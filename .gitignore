@@ -6,6 +6,7 @@ web/public/*.cbsp
 web/public/spawn.json
 web/public/scenery.json
 web/public/constants.json
+web/public/shaders.json
 web/public/textures/
 
 # build artifacts

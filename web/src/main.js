@@ -4,6 +4,7 @@ import {
   computeBoundsTree, disposeBoundsTree, acceleratedRaycast,
 } from 'three-mesh-bvh';
 import { loadPhysics, TICK } from './physics.js';
+import { loadHaloShaders, createHaloMaterial, haloTime } from './halo_materials.js';
 
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
@@ -35,8 +36,9 @@ sky.layers.set(1);
 scene.add(sky);
 scene.add(new THREE.AmbientLight(0xdfe8ff, 0.35));
 
-// flashlight: spotlight riding the camera, toggled with Q
-const flashlight = new THREE.SpotLight(0xfff3d8, 90, 45, Math.PI / 7, 0.45, 1.3);
+// flashlight: spotlight riding the camera, toggled with Q. Wide-ish cone with
+// a soft penumbra approximates Halo's flashlight gel falloff.
+const flashlight = new THREE.SpotLight(0xfff3d8, 60, 40, Math.PI / 5.5, 0.85, 1.15);
 flashlight.position.set(0.2, -0.25, 0);
 flashlight.visible = false;
 camera.add(flashlight);
@@ -81,10 +83,23 @@ function applyBlend(mat, blend) {
 
 // Halo BSP lighting is fully baked: diffuse map x lightmap. Lambert (rather
 // than unlit Basic) so the ambient fill and flashlight can also contribute.
+// When the shader registry is available, the tag-faithful GLSL materials
+// (detail maps, cube reflections, ripple water, animated chicago stages)
+// take priority; the code below is the fallback.
 function upgradeMaterial(mesh) {
   const src = mesh.material;
   const extras = src.userData || {};
   const cls = extras.shader_class || '';
+
+  if (haloReg && extras.shader) {
+    const lm = extras.lightmap && mesh.geometry.attributes.uv1
+      ? lightmapTex(`/${extras.lightmap}`) : null;
+    const hm = createHaloMaterial(haloReg, extras.shader, { lightmap: lm });
+    if (hm) {
+      hm.userData = { ...extras, ...hm.userData };
+      return hm;
+    }
+  }
 
   if (cls === 'shader_transparent_water') {
     const water = new THREE.MeshStandardMaterial({
@@ -138,12 +153,25 @@ function loadBsp(url) {
     if (ev.total) loadingEl.textContent = `loading… ${Math.round((ev.loaded / ev.total) * 100)}%`;
   });
 }
-loadBsp('/b30a.glb');
-loadBsp('/b30b.glb');
+// shader registry first, so materials can be built tag-faithfully
+let haloReg = null;
+loadHaloShaders('/shaders.json')
+  .catch((e) => { console.warn('halo shaders unavailable, using fallbacks:', e); return null; })
+  .then((reg) => {
+    haloReg = reg;
+    loadBsp('/b30a.glb');
+    loadBsp('/b30b.glb');
+    loadScenery();
+  });
 
 // ---------------------------------------------------------------- scenery
 // trees/rocks/props from the scenario tag, instanced per model part
 function sceneryMaterial(src) {
+  const extras = src.userData || {};
+  if (haloReg && extras.shader) {
+    const hm = createHaloMaterial(haloReg, extras.shader);
+    if (hm) return hm;
+  }
   const mat = new THREE.MeshLambertMaterial({
     map: src.map || null,
     color: src.map ? 0xffffff : 0x999999,
@@ -151,15 +179,16 @@ function sceneryMaterial(src) {
     side: src.alphaTest ? THREE.DoubleSide : src.side,
     transparent: src.transparent,
   });
-  mat.userData = src.userData;
-  if (src.userData?.blend) applyBlend(mat, src.userData.blend);
+  mat.userData = extras;
+  if (extras.blend) applyBlend(mat, extras.blend);
   return mat;
 }
 
-Promise.all([
-  loader.loadAsync('/scenery.glb'),
-  fetch('/scenery.json').then((r) => r.json()),
-]).then(([gltf, info]) => {
+function loadScenery() {
+  Promise.all([
+    loader.loadAsync('/scenery.glb'),
+    fetch('/scenery.json').then((r) => r.json()),
+  ]).then(([gltf, info]) => {
   const byModel = new Map();
   for (const inst of info.instances) {
     if (!byModel.has(inst.m)) byModel.set(inst.m, []);
@@ -192,7 +221,8 @@ Promise.all([
     count += list.length;
   }
   console.log(`scenery: ${count} instances of ${byModel.size} models`);
-}).catch((e) => console.warn('scenery not loaded:', e));
+  }).catch((e) => console.warn('scenery not loaded:', e));
+}
 
 // ---------------------------------------------------------------- player
 const EYE = 1.7;           // meters
@@ -299,6 +329,7 @@ const clock = new THREE.Clock();
 function tick() {
   requestAnimationFrame(tick);
   const dt = Math.min(clock.getDelta(), 0.05);
+  haloTime.value = clock.elapsedTime; // drives water ripples / chicago stages
   const gp = gamepad();
 
   player.yaw -= gp.lx * 2.4 * dt;
