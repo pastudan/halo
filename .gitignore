@@ -1,0 +1,19 @@
+# game-derived assets — never commit (see README Legal)
+assets/
+web/public/*.glb
+web/public/*.bin
+web/public/spawn.json
+web/public/constants.json
+web/public/textures/
+
+# environments / deps
+.venv/
+node_modules/
+dist/
+
+# local clone of halo-re reference repo (has its own git history)
+halo-re/
+
+# misc
+.DS_Store
+*.log
