@@ -347,9 +347,11 @@ class TextureBank:
 # GLB writer
 # --------------------------------------------------------------------------
 
-def build_glb(primitives, images, out_path):
+def build_glb(primitives, images, out_path, nodes=None):
     """primitives: list of dicts (see extract_sbsp). images: list of dicts
-    {png: bytes} shared by primitives via 'image' index."""
+    {png: bytes} shared by primitives via 'image' index.
+    nodes: optional list of {"name": str, "prims": [primitive indices]} to
+    emit multiple named meshes (default: one mesh with everything)."""
     bin_chunks = []
     buffer_views = []
     accessors = []
@@ -419,16 +421,30 @@ def build_glb(primitives, images, out_path):
         if p.get("transparent"):
             mat["alphaMode"] = "BLEND"
             mat["doubleSided"] = True
+        elif p.get("alpha_test"):
+            mat["alphaMode"] = "MASK"
+            mat["alphaCutoff"] = 0.5
+            mat["doubleSided"] = True
         materials.append(mat)
         prims_json.append({"attributes": attrs, "indices": idx_acc,
                            "material": len(materials) - 1})
 
+    if nodes is None:
+        gltf_nodes = [{"mesh": 0, "name": out_path.stem}]
+        meshes = [{"primitives": prims_json}]
+    else:
+        gltf_nodes = []
+        meshes = []
+        for nd in nodes:
+            meshes.append({"primitives": [prims_json[i] for i in nd["prims"]]})
+            gltf_nodes.append({"mesh": len(meshes) - 1, "name": nd["name"]})
+
     gltf = {
         "asset": {"version": "2.0", "generator": "halo-ring extract_bsp"},
         "scene": 0,
-        "scenes": [{"nodes": [0]}],
-        "nodes": [{"mesh": 0, "name": out_path.stem}],
-        "meshes": [{"primitives": prims_json}],
+        "scenes": [{"nodes": list(range(len(gltf_nodes)))}],
+        "nodes": gltf_nodes,
+        "meshes": meshes,
         "materials": materials,
         "accessors": accessors,
         "bufferViews": buffer_views,

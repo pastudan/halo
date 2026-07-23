@@ -20,11 +20,28 @@ scene.background = new THREE.Color(0x87b5d8);
 scene.fog = new THREE.Fog(0x87b5d8, 400, 2200);
 
 const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 4000);
+scene.add(camera);
 
+// Lighting layers: BSP lightmapped surfaces have the sun baked into their
+// lightmaps, so the dynamic sun/sky lights live on layer 1 and only affect
+// scenery and other non-lightmapped materials. A dim ambient (layer 0,
+// everything) keeps unlit interiors readable.
 const sun = new THREE.DirectionalLight(0xfff2dd, 2.4);
 sun.position.set(0.4, 1, 0.35).multiplyScalar(100);
+sun.layers.set(1);
 scene.add(sun);
-scene.add(new THREE.HemisphereLight(0xbfd8ff, 0x5a4a33, 1.1));
+const sky = new THREE.HemisphereLight(0xbfd8ff, 0x5a4a33, 1.1);
+sky.layers.set(1);
+scene.add(sky);
+scene.add(new THREE.AmbientLight(0xdfe8ff, 0.35));
+
+// flashlight: spotlight riding the camera, toggled with Q
+const flashlight = new THREE.SpotLight(0xfff3d8, 90, 45, Math.PI / 7, 0.45, 1.3);
+flashlight.position.set(0.2, -0.25, 0);
+flashlight.visible = false;
+camera.add(flashlight);
+camera.add(flashlight.target);
+flashlight.target.position.set(0, 0, -10);
 
 // (the BSP itself contains the sea surface — shader_transparent_water)
 
@@ -62,7 +79,8 @@ function applyBlend(mat, blend) {
   }
 }
 
-// Halo BSP lighting is fully baked: diffuse map x lightmap, no dynamic lights.
+// Halo BSP lighting is fully baked: diffuse map x lightmap. Lambert (rather
+// than unlit Basic) so the ambient fill and flashlight can also contribute.
 function upgradeMaterial(mesh) {
   const src = mesh.material;
   const extras = src.userData || {};
@@ -89,7 +107,7 @@ function upgradeMaterial(mesh) {
 
   let mat = src;
   if (extras.lightmap && mesh.geometry.attributes.uv1) {
-    mat = new THREE.MeshBasicMaterial({
+    mat = new THREE.MeshLambertMaterial({
       map: src.map || null,
       color: src.map ? 0xffffff : 0x888888,
       lightMap: lightmapTex(`/${extras.lightmap}`),
@@ -108,6 +126,8 @@ function loadBsp(url) {
     gltf.scene.traverse((obj) => {
       if (obj.isMesh) {
         obj.material = upgradeMaterial(obj);
+        // materials without a baked lightmap keep getting the dynamic sun/sky
+        if (!obj.material.lightMap) obj.layers.enable(1);
         obj.geometry.computeBoundsTree();
         colliders.push(obj);
       }
@@ -120,6 +140,59 @@ function loadBsp(url) {
 }
 loadBsp('/b30a.glb');
 loadBsp('/b30b.glb');
+
+// ---------------------------------------------------------------- scenery
+// trees/rocks/props from the scenario tag, instanced per model part
+function sceneryMaterial(src) {
+  const mat = new THREE.MeshLambertMaterial({
+    map: src.map || null,
+    color: src.map ? 0xffffff : 0x999999,
+    alphaTest: src.alphaTest || 0,
+    side: src.alphaTest ? THREE.DoubleSide : src.side,
+    transparent: src.transparent,
+  });
+  mat.userData = src.userData;
+  if (src.userData?.blend) applyBlend(mat, src.userData.blend);
+  return mat;
+}
+
+Promise.all([
+  loader.loadAsync('/scenery.glb'),
+  fetch('/scenery.json').then((r) => r.json()),
+]).then(([gltf, info]) => {
+  const byModel = new Map();
+  for (const inst of info.instances) {
+    if (!byModel.has(inst.m)) byModel.set(inst.m, []);
+    byModel.get(inst.m).push(inst);
+  }
+  const mtx = new THREE.Matrix4();
+  const pos = new THREE.Vector3();
+  const quat = new THREE.Quaternion();
+  const eul = new THREE.Euler();
+  const one = new THREE.Vector3(1, 1, 1);
+  let count = 0;
+  for (const [mi, list] of byModel) {
+    const tpl = gltf.scene.getObjectByName(`pal_${mi}`);
+    if (!tpl) continue;
+    tpl.traverse((obj) => {
+      if (!obj.isMesh) return;
+      const imesh = new THREE.InstancedMesh(
+        obj.geometry, sceneryMaterial(obj.material), list.length);
+      list.forEach((inst, i) => {
+        pos.set(inst.p[0], inst.p[1], inst.p[2]);
+        // halo yaw/pitch/roll (z-up) -> three: yaw about Y, pitch about -Z, roll about X
+        eul.set(inst.r[2], inst.r[0], -inst.r[1], 'YZX');
+        quat.setFromEuler(eul);
+        mtx.compose(pos, quat, one);
+        imesh.setMatrixAt(i, mtx);
+      });
+      imesh.layers.enable(1); // receive the dynamic sun/sky
+      scene.add(imesh);
+    });
+    count += list.length;
+  }
+  console.log(`scenery: ${count} instances of ${byModel.size} models`);
+}).catch((e) => console.warn('scenery not loaded:', e));
 
 // ---------------------------------------------------------------- player
 const EYE = 1.7;           // meters
@@ -182,6 +255,7 @@ const keys = new Set();
 addEventListener('keydown', (e) => {
   keys.add(e.code);
   if (e.code === 'KeyF') player.fly = !player.fly;
+  if (e.code === 'KeyQ') flashlight.visible = !flashlight.visible;
   if (TELEPORTS[e.code]) TELEPORTS[e.code]();
 });
 addEventListener('keyup', (e) => keys.delete(e.code));
