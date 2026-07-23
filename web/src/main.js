@@ -25,16 +25,7 @@ sun.position.set(0.4, 1, 0.35).multiplyScalar(100);
 scene.add(sun);
 scene.add(new THREE.HemisphereLight(0xbfd8ff, 0x5a4a33, 1.1));
 
-// simple ocean plane at sea level (halo z=0)
-const ocean = new THREE.Mesh(
-  new THREE.PlaneGeometry(20000, 20000),
-  new THREE.MeshStandardMaterial({
-    color: 0x1a4d66, transparent: true, opacity: 0.82, roughness: 0.15, metalness: 0.1,
-  }),
-);
-ocean.rotation.x = -Math.PI / 2;
-ocean.position.y = -0.15;
-scene.add(ocean);
+// (the BSP itself contains the sea surface — shader_transparent_water)
 
 // ---------------------------------------------------------------- level loading
 const loader = new GLTFLoader();
@@ -42,21 +33,80 @@ const colliders = [];
 const loadingEl = document.getElementById('loading');
 let pending = 2;
 
-function tuneMaterial(mat) {
-  const n = (mat.name || '').toLowerCase();
-  if (n.includes('water') || n.includes('ocean')) {
-    mat.transparent = true;
-    mat.opacity = 0.6;
-    mat.color = new THREE.Color(0x2a6a88);
+const texLoader = new THREE.TextureLoader();
+const lmCache = new Map();
+function lightmapTex(url) {
+  if (!lmCache.has(url)) {
+    const t = texLoader.load(url);
+    t.flipY = false; // match glTF UV convention (UV2 comes from the GLB)
+    t.channel = 1;
+    t.colorSpace = THREE.SRGBColorSpace;
+    lmCache.set(url, t);
   }
-  mat.side = THREE.FrontSide;
+  return lmCache.get(url);
+}
+
+// Halo framebuffer blend function -> three.js blending
+function applyBlend(mat, blend) {
+  if (blend === 'add' || blend === 'alpha_multiply_add' || blend === 'component_max') {
+    mat.blending = THREE.AdditiveBlending;
+  } else if (blend === 'multiply' || blend === 'double_multiply' || blend === 'component_min') {
+    mat.blending = THREE.MultiplyBlending;
+  } else if (blend === 'subtract') {
+    mat.blending = THREE.SubtractiveBlending;
+  }
+  if (mat.blending !== THREE.NormalBlending) {
+    mat.transparent = true;
+    mat.depthWrite = false;
+  }
+}
+
+// Halo BSP lighting is fully baked: diffuse map x lightmap, no dynamic lights.
+function upgradeMaterial(mesh) {
+  const src = mesh.material;
+  const extras = src.userData || {};
+  const cls = extras.shader_class || '';
+
+  if (cls === 'shader_transparent_water') {
+    const water = new THREE.MeshStandardMaterial({
+      color: 0x2a6a88, transparent: true, opacity: 0.7,
+      roughness: 0.12, metalness: 0.1, depthWrite: false,
+    });
+    water.userData = extras;
+    return water;
+  }
+  // shoreline foam: animated in the real game; render as a faint additive overlay
+  if ((extras.shader || '').endsWith('\\waves')) {
+    const foam = new THREE.MeshBasicMaterial({
+      map: src.map || null, transparent: true, opacity: 0.25,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    });
+    foam.userData = extras;
+    return foam;
+  }
+  if (src.map) src.map.anisotropy = 8;
+
+  let mat = src;
+  if (extras.lightmap && mesh.geometry.attributes.uv1) {
+    mat = new THREE.MeshBasicMaterial({
+      map: src.map || null,
+      color: src.map ? 0xffffff : 0x888888,
+      lightMap: lightmapTex(`/${extras.lightmap}`),
+      lightMapIntensity: 2.0, // Halo applies lightmaps with D3D MODULATE2X
+      transparent: src.transparent,
+      side: src.side,
+    });
+    mat.userData = extras;
+  }
+  if (extras.blend) applyBlend(mat, extras.blend);
+  return mat;
 }
 
 function loadBsp(url) {
   loader.load(url, (gltf) => {
     gltf.scene.traverse((obj) => {
       if (obj.isMesh) {
-        (Array.isArray(obj.material) ? obj.material : [obj.material]).forEach(tuneMaterial);
+        obj.material = upgradeMaterial(obj);
         obj.geometry.computeBoundsTree();
         colliders.push(obj);
       }
@@ -85,12 +135,13 @@ const player = {
 window.__player = player; // debug / scripted navigation
 window.__scene = scene;
 window.__colliders = colliders;
+window.__THREE = THREE;
 
 fetch('/spawn.json').then((r) => r.json()).then((spawns) => {
   if (spawns.length) {
     const s = spawns[0];
     player.pos.set(s.position[0], s.position[1] + EYE + 0.5, s.position[2]);
-    player.yaw = -s.facing_deg + Math.PI / 2; // halo yaw (rad, 0=+X, z-up) -> three yaw about Y
+    player.yaw = s.facing_rad - Math.PI / 2; // halo yaw (rad, 0=+X, z-up) -> three yaw about Y
   }
 });
 
