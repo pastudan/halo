@@ -2,9 +2,13 @@
 assets/
 web/public/*.glb
 web/public/*.bin
+web/public/*.cbsp
 web/public/spawn.json
 web/public/constants.json
 web/public/textures/
+
+# build artifacts
+web/public/halo_phys.wasm
 
 # environments / deps
 .venv/
@@ -17,3 +21,4 @@ halo-re/
 # misc
 .DS_Store
 *.log
+toolchain/

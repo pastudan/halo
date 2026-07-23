@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import {
   computeBoundsTree, disposeBoundsTree, acceleratedRaycast,
 } from 'three-mesh-bvh';
+import { loadPhysics, TICK } from './physics.js';
 
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
@@ -132,15 +133,33 @@ const player = {
   fly: false, grounded: false,
 };
 
+// ---- WASM physics (faithful Halo movement); ?jsphys falls back to the JS stub
+const useJsPhys = new URLSearchParams(location.search).has('jsphys');
+let phys = null;            // wasm bridge once loaded
+let physNeedsSpawn = true;  // sync wasm state to player.pos on next walk tick
+let physAccum = 0;
+const physPrev = { eye: new THREE.Vector3(), grounded: false };
+const physCur = { eye: new THREE.Vector3(), grounded: false };
+if (!useJsPhys) {
+  loadPhysics().then((p) => { phys = p; window.__phys = p; })
+    .catch((e) => console.error('WASM physics failed, using JS fallback:', e));
+}
+
 window.__player = player; // debug / scripted navigation
 window.__scene = scene;
 window.__colliders = colliders;
 window.__THREE = THREE;
 
+function movePlayerTo(pos) {
+  player.pos.copy(pos);
+  player.vel.set(0, 0, 0);
+  physNeedsSpawn = true;
+}
+
 fetch('/spawn.json').then((r) => r.json()).then((spawns) => {
   if (spawns.length) {
     const s = spawns[0];
-    player.pos.set(s.position[0], s.position[1] + EYE + 0.5, s.position[2]);
+    movePlayerTo(new THREE.Vector3(s.position[0], s.position[1] + EYE + 0.5, s.position[2]));
     player.yaw = s.facing_rad - Math.PI / 2; // halo yaw (rad, 0=+X, z-up) -> three yaw about Y
   }
 });
@@ -148,18 +167,13 @@ fetch('/spawn.json').then((r) => r.json()).then((spawns) => {
 // teleport spots: 1 = beach spawn, 2 = map room interior (b30b)
 const TELEPORTS = {
   Digit1: () => fetch('/spawn.json').then((r) => r.json()).then((s) => {
-    player.pos.set(s[0].position[0], s[0].position[1] + EYE + 0.5, s[0].position[2]);
-    player.vel.set(0, 0, 0);
+    player.fly = false;
+    movePlayerTo(new THREE.Vector3(s[0].position[0], s[0].position[1] + EYE + 0.5, s[0].position[2]));
   }),
   Digit2: () => {
-    // drop into the b30b interior from its bounding box center
-    const b30b = colliders.filter((c) => c.parent?.name === 'b30b' || c.name === 'b30b');
-    const box = new THREE.Box3();
-    (b30b.length ? b30b : colliders).forEach((c) => box.expandByObject(c));
-    const ctr = box.getCenter(new THREE.Vector3());
-    player.pos.set(ctr.x, box.max.y - 2, ctr.z);
-    player.vel.set(0, 0, 0);
-    player.fly = true;
+    // map room interior (b30b): a spot on the walkable floor
+    player.fly = false;
+    movePlayerTo(new THREE.Vector3(17, 6.5 + EYE + 0.5, 62));
   },
 };
 
@@ -234,6 +248,34 @@ function tick() {
     if (keys.has('Space') || gp.jump) player.pos.y += spd * dt;
     if (keys.has('KeyC')) player.pos.y -= spd * dt;
     player.vel.set(0, 0, 0);
+    physNeedsSpawn = true; // re-sync wasm when we land back into walk mode
+  } else if (phys) {
+    // ---- faithful Halo movement: fixed 30Hz WASM ticks, interpolated render
+    if (physNeedsSpawn) {
+      phys.spawn(player.pos);
+      const st = phys.state();
+      physPrev.eye.set(st.eye.x, st.eye.y, st.eye.z);
+      physCur.eye.copy(physPrev.eye);
+      physAccum = 0;
+      physNeedsSpawn = false;
+    }
+    const fwdIn = (keys.has('KeyW') ? 1 : 0) - (keys.has('KeyS') ? 1 : 0) - gp.mz;
+    const sideIn = (keys.has('KeyD') ? 1 : 0) - (keys.has('KeyA') ? 1 : 0) + gp.mx;
+    const jump = keys.has('Space') || gp.jump;
+    phys.input(fwdIn, sideIn, player.yaw, jump);
+
+    physAccum += dt;
+    while (physAccum >= TICK) {
+      phys.tick();
+      physAccum -= TICK;
+      physPrev.eye.copy(physCur.eye);
+      physPrev.grounded = physCur.grounded;
+      const st = phys.state();
+      physCur.eye.set(st.eye.x, st.eye.y, st.eye.z);
+      physCur.grounded = st.grounded;
+    }
+    player.pos.lerpVectors(physPrev.eye, physCur.eye, physAccum / TICK);
+    player.grounded = physCur.grounded;
   } else {
     const spd = sprint ? SPRINT : WALK;
     player.pos.x += move.x * spd * dt;
@@ -263,7 +305,8 @@ function tick() {
   camera.rotateX(player.pitch);
 
   hud.textContent =
-    `${player.fly ? 'FLY' : player.grounded ? 'WALK' : 'AIR '}  ` +
+    `${player.fly ? 'FLY' : player.grounded ? 'WALK' : 'AIR '} ` +
+    `[${player.fly ? 'js' : phys ? 'wasm' : 'js'}]  ` +
     `x ${player.pos.x.toFixed(1)}  y ${player.pos.y.toFixed(1)}  z ${player.pos.z.toFixed(1)}`;
 
   renderer.render(scene, camera);
