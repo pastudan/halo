@@ -613,7 +613,8 @@ static void collision_bsp_vector_remember_leaf(collision_bsp_vector_state *state
 
 
 /* 0x148780 — leaf plane-ref walk → 2D BSP surface index.
- * leaf_index arrives in EAX. Returns surface index or -1.
+ * XBE ABI: leaf_index @<eax>; reverse thunk → cdecl first arg (see
+ * docs/references/abi-and-calling-conventions.md). Returns surface or -1.
  * ported:false until verified. */
 int FUN_00148780(int leaf_index, int bsp, unsigned short flags,
                  int breakable_surfaces, float *origin, float *direction,
@@ -630,9 +631,8 @@ int FUN_00148780(int leaf_index, int bsp, unsigned short flags,
   float point2d[2];
   uint32_t surface_index;
   float ax, ay, az;
-
-  (void)flags;
-  (void)breakable_surfaces;
+  int high;
+  int pos;
 
   leaf = (short *)tag_block_get_element((char *)bsp + 0x18, leaf_index, 8);
   ref_i = *(int *)(leaf + 2); /* leaf[+4] as int — first bsp2d ref */
@@ -648,20 +648,23 @@ int FUN_00148780(int leaf_index, int bsp, unsigned short flags,
     ax = xbox_fabsf(plane[0]);
     ay = xbox_fabsf(plane[1]);
     az = xbox_fabsf(plane[2]);
-    if (az >= ay && az >= ax) {
-      axis = 2;
-    } else if (ay >= ax) {
-      axis = 1;
+    /* Same branch shape as breakable_surfaces / XBE fcom chain */
+    if (az < ay || az < ax) {
+      if (ay < ax)
+        axis = 0;
+      else
+        axis = 1;
     } else {
-      axis = 0;
+      axis = 2;
     }
 
-    /* project sign: (plane[axis] > 0) XOR (ref.plane high bit) — asm setne */
-    {
-      int high = (ref[0] & 0x80000000) ? 1 : 0;
-      int pos = (plane[axis] > 0.0f) ? 1 : 0;
-      sign = (pos != high) ? 1 : 0;
-    }
+    /* fcomp [0x2533c0]; test ah,41h / jne → pos=0 when plane[axis] <= 0 */
+    pos = 1;
+    if (plane[axis] <= *(float *)0x2533c0)
+      pos = 0;
+    /* neg/sbb/neg of high bit → 0/1; setne vs pos */
+    high = (ref[0] & 0x80000000) ? 1 : 0;
+    sign = (pos != high) ? 1 : 0;
 
     point[0] = direction[0] * t + origin[0];
     point[1] = direction[1] * t + origin[1];
@@ -724,11 +727,13 @@ char FUN_00148eb0(void *state_v, int node_index, float t0, float t1)
     d_t1 = dir_dot * t1 + d0;
 
     /* cl = back (any d < 0); al = front (any d >= 0) — see asm 0x148f32 */
-    back_touch = (char)(d_t0 < 0.0f || d_t1 < 0.0f);
-    front_touch = (char)(d_t0 >= 0.0f || d_t1 >= 0.0f);
+    back_touch =
+      (char)(d_t0 < *(float *)0x2533c0 || d_t1 < *(float *)0x2533c0);
+    front_touch =
+      (char)(d_t0 >= *(float *)0x2533c0 || d_t1 >= *(float *)0x2533c0);
 
     if (back_touch && front_touch) {
-      dir_positive = (char)(dir_dot > 0.0f);
+      dir_positive = (char)(dir_dot > *(float *)0x2533c0);
       t_split = -(d0 / dir_dot);
       /* near = back when dir_dot > 0, else front */
       child = (int)node[1 + (dir_positive ? 0 : 1)];
@@ -841,24 +846,25 @@ char collision_bsp_test_vector(int collision_flags, int bsp, short flags,
   state.leaf_side = 0;
   state.plane_index = -1;
 
-  /* test ah,5 / jp: result = max_t when max_t >= 0, else 0 */
-  if (max_t < 0.0f) {
-    result[0] = 0.0f;
+  /* fcomp [0x2533c0]; test ah,5 / jp: result = max_t when max_t >= 0, else 0 */
+  if (max_t < *(float *)0x2533c0) {
+    result[0] = *(float *)0x2533c0;
   } else {
     result[0] = max_t;
   }
   *(int *)((char *)result + 0x14) = 0;
 
-  /* scale / t1: max_t < 0 → 0; max_t > 1 → 1; else max_t */
-  if (max_t < 0.0f) {
-    scale = 0.0f;
-  } else if (max_t > 1.0f) {
-    scale = 1.0f;
+  /* scale / t1: max_t < 0 → 0; max_t > 1 → 1; else max_t
+   * (fcomp 0x2533c0 / 0x2533c8; test ah,5 / ah,41h) */
+  if (max_t < *(float *)0x2533c0) {
+    scale = *(float *)0x2533c0;
+  } else if (max_t > *(float *)0x2533c8) {
+    scale = *(float *)0x2533c8;
   } else {
     scale = max_t;
   }
 
-  hit = FUN_00148eb0(&state, 0, 0.0f, scale);
+  hit = FUN_00148eb0(&state, 0, *(float *)0x2533c0, scale);
   collision_log_add_time(log_fn, *(unsigned int *)0x46f090, *(int *)0x46f094);
   return hit;
 }
