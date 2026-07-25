@@ -36334,7 +36334,14 @@
         },
         {
           "addr": "0x148910",
-          "decl": "void FUN_00148910(void);"
+          "decl": "char FUN_00148910(float *out_t /* @<eax> */, float *origin /* @<ebx> */, float *edge_a /* @<ecx> */, float *direction /* @<edx> */, float *edge_delta /* @<edi> */, float *param_f, float *out_u);",
+          "reg_args": {
+            "out_t": "eax",
+            "origin": "ebx",
+            "edge_a": "ecx",
+            "direction": "edx",
+            "edge_delta": "edi"
+          }
         },
         {
           "addr": "0x148b20",

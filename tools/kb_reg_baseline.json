@@ -660,6 +660,7 @@
     "0x2256bb": "int __stdcall recv(void *xnet@<ecx>, unsigned int socket, char *buf, int len, int flags);",
     "0x2258a4": "int __stdcall send(void *xnet@<ecx>, unsigned int socket, const char *buf, int len, int flags);",
     "0x148240": "char FUN_00148240(int bsp /* @<eax> */, unsigned short flags, int breakable_surfaces, int surface_index, int projection, int sign, float *point2d);",
-    "0x148780": "int FUN_00148780(int leaf_index /* @<eax> */, int bsp, unsigned short flags, int breakable_surfaces, float *origin, float *direction, int plane_index, float t, int two_sided);"
+    "0x148780": "int FUN_00148780(int leaf_index /* @<eax> */, int bsp, unsigned short flags, int breakable_surfaces, float *origin, float *direction, int plane_index, float t, int two_sided);",
+    "0x148910": "char FUN_00148910(float *out_t /* @<eax> */, float *origin /* @<ebx> */, float *edge_a /* @<ecx> */, float *direction /* @<edx> */, float *edge_delta /* @<edi> */, float *param_f, float *out_u);"
   }
 }
