@@ -40,6 +40,9 @@ env:
 jobs:
   regression:
     name: Unicorn regression (quick)
+    # Needs a machine with delinked/ + build/ + unicorn (upstream self-hosted).
+    # Skip on forks that have not attached such a runner.
+    if: ${{ vars.HAS_SELF_HOSTED == 'true' }}
     runs-on: self-hosted
     timeout-minutes: 5
     steps:
@@ -77,8 +80,9 @@ jobs:
     name: Batch equivalence (${{ github.event.inputs.mode || 'batch' }})
     runs-on: self-hosted
     if: >-
-      github.event_name == 'schedule' ||
-      (github.event_name == 'workflow_dispatch')
+      vars.HAS_SELF_HOSTED == 'true' &&
+      (github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch')
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4

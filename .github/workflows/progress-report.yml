@@ -23,8 +23,9 @@ jobs:
     # *scheduled* Equivalence run so ordinary pushes — which also trigger
     # Equivalence Tests — don't double-fire this report.
     if: >-
-      github.event_name != 'workflow_run' ||
-      github.event.workflow_run.event == 'schedule'
+      vars.HAS_SELF_HOSTED == 'true' &&
+      (github.event_name != 'workflow_run' ||
+      github.event.workflow_run.event == 'schedule')
     runs-on: self-hosted
     permissions:
       contents: write

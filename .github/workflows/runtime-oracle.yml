@@ -25,6 +25,7 @@ env:
 jobs:
   runtime-oracle:
     name: Nightly runtime oracle
+    if: ${{ vars.HAS_SELF_HOSTED == 'true' }}
     runs-on: self-hosted
     timeout-minutes: 180
     steps:
