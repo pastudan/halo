@@ -1,0 +1,86 @@
+# Windows CI for Track A lifts.
+#
+# GitHub-hosted windows-latest can clang-build `halo` (no XBE required).
+# Official VC71 scoring needs RXDK CL.Exe — run the optional self-hosted job
+# after registering a Windows runner with RXDK installed (see docs below).
+
+name: Windows Build
+
+on:
+  push:
+    branches-ignore: [website, gh-pages]
+  pull_request:
+    branches-ignore: [website, gh-pages]
+  workflow_dispatch:
+    inputs:
+      run_vc71:
+        description: "Run VC71 verify on self-hosted runner (needs RXDK)"
+        type: boolean
+        default: false
+
+jobs:
+  BuildWindows:
+    name: Build on Windows with clang (${{ matrix.configuration }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+      - name: Clone Tree
+        uses: actions/checkout@v4
+
+      - name: Install LLVM + Ninja
+        run: choco install llvm ninja -y --no-progress
+
+      - name: Install Python deps
+        run: python -m pip install -r requirements.txt
+
+      - name: Configure + build halo (no XBE patch)
+        shell: bash
+        run: |
+          export PATH="/c/Program Files/LLVM/bin:/c/ProgramData/chocolatey/bin:$PATH"
+          clang --version
+          ninja --version
+          cmake -Bbuild -S. -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=toolchains/llvm.cmake \
+            -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+          cmake --build build --target halo --parallel
+
+      - name: Build failure summary
+        if: failure()
+        shell: bash
+        run: |
+          printf '## ❌ Windows Build Failed: %s\n\nSee the **Configure + build** step log.\n' \
+            "${{ matrix.configuration }}" >> "$GITHUB_STEP_SUMMARY"
+
+  # Optional: attach a self-hosted Windows runner labeled
+  # [self-hosted, Windows, rxdk] with RXDK VC71 at the default path used by
+  # tools/verify/vc71_verify.py. Delinked objs expected under delinked/.
+  VC71Collision:
+    name: VC71 collision BSP lifts (self-hosted RXDK)
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_vc71 }}
+    runs-on: [self-hosted, Windows, rxdk]
+    needs: BuildWindows
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: VC71 verify collision lifts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -r requirements.txt
+          for t in FUN_00148780 FUN_00148eb0 collision_bsp_test_vector; do
+            echo "=== VC71 $t ==="
+            python tools/verify/vc71_verify.py --function "$t" || true
+          done
+
+      - name: Upload VC71 artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vc71-collision
+          path: |
+            build/vc71/**
+            artifacts/**
+          if-no-files-found: ignore

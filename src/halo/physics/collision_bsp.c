@@ -552,3 +552,313 @@ int collision_surface_test_line2d(int bsp, int surface_index, int param3,
   }
   return 0;
 }
+
+
+/* -------------------------------------------------------------------------
+ * collision_bsp_test_vector (0x149480) + FUN_00148eb0 (0x148eb0)
+ *
+ * Ray/segment test against a collision BSP. Wrapper builds a 0x28-byte state
+ * and calls the recursive walker at node 0 with t in [0, scale].
+ *
+ * State layout (wrapper stack at 0x149480):
+ *   +0x00 int     collision_flags
+ *   +0x04 int     bsp
+ *   +0x08 uint16  flags
+ *   +0x0c int     breakable_surfaces
+ *   +0x10 float*  origin
+ *   +0x14 float*  direction
+ *   +0x18 float*  result
+ *   +0x1c int     last_leaf
+ *   +0x20 uint8   leaf_side
+ *   +0x24 int     plane_index
+ *
+ * Both marked ported:false in kb.json until VC71 / equivalence sign-off.
+ * ------------------------------------------------------------------------- */
+
+typedef struct collision_bsp_vector_state {
+  int collision_flags;
+  int bsp;
+  unsigned short flags;
+  unsigned short pad_u16;
+  int breakable_surfaces;
+  float *origin;
+  float *direction;
+  float *result;
+  int last_leaf;
+  unsigned char leaf_side;
+  unsigned char pad_u8[3];
+  int plane_index;
+} collision_bsp_vector_state;
+
+static void collision_bsp_vector_remember_leaf(collision_bsp_vector_state *state,
+                                              int leaf_index,
+                                              unsigned char leaf_class)
+{
+  int *result_i;
+  int count;
+
+  if (leaf_index != -1) {
+    result_i = (int *)state->result;
+    count = result_i[5];
+    if (count < 0x100) {
+      result_i[6 + count] = leaf_index;
+      result_i[5] = count + 1;
+    } else {
+      result_i[0x105] = leaf_index;
+    }
+  }
+  state->last_leaf = leaf_index;
+  state->leaf_side = leaf_class;
+}
+
+
+/* 0x148780 — leaf plane-ref walk → 2D BSP surface index.
+ * leaf_index arrives in EAX. Returns surface index or -1.
+ * ported:false until verified. */
+int FUN_00148780(int leaf_index, int bsp, unsigned short flags,
+                 int breakable_surfaces, float *origin, float *direction,
+                 int plane_index, float t, int two_sided)
+{
+  short *leaf;
+  int ref_i;
+  int ref_end;
+  int *ref;
+  float *plane;
+  int axis;
+  int sign;
+  float point[3];
+  float point2d[2];
+  uint32_t surface_index;
+  float ax, ay, az;
+
+  (void)flags;
+  (void)breakable_surfaces;
+
+  leaf = (short *)tag_block_get_element((char *)bsp + 0x18, leaf_index, 8);
+  ref_i = *(int *)(leaf + 2); /* leaf[+4] as int — first bsp2d ref */
+  ref_end = ref_i + leaf[1];  /* leaf[+2] ref count (int16) */
+
+  for (; ref_i < ref_end; ref_i++) {
+    ref = (int *)tag_block_get_element((char *)bsp + 0x24, ref_i, 8);
+    if ((ref[0] & 0x7fffffff) != plane_index) {
+      continue;
+    }
+
+    plane = (float *)tag_block_get_element((char *)bsp + 0xc, plane_index, 0x10);
+    ax = xbox_fabsf(plane[0]);
+    ay = xbox_fabsf(plane[1]);
+    az = xbox_fabsf(plane[2]);
+    if (az >= ay && az >= ax) {
+      axis = 2;
+    } else if (ay >= ax) {
+      axis = 1;
+    } else {
+      axis = 0;
+    }
+
+    /* project sign: (plane[axis] > 0) XOR (ref.plane high bit) — asm setne */
+    {
+      int high = (ref[0] & 0x80000000) ? 1 : 0;
+      int pos = (plane[axis] > 0.0f) ? 1 : 0;
+      sign = (pos != high) ? 1 : 0;
+    }
+
+    point[0] = direction[0] * t + origin[0];
+    point[1] = direction[1] * t + origin[1];
+    point[2] = direction[2] * t + origin[2];
+
+    FUN_00061df0(point, (short)axis, (unsigned char)sign, point2d);
+    surface_index = FUN_00146d40((char *)bsp + 0x30, point2d, ref[1]);
+
+    if (!two_sided) {
+      return (int)surface_index;
+    }
+    if (FUN_00148240(flags, breakable_surfaces, (int)surface_index, axis, sign,
+                     point2d)) {
+      return (int)surface_index;
+    }
+  }
+  return -1;
+}
+
+char FUN_00148eb0(void *state_v, int node_index, float t0, float t1)
+{
+  collision_bsp_vector_state *state;
+  uint32_t *node;
+  float *plane;
+  float *origin;
+  float *direction;
+  float d0;
+  float dir_dot;
+  float d_t0;
+  float d_t1;
+  char back_touch;
+  char front_touch;
+  char dir_positive;
+  float t_split;
+  int child;
+  int leaf_index;
+  unsigned char leaf_class;
+  unsigned char leaf_flags;
+  int surface_index;
+  char *surface;
+  char *result_b;
+  int two_sided;
+  int flags;
+
+  state = (collision_bsp_vector_state *)state_v;
+
+  if (node_index >= 0) {
+    node = (uint32_t *)tag_block_get_element((void *)state->bsp, node_index,
+                                             0xc);
+    plane = (float *)tag_block_get_element((char *)state->bsp + 0xc,
+                                           (int)node[0], 0x10);
+    origin = state->origin;
+    direction = state->direction;
+
+    d0 = (plane[1] * origin[1] + plane[2] * origin[2] + plane[0] * origin[0]) -
+         plane[3];
+    dir_dot = plane[1] * direction[1] + plane[2] * direction[2] +
+              plane[0] * direction[0];
+    d_t0 = dir_dot * t0 + d0;
+    d_t1 = dir_dot * t1 + d0;
+
+    /* cl = back (any d < 0); al = front (any d >= 0) — see asm 0x148f32 */
+    back_touch = (char)(d_t0 < 0.0f || d_t1 < 0.0f);
+    front_touch = (char)(d_t0 >= 0.0f || d_t1 >= 0.0f);
+
+    if (back_touch && front_touch) {
+      dir_positive = (char)(dir_dot > 0.0f);
+      t_split = -(d0 / dir_dot);
+      /* near = back when dir_dot > 0, else front */
+      child = (int)node[1 + (dir_positive ? 0 : 1)];
+      if (FUN_00148eb0(state, child, t0, t_split)) {
+        return 1;
+      }
+      /* continue far only if result[0] > t_split (asm test ah,41h / jnp) */
+      if (!(state->result[0] > t_split)) {
+        return 0;
+      }
+      state->plane_index = (int)node[0];
+      child = (int)node[1 + (dir_positive ? 1 : 0)];
+      return FUN_00148eb0(state, child, t_split, t1) ? 1 : 0;
+    }
+
+    child = (int)node[1 + (front_touch ? 1 : 0)];
+    return FUN_00148eb0(state, child, t0, t1) ? 1 : 0;
+  }
+
+  /* ---- leaf / solid terminal (node_index < 0) ---- */
+  leaf_index = -1;
+  leaf_class = 3;
+  two_sided = 0;
+  surface_index = -1;
+  flags = state->collision_flags;
+
+  if (node_index != -1) {
+    leaf_index = node_index & 0x7fffffff;
+    leaf_flags = *(unsigned char *)tag_block_get_element(
+      (char *)state->bsp + 0x18, leaf_index, 8);
+    leaf_class = (unsigned char)(((leaf_flags & 1) != 0) + 1);
+  }
+
+  if ((flags & 1) != 0 &&
+      (state->leaf_side == 1 || state->leaf_side == 2) && leaf_class == 3) {
+    surface_index = state->last_leaf;
+  } else if ((flags & 2) != 0 && state->leaf_side == 3 &&
+             (leaf_class == 1 || leaf_class == 2)) {
+    surface_index = leaf_index;
+  } else if ((flags & 4) == 0 && state->leaf_side == 2 && leaf_class == 2) {
+    if ((flags & 1) != 0) {
+      surface_index = state->last_leaf;
+    } else {
+      surface_index = leaf_index;
+    }
+    two_sided = 1;
+  } else {
+    collision_bsp_vector_remember_leaf(state, leaf_index, leaf_class);
+    return 0;
+  }
+
+  if (surface_index == -1) {
+    collision_bsp_vector_remember_leaf(state, leaf_index, leaf_class);
+    return 0;
+  }
+
+  surface_index = FUN_00148780(
+    surface_index, state->bsp, state->flags, state->breakable_surfaces,
+    state->origin, state->direction, state->plane_index, t0, two_sided);
+  if (surface_index == -1) {
+    collision_bsp_vector_remember_leaf(state, leaf_index, leaf_class);
+    return 0;
+  }
+
+  surface = (char *)tag_block_get_element((char *)state->bsp + 0x3c,
+                                          surface_index, 0xc);
+  if ((surface[8] & 2) != 0 && (flags & 8) != 0) {
+    collision_bsp_vector_remember_leaf(state, leaf_index, leaf_class);
+    return 0;
+  }
+  if ((surface[8] & 8) != 0 && (flags & 0x10) != 0) {
+    collision_bsp_vector_remember_leaf(state, leaf_index, leaf_class);
+    return 0;
+  }
+
+  result_b = (char *)state->result;
+  *(float *)result_b = t0;
+  plane = (float *)tag_block_get_element((char *)state->bsp + 0xc,
+                                         state->plane_index, 0x10);
+  *(float **)(result_b + 4) = plane;
+  *(int *)(result_b + 8) = surface_index;
+  *(int *)(result_b + 0xc) = *(int *)surface;
+  result_b[0x10] = surface[8];
+  result_b[0x11] = surface[9];
+  *(short *)(result_b + 0x12) = *(short *)(surface + 0xa);
+  return 1;
+}
+
+char collision_bsp_test_vector(int collision_flags, int bsp, short flags,
+                               int breakable_surfaces, int origin, int direction,
+                               float max_t, float *result)
+{
+  collision_bsp_vector_state state;
+  short log_fn;
+  float scale;
+  char hit;
+
+  log_fn = (short)(4 + (bsp == *(int *)0x5064dc ? 1 : 0));
+  collision_log_add_call(log_fn);
+  collision_log_query_counter((void *)0x46f090);
+
+  state.collision_flags = collision_flags;
+  state.bsp = bsp;
+  state.flags = (unsigned short)flags;
+  state.breakable_surfaces = breakable_surfaces;
+  state.origin = (float *)origin;
+  state.direction = (float *)direction;
+  state.result = result;
+  state.last_leaf = -1;
+  state.leaf_side = 0;
+  state.plane_index = -1;
+
+  /* test ah,5 / jp: result = max_t when max_t >= 0, else 0 */
+  if (max_t < 0.0f) {
+    result[0] = 0.0f;
+  } else {
+    result[0] = max_t;
+  }
+  *(int *)((char *)result + 0x14) = 0;
+
+  /* scale / t1: max_t < 0 → 0; max_t > 1 → 1; else max_t */
+  if (max_t < 0.0f) {
+    scale = 0.0f;
+  } else if (max_t > 1.0f) {
+    scale = 1.0f;
+  } else {
+    scale = max_t;
+  }
+
+  hit = FUN_00148eb0(&state, 0, 0.0f, scale);
+  collision_log_add_time(log_fn, *(unsigned int *)0x46f090, *(int *)0x46f094);
+  return hit;
+}
