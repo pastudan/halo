@@ -473,7 +473,7 @@
     "0x140a00": "char object_select_random_region_permutations_by_variant(int object_handle@<eax>, void *model_tag, int16_t variant);",
     "0x140ad0": "void object_choose_random_region_permutations(int object_handle@<edi>);",
     "0x147ed0": "void FUN_00147ed0(void *state /* @<eax> */, int surface_index);",
-    "0x1491d0": "bool FUN_001491d0(void *state /* @<esi> */, int surface_index);",
+    "0x1491d0": "char FUN_001491d0(void *state /* @<esi> */, int surface_index);",
     "0x14d080": "void collision_log_period_helper(int time_period@<esi>, int begin_flag);",
     "0x14d1b0": "void collision_log_format_stat(char *buf @<edi>, void *stat @<esi>);",
     "0x14d840": "short FUN_0014d840(short collision_function @<edi>);",
@@ -660,7 +660,8 @@
     "0x2256bb": "int __stdcall recv(void *xnet@<ecx>, unsigned int socket, char *buf, int len, int flags);",
     "0x2258a4": "int __stdcall send(void *xnet@<ecx>, unsigned int socket, const char *buf, int len, int flags);",
     "0x148240": "char FUN_00148240(int bsp /* @<eax> */, unsigned short flags, int breakable_surfaces, int surface_index, int projection, int sign, float *point2d);",
+    "0x148370": "char FUN_00148370(float *origin /* @<eax> */, float *center /* @<ecx> */, float *direction /* @<edx> */, float *out_t /* @<esi> */, float radius);",
     "0x148780": "int FUN_00148780(int leaf_index /* @<eax> */, int bsp, unsigned short flags, int breakable_surfaces, float *origin, float *direction, int plane_index, float t, int two_sided);",
-    "0x148910": "char FUN_00148910(float *out_t /* @<eax> */, float *origin /* @<ebx> */, float *edge_a /* @<ecx> */, float *direction /* @<edx> */, float *edge_delta /* @<edi> */, float *param_f, float *out_u);"
+    "0x148910": "char FUN_00148910(float *out_t /* @<eax> */, float *origin /* @<ebx> */, float *edge_a /* @<ecx> */, float *direction /* @<edx> */, float *edge_delta /* @<edi> */, float radius, float *out_u);"
   }
 }

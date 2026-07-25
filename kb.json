@@ -36314,7 +36314,14 @@
         },
         {
           "addr": "0x148370",
-          "decl": "void FUN_00148370(void);"
+          "decl": "char FUN_00148370(float *origin /* @<eax> */, float *center /* @<ecx> */, float *direction /* @<edx> */, float *out_t /* @<esi> */, float radius);",
+          "ported": false,
+          "reg_args": {
+            "origin": "eax",
+            "center": "ecx",
+            "direction": "edx",
+            "out_t": "esi"
+          }
         },
         {
           "addr": "0x148440",
@@ -36334,7 +36341,8 @@
         },
         {
           "addr": "0x148910",
-          "decl": "char FUN_00148910(float *out_t /* @<eax> */, float *origin /* @<ebx> */, float *edge_a /* @<ecx> */, float *direction /* @<edx> */, float *edge_delta /* @<edi> */, float *param_f, float *out_u);",
+          "decl": "char FUN_00148910(float *out_t /* @<eax> */, float *origin /* @<ebx> */, float *edge_a /* @<ecx> */, float *direction /* @<edx> */, float *edge_delta /* @<edi> */, float radius, float *out_u);",
+          "ported": false,
           "reg_args": {
             "out_t": "eax",
             "origin": "ebx",
@@ -36358,7 +36366,8 @@
         },
         {
           "addr": "0x1491d0",
-          "decl": "bool FUN_001491d0(void *state /* @<esi> */, int surface_index);",
+          "decl": "char FUN_001491d0(void *state /* @<esi> */, int surface_index);",
+          "ported": false,
           "reg_args": {
             "state": "esi"
           }

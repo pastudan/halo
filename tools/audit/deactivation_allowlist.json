@@ -1211,6 +1211,27 @@
     "since": "2026-07-25"
   },
   {
+    "addr": "0x148370",
+    "name": "FUN_00148370",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x148910",
+    "name": "FUN_00148910",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1491d0",
+    "name": "FUN_001491d0",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
     "addr": "0x148240",
     "name": "FUN_00148240",
     "object": "collision_bsp.obj",

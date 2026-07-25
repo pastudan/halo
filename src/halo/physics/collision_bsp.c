@@ -750,6 +750,240 @@ project_first_vertex:
 
 
 /* -------------------------------------------------------------------------
+ * FUN_00148370 (0x148370) — ray vs sphere (endpoint of pill edge).
+ *
+ * XBE: origin@eax center@ecx direction@edx out_t@esi; stack = radius (float).
+ * If origin inside/on sphere → *out_t=0 success. Else nearer root in (0,1].
+ * ported:false until verified.
+ * ------------------------------------------------------------------------- */
+char FUN_00148370(float *origin, float *center, float *direction, float *out_t,
+                  float radius)
+{
+  float w_x, w_y, w_z;
+  float c, b, d2, disc, t;
+
+  w_x = center[0] - origin[0];
+  w_y = center[1] - origin[1];
+  w_z = center[2] - origin[2];
+  c = w_x * w_x + w_y * w_y + w_z * w_z - radius * radius;
+
+  /* fcomp c,0; test ah,41h / jp → quadratic when c > 0 */
+  if (!(c > *(float *)0x2533c0)) {
+    *out_t = *(float *)0x2533c0;
+    return 1;
+  }
+
+  b = w_x * direction[0] + w_z * direction[2] + w_y * direction[1];
+  /* need b > 0 (sphere ahead) */
+  if (!(b > *(float *)0x2533c0)) {
+    return 0;
+  }
+
+  d2 = direction[0] * direction[0] + direction[1] * direction[1] +
+       direction[2] * direction[2];
+  disc = b * b - d2 * c;
+  if (disc < *(float *)0x2533c0) {
+    return 0;
+  }
+
+  t = (b - sqrtf(disc)) / d2;
+  if (t > *(float *)0x2533c8) {
+    return 0;
+  }
+  *out_t = t;
+  return 1;
+}
+
+
+/* -------------------------------------------------------------------------
+ * FUN_00148910 (0x148910) — ray vs pill edge (cylinder + endpoint spheres).
+ *
+ * XBE: out_t@eax origin@ebx edge_a@ecx direction@edx edge_delta@edi;
+ * stack: radius (float by value), out_u (float*).
+ * ported:false until verified.
+ * ------------------------------------------------------------------------- */
+char FUN_00148910(float *out_t, float *origin, float *edge_a, float *direction,
+                  float *edge_delta, float radius, float *out_u)
+{
+  float w_x, w_y, w_z;
+  float edge_len_sq;
+  float e_dot_d;
+  float a;
+  float w_dot_e;
+  float b;
+  float disc;
+  float sqrt_disc;
+  float inv_a;
+  float t0, t1, t;
+  float u_num;
+  float end_pt[3];
+
+  w_x = origin[0] - edge_a[0];
+  w_y = origin[1] - edge_a[1];
+  w_z = origin[2] - edge_a[2];
+
+  edge_len_sq = edge_delta[2] * edge_delta[2] + edge_delta[0] * edge_delta[0] +
+                edge_delta[1] * edge_delta[1];
+  e_dot_d = edge_delta[2] * direction[2] + edge_delta[1] * direction[1] +
+            edge_delta[0] * direction[0];
+  a = (direction[0] * direction[0] + direction[1] * direction[1] +
+       direction[2] * direction[2]) *
+        edge_len_sq -
+      e_dot_d * e_dot_d;
+
+  /* reject a == 0 (parallel / degenerate) — test ah,0x44 / jnp */
+  if (a == *(float *)0x2533c0) {
+    return 0;
+  }
+
+  w_dot_e = w_z * edge_delta[2] + w_x * edge_delta[0] + w_y * edge_delta[1];
+  b = w_dot_e * e_dot_d -
+      (w_x * direction[0] + w_z * direction[2] + w_y * direction[1]) *
+        edge_len_sq;
+
+  disc = b * b -
+         ((w_z * w_z + w_x * w_x + w_y * w_y - radius * radius) * edge_len_sq -
+          w_dot_e * w_dot_e) *
+           a;
+  if (disc < *(float *)0x2533c0) {
+    return 0;
+  }
+
+  sqrt_disc = sqrtf(disc);
+  inv_a = *(float *)0x2533c8 / a;
+  t0 = -(b + sqrt_disc) * inv_a;
+  if (t0 > *(float *)0x2533c8) {
+    return 0;
+  }
+  t1 = -(b - sqrt_disc) * inv_a;
+  if (t1 < *(float *)0x2533c0) {
+    return 0;
+  }
+
+  if (t0 < *(float *)0x2533c0) {
+    t = *(float *)0x2533c0;
+  } else {
+    t = t0;
+  }
+
+  u_num = e_dot_d * t + w_dot_e;
+  if (u_num < *(float *)0x2533c0) {
+    if (!FUN_00148370(origin, edge_a, direction, out_t, radius)) {
+      return 0;
+    }
+    *out_u = *(float *)0x2533c0;
+    return 1;
+  }
+  if (u_num > edge_len_sq) {
+    end_pt[0] = edge_a[0] + edge_delta[0];
+    end_pt[1] = edge_a[1] + edge_delta[1];
+    end_pt[2] = edge_a[2] + edge_delta[2];
+    if (!FUN_00148370(origin, end_pt, direction, out_t, radius)) {
+      return 0;
+    }
+    *out_u = *(float *)0x2533c8;
+    return 1;
+  }
+
+  *out_t = t;
+  *out_u = u_num / edge_len_sq;
+  return 1;
+}
+
+
+/* -------------------------------------------------------------------------
+ * FUN_001491d0 (0x1491d0) — test one surface's edges as pill segments.
+ *
+ * XBE: state@esi, surface_index stack. State: +0 bsp, +4 origin*, +8 dir*,
+ * +0xc radius (float), +0x10 result*. Walks surface edges; on hit fills
+ * result t/normal/surface. ported:false until verified.
+ * ------------------------------------------------------------------------- */
+typedef struct collision_bsp_edge_test_state {
+  int bsp;
+  float *origin;
+  float *direction;
+  float radius;
+  float *result;
+} collision_bsp_edge_test_state;
+
+char FUN_001491d0(void *state_v, int surface_index)
+{
+  collision_bsp_edge_test_state *state;
+  char *surface;
+  int first_edge;
+  int edge_index;
+  int *edge;
+  int side;
+  float *vert0;
+  float *vert1;
+  float edge_delta[3];
+  float t;
+  float u;
+  float *result;
+  float *origin;
+  float *direction;
+  float hit_pos[3];
+  float nx, ny, nz, len;
+  char hit;
+
+  state = (collision_bsp_edge_test_state *)state_v;
+  hit = 0;
+  surface =
+    (char *)tag_block_get_element((char *)state->bsp + 0x3c, surface_index, 0xc);
+  first_edge = *(int *)(surface + 4);
+  edge_index = first_edge;
+  origin = state->origin;
+  direction = state->direction;
+  result = state->result;
+
+  do {
+    edge = (int *)tag_block_get_element((char *)state->bsp + 0x48, edge_index,
+                                        0x18);
+    side = (edge[5] == surface_index) ? 1 : 0;
+    vert0 = (float *)tag_block_get_element((char *)state->bsp + 0x54, edge[side],
+                                           0x10);
+    vert1 = (float *)tag_block_get_element((char *)state->bsp + 0x54,
+                                           edge[!side], 0x10);
+    edge_delta[0] = vert1[0] - vert0[0];
+    edge_delta[1] = vert1[1] - vert0[1];
+    edge_delta[2] = vert1[2] - vert0[2];
+
+    if (FUN_00148910(&t, origin, vert0, direction, edge_delta, state->radius,
+                     &u)) {
+      /* keep hit only if t < result[0] (current best) */
+      if (result[0] > t) {
+        result[0] = t;
+        hit_pos[0] = direction[0] * t + origin[0];
+        hit_pos[1] = direction[1] * t + origin[1];
+        hit_pos[2] = direction[2] * t + origin[2];
+        /* normal ≈ hit_pos - point_on_edge */
+        nx = hit_pos[0] - (vert0[0] + edge_delta[0] * u);
+        ny = hit_pos[1] - (vert0[1] + edge_delta[1] * u);
+        nz = hit_pos[2] - (vert0[2] + edge_delta[2] * u);
+        len = sqrtf(nx * nx + ny * ny + nz * nz);
+        if (!(len < (float)*(double *)0x2533d0)) {
+          nx *= *(float *)0x2533c8 / len;
+          ny *= *(float *)0x2533c8 / len;
+          nz *= *(float *)0x2533c8 / len;
+        }
+        result[1] = nx;
+        result[2] = ny;
+        result[3] = nz;
+        *(int *)((char *)result + 0x10) = 0x7f7fffff; /* +inf marker */
+        *(int *)((char *)result + 0x14) = surface_index;
+        *(short *)((char *)result + 0x1a) = *(short *)(surface + 0xa);
+        hit = 1;
+      }
+    }
+
+    edge_index = edge[2 + side];
+  } while (edge_index != first_edge);
+
+  return hit;
+}
+
+
+/* -------------------------------------------------------------------------
  * FUN_00148240 (0x148240) — two-sided / breakable surface acceptance.
  *
  * XBE ABI: bsp @<eax>; stack = flags, breakable_surfaces, surface_index,
