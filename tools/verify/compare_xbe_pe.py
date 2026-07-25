@@ -69,6 +69,7 @@ def main() -> int:
         ("collision_surface_project_point2d", 0x147990, 0x1479d8),
         ("collision_surface_test_point2d", 0x1479e0, 0x147ad7),
         ("collision_surface_find_closest_point2d", 0x147ae0, 0x147d10),
+        ("FUN_00147ed0", 0x147ed0, 0x148240),
         ("FUN_00148240", 0x148240, 0x148365),
         ("FUN_00148370", 0x148370, 0x148440),
         ("FUN_001486e0", 0x1486e0, 0x148780),

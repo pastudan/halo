@@ -36300,6 +36300,7 @@
         {
           "addr": "0x147ed0",
           "decl": "void FUN_00147ed0(void *state /* @<eax> */, int surface_index);",
+          "ported": false,
           "reg_args": {
             "state": "eax"
           }

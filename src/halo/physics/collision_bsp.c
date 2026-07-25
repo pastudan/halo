@@ -1395,6 +1395,157 @@ typedef struct collision_bsp_sphere_state {
   float point2d[2];
 } collision_bsp_sphere_state;
 
+
+/* -------------------------------------------------------------------------
+ * FUN_00147ed0 (0x147ed0) — sphere vs one surface (verts / edges / interior).
+ *
+ * XBE: state @<eax>, surface_index stack. Records hits into results buckets:
+ *   +0 surface indices, +0x404 edge indices, +0x808 vertex indices.
+ * Calls fast_vector_intersects_sphere on edges. ported:false until verified.
+ * ------------------------------------------------------------------------- */
+void FUN_00147ed0(void *state_v, int surface_index)
+{
+  collision_bsp_sphere_state *state;
+  char *surface;
+  unsigned char breakable_index;
+  int bit;
+  int *breakable;
+  float radius_sq;
+  int first_edge;
+  int edge_index;
+  int *edge;
+  int side;
+  float *vert;
+  float *vert0;
+  float *vert1;
+  float *origin;
+  float edge_delta[3];
+  float dx, dy, dz;
+  float dist_sq;
+  int *results;
+  int count;
+  int i;
+  char hit;
+  float proj0[2];
+  float proj1[2];
+  float cross;
+  float ex, ey;
+
+  state = (collision_bsp_sphere_state *)state_v;
+  surface =
+    (char *)tag_block_get_element((char *)state->bsp + 0x3c, surface_index, 0xc);
+
+  if ((surface[8] & 8) != 0) {
+    breakable_index = (unsigned char)surface[9];
+    if ((int)breakable_index < (int)state->flags) {
+      breakable = (int *)state->breakable_surfaces;
+      bit = 1 << (breakable_index & 0x1f);
+      if ((breakable[breakable_index >> 5] & bit) == 0) {
+        return;
+      }
+    }
+  }
+
+  radius_sq = state->radius * state->radius;
+  hit = 0;
+  first_edge = *(int *)(surface + 4);
+  edge_index = first_edge;
+  origin = state->origin;
+  results = state->results;
+
+  do {
+    edge = (int *)tag_block_get_element((char *)state->bsp + 0x48, edge_index,
+                                        0x18);
+    side = (edge[5] == surface_index) ? 1 : 0;
+    vert = (float *)tag_block_get_element((char *)state->bsp + 0x54, edge[side],
+                                          0x10);
+    dx = vert[0] - origin[0];
+    dy = vert[1] - origin[1];
+    dz = vert[2] - origin[2];
+    dist_sq = dx * dx + dy * dy + dz * dz;
+    if (!(dist_sq > radius_sq)) {
+      count = results[0x808 / 4];
+      for (i = 0; i < count; i++) {
+        if (results[0x80c / 4 + i] == edge[side]) {
+          break;
+        }
+      }
+      if (i >= count && count < 0x100) {
+        results[0x80c / 4 + count] = edge[side];
+        results[0x808 / 4] = count + 1;
+      }
+      hit = 1;
+    }
+    edge_index = edge[2 + side];
+  } while (edge_index != first_edge);
+
+  edge_index = first_edge;
+  do {
+    edge = (int *)tag_block_get_element((char *)state->bsp + 0x48, edge_index,
+                                        0x18);
+    side = (edge[5] == surface_index) ? 1 : 0;
+    vert0 = (float *)tag_block_get_element((char *)state->bsp + 0x54, edge[side],
+                                           0x10);
+    vert1 = (float *)tag_block_get_element((char *)state->bsp + 0x54,
+                                           edge[!side], 0x10);
+    edge_delta[0] = vert1[0] - vert0[0];
+    edge_delta[1] = vert1[1] - vert0[1];
+    edge_delta[2] = vert1[2] - vert0[2];
+    if (fast_vector_intersects_sphere(vert0, edge_delta, origin, state->radius)) {
+      count = results[0x404 / 4];
+      for (i = 0; i < count; i++) {
+        if (results[0x408 / 4 + i] == edge_index) {
+          break;
+        }
+      }
+      if (i >= count && count < 0x100) {
+        results[0x408 / 4 + count] = edge_index;
+        results[0x404 / 4] = count + 1;
+      }
+      hit = 1;
+    }
+    edge_index = edge[2 + side];
+  } while (edge_index != first_edge);
+
+  if (hit) {
+    goto record_surface;
+  }
+
+  edge_index = first_edge;
+  do {
+    edge = (int *)tag_block_get_element((char *)state->bsp + 0x48, edge_index,
+                                        0x18);
+    side = (edge[5] == surface_index) ? 1 : 0;
+    vert0 = (float *)tag_block_get_element((char *)state->bsp + 0x54, edge[side],
+                                           0x10);
+    vert1 = (float *)tag_block_get_element((char *)state->bsp + 0x54,
+                                           edge[!side], 0x10);
+    FUN_00061df0(vert0, state->projection, state->sign, proj0);
+    FUN_00061df0(vert1, state->projection, state->sign, proj1);
+    dx = state->point2d[0] - proj0[0];
+    dy = state->point2d[1] - proj0[1];
+    ex = proj1[0] - proj0[0];
+    ey = proj1[1] - proj0[1];
+    cross = ey * dx - ex * dy;
+    if (cross > *(float *)0x2533c0) {
+      return;
+    }
+    edge_index = edge[2 + side];
+  } while (edge_index != first_edge);
+
+record_surface:
+  count = results[0];
+  for (i = 0; i < count; i++) {
+    if (results[1 + i] == surface_index) {
+      return;
+    }
+  }
+  if (count < 0x100) {
+    results[1 + count] = surface_index;
+    results[0] = count + 1;
+  }
+}
+
 void FUN_001486e0(void *state_v, int node_index)
 {
   collision_bsp_sphere_state *state;
