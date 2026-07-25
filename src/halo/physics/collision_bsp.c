@@ -555,6 +555,83 @@ int collision_surface_test_line2d(int bsp, int surface_index, int param3,
 
 
 /* -------------------------------------------------------------------------
+ * collision_surface_project_point2d (0x147990)
+ *
+ * Load surface plane, then project_point2d (0x992d0) to unproject a 2D point
+ * onto that plane (writes 3 floats). Returns out_point.
+ * ported:false until verified.
+ * ------------------------------------------------------------------------- */
+int collision_surface_project_point2d(int bsp, int surface_index,
+                                      int projection, int sign, float *point,
+                                      float *out_point)
+{
+  char *surface;
+  int plane_index;
+  float *plane;
+
+  surface =
+    (char *)tag_block_get_element((char *)bsp + 0x3c, surface_index, 0xc);
+  plane_index = *(int *)surface & 0x7fffffff;
+  plane =
+    (float *)tag_block_get_element((char *)bsp + 0xc, plane_index, 0x10);
+  project_point2d(point, plane, (short)projection, (unsigned char)sign,
+                  out_point);
+  return (int)out_point;
+}
+
+
+/* -------------------------------------------------------------------------
+ * collision_surface_test_point2d (0x1479e0)
+ *
+ * Point-in-projected-polygon for one surface (same edge-cross test as
+ * FUN_00148240, without the breakable bitset gate). point is 2D in the
+ * projection/sign frame (callers often pass XYZ and use projection=2).
+ * ported:false until verified.
+ * ------------------------------------------------------------------------- */
+char collision_surface_test_point2d(int bsp, int surface_index, int projection,
+                                    int sign, float *point)
+{
+  char *surface;
+  int first_edge;
+  int edge_index;
+  int *edge;
+  int side;
+  float *vert0;
+  float *vert1;
+  float proj0[2];
+  float proj1[2];
+  float dx, dy, ex, ey, cross;
+
+  surface =
+    (char *)tag_block_get_element((char *)bsp + 0x3c, surface_index, 0xc);
+  first_edge = *(int *)(surface + 4);
+  edge_index = first_edge;
+  do {
+    edge = (int *)tag_block_get_element((char *)bsp + 0x48, edge_index, 0x18);
+    side = (edge[5] == surface_index) ? 1 : 0;
+    vert0 = (float *)tag_block_get_element((char *)bsp + 0x54, edge[side], 0x10);
+    vert1 = (float *)tag_block_get_element((char *)bsp + 0x54, edge[!side],
+                                           0x10);
+    FUN_00061df0(vert0, (short)projection, (unsigned char)sign, proj0);
+    FUN_00061df0(vert1, (short)projection, (unsigned char)sign, proj1);
+
+    dx = point[0] - proj0[0];
+    dy = point[1] - proj0[1];
+    ex = proj1[0] - proj0[0];
+    ey = proj1[1] - proj0[1];
+    cross = ey * dx - ex * dy;
+    if (cross > *(float *)0x2533c0) {
+      return 0;
+    }
+
+    edge_index = edge[2 + side];
+  } while (edge_index != first_edge);
+
+  return 1;
+}
+
+
+/* -------------------------------------------------------------------------
  * FUN_00148240 (0x148240) — two-sided / breakable surface acceptance.
  *
  * XBE ABI: bsp @<eax>; stack = flags, breakable_surfaces, surface_index,
@@ -608,8 +685,8 @@ char FUN_00148240(int bsp, unsigned short flags, int breakable_surfaces,
     dy = point2d[1] - proj0[1];
     ex = proj1[0] - proj0[0];
     ey = proj1[1] - proj0[1];
-    cross = ex * dy - ey * dx;
-    /* fcomp 0; test ah,41h / je → fail when cross > 0 */
+    /* x87: fmul/fxch/fsubp → ey*dx - ex*dy; fail iff > 0 */
+    cross = ey * dx - ex * dy;
     if (cross > *(float *)0x2533c0) {
       return 0;
     }

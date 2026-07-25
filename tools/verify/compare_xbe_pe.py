@@ -66,6 +66,8 @@ def main() -> int:
     args = ap.parse_args()
 
     targets = [
+        ("collision_surface_project_point2d", 0x147990, 0x1479d8),
+        ("collision_surface_test_point2d", 0x1479e0, 0x147ad7),
         ("FUN_00148240", 0x148240, 0x148365),
         ("FUN_00148780", 0x148780, 0x148910),
         ("FUN_00148eb0", 0x148eb0, 0x1491d0),

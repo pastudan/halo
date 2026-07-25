@@ -36277,11 +36277,13 @@
         },
         {
           "addr": "0x147990",
-          "decl": "int collision_surface_project_point2d(int bsp, int surface_index, int param3, int param4, float *point, float *out_point);"
+          "decl": "int collision_surface_project_point2d(int bsp, int surface_index, int projection, int sign, float *point, float *out_point);",
+          "ported": false
         },
         {
           "addr": "0x1479e0",
-          "decl": "char collision_surface_test_point2d(int bsp, int surface_index, int param3, int param4, float *point);"
+          "decl": "char collision_surface_test_point2d(int bsp, int surface_index, int projection, int sign, float *point);",
+          "ported": false
         },
         {
           "addr": "0x147ae0",

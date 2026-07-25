@@ -1190,6 +1190,20 @@
     "since": "2026-06-10"
   },
   {
+    "addr": "0x147990",
+    "name": "collision_surface_project_point2d",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1479e0",
+    "name": "collision_surface_test_point2d",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
     "addr": "0x148240",
     "name": "FUN_00148240",
     "object": "collision_bsp.obj",
