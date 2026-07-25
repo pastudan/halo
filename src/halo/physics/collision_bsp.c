@@ -555,6 +555,73 @@ int collision_surface_test_line2d(int bsp, int surface_index, int param3,
 
 
 /* -------------------------------------------------------------------------
+ * FUN_00148240 (0x148240) — two-sided / breakable surface acceptance.
+ *
+ * XBE ABI: bsp @<eax>; stack = flags, breakable_surfaces, surface_index,
+ * projection, sign, point2d. Returns 1 if point2d is inside the projected
+ * surface polygon (all edge crosses <= 0) and breakable bit allows it.
+ * ported:false until verified.
+ * ------------------------------------------------------------------------- */
+char FUN_00148240(int bsp, unsigned short flags, int breakable_surfaces,
+                  int surface_index, int projection, int sign, float *point2d)
+{
+  char *surface;
+  unsigned char breakable_index;
+  int bit;
+  int word;
+  int first_edge;
+  int edge_index;
+  int *edge;
+  int side;
+  float *vert0;
+  float *vert1;
+  float proj0[2];
+  float proj1[2];
+  float dx, dy, ex, ey, cross;
+
+  surface = (char *)tag_block_get_element((char *)bsp + 0x3c, surface_index, 0xc);
+
+  /* surface flags bit 3 (0x8): breakable — require bit set in bitset */
+  if ((surface[8] & 8) != 0) {
+    breakable_index = (unsigned char)surface[9];
+    if ((int)breakable_index < (short)flags) {
+      bit = 1 << (breakable_index & 0x1f);
+      word = (int)(breakable_index >> 5);
+      if ((((int *)breakable_surfaces)[word] & bit) == 0) {
+        return 0;
+      }
+    }
+  }
+
+  first_edge = *(int *)(surface + 4);
+  edge_index = first_edge;
+  do {
+    edge = (int *)tag_block_get_element((char *)bsp + 0x48, edge_index, 0x18);
+    side = (edge[5] == surface_index) ? 1 : 0;
+    vert0 = (float *)tag_block_get_element((char *)bsp + 0x54, edge[side], 0x10);
+    vert1 = (float *)tag_block_get_element((char *)bsp + 0x54, edge[!side],
+                                           0x10);
+    FUN_00061df0(vert0, (short)projection, (unsigned char)sign, proj0);
+    FUN_00061df0(vert1, (short)projection, (unsigned char)sign, proj1);
+
+    dx = point2d[0] - proj0[0];
+    dy = point2d[1] - proj0[1];
+    ex = proj1[0] - proj0[0];
+    ey = proj1[1] - proj0[1];
+    cross = ex * dy - ey * dx;
+    /* fcomp 0; test ah,41h / je → fail when cross > 0 */
+    if (cross > *(float *)0x2533c0) {
+      return 0;
+    }
+
+    edge_index = edge[2 + side];
+  } while (edge_index != first_edge);
+
+  return 1;
+}
+
+
+/* -------------------------------------------------------------------------
  * collision_bsp_test_vector (0x149480) + FUN_00148eb0 (0x148eb0)
  *
  * Ray/segment test against a collision BSP. Wrapper builds a 0x28-byte state
@@ -572,7 +639,7 @@ int collision_surface_test_line2d(int bsp, int surface_index, int param3,
  *   +0x20 uint8   leaf_side
  *   +0x24 int     plane_index
  *
- * Both marked ported:false in kb.json until VC71 / equivalence sign-off.
+ * Marked ported:false in kb.json until VC71 / equivalence sign-off.
  * ------------------------------------------------------------------------- */
 
 typedef struct collision_bsp_vector_state {
@@ -676,8 +743,9 @@ int FUN_00148780(int leaf_index, int bsp, unsigned short flags,
     if (!two_sided) {
       return (int)surface_index;
     }
-    if (FUN_00148240(flags, breakable_surfaces, (int)surface_index, axis, sign,
-                     point2d)) {
+    /* bsp @<eax> — forward thunk / cdecl first arg */
+    if (FUN_00148240(bsp, flags, breakable_surfaces, (int)surface_index, axis,
+                     sign, point2d)) {
       return (int)surface_index;
     }
   }

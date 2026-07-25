@@ -1190,6 +1190,13 @@
     "since": "2026-06-10"
   },
   {
+    "addr": "0x148240",
+    "name": "FUN_00148240",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored; fixes missing bsp@eax ABI",
+    "since": "2026-07-25"
+  },
+  {
     "addr": "0x148780",
     "name": "FUN_00148780",
     "object": "collision_bsp.obj",

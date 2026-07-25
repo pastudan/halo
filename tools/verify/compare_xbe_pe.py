@@ -66,6 +66,7 @@ def main() -> int:
     args = ap.parse_args()
 
     targets = [
+        ("FUN_00148240", 0x148240, 0x148365),
         ("FUN_00148780", 0x148780, 0x148910),
         ("FUN_00148eb0", 0x148eb0, 0x1491d0),
         ("collision_bsp_test_vector", 0x149480, 0x149570),
