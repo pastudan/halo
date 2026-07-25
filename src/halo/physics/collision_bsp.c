@@ -632,6 +632,124 @@ char collision_surface_test_point2d(int bsp, int surface_index, int projection,
 
 
 /* -------------------------------------------------------------------------
+ * collision_surface_find_closest_point2d (0x147ae0)
+ *
+ * Closest 2D point on a surface polygon to `point` (same projection/sign
+ * frame as test_point2d). Returns 1 with out=point when accepted inside;
+ * else 0 with out on the boundary (edge foot or vertex).
+ * ported:false until verified.
+ * ------------------------------------------------------------------------- */
+int collision_surface_find_closest_point2d(int bsp, int surface_index,
+                                           int projection, int sign,
+                                           float *point, float *out_point)
+{
+  char *surface;
+  int first_edge;
+  int edge_index;
+  int *edge;
+  int side;
+  float *vert0;
+  float *vert1;
+  float proj0[2];
+  float proj1[2];
+  float dx, dy, ex, ey, cross, t_numer, edge_len_sq, t;
+  unsigned char before_start;
+  unsigned char on_segment;
+  unsigned char prev_before_start;
+  unsigned char prev_on_segment;
+  unsigned char first_before_start;
+  unsigned char first_on_segment;
+
+  surface =
+    (char *)tag_block_get_element((char *)bsp + 0x3c, surface_index, 0xc);
+  first_edge = *(int *)(surface + 4);
+  edge_index = first_edge;
+  prev_before_start = 0;
+  prev_on_segment = 0;
+  first_before_start = 0;
+  first_on_segment = 0;
+
+  do {
+    edge = (int *)tag_block_get_element((char *)bsp + 0x48, edge_index, 0x18);
+    side = (edge[5] == surface_index) ? 1 : 0;
+    vert0 = (float *)tag_block_get_element((char *)bsp + 0x54, edge[side], 0x10);
+    vert1 = (float *)tag_block_get_element((char *)bsp + 0x54, edge[!side],
+                                           0x10);
+    FUN_00061df0(vert0, (short)projection, (unsigned char)sign, proj0);
+    FUN_00061df0(vert1, (short)projection, (unsigned char)sign, proj1);
+
+    dx = point[0] - proj0[0];
+    dy = point[1] - proj0[1];
+    ex = proj1[0] - proj0[0];
+    ey = proj1[1] - proj0[1];
+    /* outside half-plane when cross > 0 (same sign as test_point2d fail) */
+    cross = ey * dx - ex * dy;
+
+    if (cross > *(float *)0x2533c0) {
+      t_numer = ex * dx + ey * dy;
+      if (t_numer < *(float *)0x2533c0) {
+        before_start = 1;
+        on_segment = 0;
+      } else {
+        edge_len_sq = ex * ex + ey * ey;
+        /* 0 <= t_numer <= len² → foot on segment; return immediately */
+        if (!(t_numer > edge_len_sq)) {
+          t = t_numer / edge_len_sq;
+          out_point[0] = ex * t + proj0[0];
+          out_point[1] = ey * t + proj0[1];
+          return 0;
+        }
+        before_start = 0;
+        on_segment = 1;
+      }
+    } else {
+      before_start = 0;
+      on_segment = 0;
+    }
+
+    if (edge_index != first_edge) {
+      if (prev_on_segment) {
+        if (before_start || !on_segment) {
+          out_point[0] = proj0[0];
+          out_point[1] = proj0[1];
+          return 0;
+        }
+      } else if (before_start && !prev_before_start) {
+        out_point[0] = proj0[0];
+        out_point[1] = proj0[1];
+        return 0;
+      }
+    } else {
+      first_before_start = before_start;
+      first_on_segment = on_segment;
+    }
+
+    prev_before_start = before_start;
+    prev_on_segment = on_segment;
+    edge_index = edge[2 + side];
+  } while (edge_index != first_edge);
+
+  if (on_segment) {
+    if (first_before_start || !first_on_segment)
+      goto project_first_vertex;
+  } else if (first_before_start && !before_start) {
+    goto project_first_vertex;
+  }
+
+  out_point[0] = point[0];
+  out_point[1] = point[1];
+  return 1;
+
+project_first_vertex:
+  edge = (int *)tag_block_get_element((char *)bsp + 0x48, edge_index, 0x18);
+  side = (edge[5] == surface_index) ? 1 : 0;
+  vert0 = (float *)tag_block_get_element((char *)bsp + 0x54, edge[side], 0x10);
+  FUN_00061df0(vert0, (short)projection, (unsigned char)sign, out_point);
+  return 0;
+}
+
+
+/* -------------------------------------------------------------------------
  * FUN_00148240 (0x148240) — two-sided / breakable surface acceptance.
  *
  * XBE ABI: bsp @<eax>; stack = flags, breakable_surfaces, surface_index,

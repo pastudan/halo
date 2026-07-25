@@ -36287,7 +36287,8 @@
         },
         {
           "addr": "0x147ae0",
-          "decl": "int collision_surface_find_closest_point2d(int bsp, int surface_index, int param3, int param4, float *point, float *out_point);"
+          "decl": "int collision_surface_find_closest_point2d(int bsp, int surface_index, int projection, int sign, float *point, float *out_point);",
+          "ported": false
         },
         {
           "addr": "0x147d10",

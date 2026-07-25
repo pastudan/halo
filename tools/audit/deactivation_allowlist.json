@@ -1204,6 +1204,13 @@
     "since": "2026-07-25"
   },
   {
+    "addr": "0x147ae0",
+    "name": "collision_surface_find_closest_point2d",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
     "addr": "0x148240",
     "name": "FUN_00148240",
     "object": "collision_bsp.obj",
