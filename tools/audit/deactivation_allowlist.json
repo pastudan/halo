@@ -1,5 +1,47 @@
 [
   {
+    "addr": "0x12f10",
+    "name": "magnitude3d",
+    "object": "vector_math.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x13dd0",
+    "name": "FUN_00013dd0",
+    "object": "actor_looking.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x13ef0",
+    "name": "FUN_00013ef0",
+    "object": "actor_looking.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x14e90",
+    "name": "FUN_00014e90",
+    "object": "actor_looking.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x153e0",
+    "name": "FUN_000153e0",
+    "object": "actor_looking.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x169a0",
+    "name": "FUN_000169a0",
+    "object": "actor_looking.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
     "addr": "0x1c0e0",
     "name": "FUN_0001c0e0",
     "object": "actions.obj",
@@ -49,41 +91,6 @@
     "since": "2026-06-10"
   },
   {
-    "addr": "0x13dd0",
-    "name": "FUN_00013dd0",
-    "object": "actor_looking.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x13ef0",
-    "name": "FUN_00013ef0",
-    "object": "actor_looking.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x14e90",
-    "name": "FUN_00014e90",
-    "object": "actor_looking.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x153e0",
-    "name": "FUN_000153e0",
-    "object": "actor_looking.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x169a0",
-    "name": "FUN_000169a0",
-    "object": "actor_looking.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
     "addr": "0x27a60",
     "name": "FUN_00027a60",
     "object": "actor_looking.obj",
@@ -98,44 +105,65 @@
     "since": "2026-06-10"
   },
   {
-    "addr": "0x1bd910",
-    "name": "cache_files_precache_map_begin",
-    "object": "cache_files_windows.obj",
+    "addr": "0x2b5d0",
+    "name": "actor_move_get_avoidance_direction",
+    "object": "actor_moving.obj",
     "reason": "pre-gate baseline 2026-06-10",
     "since": "2026-06-10"
   },
   {
-    "addr": "0x1bda30",
-    "name": "cache_files_precache_map_end",
-    "object": "cache_files_windows.obj",
+    "addr": "0x2cdb0",
+    "name": "actor_path_refresh",
+    "object": "actor_moving.obj",
     "reason": "pre-gate baseline 2026-06-10",
     "since": "2026-06-10"
   },
   {
-    "addr": "0xdc7a0",
-    "name": "FUN_000dc7a0",
-    "object": "first_person_weapons.obj",
+    "addr": "0x2d350",
+    "name": "actor_destination_update",
+    "object": "actor_moving.obj",
     "reason": "pre-gate baseline 2026-06-10",
     "since": "2026-06-10"
   },
   {
-    "addr": "0xb45c0",
-    "name": "FUN_000b45c0",
-    "object": "game.obj",
+    "addr": "0x58700",
+    "name": "FUN_00058700",
+    "object": "encounters.obj",
     "reason": "pre-gate baseline 2026-06-10",
     "since": "2026-06-10"
   },
   {
-    "addr": "0xb4960",
-    "name": "FUN_000b4960",
-    "object": "game.obj",
+    "addr": "0x58710",
+    "name": "FUN_00058710",
+    "object": "encounters.obj",
     "reason": "pre-gate baseline 2026-06-10",
     "since": "2026-06-10"
   },
   {
-    "addr": "0xd5350",
-    "name": "FUN_000d5350",
-    "object": "hud_messaging.obj",
+    "addr": "0x58ae0",
+    "name": "FUN_00058ae0",
+    "object": "encounters.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x5a5a0",
+    "name": "encounter_link_activation",
+    "object": "encounters.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x5ba70",
+    "name": "encounter_force_activate",
+    "object": "encounters.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x5baa0",
+    "name": "encounter_force_deactivate",
+    "object": "encounters.obj",
     "reason": "pre-gate baseline 2026-06-10",
     "since": "2026-06-10"
   },
@@ -182,6 +210,13 @@
     "since": "2026-06-10"
   },
   {
+    "addr": "0x994d0",
+    "name": "plane_negate",
+    "object": "geometry.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
     "addr": "0x9eb40",
     "name": "FUN_0009eb40",
     "object": "objects.obj",
@@ -196,11 +231,291 @@
     "since": "2026-06-10"
   },
   {
+    "addr": "0xa1fd0",
+    "name": "particle_new",
+    "object": "particles.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0xb45c0",
+    "name": "FUN_000b45c0",
+    "object": "game.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0xb4960",
+    "name": "FUN_000b4960",
+    "object": "game.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0xbae20",
+    "name": "FUN_000bae20",
+    "object": "players.obj",
+    "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
+    "since": "2026-06-30"
+  },
+  {
+    "addr": "0xd5350",
+    "name": "FUN_000d5350",
+    "object": "hud_messaging.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0xdc7a0",
+    "name": "FUN_000dc7a0",
+    "object": "first_person_weapons.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x106510",
+    "name": "convex_polygon2d_clip_to_plane",
+    "object": "geometry.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x109f40",
+    "name": "FUN_00109f40",
+    "object": "real_math.obj",
+    "reason": "unverified: equiv blind via .rdata reloc gap (DAT_0028c728/255e94/2533c8 unresolved) + xbox_asin float vs _CIasin 80-bit; VC71 52.4% (atan2 __asm CALL); disasm-reviewed correct; pending static-constant snapshot",
+    "since": "2026-06-21"
+  },
+  {
+    "addr": "0x10a5e0",
+    "name": "FUN_0010a5e0",
+    "object": "real_math.obj",
+    "reason": "unverified: equiv vacuous (table-init early-exit); VC71 70.7% x87 stack-chaining; disasm-reviewed correct; pending curve-table state snapshot",
+    "since": "2026-06-21"
+  },
+  {
+    "addr": "0x10a710",
+    "name": "transition_function_evaluate",
+    "object": "real_math.obj",
+    "reason": "unverified: equiv vacuous (early-exit on table-init flag *0x46e39c==0); VC71 75.3% x87 stack-chaining cap; disasm-reviewed correct; pending curve-table state snapshot",
+    "since": "2026-06-21"
+  },
+  {
+    "addr": "0x10bbc0",
+    "name": "vectors3d_from_euler_angles3d",
+    "object": "real_math.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x10c390",
+    "name": "FUN_0010c390",
+    "object": "random_math.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x10ce10",
+    "name": "vector_to_line_distance_squared3d",
+    "object": "real_math.obj",
+    "reason": "Faithful cdecl lift, dormant pending a fix for a REAL residual divergence. CORRECTION 2026-06-22: the earlier 'equiv unverifiable via harness' was WRONG. The harness IS usable -- with a constants snapshot (static .rdata float consts 0.0/0.5/1.0/parallel-eps/len-eps/REAL_MAX seeded byte-exact from cachebeta.xbe; recipe regenerates artifacts/snapshots/real_math_consts.json) AND invoking unicorn_diff BY NAME not address (the candidate .obj symbol is the decl name, not FUN_<addr>), the universal-NaN ('0 data refs') is GONE and equiv runs 15/60 pass with real finite divergences (67.9% cov, high conf; INSN 245 oracle vs 273 lifted). So ce10 has a REAL lift bug, NOT a harness artifact. VERIFIED CORRECT: n = p2 x p4 (cross), non-parallel s,t = (delta x d2).n/|n|^2 and (delta x d1).n/|n|^2 (standard line-line closest-point), FUN_0010cd40 is plain cdecl(point,seg_start,seg_dir) and call arg-order is right. Bug is ISOLATED to the non-parallel s_oob/t_oob clamp classification (or the parallel projection): seed-56 oracle 0.00097 vs lifted 6.5e18 = an in-range-vs-out-of-range misclassification picking a far clamp endpoint. Activation pending that clamp-path fix; harness now ready to debug it. UPDATE 2026-06-30 (instruction-level disasm verification, advances the above): the 'misclassification' is NOT a clamp-logic or call-arg bug -- ruled out at instruction level. Disassembled 0x10ce10 fully (0x10ce10-0x10d378): entry holds EDX=p1, EBX=p3, ESI=p2, EDI=p4 in registers throughout. s_oob call (0x10cfda) = FUN_0010cd40(closest_a, EBX=p3, EDI=p4); t_oob call (0x10d02d) pushes ECX=&closest_b, EDX, ESI=p2 so arg2=EDX. Disassembled FUN_0010cd40 (0x10cd40-0x10ce01): it clobbers only EAX/ECX+FPU, NEVER touches EDX/EBX/ESI/EDI -- so EDX==p1 still holds at the t_oob call even when s_oob ran first. The C body's flagged assumption (line ~2027 'FUN_0010cd40 preserves EDX which still holds p1') is CONFIRMED CORRECT; both call arg-orders match disasm exactly; s/t formulas + s_oob/t_oob classification match disasm exactly. Therefore the large divergences (seed-56 0.00097 vs 6.5e18) are FP-ORDER BRANCH-FLIPS: clang -mno-sse computes s/t with a different x87 operation order than MSVC's exact FPU sequence (oracle: FDIVR inv first, then nx*inv per term @0x10ce95+; C: (cross)*nx*inv per term), producing sub-ULP s/t differences that straddle the [0,1] clamp boundary and flip in-range<->out-of-range, picking a different endpoint -> amplified output divergence. This is the same x87-rounding structural cap noted for siblings 0x10a5e0/0x10a710. NEXT (lift-score-improve op-order lever, uncertain payoff): reorder the C s/t computation to mirror the oracle FPU sequence and re-run equiv; if pass rate does not materially rise, accept as structural FP cap and keep dormant. Do NOT change clamp logic or call args -- they are byte-faithful.",
+    "since": "2026-06-22"
+  },
+  {
+    "addr": "0x10fd90",
+    "name": "quantize_real_to_byte_rectangle3d",
+    "object": "real_math.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x110d40",
+    "name": "FUN_00110d40",
+    "object": "real_math.obj",
+    "reason": "read_buf+hash-insert: 71.2% VC71, idiom-heavy; deferred pending dual-oracle/equivalence",
+    "since": "2026-06-21"
+  },
+  {
+    "addr": "0x111170",
+    "name": "FUN_00111170",
+    "object": "real_math.obj",
+    "reason": "deflateEnd: 85.0% VC71, permuter candidate ([85,98] band) pending permuter pass",
+    "since": "2026-06-21"
+  },
+  {
+    "addr": "0x12c100",
+    "name": "FUN_0012c100",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12c160",
+    "name": "FUN_0012c160",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12d880",
+    "name": "FUN_0012d880",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12da90",
+    "name": "FUN_0012da90",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12db30",
+    "name": "FUN_0012db30",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12dc20",
+    "name": "FUN_0012dc20",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12e580",
+    "name": "FUN_0012e580",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12e750",
+    "name": "FUN_0012e750",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12eb20",
+    "name": "FUN_0012eb20",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12eca0",
+    "name": "FUN_0012eca0",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12f040",
+    "name": "FUN_0012f040",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12f0d0",
+    "name": "FUN_0012f0d0",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12f170",
+    "name": "FUN_0012f170",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12f200",
+    "name": "FUN_0012f200",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12f290",
+    "name": "FUN_0012f290",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12f330",
+    "name": "FUN_0012f330",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12f430",
+    "name": "FUN_0012f430",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12f5d0",
+    "name": "FUN_0012f5d0",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12f690",
+    "name": "FUN_0012f690",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12f8d0",
+    "name": "FUN_0012f8d0",
+    "object": "network_server_manager.obj",
+    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
+    "since": "2026-07-05"
+  },
+  {
+    "addr": "0x12f990",
+    "name": "FUN_0012f990",
+    "object": "network_server_manager.obj",
+    "reason": "Pre-existing committed deactivation (HEAD). Ported+fixed at f28a5b6e then deactivated for an unrecorded reason; outside the 0xA0001/biped-aim goal scope. Allowlisted to unblock the commit gate pending dedicated investigation/reactivation.",
+    "since": "2026-06-21"
+  },
+  {
     "addr": "0x134e50",
     "name": "FUN_00134e50",
     "object": "objects.obj",
     "reason": "unverified: fmod-guard, VC71 57.1% (x87 fmod tail-call ceiling); equivalence vacuous (DAT/fmod relocs cannot emulate). Lift faithful, dormant pending live oracle.",
     "since": "2026-06-21"
+  },
+  {
+    "addr": "0x134e80",
+    "name": "FUN_00134e80",
+    "object": "objects.obj",
+    "reason": "Faithful lift kept dormant: VC71 71.0% (FPU-heavy light-volume render + fmod density + marker-buffer/float-local overlap that clang cannot reproduce); dormant register-arg callee FUN_00134c40 @<ebx>; equivalence vacuous (zero-fill early-exits tag+0x6e gate, unported sprite callees 0x17cfc0/cfd0/d010/d020 stub out). Below activation score gate.",
+    "since": "2026-06-22"
+  },
+  {
+    "addr": "0x135210",
+    "name": "FUN_00135210",
+    "object": "objects.obj",
+    "reason": "Faithful lift kept dormant: VC71 80.7% (FPU view-depth dot product computed/kept on the x87 stack across a branch then conditionally discarded \u2014 clang single-expression cannot reproduce the FSTP ST0 cleanup; marker-buffer/float-local overlap). x87 temps-across-branch ceiling. References FUN_00134e80 (also dormant) as render callback. Equivalence vacuous (zero-fill early-exits tag gate; unported FUN_0017cfb0).",
+    "since": "2026-06-22"
+  },
+  {
+    "addr": "0x135510",
+    "name": "FUN_00135510",
+    "object": "objects.obj",
+    "reason": "non-faithful mass-lift stub (41b57f52): drops tag_get('bitm', elec+0x40) indirection, reads block from elec+0x60 not bitmap+0x60 -> tag_groups.c:3089 assert on empty block; inner lightning geometry loops empty. Deactivated to restore original faithful 'elec' renderer; needs proper re-lift.",
+    "since": "2026-07-01"
   },
   {
     "addr": "0x135f20",
@@ -217,20 +532,6 @@
     "since": "2026-06-21"
   },
   {
-    "addr": "0x13c490",
-    "name": "FUN_0013c490",
-    "object": "objects.obj",
-    "reason": "unverified: object can-delete predicate vtable-walk, VC71 84.0% (MSVC CL=1 sentinel register codegen + indexed-addr reuse unmatched). Calls type-def function pointers, not a zero-fill equiv leaf. Lift faithful, dormant.",
-    "since": "2026-06-21"
-  },
-  {
-    "addr": "0x13dcc0",
-    "name": "FUN_0013dcc0",
-    "object": "objects.obj",
-    "reason": "unverified: object_pvs_get_cluster_index, VC71 81.2% (multi-call MSVC scheduling). Stateful (object_globals state machine + scenario clusters), not a zero-fill equiv leaf. Lift faithful, dormant pending live oracle.",
-    "since": "2026-06-21"
-  },
-  {
     "addr": "0x1396e0",
     "name": "object_wake",
     "object": "objects.obj",
@@ -238,11 +539,39 @@
     "since": "2026-06-10"
   },
   {
+    "addr": "0x139b40",
+    "name": "FUN_00139b40",
+    "object": "objects.obj",
+    "reason": "Faithful lift kept dormant by score gate. VC71 86.3% (73 candidate vs 66 reference insns) measured against fresh per-function ref delinked/functions/00139b40.obj. Gate B passes (condition holds): callees {0x99530 real_a_rgb_color_to_pixel32, 0x180770, 0x1ba140 tag_get, 0x180b10} and sole caller 0x18ca40 are all outside the GC/lifecycle cluster; function only appends a record to the per-frame light-marker array at 0x5a8f6c (count 0x5a90ac, max 8, 0x28 stride) -- no object garbage/lifecycle mutation. Score gap (~7 insns) is the float-inequality guard: original emits per-component memory-operand FCOMP (FLD [color+N]; FCOMP [0x2533c0]) while VC71 on the C || chain hoists *(float*)0x2533c0 to a register and emits register fucompp; plus tail integer-codegen scheduling (orl $-1 vs movl, count/+0x20 store order). A correctly-pinned permuter run (delinked/functions/00139b40.obj, 300s/4 threads, 2026-06-22) found lower-score candidates; none confirmed to cross the 88% activation bar this pass (an earlier 367-iter run was vacuous -- it mis-selected stale ref 00085110.obj). Re-evaluate in a dedicated permuter-apply session before activation. Equivalence is the wrong lane: two callees are XCALL literal-address casts -> --allow-stubs makes the side-effect store diff stub-vs-stub (vacuous, per feedback_equivalence_hardcoded_import). param_6 confirmed float (caller MOV+PUSH no FILD; callee 0x180770 FLD [EBP+8]); kb decl updated int->float param_6.",
+    "since": "2026-06-22"
+  },
+  {
     "addr": "0x13aed0",
     "name": "object_move_to_limbo",
     "object": "objects.obj",
     "reason": "pre-gate baseline 2026-06-10",
     "since": "2026-06-10"
+  },
+  {
+    "addr": "0x13c030",
+    "name": "FUN_0013c030",
+    "object": "objects.obj",
+    "reason": "Faithful lift kept dormant: VC71 56.1% (candidate 76 vs ref 31 insns, consistent with same-TU MSVC 7.1 inlining of object_get_and_verify_type 0x13d680, which the original compiled as out-of-line CALLs in a separate TU). Forcing the shared 92.8%-matching callee out-of-line would be invasive churn affecting all its TU callers. Unverifiable by any oracle: void return, param_2/param_3 forwarded-unused, no memory side effects (recursive child-hierarchy walk). No positive correctness evidence available.",
+    "since": "2026-06-22"
+  },
+  {
+    "addr": "0x13c490",
+    "name": "FUN_0013c490",
+    "object": "objects.obj",
+    "reason": "unverified: object can-delete predicate vtable-walk, VC71 84.0% (MSVC CL=1 sentinel register codegen + indexed-addr reuse unmatched). Calls type-def function pointers, not a zero-fill equiv leaf. Lift faithful, dormant.",
+    "since": "2026-06-21"
+  },
+  {
+    "addr": "0x13cb80",
+    "name": "FUN_0013cb80",
+    "object": "objects.obj",
+    "reason": "Faithful lift kept dormant by Gate B cluster coupling (NOT a score failure: VC71 86.7%). Calls object_new_from_scenario (0x144770) and objects_garbage_collect_tick (0x144b50) \u2014 both GC/lifecycle cluster members \u2014 and mutates streaming state (DAT_0046f078 BSP-loaded mask + per-placement flags element+0x20). Scenario object spawner for a BSP slot; piecemeal cluster activation is unsafe. Activate only as part of a coordinated object-lifecycle cluster activation.",
+    "since": "2026-06-22"
   },
   {
     "addr": "0x13d570",
@@ -322,6 +651,13 @@
     "since": "2026-06-10"
   },
   {
+    "addr": "0x13dcc0",
+    "name": "FUN_0013dcc0",
+    "object": "objects.obj",
+    "reason": "unverified: object_pvs_get_cluster_index, VC71 81.2% (multi-call MSVC scheduling). Stateful (object_globals state machine + scenario clusters), not a zero-fill equiv leaf. Lift faithful, dormant pending live oracle.",
+    "since": "2026-06-21"
+  },
+  {
     "addr": "0x13dda0",
     "name": "object_definition_predict",
     "object": "objects.obj",
@@ -350,6 +686,13 @@
     "since": "2026-06-10"
   },
   {
+    "addr": "0x13e1f0",
+    "name": "object_choose_random_change_colors",
+    "object": "objects.obj",
+    "reason": "Faithful @<eax>-defined lift kept dormant. VC71 67.0% (190 candidate vs 168 reference insns) via objcopy-bridged compare_obj against fresh per-function ref delinked/functions/0013e1f0.obj (vc71_verify auto-path cannot bridge the real-name<->FUN_ symbol map on this 12k-line TU; symbol _object_choose_random_change_colors is present in the compiled candidate, confirmed by objdump). Two caps stack: (1) @<eax>-defined prologue cannot be emitted by cl.exe to match (feedback_eax_defining_fn_vc71_ceiling), (2) x87 RNG (x87_fmod on a basis-vector dot) plus per-slot CDF blend produce extra FPU spills, inflating the candidate by ~22 insns. Gate B passes: callees {FUN_0007c270 color-blend cdecl, x87_fmod} are pure math with no GC/lifecycle edge; writes only the object change-color slots and their +0x30 mirror. Equivalence is the only activation lane but is vacuous on zero-fill (permutation count comes from tag data = 0, so the CDF loop body never runs); needs a live object-appearance state snapshot not currently captured. Disasm-derived (FABS-on-input not output, push-then-fstp arg5 recovered). Safe dormant.",
+    "since": "2026-06-22"
+  },
+  {
     "addr": "0x13e3f0",
     "name": "object_find_region_permutations_available_with_variant",
     "object": "objects.obj",
@@ -369,6 +712,20 @@
     "object": "objects.obj",
     "reason": "pre-gate baseline 2026-06-10",
     "since": "2026-06-10"
+  },
+  {
+    "addr": "0x13e5d0",
+    "name": "object_compute_change_colors",
+    "object": "objects.obj",
+    "reason": "Faithful @<eax>-defined lift kept dormant. VC71 61.3% (129 candidate vs 145 reference insns -- candidate SMALLER) via objcopy-bridged compare_obj against fresh per-function ref delinked/functions/0013e5d0.obj. Caps: (1) @<eax> prologue ceiling, (2) the lift collapses a CMP 0x5; JL vestigial dual-branch bounds-check to a single obj+0xd0+idx*4 read (both arms emit identical loads per disasm), which drops the duplicate-load insns and accounts for most of the 16-insn shortfall vs reference. Reads the precomputed function-value array at obj+0xd0, blends via FUN_0007c270, clamps [0,1], gated on obj_tag+0x24 bit0. Gate B passes (no GC/lifecycle edge; writes only obj+0x168 change-color slots). Equivalence vacuous on zero-fill (anim-entry count from tag = 0). Branch-collapse flagged for a future re-lift if activation is ever pursued. Safe dormant.",
+    "since": "2026-06-22"
+  },
+  {
+    "addr": "0x13e7b0",
+    "name": "object_compute_function_values",
+    "object": "objects.obj",
+    "reason": "Faithful @<eax>-defined lift kept dormant. VC71 81.0% (266 candidate vs 277 reference insns) via objcopy-bridged compare_obj against fresh per-function ref delinked/functions/0013e7b0.obj. Caps: @<eax> prologue ceiling + non-leaf x87 pipeline (game_time_get, FUN_0010a5e0 waveform, transition_function_evaluate, floor, x87_fmod x3) whose 80-bit-vs-float rounding and spill scheduling cl.exe cannot reproduce. Ghidra decompiler was structurally untrustworthy here; whole body written from disassembly (output array obj+0xe4 not 0xd0, active bitmask obj+0xd3, FDIVP-vs-discard gated on fv>0, TEST AH,0x44 = !=0.0). Gate B passes (read-mostly per-frame function evaluator; writes only obj+0xe4 / obj+0xd3, no GC/lifecycle mutation). Equivalence vacuous on zero-fill (per-frame tag-function loop count = 0). Safe dormant.",
+    "since": "2026-06-22"
   },
   {
     "addr": "0x13eb30",
@@ -397,6 +754,13 @@
     "object": "objects.obj",
     "reason": "pre-gate baseline 2026-06-10",
     "since": "2026-06-10"
+  },
+  {
+    "addr": "0x13ecb0",
+    "name": "attachments_new",
+    "object": "objects.obj",
+    "reason": "Faithful lift kept dormant by Gate B cluster coupling (NOT a score failure: VC71 92.1% vs fresh per-function ref delinked/functions/0013ecb0.obj \u2014 note vc71_verify auto-selects a stale chunk 0013dda0.obj giving a false 42.6%). Caller edge from object_new (0x143c80, lifecycle cluster member) at 0x144147, AND object-lifecycle mutation: fills the object attachment table (object+0xf4 type bytes, object+0xfc handles) and sets creation flags (object+0x4 |= 0x100/0x400). Part of the object creation path; activate only with the lifecycle cluster.",
+    "since": "2026-06-22"
   },
   {
     "addr": "0x13ee60",
@@ -623,6 +987,13 @@
     "since": "2026-06-10"
   },
   {
+    "addr": "0x140ad0",
+    "name": "object_choose_random_region_permutations",
+    "object": "objects.obj",
+    "reason": "Faithful @<edi>-defined lift kept dormant. VC71 81.9% (56 candidate vs 49 reference insns) via objcopy-bridged compare_obj against fresh per-function ref delinked/functions/00140ad0.obj. @<edi> confirmed from entry disasm (PUSH EDI before object_get_and_verify_type; EDI live across all calls). Orchestrator: resolves the model tag, picks per-region permutation indices honoring the variant at obj+0x6e, falls back to variant -1 then determines and records the actual variant. Callees object_select_random_region_permutations_by_variant(@<eax>) and object_determine_variant_number(@<eax>) are themselves dormant. Caps: @<edi> prologue ceiling + cdecl-shift cascade on the call sites. Gate B passes (no GC/lifecycle edge). Equivalence vacuous on zero-fill (object_get_and_verify_type + tag reads early-exit; the two @<eax> callees would be stubbed). Safe dormant.",
+    "since": "2026-06-22"
+  },
+  {
     "addr": "0x140b80",
     "name": "objects_scripting_set_scale",
     "object": "objects.obj",
@@ -705,6 +1076,13 @@
     "object": "objects.obj",
     "reason": "pre-gate baseline 2026-06-10",
     "since": "2026-06-10"
+  },
+  {
+    "addr": "0x141970",
+    "name": "FUN_00141970",
+    "object": "objects.obj",
+    "reason": "Faithful lift kept dormant by score gate (Gate B passes: read-only function-value evaluator, writes only object+0xd4 cache, no GC/lifecycle mutation). VC71 77.5% vs fresh per-function ref (ref denominator includes ~10 jump-table data bytes mis-disassembled as popl %es; true match ~80%). Candidate ~157 insns vs ~122 real reference: FPU-heavy (FPATAN/FABS) + non-contiguous switch dispatch (codes 1-5/0x12/0x13/region-default via two-level jump table) that clang/VC71 cannot reproduce as the compact byte-indexed table. Equivalence vacuous on zero-fill (object_get_and_verify_type + tag reads early-exit). Push-then-fstp recovered: FUN_000b6dd0(scenario+0x4c, atan2_result).",
+    "since": "2026-06-22"
   },
   {
     "addr": "0x141b70",
@@ -812,165 +1190,53 @@
     "since": "2026-06-10"
   },
   {
-    "addr": "0xa1fd0",
-    "name": "particle_new",
-    "object": "particles.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
+    "addr": "0x148780",
+    "name": "FUN_00148780",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   },
   {
-    "addr": "0x10c390",
-    "name": "FUN_0010c390",
-    "object": "random_math.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
+    "addr": "0x148eb0",
+    "name": "FUN_00148eb0",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   },
   {
-    "addr": "0x12f10",
-    "name": "magnitude3d",
-    "object": "vector_math.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
+    "addr": "0x149480",
+    "name": "collision_bsp_test_vector",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   },
   {
-    "addr": "0x10fd90",
-    "name": "quantize_real_to_byte_rectangle3d",
-    "object": "real_math.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
+    "addr": "0x15b190",
+    "name": "FUN_0015b190",
+    "object": "rasterizer_decals.obj",
+    "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
+    "since": "2026-06-30"
   },
   {
-    "addr": "0x1913c0",
-    "name": "reference_list_remove",
-    "object": "structures.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
+    "addr": "0x15b1a0",
+    "name": "FUN_0015b1a0",
+    "object": "rasterizer_decals.obj",
+    "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
+    "since": "2026-06-30"
   },
   {
-    "addr": "0x191660",
-    "name": "cluster_partition_iter_next",
-    "object": "structures.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
+    "addr": "0x15b6d0",
+    "name": "FUN_0015b6d0",
+    "object": "rasterizer_decals.obj",
+    "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
+    "since": "2026-06-30"
   },
   {
-    "addr": "0x1917a0",
-    "name": "cluster_partition_add_object",
-    "object": "structures.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1919a0",
-    "name": "cluster_partition_remove_object",
-    "object": "structures.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x191a50",
-    "name": "cluster_partition_iter_first",
-    "object": "structures.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1a0b30",
-    "name": "FUN_001a0b30",
-    "object": "bipeds.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1a1a10",
-    "name": "FUN_001a1a10",
-    "object": "bipeds.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1a1b90",
-    "name": "biped_approximate_surface_index",
-    "object": "bipeds.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1a1e70",
-    "name": "FUN_001a1e70",
-    "object": "bipeds.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1a2160",
-    "name": "FUN_001a2160",
-    "object": "bipeds.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1a2290",
-    "name": "FUN_001a2290",
-    "object": "bipeds.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1a25e0",
-    "name": "FUN_001a25e0",
-    "object": "bipeds.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1a2a60",
-    "name": "FUN_001a2a60",
-    "object": "bipeds.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1a2b10",
-    "name": "FUN_001a2b10",
-    "object": "bipeds.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1a2f40",
-    "name": "FUN_001a2f40",
-    "object": "bipeds.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1bea30",
-    "name": "xbox_texture_cache_steal_memory",
-    "object": "xbox_texture_cache.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1beb10",
-    "name": "xbox_texture_cache_return_memory",
-    "object": "xbox_texture_cache.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1beba0",
-    "name": "bitmap_format_to_d3d_linear_format",
-    "object": "xbox_texture_cache.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x1bf570",
-    "name": "xbox_texture_cache_get_hardware_format",
-    "object": "xbox_texture_cache.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
+    "addr": "0x15b7e0",
+    "name": "FUN_0015b7e0",
+    "object": "rasterizer_decals.obj",
+    "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
+    "since": "2026-06-30"
   },
   {
     "addr": "0x17ffc0",
@@ -1078,118 +1344,6 @@
     "since": "2026-06-10"
   },
   {
-    "addr": "0x2b5d0",
-    "name": "actor_move_get_avoidance_direction",
-    "object": "actor_moving.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x2d350",
-    "name": "actor_destination_update",
-    "object": "actor_moving.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x2cdb0",
-    "name": "actor_path_refresh",
-    "object": "actor_moving.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x58700",
-    "name": "FUN_00058700",
-    "object": "encounters.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x58710",
-    "name": "FUN_00058710",
-    "object": "encounters.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x58ae0",
-    "name": "FUN_00058ae0",
-    "object": "encounters.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x5a5a0",
-    "name": "encounter_link_activation",
-    "object": "encounters.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x5ba70",
-    "name": "encounter_force_activate",
-    "object": "encounters.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x5baa0",
-    "name": "encounter_force_deactivate",
-    "object": "encounters.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x994d0",
-    "name": "plane_negate",
-    "object": "geometry.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x106510",
-    "name": "convex_polygon2d_clip_to_plane",
-    "object": "geometry.obj",
-    "reason": "pre-gate baseline 2026-06-10",
-    "since": "2026-06-10"
-  },
-  {
-    "addr": "0x111170",
-    "name": "FUN_00111170",
-    "object": "real_math.obj",
-    "reason": "deflateEnd: 85.0% VC71, permuter candidate ([85,98] band) pending permuter pass",
-    "since": "2026-06-21"
-  },
-  {
-    "addr": "0x110d40",
-    "name": "FUN_00110d40",
-    "object": "real_math.obj",
-    "reason": "read_buf+hash-insert: 71.2% VC71, idiom-heavy; deferred pending dual-oracle/equivalence",
-    "since": "2026-06-21"
-  },
-  {
-    "addr": "0x109f40",
-    "name": "FUN_00109f40",
-    "object": "real_math.obj",
-    "reason": "unverified: equiv blind via .rdata reloc gap (DAT_0028c728/255e94/2533c8 unresolved) + xbox_asin float vs _CIasin 80-bit; VC71 52.4% (atan2 __asm CALL); disasm-reviewed correct; pending static-constant snapshot",
-    "since": "2026-06-21"
-  },
-  {
-    "addr": "0x10a710",
-    "name": "transition_function_evaluate",
-    "object": "real_math.obj",
-    "reason": "unverified: equiv vacuous (early-exit on table-init flag *0x46e39c==0); VC71 75.3% x87 stack-chaining cap; disasm-reviewed correct; pending curve-table state snapshot",
-    "since": "2026-06-21"
-  },
-  {
-    "addr": "0x10a5e0",
-    "name": "FUN_0010a5e0",
-    "object": "real_math.obj",
-    "reason": "unverified: equiv vacuous (table-init early-exit); VC71 70.7% x87 stack-chaining; disasm-reviewed correct; pending curve-table state snapshot",
-    "since": "2026-06-21"
-  },
-  {
     "addr": "0x18bf80",
     "name": "FUN_0018bf80",
     "object": "scenario.obj",
@@ -1197,137 +1351,151 @@
     "since": "2026-06-21"
   },
   {
-    "addr": "0x134e80",
-    "name": "FUN_00134e80",
-    "object": "objects.obj",
-    "reason": "Faithful lift kept dormant: VC71 71.0% (FPU-heavy light-volume render + fmod density + marker-buffer/float-local overlap that clang cannot reproduce); dormant register-arg callee FUN_00134c40 @<ebx>; equivalence vacuous (zero-fill early-exits tag+0x6e gate, unported sprite callees 0x17cfc0/cfd0/d010/d020 stub out). Below activation score gate.",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x135210",
-    "name": "FUN_00135210",
-    "object": "objects.obj",
-    "reason": "Faithful lift kept dormant: VC71 80.7% (FPU view-depth dot product computed/kept on the x87 stack across a branch then conditionally discarded — clang single-expression cannot reproduce the FSTP ST0 cleanup; marker-buffer/float-local overlap). x87 temps-across-branch ceiling. References FUN_00134e80 (also dormant) as render callback. Equivalence vacuous (zero-fill early-exits tag gate; unported FUN_0017cfb0).",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x13c030",
-    "name": "FUN_0013c030",
-    "object": "objects.obj",
-    "reason": "Faithful lift kept dormant: VC71 56.1% (candidate 76 vs ref 31 insns, consistent with same-TU MSVC 7.1 inlining of object_get_and_verify_type 0x13d680, which the original compiled as out-of-line CALLs in a separate TU). Forcing the shared 92.8%-matching callee out-of-line would be invasive churn affecting all its TU callers. Unverifiable by any oracle: void return, param_2/param_3 forwarded-unused, no memory side effects (recursive child-hierarchy walk). No positive correctness evidence available.",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x13cb80",
-    "name": "FUN_0013cb80",
-    "object": "objects.obj",
-    "reason": "Faithful lift kept dormant by Gate B cluster coupling (NOT a score failure: VC71 86.7%). Calls object_new_from_scenario (0x144770) and objects_garbage_collect_tick (0x144b50) — both GC/lifecycle cluster members — and mutates streaming state (DAT_0046f078 BSP-loaded mask + per-placement flags element+0x20). Scenario object spawner for a BSP slot; piecemeal cluster activation is unsafe. Activate only as part of a coordinated object-lifecycle cluster activation.",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x13ecb0",
-    "name": "attachments_new",
-    "object": "objects.obj",
-    "reason": "Faithful lift kept dormant by Gate B cluster coupling (NOT a score failure: VC71 92.1% vs fresh per-function ref delinked/functions/0013ecb0.obj — note vc71_verify auto-selects a stale chunk 0013dda0.obj giving a false 42.6%). Caller edge from object_new (0x143c80, lifecycle cluster member) at 0x144147, AND object-lifecycle mutation: fills the object attachment table (object+0xf4 type bytes, object+0xfc handles) and sets creation flags (object+0x4 |= 0x100/0x400). Part of the object creation path; activate only with the lifecycle cluster.",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x141970",
-    "name": "FUN_00141970",
-    "object": "objects.obj",
-    "reason": "Faithful lift kept dormant by score gate (Gate B passes: read-only function-value evaluator, writes only object+0xd4 cache, no GC/lifecycle mutation). VC71 77.5% vs fresh per-function ref (ref denominator includes ~10 jump-table data bytes mis-disassembled as popl %es; true match ~80%). Candidate ~157 insns vs ~122 real reference: FPU-heavy (FPATAN/FABS) + non-contiguous switch dispatch (codes 1-5/0x12/0x13/region-default via two-level jump table) that clang/VC71 cannot reproduce as the compact byte-indexed table. Equivalence vacuous on zero-fill (object_get_and_verify_type + tag reads early-exit). Push-then-fstp recovered: FUN_000b6dd0(scenario+0x4c, atan2_result).",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x139b40",
-    "name": "FUN_00139b40",
-    "object": "objects.obj",
-    "reason": "Faithful lift kept dormant by score gate. VC71 86.3% (73 candidate vs 66 reference insns) measured against fresh per-function ref delinked/functions/00139b40.obj. Gate B passes (condition holds): callees {0x99530 real_a_rgb_color_to_pixel32, 0x180770, 0x1ba140 tag_get, 0x180b10} and sole caller 0x18ca40 are all outside the GC/lifecycle cluster; function only appends a record to the per-frame light-marker array at 0x5a8f6c (count 0x5a90ac, max 8, 0x28 stride) -- no object garbage/lifecycle mutation. Score gap (~7 insns) is the float-inequality guard: original emits per-component memory-operand FCOMP (FLD [color+N]; FCOMP [0x2533c0]) while VC71 on the C || chain hoists *(float*)0x2533c0 to a register and emits register fucompp; plus tail integer-codegen scheduling (orl $-1 vs movl, count/+0x20 store order). A correctly-pinned permuter run (delinked/functions/00139b40.obj, 300s/4 threads, 2026-06-22) found lower-score candidates; none confirmed to cross the 88% activation bar this pass (an earlier 367-iter run was vacuous -- it mis-selected stale ref 00085110.obj). Re-evaluate in a dedicated permuter-apply session before activation. Equivalence is the wrong lane: two callees are XCALL literal-address casts -> --allow-stubs makes the side-effect store diff stub-vs-stub (vacuous, per feedback_equivalence_hardcoded_import). param_6 confirmed float (caller MOV+PUSH no FILD; callee 0x180770 FLD [EBP+8]); kb decl updated int->float param_6.",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x13e1f0",
-    "name": "object_choose_random_change_colors",
-    "object": "objects.obj",
-    "reason": "Faithful @<eax>-defined lift kept dormant. VC71 67.0% (190 candidate vs 168 reference insns) via objcopy-bridged compare_obj against fresh per-function ref delinked/functions/0013e1f0.obj (vc71_verify auto-path cannot bridge the real-name<->FUN_ symbol map on this 12k-line TU; symbol _object_choose_random_change_colors is present in the compiled candidate, confirmed by objdump). Two caps stack: (1) @<eax>-defined prologue cannot be emitted by cl.exe to match (feedback_eax_defining_fn_vc71_ceiling), (2) x87 RNG (x87_fmod on a basis-vector dot) plus per-slot CDF blend produce extra FPU spills, inflating the candidate by ~22 insns. Gate B passes: callees {FUN_0007c270 color-blend cdecl, x87_fmod} are pure math with no GC/lifecycle edge; writes only the object change-color slots and their +0x30 mirror. Equivalence is the only activation lane but is vacuous on zero-fill (permutation count comes from tag data = 0, so the CDF loop body never runs); needs a live object-appearance state snapshot not currently captured. Disasm-derived (FABS-on-input not output, push-then-fstp arg5 recovered). Safe dormant.",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x13e5d0",
-    "name": "object_compute_change_colors",
-    "object": "objects.obj",
-    "reason": "Faithful @<eax>-defined lift kept dormant. VC71 61.3% (129 candidate vs 145 reference insns -- candidate SMALLER) via objcopy-bridged compare_obj against fresh per-function ref delinked/functions/0013e5d0.obj. Caps: (1) @<eax> prologue ceiling, (2) the lift collapses a CMP 0x5; JL vestigial dual-branch bounds-check to a single obj+0xd0+idx*4 read (both arms emit identical loads per disasm), which drops the duplicate-load insns and accounts for most of the 16-insn shortfall vs reference. Reads the precomputed function-value array at obj+0xd0, blends via FUN_0007c270, clamps [0,1], gated on obj_tag+0x24 bit0. Gate B passes (no GC/lifecycle edge; writes only obj+0x168 change-color slots). Equivalence vacuous on zero-fill (anim-entry count from tag = 0). Branch-collapse flagged for a future re-lift if activation is ever pursued. Safe dormant.",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x13e7b0",
-    "name": "object_compute_function_values",
-    "object": "objects.obj",
-    "reason": "Faithful @<eax>-defined lift kept dormant. VC71 81.0% (266 candidate vs 277 reference insns) via objcopy-bridged compare_obj against fresh per-function ref delinked/functions/0013e7b0.obj. Caps: @<eax> prologue ceiling + non-leaf x87 pipeline (game_time_get, FUN_0010a5e0 waveform, transition_function_evaluate, floor, x87_fmod x3) whose 80-bit-vs-float rounding and spill scheduling cl.exe cannot reproduce. Ghidra decompiler was structurally untrustworthy here; whole body written from disassembly (output array obj+0xe4 not 0xd0, active bitmask obj+0xd3, FDIVP-vs-discard gated on fv>0, TEST AH,0x44 = !=0.0). Gate B passes (read-mostly per-frame function evaluator; writes only obj+0xe4 / obj+0xd3, no GC/lifecycle mutation). Equivalence vacuous on zero-fill (per-frame tag-function loop count = 0). Safe dormant.",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x140ad0",
-    "name": "object_choose_random_region_permutations",
-    "object": "objects.obj",
-    "reason": "Faithful @<edi>-defined lift kept dormant. VC71 81.9% (56 candidate vs 49 reference insns) via objcopy-bridged compare_obj against fresh per-function ref delinked/functions/00140ad0.obj. @<edi> confirmed from entry disasm (PUSH EDI before object_get_and_verify_type; EDI live across all calls). Orchestrator: resolves the model tag, picks per-region permutation indices honoring the variant at obj+0x6e, falls back to variant -1 then determines and records the actual variant. Callees object_select_random_region_permutations_by_variant(@<eax>) and object_determine_variant_number(@<eax>) are themselves dormant. Caps: @<edi> prologue ceiling + cdecl-shift cascade on the call sites. Gate B passes (no GC/lifecycle edge). Equivalence vacuous on zero-fill (object_get_and_verify_type + tag reads early-exit; the two @<eax> callees would be stubbed). Safe dormant.",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x10ce10",
-    "name": "vector_to_line_distance_squared3d",
-    "object": "real_math.obj",
-    "reason": "Faithful cdecl lift, dormant pending a fix for a REAL residual divergence. CORRECTION 2026-06-22: the earlier 'equiv unverifiable via harness' was WRONG. The harness IS usable -- with a constants snapshot (static .rdata float consts 0.0/0.5/1.0/parallel-eps/len-eps/REAL_MAX seeded byte-exact from cachebeta.xbe; recipe regenerates artifacts/snapshots/real_math_consts.json) AND invoking unicorn_diff BY NAME not address (the candidate .obj symbol is the decl name, not FUN_<addr>), the universal-NaN ('0 data refs') is GONE and equiv runs 15/60 pass with real finite divergences (67.9% cov, high conf; INSN 245 oracle vs 273 lifted). So ce10 has a REAL lift bug, NOT a harness artifact. VERIFIED CORRECT: n = p2 x p4 (cross), non-parallel s,t = (delta x d2).n/|n|^2 and (delta x d1).n/|n|^2 (standard line-line closest-point), FUN_0010cd40 is plain cdecl(point,seg_start,seg_dir) and call arg-order is right. Bug is ISOLATED to the non-parallel s_oob/t_oob clamp classification (or the parallel projection): seed-56 oracle 0.00097 vs lifted 6.5e18 = an in-range-vs-out-of-range misclassification picking a far clamp endpoint. Activation pending that clamp-path fix; harness now ready to debug it. UPDATE 2026-06-30 (instruction-level disasm verification, advances the above): the 'misclassification' is NOT a clamp-logic or call-arg bug -- ruled out at instruction level. Disassembled 0x10ce10 fully (0x10ce10-0x10d378): entry holds EDX=p1, EBX=p3, ESI=p2, EDI=p4 in registers throughout. s_oob call (0x10cfda) = FUN_0010cd40(closest_a, EBX=p3, EDI=p4); t_oob call (0x10d02d) pushes ECX=&closest_b, EDX, ESI=p2 so arg2=EDX. Disassembled FUN_0010cd40 (0x10cd40-0x10ce01): it clobbers only EAX/ECX+FPU, NEVER touches EDX/EBX/ESI/EDI -- so EDX==p1 still holds at the t_oob call even when s_oob ran first. The C body's flagged assumption (line ~2027 'FUN_0010cd40 preserves EDX which still holds p1') is CONFIRMED CORRECT; both call arg-orders match disasm exactly; s/t formulas + s_oob/t_oob classification match disasm exactly. Therefore the large divergences (seed-56 0.00097 vs 6.5e18) are FP-ORDER BRANCH-FLIPS: clang -mno-sse computes s/t with a different x87 operation order than MSVC's exact FPU sequence (oracle: FDIVR inv first, then nx*inv per term @0x10ce95+; C: (cross)*nx*inv per term), producing sub-ULP s/t differences that straddle the [0,1] clamp boundary and flip in-range<->out-of-range, picking a different endpoint -> amplified output divergence. This is the same x87-rounding structural cap noted for siblings 0x10a5e0/0x10a710. NEXT (lift-score-improve op-order lever, uncertain payoff): reorder the C s/t computation to mirror the oracle FPU sequence and re-run equiv; if pass rate does not materially rise, accept as structural FP cap and keep dormant. Do NOT change clamp logic or call args -- they are byte-faithful.",
-    "since": "2026-06-22"
-  },
-  {
-    "addr": "0x10bbc0",
-    "name": "vectors3d_from_euler_angles3d",
-    "object": "real_math.obj",
+    "addr": "0x1913c0",
+    "name": "reference_list_remove",
+    "object": "structures.obj",
     "reason": "pre-gate baseline 2026-06-10",
     "since": "2026-06-10"
   },
   {
-    "addr": "0x12f990",
-    "name": "FUN_0012f990",
-    "object": "network_server_manager.obj",
-    "reason": "Pre-existing committed deactivation (HEAD). Ported+fixed at f28a5b6e then deactivated for an unrecorded reason; outside the 0xA0001/biped-aim goal scope. Allowlisted to unblock the commit gate pending dedicated investigation/reactivation.",
-    "since": "2026-06-21"
+    "addr": "0x191660",
+    "name": "cluster_partition_iter_next",
+    "object": "structures.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
   },
   {
-    "addr": "0xbae20",
-    "name": "FUN_000bae20",
-    "object": "players.obj",
-    "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
-    "since": "2026-06-30"
+    "addr": "0x1917a0",
+    "name": "cluster_partition_add_object",
+    "object": "structures.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
   },
   {
-    "addr": "0x15b190",
-    "name": "FUN_0015b190",
-    "object": "rasterizer_decals.obj",
-    "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
-    "since": "2026-06-30"
+    "addr": "0x1919a0",
+    "name": "cluster_partition_remove_object",
+    "object": "structures.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
   },
   {
-    "addr": "0x15b1a0",
-    "name": "FUN_0015b1a0",
-    "object": "rasterizer_decals.obj",
-    "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
-    "since": "2026-06-30"
+    "addr": "0x191a50",
+    "name": "cluster_partition_iter_first",
+    "object": "structures.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
   },
   {
-    "addr": "0x15b6d0",
-    "name": "FUN_0015b6d0",
-    "object": "rasterizer_decals.obj",
-    "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
-    "since": "2026-06-30"
+    "addr": "0x1a0b30",
+    "name": "FUN_001a0b30",
+    "object": "bipeds.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
   },
   {
-    "addr": "0x15b7e0",
-    "name": "FUN_0015b7e0",
-    "object": "rasterizer_decals.obj",
-    "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
-    "since": "2026-06-30"
+    "addr": "0x1a1a10",
+    "name": "FUN_001a1a10",
+    "object": "bipeds.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1a1b90",
+    "name": "biped_approximate_surface_index",
+    "object": "bipeds.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1a1e70",
+    "name": "FUN_001a1e70",
+    "object": "bipeds.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1a2160",
+    "name": "FUN_001a2160",
+    "object": "bipeds.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1a2290",
+    "name": "FUN_001a2290",
+    "object": "bipeds.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1a25e0",
+    "name": "FUN_001a25e0",
+    "object": "bipeds.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1a2a60",
+    "name": "FUN_001a2a60",
+    "object": "bipeds.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1a2b10",
+    "name": "FUN_001a2b10",
+    "object": "bipeds.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1a2f40",
+    "name": "FUN_001a2f40",
+    "object": "bipeds.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1bd910",
+    "name": "cache_files_precache_map_begin",
+    "object": "cache_files_windows.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1bda30",
+    "name": "cache_files_precache_map_end",
+    "object": "cache_files_windows.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1bea30",
+    "name": "xbox_texture_cache_steal_memory",
+    "object": "xbox_texture_cache.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1beb10",
+    "name": "xbox_texture_cache_return_memory",
+    "object": "xbox_texture_cache.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1beba0",
+    "name": "bitmap_format_to_d3d_linear_format",
+    "object": "xbox_texture_cache.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
+  },
+  {
+    "addr": "0x1bf570",
+    "name": "xbox_texture_cache_get_hardware_format",
+    "object": "xbox_texture_cache.obj",
+    "reason": "pre-gate baseline 2026-06-10",
+    "since": "2026-06-10"
   },
   {
     "addr": "0x1d8368",
@@ -1335,152 +1503,5 @@
     "object": "XAPILIB",
     "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
     "since": "2026-06-30"
-  },
-  {
-    "addr": "0x135510",
-    "name": "FUN_00135510",
-    "object": "objects.obj",
-    "reason": "non-faithful mass-lift stub (41b57f52): drops tag_get('bitm', elec+0x40) indirection, reads block from elec+0x60 not bitmap+0x60 -> tag_groups.c:3089 assert on empty block; inner lightning geometry loops empty. Deactivated to restore original faithful 'elec' renderer; needs proper re-lift.",
-    "since": "2026-07-01"
-  },
-  {
-    "addr": "0x12c100",
-    "name": "FUN_0012c100",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12c160",
-    "name": "FUN_0012c160",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12d880",
-    "name": "FUN_0012d880",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12dc20",
-    "name": "FUN_0012dc20",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12e580",
-    "name": "FUN_0012e580",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12e750",
-    "name": "FUN_0012e750",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12eb20",
-    "name": "FUN_0012eb20",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12eca0",
-    "name": "FUN_0012eca0",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12f430",
-    "name": "FUN_0012f430",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12f5d0",
-    "name": "FUN_0012f5d0",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12da90",
-    "name": "FUN_0012da90",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12db30",
-    "name": "FUN_0012db30",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12f040",
-    "name": "FUN_0012f040",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12f0d0",
-    "name": "FUN_0012f0d0",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12f170",
-    "name": "FUN_0012f170",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12f200",
-    "name": "FUN_0012f200",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12f290",
-    "name": "FUN_0012f290",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12f330",
-    "name": "FUN_0012f330",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12f690",
-    "name": "FUN_0012f690",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
-  },
-  {
-    "addr": "0x12f8d0",
-    "name": "FUN_0012f8d0",
-    "object": "network_server_manager.obj",
-    "reason": "sub-80% VC71 lift; deactivated pending lift-score-improve (integrate-scenario-20260704). Runs original binary behavior until the lift is improved past the 80% ship threshold.",
-    "since": "2026-07-05"
   }
 ]
