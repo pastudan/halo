@@ -30,11 +30,19 @@ jobs:
       - name: Clone Tree
         uses: actions/checkout@v4
 
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
       - name: Install LLVM + Ninja
         run: choco install llvm ninja -y --no-progress
 
       - name: Install Python deps
-        run: python -m pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -c "import clang.cindex; print('libclang ok')"
 
       - name: Configure + build halo (no XBE patch)
         shell: bash
@@ -44,7 +52,8 @@ jobs:
           ninja --version
           cmake -Bbuild -S. -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE=toolchains/llvm.cmake \
-            -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+            -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} \
+            -DPython3_EXECUTABLE="$(command -v python)"
           cmake --build build --target halo --parallel
 
       - name: Build failure summary
