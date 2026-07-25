@@ -1365,3 +1365,245 @@ char collision_bsp_test_vector(int collision_flags, int bsp, short flags,
   collision_log_add_time(log_fn, *(unsigned int *)0x46f090, *(int *)0x46f094);
   return hit;
 }
+
+
+/* -------------------------------------------------------------------------
+ * Sphere path: collision_bsp_test_sphere (0x1493b0) +
+ * bsp3d_test_sphere_recursive (0x148b90) + FUN_001486e0 (0x1486e0).
+ *
+ * State layout (wrapper stack, size 0x228):
+ *   +0x00 bsp, +0x04 flags, +0x08 breakable_surfaces, +0x0c origin*,
+ *   +0x10 radius, +0x14 results*, +0x18 plane_stack_count,
+ *   +0x1c plane_stack[0x80], +0x21c projection, +0x21e sign,
+ *   +0x220 point2d[2].
+ * Results: counts at +0, +0x404, +0x808; leaf list count at +0xc0c.
+ * ported:false until verified.
+ * ------------------------------------------------------------------------- */
+typedef struct collision_bsp_sphere_state {
+  int bsp;
+  unsigned short flags;
+  unsigned short pad0;
+  int breakable_surfaces;
+  float *origin;
+  float radius;
+  int *results;
+  int plane_stack_count;
+  int plane_stack[0x80];
+  short projection;
+  unsigned char sign;
+  unsigned char pad1;
+  float point2d[2];
+} collision_bsp_sphere_state;
+
+void FUN_001486e0(void *state_v, int node_index)
+{
+  collision_bsp_sphere_state *state;
+  float *node;
+  float d;
+  char front_hit;
+  char back_hit;
+
+  state = (collision_bsp_sphere_state *)state_v;
+  if (node_index < 0) {
+    FUN_00147ed0(state, node_index & 0x7fffffff);
+    return;
+  }
+
+  node = (float *)tag_block_get_element((char *)state->bsp + 0x30, node_index,
+                                        0x14);
+  d = node[1] * state->point2d[1] + state->point2d[0] * node[0] - node[2];
+
+  /* d < radius → front child may hit */
+  if (d < state->radius) {
+    front_hit = 1;
+  } else {
+    front_hit = 0;
+  }
+  /* d > -radius → back child may hit (test ah,1 after fcompp vs -radius) */
+  if (d > -state->radius) {
+    back_hit = 1;
+  } else {
+    back_hit = 0;
+  }
+
+  if (front_hit) {
+    FUN_001486e0(state, *(int *)((char *)node + 0xc));
+  }
+  if (back_hit) {
+    FUN_001486e0(state, *(int *)((char *)node + 0x10));
+  }
+}
+
+void bsp3d_test_sphere_recursive(void *state_v, int node_index)
+{
+  collision_bsp_sphere_state *state;
+  int *bsp3d_node;
+  float *plane;
+  float *origin;
+  float d;
+  char near_front;
+  char al;
+  int child;
+  short *leaf;
+  int ref_i;
+  int ref_end;
+  int *ref;
+  int plane_index;
+  int i;
+  int *results;
+  float proj_pt[3];
+  int axis;
+  int high;
+  int pos;
+  float ax, ay, az;
+
+  state = (collision_bsp_sphere_state *)state_v;
+
+node_loop:
+  if (node_index < 0) {
+    goto leaf_path;
+  }
+
+  bsp3d_node =
+    (int *)tag_block_get_element((char *)state->bsp, node_index, 0xc);
+  plane = (float *)tag_block_get_element((char *)state->bsp + 0xc,
+                                         bsp3d_node[0], 0x10);
+  origin = state->origin;
+  d = origin[2] * plane[2] + origin[1] * plane[1] + origin[0] * plane[0] -
+      plane[3];
+
+  /* near_front (cl): d < radius */
+  near_front = (d < state->radius) ? 1 : 0;
+
+  /* if d <= -radius → only child +4 (al=0); else if straddling both; else +8 */
+  if (!(d > -state->radius)) {
+    al = 0;
+    goto pick_child;
+  }
+  if (near_front) {
+    /* straddling: push plane with high bit, recurse front, then back */
+    if (state->plane_stack_count < 0 || state->plane_stack_count >= 0x80) {
+      display_assert((const char *)0x29cb24, (const char *)0x29cafc, 0x206, 1);
+      system_exit(-1);
+    }
+    state->plane_stack[state->plane_stack_count] =
+      bsp3d_node[0] | (int)0x80000000;
+    state->plane_stack_count++;
+    bsp3d_test_sphere_recursive(state, bsp3d_node[1]);
+    state->plane_stack_count--;
+
+    if (state->plane_stack_count < 0 || state->plane_stack_count >= 0x80) {
+      display_assert((const char *)0x29cb24, (const char *)0x29cafc, 0x210, 1);
+      system_exit(-1);
+    }
+    state->plane_stack[state->plane_stack_count] =
+      bsp3d_node[0] & 0x7fffffff;
+    state->plane_stack_count++;
+    bsp3d_test_sphere_recursive(state, bsp3d_node[2]);
+    state->plane_stack_count--;
+    return;
+  }
+  al = 1;
+
+pick_child:
+  child = bsp3d_node[al + 1];
+  node_index = child;
+  if (node_index >= 0) {
+    goto node_loop;
+  }
+
+leaf_path:
+  if (node_index == -1) {
+    return;
+  }
+
+  node_index &= 0x7fffffff;
+  results = state->results;
+  if (results[0xc0c / 4] < 0x100) {
+    results[0xc10 / 4 + results[0xc0c / 4]] = node_index;
+    results[0xc0c / 4]++;
+  }
+
+  leaf = (short *)tag_block_get_element((char *)state->bsp + 0x18, node_index,
+                                        8);
+  ref_i = *(int *)(leaf + 2);
+  ref_end = ref_i + leaf[1];
+  for (; ref_i < ref_end; ref_i++) {
+    ref = (int *)tag_block_get_element((char *)state->bsp + 0x24, ref_i, 8);
+    /* match plane against stack */
+    if (state->plane_stack_count <= 0) {
+      continue;
+    }
+    plane_index = ref[0];
+    for (i = 0; i < state->plane_stack_count; i++) {
+      if (state->plane_stack[i] == plane_index) {
+        break;
+      }
+    }
+    if (i >= state->plane_stack_count) {
+      continue;
+    }
+
+    /* project origin onto leaf plane → point2d, then 2D BSP */
+    plane = (float *)tag_block_get_element((char *)state->bsp + 0xc,
+                                           plane_index & 0x7fffffff, 0x10);
+    origin = state->origin;
+    d = -(origin[1] * plane[1] + origin[2] * plane[2] + origin[0] * plane[0] -
+          plane[3]);
+    proj_pt[0] = d * plane[0] + origin[0];
+    proj_pt[1] = d * plane[1] + origin[1];
+    proj_pt[2] = d * plane[2] + origin[2];
+
+    ax = xbox_fabsf(plane[0]);
+    ay = xbox_fabsf(plane[1]);
+    az = xbox_fabsf(plane[2]);
+    if (az >= ay && az >= ax) {
+      axis = 2;
+    } else if (ay >= ax) {
+      axis = 1;
+    } else {
+      axis = 0;
+    }
+    pos = (plane[axis] > *(float *)0x2533c0) ? 1 : 0;
+    high = (ref[0] & (int)0x80000000) ? 1 : 0;
+    state->projection = (short)axis;
+    state->sign = (unsigned char)(pos != high);
+    FUN_00061df0(proj_pt, (short)axis, state->sign, state->point2d);
+    FUN_001486e0(state, ref[1]);
+  }
+}
+
+int collision_bsp_test_sphere(int bsp, short flags, int breakable_surfaces,
+                              int origin, float radius, int *results)
+{
+  collision_bsp_sphere_state state;
+  short log_fn;
+
+  log_fn = (short)(6 + (bsp == *(int *)0x5064dc ? 1 : 0));
+  collision_log_add_call(log_fn);
+  collision_log_query_counter((void *)0x46f098);
+
+  state.bsp = bsp;
+  state.flags = (unsigned short)flags;
+  state.pad0 = 0;
+  state.breakable_surfaces = breakable_surfaces;
+  state.origin = (float *)origin;
+  state.radius = radius;
+  state.results = results;
+  state.plane_stack_count = 0;
+  state.projection = 0;
+  state.sign = 0;
+
+  results[0xc0c / 4] = 0;
+  results[0] = 0;
+  results[0x404 / 4] = 0;
+  results[0x808 / 4] = 0;
+
+  bsp3d_test_sphere_recursive(&state, 0);
+  collision_log_add_time(log_fn, *(unsigned int *)0x46f098, *(int *)0x46f09c);
+
+  if (results[0] > 0 || results[0x404 / 4] > 0) {
+    return 1;
+  }
+  return 0;
+}

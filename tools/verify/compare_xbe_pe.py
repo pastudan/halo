@@ -71,10 +71,13 @@ def main() -> int:
         ("collision_surface_find_closest_point2d", 0x147ae0, 0x147d10),
         ("FUN_00148240", 0x148240, 0x148365),
         ("FUN_00148370", 0x148370, 0x148440),
+        ("FUN_001486e0", 0x1486e0, 0x148780),
         ("FUN_00148780", 0x148780, 0x148910),
+        ("bsp3d_test_sphere_recursive", 0x148b90, 0x148eb0),
         ("FUN_00148910", 0x148910, 0x148b20),
         ("FUN_00148eb0", 0x148eb0, 0x1491d0),
         ("FUN_001491d0", 0x1491d0, 0x1493b0),
+        ("collision_bsp_test_sphere", 0x1493b0, 0x149480),
         ("collision_bsp_test_vector", 0x149480, 0x149570),
     ]
 

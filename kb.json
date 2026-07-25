@@ -36329,7 +36329,8 @@
         },
         {
           "addr": "0x1486e0",
-          "decl": "void FUN_001486e0(void);"
+          "decl": "void FUN_001486e0(void *state, int node_index);",
+          "ported": false
         },
         {
           "addr": "0x148780",
@@ -36357,7 +36358,8 @@
         },
         {
           "addr": "0x148b90",
-          "decl": "void bsp3d_test_sphere_recursive(void);"
+          "decl": "void bsp3d_test_sphere_recursive(void *state, int node_index);",
+          "ported": false
         },
         {
           "addr": "0x148eb0",
@@ -36374,7 +36376,8 @@
         },
         {
           "addr": "0x1493b0",
-          "decl": "int collision_bsp_test_sphere(int bsp, short flags, int origin, int direction, int radius, int *results);"
+          "decl": "int collision_bsp_test_sphere(int bsp, short flags, int breakable_surfaces, int origin, float radius, int *results);",
+          "ported": false
         },
         {
           "addr": "0x149480",

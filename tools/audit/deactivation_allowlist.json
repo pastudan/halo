@@ -1552,5 +1552,26 @@
     "object": "XAPILIB",
     "reason": "Set ported=false to fix the pre-existing broken branch build (build never reached the patch step before). These were ported=true in kb.json with NO source implementation -> 'symbol absent from EXE exports'. ported=false makes the build emit a thunk to the original, preserving original behavior (no regression). Re-lift properly to reactivate. Build green 2026-06-30.",
     "since": "2026-06-30"
+  },
+  {
+    "addr": "0x1486e0",
+    "name": "FUN_001486e0",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x148b90",
+    "name": "bsp3d_test_sphere_recursive",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1493b0",
+    "name": "collision_bsp_test_sphere",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]
