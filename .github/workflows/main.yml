@@ -64,9 +64,18 @@ jobs:
 
       - name: Build
         run: |
-          brew install llvm
+          brew install llvm lld
           python3 -m pip install --break-system-packages --user -r requirements.txt
-          export PATH="/opt/homebrew/opt/llvm/bin:/usr/local/opt/llvm/bin:$PATH"
+          LLVM_PREFIX="$(brew --prefix llvm)"
+          export PATH="${LLVM_PREFIX}/bin:$(brew --prefix lld)/bin:$PATH"
+          # Homebrew sometimes ships only `lld`; COFF link step needs `lld-link`.
+          if ! command -v lld-link >/dev/null 2>&1; then
+            mkdir -p "$HOME/.local/bin"
+            ln -sf "$(command -v lld)" "$HOME/.local/bin/lld-link"
+            export PATH="$HOME/.local/bin:$PATH"
+          fi
+          command -v clang
+          command -v lld-link
           cmake -Bbuild -S. -DCMAKE_TOOLCHAIN_FILE=toolchains/llvm.cmake -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
           cmake --build build --target halo
 

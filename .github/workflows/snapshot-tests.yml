@@ -21,24 +21,42 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check delinked oracle present
+        id: delinked
+        run: |
+          if [ -f delinked/game_state.obj ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping snapshot verification — delinked/game_state.obj not in tree (self-hosted / local only)."
+          fi
+
       - name: Install system deps
+        if: steps.delinked.outputs.present == 'true'
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build
+          sudo apt-get install -y cmake ninja-build clang lld
+          sudo ln -sf "$(command -v lld)" /usr/local/bin/lld-link || true
 
       - name: Set up Python
+        if: steps.delinked.outputs.present == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Install Python deps
-        run: pip install unicorn lief capstone
+        if: steps.delinked.outputs.present == 'true'
+        run: |
+          pip install -r requirements.txt
+          pip install unicorn lief
 
       - name: Build
+        if: steps.delinked.outputs.present == 'true'
         run: python3 tools/build/build.py -q --target halo
         timeout-minutes: 10
 
       - name: Run snapshot verification
+        if: steps.delinked.outputs.present == 'true'
         run: |
           mkdir -p artifacts/progress
           python3 tools/equivalence/game_state_verify.py \
@@ -50,14 +68,14 @@ jobs:
         timeout-minutes: 20
 
       - name: Generate progress report
-        if: always()
+        if: steps.delinked.outputs.present == 'true' && always()
         run: |
           python3 tools/report/generate_decomp_report.py \
             -o artifacts/progress/report.json \
             --html artifacts/progress/index.html
 
       - name: Report results
-        if: always()
+        if: steps.delinked.outputs.present == 'true' && always()
         run: |
           python3 -c "
           import json
@@ -75,3 +93,7 @@ jobs:
               else:
                   print(f'  PASS  {res[\"func\"]}  cov={res.get(\"coverage\", 0):.0f}%')
           "
+
+      - name: Skipped (no delinked oracle)
+        if: steps.delinked.outputs.present != 'true'
+        run: echo "Snapshot Verification skipped — no delinked/game_state.obj"
