@@ -3329,7 +3329,7 @@ void FUN_000bdf40(int16_t function_index, int thread_datum, char init)
 
   args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
   if (args) {
-    FUN_000c95d0(args[0]);
+    FUN_000c95d0((const char *)args[0]);
     hs_return(thread_datum, 0);
   }
 }
@@ -3384,7 +3384,7 @@ void FUN_000be190(int16_t function_index, int thread_datum, char init)
 
   args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
   if (args) {
-    FUN_000c9b90(args[0]);
+    FUN_000c9b90((const char *)args[0]);
     hs_return(thread_datum, 0);
   }
 }
@@ -3395,7 +3395,7 @@ void FUN_000be1d0(int16_t function_index, int thread_datum, char init)
 
   args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
   if (args) {
-    FUN_000ca140(args[0]);
+    FUN_000ca140((const char *)args[0]);
     hs_return(thread_datum, 0);
   }
 }
@@ -3406,7 +3406,7 @@ void FUN_000be210(int16_t function_index, int thread_datum, char init)
 
   args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
   if (args) {
-    FUN_000c9bb0(args[0]);
+    FUN_000c9bb0((const char *)args[0]);
     hs_return(thread_datum, 0);
   }
 }

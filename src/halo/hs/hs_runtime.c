@@ -3033,3 +3033,296 @@ int FUN_000ce450(int param_1, int *param_2)
   }
   return -1;
 }
+
+char FUN_000c95c0(char value)
+{
+  return value ? 0 : 1;
+}
+
+void FUN_000c95d0(const char *text)
+{
+  terminal_output(*(void **)0x2ee6d4, (const char *)0x257984, text);
+}
+
+void FUN_000c9990(int16_t name_index)
+{
+  int handle;
+  void *elem;
+  if (name_index == (int16_t)-1)
+    return;
+  handle = object_name_list_get_handle(name_index);
+  if (handle != -1) {
+    elem = tag_block_get_element((char *)global_scenario_get() + 0x204,
+                                name_index, 0x24);
+    error(2, (const char *)0x280378, elem);
+    return;
+  }
+  object_new_by_name(name_index);
+}
+
+void hs_object_iterate_names_containing(void *callback, const char *substr)
+{
+  void (*cb)(int16_t);
+  void *block;
+  int i;
+  void *elem;
+  cb = (void (*)(int16_t))callback;
+  if (cb == 0) {
+    display_assert((const char *)0x25c3b4, (const char *)0x280408, 0x197, 1);
+    system_exit(-1);
+  }
+  block = (char *)global_scenario_get() + 0x204;
+  for (i = 0; i < *(int *)block; i++) {
+    elem = tag_block_get_element(block, i, 0x24);
+    if (crt_strstr((const char *)elem, substr) != 0)
+      cb((int16_t)i);
+  }
+}
+
+void FUN_000c9b90(const char *substr)
+{
+  hs_object_iterate_names_containing((void *)FUN_000c9990, substr);
+}
+
+char FUN_000cae80(int value)
+{
+  return value == 0;
+}
+
+char FUN_000caea0(int16_t value)
+{
+  return value == 0;
+}
+
+char FUN_000caec0(const char *s)
+{
+  return csstrlen(s) == 0;
+}
+
+float FUN_000caef0(int16_t value)
+{
+  return (float)value;
+}
+
+float FUN_000caf10(int value)
+{
+  return (float)value;
+}
+
+float FUN_000caf20(int16_t value)
+{
+  return (float)(value + 1);
+}
+
+int16_t FUN_000caf40(float value)
+{
+  return (int16_t)(int)value;
+}
+
+int FUN_000caf60(float value)
+{
+  return (int)value;
+}
+
+int16_t FUN_000caf70(int16_t value)
+{
+  return value;
+}
+
+int FUN_000ce200(void)
+{
+  int handle;
+  char *datum;
+  handle = data_new_at_index(*(data_t **)0x5aa698);
+  if (handle != -1) {
+    datum = (char *)datum_get(*(data_t **)0x5aa698, handle);
+    *(int16_t *)(datum + 6) = 0;
+    *(int *)(datum + 8) = -1;
+  }
+  return handle;
+}
+
+void FUN_000ce2b0(int list_handle, int object_handle)
+{
+  char *list;
+  data_t *obj_data;
+  int node;
+  char *node_datum;
+  list = (char *)datum_get(*(data_t **)0x5aa698, list_handle);
+  obj_data = *(data_t **)0x5aa694;
+  node = data_new_at_index(obj_data);
+  if (node != -1) {
+    node_datum = (char *)datum_get(obj_data, node);
+    *(int *)(node_datum + 4) = object_handle;
+    *(int *)(node_datum + 8) = *(int *)(list + 8);
+    *(int *)(list + 8) = node;
+    *(int16_t *)(list + 6) = (int16_t)(*(int16_t *)(list + 6) + 1);
+    return;
+  }
+  error(2, (const char *)0x280ea4, obj_data,
+        (int)*(int16_t *)((char *)obj_data + 0x20));
+  *(int16_t *)(list + 6) = (int16_t)(*(int16_t *)(list + 6) + 1);
+}
+
+int FUN_000cafc0(int object_handle)
+{
+  int list;
+  if (object_handle == -1)
+    return -1;
+  list = FUN_000ce200();
+  FUN_000ce2b0(list, object_handle);
+  return list;
+}
+
+int FUN_000ce090(data_t *data, int *cursor)
+{
+  char *datum;
+  if (*cursor == -1)
+    return -1;
+  datum = (char *)datum_get(data, *cursor);
+  *cursor = *(int *)(datum + 8);
+  return *(int *)(datum + 4);
+}
+
+int16_t FUN_000ce420(int list_handle)
+{
+  char *datum;
+  if (list_handle == -1)
+    return 0;
+  datum = (char *)datum_get(*(data_t **)0x5aa698, list_handle);
+  return *(int16_t *)(datum + 6);
+}
+
+void FUN_000cab80(int handle)
+{
+  char *datum;
+  int *list;
+  datum = (char *)datum_get(*(data_t **)0x5aa6c4, handle);
+  list = *(int **)(datum + 0x10);
+  *(int *)(datum + 0x10) = *list;
+}
+
+void FUN_000ca4e0(int16_t type, char flag, char *buffer)
+{
+  const char *word;
+  if (type != 5) {
+    display_assert((const char *)0x280460, (const char *)0x280478, 0x241, 1);
+    system_exit(-1);
+  }
+  word = flag ? (const char *)0x25cb44 : (const char *)0x25cb3c;
+  crt_sprintf(buffer, (const char *)0x257984, word);
+}
+
+void FUN_000ca530(int16_t type, float value, char *buffer)
+{
+  if (type != 6) {
+    display_assert((const char *)0x2804ac, (const char *)0x280478, 0x24c, 1);
+    system_exit(-1);
+  }
+  crt_sprintf(buffer, (const char *)0x2804a8, (double)value);
+}
+
+void FUN_000ca580(int16_t type, int16_t value, char *buffer)
+{
+  if (type != 7) {
+    display_assert((const char *)0x2804c0, (const char *)0x280478, 0x257, 1);
+    system_exit(-1);
+  }
+  crt_sprintf(buffer, (const char *)0x25acb8, (int)value);
+}
+
+void FUN_000ca5d0(int16_t type, int value, char *buffer)
+{
+  if (type != 8) {
+    display_assert((const char *)0x2804e4, (const char *)0x280478, 0x262, 1);
+    system_exit(-1);
+  }
+  crt_sprintf(buffer, (const char *)0x2804e0, value);
+}
+
+void FUN_000ca620(int16_t type, int value, char *buffer)
+{
+  if (type != 9) {
+    display_assert((const char *)0x280500, (const char *)0x280478, 0x26d, 1);
+    system_exit(-1);
+  }
+  crt_sprintf(buffer, (const char *)0x257984, value);
+}
+
+char FUN_000c98e0(int object_handle)
+{
+  char *obj;
+  char *other;
+  int child;
+  int player;
+  char protected_flag;
+
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  player = player_index_from_unit_index(object_handle);
+  protected_flag = player != -1;
+  if (protected_flag)
+    return 1;
+
+  child = *(int *)(obj + 0xc8);
+  while (child != -1) {
+    other = (char *)object_get_and_verify_type(child, -1);
+    if (FUN_000c98e0(child))
+      return 1;
+    child = *(int *)(other + 0xc4);
+  }
+
+  child = *(int *)(obj + 0xcc);
+  while (child != -1) {
+    other = (char *)object_get_and_verify_type(child, -1);
+    if (player_index_from_unit_index(child) != -1)
+      return 1;
+    child = *(int *)(other + 0xcc);
+  }
+
+  if (((1 << *(uint8_t *)(obj + 0x64)) & 0x1c) != 0 &&
+      (*(uint8_t *)(obj + 0x1a4) & 2) != 0)
+    return 1;
+  return protected_flag;
+}
+
+void FUN_000c99e0(int object_handle)
+{
+  if (object_handle == -1)
+    return;
+  if (!FUN_000c98e0(object_handle)) {
+    object_delete(object_handle);
+    return;
+  }
+  error(2, (const char *)0x2803a8);
+}
+
+void FUN_000c9a20(int16_t name_index)
+{
+  int handle;
+  if (name_index == (int16_t)0xffff)
+    return;
+  handle = object_name_list_get_handle(name_index);
+  if (handle != -1)
+    FUN_000c99e0(handle);
+}
+
+void FUN_000ca110(int16_t name_index)
+{
+  int handle;
+  if (name_index == (int16_t)-1)
+    return;
+  handle = object_name_list_get_handle(name_index);
+  if (handle != -1)
+    FUN_000c99e0(handle);
+  FUN_000c9990(name_index);
+}
+
+void FUN_000c9bb0(const char *substr)
+{
+  hs_object_iterate_names_containing((void *)FUN_000c9a20, substr);
+}
+
+void FUN_000ca140(const char *substr)
+{
+  hs_object_iterate_names_containing((void *)FUN_000ca110, substr);
+}
