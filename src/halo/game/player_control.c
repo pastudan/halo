@@ -7,8 +7,357 @@ void *player_control_get_data(int16_t local_player_index)
   return (char *)player_control_globals + local_player_index * 0x40 + 0x10;
 }
 
+void player_control_initialize(void)
+{
+  player_control_globals = (player_control_globals_t *)game_state_malloc(
+      "player control globals", 0, sizeof(player_control_globals_t));
+}
+
 void player_control_dispose(void)
 {
+}
+
+/* Scripted camera takeover: clear bit0 of globals+0xc when enable!=0 (player
+ * camera allowed); set bit0 when enable==0 (scripted camera lock). */
+void scripted_player_control_set_camera_control(char enable)
+{
+  int *flags;
+
+  flags = (int *)((char *)player_control_globals + 0xc);
+  if (enable)
+    *flags &= ~1;
+  else
+    *flags |= 1;
+}
+
+float player_control_get_autoaim_level(int16_t local_player_index)
+{
+  assert_halt(local_player_index >= 0 &&
+              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+  return *(float *)((char *)player_control_globals +
+                    (int)local_player_index * 0x40 + 0x3c);
+}
+
+void players_unzoom_all(void)
+{
+  int16_t i;
+
+  for (i = 0; i < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS; i++) {
+    assert_halt(i >= 0 && i < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+    *(int16_t *)((char *)player_control_globals + (int)i * 0x40 + 0x34) =
+        (int16_t)NONE;
+  }
+}
+
+int16_t player_control_get_zoom_level(int16_t local_player_index)
+{
+  char *slot;
+
+  if (local_player_index == (int16_t)NONE)
+    return (int16_t)NONE;
+  slot = (char *)player_control_get_data(local_player_index);
+  return *(int16_t *)(slot + 0x24);
+}
+
+void player_control_action_test_reset(void)
+{
+  *(int *)player_control_globals = 0;
+  *((int *)player_control_globals + 1) = 0;
+}
+
+char player_control_action_test_accept(void)
+{
+  int *g;
+
+  g = (int *)player_control_globals;
+  g[1] |= 4;
+  g[2] |= 4;
+  return (char)((g[0] >> 2) & 1);
+}
+
+char player_control_action_test_back(void)
+{
+  int *g;
+
+  g = (int *)player_control_globals;
+  g[1] |= 8;
+  g[2] |= 8;
+  return (char)((g[0] >> 3) & 1);
+}
+
+char player_control_action_test_action(void)
+{
+  int *g;
+
+  g = (int *)player_control_globals;
+  g[1] |= 1;
+  g[2] |= 1;
+  return (char)(g[0] & 1);
+}
+
+char player_control_action_test_jump(void)
+{
+  return (char)((*(int *)player_control_globals >> 1) & 1);
+}
+
+char player_control_action_test_primary_trigger(void)
+{
+  return (char)((*(int *)player_control_globals >> 4) & 1);
+}
+
+char player_control_action_test_grenade_trigger(void)
+{
+  return (char)((*(int *)player_control_globals >> 5) & 1);
+}
+
+char player_control_action_test_zoom(void)
+{
+  return (char)((*(int *)player_control_globals >> 6) & 1);
+}
+
+/* True when all relative-move bits (0x7800) are set. */
+char player_control_action_test_move_relative_all_directions(void)
+{
+  return (char)((~*(int *)player_control_globals & 0x7800) == 0);
+}
+
+/* True when all relative-look bits (0x780) are set. */
+char player_control_action_test_look_relative_all_directions(void)
+{
+  return (char)((~*(int *)player_control_globals & 0x780) == 0);
+}
+
+char player_control_action_test_look_relative_left(void)
+{
+  return (char)((*(int *)player_control_globals >> 9) & 1);
+}
+
+char player_control_action_test_look_relative_right(void)
+{
+  return (char)((*(int *)player_control_globals >> 10) & 1);
+}
+
+char player_control_action_test_look_relative_up(void)
+{
+  return (char)((*(int *)player_control_globals >> 7) & 1);
+}
+
+char player_control_action_test_look_relative_down(void)
+{
+  return (char)((*(int *)player_control_globals >> 8) & 1);
+}
+
+/* Smallest signed angle delta b-a, wrapped into [-pi, pi). */
+float FUN_000b6dd0(float a, float b)
+{
+  float diff;
+
+  diff = b - a;
+  if (diff >= *(float *)0x256980)
+    diff -= *(float *)0x255a54;
+  if (diff <= *(float *)0x26e280)
+    diff += *(float *)0x255a54;
+  return diff;
+}
+
+/* If |vec| > max_len, scale vec onto the circle of radius max_len and return 1;
+ * otherwise leave vec unchanged and return 0. */
+char limit2d(float *vec, float max_len)
+{
+  float len_sq;
+  float scale;
+
+  len_sq = vec[0] * vec[0] + vec[1] * vec[1];
+  if (len_sq > max_len * max_len) {
+    scale = max_len / sqrtf(len_sq);
+    vec[0] *= scale;
+    vec[1] *= scale;
+    return 1;
+  }
+  return 0;
+}
+
+/* Move *value toward target by at most max_delta per call. */
+void interpolate_scalar(float *value, float target, float max_delta)
+{
+  float delta;
+
+  delta = target - *value;
+  if (delta < -max_delta)
+    *value += -max_delta;
+  else if (delta > max_delta)
+    *value += max_delta;
+  else
+    *value += delta;
+}
+
+/* Piecewise-linear sample of table[0..count) at |t| in [0,1], with sign of t
+ * applied by negating the result when t >= 0 (matches XBE polarity). */
+float evaluate_piecewise_linear_function(int16_t count, float *table, float t)
+{
+  char positive;
+  int n;
+  float idx_f;
+  int16_t i;
+  int16_t j;
+  float result;
+
+  positive = 1;
+  if (t < *(float *)0x2533c0)
+    positive = 0;
+  n = (int)count - 1;
+  idx_f = fabsf(t) * (float)n;
+  if (idx_f < 0.0)
+    idx_f = 0.0f;
+  else if (idx_f > (float)count - *(float *)0x2533c8)
+    idx_f = (float)count - *(float *)0x2533c8;
+  i = (int16_t)(int)idx_f;
+  if (i < 0)
+    i = 0;
+  else if ((int)i > n)
+    i = (int16_t)n;
+  j = (int16_t)(i + 1);
+  if ((int)j > n)
+    j = (int16_t)n;
+  assert_halt(table && i >= 0 && i <= j && j < count);
+  result = table[i] + (idx_f - (float)i) * (table[j] - table[i]);
+  if (positive)
+    result = -result;
+  return result;
+}
+
+int player_control_get_unit_index(int16_t local_player_index)
+{
+  assert_halt(local_player_index >= 0 &&
+              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+  return *(int *)((char *)player_control_globals +
+                  (int)local_player_index * 0x40 + 0x10);
+}
+
+int player_control_get_aiming_unit_index(int16_t local_player_index)
+{
+  int unit_handle;
+
+  assert_halt(local_player_index >= 0 &&
+              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+  unit_handle = *(int *)((char *)player_control_globals +
+                         (int)local_player_index * 0x40 + 0x10);
+  return unit_get_aiming_unit_index(unit_handle);
+}
+
+int player_control_get_target_object_index(int16_t local_player_index)
+{
+  char *slot;
+  int target_handle;
+
+  assert_halt(local_player_index >= 0 &&
+              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+  slot = (char *)player_control_globals + (int)local_player_index * 0x40 + 0x10;
+  target_handle = *(int *)(slot + 0x28);
+  if (object_try_and_get_and_verify_type(target_handle, NONE))
+    return *(int *)(slot + 0x28);
+  return NONE;
+}
+
+float player_control_get_field_of_view(int16_t local_player_index)
+{
+  char *slot;
+  int unit_handle;
+  void *unit_obj;
+  void *unit_tag;
+  int weapon_handle;
+  int16_t zoom;
+
+  assert_halt(local_player_index >= 0 &&
+              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+  slot = (char *)player_control_globals + (int)local_player_index * 0x40 + 0x10;
+  unit_handle = *(int *)slot;
+  if (unit_handle == NONE)
+    return *(float *)0x26e270;
+  unit_obj = object_get_and_verify_type(unit_handle, 3);
+  unit_tag = tag_get(0x756e6974 /* 'unit' */, *(int *)unit_obj);
+  zoom = *(int16_t *)(slot + 0x24);
+  weapon_handle = unit_get_weapon(unit_handle, *(int16_t *)((char *)unit_obj + 0x2a2));
+  if (weapon_handle != NONE)
+    return weapon_get_field_of_view(
+        weapon_handle, *(float *)((char *)unit_tag + 0x1a0), zoom);
+  return *(float *)((char *)unit_tag + 0x1a0);
+}
+
+int player_control_get_desired_weapon(int16_t local_player_index, int unit_handle)
+{
+  char *slot;
+  int weapon_handle;
+
+  assert_halt(local_player_index >= 0 &&
+              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+  slot = (char *)player_control_globals + (int)local_player_index * 0x40 + 0x10;
+  if (*(int *)slot == unit_handle) {
+    weapon_handle = unit_get_weapon(unit_handle, *(int16_t *)(slot + 0x20));
+    if (weapon_handle != NONE)
+      return weapon_handle;
+  }
+  return unit_get_weapon(
+      unit_handle,
+      *(int16_t *)((char *)object_get_and_verify_type(unit_handle, 3) + 0x2a2));
+}
+
+float *player_control_get_facing_angles(int16_t local_player_index)
+{
+  char *slot;
+  uint32_t bits;
+
+  assert_halt(local_player_index >= 0 &&
+              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+  slot = (char *)player_control_globals + (int)local_player_index * 0x40 + 0x10;
+  bits = *(uint32_t *)(slot + 0x10);
+  if ((bits & 0x7f800000) == 0x7f800000 ||
+      *(float *)(slot + 0x10) > *(float *)0x26e37c ||
+      *(float *)(slot + 0x10) < *(float *)0x26e378) {
+    display_assert("valid_euler_angles2d(&player->desired_angles)",
+                   "c:\\halo\\SOURCE\\game\\player_control.c", 0x3c0, 1);
+    system_exit(NONE);
+  }
+  bits = *(uint32_t *)(slot + 0xc);
+  if ((bits & 0x7f800000) == 0x7f800000 ||
+      *(float *)(slot + 0xc) > *(float *)0x255a54 ||
+      *(float *)(slot + 0xc) < *(float *)0x2533c0) {
+    display_assert("valid_euler_angles2d(&player->desired_angles)",
+                   "c:\\halo\\SOURCE\\game\\player_control.c", 0x3c0, 1);
+    system_exit(NONE);
+  }
+  return (float *)(slot + 0xc);
+}
+
+float *player_control_get_facing_direction(int16_t local_player_index,
+                                           float *out_direction)
+{
+  float *angles;
+  int player_index;
+
+  angles = player_control_get_facing_angles(local_player_index);
+  player_index = local_player_get_player_index(local_player_index);
+  player_build_action_update(player_index, out_direction, angles);
+  return out_direction;
+}
+
+/* Forward input delta into FUN_000b7f90 (local player index in EAX). */
+void FUN_000b8cf0(int a, float *delta)
+{
+  assert_halt(delta != NULL);
+  FUN_000b7f90((int16_t)a, delta[0], delta[1]);
+}
+
+void FUN_000b8d30(int handle)
+{
+  int queue_index;
+
+  queue_index = data_new_datum(*(data_t **)0x4570c8, handle);
+  if (queue_index == NONE) {
+    display_assert("queue_index!=NONE", "c:\\halo\\SOURCE\\game\\player_control.c",
+                   0xeb, 1);
+    system_exit(NONE);
+  }
 }
 
 /* Set action flags on a local player's control slot.

@@ -793,8 +793,8 @@ void FUN_000d1090(void)
       draw_ptr =
         (autoaim > 0.0f) ? *(const void **)0x2ee6d0 : *(const void **)0x2ee6d8;
 
-      zoom_level = (int16_t)player_control_get_zoom_level(
-        (int16_t) * (int *)0x506548, draw_ptr);
+      zoom_level = player_control_get_zoom_level(
+        (int16_t) * (int *)0x506548);
       magnification =
         weapon_get_zoom_magnification(weapon_obj_handle, zoom_level);
 

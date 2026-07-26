@@ -1657,5 +1657,229 @@
     "object": "collision_bsp.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb63d0",
+    "name": "player_control_initialize",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6430",
+    "name": "scripted_player_control_set_camera_control",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6940",
+    "name": "player_control_get_autoaim_level",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb69d0",
+    "name": "players_unzoom_all",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6a70",
+    "name": "player_control_get_zoom_level",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6a90",
+    "name": "player_control_action_test_reset",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6ab0",
+    "name": "player_control_action_test_accept",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6ad0",
+    "name": "player_control_action_test_back",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6af0",
+    "name": "player_control_action_test_action",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6b10",
+    "name": "player_control_action_test_jump",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6b20",
+    "name": "player_control_action_test_primary_trigger",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6b30",
+    "name": "player_control_action_test_grenade_trigger",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6b40",
+    "name": "player_control_action_test_zoom",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6b50",
+    "name": "player_control_action_test_move_relative_all_directions",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6b70",
+    "name": "player_control_action_test_look_relative_all_directions",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6b90",
+    "name": "player_control_action_test_look_relative_left",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6ba0",
+    "name": "player_control_action_test_look_relative_right",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6bb0",
+    "name": "player_control_action_test_look_relative_up",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6bc0",
+    "name": "player_control_action_test_look_relative_down",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6dd0",
+    "name": "FUN_000b6dd0",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6e10",
+    "name": "limit2d",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6e60",
+    "name": "interpolate_scalar",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb64c0",
+    "name": "evaluate_piecewise_linear_function",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb65c0",
+    "name": "player_control_get_aiming_unit_index",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6620",
+    "name": "player_control_get_target_object_index",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6690",
+    "name": "player_control_get_field_of_view",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb68c0",
+    "name": "player_control_get_desired_weapon",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb7e30",
+    "name": "player_control_get_facing_angles",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb7f10",
+    "name": "player_control_get_facing_direction",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb8cf0",
+    "name": "FUN_000b8cf0",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb8d30",
+    "name": "FUN_000b8d30",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6870",
+    "name": "player_control_get_unit_index",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]
