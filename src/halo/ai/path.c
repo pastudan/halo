@@ -2776,39 +2776,11 @@ float FUN_00060200(void *path, int16_t heap_index)
 /* FUN_00060260 (0x60260) — readable C lift. */
 void FUN_00060260(unsigned short channel, void *path)
 {
-<<<<<<< HEAD
   int16_t count;
   int16_t i;
   int16_t node;
   float val;
   unsigned bits;
-=======
-  short count;
-  short i;
-  short node;
-  short limit;
-  float val;
-
-  count = *(short *)((char *)path + 0x1430);
-  if (count <= 0)
-    return;
-  for (i = 0; i < count; i++) {
-    if (i < 0 || i >= count || count > 0x80) {
-      display_assert((const char *)0x25ea40, (const char *)0x25ea14, 0x31, 1);
-      system_exit(-1);
-    }
-    node = *(short *)((char *)path + 0x1432 + (int)i * 2);
-    limit = *(short *)((char *)path + 0x2c);
-    if (node < 0 || node >= limit || limit > 0x80) {
-      display_assert((const char *)0x25e9b0, (const char *)0x25ea14, 0x28, 1);
-      system_exit(-1);
-    }
-    val = *(float *)((char *)path + ((int)node + 2) * 40);
-    error(channel, (const char *)0x25eab4, (int)i, (double)val);
-  }
-}
-
->>>>>>> 5583183bdc91a61e208322f835b56d1a5f14c9ff
 
   count = *(int16_t *)((char *)path + 0x1430);
   if (count <= 0)
