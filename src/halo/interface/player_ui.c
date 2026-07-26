@@ -349,54 +349,18 @@ char player_ui_game_variant_specified(void *out_variant)
   return 0;
 }
 
-/* player_ui_rumble_disabled (0xe0b00) — XBE naked draft (batch 170). */
-#if defined(__clang__)
-static void (*const be0b00_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be0b00_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* player_ui_rumble_disabled (0xe0b00) — readable C lift. */
 bool player_ui_rumble_disabled(int controller_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "cmpw $-1, %%si\n\t"
-      "jne .Lplayer_ui_rumble_disabled_1\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_ui_rumble_disabled_1:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lplayer_ui_rumble_disabled_2\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lplayer_ui_rumble_disabled_3\n\t"
-      ".Lplayer_ui_rumble_disabled_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x131\n\t"
-      "pushl $0x282724\n\t"
-      "pushl $0x282750\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_ui_rumble_disabled_3:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0x38, %%eax, %%eax\n\t"
-      "movb 0x46bf0c(%%eax), %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be0b00_assert), [exitfn] "m"(be0b00_exitfn)
-      : "memory");
+  int16_t si = (int16_t)controller_index;
+  if (si == -1)
+    return 0;
+  if (si < 0 || si >= 4) {
+    display_assert((const char *)0x282750, (const char *)0x282724, 0x131, 1);
+    system_exit(-1);
+  }
+  return *(unsigned char *)(0x46bf0c + si * 0x38) != 0;
 }
-#else
-#error "player_ui_rumble_disabled: clang naked draft required"
-#endif
-
 
 /* player_ui_autolevel_enabled (0xe0b50) — XBE naked draft (batch 147). */
 #if defined(__clang__)

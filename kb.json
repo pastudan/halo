@@ -26851,7 +26851,7 @@
         },
         {
           "addr": "0x84970",
-          "decl": "void FUN_00084970(void);",
+          "decl": "void FUN_00084970(unsigned int *ep);",
           "ported": false
         }
       ],
@@ -37673,7 +37673,7 @@
         },
         {
           "addr": "0x120470",
-          "decl": "void FUN_00120470(void);",
+          "decl": "void FUN_00120470(void *ctrl, int datum_handle);",
           "ported": false
         },
         {
@@ -37728,7 +37728,7 @@
         },
         {
           "addr": "0x120930",
-          "decl": "void quaternion_decompress_6byte_renormalized(void);",
+          "decl": "void quaternion_decompress_6byte_renormalized(void *compressed, float *out);",
           "ported": false
         },
         {
