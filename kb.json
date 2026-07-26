@@ -18001,7 +18001,7 @@
         {
           "addr": "0xa2dc0",
           "decl": "void scripted_player_effect_set_translation(int a0, int a1, int a2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xa2df0",
