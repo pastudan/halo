@@ -5994,65 +5994,20 @@ void FUN_000ce150(void)
   *(data_t **)0x5aa694 = game_state_data_new(buf, 0x80, 0xc);
 }
 
-/* object_list_delete (0xce240) — XBE naked draft (batch 157). */
-#if defined(__clang__)
-static void *(*const bce240_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bce240_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bce240_exitfn)(int) = system_exit;
-static void (*const bce240_cce110)(data_t *data, int link) = FUN_000ce110;
-static void (*const bce240_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
-void object_list_delete(int list_handle __attribute__((unused)))
+/* object_list_delete (0xce240) — readable C lift. */
+void object_list_delete(int list_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lobject_list_delete_2\n\t"
-      "movl 0x5aa698, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x4(%%esi)\n\t"
-      "je .Lobject_list_delete_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x64\n\t"
-      "pushl $0x280f0c\n\t"
-      "pushl $0x280ef0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lobject_list_delete_1:\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "movl 0x5aa694, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cce110]\n\t"
-      "movl 0x5aa698, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%esi\n\t"
-      ".Lobject_list_delete_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bce240_dget), [assert] "m"(bce240_assert), [exitfn] "m"(bce240_exitfn), [cce110] "m"(bce240_cce110), [c1196d0] "m"(bce240_c1196d0)
-      : "memory");
+  char *node;
+  if (list_handle == -1)
+    return;
+  node = (char *)datum_get(*(data_t **)0x5aa698, list_handle);
+  if (*(short *)(node + 4) != 0) {
+    display_assert((const char *)0x280ef0, (const char *)0x280f0c, 0x64, 1);
+    system_exit(-1);
+  }
+  FUN_000ce110(*(data_t **)0x5aa694, *(int *)(node + 8));
+  datum_delete(*(data_t **)0x5aa698, list_handle);
 }
-#else
-#error "object_list_delete: clang naked draft required"
-#endif
-
 
 /* FUN_000ce3c0 (0xce3c0) — XBE naked draft (batch 177). */
 #if defined(__clang__)
