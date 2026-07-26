@@ -3673,34 +3673,12 @@ void observer_set_camera(void)
 #endif
 
 
-/* FUN_0008cf10 (0x8cf10) — XBE naked draft (batch 188). */
-#if defined(__clang__)
-static void (*const b8cf10_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-
-__attribute__((naked, noinline))
-void FUN_0008cf10(void)
+/* FUN_0008cf10 (0x8cf10) — readable C lift. */
+void FUN_0008cf10(float *angles, float pitch, float *vec)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10cc00]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c10cc00] "m"(b8cf10_c10cc00)
-      : "memory");
+  angles[2] = pitch;
+  vector_to_angles(angles, vec);
 }
-#else
-#error "FUN_0008cf10: clang naked draft required"
-#endif
-
 
 /* FUN_0008cf30 (0x8cf30) — XBE naked draft (batch 108). */
 #if defined(__clang__)

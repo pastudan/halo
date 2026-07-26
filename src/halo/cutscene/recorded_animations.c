@@ -536,59 +536,17 @@ int recorded_animation_get_time_left(int unit_handle __attribute__((unused)))
 #endif
 
 
-/* recorded_animation_play_and_delete (0x95660) — XBE naked draft (batch 289). */
-#if defined(__clang__)
-static char (*const b95660_c95330)(int unit, int anim, int flags) = recorded_animation_play_internal;
-
-__attribute__((naked, noinline))
-int recorded_animation_play_and_delete(int unit __attribute__((unused)), int anim __attribute__((unused)))
+/* recorded_animation_play_and_delete (0x95660) — readable C lift. */
+int recorded_animation_play_and_delete(int unit, int anim)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $8\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "call *%[c95330]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c95330] "m"(b95660_c95330)
-      : "memory");
+  return recorded_animation_play_internal(unit, anim, 8);
 }
-#else
-#error "recorded_animation_play_and_delete: clang naked draft required"
-#endif
 
-
-/* FUN_00095680 (0x95680) — XBE naked draft (batch 289). */
-#if defined(__clang__)
-static char (*const b95680_c95330)(int unit, int anim, int flags) = recorded_animation_play_internal;
-
-__attribute__((naked, noinline))
-int FUN_00095680(int unit __attribute__((unused)), int anim __attribute__((unused)))
+/* FUN_00095680 (0x95680) — readable C lift. */
+int FUN_00095680(int unit, int anim)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "call *%[c95330]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c95330] "m"(b95680_c95330)
-      : "memory");
+  return recorded_animation_play_internal(unit, anim, 0x10);
 }
-#else
-#error "FUN_00095680: clang naked draft required"
-#endif
-
 
 /* FUN_000956e0 (0x956e0) — XBE naked draft (batch 287). */
 #if defined(__clang__)

@@ -36152,7 +36152,7 @@
         {
           "addr": "0x64fa0",
           "decl": "void FUN_00064fa0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x64fe0",
