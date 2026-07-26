@@ -1359,6 +1359,51 @@ void first_person_weapon_render_update(void)
 }
 
 /* 0xddb90 — resolve a marker only for the currently rendered local player. */
+#if defined(__clang__)
+static int16_t (*const fp_marker_local)(int) = FUN_000dcd60;
+static int16_t (*const fp_marker_by_name)(int, const char *, void *, int16_t) =
+    first_person_weapon_get_marker_by_name;
+
+__attribute__((naked, noinline))
+int16_t first_person_weapon_get_marker_by_name_render(
+    int object_handle __attribute__((unused)),
+    const char *marker_name __attribute__((unused)),
+    void *out_markers __attribute__((unused)),
+    int16_t max_markers __attribute__((unused)))
+{
+  /* PE FUN_000dcd60 is cdecl (XBE used EDI); push handle for the lift. */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "movl 8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[local]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw %%ax, 0x506548\n\t"
+      "jne 1f\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[byname]\n\t"
+      "addl $16, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "1:\n\t"
+      "xorw %%ax, %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [local] "m"(fp_marker_local), [byname] "m"(fp_marker_by_name)
+      : "memory");
+}
+#else
 int16_t first_person_weapon_get_marker_by_name_render(int object_handle,
                                                      const char *marker_name,
                                                      void *out_markers,
@@ -1369,6 +1414,7 @@ int16_t first_person_weapon_get_marker_by_name_render(int object_handle,
   return first_person_weapon_get_marker_by_name(object_handle, marker_name,
                                                 out_markers, max_markers);
 }
+#endif
 
 /* 0xde0e0 — bind an object into a local player's first-person weapon slot. */
 #if defined(__i386__) && defined(__GNUC__)

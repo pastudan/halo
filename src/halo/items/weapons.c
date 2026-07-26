@@ -1742,39 +1742,56 @@ int16_t weapon_rotate_zoom_level(int weapon_handle, int16_t zoom_level)
   return (int16_t)((zoom_level != *(int16_t *)(tag_data + 0x3da) - 1) - 1);
 }
 
-/* 0xfc780 */
+/* 0xfc780 — interpolate weapon zoom magnification for a zoom level. */
+#if defined(__clang__)
+__attribute__((noinline))
+#endif
 float weapon_get_zoom_magnification(int weapon_handle, int16_t zoom_level)
 {
-  char *tag_data = (char *)tag_get(
-    0x77656170,
-    *(int *)object_get_and_verify_type(weapon_handle, 4));
-  float result = 1.0f;
+  char *weapon_obj;
+  char *tag_data;
+  float result;
   float min_zoom;
   float max_zoom;
   float t;
+  int16_t zoom_count;
 
-  if (zoom_level < 0 || zoom_level >= *(int16_t *)(tag_data + 0x3da))
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
+  result = *(float *)0x2533c8; /* 1.0f */
+  zoom_count = *(int16_t *)(tag_data + 0x3da);
+
+  if (zoom_level < 0 || zoom_level >= zoom_count)
     return result;
 
-  if (*(int16_t *)(tag_data + 0x3da) > 1) {
-    t = (float)zoom_level / (float)(*(int16_t *)(tag_data + 0x3da) - 1);
-  } else {
+  if (zoom_count > 1)
+    t = (float)(int)zoom_level / (float)(int)(zoom_count - 1);
+  else
     t = 0.0f;
-  }
 
-  min_zoom = (*(float *)(tag_data + 0x3dc) != 0.0f) ? *(float *)(tag_data + 0x3dc)
-                                                     : 1.0f;
-  max_zoom = (*(float *)(tag_data + 0x3e0) != 0.0f) ? *(float *)(tag_data + 0x3e0)
-                                                     : 1.0f;
+  /* XBE: fcomp 0.0; AH&0x41 => value <= 0 -> default 1.0 */
+  if (*(float *)(tag_data + 0x3dc) > *(float *)0x2533c0)
+    min_zoom = *(float *)(tag_data + 0x3dc);
+  else
+    min_zoom = *(float *)0x2533c8;
+
+  if (*(float *)(tag_data + 0x3e0) > *(float *)0x2533c0)
+    max_zoom = *(float *)(tag_data + 0x3e0);
+  else
+    max_zoom = *(float *)0x2533c8;
 
   result = FUN_000fbcf0(max_zoom / min_zoom, t) * min_zoom;
 
   if ((*(uint32_t *)&result & 0x7f800000u) == 0x7f800000u) {
-    display_assert(0, "c:\\halo\\SOURCE\\items\\weapons.c", 0x5a2, 1);
+    display_assert(
+        csprintf((char *)0x5ab100, (char *)0x0025eb8c, (char *)0x0028aeec,
+                 *(unsigned int *)&result, (double)result),
+        (char *)0x0028ad48, 0x5a2, 1);
     system_exit(-1);
   }
-  if (result <= 0.0f) {
-    display_assert(0, "c:\\halo\\SOURCE\\items\\weapons.c", 0x5a3, 1);
+  /* XBE: fcomp 0.0; AH&0x41 == 0 => result > 0 ok; else assert */
+  if (!(result > *(float *)0x2533c0)) {
+    display_assert((char *)0x0028aed8, (char *)0x0028ad48, 0x5a3, 1);
     system_exit(-1);
   }
 
@@ -1968,31 +1985,41 @@ void FUN_000fcec0(int16_t trigger_index, int weapon_handle)
   FUN_000fcdd0(trigger_index, weapon_handle);
 }
 
-/* 0xfd0b0 */
+/* 0xfd0b0 — build a shot-error rotation from a dispersion index.
+ * angle_index arrives in AX (register); remaining args are cdecl. */
+#if defined(__clang__)
+__attribute__((noinline))
+#endif
 void FUN_000fd0b0(int16_t angle_index, float *out_x, float *out_y,
-                    int16_t param_3, float scale, char flag)
+                  int16_t param_3, float scale, char flag)
 {
   float angle;
+  int16_t idx;
 
-  if ((flag & 1) == 0) {
-    angle = (float)(angle_index >> 1) - *(float *)0x253398;
-    if ((angle_index & 1) == 0)
-      angle = -angle;
-  } else if (angle_index == 0) {
-    angle = 0.0f;
-  } else if ((angle_index & 1) != 0) {
-    angle = (float)((angle_index - 1) >> 1);
+  idx = angle_index;
+  if ((flag & 1) != 0) {
+    if (idx == 0) {
+      angle = *(float *)0x2533c0;
+    } else if (((idx - 1) & 1) != 0) {
+      angle = (float)(int)((int16_t)(idx - 1) >> 1);
+    } else {
+      angle = (float)(int)(int16_t)(-(idx >> 1));
+    }
   } else {
-    angle = (float)(-(angle_index >> 1));
+    angle = (float)(int)(int16_t)(idx >> 1) - *(float *)0x253398;
+    /* XBE: fchs when (angle_index & 1) != 0 */
+    if ((idx & 1) != 0)
+      angle = -angle;
   }
 
   angle *= scale;
 
-  if (param_3 == 1) {
+  if ((int16_t)(param_3 - 1) == 0) {
     float sin_a;
     float cos_a;
-    sin_a = xbox_sinf(angle);
+
     cos_a = xbox_cosf(angle);
+    sin_a = xbox_sinf(angle);
     rotate_vector3d_by_sincos(out_x, out_y, sin_a, cos_a);
   }
 }

@@ -433,6 +433,15 @@ def main() -> int:
         ("object_propagate_flag_to_children", 0x13ee60, 0x13ef00),
         ("weapon_build_weapon_interface_state", 0xfc550, 0xfc690),
         ("FUN_000fb5a0", 0xfb5a0, 0xfb690),
+        # gameplay wave 35 (2026-07-26)
+        ("FUN_001b5500", 0x1b5500, 0x1b5540),
+        ("vehicle_causes_collision_damage", 0x1b5580, 0x1b55b0),
+        ("vehicle_hover", 0x1b55c0, 0x1b55f0),
+        ("biped_approximate_surface_index", 0x1a1b90, 0x1a1bc0),
+        ("first_person_weapon_get_marker_by_name_render", 0xddb90, 0xddbd0),
+        ("weapon_get_zoom_magnification", 0xfc780, 0xfc8e0),
+        ("FUN_000fd0b0", 0xfd0b0, 0xfd150),
+        ("FUN_001a8910", 0x1a8910, 0x1a8930),
     ]
 
     xbe = Xbe.from_file(args.xbe)

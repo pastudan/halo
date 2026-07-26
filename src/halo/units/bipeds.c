@@ -1715,6 +1715,9 @@ int FUN_001a1a10(float scale, float *out_point, void *out_vec,
  * out_point=param_2, out_vec=NULL; ADD ESP,0xc. No MOV EAX after CALL, so the
  * keystone return flows through (caller 0x56c60 tests the result == -1).
  */
+#if defined(__clang__)
+__attribute__((noinline))
+#endif
 int biped_approximate_surface_index(int unit_handle, float *out_point)
 {
   return FUN_001a1a10(2.0f, out_point, (void *)0, *(float **)0x31fc50,

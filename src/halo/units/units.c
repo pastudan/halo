@@ -14136,7 +14136,10 @@ char FUN_001a8890(void *anim_state)
   return result;
 }
 
-/* 0x1a8910 — jump table on anim_state for states 0x1e..0x29 */
+/* 0x1a8910 — jump table on anim_state for states 0x1e..0x29. */
+#if defined(__clang__)
+__attribute__((noinline))
+#endif
 char FUN_001a8910(int16_t anim_state)
 {
   static const unsigned char k_slot[] = {
@@ -14147,7 +14150,7 @@ char FUN_001a8910(int16_t anim_state)
   idx = (int)anim_state - 0x1e;
   if ((unsigned int)idx > 0xb)
     return 1;
-  return k_slot[idx] ? 1 : 0;
+  return (char)k_slot[idx];
 }
 
 /* 0x1a8950 — map (anim_state,target_state) pair to action id */
