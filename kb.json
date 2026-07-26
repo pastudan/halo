@@ -17957,12 +17957,12 @@
         {
           "addr": "0xa2970",
           "decl": "void player_effect_screen_fade_in(float a0, int a1, int a2, short a3);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xa29c0",
           "decl": "void player_effect_screen_fade_out(float a0, int a1, int a2, short a3);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xa2a10",
