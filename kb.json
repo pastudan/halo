@@ -11690,7 +11690,7 @@
         {
           "addr": "0xc4240",
           "decl": "void FUN_000c4240(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4270",
@@ -11700,52 +11700,52 @@
         {
           "addr": "0xc4320",
           "decl": "void FUN_000c4320(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4350",
           "decl": "void FUN_000c4350(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4380",
           "decl": "void FUN_000c4380(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc43b0",
           "decl": "void FUN_000c43b0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc43e0",
           "decl": "void FUN_000c43e0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4410",
           "decl": "void FUN_000c4410(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4440",
           "decl": "void FUN_000c4440(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4470",
           "decl": "void FUN_000c4470(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc44a0",
           "decl": "void FUN_000c44a0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc44d0",
           "decl": "void FUN_000c44d0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4500",
@@ -29501,7 +29501,7 @@
         {
           "addr": "0x1a8950",
           "decl": "int FUN_001a8950(int16_t anim_state@<ecx>, int16_t target_state@<edx>);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "units.obj",
@@ -29522,7 +29522,7 @@
         {
           "addr": "0x1b5500",
           "decl": "void FUN_001b5500(int unit_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b5580",
@@ -29537,7 +29537,7 @@
         {
           "addr": "0x1b5610",
           "decl": "void FUN_001b5610(int vehicle_handle, char flag);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b5680",
@@ -38091,7 +38091,7 @@
         {
           "addr": "0x14ad60",
           "decl": "void render_debug_collision_sphere(void *sphere, void *color);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x14ad80",
@@ -39077,7 +39077,7 @@
         {
           "addr": "0x136700",
           "decl": "float object_get_maximum_shield_vitality(int object_handle, char use_shield_multiplier);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x138f10",
@@ -39087,12 +39087,12 @@
         {
           "addr": "0x138f30",
           "decl": "void FUN_00138f30(float *output@<eax>, float *vertex_c@<ecx>, float *vertex_d@<edx>, float *base@<esi>, float u, float v);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x138f70",
           "decl": "void FUN_00138f70(float *output@<eax>, float *vertex_c@<ecx>, float *vertex_d@<edx>, float *base@<esi>, float u, float v);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x138fd0",

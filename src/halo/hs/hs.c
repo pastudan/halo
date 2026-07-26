@@ -4534,36 +4534,13 @@ void FUN_000c41e0(void)
 #endif
 
 
-/* FUN_000c4240 (0xc4240) — XBE naked draft (batch 187). */
-#if defined(__clang__)
-static scenario_t * (*const bc4240_c18e380)(void) = global_scenario_get;
-static void (*const bc4240_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
+/* FUN_000c4240 (0xc4240) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c4240(void)
 {
-  __asm__ volatile(
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c4240_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x49c, %%eax\n\t"
-      "pushl $0x5c\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c4240_1:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc4240_c18e380), [cc40f0] "m"(bc4240_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0((int16_t)0, 0x5c, (char *)global_scenario_get() + 0x49c);
+  }
 }
-#else
-#error "FUN_000c4240: clang naked draft required"
-#endif
-
 
 /* FUN_000c4270 (0xc4270) — XBE naked draft (batch 145). */
 #if defined(__clang__)
@@ -4648,315 +4625,85 @@ void FUN_000c4270(void)
 #endif
 
 
-/* FUN_000c4320 (0xc4320) — XBE naked draft (batch 187). */
-#if defined(__clang__)
-static scenario_t * (*const bc4320_c18e380)(void) = global_scenario_get;
-static void (*const bc4320_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
+/* FUN_000c4320 (0xc4320) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c4320(void)
 {
-  __asm__ volatile(
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c4320_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl $0xb0\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c4320_1:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc4320_c18e380), [cc40f0] "m"(bc4320_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0((int16_t)0, 0xb0, (char *)global_scenario_get() + 0x42c);
+  }
 }
-#else
-#error "FUN_000c4320: clang naked draft required"
-#endif
 
-
-/* FUN_000c4350 (0xc4350) — XBE naked draft (batch 187). */
-#if defined(__clang__)
-static scenario_t * (*const bc4350_c18e380)(void) = global_scenario_get;
-static void (*const bc4350_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
+/* FUN_000c4350 (0xc4350) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c4350(void)
 {
-  __asm__ volatile(
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c4350_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x438, %%eax\n\t"
-      "pushl $0x60\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c4350_1:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc4350_c18e380), [cc40f0] "m"(bc4350_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0((int16_t)0, 0x60, (char *)global_scenario_get() + 0x438);
+  }
 }
-#else
-#error "FUN_000c4350: clang naked draft required"
-#endif
 
-
-/* FUN_000c4380 (0xc4380) — XBE naked draft (batch 187). */
-#if defined(__clang__)
-static scenario_t * (*const bc4380_c18e380)(void) = global_scenario_get;
-static void (*const bc4380_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
+/* FUN_000c4380 (0xc4380) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c4380(void)
 {
-  __asm__ volatile(
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c4380_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x348, %%eax\n\t"
-      "pushl $0x68\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c4380_1:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc4380_c18e380), [cc40f0] "m"(bc4380_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0((int16_t)0, 0x68, (char *)global_scenario_get() + 0x348);
+  }
 }
-#else
-#error "FUN_000c4380: clang naked draft required"
-#endif
 
-
-/* FUN_000c43b0 (0xc43b0) — XBE naked draft (batch 187). */
-#if defined(__clang__)
-static scenario_t * (*const bc43b0_c18e380)(void) = global_scenario_get;
-static void (*const bc43b0_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
+/* FUN_000c43b0 (0xc43b0) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c43b0(void)
 {
-  __asm__ volatile(
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c43b0_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x468, %%eax\n\t"
-      "pushl $0x74\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c43b0_1:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc43b0_c18e380), [cc40f0] "m"(bc43b0_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0((int16_t)0, 0x74, (char *)global_scenario_get() + 0x468);
+  }
 }
-#else
-#error "FUN_000c43b0: clang naked draft required"
-#endif
 
-
-/* FUN_000c43e0 (0xc43e0) — XBE naked draft (batch 187). */
-#if defined(__clang__)
-static scenario_t * (*const bc43e0_c18e380)(void) = global_scenario_get;
-static void (*const bc43e0_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
+/* FUN_000c43e0 (0xc43e0) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c43e0(void)
 {
-  __asm__ volatile(
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c43e0_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x204, %%eax\n\t"
-      "pushl $0x24\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c43e0_1:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc43e0_c18e380), [cc40f0] "m"(bc43e0_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0((int16_t)0, 0x24, (char *)global_scenario_get() + 0x204);
+  }
 }
-#else
-#error "FUN_000c43e0: clang naked draft required"
-#endif
 
-
-/* FUN_000c4410 (0xc4410) — XBE naked draft (batch 187). */
-#if defined(__clang__)
-static scenario_t * (*const bc4410_c18e380)(void) = global_scenario_get;
-static void (*const bc4410_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
+/* FUN_000c4410 (0xc4410) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c4410(void)
 {
-  __asm__ volatile(
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c4410_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x360, %%eax\n\t"
-      "pushl $0x60\n\t"
-      "pushl $4\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c4410_1:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc4410_c18e380), [cc40f0] "m"(bc4410_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0((int16_t)4, 0x60, (char *)global_scenario_get() + 0x360);
+  }
 }
-#else
-#error "FUN_000c4410: clang naked draft required"
-#endif
 
-
-/* FUN_000c4440 (0xc4440) — XBE naked draft (batch 187). */
-#if defined(__clang__)
-static scenario_t * (*const bc4440_c18e380)(void) = global_scenario_get;
-static void (*const bc4440_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
+/* FUN_000c4440 (0xc4440) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c4440(void)
 {
-  __asm__ volatile(
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c4440_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x4e4, %%eax\n\t"
-      "pushl $0x5c\n\t"
-      "pushl $4\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c4440_1:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc4440_c18e380), [cc40f0] "m"(bc4440_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0((int16_t)4, 0x5c, (char *)global_scenario_get() + 0x4e4);
+  }
 }
-#else
-#error "FUN_000c4440: clang naked draft required"
-#endif
 
-
-/* FUN_000c4470 (0xc4470) — XBE naked draft (batch 188). */
-#if defined(__clang__)
-static scenario_t * (*const bc4470_c18e380)(void) = global_scenario_get;
-static void (*const bc4470_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
+/* FUN_000c4470 (0xc4470) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c4470(void)
 {
-  __asm__ volatile(
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c4470_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x4f0, %%eax\n\t"
-      "pushl $0x68\n\t"
-      "pushl $4\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c4470_1:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc4470_c18e380), [cc40f0] "m"(bc4470_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0((int16_t)4, 0x68, (char *)global_scenario_get() + 0x4f0);
+  }
 }
-#else
-#error "FUN_000c4470: clang naked draft required"
-#endif
 
-
-/* FUN_000c44a0 (0xc44a0) — XBE naked draft (batch 188). */
-#if defined(__clang__)
-static scenario_t * (*const bc44a0_c18e380)(void) = global_scenario_get;
-static void (*const bc44a0_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
+/* FUN_000c44a0 (0xc44a0) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c44a0(void)
 {
-  __asm__ volatile(
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c44a0_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x4fc, %%eax\n\t"
-      "pushl $0x60\n\t"
-      "pushl $4\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c44a0_1:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc44a0_c18e380), [cc40f0] "m"(bc44a0_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0((int16_t)4, 0x60, (char *)global_scenario_get() + 0x4fc);
+  }
 }
-#else
-#error "FUN_000c44a0: clang naked draft required"
-#endif
 
-
-/* FUN_000c44d0 (0xc44d0) — XBE naked draft (batch 188). */
-#if defined(__clang__)
-static scenario_t * (*const bc44d0_c18e380)(void) = global_scenario_get;
-static void (*const bc44d0_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
+/* FUN_000c44d0 (0xc44d0) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c44d0(void)
 {
-  __asm__ volatile(
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c44d0_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x36c, %%eax\n\t"
-      "pushl $0x40\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c44d0_1:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc44d0_c18e380), [cc40f0] "m"(bc44d0_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0((int16_t)0, 0x40, (char *)global_scenario_get() + 0x36c);
+  }
 }
-#else
-#error "FUN_000c44d0: clang naked draft required"
-#endif
-
 
 /* FUN_000c4500 (0xc4500) — XBE naked draft (batch 187). */
 #if defined(__clang__)
