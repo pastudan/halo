@@ -12258,7 +12258,7 @@
         {
           "addr": "0xc9990",
           "decl": "void FUN_000c9990(int16_t name_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc99e0",

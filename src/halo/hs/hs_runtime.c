@@ -3579,61 +3579,22 @@ void FUN_000c95d0(const char *text)
   out(*(void **)0x2ee6d4, text);
 }
 
-/* FUN_000c9990 (0xc9990) — XBE naked draft (batch 162). */
-#if defined(__clang__)
-static int (*const bc9990_c140720)(int16_t index) = object_name_list_get_handle;
-static scenario_t * (*const bc9990_c18e380)(void) = global_scenario_get;
-static void *(*const bc9990_elem)(void *, int, int) = tag_block_get_element;
-static void (*const bc9990_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const bc9990_c144940)(short param_1) = object_new_by_name;
-
-__attribute__((naked, noinline))
-void FUN_000c9990(int16_t name_index __attribute__((unused)))
+/* FUN_000c9990 (0xc9990) — readable C lift. */
+void FUN_000c9990(int16_t name_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .LFUN_000c9990_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c140720]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c9990_1\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl $0x24\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x204, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x280378\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c9990_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c144940]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000c9990_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c140720] "m"(bc9990_c140720), [c18e380] "m"(bc9990_c18e380), [elem] "m"(bc9990_elem), [c8f390] "m"(bc9990_c8f390), [c144940] "m"(bc9990_c144940)
-      : "memory");
+  int handle;
+  void *elem;
+  if (name_index == (int16_t)-1)
+    return;
+  handle = object_name_list_get_handle(name_index);
+  if (handle == -1) {
+    object_new_by_name(name_index);
+    return;
+  }
+  elem = tag_block_get_element(
+      (char *)global_scenario_get() + 0x204, (int)name_index, 0x24);
+  error(2, (const char *)0x280378, elem);
 }
-#else
-#error "FUN_000c9990: clang naked draft required"
-#endif
-
-
 /* hs_object_iterate_names_containing (0xc9b10) — XBE naked draft (batch 151). */
 #if defined(__clang__)
 static scenario_t * (*const bc9b10_c18e380)(void) = global_scenario_get;
