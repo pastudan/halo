@@ -187,11 +187,26 @@ int16_t player_control_get_zoom_level(int16_t local_player_index __attribute__((
 #endif
 
 
+/* player_control_action_test_reset (0xb6a90) — XBE naked draft (batch 395). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void player_control_action_test_reset(void)
 {
-  *(int *)player_control_globals = 0;
-  *((int *)player_control_globals + 1) = 0;
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl $0, (%%eax)\n\t"
+      "movl $0, 0x4(%%eax)\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_reset: clang naked draft required"
+#endif
+
 
 /* player_control_action_test_accept (0xb6ab0) — XBE naked draft (batch 206). */
 #if defined(__clang__)

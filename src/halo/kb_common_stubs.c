@@ -25684,13 +25684,26 @@ void FUN_001d5c66(void)
 #endif
 
 
-/* 0x1e67e7 */
+/* FUN_001e67e7 (0x1e67e7) — XBE naked draft (batch 395). */
+#if defined(__clang__)
+static void (*const b1e67e7_c1e33c2)(void) = (void *)__unlock_fhandle;
+
+__attribute__((naked, noinline))
 void FUN_001e67e7(void)
 {
-  __unlock_fhandle();
-  FUN_001db777();
-  __SEH_epilog();
+  __asm__ volatile(
+      "pushl 0x8(%%ebp)\n\t"
+      "call *%[c1e33c2]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c1e33c2] "m"(b1e67e7_c1e33c2)
+      : "memory");
 }
+#else
+#error "FUN_001e67e7: clang naked draft required"
+#endif
+
 
 /* 0x1e6805 */
 wchar_t *FUN_001e6805(wchar_t *s)

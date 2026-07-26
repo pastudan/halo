@@ -49,13 +49,25 @@ void GetLocalTime(void *system_time)
   (void)0;
 }
 
-/* 0x1d0581 */
+/* FUN_001d0581 (0x1d0581) — XBE naked draft (batch 394). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 int FUN_001d0581(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "movl 0x253140, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001d0581: clang naked draft required"
+#endif
+
 
 /* FUN_001d0589 (0x1d0589) — XBE naked draft (batch 321). */
 #if defined(__clang__)

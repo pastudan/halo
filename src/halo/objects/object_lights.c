@@ -73,11 +73,26 @@ void lights_initialize(void)
 #endif
 
 
-/* 0x1392a0 */
+/* lights_dispose (0x1392a0) — XBE naked draft (batch 397). */
+#if defined(__clang__)
+static void (*const b1392a0_c191630)(int *partition) = (void *)cluster_partition_null_references;
+
+__attribute__((naked, noinline))
 void lights_dispose(void)
 {
-  cluster_partition_null_references((void *)0x005a90b0);
+  __asm__ volatile(
+      "pushl $0x5a90b0\n\t"
+      "call *%[c191630]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c191630] "m"(b1392a0_c191630)
+      : "memory");
 }
+#else
+#error "lights_dispose: clang naked draft required"
+#endif
+
 
 /* lights_initialize_for_new_map (0x1392b0) — XBE naked draft (batch 237). */
 #if defined(__clang__)

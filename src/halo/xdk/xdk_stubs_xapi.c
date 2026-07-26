@@ -2885,25 +2885,26 @@ void D3DDevice_CreateImageSurface(void)
 #endif
 
 
-/* 0x001e6bc0 */
+/* D3DDevice_SetRenderState (0x1e6bc0) — XBE naked draft (batch 395). */
+#if defined(__clang__)
+static void (*const b1e6bc0_c1e93a0)(void) = (void *)D3DDevice_SetRenderStateNotInline;
+
+__attribute__((naked, noinline))
 void D3DDevice_SetRenderState(void)
 {
-  int edx = 0;
-  int esi = 0;
-
-  D3DDevice_SetRenderStateNotInline();
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: cmp dword ptr [edx + 0x3c], esi -> jne 0x1e6cc2 */
-  D3D_UpdateProjectionViewportTransform();
-  /* relift: FUN_001eb6f0(0, 0); */
-
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e93a0]\n\t"
+      "ret\n\t"
+      :
+      : [c1e93a0] "m"(b1e6bc0_c1e93a0)
+      : "memory");
 }
+#else
+#error "D3DDevice_SetRenderState: clang naked draft required"
+#endif
+
 
 /* D3DDevice_MultiplyTransform (0x1e6d10) — XBE naked draft (batch 363). */
 #if defined(__clang__)
@@ -3337,15 +3338,26 @@ void D3DDevice_GetVisibilityTestResult(void)
 #endif
 
 
-/* 0x001e70e0 */
+/* D3DDevice_SetVerticalBlankCallback (0x1e70e0) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void D3DDevice_SetVerticalBlankCallback(void)
 {
-  int eax = 0;
-
-  D3DDevice_SetViewport((void *)(uintptr_t)eax);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "movl 0x1fe6a0, %%ecx\n\t"
+      "movl %%eax, 0x24ec(%%ecx)\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "D3DDevice_SetVerticalBlankCallback: clang naked draft required"
+#endif
+
 
 /* D3DDevice_GetProjectionViewportMatrix (0x1e7140) — XBE naked draft (batch 385). */
 #if defined(__clang__)
@@ -3537,11 +3549,25 @@ void D3DDevice_SetSoftDisplayFilter(void)
 #endif
 
 
-/* 0x001e73a0 */
+/* D3DDevice_InsertFence (0x1e73a0) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+static void (*const b1e73a0_c1ef9e0)(void) = (void *)D3D_SetFence;
+
+__attribute__((naked, noinline))
 void D3DDevice_InsertFence(void)
 {
-  D3D_SetFence();
+  __asm__ volatile(
+      "pushl $0\n\t"
+      "call *%[c1ef9e0]\n\t"
+      "ret\n\t"
+      :
+      : [c1ef9e0] "m"(b1e73a0_c1ef9e0)
+      : "memory");
 }
+#else
+#error "D3DDevice_InsertFence: clang naked draft required"
+#endif
+
 
 /* 0x001e73b0 */
 void D3DResource_AddRef(void)
@@ -3586,32 +3612,26 @@ void D3DResource_AddRef(void)
   (void)esi;
 }
 
-/* 0x001e76b0 */
+/* D3DBaseTexture_GetLevelCount (0x1e76b0) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void D3DBaseTexture_GetLevelCount(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* test eax, eax -> jne 0x1e775e */
-  /* test eax, eax -> jne 0x1e778c */
-  /* test ecx, ecx -> jne 0x1e77bb */
-  /* test eax, eax -> jne 0x1e7825 */
-  /* cmp eax, 0xc -> je 0x1e781e */
-  /* cmp eax, 0xd -> jle 0x1e780a */
-  /* cmp eax, 0xf -> jg 0x1e780a */
-  /* relift: FUN_001f3d90(0, 0); */
-  /* cmp edx, eax -> jbe 0x1e786d */
-  /* cmp edx, ecx -> jbe 0x1e7879 */
-  /* relift: FUN_001ef590(0, 0); */
-  XMETAL_StartPush();
-  /* relift: FUN_001efe30(0, 0); */
-  /* test eax, eax -> je 0x1e79c4 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "movzbl 0xe(%%eax), %%eax\n\t"
+      "andl $0xf, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "D3DBaseTexture_GetLevelCount: clang naked draft required"
+#endif
+
 
 /* D3DDevice_GetDisplayMode (0x1e79d0) — XBE naked draft (batch 346). */
 #if defined(__clang__)
@@ -5044,17 +5064,26 @@ void D3DDevice_SetRenderStateNotInline(void)
 #endif
 
 
-/* 0x001e9400 */
+/* D3DDevice_SetRenderState2 (0x1e9400) — XBE naked draft (batch 395). */
+#if defined(__clang__)
+static void (*const b1e9400_c1e93a0)(void) = (void *)D3DDevice_SetRenderStateNotInline;
+
+__attribute__((naked, noinline))
 void D3DDevice_SetRenderState2(void)
 {
-  int esi = 0;
-
-  D3DDevice_SetRenderStateNotInline();
-  /* mem[0x001fbb18] = esi */
-  /* relift: FUN_001f3c30(0, 0); */
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e93a0]\n\t"
+      "ret\n\t"
+      :
+      : [c1e93a0] "m"(b1e9400_c1e93a0)
+      : "memory");
 }
+#else
+#error "D3DDevice_SetRenderState2: clang naked draft required"
+#endif
+
 
 /* D3DDevice_SetRenderState_EdgeAntiAlias (0x1e9620) — XBE naked draft (batch 359). */
 #if defined(__clang__)
@@ -6009,38 +6038,68 @@ void D3DDevice_SetRenderState_StencilCullEnable(void)
 #endif
 
 
-/* 0x001ea4e0 */
+/* D3DDevice_SetRenderState_RopZCmpAlwaysRead (0x1ea4e0) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+static void (*const b1ea4e0_c1ea1c0)(void) = (void *)D3D_CommonSetDebugRegisters;
+
+__attribute__((naked, noinline))
 void D3DDevice_SetRenderState_RopZCmpAlwaysRead(void)
 {
-  int eax = 0;
-
-  /* mem[0x001fb8cc] = eax */
-  D3D_CommonSetDebugRegisters();
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "movl %%eax, 0x1fb8cc\n\t"
+      "call *%[c1ea1c0]\n\t"
+      "ret\n\t"
+      :
+      : [c1ea1c0] "m"(b1ea4e0_c1ea1c0)
+      : "memory");
 }
+#else
+#error "D3DDevice_SetRenderState_RopZCmpAlwaysRead: clang naked draft required"
+#endif
 
-/* 0x001ea500 */
+
+/* D3DDevice_SetRenderState_RopZRead (0x1ea500) — XBE naked draft (batch 394). */
+#if defined(__clang__)
+static void (*const b1ea500_c1ea1c0)(void) = (void *)D3D_CommonSetDebugRegisters;
+
+__attribute__((naked, noinline))
 void D3DDevice_SetRenderState_RopZRead(void)
 {
-  int eax = 0;
-
-  /* mem[0x001fb8d0] = eax */
-  D3D_CommonSetDebugRegisters();
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "movl %%eax, 0x1fb8d0\n\t"
+      "call *%[c1ea1c0]\n\t"
+      "ret\n\t"
+      :
+      : [c1ea1c0] "m"(b1ea500_c1ea1c0)
+      : "memory");
 }
+#else
+#error "D3DDevice_SetRenderState_RopZRead: clang naked draft required"
+#endif
 
-/* 0x001ea520 */
+
+/* D3DDevice_SetRenderState_DoNotCullUncompressed (0x1ea520) — XBE naked draft (batch 394). */
+#if defined(__clang__)
+static void (*const b1ea520_c1ea1c0)(void) = (void *)D3D_CommonSetDebugRegisters;
+
+__attribute__((naked, noinline))
 void D3DDevice_SetRenderState_DoNotCullUncompressed(void)
 {
-  int eax = 0;
-
-  /* mem[0x001fb8d4] = eax */
-  D3D_CommonSetDebugRegisters();
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "movl %%eax, 0x1fb8d4\n\t"
+      "call *%[c1ea1c0]\n\t"
+      "ret\n\t"
+      :
+      : [c1ea1c0] "m"(b1ea520_c1ea1c0)
+      : "memory");
 }
+#else
+#error "D3DDevice_SetRenderState_DoNotCullUncompressed: clang naked draft required"
+#endif
+
 
 /* D3DDevice_SetRenderState_MultiSampleAntiAlias (0x1ea540) — XBE naked draft (batch 336). */
 #if defined(__clang__)
@@ -11657,103 +11716,25 @@ void CMiniport_GetDisplayCapabilities(void)
 #endif
 
 
-/* 0x001f4aa0 */
+/* CMiniport_IsFlipPending (0x1f4aa0) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void CMiniport_IsFlipPending(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* test ecx, ecx -> jne 0x1f4b12 */
-  /* test ecx, ecx -> je 0x1f4bd7 */
-  /* test eax, eax -> je 0x1f4bd7 */
-  /* test eax, 0x1000000 -> je 0x1f4bb4 */
-  /* relift: cmp dword ptr [esi + ecx*8 + 0x1b4], 1 -> jne 0x1f4b8b */
-  /* relift: cmp dword ptr [esi + 4], 2 -> jne 0x1f4b7c */
-  /* test (char)eax, 1 -> je 0x1f4b8b */
-  /* mem[0x001fe6b4] = ecx */
-  /* cmp eax, 0x80000000 -> jne 0x1f4bb4 */
-  /* relift: test dword ptr [esi + 0x208], 0x200000 -> je 0x1f4bb4 */
-  /* relift: FUN_001efe80(0); */
-  /* cmp eax, ebx -> jne 0x1f4cc0 */
-  /* relift: cmp dword ptr [esi + 4], 2 -> jne 0x1f4c31 */
-  /* test (char)ebx, (char)eax -> je 0x1f4cc0 */
-  /* relift: FUN_001efe80(0, 0); */
-  /* relift: cmp dword ptr [esi + ebp*4 + 0x814], ebx -> jne 0x1f4c84 */
-  /* relift: FUN_001eff04(0); */
-  /* relift: test dword ptr [edi + 0x100], 0x1000000 -> jne 0x1f4cc0 */
-  /* test eax, eax -> je 0x1f4d09 */
-  /* test (char)ecx, 1 -> je 0x1f4d37 */
-  /* cmp edx, -1 -> je 0x1f4d8d */
-  /* cmp edx, -1 -> jne 0x1f4d60 */
-  /* relift: cmp dword ptr [esp + 0x14], 0x308 -> jne 0x1f4db6 */
-  /* relift: FUN_001efe80(0); */
-  /* relift: cmp dword ptr [esi + edi*4 + 0x814], 1 -> jne 0x1f4e38 */
-  /* relift: FUN_001eff04(0); */
-  /* relift: FUN_001f4d40(0, 0); */
-  /* relift: FUN_001ef860(0, 0); */
-  /* relift: FUN_001f6135(0, 0); */
-  /* test edx, edx -> jne 0x1f5010 */
-  /* relift: FUN_001f8d2e(0); */
-  /* test (char)ebx, 0x10 -> je 0x1f5033 */
-  /* test ebx, 0x100000 -> je 0x1f505b */
-  /* test dl, 0x40 -> je 0x1f505b */
-  /* test ebx, ebx -> je 0x1f510a */
-  /* cmp ebx, 0x1000000 -> je 0x1f510a */
-  /* test (char)ebx, 0x10 -> je 0x1f509c */
-  /* test ecx, ecx -> jne 0x1f5092 */
-  /* test edx, edx -> je 0x1f50f1 */
-  /* test (char)ebx, 1 -> jne 0x1f50ad */
-  /* test ebx, 0x100000 -> je 0x1f50f1 */
-  /* cmp ebp, 0x100 -> jne 0x1f50d9 */
-  /* relift: FUN_001f4dc0(0, 0); */
-  DbgPrint(0x001fb2d8, 0, 0, 0);
-  /* test ebx, 0x10000 -> je 0x1f510a */
-  /* test ecx, ecx -> jne 0x1f5100 */
-  /* test eax, 0x1000000 -> je 0x1f5161 */
-  /* test (char)ebx, dl -> je 0x1f51b0 */
-  /* test (char)eax, 0x10 -> je 0x1f519e */
-  /* test (char)edx, 0x10 -> je 0x1f521a */
-  DbgPrint(0x001fb360, 0);
-  DbgPrint(0x001fb354, 0);
-  DbgPrint(0x001fb348, 0);
-  /* cmp eax, ecx -> je 0x1f521a */
-  /* test (char)eax, 0x10 -> je 0x1f528a */
-  /* test (char)eax, 0x10 -> jne 0x1f5263 */
-  /* relift: cmp dword ptr [esi + 0x2100], edi -> jne 0x1f5263 */
-  /* relift: cmp dword ptr [esi + 0x400100], edi -> je 0x1f5247 */
-  /* relift: FUN_001f4fc0(0, 0); */
-  /* relift: test dword ptr [esi + 0x100], 0x1000000 -> je 0x1f525a */
-  /* relift: FUN_001f4be0(0, 0); */
-  /* relift: test byte ptr [esi + 0x3214], 0x10 -> je 0x1f5230 */
-  /* relift: test byte ptr [esi + 0x3214], 0x10 -> je 0x1f528a */
-  /* relift: test byte ptr [esi + 0x2500], 0x10 -> jne 0x1f5270 */
-  /* relift: cmp dword ptr [esi + 0x2100], edi -> jne 0x1f529e */
-  /* test esi, 0x100000 -> je 0x1f52f0 */
-  /* test esi, 0x1000000 -> je 0x1f5301 */
-  /* relift: FUN_001f4be0(0, 0); */
-  /* test esi, 0x1000 -> je 0x1f5312 */
-  /* relift: FUN_001f4fc0(0, 0); */
-  /* test esi, 0x100 -> jne 0x1f5323 */
-  /* relift: test byte ptr [ebp + 0x2080], 1 -> je 0x1f532c */
-  /* relift: FUN_001f5130(0, 0); */
-  /* test esi, 0x10000 -> je 0x1f5349 */
-  /* relift: test byte ptr [eax + 0x8100], 1 -> je 0x1f5349 */
-  /* test edi, edi -> jne 0x1f52d0 */
-  FUN_001d0bb9(64, eax);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "movl 0x1dc(%%ecx), %%eax\n\t"
+      "movl 0x1b4(%%ecx,%%eax,8), %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "CMiniport_IsFlipPending: clang naked draft required"
+#endif
+
 
 /* D3D_AllocContiguousMemory (0x1f5390) — XBE naked draft (batch 384). */
 #if defined(__clang__)
@@ -12056,34 +12037,46 @@ void D3D_ClearStateBlockFlags(void)
 #endif
 
 
-/* 0x001f91a1 */
+/* D3DDevice_BeginStateBlock (0x1f91a1) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void D3DDevice_BeginStateBlock(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x1fe6a0, %%eax\n\t"
+      "orl $0x20, 0xc(%%eax)\n\t"
+      ".byte 0xe9, 0xb6, 0xff, 0xff, 0xff\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "D3DDevice_BeginStateBlock: clang naked draft required"
+#endif
 
-/* 0x001f91af */
+
+/* D3DDevice_Suspend (0x1f91af) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+static void (*const b1f91af_c1f1bc0)(void) = (void *)CDevice_SetStateVB;
+
+__attribute__((naked, noinline))
 void D3DDevice_Suspend(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  CDevice_SetStateVB();
-  D3DDevice_SetMaterial();
-  D3DDevice_SetBackMaterial();
-  D3DDevice_GetLightEnable();
-  D3DDevice_SetRenderStateNotInline();
-  D3DDevice_SetTextureStageStateNotInline();
-  D3DDevice_DeleteVertexShader();
-  D3DDevice_SetVertexShaderConstant(0, (void *)(uintptr_t)ecx, eax);
-  D3DDevice_SetIndices();
-  D3DDevice_DeletePixelShader();
-  D3DDevice_SetPixelShaderConstant();
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "movl 0x1fe6a0, %%ecx\n\t"
+      "pushl $0\n\t"
+      "call *%[c1f1bc0]\n\t"
+      "ret\n\t"
+      :
+      : [c1f1bc0] "m"(b1f91af_c1f1bc0)
+      : "memory");
 }
+#else
+#error "D3DDevice_Suspend: clang naked draft required"
+#endif
+
 
 /* D3D_RecordStateBlock (0x1f92f0) — XBE naked draft (batch 299). */
 #if defined(__clang__)
@@ -13281,22 +13274,25 @@ void D3DDevice_CreateStateBlock(void)
 #endif
 
 
-/* 0x001f9d0f */
+/* D3DDevice_EndStateBlock (0x1f9d0f) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void D3DDevice_EndStateBlock(void)
 {
-  int eax = 0;
-  int ebp = 0;
-
-  /* relift: cmp dword ptr [ebp + 8], 0 -> je 0x1f9d41 */
-  D3DDevice_CreateStateBlock();
-  D3DDevice_ApplyStateBlock();
-  D3DDevice_DeleteStateBlock();
-  /* relift: relift: mov byte ptr [0xa300001e], (char)eax */
-  /* mem[0xa420001e] = eax */
-
-  (void)eax;
-  (void)ebp;
+  __asm__ volatile(
+      "movl 0x1fe6a0, %%eax\n\t"
+      "andl $0xffffffdf, 0xc(%%eax)\n\t"
+      ".byte 0xe9, 0xd3, 0xf5, 0xff, 0xff\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "D3DDevice_EndStateBlock: clang naked draft required"
+#endif
+
 
 /* DirectSoundEnterCriticalSection (0x20368b) — XBE naked draft (batch 319). */
 #if defined(__clang__)
@@ -14295,12 +14291,26 @@ void CDirectSound_CommitDeferredSettings(void)
 #endif
 
 
-/* 0x00203dd4 */
+/* CDirectSound_GetTime (0x203dd4) — XBE naked draft (batch 394). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void CDirectSound_GetTime(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl 0x8(%%esp)\n\t"
+      "call *0x25313c\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "CDirectSound_GetTime: clang naked draft required"
+#endif
+
 
 /* CDirectSound_DoWork (0x203de3) — XBE naked draft (batch 377). */
 #if defined(__clang__)
@@ -22508,11 +22518,25 @@ void XInputOpen(void)
 #endif
 
 
-/* 0x0024c1b8 */
+/* XInputClose (0x24c1b8) — XBE naked draft (batch 395). */
+#if defined(__clang__)
+static void (*const b24c1b8_c24d009)(void) = (void *)XID_fCloseDevice;
+
+__attribute__((naked, noinline))
 void XInputClose(void)
 {
-  XID_fCloseDevice();
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%ecx\n\t"
+      "call *%[c24d009]\n\t"
+      "ret\n\t"
+      :
+      : [c24d009] "m"(b24c1b8_c24d009)
+      : "memory");
 }
+#else
+#error "XInputClose: clang naked draft required"
+#endif
+
 
 /* XInputGetCapabilities (0x24c1c4) — XBE naked draft (batch 301). */
 #if defined(__clang__)

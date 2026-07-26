@@ -35,10 +35,26 @@ int _fgetwc(void *stream);
 void FUN_001dc54a(void);
 void FUN_001dc559(void);
 
+/* FUN_001dbc1e (0x1dbc1e) — XBE naked draft (batch 394). */
+#if defined(__clang__)
+static void (*const b1dbc1e_c1d9a20)(void) = (void *)__unlock_file;
+
+__attribute__((naked, noinline))
 void FUN_001dbc1e(void)
 {
-  __unlock_file();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "call *%[c1d9a20]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c1d9a20] "m"(b1dbc1e_c1d9a20)
+      : "memory");
 }
+#else
+#error "FUN_001dbc1e: clang naked draft required"
+#endif
+
 
 /* FUN_001dbc26 (0x1dbc26) — XBE naked draft (batch 323). */
 #if defined(__clang__)
@@ -1081,11 +1097,26 @@ int _fgetwc(void *stream __attribute__((unused)))
 #endif
 
 
-/* 0x1dc54a */
+/* FUN_001dc54a (0x1dc54a) — XBE naked draft (batch 394). */
+#if defined(__clang__)
+static void (*const b1dc54a_c1d9a20)(void) = (void *)__unlock_file;
+
+__attribute__((naked, noinline))
 void FUN_001dc54a(void)
 {
-  __unlock_file();
+  __asm__ volatile(
+      "pushl 0x8(%%ebp)\n\t"
+      "call *%[c1d9a20]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c1d9a20] "m"(b1dc54a_c1d9a20)
+      : "memory");
 }
+#else
+#error "FUN_001dc54a: clang naked draft required"
+#endif
+
 
 /* FUN_001dc559 (0x1dc559) — XBE naked draft (batch 307). */
 #if defined(__clang__)

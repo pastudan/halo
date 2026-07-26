@@ -1915,17 +1915,47 @@ void FUN_0015ee80(void)
 #endif
 
 
-/* 0x15f1f0 */
+/* FUN_0015f1f0 (0x15f1f0) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+static void (*const b15f1f0_c16f910)(int16_t profile) = (void *)FUN_0016f910;
+
+__attribute__((naked, noinline))
 void FUN_0015f1f0(void)
 {
-  FUN_0016f910(27);
+  __asm__ volatile(
+      "pushl $0x1b\n\t"
+      "call *%[c16f910]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16f910] "m"(b15f1f0_c16f910)
+      : "memory");
 }
+#else
+#error "FUN_0015f1f0: clang naked draft required"
+#endif
 
-/* 0x15f200 */
+
+/* FUN_0015f200 (0x15f200) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+static void (*const b15f200_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+
+__attribute__((naked, noinline))
 void FUN_0015f200(void)
 {
-  FUN_0016fa40(27);
+  __asm__ volatile(
+      "pushl $0x1b\n\t"
+      "call *%[c16fa40]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16fa40] "m"(b15f200_c16fa40)
+      : "memory");
 }
+#else
+#error "FUN_0015f200: clang naked draft required"
+#endif
+
 
 /* FUN_0015f220 (0x15f220) — XBE naked draft (batch 331). */
 #if defined(__clang__)
@@ -3104,11 +3134,26 @@ void FUN_0015f8e0(void *parameters __attribute__((unused)), void *vertices __att
 #endif
 
 
-/* 0x160920 */
+/* FUN_00160920 (0x160920) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+static void (*const b160920_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+
+__attribute__((naked, noinline))
 void FUN_00160920(void)
 {
-  FUN_0016fa40(0);
+  __asm__ volatile(
+      "pushl $3\n\t"
+      "call *%[c16fa40]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16fa40] "m"(b160920_c16fa40)
+      : "memory");
 }
+#else
+#error "FUN_00160920: clang naked draft required"
+#endif
+
 
 /* 0x160930 */
 void FUN_00160930(void)
@@ -3117,11 +3162,26 @@ void FUN_00160930(void)
   (void)0;
 }
 
-/* 0x160940 */
+/* _rasterizer_hud_begin (0x160940) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+static void (*const b160940_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+
+__attribute__((naked, noinline))
 void _rasterizer_hud_begin(void)
 {
-  FUN_0016fa40(0);
+  __asm__ volatile(
+      "pushl $5\n\t"
+      "call *%[c16fa40]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16fa40] "m"(b160940_c16fa40)
+      : "memory");
 }
+#else
+#error "_rasterizer_hud_begin: clang naked draft required"
+#endif
+
 
 /* FUN_00160950 (0x160950) — XBE naked draft (batch 383). */
 #if defined(__clang__)
@@ -3154,17 +3214,47 @@ void _rasterizer_hud_end(void)
   (void)0;
 }
 
-/* 0x160980 */
+/* FUN_00160980 (0x160980) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+static void (*const b160980_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+
+__attribute__((naked, noinline))
 void FUN_00160980(void)
 {
-  FUN_0016fa40(11);
+  __asm__ volatile(
+      "pushl $0xb\n\t"
+      "call *%[c16fa40]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16fa40] "m"(b160980_c16fa40)
+      : "memory");
 }
+#else
+#error "FUN_00160980: clang naked draft required"
+#endif
 
-/* 0x1609a0 */
+
+/* _rasterizer_dynamic_lit_geometry_draw (0x1609a0) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+static void (*const b1609a0_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+
+__attribute__((naked, noinline))
 void _rasterizer_dynamic_lit_geometry_draw(void)
 {
-  FUN_0016fa40(12);
+  __asm__ volatile(
+      "pushl $0xc\n\t"
+      "call *%[c16fa40]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16fa40] "m"(b1609a0_c16fa40)
+      : "memory");
 }
+#else
+#error "_rasterizer_dynamic_lit_geometry_draw: clang naked draft required"
+#endif
+
 
 /* FUN_001609b0 (0x1609b0) — XBE naked draft (batch 315). */
 #if defined(__clang__)
@@ -3335,41 +3425,131 @@ void FUN_001609b0(void)
 #endif
 
 
-/* 0x160bc0 */
+/* FUN_00160bc0 (0x160bc0) — XBE naked draft (batch 397). */
+#if defined(__clang__)
+static void (*const b160bc0_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+
+__attribute__((naked, noinline))
 void FUN_00160bc0(void)
 {
-  FUN_0016fa40(13);
+  __asm__ volatile(
+      "pushl $0xd\n\t"
+      "call *%[c16fa40]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16fa40] "m"(b160bc0_c16fa40)
+      : "memory");
 }
+#else
+#error "FUN_00160bc0: clang naked draft required"
+#endif
 
-/* 0x160bd0 */
+
+/* FUN_00160bd0 (0x160bd0) — XBE naked draft (batch 397). */
+#if defined(__clang__)
+static void (*const b160bd0_c16f910)(int16_t profile) = (void *)FUN_0016f910;
+
+__attribute__((naked, noinline))
 void FUN_00160bd0(void)
 {
-  FUN_0016f910(14);
+  __asm__ volatile(
+      "pushl $0xe\n\t"
+      "call *%[c16f910]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16f910] "m"(b160bd0_c16f910)
+      : "memory");
 }
+#else
+#error "FUN_00160bd0: clang naked draft required"
+#endif
 
-/* 0x160be0 */
+
+/* FUN_00160be0 (0x160be0) — XBE naked draft (batch 397). */
+#if defined(__clang__)
+static void (*const b160be0_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+
+__attribute__((naked, noinline))
 void FUN_00160be0(void)
 {
-  FUN_0016fa40(14);
+  __asm__ volatile(
+      "pushl $0xe\n\t"
+      "call *%[c16fa40]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16fa40] "m"(b160be0_c16fa40)
+      : "memory");
 }
+#else
+#error "FUN_00160be0: clang naked draft required"
+#endif
 
-/* 0x160bf0 */
+
+/* FUN_00160bf0 (0x160bf0) — XBE naked draft (batch 397). */
+#if defined(__clang__)
+static void (*const b160bf0_c16f910)(int16_t profile) = (void *)FUN_0016f910;
+
+__attribute__((naked, noinline))
 void FUN_00160bf0(void)
 {
-  FUN_0016f910(15);
+  __asm__ volatile(
+      "pushl $0xf\n\t"
+      "call *%[c16f910]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16f910] "m"(b160bf0_c16f910)
+      : "memory");
 }
+#else
+#error "FUN_00160bf0: clang naked draft required"
+#endif
 
-/* 0x160c00 */
+
+/* FUN_00160c00 (0x160c00) — XBE naked draft (batch 397). */
+#if defined(__clang__)
+static void (*const b160c00_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+
+__attribute__((naked, noinline))
 void FUN_00160c00(void)
 {
-  FUN_0016fa40(15);
+  __asm__ volatile(
+      "pushl $0xf\n\t"
+      "call *%[c16fa40]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16fa40] "m"(b160c00_c16fa40)
+      : "memory");
 }
+#else
+#error "FUN_00160c00: clang naked draft required"
+#endif
 
-/* 0x160c10 */
+
+/* FUN_00160c10 (0x160c10) — XBE naked draft (batch 394). */
+#if defined(__clang__)
+static void (*const b160c10_c16f910)(int16_t profile) = (void *)FUN_0016f910;
+
+__attribute__((naked, noinline))
 void FUN_00160c10(void)
 {
-  FUN_0016f910(16);
+  __asm__ volatile(
+      "pushl $0x10\n\t"
+      "call *%[c16f910]\n\t"
+      "addl $4, %%esp\n\t"
+      ".byte 0xe9, 0xc1, 0x40, 0x01, 0x00\n\t"
+      :
+      : [c16f910] "m"(b160c10_c16f910)
+      : "memory");
 }
+#else
+#error "FUN_00160c10: clang naked draft required"
+#endif
+
 
 /* FUN_00160c20 (0x160c20) — XBE naked draft (batch 387). */
 #if defined(__clang__)
@@ -8277,11 +8457,26 @@ void FUN_00165cb0(void)
 #endif
 
 
-/* 0x165dd0 */
+/* FUN_00165dd0 (0x165dd0) — XBE naked draft (batch 397). */
+#if defined(__clang__)
+static void (*const b165dd0_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+
+__attribute__((naked, noinline))
 void FUN_00165dd0(void)
 {
-  FUN_0016fa40(17);
+  __asm__ volatile(
+      "pushl $0x11\n\t"
+      "call *%[c16fa40]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16fa40] "m"(b165dd0_c16fa40)
+      : "memory");
 }
+#else
+#error "FUN_00165dd0: clang naked draft required"
+#endif
+
 
 /* FUN_00165de0 (0x165de0) — XBE naked draft (batch 354). */
 #if defined(__clang__)

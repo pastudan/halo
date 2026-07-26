@@ -5354,12 +5354,26 @@ void FUN_0016f730(void)
 #endif
 
 
-/* 0x16f880 */
+/* FUN_0016f880 (0x16f880) — XBE naked draft (batch 394). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_0016f880(void)
 {
-  *(short *)0x325184 = *(short *)0x5a5bc2;
-  *(short *)0x325180 = -1;
+  __asm__ volatile(
+      "movw 0x5a5bc2, %%ax\n\t"
+      "movw %%ax, 0x325184\n\t"
+      "movw $0xffff, 0x325180\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0016f880: clang naked draft required"
+#endif
+
 
 /* FUN_0016f8a0 (0x16f8a0) — XBE naked draft (batch 372). */
 #if defined(__clang__)
@@ -7985,44 +7999,26 @@ void FUN_00171bc0(void)
 #endif
 
 
-/* 0x172520 */
+/* FUN_00172520 (0x172520) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+static void (*const b172520_c16f910)(int16_t profile) = (void *)FUN_0016f910;
+
+__attribute__((naked, noinline))
 void FUN_00172520(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  FUN_0016f910(0);
-  /* cmp edx, 0x16 -> jge 0x172540 */
-  D3DDevice_SetTextureStageState(eax, 0, 0);
-  /* cmp edx, 0x1c -> jne 0x172551 */
-  D3DDevice_SetTextureState_TexCoordIndex();
-  /* cmp edx, 0x1d -> jne 0x172562 */
-  D3DDevice_SetTextureState_BorderColor(ecx, eax);
-  /* cmp edx, 0x1e -> jne 0x172573 */
-  D3DDevice_SetTextureState_ColorKeyColor();
-  /* cmp edx, 0x1b -> jg 0x172580 */
-  D3DDevice_SetTextureState_BumpEnv();
-  /* test eax, eax -> jne 0x1725bc */
-  display_assert((char *)0x0029dc40, (char *)0x002a44b0, 239, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [0x5a5bc0], 0 -> jne 0x172621 */
-  /* relift: relift: mov (char)eax, byte ptr [0x3256ca] */
-  /* test (char)eax, (char)eax -> je 0x172621 */
-  /* test esi, esi -> jne 0x1725f7 */
-  display_assert((char *)0x0029f510, (char *)0x002a44b0, 245, 0);
-  system_exit(0);
-  rasterizer_set_model_skinning((void *)(uintptr_t)eax);
-  /* mem[0x0047e4b0] = esi */
-  /* relift: relift: mov byte ptr [0x47e4b5], 1 */
-  D3DDevice_SetVertexShaderConstant(0, (void *)(uintptr_t)ecx, eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl $4\n\t"
+      "call *%[c16f910]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16f910] "m"(b172520_c16f910)
+      : "memory");
 }
+#else
+#error "FUN_00172520: clang naked draft required"
+#endif
+
 
 /* 0x172640 */
 void FUN_00172640(void)
@@ -8119,11 +8115,26 @@ void FUN_001726a0(void)
 #endif
 
 
-/* 0x172720 */
+/* rasterizer_window_get_fog (0x172720) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+static void (*const b172720_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+
+__attribute__((naked, noinline))
 void rasterizer_window_get_fog(void)
 {
-  FUN_0016fa40(0);
+  __asm__ volatile(
+      "pushl $4\n\t"
+      "call *%[c16fa40]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c16fa40] "m"(b172720_c16fa40)
+      : "memory");
 }
+#else
+#error "rasterizer_window_get_fog: clang naked draft required"
+#endif
+
 
 /* FUN_00172730 (0x172730) — XBE naked draft (batch 313). */
 #if defined(__clang__)
@@ -14999,26 +15010,68 @@ void FUN_0017C7D0(void)
   (void)eax;
 }
 
-/* 0x17c8e0 */
+/* rasterizer_environment_fog_screen_draw (0x17c8e0) — XBE naked draft (batch 397). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void rasterizer_environment_fog_screen_draw(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x17, 0x91, 0xfd, 0xff\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "rasterizer_environment_fog_screen_draw: clang naked draft required"
+#endif
 
-/* 0x17c8f0 */
-void rasterizer_environment_fog_screen_end(void *screen_fog)
-{
-  /* relift: no calls detected — manual review */
-  (void)0;
-}
 
-/* 0x17c930 */
-void rasterizer_dynamic_lit_geometry_draw(void *param_1, void *param_2)
+/* rasterizer_environment_fog_screen_end (0x17c8f0) — XBE naked draft (batch 397). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void rasterizer_environment_fog_screen_end(void *screen_fog __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0xd7, 0xb0, 0xfd, 0xff\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "rasterizer_environment_fog_screen_end: clang naked draft required"
+#endif
+
+
+/* rasterizer_dynamic_lit_geometry_draw (0x17c930) — XBE naked draft (batch 397). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void rasterizer_dynamic_lit_geometry_draw(void *param_1 __attribute__((unused)), void *param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x07, 0xb5, 0xfd, 0xff\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+#error "rasterizer_dynamic_lit_geometry_draw: clang naked draft required"
+#endif
+
 
 /* 0x17c940 */
 void rasterizer_dynamic_screen_geometry_draw(void)
@@ -15045,20 +15098,47 @@ void rasterizer_dynamic_screen_geometry_draw(void)
   (void)eax;
 }
 
-/* 0x17c960 */
-void rasterizer_psuedo_dynamic_screen_quad_draw(int param_1)
-{
-  /* relift: no calls detected — manual review */
-  (void)0;
-}
+/* rasterizer_psuedo_dynamic_screen_quad_draw (0x17c960) — XBE naked draft (batch 398). */
+#if defined(__clang__)
 
-/* 0x17c970 */
-int rasterizer_widget_submit(int mode)
+
+__attribute__((naked, noinline))
+void rasterizer_psuedo_dynamic_screen_quad_draw(int param_1 __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x37, 0x2f, 0xff, 0xff\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "rasterizer_psuedo_dynamic_screen_quad_draw: clang naked draft required"
+#endif
+
+
+/* rasterizer_widget_submit (0x17c970) — XBE naked draft (batch 395). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+int rasterizer_widget_submit(int mode __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0xf7, 0x07, 0xfe, 0xff\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+#error "rasterizer_widget_submit: clang naked draft required"
+#endif
+
 
 /* 0x17c980 */
 void *rasterizer_widget_begin(int handle)
@@ -15068,57 +15148,152 @@ void *rasterizer_widget_begin(int handle)
   return NULL;
 }
 
-/* 0x17c990 */
-void rasterizer_widget_set_texture(int handle)
-{
-  /* relift: no calls detected — manual review */
-  (void)0;
-}
+/* rasterizer_widget_set_texture (0x17c990) — XBE naked draft (batch 398). */
+#if defined(__clang__)
 
-/* 0x17c9a0 */
-void rasterizer_widget_set_tint_factor(int handle)
-{
-  /* relift: no calls detected — manual review */
-  (void)0;
-}
 
-/* 0x17c9b0 */
-int rasterizer_widget_set_zbuffer_enable(int param_1, int param_2)
+__attribute__((naked, noinline))
+void rasterizer_widget_set_texture(int handle __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0xf7, 0x21, 0xfe, 0xff\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "rasterizer_widget_set_texture: clang naked draft required"
+#endif
 
-/* 0x17c9c0 */
-short rasterizer_widget_draw_sprite2d(int dynamic_vertex_buffer_index)
-{
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
-}
 
-/* 0x17c9d0 */
-int rasterizer_widget_draw_sprite3d(int zbuf_result)
-{
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
-}
+/* rasterizer_widget_set_tint_factor (0x17c9a0) — XBE naked draft (batch 398). */
+#if defined(__clang__)
 
-/* 0x17c9e0 */
-void rasterizer_widget_end(int handle)
-{
-  /* relift: no calls detected — manual review */
-  (void)0;
-}
 
-/* 0x17c9f0 */
-void rasterizer_widget_submit_occlusion_test(int handle)
+__attribute__((naked, noinline))
+void rasterizer_widget_set_tint_factor(int handle __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x57, 0x09, 0xfe, 0xff\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "rasterizer_widget_set_tint_factor: clang naked draft required"
+#endif
+
+
+/* rasterizer_widget_set_zbuffer_enable (0x17c9b0) — XBE naked draft (batch 395). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+int rasterizer_widget_set_zbuffer_enable(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x57, 0x09, 0xfe, 0xff\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+#error "rasterizer_widget_set_zbuffer_enable: clang naked draft required"
+#endif
+
+
+/* rasterizer_widget_draw_sprite2d (0x17c9c0) — XBE naked draft (batch 395). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+short rasterizer_widget_draw_sprite2d(int dynamic_vertex_buffer_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0xb7, 0x0a, 0xfe, 0xff\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+#error "rasterizer_widget_draw_sprite2d: clang naked draft required"
+#endif
+
+
+/* rasterizer_widget_draw_sprite3d (0x17c9d0) — XBE naked draft (batch 395). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+int rasterizer_widget_draw_sprite3d(int zbuf_result __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x77, 0x22, 0xfe, 0xff\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+#error "rasterizer_widget_draw_sprite3d: clang naked draft required"
+#endif
+
+
+/* rasterizer_widget_end (0x17c9e0) — XBE naked draft (batch 398). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void rasterizer_widget_end(int handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x97, 0x24, 0xfe, 0xff\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+#error "rasterizer_widget_end: clang naked draft required"
+#endif
+
+
+/* rasterizer_widget_submit_occlusion_test (0x17c9f0) — XBE naked draft (batch 398). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void rasterizer_widget_submit_occlusion_test(int handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0xa7, 0x0b, 0xfe, 0xff\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+#error "rasterizer_widget_submit_occlusion_test: clang naked draft required"
+#endif
+
 
 /* 0x17ca00 */
 void rasterizer_widget_get_occlusion_test_result(void)
@@ -15136,19 +15311,47 @@ void rasterizer_widget_get_occlusion_test_result(void)
   (void)eax;
 }
 
-/* 0x17ca10 */
+/* rasterizer_hud_motion_sensor_blip_begin (0x17ca10) — XBE naked draft (batch 398). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void rasterizer_hud_motion_sensor_blip_begin(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0xd7, 0xdd, 0xfd, 0xff\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "rasterizer_hud_motion_sensor_blip_begin: clang naked draft required"
+#endif
 
-/* 0x17ca20 */
+
+/* rasterizer_hud_motion_sensor_blip_draw (0x17ca20) — XBE naked draft (batch 398). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void rasterizer_hud_motion_sensor_blip_draw(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0xc7, 0xde, 0xfd, 0xff\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "rasterizer_hud_motion_sensor_blip_draw: clang naked draft required"
+#endif
+
 
 /* 0x17ca30 */
 void rasterizer_hud_motion_sensor_blip_end(void)

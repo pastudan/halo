@@ -587,12 +587,26 @@ void scripted_player_effect_set_rotation(int a0 __attribute__((unused)), float a
 #endif
 
 
-/* 0xa2920 */
-void scripted_player_effect_set_rumble(int a0, float a1)
+/* scripted_player_effect_set_rumble (0xa2920) — XBE naked draft (batch 397). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void scripted_player_effect_set_rumble(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x57, 0x72, 0x01, 0x00\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "scripted_player_effect_set_rumble: clang naked draft required"
+#endif
+
 
 /* player_telefrag_effect_stop (0xa2930) — XBE naked draft (batch 177). */
 #if defined(__clang__)

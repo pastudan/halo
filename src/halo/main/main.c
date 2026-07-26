@@ -3197,18 +3197,46 @@ void main_revert_map(void)
 #endif
 
 
+/* main_skip_cinematic (0x1002e0) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void main_skip_cinematic(void)
 {
-  *(int16_t *)0x46da40 = -1;
-  *(char *)0x46da28 = 0;
-  *(char *)0x46da27 = 1;
+  __asm__ volatile(
+      "movw $0xffff, 0x46da40\n\t"
+      "movb $0, 0x46da28\n\t"
+      "movb $1, 0x46da27\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "main_skip_cinematic: clang naked draft required"
+#endif
 
+
+/* main_save_map_nonsafe (0x100300) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void main_save_map_nonsafe(void)
 {
-  *(char *)0x46da28 = 1;
-  *(char *)0x46da29 = 0;
+  __asm__ volatile(
+      "movb $1, 0x46da28\n\t"
+      "movb $0, 0x46da29\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "main_save_map_nonsafe: clang naked draft required"
+#endif
+
 
 char main_saving_map(void)
 {
@@ -3253,17 +3281,45 @@ void main_save_map_safe(void)
 #endif
 
 
+/* main_won_map (0x100370) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void main_won_map(void)
 {
-  *(char *)0x46da28 = 0;
-  *(char *)0x46da3a = 1;
+  __asm__ volatile(
+      "movb $0, 0x46da28\n\t"
+      "movb $1, 0x46da3a\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "main_won_map: clang naked draft required"
+#endif
 
+
+/* FUN_00100380 (0x100380) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00100380(void)
 {
-  *(char *)0x46da28 = 0;
-  *(char *)0x46da3b = 1;
+  __asm__ volatile(
+      "movb $0, 0x46da28\n\t"
+      "movb $1, 0x46da3b\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00100380: clang naked draft required"
+#endif
+
 
 /* main_respawn (0x100390) — XBE naked draft (batch 198). */
 #if defined(__clang__)
@@ -3775,10 +3831,26 @@ int main_get_solo_level_from_name(const char *map_name __attribute__((unused)))
 #endif
 
 
+/* main_get_current_solo_level (0x100860) — XBE naked draft (batch 396). */
+#if defined(__clang__)
+static int (*const b100860_c1006f0)(const char *map_name) = (void *)main_get_solo_level_from_name;
+
+__attribute__((naked, noinline))
 int main_get_current_solo_level(void)
 {
-  return main_get_solo_level_from_name((const char *)0x46da55);
+  __asm__ volatile(
+      "pushl $0x46da55\n\t"
+      "call *%[c1006f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c1006f0] "m"(b100860_c1006f0)
+      : "memory");
 }
+#else
+#error "main_get_current_solo_level: clang naked draft required"
+#endif
+
 
 const char *main_get_solo_level_name(int16_t index)
 {

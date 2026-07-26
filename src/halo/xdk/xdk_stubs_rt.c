@@ -431,12 +431,25 @@ void * CreateThread(void *security, int stack_size, void *func, void *param, int
   (void)eax;
 }
 
-/* 0x1cfde0 */
+/* FUN_001cfde0 (0x1cfde0) — XBE naked draft (batch 395). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_001cfde0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x28, %%eax\n\t"
+      "movl 0x12c(%%eax), %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001cfde0: clang naked draft required"
+#endif
+
 
 /* 0x1cfded */
 void * CreateEventA(void *security, int manual_reset, int initial_state, const char *name)
@@ -1164,11 +1177,26 @@ void FUN_001d0348(void)
 #endif
 
 
-/* 0x1d0362 */
+/* FUN_001d0362 (0x1d0362) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+static unsigned int __stdcall (*const b1d0362_c1d01c4)(unsigned int milliseconds, int alertable) = (void *)SleepEx;
+
+__attribute__((naked, noinline))
 void FUN_001d0362(void)
 {
-  SleepEx(0, 0);
+  __asm__ volatile(
+      "pushl $0\n\t"
+      "pushl 0x8(%%esp)\n\t"
+      "call *%[c1d01c4]\n\t"
+      "ret\n\t"
+      :
+      : [c1d01c4] "m"(b1d0362_c1d01c4)
+      : "memory");
 }
+#else
+#error "FUN_001d0362: clang naked draft required"
+#endif
+
 
 /* OutputDebugStringA (0x1d0370) — XBE naked draft (batch 336). */
 #if defined(__clang__)
@@ -1768,20 +1796,26 @@ void D3DDevice_SetRenderState_Simple(uint32_t reg __attribute__((unused)), uint3
 #endif
 
 
-/* 0x1e9380 */
-void D3DDevice_SetRenderState_Deferred(uint32_t reg_index, uint32_t value)
+/* D3DDevice_SetRenderState_Deferred (0x1e9380) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void D3DDevice_SetRenderState_Deferred(uint32_t reg_index __attribute__((unused)), uint32_t value __attribute__((unused)))
 {
-  int esi = 0;
-  int edi = 0;
-
-  /* cmp esi, 0x52 -> jge 0x1e93c9 */
-  D3DDevice_SetRenderState_Simple(edi, 0);
-  /* cmp esi, 0x74 -> jge 0x1e93ea */
-  D3DDevice_SetRenderStateNotInline();
-
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "movl 0x1f9d50(,%%ecx,4), %%eax\n\t"
+      "orl %%eax, 0x1fbb18\n\t"
+      "movl %%edx, 0x1fb698(,%%ecx,4)\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "D3DDevice_SetRenderState_Deferred: clang naked draft required"
+#endif
+
 
 /* D3DDevice_SetTextureStageState (0x1e9410) — XBE naked draft (batch 360). */
 #if defined(__clang__)

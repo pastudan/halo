@@ -4057,77 +4057,23 @@ void FUN_001887b0(void)
 #endif
 
 
-/* 0x188880 */
+/* FUN_00188880 (0x188880) — XBE naked draft (batch 393). */
+#if defined(__clang__)
+static void (*const b188880_c1887b0)(void) = (void *)FUN_001887b0;
+
+__attribute__((naked, noinline))
 void FUN_00188880(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  FUN_001887b0();
-  /* test (char)eax, (char)eax -> jne 0x1888ba */
-  display_assert((char *)0x002b1784, (char *)0x002b1790, 480, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x1888e1 */
-  display_assert((char *)0x002b177c, (char *)0x002b1790, 481, 0);
-  system_exit(0);
-  display_assert((char *)0x002b1774, (char *)0x002b1790, 482, 0);
-  system_exit(0);
-  /* test edi, edi -> jne 0x188932 */
-  display_assert((char *)0x002b176c, (char *)0x002b1790, 483, 0);
-  system_exit(0);
-  /* test esi, esi -> jne 0x188959 */
-  display_assert((char *)0x00269fd8, (char *)0x002b1790, 484, 0);
-  system_exit(0);
-  FUN_0017eb30((float *)(uintptr_t)eax, (float *)(uintptr_t)ebx, (float *)(uintptr_t)edi, (void *)(uintptr_t)esi);
-  /* test (char)eax, (char)eax -> jne 0x18899a */
-  display_assert((char *)0x002b1784, (char *)0x002b1790, 499, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x1889c1 */
-  display_assert((char *)0x002b177c, (char *)0x002b1790, 500, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x1889e8 */
-  display_assert((char *)0x002b1774, (char *)0x002b1790, 501, 0);
-  system_exit(0);
-  /* test edi, edi -> jne 0x188a12 */
-  display_assert((char *)0x002b176c, (char *)0x002b1790, 502, 0);
-  system_exit(0);
-  /* test ebx, ebx -> jne 0x188a39 */
-  display_assert((char *)0x002b17b8, (char *)0x002b1790, 503, 0);
-  system_exit(0);
-  /* test esi, esi -> jne 0x188a60 */
-  display_assert((char *)0x00269fd8, (char *)0x002b1790, 504, 0);
-  system_exit(0);
-  FUN_00188890(edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edi, (void *)(uintptr_t)esi);
-  FUN_00188890(ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edi, (float *)(uintptr_t)ebx, (void *)(uintptr_t)esi);
-  /* test edi, edi -> jne 0x188abd */
-  display_assert((char *)0x0028ba70, (char *)0x002b1790, 855, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x188ae4 */
-  display_assert((char *)0x00269fd8, (char *)0x002b1790, 856, 0);
-  system_exit(0);
-  /* cmp ebx, esi -> jle 0x188b16 */
-  FUN_00188890(0, (float *)(uintptr_t)edi, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
-  /* cmp eax, ebx -> jl 0x188af4 */
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x188b66 */
-  csstrcmp((char *)(uintptr_t)edi, (char *)(uintptr_t)eax);
-  /* test eax, eax -> je 0x188b55 */
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x188b31 */
-  /* cmp (int16_t)eax, 0x3ff -> jge 0x188bbf */
-  csstrncpy((char *)(uintptr_t)esi, (char *)(uintptr_t)edi, ecx);
-  csstrlen((char *)(uintptr_t)edi);
-  /* cmp (int16_t)eax, 0x3ff -> jle 0x188bb4 */
-  /* test (char)eax, (char)eax -> jne 0x188bde */
-  error(0, (char *)0x002b17c0);
-  /* cmp esi, 0x10 -> jl 0x188c10 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl $-0xd\n\t"
+      "call *%[c1887b0]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c1887b0] "m"(b188880_c1887b0)
+      : "memory");
 }
+#else
+#error "FUN_00188880: clang naked draft required"
+#endif
+

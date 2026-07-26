@@ -206,7 +206,9 @@ def pick(
                 om.pop()
             while cm and cm[-1] == "nop":
                 cm.pop()
-            min_ins = 1 if use_cand_end else 5
+            # Tiny XDK/rasterizer stubs are often 3–4 insns; keep min at 1 so
+            # the all-domain drain can finish (multi>800 / n>2500 still deferred).
+            min_ins = 1
             if len(om) < min_ins:
                 continue
             pct = SequenceMatcher(None, om, cm, autojunk=False).ratio() * 100

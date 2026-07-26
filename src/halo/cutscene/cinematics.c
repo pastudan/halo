@@ -64,19 +64,45 @@ void cinematic_start(void)
 #endif
 
 
-/* 0x92e70 */
+/* cinematic_skip_start (0x92e70) — XBE naked draft (batch 394). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void cinematic_skip_start(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x44df00, %%eax\n\t"
+      "movb $1, 0xa(%%eax)\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "cinematic_skip_start: clang naked draft required"
+#endif
 
-/* 0x92e80 */
+
+/* cinematic_skip_stop (0x92e80) — XBE naked draft (batch 394). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void cinematic_skip_stop(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x44df00, %%eax\n\t"
+      "movb $0, 0xa(%%eax)\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "cinematic_skip_stop: clang naked draft required"
+#endif
+
 
 /* cinematic_show_letterbox (0x92e90) — XBE naked draft (batch 269). */
 #if defined(__clang__)
