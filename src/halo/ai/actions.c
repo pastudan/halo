@@ -2231,118 +2231,186 @@ char actor_action_consider_grenade(int actor_handle)
   return 1;
 }
 
-/* actor_action_try_to_evade (0x1fca0) - Attempt to start an evade (sidestep)
- * action away from the actor's current target/attractor.
- *
- * Pre-screen guards (all fall through to a false return):
- *   1. actor+0x158 (swarm element handle) must be NONE (-1).
- *   2. FUN_0002a360(actor_handle) must be false (some blocking condition).
- *   3. actor+0x504 (a boolean flag) must be clear.
- *   4. actor+0x270 (target prop/attractor datum handle) must be valid (!= -1).
- *   5. unit_tag+0x234 (evade-enable / max-evade scalar) must be > 0.0f.
- *
- * Reads the attractor direction (2D vector at prop+0xe0) and measures its
- * alignment with the actor's facing (actor+0x174/0x178). When actr_tag flag
- * 0x200000 is set the alignment is a 3-component dot (FUN_00013070); otherwise
- * the attractor vector is copied, normalized (magnitude3d), and dotted in 2D.
- * A zero-length attractor vector skips the alignment gate. The alignment must
- * exceed 0.4f (0x253524) to proceed.
- *
- * Builds the alignment vector (normalized copy of prop+0xe0), requests a
- * feasible evade direction from actor_move_try_evasion_direction with the
- * "random" reference mode (4). On success the returned direction index selects
- * an animation impulse (1 -> 7, 0 -> 6; anything else asserts), which is
- * validated via unit_test_animation_impulse before being committed with
- * actor_move_animation_impulse.
- *
- * Confirmed: datum_get(actor_data, actor_handle); tag_get('actr', actor+0x58);
- * object_get_and_verify_type(actor+0x18, 3); tag_get('unit', *object);
- * datum_get(prop_data 0x5ab23c, actor+0x270). Confirmed float constants
- * 0x2533c0 = 0.0f, 0x253524 = 0.4f. Confirmed FUN_0002ab40 result buffer is a
- * pathfinding-location scratch (28-byte frame reservation, callee reads +0xc).
- * Confirmed default-case assert "evade_direction == _actor_evade_left",
- * line 0xce3, + system_exit(-1). Returns bool in AL. */
-char actor_action_try_to_evade(int actor_handle)
+/* actor_action_try_to_evade (0x1fca0) — XBE naked draft (batch 83). */
+#if defined(__clang__)
+static void *(*const b1fca0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const b1fca0_c2a360)(int actor_handle) = FUN_0002a360;
+static void *(*const b1fca0_tag)(int, int) = tag_get;
+static void *(*const b1fca0_get)(int, int) = object_get_and_verify_type;
+static float (*const b1fca0_c13070)(float *a, float *b) = FUN_00013070;
+static float (*const b1fca0_mag)(float *) = magnitude3d;
+static char (*const b1fca0_c2ab40)(int actor_handle, float *alignment_vector, float param_3, unsigned short *evade_direction_reference, float param_5, char *out_flag, void *result) = actor_move_try_evasion_direction;
+static void (*const b1fca0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1fca0_exitfn)(int) = system_exit;
+static uint32_t (*const b1fca0_c1a97c0)(int unit_handle, int impulse_index) = unit_test_animation_impulse;
+static int (*const b1fca0_c2a7e0)(int actor_handle, int16_t param_2, int *param_3) = actor_move_animation_impulse;
+
+__attribute__((naked, noinline))
+char actor_action_try_to_evade(int actor_handle __attribute__((unused)))
 {
-  char *actor;
-  int *actr_tag;
-  char *unit_tag;
-  char *prop;
-  float *attractor_vec;
-  float scratch[2];
-  float alignment_vec[2];
-  float dot;
-  int evade_dir_ref;
-  char out_flag;
-  char result;
-  int impulse;
-  char path_result[0x1c];
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  result = 0;
-  if (*(int *)(actor + 0x158) != -1) {
-    return result;
-  }
-  if (FUN_0002a360(actor_handle) != 0) {
-    return result;
-  }
-  if (*(char *)(actor + 0x504) != '\0') {
-    return result;
-  }
-  if (*(int *)(actor + 0x270) == -1) {
-    return result;
-  }
-
-  actr_tag = (int *)tag_get(0x61637472, *(int *)(actor + 0x58));
-  unit_tag = (char *)tag_get(
-      0x756e6974,
-      *(int *)object_get_and_verify_type(*(int *)(actor + 0x18), 3));
-  prop = (char *)datum_get(*(data_t **)0x5ab23c, *(int *)(actor + 0x270));
-  if (*(float *)(unit_tag + 0x234) <= *(float *)0x2533c0) {
-    return result;
-  }
-
-  attractor_vec = (float *)(prop + 0xe0);
-  if ((*actr_tag & 0x200000) != 0) {
-    dot = FUN_00013070(attractor_vec, (float *)(actor + 0x174));
-  } else {
-    scratch[0] = attractor_vec[0];
-    scratch[1] = attractor_vec[1];
-    if (magnitude3d(scratch) <= *(float *)0x2533c0) {
-      goto do_evade;
-    }
-    dot = scratch[1] * *(float *)(actor + 0x178) +
-          scratch[0] * *(float *)(actor + 0x174);
-  }
-  if (dot <= *(float *)0x253524) {
-    return result;
-  }
-
-do_evade:
-  alignment_vec[0] = attractor_vec[0];
-  alignment_vec[1] = attractor_vec[1];
-  evade_dir_ref = 4;
-  magnitude3d(alignment_vec);
-  if (actor_move_try_evasion_direction(actor_handle, alignment_vec,
-                                       *(float *)(unit_tag + 0x234),
-                                       (unsigned short *)&evade_dir_ref, 0.0f,
-                                       &out_flag, path_result) != '\0') {
-    if ((unsigned short)evade_dir_ref == 1) {
-      impulse = 7;
-    } else if ((unsigned short)evade_dir_ref == 0) {
-      impulse = 6;
-    } else {
-      display_assert("evade_direction == _actor_evade_left",
-                     "c:\\halo\\SOURCE\\ai\\actions.c", 0xce3, 1);
-      system_exit(-1);
-    }
-    if (unit_test_animation_impulse(*(int *)(actor + 0x18), impulse) != 0) {
-      result = (char)actor_move_animation_impulse(
-        actor_handle, (int16_t)impulse, (int *)alignment_vec);
-    }
-  }
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x30, %%esp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x158(%%esi), %%eax\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "jne .Lactor_action_try_to_evade_7\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c2a360]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_action_try_to_evade_7\n\t"
+      "movb 0x504(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_action_try_to_evade_7\n\t"
+      "cmpl %%ebx, 0x270(%%esi)\n\t"
+      "je .Lactor_action_try_to_evade_7\n\t"
+      "movl 0x58(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x18(%%esi), %%edx\n\t"
+      "pushl $3\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x270(%%esi), %%ecx\n\t"
+      "movl 0x5ab23c, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[dget]\n\t"
+      "flds 0x234(%%ebx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "addl $0x20, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_action_try_to_evade_7\n\t"
+      "testl $0x200000, (%%edi)\n\t"
+      "leal 0xe0(%%ecx), %%edi\n\t"
+      "je .Lactor_action_try_to_evade_1\n\t"
+      "leal 0x174(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c13070]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lactor_action_try_to_evade_2\n\t"
+      ".Lactor_action_try_to_evade_1:\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "movl 0x4(%%edi), %%edx\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "call *%[mag]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_action_try_to_evade_3\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x178(%%esi)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x174(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      ".Lactor_action_try_to_evade_2:\n\t"
+      "fcomps 0x253524\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_action_try_to_evade_7\n\t"
+      ".Lactor_action_try_to_evade_3:\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "movl 0x4(%%edi), %%edx\n\t"
+      "leal -0x14(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl $4, -0x8(%%ebp)\n\t"
+      "movl %%ecx, -0x14(%%ebp)\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "call *%[mag]\n\t"
+      "fstp %%st(0)\n\t"
+      "leal -0x30(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x234(%%ebx), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "leal -0x2(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c2ab40]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_try_to_evade_7\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .Lactor_action_try_to_evade_4\n\t"
+      "movl $7, %%edi\n\t"
+      "jmp .Lactor_action_try_to_evade_6\n\t"
+      ".Lactor_action_try_to_evade_4:\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lactor_action_try_to_evade_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0xce3\n\t"
+      "pushl $0x2544b0\n\t"
+      "pushl $0x254874\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_action_try_to_evade_5:\n\t"
+      "movl $6, %%edi\n\t"
+      ".Lactor_action_try_to_evade_6:\n\t"
+      "movl 0x18(%%esi), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1a97c0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_try_to_evade_7\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c2a7e0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb %%al, -0x1(%%ebp)\n\t"
+      ".Lactor_action_try_to_evade_7:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1fca0_dget), [c2a360] "m"(b1fca0_c2a360), [tag] "m"(b1fca0_tag), [get] "m"(b1fca0_get), [c13070] "m"(b1fca0_c13070), [mag] "m"(b1fca0_mag), [c2ab40] "m"(b1fca0_c2ab40), [assert] "m"(b1fca0_assert), [exitfn] "m"(b1fca0_exitfn), [c1a97c0] "m"(b1fca0_c1a97c0), [c2a7e0] "m"(b1fca0_c2a7e0)
+      : "memory");
 }
+#else
+#error "actor_action_try_to_evade: clang naked draft required"
+#endif
+
 
 /* actor_action_try_to_dive (0x1fe70) — XBE naked draft (batch 80). */
 #if defined(__clang__)

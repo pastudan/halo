@@ -5788,127 +5788,189 @@ int16_t FUN_001989b0(uint16_t cluster_count, float *position, float radius,
   return (int16_t)visited_count;
 }
 
-/* structure_clusters_in_cone (0x198ad0)
- *
- * Iterative flood-fill over the scenario's structure clusters, collecting
- * every cluster reachable through portals whose bounding sphere falls inside
- * a view cone, up to max_count output clusters.  This is the cone analog of
- * structure_find_in_cluster / FUN_001989b0 (which flood-fill with a sphere
- * via structure_get_planar_fog); here the portal-vs-cone test is FUN_00110210
- * against the portal bounding sphere (center at portal+8, radius at
- * portal+0x14) and the cone (apex `point`, axis `direction`, `length`, and
- * half-angle sine/cosine).
- *
- * Unlike structure_find_in_cluster, MSVC inlined the cluster-marker begin/end
- * here: the top asserts !cluster_marker_initialized (line 0x103), bumps the
- * marker generation counter (0x4d92e4) and sets the flag; the tail asserts
- * cluster_marker_initialized (line 0x130) and clears it.
- *
- * Confirmed from decompile:
- *   - work_stack[MAXIMUM_CLUSTERS_PER_STRUCTURE=512] on the frame, seeded with
- *     starting_cluster; push bounded by the 0xf5 assert (stack_depth < 512).
- *   - clusters tag block at scenario+0x134 (stride 0x68); each cluster's
- *     portal-index block header at cluster+0x5c (count = *(int*)); index
- *     elements int16 (stride 2).
- *   - cluster_portals tag block at scenario+0x154 (stride 0x40); portal[0]/
- *     portal[1] = front/back cluster (int16); if front == current, take back.
- *   - FUN_00110210 float arg #2 = *(float*)(portal+0x14) (radius), a float,
- *     NOT a pointer.
- * Inferred: point/direction/length param semantics from FUN_00110210's
- *   signature (only forwarded here); return = count of clusters written.
- */
-int16_t structure_clusters_in_cone(int16_t starting_cluster, float *point,
-                                   float *direction, float length, float sine,
-                                   float cosine, int16_t max_count,
-                                   int16_t *out_indices)
+/* structure_clusters_in_cone (0x198ad0) — XBE naked draft (batch 83). */
+#if defined(__clang__)
+static void (*const b198ad0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b198ad0_exitfn)(int) = system_exit;
+static void * (*const b198ad0_c18e3c0)(void) = scenario_get;
+static int (*const b198ad0_c1984c0)(int16_t cluster_index) = structure_cluster_mark;
+static void *(*const b198ad0_elem)(void *, int, int) = tag_block_get_element;
+static bool (*const b198ad0_c198440)(int16_t cluster_index) = structure_cluster_unmarked;
+static char (*const b198ad0_c110210)(float *p1, float p2, float *p3, float *p4, float p5, float sine, float cosine) = FUN_00110210;
+
+__attribute__((naked, noinline))
+int16_t structure_clusters_in_cone(int16_t starting_cluster __attribute__((unused)), float *point __attribute__((unused)), float *direction __attribute__((unused)), float length __attribute__((unused)), float sine __attribute__((unused)), float cosine __attribute__((unused)), int16_t max_count __attribute__((unused)), int16_t *out_indices __attribute__((unused)))
 {
-  int16_t work_stack[512];
-  void *scenario;
-  int stack_depth;
-  int output_count;
-  int work_depth;
-  int next_output;
-
-  if (*(uint8_t *)0x4d92e1 != 0) {
-    display_assert("!structure_globals.cluster_marker_initialized",
-                   "c:\\halo\\SOURCE\\structures\\structures.c", 0x103, true);
-    system_exit(-1);
-  }
-  *(uint32_t *)0x4d92e4 += 1;
-  *(uint8_t *)0x4d92e1 = 1;
-
-  scenario = scenario_get();
-  structure_cluster_mark(starting_cluster);
-  work_stack[0] = starting_cluster;
-  stack_depth = 1;
-  output_count = 0;
-
-  do {
-    int16_t current_cluster;
-    char *cluster;
-    int *portal_count;
-
-    if (max_count <= (int16_t)output_count) {
-      break;
-    }
-
-    stack_depth -= 1;
-    current_cluster = work_stack[(int16_t)stack_depth];
-    work_depth = stack_depth;
-    cluster = tag_block_get_element((char *)scenario + 0x134,
-                                    (int)current_cluster, 0x68);
-    next_output = output_count + 1;
-    portal_count = (int *)(cluster + 0x5c);
-    out_indices[(int16_t)output_count] = current_cluster;
-
-    if (*portal_count > 0) {
-      int16_t portal_iter = 0;
-
-      do {
-        int16_t *portal_index_ptr =
-          tag_block_get_element(portal_count, (int)portal_iter, 2);
-        int16_t *portal = tag_block_get_element((char *)scenario + 0x154,
-                                                (int)*portal_index_ptr, 0x40);
-        int16_t adjacent_cluster = portal[0];
-
-        if (adjacent_cluster == current_cluster) {
-          adjacent_cluster = portal[1];
-        }
-
-        if (structure_cluster_unmarked(adjacent_cluster) &&
-            FUN_00110210((float *)(portal + 4), *(float *)(portal + 10), point,
-                         direction, length, sine, cosine)) {
-          structure_cluster_mark(adjacent_cluster);
-          if ((int16_t)work_depth > 0x1ff) {
-            display_assert("stack_depth<MAXIMUM_CLUSTERS_PER_STRUCTURE",
-                           "c:\\halo\\SOURCE\\structures\\structures.c", 0xf5,
-                           true);
-            system_exit(-1);
-            /* dead at runtime (system_exit never returns): mirrors the
-             * original's register reload on this path (permuter-found) */
-            portal_count = (int *)(cluster + 0x5c);
-          }
-          work_stack[(int16_t)work_depth] = adjacent_cluster;
-          work_depth += 1;
-        }
-
-        portal_iter += 1;
-        stack_depth = work_depth;
-      } while ((int)portal_iter < *portal_count);
-    }
-
-    output_count = next_output;
-  } while (0 < (int16_t)stack_depth);
-
-  if (*(uint8_t *)0x4d92e1 == 0) {
-    display_assert("structure_globals.cluster_marker_initialized",
-                   "c:\\halo\\SOURCE\\structures\\structures.c", 0x130, true);
-    system_exit(-1);
-  }
-  *(uint8_t *)0x4d92e1 = 0;
-
-  return (int16_t)output_count;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x410, %%esp\n\t"
+      "movb 0x4d92e1, %%al\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lstructure_clusters_in_cone_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x103\n\t"
+      "pushl $0x2b3954\n\t"
+      "pushl $0x2b3924\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_clusters_in_cone_1:\n\t"
+      "movl 0x4d92e4, %%edx\n\t"
+      "pushl %%esi\n\t"
+      "incl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%edx, 0x4d92e4\n\t"
+      "movb $1, 0x4d92e1\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "call *%[c1984c0]\n\t"
+      "movw %%si, -0x410(%%ebp)\n\t"
+      "addl $4, %%esp\n\t"
+      "movl $1, %%esi\n\t"
+      "jmp .Lstructure_clusters_in_cone_2\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lstructure_clusters_in_cone_2:\n\t"
+      "cmpw 0x20(%%ebp), %%bx\n\t"
+      "jge .Lstructure_clusters_in_cone_9\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "decl %%esi\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movw -0x410(%%ebp,%%eax,2), %%di\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "pushl $0x68\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x134, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x24(%%ebp), %%edx\n\t"
+      "movswl %%bx, %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "incl %%ebx\n\t"
+      "movl %%ebx, -0xc(%%ebp)\n\t"
+      "leal 0x5c(%%eax), %%ebx\n\t"
+      "movw %%di, (%%edx,%%ecx,2)\n\t"
+      "cmpl $0, (%%ebx)\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      "jle .Lstructure_clusters_in_cone_8\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lstructure_clusters_in_cone_3:\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "movw (%%eax), %%ax\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "addl $0x154, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpw %%di, %%ax\n\t"
+      "jne .Lstructure_clusters_in_cone_4\n\t"
+      "movw 0x2(%%esi), %%cx\n\t"
+      "movw %%cx, 0x8(%%ebp)\n\t"
+      "jmp .Lstructure_clusters_in_cone_5\n\t"
+      ".Lstructure_clusters_in_cone_4:\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      ".Lstructure_clusters_in_cone_5:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c198440]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lstructure_clusters_in_cone_7\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x14(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "addl $8, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c110210]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lstructure_clusters_in_cone_7\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1984c0]\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $0x200, %%si\n\t"
+      "jl .Lstructure_clusters_in_cone_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf5\n\t"
+      "pushl $0x2b3954\n\t"
+      "pushl $0x2b39ac\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_clusters_in_cone_6:\n\t"
+      "movw 0x8(%%ebp), %%dx\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "incl %%esi\n\t"
+      "movw %%dx, -0x410(%%ebp,%%ecx,2)\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      ".Lstructure_clusters_in_cone_7:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lstructure_clusters_in_cone_3\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      ".Lstructure_clusters_in_cone_8:\n\t"
+      "testw %%si, %%si\n\t"
+      "movl -0xc(%%ebp), %%ebx\n\t"
+      "jg .Lstructure_clusters_in_cone_2\n\t"
+      ".Lstructure_clusters_in_cone_9:\n\t"
+      "movb 0x4d92e1, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "jne .Lstructure_clusters_in_cone_10\n\t"
+      "pushl $1\n\t"
+      "pushl $0x130\n\t"
+      "pushl $0x2b3954\n\t"
+      "pushl $0x2b397c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_clusters_in_cone_10:\n\t"
+      "movw %%bx, %%ax\n\t"
+      "movb $0, 0x4d92e1\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b198ad0_assert), [exitfn] "m"(b198ad0_exitfn), [c18e3c0] "m"(b198ad0_c18e3c0), [c1984c0] "m"(b198ad0_c1984c0), [elem] "m"(b198ad0_elem), [c198440] "m"(b198ad0_c198440), [c110210] "m"(b198ad0_c110210)
+      : "memory");
 }
+#else
+#error "structure_clusters_in_cone: clang naked draft required"
+#endif
+
 
 /* structure_test_vector (0x198cb0) — XBE naked draft (batch 56). */
 #if defined(__clang__)

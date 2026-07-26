@@ -70,8 +70,10 @@ def pe_fn_bytes(pe: pefile.PE, name: str) -> tuple[bytes, int]:
         if insns[-2].mnemonic == "ret" and insns[-1].size == 1:
             break
         data = data[: insns[-1].address - addr]
-    # Truncate after final RET (+ optional single-byte nop). Prevents post-RET
-    # JT/pad residue from decoding as trailing opcodes (batch 56 FUN_001ad260).
+    # Truncate after final RET (+ optional single-byte nop) only when the
+    # post-RET region looks like JT/pad residue (batch 56 FUN_001ad260).
+    # Keep post-RET bodies that are still live via jump tables (early-ret
+    # + continuation, e.g. batch 82 FUN_0011b2a0).
     insns = list(md.disasm(data, addr))
     ret_idxs = [i for i, ins in enumerate(insns) if ins.mnemonic == "ret"]
     if ret_idxs:
@@ -84,7 +86,16 @@ def pe_fn_bytes(pe: pefile.PE, name: str) -> tuple[bytes, int]:
             and insns[ri + 1].address == addr + end_off
         ):
             end_off += 1
-        data = data[:end_off]
+        post = data[end_off:]
+        post_insns = list(md.disasm(post, addr + end_off))
+        real = [
+            i
+            for i in post_insns
+            if i.mnemonic not in ("nop", "int3")
+        ]
+        # Jump-table dwords rarely decode into a long run of real ops.
+        if len(real) < 8:
+            data = data[:end_off]
     return data, addr
 
 
@@ -992,6 +1003,19 @@ def main() -> int:
         ("FUN_00197310", 0x197310, 0x1974e4),
         ("FUN_0011b2a0", 0x11b2a0, 0x11b520, [(0x11b520, 0x11b540)]),
         ("FUN_00197130", 0x197130, 0x19730b),
+        # gameplay wave 83 (2026-07-26) — memory/AI/math/objects Capstone weaks
+        ("FUN_0011c5f0", 0x11c5f0, 0x11c774),
+        ("structure_clusters_in_cone", 0x198ad0, 0x198cac),
+        ("actor_action_try_to_evade", 0x1fca0, 0x1fe6b),
+        ("lrar_cache_new", 0x11c870, 0x11ca20),
+        ("convex_polygon3d_verify", 0x106dc0, 0x106f43),
+        ("actor_get_stopping_distances", 0x2a610, 0x2a7d1),
+        ("FUN_001108b0", 0x1108b0, 0x110a0c),
+        ("network_game_server_stalled_on_client", 0x12e1d0, 0x12e395),
+        ("actor_move_try_evasion_direction", 0x2ab40, 0x2acc4, [(0x2acc4, 0x2acd8)]),
+        ("FUN_00064b40", 0x64b40, 0x64ccb),
+        ("object_update", 0x1444f0, 0x144694),
+        ("build_path_edges_for_surface", 0x5f240, 0x5f3b4),
     ]
 
     xbe = Xbe.from_file(args.xbe)

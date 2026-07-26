@@ -23693,68 +23693,183 @@ void object_postprocess_node_matrices(data_t *data, int object_handle)
   *block_ref = 0;
 }
 
-/* 0x1444f0 — Per-tick object update (extensions, attachments, animation). */
-char object_update(int object_handle)
+/* object_update (0x1444f0) — XBE naked draft (batch 83). */
+#if defined(__clang__)
+static void *(*const b1444f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b1444f0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1444f0_tag)(int, int) = tag_get;
+static void (*const b1444f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1444f0_exitfn)(int) = system_exit;
+static int (*const b1444f0_c13c5c0)(int param_1) = FUN_0013c5c0;
+static void (*const b1444f0_c1384e0)(int object_handle) = object_damage_update;
+static void (*const b1444f0_c13c620)(int param_1) = FUN_0013c620;
+static void (*const b1444f0_c141b70)(int object_handle) = object_compute_node_matrices;
+static void (*const b1444f0_c13e7b0)(int object_handle) = object_compute_function_values;
+static void (*const b1444f0_c13e5d0)(int object_handle) = object_compute_change_colors;
+static void (*const b1444f0_c13ee60)(int object_handle, char do_wake, char do_limbo) = object_propagate_flag_to_children;
+static char (*const b1444f0_c1444f0)(int object_handle) = object_update;
+static void * (*const b1444f0_c13dfc0)(int object_handle, void *reference) = object_header_block_reference_get;
+static void (*const b1444f0_c13c800)(int object_handle, void *block_data) = FUN_0013c800;
+
+__attribute__((naked, noinline))
+char object_update(int object_handle __attribute__((unused)))
 {
-  char *header;
-  char *obj;
-  char *obj_tag;
-  int attachment;
-  int sibling;
-  void *block;
-
-  header = (char *)datum_get(*(void **)0x5a8d50, object_handle);
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  obj_tag = (char *)tag_get('ejbo', *(int *)obj);
-
-  if ((*(char *)(header + 2) & 0x10) != 0)
-    return 1;
-
-  if ((*(int *)(obj + 4) & 0x10000) != 0)
-    (*(int16_t *)(*(int *)0x46f084 + 4))++;
-
-  if (*(int16_t *)(obj + 0x86) != 0) {
-    if ((1 << *(uint8_t *)(obj + 0x64)) & 0xfe0) {
-      display_assert((char *)0x29bf80, (char *)0x29b91c, 0x9cc, 1);
-      system_exit(-1);
-    }
-    (*(int16_t *)(obj + 0x84))++;
-    if (*(int16_t *)(obj + 0x84) >= *(int16_t *)(obj + 0x86))
-      *(int16_t *)(obj + 0x86) = 0;
-  }
-
-  (void)FUN_0013c5c0(object_handle);
-  if (*(int *)(obj_tag + 0x7c) != -1)
-    object_damage_update(object_handle);
-  FUN_0013c620(object_handle);
-
-  if ((*(int *)(obj + 4) & 0x800000) == 0)
-    object_compute_node_matrices(object_handle);
-
-  object_compute_function_values(object_handle);
-  object_compute_change_colors(object_handle);
-
-  if ((*(int *)(obj + 4) & 0x200000) != 0 && (*(int *)(obj + 4) & 1) != 0) {
-    if (*(int *)(obj_tag + 0x34) == -1)
-      object_propagate_flag_to_children(object_handle, 1, 1);
-  }
-
-  attachment = *(int *)(obj + 0xc8);
-  if (attachment != -1)
-    object_update(attachment);
-
-  if (*(int *)(obj + 0xcc) != -1) {
-    sibling = *(int *)(obj + 0xc4);
-    if (sibling != -1)
-      object_update(sibling);
-  }
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  obj_tag = (char *)tag_get('ejbo', *(int *)obj);
-  if (*(int *)(obj_tag + 0x34) != -1 && *(int *)(obj_tag + 0x44) != -1) {
-    block = object_header_block_reference_get(object_handle, obj + 0x1a0);
-    FUN_0013c800(object_handle, block);
-  }
-
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movb 0x2(%%ebx), %%al\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb $0x10, %%al\n\t"
+      "jne .Lobject_update_12\n\t"
+      "testl $0x10000, 0x4(%%esi)\n\t"
+      "je .Lobject_update_1\n\t"
+      "movl 0x46f084, %%eax\n\t"
+      "incw 0x4(%%eax)\n\t"
+      ".Lobject_update_1:\n\t"
+      "cmpw $0, 0x86(%%esi)\n\t"
+      "je .Lobject_update_4\n\t"
+      "movb 0x64(%%esi), %%cl\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "testl $0xfe0, %%edx\n\t"
+      "je .Lobject_update_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9cc\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29bf80\n\t"
+      "call *%[assert]\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .Lobject_update_3\n\t"
+      ".Lobject_update_2:\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      ".Lobject_update_3:\n\t"
+      "incw 0x84(%%esi)\n\t"
+      "movw 0x84(%%esi), %%ax\n\t"
+      "cmpw 0x86(%%esi), %%ax\n\t"
+      "jl .Lobject_update_5\n\t"
+      "movw $0, 0x86(%%esi)\n\t"
+      "jmp .Lobject_update_5\n\t"
+      ".Lobject_update_4:\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      ".Lobject_update_5:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c13c5c0]\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x7c(%%eax), %%ecx\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "je .Lobject_update_6\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1384e0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lobject_update_6:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c13c620]\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "testl $0x800000, %%eax\n\t"
+      "jne .Lobject_update_7\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c141b70]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lobject_update_7:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c13e7b0]\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c13e5d0]\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "testb $0x20, %%ah\n\t"
+      "je .Lobject_update_9\n\t"
+      "testb $1, %%al\n\t"
+      "je .Lobject_update_8\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x34(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "jne .Lobject_update_9\n\t"
+      ".Lobject_update_8:\n\t"
+      "pushl $1\n\t"
+      "pushl $1\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c13ee60]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_update_9:\n\t"
+      "movl 0xc8(%%esi), %%eax\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "je .Lobject_update_10\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1444f0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lobject_update_10:\n\t"
+      "cmpl %%ebx, 0xcc(%%esi)\n\t"
+      "je .Lobject_update_11\n\t"
+      "movl 0xc4(%%esi), %%esi\n\t"
+      "cmpl %%ebx, %%esi\n\t"
+      "je .Lobject_update_11\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1444f0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lobject_update_11:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x34(%%eax), %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "je .Lobject_update_12\n\t"
+      "cmpl %%ebx, 0x44(%%eax)\n\t"
+      "je .Lobject_update_12\n\t"
+      "addl $0x1a0, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c13dfc0]\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c13c800]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lobject_update_12:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1444f0_dget), [get] "m"(b1444f0_get), [tag] "m"(b1444f0_tag), [assert] "m"(b1444f0_assert), [exitfn] "m"(b1444f0_exitfn), [c13c5c0] "m"(b1444f0_c13c5c0), [c1384e0] "m"(b1444f0_c1384e0), [c13c620] "m"(b1444f0_c13c620), [c141b70] "m"(b1444f0_c141b70), [c13e7b0] "m"(b1444f0_c13e7b0), [c13e5d0] "m"(b1444f0_c13e5d0), [c13ee60] "m"(b1444f0_c13ee60), [c1444f0] "m"(b1444f0_c1444f0), [c13dfc0] "m"(b1444f0_c13dfc0), [c13c800] "m"(b1444f0_c13c800)
+      : "memory");
 }
+#else
+#error "object_update: clang naked draft required"
+#endif
+

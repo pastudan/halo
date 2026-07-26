@@ -4115,119 +4115,177 @@ void FUN_00110800(int param_1)
   FUN_00117cf0((int *)(param_1 + 4));
 }
 
-/*
- * 0x1108b0 — vector_tree BST search/insert.
- *
- * Traverses a ternary BST built on an array_new pool. Each node holds a
- * stored value and three child indices (left/equal/right), all initialised to
- * -1. The tree struct layout (int[]):
- *   [0]  root index (-1 = empty)
- *   [1+] node pool (passed to FUN_00117da0/FUN_00117ee0 as &tree[1])
- *   [2]  free-list head  (written into the target slot before FUN_00117da0)
- *   [4]  max component count (short, compared with (short) casts)
- *   [5]  user_data passed to the two callbacks
- *   [6]  fn ptr: key_of(user_data, node_value) -> key
- *   [7]  fn ptr: compare(user_data, vector, key, count) -> <0/0/>0
- *
- * Control flow:
- *   - Traverse until an empty slot (-1): allocate a new node there, return 0.
- *   - compare < 0  -> follow left  child (node+1)
- *   - compare > 0  -> follow right child (node+3)
- *   - compare == 0 -> increment persistent count, re-compare with new count
- *                     until non-zero or count reaches max: return 1 (found).
- *                     If re-compare non-zero, follow equal/mid child (node+2).
- *
- * Returns 1 (found), 0 (inserted or alloc failed). *out_node receives the
- * node pointer on found, or the new node pointer on insert, or 0 on alloc fail.
- *
- * The persistent outer count lives in [EBP+8] (the reused param_1 slot zeroed
- * at entry). The inner duplicate-scan increments a separate EBX scan variable
- * without writing back, so it does not corrupt the outer count.
- */
-char FUN_001108b0(int *tree, int vector, int *out_node)
+/* FUN_001108b0 (0x1108b0) — XBE naked draft (batch 83). */
+#if defined(__clang__)
+static void (*const b1108b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1108b0_exitfn)(int) = system_exit;
+static int (*const b1108b0_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
+static int (*const b1108b0_c117da0)(int *array) = FUN_00117da0;
+
+__attribute__((naked, noinline))
+char FUN_001108b0(int *tree __attribute__((unused)), int vector __attribute__((unused)), int *out_node __attribute__((unused)))
 {
-    int *slot;
-    int *node;
-    int key;
-    int cmp;
-    int count;
-    int scan;
-    int new_node;
-
-    if (tree == (int *)0) {
-        display_assert("tree", "c:\\halo\\SOURCE\\math\\vector_tree.c", 0x4a,
-                       1);
-        system_exit(-1);
-    }
-    if (vector == 0) {
-        display_assert("vector", "c:\\halo\\SOURCE\\math\\vector_tree.c", 0x4b,
-                       1);
-        system_exit(-1);
-    }
-    if (out_node == (int *)0) {
-        display_assert("index_reference",
-                       "c:\\halo\\SOURCE\\math\\vector_tree.c", 0x4c, 1);
-        system_exit(-1);
-    }
-
-    count = 0;
-    slot = tree; /* initially points at tree[0] = root index field */
-
-    do {
-        if (*slot == -1) {
-            /* Empty slot: insert here. Write free-list head into slot, then
-               allocate a node from the pool. */
-            *slot = tree[2];
-            new_node = FUN_00117da0(&tree[1]);
-            if (new_node != -1) {
-                new_node = FUN_00117ee0(&tree[1], new_node, 0x10);
-                ((int *)new_node)[1] = -1;
-                ((int *)new_node)[2] = -1;
-                ((int *)new_node)[3] = -1;
-                *out_node = new_node;
-                return 0;
-            }
-            *out_node = 0;
-            return 0;
-        }
-
-        /* Get pointer to current node's data block. */
-        node = (int *)FUN_00117ee0(&tree[1], *slot, 0x10);
-        key = (*(int (*)(int, int))tree[6])(tree[5], node[0]);
-        cmp = (*(int (*)(int, int, int, int))tree[7])(tree[5], vector, key,
-                                                       count);
-        if (cmp < 0) {
-            slot = node + 1; /* left child */
-        } else if (cmp > 0) {
-            slot = node + 3; /* right child */
-        } else {
-            /* Equal: increment persistent count, check against max.
-             * Both the outer-max check and inner-loop exhaustion share the
-             * same found epilogue (matches original's single LAB_1109a2).
-             */
-            count++;
-            scan = count;
-            if ((short)scan < (short)tree[4]) {
-                /* Inner duplicate scan: call comparator with increasing scan
-                   value until non-zero result or scan reaches max. */
-                do {
-                    cmp = (*(int (*)(int, int, int, int))tree[7])(
-                        tree[5], vector, key, scan);
-                    if (cmp != 0) {
-                        /* Non-zero: follow equal/mid child. */
-                        slot = node + 2;
-                        goto next_iter;
-                    }
-                    scan++;
-                } while ((short)scan < (short)tree[4]);
-            }
-            /* Scan exhausted (or count already at max): found. */
-            *out_node = (int)node;
-            return 1;
-        next_iter: ;
-        }
-    } while (1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%esi, %%edi\n\t"
+      "movl $0, 0x8(%%ebp)\n\t"
+      "jne .LFUN_001108b0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4a\n\t"
+      "pushl $0x28ce0c\n\t"
+      "pushl $0x28ce04\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001108b0_1:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_001108b0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4b\n\t"
+      "pushl $0x28ce0c\n\t"
+      "pushl $0x254a50\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001108b0_2:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .LFUN_001108b0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4c\n\t"
+      "pushl $0x28ce0c\n\t"
+      "pushl $0x28ce30\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001108b0_3:\n\t"
+      "cmpl $-1, (%%esi)\n\t"
+      "je .LFUN_001108b0_11\n\t"
+      ".LFUN_001108b0_4:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x4(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c117ee0]\n\t"
+      "movl 0x14(%%esi), %%edx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "call *0x18(%%esi)\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%esi), %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *0x1c(%%esi)\n\t"
+      "addl $0x24, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_001108b0_5\n\t"
+      "leal 0x4(%%ebx), %%edi\n\t"
+      "jmp .LFUN_001108b0_10\n\t"
+      ".LFUN_001108b0_5:\n\t"
+      "jle .LFUN_001108b0_6\n\t"
+      "leal 0xc(%%ebx), %%edi\n\t"
+      "jmp .LFUN_001108b0_10\n\t"
+      ".LFUN_001108b0_6:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "incl %%ebx\n\t"
+      "movw %%bx, %%ax\n\t"
+      "cmpw 0x10(%%esi), %%ax\n\t"
+      "movl %%ebx, 0x8(%%ebp)\n\t"
+      "jge .LFUN_001108b0_8\n\t"
+      ".LFUN_001108b0_7:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%esi), %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *0x1c(%%esi)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_001108b0_9\n\t"
+      "incl %%ebx\n\t"
+      "cmpw 0x10(%%esi), %%bx\n\t"
+      "jl .LFUN_001108b0_7\n\t"
+      ".LFUN_001108b0_8:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001108b0_9:\n\t"
+      "movl -0x4(%%ebp), %%edi\n\t"
+      "addl $8, %%edi\n\t"
+      ".LFUN_001108b0_10:\n\t"
+      "cmpl $-1, (%%edi)\n\t"
+      "jne .LFUN_001108b0_4\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      ".LFUN_001108b0_11:\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "addl $4, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "movl %%edx, (%%edi)\n\t"
+      "call *%[c117da0]\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "je .LFUN_001108b0_12\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c117ee0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%edi, 0x4(%%eax)\n\t"
+      "movl %%edi, 0x8(%%eax)\n\t"
+      "movl %%edi, 0xc(%%eax)\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001108b0_12:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $0, (%%ebx)\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1108b0_assert), [exitfn] "m"(b1108b0_exitfn), [c117ee0] "m"(b1108b0_c117ee0), [c117da0] "m"(b1108b0_c117da0)
+      : "memory");
 }
+#else
+#error "FUN_001108b0: clang naked draft required"
+#endif
+
 
 /* 0x110a10 — zlib adler32 checksum (pure integer leaf, no calls).
  * Updates a running Adler-32 sum over `len` bytes of `buf`. The state packs

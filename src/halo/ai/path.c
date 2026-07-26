@@ -1386,89 +1386,166 @@ void FUN_0005f1d0(void)
   (void)edi;
 }
 
-/* 0x5f240 — enumerate BSP surface edges into a path-search buffer. */
-int16_t build_path_edges_for_surface(void *scenario, int surface_index,
-                                     char *out_edges)
+/* build_path_edges_for_surface (0x5f240) — XBE naked draft (batch 83). */
+#if defined(__clang__)
+static void *(*const b5f240_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b5f240_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b5f240_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int16_t build_path_edges_for_surface(void *scenario __attribute__((unused)), int surface_index __attribute__((unused)), char *out_edges __attribute__((unused)))
 {
-  char *sc;
-  char *bsp;
-  char *surfaces_block;
-  char *surface;
-  char *surfaces_count_ptr;
-  char *edges_block;
-  char *vertices_block;
-  char *sector_map;
-  int edge_link;
-  int16_t out_count;
-  char matched;
-  int adj_slot;
-
-  sc = (char *)scenario;
-  bsp = tag_block_get_element(sc + 0xb0, 0, 0x60);
-  if (surface_index < 0 || surface_index >= *(int *)(bsp + 0x3c)) {
-    display_assert("surface_index>=0 && surface_index<bsp->surfaces.count",
-                   "c:\\halo\\SOURCE\\ai\\path.c", 0x5d8, 1);
-    system_exit(-1);
-  }
-
-  surfaces_block = tag_block_get_element(bsp + 0x3c, 0, 0xc);
-  surface = tag_block_get_element(surfaces_block, surface_index, 0x18);
-  surfaces_count_ptr = bsp + 0x3c;
-  edges_block = bsp + 0x48;
-  vertices_block = bsp + 0x54;
-  sector_map = *(char **)(sc + 0x1e8);
-
-  edge_link = *(int *)(surface + 4);
-  out_count = 0;
-
-  for (;;) {
-    char *edge_desc;
-    char *out;
-    int adj_surface;
-    float *vert_a;
-    float *vert_b;
-
-    edge_desc = tag_block_get_element(edges_block, edge_link, 0x18);
-    matched = (char)(surface_index == *(int *)(edge_desc + 0x14));
-    adj_slot = matched ? 0 : 1;
-
-    out = out_edges + (int)out_count * 0x20;
-    adj_surface = *(int *)(edge_desc + adj_slot * 4 + 0x10);
-    *(int *)out = adj_surface;
-
-    if (adj_surface != -1) {
-      if (adj_surface < 0 || adj_surface >= *(int *)surfaces_count_ptr) {
-        display_assert(
-            "adjacent_surface_index>=0 && "
-            "adjacent_surface_index<bsp->surfaces.count",
-            "c:\\halo\\SOURCE\\ai\\path.c", 0x5ee, 1);
-        system_exit(-1);
-      }
-      *(char *)(out + 4) = sector_map[adj_surface];
-    } else {
-      *(char *)(out + 4) = 0;
-    }
-
-    vert_a = tag_block_get_element(vertices_block, *(int *)edge_desc, 0x10);
-    vert_b = tag_block_get_element(vertices_block, *(int *)(edge_desc + 4), 0x10);
-    *(float *)(out + 8) = vert_a[0];
-    *(float *)(out + 0xc) = vert_a[1];
-    *(float *)(out + 0x10) = vert_a[2];
-    *(float *)(out + 0x14) = vert_b[0] - vert_a[0];
-    *(float *)(out + 0x18) = vert_b[1] - vert_a[1];
-    *(float *)(out + 0x1c) = vert_b[2] - vert_a[2];
-
-    out_count++;
-    if (out_count >= 0x40)
-      break;
-
-    edge_link = *(int *)(edge_desc + adj_slot * 4 + 8);
-    if (edge_link == *(int *)(surface + 4))
-      break;
-  }
-
-  return out_count;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x20, %%esp\n\t"
+      "movl 0x1e8(%%eax), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x60\n\t"
+      "addl $0xb0, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, -0x18(%%ebp)\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%edi, %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jl .Lbuild_path_edges_for_surface_1\n\t"
+      "cmpl 0x3c(%%esi), %%edi\n\t"
+      "jl .Lbuild_path_edges_for_surface_2\n\t"
+      ".Lbuild_path_edges_for_surface_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5d8\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e584\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbuild_path_edges_for_surface_2:\n\t"
+      "pushl $0xc\n\t"
+      "leal 0x3c(%%esi), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x4(%%eax), %%edi\n\t"
+      "leal 0x48(%%esi), %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl $0x54, %%esi\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "movl %%esi, -0xc(%%ebp)\n\t"
+      "jmp .Lbuild_path_edges_for_surface_4\n\t"
+      ".Lbuild_path_edges_for_surface_3:\n\t"
+      "movl -0x8(%%ebp), %%ebx\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lbuild_path_edges_for_surface_4:\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "pushl $0x18\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x14(%%edi), %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "sete %%al\n\t"
+      "movswl %%bx, %%esi\n\t"
+      "shll $5, %%esi\n\t"
+      "addl %%edx, %%esi\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "incl %%ebx\n\t"
+      "testb %%al, %%al\n\t"
+      "sete %%dl\n\t"
+      "movb %%al, -0x1(%%ebp)\n\t"
+      "movl %%ebx, -0x8(%%ebp)\n\t"
+      "movl 0x10(%%edi,%%edx,4), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "je .Lbuild_path_edges_for_surface_6\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .Lbuild_path_edges_for_surface_5\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "cmpl (%%ecx), %%eax\n\t"
+      "jl .Lbuild_path_edges_for_surface_6\n\t"
+      ".Lbuild_path_edges_for_surface_5:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5ee\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e528\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbuild_path_edges_for_surface_6:\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "movb (%%eax,%%edx,1), %%cl\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movb %%cl, 0x4(%%esi)\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "leal 0x8(%%esi), %%eax\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "flds (%%eax)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "fsubs (%%ebx)\n\t"
+      "fstps 0x14(%%esi)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs 0x4(%%ebx)\n\t"
+      "fstps 0x18(%%esi)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "cmpw $0x40, %%ax\n\t"
+      "fsubs 0x8(%%ebx)\n\t"
+      "fstps 0x1c(%%esi)\n\t"
+      "je .Lbuild_path_edges_for_surface_7\n\t"
+      "movzbl -0x1(%%ebp), %%edx\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "movl 0x8(%%edi,%%edx,4), %%edi\n\t"
+      "cmpl 0x4(%%eax), %%edi\n\t"
+      "jne .Lbuild_path_edges_for_surface_3\n\t"
+      "movw -0x8(%%ebp), %%ax\n\t"
+      ".Lbuild_path_edges_for_surface_7:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b5f240_elem), [assert] "m"(b5f240_assert), [exitfn] "m"(b5f240_exitfn)
+      : "memory");
 }
+#else
+#error "build_path_edges_for_surface: clang naked draft required"
+#endif
+
 
 /* 0x5f3c0 — closest point on a segment to a reference point. */
 void closest_point_to_attractor(float *segment_start, float *segment_end,

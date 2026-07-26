@@ -105,113 +105,172 @@ char actor_test_destination(int actor_handle)
   return *(char *)(actor + 0x484);
 }
 
-/* actor_get_stopping_distances (0x2a610) — Compute stopping distances for an
- * actor.
- *
- * Calculates two stopping-distance values based on the actor's current speed,
- * maximum speed, and deceleration sourced from the actor's biped or vehicle
- * tag.
- *
- * param_2 = out: current-speed braking distance = speed^2 / (2 * brake_decel)
- * param_3 = out: lookahead stopping distance =
- *               effective_max^2 / (2 * brake_decel)
- *             + (effective_max^2 - speed^2) / (2 * turn_decel)
- *   where effective_max = max(max_speed, current_speed)
- *
- * Confirmed: FLD float [0x255960] default max_speed; MOV [EBP-0xc]=0x3c888889
- * (turn_decel ~1/60), MOV [EBP-0x8]=0x3cda740e (brake_decel ~1/37.5).
- * Confirmed: bipd branch gated by actor[0x18]!=-1 at 0x2a6be; loads tag+0x334
- * (max), tag+0x33c (turn), tag+0x340 (brake) scaled by [0x2546a4]; conditional
- * multiplier tag+0x34c gated by actor+0x508 and FCOMP [0x2533c0] > 0.
- * Confirmed: vehicle FST/FSTP tag+0x300 stores same value to both decel slots
- * at 0x2a6b0/0x2a6b3; object_get_and_verify_type asserts, no NULL check needed.
- * Confirmed: output section NULL-checks param_2 (0x2a780) and param_3
- * (0x2a798); max(max_speed, current_speed) lives inside param_3 block only. */
-void actor_get_stopping_distances(int actor_handle, float *param_2,
-                                  float *param_3)
+/* actor_get_stopping_distances (0x2a610) — XBE naked draft (batch 83). */
+#if defined(__clang__)
+static void *(*const b2a610_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b2a610_get)(int, int) = object_get_and_verify_type;
+static void *(*const b2a610_tag)(int, int) = tag_get;
+static void *(*const b2a610_tryget)(int, int) = object_try_and_get_and_verify_type;
+
+__attribute__((naked, noinline))
+void actor_get_stopping_distances(int actor_handle __attribute__((unused)), float *param_2 __attribute__((unused)), float *param_3 __attribute__((unused)))
 {
-  char *actor;
-  char *obj;
-  char *tag;
-  int vehicle_handle;
-  int unit_handle;
-  int vehicle_count;
-  float max_speed;
-  float turn_decel;
-  float brake_decel;
-  float current_speed;
-
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  max_speed = *(float *)0x255960;
-  current_speed = 0.0f;
-  turn_decel = 0.016666668f;
-  brake_decel = 0.026666667f;
-
-  vehicle_handle = *(int *)(actor + 0x158);
-  if (vehicle_handle != -1) {
-    vehicle_count = (int)*(int16_t *)(actor + 0x15e);
-    if (vehicle_count >= 2 && vehicle_count <= 3) {
-      /* seated in vehicle: object_get_and_verify_type asserts, no NULL check */
-      obj = (char *)object_get_and_verify_type(vehicle_handle, 2);
-      tag = (char *)tag_get(0x76656869, *(int *)obj);
-      /* disasm 0x2a688: FLD [ESI+0x20]*[ESI+0x2c], FLD [ESI+0x1c]*[ESI+0x28],
-       * FADDP, FLD [ESI+0x18]*[ESI+0x24], FADDP */
-      current_speed = *(float *)(obj + 0x20) * *(float *)(obj + 0x2c) +
-                      *(float *)(obj + 0x1c) * *(float *)(obj + 0x28) +
-                      *(float *)(obj + 0x18) * *(float *)(obj + 0x24);
-      max_speed = *(float *)(tag + 0x2f8);
-      /* FST [EBP-0xc], FSTP [EBP-0x8]: same source tag+0x300 */
-      turn_decel = *(float *)(tag + 0x300);
-      brake_decel = *(float *)(tag + 0x300);
-    }
-  } else {
-    /* no vehicle: check unit handle */
-    unit_handle = *(int *)(actor + 0x18);
-    if (unit_handle != -1) {
-      obj = (char *)object_try_and_get_and_verify_type(unit_handle, 1);
-      if (obj != NULL) {
-        /* tag_get called before dot product in disasm, ECX=tag at 0x2a6f1 */
-        tag = (char *)tag_get(0x62697064, *(int *)obj);
-        /* dot product: velocity [+0x18,+0x1c,+0x20] . facing
-         * [+0x24,+0x28,+0x2c] disasm at 0x2a6eb: FLD [ESI+0x20]*[ESI+0x2c], FLD
-         * [ESI+0x1c]*[ESI+0x28], FADDP, FLD [ESI+0x24]*[ESI+0x18], FADDP */
-        current_speed = *(float *)(obj + 0x20) * *(float *)(obj + 0x2c) +
-                        *(float *)(obj + 0x1c) * *(float *)(obj + 0x28) +
-                        *(float *)(obj + 0x24) * *(float *)(obj + 0x18);
-        /* bit 2 of byte at tag+0x2f4 enables custom movement params */
-        if (*(unsigned char *)(tag + 0x2f4) & 4) {
-          max_speed = *(float *)(tag + 0x334) * *(float *)0x2546a4;
-          turn_decel = *(float *)(tag + 0x33c) * *(float *)0x2546a4;
-          brake_decel = *(float *)(tag + 0x340) * *(float *)0x2546a4;
-          /* conditional multiplier: only if actor[0x508] != 0 */
-          if (*(unsigned char *)(actor + 0x508) != 0) {
-            /* FCOMP [0x2533c0] + TEST AH,0x41: skip if multiplier <= 0 */
-            if (*(float *)(tag + 0x34c) > *(float *)0x2533c0) {
-              max_speed *= *(float *)(tag + 0x34c);
-              turn_decel *= *(float *)(tag + 0x34c);
-              brake_decel *= *(float *)(tag + 0x34c);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  /* param_2: braking distance from current speed; NULL-checked at 0x2a780 */
-  if (param_2 != NULL) {
-    *param_2 = (current_speed * current_speed) / (2.0f * brake_decel);
-  }
-  /* param_3: lookahead distance; NULL-checked at 0x2a798;
-   * max() inside this block only (FCOMP at 0x2a79f) */
-  if (param_3 != NULL) {
-    if (current_speed > max_speed) {
-      max_speed = current_speed;
-    }
-    *param_3 = (max_speed * max_speed) / (2.0f * brake_decel) +
-               (max_speed * max_speed - current_speed * current_speed) /
-                 (2.0f * turn_decel);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "flds 0x255960\n\t"
+      "movl %%eax, %%edi\n\t"
+      "fsts -0x10(%%ebp)\n\t"
+      "movl 0x158(%%edi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "movl $0x3c888889, -0xc(%%ebp)\n\t"
+      "movl $0x3cda740e, -0x8(%%ebp)\n\t"
+      "je .Lactor_get_stopping_distances_1\n\t"
+      "movswl 0x15e(%%edi), %%ecx\n\t"
+      "cmpl $2, %%ecx\n\t"
+      "jl .Lactor_get_stopping_distances_3\n\t"
+      "cmpl $3, %%ecx\n\t"
+      "jg .Lactor_get_stopping_distances_3\n\t"
+      "pushl $2\n\t"
+      "fstp %%st(0)\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x76656869\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x20(%%esi)\n\t"
+      "fmuls 0x2c(%%esi)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "flds 0x1c(%%esi)\n\t"
+      "fmuls 0x28(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x18(%%esi)\n\t"
+      "fmuls 0x24(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds 0x2f8(%%eax)\n\t"
+      "flds 0x300(%%eax)\n\t"
+      "fsts -0xc(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jmp .Lactor_get_stopping_distances_3\n\t"
+      ".Lactor_get_stopping_distances_1:\n\t"
+      "movl 0x18(%%edi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_get_stopping_distances_3\n\t"
+      "pushl $1\n\t"
+      "fstp %%st(0)\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lactor_get_stopping_distances_2\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x20(%%esi)\n\t"
+      "fmuls 0x2c(%%esi)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "flds 0x1c(%%esi)\n\t"
+      "movb 0x2f4(%%ecx), %%al\n\t"
+      "fmuls 0x28(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $4, %%al\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x24(%%esi)\n\t"
+      "fmuls 0x18(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "je .Lactor_get_stopping_distances_2\n\t"
+      "flds 0x334(%%ecx)\n\t"
+      "movb 0x508(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "fmuls 0x2546a4\n\t"
+      "flds 0x33c(%%ecx)\n\t"
+      "fmuls 0x2546a4\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x340(%%ecx)\n\t"
+      "fmuls 0x2546a4\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "je .Lactor_get_stopping_distances_3\n\t"
+      "flds 0x34c(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_get_stopping_distances_3\n\t"
+      "fmuls 0x34c(%%ecx)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x34c(%%ecx)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x34c(%%ecx)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jmp .Lactor_get_stopping_distances_3\n\t"
+      ".Lactor_get_stopping_distances_2:\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      ".Lactor_get_stopping_distances_3:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "je .Lactor_get_stopping_distances_4\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      ".byte 0xdc, 0xc0\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fstps (%%eax)\n\t"
+      ".Lactor_get_stopping_distances_4:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lactor_get_stopping_distances_6\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_get_stopping_distances_5\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      ".Lactor_get_stopping_distances_5:\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xde, 0xc9\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      ".byte 0xd8, 0xe9\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      ".byte 0xdc, 0xc0\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      ".byte 0xdc, 0xc0\n\t"
+      ".byte 0xd8, 0xfa\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps (%%ecx)\n\t"
+      ".Lactor_get_stopping_distances_6:\n\t"
+      "fstp %%st(0)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2a610_dget), [get] "m"(b2a610_get), [tag] "m"(b2a610_tag), [tryget] "m"(b2a610_tryget)
+      : "memory");
 }
+#else
+#error "actor_get_stopping_distances: clang naked draft required"
+#endif
+
 
 /* 0x2a7e0 — Set actor goal destination if not already occupied.
  * Calls actor_set_dormant(actor, 0), then checks actor->goal_slot (+0x418)
@@ -496,111 +555,188 @@ char actor_move_try_evasion_vector(int actor_handle __attribute__((unused)), flo
 #endif
 
 
-/* actor_move_try_evasion_direction (0x2ab40) — Try one perpendicular evasion
- * direction (and its mirror) derived from the alignment vector.
- *
- * Builds a 2D evade vector from alignment_vector according to the requested
- * reference mode (*evade_direction_reference), then delegates the actual
- * feasibility test to actor_move_try_evasion_vector (0x2a8f0) for each of the
- * candidate directions. On the first feasible candidate the chosen direction
- * index is written back to *evade_direction_reference and 1 is returned. If no
- * candidate is feasible, 0xffff is written back and 0 is returned.
- *
- * Confirmed: datum_get(*0x6325a4, actor_handle) at 0x2ab49-0x2ab54 (only its
- * side effect / handle validation; result unused).
- * Confirmed: assert "alignment_vector && evade_direction_reference && result"
- * at 0x2ab78-0x2ab89 when any of param_2/param_4/param_7 is NULL.
- * Confirmed: switch on (short)*evade_direction_reference (MOVSX, jump table at
- * 0x2acc4), cases 0-4, default asserts at 0x2ac3a (line 0x508).
- *   case 0: evade[0]=-v[1], evade[1]= v[0], index unchanged, count=1.
- *   case 1: evade[0]= v[1], evade[1]=-v[0], index unchanged, count=1.
- *   case 2: evade[0]= v[0], evade[1]= v[1], index unchanged, count=1.
- *   case 3: evade[0]=-v[0], evade[1]=-v[1], index unchanged, count=1.
- *   case 4: random pick of case 0 (index 0) vs case 1 (index 1), count=2;
- *           random_seed_step(seed) <= 0x8000 -> index 1 branch (0x2ac1f).
- * Confirmed: the two evade floats are a contiguous buffer at
- * [EBP-0xc]/[EBP-0x8] passed by address to actor_move_try_evasion_vector at
- * 0x2ac77. Confirmed: per-attempt both evade floats are negated (FCHS at
- * 0x2ac87/0x2ac96) and the index toggles (XOR EDI,1) at 0x2ac89. Confirmed:
- * success writes index to *evade_direction_reference (16-bit store at
- * 0x2aca5/0x2acb9); exhaustion writes 0xffff (0x2aca5). Return is char (AL). */
-char actor_move_try_evasion_direction(int actor_handle, float *alignment_vector,
-                                      float param_3,
-                                      unsigned short *evade_direction_reference,
-                                      float param_5, char *out_flag,
-                                      void *result)
+/* actor_move_try_evasion_direction (0x2ab40) — XBE naked draft (batch 83). */
+#if defined(__clang__)
+static void *(*const b2ab40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b2ab40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b2ab40_exitfn)(int) = system_exit;
+static int *(*const b2ab40_gseed)(void) = get_global_random_seed_address;
+static uint16_t (*const b2ab40_c10b2b0)(unsigned int *seed) = random_seed_step;
+static char (*const b2ab40_c2a8f0)(int actor_handle, float *evasion_vector, float scale, float param_4, char *out_flag, void *result) = actor_move_try_evasion_vector;
+
+__attribute__((naked, noinline))
+char actor_move_try_evasion_direction(int actor_handle __attribute__((unused)), float *alignment_vector __attribute__((unused)), float param_3 __attribute__((unused)), unsigned short *evade_direction_reference __attribute__((unused)), float param_5 __attribute__((unused)), char *out_flag __attribute__((unused)), void *result __attribute__((unused)))
 {
-  float evade_dir[2];
-  short count;
-  short attempt;
-  short index;
-
-  datum_get(*(data_t **)0x6325a4, actor_handle);
-
-  count = 1;
-  if (alignment_vector == (float *)0x0 ||
-      evade_direction_reference == (unsigned short *)0x0 ||
-      result == (void *)0x0) {
-    display_assert("alignment_vector && evade_direction_reference && result",
-                   "c:\\halo\\SOURCE\\ai\\actor_moving.c", 0x4e4, 1);
-    system_exit(-1);
-  }
-
-  index = *evade_direction_reference;
-  switch (index) {
-  case 0:
-    evade_dir[1] = alignment_vector[0];
-    evade_dir[0] = -alignment_vector[1];
-    break;
-  case 1:
-    evade_dir[0] = alignment_vector[1];
-    evade_dir[1] = -alignment_vector[0];
-    break;
-  case 2:
-    evade_dir[1] = alignment_vector[1];
-    evade_dir[0] = alignment_vector[0];
-    break;
-  case 3:
-    evade_dir[0] = -alignment_vector[0];
-    evade_dir[1] = -alignment_vector[1];
-    break;
-  case 4:
-    if (random_seed_step((unsigned int *)get_global_random_seed_address()) <
-        0x8001) {
-      evade_dir[0] = alignment_vector[1];
-      evade_dir[1] = -alignment_vector[0];
-      index = 1;
-      count = 2;
-    } else {
-      evade_dir[1] = alignment_vector[0];
-      evade_dir[0] = -alignment_vector[1];
-      index = 0;
-      count = 2;
-    }
-    break;
-  default:
-    display_assert((char *)0, "c:\\halo\\SOURCE\\ai\\actor_moving.c", 0x508, 1);
-    system_exit(-1);
-  }
-
-  attempt = 0;
-  if (count > 0) {
-    do {
-      if (actor_move_try_evasion_vector(actor_handle, evade_dir, param_3,
-                                        param_5, out_flag, result) != '\0') {
-        *evade_direction_reference = index;
-        return 1;
-      }
-      attempt = attempt + 1;
-      evade_dir[0] = -evade_dir[0];
-      index = index ^ 1;
-      evade_dir[1] = -evade_dir[1];
-    } while (attempt < count);
-  }
-
-  *evade_direction_reference = 0xffff;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl $1, -0x4(%%ebp)\n\t"
+      "je .Lactor_move_try_evasion_direction_1\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lactor_move_try_evasion_direction_1\n\t"
+      "movl 0x20(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lactor_move_try_evasion_direction_2\n\t"
+      ".Lactor_move_try_evasion_direction_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4e4\n\t"
+      "pushl $0x255984\n\t"
+      "pushl $0x2559a8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_move_try_evasion_direction_2:\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movw (%%edx), %%di\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cmpl $4, %%eax\n\t"
+      "ja .Lactor_move_try_evasion_direction_9\n\t"
+      "jmp *.Lactor_move_try_evasion_direction_jt(,%%eax,4)\n\t"
+      ".Lactor_move_try_evasion_direction_3:\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "fchs\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "jmp .Lactor_move_try_evasion_direction_10\n\t"
+      ".Lactor_move_try_evasion_direction_4:\n\t"
+      "flds (%%esi)\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "fchs\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jmp .Lactor_move_try_evasion_direction_10\n\t"
+      ".Lactor_move_try_evasion_direction_5:\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "jmp .Lactor_move_try_evasion_direction_10\n\t"
+      ".Lactor_move_try_evasion_direction_6:\n\t"
+      "flds (%%esi)\n\t"
+      "fchs\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fchs\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jmp .Lactor_move_try_evasion_direction_10\n\t"
+      ".Lactor_move_try_evasion_direction_7:\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10b2b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $0x8000, %%ax\n\t"
+      "jbe .Lactor_move_try_evasion_direction_8\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "fchs\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl $2, -0x4(%%ebp)\n\t"
+      "jmp .Lactor_move_try_evasion_direction_10\n\t"
+      ".Lactor_move_try_evasion_direction_8:\n\t"
+      "flds (%%esi)\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "fchs\n\t"
+      "movl $1, %%edi\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "movl $2, -0x4(%%ebp)\n\t"
+      "jmp .Lactor_move_try_evasion_direction_10\n\t"
+      ".Lactor_move_try_evasion_direction_9:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x508\n\t"
+      "pushl $0x255984\n\t"
+      "pushl $0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_move_try_evasion_direction_10:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpw %%si, -0x4(%%ebp)\n\t"
+      "jle .Lactor_move_try_evasion_direction_12\n\t"
+      "movl 0x1c(%%ebp), %%ebx\n\t"
+      ".Lactor_move_try_evasion_direction_11:\n\t"
+      "movl 0x20(%%ebp), %%edx\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c2a8f0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_move_try_evasion_direction_13\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "incl %%esi\n\t"
+      "fchs\n\t"
+      "xorl $1, %%edi\n\t"
+      "cmpw -0x4(%%ebp), %%si\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fchs\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jl .Lactor_move_try_evasion_direction_11\n\t"
+      ".Lactor_move_try_evasion_direction_12:\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, (%%ecx)\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_move_try_evasion_direction_13:\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "movw %%cx, (%%edx)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lactor_move_try_evasion_direction_jt:\n\t"
+      ".long .Lactor_move_try_evasion_direction_3\n\t"
+      ".long .Lactor_move_try_evasion_direction_4\n\t"
+      ".long .Lactor_move_try_evasion_direction_5\n\t"
+      ".long .Lactor_move_try_evasion_direction_6\n\t"
+      ".long .Lactor_move_try_evasion_direction_7\n\t"
+      ".text\n\t"
+      :
+      : [dget] "m"(b2ab40_dget), [assert] "m"(b2ab40_assert), [exitfn] "m"(b2ab40_exitfn), [gseed] "m"(b2ab40_gseed), [c10b2b0] "m"(b2ab40_c10b2b0), [c2a8f0] "m"(b2ab40_c2a8f0)
+      : "memory");
 }
+#else
+#error "actor_move_try_evasion_direction: clang naked draft required"
+#endif
+
 
 /* actor_aim_jump (0x2ace0) — Compute and clamp the jump aim velocity vector.
  *

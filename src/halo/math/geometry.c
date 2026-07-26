@@ -355,86 +355,170 @@ bool convex_polygon2d_verify(int16_t vertex_count, uint32_t *vertices)
   return 1;
 }
 
-/* 0x106dc0 — Verify that a 3D polygon is convex and (near-)planar.
- * vertices is a flat array of (x,y,z) triples (12 bytes each); vertex_count is
- * the vertex count. A reference plane normal is built from the first three
- * vertices as cross(vert0 - vert1, vert2 - vert1). For every vertex the corner
- * normal cross(prev - cur, next - cur) is dotted against that reference normal;
- * if any dot falls below a small negative epsilon (0xb58637bd = -1e-6) the
- * winding has reversed and the function returns 0. The current vertex is also
- * rejected if any component is IEEE 754 infinity or NaN (all exponent bits
- * set). prev wraps to the last vertex on the first iteration; next wraps to
- * vertex 0 on the last. The reference-normal setup runs unconditionally before
- * the count guard, and the loop counter stays 16-bit, matching the original
- * codegen. Returns a byte (bool). Source: c:\halo\SOURCE\math\geometry.c */
-bool convex_polygon3d_verify(int16_t vertex_count, float *vertices)
+/* convex_polygon3d_verify (0x106dc0) — XBE naked draft (batch 83). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+bool convex_polygon3d_verify(int16_t vertex_count __attribute__((unused)), float *vertices __attribute__((unused)))
 {
-  float edge_a0, edge_a1, edge_a2;
-  float edge_b0, edge_b1, edge_b2;
-  float ref0, ref1, ref2;
-  float a0, a1, a2, b0, b1, b2, c0, c1, c2, dot;
-  float cx, cy, cz;
-  float *prev, *cur, *next;
-  int last;
-  int16_t i;
-
-  edge_a0 = vertices[0] - vertices[3];
-  edge_a1 = vertices[1] - vertices[4];
-  edge_a2 = vertices[2] - vertices[5];
-  edge_b0 = vertices[6] - vertices[3];
-  edge_b1 = vertices[7] - vertices[4];
-  edge_b2 = vertices[8] - vertices[5];
-  ref0 = edge_a1 * edge_b2 - edge_a2 * edge_b1;
-  ref1 = edge_a2 * edge_b0 - edge_a0 * edge_b2;
-  ref2 = edge_a0 * edge_b1 - edge_a1 * edge_b0;
-
-  if (vertex_count <= 0) {
-    return 1;
-  }
-
-  last = vertex_count - 1;
-  for (i = 0; i < vertex_count; i++) {
-    if (i == 0) {
-      prev = vertices + vertex_count * 3 - 3;
-    } else {
-      prev = vertices + i * 3 - 3;
-    }
-    cur = vertices + i * 3;
-    if (i == last) {
-      next = vertices;
-    } else {
-      next = cur + 3;
-    }
-
-    cx = cur[0];
-    if ((*(uint32_t *)&cx & 0x7f800000) == 0x7f800000) {
-      return 0;
-    }
-    cy = cur[1];
-    if ((*(uint32_t *)&cy & 0x7f800000) == 0x7f800000) {
-      return 0;
-    }
-    cz = cur[2];
-    if ((*(uint32_t *)&cz & 0x7f800000) == 0x7f800000) {
-      return 0;
-    }
-
-    a0 = prev[0] - cur[0];
-    a1 = prev[1] - cur[1];
-    a2 = prev[2] - cur[2];
-    b0 = next[0] - cur[0];
-    b1 = next[1] - cur[1];
-    b2 = next[2] - cur[2];
-    c0 = a1 * b2 - a2 * b1;
-    c1 = a2 * b0 - a0 * b2;
-    c2 = a0 * b1 - a1 * b0;
-    dot = ref0 * c0 + ref1 * c1 + ref2 * c2;
-    if (dot < -9.99999997e-07f) {
-      return 0;
-    }
-  }
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x30, %%esp\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "flds (%%ecx)\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "fsubs 0xc(%%ecx)\n\t"
+      "pushl %%ebx\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "pushl %%esi\n\t"
+      "fsubs 0x10(%%ecx)\n\t"
+      "pushl %%edi\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "fsubs 0x14(%%ecx)\n\t"
+      "flds 0x18(%%ecx)\n\t"
+      "fsubs 0xc(%%ecx)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds 0x1c(%%ecx)\n\t"
+      "fsubs 0x10(%%ecx)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds 0x20(%%ecx)\n\t"
+      "fsubs 0x14(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "jle .Lconvex_polygon3d_verify_5\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "decl %%edx\n\t"
+      "movl %%edx, 0xc(%%ebp)\n\t"
+      ".Lconvex_polygon3d_verify_1:\n\t"
+      "testw %%di, %%di\n\t"
+      "jne .Lconvex_polygon3d_verify_2\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal -0xc(%%ecx,%%eax,4), %%esi\n\t"
+      "jmp .Lconvex_polygon3d_verify_3\n\t"
+      ".Lconvex_polygon3d_verify_2:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%edx\n\t"
+      "leal -0xc(%%ecx,%%edx,4), %%esi\n\t"
+      ".Lconvex_polygon3d_verify_3:\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "movswl %%di, %%edx\n\t"
+      "leal (%%edx,%%edx,2), %%eax\n\t"
+      "cmpl %%ebx, %%edx\n\t"
+      "leal (%%ecx,%%eax,4), %%eax\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "je .Lconvex_polygon3d_verify_4\n\t"
+      "leal 0xc(%%eax), %%edx\n\t"
+      ".Lconvex_polygon3d_verify_4:\n\t"
+      "movl (%%eax), %%ebx\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "andl $0x7f800000, %%ebx\n\t"
+      "cmpl $0x7f800000, %%ebx\n\t"
+      "je .Lconvex_polygon3d_verify_6\n\t"
+      "movl 0x4(%%eax), %%ebx\n\t"
+      "movl %%ebx, -0x8(%%ebp)\n\t"
+      "andl $0x7f800000, %%ebx\n\t"
+      "cmpl $0x7f800000, %%ebx\n\t"
+      "je .Lconvex_polygon3d_verify_6\n\t"
+      "movl 0x8(%%eax), %%ebx\n\t"
+      "movl %%ebx, -0xc(%%ebp)\n\t"
+      "andl $0x7f800000, %%ebx\n\t"
+      "cmpl $0x7f800000, %%ebx\n\t"
+      "je .Lconvex_polygon3d_verify_6\n\t"
+      "flds (%%esi)\n\t"
+      "fsubs (%%eax)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fsubs 0x4(%%eax)\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fsubs 0x8(%%eax)\n\t"
+      "flds (%%edx)\n\t"
+      "fsubs (%%eax)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds 0x4(%%edx)\n\t"
+      "fsubs 0x4(%%eax)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds 0x8(%%edx)\n\t"
+      "fsubs 0x8(%%eax)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x30(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x2c(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      ".byte 0xde, 0xca\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      ".byte 0xde, 0xea\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "flds -0x2c(%%ebp)\n\t"
+      "fmuls -0x20(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "fmuls -0x24(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps 0x28c038\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lconvex_polygon3d_verify_6\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "incl %%edi\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jl .Lconvex_polygon3d_verify_1\n\t"
+      ".Lconvex_polygon3d_verify_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lconvex_polygon3d_verify_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "convex_polygon3d_verify: clang naked draft required"
+#endif
+
 
 /* 0x106f50 — Build an initial simplex (tetrahedron) from a point cloud: the
  * seed step of a convex-hull/quickhull. Selects four extremal points, emits
