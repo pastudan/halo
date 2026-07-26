@@ -852,7 +852,7 @@ void player_ui_get_player1_last_used_profile_index(void)
 #endif
 
 
-/* player_ui_fast_setup_network_server (0xe0cd0) — XBE naked draft (batch 149). */
+/* player_ui_fast_setup_network_server (0xe0cd0) — XBE naked draft (batch 240). */
 #if defined(__clang__)
 static void (*const be0cd0_ce58c0)(void) = ui_widgets_close_all;
 static void (*const be0cd0_c12a1e0)(void) = dispose_global_network_game_client;
@@ -915,14 +915,12 @@ void player_ui_fast_setup_network_server(void)
       "pushl $2\n\t"
       "call *%[c8f390]\n\t"
       "addl $0xc, %%esp\n\t"
-      "jmp .Lplayer_ui_fast_setup_network_server_10000\n\t"
+      "jmp *%[c100620]\n\t"
       ".Lplayer_ui_fast_setup_network_server_2:\n\t"
       "pushl $0x282840\n\t"
       "pushl $2\n\t"
       "call *%[c8f390]\n\t"
       "addl $8, %%esp\n\t"
-      "jmp .Lplayer_ui_fast_setup_network_server_10000\n\t"
-      ".Lplayer_ui_fast_setup_network_server_10000:\n\t"
       "jmp *%[c100620]\n\t"
       :
       : [ce58c0] "m"(be0cd0_ce58c0), [c12a1e0] "m"(be0cd0_c12a1e0), [c12a2a0] "m"(be0cd0_c12a2a0), [cfff70] "m"(be0cd0_cfff70), [c100010] "m"(be0cd0_c100010), [ce84e0] "m"(be0cd0_ce84e0), [cae750] "m"(be0cd0_cae750), [c12a150] "m"(be0cd0_c12a150), [c12a890] "m"(be0cd0_c12a890), [c12a250] "m"(be0cd0_c12a250), [ca8a70] "m"(be0cd0_ca8a70), [c8f390] "m"(be0cd0_c8f390), [c100620] "m"(be0cd0_c100620)

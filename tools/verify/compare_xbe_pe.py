@@ -223,7 +223,7 @@ def main() -> int:
         ("FUN_0005ef80", 0x5ef80, 0x5f1d0),
         ("prop_add", 0x64170, 0x643d0),
         ("FUN_00064b40", 0x64b40, 0x64cd0),
-        ("FUN_00064cd0", 0x64cd0, 0x64f50),
+        ("FUN_00064cd0", 0x64cd0, 0x64e7e, [(0x64e80, 0x64ea4)]),
         ("prop_new_unacknowledged", 0x645a0, 0x647c0),
         ("prop_position_refresh", 0x31df0, 0x32170),
         ("prop_status_refresh", 0x33440, 0x342a0),
@@ -238,7 +238,7 @@ def main() -> int:
         ("FUN_00032170", 0x32170, 0x32380),
         ("actor_expected_acknowledgement", 0x32940, 0x32ac0),
         ("actor_perception_refresh_danger_zone", 0x32380, 0x32940),
-        ("actor_visibility_at_point", 0x314f0, 0x31850),
+        ("actor_visibility_at_point", 0x314f0, 0x3183d, [(0x31840, 0x31850)]),
         ("actor_perception_unreachable", 0x32ac0, 0x32b43),
         ("FUN_0002f5f0", 0x2f5f0, 0x2f6d9),
         # perception orphan + audibility wave (2026-07-26)
@@ -309,7 +309,7 @@ def main() -> int:
         ("FUN_00138f70", 0x138f70, 0x138fc5),
         ("FUN_00085280", 0x85280, 0x8534f),
         ("FUN_001342a0", 0x1342a0, 0x13434a),
-        ("vehicle_causes_collision_damage", 0x1b5580, 0x1b55c0),
+        ("vehicle_causes_collision_damage", 0x1b5580, 0x1b55b0),
         ("weapon_can_be_fired", 0xfaf50, 0xfafd4),
         ("weapon_useful", 0xfafe0, 0xfb00c),
         ("weapon_compute_movement_penalty", 0xfb010, 0xfb07c),
@@ -318,7 +318,7 @@ def main() -> int:
         ("vehicle_hover", 0x1b55c0, 0x1b55f0),
         ("vehicle_is_flipped", 0x1b5680, 0x1b56ac),
         ("FUN_001a0db0", 0x1a0db0, 0x1a0e00),
-        ("FUN_001b5500", 0x1b5500, 0x1b5580),
+        ("FUN_001b5500", 0x1b5500, 0x1b5540),
         ("FUN_001b5610", 0x1b5610, 0x1b5657),
         ("FUN_000fb910", 0xfb910, 0xfb98d),
         ("FUN_000fb990", 0xfb990, 0xfb9da),
@@ -671,12 +671,12 @@ def main() -> int:
         # gameplay wave 56 (2026-07-26)
         # Ends stop at final RET (before align nop / JT); multi-JT uses skips.
         ("FUN_001ad260", 0x1ad260, 0x1ad713),
-        ("FUN_001b0d90", 0x1b0d90, 0x1b1278, [(0x1b122c, 0x1b1254), (0x1b1248, 0x1b1254), (0x1b1260, 0x1b1278)]),
+        ("FUN_001b0d90", 0x1b0d90, 0x1b1290, [(0x1b122c, 0x1b1254), (0x1b1248, 0x1b1254), (0x1b1260, 0x1b1278)]),
         (
             "unit_impulse_to_animation_kind",
             0x1a9560,
-            0x1a979d,
-            [(0x1a969c, 0x1a96d4), (0x1a96d4, 0x1a96dc)],
+            0x1a97c0,
+            [(0x1a969c, 0x1a96dc), (0x1a96d4, 0x1a96dc), (0x1a97a0, 0x1a97a8)],
         ),
         ("unit_animation_start_action", 0x1a8990, 0x1a8af8),
         ("FUN_001a2440", 0x1a2440, 0x1a25c0),
@@ -2729,7 +2729,13 @@ def main() -> int:
         ("FUN_00184710", 0x184710, 0x184719),
         # gameplay wave 238 (2026-07-26) — Capstone weaks
         # gameplay wave 239 (2026-07-26) — Capstone weaks
-        ("unit_impulse_to_animation_kind", 0x1a9560, 0x1a96dc, [(0x1a969c, 0x1a96dc), (0x1a96d4, 0x1a96dc)]),
+        # gameplay wave 240 (2026-07-26) — Capstone weaks
+        (
+            "unit_impulse_to_animation_kind",
+            0x1a9560,
+            0x1a97c0,
+            [(0x1a969c, 0x1a96dc), (0x1a96d4, 0x1a96dc), (0x1a97a0, 0x1a97a8)],
+        ),
     ]
 
     xbe = Xbe.from_file(args.xbe)
@@ -2758,7 +2764,7 @@ def main() -> int:
                 if insn.mnemonic != "ret":
                     continue
                 off = insn.address + insn.size - cand_va
-                if abs(off - len(orig)) > 32:
+                if abs(off - len(orig)) > 64:
                     continue
                 j = i + 1
                 while j < len(insns) and insns[j].mnemonic == "nop":
