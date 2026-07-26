@@ -500,31 +500,12 @@ void profile_seconds_elapsed(int v)
   *(int *)0x449cc8 = v;
 }
 
-/* profile_lapsed_msec (0x8f8c0) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void profile_lapsed_msec(void)
+/* profile_lapsed_msec (0x8f8c0) — readable C lift. */
+void profile_lapsed_msec(int value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x449cd0\n\t"
-      "setg %%al\n\t"
-      "movb %%al, 0x449cd4\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(int *)0x449cd0 = value;
+  *(char *)0x449cd4 = value > 0;
 }
-#else
-#error "profile_lapsed_msec: clang naked draft required"
-#endif
-
 
 /* find_profile_section (0x8f8e0) — XBE naked draft (batch 252). */
 #if defined(__clang__)
@@ -1226,30 +1207,12 @@ void FUN_0008fb60(void)
 #endif
 
 
-/* FUN_00090170 (0x90170) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00090170(void)
+/* FUN_00090170 (0x90170) — readable C lift. */
+void FUN_00090170(int *out, int a, int b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  out[0] = a;
+  out[1] = b;
 }
-#else
-#error "FUN_00090170: clang naked draft required"
-#endif
-
 
 /* FUN_00090180 (0x90180) — XBE naked draft (batch 260). */
 #if defined(__clang__)
@@ -3894,9 +3857,9 @@ void FUN_00091ef0(int *keys __attribute__((unused)), int count __attribute__((un
 
 
 /* FUN_00092050 (0x92050) — readable C lift. */
-void FUN_00092050(char v)
+void FUN_00092050(char value)
 {
-  *(unsigned char *)0x2ee784 = (unsigned char)v;
+  *(char *)0x2ee784 = value;
 }
 
 /* 0x92110 */

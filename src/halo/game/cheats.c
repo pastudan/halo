@@ -554,7 +554,7 @@ void FUN_000a5700(void)
 /* FUN_000a57a0 (0xa57a0) — readable C lift: 1/sqrt(x). */
 float FUN_000a57a0(float x)
 {
-  return *(float *)0x2533c8 / x87_sqrt(x);
+  return *(float *)0x2533c8 / __builtin_sqrtf(x);
 }
 
 /* FUN_000a57b0 (0xa57b0) — XBE naked draft (batch 153). */
@@ -616,11 +616,11 @@ short FUN_000a57b0(float *vec __attribute__((unused)), float max_length __attrib
 #endif
 
 
-/* FUN_000a5810 (0xa5810) — readable C lift from XBE leaf. */
-void FUN_000a5810(int *out, float value, int field0)
+/* FUN_000a5810 (0xa5810) — readable C lift. */
+void FUN_000a5810(float *out, float value, int field0)
 {
-  out[1] = *(int *)&value;
-  out[0] = field0;
+  out[1] = value;
+  *(int *)out = field0;
 }
 
 /* FUN_000a5830 (0xa5830) — XBE naked draft (batch 135). */

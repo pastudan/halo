@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* sound_object_apply_pitch_delta (0x1ac2f0)
  *
  * Computes a clamped pitch delta and accumulates it onto the object's
@@ -3014,58 +3015,22 @@ void sound_enable(char enabled)
   *(char *)0x4eaf41 = enabled;
 }
 
-/* sound_scripted_dialog_is_playing (0x1cb990) — XBE naked draft (batch 282). */
-#if defined(__clang__)
-static int (*const b1cb990_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
+/* sound_scripted_dialog_is_playing (0x1cb990) — readable C lift. */
 char sound_scripted_dialog_is_playing(void)
 {
-  __asm__ volatile(
-      "call *%[gtime]\n\t"
-      "movl 0x4eaf44, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "setl %%cl\n\t"
-      "movb %%cl, %%al\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(b1cb990_gtime)
-      : "memory");
+  return game_time_get() < *(int *)0x4eaf44;
 }
-#else
-#error "sound_scripted_dialog_is_playing: clang naked draft required"
-#endif
 
-
-/* sound_manager_set_sound_environment (0x1cb9b0) — XBE naked draft (batch 253). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void sound_manager_set_sound_environment(void *environment __attribute__((unused)))
+/* sound_manager_set_sound_environment (0x1cb9b0) — readable C lift. */
+void sound_manager_set_sound_environment(void *environment)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x12, %%ecx\n\t"
-      "movl $0x4eb068, %%edi\n\t"
-      "rep movsl\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int i;
+  int *src = (int *)environment;
+  int *dst = (int *)0x4eb068;
+  for (i = 0; i < 0x12; i++) {
+    dst[i] = src[i];
+  }
 }
-#else
-#error "sound_manager_set_sound_environment: clang naked draft required"
-#endif
-
 
 /* FUN_001cb9d0 (0x1cb9d0) — XBE naked draft (batch 286). */
 #if defined(__clang__)
@@ -3097,31 +3062,11 @@ void FUN_001cb9d0(void)
 #endif
 
 
-/* FUN_001cba00 (0x1cba00) — XBE naked draft (batch 288). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float FUN_001cba00(float scale __attribute__((unused)), float a __attribute__((unused)), float b __attribute__((unused)), float t __attribute__((unused)))
+/* FUN_001cba00 (0x1cba00) — readable C lift: scale * lerp(a,b,t). */
+float FUN_001cba00(float scale, float a, float b, float t)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "fmuls 0x14(%%ebp)\n\t"
-      "fadds 0xc(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return ((b - a) * t + a) * scale;
 }
-#else
-#error "FUN_001cba00: clang naked draft required"
-#endif
-
 
 /* --- sound_manager.obj batch2 drafts (2026-07-25) --- */
 
@@ -5035,7 +4980,7 @@ void FUN_001cc5b0(int sound_tag_index __attribute__((unused)), void *source __at
 
 /* sound_initialize (0x1cc710) — XBE naked draft (batch 268). */
 #if defined(__clang__)
-static void (*const b1cc710_c1cf820)(void **out) = FUN_001cf820;
+static void (*const b1cc710_c1cf820)(void **out) = (void *)FUN_001cf820;
 static void (*const b1cc710_c1be3e0)(void) = sound_cache_new;
 static data_t * (*const b1cc710_c1194d0)(char *name, int16_t maximum_count, int16_t size) = data_new;
 static void (*const b1cc710_c119b20)(data_t *data) = data_delete_all;

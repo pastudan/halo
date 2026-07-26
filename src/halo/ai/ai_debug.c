@@ -13723,28 +13723,11 @@ void FUN_000534d0(void)
 #endif
 
 
-/* FUN_00053650 (0x53650) — XBE naked draft (batch 188). */
-#if defined(__clang__)
-static void *(*const b53650_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* FUN_00053650 (0x53650) — readable C lift: memset helper. */
 void FUN_00053650(void)
 {
-  __asm__ volatile(
-      "pushl $0xee0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5abaac\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b53650_memset)
-      : "memory");
+  csmemset((void *)0x5abaac, 0, 0xee0);
 }
-#else
-#error "FUN_00053650: clang naked draft required"
-#endif
-
 
 /* FUN_00053680 (0x53680) — XBE naked draft (batch 133). */
 #if defined(__clang__)

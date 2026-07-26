@@ -1,3 +1,4 @@
+#include <stdint.h>
 #define FILE_REF_MAGIC 0x66696C6F
 
 #define FIND_FILES_RECURSIVE_BIT 1
@@ -1228,33 +1229,11 @@ void FUN_00199d40(void)
 #endif
 
 
-/* file_compare_last_modification_dates (0x19a020) — XBE naked draft (batch 291). */
-#if defined(__clang__)
-static int (*const b19a020_c8da40)(const void *a, const void *b, int size) = csmemcmp;
-
-__attribute__((naked, noinline))
-void file_compare_last_modification_dates(void)
+/* file_compare_last_modification_dates (0x19a020) — readable C lift. */
+int file_compare_last_modification_dates(const void *a, const void *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $8\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8da40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8da40] "m"(b19a020_c8da40)
-      : "memory");
+  return csmemcmp(a, b, 8);
 }
-#else
-#error "file_compare_last_modification_dates: clang naked draft required"
-#endif
-
 
 /* file_read_only (0x19a400) — XBE naked draft (batch 278). */
 #if defined(__clang__)

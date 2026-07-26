@@ -4253,7 +4253,7 @@ static void * (*const b12f690_c8e0b0)(void *destination, void *source, size_t si
 static void (*const b12f690_c81ec0)(void *dst, int bytes) = transport_get_nonce;
 static int64_t (*const b12f690_c82090)(void) = transport_get_key_id;
 static void * (*const b12f690_c820d0)(void *dst) = transport_get_key;
-static void * (*const b12f690_c82060)(void *dst) = transport_get_xnaddr;
+static void * (*const b12f690_c82060)(void *dst) = (void *)transport_get_xnaddr;
 static wchar_t * (*const b12f690_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 static bool (*const b12f690_c12c100)(void *server) = network_game_server_game_is_open;
 static void (*const b12f690_c12d250)(void *join_token) = network_game_generate_join_game_token;

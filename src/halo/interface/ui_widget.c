@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* ui_widgets_initialize — sets up the UI widget subsystem. Allocates a
  * 0x4000-byte block via debug_malloc for the stack memory pool at
  * [0x31e04c], initializes the pool, zeroes the 0x68-byte static widget
@@ -2016,65 +2017,27 @@ void *widget_instance_get_nth_child(void *widget, int index)
   return child;
 }
 
-/* widget_free (0xe3d50) — XBE naked draft (batch 213). */
-#if defined(__clang__)
-static void (*const be3d50_c11f620)(void *pool, void *block) = stack_memory_pool_deallocate;
-
-__attribute__((naked, noinline))
-void widget_free(void *block __attribute__((unused)))
+/* widget_free (0xe3d50) — readable C lift. */
+void widget_free(void *block)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x31e04c, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c11f620]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11f620] "m"(be3d50_c11f620)
-      : "memory");
+  stack_memory_pool_deallocate(*(void **)0x31e04c, block);
 }
-#else
-#error "widget_free: clang naked draft required"
-#endif
 
-
-/* ui_widgets_active (0xe3d70) — XBE naked draft (batch 177). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* ui_widgets_active (0xe3d70) — readable C lift. */
 char ui_widgets_active(void)
 {
-  __asm__ volatile(
-      "movb 0x46cc82, %%cl\n\t"
-      "xorb %%al, %%al\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lui_widgets_active_3\n\t"
-      "movl $0x46cc20, %%ecx\n\t"
-      ".Lui_widgets_active_1:\n\t"
-      "cmpl $0, (%%ecx)\n\t"
-      "jne .Lui_widgets_active_2\n\t"
-      "addl $4, %%ecx\n\t"
-      "cmpl $0x46cc30, %%ecx\n\t"
-      "jl .Lui_widgets_active_1\n\t"
-      "ret\n\t"
-      ".Lui_widgets_active_2:\n\t"
-      "movb $1, %%al\n\t"
-      ".Lui_widgets_active_3:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "ui_widgets_active: clang naked draft required"
-#endif
+  int *slot;
 
+  if (!*(char *)0x46cc82) {
+    return 0;
+  }
+  for (slot = (int *)0x46cc20; slot < (int *)0x46cc30; slot++) {
+    if (*slot != 0) {
+      return 1;
+    }
+  }
+  return 0;
+}
 
 /* ui_widgets_active_for_local_player (0xe3da0) — XBE naked draft (batch 155). */
 #if defined(__clang__)
@@ -2393,39 +2356,14 @@ void display_error_deferred(int16_t error_handle __attribute__((unused)), int16_
 #endif
 
 
-/* display_error_abort_to_dashboard_deferred (0xe4590) — XBE naked draft (batch 175). */
-#if defined(__clang__)
-static void (*const be4590_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void display_error_abort_to_dashboard_deferred(int16_t error_handle __attribute__((unused)), char flag __attribute__((unused)))
+/* display_error_abort_to_dashboard_deferred (0xe4590) — readable C lift. */
+void display_error_abort_to_dashboard_deferred(int16_t code, char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpw $-1, 0x46cc68\n\t"
-      "jne .Ldisplay_error_abort_to_dashboard_deferred_1\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "movw %%ax, 0x46cc68\n\t"
-      "movb %%cl, 0x46cc6a\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldisplay_error_abort_to_dashboard_deferred_1:\n\t"
-      "pushl $0x283460\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8f390] "m"(be4590_c8f390)
-      : "memory");
+  if (*(int16_t *)0x46cc68 == (int16_t)-1) {
+    *(int16_t *)0x46cc68 = code;
+    *(char *)0x46cc6a = flag;
+  }
 }
-#else
-#error "display_error_abort_to_dashboard_deferred: clang naked draft required"
-#endif
-
 
 /* ui_widget_link_child (0xe4800) — XBE naked draft (batch 147). */
 #if defined(__clang__)
@@ -2502,34 +2440,21 @@ void ui_widget_link_child(void *parent __attribute__((unused)), void *child __at
 #endif
 
 
-/* widget_instance_get_opacity_product (0xe4960) — XBE naked draft (batch 184). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float widget_instance_get_opacity_product(void *widget __attribute__((unused)))
+/* widget_instance_get_opacity_product (0xe4960) — readable C lift. */
+float widget_instance_get_opacity_product(void *widget)
 {
-  __asm__ volatile(
-      "flds 0x24(%%eax)\n\t"
-      "movl 0x30(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lwidget_instance_get_opacity_product_2\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lwidget_instance_get_opacity_product_1:\n\t"
-      "fmuls 0x24(%%eax)\n\t"
-      "movl 0x30(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lwidget_instance_get_opacity_product_1\n\t"
-      ".Lwidget_instance_get_opacity_product_2:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "widget_instance_get_opacity_product: clang naked draft required"
-#endif
+  float product;
+  char *node;
 
+  node = (char *)widget;
+  product = *(float *)(node + 0x24);
+  node = *(char **)(node + 0x30);
+  while (node) {
+    product *= *(float *)(node + 0x24);
+    node = *(char **)(node + 0x30);
+  }
+  return product;
+}
 
 /* widget_instance_is_visible_in_parent_chain (0xe4980) — XBE naked draft (batch 131). */
 #if defined(__clang__)
@@ -3683,7 +3608,7 @@ char FUN_000ea1f0(void *widget)
 
 /* FUN_000ea540 (0xea540) — XBE naked draft (batch 215). */
 #if defined(__clang__)
-static void (*const bea540_ce3d50)(void *block) = widget_free;
+static void (*const bea540_ce3d50)(void *block) = (void *)widget_free;
 
 __attribute__((naked, noinline))
 char FUN_000ea540(void *widget __attribute__((unused)))
@@ -3827,7 +3752,7 @@ char split_screen_game_initialize(void *widget __attribute__((unused)), void *pl
 
 /* FUN_000eab70 (0xeab70) — XBE naked draft (batch 215). */
 #if defined(__clang__)
-static void (*const beab70_ce3d50)(void *block) = widget_free;
+static void (*const beab70_ce3d50)(void *block) = (void *)widget_free;
 
 __attribute__((naked, noinline))
 char FUN_000eab70(void *widget __attribute__((unused)))
@@ -6089,7 +6014,7 @@ static wchar_t * (*const be6140_cf5290)(void *widget, unsigned short function_in
 static wchar_t * (*const be6140_c19f450)(const char *ascii, wchar_t *unicode, size_t length) = ascii_to_wide;
 static int (*const be6140_ce5180)(wchar_t *text, wchar_t *replacement, void **pool_block) = FUN_000e5180;
 static void (*const be6140_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static float (*const be6140_ce4960)(void *widget) = widget_instance_get_opacity_product;
+static float (*const be6140_ce4960)(void *widget) = (void *)widget_instance_get_opacity_product;
 static void (*const be6140_ce5530)(float *out) = get_ui_argb_white;
 static void (*const be6140_c19b8b0)(int tag_index, int style, int justify, int flags, const void *color) = draw_string_set_font;
 static char (*const be6140_ce4ce0)(wchar_t *text) = ui_widget_match_localized_substring;
@@ -6408,7 +6333,7 @@ static void * (*const be6450_c8e0b0)(void *destination, void *source, size_t siz
 static wchar_t * (*const be6450_cf5290)(void *widget, unsigned short function_index) = ui_widget_text_search_and_replace_function_invoke;
 static wchar_t * (*const be6450_c19f450)(const char *ascii, wchar_t *unicode, size_t length) = ascii_to_wide;
 static int (*const be6450_ce5180)(wchar_t *text, wchar_t *replacement, void **pool_block) = FUN_000e5180;
-static float (*const be6450_ce4960)(void *widget) = widget_instance_get_opacity_product;
+static float (*const be6450_ce4960)(void *widget) = (void *)widget_instance_get_opacity_product;
 static void (*const be6450_ce54e0)(float *out) = get_ui_rgb_white;
 static void (*const be6450_c19b8b0)(int tag_index, int style, int justify, int flags, const void *color) = draw_string_set_font;
 static void (*const be6450_c184060)(void *screen_pos, short *bounds, const void *color, int flags, unsigned short *text) = rasterizer_draw_string;

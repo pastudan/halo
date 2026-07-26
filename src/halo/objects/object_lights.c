@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* --- object_lights.obj batch drafts (2026-07-26) --- */
 
 /* lights_initialize (0x1391e0) — XBE naked draft (batch 230). */
@@ -73,26 +74,11 @@ void lights_initialize(void)
 #endif
 
 
-/* lights_dispose (0x1392a0) — XBE naked draft (batch 397). */
-#if defined(__clang__)
-static void (*const b1392a0_c191630)(int *partition) = (void *)cluster_partition_null_references;
-
-__attribute__((naked, noinline))
+/* lights_dispose (0x1392a0) — readable C lift. */
 void lights_dispose(void)
 {
-  __asm__ volatile(
-      "pushl $0x5a90b0\n\t"
-      "call *%[c191630]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c191630] "m"(b1392a0_c191630)
-      : "memory");
+  cluster_partition_null_references((int *)0x5a90b0);
 }
-#else
-#error "lights_dispose: clang naked draft required"
-#endif
-
 
 /* lights_initialize_for_new_map (0x1392b0) — XBE naked draft (batch 237). */
 #if defined(__clang__)

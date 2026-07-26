@@ -1549,7 +1549,7 @@ void playlist_profile_initialize_ctf_rules(void *widget __attribute__((unused)))
 
 /* FUN_000eebe0 (0xeebe0) — XBE naked draft (batch 176). */
 #if defined(__clang__)
-static void (*const beebe0_ce3d50)(void *block) = widget_free;
+static void (*const beebe0_ce3d50)(void *block) = (void *)widget_free;
 
 __attribute__((naked, noinline))
 void FUN_000eebe0(void *widget __attribute__((unused)))
@@ -3917,7 +3917,7 @@ static void (*const bf0250_ce08e0)(void) = player_ui_clear_multiplayer_autojoin_
 static void * (*const bf0250_c12a1d0)(void) = network_game_server_get;
 static bool (*const bf0250_c12a160)(void) = network_game_accept_remote_connections;
 static void (*const bf0250_c12d690)(void *server, char flag) = network_game_server_pause_countdown;
-static void (*const bf0250_ce0930)(void) = player_ui_autojoin_players_to_next_multiplayer_game;
+static void (*const bf0250_ce0930)(void) = (void *)player_ui_autojoin_players_to_next_multiplayer_game;
 static void (*const bf0250_c12a2a0)(void) = dispose_global_network_game_server;
 static void (*const bf0250_c12a1e0)(void) = dispose_global_network_game_client;
 
@@ -4522,7 +4522,7 @@ void FUN_000f0740(void *widget __attribute__((unused)))
 #if defined(__clang__)
 static void *(*const bf0790_memset)(void *, int, unsigned int) = csmemset;
 static char (*const bf0790_ce98c0)(void *widget) = FUN_000e98c0;
-static void (*const bf0790_ce09e0)(void) = player_ui_get_active_player_profile_index;
+static void (*const bf0790_ce09e0)(void) = (void *)player_ui_get_active_player_profile_index;
 static int (*const bf0790_c1bf920)(char *header, int16_t *flags, int param_3) = game_state_test_persistent_storage;
 static void (*const bf0790_ce0980)(void) = player_ui_get_active_player_profile;
 static void (*const bf0790_c1c0f70)(void *profile, short *out_level, short *out_difficulty) = player_profile_save_last_level_played;

@@ -954,35 +954,11 @@ void shader_type_is_lightmapped(void)
 #endif
 
 
-/* shader_type_is_vertex_lit (0x190a10) — XBE naked draft (batch 280). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void shader_type_is_vertex_lit(void)
+/* shader_type_is_vertex_lit (0x190a10) — readable C lift. */
+char shader_type_is_vertex_lit(short shader_type)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0x8(%%ebp), %%ecx\n\t"
-      "xorb %%al, %%al\n\t"
-      "cmpl $4, %%ecx\n\t"
-      "je .Lshader_type_is_vertex_lit_1\n\t"
-      "cmpl $8, %%ecx\n\t"
-      "jne .Lshader_type_is_vertex_lit_2\n\t"
-      ".Lshader_type_is_vertex_lit_1:\n\t"
-      "movb $1, %%al\n\t"
-      ".Lshader_type_is_vertex_lit_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return shader_type == 4 || shader_type == 8;
 }
-#else
-#error "shader_type_is_vertex_lit: clang naked draft required"
-#endif
-
 
 /* shader_type_is_valid_for_environment (0x190a30) — XBE naked draft (batch 276). */
 #if defined(__clang__)
@@ -1016,34 +992,11 @@ void shader_type_is_valid_for_environment(void)
 #endif
 
 
-/* shader_type_is_valid_for_model (0x190a50) — XBE naked draft (batch 280). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void shader_type_is_valid_for_model(void)
+/* shader_type_is_valid_for_model (0x190a50) — readable C lift. */
+char shader_type_is_valid_for_model(short shader_type)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0x8(%%ebp), %%ecx\n\t"
-      "xorb %%al, %%al\n\t"
-      "cmpl $3, %%ecx\n\t"
-      "jl .Lshader_type_is_valid_for_model_1\n\t"
-      "cmpl $0xa, %%ecx\n\t"
-      "jg .Lshader_type_is_valid_for_model_1\n\t"
-      "movb $1, %%al\n\t"
-      ".Lshader_type_is_valid_for_model_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return shader_type >= 3 && shader_type <= 10;
 }
-#else
-#error "shader_type_is_valid_for_model: clang naked draft required"
-#endif
-
 
 /* shader_type_is_valid_for_modifier (0x190a70) — XBE naked draft (batch 281). */
 #if defined(__clang__)
@@ -1198,30 +1151,12 @@ void shader_environment_texture_animation_evaluate(void)
 #endif
 
 
-/* numeric_countdown_timer_set (0x190be0) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void numeric_countdown_timer_set(int a0 __attribute__((unused)), int a1 __attribute__((unused)))
+/* numeric_countdown_timer_set (0x190be0) — readable C lift. */
+void numeric_countdown_timer_set(int value, char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "movl %%eax, 0x4d8a78\n\t"
-      "movb %%cl, 0x4d8a7c\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(int *)0x4d8a78 = value;
+  *(char *)0x4d8a7c = flag;
 }
-#else
-#error "numeric_countdown_timer_set: clang naked draft required"
-#endif
-
 
 /* numeric_countdown_timer_get (0x190c00) — XBE naked draft (batch 243). */
 #if defined(__clang__)

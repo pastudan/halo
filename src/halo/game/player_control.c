@@ -8,29 +8,11 @@ void *player_control_get_data(int16_t local_player_index)
   return (char *)player_control_globals + local_player_index * 0x40 + 0x10;
 }
 
-/* player_control_initialize (0xb63d0) — XBE naked draft (batch 184). */
-#if defined(__clang__)
-static void * (*const bb63d0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
-
-__attribute__((naked, noinline))
+/* player_control_initialize (0xb63d0) — readable C lift. */
 void player_control_initialize(void)
 {
-  __asm__ volatile(
-      "pushl $0x110\n\t"
-      "pushl $0\n\t"
-      "pushl $0x26e210\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, 0x457090\n\t"
-      "ret\n\t"
-      :
-      : [c1bfbf0] "m"(bb63d0_c1bfbf0)
-      : "memory");
+  *(void **)0x457090 = game_state_malloc((const char *)0x26e210, 0, 0x110);
 }
-#else
-#error "player_control_initialize: clang naked draft required"
-#endif
-
 
 void player_control_dispose(void)
 {
@@ -39,8 +21,7 @@ void player_control_dispose(void)
 /* scripted_player_control_set_camera_control (0xb6430) — readable C lift. */
 void scripted_player_control_set_camera_control(char enable)
 {
-  unsigned int *flags = (unsigned int *)((char *)player_control_globals + 0xc);
-
+  unsigned int *flags = (unsigned int *)(*(char **)0x457090 + 0xc);
   if (enable) {
     *flags &= ~1u;
   } else {

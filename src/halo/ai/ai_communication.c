@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* ai_communication.c — AI communication dialogue/reply subsystem lifecycle.
  *
  * Corresponds to addresses 0x42a30–0x42ca0 in the XBE.
@@ -719,30 +720,13 @@ char FUN_00042eb0(int actor __attribute__((unused)), int unit __attribute__((unu
 #endif
 
 
-/* FUN_00042f40 (0x42f40) — XBE naked draft (batch 214). */
-#if defined(__clang__)
-static char (*const b42f40_c3b150)(int actor_handle) = actor_is_fighting;
-
-__attribute__((naked, noinline))
-char FUN_00042f40(int a __attribute__((unused)), int b __attribute__((unused)), int actor __attribute__((unused)))
+/* FUN_00042f40 (0x42f40) — readable C lift: thin wrapper. */
+char FUN_00042f40(int a, int b, int actor)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c3b150]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c3b150] "m"(b42f40_c3b150)
-      : "memory");
+  (void)a;
+  (void)b;
+  return actor_is_fighting(actor);
 }
-#else
-#error "FUN_00042f40: clang naked draft required"
-#endif
-
 
 /* FUN_00042f60 (0x42f60) — XBE naked draft (batch 180). */
 #if defined(__clang__)
@@ -2206,7 +2190,7 @@ char ai_conversation_line_begin(int conversation_handle __attribute__((unused)))
 static void *(*const b43a20_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static scenario_t * (*const b43a20_c18e380)(void) = global_scenario_get;
 static void *(*const b43a20_elem)(void *, int, int) = tag_block_get_element;
-static char (*const b43a20_c1cb990)(void) = sound_scripted_dialog_is_playing;
+static char (*const b43a20_c1cb990)(void) = (void *)sound_scripted_dialog_is_playing;
 static short (*const b43a20_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = FUN_001a68d0;
 static void *(*const b43a20_memset)(void *, int, unsigned int) = csmemset;
 static const char * (*const b43a20_c1ba1f0)(int tag_index) = tag_get_name;
@@ -5958,7 +5942,7 @@ char ai_conversation_begin(int conversation_handle __attribute__((unused)), char
 #if defined(__clang__)
 static char * (*const b460e0_c1a67b0)(short param_1, unsigned char param_2) = FUN_001a67b0;
 static int (*const b460e0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static char (*const b460e0_c1cb990)(void) = sound_scripted_dialog_is_playing;
+static char (*const b460e0_c1cb990)(void) = (void *)sound_scripted_dialog_is_playing;
 static char * (*const b460e0_c8dc30)(char *destination, const char *source) = FUN_0008dc30;
 static int *(*const b460e0_gseed)(void) = get_global_random_seed_address;
 static float (*const b460e0_rmreal)(unsigned int *) = random_math_real;
@@ -6359,7 +6343,7 @@ static void *(*const b46530_get)(int, int) = object_get_and_verify_type;
 static void *(*const b46530_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static char * (*const b46530_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 static char * (*const b46530_c8dc30)(char *destination, const char *source) = FUN_0008dc30;
-static char (*const b46530_c1cb990)(void) = sound_scripted_dialog_is_playing;
+static char (*const b46530_c1cb990)(void) = (void *)sound_scripted_dialog_is_playing;
 static void (*const b46530_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b46530_exitfn)(int) = system_exit;
 static int (*const b46530_c458f0)(int comm_type, int unit, int16_t subtype, int16_t index, int stack_a, int stack_b, float max_dist, int mode) = ai_communication_find_global_actor_to_talk;
@@ -7338,7 +7322,7 @@ static void (*const b46f10_c8f390)(unsigned __int16 a1, const char *a2, ...) = e
 static short (*const b46f10_cfff80)(void) = game_connection;
 static char * (*const b46f10_c1a67b0)(short param_1, unsigned char param_2) = FUN_001a67b0;
 static char * (*const b46f10_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static char (*const b46f10_c1cb990)(void) = sound_scripted_dialog_is_playing;
+static char (*const b46f10_c1cb990)(void) = (void *)sound_scripted_dialog_is_playing;
 static int (*const b46f10_c45830)(int type /* */, int unit /* */, int actor /* */, int target /* */, int16_t subtype, int16_t index, float max_dist) = FUN_00045830;
 static void (*const b46f10_c460e0)(int actor /* */, int stack_a, float *pos, int stack_c, float radius, float rating, int16_t anim_a, int16_t anim_b, int stack_d, int stack_e, char flags) = FUN_000460e0;
 static float (*const b46f10_c441c0)(int unit, char use_teams, int *out_unit, int *out_handle) = ai_communication_get_player_rating;

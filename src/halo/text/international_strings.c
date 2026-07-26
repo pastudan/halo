@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* 0x19d080 — Return true if the two bytes starting at p form a valid
  * multibyte character under the current language encoding.
  *
@@ -1229,35 +1230,14 @@ void * FUN_0019cff0(void *font_tag __attribute__((unused)), unsigned short chara
 #endif
 
 
-/* set_language_code (0x19d060) — XBE naked draft (batch 280). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void set_language_code(short code __attribute__((unused)))
+/* set_language_code (0x19d060) — readable C lift. */
+void set_language_code(short code)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lset_language_code_1\n\t"
-      "cmpw $6, %%ax\n\t"
-      "jl .Lset_language_code_2\n\t"
-      ".Lset_language_code_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lset_language_code_2:\n\t"
-      "movw %%ax, 0x4d9be0\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (code < 0 || code >= 6) {
+    code = 0;
+  }
+  *(short *)0x4d9be0 = code;
 }
-#else
-#error "set_language_code: clang naked draft required"
-#endif
-
 
 /* FUN_0019d380 (0x19d380) — XBE naked draft (batch 271). */
 #if defined(__clang__)

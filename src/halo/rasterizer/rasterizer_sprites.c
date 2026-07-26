@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Render sprites by forwarding to the dynavob geometry renderer (0x17cfa0). */
 void rasterizer_sprites_render(void *render_data, void *vertices)
 {
@@ -341,25 +342,11 @@ void FUN_0017cea0(void)
   (void)eax;
 }
 
-/* FUN_0017ceb0 (0x17ceb0) — XBE naked draft (batch 399). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017ceb0(void)
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x67, 0x85, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+/* FUN_0017ceb0 (0x17ceb0) — readable C lift (auto_lift_trivial). */
+void FUN_0017ceb0(void) {
+  ((void (*)(void))0x165420)();
 }
-#else
-#error "FUN_0017ceb0: clang naked draft required"
-#endif
+
 
 
 /* 0x17cec0 */
@@ -476,25 +463,11 @@ void FUN_0017cf10(int pass_index __attribute__((unused)))
 #endif
 
 
-/* FUN_0017cf20 (0x17cf20) — XBE naked draft (batch 399). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017cf20(void)
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xa7, 0xa8, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+/* FUN_0017cf20 (0x17cf20) — readable C lift (auto_lift_trivial). */
+void FUN_0017cf20(void) {
+  ((void (*)(void))0x1677d0)();
 }
-#else
-#error "FUN_0017cf20: clang naked draft required"
-#endif
+
 
 
 /* 0x17cf30 */
@@ -3385,28 +3358,11 @@ void FUN_0017eb50(void)
 #endif
 
 
-/* FUN_0017eb90 (0x17eb90) — XBE naked draft (batch 387). */
-#if defined(__clang__)
-static void *(*const b17eb90_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* FUN_0017eb90 (0x17eb90) — readable C lift. */
 void FUN_0017eb90(void)
 {
-  __asm__ volatile(
-      "pushl $0x170\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5a5400\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b17eb90_memset)
-      : "memory");
+  csmemset((void *)0x5a5400, 0, 0x170);
 }
-#else
-#error "FUN_0017eb90: clang naked draft required"
-#endif
-
 
 /* FUN_0017ebb0 (0x17ebb0) — XBE naked draft (batch 300). */
 #if defined(__clang__)
@@ -4978,6 +4934,21 @@ void FUN_0017ef00(void)
 
 __attribute__((naked, noinline))
 int FUN_0017d030(float *position __attribute__((unused)), int vis_index __attribute__((unused)), int index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0xd7, 0xe9, 0xff, 0xff\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+#error "FUN_0017d030: clang naked draft required"
+#endif
+
+((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

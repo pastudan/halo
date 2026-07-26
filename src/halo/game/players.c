@@ -9064,7 +9064,7 @@ void FUN_000be5e0(int16_t function_index __attribute__((unused)), int thread_dat
 /* FUN_000be660 (0xbe660) — XBE naked draft (batch 195). */
 #if defined(__clang__)
 static int (*const bbe660_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bbe660_c190be0)(int a0, int a1) = numeric_countdown_timer_set;
+static void (*const bbe660_c190be0)(int a0, int a1) = (void *)numeric_countdown_timer_set;
 static void (*const bbe660_ccbf80)(int thread_handle, int value) = hs_return;
 
 __attribute__((naked, noinline))

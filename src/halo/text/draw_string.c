@@ -1,3 +1,4 @@
+#include <stdint.h>
 /*
  * text/draw_string.c — string rendering state setup and telnet tab output
  * XBE source: c:\halo\SOURCE\text\draw_string.c
@@ -791,30 +792,12 @@ void FUN_0019B7E0(void)
 #endif
 
 
-/* draw_string_set_highlight (0x19b8f0) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void draw_string_set_highlight(void)
+/* draw_string_set_highlight (0x19b8f0) — readable C lift. */
+void draw_string_set_highlight(short a, short b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "movw %%ax, 0x4d9b4a\n\t"
-      "movw %%cx, 0x4d9b4c\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(short *)0x4d9b4a = a;
+  *(short *)0x4d9b4c = b;
 }
-#else
-#error "draw_string_set_highlight: clang naked draft required"
-#endif
-
 
 /* bitmap_draw_character (0x19b910) — XBE naked draft (batch 243). */
 #if defined(__clang__)

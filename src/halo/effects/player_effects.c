@@ -1,3 +1,4 @@
+#include <stdint.h>
 
 char *player_effect_get(int16_t local_player_index)
 {
@@ -1091,13 +1092,12 @@ void player_effect_continuous_refresh(void)
 
 
 /* scripted_player_effect_set_translation (0xa2dc0) — readable C lift. */
-void scripted_player_effect_set_translation(int a0, float a1, float a2)
+void scripted_player_effect_set_translation(int a0, int a1, int a2)
 {
   char *g = *(char **)0x4557ec;
-
   *(int *)(g + 0x3c4) = a0;
-  *(float *)(g + 0x3c8) = a1;
-  *(float *)(g + 0x3cc) = a2;
+  *(int *)(g + 0x3c8) = a1;
+  *(int *)(g + 0x3cc) = a2;
 }
 
 /* scripted_player_effect_start (0xa2df0) — XBE naked draft (batch 165). */

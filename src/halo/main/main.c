@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Close all UI widgets and display the "damaged media" fatal error screen.
  *
  * Loads the "error_abort_to_dashboard_you_have_no_choice" widget by name,
@@ -3230,28 +3231,12 @@ void main_respawn(char flag)
   }
 }
 
-/* main_save_core (0x1003b0) — XBE naked draft (batch 178). */
-#if defined(__clang__)
-static char * (*const b1003b0_c8dff0)(char *destination, const char *source) = csstrcpy;
-
-__attribute__((naked, noinline))
+/* main_save_core (0x1003b0) — readable C lift. */
 void main_save_core(void)
 {
-  __asm__ volatile(
-      "pushl $0x28b198\n\t"
-      "pushl $0x46dd55\n\t"
-      "movb $1, 0x46da3d\n\t"
-      "call *%[c8dff0]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c8dff0] "m"(b1003b0_c8dff0)
-      : "memory");
+  *(char *)0x46da3d = 1;
+  csstrcpy((char *)0x46dd55, (const char *)0x28b198);
 }
-#else
-#error "main_save_core: clang naked draft required"
-#endif
-
 
 /* main_save_core_name (0x1003d0) — XBE naked draft (batch 215). */
 #if defined(__clang__)
@@ -3297,51 +3282,19 @@ void main_save_core_name(const char *name __attribute__((unused)))
 #endif
 
 
-/* main_load_core (0x100420) — XBE naked draft (batch 178). */
-#if defined(__clang__)
-static char * (*const b100420_c8dff0)(char *destination, const char *source) = csstrcpy;
-
-__attribute__((naked, noinline))
+/* main_load_core (0x100420) — readable C lift. */
 void main_load_core(void)
 {
-  __asm__ volatile(
-      "pushl $0x28b198\n\t"
-      "pushl $0x46dd55\n\t"
-      "movb $1, 0x46da3e\n\t"
-      "call *%[c8dff0]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c8dff0] "m"(b100420_c8dff0)
-      : "memory");
+  *(char *)0x46da3e = 1;
+  csstrcpy((char *)0x46dd55, (const char *)0x28b198);
 }
-#else
-#error "main_load_core: clang naked draft required"
-#endif
 
-
-/* main_load_core_at_startup (0x100440) — XBE naked draft (batch 178). */
-#if defined(__clang__)
-static char * (*const b100440_c8dff0)(char *destination, const char *source) = csstrcpy;
-
-__attribute__((naked, noinline))
+/* main_load_core_at_startup (0x100440) — readable C lift. */
 void main_load_core_at_startup(void)
 {
-  __asm__ volatile(
-      "pushl $0x28b198\n\t"
-      "pushl $0x46dd55\n\t"
-      "movb $1, 0x46da3f\n\t"
-      "call *%[c8dff0]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c8dff0] "m"(b100440_c8dff0)
-      : "memory");
+  *(char *)0x46da3f = 1;
+  csstrcpy((char *)0x46dd55, (const char *)0x28b198);
 }
-#else
-#error "main_load_core_at_startup: clang naked draft required"
-#endif
-
 
 /* main_load_core_name (0x100460) — XBE naked draft (batch 215). */
 #if defined(__clang__)
@@ -3485,38 +3438,16 @@ void main_switch_structure_bsp(int16_t bsp_index __attribute__((unused)))
 #endif
 
 
-/* main_skip (0x100560) — XBE naked draft (batch 175). */
-#if defined(__clang__)
-static void (*const b100560_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void main_skip(int16_t level __attribute__((unused)))
+/* main_skip (0x100560) — readable C lift. */
+void main_skip(short level)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "cmpw $0xf, %%ax\n\t"
-      "jg .Lmain_skip_1\n\t"
-      "movw %%ax, 0x46da4a\n\t"
-      "movb $1, 0x46da49\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_skip_1:\n\t"
-      "pushl $0x28b238\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8f390] "m"(b100560_c8f390)
-      : "memory");
+  if (level > 0xf) {
+    error(2, (const char *)0x28b238);
+    return;
+  }
+  *(short *)0x46da4a = level;
+  *(char *)0x46da49 = 1;
 }
-#else
-#error "main_skip: clang naked draft required"
-#endif
-
 
 /* main_menu_unload (0x100690) — XBE naked draft (batch 188). */
 #if defined(__clang__)
@@ -3792,27 +3723,11 @@ void main_crash(int unused)
   *(volatile int *)0 = (int)0x28b5a8;
 }
 
-/* main_print_version (0x101cc0) — XBE naked draft (batch 183). */
-#if defined(__clang__)
-static void (*const b101cc0_cff4d0)(int channel, const char *format, ...) = console_printf;
-
-__attribute__((naked, noinline))
+/* main_print_version (0x101cc0) — readable C lift. */
 void main_print_version(void)
 {
-  __asm__ volatile(
-      "pushl $0x28b5d4\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [cff4d0] "m"(b101cc0_cff4d0)
-      : "memory");
+  console_printf(0, (const char *)0x28b5d4);
 }
-#else
-#error "main_print_version: clang naked draft required"
-#endif
-
 
 /* main_save_map_no_timeout (0x101ec0) — XBE naked draft (batch 206). */
 #if defined(__clang__)

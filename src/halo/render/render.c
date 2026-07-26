@@ -469,25 +469,11 @@ void FUN_00184690(void)
 #endif
 
 
-/* FUN_00184710 (0x184710) — XBE naked draft (batch 219). */
-#if defined(__clang__)
-static void (*const b184710_c158ae0)(int mode) = FUN_00158ae0;
-
-__attribute__((naked, noinline))
-void FUN_00184710(void)
-{
-  __asm__ volatile(
-      "pushl $0\n\t"
-      "call *%[c158ae0]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c158ae0] "m"(b184710_c158ae0)
-      : "memory");
+/* FUN_00184710 (0x184710) — readable C lift (auto_lift_trivial). */
+void FUN_00184710(void) {
+  ((void (*)(int))0x158ae0)(0);
 }
-#else
-#error "FUN_00184710: clang naked draft required"
-#endif
+
 
 
 /* group_sorted_indices_cmpfn (0x184750) — XBE naked draft (batch 120). */

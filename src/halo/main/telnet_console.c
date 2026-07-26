@@ -1,3 +1,4 @@
+#include <stdint.h>
 /*
  * telnet_console.c — Debug telnet server for runtime console access.
  *
@@ -269,49 +270,17 @@ void FUN_00130ec0(void)
 #endif
 
 
-/* FUN_00130ef0 (0x130ef0) — XBE naked draft (batch 202). */
-#if defined(__clang__)
-static void (*const b130ef0_c119b20)(data_t *data) = data_delete_all;
-
-__attribute__((naked, noinline))
+/* FUN_00130ef0 (0x130ef0) — readable C lift. */
 void FUN_00130ef0(void)
 {
-  __asm__ volatile(
-      "movl 0x5a90d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119b20]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c119b20] "m"(b130ef0_c119b20)
-      : "memory");
+  data_delete_all(*(data_t **)0x5a90d4);
 }
-#else
-#error "FUN_00130ef0: clang naked draft required"
-#endif
 
-
-/* FUN_00130f00 (0x130f00) — XBE naked draft (batch 202). */
-#if defined(__clang__)
-static void (*const b130f00_c119550)(data_t *data) = data_make_invalid;
-
-__attribute__((naked, noinline))
+/* FUN_00130f00 (0x130f00) — readable C lift. */
 void FUN_00130f00(void)
 {
-  __asm__ volatile(
-      "movl 0x5a90d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119550]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c119550] "m"(b130f00_c119550)
-      : "memory");
+  data_make_invalid(*(data_t **)0x5a90d4);
 }
-#else
-#error "FUN_00130f00: clang naked draft required"
-#endif
-
 
 /* FUN_00130f10 (0x130f10) — readable C lift. */
 void FUN_00130f10(void)
@@ -521,32 +490,11 @@ void FUN_00130f30(void)
 #endif
 
 
-/* FUN_00131130 (0x131130) — XBE naked draft (batch 213). */
-#if defined(__clang__)
-static void (*const b131130_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
-void FUN_00131130(void)
+/* FUN_00131130 (0x131130) — readable C lift. */
+void FUN_00131130(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5a90d4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1196d0] "m"(b131130_c1196d0)
-      : "memory");
+  datum_delete(*(data_t **)0x5a90d4, handle);
 }
-#else
-#error "FUN_00131130: clang naked draft required"
-#endif
-
 
 /* FUN_00131150 (0x131150) — XBE naked draft (batch 125). */
 #if defined(__clang__)
@@ -1474,49 +1422,17 @@ void FUN_001319b0(void)
 #endif
 
 
-/* FUN_001319e0 (0x1319e0) — XBE naked draft (batch 202). */
-#if defined(__clang__)
-static void (*const b1319e0_c119b20)(data_t *data) = data_delete_all;
-
-__attribute__((naked, noinline))
+/* FUN_001319e0 (0x1319e0) — readable C lift. */
 void FUN_001319e0(void)
 {
-  __asm__ volatile(
-      "movl 0x5a90d0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119b20]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c119b20] "m"(b1319e0_c119b20)
-      : "memory");
+  data_delete_all(*(data_t **)0x5a90d0);
 }
-#else
-#error "FUN_001319e0: clang naked draft required"
-#endif
 
-
-/* FUN_001319f0 (0x1319f0) — XBE naked draft (batch 203). */
-#if defined(__clang__)
-static void (*const b1319f0_c119550)(data_t *data) = data_make_invalid;
-
-__attribute__((naked, noinline))
+/* FUN_001319f0 (0x1319f0) — readable C lift. */
 void FUN_001319f0(void)
 {
-  __asm__ volatile(
-      "movl 0x5a90d0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119550]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c119550] "m"(b1319f0_c119550)
-      : "memory");
+  data_make_invalid(*(data_t **)0x5a90d0);
 }
-#else
-#error "FUN_001319f0: clang naked draft required"
-#endif
-
 
 /* FUN_00131a00 (0x131a00) — readable C lift. */
 void FUN_00131a00(void)
@@ -1659,32 +1575,11 @@ void FUN_00131a20(void)
 #endif
 
 
-/* FUN_00131b40 (0x131b40) — XBE naked draft (batch 213). */
-#if defined(__clang__)
-static void (*const b131b40_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
-void FUN_00131b40(void)
+/* FUN_00131b40 (0x131b40) — readable C lift. */
+void FUN_00131b40(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5a90d0, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1196d0] "m"(b131b40_c1196d0)
-      : "memory");
+  datum_delete(*(data_t **)0x5a90d0, handle);
 }
-#else
-#error "FUN_00131b40: clang naked draft required"
-#endif
-
 
 /* FUN_00131b60 (0x131b60) — XBE naked draft (batch 111). */
 #if defined(__clang__)

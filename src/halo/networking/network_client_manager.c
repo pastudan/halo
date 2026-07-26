@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* 0x1249b0 — network_game_server_dispose.
  * Tears down the network game client connection. If the server pointer is
  * non-null, closes its connection handle and clears the in-use flag. */
@@ -832,31 +833,11 @@ void FUN_00124900(void *model __attribute__((unused)))
 #endif
 
 
-/* network_game_client_keep_alive (0x124a10) — XBE naked draft (batch 214). */
-#if defined(__clang__)
-static void (*const b124a10_c128d20)(int connection) = network_connection_keep_alive;
-
-__attribute__((naked, noinline))
-void network_game_client_keep_alive(void *client __attribute__((unused)))
+/* network_game_client_keep_alive (0x124a10) — readable C lift. */
+void network_game_client_keep_alive(void *client)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x82c(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c128d20]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c128d20] "m"(b124a10_c128d20)
-      : "memory");
+  network_connection_keep_alive(*(int *)((char *)client + 0x82c));
 }
-#else
-#error "network_game_client_keep_alive: clang naked draft required"
-#endif
-
 
 /* network_game_client_initiate_join_game (0x124aa0) — XBE naked draft (batch 134). */
 #if defined(__clang__)

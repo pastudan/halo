@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Saved game file management — create directories and manage file handles. */
 
 /* Helper: call ensure_directory at 0x1c31f0 which takes EAX as the path. */
@@ -218,7 +219,7 @@ void player_profile_get_from_path(void)
 static int (*const b1c1c00_c100860)(void) = main_get_current_solo_level;
 static void (*const b1c1c00_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1c1c00_exitfn)(int) = system_exit;
-static void (*const b1c1c00_ce09e0)(void) = player_ui_get_active_player_profile_index;
+static void (*const b1c1c00_ce09e0)(void) = (void *)player_ui_get_active_player_profile_index;
 static void (*const b1c1c00_ce0980)(void) = player_ui_get_active_player_profile;
 static void (*const b1c1c00_c1c1bc0)(void) = player_profile_get_from_path;
 static void (*const b1c1c00_ce1490)(void) = player_ui_set_active_player_profile;
@@ -315,7 +316,7 @@ static void (*const b1c1cc0_assert)(const char *, const char *, int, bool) = dis
 static void (*const b1c1cc0_exitfn)(int) = system_exit;
 static int (*const b1c1cc0_c100860)(void) = main_get_current_solo_level;
 static int16_t (*const b1c1cc0_ca7460)(void) = game_difficulty_level_get;
-static void (*const b1c1cc0_ce09e0)(void) = player_ui_get_active_player_profile_index;
+static void (*const b1c1cc0_ce09e0)(void) = (void *)player_ui_get_active_player_profile_index;
 static void (*const b1c1cc0_ce0980)(void) = player_ui_get_active_player_profile;
 static void (*const b1c1cc0_c1c1b00)(void) = FUN_001c1b00;
 static void (*const b1c1cc0_ce1490)(void) = player_ui_set_active_player_profile;
@@ -421,29 +422,12 @@ void FUN_001c1cc0(void)
 #endif
 
 
-/* FUN_001c1da0 (0x1c1da0) — XBE naked draft (batch 288). */
-#if defined(__clang__)
-static void *(*const b1c1da0_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* FUN_001c1da0 (0x1c1da0) — readable C lift. */
 void FUN_001c1da0(void)
 {
-  __asm__ volatile(
-      "pushl $0x74\n\t"
-      "pushl $0\n\t"
-      "pushl $0x4eaa38\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, 0x4eaaaa\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b1c1da0_memset)
-      : "memory");
+  csmemset((void *)0x4eaa38, 0, 0x74);
+  *(char *)0x4eaaaa = 1;
 }
-#else
-#error "FUN_001c1da0: clang naked draft required"
-#endif
-
 
 /* FUN_001c1dc0 (0x1c1dc0) — XBE naked draft (batch 288). */
 #if defined(__clang__)
@@ -1032,14 +1016,14 @@ static void (*const b1c22e0_exitfn)(int) = system_exit;
 static void (*const b1c22e0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 static bool (*const b1c22e0_c81720)(void *thread_reference) = thread_is_done;
 static void (*const b1c22e0_c81770)(void *thread_reference) = thread_close;
-static void (*const b1c22e0_c1c2af0)(void) = saved_game_files_take_mutex;
+static void (*const b1c22e0_c1c2af0)(void) = (void *)saved_game_files_take_mutex;
 static void (*const b1c22e0_c1c4850)(void) = FUN_001c4850;
 static bool (*const b1c22e0_c19ab50)(file_ref_t *info, int size, void *buffer) = file_read;
 static void (*const b1c22e0_c1c3160)(void) = saved_game_file_generate_checksum;
 static int (*const b1c22e0_c8da40)(const void *a, const void *b, int size) = csmemcmp;
 static void * (*const b1c22e0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static void (*const b1c22e0_c1c2890)(void) = saved_game_file_close;
-static void (*const b1c22e0_c1c2b10)(void) = saved_game_files_release_mutex;
+static void (*const b1c22e0_c1c2b10)(void) = (void *)saved_game_files_release_mutex;
 static game_variant_t * (*const b1c22e0_caa190)(game_variant_t *out) = game_engine_slayer_default;
 static void (*const b1c22e0_c1c4600)(void) = saved_game_file_get_display_name;
 static wchar_t * (*const b1c22e0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
@@ -1276,7 +1260,7 @@ void playlist_profile_create_default_profiles_on_disk(void)
 static void (*const b1c2550_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1c2550_exitfn)(int) = system_exit;
 static void (*const b1c2550_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b1c2550_c1c2af0)(void) = saved_game_files_take_mutex;
+static void (*const b1c2550_c1c2af0)(void) = (void *)saved_game_files_take_mutex;
 static void (*const b1c2550_c1c4850)(void) = FUN_001c4850;
 static void * (*const b1c2550_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static void (*const b1c2550_c1c3160)(void) = saved_game_file_generate_checksum;
@@ -1285,7 +1269,7 @@ static void (*const b1c2550_c19ac00)(void) = file_write;
 static void (*const b1c2550_c1c2890)(void) = saved_game_file_close;
 static void (*const b1c2550_c1c4990)(void) = FUN_001c4990;
 static char (*const b1c2550_c1c46c0)(int param_1) = delete_enumerated_saved_game_file;
-static void (*const b1c2550_c1c2b10)(void) = saved_game_files_release_mutex;
+static void (*const b1c2550_c1c2b10)(void) = (void *)saved_game_files_release_mutex;
 
 __attribute__((naked, noinline))
 void playlist_profile_write(void)
@@ -1754,28 +1738,11 @@ void saved_game_file_close(void)
 #endif
 
 
-/* saved_game_file_get_type (0x1c29a0) — XBE naked draft (batch 289). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void saved_game_file_get_type(void)
+/* saved_game_file_get_type (0x1c29a0) — readable C lift. */
+int saved_game_file_get_type(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "andl $0xf, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return handle & 0xf;
 }
-#else
-#error "saved_game_file_get_type: clang naked draft required"
-#endif
-
 
 /* 0x1c29b0 */
 void saved_game_files_notify_memory_units_changed(void)
@@ -1907,50 +1874,17 @@ void saved_game_file_get_useable_untitled_profile_name(void)
 #endif
 
 
-/* saved_game_files_take_mutex (0x1c2af0) — XBE naked draft (batch 290). */
-#if defined(__clang__)
-static bool (*const b1c2af0_c81870)(int *mutex_reference, int timeout_ms) = take_mutex;
-
-__attribute__((naked, noinline))
+/* saved_game_files_take_mutex (0x1c2af0) — readable C lift. */
 void saved_game_files_take_mutex(void)
 {
-  __asm__ volatile(
-      "movl 0x4eacbc, %%eax\n\t"
-      "pushl $0x36ee80\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c81870]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c81870] "m"(b1c2af0_c81870)
-      : "memory");
+  take_mutex(*(int **)0x4eacbc, 0x36ee80);
 }
-#else
-#error "saved_game_files_take_mutex: clang naked draft required"
-#endif
 
-
-/* saved_game_files_release_mutex (0x1c2b10) — XBE naked draft (batch 290). */
-#if defined(__clang__)
-static void (*const b1c2b10_c818d0)(int *mutex_reference) = release_mutex;
-
-__attribute__((naked, noinline))
+/* saved_game_files_release_mutex (0x1c2b10) — readable C lift. */
 void saved_game_files_release_mutex(void)
 {
-  __asm__ volatile(
-      "movl 0x4eacbc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c818d0]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c818d0] "m"(b1c2b10_c818d0)
-      : "memory");
+  release_mutex(*(int **)0x4eacbc);
 }
-#else
-#error "saved_game_files_release_mutex: clang naked draft required"
-#endif
-
 
 /* saved_game_perform_file_system_checks (0x1c2b20) — XBE naked draft (batch 259). */
 #if defined(__clang__)

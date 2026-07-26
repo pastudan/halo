@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* MSVC CRT pow(): compiles to the _CIpow intrinsic (0x1d9e70 dispatcher,
  * body at 0x1d9e94 uses fyl2x). Not in decl.h; declared locally as in
  * objects.c so the compiler emits the intrinsic. */
@@ -8174,26 +8175,11 @@ void FUN_001726a0(void)
 #endif
 
 
-/* rasterizer_window_get_fog (0x172720) — XBE naked draft (batch 396). */
-#if defined(__clang__)
-static void (*const b172720_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
-
-__attribute__((naked, noinline))
+/* rasterizer_window_get_fog (0x172720) — readable C lift. */
 void rasterizer_window_get_fog(void)
 {
-  __asm__ volatile(
-      "pushl $4\n\t"
-      "call *%[c16fa40]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c16fa40] "m"(b172720_c16fa40)
-      : "memory");
+  FUN_0016fa40(4);
 }
-#else
-#error "rasterizer_window_get_fog: clang naked draft required"
-#endif
-
 
 /* FUN_00172730 (0x172730) — XBE naked draft (batch 313). */
 #if defined(__clang__)

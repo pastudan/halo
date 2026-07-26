@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Xbox texture cache: retrieve and block on hardware texture data.
  * Source: c:\halo\SOURCE\cache\xbox_texture_cache.c */
 #ifdef HALO_RETAIL64
@@ -407,49 +408,17 @@ void texture_cache_delete(void)
 #endif
 
 
-/* texture_cache_open (0x1be940) — XBE naked draft (batch 290). */
-#if defined(__clang__)
-static void (*const b1be940_c119b20)(data_t *data) = data_delete_all;
-
-__attribute__((naked, noinline))
+/* texture_cache_open (0x1be940) — readable C lift. */
 void texture_cache_open(void)
 {
-  __asm__ volatile(
-      "movl 0x4ea978, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119b20]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c119b20] "m"(b1be940_c119b20)
-      : "memory");
+  data_delete_all(*(data_t **)0x4ea978);
 }
-#else
-#error "texture_cache_open: clang naked draft required"
-#endif
 
-
-/* texture_cache_idle (0x1be950) — XBE naked draft (batch 290). */
-#if defined(__clang__)
-static void (*const b1be950_c11d8d0)(void *cache) = lruv_idle;
-
-__attribute__((naked, noinline))
+/* texture_cache_idle (0x1be950) — readable C lift. */
 void texture_cache_idle(void)
 {
-  __asm__ volatile(
-      "movl 0x4ea980, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11d8d0]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c11d8d0] "m"(b1be950_c11d8d0)
-      : "memory");
+  lruv_idle(*(void **)0x4ea980);
 }
-#else
-#error "texture_cache_idle: clang naked draft required"
-#endif
-
 
 /* texture_cache_bitmap_new (0x1be960) — XBE naked draft (batch 265). */
 #if defined(__clang__)

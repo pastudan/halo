@@ -1405,64 +1405,11 @@ void FUN_000e1f20(void)
 #endif
 
 
-/* FUN_000e2170 (0xe2170) — XBE naked draft (batch 154). */
-#if defined(__clang__)
-static uint32_t __stdcall (*const be2170_c1ed930)(void *resource) = D3DResource_Release;
-static void __stdcall (*const be2170_c1edc10)(void *texture, unsigned int level, void *desc) = D3DTexture_GetLevelDesc;
-
-__attribute__((naked, noinline))
-void FUN_000e2170(void)
+/* FUN_000e2170 (0xe2170) — readable C lift. */
+void FUN_000e2170(char value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "movb %%al, 0x30f030\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed930]\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1edc10]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [c1ed930] "m"(be2170_c1ed930), [c1edc10] "m"(be2170_c1edc10)
-      : "memory");
+  *(char *)0x30f030 = value;
 }
-#else
-#error "FUN_000e2170: clang naked draft required"
-#endif
-
 
 /* FUN_000e21b0 (0xe21b0) — XBE naked draft (batch 171). */
 #if defined(__clang__)

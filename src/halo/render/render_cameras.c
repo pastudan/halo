@@ -577,32 +577,11 @@ void render_camera_build_frustum(camera_t *camera, float *bounds,
 }
 /* --- render_cameras.obj batch drafts (2026-07-26) --- */
 
-/* render_camera_new (0x185810) — XBE naked draft (batch 214). */
-#if defined(__clang__)
-static void *(*const b185810_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void render_camera_new(void)
+/* render_camera_new (0x185810) — readable C lift. */
+void render_camera_new(void *camera)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x54\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b185810_memset)
-      : "memory");
+  csmemset(camera, 0, 0x54);
 }
-#else
-#error "render_camera_new: clang naked draft required"
-#endif
-
 
 /* render_camera_hack_frustum_z (0x185830) — XBE naked draft (batch 135). */
 #if defined(__clang__)

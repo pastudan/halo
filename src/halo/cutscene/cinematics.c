@@ -241,10 +241,10 @@ void cinematic_force_title(short title)
 }
 
 /* cinematic_suppress_bsp_object_creation (0x93030) — readable C lift. */
-void cinematic_suppress_bsp_object_creation(char v)
+void cinematic_suppress_bsp_object_creation(char suppress)
 {
-  unsigned char *base = *(unsigned char **)0x44df00;
-  base[0xb] = (unsigned char)v;
+  char *g = *(char **)0x44df00;
+  g[0xb] = suppress;
 }
 
 /* cinematic_set_title_delayed (0x930b0) — XBE naked draft (batch 273). */
@@ -319,7 +319,7 @@ void cinematic_set_title_delayed(int a0 __attribute__((unused)), float a1 __attr
 
 /* cinematic_render (0x93140) — XBE naked draft (batch 249). */
 #if defined(__clang__)
-static char (*const b93140_ce3d70)(void) = ui_widgets_active;
+static char (*const b93140_ce3d70)(void) = (void *)ui_widgets_active;
 static int (*const b93140_gtime)(void) = game_time_get;
 static void (*const b93140_c92ec0)(int16_t *rect, int color) = draw_quad;
 static scenario_t * (*const b93140_c18e380)(void) = global_scenario_get;
