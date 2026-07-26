@@ -2657,148 +2657,239 @@ void FUN_0005a050(int squad_index /* @<eax> */,
   }
 }
 
-/* 0x5a120 — encounter_initialize_from_definition (FUN_0005a120).
- * Allocates a new encounter record from the encounter data pool, initializes
- * its fields from the scenario encounter definition, then iterates squads and
- * platoons to set up per-squad and per-platoon state. Updates the running
- * squad_counter and platoon_counter accumulators.
- *
- * Confirmed:
- *   - squad_counter passed via EAX (@<eax>), encounter_def via [EBP+0x8],
- *     platoon_counter via [EBP+0xc].
- *   - data_new_at_index(DAT_005ab270) at 0x5a12f; datum_get at 0x5a14d.
- *   - Squad count from encounter_def+0x80 (tag_block); max 0x40 squads.
- *   - Squad accumulator max 0x400 (MAXIMUM_SQUADS_PER_MAP).
- *   - Platoon count from encounter_def+0x8c (tag_block); max 0x20 platoons.
- *   - Platoon accumulator max 0x100 (MAXIMUM_PLATOONS_PER_MAP).
- *   - encounter_get_squad(encounter, squad_index) for squad records.
- *   - FUN_00054020(encounter, platoon_index) for platoon records.
- *   - FUN_0005a050(squad_index @EAX, encounter_handle @ECX) initializes
- *     squad starting locations from the definition.
- *   - _ftol2 at 0x5a289 = (short)(squad_def->field_0x50 * 30.0f).
- *   - tag_block_get_element sizes: 0xe8 for squads, 0xac for platoons.
- */
-void FUN_0005a120(short *squad_counter /* @<eax> */, void *encounter_def,
-                  short *platoon_counter)
+/* FUN_0005a120 (0x5a120) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static int (*const b5a120_c119610)(data_t *data) = data_new_at_index;
+static void *(*const b5a120_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b5a120_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b5a120_exitfn)(int) = system_exit;
+static char * (*const b5a120_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static char * (*const b5a120_c1c270)(char *encounter, int16_t squad_index) = encounter_get_squad;
+static void *(*const b5a120_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b5a120_ftol)(void) = FUN_001d9068;
+static void (*const b5a120_c5a050)(int squad_index /* */, int encounter_handle /* */) = FUN_0005a050;
+static char * (*const b5a120_c54020)(char *encounter, short platoon_index) = FUN_00054020;
+
+__attribute__((naked, noinline))
+void FUN_0005a120(short *squad_counter /* */ __attribute__((unused)), void *encounter_def __attribute__((unused)), short *platoon_counter __attribute__((unused)))
 {
-  int encounter_handle;
-  char *encounter;
-  char *squad_record;
-  char *squad_def;
-  char *platoon_record;
-  char *platoon_def;
-  short squad_count;
-  short platoon_count;
-  int i;
-  short sVar;
-  void *platoon_block;
-
-  encounter_handle = data_new_at_index(*(data_t **)0x5ab270);
-  if (encounter_handle == -1) {
-    return;
-  }
-  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
-
-  *(short *)(encounter + 0x2) = *(short *)((char *)encounter_def + 0x24);
-  *(int *)(encounter + 0x14) = -1;
-  *(int *)(encounter + 0x38) = -1;
-  *(unsigned char *)(encounter + 0x40) =
-    (unsigned char)((*(unsigned int *)((char *)encounter_def + 0x20) >> 2) & 1);
-  *(unsigned char *)(encounter + 0x41) =
-    (unsigned char)((*(unsigned int *)((char *)encounter_def + 0x20) >> 3) & 1);
-  *(unsigned char *)(encounter + 0x3c) =
-    (unsigned char)((*(unsigned int *)((char *)encounter_def + 0x20) >> 1) & 1);
-  *(short *)(encounter + 0x3e) = 0;
-  *(char *)(encounter + 0x46) = 0;
-  *(char *)(encounter + 0x45) = 0;
-  *(int *)(encounter + 0x50) = -1;
-  *(char *)(encounter + 0x44) = 0;
-  *(int *)(encounter + 0x54) = -1;
-  *(int *)(encounter + 0x58) = -1;
-  *(char *)(encounter + 0x42) = 1;
-  *(int *)(encounter + 0x5c) = -1;
-  *(short *)(encounter + 0x20) = 0;
-  *(int *)(encounter + 0x10) = -1;
-
-  if (*(int *)((char *)encounter_def + 0x80) > 0x40) {
-    display_assert(
-      "encounter_definition->squads.count <= MAXIMUM_SQUADS_PER_ENCOUNTER",
-      "c:\\halo\\SOURCE\\ai\\encounters.c", 0x5a4, 1);
-    system_exit(-1);
-  }
-
-  squad_count = *(short *)((char *)encounter_def + 0x80);
-  *(short *)(encounter + 0x6) = squad_count;
-  *(short *)(encounter + 0x4) = *squad_counter;
-  *squad_counter = *squad_counter + squad_count;
-
-  if (*squad_counter > 0x400) {
-    display_assert(csprintf((char *)0x5ab100,
-                            "overflowed MAXIMUM_SQUADS_PER_MAP (%d)", 0x400),
-                   "c:\\halo\\SOURCE\\ai\\encounters.c", 0x5a8, 1);
-    system_exit(-1);
-  }
-
-  i = 0;
-  if (*(short *)(encounter + 0x6) > 0) {
-    do {
-      squad_record = (char *)encounter_get_squad(encounter, (short)i);
-      squad_def = (char *)tag_block_get_element((char *)encounter_def + 0x80,
-                                                (int)(short)i, 0xe8);
-      *(char *)(squad_record + 0x11) = 0;
-      if ((*(unsigned char *)(squad_def + 0x28) & 8) == 0) {
-        *(short *)(squad_record + 0x12) =
-          (short)(*(float *)(squad_def + 0x50) * 30.0f);
-      } else {
-        *(short *)(squad_record + 0x12) = 999;
-      }
-      *(unsigned char *)(squad_record + 0x10) =
-        (unsigned char)((*(unsigned int *)(squad_def + 0x28) >> 5) & 1);
-      FUN_0005a050(i /* @<eax> */, encounter_handle /* @<ecx> */);
-      if (*(short *)(squad_def + 0x86) > 0 ||
-          *(short *)(squad_def + 0x84) > 0) {
-        sVar = 999;
-        if (*(short *)(squad_def + 0x88) != 0) {
-          sVar = *(short *)(squad_def + 0x88);
-        }
-        *(short *)(squad_record + 0xc) = sVar;
-      }
-      i = i + 1;
-    } while ((short)i < *(short *)(encounter + 0x6));
-  }
-
-  if (*(int *)((char *)encounter_def + 0x8c) > 0x20) {
-    display_assert(
-      "encounter_definition->platoons.count <= MAXIMUM_PLATOONS_PER_ENCOUNTER",
-      "c:\\halo\\SOURCE\\ai\\encounters.c", 0x5cb, 1);
-    system_exit(-1);
-  }
-
-  platoon_count = *(short *)((char *)encounter_def + 0x8c);
-  *(short *)(encounter + 0xa) = platoon_count;
-  *(short *)(encounter + 0x8) = *platoon_counter;
-  *platoon_counter = *platoon_counter + platoon_count;
-
-  if (*platoon_counter > 0x100) {
-    display_assert(csprintf((char *)0x5ab100,
-                            "overflowed MAXIMUM_PLATOONS_PER_MAP (%d)", 0x100),
-                   "c:\\halo\\SOURCE\\ai\\encounters.c", 0x5cf, 1);
-    system_exit(-1);
-  }
-
-  platoon_block = (void *)((char *)encounter_def + 0x8c);
-  i = 0;
-  if (*(short *)(encounter + 0xa) > 0) {
-    do {
-      platoon_record = (char *)FUN_00054020(encounter, (short)i);
-      platoon_def =
-        (char *)tag_block_get_element(platoon_block, (int)(short)i, 0xac);
-      i = i + 1;
-      *(unsigned char *)platoon_record =
-        (unsigned char)((*(unsigned int *)(platoon_def + 0x20) >> 2) & 1);
-    } while ((short)i < *(short *)(encounter + 0xa));
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119610]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "je .LFUN_0005a120_14\n\t"
+      "movl 0x5ab270, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movw 0x24(%%edi), %%dx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "movw %%dx, 0x2(%%esi)\n\t"
+      "movl %%eax, 0x14(%%esi)\n\t"
+      "movl %%eax, 0x38(%%esi)\n\t"
+      "movl 0x20(%%edi), %%ecx\n\t"
+      "shrl $2, %%ecx\n\t"
+      "andb $1, %%cl\n\t"
+      "movb %%cl, 0x40(%%esi)\n\t"
+      "movl 0x20(%%edi), %%edx\n\t"
+      "shrl $3, %%edx\n\t"
+      "andb $1, %%dl\n\t"
+      "movb %%dl, 0x41(%%esi)\n\t"
+      "movl 0x20(%%edi), %%ecx\n\t"
+      "shrl $1, %%ecx\n\t"
+      "andb $1, %%cl\n\t"
+      "movb %%cl, 0x3c(%%esi)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw %%cx, 0x3e(%%esi)\n\t"
+      "movb %%cl, 0x46(%%esi)\n\t"
+      "movb %%cl, 0x45(%%esi)\n\t"
+      "movl %%eax, 0x50(%%esi)\n\t"
+      "movb %%cl, 0x44(%%esi)\n\t"
+      "movl %%eax, 0x54(%%esi)\n\t"
+      "movl %%eax, 0x58(%%esi)\n\t"
+      "movb $1, 0x42(%%esi)\n\t"
+      "movl %%eax, 0x5c(%%esi)\n\t"
+      "movw %%cx, 0x20(%%esi)\n\t"
+      "movl %%eax, 0x10(%%esi)\n\t"
+      "movl 0x80(%%edi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $0x40, %%eax\n\t"
+      "jle .LFUN_0005a120_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5a4\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x25d680\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0005a120_1:\n\t"
+      "movw 0x80(%%edi), %%dx\n\t"
+      "movw %%dx, 0x6(%%esi)\n\t"
+      "movw (%%ebx), %%ax\n\t"
+      "movw %%ax, 0x4(%%esi)\n\t"
+      "movw %%dx, %%cx\n\t"
+      "addw %%cx, (%%ebx)\n\t"
+      "movw (%%ebx), %%bx\n\t"
+      "cmpw $0x400, %%bx\n\t"
+      "jle .LFUN_0005a120_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5a8\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x400\n\t"
+      "pushl $0x25d658\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0005a120_2:\n\t"
+      "cmpw $0, 0x6(%%esi)\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "jle .LFUN_0005a120_9\n\t"
+      ".LFUN_0005a120_3:\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1c270]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movswl -0x4(%%ebp), %%eax\n\t"
+      "pushl $0xe8\n\t"
+      "pushl %%eax\n\t"
+      "addl $0x80, %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movb $0, 0x11(%%ebx)\n\t"
+      "movb 0x28(%%edi), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb $8, %%al\n\t"
+      "je .LFUN_0005a120_4\n\t"
+      "movw $0x3e7, 0x12(%%ebx)\n\t"
+      "jmp .LFUN_0005a120_5\n\t"
+      ".LFUN_0005a120_4:\n\t"
+      "flds 0x50(%%edi)\n\t"
+      "fmuls 0x253394\n\t"
+      "call *%[ftol]\n\t"
+      "movw %%ax, 0x12(%%ebx)\n\t"
+      ".LFUN_0005a120_5:\n\t"
+      "movl 0x28(%%edi), %%ecx\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "shrl $5, %%ecx\n\t"
+      "andb $1, %%cl\n\t"
+      "movb %%cl, 0x10(%%ebx)\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "call *%[c5a050]\n\t"
+      "cmpw $0, 0x86(%%edi)\n\t"
+      "jg .LFUN_0005a120_6\n\t"
+      "cmpw $0, 0x84(%%edi)\n\t"
+      "jle .LFUN_0005a120_8\n\t"
+      ".LFUN_0005a120_6:\n\t"
+      "movw 0x88(%%edi), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "movl $0x3e7, %%eax\n\t"
+      "je .LFUN_0005a120_7\n\t"
+      "movswl %%di, %%eax\n\t"
+      ".LFUN_0005a120_7:\n\t"
+      "movw %%ax, 0xc(%%ebx)\n\t"
+      ".LFUN_0005a120_8:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "incl %%eax\n\t"
+      "cmpw 0x6(%%esi), %%ax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jl .LFUN_0005a120_3\n\t"
+      ".LFUN_0005a120_9:\n\t"
+      "movl 0x8c(%%edi), %%eax\n\t"
+      "addl $0x8c, %%edi\n\t"
+      "cmpl $0x20, %%eax\n\t"
+      "movl %%edi, -0x8(%%ebp)\n\t"
+      "jle .LFUN_0005a120_10\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5cb\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x25d610\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0005a120_10:\n\t"
+      "movw (%%edi), %%dx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movw %%dx, 0xa(%%esi)\n\t"
+      "movw (%%eax), %%cx\n\t"
+      "movw %%cx, 0x8(%%esi)\n\t"
+      "addw %%dx, (%%eax)\n\t"
+      "movw (%%eax), %%ax\n\t"
+      "cmpw $0x100, %%ax\n\t"
+      "jle .LFUN_0005a120_11\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5cf\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x100\n\t"
+      "pushl $0x25d5e0\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0005a120_11:\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "cmpw %%di, 0xa(%%esi)\n\t"
+      "jle .LFUN_0005a120_13\n\t"
+      ".LFUN_0005a120_12:\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c54020]\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "pushl $0xac\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x20(%%eax), %%edx\n\t"
+      "shrl $2, %%edx\n\t"
+      "andb $1, %%dl\n\t"
+      "addl $0x14, %%esp\n\t"
+      "incl %%edi\n\t"
+      "movb %%dl, (%%ebx)\n\t"
+      "cmpw 0xa(%%esi), %%di\n\t"
+      "jl .LFUN_0005a120_12\n\t"
+      ".LFUN_0005a120_13:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_0005a120_14:\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c119610] "m"(b5a120_c119610), [dget] "m"(b5a120_dget), [assert] "m"(b5a120_assert), [exitfn] "m"(b5a120_exitfn), [c8d9d0] "m"(b5a120_c8d9d0), [c1c270] "m"(b5a120_c1c270), [elem] "m"(b5a120_elem), [ftol] "m"(b5a120_ftol), [c5a050] "m"(b5a120_c5a050), [c54020] "m"(b5a120_c54020)
+      : "memory");
 }
+#else
+#error "FUN_0005a120: clang naked draft required"
+#endif
+
 
 /* FUN_0005a3b0 (0x5a3b0) — Look up actor type from squad definition.
  *
@@ -3694,149 +3785,291 @@ void FUN_0005ae70(int encounter_handle)
   } while (squad_index < *(int16_t *)(encounter + 0x6));
 }
 
-/* 0x5af70 — encounter_evaluate_rule (FUN_0005af70).
- *
- * Evaluates an encounter platoon rule condition. The rule structure is a
- * short[2]: rule[0] = type (0–9), rule[1] = platoon index override.
- *
- * If rule[1] is a valid platoon index, uses that platoon's stats (strength,
- * total, survivors); otherwise uses the encounter-level stats.
- *
- * Rule types:
- *   0: always false (default)
- *   1: strength < 0.75
- *   2: strength < 0.50
- *   3: strength < 0.25
- *   4: survivors < total
- *   5: survivors*4/3 <= total
- *   6: survivors*2 <= total
- *   7: survivors*4 <= total
- *   8: survivors <= 1
- *   9: survivors == 0
- *
- * If the global debug flag at 0x5aca4c is set and the rule triggers, a
- * diagnostic message is printed via console_printf.
- *
- * Confirmed:
- *   - EAX = encounter_handle (datum index), EDI = rule pointer (short*).
- *   - datum_get(*(data_t**)0x5ab270, encounter_handle) → encounter record.
- *   - FUN_00054020(encounter, platoon_index) → platoon record.
- *   - Switch table at 0x5b1b4 (10 entries), debug switch at 0x5b1dc (9
- * entries).
- *   - Float constants: 0x25afcc=0.75f, 0x253398=0.5f, 0x25337c=0.25f.
- */
-bool FUN_0005af70(int encounter_handle /* @<eax> */, void *rule /* @<edi> */)
+/* FUN_0005af70 (0x5af70) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b5af70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const b5af70_c54020)(char *encounter, short platoon_index) = FUN_00054020;
+static void (*const b5af70_cff4d0)(int channel, const char *format, ...) = console_printf;
+
+__attribute__((naked, noinline))
+bool FUN_0005af70(int encounter_handle /* */ __attribute__((unused)), void *rule /* */ __attribute__((unused)))
 {
-  char *encounter;
-  char *platoon;
-  short platoon_index;
-  short total;
-  short survivors;
-  float strength;
-  bool result;
-  short *rule_ptr;
-
-  rule_ptr = (short *)rule;
-  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
-  platoon_index = rule_ptr[1];
-  result = 0;
-
-  if (platoon_index < 0 || platoon_index >= *(short *)(encounter + 0xa)) {
-    /* Use encounter-level stats. */
-    total = *(short *)(encounter + 0x18);
-    survivors = *(short *)(encounter + 0x2a);
-    strength = *(float *)(encounter + 0x34);
-  } else {
-    /* Use platoon-level stats. */
-    platoon = FUN_00054020(encounter, platoon_index);
-    strength = *(float *)(platoon + 0xc);
-    total = *(short *)(platoon + 0x4);
-    survivors = *(short *)(platoon + 0x6);
-  }
-
-  if (total <= 0) {
-    goto done;
-  }
-
-  switch (rule_ptr[0]) {
-  case 1:
-    if (strength < 0.75f) {
-      result = 1;
-      break;
-    }
-    goto case_default;
-  case 2:
-    if (strength < 0.5f) {
-      result = 1;
-      break;
-    }
-    goto case_default;
-  case 3:
-    if (strength < 0.25f) {
-      result = 1;
-      break;
-    }
-  case_default:
-  default:
-    result = 0;
-    break;
-  case 4:
-    result = (survivors < total);
-    break;
-  case 5:
-    result = ((int)survivors * 4 / 3 <= (int)total);
-    break;
-  case 6:
-    result = ((int)survivors * 2 <= (int)total);
-    break;
-  case 7:
-    result = ((int)survivors * 4 <= (int)total);
-    break;
-  case 8:
-    result = (survivors <= 1);
-    break;
-  case 9:
-    result = (survivors == 0);
-    break;
-  }
-
-done:
-  if (*(char *)0x5aca4c != '\0' && result != 0) {
-    switch (rule_ptr[0] - 1) {
-    case 0:
-      console_printf(0, "strength %.2f < 75%%", (double)strength);
-      return result;
-    case 1:
-      console_printf(0, "strength %.2f < 50%%", (double)strength);
-      return result;
-    case 2:
-      console_printf(0, "strength %.2f < 25%%", (double)strength);
-      return result;
-    case 3:
-      console_printf(0, "survivors %d < total %d", (int)survivors, (int)total);
-      return result;
-    case 4:
-      console_printf(0, "survivors %d <= 25%% of total %d", (int)survivors,
-                     (int)total);
-      return result;
-    case 5:
-      console_printf(0, "survivors %d <= 50%% of total %d", (int)survivors,
-                     (int)total);
-      return result;
-    case 6:
-      console_printf(0, "survivors %d <= 75%% of total %d", (int)survivors,
-                     (int)total);
-      return result;
-    case 7:
-      console_printf(0, "survivors %d <= 1", (int)survivors);
-      return result;
-    case 8:
-      console_printf(0, "survivors %d = 0", (int)survivors);
-      break;
-    }
-  }
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x5ab270, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x2(%%edi), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jl .LFUN_0005af70_1\n\t"
+      "cmpw 0xa(%%eax), %%cx\n\t"
+      "jge .LFUN_0005af70_1\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c54020]\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "movw 0x4(%%eax), %%si\n\t"
+      "movw 0x6(%%eax), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_0005af70_2\n\t"
+      ".LFUN_0005af70_1:\n\t"
+      "movw 0x18(%%eax), %%si\n\t"
+      "movw 0x2a(%%eax), %%cx\n\t"
+      "movl 0x34(%%eax), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      ".LFUN_0005af70_2:\n\t"
+      "testw %%si, %%si\n\t"
+      "jle .LFUN_0005af70_13\n\t"
+      "movswl (%%edi), %%eax\n\t"
+      "cmpl $9, %%eax\n\t"
+      "ja .LFUN_0005af70_12\n\t"
+      "jmp *.LFUN_0005af70_jt0(,%%eax,4)\n\t"
+      ".LFUN_0005af70_3:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x25afcc\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_0005af70_12\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .LFUN_0005af70_13\n\t"
+      ".LFUN_0005af70_4:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x253398\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_0005af70_12\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .LFUN_0005af70_13\n\t"
+      ".LFUN_0005af70_5:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x25337c\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_0005af70_12\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .LFUN_0005af70_13\n\t"
+      ".LFUN_0005af70_6:\n\t"
+      "cmpw %%si, %%cx\n\t"
+      "setl %%bl\n\t"
+      "jmp .LFUN_0005af70_13\n\t"
+      ".LFUN_0005af70_7:\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "shll $2, %%edx\n\t"
+      "movl $0x55555556, %%eax\n\t"
+      "imull %%edx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "shrl $0x1f, %%eax\n\t"
+      "addl %%eax, %%edx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "setle %%bl\n\t"
+      "jmp .LFUN_0005af70_13\n\t"
+      ".LFUN_0005af70_8:\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "shll $1, %%edx\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "setle %%bl\n\t"
+      "jmp .LFUN_0005af70_13\n\t"
+      ".LFUN_0005af70_9:\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "shll $2, %%edx\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "setle %%bl\n\t"
+      "jmp .LFUN_0005af70_13\n\t"
+      ".LFUN_0005af70_10:\n\t"
+      "cmpw $1, %%cx\n\t"
+      "setle %%bl\n\t"
+      "jmp .LFUN_0005af70_13\n\t"
+      ".LFUN_0005af70_11:\n\t"
+      "testw %%cx, %%cx\n\t"
+      "sete %%bl\n\t"
+      "jmp .LFUN_0005af70_13\n\t"
+      ".LFUN_0005af70_12:\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".LFUN_0005af70_13:\n\t"
+      "movb 0x5aca4c, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0005af70_23\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_0005af70_23\n\t"
+      "movswl (%%edi), %%eax\n\t"
+      "decl %%eax\n\t"
+      "cmpl $8, %%eax\n\t"
+      "ja .LFUN_0005af70_23\n\t"
+      "jmp *.LFUN_0005af70_jt1(,%%eax,4)\n\t"
+      ".LFUN_0005af70_14:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x25d8a0\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0005af70_15:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x25d888\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0005af70_16:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x25d870\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0005af70_17:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x25d858\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0005af70_18:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x25d834\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0005af70_19:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x25d810\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0005af70_20:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x25d7ec\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0005af70_21:\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x25d7d8\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0005af70_22:\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x25d7c4\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_0005af70_23:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_0005af70_jt0:\n\t"
+      ".long .LFUN_0005af70_12\n\t"
+      ".long .LFUN_0005af70_3\n\t"
+      ".long .LFUN_0005af70_4\n\t"
+      ".long .LFUN_0005af70_5\n\t"
+      ".long .LFUN_0005af70_6\n\t"
+      ".long .LFUN_0005af70_7\n\t"
+      ".long .LFUN_0005af70_8\n\t"
+      ".long .LFUN_0005af70_9\n\t"
+      ".long .LFUN_0005af70_10\n\t"
+      ".long .LFUN_0005af70_11\n\t"
+      ".text\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_0005af70_jt1:\n\t"
+      ".long .LFUN_0005af70_14\n\t"
+      ".long .LFUN_0005af70_15\n\t"
+      ".long .LFUN_0005af70_16\n\t"
+      ".long .LFUN_0005af70_17\n\t"
+      ".long .LFUN_0005af70_18\n\t"
+      ".long .LFUN_0005af70_19\n\t"
+      ".long .LFUN_0005af70_20\n\t"
+      ".long .LFUN_0005af70_21\n\t"
+      ".long .LFUN_0005af70_22\n\t"
+      ".text\n\t"
+      :
+      : [dget] "m"(b5af70_dget), [c54020] "m"(b5af70_c54020), [cff4d0] "m"(b5af70_cff4d0)
+      : "memory");
 }
+#else
+#error "FUN_0005af70: clang naked draft required"
+#endif
+
 
 /* 0x5b200 — encounters_initialize_for_new_map.
  * Resets encounter and pursuit data pools, zeroes squad and platoon arrays,

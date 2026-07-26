@@ -727,172 +727,261 @@ void FUN_00054bb0(unsigned int ai_ref)
   encounter_create(ai_ref & 0xffff, (short)arg_a, (short)arg_b);
 }
 
-/* ---------------------------------------------------------------------------
- * ai_index_reference count accessor (the "how many of X" query).
- *
- * FUN_00055350 resolves a packed ai_index_reference to a tag record and reports
- * one of three count_type quantities about it:
- *     count_type 0 -> the record's "start"/min index
- *     count_type 1 -> the record's "end"/max index
- *     count_type 2 -> the span (end - start), clamped to >= 0
- * The record is located by the reference's selector (top 2 bits):
- *     selector 0 -> the ai_profile element itself (offsets +0x2a/+0x2c/+0x34)
- *     selector 1 -> a platoon record (encounter_get_platoon, offs +0x4/+6/+8/+c)
- *     selector 2 -> a squad record  (encounter_get_squad,    offs +0x16..+0x1c)
- * In addition to the EAX result the dispatcher returns two record fields through
- * the optional out parameters: *out_min receives a fixed record field (squad/
- * platoon "name" word at +0x16/+0x4, or the profile's +0x18) and *out_handle
- * receives a record dword (squad/platoon +0x1c/+0xc, or the profile's +0x34).
- * count_type arrives in EDI as an int16 (compared via di / sign-extended via
- * movsx). 0x12a0 obj / 0x55350 XBE. Asserts (ai_script.c) on bad count_type and
- * on the unreachable selector/count_type defaults. */
-int FUN_00055350(unsigned int ai_ref, int *out_min, int *out_handle,
-                 int count_type /* @<edi> */)
+/* FUN_00055350 (0x55350) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void (*const b55350_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b55350_exitfn)(int) = system_exit;
+static scenario_t * (*const b55350_c18e380)(void) = global_scenario_get;
+static void *(*const b55350_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const b55350_c1c270)(char *encounter, int16_t squad_index) = encounter_get_squad;
+static char * (*const b55350_c54020)(char *encounter, short platoon_index) = FUN_00054020;
+
+__attribute__((naked, noinline))
+int FUN_00055350(unsigned int ai_ref __attribute__((unused)), int *out_min __attribute__((unused)), int *out_handle __attribute__((unused)), int count_type /* */ __attribute__((unused)))
 {
-  int ret_val;      /* [ebp-0x4], EAX result */
-  int handle_val;   /* [ebp-0x8], flows to *out_handle */
-  int min_val;      /* EBX, flows to *out_min */
-  void *scenario;
-  void *element;
-  char *record;
-  int profile_index;
-  unsigned int selector;
-  short sub_index;
-
-  ret_val = 0;
-  handle_val = 0;
-  min_val = 0;
-
-  if ((short)count_type < 0 || (short)count_type >= 3) {
-    display_assert("(count_type >= 0) && (count_type < NUMBER_OF_AI_COUNT_TYPES)",
-                   "c:\\halo\\SOURCE\\ai\\ai_script.c", 0x405, 1);
-    system_exit(-1);
-  }
-
-  if (ai_ref == 0xffffffff)
-    goto done;
-
-  scenario = global_scenario_get();
-  selector = ai_ref >> 0x1e;
-
-  switch (selector) {
-  case 0:
-    profile_index = ai_ref & 0xffff;
-    if (profile_index < 0
-        || profile_index >= *(int *)((char *)scenario + 0x42c))
-      goto done;
-    element = datum_get(*(data_t **)0x5ab270, profile_index);
-
-    switch ((short)count_type) {
-    case 0:
-      ret_val = *(short *)((char *)element + 0x2a);
-      break;
-    case 1:
-      ret_val = *(short *)((char *)element + 0x2c);
-      break;
-    case 2:
-      ret_val = (int)*(short *)((char *)element + 0x2a)
-                - (int)*(short *)((char *)element + 0x2c);
-      ret_val = (ret_val < 0) ? 0 : ret_val;
-      break;
-    default:
-      display_assert("!\"unreachable\"",
-                     "c:\\halo\\SOURCE\\ai\\ai_script.c", 0x424, 1);
-      system_exit(-1);
-    }
-    min_val = *(short *)((char *)element + 0x18);
-    handle_val = *(int *)((char *)element + 0x34);
-    break;
-
-  case 1:
-    profile_index = ai_ref & 0xffff;
-    if (profile_index < 0
-        || profile_index >= *(int *)((char *)scenario + 0x42c))
-      goto done;
-    element = datum_get(*(data_t **)0x5ab270, profile_index);
-    sub_index = ((unsigned char *)&ai_ref)[2];
-    if (sub_index < 0 || sub_index >= *(short *)((char *)element + 0xa))
-      goto done;
-    record = FUN_00054020((char *)element, sub_index);
-
-    switch ((short)count_type) {
-    case 0:
-      min_val = *(short *)(record + 0x4);
-      ret_val = *(short *)(record + 0x6);
-      handle_val = *(int *)(record + 0xc);
-      break;
-    case 1:
-      min_val = *(short *)(record + 0x4);
-      ret_val = *(short *)(record + 0x8);
-      handle_val = *(int *)(record + 0xc);
-      break;
-    case 2:
-      min_val = *(short *)(record + 0x4);
-      ret_val = (int)*(short *)(record + 0x6)
-                - (int)*(short *)(record + 0x8);
-      ret_val = (ret_val < 0) ? 0 : ret_val;
-      handle_val = *(int *)(record + 0xc);
-      break;
-    default:
-      display_assert("!\"unreachable\"",
-                     "c:\\halo\\SOURCE\\ai\\ai_script.c", 0x448, 1);
-      system_exit(-1);
-      min_val = *(short *)(record + 0x4);
-      handle_val = *(int *)(record + 0xc);
-    }
-    break;
-
-  case 2:
-    profile_index = ai_ref & 0xffff;
-    if (profile_index < 0
-        || profile_index >= *(int *)((char *)scenario + 0x42c))
-      goto done;
-    element = datum_get(*(data_t **)0x5ab270, profile_index);
-    sub_index = ((unsigned char *)&ai_ref)[2];
-    if (sub_index < 0 || sub_index >= *(short *)((char *)element + 0x6))
-      goto done;
-    record = encounter_get_squad((char *)element, sub_index);
-
-    switch ((short)count_type) {
-    case 0:
-      min_val = *(short *)(record + 0x16);
-      ret_val = *(short *)(record + 0x18);
-      handle_val = *(int *)(record + 0x1c);
-      break;
-    case 1:
-      min_val = *(short *)(record + 0x16);
-      ret_val = *(short *)(record + 0x1a);
-      handle_val = *(int *)(record + 0x1c);
-      break;
-    case 2:
-      min_val = *(short *)(record + 0x16);
-      ret_val = (int)*(short *)(record + 0x18)
-                - (int)*(short *)(record + 0x1a);
-      ret_val = (ret_val < 0) ? 0 : ret_val;
-      handle_val = *(int *)(record + 0x1c);
-      break;
-    default:
-      display_assert("!\"unreachable\"",
-                     "c:\\halo\\SOURCE\\ai\\ai_script.c", 0x46d, 1);
-      system_exit(-1);
-      min_val = *(short *)(record + 0x16);
-      handle_val = *(int *)(record + 0x1c);
-    }
-    break;
-
-  default:
-    display_assert("!\"unreachable\"",
-                   "c:\\halo\\SOURCE\\ai\\ai_script.c", 0x477, 1);
-    system_exit(-1);
-  }
-
-done:
-  if (out_min != 0)
-    *out_min = min_val;
-  if (out_handle != 0)
-    *out_handle = handle_val;
-  return ret_val;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpw %%bx, %%di\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "movl %%ebx, -0x8(%%ebp)\n\t"
+      "jl .LFUN_00055350_1\n\t"
+      "cmpw $3, %%di\n\t"
+      "jl .LFUN_00055350_2\n\t"
+      ".LFUN_00055350_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x405\n\t"
+      "pushl $0x25c394\n\t"
+      "pushl $0x25c5b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00055350_2:\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_00055350_17\n\t"
+      "call *%[c18e380]\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "shrl $0x1e, %%ecx\n\t"
+      "subl $0, %%ecx\n\t"
+      "je .LFUN_00055350_11\n\t"
+      "decl %%ecx\n\t"
+      "je .LFUN_00055350_7\n\t"
+      "decl %%ecx\n\t"
+      "je .LFUN_00055350_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x477\n\t"
+      "pushl $0x25c394\n\t"
+      "pushl $0x255ee8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .LFUN_00055350_17\n\t"
+      ".LFUN_00055350_3:\n\t"
+      "andl $0xffff, %%esi\n\t"
+      "jl .LFUN_00055350_17\n\t"
+      "cmpl 0x42c(%%eax), %%esi\n\t"
+      "jge .LFUN_00055350_17\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movzbw 0xa(%%ebp), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jl .LFUN_00055350_17\n\t"
+      "cmpw 0x6(%%eax), %%cx\n\t"
+      "jge .LFUN_00055350_17\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1c270]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "subl $0, %%eax\n\t"
+      "je .LFUN_00055350_6\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_00055350_5\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_00055350_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x46d\n\t"
+      "pushl $0x25c394\n\t"
+      "pushl $0x255ee8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movswl 0x16(%%esi), %%ebx\n\t"
+      "movl 0x1c(%%esi), %%edx\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .LFUN_00055350_16\n\t"
+      ".LFUN_00055350_4:\n\t"
+      "movswl 0x1a(%%esi), %%ecx\n\t"
+      "movswl 0x18(%%esi), %%eax\n\t"
+      "movswl 0x16(%%esi), %%ebx\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "movl $0, %%edx\n\t"
+      "sets %%dl\n\t"
+      "decl %%edx\n\t"
+      "andl %%eax, %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "movl 0x1c(%%esi), %%edx\n\t"
+      "jmp .LFUN_00055350_16\n\t"
+      ".LFUN_00055350_5:\n\t"
+      "movswl 0x1a(%%esi), %%eax\n\t"
+      "movswl 0x16(%%esi), %%ebx\n\t"
+      "movl 0x1c(%%esi), %%edx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_00055350_16\n\t"
+      ".LFUN_00055350_6:\n\t"
+      "movswl 0x18(%%esi), %%ecx\n\t"
+      "movswl 0x16(%%esi), %%ebx\n\t"
+      "movl 0x1c(%%esi), %%edx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_00055350_16\n\t"
+      ".LFUN_00055350_7:\n\t"
+      "andl $0xffff, %%esi\n\t"
+      "jl .LFUN_00055350_17\n\t"
+      "cmpl 0x42c(%%eax), %%esi\n\t"
+      "jge .LFUN_00055350_17\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movzbw 0xa(%%ebp), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jl .LFUN_00055350_17\n\t"
+      "cmpw 0xa(%%eax), %%cx\n\t"
+      "jge .LFUN_00055350_17\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c54020]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "subl $0, %%eax\n\t"
+      "je .LFUN_00055350_10\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_00055350_9\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_00055350_8\n\t"
+      "pushl $1\n\t"
+      "pushl $0x448\n\t"
+      "pushl $0x25c394\n\t"
+      "pushl $0x255ee8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movswl 0x4(%%esi), %%ebx\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .LFUN_00055350_16\n\t"
+      ".LFUN_00055350_8:\n\t"
+      "movswl 0x8(%%esi), %%ecx\n\t"
+      "movswl 0x6(%%esi), %%eax\n\t"
+      "movswl 0x4(%%esi), %%ebx\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "movl $0, %%edx\n\t"
+      "sets %%dl\n\t"
+      "decl %%edx\n\t"
+      "andl %%eax, %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "jmp .LFUN_00055350_16\n\t"
+      ".LFUN_00055350_9:\n\t"
+      "movswl 0x8(%%esi), %%eax\n\t"
+      "movswl 0x4(%%esi), %%ebx\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_00055350_16\n\t"
+      ".LFUN_00055350_10:\n\t"
+      "movswl 0x6(%%esi), %%ecx\n\t"
+      "movswl 0x4(%%esi), %%ebx\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_00055350_16\n\t"
+      ".LFUN_00055350_11:\n\t"
+      "andl $0xffff, %%esi\n\t"
+      "jl .LFUN_00055350_17\n\t"
+      "cmpl 0x42c(%%eax), %%esi\n\t"
+      "jge .LFUN_00055350_17\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "subl $0, %%eax\n\t"
+      "je .LFUN_00055350_14\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_00055350_13\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_00055350_12\n\t"
+      "pushl $1\n\t"
+      "pushl $0x424\n\t"
+      "pushl $0x25c394\n\t"
+      "pushl $0x255ee8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .LFUN_00055350_15\n\t"
+      ".LFUN_00055350_12:\n\t"
+      "movswl 0x2c(%%esi), %%ecx\n\t"
+      "movswl 0x2a(%%esi), %%eax\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "movl $0, %%edx\n\t"
+      "sets %%dl\n\t"
+      "decl %%edx\n\t"
+      "andl %%eax, %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_00055350_15\n\t"
+      ".LFUN_00055350_13:\n\t"
+      "movswl 0x2c(%%esi), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_00055350_15\n\t"
+      ".LFUN_00055350_14:\n\t"
+      "movswl 0x2a(%%esi), %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      ".LFUN_00055350_15:\n\t"
+      "movswl 0x18(%%esi), %%ebx\n\t"
+      "movl 0x34(%%esi), %%edx\n\t"
+      ".LFUN_00055350_16:\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      ".LFUN_00055350_17:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00055350_18\n\t"
+      "movl %%ebx, (%%eax)\n\t"
+      ".LFUN_00055350_18:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "je .LFUN_00055350_19\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      ".LFUN_00055350_19:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b55350_assert), [exitfn] "m"(b55350_exitfn), [c18e380] "m"(b55350_c18e380), [dget] "m"(b55350_dget), [c1c270] "m"(b55350_c1c270), [c54020] "m"(b55350_c54020)
+      : "memory");
 }
+#else
+#error "FUN_00055350: clang naked draft required"
+#endif
+
 
 /* FUN_00055620 — count_type 1 ("end"/max) accessor wrapper. 0x1570 obj. */
 int FUN_00055620(unsigned int ai_ref)
