@@ -5998,8 +5998,7 @@ void FUN_000ce150(void)
 void object_list_delete(int list_handle)
 {
   char *node;
-  if (list_handle == -1)
-    return;
+  if (list_handle == -1) return;
   node = (char *)datum_get(*(data_t **)0x5aa698, list_handle);
   if (*(short *)(node + 4) != 0) {
     display_assert((const char *)0x280ef0, (const char *)0x280f0c, 0x64, 1);
