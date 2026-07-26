@@ -12723,7 +12723,8 @@
         {
           "addr": "0xce090",
           "decl": "int FUN_000ce090(data_t *data, int *cursor);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000ce090"
         },
         {
           "addr": "0xce0c0",
@@ -40514,8 +40515,8 @@
         },
         {
           "addr": "0x62b20",
-          "decl": "char FUN_00062b20(unsigned char *flag_base @<eax>, int index @<edx>, char skip_check @<ebx>, void *block, void *bitvec);",
-          "ported": false,
+          "decl": "char FUN_00062b20(unsigned char *flag_base @<eax>, int index @<edx>, char skip_check @<bl>, void *block, void *bitvec);",
+          "ported": true,
           "name": "FUN_00062b20"
         },
         {
