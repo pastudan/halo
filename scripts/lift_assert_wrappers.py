@@ -47,6 +47,27 @@ PREF = (
     "saved games",
     "saved_games",
     "devices/",
+    "camera/",
+    "game/",
+    "interface/",
+    "effects/",
+    "ai/",
+    "objects/",
+    "units/",
+    "items/",
+    "physics/",
+    "structures/",
+    "cutscene/",
+    "cseries/",
+    "main/",
+    "text/",
+    "bungie_net/",
+    "input/",
+    "models/",
+    "memory/",
+    "cache/",
+    "hs/",
+    "math/",
 )
 
 
@@ -753,6 +774,342 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                             f"  {ret}1;\n"
                             f"}}\n"
                         )
+
+
+    # --- Pattern: index 0..4 → return table pointer (movsx/imul/add) ---
+    if (
+        len(body) >= 14
+        and body[0] == ("push", "ebp")
+        and body[1] == ("mov", "ebp, esp")
+        and body[2] == ("push", "esi")
+        and body[3] == ("mov", "si, word ptr [ebp + 8]")
+        and body[4] == ("test", "si, si")
+        and body[5][0] == "jl"
+        and body[6] == ("cmp", "si, 4")
+        and body[7][0] == "jl"
+    ):
+        ab = parse_assert(body, 8)
+        if ab:
+            sigi, psi = ensure_params(sig, ps, 1, ["int16_t"])
+            mid = body[ab["next"] :]
+            while mid and mid[-1][0] == "pop" and mid[-1][1] in ("ebp", "esi"):
+                mid = mid[:-1]
+            if (
+                len(mid) == 3
+                and mid[0] == ("movsx", "eax, si")
+                and mid[1][0] == "imul"
+                and mid[2][0] == "add"
+                and mid[2][1].startswith("eax,")
+            ):
+                im = re.match(r"eax, eax, (0x[0-9a-f]+|\d+)$", mid[1][1])
+                am = re.match(r"eax, (0x[0-9a-f]+)$", mid[2][1])
+                if im and am:
+                    if is_void(sigi):
+                        sigi = sigi.replace("void ", "void *", 1)
+                    return (
+                        f"{sigi}\n{{\n"
+                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= 4) {{\n"
+                        f"{assert_c(ab, '    ')}"
+                        f"  }}\n"
+                        f"  return (void *)(0x{int(am.group(1), 16):x} + (int)(int16_t){psi[0]} * {im.group(1)});\n"
+                        f"}}\n"
+                    )
+            if (
+                len(mid) == 4
+                and mid[0][0] == "mov"
+                and "dword ptr [0x" in mid[0][1]
+                and mid[1] == ("movsx", "eax, si")
+                and mid[2][0] == "imul"
+                and mid[3] == ("add", "eax, ecx")
+            ):
+                g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[0][1])
+                im = re.match(r"eax, eax, (0x[0-9a-f]+|\d+)$", mid[2][1])
+                if g and im:
+                    if is_void(sigi):
+                        sigi = sigi.replace("void ", "void *", 1)
+                    return (
+                        f"{sigi}\n{{\n"
+                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= 4) {{\n"
+                        f"{assert_c(ab, '    ')}"
+                        f"  }}\n"
+                        f"  return (void *)((char *)*(void **)0x{g.group(1)} + "
+                        f"(int)(int16_t){psi[0]} * {im.group(1)});\n"
+                        f"}}\n"
+                    )
+
+    # --- Pattern: null-check any ebp arg + memset + optional imm stores / return 1 ---
+    if (
+        len(body) >= 14
+        and body[0] == ("push", "ebp")
+        and body[1] == ("mov", "ebp, esp")
+        and body[2] == ("push", "esi")
+        and body[3][0] == "mov"
+        and body[4] == ("test", "esi, esi")
+        and body[5][0] == "jne"
+    ):
+        em = re.match(r"esi, dword ptr \[ebp \+ (0x[0-9a-f]+|8)\]$", body[3][1])
+        ab = parse_assert(body, 6)
+        if em and ab:
+            eoff = int(em.group(1), 0)
+            ai = (eoff - 8) // 4
+            sigm, psm = ensure_params(sig, ps, ai + 1, ["void *"] * (ai + 1))
+            mid = body[ab["next"] :]
+            while mid and mid[-1][0] == "pop":
+                mid = mid[:-1]
+            if (
+                len(mid) >= 5
+                and mid[0][0] == "push"
+                and mid[1] == ("push", "0")
+                and mid[2] == ("push", "esi")
+                and mid[3][0] == "call"
+            ):
+                fn = callee(mid[3][1], name_by)
+                if fn in ("csmemset", "memset") or (fn and "memset" in (fn or "")):
+                    rest = mid[4:]
+                    if rest and rest[0][0] == "add":
+                        rest = rest[1:]
+                    stores = []
+                    ok = True
+                    ret1 = False
+                    for mnem, op in rest:
+                        if mnem == "mov" and op == "al, 1":
+                            ret1 = True
+                            continue
+                        sm = re.match(
+                            r"(byte|word|dword) ptr \[esi(?: \+ (0x[0-9a-f]+|\d+))?\], "
+                            r"(0x[0-9a-f]+|-?\d+)$",
+                            op,
+                        )
+                        if mnem == "mov" and sm:
+                            width, off, val = sm.group(1), sm.group(2), sm.group(3)
+                            o = int(off, 0) if off else 0
+                            ctype = {"byte": "uint8_t", "word": "uint16_t", "dword": "uint32_t"}[width]
+                            stores.append(
+                                f"  *({ctype} *)((char *){psm[ai]} + 0x{o:x}) = ({ctype}){val};"
+                            )
+                        else:
+                            ok = False
+                            break
+                    if ok:
+                        if ret1 and is_void(sigm):
+                            sigm = sigm.replace("void ", "int ", 1)
+                        out = (
+                            f"{sigm}\n{{\n"
+                            f"  if ({psm[ai]} == NULL) {{\n"
+                            f"{assert_c(ab, '    ')}"
+                            f"  }}\n"
+                            f"  {fn}({psm[ai]}, 0, {mid[0][1]});\n"
+                        )
+                        if stores:
+                            out += "\n".join(stores) + "\n"
+                        if ret1:
+                            out += "  return 1;\n"
+                        out += "}\n"
+                        return out
+
+    # --- Pattern: global nonzero assert + memset ---
+    if (
+        len(body) >= 10
+        and body[0][0] == "mov"
+        and body[0][1].startswith("eax, dword ptr [0x")
+        and body[1] == ("test", "eax, eax")
+        and body[2][0] == "jne"
+    ):
+        ab = parse_assert(body, 3)
+        if ab:
+            g = re.search(r"\[0x([0-9a-fA-F]+)\]", body[0][1])
+            mid = body[ab["next"] :]
+            if (
+                g
+                and len(mid) >= 5
+                and mid[0][0] == "mov"
+                and "dword ptr [0x" in mid[0][1]
+                and mid[1][0] == "push"
+                and mid[2] == ("push", "0")
+                and mid[3] == ("push", "eax")
+                and mid[4][0] == "call"
+            ):
+                fn = callee(mid[4][1], name_by)
+                g2 = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[0][1])
+                if g2 and fn and (fn in ("csmemset", "memset") or "memset" in fn):
+                    return (
+                        f"{sig}\n{{\n"
+                        f"  if (!*(void **)0x{g.group(1)}) {{\n"
+                        f"{assert_c(ab, '    ')}"
+                        f"  }}\n"
+                        f"  {fn}(*(void **)0x{g2.group(1)}, 0, {mid[1][1]});\n"
+                        f"}}\n"
+                    )
+
+    # --- Pattern: global ptr/byte assert then return (void) ---
+    if (
+        len(body) >= 8
+        and body[0][0] == "mov"
+        and ("dword ptr [0x" in body[0][1] or "byte ptr [0x" in body[0][1])
+        and body[1][0] == "test"
+        and body[2][0] in ("jne", "je")
+    ):
+        ab = parse_assert(body, 3)
+        if ab:
+            mid = body[ab["next"] :]
+            while mid and mid[-1][0] == "pop":
+                mid = mid[:-1]
+            g = re.search(r"\[0x([0-9a-fA-F]+)\]", body[0][1])
+            if g and not mid:
+                ctype = "uint8_t" if "byte" in body[0][1] else "uint32_t"
+                # jne L_ok → assert when zero; je L_ok → assert when nonzero
+                if body[2][0] == "jne":
+                    cond = "!*(%s *)0x%s" % (ctype, g.group(1))
+                else:
+                    cond = "*(%s *)0x%s" % (ctype, g.group(1))
+                return (
+                    f"{sig}\n{{\n"
+                    f"  if ({cond}) {{\n"
+                    f"{assert_c(ab, '    ')}"
+                    f"  }}\n"
+                    f"}}\n"
+                )
+
+    # --- Pattern: null-check arg + memset(+stores) + optional return 1 ---
+    if (
+        len(body) >= 12
+        and body[0] == ("push", "ebp")
+        and body[1] == ("mov", "ebp, esp")
+        and body[2] == ("push", "esi")
+        and body[3][0] == "mov"
+        and "esi, dword ptr [ebp" in body[3][1]
+        and body[4] == ("test", "esi, esi")
+        and body[5][0] == "jne"
+    ):
+        ab = parse_assert(body, 6)
+        if ab:
+            mid = body[ab["next"] :]
+            while mid and mid[-1][0] == "pop":
+                mid = mid[:-1]
+            if (
+                len(mid) >= 4
+                and mid[0][0] == "push"
+                and mid[1] == ("push", "0")
+                and mid[2] == ("push", "esi")
+                and mid[3][0] == "call"
+                and f"{0x8DB80:x}" in mid[3][1]
+            ):
+                em = re.search(r"\[ebp \+ (0x[0-9a-f]+|8)\]", body[3][1])
+                argi = (int(em.group(1), 0) - 8) // 4 if em else 0
+                sig1, ps1 = ensure_params(sig, ps, argi + 1, ["void *"] * (argi + 1))
+                p = ps1[argi]
+                rest = mid[4:]
+                if rest and rest[0][0] == "add":
+                    rest = rest[1:]
+                stores = []
+                ret1 = False
+                ok = True
+                for mnem, op in rest:
+                    if mnem == "mov" and op.strip() in ("al, 1", "eax, 1"):
+                        ret1 = True
+                        continue
+                    mm = re.match(
+                        r"(byte|word|dword) ptr \[esi(?: \+ (0x[0-9a-f]+|\d+))?\]"
+                        r", (.+)$",
+                        op,
+                    )
+                    if mnem == "mov" and mm:
+                        stores.append(
+                            (
+                                mm.group(1),
+                                int(mm.group(2), 0) if mm.group(2) else 0,
+                                mm.group(3),
+                            )
+                        )
+                        continue
+                    ok = False
+                    break
+                if ok:
+                    fn = callee(mid[3][1], name_by) or "csmemset"
+                    lines = [
+                        f"  if ({p} == NULL) {{\n{assert_c(ab, '    ')}  }}",
+                        f"  {fn}({p}, 0, {mid[0][1]});",
+                    ]
+                    for w, off, val in stores:
+                        ctype = {"byte": "uint8_t", "word": "uint16_t", "dword": "uint32_t"}[
+                            w
+                        ]
+                        lines.append(
+                            f"  *({ctype} *)((char *){p} + 0x{off:x}) = ({ctype}){val};"
+                        )
+                    if ret1:
+                        if is_void(sig1):
+                            sig1 = sig1.replace("void ", "int ", 1)
+                        lines.append("  return 1;")
+                    return sig1 + "\n{\n" + "\n".join(lines) + "\n}\n"
+
+            # ufputc-style: mov eax,[ebp+8]; push esi; push eax; call; [add]
+            if (
+                len(mid) in (4, 5)
+                and mid[0][0] == "mov"
+                and "ebp + 8" in mid[0][1]
+                and mid[1] == ("push", "esi")
+                and mid[2] == ("push", "eax")
+                and mid[3][0] == "call"
+            ):
+                if len(mid) == 5 and mid[4][0] != "add":
+                    pass
+                else:
+                    fn = callee(mid[3][1], name_by)
+                    if fn:
+                        sig2, ps2 = ensure_params(sig, ps, 2, ["int", "void *"])
+                        r = "" if is_void(sig2) else "return "
+                        return (
+                            f"{sig2}\n{{\n"
+                            f"  if ({ps2[1]} == NULL) {{\n"
+                            f"{assert_c(ab, '    ')}"
+                            f"  }}\n"
+                            f"  {r}{fn}({ps2[0]}, {ps2[1]});\n"
+                            f"}}\n"
+                        )
+
+    # --- Pattern: 0..4 index + (base[global] + (i<<6) + off) dword load ---
+    if (
+        len(body) >= 14
+        and body[0] == ("push", "ebp")
+        and body[1] == ("mov", "ebp, esp")
+        and body[2] == ("push", "esi")
+        and body[3] == ("mov", "si, word ptr [ebp + 8]")
+        and body[4] == ("test", "si, si")
+        and body[5][0] == "jl"
+        and body[6] == ("cmp", "si, 4")
+        and body[7][0] == "jl"
+    ):
+        ab = parse_assert(body, 8)
+        if ab:
+            mid = body[ab["next"] :]
+            while mid and mid[-1][0] == "pop":
+                mid = mid[:-1]
+            if (
+                len(mid) == 4
+                and mid[0][0] == "mov"
+                and "dword ptr [0x" in mid[0][1]
+                and mid[1] == ("movsx", "eax, si")
+                and mid[2] == ("shl", "eax, 6")
+                and mid[3][0] == "mov"
+                and "eax, dword ptr [eax + ecx +" in mid[3][1]
+            ):
+                g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[0][1])
+                off = re.search(r"\[eax \+ ecx \+ (0x[0-9a-f]+|\d+)\]", mid[3][1])
+                if g and off:
+                    sig1, ps1 = ensure_params(sig, ps, 1, ["int16_t"])
+                    if is_void(sig1):
+                        sig1 = sig1.replace("void ", "int ", 1)
+                    return (
+                        f"{sig1}\n{{\n"
+                        f"  if ((int16_t){ps1[0]} < 0 || (int16_t){ps1[0]} >= 4) {{\n"
+                        f"{assert_c(ab, '    ')}"
+                        f"  }}\n"
+                        f"  void *base = *(void **)0x{g.group(1)};\n"
+                        f"  return *(int *)((char *)base + ((int)(int16_t){ps1[0]} << 6)"
+                        f" + {off.group(1)});\n"
+                        f"}}\n"
+                    )
 
     return None
 

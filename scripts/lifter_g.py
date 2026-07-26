@@ -37,6 +37,23 @@ PREF = (
     "saved games",
     "saved_games",
     "devices/",
+    "camera/",
+    "game/",
+    "interface/",
+    "effects/",
+    "ai/",
+    "cutscene/",
+    "cseries/",
+    "main/",
+    "text/",
+    "bungie_net/",
+    "input/",
+    "models/",
+    "memory/",
+    "cache/",
+    "math/",
+    "render/",
+    "hs/",
 )
 LEDGER_TAG = "lifter_g"
 

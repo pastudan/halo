@@ -380,7 +380,140 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
                 f"}}\n"
             )
 
+    # General cdecl forward: mov regs from ebp/imm, push*, call named, add esp
+    # (also stdcall ret N with xor eax,eax → return 0)
+    gen = _emit_general_forward(mid, ops[-1], sig, ps, is_void, name_by, callee)
+    if gen:
+        return gen
+
     return None
+
+
+def _emit_general_forward(mid, ret_op, sig, ps, is_void, name_by, callee):
+    """Synthesize simple stack-marshalling wrappers."""
+    retn = (ret_op[1] or "").strip() if ret_op[0] in ("ret", "retn") else ""
+    # strip trailing callee-saved pops already removed by caller for frame mid
+    work = list(mid)
+    while work and work[-1][0] == "pop" and work[-1][1] in ("esi", "edi", "ebx"):
+        work = work[:-1]
+    ret0 = False
+    if work and work[-1] == ("xor", "eax, eax"):
+        ret0 = True
+        work = work[:-1]
+    if work and work[-1][0] == "add" and "esp" in work[-1][1]:
+        work = work[:-1]
+    elif retn:
+        pass  # stdcall: no add
+    else:
+        # cdecl should have add unless 0-arg
+        pass
+    if not work or work[-1][0] != "call":
+        return None
+    fn = callee(work[-1][1])
+    if not fn:
+        return None
+    pre = work[:-1]
+    regval: dict[str, str] = {}
+    stack: list[str] = []
+    max_arg = -1
+
+    def arg_from_off(off_s: str) -> str | None:
+        nonlocal max_arg
+        off = int(off_s, 0)
+        if off < 8 or (off - 8) % 4:
+            return None
+        idx = (off - 8) // 4
+        max_arg = max(max_arg, idx)
+        while len(ps) <= idx:
+            # synthesize names into local list copy
+            break
+        return f"__ARG{idx}__"
+
+    # Ensure we have enough param slots
+    # First pass collect max
+    for mnem, op in pre:
+        if mnem in ("mov", "movsx"):
+            m = re.match(
+                r"(eax|ecx|edx|ebx|esi|edi), (?:dword|word|byte) ptr \[ebp \+ (0x[0-9a-f]+|8)\]$",
+                op,
+            )
+            if m:
+                off = int(m.group(2), 0)
+                max_arg = max(max_arg, (off - 8) // 4)
+        elif mnem == "lea":
+            m = re.match(r"(eax|ecx|edx), \[ebp \+ (0x[0-9a-f]+)\]$", op)
+            if m:
+                off = int(m.group(2), 0)
+                max_arg = max(max_arg, (off - 8) // 4)
+
+    if max_arg >= 0 and len(ps) <= max_arg:
+        # synthesize
+        names = list(ps) + [f"a{i}" for i in range(len(ps), max_arg + 1)]
+        plist = ", ".join(f"int {n}" for n in names)
+        ret_t = sig.split("(")[0].strip()
+        m = re.match(r"^(.*\b)(\w+)\s*$", ret_t)
+        if not m:
+            return None
+        sig = f"{m.group(1)}{m.group(2)}({plist})"
+        ps = names
+        is_void = "void" in sig.split("(")[0]
+
+    for mnem, op in pre:
+        if mnem in ("mov", "movsx"):
+            m = re.match(
+                r"(eax|ecx|edx|ebx|esi|edi), (?:dword|word|byte) ptr \[ebp \+ (0x[0-9a-f]+|8)\]$",
+                op,
+            )
+            if m:
+                off = int(m.group(2), 0)
+                idx = (off - 8) // 4
+                if idx < 0 or idx >= len(ps):
+                    return None
+                regval[m.group(1)] = ps[idx]
+                continue
+            m = re.match(r"(eax|ecx|edx|ebx|esi|edi), (-?0x[0-9a-f]+|-?\d+)$", op)
+            if m:
+                regval[m.group(1)] = m.group(2)
+                continue
+            return None
+        if mnem == "lea":
+            m = re.match(r"(eax|ecx|edx), \[ebp \+ (0x[0-9a-f]+)\]$", op)
+            if m:
+                off = int(m.group(2), 0)
+                idx = (off - 8) // 4
+                if idx < 0 or idx >= len(ps):
+                    return None
+                regval[m.group(1)] = f"&{ps[idx]}"
+                continue
+            return None
+        if mnem == "push":
+            if op in regval:
+                stack.append(regval[op])
+                continue
+            if re.match(r"-?0x[0-9a-fA-F]+|-?\d+$", op):
+                # named code pointer?
+                mm = re.match(r"0x([0-9a-fA-F]+)$", op)
+                if mm:
+                    nm = name_by.get(int(mm.group(1), 16))
+                    stack.append(nm if nm else op)
+                else:
+                    stack.append(op)
+                continue
+            return None
+        return None
+
+    # cdecl stack: last push is first arg
+    args = list(reversed(stack))
+    # drop leading register-save junk only if stdcall with retn and args look wrong — skip
+    if not args and not retn:
+        call = f"{fn}()"
+    else:
+        call = f"{fn}({', '.join(args)})"
+    if ret0:
+        return f"{sig}\n{{\n  {call};\n  return 0;\n}}\n"
+    if is_void:
+        return f"{sig}\n{{\n  {call};\n}}\n"
+    return f"{sig}\n{{\n  return {call};\n}}\n"
 
 
 def commit_chunk(n: int) -> str | None:
@@ -428,7 +561,7 @@ def main() -> int:
             continue
         end = starts[i + 1] if i + 1 < len(starts) else ai + 64
         size = end - ai
-        if size > 96:
+        if size > 160:
             continue
         sp = resolve_src(src)
         if not sp:

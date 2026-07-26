@@ -41,19 +41,42 @@ PREF = (
     "sound/",
     "tag_files/",
     "saved_games/",
+    "saved games/",
     "devices/",
     "models/",
+    "camera/",
+    "game/",
+    "interface/",
+    "effects/",
+    "ai/",
+    "objects/",
+    "units/",
+    "items/",
+    "physics/",
+    "structures/",
+    "cutscene/",
+    "cseries/",
+    "main/",
+    "text/",
+    "bungie_net/",
+    "input/",
+    "memory/",
+    "cache/",
+    "math/",
+    "networking/",
+    "render/",
+    "scenario/",
 )
 LEDGER_TAG = "lifter_j"
 COMMIT_EVERY = 10
 MAX_SIZE = 256
 
 # addr -> (src, name, body)
-HAND: dict[int, tuple[str, str, str]] = {}
+HAND: dict[int, tuple[str, str, str, str | None]] = {}
 
 
-def H(addr: int, src: str, name: str, body: str) -> None:
-    HAND[addr] = (src, name, body.strip() + "\n")
+def H(addr: int, src: str, name: str, body: str, decl: str | None = None) -> None:
+    HAND[addr] = (src, name, body.strip() + "\n", decl)
 
 
 # --- devices ---
@@ -938,7 +961,7 @@ def main() -> int:
     seen = set()
 
     # 1) Hand lifts
-    for ai, (src, name, body) in sorted(HAND.items()):
+    for ai, (src, name, body, new_decl) in sorted(HAND.items()):
         if ported.get(ai) is not False:
             continue
         if not in_pref(src_by.get(ai, src)):
@@ -949,6 +972,7 @@ def main() -> int:
                 "name": name_by.get(ai, name),
                 "src": src_by.get(ai, src),
                 "kind": "hand",
+                "decl": new_decl,
                 "body": f"/* {name} (0x{ai:x}) — readable C lift. */\n" + body
                 if not body.lstrip().startswith("/*")
                 else body,
@@ -1058,6 +1082,13 @@ def main() -> int:
             if path is None:
                 print("  no source", flush=True)
                 continue
+            if job.get("decl"):
+                set_kb_decl(ai, job["decl"])
+                for stale in (ROOT / "build" / "generated").glob("decl.h"):
+                    try:
+                        stale.unlink()
+                    except OSError:
+                        pass
             # skip if not naked anymore
             text0 = path.read_text(encoding="utf-8", errors="replace")
             if not is_naked_near_def(text0.splitlines(), name, hex(ai)):
