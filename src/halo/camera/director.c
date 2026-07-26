@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Camera director — controls camera mode per local player.
  *
  * Per-player director state lives in a 0xf8-byte array of 4 entries.
@@ -1396,47 +1397,15 @@ void director_inhibit_facing(void)
 #endif
 
 
-/* director_inhibited_facing (0x86270) — XBE naked draft (batch 174). */
-#if defined(__clang__)
-static void (*const b86270_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b86270_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void director_inhibited_facing(void)
+/* director_inhibited_facing (0x86270) — readable C lift. */
+uint8_t director_inhibited_facing(int16_t a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Ldirector_inhibited_facing_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Ldirector_inhibited_facing_2\n\t"
-      ".Ldirector_inhibited_facing_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb3\n\t"
-      "pushl $0x26700c\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldirector_inhibited_facing_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0xf8, %%eax, %%eax\n\t"
-      "movb 0x335301(%%eax), %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b86270_assert), [exitfn] "m"(b86270_exitfn)
-      : "memory");
+  if ((int16_t)a0 < 0 || (int16_t)a0 >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x26700c, 0xb3, 1);
+    system_exit(-1);
+  }
+  return *(uint8_t *)(0x335301 + (int)(int16_t)a0 * 0xf8);
 }
-#else
-#error "director_inhibited_facing: clang naked draft required"
-#endif
-
 
 /* director_inhibited_input (0x862c0) — XBE naked draft (batch 174). */
 #if defined(__clang__)

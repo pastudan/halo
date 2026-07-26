@@ -12285,7 +12285,7 @@
         },
         {
           "addr": "0xc9c10",
-          "decl": "void FUN_000c9c10(int object_handle, float value);",
+          "decl": "float FUN_000c9c10(int object_handle, float value);",
           "ported": true
         },
         {
@@ -26796,12 +26796,12 @@
         },
         {
           "addr": "0x83220",
-          "decl": "int FUN_00083220(void *a0);",
+          "decl": "void FUN_00083220(void);",
           "ported": true
         },
         {
           "addr": "0x83260",
-          "decl": "uint16_t FUN_00083260(void *a0);",
+          "decl": "void FUN_00083260(void);",
           "ported": true
         },
         {
@@ -36151,7 +36151,7 @@
         },
         {
           "addr": "0x64fa0",
-          "decl": "int FUN_00064fa0(void *prop@<edx>, int a1);",
+          "decl": "void FUN_00064fa0(void);",
           "ported": true
         },
         {
