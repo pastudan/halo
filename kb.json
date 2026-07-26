@@ -10222,7 +10222,8 @@
         {
           "addr": "0x1c0070",
           "decl": "void game_state_lruv_cache_new(void);",
-          "ported": false
+          "ported": true,
+          "name": "game_state_lruv_cache_new"
         },
         {
           "addr": "0x1c00c0",
