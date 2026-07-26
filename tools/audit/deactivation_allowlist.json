@@ -3274,5 +3274,68 @@
     "object": "players.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"
+  },
+  {
+    "addr": "0xba890",
+    "name": "FUN_000ba890",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xba970",
+    "name": "player_control_update_for_loaded_game_state",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbb410",
+    "name": "player_add_equipment",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbbfe0",
+    "name": "FUN_000bbfe0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbc320",
+    "name": "player_handle_powerup",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbc520",
+    "name": "players_debug_render",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbc920",
+    "name": "players_update_before_game_client",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbca60",
+    "name": "players_reconnect_to_structure_bsp",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc0b70",
+    "name": "FUN_000c0b70",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]

@@ -17216,11 +17216,13 @@
         },
         {
           "addr": "0xba890",
-          "decl": "void FUN_000ba890(int player_handle@<eax>, int target_handle);"
+          "decl": "void FUN_000ba890(int player_handle@<eax>, int target_handle);",
+          "ported": false
         },
         {
           "addr": "0xba970",
-          "decl": "void player_control_fix_for_loaded_game_state(void);"
+          "decl": "void player_control_update_for_loaded_game_state(void);",
+          "ported": false
         },
         {
           "addr": "0xbaa90",
@@ -17324,7 +17326,8 @@
         },
         {
           "addr": "0xbb410",
-          "decl": "void player_add_equipment(void);"
+          "decl": "void player_add_equipment(int unit_handle, int16_t equipment_index, char reset);",
+          "ported": false
         },
         {
           "addr": "0xbb560",
@@ -17353,7 +17356,8 @@
         },
         {
           "addr": "0xbbfe0",
-          "decl": "void FUN_000bbfe0(void);"
+          "decl": "void FUN_000bbfe0(int player_handle@<eax>, int16_t action_result_type, int object_handle, int16_t seat_index);",
+          "ported": false
         },
         {
           "addr": "0xbc0d0",
@@ -17362,7 +17366,8 @@
         },
         {
           "addr": "0xbc320",
-          "decl": "void player_handle_powerup(void);"
+          "decl": "char player_handle_powerup(int player_handle, int16_t powerup_index, int16_t ticks);",
+          "ported": false
         },
         {
           "addr": "0xbc410",
@@ -17376,7 +17381,8 @@
         },
         {
           "addr": "0xbc520",
-          "decl": "void players_debug_render(void);"
+          "decl": "void players_debug_render(void);",
+          "ported": false
         },
         {
           "addr": "0xbc6c0",
@@ -17390,11 +17396,13 @@
         },
         {
           "addr": "0xbc920",
-          "decl": "void players_update_before_game_client(void);"
+          "decl": "void players_update_before_game_client(int player_handle@<ebx>, int anchor_unit, float *position);",
+          "ported": false
         },
         {
           "addr": "0xbca60",
-          "decl": "void players_reconnect_to_structure_bsp(void);"
+          "decl": "void players_reconnect_to_structure_bsp(void);",
+          "ported": false
         },
         {
           "addr": "0xbcd40",
@@ -18323,7 +18331,8 @@
         },
         {
           "addr": "0xc0b70",
-          "decl": "void FUN_000c0b70(void);"
+          "decl": "void FUN_000c0b70(int16_t function_index, int thread_datum, char init);",
+          "ported": false
         }
       ],
       "name": "players.obj",

@@ -956,9 +956,9 @@ void player_spawn(int player_handle)
     if (!game_engine_running()) {
       scen_starting_count = *(int *)((char *)global_scenario_get() + 0x348);
       if (scen_starting_count > 1 && *(int16_t *)(player2 + 0xaa) > 0) {
-        ((void (*)(int, char, char))0xbb410)(*(int *)(player2 + 0x34), 1, 1);
+        player_add_equipment(*(int *)(player2 + 0x34), 1, 1);
       } else if (scen_starting_count != 0) {
-        ((void (*)(int, char, char))0xbb410)(*(int *)(player2 + 0x34), 0, 1);
+        player_add_equipment(*(int *)(player2 + 0x34), 0, 1);
       }
     }
     /* Restore EDI (original player ptr) for the common tail. */
@@ -1365,10 +1365,8 @@ bool players_respawn_coop(void)
 }
 
 /* Priority-filtered pending action-result update (matches 0xbbfe0). */
-static void player_set_spawn_action_result(int player_handle,
-                                           int16_t action_result_type,
-                                           int object_handle,
-                                           int16_t seat_index)
+void FUN_000bbfe0(int player_handle, int16_t action_result_type,
+                  int object_handle, int16_t seat_index)
 {
   char *player;
 
@@ -1442,7 +1440,7 @@ void player_update_nearby_biped(int datum_handle, int object_handle)
   if (*(float *)(nearby_biped + 0x38) <= xbox_cosf(angle_delta)) {
     if ((*(unsigned char *)(nearby_biped + 0x424) & 0x10) == 0 &&
         *(int *)(nearby_biped + 0x2d4) == -1) {
-      player_set_spawn_action_result(datum_handle, 11, object_handle, -1);
+      FUN_000bbfe0(datum_handle, 11, object_handle, -1);
     }
   } else {
     if (unit_current_weapon_is_busy(*(int *)(player + 0x34)))
@@ -1469,7 +1467,7 @@ void player_update_nearby_biped(int datum_handle, int object_handle)
                        "c:\\halo\\SOURCE\\game\\players.c", 0x838, 1);
         system_exit(-1);
       }
-      player_set_spawn_action_result(datum_handle, 8, object_handle,
+      FUN_000bbfe0(datum_handle, 8, object_handle,
                                      seat_index);
       return;
     }
@@ -1479,7 +1477,7 @@ void player_update_nearby_biped(int datum_handle, int object_handle)
                        "c:\\halo\\SOURCE\\game\\players.c", 0x83d, 1);
         system_exit(-1);
       }
-      player_set_spawn_action_result(datum_handle, 9, object_handle,
+      FUN_000bbfe0(datum_handle, 9, object_handle,
                                      seat_index);
       return;
     }
@@ -1507,7 +1505,7 @@ void player_update_nearby_weapon(int datum_handle, int object_handle)
   if (!device_can_change_position(object_handle))
     return;
 
-  player_set_spawn_action_result(datum_handle, 10, object_handle, -1);
+  FUN_000bbfe0(datum_handle, 10, object_handle, -1);
 }
 
 /* Handle the result of a player interacting with an equipment (powerup) object.
@@ -1568,8 +1566,7 @@ void player_set_action_result_for_equipment(int player_handle,
       system_exit(-1);
     }
     /* Try to apply the powerup. */
-    if (!((bool (*)(int, int, int16_t))0xbc320)(player_handle, powerup_index,
-                                                ticks))
+    if (!player_handle_powerup(player_handle, powerup_index, ticks))
       return;
     /* Active camo (index 0) triggers a location notification. */
     if ((int16_t)powerup_index == 0) {
@@ -2042,7 +2039,7 @@ void player_update_nearby_vehicle(int datum_handle, int object_handle)
         current_weapon_tag = (char *)tag_get(0x65716970, *equipment_obj);
         if (*(int16_t *)(equipment_tag + 0x308) !=
             *(int16_t *)(current_weapon_tag + 0x308)) {
-          player_set_spawn_action_result(datum_handle, 5, object_handle, -1);
+          FUN_000bbfe0(datum_handle, 5, object_handle, -1);
         }
       }
     }
@@ -2090,10 +2087,10 @@ void player_update_nearby_vehicle(int datum_handle, int object_handle)
         (int *)object_try_and_get_and_verify_type(current_weapon_handle, 4);
       if (nearby_weapon_count == 1 && current_weapon_obj != NULL &&
           *current_weapon_obj != *nearby_weapon_obj) {
-        player_set_spawn_action_result(datum_handle, 7, object_handle, -1);
+        FUN_000bbfe0(datum_handle, 7, object_handle, -1);
         return;
       }
-      player_set_spawn_action_result(datum_handle, 6, object_handle, -1);
+      FUN_000bbfe0(datum_handle, 6, object_handle, -1);
     }
   }
 }
@@ -2858,6 +2855,457 @@ int FUN_000bac10(int tag_index, void *start_loc)
   *(int16_t *)(obj + 0x25e) = *(int16_t *)((char *)start_loc + 0x12);
   *(int16_t *)(obj + 0x260) = *(int16_t *)((char *)start_loc + 0x10);
   return handle;
+}
+
+/* Post-teleport player/unit cleanup (0xba890). */
+void FUN_000ba890(int player_handle, int target_handle)
+{
+  char *player;
+  int unit_handle;
+  char *unit_obj;
+  int16_t local_player_index;
+  int weapon_handle;
+
+  player = (char *)datum_get(player_data, player_handle);
+  unit_handle = *(int *)(player + 0x34);
+  if (unit_handle == NONE)
+    return;
+
+  if (game_engine_can_score())
+    FUN_000b56f0(unit_handle, NONE, NONE, NONE);
+
+  local_player_index = *(int16_t *)(player + 2);
+  *(int *)&players_globals->unk_0[0x14 + local_player_index * 4] = unit_handle;
+  player_died(player_handle);
+
+  unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
+  weapon_handle = unit_get_weapon(unit_handle, *(int16_t *)(unit_obj + 0x2a2));
+  *(int *)(unit_obj + 0x1c8) = NONE;
+  object_deactivate(unit_handle);
+  object_set_garbage(unit_handle, 0);
+  if (weapon_handle != NONE)
+    object_set_garbage(weapon_handle, 0);
+
+  if (target_handle != NONE)
+    *(int *)(player + 0x38) = target_handle;
+
+  *((char *)players_globals + 0x28) = 0;
+}
+
+/* Rebind local player controls after a save-game load (0xba970). */
+void player_control_update_for_loaded_game_state(void)
+{
+  int16_t local_player_index;
+  int16_t controller_index;
+  int16_t saved_player_index;
+  int player_handle;
+  char *player;
+  int unit_handle;
+
+  local_player_index = 0;
+  controller_index = player_ui_get_single_player_local_player_controller(0);
+  if (controller_index == (int16_t)NONE)
+    saved_player_index = 0;
+  else
+    saved_player_index = controller_index;
+
+  if (local_player_get_player_index((uint16_t)saved_player_index) != NONE)
+    return;
+
+  if (*(int16_t *)0x31fa94 != 1)
+    goto load_failed;
+
+  while (local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS) {
+    if (local_player_index < NONE || local_player_index >= 4) {
+      display_assert("((local_player_index>=0) && (local_player_index<"
+                     "MAXIMUM_NUMBER_OF_LOCAL_PLAYERS)) || "
+                     "(local_player_index==NONE)",
+                     "c:\\halo\\SOURCE\\game\\players.c", 0x3ab, 1);
+      system_exit(NONE);
+    }
+
+    player_handle = *(int *)&players_globals->unk_0[4 + local_player_index * 4];
+    if (player_handle == NONE) {
+      local_player_index++;
+      continue;
+    }
+
+    player = (char *)datum_get(player_data, player_handle);
+    local_player_set_player_index((uint16_t)local_player_index, NONE);
+    player_control_new_unit((uint16_t)local_player_index, NONE);
+    local_player_set_player_index((uint16_t)saved_player_index,
+                                  player_handle);
+    player_control_new_unit((uint16_t)local_player_index, player_handle);
+    unit_handle = *(int *)(player + 0x34);
+    player_control_new_unit((uint16_t)local_player_index, unit_handle);
+    ((void (*)(int, int))0xd98c0)(saved_player_index, local_player_index);
+    FUN_000d7780(saved_player_index, local_player_index);
+    error(2, (char *)0x26ece4);
+    return;
+  }
+
+  if (local_player_index >= MAXIMUM_NUMBER_OF_LOCAL_PLAYERS) {
+    error(2, (char *)0x26ec78);
+    return;
+  }
+
+load_failed:
+  error(2, (char *)0x26ebd8);
+}
+
+/* Apply a starting-equipment entry to a unit (0xbb410). */
+void player_add_equipment(int unit_handle, int16_t equipment_index, char reset)
+{
+  char *unit_obj;
+  int weapon_handle;
+  void *scenario;
+  void *equipment_block;
+  void *equipment_entry;
+  int spawned_object;
+  float *unit_stats;
+  float *entry_stats;
+
+  if (unit_handle == NONE)
+    return;
+  if (equipment_index == (int16_t)NONE)
+    return;
+
+  unit_obj = (char *)object_try_and_get_and_verify_type(unit_handle, 3);
+  if (unit_obj == NULL)
+    return;
+
+  weapon_handle = *(int *)(unit_obj + 0x1c8);
+  if (weapon_handle == NONE)
+    return;
+
+  scenario = global_scenario_get();
+  equipment_block = tag_block_get_element((char *)scenario + 0x348,
+                                          (unsigned short)equipment_index, 0x68);
+  if (reset) {
+    unit_clear_weapons(unit_handle);
+    *(int *)(unit_obj + 0x94) = 0;
+    *(int *)(unit_obj + 0x90) = 0;
+    *(int16_t *)(unit_obj + 0x2ce) = 0;
+  }
+
+  equipment_entry = equipment_block;
+  if (*(int *)((char *)equipment_entry + 0x34) != NONE) {
+    spawned_object =
+        FUN_000bac10(unit_handle, (char *)equipment_entry + 0x28);
+    if (spawned_object != NONE &&
+        !unit_enter_seat(unit_handle, spawned_object, reset != 0)) {
+      error(2, (char *)0x26ed88);
+      object_delete(spawned_object);
+    }
+  }
+
+  if (*(int *)((char *)equipment_entry + 0x48) != NONE) {
+    spawned_object =
+        FUN_000bac10(unit_handle, (char *)equipment_entry + 0x3c);
+    if (spawned_object != NONE &&
+        !unit_enter_seat(unit_handle, spawned_object, 0)) {
+      error(2, (char *)0x26ed88);
+      object_delete(spawned_object);
+    }
+  }
+
+  unit_stats = (float *)((char *)unit_obj + 0x94);
+  entry_stats = (float *)((char *)equipment_entry + 0x24);
+  unit_stats[0] = entry_stats[0] + unit_stats[0];
+  unit_stats[-1] = ((float *)((char *)equipment_entry + 0x20))[0] +
+                   unit_stats[-1];
+  ((char *)unit_obj + 0x2ce)[0] +=
+      *((char *)equipment_entry + 0x50);
+  ((char *)unit_obj + 0x2ce)[1] +=
+      *((char *)equipment_entry + 0x51);
+}
+
+/* Apply or extend an active-camo / vision powerup timer (0xbc320). */
+char player_handle_powerup(int player_handle, int16_t powerup_index,
+                           int16_t ticks)
+{
+  char *player;
+  char *unit_obj;
+  int16_t remaining;
+
+  if (powerup_index < 0 || powerup_index >= 2) {
+    display_assert("powerup_index>=0 && powerup_index<2",
+                   "c:\\halo\\SOURCE\\game\\players.c", 0xaea, 1);
+    system_exit(NONE);
+  }
+
+  player = (char *)datum_get(player_data, player_handle);
+  if (powerup_index == 0) {
+    unit_obj = (char *)object_get_and_verify_type(*(int *)(player + 0x34), 3);
+    if ((*(unsigned char *)(unit_obj + 0x1b4) & 0x10) != 0)
+      return 0;
+  }
+
+  remaining = *(int16_t *)(player + 0x68 + powerup_index * 2);
+  if (remaining <= 0) {
+    if (powerup_index == 0) {
+      if (game_engine_running())
+        goto apply_ticks;
+      unit_obj = (char *)object_get_and_verify_type(*(int *)(player + 0x34), 3);
+      *(unsigned char *)(unit_obj + 0x1b4) |= 0x10;
+      *(int16_t *)(unit_obj + 0x3d2) = powerup_index;
+    } else {
+      if (game_engine_running())
+        goto apply_ticks;
+      unit_obj = (char *)object_get_and_verify_type(*(int *)(player + 0x34), 3);
+      *(unsigned char *)(unit_obj + 0x1b4) |= 0x20;
+    }
+  }
+
+apply_ticks:
+  *(int16_t *)(player + 0x68 + powerup_index * 2) =
+      (int16_t)(*(int16_t *)(player + 0x68 + powerup_index * 2) + ticks);
+  return 1;
+}
+
+/* Debug overlay for local player unit aim/camera probes (0xbc520). */
+void players_debug_render(void)
+{
+  int16_t local_player_index;
+  int iter_count;
+  int player_handle;
+  char *player;
+  int unit_handle;
+  char *unit_obj;
+  char *biped_tag;
+  vector3_t world_pos;
+  float height_offset;
+  float camera_height;
+  float position[3];
+  float height_vec[3];
+  float radius;
+  char collision_ok;
+  char collision_buf[0x84];
+
+  if (*(char *)0x46b6c4 == 0)
+    return;
+
+  iter_count = 0;
+  local_player_index = local_player_get_next(NONE);
+  while (local_player_index != NONE) {
+    if (local_player_index < NONE || local_player_index >= 4) {
+      display_assert("((local_player_index>=0) && (local_player_index<"
+                     "MAXIMUM_NUMBER_OF_LOCAL_PLAYERS)) || "
+                     "(local_player_index==NONE)",
+                     "c:\\halo\\SOURCE\\game\\players.c", 0x3ab, 1);
+      system_exit(NONE);
+    }
+
+    player_handle = local_player_get_player_index(local_player_index);
+    if (player_handle != NONE) {
+      player = (char *)datum_get(player_data, player_handle);
+      unit_handle = *(int *)(player + 0x34);
+      if (unit_handle != NONE) {
+        unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
+        biped_get_camera_height_and_offset(unit_handle, &world_pos,
+                                           &height_offset, &camera_height);
+        position[0] = world_pos.x;
+        position[1] = world_pos.y;
+        position[2] = world_pos.z;
+        collision_ok = biped_fix_position(unit_handle, NONE, position,
+                                          position, 2.0f, 1, 1, 0);
+        if (collision_ok) {
+          biped_tag = (char *)tag_get(0x62697064, *(int *)unit_obj);
+          position[2] = position[2] + *(float *)(biped_tag + 0x42c);
+          height_vec[0] = height_offset * *(float *)(*(int *)0x31fc44 + 0);
+          height_vec[1] = height_offset * *(float *)(*(int *)0x31fc44 + 4);
+          height_vec[2] = height_offset * *(float *)(*(int *)0x31fc44 + 8);
+          radius = camera_height;
+          if (FUN_0014e7d0(0x4029, position, height_vec, radius, unit_handle,
+                           collision_buf))
+            FUN_00189860(0, position, height_vec, radius, position);
+          else
+            FUN_00189860(0, position, height_vec, radius, position);
+        }
+      }
+    }
+
+    iter_count++;
+    if (iter_count >= 2)
+      break;
+    local_player_index = local_player_get_next(local_player_index);
+  }
+}
+
+/* Teleport a local player onto a structure-BSP anchor during reconnect (0xbc920). */
+void players_update_before_game_client(int player_handle, int anchor_unit,
+                                       float *position)
+{
+  char *player;
+  char *unit_obj;
+  void *scenario;
+  void *trigger_block;
+  int16_t structure_bsp_index;
+  char cluster_matches;
+  int vehicle_object;
+
+  if (player_handle == NONE) {
+    display_assert("player_handle!=NONE",
+                   "c:\\halo\\SOURCE\\game\\players.c", 0x4c7, 1);
+    system_exit(NONE);
+  }
+  if (position == NULL) {
+    display_assert("position",
+                   "c:\\halo\\SOURCE\\game\\players.c", 0x4c8, 1);
+    system_exit(NONE);
+  }
+
+  player = (char *)datum_get(player_data, player_handle);
+  unit_obj = (char *)object_try_and_get_and_verify_type(
+      *(int *)(player + 0x34), 1);
+  if (unit_obj == NULL)
+    return;
+
+  cluster_matches = 0;
+  structure_bsp_index = *(int16_t *)((char *)players_globals + 0x2a);
+  if (structure_bsp_index != (int16_t)NONE) {
+    scenario = global_scenario_get();
+    trigger_block = tag_block_get_element((char *)scenario + 0x39c,
+                                          (unsigned short)structure_bsp_index,
+                                          8);
+    cluster_matches = FUN_0018ef00((int)*(int16_t *)trigger_block,
+                                   *(int *)(player + 0x34));
+  }
+
+  vehicle_object = FUN_0018e720((int)(unit_obj + 0x50));
+  if (vehicle_object != NONE && !cluster_matches)
+    return;
+
+  if (*(int *)(unit_obj + 0xcc) != NONE) {
+    char *anchor_obj;
+    anchor_obj = (char *)object_get_and_verify_type(anchor_unit, 1);
+    if (*(int *)(unit_obj + 0xcc) != *(int *)(anchor_obj + 0xcc))
+      unit_exit_seat_end(*(int *)(player + 0x34));
+    if (*(int *)(unit_obj + 0xcc) != NONE)
+      return;
+  }
+
+  if (!FUN_000bb670(player_handle, (void *)anchor_unit, position))
+    *((char *)players_globals + 0x2e) = 1;
+  else
+    *((char *)players_globals + 0x2e) = 0;
+}
+
+/* Move all local players onto a structure BSP after load (0xbca60). */
+void players_reconnect_to_structure_bsp(void)
+{
+  void *scenario;
+  void *trigger_block;
+  int16_t structure_bsp_index;
+  int16_t local_player_index;
+  int player_handle;
+  char *player;
+  int unit_handle;
+  float probe_position[3];
+  float floor_height;
+  char adjust_height;
+  int anchor_unit;
+  data_iter_t iter;
+  vector3_t camera_pos;
+  float height_offset;
+  float camera_height;
+  int cluster_index;
+  void *surface_block;
+
+  if (*(int16_t *)((char *)players_globals + 0x2a) == (int16_t)NONE)
+    return;
+  if (*(int16_t *)((char *)players_globals + 0x24) <= 1)
+    return;
+
+  scenario = global_scenario_get();
+  structure_bsp_index = *(int16_t *)((char *)players_globals + 0x2a);
+  trigger_block = tag_block_get_element((char *)scenario + 0x39c,
+                                        (unsigned short)structure_bsp_index, 8);
+  if (*(int16_t *)((char *)trigger_block + 6) == (int16_t)NONE)
+    goto finish;
+
+  probe_position[0] = *(float *)((char *)trigger_block + 0x24);
+  probe_position[1] = *(float *)((char *)trigger_block + 0x28);
+  probe_position[2] = *(float *)((char *)trigger_block + 0x2c);
+  floor_height = 0.0f;
+  while (FUN_0014dc30(0x4029, probe_position, 0)) {
+    probe_position[2] = probe_position[2] + *(float *)0x2533e8;
+    floor_height = probe_position[2];
+    if (floor_height <= *(float *)0x2533e4)
+      break;
+  }
+  adjust_height = (char)(floor_height <= *(float *)0x2533e4);
+
+  anchor_unit = NONE;
+  data_iterator_new(&iter, player_data);
+  while ((player = (char *)data_iterator_next(&iter)) != NULL) {
+    unit_handle = *(int *)(player + 0x34);
+    if (unit_handle == NONE)
+      continue;
+
+    trigger_block = tag_block_get_element((char *)scenario + 0x39c,
+                                          (unsigned short)structure_bsp_index,
+                                          8);
+    if (!FUN_0018ef00((int)*(int16_t *)trigger_block, unit_handle))
+      continue;
+
+    biped_get_camera_height_and_offset(unit_handle, &camera_pos, &height_offset,
+                                       &camera_height);
+    cluster_index = FUN_0018e720((int)(player + 0x50));
+    if (cluster_index == NONE)
+      continue;
+
+    cluster_index = FUN_0018e720(cluster_index + 0x10) & 0x7fffffff;
+    surface_block = tag_block_get_element((char *)scenario_get() + 0xe0,
+                                          cluster_index, 0x5c);
+    if (*(int16_t *)((char *)surface_block + 8) == (int16_t)NONE)
+      continue;
+
+    if (!adjust_height) {
+      probe_position[0] = camera_pos.x;
+      probe_position[1] = camera_pos.y;
+      probe_position[2] = camera_pos.z;
+    } else {
+      probe_position[2] = floor_height + probe_position[2];
+    }
+    anchor_unit = unit_handle;
+    break;
+  }
+
+  if (anchor_unit == NONE) {
+    error(2, (char *)0x26eecc);
+    goto finish;
+  }
+
+  local_player_index = local_player_get_next(NONE);
+  while (local_player_index != NONE) {
+    player_handle = local_player_get_player_index(local_player_index);
+    if (player_handle != NONE) {
+      player = (char *)datum_get(player_data, player_handle);
+      unit_handle = *(int *)(player + 0x34);
+      if (unit_handle != NONE && unit_handle != anchor_unit)
+        players_update_before_game_client(player_handle, anchor_unit,
+                                          probe_position);
+    }
+    local_player_index = local_player_get_next(local_player_index);
+  }
+
+finish:
+  *(int16_t *)((char *)players_globals + 0x2a) = (int16_t)NONE;
+  data_iterator_new(&iter, player_data);
+  while ((player = (char *)data_iterator_next(&iter)) != NULL)
+    *(int16_t *)(player + 0x3c) = (int16_t)NONE;
+}
+
+void FUN_000c0b70(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_00057850(*(unsigned int *)(args + 0), (char)args[4]);
+    hs_return(thread_datum, 0);
+  }
 }
 
 void FUN_000bdf80(int16_t function_index, int thread_datum, char init)
