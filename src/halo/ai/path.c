@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* path.c — AI path planning state builders.
  *
  * Corresponds to path.obj (XBE address range ~0x5dfc0–0x5ff70+).
@@ -2966,53 +2967,25 @@ char FUN_0005f740(unsigned int *path_buf __attribute__((unused)))
 #endif
 
 
-/* FUN_00060070 (0x60070) — XBE naked draft (batch 230). */
-#if defined(__clang__)
-static void (*const b60070_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b60070_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void * FUN_00060070(void *obstacles __attribute__((unused)), int16_t disc_index __attribute__((unused)))
+/* FUN_00060070 (0x60070) — readable C lift (ai campaign). */
+void *FUN_00060070(void *obstacles, int16_t disc_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0xc(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "jl .LFUN_00060070_1\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .LFUN_00060070_1\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00060070_2\n\t"
-      ".LFUN_00060070_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x18c\n\t"
-      "pushl $0x25e990\n\t"
-      "pushl $0x25e930\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00060070_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "leal 0x8(%%edi,%%eax,8), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b60070_assert), [exitfn] "m"(b60070_exitfn)
-      : "memory");
+  extern char DAT_0025e930[];
+  extern char DAT_0025e990[];
+  int16_t count;
+  if (disc_index < 0)
+    goto do_assert;
+  count = *(int16_t *)((char *)obstacles + 2);
+  if (disc_index >= count)
+    goto do_assert;
+  if (count > 0x80)
+    goto do_assert;
+  return (char *)obstacles + 8 + (int)disc_index * 24;
+do_assert:
+  display_assert(DAT_0025e930, DAT_0025e990, 0x18c, 1);
+  system_exit(-1);
+  return (char *)obstacles + 8 + (int)disc_index * 24;
 }
-#else
-#error "FUN_00060070: clang naked draft required"
-#endif
-
 
 /* FUN_000600c0 (0x600c0) — XBE naked draft (batch 226). */
 #if defined(__clang__)
@@ -3060,92 +3033,37 @@ int16_t FUN_000600c0(void *obstacles __attribute__((unused)), int16_t disc_index
 #endif
 
 
-/* FUN_000600f0 (0x600f0) — XBE naked draft (batch 231). */
-#if defined(__clang__)
-static void (*const b600f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b600f0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void * FUN_000600f0(void *path __attribute__((unused)), int16_t step_index __attribute__((unused)))
+/* FUN_000600f0 (0x600f0) — readable C lift (ai campaign). */
+void *FUN_000600f0(void *path, int16_t step_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0xc(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "jl .LFUN_000600f0_1\n\t"
-      "movw 0x2c(%%edi), %%ax\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .LFUN_000600f0_1\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_000600f0_2\n\t"
-      ".LFUN_000600f0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x28\n\t"
-      "pushl $0x25ea14\n\t"
-      "pushl $0x25e9b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000600f0_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%eax\n\t"
-      "leal 0x30(%%edi,%%eax,8), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b600f0_assert), [exitfn] "m"(b600f0_exitfn)
-      : "memory");
+  extern char DAT_0025e9b0[];
+  extern char DAT_0025ea14[];
+  int16_t count;
+  if (step_index < 0)
+    goto do_assert;
+  count = *(int16_t *)((char *)path + 0x2c);
+  if (step_index >= count)
+    goto do_assert;
+  if (count > 0x80)
+    goto do_assert;
+  return (char *)path + 0x30 + (int)step_index * 40;
+do_assert:
+  display_assert(DAT_0025e9b0, DAT_0025ea14, 0x28, 1);
+  system_exit(-1);
+  return (char *)path + 0x30 + (int)step_index * 40;
 }
-#else
-#error "FUN_000600f0: clang naked draft required"
-#endif
 
-
-/* FUN_000601a0 (0x601a0) — XBE naked draft (batch 234). */
-#if defined(__clang__)
-static void (*const b601a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b601a0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int FUN_000601a0(int16_t heap_index __attribute__((unused)))
+/* FUN_000601a0 (0x601a0) — readable C lift (ai campaign). */
+int FUN_000601a0(int16_t heap_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jg .LFUN_000601a0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x39\n\t"
-      "pushl $0x25ea14\n\t"
-      "pushl $0x25eaa4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000601a0_1:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "decl %%eax\n\t"
-      "sarl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b601a0_assert), [exitfn] "m"(b601a0_exitfn)
-      : "memory");
+  extern char DAT_0025eaa4[];
+  extern char DAT_0025ea14[];
+  if (heap_index > 0)
+    return ((int)heap_index - 1) >> 1;
+  display_assert(DAT_0025eaa4, DAT_0025ea14, 0x39, 1);
+  system_exit(-1);
+  return ((int)heap_index - 1) >> 1;
 }
-#else
-#error "FUN_000601a0: clang naked draft required"
-#endif
-
 
 /* 0x601e0 — binary-heap left child index */
 int FUN_000601e0(int heap_index)
@@ -3159,60 +3077,25 @@ int FUN_000601f0(int heap_index)
   return heap_index * 2 + 2;
 }
 
-/* FUN_00060140 (0x60140) — XBE naked draft (batch 224). */
-#if defined(__clang__)
-static void (*const b60140_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b60140_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int16_t FUN_00060140(void *path __attribute__((unused)), int16_t heap_index __attribute__((unused)))
+/* FUN_00060140 (0x60140) — readable C lift (ai campaign). */
+int16_t FUN_00060140(void *path, int16_t heap_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0xc(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "jl .LFUN_00060140_1\n\t"
-      "movw 0x1430(%%edi), %%ax\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .LFUN_00060140_1\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00060140_2\n\t"
-      ".LFUN_00060140_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x31\n\t"
-      "pushl $0x25ea14\n\t"
-      "pushl $0x25ea40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movw 0x1432(%%edi,%%eax,2), %%ax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00060140_2:\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movw 0x1432(%%edi,%%ecx,2), %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [assert] "m"(b60140_assert), [exitfn] "m"(b60140_exitfn)
-      : "memory");
+  extern char DAT_0025ea40[];
+  extern char DAT_0025ea14[];
+  int16_t count;
+  if (heap_index < 0)
+    goto do_assert;
+  count = *(int16_t *)((char *)path + 0x1430);
+  if (heap_index >= count)
+    goto do_assert;
+  if (count > 0x80)
+    goto do_assert;
+  return *(int16_t *)((char *)path + 0x1432 + (int)heap_index * 2);
+do_assert:
+  display_assert(DAT_0025ea40, DAT_0025ea14, 0x31, 1);
+  system_exit(-1);
+  return *(int16_t *)((char *)path + 0x1432 + (int)heap_index * 2);
 }
-#else
-#error "FUN_00060140: clang naked draft required"
-#endif
-
 
 /* FUN_00060200 (0x60200) — XBE naked draft (batch 226). */
 #if defined(__clang__)

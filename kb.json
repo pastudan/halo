@@ -40311,7 +40311,7 @@
         {
           "addr": "0x60070",
           "decl": "void *FUN_00060070(void *obstacles, int16_t disc_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00060070"
         },
         {
@@ -40323,19 +40323,19 @@
         {
           "addr": "0x600f0",
           "decl": "void *FUN_000600f0(void *path, int16_t step_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000600f0"
         },
         {
           "addr": "0x60140",
           "decl": "int16_t FUN_00060140(void *path, int16_t heap_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00060140"
         },
         {
           "addr": "0x601a0",
           "decl": "int FUN_000601a0(int16_t heap_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000601a0"
         },
         {
