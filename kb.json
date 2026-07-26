@@ -24861,7 +24861,8 @@
         },
         {
           "addr": "0x620f0",
-          "decl": "void obstacles_get_discs_in_sphere(void);"
+          "decl": "void obstacles_get_discs_in_sphere(void);",
+          "ported": false
         },
         {
           "addr": "0x62410",
@@ -24928,7 +24929,8 @@
         },
         {
           "addr": "0x105160",
-          "decl": "void FUN_00105160(void);"
+          "decl": "void FUN_00105160(void);",
+          "ported": false
         },
         {
           "addr": "0x105550",
@@ -25180,11 +25182,13 @@
         },
         {
           "addr": "0x192050",
-          "decl": "void leaf_map_build_portal_from_leaves(void);"
+          "decl": "void leaf_map_build_portal_from_leaves(void);",
+          "ported": false
         },
         {
           "addr": "0x192390",
-          "decl": "void FUN_00192390(void);"
+          "decl": "void FUN_00192390(void);",
+          "ported": false
         },
         {
           "addr": "0x1926a0",
@@ -25194,7 +25198,8 @@
         },
         {
           "addr": "0x192710",
-          "decl": "void FUN_00192710(void);"
+          "decl": "void FUN_00192710(void);",
+          "ported": false
         },
         {
           "addr": "0x193970",
@@ -25208,7 +25213,8 @@
         },
         {
           "addr": "0x194070",
-          "decl": "void FUN_00194070(void);"
+          "decl": "void FUN_00194070(void);",
+          "ported": false
         },
         {
           "addr": "0x194360",
@@ -25222,7 +25228,8 @@
         },
         {
           "addr": "0x1943e0",
-          "decl": "void build_structure_lens_flares(void *scenario);"
+          "decl": "void build_structure_lens_flares(void *scenario);",
+          "ported": false
         },
         {
           "addr": "0x1954d0",
@@ -25389,7 +25396,8 @@
         },
         {
           "addr": "0x1975e0",
-          "decl": "void FUN_001975e0(void);"
+          "decl": "void FUN_001975e0(void);",
+          "ported": false
         },
         {
           "addr": "0x1978a0",
