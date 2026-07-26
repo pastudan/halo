@@ -29655,7 +29655,7 @@
         },
         {
           "addr": "0x1b81d0",
-          "decl": "void FUN_001b81d0(int object_handle, void *wheel_buffer);",
+          "decl": "void FUN_001b81d0(int object_handle, void *unused_scratch, void *force_buffer);",
           "ported": false
         },
         {
@@ -33563,7 +33563,7 @@
         },
         {
           "addr": "0xfb320",
-          "decl": "char *FUN_000fb320(void *weapon_obj, int16_t trigger_index);",
+          "decl": "char *FUN_000fb320(void *weapon_obj@<edi>, int16_t trigger_index@<esi>);",
           "ported": false
         },
         {

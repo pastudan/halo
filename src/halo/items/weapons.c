@@ -1443,6 +1443,7 @@ void weapon_delete(int weapon_handle)
   }
 }
 
+/* Jump-table cases at 0xfc244 — function_id is 1..16 (table index = id-1). */
 static float weapon_export_eval_function(int weapon_handle, char *weapon_obj,
                                          char *tag_data, int16_t function_id)
 {
@@ -1451,93 +1452,99 @@ static float weapon_export_eval_function(int weapon_handle, char *weapon_obj,
   int16_t magazine_index;
 
   switch (function_id) {
-  case 1:
-  case 7:
-    value = 1.0f;
-    break;
-  case 2:
+  case 1: /* heat */
     value = *(float *)(weapon_obj + 0x1ec);
     break;
-  case 3:
-  case 4:
+  case 2:
+  case 3: /* magazine rounds fraction */
     magazine_index = (int16_t)(function_id - 2);
     if ((int)magazine_index < *(int *)(tag_data + 0x4f0)) {
       char *mag_def = (char *)tag_block_get_element(
-        (void *)(tag_data + 0x4f0), (int)magazine_index, 0x70);
-      int16_t loaded = *(int16_t *)((char *)weapon_obj +
-                                    ((int)magazine_index * 3 + 0x96) * 4 + 8);
-      if (*(int16_t *)(mag_def + 0xa) != 0)
-        value = (float)loaded / (float) * (int16_t *)(mag_def + 0xa);
+          (void *)(tag_data + 0x4f0), (int)magazine_index, 0x70);
+      int16_t capacity = *(int16_t *)(mag_def + 0xa);
+      int16_t loaded =
+          *(int16_t *)(weapon_obj + (int)magazine_index * 12 + 0x260);
+      if (capacity != 0)
+        value = (float)loaded / (float)capacity;
     }
     break;
-  case 5:
-  case 6:
+  case 4:
+  case 5: /* trigger primary float at entry+0x10 */
     trigger_index = (int16_t)(function_id - 4);
     if ((int)trigger_index < *(int *)(tag_data + 0x4fc))
       value = *(float *)(weapon_get_trigger_entry(weapon_obj, trigger_index) +
                          0x10);
     break;
-  case 8:
-  case 9:
+  case 6: /* constant one */
+    value = 1.0f;
+    break;
+  case 7:
+  case 8: /* trigger secondary float at entry+0x14 */
     trigger_index = (int16_t)(function_id - 7);
     if ((int)trigger_index < *(int *)(tag_data + 0x4fc))
       value = *(float *)(weapon_get_trigger_entry(weapon_obj, trigger_index) +
                          0x14);
     break;
-  case 10:
+  case 9: /* illuminated overheat fraction */
     if ((*(uint8_t *)(weapon_obj + 0x1dc) & 1) != 0 &&
         *(float *)(tag_data + 0x34c) != 1.0f)
       value = (*(float *)(weapon_obj + 0x1ec) - *(float *)(tag_data + 0x34c)) /
               (1.0f - *(float *)(tag_data + 0x34c));
     break;
+  case 10:
   case 11:
-  case 12:
     trigger_index = (int16_t)(function_id - 10);
-    value = FUN_000fb510(weapon_handle, trigger_index);
+    if ((int)trigger_index < *(int *)(tag_data + 0x4fc))
+      value = FUN_000fb510(weapon_handle, trigger_index);
     break;
-  case 13: {
+  case 12: { /* aggregated trigger age / illumination */
     int i;
     value = 0.0f;
     for (i = 0; i < *(int *)(tag_data + 0x4fc); i++) {
       char *trig_def = (char *)tag_block_get_element(
-        (void *)(tag_data + 0x4fc), i, 0x114);
-      char *trigger_entry = weapon_get_trigger_entry(weapon_obj, (int16_t)i);
-      float candidate = 0.0f;
+          (void *)(tag_data + 0x4fc), i, 0x114);
+      char *trigger_entry = FUN_000fb320(weapon_obj, (int16_t)i);
+      float candidate;
 
-      if (*(float *)(trig_def + 0x48) != 0.0f) {
+      if (*(float *)(trig_def + 0x48) > 0.0f) {
         candidate = FUN_000fb510(weapon_handle, (int16_t)i) *
                     *(float *)(trig_def + 0x54);
-        if (candidate > value)
+        if (!(value > candidate))
           value = candidate;
       }
       if (trigger_entry[1] == 3) {
         candidate = (1.0f - *(float *)(trig_def + 0x54)) *
-                      *(float *)(weapon_obj + 0x1f4) +
+                        *(float *)(weapon_obj + 0x1f4) +
                     *(float *)(trig_def + 0x54);
-        if (candidate > value)
+        if (!(value > candidate))
           value = candidate;
       }
-      if (value > *(float *)(trigger_entry + 0x18))
-        *(float *)(trigger_entry + 0x18) = value;
-      else
+      if (!(value > *(float *)(trigger_entry + 0x18)))
         value = *(float *)(trigger_entry + 0x18);
+      *(float *)(trigger_entry + 0x18) = value;
     }
-    if (*(float *)(tag_data + 0x360) * *(float *)(weapon_obj + 0x1ec) > value)
-      value = *(float *)(tag_data + 0x360) * *(float *)(weapon_obj + 0x1ec);
+    {
+      float illuminated =
+          *(float *)(tag_data + 0x360) * *(float *)(weapon_obj + 0x1ec);
+      if (!(value > illuminated))
+        value = illuminated;
+    }
     break;
   }
-  case 14:
+  case 13:
     value = *(float *)(weapon_obj + 0x1f0);
     break;
-  case 15:
-    value = (float) * (int *)(weapon_obj + 0x1f8);
+  case 14:
+    value = *(float *)(weapon_obj + 0x1f8);
     break;
+  case 15:
   case 16:
     trigger_index = (int16_t)(function_id - 15);
     if ((int)trigger_index < *(int *)(tag_data + 0x4fc)) {
       value = *(float *)(weapon_get_trigger_entry(weapon_obj, trigger_index) +
                          0x10);
-      if (game_time_get() - *(int *)(weapon_obj + 0x278) <= 1)
+      /* XBE: zero when age > 1 tick. */
+      if (game_time_get() - *(int *)(weapon_obj + 0x278) > 1)
         value = 0.0f;
     }
     break;
@@ -1553,27 +1560,31 @@ void weapon_export_function_values(int weapon_handle)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
   char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-  char *weapon_root = weapon_obj;
+  char *out_obj = weapon_obj;
   int slot;
 
-  while ((weapon_obj[4] & 1) != 0 && *(int *)(weapon_obj + 0xcc) != -1) {
-    weapon_obj =
-      (char *)object_get_and_verify_type(*(int *)(weapon_obj + 0xcc), -1);
-    if ((weapon_obj[4] & 1) == 0)
-      break;
+  /* Walk attached parents; function slots are written on the top object. */
+  if ((out_obj[4] & 1) != 0) {
+    while (*(int *)(out_obj + 0xcc) != -1) {
+      char *parent =
+          (char *)object_get_and_verify_type(*(int *)(out_obj + 0xcc), -1);
+      out_obj = parent;
+      if ((out_obj[4] & 1) == 0)
+        break;
+    }
   }
 
   for (slot = 0; slot < 4; slot++) {
     int16_t function_id = *(int16_t *)(tag_data + 0x330 + slot * 2);
-    float *out = (float *)(weapon_root + 0xd4 + slot * 4);
+    float *out = (float *)(out_obj + 0xd4 + slot * 4);
 
     if (function_id == 0)
       continue;
-    if ((int)function_id - 1 > 15)
+    if ((unsigned)((int)function_id - 1) > 15)
       continue;
 
-    *out = weapon_export_eval_function(weapon_handle, weapon_root, tag_data,
-                                     function_id);
+    *out = weapon_export_eval_function(weapon_handle, weapon_obj, tag_data,
+                                       function_id);
   }
 }
 

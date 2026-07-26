@@ -603,27 +603,22 @@ void vehicle_new(void)
   vehicle_reset();
 }
 
-/* 0x1b5890 — Preprocess vehicle antenna node orientations from rtna tag. */
+/* 0x1b5890 — Preprocess vehicle node orientations from model_animations
+ * (antr / 'rtna') tag referenced at vehicle_tag+0x44. */
 static float vehicle_clamp_unit_float(float value)
 {
   if (!(value > 0.0f))
     return 0.0f;
-  if (value > 1.0f)
+  if (!(value <= 1.0f))
     return 1.0f;
   return value;
-}
-
-static void vehicle_preprocess_apply_animation(char *animation, float frame,
-                                               void *node_output)
-{
-  FUN_00122690(animation, frame, node_output);
 }
 
 void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
 {
   char *vehicle;
   char *vehicle_tag;
-  char *antenna_tag;
+  char *animations_tag;
   char *node_block;
   int16_t *node_indices;
   int node_count;
@@ -633,52 +628,50 @@ void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
   float steer;
 
   vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
-  vehicle_tag = (char *)tag_get('ihev', *(int *)vehicle);
+  vehicle_tag = (char *)tag_get(0x76656869, *(int *)vehicle); /* 'vehi' */
 
   if (*(int *)(vehicle_tag + 0x44) == -1)
     return;
 
-  antenna_tag = (char *)tag_get('rtna', *(int *)(vehicle_tag + 0x44));
-  node_block = (char *)tag_block_get_element(antenna_tag + 0x24, 0, 0x74);
+  animations_tag =
+      (char *)tag_get(0x616e7472, *(int *)(vehicle_tag + 0x44)); /* 'antr' */
+  if (*(int *)(animations_tag + 0x24) == 0)
+    return;
+  node_block = (char *)tag_block_get_element(animations_tag + 0x24, 0, 0x74);
   if (node_block == 0)
     return;
 
   node_count = *(int *)(node_block + 0x5c);
   node_indices = *(int16_t **)(node_block + 0x60);
 
+  /* Animation graph lookups use animations_tag+0x74 (not vehicle_tag). */
   if (node_count > 0 && node_indices[0] != (int16_t)-1) {
-    char *animation =
-      (char *)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[0],
-                                    0xb4);
-    FUN_00122e50((int)animation, (float *)(vehicle + 0x434), 0.0f, 0.0f,
-                 (int)node_output);
+    char *animation = (char *)tag_block_get_element(
+        animations_tag + 0x74, (int)node_indices[0], 0xb4);
+    /* blend_params = node_block; direction = vehicle throttle-aim float. */
+    FUN_00122e50((int)animation, (float *)node_block,
+                 *(float *)(vehicle + 0x434), 0.0f, (int)node_output);
   }
 
   if (node_count > 1 && node_indices[1] != (int16_t)-1) {
-    char *animation =
-      (char *)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[1],
-                                    0xb4);
+    char *animation = (char *)tag_block_get_element(
+        animations_tag + 0x74, (int)node_indices[1], 0xb4);
     steer = triple_product3d((float *)(vehicle + 0x18),
                              (float *)(vehicle + 0x24),
                              (float *)(vehicle + 0x30));
     steer /= *(float *)(vehicle_tag + 0x2f8);
     steer += *(float *)0x2533c8;
     steer *= *(float *)0x253398;
-    if (steer <= 0.0f)
-      frame = 0.0f;
-    else if (steer >= 1.0f)
-      frame = 1.0f;
-    else
-      frame = steer;
+    frame = vehicle_clamp_unit_float(steer);
     frame *= (float)(*(int16_t *)(animation + 0x22) - 1);
-    vehicle_preprocess_apply_animation(animation, frame, node_output);
+    FUN_00122690(animation, frame, node_output);
   }
 
   if (node_count > 2 && node_indices[2] != (int16_t)-1) {
-    char *animation =
-      (char *)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[2],
-                                    0xb4);
-    if (*(float *)(vehicle + 0x42c) <= 0.0f) {
+    char *animation = (char *)tag_block_get_element(
+        animations_tag + 0x74, (int)node_indices[2], 0xb4);
+    /* XBE: negative path only when velocity < 0 (not <=). */
+    if (*(float *)(vehicle + 0x42c) < 0.0f) {
       frame = *(float *)(vehicle + 0x42c) / *(float *)(vehicle_tag + 0x2fc);
       frame *= *(float *)0x253398;
       frame = *(float *)0x253398 - frame;
@@ -688,44 +681,35 @@ void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
       frame *= *(float *)0x253398;
     }
     frame *= (float)(*(int16_t *)(animation + 0x22) - 1);
-    vehicle_preprocess_apply_animation(animation, frame, node_output);
+    FUN_00122690(animation, frame, node_output);
   }
 
   if (node_count > 3 && node_indices[3] != (int16_t)-1) {
-    char *animation =
-      (char *)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[3],
-                                    0xb4);
+    char *animation = (char *)tag_block_get_element(
+        animations_tag + 0x74, (int)node_indices[3], 0xb4);
     steer = *(float *)(vehicle + 0x20) * *(float *)(vehicle + 0x2c) +
             *(float *)(vehicle + 0x1c) * *(float *)(vehicle + 0x28) +
             *(float *)(vehicle + 0x18) * *(float *)(vehicle + 0x24);
-    if (steer <= 0.0f)
-      frame = 0.0f;
-    else if (steer >= 1.0f)
-      frame = 1.0f;
-    else
-      frame = steer;
+    frame = vehicle_clamp_unit_float(steer);
     frame /= fabsf(*(float *)(vehicle_tag + 0x2f8));
-    if (frame <= 0.0f)
-      frame = 0.0f;
-    else if (frame >= 1.0f)
-      frame = 1.0f;
+    frame = vehicle_clamp_unit_float(frame);
     frame *= (float)(*(int16_t *)(animation + 0x22) - 1);
-    vehicle_preprocess_apply_animation(animation, frame, node_output);
+    FUN_00122690(animation, frame, node_output);
   }
 
   if (node_count > 4 && node_indices[4] != (int16_t)-1)
-    (void)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[4], 0xb4);
+    (void)tag_block_get_element(animations_tag + 0x74, (int)node_indices[4],
+                                0xb4);
 
   if (node_count > 5 && node_indices[5] != (int16_t)-1) {
-    char *animation =
-      (char *)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[5],
-                                    0xb4);
+    char *animation = (char *)tag_block_get_element(
+        animations_tag + 0x74, (int)node_indices[5], 0xb4);
     if (*(float *)(vehicle_tag + 0x310) > 0.0f)
       frame = *(float *)(vehicle + 0x438) / *(float *)(vehicle_tag + 0x310);
     else
       frame = 0.0f;
     frame *= (float)*(int16_t *)(animation + 0x22);
-    vehicle_preprocess_apply_animation(animation, frame, node_output);
+    FUN_00122690(animation, frame, node_output);
   }
 
   wheel_count = *(int *)(node_block + 0x68);
@@ -740,7 +724,7 @@ void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
     if (anim_index == (int16_t)-1)
       continue;
 
-    wheel_animation = (char *)tag_block_get_element(vehicle_tag + 0x74,
+    wheel_animation = (char *)tag_block_get_element(animations_tag + 0x74,
                                                     (int)anim_index, 0xb4);
     if ((unsigned char)vehicle[0x44c + wheel_index] == 0xff)
       frame = 1.0f;
@@ -851,25 +835,43 @@ void FUN_001b6250(int vehicle_handle, void *physics_buffer,
   char *vehi;
   char *phys;
   char *ws;
+  float *forward;
+  float *up;
+  float *obj_up;
+  float speed;
   float angle;
+  float tilted[3];
+  float cross_a[3];
   float force[3];
-  float local_mat[12];
+  float aux[12];
+  float bank;
+  float ground_speed;
+  float lift;
+  float c0, c1, c2;
+  int sign;
 
   veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
   vehi = (char *)tag_get(0x76656869, *(int *)veh);
   phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c));
   ws = (char *)wheel_state;
-  if (*(int *)(phys + 0x68) != 3)
+  if (*(int *)(phys + 0x68) != 3) {
+    FUN_00154270(vehicle_handle, 0, physics_buffer, 0, 0);
     return;
+  }
 
-  angle = *(float *)(veh + 0x434) * *(float *)0x253398;
-  if (angle > 1.0f)
-    angle = 1.0f;
-  angle = 1.0f - angle;
+  forward = (float *)(veh + 0x24);
+  obj_up = (float *)(veh + 0x30);
+  up = *(float **)0x31fc44;
+
+  speed = fabsf(magnitude3d((float *)(veh + 0x18)) * *(float *)0x254e04);
+  if (!(speed <= 1.0f))
+    speed = 1.0f;
+  angle = (1.0f - speed) * (*(float *)(veh + 0x434) * *(float *)0x253398);
 
   *(float *)(ws + 4) = *(float *)(veh + 0x42c);
   *(int *)(ws + 0xc) = 0x3b449ba6;
   *(int *)(ws + 0x1c) = 0;
+  *(int *)(ws + 0x20) = 0;
   *(float *)(ws + 0x24) = sinf(angle);
   *(float *)(ws + 0x28) = cosf(angle);
   *(int *)(ws + 0x6c) = 0x3b449ba6;
@@ -883,34 +885,59 @@ void FUN_001b6250(int vehicle_handle, void *physics_buffer,
   *(int *)(ws + 0xe4) = 0;
   *(int *)(ws + 0xe8) = 0x3f800000;
 
-  force[0] = 0.0f;
-  force[1] = 0.0f;
-  force[2] = 0.0f;
-  if (magnitude3d((float *)(veh + 0x18)) > 0.0f) {
-    float forward[3];
-    float ground;
-    float scale;
-    forward[0] = *(float *)(veh + 0x24);
-    forward[1] = *(float *)(veh + 0x28);
-    forward[2] = *(float *)(veh + 0x2c);
-    if (magnitude3d(forward) > 0.0f) {
-      ground = *(float *)(veh + 0x3c) * forward[0] +
-               *(float *)(veh + 0x40) * forward[1] +
-               *(float *)(veh + 0x44) * forward[2];
-      scale = *(float *)(phys + 0x50);
-      if (scale > *(float *)0x2b7ce4)
-        scale = *(float *)0x2b7ce4;
-      else if (scale < *(float *)0x2b7ce0)
-        scale = *(float *)0x2b7ce0;
-      force[0] = scale * forward[0];
-      force[1] = scale * forward[1];
-      force[2] = scale * forward[2];
-      (void)ground;
-    }
+  csmemset(aux, 0, sizeof(aux));
+  tilted[0] = (-forward[2]) * forward[0] + up[0];
+  tilted[1] = (-forward[2]) * forward[1] + up[1];
+  tilted[2] = (-forward[2]) * forward[2] + up[2];
+
+  if (normalize3d(tilted) == 0.0f) {
+    force[0] = 0.0f;
+    force[1] = 0.0f;
+    force[2] = 0.0f;
+    FUN_00154270(vehicle_handle, ws, physics_buffer, force, aux);
+    return;
   }
 
-  csmemset(local_mat, 0, sizeof(local_mat));
-  FUN_00154270(vehicle_handle, ws, physics_buffer, force, local_mat);
+  /* obj_up × forward */
+  cross_a[0] = obj_up[1] * forward[2] - obj_up[2] * forward[1];
+  cross_a[1] = obj_up[2] * forward[0] - obj_up[0] * forward[2];
+  cross_a[2] = forward[1] * obj_up[0] - obj_up[1] * forward[0];
+
+  /* (veh+0x18) × forward, dotted with world-up, scaled by 2π */
+  c0 = *(float *)(veh + 0x20) * forward[1] - *(float *)(veh + 0x1c) * forward[2];
+  c1 = forward[2] * *(float *)(veh + 0x18) - *(float *)(veh + 0x20) * forward[0];
+  c2 = *(float *)(veh + 0x1c) * forward[0] - forward[1] * *(float *)(veh + 0x18);
+  bank = (c1 * up[1] + c2 * up[2] + c0 * up[0]) * *(float *)0x255a54;
+  rotate_vector3d_by_sincos(tilted, forward, sinf(bank), cosf(bank));
+
+  /* FUN_0010c510(tilted, obj_up) — angle left in ST0 as bank sense. */
+  bank = FUN_0010c510(tilted, obj_up);
+  if (cross_a[0] * tilted[0] + cross_a[1] * tilted[1] + cross_a[2] * tilted[2] >
+      0.0f)
+    bank = -bank;
+
+  ground_speed = forward[0] * *(float *)(veh + 0x3c) +
+                 forward[1] * *(float *)(veh + 0x40) +
+                 forward[2] * *(float *)(veh + 0x44);
+
+  if (bank == 0.0f)
+    sign = 0;
+  else if (bank < 0.0f)
+    sign = -1;
+  else
+    sign = 1;
+
+  lift = fabsf(bank) * sqrtf(*(double *)0x2b7ce8) * (float)sign - ground_speed;
+  if (lift < *(float *)0x2b7ce4)
+    lift = *(float *)0x2b7ce4;
+  else if (!(lift <= *(float *)0x2b7ce0))
+    lift = *(float *)0x2b7ce0;
+  lift *= *(float *)(phys + 0x50);
+  force[0] = lift * forward[0];
+  force[1] = lift * forward[1];
+  force[2] = lift * forward[2];
+
+  FUN_00154270(vehicle_handle, ws, physics_buffer, force, aux);
 }
 
 /* FUN_001b6560 (0x1b6560) — wheel suspension force for physics type 2. */
@@ -1915,23 +1942,137 @@ char vehicle_stuck(int unit_handle, float *vec)
   (void)local_60;
 }
 
-/* 0x1b81d0 — reset vehicle wheel state from object definition */
-void FUN_001b81d0(int object_handle, void *wheel_buffer)
+/* 0x1b81d0 — vehicle ground force / wheel integration.
+ * Caller pushes (handle, scratch_a, force_buffer). scratch_a is unused here. */
+void FUN_001b81d0(int object_handle, void *unused_scratch, void *force_buffer)
 {
   char *object;
   char *vehicle_tag;
   char *physics_tag;
-  int wheel_stride;
+  float *forward;
+  float speed_ratio;
+  float damping;
+  float delta;
+  float ground[3];
+  float tilted[3];
+  float left[3];
+  float force[3];
+  float aux[3];
+  float mat_a[12];
+  float mat_b[12];
+  float mat_c[12];
+  float quat[4];
+  float angle;
+  float axis[3];
+  float yaw;
+  float scale;
+  float mass_term;
+  unsigned short flags;
 
+  (void)unused_scratch;
   object = (char *)object_get_and_verify_type(object_handle, 2);
-  vehicle_tag = (char *)tag_get('ihev', *(int *)object);
-  physics_tag = (char *)tag_get('syhp', *(int *)(vehicle_tag + 0x8c));
-  if (*(unsigned short *)(object + 0x424) & 2) {
-    wheel_stride = *(int *)(physics_tag + 0x74) * 0x130;
-    csmemset(wheel_buffer, 0, wheel_stride);
+  vehicle_tag = (char *)tag_get(0x76656869, *(int *)object); /* 'vehi' */
+  physics_tag =
+      (char *)tag_get(0x70687973, *(int *)(vehicle_tag + 0x8c)); /* 'phys' */
+  flags = *(unsigned short *)(object + 0x424);
+
+  if ((flags & 2) != 0) {
+    csmemset(force_buffer, 0, *(int *)(physics_tag + 0x74) * 0x130);
     FUN_001b6e20(object_handle);
+    return;
   }
-  (void)physics_tag;
+
+  /* Clamp forward speed into [0, max_forward], square, normalize by max. */
+  if (*(float *)(object + 0x42c) < 0.0f)
+    speed_ratio = 0.0f;
+  else if (!(*(float *)(object + 0x42c) <= *(float *)(vehicle_tag + 0x2f8)))
+    speed_ratio = *(float *)(vehicle_tag + 0x2f8);
+  else
+    speed_ratio = *(float *)(object + 0x42c);
+  speed_ratio /= *(float *)(vehicle_tag + 0x2f8);
+  speed_ratio *= speed_ratio;
+
+  if ((flags & 4) != 0)
+    damping = *(float *)0x25337c; /* 0.25 */
+  else if ((flags & 8) != 0)
+    damping = 1.0f;
+  else
+    damping = *(float *)0x25afcc; /* 0.75 */
+
+  delta = (1.0f - speed_ratio) * damping * *(float *)(object + 0x2e8) -
+          *(float *)(object + 0x444);
+  if (delta < *(float *)0x2b7d44)
+    delta = *(float *)0x2b7d44;
+  else if (!(delta <= *(float *)0x2533e8))
+    delta = *(float *)0x2533e8;
+  *(float *)(object + 0x444) += delta;
+
+  ground[0] = *(float *)(object + 0x1d4);
+  ground[1] = *(float *)(object + 0x1d8);
+  ground[2] = *(float *)(object + 0x1dc);
+
+  scale = speed_ratio * *(float *)(object + 0x2e8);
+  *(float *)(object + 0x448) = scale;
+
+  /* Build nearly-vertical tilt from ground normal. */
+  tilted[0] = -(ground[0] * ground[2]);
+  tilted[1] = -(ground[1] * ground[2]);
+  tilted[2] = 1.0f - ground[2] * ground[2];
+  if (normalize3d(tilted) == 0.0f) {
+    tilted[0] = 1.0f;
+    tilted[1] = 0.0f;
+    tilted[2] = 0.0f;
+  }
+
+  forward = (float *)(object + 0x24);
+  left[0] = *(float *)(object + 0x18);
+  left[1] = *(float *)(object + 0x1c);
+  left[2] = *(float *)(object + 0x20);
+
+  {
+    float facing_dot = left[2] * forward[2] + left[1] * forward[1] +
+                       left[0] * forward[0];
+    float drive = (*(float *)(object + 0x42c) - facing_dot) * scale *
+                  *(float *)(physics_tag + 8) * *(float *)0x2533e8;
+    float turn = fabsf(*(float *)(object + 0x42c) /
+                       *(float *)(vehicle_tag + 0x2f8)) *
+                     *(float *)0x2b7cf4 +
+                 *(float *)(object + 0x444) * *(float *)0x255b9c;
+    turn *= *(float *)0x32512c * *(float *)(physics_tag + 8);
+
+    force[0] = turn * *(float *)(object + 0x30) + drive * forward[0];
+    force[1] = turn * *(float *)(object + 0x34) + drive * *(float *)(object + 0x28);
+    force[2] = turn * *(float *)(object + 0x38) + drive * *(float *)(object + 0x2c);
+  }
+
+  yaw = (left[1] * ground[0] - left[0] * ground[1]) * *(float *)0x2568bc;
+  yaw /= fabsf(*(float *)(vehicle_tag + 0x2f8));
+  FUN_0010c690(tilted, ground, sinf(yaw), cosf(yaw));
+
+  matrix_from_forward_and_up(mat_a, forward, (float *)(object + 0x30));
+  matrix_from_forward_and_up(mat_b, tilted, ground);
+  matrix_inverse(mat_b, mat_b);
+  matrix4x3_multiply(mat_a, mat_b, mat_c);
+  FUN_00109fc0(mat_c, quat);
+  FUN_0010caf0(quat, &angle, axis);
+
+  angle *= *(float *)0x2546a4;
+  mass_term = *(float *)physics_tag * *(float *)physics_tag *
+              *(float *)(physics_tag + 8) * *(float *)0x2533e8;
+
+  aux[0] = (axis[0] * angle - *(float *)(object + 0x3c)) * mass_term;
+  aux[1] = (axis[1] * angle - *(float *)(object + 0x40)) * mass_term;
+  aux[2] = (axis[2] * angle - *(float *)(object + 0x44)) * mass_term;
+
+  force[0] *= *(float *)(object + 0x2e8);
+  force[1] *= *(float *)(object + 0x2e8);
+  force[2] *= *(float *)(object + 0x2e8);
+  aux[0] *= *(float *)(object + 0x2e8);
+  aux[1] *= *(float *)(object + 0x2e8);
+  aux[2] *= *(float *)(object + 0x2e8);
+
+  FUN_00154270(object_handle, 0, force_buffer, force, aux);
+  FUN_001b6e20(object_handle);
 }
 
 /* 0x1b8570 — vehicle physics setup from object definition */

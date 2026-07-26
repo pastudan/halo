@@ -12921,9 +12921,8 @@ int glow_trailing_particle_new(int glow_widget_ptr)
   float scale;
   float lifetime;
   int *seed;
-  float dir[3];
 
-  glow_def = (char *)tag_get('!wlg', *(int *)(widget + 0x224));
+  glow_def = (char *)tag_get(0x676c7721, *(int *)(widget + 0x224)); /* '!wlg' */
   particle_table = *(data_t **)0x5a90cc;
   particle_index = data_new_at_index(particle_table);
   if (particle_index == -1)
@@ -12932,15 +12931,18 @@ int glow_trailing_particle_new(int glow_widget_ptr)
   particle = (char *)datum_get(particle_table, particle_index);
   *(int *)(particle + 4) = particle_index;
 
+  /* XBE: path widgets (>1 marker) sample lifetime into particle+0x28, then
+   * call get_particle_world_position(widget, particle, 0). */
   if (*(int16_t *)(widget + 4) > 1) {
-    float path_min =
-        *(float *)(glow_def + 0x108) * *(float *)(widget + 0x234);
     float path_max =
         *(float *)(glow_def + 0x10c) * *(float *)(widget + 0x234);
+    float path_min =
+        *(float *)(glow_def + 0x108) * *(float *)(widget + 0x234);
 
     seed = (int *)random_math_get_local_seed_address();
-    lifetime = random_real_range(seed, path_min, path_max);
-    get_particle_world_position(glow_widget_ptr, (int)particle, lifetime);
+    *(float *)(particle + 0x28) =
+        random_real_range(seed, path_min, path_max);
+    get_particle_world_position(glow_widget_ptr, (int)particle, 0.0f);
   } else {
     *(float *)(particle + 0x2c) = *(float *)(widget + 0x68);
     *(float *)(particle + 0x30) = *(float *)(widget + 0x6c);
@@ -12949,56 +12951,57 @@ int glow_trailing_particle_new(int glow_widget_ptr)
 
   direction_type = *(int16_t *)(glow_def + 0x26);
   if (direction_type == 0) {
-    dir[0] = 0.0f;
-    dir[1] = 0.0f;
-    dir[2] = 1.0f;
+    *(float *)(particle + 0x38) = 0.0f;
+    *(float *)(particle + 0x3c) = 0.0f;
+    *(float *)(particle + 0x40) = 1.0f;
   } else if (direction_type == 1) {
     int16_t point_index = *(int16_t *)(particle + 2);
-    char *point =
-        widget + 0x5c + (int)point_index * 0x6c;
+    char *point = widget + 0x5c + (int)point_index * 0x6c;
 
-    dir[0] = *(float *)(point + 0);
-    dir[1] = *(float *)(point + 4);
-    dir[2] = *(float *)(point + 8);
+    *(float *)(particle + 0x38) = *(float *)(point + 0);
+    *(float *)(particle + 0x3c) = *(float *)(point + 4);
+    *(float *)(particle + 0x40) = *(float *)(point + 8);
   } else if (direction_type == 2) {
     seed = (int *)random_math_get_local_seed_address();
-    dir[0] = random_real_range(seed, -1.0f, 1.0f);
-    dir[1] = random_real_range(seed, -1.0f, 1.0f);
-    dir[2] = random_real_range(seed, -1.0f, 1.0f);
-    normalize3d(dir);
+    *(float *)(particle + 0x38) = random_real_range(seed, -1.0f, 1.0f);
+    seed = (int *)random_math_get_local_seed_address();
+    *(float *)(particle + 0x3c) = random_real_range(seed, -1.0f, 1.0f);
+    seed = (int *)random_math_get_local_seed_address();
+    *(float *)(particle + 0x40) = random_real_range(seed, -1.0f, 1.0f);
+    normalize3d((float *)(particle + 0x38));
   } else {
-    display_assert((char *)0x0029abfc, (char *)0x0029ab60, 996, 1);
+    display_assert((char *)0x0029abfc, (char *)0x0029ab60, 0x3e4, 1);
     system_exit(-1);
   }
 
   scale = *(float *)(glow_def + 0x104) * *(float *)0x2546a4;
-  *(float *)(particle + 0x38) = dir[0] * scale;
-  *(float *)(particle + 0x3c) = dir[1] * scale;
-  *(float *)(particle + 0x40) = dir[2] * scale;
+  *(float *)(particle + 0x38) *= scale;
+  *(float *)(particle + 0x3c) *= scale;
+  *(float *)(particle + 0x40) *= scale;
 
   seed = (int *)random_math_get_local_seed_address();
   lifetime = random_real_range(seed, *(float *)(glow_def + 0xa0),
                                *(float *)(glow_def + 0xa4));
-  if (*(int16_t *)(widget + 0x228) != 0)
-    lifetime /= (float)*(int16_t *)(widget + 0x228);
-  *(float *)(particle + 0x20) = lifetime;
+  /* XBE always divides by widget+0x228 (may be 0). */
+  *(float *)(particle + 0x20) =
+      lifetime / (float)*(int16_t *)(widget + 0x228);
+
+  *(int16_t *)(particle + 0x52) =
+      (int16_t)(int)(*(float *)(glow_def + 0x100) * *(float *)0x253394);
 
   seed = (int *)random_math_get_local_seed_address();
   scale = random_real_range(seed, 0.0f, 1.0f);
   *(float *)(particle + 0xc) = 1.0f;
-  *(float *)(particle + 0x10) =
-      *(float *)(glow_def + 0xb8) +
-      (*(float *)(glow_def + 0xc8) - *(float *)(glow_def + 0xb8)) * scale;
-  *(float *)(particle + 0x14) =
-      *(float *)(glow_def + 0xbc) +
-      (*(float *)(glow_def + 0xcc) - *(float *)(glow_def + 0xbc)) * scale;
-  *(float *)(particle + 0x18) =
-      *(float *)(glow_def + 0xc0) +
-      (*(float *)(glow_def + 0xd0) - *(float *)(glow_def + 0xc0)) * scale;
-
   *(int *)(particle + 0x54) |= 2;
-  *(int16_t *)(particle + 0x52) =
-      (int16_t)(int)(*(float *)(glow_def + 0x100) * *(float *)0x253394);
+  *(float *)(particle + 0x10) =
+      (*(float *)(glow_def + 0xc8) - *(float *)(glow_def + 0xb8)) * scale +
+      *(float *)(glow_def + 0xb8);
+  *(float *)(particle + 0x14) =
+      (*(float *)(glow_def + 0xcc) - *(float *)(glow_def + 0xbc)) * scale +
+      *(float *)(glow_def + 0xbc);
+  *(float *)(particle + 0x18) =
+      (*(float *)(glow_def + 0xd0) - *(float *)(glow_def + 0xc0)) * scale +
+      *(float *)(glow_def + 0xc0);
 
   return (int)particle;
 }

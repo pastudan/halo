@@ -2152,12 +2152,12 @@ shield_recharge:
   }
 
 write_outputs:
-  if (shield_apply > *(float *)(coll + 0x108)) {
-    if (*(float *)(obj + 0x94) == 0.0f) {
-      FUN_001d9068();
-      *(short *)(obj + 0xb4) =
-          (short)(int)(*(float *)(coll + 0x10c) * *(float *)0x253394);
-    }
+  /* XBE: stun unless (shield_apply < coll+0x108 AND shield != 0). */
+  if (!(shield_apply < *(float *)(coll + 0x108) &&
+        *(float *)(obj + 0x94) != 0.0f)) {
+    FUN_001d9068();
+    *(short *)(obj + 0xb4) =
+        (short)(int)(*(float *)(coll + 0x10c) * *(float *)0x253394);
   }
   *shield_damage = shield_apply;
   *body_damage = remaining;
