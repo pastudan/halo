@@ -5028,3 +5028,32 @@ void FUN_000c08b0(int16_t function_index, int thread_datum, char init)
     hs_return(thread_datum, 0);
   }
 }
+/* --- players.obj orphan shells (2026-07-26) --- */
+
+/* 0xbae20 */
+bool FUN_000bae20(int player_unit_handle, int nearby_unit_handle)
+{
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+
+  object_try_and_get_and_verify_type(0, 0);
+  tag_get('paew', 0);
+  unit_count_weapons(0);
+  unit_weapon_is_new(0, 0);
+  /* test (char)eax, (char)eax -> je 0xbae68 */
+  /* relift: test byte ptr [ecx + 0x308], 0x10 -> jne 0xbae9d */
+  /* test ebx, ebx -> je 0xbae9d */
+  game_engine_running();
+  /* test (char)eax, (char)eax -> jne 0xbae88 */
+  unit_weapon_is_new(0, 0);
+  /* test (char)eax, (char)eax -> je 0xbae88 */
+  /* cmp ebx, 2 -> jl 0xbae9d */
+  game_engine_can_pick_up_weapon(0, 0);
+  /* test (char)eax, (char)eax -> jne 0xbae9d */
+  return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+}

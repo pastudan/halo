@@ -1895,3 +1895,11 @@ void FUN_001cb0c0(int channel)
   (void)edi;
   (void)ebp;
 }
+/* --- sound_dsound_xbox.obj orphan shells (2026-07-26) --- */
+
+/* 0x20f069 */
+bool dsound_stream_is_active(void *stream)
+{
+  (void)stream;
+  return 0;
+}

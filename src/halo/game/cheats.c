@@ -608,3 +608,34 @@ void FUN_000a6930(int unused_arg_0, unsigned short unused_arg_1)
   (void)edx;
   (void)esi;
 }
+/* --- cheats.obj orphan shells (2026-07-26) --- */
+
+/* 0xa6470 */
+int FUN_000a6470(int16_t local_player_index, float *field_2c, float *field_30, float *scratch_a, float *scratch_b)
+{
+  int eax = 0;
+  int ebx = 0;
+  int edx = 0;
+  int edi = 0;
+
+  director_get_perspective(ebx);
+  /* cmp (int16_t)eax, 1 -> jne 0xa65c7 */
+  local_player_get_player_index(ebx);
+  datum_get((void *)(uintptr_t)eax, 0);
+  unit_get_aiming_unit_index(0);
+  player_control_get_zoom_level(ebx);
+  FUN_000a5610();
+  /* test (char)eax, (char)eax -> je 0xa65c7 */
+  observer_get_camera(edx);
+  FUN_000a6030();
+  /* test (char)eax, (char)eax -> je 0xa65c7 */
+  vector_to_angles((float *)(uintptr_t)edi, (float *)(uintptr_t)edx);
+  object_get_root_location(0, (float *)(uintptr_t)eax, (float *)0);
+  object_get_root_location(0, (float *)(uintptr_t)edx, (float *)0);
+  return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)edx;
+  (void)edi;
+}

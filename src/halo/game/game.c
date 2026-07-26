@@ -1490,3 +1490,11 @@ void slayer_engine_display_score(void)
   (void)esi;
   (void)edi;
 }
+/* --- game.obj orphan shells (2026-07-26) --- */
+
+/* 0xa7470 */
+void FUN_000A7470(void)
+{
+  /* relift: no calls detected — manual review */
+  (void)0;
+}

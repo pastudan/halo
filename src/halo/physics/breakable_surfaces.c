@@ -1038,3 +1038,10 @@ void FUN_001457d0(int a0, int a1, int a2, int a3)
 {
   FUN_00145660();
 }
+/* --- breakable_surfaces.obj orphan shells (2026-07-26) --- */
+
+/* orphan 0x1459d0 */
+void breakable_surfaces_reset(void)
+{
+
+}

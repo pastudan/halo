@@ -201,3 +201,10 @@ void FUN_001dc559(void)
 {
 
 }
+/* --- LIBCMT:wcsncpy.obj orphan shells (2026-07-26) --- */
+
+/* orphan 0x1dbea9 */
+void FUN_001dbea9(void)
+{
+
+}

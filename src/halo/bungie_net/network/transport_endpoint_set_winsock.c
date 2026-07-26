@@ -1813,3 +1813,44 @@ void FUN_00084970(void)
   (void)esi;
   (void)edi;
 }
+/* --- transport_endpoint_set_winsock.obj orphan shells (2026-07-26) --- */
+
+/* 0x83930 */
+int FUN_00083930(int af, int type, int protocol)
+{
+  int eax = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  /* relift: FUN_002255f6(0, 0, 0, 0); */
+  /* cmp esi, -1 -> je 0x83a47 */
+  /* cmp edi, 2 -> jne 0x8397e */
+  /* relift: FUN_00225188(0, 65535, 32, 0); */
+  /* test eax, eax -> je 0x8397e */
+  GetLastError();
+  winsock_error_report(0);
+  /* relift: FUN_00225188(0, 65535, 0, 0); */
+  /* test eax, eax -> je 0x839aa */
+  GetLastError();
+  winsock_error_report(0);
+  /* relift: FUN_0022485c(0, 65535, 4097, 0); */
+  /* relift: cmp dword ptr [ebp - 4], edi -> jge 0x83a02 */
+  /* relift: FUN_00225188(0, 65535, 4097, 0); */
+  /* test eax, eax -> je 0x83a02 */
+  GetLastError();
+  winsock_error_report(0);
+  /* relift: FUN_0022485c(0, 65535, 4098, 0); */
+  /* test eax, eax -> jne 0x83a47 */
+  /* relift: cmp dword ptr [ebp - 4], edi -> jge 0x83a55 */
+  /* relift: FUN_00225188(0, 65535, 4098, 0); */
+  /* test eax, eax -> je 0x83a55 */
+  GetLastError();
+  winsock_error_report(0);
+  return 0;
+
+  (void)eax;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
+}

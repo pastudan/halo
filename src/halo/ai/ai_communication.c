@@ -1646,3 +1646,10 @@ void FUN_00046f10(int16_t type, int unit_handle, int param3, int param4,
   (void)param7;
   (void)dialogue;
 }
+/* --- ai_communication.obj orphan shells (2026-07-26) --- */
+
+/* orphan 0x48e90 */
+void ai_debug_initialize(void)
+{
+
+}

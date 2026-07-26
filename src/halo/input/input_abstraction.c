@@ -449,3 +449,18 @@ void input_abstraction_print_config_control(void)
   (void)ecx;
   (void)esi;
 }
+/* --- input_abstraction.obj orphan shells (2026-07-26) --- */
+
+/* 0xce7f0 */
+void *input_abstraction_get_input_state(int gamepad_index)
+{
+  int esi = 0;
+
+  /* test (int16_t)esi, (int16_t)esi -> jl 0xce803 */
+  /* cmp (int16_t)esi, 4 -> jl 0xce823 */
+  display_assert((char *)0x00280fa0, (char *)0x00280fe4, 521, 0);
+  system_exit(0);
+  return NULL;
+
+  (void)esi;
+}

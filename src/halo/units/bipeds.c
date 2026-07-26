@@ -3790,3 +3790,23 @@ LAB_001a4062_done:
   (void)tval;
   (void)fdist;
 }
+/* --- bipeds.obj orphan shells (2026-07-26) --- */
+
+/* 0x1a0db0 */
+char FUN_001a0db0(int biped_handle)
+{
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  object_get_and_verify_type(0, 0);
+  tag_get('dpib', 0);
+  /* cmp (char)ecx, 3 -> jle 0x1a0df8 */
+  /* test (char)ecx, dl -> je 0x1a0df0 */
+  /* relift: test byte ptr [esi + 0xb6], (char)ecx -> je 0x1a0df8 */
+  return 0;
+
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+}

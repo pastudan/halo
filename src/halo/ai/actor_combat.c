@@ -1098,3 +1098,11 @@ void FUN_00022dc0(int actor_handle)
   (void)edx;
   (void)edi;
 }
+/* --- actor_combat.obj orphan shells (2026-07-26) --- */
+
+/* orphan 0x22b40 */
+void FUN_00022b40(int actor_handle, float *aim_vector)
+{
+  (void)actor_handle;
+  (void)aim_vector;
+}

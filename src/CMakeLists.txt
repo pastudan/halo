@@ -181,6 +181,9 @@
 	halo/xdk/xapilib/xinput.c
 	halo/xdk/xdk_stubs_rt.c
 	halo/xdk/xdk_stubs_xapi.c
+	halo/libcmt/qsort.c
+	halo/libcmt/stricmp.c
+	halo/libcmt/wcsncpy.c
 	halo/shell.c
 	halo/shell_xbox.c
 		halo/cache/xbox_texture_cache.c

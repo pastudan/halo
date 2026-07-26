@@ -469,3 +469,25 @@ void FUN_00093e20(void)
   (void)edx;
   (void)esi;
 }
+/* --- cinematics.obj orphan shells (2026-07-26) --- */
+
+/* 0x936b0 */
+short FUN_000936b0(void *scenario, void *entry)
+{
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+
+  /* test ecx, ecx -> jle 0x936ff */
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 64);
+  crt_stricmp((char *)(uintptr_t)eax, (char *)(uintptr_t)ebx);
+  /* test eax, eax -> je 0x936fc */
+  /* cmp eax, ecx -> jl 0x936d3 */
+  return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
+}

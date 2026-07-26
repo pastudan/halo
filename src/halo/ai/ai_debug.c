@@ -2529,3 +2529,14 @@ void FUN_00053af0(void)
   (void)esi;
   (void)edi;
 }
+/* --- ai_debug.obj orphan shells (2026-07-26) --- */
+
+/* orphan 0x4a460 */
+void FUN_0004a460(int a0, int a1, void *buf, int buf_size, int max_entries)
+{
+  (void)a0;
+  (void)a1;
+  (void)buf;
+  (void)buf_size;
+  (void)max_entries;
+}

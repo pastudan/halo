@@ -6133,3 +6133,178 @@ void FUN_001975e0(void)
   (void)edx;
   (void)esi;
 }
+/* --- structures.obj orphan shells (2026-07-26) --- */
+
+/* 0x1943e0 */
+void build_structure_lens_flares(void *scenario)
+{
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  display_assert((char *)0x002b3274, (char *)0x002b3284, 66, 0);
+  system_exit(0);
+  crt_fprintf((void *)0x00331050, (char *)0x002b3250);
+  crt_fflush((void *)0x00331050);
+  tag_block_resize((void *)(uintptr_t)eax, 0);
+  /* test (char)eax, (char)eax -> je 0x1954b5 */
+  tag_block_resize((void *)(uintptr_t)eax, 0);
+  /* test (char)eax, (char)eax -> je 0x1954b5 */
+  debug_malloc(0x00075300, 0, (char *)0x002b3284, 74);
+  debug_malloc(0x000afc80, 0, (char *)0x002b3284, 75);
+  debug_malloc(0x0001d4c0, 0, (char *)0x002b3284, 76);
+  /* test esi, esi -> je 0x195432 */
+  /* test ebx, ebx -> je 0x195432 */
+  /* test eax, eax -> je 0x195432 */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 104);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 104);
+  /* relift: cmp esi, dword ptr [edx] -> jl 0x1944e2 */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 32);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 256);
+  /* cmp eax, -1 -> je 0x194970 */
+  tag_get('rdhs', 0);
+  FUN_001906b0((void *)(uintptr_t)edi, 0);
+  FUN_001906b0((void *)0, 0);
+  FUN_001906b0((void *)(uintptr_t)edi, 0);
+  FUN_001906b0((void *)0, 0);
+  FUN_001906b0((void *)(uintptr_t)edi, 0);
+  FUN_001906b0((void *)0, 0);
+  /* test esi, esi -> je 0x194970 */
+  /* relift: cmp dword ptr [esi + 0xc], -1 -> je 0x194970 */
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 16);
+  /* cmp eax, ecx -> je 0x194656 */
+  /* cmp eax, ecx -> jl 0x194630 */
+  /* cmp eax, ecx -> jne 0x194695 */
+  /* cmp eax, 0x100 -> jge 0x194948 */
+  tag_block_add_element((void *)(uintptr_t)edi);
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 0);
+  FUN_001b9b50();
+  /* relift: cmp word ptr [ebp - 0x10], -1 -> je 0x19495c */
+  FUN_001034b0((void *)(uintptr_t)eax);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* cmp ecx, eax -> jl 0x194724 */
+  display_assert((char *)0x002b31f8, (char *)0x002b3284, 179, 0);
+  system_exit(0);
+  /* relift: cmp edx, dword ptr [edi + 0xb4] -> jl 0x194750 */
+  display_assert((char *)0x002b31a0, (char *)0x002b3284, 180, 0);
+  system_exit(0);
+  /* relift: cmp eax, dword ptr [edi + 0xb4] -> jl 0x19477c */
+  display_assert((char *)0x002b3148, (char *)0x002b3284, 181, 0);
+  system_exit(0);
+  FUN_00103860(0, (float *)(uintptr_t)ecx, (float *)0, (float *)0, 0);
+  FUN_00103c00((void *)(uintptr_t)eax);
+  FUN_00117ee0((void *)(uintptr_t)ecx, 0, 24);
+  /* cmp eax, edx -> jne 0x194d76 */
+  FUN_00117ee0((void *)(uintptr_t)ecx, 0, 0);
+  FUN_00117ee0((void *)(uintptr_t)ecx, 0, 0);
+  FUN_00117ee0((void *)(uintptr_t)eax, 0, 0);
+  FUN_00117ee0((void *)(uintptr_t)eax, 0, 0);
+  FUN_00117ee0((void *)(uintptr_t)edx, 0, 0);
+  FUN_00117ee0((void *)(uintptr_t)eax, 0, 0);
+  FUN_001037b0((float *)(uintptr_t)edx, (float *)(uintptr_t)eax, (float *)(uintptr_t)ecx, (float *)(uintptr_t)ebx);
+  /* test (char)eax, 1 -> jne 0x194c72 */
+  /* test (char)eax, 1 -> jne 0x194c74 */
+  error(0, (char *)0x002b3108);
+  error(0, (char *)0x002b3108);
+  /* cmp eax, edx -> jl 0x194568 */
+  debug_malloc(ecx, ebx, (char *)0, 0);
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 16);
+  csmemcpy((void *)0, (void *)0, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 96);
+  bsp3d_find_leaf((void *)(uintptr_t)eax, 0, (void *)0);
+  /* cmp eax, -1 -> je 0x194aa5 */
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  /* relift: relift: fcomp dword ptr [0x2533c8] */
+  /* cmp ebx, eax -> jl 0x1949f5 */
+  qsort((void *)(uintptr_t)esi, eax, 20, (void *)0x00194360);
+  /* test eax, eax -> jle 0x194bc3 */
+  /* cmp (int16_t)eax, 0xffff -> je 0x194bb5 */
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 104);
+  /* cmp (int16_t)ecx, (int16_t)eax -> je 0x194b89 */
+  display_assert((char *)0x002b30d0, (char *)0x002b3284, 415, 0);
+  system_exit(0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 16);
+  csmemcpy((void *)(uintptr_t)eax, (void *)(uintptr_t)ecx, 16);
+  /* cmp edi, eax -> jl 0x194b30 */
+  tag_block_resize((void *)(uintptr_t)ebx, 0);
+  /* test (char)eax, (char)eax -> je 0x195400 */
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 104);
+  /* relift: cmp word ptr [esi + 0x42], 0 -> jbe 0x194c5d */
+  /* relift: cmp eax, dword ptr [ebx] -> jl 0x194c2d */
+  display_assert((char *)0x002b3080, (char *)0x002b3284, 444, 0);
+  system_exit(0);
+  /* cmp ecx, eax -> jle 0x194c5d */
+  display_assert((char *)0x002b3008, (char *)0x002b3284, 445, 0);
+  system_exit(0);
+  /* cmp eax, ecx -> jl 0x194bf0 */
+  /* test (char)eax, 1 -> jne 0x194c86 */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> je 0x194cb0 */
+  /* cmp edi, 0xea60 -> jl 0x194cde */
+  display_assert((char *)0x002b2fa0, (char *)0x002b3284, 218, 0);
+  system_exit(0);
+  FUN_00061df0((void *)(uintptr_t)edx, 0, ebx, (void *)(uintptr_t)esi);
+  FUN_00061df0((void *)(uintptr_t)eax, 0, ebx, (void *)(uintptr_t)esi);
+  FUN_00061df0((void *)(uintptr_t)eax, 0, ebx, (void *)(uintptr_t)edx);
+  /* cmp eax, ecx -> jl 0x194800 */
+  convex_hull2d_reduce(edi, (float *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
+  /* relift: relift: fcomp qword ptr [0x2533d0] */
+  /* test (char)eax, 0x41 -> je 0x194fda */
+  /* test (char)eax, 0x41 -> je 0x194ff3 */
+  /* test (char)eax, 0x41 -> jne 0x195008 */
+  /* test (char)eax, 0x41 -> jne 0x195023 */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* relift: relift: fld dword ptr [0x2533c8] */
+  /* relift: relift: fld dword ptr [0x25ddb8] */
+  /* test (char)eax, 0x41 -> jne 0x19507f */
+  /* relift: relift: fld dword ptr [0x254cb8] */
+  FUN_001dbc26();
+  /* relift: relift: fld dword ptr [0x25ddb8] */
+  /* test (char)eax, 0x41 -> jne 0x1950d9 */
+  /* relift: relift: fld dword ptr [0x254cb8] */
+  FUN_001dbc26();
+  /* relift: relift: fld dword ptr [0x25ddb8] */
+  /* test (char)eax, 0x41 -> jne 0x195132 */
+  /* relift: relift: fld dword ptr [0x254cb8] */
+  floor(0.0f);
+  /* relift: relift: fld dword ptr [0x25ddb8] */
+  /* test (char)eax, 0x41 -> jne 0x19518c */
+  /* relift: relift: fld dword ptr [0x254cb8] */
+  floor(0.0f);
+  /* relift: cmp word ptr [ebp - 0x66], (int16_t)eax -> jg 0x1953c3 */
+  FUN_00061df0((void *)0, 0, 0, (void *)0);
+  FUN_00106290(eax, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (float *)(uintptr_t)eax, 0.0f);
+  /* test (char)eax, (char)eax -> je 0x1953af */
+  tag_block_add_element((void *)(uintptr_t)ecx);
+  /* cmp eax, -1 -> je 0x19539b */
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 16);
+  floor(0.0f);
+  floor(0.0f);
+  floor(0.0f);
+  error(0, (char *)0x002b2f58);
+  FUN_001034e0((void *)(uintptr_t)eax);
+  error(0, (char *)0x002b2f20);
+  debug_free((void *)(uintptr_t)eax, (char *)0x002b3284, 455);
+  error(0, (char *)0x002b2e90);
+  /* test eax, eax -> je 0x19545f */
+  debug_free((void *)(uintptr_t)eax, (char *)0x002b3284, 470);
+  /* test eax, eax -> je 0x195479 */
+  debug_free((void *)(uintptr_t)eax, (char *)0x002b3284, 471);
+  /* test eax, eax -> je 0x195493 */
+  debug_free((void *)(uintptr_t)eax, (char *)0x002b3284, 472);
+  /* test (char)ebx, (char)ebx -> je 0x1954ac */
+  crt_fprintf((void *)0x00331050, (char *)0x002b2e88);
+  error(0, (char *)0x002b2e40);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
+}

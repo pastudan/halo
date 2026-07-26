@@ -2604,3 +2604,17 @@ int16_t FUN_00183120(void *bitmap)
   (void)bitmap;
   return 0;
 }
+/* --- rasterizer_text.obj orphan shells (2026-07-26) --- */
+
+/* orphan 0x181020 */
+int *FUN_00181020(short index)
+{
+  (void)index;
+  return NULL;
+}
+
+/* orphan 0x181670 */
+void FUN_00181670(int *params)
+{
+  (void)params;
+}

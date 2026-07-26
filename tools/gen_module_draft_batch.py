@@ -41,21 +41,88 @@ def clean_param_name(name: str) -> str:
 
 
 def fn_name(decl: str, addr: str) -> str:
-    m = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*\(", decl or "")
+    raw = strip_c_comments(decl or "")
+    if "??" in raw or re.search(r"@[0-9A-Za-z_]*\s*\(", raw):
+        return f"FUN_{int(addr, 16):08x}"
+    m = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*\(", raw)
     if m:
         return m.group(1)
     return f"FUN_{int(addr, 16):08x}"
 
 
+FN_SIG_HEAD = (
+    r"(?m)^(?!\s)"
+    r"(?:static\s+)?(?:inline\s+)?"
+    r"(?:__declspec\s*\([^)]*\)\s+)?"
+    r"(?:(?:[\w\s*]+?(?:\*|\s+)|[\w\s]+\*\s*))"
+    r"(?:__stdcall\s+|__cdecl\s+|__fastcall\s+)?"
+)
+
+
+def scan_balanced(text: str, start: int, open_ch: str, close_ch: str) -> int | None:
+    if start >= len(text) or text[start] != open_ch:
+        return None
+    depth = 0
+    for i in range(start, len(text)):
+        ch = text[i]
+        if ch == open_ch:
+            depth += 1
+        elif ch == close_ch:
+            depth -= 1
+            if depth == 0:
+                return i
+    return None
+
+
+C_KEYWORDS = {
+    "if",
+    "for",
+    "while",
+    "switch",
+    "return",
+    "sizeof",
+    "do",
+    "else",
+    "case",
+    "default",
+    "break",
+    "continue",
+    "goto",
+}
+
+
+def iter_fn_defs(text: str):
+    """Yield (name, sig_start, body_start, body_end) for each top-level C function."""
+    text = strip_c_comments(text)
+    for m in re.finditer(FN_SIG_HEAD + r"([A-Za-z_][A-Za-z0-9_]*)\s*\(", text):
+        name = m.group(1)
+        if name in C_KEYWORDS:
+            continue
+        paren_open = m.end() - 1
+        paren_close = scan_balanced(text, paren_open, "(", ")")
+        if paren_close is None:
+            continue
+        i = paren_close + 1
+        while i < len(text) and text[i].isspace():
+            i += 1
+        if i >= len(text) or text[i] != "{":
+            continue
+        body_start = i + 1
+        body_end = scan_balanced(text, i, "{", "}")
+        if body_end is None:
+            continue
+        yield name, m.start(), body_start, body_end
+
+
 def existing_fn_names(src_text: str) -> set[str]:
-    text = strip_c_comments(src_text)
-    return set(
-        re.findall(
-            r"(?m)^(?:static\s+)?(?:inline\s+)?(?:[\w\s*]+?(?:\*|\s+))"
-            r"([A-Za-z_][A-Za-z0-9_]*)\s*\([^;]*\)\s*\{",
-            text,
-        )
-    )
+    return {name for name, _, _, _ in iter_fn_defs(src_text)}
+
+
+def find_function_def(src: str, name: str) -> tuple[int, int, int] | None:
+    for fn, sig_start, body_start, body_end in iter_fn_defs(src):
+        if fn == name:
+            return sig_start, body_start, body_end
+    return None
 
 
 def load_decls(object_name: str, *, skip_existing: bool = False) -> dict[str, str]:
@@ -216,18 +283,18 @@ def ret_kind(decl: str) -> str:
 
 
 def gen_stub_body(decl: str, addr: str | None = None) -> str:
+    use_addr = addr.lower() if addr else "0x0"
+    name = fn_name(decl, use_addr)
+    raw = strip_c_comments(decl or "")
     c_decl = sanitize_decl_for_c(decl)
-    use_addr = addr.lower() if addr else None
-    head_part = c_decl.split("(", 1)[0]
-    if "??" in c_decl or "@" in head_part:
-        if not use_addr:
-            use_addr = "0x0"
-        c_decl = f"void FUN_{int(use_addr, 16):08x}(void);"
-    name = fn_name(c_decl, use_addr or "0x0")
-    if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", name):
-        if not use_addr:
-            use_addr = "0x0"
-        c_decl = f"void FUN_{int(use_addr, 16):08x}(void);"
+    if "??" in raw or re.search(r"@[0-9A-Za-z_]*\s*\(", raw):
+        c_decl = f"void {name}(void);"
+    else:
+        san_name = fn_name(c_decl, use_addr)
+        if san_name != name:
+            c_decl = re.sub(
+                rf"\b{re.escape(san_name)}\s*\(", f"{name}(", c_decl, count=1
+            )
     params = parse_params(c_decl)
     lines = [f"  (void){p};" for p in params]
     kind = ret_kind(c_decl)

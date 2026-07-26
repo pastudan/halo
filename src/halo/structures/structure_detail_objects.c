@@ -336,3 +336,18 @@ void FUN_00193c00(void)
   FUN_0017cb70((void *)(base + 0x5200));
   FUN_0017cb80(); /* leave/unlock */
 }
+/* --- structure_detail_objects.obj orphan shells (2026-07-26) --- */
+
+/* 0x1939c0 */
+void structure_detail_objects_dispose_from_old_map(void)
+{
+  /* relift: no calls detected — manual review */
+  (void)0;
+}
+
+/* 0x1939d0 */
+void structure_detail_objects_dispose(void)
+{
+  /* relift: no calls detected — manual review */
+  (void)0;
+}

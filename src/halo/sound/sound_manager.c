@@ -3882,3 +3882,47 @@ void FUN_001cf820(void **out)
 {
   *out = (void *)0x32fce4;
 }
+/* --- sound_manager.obj orphan shells (2026-07-26) --- */
+
+/* 0x1ac180 */
+char FUN_001ac180(int actor, int anim_tag, void *entry, int do_flag)
+{
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* cmp ecx, -1 -> je 0x1ac2de */
+  /* cmp edi, -1 -> je 0x1ac2db */
+  object_get_and_verify_type(0, 0);
+  tag_get('tinu', 0);
+  tag_get('rtna', 0);
+  FUN_00120cb0(0, (char *)(uintptr_t)ecx);
+  /* cmp (int16_t)eax, 0xffff -> je 0x1ac2c1 */
+  model_animation_choose_random(0, 0, eax);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
+  /* cmp (int16_t)eax, 1 -> je 0x1ac2d9 */
+  /* test (int16_t)eax, (int16_t)eax -> jne 0x1ac2d9 */
+  /* relift: cmp byte ptr [esi + 0x253], 0x1c -> jne 0x1ac27e */
+  /* cmp (int16_t)eax, 0xffff -> je 0x1ac27e */
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 180);
+  /* relift: cmp (int16_t)ecx, word ptr [edx + 0x42] -> jne 0x1ac27e */
+  /* cmp edx, ebx -> jne 0x1ac279 */
+  /* cmp (int16_t)ecx, (int16_t)eax -> jl 0x1ac2d9 */
+  /* test (char)eax, (char)eax -> je 0x1ac293 */
+  object_set_region_count(0, 0);
+  unit_set_animation(0, 0, 0);
+  object_update_children_recursive(0);
+  tag_get_name(0);
+  console_warning((char *)0x0029c71c);
+  return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+}

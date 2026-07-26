@@ -4688,3 +4688,40 @@ void FUN_000ce4a0(void)
   if (handle != 0)
     CloseHandle(handle);
 }
+/* --- hs_runtime.obj orphan shells (2026-07-26) --- */
+
+/* 0xc9f90 */
+float *FUN_000c9f90(void)
+{
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
+
+  tag_loaded('!dns', (char *)(uintptr_t)esi);
+  /* cmp eax, -1 -> je 0xc9fb5 */
+  tag_get('!dns', 0);
+  tag_loaded('dnsl', (char *)(uintptr_t)esi);
+  /* cmp eax, -1 -> je 0xc9ff4 */
+  tag_get('dnsl', 0);
+  /* test ecx, ecx -> jle 0xc9ff4 */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 160);
+  console_printf(0, (char *)0x00280430);
+  return NULL;
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
+}
+
+/* 0xcb9a0 */
+char hs_wake_by_name(void *block_entry)
+{
+  int edi = 0;
+
+  FUN_000cae00((char *)(uintptr_t)edi);
+  /* cmp edi, -1 -> je 0xcb9bc */
+  FUN_000cacf0(0);
+  return 0;
+
+  (void)edi;
+}

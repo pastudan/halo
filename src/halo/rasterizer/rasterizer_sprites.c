@@ -557,3 +557,13 @@ void FUN_0017ef00(void)
 {
 
 }
+/* --- rasterizer_sprites.obj orphan shells (2026-07-26) --- */
+
+/* orphan 0x17d030 */
+int FUN_0017d030(float *position, int vis_index, int index)
+{
+  (void)position;
+  (void)vis_index;
+  (void)index;
+  return 0;
+}

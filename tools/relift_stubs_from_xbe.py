@@ -43,6 +43,7 @@ def load_gen_utils():
     spec_path = ROOT / "tools" / "gen_module_draft_batch.py"
     spec = importlib.util.spec_from_file_location("gen_module_draft_batch", spec_path)
     mod = importlib.util.module_from_spec(spec)
+    sys.modules["gen_module_draft_batch"] = mod
     assert spec.loader is not None
     spec.loader.exec_module(mod)
     return mod
@@ -116,28 +117,7 @@ def fn_name_from_decl(decl: str, addr: str) -> str:
 
 def find_function_def(src: str, name: str) -> tuple[int, int, int] | None:
     """Return (sig_start, body_start, body_end) for named function."""
-    text = strip_c_comments(src)
-    pat = (
-        rf"(?m)^(?:static\s+)?(?:inline\s+)?"
-        rf"(?:[\w\s*]+?(?:\*|\s+)){re.escape(name)}\s*\([^;{{]*\)\s*\{{"
-    )
-    m = re.search(pat, text)
-    if not m:
-        return None
-    # Map stripped offset back to original — re-search on original with same span
-    m2 = re.search(pat, src)
-    if not m2:
-        return None
-    body_start = m2.end()
-    depth = 1
-    i = body_start
-    while i < len(src) and depth:
-        if src[i] == "{":
-            depth += 1
-        elif src[i] == "}":
-            depth -= 1
-        i += 1
-    return m2.start(), body_start, i - 1
+    return GEN.find_function_def(src, name)
 
 
 def infer_stack_params(insns) -> list[tuple[int, str]]:
@@ -660,6 +640,10 @@ def fmt_call_line(
         return f"  /* relift: {cname}(); */"
     if cname in ("csmemset", "csmemcpy", "csmemmove"):
         casted = [a.replace("(const char *)", "(void *)") for a in casted]
+    if cname in ("strncpy", "strncat", "strcpy", "strcat"):
+        casted = [a.replace("(void *)", "(char *)") for a in casted]
+    if cname in ("csstrcpy", "csstrncpy", "csstrlen"):
+        pass
     if arity == 0:
         return f"  {cname}();"
     return f"  {cname}({', '.join(casted)});"

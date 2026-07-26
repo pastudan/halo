@@ -1410,3 +1410,44 @@ void FUN_0007ea60(void)
   (void)esi;
   (void)edi;
 }
+/* --- bitmaps.obj orphan shells (2026-07-26) --- */
+
+/* orphan 0x7ba50 */
+void FUN_0007ba50(void *bitmap)
+{
+  (void)bitmap;
+}
+
+/* orphan 0x7bcb0 */
+void FUN_0007bcb0(void *bitmap)
+{
+  (void)bitmap;
+}
+
+/* orphan 0x7bd90 */
+void FUN_0007bd90(void *bitmap)
+{
+  (void)bitmap;
+}
+
+/* orphan 0x7cb60 */
+void *bitmap_3d_address(void *bitmap, short x, short y, short face_index, short mipmap_index)
+{
+  (void)bitmap;
+  (void)x;
+  (void)y;
+  (void)face_index;
+  (void)mipmap_index;
+  return NULL;
+}
+
+/* orphan 0x7cdf0 */
+void *bitmap_cube_map_address(void *bitmap, short x, short y, short z, short mipmap_index)
+{
+  (void)bitmap;
+  (void)x;
+  (void)y;
+  (void)z;
+  (void)mipmap_index;
+  return NULL;
+}

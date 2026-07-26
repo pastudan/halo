@@ -1146,3 +1146,12 @@ finish:
 }
 
 #undef RA3_EVENT_ASSERT
+/* --- recorded_animations.obj orphan shells (2026-07-26) --- */
+
+/* orphan 0x95640 */
+char recorded_animation_play(int actor, short anim_idx)
+{
+  (void)actor;
+  (void)anim_idx;
+  return 0;
+}

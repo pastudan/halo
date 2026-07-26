@@ -3330,3 +3330,156 @@ void FUN_0007b940(float bump_height, void *bitmap)
   (void)esi;
   (void)edi;
 }
+/* --- bitmap_utilities.obj orphan shells (2026-07-26) --- */
+
+/* 0x76790 */
+char FUN_00076790(void *group, int param_3)
+{
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  /* test esi, esi -> jne 0x767bc */
+  display_assert((char *)0x0026276c, (char *)0x002616f0, 180, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x767ca */
+  /* cmp (int16_t)eax, 5 -> jl 0x767ea */
+  display_assert((char *)0x0026272c, (char *)0x002616f0, 181, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x767f9 */
+  /* cmp (int16_t)eax, 6 -> jl 0x76819 */
+  display_assert((char *)0x002626e8, (char *)0x002616f0, 182, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x76828 */
+  /* cmp (int16_t)eax, 6 -> jl 0x76848 */
+  display_assert((char *)0x002626a8, (char *)0x002616f0, 183, 0);
+  system_exit(0);
+  /* relift: relift: mov word ptr [0x334138], 0 */
+  debug_malloc(16384, 0, (char *)0x002616f0, 186);
+  /* mem[0x00334134] = eax */
+  error(0, (char *)0x00262674);
+  error(0, (char *)0x00262634);
+  tag_block_resize((void *)(uintptr_t)eax, 0);
+  /* test (char)eax, (char)eax -> je 0x76882 */
+  tag_block_resize((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> je 0x76882 */
+  tag_data_resize((void *)(uintptr_t)edx, 0);
+  /* test (char)eax, (char)eax -> je 0x76882 */
+  /* mem[0x00334158] = 0 */
+  /* relift: relift: mov word ptr [0x33415c], 0xffff */
+  /* mem[0x0033414c] = esi */
+  bitmap_2d_new(0, 0, 0, 11);
+  /* mem[0x00334150] = eax */
+  FUN_00119bb0((void *)(uintptr_t)eax, edx);
+  display_assert((char *)0x002625e0, (char *)0x002616f0, 260, 0);
+  system_exit(0);
+  bitmap_mipmap_address((void *)(uintptr_t)ecx, 0);
+  FUN_00119bf0((void *)(uintptr_t)eax, edx, 0, (void *)0);
+  /* test (char)eax, (char)eax -> je 0x769cd */
+  FUN_00073830();
+  /* relift: relift: mov (char)eax, byte ptr [0x334148] */
+  /* mem[0x00334154] = ecx */
+  FUN_000766e0();
+  FUN_00076300();
+  bitmap_delete((void *)(uintptr_t)edx);
+  /* test (char)ebx, (char)ebx -> je 0x76a2e */
+  /* cmp eax, 4 -> ja 0x76a0e */
+  error(0, (char *)0x002625a8);
+  error(0, (char *)0x00262574);
+  FUN_00075630();
+  FUN_00075800();
+  FUN_00075a20();
+  display_assert((char *)0x00261ea0, (char *)0x002616f0, 311, 0);
+  system_exit(0);
+  /* test eax, eax -> je 0x76a4a */
+  debug_free((void *)(uintptr_t)eax, (char *)0x002616f0, 317);
+  return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+}
+
+/* 0x77cd0 */
+void *FUN_00077cd0(void *bitmap, short mipmap_count, int param_3, int param_4)
+{
+  int eax = 0;
+  int ebx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  bitmap_verify((void *)(uintptr_t)esi, 0);
+  /* test (char)eax, (char)eax -> jne 0x77d08 */
+  display_assert((char *)0x00261aa4, (char *)0x002641f0, 443, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi + 0xa], 2 -> je 0x77d2f */
+  display_assert((char *)0x00264274, (char *)0x002641f0, 444, 0);
+  system_exit(0);
+  /* cmp (int16_t)edi, 1 -> jg 0x77d58 */
+  display_assert((char *)0x0026421c, (char *)0x002641f0, 445, 0);
+  system_exit(0);
+  bitmap_cube_map_new(0, 0, 11);
+  /* test eax, eax -> je 0x77e42 */
+  bitmap_2d_new(0, 0, 0, 11);
+  /* test ebx, ebx -> je 0x77e21 */
+  /* test eax, eax -> je 0x77e21 */
+  FUN_0007ea60();
+  FUN_00077720(0, (void *)(uintptr_t)eax, 0, 0);
+  /* test esi, esi -> je 0x77dfc */
+  /* test eax, eax -> je 0x77dfc */
+  bitmap_cube_map_face_insert();
+  bitmap_delete((void *)(uintptr_t)esi);
+  /* cmp (int16_t)edi, 6 -> jl 0x77dbe */
+  bitmap_delete((void *)(uintptr_t)ebx);
+  error(0, (char *)0x00264194);
+  bitmap_delete((void *)(uintptr_t)ebx);
+  error(0, (char *)0x00264194);
+  return NULL;
+
+  (void)eax;
+  (void)ebx;
+  (void)esi;
+  (void)edi;
+}
+
+/* 0x79480 */
+void FUN_00079480(short passes, void *bitmap)
+{
+  int eax = 0;
+  int ebx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  bitmap_verify((void *)(uintptr_t)edi, 0);
+  /* test (char)eax, (char)eax -> jne 0x794b2 */
+  display_assert((char *)0x00261814, (char *)0x002641f0, 1138, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [edi + 0xa], 1 -> je 0x794d9 */
+  display_assert((char *)0x00264354, (char *)0x002641f0, 1139, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [ebp + 8], 0 -> jg 0x79500 */
+  display_assert((char *)0x00264434, (char *)0x002641f0, 1140, 0);
+  system_exit(0);
+  bitmap_2d_new(0, 0, 0, 0);
+  /* test ebx, ebx -> je 0x7956a */
+  /* test eax, eax -> je 0x7956a */
+  /* relift: cmp word ptr [edi + 8], (int16_t)esi -> jle 0x79579 */
+  bitmap_3d_slice_insert();
+  FUN_00079250(0, (void *)0);
+  bitmap_cube_map_face_extract((void *)(uintptr_t)ebx, (void *)(uintptr_t)edi, 0, 0);
+  /* relift: cmp (int16_t)esi, word ptr [edi + 8] -> jl 0x79536 */
+  bitmap_delete((void *)(uintptr_t)ebx);
+  error(0, (char *)0x00264194);
+  bitmap_delete((void *)(uintptr_t)ebx);
+
+  (void)eax;
+  (void)ebx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
+}

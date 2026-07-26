@@ -12704,3 +12704,391 @@ void FUN_001414e0(int param_1, int param_2, int param_3, int param_4, int param_
                                      (int)parent_index * 0x34 + param_5,
                                      (int)self_index * 0x34 + param_5);
 }
+/* --- objects.obj orphan shells (2026-07-26) --- */
+
+/* 0x85000 */
+void FUN_00085000(int param_1, const char *param_2)
+{
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* cmp eax, -1 -> je 0x850cc */
+  tag_get('rtna', 0);
+  /* cmp ecx, 1 -> jne 0x850cc */
+  /* test eax, eax -> jle 0x850c9 */
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 180);
+  crt_stricmp((char *)(uintptr_t)eax, (char *)(uintptr_t)esi);
+  /* test eax, eax -> je 0x8506e */
+  /* cmp eax, ecx -> jl 0x85040 */
+  /* relift: relift: mov word ptr [0x2ee5a4], (int16_t)eax */
+  /* mem[0x002ee5d4] = eax */
+  /* relift: relift: mov word ptr [0x2ee5a2], 1 */
+  /* relift: relift: mov byte ptr [0x2ee5a1], 1 */
+  /* relift: relift: mov word ptr [0x2ee5dc], (int16_t)ebx */
+  /* mem[0x002ee5d8] = ecx */
+  /* mem[0x002ee5d0] = 0x3f9c61aa */
+  /* relift: relift: fstp dword ptr [0x2ee5a8] */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
+}
+
+/* 0x85280 */
+void FUN_00085280(float *param_1, float *param_2, float *param_3, float param_4, short param_5, int param_6)
+{
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* relift: relift: mov word ptr [0x2ee5a2], 0 */
+  /* relift: relift: mov word ptr [0x2ee5a4], 0xffff */
+  /* mem[0x002ee5ac] = ecx */
+  /* mem[0x002ee5b0] = edx */
+  /* mem[0x002ee5b4] = eax */
+  /* mem[0x002ee5b8] = edx */
+  /* mem[0x002ee5bc] = eax */
+  /* mem[0x002ee5c0] = ecx */
+  /* mem[0x002ee5c4] = eax */
+  /* mem[0x002ee5c8] = ecx */
+  /* mem[0x002ee5cc] = edx */
+  /* mem[0x002ee5d0] = eax */
+  /* mem[0x002ee5d0] = 0x3f9c61aa */
+  /* mem[0x002ee5d4] = edx */
+  /* relift: relift: fstp dword ptr [0x2ee5a8] */
+  director_update(0.0f);
+  observer_update(0.0f);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+}
+
+/* 0x85350 */
+void FUN_00085350(float *param_1, float *param_2, float *param_3, float param_4, short param_5)
+{
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+
+  FUN_00085280((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx, 0.0f, 0, 0);
+  /* relift: relift: mov (int16_t)eax, word ptr [0x2ee5a4] */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+}
+
+/* 0x134070 */
+void FUN_00134070(int particle_ptr, int glow_widget_ptr, int object_handle, float delta, float ratio)
+{
+  int eax = 0;
+  int ecx = 0;
+
+  tag_get(0x676c7721, 0);
+  /* cmp (int16_t)eax, 0xffff -> je 0x1340e2 */
+  object_get_function_value(0, 0, (void *)(uintptr_t)ecx);
+  /* test (char)eax, (char)eax -> jne 0x1340b6 */
+  /* test (char)ecx, 1 -> je 0x1341d4 */
+  display_assert((char *)0x0029abcc, (char *)0, 0, 0);
+  system_exit(0);
+  get_particle_world_position(0, 0, 0.0f);
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  get_particle_world_position(0, 0, 0.0f);
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  get_particle_world_position(0, 0, 0.0f);
+  /* test (char)eax, 0x41 -> jne 0x1341c0 */
+  /* test (char)eax, 0x41 -> je 0x134202 */
+  get_particle_world_position(0, 0, 0.0f);
+  /* test (char)eax, 0x41 -> jne 0x1341be */
+  /* test (char)eax, 0x41 -> jne 0x13426c */
+  /* test (char)eax, 0x41 -> je 0x134250 */
+  get_particle_world_position(0, 0, 0.0f);
+
+  (void)eax;
+  (void)ecx;
+}
+
+/* 0x1342a0 */
+void FUN_001342a0(int glow_widget_ptr)
+{
+  int eax = 0;
+  int ecx = 0;
+  int edi = 0;
+
+  tag_get(0x676c7721, 0);
+  glow_normal_particle_new(0, 0, 0);
+  /* test eax, eax -> je 0x134344 */
+  /* relift: test byte ptr [ecx + 0x28], 2 -> je 0x1342f5 */
+  /* relift: test byte ptr [ecx + 0x28], 4 -> je 0x134318 */
+  /* test ecx, ecx -> jne 0x134328 */
+  /* test edi, edi -> je 0x13432f */
+
+  (void)eax;
+  (void)ecx;
+  (void)edi;
+}
+
+/* 0x134350 */
+int glow_trailing_particle_new(int glow_widget_ptr)
+{
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+
+  tag_get(0x676c7721, 0);
+  data_new_at_index((void *)(uintptr_t)ecx);
+  datum_get((void *)(uintptr_t)edx, 0);
+  /* relift: cmp word ptr [ebx + 4], 1 -> jle 0x1343ea */
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  get_particle_world_position(0, 0, 0.0f);
+  display_assert((char *)0x0029abfc, (char *)0x0029ab60, 996, 0);
+  system_exit(0);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  normalize3d((float *)(uintptr_t)eax);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  FUN_001d9068();
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+}
+
+/* 0x1345b0 */
+void FUN_001345b0(int glow_widget, int object_handle)
+{
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  tag_get(0x676c7721, 0);
+  object_get_markers_by_string_id(0, (void *)(uintptr_t)esi, (void *)(uintptr_t)ecx, 0);
+  /* cmp (int16_t)eax, 1 -> jle 0x134876 */
+  /* relift: cmp word ptr [ebp - 8], (int16_t)esi -> je 0x13469a */
+  normalize3d((float *)0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x134711 */
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x134709 */
+  /* relift: cmp word ptr [ebp + edi*2 - 0x24], (int16_t)ecx -> je 0x134706 */
+  /* test (int16_t)eax, (int16_t)eax -> jge 0x1346f4 */
+  /* cmp eax, edx -> jl 0x134730 */
+  FUN_001342a0(0);
+  /* cmp (int16_t)eax, 1 -> jle 0x134876 */
+  /* cmp (int16_t)eax, 0xffff -> je 0x13482b */
+  object_get_function_value(0, 0, (void *)(uintptr_t)ecx);
+  /* test (char)eax, (char)eax -> jne 0x134815 */
+  /* relift: relift: fld dword ptr [0x2533c0] */
+  object_get_function_value(0, 0, (void *)(uintptr_t)ecx);
+  /* test (char)eax, (char)eax -> jne 0x134857 */
+  /* relift: relift: fld dword ptr [0x2533c0] */
+  game_time_get();
+  /* relift: cmp word ptr [ebx + 4], 1 -> jle 0x1348d0 */
+  /* test esi, esi -> je 0x1348d0 */
+  /* relift: test byte ptr [esi + 0x54], 2 -> jne 0x1348c9 */
+  /* relift: relift: fld dword ptr [0x50654c] */
+  FUN_00134070(0, 0, 0, 0.0f, 0.0f);
+  FUN_00133300(0, 0);
+  /* test esi, esi -> jne 0x134893 */
+  /* test esi, esi -> je 0x1349fb */
+  /* relift: test byte ptr [esi + 0x54], 2 -> je 0x1349f0 */
+  game_time_get();
+  FUN_001330f0(0);
+  tag_get('!wlg', 0);
+  /* test (char)ecx, 0x10 -> je 0x13494d */
+  /* relift: relift: fld dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> jne 0x134947 */
+  /* relift: relift: fld dword ptr [0x2533c0] */
+  FUN_001331d0(0, 0);
+  tag_get('!wlg', 0);
+  tag_get('!wlg', 0);
+  /* relift: cmp (int16_t)edx, word ptr [esi + 0x52] -> jle 0x1349f0 */
+  /* test ecx, ecx -> je 0x1349d0 */
+  datum_delete((void *)(uintptr_t)ecx, 0);
+  /* test esi, esi -> jne 0x1348e0 */
+  /* relift: relift: fcomp dword ptr [0x25bb10] */
+  /* test (char)eax, 0x41 -> jne 0x134ad4 */
+  /* relift: relift: fld dword ptr [0x253394] */
+  /* relift: relift: fcomp dword ptr [0x2533c8] */
+  /* test (char)eax, 0x41 -> jne 0x134ad4 */
+  glow_trailing_particle_new(0);
+  /* test eax, eax -> je 0x134ab4 */
+  /* test ecx, ecx -> je 0x134a7b */
+  FUN_001d9068();
+  /* test (char)eax, 0x41 -> je 0x134a53 */
+  display_assert((char *)0x0029ac28, (char *)0x0029ab60, 521, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
+}
+
+/* 0x134c40 */
+void *FUN_00134c40(int definition_ptr, int object_handle)
+{
+  int eax = 0;
+  int ebx = 0;
+  int edi = 0;
+
+  /* test ebx, ebx -> jne 0x134c67 */
+  display_assert((char *)0x00269eb4, (char *)0x0029ac98, 110, 0);
+  system_exit(0);
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 176);
+  /* cmp eax, 1 -> jle 0x134e29 */
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 176);
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 176);
+  object_get_function_value(0, 0, (void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x134e3e */
+  /* relift: relift: fld dword ptr [0x2533c8] */
+  /* relift: relift: fstp dword ptr [0x46ef80] */
+  /* relift: relift: fstp dword ptr [0x46ef84] */
+  /* relift: relift: fstp dword ptr [0x46ef88] */
+  /* relift: relift: fstp dword ptr [0x46efac] */
+  /* relift: relift: fstp dword ptr [0x46efb0] */
+  /* relift: relift: fstp dword ptr [0x46efb4] */
+  /* relift: relift: fstp dword ptr [0x46efd8] */
+  /* relift: relift: fstp dword ptr [0x46efdc] */
+  /* relift: relift: fstp dword ptr [0x46efe0] */
+  /* relift: relift: fstp dword ptr [0x46efe4] */
+  /* relift: relift: fstp dword ptr [0x46efe8] */
+  /* relift: relift: fstp dword ptr [0x46efec] */
+  /* relift: relift: fstp dword ptr [0x46eff0] */
+  /* relift: relift: fstp dword ptr [0x46eff4] */
+  /* relift: relift: fstp dword ptr [0x46eff8] */
+  /* relift: relift: fstp dword ptr [0x46effc] */
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 176);
+  return NULL;
+
+  (void)eax;
+  (void)ebx;
+  (void)edi;
+}
+
+/* 0x135420 */
+void lightning_offset_marker_position(int matrix_ptr, float *position_out, float *random_bounds)
+{
+  int eax = 0;
+  int ebx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test esi, esi -> jne 0x135447 */
+  display_assert((char *)0x00267114, (char *)0x0029acfc, 116, 0);
+  system_exit(0);
+  /* test ebx, ebx -> jne 0x135468 */
+  display_assert((char *)0x0026af40, (char *)0x0029acfc, 117, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x135489 */
+  display_assert((char *)0x0029ad34, (char *)0x0029acfc, 118, 0);
+  system_exit(0);
+  random_math_get_local_seed_address();
+  random_math_real((void *)(uintptr_t)eax);
+  random_math_get_local_seed_address();
+  random_math_real((void *)(uintptr_t)eax);
+  random_math_get_local_seed_address();
+  random_math_real((void *)(uintptr_t)eax);
+  matrix_scale_transform_vector((float *)0, (float *)0, (float *)0);
+
+  (void)eax;
+  (void)ebx;
+  (void)esi;
+  (void)edi;
+}
+
+/* 0x13df70 */
+void object_postprocess_node_matrices(data_t *data, int object_handle)
+{
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* test eax, eax -> je 0x13df9e */
+  memory_pool_block_free((void *)(uintptr_t)ecx, (void *)(uintptr_t)esi);
+  datum_delete((void *)(uintptr_t)edx, 0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+}
+
+/* 0x1444f0 */
+int object_update(int param_1)
+{
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  datum_get((void *)(uintptr_t)eax, 0);
+  object_get_and_verify_type(0, 0);
+  tag_get('ejbo', 0);
+  /* test (char)eax, 0x10 -> jne 0x14468b */
+  /* relift: test dword ptr [esi + 4], 0x10000 -> je 0x144542 */
+  /* relift: cmp word ptr [esi + 0x86], 0 -> je 0x1445a7 */
+  /* test edx, 0xfe0 -> je 0x144582 */
+  display_assert((char *)0x0029bf80, (char *)0x0029b91c, 2508, 0);
+  system_exit(0);
+  /* relift: cmp (int16_t)eax, word ptr [esi + 0x86] -> jl 0x1445aa */
+  FUN_0013c5c0(0);
+  /* cmp ecx, ebx -> je 0x1445c6 */
+  object_damage_update(0);
+  FUN_0013c620(0);
+  /* test eax, 0x800000 -> jne 0x1445e2 */
+  object_compute_node_matrices(0);
+  object_compute_function_values(0);
+  object_compute_change_colors(0);
+  /* test (char)eax, 0x20 -> je 0x144621 */
+  /* test (char)eax, 1 -> je 0x144613 */
+  tag_get('ejbo', 0);
+  /* cmp ecx, ebx -> jne 0x144621 */
+  object_propagate_flag_to_children(0, 0, 0);
+  /* cmp eax, ebx -> je 0x144634 */
+  /* relift: tail-call object_update(); */
+  /* relift: cmp dword ptr [esi + 0xcc], ebx -> je 0x14464f */
+  /* cmp esi, ebx -> je 0x14464f */
+  /* relift: tail-call object_update(); */
+  object_get_and_verify_type(0, 0);
+  tag_get('ejbo', 0);
+  /* cmp ecx, ebx -> je 0x14468b */
+  /* relift: cmp dword ptr [eax + 0x44], ebx -> je 0x14468b */
+  object_header_block_reference_get(0, (void *)(uintptr_t)esi);
+  FUN_0013c800(0, (void *)(uintptr_t)eax);
+  return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+}

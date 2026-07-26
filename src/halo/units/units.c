@@ -14106,3 +14106,36 @@ char FUN_001a6350(int unit_handle)
 
     return 1;
 }
+/* --- units.obj orphan shells (2026-07-26) --- */
+
+/* 0x1a8770 */
+char FUN_001a8770(void *anim_state)
+{
+  /* relift: no calls detected — manual review */
+  (void)0;
+  return 0;
+}
+
+/* 0x1a8890 */
+char FUN_001a8890(void *anim_state)
+{
+  /* relift: no calls detected — manual review */
+  (void)0;
+  return 0;
+}
+
+/* 0x1a8910 */
+char FUN_001a8910(int16_t anim_state)
+{
+  /* relift: no calls detected — manual review */
+  (void)0;
+  return 0;
+}
+
+/* 0x1a8950 */
+int FUN_001a8950(int16_t anim_state, int16_t target_state)
+{
+  /* relift: no calls detected — manual review */
+  (void)0;
+  return 0;
+}

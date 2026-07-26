@@ -1315,3 +1315,83 @@ void cache_file_open(void)
   (void)esi;
   (void)edi;
 }
+/* --- cache_files_windows.obj orphan shells (2026-07-26) --- */
+
+/* 0x1bc280 */
+void FUN_001bc280(void)
+{
+  int eax = 0;
+  int ecx = 0;
+
+  QueryPerformanceFrequency((void *)(uintptr_t)eax);
+  /* test eax, eax -> je 0x1bc2b6 */
+  display_assert((char *)0x002b8c54, (char *)0x002b839c, 487, 0);
+  system_exit(0);
+  /* mem[0x0032ea9c] = ecx */
+  CreateEventA((void *)0, 0, 0, (char *)0);
+  CreateEventA((void *)0, 0, 0, (char *)0);
+  CreateEventA((void *)0, 0, 0, (char *)0);
+  CreateEventA((void *)0, 0, 0, (char *)0);
+  CreateThread((void *)0, 16384, (void *)0x001bbea0, (void *)0, 0, (void *)0);
+
+  (void)eax;
+  (void)ecx;
+}
+
+/* 0x1bc620 */
+void FUN_001bc620(void)
+{
+  int eax = 0;
+  int esi = 0;
+
+  /* relift: cmp word ptr [0x4e9244], -1 -> jne 0x1bc64a */
+  display_assert((char *)0x002b8d90, (char *)0x002b8c98, 645, 0);
+  system_exit(0);
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x1bc65c */
+  /* cmp (int16_t)esi, 0x200 -> jl 0x1bc67c */
+  display_assert((char *)0x002b8d48, (char *)0x002b8c98, 608, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [eax], 0 -> jne 0x1bc685 */
+  /* cmp (int16_t)esi, 0x200 -> jl 0x1bc650 */
+
+  (void)eax;
+  (void)esi;
+}
+
+/* 0x1bd020 */
+void cache_file_read_header_into_slot(short map_file_index)
+{
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x1bd039 */
+  /* cmp (int16_t)esi, 6 -> jl 0x1bd059 */
+  display_assert((char *)0x002b8de4, (char *)0x002b8c98, 1157, 0);
+  system_exit(0);
+  crt_sprintf((char *)(uintptr_t)edx, (char *)0x002b8e24);
+  FUN_001d18aa();
+  FUN_001bc3b0();
+  SleepEx(5000, 0);
+  /* cmp eax, 0xc0 -> jne 0x1bd0ea */
+  /* test (char)eax, (char)eax -> je 0x1bd0d0 */
+  /* test (char)eax, (char)eax -> je 0x1bd133 */
+  cache_file_header_verify((void *)(uintptr_t)esi, (char *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> jne 0x1bd19f */
+  csmemset((void *)(uintptr_t)esi, 0, 2048);
+  csmemset((void *)(uintptr_t)edx, 0, 0);
+  xapi_GetLastError();
+  csprintf((char *)0x005ab100, (char *)0x002b8f4c);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x1bd176 */
+  /* cmp (int16_t)eax, 6 -> jl 0x1bd196 */
+  display_assert((char *)0x002b8de4, (char *)0x002b8c98, 1157, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+}
