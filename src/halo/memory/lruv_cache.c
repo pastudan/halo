@@ -1489,297 +1489,511 @@ void *lruv_cache_new(const char *name, int capacity, int max_locked,
   return cache;
 }
 
-/* FUN_0011de10  (0x11de10)  lruv_cache.obj  -  lru_cache "new block" allocator.
- *
- * int FUN_0011de10(lruv_cache_t *cache, unsigned int size)
- *
- * Allocates a cache block large enough to hold `size` bytes and returns its
- * datum handle, or NONE(-1) if no room could be made / the datum pool is full.
- * param_2 is a BYTE COUNT, not a block index (Ghidra's kb decl was wrong):
- * desired_page_count = ceil(size / (1 << cache->page_size_bits)).
- *
- * Walks the LRU list treating cache page space as alternating gap/block
- * segments, folds each segment into a 256-entry ring of candidate "holes",
- * picks the least-recently-used contiguous run of desired_page_count pages
- * (min usage-stamp, tie-broken by smaller span), evicts every block
- * overlapping the chosen run (plus the tracked oldest-unlocked block when the
- * datum pool is exhausted), allocates a new datum, links it into the LRU list,
- * stamps it with cache->field_30 and returns the new handle.
- *
- * A block is "locked" (not reclaimable) if cache->query_cb(handle) is true OR
- * its usage stamp (block+0x14) equals cache->field_30. NONE = -1. All stamp
- * compares are unsigned; all page-count compares signed. Verified against
- * disassembly 0x11de10-0x11e325. Asserts: c:\halo\SOURCE\memory\lruv_cache.c.
- * Frame is > 0x1000 (int holes[1024]) so MSVC emits _chkstk; clang covers it. */
-int FUN_0011de10(void *cache, unsigned int size)
+/* FUN_0011de10 (0x11de10) — XBE naked draft (batch 79). */
+#if defined(__clang__)
+static void (*const b11de10_chkstk)(void) = FUN_001d90e0;
+static void (*const b11de10_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11de10_exitfn)(int) = system_exit;
+static void *(*const b11de10_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b11de10_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b11de10_c119810)(data_iter_t *iterator) = data_iterator_next;
+static void (*const b11de10_c11d8f0)(void *cache, int block_index) = lruv_block_delete;
+static int (*const b11de10_c119610)(data_t *data) = data_new_at_index;
+static void (*const b11de10_c11d550)(void *cache, char do_full_check) = lruv_cache_verify;
+
+__attribute__((naked, noinline))
+int FUN_0011de10(void *cache __attribute__((unused)), unsigned int size __attribute__((unused)))
 {
-  lruv_cache_t *c = (lruv_cache_t *)cache;
-  int holes[1024];              /* 256 holes x {block_index,max_stamp,start_page,page_count} */
-  data_iter_t iter;
-  lruv_cache_block_t *block;
-  lruv_cache_block_t *rec;
-  lruv_cache_block_t *next_rec;
-  lruv_cache_block_t *head_rec;
-  lruv_cache_block_t *new_rec;
-
-  int shift;
-  int desired_page_count;
-  int accumulator;              /* current page position along the walk (EDI) */
-  int walk_cursor;              /* current block datum handle, or NONE (EBP-0xc) */
-  int pending_hole_block_index; /* block that will own the next opened hole (EBP-0x20) */
-
-  int hole_write;               /* ring write cursor (EBP-0x8) */
-  int hole_read;                /* ring finalize/read cursor (EBP-0x4) */
-  int read_cursor;              /* per-segment accumulate cursor (SI) */
-  int saved_read;
-  int next_write;
-  int base;                     /* holes[] element base = cursor*4 */
-
-  unsigned int segment_stamp;   /* EBP-0x1c */
-  int segment_page_count;       /* EBP-0x10 */
-  int locked;
-  int skip_accumulate;
-
-  int oldest_unlocked_block;    /* EBP-0x18 */
-  unsigned int oldest_unlocked_stamp; /* EBP-0x38 */
-  unsigned int block_stamp;
-
-  int have_best;                /* EBP+0xf */
-  int best_block_index;         /* EBP-0x30 */
-  unsigned int best_max_stamp;  /* EBP-0x2c */
-  int best_start_page;          /* EBP-0x28 */
-  int best_page_count;          /* EBP-0x24 */
-
-  int new_block_index;
-  int region_end;
-  int block_end;
-
-  shift = (int)((unsigned char)c->page_size_bits) & 0x1f;
-  desired_page_count = (int)size >> shift;
-  if ((size & ((1u << shift) - 1u)) != 0) {
-    desired_page_count = desired_page_count + 1;
-  }
-  if (desired_page_count <= 0) {
-    display_assert("desired_page_count>0",
-                   "c:\\halo\\SOURCE\\memory\\lruv_cache.c", 0xe1, 1);
-    system_exit(-1);
-  }
-
-  have_best = 0;
-  accumulator = 0;
-  hole_write = 0;
-  hole_read = 0;
-  pending_hole_block_index = -1;
-  walk_cursor = c->first_block_index;
-  oldest_unlocked_block = -1;
-  oldest_unlocked_stamp = 0;
-  best_block_index = 0;
-  best_max_stamp = 0;
-  best_start_page = 0;
-  best_page_count = 0;
-  segment_stamp = 0;
-  segment_page_count = 0;
-
-  if (c->page_count < 1) {
-    return -1;
-  }
-
-  for (;;) {
-    skip_accumulate = 0;
-
-    /* open a fresh hole at the current page position, unless advancing the
-     * write cursor would collide with the read side. */
-    next_write = (hole_write == 0xff) ? 0 : (hole_write + 1);
-    if (next_write != hole_read) {
-      base = hole_write * 4;
-      holes[base + 0] = pending_hole_block_index; /* owning block, or NONE */
-      holes[base + 2] = accumulator;              /* start_page */
-      holes[base + 1] = 0;                        /* max_stamp  */
-      holes[base + 3] = 0;                        /* page_count */
-      hole_write = (hole_write == 0xff) ? 0 : (hole_write + 1);
-    }
-
-    if (walk_cursor == -1) {
-      /* trailing free region after the last block */
-      segment_page_count = c->page_count - accumulator;
-      segment_stamp = 0;
-      accumulator = c->page_count;
-    } else {
-      block = (lruv_cache_block_t *)datum_get(c->blocks, walk_cursor);
-      if (accumulator == block->first_page_index) {
-        /* contiguous block segment */
-        block_stamp = *(unsigned int *)&block->unk_14[0]; /* usage stamp @ +0x14 */
-        segment_stamp = block_stamp;
-        segment_page_count = block->page_count;
-        locked = 0;
-        if (c->query_cb != 0) {
-          if (c->query_cb(walk_cursor) != 0) {
-            locked = 1;
-          }
-        }
-        if (block_stamp == (unsigned int)c->field_30) {
-          locked = 1;
-        } else if (!locked) {
-          if (oldest_unlocked_block == -1 || block_stamp < oldest_unlocked_stamp) {
-            oldest_unlocked_block = walk_cursor;
-            oldest_unlocked_stamp = block_stamp;
-          }
-        }
-        pending_hole_block_index = walk_cursor;
-        walk_cursor = block->next_block_index;
-        accumulator = block->first_page_index + block->page_count; /* block end */
-        if (locked) {
-          hole_read = hole_write;     /* a locked block breaks contiguity: flush ring */
-          skip_accumulate = 1;
-        }
-      } else {
-        /* gap segment before this block; block re-processed next iteration */
-        segment_page_count = block->first_page_index - accumulator;
-        segment_stamp = 0;
-        if (segment_page_count <= 0) {
-          display_assert("page_count>0",
-                         "c:\\halo\\SOURCE\\memory\\lruv_cache.c", 0x137, 1);
-          system_exit(-1);
-        }
-        accumulator = block->first_page_index;
-      }
-    }
-
-    /* fold this segment into every open hole; finalize candidates FIFO. */
-    if (!skip_accumulate) {
-      read_cursor = hole_read;
-      while (read_cursor != hole_write) {
-        saved_read = read_cursor;
-        base = read_cursor * 4;
-        if (segment_stamp > (unsigned int)holes[base + 1]) {
-          holes[base + 1] = (int)segment_stamp;
-        }
-        holes[base + 3] = holes[base + 3] + segment_page_count;
-        if (holes[base + 3] >= desired_page_count) {
-          if (!have_best
-              || (unsigned int)holes[base + 1] < best_max_stamp
-              || ((unsigned int)holes[base + 1] == best_max_stamp
-                  && holes[base + 3] < best_page_count)) {
-            best_block_index = holes[base + 0];
-            best_max_stamp   = (unsigned int)holes[base + 1];
-            best_start_page  = holes[base + 2];
-            best_page_count  = holes[base + 3];
-            have_best = 1;
-          }
-          if (hole_read != read_cursor) {
-            display_assert("hole_read_index==hole_index",
-                           "c:\\halo\\SOURCE\\memory\\lruv_cache.c", 0x15f, 1);
-            system_exit(-1);
-          }
-          hole_read = (hole_read == 0xff) ? 0 : (hole_read + 1);
-        }
-        read_cursor = (saved_read == 0xff) ? 0 : (saved_read + 1);
-      }
-    }
-
-    if (accumulator < c->page_count) {
-      continue;
-    }
-    break;
-  }
-
-  if (!have_best) {
-    return -1;
-  }
-
-  /* evict every block overlapping the chosen region. */
-  region_end = desired_page_count + best_start_page;
-  data_iterator_new(&iter, c->blocks);
-  rec = (lruv_cache_block_t *)data_iterator_next(&iter);
-  while (rec != 0) {
-    block_end = rec->first_page_index + rec->page_count;
-    if (rec->first_page_index < region_end && block_end > best_start_page) {
-      if (c->query_cb != 0) {
-        if (c->query_cb(iter.datum_handle) != 0) {
-          display_assert(
-              "!cache->locked_block_proc || !cache->locked_block_proc(iterator.index)",
-              "c:\\halo\\SOURCE\\memory\\lruv_cache.c", 0x177, 1);
-          system_exit(-1);
-        }
-      }
-      lruv_block_delete(c, iter.datum_handle);
-    }
-    rec = (lruv_cache_block_t *)data_iterator_next(&iter);
-  }
-
-  /* datum pool exhausted: also evict the tracked oldest-unlocked block. */
-  if (c->blocks->unk_48 == c->blocks->maximum_count && oldest_unlocked_block != -1) {
-    if (best_block_index == oldest_unlocked_block) {
-      rec = (lruv_cache_block_t *)datum_get(c->blocks, oldest_unlocked_block);
-      best_block_index = rec->previous_block_index;
-    }
-    if (datum_get(c->blocks, oldest_unlocked_block) == 0) {
-      display_assert("lruv_cache_block_get(cache, oldest_unlocked_block_index)",
-                     "c:\\halo\\SOURCE\\memory\\lruv_cache.c", 0x188, 1);
-      system_exit(-1);
-    }
-    if (c->query_cb != 0) {
-      if (c->query_cb(oldest_unlocked_block) != 0) {
-        display_assert(
-            "!cache->locked_block_proc || !cache->locked_block_proc(oldest_unlocked_block_index)",
-            "c:\\halo\\SOURCE\\memory\\lruv_cache.c", 0x189, 1);
-        system_exit(-1);
-      }
-    }
-    lruv_block_delete(c, oldest_unlocked_block);
-  }
-
-  /* allocate the new block datum and link it into the LRU list. */
-  new_block_index = data_new_at_index(c->blocks);
-  if (new_block_index == -1) {
-    return -1;
-  }
-  new_rec = (lruv_cache_block_t *)datum_get(c->blocks, new_block_index);
-
-  if (best_block_index == -1) {
-    if (c->first_block_index == -1) {
-      /* empty list */
-      if (c->last_block_index != -1) {
-        display_assert("cache->last_block_index==NONE",
-                       "c:\\halo\\SOURCE\\memory\\lruv_cache.c", 0x198, 1);
-        system_exit(-1);
-      }
-      new_rec->previous_block_index = -1;
-      c->last_block_index = new_block_index;
-      new_rec->next_block_index = c->first_block_index;
-      c->first_block_index = new_block_index;
-    } else {
-      /* insert before the current head */
-      head_rec = (lruv_cache_block_t *)datum_get(c->blocks, c->first_block_index);
-      if (head_rec->previous_block_index != -1) {
-        display_assert("next_block->previous_block_index==NONE",
-                       "c:\\halo\\SOURCE\\memory\\lruv_cache.c", 0x1a0, 1);
-        system_exit(-1);
-      }
-      new_rec->previous_block_index = -1;
-      head_rec->previous_block_index = new_block_index;
-      new_rec->next_block_index = c->first_block_index;
-      c->first_block_index = new_block_index;
-    }
-  } else {
-    /* insert immediately after best_block_index */
-    rec = (lruv_cache_block_t *)datum_get(c->blocks, best_block_index);
-    if (rec->next_block_index != -1) {
-      next_rec = (lruv_cache_block_t *)datum_get(c->blocks, rec->next_block_index);
-      new_rec->previous_block_index = next_rec->previous_block_index;
-      next_rec->previous_block_index = new_block_index;
-    } else {
-      new_rec->previous_block_index = c->last_block_index;
-      c->last_block_index = new_block_index;
-    }
-    rec = (lruv_cache_block_t *)datum_get(c->blocks, best_block_index);
-    new_rec->next_block_index = rec->next_block_index;
-    rec->next_block_index = new_block_index;
-  }
-
-  new_rec->first_page_index = best_start_page;
-  new_rec->page_count = desired_page_count;
-  *(int *)&new_rec->unk_14[0] = c->field_30;
-  lruv_cache_verify(c, 1);
-  return new_block_index;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl $0x1048, %%eax\n\t"
+      "call *%[chkstk]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl 0x2c(%%ebx), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl $1, %%esi\n\t"
+      "shll %%cl, %%esi\n\t"
+      "movl %%eax, %%edx\n\t"
+      "sarl %%cl, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "decl %%esi\n\t"
+      "testl %%esi, %%eax\n\t"
+      "movl %%edx, -0x14(%%ebp)\n\t"
+      "je .LFUN_0011de10_1\n\t"
+      "incl %%edx\n\t"
+      "movl %%edx, -0x14(%%ebp)\n\t"
+      ".LFUN_0011de10_1:\n\t"
+      "orl $0xffffffff, %%esi\n\t"
+      "testl %%edx, %%edx\n\t"
+      "movb $0, 0xf(%%ebp)\n\t"
+      "movl %%esi, -0x18(%%ebp)\n\t"
+      "jg .LFUN_0011de10_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe1\n\t"
+      "pushl $0x28fa90\n\t"
+      "pushl $0x28ff0c\n\t"
+      "call *%[assert]\n\t"
+      "pushl %%esi\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011de10_2:\n\t"
+      "movl 0x34(%%ebx), %%eax\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "movl 0x28(%%ebx), %%eax\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "movl %%edi, -0x4(%%ebp)\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl %%esi, -0x20(%%ebp)\n\t"
+      "jg .LFUN_0011de10_4\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011de10_3:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LFUN_0011de10_4:\n\t"
+      "cmpw $0xff, %%cx\n\t"
+      "jne .LFUN_0011de10_5\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .LFUN_0011de10_6\n\t"
+      ".LFUN_0011de10_5:\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "incl %%eax\n\t"
+      ".LFUN_0011de10_6:\n\t"
+      "movswl -0x4(%%ebp), %%esi\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "je .LFUN_0011de10_8\n\t"
+      "movl -0x20(%%ebp), %%esi\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "shll $4, %%eax\n\t"
+      "cmpw $0xff, -0x8(%%ebp)\n\t"
+      "leal -0x1048(%%ebp,%%eax,1), %%eax\n\t"
+      "movl %%esi, (%%eax)\n\t"
+      "movl %%edi, 0x8(%%eax)\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl %%edx, 0xc(%%eax)\n\t"
+      "jne .LFUN_0011de10_7\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "jmp .LFUN_0011de10_8\n\t"
+      ".LFUN_0011de10_7:\n\t"
+      "incl %%ecx\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      ".LFUN_0011de10_8:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_0011de10_14\n\t"
+      "movl 0x28(%%ebx), %%eax\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "subl %%edi, %%ebx\n\t"
+      "movl %%edx, -0x1c(%%ebp)\n\t"
+      "movl %%ebx, -0x10(%%ebp)\n\t"
+      "movl %%eax, %%edi\n\t"
+      ".LFUN_0011de10_9:\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      "cmpw -0x8(%%ebp), %%si\n\t"
+      "je .LFUN_0011de10_29\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_0011de10_10:\n\t"
+      "movl -0x1c(%%ebp), %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl %%eax, -0x34(%%ebp)\n\t"
+      "shll $4, %%eax\n\t"
+      "movl -0x1044(%%ebp,%%eax,1), %%edx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "leal -0x1048(%%ebp,%%eax,1), %%eax\n\t"
+      "jbe .LFUN_0011de10_11\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      ".LFUN_0011de10_11:\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "addl %%ebx, %%edx\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "movl %%edx, 0xc(%%eax)\n\t"
+      "jl .LFUN_0011de10_26\n\t"
+      "movb 0xf(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_0011de10_13\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl -0x2c(%%ebp), %%ebx\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "jb .LFUN_0011de10_12\n\t"
+      "jne .LFUN_0011de10_22\n\t"
+      "cmpl -0x24(%%ebp), %%edx\n\t"
+      "jge .LFUN_0011de10_22\n\t"
+      ".LFUN_0011de10_12:\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      ".LFUN_0011de10_13:\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%ecx, -0x30(%%ebp)\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl %%edx, -0x2c(%%ebp)\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "movl %%ecx, -0x28(%%ebp)\n\t"
+      "movl %%edx, -0x24(%%ebp)\n\t"
+      "movb $1, 0xf(%%ebp)\n\t"
+      "jmp .LFUN_0011de10_23\n\t"
+      ".LFUN_0011de10_14:\n\t"
+      "movl 0x3c(%%ebx), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "jne .LFUN_0011de10_20\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl 0x24(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl 0x14(%%esi), %%edx\n\t"
+      "movl 0x4(%%esi), %%ebx\n\t"
+      "movl %%edx, -0x1c(%%ebp)\n\t"
+      "movl %%ebx, -0x10(%%ebp)\n\t"
+      "je .LFUN_0011de10_15\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0011de10_15\n\t"
+      "movb $1, %%cl\n\t"
+      "jmp .LFUN_0011de10_16\n\t"
+      ".LFUN_0011de10_15:\n\t"
+      "xorb %%cl, %%cl\n\t"
+      ".LFUN_0011de10_16:\n\t"
+      "movl 0x14(%%esi), %%eax\n\t"
+      "cmpl 0x30(%%edi), %%eax\n\t"
+      "jne .LFUN_0011de10_17\n\t"
+      "movb $1, %%cl\n\t"
+      "jmp .LFUN_0011de10_19\n\t"
+      ".LFUN_0011de10_17:\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_0011de10_19\n\t"
+      "cmpl $-1, -0x18(%%ebp)\n\t"
+      "je .LFUN_0011de10_18\n\t"
+      "cmpl -0x38(%%ebp), %%eax\n\t"
+      "jae .LFUN_0011de10_19\n\t"
+      ".LFUN_0011de10_18:\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movl %%edx, -0x18(%%ebp)\n\t"
+      "movl %%eax, -0x38(%%ebp)\n\t"
+      ".LFUN_0011de10_19:\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "movl 0x4(%%esi), %%edi\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "addl %%eax, %%edi\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "je .LFUN_0011de10_9\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_0011de10_29\n\t"
+      ".LFUN_0011de10_20:\n\t"
+      "subl %%edi, %%eax\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "movl $0, -0x1c(%%ebp)\n\t"
+      "movl %%ebx, -0x10(%%ebp)\n\t"
+      "jg .LFUN_0011de10_21\n\t"
+      "pushl $1\n\t"
+      "pushl $0x137\n\t"
+      "pushl $0x28fa90\n\t"
+      "pushl $0x28fcec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011de10_21:\n\t"
+      "movl 0x8(%%esi), %%edi\n\t"
+      "jmp .LFUN_0011de10_9\n\t"
+      ".LFUN_0011de10_22:\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      ".LFUN_0011de10_23:\n\t"
+      "cmpw %%si, -0x4(%%ebp)\n\t"
+      "je .LFUN_0011de10_24\n\t"
+      "pushl $1\n\t"
+      "pushl $0x15f\n\t"
+      "pushl $0x28fa90\n\t"
+      "pushl $0x28fef0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011de10_24:\n\t"
+      "cmpw $0xff, -0x4(%%ebp)\n\t"
+      "jne .LFUN_0011de10_25\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_0011de10_26\n\t"
+      ".LFUN_0011de10_25:\n\t"
+      "incl -0x4(%%ebp)\n\t"
+      ".LFUN_0011de10_26:\n\t"
+      "cmpw $0xff, %%si\n\t"
+      "jne .LFUN_0011de10_27\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "jmp .LFUN_0011de10_28\n\t"
+      ".LFUN_0011de10_27:\n\t"
+      "movl -0x34(%%ebp), %%esi\n\t"
+      "incl %%esi\n\t"
+      ".LFUN_0011de10_28:\n\t"
+      "cmpw -0x8(%%ebp), %%si\n\t"
+      "jne .LFUN_0011de10_10\n\t"
+      ".LFUN_0011de10_29:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl 0x28(%%eax), %%edi\n\t"
+      "jl .LFUN_0011de10_3\n\t"
+      "movb 0xf(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0011de10_46\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl 0x3c(%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x48(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x48(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0011de10_33\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl -0x28(%%ebp), %%edi\n\t"
+      "leal (%%ecx,%%edi,1), %%esi\n\t"
+      ".LFUN_0011de10_30:\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "jge .LFUN_0011de10_32\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "addl %%ecx, %%edx\n\t"
+      "cmpl %%edi, %%edx\n\t"
+      "jle .LFUN_0011de10_32\n\t"
+      "movl 0x24(%%ebx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0011de10_31\n\t"
+      "movl -0x40(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0011de10_31\n\t"
+      "pushl $1\n\t"
+      "pushl $0x177\n\t"
+      "pushl $0x28fa90\n\t"
+      "pushl $0x28fea8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011de10_31:\n\t"
+      "movl -0x40(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c11d8f0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_0011de10_32:\n\t"
+      "leal -0x48(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0011de10_30\n\t"
+      ".LFUN_0011de10_33:\n\t"
+      "movl 0x3c(%%ebx), %%eax\n\t"
+      "movw 0x30(%%eax), %%cx\n\t"
+      "cmpw 0x20(%%eax), %%cx\n\t"
+      "jne .LFUN_0011de10_37\n\t"
+      "movl -0x18(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_0011de10_37\n\t"
+      "cmpl %%esi, -0x30(%%ebp)\n\t"
+      "jne .LFUN_0011de10_34\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%eax), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edx, -0x30(%%ebp)\n\t"
+      ".LFUN_0011de10_34:\n\t"
+      "movl 0x3c(%%ebx), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0011de10_35\n\t"
+      "pushl $1\n\t"
+      "pushl $0x188\n\t"
+      "pushl $0x28fa90\n\t"
+      "pushl $0x28fe6c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011de10_35:\n\t"
+      "movl 0x24(%%ebx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0011de10_36\n\t"
+      "pushl %%esi\n\t"
+      "call *%%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0011de10_36\n\t"
+      "pushl $1\n\t"
+      "pushl $0x189\n\t"
+      "pushl $0x28fa90\n\t"
+      "pushl $0x28fe18\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011de10_36:\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c11d8f0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_0011de10_37:\n\t"
+      "movl 0x3c(%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119610]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_0011de10_44\n\t"
+      "movl 0x3c(%%ebx), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl -0x30(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_0011de10_41\n\t"
+      "movl 0x34(%%ebx), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_0011de10_39\n\t"
+      "cmpl $-1, 0x38(%%ebx)\n\t"
+      "je .LFUN_0011de10_38\n\t"
+      "pushl $1\n\t"
+      "pushl $0x198\n\t"
+      "pushl $0x28fa90\n\t"
+      "pushl $0x28fdf8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011de10_38:\n\t"
+      "movl $0xffffffff, 0x10(%%esi)\n\t"
+      "movl 0x34(%%ebx), %%edx\n\t"
+      "movl %%edi, 0x38(%%ebx)\n\t"
+      "movl %%edx, 0xc(%%esi)\n\t"
+      "movl %%edi, 0x34(%%ebx)\n\t"
+      "jmp .LFUN_0011de10_43\n\t"
+      ".LFUN_0011de10_39:\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x3c(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x10(%%ebx), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_0011de10_40\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a0\n\t"
+      "pushl $0x28fa90\n\t"
+      "pushl $0x28fdd0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011de10_40:\n\t"
+      "movl $0xffffffff, 0x10(%%esi)\n\t"
+      "movl %%edi, 0x10(%%ebx)\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl 0x34(%%ebx), %%edx\n\t"
+      "movl %%edx, 0xc(%%esi)\n\t"
+      "movl %%edi, 0x34(%%ebx)\n\t"
+      "jmp .LFUN_0011de10_43\n\t"
+      ".LFUN_0011de10_41:\n\t"
+      "movl 0x3c(%%ebx), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_0011de10_45\n\t"
+      "movl 0x38(%%ebx), %%edx\n\t"
+      "movl %%edx, 0x10(%%esi)\n\t"
+      "movl %%edi, 0x38(%%ebx)\n\t"
+      ".LFUN_0011de10_42:\n\t"
+      "movl -0x30(%%ebp), %%eax\n\t"
+      "movl 0x3c(%%ebx), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "movl %%edx, 0xc(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edi, 0xc(%%eax)\n\t"
+      ".LFUN_0011de10_43:\n\t"
+      "movl -0x28(%%ebp), %%eax\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      "movl 0x30(%%ebx), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%edx, 0x14(%%esi)\n\t"
+      "call *%[c11d550]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_0011de10_44:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011de10_45:\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x3c(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x10(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edi, 0x10(%%eax)\n\t"
+      "jmp .LFUN_0011de10_42\n\t"
+      ".LFUN_0011de10_46:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [chkstk] "m"(b11de10_chkstk), [assert] "m"(b11de10_assert), [exitfn] "m"(b11de10_exitfn), [dget] "m"(b11de10_dget), [c1197b0] "m"(b11de10_c1197b0), [c119810] "m"(b11de10_c119810), [c11d8f0] "m"(b11de10_c11d8f0), [c119610] "m"(b11de10_c119610), [c11d550] "m"(b11de10_c11d550)
+      : "memory");
 }
+#else
+#error "FUN_0011de10: clang naked draft required"
+#endif
+

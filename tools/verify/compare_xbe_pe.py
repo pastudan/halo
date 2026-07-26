@@ -940,6 +940,19 @@ def main() -> int:
         ("FUN_00014620", 0x14620, 0x1465a),
         ("actor_clear_aim_target", 0x17060, 0x1708e),
         ("prime_compare", 0x80d30, 0x80d4c),
+        # gameplay wave 79 (2026-07-26) — rasterizer/path/props Capstone weaks
+        ("rasterizer_transparent_geometry_group_draw", 0x174d10, 0x17878f, [(0x178790, 0x1787b8), (0x1787b8, 0x1787d8), (0x1787d8, 0x1787f8), (0x1787f8, 0x178818)]),
+        ("FUN_0002bd80", 0x2bd80, 0x2cda2),
+        ("prop_status_refresh", 0x33440, 0x3429a),
+        ("actor_move_update", 0x2e560, 0x2f198),
+        ("actor_move_compute_facing", 0x2daa0, 0x2e521, [(0x2e524, 0x2e534), (0x2e534, 0x2e544), (0x2e544, 0x2e558)]),
+        ("FUN_00181c20", 0x181c20, 0x1824d2),
+        ("FUN_0005f740", 0x5f740, 0x5ff6d),
+        ("actor_perception_refresh_danger_zone", 0x32380, 0x32940),
+        ("FUN_0011de10", 0x11de10, 0x11e326),
+        ("actor_path_refresh", 0x2cdb0, 0x2d333, [(0x2d334, 0x2d344)]),
+        ("path_state_build_path", 0x5eae0, 0x5ef80),
+        ("FUN_001800b0", 0x1800b0, 0x1804e9),
     ]
 
     xbe = Xbe.from_file(args.xbe)
