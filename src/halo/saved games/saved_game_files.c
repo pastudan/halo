@@ -146,73 +146,27 @@ void FUN_001c1b00(void)
 #endif
 
 
-/* FUN_001c1ba0 (0x1c1ba0) — XBE naked draft (batch 285). */
-#if defined(__clang__)
-static void *(*const b1c1ba0_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* FUN_001c1ba0 (0x1c1ba0) — readable C lift. */
 void FUN_001c1ba0(void)
 {
-  __asm__ volatile(
-      "pushl $0x6c\n\t"
-      "pushl $0\n\t"
-      "pushl $0x4ea9c8\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, 0x4eaa30\n\t"
-      ".byte 0xe9, 0x23, 0xfe, 0xff, 0xff\n\t"
-      :
-      : [memset] "m"(b1c1ba0_memset)
-      : "memory");
+  csmemset((void *)0x4ea9c8, 0, 0x6c);
+  *(char *)0x4eaa30 = 1;
+  FUN_001c19e0();
 }
-#else
-#error "FUN_001c1ba0: clang naked draft required"
-#endif
 
-
-/* player_profile_get_from_path (0x1c1bc0) — XBE naked draft (batch 281). */
-#if defined(__clang__)
-static void (*const b1c1bc0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c1bc0_exitfn)(int) = system_exit;
-static void (*const b1c1bc0_c1c1b00)(void) = FUN_001c1b00;
-
-__attribute__((naked, noinline))
-void player_profile_get_from_path(void)
+/* player_profile_get_from_path (0x1c1bc0) — readable C lift. */
+void player_profile_get_from_path(int profile_handle, void *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lplayer_profile_get_from_path_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x100\n\t"
-      "pushl $0x2b9f70\n\t"
-      "pushl $0x2829b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_profile_get_from_path_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lplayer_profile_get_from_path_2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c1b00]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lplayer_profile_get_from_path_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c1bc0_assert), [exitfn] "m"(b1c1bc0_exitfn), [c1c1b00] "m"(b1c1bc0_c1c1b00)
-      : "memory");
-}
-#else
-#error "player_profile_get_from_path: clang naked draft required"
-#endif
+  extern char DAT_002829b0[];
+  extern char DAT_002b9f70[];
 
+  if (!out) {
+    display_assert(DAT_002829b0, DAT_002b9f70, 0x100, 1);
+    system_exit(-1);
+  }
+  if (profile_handle != -1)
+    FUN_001c1b00(profile_handle);
+}
 
 /* FUN_001c1c00 (0x1c1c00) — XBE naked draft (batch 259). */
 #if defined(__clang__)

@@ -13893,7 +13893,7 @@
         {
           "addr": "0xdff70",
           "decl": "void interface_draw_fullscreen_overlays(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xdff90",
