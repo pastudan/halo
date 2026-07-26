@@ -4356,42 +4356,13 @@ void FUN_000c40f0(int16_t name_offset __attribute__((unused)), int element_size 
 #endif
 
 
-/* FUN_000c4130 (0xc4130) — XBE naked draft (batch 170). */
-#if defined(__clang__)
-static scenario_t * (*const bc4130_c18e380)(void) = global_scenario_get;
-static void (*const bc4130_cc40f0)(int16_t name_offset, int element_size, void *block) = FUN_000c40f0;
-
-__attribute__((naked, noinline))
-void FUN_000c4130(int16_t block_offset __attribute__((unused)), int16_t name_offset __attribute__((unused)), int element_size __attribute__((unused)))
+/* FUN_000c4130 (0xc4130) — readable C lift (HS scenario-block wrapper). */
+void FUN_000c4130(int16_t block_offset, int16_t name_offset, int element_size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c4130_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "movswl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cc40f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c4130_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc4130_c18e380), [cc40f0] "m"(bc4130_cc40f0)
-      : "memory");
+  if (*(int *)0x326a08 != -1) {
+    FUN_000c40f0(name_offset, element_size, (char *)global_scenario_get() + block_offset);
+  }
 }
-#else
-#error "FUN_000c4130: clang naked draft required"
-#endif
-
 
 /* FUN_000c4160 (0xc4160) — XBE naked draft (batch 163). */
 #if defined(__clang__)

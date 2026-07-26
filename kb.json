@@ -11665,7 +11665,7 @@
         {
           "addr": "0xc4130",
           "decl": "void FUN_000c4130(int16_t block_offset, int16_t name_offset, int element_size);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4160",
