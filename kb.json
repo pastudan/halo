@@ -14381,7 +14381,7 @@
         {
           "addr": "0x100690",
           "decl": "void main_menu_unload(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1006b0",

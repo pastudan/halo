@@ -3449,29 +3449,13 @@ void main_skip(short level)
   *(char *)0x46da49 = 1;
 }
 
-/* main_menu_unload (0x100690) — XBE naked draft (batch 188). */
-#if defined(__clang__)
-static void (*const b100690_ce4640)(void) = ui_widget_stop_attract_mode;
-static void (*const b100690_ce43d0)(char active) = main_menu_active;
-
-__attribute__((naked, noinline))
+/* main_menu_unload (0x100690) — readable C lift. */
 void main_menu_unload(void)
 {
-  __asm__ volatile(
-      "call *%[ce4640]\n\t"
-      "pushl $0\n\t"
-      "call *%[ce43d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $0, 0x46da42\n\t"
-      "ret\n\t"
-      :
-      : [ce4640] "m"(b100690_ce4640), [ce43d0] "m"(b100690_ce43d0)
-      : "memory");
+  ui_widget_stop_attract_mode();
+  main_menu_active(0);
+  *(char *)0x46da42 = 0;
 }
-#else
-#error "main_menu_unload: clang naked draft required"
-#endif
-
 
 void main_menu_switch_to_single_player(void)
 {
