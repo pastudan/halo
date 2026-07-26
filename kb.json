@@ -33811,7 +33811,7 @@
         {
           "addr": "0xfcec0",
           "decl": "void FUN_000fcec0(int16_t trigger_index @<eax>, int weapon_handle @<ebx>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfcf20",

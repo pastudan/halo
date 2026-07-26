@@ -3580,73 +3580,19 @@ void FUN_000fce60(int weapon_handle /*@<eax>*/, int16_t trigger_index /*@<si>*/)
   *(int16_t *)(slot + 0x212) = -1;
 }
 
-/* 0xfcec0 — clear trigger heat then reset charge (trigger@eax, weapon@ebx). */
-#if defined(__clang__)
-static void *(*const FUN_000fcec0_get)(int, int) = object_get_and_verify_type;
-static char *(*const FUN_000fcec0_entry)(void *, int16_t) = FUN_000fb320;
-static void *(*const FUN_000fcec0_tag)(int, int) = tag_get;
-static void *(*const FUN_000fcec0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const FUN_000fcec0_clear)(int16_t, int) = FUN_000fcdd0;
-
-__attribute__((naked, noinline))
-void FUN_000fcec0(int16_t trigger_index __attribute__((unused)),
-                  int weapon_handle __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $4\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[entry]\n\t"
-      "movl %%eax, -4(%%ebp)\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "pushl $0x114\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x4fc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl -4(%%ebp), %%edx\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "movb $0, (%%edx)\n\t"
-      "call *%[clear]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_000fcec0_get), [entry] "m"(FUN_000fcec0_entry),
-        [tag] "m"(FUN_000fcec0_tag), [elem] "m"(FUN_000fcec0_elem),
-        [clear] "m"(FUN_000fcec0_clear)
-      : "memory");
-}
-#else
+/* FUN_000fcec0 (0xfcec0) — readable C lift. */
 void FUN_000fcec0(int16_t trigger_index, int weapon_handle)
 {
-  char *weapon_obj;
-  char *trigger_entry;
-
-  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  trigger_entry = FUN_000fb320(weapon_obj, trigger_index);
-  tag_block_get_element(
-      (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4fc,
-      (int)trigger_index, 0x114);
-  trigger_entry[0] = 0;
+  char *weapon;
+  char *state;
+  char *weap_tag;
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  state = (char *)FUN_000fb320(weapon, trigger_index);
+  weap_tag = (char *)tag_get(0x77656170, *(int *)weapon);
+  (void)tag_block_get_element((void *)(weap_tag + 0x4fc), (int)trigger_index, 0x114);
+  *state = 0;
   FUN_000fcdd0(trigger_index, weapon_handle);
 }
-#endif
 
 /* 0xfd0b0 — shot-error rotation (angle_index@ax; remaining args cdecl). */
 #if defined(__clang__)
@@ -3788,7 +3734,7 @@ static void *(*const bfd520_get)(int, int) = object_get_and_verify_type;
 static char *(*const bfd520_fb320)(void *, short) = FUN_000fb320;
 static void *(*const bfd520_tag)(int, int) = tag_get;
 static void *(*const bfd520_elem)(void *, int, int) = tag_block_get_element;
-static void (*const bfd520_cfcec0)(int16_t trigger_index, int weapon_handle) = FUN_000fcec0;
+static void (*const bfd520_cfcec0)(int16_t trigger_index, int weapon_handle) = (void *)&FUN_000fcec0;
 
 __attribute__((naked, noinline))
 void FUN_000fd520(int param_a __attribute__((unused)), int weapon_handle __attribute__((unused)), int16_t trigger_index __attribute__((unused)))
