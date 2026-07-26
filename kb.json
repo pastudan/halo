@@ -20388,7 +20388,7 @@
         {
           "addr": "0xe2820",
           "decl": "void FUN_000e2820(float *unused, float alpha, float *color, float progress);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e2820"
         },
         {
