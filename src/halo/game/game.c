@@ -2166,15 +2166,38 @@ void FUN_000b4bf0(void)
 #endif
 
 
-/* 0xb4d00 */
+/* FUN_000b4d00 (0xb4d00) — XBE naked draft (batch 169). */
+#if defined(__clang__)
+static void *(*const bb4d00_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
 void FUN_000b4d00(void)
 {
-  int eax = 0;
-
-  datum_get((void *)(uintptr_t)eax, 0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x20(%%eax), %%eax\n\t"
+      "addl %%edi, 0x456fe0(,%%eax,4)\n\t"
+      "andl $0xffff, %%esi\n\t"
+      "movl 0x457020(,%%esi,4), %%ecx\n\t"
+      "leal 0x457020(,%%esi,4), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "addl %%edi, %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bb4d00_dget)
+      : "memory");
 }
+#else
+#error "FUN_000b4d00: clang naked draft required"
+#endif
+
 
 /* find_next_target (0xb4e20) — XBE naked draft (batch 121). */
 #if defined(__clang__)
@@ -2770,9 +2793,27 @@ void slayer_engine_display_score(void)
 
 /* --- game.obj orphan shells (2026-07-26) --- */
 
-/* 0xa7470 */
+/* FUN_000A7470 (0xa7470) — XBE naked draft (batch 166). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_000A7470(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x4566ec, %%eax\n\t"
+      "movw 0xe(%%eax), %%ax\n\t"
+      "cmpw $1, %%ax\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "jg .LFUN_000A7470_1\n\t"
+      "movl $1, %%eax\n\t"
+      ".LFUN_000A7470_1:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000A7470: clang naked draft required"
+#endif
+

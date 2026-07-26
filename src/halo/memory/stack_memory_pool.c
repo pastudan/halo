@@ -1034,19 +1034,45 @@ void *stack_memory_pool_realloc(void *pool, int block, unsigned short new_size,
 }
 /* --- stack_memory_pool.obj batch drafts (2026-07-26) --- */
 
-/* 0x11eac0 */
+/* memory_block_get_user_size (0x11eac0) — XBE naked draft (batch 169). */
+#if defined(__clang__)
+static void (*const b11eac0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11eac0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void memory_block_get_user_size(void)
 {
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x11eb01 */
-  display_assert((char *)0x002901b8, (char *)0x0029018c, 567, 0);
-  system_exit(0);
-  display_assert((char *)0x002901b8, (char *)0x0029018c, 559, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "testl %%esi, %%esi\n\t"
+      "jne .Lmemory_block_get_user_size_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x237\n\t"
+      "pushl $0x29018c\n\t"
+      "pushl $0x2901b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "pushl $1\n\t"
+      "pushl $0x22f\n\t"
+      "pushl $0x29018c\n\t"
+      "pushl $0x2901b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x28, %%esp\n\t"
+      ".Lmemory_block_get_user_size_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "andl $0x7fffffff, %%eax\n\t"
+      "subl $0x20, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11eac0_assert), [exitfn] "m"(b11eac0_exitfn)
+      : "memory");
 }
+#else
+#error "memory_block_get_user_size: clang naked draft required"
+#endif
+
 
 /* 0x11eb10 */
 void FUN_0011eb10(void)
@@ -1794,30 +1820,92 @@ void pool_new_pointer_clear(void)
 #endif
 
 
-/* 0x11fd10 */
+/* FUN_0011fd10 (0x11fd10) — XBE naked draft (batch 165). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_0011fd10(void)
 {
-  /* relift: no calls detected — manual review */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "je .LFUN_0011fd10_1\n\t"
+      "movl 0x14(%%eax), %%ecx\n\t"
+      "movl %%ecx, 0xc(%%ebp)\n\t"
+      "jmp .LFUN_0011fd10_2\n\t"
+      ".LFUN_0011fd10_1:\n\t"
+      "movl 0x10(%%eax), %%edx\n\t"
+      "movl %%edx, 0xc(%%ebp)\n\t"
+      ".LFUN_0011fd10_2:\n\t"
+      "movswl 0xa(%%eax), %%ecx\n\t"
+      "fildl 0xc(%%ebp)\n\t"
+      "movswl 0x8(%%eax), %%edx\n\t"
+      "imull %%edx, %%ecx\n\t"
+      "movl %%ecx, 0xc(%%ebp)\n\t"
+      "fidivl 0xc(%%ebp)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0011fd10: clang naked draft required"
+#endif
 
-/* 0x11fd50 */
+
+/* FUN_0011fd50 (0x11fd50) — XBE naked draft (batch 166). */
+#if defined(__clang__)
+static void (*const b11fd50_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11fd50_exitfn)(int) = system_exit;
+static void (*const b11fd50_c1193f0)(data_t *data) = data_verify;
+
+__attribute__((naked, noinline))
 void FUN_0011fd50(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x11fd74 */
-  display_assert((char *)0x002905a0, (char *)0x002905b0, 260, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 8], 0 -> jle 0x11fd82 */
-  /* relift: cmp word ptr [esi + 0xa], 0 -> jg 0x11fda2 */
-  display_assert((char *)0x00290570, (char *)0x002905b0, 261, 0);
-  system_exit(0);
-  data_verify((void *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_0011fd50_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x104\n\t"
+      "pushl $0x2905b0\n\t"
+      "pushl $0x2905a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011fd50_1:\n\t"
+      "cmpw $0, 0x8(%%esi)\n\t"
+      "jle .LFUN_0011fd50_2\n\t"
+      "cmpw $0, 0xa(%%esi)\n\t"
+      "jg .LFUN_0011fd50_3\n\t"
+      ".LFUN_0011fd50_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x105\n\t"
+      "pushl $0x2905b0\n\t"
+      "pushl $0x290570\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011fd50_3:\n\t"
+      "movl 0x18(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1193f0]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11fd50_assert), [exitfn] "m"(b11fd50_exitfn), [c1193f0] "m"(b11fd50_c1193f0)
+      : "memory");
 }
+#else
+#error "FUN_0011fd50: clang naked draft required"
+#endif
+
 
 /* FUN_0011fdb0 (0x11fdb0) — XBE naked draft (batch 137). */
 #if defined(__clang__)
@@ -1933,18 +2021,44 @@ void FUN_0011fe80(void)
   (void)esi;
 }
 
-/* 0x11feb0 */
+/* FUN_0011feb0 (0x11feb0) — XBE naked draft (batch 164). */
+#if defined(__clang__)
+static void (*const b11feb0_c11fd50)(void) = FUN_0011fd50;
+static void (*const b11feb0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11feb0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_0011feb0(void)
 {
-  int esi = 0;
-
-  FUN_0011fd50();
-  /* relift: cmp byte ptr [esi], 0 -> je 0x11fede */
-  display_assert((char *)0x00290610, (char *)0x002905b0, 78, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "call *%[c11fd50]\n\t"
+      "cmpb $0, (%%esi)\n\t"
+      "je .LFUN_0011feb0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4e\n\t"
+      "pushl $0x2905b0\n\t"
+      "pushl $0x290610\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011feb0_1:\n\t"
+      "movb $1, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11fd50] "m"(b11feb0_c11fd50), [assert] "m"(b11feb0_assert), [exitfn] "m"(b11feb0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_0011feb0: clang naked draft required"
+#endif
+
 
 /* 0x11fef0 */
 void FUN_0011fef0(void)

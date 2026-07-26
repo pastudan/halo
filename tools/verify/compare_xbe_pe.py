@@ -60,6 +60,14 @@ def pe_fn_bytes(pe: pefile.PE, name: str) -> tuple[bytes, int]:
     while len(data) > 16 and data[-1] in (0x90, 0xCC, 0x00):
         if data[-1] == 0x90 and data[-2] == 0xC3:
             break
+        # Do not strip a trailing 0x00 that is the high byte of an imm32
+        # (e.g. FF 25 xx xx xx 00 = jmp dword ptr [abs], batch 170).
+        if data[-1] == 0x00 and len(data) >= 6 and data[-6] in (0xE8, 0xE9, 0x68):
+            break
+        if data[-1] == 0x00 and len(data) >= 6 and data[-6:-4] == b"\xFF\x25":
+            break
+        if data[-1] == 0x00 and len(data) >= 6 and data[-6:-4] == b"\xFF\x15":
+            break
         data = data[:-1]
     while True:
         insns = list(md.disasm(data, addr))
@@ -2032,6 +2040,110 @@ def main() -> int:
         ("FUN_000bf2b0", 0xbf2b0, 0xbf2f9),
         ("FUN_000bf4c0", 0xbf4c0, 0xbf50a),
         ("FUN_000c9990", 0xc9990, 0xc99e0),
+        # gameplay wave 163 (2026-07-26) — Capstone weaks
+        ("player_ui_activate_all_solo_levels", 0xe0fd0, 0xe0ff9),
+        ("FUN_000c4180", 0xc4180, 0xc41a1),
+        ("player_ui_get_edit_playlist_profile", 0xe0ec0, 0xe0edd),
+        ("player_ui_get_edit_player_profile", 0xe0ea0, 0xe0ebb),
+        ("FUN_0004b2b0", 0x4b2b0, 0x4b31b),
+        ("player_ui_get_player1_last_used_profile_index", 0xe0c90, 0xe0cc5),
+        ("FUN_000f0070", 0xf0070, 0xf008b),
+        ("FUN_000c4160", 0xc4160, 0xc4177),
+        ("render_frustum_sphere_diameter_in_pixels", 0x185a70, 0x185ac2),
+        ("FUN_00024900", 0x24900, 0x24945),
+        ("FUN_00024850", 0x24850, 0x24890),
+        ("player_ui_get_path_to_local_player_profile_directory", 0xe0bf0, 0xe0c21),
+        # gameplay wave 164 (2026-07-26) — Capstone weaks
+        ("FUN_000e33e0", 0xe33e0, 0xe340f),
+        ("get_ui_rgb_white", 0xe54e0, 0xe5530),
+        ("UnhandledExceptionFilter", 0x1cf97c, 0x1cf999),
+        ("FUN_0011feb0", 0x11feb0, 0x11fee4),
+        ("FUN_0009fad0", 0x9fad0, 0x9fb0c),
+        ("get_ui_argb_white", 0xe5530, 0xe5586),
+        ("players_unzoom_all", 0xb69d0, 0xb6a1a),
+        ("player_effect_screen_fade_in", 0xa2970, 0xa29b8),
+        ("player_effect_screen_fade_out", 0xa29c0, 0xa2a08),
+        ("FUN_000ca030", 0xca030, 0xca048),
+        ("FUN_00087ac0", 0x87ac0, 0x87ae8),
+        ("D3DXMatrixIdentity", 0xe21e0, 0xe221e),
+        # gameplay wave 165 (2026-07-26) — Capstone weaks
+        ("FUN_000c40f0", 0xc40f0, 0xc4128),
+        ("FUN_000c41e0", 0xc41e0, 0xc4235),
+        ("player_ui_autojoin_players_to_next_multiplayer_game", 0xe0930, 0xe095d),
+        ("FUN_000ca010", 0xca010, 0xca02d),
+        ("XapiCallThreadNotifyRoutines", 0x1cf944, 0x1cf97c),
+        ("FUN_000dae90", 0xdae90, 0xdaed4),
+        ("FUN_000a55e0", 0xa55e0, 0xa560b),
+        ("set_ui_plasma_effect_color", 0xe3bb0, 0xe3bd7),
+        ("FUN_000c41b0", 0xc41b0, 0xc41d1),
+        ("FUN_0011fd10", 0x11fd10, 0x11fd41),
+        ("scripted_player_effect_start", 0xa2df0, 0xa2e38),
+        ("FUN_000dc000", 0xdc000, 0xdc063),
+        # gameplay wave 166 (2026-07-26) — Capstone weaks
+        ("ui_widget_find_localized_string_index", 0xe4a80, 0xe4ac2),
+        ("FUN_000A7470", 0xa7470, 0xa7488),
+        ("FUN_00053a20", 0x53a20, 0x53a8b),
+        ("FUN_000c40b0", 0xc40b0, 0xc40e2),
+        ("weapon_get_field_of_view", 0xfc8e0, 0xfc92d),
+        ("FUN_0011fd50", 0x11fd50, 0x11fdad),
+        ("valid_real_vector2d", 0xbb2b0, 0xbb2ec),
+        ("player_control_get_zoom_level", 0xb6a70, 0xb6a8e),
+        ("vertex_type_from_shader_tag", 0x1937a0, 0x1937ce),
+        ("widget_instance_parent_allows_focus", 0xe4a40, 0xe4a7d),
+        ("GetThreadPriority", 0x1cf9eb, 0x1cfa3f),
+        ("ai_debug_lineofsight", 0x4b770, 0x4b79d),
+        # gameplay wave 167 (2026-07-26) — Capstone weaks
+        ("FUN_00134e50", 0x134e50, 0x134e71),
+        ("scripted_player_effect_stop", 0xa2e40, 0xa2e77),
+        ("FUN_000caf60", 0xcaf60, 0xcaf6c),
+        ("player_control_get_aiming_unit_index", 0xb65c0, 0xb6613),
+        ("FUN_00125fb0", 0x125fb0, 0x125ff5),
+        ("following_camera_new", 0x89850, 0x898a8),
+        ("FUN_000ca4e0", 0xca4e0, 0xca52f),
+        ("player_ui_get_active_player_profile_index", 0xe09e0, 0xe0a05),
+        ("FUN_000539c0", 0x539c0, 0x53a18),
+        ("FUN_00053a90", 0x53a90, 0x53ae4),
+        ("FUN_000c9bd0", 0xc9bd0, 0xc9c0e),
+        ("FUN_000b6dd0", 0xb6dd0, 0xb6e01),
+        # gameplay wave 168 (2026-07-26) — Capstone weaks
+        ("FUN_000c97f0", 0xc97f0, 0xc9836),
+        ("FUN_000b8cf0", 0xb8cf0, 0xb8d30),
+        ("actor_clear_discarded_firing_positions", 0x24b80, 0x24bdf),
+        ("FUN_0008ac70", 0x8ac70, 0x8acb0),
+        ("FUN_000e2820", 0xe2820, 0xe2878),
+        ("FUN_000ca530", 0xca530, 0xca576),
+        ("scripted_player_effect_set_rotation", 0xa28e0, 0xa2917),
+        ("player_control_action_test_move_relative_all_directions", 0xb6b50, 0xb6b64),
+        ("player_control_action_test_look_relative_all_directions", 0xb6b70, 0xb6b84),
+        ("FUN_00130f10", 0x130f10, 0x130f24),
+        ("FUN_00131a00", 0x131a00, 0x131a14),
+        ("FUN_000dbfb0", 0xdbfb0, 0xdbfff),
+        # gameplay wave 169 (2026-07-26) — Capstone weaks
+        ("memory_block_get_user_size", 0x11eac0, 0x11eb0c),
+        ("ai_debug_idle_look_addprop", 0x4a710, 0x4a76f),
+        ("player_ui_get_single_player_local_player_from_controller", 0xe0810, 0xe083a),
+        ("interpolate_scalar", 0xb6e60, 0xb6ea0),
+        ("FUN_000b4d00", 0xb4d00, 0xb4d36),
+        ("FUN_00089350", 0x89350, 0x89393),
+        ("FUN_000e9fd0", 0xe9fd0, 0xe9fe3),
+        ("FUN_000e1000", 0xe1000, 0xe104d),
+        ("FUN_000804e0", 0x804e0, 0x8052f),
+        ("player_control_get_autoaim_level", 0xb6940, 0xb6986),
+        ("main_get_window_count", 0x100b00, 0x100b3d),
+        ("hs_evaluate_by_name", 0xc4b00, 0xc4b3f),
+        # gameplay wave 170 (2026-07-26) — Capstone weaks
+        ("network_game_client_game_shutdown", 0x126750, 0x1267bf),
+        ("FUN_001cf840", 0x1cf840, 0x1cf864),
+        ("player_ui_edit_profile_is_default_profile", 0xe0d80, 0xe0dc1),
+        ("player_ui_rumble_disabled", 0xe0b00, 0xe0b4d),
+        ("FUN_00081110", 0x81110, 0x8116c),
+        ("render_location_visible", 0x184de0, 0x184e42),
+        ("FUN_000c4130", 0xc4130, 0xc415d),
+        ("decals_update", 0x99f80, 0x99fcd),
+        ("FUN_001366b0", 0x1366b0, 0x1366f1),
+        ("FUN_000c9c10", 0xc9c10, 0xc9c71),
+        ("FUN_000e2880", 0xe2880, 0xe28d7),
+        ("FUN_000fd520", 0xfd520, 0xfd56f),
     ]
 
     xbe = Xbe.from_file(args.xbe)

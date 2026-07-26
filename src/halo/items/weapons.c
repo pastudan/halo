@@ -3338,20 +3338,53 @@ float weapon_get_zoom_magnification(int weapon_handle, int16_t zoom_level)
   return result;
 }
 
-/* 0xfc8e0 */
-float weapon_get_field_of_view(int weapon_handle, float base_fov,
-                               int16_t zoom_level)
-{
-  float mag = weapon_get_zoom_magnification(weapon_handle, zoom_level);
+/* weapon_get_field_of_view (0xfc8e0) — XBE naked draft (batch 166). */
+#if defined(__clang__)
+static float (*const bfc8e0_cfc780)(int weapon_handle, int16_t zoom_level) = weapon_get_zoom_magnification;
 
-  if (mag == 1.0f)
-    return base_fov;
-  if (base_fov / mag >= *(float *)0x28af00)
-    return base_fov;
-  if (base_fov / mag <= *(float *)0x28aefc)
-    return base_fov;
-  return base_fov / mag;
+__attribute__((naked, noinline))
+float weapon_get_field_of_view(int weapon_handle __attribute__((unused)), float base_fov __attribute__((unused)), int16_t zoom_level __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "call *%[cfc780]\n\t"
+      "fcoms 0x2533c8\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Lweapon_get_field_of_view_1\n\t"
+      "fdivrs 0xc(%%ebp)\n\t"
+      "fcoms 0x28af00\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lweapon_get_field_of_view_1\n\t"
+      "fcoms 0x28aefc\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lweapon_get_field_of_view_2\n\t"
+      ".Lweapon_get_field_of_view_1:\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      ".Lweapon_get_field_of_view_2:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cfc780] "m"(bfc8e0_cfc780)
+      : "memory");
 }
+#else
+#error "weapon_get_field_of_view: clang naked draft required"
+#endif
+
 
 /* weapon_prevents_melee_attack (0xfc930) — XBE naked draft (batch 158). */
 #if defined(__clang__)
@@ -4074,21 +4107,54 @@ void weapon_stop_reload(int weapon_handle)
   weapon_reset_state(weapon_handle);
 }
 
-/* 0xfd520 */
-void FUN_000fd520(int param_a, int weapon_handle, int16_t trigger_index)
+/* FUN_000fd520 (0xfd520) — XBE naked draft (batch 170). */
+#if defined(__clang__)
+static void *(*const bfd520_get)(int, int) = object_get_and_verify_type;
+static char *(*const bfd520_fb320)(void *, short) = FUN_000fb320;
+static void *(*const bfd520_tag)(int, int) = tag_get;
+static void *(*const bfd520_elem)(void *, int, int) = tag_block_get_element;
+static void (*const bfd520_cfcec0)(int16_t trigger_index, int weapon_handle) = FUN_000fcec0;
+
+__attribute__((naked, noinline))
+void FUN_000fd520(int param_a __attribute__((unused)), int weapon_handle __attribute__((unused)), int16_t trigger_index __attribute__((unused)))
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-
-  weapon_get_trigger_entry(weapon_obj, trigger_index);
-  tag_get(0x77656170, *(int *)weapon_obj);
-  tag_block_get_element(
-    (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4fc,
-    (int)trigger_index, 0x114);
-
-  *(int *)(weapon_obj + 0x200) = -1;
-  FUN_000fcec0(trigger_index, weapon_handle);
-  (void)param_a;
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ecx, %%ebx\n\t"
+      "pushl $4\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[fb320]\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "pushl $0x114\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x4fc, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl $0xffffffff, 0x200(%%edi)\n\t"
+      "call *%[cfcec0]\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfd520_get), [fb320] "m"(bfd520_fb320), [tag] "m"(bfd520_tag), [elem] "m"(bfd520_elem), [cfcec0] "m"(bfd520_cfcec0)
+      : "memory");
 }
+#else
+#error "FUN_000fd520: clang naked draft required"
+#endif
+
 
 /* 0xfd570 — fire projectile(s) from a weapon trigger. */
 #if defined(__clang__)

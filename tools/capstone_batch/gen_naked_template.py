@@ -297,9 +297,15 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
         all_ents.extend(j["ents"])
 
     jtargets = set(all_ents)
+    body_addrs = {a for a, _, _ in parsed}
+    body_lo = min(body_addrs) if body_addrs else 0
+    body_hi = max(body_addrs) + 1 if body_addrs else 0
     for addr, mnem, ops in parsed:
         if mnem.startswith("j") and re.fullmatch(r"0x[0-9a-f]+", ops):
-            jtargets.add(int(ops, 16))
+            t = int(ops, 16)
+            # Only local labels; external tail-jmps become indirect via ensure().
+            if body_lo <= t < body_hi or t in body_addrs:
+                jtargets.add(t)
     label_of: dict[int, int] = {}
     n = 1
     for a, _, _ in parsed:
@@ -370,6 +376,15 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
             continue
         if mnem == "nop":
             out.append("  nop")
+            continue
+        if mnem.startswith("j") and re.fullmatch(r"0x[0-9a-f]+", ops):
+            t = int(ops, 16)
+            if t in label_of:
+                out.append(f"  {mnem} .L{name}_{label_of[t]}")
+            else:
+                # External target (tail-call / CRT helper): match via function ptr.
+                key = ensure(t)
+                out.append(f"  {mnem} *%[{key}]")
             continue
         if mnem.startswith("j"):
             out.append(f"  {mnem} .L{name}_{label_of[int(ops, 16)]}")
@@ -647,27 +662,40 @@ def find_src(name: str) -> Path:
 
 def inject(name: str, va: int, body: str, path: Path) -> None:
     text = path.read_text()
-    comment = f"/* {name} ({hex(va)}) — XBE naked draft (batch {BATCH}). */\n"  # noqa: F821
-    marker = comment.strip()
-    if marker in text:
-        start = text.find(marker)
-        err = text.find(f'#error "{name}: clang naked draft required"', start)
-        endpos = text.find("#endif", err) + len("#endif")
-        if endpos < len(text) and text[endpos] == "\n":
-            endpos += 1
+    comment = f"/* {name} ({hex(va)}) — XBE naked draft (batch {BATCH}). */\n"
+    prior_re = re.compile(
+        rf"/\* {re.escape(name)} \(0x[0-9a-fA-F]+\) — XBE naked draft \(batch \d+\)\. \*/\n"
+        rf"#if defined\(__clang__\)\n"
+        rf".*?"
+        rf"#else\n"
+        rf'#error "{re.escape(name)}: clang naked draft required"\n'
+        rf"#endif\n?",
+        re.S,
+    )
+    matches = list(prior_re.finditer(text))
+    if matches:
+        start = matches[0].start()
+        pieces = []
+        last = 0
+        for m in matches:
+            pieces.append(text[last : m.start()])
+            last = m.end()
+        pieces.append(text[last:])
+        cleaned = "".join(pieces)
         path.write_text(
-            text[:start]
+            cleaned[:start]
             + comment
             + body
             + ("\n" if not body.endswith("\n") else "")
-            + text[endpos:]
+            + cleaned[start:]
         )
-        print(f"  replaced {name} -> {path}")
+        print(f"  replaced {name} ({len(matches)} prior) -> {path}")
         return
     pat = re.compile(rf"^(?:[a-zA-Z_][\w\s\*]+)\s+{re.escape(name)}\s*\(", re.M)
     m = pat.search(text)
     if not m:
         raise SystemExit(f"no def {name} in {path}")
+    # Prefer a definition that is not already inside a naked draft attribute line.
     line_start = text.rfind("\n", 0, m.start()) + 1
     before_txt = text[:line_start]
     start = line_start
@@ -680,9 +708,14 @@ def inject(name: str, va: int, body: str, path: Path) -> None:
         start_c = before_txt.rfind("/*", 0, end_c)
         if start_c != -1:
             start = start_c
+    # Skip __attribute__((naked...)) wrappers if find_src hit the naked sig.
+    attr_lookback = text[max(0, m.start() - 80) : m.start()]
+    if "__attribute__" in attr_lookback and "naked" in attr_lookback:
+        raise SystemExit(f"refusing to inject over naked sig without marker: {name}")
     brace = text.find("{", m.start())
     depth = 0
     i = brace
+    endpos = None
     while i < len(text):
         if text[i] == "{":
             depth += 1
@@ -694,8 +727,11 @@ def inject(name: str, va: int, body: str, path: Path) -> None:
                     endpos += 1
                 break
         i += 1
+    if endpos is None:
+        raise SystemExit(f"no body end for {name}")
     path.write_text(text[:start] + comment + body + "\n" + text[endpos:])
     print(f"  injected {name} -> {path}")
+
 
 
 before = {}

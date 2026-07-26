@@ -1603,8 +1603,37 @@ void structure_bsp_find_material_for_surface(void *scenario __attribute__((unuse
 #endif
 
 
-/* 0x1937a0 */
+/* vertex_type_from_shader_tag (0x1937a0) — XBE naked draft (batch 166). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void vertex_type_from_shader_tag(void)
 {
-  /* relift: no calls detected — manual review */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x14(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lvertex_type_from_shader_tag_1\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movw $1, (%%eax)\n\t"
+      "movw $3, (%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lvertex_type_from_shader_tag_1:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movw $0, (%%edx)\n\t"
+      "movw $2, (%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "vertex_type_from_shader_tag: clang naked draft required"
+#endif
+

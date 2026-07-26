@@ -2418,18 +2418,44 @@ void players_update_after_game(void)
     profile_exit_private((void *)0x2f0e88);
 }
 
-char valid_real_vector2d(float *v)
-{
-  uint32_t bits;
+/* valid_real_vector2d (0xbb2b0) — XBE naked draft (batch 166). */
+#if defined(__clang__)
 
-  bits = *(uint32_t *)v;
-  if ((bits & 0x7f800000) == 0x7f800000)
-    return 0;
-  bits = *(uint32_t *)(v + 1);
-  if ((bits & 0x7f800000) == 0x7f800000)
-    return 0;
-  return 1;
+
+__attribute__((naked, noinline))
+char valid_real_vector2d(float *v __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, 0x8(%%ebp)\n\t"
+      "je .Lvalid_real_vector2d_1\n\t"
+      "movl 0x4(%%eax), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "je .Lvalid_real_vector2d_1\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lvalid_real_vector2d_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "valid_real_vector2d: clang naked draft required"
+#endif
+
 
 void FUN_000BB290(float *out_direction)
 {

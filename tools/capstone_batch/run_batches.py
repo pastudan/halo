@@ -120,7 +120,13 @@ def true_end(xbe: Xbe, md: Cs, va: int, scan: int = 0x4000) -> int | None:
     return last
 
 
-def pick(n: int, remain_path: Path) -> list[dict]:
+def pick(
+    n: int,
+    remain_path: Path,
+    *,
+    allow_in_compare: bool = False,
+    use_cand_end: bool = False,
+) -> list[dict]:
     done = set(
         re.findall(
             r'\("([A-Za-z0-9_]+)",\s*0x',
@@ -128,14 +134,27 @@ def pick(n: int, remain_path: Path) -> list[dict]:
         )
     )
     cands = json.loads(remain_path.read_text())
-    pf = [x for x in cands if x.get("ported") is False and x["name"] not in done]
+    # Prefer lowest Capstone % among remaining (then largest n).
+    cands = sorted(cands, key=lambda x: (x.get("pct", 100), -x.get("n", 0)))
+    pf = [
+        x
+        for x in cands
+        if x.get("ported") is not True
+        and (allow_in_compare or x["name"] not in done)
+    ]
     xbe = Xbe.from_file(str(ROOT / "halo-patched/cachebeta.xbe"))
     pe = pefile.PE(str(ROOT / "build/halo"))
     md = Cs(CS_ARCH_X86, CS_MODE_32)
     picked: list[dict] = []
     skipped = 0
+    seen: set[str] = set()
     for w in pf:
-        te = true_end(xbe, md, w["va"])
+        if w["name"] in seen:
+            continue
+        if use_cand_end and "end" in w:
+            te = int(w["end"])
+        else:
+            te = true_end(xbe, md, w["va"])
         if not te:
             skipped += 1
             continue
@@ -174,7 +193,7 @@ def pick(n: int, remain_path: Path) -> list[dict]:
             continue
         if pct >= 99.5:
             continue
-        if len(om) < 40 and w["n"] > 100:
+        if (not use_cand_end) and len(om) < 40 and w.get("n", 0) > 100:
             skipped += 1
             continue
         raw = b""
@@ -189,6 +208,7 @@ def pick(n: int, remain_path: Path) -> list[dict]:
             and "*4" in insn.op_str.replace(" ", "")
             for insn in md.disasm(raw, w["va"])
         )
+        domain = w.get("domain", "?")
         picked.append(
             {
                 "name": w["name"],
@@ -197,12 +217,13 @@ def pick(n: int, remain_path: Path) -> list[dict]:
                 "multi": multi,
                 "n": len(om),
                 "pct": pct,
-                "defs": w["defs"],
-                "domain": w["domain"],
+                "defs": w.get("defs", []),
+                "domain": domain,
             }
         )
+        seen.add(w["name"])
         print(
-            f"PICK {len(picked):2d} {w['name']:45s} n={len(om):4d} {pct:5.1f}% {w['domain']}"
+            f"PICK {len(picked):2d} {w['name']:45s} n={len(om):4d} {pct:5.1f}% {domain}"
         )
         if len(picked) >= n:
             break
@@ -272,36 +293,41 @@ def docker_build() -> None:
     print("build OK")
 
 
-def register_waves(batches: list[int]) -> None:
+def register_waves(batches: list[int], *, update_existing: bool = False) -> None:
     p = ROOT / "tools/verify/compare_xbe_pe.py"
     t = p.read_text()
-    # Insert before final closing of targets list
     waves = []
     for num in batches:
         targets = re.findall(
             r'\("([^"]+)", (0x[0-9a-f]+), (0x[0-9a-f]+), (True|False)\)',
             Path(f"/tmp/gen_batch{num}.py").read_text(),
         )
+        if f"gameplay wave {num}" in t:
+            if update_existing:
+                print(f"wave {num} already registered — skip insert")
+                continue
+            raise SystemExit(f"wave {num} already registered")
         lines = [f"        # gameplay wave {num} (2026-07-26) — Capstone weaks"]
         for name, va, end, _multi in targets:
+            # Update end if symbol already present
+            if update_existing:
+                pat = rf'(\("{re.escape(name)}",\s*{va},\s*)0x[0-9a-fA-F]+(\))'
+                t2, nsub = re.subn(pat, rf"\g<1>{end}\2", t, count=1)
+                if nsub:
+                    t = t2
+                    continue
             lines.append(f'        ("{name}", {va}, {end}),')
-        waves.append("\n".join(lines))
-        if f"gameplay wave {num}" in t:
-            raise SystemExit(f"wave {num} already registered")
-    block = "\n".join(waves) + "\n"
-    # Anchor on last target before closing ]
-    m = re.search(
-        r'(\("FUN_000bf260", 0xbf260, 0xbf2a9\),)\n    \]',
-        t,
-    )
-    if not m:
-        # Fall back: last gameplay wave comment's closing
-        m = re.search(r"(# gameplay wave \d+.*?\n(?:        \(.*?\),\n)+)    \]", t, re.S)
+        if len(lines) > 1:
+            waves.append("\n".join(lines))
+    if waves:
+        block = "\n".join(waves) + "\n"
+        m = re.search(
+            r"(# gameplay wave \d+[^\n]*\n(?:        \([^\n]+\),\n)+)    \]",
+            t,
+        )
         if not m:
             raise SystemExit("could not find insertion point in compare_xbe_pe.py")
         t = t[: m.end(1)] + block + "    ]" + t[m.end() :]
-    else:
-        t = t.replace(m.group(0), m.group(1) + "\n" + block + "    ]")
     p.write_text(t)
     print("registered waves", batches)
 
@@ -335,6 +361,11 @@ def main() -> int:
     ap.add_argument("--start", type=int, required=True)
     ap.add_argument("--count", type=int, default=8, help="number of batches of 12")
     ap.add_argument("--remain", type=Path, default=REMAIN)
+    ap.add_argument(
+        "--wave-weaks",
+        action="store_true",
+        help="re-port symbols already in compare_xbe_pe that still score <100%",
+    )
     ap.add_argument("--build", action="store_true")
     ap.add_argument("--register", action="store_true")
     ap.add_argument("--score", action="store_true")
@@ -342,8 +373,19 @@ def main() -> int:
     ap.add_argument("--pick-only", action="store_true")
     args = ap.parse_args()
 
+    remain = args.remain
+    if args.wave_weaks:
+        remain = Path("/tmp/remain_wave_weaks.json")
+        if not remain.exists():
+            raise SystemExit("missing /tmp/remain_wave_weaks.json — regenerate first")
+
     total = args.count * PER_BATCH
-    picked = pick(total, args.remain)
+    picked = pick(
+        total,
+        remain,
+        allow_in_compare=args.wave_weaks,
+        use_cand_end=args.wave_weaks,
+    )
     if len(picked) < PER_BATCH:
         print(f"WARNING: only picked {len(picked)}")
     if args.pick_only:

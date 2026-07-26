@@ -1189,11 +1189,47 @@ void FUN_0009fa60(void)
 #endif
 
 
-/* 0x9fad0 */
+/* FUN_0009fad0 (0x9fad0) — XBE naked draft (batch 164). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_0009fad0(void)
 {
-  /* relift: no calls detected — manual review */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "leal 0x60(%%eax), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "leal 0x1c(%%eax), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movl (%%ecx), %%esi\n\t"
+      "movl %%esi, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%esi\n\t"
+      "movl %%esi, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "addl $0x2c, %%edx\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "addl $0x28, %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0009fad0: clang naked draft required"
+#endif
+
 
 /* FUN_0009fb10 (0x9fb10) — XBE naked draft (batch 121). */
 #if defined(__clang__)

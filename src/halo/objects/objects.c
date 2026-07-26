@@ -940,24 +940,36 @@ void FUN_00134c20(int param_1)
   }
 }
 
-/*
- * FUN_00134e50 (0x134e50 / objects.obj) — wrap a value into the range of a
- * period, skipping the modulo when the period is exactly 1.0.
- *
- * Returns value (param_1) unchanged when period (param_2) == 1.0f; otherwise
- * returns fmod(value, period). The 1.0 special-case avoids a redundant modulo
- * when the period is unit-length.
- *
- * Confirmed: FCOMP param_2 against [0x2533c8 = 1.0f]; equal -> return param_1.
- * Confirmed: not-equal -> tail-call fmod(param_1, param_2) (JMP 0x1d9e70).
- */
-float FUN_00134e50(float value, float period)
+/* FUN_00134e50 (0x134e50) — XBE naked draft (batch 167). */
+#if defined(__clang__)
+static float (*const b134e50_c1d9e70)(float base, float exponent) = FUN_001d9e70;
+
+__attribute__((naked, noinline))
+float FUN_00134e50(float param_1 __attribute__((unused)), float param_2 __attribute__((unused)))
 {
-  if (period == 1.0f) {
-    return value;
-  }
-  return x87_fmod(value, (double)period);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .LFUN_00134e50_1\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "popl %%ebp\n\t"
+      "jmp *%[c1d9e70]\n\t"
+      ".LFUN_00134e50_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d9e70] "m"(b134e50_c1d9e70)
+      : "memory");
 }
+#else
+#error "FUN_00134e50: clang naked draft required"
+#endif
+
 
 /* FUN_00134e80 (0x134e80) — XBE naked draft (batch 57). */
 #if defined(__clang__)
@@ -2357,38 +2369,51 @@ void FUN_001365d0(int object_handle __attribute__((unused)), float *body_vitalit
 #endif
 
 
-/*
- * FUN_001366b0 (0x1366b0 / objects.obj) — return an object's effective maximum
- * body vitality.
- *
- * Resolves the object and reads its stored max body vitality (object+0x88,
- * set by FUN_001365d0). If use_raw_max (param_2) is non-zero, returns that
- * value unmodified. Otherwise scales it by the per-team / game-mode vitality
- * multiplier returned by FUN_000b55b0(1, object->team@+0x68).
- *
- * §7 note: Ghidra mis-groups object_get_and_verify_type as taking 3 args; the
- * disassembly shows PUSH -1, PUSH handle -> (handle, -1); the char flag stays
- * in [EBP+0xc].
- *
- * Confirmed: CALL 0x13d680 (object_get_and_verify_type, mask -1).
- * Confirmed: float load from object+0x88 (max body vitality).
- * Confirmed: flag byte at [EBP+0xc]; non-zero -> return raw object+0x88.
- * Confirmed: zero -> FUN_000b55b0(1, (uint16)object+0x68) * object+0x88.
- */
-float FUN_001366b0(int object_handle, char use_raw_max)
+/* FUN_001366b0 (0x1366b0) — XBE naked draft (batch 170). */
+#if defined(__clang__)
+static void *(*const b1366b0_get)(int, int) = object_get_and_verify_type;
+static float (*const b1366b0_cb55b0)(short value_type, int team) = FUN_000b55b0;
+
+__attribute__((naked, noinline))
+float FUN_001366b0(int object_handle __attribute__((unused)), char use_raw_max __attribute__((unused)))
 {
-  char *obj;
-  float max_vitality;
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  max_vitality = *(float *)(obj + 0x88);
-
-  if (use_raw_max != 0) {
-    return max_vitality;
-  }
-
-  return FUN_000b55b0(1, (int)*(unsigned short *)(obj + 0x68)) * max_vitality;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0x88(%%eax), %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_001366b0_1\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x68(%%eax), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $1\n\t"
+      "call *%[cb55b0]\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001366b0_1:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1366b0_get), [cb55b0] "m"(b1366b0_cb55b0)
+      : "memory");
 }
+#else
+#error "FUN_001366b0: clang naked draft required"
+#endif
+
 
 /* FUN_00139810 (0x139810) — XBE naked draft (batch 64). */
 #if defined(__clang__)

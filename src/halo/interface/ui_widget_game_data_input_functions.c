@@ -3617,18 +3617,34 @@ void FUN_000eff70(void *widget __attribute__((unused)))
 #endif
 
 
-/* 0xf0070 */
-void FUN_000f0070(void *widget)
+/* FUN_000f0070 (0xf0070) — XBE naked draft (batch 163). */
+#if defined(__clang__)
+static unsigned char (*const bf0070_ce0430)(void) = xbox_demos_available;
+
+__attribute__((naked, noinline))
+void FUN_000f0070(void *widget __attribute__((unused)))
 {
-  int eax = 0;
-
-  xbox_demos_available();
-  /* test (char)eax, (char)eax -> jne 0xf0087 */
-  main_run_demos();
-  player_ui_reset_single_player_local_player_controllers();
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "call *%[ce0430]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000f0070_1\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movb $1, 0x12(%%eax)\n\t"
+      "movb $0, 0x10(%%eax)\n\t"
+      ".LFUN_000f0070_1:\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ce0430] "m"(bf0070_ce0430)
+      : "memory");
 }
+#else
+#error "FUN_000f0070: clang naked draft required"
+#endif
+
 
 /* 0xf00b0 */
 void FUN_000f00b0(void *widget)

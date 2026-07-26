@@ -31,11 +31,35 @@ int *d3d_find_flipcount(void)
 }
 /* --- d3d_intimacy.obj batch drafts (2026-07-26) --- */
 
-/* 0x1cf840 */
+/* FUN_001cf840 (0x1cf840) — XBE naked draft (batch 170). */
+#if defined(__clang__)
+static void *(*const b1cf840_get)(int, int) = object_get_and_verify_type;
+
+__attribute__((naked, noinline))
 void FUN_001cf840(void)
 {
-  object_get_and_verify_type(0, 2048);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x800\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "orl $0x40000, %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1cf840_get)
+      : "memory");
 }
+#else
+#error "FUN_001cf840: clang naked draft required"
+#endif
+
 
 /* 0x1cf900 */
 int __stdcall CloseHandle(int handle)
@@ -51,19 +75,75 @@ int __stdcall CloseHandle(int handle)
   (void)eax;
 }
 
-/* 0x1cf944 */
+/* XapiCallThreadNotifyRoutines (0x1cf944) — XBE naked draft (batch 165). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void XapiCallThreadNotifyRoutines(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl $0x32fd00, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "call *0x25309c\n\t"
+      "movl 0x32fd1c, %%esi\n\t"
+      "movl $0x32fd1c, %%edi\n\t"
+      "jmp .LXapiCallThreadNotifyRoutines_2\n\t"
+      ".LXapiCallThreadNotifyRoutines_1:\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "call *0x8(%%eax)\n\t"
+      ".LXapiCallThreadNotifyRoutines_2:\n\t"
+      "cmpl %%edi, %%esi\n\t"
+      "jne .LXapiCallThreadNotifyRoutines_1\n\t"
+      "pushl %%ebx\n\t"
+      "call *0x253098\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "XapiCallThreadNotifyRoutines: clang naked draft required"
+#endif
 
-/* 0x1cf97c */
+
+/* UnhandledExceptionFilter (0x1cf97c) — XBE naked draft (batch 164). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void UnhandledExceptionFilter(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x632a2c, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LUnhandledExceptionFilter_1\n\t"
+      "pushl 0x4(%%esp)\n\t"
+      "call *%%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LUnhandledExceptionFilter_1\n\t"
+      "orl %%eax, %%eax\n\t"
+      "jmp .LUnhandledExceptionFilter_2\n\t"
+      ".LUnhandledExceptionFilter_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LUnhandledExceptionFilter_2:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "UnhandledExceptionFilter: clang naked draft required"
+#endif
+
 
 /* 0x1cf999 */
 int __stdcall SetThreadPriority(int thread_handle, int priority)
@@ -79,47 +159,55 @@ int __stdcall SetThreadPriority(int thread_handle, int priority)
   (void)eax;
 }
 
-/* 0x1cf9eb */
+/* GetThreadPriority (0x1cf9eb) — XBE naked draft (batch 166). */
+#if defined(__clang__)
+static void __stdcall (*const b1cf9eb_c1d2296)(int status) = XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void GetThreadPriority(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  /* test eax, eax -> jl 0x1cfa30 */
-  /* cmp esi, 0x10 -> jne 0x1cfa1a */
-  /* cmp esi, -0x10 -> jne 0x1cfa22 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1cfa79 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1cfaba */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jge 0x1cfae5 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jge 0x1cfb0b */
-  XapiSetLastNTError(0);
-  /* cmp ecx, 0xf -> jbe 0x1cfb45 */
-  XapiCallThreadNotifyRoutines();
-  /* test eax, eax -> jl 0x1cfbfd */
-  /* relift: cmp byte ptr [ecx + 4], 0 -> je 0x1cfbe8 */
-  XapiSetLastNTError(0);
-  /* mem[0x00632a2c] = ecx */
-  /* cmp eax, ebx -> jl 0x1cfc97 */
-  XapiSetLastNTError(0);
-  /* relift: cmp dword ptr [esp + 0xc], 0 -> je 0x1cfcd4 */
-  /* mem[0x0032fd20] = eax */
-  FUN_001dd5c8();
-  /* test ecx, ecx -> je 0x1cfd59 */
-  XapiCallThreadNotifyRoutines();
-  XapiCallThreadNotifyRoutines();
-  UnhandledExceptionFilter();
-  /* test eax, eax -> jne 0x1cfd9b */
-  /* test eax, eax -> jge 0x1cfdd9 */
-  XapiSetLastNTError(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "leal 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0x2530ac\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *0x2530a8\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LGetThreadPriority_4\n\t"
+      "pushl %%esi\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *0x2530b0\n\t"
+      "movl %%eax, %%esi\n\t"
+      "cmpl $0x10, %%esi\n\t"
+      "jne .LGetThreadPriority_1\n\t"
+      "pushl $0xf\n\t"
+      "jmp .LGetThreadPriority_2\n\t"
+      ".LGetThreadPriority_1:\n\t"
+      "cmpl $-0x10, %%esi\n\t"
+      "jne .LGetThreadPriority_3\n\t"
+      "pushl $-0xf\n\t"
+      ".LGetThreadPriority_2:\n\t"
+      "popl %%esi\n\t"
+      ".LGetThreadPriority_3:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "call *0x2530a0\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "jmp .LGetThreadPriority_5\n\t"
+      ".LGetThreadPriority_4:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "movl $0x7fffffff, %%eax\n\t"
+      ".LGetThreadPriority_5:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1cf9eb_c1d2296)
+      : "memory");
 }
+#else
+#error "GetThreadPriority: clang naked draft required"
+#endif
+

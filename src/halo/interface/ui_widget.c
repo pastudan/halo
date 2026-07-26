@@ -1959,13 +1959,34 @@ bool event_controller_index_compatible_with_widget(void *widget,
   return false;
 }
 
-void set_ui_plasma_effect_color(float r, float g, float b, float a)
+/* set_ui_plasma_effect_color (0xe3bb0) — XBE naked draft (batch 165). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void set_ui_plasma_effect_color(float r __attribute__((unused)), float g __attribute__((unused)), float b __attribute__((unused)), float a __attribute__((unused)))
 {
-  *(float *)0x5aa460 = r;
-  *(float *)0x5aa464 = g;
-  *(float *)0x5aa468 = b;
-  *(float *)0x5aa46c = a;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl %%eax, 0x5aa460\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl %%ecx, 0x5aa464\n\t"
+      "movl %%edx, 0x5aa468\n\t"
+      "movl %%eax, 0x5aa46c\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "set_ui_plasma_effect_color: clang naked draft required"
+#endif
+
 
 void ui_widgets_set_fade_value(float fade)
 {
@@ -2450,65 +2471,102 @@ char widget_instance_is_visible_in_parent_chain(void *widget __attribute__((unus
 #endif
 
 
-char widget_instance_parent_allows_focus(void *widget)
+/* widget_instance_parent_allows_focus (0xe4a40) — XBE naked draft (batch 166). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+char widget_instance_parent_allows_focus(void *widget __attribute__((unused)))
 {
-  void *parent;
-  void *tag;
-
-  parent = *(void **)((char *)widget + 0x30);
-  if (parent == NULL)
-    return 1;
-  if (*(void **)((char *)parent + 0x38) == widget)
-    return 1;
-  parent = *(void **)((char *)parent + 0x30);
-  if (parent == NULL)
-    return 1;
-  if (*(void **)((char *)parent + 0x38) != parent)
-    return 0;
-  if (*(int16_t *)((char *)parent + 0xe) == 2 ||
-      *(int16_t *)((char *)parent + 0xe) == 3)
-    return 1;
-  while (parent != NULL) {
-    tag = tag_get(0x44654c61, *(int *)parent);
-    if (*(int *)((char *)tag + 0x54) <= 0) {
-      if (*(int16_t *)((char *)parent + 0xe) != 2 &&
-          *(int16_t *)((char *)parent + 0xe) != 3)
-        return 0;
-    }
-    parent = *(void **)((char *)parent + 0x30);
-  }
-  return 1;
+  __asm__ volatile(
+      "movl 0x30(%%eax), %%edx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "je .Lwidget_instance_parent_allows_focus_3\n\t"
+      "cmpl %%eax, 0x38(%%edx)\n\t"
+      "sete %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lwidget_instance_parent_allows_focus_6\n\t"
+      ".Lwidget_instance_parent_allows_focus_1:\n\t"
+      "movl 0x30(%%edx), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lwidget_instance_parent_allows_focus_5\n\t"
+      "cmpl %%edx, 0x38(%%ecx)\n\t"
+      "jne .Lwidget_instance_parent_allows_focus_6\n\t"
+      "movw 0xe(%%ecx), %%ax\n\t"
+      "cmpw $2, %%ax\n\t"
+      "je .Lwidget_instance_parent_allows_focus_2\n\t"
+      "cmpw $3, %%ax\n\t"
+      "jne .Lwidget_instance_parent_allows_focus_4\n\t"
+      ".Lwidget_instance_parent_allows_focus_2:\n\t"
+      "movb $1, %%al\n\t"
+      "jmp .Lwidget_instance_parent_allows_focus_5\n\t"
+      ".Lwidget_instance_parent_allows_focus_3:\n\t"
+      "movb $1, %%al\n\t"
+      "ret\n\t"
+      ".Lwidget_instance_parent_allows_focus_4:\n\t"
+      "xorb %%al, %%al\n\t"
+      ".Lwidget_instance_parent_allows_focus_5:\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "jne .Lwidget_instance_parent_allows_focus_1\n\t"
+      ".Lwidget_instance_parent_allows_focus_6:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "widget_instance_parent_allows_focus: clang naked draft required"
+#endif
 
-int16_t ui_widget_find_localized_string_index(wchar_t *needle)
+
+/* ui_widget_find_localized_string_index (0xe4a80) — XBE naked draft (batch 166). */
+#if defined(__clang__)
+static size_t (*const be4a80_c1db11e)(const wchar_t *str) = _wcslen;
+static int (*const be4a80_c1dc34b)(const wchar_t *s1, const wchar_t *s2, size_t count) = __wcsnicmp;
+
+__attribute__((naked, noinline))
+int16_t ui_widget_find_localized_string_index(wchar_t *needle __attribute__((unused)))
 {
-  int index;
-  wchar_t *candidate;
-  int len;
-  int i;
-
-  index = 0;
-  while (index < 0x28) {
-    candidate = *(wchar_t **)(0x31e098 + index * 4);
-    len = _wcslen(candidate);
-    for (i = 0; i < len; i++) {
-      wchar_t a;
-      wchar_t b;
-      a = needle[i];
-      b = candidate[i];
-      if (a >= L'A' && a <= L'Z')
-        a = (wchar_t)(a + (L'a' - L'A'));
-      if (b >= L'A' && b <= L'Z')
-        b = (wchar_t)(b + (L'a' - L'A'));
-      if (a != b)
-        break;
-    }
-    if (i == len)
-      return (int16_t)index;
-    index++;
-  }
-  return (int16_t)-1;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      ".Lui_widget_find_localized_string_index_1:\n\t"
+      "movswl %%si, %%edi\n\t"
+      "movl 0x31e098(,%%edi,4), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1db11e]\n\t"
+      "movl 0x31e098(,%%edi,4), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1dc34b]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lui_widget_find_localized_string_index_2\n\t"
+      "incl %%esi\n\t"
+      "cmpw $0x28, %%si\n\t"
+      "jb .Lui_widget_find_localized_string_index_1\n\t"
+      ".Lui_widget_find_localized_string_index_2:\n\t"
+      "cmpw $0x28, %%si\n\t"
+      "popl %%edi\n\t"
+      "jne .Lui_widget_find_localized_string_index_3\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".Lui_widget_find_localized_string_index_3:\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c1db11e] "m"(be4a80_c1db11e), [c1dc34b] "m"(be4a80_c1dc34b)
+      : "memory");
 }
+#else
+#error "ui_widget_find_localized_string_index: clang naked draft required"
+#endif
+
 
 /* FUN_000e4c70 (0xe4c70) — XBE naked draft (batch 153). */
 #if defined(__clang__)
@@ -2691,24 +2749,95 @@ char ui_widget_player_prefers_metric_units(int16_t player_index __attribute__((u
 #endif
 
 
-void get_ui_rgb_white(float *out)
-{
-  (void)*(float **)0x2ee708;
-  out[0] = *(float *)0x31e148;
-  out[1] = *(float *)0x31e14c;
-  out[2] = *(float *)0x31e150;
-}
+/* get_ui_rgb_white (0xe54e0) — XBE naked draft (batch 164). */
+#if defined(__clang__)
 
-void get_ui_argb_white(float *out)
-{
-  float *src;
 
-  src = *(float **)0x2ee6c4;
-  out[0] = src[0];
-  out[1] = *(float *)0x31e148;
-  out[2] = *(float *)0x31e14c;
-  out[3] = *(float *)0x31e150;
+__attribute__((naked, noinline))
+void get_ui_rgb_white(float *out __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x2ee708, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "movl 0x31e148, %%ecx\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "movl 0x31e14c, %%edx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl 0x31e150, %%eax\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "get_ui_rgb_white: clang naked draft required"
+#endif
+
+
+/* get_ui_argb_white (0xe5530) — XBE naked draft (batch 164). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void get_ui_argb_white(float *out __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x2ee6c4, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl 0x8(%%eax), %%edx\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "movl 0x31e148, %%edx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl 0x31e150, %%edx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl 0x31e14c, %%eax\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%ecx, (%%edx)\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0xc(%%edx)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+#error "get_ui_argb_white: clang naked draft required"
+#endif
+
 
 void __stdcall ui_widget_filesystem_check_thread_proc(int unused)
 {
@@ -3359,12 +3488,31 @@ char FUN_000E9D40(void)
 #endif
 
 
-char FUN_000e9fd0(void *widget)
+/* FUN_000e9fd0 (0xe9fd0) — XBE naked draft (batch 169). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+char FUN_000e9fd0(void *widget __attribute__((unused)))
 {
-  *(int *)((char *)widget + 0x40) = 0;
-  *(int16_t *)((char *)widget + 0x44) = 0;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movl %%ecx, 0x40(%%eax)\n\t"
+      "movw %%cx, 0x44(%%eax)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000e9fd0: clang naked draft required"
+#endif
+
 
 char FUN_000ea1f0(void *widget)
 {

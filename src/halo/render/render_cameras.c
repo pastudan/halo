@@ -803,13 +803,53 @@ void render_camera_build_frustum_bounds(void)
 #endif
 
 
-/* 0x185a70 */
-float render_frustum_sphere_diameter_in_pixels(void *frustum, float *center, float radius)
+/* render_frustum_sphere_diameter_in_pixels (0x185a70) — XBE naked draft (batch 163). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+float render_frustum_sphere_diameter_in_pixels(void *frustum __attribute__((unused)), float *center __attribute__((unused)), float radius __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "flds 0x34(%%ecx)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "flds 0x28(%%ecx)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x1c(%%ecx)\n\t"
+      "fmuls (%%eax)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadds 0x40(%%ecx)\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "je .Lrender_frustum_sphere_diameter_in_pixels_1\n\t"
+      "fchs\n\t"
+      ".Lrender_frustum_sphere_diameter_in_pixels_1:\n\t"
+      "fcoms 0x25496c\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lrender_frustum_sphere_diameter_in_pixels_2\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x25496c\n\t"
+      ".Lrender_frustum_sphere_diameter_in_pixels_2:\n\t"
+      "fdivrs 0x188(%%ecx)\n\t"
+      "fmuls 0x10(%%ebp)\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "render_frustum_sphere_diameter_in_pixels: clang naked draft required"
+#endif
+
 
 /* render_frustum_cube_view_fraction (0x185ad0) — XBE naked draft (batch 107). */
 #if defined(__clang__)

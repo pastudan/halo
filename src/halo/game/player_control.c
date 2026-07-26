@@ -30,34 +30,124 @@ void scripted_player_control_set_camera_control(char enable)
     *flags |= 1;
 }
 
-float player_control_get_autoaim_level(int16_t local_player_index)
-{
-  assert_halt(local_player_index >= 0 &&
-              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
-  return *(float *)((char *)player_control_globals +
-                    (int)local_player_index * 0x40 + 0x3c);
-}
+/* player_control_get_autoaim_level (0xb6940) — XBE naked draft (batch 169). */
+#if defined(__clang__)
+static void (*const bb6940_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb6940_exitfn)(int) = system_exit;
 
+__attribute__((naked, noinline))
+float player_control_get_autoaim_level(int16_t local_player_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_control_get_autoaim_level_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_control_get_autoaim_level_2\n\t"
+      ".Lplayer_control_get_autoaim_level_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb1\n\t"
+      "pushl $0x26e1e8\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_control_get_autoaim_level_2:\n\t"
+      "movl 0x457090, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "shll $6, %%eax\n\t"
+      "popl %%esi\n\t"
+      "flds 0x3c(%%eax,%%ecx,1)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bb6940_assert), [exitfn] "m"(bb6940_exitfn)
+      : "memory");
+}
+#else
+#error "player_control_get_autoaim_level: clang naked draft required"
+#endif
+
+
+/* players_unzoom_all (0xb69d0) — XBE naked draft (batch 164). */
+#if defined(__clang__)
+static void (*const bb69d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb69d0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void players_unzoom_all(void)
 {
-  int16_t i;
-
-  for (i = 0; i < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS; i++) {
-    assert_halt(i >= 0 && i < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
-    *(int16_t *)((char *)player_control_globals + (int)i * 0x40 + 0x34) =
-        (int16_t)NONE;
-  }
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      ".Lplayers_unzoom_all_1:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayers_unzoom_all_2\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayers_unzoom_all_3\n\t"
+      ".Lplayers_unzoom_all_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb1\n\t"
+      "pushl $0x26e1e8\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayers_unzoom_all_3:\n\t"
+      "movl 0x457090, %%eax\n\t"
+      "movw $0xffff, 0x34(%%edi,%%eax,1)\n\t"
+      "incl %%esi\n\t"
+      "addl $0x40, %%edi\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayers_unzoom_all_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bb69d0_assert), [exitfn] "m"(bb69d0_exitfn)
+      : "memory");
 }
+#else
+#error "players_unzoom_all: clang naked draft required"
+#endif
 
-int16_t player_control_get_zoom_level(int16_t local_player_index)
+
+/* player_control_get_zoom_level (0xb6a70) — XBE naked draft (batch 166). */
+#if defined(__clang__)
+static void * (*const bb6a70_cb6380)(int16_t local_player_index) = player_control_get_data;
+
+__attribute__((naked, noinline))
+int16_t player_control_get_zoom_level(int16_t local_player_index __attribute__((unused)))
 {
-  char *slot;
-
-  if (local_player_index == (int16_t)NONE)
-    return (int16_t)NONE;
-  slot = (char *)player_control_get_data(local_player_index);
-  return *(int16_t *)(slot + 0x24);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .Lplayer_control_get_zoom_level_1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[cb6380]\n\t"
+      "movw 0x24(%%eax), %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lplayer_control_get_zoom_level_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cb6380] "m"(bb6a70_cb6380)
+      : "memory");
 }
+#else
+#error "player_control_get_zoom_level: clang naked draft required"
+#endif
+
 
 void player_control_action_test_reset(void)
 {
@@ -115,17 +205,55 @@ char player_control_action_test_zoom(void)
   return (char)((*(int *)player_control_globals >> 6) & 1);
 }
 
-/* True when all relative-move bits (0x7800) are set. */
+/* player_control_action_test_move_relative_all_directions (0xb6b50) — XBE naked draft (batch 168). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_move_relative_all_directions(void)
 {
-  return (char)((~*(int *)player_control_globals & 0x7800) == 0);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "notl %%eax\n\t"
+      "andl $0x7800, %%eax\n\t"
+      "negl %%eax\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_move_relative_all_directions: clang naked draft required"
+#endif
 
-/* True when all relative-look bits (0x780) are set. */
+
+/* player_control_action_test_look_relative_all_directions (0xb6b70) — XBE naked draft (batch 168). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_look_relative_all_directions(void)
 {
-  return (char)((~*(int *)player_control_globals & 0x780) == 0);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "notl %%eax\n\t"
+      "andl $0x780, %%eax\n\t"
+      "negl %%eax\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_look_relative_all_directions: clang naked draft required"
+#endif
+
 
 char player_control_action_test_look_relative_left(void)
 {
@@ -147,18 +275,40 @@ char player_control_action_test_look_relative_down(void)
   return (char)((*(int *)player_control_globals >> 8) & 1);
 }
 
-/* Smallest signed angle delta b-a, wrapped into [-pi, pi). */
-float FUN_000b6dd0(float a, float b)
-{
-  float diff;
+/* FUN_000b6dd0 (0xb6dd0) — XBE naked draft (batch 167). */
+#if defined(__clang__)
 
-  diff = b - a;
-  if (diff >= *(float *)0x256980)
-    diff -= *(float *)0x255a54;
-  if (diff <= *(float *)0x26e280)
-    diff += *(float *)0x255a54;
-  return diff;
+
+__attribute__((naked, noinline))
+float FUN_000b6dd0(float a __attribute__((unused)), float b __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fsubs 0x8(%%ebp)\n\t"
+      "fcoms 0x256980\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_000b6dd0_1\n\t"
+      "fsubs 0x255a54\n\t"
+      ".LFUN_000b6dd0_1:\n\t"
+      "fcoms 0x26e280\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_000b6dd0_2\n\t"
+      "fadds 0x255a54\n\t"
+      ".LFUN_000b6dd0_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000b6dd0: clang naked draft required"
+#endif
+
 
 /* limit2d (0xb6e10) — XBE naked draft (batch 161). */
 #if defined(__clang__)
@@ -211,19 +361,53 @@ char limit2d(float *vec __attribute__((unused)), float max_len __attribute__((un
 #endif
 
 
-/* Move *value toward target by at most max_delta per call. */
-void interpolate_scalar(float *value, float target, float max_delta)
-{
-  float delta;
+/* interpolate_scalar (0xb6e60) — XBE naked draft (batch 169). */
+#if defined(__clang__)
 
-  delta = target - *value;
-  if (delta < -max_delta)
-    *value += -max_delta;
-  else if (delta > max_delta)
-    *value += max_delta;
-  else
-    *value += delta;
+
+__attribute__((naked, noinline))
+void interpolate_scalar(float *value __attribute__((unused)), float target __attribute__((unused)), float max_delta __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "fsubs (%%ecx)\n\t"
+      "fstps 0xc(%%ebp)\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fchs\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Linterpolate_scalar_2\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Linterpolate_scalar_1\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fadds (%%ecx)\n\t"
+      "fstps (%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Linterpolate_scalar_1:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      ".Linterpolate_scalar_2:\n\t"
+      "fadds (%%ecx)\n\t"
+      "fstps (%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "interpolate_scalar: clang naked draft required"
+#endif
+
 
 /* evaluate_piecewise_linear_function (0xb64c0) — XBE naked draft (batch 129). */
 #if defined(__clang__)
@@ -383,16 +567,53 @@ int player_control_get_unit_index(int16_t local_player_index __attribute__((unus
 #endif
 
 
-int player_control_get_aiming_unit_index(int16_t local_player_index)
-{
-  int unit_handle;
+/* player_control_get_aiming_unit_index (0xb65c0) — XBE naked draft (batch 167). */
+#if defined(__clang__)
+static void (*const bb65c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb65c0_exitfn)(int) = system_exit;
+static int (*const bb65c0_c1a9880)(int unit_index) = unit_get_aiming_unit_index;
 
-  assert_halt(local_player_index >= 0 &&
-              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
-  unit_handle = *(int *)((char *)player_control_globals +
-                         (int)local_player_index * 0x40 + 0x10);
-  return unit_get_aiming_unit_index(unit_handle);
+__attribute__((naked, noinline))
+int player_control_get_aiming_unit_index(int16_t local_player_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_control_get_aiming_unit_index_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_control_get_aiming_unit_index_2\n\t"
+      ".Lplayer_control_get_aiming_unit_index_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb1\n\t"
+      "pushl $0x26e1e8\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_control_get_aiming_unit_index_2:\n\t"
+      "movl 0x457090, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "shll $6, %%eax\n\t"
+      "movl 0x10(%%eax,%%ecx,1), %%edx\n\t"
+      "leal 0x10(%%eax,%%ecx,1), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1a9880]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bb65c0_assert), [exitfn] "m"(bb65c0_exitfn), [c1a9880] "m"(bb65c0_c1a9880)
+      : "memory");
 }
+#else
+#error "player_control_get_aiming_unit_index: clang naked draft required"
+#endif
+
 
 /* player_control_get_target_object_index (0xb6620) — XBE naked draft (batch 159). */
 #if defined(__clang__)
@@ -1556,12 +1777,49 @@ void FUN_000b6bd0(char *input __attribute__((unused)))
 #endif
 
 
-/* Forward input delta into FUN_000b7f90 (local player index in EAX). */
-void FUN_000b8cf0(int a, float *delta)
+/* FUN_000b8cf0 (0xb8cf0) — XBE naked draft (batch 168). */
+#if defined(__clang__)
+static void (*const bb8cf0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb8cf0_exitfn)(int) = system_exit;
+static void (*const bb8cf0_cb7f90)(int16_t local_player_index, float dx, float dy) = FUN_000b7f90;
+
+__attribute__((naked, noinline))
+void FUN_000b8cf0(int a __attribute__((unused)), float *delta __attribute__((unused)))
 {
-  assert_halt(delta != NULL);
-  FUN_000b7f90((int16_t)a, delta[0], delta[1]);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_000b8cf0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x467\n\t"
+      "pushl $0x26e1e8\n\t"
+      "pushl $0x26e424\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000b8cf0_1:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[cb7f90]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bb8cf0_assert), [exitfn] "m"(bb8cf0_exitfn), [cb7f90] "m"(bb8cf0_cb7f90)
+      : "memory");
 }
+#else
+#error "FUN_000b8cf0: clang naked draft required"
+#endif
+
 
 void FUN_000b8d30(int handle)
 {

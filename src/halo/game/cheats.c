@@ -334,12 +334,41 @@ void FUN_000a5590(void)
 #endif
 
 
-/* 0xa55e0 */
+/* FUN_000a55e0 (0xa55e0) — XBE naked draft (batch 165). */
+#if defined(__clang__)
+static void (*const ba55e0_ca5590)(void) = FUN_000a5590;
+
+__attribute__((naked, noinline))
 void FUN_000a55e0(void)
 {
-  FUN_000a5590();
-  FUN_000a5590();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ca5590]\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca5590]\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ca5590] "m"(ba55e0_ca5590)
+      : "memory");
 }
+#else
+#error "FUN_000a55e0: clang naked draft required"
+#endif
+
 
 /* FUN_000a5610 (0xa5610) — XBE naked draft (batch 134). */
 #if defined(__clang__)

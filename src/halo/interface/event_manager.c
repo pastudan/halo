@@ -2619,11 +2619,42 @@ void tiny_point2d_set(void)
 #endif
 
 
-/* 0xdae90 */
+/* FUN_000dae90 (0xdae90) — XBE naked draft (batch 165). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_000dae90(void)
 {
-  /* relift: no calls detected — manual review */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movsbl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "movl 0x46bd0c, %%edx\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fmuls 0x2d0(%%edx)\n\t"
+      "fmuls 0x2820c0\n\t"
+      "fstps (%%eax)\n\t"
+      "movsbl 0x1(%%ecx), %%ecx\n\t"
+      "movl 0x46bd0c, %%edx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fmuls 0x2d0(%%edx)\n\t"
+      "fmuls 0x2820c0\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000dae90: clang naked draft required"
+#endif
+
 
 /* FUN_000daee0 (0xdaee0) — XBE naked draft (batch 115). */
 #if defined(__clang__)
@@ -4083,29 +4114,101 @@ void FUN_000dbcb0(void)
 #endif
 
 
-/* 0xdbfb0 */
-void FUN_000dbfb0(int param_1, int param_2, int param_3)
+/* FUN_000dbfb0 (0xdbfb0) — XBE naked draft (batch 168). */
+#if defined(__clang__)
+static void (*const bdbfb0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bdbfb0_exitfn)(int) = system_exit;
+static void (*const bdbfb0_cdb950)(void) = update_motion_sensor;
+static void (*const bdbfb0_cdbcb0)(void) = FUN_000dbcb0;
+
+__attribute__((naked, noinline))
+void FUN_000dbfb0(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
 {
-  int esi = 0;
-  int edi = 0;
-
-  /* test edi, edi -> jne 0xdbfdc */
-  display_assert((char *)0x00282178, (char *)0x00282094, 476, 0);
-  system_exit(0);
-  /* cmp (int16_t)esi, -1 -> je 0xdbffb */
-  update_motion_sensor();
-  FUN_000dbcb0();
-
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_000dbfb0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1dc\n\t"
+      "pushl $0x282094\n\t"
+      "pushl $0x282178\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000dbfb0_1:\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .LFUN_000dbfb0_2\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cdb950]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edi, %%eax\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[cdbcb0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000dbfb0_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bdbfb0_assert), [exitfn] "m"(bdbfb0_exitfn), [cdb950] "m"(bdbfb0_cdb950), [cdbcb0] "m"(bdbfb0_cdbcb0)
+      : "memory");
 }
+#else
+#error "FUN_000dbfb0: clang naked draft required"
+#endif
 
-/* 0xdc000 */
+
+/* FUN_000dc000 (0xdc000) — XBE naked draft (batch 165). */
+#if defined(__clang__)
+static int (*const bdc000_gtime)(void) = game_time_get;
+static void (*const bdc000_c1daf7e)(void) = FUN_001daf7e;
+static void (*const bdc000_cdb4c0)(void) = motion_sensor_update;
+
+__attribute__((naked, noinline))
 void FUN_000dc000(void)
 {
-  game_time_get();
-  FUN_001daf7e();
-  motion_sensor_update();
-  /* mem[0x0046bd30] = 0x3ecccccd */
-  motion_sensor_update();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fmuls 0x2546a4\n\t"
+      "fldl 0x282180\n\t"
+      "call *%[c1daf7e]\n\t"
+      "fcoms 0x28217c\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_000dc000_1\n\t"
+      "fadds 0x255d90\n\t"
+      "fmuls 0x2f6708\n\t"
+      "fdivrs 0x2533c8\n\t"
+      "fstps 0x46bd30\n\t"
+      "call *%[cdb4c0]\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000dc000_1:\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0x3ecccccd, 0x46bd30\n\t"
+      "call *%[cdb4c0]\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [gtime] "m"(bdc000_gtime), [c1daf7e] "m"(bdc000_c1daf7e), [cdb4c0] "m"(bdc000_cdb4c0)
+      : "memory");
 }
+#else
+#error "FUN_000dc000: clang naked draft required"
+#endif
+

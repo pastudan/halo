@@ -913,12 +913,53 @@ void FUN_00024770(void)
 #endif
 
 
-/* 0x24850 */
-void FUN_00024850(int actor_handle, int flag, char *actor, void *state)
+/* FUN_00024850 (0x24850) — XBE naked draft (batch 163). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void FUN_00024850(int actor_handle __attribute__((unused)), int flag __attribute__((unused)), char *actor __attribute__((unused)), void *state __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x254bf8, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00024850_3\n\t"
+      "pushl %%esi\n\t"
+      "movl $0x254bf8, %%esi\n\t"
+      ".LFUN_00024850_1:\n\t"
+      "movb 0x4(%%edi), %%cl\n\t"
+      "movswl -0x4(%%esi), %%eax\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "testl %%eax, %%edx\n\t"
+      "je .LFUN_00024850_2\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *(%%esi)\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_00024850_2:\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "addl $8, %%esi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00024850_1\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_00024850_3:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00024850: clang naked draft required"
+#endif
+
 
 /* FUN_00024890 (0x24890) — XBE naked draft (batch 152). */
 #if defined(__clang__)
@@ -985,13 +1026,54 @@ char FUN_00024890(int actor_handle __attribute__((unused)), void *state __attrib
 #endif
 
 
-/* 0x24900 */
-char FUN_00024900(int actor_handle, void *query_buf)
+/* FUN_00024900 (0x24900) — XBE naked draft (batch 163). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+char FUN_00024900(int actor_handle __attribute__((unused)), void *query_buf __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "movl $0, 0x660(%%edi)\n\t"
+      "movl $0x254c30, %%esi\n\t"
+      ".LFUN_00024900_1:\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "je .LFUN_00024900_3\n\t"
+      "movb 0x4(%%edi), %%cl\n\t"
+      "movl $1, %%ebx\n\t"
+      "shll %%cl, %%ebx\n\t"
+      "movswl -0x4(%%esi), %%ecx\n\t"
+      "testl %%ebx, %%ecx\n\t"
+      "je .LFUN_00024900_2\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00024900_2:\n\t"
+      "addl $8, %%esi\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00024900_1\n\t"
+      ".LFUN_00024900_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00024900: clang naked draft required"
+#endif
+
 
 /* FUN_00024950 (0x24950) — XBE naked draft (batch 127). */
 #if defined(__clang__)
@@ -1250,18 +1332,53 @@ int actor_get_firing_position_group(int actor_handle __attribute__((unused)), sh
 #endif
 
 
-/* 0x24b80 */
-void actor_clear_discarded_firing_positions(int actor_handle, int param2)
+/* actor_clear_discarded_firing_positions (0x24b80) — XBE naked draft (batch 168). */
+#if defined(__clang__)
+static void *(*const b24b80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void actor_clear_discarded_firing_positions(int actor_handle __attribute__((unused)), int param2 __attribute__((unused)))
 {
-  int ecx = 0;
-
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* test (char)ecx, (char)ecx -> je 0x24bdd */
-  /* test (char)ecx, (char)ecx -> je 0x24bd6 */
-  /* test (char)ecx, (char)ecx -> je 0x24bdd */
-
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "movw $0, 0x3c6(%%eax)\n\t"
+      "leal 0x3ca(%%eax), %%ecx\n\t"
+      "movl $4, %%edx\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lactor_clear_discarded_firing_positions_1:\n\t"
+      "movw $0xffff, (%%ecx)\n\t"
+      "addl $4, %%ecx\n\t"
+      "decl %%edx\n\t"
+      "jne .Lactor_clear_discarded_firing_positions_1\n\t"
+      "movb 0x3d8(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_clear_discarded_firing_positions_3\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_clear_discarded_firing_positions_2\n\t"
+      "movb 0x3d9(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_clear_discarded_firing_positions_3\n\t"
+      ".Lactor_clear_discarded_firing_positions_2:\n\t"
+      "movb $0, 0x3d8(%%eax)\n\t"
+      ".Lactor_clear_discarded_firing_positions_3:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b24b80_dget)
+      : "memory");
 }
+#else
+#error "actor_clear_discarded_firing_positions: clang naked draft required"
+#endif
+
 
 /* FUN_00024be0 (0x24be0) — XBE naked draft (batch 144). */
 #if defined(__clang__)
