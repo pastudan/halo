@@ -406,48 +406,143 @@ void FUN_00064ee0(int tif_)
 }
 /* --- props.obj batch drafts (2026-07-26) --- */
 
-/* 0x63e30 */
-void FUN_00063e30(void)
+/* 0x63e30 — project a probe point onto a structure surface. */
+int FUN_00063e30(int scenario, unsigned char bsp_idx, float *origin,
+                 int surface_index, float *out_point)
 {
-  int edi = 0;
+  char result[0x1c];
+  int end_surface;
 
-  /* cmp edi, -1 -> je 0x63e7a */
-  FUN_000639e0(0, 0, (void *)0, 0, (void *)0, 0, (char *)0);
+  if (surface_index == -1)
+    return -1;
 
-  (void)edi;
+  FUN_000639e0(scenario, bsp_idx, origin, surface_index, out_point, -1, result);
+  end_surface = *(int *)(result + 0x10);
+  out_point[0] = *(float *)(result + 4);
+  out_point[1] = *(float *)(result + 8);
+  if (end_surface == -1)
+    return surface_index;
+  return end_surface;
 }
 
-/* 0x63e90 */
-char FUN_00063e90(int scenario, unsigned char bsp_idx, float *origin, int node_handle, float *target, int flags, float param_7, int param_8, unsigned int *result)
+/* 0x63e90 — test line-of-sight / path visibility between two 2D points. */
+char FUN_00063e90(int scenario, unsigned char bsp_idx, float *origin,
+                  int node_handle, float *target, int flags, float scale,
+                  int param_8, unsigned int *result)
 {
-  int eax = 0;
-  int ebp = 0;
+  float dir[2];
+  float dist_sq;
+  float inv_dist;
+  float pt_fwd[2];
+  float pt_back[2];
+  float pt_tgt_fwd[2];
+  float pt_tgt_back[2];
+  int surf_fwd;
+  int surf_back;
+  int surf_tgt_fwd;
+  int surf_tgt_back;
+  char buf_fwd[0x4c];
+  char buf_back[0x68];
+  char pick_fwd;
+  char pick_back;
+  float best_dist;
+  char *best_buf;
 
-  /* test (char)eax, 0x41 -> jne 0x640f6 */
-  FUN_00063e30();
-  FUN_00063e30();
-  FUN_00063e30();
-  FUN_00063e30();
-  /* cmp eax, -1 -> je 0x64019 */
-  FUN_000639e0(0, 0, (void *)0, 0, (void *)0, 0, (char *)0);
-  /* test (char)eax, (char)eax -> je 0x6401d */
-  /* cmp eax, -1 -> je 0x6401d */
-  /* relift: test byte ptr [ebp + 0x24], 1 -> jne 0x6401d */
-  FUN_000639e0(0, 0, (void *)0, 0, (void *)0, 0, (char *)0);
-  /* test (char)eax, (char)eax -> jne 0x6401d */
-  /* cmp eax, -1 -> jne 0x6402c */
-  FUN_000639e0(0, 0, (void *)0, 0, (void *)0, 0, (char *)0);
-  /* test (char)eax, (char)eax -> je 0x6407d */
-  /* cmp eax, -1 -> je 0x6407d */
-  /* relift: test byte ptr [ebp + 0x24], 1 -> jne 0x6407d */
-  FUN_000639e0(0, 0, (void *)0, 0, (void *)0, 0, (char *)0);
-  /* test (char)eax, (char)eax -> jne 0x6407d */
-  /* test (char)eax, (char)eax -> je 0x64099 */
-  /* test (char)eax, (char)eax -> je 0x640df */
-  return 0;
+  dir[0] = origin[0] - target[0];
+  dir[1] = origin[1] - target[1];
+  dist_sq = dir[0] * dir[0] + dir[1] * dir[1];
+  if (fabs(dist_sq) < *(double *)0x2533d0) {
+    inv_dist = 1.0f;
+    dir[0] = 0.0f;
+    dir[1] = 0.0f;
+  } else {
+    inv_dist = 1.0f / sqrtf(dist_sq);
+    dir[0] *= inv_dist;
+    dir[1] *= inv_dist;
+  }
+  if (*(float *)0x2533c0 < dist_sq)
+    return 0;
 
-  (void)eax;
-  (void)ebp;
+  pt_fwd[0] = dir[0] * scale + origin[0];
+  pt_fwd[1] = dir[1] * scale + origin[1];
+  pt_back[0] = -dir[0] * scale + origin[0];
+  pt_back[1] = -dir[1] * scale + origin[1];
+  pt_tgt_fwd[0] = dir[0] * scale + target[0];
+  pt_tgt_fwd[1] = dir[1] * scale + target[1];
+  pt_tgt_back[0] = -dir[0] * scale + target[0];
+  pt_tgt_back[1] = -dir[1] * scale + target[1];
+
+  surf_fwd = FUN_00063e30(scenario, bsp_idx, origin, node_handle, pt_fwd);
+  surf_back = FUN_00063e30(scenario, bsp_idx, origin, node_handle, pt_back);
+  surf_tgt_fwd =
+      FUN_00063e30(scenario, bsp_idx, target, flags, pt_tgt_fwd);
+  surf_tgt_back =
+      FUN_00063e30(scenario, bsp_idx, target, flags, pt_tgt_back);
+
+  csmemset(buf_fwd, 0, sizeof(buf_fwd));
+  csmemset(buf_back, 0, sizeof(buf_back));
+  pick_fwd = 0;
+  pick_back = 0;
+
+  if (surf_fwd != -1) {
+    if (FUN_000639e0(scenario, bsp_idx, origin, surf_fwd, pt_fwd, surf_back,
+                     buf_fwd + 0x3c) &&
+        *(int *)(buf_fwd + 0x24) != -1 && !(param_8 & 1)) {
+      if (!FUN_000639e0(scenario, bsp_idx, pt_fwd, *(int *)(buf_fwd + 0x24),
+                        target, flags, buf_fwd))
+        buf_fwd[0] = 0;
+    } else {
+      buf_fwd[0] = 0;
+    }
+    if (surf_back != -1 &&
+        FUN_000639e0(scenario, bsp_idx, pt_fwd, surf_back, target, flags,
+                     buf_fwd + 0x08) &&
+        *(int *)(buf_fwd + 0x1c) != -1 && !(param_8 & 1)) {
+      pick_fwd = 1;
+    }
+  }
+
+  if (surf_tgt_back != -1) {
+    if (FUN_000639e0(scenario, bsp_idx, target, surf_tgt_back, pt_tgt_back,
+                     surf_tgt_fwd, buf_back + 0x58) &&
+        *(int *)(buf_back + 0x40) != -1 && !(param_8 & 1)) {
+      if (!FUN_000639e0(scenario, bsp_idx, pt_tgt_back,
+                        *(int *)(buf_back + 0x40), origin, node_handle,
+                        buf_back + 0x1c))
+        buf_back[0x20] = 0;
+    } else {
+      buf_back[0x20] = 0;
+    }
+    if (surf_tgt_fwd != -1 &&
+        FUN_000639e0(scenario, bsp_idx, pt_tgt_back, surf_tgt_fwd, origin,
+                     node_handle, buf_back + 0x24) &&
+        *(int *)(buf_back + 0x38) != -1 && !(param_8 & 1)) {
+      pick_back = 1;
+    }
+  }
+
+  if (buf_fwd[0] && pick_back && pick_fwd) {
+    if (*(float *)(buf_fwd + 0x2c) >= *(float *)(buf_back + 0x48))
+      best_buf = buf_fwd;
+    else
+      best_buf = buf_back + 0x20;
+  } else if (buf_fwd[0] && pick_fwd) {
+    best_buf = buf_fwd;
+  } else if (pick_back) {
+    best_buf = buf_back + 0x20;
+  } else {
+    return 0;
+  }
+
+  best_dist = (target[0] - *(float *)(best_buf + 4)) *
+                  (target[0] - *(float *)(best_buf + 4)) +
+              (target[1] - *(float *)(best_buf + 8)) *
+                  (target[1] - *(float *)(best_buf + 8));
+  if (scale * scale < best_dist)
+    return 0;
+
+  csmemcpy(result, best_buf, 0x1c);
+  return 1;
 }
 
 /* 0x64170 */

@@ -1706,43 +1706,65 @@ void ai_adjust_damage(int player_index, void *damage_params, float *scale)
   (void)eax;
 }
 
-/* 0x3fb40 */
-void ai_find_inactive_encounters(void)
+/* 0x3fb40 — collect inactive encounter/actor records for recycling. */
+void ai_find_inactive_encounters(void *out_list, int buf_size)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
-  int ebp = 0;
+  int actor_iter[3];
+  int enc_iter[6];
+  int actor_rec;
+  int enc_rec;
+  int16_t count;
+  int entry_off;
 
-  /* relift: cmp word ptr [ebp + 0xc], 0xc04 -> jae 0x3fb72 */
-  display_assert((char *)0x00257648, (char *)0x002575c0, 558, 1);
-  system_exit(edi);
-  encounter_actor_iterator_new((void *)0, edi);
-  encounter_actor_iterator_next((void *)0);
-  /* test eax, eax -> je 0x3fbee */
-  /* cmp (int16_t)ecx, 0x100 -> jge 0x3fbee */
-  /* test dl, dl -> jne 0x3fbde */
-  /* relift: cmp dword ptr [eax + 0xc], edi -> je 0x3fbde */
-  encounter_actor_iterator_next((void *)0);
-  /* test eax, eax -> jne 0x3fba0 */
-  encounter_iterator_new(0, 0);
-  FUN_000599c0(0);
-  /* test eax, eax -> je 0x3fc65 */
-  /* cmp (int16_t)ecx, 0x100 -> jge 0x3fc65 */
-  /* test dl, dl -> jne 0x3fc55 */
-  /* relift: cmp word ptr [eax + 0x2a], 0 -> jle 0x3fc55 */
-  /* relift: cmp dword ptr [eax + 0x10], edi -> je 0x3fc55 */
-  FUN_000599c0(0);
-  /* test eax, eax -> jne 0x3fc10 */
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x3fc84 */
-  qsort((void *)(uintptr_t)0, 0, 0, (void *)0);
+  if (buf_size >= 0xc04) {
+    display_assert("buffer_size<MAXIMUM_INACTIVE_ENCOUNTER_BUFFER_SIZE",
+                   "c:\\halo\\SOURCE\\ai\\ai.c", 0x22e, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
-  (void)ebp;
+  *(int16_t *)out_list = 0;
+  *(int16_t *)((char *)out_list + 2) = 0;
+
+  encounter_actor_iterator_new(actor_iter, -1);
+  for (actor_rec = encounter_actor_iterator_next(actor_iter); actor_rec != 0;
+       actor_rec = encounter_actor_iterator_next(actor_iter)) {
+    count = *(int16_t *)out_list;
+    if (count >= 0x100)
+      break;
+    if (*(char *)(actor_rec + 8) != 0)
+      continue;
+    if (*(int *)(actor_rec + 0xc) == -1)
+      continue;
+    entry_off = count * 0xc;
+    *(char *)((char *)out_list + entry_off + 4) = 1;
+    *(int *)((char *)out_list + entry_off + 8) = actor_iter[1];
+    *(int *)((char *)out_list + entry_off) = *(int *)(actor_rec + 0xc);
+    *(int16_t *)out_list = count + 1;
+  }
+
+  encounter_iterator_new((int)enc_iter, 0);
+  for (enc_rec = (int)FUN_000599c0((int)enc_iter); enc_rec != 0;
+       enc_rec = (int)FUN_000599c0((int)enc_iter)) {
+    count = *(int16_t *)out_list;
+    if (count >= 0x100)
+      break;
+    if (*(char *)(enc_rec + 0xd) != 0)
+      continue;
+    if (*(int16_t *)(enc_rec + 0x2a) <= 0)
+      continue;
+    if (*(int *)(enc_rec + 0x10) == -1)
+      continue;
+    entry_off = count * 0xc;
+    *(char *)((char *)out_list + entry_off + 4) = 0;
+    *(int *)((char *)out_list + entry_off + 8) = *(int *)((char *)enc_iter + 0x10);
+    *(int *)((char *)out_list + entry_off) = *(int *)(enc_rec + 0x10);
+    *(int16_t *)out_list = count + 1;
+  }
+
+  count = *(int16_t *)out_list;
+  if (count > 0) {
+    qsort((char *)out_list + 4, count, 0xc, (void *)FUN_0003fb00);
+  }
 }
 
 /* 0x3fc90 */

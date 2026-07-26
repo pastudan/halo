@@ -126,6 +126,11 @@ def main() -> int:
         ("FUN_00062e10", 0x62e10, 0x63030),
         ("FUN_00062ba0", 0x62ba0, 0x62cf0),
         ("FUN_00062cf0", 0x62cf0, 0x62e10),
+        ("FUN_000639e0", 0x639e0, 0x63e30),
+        ("FUN_00063e30", 0x63e30, 0x63e90),
+        ("FUN_00063e90", 0x63e90, 0x640df),
+        ("path_heap_bubble_up", 0x5e150, 0x5e330),
+        ("ai_find_inactive_encounters", 0x3fb40, 0x3fc90),
         ("actor_berserk", 0x31440, 0x314f0),
     ]
 

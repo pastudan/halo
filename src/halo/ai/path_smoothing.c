@@ -757,7 +757,8 @@ char FUN_000633b0(unsigned int param_1, int param_2, void *param_3,
     proj_in[0] = smooth[0];
     proj_in[1] = smooth[1];
     proj_in[2] = ref_point[2];
-    FUN_00063e30();
+    surface_index = FUN_00063e30((int)scenario, *(unsigned char *)(path + 4),
+                                 proj_in, surface_index, ref_point);
 
     if (out_index >= 4)
       break;
@@ -814,48 +815,220 @@ void FUN_00062b20(void)
   (void)ebx;
 }
 
-/* 0x639e0 */
-int FUN_000639e0(int scenario, unsigned char bsp_idx, float *origin, int node_handle, float *target, int flags, char *result_buf)
+/* 0x639e0 — march structure BSP surfaces between two points. */
+char FUN_000639e0(int scenario, unsigned char bsp_idx, float *origin,
+                  int start_surface, float *target, int end_surface,
+                  char *result_buf)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
+  void *bsp_block;
+  char *skip_flags;
+  unsigned int *breakable_bitmap;
+  float delta[2];
+  float accum[3];
+  float edge_vec[2];
+  float proj_in[2];
+  float proj_out[3];
+  int cur_surface;
+  int walk_surface;
+  int coll_target;
+  int *surf_def;
+  char *coll_rec;
+  int16_t step_count;
+  char edge_clear;
+  char target_edge;
+  char recurse;
+  int side_idx;
+  int next_surface;
+  float cross;
+  float t_param;
 
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 96);
-  breakable_surfaces_get_bsp_surface_data();
-  display_assert((char *)0x0025f120, (char *)0x0025f09c, 217, 0);
-  system_exit(0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 12);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 24);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 16);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* test (char)eax, 0x41 -> jne 0x63bbc */
-  /* test (char)eax, 0x41 -> jne 0x63bbc */
-  /* test (char)eax, 0x41 -> je 0x63bda */
-  /* test dl, dl -> jne 0x63c5f */
-  /* test (char)eax, (char)eax -> je 0x63d1b */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* test (char)eax, 8 -> jne 0x63c43 */
-  display_assert((char *)0x0025ef00, (char *)0x0025f09c, 274, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> je 0x63d1b */
-  /* test (char)eax, (char)eax -> je 0x63de1 */
-  /* test esi, esi -> jl 0x63c8f */
-  /* relift: cmp esi, dword ptr [edx + 0x1e4] -> jl 0x63caf */
-  display_assert((char *)0x0025f0d8, (char *)0x0025f09c, 316, 0);
-  system_exit(0);
-  /* relift: cmp byte ptr [esi + ecx], 0 -> je 0x63da9 */
-  /* relift: tail-call FUN_000639e0(); */
-  /* test (char)eax, (char)eax -> jne 0x63da9 */
-  collision_surface_project_point2d(0, 0, 0, 0, (float *)0, (float *)0);
-  collision_surface_project_point2d(0, 0, 0, 0, (float *)(uintptr_t)ebx, (float *)(uintptr_t)eax);
+  if (result_buf == NULL) {
+    display_assert("result", "c:\\halo\\SOURCE\\ai\\path_smoothing.c", 0xd9, 0);
+    system_exit(-1);
+  }
+
+  bsp_block = tag_block_get_element((char *)scenario + 0xb0, 0, 0x60);
+  skip_flags = *(char **)((char *)scenario + 0x1e8);
+  breakable_bitmap = (unsigned int *)breakable_surfaces_get_bsp_surface_data();
+
+  delta[0] = target[0] - origin[0];
+  delta[1] = target[1] - origin[1];
+
+  accum[0] = *(float *)0x31fc1c;
+  accum[1] = *(((float *)0x31fc1c) + 1);
+  accum[2] = *(((float *)0x31fc1c) + 2);
+
+  cur_surface = start_surface;
+  walk_surface = start_surface;
+  step_count = 0;
+  edge_clear = 0;
+  target_edge = 0;
+  recurse = 0;
+
+  coll_rec = (char *)tag_block_get_element((char *)bsp_block + 0x3c, cur_surface,
+                                           0xc);
+  walk_surface = *(int *)(coll_rec + 4);
+
+  for (;;) {
+    float *edge_a;
+    float *edge_b;
+    float *far_edge;
+    char breakable_side;
+    char blocked;
+
+    surf_def = (int *)tag_block_get_element((char *)bsp_block + 0x48,
+                                            walk_surface, 0x18);
+    side_idx = (cur_surface == surf_def[5]) ? 1 : 0;
+    edge_a = (float *)tag_block_get_element((char *)bsp_block + 0x54,
+                                            surf_def[4 + side_idx], 0x10);
+    far_edge = (float *)tag_block_get_element((char *)bsp_block + 0x54,
+                                              surf_def[4 + (1 - side_idx)], 0x10);
+    edge_b = far_edge;
+
+    edge_vec[0] = edge_b[0] - edge_a[0];
+    edge_vec[1] = edge_b[1] - edge_a[1];
+
+    if (*(int *)((char *)surf_def + side_idx * 4 + 0x10) == end_surface)
+      target_edge = 1;
+
+    accum[0] += edge_a[0];
+    accum[1] += edge_a[1];
+    accum[2] += edge_a[2];
+    step_count++;
+
+    cross = edge_vec[0] * delta[1] - edge_vec[1] * delta[0];
+    if (*(float *)0x2533c0 < cross)
+      edge_clear = 1;
+
+    edge_vec[0] = target[0] - edge_a[0];
+    edge_vec[1] = target[1] - edge_a[1];
+    if (edge_vec[0] * delta[1] - edge_vec[1] * delta[0] >= *(float *)0x2533c0)
+      edge_clear = 1;
+
+    edge_vec[0] = origin[0] - edge_a[0];
+    edge_vec[1] = origin[1] - edge_a[1];
+    if (edge_vec[0] * delta[1] - edge_vec[1] * delta[0] >= *(float *)0x2533c0)
+      edge_clear = 1;
+
+    if (*(float *)0x2533c0 < cross) {
+      next_surface = *(int *)((char *)surf_def + side_idx * 4 + 8);
+      coll_rec = (char *)tag_block_get_element((char *)bsp_block + 0x3c,
+                                               walk_surface, 0xc);
+      coll_target = *(int *)(coll_rec + 4);
+      if (next_surface == coll_target)
+        break;
+      walk_surface = next_surface;
+      continue;
+    }
+
+    next_surface = surf_def[4 + (side_idx ^ 1)];
+    blocked = 0;
+    if (bsp_idx == 0) {
+      char flagbyte = skip_flags[next_surface];
+      coll_rec = (char *)tag_block_get_element((char *)bsp_block + 0x3c,
+                                               next_surface, 0xc);
+      breakable_side = (coll_rec[0] >> 6) & 1;
+      if (breakable_side && flagbyte < 0)
+        blocked = path_surface_breakable_is_blocking(bsp_block, next_surface,
+                                                     breakable_bitmap, 0);
+    }
+    if (!blocked)
+      goto project_hit;
+
+    cur_surface = next_surface;
+    walk_surface = cur_surface;
+    coll_rec = (char *)tag_block_get_element((char *)bsp_block + 0x3c,
+                                             cur_surface, 0xc);
+    walk_surface = *(int *)(coll_rec + 4);
+
+    if (!recurse && cur_surface >= 0 &&
+        cur_surface < *(int *)((char *)scenario + 0x1e4) &&
+        skip_flags[cur_surface] != 0) {
+      char sub_result[0x70];
+      if (!FUN_000639e0(scenario, bsp_idx, accum, cur_surface, target, -1,
+                        sub_result)) {
+        cur_surface = *(int *)(sub_result + 0x10);
+        recurse = 1;
+        walk_surface = cur_surface;
+        coll_rec = (char *)tag_block_get_element((char *)bsp_block + 0x3c,
+                                                 cur_surface, 0xc);
+        walk_surface = *(int *)(coll_rec + 4);
+      }
+    }
+    if (step_count > 0x200)
+      break;
+  }
+
+  if (edge_clear) {
+    if (cur_surface < 0 ||
+        cur_surface >= *(int *)((char *)scenario + 0x1e4)) {
+      display_assert("current_surface>=0 && "
+                     "current_surface<scenario->structure_bsp.surface_count",
+                     "c:\\halo\\SOURCE\\ai\\path_smoothing.c", 0x13c, 0);
+      system_exit(-1);
+    }
+    t_param = (float)step_count;
+    t_param = 1.0f / t_param;
+    accum[0] *= t_param;
+    accum[1] *= t_param;
+    if (!recurse) {
+      if (skip_flags[cur_surface] == 0)
+        goto write_fail;
+    }
+    proj_in[0] = accum[0];
+    proj_in[1] = accum[1];
+    collision_surface_project_point2d((int)bsp_block, cur_surface, 2, 1, proj_in,
+                                      proj_out);
+    *(float *)(result_buf + 4) = proj_out[0];
+    *(float *)(result_buf + 8) = proj_out[1];
+    *(int *)(result_buf + 0x10) = cur_surface;
+    *(int *)(result_buf + 0x14) = end_surface;
+    result_buf[0] = 1;
+    *(float *)(result_buf + 0x18) = t_param;
+    return 1;
+  }
+
+  if (cur_surface != end_surface && !target_edge && end_surface != -1)
+    goto write_partial;
+
+write_fail:
+  collision_surface_project_point2d((int)bsp_block, cur_surface, 2, 1, origin,
+                                    proj_out);
+  *(int *)(result_buf + 0x10) = cur_surface;
+  *(int *)(result_buf + 0x14) = -1;
+  result_buf[0] = 0;
+  *(float *)(result_buf + 0x18) = 1.0f;
   return 0;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+write_partial:
+  collision_surface_project_point2d((int)bsp_block, end_surface, 2, 1, target,
+                                    proj_out);
+  *(int *)(result_buf + 0x10) = -1;
+  *(int *)(result_buf + 0x14) = -1;
+  result_buf[0] = 1;
+  *(float *)(result_buf + 0x18) = 0.0f;
+  return 1;
+
+project_hit:
+  cross = edge_vec[1] * delta[0] - edge_vec[0] * delta[1];
+  t_param = sqrtf(delta[0] * edge_vec[0] + delta[1] * edge_vec[1]);
+  if (*(float *)0x2533c0 < t_param) {
+    float denom = edge_vec[0] * edge_vec[0] + edge_vec[1] * edge_vec[1];
+    float scale = *(float *)0x25f0d0;
+    if (*(float *)0x2533c0 < denom) {
+      t_param = (sqrtf(denom) * scale - t_param) / cross;
+      proj_in[0] = delta[0] * t_param + origin[0];
+      proj_in[1] = delta[1] * t_param + origin[1];
+      collision_surface_project_point2d((int)bsp_block, next_surface, 2, 1,
+                                        proj_in, proj_out);
+      *(float *)(result_buf + 4) = proj_out[0];
+      *(float *)(result_buf + 8) = proj_out[1];
+      *(int *)(result_buf + 0x10) = next_surface;
+      *(int *)(result_buf + 0x14) = walk_surface;
+      result_buf[0] = 1;
+      *(float *)(result_buf + 0x18) = t_param;
+      return 1;
+    }
+  }
+  goto write_partial;
 }

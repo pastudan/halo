@@ -4347,7 +4347,7 @@
         },
         {
           "addr": "0x3fb40",
-          "decl": "void ai_find_inactive_encounters(void);",
+          "decl": "void ai_find_inactive_encounters(void *out_list, int buf_size);",
           "ported": false
         },
         {
@@ -36030,7 +36030,7 @@
         },
         {
           "addr": "0x63e30",
-          "decl": "void FUN_00063e30(void);",
+          "decl": "int FUN_00063e30(int scenario, unsigned char bsp_idx, float *origin, int surface_index, float *out_point);",
           "ported": false
         },
         {
@@ -40141,7 +40141,7 @@
         },
         {
           "addr": "0x5e150",
-          "decl": "void path_heap_bubble_up(void);",
+          "decl": "void path_heap_bubble_up(void *path, int16_t heap_index);",
           "ported": false
         },
         {
@@ -40368,7 +40368,7 @@
         },
         {
           "addr": "0x639e0",
-          "decl": "int FUN_000639e0(int scenario, unsigned char bsp_idx, float *origin, int node_handle, float *target, int flags, char *result_buf);",
+          "decl": "char FUN_000639e0(int scenario, unsigned char bsp_idx, float *origin, int start_surface, float *target, int end_surface, char *result_buf);",
           "ported": false
         }
       ],
