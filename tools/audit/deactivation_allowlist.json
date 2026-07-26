@@ -16952,5 +16952,47 @@
     "object": "d3d_intimacy.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x14ad60",
+    "name": "render_debug_collision_sphere",
+    "object": "collision_features.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x14ad80",
+    "name": "render_debug_collision_cylinder",
+    "object": "collision_features.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x14bdb0",
+    "name": "collision_sphere_test_vector",
+    "object": "collision_features.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x14bf30",
+    "name": "collision_cylinder_test_vector",
+    "object": "collision_features.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x14c220",
+    "name": "collision_prism_test_vector",
+    "object": "collision_features.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x14c4b0",
+    "name": "FUN_0014c4b0",
+    "object": "collision_features.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

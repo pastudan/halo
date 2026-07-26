@@ -36834,11 +36834,13 @@
         },
         {
           "addr": "0x14ad60",
-          "decl": "void render_debug_collision_sphere(void);"
+          "decl": "void render_debug_collision_sphere(void);",
+          "ported": false
         },
         {
           "addr": "0x14ad80",
-          "decl": "void render_debug_collision_cylinder(void);"
+          "decl": "void render_debug_collision_cylinder(void);",
+          "ported": false
         },
         {
           "addr": "0x14adb0",
@@ -36897,19 +36899,23 @@
         },
         {
           "addr": "0x14bdb0",
-          "decl": "void collision_sphere_test_vector(void);"
+          "decl": "void collision_sphere_test_vector(void);",
+          "ported": false
         },
         {
           "addr": "0x14bf30",
-          "decl": "void collision_cylinder_test_vector(void);"
+          "decl": "void collision_cylinder_test_vector(void);",
+          "ported": false
         },
         {
           "addr": "0x14c220",
-          "decl": "void collision_prism_test_vector(void);"
+          "decl": "void collision_prism_test_vector(void);",
+          "ported": false
         },
         {
           "addr": "0x14c4b0",
-          "decl": "char FUN_0014c4b0(int arg1, float *arg2, float *arg3, void *out_result);"
+          "decl": "char FUN_0014c4b0(int arg1, float *arg2, float *arg3, void *out_result);",
+          "ported": false
         }
       ],
       "name": "collision_features.obj",
