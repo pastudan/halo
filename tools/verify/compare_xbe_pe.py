@@ -77,9 +77,9 @@ def main() -> int:
         # refined hs_runtime / units / bipeds (2026-07-26 wave)
         ("FUN_000c9f90", 0xc9f90, 0xca010),
         ("hs_wake_by_name", 0xcb9a0, 0xcba00),
-        ("FUN_001a8770", 0x1a8770, 0x1a8810),
-        ("FUN_001a8890", 0x1a8890, 0x1a8910),
-        ("FUN_001a8910", 0x1a8910, 0x1a8950),
+        ("FUN_001a8770", 0x1a8770, 0x1a8782),
+        ("FUN_001a8890", 0x1a8890, 0x1a88ad),
+        ("FUN_001a8910", 0x1a8910, 0x1a892e),
         ("FUN_001a8950", 0x1a8950, 0x1a898e),
         ("FUN_001a0db0", 0x1a0db0, 0x1a0e00),
         # collision_bsp extended
@@ -245,7 +245,7 @@ def main() -> int:
         # gameplay wave 7 (2026-07-26)
         ("glow_trailing_particle_new", 0x134350, 0x1345b0),
         ("FUN_001b5400", 0x1b5400, 0x1b5500),
-        ("FUN_001b56b0", 0x1b56b0, 0x1b5750),
+        ("FUN_001b56b0", 0x1b56b0, 0x1b5747),
         ("FUN_000fb690", 0xfb690, 0xfb6d6),
         # gameplay wave 8 (2026-07-26)
         ("FUN_00136bc0", 0x136bc0, 0x136f40),
@@ -407,9 +407,9 @@ def main() -> int:
         ("FUN_000f5660", 0xf5660, 0xf56b0),
         ("FUN_000f56b0", 0xf56b0, 0xf5700),
         ("object_postprocess_node_matrices", 0x13df70, 0x13dfc0),
-        ("weapon_reloading", 0xfc690, 0xfc710),
-        ("FUN_000fb510", 0xfb510, 0xfb5a0),
-        ("weapon_trigger_release_charge", 0xfb880, 0xfb910),
+        ("weapon_reloading", 0xfc690, 0xfc70a),
+        ("FUN_000fb510", 0xfb510, 0xfb594),
+        ("weapon_trigger_release_charge", 0xfb880, 0xfb904),
         ("FUN_000fcd10", 0xfcd10, 0xfcdd0),
         ("weapon_new", 0xfbd10, 0xfbea0),
         # gameplay wave 33 (2026-07-26)
@@ -441,7 +441,7 @@ def main() -> int:
         ("first_person_weapon_get_marker_by_name_render", 0xddb90, 0xddbd0),
         ("weapon_get_zoom_magnification", 0xfc780, 0xfc8e0),
         ("FUN_000fd0b0", 0xfd0b0, 0xfd150),
-        ("FUN_001a8910", 0x1a8910, 0x1a8930),
+        ("FUN_001a8910", 0x1a8910, 0x1a892e),
         # gameplay wave 36 (2026-07-26)
         ("FUN_000f5800", 0xf5800, 0xf58c6),
         ("FUN_000fb990", 0xfb990, 0xfb9da),
@@ -453,6 +453,16 @@ def main() -> int:
         ("FUN_001b5610", 0x1b5610, 0x1b5657),
         ("vehicle_is_flipped", 0x1b5680, 0x1b56ac),
         ("weapon_useful", 0xfafe0, 0xfb00c),
+        # gameplay wave 37 (2026-07-26)
+        ("FUN_001a8770", 0x1a8770, 0x1a8782),
+        ("FUN_001a8890", 0x1a8890, 0x1a88ad),
+        ("FUN_001a8910", 0x1a8910, 0x1a892e),
+        ("weapon_reloading", 0xfc690, 0xfc70a),
+        ("FUN_000fb510", 0xfb510, 0xfb594),
+        ("FUN_000fb690", 0xfb690, 0xfb6d6),
+        ("weapon_trigger_release_charge", 0xfb880, 0xfb904),
+        ("FUN_001b56b0", 0x1b56b0, 0x1b5747),
+        ("FUN_001b5ff0", 0x1b5ff0, 0x1b613b),
     ]
 
     xbe = Xbe.from_file(args.xbe)

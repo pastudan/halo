@@ -728,7 +728,79 @@ char vehicle_is_flipped(int vehicle_handle)
 }
 #endif
 
-/* 0x1b56b0 — Update vehicle wheel-compression counters from physics state. */
+/* 0x1b56b0 — Update wheel-compression counters (vehicle@eax, physics@edi). */
+#if defined(__clang__)
+static void *(*const FUN_001b56b0_get)(int, int) = object_get_and_verify_type;
+static void *(*const FUN_001b56b0_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+void FUN_001b56b0(int vehicle_handle __attribute__((unused)),
+                  void *physics_state __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x76656869\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x8c(%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x70687973\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x428(%%esi), %%cl\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpb $0xff, %%cl\n\t"
+      "jae 1f\n\t"
+      "incb %%cl\n\t"
+      "movb %%cl, 0x428(%%esi)\n\t"
+      "1:\n\t"
+      "movl 0x74(%%eax), %%ecx\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "jle 4f\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      "2:\n\t"
+      "imull $0x130, %%ecx, %%ecx\n\t"
+      "addl %%edi, %%ecx\n\t"
+      "movl (%%ecx), %%ecx\n\t"
+      "testb $2, %%cl\n\t"
+      "jne 5f\n\t"
+      "testb $0x10, %%cl\n\t"
+      "je 3f\n\t"
+      "movb %%bl, 0x428(%%esi)\n\t"
+      "3:\n\t"
+      "incl %%edx\n\t"
+      "movswl %%dx, %%ecx\n\t"
+      "cmpl 0x74(%%eax), %%ecx\n\t"
+      "jl 2b\n\t"
+      "4:\n\t"
+      "movb %%bl, 0x42b(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      "5:\n\t"
+      "movb 0x42b(%%esi), %%al\n\t"
+      "cmpb $0xff, %%al\n\t"
+      "movb %%bl, 0x428(%%esi)\n\t"
+      "jae 6f\n\t"
+      "incb %%al\n\t"
+      "movb %%al, 0x42b(%%esi)\n\t"
+      "6:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(FUN_001b56b0_get), [tag] "m"(FUN_001b56b0_tag)
+      : "memory");
+}
+#else
 void FUN_001b56b0(int vehicle_handle, void *physics_state)
 {
   char *vehicle;
@@ -739,8 +811,9 @@ void FUN_001b56b0(int vehicle_handle, void *physics_state)
   unsigned char wheel_flags;
 
   vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
-  vehicle_tag = (char *)tag_get('ihev', *(int *)vehicle);
-  physics_tag = (char *)tag_get('syhp', *(int *)(vehicle_tag + 0x8c));
+  vehicle_tag = (char *)tag_get(0x76656869, *(int *)vehicle); /* 'vehi' */
+  physics_tag =
+      (char *)tag_get(0x70687973, *(int *)(vehicle_tag + 0x8c)); /* 'phys' */
 
   if ((unsigned char)vehicle[0x428] != 0xff)
     vehicle[0x428]++;
@@ -751,9 +824,9 @@ void FUN_001b56b0(int vehicle_handle, void *physics_state)
 
     wheel_flags = (unsigned char)*(int *)wheel_state;
     if ((wheel_flags & 2) != 0) {
+      vehicle[0x428] = 0;
       if ((unsigned char)vehicle[0x42b] != 0xff)
         vehicle[0x42b]++;
-      vehicle[0x428] = 0;
       return;
     }
     if ((wheel_flags & 0x10) != 0)
@@ -762,6 +835,7 @@ void FUN_001b56b0(int vehicle_handle, void *physics_state)
 
   vehicle[0x42b] = 0;
 }
+#endif
 
 /* 0x1b5750 — pack float w + three int components into quaternion storage */
 void set_real_quaternion(float *quat, float w, int x, int y, int z)
@@ -1045,8 +1119,133 @@ float *FUN_001b5f20(float *a, float *b, float *out, float scale_a, float scale_b
   return out;
 }
 
-/* 0x1b5ff0 */
-/* 0x1b5ff0 — accumulate throttle/steer into antipodal wheel channels. */
+/* 0x1b5ff0 — accumulate throttle/steer into antipodal wheel channels.
+ * wheel_state arrives in EDI (register); handle/physics_buffer are cdecl. */
+#if defined(__clang__)
+static void *(*const FUN_001b5ff0_get)(int, int) = object_get_and_verify_type;
+static void *(*const FUN_001b5ff0_tag)(int, int) = tag_get;
+static void (*const FUN_001b5ff0_fmod)(void) = FUN_001daf7e;
+static void (*const FUN_001b5ff0_apply)(int, void *, void *, float *, float *) =
+    FUN_00154270;
+
+__attribute__((naked, noinline))
+void FUN_001b5ff0(int vehicle_handle __attribute__((unused)),
+                  void *physics_buffer __attribute__((unused)),
+                  void *wheel_state __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x76656869\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x8c(%%ebx), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x70687973\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x42c(%%esi)\n\t"
+      "fsubs 0x434(%%esi)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "fstps -4(%%ebp)\n\t"
+      "flds 0x434(%%esi)\n\t"
+      "fadds 0x42c(%%esi)\n\t"
+      "fstps -8(%%ebp)\n\t"
+      "flds -4(%%ebp)\n\t"
+      "fadds 0x43c(%%esi)\n\t"
+      "fsts -0xc(%%ebp)\n\t"
+      "fstps 0x43c(%%esi)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "flds 0x310(%%ebx)\n\t"
+      "call *%[xfmod]\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fsts 0x43c(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp 1f\n\t"
+      "fadds 0x310(%%ebx)\n\t"
+      "fstps 0x43c(%%esi)\n\t"
+      "jmp 2f\n\t"
+      "1:\n\t"
+      "fstp %%st(0)\n\t"
+      "2:\n\t"
+      "flds -8(%%ebp)\n\t"
+      "fadds 0x440(%%esi)\n\t"
+      "fsts -0xc(%%ebp)\n\t"
+      "fstps 0x440(%%esi)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "flds 0x310(%%ebx)\n\t"
+      "call *%[xfmod]\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fsts 0x440(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp 3f\n\t"
+      "fadds 0x310(%%ebx)\n\t"
+      "fstps 0x440(%%esi)\n\t"
+      "jmp 4f\n\t"
+      "3:\n\t"
+      "fstp %%st(0)\n\t"
+      "4:\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "movl 0x68(%%eax), %%ecx\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl $2, %%ecx\n\t"
+      "popl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%eax\n\t"
+      "jne 5f\n\t"
+      "movl -4(%%ebp), %%ecx\n\t"
+      "movl -8(%%ebp), %%edx\n\t"
+      "movl %%ecx, (%%edi)\n\t"
+      "movl %%eax, 0x1c(%%edi)\n\t"
+      "movl %%eax, 0x20(%%edi)\n\t"
+      "movl %%eax, 0x24(%%edi)\n\t"
+      "movl $0x3f800000, %%ecx\n\t"
+      "movl %%ecx, 0x28(%%edi)\n\t"
+      "movl %%edx, 0x60(%%edi)\n\t"
+      "movl %%eax, 0x7c(%%edi)\n\t"
+      "movl %%eax, 0x80(%%edi)\n\t"
+      "movl %%eax, 0x84(%%edi)\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, 0x88(%%edi)\n\t"
+      "movl 8(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[apply]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "5:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[apply]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(FUN_001b5ff0_get), [tag] "m"(FUN_001b5ff0_tag),
+        [xfmod] "m"(FUN_001b5ff0_fmod), [apply] "m"(FUN_001b5ff0_apply)
+      : "memory");
+}
+#else
 void FUN_001b5ff0(int vehicle_handle, void *physics_buffer, void *wheel_state)
 {
   char *veh;
@@ -1059,8 +1258,8 @@ void FUN_001b5ff0(int vehicle_handle, void *physics_buffer, void *wheel_state)
   float max_v;
 
   veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
-  vehi = (char *)tag_get(0x76656869, *(int *)veh); /* 'vehi' */
-  phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c)); /* 'phys' */
+  vehi = (char *)tag_get(0x76656869, *(int *)veh);
+  phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c));
   ws = (char *)wheel_state;
   max_v = *(float *)(vehi + 0x310);
 
@@ -1097,6 +1296,7 @@ void FUN_001b5ff0(int vehicle_handle, void *physics_buffer, void *wheel_state)
     FUN_00154270(vehicle_handle, 0, physics_buffer, 0, 0);
   }
 }
+#endif
 
 /* 0x1b6140 — accumulate throttle into a steering wheel channel. */
 void FUN_001b6140(int vehicle_handle, void *physics_buffer, void *wheel_state)

@@ -1239,10 +1239,81 @@ char *FUN_000fb320(void *weapon_obj, int16_t trigger_index)
   return weapon_get_trigger_entry(weapon_obj, trigger_index);
 }
 
-/* 0xfb510 — trigger charge fraction remaining (state 2 = charging). */
-#if defined(__i386__) && defined(__GNUC__)
-__attribute__((noinline))
-#endif
+/* 0xfb510 — trigger charge fraction (weapon@eax, trigger@ecx). */
+#if defined(__clang__)
+static void *(*const FUN_000fb510_get)(int, int) = object_get_and_verify_type;
+static char *(*const FUN_000fb510_entry)(void *, int16_t) = FUN_000fb320;
+static void *(*const FUN_000fb510_tag)(int, int) = tag_get;
+static void *(*const FUN_000fb510_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+float FUN_000fb510(int weapon_handle __attribute__((unused)),
+                   int16_t trigger_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[entry]\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[tag]\n\t"
+      "movswl %%si, %%edx\n\t"
+      "pushl $0x114\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x4fc, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movsbl 1(%%ebx), %%ecx\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "subl $2, %%ecx\n\t"
+      "je 3f\n\t"
+      "decl %%ecx\n\t"
+      "je 2f\n\t"
+      "flds 0x2533c0\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "2:\n\t"
+      "flds 0x2533c8\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "3:\n\t"
+      "movswl 2(%%ebx), %%ecx\n\t"
+      "movl %%ecx, -4(%%ebp)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "fildl -4(%%ebp)\n\t"
+      "popl %%ebx\n\t"
+      "fmuls 0x2546a4\n\t"
+      "fdivs 0x48(%%eax)\n\t"
+      "fsubrs 0x2533c8\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(FUN_000fb510_get), [entry] "m"(FUN_000fb510_entry),
+        [tag] "m"(FUN_000fb510_tag), [elem] "m"(FUN_000fb510_elem)
+      : "memory");
+}
+#else
 float FUN_000fb510(int weapon_handle, int16_t trigger_index)
 {
   char *weapon_obj;
@@ -1258,15 +1329,15 @@ float FUN_000fb510(int weapon_handle, int16_t trigger_index)
 
   state = (int)(signed char)trigger_entry[1] - 2;
   if (state == 0) {
-    /* charging: 1.0 - frame * tick / period */
     return *(float *)0x2533c8 -
            (float)*(int16_t *)(trigger_entry + 2) * *(float *)0x2546a4 /
                *(float *)(trig_def + 0x48);
   }
   if (state == 1)
-    return *(float *)0x2533c8; /* charged */
+    return *(float *)0x2533c8;
   return *(float *)0x2533c0;
 }
+#endif
 
 /* 0xfb5a0 — trigger ready to fire (charge vs firing-heat threshold). */
 #if defined(__clang__)
@@ -1320,7 +1391,51 @@ char FUN_000fb5a0(int weapon_handle, int16_t trigger_index)
   return result;
 }
 
-/* 0xfb690 — Zero one weapon magazine's loaded/reserve counts. */
+/* 0xfb690 — Zero magazine loaded/reserve (weapon@eax, magazine@ecx). */
+#if defined(__clang__)
+static void *(*const FUN_000fb690_get)(int, int) = object_get_and_verify_type;
+static void *(*const FUN_000fb690_mag)(void *, int16_t) = FUN_000fb370;
+static void *(*const FUN_000fb690_tag)(int, int) = tag_get;
+static void *(*const FUN_000fb690_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+void FUN_000fb690(int weapon_handle __attribute__((unused)),
+                  int16_t magazine_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[mag]\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[tag]\n\t"
+      "movswl %%si, %%edx\n\t"
+      "pushl $0x70\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x4f0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw $0, (%%ebx)\n\t"
+      "movw $0, 2(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(FUN_000fb690_get), [mag] "m"(FUN_000fb690_mag),
+        [tag] "m"(FUN_000fb690_tag), [elem] "m"(FUN_000fb690_elem)
+      : "memory");
+}
+#else
 void FUN_000fb690(int weapon_handle, int16_t magazine_index)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
@@ -1332,6 +1447,7 @@ void FUN_000fb690(int weapon_handle, int16_t magazine_index)
   magazine[0] = 0;
   magazine[1] = 0;
 }
+#endif
 
 /* 0xfb7d0 — start attached effect on parent object */
 int FUN_000fb7d0(int effect_tag, int weapon_handle)
@@ -1361,10 +1477,71 @@ int FUN_000fb7d0(int effect_tag, int weapon_handle)
                       (int16_t)-1);
 }
 
-/* 0xfb880 — set a weapon trigger's state/frame (charge release path). */
-#if defined(__i386__) && defined(__GNUC__)
-__attribute__((noinline))
-#endif
+/* 0xfb880 — set trigger state/frame (handle@eax, state@bx, trigger@si,
+ * charge_counter cdecl @ebp+8). */
+#if defined(__clang__)
+static void *(*const wtrc_get)(int, int) = object_get_and_verify_type;
+static void (*const wtrc_assert)(const char *, const char *, int, bool) =
+    display_assert;
+static void (*const wtrc_exit)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void weapon_trigger_release_charge(int16_t charge_counter __attribute__((unused)),
+                                   int weapon_handle __attribute__((unused)),
+                                   char state __attribute__((unused)),
+                                   int16_t trigger_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%si, %%si\n\t"
+      "movl %%eax, %%edi\n\t"
+      "jl 1f\n\t"
+      "cmpw $2, %%si\n\t"
+      "jl 2f\n\t"
+      "1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa11\n\t"
+      "pushl $0x28ad48\n\t"
+      "pushl $0x28ae40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exit]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "2:\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl 3f\n\t"
+      "cmpw $9, %%bx\n\t"
+      "jl 4f\n\t"
+      "3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa12\n\t"
+      "pushl $0x28ad48\n\t"
+      "pushl $0x28ae08\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exit]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "4:\n\t"
+      "movw 8(%%ebp), %%dx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,8), %%ecx\n\t"
+      "leal (%%edi,%%ecx,4), %%eax\n\t"
+      "movb %%bl, 0x211(%%eax)\n\t"
+      "movw %%dx, 0x212(%%eax)\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(wtrc_get), [assert] "m"(wtrc_assert), [exit] "m"(wtrc_exit)
+      : "memory");
+}
+#else
 void weapon_trigger_release_charge(int16_t charge_counter, int weapon_handle,
                                    char state, int16_t trigger_index)
 {
@@ -1385,6 +1562,7 @@ void weapon_trigger_release_charge(int16_t charge_counter, int weapon_handle,
   weapon_obj[idx * 36 + 0x211] = state;
   *(int16_t *)(weapon_obj + idx * 36 + 0x212) = charge_counter;
 }
+#endif
 
 /* 0xfb910 — Reset trigger charge when definition charge time is zero. */
 #if defined(__i386__) && defined(__GNUC__)
@@ -1778,9 +1956,69 @@ void weapon_build_weapon_interface_state(int weapon_handle, int out_state)
 }
 
 /* 0xfc690 — true if magazine 0 is currently in the reloading state. */
-#if defined(__i386__) && defined(__GNUC__)
-__attribute__((noinline))
-#endif
+#if defined(__clang__)
+static void *(*const weapon_reloading_get)(int, int) =
+    object_get_and_verify_type;
+static void *(*const weapon_reloading_tag)(int, int) = tag_get;
+static void (*const weapon_reloading_assert)(const char *, const char *, int,
+                                             bool) = display_assert;
+static void (*const weapon_reloading_exit)(int) = system_exit;
+
+__attribute__((naked, noinline))
+char weapon_reloading(int weapon_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x4f0(%%eax), %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle 3f\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x4f0(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jg 2f\n\t"
+      "pushl $1\n\t"
+      "pushl $0x672\n\t"
+      "pushl $0x28ad48\n\t"
+      "pushl $0x28adb8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exit]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "2:\n\t"
+      "cmpw $1, 0x258(%%esi)\n\t"
+      "movb $1, %%al\n\t"
+      "je 4f\n\t"
+      "3:\n\t"
+      "movb %%bl, %%al\n\t"
+      "4:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(weapon_reloading_get), [tag] "m"(weapon_reloading_tag),
+        [assert] "m"(weapon_reloading_assert), [exit] "m"(weapon_reloading_exit)
+      : "memory");
+}
+#else
 char weapon_reloading(int weapon_handle)
 {
   char *weapon_obj;
@@ -1801,6 +2039,7 @@ char weapon_reloading(int weapon_handle)
   }
   return result;
 }
+#endif
 
 /* 0xfc710 */
 int16_t weapon_rotate_zoom_level(int weapon_handle, int16_t zoom_level)
