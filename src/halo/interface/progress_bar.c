@@ -1392,6 +1392,14 @@ void FUN_000e2170(char v)
   *(char *)0x30f030 = v;
 }
 
+/* FUN_000e21b0 (0xe21b0) — readable C lift. */
+int FUN_000e21b0(void *texture, unsigned int level, void *locked_rect /*@<edx>*/,
+                 void *rect /*@<ecx>*/, unsigned int flags /*@<eax>*/)
+{
+  D3DTexture_LockRect(texture, level, locked_rect, rect, flags);
+  return 0;
+}
+
 /* D3DXMatrixIdentity (0xe21e0) — readable C lift from XBE leaf. */
 void D3DXMatrixIdentity(float *m)
 {

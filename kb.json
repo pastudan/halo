@@ -20357,7 +20357,7 @@
         {
           "addr": "0xe21b0",
           "decl": "int FUN_000e21b0(void *texture, unsigned int level, void *locked_rect@<edx>, void *rect@<ecx>, unsigned int flags@<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e21b0"
         },
         {

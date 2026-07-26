@@ -2089,6 +2089,11 @@
     "confidence": "weak",
     "coverage_pct": 0.0
   },
+  "0x45830": {
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 0.0
+  },
   "0x459": {
     "confidence": "moderate",
     "coverage_pct": 43.2
@@ -2365,6 +2370,9 @@
     "confidence": "weak",
     "coverage_pct": 100.0
   },
+  "0x5f240": {
+    "class": "non_leaf"
+  },
   "0x5f3c0": {
     "class": "non_leaf",
     "confidence": "high",
@@ -2408,6 +2416,11 @@
     "class": "non_leaf",
     "confidence": "weak",
     "coverage_pct": 78.4
+  },
+  "0x60260": {
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 13.9
   },
   "0x60970": {
     "class": "non_leaf",
@@ -2463,7 +2476,7 @@
   "0x651a0": {
     "class": "non_leaf",
     "confidence": "weak",
-    "coverage_pct": 31.0
+    "coverage_pct": 98.3
   },
   "0x652a0": {
     "class": "non_leaf",
@@ -4393,7 +4406,7 @@
   "0xe21b0": {
     "class": "non_leaf",
     "confidence": "weak",
-    "coverage_pct": 0.0
+    "coverage_pct": 67.6
   },
   "0xe21e0": {
     "class": "leaf",
