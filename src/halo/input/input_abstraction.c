@@ -352,25 +352,67 @@ void input_abstraction_update(void)
 }
 /* --- input_abstraction.obj batch drafts (2026-07-26) --- */
 
-/* 0xce6c0 */
-void input_abstraction_get_local_player_preferences(short local_player_index, void *preferences_out)
+/* input_abstraction_get_local_player_preferences (0xce6c0) — XBE naked draft (batch 155). */
+#if defined(__clang__)
+static void (*const bce6c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bce6c0_exitfn)(int) = system_exit;
+static void * (*const bce6c0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
+void input_abstraction_get_local_player_preferences(short local_player_index __attribute__((unused)), void *preferences_out __attribute__((unused)))
 {
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* cmp (int16_t)esi, 4 -> jl 0xce6f4 */
-  display_assert((char *)0x00280fa0, (char *)0x00280fe4, 495, 0);
-  system_exit(0);
-  /* test edi, edi -> jne 0xce71b */
-  display_assert((char *)0x00280f94, (char *)0x00280fe4, 496, 0);
-  system_exit(0);
-  csmemcpy((void *)(uintptr_t)edi, (void *)(uintptr_t)ecx, 24);
-
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "jl .Linput_abstraction_get_local_player_preferences_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Linput_abstraction_get_local_player_preferences_2\n\t"
+      ".Linput_abstraction_get_local_player_preferences_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1ef\n\t"
+      "pushl $0x280fe4\n\t"
+      "pushl $0x280fa0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Linput_abstraction_get_local_player_preferences_2:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Linput_abstraction_get_local_player_preferences_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1f0\n\t"
+      "pushl $0x280fe4\n\t"
+      "pushl $0x280f94\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Linput_abstraction_get_local_player_preferences_3:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "pushl $0x18\n\t"
+      "leal 0x46b820(,%%eax,8), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bce6c0_assert), [exitfn] "m"(bce6c0_exitfn), [c8e0b0] "m"(bce6c0_c8e0b0)
+      : "memory");
 }
+#else
+#error "input_abstraction_get_local_player_preferences: clang naked draft required"
+#endif
+
 
 /* input_abstraction_update_local_player_preferences (0xce740) — XBE naked draft (batch 147). */
 #if defined(__clang__)
@@ -448,28 +490,62 @@ void input_abstraction_update_local_player_preferences(void)
 #endif
 
 
-/* 0xce840 */
+/* input_abstraction_update_device_changes (0xce840) — XBE naked draft (batch 159). */
+#if defined(__clang__)
+static unsigned int (*const bce840_c8e370)(void) = system_milliseconds;
+static void (*const bce840_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bce840_c1c62a0)(void) = bink_playback_stop;
+
+__attribute__((naked, noinline))
 void input_abstraction_update_device_changes(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* test (char)eax, (char)eax -> je 0xce8b1 */
-  /* test esi, esi -> je 0xce895 */
-  system_milliseconds();
-  /* cmp eax, 0x7d0 -> jae 0xce881 */
-  /* test eax, eax -> je 0xce895 */
-  system_milliseconds();
-  /* cmp eax, 0x7d0 -> jb 0xce895 */
-  error(0, (char *)0x00281094);
-  bink_playback_stop();
-  /* test eax, eax -> jne 0xce8b1 */
-  system_milliseconds();
-  /* mem[0x0046b8fc] = eax */
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x46b8f8, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Linput_abstraction_update_device_changes_3\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Linput_abstraction_update_device_changes_2\n\t"
+      "call *%[c8e370]\n\t"
+      "subl 0x46b8f0, %%eax\n\t"
+      "cmpl $0x7d0, %%eax\n\t"
+      "jae .Linput_abstraction_update_device_changes_1\n\t"
+      "movl 0x46b8fc, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Linput_abstraction_update_device_changes_2\n\t"
+      "call *%[c8e370]\n\t"
+      "subl 0x46b8fc, %%eax\n\t"
+      "cmpl $0x7d0, %%eax\n\t"
+      "jb .Linput_abstraction_update_device_changes_2\n\t"
+      ".Linput_abstraction_update_device_changes_1:\n\t"
+      "pushl $0x281094\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "call *%[c1c62a0]\n\t"
+      ".Linput_abstraction_update_device_changes_2:\n\t"
+      "testl $0xfff000, %%esi\n\t"
+      "popl %%esi\n\t"
+      "je .Linput_abstraction_update_device_changes_3\n\t"
+      "movl 0x46b8fc, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Linput_abstraction_update_device_changes_3\n\t"
+      "call *%[c8e370]\n\t"
+      "movl %%eax, 0x46b8fc\n\t"
+      ".Linput_abstraction_update_device_changes_3:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8e370] "m"(bce840_c8e370), [c8f390] "m"(bce840_c8f390), [c1c62a0] "m"(bce840_c1c62a0)
+      : "memory");
 }
+#else
+#error "input_abstraction_update_device_changes: clang naked draft required"
+#endif
+
 
 /* input_abstraction_print_config_control (0xce8c0) — XBE naked draft (batch 127). */
 #if defined(__clang__)

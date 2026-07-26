@@ -1083,20 +1083,62 @@ void path_heap_insert(void *path, int16_t heap_node, int16_t heap_cost)
   path_heap_bubble_up(path, heap_index);
 }
 
-/* 0x5e700 */
+/* FUN_0005e700 (0x5e700) — XBE naked draft (batch 156). */
+#if defined(__clang__)
+static void *(*const b5e700_elem)(void *, int, int) = tag_block_get_element;
+static char * (*const b5e700_c1459e0)(void) = breakable_surfaces_get_bsp_surface_data;
+
+__attribute__((naked, noinline))
 void FUN_0005e700(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* test (char)ecx, 8 -> je 0x5e758 */
-  breakable_surfaces_get_bsp_surface_data();
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x60\n\t"
+      "addl $0xb0, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x3c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x8(%%esi), %%cl\n\t"
+      "addl $0x18, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "testb $8, %%cl\n\t"
+      "je .LFUN_0005e700_1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1459e0]\n\t"
+      "movzbl 0x9(%%esi), %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%eax\n\t"
+      "shll %%cl, %%eax\n\t"
+      "shrl $5, %%edx\n\t"
+      "movl (%%edi,%%edx,4), %%esi\n\t"
+      "popl %%edi\n\t"
+      "andl %%esi, %%eax\n\t"
+      "negl %%eax\n\t"
+      "sbbb %%al, %%al\n\t"
+      "incb %%al\n\t"
+      ".LFUN_0005e700_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b5e700_elem), [c1459e0] "m"(b5e700_c1459e0)
+      : "memory");
 }
+#else
+#error "FUN_0005e700: clang naked draft required"
+#endif
+
 
 /* 0x5e9b0 — test whether a path can approach a firing-position point. */
 char path_state_approach_point(void *path_state, float *fp_results, int fp_count,

@@ -160,22 +160,56 @@ float FUN_000b6dd0(float a, float b)
   return diff;
 }
 
-/* If |vec| > max_len, scale vec onto the circle of radius max_len and return 1;
- * otherwise leave vec unchanged and return 0. */
-char limit2d(float *vec, float max_len)
-{
-  float len_sq;
-  float scale;
+/* limit2d (0xb6e10) — XBE naked draft (batch 161). */
+#if defined(__clang__)
 
-  len_sq = vec[0] * vec[0] + vec[1] * vec[1];
-  if (len_sq > max_len * max_len) {
-    scale = max_len / sqrtf(len_sq);
-    vec[0] *= scale;
-    vec[1] *= scale;
-    return 1;
-  }
-  return 0;
+
+__attribute__((naked, noinline))
+char limit2d(float *vec __attribute__((unused)), float max_len __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "flds (%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstp %%st(2)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "fld %%st(1)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Llimit2d_1\n\t"
+      "fsqrt\n\t"
+      "movb $1, %%al\n\t"
+      "fdivrs 0xc(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls (%%ecx)\n\t"
+      "fstps (%%ecx)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      "fstps 0x4(%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Llimit2d_1:\n\t"
+      "fstp %%st(0)\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "limit2d: clang naked draft required"
+#endif
+
 
 /* Move *value toward target by at most max_delta per call. */
 void interpolate_scalar(float *value, float target, float max_delta)
@@ -360,19 +394,62 @@ int player_control_get_aiming_unit_index(int16_t local_player_index)
   return unit_get_aiming_unit_index(unit_handle);
 }
 
-int player_control_get_target_object_index(int16_t local_player_index)
-{
-  char *slot;
-  int target_handle;
+/* player_control_get_target_object_index (0xb6620) — XBE naked draft (batch 159). */
+#if defined(__clang__)
+static void (*const bb6620_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb6620_exitfn)(int) = system_exit;
+static void *(*const bb6620_tryget)(int, int) = object_try_and_get_and_verify_type;
 
-  assert_halt(local_player_index >= 0 &&
-              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
-  slot = (char *)player_control_globals + (int)local_player_index * 0x40 + 0x10;
-  target_handle = *(int *)(slot + 0x28);
-  if (object_try_and_get_and_verify_type(target_handle, NONE))
-    return *(int *)(slot + 0x28);
-  return NONE;
+__attribute__((naked, noinline))
+int player_control_get_target_object_index(int16_t local_player_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_control_get_target_object_index_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_control_get_target_object_index_2\n\t"
+      ".Lplayer_control_get_target_object_index_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb1\n\t"
+      "pushl $0x26e1e8\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_control_get_target_object_index_2:\n\t"
+      "movl 0x457090, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "shll $6, %%eax\n\t"
+      "movl 0x38(%%eax,%%ecx,1), %%edx\n\t"
+      "leal 0x10(%%eax,%%ecx,1), %%esi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lplayer_control_get_target_object_index_3\n\t"
+      "movl 0x28(%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayer_control_get_target_object_index_3:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bb6620_assert), [exitfn] "m"(bb6620_exitfn), [tryget] "m"(bb6620_tryget)
+      : "memory");
 }
+#else
+#error "player_control_get_target_object_index: clang naked draft required"
+#endif
+
 
 /* player_control_get_field_of_view (0xb6690) — XBE naked draft (batch 146). */
 #if defined(__clang__)

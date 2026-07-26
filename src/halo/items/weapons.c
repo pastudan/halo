@@ -3353,26 +3353,63 @@ float weapon_get_field_of_view(int weapon_handle, float base_fov,
   return base_fov / mag;
 }
 
-/* 0xfc930 */
-char weapon_prevents_melee_attack(int weapon_handle)
+/* weapon_prevents_melee_attack (0xfc930) — XBE naked draft (batch 158). */
+#if defined(__clang__)
+static void *(*const bfc930_get)(int, int) = object_get_and_verify_type;
+static void *(*const bfc930_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+char weapon_prevents_melee_attack(int weapon_handle __attribute__((unused)))
 {
-  char *tag_data;
-  char trigger_state;
-
-  if (weapon_handle == -1)
-    return 1;
-
-  tag_data = (char *)tag_get(
-    0x77656170,
-    *(int *)object_get_and_verify_type(weapon_handle, 4));
-
-  trigger_state = *(char *)((char *)object_get_and_verify_type(weapon_handle, 4) +
-                            0x211);
-  if (trigger_state == 2 || trigger_state == 3)
-    return 1;
-
-  return (char)((*(uint32_t *)(tag_data + 0x308) >> 9) & 1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "je .Lweapon_prevents_melee_attack_3\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x308(%%eax), %%ebx\n\t"
+      "pushl $4\n\t"
+      "shrl $9, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "andb $1, %%bl\n\t"
+      "call *%[get]\n\t"
+      "movb 0x211(%%eax), %%al\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpb $2, %%al\n\t"
+      "je .Lweapon_prevents_melee_attack_1\n\t"
+      "cmpb $3, %%al\n\t"
+      "jne .Lweapon_prevents_melee_attack_2\n\t"
+      ".Lweapon_prevents_melee_attack_1:\n\t"
+      "popl %%ebx\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lweapon_prevents_melee_attack_2:\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      ".Lweapon_prevents_melee_attack_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfc930_get), [tag] "m"(bfc930_tag)
+      : "memory");
 }
+#else
+#error "weapon_prevents_melee_attack: clang naked draft required"
+#endif
+
 
 /* FUN_000fcbd0 (0xfcbd0) — XBE naked draft (batch 140). */
 #if defined(__clang__)

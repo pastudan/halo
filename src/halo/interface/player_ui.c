@@ -539,34 +539,119 @@ void player_ui_edit_profile_is_default_profile(void)
   (void)eax;
 }
 
-/* 0xe0dd0 */
+/* player_ui_edit_profile_name_is_dirty (0xe0dd0) — XBE naked draft (batch 158). */
+#if defined(__clang__)
+static void (*const be0dd0_c1c29a0)(void) = saved_game_file_get_type;
+static void (*const be0dd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static int (*const be0dd0_c19dc20)(const wchar_t *s1, const wchar_t *s2, size_t count) = ustrncmp;
+
+__attribute__((naked, noinline))
 void player_ui_edit_profile_name_is_dirty(void)
 {
-  int eax = 0;
-
-  /* cmp eax, -1 -> je 0xe0e20 */
-  saved_game_file_get_type();
-  error(0, (char *)0x00282938);
-  ustrncmp((wchar_t *)0x0046c03c, (wchar_t *)0x0046c0a4, 12);
-  /* test eax, eax -> je 0xe0e2f */
-  error(0, (char *)0x00282964);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x46c038, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayer_ui_edit_profile_name_is_dirty_2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1c29a0]\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "subl $0, %%eax\n\t"
+      "je .Lplayer_ui_edit_profile_name_is_dirty_1\n\t"
+      "decl %%eax\n\t"
+      "je .Lplayer_ui_edit_profile_name_is_dirty_1\n\t"
+      "pushl $0x282938\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_edit_profile_name_is_dirty_1:\n\t"
+      "pushl $0xc\n\t"
+      "pushl $0x46c0a4\n\t"
+      "pushl $0x46c03c\n\t"
+      "call *%[c19dc20]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lplayer_ui_edit_profile_name_is_dirty_3\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_edit_profile_name_is_dirty_2:\n\t"
+      "pushl $0x282964\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lplayer_ui_edit_profile_name_is_dirty_3:\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c1c29a0] "m"(be0dd0_c1c29a0), [c8f390] "m"(be0dd0_c8f390), [c19dc20] "m"(be0dd0_c19dc20)
+      : "memory");
 }
+#else
+#error "player_ui_edit_profile_name_is_dirty: clang naked draft required"
+#endif
 
-/* 0xe0e40 */
+
+/* player_ui_prompt_user_to_rename_edit_profile (0xe0e40) — XBE naked draft (batch 160). */
+#if defined(__clang__)
+static void (*const be0e40_c1c29a0)(void) = saved_game_file_get_type;
+static void (*const be0e40_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static bool (*const be0e40_cf5500)(wchar_t *text_buffer, unsigned short buffer_size, short caption_index) = virtual_keyboard_set_validation;
+
+__attribute__((naked, noinline))
 void player_ui_prompt_user_to_rename_edit_profile(void)
 {
-  int eax = 0;
-
-  /* cmp eax, -1 -> je 0xe0e87 */
-  saved_game_file_get_type();
-  error(0, (char *)0x00282938);
-  virtual_keyboard_set_validation((wchar_t *)0x0046c03c, 24, 10);
-  error(0, (char *)0x00282964);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x46c038, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayer_ui_prompt_user_to_rename_edit_profile_2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1c29a0]\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "subl $0, %%eax\n\t"
+      "je .Lplayer_ui_prompt_user_to_rename_edit_profile_1\n\t"
+      "decl %%eax\n\t"
+      "je .Lplayer_ui_prompt_user_to_rename_edit_profile_1\n\t"
+      "pushl $0x282938\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_prompt_user_to_rename_edit_profile_1:\n\t"
+      "pushl $0xa\n\t"
+      "pushl $0x18\n\t"
+      "pushl $0x46c03c\n\t"
+      "call *%[cf5500]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_prompt_user_to_rename_edit_profile_2:\n\t"
+      "pushl $0x282964\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c1c29a0] "m"(be0e40_c1c29a0), [c8f390] "m"(be0e40_c8f390), [cf5500] "m"(be0e40_cf5500)
+      : "memory");
 }
+#else
+#error "player_ui_prompt_user_to_rename_edit_profile: clang naked draft required"
+#endif
+
 
 /* 0xe0ea0 */
 void player_ui_get_edit_player_profile(void)
@@ -717,23 +802,64 @@ int player0_look_pitch_is_inverted(void)
   return 0;
 }
 
-/* 0xe1060 */
+/* FUN_000e1060 (0xe1060) — XBE naked draft (batch 156). */
+#if defined(__clang__)
+static void (*const be1060_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be1060_exitfn)(int) = system_exit;
+static void *(*const be1060_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 int FUN_000e1060(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* test (char)eax, (char)eax -> je 0xe1070 */
-  /* cmp (char)eax, 1 -> je 0xe1070 */
-  /* test esi, esi -> jne 0xe10a4 */
-  display_assert((char *)0x002829b0, (char *)0x00282724, 869, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)esi, 0, 48);
-  return 1;
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "movb 0x46bf09, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000e1060_1\n\t"
+      "cmpb $1, %%al\n\t"
+      "je .LFUN_000e1060_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      ".LFUN_000e1060_1:\n\t"
+      "movl $1, %%eax\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_000e1060_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x365\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x2829b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000e1060_2:\n\t"
+      "pushl $0x30\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw $0xffff, 0x18(%%esi)\n\t"
+      "movb $0, 0x28(%%esi)\n\t"
+      "movb $0, 0x29(%%esi)\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be1060_assert), [exitfn] "m"(be1060_exitfn), [memset] "m"(be1060_memset)
+      : "memory");
 }
+#else
+#error "FUN_000e1060: clang naked draft required"
+#endif
+
 
 /* FUN_000e10c0 (0xe10c0) — XBE naked draft (batch 118). */
 #if defined(__clang__)
@@ -989,25 +1115,62 @@ void player_ui_clear_multiplayer_joins(void)
 #endif
 
 
-/* 0xe1490 */
+/* player_ui_set_active_player_profile (0xe1490) — XBE naked draft (batch 159). */
+#if defined(__clang__)
+static void (*const be1490_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be1490_exitfn)(int) = system_exit;
+static void * (*const be1490_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void (*const be1490_ce10c0)(void) = FUN_000e10c0;
+
+__attribute__((naked, noinline))
 void player_ui_set_active_player_profile(void)
 {
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (int16_t)edi, (int16_t)edi -> jl 0xe14aa */
-  /* cmp (int16_t)edi, 4 -> jge 0xe14aa */
-  /* test esi, esi -> jne 0xe14ca */
-  display_assert((char *)0x002827a0, (char *)0x00282724, 226, 0);
-  system_exit(0);
-  csmemcpy((void *)(uintptr_t)edx, (void *)(uintptr_t)esi, 48);
-  FUN_000e10c0();
-
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Lplayer_ui_set_active_player_profile_1\n\t"
+      "cmpw $4, %%di\n\t"
+      "jge .Lplayer_ui_set_active_player_profile_1\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lplayer_ui_set_active_player_profile_2\n\t"
+      ".Lplayer_ui_set_active_player_profile_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe2\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x2827a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_set_active_player_profile_2:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "imull $0x38, %%eax, %%eax\n\t"
+      "pushl $0x30\n\t"
+      "leal 0x46bee0(%%eax), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "movl %%ecx, 0x46bf10(%%eax)\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "call *%[ce10c0]\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be1490_assert), [exitfn] "m"(be1490_exitfn), [c8e0b0] "m"(be1490_c8e0b0), [ce10c0] "m"(be1490_ce10c0)
+      : "memory");
 }
+#else
+#error "player_ui_set_active_player_profile: clang naked draft required"
+#endif
+
 
 /* player_ui_begin_editing_profile (0xe1500) — XBE naked draft (batch 143). */
 #if defined(__clang__)

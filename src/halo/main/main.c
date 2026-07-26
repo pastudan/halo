@@ -3189,20 +3189,59 @@ void main_load_core_name_at_startup(const char *name)
   *(char *)0x46da3f = 1;
 }
 
-void main_switch_structure_bsp(int16_t bsp_index)
+/* main_switch_structure_bsp (0x100500) — XBE naked draft (batch 161). */
+#if defined(__clang__)
+static scenario_t * (*const b100500_c18e380)(void) = global_scenario_get;
+static void (*const b100500_cff550)(const char* format, ...) = console_warning;
+static void (*const b100500_cd0d50)(bool a1) = hud_load;
+
+__attribute__((naked, noinline))
+void main_switch_structure_bsp(int16_t bsp_index __attribute__((unused)))
 {
-  void *scenario = global_scenario_get();
-  if (bsp_index < 0 || bsp_index >= *(int *)((char *)scenario + 0x5a4)) {
-    console_warning((char *)0x28b1e0, (int)bsp_index);
-    return;
-  }
-  if (bsp_index == *(int16_t *)0x326a0c) {
-    console_warning((char *)0x28b20c, (int)bsp_index);
-    return;
-  }
-  *(int16_t *)0x46da40 = bsp_index;
-  hud_load(1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "call *%[c18e380]\n\t"
+      "movw 0x8(%%ebp), %%cx\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jl .Lmain_switch_structure_bsp_2\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x5a4(%%eax), %%esi\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "cmpl %%esi, %%edx\n\t"
+      "popl %%esi\n\t"
+      "jge .Lmain_switch_structure_bsp_2\n\t"
+      "cmpw 0x326a0c, %%cx\n\t"
+      "jne .Lmain_switch_structure_bsp_1\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x28b20c\n\t"
+      "call *%[cff550]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_switch_structure_bsp_1:\n\t"
+      "pushl $1\n\t"
+      "movw %%cx, 0x46da40\n\t"
+      "call *%[cd0d50]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_switch_structure_bsp_2:\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x28b1e0\n\t"
+      "call *%[cff550]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(b100500_c18e380), [cff550] "m"(b100500_cff550), [cd0d50] "m"(b100500_cd0d50)
+      : "memory");
 }
+#else
+#error "main_switch_structure_bsp: clang naked draft required"
+#endif
+
 
 void main_skip(int16_t level)
 {
@@ -3817,13 +3856,66 @@ void FUN_000e8e20(int a0 __attribute__((unused)))
 #endif
 
 
-void FUN_000ffeb0(char param_1)
+/* FUN_000ffeb0 (0xffeb0) — XBE naked draft (batch 154). */
+#if defined(__clang__)
+static void (*const bffeb0_c54df0)(void) = FUN_00054df0;
+
+__attribute__((naked, noinline))
+void FUN_000ffeb0(char param_1 __attribute__((unused)))
 {
-  if (param_1 != 0) {
-    FUN_00054df0();
-    return;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000ffeb0_1\n\t"
+      "popl %%ebp\n\t"
+      "jmp .LFUN_000ffeb0_10000\n\t"
+      ".LFUN_000ffeb0_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "flds 0x46da08\n\t"
+      "ret\n\t"
+      ".LFUN_000ffeb0_10000:\n\t"
+      "jmp *%[c54df0]\n\t"
+      :
+      : [c54df0] "m"(bffeb0_c54df0)
+      : "memory");
 }
+#else
+#error "FUN_000ffeb0: clang naked draft required"
+#endif
+
 
 /* main_framerate_render (0x102700) — XBE naked draft (batch 114). */
 #if defined(__clang__)
@@ -4803,14 +4895,64 @@ int FUN_00103c00(int *obj __attribute__((unused)))
 #endif
 
 
+/* FUN_00103d80 (0x103d80) — XBE naked draft (batch 157). */
+#if defined(__clang__)
+static void (*const b103d80_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b103d80_exitfn)(int) = system_exit;
+static void (*const b103d80_c1db4a9)(void) = FUN_001db4a9;
+static int (*const b103d80_c1d9dac)(void *stream) = crt_fclose;
+
+__attribute__((naked, noinline))
 void FUN_00103d80(void)
 {
-  if (*(void **)0x46e394 != NULL) {
-    display_assert((char *)0x28b81c, (char *)0x28b838, 0x44, 1);
-    system_exit(-1);
-  }
-  FUN_001db4a9();
+  __asm__ volatile(
+      "movl 0x46e394, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00103d80_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x44\n\t"
+      "pushl $0x28b838\n\t"
+      "pushl $0x28b81c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00103d80_1:\n\t"
+      "pushl $0x31fac8\n\t"
+      "call *%[c1db4a9]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "movl 0x46e394, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00103d80_2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9dac]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl $0, 0x46e394\n\t"
+      ".LFUN_00103d80_2:\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b103d80_assert), [exitfn] "m"(b103d80_exitfn), [c1db4a9] "m"(b103d80_c1db4a9), [c1d9dac] "m"(b103d80_c1d9dac)
+      : "memory");
 }
+#else
+#error "FUN_00103d80: clang naked draft required"
+#endif
+
 
 static __attribute__((unused)) void error_geometry_assert_null(const char *name, int line)
 {

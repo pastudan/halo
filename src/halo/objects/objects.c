@@ -7976,68 +7976,132 @@ void object_propagate_flag_to_children(int object_handle /* @<eax> */,
 }
 #endif
 
-/* Remove an object from the scenario object-name lookup table.
- * Clears the name_index field (obj+0x6a) and removes all references
- * to object_handle from the name table at 0x46f07c.
- * object_handle in EDI (register arg). */
-void object_remove_from_name_list(int object_handle /* @<edi> */)
+/* object_remove_from_name_list (0x13eff0) — XBE naked draft (batch 157). */
+#if defined(__clang__)
+static void *(*const b13eff0_get)(int, int) = object_get_and_verify_type;
+static scenario_t * (*const b13eff0_c18e380)(void) = global_scenario_get;
+
+__attribute__((naked, noinline))
+void object_remove_from_name_list(int object_handle __attribute__((unused)))
 {
-  char *obj;
-  void *scenario;
-  int count;
-  int *name_table;
-  int16_t i;
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  if (*(int16_t *)(obj + 0x6a) == -1)
-    return;
-
-  scenario = global_scenario_get();
-  *(int16_t *)(obj + 0x6a) = -1;
-  count = *(int *)((char *)scenario + 0x204);
-  name_table = *(int **)0x46f07c;
-  i = 0;
-  while ((int)i < count) {
-    if (name_table[(int)i] == object_handle)
-      name_table[(int)i] = -1;
-    i++;
-  }
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $-1, 0x6a(%%esi)\n\t"
+      "je .Lobject_remove_from_name_list_3\n\t"
+      "call *%[c18e380]\n\t"
+      "movw $0xffff, 0x6a(%%esi)\n\t"
+      "movl 0x204(%%eax), %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .Lobject_remove_from_name_list_3\n\t"
+      "movl 0x46f07c, %%esi\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      ".Lobject_remove_from_name_list_1:\n\t"
+      "cmpl %%edi, (%%esi,%%ecx,4)\n\t"
+      "jne .Lobject_remove_from_name_list_2\n\t"
+      "movl $0xffffffff, (%%esi,%%ecx,4)\n\t"
+      ".Lobject_remove_from_name_list_2:\n\t"
+      "incl %%edx\n\t"
+      "movswl %%dx, %%ecx\n\t"
+      "cmpl 0x204(%%eax), %%ecx\n\t"
+      "jl .Lobject_remove_from_name_list_1\n\t"
+      ".Lobject_remove_from_name_list_3:\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lobject_remove_from_name_list_4\n\t"
+      "cmpw $0x200, %%ax\n\t"
+      "jge .Lobject_remove_from_name_list_4\n\t"
+      "movl 0x46f07c, %%ecx\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movl (%%ecx,%%eax,4), %%eax\n\t"
+      "ret\n\t"
+      ".Lobject_remove_from_name_list_4:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [get] "m"(b13eff0_get), [c18e380] "m"(b13eff0_c18e380)
+      : "memory");
 }
+#else
+#error "object_remove_from_name_list: clang naked draft required"
+#endif
 
-/* 0x13ef70 / objects.obj — Add an object to the scenario name table.
- * Validates name_index is in [0, 0x1FF], checks the name slot is free,
- * and writes the object_handle into the name table. Sets the object's
- * name field at obj+0x6a.
- * object_handle in EDI, name_index in SI (register args).
- * Confirmed: PUSH -1; PUSH EDI; CALL object_get_and_verify_type.
- * Confirmed: CMP SI,0x200 for range check.
- * Confirmed: name_table at DAT_0046f07c[name_index].
- * Confirmed: on collision, calls error(2, "an object with the name '%s' already exists!", name). */
-void object_name_list_new(int object_handle /* @<edi> */,
-                          int16_t name_index /* @<si> */)
+
+/* object_name_list_new (0x13ef70) — XBE naked draft (batch 156). */
+#if defined(__clang__)
+static void *(*const b13ef70_get)(int, int) = object_get_and_verify_type;
+static void (*const b13ef70_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b13ef70_exitfn)(int) = system_exit;
+static scenario_t * (*const b13ef70_c18e380)(void) = global_scenario_get;
+static void *(*const b13ef70_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b13ef70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+void object_name_list_new(int object_handle __attribute__((unused)), int16_t name_index __attribute__((unused)))
 {
-  char *obj;
-  int idx;
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  if (name_index < 0 || name_index >= 0x200) {
-    display_assert(
-        "name_index>=0 && name_index<MAXIMUM_OBJECT_NAMES_PER_SCENARIO",
-        "c:\\halo\\SOURCE\\objects\\objects.c", 0x1003, 1);
-    system_exit(-1);
-  }
-  idx = (int)name_index;
-  if (*(int *)(*(int *)0x46f07c + idx * 4) == -1) {
-    *(int *)(*(int *)0x46f07c + idx * 4) = object_handle;
-    *(int16_t *)(obj + 0x6a) = name_index;
-    return;
-  }
-  {
-    void *scenario_data = (void *)((char *)global_scenario_get() + 0x204);
-    char *name = (char *)tag_block_get_element(scenario_data, idx, 0x24);
-    error(2, "an object with the name \'%s\' already exists!", name);
-  }
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%si, %%si\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "jl .Lobject_name_list_new_1\n\t"
+      "cmpw $0x200, %%si\n\t"
+      "jl .Lobject_name_list_new_2\n\t"
+      ".Lobject_name_list_new_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1003\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29bcb4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_name_list_new_2:\n\t"
+      "movl 0x46f07c, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "cmpl $-1, (%%ecx,%%eax,4)\n\t"
+      "jne .Lobject_name_list_new_3\n\t"
+      "movl %%edi, (%%ecx,%%eax,4)\n\t"
+      "movw %%si, 0x6a(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".Lobject_name_list_new_3:\n\t"
+      "pushl $0x24\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x204, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x29bc84\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b13ef70_get), [assert] "m"(b13ef70_assert), [exitfn] "m"(b13ef70_exitfn), [c18e380] "m"(b13ef70_c18e380), [elem] "m"(b13ef70_elem), [c8f390] "m"(b13ef70_c8f390)
+      : "memory");
 }
+#else
+#error "object_name_list_new: clang naked draft required"
+#endif
+
 
 /*
  * objects_place — place all scenario objects for the current map.
@@ -8467,37 +8531,67 @@ void object_add_to_dump(int object_handle __attribute__((unused)), void *stats _
 #endif
 
 
-/* 0x13f440 / objects.obj — Write one dump stats record to a file.
- * Formats the stats structure into a single line with counts/sizes.
- * stats pointer in ESI (register arg), file pointer as stack param.
- * Confirmed: fprintf format string at 0x29bcf4.
- * Confirmed: reads stats fields for count, active, orphaned, total_size etc. */
-void object_dump_write(void *stats /* @<esi> */, void *file)
-{
-  char *pcVar1;
-  int *st = (int *)stats;
+/* object_dump_write (0x13f440) — XBE naked draft (batch 155). */
+#if defined(__clang__)
+static const char * (*const b13f440_c1ba1f0)(int tag_index) = tag_get_name;
+static void * (*const b13f440_c13c250)(int16_t param_1) = FUN_0013c250;
+static int (*const b13f440_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
 
-  pcVar1 = "unknown";
-  if (st[0] == -1) {
-    if ((int16_t)st[1] != -1) {
-      pcVar1 = (char *)FUN_0013c250((int16_t)st[1]);
-    }
-  } else {
-    pcVar1 = (char *)tag_get_name(st[0]);
-  }
-  crt_fprintf(
-      file,
-      "% 6d (% 6d) [% 7d/% 7d/% 7d/% 7d] % 7d % 7d %s\r\n",
-      (int)*(int16_t *)((char *)st + 0xc),
-      (int)*(int16_t *)((char *)st + 0xe),
-      (int)*(int16_t *)((char *)st + 0x10),
-      (int)*(int16_t *)((char *)st + 0x12),
-      (int)*(int16_t *)((char *)st + 0x14),
-      (int)*(int16_t *)((char *)st + 0x16),
-      (int)*(int16_t *)((char *)st + 0x6),
-      st[2],
-      pcVar1);
+__attribute__((naked, noinline))
+void object_dump_write(void *stats __attribute__((unused)), void *file __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "movl $0x254608, %%eax\n\t"
+      "je .Lobject_dump_write_1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "jmp .Lobject_dump_write_2\n\t"
+      ".Lobject_dump_write_1:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x4(%%esi), %%cx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .Lobject_dump_write_3\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13c250]\n\t"
+      ".Lobject_dump_write_2:\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lobject_dump_write_3:\n\t"
+      "movswl 0x6(%%esi), %%ecx\n\t"
+      "movswl 0x16(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movswl 0x14(%%esi), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movswl 0x12(%%esi), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movswl 0x10(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movswl 0xe(%%esi), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movswl 0xc(%%esi), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x29bcf4\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1ba1f0] "m"(b13f440_c1ba1f0), [c13c250] "m"(b13f440_c13c250), [c1d98ad] "m"(b13f440_c1d98ad)
+      : "memory");
 }
+#else
+#error "object_dump_write: clang naked draft required"
+#endif
+
 
 /* object_select_random_region_permutations_by_variant (0x140a00) — XBE naked draft (batch 136). */
 #if defined(__clang__)
@@ -9335,66 +9429,68 @@ void objects_initialize(void)
                                              "noncollideable object");
 }
 
-/*
- * objects_initialize_for_new_map — reset object subsystems when loading a map.
- *
- * Call order (confirmed from disasm):
- *   widgets_dispose  — resets a global slot index (object type slot reset)
- *   FUN_00136040  — iterates 5 object type slots, calls initialize_for_new_map
- *                   vtable entry via [EDI] (slot stride 0x28)
- *   FUN_0013c3d0  — walks the object_type_definition linked list, calls
- *                   each type's initialize_for_new_map function at +0x18
- *   lights_initialize_for_new_map  — calls data_delete_all on a BSP cluster
- * data table, then object_list_initialize_for_new_map via FUN_1915d0
- *
- * Then:
- *   data_delete_all(*(data_t**)0x5a8d50)        — clear all object headers
- *   csmemset(object_name_list, 0xff, 0x800)      — reset name list
- *   FUN_001915d0(&collideable_cluster_partition)  — reset collideable cluster
- *   FUN_001915d0(&noncollideable_cluster_partition) — reset noncollideable
- *   csmemset(object_globals->combined_pvs, 0, 64)
- *   csmemset(object_globals->combined_pvs_local, 0, 64)
- *   object_globals->pvs_activator_type = 0
- *   object_globals->object_marker_initialized = 0
- *   *(uint32_t*)0x5a8d28 = 0                     — unknown global counter
- *   object_globals->unk_8 = 0xffffffff            — datum handle sentinel
- *   object_globals->unk_4 = 0
- *   object_globals->last_garbage_collection_tick = 0
- *
- * Confirmed: ADD ESP,0x30 cleans 12 args across the 4 csmemset calls and
- *            the two FUN_1915d0 calls, consistent with 12 total cdecl pushes.
- */
+/* objects_initialize_for_new_map (0x13f950) — XBE naked draft (batch 155). */
+#if defined(__clang__)
+static void (*const b13f950_c1365a0)(void) = widgets_dispose;
+static void (*const b13f950_c136040)(void) = FUN_00136040;
+static void (*const b13f950_c13c3d0)(void) = FUN_0013c3d0;
+static void (*const b13f950_c1392b0)(void) = lights_initialize_for_new_map;
+static void (*const b13f950_c119b20)(data_t *data) = data_delete_all;
+static void *(*const b13f950_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b13f950_c1915d0)(void *partition) = cluster_partition_clear;
+
+__attribute__((naked, noinline))
 void objects_initialize_for_new_map(void)
 {
-  object_globals_t *og;
-
-  ((pfn_void_t)0x1365a0)();
-  ((pfn_void_t)0x136040)();
-  ((pfn_void_t)0x13c3d0)();
-  ((pfn_void_t)0x1392b0)();
-
-  data_delete_all(*(data_t **)0x5a8d50);
-  csmemset(object_name_list, 0xff, 0x800);
-
-  /* Reset collideable and noncollideable cluster partition structs.
-   * These are 12-byte structs (3 data_t* fields) at fixed addresses. */
-  ((void (*)(void *))0x1915d0)((void *)0x5a8d40);
-  ((void (*)(void *))0x1915d0)((void *)0x5a8d30);
-
-  og = object_globals;
-
-  csmemset(og->combined_pvs, 0, 0x40);
-  csmemset(og->combined_pvs_local, 0, 0x40);
-
-  og->pvs_activator_type = 0;
-  og->object_marker_initialized = 0;
-
-  *(uint32_t *)0x5a8d28 = 0;
-
-  og->unk_8.value = 0xffffffff;
-  og->unk_4 = 0;
-  og->last_garbage_collection_tick = 0;
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "call *%[c1365a0]\n\t"
+      "call *%[c136040]\n\t"
+      "call *%[c13c3d0]\n\t"
+      "call *%[c1392b0]\n\t"
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119b20]\n\t"
+      "movl 0x46f07c, %%ecx\n\t"
+      "pushl $0x800\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[memset]\n\t"
+      "pushl $0x5a8d40\n\t"
+      "call *%[c1915d0]\n\t"
+      "pushl $0x5a8d30\n\t"
+      "call *%[c1915d0]\n\t"
+      "movl 0x46f084, %%edx\n\t"
+      "pushl $0x40\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "addl $0xc, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x46f084, %%eax\n\t"
+      "pushl $0x40\n\t"
+      "addl $0x4c, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x46f084, %%eax\n\t"
+      "movw %%bx, 0x90(%%eax)\n\t"
+      "movb %%bl, 0x1(%%eax)\n\t"
+      "movl %%ebx, 0x5a8d28\n\t"
+      "movl $0xffffffff, 0x8(%%eax)\n\t"
+      "movw %%bx, 0x4(%%eax)\n\t"
+      "addl $0x30, %%esp\n\t"
+      "movl %%ebx, 0x8c(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c1365a0] "m"(b13f950_c1365a0), [c136040] "m"(b13f950_c136040), [c13c3d0] "m"(b13f950_c13c3d0), [c1392b0] "m"(b13f950_c1392b0), [c119b20] "m"(b13f950_c119b20), [memset] "m"(b13f950_memset), [c1915d0] "m"(b13f950_c1915d0)
+      : "memory");
 }
+#else
+#error "objects_initialize_for_new_map: clang naked draft required"
+#endif
+
 
 /*
  * objects_dispose_from_old_map — per-map teardown of the object subsystem.

@@ -318,16 +318,57 @@ char FUN_00184570(void *group)
   (void)eax;
 }
 
-/* 0x1845b0 */
-void FUN_001845b0(void *group, int a2)
+/* FUN_001845b0 (0x1845b0) — XBE naked draft (batch 161). */
+#if defined(__clang__)
+static short (*const b1845b0_c1844b0)(unsigned int group) = rasterizer_transparent_geometry_group_to_presorted_index;
+
+__attribute__((naked, noinline))
+void FUN_001845b0(void *group __attribute__((unused)), int a2 __attribute__((unused)))
 {
-  int eax = 0;
-
-  rasterizer_transparent_geometry_group_to_presorted_index(eax);
-  /* cmp (int16_t)eax, 0xffff -> je 0x18460c */
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1844b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_001845b0_2\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "jne .LFUN_001845b0_1\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "sarl $5, %%edx\n\t"
+      "leal 0x4d0cbc(,%%edx,4), %%eax\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "orl %%edx, (%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001845b0_1:\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "sarl $5, %%eax\n\t"
+      "movl 0x4d0cbc(,%%eax,4), %%ecx\n\t"
+      "leal 0x4d0cbc(,%%eax,4), %%eax\n\t"
+      "notl %%edx\n\t"
+      "andl %%edx, %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      ".LFUN_001845b0_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1844b0] "m"(b1845b0_c1844b0)
+      : "memory");
 }
+#else
+#error "FUN_001845b0: clang naked draft required"
+#endif
+
 
 /* FUN_00184610 (0x184610) — XBE naked draft (batch 152). */
 #if defined(__clang__)
@@ -401,26 +442,60 @@ void FUN_00184680(void)
   /* relift: no calls detected — manual review */
 }
 
-/* 0x184690 */
+/* FUN_00184690 (0x184690) — XBE naked draft (batch 159). */
+#if defined(__clang__)
+static void (*const b184690_c174cc0)(void) = FUN_00174cc0;
+static void (*const b184690_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+
+__attribute__((naked, noinline))
 void FUN_00184690(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  FUN_00174cc0();
-  /* cmp eax, esi -> je 0x1846b4 */
-  debug_free((void *)(uintptr_t)eax, (char *)0x002b0ca8, 273);
-  /* mem[0x004d0cec] = esi */
-  debug_free((void *)(uintptr_t)eax, (char *)0x002b0ca8, 276);
-  /* mem[0x004d0cfc] = esi */
-  debug_free((void *)(uintptr_t)eax, (char *)0x002b0ca8, 280);
-  /* mem[0x004d0cf0] = esi */
-  /* mem[0x004d0cf8] = esi */
-  /* mem[0x004d0cf4] = esi */
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "call *%[c174cc0]\n\t"
+      "movl 0x4d0cec, %%eax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "je .LFUN_00184690_1\n\t"
+      "pushl $0x111\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00184690_1:\n\t"
+      "movl 0x4d0cfc, %%eax\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "movl %%esi, 0x4d0cec\n\t"
+      "je .LFUN_00184690_2\n\t"
+      "pushl $0x114\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00184690_2:\n\t"
+      "movl 0x4d0cf0, %%eax\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "movl %%esi, 0x4d0cfc\n\t"
+      "je .LFUN_00184690_3\n\t"
+      "pushl $0x118\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00184690_3:\n\t"
+      "movl %%esi, 0x4d0cf0\n\t"
+      "movl %%esi, 0x4d0cf8\n\t"
+      "movl %%esi, 0x4d0cf4\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c174cc0] "m"(b184690_c174cc0), [c8ef70] "m"(b184690_c8ef70)
+      : "memory");
 }
+#else
+#error "FUN_00184690: clang naked draft required"
+#endif
+
 
 /* 0x184710 */
 void FUN_00184710(void)

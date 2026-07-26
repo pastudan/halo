@@ -1205,24 +1205,66 @@ void dispose_handle(void)
 #endif
 
 
-/* 0x11f4e0 */
+/* lock_handle (0x11f4e0) — XBE naked draft (batch 156). */
+#if defined(__clang__)
+static void (*const b11f4e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11f4e0_exitfn)(int) = system_exit;
+static int (*const b11f4e0_c11ef50)(void *block_hdr, void *pool) = stack_memory_pool_valid_block;
+static void (*const b11f4e0_c11f070)(void *block_hdr, void *pool) = stack_memory_pool_mark_used;
+
+__attribute__((naked, noinline))
 void lock_handle(void)
 {
-  int eax = 0;
-  int edi = 0;
-
-  /* test edi, edi -> jne 0x11f50d */
-  display_assert((char *)0x002904f8, (char *)0x0029018c, 247, 0);
-  system_exit(0);
-  stack_memory_pool_valid_block((void *)0, (void *)0);
-  /* test (char)eax, (char)eax -> jne 0x11f53f */
-  display_assert((char *)0x002904c8, (char *)0x0029018c, 250, 0);
-  system_exit(0);
-  stack_memory_pool_mark_used((void *)0, (void *)0);
-
-  (void)eax;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Llock_handle_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf7\n\t"
+      "pushl $0x29018c\n\t"
+      "pushl $0x2904f8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Llock_handle_1:\n\t"
+      "movl (%%edi), %%esi\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "call *%[c11ef50]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Llock_handle_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xfa\n\t"
+      "pushl $0x29018c\n\t"
+      "pushl $0x2904c8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Llock_handle_2:\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "call *%[c11f070]\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11f4e0_assert), [exitfn] "m"(b11f4e0_exitfn), [c11ef50] "m"(b11f4e0_c11ef50), [c11f070] "m"(b11f4e0_c11f070)
+      : "memory");
 }
+#else
+#error "lock_handle: clang naked draft required"
+#endif
+
 
 /* unlock_handle (0x11f550) — XBE naked draft (batch 137). */
 #if defined(__clang__)
@@ -1915,20 +1957,57 @@ void FUN_0011fef0(void)
   (void)ecx;
 }
 
-/* 0x11ff10 */
+/* FUN_0011ff10 (0x11ff10) — XBE naked draft (batch 159). */
+#if defined(__clang__)
+static void (*const b11ff10_c11fd50)(void) = FUN_0011fd50;
+static void *(*const b11ff10_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
 void FUN_0011ff10(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  FUN_0011fd50();
-  FUN_0011fd50();
-  datum_get((void *)(uintptr_t)ecx, 0);
-  datum_get((void *)(uintptr_t)eax, 0);
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x46e808, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%esi, %%edi\n\t"
+      "call *%[c11fd50]\n\t"
+      "movl 0x46e808, %%esi\n\t"
+      "movl %%esi, %%ebx\n\t"
+      "call *%[c11fd50]\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x18(%%ebx), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movswl 0xc(%%ebp), %%edx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x18(%%edi), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movswl 0xa(%%eax), %%ecx\n\t"
+      "movswl 0xa(%%esi), %%edx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%edi\n\t"
+      "subl %%edx, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "popl %%esi\n\t"
+      "setg %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11fd50] "m"(b11ff10_c11fd50), [dget] "m"(b11ff10_dget)
+      : "memory");
 }
+#else
+#error "FUN_0011ff10: clang naked draft required"
+#endif
+
 
 /* FUN_0011ff70 (0x11ff70) — XBE naked draft (batch 112). */
 #if defined(__clang__)

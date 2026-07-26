@@ -929,21 +929,62 @@ void progress_bar_display(float progress)
 }
 /* --- progress_bar.obj batch drafts (2026-07-26) --- */
 
-/* 0xe19c0 */
+/* tgaLoad (0xe19c0) — XBE naked draft (batch 157). */
+#if defined(__clang__)
+static void __stdcall (*const be19c0_c1e6ae0)(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture) = D3DDevice_CreateTexture;
+static void __stdcall (*const be19c0_c1e7af0)(void *render_target, void *depth_stencil) = D3DDevice_SetRenderTarget;
+static int __stdcall (*const be19c0_c1e8270)(void **out_surface) = D3DDevice_GetDepthStencilSurface;
+
+__attribute__((naked, noinline))
 void tgaLoad(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  D3DDevice_CreateTexture(eax, edx, ecx, eax, edx, ecx, (void *)(uintptr_t)eax);
-  D3DDevice_SetRenderTarget((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
-  D3DDevice_GetDepthStencilSurface((void *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e6ae0]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "movl 0x46c3f0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "setne %%al\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e7af0]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e8270]\n\t"
+      "ret\n\t"
+      :
+      : [c1e6ae0] "m"(be19c0_c1e6ae0), [c1e7af0] "m"(be19c0_c1e7af0), [c1e8270] "m"(be19c0_c1e8270)
+      : "memory");
 }
+#else
+#error "tgaLoad: clang naked draft required"
+#endif
+
 
 /* FUN_000e1a10 (0xe1a10) — XBE naked draft (batch 130). */
 #if defined(__clang__)
@@ -1346,20 +1387,64 @@ void FUN_000e1f20(void)
 #endif
 
 
-/* 0xe2170 */
+/* FUN_000e2170 (0xe2170) — XBE naked draft (batch 154). */
+#if defined(__clang__)
+static uint32_t __stdcall (*const be2170_c1ed930)(void *resource) = D3DResource_Release;
+static void __stdcall (*const be2170_c1edc10)(void *texture, unsigned int level, void *desc) = D3DTexture_GetLevelDesc;
+
+__attribute__((naked, noinline))
 void FUN_000e2170(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  D3DResource_Release((void *)(uintptr_t)eax);
-  D3DTexture_GetLevelDesc((void *)(uintptr_t)edx, ecx, (void *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "movb %%al, 0x30f030\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ed930]\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1edc10]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c1ed930] "m"(be2170_c1ed930), [c1edc10] "m"(be2170_c1edc10)
+      : "memory");
 }
+#else
+#error "FUN_000e2170: clang naked draft required"
+#endif
+
 
 /* 0xe21b0 */
 void FUN_000e21b0(void)

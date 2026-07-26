@@ -1944,25 +1944,67 @@ void following_camera_new(void)
   (void)esi;
 }
 
-/* 0x898b0 */
+/* FUN_000898b0 (0x898b0) — XBE naked draft (batch 154). */
+#if defined(__clang__)
+static void *(*const b898b0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b898b0_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void *(*const b898b0_tag)(int, int) = tag_get;
+static void *(*const b898b0_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
 void FUN_000898b0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  object_get_and_verify_type(0, 0);
-  /* cmp eax, -1 -> je 0x89910 */
-  object_try_and_get_and_verify_type(0, 0);
-  /* test eax, eax -> je 0x89910 */
-  tag_get('ihev', 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* test (char)ecx, 0x15 -> je 0x89910 */
-  /* test eax, eax -> jne 0x89925 */
-  tag_get('tinu', 0);
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0xcc(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000898b0_1\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000898b0_1\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x76656869\n\t"
+      "call *%[tag]\n\t"
+      "movswl 0x2a0(%%esi), %%edx\n\t"
+      "pushl $0x11c\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x2e4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movb (%%eax), %%cl\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb $0x15, %%cl\n\t"
+      "je .LFUN_000898b0_1\n\t"
+      "addl $0x84, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000898b0_2\n\t"
+      ".LFUN_000898b0_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "addl $0x1a8, %%eax\n\t"
+      ".LFUN_000898b0_2:\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b898b0_get), [tryget] "m"(b898b0_tryget), [tag] "m"(b898b0_tag), [elem] "m"(b898b0_elem)
+      : "memory");
 }
+#else
+#error "FUN_000898b0: clang naked draft required"
+#endif
+
 
 /* 0x89930 */
 void FUN_00089930(void)
@@ -2940,42 +2982,126 @@ void following_camera_update(void)
 #endif
 
 
-/* 0x8a570 */
+/* observer_command_has_finished (0x8a570) — XBE naked draft (batch 154). */
+#if defined(__clang__)
+static void (*const b8a570_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b8a570_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void observer_command_has_finished(void)
 {
-  int ecx = 0;
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x8a583 */
-  /* cmp (int16_t)esi, 4 -> jl 0x8a5a0 */
-  display_assert((char *)0x00266fc0, (char *)0x002673a8, 114, 0);
-  system_exit(0);
-  /* cmp (int16_t)ecx, 5 -> jl 0x8a5c2 */
-
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lobserver_command_has_finished_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lobserver_command_has_finished_2\n\t"
+      ".Lobserver_command_has_finished_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x72\n\t"
+      "pushl $0x2673a8\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobserver_command_has_finished_2:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "imull $0x29c, %%edx, %%edx\n\t"
+      "addl $0x33571c, %%edx\n\t"
+      "popl %%esi\n\t"
+      "flds 0x50(%%edx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lobserver_command_has_finished_4\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      ".Lobserver_command_has_finished_3:\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "flds 0x5c(%%edx,%%eax,4)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lobserver_command_has_finished_4\n\t"
+      "incl %%ecx\n\t"
+      "cmpw $5, %%cx\n\t"
+      "jl .Lobserver_command_has_finished_3\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lobserver_command_has_finished_4:\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b8a570_assert), [exitfn] "m"(b8a570_exitfn)
+      : "memory");
 }
+#else
+#error "observer_command_has_finished: clang naked draft required"
+#endif
 
-/* 0x8a5f0 */
+
+/* observer_reconnect_to_structure_bsp (0x8a5f0) — XBE naked draft (batch 160). */
+#if defined(__clang__)
+static int (*const b8a5f0_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
+static void (*const b8a5f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b8a5f0_exitfn)(int) = system_exit;
+static void (*const b8a5f0_c18f180)(void *location_out, void *point) = scenario_location_from_point;
+
+__attribute__((naked, noinline))
 void observer_reconnect_to_structure_bsp(void)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-
-  local_player_get_player_index(esi);
-  /* cmp eax, -1 -> je 0x8a643 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x8a619 */
-  /* cmp (int16_t)esi, 4 -> jl 0x8a636 */
-  display_assert((char *)0x00266fc0, (char *)0x002673a8, 114, 0);
-  system_exit(0);
-  scenario_location_from_point((void *)(uintptr_t)edi, (void *)(uintptr_t)eax);
-  /* cmp (int16_t)esi, 4 -> jl 0x8a600 */
-
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movl $0x33579c, %%edi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lobserver_reconnect_to_structure_bsp_1:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cba3c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobserver_reconnect_to_structure_bsp_4\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lobserver_reconnect_to_structure_bsp_2\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lobserver_reconnect_to_structure_bsp_3\n\t"
+      ".Lobserver_reconnect_to_structure_bsp_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x72\n\t"
+      "pushl $0x2673a8\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobserver_reconnect_to_structure_bsp_3:\n\t"
+      "leal -0xc(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18f180]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobserver_reconnect_to_structure_bsp_4:\n\t"
+      "incl %%esi\n\t"
+      "addl $0x29c, %%edi\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lobserver_reconnect_to_structure_bsp_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [cba3c0] "m"(b8a5f0_cba3c0), [assert] "m"(b8a5f0_assert), [exitfn] "m"(b8a5f0_exitfn), [c18f180] "m"(b8a5f0_c18f180)
+      : "memory");
 }
+#else
+#error "observer_reconnect_to_structure_bsp: clang naked draft required"
+#endif
+
 
 /* 0x8aa30 */
 void observer_obsolete_position(void)
@@ -3769,39 +3895,59 @@ void FUN_0008cf30(void)
 #endif
 
 
-/* 0x8d3a0 */
+/* FUN_0008d3a0 (0x8d3a0) — XBE naked draft (batch 154). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_0008d3a0(void)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test edi, edi -> jne 0x8d439 */
-  display_assert((char *)0x00266e9c, (char *)0x002676d8, 36, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x8d45d */
-  display_assert((char *)0x0025b57c, (char *)0x002676d8, 37, 0);
-  system_exit(0);
-  /* test esi, esi -> jne 0x8d481 */
-  display_assert((char *)0x0025f120, (char *)0x002676d8, 38, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0x8d827 */
-  /* relift: test byte ptr [esi], 1 -> je 0x8d826 */
-  valid_real_normal3d_perpendicular((float *)(uintptr_t)edi, (float *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0x8d76e */
-  /* test (char)eax, 1 -> jne 0x8d76e */
-  /* test (char)eax, 1 -> jne 0x8d76e */
-  /* test (char)eax, 1 -> jne 0x8d76e */
-  /* test (char)eax, 1 -> jne 0x8d76e */
-  /* test (char)eax, 1 -> jne 0x8d76e */
-  /* test (char)eax, 1 -> jne 0x8d76e */
-  real_vector3d_valid((float *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0x8d76e */
-  /* test (char)eax, 1 -> jne 0x8d76e */
-  /* test (char)eax, 1 -> jne 0x8d76e */
-  /* test (char)eax, 1 -> jne 0x8d76e */
-
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl (%%ecx), %%esi\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%esi, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%esi\n\t"
+      "movl %%esi, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl %%edx, 0xc(%%eax)\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl (%%edx), %%esi\n\t"
+      "leal 0x10(%%eax), %%ecx\n\t"
+      "movl %%esi, (%%ecx)\n\t"
+      "movl 0x4(%%edx), %%esi\n\t"
+      "movl %%esi, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movl 0x18(%%ebp), %%edx\n\t"
+      "movl (%%edx), %%esi\n\t"
+      "leal 0x1c(%%eax), %%ecx\n\t"
+      "movl %%esi, (%%ecx)\n\t"
+      "movl 0x4(%%edx), %%esi\n\t"
+      "movl %%esi, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movl 0x1c(%%ebp), %%ecx\n\t"
+      "movl 0x20(%%ebp), %%edx\n\t"
+      "movl %%ecx, 0x28(%%eax)\n\t"
+      "movl 0x24(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x2c(%%eax)\n\t"
+      "movb $0, 0x34(%%eax)\n\t"
+      "movl %%ecx, 0x30(%%eax)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0008d3a0: clang naked draft required"
+#endif
+

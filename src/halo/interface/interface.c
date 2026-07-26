@@ -724,26 +724,66 @@ void interface_draw_screen(void)
 #endif
 
 
-/* 0xdf350 */
-void profile_graph_toggle(int a0)
+/* profile_graph_toggle (0xdf350) — XBE naked draft (batch 155). */
+#if defined(__clang__)
+static int (*const bdf350_c1dd801)(const char *a, const char *b) = crt_stricmp;
+
+__attribute__((naked, noinline))
+void profile_graph_toggle(int a0 __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* relift: cmp word ptr [0x306d20], (int16_t)edi -> jle 0xdf3be */
-  crt_stricmp((char *)(uintptr_t)esi, (char *)(uintptr_t)ebx);
-  /* test eax, eax -> je 0xdf3a1 */
-  crt_stricmp((char *)(uintptr_t)eax, (char *)(uintptr_t)ebx);
-  /* test eax, eax -> jne 0xdf3b2 */
-  /* relift: cmp (int16_t)edi, word ptr [0x306d20] -> jl 0xdf370 */
-
-  (void)eax;
-  (void)ebx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "cmpw %%di, 0x306d20\n\t"
+      "jle .Lprofile_graph_toggle_4\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "jmp .Lprofile_graph_toggle_1\n\t"
+      "leal (%%esp), %%esp\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lprofile_graph_toggle_1:\n\t"
+      "movswl %%di, %%esi\n\t"
+      "imull $0x20c, %%esi, %%esi\n\t"
+      "addl $0x306d28, %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1dd801]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lprofile_graph_toggle_2\n\t"
+      "leal 0x100(%%esi), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dd801]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lprofile_graph_toggle_3\n\t"
+      ".Lprofile_graph_toggle_2:\n\t"
+      "movb 0x209(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "sete %%cl\n\t"
+      "movb %%cl, 0x209(%%esi)\n\t"
+      ".Lprofile_graph_toggle_3:\n\t"
+      "incl %%edi\n\t"
+      "cmpw 0x306d20, %%di\n\t"
+      "jl .Lprofile_graph_toggle_1\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lprofile_graph_toggle_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dd801] "m"(bdf350_c1dd801)
+      : "memory");
 }
+#else
+#error "profile_graph_toggle: clang naked draft required"
+#endif
+
 
 /* FUN_000df3d0 (0xdf3d0) — XBE naked draft (batch 129). */
 #if defined(__clang__)
@@ -1574,19 +1614,57 @@ void FUN_000df4e0(void)
 #endif
 
 
-/* 0xdff00 */
+/* interface_get_rgb_color (0xdff00) — XBE naked draft (batch 159). */
+#if defined(__clang__)
+static void * (*const bdff00_cded20)(int interface_tag_index, short color_index, void *out_color) = interface_get_color;
+static void (*const bdff00_ftol)(void) = FUN_001d9068;
+
+__attribute__((naked, noinline))
 void interface_get_rgb_color(void)
 {
-  int eax = 0;
-
-  interface_get_color(0, 0, (void *)(uintptr_t)eax);
-  FUN_001d9068();
-  FUN_001d9068();
-  FUN_001d9068();
-  FUN_001d9068();
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[cded20]\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls 0x2647cc\n\t"
+      "addl $0xc, %%esp\n\t"
+      "call *%[ftol]\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x2647cc\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "movw %%ax, (%%esi)\n\t"
+      "call *%[ftol]\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x2647cc\n\t"
+      "movw %%ax, 0x2(%%esi)\n\t"
+      "call *%[ftol]\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x2647cc\n\t"
+      "movw %%ax, 0x4(%%esi)\n\t"
+      "call *%[ftol]\n\t"
+      "movw %%ax, 0x6(%%esi)\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cded20] "m"(bdff00_cded20), [ftol] "m"(bdff00_ftol)
+      : "memory");
 }
+#else
+#error "interface_get_rgb_color: clang naked draft required"
+#endif
+
 
 /* 0xdff70 */
 void interface_draw_fullscreen_overlays(void)

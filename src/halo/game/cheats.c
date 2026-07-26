@@ -283,12 +283,56 @@ void FUN_000a54b0(void)
 #endif
 
 
-/* 0xa5590 */
+/* FUN_000a5590 (0xa5590) — XBE naked draft (batch 161). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_000a5590(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fmuls 0x253398\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_000a5590_1\n\t"
+      "flds 0x2533c0\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000a5590_1:\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps -0x4(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_000a5590_2\n\t"
+      "flds 0x2533c8\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000a5590_2:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fsubs 0x8(%%ebp)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fsubs -0x4(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000a5590: clang naked draft required"
+#endif
+
 
 /* 0xa55e0 */
 void FUN_000a55e0(void)

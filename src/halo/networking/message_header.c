@@ -1543,22 +1543,57 @@ void FUN_00080620(void)
 #endif
 
 
-/* 0x80eb0 */
+/* FUN_00080eb0 (0x80eb0) — XBE naked draft (batch 161). */
+#if defined(__clang__)
+static unsigned int * (*const b80eb0_c80d50)(unsigned int limit, unsigned int *num_primes) = sieve_of_eratosthenes;
+static void (*const b80eb0_c81410)(void) = FUN_00081410;
+static void (*const b80eb0_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+
+__attribute__((naked, noinline))
 void FUN_00080eb0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  sieve_of_eratosthenes(ecx, (void *)(uintptr_t)eax);
-  /* test esi, esi -> je 0x80eef */
-  FUN_00081410();
-  debug_free((void *)(uintptr_t)esi, (char *)0x00265d54, 137);
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "call *%[c80d50]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_00080eb0_1\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "decl %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c81410]\n\t"
+      "movl (%%esi,%%eax,4), %%edi\n\t"
+      "pushl $0x89\n\t"
+      "pushl $0x265d54\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00080eb0_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c80d50] "m"(b80eb0_c80d50), [c81410] "m"(b80eb0_c81410), [c8ef70] "m"(b80eb0_c8ef70)
+      : "memory");
 }
+#else
+#error "FUN_00080eb0: clang naked draft required"
+#endif
+
 
 /* FUN_00080f00 (0x80f00) — XBE naked draft (batch 139). */
 #if defined(__clang__)
@@ -1748,29 +1783,64 @@ void FUN_00080fc0(void)
 #endif
 
 
-/* 0x81090 */
+/* FUN_00081090 (0x81090) — XBE naked draft (batch 158). */
+#if defined(__clang__)
+static void (*const b81090_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b81090_exitfn)(int) = system_exit;
+static void (*const b81090_c80fc0)(void) = FUN_00080fc0;
+
+__attribute__((naked, noinline))
 void FUN_00081090(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* cmp esi, 2 -> ja 0x810b2 */
-  display_assert((char *)0x00265de0, (char *)0x00265da0, 112, 0);
-  system_exit(0);
-  /* cmp ebx, eax -> jb 0x810d6 */
-  display_assert((char *)0x00265dd8, (char *)0x00265da0, 113, 0);
-  system_exit(0);
-  /* cmp edi, esi -> jb 0x810f7 */
-  display_assert((char *)0x00265dd4, (char *)0x00265da0, 114, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "cmpl $2, %%esi\n\t"
+      "ja .LFUN_00081090_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x70\n\t"
+      "pushl $0x265da0\n\t"
+      "pushl $0x265de0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00081090_1:\n\t"
+      "leal -0x1(%%esi), %%eax\n\t"
+      "cmpl %%eax, %%ebx\n\t"
+      "jb .LFUN_00081090_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x71\n\t"
+      "pushl $0x265da0\n\t"
+      "pushl $0x265dd8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00081090_2:\n\t"
+      "cmpl %%esi, %%edi\n\t"
+      "jb .LFUN_00081090_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x72\n\t"
+      "pushl $0x265da0\n\t"
+      "pushl $0x265dd4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00081090_3:\n\t"
+      "movl %%esi, %%edx\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "jmp .LFUN_00081090_10000\n\t"
+      ".LFUN_00081090_10000:\n\t"
+      "jmp *%[c80fc0]\n\t"
+      :
+      : [assert] "m"(b81090_assert), [exitfn] "m"(b81090_exitfn), [c80fc0] "m"(b81090_c80fc0)
+      : "memory");
 }
+#else
+#error "FUN_00081090: clang naked draft required"
+#endif
+
 
 /* 0x81110 */
 void FUN_00081110(void)

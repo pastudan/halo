@@ -247,33 +247,112 @@ __declspec(noinline) void network_game_server_close_game(void *server)
   network_game_log("closing game");
 }
 
-/* Check if the server's game is open (0x12c100).
- * Returns bit 0 of the flags byte at server+6, set by
- * network_game_server_open_game and cleared by network_game_server_close_game.
- */
-bool network_game_server_game_is_open(void *server)
-{
-  if (!server) {
-    display_assert("server",
-                   "c:\\halo\\SOURCE\\networking\\network_server_manager.c",
-                   0x214, 1);
-    system_exit(-1);
-  }
-  return *(uint8_t *)((char *)server + 6) & 1;
-}
+/* network_game_server_game_is_open (0x12c100) — XBE naked draft (batch 161). */
+#if defined(__clang__)
+static void (*const b12c100_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b12c100_exitfn)(int) = system_exit;
 
-/* Check if the server's game is valid (0x12c160).
- * Returns bit 1 of the flags byte at server+6. */
-bool network_game_server_game_is_valid(void *server)
+__attribute__((naked, noinline))
+bool network_game_server_game_is_open(void *server __attribute__((unused)))
 {
-  if (!server) {
-    display_assert("server",
-                   "c:\\halo\\SOURCE\\networking\\network_server_manager.c",
-                   0x220, 1);
-    system_exit(-1);
-  }
-  return (*(uint8_t *)((char *)server + 6) >> 1) & 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lnetwork_game_server_game_is_open_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x214\n\t"
+      "pushl $0x296bf0\n\t"
+      "pushl $0x296c34\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lnetwork_game_server_game_is_open_1:\n\t"
+      "movb 0x6(%%esi), %%bl\n\t"
+      "andb $1, %%bl\n\t"
+      "jne .Lnetwork_game_server_game_is_open_2\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lnetwork_game_server_game_is_open_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x217\n\t"
+      "pushl $0x296bf0\n\t"
+      "pushl $0x296c5c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lnetwork_game_server_game_is_open_2:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b12c100_assert), [exitfn] "m"(b12c100_exitfn)
+      : "memory");
 }
+#else
+#error "network_game_server_game_is_open: clang naked draft required"
+#endif
+
+
+/* network_game_server_game_is_valid (0x12c160) — XBE naked draft (batch 160). */
+#if defined(__clang__)
+static void (*const b12c160_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b12c160_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+bool network_game_server_game_is_valid(void *server __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lnetwork_game_server_game_is_valid_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x220\n\t"
+      "pushl $0x296bf0\n\t"
+      "pushl $0x296c34\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lnetwork_game_server_game_is_valid_1:\n\t"
+      "movb 0x6(%%esi), %%bl\n\t"
+      "shrb $1, %%bl\n\t"
+      "andb $1, %%bl\n\t"
+      "jne .Lnetwork_game_server_game_is_valid_2\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lnetwork_game_server_game_is_valid_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x223\n\t"
+      "pushl $0x296bf0\n\t"
+      "pushl $0x296c90\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lnetwork_game_server_game_is_valid_2:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b12c160_assert), [exitfn] "m"(b12c160_exitfn)
+      : "memory");
+}
+#else
+#error "network_game_server_game_is_valid: clang naked draft required"
+#endif
+
 
 /* Handle a client player-removal request while in-game (0x12c1c0).
  * Asserts the server is in state 1 (in-game). Iterates the 16 client

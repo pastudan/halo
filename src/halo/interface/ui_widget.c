@@ -2033,27 +2033,69 @@ char ui_widgets_active(void)
   return 0;
 }
 
-char ui_widgets_active_for_local_player(int16_t local_player_index)
-{
-  int *slot;
-  void *widget;
+/* ui_widgets_active_for_local_player (0xe3da0) — XBE naked draft (batch 155). */
+#if defined(__clang__)
+static void (*const be3da0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be3da0_exitfn)(int) = system_exit;
 
-  if (local_player_index < 0 || local_player_index >= 4) {
-    display_assert((char *)0x2832b0, (char *)0x283280, 0x456, 1);
-    system_exit(-1);
-  }
-  if (*(char *)0x46cc82 == 0)
-    return 0;
-  slot = (int *)0x46cc20;
-  while ((int)slot < 0x46cc30) {
-    widget = (void *)*slot;
-    if (widget != NULL &&
-        *(int16_t *)((char *)widget + 8) == local_player_index)
-      return 1;
-    slot++;
-  }
-  return 0;
+__attribute__((naked, noinline))
+char ui_widgets_active_for_local_player(int16_t local_player_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lui_widgets_active_for_local_player_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lui_widgets_active_for_local_player_2\n\t"
+      ".Lui_widgets_active_for_local_player_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x456\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x2832b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lui_widgets_active_for_local_player_2:\n\t"
+      "movb 0x46cc82, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lui_widgets_active_for_local_player_5\n\t"
+      "movl $0x46cc20, %%eax\n\t"
+      ".Lui_widgets_active_for_local_player_3:\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lui_widgets_active_for_local_player_4\n\t"
+      "cmpw %%si, 0x8(%%ecx)\n\t"
+      "je .Lui_widgets_active_for_local_player_6\n\t"
+      ".Lui_widgets_active_for_local_player_4:\n\t"
+      "addl $4, %%eax\n\t"
+      "cmpl $0x46cc30, %%eax\n\t"
+      "jl .Lui_widgets_active_for_local_player_3\n\t"
+      ".Lui_widgets_active_for_local_player_5:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lui_widgets_active_for_local_player_6:\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be3da0_assert), [exitfn] "m"(be3da0_exitfn)
+      : "memory");
 }
+#else
+#error "ui_widgets_active_for_local_player: clang naked draft required"
+#endif
+
 
 float FUN_000e3e60(int a, float b)
 {
@@ -2493,52 +2535,123 @@ void FUN_000e4c70(void *draw_state __attribute__((unused)), void *cursor __attri
 #endif
 
 
-char ui_widget_match_localized_substring(wchar_t *text)
+/* ui_widget_match_localized_substring (0xe4ce0) — XBE naked draft (batch 159). */
+#if defined(__clang__)
+static void (*const be4ce0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be4ce0_exitfn)(int) = system_exit;
+static wchar_t * (*const be4ce0_c1db134)(const wchar_t *s, wchar_t c) = _wcschr;
+static int16_t (*const be4ce0_ce4a80)(wchar_t *needle) = ui_widget_find_localized_string_index;
+
+__attribute__((naked, noinline))
+char ui_widget_match_localized_substring(wchar_t *text __attribute__((unused)))
 {
-  wchar_t *cursor;
-  int16_t index;
-  int i;
-
-  if (text == NULL) {
-    display_assert((char *)0x27b838, (char *)0x283280, 0x1055, 1);
-    system_exit(-1);
-    return 0;
-  }
-  for (i = 0; text[i] != 0; i++) {
-    if (text[i] != 0x25)
-      continue;
-    cursor = &text[i + 1];
-    for (;;) {
-      index = ui_widget_find_localized_string_index(cursor);
-      if (index != -1)
-        return 1;
-      for (; text[i] != 0 && text[i] != 0x25; i++)
-        ;
-      if (text[i] == 0)
-        return 0;
-      cursor = &text[i + 1];
-    }
-  }
-  return 0;
+  __asm__ volatile(
+      "testl %%eax, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "jne .Lui_widget_match_localized_substring_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1055\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x27b838\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lui_widget_match_localized_substring_1:\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lui_widget_match_localized_substring_2:\n\t"
+      "pushl $0x25\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1db134]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "je .Lui_widget_match_localized_substring_1\n\t"
+      "addl $2, %%ebx\n\t"
+      "call *%[ce4a80]\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "jne .Lui_widget_match_localized_substring_3\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "jne .Lui_widget_match_localized_substring_2\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".Lui_widget_match_localized_substring_3:\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be4ce0_assert), [exitfn] "m"(be4ce0_exitfn), [c1db134] "m"(be4ce0_c1db134), [ce4a80] "m"(be4ce0_ce4a80)
+      : "memory");
 }
+#else
+#error "ui_widget_match_localized_substring: clang naked draft required"
+#endif
 
-char ui_widget_player_prefers_metric_units(int16_t player_index)
+
+/* ui_widget_player_prefers_metric_units (0xe4d40) — XBE naked draft (batch 157). */
+#if defined(__clang__)
+static __int16 (*const be4d40_cba4c0)(__int16 a1) = local_player_get_next;
+static void *(*const be4d40_memset)(void *, int, unsigned int) = csmemset;
+static void (*const be4d40_cce6c0)(short local_player_index, void *preferences_out) = input_abstraction_get_local_player_preferences;
+
+__attribute__((naked, noinline))
+char ui_widget_player_prefers_metric_units(int16_t player_index __attribute__((unused)))
 {
-  int16_t resolved;
-  char prefs[0x18];
-
-  resolved = player_index;
-  if (resolved == -1)
-    resolved = local_player_get_next(-1);
-  csmemset(prefs, 0, 0x18);
-  if (resolved != -1)
-    input_abstraction_get_local_player_preferences(resolved, prefs);
-  if (*(int16_t *)(prefs + 0x14) == 1)
-    return 1;
-  if (*(int16_t *)(prefs + 0x14) == 3)
-    return 1;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "cmpw $-1, %%si\n\t"
+      "jne .Lui_widget_player_prefers_metric_units_1\n\t"
+      "pushl $-1\n\t"
+      "call *%[cba4c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      ".Lui_widget_player_prefers_metric_units_1:\n\t"
+      "pushl $0x18\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .Lui_widget_player_prefers_metric_units_2\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cce6c0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lui_widget_player_prefers_metric_units_2:\n\t"
+      "movswl -0x4(%%ebp), %%eax\n\t"
+      "decl %%eax\n\t"
+      "popl %%esi\n\t"
+      "je .Lui_widget_player_prefers_metric_units_3\n\t"
+      "subl $2, %%eax\n\t"
+      "je .Lui_widget_player_prefers_metric_units_3\n\t"
+      "xorb %%al, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lui_widget_player_prefers_metric_units_3:\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cba4c0] "m"(be4d40_cba4c0), [memset] "m"(be4d40_memset), [cce6c0] "m"(be4d40_cce6c0)
+      : "memory");
 }
+#else
+#error "ui_widget_player_prefers_metric_units: clang naked draft required"
+#endif
+
 
 void get_ui_rgb_white(float *out)
 {
@@ -2662,21 +2775,61 @@ void ui_widgets_close_stack_for_player(int16_t player_index __attribute__((unuse
 #endif
 
 
-void ui_widgets_pop_stack(int16_t player_index)
-{
-  int *head;
-  ui_widget_pending_load_t pending;
+/* ui_widgets_pop_stack (0xe59e0) — XBE naked draft (batch 161). */
+#if defined(__clang__)
+static void (*const be59e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be59e0_exitfn)(int) = system_exit;
+static void (*const be59e0_ce4770)(int *head, void *record) = ui_widget_pending_load_pop;
 
-  if (player_index == -1)
-    player_index = 0;
-  else if (player_index < 0 || player_index >= 4) {
-    display_assert((char *)0x282750, (char *)0x283280, 0x4b4, 1);
-    system_exit(-1);
-  }
-  head = (int *)(0x46cc30 + (int)player_index * 4);
-  if (*head != 0)
-    ui_widget_pending_load_pop(head, &pending);
+__attribute__((naked, noinline))
+void ui_widgets_pop_stack(int16_t player_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpw $-1, %%si\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lui_widgets_pop_stack_1\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "jmp .Lui_widgets_pop_stack_3\n\t"
+      ".Lui_widgets_pop_stack_1:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lui_widgets_pop_stack_2\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lui_widgets_pop_stack_3\n\t"
+      ".Lui_widgets_pop_stack_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4b4\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x282750\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lui_widgets_pop_stack_3:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal 0x46cc30(,%%eax,4), %%edi\n\t"
+      "cmpl $0, (%%edi)\n\t"
+      "je .Lui_widgets_pop_stack_4\n\t"
+      "leal -0xc(%%ebp), %%esi\n\t"
+      "call *%[ce4770]\n\t"
+      ".Lui_widgets_pop_stack_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be59e0_assert), [exitfn] "m"(be59e0_exitfn), [ce4770] "m"(be59e0_ce4770)
+      : "memory");
 }
+#else
+#error "ui_widgets_pop_stack: clang naked draft required"
+#endif
+
 
 /* main_screen_shell_begin_fade (0xe5a40) — XBE naked draft (batch 152). */
 #if defined(__clang__)
@@ -2742,30 +2895,61 @@ void main_screen_shell_begin_fade(int fade_duration __attribute__((unused)))
 #endif
 
 
-void ui_play_audio_feedback_sound(int16_t sound_selector)
-{
-  int tag_index;
+/* ui_play_audio_feedback_sound (0xe5ab0) — XBE naked draft (batch 159). */
+#if defined(__clang__)
+static int (*const be5ab0_c1b9930)(int group_tag, const char *name, ...) = tag_loaded;
+static int (*const be5ab0_c1c7480)(int sound_tag_index, float scale) = sound_impulse_start;
 
-  switch (sound_selector) {
-  case 1:
-    tag_index = tag_loaded(0x736e6421, (char *)0x28380c);
-    break;
-  case 2:
-    tag_index = tag_loaded(0x736e6421, (char *)0x2837f4);
-    break;
-  case 3:
-    tag_index = tag_loaded(0x736e6421, (char *)0x2837e0);
-    break;
-  case 4:
-    tag_index = tag_loaded(0x736e6421, (char *)0x2837c4);
-    break;
-  default:
-    return;
-  }
-  if (tag_index == -1)
-    return;
-  sound_impulse_start(tag_index, 1.0f);
+__attribute__((naked, noinline))
+void ui_play_audio_feedback_sound(int16_t sound_selector __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "decl %%eax\n\t"
+      "cmpl $3, %%eax\n\t"
+      "ja .Lui_play_audio_feedback_sound_6\n\t"
+      "jmp *.Lui_play_audio_feedback_sound_jt(,%%eax,4)\n\t"
+      ".Lui_play_audio_feedback_sound_1:\n\t"
+      "pushl $0x28380c\n\t"
+      "jmp .Lui_play_audio_feedback_sound_5\n\t"
+      ".Lui_play_audio_feedback_sound_2:\n\t"
+      "pushl $0x2837f4\n\t"
+      "jmp .Lui_play_audio_feedback_sound_5\n\t"
+      ".Lui_play_audio_feedback_sound_3:\n\t"
+      "pushl $0x2837e0\n\t"
+      "jmp .Lui_play_audio_feedback_sound_5\n\t"
+      ".Lui_play_audio_feedback_sound_4:\n\t"
+      "pushl $0x2837c4\n\t"
+      ".Lui_play_audio_feedback_sound_5:\n\t"
+      "pushl $0x736e6421\n\t"
+      "call *%[c1b9930]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lui_play_audio_feedback_sound_6\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1c7480]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lui_play_audio_feedback_sound_6:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lui_play_audio_feedback_sound_jt:\n\t"
+      ".long .Lui_play_audio_feedback_sound_1\n\t"
+      ".long .Lui_play_audio_feedback_sound_2\n\t"
+      ".long .Lui_play_audio_feedback_sound_3\n\t"
+      ".long .Lui_play_audio_feedback_sound_4\n\t"
+      ".text\n\t"
+      :
+      : [c1b9930] "m"(be5ab0_c1b9930), [c1c7480] "m"(be5ab0_c1c7480)
+      : "memory");
 }
+#else
+#error "ui_play_audio_feedback_sound: clang naked draft required"
+#endif
+
 
 /* FUN_000e76b0 (0xe76b0) — XBE naked draft (batch 139). */
 #if defined(__clang__)
@@ -11587,36 +11771,134 @@ void ui_widget_pending_load_apply(int a6 __attribute__((unused)), int widget __a
 #endif
 
 
-/* 0xe5380 */
-void ui_widget_update_list_selection(void *widget, void *definition)
+/* ui_widget_update_list_selection (0xe5380) — XBE naked draft (batch 156). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void ui_widget_update_list_selection(void *widget __attribute__((unused)), void *definition __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x34(%%ecx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lui_widget_update_list_selection_4\n\t"
+      "movl $2, %%edx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lui_widget_update_list_selection_1:\n\t"
+      "cmpl 0x38(%%ecx), %%eax\n\t"
+      "jne .Lui_widget_update_list_selection_2\n\t"
+      "cmpw %%dx, 0x56(%%eax)\n\t"
+      "jne .Lui_widget_update_list_selection_3\n\t"
+      "movw $1, 0x50(%%eax)\n\t"
+      "jmp .Lui_widget_update_list_selection_3\n\t"
+      ".Lui_widget_update_list_selection_2:\n\t"
+      "cmpw %%dx, 0x56(%%eax)\n\t"
+      "jne .Lui_widget_update_list_selection_3\n\t"
+      "movw $0, 0x50(%%eax)\n\t"
+      ".Lui_widget_update_list_selection_3:\n\t"
+      "movl 0x2c(%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lui_widget_update_list_selection_1\n\t"
+      ".Lui_widget_update_list_selection_4:\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "movl 0x34(%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lui_widget_update_list_selection_6\n\t"
+      "movl 0x2c(%%eax), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lui_widget_update_list_selection_6\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lui_widget_update_list_selection_5:\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "movl 0x2c(%%eax), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jne .Lui_widget_update_list_selection_5\n\t"
+      ".Lui_widget_update_list_selection_6:\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "ui_widget_update_list_selection: clang naked draft required"
+#endif
 
-/* 0xe53e0 */
-void ui_widget_list_prev(void *widget)
+
+/* ui_widget_list_prev (0xe53e0) — XBE naked draft (batch 156). */
+#if defined(__clang__)
+static void *(*const be53e0_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+void ui_widget_list_prev(void *widget __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test esi, esi -> je 0xe543d */
-  /* relift: cmp esi, dword ptr [edi + 0x38] -> je 0xe543d */
-  tag_get('aLeD', 0);
-  /* test ecx, ecx -> jg 0xe543a */
-  /* relift: test byte ptr [eax + 0x2c], 1 -> jne 0xe543a */
-  /* cmp (int16_t)eax, 2 -> je 0xe543a */
-  /* cmp (int16_t)eax, 3 -> je 0xe543a */
-  /* test esi, esi -> jne 0xe53f8 */
-  /* test esi, esi -> jne 0xe53f8 */
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "movl 0x38(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "je .Lui_widget_list_prev_1\n\t"
+      "movl 0x2c(%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jne .Lui_widget_list_prev_2\n\t"
+      ".Lui_widget_list_prev_1:\n\t"
+      "movl 0x34(%%edi), %%esi\n\t"
+      ".Lui_widget_list_prev_2:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lui_widget_list_prev_5\n\t"
+      ".Lui_widget_list_prev_3:\n\t"
+      "cmpl 0x38(%%edi), %%esi\n\t"
+      "je .Lui_widget_list_prev_5\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x44654c61\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x54(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jg .Lui_widget_list_prev_4\n\t"
+      "testb $1, 0x2c(%%eax)\n\t"
+      "jne .Lui_widget_list_prev_4\n\t"
+      "movw 0xe(%%edi), %%ax\n\t"
+      "cmpw $2, %%ax\n\t"
+      "je .Lui_widget_list_prev_4\n\t"
+      "cmpw $3, %%ax\n\t"
+      "je .Lui_widget_list_prev_4\n\t"
+      "movl 0x2c(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lui_widget_list_prev_3\n\t"
+      "movl 0x34(%%edi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lui_widget_list_prev_3\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".Lui_widget_list_prev_4:\n\t"
+      "movl %%esi, 0x38(%%edi)\n\t"
+      ".Lui_widget_list_prev_5:\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(be53e0_tag)
+      : "memory");
 }
+#else
+#error "ui_widget_list_prev: clang naked draft required"
+#endif
+
 
 /* ui_widget_list_next (0xe5440) — XBE naked draft (batch 141). */
 #if defined(__clang__)

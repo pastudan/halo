@@ -946,20 +946,64 @@ char network_game_client_initiate_join_game(void *client __attribute__((unused))
 #endif
 
 
-/* 0x124ba0 */
-char network_game_client_set_machine(void *client, void *machine)
+/* network_game_client_set_machine (0x124ba0) — XBE naked draft (batch 157). */
+#if defined(__clang__)
+static void (*const b124ba0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b124ba0_exitfn)(int) = system_exit;
+static void * (*const b124ba0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
+char network_game_client_set_machine(void *client __attribute__((unused)), void *machine __attribute__((unused)))
 {
-  if (client == NULL || *(uint16_t *)client >= 4 || machine == NULL ||
-      *(char *)((char *)machine + 0x40) < 0 || *(char *)((char *)machine + 0x40) >= 4) {
-    display_assert("client && (client->machine_index<MAXIMUM_NETWORK_MACHINE_COUNT) "
-                   "&& network_machine_is_valid(machine)",
-                   "c:\\halo\\SOURCE\\networking\\network_client_manager.c",
-                   0x1e1, 1);
-    system_exit(-1);
-  }
-  csmemcpy((char *)client + *(uint16_t *)client * 0x44 + 0x970, machine, 0x44);
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "je .Lnetwork_game_client_set_machine_1\n\t"
+      "cmpw $4, (%%esi)\n\t"
+      "jae .Lnetwork_game_client_set_machine_1\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Lnetwork_game_client_set_machine_1\n\t"
+      "movb 0x40(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jl .Lnetwork_game_client_set_machine_1\n\t"
+      "cmpb $4, %%al\n\t"
+      "jl .Lnetwork_game_client_set_machine_2\n\t"
+      ".Lnetwork_game_client_set_machine_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1e1\n\t"
+      "pushl $0x291774\n\t"
+      "pushl $0x2918f8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lnetwork_game_client_set_machine_2:\n\t"
+      "movzwl (%%esi), %%eax\n\t"
+      "imull $0x44, %%eax, %%eax\n\t"
+      "pushl $0x44\n\t"
+      "leal 0x970(%%eax,%%esi,1), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b124ba0_assert), [exitfn] "m"(b124ba0_exitfn), [c8e0b0] "m"(b124ba0_c8e0b0)
+      : "memory");
 }
+#else
+#error "network_game_client_set_machine: clang naked draft required"
+#endif
+
 
 /* network_game_client_get_machine (0x124c10) — XBE naked draft (batch 100). */
 #if defined(__clang__)
@@ -1106,23 +1150,65 @@ char network_game_client_address_matches_server(void *client __attribute__((unus
 #endif
 
 
-/* 0x124e20 */
-void network_game_client_game_out_of_sync(void *client)
-{
-  int16_t player;
+/* network_game_client_game_out_of_sync (0x124e20) — XBE naked draft (batch 157). */
+#if defined(__clang__)
+static void (*const b124e20_c12b650)(const char *fmt, ...) = network_game_log;
+static __int16 (*const b124e20_cba4c0)(__int16 a1) = local_player_get_next;
+static void (*const b124e20_ce8910)(int16_t error_handle, int local_player_index, char is_modal, char pause_game) = ui_widget_display_error;
 
-  if (*(char *)0x46e8b8 != 0)
-    return;
-  network_game_log("local machine is out of sync with the server");
-  if (*(char *)((char *)client + 0xcac) == 0) {
-    player = local_player_get_next(-1);
-    while (player != (int16_t)-1) {
-      ui_widget_display_error(8, player, 1, 0);
-      player = local_player_get_next(player);
-    }
-  }
-  *(char *)((char *)client + 0xcac) = 1;
+__attribute__((naked, noinline))
+void network_game_client_game_out_of_sync(void *client __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x46e8b8, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lnetwork_game_client_game_out_of_sync_4\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x2919b4\n\t"
+      "call *%[c12b650]\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movb 0xcac(%%edi), %%al\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lnetwork_game_client_game_out_of_sync_3\n\t"
+      "pushl %%esi\n\t"
+      "pushl $-1\n\t"
+      "call *%[cba4c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .Lnetwork_game_client_game_out_of_sync_2\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lnetwork_game_client_game_out_of_sync_1:\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "pushl %%esi\n\t"
+      "pushl $8\n\t"
+      "call *%[ce8910]\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cba4c0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "cmpw $-1, %%si\n\t"
+      "jne .Lnetwork_game_client_game_out_of_sync_1\n\t"
+      ".Lnetwork_game_client_game_out_of_sync_2:\n\t"
+      "popl %%esi\n\t"
+      ".Lnetwork_game_client_game_out_of_sync_3:\n\t"
+      "movb $1, 0xcac(%%edi)\n\t"
+      "popl %%edi\n\t"
+      ".Lnetwork_game_client_game_out_of_sync_4:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c12b650] "m"(b124e20_c12b650), [cba4c0] "m"(b124e20_cba4c0), [ce8910] "m"(b124e20_ce8910)
+      : "memory");
 }
+#else
+#error "network_game_client_game_out_of_sync: clang naked draft required"
+#endif
+
 
 /* network_game_client_ponged (0x124e90) — XBE naked draft (batch 141). */
 #if defined(__clang__)
@@ -1450,22 +1536,62 @@ char network_game_client_game_settings_updated(void *client __attribute__((unuse
 #endif
 
 
-/* 0x125180 */
-int unstrip_player_index(int stripped_index)
-{
-  data_iter_t iter;
-  char *player;
+/* unstrip_player_index (0x125180) — XBE naked draft (batch 158). */
+#if defined(__clang__)
+static void (*const b125180_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b125180_c119810)(data_iter_t *iterator) = data_iterator_next;
 
-  data_iterator_new(&iter, *(data_t **)0x5aa6d4);
-  player = (char *)data_iterator_next(&iter);
-  while (player != NULL) {
-    if ((*(unsigned short *)(player + 8) & 0xffff) ==
-        (unsigned short)(stripped_index & 0xffff))
-      return *(int *)(player + 4);
-    player = (char *)data_iterator_next(&iter);
-  }
-  return -1;
+__attribute__((naked, noinline))
+int unstrip_player_index(int stripped_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lunstrip_player_index_2\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "andl $0xffff, %%esi\n\t"
+      ".Lunstrip_player_index_1:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0xffff, %%ecx\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "je .Lunstrip_player_index_3\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lunstrip_player_index_1\n\t"
+      ".Lunstrip_player_index_2:\n\t"
+      "movl %%edi, %%eax\n\t"
+      ".Lunstrip_player_index_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1197b0] "m"(b125180_c1197b0), [c119810] "m"(b125180_c119810)
+      : "memory");
 }
+#else
+#error "unstrip_player_index: clang naked draft required"
+#endif
+
 
 /* network_game_client_game_has_started (0x1251e0) — XBE naked draft (batch 124). */
 #if defined(__clang__)
