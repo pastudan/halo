@@ -33780,7 +33780,7 @@
         {
           "addr": "0xfcd10",
           "decl": "void FUN_000fcd10(int16_t trigger_index, int weapon_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfcdd0",

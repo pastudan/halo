@@ -2368,6 +2368,11 @@
     "confidence": "weak",
     "coverage_pct": 78.4
   },
+  "0x60970": {
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 36.7
+  },
   "0x64": {
     "confidence": "moderate",
     "coverage_pct": 55.4
