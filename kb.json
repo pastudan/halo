@@ -34623,8 +34623,9 @@
         },
         {
           "addr": "0x43ce0",
-          "decl": "void FUN_00043ce0(int actor /* @<eax> */);",
-          "ported": false
+          "decl": "void FUN_00043ce0(int actor @<eax>);",
+          "ported": true,
+          "name": "FUN_00043ce0"
         },
         {
           "addr": "0x43db0",
