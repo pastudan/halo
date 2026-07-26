@@ -6445,7 +6445,7 @@ void FUN_000c2f90(int16_t function_index __attribute__((unused)), int thread_dat
 /* FUN_000c2fe0 (0xc2fe0) — XBE naked draft (batch 198). */
 #if defined(__clang__)
 static int (*const bc2fe0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc2fe0_ca28e0)(int a0, float a1, float a2) = scripted_player_effect_set_rotation;
+static void (*const bc2fe0_ca28e0)(int a0, float a1, float a2) = (void *)scripted_player_effect_set_rotation;
 static void (*const bc2fe0_ccbf80)(int thread_handle, int value) = hs_return;
 
 __attribute__((naked, noinline))
@@ -6585,7 +6585,7 @@ void FUN_000c3070(int16_t function_index __attribute__((unused)), int thread_dat
 /* FUN_000c30b0 (0xc30b0) — XBE naked draft (batch 208). */
 #if defined(__clang__)
 static int (*const bc30b0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc30b0_ca2e40)(int a0) = scripted_player_effect_stop;
+static void (*const bc30b0_ca2e40)(int a0) = (void *)scripted_player_effect_stop;
 static void (*const bc30b0_ccbf80)(int thread_handle, int value) = hs_return;
 
 __attribute__((naked, noinline))
@@ -7487,7 +7487,7 @@ void FUN_000c3590(int16_t function_index __attribute__((unused)), int thread_dat
 /* FUN_000c35b0 (0xc35b0) — XBE naked draft (batch 188). */
 #if defined(__clang__)
 static int (*const bc35b0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc35b0_c16b270)(int a0, float a1, float a2, float a3) = FUN_0016b270;
+static void (*const bc35b0_c16b270)(int a0, float a1, float a2, float a3) = (void *)FUN_0016b270;
 static void (*const bc35b0_ccbf80)(int thread_handle, int value) = hs_return;
 
 __attribute__((naked, noinline))
@@ -7565,7 +7565,7 @@ void FUN_000c3600(int16_t function_index __attribute__((unused)), int thread_dat
 /* FUN_000c3620 (0xc3620) — XBE naked draft (batch 183). */
 #if defined(__clang__)
 static int (*const bc3620_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc3620_c17d9a0)(int a0, float a1) = FUN_0017d9a0;
+static void (*const bc3620_c17d9a0)(int a0, float a1) = (void *)FUN_0017d9a0;
 static void (*const bc3620_ccbf80)(int thread_handle, int value) = hs_return;
 
 __attribute__((naked, noinline))
@@ -7765,7 +7765,7 @@ void FUN_000c3700(int16_t function_index __attribute__((unused)), int thread_dat
 /* FUN_000c3760 (0xc3760) — XBE naked draft (batch 198). */
 #if defined(__clang__)
 static int (*const bc3760_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc3760_c17db20)(int a0, float a1, float a2) = FUN_0017db20;
+static void (*const bc3760_c17db20)(int a0, float a1, float a2) = (void *)FUN_0017db20;
 static void (*const bc3760_ccbf80)(int thread_handle, int value) = hs_return;
 
 __attribute__((naked, noinline))
@@ -7859,7 +7859,7 @@ void FUN_000c37b0(int16_t function_index __attribute__((unused)), int thread_dat
 
 /* FUN_000c37f0 (0xc37f0) — XBE naked draft (batch 193). */
 #if defined(__clang__)
-static void (*const bc37f0_c17dc60)(void) = FUN_0017dc60;
+static void (*const bc37f0_c17dc60)(void) = (void *)FUN_0017dc60;
 static void (*const bc37f0_ccbf80)(int thread_handle, int value) = hs_return;
 
 __attribute__((naked, noinline))
@@ -7888,7 +7888,7 @@ void FUN_000c37f0(int16_t function_index __attribute__((unused)), int thread_dat
 /* FUN_000c3810 (0xc3810) — XBE naked draft (batch 208). */
 #if defined(__clang__)
 static int (*const bc3810_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc3810_c17dec0)(int a0) = FUN_0017dec0;
+static void (*const bc3810_c17dec0)(int a0) = (void *)FUN_0017dec0;
 static void (*const bc3810_ccbf80)(int thread_handle, int value) = hs_return;
 
 __attribute__((naked, noinline))

@@ -1777,72 +1777,28 @@ void FUN_0017d990(void)
   (void)0;
 }
 
-/* FUN_0017d9a0 (0x17d9a0) — XBE naked draft (batch 369). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017d9a0(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
+/* FUN_0017d9a0 (0x17d9a0) — readable C lift. */
+void FUN_0017d9a0(short index, float value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x47e4d4, %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_0017d9a0_1\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_0017d9a0_1\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jge .LFUN_0017d9a0_1\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "fstps 0x64(%%ecx,%%eax,4)\n\t"
-      ".LFUN_0017d9a0_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  char *spr;
+
+  spr = *(char **)0x47e4d4;
+  if (spr && index >= 0 && index < 4) {
+    *(float *)(spr + 0x64 + (int)index * 4) = value;
+  }
 }
-#else
-#error "FUN_0017d9a0: clang naked draft required"
-#endif
 
-
-/* FUN_0017d9d0 (0x17d9d0) — XBE naked draft (batch 365). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017d9d0(void)
+/* FUN_0017d9d0 (0x17d9d0) — readable C lift. */
+float FUN_0017d9d0(short index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x47e4d4, %%ecx\n\t"
-      "flds 0x2533c0\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_0017d9d0_1\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_0017d9d0_1\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jge .LFUN_0017d9d0_1\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x64(%%ecx,%%eax,4)\n\t"
-      ".LFUN_0017d9d0_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_0017d9d0: clang naked draft required"
-#endif
+  char *spr;
 
+  spr = *(char **)0x47e4d4;
+  if (!spr || index < 0 || index >= 4) {
+    return *(float *)0x2533c0;
+  }
+  return *(float *)(spr + 0x64 + (int)index * 4);
+}
 
 /* FUN_0017da00 (0x17da00) — XBE naked draft (batch 381). */
 #if defined(__clang__)
@@ -1993,36 +1949,18 @@ void FUN_0017dab0(int a0 __attribute__((unused)), float a1 __attribute__((unused
 #endif
 
 
-/* FUN_0017db20 (0x17db20) — XBE naked draft (batch 375). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017db20(int a0 __attribute__((unused)), float a1 __attribute__((unused)), float a2 __attribute__((unused)))
+/* FUN_0017db20 (0x17db20) — readable C lift. */
+void FUN_0017db20(int a, int b, int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x47e4d4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0017db20_1\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x14(%%eax)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x18(%%eax)\n\t"
-      "movl %%ecx, 0x1c(%%eax)\n\t"
-      ".LFUN_0017db20_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_0017db20: clang naked draft required"
-#endif
+  char *spr;
 
+  spr = *(char **)0x47e4d4;
+  if (spr) {
+    *(int *)(spr + 0x14) = a;
+    *(int *)(spr + 0x18) = b;
+    *(int *)(spr + 0x1c) = c;
+  }
+}
 
 /* rasterizer_screen_effect_set_video (0x17db40) — XBE naked draft (batch 332). */
 #if defined(__clang__)
@@ -2133,28 +2071,16 @@ void rasterizer_screen_effect_set_video(int a0 __attribute__((unused)), float a1
 #endif
 
 
-/* FUN_0017dc60 (0x17dc60) — XBE naked draft (batch 373). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_0017dc60 (0x17dc60) — readable C lift. */
 void FUN_0017dc60(void)
 {
-  __asm__ volatile(
-      "movl 0x47e4d4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0017dc60_1\n\t"
-      "movb $0, 0x38(%%eax)\n\t"
-      ".LFUN_0017dc60_1:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_0017dc60: clang naked draft required"
-#endif
+  char *spr;
 
+  spr = *(char **)0x47e4d4;
+  if (spr) {
+    spr[0x38] = 0;
+  }
+}
 
 /* 0x17dc70 */
 void *rasterizer_screen_effect_get_cinematic_parameters(void *effect)
@@ -2200,62 +2126,32 @@ void *rasterizer_screen_effect_get_cinematic_parameters(void *effect)
   (void)edx;
 }
 
-/* FUN_0017dec0 (0x17dec0) — XBE naked draft (batch 383). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017dec0(int a0 __attribute__((unused)))
+/* FUN_0017dec0 (0x17dec0) — readable C lift. */
+void FUN_0017dec0(int value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x47e4d4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0017dec0_1\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x74(%%eax)\n\t"
-      ".LFUN_0017dec0_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  char *spr;
+
+  spr = *(char **)0x47e4d4;
+  if (spr) {
+    *(int *)(spr + 0x74) = value;
+  }
 }
-#else
-#error "FUN_0017dec0: clang naked draft required"
-#endif
 
-
-/* FUN_0017dee0 (0x17dee0) — XBE naked draft (batch 339). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017dee0(void)
+/* FUN_0017dee0 (0x17dee0) — readable C lift. */
+float FUN_0017dee0(void)
 {
-  __asm__ volatile(
-      "movl 0x47e4d4, %%ecx\n\t"
-      "flds 0x2af1ac\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_0017dee0_1\n\t"
-      "flds 0x74(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0017dee0_1\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x74(%%ecx)\n\t"
-      ".LFUN_0017dee0_1:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_0017dee0: clang naked draft required"
-#endif
+  char *spr;
+  float v;
 
+  spr = *(char **)0x47e4d4;
+  v = *(float *)0x2af1ac;
+  if (spr) {
+    if (*(float *)(spr + 0x74) > *(float *)0x2533c0) {
+      v = *(float *)(spr + 0x74);
+    }
+  }
+  return v;
+}
 
 /* FUN_0017df10 (0x17df10) — XBE naked draft (batch 365). */
 #if defined(__clang__)
@@ -2370,28 +2266,14 @@ void FUN_0017df80(void)
 #endif
 
 
-/* FUN_0017e010 (0x17e010) — XBE naked draft (batch 368). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_0017e010 (0x17e010) — readable C lift. */
 void FUN_0017e010(void)
 {
-  __asm__ volatile(
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, 0x47e4e0\n\t"
-      "movl %%eax, 0x47e4e8\n\t"
-      "movl %%eax, 0x47e4f0\n\t"
-      "movl %%eax, 0x47e4f4\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(int *)0x47e4e0 = 0;
+  *(int *)0x47e4e8 = 0;
+  *(int *)0x47e4f0 = 0;
+  *(int *)0x47e4f4 = 0;
 }
-#else
-#error "FUN_0017e010: clang naked draft required"
-#endif
-
 
 /* 0x17e030 */
 void FUN_0017e030(void)
@@ -3702,79 +3584,29 @@ void FUN_0017ed30(void)
 #endif
 
 
-/* FUN_0017ed70 (0x17ed70) — XBE naked draft (batch 378). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017ed70(void)
+/* FUN_0017ed70 (0x17ed70) — readable C lift. */
+char FUN_0017ed70(unsigned short a, unsigned short b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "cmpw 0xc(%%ebp), %%ax\n\t"
-      "jbe .LFUN_0017ed70_1\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0017ed70_1:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return a > b;
 }
-#else
-#error "FUN_0017ed70: clang naked draft required"
-#endif
 
-
-/* FUN_0017ed90 (0x17ed90) — XBE naked draft (batch 343). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017ed90(void)
+/* FUN_0017ed90 (0x17ed90) — readable C lift. */
+int FUN_0017ed90(short *a, short *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .LFUN_0017ed90_3\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0017ed90_2\n\t"
-      "movw (%%edx), %%cx\n\t"
-      "cmpw $1, %%cx\n\t"
-      "jne .LFUN_0017ed90_1\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "addl $2, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0017ed90_1:\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jne .LFUN_0017ed90_2\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      ".LFUN_0017ed90_2:\n\t"
-      "popl %%esi\n\t"
-      "nop\n\t"
-      ".LFUN_0017ed90_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (!a) {
+    return 0;
+  }
+  if (!b) {
+    return 0;
+  }
+  if (a[0] == 1) {
+    return *(int *)(a + 2) + 2;
+  }
+  if (a[0] == 0) {
+    return *(int *)(b + 2);
+  }
+  return 0;
 }
-#else
-#error "FUN_0017ed90: clang naked draft required"
-#endif
-
 
 /* rasterizer_frame_statistics_count_static_vertices (0x17edd0) — XBE naked draft (batch 330). */
 #if defined(__clang__)

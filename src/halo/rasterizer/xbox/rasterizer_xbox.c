@@ -2794,7 +2794,7 @@ static void (*const b157010_c16f6c0)(void) = FUN_0016f6c0;
 static void (*const b157010_c1659a0)(void) = FUN_001659a0;
 static void (*const b157010_c17d910)(void) = rasterizer_screen_effects_initialize;
 static void (*const b157010_c1bf080)(void) = texture_cache_new;
-static void (*const b157010_c17e010)(void) = FUN_0017e010;
+static void (*const b157010_c17e010)(void) = (void *)FUN_0017e010;
 
 __attribute__((naked, noinline))
 void FUN_00157010(void)

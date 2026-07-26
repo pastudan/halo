@@ -8420,7 +8420,7 @@ static void __stdcall (*const b172de0_c1e9410)(uint32_t stage, uint32_t state, u
 static void (*const b172de0_c190e10)(void *map_animation, void *external_animation, float u_scale, float v_scale, float u_offset, float v_offset, float rotation, float time, float *out_u, float *out_v) = FUN_00190e10;
 static void __stdcall (*const b172de0_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
 static void (*const b172de0_c15e430)(void) = FUN_0015e430;
-static void (*const b172de0_c17ed90)(void) = FUN_0017ed90;
+static void (*const b172de0_c17ed90)(void) = (void *)FUN_0017ed90;
 
 __attribute__((naked, noinline))
 void FUN_00172de0(void *decal __attribute__((unused)), int param_2 __attribute__((unused)), void *param_3 __attribute__((unused)), void *param_4 __attribute__((unused)))
@@ -10121,81 +10121,23 @@ void FUN_001749b0(void)
 #endif
 
 
-/* FUN_00174b60 (0x174b60) — XBE naked draft (batch 357). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00174b60(void)
+/* FUN_00174b60 (0x174b60) — readable C lift: plane/vec4 subtract. */
+void FUN_00174b60(float *a, float *b, float *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds (%%ecx)\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "fsubs (%%edx)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "fstps (%%eax)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsubs 0x4(%%edx)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "fsubs 0x8(%%edx)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "flds 0xc(%%ecx)\n\t"
-      "fsubs 0xc(%%edx)\n\t"
-      "fstps 0xc(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  out[0] = a[0] - b[0];
+  out[1] = a[1] - b[1];
+  out[2] = a[2] - b[2];
+  out[3] = a[3] - b[3];
 }
-#else
-#error "FUN_00174b60: clang naked draft required"
-#endif
 
-
-/* FUN_00174b90 (0x174b90) — XBE naked draft (batch 346). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00174b90(void)
+/* FUN_00174b90 (0x174b90) — readable C lift: out = a + t*b (vec4). */
+void FUN_00174b90(float *a, float *b, float t, float *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "fadds (%%edx)\n\t"
-      "fstps (%%eax)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "fadds 0x4(%%edx)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      "fadds 0x8(%%edx)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0xc(%%ecx)\n\t"
-      "fadds 0xc(%%edx)\n\t"
-      "fstps 0xc(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  out[0] = t * b[0] + a[0];
+  out[1] = t * b[1] + a[1];
+  out[2] = t * b[2] + a[2];
+  out[3] = t * b[3] + a[3];
 }
-#else
-#error "FUN_00174b90: clang naked draft required"
-#endif
-
 
 /* FUN_00174bd0 (0x174bd0) — XBE naked draft (batch 348). */
 #if defined(__clang__)
@@ -11053,54 +10995,18 @@ void FUN_00178b40(int a1 __attribute__((unused)), int a2 __attribute__((unused))
 #endif
 
 
-/* FUN_001792a0 (0x1792a0) — XBE naked draft (batch 383). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001792a0(void)
+/* FUN_001792a0 (0x1792a0) — readable C lift. */
+void FUN_001792a0(char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "sete %%cl\n\t"
-      "movb %%cl, 0x47e4c8\n\t"
-      "movb %%al, 0x47e4c9\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(char *)0x47e4c8 = (char)(flag == 0);
+  *(char *)0x47e4c9 = flag;
 }
-#else
-#error "FUN_001792a0: clang naked draft required"
-#endif
 
-
-/* FUN_001792C0 (0x1792c0) — XBE naked draft (batch 387). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001792C0(int param_1 __attribute__((unused)))
+/* FUN_001792C0 (0x1792c0) — readable C lift. */
+void FUN_001792C0(char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "movb %%al, 0x47e4c9\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(char *)0x47e4c9 = flag;
 }
-#else
-#error "FUN_001792C0: clang naked draft required"
-#endif
-
 
 /* 0x1792d0 */
 void FUN_001792d0(void)

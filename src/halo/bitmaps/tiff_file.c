@@ -406,7 +406,7 @@ void tiff_get_bounds(void)
 static bool (*const b7fa00_c19a640)(file_ref_t *info) = file_exists;
 static char * (*const b7fa00_c199810)(file_ref_t *info, int flags, char *name_out) = file_reference_get_name;
 static int (*const b7fa00_c6d8e0)(const char *path, const char *mode) = FUN_0006d8e0;
-static void (*const b7fa00_c6d820)(void) = TIFFScanlineSize;
+static void (*const b7fa00_c6d820)(void) = (void *)TIFFScanlineSize;
 static int (*const b7fa00_c64ec0)(char *prop, int tag, void *out) = FUN_00064ec0;
 static void (*const b7fa00_c65e90)(void) = TIFFGetField;
 static void (*const b7fa00_c64ee0)(int file) = FUN_00064ee0;

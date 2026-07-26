@@ -6,7 +6,7 @@
 #if defined(__clang__)
 static int (*const b6c400_c64ec0)(char *prop, int tag, void *out) = FUN_00064ec0;
 static void (*const b6c400_c65e90)(void) = TIFFGetField;
-static void (*const b6c400_c6d850)(void) = TIFFFileName;
+static void (*const b6c400_c6d850)(void) = (void *)TIFFFileName;
 static void (*const b6c400_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 static void (*const b6c400_c6c080)(void) = FUN_0006c080;
 static void (*const b6c400_c8ef70)(void *ptr, const char *file, int line) = debug_free;
@@ -179,7 +179,7 @@ void FUN_0006c400(void)
 #if defined(__clang__)
 static void (*const b6c5e0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 static void (*const b6c5e0_c6f890)(void) = FUN_0006f890;
-static void (*const b6c5e0_c6d820)(void) = TIFFScanlineSize;
+static void (*const b6c5e0_c6d820)(void) = (void *)TIFFScanlineSize;
 
 __attribute__((naked, noinline))
 void FUN_0006c5e0(void)
@@ -1992,32 +1992,14 @@ void FUN_0006d340(void)
 #endif
 
 
-/* FUN_0006d4d0 (0x6d4d0) — XBE naked draft (batch 380). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006d4d0(void)
+/* FUN_0006d4d0 (0x6d4d0) — readable C lift. */
+int FUN_0006d4d0(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl $0x6d340, %%ecx\n\t"
-      "movl %%ecx, 0xfc(%%eax)\n\t"
-      "movl %%ecx, 0x104(%%eax)\n\t"
-      "movl %%ecx, 0x10c(%%eax)\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(unsigned int *)((char *)tif + 0xfc) = 0x6d340;
+  *(unsigned int *)((char *)tif + 0x104) = 0x6d340;
+  *(unsigned int *)((char *)tif + 0x10c) = 0x6d340;
+  return 1;
 }
-#else
-#error "FUN_0006d4d0: clang naked draft required"
-#endif
-
 
 /* FUN_0006d500 (0x6d500) — XBE naked draft (batch 327). */
 #if defined(__clang__)
@@ -2064,8 +2046,8 @@ static void (*const b6d590_c1e209e)(void) = __read;
 static void (*const b6d590_c1df419)(void) = __write;
 static void (*const b6d590_c6d500)(void) = FUN_0006d500;
 static void (*const b6d590_c66190)(void) = FUN_00066190;
-static void (*const b6d590_c6f1b0)(void) = FUN_0006f1b0;
-static void (*const b6d590_c6f1d0)(void) = FUN_0006f1d0;
+static void (*const b6d590_c6f1b0)(void) = (void *)FUN_0006f1b0;
+static void (*const b6d590_c6f1d0)(void) = (void *)FUN_0006f1d0;
 static void (*const b6d590_c66e70)(void) = FUN_00066e70;
 static void (*const b6d590_c64ee0)(int file) = FUN_00064ee0;
 
@@ -2307,222 +2289,66 @@ void TIFFFdOpen(void)
 #endif
 
 
-/* TIFFScanlineSize (0x6d820) — XBE naked draft (batch 375). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void TIFFScanlineSize(void)
+/* TIFFScanlineSize (0x6d820) — readable C lift. */
+unsigned int TIFFScanlineSize(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movzwl 0x36(%%ecx), %%eax\n\t"
-      "imull 0x1c(%%ecx), %%eax\n\t"
-      "cmpw $1, 0x5e(%%ecx)\n\t"
-      "jne .LTIFFScanlineSize_1\n\t"
-      "movzwl 0x44(%%ecx), %%ecx\n\t"
-      "imull %%ecx, %%eax\n\t"
-      ".LTIFFScanlineSize_1:\n\t"
-      "addl $7, %%eax\n\t"
-      "shrl $3, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int size;
+
+  size = (unsigned int)*((unsigned short *)((char *)tif + 0x36));
+  size *= *(unsigned int *)((char *)tif + 0x1c);
+  if (*((unsigned short *)((char *)tif + 0x5e)) == 1) {
+    size *= (unsigned int)*((unsigned short *)((char *)tif + 0x44));
+  }
+  return (size + 7) >> 3;
 }
-#else
-#error "TIFFScanlineSize: clang naked draft required"
-#endif
 
-
-/* TIFFFileName (0x6d850) — XBE naked draft (batch 387). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void TIFFFileName(void)
+/* TIFFFileName (0x6d850) — readable C lift. */
+char *TIFFFileName(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return *(char **)tif;
 }
-#else
-#error "TIFFFileName: clang naked draft required"
-#endif
 
-
-/* TIFFFileno (0x6d860) — XBE naked draft (batch 387). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void TIFFFileno(void)
+/* TIFFFileno (0x6d860) — readable C lift. */
+int TIFFFileno(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movswl 0x4(%%eax), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (int)*((short *)tif + 2);
 }
-#else
-#error "TIFFFileno: clang naked draft required"
-#endif
 
-
-/* TIFFGetMode (0x6d870) — XBE naked draft (batch 387). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void TIFFGetMode(void)
+/* TIFFGetMode (0x6d870) — readable C lift. */
+int TIFFGetMode(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movswl 0x6(%%eax), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (int)*((short *)tif + 3);
 }
-#else
-#error "TIFFGetMode: clang naked draft required"
-#endif
 
-
-/* TIFFIsTiled (0x6d880) — XBE naked draft (batch 385). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void TIFFIsTiled(void)
+/* TIFFIsTiled (0x6d880) — readable C lift. */
+int TIFFIsTiled(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movsbl 0xa(%%eax), %%eax\n\t"
-      "andl $0x80, %%eax\n\t"
-      "shrl $7, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (((int)*((char *)tif + 0xa)) & 0x80) >> 7;
 }
-#else
-#error "TIFFIsTiled: clang naked draft required"
-#endif
 
-
-/* TIFFCurrentRow (0x6d8a0) — XBE naked draft (batch 388). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void TIFFCurrentRow(void)
+/* TIFFCurrentRow (0x6d8a0) — readable C lift. */
+unsigned int TIFFCurrentRow(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0xd4(%%eax), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return *(unsigned int *)((char *)tif + 0xd4);
 }
-#else
-#error "TIFFCurrentRow: clang naked draft required"
-#endif
 
-
-/* TIFFCurrentDirectory (0x6d8b0) — XBE naked draft (batch 388). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void TIFFCurrentDirectory(void)
+/* TIFFCurrentDirectory (0x6d8b0) — readable C lift. */
+unsigned int TIFFCurrentDirectory(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0xd8(%%eax), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return *(unsigned int *)((char *)tif + 0xd8);
 }
-#else
-#error "TIFFCurrentDirectory: clang naked draft required"
-#endif
 
-
-/* TIFFCurrentStrip (0x6d8c0) — XBE naked draft (batch 388). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void TIFFCurrentStrip(void)
+/* TIFFCurrentStrip (0x6d8c0) — readable C lift. */
+unsigned int TIFFCurrentStrip(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0xdc(%%eax), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return *(unsigned int *)((char *)tif + 0xdc);
 }
-#else
-#error "TIFFCurrentStrip: clang naked draft required"
-#endif
 
-
-/* TIFFCurrentTile (0x6d8d0) — XBE naked draft (batch 388). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void TIFFCurrentTile(void)
+/* TIFFCurrentTile (0x6d8d0) — readable C lift. */
+unsigned int TIFFCurrentTile(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0xe8(%%eax), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return *(unsigned int *)((char *)tif + 0xe8);
 }
-#else
-#error "TIFFCurrentTile: clang naked draft required"
-#endif
-
 
 /* FUN_0006d8e0 (0x6d8e0) — XBE naked draft (batch 363). */
 #if defined(__clang__)
@@ -2609,7 +2435,7 @@ int FUN_0006d8e0(const char *path __attribute__((unused)), const char *mode __at
 /* FUN_0006d980 (0x6d980) — XBE naked draft (batch 336). */
 #if defined(__clang__)
 static void (*const b6d980_c6f890)(void) = FUN_0006f890;
-static void (*const b6d980_c6d820)(void) = TIFFScanlineSize;
+static void (*const b6d980_c6d820)(void) = (void *)TIFFScanlineSize;
 
 __attribute__((naked, noinline))
 void FUN_0006d980(void)
@@ -3053,37 +2879,18 @@ void FUN_0006dd00(void)
 #endif
 
 
-/* FUN_0006dd50 (0x6dd50) — XBE naked draft (batch 369). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006dd50(void)
+/* FUN_0006dd50 (0x6dd50) — readable C lift. */
+int FUN_0006dd50(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl $0x6dbf0, %%ecx\n\t"
-      "movl %%ecx, 0xfc(%%eax)\n\t"
-      "movl %%ecx, 0x104(%%eax)\n\t"
-      "movl %%ecx, 0x10c(%%eax)\n\t"
-      "movl $0x6dd00, %%ecx\n\t"
-      "movl $0x6d980, 0xf4(%%eax)\n\t"
-      "movl $0x6d9c0, 0x100(%%eax)\n\t"
-      "movl %%ecx, 0x108(%%eax)\n\t"
-      "movl %%ecx, 0x110(%%eax)\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(unsigned int *)((char *)tif + 0xfc) = 0x6dbf0;
+  *(unsigned int *)((char *)tif + 0x104) = 0x6dbf0;
+  *(unsigned int *)((char *)tif + 0x10c) = 0x6dbf0;
+  *(unsigned int *)((char *)tif + 0xf4) = 0x6d980;
+  *(unsigned int *)((char *)tif + 0x100) = 0x6d9c0;
+  *(unsigned int *)((char *)tif + 0x108) = 0x6dd00;
+  *(unsigned int *)((char *)tif + 0x110) = 0x6dd00;
+  return 1;
 }
-#else
-#error "FUN_0006dd50: clang naked draft required"
-#endif
-
 
 /* FUN_0006dda0 (0x6dda0) — XBE naked draft (batch 360). */
 #if defined(__clang__)

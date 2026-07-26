@@ -539,60 +539,33 @@ void FUN_001546b0(float *accum __attribute__((unused)), float *rate __attribute_
 #endif
 
 
-/* FUN_001546f0 (0x1546f0) — XBE naked draft (batch 233). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float FUN_001546f0(float *bounds /* */ __attribute__((unused)), float from __attribute__((unused)), char wrap_flag __attribute__((unused)), float to __attribute__((unused)))
+/* FUN_001546f0 (0x1546f0) — readable C lift: wrapped delta sign helper. */
+float FUN_001546f0(float *bounds, float from, char wrap_flag, float to)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_001546f0_3\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001546f0_1\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "flds (%%ecx)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "fmuls 0x253398\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001546f0_1\n\t"
-      "fchs\n\t"
-      ".LFUN_001546f0_1:\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001546f0_2\n\t"
-      "flds 0x2533c8\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001546f0_2:\n\t"
-      "flds 0x255e94\n\t"
-      ".LFUN_001546f0_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_001546f0: clang naked draft required"
-#endif
+  float delta;
+  float span;
+  float abs_delta;
 
+  delta = to - from;
+  if (delta == *(float *)0x2533c0) {
+    return delta;
+  }
+  if (wrap_flag) {
+    abs_delta = delta < 0.0f ? -delta : delta;
+    span = (bounds[0] - bounds[1]) * *(float *)0x253398;
+    if (abs_delta > span) {
+      delta = -delta;
+    }
+  }
+  if (delta > *(float *)0x2533c0) {
+    return *(float *)0x2533c8;
+  }
+  return *(float *)0x255e94;
+}
 
 /* FUN_00154750 (0x154750) — XBE naked draft (batch 226). */
 #if defined(__clang__)
-static float (*const b154750_c1546f0)(float *bounds /* */, float from, char wrap_flag, float to) = FUN_001546f0;
+static float (*const b154750_c1546f0)(float *bounds /* */, float from, char wrap_flag, float to) = (void *)FUN_001546f0;
 static void (*const b154750_c1544d0)(float *param_1, float *param_2, char param_3, float param_4) = FUN_001544d0;
 
 __attribute__((naked, noinline))
@@ -678,7 +651,7 @@ char FUN_00154750(float *accum __attribute__((unused)), float *bounds __attribut
 
 /* FUN_001547d0 (0x1547d0) — XBE naked draft (batch 226). */
 #if defined(__clang__)
-static float (*const b1547d0_c1546f0)(float *bounds /* */, float from, char wrap_flag, float to) = FUN_001546f0;
+static float (*const b1547d0_c1546f0)(float *bounds /* */, float from, char wrap_flag, float to) = (void *)FUN_001546f0;
 static void (*const b1547d0_c154540)(float *accum, float *coeffs, float scale) = FUN_00154540;
 static void (*const b1547d0_c1544d0)(float *param_1, float *param_2, char param_3, float param_4) = FUN_001544d0;
 

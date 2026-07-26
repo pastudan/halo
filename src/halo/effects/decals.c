@@ -2247,47 +2247,14 @@ void FUN_0017cd30(void)
 }/* --- decals.obj batch drafts (2026-07-26) --- */
 
 /* 0x99490 */
-/* FUN_00099490 (0x99490) — XBE naked draft (batch 175). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00099490(float *plane __attribute__((unused)), float *point __attribute__((unused)), float *normal __attribute__((unused)))
+/* FUN_00099490 (0x99490) — readable C lift: plane from point+normal. */
+void FUN_00099490(float *plane, float *point, float *normal)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl (%%ecx), %%esi\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl %%esi, (%%edx)\n\t"
-      "movl 0x4(%%ecx), %%esi\n\t"
-      "movl %%esi, 0x4(%%edx)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%edx)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "faddp %%st(1)\n\t"
-      "flds (%%eax)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "faddp %%st(1)\n\t"
-      "fstps 0xc(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  plane[0] = normal[0];
+  plane[1] = normal[1];
+  plane[2] = normal[2];
+  plane[3] = plane[0] * point[0] + plane[1] * point[1] + plane[2] * point[2];
 }
-#else
-#error "FUN_00099490: clang naked draft required"
-#endif
-
 
 /* decal_update (0x996b0) — XBE naked draft (batch 123). */
 #if defined(__clang__)

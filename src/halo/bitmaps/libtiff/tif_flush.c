@@ -6,8 +6,8 @@
 #if defined(__clang__)
 static void (*const b68780_c6fe10)(void) = TIFFFlushData1;
 static void * (*const b68780_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b68780_c6f220)(void) = FUN_0006f220;
-static void (*const b68780_c6f1f0)(void) = FUN_0006f1f0;
+static void (*const b68780_c6f220)(void) = (void *)FUN_0006f220;
+static void (*const b68780_c6f1f0)(void) = (void *)FUN_0006f1f0;
 
 __attribute__((naked, noinline))
 void FUN_00068780(void)
@@ -132,8 +132,8 @@ void FUN_00068780(void)
 #if defined(__clang__)
 static void (*const b68890_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 static void * (*const b68890_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b68890_c6f220)(void) = FUN_0006f220;
-static void (*const b68890_c6f1f0)(void) = FUN_0006f1f0;
+static void (*const b68890_c6f220)(void) = (void *)FUN_0006f220;
+static void (*const b68890_c6f1f0)(void) = (void *)FUN_0006f1f0;
 
 __attribute__((naked, noinline))
 void FUN_00068890(void)
@@ -220,32 +220,16 @@ void FUN_00068890(void)
 #endif
 
 
-/* FUN_00068940 (0x68940) — XBE naked draft (batch 380). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00068940(void)
+/* FUN_00068940 (0x68940) — readable C lift. */
+int FUN_00068940(void *tif, int count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x124(%%eax), %%ecx\n\t"
-      "imull 0xc(%%ebp), %%ecx\n\t"
-      "addl %%ecx, 0x134(%%eax)\n\t"
-      "subl %%ecx, 0x138(%%eax)\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_00068940: clang naked draft required"
-#endif
+  int stride;
 
+  stride = *(int *)((char *)tif + 0x124) * count;
+  *(int *)((char *)tif + 0x134) += stride;
+  *(int *)((char *)tif + 0x138) -= stride;
+  return 1;
+}
 
 /* FUN_00068970 (0x68970) — XBE naked draft (batch 369). */
 #if defined(__clang__)
@@ -320,29 +304,15 @@ void FUN_000689c0(void)
 #endif
 
 
-/* FUN_00068a10 (0x68a10) — XBE naked draft (batch 386). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00068a10(void)
+/* FUN_00068a10 (0x68a10) — readable C lift: swap global handler. */
+void *FUN_00068a10(void *handler)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x2ca1f4, %%eax\n\t"
-      "movl %%ecx, 0x2ca1f4\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_00068a10: clang naked draft required"
-#endif
+  void *prev;
 
+  prev = *(void **)0x2ca1f4;
+  *(void **)0x2ca1f4 = handler;
+  return prev;
+}
 
 /* FUN_00068a30 (0x68a30) — XBE naked draft (batch 369). */
 #if defined(__clang__)
@@ -377,38 +347,18 @@ void FUN_00068a30(int param_1 __attribute__((unused)), const char *format __attr
 #endif
 
 
-/* FUN_00068a50 (0x68a50) — XBE naked draft (batch 369). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00068a50(void)
+/* FUN_00068a50 (0x68a50) — readable C lift: set/clear flag bit0 at tif+9. */
+void FUN_00068a50(void *tif, int enable)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movb 0x9(%%eax), %%cl\n\t"
-      "je .LFUN_00068a50_1\n\t"
-      "orb $1, %%cl\n\t"
-      "movb %%cl, 0x9(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00068a50_1:\n\t"
-      "andb $0xfe, %%cl\n\t"
-      "movb %%cl, 0x9(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_00068a50: clang naked draft required"
-#endif
+  unsigned char flags;
 
+  flags = *((unsigned char *)tif + 9);
+  if (enable) {
+    *((unsigned char *)tif + 9) = (unsigned char)(flags | 1);
+  } else {
+    *((unsigned char *)tif + 9) = (unsigned char)(flags & 0xfe);
+  }
+}
 
 /* FUN_00068a70 (0x68a70) — XBE naked draft (batch 302). */
 #if defined(__clang__)
@@ -679,7 +629,7 @@ void FUN_00068c40(void)
 #if defined(__clang__)
 static void (*const b68c70_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 static void (*const b68c70_c6f890)(void) = FUN_0006f890;
-static void (*const b68c70_c6d820)(void) = TIFFScanlineSize;
+static void (*const b68c70_c6d820)(void) = (void *)TIFFScanlineSize;
 static void * (*const b68c70_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
 
 __attribute__((naked, noinline))

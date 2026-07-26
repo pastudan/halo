@@ -1148,54 +1148,18 @@ void FUN_0015e770(void)
 #endif
 
 
-/* FUN_0015e7a0 (0x15e7a0) — XBE naked draft (batch 383). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0015e7a0(void)
+/* FUN_0015e7a0 (0x15e7a0) — readable C lift. */
+void FUN_0015e7a0(void *obj, int *out, int addend)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "addl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *out = *(int *)((char *)obj + 4) + addend;
 }
-#else
-#error "FUN_0015e7a0: clang naked draft required"
-#endif
 
-
-/* FUN_0015e7d0 (0x15e7d0) — XBE naked draft (batch 385). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0015e7d0(void)
+/* FUN_0015e7d0 (0x15e7d0) — readable C lift. */
+int FUN_0015e7d0(void *obj, int *out, int addend)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "addl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *out = *(int *)((char *)obj + 4) + addend;
+  return 0;
 }
-#else
-#error "FUN_0015e7d0: clang naked draft required"
-#endif
-
 
 /* FUN_0015e800 (0x15e800) — XBE naked draft (batch 314). */
 #if defined(__clang__)
@@ -8687,7 +8651,7 @@ static void (*const b165420_c190a30)(void) = shader_type_is_valid_for_environmen
 static char (*const b165420_c1908a0)(void *shader) = shader_is_decal;
 static void * (*const b165420_c184330)(void) = rasterizer_transparent_geometry_group_new;
 static void (*const b165420_c182590)(int data, int size) = rasterizer_memory_pool_copy;
-static void (*const b165420_c1792c0)(int param_1) = FUN_001792C0;
+static void (*const b165420_c1792c0)(int param_1) = (void *)FUN_001792C0;
 static void * (*const b165420_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
 static void (*const b165420_c174d10)(void *group, int dirty) = rasterizer_transparent_geometry_group_draw;
 static void (*const b165420_c1845b0)(void *group, int a2) = FUN_001845b0;
@@ -9397,35 +9361,14 @@ void FUN_00165fc0(void)
   (void)0;
 }
 
-/* FUN_00165fd0 (0x165fd0) — XBE naked draft (batch 364). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00165fd0(void)
+/* FUN_00165fd0 (0x165fd0) — readable C lift. */
+void FUN_00165fd0(float *out, float f0, int a, int b, int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "fstps (%%eax)\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl %%ecx, 0xc(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  out[0] = f0;
+  *(int *)(out + 1) = a;
+  *(int *)(out + 2) = b;
+  *(int *)(out + 3) = c;
 }
-#else
-#error "FUN_00165fd0: clang naked draft required"
-#endif
-
 
 /* FUN_00166010 (0x166010) — XBE naked draft (batch 316). */
 #if defined(__clang__)
@@ -10122,7 +10065,7 @@ static short (*const b166890_c184610)(void *group) = FUN_00184610;
 static void (*const b166890_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
 static void (*const b166890_c156710)(void *a1) = rasterizer_set_model_skinning;
 static void (*const b166890_c174510)(void *group, int a2) = FUN_00174510;
-static void (*const b166890_c17ed90)(void) = FUN_0017ed90;
+static void (*const b166890_c17ed90)(void) = (void *)FUN_0017ed90;
 
 __attribute__((naked, noinline))
 void FUN_00166890(void)
@@ -13377,54 +13320,18 @@ void FUN_00168c40(void)
 #endif
 
 
-/* FUN_00168c70 (0x168c70) — XBE naked draft (batch 383). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00168c70(void)
+/* FUN_00168c70 (0x168c70) — readable C lift. */
+void FUN_00168c70(void *obj, int *out, int addend)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "addl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *out = *(int *)((char *)obj + 4) + addend;
 }
-#else
-#error "FUN_00168c70: clang naked draft required"
-#endif
 
-
-/* FUN_00168ca0 (0x168ca0) — XBE naked draft (batch 385). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00168ca0(void)
+/* FUN_00168ca0 (0x168ca0) — readable C lift. */
+int FUN_00168ca0(void *obj, int *out, int addend)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "addl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *out = *(int *)((char *)obj + 4) + addend;
+  return 0;
 }
-#else
-#error "FUN_00168ca0: clang naked draft required"
-#endif
-
 
 /* FUN_00168cd0 (0x168cd0) — XBE naked draft (batch 322). */
 #if defined(__clang__)
@@ -15804,41 +15711,19 @@ void FUN_0016b240(void)
 #endif
 
 
-/* FUN_0016b270 (0x16b270) — XBE naked draft (batch 361). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0016b270(int a0 __attribute__((unused)), float a1 __attribute__((unused)), float a2 __attribute__((unused)), float a3 __attribute__((unused)))
+/* FUN_0016b270 (0x16b270) — readable C lift. */
+void FUN_0016b270(int a0, float a1, float a2, float a3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x47e4d0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0016b270_1\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x47e4d0, %%edx\n\t"
-      "fstps 0x4(%%edx)\n\t"
-      "movl 0x47e4d0, %%eax\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "movl 0x47e4d0, %%ecx\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fstps 0xc(%%ecx)\n\t"
-      ".LFUN_0016b270_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_0016b270: clang naked draft required"
-#endif
+  char *g;
 
+  g = *(char **)0x47e4d0;
+  if (g) {
+    *(int *)g = a0;
+    *(float *)(g + 4) = a1;
+    *(float *)(g + 8) = a2;
+    *(float *)(g + 0xc) = a3;
+  }
+}
 
 /* FUN_0016b2b0 (0x16b2b0) — XBE naked draft (batch 298). */
 #if defined(__clang__)
@@ -15858,7 +15743,7 @@ static unsigned int (*const b16b2b0_d1c90)(float *) = FUN_000d1c90;
 static unsigned int (*const b16b2b0_cd1dd0)(float *color) = FUN_000d1dd0;
 static void (*const b16b2b0_c16ab00)(void) = FUN_0016ab00;
 static void (*const b16b2b0_c15e650)(void) = FUN_0015e650;
-static void (*const b16b2b0_c17ed90)(void) = FUN_0017ed90;
+static void (*const b16b2b0_c17ed90)(void) = (void *)FUN_0017ed90;
 
 __attribute__((naked, noinline))
 void FUN_0016b2b0(void)
@@ -16928,7 +16813,7 @@ static void (*const b16c090_c174ce0)(void) = FUN_00174ce0;
 static void (*const b16c090_c174d10)(void *group, int dirty) = rasterizer_transparent_geometry_group_draw;
 static void (*const b16c090_c1749b0)(void) = FUN_001749b0;
 static void (*const b16c090_c182590)(int data, int size) = rasterizer_memory_pool_copy;
-static void (*const b16c090_c17ed90)(void) = FUN_0017ed90;
+static void (*const b16c090_c17ed90)(void) = (void *)FUN_0017ed90;
 static void (*const b16c090_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
@@ -17375,7 +17260,7 @@ static unsigned int (*const b16c5a0_d1c90)(float *) = FUN_000d1c90;
 static unsigned int (*const b16c5a0_cd1dd0)(float *color) = FUN_000d1dd0;
 static void (*const b16c5a0_c16ab00)(void) = FUN_0016ab00;
 static void (*const b16c5a0_c15e650)(void) = FUN_0015e650;
-static void (*const b16c5a0_c17ed90)(void) = FUN_0017ed90;
+static void (*const b16c5a0_c17ed90)(void) = (void *)FUN_0017ed90;
 static void (*const b16c5a0_ce2220)(int state, int value) = SetRenderStateSmart;
 static void (*const b16c5a0_c165ea0)(void) = FUN_00165ea0;
 static void (*const b16c5a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;

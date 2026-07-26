@@ -556,36 +556,18 @@ void player_effect_add_continuous_effect(void)
 #endif
 
 
-/* scripted_player_effect_set_rotation (0xa28e0) — XBE naked draft (batch 168). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void scripted_player_effect_set_rotation(int a0 __attribute__((unused)), float a1 __attribute__((unused)), float a2 __attribute__((unused)))
+/* scripted_player_effect_set_rotation (0xa28e0) — readable C lift (deg→rad scale). */
+void scripted_player_effect_set_rotation(float yaw, float pitch, float roll)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "fmuls 0x253d4c\n\t"
-      "fstps 0x3d0(%%eax)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0x253d4c\n\t"
-      "fstps 0x3d4(%%eax)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x253d4c\n\t"
-      "fstps 0x3d8(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "scripted_player_effect_set_rotation: clang naked draft required"
-#endif
+  char *fx;
+  float scale;
 
+  fx = *(char **)0x4557ec;
+  scale = *(float *)0x253d4c;
+  *(float *)(fx + 0x3d0) = yaw * scale;
+  *(float *)(fx + 0x3d4) = pitch * scale;
+  *(float *)(fx + 0x3d8) = roll * scale;
+}
 
 /* scripted_player_effect_set_rumble (0xa2920) — XBE naked draft (batch 397). */
 #if defined(__clang__)
@@ -1154,38 +1136,18 @@ void scripted_player_effect_start(int a0 __attribute__((unused)), float a1 __att
 #endif
 
 
-/* scripted_player_effect_stop (0xa2e40) — XBE naked draft (batch 167). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void scripted_player_effect_stop(int a0 __attribute__((unused)))
+/* scripted_player_effect_stop (0xa2e40) — readable C lift. */
+void scripted_player_effect_stop(float seconds)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x253394\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fistps -0x4(%%ebp)\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movw %%cx, 0x3e0(%%eax)\n\t"
-      "movw %%cx, 0x3e2(%%eax)\n\t"
-      "orl $2, 0x3e4(%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "scripted_player_effect_stop: clang naked draft required"
-#endif
+  char *fx;
+  int ticks;
 
+  ticks = (int)(seconds * *(float *)0x253394);
+  fx = *(char **)0x4557ec;
+  *(short *)(fx + 0x3e0) = (short)ticks;
+  *(short *)(fx + 0x3e2) = (short)ticks;
+  *(int *)(fx + 0x3e4) |= 2;
+}
 
 /* player_telefrag_effect_start (0xa2ed0) — XBE naked draft (batch 136). */
 #if defined(__clang__)

@@ -957,44 +957,19 @@ void set_real_point3d(void)
 #endif
 
 
-/* ai_debug_get_last_path (0x493d0) — XBE naked draft (batch 215). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void ai_debug_get_last_path(float *vec_a __attribute__((unused)), float *vec_b __attribute__((unused)))
+/* ai_debug_get_last_path (0x493d0) — readable C lift. */
+void ai_debug_get_last_path(float *vec_a, float *vec_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movb $1, 0x5acab8\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb %%al, 0x5acab9\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, 0x5acabc\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x5acac0\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x5acac4\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x5acac8\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x5acacc\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x5acad0\n\t"
-      "movl %%eax, 0x5acad4\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(char *)0x5acab8 = 1;
+  *(char *)0x5acab9 = 0;
+  *(float *)0x5acabc = vec_a[0];
+  *(float *)0x5acac0 = vec_a[1];
+  *(float *)0x5acac4 = vec_a[2];
+  *(float *)0x5acac8 = vec_b[0];
+  *(float *)0x5acacc = vec_b[1];
+  *(float *)0x5acad0 = vec_b[2];
+  *(int *)0x5acad4 = 0;
 }
-#else
-#error "ai_debug_get_last_path: clang naked draft required"
-#endif
-
 
 /* ai_debug_communication_suppress (0x4a650) — XBE naked draft (batch 213). */
 #if defined(__clang__)
@@ -3607,43 +3582,22 @@ void FUN_0004b220(void)
 #endif
 
 
-/* FUN_0004b2b0 (0x4b2b0) — XBE naked draft (batch 163). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0004b2b0(void)
+/* FUN_0004b2b0 (0x4b2b0) — readable C lift: advance debug point by dt*vel. */
+float *FUN_0004b2b0(void)
 {
-  __asm__ volatile(
-      "movl 0x5ac9b0, %%eax\n\t"
-      "flds 0x5ac990\n\t"
-      "movl 0x5ac9b4, %%ecx\n\t"
-      "movl 0x5ac9b8, %%edx\n\t"
-      "movl %%eax, 0x5ac9a0\n\t"
-      "movl 0x31fc44, %%eax\n\t"
-      "movl %%ecx, 0x5ac9a4\n\t"
-      "movl %%edx, 0x5ac9a8\n\t"
-      "fmuls (%%eax)\n\t"
-      "fadds 0x5ac9b0\n\t"
-      "fstps 0x5ac9b0\n\t"
-      "flds 0x5ac990\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      "fadds 0x5ac9a4\n\t"
-      "fstps 0x5ac9b4\n\t"
-      "flds 0x5ac990\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      "movl $0x5ac9a0, %%eax\n\t"
-      "fadds 0x5ac9a8\n\t"
-      "fstps 0x5ac9b8\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_0004b2b0: clang naked draft required"
-#endif
+  float *vel;
+  float dt;
 
+  *(float *)0x5ac9a0 = *(float *)0x5ac9b0;
+  *(float *)0x5ac9a4 = *(float *)0x5ac9b4;
+  *(float *)0x5ac9a8 = *(float *)0x5ac9b8;
+  vel = *(float **)0x31fc44;
+  dt = *(float *)0x5ac990;
+  *(float *)0x5ac9b0 = dt * vel[0] + *(float *)0x5ac9b0;
+  *(float *)0x5ac9b4 = dt * vel[1] + *(float *)0x5ac9a4;
+  *(float *)0x5ac9b8 = dt * vel[2] + *(float *)0x5ac9a8;
+  return (float *)0x5ac9a0;
+}
 
 /* FUN_0004b320 (0x4b320) — XBE naked draft (batch 109). */
 #if defined(__clang__)
@@ -4195,7 +4149,7 @@ static void (*const b4b810_c189cb0)(char flag, void *position, void *string, int
 static char * (*const b4b810_c1a67b0)(short param_1, unsigned char param_2) = FUN_001a67b0;
 static char * (*const b4b810_c1a6ca0)(short param_1) = FUN_001a6ca0;
 static char * (*const b4b810_c1a6d10)(int unit_handle, char full_path, int16_t max_len, char *output) = FUN_001a6d10;
-static void (*const b4b810_c4b2b0)(void) = FUN_0004b2b0;
+static void (*const b4b810_c4b2b0)(void) = (void *)FUN_0004b2b0;
 
 __attribute__((naked, noinline))
 void FUN_0004b810(void)
@@ -4540,7 +4494,7 @@ static void *(*const b4bc70_tryget)(int, int) = object_try_and_get_and_verify_ty
 static vector3_t * (*const b4bc70_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
 static void (*const b4bc70_c4b220)(void) = FUN_0004b220;
 static char * (*const b4bc70_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b4bc70_c4b2b0)(void) = FUN_0004b2b0;
+static void (*const b4bc70_c4b2b0)(void) = (void *)FUN_0004b2b0;
 static void (*const b4bc70_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
 static int (*const b4bc70_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
 static char * (*const b4bc70_c8dc30)(char *destination, const char *source) = FUN_0008dc30;
@@ -5134,7 +5088,7 @@ static void (*const b4c560_assert)(const char *, const char *, int, bool) = disp
 static void (*const b4c560_exitfn)(int) = system_exit;
 static int (*const b4c560_gtime)(void) = game_time_get;
 static char * (*const b4c560_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b4c560_c4b2b0)(void) = FUN_0004b2b0;
+static void (*const b4c560_c4b2b0)(void) = (void *)FUN_0004b2b0;
 static void (*const b4c560_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
 static void (*const b4c560_c189450)(int flag, float *point_a, float *point_b, void *color, float scale) = FUN_00189450;
 static void (*const b4c560_c189150)(char flag, float *position, float scale, void *color) = FUN_00189150;
@@ -5481,7 +5435,7 @@ static void (*const b4c920_c4b220)(void) = FUN_0004b220;
 static void * (*const b4c920_c1d620)(int actor_handle) = actor_action_debug_color;
 static void (*const b4c920_c4b670)(void) = FUN_0004b670;
 static char * (*const b4c920_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b4c920_c4b2b0)(void) = FUN_0004b2b0;
+static void (*const b4c920_c4b2b0)(void) = (void *)FUN_0004b2b0;
 static void (*const b4c920_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
 static void (*const b4c920_c64540)(int *out, int actor_handle) = FUN_00064540;
 static int (*const b4c920_c64570)(int *iter) = FUN_00064570;
@@ -12754,7 +12708,7 @@ void FUN_0004c920(int actor_handle __attribute__((unused)), char debug_selected 
 #if defined(__clang__)
 static void (*const b52ab0_c4b220)(void) = FUN_0004b220;
 static char * (*const b52ab0_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
-static void (*const b52ab0_c4b2b0)(void) = FUN_0004b2b0;
+static void (*const b52ab0_c4b2b0)(void) = (void *)FUN_0004b2b0;
 static void (*const b52ab0_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
 static void (*const b52ab0_c4c560)(void) = FUN_0004c560;
 
@@ -12901,7 +12855,7 @@ static void (*const b52bb0_c189270)(char flag, float *point_a, float *point_b, v
 static void (*const b52bb0_c189ba0)(float *points, short count, void *color) = FUN_00189ba0;
 static void (*const b52bb0_c4b220)(void) = FUN_0004b220;
 static char * (*const b52bb0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b52bb0_c4b2b0)(void) = FUN_0004b2b0;
+static void (*const b52bb0_c4b2b0)(void) = (void *)FUN_0004b2b0;
 static void (*const b52bb0_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
 static void * (*const b52bb0_c1d4f0)(int actor_handle) = actor_get_pursuit_location;
 static char (*const b52bb0_c5b6e0)(int encounter_handle, int position_hash, int16_t pursuit_index, int min_time, int16_t *out_count, int *out_time) = encounter_pursuit_position_already_examined;

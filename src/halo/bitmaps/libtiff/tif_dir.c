@@ -923,8 +923,8 @@ void FUN_00066190(void)
 #if defined(__clang__)
 static void (*const b66200_c1e24d2)(void) = __lseek;
 static void (*const b66200_c1e209e)(void) = __read;
-static void (*const b66200_c6f1b0)(void) = FUN_0006f1b0;
-static void (*const b66200_c6f1d0)(void) = FUN_0006f1d0;
+static void (*const b66200_c6f1b0)(void) = (void *)FUN_0006f1b0;
+static void (*const b66200_c6f1d0)(void) = (void *)FUN_0006f1d0;
 static void (*const b66200_c66e70)(void) = FUN_00066e70;
 static void (*const b66200_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 
@@ -1322,8 +1322,8 @@ static void (*const b66550_c1e24d2)(void) = __lseek;
 static void (*const b66550_c1e209e)(void) = __read;
 static void (*const b66550_c66380)(void) = TIFFDefaultDirectory;
 static void (*const b66550_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
-static void (*const b66550_c6f1f0)(void) = FUN_0006f1f0;
-static void (*const b66550_c6f220)(void) = FUN_0006f220;
+static void (*const b66550_c6f1f0)(void) = (void *)FUN_0006f1f0;
+static void (*const b66550_c6f220)(void) = (void *)FUN_0006f220;
 
 __attribute__((naked, noinline))
 void FUN_00066550(void)
@@ -2449,14 +2449,14 @@ void FUN_00066d40(void)
 static void (*const b66e70_c1e24d2)(void) = __lseek;
 static void (*const b66e70_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 static void (*const b66e70_c1e209e)(void) = __read;
-static void (*const b66e70_c6f1b0)(void) = FUN_0006f1b0;
+static void (*const b66e70_c6f1b0)(void) = (void *)FUN_0006f1b0;
 static void (*const b66e70_c663f0)(void) = FUN_000663f0;
-static void (*const b66e70_c6f1d0)(void) = FUN_0006f1d0;
+static void (*const b66e70_c6f1d0)(void) = (void *)FUN_0006f1d0;
 static void (*const b66e70_c65f90)(int file) = TIFFFreeDirectory;
 static void (*const b66e70_c66190)(void) = FUN_00066190;
 static void (*const b66e70_c659f0)(int file, int field, int value) = TIFFSetField;
-static void (*const b66e70_c6f1f0)(void) = FUN_0006f1f0;
-static void (*const b66e70_c6f220)(void) = FUN_0006f220;
+static void (*const b66e70_c6f1f0)(void) = (void *)FUN_0006f1f0;
+static void (*const b66e70_c6f220)(void) = (void *)FUN_0006f220;
 static void (*const b66e70_c6f9d0)(void) = FUN_0006f9d0;
 static void (*const b66e70_c669f0)(void) = FUN_000669f0;
 static void (*const b66e70_c6f820)(void) = FUN_0006f820;
@@ -2468,7 +2468,7 @@ static void (*const b66e70_c66cc0)(void) = FUN_00066cc0;
 static void (*const b66e70_c66380)(void) = TIFFDefaultDirectory;
 static void (*const b66e70_c66430)(void) = FUN_00066430;
 static void (*const b66e70_c6f910)(void) = FUN_0006f910;
-static void (*const b66e70_c6d820)(void) = TIFFScanlineSize;
+static void (*const b66e70_c6d820)(void) = (void *)TIFFScanlineSize;
 
 __attribute__((naked, noinline))
 void FUN_00066e70(void)

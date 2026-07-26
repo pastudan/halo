@@ -1248,46 +1248,23 @@ void FUN_0006f0d0(void)
 #endif
 
 
-/* FUN_0006f120 (0x6f120) — XBE naked draft (batch 357). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006f120(void)
+/* FUN_0006f120 (0x6f120) — readable C lift. */
+unsigned int FUN_0006f120(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x48(%%eax), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "jne .LFUN_0006f120_1\n\t"
-      "movl 0x20(%%eax), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "setne %%cl\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006f120_1:\n\t"
-      "movl 0x20(%%eax), %%edx\n\t"
-      "leal -0x1(%%edx,%%ecx,1), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "divl %%ecx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_0006f120: clang naked draft required"
-#endif
+  unsigned int a;
+  unsigned int b;
 
+  a = *(unsigned int *)((char *)tif + 0x48);
+  b = *(unsigned int *)((char *)tif + 0x20);
+  if (a == 0xffffffff) {
+    return b != 0;
+  }
+  return (b + a - 1) / a;
+}
 
 /* FUN_0006f150 (0x6f150) — XBE naked draft (batch 351). */
 #if defined(__clang__)
-static void (*const b6f150_c6d820)(void) = TIFFScanlineSize;
+static void (*const b6f150_c6d820)(void) = (void *)TIFFScanlineSize;
 
 __attribute__((naked, noinline))
 void FUN_0006f150(void)
@@ -1320,7 +1297,7 @@ void FUN_0006f150(void)
 
 /* FUN_0006f180 (0x6f180) — XBE naked draft (batch 351). */
 #if defined(__clang__)
-static void (*const b6f180_c6d820)(void) = TIFFScanlineSize;
+static void (*const b6f180_c6d820)(void) = (void *)TIFFScanlineSize;
 
 __attribute__((naked, noinline))
 void FUN_0006f180(void)
@@ -1351,139 +1328,61 @@ void FUN_0006f180(void)
 #endif
 
 
-/* FUN_0006f1b0 (0x6f1b0) — XBE naked draft (batch 383). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006f1b0(void)
+/* FUN_0006f1b0 (0x6f1b0) — readable C lift: swap two bytes. */
+void FUN_0006f1b0(unsigned char *p)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movzbl 0x1(%%eax), %%ecx\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "movb %%dl, 0x1(%%eax)\n\t"
-      "movb %%cl, (%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char t;
+
+  t = p[1];
+  p[1] = p[0];
+  p[0] = t;
 }
-#else
-#error "FUN_0006f1b0: clang naked draft required"
-#endif
 
-
-/* FUN_0006f1d0 (0x6f1d0) — XBE naked draft (batch 375). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006f1d0(void)
+/* FUN_0006f1d0 (0x6f1d0) — readable C lift: endian-swap 4 bytes. */
+void FUN_0006f1d0(unsigned char *p)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movzbl 0x3(%%eax), %%ecx\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "movb %%cl, (%%eax)\n\t"
-      "movzbl 0x2(%%eax), %%ecx\n\t"
-      "movb %%dl, 0x3(%%eax)\n\t"
-      "movb 0x1(%%eax), %%dl\n\t"
-      "movb %%dl, 0x2(%%eax)\n\t"
-      "movb %%cl, 0x1(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char b0;
+  unsigned char b1;
+
+  b0 = p[0];
+  p[0] = p[3];
+  b1 = p[2];
+  p[3] = b0;
+  p[2] = p[1];
+  p[1] = b1;
 }
-#else
-#error "FUN_0006f1d0: clang naked draft required"
-#endif
 
-
-/* FUN_0006f1f0 (0x6f1f0) — XBE naked draft (batch 361). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006f1f0(void)
+/* FUN_0006f1f0 (0x6f1f0) — readable C lift: swap pairs for count words. */
+void FUN_0006f1f0(unsigned char *p, int count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jle .LFUN_0006f1f0_2\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_0006f1f0_1:\n\t"
-      "movzbl 0x1(%%eax), %%ecx\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "movb %%dl, 0x1(%%eax)\n\t"
-      "movb %%cl, (%%eax)\n\t"
-      "addl $2, %%eax\n\t"
-      "decl %%esi\n\t"
-      "jne .LFUN_0006f1f0_1\n\t"
-      ".LFUN_0006f1f0_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char t;
+
+  while (count > 0) {
+    t = p[1];
+    p[1] = p[0];
+    p[0] = t;
+    p += 2;
+    count -= 1;
+  }
 }
-#else
-#error "FUN_0006f1f0: clang naked draft required"
-#endif
 
-
-/* FUN_0006f220 (0x6f220) — XBE naked draft (batch 348). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006f220(void)
+/* FUN_0006f220 (0x6f220) — readable C lift: endian-swap count dwords. */
+void FUN_0006f220(unsigned char *p, int count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jle .LFUN_0006f220_2\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_0006f220_1:\n\t"
-      "movzbl 0x3(%%eax), %%ecx\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "movb %%cl, (%%eax)\n\t"
-      "movzbl 0x2(%%eax), %%ecx\n\t"
-      "movb %%dl, 0x3(%%eax)\n\t"
-      "movb 0x1(%%eax), %%dl\n\t"
-      "movb %%dl, 0x2(%%eax)\n\t"
-      "movb %%cl, 0x1(%%eax)\n\t"
-      "addl $4, %%eax\n\t"
-      "decl %%esi\n\t"
-      "jne .LFUN_0006f220_1\n\t"
-      ".LFUN_0006f220_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_0006f220: clang naked draft required"
-#endif
+  unsigned char b0;
+  unsigned char b1;
 
+  while (count > 0) {
+    b0 = p[0];
+    p[0] = p[3];
+    b1 = p[2];
+    p[3] = b0;
+    p[2] = p[1];
+    p[1] = b1;
+    p += 4;
+    count -= 1;
+  }
+}
 
 /* FUN_0006f260 (0x6f260) — XBE naked draft (batch 317). */
 #if defined(__clang__)
@@ -1875,31 +1774,13 @@ void FUN_0006f620(void)
 #endif
 
 
-/* FUN_0006f670 (0x6f670) — XBE naked draft (batch 383). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006f670(void)
+/* FUN_0006f670 (0x6f670) — readable C lift. */
+int FUN_0006f670(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl $0x6f620, %%ecx\n\t"
-      "movl %%ecx, 0xfc(%%eax)\n\t"
-      "movl %%ecx, 0x104(%%eax)\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(unsigned int *)((char *)tif + 0xfc) = 0x6f620;
+  *(unsigned int *)((char *)tif + 0x104) = 0x6f620;
+  return 1;
 }
-#else
-#error "FUN_0006f670: clang naked draft required"
-#endif
-
 
 /* FUN_0006f690 (0x6f690) — XBE naked draft (batch 306). */
 #if defined(__clang__)
@@ -2348,29 +2229,15 @@ void FUN_0006f950(void)
 #endif
 
 
-/* FUN_0006f9b0 (0x6f9b0) — XBE naked draft (batch 386). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006f9b0(void)
+/* FUN_0006f9b0 (0x6f9b0) — readable C lift: swap global handler. */
+void *FUN_0006f9b0(void *handler)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x2ecfac, %%eax\n\t"
-      "movl %%ecx, 0x2ecfac\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_0006f9b0: clang naked draft required"
-#endif
+  void *prev;
 
+  prev = *(void **)0x2ecfac;
+  *(void **)0x2ecfac = handler;
+  return prev;
+}
 
 /* FUN_0006f9d0 (0x6f9d0) — XBE naked draft (batch 369). */
 #if defined(__clang__)
@@ -3702,41 +3569,18 @@ void FUN_000704c0(void)
 #endif
 
 
-/* FUN_00070570 (0x70570) — XBE naked draft (batch 357). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00070570(void)
+/* FUN_00070570 (0x70570) — readable C lift: pack RGB888→RGB565. */
+void FUN_00070570(unsigned char *rgb, unsigned short *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x2(%%eax), %%cl\n\t"
-      "shrb $3, %%cl\n\t"
-      "movzbw %%cl, %%dx\n\t"
-      "movb 0x1(%%eax), %%cl\n\t"
-      "movb (%%eax), %%al\n\t"
-      "shrb $2, %%cl\n\t"
-      "movzbw %%cl, %%cx\n\t"
-      "shll $6, %%edx\n\t"
-      "shrb $3, %%al\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "movzbw %%al, %%cx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "shll $5, %%edx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "movw %%dx, (%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_00070570: clang naked draft required"
-#endif
+  unsigned int r;
+  unsigned int g;
+  unsigned int b;
 
+  b = (unsigned int)(rgb[2] >> 3);
+  g = (unsigned int)(rgb[1] >> 2);
+  r = (unsigned int)(rgb[0] >> 3);
+  *out = (unsigned short)(((b << 6) | g) << 5 | r);
+}
 
 /* FUN_000705b0 (0x705b0) — XBE naked draft (batch 332). */
 #if defined(__clang__)

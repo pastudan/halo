@@ -116,8 +116,8 @@ static void (*const b677f0_c1e24d2)(void) = __lseek;
 static void (*const b677f0_c1df419)(void) = __write;
 static void (*const b677f0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 static void (*const b677f0_c1e209e)(void) = __read;
-static void (*const b677f0_c6f1b0)(void) = FUN_0006f1b0;
-static void (*const b677f0_c6f1d0)(void) = FUN_0006f1d0;
+static void (*const b677f0_c6f1b0)(void) = (void *)FUN_0006f1b0;
+static void (*const b677f0_c6f1d0)(void) = (void *)FUN_0006f1d0;
 
 __attribute__((naked, noinline))
 void FUN_000677f0(void)
@@ -1851,7 +1851,7 @@ static void (*const b6bcb0_c68a30)(int param_1, const char *format, ...) = FUN_0
 static void (*const b6bcb0_c6a310)(void) = FUN_0006a310;
 static int (*const b6bcb0_c64ec0)(char *prop, int tag, void *out) = FUN_00064ec0;
 static void (*const b6bcb0_c65e90)(void) = TIFFGetField;
-static void (*const b6bcb0_c6d820)(void) = TIFFScanlineSize;
+static void (*const b6bcb0_c6d820)(void) = (void *)TIFFScanlineSize;
 static void (*const b6bcb0_c6f0d0)(void) = FUN_0006f0d0;
 static void (*const b6bcb0_c6ede0)(void) = FUN_0006ede0;
 static void (*const b6bcb0_c8ef70)(void *ptr, const char *file, int line) = debug_free;
@@ -2036,7 +2036,7 @@ static void (*const b6be40_c68a30)(int param_1, const char *format, ...) = FUN_0
 static void (*const b6be40_c6a310)(void) = FUN_0006a310;
 static int (*const b6be40_c64ec0)(char *prop, int tag, void *out) = FUN_00064ec0;
 static void (*const b6be40_c65e90)(void) = TIFFGetField;
-static void (*const b6be40_c6d820)(void) = TIFFScanlineSize;
+static void (*const b6be40_c6d820)(void) = (void *)TIFFScanlineSize;
 static void (*const b6be40_c6f0d0)(void) = FUN_0006f0d0;
 static void (*const b6be40_c6ede0)(void) = FUN_0006ede0;
 static void (*const b6be40_c8ef70)(void *ptr, const char *file, int line) = debug_free;
@@ -2291,7 +2291,7 @@ static void (*const b6c080_c8ef70)(void *ptr, const char *file, int line) = debu
 static void (*const b6c080_c65e90)(void) = TIFFGetField;
 static void (*const b6c080_c6a2a0)(void) = FUN_0006a2a0;
 static void (*const b6c080_c6a5d0)(void) = FUN_0006a5d0;
-static void (*const b6c080_c6d880)(void) = TIFFIsTiled;
+static void (*const b6c080_c6d880)(void) = (void *)TIFFIsTiled;
 static void (*const b6c080_c6ba70)(void) = FUN_0006ba70;
 static void (*const b6c080_c6be40)(void) = FUN_0006be40;
 static void (*const b6c080_c6b8e0)(void) = FUN_0006b8e0;
@@ -23850,7 +23850,7 @@ void FUN_00157940(void)
 #if defined(__clang__)
 static void (*const b1579d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1579d0_exitfn)(int) = system_exit;
-static void (*const b1579d0_c99490)(float *plane, float *point, float *normal) = FUN_00099490;
+static void (*const b1579d0_c99490)(float *plane, float *point, float *normal) = (void *)FUN_00099490;
 static void __stdcall (*const b1579d0_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
 static unsigned int (*const b1579d0_cd1dd0)(float *color) = FUN_000d1dd0;
 static void (*const b1579d0_c1e9680)(void) = D3DDevice_SetRenderState_FogColor;

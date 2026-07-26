@@ -288,7 +288,7 @@ static void (*const b93050_cba6d0)(bool) = player_input_enable;
 static void (*const b93050_c3f7b0)(char param_1) = ai_globals_dialogue_triggers_enabled;
 static void (*const b93050_c17d950)(void) = FUN_0017d950;
 static void *(*const b93050_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b93050_c17dec0)(int a0) = FUN_0017dec0;
+static void (*const b93050_c17dec0)(int a0) = (void *)FUN_0017dec0;
 
 __attribute__((naked, noinline))
 void cinematic_stop(void)
