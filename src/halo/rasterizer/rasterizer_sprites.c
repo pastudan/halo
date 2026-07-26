@@ -1521,12 +1521,35 @@ void FUN_0017dec0(int a0)
   (void)0;
 }
 
-/* 0x17dee0 */
+/* FUN_0017dee0 (0x17dee0) — XBE naked draft (batch 339). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_0017dee0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x47e4d4, %%ecx\n\t"
+      "flds 0x2af1ac\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LFUN_0017dee0_1\n\t"
+      "flds 0x74(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_0017dee0_1\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x74(%%ecx)\n\t"
+      ".LFUN_0017dee0_1:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0017dee0: clang naked draft required"
+#endif
+
 
 /* 0x17df10 */
 void FUN_0017df10(void)
@@ -1584,33 +1607,82 @@ void FUN_0017e030(void)
   (void)0;
 }
 
-/* 0x17e040 */
+/* FUN_0017e040 (0x17e040) — XBE naked draft (batch 337). */
+#if defined(__clang__)
+static void (*const b17e040_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b17e040_exitfn)(int) = system_exit;
+static void (*const b17e040_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+
+__attribute__((naked, noinline))
 void FUN_0017e040(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* relift: relift: mov (char)eax, byte ptr [0x47e4d8] */
-  /* test (char)eax, (char)eax -> je 0x17e113 */
-  /* test eax, eax -> jne 0x17e076 */
-  display_assert((char *)0x002af524, (char *)0x002af4b8, 137, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x17e09f */
-  display_assert((char *)0x002af50c, (char *)0x002af4b8, 138, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x17e0c8 */
-  display_assert((char *)0x002af4e8, (char *)0x002af4b8, 139, 0);
-  system_exit(0);
-  debug_free((void *)(uintptr_t)eax, (char *)0x002af4b8, 141);
-  debug_free((void *)(uintptr_t)ecx, (char *)0x002af4b8, 142);
-  debug_free((void *)(uintptr_t)edx, (char *)0x002af4b8, 143);
-  /* relift: relift: mov byte ptr [0x47e4d8], 0 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "movb 0x47e4d8, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0017e040_4\n\t"
+      "movl 0x47e4dc, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0017e040_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x89\n\t"
+      "pushl $0x2af4b8\n\t"
+      "pushl $0x2af524\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0017e040_1:\n\t"
+      "movl 0x47e4e4, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0017e040_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x8a\n\t"
+      "pushl $0x2af4b8\n\t"
+      "pushl $0x2af50c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0017e040_2:\n\t"
+      "movl 0x47e4ec, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0017e040_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x8b\n\t"
+      "pushl $0x2af4b8\n\t"
+      "pushl $0x2af4e8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0017e040_3:\n\t"
+      "movl 0x47e4dc, %%eax\n\t"
+      "pushl $0x8d\n\t"
+      "pushl $0x2af4b8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8ef70]\n\t"
+      "movl 0x47e4e4, %%ecx\n\t"
+      "pushl $0x8e\n\t"
+      "pushl $0x2af4b8\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8ef70]\n\t"
+      "movl 0x47e4ec, %%edx\n\t"
+      "pushl $0x8f\n\t"
+      "pushl $0x2af4b8\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "movb $0, 0x47e4d8\n\t"
+      ".LFUN_0017e040_4:\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b17e040_assert), [exitfn] "m"(b17e040_exitfn), [c8ef70] "m"(b17e040_c8ef70)
+      : "memory");
 }
+#else
+#error "FUN_0017e040: clang naked draft required"
+#endif
+
 
 /* FUN_0017e130 (0x17e130) — XBE naked draft (batch 325). */
 #if defined(__clang__)
@@ -2754,12 +2826,50 @@ void FUN_0017ed70(void)
   (void)0;
 }
 
-/* 0x17ed90 */
+/* FUN_0017ed90 (0x17ed90) — XBE naked draft (batch 343). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_0017ed90(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testl %%edx, %%edx\n\t"
+      "je .LFUN_0017ed90_3\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_0017ed90_2\n\t"
+      "movw (%%edx), %%cx\n\t"
+      "cmpw $1, %%cx\n\t"
+      "jne .LFUN_0017ed90_1\n\t"
+      "movl 0x4(%%edx), %%eax\n\t"
+      "addl $2, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0017ed90_1:\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jne .LFUN_0017ed90_2\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      ".LFUN_0017ed90_2:\n\t"
+      "popl %%esi\n\t"
+      "nop\n\t"
+      ".LFUN_0017ed90_3:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0017ed90: clang naked draft required"
+#endif
+
 
 /* rasterizer_frame_statistics_count_static_vertices (0x17edd0) — XBE naked draft (batch 330). */
 #if defined(__clang__)

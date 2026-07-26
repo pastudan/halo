@@ -210,14 +210,12 @@ def ensure(addr: int) -> str:
             + ")(void *, int) = (void *(*)(void *, int))datum_get;"
         )
     else:
-        # kb decls often carry __stdcall/__fastcall on the return side; our C
-        # stubs are frequently plain cdecl. Cast through void* so -Werror
-        # incompatible-function-pointer-types does not fail the build.
-        rhs = f"(void *){name}" if re.search(r"\b__(?:stdcall|fastcall)\b", ret) else name
+        # Always cast through void*: kb decls frequently disagree with our C
+        # stubs on stdcall/fastcall and on arity (XcSHAInit etc.).
         if args in ("", "void"):
-            PTR[key] = f"static {ret} (*const {{p}}_{key})(void) = {rhs};"
+            PTR[key] = f"static {ret} (*const {{p}}_{key})(void) = (void *){name};"
         else:
-            PTR[key] = f"static {ret} (*const {{p}}_{key})({args}) = {rhs};"
+            PTR[key] = f"static {ret} (*const {{p}}_{key})({args}) = (void *){name};"
     return key
 
 

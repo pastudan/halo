@@ -316,13 +316,53 @@ void _memchr(void)
 #endif
 
 
-/* 0x1dbf75 */
-int _wcscmp(const wchar_t *s1, const wchar_t *s2)
+/* _wcscmp (0x1dbf75) — XBE naked draft (batch 340). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+int _wcscmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%esp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jmp .L_wcscmp_2\n\t"
+      ".L_wcscmp_1:\n\t"
+      "testw %%cx, %%cx\n\t"
+      "je .L_wcscmp_3\n\t"
+      "incl %%edx\n\t"
+      "incl %%edx\n\t"
+      "incl %%esi\n\t"
+      "incl %%esi\n\t"
+      ".L_wcscmp_2:\n\t"
+      "movw (%%esi), %%cx\n\t"
+      "movzwl (%%edx), %%eax\n\t"
+      "movzwl %%cx, %%edi\n\t"
+      "subl %%edi, %%eax\n\t"
+      "je .L_wcscmp_1\n\t"
+      ".L_wcscmp_3:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "jge .L_wcscmp_4\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "ret\n\t"
+      ".L_wcscmp_4:\n\t"
+      "jle .L_wcscmp_5\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      ".L_wcscmp_5:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "_wcscmp: clang naked draft required"
+#endif
+
 
 /* 0x1dbfa7 */
 int FUN_001dbfa7(const wchar_t *s1, const wchar_t *s2)
@@ -332,13 +372,57 @@ int FUN_001dbfa7(const wchar_t *s1, const wchar_t *s2)
   return 0;
 }
 
-/* 0x1dbfac */
-size_t _wcscspn(const wchar_t *s, const wchar_t *reject)
+/* _wcscspn (0x1dbfac) — XBE naked draft (batch 345). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+size_t _wcscspn(const wchar_t *s __attribute__((unused)), const wchar_t *reject __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "cmpw $0, (%%eax)\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .L_wcscspn_4\n\t"
+      "movl 0x14(%%esp), %%ebx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movw (%%ebx), %%di\n\t"
+      ".L_wcscspn_1:\n\t"
+      "testw %%di, %%di\n\t"
+      "movl %%ebx, %%edx\n\t"
+      "je .L_wcscspn_3\n\t"
+      "movw (%%eax), %%si\n\t"
+      "movl %%edi, %%ecx\n\t"
+      ".L_wcscspn_2:\n\t"
+      "cmpw %%si, %%cx\n\t"
+      "je .L_wcscspn_4\n\t"
+      "incl %%edx\n\t"
+      "incl %%edx\n\t"
+      "movw (%%edx), %%cx\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jne .L_wcscspn_2\n\t"
+      ".L_wcscspn_3:\n\t"
+      "incl %%eax\n\t"
+      "incl %%eax\n\t"
+      "cmpw $0, (%%eax)\n\t"
+      "jne .L_wcscspn_1\n\t"
+      ".L_wcscspn_4:\n\t"
+      "subl 0x10(%%esp), %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "sarl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "_wcscspn: clang naked draft required"
+#endif
+
 
 /* 0x1dbfef */
 wchar_t *_wcsncat(wchar_t *dest, const wchar_t *src, size_t count)
@@ -380,13 +464,59 @@ wchar_t *_wcsrchr(const wchar_t *s, wchar_t c)
   return NULL;
 }
 
-/* 0x1dc10e */
-size_t _wcsspn(const wchar_t *s, const wchar_t *accept)
+/* _wcsspn (0x1dc10e) — XBE naked draft (batch 341). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+size_t _wcsspn(const wchar_t *s __attribute__((unused)), const wchar_t *accept __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw (%%eax), %%cx\n\t"
+      "testw %%cx, %%cx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .L_wcsspn_4\n\t"
+      "movl 0x14(%%esp), %%ebx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movw (%%ebx), %%di\n\t"
+      ".L_wcsspn_1:\n\t"
+      "cmpw %%cx, %%di\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "je .L_wcsspn_3\n\t"
+      "movl %%edi, %%edx\n\t"
+      ".L_wcsspn_2:\n\t"
+      "testw %%dx, %%dx\n\t"
+      "je .L_wcsspn_4\n\t"
+      "incl %%esi\n\t"
+      "incl %%esi\n\t"
+      "movw (%%esi), %%dx\n\t"
+      "cmpw %%cx, %%dx\n\t"
+      "jne .L_wcsspn_2\n\t"
+      ".L_wcsspn_3:\n\t"
+      "incl %%eax\n\t"
+      "incl %%eax\n\t"
+      "movw (%%eax), %%cx\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jne .L_wcsspn_1\n\t"
+      ".L_wcsspn_4:\n\t"
+      "subl 0x10(%%esp), %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "sarl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "_wcsspn: clang naked draft required"
+#endif
+
 
 /* 0x1dc154 */
 wchar_t *_wcsstr(const wchar_t *haystack, const wchar_t *needle)
@@ -453,28 +583,87 @@ wchar_t *FUN_001dc27c(wchar_t *s, size_t count)
   (void)esi;
 }
 
-/* 0x1dc2c3 */
-int __wcsicmp(const wchar_t *s1, const wchar_t *s2)
+/* __wcsicmp (0x1dc2c3) — XBE naked draft (batch 339). */
+#if defined(__clang__)
+static wchar_t * (*const b1dc2c3_c1da8e3)(wchar_t *s, size_t count) = FUN_001da8e3;
+
+__attribute__((naked, noinline))
+int __wcsicmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int edi = 0;
-
-  /* cmp (int16_t)ebx, 0x41 -> jb 0x1dc2e9 */
-  /* cmp (int16_t)ebx, 0x5a -> ja 0x1dc2e9 */
-  /* cmp (int16_t)eax, 0x41 -> jb 0x1dc2fd */
-  /* cmp (int16_t)eax, 0x5a -> ja 0x1dc2fd */
-  /* test (int16_t)ebx, (int16_t)ebx -> je 0x1dc341 */
-  /* cmp (int16_t)ebx, (int16_t)eax -> je 0x1dc2d5 */
-  FUN_001da8e3((wchar_t *)(uintptr_t)eax, edi);
-  FUN_001da8e3((wchar_t *)(uintptr_t)eax, 0);
-  /* cmp (int16_t)ebx, (int16_t)eax -> je 0x1dc317 */
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)edi;
+  __asm__ volatile(
+      "cmpl $0, 0x4fc25c\n\t"
+      "pushl %%ebx\n\t"
+      "jne .L__wcsicmp_4\n\t"
+      "movl 0xc(%%esp), %%edx\n\t"
+      "movl 0x8(%%esp), %%ecx\n\t"
+      ".L__wcsicmp_1:\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "movw (%%ecx), %%bx\n\t"
+      "cmpw $0x41, %%bx\n\t"
+      "jb .L__wcsicmp_2\n\t"
+      "cmpw $0x5a, %%bx\n\t"
+      "ja .L__wcsicmp_2\n\t"
+      "addl $0x20, %%ebx\n\t"
+      ".L__wcsicmp_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%edx), %%ax\n\t"
+      "cmpw $0x41, %%ax\n\t"
+      "jb .L__wcsicmp_3\n\t"
+      "cmpw $0x5a, %%ax\n\t"
+      "ja .L__wcsicmp_3\n\t"
+      "addl $0x20, %%eax\n\t"
+      ".L__wcsicmp_3:\n\t"
+      "incl %%ecx\n\t"
+      "incl %%ecx\n\t"
+      "incl %%edx\n\t"
+      "incl %%edx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "je .L__wcsicmp_7\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "je .L__wcsicmp_1\n\t"
+      "jmp .L__wcsicmp_7\n\t"
+      ".L__wcsicmp_4:\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%esp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x14(%%esp), %%edi\n\t"
+      ".L__wcsicmp_5:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1da8e3]\n\t"
+      "incl %%esi\n\t"
+      "incl %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%edi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1da8e3]\n\t"
+      "incl %%edi\n\t"
+      "popl %%ecx\n\t"
+      "incl %%edi\n\t"
+      "testw %%bx, %%bx\n\t"
+      "popl %%ecx\n\t"
+      "je .L__wcsicmp_6\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "je .L__wcsicmp_5\n\t"
+      ".L__wcsicmp_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      ".L__wcsicmp_7:\n\t"
+      "movzwl %%ax, %%ecx\n\t"
+      "movzwl %%bx, %%eax\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c1da8e3] "m"(b1dc2c3_c1da8e3)
+      : "memory");
 }
+#else
+#error "__wcsicmp: clang naked draft required"
+#endif
+
 
 /* __wcsnicmp (0x1dc34b) — XBE naked draft (batch 333). */
 #if defined(__clang__)
@@ -707,16 +896,42 @@ void __getwc_lk(void)
 #endif
 
 
-/* 0x1dc512 */
-int _fgetwc(void *stream)
+/* _fgetwc (0x1dc512) — XBE naked draft (batch 340). */
+#if defined(__clang__)
+static void (*const b1dc512_c1dd5c8)(void) = FUN_001dd5c8;
+static void (*const b1dc512_c1d99ce)(void) = __lock_file;
+static void (*const b1dc512_c1dc41e)(void) = __getwc_lk;
+static void (*const b1dc512_c1dc54a)(void) = FUN_001dc54a;
+static void (*const b1dc512_c1dd601)(void) = __SEH_epilog;
+
+__attribute__((naked, noinline))
+int _fgetwc(void *stream __attribute__((unused)))
 {
-  FUN_001dd5c8();
-  __lock_file();
-  __getwc_lk();
-  FUN_001dc54a();
-  __SEH_epilog();
-  return 0;
+  __asm__ volatile(
+      "pushl $0xc\n\t"
+      "pushl $0x2c7568\n\t"
+      "call *%[c1dd5c8]\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *%[c1d99ce]\n\t"
+      "popl %%ecx\n\t"
+      "andl $0, -0x4(%%ebp)\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *%[c1dc41e]\n\t"
+      "popl %%ecx\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "orl $0xffffffff, -0x4(%%ebp)\n\t"
+      "call *%[c1dc54a]\n\t"
+      "movw -0x1c(%%ebp), %%ax\n\t"
+      "call *%[c1dd601]\n\t"
+      "ret\n\t"
+      :
+      : [c1dd5c8] "m"(b1dc512_c1dd5c8), [c1d99ce] "m"(b1dc512_c1d99ce), [c1dc41e] "m"(b1dc512_c1dc41e), [c1dc54a] "m"(b1dc512_c1dc54a), [c1dd601] "m"(b1dc512_c1dd601)
+      : "memory");
 }
+#else
+#error "_fgetwc: clang naked draft required"
+#endif
+
 
 /* 0x1dc54a */
 void FUN_001dc54a(void)

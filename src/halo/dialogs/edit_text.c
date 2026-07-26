@@ -329,34 +329,127 @@ void FUN_00096d70(void)
   (void)edx;
 }
 
-/* 0x96f20 */
-int FUN_00096f20(int a0, float a1)
+/* FUN_00096f20 (0x96f20) — XBE naked draft (batch 337). */
+#if defined(__clang__)
+static void *(*const b96f20_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b96f20_c13d6f0)(void *iter, int type_mask, int flags) = object_iterator_new;
+static void * (*const b96f20_c13d730)(void *iter) = object_iterator_next;
+static void *(*const b96f20_tag)(int, int) = tag_get;
+static void (*const b96f20_c967a0)(void *rec, int object) = FUN_000967a0;
+
+__attribute__((naked, noinline))
+int FUN_00096f20(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (char)eax, 0x41 -> jne 0x96f5b */
-  /* cmp (int16_t)edi, -1 -> je 0x9702a */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* test (char)eax, 1 -> je 0x96fa1 */
-  /* test (char)eax, 2 -> jne 0x9702a */
-  object_iterator_new((void *)(uintptr_t)eax, 896, 0);
-  object_iterator_next((void *)(uintptr_t)ecx);
-  /* test esi, esi -> je 0x9702a */
-  tag_get('ived', 0);
-  /* test (char)eax, 0x41 -> jne 0x97005 */
-  FUN_000967a0((void *)(uintptr_t)eax, 0);
-  object_iterator_next((void *)(uintptr_t)ecx);
-  /* test esi, esi -> jne 0x96fd2 */
-  return 0;
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "pushl %%ebx\n\t"
+      "fcomps 0x2533c0\n\t"
+      "pushl %%esi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "pushl %%edi\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00096f20_1\n\t"
+      "movl $0, 0xc(%%ebp)\n\t"
+      "jmp .LFUN_00096f20_2\n\t"
+      ".LFUN_00096f20_1:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00096f20_2\n\t"
+      "movl $0x3f800000, 0xc(%%ebp)\n\t"
+      ".LFUN_00096f20_2:\n\t"
+      "movw 0x8(%%ebp), %%di\n\t"
+      "cmpw $-1, %%di\n\t"
+      "je .LFUN_00096f20_8\n\t"
+      "movl 0x5aa8c8, %%ecx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "fcomps 0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .LFUN_00096f20_8\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x2(%%ecx), %%ax\n\t"
+      "testb $1, %%al\n\t"
+      "je .LFUN_00096f20_3\n\t"
+      "testb $2, %%al\n\t"
+      "jne .LFUN_00096f20_8\n\t"
+      ".LFUN_00096f20_3:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "orl $2, %%eax\n\t"
+      "pushl $0\n\t"
+      "movw %%ax, 0x2(%%ecx)\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl $0x380\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movb $1, %%bl\n\t"
+      "call *%[c13d6f0]\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13d730]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_00096f20_8\n\t"
+      ".LFUN_00096f20_4:\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x64657669\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw %%di, 0x1a8(%%esi)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "jne .LFUN_00096f20_7\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00096f20_5\n\t"
+      "movl 0x1fc(%%ecx), %%ecx\n\t"
+      "jmp .LFUN_00096f20_6\n\t"
+      ".LFUN_00096f20_5:\n\t"
+      "movl 0x1ec(%%ecx), %%ecx\n\t"
+      ".LFUN_00096f20_6:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c967a0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00096f20_7:\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13d730]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00096f20_4\n\t"
+      ".LFUN_00096f20_8:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b96f20_dget), [c13d6f0] "m"(b96f20_c13d6f0), [c13d730] "m"(b96f20_c13d730), [tag] "m"(b96f20_tag), [c967a0] "m"(b96f20_c967a0)
+      : "memory");
 }
+#else
+#error "FUN_00096f20: clang naked draft required"
+#endif
+
 
 /* 0x97040 */
 void FUN_00097040(int a0, float a1)
@@ -412,14 +505,42 @@ int FUN_00097220(int a0, float a1)
   (void)eax;
 }
 
-/* 0x97260 */
-void FUN_00097260(int a0, float a1)
+/* FUN_00097260 (0x97260) — XBE naked draft (batch 349). */
+#if defined(__clang__)
+static void *(*const b97260_get)(int, int) = object_get_and_verify_type;
+static int (*const b97260_c96f20)(int a0, float a1) = FUN_00096f20;
+
+__attribute__((naked, noinline))
+void FUN_00097260(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
 {
-  int eax = 0;
-
-  /* cmp eax, -1 -> je 0x972a1 */
-  object_get_and_verify_type(0, 896);
-  FUN_00096f20(0, 0.0f);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00097260_1\n\t"
+      "pushl $0x380\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0x1a4(%%eax), %%edx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "orl $4, %%edx\n\t"
+      "movl %%edx, 0x1a4(%%eax)\n\t"
+      "movl %%ecx, 0x1ac(%%eax)\n\t"
+      "movswl 0x1a8(%%eax), %%eax\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c96f20]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_00097260_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b97260_get), [c96f20] "m"(b97260_c96f20)
+      : "memory");
 }
+#else
+#error "FUN_00097260: clang naked draft required"
+#endif
+
