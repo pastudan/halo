@@ -51,8 +51,8 @@ void player_ui_initialize(void)
 
 /* FUN_000e0620 (0xe0620) — XBE naked draft (batch 144). */
 #if defined(__clang__)
-static void (*const be0620_ftol)(void) = FUN_001d9068;
-static int (*const be0620_cb5b20)(void) = local_time_get;
+static void (*const be0620_ftol)(void) = (void *)FUN_001d9068;
+static int (*const be0620_cb5b20)(void) = (void *)local_time_get;
 
 __attribute__((naked, noinline))
 void FUN_000e0620(void)
@@ -135,8 +135,8 @@ void player_ui_reset_single_player_local_player_controllers(void)
 
 /* player_ui_set_single_player_local_player_controller (0xe0740) — XBE naked draft (batch 153). */
 #if defined(__clang__)
-static void (*const be0740_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be0740_exitfn)(int) = system_exit;
+static void (*const be0740_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const be0740_exitfn)(int) = (void *)system_exit;
 
 __attribute__((naked, noinline))
 void player_ui_set_single_player_local_player_controller(void)
@@ -256,9 +256,9 @@ void player_ui_clear_multiplayer_variant(void)
 
 /* player_ui_get_active_player_profile (0xe0980) — XBE naked draft (batch 162). */
 #if defined(__clang__)
-static void (*const be0980_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be0980_exitfn)(int) = system_exit;
-static void * (*const be0980_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void (*const be0980_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const be0980_exitfn)(int) = (void *)system_exit;
+static void * (*const be0980_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
 
 __attribute__((naked, noinline))
 void player_ui_get_active_player_profile(void)
@@ -364,9 +364,9 @@ bool player_ui_rumble_disabled(int controller_index)
 
 /* player_ui_autolevel_enabled (0xe0b50) — XBE naked draft (batch 147). */
 #if defined(__clang__)
-static void (*const be0b50_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be0b50_exitfn)(int) = system_exit;
-static bool (*const be0b50_c12a000)(void) = network_game_in_progress;
+static void (*const be0b50_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const be0b50_exitfn)(int) = (void *)system_exit;
+static bool (*const be0b50_c12a000)(void) = (void *)network_game_in_progress;
 
 __attribute__((naked, noinline))
 void player_ui_autolevel_enabled(void)
@@ -446,7 +446,7 @@ void player_ui_autolevel_enabled(void)
 
 /* player_ui_get_path_to_local_player_profile_directory (0xe0bf0) — XBE naked draft (batch 163). */
 #if defined(__clang__)
-static char (*const be0bf0_c1c1280)(int, void *) = FUN_001c1280;
+static char (*const be0bf0_c1c1280)(int, void *) = (void *)FUN_001c1280;
 
 __attribute__((naked, noinline))
 char player_ui_get_path_to_local_player_profile_directory(int16_t local_player_index, void *out_path)
@@ -485,7 +485,7 @@ char player_ui_get_path_to_local_player_profile_directory(int16_t local_player_i
 /* player_ui_get_player1_last_used_profile_index (0xe0c90) — XBE naked draft (batch 163). */
 #if defined(__clang__)
 static char (*const be0c90_c1c2d20)(void *) = saved_game_file_retrieve_player1_last_used_profile_directory;
-static int (*const be0c90_c1c38d0)(void *, int) = saved_game_file_find_profile_index_for_directory_path;
+static int (*const be0c90_c1c38d0)(void *, int) = (void *)saved_game_file_find_profile_index_for_directory_path;
 
 __attribute__((naked, noinline))
 int player_ui_get_player1_last_used_profile_index(void)
@@ -519,19 +519,19 @@ int player_ui_get_player1_last_used_profile_index(void)
 
 /* player_ui_fast_setup_network_server (0xe0cd0) — XBE naked draft (batch 240). */
 #if defined(__clang__)
-static void (*const be0cd0_ce58c0)(void) = ui_widgets_close_all;
-static void (*const be0cd0_c12a1e0)(void) = dispose_global_network_game_client;
-static void (*const be0cd0_c12a2a0)(void) = dispose_global_network_game_server;
-static void (*const be0cd0_cfff70)(short param) = set_game_connection;
-static void (*const be0cd0_c100010)(const char *name) = main_set_multiplayer_map_name;
-static void * (*const be0cd0_ce84e0)(const char *name, int tag_index, int is_child, int widget_stack, int parent_tag_index, int a6, int a7) = ui_widget_load_by_name_or_tag;
-static void (*const be0cd0_cae750)(void) = game_engine_playlist_initialize;
-static void (*const be0cd0_c12a150)(char accept) = network_game_set_accept_remote_connections;
-static bool (*const be0cd0_c12a890)(void) = FUN_0012a890;
-static bool (*const be0cd0_c12a250)(void) = FUN_0012a250;
-static void (*const be0cd0_ca8a70)(void) = game_engine_playlist_begin;
-static void (*const be0cd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const be0cd0_c100620)(void) = main_goto_main_menu;
+static void (*const be0cd0_ce58c0)(void) = (void *)ui_widgets_close_all;
+static void (*const be0cd0_c12a1e0)(void) = (void *)dispose_global_network_game_client;
+static void (*const be0cd0_c12a2a0)(void) = (void *)dispose_global_network_game_server;
+static void (*const be0cd0_cfff70)(short param) = (void *)set_game_connection;
+static void (*const be0cd0_c100010)(const char *name) = (void *)main_set_multiplayer_map_name;
+static void * (*const be0cd0_ce84e0)(const char *name, int tag_index, int is_child, int widget_stack, int parent_tag_index, int a6, int a7) = (void *)ui_widget_load_by_name_or_tag;
+static void (*const be0cd0_cae750)(void) = (void *)game_engine_playlist_initialize;
+static void (*const be0cd0_c12a150)(char accept) = (void *)network_game_set_accept_remote_connections;
+static bool (*const be0cd0_c12a890)(void) = (void *)FUN_0012a890;
+static bool (*const be0cd0_c12a250)(void) = (void *)FUN_0012a250;
+static void (*const be0cd0_ca8a70)(void) = (void *)game_engine_playlist_begin;
+static void (*const be0cd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static void (*const be0cd0_c100620)(void) = (void *)main_goto_main_menu;
 
 __attribute__((naked, noinline))
 void player_ui_fast_setup_network_server(void)
@@ -615,8 +615,8 @@ char player_ui_edit_profile_is_default_profile(void)
 /* player_ui_edit_profile_name_is_dirty (0xe0dd0) — XBE naked draft (batch 158). */
 #if defined(__clang__)
 static void (*const be0dd0_c1c29a0)(void) = (void *)saved_game_file_get_type;
-static void (*const be0dd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static int (*const be0dd0_c19dc20)(const wchar_t *s1, const wchar_t *s2, size_t count) = ustrncmp;
+static void (*const be0dd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static int (*const be0dd0_c19dc20)(const wchar_t *s1, const wchar_t *s2, size_t count) = (void *)ustrncmp;
 
 __attribute__((naked, noinline))
 void player_ui_edit_profile_name_is_dirty(void)
@@ -674,8 +674,8 @@ void player_ui_edit_profile_name_is_dirty(void)
 /* player_ui_prompt_user_to_rename_edit_profile (0xe0e40) — XBE naked draft (batch 160). */
 #if defined(__clang__)
 static void (*const be0e40_c1c29a0)(void) = (void *)saved_game_file_get_type;
-static void (*const be0e40_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static bool (*const be0e40_cf5500)(wchar_t *text_buffer, unsigned short buffer_size, short caption_index) = virtual_keyboard_set_validation;
+static void (*const be0e40_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static bool (*const be0e40_cf5500)(wchar_t *text_buffer, unsigned short buffer_size, short caption_index) = (void *)virtual_keyboard_set_validation;
 
 __attribute__((naked, noinline))
 void player_ui_prompt_user_to_rename_edit_profile(void)
@@ -745,8 +745,8 @@ void *player_ui_get_edit_playlist_profile(void)
 /* player_ui_edit_profile_is_dirty (0xe0ee0) — XBE naked draft (batch 137). */
 #if defined(__clang__)
 static void (*const be0ee0_c1c29a0)(void) = (void *)saved_game_file_get_type;
-static void (*const be0ee0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static int (*const be0ee0_c8da40)(const void *a, const void *b, int size) = csmemcmp;
+static void (*const be0ee0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static int (*const be0ee0_c8da40)(const void *a, const void *b, int size) = (void *)csmemcmp;
 
 __attribute__((naked, noinline))
 void player_ui_edit_profile_is_dirty(void)
@@ -839,7 +839,7 @@ void player_ui_edit_profile_is_dirty(void)
 
 /* player_ui_activate_all_solo_levels (0xe0fd0) — XBE naked draft (batch 163). */
 #if defined(__clang__)
-static void (*const be0fd0_c1c1bc0)(int, void *) = player_profile_get_from_path;
+static void (*const be0fd0_c1c1bc0)(int, void *) = (void *)player_profile_get_from_path;
 
 __attribute__((naked, noinline))
 void player_ui_activate_all_solo_levels(void)
@@ -872,9 +872,9 @@ void player_ui_activate_all_solo_levels(void)
 
 /* FUN_000e1000 (0xe1000) — XBE naked draft (batch 169). */
 #if defined(__clang__)
-static void (*const be1000_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const be1000_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void (*const be1000_cd51c0)(__int16 player, wchar_t *message) = hud_print_message;
+static void (*const be1000_c1197b0)(data_iter_t *iter, data_t *data) = (void *)data_iterator_new;
+static void * (*const be1000_c119810)(data_iter_t *iterator) = (void *)data_iterator_next;
+static void (*const be1000_cd51c0)(__int16 player, wchar_t *message) = (void *)hud_print_message;
 
 __attribute__((naked, noinline))
 void FUN_000e1000(void)
@@ -941,9 +941,9 @@ int FUN_000e1060(void)
 
 /* FUN_000e10c0 (0xe10c0) — XBE naked draft (batch 118). */
 #if defined(__clang__)
-static void (*const be10c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be10c0_exitfn)(int) = system_exit;
-static void (*const be10c0_cce740)(void) = input_abstraction_update_local_player_preferences;
+static void (*const be10c0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const be10c0_exitfn)(int) = (void *)system_exit;
+static void (*const be10c0_cce740)(void) = (void *)input_abstraction_update_local_player_preferences;
 
 __attribute__((naked, noinline))
 void FUN_000e10c0(void)
@@ -1127,9 +1127,9 @@ void FUN_000e10c0(void)
 
 /* player_ui_clear_multiplayer_joins (0xe13f0) — XBE naked draft (batch 150). */
 #if defined(__clang__)
-static void (*const be13f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be13f0_exitfn)(int) = system_exit;
-static void *(*const be13f0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const be13f0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const be13f0_exitfn)(int) = (void *)system_exit;
+static void *(*const be13f0_memset)(void *, int, unsigned int) = (void *)csmemset;
 
 __attribute__((naked, noinline))
 void player_ui_clear_multiplayer_joins(void)
@@ -1195,10 +1195,10 @@ void player_ui_clear_multiplayer_joins(void)
 
 /* player_ui_set_active_player_profile (0xe1490) — XBE naked draft (batch 159). */
 #if defined(__clang__)
-static void (*const be1490_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be1490_exitfn)(int) = system_exit;
-static void * (*const be1490_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const be1490_ce10c0)(void) = FUN_000e10c0;
+static void (*const be1490_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const be1490_exitfn)(int) = (void *)system_exit;
+static void * (*const be1490_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
+static void (*const be1490_ce10c0)(void) = (void *)FUN_000e10c0;
 
 __attribute__((naked, noinline))
 void player_ui_set_active_player_profile(void)
@@ -1253,10 +1253,10 @@ void player_ui_set_active_player_profile(void)
 /* player_ui_begin_editing_profile (0xe1500) — XBE naked draft (batch 143). */
 #if defined(__clang__)
 static void (*const be1500_c1c29a0)(void) = (void *)saved_game_file_get_type;
-static void (*const be1500_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const be1500_c1c26f0)(void) = playlist_profile_delete;
-static void (*const be1500_c1c18f0)(void) = player_profile_new;
-static void * (*const be1500_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void (*const be1500_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static void (*const be1500_c1c26f0)(void) = (void *)playlist_profile_delete;
+static void (*const be1500_c1c18f0)(void) = (void *)player_profile_new;
+static void * (*const be1500_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
 
 __attribute__((naked, noinline))
 void player_ui_begin_editing_profile(void)
@@ -1339,14 +1339,14 @@ void player_ui_begin_editing_profile(void)
 /* player_ui_save_profile (0xe15b0) — XBE naked draft (batch 123). */
 #if defined(__clang__)
 static void (*const be15b0_c1c29a0)(void) = (void *)saved_game_file_get_type;
-static void (*const be15b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const be15b0_ce0ee0)(void) = player_ui_edit_profile_is_dirty;
-static int (*const be15b0_c19dc20)(const wchar_t *s1, const wchar_t *s2, size_t count) = ustrncmp;
-static void (*const be15b0_c1c1e20)(void) = FUN_001c1e20;
-static void (*const be15b0_c1c27f0)(void) = playlist_profile_get_display_name;
-static void (*const be15b0_c1c4da0)(void) = FUN_001c4da0;
-static void (*const be15b0_c1c2e00)(void) = saved_game_file_remember_last_used_multiplayer_variant_directory;
-static void (*const be15b0_c1c1bc0)(int, void *) = player_profile_get_from_path;
+static void (*const be15b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static void (*const be15b0_ce0ee0)(void) = (void *)player_ui_edit_profile_is_dirty;
+static int (*const be15b0_c19dc20)(const wchar_t *s1, const wchar_t *s2, size_t count) = (void *)ustrncmp;
+static void (*const be15b0_c1c1e20)(void) = (void *)FUN_001c1e20;
+static void (*const be15b0_c1c27f0)(void) = (void *)playlist_profile_get_display_name;
+static void (*const be15b0_c1c4da0)(void) = (void *)FUN_001c4da0;
+static void (*const be15b0_c1c2e00)(void) = (void *)saved_game_file_remember_last_used_multiplayer_variant_directory;
+static void (*const be15b0_c1c1bc0)(int, void *) = (void *)player_profile_get_from_path;
 
 __attribute__((naked, noinline))
 void player_ui_save_profile(void)
@@ -1504,9 +1504,9 @@ void player_ui_end_editing_profile(void)
 
 /* FUN_000e1770 (0xe1770) — XBE naked draft (batch 234). */
 #if defined(__clang__)
-static void (*const be1770_ce1000)(void) = FUN_000e1000;
-static void (*const be1770_c1c1bc0)(int, void *) = player_profile_get_from_path;
-static void (*const be1770_ce10c0)(void) = FUN_000e10c0;
+static void (*const be1770_ce1000)(void) = (void *)FUN_000e1000;
+static void (*const be1770_c1c1bc0)(int, void *) = (void *)player_profile_get_from_path;
+static void (*const be1770_ce10c0)(void) = (void *)FUN_000e10c0;
 
 __attribute__((naked, noinline))
 void FUN_000e1770(int a0)
