@@ -3068,11 +3068,33 @@ const char *main_get_map_name(void)
   return (const char *)0x46da55;
 }
 
-void main_set_difficulty(int16_t difficulty)
+/* main_set_difficulty (0x100060) — XBE naked draft (batch 177). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void main_set_difficulty(int16_t difficulty __attribute__((unused)))
 {
-  if (difficulty >= 0 && difficulty < 4)
-    *(int16_t *)0x31fa90 = difficulty;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lmain_set_difficulty_1\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jge .Lmain_set_difficulty_1\n\t"
+      "movw %%ax, 0x31fa90\n\t"
+      ".Lmain_set_difficulty_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "main_set_difficulty: clang naked draft required"
+#endif
+
 
 void main_reset_map(void)
 {
@@ -3144,11 +3166,28 @@ void main_respawn(char flag)
     *(int16_t *)0x46da4e = 0x5b;
 }
 
+/* main_save_core (0x1003b0) — XBE naked draft (batch 178). */
+#if defined(__clang__)
+static char * (*const b1003b0_c8dff0)(char *destination, const char *source) = csstrcpy;
+
+__attribute__((naked, noinline))
 void main_save_core(void)
 {
-  *(char *)0x46da3d = 1;
-  csstrcpy((char *)0x46dd55, (char *)0x28b198);
+  __asm__ volatile(
+      "pushl $0x28b198\n\t"
+      "pushl $0x46dd55\n\t"
+      "movb $1, 0x46da3d\n\t"
+      "call *%[c8dff0]\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c8dff0] "m"(b1003b0_c8dff0)
+      : "memory");
 }
+#else
+#error "main_save_core: clang naked draft required"
+#endif
+
 
 void main_save_core_name(const char *name)
 {
@@ -3159,17 +3198,51 @@ void main_save_core_name(const char *name)
   *(char *)0x46da3d = 1;
 }
 
+/* main_load_core (0x100420) — XBE naked draft (batch 178). */
+#if defined(__clang__)
+static char * (*const b100420_c8dff0)(char *destination, const char *source) = csstrcpy;
+
+__attribute__((naked, noinline))
 void main_load_core(void)
 {
-  *(char *)0x46da3e = 1;
-  csstrcpy((char *)0x46dd55, (char *)0x28b198);
+  __asm__ volatile(
+      "pushl $0x28b198\n\t"
+      "pushl $0x46dd55\n\t"
+      "movb $1, 0x46da3e\n\t"
+      "call *%[c8dff0]\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c8dff0] "m"(b100420_c8dff0)
+      : "memory");
 }
+#else
+#error "main_load_core: clang naked draft required"
+#endif
 
+
+/* main_load_core_at_startup (0x100440) — XBE naked draft (batch 178). */
+#if defined(__clang__)
+static char * (*const b100440_c8dff0)(char *destination, const char *source) = csstrcpy;
+
+__attribute__((naked, noinline))
 void main_load_core_at_startup(void)
 {
-  *(char *)0x46da3f = 1;
-  csstrcpy((char *)0x46dd55, (char *)0x28b198);
+  __asm__ volatile(
+      "pushl $0x28b198\n\t"
+      "pushl $0x46dd55\n\t"
+      "movb $1, 0x46da3f\n\t"
+      "call *%[c8dff0]\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c8dff0] "m"(b100440_c8dff0)
+      : "memory");
 }
+#else
+#error "main_load_core_at_startup: clang naked draft required"
+#endif
+
 
 void main_load_core_name(const char *name)
 {
@@ -3243,15 +3316,38 @@ void main_switch_structure_bsp(int16_t bsp_index __attribute__((unused)))
 #endif
 
 
-void main_skip(int16_t level)
+/* main_skip (0x100560) — XBE naked draft (batch 175). */
+#if defined(__clang__)
+static void (*const b100560_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+void main_skip(int16_t level __attribute__((unused)))
 {
-  if (level > 0xf) {
-    error(2, (char *)0x28b238);
-    return;
-  }
-  *(int16_t *)0x46da4a = level;
-  *(char *)0x46da49 = 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "cmpw $0xf, %%ax\n\t"
+      "jg .Lmain_skip_1\n\t"
+      "movw %%ax, 0x46da4a\n\t"
+      "movb $1, 0x46da49\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_skip_1:\n\t"
+      "pushl $0x28b238\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8f390] "m"(b100560_c8f390)
+      : "memory");
 }
+#else
+#error "main_skip: clang naked draft required"
+#endif
+
 
 void main_menu_unload(void)
 {

@@ -1354,58 +1354,175 @@ void FUN_00085c80(void)
 #endif
 
 
-/* 0x861d0 */
+/* director_inhibit_facing (0x861d0) — XBE naked draft (batch 174). */
+#if defined(__clang__)
+static void (*const b861d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b861d0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void director_inhibit_facing(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x861e3 */
-  /* cmp (int16_t)esi, 4 -> jl 0x86203 */
-  display_assert((char *)0x00266fc0, (char *)0x0026700c, 179, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Ldirector_inhibit_facing_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Ldirector_inhibit_facing_2\n\t"
+      ".Ldirector_inhibit_facing_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb3\n\t"
+      "pushl $0x26700c\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldirector_inhibit_facing_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0xf8, %%eax, %%eax\n\t"
+      "movb $1, 0x335301(%%eax)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b861d0_assert), [exitfn] "m"(b861d0_exitfn)
+      : "memory");
 }
+#else
+#error "director_inhibit_facing: clang naked draft required"
+#endif
 
-/* 0x86270 */
+
+/* director_inhibited_facing (0x86270) — XBE naked draft (batch 174). */
+#if defined(__clang__)
+static void (*const b86270_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b86270_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void director_inhibited_facing(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x86283 */
-  /* cmp (int16_t)esi, 4 -> jl 0x862a3 */
-  display_assert((char *)0x00266fc0, (char *)0x0026700c, 179, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Ldirector_inhibited_facing_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Ldirector_inhibited_facing_2\n\t"
+      ".Ldirector_inhibited_facing_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb3\n\t"
+      "pushl $0x26700c\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldirector_inhibited_facing_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0xf8, %%eax, %%eax\n\t"
+      "movb 0x335301(%%eax), %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b86270_assert), [exitfn] "m"(b86270_exitfn)
+      : "memory");
 }
+#else
+#error "director_inhibited_facing: clang naked draft required"
+#endif
 
-/* 0x862c0 */
+
+/* director_inhibited_input (0x862c0) — XBE naked draft (batch 174). */
+#if defined(__clang__)
+static void (*const b862c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b862c0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void director_inhibited_input(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x862d3 */
-  /* cmp (int16_t)esi, 4 -> jl 0x862f3 */
-  display_assert((char *)0x00266fc0, (char *)0x0026700c, 179, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Ldirector_inhibited_input_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Ldirector_inhibited_input_2\n\t"
+      ".Ldirector_inhibited_input_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb3\n\t"
+      "pushl $0x26700c\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldirector_inhibited_input_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0xf8, %%eax, %%eax\n\t"
+      "movb 0x335302(%%eax), %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b862c0_assert), [exitfn] "m"(b862c0_exitfn)
+      : "memory");
 }
+#else
+#error "director_inhibited_input: clang naked draft required"
+#endif
 
-/* 0x86310 */
+
+/* director_set_mode (0x86310) — XBE naked draft (batch 173). */
+#if defined(__clang__)
+static void (*const b86310_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b86310_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void director_set_mode(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x86323 */
-  /* cmp (int16_t)esi, 5 -> jl 0x86343 */
-  display_assert((char *)0x00267044, (char *)0x0026700c, 384, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [0x3352ac], (int16_t)esi -> je 0x8635a */
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Ldirector_set_mode_1\n\t"
+      "cmpw $5, %%si\n\t"
+      "jl .Ldirector_set_mode_2\n\t"
+      ".Ldirector_set_mode_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x180\n\t"
+      "pushl $0x26700c\n\t"
+      "pushl $0x267044\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldirector_set_mode_2:\n\t"
+      "cmpw %%si, 0x3352ac\n\t"
+      "je .Ldirector_set_mode_3\n\t"
+      "movw %%si, 0x3352ac\n\t"
+      "movb $1, 0x3352ae\n\t"
+      ".Ldirector_set_mode_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b86310_assert), [exitfn] "m"(b86310_exitfn)
+      : "memory");
 }
+#else
+#error "director_set_mode: clang naked draft required"
+#endif
+
 
 /* director_save_camera (0x86360) — XBE naked draft (batch 146). */
 #if defined(__clang__)

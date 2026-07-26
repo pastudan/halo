@@ -232,44 +232,133 @@ int player_ui_get_single_player_local_player_from_controller(short local_player_
 #endif
 
 
-/* 0xe0840 */
+/* player_ui_local_player_joined_multiplayer_game (0xe0840) — XBE naked draft (batch 173). */
+#if defined(__clang__)
+static void (*const be0840_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be0840_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void player_ui_local_player_joined_multiplayer_game(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xe0853 */
-  /* cmp (int16_t)esi, 4 -> jl 0xe0873 */
-  display_assert((char *)0x00282750, (char *)0x00282724, 157, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_ui_local_player_joined_multiplayer_game_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_ui_local_player_joined_multiplayer_game_2\n\t"
+      ".Lplayer_ui_local_player_joined_multiplayer_game_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9d\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x282750\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_local_player_joined_multiplayer_game_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "imull $0x38, %%ecx, %%ecx\n\t"
+      "movb $1, 0x46bf14(%%ecx)\n\t"
+      "movb $1, 0x46bfc0(%%eax)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be0840_assert), [exitfn] "m"(be0840_exitfn)
+      : "memory");
 }
+#else
+#error "player_ui_local_player_joined_multiplayer_game: clang naked draft required"
+#endif
 
-/* 0xe0890 */
+
+/* player_ui_local_player_wants_to_play_multiplayer (0xe0890) — XBE naked draft (batch 174). */
+#if defined(__clang__)
+static void (*const be0890_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be0890_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void player_ui_local_player_wants_to_play_multiplayer(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xe08a3 */
-  /* cmp (int16_t)esi, 4 -> jl 0xe08c3 */
-  display_assert((char *)0x00282750, (char *)0x00282724, 167, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_ui_local_player_wants_to_play_multiplayer_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_ui_local_player_wants_to_play_multiplayer_2\n\t"
+      ".Lplayer_ui_local_player_wants_to_play_multiplayer_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa7\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x282750\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_local_player_wants_to_play_multiplayer_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0x38, %%eax, %%eax\n\t"
+      "movb 0x46bf14(%%eax), %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be0890_assert), [exitfn] "m"(be0890_exitfn)
+      : "memory");
 }
+#else
+#error "player_ui_local_player_wants_to_play_multiplayer: clang naked draft required"
+#endif
 
-/* 0xe08e0 */
+
+/* player_ui_clear_multiplayer_autojoin_for_local_player (0xe08e0) — XBE naked draft (batch 174). */
+#if defined(__clang__)
+static void (*const be08e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be08e0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void player_ui_clear_multiplayer_autojoin_for_local_player(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xe08f3 */
-  /* cmp (int16_t)esi, 4 -> jl 0xe0913 */
-  display_assert((char *)0x00282750, (char *)0x00282724, 175, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_ui_clear_multiplayer_autojoin_for_local_player_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_ui_clear_multiplayer_autojoin_for_local_player_2\n\t"
+      ".Lplayer_ui_clear_multiplayer_autojoin_for_local_player_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xaf\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x282750\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_clear_multiplayer_autojoin_for_local_player_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0x38, %%eax, %%eax\n\t"
+      "movb $0, 0x46bf14(%%eax)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be08e0_assert), [exitfn] "m"(be08e0_exitfn)
+      : "memory");
 }
+#else
+#error "player_ui_clear_multiplayer_autojoin_for_local_player: clang naked draft required"
+#endif
+
 
 /* player_ui_autojoin_players_to_next_multiplayer_game (0xe0930) — XBE naked draft (batch 165). */
 #if defined(__clang__)
@@ -391,47 +480,137 @@ void player_ui_get_active_player_profile_index(void)
 #endif
 
 
-/* 0xe0a10 */
+/* player_ui_get_last_single_player_level_played (0xe0a10) — XBE naked draft (batch 175). */
+#if defined(__clang__)
+static void (*const be0a10_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be0a10_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void player_ui_get_last_single_player_level_played(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xe0a23 */
-  /* cmp (int16_t)esi, 4 -> jl 0xe0a43 */
-  display_assert((char *)0x00282750, (char *)0x00282724, 265, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_ui_get_last_single_player_level_played_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_ui_get_last_single_player_level_played_2\n\t"
+      ".Lplayer_ui_get_last_single_player_level_played_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x109\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x282750\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_get_last_single_player_level_played_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0x38, %%eax, %%eax\n\t"
+      "movw 0x46bf06(%%eax), %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be0a10_assert), [exitfn] "m"(be0a10_exitfn)
+      : "memory");
 }
+#else
+#error "player_ui_get_last_single_player_level_played: clang naked draft required"
+#endif
 
-/* 0xe0a60 */
+
+/* player_ui_set_game_variant (0xe0a60) — XBE naked draft (batch 173). */
+#if defined(__clang__)
+static void (*const be0a60_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be0a60_exitfn)(int) = system_exit;
+static void * (*const be0a60_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
 void player_ui_set_game_variant(void)
 {
-  int esi = 0;
-
-  /* test esi, esi -> jne 0xe0a8b */
-  display_assert((char *)0x00282808, (char *)0x00282724, 273, 0);
-  system_exit(0);
-  csmemcpy((void *)0x0046bfcc, (void *)(uintptr_t)esi, 104);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lplayer_ui_set_game_variant_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x111\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x282808\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_set_game_variant_1:\n\t"
+      "pushl $0x68\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x46bfcc\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0x46c034\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be0a60_assert), [exitfn] "m"(be0a60_exitfn), [c8e0b0] "m"(be0a60_c8e0b0)
+      : "memory");
 }
+#else
+#error "player_ui_set_game_variant: clang naked draft required"
+#endif
 
-/* 0xe0ab0 */
+
+/* player_ui_game_variant_specified (0xe0ab0) — XBE naked draft (batch 171). */
+#if defined(__clang__)
+static void (*const be0ab0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be0ab0_exitfn)(int) = system_exit;
+static void * (*const be0ab0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
 void player_ui_game_variant_specified(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* test esi, esi -> jne 0xe0adb */
-  display_assert((char *)0x00282808, (char *)0x00282724, 284, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> je 0xe0af9 */
-  csmemcpy((void *)(uintptr_t)esi, (void *)0x0046bfcc, 104);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lplayer_ui_game_variant_specified_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x11c\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x282808\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_game_variant_specified_1:\n\t"
+      "movb 0x46c034, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayer_ui_game_variant_specified_2\n\t"
+      "pushl $0x68\n\t"
+      "pushl $0x46bfcc\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8e0b0]\n\t"
+      "movb 0x46c034, %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lplayer_ui_game_variant_specified_2:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be0ab0_assert), [exitfn] "m"(be0ab0_exitfn), [c8e0b0] "m"(be0ab0_c8e0b0)
+      : "memory");
 }
+#else
+#error "player_ui_game_variant_specified: clang naked draft required"
+#endif
+
 
 /* player_ui_rumble_disabled (0xe0b00) — XBE naked draft (batch 170). */
 #if defined(__clang__)

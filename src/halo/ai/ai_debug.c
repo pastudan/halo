@@ -7249,11 +7249,37 @@ void FUN_00053800(void)
 #endif
 
 
-/* 0x53890 */
+/* FUN_00053890 (0x53890) — XBE naked draft (batch 173). */
+#if defined(__clang__)
+static void (*const b53890_cff4d0)(int channel, const char *format, ...) = console_printf;
+
+__attribute__((naked, noinline))
 void FUN_00053890(void)
 {
-  console_printf(0, (void *)0x0025c120);
+  __asm__ volatile(
+      "movswl 0x5abaa2, %%eax\n\t"
+      "incl %%eax\n\t"
+      "cdq\n\t"
+      "movl $3, %%ecx\n\t"
+      "idivl %%ecx\n\t"
+      "movw %%dx, 0x5abaa2\n\t"
+      "movswl %%dx, %%edx\n\t"
+      "movl 0x2c8f78(,%%edx,4), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x25c120\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "movw 0x5abaa2, %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [cff4d0] "m"(b53890_cff4d0)
+      : "memory");
 }
+#else
+#error "FUN_00053890: clang naked draft required"
+#endif
+
 
 /* 0x538d0 — read debug widget field at +0x30 */
 int16_t FUN_000538d0(void)

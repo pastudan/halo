@@ -307,16 +307,47 @@ void render_frame(void *a2, __int16 a3, _WORD *a4, _WORD *a5, void *a6,
 }
 /* --- render.obj batch drafts (2026-07-26) --- */
 
-/* 0x184570 */
-char FUN_00184570(void *group)
+/* FUN_00184570 (0x184570) — XBE naked draft (batch 171). */
+#if defined(__clang__)
+static short (*const b184570_c1844b0)(unsigned int group) = rasterizer_transparent_geometry_group_to_presorted_index;
+
+__attribute__((naked, noinline))
+char FUN_00184570(void *group __attribute__((unused)))
 {
-  int eax = 0;
-
-  rasterizer_transparent_geometry_group_to_presorted_index(eax);
-  return 1;
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1844b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "movb $1, %%cl\n\t"
+      "je .LFUN_00184570_1\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%eax\n\t"
+      "shll %%cl, %%eax\n\t"
+      "sarl $5, %%edx\n\t"
+      "andl 0x4d0cbc(,%%edx,4), %%eax\n\t"
+      "negl %%eax\n\t"
+      "sbbb %%al, %%al\n\t"
+      "incb %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00184570_1:\n\t"
+      "movb %%cl, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1844b0] "m"(b184570_c1844b0)
+      : "memory");
 }
+#else
+#error "FUN_00184570: clang naked draft required"
+#endif
+
 
 /* FUN_001845b0 (0x1845b0) — XBE naked draft (batch 161). */
 #if defined(__clang__)
@@ -935,11 +966,31 @@ void FUN_00184980(char param_1 __attribute__((unused)))
 #endif
 
 
-/* 0x184b60 */
-void render_effects(int a0)
+/* render_effects (0x184b60) — XBE naked draft (batch 176). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void render_effects(int a0 __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "movb %%al, 0x32574d\n\t"
+      "movb %%al, 0x32574c\n\t"
+      "movb %%al, 0x32574b\n\t"
+      "movb %%al, 0x32574a\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "render_effects: clang naked draft required"
+#endif
+
 
 /* render_location_visible (0x184de0) — XBE naked draft (batch 170). */
 #if defined(__clang__)

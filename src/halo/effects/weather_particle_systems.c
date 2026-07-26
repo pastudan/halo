@@ -37,36 +37,85 @@ void weather_particle_systems_dispose(void)
 }
 /* --- weather_particle_systems.obj batch drafts (2026-07-26) --- */
 
-/* 0xa3e60 */
+/* FUN_000a3e60 (0xa3e60) — XBE naked draft (batch 173). */
+#if defined(__clang__)
+static void (*const ba3e60_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const ba3e60_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_000a3e60(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xa3e6b */
-  /* cmp (int16_t)esi, 4 -> jl 0xa3e88 */
-  display_assert((char *)0x00266fc0, (char *)0x0026af50, 91, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_000a3e60_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .LFUN_000a3e60_2\n\t"
+      ".LFUN_000a3e60_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5b\n\t"
+      "pushl $0x26af50\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000a3e60_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0x9c, %%eax, %%eax\n\t"
+      "addl $0x4557f4, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(ba3e60_assert), [exitfn] "m"(ba3e60_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_000a3e60: clang naked draft required"
+#endif
 
-/* 0xa3ea0 */
+
+/* FUN_000a3ea0 (0xa3ea0) — XBE naked draft (batch 177). */
+#if defined(__clang__)
+static void *(*const ba3ea0_tag)(int, int) = tag_get;
+static void (*const ba3ea0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const ba3ea0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_000a3ea0(void)
 {
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  tag_get('niar', 0);
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xa3ebf */
-  /* cmp ecx, edx -> jl 0xa3edc */
-  display_assert((char *)0x0026af84, (char *)0x0026af50, 102, 0);
-  system_exit(0);
-
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "movl (%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x7261696e\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_000a3ea0_1\n\t"
+      "movl 0x24(%%eax), %%edx\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jl .LFUN_000a3ea0_2\n\t"
+      ".LFUN_000a3ea0_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x66\n\t"
+      "pushl $0x26af50\n\t"
+      "pushl $0x26af84\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000a3ea0_2:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "shll $4, %%edx\n\t"
+      "leal 0x1c(%%edx,%%edi,1), %%eax\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(ba3ea0_tag), [assert] "m"(ba3ea0_assert), [exitfn] "m"(ba3ea0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_000a3ea0: clang naked draft required"
+#endif
+
 
 /* FUN_000a4000 (0xa4000) — XBE naked draft (batch 149). */
 #if defined(__clang__)
@@ -667,11 +716,45 @@ void FUN_000a4310(void)
 #endif
 
 
-/* 0xa45d0 */
+/* FUN_000a45d0 (0xa45d0) — XBE naked draft (batch 174). */
+#if defined(__clang__)
+static void (*const ba45d0_ca4000)(float *dst, float *src, float scale) = FUN_000a4000;
+
+__attribute__((naked, noinline))
 void FUN_000a45d0(void)
 {
-  FUN_000a4000((float *)0, (float *)0, 0.0f);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca4000]\n\t"
+      "flds (%%esi)\n\t"
+      "fsubs (%%edi)\n\t"
+      "addl $4, %%esp\n\t"
+      "fstps (%%edi)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fsubs 0x4(%%edi)\n\t"
+      "fstps 0x4(%%edi)\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fsubs 0x8(%%edi)\n\t"
+      "fstps 0x8(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ca4000] "m"(ba45d0_ca4000)
+      : "memory");
 }
+#else
+#error "FUN_000a45d0: clang naked draft required"
+#endif
+
 
 /* FUN_000a4610 (0xa4610) — XBE naked draft (batch 112). */
 #if defined(__clang__)

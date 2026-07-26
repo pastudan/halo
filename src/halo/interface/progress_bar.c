@@ -1446,19 +1446,35 @@ void FUN_000e2170(void)
 #endif
 
 
-/* 0xe21b0 */
+/* FUN_000e21b0 (0xe21b0) — XBE naked draft (batch 171). */
+#if defined(__clang__)
+static void __stdcall (*const be21b0_c1edc70)(void *texture, unsigned int level, void *locked_rect, void *rect, unsigned int flags) = D3DTexture_LockRect;
+
+__attribute__((naked, noinline))
 void FUN_000e21b0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  D3DTexture_LockRect((void *)(uintptr_t)ecx, eax, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1edc70]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1edc70] "m"(be21b0_c1edc70)
+      : "memory");
 }
+#else
+#error "FUN_000e21b0: clang naked draft required"
+#endif
+
 
 /* D3DXMatrixIdentity (0xe21e0) — XBE naked draft (batch 164). */
 #if defined(__clang__)
@@ -1898,17 +1914,69 @@ void SetTextureStageStateSmart(int stage __attribute__((unused)), int state __at
 #endif
 
 
-/* 0xe2650 */
+/* FUN_000e2650 (0xe2650) — XBE naked draft (batch 173). */
+#if defined(__clang__)
+static void __stdcall (*const be2650_c1ed280)(uint32_t reg, float a, float b) = D3DDevice_SetVertexData2f;
+
+__attribute__((naked, noinline))
 void FUN_000e2650(void)
 {
-  D3DDevice_SetVertexData2f(10, 0.0f, 0.0f);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "subl $8, %%esp\n\t"
+      "fmuls 0x254cd0\n\t"
+      "fstps 0x4(%%esp)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fmuls 0x282d3c\n\t"
+      "fadds 0x10(%%ebp)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl $0xa\n\t"
+      "call *%[c1ed280]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1ed280] "m"(be2650_c1ed280)
+      : "memory");
 }
+#else
+#error "FUN_000e2650: clang naked draft required"
+#endif
 
-/* 0xe2680 */
+
+/* FUN_000e2680 (0xe2680) — XBE naked draft (batch 171). */
+#if defined(__clang__)
+static void __stdcall (*const be2680_c1ed280)(uint32_t reg, float a, float b) = D3DDevice_SetVertexData2f;
+
+__attribute__((naked, noinline))
 void FUN_000e2680(void)
 {
-  D3DDevice_SetVertexData2f(10, 0.0f, 0.0f);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "subl $8, %%esp\n\t"
+      "fmuls 0x2546a4\n\t"
+      "fstps 0x4(%%esp)\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fmuls 0x282d40\n\t"
+      "fsubs 0x254df8\n\t"
+      "fsubs 0x254df8\n\t"
+      "fsubrs 0x8(%%ebp)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl $0xa\n\t"
+      "call *%[c1ed280]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1ed280] "m"(be2680_c1ed280)
+      : "memory");
 }
+#else
+#error "FUN_000e2680: clang naked draft required"
+#endif
+
 
 /* FUN_000e2820 (0xe2820) — XBE naked draft (batch 168). */
 #if defined(__clang__)
@@ -2068,20 +2136,37 @@ void progress_bar_eachframe(void)
 #endif
 
 
-/* 0xe33a0 */
+/* FUN_000e33a0 (0xe33a0) — XBE naked draft (batch 176). */
+#if defined(__clang__)
+static data_t * (*const be33a0_c1194d0)(char *name, int16_t maximum_count, int16_t size) = data_new;
+static void (*const be33a0_c119b20)(data_t *data) = data_delete_all;
+
+__attribute__((naked, noinline))
 void FUN_000e33a0(void)
 {
-  int eax = 0;
-
-  data_new((char *)0x00282db4, 32, 292);
-  /* mem[0x0046c408] = eax */
-  data_delete_all((void *)(uintptr_t)eax);
-  /* mem[0x0046c414] = 0 */
-  /* mem[0x0046c40c] = eax */
-  /* mem[0x0046c410] = eax */
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl $0x124\n\t"
+      "pushl $0x20\n\t"
+      "pushl $0x282db4\n\t"
+      "call *%[c1194d0]\n\t"
+      "pushl %%eax\n\t"
+      "movl %%eax, 0x46c408\n\t"
+      "movb $1, 0x46c404\n\t"
+      "call *%[c119b20]\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl $0, 0x46c414\n\t"
+      "movl %%eax, 0x46c40c\n\t"
+      "movl %%eax, 0x46c410\n\t"
+      "ret\n\t"
+      :
+      : [c1194d0] "m"(be33a0_c1194d0), [c119b20] "m"(be33a0_c119b20)
+      : "memory");
 }
+#else
+#error "FUN_000e33a0: clang naked draft required"
+#endif
+
 
 /* FUN_000e33e0 (0xe33e0) — XBE naked draft (batch 164). */
 #if defined(__clang__)

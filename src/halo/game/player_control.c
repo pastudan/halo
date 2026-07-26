@@ -17,18 +17,38 @@ void player_control_dispose(void)
 {
 }
 
-/* Scripted camera takeover: clear bit0 of globals+0xc when enable!=0 (player
- * camera allowed); set bit0 when enable==0 (scripted camera lock). */
-void scripted_player_control_set_camera_control(char enable)
-{
-  int *flags;
+/* scripted_player_control_set_camera_control (0xb6430) — XBE naked draft (batch 177). */
+#if defined(__clang__)
 
-  flags = (int *)((char *)player_control_globals + 0xc);
-  if (enable)
-    *flags &= ~1;
-  else
-    *flags |= 1;
+
+__attribute__((naked, noinline))
+void scripted_player_control_set_camera_control(char enable __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movl 0x457090, %%ecx\n\t"
+      "movl 0xc(%%ecx), %%edx\n\t"
+      "jne .Lscripted_player_control_set_camera_control_1\n\t"
+      "orl $1, %%edx\n\t"
+      "movl %%edx, 0xc(%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lscripted_player_control_set_camera_control_1:\n\t"
+      "andl $0xfffffffe, %%edx\n\t"
+      "movl %%edx, 0xc(%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "scripted_player_control_set_camera_control: clang naked draft required"
+#endif
+
 
 /* player_control_get_autoaim_level (0xb6940) — XBE naked draft (batch 169). */
 #if defined(__clang__)
@@ -265,15 +285,49 @@ char player_control_action_test_look_relative_right(void)
   return (char)((*(int *)player_control_globals >> 10) & 1);
 }
 
+/* player_control_action_test_look_relative_up (0xb6bb0) — XBE naked draft (batch 176). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_look_relative_up(void)
 {
-  return (char)((*(int *)player_control_globals >> 7) & 1);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "shrl $7, %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_look_relative_up: clang naked draft required"
+#endif
 
+
+/* player_control_action_test_look_relative_down (0xb6bc0) — XBE naked draft (batch 176). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_look_relative_down(void)
 {
-  return (char)((*(int *)player_control_globals >> 8) & 1);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "shrl $8, %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_look_relative_down: clang naked draft required"
+#endif
+
 
 /* FUN_000b6dd0 (0xb6dd0) — XBE naked draft (batch 167). */
 #if defined(__clang__)

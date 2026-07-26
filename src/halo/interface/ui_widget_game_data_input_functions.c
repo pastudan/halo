@@ -1547,16 +1547,38 @@ void playlist_profile_initialize_ctf_rules(void *widget __attribute__((unused)))
 #endif
 
 
-/* 0xeebe0 */
-void FUN_000eebe0(void *widget)
+/* FUN_000eebe0 (0xeebe0) — XBE naked draft (batch 176). */
+#if defined(__clang__)
+static void (*const beebe0_ce3d50)(void *block) = widget_free;
+
+__attribute__((naked, noinline))
+void FUN_000eebe0(void *widget __attribute__((unused)))
 {
-  int eax = 0;
-
-  /* test eax, eax -> je 0xeebfe */
-  widget_free((void *)(uintptr_t)eax);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0x40(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000eebe0_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ce3d50]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl $0, 0x40(%%esi)\n\t"
+      ".LFUN_000eebe0_1:\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ce3d50] "m"(beebe0_ce3d50)
+      : "memory");
 }
+#else
+#error "FUN_000eebe0: clang naked draft required"
+#endif
+
 
 /* FUN_000eec10 (0xeec10) — XBE naked draft (batch 133). */
 #if defined(__clang__)
@@ -3646,18 +3668,49 @@ void FUN_000f0070(void *widget __attribute__((unused)))
 #endif
 
 
-/* 0xf00b0 */
-void FUN_000f00b0(void *widget)
+/* FUN_000f00b0 (0xf00b0) — XBE naked draft (batch 173). */
+#if defined(__clang__)
+static void (*const bf00b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bf00b0_exitfn)(int) = system_exit;
+static void (*const bf00b0_ce0740)(void) = player_ui_set_single_player_local_player_controller;
+
+__attribute__((naked, noinline))
+void FUN_000f00b0(void *widget __attribute__((unused)))
 {
-  int esi = 0;
-
-  /* test esi, esi -> jne 0xf00db */
-  display_assert((char *)0x00288670, (char *)0x002859a4, 4537, 0);
-  system_exit(0);
-  player_ui_set_single_player_local_player_controller();
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_000f00b0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x11b9\n\t"
+      "pushl $0x2859a4\n\t"
+      "pushl $0x288670\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000f00b0_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x2(%%esi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "call *%[ce0740]\n\t"
+      "addl $8, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bf00b0_assert), [exitfn] "m"(bf00b0_exitfn), [ce0740] "m"(bf00b0_ce0740)
+      : "memory");
 }
+#else
+#error "FUN_000f00b0: clang naked draft required"
+#endif
+
 
 /* FUN_000f0100 (0xf0100) — XBE naked draft (batch 155). */
 #if defined(__clang__)
@@ -9124,18 +9177,54 @@ void game_options_menu_update_pic_desc(void *widget __attribute__((unused)))
 #endif
 
 
-/* 0xf3540 */
-void mp_level_select_list_update_displayed_items(void *widget)
+/* mp_level_select_list_update_displayed_items (0xf3540) — XBE naked draft (batch 172). */
+#if defined(__clang__)
+static int (*const bf3540_c12a0a0)(void) = FUN_0012a0a0;
+static void (*const bf3540_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bf3540_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void mp_level_select_list_update_displayed_items(void *widget __attribute__((unused)))
 {
-  int esi = 0;
-
-  FUN_0012a0a0();
-  display_assert((char *)0x00289430, (char *)0x00288938, 3068, 0);
-  system_exit(0);
-  /* test esi, esi -> je 0xf358c */
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c12a0a0]\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "cmpw $0, 0xe(%%edi)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "je .Lmp_level_select_list_update_displayed_items_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xbfc\n\t"
+      "pushl $0x288938\n\t"
+      "pushl $0x289430\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lmp_level_select_list_update_displayed_items_1:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lmp_level_select_list_update_displayed_items_2\n\t"
+      "movb 0xc0(%%esi), %%cl\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpb $1, %%cl\n\t"
+      "setne %%al\n\t"
+      "movw %%ax, 0x50(%%edi)\n\t"
+      ".Lmp_level_select_list_update_displayed_items_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c12a0a0] "m"(bf3540_c12a0a0), [assert] "m"(bf3540_assert), [exitfn] "m"(bf3540_exitfn)
+      : "memory");
 }
+#else
+#error "mp_level_select_list_update_displayed_items: clang naked draft required"
+#endif
+
 
 /* get_editable_player_profile_display_name (0xf3590) — XBE naked draft (batch 147). */
 #if defined(__clang__)
@@ -9215,21 +9304,51 @@ void get_editable_player_profile_display_name(void *widget __attribute__((unused
 #endif
 
 
-/* 0xf3640 */
-void get_editable_playlist_profile_display_name(void *widget)
+/* get_editable_playlist_profile_display_name (0xf3640) — XBE naked draft (batch 172). */
+#if defined(__clang__)
+static void (*const bf3640_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bf3640_exitfn)(int) = system_exit;
+static bool (*const bf3640_c82300)(void) = transport_network_available;
+
+__attribute__((naked, noinline))
+void get_editable_playlist_profile_display_name(void *widget __attribute__((unused)))
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* relift: cmp word ptr [esi + 0xe], 1 -> je 0xf366e */
-  display_assert((char *)0x002894f4, (char *)0x00288938, 3132, 0);
-  system_exit(0);
-  transport_network_available();
-  /* test (char)eax, (char)eax -> je 0xf3681 */
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpw $1, 0xe(%%esi)\n\t"
+      "je .Lget_editable_playlist_profile_display_name_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xc3c\n\t"
+      "pushl $0x288938\n\t"
+      "pushl $0x2894f4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lget_editable_playlist_profile_display_name_1:\n\t"
+      "call *%[c82300]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lget_editable_playlist_profile_display_name_2\n\t"
+      "movl $0x3f800000, 0x24(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lget_editable_playlist_profile_display_name_2:\n\t"
+      "movl $0x3eaa7efa, 0x24(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bf3640_assert), [exitfn] "m"(bf3640_exitfn), [c82300] "m"(bf3640_c82300)
+      : "memory");
 }
+#else
+#error "get_editable_playlist_profile_display_name: clang naked draft required"
+#endif
+
 
 /* 0xf3690 — collect up to 3 child widget text handles for item UI sync. */
 /* 0xf3690 — resolve three neighboring list indices for a widget spinner. */

@@ -594,20 +594,47 @@ void scripted_player_effect_set_rumble(int a0, float a1)
   (void)0;
 }
 
-/* 0xa2930 */
+/* player_telefrag_effect_stop (0xa2930) — XBE naked draft (batch 177). */
+#if defined(__clang__)
+static void *(*const ba2930_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const ba2930_ca2690)(int16_t local_player_index) = player_effect_get;
+static void (*const ba2930_cb9da0)(short local_player_index, int left_motor, int right_motor) = rumble_set_direct_motors;
+
+__attribute__((naked, noinline))
 void player_telefrag_effect_stop(void)
 {
-  int ecx = 0;
-  int esi = 0;
-
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp esi, -1 -> je 0xa2963 */
-  player_effect_get(esi);
-  rumble_set_direct_motors(0, 0, 0);
-
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movswl 0x2(%%eax), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lplayer_telefrag_effect_stop_1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ca2690]\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cb9da0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lplayer_telefrag_effect_stop_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(ba2930_dget), [ca2690] "m"(ba2930_ca2690), [cb9da0] "m"(ba2930_cb9da0)
+      : "memory");
 }
+#else
+#error "player_telefrag_effect_stop: clang naked draft required"
+#endif
+
 
 /* player_effect_screen_fade_in (0xa2970) — XBE naked draft (batch 164). */
 #if defined(__clang__)
@@ -737,23 +764,61 @@ void player_effect_get_damage_indicators(int player_index __attribute__((unused)
 #endif
 
 
-/* 0xa2a70 */
-void player_effect_clear_damage_indicators(int player_index)
+/* player_effect_clear_damage_indicators (0xa2a70) — XBE naked draft (batch 175). */
+#if defined(__clang__)
+static char * (*const ba2a70_ca2690)(int16_t local_player_index) = player_effect_get;
+static void *(*const ba2a70_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
+void player_effect_clear_damage_indicators(int player_index __attribute__((unused)))
 {
-  int eax = 0;
-
-  player_effect_get(eax);
-  csmemset((void *)(uintptr_t)eax, 0, 0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca2690]\n\t"
+      "pushl $4\n\t"
+      "addl $0xe4, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ca2690] "m"(ba2a70_ca2690), [memset] "m"(ba2a70_memset)
+      : "memory");
 }
+#else
+#error "player_effect_clear_damage_indicators: clang naked draft required"
+#endif
 
-/* 0xa2a90 */
+
+/* FUN_000a2a90 (0xa2a90) — XBE naked draft (batch 178). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_000a2a90(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs 0x8(%%ebp)\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "fadds 0x8(%%ebp)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000a2a90: clang naked draft required"
+#endif
+
 
 /* FUN_000a2ab0 (0xa2ab0) — XBE naked draft (batch 136). */
 #if defined(__clang__)
@@ -1024,12 +1089,33 @@ void player_effect_continuous_refresh(void)
 #endif
 
 
-/* 0xa2dc0 */
-void scripted_player_effect_set_translation(int a0, float a1, float a2)
+/* scripted_player_effect_set_translation (0xa2dc0) — XBE naked draft (batch 173). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void scripted_player_effect_set_translation(int a0 __attribute__((unused)), float a1 __attribute__((unused)), float a2 __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x4557ec, %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl %%ecx, 0x3c4(%%eax)\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x3c8(%%eax)\n\t"
+      "movl %%ecx, 0x3cc(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "scripted_player_effect_set_translation: clang naked draft required"
+#endif
+
 
 /* scripted_player_effect_start (0xa2df0) — XBE naked draft (batch 165). */
 #if defined(__clang__)

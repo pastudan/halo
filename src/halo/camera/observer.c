@@ -1424,12 +1424,40 @@ void observer_update(float delta_time)
 }
 /* --- observer.obj batch drafts (2026-07-26) --- */
 
-/* 0x89240 */
+/* FUN_00089240 (0x89240) — XBE naked draft (batch 174). */
+#if defined(__clang__)
+static void *(*const b89240_get)(int, int) = object_get_and_verify_type;
+static void (*const b89240_c88d50)(void) = first_person_camera_for_unit_and_vector;
+
+__attribute__((naked, noinline))
 void FUN_00089240(void)
 {
-  object_get_and_verify_type(0, 0);
-  first_person_camera_for_unit_and_vector();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "addl $0x1ec, %%eax\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "call *%[c88d50]\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b89240_get), [c88d50] "m"(b89240_c88d50)
+      : "memory");
 }
+#else
+#error "FUN_00089240: clang naked draft required"
+#endif
+
 
 /* first_person_camera_update (0x89270) — XBE naked draft (batch 138). */
 #if defined(__clang__)
@@ -1526,12 +1554,34 @@ void first_person_camera_update(void)
 #endif
 
 
-/* 0x89330 */
+/* FUN_00089330 (0x89330) — XBE naked draft (batch 171). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00089330(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl %%ecx, 0xc(%%eax)\n\t"
+      "movl %%ecx, 0x10(%%eax)\n\t"
+      "movl %%ecx, 0x14(%%eax)\n\t"
+      "movl $0x3f9c61aa, 0x18(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00089330: clang naked draft required"
+#endif
+
 
 /* FUN_00089350 (0x89350) — XBE naked draft (batch 169). */
 #if defined(__clang__)
@@ -2073,12 +2123,27 @@ void FUN_000898b0(void)
 #endif
 
 
-/* 0x89930 */
+/* FUN_00089930 (0x89930) — XBE naked draft (batch 178). */
+#if defined(__clang__)
+static void (*const b89930_c1da0cc)(void) = FUN_001da0cc;
+
+__attribute__((naked, noinline))
 void FUN_00089930(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "popl %%ebp\n\t"
+      "jmp *%[c1da0cc]\n\t"
+      :
+      : [c1da0cc] "m"(b89930_c1da0cc)
+      : "memory");
 }
+#else
+#error "FUN_00089930: clang naked draft required"
+#endif
+
 
 /* FUN_00089940 (0x89940) — XBE naked draft (batch 136). */
 #if defined(__clang__)
@@ -3170,19 +3235,49 @@ void observer_reconnect_to_structure_bsp(void)
 #endif
 
 
-/* 0x8aa30 */
+/* observer_obsolete_position (0x8aa30) — XBE naked draft (batch 171). */
+#if defined(__clang__)
+static void (*const b8aa30_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b8aa30_exitfn)(int) = system_exit;
+static void (*const b8aa30_c8a350)(void *observer) = observer_result_initialize;
+
+__attribute__((naked, noinline))
 void observer_obsolete_position(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x8aa43 */
-  /* cmp (int16_t)esi, 4 -> jl 0x8aa60 */
-  display_assert((char *)0x00266fc0, (char *)0x002673a8, 114, 0);
-  system_exit(0);
-  observer_result_initialize((void *)0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lobserver_obsolete_position_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lobserver_obsolete_position_2\n\t"
+      ".Lobserver_obsolete_position_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x72\n\t"
+      "pushl $0x2673a8\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobserver_obsolete_position_2:\n\t"
+      "movswl %%si, %%esi\n\t"
+      "imull $0x29c, %%esi, %%esi\n\t"
+      "addl $0x33571c, %%esi\n\t"
+      "call *%[c8a350]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b8aa30_assert), [exitfn] "m"(b8aa30_exitfn), [c8a350] "m"(b8aa30_c8a350)
+      : "memory");
 }
+#else
+#error "observer_obsolete_position: clang naked draft required"
+#endif
+
 
 /* observer_up_from_forward (0x8aa80) — XBE naked draft (batch 151). */
 #if defined(__clang__)

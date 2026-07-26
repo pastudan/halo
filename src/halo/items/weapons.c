@@ -2335,21 +2335,63 @@ void FUN_000fb990(int weapon_handle)
 }
 #endif
 
-/* 0xfba00 */
-char FUN_000fba00(int16_t value, int16_t threshold)
-{
-  if (value == 0)
-    return 1;
-  if (value <= 0 || value > 2)
-    return 0;
-  return (char)(threshold >= value);
-}
+/* FUN_000fba00 (0xfba00) — XBE naked draft (batch 175). */
+#if defined(__clang__)
 
-/* 0xfbcf0 */
-float FUN_000fbcf0(float base, float exponent)
+
+__attribute__((naked, noinline))
+char FUN_000fba00(int16_t value __attribute__((unused)), int16_t threshold __attribute__((unused)))
 {
-  return FUN_001d9e70(base, exponent);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl %%dx, %%ecx\n\t"
+      "xorb %%al, %%al\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LFUN_000fba00_1\n\t"
+      "jle .LFUN_000fba00_2\n\t"
+      "cmpl $2, %%ecx\n\t"
+      "jg .LFUN_000fba00_2\n\t"
+      "cmpw %%dx, 0x8(%%ebp)\n\t"
+      "setge %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000fba00_1:\n\t"
+      "movb $1, %%al\n\t"
+      ".LFUN_000fba00_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000fba00: clang naked draft required"
+#endif
+
+
+/* FUN_000fbcf0 (0xfbcf0) — XBE naked draft (batch 171). */
+#if defined(__clang__)
+static float (*const bfbcf0_c1d9e70)(float base, float exponent) = FUN_001d9e70;
+
+__attribute__((naked, noinline))
+float FUN_000fbcf0(float base __attribute__((unused)), float exponent __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "popl %%ebp\n\t"
+      "jmp *%[c1d9e70]\n\t"
+      :
+      : [c1d9e70] "m"(bfbcf0_c1d9e70)
+      : "memory");
+}
+#else
+#error "FUN_000fbcf0: clang naked draft required"
+#endif
+
 
 /* 0xfbd10 — initialize magazines/triggers for a newly created weapon. */
 #if defined(__i386__) && defined(__GNUC__)
@@ -4087,19 +4129,44 @@ void FUN_000fd0b0(int16_t angle_index, float *out_x, float *out_y,
 }
 #endif
 
-/* 0xfd150 */
-void FUN_000fd150(int weapon_handle)
+/* FUN_000fd150 (0xfd150) — XBE naked draft (batch 171). */
+#if defined(__clang__)
+static void *(*const bfd150_get)(int, int) = object_get_and_verify_type;
+static int (*const bfd150_cfba20)(int weapon_handle, char param_2, int16_t state) = weapon_set_animation_state;
+
+__attribute__((naked, noinline))
+void FUN_000fd150(int weapon_handle __attribute__((unused)))
 {
-  char anim_state =
-    *(char *)((char *)object_get_and_verify_type(weapon_handle, 4) + 0x1e8);
-
-  if (anim_state >= 7 && anim_state <= 8)
-    return;
-  if (anim_state == 10)
-    return;
-
-  weapon_set_animation_state(weapon_handle, 1, 0);
+  __asm__ volatile(
+      "pushl $4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movb 0x1e8(%%eax), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpb $7, %%al\n\t"
+      "jl .LFUN_000fd150_1\n\t"
+      "cmpb $8, %%al\n\t"
+      "jle .LFUN_000fd150_2\n\t"
+      "cmpb $0xa, %%al\n\t"
+      "je .LFUN_000fd150_2\n\t"
+      ".LFUN_000fd150_1:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $1\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "call *%[cfba20]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_000fd150_2:\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfd150_get), [cfba20] "m"(bfd150_cfba20)
+      : "memory");
 }
+#else
+#error "FUN_000fd150: clang naked draft required"
+#endif
+
 
 /* 0xfd510 */
 void weapon_stop_reload(int weapon_handle)

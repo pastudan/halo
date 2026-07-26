@@ -1988,10 +1988,28 @@ void set_ui_plasma_effect_color(float r __attribute__((unused)), float g __attri
 #endif
 
 
-void ui_widgets_set_fade_value(float fade)
+/* ui_widgets_set_fade_value (0xe3c90) — XBE naked draft (batch 178). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void ui_widgets_set_fade_value(float fade __attribute__((unused)))
 {
-  *(float *)0x46cc4c = fade;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x46cc4c\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "ui_widgets_set_fade_value: clang naked draft required"
+#endif
+
 
 void ui_widget_debug_show_path(char show)
 {
@@ -2039,20 +2057,38 @@ void widget_free(void *block)
   stack_memory_pool_deallocate(*(void **)0x31e04c, block);
 }
 
+/* ui_widgets_active (0xe3d70) — XBE naked draft (batch 177). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char ui_widgets_active(void)
 {
-  int *slot;
-
-  if (*(char *)0x46cc82 == 0)
-    return 0;
-  slot = (int *)0x46cc20;
-  while ((int)slot < 0x46cc30) {
-    if (*slot != 0)
-      return 1;
-    slot++;
-  }
-  return 0;
+  __asm__ volatile(
+      "movb 0x46cc82, %%cl\n\t"
+      "xorb %%al, %%al\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lui_widgets_active_3\n\t"
+      "movl $0x46cc20, %%ecx\n\t"
+      ".Lui_widgets_active_1:\n\t"
+      "cmpl $0, (%%ecx)\n\t"
+      "jne .Lui_widgets_active_2\n\t"
+      "addl $4, %%ecx\n\t"
+      "cmpl $0x46cc30, %%ecx\n\t"
+      "jl .Lui_widgets_active_1\n\t"
+      "ret\n\t"
+      ".Lui_widgets_active_2:\n\t"
+      "movb $1, %%al\n\t"
+      ".Lui_widgets_active_3:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "ui_widgets_active: clang naked draft required"
+#endif
+
 
 /* ui_widgets_active_for_local_player (0xe3da0) — XBE naked draft (batch 155). */
 #if defined(__clang__)
@@ -2118,12 +2154,30 @@ char ui_widgets_active_for_local_player(int16_t local_player_index __attribute__
 #endif
 
 
-float FUN_000e3e60(int a, float b)
+/* FUN_000e3e60 (0xe3e60) — XBE naked draft (batch 174). */
+#if defined(__clang__)
+static void (*const be3e60_c1daf7e)(void) = FUN_001daf7e;
+
+__attribute__((naked, noinline))
+float FUN_000e3e60(int a __attribute__((unused)), float b __attribute__((unused)))
 {
-  float product;
-  product = (float)a * *(float *)0x255ef8 * b;
-  return product * *(double *)0x2573d8;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fmuls 0x255ef8\n\t"
+      "fimull 0x8(%%ebp)\n\t"
+      "fldl 0x2573d8\n\t"
+      "popl %%ebp\n\t"
+      "jmp *%[c1daf7e]\n\t"
+      :
+      : [c1daf7e] "m"(be3e60_c1daf7e)
+      : "memory");
 }
+#else
+#error "FUN_000e3e60: clang naked draft required"
+#endif
+
 
 int widget_instance_get_child_index_from_parent(void *widget)
 {
@@ -2211,23 +2265,54 @@ char main_menu_is_active(void)
   return *(char *)0x46cc88;
 }
 
-void ui_set_next_level(int16_t level_index)
-{
-  const char *map_name;
+/* ui_set_next_level (0xe4420) — XBE naked draft (batch 174). */
+#if defined(__clang__)
+static const char * (*const be4420_c100870)(int16_t index) = main_get_solo_level_name;
+static void (*const be4420_cfffa0)(const char *name) = main_set_map_name;
+static void (*const be4420_cfff90)(void) = main_disallow_persistent_storage;
+static void (*const be4420_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const be4420_c100620)(void) = main_goto_main_menu;
+static void (*const be4420_c102070)(void) = main_roll_credits;
 
-  if (level_index == -1) {
-    main_goto_main_menu();
-    return;
-  }
-  if (level_index < 0 || level_index > 9) {
-    error(2, (char *)0x283318);
-    main_goto_main_menu();
-    return;
-  }
-  map_name = main_get_solo_level_name(level_index);
-  main_set_map_name(map_name);
-  main_menu_switch_to_single_player();
+__attribute__((naked, noinline))
+void ui_set_next_level(int16_t level_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lui_set_next_level_2\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .Lui_set_next_level_1\n\t"
+      "cmpl $9, %%eax\n\t"
+      "jg .Lui_set_next_level_1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c100870]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cfffa0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "jmp *%[cfff90]\n\t"
+      ".Lui_set_next_level_1:\n\t"
+      "pushl $0x283318\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "jmp *%[c100620]\n\t"
+      ".Lui_set_next_level_2:\n\t"
+      "popl %%ebp\n\t"
+      "jmp *%[c102070]\n\t"
+      :
+      : [c100870] "m"(be4420_c100870), [cfffa0] "m"(be4420_cfffa0), [cfff90] "m"(be4420_cfff90), [c8f390] "m"(be4420_c8f390), [c100620] "m"(be4420_c100620), [c102070] "m"(be4420_c102070)
+      : "memory");
 }
+#else
+#error "ui_set_next_level: clang naked draft required"
+#endif
+
 
 /* display_error_deferred (0xe4500) — XBE naked draft (batch 150). */
 #if defined(__clang__)
@@ -2298,15 +2383,39 @@ void display_error_deferred(int16_t error_handle __attribute__((unused)), int16_
 #endif
 
 
-void display_error_abort_to_dashboard_deferred(int16_t error_handle, char flag)
+/* display_error_abort_to_dashboard_deferred (0xe4590) — XBE naked draft (batch 175). */
+#if defined(__clang__)
+static void (*const be4590_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+void display_error_abort_to_dashboard_deferred(int16_t error_handle __attribute__((unused)), char flag __attribute__((unused)))
 {
-  if (*(int16_t *)0x46cc68 != -1) {
-    error(2, (char *)0x283460);
-    return;
-  }
-  *(int16_t *)0x46cc68 = error_handle;
-  *(char *)0x46cc6a = flag;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "cmpw $-1, 0x46cc68\n\t"
+      "jne .Ldisplay_error_abort_to_dashboard_deferred_1\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "movw %%ax, 0x46cc68\n\t"
+      "movb %%cl, 0x46cc6a\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ldisplay_error_abort_to_dashboard_deferred_1:\n\t"
+      "pushl $0x283460\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8f390] "m"(be4590_c8f390)
+      : "memory");
 }
+#else
+#error "display_error_abort_to_dashboard_deferred: clang naked draft required"
+#endif
+
 
 /* ui_widget_link_child (0xe4800) — XBE naked draft (batch 147). */
 #if defined(__clang__)

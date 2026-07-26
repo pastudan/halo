@@ -2093,25 +2093,53 @@ bool hs_type_check(int datum_index, int16_t check_type)
 int FUN_000c5310(int parent_handle, int sibling_handle);
 int16_t FUN_0018ea50(void *param_1, const char *name);
 
-/* 0xc6a30 — Case-sensitive name lookup in a string table (register args in
- * binary: count@<di>, str on stack, table@<ebx>). Returns the matching index
- * or -1. */
-int16_t FUN_000c6a30(const char *str, const char **names, int16_t count)
+/* FUN_000c6a30 (0xc6a30) — XBE naked draft (batch 175). */
+#if defined(__clang__)
+static int (*const bc6a30_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
+
+__attribute__((naked, noinline))
+int16_t FUN_000c6a30(const char *str __attribute__((unused)), const char **names __attribute__((unused)), int16_t count __attribute__((unused)))
 {
-  int16_t i;
-
-  i = 0;
-  if (count <= 0)
-    return -1;
-
-  do {
-    if (csstrcmp(str, names[(int)i]) == 0)
-      return i;
-    i++;
-  } while (i < count);
-
-  return -1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testw %%di, %%di\n\t"
+      "jle .LFUN_000c6a30_2\n\t"
+      "jmp .LFUN_000c6a30_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_000c6a30_1:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl (%%ebx,%%eax,4), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8dcb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c6a30_3\n\t"
+      "incl %%esi\n\t"
+      "cmpw %%di, %%si\n\t"
+      "jl .LFUN_000c6a30_1\n\t"
+      ".LFUN_000c6a30_2:\n\t"
+      "orw $0xffff, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c6a30_3:\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8dcb0] "m"(bc6a30_c8dcb0)
+      : "memory");
 }
+#else
+#error "FUN_000c6a30: clang naked draft required"
+#endif
+
 
 /* hs_parse_enum (0xc5f60) — XBE naked draft (batch 120). */
 #if defined(__clang__)

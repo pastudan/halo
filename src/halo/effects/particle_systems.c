@@ -1392,12 +1392,39 @@ void FUN_0009fb10(void)
 #endif
 
 
-/* 0x9fca0 */
+/* FUN_0009fca0 (0x9fca0) — XBE naked draft (batch 175). */
+#if defined(__clang__)
+static void *(*const b9fca0_tag)(int, int) = tag_get;
+static void (*const b9fca0_c9fa60)(void) = FUN_0009fa60;
+
+__attribute__((naked, noinline))
 void FUN_0009fca0(void)
 {
-  tag_get(0x7063746c, 0);
-  FUN_0009fa60();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x7063746c\n\t"
+      "call *%[tag]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c9fa60]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b9fca0_tag), [c9fa60] "m"(b9fca0_c9fa60)
+      : "memory");
 }
+#else
+#error "FUN_0009fca0: clang naked draft required"
+#endif
+
 
 /* 0xa0800 */
 void FUN_000a0800(int particle_system_handle)
