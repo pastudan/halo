@@ -303,10 +303,8 @@ def register_waves(batches: list[int], *, update_existing: bool = False) -> None
             Path(f"/tmp/gen_batch{num}.py").read_text(),
         )
         if f"gameplay wave {num}" in t:
-            if update_existing:
-                print(f"wave {num} already registered — skip insert")
-                continue
-            raise SystemExit(f"wave {num} already registered")
+            print(f"wave {num} already registered — skip insert")
+            continue
         lines = [f"        # gameplay wave {num} (2026-07-26) — Capstone weaks"]
         for name, va, end, _multi in targets:
             # Update end if symbol already present
