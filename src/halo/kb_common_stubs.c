@@ -411,22 +411,53 @@ void FUN_000679f0(void)
 #endif
 
 
-/* 0x67a70 */
+/* FUN_00067a70 (0x67a70) — XBE naked draft (batch 384). */
+#if defined(__clang__)
+static int (*const b67a70_c8df60)(const char *s1) = (void *)csstrlen;
+static void (*const b67a70_c67760)(void) = (void *)FUN_00067760;
+static void * (*const b67a70_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
+
+__attribute__((naked, noinline))
 void FUN_00067a70(void)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-
-  csstrlen((char *)(uintptr_t)esi);
-  FUN_00067760();
-  /* test eax, eax -> jne 0x67aab */
-  csmemcpy((void *)(uintptr_t)edi, (void *)0, 0);
-
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%edi\n\t"
+      "movl %%ecx, %%edi\n\t"
+      "pushl %%esi\n\t"
+      "movw %%ax, (%%edi)\n\t"
+      "movw $2, 0x2(%%edi)\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $4, %%esp\n\t"
+      "incl %%eax\n\t"
+      "cmpl $4, %%eax\n\t"
+      "movl %%eax, 0x4(%%edi)\n\t"
+      "jbe .LFUN_00067a70_1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c67760]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00067a70_2\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      ".LFUN_00067a70_1:\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "addl $8, %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00067a70_2:\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      :
+      : [c8df60] "m"(b67a70_c8df60), [c67760] "m"(b67a70_c67760), [c8e0b0] "m"(b67a70_c8e0b0)
+      : "memory");
 }
+#else
+#error "FUN_00067a70: clang naked draft required"
+#endif
+
 
 /* FUN_00067ac0 (0x67ac0) — XBE naked draft (batch 345). */
 #if defined(__clang__)
@@ -3964,17 +3995,42 @@ void FUN_000887e0(void)
 #endif
 
 
-/* 0x88c40 */
+/* first_person_camera_new (0x88c40) — XBE naked draft (batch 384). */
+#if defined(__clang__)
+static void (*const b88c40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b88c40_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void first_person_camera_new(void)
 {
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x88c68 */
-  display_assert((char *)0x00266e9c, (char *)0x0026720c, 24, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lfirst_person_camera_new_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18\n\t"
+      "pushl $0x26720c\n\t"
+      "pushl $0x266e9c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lfirst_person_camera_new_1:\n\t"
+      "movl $0, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b88c40_assert), [exitfn] "m"(b88c40_exitfn)
+      : "memory");
 }
+#else
+#error "first_person_camera_new: clang naked draft required"
+#endif
+
 
 /* FUN_00088c80 (0x88c80) — XBE naked draft (batch 371). */
 #if defined(__clang__)
@@ -9302,20 +9358,57 @@ void FUN_00132fb0(void)
 #endif
 
 
-/* 0x1330a0 */
+/* FUN_001330a0 (0x1330a0) — XBE naked draft (batch 384). */
+#if defined(__clang__)
+static void *(*const b1330a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b1330a0_c1196d0)(data_t *data, int datum_handle) = (void *)datum_delete;
+
+__attribute__((naked, noinline))
 void FUN_001330a0(void)
 {
-  int eax = 0;
-  int edx = 0;
-
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* test eax, eax -> je 0x1330de */
-  datum_delete((void *)(uintptr_t)edx, 0);
-  datum_delete((void *)(uintptr_t)eax, 0);
-
-  (void)eax;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5a90c8, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x250(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001330a0_2\n\t"
+      "pushl %%esi\n\t"
+      ".LFUN_001330a0_1:\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl 0x5a90cc, %%edx\n\t"
+      "movl 0x5c(%%eax), %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1196d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "jne .LFUN_001330a0_1\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_001330a0_2:\n\t"
+      "movl 0x5a90c8, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1196d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1330a0_dget), [c1196d0] "m"(b1330a0_c1196d0)
+      : "memory");
 }
+#else
+#error "FUN_001330a0: clang naked draft required"
+#endif
+
 
 /* 0x1330f0 */
 #if 0 /* ported in objects.c */

@@ -1807,11 +1807,28 @@ void __nh_malloc(void)
 #endif
 
 
-/* 0x1dde12 */
+/* _malloc (0x1dde12) — XBE naked draft (batch 377). */
+#if defined(__clang__)
+static void (*const b1dde12_c1ddde6)(void) = (void *)__nh_malloc;
+
+__attribute__((naked, noinline))
 void _malloc(void)
 {
-  __nh_malloc();
+  __asm__ volatile(
+      "pushl 0x4fc36c\n\t"
+      "pushl 0x8(%%esp)\n\t"
+      "call *%[c1ddde6]\n\t"
+      "popl %%ecx\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c1ddde6] "m"(b1dde12_c1ddde6)
+      : "memory");
 }
+#else
+#error "_malloc: clang naked draft required"
+#endif
+
 
 /* FUN_001dde24 (0x1dde24) — XBE naked draft (batch 340). */
 #if defined(__clang__)
@@ -1974,21 +1991,43 @@ void __fassign(void)
 #endif
 
 
-/* 0x1ddf77 */
+/* FUN_001ddf77 (0x1ddf77) — XBE naked draft (batch 380). */
+#if defined(__clang__)
+static void * (*const b1ddf77_c1da290)(void *dest, const void *src, size_t size) = (void *)memmove;
+
+__attribute__((naked, noinline))
 void FUN_001ddf77(void)
 {
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* test esi, esi -> je 0x1ddf99 */
-  /* test dl, dl -> jne 0x1ddf81 */
-  memmove((void *)(uintptr_t)ecx, (void *)0, 0);
-
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_001ddf77_2\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x1(%%eax), %%edi\n\t"
+      ".LFUN_001ddf77_1:\n\t"
+      "movb (%%eax), %%dl\n\t"
+      "incl %%eax\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .LFUN_001ddf77_1\n\t"
+      "subl %%edi, %%eax\n\t"
+      "incl %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "addl %%esi, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1da290]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      ".LFUN_001ddf77_2:\n\t"
+      "ret\n\t"
+      :
+      : [c1da290] "m"(b1ddf77_c1da290)
+      : "memory");
 }
+#else
+#error "FUN_001ddf77: clang naked draft required"
+#endif
+
 
 /* FUN_001ddf9a (0x1ddf9a) — XBE naked draft (batch 324). */
 #if defined(__clang__)

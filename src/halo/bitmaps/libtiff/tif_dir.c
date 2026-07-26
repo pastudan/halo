@@ -672,12 +672,29 @@ void TIFFVGetField(void)
 #endif
 
 
-/* 0x65f70 */
+/* _TIFFgetfield (0x65f70) — XBE naked draft (batch 379). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void _TIFFgetfield(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "leal 0x10(%%ebp), %%eax\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x6e, 0xfb, 0xff, 0xff\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "_TIFFgetfield: clang naked draft required"
+#endif
+
 
 /* 0x65f90 */
 void TIFFFreeDirectory(int file)

@@ -169,16 +169,39 @@ void FUN_001cfa85(void)
 #endif
 
 
-/* 0x1cfac6 */
+/* FUN_001cfac6 (0x1cfac6) — XBE naked draft (batch 380). */
+#if defined(__clang__)
+static void __stdcall (*const b1cfac6_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void FUN_001cfac6(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jge 0x1cfae5 */
-  XapiSetLastNTError(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "leal 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *0x2530b8\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_001cfac6_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "jmp .LFUN_001cfac6_2\n\t"
+      ".LFUN_001cfac6_1:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      ".LFUN_001cfac6_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1cfac6_c1d2296)
+      : "memory");
 }
+#else
+#error "FUN_001cfac6: clang naked draft required"
+#endif
+
 
 /* 0x1cfaec */
 int ResumeThread(int thread_handle)
@@ -497,18 +520,35 @@ bool SetEvent(void *handle)
   (void)eax;
 }
 
-/* 0x1cfeca */
+/* ResetEvent (0x1cfeca) — XBE naked draft (batch 378). */
+#if defined(__clang__)
+static void __stdcall (*const b1cfeca_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void ResetEvent(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jl 0x1cfedd */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1cfefd */
-  XapiSetLastNTError(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl 0x4(%%esp)\n\t"
+      "call *0x2530ec\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LResetEvent_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "jmp .LResetEvent_2\n\t"
+      ".LResetEvent_1:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LResetEvent_2:\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1cfeca_c1d2296)
+      : "memory");
 }
+#else
+#error "ResetEvent: clang naked draft required"
+#endif
+
 
 /* FUN_001cff08 (0x1cff08) — XBE naked draft (batch 353). */
 #if defined(__clang__)
@@ -1100,11 +1140,29 @@ int WaitForSingleObject(int handle, int timeout_ms)
   return 0;
 }
 
-/* 0x1d0348 */
+/* FUN_001d0348 (0x1d0348) — XBE naked draft (batch 377). */
+#if defined(__clang__)
+static void (*const b1d0348_c1d0144)(void) = (void *)FUN_001d0144;
+
+__attribute__((naked, noinline))
 void FUN_001d0348(void)
 {
-  FUN_001d0144();
+  __asm__ volatile(
+      "pushl $0\n\t"
+      "pushl 0x14(%%esp)\n\t"
+      "pushl 0x14(%%esp)\n\t"
+      "pushl 0x14(%%esp)\n\t"
+      "pushl 0x14(%%esp)\n\t"
+      "call *%[c1d0144]\n\t"
+      "ret\n\t"
+      :
+      : [c1d0144] "m"(b1d0348_c1d0144)
+      : "memory");
 }
+#else
+#error "FUN_001d0348: clang naked draft required"
+#endif
+
 
 /* 0x1d0362 */
 void FUN_001d0362(void)

@@ -220,12 +220,32 @@ void FUN_00068890(void)
 #endif
 
 
-/* 0x68940 */
+/* FUN_00068940 (0x68940) — XBE naked draft (batch 380). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00068940(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x124(%%eax), %%ecx\n\t"
+      "imull 0xc(%%ebp), %%ecx\n\t"
+      "addl %%ecx, 0x134(%%eax)\n\t"
+      "subl %%ecx, 0x138(%%eax)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00068940: clang naked draft required"
+#endif
+
 
 /* FUN_00068970 (0x68970) — XBE naked draft (batch 369). */
 #if defined(__clang__)

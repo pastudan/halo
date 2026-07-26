@@ -558,16 +558,37 @@ void FUN_001d8a88(void)
 #endif
 
 
-/* 0x1d8aef */
+/* FUN_001d8aef (0x1d8aef) — XBE naked draft (batch 383). */
+#if defined(__clang__)
+static void __stdcall (*const b1d8aef_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void FUN_001d8aef(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jge 0x1d8b09 */
-  XapiSetLastNTError(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0x8(%%esp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *0x253294\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_001d8aef_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .LFUN_001d8aef_2\n\t"
+      ".LFUN_001d8aef_1:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      ".LFUN_001d8aef_2:\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1d8aef_c1d2296)
+      : "memory");
 }
+#else
+#error "FUN_001d8aef: clang naked draft required"
+#endif
+
 
 /* FUN_001d8b10 (0x1d8b10) — XBE naked draft (batch 372). */
 #if defined(__clang__)

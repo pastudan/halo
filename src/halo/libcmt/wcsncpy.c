@@ -155,11 +155,40 @@ void FUN_001dbc26(void)
 #endif
 
 
-/* 0x1dbcf4 */
+/* __global_unwind2 (0x1dbcf4) — XBE naked draft (batch 384). */
+#if defined(__clang__)
+static void (*const b1dbcf4_c1e6584)(void) = (void *)RtlUnwind;
+
+__attribute__((naked, noinline))
 void __global_unwind2(void)
 {
-  RtlUnwind(0, (void *)(uintptr_t)0x001dbd0c, 0, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebp\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0x1dbd0c\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *%[c1e6584]\n\t"
+      "popl %%ebp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1e6584] "m"(b1dbcf4_c1e6584)
+      : "memory");
 }
+#else
+#error "__global_unwind2: clang naked draft required"
+#endif
+
 
 /* __local_unwind2 (0x1dbd36) — XBE naked draft (batch 363). */
 #if defined(__clang__)
@@ -629,18 +658,38 @@ wchar_t *_wcstok(wchar_t *s, const wchar_t *delim)
   (void)edi;
 }
 
-/* 0x1dc257 */
-size_t FUN_001dc257(wchar_t *dest, const wchar_t *src, size_t count)
+/* FUN_001dc257 (0x1dc257) — XBE naked draft (batch 384). */
+#if defined(__clang__)
+static wchar_t * (*const b1dc257_c1dc061)(wchar_t *dest, const wchar_t *src, size_t count) = (void *)_wcsncpy;
+static size_t (*const b1dc257_c1db11e)(const wchar_t *str) = (void *)_wcslen;
+
+__attribute__((naked, noinline))
+size_t FUN_001dc257(wchar_t *dest __attribute__((unused)), const wchar_t *src __attribute__((unused)), size_t count __attribute__((unused)))
 {
-  int ebp = 0;
-
-  /* relift: cmp dword ptr [ebp + 8], 0 -> je 0x1dc271 */
-  _wcsncpy((wchar_t *)0, (wchar_t *)(uintptr_t)src, count);
-  _wcslen((wchar_t *)(uintptr_t)src);
-  return 0;
-
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "cmpl $0, 0x8(%%ebp)\n\t"
+      "je .LFUN_001dc257_1\n\t"
+      "pushl 0x10(%%ebp)\n\t"
+      "pushl 0xc(%%ebp)\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *%[c1dc061]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_001dc257_1:\n\t"
+      "pushl 0xc(%%ebp)\n\t"
+      "call *%[c1db11e]\n\t"
+      "popl %%ecx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc061] "m"(b1dc257_c1dc061), [c1db11e] "m"(b1dc257_c1db11e)
+      : "memory");
 }
+#else
+#error "FUN_001dc257: clang naked draft required"
+#endif
+
 
 /* 0x1dc27c */
 wchar_t *FUN_001dc27c(wchar_t *s, size_t count)

@@ -437,17 +437,47 @@ void XGetLaunchInfo(void)
 #endif
 
 
-/* 0x1d259b */
+/* FUN_001d259b (0x1d259b) — XBE naked draft (batch 383). */
+#if defined(__clang__)
+static void (*const b1d259b_c1d243e)(void) = (void *)FUN_001d243e;
+
+__attribute__((naked, noinline))
 void FUN_001d259b(void)
 {
-  int eax = 0;
-
-  FUN_001d243e();
-  /* test eax, eax -> jl 0x1d25d5 */
-  /* test eax, eax -> je 0x1d25cd */
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl 0x18(%%ebp)\n\t"
+      "pushl 0x14(%%ebp)\n\t"
+      "pushl 0x10(%%ebp)\n\t"
+      "pushl 0xc(%%ebp)\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *%[c1d243e]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_001d259b_2\n\t"
+      "movl 0x20, %%eax\n\t"
+      "movl 0x250(%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001d259b_1\n\t"
+      "pushl $0\n\t"
+      "pushl $2\n\t"
+      "call *0x14(%%eax)\n\t"
+      ".LFUN_001d259b_1:\n\t"
+      "pushl $2\n\t"
+      "call *0x2531f8\n\t"
+      ".LFUN_001d259b_2:\n\t"
+      "pushl %%eax\n\t"
+      "call *0x2531d0\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d243e] "m"(b1d259b_c1d243e)
+      : "memory");
 }
+#else
+#error "FUN_001d259b: clang naked draft required"
+#endif
+
 
 /* 0x1d25e0 */
 int XLaunchNewImageA(const char *image_path, void *launch_data)
