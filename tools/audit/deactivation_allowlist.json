@@ -3001,5 +3001,278 @@
     "object": "players.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbe2f0",
+    "name": "FUN_000be2f0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbe500",
+    "name": "FUN_000be500",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbe550",
+    "name": "FUN_000be550",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbe5e0",
+    "name": "FUN_000be5e0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbe660",
+    "name": "FUN_000be660",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbe8f0",
+    "name": "FUN_000be8f0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbe930",
+    "name": "FUN_000be930",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbe990",
+    "name": "FUN_000be990",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbe9d0",
+    "name": "FUN_000be9d0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbea10",
+    "name": "FUN_000bea10",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbeb30",
+    "name": "FUN_000beb30",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbedb0",
+    "name": "FUN_000bedb0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbee40",
+    "name": "FUN_000bee40",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbf010",
+    "name": "FUN_000bf010",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbf060",
+    "name": "FUN_000bf060",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbf0b0",
+    "name": "FUN_000bf0b0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbf160",
+    "name": "FUN_000bf160",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbf1e0",
+    "name": "FUN_000bf1e0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbf870",
+    "name": "FUN_000bf870",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbf8b0",
+    "name": "FUN_000bf8b0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbf920",
+    "name": "FUN_000bf920",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbf960",
+    "name": "FUN_000bf960",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbf9f0",
+    "name": "FUN_000bf9f0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbfa30",
+    "name": "FUN_000bfa30",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbfab0",
+    "name": "FUN_000bfab0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbfb40",
+    "name": "FUN_000bfb40",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbfbc0",
+    "name": "FUN_000bfbc0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbfc10",
+    "name": "FUN_000bfc10",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbfc50",
+    "name": "FUN_000bfc50",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbfc90",
+    "name": "FUN_000bfc90",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbfcd0",
+    "name": "FUN_000bfcd0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc0270",
+    "name": "FUN_000c0270",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc02b0",
+    "name": "FUN_000c02b0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc02f0",
+    "name": "FUN_000c02f0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc05b0",
+    "name": "FUN_000c05b0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc07f0",
+    "name": "FUN_000c07f0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc0830",
+    "name": "FUN_000c0830",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc0870",
+    "name": "FUN_000c0870",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc08b0",
+    "name": "FUN_000c08b0",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]

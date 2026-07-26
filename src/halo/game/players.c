@@ -4194,3 +4194,389 @@ void FUN_000c0ab0(int16_t function_index, int thread_datum, char init)
     hs_return(thread_datum, 0);
   }
 }
+
+void FUN_000be2f0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_000c9c10(*(int *)(args + 0), *(float *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be500(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum, FUN_000c9770(*(int *)(args + 0), *(int *)(args + 4), *(float *)(args + 8)));
+  }
+}
+
+void FUN_000be550(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum, FUN_000c9840(*(int *)(args + 0), (int)*(uint16_t *)(args + 4), *(float *)(args + 8)));
+  }
+}
+
+void FUN_000be5e0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_000ca030(*(int *)(args + 0), *(float *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be660(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    numeric_countdown_timer_set(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be8f0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    object_set_ranged_attack_inhibited(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be930(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    object_set_melee_attack_inhibited(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be990(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    object_scripting_set_collideable(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be9d0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    objects_scripting_set_scale(*(int *)(args + 0), *(float *)(args + 4), (int)*(uint16_t *)(args + 8));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bea10(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    objects_scripting_attach(*(int *)(args + 0), *(int *)(args + 4), *(int *)(args + 8), *(int *)(args + 12));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000beb30(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    object_beautify(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bedb0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_001457d0(*(int *)(args + 0), *(int *)(args + 4), *(int *)(args + 8), (int)*(uint16_t *)(args + 12));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bee40(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    unit_scripting_can_blink(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bf010(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum,
+              FUN_001ac180(*(int *)(args + 0), *(int *)(args + 4),
+                           (void *)*(int *)(args + 8),
+                           (int)*(uint8_t *)(args + 12)));
+  }
+}
+
+void FUN_000bf060(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum, FUN_001a7df0(*(int *)(args + 0), *(int *)(args + 4), *(int *)(args + 8), (int)*(uint8_t *)(args + 12)));
+  }
+}
+
+void FUN_000bf0b0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum, unit_custom_animation_at_frame(*(int *)(args + 0), *(int *)(args + 4), *(int *)(args + 8), (int)*(uint8_t *)(args + 12), (int)*(uint16_t *)(args + 16)));
+  }
+}
+
+void FUN_000bf160(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_001ac0a0(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bf1e0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_001ac030(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bf870(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_001a7d80(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bf8b0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    unit_scripting_suspended(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bf920(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    units_set_desired_flashlight_state(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bf960(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    unit_set_desired_flashlight_state(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bf9f0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    device_set_never_appears_locked(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bfa30(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_00097260(*(int *)(args + 0), *(float *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bfab0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum, FUN_00097220(*(int *)(args + 0), *(float *)(args + 4)));
+  }
+}
+
+void FUN_000bfb40(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_00097040(*(int *)(args + 0), *(float *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bfbc0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum, FUN_00096f20((int)*(uint16_t *)(args + 0), *(float *)(args + 4)));
+  }
+}
+
+void FUN_000bfc10(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    device_group_set_actual_value((int)*(uint16_t *)(args + 0), *(float *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bfc50(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    device_one_sided_set(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bfc90(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    device_operates_automatically_set(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bfcd0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    device_group_change_only_once_more_set((int)*(int16_t *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000c0270(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_00054f90(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000c02b0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_00055010(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000c02f0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_00055090(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000c05b0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_00055900(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000c07f0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_00056980(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000c0830(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_00056a20(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000c0870(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_00056b20(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000c08b0(int16_t function_index, int thread_datum, char init)
+{
+  char *args;
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_00056bc0(*(int *)(args + 0), (int)*(uint8_t *)(args + 4));
+    hs_return(thread_datum, 0);
+  }
+}
