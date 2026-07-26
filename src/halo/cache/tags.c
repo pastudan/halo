@@ -287,12 +287,44 @@ void FUN_001ba0c0(void *element __attribute__((unused)))
 #endif
 
 
-/* 0x1ba250 */
+/* FUN_001ba250 (0x1ba250) — XBE naked draft (batch 285). */
+#if defined(__clang__)
+static int __stdcall (*const b1ba250_c1cf999)(int thread_handle, int priority) = SetThreadPriority;
+
+__attribute__((naked, noinline))
 void FUN_001ba250(void)
 {
-  SetThreadPriority(0, 0);
-  SetThreadPriority(0, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movl 0x32ea98, %%ecx\n\t"
+      "movb %%al, 0x988(%%ecx)\n\t"
+      "je .LFUN_001ba250_1\n\t"
+      "movl 0x95c(%%ecx), %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1cf999]\n\t"
+      "movl $0x512000, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001ba250_1:\n\t"
+      "movl 0x95c(%%ecx), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1cf999]\n\t"
+      "movl $0x512000, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1cf999] "m"(b1ba250_c1cf999)
+      : "memory");
 }
+#else
+#error "FUN_001ba250: clang naked draft required"
+#endif
+
 
 /* FUN_001ba290 (0x1ba290) — XBE naked draft (batch 274). */
 #if defined(__clang__)

@@ -2543,76 +2543,220 @@ void sound_render(void)
   if (*(uint8_t *)0x449ef1 != 0 && *(uint8_t *)0x32f6f0 != 0)
     profile_exit_private((void *)0x32f6e8);
 }
-/* --- sound_manager.obj batch1 drafts (2026-07-25) --- */
+/* FUN_001ac030 (0x1ac030) — XBE naked draft (batch 285). */
+#if defined(__clang__)
+static void *(*const b1ac030_get)(int, int) = object_get_and_verify_type;
 
-void FUN_001ac030(int unit_handle, char flag)
+__attribute__((naked, noinline))
+void FUN_001ac030(int unit_handle __attribute__((unused)), char flag __attribute__((unused)))
 {
-  if (unit_handle == -1)
-    return;
-  {
-    char *unit = (char *)object_get_and_verify_type(unit_handle, 3);
-    if (flag)
-      *(uint32_t *)(unit + 0x1b4) &= ~0x10000u;
-    else
-      *(uint32_t *)(unit + 0x1b4) |= 0x10000u;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001ac030_2\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movl 0x1b4(%%eax), %%ecx\n\t"
+      "jne .LFUN_001ac030_1\n\t"
+      "orl $0x10000, %%ecx\n\t"
+      "movl %%ecx, 0x1b4(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001ac030_1:\n\t"
+      "andl $0xfffeffff, %%ecx\n\t"
+      "movl %%ecx, 0x1b4(%%eax)\n\t"
+      ".LFUN_001ac030_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1ac030_get)
+      : "memory");
 }
+#else
+#error "FUN_001ac030: clang naked draft required"
+#endif
 
-void FUN_001ac070(int unit_handle, char flag)
+
+/* FUN_001ac070 (0x1ac070) — XBE naked draft (batch 290). */
+#if defined(__clang__)
+static void *(*const b1ac070_get)(int, int) = object_get_and_verify_type;
+static void (*const b1ac070_c140160)(int object_handle, int16_t region_count) = object_set_region_count;
+
+__attribute__((naked, noinline))
+void FUN_001ac070(int unit_handle __attribute__((unused)), char flag __attribute__((unused)))
 {
-  if (unit_handle == -1)
-    return;
-  {
-    char *unit = (char *)object_get_and_verify_type(unit_handle, 3);
-    unit[0x258] = flag;
-    object_set_region_count(unit_handle, 6);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_001ac070_1\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "pushl $6\n\t"
+      "pushl %%esi\n\t"
+      "movb %%cl, 0x258(%%eax)\n\t"
+      "call *%[c140160]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_001ac070_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1ac070_get), [c140160] "m"(b1ac070_c140160)
+      : "memory");
 }
+#else
+#error "FUN_001ac070: clang naked draft required"
+#endif
 
-void FUN_001ac0a0(int unit_handle, char flag)
+
+/* FUN_001ac0a0 (0x1ac0a0) — XBE naked draft (batch 285). */
+#if defined(__clang__)
+static void *(*const b1ac0a0_get)(int, int) = object_get_and_verify_type;
+
+__attribute__((naked, noinline))
+void FUN_001ac0a0(int unit_handle __attribute__((unused)), char flag __attribute__((unused)))
 {
-  if (unit_handle == -1)
-    return;
-  {
-    char *unit = (char *)object_get_and_verify_type(unit_handle, 3);
-    if (flag)
-      *(uint32_t *)(unit + 0x1b4) |= 0x4000u;
-    else
-      *(uint32_t *)(unit + 0x1b4) &= ~0x4000u;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001ac0a0_2\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movl 0x1b4(%%eax), %%ecx\n\t"
+      "je .LFUN_001ac0a0_1\n\t"
+      "orl $0x4000, %%ecx\n\t"
+      "movl %%ecx, 0x1b4(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001ac0a0_1:\n\t"
+      "andl $0xffffbfff, %%ecx\n\t"
+      "movl %%ecx, 0x1b4(%%eax)\n\t"
+      ".LFUN_001ac0a0_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1ac0a0_get)
+      : "memory");
 }
+#else
+#error "FUN_001ac0a0: clang naked draft required"
+#endif
 
-int FUN_001AC0E0(int unit_handle)
+
+/* FUN_001AC0E0 (0x1ac0e0) — XBE naked draft (batch 287). */
+#if defined(__clang__)
+static void *(*const b1ac0e0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1ac0e0_tag)(int, int) = tag_get;
+static void *(*const b1ac0e0_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+int FUN_001AC0E0(int unit_handle __attribute__((unused)))
 {
-  if (unit_handle == -1)
-    return 0;
-  {
-    char *unit = (char *)object_get_and_verify_type(unit_handle, 3);
-    int anim_tag;
-    void *anim_elem;
-    int frame_delta;
-
-    if (unit[0x253] != 0x1c)
-      return 0;
-
-    anim_tag = (int)tag_get(0x616e7472, *(int *)(unit + 0x7c));
-    anim_elem = tag_block_get_element((void *)(anim_tag + 0x74),
-                                      (int)*(int16_t *)(unit + 0x80), 0xb4);
-    frame_delta = (int)*(int16_t *)((char *)anim_elem + 0x22) -
-                  (int)*(int16_t *)(unit + 0x82) - 2;
-    if (frame_delta <= 0)
-      return frame_delta;
-    return 0;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "je .LFUN_001AC0E0_1\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x253(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpb $0x1c, %%al\n\t"
+      "jne .LFUN_001AC0E0_1\n\t"
+      "movl 0x7c(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x616e7472\n\t"
+      "call *%[tag]\n\t"
+      "movswl 0x80(%%esi), %%ecx\n\t"
+      "pushl $0xb4\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x74, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movswl 0x22(%%eax), %%eax\n\t"
+      "movswl 0x82(%%esi), %%edx\n\t"
+      "subl %%edx, %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "addl $-2, %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "setle %%cl\n\t"
+      "popl %%esi\n\t"
+      "decl %%ecx\n\t"
+      "andl %%ecx, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001AC0E0_1:\n\t"
+      "xorw %%ax, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1ac0e0_get), [tag] "m"(b1ac0e0_tag), [elem] "m"(b1ac0e0_elem)
+      : "memory");
 }
+#else
+#error "FUN_001AC0E0: clang naked draft required"
+#endif
 
-char FUN_001ac150(int unit_handle)
+
+/* FUN_001ac150 (0x1ac150) — XBE naked draft (batch 291). */
+#if defined(__clang__)
+static void *(*const b1ac150_get)(int, int) = object_get_and_verify_type;
+
+__attribute__((naked, noinline))
+char FUN_001ac150(int unit_handle __attribute__((unused)))
 {
-  if (unit_handle == -1)
-    return 0;
-  return (char)(*(char *)((char *)object_get_and_verify_type(unit_handle, 3) +
-                          0x253) == 0x1c);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001ac150_1\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movb 0x253(%%eax), %%dl\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpb $0x1c, %%dl\n\t"
+      "sete %%cl\n\t"
+      "movb %%cl, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001ac150_1:\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1ac150_get)
+      : "memory");
 }
+#else
+#error "FUN_001ac150: clang naked draft required"
+#endif
+
 
 /* sound_dispose (0x1ac350) — XBE naked draft (batch 279). */
 #if defined(__clang__)
@@ -2720,27 +2864,79 @@ char FUN_001ac3b0(int unit_handle __attribute__((unused)), int weapon_handle __a
 #endif
 
 
-void FUN_001be100(void *perm_entry)
-{
-  char *entry = (char *)perm_entry;
-  datum_get(*(data_t **)0x4e9368, *(int *)(entry + 0x2c));
-  if ((uint8_t)entry[5] < 0xffu) {
-    entry[5]++;
-    return;
-  }
-  *(int16_t *)0x5054ea += 1;
-}
+/* FUN_001be100 (0x1be100) — XBE naked draft (batch 288). */
+#if defined(__clang__)
+static void *(*const b1be100_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 
-void FUN_001be140(void *perm_entry)
+__attribute__((naked, noinline))
+void FUN_001be100(void *cache_entry __attribute__((unused)))
 {
-  char *entry = (char *)perm_entry;
-  datum_get(*(data_t **)0x4e9368, *(int *)(entry + 0x2c));
-  if (entry[5] != 0) {
-    entry[5]--;
-    return;
-  }
-  *(int16_t *)0x5054ea += 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x2c(%%eax), %%ecx\n\t"
+      "movl 0x4e9368, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0x5(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpb $0xff, %%cl\n\t"
+      "jae .LFUN_001be100_1\n\t"
+      "incb %%cl\n\t"
+      "movb %%cl, 0x5(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001be100_1:\n\t"
+      "incw 0x5054ea\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1be100_dget)
+      : "memory");
 }
+#else
+#error "FUN_001be100: clang naked draft required"
+#endif
+
+
+/* FUN_001be140 (0x1be140) — XBE naked draft (batch 290). */
+#if defined(__clang__)
+static void *(*const b1be140_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void FUN_001be140(void *cache_entry __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x2c(%%eax), %%ecx\n\t"
+      "movl 0x4e9368, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0x5(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_001be140_1\n\t"
+      "decb %%cl\n\t"
+      "movb %%cl, 0x5(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001be140_1:\n\t"
+      "incw 0x5054ea\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1be140_dget)
+      : "memory");
+}
+#else
+#error "FUN_001be140: clang naked draft required"
+#endif
+
 
 /* FUN_001be170 (0x1be170) — XBE naked draft (batch 280). */
 #if defined(__clang__)
@@ -2783,15 +2979,35 @@ char FUN_001be170(int cache_handle __attribute__((unused)))
 #endif
 
 
-char sound_try_and_get(int sound_index)
+/* sound_try_and_get (0x1cb960) — XBE naked draft (batch 287). */
+#if defined(__clang__)
+static int (*const b1cb960_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
+
+__attribute__((naked, noinline))
+char sound_try_and_get(int sound_index __attribute__((unused)))
 {
-  int index =
-    datum_absolute_index_to_index(*(data_t **)0x4fdba4, sound_index);
-  int result = -index;
-  result = result - result - (result != 0);
-  result = -result;
-  return (char)result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x4fdba4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119270]\n\t"
+      "addl $8, %%esp\n\t"
+      "negl %%eax\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "negl %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c119270] "m"(b1cb960_c119270)
+      : "memory");
 }
+#else
+#error "sound_try_and_get: clang naked draft required"
+#endif
+
 
 void sound_enable(char enabled)
 {
@@ -2851,18 +3067,61 @@ void sound_manager_set_sound_environment(void *environment __attribute__((unused
 #endif
 
 
+/* FUN_001cb9d0 (0x1cb9d0) — XBE naked draft (batch 286). */
+#if defined(__clang__)
+static unsigned int (*const b1cb9d0_c8e370)(void) = system_milliseconds;
+
+__attribute__((naked, noinline))
 void FUN_001cb9d0(void)
 {
-  unsigned int tick = system_milliseconds();
-  float delta = (float)(int)(tick - *(unsigned int *)0x4eaf4c);
-  *(unsigned int *)0x4eaf4c = tick;
-  *(float *)0x4eaf50 = delta * *(float *)0x25bc08;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8e370]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fisubl 0x4eaf4c\n\t"
+      "movl %%eax, 0x4eaf4c\n\t"
+      "fmuls 0x25bc08\n\t"
+      "fstps 0x4eaf50\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8e370] "m"(b1cb9d0_c8e370)
+      : "memory");
 }
+#else
+#error "FUN_001cb9d0: clang naked draft required"
+#endif
 
-float FUN_001cba00(float scale, float a, float b, float t)
+
+/* FUN_001cba00 (0x1cba00) — XBE naked draft (batch 288). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+float FUN_001cba00(float scale __attribute__((unused)), float a __attribute__((unused)), float b __attribute__((unused)), float t __attribute__((unused)))
 {
-  return ((b - a) * t + a) * scale;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fsubs 0xc(%%ebp)\n\t"
+      "fmuls 0x14(%%ebp)\n\t"
+      "fadds 0xc(%%ebp)\n\t"
+      "fmuls 0x8(%%ebp)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001cba00: clang naked draft required"
+#endif
+
 
 /* --- sound_manager.obj batch2 drafts (2026-07-25) --- */
 
@@ -3397,10 +3656,32 @@ int FUN_001c8700(void *state __attribute__((unused)), int sample_count __attribu
 #endif
 
 
-void sound_is_active(int sound_index)
+/* sound_is_active (0x1c88a0) — XBE naked draft (batch 292). */
+#if defined(__clang__)
+static void (*const b1c88a0_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
+
+__attribute__((naked, noinline))
+void sound_is_active(int sound_index __attribute__((unused)))
 {
-  FUN_00118be0((void *)0x32ecf4, (void *)(long)sound_index, 1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x32ecf4\n\t"
+      "call *%[c118be0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c118be0] "m"(b1c88a0_c118be0)
+      : "memory");
 }
+#else
+#error "sound_is_active: clang naked draft required"
+#endif
+
 
 /* FUN_001c8ee0 (0x1c8ee0) — XBE naked draft (batch 284). */
 #if defined(__clang__)
@@ -3478,12 +3759,46 @@ void FUN_001cb1a0(int channel_index __attribute__((unused)), int param __attribu
 #endif
 
 
-void FUN_001cb1d0(int channel_index, int a, int b, int c, int d, int e)
+/* FUN_001cb1d0 (0x1cb1d0) — XBE naked draft (batch 288). */
+#if defined(__clang__)
+static short (*const b1cb1d0_c1c9b40)(int channel_index) = sound_dsound_channel_resolve;
+static void (*const b1cb1d0_c1cadd0)(int a, int b, int c, int d, int e, int f) = FUN_001cadd0;
+
+__attribute__((naked, noinline))
+void FUN_001cb1d0(int channel_index __attribute__((unused)), int a __attribute__((unused)), int b __attribute__((unused)), int c __attribute__((unused)), int d __attribute__((unused)), int e __attribute__((unused)))
 {
-  short resolved = sound_dsound_channel_resolve(channel_index);
-  if (resolved != -1)
-    FUN_001cadd0(resolved, a, b, c, d, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "call *%[c1c9b40]\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_001cb1d0_1\n\t"
+      "movl 0x1c(%%ebp), %%ecx\n\t"
+      "movl 0x18(%%ebp), %%edx\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1cadd0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001cb1d0_1:\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1c9b40] "m"(b1cb1d0_c1c9b40), [c1cadd0] "m"(b1cb1d0_c1cadd0)
+      : "memory");
 }
+#else
+#error "FUN_001cb1d0: clang naked draft required"
+#endif
+
 
 /* FUN_001cb210 (0x1cb210) — XBE naked draft (batch 272). */
 #if defined(__clang__)
@@ -4009,20 +4324,52 @@ char FUN_001cb4c0(void *driver_caps __attribute__((unused)))
 #endif
 
 
+/* FUN_001cb820 (0x1cb820) — XBE naked draft (batch 290). */
+#if defined(__clang__)
+static void (*const b1cb820_c119550)(data_t *data) = data_make_invalid;
+static void (*const b1cb820_c119520)(data_t *data) = data_dispose;
+
+__attribute__((naked, noinline))
 void FUN_001cb820(void)
 {
-  if (*(char *)0x4eaf40) {
-    (*(void (**)(void))(*(int *)0x4eaf48 + 8))();
-    data_make_invalid(*(data_t **)0x4fdba4);
-    data_make_invalid(*(data_t **)0x4fdba0);
-    *(char *)0x4eaf40 = 0;
-  }
-  if (*(data_t **)0x4fdba4)
-    data_dispose(*(data_t **)0x4fdba4);
-  if (*(data_t **)0x4fdba0)
-    data_dispose(*(data_t **)0x4fdba0);
-  FUN_001bde90();
+  __asm__ volatile(
+      "movb 0x4eaf40, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001cb820_1\n\t"
+      "movl 0x4eaf48, %%eax\n\t"
+      "call *0x8(%%eax)\n\t"
+      "movl 0x4fdba4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119550]\n\t"
+      "movl 0x4fdba0, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119550]\n\t"
+      "addl $8, %%esp\n\t"
+      "movb $0, 0x4eaf40\n\t"
+      ".LFUN_001cb820_1:\n\t"
+      "movl 0x4fdba4, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001cb820_2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119520]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001cb820_2:\n\t"
+      "movl 0x4fdba0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001cb820_3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119520]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001cb820_3:\n\t"
+      ".byte 0xe9, 0x14, 0x26, 0xff, 0xff\n\t"
+      :
+      : [c119550] "m"(b1cb820_c119550), [c119520] "m"(b1cb820_c119520)
+      : "memory");
 }
+#else
+#error "FUN_001cb820: clang naked draft required"
+#endif
+
 
 /* sound_reconnect_to_structure_bsp (0x1cb8f0) — XBE naked draft (batch 282). */
 #if defined(__clang__)
@@ -4086,10 +4433,28 @@ void sound_reconnect_to_structure_bsp(void)
 #endif
 
 
-float FUN_001cbc20(float t)
+/* FUN_001cbc20 (0x1cbc20) — XBE naked draft (batch 290). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+float FUN_001cbc20(float t __attribute__((unused)))
 {
-  return *(float *)0x2c1288 * t;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x2c1288\n\t"
+      "fmuls 0x8(%%ebp)\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x36, 0xd4, 0x00, 0x00\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001cbc20: clang naked draft required"
+#endif
+
 
 /* FUN_001cbc40 (0x1cbc40) — XBE naked draft (batch 282). */
 #if defined(__clang__)
@@ -4192,15 +4557,47 @@ char FUN_001cbc40(int sound_handle __attribute__((unused)))
 #endif
 
 
-char FUN_001cc1c0(int looping_handle, void *out)
+/* FUN_001cc1c0 (0x1cc1c0) — XBE naked draft (batch 287). */
+#if defined(__clang__)
+static int (*const b1cc1c0_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
+
+__attribute__((naked, noinline))
+char FUN_001cc1c0(int looping_handle __attribute__((unused)), void *out __attribute__((unused)))
 {
-  char *src = (char *)datum_absolute_index_to_index(*(data_t **)0x4fdba0,
-                                                    looping_handle);
-  if (!src)
-    return 0;
-  csmemcpy(out, src + 0xc, 0x40);
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x4fdba0, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119270]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001cc1c0_1\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "leal 0xc(%%eax), %%esi\n\t"
+      "movl $0x10, %%ecx\n\t"
+      "rep movsl\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001cc1c0_1:\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c119270] "m"(b1cc1c0_c119270)
+      : "memory");
 }
+#else
+#error "FUN_001cc1c0: clang naked draft required"
+#endif
+
 
 /* FUN_001cc200 (0x1cc200) — XBE naked draft (batch 274). */
 #if defined(__clang__)
@@ -4310,12 +4707,33 @@ char FUN_001cc200(int looping_handle __attribute__((unused)), void *source __att
 #endif
 
 
-void FUN_001cc2f0(int sound_handle /* @<eax> */, int tag_index /* @<esi> */)
+/* FUN_001cc2f0 (0x1cc2f0) — XBE naked draft (batch 288). */
+#if defined(__clang__)
+static void *(*const b1cc2f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void FUN_001cc2f0(int sound_handle __attribute__((unused)), int tag_index __attribute__((unused)))
 {
-  char *entry = (char *)datum_get(*(data_t **)0x4fdba4, sound_handle);
-  if (*(int *)(entry + 8) != tag_index)
-    *(int *)(entry + 0x98) = tag_index;
+  __asm__ volatile(
+      "movl 0x4fdba4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "je .LFUN_001cc2f0_1\n\t"
+      "movl %%esi, 0x98(%%eax)\n\t"
+      ".LFUN_001cc2f0_1:\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1cc2f0_dget)
+      : "memory");
 }
+#else
+#error "FUN_001cc2f0: clang naked draft required"
+#endif
+
 
 /* FUN_001cc440 (0x1cc440) — XBE naked draft (batch 278). */
 #if defined(__clang__)
@@ -5298,33 +5716,127 @@ void FUN_001cd390(void *track_entry __attribute__((unused)), float *out __attrib
 #endif
 
 
-void sound_stop_impulse_by_source_and_definition(int source, int definition)
-{
-  int index = data_next_index(*(data_t **)0x4fdba4, -1);
-  while (index != -1) {
-    char *entry = (char *)datum_get(*(data_t **)0x4fdba4, index);
-    if (*(int16_t *)(entry + 2) == 0 && *(int *)(entry + 0xc) == source &&
-        *(int *)(entry + 8) == definition) {
-      sound_stop_impulse(index);
-      return;
-    }
-    index = data_next_index(*(data_t **)0x4fdba4, index);
-  }
-}
+/* sound_stop_impulse_by_source_and_definition (0x1cd4d0) — XBE naked draft (batch 285). */
+#if defined(__clang__)
+static int (*const b1cd4d0_c1198f0)(data_t *data, int prev_index) = data_next_index;
+static void *(*const b1cd4d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b1cd4d0_c1cd450)(int sound_index) = sound_stop_impulse;
 
+__attribute__((naked, noinline))
+void sound_stop_impulse_by_source_and_definition(int source __attribute__((unused)), int definition __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x4fdba4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1198f0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lsound_stop_impulse_by_source_and_definition_4\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      ".Lsound_stop_impulse_by_source_and_definition_1:\n\t"
+      "movl 0x4fdba4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, 0x2(%%eax)\n\t"
+      "jne .Lsound_stop_impulse_by_source_and_definition_2\n\t"
+      "cmpl %%ebx, 0xc(%%eax)\n\t"
+      "jne .Lsound_stop_impulse_by_source_and_definition_2\n\t"
+      "cmpl %%edi, 0x8(%%eax)\n\t"
+      "je .Lsound_stop_impulse_by_source_and_definition_3\n\t"
+      ".Lsound_stop_impulse_by_source_and_definition_2:\n\t"
+      "movl 0x4fdba4, %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1198f0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne .Lsound_stop_impulse_by_source_and_definition_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lsound_stop_impulse_by_source_and_definition_3:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1cd450]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".Lsound_stop_impulse_by_source_and_definition_4:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1198f0] "m"(b1cd4d0_c1198f0), [dget] "m"(b1cd4d0_dget), [c1cd450] "m"(b1cd4d0_c1cd450)
+      : "memory");
+}
+#else
+#error "sound_stop_impulse_by_source_and_definition: clang naked draft required"
+#endif
+
+
+/* sound_stop_all (0x1cd540) — XBE naked draft (batch 286). */
+#if defined(__clang__)
+static int (*const b1cd540_c1198f0)(data_t *data, int prev_index) = data_next_index;
+static void (*const b1cd540_c1cca60)(int sound_handle) = sound_stop_channel;
+static void (*const b1cd540_c119720)(data_t *data) = data_make_valid;
+
+__attribute__((naked, noinline))
 void sound_stop_all(void)
 {
-  if (*(char *)0x4eaf40) {
-    int index = data_next_index(*(data_t **)0x4fdba4, -1);
-    while (index != -1) {
-      sound_stop_channel(index);
-      index = data_next_index(*(data_t **)0x4fdba4, index);
-    }
-    data_make_valid(*(data_t **)0x4fdba0);
-    (*(void (**)(void))(*(int *)0x4eaf48 + 0x2c))();
-  }
-  *(int *)0x4eaf44 = 0;
+  __asm__ volatile(
+      "movb 0x4eaf40, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lsound_stop_all_3\n\t"
+      "movl 0x4fdba4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1198f0]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .Lsound_stop_all_2\n\t"
+      ".Lsound_stop_all_1:\n\t"
+      "call *%[c1cca60]\n\t"
+      "movl 0x4fdba4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1198f0]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "jne .Lsound_stop_all_1\n\t"
+      ".Lsound_stop_all_2:\n\t"
+      "movl 0x4fdba0, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119720]\n\t"
+      "movl 0x4eaf48, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "call *0x2c(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      ".Lsound_stop_all_3:\n\t"
+      "movl $0, 0x4eaf44\n\t"
+      "ret\n\t"
+      :
+      : [c1198f0] "m"(b1cd540_c1198f0), [c1cca60] "m"(b1cd540_c1cca60), [c119720] "m"(b1cd540_c119720)
+      : "memory");
 }
+#else
+#error "sound_stop_all: clang naked draft required"
+#endif
+
 
 /* FUN_001cd690 (0x1cd690) — XBE naked draft (batch 268). */
 #if defined(__clang__)

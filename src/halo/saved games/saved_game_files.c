@@ -145,11 +145,29 @@ void FUN_001c1b00(void)
 #endif
 
 
-/* 0x1c1ba0 */
+/* FUN_001c1ba0 (0x1c1ba0) — XBE naked draft (batch 285). */
+#if defined(__clang__)
+static void *(*const b1c1ba0_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void FUN_001c1ba0(void)
 {
-  csmemset((void *)0x004ea9c8, 0, 108);
+  __asm__ volatile(
+      "pushl $0x6c\n\t"
+      "pushl $0\n\t"
+      "pushl $0x4ea9c8\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0x4eaa30\n\t"
+      ".byte 0xe9, 0x23, 0xfe, 0xff, 0xff\n\t"
+      :
+      : [memset] "m"(b1c1ba0_memset)
+      : "memory");
 }
+#else
+#error "FUN_001c1ba0: clang naked draft required"
+#endif
+
 
 /* player_profile_get_from_path (0x1c1bc0) — XBE naked draft (batch 281). */
 #if defined(__clang__)
@@ -403,29 +421,77 @@ void FUN_001c1cc0(void)
 #endif
 
 
-/* 0x1c1da0 */
+/* FUN_001c1da0 (0x1c1da0) — XBE naked draft (batch 288). */
+#if defined(__clang__)
+static void *(*const b1c1da0_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void FUN_001c1da0(void)
 {
-  csmemset((void *)0x004eaa38, 0, 116);
+  __asm__ volatile(
+      "pushl $0x74\n\t"
+      "pushl $0\n\t"
+      "pushl $0x4eaa38\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0x4eaaaa\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b1c1da0_memset)
+      : "memory");
 }
+#else
+#error "FUN_001c1da0: clang naked draft required"
+#endif
 
-/* 0x1c1dc0 */
+
+/* FUN_001c1dc0 (0x1c1dc0) — XBE naked draft (batch 288). */
+#if defined(__clang__)
+static void (*const b1c1dc0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static bool (*const b1c1dc0_c81720)(void *thread_reference) = thread_is_done;
+static void (*const b1c1dc0_c81770)(void *thread_reference) = thread_close;
+static void *(*const b1c1dc0_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void FUN_001c1dc0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  /* test eax, eax -> je 0x1c1e0b */
-  error(0, (char *)0x002ba430);
-  thread_is_done((void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0x1c1de0 */
-  thread_close((void *)(uintptr_t)ecx);
-  /* mem[0x004eaaa4] = 0 */
-  csmemset((void *)0x004eaa38, 0, 116);
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "movl 0x4eaaa4, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001c1dc0_2\n\t"
+      "pushl $0x2ba430\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .LFUN_001c1dc0_1\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LFUN_001c1dc0_1:\n\t"
+      "movl 0x4eaaa4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c81720]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001c1dc0_1\n\t"
+      "movl 0x4eaaa4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c81770]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl $0, 0x4eaaa4\n\t"
+      ".LFUN_001c1dc0_2:\n\t"
+      "pushl $0x74\n\t"
+      "pushl $0\n\t"
+      "pushl $0x4eaa38\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c8f390] "m"(b1c1dc0_c8f390), [c81720] "m"(b1c1dc0_c81720), [c81770] "m"(b1c1dc0_c81770), [memset] "m"(b1c1dc0_memset)
+      : "memory");
 }
+#else
+#error "FUN_001c1dc0: clang naked draft required"
+#endif
+
 
 /* FUN_001c1e20 (0x1c1e20) — XBE naked draft (batch 251). */
 #if defined(__clang__)
@@ -565,20 +631,43 @@ void FUN_001c1e20(void)
 #endif
 
 
-/* 0x1c1f70 */
+/* FUN_001c1f70 (0x1c1f70) — XBE naked draft (batch 287). */
+#if defined(__clang__)
+static char (*const b1c1f70_c1c46c0)(int param_1) = delete_enumerated_saved_game_file;
+static void (*const b1c1f70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
 void FUN_001c1f70(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* cmp esi, -1 -> je 0x1c1f99 */
-  delete_enumerated_saved_game_file(0);
-  /* test (char)eax, (char)eax -> jne 0x1c1f99 */
-  error(0, (char *)0x002ba4d4);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_001c1f70_1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1c46c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001c1f70_1\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x2ba4d4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_001c1f70_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1c46c0] "m"(b1c1f70_c1c46c0), [c8f390] "m"(b1c1f70_c8f390)
+      : "memory");
 }
+#else
+#error "FUN_001c1f70: clang naked draft required"
+#endif
+
 
 /* playlist_profile_get (0x1c1fa0) — XBE naked draft (batch 251). */
 #if defined(__clang__)
@@ -1665,12 +1754,28 @@ void saved_game_file_close(void)
 #endif
 
 
-/* 0x1c29a0 */
+/* saved_game_file_get_type (0x1c29a0) — XBE naked draft (batch 289). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void saved_game_file_get_type(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "andl $0xf, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "saved_game_file_get_type: clang naked draft required"
+#endif
+
 
 /* 0x1c29b0 */
 void saved_game_files_notify_memory_units_changed(void)
@@ -1802,25 +1907,50 @@ void saved_game_file_get_useable_untitled_profile_name(void)
 #endif
 
 
-/* 0x1c2af0 */
+/* saved_game_files_take_mutex (0x1c2af0) — XBE naked draft (batch 290). */
+#if defined(__clang__)
+static bool (*const b1c2af0_c81870)(int *mutex_reference, int timeout_ms) = take_mutex;
+
+__attribute__((naked, noinline))
 void saved_game_files_take_mutex(void)
 {
-  int eax = 0;
-
-  take_mutex((void *)(uintptr_t)eax, 0x0036ee80);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x4eacbc, %%eax\n\t"
+      "pushl $0x36ee80\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c81870]\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c81870] "m"(b1c2af0_c81870)
+      : "memory");
 }
+#else
+#error "saved_game_files_take_mutex: clang naked draft required"
+#endif
 
-/* 0x1c2b10 */
+
+/* saved_game_files_release_mutex (0x1c2b10) — XBE naked draft (batch 290). */
+#if defined(__clang__)
+static void (*const b1c2b10_c818d0)(int *mutex_reference) = release_mutex;
+
+__attribute__((naked, noinline))
 void saved_game_files_release_mutex(void)
 {
-  int eax = 0;
-
-  release_mutex((void *)(uintptr_t)eax);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x4eacbc, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c818d0]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c818d0] "m"(b1c2b10_c818d0)
+      : "memory");
 }
+#else
+#error "saved_game_files_release_mutex: clang naked draft required"
+#endif
+
 
 /* saved_game_perform_file_system_checks (0x1c2b20) — XBE naked draft (batch 259). */
 #if defined(__clang__)
@@ -1933,18 +2063,58 @@ void saved_game_perform_file_system_checks(void)
 #endif
 
 
-/* 0x1c2bf0 — return non-zero if current profile name is unique. */
+/* saved_game_file_name_unique (0x1c2bf0) — XBE naked draft (batch 285). */
+#if defined(__clang__)
+static char * (*const b1c2bf0_c19f3a0)(const wchar_t *unicode, char *ascii, int size) = wide_to_ascii;
+static void (*const b1c2bf0_c1d2f22)(void) = FUN_001d2f22;
+
+__attribute__((naked, noinline))
 char saved_game_file_name_unique(void)
 {
-  wchar_t *name = *(wchar_t **)0x46cf08;
-  char ascii[256];
-
-  if (name == 0 || name[0] == 0)
-    return 0;
-  wide_to_ascii(name, ascii, 255);
-  FUN_001d2f22();
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x108, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lsaved_game_file_name_unique_1\n\t"
+      "cmpw $0, (%%eax)\n\t"
+      "je .Lsaved_game_file_name_unique_1\n\t"
+      "pushl $0x100\n\t"
+      "leal -0x108(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x32eb94, %%eax\n\t"
+      "pushl $8\n\t"
+      "leal -0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19f3a0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2f22]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movb $1, %%al\n\t"
+      "jne .Lsaved_game_file_name_unique_2\n\t"
+      ".Lsaved_game_file_name_unique_1:\n\t"
+      "movb %%bl, %%al\n\t"
+      ".Lsaved_game_file_name_unique_2:\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c19f3a0] "m"(b1c2bf0_c19f3a0), [c1d2f22] "m"(b1c2bf0_c1d2f22)
+      : "memory");
 }
+#else
+#error "saved_game_file_name_unique: clang naked draft required"
+#endif
+
 
 /* saved_game_file_remember_player1_last_used_profile_directory (0x1c2c50) — XBE naked draft (batch 257). */
 #if defined(__clang__)

@@ -371,29 +371,71 @@ void device_preprocess_node_orientations(void)
 #endif
 
 
-/* 0x96470 */
-int device_get_position(int a0)
+/* device_get_position (0x96470) — XBE naked draft (batch 286). */
+#if defined(__clang__)
+static void *(*const b96470_get)(int, int) = object_get_and_verify_type;
+
+__attribute__((naked, noinline))
+int device_get_position(int a0 __attribute__((unused)))
 {
-  int eax = 0;
-
-  /* cmp eax, -1 -> je 0x96491 */
-  object_get_and_verify_type(0, 896);
-  return 0;
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Ldevice_get_position_1\n\t"
+      "pushl $0x380\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "flds 0x1b8(%%eax)\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ldevice_get_position_1:\n\t"
+      "flds 0x2533c0\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b96470_get)
+      : "memory");
 }
+#else
+#error "device_get_position: clang naked draft required"
+#endif
 
-/* 0x964a0 */
-int device_get_power(int a0)
+
+/* device_get_power (0x964a0) — XBE naked draft (batch 286). */
+#if defined(__clang__)
+static void *(*const b964a0_get)(int, int) = object_get_and_verify_type;
+
+__attribute__((naked, noinline))
+int device_get_power(int a0 __attribute__((unused)))
 {
-  int eax = 0;
-
-  /* cmp eax, -1 -> je 0x964c1 */
-  object_get_and_verify_type(0, 896);
-  return 0;
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Ldevice_get_power_1\n\t"
+      "pushl $0x380\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "flds 0x1ac(%%eax)\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ldevice_get_power_1:\n\t"
+      "flds 0x2533c0\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b964a0_get)
+      : "memory");
 }
+#else
+#error "device_get_power: clang naked draft required"
+#endif
+
 
 /* device_set_never_appears_locked (0x964d0) — XBE naked draft (batch 279). */
 #if defined(__clang__)
@@ -649,16 +691,33 @@ void device_group_change_only_once_more_set(int a0 __attribute__((unused)), int 
 #endif
 
 
-/* 0x966b0 */
-int device_group_get_value(int a0)
+/* device_group_get_value (0x966b0) — XBE naked draft (batch 289). */
+#if defined(__clang__)
+static void *(*const b966b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+int device_group_get_value(int a0 __attribute__((unused)))
 {
-  int ecx = 0;
-
-  datum_get((void *)(uintptr_t)ecx, 0);
-  return 0;
-
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x5aa8c8, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b966b0_dget)
+      : "memory");
 }
+#else
+#error "device_group_get_value: clang naked draft required"
+#endif
+
 
 /* device_group_set_real (0x966d0) — XBE naked draft (batch 282). */
 #if defined(__clang__)

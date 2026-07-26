@@ -75,24 +75,55 @@ bool FUN_00012e50(int actor_handle)
   return result;
 }
 
-/* 0x12f10 — Normalize a 2D vector in-place and return its magnitude.
- * Despite the kb.json name "magnitude3d", only operates on v[0] and v[1].
- * If magnitude exceeds epsilon, divides each component by it so v becomes
- * a unit vector. Returns the original magnitude, or 0.0f if too small. */
-float magnitude3d(float *v)
-{
-  float mag;
-  float scale;
+/* magnitude3d (0x12f10) — XBE naked draft (batch 285). */
+#if defined(__clang__)
 
-  mag = sqrtf(v[0] * v[0] + v[1] * v[1]);
-  if (fabsf(mag) >= *(double *)0x2533d0) {
-    scale = 1.0f / mag;
-    v[0] = v[0] * scale;
-    v[1] = v[1] * scale;
-    return mag;
-  }
-  return 0.0f;
+
+__attribute__((naked, noinline))
+float magnitude3d(float *v __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "flds (%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fstp %%st(2)\n\t"
+      "fstp %%st(0)\n\t"
+      "fld %%st(0)\n\t"
+      "fabs\n\t"
+      "fcompl 0x2533d0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lmagnitude3d_1\n\t"
+      "flds 0x2533c8\n\t"
+      "fdiv %%st(1), %%st(0)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls (%%ecx)\n\t"
+      "fstps (%%ecx)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      "fstps 0x4(%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmagnitude3d_1:\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c0\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "magnitude3d: clang naked draft required"
+#endif
+
 
 /* 0x12f80 — Compute out = base + scale * direction (3-component). */
 float *vector3d_scale_add(float *base, float *direction, float scale, float *out)

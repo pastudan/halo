@@ -493,12 +493,28 @@ void symbol_table_dispose(int32_t *symtab __attribute__((unused)))
 
 /* --- profile.obj batch drafts (2026-07-26) --- */
 
-/* 0x8f870 */
+/* profile_seconds_elapsed (0x8f870) — XBE naked draft (batch 289). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void profile_seconds_elapsed(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x449cc8\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "profile_seconds_elapsed: clang naked draft required"
+#endif
+
 
 /* profile_lapsed_frames (0x8f880) — XBE naked draft (batch 282). */
 #if defined(__clang__)
@@ -1266,12 +1282,30 @@ void FUN_0008fb60(void)
 #endif
 
 
-/* 0x90170 */
+/* FUN_00090170 (0x90170) — XBE naked draft (batch 286). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00090170(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00090170: clang naked draft required"
+#endif
+
 
 /* FUN_00090180 (0x90180) — XBE naked draft (batch 260). */
 #if defined(__clang__)
@@ -3915,12 +3949,28 @@ void FUN_00091ef0(int *keys __attribute__((unused)), int count __attribute__((un
 #endif
 
 
-/* 0x92050 */
+/* FUN_00092050 (0x92050) — XBE naked draft (batch 289). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00092050(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "movb %%al, 0x2ee784\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00092050: clang naked draft required"
+#endif
+
 
 /* profile_idle_start (0x92060) — XBE naked draft (batch 262). */
 #if defined(__clang__)

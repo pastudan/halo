@@ -508,58 +508,151 @@ void game_state_read_from_file(void)
 #endif
 
 
-/* 0x1c0570 */
+/* game_state_write_core (0x1c0570) — XBE naked draft (batch 286). */
+#if defined(__clang__)
+static int (*const b1c0570_c1d3410)(const char *path, int access) = CreateDirectoryA;
+static int (*const b1c0570_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static int __stdcall (*const b1c0570_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = CreateFileA;
+static int __stdcall (*const b1c0570_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = WriteFile;
+static int __stdcall (*const b1c0570_c1cf900)(int handle) = CloseHandle;
+
+__attribute__((naked, noinline))
 void game_state_write_core(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  CreateDirectoryA((char *)0x002b9cf4, 0);
-  crt_sprintf((char *)(uintptr_t)ecx, (char *)0x002b9ce8);
-  CreateFileA((char *)(uintptr_t)edx, 0x40000000, 0, 0, 0, 128, 0);
-  /* cmp esi, -1 -> je 0x1c05e7 */
-  WriteFile(0, (void *)(uintptr_t)ecx, edi, (void *)(uintptr_t)eax, (void *)0);
-  /* test eax, eax -> je 0x1c05e6 */
-  /* relift: cmp dword ptr [ebp - 4], edi -> jne 0x1c05e6 */
-  CloseHandle(0);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x404, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl $0x2b9cf4\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c1d3410]\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x404(%%ebp), %%ecx\n\t"
+      "pushl $0x2b9ce8\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0\n\t"
+      "pushl $0x80\n\t"
+      "pushl $2\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0x40000000\n\t"
+      "leal -0x404(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d1d85]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lgame_state_write_core_2\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "pushl $0\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d14b6]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lgame_state_write_core_1\n\t"
+      "cmpl %%edi, -0x4(%%ebp)\n\t"
+      "jne .Lgame_state_write_core_1\n\t"
+      "movb $1, %%bl\n\t"
+      ".Lgame_state_write_core_1:\n\t"
+      "popl %%edi\n\t"
+      ".Lgame_state_write_core_2:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1cf900]\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d3410] "m"(b1c0570_c1d3410), [c1d90f0] "m"(b1c0570_c1d90f0), [c1d1d85] "m"(b1c0570_c1d1d85), [c1d14b6] "m"(b1c0570_c1d14b6), [c1cf900] "m"(b1c0570_c1cf900)
+      : "memory");
 }
+#else
+#error "game_state_write_core: clang naked draft required"
+#endif
 
-/* 0x1c0600 */
+
+/* game_state_read_core_header (0x1c0600) — XBE naked draft (batch 285). */
+#if defined(__clang__)
+static int (*const b1c0600_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static int __stdcall (*const b1c0600_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = CreateFileA;
+static int __stdcall (*const b1c0600_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = ReadFile;
+static int __stdcall (*const b1c0600_c1cf900)(int handle) = CloseHandle;
+
+__attribute__((naked, noinline))
 void game_state_read_core_header(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  crt_sprintf((char *)(uintptr_t)ecx, (char *)0x002b9ce8);
-  CreateFileA((char *)(uintptr_t)edx, 0x80000000, 0, 0, 0, 128, 0);
-  /* cmp esi, -1 -> je 0x1c066b */
-  ReadFile(0, (void *)(uintptr_t)ecx, edi, (void *)(uintptr_t)eax, (void *)0);
-  /* test eax, eax -> je 0x1c066a */
-  /* relift: cmp dword ptr [ebp - 4], edi -> jne 0x1c066a */
-  CloseHandle(0);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x404, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x404(%%ebp), %%ecx\n\t"
+      "pushl $0x2b9ce8\n\t"
+      "pushl %%ecx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0\n\t"
+      "pushl $0x80\n\t"
+      "pushl $3\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0x80000000\n\t"
+      "leal -0x404(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d1d85]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lgame_state_read_core_header_2\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "pushl $0\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d13c9]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lgame_state_read_core_header_1\n\t"
+      "cmpl %%edi, -0x4(%%ebp)\n\t"
+      "jne .Lgame_state_read_core_header_1\n\t"
+      "movb $1, %%bl\n\t"
+      ".Lgame_state_read_core_header_1:\n\t"
+      "popl %%edi\n\t"
+      ".Lgame_state_read_core_header_2:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1cf900]\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d90f0] "m"(b1c0600_c1d90f0), [c1d1d85] "m"(b1c0600_c1d1d85), [c1d13c9] "m"(b1c0600_c1d13c9), [c1cf900] "m"(b1c0600_c1cf900)
+      : "memory");
 }
+#else
+#error "game_state_read_core_header: clang naked draft required"
+#endif
+
 
 /* game_state_read_core (0x1c0680) — XBE naked draft (batch 284). */
 #if defined(__clang__)

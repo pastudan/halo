@@ -762,22 +762,59 @@ void draw_string_get_color(void)
 #endif
 
 
-/* 0x19b7e0 */
+/* FUN_0019B7E0 (0x19b7e0) — XBE naked draft (batch 289). */
+#if defined(__clang__)
+static void *(*const b19b7e0_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
 void FUN_0019B7E0(void)
 {
-  int esi = 0;
-
-  tag_get(0x666f6e74, 0);
-  /* mem[0x004d9b0c] = esi */
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x666f6e74\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%esi, 0x4d9b0c\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b19b7e0_tag)
+      : "memory");
 }
+#else
+#error "FUN_0019B7E0: clang naked draft required"
+#endif
 
-/* 0x19b8f0 */
+
+/* draw_string_set_highlight (0x19b8f0) — XBE naked draft (batch 286). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void draw_string_set_highlight(void)
 {
-  /* relift: no calls detected — manual review */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "movw 0xc(%%ebp), %%cx\n\t"
+      "movw %%ax, 0x4d9b4a\n\t"
+      "movw %%cx, 0x4d9b4c\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "draw_string_set_highlight: clang naked draft required"
+#endif
+
 
 /* bitmap_draw_character (0x19b910) — XBE naked draft (batch 243). */
 #if defined(__clang__)

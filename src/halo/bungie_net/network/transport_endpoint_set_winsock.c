@@ -1205,18 +1205,38 @@ void *transport_get_xnaddr(void *dst)
   return NULL;
 }
 
-/* 0x82090 */
+/* transport_get_key_id (0x82090) — XBE naked draft (batch 286). */
+#if defined(__clang__)
+static void (*const b82090_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b82090_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 int64_t transport_get_key_id(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jg 0x820b9 */
-  display_assert((char *)0x002664a8, (char *)0x00266458, 224, 0);
-  system_exit(0);
-  return 0;
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x335094, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jg .Ltransport_get_key_id_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe0\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x2664a8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltransport_get_key_id_1:\n\t"
+      "movl 0x5ab220, %%eax\n\t"
+      "movl 0x5ab224, %%edx\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b82090_assert), [exitfn] "m"(b82090_exitfn)
+      : "memory");
 }
+#else
+#error "transport_get_key_id: clang naked draft required"
+#endif
+
 
 /* 0x820d0 */
 void *transport_get_key(void *dst)
@@ -2585,17 +2605,42 @@ void FUN_00083220(void)
 #endif
 
 
-/* 0x83260 */
+/* FUN_00083260 (0x83260) — XBE naked draft (batch 285). */
+#if defined(__clang__)
+static void (*const b83260_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b83260_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_00083260(void)
 {
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x8328b */
-  display_assert((char *)0x00266658, (char *)0x00266618, 1086, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00083260_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x43e\n\t"
+      "pushl $0x266618\n\t"
+      "pushl $0x266658\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00083260_1:\n\t"
+      "movw 0x6(%%esi), %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b83260_assert), [exitfn] "m"(b83260_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00083260: clang naked draft required"
+#endif
+
 
 /* FUN_000832a0 (0x832a0) — XBE naked draft (batch 268). */
 #if defined(__clang__)

@@ -455,17 +455,69 @@ char FUN_00190550(int *collision_location __attribute__((unused)), float *positi
 #endif
 
 
-/* 0x190670 */
+/* FUN_00190670 (0x190670) — XBE naked draft (batch 289). */
+#if defined(__clang__)
+static char (*const b190670_c190550)(int *collision_location, float *position, float *wind_out, int flags) = FUN_00190550;
+
+__attribute__((naked, noinline))
 void FUN_00190670(void)
 {
-  FUN_00190550((int *)0, (float *)0, (float *)0, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "orl $8, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c190550]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c190550] "m"(b190670_c190550)
+      : "memory");
 }
+#else
+#error "FUN_00190670: clang naked draft required"
+#endif
 
-/* 0x190690 */
+
+/* FUN_00190690 (0x190690) — XBE naked draft (batch 289). */
+#if defined(__clang__)
+static char (*const b190690_c190550)(int *collision_location, float *position, float *wind_out, int flags) = FUN_00190550;
+
+__attribute__((naked, noinline))
 void FUN_00190690(void)
 {
-  FUN_00190550((int *)0, (float *)0, (float *)0, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "orl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c190550]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c190550] "m"(b190690_c190550)
+      : "memory");
 }
+#else
+#error "FUN_00190690: clang naked draft required"
+#endif
+
 
 /* 0x1906b0 */
 void *FUN_001906b0(void *shader, int shader_type)
@@ -1146,12 +1198,30 @@ void shader_environment_texture_animation_evaluate(void)
 #endif
 
 
-/* 0x190be0 */
-void numeric_countdown_timer_set(int a0, int a1)
+/* numeric_countdown_timer_set (0x190be0) — XBE naked draft (batch 286). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void numeric_countdown_timer_set(int a0 __attribute__((unused)), int a1 __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "movl %%eax, 0x4d8a78\n\t"
+      "movb %%cl, 0x4d8a7c\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "numeric_countdown_timer_set: clang naked draft required"
+#endif
+
 
 /* numeric_countdown_timer_get (0x190c00) — XBE naked draft (batch 243). */
 #if defined(__clang__)

@@ -257,27 +257,73 @@ void cinematic_force_title(void)
 #endif
 
 
-/* 0x93030 */
-void cinematic_suppress_bsp_object_creation(int a0)
-{
-  /* relift: no calls detected — manual review */
-  (void)0;
-}
+/* cinematic_suppress_bsp_object_creation (0x93030) — XBE naked draft (batch 287). */
+#if defined(__clang__)
 
-/* 0x93050 */
+
+__attribute__((naked, noinline))
+void cinematic_suppress_bsp_object_creation(int a0 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "movl 0x44df00, %%ecx\n\t"
+      "movb %%al, 0xb(%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+#error "cinematic_suppress_bsp_object_creation: clang naked draft required"
+#endif
+
+
+/* cinematic_stop (0x93050) — XBE naked draft (batch 287). */
+#if defined(__clang__)
+static void (*const b93050_cba6d0)(bool) = player_input_enable;
+static void (*const b93050_c3f7b0)(char param_1) = ai_globals_dialogue_triggers_enabled;
+static void (*const b93050_c17d950)(void) = FUN_0017d950;
+static void *(*const b93050_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b93050_c17dec0)(int a0) = FUN_0017dec0;
+
+__attribute__((naked, noinline))
 void cinematic_stop(void)
 {
-  int eax = 0;
-
-  player_input_enable(0);
-  ai_globals_dialogue_triggers_enabled(0);
-  FUN_0017d950();
-  /* test eax, eax -> je 0x9308f */
-  csmemset((void *)(uintptr_t)eax, 0, 16);
-  FUN_0017dec0(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x44df00, %%eax\n\t"
+      "pushl $1\n\t"
+      "movb $0, 0x8(%%eax)\n\t"
+      "call *%[cba6d0]\n\t"
+      "pushl $1\n\t"
+      "call *%[c3f7b0]\n\t"
+      "movl 0x44df00, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "movb $0, 0x9(%%ecx)\n\t"
+      "call *%[c17d950]\n\t"
+      "movl 0x47e4d0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lcinematic_stop_1\n\t"
+      "pushl $0x10\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lcinematic_stop_1:\n\t"
+      "pushl $0\n\t"
+      "call *%[c17dec0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".byte 0xe9, 0x12, 0x5d, 0x05, 0x00\n\t"
+      :
+      : [cba6d0] "m"(b93050_cba6d0), [c3f7b0] "m"(b93050_c3f7b0), [c17d950] "m"(b93050_c17d950), [memset] "m"(b93050_memset), [c17dec0] "m"(b93050_c17dec0)
+      : "memory");
 }
+#else
+#error "cinematic_stop: clang naked draft required"
+#endif
+
 
 /* cinematic_set_title_delayed (0x930b0) — XBE naked draft (batch 273). */
 #if defined(__clang__)
@@ -782,11 +828,31 @@ void cinematic_render(void)
 #endif
 
 
-/* 0x93640 */
-void FUN_00093640(int a0)
+/* FUN_00093640 (0x93640) — XBE naked draft (batch 291). */
+#if defined(__clang__)
+static void (*const b93640_c930b0)(int a0, float a1) = cinematic_set_title_delayed;
+
+__attribute__((naked, noinline))
+void FUN_00093640(int a0 __attribute__((unused)))
 {
-  cinematic_set_title_delayed(0, 0.0f);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c930b0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c930b0] "m"(b93640_c930b0)
+      : "memory");
 }
+#else
+#error "FUN_00093640: clang naked draft required"
+#endif
+
 
 /* FUN_00093660 (0x93660) — XBE naked draft (batch 255). */
 #if defined(__clang__)

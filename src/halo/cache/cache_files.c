@@ -1,18 +1,35 @@
 /* --- cache_files.obj batch drafts (2026-07-26) --- */
 
-/* 0x1b9890 */
+/* scenario_tags_unload (0x1b9890) — XBE naked draft (batch 286). */
+#if defined(__clang__)
+static void (*const b1b9890_c1be4f0)(void) = sound_cache_close;
+static void (*const b1b9890_c1bf130)(void) = texture_cache_close;
+static void (*const b1b9890_c1bc9c0)(void) = cache_file_close;
+static void (*const b1b9890_c1bcd10)(void *block) = tags_header_deregister_vertex_and_index_buffers;
+
+__attribute__((naked, noinline))
 void scenario_tags_unload(void)
 {
-  int eax = 0;
-
-  sound_cache_close();
-  texture_cache_close();
-  cache_file_close();
-  tags_header_deregister_vertex_and_index_buffers((void *)(uintptr_t)eax);
-  /* mem[0x005054f0] = eax */
-
-  (void)eax;
+  __asm__ volatile(
+      "call *%[c1be4f0]\n\t"
+      "call *%[c1bf130]\n\t"
+      "call *%[c1bc9c0]\n\t"
+      "movl 0x4e5504, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1bcd10]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "movb %%al, 0x4e4d00\n\t"
+      "movl %%eax, 0x5054f0\n\t"
+      "ret\n\t"
+      :
+      : [c1be4f0] "m"(b1b9890_c1be4f0), [c1bf130] "m"(b1b9890_c1bf130), [c1bc9c0] "m"(b1b9890_c1bc9c0), [c1bcd10] "m"(b1b9890_c1bcd10)
+      : "memory");
 }
+#else
+#error "scenario_tags_unload: clang naked draft required"
+#endif
+
 
 /* 0x1b98c0 */
 void tag_files_close(void)

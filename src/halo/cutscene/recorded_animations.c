@@ -165,17 +165,47 @@ void FUN_00097080(int object, void *ctrl_block);
 void FUN_00097040(int object, float value);
 void control_toggle(int object);
 
-void FUN_00094020(int *out, int *cursor_ptr, int a, int c)
+/* FUN_00094020 (0x94020) — XBE naked draft (batch 289). */
+#if defined(__clang__)
+static void (*const b94020_c93780)(int a, int *cursor, int c) = FUN_00093780;
+
+__attribute__((naked, noinline))
+void FUN_00094020(int *out __attribute__((unused)), int *cursor_ptr __attribute__((unused)), int a __attribute__((unused)), int c __attribute__((unused)))
 {
-  FUN_00093780(a, cursor_ptr, c);
-  {
-    int *p = *(int **)cursor_ptr;
-    out[0] = p[0];
-    out[1] = p[1];
-    out[2] = p[2];
-    *(int **)cursor_ptr = (int *)((char *)p + 0xc);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c93780]\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl $0xc, %%eax\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c93780] "m"(b94020_c93780)
+      : "memory");
 }
+#else
+#error "FUN_00094020: clang naked draft required"
+#endif
+
 
 /* FUN_00094060 (0x94060) — XBE naked draft (batch 279). */
 #if defined(__clang__)
@@ -359,41 +389,119 @@ char recorded_animation_controlling_unit(int unit_handle __attribute__((unused))
 #endif
 
 
-void FUN_00095050(int unit_handle /* @<edi> */, int *out /* @<ebx> */)
+/* FUN_00095050 (0x95050) — XBE naked draft (batch 287). */
+#if defined(__clang__)
+static void (*const b95050_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b95050_c119810)(data_iter_t *iterator) = data_iterator_next;
+
+__attribute__((naked, noinline))
+void FUN_00095050(int unit __attribute__((unused)), int *out __attribute__((unused)))
 {
-  data_iter_t iter;
-  char *thread;
-  int handle = -1;
-
-  data_iterator_new(&iter, *(data_t **)0x44df04);
-  thread = (char *)data_iterator_next(&iter);
-  while (thread != NULL) {
-    if (*(int *)(thread + 4) == unit_handle) {
-      handle = iter.datum_handle;
-      break;
-    }
-    thread = (char *)data_iterator_next(&iter);
-  }
-  if (out != NULL)
-    *out = handle;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x44df04, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "orl $0xffffffff, %%esi\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00095050_3\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00095050_1:\n\t"
+      "cmpl %%edi, 0x4(%%eax)\n\t"
+      "je .LFUN_00095050_2\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00095050_1\n\t"
+      "jmp .LFUN_00095050_3\n\t"
+      ".LFUN_00095050_2:\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      ".LFUN_00095050_3:\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "je .LFUN_00095050_4\n\t"
+      "movl %%esi, (%%ebx)\n\t"
+      ".LFUN_00095050_4:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1197b0] "m"(b95050_c1197b0), [c119810] "m"(b95050_c119810)
+      : "memory");
 }
+#else
+#error "FUN_00095050: clang naked draft required"
+#endif
 
-void recorded_animation_kill(int unit_handle)
+
+/* recorded_animation_kill (0x952d0) — XBE naked draft (batch 285). */
+#if defined(__clang__)
+static void (*const b952d0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b952d0_c119810)(data_iter_t *iterator) = data_iterator_next;
+
+__attribute__((naked, noinline))
+void recorded_animation_kill(int unit_handle __attribute__((unused)))
 {
-  data_iter_t iter;
-  char *thread;
-
-  data_iterator_new(&iter, *(data_t **)0x44df04);
-  thread = (char *)data_iterator_next(&iter);
-  while (thread != NULL) {
-    if (*(int *)(thread + 4) == unit_handle) {
-      if (thread != NULL)
-        *(uint8_t *)(thread + 0xa) |= 3;
-      return;
-    }
-    thread = (char *)data_iterator_next(&iter);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x44df04, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lrecorded_animation_kill_4\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lrecorded_animation_kill_1:\n\t"
+      "cmpl %%esi, 0x4(%%eax)\n\t"
+      "je .Lrecorded_animation_kill_2\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lrecorded_animation_kill_1\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrecorded_animation_kill_2:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lrecorded_animation_kill_3\n\t"
+      "orb $3, 0xa(%%eax)\n\t"
+      ".Lrecorded_animation_kill_3:\n\t"
+      "popl %%esi\n\t"
+      ".Lrecorded_animation_kill_4:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1197b0] "m"(b952d0_c1197b0), [c119810] "m"(b952d0_c119810)
+      : "memory");
 }
+#else
+#error "recorded_animation_kill: clang naked draft required"
+#endif
+
 
 /* recorded_animation_get_time_left (0x955b0) — XBE naked draft (batch 283). */
 #if defined(__clang__)
@@ -478,94 +586,378 @@ int recorded_animation_get_time_left(int unit_handle __attribute__((unused)))
 #endif
 
 
-int recorded_animation_play_and_delete(int unit, int anim)
+/* recorded_animation_play_and_delete (0x95660) — XBE naked draft (batch 289). */
+#if defined(__clang__)
+static char (*const b95660_c95330)(int unit, int anim, int flags) = recorded_animation_play_internal;
+
+__attribute__((naked, noinline))
+int recorded_animation_play_and_delete(int unit __attribute__((unused)), int anim __attribute__((unused)))
 {
-  recorded_animation_play_internal(unit, anim, 8);
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl $8\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "call *%[c95330]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c95330] "m"(b95660_c95330)
+      : "memory");
 }
+#else
+#error "recorded_animation_play_and_delete: clang naked draft required"
+#endif
 
-int FUN_00095680(int unit, int anim)
+
+/* FUN_00095680 (0x95680) — XBE naked draft (batch 289). */
+#if defined(__clang__)
+static char (*const b95680_c95330)(int unit, int anim, int flags) = recorded_animation_play_internal;
+
+__attribute__((naked, noinline))
+int FUN_00095680(int unit __attribute__((unused)), int anim __attribute__((unused)))
 {
-  recorded_animation_play_internal(unit, anim, 0x10);
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "call *%[c95330]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c95330] "m"(b95680_c95330)
+      : "memory");
 }
+#else
+#error "FUN_00095680: clang naked draft required"
+#endif
 
-void FUN_000956e0(int object, void *ctrl)
+
+/* FUN_000956e0 (0x956e0) — XBE naked draft (batch 287). */
+#if defined(__clang__)
+static void *(*const b956e0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b956e0_tag)(int, int) = tag_get;
+static void (*const b956e0_c97080)(int object, void *ctrl_block) = FUN_00097080;
+
+__attribute__((naked, noinline))
+void FUN_000956e0(int object __attribute__((unused)), void *ctrl __attribute__((unused)))
 {
-  char *dev = (char *)object_get_and_verify_type(object, 0x100);
-
-  tag_get(*(int *)dev, 0x6374726c);
-  FUN_00097080(object, (char *)ctrl + 0x28);
-  if ((*(uint8_t *)((char *)ctrl + 0x30) & 1) != 0)
-    *(int *)(dev + 0x1c4) |= 1;
-  if ((*(uint8_t *)((char *)ctrl + 0x30) & 0x10) != 0)
-    *(int *)(dev + 0x1c4) |= 2;
-  *(int16_t *)(dev + 0x1c8) = (int16_t)(*(int16_t *)((char *)ctrl + 0x34) - 1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6374726c\n\t"
+      "call *%[tag]\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "leal 0x28(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c97080]\n\t"
+      "movb 0x30(%%edi), %%cl\n\t"
+      "movl $1, %%eax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%cl, %%al\n\t"
+      "je .LFUN_000956e0_1\n\t"
+      "orl %%eax, 0x1c4(%%esi)\n\t"
+      ".LFUN_000956e0_1:\n\t"
+      "testb $0x10, 0x30(%%edi)\n\t"
+      "je .LFUN_000956e0_2\n\t"
+      "orl $2, 0x1c4(%%esi)\n\t"
+      ".LFUN_000956e0_2:\n\t"
+      "movw 0x34(%%edi), %%dx\n\t"
+      "decw %%dx\n\t"
+      "popl %%edi\n\t"
+      "movw %%dx, 0x1c8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b956e0_get), [tag] "m"(b956e0_tag), [c97080] "m"(b956e0_c97080)
+      : "memory");
 }
+#else
+#error "FUN_000956e0: clang naked draft required"
+#endif
 
-char FUN_00095750(int object)
+
+/* FUN_00095750 (0x95750) — XBE naked draft (batch 290). */
+#if defined(__clang__)
+static void *(*const b95750_get)(int, int) = object_get_and_verify_type;
+static void *(*const b95750_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+char FUN_00095750(int object __attribute__((unused)))
 {
-  char *dev = (char *)object_get_and_verify_type(object, 0x100);
-
-  tag_get(*(int *)dev, 0x6374726c);
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6374726c\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b95750_get), [tag] "m"(b95750_tag)
+      : "memory");
 }
+#else
+#error "FUN_00095750: clang naked draft required"
+#endif
 
-char FUN_00095790(int object)
+
+/* FUN_00095790 (0x95790) — XBE naked draft (batch 291). */
+#if defined(__clang__)
+static void *(*const b95790_get)(int, int) = object_get_and_verify_type;
+static void *(*const b95790_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+char FUN_00095790(int object __attribute__((unused)))
 {
-  char *dev = (char *)object_get_and_verify_type(object, 0x100);
-
-  tag_get(*(int *)dev, 0x6374726c);
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6374726c\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b95790_get), [tag] "m"(b95790_tag)
+      : "memory");
 }
+#else
+#error "FUN_00095790: clang naked draft required"
+#endif
 
-void FUN_000958f0(int object)
+
+/* FUN_000958f0 (0x958f0) — XBE naked draft (batch 287). */
+#if defined(__clang__)
+static void *(*const b958f0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b958f0_tag)(int, int) = tag_get;
+static void (*const b958f0_c957c0)(int object) = control_toggle;
+
+__attribute__((naked, noinline))
+void FUN_000958f0(int object __attribute__((unused)))
 {
-  char *dev = (char *)object_get_and_verify_type(object, 0x100);
-  char *tag = (char *)tag_get(*(int *)dev, 0x6374726c);
-
-  if (*(int16_t *)(tag + 0x292) == 0)
-    control_toggle(object);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6374726c\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $0, 0x292(%%eax)\n\t"
+      "jne .LFUN_000958f0_1\n\t"
+      "call *%[c957c0]\n\t"
+      ".LFUN_000958f0_1:\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b958f0_get), [tag] "m"(b958f0_tag), [c957c0] "m"(b958f0_c957c0)
+      : "memory");
 }
+#else
+#error "FUN_000958f0: clang naked draft required"
+#endif
 
-void FUN_00095930(int object)
+
+/* FUN_00095930 (0x95930) — XBE naked draft (batch 290). */
+#if defined(__clang__)
+static void *(*const b95930_get)(int, int) = object_get_and_verify_type;
+static void *(*const b95930_tag)(int, int) = tag_get;
+static void (*const b95930_c957c0)(int object) = control_toggle;
+
+__attribute__((naked, noinline))
+void FUN_00095930(int object __attribute__((unused)))
 {
-  char *dev = (char *)object_get_and_verify_type(object, 0x100);
-  char *tag = (char *)tag_get(*(int *)dev, 0x6374726c);
-
-  if (*(int16_t *)(tag + 0x292) == 1)
-    control_toggle(object);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6374726c\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $1, 0x292(%%eax)\n\t"
+      "jne .LFUN_00095930_1\n\t"
+      "call *%[c957c0]\n\t"
+      ".LFUN_00095930_1:\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b95930_get), [tag] "m"(b95930_tag), [c957c0] "m"(b95930_c957c0)
+      : "memory");
 }
+#else
+#error "FUN_00095930: clang naked draft required"
+#endif
 
-void FUN_000959b0(int object, void *ctrl)
+
+/* FUN_000959b0 (0x959b0) — XBE naked draft (batch 288). */
+#if defined(__clang__)
+static void *(*const b959b0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b959b0_tag)(int, int) = tag_get;
+static void (*const b959b0_c97080)(int object, void *ctrl_block) = FUN_00097080;
+
+__attribute__((naked, noinline))
+void FUN_000959b0(int object __attribute__((unused)), void *ctrl __attribute__((unused)))
 {
-  char *dev = (char *)object_get_and_verify_type(object, 0x200);
-
-  tag_get(*(int *)dev, 0x6c696669);
-  FUN_00097080(object, (char *)ctrl + 0x28);
-  *(int *)(dev + 0x1c4) = *(int *)((char *)ctrl + 0x30);
-  *(int *)(dev + 0x1c8) = *(int *)((char *)ctrl + 0x34);
-  *(int *)(dev + 0x1cc) = *(int *)((char *)ctrl + 0x38);
-  *(int *)(dev + 0x1d0) = *(int *)((char *)ctrl + 0x3c);
-  *(int *)(dev + 0x1d4) = *(int *)((char *)ctrl + 0x40);
-  *(int *)(dev + 0x1d8) = *(int *)((char *)ctrl + 0x44);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x200\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6c696669\n\t"
+      "call *%[tag]\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "leal 0x28(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c97080]\n\t"
+      "leal 0x30(%%edi), %%edx\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "leal 0x1c4(%%esi), %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "movl 0x3c(%%edi), %%eax\n\t"
+      "movl %%eax, 0x1d0(%%esi)\n\t"
+      "movl 0x40(%%edi), %%ecx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movl %%ecx, 0x1d4(%%esi)\n\t"
+      "movl 0x44(%%edi), %%edx\n\t"
+      "popl %%edi\n\t"
+      "movl %%edx, 0x1d8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b959b0_get), [tag] "m"(b959b0_tag), [c97080] "m"(b959b0_c97080)
+      : "memory");
 }
+#else
+#error "FUN_000959b0: clang naked draft required"
+#endif
 
-char FUN_00095a20(int object)
+
+/* FUN_00095a20 (0x95a20) — XBE naked draft (batch 291). */
+#if defined(__clang__)
+static void *(*const b95a20_get)(int, int) = object_get_and_verify_type;
+static void *(*const b95a20_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+char FUN_00095a20(int object __attribute__((unused)))
 {
-  char *dev = (char *)object_get_and_verify_type(object, 0x200);
-
-  tag_get(*(int *)dev, 0x6c696669);
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x200\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6c696669\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b95a20_get), [tag] "m"(b95a20_tag)
+      : "memory");
 }
+#else
+#error "FUN_00095a20: clang naked draft required"
+#endif
 
-char FUN_00095a60(int object)
+
+/* FUN_00095a60 (0x95a60) — XBE naked draft (batch 291). */
+#if defined(__clang__)
+static void *(*const b95a60_get)(int, int) = object_get_and_verify_type;
+static void *(*const b95a60_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+char FUN_00095a60(int object __attribute__((unused)))
 {
-  char *dev = (char *)object_get_and_verify_type(object, 0x200);
-
-  tag_get(*(int *)dev, 0x6c696669);
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x200\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6c696669\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b95a60_get), [tag] "m"(b95a60_tag)
+      : "memory");
 }
+#else
+#error "FUN_00095a60: clang naked draft required"
+#endif
+
 
 /* FUN_00095ad0 (0x95ad0) — XBE naked draft (batch 282). */
 #if defined(__clang__)
@@ -693,21 +1085,81 @@ char FUN_00095b50(int object __attribute__((unused)))
 #endif
 
 
-void FUN_00095be0(int object)
+/* FUN_00095be0 (0x95be0) — XBE naked draft (batch 290). */
+#if defined(__clang__)
+static void *(*const b95be0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b95be0_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+void FUN_00095be0(int object __attribute__((unused)))
 {
-  char *dev = (char *)object_get_and_verify_type(object, 0x80);
-
-  tag_get(*(int *)dev, 0x6d616368);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x80\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6d616368\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b95be0_get), [tag] "m"(b95be0_tag)
+      : "memory");
 }
+#else
+#error "FUN_00095be0: clang naked draft required"
+#endif
 
-void FUN_00095c10(int object)
+
+/* FUN_00095c10 (0x95c10) — XBE naked draft (batch 291). */
+#if defined(__clang__)
+static void *(*const b95c10_get)(int, int) = object_get_and_verify_type;
+static void *(*const b95c10_tag)(int, int) = tag_get;
+static void (*const b95c10_c97040)(int a0, float a1) = FUN_00097040;
+
+__attribute__((naked, noinline))
+void FUN_00095c10(int object __attribute__((unused)))
 {
-  char *dev = (char *)object_get_and_verify_type(object, 0x80);
-
-  tag_get(*(int *)dev, 0x6d616368);
-  if ((*(uint8_t *)(dev + 0x1c4) & 8) != 0)
-    FUN_00097040(object, 1.0f);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $0x80\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6d616368\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x1c4(%%esi), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb $8, %%al\n\t"
+      "je .LFUN_00095c10_1\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c97040]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00095c10_1:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b95c10_get), [tag] "m"(b95c10_tag), [c97040] "m"(b95c10_c97040)
+      : "memory");
 }
+#else
+#error "FUN_00095c10: clang naked draft required"
+#endif
+
 /* --- recorded_animations.obj batch2 drafts (2026-07-26) --- */
 
 void angles_to_vector(float *out, float *angles);
@@ -2983,9 +3435,29 @@ char FUN_00095c60(int object __attribute__((unused)))
 #undef RA3_EVENT_ASSERT
 /* --- recorded_animations.obj orphan shells (2026-07-26) --- */
 
-/* orphan 0x95640 */
-char recorded_animation_play(int actor, short anim_idx)
+/* recorded_animation_play (0x95640) — XBE naked draft (batch 289). */
+#if defined(__clang__)
+static char (*const b95640_c95330)(int unit, int anim, int flags) = recorded_animation_play_internal;
+
+__attribute__((naked, noinline))
+char recorded_animation_play(int actor __attribute__((unused)), short anim_idx __attribute__((unused)))
 {
-  recorded_animation_play_internal(0, 0, 0);
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "call *%[c95330]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c95330] "m"(b95640_c95330)
+      : "memory");
 }
+#else
+#error "recorded_animation_play: clang naked draft required"
+#endif
+

@@ -1551,13 +1551,40 @@ void FUN_00120400(void)
 #endif
 
 
-/* 0x120470 */
+/* FUN_00120470 (0x120470) — XBE naked draft (batch 285). */
+#if defined(__clang__)
+static void (*const b120470_c11fd50)(void) = FUN_0011fd50;
+static void (*const b120470_c1196d0)(data_t *data, int datum_handle) = datum_delete;
+static void (*const b120470_c11ff70)(void) = FUN_0011ff70;
+
+__attribute__((naked, noinline))
 void FUN_00120470(void)
 {
-  FUN_0011fd50();
-  datum_delete((void *)0, 0);
-  FUN_0011ff70();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "call *%[c11fd50]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x18(%%esi), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1196d0]\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c11ff70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11fd50] "m"(b120470_c11fd50), [c1196d0] "m"(b120470_c1196d0), [c11ff70] "m"(b120470_c11ff70)
+      : "memory");
 }
+#else
+#error "FUN_00120470: clang naked draft required"
+#endif
+
 
 /* FUN_001204a0 (0x1204a0) — XBE naked draft (batch 258). */
 #if defined(__clang__)
@@ -4705,11 +4732,35 @@ void FUN_00123d80(void)
 #endif
 
 
-/* 0x123e20 */
+/* animation_get_root_matrix (0x123e20) — XBE naked draft (batch 290). */
+#if defined(__clang__)
+static void *(*const b123e20_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
 void animation_get_root_matrix(void)
 {
-  tag_block_get_element((void *)0, 0, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0x9c\n\t"
+      "pushl %%eax\n\t"
+      "addl $0xb8, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl $0x68, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b123e20_elem)
+      : "memory");
 }
+#else
+#error "animation_get_root_matrix: clang naked draft required"
+#endif
+
 
 /* FUN_00123e50 (0x123e50) — XBE naked draft (batch 278). */
 #if defined(__clang__)

@@ -894,91 +894,343 @@ int ustrncasecmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __
 #endif
 
 
-/* 0x19e460 */
-int uisalpha(int c)
+/* uisalpha (0x19e460) — XBE naked draft (batch 291). */
+#if defined(__clang__)
+static int (*const b19e460_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
+
+__attribute__((naked, noinline))
+int uisalpha(int c __attribute__((unused)))
 {
-  return FUN_001dc3e9(c, 0x103);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x103\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc3e9]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc3e9] "m"(b19e460_c1dc3e9)
+      : "memory");
 }
+#else
+#error "uisalpha: clang naked draft required"
+#endif
 
-/* 0x19e480 */
-int uisupper(int c)
+
+/* uisupper (0x19e480) — XBE naked draft (batch 291). */
+#if defined(__clang__)
+static int (*const b19e480_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
+
+__attribute__((naked, noinline))
+int uisupper(int c __attribute__((unused)))
 {
-  return FUN_001dc3e9(c, 1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc3e9]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc3e9] "m"(b19e480_c1dc3e9)
+      : "memory");
 }
+#else
+#error "uisupper: clang naked draft required"
+#endif
 
-/* 0x19e4a0 */
-int uislower(int c)
+
+/* uislower (0x19e4a0) — XBE naked draft (batch 291). */
+#if defined(__clang__)
+static int (*const b19e4a0_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
+
+__attribute__((naked, noinline))
+int uislower(int c __attribute__((unused)))
 {
-  return FUN_001dc3e9(c, 2);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc3e9]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc3e9] "m"(b19e4a0_c1dc3e9)
+      : "memory");
 }
+#else
+#error "uislower: clang naked draft required"
+#endif
 
-/* 0x19e4c0 */
-int uisdigit(int c)
+
+/* uisdigit (0x19e4c0) — XBE naked draft (batch 291). */
+#if defined(__clang__)
+static int (*const b19e4c0_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
+
+__attribute__((naked, noinline))
+int uisdigit(int c __attribute__((unused)))
 {
-  return FUN_001dc3e9(c, 4);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc3e9]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc3e9] "m"(b19e4c0_c1dc3e9)
+      : "memory");
 }
+#else
+#error "uisdigit: clang naked draft required"
+#endif
 
-/* 0x19e4e0 */
-int uisxdigit(int c)
+
+/* uisxdigit (0x19e4e0) — XBE naked draft (batch 291). */
+#if defined(__clang__)
+static int (*const b19e4e0_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
+
+__attribute__((naked, noinline))
+int uisxdigit(int c __attribute__((unused)))
 {
-  return FUN_001dc3e9(c, 0x80);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x80\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc3e9]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc3e9] "m"(b19e4e0_c1dc3e9)
+      : "memory");
 }
+#else
+#error "uisxdigit: clang naked draft required"
+#endif
 
-/* 0x19e500 */
-int uisspace(int c)
+
+/* uisspace (0x19e500) — XBE naked draft (batch 292). */
+#if defined(__clang__)
+static int (*const b19e500_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
+
+__attribute__((naked, noinline))
+int uisspace(int c __attribute__((unused)))
 {
-  return FUN_001dc3e9(c, 8);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc3e9]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc3e9] "m"(b19e500_c1dc3e9)
+      : "memory");
 }
+#else
+#error "uisspace: clang naked draft required"
+#endif
 
-/* 0x19e520 */
-int uispunct(int c)
+
+/* uispunct (0x19e520) — XBE naked draft (batch 292). */
+#if defined(__clang__)
+static int (*const b19e520_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
+
+__attribute__((naked, noinline))
+int uispunct(int c __attribute__((unused)))
 {
-  return FUN_001dc3e9(c, 0x10);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc3e9]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc3e9] "m"(b19e520_c1dc3e9)
+      : "memory");
 }
+#else
+#error "uispunct: clang naked draft required"
+#endif
 
-/* 0x19e540 */
-int uisalnum(int c)
+
+/* uisalnum (0x19e540) — XBE naked draft (batch 292). */
+#if defined(__clang__)
+static int (*const b19e540_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
+
+__attribute__((naked, noinline))
+int uisalnum(int c __attribute__((unused)))
 {
-  return FUN_001dc3e9(c, 0x107);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x107\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc3e9]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc3e9] "m"(b19e540_c1dc3e9)
+      : "memory");
 }
+#else
+#error "uisalnum: clang naked draft required"
+#endif
 
-/* 0x19e560 */
-int uisprint(int c)
+
+/* uisprint (0x19e560) — XBE naked draft (batch 292). */
+#if defined(__clang__)
+static int (*const b19e560_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
+
+__attribute__((naked, noinline))
+int uisprint(int c __attribute__((unused)))
 {
-  return FUN_001dc3e9(c, 0x100);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x157\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc3e9]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc3e9] "m"(b19e560_c1dc3e9)
+      : "memory");
 }
+#else
+#error "uisprint: clang naked draft required"
+#endif
 
-/* 0x19e580 */
-int uisgraph(int c)
+
+/* uisgraph (0x19e580) — XBE naked draft (batch 292). */
+#if defined(__clang__)
+static int (*const b19e580_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
+
+__attribute__((naked, noinline))
+int uisgraph(int c __attribute__((unused)))
 {
-  return FUN_001dc3e9(c, 0x117);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x117\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc3e9]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc3e9] "m"(b19e580_c1dc3e9)
+      : "memory");
 }
+#else
+#error "uisgraph: clang naked draft required"
+#endif
 
-/* 0x19e5a0 */
-int uiscntrl(int c)
+
+/* uiscntrl (0x19e5a0) — XBE naked draft (batch 292). */
+#if defined(__clang__)
+static int (*const b19e5a0_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
+
+__attribute__((naked, noinline))
+int uiscntrl(int c __attribute__((unused)))
 {
-  return FUN_001dc3e9(c, 0x20);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc3e9]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc3e9] "m"(b19e5a0_c1dc3e9)
+      : "memory");
 }
+#else
+#error "uiscntrl: clang naked draft required"
+#endif
 
-/* 0x19e5c0 */
-int utoupper(int c)
+
+/* utoupper (0x19e5c0) — XBE naked draft (batch 288). */
+#if defined(__clang__)
+static wchar_t * (*const b19e5c0_c1dc27c)(wchar_t *s, size_t count) = FUN_001dc27c;
+
+__attribute__((naked, noinline))
+int utoupper(int c __attribute__((unused)))
 {
-  wchar_t ch;
-
-  ch = (wchar_t)c;
-  FUN_001dc27c(&ch, 1);
-  return (int)(unsigned short)ch;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc27c]\n\t"
+      "addl $4, %%esp\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1dc27c] "m"(b19e5c0_c1dc27c)
+      : "memory");
 }
+#else
+#error "utoupper: clang naked draft required"
+#endif
 
-/* 0x19e5e0 */
-int utolower(int c)
+
+/* utolower (0x19e5e0) — XBE naked draft (batch 288). */
+#if defined(__clang__)
+static wchar_t * (*const b19e5e0_c1da8e3)(wchar_t *s, size_t count) = FUN_001da8e3;
+
+__attribute__((naked, noinline))
+int utolower(int c __attribute__((unused)))
 {
-  wchar_t ch;
-
-  ch = (wchar_t)c;
-  FUN_001da8e3(&ch, 1);
-  return (int)(unsigned short)ch;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1da8e3]\n\t"
+      "addl $4, %%esp\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1da8e3] "m"(b19e5e0_c1da8e3)
+      : "memory");
 }
+#else
+#error "utolower: clang naked draft required"
+#endif
+
 
 /* ufgetc (0x19e600) — XBE naked draft (batch 283). */
 #if defined(__clang__)
