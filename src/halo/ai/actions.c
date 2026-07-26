@@ -998,79 +998,31 @@ char actor_action_can_stop_guarding(int actor_handle, short min_state,
   return 1;
 }
 
-/* actor_action_can_stop_conversing (0x1cfa0) — XBE naked draft (batch 149). */
-#if defined(__clang__)
-static void *(*const b1cfa0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static scenario_t * (*const b1cfa0_c18e380)(void) = global_scenario_get;
-static void *(*const b1cfa0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-int actor_action_can_stop_conversing(int actor_handle __attribute__((unused)), int flag __attribute__((unused)))
+/* actor_action_can_stop_conversing (0x1cfa0) — readable C lift. */
+char actor_action_can_stop_conversing(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x1dc(%%esi), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "movb $1, %%al\n\t"
-      "je .Lactor_action_can_stop_conversing_5\n\t"
-      "movl 0x6324ec, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0x2(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl $0x74\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x468, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw 0x20(%%eax), %%ax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb $2, %%al\n\t"
-      "je .Lactor_action_can_stop_conversing_2\n\t"
-      "movb 0x1f6(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lactor_action_can_stop_conversing_2\n\t"
-      ".Lactor_action_can_stop_conversing_1:\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_can_stop_conversing_2:\n\t"
-      "testb $4, %%al\n\t"
-      "je .Lactor_action_can_stop_conversing_3\n\t"
-      "cmpw $9, 0x268(%%esi)\n\t"
-      "jge .Lactor_action_can_stop_conversing_1\n\t"
-      ".Lactor_action_can_stop_conversing_3:\n\t"
-      "testb $8, %%al\n\t"
-      "je .Lactor_action_can_stop_conversing_4\n\t"
-      "cmpw $6, 0x268(%%esi)\n\t"
-      "jge .Lactor_action_can_stop_conversing_1\n\t"
-      ".Lactor_action_can_stop_conversing_4:\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Lactor_action_can_stop_conversing_5:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1cfa0_dget), [c18e380] "m"(b1cfa0_c18e380), [elem] "m"(b1cfa0_elem)
-      : "memory");
+  char *actor;
+  int conv;
+  char *rec;
+  void *block;
+  unsigned char flags;
+
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  conv = *(int *)(actor + 0x1dc);
+  if (conv == -1)
+    return 1;
+  rec = (char *)datum_get(*(data_t **)0x6324ec, conv);
+  block = tag_block_get_element((char *)global_scenario_get() + 0x468,
+                                (int)*(short *)(rec + 2), 0x74);
+  flags = *(unsigned char *)((char *)block + 0x20);
+  if ((flags & 2) && actor[0x1f6])
+    return 1;
+  if ((flags & 4) && *(short *)(actor + 0x268) >= 9)
+    return 1;
+  if ((flags & 8) && *(short *)(actor + 0x268) >= 6)
+    return 1;
+  return 0;
 }
-#else
-#error "actor_action_can_stop_conversing: clang naked draft required"
-#endif
-
-
 /* actor_action_change (0x1d030) — actor_set_action
  *
  * Transitions an actor to a new action type: calls the old action's exit

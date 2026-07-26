@@ -2635,8 +2635,8 @@
         },
         {
           "addr": "0x1cfa0",
-          "decl": "int actor_action_can_stop_conversing(int actor_handle, int flag);",
-          "ported": false
+          "decl": "char actor_action_can_stop_conversing(int actor_handle);",
+          "ported": true
         },
         {
           "addr": "0x1d030",
