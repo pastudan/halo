@@ -2805,8 +2805,9 @@ void __stdcall ui_widget_filesystem_check_thread_proc(int unused)
 unsigned int modulate_pixel32_by_real_alpha(unsigned int pixel, float alpha)
 {
   int a_byte = (int)(pixel >> 24);
-  float scaled = (float)a_byte;
+  float scaled;
   int na;
+  scaled = (float)a_byte;
   if (a_byte < 0)
     scaled += 4294967296.0f;
   scaled *= alpha;

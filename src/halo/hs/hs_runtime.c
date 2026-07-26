@@ -3575,7 +3575,7 @@ char FUN_000c95c0(char value)
 static void (*const bc95d0_ce3a10)(void *color, const char *format, const char *text) = terminal_output;
 
 __attribute__((naked, noinline))
-void FUN_000c95d0(const char *text __attribute__((unused)))
+char FUN_000c95d0(int value __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3766,7 +3766,7 @@ char FUN_000caea0(int16_t value)
 static int (*const bcaec0_c8df60)(const char *s1) = csstrlen;
 
 __attribute__((naked, noinline))
-char FUN_000caec0(const char *s __attribute__((unused)))
+int FUN_000caec0(int16_t value __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -5466,56 +5466,19 @@ int FUN_000c9bd0(int list_handle __attribute__((unused)), int16_t skip_count __a
 #endif
 
 
-/* FUN_000c9c10 (0xc9c10) — XBE naked draft (batch 170). */
-#if defined(__clang__)
-static void *(*const bc9c10_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void FUN_000c9c10(int object_handle __attribute__((unused)), float value __attribute__((unused)))
+/* FUN_000c9c10 (0xc9c10) — readable C lift. */
+void FUN_000c9c10(int object_handle, float value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c9c10_3\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000c9c10_1\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      "fmuls 0x8c(%%ecx)\n\t"
-      "fstps 0x94(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c9c10_1:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000c9c10_2\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".LFUN_000c9c10_2:\n\t"
-      "fmuls 0x8c(%%ecx)\n\t"
-      "fstps 0x94(%%ecx)\n\t"
-      ".LFUN_000c9c10_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bc9c10_get)
-      : "memory");
+  char *obj;
+  if (object_handle == -1)
+    return;
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  if (value < 0.0f)
+    value = 0.0f;
+  else if (value > 1.0f)
+    value = 1.0f;
+  *(float *)(obj + 0x94) = value * *(float *)(obj + 0x8c);
 }
-#else
-#error "FUN_000c9c10: clang naked draft required"
-#endif
-
 
 /* FUN_000c9c80 (0xc9c80) — XBE naked draft (batch 137). */
 #if defined(__clang__)
