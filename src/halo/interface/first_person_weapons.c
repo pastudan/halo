@@ -1042,80 +1042,186 @@ char first_person_weapon_adjust_light(int object_handle, int marker_result, void
   (void)esi;
 }
 
-/* 0xdd580 */
-void first_person_weapon_update(void)
+/* 0xdd580 — per-tick update for a local player's first-person weapon pose. */
+void first_person_weapon_update(int16_t local_player_index)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *fp;
+  char *weapon_obj;
+  char *weap;
+  char *mode;
+  char *antr;
+  char *anim_root;
+  char *nodes;
+  int weapon_handle;
+  int16_t anim_index;
+  int16_t frame;
 
-  /* cmp (int16_t)esi, 4 -> jl 0xdd5b7 */
-  display_assert((char *)0x00266fc0, (char *)0x00282294, 1433, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0xdd600 */
-  vector_to_angles((float *)(uintptr_t)eax, (void *)0x0050655c);
-  vector_to_angles((float *)(uintptr_t)eax, (void *)0x0050655c);
-  object_try_and_get_and_verify_type(0, 0);
-  /* test eax, eax -> jne 0xdd6a4 */
-  error(0, (char *)0x002823ac);
-  /* cmp eax, -1 -> je 0xddad1 */
-  object_get_and_verify_type(0, 0);
-  tag_get('paew', 0);
-  tag_get('edom', 0);
-  tag_get('rtna', 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 28);
-  /* cmp (int16_t)eax, 0xffff -> je 0xdd754 */
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 180);
-  FUN_00121d60((void *)0, (void *)(uintptr_t)eax, 0, (void *)(uintptr_t)edi);
-  display_assert((char *)0, (char *)0x00282294, 1294, 0);
-  system_exit(0);
-  FUN_00123aa0((void *)(uintptr_t)edx, (void *)(uintptr_t)edi);
-  /* cmp ecx, 0x11 -> jle 0xdd8aa */
-  /* cmp (int16_t)eax, 0xffff -> je 0xdd8aa */
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 180);
-  /* cmp (int16_t)ecx, 0xd -> je 0xdd7e4 */
-  /* cmp (int16_t)ecx, 0xe -> jne 0xdd88d */
-  /* cmp (int16_t)ebx, 0x2c -> jl 0xdd87a */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* test (char)eax, 0x41 -> jne 0xdd846 */
-  /* cmp (int16_t)eax, (int16_t)ecx -> jle 0xdd85b */
-  FUN_001d9068();
-  overlay_animation_apply();
-  /* relift: cmp (int16_t)ecx, word ptr [eax + 0x22] -> jge 0xdd8aa */
-  overlay_animation_apply();
-  /* cmp (int16_t)eax, 0xffff -> je 0xdd8d7 */
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 180);
-  overlay_animation_apply();
-  /* cmp (int16_t)eax, 0xffff -> je 0xdd917 */
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 180);
-  FUN_00122a50(0, 0.0f, 0.0f, 0);
-  /* relift: cmp dword ptr [eax + 0x10], 4 -> jle 0xdda72 */
-  /* cmp (int16_t)eax, 0xffff -> je 0xdda72 */
-  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
-  /* relift: cmp word ptr [ebx + 0x22], 9 -> jl 0xdda6f */
-  /* test (char)eax, 0x41 -> jne 0xdd970 */
-  overlay_animation_apply_scaled();
-  /* test (char)eax, 0x41 -> jne 0xdd9ae */
-  overlay_animation_apply_scaled();
-  /* test (char)eax, 0x41 -> jne 0xdd9ec */
-  overlay_animation_apply_scaled();
-  /* test (char)eax, 0x41 -> jne 0xdda2a */
-  overlay_animation_apply_scaled();
-  /* test (char)eax, 0x41 -> jne 0xdda6f */
-  overlay_animation_apply_scaled();
-  /* test (int16_t)eax, (int16_t)eax -> jle 0xddaa2 */
-  interpolate_node_orientations();
-  animation_graph_node_matrices_from_orientations();
+  if (local_player_index < 0 || local_player_index >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 0x599, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  fp = (char *)(*(int *)0x46bea8) + (int)local_player_index * 0x1ea0;
+  nodes = fp + 0x8c;
+
+  if (fp[0x50] == 0) {
+    vector_to_angles((float *)(fp + 0x60), (float *)0x50655c);
+    *(float *)(fp + 0x70) = *(float *)0x506550;
+    *(float *)(fp + 0x74) = *(float *)0x506554;
+    *(float *)(fp + 0x78) = *(float *)0x506558;
+  }
+
+  /* Cache previous look angles / camera position, then refresh from camera. */
+  *(int *)(fp + 0x68) = *(int *)(fp + 0x60);
+  *(int *)(fp + 0x6c) = *(int *)(fp + 0x64);
+  *(int *)(fp + 0x7c) = *(int *)(fp + 0x70);
+  *(int *)(fp + 0x80) = *(int *)(fp + 0x74);
+  *(int *)(fp + 0x84) = *(int *)(fp + 0x78);
+  vector_to_angles((float *)(fp + 0x60), (float *)0x50655c);
+  *(float *)(fp + 0x70) = *(float *)0x506550;
+  *(float *)(fp + 0x74) = *(float *)0x506554;
+  *(float *)(fp + 0x78) = *(float *)0x506558;
+  *(float *)(fp + 0x54) = *(float *)0x50655c;
+  *(float *)(fp + 0x58) = *(float *)0x506560;
+  *(float *)(fp + 0x5c) = *(float *)0x506564;
+  fp[0x50] = 1;
+
+  weapon_handle = *(int *)(fp + 8);
+  if (weapon_handle != -1) {
+    if (object_try_and_get_and_verify_type(weapon_handle, 4) == 0) {
+      error(3, (char *)0x002823ac, (int)local_player_index, weapon_handle);
+      *(int *)(fp + 8) = -1;
+      weapon_handle = -1;
+    }
+  }
+  if (weapon_handle == -1)
+    return;
+
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  weap = (char *)tag_get(0x77656170, *(int *)weapon_obj); /* 'weap' */
+  mode = (char *)tag_get(0x6d6f6465, *(int *)(weap + 0x468)); /* 'mode' */
+  antr = (char *)tag_get(0x616e7472, *(int *)(weap + 0x478)); /* 'antr' */
+  if (*(int *)(antr + 0x48) == 0)
+    return;
+
+  anim_root = (char *)tag_block_get_element(antr + 0x48, 0, 0x1c);
+  if (anim_root == 0)
+    return;
+
+  anim_index = *(int16_t *)(fp + 0x16);
+  if (anim_index != (int16_t)0xffff) {
+    char *animation = (char *)tag_block_get_element(antr + 0x74, anim_index, 0xb4);
+    FUN_00121d60(0, animation, *(unsigned short *)(fp + 0x18), nodes);
+  } else {
+    display_assert((char *)0, (char *)0x00282294, 0x50e, 1);
+    system_exit(-1);
+    FUN_00123aa0(mode, nodes);
+  }
+
+  if (*(int *)(anim_root + 0x10) > 0x11) {
+    int16_t *index_list = *(int16_t **)(anim_root + 0x14);
+    int16_t ik_index = index_list[0x11]; /* word at +0x22 of element? XBE: [eax+0x22] where eax=list base+? */
+    /* XBE: mov eax,[anim_root+0x14]; mov ax,[eax+0x22] */
+    ik_index = *(int16_t *)((char *)index_list + 0x22);
+    if (ik_index != (int16_t)0xffff) {
+      char *ik_anim = (char *)tag_block_get_element(antr + 0x74, ik_index, 0xb4);
+      if (*(int16_t *)(weap + 0x4e2) == 2) {
+        int16_t state = *(int16_t *)(*(char **)0x46bea8 + 0xc);
+        if (state == 0xd || state == 0xe) {
+          int16_t ticks = (int16_t)(*(int16_t *)(weapon_obj + 0x25c) -
+                                    *(int16_t *)(weapon_obj + 0x25a));
+          frame = *(int16_t *)(weapon_obj + 0x260);
+          if (ticks >= 0x2c) {
+            char *trigger = (char *)tag_block_get_element(weap + 0x4f0, 0, 0x70);
+            float t = (float)(ticks - 0x2c) * *(float *)0x2549d4;
+            int16_t max_f;
+            if (!(t <= 1.0f))
+              t = 1.0f;
+            max_f = *(int16_t *)(trigger + 0xa);
+            {
+              int16_t cur = *(int16_t *)(weapon_obj + 0x25e);
+              if (cur > max_f)
+                cur = max_f;
+              {
+                int delta = (int)cur - (int)frame;
+                float add = (float)delta * t;
+                /* fistp via FUN_001d9068 truncation */
+                frame = (int16_t)((int)frame + (int)add);
+              }
+            }
+          }
+          overlay_animation_apply(ik_anim, frame, nodes);
+        } else {
+          frame = *(int16_t *)(weapon_obj + 0x260);
+          if (frame < *(int16_t *)(ik_anim + 0x22))
+            overlay_animation_apply(ik_anim, frame, nodes);
+        }
+      } else {
+        frame = *(int16_t *)(weapon_obj + 0x260);
+        if (frame < *(int16_t *)(ik_anim + 0x22))
+          overlay_animation_apply(ik_anim, frame, nodes);
+      }
+    }
+  }
+
+  anim_index = *(int16_t *)(fp + 0x1a);
+  if (anim_index != (int16_t)0xffff) {
+    char *animation = (char *)tag_block_get_element(antr + 0x74, anim_index, 0xb4);
+    overlay_animation_apply(animation, *(unsigned short *)(fp + 0x1c), nodes);
+  }
+
+  anim_index = *(int16_t *)(fp + 0x20);
+  if (anim_index != (int16_t)0xffff) {
+    char *animation = (char *)tag_block_get_element(antr + 0x74, anim_index, 0xb4);
+    {
+      float blend = *(float *)(weapon_obj + 0x1f4) + *(float *)0x253398;
+      FUN_00122a50((int)animation, *(float *)(fp + 0x24), blend, (int)nodes);
+    }
+  }
+
+  if (*(int *)(anim_root + 0x10) > 4) {
+    int16_t ov_index = *(int16_t *)(*(char **)(anim_root + 0x14) + 8);
+    if (ov_index != (int16_t)0xffff) {
+      char *ov = (char *)tag_block_get_element(antr + 0x74, ov_index, 0xb4);
+      if (*(int16_t *)(ov + 0x22) >= 9) {
+        float s;
+        s = *(float *)(fp + 0x30);
+        if (s > 0.0f)
+          overlay_animation_apply_scaled(ov, 0, s, nodes);
+        else if (s < 0.0f)
+          overlay_animation_apply_scaled(ov, 1, -s, nodes);
+        s = *(float *)(fp + 0x34);
+        if (s > 0.0f)
+          overlay_animation_apply_scaled(ov, 3, s, nodes);
+        else if (s < 0.0f)
+          overlay_animation_apply_scaled(ov, 2, -s, nodes);
+        s = *(float *)(fp + 0x40);
+        if (s > 0.0f)
+          overlay_animation_apply_scaled(ov, 4, s, nodes);
+        else if (s < 0.0f)
+          overlay_animation_apply_scaled(ov, 5, -s, nodes);
+        s = *(float *)(fp + 0x44);
+        if (s > 0.0f)
+          overlay_animation_apply_scaled(ov, 7, s, nodes);
+        else if (s < 0.0f)
+          overlay_animation_apply_scaled(ov, 6, -s, nodes);
+        s = *(float *)(fp + 0x28);
+        if (s > 0.0f)
+          overlay_animation_apply_scaled(ov, 8, s, nodes);
+      }
+    }
+  }
+
+  if (*(int16_t *)(fp + 0x8a) > 0) {
+    ((void (*)(int, void *, void *, int, int))interpolate_node_orientations)(
+        *(unsigned short *)(antr + 0x68), fp + 0x88c, nodes,
+        *(unsigned short *)(fp + 0x88), *(unsigned short *)(fp + 0x8a));
+  }
+
+  ((void (*)(int, void *, void *, float *, float *, float *))
+       animation_graph_node_matrices_from_orientations)(
+      *(int *)(weap + 0x478), fp + 0x108c, nodes, (float *)0x506550,
+      (float *)0x50655c, (float *)0x506568);
 }
 
 /* 0xddae0 */

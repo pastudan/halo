@@ -1467,115 +1467,197 @@ void FUN_000f0f30(void *widget)
   (void)edi;
 }
 
-/* 0xf1710 */
+/* 0xf1710 — update network pregame/status item widget texts and visibility. */
 void FUN_000f1710(void *widget)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  void *net_state;
+  char *tag;
+  char *def;
+  char *chain0, *chain1, *chain2, *chain3, *ping_box, *ping_text;
+  void *client;
+  int16_t ping;
+  int16_t local_index;
+  char is_server_host;
+  wchar_t *text;
+  int i;
+  char found_local;
+  void *name_src;
+  int name_len;
+  char *row_def;
+  char *slot_root;
+  char *slot_a, *slot_b, *slot_c;
+  int order[4];
+  int order_count;
 
-  FUN_0012a0a0();
-  tag_get('aLeD', 0);
-  /* cmp ecx, 6 -> je 0xf1760 */
-  display_assert((char *)0x00288f28, (char *)0x00288938, 1020, 0);
-  system_exit(0);
-  /* test edi, edi -> je 0xf1ec6 */
-  network_game_client_get();
-  FUN_00124c40((void *)(uintptr_t)eax);
-  ui_widget_realloc(0, 32, (char *)0x00288938, 1035);
-  network_game_client_get();
-  FUN_00124d00((void *)(uintptr_t)eax);
-  network_game_server_get();
-  /* test eax, eax -> je 0xf17e2 */
-  ustrncpy((wchar_t *)(uintptr_t)eax, (wchar_t *)0x00288f1c, 15);
-  unicode_sprintf((wchar_t *)(uintptr_t)edx, 15, (wchar_t *)0x00288f0c);
-  /* cmp (int16_t)ebx, 0xe10 -> jge 0xf1877 */
-  unicode_sprintf((wchar_t *)(uintptr_t)ecx, 15, (wchar_t *)0x00288ef8);
-  unicode_sprintf((wchar_t *)(uintptr_t)ecx, 15, (wchar_t *)0x00288edc);
-  /* test (char)eax, (char)eax -> jne 0xf18e0 */
-  /* relift: cmp byte ptr [edx + 0xc0], 1 -> jne 0xf18e8 */
-  tag_get('aLeD', 0);
-  /* cmp ecx, 6 -> je 0xf192f */
-  display_assert((char *)0x00288f28, (char *)0x00288938, 1100, 0);
-  system_exit(0);
-  /* test eax, eax -> je 0xf19aa */
-  /* test (char)eax, (char)eax -> jl 0xf19aa */
-  /* cmp (char)eax, 4 -> jge 0xf19aa */
-  /* relift: cmp (int16_t)ecx, word ptr [ebp - 0x18] -> jne 0xf19aa */
-  network_game_client_get();
-  network_game_client_get_machine((void *)(uintptr_t)eax);
-  /* test eax, eax -> je 0xf19a6 */
-  /* relift: cmp word ptr [eax], 0 -> je 0xf19a6 */
-  csmemset((void *)(uintptr_t)edx, 0, 16);
-  network_player_is_valid((void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0xf19f8 */
-  /* relift: cmp (int16_t)ecx, word ptr [ebp - 0x18] -> jne 0xf19f8 */
-  /* cmp edi, 0x10 -> jl 0xf19d0 */
-  ustrlen((void *)(uintptr_t)ebx);
-  ui_widget_realloc(0, 0, (char *)0x00288938, 1147);
-  ustrncpy((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)ebx, esi);
-  tag_get('aLeD', 0);
-  /* cmp ecx, 3 -> je 0xf1aa6 */
-  display_assert((char *)0x00288f28, (char *)0x00288938, 1157, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0xe], 0 -> je 0xf1ad7 */
-  display_assert((char *)0x00288e98, (char *)0x00288938, 1163, 0);
-  system_exit(0);
-  /* test esi, esi -> je 0xf1ae5 */
-  /* relift: cmp word ptr [esi + 0xe], 1 -> je 0xf1b05 */
-  display_assert((char *)0x00288e68, (char *)0x00288938, 1165, 0);
-  system_exit(0);
-  /* test ebx, ebx -> je 0xf1b13 */
-  /* relift: cmp word ptr [ebx + 0xe], 2 -> je 0xf1b33 */
-  display_assert((char *)0x00288e30, (char *)0x00288938, 1167, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0xf1b44 */
-  widget_instance_set_visibility_recursive((void *)(uintptr_t)ebx, 0);
-  /* cmp eax, -1 -> jne 0xf1b93 */
-  ui_widget_realloc(0, 0, (char *)0x00288938, 1181);
-  ustrlen((void *)(uintptr_t)eax);
-  ui_widget_realloc(0, 0, (char *)0x00288938, 1190);
-  ustrncpy((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)edx, edi);
-  /* test (char)ecx, (char)ecx -> jne 0xf1c0a */
-  csmemset((void *)(uintptr_t)edx, 0, 12);
-  /* test eax, eax -> je 0xf1ce5 */
-  /* test (char)eax, (char)eax -> jl 0xf1ce5 */
-  /* cmp (char)eax, 4 -> jge 0xf1ce5 */
-  /* relift: cmp (int16_t)ecx, word ptr [ebp - 0x18] -> je 0xf1ce5 */
-  /* cmp ebx, 3 -> jl 0xf1ce0 */
-  display_assert((char *)0x00288e0c, (char *)0x00288938, 1236, 0);
-  system_exit(0);
-  /* cmp esi, 4 -> jl 0xf1ca0 */
-  tag_get('aLeD', 0);
-  /* cmp ecx, 6 -> je 0xf1d37 */
-  display_assert((char *)0x00288f28, (char *)0x00288938, 1245, 0);
-  system_exit(0);
-  ui_widget_realloc(0, 0, (char *)0x00288938, 1255);
-  /* test esi, esi -> je 0xf1eb3 */
-  ustrlen((void *)(uintptr_t)eax);
-  ui_widget_realloc(0, 0, (char *)0x00288938, 1268);
-  ustrncpy((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)ecx, edi);
-  csmemset((void *)(uintptr_t)eax, 0, 16);
-  network_player_is_valid((void *)(uintptr_t)ecx);
-  /* test (char)eax, (char)eax -> je 0xf1e3f */
-  /* relift: cmp (char)ecx, byte ptr [eax + edx] -> jne 0xf1e3f */
-  /* cmp ebx, 0x10 -> jl 0xf1e10 */
-  /* test eax, eax -> je 0xf1eb3 */
-  /* cmp ecx, -1 -> jne 0xf1e66 */
-  /* test (char)ebx, (char)ebx -> jne 0xf1e79 */
-  /* cmp edx, 0x288900 -> jl 0xf1e53 */
+  net_state = (void *)FUN_0012a0a0();
+  tag = (char *)tag_get(0x44654c61, *(int *)widget);
+  if (*(int *)(tag + 0x3e0) != 6) {
+    display_assert((char *)0x00288f28, (char *)0x00288938, 0x3fc, 1);
+    system_exit(-1);
+  }
+  if (net_state == 0)
+    return;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  client = network_game_client_get();
+  local_index = (int16_t)FUN_00124c40(client);
+  def = *(char **)((char *)widget + 0x34);
+  chain0 = *(char **)(def + 0x2c);
+  chain1 = *(char **)(chain0 + 0x2c);
+  chain2 = *(char **)(chain1 + 0x2c);
+  chain3 = *(char **)(chain2 + 0x2c);
+  ping_box = *(char **)(chain3 + 0x2c);
+  ping_text = *(char **)(ping_box + 0x2c);
+
+  *(void **)(ping_text + 0x3c) = ui_widget_realloc(
+      *(int *)(ping_text + 0x3c), 0x20, (char *)0x00288938, 0x40b);
+  if (*(void **)(ping_text + 0x3c) != 0) {
+    ping = (int16_t)FUN_00124d00(network_game_client_get());
+    is_server_host = 0;
+    if (network_game_server_get() != 0 &&
+        *(int16_t *)((char *)net_state + 0x112) < 2)
+      is_server_host = 1;
+
+    text = *(wchar_t **)(ping_text + 0x3c);
+    ustrncpy(text, (wchar_t *)0x00288f1c, 0xf);
+    ping_box[0x10] = 1;
+    *(int16_t *)(ping_box + 0x40) = 0;
+    ping_text[0x10] = 1;
+
+    if (ping == 0) {
+      *(int16_t *)(ping_box + 0x40) = 1;
+      ping_box[0x10] = 0;
+      ping_text[0x10] = 0;
+    } else if (ping > 0) {
+      if (ping < 0x3c)
+        unicode_sprintf(text, 0xf, (wchar_t *)0x00288f0c, (int)ping);
+      else if (ping < 0xe10) {
+        int mins = (int)ping / 60;
+        int secs = (int)ping % 60;
+        unicode_sprintf(text, 0xf, (wchar_t *)0x00288ef8, mins, secs);
+      } else {
+        int hours = (int)ping / 0xe10;
+        int rem = (int)ping % 0xe10;
+        int mins = rem / 60;
+        int secs = rem % 60;
+        unicode_sprintf(text, 0xf, (wchar_t *)0x00288edc, hours, mins, secs);
+      }
+    } else if (is_server_host ||
+               *(unsigned char *)((char *)net_state + 0xc0) == 1) {
+      ping_box[0x10] = 0;
+      ping_text[0x10] = 0;
+    }
+    *(int16_t *)((char *)text + 0x1e) = 0;
+  }
+
+  tag = (char *)tag_get(0x44654c61, *(int *)def);
+  if (*(int *)(tag + 0x3e0) != 6) {
+    display_assert((char *)0x00288f28, (char *)0x00288938, 0x44c, 1);
+    system_exit(-1);
+  }
+
+  row_def = *(char **)(def + 0x34);
+  slot_root = *(char **)(row_def + 0x2c);
+  slot_a = *(char **)(slot_root + 0x2c);
+  slot_b = *(char **)(slot_a + 0x2c);
+  slot_c = *(char **)(slot_b + 0x2c);
+
+  found_local = 0;
+  name_src = (void *)0x00288ed8;
+  {
+    char *scan = (char *)net_state + 0x154 + 0x40;
+    for (i = 0; i < 4; i++) {
+      char idx = scan[0];
+      if (scan - 0x40 != 0 && idx >= 0 && idx < 4 &&
+          (int16_t)idx == local_index) {
+        void *machine =
+            network_game_client_get_machine(network_game_client_get());
+        if (machine != 0 && *(int16_t *)machine != 0)
+          name_src = machine;
+        found_local = 1;
+      }
+      scan += 0x44;
+    }
+  }
+
+  for (i = 0; i < 4; i++)
+    order[i] = -1;
+  order_count = 0;
+  {
+    char *scan = (char *)net_state + 0x242;
+    for (i = 0; i < 0x10; i++) {
+      if (network_player_is_valid(scan - 0x1c) &&
+          (int16_t)(signed char)scan[0] == local_index) {
+        int pos = (signed char)scan[1];
+        order[pos] = i;
+        order_count++;
+        if (order_count == 4)
+          break;
+      }
+      scan += 0x20;
+    }
+  }
+
+  name_len = (int)ustrlen((const unsigned short *)name_src);
+  *(void **)(row_def + 0x3c) = ui_widget_realloc(
+      *(int *)(row_def + 0x3c), (unsigned short)(name_len * 2 + 2),
+      (char *)0x00288938, 0x47b);
+  if (*(void **)(row_def + 0x3c) != 0) {
+    ustrncpy(*(wchar_t **)(row_def + 0x3c), (wchar_t *)name_src, name_len);
+    *(int16_t *)(*(char **)(row_def + 0x3c) + name_len * 2) = 0;
+  }
+  *(int16_t *)(slot_root + 0x50) = (int16_t)(found_local != 0);
+
+  /* Drive nested select-list children for up to 4 ordered players. */
+  {
+    char *nodes[4];
+    nodes[0] = slot_root;
+    nodes[1] = slot_a;
+    nodes[2] = slot_b;
+    nodes[3] = slot_c;
+    for (i = 0; i < 4; i++) {
+      char *node = nodes[i];
+      char *inst;
+      char *nested;
+      char *leaf;
+      if (node == 0)
+        break;
+      tag = (char *)tag_get(0x44654c61, *(int *)node);
+      if (*(int *)(tag + 0x3e0) != 3) {
+        display_assert((char *)0x00288f28, (char *)0x00288938, 0x485, 1);
+        system_exit(-1);
+      }
+      inst = *(char **)(node + 0x34);
+      if (inst == 0 || *(int16_t *)(inst + 0xe) != 0) {
+        display_assert((char *)0x00288e98, (char *)0x00288938, 0x48b, 1);
+        system_exit(-1);
+      }
+      nested = *(char **)(inst + 0x2c);
+      if (nested == 0 || *(int16_t *)(nested + 0xe) != 1) {
+        display_assert((char *)0x00288e68, (char *)0x00288938, 0x48d, 1);
+        system_exit(-1);
+      }
+      leaf = *(char **)(nested + 0x2c);
+      if (leaf == 0 || *(int16_t *)(leaf + 0xe) != 2) {
+        display_assert((char *)0x00288e30, (char *)0x00288938, 0x48f, 1);
+        system_exit(-1);
+      }
+      if (order[i] == -1) {
+        widget_instance_set_visibility_recursive(nested, 0);
+      } else {
+        char *player = (char *)net_state + 0x242 + order[i] * 0x20 - 0x1c;
+        int plen = (int)ustrlen((const unsigned short *)player);
+        widget_instance_set_visibility_recursive(nested, 1);
+        *(void **)(inst + 0x3c) = ui_widget_realloc(
+            *(int *)(inst + 0x3c), (unsigned short)(plen * 2 + 2),
+            (char *)0x00288938, 0x4a6);
+        if (*(void **)(inst + 0x3c) != 0) {
+          ustrncpy(*(wchar_t **)(inst + 0x3c), (wchar_t *)player, plen);
+          *(int16_t *)(*(char **)(inst + 0x3c) + plen * 2) = 0;
+        }
+      }
+      (void)leaf;
+    }
+  }
 }
 
 /* 0xf1ed0 */

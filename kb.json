@@ -8153,7 +8153,7 @@
         },
         {
           "addr": "0xdd580",
-          "decl": "void first_person_weapon_update(void);",
+          "decl": "void first_person_weapon_update(int16_t local_player_index@<ax>);",
           "ported": false
         },
         {
@@ -37770,12 +37770,12 @@
         },
         {
           "addr": "0x122240",
-          "decl": "void overlay_animation_apply(void);",
+          "decl": "void overlay_animation_apply(void *animation, int frame, void *node_output);",
           "ported": false
         },
         {
           "addr": "0x122450",
-          "decl": "void overlay_animation_apply_scaled(void);",
+          "decl": "void overlay_animation_apply_scaled(void *animation, int frame, float scale, void *node_output);",
           "ported": false
         },
         {

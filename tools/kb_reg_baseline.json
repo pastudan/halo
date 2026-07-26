@@ -320,6 +320,7 @@
     "0xdcd60": "int16_t FUN_000dcd60(int object_handle@<edi>);",
     "0xdce00": "void FUN_000dce00(int16_t local_player_index@<ax>);",
     "0xdd4d0": "void FUN_000dd4d0(int16_t local_player_index@<ax>, int16_t blend_ticks@<di>);",
+    "0xdd580": "void first_person_weapon_update(int16_t local_player_index@<ax>);",
     "0xde3f0": "void FUN_000de3f0(int local_player_index@<ebx>);",
     "0xe24e0": "void progress_bar_decode_texture(int height@<eax>, int width@<ecx>, void *out_texture@<edx>, void *data, int data_size);",
     "0xe26c0": "void progress_bar_draw_loading_bar(float *rect@<eax>, float *color@<ecx>, float alpha, float progress);",

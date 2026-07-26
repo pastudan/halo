@@ -1396,83 +1396,21 @@ void replacement_animation_apply(void)
 }
 
 /* 0x122240 */
-void overlay_animation_apply(void)
+void overlay_animation_apply(void *animation, int frame, void *node_output)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: cmp word ptr [esi + 0x20], 1 -> jne 0x122441 */
-  /* cmp (int16_t)edi, (int16_t)ebx -> jl 0x12243f */
-  /* relift: cmp (int16_t)edi, word ptr [esi + 0x22] -> jge 0x12243f */
-  FUN_00120620(0);
-  FUN_00120500((void *)(uintptr_t)esi, 0);
-  /* test (char)ebx, 0x1f -> jne 0x1222c6 */
-  /* relift: test byte ptr [ebp - 0xc], 1 -> je 0x12231f */
-  FUN_00121330((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
-  quaternion_decompress_8byte((void *)(uintptr_t)edx, (float *)0);
-  FUN_0010b9c0((float *)(uintptr_t)eax, (float *)(uintptr_t)edi, (float *)(uintptr_t)edi);
-  /* test (char)eax, (char)eax -> je 0x12235e */
-  animation_get_node_orientations((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x1223d4 */
-  overlay_animation_apply_continuous_scaled((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> jne 0x12243f */
-  FUN_00120500((void *)(uintptr_t)esi, 0);
-  /* cmp ecx, eax -> je 0x12243f */
-  display_assert((char *)0x002912a0, (char *)0x00290ce4, 470, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  (void)animation;
+  (void)frame;
+  (void)node_output;
 }
 
 /* 0x122450 */
-void overlay_animation_apply_scaled(void)
+void overlay_animation_apply_scaled(void *animation, int frame, float scale,
+                                    void *node_output)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* cmp (int16_t)edi, (int16_t)ebx -> jl 0x122681 */
-  /* relift: cmp (int16_t)edi, word ptr [esi + 0x22] -> jge 0x122681 */
-  FUN_00120620(0);
-  FUN_00120500((void *)(uintptr_t)esi, 0);
-  /* test (char)ebx, 0x1f -> jne 0x1224e2 */
-  /* relift: test byte ptr [ebp - 0xc], 1 -> je 0x122552 */
-  FUN_00121330((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
-  quaternion_decompress_8byte((void *)(uintptr_t)edx, (float *)0);
-  FUN_0010ba90((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, 0.0f, (float *)(uintptr_t)eax);
-  FUN_0010b9c0((float *)(uintptr_t)ecx, (float *)(uintptr_t)edi, (float *)(uintptr_t)edi);
-  /* test (char)eax, (char)eax -> je 0x122591 */
-  animation_get_node_orientations((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x122610 */
-  overlay_animation_apply_continuous_scaled((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> jne 0x122681 */
-  FUN_00120500((void *)(uintptr_t)esi, 0);
-  /* cmp ecx, edx -> je 0x122681 */
-  display_assert((char *)0x002912a0, (char *)0x00290ce4, 554, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  (void)animation;
+  (void)scale;
+  (void)frame;
+  (void)node_output;
 }
 
 /* 0x122690 */

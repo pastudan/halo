@@ -54,7 +54,7 @@ void device_preprocess_node_orientations(void)
   /* test (char)eax, 1 -> je 0x963be */
   /* test (char)eax, 1 -> je 0x963dd */
   FUN_001d9068();
-  overlay_animation_apply();
+  overlay_animation_apply(0, 0, 0);
   FUN_00122690((void *)(uintptr_t)ebx, 0.0f, (void *)(uintptr_t)ecx);
   /* relift: cmp dword ptr [esi + 0x54], 1 -> jle 0x96465 */
   /* cmp (int16_t)eax, 0xffff -> je 0x96465 */

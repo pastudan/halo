@@ -321,6 +321,12 @@ def main() -> int:
         ("FUN_000f46e0", 0xf46e0, 0xf4b60),
         ("FUN_00135510", 0x135510, 0x135f20),
         ("FUN_001b6e20", 0x1b6e20, 0x1b7020),
+        # gameplay wave 20 (2026-07-26)
+        ("first_person_weapon_update", 0xdd580, 0xddae0),
+        ("FUN_000f1710", 0xf1710, 0xf1ed0),
+        ("FUN_0001b280", 0x1b280, 0x1b750),
+        ("get_local_player_input_blob", 0xb70b0, 0xb7e30),
+        ("FUN_00136bc0", 0x136bc0, 0x136f40),
     ]
 
     xbe = Xbe.from_file(args.xbe)

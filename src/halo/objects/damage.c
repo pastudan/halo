@@ -2062,12 +2062,15 @@ void FUN_00136bc0(int current_object_handle, void *collision_model, void *materi
       friendly_fire = 1;
   }
 
-  if (*(float *)(obj + 0x94) <= 0.0f) {
+  if (!(*(float *)(obj + 0x94) > 0.0f)) {
+    /* XBE 0x136ed9: zero shield apply/pool then fall through to outputs. */
     shield_apply = 0.0f;
     *(float *)(obj + 0x94) = 0.0f;
     goto write_outputs;
   }
 
+  /* XBE re-resolves the object before reading max shield. */
+  obj = (char *)object_get_and_verify_type(current_object_handle, -1);
   max_shield = *(float *)(obj + 0x8c);
   if (!friendly_fire)
     max_shield = FUN_000b55b0(2, (int)*(unsigned short *)(obj + 0x68)) *

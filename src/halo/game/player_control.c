@@ -980,7 +980,8 @@ void get_local_player_input_blob(int16_t local_player_index, float delta_time,
 
     look_scale_x = 0.0f;
     look_scale_y = 0.0f;
-    unit_handle = *(int *)(slot + 0x24);
+    /* XBE: unit comes from player datum +0x34 (not control-slot +0x24). */
+    unit_handle = *(int *)(player + 0x34);
     if (unit_handle != NONE) {
       unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
       look_scale_x =
