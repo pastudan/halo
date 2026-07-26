@@ -16630,5 +16630,54 @@
     "object": "cache_files.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x62b20",
+    "name": "FUN_00062b20",
+    "object": "path_smoothing.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x62ba0",
+    "name": "FUN_00062ba0",
+    "object": "path_smoothing.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x62cf0",
+    "name": "FUN_00062cf0",
+    "object": "path_smoothing.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x62e10",
+    "name": "FUN_00062e10",
+    "object": "path_smoothing.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x63030",
+    "name": "find_turning_point",
+    "object": "path_smoothing.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x633b0",
+    "name": "FUN_000633b0",
+    "object": "path_smoothing.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x639e0",
+    "name": "FUN_000639e0",
+    "object": "path_smoothing.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

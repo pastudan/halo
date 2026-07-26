@@ -38879,27 +38879,33 @@
         },
         {
           "addr": "0x62b20",
-          "decl": "void FUN_00062b20(void);"
+          "decl": "void FUN_00062b20(void);",
+          "ported": false
         },
         {
           "addr": "0x62ba0",
-          "decl": "void FUN_00062ba0(void);"
+          "decl": "void FUN_00062ba0(void);",
+          "ported": false
         },
         {
           "addr": "0x62cf0",
-          "decl": "void FUN_00062cf0(void);"
+          "decl": "void FUN_00062cf0(void);",
+          "ported": false
         },
         {
           "addr": "0x62e10",
-          "decl": "void FUN_00062e10(void);"
+          "decl": "void FUN_00062e10(void);",
+          "ported": false
         },
         {
           "addr": "0x63030",
-          "decl": "void find_turning_point(void);"
+          "decl": "void find_turning_point(void);",
+          "ported": false
         },
         {
           "addr": "0x633b0",
-          "decl": "void FUN_000633b0(unsigned int param_1, int param_2, void *param_3, int *param_4, void *param_5, char *param_6);"
+          "decl": "void FUN_000633b0(unsigned int param_1, int param_2, void *param_3, int *param_4, void *param_5, char *param_6);",
+          "ported": false
         },
         {
           "addr": "0x63710",
@@ -38918,7 +38924,8 @@
         },
         {
           "addr": "0x639e0",
-          "decl": "int FUN_000639e0(int scenario, unsigned char bsp_idx, float *origin, int node_handle, float *target, int flags, char *result_buf);"
+          "decl": "int FUN_000639e0(int scenario, unsigned char bsp_idx, float *origin, int node_handle, float *target, int flags, char *result_buf);",
+          "ported": false
         }
       ],
       "name": "path_smoothing.obj",
