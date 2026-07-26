@@ -1364,8 +1364,10 @@ void unlock_handle(void)
 #endif
 
 
-/* FUN_0011f6d0 (0x11f6d0) — readable C lift. */
-void *FUN_0011f6d0(int alloc_size, void *pool, const char *file, unsigned int line)
+/* FUN_0011f6d0 (0x11f6d0) — readable C lift from XBE leaf.
+ * Thin wrapper: size on stack, pool@edx, file@ecx, line@eax → alloc_internal. */
+void *FUN_0011f6d0(int alloc_size, void *pool /* @<edx> */, const char *file /* @<ecx> */,
+                   unsigned int line /* @<eax> */)
 {
   return stack_memory_pool_alloc_internal(alloc_size, pool, file, line);
 }
@@ -1786,7 +1788,6 @@ float FUN_0011fd10(void *block, char use_alt)
                 (int)*(int16_t *)((char *)block + 8);
   return (float)numerator / (float)denominator;
 }
-
 
 /* FUN_0011fd50 (0x11fd50) — readable C lift. */
 void FUN_0011fd50(void *pool)

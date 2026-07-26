@@ -4233,15 +4233,17 @@ char FUN_001cc200(int looping_handle __attribute__((unused)), void *source __att
 #endif
 
 
-/* FUN_001cc2f0 (0x1cc2f0) — readable C lift. */
-void FUN_001cc2f0(int sound_handle /*@<eax>*/, int tag_index /*@<esi>*/)
+/* FUN_001cc2f0 (0x1cc2f0) — readable C lift from XBE leaf.
+ * Register args: sound_handle@<esi>, tag_index@<eax> (binary: push eax; cmp [node+8],esi). */
+void FUN_001cc2f0(int sound_handle /* @<esi> */, int tag_index /* @<eax> */)
 {
-  extern data_t *DAT_004fdba4;
-  char *node = (char *)datum_get(DAT_004fdba4, sound_handle);
-  if (*(int *)(node + 8) != tag_index)
-    *(int *)(node + 0x98) = tag_index;
-}
+  char *datum;
 
+  datum = (char *)datum_get(*(data_t **)0x4fdba4, tag_index);
+  if (*(int *)(datum + 8) != sound_handle) {
+    *(int *)(datum + 0x98) = sound_handle;
+  }
+}
 
 /* FUN_001cc440 (0x1cc440) — XBE naked draft (batch 278). */
 #if defined(__clang__)

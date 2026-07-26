@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "x87_math.h"
 /* ui_widgets_initialize — sets up the UI widget subsystem. Allocates a
  * 0x4000-byte block via debug_malloc for the stack memory pool at
  * [0x31e04c], initializes the pool, zeroes the 0x68-byte static widget
@@ -2098,76 +2099,44 @@ char ui_widgets_active_for_local_player(int16_t local_player_index)
 #endif
 
 
-/* FUN_000e3e60 (0xe3e60) — XBE naked draft (batch 174). */
-#if defined(__clang__)
-static void (*const be3e60_c1daf7e)(void) = (void *)FUN_001daf7e;
-
-__attribute__((naked, noinline))
+/* FUN_000e3e60 (0xe3e60) — readable C lift from XBE leaf.
+ * fmod(a * b * *(float*)0x255ef8, *(double*)0x2573d8) via x87 FPREM. */
 float FUN_000e3e60(int a, float b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0x255ef8\n\t"
-      "fimull 0x8(%%ebp)\n\t"
-      "fldl 0x2573d8\n\t"
-      "popl %%ebp\n\t"
-      "jmp *%[c1daf7e]\n\t"
-      :
-      : [c1daf7e] "m"(be3e60_c1daf7e)
-      : "memory");
+  float scaled;
+
+  scaled = b * *(float *)0x255ef8 * (float)a;
+  return x87_fmod(scaled, *(double *)0x2573d8);
 }
-#else
-#error "FUN_000e3e60: clang naked draft required"
-#endif
 
-
-/* widget_instance_get_child_index_from_parent (0xe4330) — XBE naked draft (batch 213). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* widget_instance_get_child_index_from_parent (0xe4330) — readable C lift from XBE leaf. */
 int widget_instance_get_child_index_from_parent(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x30(%%esi), %%ecx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lwidget_instance_get_child_index_from_parent_3\n\t"
-      "movl 0x34(%%ecx), %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lwidget_instance_get_child_index_from_parent_3\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lwidget_instance_get_child_index_from_parent_1:\n\t"
-      "cmpl %%esi, %%ecx\n\t"
-      "je .Lwidget_instance_get_child_index_from_parent_2\n\t"
-      "movl 0x2c(%%ecx), %%ecx\n\t"
-      "incl %%edx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jne .Lwidget_instance_get_child_index_from_parent_1\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lwidget_instance_get_child_index_from_parent_2:\n\t"
-      "movl %%edx, %%eax\n\t"
-      ".Lwidget_instance_get_child_index_from_parent_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "widget_instance_get_child_index_from_parent: clang naked draft required"
-#endif
+  void *parent;
+  void *child;
+  int index;
 
+  parent = *(void **)((char *)widget + 0x30);
+  index = -1;
+  if (parent == NULL) {
+    return index;
+  }
+  child = *(void **)((char *)parent + 0x34);
+  index = 0;
+  if (child == NULL) {
+    return -1;
+  }
+  for (;;) {
+    if (child == widget) {
+      return index;
+    }
+    child = *(void **)((char *)child + 0x2c);
+    index++;
+    if (child == NULL) {
+      return -1;
+    }
+  }
+}
 
 /* widget_instance_set_visibility_recursive (0xe4370) — XBE naked draft (batch 162). */
 #if defined(__clang__)
@@ -2494,54 +2463,41 @@ char widget_instance_is_visible_in_parent_chain(void *widget)
 #endif
 
 
-/* widget_instance_parent_allows_focus (0xe4a40) — XBE naked draft (batch 166). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char widget_instance_parent_allows_focus(void *widget)
+/* widget_instance_parent_allows_focus (0xe4a40) — readable C lift from XBE leaf. */
+char widget_instance_parent_allows_focus(void *widget /* @<eax> */)
 {
-  __asm__ volatile(
-      "movl 0x30(%%eax), %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .Lwidget_instance_parent_allows_focus_3\n\t"
-      "cmpl %%eax, 0x38(%%edx)\n\t"
-      "sete %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lwidget_instance_parent_allows_focus_6\n\t"
-      ".Lwidget_instance_parent_allows_focus_1:\n\t"
-      "movl 0x30(%%edx), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lwidget_instance_parent_allows_focus_5\n\t"
-      "cmpl %%edx, 0x38(%%ecx)\n\t"
-      "jne .Lwidget_instance_parent_allows_focus_6\n\t"
-      "movw 0xe(%%ecx), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .Lwidget_instance_parent_allows_focus_2\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jne .Lwidget_instance_parent_allows_focus_4\n\t"
-      ".Lwidget_instance_parent_allows_focus_2:\n\t"
-      "movb $1, %%al\n\t"
-      "jmp .Lwidget_instance_parent_allows_focus_5\n\t"
-      ".Lwidget_instance_parent_allows_focus_3:\n\t"
-      "movb $1, %%al\n\t"
-      "ret\n\t"
-      ".Lwidget_instance_parent_allows_focus_4:\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Lwidget_instance_parent_allows_focus_5:\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "jne .Lwidget_instance_parent_allows_focus_1\n\t"
-      ".Lwidget_instance_parent_allows_focus_6:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "widget_instance_parent_allows_focus: clang naked draft required"
-#endif
+  char *w;
+  char *parent;
+  char *ancestor;
+  char result;
+  int16_t typ;
 
+  w = (char *)widget;
+  parent = *(char **)(w + 0x30);
+  if (parent == NULL) {
+    return 1;
+  }
+  if (*(char **)(parent + 0x38) == w) {
+    return 1;
+  }
+  result = 0;
+  for (;;) {
+    ancestor = *(char **)(parent + 0x30);
+    if (ancestor == NULL) {
+      return result;
+    }
+    if (*(char **)(ancestor + 0x38) != parent) {
+      return result;
+    }
+    typ = *(int16_t *)(ancestor + 0xe);
+    if (typ == 2 || typ == 3) {
+      result = 1;
+    } else {
+      result = 0;
+    }
+    parent = ancestor;
+  }
+}
 
 /* ui_widget_find_localized_string_index (0xe4a80) — XBE naked draft (batch 166). */
 #if defined(__clang__)
@@ -2795,7 +2751,7 @@ void __stdcall ui_widget_filesystem_check_thread_proc(int unused)
   (void)unused;
   saved_game_perform_file_system_checks();
   if (*(int16_t *)0x46cc80 == 0) {
-    FUN_001c26b0();
+    FUN_001c26b0(0, 0, 0);
     FUN_001c0d50(0, 0, 0, 0);
     player_ui_get_player1_last_used_profile_index();
   }
@@ -11663,12 +11619,21 @@ char FUN_000ecb60(void *widget)
 
 /* --- ui_widget.obj orphan shells (2026-07-26) --- */
 
-/* 0xe4310 */
+/* ui_widget_get_last_child (0xe4310) — readable C lift from XBE leaf.
+ * Walks the +0x30 link chain; returns the last non-NULL node (or widget). */
 void *ui_widget_get_last_child(void *widget)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return NULL;
+  void *next;
+
+  next = *(void **)((char *)widget + 0x30);
+  if (next == NULL) {
+    return widget;
+  }
+  do {
+    widget = next;
+    next = *(void **)((char *)widget + 0x30);
+  } while (next != NULL);
+  return widget;
 }
 
 /* ui_widget_pending_load_push_internal (0xe46f0) — XBE naked draft (batch 153). */
@@ -11891,73 +11856,29 @@ void ui_widget_pending_load_apply(int a6, int widget, int16_t a7)
 #endif
 
 
-/* ui_widget_update_list_selection (0xe5380) — XBE naked draft (batch 156). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void ui_widget_update_list_selection(void *widget, void *definition)
+/* ui_widget_update_list_selection (0xe5380) — readable C lift from XBE leaf. */
+void ui_widget_update_list_selection(void *widget /* @<ecx> */, void *definition)
 {
-  __asm__ volatile(
-      "movl 0x34(%%ecx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lui_widget_update_list_selection_4\n\t"
-      "movl $2, %%edx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lui_widget_update_list_selection_1:\n\t"
-      "cmpl 0x38(%%ecx), %%eax\n\t"
-      "jne .Lui_widget_update_list_selection_2\n\t"
-      "cmpw %%dx, 0x56(%%eax)\n\t"
-      "jne .Lui_widget_update_list_selection_3\n\t"
-      "movw $1, 0x50(%%eax)\n\t"
-      "jmp .Lui_widget_update_list_selection_3\n\t"
-      ".Lui_widget_update_list_selection_2:\n\t"
-      "cmpw %%dx, 0x56(%%eax)\n\t"
-      "jne .Lui_widget_update_list_selection_3\n\t"
-      "movw $0, 0x50(%%eax)\n\t"
-      ".Lui_widget_update_list_selection_3:\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lui_widget_update_list_selection_1\n\t"
-      ".Lui_widget_update_list_selection_4:\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lui_widget_update_list_selection_6\n\t"
-      "movl 0x2c(%%eax), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lui_widget_update_list_selection_6\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lui_widget_update_list_selection_5:\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movl 0x2c(%%eax), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jne .Lui_widget_update_list_selection_5\n\t"
-      ".Lui_widget_update_list_selection_6:\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "ui_widget_update_list_selection: clang naked draft required"
-#endif
+  void *child;
+  (void)definition;
 
+  child = *(void **)((char *)widget + 0x34);
+  if (child == NULL) {
+    return;
+  }
+  do {
+    if (child == *(void **)((char *)widget + 0x38)) {
+      if (*(int16_t *)((char *)child + 0x56) == 2) {
+        *(int16_t *)((char *)child + 0x50) = 1;
+      }
+    } else {
+      if (*(int16_t *)((char *)child + 0x56) == 2) {
+        *(int16_t *)((char *)child + 0x50) = 0;
+      }
+    }
+    child = *(void **)((char *)child + 0x2c);
+  } while (child != NULL);
+}
 
 /* ui_widget_list_prev (0xe53e0) — XBE naked draft (batch 156). */
 #if defined(__clang__)

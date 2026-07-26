@@ -25079,7 +25079,7 @@
         },
         {
           "addr": "0x1cc2f0",
-          "decl": "void FUN_001cc2f0(int sound_handle@<eax>, int tag_index@<esi>);",
+          "decl": "void FUN_001cc2f0(int sound_handle@<esi>, int tag_index@<eax>);",
           "ported": true,
           "name": "FUN_001cc2f0"
         },
@@ -26982,7 +26982,7 @@
         {
           "addr": "0xe3cb0",
           "decl": "int widget_instance_count_children(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe3cd0",
@@ -27017,7 +27017,7 @@
         {
           "addr": "0xe3e60",
           "decl": "float FUN_000e3e60(int a, float b);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe3e80",
@@ -27027,12 +27027,12 @@
         {
           "addr": "0xe4310",
           "decl": "void *ui_widget_get_last_child(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe4330",
           "decl": "int widget_instance_get_child_index_from_parent(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe4370",
@@ -27131,8 +27131,8 @@
         },
         {
           "addr": "0xe4960",
-          "decl": "float widget_instance_get_opacity_product(void *widget);",
-          "ported": false
+          "decl": "float widget_instance_get_opacity_product(void *widget@<eax>);",
+          "ported": true
         },
         {
           "addr": "0xe4980",
@@ -27142,7 +27142,7 @@
         {
           "addr": "0xe4a40",
           "decl": "char widget_instance_parent_allows_focus(void *widget@<eax>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe4a80",
@@ -27192,7 +27192,7 @@
         {
           "addr": "0xe5380",
           "decl": "void ui_widget_update_list_selection(void *widget@<ecx>, void *definition);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe53e0",
