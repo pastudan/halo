@@ -19878,5 +19878,1489 @@
     "object": "rasterizer_xbox_dynavobgeom.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7f3a0",
+    "name": "targa_export",
+    "object": "tiff_file.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7f570",
+    "name": "tiff_get_bounds",
+    "object": "tiff_file.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7fa00",
+    "name": "FUN_0007fa00",
+    "object": "tiff_file.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7ff40",
+    "name": "FUN_0007ff40",
+    "object": "tiff_file.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7ffe0",
+    "name": "FUN_0007ffe0",
+    "object": "tiff_file.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x80070",
+    "name": "FUN_00080070",
+    "object": "tiff_file.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x800d0",
+    "name": "FUN_000800d0",
+    "object": "tiff_file.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x659f0",
+    "name": "TIFFSetField",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x65a70",
+    "name": "TIFFVSetField",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x65af0",
+    "name": "FUN_00065af0",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x65e90",
+    "name": "TIFFGetField",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x65f00",
+    "name": "TIFFVGetField",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x65f70",
+    "name": "_TIFFgetfield",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x65f90",
+    "name": "TIFFFreeDirectory",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66190",
+    "name": "FUN_00066190",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66200",
+    "name": "FUN_00066200",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66320",
+    "name": "FUN_00066320",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66380",
+    "name": "TIFFDefaultDirectory",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x663f0",
+    "name": "FUN_000663f0",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66430",
+    "name": "FUN_00066430",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66550",
+    "name": "FUN_00066550",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66640",
+    "name": "FUN_00066640",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x666a0",
+    "name": "FUN_000666a0",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66720",
+    "name": "FUN_00066720",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66770",
+    "name": "FUN_00066770",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x667d0",
+    "name": "FUN_000667d0",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x668a0",
+    "name": "FUN_000668a0",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66900",
+    "name": "FUN_00066900",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66920",
+    "name": "FUN_00066920",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x669f0",
+    "name": "FUN_000669f0",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66cc0",
+    "name": "FUN_00066cc0",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66d40",
+    "name": "FUN_00066d40",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x66e70",
+    "name": "FUN_00066e70",
+    "object": "tif_dir.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68780",
+    "name": "FUN_00068780",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68890",
+    "name": "FUN_00068890",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68940",
+    "name": "FUN_00068940",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68970",
+    "name": "FUN_00068970",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x689c0",
+    "name": "FUN_000689c0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68a10",
+    "name": "FUN_00068a10",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68a30",
+    "name": "FUN_00068a30",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68a50",
+    "name": "FUN_00068a50",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68a70",
+    "name": "FUN_00068a70",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68bd0",
+    "name": "FUN_00068bd0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68c40",
+    "name": "FUN_00068c40",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68c70",
+    "name": "FUN_00068c70",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68d80",
+    "name": "FUN_00068d80",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68e20",
+    "name": "FUN_00068e20",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68eb0",
+    "name": "FUN_00068eb0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x68f60",
+    "name": "FUN_00068f60",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69020",
+    "name": "FUN_00069020",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69180",
+    "name": "FUN_00069180",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69200",
+    "name": "FUN_00069200",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69310",
+    "name": "FUN_00069310",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x693b0",
+    "name": "FUN_000693b0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69420",
+    "name": "FUN_00069420",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69520",
+    "name": "FUN_00069520",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69590",
+    "name": "FUN_00069590",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x695c0",
+    "name": "FUN_000695c0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69600",
+    "name": "FUN_00069600",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69690",
+    "name": "FUN_00069690",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x696d0",
+    "name": "FUN_000696d0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69b90",
+    "name": "FUN_00069b90",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69c40",
+    "name": "FUN_00069c40",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x69f30",
+    "name": "FUN_00069f30",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6a070",
+    "name": "FUN_0006a070",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6a190",
+    "name": "FUN_0006a190",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6a210",
+    "name": "FUN_0006a210",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6a260",
+    "name": "FUN_0006a260",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6a2a0",
+    "name": "FUN_0006a2a0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6a310",
+    "name": "FUN_0006a310",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6a3b0",
+    "name": "FUN_0006a3b0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6a5d0",
+    "name": "FUN_0006a5d0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6a910",
+    "name": "FUN_0006a910",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6a9a0",
+    "name": "FUN_0006a9a0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6aa40",
+    "name": "FUN_0006aa40",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ab10",
+    "name": "FUN_0006ab10",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ac60",
+    "name": "FUN_0006ac60",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6acc0",
+    "name": "FUN_0006acc0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ae10",
+    "name": "FUN_0006ae10",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6aee0",
+    "name": "FUN_0006aee0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6af80",
+    "name": "FUN_0006af80",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6b0a0",
+    "name": "FUN_0006b0a0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6b190",
+    "name": "FUN_0006b190",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6b2d0",
+    "name": "FUN_0006b2d0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6b3f0",
+    "name": "TIFFFlushData",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6b440",
+    "name": "FUN_0006b440",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6b610",
+    "name": "FUN_0006b610",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6b780",
+    "name": "FUN_0006b780",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6b8e0",
+    "name": "FUN_0006b8e0",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ba70",
+    "name": "FUN_0006ba70",
+    "object": "tif_flush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6c400",
+    "name": "FUN_0006c400",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6c5e0",
+    "name": "FUN_0006c5e0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6c680",
+    "name": "FUN_0006c680",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6c6f0",
+    "name": "FUN_0006c6f0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6c780",
+    "name": "FUN_0006c780",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6c860",
+    "name": "FUN_0006c860",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6c8d0",
+    "name": "FUN_0006c8d0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6c960",
+    "name": "FUN_0006c960",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ca50",
+    "name": "FUN_0006ca50",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6cac0",
+    "name": "FUN_0006cac0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6cb00",
+    "name": "FUN_0006cb00",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ccf0",
+    "name": "FUN_0006ccf0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6cd40",
+    "name": "FUN_0006cd40",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6cda0",
+    "name": "FUN_0006cda0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6cde0",
+    "name": "FUN_0006cde0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ce60",
+    "name": "FUN_0006ce60",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6cfa0",
+    "name": "FUN_0006cfa0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d140",
+    "name": "FUN_0006d140",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d180",
+    "name": "FUN_0006d180",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d1e0",
+    "name": "FUN_0006d1e0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d2d0",
+    "name": "FUN_0006d2d0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d340",
+    "name": "FUN_0006d340",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d4d0",
+    "name": "FUN_0006d4d0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d500",
+    "name": "FUN_0006d500",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d590",
+    "name": "TIFFFdOpen",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d820",
+    "name": "TIFFScanlineSize",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d850",
+    "name": "TIFFFileName",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d860",
+    "name": "TIFFFileno",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d870",
+    "name": "TIFFGetMode",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d880",
+    "name": "TIFFIsTiled",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d8a0",
+    "name": "TIFFCurrentRow",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d8b0",
+    "name": "TIFFCurrentDirectory",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d8c0",
+    "name": "TIFFCurrentStrip",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d8d0",
+    "name": "TIFFCurrentTile",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d8e0",
+    "name": "FUN_0006d8e0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d980",
+    "name": "FUN_0006d980",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6d9c0",
+    "name": "FUN_0006d9c0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6dbf0",
+    "name": "FUN_0006dbf0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6dd00",
+    "name": "FUN_0006dd00",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6dd50",
+    "name": "FUN_0006dd50",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6dda0",
+    "name": "FUN_0006dda0",
+    "object": "tif_open.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6e740",
+    "name": "FUN_0006e740",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6e7d0",
+    "name": "FUN_0006e7d0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6e870",
+    "name": "FUN_0006e870",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6e930",
+    "name": "FUN_0006e930",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6e980",
+    "name": "FUN_0006e980",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ea50",
+    "name": "FUN_0006ea50",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6eaf0",
+    "name": "FUN_0006eaf0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ebb0",
+    "name": "FUN_0006ebb0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ec50",
+    "name": "FUN_0006ec50",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ed10",
+    "name": "FUN_0006ed10",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ede0",
+    "name": "FUN_0006ede0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6eea0",
+    "name": "FUN_0006eea0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6ef80",
+    "name": "FUN_0006ef80",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f040",
+    "name": "FUN_0006f040",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f0d0",
+    "name": "FUN_0006f0d0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f120",
+    "name": "FUN_0006f120",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f150",
+    "name": "FUN_0006f150",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f180",
+    "name": "FUN_0006f180",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f1b0",
+    "name": "FUN_0006f1b0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f1d0",
+    "name": "FUN_0006f1d0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f1f0",
+    "name": "FUN_0006f1f0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f220",
+    "name": "FUN_0006f220",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f260",
+    "name": "FUN_0006f260",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f320",
+    "name": "FUN_0006f320",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f620",
+    "name": "FUN_0006f620",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f670",
+    "name": "FUN_0006f670",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f690",
+    "name": "FUN_0006f690",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f780",
+    "name": "FUN_0006f780",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f820",
+    "name": "FUN_0006f820",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f890",
+    "name": "FUN_0006f890",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f8d0",
+    "name": "FUN_0006f8d0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f910",
+    "name": "FUN_0006f910",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f950",
+    "name": "FUN_0006f950",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f9b0",
+    "name": "FUN_0006f9b0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f9d0",
+    "name": "FUN_0006f9d0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6f9f0",
+    "name": "FUN_0006f9f0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6faf0",
+    "name": "FUN_0006faf0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6fbd0",
+    "name": "FUN_0006fbd0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6fc60",
+    "name": "FUN_0006fc60",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6fd30",
+    "name": "FUN_0006fd30",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6fe10",
+    "name": "TIFFFlushData1",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x6fea0",
+    "name": "TIFFWriteScanline",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x700c0",
+    "name": "TIFFWriteEncodedStrip",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x701f0",
+    "name": "TIFFWriteRawStrip",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x70260",
+    "name": "TIFFWriteEncodedTile",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x703f0",
+    "name": "FUN_000703f0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x70460",
+    "name": "FUN_00070460",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x704c0",
+    "name": "FUN_000704c0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x70570",
+    "name": "FUN_00070570",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x705b0",
+    "name": "FUN_000705b0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x70610",
+    "name": "FUN_00070610",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x706b0",
+    "name": "FUN_000706b0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x708c0",
+    "name": "FUN_000708c0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x70a00",
+    "name": "FUN_00070a00",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x70b70",
+    "name": "FUN_00070b70",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x71400",
+    "name": "FUN_00071400",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x715c0",
+    "name": "DecodeBlockRGB__single_pixel",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x717b0",
+    "name": "FUN_000717b0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x71840",
+    "name": "FUN_00071840",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x71890",
+    "name": "FUN_00071890",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x71af0",
+    "name": "FUN_00071af0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x71ca0",
+    "name": "FUN_00071ca0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x71cc0",
+    "name": "TIFFWriteRawTile",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x71d30",
+    "name": "FUN_00071d30",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x71fa0",
+    "name": "FUN_00071fa0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x72060",
+    "name": "FUN_00072060",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x721a0",
+    "name": "FUN_000721a0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x72490",
+    "name": "FUN_00072490",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x72f70",
+    "name": "FUN_00072f70",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x73390",
+    "name": "FUN_00073390",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x73770",
+    "name": "FUN_00073770",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x73830",
+    "name": "FUN_00073830",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x73960",
+    "name": "FUN_00073960",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x73a80",
+    "name": "FUN_00073a80",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x73b00",
+    "name": "FUN_00073b00",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x73e40",
+    "name": "FUN_00073e40",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x73fd0",
+    "name": "FUN_00073fd0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x74210",
+    "name": "FUN_00074210",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x745c0",
+    "name": "FUN_000745c0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x747d0",
+    "name": "FUN_000747d0",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x74a30",
+    "name": "FUN_00074a30",
+    "object": "tif_write.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

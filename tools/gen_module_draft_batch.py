@@ -133,6 +133,8 @@ def parse_params(decl: str) -> list[str]:
     names: list[str] = []
     for i, p in enumerate(split_param_strings(decl)):
         p = strip_c_comments(re.sub(r"\[[^\]]*\]", "", p)).strip()
+        if "..." in p:
+            break
         tok = re.split(r"\s+", p.replace("*", " ").strip())
         cand = tok[-1] if tok else ""
         if (
@@ -154,10 +156,16 @@ def format_fn_signature(decl: str, param_names: list[str]) -> str:
     sig_params: list[str] = []
     for raw, name in zip(raw_params, param_names):
         raw = strip_c_comments(re.sub(r"\[[^\]]*\]", "", raw)).strip()
+        if "..." in raw:
+            sig_params.append("...")
+            break
         if re.search(rf"\b{re.escape(name)}\s*$", raw):
             sig_params.append(raw)
         else:
             sig_params.append(f"{raw} {name}")
+    if any("..." in strip_c_comments(re.sub(r"\[[^\]]*\]", "", r)) for r in raw_params):
+        if not sig_params or sig_params[-1] != "...":
+            sig_params.append("...")
     return f"{head}({', '.join(sig_params)})"
 
 
