@@ -1164,6 +1164,10 @@ class StubManager:
                 dst = int.from_bytes(bytes(uc.mem_read(caller_esp + 4, 4)), "little")
                 src = int.from_bytes(bytes(uc.mem_read(caller_esp + 8, 4)), "little")
                 size = int.from_bytes(bytes(uc.mem_read(caller_esp + 12, 4)), "little")
+                # Cap copy size: INT_MAX corner seeds otherwise walk the
+                # auto-map path into UC_ERR_MAP (oracle crash ≠ differential).
+                if size > 0x8000:
+                    size = 0x8000
                 if size > 0:
                     data = _safe_read(src, size)
                     _safe_write(dst, data)

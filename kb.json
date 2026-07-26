@@ -36338,7 +36338,7 @@
         {
           "addr": "0x652a0",
           "decl": "void FUN_000652a0(int count, void **out_ptr @<esi>, void *src @<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000652a0"
         },
         {
