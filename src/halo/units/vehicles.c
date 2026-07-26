@@ -2075,14 +2075,166 @@ void FUN_001b81d0(int object_handle, void *unused_scratch, void *force_buffer)
   FUN_001b6e20(object_handle);
 }
 
-/* 0x1b8570 — vehicle physics setup from object definition */
-void FUN_001b8570(int object_handle)
+/* 0x1b8570 — per-tick vehicle force integration.
+ * Args: handle, dt, contact_buf (stride 0x60), wheel_buf (stride 0x130). */
+void FUN_001b8570(int object_handle, float dt, void *contact_buf,
+                  void *wheel_buf)
 {
-  char *object;
-  char *vehicle_tag;
+  char *veh;
+  char *vehi;
+  char *phys;
+  float *global_vel;
+  float mass;
+  float gravity_scale;
+  float force_a[3];
+  float force_b[3];
+  float matrix[12];
+  float transformed[3];
+  float air_speed;
+  int contact_count;
+  int i;
+  int grounded;
+  int flagged;
+  float ground_frac;
+  float target;
+  float delta;
 
-  object = (char *)object_get_and_verify_type(object_handle, 2);
-  vehicle_tag = (char *)tag_get('ihev', *(int *)object);
-  (void)tag_get('syhp', *(int *)(vehicle_tag + 0x8c));
-  FUN_0018f510(object + 0x48, object + 0xc);
+  veh = (char *)object_get_and_verify_type(object_handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh);
+  phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c));
+  gravity_scale = FUN_0018f510(veh + 0x48, veh + 0xc);
+
+  global_vel = *(float **)0x31fc38;
+  force_a[0] = global_vel[0];
+  force_a[1] = global_vel[1];
+  force_a[2] = global_vel[2];
+  force_b[0] = global_vel[0];
+  force_b[1] = global_vel[1];
+  force_b[2] = global_vel[2];
+  mass = *(float *)(veh + 0x2e8);
+
+  contact_count = *(int *)(phys + 0x68);
+  for (i = 0; i < contact_count; i++) {
+    char *slot = (char *)contact_buf + i * 0x60;
+    *(float *)(slot + 0x18) = mass;
+    *(int *)(slot + 0x1c) = 0;
+    *(int *)(slot + 0x20) = 0;
+    *(int *)(slot + 0x24) = 0;
+    *(int *)(slot + 0x28) = 0x3f800000;
+  }
+
+  /* Full aero/ground forces only when gravity_scale < 0.5 and up.z > -0.2. */
+  if (gravity_scale < *(float *)0x253398 &&
+      *(float *)(veh + 0x38) > *(float *)0x255ba4) {
+    matrix4x3_from_forward_up_position(matrix, (float *)(veh + 0xc),
+                                       (float *)(veh + 0x24),
+                                       (float *)(veh + 0x30));
+    real_matrix3x3_transform_vector(matrix, (vector3_t *)(veh + 0x18),
+                                    (vector3_t *)transformed);
+
+    if (*(float *)(veh + 0x444) > 0.0f) {
+      float max_speed = *(float *)(vehi + 0x2f8);
+      float scale = *(float *)(vehi + 0x300);
+      float lateral[3];
+
+      if ((*(unsigned char *)(veh + 0x424) & 8) != 0)
+        max_speed *= *(float *)0x2533f0;
+
+      lateral[0] = max_speed * *(float *)(veh + 0x228) - transformed[0];
+      lateral[1] = max_speed * *(float *)(veh + 0x22c) - transformed[1];
+      lateral[2] = 0.0f;
+
+      if ((unsigned char)*(veh + 0x42b) > 0 &&
+          fabsf(dt) > *(double *)0x25b3f0) {
+        float fade =
+            (float)(unsigned char)*(veh + 0x42b) * *(float *)0x2533e8;
+        if (fade > *(float *)0x291060)
+          fade = *(float *)0x291060;
+        scale *= (1.0f - fade);
+      }
+      FUN_000a57b0(lateral, scale);
+      matrix_scale_transform_vector(matrix, lateral, lateral);
+      {
+        float thrust = *(float *)(phys + 8) * *(float *)(veh + 0x444);
+        force_a[0] += lateral[0] * thrust;
+        force_a[1] += lateral[1] * thrust;
+        force_a[2] += lateral[2] * thrust;
+      }
+    }
+
+    if (*(float *)(veh + 0x444) > 0.0f) {
+      float *up = (float *)(veh + 0x30);
+      float ground_speed = up[0] * *(float *)(veh + 0x3c) +
+                           up[1] * *(float *)(veh + 0x40) +
+                           up[2] * *(float *)(veh + 0x44);
+      int sign;
+      float lift;
+
+      if (dt == 0.0f)
+        sign = 0;
+      else if (dt < 0.0f)
+        sign = -1;
+      else
+        sign = 1;
+      lift = fabsf(dt) * sqrtf(*(double *)0x2b7d68) * (float)sign;
+      if (fabsf(lift) > *(double *)0x2533d0 &&
+          dt / lift < *(float *)0x253f40)
+        lift = dt * *(float *)0x253398;
+      lift = ground_speed - lift;
+      if (lift < *(float *)0x2b7d60)
+        lift = *(float *)0x2b7d60;
+      else if (!(lift <= *(float *)0x2b7d5c))
+        lift = *(float *)0x2b7d5c;
+      lift *= *(float *)(phys + 0x58) * *(float *)(veh + 0x444);
+      force_b[0] += up[0] * lift;
+      force_b[1] += up[1] * lift;
+      force_b[2] += up[2] * lift;
+    }
+
+    force_a[0] *= mass;
+    force_a[1] *= mass;
+    force_a[2] *= mass;
+    force_b[0] *= mass;
+    force_b[1] *= mass;
+    force_b[2] *= mass;
+  }
+
+  FUN_00154270(object_handle, contact_buf, wheel_buf, force_a, force_b);
+
+  /* Ground-fraction from powered wheels (phys mass points with marker != -1). */
+  grounded = 0;
+  flagged = 0;
+  ground_frac = 0.0f;
+  air_speed = (*(float *)(veh + 0x38) < *(float *)0x253524)
+                  ? 0.4f
+                  : *(float *)(veh + 0x38);
+  {
+    int wheel_count = *(int *)(phys + 0x74);
+    for (i = 0; i < wheel_count; i++) {
+      char *mass_point =
+          (char *)tag_block_get_element(phys + 0x74, i, 0x80);
+      if (*(int16_t *)(mass_point + 0x20) == (int16_t)-1)
+        continue;
+      grounded++;
+      if ((((char *)wheel_buf)[i * 0x130] & 0x10) != 0)
+        flagged++;
+    }
+    if (grounded > 0)
+      ground_frac = (float)flagged / (float)grounded;
+  }
+
+  target = ground_frac * air_speed;
+  if (target < 0.0f)
+    target = 0.0f;
+  else if (target > 1.0f)
+    target = 1.0f;
+  delta = target - *(float *)(veh + 0x444);
+  if (delta > *(float *)0x25496c)
+    *(float *)(veh + 0x444) += *(float *)0x25496c;
+  else if (!(delta >= *(float *)0x25e884))
+    *(float *)(veh + 0x444) -= *(float *)0x25496c;
+  else
+    *(float *)(veh + 0x444) = target;
+
+  FUN_001b7020(object_handle);
 }

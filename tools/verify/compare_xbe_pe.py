@@ -303,6 +303,12 @@ def main() -> int:
         ("FUN_001b81d0", 0x1b81d0, 0x1b8570),
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c90),
         ("FUN_00136bc0", 0x136bc0, 0x136f40),
+        # gameplay wave 17 (2026-07-26)
+        ("FUN_001b8570", 0x1b8570, 0x1b8f10),
+        ("item_update", 0xf7340, 0xf7cb0),
+        ("FUN_000fd570", 0xfd570, 0xfdc90),
+        ("FUN_00138900", 0x138900, 0x138e15),
+        ("FUN_001377d0", 0x1377d0, 0x137d12),
     ]
 
     xbe = Xbe.from_file(args.xbe)

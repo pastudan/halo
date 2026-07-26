@@ -1940,25 +1940,32 @@ void FUN_000fd520(int param_a, int weapon_handle, int16_t trigger_index)
   FUN_000fcec0(param_a, weapon_handle, trigger_index);
 }
 
-/* 0xfd570 — fire projectile from weapon trigger (large) */
+/* 0xfd570 — fire projectile(s) from a weapon trigger. */
 void FUN_000fd570(int weapon_handle, int16_t trigger_index)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *trigger_entry = weapon_get_trigger_entry(weapon_obj, trigger_index);
+  char *trigger_entry = FUN_000fb320(weapon_obj, trigger_index);
   char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
   char *trig_def = (char *)tag_block_get_element((void *)(tag_data + 0x4fc),
                                                  (int)trigger_index, 0x114);
   int unit_handle = -1;
-  int parent_handle = -1;
+  int owner_unit = -1;
+  int parent_handle;
   int marker_string_ids[2] = {0x267238, 0x28af04};
-  void *marker_name = (void *)marker_string_ids[trigger_index];
+  void *marker_name = (void *)marker_string_ids[(int)trigger_index];
   int16_t marker_count;
   char marker_buf[0x40 * 0x6c];
   int16_t marker_index;
+  int16_t projectile_count;
+  int16_t shot_index;
   float origin[3];
   float direction[3];
-  float velocity[3];
+  float up[3];
+  int aim_extra;
   int proj_tag;
+  char placement[0x100];
+  int aim_target;
+  float first_dir[3];
 
   if (*(int *)(weapon_obj + 0xcc) != -1 &&
       object_try_and_get_and_verify_type(*(int *)(weapon_obj + 0xcc), 3) != 0)
@@ -1971,17 +1978,20 @@ void FUN_000fd570(int weapon_handle, int16_t trigger_index)
       parent_handle = *(int *)(obj2 + 0xcc);
   }
 
-  marker_count = object_get_markers_by_string_id(
-    parent_handle, marker_name, marker_buf, 0x40);
-  if ((trig_def[0] & 0x20) == 0)
+  marker_count = object_get_markers_by_string_id(parent_handle, marker_name,
+                                                 marker_buf, 0x40);
+  if (marker_count == 0)
+    marker_count = 1;
+  if ((*(unsigned char *)trig_def & 0x20) == 0)
     marker_count = 1;
   if (marker_count <= 0)
     return;
 
   for (marker_index = 0; marker_index < marker_count; marker_index++) {
-    float *marker_pos = (float *)(marker_buf + marker_index * 0x6c);
-    float *marker_fwd = marker_pos + 3;
-    float *marker_up = marker_pos + 6;
+    char *marker = marker_buf + marker_index * 0x6c;
+    float *marker_pos = (float *)(marker + 0x60);
+    float *marker_fwd = (float *)(marker + 0x3c);
+    float *marker_up = (float *)(marker + 0x48);
 
     origin[0] = marker_pos[0];
     origin[1] = marker_pos[1];
@@ -1989,49 +1999,159 @@ void FUN_000fd570(int weapon_handle, int16_t trigger_index)
     direction[0] = marker_fwd[0];
     direction[1] = marker_fwd[1];
     direction[2] = marker_fwd[2];
-    velocity[0] = marker_up[0];
-    velocity[1] = marker_up[1];
-    velocity[2] = marker_up[2];
+    up[0] = marker_up[0];
+    up[1] = marker_up[1];
+    up[2] = marker_up[2];
+    aim_target = -1;
+    aim_extra = 0;
 
-    if (unit_handle != -1 &&
-        (trig_def[0] & 8) == 0 &&
-        object_try_and_get_and_verify_type(unit_handle, 3) != 0 &&
-        (*(uint8_t *)((char *)object_try_and_get_and_verify_type(unit_handle, 3) +
-                      0xb6) &
-          4) == 0) {
-      char use_forward = 1;
-      char adjust_origin = 1;
-      unit_adjust_projectile_ray(unit_handle, origin, direction, velocity,
-                                 adjust_origin, use_forward);
-      if (normalize3d(velocity) == 0.0f) {
-        float *world_up = *(float **)0x31fc40;
-        velocity[0] = world_up[0];
-        velocity[1] = world_up[1];
-        velocity[2] = world_up[2];
+    if ((*(unsigned int *)trig_def & 0x800) == 0 && unit_handle != -1) {
+      char *unit =
+          (char *)object_try_and_get_and_verify_type(unit_handle, 3);
+      if (unit != 0 && (*(unsigned char *)(unit + 0xb6) & 4) == 0) {
+        unit_adjust_projectile_ray(unit_handle, origin, direction, up, 1, 1);
+        if (normalize3d(up) == 0.0f) {
+          float *world_up = *(float **)0x31fc40;
+          up[0] = world_up[0];
+          up[1] = world_up[1];
+          up[2] = world_up[2];
+        }
+      } else {
+        aim_target =
+            actor_aim_projectile(unit_handle, origin, direction, &aim_extra);
       }
     } else if (unit_handle != -1) {
-      actor_aim_projectile(unit_handle, origin, direction, NULL);
+      aim_target =
+          actor_aim_projectile(unit_handle, origin, direction, &aim_extra);
+    }
+
+    if ((*(unsigned char *)trig_def & 0x20) != 0) {
+      origin[0] = marker_pos[0];
+      origin[1] = marker_pos[1];
+      origin[2] = marker_pos[2];
     }
 
     proj_tag = *(int *)(trig_def + 0xa0);
-    if (proj_tag == -1)
+    if (trigger_index == 0 && *(int16_t *)(weapon_obj + 0x20c) > 0) {
+      int16_t bursts = *(int16_t *)(weapon_obj + 0x20c);
+      if (*(int16_t *)(tag_data + 0x32c) == 4)
+        bursts = (int16_t)(bursts + 1);
+      projectile_count =
+          (int16_t)(*(int16_t *)(trig_def + 0x6e) * (int)bursts);
+      *(int16_t *)(weapon_obj + 0x20c) = 0;
+    } else {
+      projectile_count = *(int16_t *)(trig_def + 0x6e);
+    }
+    if (proj_tag == -1 || projectile_count <= 0)
       continue;
 
-    if (*(int16_t *)(weapon_obj + 0x20c) > 0 && trigger_index == 0) {
-      int16_t spread = *(int16_t *)(trig_def + 0x6e);
-      if (*(int16_t *)(tag_data + 0x32c) == 4)
-        spread = (int16_t)(spread * 2);
-      *(int16_t *)(weapon_obj + 0x20c) = 0;
+    owner_unit = -1;
+    {
+      char *w = (char *)object_get_and_verify_type(weapon_handle, 4);
+      if (*(int *)(w + 0xcc) != -1) {
+        char *parent =
+            (char *)object_try_and_get_and_verify_type(*(int *)(w + 0xcc), 3);
+        if (parent != 0) {
+          owner_unit = *(int *)(w + 0xcc);
+          if (*(int *)(parent + 0x2d8) != -1)
+            owner_unit = *(int *)(parent + 0x2d8);
+        }
+      }
     }
 
-    if (*(int16_t *)(trig_def + 0x6e) <= 0)
-      continue;
+    for (shot_index = 0; shot_index < projectile_count; shot_index++) {
+      char is_tracer = 0;
+      int proj_handle;
+      float shot_dir[3];
+      float error_angle;
+      char from_vehicle = 0;
 
-    (void)trigger_entry;
-    (void)proj_tag;
-    (void)origin;
-    (void)direction;
-    (void)velocity;
+      object_placement_data_new(placement, proj_tag, owner_unit);
+      *(float *)(placement + 0x20) = origin[0];
+      *(float *)(placement + 0x24) = origin[1];
+      *(float *)(placement + 0x28) = origin[2];
+
+      if (*(float *)(trigger_entry + 0x10) != 0.0f) {
+        if ((unsigned short)*(int16_t *)(trigger_entry + 0xe) >=
+            (unsigned short)*(int16_t *)(trig_def + 0x26)) {
+          is_tracer = 1;
+          *(int16_t *)(trigger_entry + 0xe) = 0;
+        } else {
+          *(int16_t *)(trigger_entry + 0xe) =
+              (int16_t)(*(int16_t *)(trigger_entry + 0xe) + 1);
+        }
+      }
+
+      error_angle = 0.0f;
+      if ((*(unsigned int *)trig_def & 0x200) != 0)
+        error_angle = *(float *)(weapon_obj + 0x1e4);
+      else
+        error_angle = *(float *)(trigger_entry + 0x1c);
+      error_angle = (1.0f - error_angle) * *(float *)(trig_def + 0x7c) +
+                    error_angle * *(float *)(trig_def + 0x80);
+
+      shot_dir[0] = direction[0];
+      shot_dir[1] = direction[1];
+      shot_dir[2] = direction[2];
+      if ((*(unsigned int *)trig_def & 0x400) == 0 ||
+          (*(unsigned char *)(weapon_obj + 0x1e0) & 0x40) == 0) {
+        random_direction3d(get_global_random_seed_address(), shot_dir, 0.0f,
+                           error_angle, shot_dir);
+      }
+
+      if (shot_index == 0) {
+        first_dir[0] = shot_dir[0];
+        first_dir[1] = shot_dir[1];
+        first_dir[2] = shot_dir[2];
+      }
+      if ((*(unsigned int *)trig_def & 0x1000) != 0) {
+        shot_dir[0] = first_dir[0];
+        shot_dir[1] = first_dir[1];
+        shot_dir[2] = first_dir[2];
+      }
+
+      {
+        float perp[3];
+        float mag;
+        perpendicular3d(shot_dir, perp);
+        mag = magnitude3d(shot_dir);
+        if (mag > *(double *)0x2533d0) {
+          shot_dir[0] /= mag;
+          shot_dir[1] /= mag;
+          shot_dir[2] /= mag;
+        }
+        (void)perp;
+      }
+
+      FUN_000fd0b0(shot_index, shot_dir, up, *(int16_t *)(trig_def + 0x6c),
+                   *(float *)(trig_def + 0x70), (char)projectile_count);
+
+      *(float *)(placement + 0x3c) = shot_dir[0];
+      *(float *)(placement + 0x40) = shot_dir[1];
+      *(float *)(placement + 0x44) = shot_dir[2];
+
+      if (unit_handle != -1) {
+        char *unit_obj =
+            (char *)object_try_and_get_and_verify_type(unit_handle, 3);
+        if (unit_obj != 0 && *(int *)(unit_obj + 0x1c8) != -1) {
+          *(unsigned int *)(placement + 4) |= 2;
+          from_vehicle = 1;
+        }
+      }
+
+      proj_handle = object_new(placement);
+      if (proj_handle != -1) {
+        if (from_vehicle != 0) {
+          float seat_pos[3];
+          unit_set_seat_state(unit_handle, seat_pos);
+          object_try_place(proj_handle, seat_pos);
+        }
+        if (aim_target != -1)
+          projectile_set_target_object_index(proj_handle, aim_target);
+        if (is_tracer == 0)
+          projectile_kill_tracer(proj_handle);
+      }
+    }
   }
 }
 

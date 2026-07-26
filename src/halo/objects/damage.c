@@ -2163,7 +2163,7 @@ write_outputs:
   *body_damage = remaining;
 }
 
-/* 0x1377d0 */
+/* 0x1377d0 — apply body vitality damage for one hit. */
 void FUN_001377d0(int object_handle, int region_index, int node_index,
                   unsigned int param_4, void *collision_model, void *material,
                   void *damage_effect, void *damage_params, unsigned int *flags,
@@ -2174,26 +2174,31 @@ void FUN_001377d0(int object_handle, int region_index, int node_index,
   char *mat;
   char *jpt;
   char *dp;
+  float amount;
   float body_scale;
   float max_body;
+  float inv_body;
   float recent_a;
   float recent_b;
   char friendly_fire;
   int region;
+  unsigned int flag_bits;
 
+  (void)param_4;
   obj = (char *)object_get_and_verify_type(object_handle, -1);
   coll = (char *)collision_model;
   mat = (char *)material;
   jpt = (char *)damage_effect;
   dp = (char *)damage_params;
 
-  body_scale = scale * *(float *)(mat + 0x3c);
+  /* ebp-4 amount: scale * material+0x3c (pre-normalization). */
+  amount = scale * *(float *)(mat + 0x3c);
 
-  if ((dp[0] & 0x40) != 0 && *(short *)(obj + 0x64) == 1) {
-    char *veh =
-        (char *)object_get_and_verify_type(object_handle, 3);
+  /* collision_model flag 0x40 + vehicle with no driver → zero amount. */
+  if ((coll[0] & 0x40) != 0 && *(short *)(obj + 0x64) == 1) {
+    char *veh = (char *)object_get_and_verify_type(object_handle, 3);
     if (*(int *)(veh + 0x2d4) == -1)
-      body_scale = 0.0f;
+      amount = 0.0f;
   }
 
   friendly_fire = 0;
@@ -2207,14 +2212,24 @@ void FUN_001377d0(int object_handle, int region_index, int node_index,
     max_body = FUN_000b55b0(1, (int)*(unsigned short *)(obj + 0x68)) *
                max_body;
 
-  if ((*(unsigned int *)dp & 0x30) == 0x30) {
-    body_scale = (1.0f - *(float *)(mat + 0x44)) * body_scale;
-    if ((*(unsigned int *)dp & 0x20) != 0) {
+  if (max_body > 0.0f)
+    inv_body = *(float *)0x2533c8 / max_body;
+  else
+    inv_body = 0.0f;
+
+  body_scale = amount;
+  flag_bits = *flags;
+  /* XBE: (1 - collision_model+0x44) when flags&0x10; difficulty div if &0x20. */
+  if ((flag_bits & 0x10) != 0) {
+    body_scale = (*(float *)0x2533c8 - *(float *)(coll + 0x44)) * amount;
+    if ((flag_bits & 0x20) != 0) {
       float diff = FUN_000b5590(0);
       if (diff > 0.0f)
         body_scale /= diff;
     }
   }
+
+  body_scale *= inv_body;
 
   {
     int16_t mat_type = *(int16_t *)(mat + 0x24);
@@ -2225,31 +2240,28 @@ void FUN_001377d0(int object_handle, int region_index, int node_index,
     body_scale *= *(float *)((char *)jpt + (int)mat_type * 4 + 0x3c);
   }
 
+  /* Vitality apply skipped when object+0xb7 bit 3 set. Instant-kill uses amount. */
   if ((*(unsigned char *)(obj + 0xb7) & 8) == 0) {
-    if (body_scale > 0.0f && (mat[0x20] & 1) != 0) {
+    if (amount > 0.0f && (mat[0x20] & 1) != 0) {
       if ((*(unsigned int *)(jpt + 4) & 2) != 0) {
-        char instant = 0;
         if (!game_engine_running() && *(short *)(obj + 0x64) == 0) {
           char *unit =
               (char *)object_get_and_verify_type(object_handle, 3);
-          if (*(int *)(unit + 0x1c8) == -1)
-            instant = 1;
+          if (*(int *)(unit + 0x1c8) != -1)
+            goto subtract_body;
         }
-        if (instant || ((*(unsigned int *)(jpt + 4) & 8) != 0 &&
-                        game_engine_running())) {
-          if (instant || body_scale * 2.0f > *(float *)(obj + 0x90))
-            *flags |= 0x80;
-        }
-      } else if ((*(unsigned int *)(jpt + 4) & 8) != 0 &&
+        *(float *)(obj + 0x90) = 0.0f;
+        *flags |= 0x40;
+        if (game_engine_running())
+          *flags |= 0x80;
+      } else if ((*(unsigned int *)(jpt + 4) & 0x800) != 0 &&
                  game_engine_running()) {
-        if (body_scale * 2.0f > *(float *)(obj + 0x90))
+        body_scale *= 2.0f;
+        if (body_scale > *(float *)(obj + 0x90))
           *flags |= 0x80;
       }
-      if ((*flags & 0x40) == 0)
-        *(float *)(obj + 0x90) = 0.0f;
-      else
-        *flags |= 0x40;
     }
+  subtract_body:
     *(float *)(obj + 0x90) -= body_scale;
   }
 
@@ -2315,8 +2327,9 @@ void FUN_001377d0(int object_handle, int region_index, int node_index,
     float threshold =
         FUN_000b55b0(1, (int)*(unsigned short *)(obj + 0x68)) *
         *(float *)(obj + 0x88) * body_vitality;
-    if (*(float *)(dp + 0xb8) > 0.0f &&
-        threshold <= *(float *)(dp + 0xb8)) {
+    /* XBE: absolute threshold / region / effects read collision_model (+0x18). */
+    if (*(float *)(coll + 0xb8) > 0.0f &&
+        threshold <= *(float *)(coll + 0xb8)) {
       object_destroy(object_handle);
       *flags |= 5;
     } else if (threshold <= 0.0f) {
@@ -2333,16 +2346,16 @@ void FUN_001377d0(int object_handle, int region_index, int node_index,
         object_deplete_body(object_handle);
         *flags |= 1;
       }
-    } else if (threshold <= *(float *)(mat + 0x94) &&
+    } else if (threshold <= *(float *)(coll + 0x94) &&
                (*(unsigned char *)(obj + 0xb6) & 1) == 0) {
-      FUN_0009ec30(*(int *)(mat + 0xa4), object_handle, object_handle, -1,
+      FUN_0009ec30(*(int *)(coll + 0xa4), object_handle, object_handle, -1,
                    0.0f, 0.0f, 0, 0);
       *(unsigned char *)(obj + 0xb6) |= 1;
     }
   }
 
   if ((dp[4] & 2) != 0) {
-    int coll_index = *(int *)(mat + 0x7c);
+    int coll_index = *(int *)(coll + 0x7c);
     if (coll_index != -1) {
       FUN_00137170((float *)(dp + 0x28), (float *)(dp + 0x34),
                    object_handle, coll_index, (short)node_index,
@@ -2350,8 +2363,8 @@ void FUN_001377d0(int object_handle, int region_index, int node_index,
     }
   }
 
-  if ((dp[4] & 1) != 0 && body_scale > *(float *)(mat + 0x80)) {
-    int effect_index = *(int *)(mat + 0x90);
+  if ((dp[4] & 1) != 0 && body_scale > *(float *)(coll + 0x80)) {
+    int effect_index = *(int *)(coll + 0x90);
     if (effect_index != -1 && *(short *)(jpt + 2) != 7) {
       FUN_0009ec30(effect_index, object_handle, object_handle, -1, 0.0f,
                    0.0f, 0, 0);
@@ -2410,12 +2423,12 @@ void FUN_00138900(void *damage_params, int object_handle, char recursive)
 
     blocked = 0;
     if (can_target != 0 && ((1 << *(unsigned char *)(obj + 0x64)) & 3) != 0 &&
-        *(float *)(jpt_tag + 0x1cc) > 0.0001f) {
+        *(float *)(jpt_tag + 0x1cc) > *(float *)0x253f44) {
+      /* Damage center is float[3] at dp+0x28 (contiguous +0x28/+0x2c/+0x30). */
       delta[0] = *(float *)(obj + 0x50) - *(float *)(dp + 0x28);
-      delta[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x30);
-      delta[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x38);
+      delta[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x2c);
+      delta[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x30);
       perpendicular3d(delta, perp);
-      normalize3d(perp);
       normalize3d(perp);
       axis_a[0] = perp[1] * delta[2] - perp[2] * delta[1];
       axis_a[1] = perp[2] * delta[0] - perp[0] * delta[2];
@@ -2477,8 +2490,8 @@ void FUN_00138900(void *damage_params, int object_handle, char recursive)
     } else {
       float seg[3];
       seg[0] = *(float *)(obj + 0x50) - *(float *)(dp + 0x28);
-      seg[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x30);
-      seg[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x38);
+      seg[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x2c);
+      seg[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x30);
       int root_parent = object_get_root_parent(object_handle);
       blocked = (char)!FUN_0014df70(0xc221, (float *)(dp + 0x28), seg,
                                     root_parent, collision_buf);
@@ -2537,13 +2550,14 @@ void FUN_00138900(void *damage_params, int object_handle, char recursive)
     if (apply_damage != 0) {
       float dir[3];
       dir[0] = *(float *)(obj + 0x50) - *(float *)(dp + 0x28);
-      dir[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x30);
-      dir[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x38);
+      dir[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x2c);
+      dir[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x30);
       normalize3d(dir);
       *(float *)(dp + 0x34) = dir[0];
       *(float *)(dp + 0x38) = dir[1];
       *(float *)(dp + 0x3c) = dir[2];
 
+      /* Outer/inner radius at jpt+0 / jpt+4; distance already in dp+0x40. */
       scale = *(float *)(jpt_tag + 4) - *(float *)jpt_tag;
       if (scale > 0.0f) {
         float dist = *(float *)(dp + 0x40);

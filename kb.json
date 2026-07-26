@@ -14120,7 +14120,7 @@
         },
         {
           "addr": "0xf7340",
-          "decl": "void item_update(void);",
+          "decl": "void item_update(int item_handle);",
           "ported": false
         }
       ],
@@ -29660,7 +29660,7 @@
         },
         {
           "addr": "0x1b8570",
-          "decl": "void FUN_001b8570(int object_handle);",
+          "decl": "void FUN_001b8570(int object_handle, float dt, void *contact_buf, void *wheel_buf);",
           "ported": false
         }
       ],
@@ -33909,7 +33909,7 @@
         },
         {
           "addr": "0x22b40",
-          "decl": "void FUN_00022b40(int actor_handle, float *aim_vector);",
+          "decl": "void FUN_00022b40(int actor_handle @<ebx>, float *aim_vector @<esi>);",
           "ported": false
         },
         {
@@ -36018,7 +36018,7 @@
         },
         {
           "addr": "0x64400",
-          "decl": "void FUN_00064400(int actor_handle, int prop_handle);",
+          "decl": "void FUN_00064400(int actor_handle@<eax>, int prop_handle@<edi>);",
           "ported": false
         },
         {
@@ -40228,7 +40228,7 @@
         },
         {
           "addr": "0x5ef80",
-          "decl": "char FUN_0005ef80(unsigned int *path_buf);",
+          "decl": "char FUN_0005ef80(unsigned int *path_buf @<edi>);",
           "name": "FUN_0005ef80",
           "source_path": "src/halo/ai/path.c",
           "ported": false

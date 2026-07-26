@@ -1714,54 +1714,138 @@ void FUN_000f7110(void)
   (void)edi;
 }
 
-/* 0xf7340 */
-void item_update(void)
+/* 0xf7340 — per-tick update for a free (unheld) item. */
+void item_update(int item_handle)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
+  char *item;
+  char *item_tag;
+  float *up;
+  float *forward;
+  float right[3];
+  float start[3];
+  float end[3];
+  float hit_normal[3];
+  float ground_t;
+  int16_t collision[0x60];
+  int16_t depth;
+  char in_air;
 
-  object_get_and_verify_type(0, 28);
-  tag_get('meti', 0);
-  /* test (char)eax, (char)eax -> je 0xf7390 */
-  profile_enter_private((void *)0x0031e710);
-  /* relift: cmp word ptr [0x4761d8], 0x20 -> jl 0xf73ba */
-  display_assert((char *)0x00253440, (char *)0x0028aaa0, 174, 0);
-  system_exit(0);
-  /* test (char)eax, 8 -> je 0xf7bc4 */
-  /* relift: cmp dword ptr [ebx + 0xcc], -1 -> jne 0xf7bc4 */
-  /* relift: test byte ptr [esi + 0x17c], 1 -> je 0xf7471 */
-  cross_product3d((float *)(uintptr_t)eax, (float *)(uintptr_t)esi, (float *)(uintptr_t)ecx);
-  cross_product3d((float *)(uintptr_t)edx, (float *)(uintptr_t)eax, (float *)(uintptr_t)esi);
-  normalize3d((float *)(uintptr_t)esi);
-  /* relift: test byte ptr [ebx + 4], 0x20 -> jne 0xf7901 */
-  FUN_000130d0(0, (float *)0, (float *)0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0xf78d7 */
-  FUN_00012fe0((float *)0);
-  /* test (char)eax, 0x41 -> jne 0xf7567 */
-  /* relift: cmp dword ptr [eax + 0x254], -1 -> je 0xf75b7 */
-  FUN_0009f3b0((void *)(uintptr_t)ecx);
-  /* test (char)eax, (char)eax -> je 0xf75b7 */
-  FUN_0009f430(0, 0, 0, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, 0.0f);
-  /* cmp eax, -1 -> je 0xf7623 */
-  unattached_impulse_sound_new(0, (void *)(uintptr_t)ecx, 0.0f);
-  /* cmp (int16_t)eax, 2 -> je 0xf765b */
-  /* cmp (int16_t)eax, 3 -> jne 0xf7801 */
-  FUN_000f68b0(0);
-  /* test edx, 0x3c0 -> je 0xf7801 */
-  /* test (char)eax, 0x41 -> jne 0xf7801 */
-  FUN_000f7110();
-  FUN_00012fb0((float *)(uintptr_t)ecx, 0.0f, (float *)0);
-  game_engine_running();
-  /* test (char)eax, (char)eax -> jne 0xf7737 */
-  /* relift: cmp dword ptr [esi + 0x70], -1 -> jne 0xf7737 */
-  object_set_garbage_flag(0, 0);
+  item = (char *)object_get_and_verify_type(item_handle, 0x1c);
+  item_tag = (char *)tag_get(0x6974656d, *(int *)item); /* 'item' */
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  if (*(char *)0x449ef1 != 0 && *(char *)0x31e718 != 0)
+    profile_enter_private((void *)0x0031e710);
+
+  if (*(int16_t *)0x4761d8 >= 0x20) {
+    display_assert((char *)0x00253440, (char *)0x0028aaa0, 0xae, 1);
+    system_exit(-1);
+  }
+  depth = *(int16_t *)0x4761d8;
+  *(int16_t *)0x4761d8 = (int16_t)(depth + 1);
+  *(int16_t *)(0x5a8c80 + (int)depth * 2) = 0xb;
+
+  /* Only simulate when on-ground bit clear in flags and no parent. */
+  if ((*(unsigned int *)(item + 4) & 0x800) == 0 ||
+      *(int *)(item + 0xcc) != -1) {
+    *(int16_t *)0x4761d8 = (int16_t)(*(int16_t *)0x4761d8 - 1);
+    return;
+  }
+
+  /* Optional upright snap when item definition requests it. */
+  if ((*(unsigned char *)(item_tag + 0x17c) & 1) != 0) {
+    float tilt = fabsf(*(float *)(item + 0x38) - 1.0f);
+    if (!(tilt < *(double *)0x2533d0)) {
+      up = *(float **)0x31fc44;
+      *(float *)(item + 0x30) = up[0];
+      *(float *)(item + 0x34) = up[1];
+      *(float *)(item + 0x38) = up[2];
+      /* right = up × forward; forward = right × up (re-orthonormalize). */
+      cross_product3d((float *)(item + 0x30), (float *)(item + 0x24), right);
+      cross_product3d(right, (float *)(item + 0x30), (float *)(item + 0x24));
+      if (normalize3d((float *)(item + 0x24)) == 0.0f) {
+        forward = *(float **)0x31fc3c;
+        *(float *)(item + 0x24) = forward[0];
+        *(float *)(item + 0x28) = forward[1];
+        *(float *)(item + 0x2c) = forward[2];
+      }
+    }
+  }
+
+  in_air = (char)((*(unsigned char *)(item + 4) & 0x20) != 0);
+  if (in_air == 0) {
+    float vel[3];
+    vel[0] = *(float *)(item + 0x18);
+    vel[1] = *(float *)(item + 0x1c);
+    vel[2] = *(float *)(item + 0x20);
+    if ((*(unsigned char *)(item_tag + 0x17c) & 4) == 0)
+      vel[2] -= *(float *)0x32512c;
+
+    start[0] = *(float *)(item + 0xc);
+    start[1] = *(float *)(item + 0x10);
+    start[2] = *(float *)(item + 0x14);
+    end[0] = start[0] + vel[0];
+    end[1] = start[1] + vel[1];
+    end[2] = start[2] + vel[2];
+
+    if (FUN_000130d0(0x1ff3e9, start, end, *(int *)(item + 0x1b0),
+                     collision)) {
+      hit_normal[0] = *(float *)((char *)collision + 0x24);
+      hit_normal[1] = *(float *)((char *)collision + 0x28);
+      hit_normal[2] = *(float *)((char *)collision + 0x2c);
+      end[0] += hit_normal[0] * *(float *)0x2533e8;
+      end[1] += hit_normal[1] * *(float *)0x2533e8;
+      end[2] += hit_normal[2] * *(float *)0x2533e8;
+      ground_t = FUN_00012fe0(vel) / *(float *)0x28aa80;
+      if (ground_t < 0.0f)
+        ground_t = 0.0f;
+      else if (ground_t > 1.0f)
+        ground_t = 1.0f;
+
+      if (*(int *)(item_tag + 0x254) != -1) {
+        char material_buf[0x10];
+        if (FUN_0009f3b0(material_buf))
+          FUN_0009f430(*(int *)(item_tag + 0x254), 8, 0, material_buf,
+                       hit_normal, (void *)(item_tag + 0x78), ground_t);
+      }
+      if (*(int *)(item_tag + 0x264) != -1) {
+        float sound_loc[12];
+        sound_loc[0] = end[0];
+        sound_loc[1] = end[1];
+        sound_loc[2] = end[2];
+        sound_loc[3] = hit_normal[0];
+        sound_loc[4] = hit_normal[1];
+        sound_loc[5] = hit_normal[2];
+        {
+          float *gv = *(float **)0x31fc38;
+          sound_loc[6] = gv[0];
+          sound_loc[7] = gv[1];
+          sound_loc[8] = gv[2];
+        }
+        sound_loc[9] = *(float *)(item + 0x48);
+        sound_loc[10] = *(float *)(item + 0x4c);
+        unattached_impulse_sound_new(*(int *)(item_tag + 0x264), sound_loc,
+                                     ground_t);
+      }
+
+      {
+        int16_t surface = collision[0];
+        if (surface == 2 ||
+            (surface == 3 &&
+             ((1 << (int)FUN_000f68b0(item_handle)) & 0x3c0) != 0)) {
+          if (hit_normal[2] > *(float *)0x28aaf4) {
+            float into = -(hit_normal[0] * vel[0] + hit_normal[1] * vel[1] +
+                           hit_normal[2] * vel[2]);
+            if (into > *(float *)0x2533e8) {
+              FUN_000f7110();
+              FUN_00012fb0(hit_normal, into, vel);
+              if (!game_engine_running() && *(int *)(item_tag + 0x70) == -1)
+                object_set_garbage_flag(item_handle, 1);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  *(int16_t *)0x4761d8 = (int16_t)(*(int16_t *)0x4761d8 - 1);
 }
