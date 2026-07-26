@@ -12333,7 +12333,7 @@
         },
         {
           "addr": "0xc9f90",
-          "decl": "float *FUN_000c9f90(void);",
+          "decl": "float *FUN_000c9f90(int object_handle);",
           "ported": false
         },
         {
@@ -35347,7 +35347,7 @@
         {
           "addr": "0x58eb0",
           "decl": "void FUN_00058eb0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x58cc0",

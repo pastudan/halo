@@ -166,91 +166,34 @@ void FUN_00058d40(int a0 __attribute__((unused)))
 #endif
 
 
-/* FUN_00058eb0 (0x58eb0) — XBE naked draft (batch 140). */
-#if defined(__clang__)
-static data_t * (*const b58eb0_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
-static void (*const b58eb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b58eb0_exitfn)(int) = system_exit;
-static void * (*const b58eb0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
-
-__attribute__((naked, noinline))
+/* FUN_00058eb0 (0x58eb0) — readable C lift. */
 void FUN_00058eb0(void)
 {
-  __asm__ volatile(
-      "pushl $0x6c\n\t"
-      "pushl $0x80\n\t"
-      "pushl $0x254868\n\t"
-      "call *%[c1bfe10]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x5ab270\n\t"
-      "jne .LFUN_00058eb0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6e\n\t"
-      "pushl $0x25d27c\n\t"
-      "pushl $0x25d26c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00058eb0_1:\n\t"
-      "pushl $0x8000\n\t"
-      "pushl $0x25d264\n\t"
-      "pushl $0x25d264\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x5ab278\n\t"
-      "jne .LFUN_00058eb0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x71\n\t"
-      "pushl $0x25d27c\n\t"
-      "pushl $0x25d258\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00058eb0_2:\n\t"
-      "pushl $0x1000\n\t"
-      "pushl $0x25d250\n\t"
-      "pushl $0x25d250\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x5ab274\n\t"
-      "jne .LFUN_00058eb0_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x74\n\t"
-      "pushl $0x25d27c\n\t"
-      "pushl $0x25d240\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00058eb0_3:\n\t"
-      "pushl $0x28\n\t"
-      "pushl $0x100\n\t"
-      "pushl $0x25d234\n\t"
-      "call *%[c1bfe10]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x5ab26c\n\t"
-      "jne .LFUN_00058eb0_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x77\n\t"
-      "pushl $0x25d27c\n\t"
-      "pushl $0x25d224\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00058eb0_4:\n\t"
-      "ret\n\t"
-      :
-      : [c1bfe10] "m"(b58eb0_c1bfe10), [assert] "m"(b58eb0_assert), [exitfn] "m"(b58eb0_exitfn), [c1bfbf0] "m"(b58eb0_c1bfbf0)
-      : "memory");
+  void *p;
+
+  p = game_state_data_new((char *)0x254868, 0x80, 0x6c);
+  *(void **)0x5ab270 = p;
+  if (p == 0) {
+    display_assert((const char *)0x25d26c, (const char *)0x25d27c, 0x6e, 1);
+    system_exit(-1);
+  }
+  p = game_state_malloc((const char *)0x25d264, (const char *)0x25d264, 0x8000);
+  *(void **)0x5ab278 = p;
+  if (p == 0) {
+    display_assert((const char *)0x25d258, (const char *)0x25d27c, 0x71, 1);
+    system_exit(-1);
+  }
+  p = game_state_malloc((const char *)0x25d250, (const char *)0x25d250, 0x1000);
+  *(void **)0x5ab274 = p;
+  if (p == 0) {
+    display_assert((const char *)0x25d240, (const char *)0x25d27c, 0x74, 1);
+    system_exit(-1);
+  }
+  p = game_state_data_new((char *)0x25d234, 0x100, 0x28);
+  *(void **)0x5ab26c = p;
+  if (p == 0) {
+    display_assert((const char *)0x25d224, (const char *)0x25d27c, 0x77, 1);
+    system_exit(-1);
+  }
 }
-#else
-#error "FUN_00058eb0: clang naked draft required"
-#endif
 
