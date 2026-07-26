@@ -13347,7 +13347,7 @@ static int (*const b27ff0_gtime)(void) = game_time_get;
 static void (*const b27ff0_c4a6e0)(int actor_handle) = ai_debug_idle_look_clear;
 static void (*const b27ff0_c64540)(int *out, int actor_handle) = FUN_00064540;
 static int (*const b27ff0_c64570)(int *iter) = FUN_00064570;
-static void (*const b27ff0_c4a710)(int index, float value) = FUN_0004a710;
+static void (*const b27ff0_c4a710)(int index, float value) = ai_debug_idle_look_addprop;
 static bool (*const b27ff0_c27dd0)(float *dir, float *vec2, float threshold) = FUN_00027dd0;
 static bool (*const b27ff0_c27e50)(float *dir, float *vec2, float *limit, float threshold, float *output) = FUN_00027e50;
 
