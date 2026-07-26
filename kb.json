@@ -10212,7 +10212,8 @@
         {
           "addr": "0x1bfb60",
           "decl": "void FUN_001bfb60(const char *name, const char *label, int size, char starred);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001bfb60"
         },
         {
           "addr": "0x1bfe50",
