@@ -2291,57 +2291,18 @@ void FUN_000de0e0(int object_handle, int16_t local_player_index)
   FUN_000dde80(local_player_index);
 }
 
-/* first_person_weapon_message_from_unit (0xde360) — XBE naked draft (batch 231). */
-#if defined(__clang__)
-static int16_t (*const bde360_cdcdc0)(int object_handle /* */) = (void *)FUN_000dcdc0;
-static void (*const bde360_cde140)(int param_1, int param_2) = FUN_000de140;
-static void *(*const bde360_get)(int, int) = object_get_and_verify_type;
-static void (*const bde360_cdc9d0)(int param_2, int object_handle) = FUN_000dc9d0;
-
-__attribute__((naked, noinline))
+/* first_person_weapon_message_from_unit (0xde360) — readable C lift. */
 void first_person_weapon_message_from_unit(int unit_handle, int message_type)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ebx, %%edi\n\t"
-      "call *%[cdcdc0]\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cde140]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $-1, %%si\n\t"
-      "jne .Lfirst_person_weapon_message_from_unit_1\n\t"
-      "pushl $3\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movw 0x2a2(%%eax), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%si, %%ax\n\t"
-      "je .Lfirst_person_weapon_message_from_unit_1\n\t"
-      "movswl %%ax, %%ebx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[cdc9d0]\n\t"
-      ".Lfirst_person_weapon_message_from_unit_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cdcdc0] "m"(bde360_cdcdc0), [cde140] "m"(bde360_cde140), [get] "m"(bde360_get), [cdc9d0] "m"(bde360_cdc9d0)
-      : "memory");
+  int16_t local_player = FUN_000dcdc0(unit_handle);
+  FUN_000de140(local_player, message_type);
+  if (local_player == (int16_t)-1) {
+    char *unit = (char *)object_get_and_verify_type(unit_handle, 3);
+    int16_t weapon_index = *(int16_t *)(unit + 0x2a2);
+    if (weapon_index != (int16_t)-1)
+      FUN_000dc9d0(message_type, (int)weapon_index);
+  }
 }
-#else
-#error "first_person_weapon_message_from_unit: clang naked draft required"
-#endif
-
 
 /* 0xde3f0 — Advance first-person weapon state for one local player. */
 #if defined(__i386__) && defined(__GNUC__)

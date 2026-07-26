@@ -13458,15 +13458,20 @@ void FUN_00053a20(void)
 #endif
 
 
-/* FUN_00053a90 (0x53a90) — readable C lift. */
+/* FUN_00053a90 (0x53a90) — readable C lift (debug overlay row). */
 void FUN_00053a90(void)
 {
-  int16_t vals[1];
-  vals[0] = 0x96;
-  crt_sprintf((char *)0x5ab280, (const char *)0x25c174,
-              (int)*(int16_t *)0x5ac4c6, (int)*(int16_t *)0x5ac43e,
-              0x20, (int)*(int16_t *)0x5ac54e, 0x100);
-  FUN_00053800((void *)0x5ab280, 1, vals);
+  short column_positions[1];
+  char *debug_row = (char *)0x5ab280;
+  void *row_ctx = *(void **)0x2ee6c4;
+  void (*row_print)(char *, int, short *, void *) =
+      (void (*)(char *, int, short *, void *))(void *)FUN_00053800;
+
+  crt_sprintf(debug_row, (const char *)0x25c174,
+              (int)*(int16_t *)0x5ac4c6, (int)*(int16_t *)0x5ac43e, 0x20,
+              (int)*(int16_t *)0x5ac54e, 0x100);
+  column_positions[0] = 0x96;
+  row_print(debug_row, 1, column_positions, row_ctx);
 }
 
 /* FUN_00053af0 (0x53af0) — XBE naked draft (batch 157). */

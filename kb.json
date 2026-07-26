@@ -2506,7 +2506,8 @@
         {
           "addr": "0x1c0e0",
           "decl": "char FUN_0001c0e0(int actor_handle, char param_2, int state_data);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_0001c0e0"
         },
         {
           "addr": "0x1c190",
@@ -8186,7 +8187,7 @@
         {
           "addr": "0xde360",
           "decl": "void first_person_weapon_message_from_unit(int unit_handle, int message_type);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xde3f0",

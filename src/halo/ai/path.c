@@ -1012,111 +1012,45 @@ void path_heap_bubble_down(void *path __attribute__((unused)), int16_t heap_inde
 #endif
 
 
-/* path_heap_pop_cheapest_node (0x5e560) — XBE naked draft (batch 225). */
-#if defined(__clang__)
-static void (*const b5e560_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5e560_exitfn)(int) = system_exit;
-static void (*const b5e560_c5e330)(void *path, int16_t heap_index) = path_heap_bubble_down;
-
-__attribute__((naked, noinline))
-int16_t path_heap_pop_cheapest_node(void *path __attribute__((unused)))
+/* path_heap_pop_cheapest_node (0x5e560) — readable C lift. */
+int16_t path_heap_pop_cheapest_node(void *path /* @<eax> */)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl $1, %%esi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "cmpw %%si, 0x11084(%%ebx)\n\t"
-      "jge .Lpath_heap_pop_cheapest_node_1\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x572\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e238\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw %%si, 0x11084(%%ebx)\n\t"
-      ".Lpath_heap_pop_cheapest_node_1:\n\t"
-      "jle .Lpath_heap_pop_cheapest_node_6\n\t"
-      "movw 0x1108a(%%ebx), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .Lpath_heap_pop_cheapest_node_2\n\t"
-      "cmpw $0x400, %%di\n\t"
-      "jl .Lpath_heap_pop_cheapest_node_3\n\t"
-      ".Lpath_heap_pop_cheapest_node_2:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x577\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e034\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_heap_pop_cheapest_node_3:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "imull $0x44, %%eax, %%eax\n\t"
-      "cmpw $1, 0xb4(%%eax,%%ebx,1)\n\t"
-      "leal (%%eax,%%ebx,1), %%esi\n\t"
-      "je .Lpath_heap_pop_cheapest_node_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x579\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e208\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_heap_pop_cheapest_node_4:\n\t"
-      "movw 0xb0(%%esi), %%cx\n\t"
-      "cmpw 0x1108c(%%ebx), %%cx\n\t"
-      "je .Lpath_heap_pop_cheapest_node_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x57a\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e1a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_heap_pop_cheapest_node_5:\n\t"
-      "movw $0xffff, 0xb4(%%esi)\n\t"
-      "decw 0x11084(%%ebx)\n\t"
-      "movw 0x11084(%%ebx), %%ax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jle .Lpath_heap_pop_cheapest_node_6\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movl 0x11086(%%ebx,%%edx,4), %%eax\n\t"
-      "pushl $1\n\t"
-      "movl %%eax, 0x1108a(%%ebx)\n\t"
-      "call *%[c5e330]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lpath_heap_pop_cheapest_node_6:\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [assert] "m"(b5e560_assert), [exitfn] "m"(b5e560_exitfn), [c5e330] "m"(b5e560_c5e330)
-      : "memory");
-}
-#else
-#error "path_heap_pop_cheapest_node: clang naked draft required"
-#endif
+  int16_t result;
+  int16_t count;
+  char *node;
 
+  result = -1;
+  if (*(int16_t *)((char *)path + 0x11084) < 1) {
+    display_assert((const char *)0x25e238, (const char *)0x25e0ac, 0x572, 1);
+    system_exit(-1);
+  }
+  if (*(int16_t *)((char *)path + 0x11084) <= 1) {
+    return result;
+  }
+  result = *(int16_t *)((char *)path + 0x1108a);
+  if (result < 0 || result >= 0x400) {
+    display_assert((const char *)0x25e034, (const char *)0x25e0ac, 0x577, 1);
+    system_exit(-1);
+  }
+  node = (char *)path + (int)result * 0x44;
+  if (*(int16_t *)(node + 0xb4) != 1) {
+    display_assert((const char *)0x25e208, (const char *)0x25e0ac, 0x579, 1);
+    system_exit(-1);
+  }
+  if (*(int16_t *)(node + 0xb0) != *(int16_t *)((char *)path + 0x1108c)) {
+    display_assert((const char *)0x25e1a8, (const char *)0x25e0ac, 0x57a, 1);
+    system_exit(-1);
+  }
+  *(int16_t *)(node + 0xb4) = -1;
+  count = (int16_t)(*(int16_t *)((char *)path + 0x11084) - 1);
+  *(int16_t *)((char *)path + 0x11084) = count;
+  if (count > 1) {
+    *(int *)((char *)path + 0x1108a) =
+        *(int *)((char *)path + 0x11086 + (int)count * 4);
+    path_heap_bubble_down(path, 1);
+  }
+  return result;
+}
 
 /* path_heap_insert (0x5e680) — XBE naked draft (batch 233). */
 #if defined(__clang__)
