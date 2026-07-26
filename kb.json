@@ -19833,7 +19833,7 @@
         {
           "addr": "0x90170",
           "decl": "void FUN_00090170(int *out@<eax>, int a, int b);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x90180",
@@ -20541,7 +20541,7 @@
         {
           "addr": "0x10c390",
           "decl": "float FUN_0010c390(float param_1, float param_2, uint8_t param_3);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x10c3c0",
