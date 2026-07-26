@@ -14453,5 +14453,124 @@
     "object": "items.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0xd98c0",
+    "name": "FUN_000d98c0",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xd9960",
+    "name": "FUN_000d9960",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xd9f20",
+    "name": "render_weapon_hud",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xda980",
+    "name": "hud_update_weapon",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdabf0",
+    "name": "FUN_000dabf0",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdade0",
+    "name": "tiny_point2d_set",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdae90",
+    "name": "FUN_000dae90",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdaee0",
+    "name": "FUN_000daee0",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdb0b0",
+    "name": "FUN_000db0b0",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdb1e0",
+    "name": "FUN_000db1e0",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdb250",
+    "name": "FUN_000db250",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdb330",
+    "name": "render_blip",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdb4c0",
+    "name": "motion_sensor_update",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdb950",
+    "name": "update_motion_sensor",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdbcb0",
+    "name": "FUN_000dbcb0",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdbfb0",
+    "name": "FUN_000dbfb0",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdc000",
+    "name": "FUN_000dc000",
+    "object": "event_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
