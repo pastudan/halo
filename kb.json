@@ -20328,7 +20328,7 @@
         },
         {
           "addr": "0xe1f00",
-          "decl": "void FUN_000e1f00(void);",
+          "decl": "int __stdcall FUN_000e1f00(unsigned int reg, float a, float b);",
           "ported": false
         },
         {
@@ -25036,7 +25036,7 @@
         },
         {
           "addr": "0x1cc2f0",
-          "decl": "void FUN_001cc2f0(int sound_handle, int tag_index);",
+          "decl": "void FUN_001cc2f0(int sound_handle @<esi>, int tag_index @<eax>);",
           "ported": false,
           "name": "FUN_001cc2f0"
         },
@@ -33488,8 +33488,8 @@
         },
         {
           "addr": "0x19d380",
-          "decl": "void FUN_0019d380(void);",
-          "ported": false
+          "decl": "char FUN_0019d380(short want, const char *str);",
+          "ported": true
         },
         {
           "addr": "0x19d3c0",

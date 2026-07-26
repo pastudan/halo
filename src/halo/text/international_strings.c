@@ -1238,57 +1238,19 @@ void set_language_code(short code)
   *(short *)0x4d9be0 = v;
 }
 
-/* FUN_0019d380 (0x19d380) — XBE naked draft (batch 271). */
-#if defined(__clang__)
-static uint16_t (*const b19d380_c19d1b0)(const char *str, int16_t *cursor) = unicode_cursor_forward;
-
-__attribute__((naked, noinline))
-void FUN_0019d380(void)
+/* FUN_0019d380 (0x19d380) — readable C lift. */
+char FUN_0019d380(short want, const char *str)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x8(%%ebp), %%di\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      ".LFUN_0019d380_1:\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19d1b0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_0019d380_2\n\t"
-      "cmpw %%di, %%ax\n\t"
-      "jne .LFUN_0019d380_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0019d380_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19d1b0] "m"(b19d380_c19d1b0)
-      : "memory");
+  int16_t cursor = 0;
+  uint16_t cur;
+  for (;;) {
+    cur = unicode_cursor_forward(str, &cursor);
+    if (cur == 0)
+      return 0;
+    if ((int16_t)cur == want)
+      return 1;
+  }
 }
-#else
-#error "FUN_0019d380: clang naked draft required"
-#endif
-
 
 /* 0x19d3c0 */
 char *FUN_0019d3c0(int index, short param_2)
