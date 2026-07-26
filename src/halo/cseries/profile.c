@@ -2389,47 +2389,18 @@ void profile_find_frame_value(void)
 #endif
 
 
-/* profile_find_game_value (0x90cd0) — XBE naked draft (batch 282). */
-#if defined(__clang__)
-static void (*const b90cd0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b90cd0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void profile_find_game_value(void)
+/* profile_find_game_value (0x90cd0) — readable C lift. */
+int profile_find_game_value(void *section, int16_t *out_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "je .Lprofile_find_game_value_1\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lprofile_find_game_value_2\n\t"
-      ".Lprofile_find_game_value_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4c8\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x2687e4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lprofile_find_game_value_2:\n\t"
-      "movw $0xffff, (%%esi)\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b90cd0_assert), [exitfn] "m"(b90cd0_exitfn)
-      : "memory");
+  extern char DAT_002687e4[];
+  extern char DAT_002683fc[];
+  if (!section || !out_index) {
+    display_assert(DAT_002687e4, DAT_002683fc, 0x4c8, 1);
+    system_exit(-1);
+  }
+  *out_index = (int16_t)0xffff;
+  return ((int)(uintptr_t)section | 0xffff);
 }
-#else
-#error "profile_find_game_value: clang naked draft required"
-#endif
-
 
 /* profile_frame_get_value (0x90d10) — XBE naked draft (batch 242). */
 #if defined(__clang__)

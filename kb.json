@@ -19952,8 +19952,8 @@
         },
         {
           "addr": "0x90cd0",
-          "decl": "void profile_find_game_value(void);",
-          "ported": false
+          "decl": "int profile_find_game_value(void *section, int16_t *out_index);",
+          "ported": true
         },
         {
           "addr": "0x90d10",
