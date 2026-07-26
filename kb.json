@@ -34468,7 +34468,8 @@
         {
           "addr": "0x42fa0",
           "decl": "char FUN_00042fa0(int actor, int unit, int prop);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00042fa0"
         },
         {
           "addr": "0x43050",
