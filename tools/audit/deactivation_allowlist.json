@@ -16679,5 +16679,54 @@
     "object": "path_smoothing.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x60c80",
+    "name": "path_add_step",
+    "object": "path_obstacle_avoidance.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x60ea0",
+    "name": "FUN_00060ea0",
+    "object": "path_obstacle_avoidance.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x61080",
+    "name": "FUN_00061080",
+    "object": "path_obstacle_avoidance.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x61280",
+    "name": "path_add_steps",
+    "object": "path_obstacle_avoidance.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x615b0",
+    "name": "FUN_000615b0",
+    "object": "path_obstacle_avoidance.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x616e0",
+    "name": "FUN_000616e0",
+    "object": "path_obstacle_avoidance.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x61750",
+    "name": "FUN_00061750",
+    "object": "path_obstacle_avoidance.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
