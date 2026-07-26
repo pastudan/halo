@@ -36,9 +36,105 @@ from tu_compile import docker_compile, regen_decl_h  # noqa: E402
 import lift_assert_wrappers as law  # noqa: E402
 import lift_thin_wrappers as ltw  # noqa: E402
 import lifter_j as lj  # noqa: E402
+import lifter_interface as li  # noqa: E402
+import lift_jmp_thunks as ljt  # noqa: E402
 
 SKIP = ("xdk/", "d3d", "dsound", "libcmt", "bink", "xnet", "xapilib", "kb_common")
 COMMIT_EVERY = 8
+KW = frozenset(
+    {
+        "if",
+        "for",
+        "while",
+        "switch",
+        "return",
+        "sizeof",
+        "void",
+        "int",
+        "char",
+        "short",
+        "float",
+        "double",
+        "const",
+        "unsigned",
+        "signed",
+        "bool",
+        "uint8_t",
+        "uint16_t",
+        "uint32_t",
+        "int8_t",
+        "int16_t",
+        "int32_t",
+    }
+)
+
+
+def same_tu_unproven(
+    body: str,
+    src: str,
+    name: str,
+    name_by: dict,
+    src_by: dict,
+    ported: dict,
+) -> str | None:
+    """Return callee name if body calls a same-TU still-unproven function."""
+    addr_by_name = {v: k for k, v in name_by.items()}
+    src_n = (src or "").replace("\\", "/")
+    for c in re.findall(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(", body):
+        if c == name or c in KW:
+            continue
+        ca = addr_by_name.get(c)
+        if ca is None:
+            continue
+        cal_src = (src_by.get(ca) or "").replace("\\", "/")
+        if cal_src == src_n and ported.get(ca) is not True:
+            return c
+    return None
+
+
+
+def run_uni(name: str, addr: int, seeds: int, timeout: float) -> dict:
+    """Docker-TU path already compiled; Unicorn with stub-arg off.
+
+    Oracle DIR32 push-imm capture currently yields 0x00500xxx for string/global
+    immediates (vs correct candidate 0x28xxxx), false-failing assert wrappers.
+    """
+    import time
+    outj = ROOT / "artifacts" / "equivalence" / f"uni_{addr:08x}_s{seeds}.json"
+    cmd = [
+        sys.executable,
+        str(ROOT / "tools" / "equivalence" / "unicorn_diff.py"),
+        name,
+        "--allow-stubs",
+        "--no-stub-arg-trace",
+        "--seeds",
+        str(seeds),
+        "-q",
+        "--output-json",
+        str(outj),
+    ]
+    t0 = time.time()
+    try:
+        proc = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True, timeout=timeout)
+        timed_out = False
+    except subprocess.TimeoutExpired as exc:
+        timed_out = True
+        proc = subprocess.CompletedProcess(cmd, 124, "", "timeout")
+    text = (proc.stdout or "") + (proc.stderr or "")
+    m = re.search(r"(\d+) passed, (\d+) failed, (\d+) errors", text)
+    passed = failed = errors = None
+    if m:
+        passed, failed, errors = map(int, m.groups())
+    return {
+        "rc": proc.returncode,
+        "passed": passed,
+        "failed": failed,
+        "errors": errors,
+        "dt": round(time.time() - t0, 2),
+        "tail": text[-400:],
+        "missing_candidate": False,
+        "timeout": timed_out,
+    }
 
 
 def update_decl(addr: int, decl: str) -> None:
@@ -88,13 +184,18 @@ def merge_remote() -> None:
         print(f"merged {n} remote ported:true", flush=True)
 
 
-def commit_chunk(n: int, touched: set[Path]) -> str | None:
+def commit_chunk(n: int, touched: set[Path], label: str = "emit") -> str | None:
     merge_remote()
-    files = ["kb.json", "scripts/lift_emit_prove.py", "scripts/tu_compile.py"]
+    files = [
+        "kb.json",
+        "scripts/lift_emit_prove.py",
+        "scripts/lift_thin_wrappers.py",
+        "scripts/tu_compile.py",
+    ]
     for p in touched:
         files.append(str(p.relative_to(ROOT)))
     subprocess.run(["git", "add"] + files, cwd=ROOT, check=False)
-    msg = f"lift(track-a): emit+Docker Unicorn-prove {n} (ported:true)."
+    msg = f"lift(track-a): {label} Unicorn-prove {n} (ported:true)."
     r = subprocess.run(["git", "commit", "-m", msg], cwd=ROOT, capture_output=True, text=True)
     if r.returncode != 0:
         print("commit failed", r.stdout, r.stderr, flush=True)
@@ -118,6 +219,12 @@ def main() -> int:
     ap.add_argument("--commit-every", type=int, default=COMMIT_EVERY)
     ap.add_argument("--max-size", type=int, default=200)
     ap.add_argument("--prefer", action="append", default=[])
+    ap.add_argument(
+        "--skip-same-tu-unproven",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Skip lifts that call same-TU naked/unproven callees (default: on)",
+    )
     args = ap.parse_args()
 
     merge_remote()
@@ -128,6 +235,7 @@ def main() -> int:
     true0, false0 = count_ported(kb)
 
     jobs = []
+    skipped_same = 0
     for i, ai in enumerate(starts):
         if ported.get(ai) is not False:
             continue
@@ -146,22 +254,37 @@ def main() -> int:
         if not is_naked_near_def(sp.read_text(errors="replace").splitlines(), name, hex(ai)):
             continue
         try:
-            raw = xbe_bytes(xbe, ai, min(end, ai + args.max_size) - ai)
+            # Prefer end address (library also accepts length if end<=va).
+            raw = xbe_bytes(xbe, ai, min(end, ai + args.max_size))
         except Exception:
-            continue
+            try:
+                raw = xbe_bytes(xbe, ai, min(end, ai + args.max_size) - ai)
+            except Exception:
+                continue
         ops = []
         for insn in md.disasm(raw, ai):
             ops.append((insn.mnemonic, insn.op_str))
             if insn.mnemonic in ("ret", "retn"):
+                break
+            if insn.mnemonic == "jmp" and len(ops) <= 4:
+                # pure / frame-tail jmp thunk
                 break
         else:
             continue
         decl = decl_by.get(ai) or f"void {name}(void);"
         body = None
         kind = None
-        if ai in lj.HAND:
+        if ai in getattr(li, "HAND", {}):
+            body = li.HAND[ai][2]
+            kind = "iface_hand"
+        if not body and ai in lj.HAND:
             body = lj.HAND[ai][2]
             kind = "hand"
+        if not body:
+            thunk = ljt.try_emit_thunk(ops, decl, name, name_by)
+            if thunk:
+                body, _tgt = thunk
+                kind = "jmp"
         if not body:
             body = law.try_emit(ops, decl, name, name_by)
             kind = "assert" if body else None
@@ -169,23 +292,36 @@ def main() -> int:
             body = ltw.try_emit([f"{m} {o}".strip() for m, o in ops], decl, name, name_by)
             kind = "thin" if body else None
         if not body:
+            body = li.try_pattern_emit(ops, decl, name, name_by)
+            kind = "ipat" if body else None
+        if not body:
             body = lj.try_pattern_emit(ops, decl, name, name_by)
             kind = "jpat" if body else None
         if not body:
             continue
         if re.search(r"\(\s*(void|int|char|[^*)]+)\s*\(\s*\*", body):
             continue
+        if args.skip_same_tu_unproven:
+            bad = same_tu_unproven(body, src, name, name_by, src_by, ported)
+            if bad:
+                skipped_same += 1
+                continue
         jobs.append((ai, name, src, sp, body, kind))
 
-    jobs.sort(key=lambda j: (0 if j[5] == "hand" else 1, j[0]))
+    jobs.sort(key=lambda j: (0 if j[5] in ("hand", "iface_hand") else 1, j[0]))
     if args.limit:
         jobs = jobs[: args.limit]
-    print(f"emit-prove jobs={len(jobs)} true={true0} false={false0}", flush=True)
+    print(
+        f"emit-prove jobs={len(jobs)} skip_same_tu={skipped_same} "
+        f"true={true0} false={false0}",
+        flush=True,
+    )
 
     flips: list[str] = []
     shas: list[str] = []
     touched: set[Path] = set()
     since = 0
+    kind_counts: dict[str, int] = {}
 
     for ai, name, src, sp, body, kind in jobs:
         print(f"\n== {hex(ai)} {name} [{kind}] ({src}) ==", flush=True)
@@ -226,9 +362,9 @@ def main() -> int:
             sp.write_text(text, encoding="utf-8")
             print("  oracle FAIL", flush=True)
             continue
-        res = run_unicorn(name, ai, args.seeds, timeout=args.timeout)
+        res = run_uni(name, ai, args.seeds, args.timeout)
         if not clear_pass(res, args.seeds):
-            res2 = run_unicorn(hex(ai), ai, args.seeds, timeout=args.timeout)
+            res2 = run_uni(hex(ai), ai, args.seeds, args.timeout)
             if clear_pass(res2, args.seeds) or (res2.get("passed") or 0) > (
                 res.get("passed") or 0
             ):
@@ -270,16 +406,20 @@ def main() -> int:
             since += 1
             touched.add(sp)
             ported[ai] = True
+            kind_counts[kind or "unk"] = kind_counts.get(kind or "unk", 0) + 1
             print(f"  FLIP total={len(flips)}", flush=True)
         if args.commit_every and since >= args.commit_every:
-            sha = commit_chunk(since, touched)
+            label = "+".join(sorted(kind_counts)) or "emit"
+            sha = commit_chunk(since, touched, label=label)
             if sha:
                 shas.append(sha)
             since = 0
             touched.clear()
+            kind_counts.clear()
 
     if since:
-        sha = commit_chunk(since, touched)
+        label = "+".join(sorted(kind_counts)) or "emit"
+        sha = commit_chunk(since, touched, label=label)
         if sha:
             shas.append(sha)
 
@@ -291,7 +431,8 @@ def main() -> int:
         "true0": true0,
         "true1": true1,
         "false1": false1,
-        "delta": true1 - 4699,
+        "delta": true1 - true0,
+        "skip_same_tu": skipped_same,
     }
     Path("/tmp/lift_emit_prove.json").write_text(json.dumps(summary, indent=2))
     print("DONE", summary, flush=True)

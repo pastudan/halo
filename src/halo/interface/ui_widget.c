@@ -2796,7 +2796,7 @@ void __stdcall ui_widget_filesystem_check_thread_proc(int unused)
   saved_game_perform_file_system_checks();
   if (*(int16_t *)0x46cc80 == 0) {
     FUN_001c26b0();
-    FUN_001c0d50();
+    FUN_001c0d50(0, 0, 0, 0);
     player_ui_get_player1_last_used_profile_index();
   }
 }
@@ -3281,35 +3281,14 @@ void network_game_reset_to_pregame_ui(void)
 #endif
 
 
-/* FUN_000e9a60 (0xe9a60) — XBE naked draft (batch 186). */
-#if defined(__clang__)
-static void *(*const be9a60_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* FUN_000e9a60 (0xe9a60) — readable C lift. */
 char FUN_000e9a60(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl $0x50\n\t"
-      "pushl $0\n\t"
-      "pushl $0x46cce8\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl $0, 0x40(%%eax)\n\t"
-      "movw $0, 0x44(%%eax)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(be9a60_memset)
-      : "memory");
+  csmemset((void *)0x46cce8, 0, 0x50);
+  *(int *)((char *)widget + 0x40) = 0;
+  *(unsigned short *)((char *)widget + 0x44) = 0;
+  return 1;
 }
-#else
-#error "FUN_000e9a60: clang naked draft required"
-#endif
-
 
 /* ui_widget_event_handler_set_difficulty (0xe9bd0) — XBE naked draft (batch 128). */
 #if defined(__clang__)
@@ -3498,39 +3477,16 @@ char FUN_000ea1f0(void *widget)
   return 1;
 }
 
-/* FUN_000ea540 (0xea540) — XBE naked draft (batch 215). */
-#if defined(__clang__)
-static void (*const bea540_ce3d50)(void *block) = (void *)widget_free;
-
-__attribute__((naked, noinline))
 char FUN_000ea540(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x40(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000ea540_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce3d50]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0, 0x40(%%esi)\n\t"
-      ".LFUN_000ea540_1:\n\t"
-      "movw $0, 0x44(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce3d50] "m"(bea540_ce3d50)
-      : "memory");
+  void *p = *(void **)((char *)widget + 0x40);
+  if (p) {
+    widget_free(p);
+    *(void **)((char *)widget + 0x40) = 0;
+  }
+  *(unsigned short *)((char *)widget + 0x44) = 0;
+  return 1;
 }
-#else
-#error "FUN_000ea540: clang naked draft required"
-#endif
-
 
 /* split_screen_game_initialize (0xea810) — XBE naked draft (batch 134). */
 #if defined(__clang__)
@@ -3642,39 +3598,16 @@ char split_screen_game_initialize(void *widget, void *player_data)
 #endif
 
 
-/* FUN_000eab70 (0xeab70) — XBE naked draft (batch 215). */
-#if defined(__clang__)
-static void (*const beab70_ce3d50)(void *block) = (void *)widget_free;
-
-__attribute__((naked, noinline))
 char FUN_000eab70(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x40(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000eab70_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce3d50]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0, 0x40(%%esi)\n\t"
-      ".LFUN_000eab70_1:\n\t"
-      "movw $0, 0x44(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce3d50] "m"(beab70_ce3d50)
-      : "memory");
+  void *p = *(void **)((char *)widget + 0x40);
+  if (p) {
+    widget_free(p);
+    *(void **)((char *)widget + 0x40) = 0;
+  }
+  *(unsigned short *)((char *)widget + 0x44) = 0;
+  return 1;
 }
-#else
-#error "FUN_000eab70: clang naked draft required"
-#endif
-
 
 /* FUN_000ecd50 (0xecd50) — XBE naked draft (batch 143). */
 #if defined(__clang__)
@@ -8308,7 +8241,7 @@ static void *(*const beaa10_memset)(void *, int, unsigned int) = csmemset;
 static void (*const beaa10_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const beaa10_exitfn)(int) = system_exit;
 static void * (*const beaa10_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
-static void (*const beaa10_c1c0d50)(void) = FUN_001c0d50;
+static void (*const beaa10_c1c0d50)(int, int, int, int) = FUN_001c0d50;
 static int (*const beaa10_ce0c90)(void) = player_ui_get_player1_last_used_profile_index;
 
 __attribute__((naked, noinline))
