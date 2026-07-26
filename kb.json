@@ -12727,13 +12727,13 @@
         {
           "addr": "0xce090",
           "decl": "int FUN_000ce090(data_t *data, int *cursor);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ce090"
         },
         {
           "addr": "0xce0c0",
           "decl": "void FUN_000ce0c0(data_t *data, int *head, int object_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ce0c0"
         },
         {
@@ -33797,7 +33797,7 @@
         },
         {
           "addr": "0xfcbd0",
-          "decl": "void FUN_000fcbd0(int16_t magazine_index, int weapon_handle);",
+          "decl": "void FUN_000fcbd0(int16_t magazine_index @<eax>, int weapon_handle);",
           "ported": true
         },
         {
@@ -38972,7 +38972,7 @@
         },
         {
           "addr": "0x24370",
-          "decl": "int FUN_00024370(int actor_handle, void *actor, void *fp);",
+          "decl": "int FUN_00024370(int actor_handle, void *ctx, void *cand);",
           "ported": true,
           "name": "FUN_00024370"
         },
@@ -40406,7 +40406,7 @@
         },
         {
           "addr": "0x5f1d0",
-          "decl": "void FUN_0005f1d0(void);",
+          "decl": "float FUN_0005f1d0(void *base @<eax>, float *dst @<edi>, float *src @<esi>, int surface_index);",
           "ported": false,
           "name": "FUN_0005f1d0"
         },

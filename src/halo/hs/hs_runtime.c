@@ -5954,61 +5954,19 @@ void FUN_000ce050(int save_type, int slot)
   crt_sprintf(buf, (const char *)0x280e94, save_type);
   game_state_data_new(buf, (int16_t)slot, 0xc);
 }
-/* FUN_000ce0c0 (0xce0c0) — XBE naked draft (batch 158). */
-#if defined(__clang__)
-static int (*const bce0c0_c119610)(data_t *data) = data_new_at_index;
-static void *(*const bce0c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bce0c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_000ce0c0(data_t *data __attribute__((unused)), int *head __attribute__((unused)), int object_handle __attribute__((unused)))
+/* FUN_000ce0c0 (0xce0c0) — readable C lift: prepend linked datum node. */
+void FUN_000ce0c0(data_t *data, int *head, int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000ce0c0_1\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, (%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ce0c0_1:\n\t"
-      "movswl 0x20(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x280ea4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c119610] "m"(bce0c0_c119610), [dget] "m"(bce0c0_dget), [c8f390] "m"(bce0c0_c8f390)
-      : "memory");
+  int node_handle;
+  char *node;
+  node_handle = data_new_at_index(data);
+  if (node_handle == -1)
+    return;
+  node = (char *)datum_get(data, node_handle);
+  *(int *)(node + 4) = object_handle;
+  *(int *)(node + 8) = *head;
+  *head = node_handle;
 }
-#else
-#error "FUN_000ce0c0: clang naked draft required"
-#endif
-
 
 /* FUN_000ce110 (0xce110) — readable C lift: delete linked datum chain. */
 void FUN_000ce110(data_t *data, int link)
