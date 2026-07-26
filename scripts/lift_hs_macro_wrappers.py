@@ -341,10 +341,21 @@ def parse_action(
     # C args: reverse of push order
     c_args = list(reversed(push_stack))
     c_args = _cast_args(action_addr, c_args, decl_by)
-    # Skip clearly-wrong arity vs decl (avoid compile fail churn)
     pts = _param_types(decl_by.get(action_addr) or "")
+    # If kb arity disagrees with XBE pushes, call through a matching trampoline
+    # typedef so we still compile (decl.h often under-specifies HS helpers).
     if pts and len(c_args) != len(pts):
-        return None
+        # Build a cdecl trampoline type from observed arg count (all int-sized).
+        n = len(c_args)
+        if n == 0:
+            action = f"{action_name}();"
+        else:
+            params = ", ".join(["int"] * n)
+            args = ", ".join(c_args)
+            action = (
+                f"((void (*)({params})){action_name})({args});"
+            )
+        return action, ret_mode
     action = f"{action_name}({', '.join(c_args)});" if c_args else f"{action_name}();"
     return action, ret_mode
 

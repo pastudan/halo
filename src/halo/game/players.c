@@ -1,3 +1,4 @@
+#include <stdint.h>
 void players_initialize(void)
 {
   player_data = game_state_data_new("players", 16, sizeof(player_data_t));
@@ -7249,59 +7250,14 @@ void FUN_000be500(int16_t function_index, int thread_datum, char init)
 }
 
 
-/* FUN_000be550 (0xbe550) — XBE naked draft (batch 159). */
-#if defined(__clang__)
-static int (*const bbe550_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static char (*const bbe550_cc9840)(int list_handle, int16_t scenario_index, float distance) = FUN_000c9840;
-static void (*const bbe550_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000be550(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000be550 (0xbe550) — readable C lift (HS value-return wrapper). */
+void FUN_000be550(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000be550_1\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x4(%%eax), %%dx\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cc9840]\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000be550_1:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bbe550_ccc560), [cc9840] "m"(bbe550_cc9840), [ccbf80] "m"(bbe550_ccbf80)
-      : "memory");
+  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum, (int)(unsigned char)FUN_000c9840(args[0], (int16_t)(uint16_t)args[1], *(float *)&args[2]));
+  }
 }
-#else
-#error "FUN_000be550: clang naked draft required"
-#endif
-
 
 /* FUN_000be5e0 (0xbe5e0) — readable C lift (HS eval wrapper). */
 void FUN_000be5e0(int16_t function_index, int thread_datum, char init)

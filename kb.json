@@ -11360,7 +11360,7 @@
         {
           "addr": "0xc3070",
           "decl": "void FUN_000c3070(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc30b0",
@@ -11490,7 +11490,7 @@
         {
           "addr": "0xc3660",
           "decl": "void FUN_000c3660(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc36a0",

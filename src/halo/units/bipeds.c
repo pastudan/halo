@@ -2920,124 +2920,6 @@ void biped_exit_seat_end(int unit_handle, int seat_handle)
  * threshold; DAT_0032512c gravity-related scalar. Probe hit point and world
  * position are separate 3-float stack buffers.
  */
-#if defined(__clang__)
-static void *(*const a1e70_get)(int, int) = object_get_and_verify_type;
-static void *(*const a1e70_tag)(int, int) = tag_get;
-static int (*const a1e70_gtime)(void) = game_time_get;
-static void *(*const a1e70_gg)(void) = game_globals_get;
-static void *(*const a1e70_elem)(void *, int, int) = tag_block_get_element;
-static int (*const a1e70_probe)(float, float *, void *, float *, int) = FUN_001a1a10;
-static vector3_t *(*const a1e70_wpos)(int, vector3_t *) = object_get_world_position;
-static char (*const a1e70_recover)(int, int) = FUN_001a74d0;
-
-__attribute__((naked, noinline))
-void FUN_001a1e70(int unit_handle __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x62697064\n\t"
-      "call *%[tag]\n\t"
-      "movb 182(%%esi), %%cl\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb $4, %%cl\n\t"
-      "jne .LFUN_001a1e70_4\n\t"
-      "testb $0x84, 756(%%eax)\n\t"
-      "jne .LFUN_001a1e70_4\n\t"
-      "movl 436(%%esi), %%eax\n\t"
-      "testb $0x10, %%ah\n\t"
-      "jne .LFUN_001a1e70_4\n\t"
-      "cmpl $-1, 420(%%esi)\n\t"
-      "je .LFUN_001a1e70_4\n\t"
-      "cmpb $0x1d, 595(%%esi)\n\t"
-      "je .LFUN_001a1e70_4\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "cmpb $0x1e, 1113(%%esi)\n\t"
-      "jle .LFUN_001a1e70_3\n\t"
-      "movl 1104(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001a1e70_1\n\t"
-      "addl $0xf, %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jge .LFUN_001a1e70_3\n\t"
-      ".LFUN_001a1e70_1:\n\t"
-      "pushl $0x98\n\t"
-      "pushl $0\n\t"
-      "call *%[gg]\n\t"
-      "addl $0x188, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl $0\n\t"
-      "leal -24(%%ebp), %%edx\n\t"
-      "movl %%edi, 1104(%%esi)\n\t"
-      "movl 8(%%ebp), %%edi\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x31fc50, %%eax\n\t"
-      "pushl $0x40c00000\n\t"
-      "call *%[probe]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001a1e70_2\n\t"
-      "leal -12(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[wpos]\n\t"
-      "flds 32(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_001a1e70_3\n\t"
-      "flds 32(%%esi)\n\t"
-      "flds 148(%%ebx)\n\t"
-      "flds -4(%%ebp)\n\t"
-      "fsubs -16(%%ebp)\n\t"
-      "fmuls 0x32512c\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      "fld %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "je .LFUN_001a1e70_3\n\t"
-      ".LFUN_001a1e70_2:\n\t"
-      "movl 8(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[recover]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001a1e70_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_001a1e70_4:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(a1e70_get), [tag] "m"(a1e70_tag), [gtime] "m"(a1e70_gtime), [gg] "m"(a1e70_gg), [elem] "m"(a1e70_elem), [probe] "m"(a1e70_probe), [wpos] "m"(a1e70_wpos), [recover] "m"(a1e70_recover)
-      : "memory");
-}
-#else
 void FUN_001a1e70(int unit_handle)
 {
   int *unit_obj;
@@ -3076,7 +2958,7 @@ void FUN_001a1e70(int unit_handle)
     }
   }
 }
-#endif
+
 
 
 /* FUN_001a1fb0 (0x1a1fb0)

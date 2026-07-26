@@ -3246,51 +3246,15 @@ void FUN_000c3030(int16_t function_index __attribute__((unused)), int thread_dat
 #endif
 
 
-/* FUN_000c3070 (0xc3070) — XBE naked draft (batch 199). */
-#if defined(__clang__)
-static int (*const bc3070_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc3070_ca2df0)(int a0, float a1) = scripted_player_effect_start;
-static void (*const bc3070_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c3070(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c3070 (0xc3070) — readable C lift (HS macro-eval wrapper). */
+void FUN_000c3070(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c3070_1\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edx\n\t"
-      "call *%[ca2df0]\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_000c3070_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bc3070_ccc560), [ca2df0] "m"(bc3070_ca2df0), [ccbf80] "m"(bc3070_ccbf80)
-      : "memory");
+  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    ((void (*)(int, int))scripted_player_effect_stop)(args[0], *(float *)&args[1]);
+  }
+  hs_return(thread_datum, 0);
 }
-#else
-#error "FUN_000c3070: clang naked draft required"
-#endif
-
 
 /* FUN_000c30b0 (0xc30b0) — readable C lift (HS macro-eval wrapper). */
 void FUN_000c30b0(int16_t function_index, int thread_datum, char init)
@@ -3568,49 +3532,15 @@ void FUN_000c3620(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, 0);
 }
 
-/* FUN_000c3660 (0xc3660) — XBE naked draft (batch 201). */
-#if defined(__clang__)
-static int (*const bc3660_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc3660_c17da00)(int a0) = FUN_0017da00;
-static void (*const bc3660_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c3660(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c3660 (0xc3660) — readable C lift (HS macro-eval wrapper). */
+void FUN_000c3660(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c3660_1\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c17da00]\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000c3660_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bc3660_ccc560), [c17da00] "m"(bc3660_c17da00), [ccbf80] "m"(bc3660_ccbf80)
-      : "memory");
+  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    ((void (*)(int))FUN_0017db20)((char)(uint8_t)*((unsigned char *)args + 0));
+  }
+  hs_return(thread_datum, 0);
 }
-#else
-#error "FUN_000c3660: clang naked draft required"
-#endif
-
 
 /* FUN_000c36a0 (0xc36a0) — readable C lift (HS macro-eval wrapper). */
 void FUN_000c36a0(int16_t function_index, int thread_datum, char init)
