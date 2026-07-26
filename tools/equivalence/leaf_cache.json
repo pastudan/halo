@@ -1838,8 +1838,8 @@
     "class": "non_leaf"
   },
   "0x1e8": {
-    "confidence": "high",
-    "coverage_pct": 82.2
+    "confidence": "moderate",
+    "coverage_pct": 44.9
   },
   "0x1e9410": {
     "class": "non_leaf"

@@ -2199,66 +2199,22 @@ void FUN_000fb910(int weapon_handle __attribute__((unused)), int16_t trigger_ind
 #endif
 
 
-/* 0xfb990 — Reset trigger charge from weapon animation state (@edi handle). */
-#if defined(__clang__)
-static void *(*const FUN_000fb990_get)(int, int) = object_get_and_verify_type;
-static void *(*const FUN_000fb990_tag)(int, int) = tag_get;
-static void (*const FUN_000fb990_reset)(int, int16_t, char) = FUN_000fb910;
-
-__attribute__((naked, noinline))
-void FUN_000fb990(int weapon_handle __attribute__((unused)))
+/* FUN_000fb990 (0xfb990) — readable C lift. */
+void FUN_000fb990(int weapon_handle /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl $4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movsbl 0x1e8(%%esi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "subl $3, %%eax\n\t"
-      "popl %%esi\n\t"
-      "je 1f\n\t"
-      "decl %%eax\n\t"
-      "jne 2f\n\t"
-      "pushl $1\n\t"
-      "movl $1, %%ecx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[reset]\n\t"
-      "addl $4, %%esp\n\t"
-      "ret\n\t"
-      "1:\n\t"
-      "pushl $1\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[reset]\n\t"
-      "popl %%ecx\n\t"
-      "2:\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_000fb990_get), [tag] "m"(FUN_000fb990_tag),
-        [reset] "m"(FUN_000fb990_reset)
-      : "memory");
-}
-#else
-void FUN_000fb990(int weapon_handle)
-{
-  char *weapon_obj;
-  int state;
+  char *obj;
+  int kind;
 
-  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  tag_get(0x77656170, *(int *)weapon_obj);
-  state = (int)(signed char)weapon_obj[0x1e8] - 3;
-  if (state == 0)
-    FUN_000fb910(weapon_handle, (int16_t)0, 1);
-  else if (state == 1)
-    FUN_000fb910(weapon_handle, (int16_t)1, 1);
+  obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  tag_get(0x77656170, *(int *)obj);
+  kind = (int)(signed char)obj[0x1e8];
+  if (kind == 3) {
+    FUN_000fb910(weapon_handle, 0, 1);
+    return;
+  }
+  if (kind == 4)
+    FUN_000fb910(weapon_handle, 1, 1);
 }
-#endif
 
 /* FUN_000fba00 (0xfba00) — readable C lift. */
 char FUN_000fba00(short value, short threshold)

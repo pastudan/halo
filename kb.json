@@ -33688,8 +33688,9 @@
         },
         {
           "addr": "0xfb990",
-          "decl": "void FUN_000fb990(int weapon_handle);",
-          "ported": false
+          "decl": "void FUN_000fb990(int weapon_handle@<edi>);",
+          "ported": true,
+          "name": "FUN_000fb990"
         },
         {
           "addr": "0xfba00",
@@ -36023,7 +36024,7 @@
         },
         {
           "addr": "0x5bad0",
-          "decl": "int16_t encounter_post_combat_select_random_behavior(void *out, void *samples @<ebx>);",
+          "decl": "int16_t encounter_post_combat_select_random_behavior(void *out, void *samples);",
           "ported": false,
           "name": "encounter_post_combat_select_random_behavior"
         },
