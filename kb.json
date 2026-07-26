@@ -2857,7 +2857,7 @@
         },
         {
           "addr": "0x20990",
-          "decl": "void FUN_00020990(int actor_handle);",
+          "decl": "char FUN_00020990(int actor_handle);",
           "ported": false
         },
         {
@@ -29655,12 +29655,12 @@
         },
         {
           "addr": "0x1b81d0",
-          "decl": "void FUN_001b81d0(void);",
+          "decl": "void FUN_001b81d0(int object_handle, void *wheel_buffer);",
           "ported": false
         },
         {
           "addr": "0x1b8570",
-          "decl": "void FUN_001b8570(void);",
+          "decl": "void FUN_001b8570(int object_handle);",
           "ported": false
         }
       ],
@@ -34892,7 +34892,7 @@
         },
         {
           "addr": "0x4c920",
-          "decl": "void FUN_0004c920(void);",
+          "decl": "void FUN_0004c920(int actor_handle, char debug_selected, void *debug_context);",
           "ported": false
         },
         {
@@ -34902,12 +34902,12 @@
         },
         {
           "addr": "0x52b60",
-          "decl": "void FUN_00052b60(void);",
+          "decl": "void FUN_00052b60(char reverse_iteration);",
           "ported": false
         },
         {
           "addr": "0x52bb0",
-          "decl": "void FUN_00052bb0(void);",
+          "decl": "void FUN_00052bb0(int clump_handle);",
           "ported": false
         },
         {
@@ -40251,7 +40251,7 @@
         },
         {
           "addr": "0x60140",
-          "decl": "void FUN_00060140(void);",
+          "decl": "int16_t FUN_00060140(void *path, int16_t heap_index);",
           "ported": false
         },
         {
@@ -40271,7 +40271,7 @@
         },
         {
           "addr": "0x60200",
-          "decl": "void FUN_00060200(void);",
+          "decl": "float FUN_00060200(void *path, int16_t heap_index);",
           "ported": false
         },
         {
@@ -40281,27 +40281,27 @@
         },
         {
           "addr": "0x60330",
-          "decl": "void FUN_00060330(void);",
+          "decl": "char FUN_00060330(void *path, const char *debug_context);",
           "ported": false
         },
         {
           "addr": "0x604e0",
-          "decl": "void FUN_000604e0(void);",
+          "decl": "void FUN_000604e0(void *path, int16_t heap_index);",
           "ported": false
         },
         {
           "addr": "0x60670",
-          "decl": "void FUN_00060670(void);",
+          "decl": "void FUN_00060670(void *path, int16_t heap_index);",
           "ported": false
         },
         {
           "addr": "0x60910",
-          "decl": "void FUN_00060910(void);",
+          "decl": "char FUN_00060910(void *path, int16_t step_index);",
           "ported": false
         },
         {
           "addr": "0x60970",
-          "decl": "void FUN_00060970(void);",
+          "decl": "int16_t FUN_00060970(void *path);",
           "ported": false
         },
         {
@@ -40385,7 +40385,7 @@
         },
         {
           "addr": "0x60c80",
-          "decl": "void path_add_step(void);",
+          "decl": "int16_t path_add_step(void *path, float *delta, int16_t zone_index, char surface_flag, float step_cost, int16_t parent_step);",
           "ported": false
         },
         {

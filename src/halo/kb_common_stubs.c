@@ -14253,8 +14253,8 @@ void FUN_001b8f80(void)
   /* cmp (char)ecx, (char)eax -> je 0x1b9845 */
   object_permute_region(0, (char *)0x002b7d70, 0, ecx);
   /* test (char)eax, (char)eax -> je 0x1b983e */
-  FUN_001b81d0();
-  FUN_001b8570();
+  FUN_001b81d0(0, 0);
+  FUN_001b8570(0);
   FUN_001b8f10();
   FUN_00154270();
   /* relift: cmp word ptr [ebx + 0x426], 0 -> jle 0x1b966e */

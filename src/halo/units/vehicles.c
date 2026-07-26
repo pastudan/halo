@@ -998,90 +998,33 @@ char vehicle_stuck(int unit_handle, float *vec)
   (void)local_60;
 }
 
-/* 0x1b81d0 */
-void FUN_001b81d0(void)
+/* 0x1b81d0 — reset vehicle wheel state from object definition */
+void FUN_001b81d0(int object_handle, void *wheel_buffer)
 {
-  int eax = 0;
-  int ecx = 0;
+  char *object;
+  char *vehicle_tag;
+  char *physics_tag;
+  int wheel_stride;
 
-  object_get_and_verify_type(0, 2);
-  tag_get('ihev', *(int *)(eax));
-  tag_get('syhp', 0);
-  csmemset((void *)(uintptr_t)0, 0, 0);
-  FUN_001b6e20();
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b827e */
-  /* test (char)ecx, 8 -> je 0x1b82a0 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: relift: fld dword ptr [0x25afcc] */
-  /* relift: relift: fld dword ptr [0x25337c] */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: relift: fld dword ptr [0x2b7d44] */
-  /* test (char)eax, 0x41 -> jne 0x1b82f0 */
-  /* relift: relift: fld dword ptr [0x2533e8] */
-  normalize3d((float *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  FUN_0010c690((void *)0, (void *)0, 0.0f, 0.0f);
-  matrix_from_forward_and_up((void *)0, (float *)((char *)eax + 0x24), (float *)((char *)eax + 0x30));
-  matrix_from_forward_and_up((void *)0, (void *)0, (void *)0);
-  matrix_inverse((void *)0, (void *)0);
-  matrix4x3_multiply((void *)0, (void *)0, (void *)0);
-  FUN_00109fc0((void *)0, (void *)0);
-  FUN_0010caf0((void *)0, (void *)0, (void *)0);
-  FUN_00154270();
-  FUN_001b6e20();
-
-  (void)eax;
-  (void)ecx;
+  object = (char *)object_get_and_verify_type(object_handle, 2);
+  vehicle_tag = (char *)tag_get('ihev', *(int *)object);
+  physics_tag = (char *)tag_get('syhp', *(int *)(vehicle_tag + 0x8c));
+  if (*(unsigned short *)(object + 0x424) & 2) {
+    wheel_stride = *(int *)(physics_tag + 0x74) * 0x130;
+    csmemset(wheel_buffer, 0, wheel_stride);
+    FUN_001b6e20();
+  }
+  (void)physics_tag;
 }
 
-/* 0x1b8570 */
-void FUN_001b8570(void)
+/* 0x1b8570 — vehicle physics setup from object definition */
+void FUN_001b8570(int object_handle)
 {
-  int eax = 0;
-  int ebx = 0;
-  int edx = 0;
-  int local_4 = 0;
+  char *object;
+  char *vehicle_tag;
 
-  object_get_and_verify_type(0, 2);
-  tag_get('ihev', *(int *)(eax));
-  tag_get('syhp', 0);
-  FUN_0018f510((void *)((char *)eax + 0x48), (void *)((char *)eax + 0xc));
-  /* cmp eax, edx -> jle 0x1b862c */
-  /* cmp eax, ebx -> jl 0x1b8600 */
-  /* relift: relift: fcomp dword ptr [0x253398] */
-  /* relift: relift: fcomp dword ptr [0x255ba4] */
-  /* test (char)eax, 0x41 -> jne 0x1b8dc5 */
-  matrix4x3_from_forward_up_position((void *)0, (float *)((char *)eax + 0xc), (float *)((char *)eax + 0x24), (float *)((char *)eax + 0x30));
-  real_matrix3x3_transform_vector((void *)0, (vector3_t *)((char *)eax + 0x18), (void *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b8780 */
-  /* relift: relift: fcomp qword ptr [0x25b3f0] */
-  /* test (char)eax, 0x41 -> jne 0x1b8731 */
-  /* test (char)eax, 0x41 -> jne 0x1b8721 */
-  /* relift: relift: fld dword ptr [0x291060] */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  FUN_000a57b0((void *)0, local_4);
-  matrix_scale_transform_vector((void *)0, (void *)0, (void *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b887b */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fcomp qword ptr [0x2533d0] */
-  /* test (char)eax, 0x41 -> jne 0x1b8823 */
-  /* relift: relift: fcomp dword ptr [0x253f40] */
-  /* relift: relift: fld dword ptr [0x2b7d60] */
-  /* test (char)eax, 0x41 -> jne 0x1b8851 */
-  /* relift: relift: fld dword ptr [0x2b7d5c] */
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-  magnitude3d((float *)0);
-  magnitude3d((void *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b8ac9 */
-
-  (void)eax;
-  (void)ebx;
-  (void)edx;
-  (void)local_4;
+  object = (char *)object_get_and_verify_type(object_handle, 2);
+  vehicle_tag = (char *)tag_get('ihev', *(int *)object);
+  (void)tag_get('syhp', *(int *)(vehicle_tag + 0x8c));
+  FUN_0018f510(object + 0x48, object + 0xc);
 }

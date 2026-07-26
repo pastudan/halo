@@ -1125,32 +1125,38 @@ int FUN_000601f0(int heap_index)
   return heap_index * 2 + 2;
 }
 
-/* 0x60140 */
-void FUN_00060140(void)
+/* 0x60140 — map heap slot to path step index */
+int16_t FUN_00060140(void *path, int16_t heap_index)
 {
-  int esi = 0;
+  int16_t heap_count;
 
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x60163 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x6018f */
-  display_assert((char *)0x0025ea40, (char *)0x0025ea14, 49, 0);
-  system_exit(0);
-
-  (void)esi;
+  heap_count = *(int16_t *)((char *)path + 0x1430);
+  if (heap_index < 0 || heap_index >= heap_count || heap_count > 0x80) {
+    display_assert(
+        "heap_index>=0 && heap_index<path->heap_count && "
+        "path->heap_count<=MAXIMUM_PATH_STEPS",
+        "c:\\halo\\SOURCE\\ai\\path.h", 49, 1);
+    system_exit(-1);
+  }
+  return *(int16_t *)((char *)path + (int)heap_index * 2 + 0x1432);
 }
 
-/* 0x60200 */
-void FUN_00060200(void)
+/* 0x60200 — step cost for heap slot */
+float FUN_00060200(void *path, int16_t heap_index)
 {
-  int esi = 0;
+  int16_t step_index;
+  char *step;
 
-  FUN_00060140();
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x6022b */
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x6022b */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x60248 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-
-  (void)esi;
+  step_index = FUN_00060140(path, heap_index);
+  if (step_index < 0 || step_index >= *(int16_t *)((char *)path + 0x2c) ||
+      *(int16_t *)((char *)path + 0x2c) > 0x80) {
+    display_assert("step_index>=0 && step_index<path->step_count && "
+                   "path->step_count<=MAXIMUM_PATH_STEPS",
+                   "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 40, 1);
+    system_exit(-1);
+  }
+  step = (char *)FUN_000600f0(path, step_index);
+  return *(float *)step;
 }
 
 /* 0x60260 */
@@ -1179,217 +1185,233 @@ void FUN_00060260(void)
   (void)edi;
 }
 
-/* 0x60330 */
-void FUN_00060330(void)
+static float path_step_heap_cost(void *path, int16_t step_index)
 {
-  int ecx = 0;
-  int esi = 0;
+  char *step;
 
-  /* test (int16_t)esi, (int16_t)esi -> jg 0x6037a */
-  display_assert((char *)0x0025eaa4, (char *)0x0025ea14, 57, 0);
-  system_exit(0);
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x60399 */
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x60399 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x603b6 */
-  display_assert((char *)0x0025ea40, (char *)0x0025ea14, 49, 0);
-  system_exit(0);
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x603d5 */
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x603d5 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x603f2 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  /* cmp (int16_t)ecx, (int16_t)eax -> jge 0x6041b */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x60438 */
-  display_assert((char *)0x0025ea40, (char *)0x0025ea14, 49, 0);
-  system_exit(0);
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x60454 */
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x60454 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x60471 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  error(0, (char *)0x0025eaec);
-  error(0, (char *)0x0025eac4);
-  FUN_00060260();
-
-  (void)ecx;
-  (void)esi;
+  step = (char *)FUN_000600f0(path, step_index);
+  return *(float *)step;
 }
 
-/* 0x604e0 */
-void FUN_000604e0(void)
+static void path_assert_heap_index(void *path, int16_t heap_index, int line_kind)
 {
-  int ebx = 0;
-  int ecx = 0;
-  int edi = 0;
+  int16_t heap_count;
+  int16_t step_count;
+  int16_t step_index;
 
-  /* test (int16_t)edi, (int16_t)edi -> jle 0x60667 */
-  /* test (int16_t)edi, (int16_t)edi -> jg 0x60522 */
-  display_assert((char *)0x0025eaa4, (char *)0x0025ea14, 57, 0);
-  system_exit(0);
-  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x60542 */
-  /* cmp (int16_t)ebx, (int16_t)eax -> jge 0x60542 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x6055f */
-  display_assert((char *)0x0025ea40, (char *)0x0025ea14, 49, 0);
-  system_exit(0);
-  /* cmp (int16_t)edi, (int16_t)eax -> jge 0x60588 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x605a5 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  /* cmp (int16_t)eax, (int16_t)ecx -> jge 0x605cf */
-  /* cmp (int16_t)ecx, 0x80 -> jle 0x605ec */
-  display_assert((char *)0x0025ea40, (char *)0x0025ea14, 49, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x6060b */
-  /* cmp (int16_t)edi, (int16_t)eax -> jge 0x6060b */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x6062b */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-
-  (void)ebx;
-  (void)ecx;
-  (void)edi;
+  heap_count = *(int16_t *)((char *)path + 0x1430);
+  if (heap_index < 0 || heap_index >= heap_count || heap_count > 0x80) {
+    display_assert(
+        "heap_index>=0 && heap_index<path->heap_count && "
+        "path->heap_count<=MAXIMUM_PATH_STEPS",
+        "c:\\halo\\SOURCE\\ai\\path.h", 49, 1);
+    system_exit(-1);
+  }
+  step_index = *(int16_t *)((char *)path + (int)heap_index * 2 + 0x1432);
+  if (step_index < 0) {
+    display_assert("step_index>=0 && step_index<path->step_count && "
+                   "path->step_count<=MAXIMUM_PATH_STEPS",
+                   "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 40, 1);
+    system_exit(-1);
+  }
+  step_count = *(int16_t *)((char *)path + 0x2c);
+  if (step_index >= step_count || step_count > 0x80) {
+    display_assert("step_index>=0 && step_index<path->step_count && "
+                   "path->step_count<=MAXIMUM_PATH_STEPS",
+                   "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 40, 1);
+    system_exit(-1);
+  }
+  (void)line_kind;
 }
 
-/* 0x60670 */
-void FUN_00060670(void)
+/* 0x60330 — validate min-heap order on path->heap indices */
+char FUN_00060330(void *path, const char *debug_context)
 {
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  int16_t heap_count;
+  int heap_index;
+  int16_t child_step;
+  int16_t parent_step;
+  float child_cost;
+  float parent_cost;
 
-  /* relift: cmp (int16_t)edi, word ptr [esi + 0x1430] -> jge 0x60909 */
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x606b7 */
-  /* cmp (int16_t)edi, (int16_t)eax -> jge 0x606b7 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x606d4 */
-  display_assert((char *)0x0025ea40, (char *)0x0025ea14, 49, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x606f3 */
-  /* cmp (int16_t)edi, (int16_t)eax -> jge 0x606f3 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x60710 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  /* cmp (int16_t)ebx, (int16_t)eax -> jge 0x60736 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x60753 */
-  display_assert((char *)0x0025ea40, (char *)0x0025ea14, 49, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x60772 */
-  /* cmp (int16_t)edi, (int16_t)eax -> jge 0x60772 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x6078f */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  /* cmp (int16_t)ecx, (int16_t)eax -> jge 0x608ce */
-  /* test (int16_t)ecx, (int16_t)ecx -> jl 0x607d2 */
-  /* cmp (int16_t)ecx, (int16_t)eax -> jge 0x607d2 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x607ef */
-  display_assert((char *)0x0025ea40, (char *)0x0025ea14, 49, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x6080f */
-  /* cmp (int16_t)edi, (int16_t)eax -> jge 0x6080f */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x6082c */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  /* cmp (int16_t)ebx, (int16_t)eax -> jge 0x60859 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x60876 */
-  display_assert((char *)0x0025ea40, (char *)0x0025ea14, 49, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x60895 */
-  /* cmp (int16_t)edi, (int16_t)eax -> jge 0x60895 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x608b2 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  /* cmp (int16_t)eax, (int16_t)edi -> je 0x60908 */
+  heap_count = *(int16_t *)((char *)path + 0x1430);
+  if (heap_count <= 1)
+    return 1;
 
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  for (heap_index = 1; heap_index < heap_count; heap_index++) {
+    int parent_index = (heap_index - 1) / 2;
+
+    path_assert_heap_index(path, (int16_t)heap_index, 0);
+    path_assert_heap_index(path, (int16_t)parent_index, 0);
+    child_step =
+        *(int16_t *)((char *)path + heap_index * 2 + 0x1432);
+    parent_step =
+        *(int16_t *)((char *)path + parent_index * 2 + 0x1432);
+    child_cost = path_step_heap_cost(path, child_step);
+    parent_cost = path_step_heap_cost(path, parent_step);
+    if (child_cost >= parent_cost)
+      continue;
+
+    error(2, debug_context);
+    error(2, "c:\\halo\\SOURCE\\ai\\path.h");
+    FUN_00060260();
+    return 0;
+  }
+
+  return 1;
 }
 
-/* 0x60910 */
-void FUN_00060910(void)
+/* 0x604e0 — sift heap entry up at heap_index */
+void FUN_000604e0(void *path, int16_t heap_index)
 {
-  int edi = 0;
+  int16_t parent_index;
+  int16_t child_step;
+  int16_t parent_step;
+  float child_cost;
+  float parent_cost;
+  int16_t *heap_entry;
+  int16_t *parent_entry;
 
-  FUN_00060330();
-  /* cmp (int16_t)edi, 0x80 -> jge 0x60967 */
-  FUN_000600f0((void *)0, (int16_t)edi);
-  FUN_000604e0();
-  FUN_00060330();
+  if (heap_index <= 0)
+    return;
 
-  (void)edi;
+  while (heap_index > 0) {
+    parent_index = (int16_t)((heap_index - 1) / 2);
+    path_assert_heap_index(path, heap_index, 0);
+    path_assert_heap_index(path, parent_index, 0);
+    child_step =
+        *(int16_t *)((char *)path + (int)heap_index * 2 + 0x1432);
+    parent_step =
+        *(int16_t *)((char *)path + (int)parent_index * 2 + 0x1432);
+    child_cost = path_step_heap_cost(path, child_step);
+    parent_cost = path_step_heap_cost(path, parent_step);
+    if (child_cost >= parent_cost)
+      break;
+
+    heap_entry = (int16_t *)((char *)path + (int)heap_index * 2 + 0x1432);
+    parent_entry =
+        (int16_t *)((char *)path + (int)parent_index * 2 + 0x1432);
+    *heap_entry = parent_step;
+    *parent_entry = child_step;
+    heap_index = parent_index;
+  }
 }
 
-/* 0x60970 */
-void FUN_00060970(void)
+/* 0x60670 — sift heap entry down from heap_index */
+void FUN_00060670(void *path, int16_t heap_index)
 {
-  FUN_00060330();
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x609cc */
-  FUN_00060670();
-  FUN_00060330();
+  int16_t heap_count;
+  int16_t best_index;
+  int16_t left_index;
+  int16_t right_index;
+  int16_t step_index;
+  int16_t swap_step;
+  float best_cost;
+  float left_cost;
+  float right_cost;
+  int16_t *best_entry;
+  int16_t *swap_entry;
+
+  heap_count = *(int16_t *)((char *)path + 0x1430);
+  while (heap_index < heap_count) {
+    left_index = (int16_t)(heap_index * 2 + 1);
+    right_index = (int16_t)(heap_index * 2 + 2);
+    best_index = heap_index;
+
+    path_assert_heap_index(path, heap_index, 0);
+    step_index =
+        *(int16_t *)((char *)path + (int)heap_index * 2 + 0x1432);
+    best_cost = path_step_heap_cost(path, step_index);
+
+    if (left_index < heap_count) {
+      int16_t left_step;
+
+      path_assert_heap_index(path, left_index, 0);
+      left_step =
+          *(int16_t *)((char *)path + (int)left_index * 2 + 0x1432);
+      left_cost = path_step_heap_cost(path, left_step);
+      if (left_cost < best_cost) {
+        best_index = left_index;
+        best_cost = left_cost;
+      }
+    }
+
+    if (right_index < heap_count) {
+      int16_t right_step;
+
+      path_assert_heap_index(path, right_index, 0);
+      right_step =
+          *(int16_t *)((char *)path + (int)right_index * 2 + 0x1432);
+      right_cost = path_step_heap_cost(path, right_step);
+      if (right_cost < best_cost)
+        best_index = right_index;
+    }
+
+    if (best_index == heap_index)
+      break;
+
+    best_entry =
+        (int16_t *)((char *)path + (int)heap_index * 2 + 0x1432);
+    swap_entry =
+        (int16_t *)((char *)path + (int)best_index * 2 + 0x1432);
+    swap_step = *swap_entry;
+    *swap_entry = *best_entry;
+    *best_entry = swap_step;
+    heap_index = best_index;
+  }
 }
 
-/* 0x609e0 */
+/* 0x60910 — push step_index onto path cost heap */
+char FUN_00060910(void *path, int16_t step_index)
+{
+  int16_t heap_count;
+  int16_t new_heap_count;
+
+  FUN_00060330(path, "path_add_step");
+  heap_count = *(int16_t *)((char *)path + 0x1430);
+  if (heap_count >= 0x80)
+    return 0;
+
+  new_heap_count = heap_count + 1;
+  *(int16_t *)((char *)path + 0x1430) = new_heap_count;
+  (void)FUN_000600f0(path, new_heap_count);
+  *(int16_t *)((char *)path + (int)heap_count * 2 + 0x1432) = step_index;
+  FUN_000604e0(path, heap_count);
+  FUN_00060330(path, "path_add_step");
+  return 1;
+}
+
+/* 0x60970 — pop cheapest step index from path heap */
+int16_t FUN_00060970(void *path)
+{
+  int16_t heap_count;
+  int16_t root_step;
+  int16_t last_step;
+
+  FUN_00060330(path, "path_pop_step");
+  heap_count = *(int16_t *)((char *)path + 0x1430);
+  if (heap_count <= 0)
+    return -1;
+
+  heap_count--;
+  *(int16_t *)((char *)path + 0x1430) = heap_count;
+  last_step = *(int16_t *)((char *)path + (int)heap_count * 2 + 0x1432);
+  root_step = *(int16_t *)((char *)path + 0x1432);
+  *(int16_t *)((char *)path + 0x1432) = last_step;
+  FUN_00060670(path, 0);
+  FUN_00060330(path, "path_pop_step");
+  return root_step;
+}
+
+/* 0x609e0 — render / validate existing path steps */
 void FUN_000609e0(void *path)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  int16_t step_count;
 
-  /* relift: cmp word ptr [edi + 0x2c], 0 -> jle 0x60c37 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  collision_surface_project_point2d(0, 0, 0, 0, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
-  collision_surface_project_point2d(0, 0, 0, 0, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
-  /* relift: cmp word ptr [edi + 0x1e], (int16_t)ebx -> jne 0x60a50 */
-  FUN_00189150(0, (float *)(uintptr_t)ecx, 0.0f, (void *)(uintptr_t)eax);
-  /* relift: cmp word ptr [edi + 0x1e], (int16_t)ebx -> jne 0x60a74 */
-  FUN_00189150(0, (float *)(uintptr_t)edx, 0.0f, (void *)(uintptr_t)eax);
-  csmemset((void *)(uintptr_t)ecx, 0, eax);
-  /* cmp (int16_t)esi, (int16_t)ebx -> je 0x60b0f */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x60ac4 */
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x60ac4 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x60ae0 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  /* cmp (int16_t)esi, (int16_t)ebx -> jne 0x60ab0 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x60b36 */
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x60b36 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x60b53 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x60b86 */
-  /* cmp (int16_t)eax, (int16_t)ecx -> jge 0x60b86 */
-  /* cmp (int16_t)ecx, 0x80 -> jle 0x60ba6 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  collision_surface_project_point2d(0, 0, 0, 0, (float *)(uintptr_t)eax, (float *)(uintptr_t)ecx);
-  collision_surface_project_point2d(0, 0, 0, 0, (float *)(uintptr_t)ebx, (float *)(uintptr_t)ecx);
-  /* test eax, edx -> je 0x60bfd */
-  FUN_00189270(0, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (void *)(uintptr_t)eax);
-  /* relift: cmp word ptr [edi + 0x2c], 0x80 -> jge 0x60e96 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x60cd4 */
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x60cd4 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x60cf1 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0x18], (int16_t)eax -> jne 0x60d20 */
-  /* relift: cmp byte ptr [esi + 0x1a], (char)ecx -> jne 0x60e91 */
-  /* cmp (int16_t)esi, -1 -> jne 0x60cc0 */
-  /* cmp (int16_t)eax, (int16_t)ecx -> jne 0x60dd6 */
-  /* cmp (int16_t)ecx, -1 -> je 0x60dd6 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x60db7 */
-  FUN_000600f0(path, (int16_t)esi);
-  FUN_000600f0(path, (int16_t)esi);
-  /* test (char)eax, 0x41 -> jne 0x60db4 */
-  /* cmp (int16_t)eax, 0xffff -> jne 0x60dd6 */
+  step_count = *(int16_t *)((char *)path + 0x2c);
+  if (step_count <= 0)
+    return;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  tag_block_get_element(*(void **)((char *)path + 0xc), 0, 0x60);
+  /* remaining step projection loop still relift stub */
 }

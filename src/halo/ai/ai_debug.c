@@ -1518,7 +1518,7 @@ void FUN_0004c890(void)
 }
 
 /* 0x4c920 */
-void FUN_0004c920(void)
+void FUN_0004c920(int actor_handle, char debug_selected, void *debug_context)
 {
   int eax = 0;
   int ebx = 0;
@@ -1527,6 +1527,9 @@ void FUN_0004c920(void)
   int esi = 0;
   int edi = 0;
   int ebp = 0;
+
+  (void)debug_selected;
+  (void)debug_context;
 
   datum_get((void *)(uintptr_t)eax, 0);
   tag_get('rtca', 0);
@@ -1893,7 +1896,7 @@ void FUN_0004c920(void)
   datum_get((void *)(uintptr_t)eax, 0);
   FUN_00189270(0, (float *)(uintptr_t)ebx, (float *)0, (void *)0);
   /* test (char)eax, (char)eax -> je 0x4f145 */
-  actor_get_pursuit_location(0);
+  actor_get_pursuit_location(actor_handle);
   /* test edi, edi -> je 0x4f145 */
   /* test (int16_t)ecx, (int16_t)ecx -> jne 0x4f126 */
   /* cmp eax, -1 -> je 0x4f126 */
@@ -1990,7 +1993,7 @@ void FUN_0004c920(void)
   /* test (char)eax, (char)eax -> je 0x5020b */
   actor_action_debug_color(0);
   FUN_00189320(0, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0.0f, (void *)(uintptr_t)eax);
-  actor_get_pursuit_location(0);
+  actor_get_pursuit_location(actor_handle);
   display_assert((char *)0x0025ba88, (char *)0x0025ab74, 2773, 0);
   system_exit(0);
   actor_action_debug_color(0);
@@ -2178,128 +2181,41 @@ void FUN_00052ab0(void)
 }
 
 /* 0x52b60 */
-void FUN_00052b60(void)
+void FUN_00052b60(char reverse_iteration)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
+  char iter[0x1c];
+  int actor_handle;
+  char selected;
 
-  encounter_iterator_next((void *)(uintptr_t)ecx, eax);
-  FUN_00059b50((void *)(uintptr_t)edx);
-  /* test eax, eax -> je 0x52bac */
-  FUN_0004c920();
-  FUN_00059b50((void *)(uintptr_t)edx);
-  /* test eax, eax -> jne 0x52b85 */
+  encounter_iterator_next(iter, reverse_iteration);
+  if (FUN_00059b50(iter) == 0)
+    return;
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  do {
+    actor_handle = *(int *)(iter + 0x14);
+    selected = (char)(actor_handle == *(int *)0x5ac9f8);
+    FUN_0004c920(actor_handle, selected, 0);
+  } while (FUN_00059b50(iter) != 0);
 }
 
 /* 0x52bb0 */
-void FUN_00052bb0(void)
+void FUN_00052bb0(int clump_handle)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  int actor_iter[0xe];
+  int actor_handle;
+  char debug_selected;
+  char debug_context;
 
-  datum_get((void *)(uintptr_t)eax, 0);
-  global_scenario_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  encounter_actor_iterator_new((void *)(uintptr_t)edx, 0);
-  encounter_actor_iterator_next((void *)(uintptr_t)eax);
-  /* test eax, eax -> je 0x52c53 */
-  /* cmp ecx, edi -> je 0x52c32 */
-  /* test (char)eax, (char)eax -> je 0x52c43 */
-  FUN_0004c920();
-  encounter_actor_iterator_next((void *)(uintptr_t)ecx);
-  /* test eax, eax -> jne 0x52c10 */
-  /* relift: cmp dword ptr [0x2c8e5c], edi -> jne 0x52cc9 */
-  /* mem[0x002c8e5c] = edx */
-  /* mem[0x002c8e5c] = edx */
-  encounter_build_firing_position_owner_actor_indices(0, (void *)(uintptr_t)edx);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 24);
-  csmemset((void *)0, 0, 0);
-  /* cmp eax, -1 -> je 0x52d96 */
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* cmp ecx, eax -> je 0x52dc7 */
-  game_in_editor();
-  /* test (char)eax, (char)eax -> jne 0x52f3e */
-  datum_get((void *)(uintptr_t)eax, 0);
-  global_scenario_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* relift: test dword ptr [eax + ebx*4 + 0x54], edx -> je 0x52e90 */
-  /* relift: cmp byte ptr [esi + 0x98], 0 -> je 0x52eb0 */
-  /* relift: test dword ptr [eax + ecx*4 + 0x54], edx -> je 0x52ee6 */
-  /* relift: test dword ptr [eax + 0x6c], edx -> je 0x52f02 */
-  /* test ebx, ebx -> jne 0x52f19 */
-  /* cmp ebx, 8 -> jl 0x52f3e */
-  display_assert((char *)0x0025bfd0, (char *)0x0025ab74, 964, 0);
-  system_exit(0);
-  datum_get((void *)(uintptr_t)edx, 0);
-  actor_action_debug_color(0);
-  FUN_00188a90((float *)(uintptr_t)ecx, 0, (void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0x530e5 */
-  FUN_00189270(0, (float *)0, (float *)0, (void *)0);
-  FUN_00189270(0, (float *)0, (float *)0, (void *)0);
-  FUN_00189270(0, (float *)0, (float *)0, (void *)0);
-  /* test ebx, ebx -> jle 0x5315b */
-  FUN_00189270(0, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
-  FUN_00189270(0, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (void *)(uintptr_t)eax);
-  FUN_00189ba0((float *)(uintptr_t)eax, 0, (void *)(uintptr_t)edx);
-  /* cmp esi, ebx -> jl 0x530f0 */
-  FUN_0004b220();
-  /* test (char)ecx, (char)ecx -> je 0x533b5 */
-  /* cmp eax, -1 -> je 0x53233 */
-  csprintf((char *)0x005ab100, (char *)0x0025bfc0);
-  FUN_0004b2b0();
-  FUN_00189cb0(0, (void *)(uintptr_t)eax, (void *)0, 0);
-  /* cmp eax, -1 -> je 0x53233 */
-  actor_get_pursuit_location(0);
-  /* test eax, eax -> je 0x53231 */
-  /* relift: cmp word ptr [eax], 1 -> jne 0x53231 */
-  /* relift: cmp (int16_t)ecx, word ptr [ebp - 0x28] -> jne 0x53231 */
-  encounter_pursuit_position_already_examined(0, 0, edx, 0, (void *)0, (void *)0);
-  /* cmp ecx, -1 -> jne 0x5326b */
-  /* test (char)ebx, (char)ebx -> je 0x53277 */
-  /* mem[0x005ac9a4] = eax */
-  /* mem[0x005ac9a0] = edx */
-  /* mem[0x005ac9a8] = edx */
-  csprintf((char *)0, (char *)0);
-  FUN_00189cb0(0, (void *)0x005ac9a0, (void *)(uintptr_t)eax, 0);
-  /* test (char)eax, (char)eax -> je 0x53496 */
-  /* test (char)eax, (char)eax -> je 0x53496 */
-  /* test (char)eax, (char)eax -> je 0x53496 */
-  /* test (char)eax, (char)eax -> je 0x53496 */
-  /* test (char)eax, (char)eax -> je 0x53496 */
-  FUN_00189270(0, (float *)0, (float *)0, (void *)0);
-  FUN_00189270(0, (float *)(uintptr_t)ecx, (float *)(uintptr_t)edi, (void *)(uintptr_t)eax);
-  /* test (char)ecx, (char)ecx -> je 0x53496 */
-  /* test (char)eax, (char)eax -> je 0x53496 */
-  /* test (char)eax, (char)eax -> jne 0x53496 */
-  /* cmp ecx, -1 -> je 0x53496 */
-  /* test (char)eax, (char)eax -> jne 0x53405 */
-  /* test (char)eax, 0x41 -> jne 0x534c2 */
-  /* test eax, eax -> je 0x53466 */
-  csprintf((char *)0x005ab100, (char *)0x0025bfc0);
-  FUN_0004b2b0();
-  FUN_00189cb0(0, (void *)(uintptr_t)eax, (void *)0, 0);
-  csprintf((char *)0x005ab100, (char *)0x0025bfc0);
-  FUN_0004b2b0();
-  FUN_00189cb0(0, (void *)(uintptr_t)eax, (void *)0, 0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  encounter_actor_iterator_new(actor_iter, clump_handle);
+  while (encounter_actor_iterator_next(actor_iter) != 0) {
+    actor_handle = *(int *)((char *)actor_iter + 0x34);
+    debug_selected = (char)(actor_handle == *(int *)0x5ac9f8);
+    if (!debug_selected && *(int *)0x5ac9f8 != -1 &&
+        *(char *)0x5aca66 == 0)
+      continue;
+    debug_context = debug_selected;
+    FUN_0004c920(actor_handle, debug_selected, &debug_context);
+  }
 }
 
 /* 0x534d0 */
@@ -2323,9 +2239,9 @@ void FUN_000534d0(void)
   /* test (char)eax, (char)eax -> je 0x5356b */
   FUN_000495b0();
   /* cmp eax, -1 -> je 0x5357e */
-  FUN_00052bb0();
+  FUN_00052bb0(eax);
   /* cmp eax, -1 -> je 0x53595 */
-  FUN_0004c920();
+  FUN_0004c920(*(int *)0x5ac9f8, 1, 0);
   /* test (char)eax, (char)eax -> je 0x535a3 */
   FUN_0004c890();
   /* test (char)eax, (char)eax -> je 0x535b1 */
@@ -2333,7 +2249,7 @@ void FUN_000534d0(void)
   /* test (char)eax, (char)eax -> je 0x535bf */
   FUN_00049d60();
   /* test (char)eax, (char)eax -> je 0x535d3 */
-  FUN_00052b60();
+  FUN_00052b60(0);
   /* test (char)eax, (char)eax -> jne 0x535ee */
   /* test (char)eax, (char)eax -> jne 0x535ee */
   /* test (char)eax, (char)eax -> je 0x535f3 */

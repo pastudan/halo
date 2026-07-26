@@ -3299,90 +3299,28 @@ char actor_action_handle_combat_status(int actor_handle, int param2, int param3)
   (void)esi;
 }
 
-/* 0x20990 */
-void FUN_00020990(int actor_handle)
+/* 0x20990 — refresh actor debug motion state on action change */
+char FUN_00020990(int actor_handle)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int ebp = 0;
+  char *actor;
+  char *debug;
+  int16_t motion_state;
 
-  datum_get((void *)(uintptr_t)eax, 0);
-  game_time_get();
-  /* relift: cmp word ptr [esi + 0x280], (int16_t)ebx -> jne 0x20a04 */
-  /* test (char)eax, (char)eax -> jne 0x20a21 */
-  /* test (char)eax, (char)eax -> je 0x20a3e */
-  FUN_0001ad60((float *)(uintptr_t)ebx, (float *)(uintptr_t)ecx);
-  FUN_0002a360(0);
-  /* test (char)eax, (char)eax -> je 0x20aeb */
-  /* test (char)eax, (char)eax -> je 0x20b08 */
-  FUN_00012140((float *)(uintptr_t)eax, (float *)(uintptr_t)ecx, (float *)(uintptr_t)edx);
-  FUN_0010cd40((float *)(uintptr_t)ebx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
-  FUN_0002a3d0(0);
-  /* test (char)eax, (char)eax -> je 0x20c7a */
-  FUN_0010cd40((float *)(uintptr_t)edx, (float *)(uintptr_t)eax, (float *)(uintptr_t)ecx);
-  /* test (char)ecx, (char)ecx -> je 0x20c81 */
-  /* test (char)ecx, (char)ecx -> jne 0x20c81 */
-  /* test (char)eax, (char)eax -> jne 0x20c85 */
-  vector_to_line_distance_squared3d((float *)0, (float *)0, (float *)0, (float *)0);
-  /* test (char)eax, (char)eax -> je 0x20caa */
-  /* cmp (int16_t)eax, 0xffff -> je 0x20caa */
-  FUN_00024be0(0, 0, 0);
-  /* test (char)eax, (char)eax -> je 0x20c52 */
-  FUN_0010d680((float *)(uintptr_t)eax, (float *)(uintptr_t)ecx, (float *)(uintptr_t)ebx, 0.0f);
-  /* cmp (int16_t)eax, 0xffff -> je 0x20d5d */
-  /* cmp (int16_t)eax, 0x14 -> jge 0x20d5d */
-  /* cmp (int16_t)eax, 0xffff -> je 0x20d5d */
-  /* cmp (int16_t)eax, 0x1e -> jge 0x20d5d */
-  /* test (int16_t)eax, (int16_t)eax -> je 0x20d70 */
-  /* test (char)ecx, (char)ecx -> je 0x20dc4 */
-  /* test (char)ecx, (char)ecx -> jne 0x20dc4 */
-  /* cmp (int16_t)edx, 2 -> jne 0x20dbd */
-  FUN_00046f10(12, 0, 0, 0, 0, 0, 0);
-  actor_action_find_escape_from_danger();
-  /* relift: cmp word ptr [ebp - 0x10], -1 -> jne 0x20df5 */
-  /* test (char)ecx, (char)ecx -> je 0x20f67 */
-  /* relift: cmp dword ptr [esi + 0x158], -1 -> jne 0x20f67 */
-  /* test (char)eax, (char)eax -> je 0x20f50 */
-  /* test (char)eax, (char)eax -> jne 0x20e45 */
-  /* test (char)eax, (char)eax -> je 0x20e7b */
-  /* test (char)eax, (char)eax -> jne 0x20e60 */
-  /* test (char)eax, (char)eax -> je 0x20e7b */
-  /* test (char)eax, (char)eax -> je 0x20f50 */
-  tag_get('rtca', 0);
-  actor_action_try_to_dive(0, 0, 0.0f, (float *)(uintptr_t)eax, 0.0f);
-  /* test (char)eax, (char)eax -> je 0x20f46 */
-  FUN_0002a3f0(0);
-  /* test (char)eax, (char)eax -> jne 0x20efd */
-  /* test (char)eax, (char)eax -> je 0x20efd */
-  /* test (char)eax, (char)eax -> je 0x20f46 */
-  /* test (char)eax, (char)eax -> jne 0x20f46 */
-  actor_action_try_to_panic(0);
-  /* cmp (int16_t)eax, 1 -> je 0x20f1c */
-  /* cmp (int16_t)eax, 3 -> jne 0x20f46 */
-  action_avoid_setup();
-  /* test (char)eax, (char)eax -> je 0x20f46 */
-  actor_action_change(0, 13, 0);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* relift: cmp word ptr [eax + 0x60c], 1 -> jne 0x21003 */
-  /* relift: cmp word ptr [eax + 0x268], 8 -> jl 0x21003 */
-  /* test (char)ecx, (char)ecx -> je 0x21003 */
-  /* relift: cmp word ptr [eax + 0x60c], 0 -> jne 0x21003 */
-  /* relift: cmp word ptr [eax + 0x268], 5 -> jl 0x21003 */
-  /* test (char)ecx, (char)ecx -> je 0x21003 */
-  /* relift: cmp dword ptr [eax + 0x278], 0x4b -> jl 0x21003 */
-  /* relift: cmp word ptr [eax + 0x60c], 1 -> jne 0x21003 */
-  /* relift: cmp word ptr [eax + 0x268], 8 -> jge 0x20fc0 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp ecx, edx -> jle 0x2106d */
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  debug = (char *)0x331f58 + (actor_handle & 0xffff) * 0x657c;
+  *(int *)(debug + 0x168) = game_time_get();
+  *(int16_t *)(debug + 0x16c) = 0;
+  *(int16_t *)(debug + 0x188) = 0;
+  *(char *)(debug + 0x16e) = 0;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)ebp;
+  motion_state = *(int16_t *)(actor + 0x280);
+  if (motion_state == 0) {
+    *(int16_t *)(debug + 0x16c) = 0;
+    return 0;
+  }
+  if (*(char *)(actor + 0x287) == 0) {
+    *(int16_t *)(debug + 0x16c) = 1;
+    return *(char *)(debug + 0xfd);
+  }
+  return 0;
 }

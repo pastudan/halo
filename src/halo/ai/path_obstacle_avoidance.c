@@ -41,67 +41,104 @@ int valid_real_point2d(float *point)
 }
 /* --- path_obstacle_avoidance.obj batch drafts (2026-07-26) --- */
 
-/* 0x60c80 */
-void path_add_step(void)
+/* 0x60c80 — append or reuse a path obstacle-avoidance step */
+int16_t path_add_step(void *path, float *target_point, int16_t zone_index,
+                      char surface_flag, float step_cost, int16_t parent_step)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  int16_t step_count;
+  int16_t step_index;
+  char *step;
+  char *new_step;
+  float delta[2];
 
-  /* relift: cmp word ptr [edi + 0x2c], 0x80 -> jge 0x60e96 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x60cd4 */
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x60cd4 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x60cf1 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0x18], (int16_t)eax -> jne 0x60d20 */
-  /* relift: cmp byte ptr [esi + 0x1a], (char)ecx -> jne 0x60e91 */
-  /* cmp (int16_t)esi, -1 -> jne 0x60cc0 */
-  /* cmp (int16_t)eax, (int16_t)ecx -> jne 0x60dd6 */
-  /* cmp (int16_t)ecx, -1 -> je 0x60dd6 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x60db7 */
-  FUN_000600f0((void *)(uintptr_t)edi, (int16_t)esi);
-  FUN_000600f0((void *)(uintptr_t)edi, (int16_t)esi);
-  /* test (char)eax, 0x41 -> jne 0x60db4 */
-  /* cmp (int16_t)eax, 0xffff -> jne 0x60dd6 */
-  FUN_000600f0((void *)(uintptr_t)edi, (int16_t)esi);
-  magnitude3d((float *)(uintptr_t)eax);
-  csmemset((void *)(uintptr_t)eax, 0, 0);
-  /* test (char)eax, (char)eax -> je 0x60e60 */
-  FUN_00060910();
-  /* test (char)eax, (char)eax -> jne 0x60e88 */
-  display_assert((char *)0, (char *)0x0025ea14, 420, 0);
-  system_exit(0);
+  step_count = *(int16_t *)((char *)path + 0x2c);
+  if (step_count >= 0x80)
+    return -1;
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  delta[0] = *(float *)((char *)path + 0x10) - target_point[0];
+  delta[1] = *(float *)((char *)path + 0x14) - target_point[1];
+
+  if (parent_step != -1) {
+    step_index = parent_step;
+    for (;;) {
+      if (step_index < 0 || step_index >= step_count)
+        break;
+      step = (char *)FUN_000600f0(path, step_index);
+      if (*(int16_t *)(step + 0x18) != zone_index) {
+        if (*(int16_t *)((char *)path + 0x1c) != zone_index)
+          return -1;
+        break;
+      }
+      if (*(char *)(step + 0x1a) != surface_flag)
+        return -1;
+      if (*(int16_t *)(step + 0x24) == -1)
+        break;
+      step_index = *(int16_t *)(step + 0x24);
+    }
+  }
+
+  new_step = (char *)FUN_000600f0(path, step_count);
+  *(int16_t *)((char *)path + 0x2c) = step_count + 1;
+  *(float *)(new_step + 0xc) = delta[0];
+  *(float *)(new_step + 0x10) = delta[1];
+  *(float *)(new_step + 0x20) = step_cost;
+  *(int16_t *)(new_step + 0x18) = zone_index;
+  *(char *)(new_step + 0x1a) = surface_flag;
+  *(int16_t *)(new_step + 0x24) = parent_step;
+  csmemset(new_step + 0x1c, 0xff, 4);
+
+  if (*(char *)((char *)path + 0x29) != 0) {
+    if (*(float *)(new_step + 0x14) > *(float *)((char *)path + 0x24)) {
+      *(float *)((char *)path + 0x24) = *(float *)(new_step + 0x14);
+      *(int16_t *)((char *)path + 0x20) = parent_step;
+    }
+  }
+
+  if (!FUN_00060910(path, step_count)) {
+    display_assert("heap_addition_succeeded",
+                   "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 420, 1);
+    system_exit(-1);
+  }
+  return parent_step;
 }
 
-/* 0x60ea0 */
+/* 0x60ea0 — initialize avoidance record and seed first step */
 void FUN_00060ea0(void *avoidance_record, float *end_point, void *param_2, void *scenario, unsigned char param_4, float radius, float *start_point, int param_7, float param_8, unsigned char param_9, unsigned char param_10)
 {
-  int eax = 0;
-  int esi = 0;
+  int16_t disc_index;
+  int16_t link_index;
+  void *obstacles;
 
-  csprintf((char *)0x005ab100, (char *)0x0025eb8c);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-  csprintf((char *)0x005ab100, (char *)0x0025eb5c);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-  csprintf((char *)0x005ab100, (char *)0x0025eb5c);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-  FUN_00062410((void *)(uintptr_t)eax, 0, (float *)0, 0.0f);
-  /* cmp (int16_t)eax, (int16_t)esi -> je 0x61030 */
-  FUN_00060070(avoidance_record, 0);
-  path_add_step();
+  (void)param_7;
+  (void)param_8;
 
-  (void)eax;
-  (void)esi;
+  *(float *)avoidance_record = end_point[0];
+  *(unsigned char *)((char *)avoidance_record + 4) = param_4;
+  *(void **)((char *)avoidance_record + 8) = param_2;
+  *(void **)((char *)avoidance_record + 0xc) = scenario;
+  *(float *)((char *)avoidance_record + 0x10) = start_point[0];
+  *(float *)((char *)avoidance_record + 0x14) = start_point[1];
+  *(void **)((char *)avoidance_record + 0x18) = end_point;
+  *(int16_t *)((char *)avoidance_record + 0x1c) = -1;
+  *(int16_t *)((char *)avoidance_record + 0x1e) = -1;
+  *(int16_t *)((char *)avoidance_record + 0x20) = -1;
+  *(uint32_t *)((char *)avoidance_record + 0x24) = 0x7f7fffffU;
+  *(unsigned char *)((char *)avoidance_record + 0x28) = 0;
+  *(unsigned char *)((char *)avoidance_record + 0x29) = param_9;
+  *(unsigned char *)((char *)avoidance_record + 0x2a) = param_10;
+  *(int16_t *)((char *)avoidance_record + 0x2c) = 0;
+  *(int16_t *)((char *)avoidance_record + 0x1430) = 0;
+
+  obstacles = *(void **)((char *)avoidance_record + 8);
+  disc_index =
+      FUN_00062410(obstacles, -1, end_point, radius);
+  if (disc_index == -1)
+    link_index = -1;
+  else
+    link_index = FUN_000600c0(obstacles, disc_index);
+  *(int16_t *)((char *)avoidance_record + 0x1c) = link_index;
+
+  path_add_step(avoidance_record, end_point, link_index, 0, 0.0f, -1);
 }
 
 /* 0x61080 */
@@ -183,7 +220,8 @@ void path_add_steps(void)
   /* test (char)eax, 0x41 -> jne 0x6158b */
   /* relift: cmp word ptr [ebp - 0x26], (int16_t)edx -> je 0x6158b */
   structure_test_ray2d((void *)(uintptr_t)ecx, eax, (float *)(uintptr_t)edi, 0, (float *)(uintptr_t)ebx, 0.0f, (void *)0);
-  path_add_step();
+  path_add_step((void *)(uintptr_t)edi, (float *)(uintptr_t)ecx, 0, 0, 0.0f,
+                (int16_t)ebx);
   /* relift: cmp word ptr [ebp - 8], 0 -> jg 0x61378 */
 
   (void)eax;
@@ -197,30 +235,32 @@ void path_add_steps(void)
 /* 0x615b0 */
 int FUN_000615b0(void *avoidance_record)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
+  int16_t step_index;
+  char *step;
+  float target_point[2];
+  float step_cost;
+  float scale;
 
-  FUN_00060970();
-  FUN_000600f0(avoidance_record, 0);
-  FUN_00061080();
-  /* cmp eax, -1 -> jne 0x616bc */
-  /* cmp (int16_t)ecx, -1 -> jne 0x61689 */
-  /* cmp eax, ecx -> je 0x61649 */
-  FUN_000638f0(0, (float *)(uintptr_t)eax, 0, 0);
-  /* test (char)eax, (char)eax -> je 0x616bc */
-  path_add_step();
-  /* relift: cmp (int16_t)edx, word ptr [esi + 0x1c] -> jne 0x616ae */
-  path_add_steps();
-  /* relift: cmp word ptr [esi + 0x1e], -1 -> jne 0x616d9 */
-  /* relift: cmp word ptr [esi + 0x1430], 0 -> jle 0x616d9 */
+  step_index = FUN_00060970(avoidance_record);
+  if (step_index == -1)
+    return 0;
+
+  step = (char *)FUN_000600f0(avoidance_record, step_index);
+  if (*(int16_t *)(step + 0x24) == -1)
+    scale = *(float *)((char *)avoidance_record + 0x18);
+  else
+    scale = *(float *)(step + 0x20) - *(float *)(step + 0x14) +
+            *(float *)((char *)avoidance_record + 0x18);
+
+  target_point[0] = *(float *)(step + 0xc) * scale + *(float *)step;
+  target_point[1] = *(float *)(step + 0x10) * scale + *(float *)(step + 4);
+  step_cost = *(float *)(step + 0x20) - *(float *)(step + 0x14) + scale;
+
+  path_add_step(avoidance_record, target_point,
+                *(int16_t *)((char *)avoidance_record + 0x1c), 0, step_cost,
+                -1);
+  *(int16_t *)((char *)avoidance_record + 0x1e) = step_index;
   return 0;
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
 }
 
 /* 0x616e0 */
