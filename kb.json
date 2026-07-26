@@ -18377,7 +18377,7 @@
         {
           "addr": "0xe0e40",
           "decl": "char player_ui_prompt_user_to_rename_edit_profile(void);",
-          "ported": false,
+          "ported": true,
           "name": "player_ui_prompt_user_to_rename_edit_profile"
         },
         {
