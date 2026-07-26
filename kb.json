@@ -12726,7 +12726,8 @@
         {
           "addr": "0xce0c0",
           "decl": "void FUN_000ce0c0(data_t *data, int *head, int object_handle);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000ce0c0"
         },
         {
           "addr": "0xce110",
@@ -33647,7 +33648,8 @@
         {
           "addr": "0xfb690",
           "decl": "void FUN_000fb690(int weapon_handle@<eax>, int16_t magazine_index@<cx>);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000fb690"
         },
         {
           "addr": "0xfb6e0",

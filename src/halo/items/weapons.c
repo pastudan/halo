@@ -2003,63 +2003,20 @@ char FUN_000fb5a0(int weapon_handle, int16_t trigger_index)
 }
 #endif
 
-/* 0xfb690 — Zero magazine loaded/reserve (weapon@eax, magazine@ecx). */
-#if defined(__clang__)
-static void *(*const FUN_000fb690_get)(int, int) = object_get_and_verify_type;
-static void *(*const FUN_000fb690_mag)(void *, int16_t) = FUN_000fb370;
-static void *(*const FUN_000fb690_tag)(int, int) = tag_get;
-static void *(*const FUN_000fb690_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void FUN_000fb690(int weapon_handle __attribute__((unused)),
-                  int16_t magazine_index __attribute__((unused)))
+/* FUN_000fb690 (0xfb690) — readable C lift: clear magazine state. */
+void FUN_000fb690(int weapon_handle /*@<eax>*/, int16_t magazine_index /*@<cx>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[mag]\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x77656170\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[tag]\n\t"
-      "movswl %%si, %%edx\n\t"
-      "pushl $0x70\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x4f0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw $0, (%%ebx)\n\t"
-      "movw $0, 2(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_000fb690_get), [mag] "m"(FUN_000fb690_mag),
-        [tag] "m"(FUN_000fb690_tag), [elem] "m"(FUN_000fb690_elem)
-      : "memory");
-}
-#else
-void FUN_000fb690(int weapon_handle, int16_t magazine_index)
-{
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  int16_t *magazine =
-    (int16_t *)FUN_000fb370((void *)weapon_obj, magazine_index);
-  char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
+  char *weapon;
+  void *mag;
+  void *tag;
 
-  tag_block_get_element((void *)(tag_data + 0x4f0), (int)magazine_index, 0x70);
-  magazine[0] = 0;
-  magazine[1] = 0;
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  mag = FUN_000fb370(weapon, magazine_index);
+  tag = tag_get(0x77656170, *(int *)weapon);
+  (void)tag_block_get_element((char *)tag + 0x4f0, (int)magazine_index, 0x70);
+  *(int16_t *)mag = 0;
+  *(int16_t *)((char *)mag + 2) = 0;
 }
-#endif
 
 /* FUN_000fb7d0 (0xfb7d0) — XBE naked draft (batch 140). */
 #if defined(__clang__)
