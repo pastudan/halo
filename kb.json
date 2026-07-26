@@ -7064,7 +7064,8 @@
         {
           "addr": "0x86410",
           "decl": "int16_t director_get_perspective(int16_t local_player_index);",
-          "ported": false
+          "ported": true,
+          "name": "director_get_perspective"
         },
         {
           "addr": "0x864b0",
@@ -7158,13 +7159,15 @@
         },
         {
           "addr": "0x878d0",
-          "decl": "void editor_camera_get_focus(void);",
-          "ported": false
+          "decl": "void editor_camera_get_focus(float *out_pos, float *out_orient);",
+          "ported": true,
+          "name": "editor_camera_get_focus"
         },
         {
           "addr": "0x87950",
-          "decl": "void editor_camera_set_focus(void);",
-          "ported": false
+          "decl": "void editor_camera_set_focus(float *pos, float *orient);",
+          "ported": true,
+          "name": "editor_camera_set_focus"
         },
         {
           "addr": "0x879d0",
@@ -10350,7 +10353,7 @@
         },
         {
           "addr": "0x1c1280",
-          "decl": "void FUN_001c1280(void);",
+          "decl": "char FUN_001c1280(int profile_handle, void *out_path);",
           "ported": true,
           "name": "FUN_001c1280"
         },
@@ -17245,8 +17248,9 @@
         },
         {
           "addr": "0x89850",
-          "decl": "void following_camera_new(void);",
-          "ported": false
+          "decl": "void following_camera_new(void *camera);",
+          "ported": true,
+          "name": "following_camera_new"
         },
         {
           "addr": "0x898b0",
@@ -17310,8 +17314,9 @@
         },
         {
           "addr": "0x8a570",
-          "decl": "void observer_command_has_finished(void);",
-          "ported": false
+          "decl": "char observer_command_has_finished(short index);",
+          "ported": true,
+          "name": "observer_command_has_finished"
         },
         {
           "addr": "0x8a5f0",
@@ -17336,7 +17341,8 @@
         {
           "addr": "0x8aa80",
           "decl": "void observer_up_from_forward(float *forward, float *up);",
-          "ported": false
+          "ported": true,
+          "name": "observer_up_from_forward"
         },
         {
           "addr": "0x8ab10",
@@ -17411,7 +17417,8 @@
         {
           "addr": "0x8cf10",
           "decl": "void FUN_0008cf10(float *angles, float pitch, float *vec);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_0008cf10"
         },
         {
           "addr": "0x8cf30",
@@ -17420,8 +17427,9 @@
         },
         {
           "addr": "0x8d3a0",
-          "decl": "void FUN_0008d3a0(void);",
-          "ported": false
+          "decl": "void FUN_0008d3a0(float *dst, float *a, float b, float *c, float *d, float e, float f, float g);",
+          "ported": true,
+          "name": "FUN_0008d3a0"
         }
       ],
       "name": "observer.obj",
@@ -23176,7 +23184,8 @@
         {
           "addr": "0x184de0",
           "decl": "char render_location_visible(void *location);",
-          "ported": false
+          "ported": true,
+          "name": "render_location_visible"
         },
         {
           "addr": "0x184e50",
@@ -23218,7 +23227,8 @@
         {
           "addr": "0x185a70",
           "decl": "float render_frustum_sphere_diameter_in_pixels(void *frustum, float *center, float radius);",
-          "ported": false
+          "ported": true,
+          "name": "render_frustum_sphere_diameter_in_pixels"
         },
         {
           "addr": "0x185ad0",

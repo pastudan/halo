@@ -1505,74 +1505,32 @@ void director_save_camera(void)
 #endif
 
 
-/* director_get_perspective (0x86410) — XBE naked draft (batch 150). */
-#if defined(__clang__)
-static void (*const b86410_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b86410_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int16_t director_get_perspective(int16_t local_player_index __attribute__((unused)))
+/* director_get_perspective (0x86410) — readable C lift. */
+int16_t director_get_perspective(int16_t local_player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Ldirector_get_perspective_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Ldirector_get_perspective_2\n\t"
-      ".Ldirector_get_perspective_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb3\n\t"
-      "pushl $0x26700c\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldirector_get_perspective_2:\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "imull $0xf8, %%ecx, %%ecx\n\t"
-      "addl $0x3352b0, %%ecx\n\t"
-      "movl 0x8(%%ecx), %%eax\n\t"
-      "cmpl $0x89270, %%eax\n\t"
-      "popl %%esi\n\t"
-      "jne .Ldirector_get_perspective_3\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Ldirector_get_perspective_5\n\t"
-      "movw $0, 0x56(%%ecx)\n\t"
-      "movw 0x56(%%ecx), %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldirector_get_perspective_3:\n\t"
-      "cmpl $0x89cd0, %%eax\n\t"
-      "jne .Ldirector_get_perspective_4\n\t"
-      "movw $1, 0x56(%%ecx)\n\t"
-      "movw 0x56(%%ecx), %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldirector_get_perspective_4:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "cmpl $0x853c0, %%eax\n\t"
-      "setne %%dl\n\t"
-      "addl $2, %%edx\n\t"
-      "movw %%dx, 0x56(%%ecx)\n\t"
-      ".Ldirector_get_perspective_5:\n\t"
-      "movw 0x56(%%ecx), %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b86410_assert), [exitfn] "m"(b86410_exitfn)
-      : "memory");
-}
-#else
-#error "director_get_perspective: clang naked draft required"
-#endif
+  char *slot;
+  int fn;
 
+  if (local_player_index < 0 || local_player_index >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x26700c, 0xb3, true);
+    system_exit(-1);
+  }
+  slot = (char *)0x3352b0 + (int)local_player_index * 0xf8;
+  fn = *(int *)(slot + 8);
+  if (fn == 0x89270) {
+    if (*(float *)(slot + 4) == *(float *)0x2533c0) {
+      *(int16_t *)(slot + 0x56) = 0;
+      return 0;
+    }
+    return *(int16_t *)(slot + 0x56);
+  }
+  if (fn == 0x89cd0) {
+    *(int16_t *)(slot + 0x56) = 1;
+    return 1;
+  }
+  *(int16_t *)(slot + 0x56) = (int16_t)(2 + (fn != 0x853c0));
+  return *(int16_t *)(slot + 0x56);
+}
 
 /* director_desired_perspective (0x864b0) — XBE naked draft (batch 131). */
 #if defined(__clang__)
@@ -2531,125 +2489,41 @@ void FUN_00087800(void)
 #endif
 
 
-/* editor_camera_get_focus (0x878d0) — XBE naked draft (batch 155). */
-#if defined(__clang__)
-static void (*const b878d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b878d0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void editor_camera_get_focus(void)
+/* editor_camera_get_focus (0x878d0) — readable C lift. */
+void editor_camera_get_focus(float *out_pos, float *out_orient)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Leditor_camera_get_focus_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x78\n\t"
-      "pushl $0x267120\n\t"
-      "pushl $0x267114\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Leditor_camera_get_focus_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Leditor_camera_get_focus_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x79\n\t"
-      "pushl $0x267120\n\t"
-      "pushl $0x26710c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Leditor_camera_get_focus_2:\n\t"
-      "movl 0x33569c, %%eax\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "movl 0x3356a0, %%ecx\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      "movl 0x3356a4, %%edx\n\t"
-      "movl %%edx, 0x8(%%esi)\n\t"
-      "movl 0x3356a8, %%eax\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      "movl 0x3356ac, %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b878d0_assert), [exitfn] "m"(b878d0_exitfn)
-      : "memory");
+  if (!out_pos) {
+    display_assert((const char *)0x267114, (const char *)0x267120, 0x78, true);
+    system_exit(-1);
+  }
+  if (!out_orient) {
+    display_assert((const char *)0x26710c, (const char *)0x267120, 0x79, true);
+    system_exit(-1);
+  }
+  out_pos[0] = *(float *)0x33569c;
+  out_pos[1] = *(float *)0x3356a0;
+  out_pos[2] = *(float *)0x3356a4;
+  out_orient[0] = *(float *)0x3356a8;
+  out_orient[1] = *(float *)0x3356ac;
 }
-#else
-#error "editor_camera_get_focus: clang naked draft required"
-#endif
 
-
-/* editor_camera_set_focus (0x87950) — XBE naked draft (batch 155). */
-#if defined(__clang__)
-static void (*const b87950_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b87950_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void editor_camera_set_focus(void)
+/* editor_camera_set_focus (0x87950) — readable C lift. */
+void editor_camera_set_focus(float *pos, float *orient)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Leditor_camera_set_focus_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x81\n\t"
-      "pushl $0x267120\n\t"
-      "pushl $0x267114\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Leditor_camera_set_focus_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Leditor_camera_set_focus_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x82\n\t"
-      "pushl $0x267120\n\t"
-      "pushl $0x26710c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Leditor_camera_set_focus_2:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl %%eax, 0x33569c\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x3356a0\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "movl %%edx, 0x3356a4\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "movl %%eax, 0x3356a8\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "movl %%ecx, 0x3356ac\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b87950_assert), [exitfn] "m"(b87950_exitfn)
-      : "memory");
+  if (!pos) {
+    display_assert((const char *)0x267114, (const char *)0x267120, 0x81, true);
+    system_exit(-1);
+  }
+  if (!orient) {
+    display_assert((const char *)0x26710c, (const char *)0x267120, 0x82, true);
+    system_exit(-1);
+  }
+  *(float *)0x33569c = pos[0];
+  *(float *)0x3356a0 = pos[1];
+  *(float *)0x3356a4 = pos[2];
+  *(float *)0x3356a8 = orient[0];
+  *(float *)0x3356ac = orient[1];
 }
-#else
-#error "editor_camera_set_focus: clang naked draft required"
-#endif
-
 
 /* editor_camera_set_position (0x879d0) — XBE naked draft (batch 131). */
 #if defined(__clang__)
@@ -2823,58 +2697,6 @@ void editor_camera_set_mode(void)
 
 
 /* FUN_00087c00 (0x87c00) — XBE naked draft (batch 147). */
-#if defined(__clang__)
-static void (*const b87c00_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-
-__attribute__((naked, noinline))
-void FUN_00087c00(void)
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $7, %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl $0x3356d0, %%edi\n\t"
-      "rep movsl\n\t"
-      "movb 0x33570c, %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_00087c00_1\n\t"
-      "movl $7, %%ecx\n\t"
-      "movl $0x3356f0, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "rep movsl\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00087c00_1:\n\t"
-      "movl 0x2670d8, %%ecx\n\t"
-      "movl $0, (%%eax)\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl $0, 0x8(%%eax)\n\t"
-      "movl 0x2ee670, %%edx\n\t"
-      "addl $0x1c, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10cc00]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c10cc00] "m"(b87c00_c10cc00)
-      : "memory");
-}
-#else
-#error "FUN_00087c00: clang naked draft required"
-#endif
-
-
 /* editor_camera_move_to_point (0x87c80) — XBE naked draft (batch 156). */
 #if defined(__clang__)
 static void (*const b87c80_assert)(const char *, const char *, int, bool) = display_assert;

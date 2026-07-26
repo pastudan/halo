@@ -420,7 +420,7 @@ static void (*const b184690_c174cc0)(void) = FUN_00174cc0;
 static void (*const b184690_c8ef70)(void *ptr, const char *file, int line) = debug_free;
 
 __attribute__((naked, noinline))
-void FUN_00184690(void)
+void FUN_00184690(int a0)
 {
   __asm__ volatile(
       "pushl %%esi\n\t"
@@ -913,57 +913,28 @@ void render_effects(int a0)
   *(char *)0x32574a = v;
 }
 
-/* render_location_visible (0x184de0) — XBE naked draft (batch 170). */
-#if defined(__clang__)
-static void * (*const b184de0_c18e3c0)(void) = scenario_get;
-static void (*const b184de0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b184de0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-char render_location_visible(void *location __attribute__((unused)))
+/* render_location_visible (0x184de0) — readable C lift. */
+char render_location_visible(void *location)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $0, 0x4(%%esi)\n\t"
-      "jl .Lrender_location_visible_1\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movswl 0x4(%%esi), %%ecx\n\t"
-      "cmpl 0x134(%%eax), %%ecx\n\t"
-      "jl .Lrender_location_visible_2\n\t"
-      ".Lrender_location_visible_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x248\n\t"
-      "pushl $0x2b0f1c\n\t"
-      "pushl $0x2b0f40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrender_location_visible_2:\n\t"
-      "movswl 0x4(%%esi), %%edx\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "sarl $5, %%edx\n\t"
-      "andl 0x50678c(,%%edx,4), %%eax\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "negl %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b184de0_c18e3c0), [assert] "m"(b184de0_assert), [exitfn] "m"(b184de0_exitfn)
-      : "memory");
-}
-#else
-#error "render_location_visible: clang naked draft required"
-#endif
+  short cluster;
+  void *scenario;
+  int bit;
+  int word;
 
+  cluster = *(short *)((char *)location + 4);
+  if (cluster < 0) {
+    display_assert((const char *)0x2b0f40, (const char *)0x2b0f1c, 0x248, true);
+    system_exit(-1);
+  }
+  scenario = scenario_get();
+  if (cluster >= *(int *)((char *)scenario + 0x134)) {
+    display_assert((const char *)0x2b0f40, (const char *)0x2b0f1c, 0x248, true);
+    system_exit(-1);
+  }
+  bit = 1 << (cluster & 0x1f);
+  word = cluster >> 5;
+  return (char)((*(int *)(0x50678c + word * 4) & bit) != 0);
+}
 
 /* 0x184e50 */
 void *rendered_cluster_get(int rendered_cluster_index)

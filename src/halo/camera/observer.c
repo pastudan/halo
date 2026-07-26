@@ -1922,54 +1922,24 @@ void flying_camera_update(void)
 #endif
 
 
-/* following_camera_new (0x89850) — XBE naked draft (batch 167). */
-#if defined(__clang__)
-static void (*const b89850_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b89850_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void following_camera_new(void)
+/* following_camera_new (0x89850) — readable C lift. */
+void following_camera_new(void *camera)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "jne .Lfollowing_camera_new_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x13\n\t"
-      "pushl $0x2672ac\n\t"
-      "pushl $0x266e9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfollowing_camera_new_1:\n\t"
-      "movb %%bl, (%%esi)\n\t"
-      "movb %%bl, 0x1(%%esi)\n\t"
-      "movb %%bl, 0x2(%%esi)\n\t"
-      "movb %%bl, 0x3(%%esi)\n\t"
-      "movw %%bx, 0x4(%%esi)\n\t"
-      "movl %%ebx, 0x14(%%esi)\n\t"
-      "movl %%ebx, 0x10(%%esi)\n\t"
-      "movl $0xffffffff, 0x8(%%esi)\n\t"
-      "movw $0xffff, 0xc(%%esi)\n\t"
-      "movl $0x3f800000, 0x18(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b89850_assert), [exitfn] "m"(b89850_exitfn)
-      : "memory");
+  if (!camera) {
+    display_assert((const char *)0x266e9c, (const char *)0x2672ac, 0x13, true);
+    system_exit(-1);
+  }
+  *((unsigned char *)camera + 0) = 0;
+  *((unsigned char *)camera + 1) = 0;
+  *((unsigned char *)camera + 2) = 0;
+  *((unsigned char *)camera + 3) = 0;
+  *(unsigned short *)((char *)camera + 4) = 0;
+  *(int *)((char *)camera + 0x14) = 0;
+  *(int *)((char *)camera + 0x10) = 0;
+  *(int *)((char *)camera + 8) = -1;
+  *(unsigned short *)((char *)camera + 0xc) = 0xffff;
+  *(int *)((char *)camera + 0x18) = 0x3f800000;
 }
-#else
-#error "following_camera_new: clang naked draft required"
-#endif
-
 
 /* FUN_000898b0 (0x898b0) — XBE naked draft (batch 154). */
 #if defined(__clang__)
@@ -3024,68 +2994,25 @@ void following_camera_update(void)
 #endif
 
 
-/* observer_command_has_finished (0x8a570) — XBE naked draft (batch 154). */
-#if defined(__clang__)
-static void (*const b8a570_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b8a570_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void observer_command_has_finished(void)
+/* observer_command_has_finished (0x8a570) — readable C lift. */
+char observer_command_has_finished(short index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lobserver_command_has_finished_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lobserver_command_has_finished_2\n\t"
-      ".Lobserver_command_has_finished_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x72\n\t"
-      "pushl $0x2673a8\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lobserver_command_has_finished_2:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "imull $0x29c, %%edx, %%edx\n\t"
-      "addl $0x33571c, %%edx\n\t"
-      "popl %%esi\n\t"
-      "flds 0x50(%%edx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lobserver_command_has_finished_4\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      ".Lobserver_command_has_finished_3:\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "flds 0x5c(%%edx,%%eax,4)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lobserver_command_has_finished_4\n\t"
-      "incl %%ecx\n\t"
-      "cmpw $5, %%cx\n\t"
-      "jl .Lobserver_command_has_finished_3\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lobserver_command_has_finished_4:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b8a570_assert), [exitfn] "m"(b8a570_exitfn)
-      : "memory");
-}
-#else
-#error "observer_command_has_finished: clang naked draft required"
-#endif
+  char *base;
+  short i;
 
+  if (index < 0 || index >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x2673a8, 0x72, true);
+    system_exit(-1);
+  }
+  base = (char *)0x33571c + (int)index * 0x29c;
+  if (*(float *)(base + 0x50) != *(float *)0x2533c0)
+    return 0;
+  for (i = 0; i < 5; i++) {
+    if (*(float *)(base + 0x5c + (int)i * 4) != *(float *)0x2533c0)
+      return 0;
+  }
+  return 1;
+}
 
 /* observer_reconnect_to_structure_bsp (0x8a5f0) — XBE naked draft (batch 160). */
 #if defined(__clang__)
@@ -3155,68 +3082,26 @@ void observer_obsolete_position(int16_t a0)
   observer_result_initialize((void *)(0x33571c + (int)(int16_t)a0 * 0x29c));
 }
 
-/* observer_up_from_forward (0x8aa80) — XBE naked draft (batch 151). */
-#if defined(__clang__)
-static float (*const b8aa80_norm)(float *) = normalize3d;
-
-__attribute__((naked, noinline))
-void observer_up_from_forward(float *forward __attribute__((unused)), float *up __attribute__((unused)))
+/* observer_up_from_forward (0x8aa80) — readable C lift. */
+void observer_up_from_forward(float *forward, float *up)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "flds (%%esi)\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "fchs\n\t"
-      "pushl %%ecx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[norm]\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $4, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lobserver_up_from_forward_1\n\t"
-      "movl $0x3f800000, -0xc(%%ebp)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      ".Lobserver_up_from_forward_1:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls (%%esi)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps (%%eax)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [norm] "m"(b8aa80_norm)
-      : "memory");
-}
-#else
-#error "observer_up_from_forward: clang naked draft required"
-#endif
+  float tmp[3];
+  float len;
 
+  tmp[0] = forward[1];
+  tmp[1] = -forward[0];
+  tmp[2] = 0.0f;
+  len = normalize3d(tmp);
+  if (len == *(float *)0x2533c0) {
+    tmp[0] = 1.0f;
+    tmp[1] = 0.0f;
+    tmp[2] = 0.0f;
+  }
+  /* up = cross(tmp, forward) */
+  up[0] = tmp[1] * forward[2] - tmp[2] * forward[1];
+  up[1] = tmp[2] * forward[0] - tmp[0] * forward[2];
+  up[2] = tmp[0] * forward[1] - tmp[1] * forward[0];
+}
 
 /* FUN_0008ab10 (0x8ab10) — XBE naked draft (batch 148). */
 #if defined(__clang__)
@@ -3967,59 +3852,22 @@ void FUN_0008cf30(void)
 #endif
 
 
-/* FUN_0008d3a0 (0x8d3a0) — XBE naked draft (batch 154). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0008d3a0(void)
+/* FUN_0008d3a0 (0x8d3a0) — readable C lift. */
+void FUN_0008d3a0(float *dst, float *a, float b, float *c, float *d, float e, float f, float g)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl (%%ecx), %%esi\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl %%esi, (%%edx)\n\t"
-      "movl 0x4(%%ecx), %%esi\n\t"
-      "movl %%esi, 0x4(%%edx)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%edx)\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl %%edx, 0xc(%%eax)\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%esi\n\t"
-      "leal 0x10(%%eax), %%ecx\n\t"
-      "movl %%esi, (%%ecx)\n\t"
-      "movl 0x4(%%edx), %%esi\n\t"
-      "movl %%esi, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%esi\n\t"
-      "leal 0x1c(%%eax), %%ecx\n\t"
-      "movl %%esi, (%%ecx)\n\t"
-      "movl 0x4(%%edx), %%esi\n\t"
-      "movl %%esi, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "movl 0x20(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x28(%%eax)\n\t"
-      "movl 0x24(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x2c(%%eax)\n\t"
-      "movb $0, 0x34(%%eax)\n\t"
-      "movl %%ecx, 0x30(%%eax)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  dst[0] = a[0];
+  dst[1] = a[1];
+  dst[2] = a[2];
+  dst[3] = b;
+  dst[4] = c[0];
+  dst[5] = c[1];
+  dst[6] = c[2];
+  dst[7] = d[0];
+  dst[8] = d[1];
+  dst[9] = d[2];
+  dst[10] = e;
+  dst[11] = f;
+  *((unsigned char *)dst + 0x34) = 0;
+  dst[12] = g;
 }
-#else
-#error "FUN_0008d3a0: clang naked draft required"
-#endif
 
