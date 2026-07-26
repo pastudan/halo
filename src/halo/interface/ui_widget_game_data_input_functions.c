@@ -1547,38 +1547,16 @@ void playlist_profile_initialize_ctf_rules(void *widget)
 #endif
 
 
-/* FUN_000eebe0 (0xeebe0) — XBE naked draft (batch 176). */
-#if defined(__clang__)
-static void (*const beebe0_ce3d50)(void *block) = (void *)widget_free;
-
-__attribute__((naked, noinline))
+/* FUN_000eebe0 (0xeebe0) — readable C lift. */
 char FUN_000eebe0(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x40(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000eebe0_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce3d50]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0, 0x40(%%esi)\n\t"
-      ".LFUN_000eebe0_1:\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce3d50] "m"(beebe0_ce3d50)
-      : "memory");
+  void *p = *(void **)((char *)widget + 0x40);
+  if (p) {
+    widget_free(p);
+    *(void **)((char *)widget + 0x40) = 0;
+  }
+  return 1;
 }
-#else
-#error "FUN_000eebe0: clang naked draft required"
-#endif
-
 
 /* FUN_000eec10 (0xeec10) — XBE naked draft (batch 133). */
 #if defined(__clang__)
@@ -3639,34 +3617,15 @@ void FUN_000eff70(void *widget)
 #endif
 
 
-/* FUN_000f0070 (0xf0070) — XBE naked draft (batch 163). */
-#if defined(__clang__)
-static unsigned char (*const bf0070_ce0430)(void) = xbox_demos_available;
-
-__attribute__((naked, noinline))
+/* FUN_000f0070 (0xf0070) — readable C lift. */
 char FUN_000f0070(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "call *%[ce0430]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000f0070_1\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movb $1, 0x12(%%eax)\n\t"
-      "movb $0, 0x10(%%eax)\n\t"
-      ".LFUN_000f0070_1:\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce0430] "m"(bf0070_ce0430)
-      : "memory");
+  if (!xbox_demos_available()) {
+    ((unsigned char *)widget)[0x12] = 1;
+    ((unsigned char *)widget)[0x10] = 0;
+  }
+  return 1;
 }
-#else
-#error "FUN_000f0070: clang naked draft required"
-#endif
-
 
 /* FUN_000f00b0 (0xf00b0) — XBE naked draft (batch 173). */
 #if defined(__clang__)
@@ -4343,33 +4302,12 @@ void FUN_000f04c0(void *widget)
 #endif
 
 
-/* FUN_000f0620 (0xf0620) — XBE naked draft (batch 184). */
-#if defined(__clang__)
-static void (*const bf0620_ce59e0)(int16_t player_index) = ui_widgets_pop_stack;
-
-__attribute__((naked, noinline))
+/* FUN_000f0620 (0xf0620) — readable C lift. */
 char FUN_000f0620(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x8(%%eax), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ce59e0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce59e0] "m"(bf0620_ce59e0)
-      : "memory");
+  ui_widgets_pop_stack(*(unsigned short *)((char *)widget + 8));
+  return 1;
 }
-#else
-#error "FUN_000f0620: clang naked draft required"
-#endif
-
 
 /* FUN_000f0640 (0xf0640) — XBE naked draft (batch 133). */
 #if defined(__clang__)

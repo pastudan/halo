@@ -497,52 +497,19 @@ void player_ui_set_game_variant(void *variant)
 #endif
 
 
-/* player_ui_game_variant_specified (0xe0ab0) — XBE naked draft (batch 171). */
-#if defined(__clang__)
-static void (*const be0ab0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be0ab0_exitfn)(int) = system_exit;
-static void * (*const be0ab0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
+/* player_ui_game_variant_specified (0xe0ab0) — readable C lift. */
 char player_ui_game_variant_specified(void *out_variant)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lplayer_ui_game_variant_specified_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x11c\n\t"
-      "pushl $0x282724\n\t"
-      "pushl $0x282808\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_ui_game_variant_specified_1:\n\t"
-      "movb 0x46c034, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_ui_game_variant_specified_2\n\t"
-      "pushl $0x68\n\t"
-      "pushl $0x46bfcc\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movb 0x46c034, %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lplayer_ui_game_variant_specified_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be0ab0_assert), [exitfn] "m"(be0ab0_exitfn), [c8e0b0] "m"(be0ab0_c8e0b0)
-      : "memory");
+  if (!out_variant) {
+    display_assert((const char *)0x282808, (const char *)0x282724, 0x11c, 1);
+    system_exit(-1);
+  }
+  if (*(unsigned char *)0x46c034) {
+    csmemcpy(out_variant, (void *)0x46bfcc, 0x68);
+    return *(unsigned char *)0x46c034;
+  }
+  return 0;
 }
-#else
-#error "player_ui_game_variant_specified: clang naked draft required"
-#endif
-
 
 /* player_ui_rumble_disabled (0xe0b00) — XBE naked draft (batch 170). */
 #if defined(__clang__)
@@ -827,50 +794,21 @@ void player_ui_fast_setup_network_server(void)
 #endif
 
 
-/* player_ui_edit_profile_is_default_profile (0xe0d80) — XBE naked draft (batch 170). */
-#if defined(__clang__)
-static void (*const be0d80_c1c29a0)(void) = (void *)saved_game_file_get_type;
-static void (*const be0d80_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* player_ui_edit_profile_is_default_profile (0xe0d80) — readable C lift. */
 char player_ui_edit_profile_is_default_profile(void)
 {
-  __asm__ volatile(
-      "movl 0x46c038, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lplayer_ui_edit_profile_is_default_profile_2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c29a0]\n\t"
-      "movzwl %%ax, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .Lplayer_ui_edit_profile_is_default_profile_1\n\t"
-      "cmpl $1, %%eax\n\t"
-      "jg .Lplayer_ui_edit_profile_is_default_profile_1\n\t"
-      "movl 0x46c038, %%eax\n\t"
-      "shrl $0x1e, %%eax\n\t"
-      "andb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".Lplayer_ui_edit_profile_is_default_profile_1:\n\t"
-      "pushl $0x282938\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lplayer_ui_edit_profile_is_default_profile_2:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [c1c29a0] "m"(be0d80_c1c29a0), [c8f390] "m"(be0d80_c8f390)
-      : "memory");
+  int idx = *(int *)0x46c038;
+  if (idx == -1)
+    return 0;
+  {
+    int t = (unsigned short)saved_game_file_get_type(idx);
+    if (t < 0 || t > 1) {
+      error(2, (const char *)0x282938);
+      return 0;
+    }
+    return (char)((*(unsigned int *)0x46c038 >> 30) & 1);
+  }
 }
-#else
-#error "player_ui_edit_profile_is_default_profile: clang naked draft required"
-#endif
-
 
 /* player_ui_edit_profile_name_is_dirty (0xe0dd0) — XBE naked draft (batch 158). */
 #if defined(__clang__)
@@ -986,58 +924,21 @@ void player_ui_prompt_user_to_rename_edit_profile(void)
 #endif
 
 
-/* player_ui_get_edit_player_profile (0xe0ea0) — XBE naked draft (batch 163). */
-#if defined(__clang__)
-static void (*const be0ea0_c1c29a0)(void) = (void *)saved_game_file_get_type;
-
-__attribute__((naked, noinline))
-void player_ui_get_edit_player_profile(void)
+/* player_ui_get_edit_player_profile (0xe0ea0) — readable C lift. */
+void *player_ui_get_edit_player_profile(void)
 {
-  __asm__ volatile(
-      "movl 0x46c038, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c29a0]\n\t"
-      "addl $4, %%esp\n\t"
-      "negw %%ax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "notl %%eax\n\t"
-      "andl $0x46c03c, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [c1c29a0] "m"(be0ea0_c1c29a0)
-      : "memory");
+  short t = (short)saved_game_file_get_type(*(int *)0x46c038);
+  /* neg/sbb/not/and: return buffer iff type == 0 */
+  return t == 0 ? (void *)0x46c03c : (void *)0;
 }
-#else
-#error "player_ui_get_edit_player_profile: clang naked draft required"
-#endif
 
-
-/* player_ui_get_edit_playlist_profile (0xe0ec0) — XBE naked draft (batch 163). */
-#if defined(__clang__)
-static void (*const be0ec0_c1c29a0)(void) = (void *)saved_game_file_get_type;
-
-__attribute__((naked, noinline))
-void player_ui_get_edit_playlist_profile(void)
+/* player_ui_get_edit_playlist_profile (0xe0ec0) — readable C lift. */
+void *player_ui_get_edit_playlist_profile(void)
 {
-  __asm__ volatile(
-      "movl 0x46c038, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c29a0]\n\t"
-      "addl $4, %%esp\n\t"
-      "decw %%ax\n\t"
-      "negw %%ax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "notl %%eax\n\t"
-      "andl $0x46c03c, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [c1c29a0] "m"(be0ec0_c1c29a0)
-      : "memory");
+  short t = (short)saved_game_file_get_type(*(int *)0x46c038);
+  /* return buffer iff type == 1 */
+  return t == 1 ? (void *)0x46c03c : (void *)0;
 }
-#else
-#error "player_ui_get_edit_playlist_profile: clang naked draft required"
-#endif
-
 
 /* player_ui_edit_profile_is_dirty (0xe0ee0) — XBE naked draft (batch 137). */
 #if defined(__clang__)

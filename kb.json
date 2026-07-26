@@ -11357,7 +11357,7 @@
         {
           "addr": "0xc3030",
           "decl": "void FUN_000c3030(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc3070",
@@ -11512,7 +11512,7 @@
         {
           "addr": "0xc37b0",
           "decl": "void FUN_000c37b0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc37f0",
@@ -18345,7 +18345,7 @@
         {
           "addr": "0xe0ec0",
           "decl": "void *player_ui_get_edit_playlist_profile(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0ee0",
@@ -20326,7 +20326,7 @@
         {
           "addr": "0xe2650",
           "decl": "void FUN_000e2650(float x, float y, float z);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe2680",
@@ -27515,7 +27515,7 @@
         {
           "addr": "0xeebe0",
           "decl": "char FUN_000eebe0(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xeec10",
@@ -27590,7 +27590,7 @@
         {
           "addr": "0xf0070",
           "decl": "char FUN_000f0070(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf00b0",
@@ -27635,7 +27635,7 @@
         {
           "addr": "0xf0620",
           "decl": "char FUN_000f0620(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf0640",
