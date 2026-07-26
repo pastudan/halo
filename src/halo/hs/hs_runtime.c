@@ -5244,62 +5244,20 @@ void FUN_000c9d40(int list_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_000c9d80 (0xc9d80) — XBE naked draft (batch 160). */
-#if defined(__clang__)
-static void (*const bc9d80_c13d6f0)(void *iter, int type_mask, int flags) = object_iterator_new;
-static void * (*const bc9d80_c13d730)(void *iter) = object_iterator_next;
-static void (*const bc9d80_odel)(int) = object_delete;
-static void (*const bc9d80_c145490)(void) = FUN_00145490;
-
-__attribute__((naked, noinline))
-void FUN_000c9d80(int object_type __attribute__((unused)))
+/* FUN_000c9d80 (0xc9d80) — readable C lift: delete objects of type. */
+void FUN_000c9d80(int object_type)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl $0\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d6f0]\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c9d80_3\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      ".LFUN_000c9d80_1:\n\t"
-      "cmpl %%esi, (%%eax)\n\t"
-      "jne .LFUN_000c9d80_2\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[odel]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000c9d80_2:\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000c9d80_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000c9d80_3:\n\t"
-      "call *%[c145490]\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c13d6f0] "m"(bc9d80_c13d6f0), [c13d730] "m"(bc9d80_c13d730), [odel] "m"(bc9d80_odel), [c145490] "m"(bc9d80_c145490)
-      : "memory");
+  char iter[0x10];
+  void *obj;
+  object_iterator_new(iter, -1, 0);
+  obj = object_iterator_next(iter);
+  while (obj != 0) {
+    if (*(int *)obj == object_type)
+      object_delete(*(int *)(iter + 8));
+    obj = object_iterator_next(iter);
+  }
+  FUN_00145490();
 }
-#else
-#error "FUN_000c9d80: clang naked draft required"
-#endif
-
-
 /* FUN_000c9de0 (0xc9de0) — XBE naked draft (batch 156). */
 #if defined(__clang__)
 static scenario_t * (*const bc9de0_c18e380)(void) = global_scenario_get;

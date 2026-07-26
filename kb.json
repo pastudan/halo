@@ -12313,7 +12313,7 @@
         {
           "addr": "0xc9d80",
           "decl": "void FUN_000c9d80(int object_type);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9de0",
