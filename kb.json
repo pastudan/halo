@@ -14162,7 +14162,7 @@
         },
         {
           "addr": "0xe8db0",
-          "decl": "void main_set_difficulty(int16_t difficulty);",
+          "decl": "void FUN_000e8db0(int16_t difficulty);",
           "name": "ui_widget_display_deferred_errors",
           "ported": true
         },
@@ -23249,7 +23249,7 @@
         {
           "addr": "0x188880",
           "decl": "void FUN_00188880(void);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "render_cameras.obj",
@@ -29257,7 +29257,7 @@
         },
         {
           "addr": "0x1aea90",
-          "decl": "char FUN_001a8770(void *anim_state);",
+          "decl": "char FUN_001aea90(void *anim_state);",
           "name": "unit_cause_player_melee_damage",
           "ported": true
         },
@@ -34808,7 +34808,7 @@
         },
         {
           "addr": "0x4a710",
-          "decl": "void FUN_000493B0(float *out, float value, int field_4, int field_8);",
+          "decl": "void FUN_0004a710(int index, float value);",
           "ported": true
         },
         {
@@ -39845,8 +39845,8 @@
         },
         {
           "addr": "0x96470",
-          "decl": "int device_get_position(int a0);",
-          "ported": false
+          "decl": "float device_get_position(int a0);",
+          "ported": true
         },
         {
           "addr": "0x964a0",

@@ -372,38 +372,14 @@ void device_preprocess_node_orientations(void)
 #endif
 
 
-/* device_get_position (0x96470) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-static void *(*const b96470_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-int device_get_position(int a0 __attribute__((unused)))
+/* device_get_position (0x96470) — readable C lift. */
+float device_get_position(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Ldevice_get_position_1\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "flds 0x1b8(%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldevice_get_position_1:\n\t"
-      "flds 0x2533c0\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b96470_get)
-      : "memory");
+  if (a0 == -1)
+    return 0.0f;
+  void *obj = object_get_and_verify_type(a0, 0x380);
+  return *(float *)((char *)obj + 0x1b8);
 }
-#else
-#error "device_get_position: clang naked draft required"
-#endif
-
 
 /* device_get_power (0x964a0) — XBE naked draft (batch 286). */
 #if defined(__clang__)

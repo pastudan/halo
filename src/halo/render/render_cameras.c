@@ -4036,23 +4036,8 @@ void FUN_001887b0(void)
 #endif
 
 
-/* FUN_00188880 (0x188880) — XBE naked draft (batch 393). */
-#if defined(__clang__)
-static void (*const b188880_c1887b0)(void) = (void *)FUN_001887b0;
-
-__attribute__((naked, noinline))
-void FUN_00188880(void)
-{
-  __asm__ volatile(
-      "pushl $-0xd\n\t"
-      "call *%[c1887b0]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c1887b0] "m"(b188880_c1887b0)
-      : "memory");
+void FUN_00188880(void) {
+  ((void (*)(int))0x1887b0)(-0xd);
 }
-#else
-#error "FUN_00188880: clang naked draft required"
-#endif
+
 
