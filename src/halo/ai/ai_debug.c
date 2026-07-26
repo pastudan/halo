@@ -4618,7 +4618,7 @@ static void (*const b4c560_c189450)(int flag, float *point_a, float *point_b, vo
 static void (*const b4c560_c189150)(char flag, float *position, float scale, void *color) = FUN_00189150;
 static void (*const b4c560_c189540)(char flag, void *center, float radius, void *color) = FUN_00189540;
 static void (*const b4c560_c49300)(void) = FUN_00049300;
-static void (*const b4c560_c49280)(void) = FUN_00049280;
+static void (*const b4c560_c49280)(int16_t, float *, float *, void *) = FUN_00049280;
 static void (*const b4c560_c62960)(void *obstacles, float radius) = path_obstacles_debug_render;
 static void (*const b4c560_c609e0)(void *path) = FUN_000609e0;
 static void (*const b4c560_c4c2a0)(void) = FUN_0004c2a0;

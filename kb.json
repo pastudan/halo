@@ -34752,8 +34752,8 @@
         },
         {
           "addr": "0x49280",
-          "decl": "void FUN_00049280(void);",
-          "ported": false
+          "decl": "void FUN_00049280(int16_t count, float *points, float *point_a @<ecx>, void *color @<ebx>);",
+          "ported": true
         },
         {
           "addr": "0x49300",
