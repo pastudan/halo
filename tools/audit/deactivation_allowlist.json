@@ -17267,5 +17267,82 @@
     "object": "bsp3d.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c4da0",
+    "name": "FUN_001c4da0",
+    "object": "bink_playback.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c4f30",
+    "name": "FUN_001c4f30",
+    "object": "bink_playback.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c5010",
+    "name": "FUN_001c5010",
+    "object": "bink_playback.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c53f0",
+    "name": "FUN_001c53f0",
+    "object": "bink_playback.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c5560",
+    "name": "FUN_001c5560",
+    "object": "bink_playback.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c58f0",
+    "name": "FUN_001c58f0",
+    "object": "bink_playback.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c5ab0",
+    "name": "FUN_001c5ab0",
+    "object": "bink_playback.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c6900",
+    "name": "FUN_001c6900",
+    "object": "bink_playback.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c6b20",
+    "name": "FUN_001c6b20",
+    "object": "bink_playback.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c6bf0",
+    "name": "FUN_001c6bf0",
+    "object": "bink_playback.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c6c00",
+    "name": "FUN_001c6c00",
+    "object": "bink_playback.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
