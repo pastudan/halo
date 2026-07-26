@@ -576,48 +576,16 @@ void scripted_player_effect_set_rumble(int a0, float a1)
   rumble_player_set_scripted_values(a0, a1);
 }
 
-/* player_telefrag_effect_stop (0xa2930) — XBE naked draft (batch 177). */
-#if defined(__clang__)
-static void *(*const ba2930_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char * (*const ba2930_ca2690)(int16_t local_player_index) = player_effect_get;
-static void (*const ba2930_cb9da0)(short local_player_index, int left_motor, int right_motor) = rumble_set_direct_motors;
-
-__attribute__((naked, noinline))
-void player_telefrag_effect_stop(void)
+/* player_telefrag_effect_stop (0xa2930) — readable C lift. */
+void player_telefrag_effect_stop(int player_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0x2(%%eax), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lplayer_telefrag_effect_stop_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ca2690]\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cb9da0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lplayer_telefrag_effect_stop_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(ba2930_dget), [ca2690] "m"(ba2930_ca2690), [cb9da0] "m"(ba2930_cb9da0)
-      : "memory");
+  void *d = datum_get(*(data_t **)0x5aa6d4, player_handle);
+  short idx = *(short *)((char *)d + 2);
+  if (idx != -1) {
+    player_effect_get(idx);
+    rumble_set_direct_motors(idx, 0, 0);
+  }
 }
-#else
-#error "player_telefrag_effect_stop: clang naked draft required"
-#endif
-
-
 /* player_effect_screen_fade_in (0xa2970) — readable C lift. */
 void player_effect_screen_fade_in(float a0, int a1, int a2, short a3)
 {
@@ -702,37 +670,12 @@ void player_effect_get_damage_indicators(int player_index __attribute__((unused)
 #endif
 
 
-/* player_effect_clear_damage_indicators (0xa2a70) — XBE naked draft (batch 175). */
-#if defined(__clang__)
-static char * (*const ba2a70_ca2690)(int16_t local_player_index) = player_effect_get;
-static void *(*const ba2a70_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void player_effect_clear_damage_indicators(int player_index __attribute__((unused)))
+/* player_effect_clear_damage_indicators (0xa2a70) — readable C lift. */
+void player_effect_clear_damage_indicators(int player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca2690]\n\t"
-      "pushl $4\n\t"
-      "addl $0xe4, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ca2690] "m"(ba2a70_ca2690), [memset] "m"(ba2a70_memset)
-      : "memory");
+  char *p = player_effect_get((int16_t)player_index);
+  csmemset(p + 0xe4, 0, 4);
 }
-#else
-#error "player_effect_clear_damage_indicators: clang naked draft required"
-#endif
-
-
 /* FUN_000a2a90 (0xa2a90) — readable C lift: lerp(a, 1, t) = a+(1-a)*t. */
 float FUN_000a2a90(float a, float t)
 {

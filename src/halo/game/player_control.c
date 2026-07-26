@@ -72,52 +72,18 @@ float player_control_get_autoaim_level(int16_t local_player_index __attribute__(
 #endif
 
 
-/* players_unzoom_all (0xb69d0) — XBE naked draft (batch 164). */
-#if defined(__clang__)
-static void (*const bb69d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb69d0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* players_unzoom_all (0xb69d0) — readable C lift. */
 void players_unzoom_all(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      ".Lplayers_unzoom_all_1:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lplayers_unzoom_all_2\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lplayers_unzoom_all_3\n\t"
-      ".Lplayers_unzoom_all_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb1\n\t"
-      "pushl $0x26e1e8\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayers_unzoom_all_3:\n\t"
-      "movl 0x457090, %%eax\n\t"
-      "movw $0xffff, 0x34(%%edi,%%eax,1)\n\t"
-      "incl %%esi\n\t"
-      "addl $0x40, %%edi\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lplayers_unzoom_all_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bb69d0_assert), [exitfn] "m"(bb69d0_exitfn)
-      : "memory");
+  short i;
+  for (i = 0; i < 4; i++) {
+    if (i < 0 || i >= 4) {
+      display_assert((const char *)0x266fc0, (const char *)0x26e1e8, 0xb1, 1);
+      system_exit(-1);
+    }
+    *(short *)(*(unsigned char **)0x457090 + (i * 0x40) + 0x34) = (short)0xffff;
+  }
 }
-#else
-#error "players_unzoom_all: clang naked draft required"
-#endif
-
-
 /* player_control_get_zoom_level (0xb6a70) — readable C lift. */
 short player_control_get_zoom_level(short local_player_index)
 {

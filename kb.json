@@ -5485,13 +5485,15 @@
         },
         {
           "addr": "0x93b60",
-          "decl": "void FUN_00093b60(void);",
-          "ported": false
+          "decl": "void FUN_00093b60(short *accum, const signed char *delta);",
+          "ported": false,
+          "name": "FUN_00093b60"
         },
         {
           "addr": "0x93ba0",
-          "decl": "void FUN_00093ba0(void);",
-          "ported": false
+          "decl": "void FUN_00093ba0(short *accum, const short *delta);",
+          "ported": false,
+          "name": "FUN_00093ba0"
         },
         {
           "addr": "0x93be0",
@@ -15119,8 +15121,9 @@
         },
         {
           "addr": "0x125fb0",
-          "decl": "void FUN_00125fb0(void *client /* @<esi> */, int16_t reason /* @<ax> */);",
-          "ported": false
+          "decl": "void FUN_00125fb0(void *client, int16_t reason);",
+          "ported": false,
+          "name": "FUN_00125fb0"
         },
         {
           "addr": "0x126140",
@@ -17753,12 +17756,14 @@
         {
           "addr": "0xb6940",
           "decl": "float player_control_get_autoaim_level(int16_t local_player_index);",
-          "ported": false
+          "ported": false,
+          "name": "player_control_get_autoaim_level"
         },
         {
           "addr": "0xb69d0",
           "decl": "void players_unzoom_all(void);",
-          "ported": false
+          "ported": true,
+          "name": "players_unzoom_all"
         },
         {
           "addr": "0xb6a70",
@@ -17959,8 +17964,9 @@
         },
         {
           "addr": "0xa2930",
-          "decl": "void player_telefrag_effect_stop(void);",
-          "ported": false
+          "decl": "void player_telefrag_effect_stop(int player_handle);",
+          "ported": true,
+          "name": "player_telefrag_effect_stop"
         },
         {
           "addr": "0xa2970",
@@ -17980,7 +17986,8 @@
         {
           "addr": "0xa2a70",
           "decl": "void player_effect_clear_damage_indicators(int player_index);",
-          "ported": false
+          "ported": true,
+          "name": "player_effect_clear_damage_indicators"
         },
         {
           "addr": "0xa2a90",
