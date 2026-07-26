@@ -585,7 +585,7 @@
         },
         {
           "addr": "0x150ed0",
-          "decl": "void FUN_00150ed0(void);",
+          "decl": "void FUN_00150ed0(void *phys_state, void *buffer_a, void *buffer_b, float *out_force, float *out_aux);",
           "ported": false
         },
         {
@@ -610,12 +610,12 @@
         },
         {
           "addr": "0x152680",
-          "decl": "void FUN_00152680(void);",
+          "decl": "void FUN_00152680(void *phys_state, void *buffer_a, void *buffer_b, float *force, float *aux);",
           "ported": false
         },
         {
           "addr": "0x152e40",
-          "decl": "void FUN_00152e40(void);",
+          "decl": "void FUN_00152e40(int object_handle, void *buffer_a, void *buffer_b, float *force, float *aux);",
           "ported": false
         },
         {
@@ -38143,22 +38143,22 @@
         },
         {
           "addr": "0x14bdb0",
-          "decl": "void collision_sphere_test_vector(void);",
+          "decl": "char collision_sphere_test_vector(void *sphere, float *origin, float *direction, float *out_t, float *out_plane);",
           "ported": false
         },
         {
           "addr": "0x14bf30",
-          "decl": "void collision_cylinder_test_vector(void);",
+          "decl": "char collision_cylinder_test_vector(void *cylinder, float *origin, float *direction, float *out_t, float *out_plane);",
           "ported": false
         },
         {
           "addr": "0x14c220",
-          "decl": "void collision_prism_test_vector(void);",
+          "decl": "char collision_prism_test_vector(void *prism, float *origin, float *direction, float *out_t, float *out_plane);",
           "ported": false
         },
         {
           "addr": "0x14c4b0",
-          "decl": "char FUN_0014c4b0(int arg1, float *arg2, float *arg3, void *out_result);",
+          "decl": "char FUN_0014c4b0(void *features, float *position, float *velocity, void *out_result);",
           "ported": false
         }
       ],

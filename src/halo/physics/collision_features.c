@@ -841,123 +841,339 @@ void render_debug_collision_cylinder(void)
   (void)eax;
 }
 
-/* 0x14bdb0 */
-void collision_sphere_test_vector(void)
+/* 0x14bdb0 — ray vs sphere feature. */
+char collision_sphere_test_vector(void *sphere, float *origin, float *direction,
+                                  float *out_t, float *out_plane)
 {
-  int eax = 0;
+  char *sph = (char *)sphere;
+  float *center = (float *)(sph + 0xc);
+  float radius = *(float *)(sph + 0x18);
+  float delta[3];
+  float disc;
+  float b;
+  float dir_sq;
+  float disc2;
+  float t;
 
-  /* test (char)eax, 0x41 -> jne 0x14bf26 */
-  /* test (char)eax, 1 -> jne 0x14bf24 */
-  normalize3d((float *)0);
+  delta[0] = center[0] - origin[0];
+  delta[1] = center[1] - origin[1];
+  delta[2] = center[2] - origin[2];
+  disc = delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2] -
+         radius * radius;
 
-  (void)eax;
+  if (!(disc > *(float *)0x2533c0)) {
+    *out_t = 0.0f;
+  } else {
+    b = delta[0] * direction[0] + delta[1] * direction[1] +
+        delta[2] * direction[2];
+    if (!(b > *(float *)0x2533c0))
+      return 0;
+    dir_sq = direction[0] * direction[0] + direction[1] * direction[1] +
+             direction[2] * direction[2];
+    disc2 = b * b - dir_sq * disc;
+    if (disc2 < *(float *)0x2533c0)
+      return 0;
+    t = b - sqrtf(disc2);
+    if (!(t <= dir_sq))
+      return 0;
+    *out_t = t / dir_sq;
+  }
+
+  out_plane[0] = (*out_t) * direction[0] - delta[0];
+  out_plane[1] = (*out_t) * direction[1] - delta[1];
+  out_plane[2] = (*out_t) * direction[2] - delta[2];
+  if (normalize3d(out_plane) == *(float *)0x2533c0) {
+    out_plane[0] = 0.0f;
+    out_plane[1] = 0.0f;
+    out_plane[2] = 1.0f;
+  }
+  out_plane[3] = center[0] * out_plane[0] + center[1] * out_plane[1] +
+                 center[2] * out_plane[2] + radius;
+  return 1;
 }
 
-/* 0x14bf30 */
-void collision_cylinder_test_vector(void)
+/* 0x14bf30 — ray vs finite cylinder feature. */
+char collision_cylinder_test_vector(void *cylinder, float *origin,
+                                    float *direction, float *out_t,
+                                    float *out_plane)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *cyl = (char *)cylinder;
+  float *base = (float *)(cyl + 0xc);
+  float *axis = (float *)(cyl + 0x18);
+  float radius = *(float *)(cyl + 0x24);
+  float axis_len_sq;
+  float axis_dot_dir;
+  float dir_cross_sq;
+  float delta[3];
+  float delta_dot_axis;
+  float a, b, c, disc;
+  float inv_a;
+  float t0, t1, t;
+  float hit[3];
+  float radial[3];
+  float one = *(float *)0x2533c8;
+  float zero = *(float *)0x2533c0;
 
-  /* test (char)eax, 0x41 -> je 0x14c056 */
-  /* test (char)eax, 0x41 -> jne 0x14c0c5 */
-  /* test (char)eax, 0x41 -> jne 0x14c12d */
-  /* test (char)eax, 0x41 -> jne 0x14c14c */
-  /* test (char)eax, 0x41 -> jne 0x14c14c */
-  /* test (char)eax, 0x41 -> jne 0x14c189 */
-  /* test (char)eax, 0x41 -> je 0x14c058 */
-  vector3d_scale_add((float *)(uintptr_t)ecx, (float *)(uintptr_t)ecx, 0.0f, (float *)(uintptr_t)edx);
-  vector3d_scale_add((float *)(uintptr_t)edx, (float *)(uintptr_t)esi, 0.0f, (float *)0);
-  normalize3d((float *)(uintptr_t)ebx);
-  FUN_00013070((float *)(uintptr_t)edi, (float *)(uintptr_t)ebx);
+  axis_len_sq = axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2];
+  axis_dot_dir =
+      axis[0] * direction[0] + axis[1] * direction[1] + axis[2] * direction[2];
+  dir_cross_sq =
+      (direction[0] * direction[0] + direction[1] * direction[1] +
+       direction[2] * direction[2]) *
+          axis_len_sq -
+      axis_dot_dir * axis_dot_dir;
+  if (dir_cross_sq == zero)
+    return 0;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  delta[0] = origin[0] - base[0];
+  delta[1] = origin[1] - base[1];
+  delta[2] = origin[2] - base[2];
+  delta_dot_axis =
+      delta[0] * axis[0] + delta[1] * axis[1] + delta[2] * axis[2];
+
+  a = dir_cross_sq;
+  b = axis_dot_dir * delta_dot_axis -
+      (delta[0] * direction[0] + delta[1] * direction[1] +
+       delta[2] * direction[2]) *
+          axis_len_sq;
+  c = (delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2]) *
+          axis_len_sq -
+      delta_dot_axis * delta_dot_axis - radius * radius * axis_len_sq;
+  disc = b * b - a * c;
+  if (!(disc > zero))
+    return 0;
+
+  inv_a = one / a;
+  disc = sqrtf(disc);
+  t0 = (-b - disc) * inv_a;
+  t1 = (-b + disc) * inv_a;
+  if (t0 > t1) {
+    float tmp = t0;
+    t0 = t1;
+    t1 = tmp;
+  }
+  if (t0 < zero)
+    t0 = zero;
+  if (t1 > one)
+    t1 = one;
+  if (t0 > t1)
+    return 0;
+
+  if (axis_dot_dir != zero) {
+    float h0 = -delta_dot_axis / axis_dot_dir;
+    float h1 = (axis_len_sq - delta_dot_axis) / axis_dot_dir;
+    float h_enter = h0 < h1 ? h0 : h1;
+    float h_exit = h0 < h1 ? h1 : h0;
+    if (t0 < h_enter)
+      t0 = h_enter;
+    if (t1 > h_exit)
+      t1 = h_exit;
+    if (t0 > t1)
+      return 0;
+  } else {
+    if (!(delta_dot_axis >= zero) || !(delta_dot_axis <= axis_len_sq))
+      return 0;
+  }
+
+  t = t0;
+  *out_t = t;
+  hit[0] = origin[0] + direction[0] * t;
+  hit[1] = origin[1] + direction[1] * t;
+  hit[2] = origin[2] + direction[2] * t;
+  {
+    float d0 = hit[0] - base[0];
+    float d1 = hit[1] - base[1];
+    float d2 = hit[2] - base[2];
+    float proj = (d0 * axis[0] + d1 * axis[1] + d2 * axis[2]) / axis_len_sq;
+    radial[0] = d0 - axis[0] * proj;
+    radial[1] = d1 - axis[1] * proj;
+    radial[2] = d2 - axis[2] * proj;
+  }
+  if (normalize3d(radial) == zero) {
+    out_plane[0] = 1.0f;
+    out_plane[1] = 0.0f;
+    out_plane[2] = 0.0f;
+  } else {
+    out_plane[0] = radial[0];
+    out_plane[1] = radial[1];
+    out_plane[2] = radial[2];
+  }
+  out_plane[3] = base[0] * out_plane[0] + base[1] * out_plane[1] +
+                 base[2] * out_plane[2] + radius;
+  return 1;
 }
 
-/* 0x14c220 */
-void collision_prism_test_vector(void)
+/* 0x14c220 — ray vs prism feature. */
+char collision_prism_test_vector(void *prism, float *origin, float *direction,
+                                 float *out_t, float *out_plane)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
+  char *p = (char *)prism;
+  float *plane_n = (float *)(p + 0xc);
+  float plane_d = *(float *)(p + 0x18);
+  float height = *(float *)(p + 0x1c);
+  float t_enter = 0.0f;
+  float t_exit = 1.0f;
+  float denom;
+  float dist0;
+  float origin_2d[2];
+  float dir_2d[2];
+  float p0[3];
+  float p1[3];
+  int edge_count;
+  int i;
 
-  /* test (char)eax, 0x41 -> jne 0x14c2d6 */
-  /* test (char)eax, 0x41 -> jne 0x14c2fe */
-  /* test (char)eax, 0x41 -> jne 0x14c300 */
-  /* test (char)eax, 0x41 -> jne 0x14c332 */
-  /* test (char)eax, 1 -> je 0x14c30d */
-  FUN_00061df0((void *)(uintptr_t)ecx, 0, edx, (void *)0);
-  FUN_00061df0((void *)(uintptr_t)edx, 0, eax, (void *)(uintptr_t)edx);
-  /* test edi, edi -> jle 0x14c477 */
-  /* test (char)eax, 0x41 -> jne 0x14c442 */
-  /* test (char)eax, 0x41 -> je 0x14c30d */
-  /* cmp eax, edi -> jl 0x14c3c2 */
+  dist0 = plane_n[0] * origin[0] + plane_n[1] * origin[1] +
+          plane_n[2] * origin[2] - plane_d;
+  denom = plane_n[0] * direction[0] + plane_n[1] * direction[1] +
+          plane_n[2] * direction[2];
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
+  if (denom != *(float *)0x2533c0) {
+    float inv = *(float *)0x2533c8 / denom;
+    float a = -dist0 * inv;
+    float b = -(dist0 - height) * inv;
+    float lo = a < b ? a : b;
+    float hi = a < b ? b : a;
+    if (t_enter < lo)
+      t_enter = lo;
+    if (t_exit > hi)
+      t_exit = hi;
+    if (!(t_enter <= t_exit))
+      return 0;
+  } else {
+    if (!(dist0 >= *(float *)0x2533c0) || !(dist0 < height))
+      return 0;
+  }
+
+  /* Project ray endpoints onto prism plane then to 2D for edge clipping. */
+  {
+    float nd = -dist0;
+    p0[0] = nd * plane_n[0] + origin[0];
+    p0[1] = nd * plane_n[1] + origin[1];
+    p0[2] = nd * plane_n[2] + origin[2];
+    nd = -denom;
+    p1[0] = nd * plane_n[0] + direction[0];
+    p1[1] = nd * plane_n[1] + direction[1];
+    p1[2] = nd * plane_n[2] + direction[2];
+  }
+  FUN_00061df0(p0, *(uint16_t *)(p + 0x20), *(uint8_t *)(p + 0x22), origin_2d);
+  FUN_00061df0(p1, *(uint16_t *)(p + 0x20), *(uint8_t *)(p + 0x22), dir_2d);
+
+  edge_count = *(int *)(p + 0x24);
+  for (i = 0; i < edge_count; i++) {
+    int j = ((i + 1 >= edge_count) - 1) & (i + 1);
+    float *edge = (float *)(p + 0x28 + i * 8);
+    float *edge_n = (float *)(p + 0x28 + j * 8);
+    float ex = edge_n[0] - edge[0];
+    float ey = edge_n[1] - edge[1];
+    float rx = origin_2d[0] - edge[0];
+    float ry = origin_2d[1] - edge[1];
+    float cross_r = ex * dir_2d[1] - ey * dir_2d[0];
+    float cross_o = ex * ry - ey * rx;
+    float u;
+
+    if (cross_r == *(float *)0x2533c0) {
+      if (cross_o < *(float *)0x2533c0)
+        return 0;
+      continue;
+    }
+    u = cross_o / cross_r;
+    if (cross_r < *(float *)0x2533c0) {
+      if (t_enter < u)
+        t_enter = u;
+    } else {
+      if (t_exit > u)
+        t_exit = u;
+    }
+    if (!(t_enter <= t_exit))
+      return 0;
+  }
+
+  *out_t = t_enter;
+  out_plane[0] = plane_n[0];
+  out_plane[1] = plane_n[1];
+  out_plane[2] = plane_n[2];
+  out_plane[3] = plane_d + height;
+  return 1;
 }
 
-/* 0x14c4b0 */
-char FUN_0014c4b0(int arg1, float *arg2, float *arg3, void *out_result)
+/* 0x14c4b0 — ray vs all features in a collision_features buffer. */
+char FUN_0014c4b0(void *features, float *position, float *velocity,
+                  void *out_result)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *base = (char *)features;
+  float *out = (float *)out_result;
+  short best_type = -1;
+  short best_index = -1;
+  float best_t = 3.4028235e+38f;
+  float best_plane[4];
+  short type;
+  short i;
 
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x14c51b */
-  collision_sphere_test_vector();
-  /* test (char)eax, (char)eax -> jne 0x14c574 */
-  /* cmp (int16_t)eax, 1 -> jne 0x14c54a */
-  collision_cylinder_test_vector();
-  /* test (char)eax, (char)eax -> jne 0x14c574 */
-  /* cmp (int16_t)eax, 2 -> jne 0x14c5ca */
-  collision_prism_test_vector();
-  /* test (char)eax, (char)eax -> je 0x14c5ca */
-  /* test (char)eax, 0x41 -> jne 0x14c5ca */
-  /* relift: cmp dword ptr [edi + 0x24], 8 -> jle 0x14c702 */
-  display_assert((char *)0x0029d0ec, (char *)0x0029cf34, 1079, 0);
-  system_exit(0);
-  project_point2d((float *)(uintptr_t)eax, (float *)(uintptr_t)ebx, edx, ecx, (float *)(uintptr_t)esi);
-  /* test esi, esi -> jle 0x14c79f */
-  FUN_00189270(0, (float *)(uintptr_t)ecx, (float *)(uintptr_t)edx, (void *)0);
-  /* cmp ecx, esi -> jl 0x14c770 */
-  /* relift: cmp word ptr [esi], (int16_t)edi -> jle 0x14c7e2 */
-  display_assert((char *)0x0029d1d0, (char *)0x0029cf34, 1108, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 2], (int16_t)edi -> jle 0x14c808 */
-  display_assert((char *)0x0029d178, (char *)0x0029cf34, 1109, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 4], (int16_t)edi -> jle 0x14c82e */
-  display_assert((char *)0x0029d128, (char *)0x0029cf34, 1110, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 4], (int16_t)edi -> jle 0x14c863 */
-  FUN_0014c6d0(0, (void *)(uintptr_t)eax);
-  /* relift: cmp (int16_t)edi, word ptr [esi + 4] -> jl 0x14c840 */
-  /* relift: cmp word ptr [esi + 2], (int16_t)edi -> jle 0x14c8a5 */
-  FUN_001896d0(0, (void *)(uintptr_t)eax, (void *)0, 0.0f, (void *)0);
-  /* relift: cmp (int16_t)edi, word ptr [esi + 2] -> jl 0x14c870 */
-  /* relift: cmp word ptr [esi], (int16_t)edi -> jle 0x14c8d9 */
-  return 0;
+  for (type = 0; type < 3; type++) {
+    short count = *(short *)(base + type * 2);
+    for (i = 0; i < count; i++) {
+      float t;
+      float plane[4];
+      char hit = 0;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+      if (type == 0)
+        hit = collision_sphere_test_vector(base + 8 + i * 0x1c, position,
+                                           velocity, &t, plane);
+      else if (type == 1)
+        hit = collision_cylinder_test_vector(base + 0x1c08 + i * 0x28, position,
+                                             velocity, &t, plane);
+      else
+        hit = collision_prism_test_vector(base + 0x4408 + i * 0x68, position,
+                                          velocity, &t, plane);
+
+      if (!hit)
+        continue;
+      if (!(best_t > t))
+        continue;
+      if (!(plane[0] * velocity[0] + plane[1] * velocity[1] +
+                plane[2] * velocity[2] <
+            *(float *)0x26a810))
+        continue;
+
+      best_t = t;
+      best_type = type;
+      best_index = i;
+      best_plane[0] = plane[0];
+      best_plane[1] = plane[1];
+      best_plane[2] = plane[2];
+      best_plane[3] = plane[3];
+    }
+  }
+
+  if (best_type == -1) {
+    out[0] = *(float *)0x2533c8;
+    out[1] = position[0] + velocity[0];
+    out[2] = position[1] + velocity[1];
+    out[3] = position[2] + velocity[2];
+    return 0;
+  }
+
+  out[0] = best_t;
+  out[1] = position[0] + best_t * velocity[0];
+  out[2] = position[1] + best_t * velocity[1];
+  out[3] = position[2] + best_t * velocity[2];
+  out[4] = best_plane[0];
+  out[5] = best_plane[1];
+  out[6] = best_plane[2];
+  out[7] = best_plane[3];
+  {
+    char *feature_data;
+    if (best_type == 0)
+      feature_data = base + 8 + best_index * 0x1c;
+    else if (best_type == 1)
+      feature_data = base + 0x1c08 + best_index * 0x28;
+    else
+      feature_data = base + 0x4408 + best_index * 0x68;
+    *(int *)((char *)out_result + 0x20) = *(int *)feature_data;
+    *(int *)((char *)out_result + 0x24) = *(int *)(feature_data + 4);
+    *((char *)out_result + 0x28) = feature_data[8];
+    *((char *)out_result + 0x29) = feature_data[9];
+    *(short *)((char *)out_result + 0x2a) = *(short *)(feature_data + 0xa);
+  }
+  return 1;
 }

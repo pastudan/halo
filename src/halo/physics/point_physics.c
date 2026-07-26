@@ -37,52 +37,79 @@ float point_physics_definition_get_mass(int tag_data, float scale)
 }
 /* --- point_physics.obj batch drafts (2026-07-26) --- */
 
-/* 0x154270 */
+/* 0x154270 — apply point/vehicle physics buffers for one object. */
 void FUN_00154270(int object_handle, void *buffer_a, void *buffer_b,
                   float *force_vec, float *aux_vec)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *obj;
+  char *obj_tag;
+  char *phys_tag;
+  char phys_state[0x54];
+  float force_acc[3] = {0.0f, 0.0f, 0.0f};
+  float aux_acc[3] = {0.0f, 0.0f, 0.0f};
+  int16_t i;
+  int mass_point_count;
 
-  object_get_and_verify_type(object_handle, -1);
-  tag_get('ejbo', *(int *)(eax));
-  tag_get('syhp', 0);
-  /* test (char)eax, 0x41 -> jne 0x1542d4 */
-  FUN_00152e40();
-  FUN_001509c0((void *)(uintptr_t)eax, object_handle);
-  /* cmp eax, edi -> je 0x154323 */
-  /* relift: cmp dword ptr [ebx + 0x68], edi -> jle 0x154323 */
-  FUN_001093b0((float *)(uintptr_t)esi, (float *)(uintptr_t)eax);
-  FUN_00109120((float *)(uintptr_t)esi);
-  /* cmp eax, ecx -> jl 0x1542f2 */
-  FUN_00150ed0();
-  object_get_and_verify_type(object_handle, 2);
-  real_vector3d_valid((float *)(uintptr_t)esi);
-  /* test (char)eax, (char)eax -> jne 0x154411 */
-  csprintf((char *)0x005ab100, (char *)0x0026ae40);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-  /* test esi, esi -> je 0x1544a2 */
-  real_vector3d_valid((float *)(uintptr_t)esi);
-  /* test (char)eax, (char)eax -> jne 0x154488 */
-  csprintf((char *)0x005ab100, (char *)0x0026ae40);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-  FUN_00152680();
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  obj_tag = (char *)tag_get(0x6f626a65, *(int *)obj); /* 'obje' */
+  phys_tag = (char *)tag_get(0x70687973, *(int *)(obj_tag + 0x8c)); /* 'phys' */
+
+  if (*(float *)phys_tag > *(float *)0x2533c0) {
+    FUN_00152e40(object_handle, buffer_a, buffer_b, force_vec, aux_vec);
+    return;
+  }
+
+  FUN_001509c0((int *)phys_state, object_handle);
+  if (buffer_a != 0 && *(int *)(phys_tag + 0x68) > 0) {
+    mass_point_count = *(int *)(phys_tag + 0x68);
+    for (i = 0; i < mass_point_count; i++) {
+      char *entry = (char *)buffer_a + (int)i * 0x60;
+      FUN_001093b0((float *)(entry + 0x2c), (float *)(entry + 0x1c));
+      FUN_00109120((float *)(entry + 0x2c));
+    }
+  }
+
+  FUN_00150ed0(phys_state, buffer_a, buffer_b, force_acc, aux_acc);
+  obj = (char *)object_get_and_verify_type(object_handle, 2);
+  force_acc[0] += *(float *)(obj + 0x460);
+  force_acc[1] += *(float *)(obj + 0x464);
+  force_acc[2] += *(float *)(obj + 0x468);
+  aux_acc[0] += *(float *)(obj + 0x46c);
+  aux_acc[1] += *(float *)(obj + 0x470);
+  aux_acc[2] += *(float *)(obj + 0x474);
+  *(float *)(obj + 0x460) = 0.0f;
+  *(float *)(obj + 0x464) = 0.0f;
+  *(float *)(obj + 0x468) = 0.0f;
+  *(float *)(obj + 0x46c) = 0.0f;
+  *(float *)(obj + 0x470) = 0.0f;
+  *(float *)(obj + 0x474) = 0.0f;
+
+  if (force_vec != 0) {
+    if (!real_vector3d_valid(force_vec)) {
+      csprintf((char *)0x5ab100, (char *)0x26ae40, (char *)0x29d948,
+               (double)force_vec[0], (double)force_vec[1],
+               (double)force_vec[2]);
+      display_assert((char *)0x5ab100, (char *)0x29d780, 0x10e, 1);
+      system_exit(-1);
+    }
+    force_acc[0] += force_vec[0];
+    force_acc[1] += force_vec[1];
+    force_acc[2] += force_vec[2];
+  }
+  if (aux_vec != 0) {
+    if (!real_vector3d_valid(aux_vec)) {
+      csprintf((char *)0x5ab100, (char *)0x26ae40, (char *)0x29d938,
+               (double)aux_vec[0], (double)aux_vec[1], (double)aux_vec[2]);
+      display_assert((char *)0x5ab100, (char *)0x29d780, 0x114, 1);
+      system_exit(-1);
+    }
+    aux_acc[0] += aux_vec[0];
+    aux_acc[1] += aux_vec[1];
+    aux_acc[2] += aux_vec[2];
+  }
+
+  FUN_00152680(phys_state, buffer_a, buffer_b, force_acc, aux_acc);
   physics_compute_unit_collisions();
-
-  (void)buffer_a;
-  (void)buffer_b;
-  (void)force_vec;
-  (void)aux_vec;
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
 }
 
 /* 0x154540 */

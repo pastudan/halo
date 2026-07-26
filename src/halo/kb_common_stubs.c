@@ -7517,13 +7517,13 @@ void FUN_00149ce0(void)
   /* test (char)eax, 0x41 -> je 0x14c30d */
   /* cmp eax, edi -> jl 0x14c3c2 */
   /* test (int16_t)eax, (int16_t)eax -> jne 0x14c51b */
-  collision_sphere_test_vector();
+  collision_sphere_test_vector(0, 0, 0, 0, 0);
   /* test (char)eax, (char)eax -> jne 0x14c574 */
   /* cmp (int16_t)eax, 1 -> jne 0x14c54a */
-  collision_cylinder_test_vector();
+  collision_cylinder_test_vector(0, 0, 0, 0, 0);
   /* test (char)eax, (char)eax -> jne 0x14c574 */
   /* cmp (int16_t)eax, 2 -> jne 0x14c5ca */
-  collision_prism_test_vector();
+  collision_prism_test_vector(0, 0, 0, 0, 0);
   /* test (char)eax, (char)eax -> je 0x14c5ca */
   /* test (char)eax, 0x41 -> jne 0x14c5ca */
   /* relift: cmp dword ptr [edi + 0x24], 8 -> jle 0x14c702 */
@@ -8037,8 +8037,13 @@ void friction_evaluate(void)
 }
 
 /* 0x150ed0 */
-void FUN_00150ed0(void)
+void FUN_00150ed0(void *phys_state, void *buffer_a, void *buffer_b, float *out_force, float *out_aux)
 {
+  (void)phys_state;
+  (void)buffer_a;
+  (void)buffer_b;
+  (void)out_force;
+  (void)out_aux;
   int eax = 0;
   int ecx = 0;
   int edx = 0;
@@ -8346,8 +8351,13 @@ void physics_compute_vehicle_collision(void)
 }
 
 /* 0x152680 */
-void FUN_00152680(void)
+void FUN_00152680(void *phys_state, void *buffer_a, void *buffer_b, float *force, float *aux)
 {
+  (void)phys_state;
+  (void)buffer_a;
+  (void)buffer_b;
+  (void)force;
+  (void)aux;
   int eax = 0;
   int ecx = 0;
   int edx = 0;
@@ -8411,8 +8421,13 @@ void FUN_00152680(void)
 }
 
 /* 0x152e40 */
-void FUN_00152e40(void)
+void FUN_00152e40(int object_handle, void *buffer_a, void *buffer_b, float *force, float *aux)
 {
+  (void)object_handle;
+  (void)buffer_a;
+  (void)buffer_b;
+  (void)force;
+  (void)aux;
   int eax = 0;
   int ebx = 0;
   int ecx = 0;
@@ -8498,14 +8513,14 @@ void FUN_00152e40(void)
   tag_get('ejbo', 0);
   tag_get('syhp', 0);
   /* test (char)eax, 0x41 -> jne 0x1542d4 */
-  /* relift: tail-call FUN_00152e40(); */
+  /* relift: tail-call FUN_00152e40(0, 0, 0, 0, 0); */
   FUN_001509c0((void *)(uintptr_t)eax, 0);
   /* cmp eax, edi -> je 0x154323 */
   /* relift: cmp dword ptr [ebx + 0x68], edi -> jle 0x154323 */
   FUN_001093b0((float *)(uintptr_t)esi, (float *)(uintptr_t)eax);
   FUN_00109120((float *)(uintptr_t)esi);
   /* cmp eax, ecx -> jl 0x1542f2 */
-  FUN_00150ed0();
+  FUN_00150ed0(0, 0, 0, 0, 0);
   object_get_and_verify_type(0, 0);
   real_vector3d_valid((float *)(uintptr_t)esi);
   /* test (char)eax, (char)eax -> jne 0x154411 */
@@ -8518,7 +8533,7 @@ void FUN_00152e40(void)
   csprintf((char *)0x005ab100, (char *)0x0026ae40);
   display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
   system_exit(0);
-  FUN_00152680();
+  FUN_00152680(0, 0, 0, 0, 0);
   physics_compute_unit_collisions();
   /* test (char)eax, (char)eax -> je 0x154506 */
   /* test (char)eax, 0x41 -> jne 0x154530 */

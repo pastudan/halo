@@ -1454,7 +1454,7 @@ char FUN_0014f020(uint32_t collision_flags, float *point, float vertical_extent,
         local_pos[1] = vertical_extent * scale_table[1];
         local_pos[2] = vertical_extent * scale_table[2];
 
-        if (FUN_0014c4b0((int)(void *)feature_buf, local_offset, local_pos,
+        if (FUN_0014c4b0(feature_buf, local_offset, local_pos,
                          (void *)local_hit)) {
           if (local_hit[6] > *(float *)0x29d59c) {
             FUN_0014ef80((int)collision_flags, local_pos, unit_handle,
@@ -1481,7 +1481,7 @@ char FUN_0014f020(uint32_t collision_flags, float *point, float vertical_extent,
   local_pos[0] = point[0] - save_pos[0];
   local_pos[1] = point[1] - save_pos[1];
   local_pos[2] = point[2] - save_pos[2];
-  FUN_0014c4b0((int)(void *)feature_buf, save_pos, local_pos,
+  FUN_0014c4b0(feature_buf, save_pos, local_pos,
                (void *)local_hit);
   FUN_0014ef80((int)collision_flags, local_pos, unit_handle, local_hit,
                save_pos);
@@ -1670,7 +1670,7 @@ short FUN_0014f2c0(float *old_pos, float *old_vel, short *features,
     /* Call collision test: FUN_0014c4b0(features, position, velocity, record)
      */
     collision_hit =
-      FUN_0014c4b0((int)features, position, velocity, (void *)collision_record);
+      FUN_0014c4b0(features, position, velocity, (void *)collision_record);
 
     if (!collision_hit) {
       /* No collision: read endpoint position from record+0x04 and exit loop.

@@ -359,6 +359,12 @@ def main() -> int:
         ("FUN_000a0800", 0xa0800, 0xa0d50),
         ("actor_action_handle_vehicle_entry", 0x1dfa0, 0x1e360),
         ("point_physics_definition_interpolate", 0x1548c0, 0x154a20),
+        # gameplay wave 26 (2026-07-26)
+        ("collision_sphere_test_vector", 0x14bdb0, 0x14bf30),
+        ("collision_cylinder_test_vector", 0x14bf30, 0x14c220),
+        ("collision_prism_test_vector", 0x14c220, 0x14c4b0),
+        ("FUN_0014c4b0", 0x14c4b0, 0x14c6d0),
+        ("FUN_00154270", 0x154270, 0x1544d0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

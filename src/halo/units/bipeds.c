@@ -3743,7 +3743,7 @@ LAB_001a4062_done:
           disp[0] = fr * *(float *)(*(int *)0x31fc44);
           disp[1] = fr * *(float *)(*(int *)0x31fc44 + 4);
           disp[2] = fr * *(float *)(*(int *)0x31fc44 + 8);
-          if (FUN_0014c4b0((int)debug_scratch, &physics[0x2b], disp,
+          if (FUN_0014c4b0(debug_scratch, &physics[0x2b], disp,
                            surface_result)) {
             *(unsigned char *)((char *)physics + 0xa0) |= 4;
           }
