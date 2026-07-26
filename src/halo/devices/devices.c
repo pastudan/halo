@@ -581,45 +581,20 @@ void device_operates_automatically_set(int a0, int a1)
   }
 }
 
-/* device_group_change_only_once_more_set (0x96670) — XBE naked draft (batch 277). */
-#if defined(__clang__)
-static void *(*const b96670_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void device_group_change_only_once_more_set(int a0 __attribute__((unused)), int a1 __attribute__((unused)))
+/* device_group_change_only_once_more_set (0x96670) — readable C lift. */
+void device_group_change_only_once_more_set(int a0, int a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Ldevice_group_change_only_once_more_set_2\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5aa8c8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Ldevice_group_change_only_once_more_set_1\n\t"
-      "orb $1, 0x2(%%eax)\n\t"
-      "andb $0xfd, 0x2(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldevice_group_change_only_once_more_set_1:\n\t"
-      "andb $0xfe, 0x2(%%eax)\n\t"
-      "andb $0xfd, 0x2(%%eax)\n\t"
-      ".Ldevice_group_change_only_once_more_set_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b96670_dget)
-      : "memory");
+  if (a0 == -1)
+    return;
+  unsigned char *d = (unsigned char *)datum_get(*(void **)0x5aa8c8, a0);
+  if (a1) {
+    d[2] |= 1;
+    d[2] &= (unsigned char)0xfd;
+  } else {
+    d[2] &= (unsigned char)0xfe;
+    d[2] &= (unsigned char)0xfd;
+  }
 }
-#else
-#error "device_group_change_only_once_more_set: clang naked draft required"
-#endif
-
 
 /* device_group_get_value (0x966b0) — XBE naked draft (batch 289). */
 #if defined(__clang__)

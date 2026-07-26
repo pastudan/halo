@@ -14993,7 +14993,7 @@
         {
           "addr": "0x124a10",
           "decl": "void network_game_client_keep_alive(void *client);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x124aa0",
@@ -24821,17 +24821,17 @@
         {
           "addr": "0x1ac030",
           "decl": "void FUN_001ac030(int unit_handle, char flag);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ac070",
           "decl": "void FUN_001ac070(int unit_handle, char flag);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ac0a0",
           "decl": "void FUN_001ac0a0(int unit_handle, char flag);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ac0e0",
@@ -24841,7 +24841,7 @@
         {
           "addr": "0x1ac150",
           "decl": "char FUN_001ac150(int unit_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ac180",
@@ -24951,7 +24951,7 @@
         {
           "addr": "0x1cb990",
           "decl": "char sound_scripted_dialog_is_playing(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1cb9b0",
@@ -39130,7 +39130,7 @@
         {
           "addr": "0x1392a0",
           "decl": "void lights_dispose(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1392b0",
@@ -39876,7 +39876,7 @@
         {
           "addr": "0x96670",
           "decl": "void device_group_change_only_once_more_set(int a0, int a1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x966b0",

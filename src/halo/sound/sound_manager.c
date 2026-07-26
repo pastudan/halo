@@ -2544,122 +2544,41 @@ void sound_render(void)
   if (*(uint8_t *)0x449ef1 != 0 && *(uint8_t *)0x32f6f0 != 0)
     profile_exit_private((void *)0x32f6e8);
 }
-/* FUN_001ac030 (0x1ac030) — XBE naked draft (batch 285). */
-#if defined(__clang__)
-static void *(*const b1ac030_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void FUN_001ac030(int unit_handle __attribute__((unused)), char flag __attribute__((unused)))
+/* FUN_001ac030 (0x1ac030) — readable C lift. */
+void FUN_001ac030(int unit_handle, char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001ac030_2\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl 0x1b4(%%eax), %%ecx\n\t"
-      "jne .LFUN_001ac030_1\n\t"
-      "orl $0x10000, %%ecx\n\t"
-      "movl %%ecx, 0x1b4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001ac030_1:\n\t"
-      "andl $0xfffeffff, %%ecx\n\t"
-      "movl %%ecx, 0x1b4(%%eax)\n\t"
-      ".LFUN_001ac030_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1ac030_get)
-      : "memory");
+  if (unit_handle == -1)
+    return;
+  unsigned char *obj = (unsigned char *)object_get_and_verify_type(unit_handle, 3);
+  unsigned int *flags = (unsigned int *)(obj + 0x1b4);
+  if (!flag)
+    *flags |= 0x10000u;
+  else
+    *flags &= ~0x10000u;
 }
-#else
-#error "FUN_001ac030: clang naked draft required"
-#endif
 
-
-/* FUN_001ac070 (0x1ac070) — XBE naked draft (batch 290). */
-#if defined(__clang__)
-static void *(*const b1ac070_get)(int, int) = object_get_and_verify_type;
-static void (*const b1ac070_c140160)(int object_handle, int16_t region_count) = object_set_region_count;
-
-__attribute__((naked, noinline))
-void FUN_001ac070(int unit_handle __attribute__((unused)), char flag __attribute__((unused)))
+/* FUN_001ac070 (0x1ac070) — readable C lift. */
+void FUN_001ac070(int unit_handle, char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_001ac070_1\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "pushl $6\n\t"
-      "pushl %%esi\n\t"
-      "movb %%cl, 0x258(%%eax)\n\t"
-      "call *%[c140160]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_001ac070_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1ac070_get), [c140160] "m"(b1ac070_c140160)
-      : "memory");
+  if (unit_handle == -1)
+    return;
+  unsigned char *obj = (unsigned char *)object_get_and_verify_type(unit_handle, 3);
+  obj[0x258] = (unsigned char)flag;
+  object_set_region_count(unit_handle, 6);
 }
-#else
-#error "FUN_001ac070: clang naked draft required"
-#endif
 
-
-/* FUN_001ac0a0 (0x1ac0a0) — XBE naked draft (batch 285). */
-#if defined(__clang__)
-static void *(*const b1ac0a0_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void FUN_001ac0a0(int unit_handle __attribute__((unused)), char flag __attribute__((unused)))
+/* FUN_001ac0a0 (0x1ac0a0) — readable C lift. */
+void FUN_001ac0a0(int unit_handle, char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001ac0a0_2\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl 0x1b4(%%eax), %%ecx\n\t"
-      "je .LFUN_001ac0a0_1\n\t"
-      "orl $0x4000, %%ecx\n\t"
-      "movl %%ecx, 0x1b4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001ac0a0_1:\n\t"
-      "andl $0xffffbfff, %%ecx\n\t"
-      "movl %%ecx, 0x1b4(%%eax)\n\t"
-      ".LFUN_001ac0a0_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1ac0a0_get)
-      : "memory");
+  if (unit_handle == -1)
+    return;
+  unsigned char *obj = (unsigned char *)object_get_and_verify_type(unit_handle, 3);
+  unsigned int *flags = (unsigned int *)(obj + 0x1b4);
+  if (flag)
+    *flags |= 0x4000u;
+  else
+    *flags &= ~0x4000u;
 }
-#else
-#error "FUN_001ac0a0: clang naked draft required"
-#endif
-
 
 /* FUN_001AC0E0 (0x1ac0e0) — XBE naked draft (batch 287). */
 #if defined(__clang__)
@@ -2722,42 +2641,14 @@ int FUN_001AC0E0(int unit_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_001ac150 (0x1ac150) — XBE naked draft (batch 291). */
-#if defined(__clang__)
-static void *(*const b1ac150_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-char FUN_001ac150(int unit_handle __attribute__((unused)))
+/* FUN_001ac150 (0x1ac150) — readable C lift. */
+char FUN_001ac150(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001ac150_1\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movb 0x253(%%eax), %%dl\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpb $0x1c, %%dl\n\t"
-      "sete %%cl\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001ac150_1:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1ac150_get)
-      : "memory");
+  if (unit_handle == -1)
+    return 0;
+  unsigned char *obj = (unsigned char *)object_get_and_verify_type(unit_handle, 3);
+  return obj[0x253] == 0x1c;
 }
-#else
-#error "FUN_001ac150: clang naked draft required"
-#endif
-
 
 /* sound_dispose (0x1ac350) — XBE naked draft (batch 279). */
 #if defined(__clang__)
