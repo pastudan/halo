@@ -36111,8 +36111,9 @@
         },
         {
           "addr": "0x647c0",
-          "decl": "void FUN_000647c0(int dest_prop, int src_prop);",
-          "ported": false
+          "decl": "void FUN_000647c0(int unused, int dest_prop, int src_prop @<eax>);",
+          "ported": true,
+          "name": "FUN_000647c0"
         },
         {
           "addr": "0x648a0",
@@ -36126,7 +36127,7 @@
         },
         {
           "addr": "0x64a60",
-          "decl": "void prop_orphan_update_information(int actor_handle, int parent_prop, int unused);",
+          "decl": "void prop_orphan_update_information(int actor_handle, int parent_prop, int src_prop);",
           "ported": true
         },
         {

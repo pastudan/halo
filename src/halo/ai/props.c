@@ -1200,90 +1200,47 @@ int prop_new_unacknowledged(int actor_handle __attribute__((unused)), int unit_h
 #endif
 
 
-/* FUN_000647c0 (0x647c0) — XBE naked draft (batch 237). */
-#if defined(__clang__)
-static void *(*const b647c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void * (*const b647c0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-void FUN_000647c0(int dest_prop __attribute__((unused)), int src_prop __attribute__((unused)))
+/* FUN_000647c0 (0x647c0) — readable C lift.
+ * Stack: unused @ [ebp+8], dest_prop @ [ebp+0xc]; src_prop in EAX. */
+void FUN_000647c0(int unused, int dest_prop, int src_prop)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "movw (%%esi), %%bx\n\t"
-      "pushl $0x138\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl %%eax, 0xc(%%esi)\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      "movw %%bx, (%%esi)\n\t"
-      "movl %%edx, 0x8(%%esi)\n\t"
-      "movw $4, 0x24(%%esi)\n\t"
-      "movw $0x384, 0x3a(%%esi)\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw %%ax, 0x3c(%%esi)\n\t"
-      "movb %%al, 0xb9(%%esi)\n\t"
-      "movb %%al, 0xba(%%esi)\n\t"
-      "movb %%al, 0xbb(%%esi)\n\t"
-      "flds 0xbc(%%esi)\n\t"
-      "fsubs 0x80(%%esi)\n\t"
-      "leal 0xd4(%%esi), %%ecx\n\t"
-      "fstps 0x40(%%esi)\n\t"
-      "flds 0xc0(%%esi)\n\t"
-      "fsubs 0x84(%%esi)\n\t"
-      "fstps 0x44(%%esi)\n\t"
-      "flds 0xc4(%%esi)\n\t"
-      "fsubs 0x88(%%esi)\n\t"
-      "fstps 0x48(%%esi)\n\t"
-      "movl 0x31fc38, %%edx\n\t"
-      "movl (%%edx), %%edi\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "movl 0x4(%%edx), %%edi\n\t"
-      "movl %%edi, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "popl %%edi\n\t"
-      "movb %%al, 0x123(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b647c0_dget), [c8e0b0] "m"(b647c0_c8e0b0)
-      : "memory");
-}
-#else
-#error "FUN_000647c0: clang naked draft required"
-#endif
+  char *from;
+  char *to;
+  int x, y, z;
+  short header;
+  int *p;
 
+  (void)unused;
+  from = (char *)datum_get(*(data_t **)0x5ab23c, src_prop);
+  to = (char *)datum_get(*(data_t **)0x5ab23c, dest_prop);
+
+  x = *(int *)(to + 4);
+  y = *(int *)(to + 8);
+  z = *(int *)(to + 0xc);
+  header = *(short *)to;
+
+  csmemcpy(to, from, 0x138);
+
+  *(int *)(to + 0xc) = z;
+  *(int *)(to + 4) = x;
+  *(short *)to = header;
+  *(int *)(to + 8) = y;
+  *(short *)(to + 0x24) = 4;
+  *(short *)(to + 0x3a) = 0x384;
+  *(short *)(to + 0x3c) = 0;
+  to[0xb9] = 0;
+  to[0xba] = 0;
+  to[0xbb] = 0;
+  *(float *)(to + 0x40) = *(float *)(to + 0xbc) - *(float *)(to + 0x80);
+  *(float *)(to + 0x44) = *(float *)(to + 0xc0) - *(float *)(to + 0x84);
+  *(float *)(to + 0x48) = *(float *)(to + 0xc4) - *(float *)(to + 0x88);
+
+  p = *(int **)0x31fc38;
+  *(int *)(to + 0xd4) = p[0];
+  *(int *)(to + 0xd8) = p[1];
+  *(int *)(to + 0xdc) = p[2];
+  to[0x123] = 0;
+}
 
 /* prop_orphan_transition (0x648a0) — XBE naked draft (batch 226). */
 #if defined(__clang__)
@@ -1292,7 +1249,7 @@ static void (*const b648a0_c64170)(int actor_handle, int prop_index, int unit_ha
 static void *(*const b648a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void (*const b648a0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b648a0_exitfn)(int) = system_exit;
-static void (*const b648a0_c647c0)(int dest_prop, int src_prop) = FUN_000647c0;
+static void (*const b648a0_c647c0)(int unused, int dest_prop, int src_prop) = FUN_000647c0;
 
 __attribute__((naked, noinline))
 int prop_orphan_transition(int actor_handle __attribute__((unused)), int parent_prop __attribute__((unused)))
@@ -1399,7 +1356,7 @@ static void (*const b64970_c64170)(int actor_handle, int prop_index, int unit_ha
 static void *(*const b64970_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void (*const b64970_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b64970_exitfn)(int) = system_exit;
-static void (*const b64970_c647c0)(int dest_prop, int src_prop) = FUN_000647c0;
+static void (*const b64970_c647c0)(int unused, int dest_prop, int src_prop) = FUN_000647c0;
 
 __attribute__((naked, noinline))
 int prop_orphan_from_friend(int actor_handle __attribute__((unused)), int parent_prop __attribute__((unused)), int source_prop __attribute__((unused)))
@@ -1501,10 +1458,11 @@ int prop_orphan_from_friend(int actor_handle __attribute__((unused)), int parent
 #endif
 
 
-/* prop_orphan_update_information (0x64a60) — readable C lift. */
-void prop_orphan_update_information(int actor_handle, int parent_prop, int unused)
+/* prop_orphan_update_information (0x64a60) — readable C lift.
+ * Asm: push parent, push actor, eax=src; call FUN_000647c0. */
+void prop_orphan_update_information(int actor_handle, int parent_prop, int src_prop)
 {
-  FUN_000647c0(actor_handle, parent_prop);
+  FUN_000647c0(actor_handle, parent_prop, src_prop);
 }
 
 /* FUN_00064b40 (0x64b40) — XBE naked draft (batch 83). */
