@@ -21646,43 +21646,53 @@
         },
         {
           "addr": "0x942a0",
-          "decl": "void FUN_000942a0(void);"
+          "decl": "void FUN_000942a0(char *out, void *event, int **stream);",
+          "ported": false
         },
         {
           "addr": "0x94350",
-          "decl": "void FUN_00094350(void);"
+          "decl": "void FUN_00094350(char *out, void *event, int **stream);",
+          "ported": false
         },
         {
           "addr": "0x94400",
-          "decl": "void FUN_00094400(void);"
+          "decl": "void FUN_00094400(char *out, void *event, int **stream);",
+          "ported": false
         },
         {
           "addr": "0x944b0",
-          "decl": "void FUN_000944b0(void);"
+          "decl": "void FUN_000944b0(char *out, void *event, int **stream);",
+          "ported": false
         },
         {
           "addr": "0x94560",
-          "decl": "void FUN_00094560(void);"
+          "decl": "void FUN_00094560(char *out, void *event, int **stream);",
+          "ported": false
         },
         {
           "addr": "0x94620",
-          "decl": "void apply_facing_vector(void);"
+          "decl": "void apply_facing_vector(char *thread, void *event, int **stream);",
+          "ported": false
         },
         {
           "addr": "0x946e0",
-          "decl": "void apply_aiming_vector(void);"
+          "decl": "void apply_aiming_vector(char *thread, void *event, int **stream);",
+          "ported": false
         },
         {
           "addr": "0x947a0",
-          "decl": "void apply_looking_vector(void);"
+          "decl": "void apply_looking_vector(char *thread, void *event, int **stream);",
+          "ported": false
         },
         {
           "addr": "0x94860",
-          "decl": "void apply_angle_vector(void);"
+          "decl": "void apply_angle_vector(char *thread, void *event, int **stream);",
+          "ported": false
         },
         {
           "addr": "0x94970",
-          "decl": "void apply_multi_vector(void);"
+          "decl": "void apply_multi_vector(char *thread, void *event, int **stream);",
+          "ported": false
         },
         {
           "addr": "0x94a70",
@@ -21691,7 +21701,8 @@
         },
         {
           "addr": "0x94a90",
-          "decl": "void recorded_animation_apply_event_stream_v1(void);"
+          "decl": "char recorded_animation_apply_event_stream_v1(char *thread, void *event, int *ticks, int **cursor);",
+          "ported": false
         },
         {
           "addr": "0x94ba0",
@@ -21725,7 +21736,8 @@
         },
         {
           "addr": "0x94ee0",
-          "decl": "void recorded_animation_verify(void);"
+          "decl": "void recorded_animation_verify(char *anim);",
+          "ported": false
         },
         {
           "addr": "0x94ff0",
