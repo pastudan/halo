@@ -31155,7 +31155,7 @@
         {
           "addr": "0x17ed70",
           "decl": "char FUN_0017ed70(unsigned short a, unsigned short b);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017ed70"
         },
         {
