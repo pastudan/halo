@@ -18371,13 +18371,14 @@
         {
           "addr": "0xe0dd0",
           "decl": "char player_ui_edit_profile_name_is_dirty(void);",
-          "ported": false,
+          "ported": true,
           "name": "player_ui_edit_profile_name_is_dirty"
         },
         {
           "addr": "0xe0e40",
           "decl": "char player_ui_prompt_user_to_rename_edit_profile(void);",
-          "ported": false
+          "ported": false,
+          "name": "player_ui_prompt_user_to_rename_edit_profile"
         },
         {
           "addr": "0xe0ea0",
@@ -18423,7 +18424,8 @@
         {
           "addr": "0xe13f0",
           "decl": "void player_ui_clear_multiplayer_joins(void);",
-          "ported": false
+          "ported": false,
+          "name": "player_ui_clear_multiplayer_joins"
         },
         {
           "addr": "0xe1490",
@@ -40394,8 +40396,9 @@
         },
         {
           "addr": "0x5f1d0",
-          "decl": "void FUN_0005f1d0(void);",
-          "ported": false
+          "decl": "float FUN_0005f1d0(void *base @<eax>, float *dst @<edi>, float *src @<esi>, int surface_index);",
+          "ported": false,
+          "name": "FUN_0005f1d0"
         },
         {
           "addr": "0x5f240",
