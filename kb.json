@@ -18915,19 +18915,23 @@
       "functions": [
         {
           "addr": "0x8f870",
-          "decl": "void profile_seconds_elapsed(void);"
+          "decl": "void profile_seconds_elapsed(void);",
+          "ported": false
         },
         {
           "addr": "0x8f880",
-          "decl": "void profile_lapsed_frames(void);"
+          "decl": "void profile_lapsed_frames(void);",
+          "ported": false
         },
         {
           "addr": "0x8f8c0",
-          "decl": "void profile_lapsed_msec(void);"
+          "decl": "void profile_lapsed_msec(void);",
+          "ported": false
         },
         {
           "addr": "0x8f8e0",
-          "decl": "void find_profile_section(void);"
+          "decl": "void find_profile_section(void);",
+          "ported": false
         },
         {
           "addr": "0x8fa40",
@@ -18941,83 +18945,103 @@
         },
         {
           "addr": "0x8fb60",
-          "decl": "void FUN_0008fb60(void);"
+          "decl": "void FUN_0008fb60(void);",
+          "ported": false
         },
         {
           "addr": "0x90170",
-          "decl": "void FUN_00090170(void);"
+          "decl": "void FUN_00090170(void);",
+          "ported": false
         },
         {
           "addr": "0x90180",
-          "decl": "void FUN_00090180(void);"
+          "decl": "void FUN_00090180(void);",
+          "ported": false
         },
         {
           "addr": "0x901d0",
-          "decl": "void compare_profile_sections(void);"
+          "decl": "void compare_profile_sections(void);",
+          "ported": false
         },
         {
           "addr": "0x902f0",
-          "decl": "void profile_dump(void);"
+          "decl": "void profile_dump(void);",
+          "ported": false
         },
         {
           "addr": "0x90650",
-          "decl": "void profile_dump_to_file(int a0);"
+          "decl": "void profile_dump_to_file(int a0);",
+          "ported": false
         },
         {
           "addr": "0x906d0",
-          "decl": "void FUN_000906d0(void);"
+          "decl": "void FUN_000906d0(void);",
+          "ported": false
         },
         {
           "addr": "0x907c0",
-          "decl": "void FUN_000907c0(void);"
+          "decl": "void FUN_000907c0(void);",
+          "ported": false
         },
         {
           "addr": "0x90860",
-          "decl": "void profile_sections_activate(int a0);"
+          "decl": "void profile_sections_activate(int a0);",
+          "ported": false
         },
         {
           "addr": "0x90880",
-          "decl": "void profile_sections_deactivate(int a0);"
+          "decl": "void profile_sections_deactivate(int a0);",
+          "ported": false
         },
         {
           "addr": "0x908a0",
-          "decl": "void profile_find_frame_value(void);"
+          "decl": "void profile_find_frame_value(void);",
+          "ported": false
         },
         {
           "addr": "0x90cd0",
-          "decl": "void profile_find_game_value(void);"
+          "decl": "void profile_find_game_value(void);",
+          "ported": false
         },
         {
           "addr": "0x90d10",
-          "decl": "void profile_frame_get_value(void);"
+          "decl": "void profile_frame_get_value(void);",
+          "ported": false
         },
         {
           "addr": "0x910b0",
-          "decl": "void profile_frame_iterator_new(void);"
+          "decl": "void profile_frame_iterator_new(void);",
+          "ported": false
         },
         {
           "addr": "0x91110",
-          "decl": "void profile_frame_iterator_next(void);"
+          "decl": "void profile_frame_iterator_next(void);",
+          "ported": false
         },
         {
           "addr": "0x91190",
-          "decl": "void profile_frame_get_messages(void);"
+          "decl": "void profile_frame_get_messages(void);",
+          "ported": false
         },
         {
           "addr": "0x91220",
-          "decl": "void profile_frame_get_stalls(void);"
+          "decl": "void profile_frame_get_stalls(void);",
+          "ported": false
         },
         {
           "addr": "0x912c0",
-          "decl": "void profile_rasterizer_stalls(void);"
+          "decl": "void profile_rasterizer_stalls(void);",
+          "ported": false
         },
         {
           "addr": "0x91350",
-          "decl": "void FUN_00091350(void);"
+          "decl": "void FUN_00091350(void);",
+          "ported": false
         },
         {
           "addr": "0x91380",
-          "decl": "void FUN_00091380(void);"
+          "decl": "void FUN_00091380(void);",
+          "ported": false
         },
         {
           "addr": "0x913e0",
@@ -19071,43 +19095,53 @@
         },
         {
           "addr": "0x91b70",
-          "decl": "void FUN_00091b70(void);"
+          "decl": "void FUN_00091b70(void);",
+          "ported": false
         },
         {
           "addr": "0x91ba0",
-          "decl": "void FUN_00091ba0(void);"
+          "decl": "void FUN_00091ba0(void);",
+          "ported": false
         },
         {
           "addr": "0x91c10",
-          "decl": "void FUN_00091c10(void);"
+          "decl": "void FUN_00091c10(void);",
+          "ported": false
         },
         {
           "addr": "0x91c70",
-          "decl": "void FUN_00091c70(void);"
+          "decl": "void FUN_00091c70(void);",
+          "ported": false
         },
         {
           "addr": "0x91cf0",
-          "decl": "void FUN_00091cf0(void);"
+          "decl": "void FUN_00091cf0(void);",
+          "ported": false
         },
         {
           "addr": "0x91d50",
-          "decl": "void FUN_00091d50(void);"
+          "decl": "void FUN_00091d50(void);",
+          "ported": false
         },
         {
           "addr": "0x91da0",
-          "decl": "void FUN_00091da0(void);"
+          "decl": "void FUN_00091da0(void);",
+          "ported": false
         },
         {
           "addr": "0x91ef0",
-          "decl": "void FUN_00091ef0(int *keys, int count, int (*cmp)(int, int));"
+          "decl": "void FUN_00091ef0(int *keys, int count, int (*cmp)(int, int));",
+          "ported": false
         },
         {
           "addr": "0x92050",
-          "decl": "void FUN_00092050(void);"
+          "decl": "void FUN_00092050(void);",
+          "ported": false
         },
         {
           "addr": "0x92060",
-          "decl": "void profile_idle_start(void);"
+          "decl": "void profile_idle_start(void);",
+          "ported": false
         },
         {
           "addr": "0x92090",
@@ -19117,15 +19151,18 @@
         },
         {
           "addr": "0x92110",
-          "decl": "char *FUN_00092110(int32_t addr, int32_t *symtab);"
+          "decl": "char *FUN_00092110(int32_t addr, int32_t *symtab);",
+          "ported": false
         },
         {
           "addr": "0x921c0",
-          "decl": "void FUN_000921c0(void);"
+          "decl": "void FUN_000921c0(void);",
+          "ported": false
         },
         {
           "addr": "0x922a0",
-          "decl": "void __fastcall FUN_000922a0(int skip, int32_t *frames, uint32_t max, uint32_t *count);"
+          "decl": "void __fastcall FUN_000922a0(int skip, int32_t *frames, uint32_t max, uint32_t *count);",
+          "ported": false
         }
       ],
       "name": "profile.obj",
