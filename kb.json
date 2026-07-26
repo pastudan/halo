@@ -12481,7 +12481,7 @@
         {
           "addr": "0xcaec0",
           "decl": "char FUN_000caec0(const char *s);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcaef0",
@@ -12772,7 +12772,7 @@
         {
           "addr": "0xce420",
           "decl": "int16_t FUN_000ce420(int list_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce450",
@@ -12782,7 +12782,7 @@
         {
           "addr": "0xce4a0",
           "decl": "void FUN_000ce4a0(void);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "hs_runtime.obj",
