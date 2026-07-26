@@ -121,23 +121,23 @@ float FUN_000b6dd0(float a, float b)
   return d;
 }
 
-/* limit2d (0xb6e10) — readable C lift: clamp 2D vector to max length. */
+/* limit2d (0xb6e10) — readable C lift: clamp 2D vector to max length (x87 80-bit). */
 char limit2d(float *vec, float max_len)
 {
-  float x = vec[0];
-  float y = vec[1];
-  float mag2 = x * x + y * y;
-  float max2 = max_len * max_len;
+  /* Keep intermediates in long double to mirror x87 80-bit mul/add/fcom. */
+  long double x = vec[0];
+  long double y = vec[1];
+  long double mag2 = x * x + y * y;
+  long double max2 = (long double)max_len * (long double)max_len;
   float scale;
-
-  /* MSVC: test ah,0x41; jne => not-above (mag2 <= max2 or NaN) */
   if (!(mag2 > max2))
     return 0;
-  scale = max_len / __builtin_sqrtf(mag2);
-  vec[0] = x * scale;
-  vec[1] = y * scale;
+  scale = (float)((long double)max_len / __builtin_sqrtl(mag2));
+  vec[0] = (float)(x * (long double)scale);
+  vec[1] = (float)(y * (long double)scale);
   return 1;
 }
+
 
 /* interpolate_scalar (0xb6e60) — XBE naked draft (batch 169). */
 #if defined(__clang__)
