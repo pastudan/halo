@@ -2420,7 +2420,7 @@
         },
         {
           "addr": "0x1e65eb",
-          "decl": "void FUN_001e65eb(void);",
+          "decl": "int FUN_001e65eb(int a0, void *tmp);",
           "ported": false
         }
       ],
@@ -15455,7 +15455,7 @@
         },
         {
           "addr": "0x11c310",
-          "decl": "void FUN_0011c310(void);",
+          "decl": "int FUN_0011c310(const char *name, int size, void (*lock_proc)(void *, int), void (*unlock_proc)(void *), void *base_address);",
           "name": "FUN_0011c310",
           "ported": true
         },
@@ -18244,7 +18244,7 @@
         },
         {
           "addr": "0xe0740",
-          "decl": "void player_ui_set_single_player_local_player_controller(int local_player_index, int16_t controller_index);",
+          "decl": "void player_ui_set_single_player_local_player_controller(void);",
           "ported": false
         },
         {
@@ -20300,7 +20300,7 @@
         },
         {
           "addr": "0xe1f20",
-          "decl": "int __stdcall FUN_000e1f20(int unused, unsigned int reg, float a, float b, float c, float d);",
+          "decl": "void FUN_000e1f20(int a0, int a1, int a2, int a3, int a4, int a5);",
           "ported": false
         },
         {
@@ -36158,7 +36158,7 @@
         },
         {
           "addr": "0x64fa0",
-          "decl": "void FUN_00064fa0(void);",
+          "decl": "int FUN_00064fa0(void *prop, int a1);",
           "ported": true
         },
         {
@@ -36181,7 +36181,7 @@
         },
         {
           "addr": "0x650a0",
-          "decl": "void FUN_000650a0(void);",
+          "decl": "int FUN_000650a0(void *prop, int a1);",
           "ported": true
         },
         {
