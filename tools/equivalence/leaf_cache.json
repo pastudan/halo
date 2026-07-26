@@ -2012,6 +2012,11 @@
     "confidence": "high",
     "coverage_pct": 100.0
   },
+  "0x498d0": {
+    "class": "non_leaf",
+    "confidence": "moderate",
+    "coverage_pct": 56.2
+  },
   "0x49ac0": {
     "class": "non_leaf"
   },

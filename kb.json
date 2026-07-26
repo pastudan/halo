@@ -34766,7 +34766,7 @@
         {
           "addr": "0x498d0",
           "decl": "int FUN_000498d0(int16_t a @<ax>, int16_t b @<di>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000498d0"
         },
         {
