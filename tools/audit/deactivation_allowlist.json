@@ -1881,5 +1881,19 @@
     "object": "player_control.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6740",
+    "name": "player_control_get_unit_camera_info",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xb6bd0",
+    "name": "FUN_000b6bd0",
+    "object": "player_control.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]

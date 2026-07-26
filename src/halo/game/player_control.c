@@ -284,6 +284,53 @@ float player_control_get_field_of_view(int16_t local_player_index)
   return *(float *)((char *)unit_tag + 0x1a0);
 }
 
+/* Fill out_info with the unit/vehicle camera used for this local player:
+ * +0 object handle, +4 seat index, +8 camera tag ptr, +0xc seat position. */
+void player_control_get_unit_camera_info(int16_t local_player_index,
+                                         void *out_info)
+{
+  char *out;
+  int unit_handle;
+  void *unit_obj;
+  int parent_handle;
+  void *parent_obj;
+  void *vehi_tag;
+  void *seat_elem;
+  void *unit_tag;
+
+  assert_halt(out_info != NULL);
+  out = (char *)out_info;
+  assert_halt(local_player_index >= 0 &&
+              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+  *(int *)(out + 8) = 0;
+  unit_handle = *(int *)((char *)player_control_globals +
+                         (int)local_player_index * 0x40 + 0x10);
+  *(int *)out = unit_handle;
+  *(int16_t *)(out + 4) = (int16_t)NONE;
+  if (unit_handle == NONE)
+    return;
+  unit_obj = object_get_and_verify_type(unit_handle, 3);
+  unit_set_seat_state(unit_handle, (float *)(out + 0xc));
+  parent_handle = *(int *)((char *)unit_obj + 0xcc);
+  if (parent_handle != NONE) {
+    parent_obj = object_try_and_get_and_verify_type(parent_handle, 2);
+    if (parent_obj) {
+      vehi_tag = tag_get(0x76656869 /* 'vehi' */, *(int *)parent_obj);
+      seat_elem = tag_block_get_element((char *)vehi_tag + 0x2e4,
+                                        *(int16_t *)((char *)unit_obj + 0x2a0),
+                                        0x11c);
+      *(int *)out = parent_handle;
+      *(void **)(out + 8) = (char *)seat_elem + 0x84;
+      *(int16_t *)(out + 4) = *(int16_t *)((char *)unit_obj + 0x2a0);
+      unit_obj = object_get_and_verify_type(parent_handle, 3);
+    }
+  }
+  if (*(int16_t *)(out + 4) == (int16_t)NONE) {
+    unit_tag = tag_get(0x756e6974 /* 'unit' */, *(int *)unit_obj);
+    *(void **)(out + 8) = (char *)unit_tag + 0x1a8;
+  }
+}
+
 int player_control_get_desired_weapon(int16_t local_player_index, int unit_handle)
 {
   char *slot;
@@ -339,6 +386,119 @@ float *player_control_get_facing_direction(int16_t local_player_index,
   player_index = local_player_get_player_index(local_player_index);
   player_build_action_update(player_index, out_direction, angles);
   return out_direction;
+}
+
+/* Map a local input blob (ESI) into player_control_globals action-test flags. */
+void FUN_000b6bd0(char *input)
+{
+  int *g;
+  int flags8;
+  int input_flags;
+
+  if (input[0x14] && cinematic_can_be_skipped())
+    main_skip_cinematic();
+
+  g = (int *)player_control_globals;
+  input_flags = *(int *)(input + 0x18);
+  if (input_flags & 0x40)
+    g[0] |= 1;
+  if (input_flags & 2)
+    g[0] |= 2;
+  if (input[0x14])
+    g[0] |= 4;
+  if (input[0x15])
+    g[0] |= 8;
+  if (*(float *)(input + 8) > *(float *)0x2533c0)
+    g[0] |= 0x10;
+  if (input_flags & 0x2000)
+    g[0] |= 0x20;
+  if (input[0x1c] & 4)
+    g[0] |= 0x40;
+  if (*(float *)(input + 0x10) > *(float *)0x2533c0)
+    g[0] |= 0x80;
+  else if (*(float *)(input + 0x10) < *(float *)0x2533c0)
+    g[0] |= 0x100;
+  if (*(float *)(input + 0xc) > *(float *)0x2533c0)
+    g[0] |= 0x200;
+  else if (*(float *)(input + 0xc) < *(float *)0x2533c0)
+    g[0] |= 0x400;
+  if (*(float *)input > *(float *)0x2533c0)
+    g[0] |= 0x800;
+  else if (*(float *)input < *(float *)0x2533c0)
+    g[0] |= 0x1000;
+  if (*(float *)(input + 4) > *(float *)0x2533c0)
+    g[0] |= 0x2000;
+  else if (*(float *)(input + 4) < *(float *)0x2533c0)
+    g[0] |= 0x4000;
+
+  /* Sticky bit0 on globals+8 / clear input 0x40. */
+  if (g[1] & 1) {
+    *(int *)(input + 0x18) &= ~0x40;
+  } else if (g[2] & 1) {
+    flags8 = g[2];
+    if (*(int *)(input + 0x18) & 0x40)
+      flags8 |= 1;
+    else
+      flags8 &= ~1;
+    g[2] = flags8;
+    *(int *)(input + 0x18) &= ~0x40;
+  }
+
+  if (!*(uint8_t *)0x2f0292) {
+    if (g[1] & 4) {
+      *(int *)(input + 0x18) &= ~0x40;
+    } else if (g[2] & 4) {
+      flags8 = g[2];
+      if (*(int *)(input + 0x18) & 0x40)
+        flags8 |= 4;
+      else
+        flags8 &= ~4;
+      g[2] = flags8;
+      *(int *)(input + 0x18) &= ~0x40;
+    }
+    if (g[1] & 8) {
+      *(int *)(input + 0x1c) &= ~1;
+      return;
+    }
+    if (!(g[2] & 8))
+      return;
+    flags8 = g[2];
+    if (input[0x1c] & 1) {
+      g[2] = flags8 | 8;
+      *(int *)(input + 0x1c) &= ~1;
+      return;
+    }
+    g[2] = flags8 & ~8;
+    *(int *)(input + 0x1c) &= ~1;
+    return;
+  }
+
+  /* Alternate sticky path when 0x2f0292 is set. */
+  if (g[1] & 4) {
+    *(int *)(input + 0x18) &= ~2;
+  } else if (g[2] & 4) {
+    flags8 = g[2];
+    if (*(int *)(input + 0x18) & 2)
+      flags8 |= 4;
+    else
+      flags8 &= ~4;
+    g[2] = flags8;
+    *(int *)(input + 0x18) &= ~2;
+  }
+  if (g[1] & 8) {
+    *(int *)(input + 0x1c) &= ~2;
+    return;
+  }
+  if (!(g[2] & 4))
+    return;
+  flags8 = g[2];
+  if (input[0x1c] & 2) {
+    g[2] = flags8 | 4;
+    *(int *)(input + 0x1c) &= ~2;
+    return;
+  }
+  g[2] = flags8 & ~4;
+  *(int *)(input + 0x1c) &= ~2;
 }
 
 /* Forward input delta into FUN_000b7f90 (local player index in EAX). */

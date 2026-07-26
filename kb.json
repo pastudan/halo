@@ -16461,7 +16461,8 @@
         },
         {
           "addr": "0xb6740",
-          "decl": "void player_control_get_unit_camera_info(void);"
+          "decl": "void player_control_get_unit_camera_info(int16_t local_player_index, void *out_info);",
+          "ported": false
         },
         {
           "addr": "0xb6870",
@@ -16561,7 +16562,8 @@
         },
         {
           "addr": "0xb6bd0",
-          "decl": "void FUN_000b6bd0(void);"
+          "decl": "void FUN_000b6bd0(char *input@<esi>);",
+          "ported": false
         },
         {
           "addr": "0xb6dd0",
