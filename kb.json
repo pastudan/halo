@@ -5194,13 +5194,13 @@
       "functions": [
         {
           "addr": "0xa54b0",
-          "decl": "float FUN_000a54b0(float x);",
+          "decl": "void FUN_000a54b0(void);",
           "ported": false
         },
         {
           "addr": "0xa5590",
           "decl": "float FUN_000a5590(float x, float y);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000a5590"
         },
         {
@@ -5226,7 +5226,7 @@
         },
         {
           "addr": "0xa57b0",
-          "decl": "char FUN_000a57b0(float *vec, float max_len);",
+          "decl": "short FUN_000a57b0(float *vec, float max_len);",
           "ported": false,
           "name": "FUN_000a57b0"
         },
@@ -7677,7 +7677,7 @@
         {
           "addr": "0xdae90",
           "decl": "void FUN_000dae90(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xdaee0",
