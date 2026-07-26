@@ -1268,67 +1268,84 @@ void FUN_001a0a40(int contact_handle __attribute__((unused)), int unit_handle __
 #endif
 
 
-/* FUN_001a0b30 (0x1a0b30)
- *
- * Checks whether a biped is stuck in an unreachable (bad) position and erases
- * it if so. Triggered once per update frame from the biped update loop.
- *
- * Register arg (confirmed from caller FUN_001a6350 at 0x1a6727):
- *   @edi  unit_handle  — biped datum handle
- *
- * Conditions to erase (all must hold):
- *   1. game_engine_running() == false (not in a game engine / network game)
- *   2. Either obj+0x4 bit 0x200000 set (flying/physics flag) OR obj+0x4c == -1
- *      (no parent handle)
- *   3. obj+0x14 (velocity Z / speed float) < DAT_002b4d1c (negative-infinity or
- *      very-small threshold — biped is sinking/below world)
- *
- * On erase:
- *   Looks up actor (obj+0x1a8 or fallback obj+0x1a4), calls
- *   ai_debug_describe_actor for the warning string, prints WARNING via error(),
- *   then calls object_delete(unit_handle).
- *
- * Confirmed: FCOMP [0x2b4d1c], TEST AH,0x5, JP = "< with NaN" check.
- * Confirmed: PUSH 0x100 / PUSH 0x5ab100 / PUSH 0x1 / PUSH EDI / PUSH EAX =
- *   ai_debug_describe_actor(actor_handle, unit_handle, 1, buf@0x5ab100, 0x100).
- * Confirmed: PUSH EAX / PUSH ECX / CALL 0x1ba1f0 = tag_get_name(tag_index).
- * Confirmed: warning format string at 0x2b4cd8.
- * Returns 0 (char) always.
- * Inferred: function name from warning message "biped %s (%s) is in a bad
- * place".
- */
-char FUN_001a0b30(int unit_handle /* @edi */)
-{
-  char *obj;
-  int actor_handle;
-  const char *tag_name;
-  const char *actor_desc;
+/* FUN_001a0b30 (0x1a0b30) — XBE naked draft (batch 65). */
+#if defined(__clang__)
+static void *(*const b1a0b30_get)(int, int) = object_get_and_verify_type;
+static bool (*const b1a0b30_gerun)(void) = game_engine_running;
+static char * (*const b1a0b30_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
+static const char * (*const b1a0b30_c1ba1f0)(int tag_index) = tag_get_name;
+static const char * (*const b1a0b30_c19b0d0)(const char *tag_name) = tag_name_strip_path;
+static void (*const b1a0b30_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b1a0b30_odel)(int) = object_delete;
 
-  obj = (char *)object_get_and_verify_type(unit_handle, 1);
-  if (game_engine_running() != 0) {
-    return 0;
-  }
-  if ((*(uint32_t *)(obj + 0x4) & 0x200000) == 0 &&
-      *(int16_t *)(obj + 0x4c) != -1) {
-    return 0;
-  }
-  if (!(*(float *)(obj + 0x14) < *(float *)0x2b4d1c)) {
-    return 0;
-  }
-  actor_handle = *(int *)(obj + 0x1a8);
-  if (actor_handle == -1) {
-    actor_handle = *(int *)(obj + 0x1a4);
-  }
-  actor_desc = ai_debug_describe_actor(actor_handle, unit_handle, 1,
-                                       (char *)0x5ab100, 0x100);
-  tag_name = tag_get_name(*(int *)obj);
-  tag_name = tag_name_strip_path(tag_name);
-  error(2, "WARNING: biped %s (%s) is in a bad place (%.1f %.1f %.1f), erasing",
-        tag_name, actor_desc, (double)*(float *)(obj + 0xc),
-        (double)*(float *)(obj + 0x10), (double)*(float *)(obj + 0x14));
-  object_delete(unit_handle);
-  return 0;
+__attribute__((naked, noinline))
+char FUN_001a0b30(int unit_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a0b30_3\n\t"
+      "testl $0x200000, 0x4(%%esi)\n\t"
+      "jne .LFUN_001a0b30_1\n\t"
+      "cmpw $-1, 0x4c(%%esi)\n\t"
+      "jne .LFUN_001a0b30_3\n\t"
+      ".LFUN_001a0b30_1:\n\t"
+      "flds 0x14(%%esi)\n\t"
+      "fcomps 0x2b4d1c\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a0b30_3\n\t"
+      "movl 0x1a8(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_001a0b30_2\n\t"
+      "movl 0x1a4(%%esi), %%eax\n\t"
+      ".LFUN_001a0b30_2:\n\t"
+      "pushl $0x100\n\t"
+      "pushl $0x5ab100\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c49ac0]\n\t"
+      "flds 0x14(%%esi)\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x10(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0xc(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19b0d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2b4cd8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[odel]\n\t"
+      "addl $0x2c, %%esp\n\t"
+      ".LFUN_001a0b30_3:\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a0b30_get), [gerun] "m"(b1a0b30_gerun), [c49ac0] "m"(b1a0b30_c49ac0), [c1ba1f0] "m"(b1a0b30_c1ba1f0), [c19b0d0] "m"(b1a0b30_c19b0d0), [c8f390] "m"(b1a0b30_c8f390), [odel] "m"(b1a0b30_odel)
+      : "memory");
 }
+#else
+#error "FUN_001a0b30: clang naked draft required"
+#endif
+
 
 /* FUN_001a0be0 (0x1a0be0) — XBE naked draft (batch 56). */
 #if defined(__clang__)

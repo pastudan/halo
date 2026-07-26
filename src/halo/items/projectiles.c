@@ -622,43 +622,72 @@ char projectile_aim(int projectile_tag, int param_2, int param_3, void *param_4,
   return result;
 }
 
-/* Compute projectile velocity direction and speed angle from the velocity
- * stored at obj+0x3c (vx/vy/vz). If the speed magnitude is non-zero, sets
- * the velocity-valid flag (bit 0 at obj+0x1dc), stores the normalized
- * direction into obj+0x214..0x21c, and stores sin(speed)/cos(speed) at
- * obj+0x220/0x224. If speed is zero, clears the flag and stores sin=0,
- * cos=1. Takes projectile_handle in EAX (register arg). */
-void FUN_000f8590(int projectile_handle)
+/* FUN_000f8590 (0xf8590) — XBE naked draft (batch 65). */
+#if defined(__clang__)
+static void *(*const bf8590_get)(int, int) = object_get_and_verify_type;
+
+__attribute__((naked, noinline))
+void FUN_000f8590(int projectile_handle __attribute__((unused)))
 {
-  char *obj;
-  float vx, vy, vz;
-  float speed;
-  float inv_speed;
-  uint32_t flags;
-
-  obj = (char *)object_get_and_verify_type(projectile_handle, 0x20);
-
-  vx = *(float *)(obj + 0x3c);
-  vy = *(float *)(obj + 0x40);
-  vz = *(float *)(obj + 0x44);
-  speed = sqrtf(vx * vx + vy * vy + vz * vz);
-
-  flags = *(uint32_t *)(obj + 0x1dc);
-
-  if (speed != *(float *)0x2533c0) {
-    inv_speed = *(float *)0x2533c8 / speed;
-    *(uint32_t *)(obj + 0x1dc) = flags | 0x1u;
-    *(float *)(obj + 0x214) = inv_speed * vx;
-    *(float *)(obj + 0x218) = inv_speed * vy;
-    *(float *)(obj + 0x21c) = inv_speed * vz;
-    *(float *)(obj + 0x220) = x87_fsin(speed);
-    *(float *)(obj + 0x224) = x87_fcos(speed);
-  } else {
-    *(uint32_t *)(obj + 0x1dc) = flags & ~0x1u;
-    *(float *)(obj + 0x220) = 0.0f;
-    *(float *)(obj + 0x224) = *(float *)0x2533c8;
-  }
+  __asm__ volatile(
+      "pushl $0x20\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "flds 0x44(%%ecx)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds 0x40(%%ecx)\n\t"
+      "flds 0x3c(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsqrt\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "movl 0x1dc(%%ecx), %%eax\n\t"
+      "jnp .LFUN_000f8590_1\n\t"
+      "flds 0x2533c8\n\t"
+      "orl $1, %%eax\n\t"
+      "fdiv %%st(1), %%st(0)\n\t"
+      "movl %%eax, 0x1dc(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x3c(%%ecx)\n\t"
+      "fstps 0x214(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x40(%%ecx)\n\t"
+      "fstps 0x218(%%ecx)\n\t"
+      "fmuls 0x44(%%ecx)\n\t"
+      "fstps 0x21c(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fsin\n\t"
+      "fstps 0x220(%%ecx)\n\t"
+      "fcos\n\t"
+      "fstps 0x224(%%ecx)\n\t"
+      "ret\n\t"
+      ".LFUN_000f8590_1:\n\t"
+      "andl $0xfffffffe, %%eax\n\t"
+      "fstp %%st(0)\n\t"
+      "movl %%eax, 0x1dc(%%ecx)\n\t"
+      "movl $0, 0x220(%%ecx)\n\t"
+      "movl $0x3f800000, 0x224(%%ecx)\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bf8590_get)
+      : "memory");
 }
+#else
+#error "FUN_000f8590: clang naked draft required"
+#endif
+
 
 /* FUN_000f8640 (0xf8640) — XBE naked draft (batch 64). */
 #if defined(__clang__)

@@ -1089,44 +1089,77 @@ void item_detonate(int item_handle)
   }
 }
 
-/* Update an item's angular velocity state (0xf6b80).
- * Computes the magnitude of the angular velocity vector at +0x3c..+0x44.
- * If nonzero: sets flag bit 2 (has angular velocity) at +0x1a4, normalizes
- * the angular velocity into the direction vector at +0x1c8..+0x1d0 (unless
- * object flag bit 5 at +0x4 is set, indicating externally driven rotation),
- * then stores sin(magnitude) at +0x1d4 and cos(magnitude) at +0x1d8.
- * If zero: clears flag bit 2 and sets sin=0, cos=1 (identity rotation). */
-void FUN_000f6b80(int item_handle)
+/* FUN_000f6b80 (0xf6b80) — XBE naked draft (batch 65). */
+#if defined(__clang__)
+static void *(*const bf6b80_get)(int, int) = object_get_and_verify_type;
+
+__attribute__((naked, noinline))
+void FUN_000f6b80(int item_handle __attribute__((unused)))
 {
-  char *item_obj;
-  float x, y, z;
-  float mag;
-  float inv_mag;
-
-  item_obj = (char *)object_get_and_verify_type(item_handle, 0x1c);
-  x = *(float *)(item_obj + 0x3c);
-  y = *(float *)(item_obj + 0x40);
-  z = *(float *)(item_obj + 0x44);
-  mag = sqrtf(x * x + y * y + z * z);
-
-  if (mag != 0.0f) {
-    *(uint32_t *)(item_obj + 0x1a4) = *(uint32_t *)(item_obj + 0x1a4) | 4;
-
-    if (!(*(uint8_t *)(item_obj + 0x4) & 0x20)) {
-      inv_mag = 1.0f / mag;
-      *(float *)(item_obj + 0x1c8) = inv_mag * x;
-      *(float *)(item_obj + 0x1cc) = inv_mag * y;
-      *(float *)(item_obj + 0x1d0) = inv_mag * z;
-    }
-
-    *(float *)(item_obj + 0x1d4) = x87_fsin(mag);
-    *(float *)(item_obj + 0x1d8) = x87_fcos(mag);
-  } else {
-    *(uint32_t *)(item_obj + 0x1a4) = *(uint32_t *)(item_obj + 0x1a4) & ~4u;
-    *(float *)(item_obj + 0x1d4) = 0.0f;
-    *(float *)(item_obj + 0x1d8) = 1.0f;
-  }
+  __asm__ volatile(
+      "pushl $0x1c\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "flds 0x44(%%ecx)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds 0x40(%%ecx)\n\t"
+      "flds 0x3c(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsqrt\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .LFUN_000f6b80_2\n\t"
+      "movl 0x1a4(%%ecx), %%edx\n\t"
+      "movb 0x4(%%ecx), %%al\n\t"
+      "orl $4, %%edx\n\t"
+      "testb $0x20, %%al\n\t"
+      "movl %%edx, 0x1a4(%%ecx)\n\t"
+      "jne .LFUN_000f6b80_1\n\t"
+      "flds 0x2533c8\n\t"
+      "fdiv %%st(1), %%st(0)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x3c(%%ecx)\n\t"
+      "fstps 0x1c8(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x40(%%ecx)\n\t"
+      "fstps 0x1cc(%%ecx)\n\t"
+      "fmuls 0x44(%%ecx)\n\t"
+      "fstps 0x1d0(%%ecx)\n\t"
+      ".LFUN_000f6b80_1:\n\t"
+      "fld %%st(0)\n\t"
+      "fsin\n\t"
+      "fstps 0x1d4(%%ecx)\n\t"
+      "fcos\n\t"
+      "fstps 0x1d8(%%ecx)\n\t"
+      "ret\n\t"
+      ".LFUN_000f6b80_2:\n\t"
+      "movl 0x1a4(%%ecx), %%eax\n\t"
+      "fstp %%st(0)\n\t"
+      "andl $0xfffffffb, %%eax\n\t"
+      "movl %%eax, 0x1a4(%%ecx)\n\t"
+      "movl $0, 0x1d4(%%ecx)\n\t"
+      "movl $0x3f800000, 0x1d8(%%ecx)\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bf6b80_get)
+      : "memory");
 }
+#else
+#error "FUN_000f6b80: clang naked draft required"
+#endif
+
 
 /* valid_real_vector3d_axes3 (0xf6c40)
  *

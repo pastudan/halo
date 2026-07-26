@@ -1577,41 +1577,84 @@ int weapon_definition_index_to_list_index(int param_1);
  * Confirmed: CALL 0x140ce0 (object_connect_to_map) with (handle, 0).
  * Confirmed: FCOMP against *(float*)0x2533c0 (0.0f) for degenerate check.
  */
-/* Allocate widget data pool, then call each widget type's initialize function.
- * 0x135f90 / objects.obj
- */
+/* FUN_00135f90 (0x135f90) — XBE naked draft (batch 65). */
+#if defined(__clang__)
+static data_t * (*const b135f90_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
+static void (*const b135f90_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b135f90_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_00135f90(void)
 {
-  short sVar1;
-  void **ppuVar2;
-
-  *(data_t **)0x5a90c4 = game_state_data_new("widget", 0x40, 0xc);
-  if (*(data_t **)0x5a90c4 == 0) {
-    display_assert("widget_data",
-                   "c:\\halo\\SOURCE\\objects\\widgets\\widgets.c", 0x2e, 1);
-    system_exit(-1);
-  }
-  sVar1 = 0;
-  ppuVar2 = (void **)0x323530;
-  do {
-    if ((sVar1 < 0) || (4 < sVar1)) {
-      display_assert("type>=0 && type<NUMBER_OF_WIDGET_TYPES",
-                     "c:\\halo\\source\\objects\\widgets\\widget_types.h", 0x96,
-                     1);
-      system_exit(-1);
-    }
-    if (ppuVar2[-2] == 0) {
-      display_assert("type_definition->group_tag",
-                     "c:\\halo\\SOURCE\\objects\\widgets\\widgets.c", 0x37, 1);
-      system_exit(-1);
-    }
-    if (*ppuVar2 != 0) {
-      ((void (*)(void)) * ppuVar2)();
-    }
-    sVar1 = sVar1 + 1;
-    ppuVar2 = ppuVar2 + 10;
-  } while (sVar1 < 5);
+  __asm__ volatile(
+      "pushl $0xc\n\t"
+      "pushl $0x40\n\t"
+      "pushl $0x2832a8\n\t"
+      "call *%[c1bfe10]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x5a90c4\n\t"
+      "jne .LFUN_00135f90_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2e\n\t"
+      "pushl $0x29ae64\n\t"
+      "pushl $0x29ae58\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00135f90_1:\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movl $0x323530, %%edi\n\t"
+      ".LFUN_00135f90_2:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_00135f90_3\n\t"
+      "cmpw $5, %%si\n\t"
+      "jl .LFUN_00135f90_4\n\t"
+      ".LFUN_00135f90_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x96\n\t"
+      "pushl $0x29ae0c\n\t"
+      "pushl $0x29ade4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00135f90_4:\n\t"
+      "movl -0x8(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00135f90_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x37\n\t"
+      "pushl $0x29ae64\n\t"
+      "pushl $0x29ae3c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00135f90_5:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00135f90_6\n\t"
+      "call *%%eax\n\t"
+      ".LFUN_00135f90_6:\n\t"
+      "incl %%esi\n\t"
+      "addl $0x28, %%edi\n\t"
+      "cmpw $5, %%si\n\t"
+      "jl .LFUN_00135f90_2\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c1bfe10] "m"(b135f90_c1bfe10), [assert] "m"(b135f90_assert), [exitfn] "m"(b135f90_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00135f90: clang naked draft required"
+#endif
+
 
 /* Reset widget data pool, then call each widget type's initialize_for_new_map.
  * 0x136040 / objects.obj
@@ -2330,25 +2373,80 @@ int FUN_00139930(int light_handle)
   return *(int *)(light + 0xc) != *(int *)0x5a8d64;
 }
 
-/* Check if the lights marker global has changed; update it and return 1 if so.
- * 0x139990 / objects.obj
- */
-int FUN_00139990(int param_1)
-{
-  int iVar1;
+/* FUN_00139990 (0x139990) — XBE naked draft (batch 65). */
+#if defined(__clang__)
+static void *(*const b139990_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b139990_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b139990_exitfn)(int) = system_exit;
 
-  iVar1 = (int)datum_get(*(data_t **)0x5a90bc, param_1);
-  if (*(char *)0x5a8d60 == '\0') {
-    display_assert("lights_globals.marker_initialized",
-                   "c:\\halo\\SOURCE\\objects\\object_lights.c", 0x67f, 1);
-    system_exit(-1);
-  }
-  if (*(int *)(iVar1 + 0xc) != *(int *)0x5a8d64) {
-    *(int *)(iVar1 + 0xc) = *(int *)0x5a8d64;
-    return 1;
-  }
-  return 0;
+__attribute__((naked, noinline))
+int FUN_00139990(int param_1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x5a90bc, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x5a8d60, %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00139990_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x67f\n\t"
+      "pushl $0x29b324\n\t"
+      "pushl $0x29b4ac\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00139990_1:\n\t"
+      "movl 0x5a8d64, %%eax\n\t"
+      "cmpl %%eax, 0xc(%%esi)\n\t"
+      "je .LFUN_00139990_2\n\t"
+      "movl %%eax, 0xc(%%esi)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00139990_2:\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "movb 0x5a8d60, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00139990_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x68e\n\t"
+      "pushl $0x29b324\n\t"
+      "pushl $0x29b4ac\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00139990_3:\n\t"
+      "movb $0, 0x5a8d60\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b139990_dget), [assert] "m"(b139990_assert), [exitfn] "m"(b139990_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00139990: clang naked draft required"
+#endif
+
 
 /* FUN_00139a30 (0x139a30) — XBE naked draft (batch 62). */
 #if defined(__clang__)
@@ -3638,31 +3736,79 @@ void FUN_0013c030(int param_1, int param_2, int param_3)
   }
 }
 
-/* 0x13c100 / objects.obj */
-void *FUN_0013c100(int16_t object_type)
-{
-  int iVar1;
+/* FUN_0013c100 (0x13c100) — XBE naked draft (batch 65). */
+#if defined(__clang__)
+static char * (*const b13c100_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b13c100_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b13c100_exitfn)(int) = system_exit;
 
-  if ((object_type < 0) || (0xb < object_type)) {
-    display_assert(csprintf((char *)0x5ab100,
-                            "#%d isn't a valid object type in [#0,#%d)",
-                            (int)object_type, 0xc),
-                   "c:\\halo\\SOURCE\\objects\\object_types.c", 0x277, 1);
-    system_exit(-1);
-  }
-  iVar1 = (int)object_type;
-  if (((void **)0x324608)[iVar1] == (void *)0) {
-    display_assert("object_type_definitions[object_type]",
-                   "c:\\halo\\SOURCE\\objects\\object_types.c", 0x278, 1);
-    system_exit(-1);
-  }
-  if (*(int *)((char *)((void **)0x324608)[iVar1] + 4) == 0) {
-    display_assert("object_type_definitions[object_type]->group_tag",
-                   "c:\\halo\\SOURCE\\objects\\object_types.c", 0x279, 1);
-    system_exit(-1);
-  }
-  return ((void **)0x324608)[iVar1];
+__attribute__((naked, noinline))
+void * FUN_0013c100(int16_t object_type __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_0013c100_1\n\t"
+      "cmpw $0xc, %%si\n\t"
+      "jl .LFUN_0013c100_2\n\t"
+      ".LFUN_0013c100_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x277\n\t"
+      "pushl $0x29b6b8\n\t"
+      "movswl %%si, %%eax\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x29b68c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0013c100_2:\n\t"
+      "movswl %%si, %%esi\n\t"
+      "movl 0x324608(,%%esi,4), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0013c100_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x278\n\t"
+      "pushl $0x29b6b8\n\t"
+      "pushl $0x29b664\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0013c100_3:\n\t"
+      "movl 0x324608(,%%esi,4), %%ecx\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0013c100_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x279\n\t"
+      "pushl $0x29b6b8\n\t"
+      "pushl $0x29b634\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0013c100_4:\n\t"
+      "movl 0x324608(,%%esi,4), %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8d9d0] "m"(b13c100_c8d9d0), [assert] "m"(b13c100_assert), [exitfn] "m"(b13c100_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_0013c100: clang naked draft required"
+#endif
+
 
 /* 0x13c1b0 / objects.obj — object type definition field accessor.
  *
@@ -3696,55 +3842,80 @@ short FUN_0013c1b0(short param_1)
   return *(short *)((char *)((void **)0x324608)[iVar1] + 8);
 }
 
-/*
- * FUN_0013c490 (0x13c490 / objects.obj) — run an object type's "can delete?"
- * predicate chain.
- *
- * Resolves the object, looks up its type definition via FUN_0013c100(type),
- * and walks the NULL-terminated array of type-handler vtable pointers at
- * type_def+0x5c. For each non-NULL handler, if it has a predicate at +0x24,
- * calls predicate(object_handle); if the predicate returns false the whole
- * function returns false. If the list is empty (first entry NULL) or every
- * predicate passes, returns true.
- *
- * Confirmed: PUSH -1, PUSH handle -> object_get_and_verify_type(handle, -1).
- * Confirmed: MOVSX EAX,[obj+0x64] -> object type, passed to FUN_0013c100.
- * Confirmed: handler list at type_def+0x5c, dword-stride, NULL-terminated.
- * Confirmed: handler predicate at handler+0x24; called handler-less as
- *            predicate(handle) (one cdecl arg, ADD ESP,4).
- * Confirmed: empty list -> return 1 (CL=1 path); predicate false -> return 0.
- */
-int FUN_0013c490(int object_handle)
+/* FUN_0013c490 (0x13c490) — XBE naked draft (batch 65). */
+#if defined(__clang__)
+static void *(*const b13c490_get)(int, int) = object_get_and_verify_type;
+static void * (*const b13c490_c13c100)(int16_t object_type) = FUN_0013c100;
+
+__attribute__((naked, noinline))
+int FUN_0013c490(int object_handle __attribute__((unused)))
 {
-  char *obj;
-  char *type_def;
-  int *handler_slot;
-  short i;
-  int (*predicate)(int);
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  type_def = (char *)FUN_0013c100(*(short *)(obj + 0x64));
-  handler_slot = (int *)(type_def + 0x5c);
-
-  i = 0;
-  if (*(int *)(type_def + 0x5c) == 0) {
-    return 1;
-  }
-
-  for (;;) {
-    predicate = *(int (**)(int))(*handler_slot + 0x24);
-    if (predicate != 0) {
-      if ((char)predicate(object_handle) == 0) {
-        return 0;
-      }
-    }
-    i = i + 1;
-    handler_slot = (int *)(type_def + 0x5c + (int)i * 4);
-    if (*handler_slot == 0) {
-      return 1;
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movswl 0x64(%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c13c100]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x5c(%%edi), %%edx\n\t"
+      "leal 0x5c(%%edi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testl %%edx, %%edx\n\t"
+      "movb $1, %%cl\n\t"
+      "je .LFUN_0013c490_4\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".LFUN_0013c490_1:\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "movl 0x24(%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0013c490_2\n\t"
+      "pushl %%ebx\n\t"
+      "call *%%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0013c490_3\n\t"
+      ".LFUN_0013c490_2:\n\t"
+      "incl %%esi\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "leal 0x5c(%%edi,%%ecx,4), %%eax\n\t"
+      "cmpl $0, (%%eax)\n\t"
+      "jne .LFUN_0013c490_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0013c490_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0013c490_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%cl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b13c490_get), [c13c100] "m"(b13c490_c13c100)
+      : "memory");
 }
+#else
+#error "FUN_0013c490: clang naked draft required"
+#endif
+
 
 /* 0x13c250 / objects.obj */
 void *FUN_0013c250(int16_t param_1)
@@ -5175,53 +5346,83 @@ void FUN_0013d8b0(int object_handle)
   }
 }
 
-/*
- * FUN_0013ddd0 (0x13ddd0 / objects.obj) — recursively precache the predicted
- * resources for an object and its attachment tree.
- *
- * Iterative+recursive walk over the object datum (table at 0x5a8d50). For each
- * object: resolves its definition pointer (obj+0x8), reads the 16-bit object
- * type at def+0x64, and asserts that (1 << type) is non-zero (i.e. the type is
- * in range; the original message reports the unexpected type). If the object's
- * tag index (def+0x0) is valid, fetches the 'obje' tag (0x6f626a65) and
- * precaches its predicted-resources block at tag+0x170. Then recurses into the
- * first child (def+0xc8) and tail-iterates to the next sibling (def+0xc4) via
- * the enclosing while loop.
- *
- * Confirmed (disasm 0x13ddd0): type is a signed 16-bit load (MOVSX ECX, word
- * ptr [ESI+0x64]); shift mask test is TEST EDX,EDX after SHL EDX,CL; assert
- * uses csprintf(0x5ab100, fmt, -1, type) then display_assert(reason,
- * "...objects.c", 0x69a, 1) then system_exit(-1); child at +0xc8, sibling at
- * +0xc4; precache arg is tag+0x170.
- */
-void FUN_0013ddd0(int object_handle)
-{
-  object_data_t *obj;
-  int *defn;
-  int type;
-  int tag;
+/* FUN_0013ddd0 (0x13ddd0) — XBE naked draft (batch 65). */
+#if defined(__clang__)
+static void *(*const b13ddd0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const b13ddd0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b13ddd0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b13ddd0_exitfn)(int) = system_exit;
+static void *(*const b13ddd0_tag)(int, int) = tag_get;
+static void (*const b13ddd0_c1bde10)(void *tag_block) = predicted_resources_precache;
+static void (*const b13ddd0_c13ddd0)(int object_handle) = FUN_0013ddd0;
 
-  while (object_handle != -1) {
-    obj = (object_data_t *)datum_get(*(data_t **)0x5a8d50, object_handle);
-    defn = *(int **)((char *)obj + 8);
-    type = *(int16_t *)((char *)defn + 0x64);
-    if ((1 << (type & 0x1f)) == 0) {
-      display_assert(
-        csprintf((char *)0x5ab100,
-                 "got an object type we didn't expect "
-                 "(expected one of 0x%08x but got #%d).",
-                 0xffffffff, type),
-        "c:\\halo\\SOURCE\\objects\\objects.c", 0x69a, 1);
-      system_exit(-1);
-    }
-    if (defn[0] != -1) {
-      tag = (int)tag_get(0x6f626a65, defn[0]);
-      predicted_resources_precache((void *)(tag + 0x170));
-    }
-    FUN_0013ddd0(defn[0x32]);
-    object_handle = defn[0x31];
-  }
+__attribute__((naked, noinline))
+void FUN_0013ddd0(int object_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_0013ddd0_4\n\t"
+      ".LFUN_0013ddd0_1:\n\t"
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%esi\n\t"
+      "movswl 0x64(%%esi), %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jne .LFUN_0013ddd0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x69a\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $-1\n\t"
+      "pushl $0x29b940\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0013ddd0_2:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_0013ddd0_3\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x170, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1bde10]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_0013ddd0_3:\n\t"
+      "movl 0xc8(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c13ddd0]\n\t"
+      "movl 0xc4(%%esi), %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne .LFUN_0013ddd0_1\n\t"
+      ".LFUN_0013ddd0_4:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b13ddd0_dget), [c8d9d0] "m"(b13ddd0_c8d9d0), [assert] "m"(b13ddd0_assert), [exitfn] "m"(b13ddd0_exitfn), [tag] "m"(b13ddd0_tag), [c1bde10] "m"(b13ddd0_c1bde10), [c13ddd0] "m"(b13ddd0_c13ddd0)
+      : "memory");
 }
+#else
+#error "FUN_0013ddd0: clang naked draft required"
+#endif
+
 
 /*
  * object_set_garbage_flag — add or remove an object from the garbage
@@ -20424,26 +20625,71 @@ void FUN_0013a340(int param_1 __attribute__((unused)), float *param_2 __attribut
 #endif
 
 
-/* 0x144940: spawn a scenario object by name index — resolve the name entry in
- * scenario+0x204 (0x24 stride), look up its palette block and base, fetch the
- * placement element, and hand it to object_new_from_scenario. */
-void object_new_by_name(short param_1)
-{
-  int scn;
-  int e;
-  int palette;
-  int pal_base;
-  int placement;
-  int elem_size;
+/* object_new_by_name (0x144940) — XBE naked draft (batch 65). */
+#if defined(__clang__)
+static scenario_t * (*const b144940_c18e380)(void) = global_scenario_get;
+static void *(*const b144940_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b144940_c13ca30)(int param_1, int param_2, int *param_3) = FUN_0013ca30;
+static int (*const b144940_c13cab0)(int param_1, int param_2) = FUN_0013cab0;
+static int (*const b144940_c144770)(void *placement_data, int palette_block) = object_new_from_scenario;
 
-  scn = (int)global_scenario_get();
-  e = (int)tag_block_get_element((void *)(scn + 0x204), param_1, 0x24);
-  palette = FUN_0013ca30(scn, *(short *)(e + 0x20), &elem_size);
-  pal_base = FUN_0013cab0(scn, *(short *)(e + 0x20));
-  placement = (int)tag_block_get_element((void *)palette, *(short *)(e + 0x22),
-                                         elem_size);
-  object_new_from_scenario((void *)placement, pal_base);
+__attribute__((naked, noinline))
+void object_new_by_name(short param_1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e380]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x24\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x204(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x20(%%edi), %%ax\n\t"
+      "leal -0x4(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c13ca30]\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x20(%%edi), %%cx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c13cab0]\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movswl 0x22(%%edi), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c144770]\n\t"
+      "addl $0x34, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(b144940_c18e380), [elem] "m"(b144940_elem), [c13ca30] "m"(b144940_c13ca30), [c13cab0] "m"(b144940_c13cab0), [c144770] "m"(b144940_c144770)
+      : "memory");
 }
+#else
+#error "object_new_by_name: clang naked draft required"
+#endif
+
 
 /* FUN_0013aa10 (0x13aa10) — XBE naked draft (batch 61). */
 #if defined(__clang__)
