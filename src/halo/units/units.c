@@ -14108,15 +14108,19 @@ char FUN_001a6350(int unit_handle)
 }
 /* --- units.obj orphan shells (2026-07-26) --- */
 
-/* 0x1a8770 — anim_state byte at +0xb in {3,4}? */
+/* 0x1a8770 — True when anim_state byte +0xb is firing (3 or 4). */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(1)))
+#endif
 char FUN_001a8770(void *anim_state)
 {
-  char state;
+  char state = *(char *)((char *)anim_state + 0xb);
 
-  state = *(char *)((char *)anim_state + 0xb);
-  if (state >= 3 && state <= 4)
-    return 1;
-  return 0;
+  if (state < 3)
+    return 0;
+  if (state > 4)
+    return 0;
+  return 1;
 }
 
 /* 0x1a8890 — gate on anim_state[0xc]==0 and motion band at [0xb] */

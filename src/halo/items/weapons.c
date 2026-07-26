@@ -1331,34 +1331,41 @@ void weapon_trigger_release_charge(int16_t charge_counter, int weapon_handle,
   *(int16_t *)(trigger_entry + 2) = charge_counter;
 }
 
-/* 0xfb910 */
+/* 0xfb910 — Reset trigger charge when definition charge time is zero. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(2)))
+#endif
 void FUN_000fb910(int weapon_handle, int16_t trigger_index, char flag)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
   char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-  char *trigger_entry = weapon_get_trigger_entry(weapon_obj, trigger_index);
+  char *trigger_entry = FUN_000fb320(weapon_obj, trigger_index);
   char *trig_def = (char *)tag_block_get_element((void *)(tag_data + 0x4fc),
                                                  (int)trigger_index, 0x114);
 
-  if (*(float *)(trig_def + 0xa4) != 0.0f) {
-    if ((*(int *)trig_def & 0x80) != 0) {
-      if (flag == 0)
-        *(float *)(trigger_entry + 0x14) = 1.0f;
-    } else if (flag == 0) {
+  if (*(float *)(trig_def + 0xa4) != 0.0f)
+    return;
+
+  if ((*(int *)trig_def & 0x80) != 0) {
+    if (flag != 0)
       *(float *)(trigger_entry + 0x14) = 1.0f;
-    }
+  } else if (flag == 0) {
+    *(float *)(trigger_entry + 0x14) = 1.0f;
   }
 }
 
-/* 0xfb990 */
+/* 0xfb990 — Reset trigger charge from weapon animation state. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(1)))
+#endif
 void FUN_000fb990(int weapon_handle)
 {
-  char anim_state =
-    *(char *)((char *)object_get_and_verify_type(weapon_handle, 4) + 0x1e8);
+  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  char state = weapon_obj[0x1e8];
 
-  if (anim_state == 3)
+  if (state == 3)
     FUN_000fb910(weapon_handle, 0, 1);
-  else if (anim_state == 4)
+  else if (state == 4)
     FUN_000fb910(weapon_handle, 1, 1);
 }
 

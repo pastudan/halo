@@ -1927,36 +1927,81 @@ void FUN_00138f70(float *output, float *vertex_d, float *vertex_c, float *base,
   output[2] = base[2] + (vertex_d[2] - base[2]) * u + (vertex_c[2] - base[2]) * v;
 }
 
+#if defined(__i386__) && defined(__GNUC__)
+static void FUN_00138fd0_bilinear_uv(float *uv, const float *v0, const float *v1,
+                                     const float *v2, float u, float v)
+{
+  __asm__ volatile(
+      "fld %2\n\t"
+      "fsub %5\n\t"
+      "fmul %8\n\t"
+      "fld %3\n\t"
+      "fsub %5\n\t"
+      "fmul %9\n\t"
+      "faddp\n\t"
+      "fadd %5\n\t"
+      "fstp %0\n\t"
+      "fld %4\n\t"
+      "fsub %6\n\t"
+      "fmul %8\n\t"
+      "fld %7\n\t"
+      "fsub %6\n\t"
+      "fmul %9\n\t"
+      "faddp\n\t"
+      "fadd %6\n\t"
+      "fstp %1"
+      : "=m"(uv[0]), "=m"(uv[1])
+      : "m"(v1[0]), "m"(v2[0]), "m"(v1[1]), "m"(v0[0]), "m"(v0[1]), "m"(v2[1]),
+        "m"(u), "m"(v)
+      : "st");
+}
+#endif
+
+#if defined(__i386__) && defined(__GNUC__)
+#pragma GCC push_options
+#pragma GCC optimize("O0")
+#endif
+
 /* 0x138fd0 — Sample lightmap RGB at barycentric UV on a material surface. */
 void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices,
                   float u, float v, float *out_rgb)
 {
-  char *mat = (char *)material;
+  char *esi = (char *)material;
+  unsigned short *edi = vertex_indices;
+  int16_t ax = *(int16_t *)(esi + 0xc4);
+  int edx = *(int *)(esi + 0xb4);
+  int verts_base = *(int *)(esi + 0xf8);
   float v0[2];
   float v1[2];
   float v2[2];
   float uv[2];
   unsigned int pixel;
-  int base_offset = *(int *)(mat + 0xb4);
 
-  if (*(int16_t *)(mat + 0xc4) != 2 && *(int16_t *)(mat + 0xc4) != 3) {
-    display_assert((char *)0x0029b268, (char *)0x0029b324, 0x8f, 1);
-    system_exit(-1);
+  if (ax != 2) {
+    if (ax != 3) {
+      display_assert((char *)0x0029b268, (char *)0x0029b324, 0x8f, 1);
+      system_exit(-1);
+    }
   }
 
-  FUN_001806e0(
-      *(int *)(mat + 0xf8) + ((int)vertex_indices[0] + base_offset * 4) * 8, v0);
-  FUN_001806e0(
-      *(int *)(mat + 0xf8) + ((int)vertex_indices[1] + base_offset * 4) * 8, v1);
-  FUN_001806e0(
-      *(int *)(mat + 0xf8) + ((int)vertex_indices[2] + base_offset * 4) * 8, v2);
+  FUN_001806e0(verts_base + ((int)edi[0] + edx * 4) * 8, v0);
+  FUN_001806e0(verts_base + ((int)edi[1] + edx * 4) * 8, v1);
+  FUN_001806e0(verts_base + ((int)edi[2] + edx * 4) * 8, v2);
 
+#if defined(__i386__) && defined(__GNUC__)
+  FUN_00138fd0_bilinear_uv(uv, v0, v1, v2, u, v);
+#else
   uv[0] = v0[0] + (v1[0] - v0[0]) * u + (v2[0] - v0[0]) * v;
   uv[1] = v0[1] + (v1[1] - v0[1]) * u + (v2[1] - v0[1]) * v;
+#endif
 
   pixel = bitmap_2d_get_pixel(lightmap, uv, 1.0f, out_rgb);
   pixel32_to_real_rgb_color(pixel, out_rgb);
 }
+
+#if defined(__i386__) && defined(__GNUC__)
+#pragma GCC pop_options
+#endif
 /* --- damage.obj orphan shells (2026-07-26) --- */
 
 /* 0x136b40 — Attach collision damage effect to an object once. */

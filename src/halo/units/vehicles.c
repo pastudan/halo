@@ -405,22 +405,21 @@ int FUN_001b5400(int a0, int a1)
   (void)local_c;
 }
 
-/* 0x1b5500 */
-void FUN_001b5500(int a0)
+/* 0x1b5500 — Exit vehicle seat when unit is seated with a valid seat index. */
+void FUN_001b5500(int unit_handle)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
+  char *unit;
 
-  /* cmp esi, -1 -> je 0x1b5535 */
-  object_get_and_verify_type(a0, 3);
-  /* cmp ecx, -1 -> je 0x1b5535 */
-  /* relift: cmp word ptr [eax + 0x2a0], -1 -> je 0x1b5535 */
-  unit_try_and_exit_seat(a0);
+  if (unit_handle == -1)
+    return;
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  if (*(int *)(unit + 0xcc) == -1)
+    return;
+  if (*(int16_t *)(unit + 0x2a0) == -1)
+    return;
+
+  unit_try_and_exit_seat(unit_handle);
 }
 
 /* 0x1b5580 — Place vehicle and apply collision damage from placement. */
@@ -441,20 +440,21 @@ char vehicle_hover(int vehicle_handle)
   return (char)((*(unsigned int *)(vehicle_tag + 0x2f0) >> 7) & 1);
 }
 
-/* 0x1b5610 */
-void FUN_001b5610(int a0, int a1)
+/* 0x1b5610 — Toggle vehicle world-position refresh flag (+0x424 bit 1). */
+void FUN_001b5610(int vehicle_handle, char flag)
 {
-  int eax = 0;
-  int edi = 0;
+  char *vehicle;
 
-  /* cmp edi, -1 -> je 0x1b5654 */
-  object_get_and_verify_type(a0, 2);
-  /* test (char)eax, (char)eax -> je 0x1b564c */
-  object_get_world_position(a0, (vector3_t *)((char *)eax + 0x454));
-  FUN_00154270();
+  if (vehicle_handle == -1)
+    return;
 
-  (void)eax;
-  (void)edi;
+  vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  if (flag) {
+    object_get_world_position(vehicle_handle, (vector3_t *)(vehicle + 0x454));
+    vehicle[0x424] |= 2;
+  } else {
+    vehicle[0x424] &= 0xfd;
+  }
 }
 
 /* 0x1b5680 — True when the vehicle up-axis dot threshold is exceeded. */

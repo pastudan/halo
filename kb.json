@@ -29530,7 +29530,7 @@
         },
         {
           "addr": "0x1b5610",
-          "decl": "void FUN_001b5610(int a0, int a1);",
+          "decl": "void FUN_001b5610(int vehicle_handle, char flag);",
           "ported": false
         },
         {

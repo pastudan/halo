@@ -238,6 +238,11 @@ def main() -> int:
         ("vehicle_hover", 0x1b55c0, 0x1b55f0),
         ("vehicle_is_flipped", 0x1b5680, 0x1b56b0),
         ("FUN_001a0db0", 0x1a0db0, 0x1a0e00),
+        ("FUN_001b5500", 0x1b5500, 0x1b5580),
+        ("FUN_001b5610", 0x1b5610, 0x1b5680),
+        ("FUN_000fb910", 0xfb910, 0xfb990),
+        ("FUN_000fb990", 0xfb990, 0xfb9da),
+        ("FUN_001a8770", 0x1a8770, 0x1a8782),
     ]
 
     xbe = Xbe.from_file(args.xbe)
