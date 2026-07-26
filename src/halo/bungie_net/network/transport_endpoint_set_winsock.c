@@ -1034,58 +1034,19 @@ void destroy_endpoint(int *ep)
 }
 /* --- transport_endpoint_set_winsock.obj batch drafts (2026-07-26) --- */
 
-/* transport_get_nonce (0x81ec0) — XBE naked draft (batch 273). */
-#if defined(__clang__)
-static void (*const b81ec0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b81ec0_exitfn)(int) = system_exit;
-static void * (*const b81ec0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-void transport_get_nonce(void *dst __attribute__((unused)), int bytes __attribute__((unused)))
+/* transport_get_nonce (0x81ec0) — readable C lift. */
+void transport_get_nonce(void *dst, int bytes)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Ltransport_get_nonce_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x97\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x2664e0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltransport_get_nonce_1:\n\t"
-      "cmpl $8, 0xc(%%ebp)\n\t"
-      "je .Ltransport_get_nonce_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x98\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x2664c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltransport_get_nonce_2:\n\t"
-      "pushl $8\n\t"
-      "pushl $0x5ab228\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b81ec0_assert), [exitfn] "m"(b81ec0_exitfn), [c8e0b0] "m"(b81ec0_c8e0b0)
-      : "memory");
+  if (dst == NULL) {
+    display_assert((const char *)0x2664e0, (const char *)0x266458, 0x97, 1);
+    system_exit(-1);
+  }
+  if (bytes != 8) {
+    display_assert((const char *)0x2664c0, (const char *)0x266458, 0x98, 1);
+    system_exit(-1);
+  }
+  csmemcpy(dst, (void *)0x5ab228, 8);
 }
-#else
-#error "transport_get_nonce: clang naked draft required"
-#endif
-
 
 /* transport_nonce_is_equal (0x81f30) — XBE naked draft (batch 269). */
 #if defined(__clang__)
@@ -1410,7 +1371,7 @@ int FUN_000824a0(int *a, int *b)
 #if defined(__clang__)
 static void (*const b824d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b824d0_exitfn)(int) = system_exit;
-static void __cdecl (*const b824d0_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
+static void __cdecl (*const b824d0_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = (void *)FUN_001d9260;
 static void * (*const b824d0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static void b824d0_c2251b8_tgt(void) { return; }
 static void (*const b824d0_c2251b8)(void) = b824d0_c2251b8_tgt;

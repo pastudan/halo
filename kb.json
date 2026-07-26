@@ -4676,7 +4676,7 @@
         },
         {
           "addr": "0x7c8f0",
-          "decl": "void screenshot_render(void *a1);",
+          "decl": "void bitmap_delete(void *bitmap);",
           "ported": true
         },
         {
@@ -8347,7 +8347,7 @@
         },
         {
           "addr": "0xa7780",
-          "decl": "void main_new_map(game_options_t *game_options);",
+          "decl": "void game_initialize_for_new_map(void);",
           "ported": true
         },
         {
@@ -10491,7 +10491,7 @@
         },
         {
           "addr": "0xb5d00",
-          "decl": "void main_skip_private(void);",
+          "decl": "void game_time_set_speed(float speed);",
           "ported": true
         },
         {
@@ -12436,7 +12436,7 @@
         },
         {
           "addr": "0xcaa80",
-          "decl": "char *hs_get_thread_script_name(int thread_index@<esi>);",
+          "decl": "char *hs_get_thread_script_name(int thread_index);",
           "ported": true
         },
         {
@@ -14612,7 +14612,7 @@
         },
         {
           "addr": "0x103530",
-          "decl": "void FUN_00103530(void);",
+          "decl": "void FUN_00103530(int a0, int a1, int a2, int a3, int a4);",
           "ported": true,
           "source_path": "src/halo/main/main.c"
         },
@@ -19869,7 +19869,7 @@
         },
         {
           "addr": "0x907c0",
-          "decl": "void FUN_000907c0(void);",
+          "decl": "void FUN_000907c0(int a0);",
           "ported": false
         },
         {
@@ -20019,7 +20019,7 @@
         },
         {
           "addr": "0x91ef0",
-          "decl": "void FUN_00091ef0(int *keys, int count, int (*cmp)(int, int));",
+          "decl": "void FUN_00091ef0(int *keys, int count, void *cmp);",
           "ported": false
         },
         {
@@ -20860,7 +20860,7 @@
         },
         {
           "addr": "0x17ad40",
-          "decl": "void FUN_0017ad40(void);",
+          "decl": "void FUN_0017ad40(int a0, int a1, int a2, int a3, int a4, int a5);",
           "ported": false
         },
         {
@@ -26686,7 +26686,7 @@
         {
           "addr": "0x81ec0",
           "decl": "void transport_get_nonce(void *dst, int bytes);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x81f30",
@@ -39958,7 +39958,7 @@
       "functions": [
         {
           "addr": "0x147380",
-          "decl": "void FUN_00147380(void);",
+          "decl": "int FUN_00147380(int a0, int a1, int a2, int a3, int a4, int a5, int a6);",
           "ported": false
         },
         {
