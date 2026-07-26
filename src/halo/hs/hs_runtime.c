@@ -3595,76 +3595,31 @@ void FUN_000c9990(int16_t name_index)
       (char *)global_scenario_get() + 0x204, (int)name_index, 0x24);
   error(2, (const char *)0x280378, elem);
 }
-/* hs_object_iterate_names_containing (0xc9b10) — XBE naked draft (batch 151). */
-#if defined(__clang__)
-static scenario_t * (*const bc9b10_c18e380)(void) = global_scenario_get;
-static void (*const bc9b10_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc9b10_exitfn)(int) = system_exit;
-static void *(*const bc9b10_elem)(void *, int, int) = tag_block_get_element;
-static char * (*const bc9b10_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
-
-__attribute__((naked, noinline))
-void hs_object_iterate_names_containing(void *callback __attribute__((unused)), const char *substr __attribute__((unused)))
+/* hs_object_iterate_names_containing (0xc9b10) — readable C lift. */
+void hs_object_iterate_names_containing(void *callback, const char *substr)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e380]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lhs_object_iterate_names_containing_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x197\n\t"
-      "pushl $0x280408\n\t"
-      "pushl $0x25c3b4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhs_object_iterate_names_containing_1:\n\t"
-      "movl 0x204(%%esi), %%eax\n\t"
-      "addl $0x204, %%esi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lhs_object_iterate_names_containing_4\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lhs_object_iterate_names_containing_2:\n\t"
-      "pushl $0x24\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lhs_object_iterate_names_containing_3\n\t"
-      "pushl %%edi\n\t"
-      "call *0x8(%%ebp)\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lhs_object_iterate_names_containing_3:\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lhs_object_iterate_names_containing_2\n\t"
-      ".Lhs_object_iterate_names_containing_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc9b10_c18e380), [assert] "m"(bc9b10_assert), [exitfn] "m"(bc9b10_exitfn), [elem] "m"(bc9b10_elem), [c1d9690] "m"(bc9b10_c1d9690)
-      : "memory");
+  char *scenario;
+  char *block;
+  int i;
+  int count;
+  char *elem;
+  void (*cb)(int);
+  scenario = (char *)global_scenario_get();
+  if (callback == 0)
+  {
+    display_assert((const char *)0x25c3b4, (const char *)0x280408, 0x197, 1);
+    system_exit(-1);
+  }
+  cb = (void (*)(int))callback;
+  block = scenario + 0x204;
+  count = *(int *)block;
+  for (i = 0; i < count; i++)
+  {
+    elem = (char *)tag_block_get_element(block, i, 0x24);
+    if (crt_strstr(elem, substr) != 0)
+      cb(i);
+  }
 }
-#else
-#error "hs_object_iterate_names_containing: clang naked draft required"
-#endif
-
-
 /* FUN_000c9b90 (0xc9b90) — readable C lift. */
 void FUN_000c9b90(const char *substr)
 {
@@ -4854,92 +4809,30 @@ void FUN_000ca030(int object_handle, float value)
     *p = value;
 }
 
-/* FUN_000ca050 (0xca050) — XBE naked draft (batch 141). */
-#if defined(__clang__)
-static int (*const bca050_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
-static char (*const bca050_c18ef00)(int cluster_index, int object_handle) = FUN_0018ef00;
-static int (*const bca050_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
-
-__attribute__((naked, noinline))
-char FUN_000ca050(int16_t game_flag __attribute__((unused)), int list_handle __attribute__((unused)))
+/* FUN_000ca050 (0xca050) — readable C lift: set/clear game flag from object list. */
+char FUN_000ca050(int16_t game_flag, int list_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[cce450]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000ca050_2\n\t"
-      ".LFUN_000ca050_1:\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c18ef00]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000ca050_3\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cce320]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_000ca050_1\n\t"
-      ".LFUN_000ca050_2:\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "sarl $5, %%edx\n\t"
-      "leal 0x5aa6a0(,%%edx,4), %%eax\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ca050_3:\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%esi\n\t"
-      "shll %%cl, %%esi\n\t"
-      "sarl $5, %%edx\n\t"
-      "movl 0x5aa6a0(,%%edx,4), %%ecx\n\t"
-      "leal 0x5aa6a0(,%%edx,4), %%edx\n\t"
-      "notl %%esi\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "andl %%esi, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cce450] "m"(bca050_cce450), [c18ef00] "m"(bca050_c18ef00), [cce320] "m"(bca050_cce320)
-      : "memory");
+  int iter_state;
+  int object_handle;
+  int bit;
+  int *word;
+  object_handle = FUN_000ce450(list_handle, &iter_state);
+  while (object_handle != -1)
+  {
+    if (!FUN_0018ef00((int)game_flag, object_handle))
+    {
+      bit = 1 << ((int)game_flag & 0x1f);
+      word = (int *)(0x5aa6a0 + (((int)game_flag >> 5) * 4));
+      *word &= ~bit;
+      return 0;
+    }
+    object_handle = FUN_000ce320(list_handle, &iter_state);
+  }
+  bit = 1 << ((int)game_flag & 0x1f);
+  word = (int *)(0x5aa6a0 + (((int)game_flag >> 5) * 4));
+  *word |= bit;
+  return 1;
 }
-#else
-#error "FUN_000ca050: clang naked draft required"
-#endif
-
-
 /* FUN_000ca0f0 (0xca0f0) — readable C lift. */
 char FUN_000ca0f0(int16_t game_flag, int list_handle)
 {

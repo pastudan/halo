@@ -712,92 +712,30 @@ void game_sound_set_music_volume(const char *sound_name, float volume,
 }
 /* --- game_sound.obj batch drafts (2026-07-26) --- */
 
-/* FUN_001c6ca0 (0x1c6ca0) — XBE naked draft (batch 278). */
-#if defined(__clang__)
-static bool (*const b1c6ca0_c1c6880)(file_ref_t *info) = FUN_001c6880;
-static void (*const b1c6ca0_c1c6b20)(void) = FUN_001c6b20;
-static void (*const b1c6ca0_c1c6bf0)(void) = FUN_001c6bf0;
-static void (*const b1c6ca0_c1c6d20)(void) = FUN_001c6d20;
-static void (*const b1c6ca0_c1c6ed0)(void) = FUN_001c6ed0;
-static void (*const b1c6ca0_c1c6fb0)(void) = FUN_001c6fb0;
-
-__attribute__((naked, noinline))
-void FUN_001c6ca0(void)
+/* FUN_001c6ca0 (0x1c6ca0) — readable C lift: load sound from file via bink or wav. */
+char FUN_001c6ca0(file_ref_t *info, void *param_2, void *param_3, void *param_4)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1c6880]\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6ca0_1\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1c6b20]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6ca0_1\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c6bf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c6ca0_1:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1c6d20]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6ca0_2\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1c6ed0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6ca0_2\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c6fb0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c6ca0_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c6880] "m"(b1c6ca0_c1c6880), [c1c6b20] "m"(b1c6ca0_c1c6b20), [c1c6bf0] "m"(b1c6ca0_c1c6bf0), [c1c6d20] "m"(b1c6ca0_c1c6d20), [c1c6ed0] "m"(b1c6ca0_c1c6ed0), [c1c6fb0] "m"(b1c6ca0_c1c6fb0)
-      : "memory");
+  char (*load_bink)(void *, void *, void *) = (char (*)(void *, void *, void *))FUN_001c6b20;
+  void (*copy_bink)(void *, void *, void *) = (void (*)(void *, void *, void *))FUN_001c6bf0;
+  char (*load_wav)(void *, void *, void *) = (char (*)(void *, void *, void *))FUN_001c6ed0;
+  if (FUN_001c6880(info))
+  {
+    if (load_bink(info, param_3, param_4))
+    {
+      copy_bink(param_2, param_3, param_4);
+      return 1;
+    }
+  }
+  if (FUN_001c6d20(info))
+  {
+    if (load_wav(info, param_3, param_4))
+    {
+      FUN_001c6fb0(param_2, param_3, param_4);
+      return 1;
+    }
+  }
+  return 0;
 }
-#else
-#error "FUN_001c6ca0: clang naked draft required"
-#endif
-
-
 /* FUN_001c6d20 (0x1c6d20) — readable C lift: detect RIFF/WAVE header. */
 char FUN_001c6d20(file_ref_t *info)
 {
