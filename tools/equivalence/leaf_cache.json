@@ -1192,6 +1192,9 @@
   "0x1ac150": {
     "class": "non_leaf"
   },
+  "0x1ac350": {
+    "class": "non_leaf"
+  },
   "0x1ac3b0": {
     "class": "non_leaf"
   },
@@ -1451,6 +1454,16 @@
     "class": "non_leaf",
     "confidence": "high",
     "coverage_pct": 100.0
+  },
+  "0x1cb820": {
+    "class": "non_leaf",
+    "confidence": "moderate",
+    "coverage_pct": 33.3
+  },
+  "0x1cb8f0": {
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 9.0
   },
   "0x1cb960": {
     "class": "non_leaf",
@@ -2061,8 +2074,8 @@
     "coverage_pct": 49.6
   },
   "0x2b4": {
-    "confidence": "high",
-    "coverage_pct": 100.0
+    "confidence": "weak",
+    "coverage_pct": 86.7
   },
   "0x2c": {
     "confidence": "weak",

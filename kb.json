@@ -24937,7 +24937,7 @@
         {
           "addr": "0x1ac350",
           "decl": "int16_t sound_dispose(int unit_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ac3b0",
@@ -25019,12 +25019,12 @@
         {
           "addr": "0x1cb820",
           "decl": "void FUN_001cb820(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1cb8f0",
           "decl": "void sound_reconnect_to_structure_bsp(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1cb960",
@@ -25079,7 +25079,7 @@
         },
         {
           "addr": "0x1cc2f0",
-          "decl": "void FUN_001cc2f0(int sound_handle@<esi>, int tag_index@<eax>);",
+          "decl": "void FUN_001cc2f0(int tag_index @<esi>, int sound_handle @<eax>);",
           "ported": true,
           "name": "FUN_001cc2f0"
         },

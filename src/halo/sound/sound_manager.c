@@ -2650,65 +2650,21 @@ char FUN_001ac150(int unit_handle)
   return obj[0x253] == 0x1c;
 }
 
-/* sound_dispose (0x1ac350) — XBE naked draft (batch 279). */
-#if defined(__clang__)
-static void *(*const b1ac350_get)(int, int) = object_get_and_verify_type;
-static int (*const b1ac350_cfb090)(int weapon_handle) = weapon_must_be_readied;
-
-__attribute__((naked, noinline))
-int16_t sound_dispose(int unit_handle __attribute__((unused)))
+/* sound_dispose (0x1ac350) — readable C lift. */
+int16_t sound_dispose(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "call *%[get]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "jmp .Lsound_dispose_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lsound_dispose_1:\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movl 0x2a8(%%edi,%%ecx,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lsound_dispose_2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cfb090]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lsound_dispose_3\n\t"
-      ".Lsound_dispose_2:\n\t"
-      "incl %%esi\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lsound_dispose_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsound_dispose_3:\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1ac350_get), [cfb090] "m"(b1ac350_cfb090)
-      : "memory");
-}
-#else
-#error "sound_dispose: clang naked draft required"
-#endif
+  char *unit;
+  int16_t i;
+  int weapon;
 
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  for (i = 0; i < 4; i++) {
+    weapon = *(int *)(unit + 0x2a8 + (int)i * 4);
+    if (weapon != -1 && weapon_must_be_readied(weapon))
+      return i;
+  }
+  return -1;
+}
 
 /* FUN_001ac3b0 (0x1ac3b0) — readable C lift. */
 char FUN_001ac3b0(int unit_handle, int weapon_handle)
@@ -3892,113 +3848,38 @@ char FUN_001cb4c0(void *driver_caps __attribute__((unused)))
 #endif
 
 
-/* FUN_001cb820 (0x1cb820) — XBE naked draft (batch 290). */
-#if defined(__clang__)
-static void (*const b1cb820_c119550)(data_t *data) = data_make_invalid;
-static void (*const b1cb820_c119520)(data_t *data) = data_dispose;
-
-__attribute__((naked, noinline))
+/* FUN_001cb820 (0x1cb820) — readable C lift. */
 void FUN_001cb820(void)
 {
-  __asm__ volatile(
-      "movb 0x4eaf40, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001cb820_1\n\t"
-      "movl 0x4eaf48, %%eax\n\t"
-      "call *0x8(%%eax)\n\t"
-      "movl 0x4fdba4, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119550]\n\t"
-      "movl 0x4fdba0, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119550]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $0, 0x4eaf40\n\t"
-      ".LFUN_001cb820_1:\n\t"
-      "movl 0x4fdba4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001cb820_2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119520]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_001cb820_2:\n\t"
-      "movl 0x4fdba0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001cb820_3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119520]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_001cb820_3:\n\t"
-      ".byte 0xe9, 0x14, 0x26, 0xff, 0xff\n\t"
-      :
-      : [c119550] "m"(b1cb820_c119550), [c119520] "m"(b1cb820_c119520)
-      : "memory");
+  if (*(unsigned char *)0x4eaf40) {
+    ((void (*)(void))(*(unsigned int *)(*(unsigned int *)0x4eaf48 + 8)))();
+    data_make_invalid(*(data_t **)0x4fdba4);
+    data_make_invalid(*(data_t **)0x4fdba0);
+    *(unsigned char *)0x4eaf40 = 0;
+  }
+  if (*(data_t **)0x4fdba4)
+    data_dispose(*(data_t **)0x4fdba4);
+  if (*(data_t **)0x4fdba0)
+    data_dispose(*(data_t **)0x4fdba0);
+  FUN_001bde90();
 }
-#else
-#error "FUN_001cb820: clang naked draft required"
-#endif
 
-
-/* sound_reconnect_to_structure_bsp (0x1cb8f0) — XBE naked draft (batch 282). */
-#if defined(__clang__)
-static int (*const b1cb8f0_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const b1cb8f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b1cb8f0_c18f180)(void *location_out, void *point) = scenario_location_from_point;
-
-__attribute__((naked, noinline))
+/* sound_reconnect_to_structure_bsp (0x1cb8f0) — readable C lift. */
 void sound_reconnect_to_structure_bsp(void)
 {
-  __asm__ volatile(
-      "movb 0x4eaf40, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_reconnect_to_structure_bsp_4\n\t"
-      "movb 0x4eaf41, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_reconnect_to_structure_bsp_4\n\t"
-      "movl 0x4fdba4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lsound_reconnect_to_structure_bsp_3\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lsound_reconnect_to_structure_bsp_1:\n\t"
-      "movl 0x4fdba4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $1, 0x14(%%eax)\n\t"
-      "jne .Lsound_reconnect_to_structure_bsp_2\n\t"
-      "leal 0x20(%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x44, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18f180]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lsound_reconnect_to_structure_bsp_2:\n\t"
-      "movl 0x4fdba4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .Lsound_reconnect_to_structure_bsp_1\n\t"
-      ".Lsound_reconnect_to_structure_bsp_3:\n\t"
-      "popl %%esi\n\t"
-      ".Lsound_reconnect_to_structure_bsp_4:\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(b1cb8f0_c1198f0), [dget] "m"(b1cb8f0_dget), [c18f180] "m"(b1cb8f0_c18f180)
-      : "memory");
+  int idx;
+  char *sound;
+
+  if (!*(unsigned char *)0x4eaf40 || !*(unsigned char *)0x4eaf41)
+    return;
+  idx = data_next_index(*(data_t **)0x4fdba4, -1);
+  while (idx != -1) {
+    sound = (char *)datum_get(*(data_t **)0x4fdba4, idx);
+    if (*(short *)(sound + 0x14) == 1)
+      scenario_location_from_point(sound + 0x44, sound + 0x20);
+    idx = data_next_index(*(data_t **)0x4fdba4, idx);
+  }
 }
-#else
-#error "sound_reconnect_to_structure_bsp: clang naked draft required"
-#endif
 
 
 /* FUN_001cbc20 (0x1cbc20) — readable C lift. */
@@ -4233,16 +4114,14 @@ char FUN_001cc200(int looping_handle __attribute__((unused)), void *source __att
 #endif
 
 
-/* FUN_001cc2f0 (0x1cc2f0) — readable C lift from XBE leaf.
- * Register args: sound_handle@<esi>, tag_index@<eax> (binary: push eax; cmp [node+8],esi). */
-void FUN_001cc2f0(int sound_handle /* @<esi> */, int tag_index /* @<eax> */)
+/* FUN_001cc2f0 (0x1cc2f0) — readable C lift. */
+void FUN_001cc2f0(int tag_index /*@<esi>*/, int sound_handle /*@<eax>*/)
 {
-  char *datum;
+  char *sound;
 
-  datum = (char *)datum_get(*(data_t **)0x4fdba4, tag_index);
-  if (*(int *)(datum + 8) != sound_handle) {
-    *(int *)(datum + 0x98) = sound_handle;
-  }
+  sound = (char *)datum_get(*(data_t **)0x4fdba4, sound_handle);
+  if (*(int *)(sound + 8) != tag_index)
+    *(int *)(sound + 0x98) = tag_index;
 }
 
 /* FUN_001cc440 (0x1cc440) — XBE naked draft (batch 278). */
