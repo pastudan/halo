@@ -17,13 +17,21 @@ def slug(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", name.replace(".obj", "").lower()).strip("_")
 
 
+def strip_c_comments(s: str) -> str:
+    return re.sub(r"/\*.*?\*/", "", s, flags=re.DOTALL)
+
+
 def sanitize_decl_for_c(decl: str) -> str:
+    decl = strip_c_comments(decl)
     return re.sub(r"\s*@<[^>]+>", "", decl)
 
 
 def clean_param_name(name: str) -> str:
+    name = strip_c_comments(name)
     name = re.sub(r"@<[^>]+>", "", name).strip()
-    return name if name else "unused_arg"
+    if not name or not re.match(r"^[A-Za-z_]", name):
+        return "unused_arg"
+    return name
 
 
 def fn_name(decl: str, addr: str) -> str:
@@ -43,7 +51,7 @@ def existing_fn_names(src_text: str) -> set[str]:
     )
 
 
-def load_decls(object_name: str, *, skip_existing: bool = True) -> dict[str, str]:
+def load_decls(object_name: str, *, skip_existing: bool = False) -> dict[str, str]:
     kb = json.loads((ROOT / "kb.json").read_text())
     obj = next(o for o in kb["objects"] if o["name"] == object_name)
     existing: set[str] = set()
@@ -167,7 +175,7 @@ def main() -> None:
     args = ap.parse_args()
     object_name = args.object
     s = slug(object_name)
-    decls = load_decls(object_name)
+    decls = load_decls(object_name, skip_existing=True)
     if not decls:
         raise SystemExit(f"no unset symbols in {object_name}")
 
