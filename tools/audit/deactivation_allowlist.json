@@ -5983,5 +5983,264 @@
     "object": "sound_manager.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1be1b0",
+    "name": "FUN_001be1b0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1be270",
+    "name": "FUN_001be270",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1be2b0",
+    "name": "FUN_001be2b0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1c7b40",
+    "name": "FUN_001c7b40",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1c8700",
+    "name": "FUN_001c8700",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1c88a0",
+    "name": "sound_is_active",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1c8ee0",
+    "name": "FUN_001c8ee0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cb1a0",
+    "name": "FUN_001cb1a0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cb1d0",
+    "name": "FUN_001cb1d0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cb210",
+    "name": "FUN_001cb210",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cb4c0",
+    "name": "FUN_001cb4c0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cb820",
+    "name": "FUN_001cb820",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cb8f0",
+    "name": "sound_reconnect_to_structure_bsp",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cbc20",
+    "name": "FUN_001cbc20",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cbc40",
+    "name": "FUN_001cbc40",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cc1c0",
+    "name": "FUN_001cc1c0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cc200",
+    "name": "FUN_001cc200",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cc2f0",
+    "name": "FUN_001cc2f0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cc440",
+    "name": "FUN_001cc440",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cc4f0",
+    "name": "FUN_001cc4f0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cc5b0",
+    "name": "FUN_001cc5b0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cc710",
+    "name": "sound_initialize",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1ccbe0",
+    "name": "FUN_001ccbe0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1ccca0",
+    "name": "FUN_001ccca0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cce80",
+    "name": "sound_update_time",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cd190",
+    "name": "FUN_001cd190",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cd390",
+    "name": "FUN_001cd390",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cd4d0",
+    "name": "sound_stop_impulse_by_source_and_definition",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cd540",
+    "name": "sound_stop_all",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cd690",
+    "name": "FUN_001cd690",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cd8b0",
+    "name": "FUN_001cd8b0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1ce550",
+    "name": "sound_refresh_looping",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1ce9c0",
+    "name": "FUN_001ce9c0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cebb0",
+    "name": "FUN_001cebb0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cf100",
+    "name": "FUN_001cf100",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cf360",
+    "name": "FUN_001cf360",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cf820",
+    "name": "FUN_001cf820",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]

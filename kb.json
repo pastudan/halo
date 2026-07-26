@@ -23206,7 +23206,7 @@
         },
         {
           "addr": "0x1ca2b0",
-          "decl": "void FUN_001ca2b0(void);"
+          "decl": "void FUN_001ca2b0(void *buf);"
         },
         {
           "addr": "0x1ca900",
@@ -23222,11 +23222,11 @@
         },
         {
           "addr": "0x1cadd0",
-          "decl": "void FUN_001cadd0(void);"
+          "decl": "void FUN_001cadd0(int a, int b, int c, int d, int e, int f);"
         },
         {
           "addr": "0x1cb0c0",
-          "decl": "void FUN_001cb0c0(void);"
+          "decl": "void FUN_001cb0c0(int channel);"
         }
       ],
       "name": "sound_dsound_xbox.obj",
@@ -23524,55 +23524,68 @@
         },
         {
           "addr": "0x1be1b0",
-          "decl": "void FUN_001be1b0(void);"
+          "decl": "void FUN_001be1b0(int cache_handle);",
+          "ported": false
         },
         {
           "addr": "0x1be270",
-          "decl": "void FUN_001be270(void);"
+          "decl": "void *FUN_001be270(int cache_handle);",
+          "ported": false
         },
         {
           "addr": "0x1be2b0",
-          "decl": "void FUN_001be2b0(void);"
+          "decl": "void FUN_001be2b0(void *perm_entry@<esi>);",
+          "ported": false
         },
         {
           "addr": "0x1c7b40",
-          "decl": "void FUN_001c7b40(void);"
+          "decl": "void FUN_001c7b40(void);",
+          "ported": false
         },
         {
           "addr": "0x1c8700",
-          "decl": "void FUN_001c8700(void);"
+          "decl": "int FUN_001c8700(void *state, int sample_count, int16_t *out, void *track, void *bitstream);",
+          "ported": false
         },
         {
           "addr": "0x1c88a0",
-          "decl": "void sound_is_active(void);"
+          "decl": "void sound_is_active(int sound_index);",
+          "ported": false
         },
         {
           "addr": "0x1c8ee0",
-          "decl": "void FUN_001c8ee0(void);"
+          "decl": "void FUN_001c8ee0(void *pitch_range);",
+          "ported": false
         },
         {
           "addr": "0x1cb1a0",
-          "decl": "void FUN_001cb1a0(void);"
+          "decl": "void FUN_001cb1a0(int channel_index, int param);",
+          "ported": false
         },
         {
           "addr": "0x1cb1d0",
-          "decl": "void FUN_001cb1d0(void);"
+          "decl": "void FUN_001cb1d0(int channel_index, int a, int b, int c, int d, int e);",
+          "ported": false
         },
         {
           "addr": "0x1cb210",
-          "decl": "void FUN_001cb210(void);"
+          "decl": "char FUN_001cb210(short channel_index@<ax>, unsigned char flags@<bl>);",
+          "ported": false
         },
         {
           "addr": "0x1cb4c0",
-          "decl": "void FUN_001cb4c0(void);"
+          "decl": "char FUN_001cb4c0(void *driver_caps);",
+          "ported": false
         },
         {
           "addr": "0x1cb820",
-          "decl": "void FUN_001cb820(void);"
+          "decl": "void FUN_001cb820(void);",
+          "ported": false
         },
         {
           "addr": "0x1cb8f0",
-          "decl": "void sound_reconnect_to_structure_bsp(void);"
+          "decl": "void sound_reconnect_to_structure_bsp(void);",
+          "ported": false
         },
         {
           "addr": "0x1cb960",
@@ -23606,91 +23619,113 @@
         },
         {
           "addr": "0x1cbc20",
-          "decl": "void FUN_001cbc20(void);"
+          "decl": "float FUN_001cbc20(float t);",
+          "ported": false
         },
         {
           "addr": "0x1cbc40",
-          "decl": "void FUN_001cbc40(void);"
+          "decl": "char FUN_001cbc40(int sound_handle@<ebx>);",
+          "ported": false
         },
         {
           "addr": "0x1cc1c0",
-          "decl": "void FUN_001cc1c0(void);"
+          "decl": "char FUN_001cc1c0(int looping_handle, void *out);",
+          "ported": false
         },
         {
           "addr": "0x1cc200",
-          "decl": "void FUN_001cc200(void);"
+          "decl": "char FUN_001cc200(int looping_handle, void *source, void *position);",
+          "ported": false
         },
         {
           "addr": "0x1cc2f0",
-          "decl": "void FUN_001cc2f0(void);"
+          "decl": "void FUN_001cc2f0(int sound_handle@<eax>, int tag_index@<esi>);",
+          "ported": false
         },
         {
           "addr": "0x1cc440",
-          "decl": "void FUN_001cc440(void);"
+          "decl": "int FUN_001cc440(int source@<edi>);",
+          "ported": false
         },
         {
           "addr": "0x1cc4f0",
-          "decl": "void FUN_001cc4f0(void);"
+          "decl": "void FUN_001cc4f0(int sound_handle);",
+          "ported": false
         },
         {
           "addr": "0x1cc5b0",
-          "decl": "void FUN_001cc5b0(void);"
+          "decl": "void FUN_001cc5b0(int sound_tag_index, void *source);",
+          "ported": false
         },
         {
           "addr": "0x1cc710",
-          "decl": "void sound_initialize(void);"
+          "decl": "void sound_initialize(void **driver_out);",
+          "ported": false
         },
         {
           "addr": "0x1cce80",
-          "decl": "void sound_update_time(void);"
+          "decl": "char sound_update_time(int sound_a@<eax>, int sound_b@<edi>, float threshold);",
+          "ported": false
         },
         {
           "addr": "0x1cd190",
-          "decl": "void FUN_001cd190(void);"
+          "decl": "int FUN_001cd190(int sound_tag_index@<eax>, void *track, void *source);",
+          "ported": false
         },
         {
           "addr": "0x1cd390",
-          "decl": "void FUN_001cd390(void);"
+          "decl": "void FUN_001cd390(void *track_entry@<edi>, float *out@<esi>);",
+          "ported": false
         },
         {
           "addr": "0x1cd4d0",
-          "decl": "void sound_stop_impulse_by_source_and_definition(void);"
+          "decl": "void sound_stop_impulse_by_source_and_definition(int source, int definition);",
+          "ported": false
         },
         {
           "addr": "0x1cd540",
-          "decl": "void sound_stop_all(void);"
+          "decl": "void sound_stop_all(void);",
+          "ported": false
         },
         {
           "addr": "0x1cd690",
-          "decl": "void FUN_001cd690(void);"
+          "decl": "void FUN_001cd690(void);",
+          "ported": false
         },
         {
           "addr": "0x1cd8b0",
-          "decl": "void FUN_001cd8b0(void);"
+          "decl": "short FUN_001cd8b0(int sound_handle);",
+          "ported": false
         },
         {
           "addr": "0x1ce550",
-          "decl": "void sound_refresh_looping(void);"
+          "decl": "char sound_refresh_looping(int sound_tag_index, void *source, void *track, short track_type);",
+          "ported": false
         },
         {
           "addr": "0x1ce9c0",
-          "decl": "void FUN_001ce9c0(void);"
+          "decl": "void FUN_001ce9c0(void);",
+          "ported": false
         },
         {
           "addr": "0x1cebb0",
-          "decl": "void FUN_001cebb0(void);"
+          "decl": "short FUN_001cebb0(int sound_handle);",
+          "ported": false
         },
         {
           "addr": "0x1cf100",
-          "decl": "void FUN_001cf100(void);"
+          "decl": "void FUN_001cf100(void);",
+          "ported": false
         },
         {
           "addr": "0x1cf360",
-          "decl": "void FUN_001cf360(void);"
+          "decl": "void FUN_001cf360(void);",
+          "ported": false
         },
         {
           "addr": "0x1cf820",
-          "decl": "void FUN_001cf820(void);"
+          "decl": "void FUN_001cf820(void **out);",
+          "ported": false
         }
       ],
       "name": "sound_manager.obj",
@@ -36607,6 +36642,61 @@
         {
           "addr": "0x2062d0",
           "decl": "int __stdcall DirectSoundCreateBuffer(void *desc, void **out_buffer);"
+        },
+        {
+          "addr": "0x2038df",
+          "decl": "void FUN_002038df(void);",
+          "ported": true
+        },
+        {
+          "addr": "0x204c79",
+          "decl": "void FUN_00204c79(int *caps, void *driver);",
+          "ported": true
+        },
+        {
+          "addr": "0x204c5d",
+          "decl": "int FUN_00204c5d(void *driver, int *wf);",
+          "ported": true
+        },
+        {
+          "addr": "0x204c95",
+          "decl": "int FUN_00204c95(void *driver, void *guid, int a, int *b, int *c);",
+          "ported": true
+        },
+        {
+          "addr": "0x204d41",
+          "decl": "void FUN_00204d41(void *driver, int a, int b);",
+          "ported": true
+        },
+        {
+          "addr": "0x204d81",
+          "decl": "int FUN_00204d81(void *driver, int pri);",
+          "ported": true
+        },
+        {
+          "addr": "0x204e48",
+          "decl": "int FUN_00204e48(void *driver, float vol);",
+          "ported": true
+        },
+        {
+          "addr": "0x2052de",
+          "decl": "void FUN_002052de(void *channel, int a, void *data);",
+          "ported": true
+        },
+        {
+          "addr": "0x205bd8",
+          "decl": "void FUN_00205bd8(void *channel, int a, void *data);",
+          "ported": true
+        },
+        {
+          "addr": "0x2060f8",
+          "decl": "int FUN_002060f8(int a, void *b, void *c, void *d);",
+          "ported": true
+        },
+        {
+          "addr": "0x206232",
+          "decl": "int FUN_00206232(void *driver, int a, int b);",
+          "ported": true
         }
       ],
       "name": "<xdk_stubs>",
