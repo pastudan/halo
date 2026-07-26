@@ -40396,7 +40396,7 @@
           "decl": "float path_attractor_weight(void *path_state, float *node_pos, float *step_pos, float *out_dist);",
           "name": "path_attractor_weight",
           "source_path": "src/halo/ai/path.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x5f550",
