@@ -33652,7 +33652,7 @@
         {
           "addr": "0xfb510",
           "decl": "float FUN_000fb510(int weapon_handle @<eax>, int16_t trigger_index @<ecx>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfb5a0",
@@ -33679,12 +33679,12 @@
         {
           "addr": "0xfb880",
           "decl": "void weapon_trigger_release_charge(int weapon_handle @<eax>, int16_t trigger_index @<esi>, int16_t state @<ebx>, int16_t charge_counter);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfb910",
           "decl": "void FUN_000fb910(int weapon_handle @<eax>, int16_t trigger_index @<ecx>, char flag);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfb990",
