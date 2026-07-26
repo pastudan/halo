@@ -4303,7 +4303,8 @@
         {
           "addr": "0x3f900",
           "decl": "char ai_adjust_damage(int player_index, void *damage_params, float *scale);",
-          "ported": false
+          "ported": true,
+          "name": "ai_adjust_damage"
         },
         {
           "addr": "0x3f350",
@@ -17944,8 +17945,9 @@
         },
         {
           "addr": "0xa2920",
-          "decl": "void FUN_000a2920(void);",
-          "ported": false
+          "decl": "void scripted_player_effect_set_rumble(int a0, float a1);",
+          "ported": false,
+          "name": "scripted_player_effect_set_rumble"
         },
         {
           "addr": "0xa2930",
@@ -31055,8 +31057,9 @@
         },
         {
           "addr": "0x17db40",
-          "decl": "void FUN_0017db40(void);",
-          "ported": true
+          "decl": "void rasterizer_screen_effect_set_video(int a0, float a1);",
+          "ported": true,
+          "name": "rasterizer_screen_effect_set_video"
         },
         {
           "addr": "0x17dc60",
@@ -35628,8 +35631,9 @@
         },
         {
           "addr": "0x58700",
-          "decl": "int FUN_00058700(int param_1);",
-          "ported": false
+          "decl": "int16_t FUN_00058700(int param_1);",
+          "ported": false,
+          "name": "FUN_00058700"
         },
         {
           "addr": "0x58710",
@@ -35670,7 +35674,8 @@
         {
           "addr": "0x58ae0",
           "decl": "void FUN_00058ae0(unsigned int combined_index);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00058ae0"
         },
         {
           "addr": "0x58af0",

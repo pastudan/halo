@@ -2073,65 +2073,27 @@ int FUN_0003f350(int unit_handle __attribute__((unused)), int spawn_tag __attrib
 #endif
 
 
-/* ai_adjust_damage (0x3f900) — XBE naked draft (batch 230). */
-#if defined(__clang__)
-static void *(*const b3f900_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-char ai_adjust_damage(int player_index __attribute__((unused)), void *damage_params __attribute__((unused)), float *scale __attribute__((unused)))
+/* ai_adjust_damage (0x3f900) — readable C lift (ai campaign). */
+char ai_adjust_damage(int player_index, void *damage_params, float *scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lai_adjust_damage_2\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movb 0x4(%%ecx), %%al\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $8, %%al\n\t"
-      "je .Lai_adjust_damage_1\n\t"
-      "flds 0x69c(%%edx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lai_adjust_damage_1\n\t"
-      "flds 0x69c(%%edx)\n\t"
-      "movb $1, %%bl\n\t"
-      "fmuls (%%ecx)\n\t"
-      "fstps (%%ecx)\n\t"
-      ".Lai_adjust_damage_1:\n\t"
-      "movb 0x1ca(%%edx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_adjust_damage_2\n\t"
-      "flds (%%ecx)\n\t"
-      "movb $1, %%al\n\t"
-      "fmuls 0x2533e4\n\t"
-      "popl %%ebx\n\t"
-      "fstps (%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lai_adjust_damage_2:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b3f900_dget)
-      : "memory");
+  char bl = 0;
+  if (player_index == -1)
+    return 0;
+  void *edx = datum_get(*(void **)0x6325a4, player_index);
+  unsigned char al = *((unsigned char *)damage_params + 4);
+  if ((al & 8) != 0) {
+    float v = *(float *)((char *)edx + 0x69c);
+    if (!(v <= *(float *)0x2533c0)) {
+      *scale = *scale * v;
+      bl = 1;
+    }
+  }
+  if (*((unsigned char *)edx + 0x1ca)) {
+    *scale = *scale * *(float *)0x2533e4;
+    return 1;
+  }
+  return bl;
 }
-#else
-#error "ai_adjust_damage: clang naked draft required"
-#endif
-
 
 /* ai_find_inactive_encounters (0x3fb40) — XBE naked draft (batch 221). */
 #if defined(__clang__)
