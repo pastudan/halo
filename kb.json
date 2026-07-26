@@ -27560,7 +27560,7 @@
         {
           "addr": "0xef900",
           "decl": "char FUN_000ef900(void *widget, void *item);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xef970",
@@ -27923,7 +27923,7 @@
         {
           "addr": "0x19dc20",
           "decl": "int ustrncmp(const wchar_t *s1, const wchar_t *s2, size_t count);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19dd00",
