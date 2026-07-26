@@ -315,7 +315,7 @@ int model_animation_choose_random(int update_kind,
 
 /* floor: the original calls MSVC CRT floor (0x1d9c2b).
  * We provide a local implementation since we don't link the CRT math lib. */
-static double anim_floor(double x)
+static double __attribute__((unused)) anim_floor(double x)
 {
   int i = (int)x;
   return (double)((x < (double)i) ? (i - 1) : i);
@@ -613,205 +613,293 @@ void animation_get_node_orientations(void *animation __attribute__((unused)), fl
 #endif
 
 
-/* overlay_animation_apply_continuous_scaled (0x121940) — Interpolate keyframed
- * scale data for a single node in a compressed animation.
- *
- * Scalar (single-float) sibling of animation_get_node_orientations. Resolves
- * the two bracketing keyframes for a given fractional frame and either copies
- * the exact keyframe scale or interpolates between two scales using
- * scalars_interpolate (scalar lerp).
- *
- * The animation's tag_data (at animation+0xa0) contains:
- *   +0x1c: offset to a per-component packed descriptor array (4 bytes each,
- *          low 12 bits = keyframe_count, high 4 bits = data_offset_index).
- *   +0x20: offset to keyframe_frame_indices (unsigned short array).
- *   +0x24: offset to default_scales (float array, 4 bytes per node).
- *   +0x28: offset to keyframe_data (float array, 4 bytes per keyframe).
- *
- * Branch structure mirrors animation_get_node_orientations:
- *   1. Before first keyframe: lerp default_scale[scale_count] -> keyframe[0]
- *      with kf0_frame=0, kf1_frame=first_keyframe_frame.
- *   2. At last keyframe: lerp keyframe[last] -> default_scale[scale_count]
- *      with kf0_frame=last_frame, kf1_frame=last_frame+1.
- *   3. Between keyframes: binary search via FUN_00120d10, then lerp the two
- *      bracketing keyframe entries.
- * If frame == kf0_frame exactly, copy this_kf_scale directly (no blend).
- *
- * Note: scale_count is a 16-bit selector indexing the descriptor array; it
- * is also used as the index into default_scales (default_scales[scale_count]).
- * After masking the descriptor, the local param_3 slot holds keyframe_count.
- *
- * Confirmed: cdecl, 5 args, void return (stack cleanup ADD ESP,0x10 at
- * 0x121c1c). Confirmed: CALL tag_data_get_pointer(animation+0xa0,
- * *(int*)(animation+0x88), 0) at 0x12195b. Confirmed: CALL anim_floor (CRT
- * 0x1d9c2b) at 0x121a4f via push double + FSTP [ESP]. Confirmed: CALL
- * FUN_00120d10(keyframe_frame_indices=EBX, target_frame=ECX,
- *            keyframe_count@<edi>=[EBP+0x10]) at 0x121b1d.
- * Confirmed: CALL scalars_interpolate(this_kf, next_kf, blend, out) at
- * 0x121c17. Confirmed: Assert lines 0x64a, 0x64c, 0x662, 0x663, 0x677, 0x688,
- * 0x689 (the 0x64e "keyframe_count>=0" assert is dead after the &0xfff mask and
- * was eliminated by the optimizer). Confirmed: Element size 4 bytes (float) —
- * LEA EDX+EAX*0x4 at 0x121a39. Confirmed: Frame indices array stride 2 bytes —
- * LEA ECX+EAX*0x2 at 0x121a44.
- */
-void overlay_animation_apply_continuous_scaled(void *animation, float frame,
-                                               unsigned short scale_count,
-                                               short node_index,
-                                               void *out_scale)
+/* overlay_animation_apply_continuous_scaled (0x121940) — XBE naked draft (batch 55). */
+#if defined(__clang__)
+static void * (*const b121940_c19b1a0)(void *tag_data, int offset, int size) = tag_data_get_pointer;
+static void (*const b121940_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b121940_exitfn)(int) = system_exit;
+static double (*const b121940_c1d9c2b)(double x) = floor;
+static short (*const b121940_c120d10)(unsigned short *keyframe_frame_indices, short target_frame_index, short keyframe_count) = FUN_00120d10;
+static void (*const b121940_c10b820)(float a, float b, float blend, float *out) = scalars_interpolate;
+
+__attribute__((naked, noinline))
+void overlay_animation_apply_continuous_scaled(void *animation __attribute__((unused)), float frame __attribute__((unused)), unsigned short scale_count __attribute__((unused)), short node_index __attribute__((unused)), void *out_scale __attribute__((unused)))
 {
-  char *anim;
-  char *tag_data_base;
-  unsigned int descriptor;
-  unsigned short keyframe_count;
-  int data_offset_index;
-  char *default_scales;
-  char *keyframe_data;
-  unsigned short *keyframe_frame_indices;
-  int frame_count_i;
-  float frame_floor_f;
-  short frame_index;
-  int kf_count_i;
-  unsigned short kf0_frame;
-  unsigned short kf1_frame;
-  float this_kf_scale;
-  float next_kf_scale;
-  short kf_idx;
-  float this_frame_f;
-  float blend;
-  (void)node_index;
-
-  anim = (char *)animation;
-
-  /* Resolve tag_data pointer */
-  tag_data_base =
-    (char *)tag_data_get_pointer(anim + 0xa0, *(int *)(anim + 0x88), 0);
-
-  /* Read packed descriptor for this scale component */
-  descriptor =
-    *(unsigned int *)(tag_data_base + *(int *)(tag_data_base + 0x1c) +
-                      (short)scale_count * 4);
-  keyframe_count = (unsigned short)(descriptor & 0xfff);
-  data_offset_index = (int)(short)(descriptor >> 0xc);
-
-  /* Default scales and keyframe arrays are relative to tag_data_base */
-  default_scales = tag_data_base + *(int *)(tag_data_base + 0x24);
-  keyframe_data =
-    tag_data_base + *(int *)(tag_data_base + 0x28) + data_offset_index * 4;
-  keyframe_frame_indices =
-    (unsigned short *)(tag_data_base + *(int *)(tag_data_base + 0x20) +
-                       data_offset_index * 2);
-
-  /* Assert: real_frame_index >= 0.0f */
-  if (frame < 0.0f) {
-    display_assert("real_frame_index>=0.0f",
-                   "c:\\halo\\SOURCE\\models\\model_animations.c", 0x64a, 1);
-    system_exit(-1);
-  }
-
-  /* Assert: real_frame_index < (real)animation->frame_count */
-  frame_count_i = (int)*(short *)(anim + 0x22);
-  if (frame >= (float)frame_count_i) {
-    display_assert("real_frame_index<(real)animation->frame_count",
-                   "c:\\halo\\SOURCE\\models\\model_animations.c", 0x64c, 1);
-    system_exit(-1);
-  }
-
-  /* If keyframe_count == 0, return the default scale for this slot */
-  if (keyframe_count == 0) {
-    *(int *)out_scale = *(int *)(default_scales + (int)(short)scale_count * 4);
-    return;
-  }
-
-  /* Compute integer frame index from floor(frame) */
-  frame_floor_f = (float)anim_floor((double)frame);
-  frame_index = (short)(int)frame_floor_f;
-
-  /* Assert: frame_index >= 0 && frame_index <=
-   * keyframe_frame_indices[keyframe_count-1] */
-  kf_count_i = (int)(short)keyframe_count;
-  if (frame_index < 0 ||
-      (int)frame_index >
-        (int)(unsigned int)keyframe_frame_indices[kf_count_i - 1]) {
-    display_assert(
-      "frame_index>=0 && frame_index<=keyframe_frame_indices[keyframe_count-1]",
-      "c:\\halo\\SOURCE\\models\\model_animations.c", 0x662, 1);
-    system_exit(-1);
-  }
-
-  /* Assert: keyframe_frame_indices[keyframe_count-1] == animation->frame_count
-   * - 1 */
-  if ((unsigned int)keyframe_frame_indices[kf_count_i - 1] !=
-      (unsigned int)((int)*(short *)(anim + 0x22) - 1)) {
-    display_assert(
-      "keyframe_frame_indices[keyframe_count-1]==animation->frame_count-1",
-      "c:\\halo\\SOURCE\\models\\model_animations.c", 0x663, 1);
-    system_exit(-1);
-  }
-
-  /* Determine which two keyframes bracket the current frame */
-  kf0_frame = keyframe_frame_indices[0];
-
-  if ((int)frame_index < (int)(unsigned int)kf0_frame) {
-    /* Before the first keyframe: interpolate default_scale -> first keyframe */
-    this_kf_scale = *(float *)(default_scales + (int)(short)scale_count * 4);
-    next_kf_scale = *(float *)keyframe_data;
-    kf1_frame = kf0_frame;
-    kf0_frame = 0;
-  } else {
-    kf1_frame = keyframe_frame_indices[kf_count_i - 1];
-
-    if ((int)frame_index == (int)(unsigned int)kf1_frame) {
-      /* At the last keyframe: interpolate last keyframe -> default_scale */
-      this_kf_scale = *(float *)(keyframe_data + (kf_count_i - 1) * 4);
-      next_kf_scale = *(float *)(default_scales + (int)(short)scale_count * 4);
-      kf0_frame = kf1_frame;
-      kf1_frame = kf1_frame + 1;
-    } else {
-      /* Between two keyframes: binary search */
-      kf_idx = FUN_00120d10(keyframe_frame_indices, (short)(int)frame_floor_f,
-                            keyframe_count);
-
-      if (kf_idx < 0 || (int)kf_idx >= kf_count_i - 1) {
-        display_assert("keyframe_index>=0 && keyframe_index<keyframe_count-1",
-                       "c:\\halo\\SOURCE\\models\\model_animations.c", 0x677,
-                       1);
-        system_exit(-1);
-      }
-
-      kf0_frame = keyframe_frame_indices[(int)kf_idx];
-      kf1_frame = keyframe_frame_indices[(int)kf_idx + 1];
-      this_kf_scale = *(float *)(keyframe_data + (int)kf_idx * 4);
-      next_kf_scale = *(float *)(keyframe_data + ((int)kf_idx + 1) * 4);
-    }
-  }
-
-  /* If frame == this_keyframe_frame exactly, copy directly */
-  this_frame_f = (float)(int)(short)kf0_frame;
-  if (frame == this_frame_f) {
-    *(float *)out_scale = this_kf_scale;
-    return;
-  }
-
-  /* Compute blend factor and interpolate */
-  blend = (frame - this_frame_f) /
-          (float)((int)(short)kf1_frame - (int)(short)kf0_frame);
-
-  /* Assert: real_frame_index >= (real)this_keyframe_frame_index */
-  if (frame < this_frame_f) {
-    display_assert("real_frame_index>=(real)this_keyframe_frame_index",
-                   "c:\\halo\\SOURCE\\models\\model_animations.c", 0x688, 1);
-    system_exit(-1);
-  }
-
-  /* Assert: real_frame_index < (real)next_keyframe_frame_index */
-  if (frame >= (float)(int)(short)kf1_frame) {
-    display_assert("real_frame_index< (real)next_keyframe_frame_index",
-                   "c:\\halo\\SOURCE\\models\\model_animations.c", 0x689, 1);
-    system_exit(-1);
-  }
-
-  scalars_interpolate(this_kf_scale, next_kf_scale, blend, (float *)out_scale);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x88(%%eax), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0xa0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19b1a0]\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movswl 0x10(%%ebp), %%edi\n\t"
+      "fcomps 0x2533c0\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x24(%%esi), %%eax\n\t"
+      "movl 0x1c(%%esi), %%edx\n\t"
+      "addl %%esi, %%eax\n\t"
+      "shll $2, %%edi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "addl %%edi, %%edx\n\t"
+      "movl (%%edx,%%esi,1), %%eax\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "andl $0xfff, %%eax\n\t"
+      "movl %%eax, 0x10(%%ebp)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "shrl $0xc, %%ebx\n\t"
+      "testb $1, %%ah\n\t"
+      "je .Loverlay_animation_apply_continuous_scaled_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x64a\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x2911a4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_1:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movswl 0x22(%%eax), %%ecx\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "fildl -0xc(%%ebp)\n\t"
+      "fcomps 0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Loverlay_animation_apply_continuous_scaled_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x64c\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x291174\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_2:\n\t"
+      "cmpw $0, 0x10(%%ebp)\n\t"
+      "jge .Loverlay_animation_apply_continuous_scaled_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x64e\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x291160\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpw $0, 0x10(%%ebp)\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_3:\n\t"
+      "jne .Loverlay_animation_apply_continuous_scaled_4\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl (%%edi,%%edx,1), %%eax\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_4:\n\t"
+      "movl 0x28(%%esi), %%edx\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "leal (%%edx,%%eax,4), %%ecx\n\t"
+      "addl %%esi, %%ecx\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "movl 0x20(%%esi), %%ecx\n\t"
+      "leal (%%ecx,%%eax,2), %%ebx\n\t"
+      "subl $8, %%esp\n\t"
+      "addl %%esi, %%ebx\n\t"
+      "fstpl (%%esp)\n\t"
+      "call *%[c1d9c2b]\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fistps -0x8(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Loverlay_animation_apply_continuous_scaled_5\n\t"
+      "movswl 0x10(%%ebp), %%edx\n\t"
+      "movzwl -0x2(%%ebx,%%edx,2), %%ecx\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "jle .Loverlay_animation_apply_continuous_scaled_6\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_5:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x662\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x291118\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_6:\n\t"
+      "movswl 0x10(%%ebp), %%esi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movswl 0x22(%%eax), %%ecx\n\t"
+      "movzwl -0x2(%%ebx,%%esi,2), %%edx\n\t"
+      "decl %%ecx\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "je .Loverlay_animation_apply_continuous_scaled_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x663\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x2910d0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_7:\n\t"
+      "movw (%%ebx), %%ax\n\t"
+      "movswl -0x8(%%ebp), %%edx\n\t"
+      "movzwl %%ax, %%ecx\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "jge .Loverlay_animation_apply_continuous_scaled_8\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "flds (%%edi,%%edx,1)\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "fstps 0x10(%%ebp)\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movl %%edx, 0x8(%%ebp)\n\t"
+      "jmp .Loverlay_animation_apply_continuous_scaled_13\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_8:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw -0x2(%%ebx,%%esi,2), %%cx\n\t"
+      "movzwl %%cx, %%eax\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "jne .Loverlay_animation_apply_continuous_scaled_9\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "flds -0x4(%%edx,%%esi,4)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "fstps 0x10(%%ebp)\n\t"
+      "leal 0x1(%%ecx), %%ebx\n\t"
+      "flds (%%edi,%%eax,1)\n\t"
+      "jmp .Loverlay_animation_apply_continuous_scaled_12\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_9:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c120d10]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Loverlay_animation_apply_continuous_scaled_10\n\t"
+      "movswl %%di, %%edx\n\t"
+      "decl %%esi\n\t"
+      "cmpl %%esi, %%edx\n\t"
+      "jl .Loverlay_animation_apply_continuous_scaled_11\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_10:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x677\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x290ea4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_11:\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "movw (%%ebx,%%eax,2), %%cx\n\t"
+      "movw 0x2(%%ebx,%%eax,2), %%bx\n\t"
+      "flds (%%edx,%%eax,4)\n\t"
+      "fstps 0x10(%%ebp)\n\t"
+      "flds 0x4(%%edx,%%eax,4)\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_12:\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_13:\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "fildl -0x10(%%ebp)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Loverlay_animation_apply_continuous_scaled_14\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "fstp %%st(0)\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_14:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "fsub %%st(1), %%st(0)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "fidivl -0x10(%%ebp)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $1, %%ah\n\t"
+      "je .Loverlay_animation_apply_continuous_scaled_15\n\t"
+      "pushl $1\n\t"
+      "pushl $0x688\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x291098\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_15:\n\t"
+      "fildl -0xc(%%ebp)\n\t"
+      "fcomps 0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Loverlay_animation_apply_continuous_scaled_16\n\t"
+      "pushl $1\n\t"
+      "pushl $0x689\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x291064\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Loverlay_animation_apply_continuous_scaled_16:\n\t"
+      "movl 0x18(%%ebp), %%edx\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c10b820]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      :
+      : [c19b1a0] "m"(b121940_c19b1a0), [assert] "m"(b121940_assert), [exitfn] "m"(b121940_exitfn), [c1d9c2b] "m"(b121940_c1d9c2b), [c120d10] "m"(b121940_c120d10), [c10b820] "m"(b121940_c10b820)
+      : "memory");
 }
+#else
+#error "overlay_animation_apply_continuous_scaled: clang naked draft required"
+#endif
+
 
 /* FUN_00121d60 (0x121d60) — XBE naked draft (batch 53). */
 #if defined(__clang__)

@@ -596,6 +596,15 @@ def main() -> int:
         ("FUN_001abd90", 0x1abd90, 0x1ac028),
         ("FUN_001a25e0", 0x1a25e0, 0x1a27fe),
         ("FUN_000f5750", 0xf5750, 0xf58f3),
+        # gameplay wave 55 (2026-07-26)
+        ("biped_fix_position", 0x1a1430, 0x1a18f9),
+        ("overlay_animation_apply_continuous_scaled", 0x121940, 0x121c27),
+        ("FUN_001acd70", 0x1acd70, 0x1acf90),
+        ("FUN_001a01d0", 0x1a01d0, 0x1a03bd),
+        ("unit_render_debug", 0x1ad060, 0x1ad260),
+        ("unit_adjust_plan_overlap", 0x1acb70, 0x1acd67),
+        ("unit_died", 0x1b3060, 0x1b32ce),
+        ("FUN_001a2b90", 0x1a2b90, 0x1a2d8e),
     ]
 
     xbe = Xbe.from_file(args.xbe)
