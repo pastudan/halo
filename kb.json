@@ -37980,27 +37980,33 @@
       "functions": [
         {
           "addr": "0x80210",
-          "decl": "void FUN_00080210(void);"
+          "decl": "void FUN_00080210(void);",
+          "ported": false
         },
         {
           "addr": "0x80380",
-          "decl": "void FUN_00080380(void);"
+          "decl": "void FUN_00080380(void);",
+          "ported": false
         },
         {
           "addr": "0x803b0",
-          "decl": "void FUN_000803b0(void);"
+          "decl": "void FUN_000803b0(void);",
+          "ported": false
         },
         {
           "addr": "0x803d0",
-          "decl": "unsigned short *key_agreement_build_message(short type, void *data, int buffer, unsigned short buffer_size);"
+          "decl": "unsigned short *key_agreement_build_message(short type, void *data, int buffer, unsigned short buffer_size);",
+          "ported": false
         },
         {
           "addr": "0x80470",
-          "decl": "void FUN_00080470(void);"
+          "decl": "void FUN_00080470(void);",
+          "ported": false
         },
         {
           "addr": "0x804e0",
-          "decl": "void FUN_000804e0(void);"
+          "decl": "void FUN_000804e0(void);",
+          "ported": false
         },
         {
           "addr": "0x80530",
@@ -38010,11 +38016,13 @@
         },
         {
           "addr": "0x805a0",
-          "decl": "void FUN_000805a0(void);"
+          "decl": "void FUN_000805a0(void);",
+          "ported": false
         },
         {
           "addr": "0x80620",
-          "decl": "void FUN_00080620(void);"
+          "decl": "void FUN_00080620(void);",
+          "ported": false
         },
         {
           "addr": "0x807d0",
@@ -38036,11 +38044,13 @@
         },
         {
           "addr": "0x80940",
-          "decl": "void message_encrypt(unsigned short *msgptr, unsigned int *key);"
+          "decl": "void message_encrypt(unsigned short *msgptr, unsigned int *key);",
+          "ported": false
         },
         {
           "addr": "0x80a40",
-          "decl": "void message_decrypt(unsigned short *msgptr, unsigned int *key);"
+          "decl": "void message_decrypt(unsigned short *msgptr, unsigned int *key);",
+          "ported": false
         },
         {
           "addr": "0x80b40",
@@ -38068,27 +38078,33 @@
         },
         {
           "addr": "0x80d50",
-          "decl": "unsigned int *sieve_of_eratosthenes(unsigned int limit, unsigned int *num_primes);"
+          "decl": "unsigned int *sieve_of_eratosthenes(unsigned int limit, unsigned int *num_primes);",
+          "ported": false
         },
         {
           "addr": "0x80eb0",
-          "decl": "void FUN_00080eb0(void);"
+          "decl": "void FUN_00080eb0(void);",
+          "ported": false
         },
         {
           "addr": "0x80f00",
-          "decl": "void FUN_00080f00(void);"
+          "decl": "void FUN_00080f00(void);",
+          "ported": false
         },
         {
           "addr": "0x80fc0",
-          "decl": "void FUN_00080fc0(void);"
+          "decl": "void FUN_00080fc0(void);",
+          "ported": false
         },
         {
           "addr": "0x81090",
-          "decl": "void FUN_00081090(void);"
+          "decl": "void FUN_00081090(void);",
+          "ported": false
         },
         {
           "addr": "0x81110",
-          "decl": "void FUN_00081110(void);"
+          "decl": "void FUN_00081110(void);",
+          "ported": false
         }
       ],
       "name": "message_header.obj",

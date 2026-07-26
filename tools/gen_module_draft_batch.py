@@ -44,7 +44,7 @@ def fn_name(decl: str, addr: str) -> str:
 def existing_fn_names(src_text: str) -> set[str]:
     return set(
         re.findall(
-            r"^(?:static\s+)?(?:inline\s+)?(?:[\w\s*]+?\s+)([A-Za-z_][A-Za-z0-9_]*)\s*\(",
+            r"^(?:static\s+)?(?:inline\s+)?[\w\s*]+\*?\s*([A-Za-z_][A-Za-z0-9_]*)\s*\(",
             src_text,
             re.M,
         )
