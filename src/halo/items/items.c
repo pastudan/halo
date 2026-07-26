@@ -3386,93 +3386,12 @@ char FUN_000f56b0(void)
 }
 
 
-/* 0xf5800 — look up a soft-keyboard glyph for slot_index (@<si>). */
-#if defined(__clang__)
-static void (*const FUN_000f5800_assert)(const char *, const char *, int,
-                                         bool) = display_assert;
-static void (*const FUN_000f5800_exit)(int) = system_exit;
-
-__attribute__((naked, noinline))
-unsigned short FUN_000f5800(int16_t slot_index __attribute__((unused)))
+/* FUN_000f5800 (0xf5800) — readable C lift. */
+unsigned short FUN_000f5800(int16_t slot_index)
 {
-  __asm__ volatile(
-      "movl 0x46cef4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne 1f\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3da\n\t"
-      "pushl $0x28a854\n\t"
-      "pushl $0x28a97c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exit]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "1:\n\t"
-      "cmpw $0x24, %%si\n\t"
-      "jb 2f\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3db\n\t"
-      "pushl $0x28a854\n\t"
-      "pushl $0x28a94c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exit]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "2:\n\t"
-      "movl 0x46cef4, %%ecx\n\t"
-      "movl 0x34(%%ecx), %%edx\n\t"
-      "movb 0x46cef1, %%cl\n\t"
-      "movzwl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "addl %%edx, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movb 0x46cef2, %%cl\n\t"
-      "je 5f\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je 3f\n\t"
-      "movw 0xa(%%eax), %%ax\n\t"
-      "jmp 8f\n\t"
-      "3:\n\t"
-      "movb 0x46cef3, %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je 4f\n\t"
-      "movw 0xc(%%eax), %%ax\n\t"
-      "jmp 8f\n\t"
-      "4:\n\t"
-      "movw 4(%%eax), %%ax\n\t"
-      "jmp 8f\n\t"
-      "5:\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movb 0x46cef3, %%cl\n\t"
-      "je 7f\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je 6f\n\t"
-      "movw 0xe(%%eax), %%ax\n\t"
-      "jmp 8f\n\t"
-      "6:\n\t"
-      "movw 6(%%eax), %%ax\n\t"
-      "jmp 8f\n\t"
-      "7:\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je 9f\n\t"
-      "movw 8(%%eax), %%ax\n\t"
-      "jmp 8f\n\t"
-      "9:\n\t"
-      "movw 2(%%eax), %%ax\n\t"
-      "8:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne 10f\n\t"
-      "movl $0x7f, %%eax\n\t"
-      "10:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(FUN_000f5800_assert), [exit] "m"(FUN_000f5800_exit)
-      : "memory");
-}
-#else
-unsigned short FUN_000f5800(int16_t slot_index /* @<si> */)
-{
+  extern char DAT_0028a97c[];
+  extern char DAT_0028a854[];
+  extern char DAT_0028a94c[];
   char *ui_globals;
   char *entry;
   unsigned short glyph;
@@ -3482,11 +3401,11 @@ unsigned short FUN_000f5800(int16_t slot_index /* @<si> */)
 
   ui_globals = *(char **)0x46cef4;
   if (ui_globals == 0) {
-    display_assert((char *)0x0028a97c, (char *)0x0028a854, 0x3da, 1);
+    display_assert(DAT_0028a97c, DAT_0028a854, 0x3da, 1);
     system_exit(-1);
   }
   if ((uint16_t)slot_index >= 0x24) {
-    display_assert((char *)0x0028a94c, (char *)0x0028a854, 0x3db, 1);
+    display_assert(DAT_0028a94c, DAT_0028a854, 0x3db, 1);
     system_exit(-1);
   }
 
@@ -3518,7 +3437,6 @@ unsigned short FUN_000f5800(int16_t slot_index /* @<si> */)
     return 0x7f;
   return glyph;
 }
-#endif
 
 /* FUN_000f5900 (0xf5900) — draw the item/profile name UI (font, bitmap, editable string). */
 #if defined(__clang__)

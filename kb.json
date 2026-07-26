@@ -14018,8 +14018,8 @@
         },
         {
           "addr": "0xf5800",
-          "decl": "unsigned short FUN_000f5800(int16_t slot_index /* @<si> */);",
-          "ported": false
+          "decl": "unsigned short FUN_000f5800(int16_t slot_index@<si>);",
+          "ported": true
         },
         {
           "addr": "0xf5900",
