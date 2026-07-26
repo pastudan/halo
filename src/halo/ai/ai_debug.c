@@ -13391,7 +13391,7 @@ static void (*const b4a460_c108fa0)(int16_t bit_vector_size, int vector, int res
 static char (*const b4a460_c108e70)(int16_t bit_vector_size, int v0, int v1, int result_out) = bit_vector_and;
 
 __attribute__((naked, noinline))
-void FUN_0004a460(int a0 __attribute__((unused)), int a1 __attribute__((unused)), void *buf __attribute__((unused)), int buf_size __attribute__((unused)), int max_entries __attribute__((unused)))
+void FUN_0004a460(int a0, int a1, void *buf, int buf_size, int max_entries)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
