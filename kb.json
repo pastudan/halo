@@ -880,7 +880,7 @@
         {
           "addr": "0x1dc02c",
           "decl": "int _wcsncmp(const wchar_t *s1, const wchar_t *s2, size_t count);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dc09e",
@@ -1324,7 +1324,7 @@
         {
           "addr": "0x1da059",
           "decl": "void FUN_001da059(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1da081",
@@ -1339,7 +1339,7 @@
         {
           "addr": "0x1da0cc",
           "decl": "void FUN_001da0cc(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1da0e9",
@@ -1468,7 +1468,7 @@
         {
           "addr": "0x1d9e72",
           "decl": "void FUN_001d9e72(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9e94",
@@ -1525,7 +1525,7 @@
         {
           "addr": "0x1ded83",
           "decl": "void __startOneArgErrorHandling(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dedc0",
@@ -1540,7 +1540,7 @@
         {
           "addr": "0x1dedec",
           "decl": "void FUN_001dedec(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dee05",
@@ -1955,7 +1955,7 @@
         {
           "addr": "0x1e2879",
           "decl": "void FUN_001e2879(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e28a4",
@@ -1965,7 +1965,7 @@
         {
           "addr": "0x1e28e8",
           "decl": "void _write_char(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e290d",
@@ -2030,7 +2030,7 @@
         {
           "addr": "0x1e3776",
           "decl": "void FUN_001e3776(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e37af",
@@ -2045,17 +2045,17 @@
         {
           "addr": "0x1e3805",
           "decl": "void FUN_001e3805(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e3830",
           "decl": "void FUN_001e3830(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e385e",
           "decl": "void FUN_001e385e(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e388c",
@@ -2145,17 +2145,17 @@
         {
           "addr": "0x1e4048",
           "decl": "void FUN_001e4048(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e4075",
           "decl": "void FUN_001e4075(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e40a3",
           "decl": "void FUN_001e40a3(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e40d0",
@@ -2180,7 +2180,7 @@
         {
           "addr": "0x1e4278",
           "decl": "void __isatty(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e42b0",
@@ -2290,7 +2290,7 @@
         {
           "addr": "0x1e57d2",
           "decl": "void __itoa(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e57fc",
@@ -2320,7 +2320,7 @@
         {
           "addr": "0x1e58f6",
           "decl": "void FUN_001e58f6(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e592f",
@@ -31355,7 +31355,7 @@
         {
           "addr": "0x1d94f0",
           "decl": "void FUN_001d94f0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d950d",
@@ -31472,7 +31472,7 @@
         {
           "addr": "0x1d99ba",
           "decl": "void FUN_001d99ba(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d99ce",
@@ -31482,7 +31482,7 @@
         {
           "addr": "0x1d99fd",
           "decl": "void __lock_file2(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9a20",
@@ -31503,7 +31503,7 @@
         {
           "addr": "0x1d9a4f",
           "decl": "void __unlock_file2(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9a72",
@@ -41264,7 +41264,7 @@
         {
           "addr": "0x001e6a10",
           "decl": "void D3DDevice_GetCreationParameters(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e6a50",
@@ -41514,7 +41514,7 @@
         {
           "addr": "0x001e9320",
           "decl": "void D3DDevice_SetRenderState_PSTextureModes(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e93a0",
@@ -41869,7 +41869,7 @@
         {
           "addr": "0x001eeac0",
           "decl": "void D3D_GetAdapterIdentifier(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001eeaf0",
