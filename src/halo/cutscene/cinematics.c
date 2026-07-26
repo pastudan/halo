@@ -735,58 +735,20 @@ void FUN_00093640(int title)
   cinematic_set_title_delayed(title, 0);
 }
 
-/* FUN_00093660 (0x93660) — XBE naked draft (batch 255). */
-#if defined(__clang__)
-static void (*const b93660_c94290)(void) = FUN_00094290;
-static void (*const b93660_c94ba0)(void) = FUN_00094ba0;
-
-__attribute__((naked, noinline))
-void FUN_00093660(void)
+/* FUN_00093660 (0x93660) — readable C lift. */
+void FUN_00093660(void *a, void *b, void *c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movb 0x20(%%ecx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jbe .LFUN_00093660_2\n\t"
-      "cmpb $3, %%al\n\t"
-      "jbe .LFUN_00093660_1\n\t"
-      "cmpb $4, %%al\n\t"
-      "jne .LFUN_00093660_2\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x22(%%ecx), %%al\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c94290]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00093660_1:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x22(%%ecx), %%al\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c94ba0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00093660_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c94290] "m"(b93660_c94290), [c94ba0] "m"(b93660_c94ba0)
-      : "memory");
+  unsigned char t = *((unsigned char *)a + 0x20);
+  if (t >= 1 && t <= 3) {
+    unsigned int v = *((unsigned char *)a + 0x22);
+    FUN_00094ba0(b, c, (int)v);
+    return;
+  }
+  if (t == 4) {
+    unsigned int v = *((unsigned char *)a + 0x22);
+    FUN_00094290(b, c, (int)v);
+  }
 }
-#else
-#error "FUN_00093660: clang naked draft required"
-#endif
-
-
 /* FUN_00093710 (0x93710) — XBE naked draft (batch 266). */
 #if defined(__clang__)
 static void (*const b93710_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
