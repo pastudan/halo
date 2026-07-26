@@ -40410,7 +40410,7 @@
         },
         {
           "addr": "0x616e0",
-          "decl": "void FUN_000616e0(void);",
+          "decl": "char FUN_000616e0(void *avoidance_record, unsigned char path_flag, void *param_3, void *param_4, void *param_5, void *param_6, float *end_point, unsigned char param_8);",
           "ported": false
         },
         {
