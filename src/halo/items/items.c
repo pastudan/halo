@@ -799,18 +799,30 @@ void virtual_keyboard_process_input(void)
 #endif
 
 
-/* items_dispose_from_old_map (0xf6740)
- * Guarded per-frame virtual-keyboard input pump. If the
- * virtual_keyboard_globals block at 0x46cef0 is active (byte flag at offset 0
- * != 0), drain its input queue via virtual_keyboard_process_input; otherwise
- * no-op. The kb name is a placeholder and does not describe the observed binary
- * behavior. */
+/* items_dispose_from_old_map (0xf6740) — XBE naked draft (batch 102). */
+#if defined(__clang__)
+static void (*const bf6740_cf63f0)(void) = virtual_keyboard_process_input;
+
+__attribute__((naked, noinline))
 void items_dispose_from_old_map(void)
 {
-  if (*(uint8_t *)0x46cef0 != 0) {
-    virtual_keyboard_process_input();
-  }
+  __asm__ volatile(
+      "movb 0x46cef0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Litems_dispose_from_old_map_1\n\t"
+      "jmp .Litems_dispose_from_old_map_10000\n\t"
+      ".Litems_dispose_from_old_map_1:\n\t"
+      "ret\n\t"
+      ".Litems_dispose_from_old_map_10000:\n\t"
+      "jmp *%[cf63f0]\n\t"
+      :
+      : [cf63f0] "m"(bf6740_cf63f0)
+      : "memory");
 }
+#else
+#error "items_dispose_from_old_map: clang naked draft required"
+#endif
+
 
 /* FUN_000f6750 (0xf6750) — XBE naked draft (batch 69). */
 #if defined(__clang__)

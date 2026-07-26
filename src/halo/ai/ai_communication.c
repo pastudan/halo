@@ -265,16 +265,27 @@ void ai_communication_initialize_for_new_map(void)
 #endif
 
 
-/* ai_communication_dispose_from_old_map: invalidate the conversation data
- * table when leaving a map.
- *
- * Confirmed via callers: ai_dispose_from_old_map (0x3f720) and
- * ai_handle_editing (0x41e80). Binary: MOV EAX,[0x6324ec]; PUSH EAX;
- * CALL data_make_invalid; POP ECX; RET. */
+/* ai_communication_dispose_from_old_map (0x42ca0) — XBE naked draft (batch 102). */
+#if defined(__clang__)
+static void (*const b42ca0_c119550)(data_t *data) = data_make_invalid;
+
+__attribute__((naked, noinline))
 void ai_communication_dispose_from_old_map(void)
 {
-  data_make_invalid(*(void **)0x6324ec);
+  __asm__ volatile(
+      "movl 0x6324ec, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119550]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c119550] "m"(b42ca0_c119550)
+      : "memory");
 }
+#else
+#error "ai_communication_dispose_from_old_map: clang naked draft required"
+#endif
+
 
 /* ai_conversation_advance (0x43520) — XBE naked draft (batch 91). */
 #if defined(__clang__)

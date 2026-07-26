@@ -77,13 +77,28 @@ void FUN_000ffe90(char param_1)
   }
 }
 
-/* Set the game connection state (network connection type).
- * Stores the low 16 bits of param into the global word_46DA0C.
- * 0 = local/singleplayer, 2 = client, other values used for host/dedicated. */
-void set_game_connection(short param)
+/* set_game_connection (0xfff70) — XBE naked draft (batch 102). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void set_game_connection(short param __attribute__((unused)))
 {
-  word_46DA0C = param;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "movw %%ax, 0x46da0c\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "set_game_connection: clang naked draft required"
+#endif
+
 
 short game_connection(void)
 {

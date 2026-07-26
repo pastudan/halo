@@ -216,14 +216,31 @@ file_ref_t *file_reference_set_name(file_ref_t *info, const char *name)
   return info;
 }
 
-/* 0x1997f0 — return the location field (unk_6) of a validated file reference.
- * The location is a small integer: -1=relative, 0=E:, 1=D:, etc. */
-int16_t file_reference_get_location(file_ref_t *info)
+/* file_reference_get_location (0x1997f0) — XBE naked draft (batch 102). */
+#if defined(__clang__)
+static file_ref_t * (*const b1997f0_c199620)(file_ref_t *info) = file_reference_verify;
+
+__attribute__((naked, noinline))
+int16_t file_reference_get_location(file_ref_t *info __attribute__((unused)))
 {
-  file_ref_t *ref;
-  ref = file_reference_verify(info);
-  return ref->unk_6;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c199620]\n\t"
+      "movw 0x6(%%eax), %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c199620] "m"(b1997f0_c199620)
+      : "memory");
 }
+#else
+#error "file_reference_get_location: clang naked draft required"
+#endif
+
 
 /**
  * file_reference_get_name - extract a formatted name string from a file

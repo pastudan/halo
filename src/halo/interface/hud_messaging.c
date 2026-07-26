@@ -293,12 +293,29 @@ void FUN_000d44f0(int cursor, short *element, int param_1, int param_2)
 
 /* HUD message display system. */
 
-/* hud_messaging_initialize (0xd4680)
- * Allocates the hud messaging globals buffer via game_state_malloc. */
+/* hud_messaging_initialize (0xd4680) — XBE naked draft (batch 102). */
+#if defined(__clang__)
+static void * (*const bd4680_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
+
+__attribute__((naked, noinline))
 void hud_messaging_initialize(void)
 {
-  *(void **)0x46bd18 = game_state_malloc("hud messaging", 0, 0x11a8);
+  __asm__ volatile(
+      "pushl $0x11a8\n\t"
+      "pushl $0\n\t"
+      "pushl $0x281ac4\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, 0x46bd18\n\t"
+      "ret\n\t"
+      :
+      : [c1bfbf0] "m"(bd4680_c1bfbf0)
+      : "memory");
 }
+#else
+#error "hud_messaging_initialize: clang naked draft required"
+#endif
+
 
 /* FUN_000d46a0 (0xd46a0)
  * Sets the player globals pointer and zeroes the hud messaging buffer. */
@@ -622,18 +639,29 @@ void scripted_hud_time_code_start(char param_1 __attribute__((unused)))
 #endif
 
 
-/* scripted_hud_time_code_reset (0xd4a90)
- * Reset the loading timer start to current tick. */
+/* scripted_hud_time_code_reset (0xd4a90) — XBE naked draft (batch 102). */
+#if defined(__clang__)
+static int (*const bd4a90_gtime)(void) = game_time_get;
+
+__attribute__((naked, noinline))
 void scripted_hud_time_code_reset(void)
 {
-  int tick;
-
-  tick = game_time_get();
-  *(int *)0x2f66e4 = tick;
-  if (*(int *)0x2f66e8 != -1) {
-    *(int *)0x2f66e8 = tick;
-  }
+  __asm__ volatile(
+      "call *%[gtime]\n\t"
+      "cmpl $-1, 0x2f66e8\n\t"
+      "movl %%eax, 0x2f66e4\n\t"
+      "je .Lscripted_hud_time_code_reset_1\n\t"
+      "movl %%eax, 0x2f66e8\n\t"
+      ".Lscripted_hud_time_code_reset_1:\n\t"
+      "ret\n\t"
+      :
+      : [gtime] "m"(bd4a90_gtime)
+      : "memory");
 }
+#else
+#error "scripted_hud_time_code_reset: clang naked draft required"
+#endif
+
 
 
 /* hud_render_timer (0xd4ab0) */
@@ -1129,22 +1157,33 @@ _BYTE *scripted_hud_messages_clear(void)
   return 0;
 }
 
-/* hud_get_font_index (0xd5160)
- * Returns font index: multiplayer-specific if 2+ local players and valid,
- * otherwise falls back to the default font index. */
+/* hud_get_font_index (0xd5160) — XBE naked draft (batch 102). */
+#if defined(__clang__)
+static __int16 (*const bd5160_cba4b0)(void) = local_player_count;
+
+__attribute__((naked, noinline))
 int hud_get_font_index(void)
 {
-  short count;
-  int base;
-  int result;
-
-  count = local_player_count();
-  base = *(int *)0x5aa68c;
-  if (count <= 1 || (result = *(int *)(base + 0x64), result == -1)) {
-    result = *(int *)(base + 0x54);
-  }
-  return result;
+  __asm__ volatile(
+      "call *%[cba4b0]\n\t"
+      "cmpw $1, %%ax\n\t"
+      "movl 0x5aa68c, %%ecx\n\t"
+      "jle .Lhud_get_font_index_1\n\t"
+      "movl 0x64(%%ecx), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lhud_get_font_index_2\n\t"
+      ".Lhud_get_font_index_1:\n\t"
+      "movl 0x54(%%ecx), %%eax\n\t"
+      ".Lhud_get_font_index_2:\n\t"
+      "ret\n\t"
+      :
+      : [cba4b0] "m"(bd5160_cba4b0)
+      : "memory");
 }
+#else
+#error "hud_get_font_index: clang naked draft required"
+#endif
+
 
 /* hud_get_text_color (0xd5180) — XBE naked draft (batch 99). */
 #if defined(__clang__)
@@ -1916,13 +1955,29 @@ void hud_nav_points_initialize(void)
 #endif
 
 
-/* hud_messaging_initialize_for_new_map: clear the messaging slot table.
- * Called from hud_initialize_for_new_map (0xd0360).
- * Fills *(void**)0x46bd1c with 0xff for 0xc0 bytes (all slots invalid). */
+/* hud_messaging_initialize_for_new_map (0xd5ff0) — XBE naked draft (batch 102). */
+#if defined(__clang__)
+static void *(*const bd5ff0_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void hud_messaging_initialize_for_new_map(void)
 {
-  csmemset(*(void **)0x46bd1c, 0xff, 0xc0);
+  __asm__ volatile(
+      "movl 0x46bd1c, %%eax\n\t"
+      "pushl $0xc0\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(bd5ff0_memset)
+      : "memory");
 }
+#else
+#error "hud_messaging_initialize_for_new_map: clang naked draft required"
+#endif
+
 
 /* hud_messaging_dispose_from_old_map: no-op stub.
  * Called from hud_dispose_from_old_map (0xd03e0). */

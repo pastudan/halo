@@ -1250,6 +1250,19 @@ def main() -> int:
         ("system_get_user_name", 0x8e390, 0x8e3ab),
         ("rasterizer_text_cache_dispose", 0x183720, 0x183744),
         ("FUN_001397f0", 0x1397f0, 0x139809),
+        # gameplay wave 102 (2026-07-26) — final interface/rasterizer Capstone weaks
+        ("rasterizer_secondary_geometry_groups_get", 0x184390, 0x1843ab),
+        ("hud_get_font_index", 0xd5160, 0xd517d),
+        ("FUN_0017ff60", 0x17ff60, 0x17ff7d),
+        ("rasterizer_transparent_geometry_begin", 0x184300, 0x18432f),
+        ("file_reference_get_location", 0x1997f0, 0x199805),
+        ("system_calloc", 0x8e3b0, 0x8e3c4),
+        ("hud_messaging_initialize", 0xd4680, 0xd469a),
+        ("hud_messaging_initialize_for_new_map", 0xd5ff0, 0xd6006),
+        ("scripted_hud_time_code_reset", 0xd4a90, 0xd4aa9),
+        ("set_game_connection", 0xfff70, 0xfff7f),
+        ("items_dispose_from_old_map", 0xf6740, 0xf674f),
+        ("ai_communication_dispose_from_old_map", 0x42ca0, 0x42cad),
     ]
 
     xbe = Xbe.from_file(args.xbe)
