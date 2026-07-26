@@ -1091,7 +1091,7 @@ void *FUN_0011ee50(void *pool)
 {
   extern char DAT_00290254[];
   extern char DAT_0029018c[];
-  if (!FUN_0011ecf0(pool)) {
+  if (!memory_block_valid(pool)) {
     display_assert(DAT_00290254, DAT_0029018c, 0x23f, 1);
     system_exit(-1);
   }
