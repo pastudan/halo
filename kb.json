@@ -8168,7 +8168,7 @@
         {
           "addr": "0xddb90",
           "decl": "int16_t first_person_weapon_get_marker_by_name_render(int object_handle, const char *marker_name, void *out_markers, int16_t max_markers);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xde0e0",
@@ -34438,7 +34438,8 @@
         {
           "addr": "0x42df0",
           "decl": "char FUN_00042df0(int actor, int unit, int prop);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00042df0"
         },
         {
           "addr": "0x42e60",
@@ -34507,7 +34508,8 @@
         {
           "addr": "0x434c0",
           "decl": "int16_t ai_conversation_line(int conversation_index);",
-          "ported": false
+          "ported": true,
+          "name": "ai_conversation_line"
         },
         {
           "addr": "0x43520",
