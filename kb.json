@@ -18424,7 +18424,7 @@
         {
           "addr": "0xe13f0",
           "decl": "void player_ui_clear_multiplayer_joins(void);",
-          "ported": false,
+          "ported": true,
           "name": "player_ui_clear_multiplayer_joins"
         },
         {
@@ -34595,8 +34595,9 @@
         },
         {
           "addr": "0x435b0",
-          "decl": "void ai_conversation_finish(int handle, char param_b, char param_c);",
-          "ported": false
+          "decl": "void ai_conversation_finish(int handle __attribute__((unused)), char param_b __attribute__((unused)), char param_c __attribute__((unused)));",
+          "ported": false,
+          "name": "ai_conversation_finish"
         },
         {
           "addr": "0x43740",
@@ -36327,7 +36328,8 @@
         {
           "addr": "0x652a0",
           "decl": "void FUN_000652a0(int count, void **out_ptr @<esi>, void *src @<ebx>);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000652a0"
         },
         {
           "addr": "0x652f0",
