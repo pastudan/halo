@@ -1,14 +1,39 @@
-/* Allocate the motion sensor (radar) game state block (0xdb0f0). */
+/* motion_sensor_initialize (0xdb0f0) — XBE naked draft (batch 99). */
+#if defined(__clang__)
+static void * (*const bdb0f0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
+static void (*const bdb0f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bdb0f0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void motion_sensor_initialize(void)
 {
-  *(void **)0x46bd2c =
-    game_state_malloc("motion sensor (radar)", "sensor data", 0x15a8);
-  if (*(void **)0x46bd2c == 0) {
-    display_assert("motion_sensor_globals",
-                   "c:\\halo\\SOURCE\\interface\\motion_sensor.c", 0x12a, 1);
-    system_exit(-1);
-  }
+  __asm__ volatile(
+      "pushl $0x15a8\n\t"
+      "pushl $0x282100\n\t"
+      "pushl $0x2820e8\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x46bd2c\n\t"
+      "jne .Lmotion_sensor_initialize_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x12a\n\t"
+      "pushl $0x282094\n\t"
+      "pushl $0x2820d0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lmotion_sensor_initialize_1:\n\t"
+      "ret\n\t"
+      :
+      : [c1bfbf0] "m"(bdb0f0_c1bfbf0), [assert] "m"(bdb0f0_assert), [exitfn] "m"(bdb0f0_exitfn)
+      : "memory");
 }
+#else
+#error "motion_sensor_initialize: clang naked draft required"
+#endif
+
 
 /* (0xdb140) */
 void FUN_000db140(void)

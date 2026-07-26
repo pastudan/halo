@@ -1,21 +1,41 @@
 
-/* ai_debug_dispose: free actor_debug_array and actor_path_debug_array.
- *
- * Confirmed: __FILE__ = "c:\halo\SOURCE\ai\ai_debug.c"
- *   line 0xa0 (160) — actor_debug_array free
- *   line 0xa6 (166) — actor_path_debug_array free
- * Called from ai_dispose (0x3f6f0). */
+/* ai_debug_dispose (0x48f50) — XBE naked draft (batch 99). */
+#if defined(__clang__)
+static void (*const b48f50_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+
+__attribute__((naked, noinline))
 void ai_debug_dispose(void)
 {
-  if (*(void **)0x331f58 != NULL) {
-    debug_free(*(void **)0x331f58, "c:\\halo\\SOURCE\\ai\\ai_debug.c", 0xa0);
-    *(void **)0x331f58 = NULL;
-  }
-  if (*(void **)0x331f5c != NULL) {
-    debug_free(*(void **)0x331f5c, "c:\\halo\\SOURCE\\ai\\ai_debug.c", 0xa6);
-    *(void **)0x331f5c = NULL;
-  }
+  __asm__ volatile(
+      "movl 0x331f58, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lai_debug_dispose_1\n\t"
+      "pushl $0xa0\n\t"
+      "pushl $0x25ab74\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl $0, 0x331f58\n\t"
+      ".Lai_debug_dispose_1:\n\t"
+      "movl 0x331f5c, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lai_debug_dispose_2\n\t"
+      "pushl $0xa6\n\t"
+      "pushl $0x25ab74\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl $0, 0x331f5c\n\t"
+      ".Lai_debug_dispose_2:\n\t"
+      "ret\n\t"
+      :
+      : [c8ef70] "m"(b48f50_c8ef70)
+      : "memory");
 }
+#else
+#error "ai_debug_dispose: clang naked draft required"
+#endif
+
 
 /* ai_debug_dispose_from_old_map (0x48fa0) — XBE naked draft (batch 97). */
 #if defined(__clang__)

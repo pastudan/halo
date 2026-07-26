@@ -2778,20 +2778,42 @@ void cluster_partition_globals_new(void **out __attribute__((unused)), const cha
 #endif
 
 
-/* Clear a cluster partition (0x1915d0).
- * Resets the per-cluster head array (partition[0], 0x800 bytes) to the empty
- * sentinel (-1), then empties both datum pools: the per-object cluster
- * references (partition[2]) first, then the per-cluster object references
- * (partition[1]). Callee order and struct offsets confirmed from disassembly.
- */
-void cluster_partition_clear(void *partition)
-{
-  int **part = (int **)partition;
+/* cluster_partition_clear (0x1915d0) — XBE naked draft (batch 99). */
+#if defined(__clang__)
+static void *(*const b1915d0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b1915d0_c119b20)(data_t *data) = data_delete_all;
 
-  csmemset(part[0], -1, 0x800);
-  data_delete_all((data_t *)part[2]);
-  data_delete_all((data_t *)part[1]);
+__attribute__((naked, noinline))
+void cluster_partition_clear(void *partition __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl $0x800\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119b20]\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119b20]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b1915d0_memset), [c119b20] "m"(b1915d0_c119b20)
+      : "memory");
 }
+#else
+#error "cluster_partition_clear: clang naked draft required"
+#endif
+
 
 /* cluster_partition_dispose (0x191600) — XBE naked draft (batch 98). */
 #if defined(__clang__)

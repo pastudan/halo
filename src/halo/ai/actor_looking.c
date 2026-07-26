@@ -704,24 +704,40 @@ void FUN_00014480(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* actor_set_prop_if_match (0x14510)
- * Conditionally replace an actor's prop handle if it matches old_prop.
- *
- * If the actor's current prop handle at actor+0xac equals old_prop, replace
- * it with new_prop.  Used to safely swap out a prop reference without
- * touching actors that already moved to a different prop.
- *
- * Confirmed: datum_get(actor_data, actor_handle) from decompile.
- * Confirmed: compare *(int *)(actor+0xac) == old_prop; store new_prop on
- *   match. */
-void actor_set_prop_if_match(int actor_handle, int old_prop, int new_prop)
+/* actor_set_prop_if_match (0x14510) — XBE naked draft (batch 99). */
+#if defined(__clang__)
+static void *(*const b14510_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void actor_set_prop_if_match(int actor_handle __attribute__((unused)), int old_prop __attribute__((unused)), int new_prop __attribute__((unused)))
 {
-  char *actor;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(int *)(actor + 0xac) == old_prop) {
-    *(int *)(actor + 0xac) = new_prop;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xac(%%eax), %%edx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "addl $0x9c, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "jne .Lactor_set_prop_if_match_1\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x10(%%eax)\n\t"
+      ".Lactor_set_prop_if_match_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b14510_dget)
+      : "memory");
 }
+#else
+#error "actor_set_prop_if_match: clang naked draft required"
+#endif
+
 
 /* FUN_00014540 (0x14540) — XBE naked draft (batch 76). */
 #if defined(__clang__)
@@ -4674,23 +4690,42 @@ void actor_clear_aim_target(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_00017090 (0x17090)
- * Compute actor prop-interest for the prop list at actor+0x9c.
- *
- * Fetches the actor record, then calls actor_look_compute_prop_interest with
- * reset=0, prop_state=actor+0x9c, callback=FUN_00016cd0, param_5=0.
- *
- * Confirmed: datum_get(actor_data, actor_handle) at 0x1709e.
- * Confirmed: PUSH 0x0; PUSH 0x16cd0; ADD EAX,0x9c; PUSH EAX; PUSH 0x0;
- *   PUSH ESI; CALL 0x16d40; ADD ESP,0x1c at 0x170a3-0x170b8.
- * Inferred: actor+0x9c = scripted-look prop state array. */
-void FUN_00017090(int actor_handle)
+/* FUN_00017090 (0x17090) — XBE naked draft (batch 99). */
+#if defined(__clang__)
+static void *(*const b17090_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b17090_c16d40)(int actor_handle, int param_2, short *param_3, void (*callback)(void), int param_5) = actor_look_compute_prop_interest;
+
+__attribute__((naked, noinline))
+void FUN_00017090(int actor_handle __attribute__((unused)))
 {
-  char *actor;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  actor_look_compute_prop_interest(actor_handle, 0, (short *)(actor + 0x9c),
-                                   (void (*)(void))FUN_00016cd0, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "pushl $0\n\t"
+      "pushl $0x16cd0\n\t"
+      "addl $0x9c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c16d40]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b17090_dget), [c16d40] "m"(b17090_c16d40)
+      : "memory");
 }
+#else
+#error "FUN_00017090: clang naked draft required"
+#endif
+
 
 /* FUN_000170c0 (0x170c0)
  * Compute actor prop-interest for the prop list at actor+0x9c using the

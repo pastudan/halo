@@ -567,20 +567,41 @@ void scripted_hud_time_code_show(char param_1)
   *(int *)0x2f66e4 = -1;
 }
 
-/* scripted_hud_time_code_start (0xd4a50)
- * Pause or unpause the loading screen timer. */
-void scripted_hud_time_code_start(char param_1)
-{
-  int now;
+/* scripted_hud_time_code_start (0xd4a50) — XBE naked draft (batch 99). */
+#if defined(__clang__)
+static int (*const bd4a50_gtime)(void) = game_time_get;
 
-  if (param_1 != '\0') {
-    now = game_time_get();
-    *(int *)0x2f66e4 = *(int *)0x2f66e4 + (now - *(int *)0x2f66e8);
-    *(int *)0x2f66e8 = -1;
-    return;
-  }
-  *(int *)0x2f66e8 = game_time_get();
+__attribute__((naked, noinline))
+void scripted_hud_time_code_start(char param_1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lscripted_hud_time_code_start_1\n\t"
+      "call *%[gtime]\n\t"
+      "movl 0x2f66e8, %%edx\n\t"
+      "movl 0x2f66e4, %%ecx\n\t"
+      "subl %%edx, %%eax\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "movl %%ecx, 0x2f66e4\n\t"
+      "movl $0xffffffff, 0x2f66e8\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lscripted_hud_time_code_start_1:\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, 0x2f66e8\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [gtime] "m"(bd4a50_gtime)
+      : "memory");
 }
+#else
+#error "scripted_hud_time_code_start: clang naked draft required"
+#endif
+
 
 /* scripted_hud_time_code_reset (0xd4a90)
  * Reset the loading timer start to current tick. */
@@ -782,16 +803,40 @@ void hud_enable_custom_state_message(short param_1 __attribute__((unused)), char
 #endif
 
 
-/* hud_set_state_text (0xd4f70)
- * Set help text string for a player. */
-void hud_set_state_text(short param_1, wchar_t *param_2)
-{
-  int iVar1;
+/* hud_set_state_text (0xd4f70) — XBE naked draft (batch 99). */
+#if defined(__clang__)
+static wchar_t * (*const bd4f70_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 
-  iVar1 = param_1 * 0x460 + *(int *)0x46bd18;
-  ustrncpy((wchar_t *)(iVar1 + 0x230), param_2, 0xff);
-  *(short *)(iVar1 + 0x42e) = 0;
+__attribute__((naked, noinline))
+void hud_set_state_text(short param_1 __attribute__((unused)), wchar_t *param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x46bd18, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movswl 0x8(%%ebp), %%esi\n\t"
+      "imull $0x460, %%esi, %%esi\n\t"
+      "addl %%eax, %%esi\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl $0xff\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x230(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c19dc90]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw $0, 0x42e(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c19dc90] "m"(bd4f70_c19dc90)
+      : "memory");
 }
+#else
+#error "hud_set_state_text: clang naked draft required"
+#endif
+
 
 /* hud_messaging_get_objective (0xd4fb0) — XBE naked draft (batch 90). */
 #if defined(__clang__)
@@ -1070,20 +1115,41 @@ int hud_get_font_index(void)
   return result;
 }
 
-/* hud_get_text_color (0xd5180)
- * Copies 4 HUD text color words from the messaging globals into param_1[0..3].
- */
-int *hud_get_text_color(int *param_1)
-{
-  int *src;
+/* hud_get_text_color (0xd5180) — XBE naked draft (batch 99). */
+#if defined(__clang__)
 
-  src = (int *)(*(int *)0x5aa68c + 0x70);
-  param_1[0] = src[0];
-  param_1[1] = src[1];
-  param_1[2] = src[2];
-  param_1[3] = src[3];
-  return param_1;
+
+__attribute__((naked, noinline))
+int * hud_get_text_color(int *param_1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5aa68c, %%eax\n\t"
+      "addl $0x70, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl (%%ecx), %%esi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%esi, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%esi\n\t"
+      "movl %%esi, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%esi\n\t"
+      "movl %%esi, 0x8(%%edx)\n\t"
+      "movl 0xc(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0xc(%%edx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "hud_get_text_color: clang naked draft required"
+#endif
+
 
 /* hud_messaging_globals_update (0xd51b0)
  * Resets the HUD message priority counter to 0. */
@@ -1782,17 +1848,42 @@ int hud_get_nav_point_data(short param_1 __attribute__((unused)))
 #endif
 
 
-/* hud_nav_points_initialize (0xd5fb0)
- * Allocates nav point data via game_state_malloc. */
+/* hud_nav_points_initialize (0xd5fb0) — XBE naked draft (batch 99). */
+#if defined(__clang__)
+static void * (*const bd5fb0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
+static void (*const bd5fb0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bd5fb0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void hud_nav_points_initialize(void)
 {
-  *(int *)0x46bd1c = (int)game_state_malloc("hud nav points", 0, 0xc0);
-  if (*(int *)0x46bd1c == 0) {
-    display_assert("nav_point_data",
-                   "c:\\halo\\SOURCE\\interface\\hud_nav_points.c", 0x6a, 1);
-    system_exit(-1);
-  }
+  __asm__ volatile(
+      "pushl $0xc0\n\t"
+      "pushl $0\n\t"
+      "pushl $0x281db8\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x46bd1c\n\t"
+      "jne .Lhud_nav_points_initialize_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6a\n\t"
+      "pushl $0x281d8c\n\t"
+      "pushl $0x281d30\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhud_nav_points_initialize_1:\n\t"
+      "ret\n\t"
+      :
+      : [c1bfbf0] "m"(bd5fb0_c1bfbf0), [assert] "m"(bd5fb0_assert), [exitfn] "m"(bd5fb0_exitfn)
+      : "memory");
 }
+#else
+#error "hud_nav_points_initialize: clang naked draft required"
+#endif
+
 
 /* hud_messaging_initialize_for_new_map: clear the messaging slot table.
  * Called from hud_initialize_for_new_map (0xd0360).

@@ -1211,6 +1211,19 @@ def main() -> int:
         ("rasterizer_memory_pool_new", 0x1824e0, 0x182519),
         ("random_real_range", 0x10b270, 0x10b2ab),
         ("angles_to_vector", 0x10cc40, 0x10cc6b),
+        # gameplay wave 99 (2026-07-26) — AI/HUD/interface Capstone weaks
+        ("ai_debug_dispose", 0x48f50, 0x48f9d),
+        ("midpoint3d", 0x2a540, 0x2a578),
+        ("item_activate", 0xf6910, 0xf6949),
+        ("cluster_partition_clear", 0x1915d0, 0x1915fe),
+        ("FUN_0011a6d0", 0x11a6d0, 0x11a6f6),
+        ("FUN_00017090", 0x17090, 0x170be),
+        ("hud_get_text_color", 0xd5180, 0xd51ac),
+        ("scripted_hud_time_code_start", 0xd4a50, 0xd4a8d),
+        ("hud_set_state_text", 0xd4f70, 0xd4fa9),
+        ("motion_sensor_initialize", 0xdb0f0, 0xdb131),
+        ("hud_nav_points_initialize", 0xd5fb0, 0xd5feb),
+        ("actor_set_prop_if_match", 0x14510, 0x14540),
     ]
 
     xbe = Xbe.from_file(args.xbe)

@@ -651,18 +651,42 @@ int FUN_0011a650(int *state __attribute__((unused)))
 #endif
 
 
-/* decode_long_long — read and byte-swap an 8-byte value (0x11a6d0).
- * Source: data_encoding.c. Wrapper around decode_raw_data(state, 1, -8). */
-int64_t FUN_0011a6d0(int *state)
-{
-  int64_t *ptr;
+/* FUN_0011a6d0 (0x11a6d0) — XBE naked draft (batch 99). */
+#if defined(__clang__)
+static int (*const b11a6d0_c11a430)(int *state, short count, int element_size) = FUN_0011a430;
 
-  ptr = (int64_t *)FUN_0011a430(state, 1, -8);
-  if (ptr != NULL) {
-    return *ptr;
-  }
-  return 0;
+__attribute__((naked, noinline))
+int64_t FUN_0011a6d0(int *state __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $-8\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c11a430]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0011a6d0_1\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011a6d0_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11a430] "m"(b11a6d0_c11a430)
+      : "memory");
 }
+#else
+#error "FUN_0011a6d0: clang naked draft required"
+#endif
+
 
 /* FUN_0011a700 (0x11a700) — XBE naked draft (batch 93). */
 #if defined(__clang__)
