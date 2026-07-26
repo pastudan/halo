@@ -901,100 +901,53 @@ void actor_get_vision_distances(void)
 #endif
 
 
-/* FUN_0002f5f0 (0x2f5f0) — XBE naked draft (batch 235). */
-#if defined(__clang__)
-static void *(*const b2f5f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b2f5f0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b2f5f0_memset)(void *, int, unsigned int) = csmemset;
-static vector3_t * (*const b2f5f0_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-
-__attribute__((naked, noinline))
-char FUN_0002f5f0(int actor_handle __attribute__((unused)), float scale __attribute__((unused)), float visibility __attribute__((unused)), int unit_handle __attribute__((unused)), char field_60 __attribute__((unused)), char dz_flag __attribute__((unused)))
+/* FUN_0002f5f0 (0x2f5f0) — readable C lift.
+ * actor @eax, unit @edi; stack: scale, visibility, field_60, dz_flag. */
+char FUN_0002f5f0(float scale, float visibility, char field_60, char dz_flag,
+                  int actor_handle, int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fadds 0x253f34\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%cl, %%cl\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0002f5f0_2\n\t"
-      "movw 0x280(%%esi), %%ax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "leal 0x280(%%esi), %%ebx\n\t"
-      "jl .LFUN_0002f5f0_1\n\t"
-      "jne .LFUN_0002f5f0_2\n\t"
-      "cmpl %%edi, 0x28c(%%esi)\n\t"
-      "je .LFUN_0002f5f0_2\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2d4(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0002f5f0_2\n\t"
-      ".LFUN_0002f5f0_1:\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "pushl $0x6c\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "leal 0x298(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movw $1, (%%ebx)\n\t"
-      "movl %%edi, 0x28c(%%esi)\n\t"
-      "movl %%edx, 0x294(%%esi)\n\t"
-      "call *%[c1412f0]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "addl $0x18, %%ecx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "leal 0x2a4(%%esi), %%edx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, 0x4(%%edx)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%edx)\n\t"
-      "movb 0x10(%%ebp), %%cl\n\t"
-      "movb 0x14(%%ebp), %%dl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "sete %%al\n\t"
-      "movw $6, 0x284(%%esi)\n\t"
-      "movb %%dl, 0x286(%%esi)\n\t"
-      "movw %%ax, 0x282(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0002f5f0_2:\n\t"
-      "popl %%esi\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b2f5f0_dget), [get] "m"(b2f5f0_get), [memset] "m"(b2f5f0_memset), [c1412f0] "m"(b2f5f0_c1412f0)
-      : "memory");
-}
-#else
-#error "FUN_0002f5f0: clang naked draft required"
-#endif
+  char *actor;
+  char *obj;
+  float *src;
+  float *dst;
 
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+
+  if (!((scale + *(float *)0x253f34) > visibility)) {
+    return 0;
+  }
+
+  if (*(short *)(actor + 0x280) > 1) {
+    return 0;
+  }
+
+  if (*(short *)(actor + 0x280) == 1) {
+    if (*(int *)(actor + 0x28c) == unit_handle) {
+      return 0;
+    }
+    if (!(visibility < *(float *)(actor + 0x2d4))) {
+      return 0;
+    }
+  }
+
+  obj = (char *)object_get_and_verify_type(unit_handle, 3);
+  csmemset(actor + 0x280, 0, 0x6c);
+  *(short *)(actor + 0x280) = 1;
+  *(int *)(actor + 0x28c) = unit_handle;
+  *(float *)(actor + 0x294) = scale;
+  object_get_world_position(unit_handle, (vector3_t *)(actor + 0x298));
+
+  src = (float *)(obj + 0x18);
+  dst = (float *)(actor + 0x2a4);
+  dst[0] = src[0];
+  dst[1] = src[1];
+  dst[2] = src[2];
+
+  *(short *)(actor + 0x284) = 6;
+  actor[0x286] = dz_flag;
+  *(short *)(actor + 0x282) = (short)(field_60 == 0);
+  return 1;
+}
 
 /* actor_perception_desire_prop (0x2f6e0) — XBE naked draft (batch 81). */
 #if defined(__clang__)

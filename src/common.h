@@ -23,21 +23,11 @@ double __cdecl sin(double);
 double __cdecl cos(double);
 double __cdecl sqrt(double);
 double __cdecl fabs(double);
-void __cdecl qsort(void *base, unsigned nmemb, unsigned size, int (__cdecl *compar)(const void *, const void *));
 
 #include "types.h"
 #define XBOX_REPLACE_STANDARD_NAMES
 #include "inlines.h"
 #include "decl.h"
-
-/* Track A: no CRT qsort in freestanding Docker TU builds. Pin libcmt VA. */
-#ifndef HALO_QSORT_FIX
-#define HALO_QSORT_FIX
-#undef qsort
-static void (*const halo_qsort_fn)(void *, unsigned int, unsigned int, void *) =
-    (void (*)(void *, unsigned int, unsigned int, void *))(void *)0x001d9260;
-#define qsort halo_qsort_fn
-#endif
 
 /* assert_halt_at(file, line, cond) — byte-match-faithful assert using the
  * original Bungie source path/line from the XBE (see stianeklund/halo). */

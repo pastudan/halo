@@ -34166,7 +34166,7 @@
         {
           "addr": "0x2f5f0",
           "decl": "char FUN_0002f5f0(int actor_handle, float scale, float visibility, int unit_handle, char field_60, char dz_flag);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x2f6e0",
