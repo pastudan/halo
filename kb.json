@@ -19871,7 +19871,7 @@
         {
           "addr": "0x90860",
           "decl": "void profile_sections_activate(int a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x90880",

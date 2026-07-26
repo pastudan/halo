@@ -98,7 +98,11 @@ def run_uni(name: str, addr: int, seeds: int, timeout: float) -> dict:
 
     Oracle DIR32 push-imm capture currently yields 0x00500xxx for string/global
     immediates (vs correct candidate 0x28xxxx), false-failing assert wrappers.
+
+    BIPED_SIBLING_RESOLVE=1 stubs same-TU callee calls so wrapper lifts match
+    oracle stubs (critical unlock for same-TU wrappers).
     """
+    import os
     import time
     outj = ROOT / "artifacts" / "equivalence" / f"uni_{addr:08x}_s{seeds}.json"
     cmd = [
@@ -113,9 +117,13 @@ def run_uni(name: str, addr: int, seeds: int, timeout: float) -> dict:
         "--output-json",
         str(outj),
     ]
+    env = os.environ.copy()
+    env.setdefault("BIPED_SIBLING_RESOLVE", "1")
     t0 = time.time()
     try:
-        proc = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True, timeout=timeout)
+        proc = subprocess.run(
+            cmd, cwd=str(ROOT), capture_output=True, text=True, timeout=timeout, env=env
+        )
         timed_out = False
     except subprocess.TimeoutExpired as exc:
         timed_out = True
@@ -143,16 +151,56 @@ def sync_decl_h(name: str, decl: str) -> bool:
     if not path.exists():
         return False
     d = (decl or "").strip().rstrip(";")
-    if not d or d.lstrip().startswith("*") or "(" not in d:
+    # Reject comment bleed / garbage (previously polluted decl.h and broke all TUs).
+    if (
+        not d
+        or d.lstrip().startswith("*")
+        or "*/" in d
+        or "Call-site" in d
+        or len(d) > 240
+        or "(" not in d
+        or ")" not in d
+        or not re.match(
+            r"^(?:void|int|char|short|float|double|bool|unsigned|signed|u?int\d+_t|size_t)\b",
+            d,
+        )
+    ):
+        return False
+    if name not in d.split("(", 1)[0]:
         return False
     text = path.read_text(encoding="utf-8", errors="replace")
-    pat = re.compile(rf"^HFUNC\s+.+\b{re.escape(name)}\s*\([^;]*\);", re.M)
+    # Non-greedy, single-line HFUNC only (avoid eating prior decls).
+    pat = re.compile(rf"^HFUNC\s+.+\b{re.escape(name)}\s*\([^;\n]*\);$", re.M)
     new_line = f"HFUNC {d};"
     new_text, n = pat.subn(new_line, text, count=1)
     if n:
         path.write_text(new_text, encoding="utf-8")
         return True
     return False
+
+
+def widen_same_tu_callees(text: str, body: str, name: str) -> str:
+    """Widen void-foo(void) naked defs so calls with args type-check (sibling stubs)."""
+    for c in re.findall(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)", body):
+        cal, args = c[0], c[1].strip()
+        if cal == name or cal in KW or not args or args == "void":
+            continue
+        nargs = len([a for a in args.split(",") if a.strip()])
+        if nargs < 1:
+            continue
+        params = ", ".join(f"int a{i}" for i in range(nargs))
+        pat = re.compile(rf"void\s+{re.escape(cal)}\s*\(\s*void\s*\)")
+        text2, n = pat.subn(f"void {cal}({params})", text, count=0)
+        if n:
+            text = text2
+            # Also widen local function-pointer aliases typed as void(*)(void).
+            text = re.sub(
+                rf"\(\s*\*\s*const\s+\w+\s*\)\s*\(\s*void\s*\)\s*=\s*{re.escape(cal)}\s*;",
+                lambda m: m.group(0).replace("(void)", f"({params})", 1),
+                text,
+            )
+            sync_decl_h(cal, f"void {cal}({params})")
+    return text
 
 
 def update_decl(addr: int, decl: str, name: str | None = None) -> None:
@@ -213,18 +261,20 @@ def merge_remote() -> None:
         print(f"merged {n} remote ported:true", flush=True)
 
 
-def commit_chunk(n: int, touched: set[Path], label: str = "emit") -> str | None:
+def commit_chunk(n: int, touched: set[Path], label: str = "sibling-resolve") -> str | None:
+    """Commit proven flips; before push: union remote ported:true, rebase, push."""
     merge_remote()
     files = [
         "kb.json",
         "scripts/lift_emit_prove.py",
         "scripts/lift_thin_wrappers.py",
+        "scripts/lift_assert_wrappers.py",
         "scripts/tu_compile.py",
     ]
     for p in touched:
         files.append(str(p.relative_to(ROOT)))
     subprocess.run(["git", "add"] + files, cwd=ROOT, check=False)
-    msg = f"lift(track-a): {label} Unicorn-prove {n} (ported:true)."
+    msg = f"lift(track-a): sibling-resolve Unicorn-prove {n} wrappers (ported:true)."
     r = subprocess.run(["git", "commit", "-m", msg], cwd=ROOT, capture_output=True, text=True)
     if r.returncode != 0:
         print("commit failed", r.stdout, r.stderr, flush=True)
@@ -232,13 +282,18 @@ def commit_chunk(n: int, touched: set[Path], label: str = "emit") -> str | None:
     sha = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
     ).stdout.strip()
-    subprocess.run(["git", "fetch", "pastudan"], cwd=ROOT, capture_output=True)
+    # Before push: stash dirt, fetch, rebase, union remote ported:true.
+    subprocess.run(
+        ["git", "stash", "push", "-u", "-m", "sib-push-dirt"],
+        cwd=ROOT,
+        capture_output=True,
+    )
+    subprocess.run(["git", "fetch", "pastudan", "track-a-collision-bsp"], cwd=ROOT, capture_output=True)
     rb = subprocess.run(
         ["git", "rebase", "pastudan/track-a-collision-bsp"],
         cwd=ROOT, capture_output=True, text=True,
     )
     if rb.returncode != 0:
-        # union kb on conflict then continue once
         merge_remote()
         subprocess.run(["git", "add", "kb.json"], cwd=ROOT, capture_output=True)
         subprocess.run(
@@ -249,7 +304,7 @@ def commit_chunk(n: int, touched: set[Path], label: str = "emit") -> str | None:
     if subprocess.run(["git", "diff", "--quiet", "kb.json"], cwd=ROOT).returncode != 0:
         subprocess.run(["git", "add", "kb.json"], cwd=ROOT, capture_output=True)
         subprocess.run(
-            ["git", "commit", "-m", "fix(track-a): union ported:true after emit-prove rebase."],
+            ["git", "commit", "-m", "fix(track-a): union ported:true after sibling-resolve rebase."],
             cwd=ROOT, capture_output=True, text=True,
         )
         sha = subprocess.run(
@@ -261,13 +316,12 @@ def commit_chunk(n: int, touched: set[Path], label: str = "emit") -> str | None:
     )
     if r.returncode != 0:
         print("push failed", r.stdout, r.stderr, flush=True)
-        # one more fetch/rebase/union/push
-        subprocess.run(["git", "fetch", "pastudan"], cwd=ROOT, capture_output=True)
+        subprocess.run(["git", "fetch", "pastudan", "track-a-collision-bsp"], cwd=ROOT, capture_output=True)
         subprocess.run(["git", "rebase", "pastudan/track-a-collision-bsp"], cwd=ROOT, capture_output=True)
         merge_remote()
         subprocess.run(["git", "add", "kb.json"], cwd=ROOT, capture_output=True)
         subprocess.run(
-            ["git", "commit", "-m", "fix(track-a): union ported:true before retry push."],
+            ["git", "commit", "-m", "fix(track-a): union ported:true before sibling-resolve retry push."],
             cwd=ROOT, capture_output=True, text=True,
         )
         r = subprocess.run(
@@ -280,6 +334,7 @@ def commit_chunk(n: int, touched: set[Path], label: str = "emit") -> str | None:
             print(f"COMMIT+PUSH {sha}", flush=True)
     else:
         print(f"COMMIT+PUSH {sha}", flush=True)
+    subprocess.run(["git", "stash", "pop"], cwd=ROOT, capture_output=True)
     return sha
 
 
@@ -294,15 +349,22 @@ def main() -> int:
     ap.add_argument(
         "--skip-same-tu-unproven",
         action=argparse.BooleanOptionalAction,
-        default=True,
-        help="Skip lifts that call same-TU naked/unproven callees (default: on)",
+        default=False,
+        help="Skip lifts that call same-TU naked/unproven callees "
+        "(default: off — BIPED_SIBLING_RESOLVE stubs them)",
     )
     ap.add_argument(
         "--addrs",
         default="",
         help="Comma/space separated hex addrs to include (optional filter)",
     )
+    ap.add_argument(
+        "--kinds",
+        default="assert,thin,jmp,jpat,ipat",
+        help="Comma-separated lift kinds to attempt (default skips brittle HAND)",
+    )
     args = ap.parse_args()
+    kind_allow = {k.strip() for k in args.kinds.split(",") if k.strip()}
     addr_filter: set[int] | None = None
     if args.addrs.strip():
         addr_filter = set()
@@ -384,6 +446,8 @@ def main() -> int:
             kind = "jpat" if body else None
         if not body:
             continue
+        if kind not in kind_allow:
+            continue
         if re.search(r"\(\s*(void|int|char|[^*)]+)\s*\(\s*\*", body):
             continue
         if args.skip_same_tu_unproven:
@@ -438,6 +502,7 @@ def main() -> int:
         if any(t in c_src for t in ("uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t")):
             if "#include <stdint.h>" not in new_text:
                 new_text = "#include <stdint.h>\n" + new_text
+        new_text = widen_same_tu_callees(new_text, body, name)
         sp.write_text(new_text, encoding="utf-8")
         src_rel = src.replace("\\", "/")
         if "src/halo/" in src_rel:

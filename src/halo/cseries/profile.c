@@ -1834,7 +1834,7 @@ static int (*const b907c0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
 static char * (*const b907c0_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
 
 __attribute__((naked, noinline))
-void FUN_000907c0(void)
+void FUN_000907c0(int a0)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1914,36 +1914,16 @@ void FUN_000907c0(void)
 #endif
 
 
-/* profile_sections_activate (0x90860) — XBE naked draft (batch 274). */
-#if defined(__clang__)
-static void (*const b90860_c907c0)(void) = FUN_000907c0;
-
-__attribute__((naked, noinline))
-void profile_sections_activate(int a0 __attribute__((unused)))
+/* profile_sections_activate (0x90860) — readable C lift. */
+void profile_sections_activate(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $1\n\t"
-      "call *%[c907c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c907c0] "m"(b90860_c907c0)
-      : "memory");
+  (void)a0;
+  FUN_000907c0(1);
 }
-#else
-#error "profile_sections_activate: clang naked draft required"
-#endif
-
 
 /* profile_sections_deactivate (0x90880) — XBE naked draft (batch 274). */
 #if defined(__clang__)
-static void (*const b90880_c907c0)(void) = FUN_000907c0;
+static void (*const b90880_c907c0)(int a0) = FUN_000907c0;
 
 __attribute__((naked, noinline))
 void profile_sections_deactivate(int a0 __attribute__((unused)))

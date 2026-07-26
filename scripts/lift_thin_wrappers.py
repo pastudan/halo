@@ -373,6 +373,77 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
         ret = "" if is_void else "return "
         return f"{sig}\n{{\n  {ret}{fn}({ps[0]}, {ps[1]});\n}}\n"
 
+    # 2-arg forward with dead load of [ebp+0x10] (prop_orphan_update_information)
+    if (
+        len(mid) == 7
+        and mid[0] == ("mov", "eax, dword ptr [ebp + 0xc]")
+        and mid[1] == ("mov", "ecx, dword ptr [ebp + 8]")
+        and mid[2] == ("push", "eax")
+        and mid[3] == ("mov", "eax, dword ptr [ebp + 0x10]")
+        and mid[4] == ("push", "ecx")
+        and mid[5][0] == "call"
+        and mid[6][0] == "add"
+    ):
+        fn = callee(mid[5][1])
+        if not fn or len(ps) < 2:
+            return None
+        ret = "" if is_void else "return "
+        return f"{sig}\n{{\n  {ret}{fn}({ps[0]}, {ps[1]});\n}}\n"
+
+    # if (arg1 != -1) return *(int16*)(F(arg0,arg1)+2);  (ai/path FUN_000600c0)
+    if (
+        len(mid) == 9
+        and mid[0] == ("mov", "eax, dword ptr [ebp + 0xc]")
+        and mid[1] == ("cmp", "ax, 0xffff")
+        and mid[2][0] == "je"
+        and mid[3] == ("push", "eax")
+        and mid[4] == ("mov", "eax, dword ptr [ebp + 8]")
+        and mid[5] == ("push", "eax")
+        and mid[6][0] == "call"
+        and mid[7][0] == "movsx"
+        and "word ptr [eax +" in mid[7][1]
+        and mid[8][0] == "add"
+    ):
+        fn = callee(mid[6][1])
+        off = re.search(r"\[eax \+ (0x[0-9a-fA-F]+)\]", mid[7][1])
+        if fn and off and len(ps) >= 2:
+            if is_void:
+                sig = f"short {name}(void *a0, short a1)"
+                ps = ["a0", "a1"]
+                is_void = False
+            return (
+                f"{sig}\n{{\n"
+                f"  if ((short){ps[1]} == (short)0xffff)\n"
+                f"    return 0;\n"
+                f"  return *(short *)((char *){fn}({ps[0]}, {ps[1]}) + {off.group(1)});\n"
+                f"}}\n"
+            )
+
+    # if ((p = F(arg0))) G(p); return 0;  (transport FUN_00084940)
+    if (
+        len(mid) == 10
+        and mid[0] == ("mov", "eax, dword ptr [ebp + 8]")
+        and mid[1] == ("push", "eax")
+        and mid[2][0] == "call"
+        and mid[3][0] == "add"
+        and mid[4] == ("test", "eax, eax")
+        and mid[5][0] == "je"
+        and mid[6] == ("push", "eax")
+        and mid[7][0] == "call"
+        and mid[8][0] == "add"
+        and mid[9] == ("xor", "ax, ax")
+    ):
+        f1, f2 = callee(mid[2][1]), callee(mid[7][1])
+        if f1 and f2 and ps:
+            return (
+                f"{sig}\n{{\n"
+                f"  void *p = {f1}({ps[0]});\n"
+                f"  if (p)\n"
+                f"    {f2}(p);\n"
+                f"  return 0;\n"
+                f"}}\n"
+            )
+
     # 3-arg forward: mov eax,[ebp+0x14]; mov ecx,[ebp+0x10]; mov edx,[ebp+0xc]; push*3; call; add
     if (
         len(mid) == 8
