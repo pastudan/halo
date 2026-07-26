@@ -88,7 +88,12 @@ class SynthResult:
 
 
 def xbe_bytes(xbe: Xbe, va: int, end: int) -> bytes:
-    """Return [va, end) from the XBE image (same helper as compare_xbe_pe)."""
+    """Return [va, end) from the XBE image (same helper as compare_xbe_pe).
+
+    If ``end <= va``, treat ``end`` as a length (legacy/buggy call sites).
+    """
+    if end <= va:
+        end = va + end
     for sec in xbe.sections.values():
         start = sec.header.virtual_addr
         if start <= va < start + sec.header.virtual_size:
