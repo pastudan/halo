@@ -3471,6 +3471,12 @@ def main() -> int:
         ("sound_is_active", 0x1c88a0, 0x1c88b8),
         # gameplay wave 293 (2026-07-26) — Capstone weaks
         ("FUN_00113a90", 0x113a90, 0x1145f8),
+        # gameplay wave 294 (2026-07-26) — Capstone weaks
+        ("tag_groups_checksum", 0x1b98d0, 0x1bc3a3),
+        # gameplay wave 295 (2026-07-26) — Capstone weaks
+        ("FUN_001c1280", 0x1c1280, 0x1c4f0a),
+        # gameplay wave 296 (2026-07-26) — Capstone weaks
+        ("FUN_0004c920", 0x4c920, 0x5291d),
     ]
 
     xbe = Xbe.from_file(args.xbe)

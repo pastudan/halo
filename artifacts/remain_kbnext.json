@@ -31,16 +31,5 @@
     "in_compare": false,
     "domain": "ai",
     "defs": []
-  },
-  {
-    "name": "FUN_00113a90",
-    "va": 1129104,
-    "end": 1132024,
-    "n": 999,
-    "pct": 8.935361216730039,
-    "ported": false,
-    "in_compare": false,
-    "domain": "math",
-    "defs": []
   }
 ]
