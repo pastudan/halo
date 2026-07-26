@@ -27559,7 +27559,7 @@
         },
         {
           "addr": "0xef900",
-          "decl": "void FUN_000ef900(void *widget);",
+          "decl": "char FUN_000ef900(void *widget, void *item);",
           "ported": false
         },
         {
@@ -39960,7 +39960,7 @@
         {
           "addr": "0x147380",
           "decl": "int FUN_00147380(int a0, int a1, int a2, int a3, int a4, int a5, int a6);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1473b0",

@@ -3556,48 +3556,11 @@ int collision_bsp_test_sphere(int bsp __attribute__((unused)), short flags __att
 
 
 
-/* FUN_00147380 (0x147380) — XBE naked draft (batch 227). */
-#if defined(__clang__)
-static int (*const b147380_c1470b0)(int tag_base, uint32_t node_index, uint32_t flags, float *verts, int counts, float epsilon, void (*callback)(float *, int, unsigned int, unsigned int, void *), void *ctx) = FUN_001470b0;
-
-__attribute__((naked, noinline))
-int FUN_00147380(int tag_base __attribute__((unused)), uint32_t node_index __attribute__((unused)), float *verts __attribute__((unused)), int counts __attribute__((unused)), float epsilon __attribute__((unused)), void (*callback)(float * __attribute__((unused)), int, unsigned int __attribute__((unused)), unsigned int __attribute__((unused)), void *) __attribute__((unused)), void *ctx __attribute__((unused)))
+/* FUN_00147380 (0x147380) — readable C lift. */
+int FUN_00147380(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1470b0]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c1470b0] "m"(b147380_c1470b0)
-      : "memory");
+  return FUN_001470b0(a0, a1, -1, a2, a3, a4, a5, a6);
 }
-#else
-#error "FUN_00147380: clang naked draft required"
-#endif
-
 
 /* -------------------------------------------------------------------------
  * Pill path: collision_bsp_test_pill_new (0x148b20) + FUN_00148440 (0x148440)
