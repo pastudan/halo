@@ -19101,5 +19101,782 @@
     "object": "rasterizer.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15dc10",
+    "name": "FUN_0015dc10",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15de60",
+    "name": "FUN_0015de60",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15e0f0",
+    "name": "FUN_0015e0f0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15e430",
+    "name": "FUN_0015e430",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15e650",
+    "name": "FUN_0015e650",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15e770",
+    "name": "FUN_0015e770",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15e7a0",
+    "name": "FUN_0015e7a0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15e7d0",
+    "name": "FUN_0015e7d0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15e800",
+    "name": "FUN_0015e800",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15e9e0",
+    "name": "FUN_0015e9e0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15ea70",
+    "name": "FUN_0015ea70",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15eb90",
+    "name": "FUN_0015eb90",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15ec50",
+    "name": "FUN_0015ec50",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15ee80",
+    "name": "FUN_0015ee80",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15f1f0",
+    "name": "FUN_0015f1f0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15f200",
+    "name": "FUN_0015f200",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15f220",
+    "name": "FUN_0015f220",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15f540",
+    "name": "FUN_0015f540",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15f5e0",
+    "name": "FUN_0015f5e0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15f630",
+    "name": "FUN_0015f630",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x15f8e0",
+    "name": "FUN_0015f8e0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160920",
+    "name": "FUN_00160920",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160930",
+    "name": "FUN_00160930",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160940",
+    "name": "_rasterizer_hud_begin",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160950",
+    "name": "FUN_00160950",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160970",
+    "name": "_rasterizer_hud_end",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160980",
+    "name": "FUN_00160980",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1609a0",
+    "name": "_rasterizer_dynamic_lit_geometry_draw",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1609b0",
+    "name": "FUN_001609b0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160bc0",
+    "name": "FUN_00160bc0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160bd0",
+    "name": "FUN_00160bd0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160be0",
+    "name": "FUN_00160be0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160bf0",
+    "name": "FUN_00160bf0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160c00",
+    "name": "FUN_00160c00",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160c10",
+    "name": "FUN_00160c10",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160c20",
+    "name": "FUN_00160c20",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160c30",
+    "name": "FUN_00160c30",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160dc0",
+    "name": "FUN_00160dc0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x160f50",
+    "name": "FUN_00160f50",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x161f00",
+    "name": "FUN_00161f00",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1621c0",
+    "name": "FUN_001621c0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x162560",
+    "name": "FUN_00162560",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x162790",
+    "name": "FUN_00162790",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x162920",
+    "name": "FUN_00162920",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x162f90",
+    "name": "FUN_00162f90",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1631d0",
+    "name": "FUN_001631d0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x163590",
+    "name": "FUN_00163590",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x163910",
+    "name": "FUN_00163910",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x163c40",
+    "name": "FUN_00163c40",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x163fe0",
+    "name": "FUN_00163fe0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1640d0",
+    "name": "FUN_001640d0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1643e0",
+    "name": "FUN_001643e0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x164590",
+    "name": "FUN_00164590",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x164690",
+    "name": "FUN_00164690",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x164cf0",
+    "name": "FUN_00164cf0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x165420",
+    "name": "FUN_00165420",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x165980",
+    "name": "FUN_00165980",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1659a0",
+    "name": "FUN_001659a0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1659f0",
+    "name": "FUN_001659f0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x165a00",
+    "name": "FUN_00165a00",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x165a10",
+    "name": "FUN_00165a10",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x165cb0",
+    "name": "FUN_00165cb0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x165dd0",
+    "name": "FUN_00165dd0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x165de0",
+    "name": "FUN_00165de0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x165ea0",
+    "name": "FUN_00165ea0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x165fc0",
+    "name": "FUN_00165fc0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x165fd0",
+    "name": "FUN_00165fd0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x166010",
+    "name": "FUN_00166010",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x166210",
+    "name": "FUN_00166210",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x166400",
+    "name": "FUN_00166400",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x166890",
+    "name": "FUN_00166890",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1677d0",
+    "name": "FUN_001677d0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x167920",
+    "name": "FUN_00167920",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x167ee0",
+    "name": "FUN_00167ee0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x167ff0",
+    "name": "FUN_00167ff0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168230",
+    "name": "FUN_00168230",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168250",
+    "name": "FUN_00168250",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168280",
+    "name": "FUN_00168280",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1682c0",
+    "name": "FUN_001682c0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168300",
+    "name": "FUN_00168300",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168340",
+    "name": "FUN_00168340",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168370",
+    "name": "FUN_00168370",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168500",
+    "name": "FUN_00168500",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1686c0",
+    "name": "FUN_001686c0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1688d0",
+    "name": "FUN_001688d0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168ae0",
+    "name": "FUN_00168ae0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168b10",
+    "name": "FUN_00168b10",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168bc0",
+    "name": "FUN_00168bc0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168be0",
+    "name": "FUN_00168be0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168c40",
+    "name": "FUN_00168c40",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168c70",
+    "name": "FUN_00168c70",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168ca0",
+    "name": "FUN_00168ca0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168cd0",
+    "name": "FUN_00168cd0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168e40",
+    "name": "FUN_00168e40",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168e70",
+    "name": "FUN_00168e70",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x168fd0",
+    "name": "_rasterizer_dynamic_unlit_geometry_draw",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x169200",
+    "name": "FUN_00169200",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x169650",
+    "name": "FUN_00169650",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x169670",
+    "name": "FUN_00169670",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1696d0",
+    "name": "FUN_001696d0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x169a50",
+    "name": "FUN_00169a50",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x169fd0",
+    "name": "FUN_00169fd0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x16ab00",
+    "name": "FUN_0016ab00",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x16b180",
+    "name": "FUN_0016b180",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x16b1c0",
+    "name": "FUN_0016b1c0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x16b240",
+    "name": "FUN_0016b240",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x16b270",
+    "name": "FUN_0016b270",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x16b2b0",
+    "name": "FUN_0016b2b0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x16bed0",
+    "name": "FUN_0016bed0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x16c090",
+    "name": "FUN_0016c090",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x16c5a0",
+    "name": "FUN_0016c5a0",
+    "object": "rasterizer_xbox_dynavobgeom.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

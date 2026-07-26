@@ -134,6 +134,7 @@
 	halo/rasterizer/xbox/rasterizer_xbox_decals.c
 	halo/rasterizer/xbox/rasterizer_xbox_shadows.c
 	halo/rasterizer/xbox/rasterizer_xbox_profile.c
+	halo/rasterizer/xbox/rasterizer_xbox_dynavobgeom.c
 	halo/render/render.c
 	halo/render/render_cameras.c
 	halo/render/render_debug.c
