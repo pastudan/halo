@@ -7832,7 +7832,8 @@
         },
         {
           "addr": "0xb40f0",
-          "decl": "void race_team_can_win_game(void);"
+          "decl": "void race_team_can_win_game(void);",
+          "ported": false
         },
         {
           "addr": "0xb4170",
@@ -7856,15 +7857,18 @@
         },
         {
           "addr": "0xb4300",
-          "decl": "void race_engine_update(void);"
+          "decl": "void race_engine_update(void);",
+          "ported": false
         },
         {
           "addr": "0xb43b0",
-          "decl": "void FUN_000b43b0(void);"
+          "decl": "void FUN_000b43b0(void);",
+          "ported": false
         },
         {
           "addr": "0xb4490",
-          "decl": "void FUN_000b4490(void);"
+          "decl": "void FUN_000b4490(void);",
+          "ported": false
         },
         {
           "addr": "0xb45c0",
@@ -7873,11 +7877,13 @@
         },
         {
           "addr": "0xb46b0",
-          "decl": "void race_update_team_score(void);"
+          "decl": "void race_update_team_score(void);",
+          "ported": false
         },
         {
           "addr": "0xb4800",
-          "decl": "void FUN_000B4800(void);"
+          "decl": "void FUN_000B4800(void);",
+          "ported": false
         },
         {
           "addr": "0xb4960",
@@ -7886,19 +7892,23 @@
         },
         {
           "addr": "0xb4a70",
-          "decl": "void FUN_000b4a70(void);"
+          "decl": "void FUN_000b4a70(void);",
+          "ported": false
         },
         {
           "addr": "0xb4b10",
-          "decl": "void FUN_000b4b10(void);"
+          "decl": "void FUN_000b4b10(void);",
+          "ported": false
         },
         {
           "addr": "0xb4bf0",
-          "decl": "void FUN_000b4bf0(void);"
+          "decl": "void FUN_000b4bf0(void);",
+          "ported": false
         },
         {
           "addr": "0xb4d00",
-          "decl": "void FUN_000b4d00(void);"
+          "decl": "void FUN_000b4d00(void);",
+          "ported": false
         },
         {
           "addr": "0xb4d50",
@@ -7927,19 +7937,23 @@
         },
         {
           "addr": "0xb4e20",
-          "decl": "void find_next_target(void);"
+          "decl": "void find_next_target(void);",
+          "ported": false
         },
         {
           "addr": "0xb4fb0",
-          "decl": "void FUN_000b4fb0(void);"
+          "decl": "void FUN_000b4fb0(void);",
+          "ported": false
         },
         {
           "addr": "0xb5040",
-          "decl": "void FUN_000b5040(void);"
+          "decl": "void FUN_000b5040(void);",
+          "ported": false
         },
         {
           "addr": "0xb5210",
-          "decl": "void slayer_engine_display_score(void);"
+          "decl": "void slayer_engine_display_score(void);",
+          "ported": false
         },
         {
           "addr": "0xb5490",

@@ -15349,5 +15349,103 @@
     "object": "xbox_texture_cache.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb40f0",
+    "name": "race_team_can_win_game",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb4300",
+    "name": "race_engine_update",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb43b0",
+    "name": "FUN_000b43b0",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb4490",
+    "name": "FUN_000b4490",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb46b0",
+    "name": "race_update_team_score",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb4800",
+    "name": "FUN_000B4800",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb4a70",
+    "name": "FUN_000b4a70",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb4b10",
+    "name": "FUN_000b4b10",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb4bf0",
+    "name": "FUN_000b4bf0",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb4d00",
+    "name": "FUN_000b4d00",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb4e20",
+    "name": "find_next_target",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb4fb0",
+    "name": "FUN_000b4fb0",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb5040",
+    "name": "FUN_000b5040",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xb5210",
+    "name": "slayer_engine_display_score",
+    "object": "game.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
