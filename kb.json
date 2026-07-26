@@ -34814,7 +34814,8 @@
         {
           "addr": "0x49f60",
           "decl": "void ai_debug_vocalize(int a0, int a1);",
-          "ported": false
+          "ported": true,
+          "name": "ai_debug_vocalize"
         },
         {
           "addr": "0x4a030",
@@ -34890,7 +34891,8 @@
         {
           "addr": "0x4b0f0",
           "decl": "void ai_debug_teleport_to(int actor_index);",
-          "ported": false
+          "ported": true,
+          "name": "ai_debug_teleport_to"
         },
         {
           "addr": "0x4b1b0",
@@ -35025,7 +35027,7 @@
         },
         {
           "addr": "0x53800",
-          "decl": "void FUN_00053800(void);",
+          "decl": "void FUN_00053800(void *buf, int count, int16_t *vals);",
           "ported": false
         },
         {
