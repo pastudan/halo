@@ -1384,137 +1384,87 @@ void actor_situation_update_target_status(int actor_handle __attribute__((unused
 #endif
 
 
-/* actor_situation_combat_status_update (0x302b0) — XBE naked draft (batch 128). */
-#if defined(__clang__)
-static void *(*const b302b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b302b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b302b0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void actor_situation_combat_status_update(int actor_handle __attribute__((unused)))
+/* actor_situation_combat_status_update (0x302b0) — readable C lift. */
+void actor_situation_combat_status_update(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x34a(%%esi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .Lactor_situation_combat_status_update_4\n\t"
-      "movw 0x74(%%esi), %%cx\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "jge .Lactor_situation_combat_status_update_1\n\t"
-      "movl 0x34c(%%esi), %%edx\n\t"
-      "movw %%ax, 0x74(%%esi)\n\t"
-      "movl %%edx, 0x78(%%esi)\n\t"
-      "jmp .Lactor_situation_combat_status_update_3\n\t"
-      ".Lactor_situation_combat_status_update_1:\n\t"
-      "jne .Lactor_situation_combat_status_update_3\n\t"
-      "movl 0x78(%%esi), %%eax\n\t"
-      "movl 0x34c(%%esi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jg .Lactor_situation_combat_status_update_2\n\t"
-      "movl %%ecx, %%eax\n\t"
-      ".Lactor_situation_combat_status_update_2:\n\t"
-      "movl %%eax, 0x78(%%esi)\n\t"
-      ".Lactor_situation_combat_status_update_3:\n\t"
-      "movw $0, 0x34a(%%esi)\n\t"
-      ".Lactor_situation_combat_status_update_4:\n\t"
-      "movw 0x268(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lactor_situation_combat_status_update_5\n\t"
-      "cmpw $0xc, %%ax\n\t"
-      "jl .Lactor_situation_combat_status_update_6\n\t"
-      ".Lactor_situation_combat_status_update_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1138\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x256030\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_situation_combat_status_update_6:\n\t"
-      "movswl 0x268(%%esi), %%eax\n\t"
-      "movw 0x72(%%esi), %%cx\n\t"
-      "movw 0x255f18(,%%eax,2), %%dx\n\t"
-      "cmpw %%dx, %%cx\n\t"
-      "pushl %%edi\n\t"
-      "movswl %%cx, %%edi\n\t"
-      "jg .Lactor_situation_combat_status_update_7\n\t"
-      "movswl %%dx, %%edi\n\t"
-      ".Lactor_situation_combat_status_update_7:\n\t"
-      "pushl %%ebx\n\t"
-      "movw 0x74(%%esi), %%bx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jle .Lactor_situation_combat_status_update_8\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "jmp .Lactor_situation_combat_status_update_9\n\t"
-      ".Lactor_situation_combat_status_update_8:\n\t"
-      "cmpw %%dx, %%cx\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "jg .Lactor_situation_combat_status_update_9\n\t"
-      "movswl %%dx, %%ecx\n\t"
-      ".Lactor_situation_combat_status_update_9:\n\t"
-      "cmpw %%bx, %%cx\n\t"
-      "movw %%cx, 0x6e(%%esi)\n\t"
-      "popl %%ebx\n\t"
-      "jle .Lactor_situation_combat_status_update_10\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw %%ax, 0x74(%%esi)\n\t"
-      "jmp .Lactor_situation_combat_status_update_11\n\t"
-      ".Lactor_situation_combat_status_update_10:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lactor_situation_combat_status_update_11:\n\t"
-      "cmpw $3, 0x6a(%%esi)\n\t"
-      "jge .Lactor_situation_combat_status_update_12\n\t"
-      "movl %%eax, 0x7c(%%esi)\n\t"
-      "jmp .Lactor_situation_combat_status_update_13\n\t"
-      ".Lactor_situation_combat_status_update_12:\n\t"
-      "incl 0x7c(%%esi)\n\t"
-      ".Lactor_situation_combat_status_update_13:\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "jne .Lactor_situation_combat_status_update_18\n\t"
-      "movl %%eax, 0x80(%%esi)\n\t"
-      ".Lactor_situation_combat_status_update_14:\n\t"
-      "movl %%eax, 0x84(%%esi)\n\t"
-      "movl 0x88(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_situation_combat_status_update_16\n\t"
-      "incl %%eax\n\t"
-      ".Lactor_situation_combat_status_update_15:\n\t"
-      "movl %%eax, 0x88(%%esi)\n\t"
-      ".Lactor_situation_combat_status_update_16:\n\t"
-      "cmpw $7, %%cx\n\t"
-      "popl %%edi\n\t"
-      "jl .Lactor_situation_combat_status_update_17\n\t"
-      "movb $1, 0x8c(%%esi)\n\t"
-      ".Lactor_situation_combat_status_update_17:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_situation_combat_status_update_18:\n\t"
-      "movl 0x80(%%esi), %%edi\n\t"
-      "incl %%edi\n\t"
-      "cmpw $4, %%cx\n\t"
-      "movl %%edi, 0x80(%%esi)\n\t"
-      "jl .Lactor_situation_combat_status_update_14\n\t"
-      "incl 0x84(%%esi)\n\t"
-      "jmp .Lactor_situation_combat_status_update_15\n\t"
-      :
-      : [dget] "m"(b302b0_dget), [assert] "m"(b302b0_assert), [exitfn] "m"(b302b0_exitfn)
-      : "memory");
+  char *actor;
+  int16_t pending;
+  int16_t cur;
+  int16_t tier;
+  int16_t table_val;
+  int16_t hi;
+  int16_t combat;
+  int16_t z;
+
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  pending = *(int16_t *)(actor + 0x34a);
+  if (pending > 0) {
+    cur = *(int16_t *)(actor + 0x74);
+    if (cur < pending) {
+      *(int16_t *)(actor + 0x74) = pending;
+      *(int *)(actor + 0x78) = *(int *)(actor + 0x34c);
+    } else if (cur == pending) {
+      int a = *(int *)(actor + 0x78);
+      int b = *(int *)(actor + 0x34c);
+      *(int *)(actor + 0x78) = (a > b) ? a : b;
+    }
+    *(int16_t *)(actor + 0x34a) = 0;
+  }
+
+  tier = *(int16_t *)(actor + 0x268);
+  if (tier < 0 || tier >= 0xc) {
+    display_assert((const char *)0x256030, (const char *)0x255fb0, 0x1138, true);
+    system_exit(-1);
+  }
+
+  cur = *(int16_t *)(actor + 0x72);
+  table_val = *(int16_t *)(0x255f18 + (int)tier * 2);
+  hi = (cur > table_val) ? cur : table_val;
+  combat = *(int16_t *)(actor + 0x74);
+  if ((int)combat > (int)hi)
+    cur = combat;
+  else if (cur <= table_val)
+    cur = table_val;
+
+  *(int16_t *)(actor + 0x6e) = cur;
+  if (cur > combat) {
+    z = 0;
+    *(int16_t *)(actor + 0x74) = z;
+  } else {
+    z = 0;
+  }
+
+  if (*(int16_t *)(actor + 0x6a) < 3)
+    *(int *)(actor + 0x7c) = z;
+  else
+    (*(int *)(actor + 0x7c))++;
+
+  if (cur == z) {
+    *(int *)(actor + 0x80) = z;
+    *(int *)(actor + 0x84) = z;
+    {
+      int t = *(int *)(actor + 0x88);
+      if (t != -1)
+        *(int *)(actor + 0x88) = t + 1;
+    }
+    if (cur >= 7)
+      actor[0x8c] = 1;
+    return;
+  }
+
+  (*(int *)(actor + 0x80))++;
+  if (cur < 4)
+    *(int *)(actor + 0x84) = 0;
+  else
+    (*(int *)(actor + 0x84))++;
+  {
+    int t = *(int *)(actor + 0x88);
+    if (t != -1)
+      *(int *)(actor + 0x88) = t + 1;
+  }
+  if (cur >= 7)
+    actor[0x8c] = 1;
 }
-#else
-#error "actor_situation_combat_status_update: clang naked draft required"
-#endif
 
 
 /* actor_situation_update (0x303f0) — XBE naked draft (batch 107). */

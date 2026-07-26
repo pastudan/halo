@@ -2978,86 +2978,37 @@ char FUN_0005a4e0(int encounter_index /* @<eax> */)
   return *(char *)(encounter + 0xd);
 }
 
-/* encounter_link_activation (0x5a5a0) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-static void *(*const b5a5a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static scenario_t * (*const b5a5a0_c18e380)(void) = global_scenario_get;
-static void (*const b5a5a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5a5a0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-char encounter_link_activation(int encounter_handle __attribute__((unused)), short link_encounter_index __attribute__((unused)))
+/* encounter_link_activation (0x5a5a0) — readable C lift. */
+char encounter_link_activation(int encounter_handle, short link_encounter_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5ab270, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movw 0xc(%%ebp), %%di\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testw %%di, %%di\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jl .Lencounter_link_activation_1\n\t"
-      "call *%[c18e380]\n\t"
-      "movl 0x42c(%%eax), %%ecx\n\t"
-      "movswl %%di, %%edx\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "jl .Lencounter_link_activation_2\n\t"
-      ".Lencounter_link_activation_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x77c\n\t"
-      "pushl $0x25d27c\n\t"
-      "pushl $0x25d6c8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencounter_link_activation_2:\n\t"
-      "movw 0x20(%%esi), %%cx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jle .Lencounter_link_activation_4\n\t"
-      ".Lencounter_link_activation_3:\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "cmpw %%di, 0x22(%%esi,%%edx,2)\n\t"
-      "je .Lencounter_link_activation_5\n\t"
-      "incl %%eax\n\t"
-      "cmpw 0x20(%%esi), %%ax\n\t"
-      "jl .Lencounter_link_activation_3\n\t"
-      ".Lencounter_link_activation_4:\n\t"
-      "cmpw $3, %%cx\n\t"
-      "jge .Lencounter_link_activation_6\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "movw %%di, 0x22(%%esi,%%eax,2)\n\t"
-      "incw 0x20(%%esi)\n\t"
-      ".Lencounter_link_activation_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lencounter_link_activation_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b5a5a0_dget), [c18e380] "m"(b5a5a0_c18e380), [assert] "m"(b5a5a0_assert), [exitfn] "m"(b5a5a0_exitfn)
-      : "memory");
+  char *enc;
+  int16_t count;
+  int16_t i;
+  scenario_t *scen;
+
+  enc = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
+  if (link_encounter_index < 0) {
+    display_assert((const char *)0x25d6c8, (const char *)0x25d27c, 0x77c, true);
+    system_exit(-1);
+  } else {
+    scen = global_scenario_get();
+    if ((int)link_encounter_index >= *(int *)((char *)scen + 0x42c)) {
+      display_assert((const char *)0x25d6c8, (const char *)0x25d27c, 0x77c, true);
+      system_exit(-1);
+    }
+  }
+
+  count = *(int16_t *)(enc + 0x20);
+  for (i = 0; i < count; i++) {
+    if (*(int16_t *)(enc + 0x22 + (int)i * 2) == link_encounter_index)
+      return 1;
+  }
+  if (count >= 3)
+    return 0;
+  *(int16_t *)(enc + 0x22 + (int)count * 2) = link_encounter_index;
+  (*(int16_t *)(enc + 0x20))++;
+  return 1;
 }
-#else
-#error "encounter_link_activation: clang naked draft required"
-#endif
 
 
 /* 0x5a640 — encounter_deactivate.
@@ -5337,64 +5288,29 @@ int FUN_00053ee0(void *encounter_def, const char *name)
   return -1;
 }
 
-/* FUN_00057b40 (0x57b40) — XBE naked draft (batch 231). */
-#if defined(__clang__)
-static void *(*const b57b40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-int FUN_00057b40(int actor_handle __attribute__((unused)))
+/* FUN_00057b40 (0x57b40) — readable C lift. */
+int FUN_00057b40(int actor_handle)
 {
-  __asm__ volatile(
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x8(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_00057b40_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_00057b40_1:\n\t"
-      "cmpw $3, 0x6a(%%eax)\n\t"
-      "jge .LFUN_00057b40_2\n\t"
-      "movl $1, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_00057b40_2:\n\t"
-      "cmpw $0, 0x6e(%%eax)\n\t"
-      "jne .LFUN_00057b40_3\n\t"
-      "movl $2, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_00057b40_3:\n\t"
-      "movw 0x268(%%eax), %%cx\n\t"
-      "cmpw $6, %%cx\n\t"
-      "jge .LFUN_00057b40_4\n\t"
-      "movl $3, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_00057b40_4:\n\t"
-      "cmpw $0xa, %%cx\n\t"
-      "jge .LFUN_00057b40_5\n\t"
-      "movl $4, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_00057b40_5:\n\t"
-      "movb 0x454(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_00057b40_6\n\t"
-      "movb 0x45c(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl $5, %%eax\n\t"
-      "je .LFUN_00057b40_7\n\t"
-      ".LFUN_00057b40_6:\n\t"
-      "movl $6, %%eax\n\t"
-      ".LFUN_00057b40_7:\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b57b40_dget)
-      : "memory");
+  char *actor;
+
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  if (!actor[8])
+    return 0;
+  if (*(int16_t *)(actor + 0x6a) < 3)
+    return 1;
+  if (*(int16_t *)(actor + 0x6e) == 0)
+    return 2;
+  {
+    int16_t v = *(int16_t *)(actor + 0x268);
+    if (v < 6)
+      return 3;
+    if (v < 0xa)
+      return 4;
+  }
+  if (actor[0x454] || actor[0x45c])
+    return 6;
+  return 5;
 }
-#else
-#error "FUN_00057b40: clang naked draft required"
-#endif
 
 
 /* FUN_0005ac60 (0x5ac60) — readable C lift. */

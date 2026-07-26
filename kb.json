@@ -34197,7 +34197,8 @@
         {
           "addr": "0x2f5f0",
           "decl": "char FUN_0002f5f0(float scale, float visibility, char field_60, char dz_flag, int actor_handle @<eax>, int unit_handle @<edi>);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_0002f5f0"
         },
         {
           "addr": "0x2f6e0",
@@ -34262,7 +34263,8 @@
         {
           "addr": "0x302b0",
           "decl": "void actor_situation_combat_status_update(int actor_handle);",
-          "ported": false
+          "ported": true,
+          "name": "actor_situation_combat_status_update"
         },
         {
           "addr": "0x303f0",
@@ -34786,7 +34788,7 @@
         {
           "addr": "0x495b0",
           "decl": "void FUN_000495b0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000495b0"
         },
         {
@@ -34797,7 +34799,7 @@
         {
           "addr": "0x497c0",
           "decl": "int16_t FUN_000497c0(float *pos @<edi>, int16_t key @<bx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000497c0"
         },
         {
@@ -35432,7 +35434,7 @@
         {
           "addr": "0x566a0",
           "decl": "void encounters_initialize(int16_t team_a, int16_t team_b);",
-          "ported": false,
+          "ported": true,
           "name": "encounters_initialize"
         },
         {
@@ -35582,8 +35584,9 @@
         },
         {
           "addr": "0x57b40",
-          "decl": "int FUN_00057b40(int actor_handle@<eax>);",
-          "ported": false
+          "decl": "int FUN_00057b40(int actor_handle @<eax>);",
+          "ported": true,
+          "name": "FUN_00057b40"
         },
         {
           "addr": "0x57bc0",
@@ -35871,9 +35874,9 @@
         },
         {
           "addr": "0x5a5a0",
-          "decl": "char encounter_link_activation(int encounter_handle, short link_encounter_index);",
+          "decl": "char encounter_link_activation(int encounter_handle, int16_t link_encounter_index);",
           "name": "encounter_link_activation",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x5a640",
@@ -36264,8 +36267,9 @@
         },
         {
           "addr": "0x651a0",
-          "decl": "void FUN_000651a0(void);",
-          "ported": false
+          "decl": "int FUN_000651a0(void *prop, int key);",
+          "ported": false,
+          "name": "FUN_000651a0"
         },
         {
           "addr": "0x65250",
