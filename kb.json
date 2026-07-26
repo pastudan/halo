@@ -12496,7 +12496,7 @@
         {
           "addr": "0xcae00",
           "decl": "int FUN_000cae00(const char *script_name@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcae80",

@@ -5546,72 +5546,29 @@ void FUN_000cacf0(int thread_index __attribute__((unused)))
 #endif
 
 
-/* FUN_000cae00 (0xcae00) — XBE naked draft (batch 152). */
-#if defined(__clang__)
-static int (*const bcae00_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const bcae00_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static scenario_t * (*const bcae00_c18e380)(void) = global_scenario_get;
-static void *(*const bcae00_elem)(void *, int, int) = tag_block_get_element;
-static int (*const bcae00_c1dd801)(const char *a, const char *b) = crt_stricmp;
-
-__attribute__((naked, noinline))
-int FUN_000cae00(const char *script_name __attribute__((unused)))
+/* FUN_000cae00 (0xcae00) — readable C lift: find script index by name. */
+int FUN_000cae00(const char *script_name)
 {
-  __asm__ volatile(
-      "movl 0x5aa6c4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000cae00_3\n\t"
-      ".LFUN_000cae00_1:\n\t"
-      "movl 0x5aa6c4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000cae00_2\n\t"
-      "pushl $0x5c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x49c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000cae00_4\n\t"
-      ".LFUN_000cae00_2:\n\t"
-      "movl 0x5aa6c4, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_000cae00_1\n\t"
-      ".LFUN_000cae00_3:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000cae00_4:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(bcae00_c1198f0), [dget] "m"(bcae00_dget), [c18e380] "m"(bcae00_c18e380), [elem] "m"(bcae00_elem), [c1dd801] "m"(bcae00_c1dd801)
-      : "memory");
+  int handle;
+  char *node;
+  int script_index;
+  void *elem;
+
+  handle = data_next_index(*(data_t **)0x5aa6c4, -1);
+  while (handle != -1) {
+    node = (char *)datum_get(*(data_t **)0x5aa6c4, handle);
+    script_index = *(int *)(node + 4);
+    if (script_index != -1) {
+      elem = tag_block_get_element(
+          (char *)global_scenario_get() + 0x49c, script_index, 0x5c);
+      if (crt_stricmp(elem, script_name) == 0)
+        return handle;
+    }
+    handle = data_next_index(*(data_t **)0x5aa6c4, handle);
+  }
+  return -1;
 }
-#else
-#error "FUN_000cae00: clang naked draft required"
-#endif
+
 
 
 /* FUN_000caf80 (0xcaf80) — readable C lift. */
