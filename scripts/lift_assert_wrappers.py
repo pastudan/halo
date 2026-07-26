@@ -68,6 +68,9 @@ PREF = (
     "cache/",
     "hs/",
     "math/",
+    "rasterizer/",
+    "shaders/",
+    "networking/",
 )
 
 
@@ -1111,6 +1114,85 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                         f"}}\n"
                     )
 
+    # --- Pattern: (ptr, idx) bounds vs *(int16*)(ptr+count_off) [+ optional max], return element ---
+    # Proven: ai/path FUN_00060070 / FUN_000600f0 style.
+    if (
+        len(body) >= 18
+        and body[0] == ("push", "ebp")
+        and body[1] == ("mov", "ebp, esp")
+        and body[2] == ("push", "esi")
+        and body[3][0] == "mov"
+        and "si, word ptr [ebp +" in body[3][1]
+        and body[4] == ("test", "si, si")
+        and body[5] == ("push", "edi")
+        and body[6] == ("mov", "edi, dword ptr [ebp + 8]")
+        and body[7][0] == "jl"
+    ):
+        i = 8
+        count_off = None
+        max_count = None
+        if i < len(body) and body[i][0] == "mov" and "ax, word ptr [edi" in body[i][1]:
+            m = re.search(r"\[edi(?: \+ (0x[0-9a-f]+|\d+))?\]", body[i][1])
+            if m:
+                count_off = int(m.group(1), 0) if m.group(1) else 0
+                i += 1
+        if (
+            count_off is not None
+            and i + 1 < len(body)
+            and body[i] == ("cmp", "ax, si")
+            and body[i + 1][0] == "jge"
+        ):
+            i += 2
+            if (
+                i + 1 < len(body)
+                and body[i][0] == "cmp"
+                and body[i][1].startswith("ax,")
+                and body[i + 1][0] == "jle"
+            ):
+                mm = re.search(r"ax, (0x[0-9a-f]+|\d+)$", body[i][1])
+                if mm:
+                    max_count = int(mm.group(1), 0)
+                i += 2
+            ab = parse_assert(body, i)
+            if ab:
+                mid = body[ab["next"] :]
+                while mid and mid[-1][0] == "pop":
+                    mid = mid[:-1]
+                elem_size = None
+                base_off = None
+                if len(mid) >= 2 and mid[0] == ("movsx", "eax, si") and mid[1][0] == "lea":
+                    if mid[1][1] == "eax, [eax + eax*2]" and len(mid) >= 3 and mid[2][0] == "lea":
+                        m = re.search(
+                            r"\[edi \+ eax\*(\d+)(?: \+ (0x[0-9a-f]+|\d+))?\]",
+                            mid[2][1],
+                        )
+                        if m:
+                            elem_size = 3 * int(m.group(1))
+                            base_off = int(m.group(2), 0) if m.group(2) else 0
+                    elif "edi" in mid[1][1]:
+                        m = re.search(
+                            r"\[edi \+ eax\*(\d+)(?: \+ (0x[0-9a-f]+|\d+))?\]",
+                            mid[1][1],
+                        )
+                        if m:
+                            elem_size = int(m.group(1))
+                            base_off = int(m.group(2), 0) if m.group(2) else 0
+                if elem_size is not None and base_off is not None:
+                    sig1, ps1 = ensure_params(sig, ps, 2, ["void *", "int16_t"])
+                    if is_void(sig1) or sig1.strip().startswith("void "):
+                        sig1 = re.sub(r"^void\b", "void *", sig1, count=1)
+                    a0, a1 = ps1[0], ps1[1]
+                    max_chk = f" || count > {max_count}" if max_count is not None else ""
+                    return (
+                        f"{sig1}\n{{\n"
+                        f"  int16_t count = *(int16_t *)((char *){a0} + {count_off});\n"
+                        f"  if ((int16_t){a1} < 0 || (int16_t){a1} >= count{max_chk}) {{\n"
+                        f"{assert_c(ab, '    ')}"
+                        f"  }}\n"
+                        f"  return (char *){a0} + {base_off} + (int)(int16_t){a1} * {elem_size};\n"
+                        f"}}\n"
+                    )
+
     return None
 
 
@@ -1309,6 +1391,27 @@ def main() -> int:
             new_text = '#include <stdint.h>\n' + new_text
         sp.write_text(new_text, encoding="utf-8")
         print(f"LIFTED {hex(ai)} {name} ({src})", flush=True)
+        # Keep kb + decl.h in sync with emitted signature (avoids conflicting-types → 0/0/0).
+        sig_line = body.split("{", 1)[0].strip()
+        kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
+        update_kb_decl(kb, ai, sig_line)
+        KB_PATH.write_text(json.dumps(kb, indent=2) + "\n", encoding="utf-8")
+        decl_h = ROOT / "build" / "generated" / "decl.h"
+        if decl_h.exists() and sig_line:
+            dh = decl_h.read_text(encoding="utf-8", errors="replace")
+            # Match HFUNC ... name(...);
+            pat = re.compile(
+                rf"^(HFUNC\s+)(.+?\s+){re.escape(name)}\s*\([^;]*\);",
+                re.M,
+            )
+            repl = rf"\g<1>{sig_line};"
+            # sig_line already has return+name+params; rebuild as HFUNC <sig>;
+            def _repl(m: re.Match) -> str:
+                return f"HFUNC {sig_line};"
+
+            dh2, nsub = pat.subn(_repl, dh, count=1)
+            if nsub:
+                decl_h.write_text(dh2, encoding="utf-8")
         for stale in (ROOT / "build").rglob(sp.name + ".obj"):
             try:
                 stale.unlink()

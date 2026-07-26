@@ -4060,28 +4060,11 @@ void sound_reconnect_to_structure_bsp(void)
 #endif
 
 
-/* FUN_001cbc20 (0x1cbc20) — XBE naked draft (batch 290). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float FUN_001cbc20(float t __attribute__((unused)))
+/* FUN_001cbc20 (0x1cbc20) — readable C lift. */
+int FUN_001cbc20(float t)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x2c1288\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x36, 0xd4, 0x00, 0x00\n\t"
-      :
-      :
-      : "memory");
+  return (int)(t * *(float *)0x2c1288);
 }
-#else
-#error "FUN_001cbc20: clang naked draft required"
-#endif
-
 
 /* FUN_001cbc40 (0x1cbc40) — XBE naked draft (batch 282). */
 #if defined(__clang__)

@@ -583,84 +583,23 @@ void sound_dsound_set_channel_properties(int channel_index, float *properties,
 }
 /* --- sound_dsound_xbox.obj batch drafts (2026-07-26) --- */
 
-/* dsound_angle_from_angle (0x1c9230) — XBE naked draft (batch 283). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void dsound_angle_from_angle(void)
+/* dsound_angle_from_angle (0x1c9230) — readable C lift. */
+int dsound_angle_from_angle(float angle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x2b073c\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x26, 0xfe, 0x00, 0x00\n\t"
-      :
-      :
-      : "memory");
+  return (int)(angle * *(float *)0x2b073c);
 }
-#else
-#error "dsound_angle_from_angle: clang naked draft required"
-#endif
 
-
-/* dsound_occlusion_from_occlusion (0x1c9250) — XBE naked draft (batch 280). */
-#if defined(__clang__)
-static int (*const b1c9250_c1c9130)(float gain, int ceiling) = sound_dsound_gain_to_volume;
-
-__attribute__((naked, noinline))
-void dsound_occlusion_from_occlusion(void)
+/* dsound_occlusion_from_occlusion (0x1c9250) — readable C lift. */
+int dsound_occlusion_from_occlusion(float occlusion)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x2533c8\n\t"
-      "pushl $0\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "call *%[c1c9130]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c9130] "m"(b1c9250_c1c9130)
-      : "memory");
+  return sound_dsound_gain_to_volume(1.0f - occlusion, 0);
 }
-#else
-#error "dsound_occlusion_from_occlusion: clang naked draft required"
-#endif
 
-
-/* dsound_obstruction_from_obstruction (0x1c9270) — XBE naked draft (batch 280). */
-#if defined(__clang__)
-static int (*const b1c9270_c1c9130)(float gain, int ceiling) = sound_dsound_gain_to_volume;
-
-__attribute__((naked, noinline))
-void dsound_obstruction_from_obstruction(void)
+/* dsound_obstruction_from_obstruction (0x1c9270) — readable C lift. */
+int dsound_obstruction_from_obstruction(float obstruction)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x2533c8\n\t"
-      "pushl $0\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "call *%[c1c9130]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c9130] "m"(b1c9270_c1c9130)
-      : "memory");
+  return sound_dsound_gain_to_volume(1.0f - obstruction, 0);
 }
-#else
-#error "dsound_obstruction_from_obstruction: clang naked draft required"
-#endif
-
 
 /* FUN_001c9350 (0x1c9350) — XBE naked draft (batch 282). */
 #if defined(__clang__)

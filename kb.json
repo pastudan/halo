@@ -7020,7 +7020,7 @@
         },
         {
           "addr": "0x861d0",
-          "decl": "void director_inhibit_facing(void);",
+          "decl": "void director_inhibit_facing(int16_t a0);",
           "ported": false
         },
         {
@@ -7030,12 +7030,12 @@
         },
         {
           "addr": "0x86270",
-          "decl": "void director_inhibited_facing(void);",
+          "decl": "uint8_t director_inhibited_facing(int16_t a0);",
           "ported": false
         },
         {
           "addr": "0x862c0",
-          "decl": "void director_inhibited_input(void);",
+          "decl": "uint8_t director_inhibited_input(int16_t a0);",
           "ported": false
         },
         {
@@ -21781,7 +21781,7 @@
         },
         {
           "addr": "0x128c0",
-          "decl": "void action_avoid_setup(void);",
+          "decl": "int action_avoid_setup(void * a0, void * a1);",
           "ported": false
         },
         {
@@ -26776,8 +26776,8 @@
         },
         {
           "addr": "0x82df0",
-          "decl": "void count_endpoints_in_set(void);",
-          "ported": false
+          "decl": "int count_endpoints_in_set(void * a0);",
+          "ported": true
         },
         {
           "addr": "0x83040",
@@ -26791,18 +26791,18 @@
         },
         {
           "addr": "0x831e0",
-          "decl": "void FUN_000831e0(void);",
-          "ported": false
+          "decl": "int FUN_000831e0(void * a0);",
+          "ported": true
         },
         {
           "addr": "0x83220",
-          "decl": "void FUN_00083220(void);",
-          "ported": false
+          "decl": "int FUN_00083220(void * a0);",
+          "ported": true
         },
         {
           "addr": "0x83260",
-          "decl": "void FUN_00083260(void);",
-          "ported": false
+          "decl": "uint16_t FUN_00083260(void * a0);",
+          "ported": true
         },
         {
           "addr": "0x832a0",
