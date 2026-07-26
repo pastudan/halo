@@ -13419,7 +13419,8 @@
         },
         {
           "addr": "0xffef0",
-          "decl": "void gamepad_button_is_down(void);"
+          "decl": "char gamepad_button_is_down(int16_t button);",
+          "ported": false
         },
         {
           "addr": "0xfff70",
@@ -13434,11 +13435,13 @@
         },
         {
           "addr": "0xfff90",
-          "decl": "void main_disallow_persistent_storage(void);"
+          "decl": "void main_disallow_persistent_storage(void);",
+          "ported": false
         },
         {
           "addr": "0xfffa0",
-          "decl": "void main_set_map_name(int a0);"
+          "decl": "void main_set_map_name(const char *name);",
+          "ported": false
         },
         {
           "addr": "0x100000",
@@ -13447,11 +13450,13 @@
         },
         {
           "addr": "0x100010",
-          "decl": "void main_set_multiplayer_map_name(const char *name);"
+          "decl": "void main_set_multiplayer_map_name(const char *name);",
+          "ported": false
         },
         {
           "addr": "0x100040",
-          "decl": "const char *main_get_map_name(void);"
+          "decl": "const char *main_get_map_name(void);",
+          "ported": false
         },
         {
           "addr": "0x100050",
@@ -13460,7 +13465,8 @@
         },
         {
           "addr": "0x100060",
-          "decl": "void main_set_difficulty(int a0);"
+          "decl": "void main_set_difficulty(int16_t difficulty);",
+          "ported": false
         },
         {
           "addr": "0x100080",
@@ -13479,75 +13485,93 @@
         },
         {
           "addr": "0x1002a0",
-          "decl": "void main_reset_map(void);"
+          "decl": "void main_reset_map(void);",
+          "ported": false
         },
         {
           "addr": "0x1002c0",
-          "decl": "void main_revert_map(void);"
+          "decl": "void main_revert_map(void);",
+          "ported": false
         },
         {
           "addr": "0x1002e0",
-          "decl": "void main_skip_cinematic(void);"
+          "decl": "void main_skip_cinematic(void);",
+          "ported": false
         },
         {
           "addr": "0x100300",
-          "decl": "void main_save_map_nonsafe(void);"
+          "decl": "void main_save_map_nonsafe(void);",
+          "ported": false
         },
         {
           "addr": "0x100310",
-          "decl": "int main_saving_map(void);"
+          "decl": "char main_saving_map(void);",
+          "ported": false
         },
         {
           "addr": "0x100320",
-          "decl": "void main_save_cancel(void);"
+          "decl": "void main_save_cancel(void);",
+          "ported": false
         },
         {
           "addr": "0x100330",
-          "decl": "void main_save_map_safe(void);"
+          "decl": "void main_save_map_safe(void);",
+          "ported": false
         },
         {
           "addr": "0x100370",
-          "decl": "void main_won_map(void);"
+          "decl": "void main_won_map(void);",
+          "ported": false
         },
         {
           "addr": "0x100380",
-          "decl": "void FUN_00100380(void);"
+          "decl": "void FUN_00100380(void);",
+          "ported": false
         },
         {
           "addr": "0x100390",
-          "decl": "void main_respawn(void);"
+          "decl": "void main_respawn(char flag);",
+          "ported": false
         },
         {
           "addr": "0x1003b0",
-          "decl": "void main_save_core(void);"
+          "decl": "void main_save_core(void);",
+          "ported": false
         },
         {
           "addr": "0x1003d0",
-          "decl": "void main_save_core_name(int a0);"
+          "decl": "void main_save_core_name(const char *name);",
+          "ported": false
         },
         {
           "addr": "0x100420",
-          "decl": "void main_load_core(void);"
+          "decl": "void main_load_core(void);",
+          "ported": false
         },
         {
           "addr": "0x100440",
-          "decl": "void main_load_core_at_startup(void);"
+          "decl": "void main_load_core_at_startup(void);",
+          "ported": false
         },
         {
           "addr": "0x100460",
-          "decl": "void main_load_core_name(int a0);"
+          "decl": "void main_load_core_name(const char *name);",
+          "ported": false
         },
         {
           "addr": "0x1004b0",
-          "decl": "void main_load_core_name_at_startup(int a0);"
+          "decl": "void main_load_core_name_at_startup(const char *name);",
+          "ported": false
         },
         {
           "addr": "0x100500",
-          "decl": "void main_switch_structure_bsp(void);"
+          "decl": "void main_switch_structure_bsp(int16_t bsp_index);",
+          "ported": false
         },
         {
           "addr": "0x100560",
-          "decl": "void main_skip(int a0);"
+          "decl": "void main_skip(int16_t level);",
+          "ported": false
         },
         {
           "addr": "0x100590",
@@ -13571,7 +13595,8 @@
         },
         {
           "addr": "0x100690",
-          "decl": "void main_menu_unload(void);"
+          "decl": "void main_menu_unload(void);",
+          "ported": false
         },
         {
           "addr": "0x1006b0",
@@ -13585,27 +13610,33 @@
         },
         {
           "addr": "0x1006d0",
-          "decl": "void main_menu_switch_to_single_player(void);"
+          "decl": "void main_menu_switch_to_single_player(void);",
+          "ported": false
         },
         {
           "addr": "0x1006e0",
-          "decl": "void main_set_game_connection_to_film_playback(void);"
+          "decl": "void main_set_game_connection_to_film_playback(void);",
+          "ported": false
         },
         {
           "addr": "0x1006f0",
-          "decl": "void main_get_solo_level_from_name(void);"
+          "decl": "int main_get_solo_level_from_name(const char *map_name);",
+          "ported": false
         },
         {
           "addr": "0x100860",
-          "decl": "void main_get_current_solo_level(void);"
+          "decl": "int main_get_current_solo_level(void);",
+          "ported": false
         },
         {
           "addr": "0x100870",
-          "decl": "void main_get_solo_level_name(void);"
+          "decl": "const char *main_get_solo_level_name(int16_t index);",
+          "ported": false
         },
         {
           "addr": "0x100890",
-          "decl": "void main_run_demos(void);"
+          "decl": "void main_run_demos(void);",
+          "ported": false
         },
         {
           "addr": "0x1008a0",
@@ -13618,7 +13649,8 @@
         },
         {
           "addr": "0x100b00",
-          "decl": "short main_get_window_count(void);"
+          "decl": "int16_t main_get_window_count(void);",
+          "ported": false
         },
         {
           "addr": "0x100b40",
@@ -13676,11 +13708,13 @@
         },
         {
           "addr": "0x101cb0",
-          "decl": "void main_crash(int a0);"
+          "decl": "void main_crash(int unused);",
+          "ported": false
         },
         {
           "addr": "0x101cc0",
-          "decl": "void main_print_version(void);"
+          "decl": "void main_print_version(void);",
+          "ported": false
         },
         {
           "addr": "0x101cd0",
@@ -13699,7 +13733,8 @@
         },
         {
           "addr": "0x101ec0",
-          "decl": "void main_save_map_no_timeout(void);"
+          "decl": "void main_save_map_no_timeout(void);",
+          "ported": false
         },
         {
           "addr": "0x101f00",
@@ -13713,7 +13748,8 @@
         },
         {
           "addr": "0x102070",
-          "decl": "void main_roll_credits(void);"
+          "decl": "void main_roll_credits(void);",
+          "ported": false
         },
         {
           "addr": "0x102090",
@@ -25462,7 +25498,7 @@
         },
         {
           "addr": "0xe43d0",
-          "decl": "void main_menu_active(void);"
+          "decl": "void main_menu_active(int flag);"
         },
         {
           "addr": "0xe43e0",

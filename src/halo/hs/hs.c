@@ -2252,7 +2252,7 @@ void FUN_000c1d10(int16_t function_index, int thread_datum, char init)
   char *args;
   args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
   if (args) {
-    main_set_map_name(*(int *)(args + 0));
+    main_set_map_name((const char *)*(int *)(args + 0));
     hs_return(thread_datum, 0);
   }
 }
@@ -2688,7 +2688,7 @@ void FUN_000c26f0(int16_t function_index, int thread_datum, char init)
   char *args;
   args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
   if (args) {
-    main_load_core_name(*(int *)(args + 0));
+    main_load_core_name((const char *)*(int *)(args + 0));
     hs_return(thread_datum, 0);
   }
 }
@@ -2698,7 +2698,7 @@ void FUN_000c2730(int16_t function_index, int thread_datum, char init)
   char *args;
   args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
   if (args) {
-    main_load_core_name_at_startup(*(int *)(args + 0));
+    main_load_core_name_at_startup((const char *)*(int *)(args + 0));
     hs_return(thread_datum, 0);
   }
 }
@@ -2716,7 +2716,7 @@ void FUN_000c2790(int16_t function_index, int thread_datum, char init)
   char *args;
   args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
   if (args) {
-    main_save_core_name(*(int *)(args + 0));
+    main_save_core_name((const char *)*(int *)(args + 0));
     hs_return(thread_datum, 0);
   }
 }
