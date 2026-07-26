@@ -2100,73 +2100,26 @@ char actor_action_handle_active_cover_seeking(int actor_handle, char param2,
   return result;
 }
 
-/* actor_action_handle_done_fleeing (0x1f6e0) — XBE naked draft (batch 151). */
-#if defined(__clang__)
-static void *(*const b1f6e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char (*const b1f6e0_c16210)(int actor_handle, int param_2, short *param_3) = FUN_00016210;
-static void (*const b1f6e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1f6e0_exitfn)(int) = system_exit;
-static void (*const b1f6e0_c1d030)(int actor_handle, int new_action_type, int param_3) = actor_action_change;
-
-__attribute__((naked, noinline))
-char actor_action_handle_done_fleeing(int actor_handle __attribute__((unused)))
+/* actor_action_handle_done_fleeing (0x1f6e0) — readable C lift. */
+char actor_action_handle_done_fleeing(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x84, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "cmpw $4, 0x6c(%%ecx)\n\t"
-      "jne .Lactor_action_handle_done_fleeing_2\n\t"
-      "movb 0xab(%%ecx), %%dl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "je .Lactor_action_handle_done_fleeing_2\n\t"
-      "leal -0x84(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x9c, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c16210]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_handle_done_fleeing_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa79\n\t"
-      "pushl $0x2544b0\n\t"
-      "pushl $0x254818\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_action_handle_done_fleeing_1:\n\t"
-      "leal -0x84(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $6\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d030]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      ".Lactor_action_handle_done_fleeing_2:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1f6e0_dget), [c16210] "m"(b1f6e0_c16210), [assert] "m"(b1f6e0_assert), [exitfn] "m"(b1f6e0_exitfn), [c1d030] "m"(b1f6e0_c1d030)
-      : "memory");
-}
-#else
-#error "actor_action_handle_done_fleeing: clang naked draft required"
-#endif
+  char *actor;
+  char buf[0x84];
 
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  if (*(short *)(actor + 0x6c) != 4) {
+    return 0;
+  }
+  if (actor[0xab] == 0) {
+    return 0;
+  }
+  if (!FUN_00016210(actor_handle, actor + 0x9c, buf)) {
+    display_assert((const char *)0x254818, (const char *)0x2544b0, 0xa79, 1);
+    system_exit(-1);
+  }
+  actor_action_change(actor_handle, 6, buf);
+  return 1;
+}
 
 /* actor_action_handle_combat_failure (0x1f920) — readable C lift. */
 char actor_action_handle_combat_failure(int actor_handle)

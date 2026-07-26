@@ -2779,7 +2779,7 @@
         {
           "addr": "0x1f6e0",
           "decl": "char actor_action_handle_done_fleeing(int actor_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1f770",
