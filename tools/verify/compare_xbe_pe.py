@@ -256,7 +256,7 @@ def main() -> int:
         ("FUN_001b56b0", 0x1b56b0, 0x1b5747),
         ("FUN_000fb690", 0xfb690, 0xfb6d6),
         # gameplay wave 8 (2026-07-26)
-        ("FUN_00136bc0", 0x136bc0, 0x136f40),
+        ("FUN_00136bc0", 0x136bc0, 0x136f3e),
         ("FUN_001377d0", 0x1377d0, 0x137d12),
         ("FUN_001345b0", 0x1345b0, 0x134adb),
         ("FUN_00133300", 0x133300, 0x133496),
@@ -278,13 +278,13 @@ def main() -> int:
         ("FUN_001b77f0", 0x1b77f0, 0x1b79c0),
         ("FUN_001b6ca0", 0x1b6ca0, 0x1b6e11),
         # gameplay wave 12 (2026-07-26)
-        ("FUN_000de560", 0xde560, 0xdeb50),
+        ("FUN_000de560", 0xde560, 0xdeb4f),
         ("FUN_001b5f20", 0x1b5f20, 0x1b5fed),
         ("FUN_001b6560", 0x1b6560, 0x1b69a0),
         ("FUN_001b69a0", 0x1b69a0, 0x1b6ca0),
         ("FUN_001b6e20", 0x1b6e20, 0x1b7016),
         # gameplay wave 13 (2026-07-26)
-        ("FUN_00136bc0", 0x136bc0, 0x136f40),
+        ("FUN_00136bc0", 0x136bc0, 0x136f3e),
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c8a),
         ("vehicle_export_function_values", 0x1b79c0, 0x1b7e48),
         ("FUN_001345b0", 0x1345b0, 0x134adb),
@@ -298,7 +298,7 @@ def main() -> int:
         ("FUN_001b4dc0", 0x1b4dc0, 0x1b53f3),
         # gameplay wave 15 (2026-07-26)
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c8a),
-        ("FUN_00136bc0", 0x136bc0, 0x136f40),
+        ("FUN_00136bc0", 0x136bc0, 0x136f3e),
         ("FUN_00149680", 0x149680, 0x149d00),
         ("FUN_001377d0", 0x1377d0, 0x137d12),
         ("FUN_001491d0", 0x1491d0, 0x1493a0),
@@ -308,7 +308,7 @@ def main() -> int:
         ("glow_trailing_particle_new", 0x134350, 0x1345b0),
         ("FUN_001b81d0", 0x1b81d0, 0x1b856c),
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c8a),
-        ("FUN_00136bc0", 0x136bc0, 0x136f40),
+        ("FUN_00136bc0", 0x136bc0, 0x136f3e),
         # gameplay wave 17 (2026-07-26)
         ("FUN_001b8570", 0x1b8570, 0x1b8f08),
         ("item_update", 0xf7340, 0xf7ca1),
@@ -328,11 +328,11 @@ def main() -> int:
         ("FUN_00135510", 0x135510, 0x135f1b),
         ("FUN_001b6e20", 0x1b6e20, 0x1b7016),
         # gameplay wave 20 (2026-07-26)
-        ("first_person_weapon_update", 0xdd580, 0xddae0),
+        ("first_person_weapon_update", 0xdd580, 0xddad8),
         ("FUN_000f1710", 0xf1710, 0xf1ed0),
         ("FUN_0001b280", 0x1b280, 0x1b750),
         ("get_local_player_input_blob", 0xb70b0, 0xb7e30),
-        ("FUN_00136bc0", 0x136bc0, 0x136f40),
+        ("FUN_00136bc0", 0x136bc0, 0x136f3e),
         # gameplay wave 21 (2026-07-26)
         ("first_person_weapon_draw", 0xdce80, 0xdd110),
         ("FUN_0001aeb0", 0x1aeb0, 0x1b280),
@@ -352,7 +352,7 @@ def main() -> int:
         ("FUN_001a4440", 0x1a4440, 0x1a4990),
         ("FUN_001a4990", 0x1a4990, 0x1a4a50),
         ("player_aim_projectile", 0xa6130, 0xa6470),
-        ("get_particle_world_position", 0x1339a0, 0x134070),
+        ("get_particle_world_position", 0x1339a0, 0x134061),
         ("FUN_001336a0", 0x1336a0, 0x133750),
         ("FUN_001335e0", 0x1335e0, 0x1336a0),
         # gameplay wave 24 (2026-07-26)
@@ -527,4 +527,10 @@ def main() -> int:
         ("item_update", 0xf7340, 0xf7ca1),
         ("FUN_0019fa20", 0x19fa20, 0x1a01c3),
         ("FUN_000fd570", 0xfd570, 0xfdc8e),
+        # gameplay wave 46 (2026-07-26)
+        ("get_particle_world_position", 0x1339a0, 0x134061),
+        ("FUN_000de560", 0xde560, 0xdeb4f),
+        ("first_person_weapon_update", 0xdd580, 0xddad8),
+        ("FUN_001345b0", 0x1345b0, 0x134adb),
+        ("FUN_00136bc0", 0x136bc0, 0x136f3e),
     ]
