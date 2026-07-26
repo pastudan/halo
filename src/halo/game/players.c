@@ -2575,64 +2575,20 @@ void *player_get_starting_location(int16_t index)
   return net_loc;
 }
 
-/* placement_data_set_change_color (0xbaba0) — XBE naked draft (batch 154). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void placement_data_set_change_color(void *placement __attribute__((unused)), float *color __attribute__((unused)))
+/* placement_data_set_change_color (0xbaba0) — readable C lift. */
+void placement_data_set_change_color(void *placement, float *color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x58(%%ecx), %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "movl %%edi, (%%edx)\n\t"
-      "movl 0x4(%%esi), %%edi\n\t"
-      "movl %%edi, 0x4(%%edx)\n\t"
-      "movl 0x8(%%esi), %%esi\n\t"
-      "movl %%esi, 0x8(%%edx)\n\t"
-      "leal 0x64(%%ecx), %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "movl %%edi, (%%edx)\n\t"
-      "movl 0x4(%%esi), %%edi\n\t"
-      "movl %%edi, 0x4(%%edx)\n\t"
-      "movl 0x8(%%esi), %%esi\n\t"
-      "movl %%esi, 0x8(%%edx)\n\t"
-      "leal 0x70(%%ecx), %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "movl %%edi, (%%edx)\n\t"
-      "movl 0x4(%%esi), %%edi\n\t"
-      "movl %%edi, 0x4(%%edx)\n\t"
-      "movl 0x8(%%esi), %%esi\n\t"
-      "movl %%esi, 0x8(%%edx)\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "addl $0x7c, %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float *dst;
+  int i;
+
+  dst = (float *)((char *)placement + 0x58);
+  for (i = 0; i < 4; i++) {
+    dst[0] = color[0];
+    dst[1] = color[1];
+    dst[2] = color[2];
+    dst += 3;
+  }
 }
-#else
-#error "placement_data_set_change_color: clang naked draft required"
-#endif
-
-
 /* players_handle_deleted_object (0xbb220) — XBE naked draft (batch 154). */
 #if defined(__clang__)
 static void *(*const bbb220_get)(int, int) = object_get_and_verify_type;

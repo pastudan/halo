@@ -106,46 +106,16 @@ char lights_enable(char active)
   return active;
 }
 
-/* light_delete (0x139310) — XBE naked draft (batch 238). */
-#if defined(__clang__)
-static void *(*const b139310_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b139310_c1919a0)(void *partition, int object_handle, void *first_cluster_ref) = cluster_partition_remove_object;
-static void (*const b139310_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
-void light_delete(int light_handle __attribute__((unused)))
+/* light_delete (0x139310) — readable C lift. */
+void light_delete(int light_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5a90bc, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x10, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x5a90b0\n\t"
-      "call *%[c1919a0]\n\t"
-      "movl 0x5a90bc, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b139310_dget), [c1919a0] "m"(b139310_c1919a0), [c1196d0] "m"(b139310_c1196d0)
-      : "memory");
+  void *light;
+
+  light = datum_get(*(data_t **)0x5a90bc, light_handle);
+  cluster_partition_remove_object((void *)0x5a90b0, light_handle,
+                                  (char *)light + 0x10);
+  datum_delete(*(data_t **)0x5a90bc, light_handle);
 }
-#else
-#error "light_delete: clang naked draft required"
-#endif
-
-
 /* FUN_00139350 (0x139350) — XBE naked draft (batch 236). */
 #if defined(__clang__)
 static void *(*const b139350_dget)(void *, int) = (void *(*)(void *, int))datum_get;
