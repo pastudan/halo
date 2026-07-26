@@ -10780,7 +10780,7 @@
         {
           "addr": "0xc1870",
           "decl": "void FUN_000c1870(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc18b0",
@@ -10900,12 +10900,12 @@
         {
           "addr": "0xc1d10",
           "decl": "void FUN_000c1d10(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1d50",
           "decl": "void FUN_000c1d50(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1d90",
@@ -10960,7 +10960,7 @@
         {
           "addr": "0xc1f40",
           "decl": "void FUN_000c1f40(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1f80",
@@ -11170,12 +11170,12 @@
         {
           "addr": "0xc26f0",
           "decl": "void FUN_000c26f0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc2730",
           "decl": "void FUN_000c2730(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc2770",
@@ -11185,7 +11185,7 @@
         {
           "addr": "0xc2790",
           "decl": "void FUN_000c2790(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc27d0",
@@ -11240,7 +11240,7 @@
         {
           "addr": "0xc2a40",
           "decl": "void FUN_000c2a40(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc2a80",
@@ -11250,7 +11250,7 @@
         {
           "addr": "0xc2ad0",
           "decl": "void FUN_000c2ad0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc2b10",
@@ -19493,7 +19493,7 @@
         {
           "addr": "0xc0370",
           "decl": "void FUN_000c0370(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc03b0",

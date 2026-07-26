@@ -73,8 +73,52 @@ def callee_addr(op: str) -> int | None:
     return int(m.group(1), 16) if m else None
 
 
-def parse_action(mid: list[tuple[str, str, int]], name_by: dict) -> tuple[str, str] | None:
+def _param_types(decl: str) -> list[str]:
+    m = re.search(r"\(([^)]*)\)", decl or "")
+    if not m:
+        return []
+    raw = m.group(1).strip()
+    if not raw or raw == "void":
+        return []
+    out = []
+    for p in raw.split(","):
+        p = re.sub(r"\s*@<\w+>", "", p)
+        p = re.sub(r"\s+", " ", p).strip()
+        if not p:
+            continue
+        # Normalize "char *name" / "char* name" / "char * name"
+        p = re.sub(r"\*\s*(\w+)$", "*", p)  # drop trailing param name after *
+        p = re.sub(r"\s+\w+$", "", p)  # drop trailing bare name
+        p = re.sub(r"\s*\*\s*", " *", p).strip()
+        out.append(p)
+    return out
+
+
+def _cast_args(action_addr: int, c_args: list[str], decl_by: dict) -> list[str]:
+    """Cast int args to pointer types expected by callee decl."""
+    decl = decl_by.get(action_addr) or ""
+    pts = _param_types(decl)
+    if not pts:
+        return c_args
+    out = []
+    for i, a in enumerate(c_args):
+        if i >= len(pts):
+            out.append(a)
+            continue
+        pt = pts[i]
+        if "*" in pt and "float" not in a and "args[" in a:
+            # pointer param — cast int slot
+            out.append(f"({pt})(uintptr_t){a}")
+        else:
+            out.append(a)
+    return out
+
+
+def parse_action(
+    mid: list[tuple[str, str, int]], name_by: dict, decl_by: dict | None = None
+) -> tuple[str, str] | None:
     """Return (action_c, ret_mode) where ret_mode is '0' or 'eax'."""
+    decl_by = decl_by or {}
     # Find action call(s) then hs_return setup.
     # Strip trailing: push 0|eax; push esi; call hs_return; add esp, N
     if len(mid) < 4:
@@ -112,7 +156,14 @@ def parse_action(mid: list[tuple[str, str, int]], name_by: dict) -> tuple[str, s
     action_addr = callee_addr(body[-1][1])
     if action_addr is None:
         return None
-    action_name = name_by.get(action_addr)
+    # Prefer C identifier from decl (matches decl.h) over pretty kb name.
+    action_name = None
+    d = (decl_by or {}).get(action_addr) or ""
+    m = re.search(r"(\w+)\s*\(", d)
+    if m:
+        action_name = m.group(1)
+    if not action_name:
+        action_name = name_by.get(action_addr)
     if not action_name:
         return None
     loads = body[:-1]
@@ -289,11 +340,18 @@ def parse_action(mid: list[tuple[str, str, int]], name_by: dict) -> tuple[str, s
 
     # C args: reverse of push order
     c_args = list(reversed(push_stack))
+    c_args = _cast_args(action_addr, c_args, decl_by)
+    # Skip clearly-wrong arity vs decl (avoid compile fail churn)
+    pts = _param_types(decl_by.get(action_addr) or "")
+    if pts and len(c_args) != len(pts):
+        return None
     action = f"{action_name}({', '.join(c_args)});" if c_args else f"{action_name}();"
     return action, ret_mode
 
 
-def try_emit(insns: list[tuple[str, str, int]], name: str, name_by: dict) -> str | None:
+def try_emit(
+    insns: list[tuple[str, str, int]], name: str, name_by: dict, decl_by: dict | None = None
+) -> str | None:
     if not insns or insns[-1][0] not in ("ret", "retn"):
         return None
     body = insns[:-1]
@@ -339,18 +397,18 @@ def try_emit(insns: list[tuple[str, str, int]], name: str, name_by: dict) -> str
     # mid may end with add esp before pops already stripped
     if mid and mid[-1][0] == "add":
         mid = mid[:-1]
-    parsed = parse_action(mid, name_by)
+    parsed = parse_action(mid, name_by, decl_by)
     if not parsed:
         return None
     action, ret_mode = parsed
-    ret_expr = "0" if ret_mode == "0" else "/*eax*/0"  # value-return handled below
+    needs_stdint = "uintptr_t" in action or "uint16_t" in action or "uint8_t" in action
+    header = "#include <stdint.h>\n" if needs_stdint else ""
     if ret_mode == "eax":
-        # action should capture return: hs_return(thread, (int)ACTION(...))
-        # rewrite action
         if not action.endswith(";"):
             return None
         call_expr = action[:-1]
         return (
+            f"{header}"
             f"void {name}(int16_t function_index, int thread_datum, char init)\n"
             f"{{\n"
             f"  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);\n"
@@ -360,6 +418,7 @@ def try_emit(insns: list[tuple[str, str, int]], name: str, name_by: dict) -> str
             f"}}\n"
         )
     return (
+        f"{header}"
         f"void {name}(int16_t function_index, int thread_datum, char init)\n"
         f"{{\n"
         f"  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);\n"
@@ -434,11 +493,15 @@ def main() -> int:
             continue
         if "0xcbf80" not in text_ins:
             continue
-        body = try_emit(insns, name, name_by)
+        body = try_emit(insns, name, name_by, decl_by)
         if not body:
             print(f"PARSE-FAIL {hex(ai)} {name}", flush=True)
             continue
-        # ensure stdint if needed
+        # strip leading include from body; apply once at file level if needed
+        file_include = ""
+        if body.startswith("#include <stdint.h>\n"):
+            body = body[len("#include <stdint.h>\n") :]
+            file_include = "#include <stdint.h>\n"
         c_src = f"/* {name} (0x{ai:x}) — readable C lift (HS macro-eval wrapper). */\n{body}"
         text = sp.read_text(encoding="utf-8", errors="replace")
         span = find_naked_block(text, name, ai)
@@ -446,7 +509,11 @@ def main() -> int:
             print(f"skip locate {hex(ai)} {name}", flush=True)
             continue
         new_text = text[: span[0]] + c_src + "\n" + text[span[1] :]
-        if ("uint16_t" in c_src or "uint8_t" in c_src) and "#include <stdint.h>" not in new_text:
+        if file_include and "#include <stdint.h>" not in new_text:
+            new_text = file_include + new_text
+        elif ("uint16_t" in c_src or "uint8_t" in c_src or "uintptr_t" in c_src) and (
+            "#include <stdint.h>" not in new_text
+        ):
             new_text = "#include <stdint.h>\n" + new_text
         sp.write_text(new_text, encoding="utf-8")
         cache[sp] = new_text.splitlines()
