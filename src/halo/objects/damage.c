@@ -1889,3 +1889,38 @@ void FUN_001390d0(int material, int bitmap_ref, uint16_t *indices, float bary_u,
   pixel32_to_real_rgb_color(bitmap_2d_get_pixel(bitmap_ref, uv, 0.3f, out_rgb),
                             out_rgb);
 }
+/* --- damage.obj batch drafts (2026-07-26) --- */
+
+/* 0x136700 */
+void object_get_maximum_shield_vitality(void)
+{
+
+}
+
+/* 0x138f30 */
+void FUN_00138f30(void)
+{
+
+}
+
+/* 0x138f70 */
+void FUN_00138f70(float *output, float *vertex_c, float *vertex_d, float *base, float u, float v)
+{
+  (void)output;
+  (void)vertex_c;
+  (void)vertex_d;
+  (void)base;
+  (void)u;
+  (void)v;
+}
+
+/* 0x138fd0 */
+void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices, float u, float v, int param_6)
+{
+  (void)material;
+  (void)lightmap;
+  (void)vertex_indices;
+  (void)u;
+  (void)v;
+  (void)param_6;
+}

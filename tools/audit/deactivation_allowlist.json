@@ -16728,5 +16728,54 @@
     "object": "path_obstacle_avoidance.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x136bc0",
+    "name": "FUN_00136bc0",
+    "object": "damage.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1377d0",
+    "name": "FUN_001377d0",
+    "object": "damage.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x138900",
+    "name": "FUN_00138900",
+    "object": "damage.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x136700",
+    "name": "object_get_maximum_shield_vitality",
+    "object": "damage.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x138f30",
+    "name": "FUN_00138f30",
+    "object": "damage.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x138f70",
+    "name": "FUN_00138f70",
+    "object": "damage.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x138fd0",
+    "name": "FUN_00138fd0",
+    "object": "damage.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
