@@ -1151,76 +1151,25 @@ int FUN_000615b0(void *avoidance_record __attribute__((unused)))
 #endif
 
 
-/* FUN_000616e0 (0x616e0) — XBE naked draft (batch 224). */
-#if defined(__clang__)
-static void * (*const b616e0_c18e3c0)(void) = scenario_get;
-static void (*const b616e0_c60ea0)(void *avoidance_record, float *end_point, void *param_2, void *scenario, unsigned char param_4, float radius, float *start_point, int param_7, float param_8, unsigned char param_9, unsigned char param_10) = FUN_00060ea0;
-static int (*const b616e0_c615b0)(void *avoidance_record) = FUN_000615b0;
-
-__attribute__((naked, noinline))
-char FUN_000616e0(void *avoidance_record __attribute__((unused)), unsigned char path_flag __attribute__((unused)), void *param_3 __attribute__((unused)), void *param_4 __attribute__((unused)), void *param_5 __attribute__((unused)), void *param_6 __attribute__((unused)), float *end_point __attribute__((unused)), unsigned char param_8 __attribute__((unused)))
+/* FUN_000616e0 (0x616e0) — readable C lift. */
+char FUN_000616e0(void *rec, void *p0, void *p1, void *p2, void *p3, void *p4, float *end_point)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c60ea0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_000616e0_1:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c615b0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000616e0_1\n\t"
-      "orl $0xffffffff, %%ecx\n\t"
-      "cmpw %%cx, 0x1e(%%esi)\n\t"
-      "je .LFUN_000616e0_2\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw %%cx, 0x1e(%%esi)\n\t"
-      "movb $1, 0x28(%%esi)\n\t"
-      "setne %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000616e0_2:\n\t"
-      "movw 0x20(%%esi), %%ax\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "je .LFUN_000616e0_3\n\t"
-      "movw %%ax, 0x1e(%%esi)\n\t"
-      ".LFUN_000616e0_3:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw %%cx, 0x1e(%%esi)\n\t"
-      "setne %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c18e3c0] "m"(b616e0_c18e3c0), [c60ea0] "m"(b616e0_c60ea0), [c615b0] "m"(b616e0_c615b0)
-      : "memory");
-}
-#else
-#error "FUN_000616e0: clang naked draft required"
-#endif
+  void *scenario;
+  short neg1;
 
+  scenario = scenario_get();
+  FUN_00060ea0(rec, end_point, p1, scenario, (unsigned char)(unsigned int)p0, 0.0f, (float *)p2, (int)p3, 0.0f, (unsigned char)(unsigned int)p4, 0);
+  while (FUN_000615b0(rec))
+    ;
+  neg1 = (short)-1;
+  if (*(short *)((char *)rec + 0x1e) != neg1) {
+    *((unsigned char *)rec + 0x28) = 1;
+    return (char)(*(short *)((char *)rec + 0x1e) != neg1);
+  }
+  if (*(short *)((char *)rec + 0x20) != neg1)
+    *(short *)((char *)rec + 0x1e) = *(short *)((char *)rec + 0x20);
+  return (char)(*(short *)((char *)rec + 0x1e) != neg1);
+}
 
 /* FUN_00061750 (0x61750) — XBE naked draft (batch 224). */
 #if defined(__clang__)

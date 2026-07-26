@@ -40620,7 +40620,8 @@
         {
           "addr": "0x60ea0",
           "decl": "void FUN_00060ea0(void *avoidance_record @<ecx>, float *end_point @<eax>, void *param_2, void *scenario, unsigned char param_4, float radius, float *start_point, int param_7, float param_8, unsigned char param_9, unsigned char param_10);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00060ea0"
         },
         {
           "addr": "0x61080",
@@ -40635,12 +40636,14 @@
         {
           "addr": "0x615b0",
           "decl": "int FUN_000615b0(void *avoidance_record @<eax>);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000615b0"
         },
         {
           "addr": "0x616e0",
-          "decl": "char FUN_000616e0(void *avoidance_record, unsigned char path_flag, void *param_3, void *param_4, void *param_5, void *param_6, float *end_point, unsigned char param_8);",
-          "ported": false
+          "decl": "char FUN_000616e0(void *rec @<esi>, void *p0, void *p1, void *p2, void *p3, void *p4, float *end_point);",
+          "ported": true,
+          "name": "FUN_000616e0"
         },
         {
           "addr": "0x61750",
