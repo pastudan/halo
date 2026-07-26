@@ -23511,7 +23511,7 @@
         {
           "addr": "0x1c1ba0",
           "decl": "void FUN_001c1ba0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c1bc0",
@@ -23531,7 +23531,7 @@
         {
           "addr": "0x1c1da0",
           "decl": "void FUN_001c1da0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c1dc0",

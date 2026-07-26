@@ -149,8 +149,9 @@ void FUN_001c1b00(void *out __attribute__((unused)), int profile_handle __attrib
 /* FUN_001c1ba0 (0x1c1ba0) — readable C lift. */
 void FUN_001c1ba0(void)
 {
-  csmemset((void *)0x4ea9c8, 0, 0x6c);
-  *(char *)0x4eaa30 = 1;
+  extern char DAT_004ea9c8[];
+  char *base = (char *)csmemset(DAT_004ea9c8, 0, 0x6c);
+  base[0x68] = 1; /* DAT_004eaa30 */
   FUN_001c19e0();
 }
 
@@ -379,8 +380,9 @@ void FUN_001c1cc0(void)
 /* FUN_001c1da0 (0x1c1da0) — readable C lift. */
 void FUN_001c1da0(void)
 {
-  csmemset((void *)0x4eaa38, 0, 0x74);
-  *(char *)0x4eaaaa = 1;
+  extern char DAT_004eaa38[];
+  char *base = (char *)csmemset(DAT_004eaa38, 0, 0x74);
+  base[0x72] = 1; /* DAT_004eaaaa */
 }
 
 /* FUN_001c1dc0 (0x1c1dc0) — XBE naked draft (batch 288). */
