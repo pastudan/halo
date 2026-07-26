@@ -13159,11 +13159,13 @@
         },
         {
           "addr": "0xce6c0",
-          "decl": "void input_abstraction_get_local_player_preferences(short local_player_index, void *preferences_out);"
+          "decl": "void input_abstraction_get_local_player_preferences(short local_player_index, void *preferences_out);",
+          "ported": false
         },
         {
           "addr": "0xce740",
-          "decl": "void input_abstraction_update_local_player_preferences(void);"
+          "decl": "void input_abstraction_update_local_player_preferences(void);",
+          "ported": false
         },
         {
           "addr": "0xce7f0",
@@ -13172,11 +13174,13 @@
         },
         {
           "addr": "0xce840",
-          "decl": "void input_abstraction_update_device_changes(void);"
+          "decl": "void input_abstraction_update_device_changes(void);",
+          "ported": false
         },
         {
           "addr": "0xce8c0",
-          "decl": "void input_abstraction_print_config_control(void);"
+          "decl": "void input_abstraction_print_config_control(void);",
+          "ported": false
         }
       ],
       "name": "input_abstraction.obj",
