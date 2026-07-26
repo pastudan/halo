@@ -222,7 +222,7 @@ static char (*const b174d10_c184570)(void *group) = FUN_00184570;
 static void (*const b174d10_c1845b0)(void *group, int a2) = FUN_001845b0;
 static void * (*const b174d10_c184460)(short group_presorted_index) = rasterizer_transparent_geometry_group_get;
 static void (*const b174d10_c174d10)(void *group, int dirty) = rasterizer_transparent_geometry_group_draw;
-static int (*const b174d10_c184610)(void *group) = FUN_00184610;
+static short (*const b174d10_c184610)(void *group) = FUN_00184610;
 static void (*const b174d10_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
 static void __stdcall (*const b174d10_c1e96d0)(uint32_t mode) = (void *)D3DDevice_SetRenderState_CullMode;
 static void (*const b174d10_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
@@ -5353,26 +5353,13 @@ void FUN_0016f730(void)
 #error "FUN_0016f730: clang naked draft required"
 #endif
 
-
-/* FUN_0016f880 (0x16f880) — XBE naked draft (batch 394). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* void FUN_0016f880(void); cdecl, no args, no return value, no callees.
+ */
 void FUN_0016f880(void)
 {
-  __asm__ volatile(
-      "movw 0x5a5bc2, %%ax\n\t"
-      "movw %%ax, 0x325184\n\t"
-      "movw $0xffff, 0x325180\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(short *)0x325184 = *(short *)0x5a5bc2;
+  *(short *)0x325180 = -1;
 }
-#else
-#error "FUN_0016f880: clang naked draft required"
-#endif
 
 
 /* FUN_0016f8a0 (0x16f8a0) — XBE naked draft (batch 372). */
@@ -5768,7 +5755,21 @@ void FUN_0016FDD0(void)
 #endif
 
 
-/* 0x16feb0 */
+
+/* FUN_0016FEB0 (0x16feb0) -- empty no-op.
+ *
+ * The entire function is a single instruction:
+ *
+ *   0016feb0:  c3            RET
+ *
+ * No prologue, no frame, no FPU, no memory access, no callees. Under the
+ * cdecl `void (void)` signature in kb.json this is a release-build no-op:
+ * a debug/profiling hook whose body compiled out. Called unconditionally
+ * from FUN_00158f90 (rasterizer_xbox_decals.c).
+ *
+ * kb.json assigns 0x16feb0 to rasterizer.obj; its address neighbours here
+ * are rasterizer_initialize (0x16fb80) and 0x16fec0.
+ */
 void FUN_0016FEB0(void)
 {
 }
@@ -11912,7 +11913,7 @@ static void (*const b179de0_assert)(const char *, const char *, int, bool) = dis
 static void (*const b179de0_exitfn)(int) = system_exit;
 static void * (*const b179de0_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
 static int (*const b179de0_c190710)(void *shader) = shader_get_vertex_shader_permutation;
-static int (*const b179de0_c184610)(void *group) = FUN_00184610;
+static short (*const b179de0_c184610)(void *group) = FUN_00184610;
 static void __stdcall (*const b179de0_c1e96d0)(uint32_t mode) = (void *)D3DDevice_SetRenderState_CullMode;
 static void (*const b179de0_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
 static void __stdcall (*const b179de0_c1ea290)(uint32_t enable) = (void *)D3DDevice_SetRenderState_ZEnable;

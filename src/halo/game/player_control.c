@@ -1121,567 +1121,228 @@ void player_control_get_unit_camera_info(int16_t local_player_index __attribute_
 #endif
 
 
-/* FUN_000b7f90 (0xb7f90) — XBE naked draft (batch 105). */
-#if defined(__clang__)
-static void (*const bb7f90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb7f90_exitfn)(int) = system_exit;
-static void * (*const bb7f90_c18e450)(void) = game_globals_get;
-static void *(*const bb7f90_elem)(void *, int, int) = tag_block_get_element;
-static void (*const bb7f90_cb6740)(int16_t local_player_index, void *out_info) = player_control_get_unit_camera_info;
-static void *(*const bb7f90_get)(int, int) = object_get_and_verify_type;
-static void *(*const bb7f90_tag)(int, int) = tag_get;
-static short (*const bb7f90_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
-static void (*const bb7f90_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-static void (*const bb7f90_c10cc40)(float *out, float *angles) = angles_to_vector;
-static float (*const bb7f90_c10c510)(float *v1, float *v2) = FUN_0010c510;
-static char * (*const bb7f90_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const bb7f90_cb6e60)(float *value, float target, float max_delta) = interpolate_scalar;
-
-__attribute__((naked, noinline))
-void FUN_000b7f90(int16_t local_player_index __attribute__((unused)), float dx __attribute__((unused)), float dy __attribute__((unused)))
+/* Apply this frame's look input to a local player's desired aiming angles.
+ * yaw_delta/pitch_delta are the raw turn/look deltas (action+0x0c,
+ * action+0x10).
+ *
+ * Yaw advances first, then is constrained to the arc the occupied seat allows:
+ * the arc is centred on a marker direction on the unit (the seat definition at
+ * +0x24 names the marker) and spans [seat+0xf0, seat+0xf4] about it. A yaw
+ * landing outside the arc snaps to whichever end is nearer; the result is then
+ * wrapped into [0, 2*pi].
+ *
+ * The pitch limits are not constants: pc->pitch_minimum/pitch_maximum ease
+ * toward targets read from the camera-info limit block at a bounded +-pi/256
+ * per call, and those targets are themselves clamped to +-85.5 degrees. Pitch
+ * advances last and is clamped to the just-updated limits.
+ *
+ * c:\halo\SOURCE\game\player_control.c */
+void FUN_000b7f90(int16_t local_player_index,
+                                          float yaw_delta, float pitch_delta)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xb0, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jl .LFUN_000b7f90_1\n\t"
-      "cmpw $4, %%bx\n\t"
-      "jl .LFUN_000b7f90_2\n\t"
-      ".LFUN_000b7f90_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb1\n\t"
-      "pushl $0x26e1e8\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000b7f90_2:\n\t"
-      "movl 0x457090, %%ecx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "shll $6, %%eax\n\t"
-      "pushl $0x80\n\t"
-      "pushl $0\n\t"
-      "leal 0x10(%%eax,%%ecx,1), %%edi\n\t"
-      "call *%[c18e450]\n\t"
-      "addl $0x110, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x10(%%edi), %%edx\n\t"
-      "leal 0x10(%%edi), %%esi\n\t"
-      "movl %%eax, -0x20(%%ebp)\n\t"
-      "movl %%edx, %%eax\n\t"
-      "andl $0x7f800000, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $0x7f800000, %%eax\n\t"
-      "movl $0xbfbf0243, -0x8(%%ebp)\n\t"
-      "movl $0x3fbf0243, -0xc(%%ebp)\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "je .LFUN_000b7f90_3\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x26e37c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_000b7f90_3\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x26e378\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_000b7f90_3\n\t"
-      "movl 0xc(%%edi), %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x7f800000, %%edx\n\t"
-      "cmpl $0x7f800000, %%edx\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "je .LFUN_000b7f90_3\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "fcomps 0x255a54\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_000b7f90_3\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_000b7f90_4\n\t"
-      ".LFUN_000b7f90_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x494\n\t"
-      "pushl $0x26e1e8\n\t"
-      "pushl $0x26e348\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000b7f90_4:\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cb6740]\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fadds 0xc(%%edi)\n\t"
-      "addl $8, %%esp\n\t"
-      "fstps 0xc(%%edi)\n\t"
-      "cmpw $-1, -0x34(%%ebp)\n\t"
-      "je .LFUN_000b7f90_17\n\t"
-      "movl -0x38(%%ebp), %%ecx\n\t"
-      "pushl $3\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movswl -0x34(%%ebp), %%ecx\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x2e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "flds 0xf0(%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_000b7f90_5\n\t"
-      "flds 0xf4(%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_000b7f90_17\n\t"
-      ".LFUN_000b7f90_5:\n\t"
-      "movl -0x38(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "leal -0xb0(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x24(%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[markers]\n\t"
-      "leal -0x74(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10cc00]\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fadds 0xf0(%%ebx)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fadds 0xf4(%%ebx)\n\t"
-      "fsts -0x10(%%ebp)\n\t"
-      "fsubs -0x18(%%ebp)\n\t"
-      "fcoms 0x256980\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_000b7f90_6\n\t"
-      "fsubs 0x255a54\n\t"
-      ".LFUN_000b7f90_6:\n\t"
-      "fcoms 0x26e280\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_000b7f90_7\n\t"
-      "fadds 0x255a54\n\t"
-      ".LFUN_000b7f90_7:\n\t"
-      "fsts -0x1c(%%ebp)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fsubs 0xc(%%edi)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fcomps 0x256980\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_000b7f90_8\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fsubs 0x255a54\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      ".LFUN_000b7f90_8:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x26e280\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_000b7f90_9\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fadds 0x255a54\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      ".LFUN_000b7f90_9:\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "fsubs -0x18(%%ebp)\n\t"
-      "fsts 0x8(%%ebp)\n\t"
-      "fcomps 0x256980\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_000b7f90_10\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fsubs 0x255a54\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      ".LFUN_000b7f90_10:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x26e280\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_000b7f90_11\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fadds 0x255a54\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      ".LFUN_000b7f90_11:\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b7f90_12\n\t"
-      "fadds 0x255a54\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "jmp .LFUN_000b7f90_13\n\t"
-      ".LFUN_000b7f90_12:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_000b7f90_13:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_000b7f90_14\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps -0x1c(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_000b7f90_17\n\t"
-      ".LFUN_000b7f90_14:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_000b7f90_15\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps -0x1c(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_000b7f90_17\n\t"
-      ".LFUN_000b7f90_15:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fabs\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b7f90_16\n\t"
-      "movl -0x18(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0xc(%%edi)\n\t"
-      "jmp .LFUN_000b7f90_17\n\t"
-      ".LFUN_000b7f90_16:\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "movl %%edx, 0xc(%%edi)\n\t"
-      ".LFUN_000b7f90_17:\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b7f90_19\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_000b7f90_18:\n\t"
-      "fadds 0x255a54\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_000b7f90_18\n\t"
-      "fstps 0xc(%%edi)\n\t"
-      ".LFUN_000b7f90_19:\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "fcomps 0x255a54\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b7f90_21\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000b7f90_20:\n\t"
-      "fsubs 0x255a54\n\t"
-      "fcoms 0x255a54\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_000b7f90_20\n\t"
-      "fstps 0xc(%%edi)\n\t"
-      ".LFUN_000b7f90_21:\n\t"
-      "movl -0x30(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000b7f90_32\n\t"
-      "movl -0x38(%%ebp), %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl -0x30(%%ebp), %%ecx\n\t"
-      "flds 0x48(%%ecx)\n\t"
-      "movl 0x40(%%ecx), %%edx\n\t"
-      "fcomps 0x2533c0\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_000b7f90_22\n\t"
-      "flds 0x44(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_000b7f90_27\n\t"
-      ".LFUN_000b7f90_22:\n\t"
-      "cmpw $-1, -0x34(%%ebp)\n\t"
-      "movl 0x44(%%ecx), %%eax\n\t"
-      "movl 0x48(%%ecx), %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "je .LFUN_000b7f90_23\n\t"
-      "flds 0x38(%%ebx)\n\t"
-      "fcomps 0x2549d4\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b7f90_23\n\t"
-      "movl 0xc(%%edi), %%edx\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x44(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      "movl $0, -0x10(%%ebp)\n\t"
-      "call *%[c10cc40]\n\t"
-      "leal 0x30(%%ebx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x44(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10c510]\n\t"
-      "fsubrs 0x2568bc\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_000b7f90_23:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x26e378\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b7f90_24\n\t"
-      "movl $0xbfbf0243, -0x8(%%ebp)\n\t"
-      "jmp .LFUN_000b7f90_25\n\t"
-      ".LFUN_000b7f90_24:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x26e37c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b7f90_25\n\t"
-      "movl $0x3fbf0243, -0x8(%%ebp)\n\t"
-      ".LFUN_000b7f90_25:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomps 0x26e378\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b7f90_26\n\t"
-      "movl $0xbfbf0243, -0xc(%%ebp)\n\t"
-      "jmp .LFUN_000b7f90_27\n\t"
-      ".LFUN_000b7f90_26:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomps 0x26e37c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b7f90_27\n\t"
-      "movl $0x3fbf0243, -0xc(%%ebp)\n\t"
-      ".LFUN_000b7f90_27:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_000b7f90_28\n\t"
-      "movb 0x26(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000b7f90_32\n\t"
-      ".LFUN_000b7f90_28:\n\t"
-      "flds (%%esi)\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x7f800000, %%edx\n\t"
-      "cmpl $0x7f800000, %%edx\n\t"
-      "fabs\n\t"
-      "movl %%ecx, -0x18(%%ebp)\n\t"
-      "fmull 0x26e3b0\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "jne .LFUN_000b7f90_29\n\t"
-      "flds (%%esi)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4f2\n\t"
-      "pushl $0x26e1e8\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x26e38c\n\t"
-      "pushl $0x25eb8c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000b7f90_29:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "fcomps 0x2533c0\n\t"
-      "flds 0x20(%%ebx)\n\t"
-      "flds 0x1c(%%ebx)\n\t"
-      "flds 0x18(%%ebx)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      "fnstsw %%ax\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "testb $0x44, %%ah\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fstp %%st(3)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "jnp .LFUN_000b7f90_30\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "fmuls 0x26e388\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%ecx\n\t"
-      "jmp .LFUN_000b7f90_31\n\t"
-      ".LFUN_000b7f90_30:\n\t"
-      "movl -0x20(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fmuls 0x54(%%edx)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      ".LFUN_000b7f90_31:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cb6e60]\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x7f800000, %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $0x7f800000, %%edx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "jne .LFUN_000b7f90_32\n\t"
-      "flds (%%esi)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4fd\n\t"
-      "pushl $0x26e1e8\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x26e38c\n\t"
-      "pushl $0x25eb8c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000b7f90_32:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fsubs 0x38(%%edi)\n\t"
-      "fcoms 0x26e384\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b7f90_33\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x26e384\n\t"
-      "jmp .LFUN_000b7f90_34\n\t"
-      ".LFUN_000b7f90_33:\n\t"
-      "fcoms 0x26e380\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b7f90_34\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x26e380\n\t"
-      ".LFUN_000b7f90_34:\n\t"
-      "fadds 0x38(%%edi)\n\t"
-      "fstps 0x38(%%edi)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fsubs 0x3c(%%edi)\n\t"
-      "fcoms 0x26e384\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b7f90_35\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x26e384\n\t"
-      "jmp .LFUN_000b7f90_36\n\t"
-      ".LFUN_000b7f90_35:\n\t"
-      "fcoms 0x26e380\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b7f90_36\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x26e380\n\t"
-      ".LFUN_000b7f90_36:\n\t"
-      "fadds 0x3c(%%edi)\n\t"
-      "fstps 0x3c(%%edi)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadds (%%esi)\n\t"
-      "fcoms 0x38(%%edi)\n\t"
-      "fsts (%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b7f90_37\n\t"
-      "movl 0x38(%%edi), %%ecx\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%edi\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000b7f90_37:\n\t"
-      "fcoms 0x3c(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b7f90_38\n\t"
-      "movl 0x3c(%%edi), %%edx\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%edi\n\t"
-      "movl %%edx, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000b7f90_38:\n\t"
-      "popl %%edi\n\t"
-      "fstps (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bb7f90_assert), [exitfn] "m"(bb7f90_exitfn), [c18e450] "m"(bb7f90_c18e450), [elem] "m"(bb7f90_elem), [cb6740] "m"(bb7f90_cb6740), [get] "m"(bb7f90_get), [tag] "m"(bb7f90_tag), [markers] "m"(bb7f90_markers), [c10cc00] "m"(bb7f90_c10cc00), [c10cc40] "m"(bb7f90_c10cc40), [c10c510] "m"(bb7f90_c10c510), [c8d9d0] "m"(bb7f90_c8d9d0), [cb6e60] "m"(bb7f90_cb6e60)
-      : "memory");
+  player_control_t *pc;
+  float *desired_pitch;
+  void *globals_tag;
+  char camera_info[0xc]; /* {unit handle, seat index, limit block ptr} */
+  char marker_buf[0x6c]; /* object_get_markers_by_string_id output */
+  float marker_angles[2]; /* yaw, pitch */
+  float forward[3];
+  float pitch_minimum_target;
+  float pitch_maximum_target;
+  float pitch_target;
+  float delta;
+  char *unit_obj;
+  char *limits;
+
+  assert_halt_at("c:\\halo\\SOURCE\\game\\player_control.c", 0xb1,
+                 local_player_index >= 0 &&
+                   local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+
+  pc = (player_control_t *)((char *)player_control_globals +
+                            (int)local_player_index * 0x40 + 0x10);
+  globals_tag =
+    tag_block_get_element((char *)game_globals_get() + 0x110, 0, 0x80);
+
+  desired_pitch = &pc->desired_angles_pitch;
+  pitch_minimum_target = -1.4922565f; /* -85.5 degrees */
+  pitch_maximum_target = 1.4922565f; /* +85.5 degrees */
+
+  /* valid_euler_angles2d(&player->desired_angles): pitch within +-85.5
+   * degrees, yaw within [0, 2*pi], neither infinite nor NaN. */
+  if ((*(uint32_t *)&pc->desired_angles_pitch & 0x7f800000) == 0x7f800000 ||
+      pc->desired_angles_pitch > 1.4922565f ||
+      pc->desired_angles_pitch < -1.4922565f ||
+      (*(uint32_t *)&pc->desired_angles_yaw & 0x7f800000) == 0x7f800000 ||
+      pc->desired_angles_yaw > 6.2831855f || pc->desired_angles_yaw < 0.0f) {
+    display_assert("valid_euler_angles2d(&player->desired_angles)",
+                   "c:\\halo\\SOURCE\\game\\player_control.c", 0x494, 1);
+    system_exit(NONE);
+  }
+
+  player_control_get_unit_camera_info(local_player_index, camera_info);
+  pc->desired_angles_yaw = yaw_delta + pc->desired_angles_yaw;
+
+  /* constrain yaw to the arc this seat permits */
+  if (*(int16_t *)(camera_info + 4) != NONE) {
+    char *seat;
+
+    /* one nested expression: the original cleans all three calls with a
+     * single ADD ESP,0x1c */
+    seat = (char *)tag_block_get_element(
+      (char *)tag_get(
+        0x756e6974 /* 'unit' */,
+        *(int *)object_get_and_verify_type(*(int *)camera_info, 3)) +
+        0x2e4,
+      *(int16_t *)(camera_info + 4), 0x11c);
+
+    if (*(float *)(seat + 0xf0) != 0.0f || *(float *)(seat + 0xf4) != 0.0f) {
+      float yaw_low;
+      float yaw_high;
+      float arc;
+      float delta_high;
+
+      object_get_markers_by_string_id(*(int *)camera_info, seat + 0x24,
+                                      marker_buf, 1);
+      /* the marker's forward vector sits at +0x3c in the marker record */
+      vector_to_angles(marker_angles, (float *)(marker_buf + 0x3c));
+
+      yaw_low = marker_angles[0] + *(float *)(seat + 0xf0);
+      yaw_high = marker_angles[0] + *(float *)(seat + 0xf4);
+
+      arc = yaw_high - yaw_low;
+      if (arc >= 3.1415927f)
+        arc -= 6.2831855f;
+      if (arc <= -3.1415927f)
+        arc += 6.2831855f;
+
+      delta_high = yaw_high - pc->desired_angles_yaw;
+      if (delta_high >= 3.1415927f)
+        delta_high -= 6.2831855f;
+      if (delta_high <= -3.1415927f)
+        delta_high += 6.2831855f;
+
+      delta = pc->desired_angles_yaw - yaw_low;
+      if (delta >= 3.1415927f)
+        delta -= 6.2831855f;
+      if (delta <= -3.1415927f)
+        delta += 6.2831855f;
+
+      if (arc < 0.0f)
+        arc += 6.2831855f;
+
+      /* outside the arc: snap to the nearer end */
+      if (!((delta_high >= 0.0f && delta_high < arc) ||
+            (delta >= 0.0f && delta < arc))) {
+        if (fabs(delta_high) > fabs(delta))
+          pc->desired_angles_yaw = yaw_low;
+        else
+          pc->desired_angles_yaw = yaw_high;
+      }
+    }
+  }
+
+  while (pc->desired_angles_yaw < 0.0f)
+    pc->desired_angles_yaw += 6.2831855f;
+  while (pc->desired_angles_yaw > 6.2831855f)
+    pc->desired_angles_yaw -= 6.2831855f;
+
+  /* ease the pitch limits toward the camera's targets */
+  limits = *(char **)(camera_info + 8);
+  if (limits != NULL) {
+    unit_obj = (char *)object_get_and_verify_type(*(int *)camera_info, 3);
+    pitch_target = *(float *)(limits + 0x40);
+
+    if (*(float *)(limits + 0x48) != 0.0f ||
+        *(float *)(limits + 0x44) != 0.0f) {
+      pitch_minimum_target = *(float *)(limits + 0x44);
+      pitch_maximum_target = *(float *)(limits + 0x48);
+
+      /* shift the targets by how far the player has turned off the unit's
+       * own facing, so the limits track the body rather than the world */
+      if (*(int16_t *)(camera_info + 4) != NONE &&
+          *(float *)(unit_obj + 0x38) > 0.0f) {
+        float offset;
+
+        marker_angles[0] = pc->desired_angles_yaw;
+        marker_angles[1] = 0.0f;
+        angles_to_vector(forward, marker_angles);
+        offset = 0.2f - FUN_0010c510(forward, (float *)(unit_obj + 0x30));
+        pitch_minimum_target -= offset;
+        pitch_maximum_target -= offset;
+        pitch_target -= offset;
+      }
+
+      if (pitch_minimum_target < -1.4922565f)
+        pitch_minimum_target = -1.4922565f;
+      else if (pitch_minimum_target > 1.4922565f)
+        pitch_minimum_target = 1.4922565f;
+
+      if (pitch_maximum_target < -1.4922565f)
+        pitch_maximum_target = -1.4922565f;
+      else if (pitch_maximum_target > 1.4922565f)
+        pitch_maximum_target = 1.4922565f;
+    }
+
+    if (pitch_target != 0.0f || pc->field_0x26 != 0) {
+      float scaled;
+      float magnitude;
+
+      scaled =
+        (float)(fabs(*desired_pitch - pitch_target) * 0.6366197466850281);
+      if ((*(uint32_t *)desired_pitch & 0x7f800000) == 0x7f800000) {
+        display_assert(
+          csprintf((char *)0x5ab100, "%s: assert_valid_real(0x%08X %f)",
+                   "player->desired_angles.pitch", *(uint32_t *)desired_pitch,
+                   (double)*desired_pitch),
+          "c:\\halo\\SOURCE\\game\\player_control.c", 0x4f2, 1);
+        system_exit(NONE);
+      }
+
+      magnitude =
+        sqrtf(*(float *)(unit_obj + 0x18) * *(float *)(unit_obj + 0x18) +
+              *(float *)(unit_obj + 0x1c) * *(float *)(unit_obj + 0x1c) +
+              *(float *)(unit_obj + 0x20) * *(float *)(unit_obj + 0x20));
+
+      if (pitch_target != 0.0f)
+        interpolate_scalar(desired_pitch, pitch_target,
+                           magnitude * scaled * 0.08f);
+      else
+        interpolate_scalar(desired_pitch, pitch_target,
+                           magnitude * *(float *)((char *)globals_tag + 0x54) *
+                             scaled);
+
+      if ((*(uint32_t *)desired_pitch & 0x7f800000) == 0x7f800000) {
+        display_assert(
+          csprintf((char *)0x5ab100, "%s: assert_valid_real(0x%08X %f)",
+                   "player->desired_angles.pitch", *(uint32_t *)desired_pitch,
+                   (double)*desired_pitch),
+          "c:\\halo\\SOURCE\\game\\player_control.c", 0x4fd, 1);
+        system_exit(NONE);
+      }
+    }
+  }
+
+  /* the limits themselves move no faster than pi/256 per call */
+  delta = pitch_minimum_target - pc->pitch_minimum;
+  if (delta < -0.0122718466f)
+    delta = -0.0122718466f;
+  else if (delta > 0.0122718466f)
+    delta = 0.0122718466f;
+  pc->pitch_minimum += delta;
+
+  delta = pitch_maximum_target - pc->pitch_maximum;
+  if (delta < -0.0122718466f)
+    delta = -0.0122718466f;
+  else if (delta > 0.0122718466f)
+    delta = 0.0122718466f;
+  pc->pitch_maximum += delta;
+
+  pc->desired_angles_pitch = pitch_delta + pc->desired_angles_pitch;
+  if (pc->desired_angles_pitch < pc->pitch_minimum)
+    pc->desired_angles_pitch = pc->pitch_minimum;
+  else if (pc->desired_angles_pitch > pc->pitch_maximum)
+    pc->desired_angles_pitch = pc->pitch_maximum;
 }
-#else
-#error "FUN_000b7f90: clang naked draft required"
-#endif
 
 
 /* player_control_get_desired_weapon (0xb68c0) — XBE naked draft (batch 153). */
@@ -2016,88 +1677,43 @@ void FUN_000b6bd0(char *input __attribute__((unused)))
 #endif
 
 
-/* FUN_000b8cf0 (0xb8cf0) — XBE naked draft (batch 168). */
-#if defined(__clang__)
-static void (*const bb8cf0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb8cf0_exitfn)(int) = system_exit;
-static void (*const bb8cf0_cb7f90)(int16_t local_player_index, float dx, float dy) = FUN_000b7f90;
-
-__attribute__((naked, noinline))
-void FUN_000b8cf0(int a __attribute__((unused)), float *delta __attribute__((unused)))
+/* Forward a packed look-delta pair to a local player's desired-angle update.
+ * delta points at two floats: delta[0] is the yaw (turn) delta and delta[1]
+ * the pitch (look) delta -- established from the push order at the
+ * player_control_update_desired_angles call site (first PUSH is the last
+ * argument, so [delta+4] becomes pitch_delta and [delta+0] yaw_delta).
+ * The deltas are only forwarded, never computed here.
+ *
+ * c:\halo\SOURCE\game\player_control.c */
+void FUN_000b8cf0(int16_t local_player_index, float *delta)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000b8cf0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x467\n\t"
-      "pushl $0x26e1e8\n\t"
-      "pushl $0x26e424\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000b8cf0_1:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cb7f90]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bb8cf0_assert), [exitfn] "m"(bb8cf0_exitfn), [cb7f90] "m"(bb8cf0_cb7f90)
-      : "memory");
+  assert_halt_at("c:\\halo\\SOURCE\\game\\player_control.c", 0x467, delta);
+  FUN_000b7f90(local_player_index, delta[0], delta[1]);
 }
-#else
-#error "FUN_000b8cf0: clang naked draft required"
-#endif
 
 
-/* FUN_000b8d30 (0xb8d30) — XBE naked draft (batch 181). */
-#if defined(__clang__)
-static int (*const bb8d30_c119570)(data_t *data, int handle) = data_new_datum;
-static void (*const bb8d30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb8d30_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_000b8d30(int handle __attribute__((unused)))
+/* Reserve a server-side update-queue slot for a player datum handle.
+ *
+ * Server-side mirror of update_client_add_player (0xb8f00): allocates a
+ * datum in the update-server queue data_t at 0x4570c8 keyed by the caller's
+ * player handle. NONE (-1) is fatal.
+ *
+ * Naming is INFERRED, not string-proven: the assert file string is
+ * player_queues_new.c and the assert line (0xeb = 235) falls between
+ * update_server_start (0xcf) and update_server_get_update (0x11a), i.e. the
+ * exact source position mirroring update_client_add_player relative to
+ * update_client_start. Shape is byte-for-byte the client sibling with the
+ * server global substituted. */
+void FUN_000b8d30(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x4570c8, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119570]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_000b8d30_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xeb\n\t"
-      "pushl $0x26e440\n\t"
-      "pushl $0x26e42c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000b8d30_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c119570] "m"(bb8d30_c119570), [assert] "m"(bb8d30_assert), [exitfn] "m"(bb8d30_exitfn)
-      : "memory");
+  int queue_index;
+  queue_index = data_new_datum(*(data_t **)0x4570c8, handle);
+  if (queue_index == -1) {
+    display_assert("queue_index!=NONE",
+                   "c:\\halo\\SOURCE\\game\\player_queues_new.c", 0xeb, 1);
+    system_exit(-1);
+  }
 }
-#else
-#error "FUN_000b8d30: clang naked draft required"
-#endif
 
 
 /* Set action flags on a local player's control slot.

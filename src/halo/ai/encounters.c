@@ -5397,49 +5397,51 @@ void FUN_00053bf0(void)
 #endif
 
 
-/* FUN_00053b80 (0x53b80) — XBE naked draft (batch 238). */
-#if defined(__clang__)
-static int (*const b53b80_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static void (*const b53b80_c53800)(void) = FUN_00053800;
-
-__attribute__((naked, noinline))
+/* 0x00053b80 — debug overlay row: collision / line-of-sight / line-of-fire /
+ * firing-point tally counters (FUN_00053b80).
+ *
+ * One of a family of sibling rows (0x539c0, 0x53a20, 0x53a90, 0x53af0,
+ * 0x53bf0, ...) that all format a "%s %d|t..." line into the shared debug
+ * scratch buffer at 0x5ab280 and hand it to the column-layout row printer
+ * FUN_00053800 together with an array of tab-stop x positions.  This row uses
+ * three stops {150, 300, 450} for its four fields.
+ *
+ * Globals (raw pointer-cast idiom, matching this TU):
+ *   0x5ab280 (char[])  : shared debug sprintf scratch buffer
+ *   0x5ac5d6 (int16)   : collisions tally
+ *   0x5ac65e (int16)   : line-of-sight tests tally
+ *   0x5ac6e6 (int16)   : line-of-fire tests tally
+ *   0x5ac906 (int16)   : firing-point tests tally
+ *   0x2ee6c4 (void *)  : row-printer context pointer, passed to FUN_00053800
+ *                        in EAX.  Confirmed: all six original call sites of
+ *                        0x53800 emit MOV EAX,[0x2ee6c4] immediately before
+ *                        the CALL (tools/audit/dump_caller_regsetup.py).
+ *
+ * All four tallies are read with MOVSX WORD PTR in the original, i.e. they are
+ * signed 16-bit globals sign-extended to int for the varargs call — declaring
+ * them int would be a load-width bug.
+ *
+ * The original also schedules the three column stores between the sprintf
+ * argument pushes and the CALL; they target a local, so the observable order
+ * is unchanged.
+ */
 void FUN_00053b80(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movswl 0x5ac906, %%eax\n\t"
-      "movswl 0x5ac6e6, %%ecx\n\t"
-      "movswl 0x5ac65e, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movswl 0x5ac5d6, %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25c1d8\n\t"
-      "pushl $0x5ab280\n\t"
-      "movw $0x96, -0x8(%%ebp)\n\t"
-      "movw $0x12c, -0x6(%%ebp)\n\t"
-      "movw $0x1c2, -0x4(%%ebp)\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movl 0x2ee6c4, %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $3\n\t"
-      "pushl $0x5ab280\n\t"
-      "call *%[c53800]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d90f0] "m"(b53b80_c1d90f0), [c53800] "m"(b53b80_c53800)
-      : "memory");
+  short column_positions[3];
+
+  char *debug_row = (char *)0x5ab280;
+  void *row_ctx = *(void **)0x2ee6c4;
+  void (*row_print)(char *, int, short *, void *) =
+    (void (*)(char *, int, short *, void *))(void *)FUN_00053800;
+  crt_sprintf(debug_row,
+              "collisions %d|tlineofsight %d|tlineoffire %d|tfiringpoint %d",
+              (int)*(int16_t *)0x5ac5d6, (int)*(int16_t *)0x5ac65e,
+              (int)*(int16_t *)0x5ac6e6, (int)*(int16_t *)0x5ac906);
+  column_positions[0] = 0x96; /* 150 */
+  column_positions[1] = 0x12c; /* 300 */
+  column_positions[2] = 0x1c2; /* 450 */
+  row_print(debug_row, 3, column_positions, row_ctx);
 }
-#else
-#error "FUN_00053b80: clang naked draft required"
-#endif
 
 
 /* FUN_00053e80 (0x53e80) — XBE naked draft (batch 237). */

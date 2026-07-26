@@ -2096,7 +2096,7 @@ static unsigned int *(*const ba3890_lseed)(void) = random_math_get_local_seed_ad
 static float (*const ba3890_rrange)(int *, float, float) = random_real_range;
 static void (*const ba3890_rots)(float *, float *, float, float) = rotate_vector3d_by_sincos;
 static float * (*const ba3890_cb7f10)(int16_t local_player_index, float *out_direction) = player_control_get_facing_direction;
-static void (*const ba3890_cb8cf0)(int a, float *delta) = FUN_000b8cf0;
+static void (*const ba3890_cb8cf0)(int16_t a, float *delta) = FUN_000b8cf0;
 
 __attribute__((naked, noinline))
 void FUN_000a3890(int unit_index __attribute__((unused)), float *rumble_def __attribute__((unused)), void *direction __attribute__((unused)), float damage_amount __attribute__((unused)), float scale __attribute__((unused)), float *effect __attribute__((unused)))

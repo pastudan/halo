@@ -3017,94 +3017,63 @@ void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices,
   pixel32_to_real_rgb_color(pixel, out_rgb);
 }
 #endif
-/* --- damage.obj orphan shells (2026-07-26) --- */
 
-/* 0x136b40 — Attach collision damage effect to an object once. */
-#if defined(__clang__)
-static void *(*const d36b40_get)(int, int) = object_get_and_verify_type;
-static void *(*const d36b40_tag)(int, int) = tag_get;
-static int (*const d36b40_eff)(int, int, int, short, float, float, int, int) = FUN_0009ec30;
-static void (*const d36b40_regflag)(int, char) = FUN_00136a00;
-
-__attribute__((naked, noinline))
-void FUN_00136b40(int object_handle __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 8(%%ebp), %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 182(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $8, %%al\n\t"
-      "jne .LFUN_00136b40_2\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6f626a65\n\t"
-      "call *%[tag]\n\t"
-      "movl 124(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00136b40_1\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x636f6c6c\n\t"
-      "call *%[tag]\n\t"
-      "movl 420(%%eax), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[eff]\n\t"
-      "addl $0x28, %%esp\n\t"
-      ".LFUN_00136b40_1:\n\t"
-      "orb $8, 182(%%esi)\n\t"
-      "pushl $0\n\t"
-      "movl %%edi, %%eax\n\t"
-      "movl $0, 152(%%esi)\n\t"
-      "call *%[regflag]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_00136b40_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(d36b40_get), [tag] "m"(d36b40_tag), [eff] "m"(d36b40_eff), [regflag] "m"(d36b40_regflag)
-      : "memory");
-}
-#else
+/* object_deplete_shield (0x136b40) — One-shot "vitality pool just hit zero"
+ * transition for the pool tracked by obj+0x94.
+ *
+ * Name is INFERRED, not string-proven: this is the paired sibling of the
+ * confirmed object_deplete_body (0x137540). FUN_001a7b50 (units.c) contains two
+ * adjacent, structurally identical blocks — one calls 0x136b40 when the
+ * obj+0x94 ratio transitions to zero, the other calls object_deplete_body when
+ * the obj+0x90 ratio does. The two functions differ only in which flag bit they
+ * latch (0x8 here vs 0x4) and which 'coll' effect field they fire
+ * (coll+0x1a4 here vs coll+0xb4).
+ *
+ * If bit 3 of the damage flags byte (obj+0xb6) is not already set:
+ *   1. Looks up the object's collision model tag (obje+0x7c -> 'coll')
+ *   2. If the collision model has an effect reference at coll+0x1a4 (!= -1),
+ *      creates that effect on the object via FUN_0009ec30
+ *   3. Sets bit 3 of obj+0xb6
+ *   4. Clears obj+0x98 (damage-related counter/timer)
+ *   5. Calls FUN_00136a00 to set region "cannot be destroyed" bytes
+ *
+ * Confirmed: cdecl, 1 stack param (object_handle), void return.
+ * Confirmed: PUSH -1; PUSH EDI; CALL 0x13d680 => object_get_and_verify_type.
+ * Confirmed: TEST AL,0x8 at 0x136b5b checks bit 3 of [ESI+0xb6].
+ * Confirmed: tag_get('obje', [ESI]) at CALL 0x1ba140.
+ * Confirmed: CMP EAX,-1 at 0x136b72 checks collision model index.
+ * Confirmed: tag_get('coll', obje[0x7c]) at second CALL 0x1ba140.
+ * Confirmed: 8 pushes [0,0,0,0,-1,EDI,EDI,ECX] before CALL 0x9ec30. The
+ *   ADD ESP,0x28 after it is 0x20 (8 args) plus the folded 0x8 cleanup of the
+ *   preceding tag_get, so the ARG_COUNT hazard (cleanup=10) is a FALSE POSITIVE
+ *   and FUN_0009ec30's 8-param decl is correct.
+ * Confirmed: params 5/6 are plain PUSH 0 immediates (no FLD/FSTP), i.e. float
+ *   literal zeros, not a push-then-fstp float.
+ * Confirmed: OR byte [ESI+0xb6],0x8 at 0x136b9d sets bit 3 (BYTE, not widened).
+ * Confirmed: MOV [ESI+0x98],0x0 at 0x136ba8 clears dword.
+ * Confirmed: MOV EAX,EDI; CALL 0x136a00 => FUN_00136a00(@EAX=handle, 0).
+ */
 void FUN_00136b40(int object_handle)
 {
-  char *obj = (char *)object_get_and_verify_type(object_handle, -1);
-  char *obj_tag;
+  char *obj;
+  char *obje_tag;
   char *coll_tag;
   int coll_index;
 
-  if ((obj[0xb6] & 8) != 0)
-    return;
-
-  obj_tag = (char *)tag_get('ejbo', *(int *)obj);
-  coll_index = *(int *)(obj_tag + 0x7c);
-  if (coll_index != -1) {
-    coll_tag = (char *)tag_get('coll', coll_index);
-    FUN_0009ec30(*(int *)(coll_tag + 0x1a4), object_handle, object_handle, -1,
-                 0.0f, 0.0f, 0, 0);
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  if ((*(unsigned char *)(obj + 0xb6) & 8) == 0) {
+    obje_tag = (char *)tag_get(0x6f626a65, *(int *)obj);
+    coll_index = *(int *)(obje_tag + 0x7c);
+    if (coll_index != -1) {
+      coll_tag = (char *)tag_get(0x636f6c6c, coll_index);
+      FUN_0009ec30(*(int *)(coll_tag + 0x1a4), object_handle, object_handle, -1,
+                   0.0f, 0.0f, 0, 0); /* dup-args-ok: confirmed PUSH EDI,EDI */
+    }
+    *(unsigned char *)(obj + 0xb6) |= 8;
+    *(int *)(obj + 0x98) = 0;
+    FUN_00136a00(object_handle, 0);
   }
-
-  obj[0xb6] |= 8;
-  *(int *)(obj + 0x98) = 0;
-  FUN_00136a00(object_handle, 0);
 }
-#endif
 
 
 /* 0x136bc0 — Apply shield damage from a collision hit. */

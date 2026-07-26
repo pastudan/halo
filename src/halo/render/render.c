@@ -305,166 +305,107 @@ void render_frame(void *a2, __int16 a3, _WORD *a4, _WORD *a5, void *a6,
   rasterizer_windows_end();
   rasterizer_frame_end();
 }
-/* --- render.obj batch drafts (2026-07-26) --- */
-
-/* FUN_00184570 (0x184570) — XBE naked draft (batch 171). */
-#if defined(__clang__)
-static short (*const b184570_c1844b0)(unsigned int group) = rasterizer_transparent_geometry_group_to_presorted_index;
-
-__attribute__((naked, noinline))
-char FUN_00184570(void *group __attribute__((unused)))
+/* Test the per-group flag bit for a transparent geometry group (0x184570).
+ * Returns 1 when the group's bit in the 384-bit flag array at 0x4d0cbc is
+ * CLEAR (or when the group pointer does not resolve to a presorted index),
+ * 0 when the bit is SET. The array is 0x30 bytes (0x180 groups, one bit per
+ * group) and is cleared by rasterizer_transparent_geometry_begin.
+ * Binary: MOVSX EDX,AX / SAR EDX,5 -> signed word index; NEG EAX / SBB AL,AL /
+ * INC AL -> AL = (bit == 0). */
+char FUN_00184570(void *group)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1844b0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "movb $1, %%cl\n\t"
-      "je .LFUN_00184570_1\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "sarl $5, %%edx\n\t"
-      "andl 0x4d0cbc(,%%edx,4), %%eax\n\t"
-      "negl %%eax\n\t"
-      "sbbb %%al, %%al\n\t"
-      "incb %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00184570_1:\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1844b0] "m"(b184570_c1844b0)
-      : "memory");
+  short presorted_index;
+
+  presorted_index = rasterizer_transparent_geometry_group_to_presorted_index(
+    (unsigned int)group);
+  if (presorted_index != -1) {
+    return (char)(((1 << (presorted_index & 0x1f)) &
+                   ((unsigned int *)0x4d0cbc)[presorted_index >> 5]) == 0);
+  }
+  return 1;
 }
-#else
-#error "FUN_00184570: clang naked draft required"
-#endif
 
 
-/* FUN_001845b0 (0x1845b0) — XBE naked draft (batch 161). */
-#if defined(__clang__)
-static short (*const b1845b0_c1844b0)(unsigned int group) = rasterizer_transparent_geometry_group_to_presorted_index;
-
-__attribute__((naked, noinline))
-void FUN_001845b0(void *group __attribute__((unused)), int a2 __attribute__((unused)))
+/* FUN_001845b0: set or clear this group's bit in the transparent-geometry-group
+ * bit vector at 0x4d0cbc (0x30 bytes = 12 dwords = 384 bits, matching the
+ * 0x180 group cap; zeroed by the csmemset above). A group pointer that does not
+ * resolve to a presorted index (-1) is silently ignored.
+ *
+ * NOTE the branch polarity, which is the opposite of what a "set flag" reading
+ * would suggest and must not be "normalized": only the LOW BYTE of clear_bit is
+ * tested (MOV CL,[EBP+0xc]; TEST CL,CL), and
+ *   low byte == 0  -> OR   mask (SET the bit)   [own POP EBP/RET at 0x1845e8]
+ *   low byte != 0  -> ANDN mask (CLEAR the bit) [RET at 0x18460d]
+ * The set path returns early (two distinct RET sites), so the early-return
+ * shape is reproduced here rather than an if/else.
+ *
+ * The index math runs on the SIGN-EXTENDED short (MOVSX ECX,AX then SAR ECX,5),
+ * so the shift must stay arithmetic on a signed int. The explicit `& 0x1f` on
+ * the shift count is real, not a Ghidra artifact: the original emits
+ * AND ECX,0x1f before SHL EDX,CL in both branches. The word index (SAR ECX,5)
+ * is recomputed inside each branch rather than hoisted above the TEST, so the
+ * expression is written out per branch here. (0x1845b0) */
+void FUN_001845b0(void *group, int clear_bit)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1844b0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_001845b0_2\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "jne .LFUN_001845b0_1\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "sarl $5, %%edx\n\t"
-      "leal 0x4d0cbc(,%%edx,4), %%eax\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "orl %%edx, (%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001845b0_1:\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "sarl $5, %%eax\n\t"
-      "movl 0x4d0cbc(,%%eax,4), %%ecx\n\t"
-      "leal 0x4d0cbc(,%%eax,4), %%eax\n\t"
-      "notl %%edx\n\t"
-      "andl %%edx, %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      ".LFUN_001845b0_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1844b0] "m"(b1845b0_c1844b0)
-      : "memory");
+  short group_presorted_index;
+  int index;
+
+  group_presorted_index =
+    rasterizer_transparent_geometry_group_to_presorted_index(
+      (unsigned int)group);
+  if (group_presorted_index == -1) {
+    return;
+  }
+  index = group_presorted_index;
+  if ((char)clear_bit == 0) {
+    *(unsigned int *)(0x4d0cbc + (index >> 5) * 4) =
+      *(unsigned int *)(0x4d0cbc + (index >> 5) * 4) | (1 << (index & 0x1f));
+    return;
+  }
+  *(unsigned int *)(0x4d0cbc + (index >> 5) * 4) =
+    *(unsigned int *)(0x4d0cbc + (index >> 5) * 4) & ~(1 << (index & 0x1f));
 }
-#else
-#error "FUN_001845b0: clang naked draft required"
-#endif
 
 
-/* FUN_00184610 (0x184610) — XBE naked draft (batch 152). */
-#if defined(__clang__)
-static void (*const b184610_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b184610_exitfn)(int) = system_exit;
-static short (*const b184610_c17c9c0)(int dynamic_vertex_buffer_index) = rasterizer_widget_draw_sprite2d;
-static void (*const b184610_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-int FUN_00184610(void *group __attribute__((unused)))
+/* FUN_00184610: resolve the first vertex index of a transparent geometry group
+ * (0x184610). Two mutually exclusive sources on the group record:
+ *   +0x58  pointer to an int16 vertex index (nullable) -- when set, the stored
+ *          index is returned directly. The load is `MOV AX,word ptr [EAX]`, a
+ *          WORD load, so this must stay a 16-bit read (Ghidra models the upper
+ *          half of EAX as CONCAT22 garbage).
+ *   +0x54  dynamic-vertex-buffer index, sentinel -1 -- when not -1 it is passed
+ *          (PUSH ESI / CALL 0x17c9c0 / ADD ESP,4 -- one stack arg; Ghidra drops
+ *          it and shows a 0-arg call) to 0x17c9c0, whose short result is the
+ *          return value.
+ * With neither source the group has no vertices: report through error() at
+ * level 2 and return -1 (EDI is pre-seeded 0xffffffff at entry purely to feed
+ * `MOV AX,DI` on this path, so it is not modelled as a variable here).
+ * The null-group assert tail is CALL 0x8e2f0 = system_exit(-1), not
+ * halt_and_catch_fire (Ghidra prints thunk_FUN_001029a0). Every return path is
+ * `MOV AX,...`, hence the 16-bit return type. */
+short FUN_00184610(void *group)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00184610_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf4\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0x26276c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00184610_1:\n\t"
-      "movl 0x58(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00184610_2\n\t"
-      "movw (%%eax), %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00184610_2:\n\t"
-      "movl 0x54(%%esi), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_00184610_3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c17c9c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00184610_3:\n\t"
-      "pushl $0x2b0e18\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b184610_assert), [exitfn] "m"(b184610_exitfn), [c17c9c0] "m"(b184610_c17c9c0), [c8f390] "m"(b184610_c8f390)
-      : "memory");
+  short *vertex_index;
+  int dynamic_vertex_buffer_index;
+
+  if (group == 0) {
+    display_assert(
+      "group",
+      "c:\\halo\\SOURCE\\rasterizer\\rasterizer_transparent_geometry.c", 0xf4,
+      1);
+    system_exit(-1);
+  }
+  vertex_index = *(short **)((char *)group + 0x58);
+  if (vertex_index != 0) {
+    return *vertex_index;
+  }
+  dynamic_vertex_buffer_index = *(int *)((char *)group + 0x54);
+  if (dynamic_vertex_buffer_index != -1) {
+    return rasterizer_widget_draw_sprite2d(dynamic_vertex_buffer_index);
+  }
+  error(2, "### ERROR transparent geometry group has no vertices");
+  return -1;
 }
-#else
-#error "FUN_00184610: clang naked draft required"
-#endif
 
 
 /* 0x184680 */

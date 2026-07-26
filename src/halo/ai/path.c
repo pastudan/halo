@@ -332,441 +332,265 @@ char path_3d_build_path(int param_1, int *param_2, int param_3, int *param_4,
   return *param_5;
 }
 
-/* path_state_build_path (0x5eae0) — XBE naked draft (batch 79). */
-#if defined(__clang__)
-static short (*const b5eae0_c5e7e0)(char *param_1, unsigned int param_2) = path_node_from_hash_table;
-static char * (*const b5eae0_c5e760)(char *param_1, short param_2) = path_get_node;
-static void (*const b5eae0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5eae0_exitfn)(int) = system_exit;
-static short (*const b5eae0_cfff80)(void) = game_connection;
-static void * (*const b5eae0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static char (*const b5eae0_c633b0)(unsigned int param_1, int param_2, void *param_3, int *param_4, void *param_5, char *param_6) = FUN_000633b0;
-static char (*const b5eae0_c61750)(unsigned int param_1, int param_2, void *param_3, int *param_4, void *param_5, char *param_6) = FUN_00061750;
-static float (*const b5eae0_c1ad60)(float *a, float *b) = FUN_0001ad60;
-
-__attribute__((naked, noinline))
-char path_state_build_path(unsigned int path_buf __attribute__((unused)), unsigned int *nav_state_out __attribute__((unused)))
+/* 0x005eae0 — path_build_steps
+ * Builds the step list for a path from the traversal node graph.
+ *
+ * Walks backward through the node chain (via parent links at node+0x02)
+ * collecting raw steps (datum_ref + entry_point) indexed by depth.
+ * Then applies smoothing (FUN_000633b0) and obstacle avoidance (FUN_00061750)
+ * to produce the final step list stored in nav_state_out.
+ *
+ * nav_state_out layout (0x5c bytes):
+ *   [+0x00] = valid (byte)
+ *   [+0x04] = destination position (3 floats)
+ *   [+0x10] = datum ref
+ *   [+0x14] = distance
+ *   [+0x18] = all_nodes_encountered flag (byte)
+ *   [+0x19] = step_count (byte)
+ *   [+0x1a] = zero (byte)
+ *   [+0x1c] = step array (step_count * 16 bytes)
+ *
+ * Each step is 16 bytes: datum_ref(4) + position(12).
+ *
+ * Returns: nav_state_out[0] (valid flag byte).
+ */
+char path_state_build_path(unsigned int path_buf, unsigned int *nav_state_out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x498, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "movl 0x48(%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Lpath_state_build_path_1\n\t"
-      "movw $0, 0x12(%%eax)\n\t"
-      ".Lpath_state_build_path_1:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movb $0, (%%esi)\n\t"
-      "movb 0x4c(%%ebx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lpath_state_build_path_23\n\t"
-      "movl 0x5c(%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c5e7e0]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "je .Lpath_state_build_path_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c5e760]\n\t"
-      "leal 0x4(%%esi), %%edi\n\t"
-      "leal 0x50(%%ebx), %%esi\n\t"
-      "movl $5, %%ecx\n\t"
-      "rep movsl\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl $0, 0x14(%%ecx)\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "jmp .Lpath_state_build_path_3\n\t"
-      ".Lpath_state_build_path_2:\n\t"
-      "flds 0x6c(%%ebx)\n\t"
-      "fcomps 0x60(%%ebx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lpath_state_build_path_22\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x68(%%ebx), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "call *%[c5e760]\n\t"
-      "leal 0x74(%%ebx), %%edx\n\t"
-      "movl (%%edx), %%edi\n\t"
-      "leal 0x4(%%esi), %%ecx\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "movl 0x4(%%edx), %%edi\n\t"
-      "movl %%edi, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x10(%%esi)\n\t"
-      "movl 0x6c(%%ebx), %%edx\n\t"
-      "movl %%edx, 0x14(%%esi)\n\t"
-      ".Lpath_state_build_path_3:\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $-1, -0x10(%%ebp)\n\t"
-      "je .Lpath_state_build_path_22\n\t"
-      "movswl 0x2e(%%eax), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "incl %%eax\n\t"
-      "cmpl $0x40, %%eax\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movb $1, 0xb(%%ebp)\n\t"
-      "movl $0xffffffff, -0x18(%%ebp)\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "movl $0x40, -0x8(%%ebp)\n\t"
-      "jg .Lpath_state_build_path_4\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      ".Lpath_state_build_path_4:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c5e760]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movw 0x2e(%%edi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0x40, %%ax\n\t"
-      "jl .Lpath_state_build_path_5\n\t"
-      "movb $0, 0xb(%%ebp)\n\t"
-      "jmp .Lpath_state_build_path_10\n\t"
-      ".Lpath_state_build_path_5:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lpath_state_build_path_6\n\t"
-      "cmpw -0x8(%%ebp), %%ax\n\t"
-      "jl .Lpath_state_build_path_7\n\t"
-      ".Lpath_state_build_path_6:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1e8\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e398\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_state_build_path_7:\n\t"
-      "movswl 0x2e(%%edi), %%ecx\n\t"
-      "movl 0x8(%%edi), %%edx\n\t"
-      "shll $4, %%ecx\n\t"
-      "cmpw $-1, -0x18(%%ebp)\n\t"
-      "movl %%edx, -0x498(%%ebp,%%ecx,1)\n\t"
-      "movswl 0x2e(%%edi), %%eax\n\t"
-      "jne .Lpath_state_build_path_8\n\t"
-      "shll $4, %%eax\n\t"
-      "leal -0x494(%%ebp,%%eax,1), %%ecx\n\t"
-      "leal 0x4(%%esi), %%eax\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "jmp .Lpath_state_build_path_10\n\t"
-      ".Lpath_state_build_path_8:\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "movswl 0x2e(%%ecx), %%edx\n\t"
-      "decl %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "je .Lpath_state_build_path_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1f0\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e370\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_state_build_path_9:\n\t"
-      "movswl 0x2e(%%edi), %%edx\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "addl $0xc, %%ecx\n\t"
-      "shll $4, %%edx\n\t"
-      "leal -0x494(%%ebp,%%edx,1), %%eax\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      ".Lpath_state_build_path_10:\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "movl %%edx, -0x18(%%ebp)\n\t"
-      "movl %%edi, -0x14(%%ebp)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "jne .Lpath_state_build_path_4\n\t"
-      "cmpw %%ax, %%dx\n\t"
-      "jne .Lpath_state_build_path_11\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1fb\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e354\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_state_build_path_11:\n\t"
-      "cmpw $0, 0x2e(%%edi)\n\t"
-      "je .Lpath_state_build_path_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1fc\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e33c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_state_build_path_12:\n\t"
-      "call *%[cfff80]\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lpath_state_build_path_14\n\t"
-      "movb 0x5ac9d0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lpath_state_build_path_14\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "cmpw $4, %%di\n\t"
-      "movl $4, %%eax\n\t"
-      "jg .Lpath_state_build_path_13\n\t"
-      "movl %%edi, %%eax\n\t"
-      ".Lpath_state_build_path_13:\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x498(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x58(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Lpath_state_build_path_15\n\t"
-      ".Lpath_state_build_path_14:\n\t"
-      "leal 0xb(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x58(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x498(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c633b0]\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".Lpath_state_build_path_15:\n\t"
-      "call *%[cfff80]\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lpath_state_build_path_17\n\t"
-      "movb 0x5ac9cf, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lpath_state_build_path_17\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jle .Lpath_state_build_path_16\n\t"
-      "movl $4, %%eax\n\t"
-      ".Lpath_state_build_path_16:\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "shll $4, %%edx\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x58(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x98(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Lpath_state_build_path_19\n\t"
-      ".Lpath_state_build_path_17:\n\t"
-      "leal 0xb(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x98(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x58(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c61750]\n\t"
-      "movl 0x48(%%ebx), %%ecx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lpath_state_build_path_18\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lpath_state_build_path_19\n\t"
-      "movw $4, 0x12(%%ecx)\n\t"
-      "jmp .Lpath_state_build_path_21\n\t"
-      ".Lpath_state_build_path_18:\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lpath_state_build_path_21\n\t"
-      ".Lpath_state_build_path_19:\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movb 0xb(%%ebp), %%cl\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "shll $4, %%edx\n\t"
-      "movb %%al, 0x19(%%esi)\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x98(%%ebp), %%eax\n\t"
-      "movb %%cl, 0x18(%%esi)\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x1c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movb $1, (%%esi)\n\t"
-      "movb $0, 0x1a(%%esi)\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movb 0x18(%%esi), %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lpath_state_build_path_20\n\t"
-      "movsbl 0x19(%%esi), %%edx\n\t"
-      "shll $4, %%edx\n\t"
-      "leal (%%edx,%%esi,1), %%eax\n\t"
-      "leal 0x10(%%eax), %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "movl (%%edx), %%edi\n\t"
-      "leal 0x4(%%esi), %%ecx\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "movl %%edi, (%%esi)\n\t"
-      "movl 0x4(%%edx), %%edi\n\t"
-      "movl %%edi, 0x4(%%esi)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%esi)\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "leal 0x50(%%ebx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, 0x10(%%esi)\n\t"
-      "call *%[c1ad60]\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "fstps 0x14(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lpath_state_build_path_20:\n\t"
-      "movl 0x48(%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lpath_state_build_path_21\n\t"
-      "movw $5, 0x12(%%eax)\n\t"
-      ".Lpath_state_build_path_21:\n\t"
-      "movl 0x48(%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lpath_state_build_path_24\n\t"
-      "movw %%di, 0x140fc(%%eax)\n\t"
-      "movl 0x48(%%ebx), %%edx\n\t"
-      "movswl %%di, %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x498(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x14100, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movl 0x48(%%ebx), %%eax\n\t"
-      "movw -0x4(%%ebp), %%cx\n\t"
-      "movw %%cx, 0x14500(%%eax)\n\t"
-      "movswl -0x4(%%ebp), %%edx\n\t"
-      "movl 0x48(%%ebx), %%ecx\n\t"
-      "shll $4, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x58(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "addl $0x14504, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movl 0x48(%%ebx), %%edx\n\t"
-      "movw -0xc(%%ebp), %%ax\n\t"
-      "movw %%ax, 0x14544(%%edx)\n\t"
-      "movswl -0xc(%%ebp), %%ecx\n\t"
-      "movl 0x48(%%ebx), %%eax\n\t"
-      "shll $4, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x98(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x14548, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "jmp .Lpath_state_build_path_24\n\t"
-      ".Lpath_state_build_path_22:\n\t"
-      "movl 0x48(%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lpath_state_build_path_24\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpw $-1, 0x68(%%ebx)\n\t"
-      "setne %%cl\n\t"
-      "addl $2, %%ecx\n\t"
-      "movw %%cx, 0x12(%%eax)\n\t"
-      "jmp .Lpath_state_build_path_24\n\t"
-      ".Lpath_state_build_path_23:\n\t"
-      "movl 0x48(%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lpath_state_build_path_24\n\t"
-      "movw $1, 0x12(%%eax)\n\t"
-      ".Lpath_state_build_path_24:\n\t"
-      "movl 0x48(%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lpath_state_build_path_27\n\t"
-      "leal 0x140a0(%%eax), %%edi\n\t"
-      "movl $0x17, %%ecx\n\t"
-      "rep movsl\n\t"
-      "movl 0x48(%%ebx), %%eax\n\t"
-      "cmpw $5, 0x12(%%eax)\n\t"
-      "je .Lpath_state_build_path_25\n\t"
-      "movb $1, 0xd(%%eax)\n\t"
-      ".Lpath_state_build_path_25:\n\t"
-      "movl 0x48(%%ebx), %%edx\n\t"
-      "cmpw $0, 0x12(%%edx)\n\t"
-      "jne .Lpath_state_build_path_26\n\t"
-      "pushl $1\n\t"
-      "pushl $0x265\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e300\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movb (%%eax), %%al\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpath_state_build_path_26:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movb (%%ecx), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpath_state_build_path_27:\n\t"
-      "movb (%%esi), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c5e7e0] "m"(b5eae0_c5e7e0), [c5e760] "m"(b5eae0_c5e760), [assert] "m"(b5eae0_assert), [exitfn] "m"(b5eae0_exitfn), [cfff80] "m"(b5eae0_cfff80), [c8e0b0] "m"(b5eae0_c8e0b0), [c633b0] "m"(b5eae0_c633b0), [c61750] "m"(b5eae0_c61750), [c1ad60] "m"(b5eae0_c1ad60)
-      : "memory");
+  unsigned int *puVar9;
+  unsigned int *puVar10;
+  int iVar6;
+  int iVar8;
+  int node_ptr;
+  short sVar4;
+  short sVar5;
+  char cVar3;
+  char all_nodes_flag;
+  unsigned int raw_steps[256]; /* 64 entries * 4 dwords = 0x400 bytes */
+  unsigned int final_steps[16]; /* 4 entries * 4 dwords = 0x40 bytes */
+  unsigned int smooth_steps[16]; /* 4 entries * 4 dwords = 0x40 bytes */
+  unsigned int prev_node_index;
+  int prev_node_ptr;
+  unsigned int cur_index;
+  int final_step_count;
+  int raw_step_count;
+  int smooth_step_count;
+
+  puVar10 = nav_state_out;
+  if (*(int *)(path_buf + 0x48) != 0) {
+    *(unsigned short *)(*(int *)(path_buf + 0x48) + 0x12) = 0;
+  }
+  *(unsigned char *)nav_state_out = 0;
+
+  if (*(char *)(path_buf + 0x4c) == '\0') {
+    if (*(int *)(path_buf + 0x48) != 0) {
+      *(unsigned short *)(*(int *)(path_buf + 0x48) + 0x12) = 1;
+    }
+    goto LAB_0005ef13;
+  }
+
+  cur_index = path_node_from_hash_table((char *)path_buf,
+                                        *(unsigned int *)(path_buf + 0x5c));
+  if ((short)cur_index == -1) {
+    if (*(float *)(path_buf + 0x6c) < *(float *)(path_buf + 0x60)) {
+      cur_index = (unsigned int)*(unsigned short *)(path_buf + 0x68);
+      iVar6 = (int)path_get_node((char *)path_buf, cur_index);
+      puVar10[1] = *(unsigned int *)(path_buf + 0x74);
+      puVar10[2] = *(unsigned int *)(path_buf + 0x78);
+      puVar10[3] = *(unsigned int *)(path_buf + 0x7c);
+      puVar10[4] = *(unsigned int *)(iVar6 + 8);
+      puVar10[5] = *(unsigned int *)(path_buf + 0x6c);
+      goto LAB_0005eb88;
+    }
+  } else {
+    iVar6 = (int)path_get_node((char *)path_buf, cur_index);
+    /* memcpy 5 dwords from path_buf+0x50 to nav_state_out+0x04 */
+    puVar9 = (unsigned int *)(path_buf + 0x50);
+    puVar10 = nav_state_out + 1;
+    for (iVar8 = 5; iVar8 != 0; iVar8--) {
+      *puVar10 = *puVar9;
+      puVar10++;
+      puVar9++;
+    }
+    nav_state_out[5] = 0;
+    puVar10 = nav_state_out;
+  LAB_0005eb88:
+    if ((short)cur_index != -1) {
+      int depth_plus_one = *(short *)(iVar6 + 0x2e) + 1;
+      smooth_step_count = 0;
+      final_step_count = 0;
+      all_nodes_flag = 1;
+      prev_node_index = 0xffffffff;
+      prev_node_ptr = 0;
+      raw_step_count = 0x40;
+      if (depth_plus_one < 0x41) {
+        raw_step_count = depth_plus_one;
+      }
+
+      do {
+        unsigned int next_index;
+        int depth;
+
+        node_ptr = (int)path_get_node((char *)path_buf, cur_index);
+        sVar4 = *(short *)(node_ptr + 0x2e);
+
+        if (sVar4 < 0x40) {
+          if (sVar4 < 0 || sVar4 >= (short)raw_step_count) {
+            display_assert(
+              "(node->depth >= 0) && (node->depth < raw_step_count)",
+              "c:\\halo\\SOURCE\\ai\\path.c", 0x1e8, 1);
+            system_exit(-1);
+          }
+
+          raw_steps[*(short *)(node_ptr + 0x2e) * 4] =
+            *(unsigned int *)(node_ptr + 8);
+          depth = (int)*(short *)(node_ptr + 0x2e);
+
+          if ((short)prev_node_index == -1) {
+            /* First node: copy destination from nav_state_out */
+            raw_steps[depth * 4 + 1] = puVar10[1];
+            raw_steps[depth * 4 + 3] = puVar10[3];
+            raw_steps[depth * 4 + 2] = puVar10[2];
+          } else {
+            if (depth != *(short *)(prev_node_ptr + 0x2e) - 1) {
+              display_assert("node->depth == child_node->depth - 1",
+                             "c:\\halo\\SOURCE\\ai\\path.c", 0x1f0, 1);
+              system_exit(-1);
+            }
+            depth = (int)*(short *)(node_ptr + 0x2e);
+            raw_steps[depth * 4 + 1] = *(unsigned int *)(prev_node_ptr + 0xc);
+            raw_steps[depth * 4 + 2] = *(unsigned int *)(prev_node_ptr + 0x10);
+            raw_steps[depth * 4 + 3] = *(unsigned int *)(prev_node_ptr + 0x14);
+          }
+        } else {
+          all_nodes_flag = 0;
+        }
+
+        prev_node_index = cur_index;
+        next_index = (unsigned int)*(unsigned short *)(node_ptr + 2);
+        prev_node_ptr = node_ptr;
+        cur_index = next_index;
+      } while (*(unsigned short *)(node_ptr + 2) != 0xffff);
+
+      sVar4 = (short)prev_node_index;
+      cur_index = (unsigned int)*(unsigned short *)(node_ptr + 2);
+
+      if (sVar4 == -1) {
+        display_assert("child_node_index != NONE",
+                       "c:\\halo\\SOURCE\\ai\\path.c", 0x1fb, 1);
+        system_exit(-1);
+      }
+      if (*(short *)(node_ptr + 0x2e) != 0) {
+        display_assert("child_node->depth == 0", "c:\\halo\\SOURCE\\ai\\path.c",
+                       0x1fc, 1);
+        system_exit(-1);
+      }
+
+      sVar4 = game_connection();
+      iVar6 = raw_step_count;
+      if (sVar4 == 0 && *(char *)0x5ac9d0 != '\0') {
+        smooth_step_count = 4;
+        if ((short)raw_step_count < 5) {
+          smooth_step_count = raw_step_count;
+        }
+        csmemcpy(smooth_steps, raw_steps, (int)(short)smooth_step_count << 4);
+      } else {
+        FUN_000633b0(path_buf, raw_step_count, raw_steps, &smooth_step_count,
+                     smooth_steps, &all_nodes_flag);
+        iVar6 = raw_step_count;
+      }
+
+      sVar4 = (short)iVar6;
+      sVar5 = game_connection();
+      if (sVar5 == 0 && *(char *)0x5ac9cf != '\0') {
+        final_step_count = smooth_step_count;
+        if (4 < (short)smooth_step_count) {
+          final_step_count = 4;
+        }
+        csmemcpy(final_steps, smooth_steps, (int)(short)final_step_count << 4);
+      LAB_0005ede3:
+        *(char *)((char *)puVar10 + 0x19) = (char)final_step_count;
+        *(char *)(puVar10 + 6) = all_nodes_flag;
+        *(unsigned char *)puVar10 = 1;
+        *(char *)((char *)puVar10 + 0x1a) = 0;
+        csmemcpy(puVar10 + 7, final_steps, (int)(short)final_step_count << 4);
+
+        puVar9 = nav_state_out;
+        if (*(char *)(puVar10 + 6) != '\0') {
+          cVar3 = *(char *)((char *)puVar10 + 0x19);
+          puVar10[1] = puVar10[(int)cVar3 * 4 + 4];
+          puVar10[2] = puVar10[(int)cVar3 * 4 + 5];
+          puVar10[3] = puVar10[(int)cVar3 * 4 + 6];
+          nav_state_out[4] = puVar10[(int)cVar3 * 4 + 3];
+          sVar4 = (short)raw_step_count;
+          *(float *)(puVar9 + 5) =
+            FUN_0001ad60((float *)(puVar10 + 1), (float *)(path_buf + 0x50));
+          puVar10 = puVar9;
+        }
+
+        if (*(int *)(path_buf + 0x48) != 0) {
+          *(unsigned short *)(*(int *)(path_buf + 0x48) + 0x12) = 5;
+        }
+      } else {
+        cVar3 = FUN_00061750(path_buf, smooth_step_count, smooth_steps,
+                             &final_step_count, final_steps, &all_nodes_flag);
+        if (*(int *)(path_buf + 0x48) == 0) {
+          if (cVar3 != '\0')
+            goto LAB_0005ede3;
+        } else {
+          if (cVar3 != '\0')
+            goto LAB_0005ede3;
+          *(unsigned short *)(*(int *)(path_buf + 0x48) + 0x12) = 4;
+        }
+      }
+
+      /* Debug: store raw, smooth, and final steps */
+      if (*(int *)(path_buf + 0x48) != 0) {
+        *(short *)(*(int *)(path_buf + 0x48) + 0x140fc) = sVar4;
+        csmemcpy((void *)(*(int *)(path_buf + 0x48) + 0x14100), raw_steps,
+                 (int)sVar4 << 4);
+        *(short *)(*(int *)(path_buf + 0x48) + 0x14500) =
+          (short)smooth_step_count;
+        csmemcpy((void *)(*(int *)(path_buf + 0x48) + 0x14504), smooth_steps,
+                 (int)(short)smooth_step_count << 4);
+        *(short *)(*(int *)(path_buf + 0x48) + 0x14544) =
+          (short)final_step_count;
+        csmemcpy((void *)(*(int *)(path_buf + 0x48) + 0x14548), final_steps,
+                 (int)(short)final_step_count << 4);
+      }
+      goto LAB_0005ef13;
+    }
+  }
+
+  /* Neither branch produced a valid path */
+  if (*(int *)(path_buf + 0x48) != 0) {
+    *(unsigned short *)(*(int *)(path_buf + 0x48) + 0x12) =
+      (unsigned short)(*(short *)(path_buf + 0x68) != -1) + 2;
+  }
+
+LAB_0005ef13:
+  if (*(int *)(path_buf + 0x48) == 0) {
+    return *(char *)puVar10;
+  }
+
+  /* Copy nav_state_out (0x5c bytes = 0x17 dwords) into debug buffer */
+  puVar9 = (unsigned int *)(*(int *)(path_buf + 0x48) + 0x140a0);
+  for (iVar6 = 0x17; iVar6 != 0; iVar6--) {
+    *puVar9 = *puVar10;
+    puVar10++;
+    puVar9++;
+  }
+
+  if (*(short *)(*(int *)(path_buf + 0x48) + 0x12) != 5) {
+    *(char *)(*(int *)(path_buf + 0x48) + 0xd) = 1;
+  }
+  if (*(short *)(*(int *)(path_buf + 0x48) + 0x12) == 0) {
+    display_assert("state->debug->path_build_result != _path_build_result_none",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x265, 1);
+    system_exit(-1);
+    return *(char *)nav_state_out;
+  }
+  return *(char *)nav_state_out;
 }
-#else
-#error "path_state_build_path: clang naked draft required"
-#endif
 
 
 /* 0x005ff70 — path traverse and debug snapshot

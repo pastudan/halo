@@ -29,6 +29,16 @@ double __cdecl fabs(double);
 #include "inlines.h"
 #include "decl.h"
 
+/* assert_halt_at(file, line, cond) — byte-match-faithful assert using the
+ * original Bungie source path/line from the XBE (see stianeklund/halo). */
+#define assert_halt_at(file, line, cond)                       \
+    do {                                                     \
+        if (!(cond)) {                                       \
+            display_assert(#cond, file, line, true);         \
+            system_exit(-1);                                 \
+        }                                                    \
+    } while (0)
+
 #define assert_halt(cond)                                    \
     do {                                                     \
         if (!(cond)) {                                       \

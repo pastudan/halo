@@ -4847,17 +4847,47 @@ char actor_action_test_grenade(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* 0x1d4f0 — pursuit location offset for vehicle/biped actors */
+
+/* actor_get_pursuit_location (0x1d4f0) — Returns the address of the actor's
+ * pursuit-location sub-record (actor+0xa4) when the actor's mode word
+ * (field_6c) is 7 or 5; otherwise returns NULL.
+ *
+ * Confirmed: datum_get(actor_data, actor_handle) — MOV EAX,[EBP+8];
+ *   MOV ECX,[0x6325a4]; PUSH EAX; PUSH ECX; CALL 0x119320; ADD ESP,0x8.
+ *   First PUSH is the last arg, so the pool is arg1 and the handle is arg2.
+ * Confirmed: MOV CX,word ptr [EAX+0x6c] — 16-bit field, loaded ONCE and
+ *   compared twice (CMP CX,7 / JZ; CMP CX,5 / JNZ). Read before the ADD ESP.
+ * Confirmed: hit path is ADD EAX,0xa4 — 0xa4 is used as an ADDRESS (base of a
+ *   sub-record), not dereferenced as a value here (contrast the byte read of
+ *   field_a4 in FUN_0001d530).
+ * Confirmed: miss path is XOR EDX,EDX / MOV EAX,EDX — returns NULL. Ghidra
+ *   typed this function `void`, which silently drops the EAX return.
+ * Confirmed: the datum_get result is NOT NULL-checked before the +0x6c load;
+ *   preserved verbatim (no added guard).
+ * Uncertain: the pointed-to type. The name suggests a location (likely
+ *   real_point3d) but this function alone gives no typed evidence, so the
+ *   return stays void *.
+ *
+ * MATCH-SENSITIVE SHAPE: the single-return accumulator form below (result
+ * pre-set to NULL, assigned only on the hit path) is what reproduces the
+ * original's hoisted XOR EDX,EDX / CMP 7 / JZ hit / CMP 5 / JNZ miss layout
+ * with MOV EAX,EDX on the out-of-line miss epilogue. Both equivalent
+ * early-return forms (`if (mode != 7 && mode != 5) return NULL;` and the
+ * ternary) instead compile to XOR EAX,EAX with the null path as fallthrough
+ * — verified 76.9% vs 100% under VC71. Do not "simplify" to an early return. */
 void *actor_get_pursuit_location(int actor_handle)
 {
   char *actor;
-  int16_t unit_type;
+  int16_t mode;
+  char *result;
 
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  unit_type = *(int16_t *)(actor + 0x6c);
-  if (unit_type == 7 || unit_type == 5)
-    return actor + 0xa4;
-  return 0;
+  actor = (char *)datum_get(actor_data, actor_handle);
+  result = NULL;
+  mode = *(int16_t *)(actor + 0x6c);
+  if (mode == 7 || mode == 5) {
+    result = actor + 0xa4;
+  }
+  return result;
 }
 
 /* actor_action_handle_vehicle_entry (0x1dfa0) — XBE naked draft (batch 230). */
