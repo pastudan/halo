@@ -4,11 +4,14 @@
 /* FUN_00024000 (0x24000) — readable C lift. */
 void FUN_00024000(void *unused, float score, int type, void *position, void *ctx)
 {
+  extern char DAT_00254c5c[];
+  extern char DAT_00254c8c[];
   (void)unused;
   (void)type;
   (void)position;
+  /* Bounds live in XBE rdata — use absolute VAs (not DAT_ relocs). */
   if (score < *(float *)0x2533c0 || !(score < *(float *)0x254cb8)) {
-    display_assert((const char *)0x254c5c, (const char *)0x254c8c, 0x81, 1);
+    display_assert(DAT_00254c5c, DAT_00254c8c, 0x81, 1);
     system_exit(-1);
   }
   *(float *)((char *)ctx + 0x38) = *(float *)((char *)ctx + 0x38) + score;
@@ -325,7 +328,7 @@ static void *(*const b24370_tag)(int, int) = tag_get;
 static char (*const b24370_c2b720)(int actor_handle, float *dest_pos, float *dist_out) = actor_path_3d_available;
 static void * (*const b24370_c18e3c0)(void) = scenario_get;
 static char (*const b24370_c5e830)(int param_1, int *param_2, int param_3, int *param_4, unsigned char *param_5, float *param_6) = path_3d_available;
-static void (*const b24370_c24000)(void *ctx, float score, int type, void *position) = FUN_00024000;
+static void (*const b24370_c24000)(void *ctx, float score, int type, void *position) = (void (*)(void *, float, int, void *))(void *)&FUN_00024000;
 
 __attribute__((naked, noinline))
 void FUN_00024370(void)
@@ -433,7 +436,7 @@ static void *(*const b24450_dget)(void *, int) = (void *(*)(void *, int))datum_g
 static int (*const b24450_gtime)(void) = game_time_get;
 static char (*const b24450_c5b5e0)(int encounter_handle, int position_hash, int16_t pursuit_index, int min_time) = encounter_mark_examined_pursuit_position;
 static char (*const b24450_c5b6e0)(int encounter_handle, int position_hash, int16_t pursuit_index, int min_time, int16_t *out_count, int *out_time) = encounter_pursuit_position_already_examined;
-static void (*const b24450_c24000)(void *ctx, float score, int type, void *position) = FUN_00024000;
+static void (*const b24450_c24000)(void *ctx, float score, int type, void *position) = (void (*)(void *, float, int, void *))(void *)&FUN_00024000;
 
 __attribute__((naked, noinline))
 void FUN_00024450(void)
@@ -599,7 +602,7 @@ void FUN_00024450(void)
 #if defined(__clang__)
 static void (*const b245d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b245d0_exitfn)(int) = system_exit;
-static void (*const b245d0_c24000)(void *ctx, float score, int type, void *position) = FUN_00024000;
+static void (*const b245d0_c24000)(void *ctx, float score, int type, void *position) = (void (*)(void *, float, int, void *))(void *)&FUN_00024000;
 
 __attribute__((naked, noinline))
 void post_evaluator_hide(void)
@@ -701,7 +704,7 @@ void post_evaluator_hide(void)
 
 /* FUN_000246b0 (0x246b0) — XBE naked draft (batch 141). */
 #if defined(__clang__)
-static void (*const b246b0_c24000)(void *ctx, float score, int type, void *position) = FUN_00024000;
+static void (*const b246b0_c24000)(void *ctx, float score, int type, void *position) = (void (*)(void *, float, int, void *))(void *)&FUN_00024000;
 
 __attribute__((naked, noinline))
 void FUN_000246b0(void)
@@ -790,7 +793,7 @@ void FUN_000246b0(void)
 
 /* FUN_00024770 (0x24770) — XBE naked draft (batch 138). */
 #if defined(__clang__)
-static void (*const b24770_c24000)(void *ctx, float score, int type, void *position) = FUN_00024000;
+static void (*const b24770_c24000)(void *ctx, float score, int type, void *position) = (void (*)(void *, float, int, void *))(void *)&FUN_00024000;
 
 __attribute__((naked, noinline))
 void FUN_00024770(void)

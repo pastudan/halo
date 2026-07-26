@@ -12359,7 +12359,7 @@
         {
           "addr": "0xca110",
           "decl": "void FUN_000ca110(int16_t name_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca140",
@@ -38905,7 +38905,7 @@
         {
           "addr": "0x24000",
           "decl": "void FUN_00024000(void *unused, float score, int type, void *position, void *ctx @<esi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00024000"
         },
         {
