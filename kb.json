@@ -34809,7 +34809,7 @@
         {
           "addr": "0x4a6b0",
           "decl": "void ai_debug_communication_focus(int a0, int a1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x4a6e0",
