@@ -12447,7 +12447,7 @@
         {
           "addr": "0xcab80",
           "decl": "void FUN_000cab80(int handle@<eax>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcaba0",
