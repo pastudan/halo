@@ -34519,7 +34519,7 @@
         {
           "addr": "0x432b0",
           "decl": "void FUN_000432b0(int look_arg, short priority, int unit @<ebx>, int actor @<eax>, int target @<edi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000432b0"
         },
         {
@@ -34574,13 +34574,13 @@
         {
           "addr": "0x43db0",
           "decl": "void actor_communication_update(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "actor_communication_update"
         },
         {
           "addr": "0x43ea0",
           "decl": "void FUN_00043ea0(int unit, void *comm @<ecx>, int prop_handle @<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00043ea0"
         },
         {
@@ -34596,13 +34596,13 @@
         {
           "addr": "0x44500",
           "decl": "void ai_conversation_stop(int conversation_index);",
-          "ported": false,
+          "ported": true,
           "name": "ai_conversation_stop"
         },
         {
           "addr": "0x44590",
           "decl": "void ai_conversation_actor_deleted(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "ai_conversation_actor_deleted"
         },
         {
@@ -35032,7 +35032,7 @@
         },
         {
           "addr": "0x53800",
-          "decl": "void FUN_00053800(void);",
+          "decl": "void FUN_00053800(void *buf, int count, int16_t *vals);",
           "ported": false
         },
         {
