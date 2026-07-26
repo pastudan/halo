@@ -133,69 +133,23 @@ void player_ui_reset_single_player_local_player_controllers(void)
   csmemset((void *)0x46bfc4, -1, 8);
 }
 
-/* player_ui_set_single_player_local_player_controller (0xe0740) — XBE naked draft (batch 153). */
-#if defined(__clang__)
-static void (*const be0740_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be0740_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void player_ui_set_single_player_local_player_controller(int16_t local_player_index, int16_t controller_index)
+/* player_ui_set_single_player_local_player_controller (0xe0740) — readable C lift. */
+void player_ui_set_single_player_local_player_controller(
+    int16_t local_player_index, int16_t controller_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jl .Lplayer_ui_set_single_player_local_player_controller_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lplayer_ui_set_single_player_local_player_controller_2\n\t"
-      ".Lplayer_ui_set_single_player_local_player_controller_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x77\n\t"
-      "pushl $0x282724\n\t"
-      "pushl $0x282708\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_ui_set_single_player_local_player_controller_2:\n\t"
-      "movw 0xc(%%ebp), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .Lplayer_ui_set_single_player_local_player_controller_3\n\t"
-      "cmpw $4, %%di\n\t"
-      "jl .Lplayer_ui_set_single_player_local_player_controller_4\n\t"
-      ".Lplayer_ui_set_single_player_local_player_controller_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x79\n\t"
-      "pushl $0x282724\n\t"
-      "pushl $0x2826ec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movswl %%si, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movw %%di, 0x46bfc4(,%%eax,2)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_ui_set_single_player_local_player_controller_4:\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movw %%di, 0x46bfc4(,%%ecx,2)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be0740_assert), [exitfn] "m"(be0740_exitfn)
-      : "memory");
+  extern char DAT_00282708[];
+  extern char DAT_00282724[];
+  extern char DAT_002826ec[];
+  if ((int16_t)local_player_index < 0 || (int16_t)local_player_index >= 4) {
+    display_assert(DAT_00282708, DAT_00282724, 0x77, 1);
+    system_exit(-1);
+  }
+  if ((int16_t)controller_index < 0 || (int16_t)controller_index >= 4) {
+    display_assert(DAT_002826ec, DAT_00282724, 0x79, 1);
+    system_exit(-1);
+  }
+  *(int16_t *)(0x46bfc4 + (int16_t)local_player_index * 2) = controller_index;
 }
-#else
-#error "player_ui_set_single_player_local_player_controller: clang naked draft required"
-#endif
-
 
 /* player_ui_get_single_player_local_player_from_controller (0xe0810) — readable C lift. */
 int player_ui_get_single_player_local_player_from_controller(short local_player_index)

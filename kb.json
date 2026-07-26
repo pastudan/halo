@@ -18268,7 +18268,7 @@
           "addr": "0xe0740",
           "decl": "void player_ui_set_single_player_local_player_controller(int16_t local_player_index, int16_t controller_index);",
           "name": "player_ui_set_single_player_local_player_controller",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0810",
