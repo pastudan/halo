@@ -31659,27 +31659,33 @@
       "functions": [
         {
           "addr": "0x1f4140",
-          "decl": "void __stdcall Get2DSurfaceDesc(void *texture, unsigned int level, void *desc);"
+          "decl": "void __stdcall Get2DSurfaceDesc(void *texture, unsigned int level, void *desc);",
+          "ported": false
         },
         {
           "addr": "0x1f44f0",
-          "decl": "void __stdcall Lock2DSurface(void *texture, unsigned int face, unsigned int level, void *locked_rect, void *rect, unsigned int flags);"
+          "decl": "void __stdcall Lock2DSurface(void *texture, unsigned int face, unsigned int level, void *locked_rect, void *rect, unsigned int flags);",
+          "ported": false
         },
         {
           "addr": "0x1ff03f",
-          "decl": "float *__stdcall mat4x4_transform_vec4(float *out, float *in, float *matrix);"
+          "decl": "float *__stdcall mat4x4_transform_vec4(float *out, float *in, float *matrix);",
+          "ported": false
         },
         {
           "addr": "0x1ff913",
-          "decl": "void __stdcall matrix_build_perspective_projection(void *matrix_out, float fov, float aspect, float z_near, float z_far);"
+          "decl": "void __stdcall matrix_build_perspective_projection(void *matrix_out, float fov, float aspect, float z_near, float z_far);",
+          "ported": false
         },
         {
           "addr": "0x1ffc57",
-          "decl": "void __stdcall matrix_build_ortho_projection(void *matrix_out, float scale_x, float scale_y, float z_near, float z_far);"
+          "decl": "void __stdcall matrix_build_ortho_projection(void *matrix_out, float scale_x, float scale_y, float z_near, float z_far);",
+          "ported": false
         },
         {
           "addr": "0x1e9190",
-          "decl": "int __stdcall D3DDevice_PersistDisplay(void);"
+          "decl": "int __stdcall D3DDevice_PersistDisplay(void);",
+          "ported": false
         }
       ],
       "name": "D3D8:d3dsurface.obj",

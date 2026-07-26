@@ -17463,5 +17463,47 @@
     "object": "static_camera.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1f4140",
+    "name": "Get2DSurfaceDesc",
+    "object": "D3D8:d3dsurface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1f44f0",
+    "name": "Lock2DSurface",
+    "object": "D3D8:d3dsurface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ff03f",
+    "name": "mat4x4_transform_vec4",
+    "object": "D3D8:d3dsurface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ff913",
+    "name": "matrix_build_perspective_projection",
+    "object": "D3D8:d3dsurface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ffc57",
+    "name": "matrix_build_ortho_projection",
+    "object": "D3D8:d3dsurface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e9190",
+    "name": "D3DDevice_PersistDisplay",
+    "object": "D3D8:d3dsurface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

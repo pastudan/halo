@@ -86,6 +86,7 @@
 	halo/items/projectiles.c
 	halo/items/weapons.c
 	halo/units/bipeds.c
+	halo/render/d3d8_d3dsurface.c
 	halo/networking/data_packet_groups.c
 	halo/networking/transport_address.c
 	halo/objects/object_lights.c
