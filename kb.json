@@ -12575,7 +12575,7 @@
         {
           "addr": "0xcb9c0",
           "decl": "void render_debug_scripting(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcbb40",
