@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply ai_communication.obj batch1 drafts to kb + allowlist."""
+"""Apply ai_communication.obj batch2 drafts to kb + allowlist."""
 from __future__ import annotations
 
 import json
@@ -8,31 +8,28 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OBJECT = "ai_communication.obj"
+sys.path.insert(0, str(ROOT / "tools"))
+from gen_ai_communication_batch2 import DECLS  # noqa: E402
 
-DECLS = {
-    "0x42cb0": "const char *ai_communication_get_type_name(int16_t type);",
-    "0x42ce0": "int16_t ai_communication_get_type_by_name(const char *name);",
-    "0x42d20": "void ai_communication_packet_new(void *packet);",
-    "0x42d80": "char FUN_00042d80(int actor, int unit, int prop);",
-    "0x42df0": "char FUN_00042df0(int actor, int unit, int prop);",
-    "0x42e60": "char FUN_00042e60(int actor, int unit, int prop);",
-    "0x42eb0": "char FUN_00042eb0(int actor, int unit, int prop);",
-    "0x42f40": "char FUN_00042f40(int a, int b, int actor);",
-    "0x42f60": "char FUN_00042f60(int actor, int unit, int prop);",
-    "0x42fa0": "char FUN_00042fa0(int actor, int unit, int prop);",
-    "0x43050": "char FUN_00043050(int actor, int unit, int prop);",
-    "0x43090": "char FUN_00043090(int actor, int unit, int prop);",
-    "0x43270": "int actor_communication_team(int actor);",
-    "0x434c0": "int16_t ai_conversation_line(int conversation_index);",
-    "0x44500": "void ai_conversation_stop(int conversation_index);",
-    "0x44590": "void ai_conversation_actor_deleted(int actor_handle);",
-}
+OBJECT = "ai_communication.obj"
 
 HELPER_DECLS = {
     "0x3b120": "char FUN_0003b120(int actor);",
-    "0x435b0": "void ai_conversation_finish(int handle, char param_b, char param_c);",
+    "0x3a770": "int16_t FUN_0003a770(int16_t actor_type);",
+    "0x64b40": "int FUN_00064b40(int a, int b, int c, int d);",
     "0x3b150": "char actor_is_fighting(int actor);",
+    "0x27a60": "int FUN_00027a60(int actor_handle, short look_type, short priority, short *look_buf);",
+    "0x1a6ca0": "char *FUN_001a6ca0(short param_1);",
+    "0x1a6ef0": "void FUN_001a6ef0(int actor, short count, void *comm_buf);",
+    "0x1a67b0": "char *FUN_001a67b0(short param_1, unsigned char param_2);",
+    "0x1a9200": "void unit_get_head_position(int object_handle, float *out_position);",
+    "0x64ab0": "int prop_get_active_by_unit_index(int actor_handle, int object_handle);",
+    "0x13d640": "void *object_try_and_get_and_verify_type(int datum_handle, int type_mask);",
+    "0x1c7f80": "void scripted_sound_new(int a0, int a1, float a2);",
+    "0x1c7500": "int scripted_sound_time(int a0);",
+    "0x1cb990": "char sound_scripted_dialog_is_playing(void);",
+    "0x121a0": "float distance_squared3d(const float *a, const float *b);",
+    "0x1ba1f0": "const char *tag_get_name(int tag_index);",
 }
 
 
@@ -48,7 +45,7 @@ def main() -> None:
 
     for addr, decl in HELPER_DECLS.items():
         for o in kb["objects"]:
-            for f in o["functions"]:
+            for f in o.get("functions", []):
                 if f["addr"] == addr:
                     f["decl"] = decl
                     break
@@ -71,7 +68,7 @@ def main() -> None:
         )
     al_path.write_text(json.dumps(al, indent=2) + "\n")
     (ROOT / "kb.json").write_text(json.dumps(kb, indent=2) + "\n")
-    print("kb+allowlist updated for", len(DECLS), "ai_communication batch1 drafts")
+    print("kb+allowlist updated for", len(DECLS), "ai_communication batch2 drafts")
 
 
 if __name__ == "__main__":
