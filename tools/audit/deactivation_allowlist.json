@@ -1636,5 +1636,12 @@
     "object": "collision_bsp.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"
+  },
+  {
+    "addr": "0x14e640",
+    "name": "FUN_0014e640",
+    "object": "collision_bsp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]

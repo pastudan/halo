@@ -2437,3 +2437,84 @@ char FUN_0014e940(int unused, float *origin, float *direction, float radius,
   *(int *)(result + 0x2c) = 0;
   return hit;
 }
+
+
+/* 0x14e640 — model collision type-3 path: transform, test, fill result. */
+char FUN_0014e640(void *model, float *origin, float *offset, void *result_v)
+{
+  char *result;
+  char *model_b;
+  float end_pt[3];
+  float neg_dir[3];
+  char xform[0x28];
+  char hit_buf[0x448];
+  int node_base;
+  int stride_off;
+  short first_idx;
+  int plane_src;
+  float t;
+  char ok;
+  short ax_s;
+
+  result = (char *)result_v;
+  model_b = (char *)model;
+  *(short *)result = (short)0xffff;
+  *(unsigned int *)(result + 0x14) = 0x7f7fffff;
+
+  if (*(short *)model_b != 3) {
+    return 0;
+  }
+
+  end_pt[0] = origin[0] + offset[0];
+  end_pt[1] = origin[1] + offset[1];
+  end_pt[2] = origin[2] + offset[2];
+  neg_dir[0] = -offset[0];
+  neg_dir[1] = -offset[1];
+  neg_dir[2] = -offset[2];
+
+  ok = (char)FUN_0014c8e0((int *)xform, *(int *)(model_b + 0x38));
+  if (!ok) {
+    return 0;
+  }
+  /* cdecl: (xform, flag=1, end_pt, neg_dir, hit_buf) — verify vs kb:
+     char FUN_0014cb00(int param_1, void *param_2, void *param_3, void *param_4, int16_t *param_5);
+     pushes: hit_buf, neg_dir, end_pt, 1, xform → (xform, 1, end_pt, neg_dir, hit_buf) */
+  if (!FUN_0014cb00((int)(int *)xform, (void *)1, end_pt, neg_dir, (int16_t *)hit_buf)) {
+    return 0;
+  }
+
+  first_idx = *(short *)hit_buf;
+  t = *(float *)0x2533c8 - *(float *)(hit_buf + 8);
+  *(float *)(result + 0x14) = t;
+  *(short *)result = 3;
+
+  /* node_base at xform+0xc (ebp-0x1c if xform at -0x28 → +0xc) */
+  node_base = *(int *)(xform + 0xc);
+  stride_off = (int)first_idx * 0x34;
+  plane_src = node_base + stride_off;
+  /* pushes: out=result+0x24, in=[hit+0xc], matrix=plane_src
+     decl FUN_0010a1c0(matrix, in_plane, out_plane) */
+  FUN_0010a1c0((float *)plane_src, *(float **)(hit_buf + 0xc),
+               (float *)(result + 0x24));
+
+  if (*(int *)(hit_buf + 0x14) < 0) {
+    plane_negate((float *)(result + 0x24), (float *)(result + 0x24));
+  }
+
+  ax_s = FUN_0014da80(*(int *)(xform + 4), *(short *)(hit_buf + 0x1a));
+  *(short *)(result + 0x34) = ax_s;
+  *(int *)(result + 0x38) = *(int *)(model_b + 0x38);
+  *(short *)(result + 0x3c) = *(short *)(hit_buf + 2);
+  *(short *)(result + 0x3e) = first_idx;
+  *(short *)(result + 0x40) = *(short *)(hit_buf + 4);
+  *(int *)(result + 0x44) = *(int *)(hit_buf + 0x10);
+  *(int *)(result + 0x48) = *(int *)(hit_buf + 0x14);
+  result[0x4c] = hit_buf[0x18];
+  result[0x4d] = hit_buf[0x19];
+  *(short *)(result + 0x4e) = *(short *)(hit_buf + 0x1a);
+
+  *(float *)(result + 0x18) = offset[0] * t + origin[0];
+  *(float *)(result + 0x1c) = offset[1] * t + origin[1];
+  *(float *)(result + 0x20) = offset[2] * t + origin[2];
+  return 1;
+}

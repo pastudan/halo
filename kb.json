@@ -36409,7 +36409,8 @@
         },
         {
           "addr": "0x14e640",
-          "decl": "void FUN_0014e640(void);"
+          "decl": "char FUN_0014e640(void *model, float *origin, float *offset, void *result);",
+          "ported": false
         },
         {
           "addr": "0x14e7d0",

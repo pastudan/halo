@@ -85,6 +85,7 @@ def main() -> int:
         ("FUN_00149680", 0x149680, 0x149c60),
         ("collision_bsp_test_sphere", 0x1493b0, 0x149480),
         ("FUN_0014dc30", 0x14dc30, 0x14dce0),
+        ("FUN_0014e640", 0x14e640, 0x14e7d0),
         ("FUN_0014e7d0", 0x14e7d0, 0x14e940),
         ("FUN_0014e940", 0x14e940, 0x14ea10),
         ("collision_bsp_test_vector", 0x149480, 0x149570),
