@@ -11626,7 +11626,7 @@
         {
           "addr": "0xc3db0",
           "decl": "int16_t hs_find_tag_reference_by_index(int tag_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc3e10",
@@ -35076,22 +35076,26 @@
         {
           "addr": "0x539c0",
           "decl": "void FUN_000539c0(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000539c0"
         },
         {
           "addr": "0x53a20",
           "decl": "void FUN_00053a20(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00053a20"
         },
         {
           "addr": "0x53a90",
           "decl": "void FUN_00053a90(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00053a90"
         },
         {
           "addr": "0x53af0",
           "decl": "void FUN_00053af0(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00053af0"
         }
       ],
       "name": "ai_debug.obj",
@@ -35377,7 +35381,8 @@
         {
           "addr": "0x53bf0",
           "decl": "void FUN_00053bf0(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00053bf0"
         },
         {
           "addr": "0x53c50",
