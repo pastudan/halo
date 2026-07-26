@@ -1411,34 +1411,8 @@ void FUN_000e2170(char value)
   *(char *)0x30f030 = value;
 }
 
-/* FUN_000e21b0 (0xe21b0) — XBE naked draft (batch 171). */
-#if defined(__clang__)
-static void __stdcall (*const be21b0_c1edc70)(void *texture, unsigned int level, void *locked_rect, void *rect, unsigned int flags) = D3DTexture_LockRect;
 
-__attribute__((naked, noinline))
-void FUN_000e21b0(void)
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1edc70]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1edc70] "m"(be21b0_c1edc70)
-      : "memory");
-}
-#else
-#error "FUN_000e21b0: clang naked draft required"
-#endif
+
 
 
 /* D3DXMatrixIdentity (0xe21e0) — readable C lift from XBE leaf. */

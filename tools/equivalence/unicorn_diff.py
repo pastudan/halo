@@ -1541,6 +1541,22 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
 
     # Prefer per-function delinked refs — they isolate callees as external
     # stubs, avoiding intra-object call resolution issues.
+    def _named_oracle_syms() -> list[str]:
+        names: list[str] = []
+        m_decl = re.search(r"\b(\w+)\s*\(", entry.get("decl") or "")
+        if m_decl:
+            names.append(m_decl.group(1))
+        if entry.get("name"):
+            names.append(entry["name"])
+        if func_name and not str(func_name).startswith("0x"):
+            names.append(func_name)
+        # de-dupe, preserve order
+        out: list[str] = []
+        for n in names:
+            if n and n not in out:
+                out.append(n)
+        return out
+
     per_func_ref = _per_function_ref(func_name)
     if per_func_ref:
         try:
@@ -1548,7 +1564,21 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
             delinked_path = per_func_ref
             info(f"  (using per-function delinked ref: {per_func_ref.name})")
         except CoffParseError:
-            per_func_ref = None  # fall through to main delinked
+            # xbe_to_coff often exports the kb decl name, not FUN_<addr>.
+            recovered = False
+            for cand in _named_oracle_syms():
+                try:
+                    oracle_slice = extract_function(str(per_func_ref), cand)
+                    delinked_path = per_func_ref
+                    info(
+                        f"  (using per-function delinked ref: {per_func_ref.name}, sym {cand})"
+                    )
+                    recovered = True
+                    break
+                except CoffParseError:
+                    continue
+            if not recovered:
+                per_func_ref = None  # fall through to main delinked
     if not per_func_ref:
         try:
             oracle_slice = extract_function(str(delinked_path), delinked_sym)
@@ -1563,10 +1593,23 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
                         oracle_slice = extract_function(str(per_func_ref2), delinked_sym)
                         delinked_path = per_func_ref2
                     except CoffParseError as e3:
-                        log(f"ERROR extracting oracle: {e}")
-                        log(f"  (also tried '{func_name}': {e2})")
-                        log(f"  (also tried split ref '{per_func_ref2.name}': {e3})")
-                        return finish("not_applicable", False, "oracle_extract_failed", 2)
+                        recovered = False
+                        for cand in _named_oracle_syms():
+                            try:
+                                oracle_slice = extract_function(str(per_func_ref2), cand)
+                                delinked_path = per_func_ref2
+                                recovered = True
+                                info(
+                                    f"  (using per-function delinked ref: {per_func_ref2.name}, sym {cand})"
+                                )
+                                break
+                            except CoffParseError:
+                                continue
+                        if not recovered:
+                            log(f"ERROR extracting oracle: {e}")
+                            log(f"  (also tried '{func_name}': {e2})")
+                            log(f"  (also tried split ref '{per_func_ref2.name}': {e3})")
+                            return finish("not_applicable", False, "oracle_extract_failed", 2)
                 else:
                     base_stem = delinked_path.stem
                     chunked_match = None

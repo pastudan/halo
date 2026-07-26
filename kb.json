@@ -14301,8 +14301,9 @@
         },
         {
           "addr": "0x100330",
-          "decl": "void main_won_map(void);",
-          "ported": false
+          "decl": "char FUN_00100330(void);",
+          "ported": false,
+          "name": "FUN_00100330"
         },
         {
           "addr": "0x100370",
@@ -20302,7 +20303,8 @@
         {
           "addr": "0xe2170",
           "decl": "void FUN_000e2170(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000e2170"
         },
         {
           "addr": "0xe21b0",
@@ -31241,27 +31243,32 @@
         {
           "addr": "0x1089d0",
           "decl": "void FUN_001089d0(int *point, int x, int y);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001089d0"
         },
         {
           "addr": "0x1089f0",
           "decl": "void FUN_001089f0(int *point, int dx, int dy);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001089f0"
         },
         {
           "addr": "0x108a10",
           "decl": "int FUN_00108a10(int *rect);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00108a10"
         },
         {
           "addr": "0x108a30",
           "decl": "int FUN_00108a30(int *rect);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00108a30"
         },
         {
           "addr": "0x108a50",
           "decl": "void FUN_00108a50(int *rect, int dy, int dx);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00108a50"
         },
         {
           "addr": "0x108a70",
@@ -31286,7 +31293,8 @@
         {
           "addr": "0x108cd0",
           "decl": "void FUN_00108cd0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00108cd0"
         },
         {
           "addr": "0x108d00",
@@ -34803,8 +34811,9 @@
         },
         {
           "addr": "0x4a650",
-          "decl": "void ai_debug_idle_look_clear(int actor_handle);",
-          "ported": false
+          "decl": "void FUN_0004a650(int a, int b);",
+          "ported": false,
+          "name": "FUN_0004a650"
         },
         {
           "addr": "0x4a680",
