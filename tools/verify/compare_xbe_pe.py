@@ -262,7 +262,7 @@ def main() -> int:
         ("FUN_00133300", 0x133300, 0x133496),
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c8a),
         # gameplay wave 9 (2026-07-26)
-        ("FUN_001b4dc0", 0x1b4dc0, 0x1b5400),
+        ("FUN_001b4dc0", 0x1b4dc0, 0x1b53f3),
         ("FUN_00138900", 0x138900, 0x138e15),
         ("vehicle_export_function_values", 0x1b79c0, 0x1b7e48),
         ("FUN_001b6560", 0x1b6560, 0x1b69a0),
@@ -295,12 +295,12 @@ def main() -> int:
         ("FUN_001345b0", 0x1345b0, 0x134adb),
         ("FUN_00133300", 0x133300, 0x133496),
         ("actor_aim_projectile", 0x220c0, 0x22390),
-        ("FUN_001b4dc0", 0x1b4dc0, 0x1b5400),
+        ("FUN_001b4dc0", 0x1b4dc0, 0x1b53f3),
         # gameplay wave 15 (2026-07-26)
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c8a),
         ("FUN_00136bc0", 0x136bc0, 0x136f40),
         ("FUN_00149680", 0x149680, 0x149d00),
-        ("FUN_001377d0", 0x1377d0, 0x137d00),
+        ("FUN_001377d0", 0x1377d0, 0x137d12),
         ("FUN_001491d0", 0x1491d0, 0x1493a0),
         # gameplay wave 16 (2026-07-26)
         ("FUN_001b6250", 0x1b6250, 0x1b6560),
@@ -358,7 +358,7 @@ def main() -> int:
         # gameplay wave 24 (2026-07-26)
         ("FUN_001a4a70", 0x1a4a70, 0x1a4c50),
         ("physics_compute_biped_collision", 0x151a50, 0x151ec0),
-        ("biped_limp_noodle_valid_joint_rotation", 0x19f540, 0x19fa20),
+        ("biped_limp_noodle_valid_joint_rotation", 0x19f540, 0x19fa1c),
         ("FUN_0019fa20", 0x19fa20, 0x1a01d0),
         ("FUN_001a4c50", 0x1a4c50, 0x1a5300),
         # gameplay wave 25 (2026-07-26)
@@ -515,6 +515,12 @@ def main() -> int:
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c8a),
         ("FUN_001b81d0", 0x1b81d0, 0x1b856c),
         ("FUN_001b74d0", 0x1b74d0, 0x1b77e1),
+        # gameplay wave 44 (2026-07-26)
+        ("FUN_001a4c50", 0x1a4c50, 0x1a5300),
+        ("FUN_001b4dc0", 0x1b4dc0, 0x1b53f3),
+        ("FUN_001a4440", 0x1a4440, 0x1a4990),
+        ("biped_limp_noodle_valid_joint_rotation", 0x19f540, 0x19fa1c),
+        ("FUN_001377d0", 0x1377d0, 0x137d12),
     ]
 
     xbe = Xbe.from_file(args.xbe)
