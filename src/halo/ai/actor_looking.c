@@ -1337,66 +1337,157 @@ void FUN_00014c10(int actor_handle, void *state_data, int param_3)
   *(char *)((char *)state_data + 0x6) = 0;
 }
 
-/* FUN_00014e90 (0x14e90)
- * Flee action: evaluate whether the actor should flee to a firing position.
- *
- * EAX = actor_handle (register arg), stack = state_data pointer.
- * Original caller (FUN_00015520 at 0x15697): MOV EAX,[EBP+8]; PUSH ESI;
- * CALL 0x14e90 — ESI = actor+0x9c (flee action state block).
- *
- * Reads state_data+0x1c (prop handle), state_data+0x8 (firing position idx).
- * If valid target, encounter, and firing position, estimates target position,
- * tests LOS, and copies target position to state_data+0x24 if LOS blocked.
- * Returns 1 if flee target is in LOS state [2,3], else 0.
- *
- * Confirmed: PUSH EAX at 0x14e9f; CALL datum_get → EAX is actor_handle.
- * Confirmed: MOV ESI,[EBP+0x8] at 0x14ed7 → stack param is state_data.
- * Confirmed: assert "!actor->meta.swarm" at action_flee.c line 0x265. */
-char FUN_00014e90(int actor_handle, char *state_data)
-{
-  char *actor;
-  short sVar1;
-  char *prop;
-  char *encounter_elem;
-  char *fp_elem;
-  float local_14[4];
-  char local_5;
+/* FUN_00014e90 (0x14e90) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b14e90_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b14e90_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b14e90_exitfn)(int) = system_exit;
+static scenario_t * (*const b14e90_c18e380)(void) = global_scenario_get;
+static void *(*const b14e90_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b14e90_c1a93e0)(int unit_handle, int16_t estimate_mode, vector3_t *body_position, vector3_t *desired_facing, vector3_t *desired_gun_offset, vector3_t *out_position) = unit_estimate_position;
+static int (*const b14e90_c416e0)(float *origin, int bsp, float *target, int param_4, short param_5, char param_6, int param_7, char param_8) = ai_test_line_of_sight;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  local_5 = 0;
-  if (*(char *)(actor + 6) != '\0') {
-    display_assert("!actor->meta.swarm", "c:\\halo\\SOURCE\\ai\\action_flee.c",
-                   0x265, 1);
-    system_exit(-1);
-  }
-  if (*(int *)(state_data + 0x1c) != -1 &&
-      *(unsigned int *)(actor + 0x34) != 0xffffffff &&
-      *(short *)(state_data + 8) != -1) {
-    encounter_elem = (char *)tag_block_get_element(
-      (char *)global_scenario_get() + 0x42c,
-      *(unsigned int *)(actor + 0x34) & 0xffff, 0xb0);
-    prop = (char *)datum_get(*(data_t **)0x5ab23c, *(int *)(state_data + 0x1c));
-    fp_elem = (char *)tag_block_get_element(
-      encounter_elem + 0x98, (int)*(short *)(state_data + 8), 0x18);
-    unit_estimate_position(*(int *)(actor + 0x18), 2, (void *)fp_elem, 0, 0,
-                           (void *)local_14);
-    sVar1 = ai_test_line_of_sight(
-      local_14, (int)*(unsigned short *)(fp_elem + 0xe),
-      (float *)(prop + 0x104), (int)*(unsigned short *)(prop + 0x100), 1, 0,
-      *(int *)(prop + 0x110), *(int *)(actor + 0x158) != -1);
-    if (*(short *)(prop + 0x24) >= 2 && *(short *)(prop + 0x24) <= 3) {
-      local_5 = sVar1 == 0;
-    }
-    if (sVar1 == 0 || sVar1 == 3) {
-      *(char *)(state_data + 0x20) = 1;
-      *(int *)(state_data + 0x24) = *(int *)(prop + 0xbc);
-      *(int *)(state_data + 0x28) = *(int *)(prop + 0xc0);
-      *(int *)(state_data + 0x2c) = *(int *)(prop + 0xc4);
-    }
-    return local_5;
-  }
-  return 0;
+__attribute__((naked, noinline))
+char FUN_00014e90(int actor_handle __attribute__((unused)), char *state_data __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movb 0x6(%%edi), %%al\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movb %%bl, -0x1(%%ebp)\n\t"
+      "je .LFUN_00014e90_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x265\n\t"
+      "pushl $0x253504\n\t"
+      "pushl $0x253380\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00014e90_1:\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0x1c(%%esi), %%eax\n\t"
+      "orl $0xffffffff, %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .LFUN_00014e90_6\n\t"
+      "movl 0x34(%%edi), %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .LFUN_00014e90_6\n\t"
+      "cmpw %%cx, 0x8(%%esi)\n\t"
+      "je .LFUN_00014e90_6\n\t"
+      "andl $0xffff, %%eax\n\t"
+      "pushl $0xb0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x42c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x1c(%%esi), %%edx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movswl 0x8(%%ecx), %%edx\n\t"
+      "pushl $0x18\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x98, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x18(%%edi), %%ecx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $2\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1a93e0]\n\t"
+      "movl 0x158(%%edi), %%ecx\n\t"
+      "movl 0x110(%%esi), %%eax\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "setne %%dl\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x100(%%esi), %%cx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0xe(%%ebx), %%ax\n\t"
+      "pushl $1\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x104(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c416e0]\n\t"
+      "movw 0x24(%%esi), %%cx\n\t"
+      "addl $0x58, %%esp\n\t"
+      "cmpw $2, %%cx\n\t"
+      "jl .LFUN_00014e90_2\n\t"
+      "cmpw $3, %%cx\n\t"
+      "jg .LFUN_00014e90_2\n\t"
+      "testw %%ax, %%ax\n\t"
+      "sete %%cl\n\t"
+      "jmp .LFUN_00014e90_3\n\t"
+      ".LFUN_00014e90_2:\n\t"
+      "movb -0x1(%%ebp), %%cl\n\t"
+      ".LFUN_00014e90_3:\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .LFUN_00014e90_4\n\t"
+      "cmpw $3, %%ax\n\t"
+      "jne .LFUN_00014e90_5\n\t"
+      ".LFUN_00014e90_4:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movb $1, 0x20(%%eax)\n\t"
+      "addl $0xbc, %%esi\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "addl $0x24, %%eax\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      ".LFUN_00014e90_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%cl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00014e90_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b14e90_dget), [assert] "m"(b14e90_assert), [exitfn] "m"(b14e90_exitfn), [c18e380] "m"(b14e90_c18e380), [elem] "m"(b14e90_elem), [c1a93e0] "m"(b14e90_c1a93e0), [c416e0] "m"(b14e90_c416e0)
+      : "memory");
 }
+#else
+#error "FUN_00014e90: clang naked draft required"
+#endif
+
 
 /* FUN_00014ff0 (0x14ff0)
  * Conditionally update the actor's look-frame field.
@@ -1435,64 +1526,133 @@ int FUN_00015020(short param_1)
   return 0;
 }
 
-/* FUN_00015040 (0x15040)
- * Initialize flee action state for an actor.
- *
- * Validates state_data pointer, zeroes 0x30 bytes, populates fields from
- * params. If a valid target is provided, calls actor_situation_try_new_target.
- * For scripted look types [9,12], rolls a random chance against 0x253524 and
- * may set a short timer. Otherwise dispatches FUN_00014c10(actor_handle,
- * state_data, 0) to find a firing position.
- *
- * Confirmed: standard cdecl, 7 stack params.
- * Confirmed: FUN_00014c10 takes actor_handle @<ebx> + state_data @<esi> +
- * 1 stack arg — original 0x1504c loads EBX=[EBP+8] (handle), 0x15071 loads
- * ESI=[EBP+0x20] (param_7 state_data, still live at the call), 0x15121
- * PUSH 0, 0x15123 CALL. Ghidra showed only FUN_00014c10(0) (register-arg
- * blindness); the missing args caused a datum_get assert (garbage EBX) and
- * then an AV at 0x14c7d reading [ESI+4] with leftover ESI=-1.
- * Confirmed: NEG CL; SBB ECX,ECX; AND ECX,0xb4 → condition ? 0xb4 : 0. */
-char FUN_00015040(int actor_handle, short param_2, int param_3, char param_4,
-                  char param_5, char param_6, short *param_7)
-{
-  char *actor;
-  volatile char result;
+/* FUN_00015040 (0x15040) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b15040_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b15040_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b15040_exitfn)(int) = system_exit;
+static void *(*const b15040_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b15040_c308e0)(int actor_handle, int target) = actor_situation_try_new_target;
+static int *(*const b15040_gseed)(void) = get_global_random_seed_address;
+static float (*const b15040_rmreal)(unsigned int *) = random_math_real;
+static void (*const b15040_c14c10)(int actor_handle, void *state_data, int param_3) = FUN_00014c10;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  result = 0;
-  if (*(char *)(actor + 0x160) == '\0') {
-    if (param_7 == (short *)0) {
-      display_assert("state_data", "c:\\halo\\SOURCE\\ai\\action_flee.c", 0x2c,
-                     1);
-      system_exit(-1);
-    }
-    csmemset(param_7, 0, 0x30);
-    *((char *)param_7 + 5) = param_6;
-    param_7[4] = (short)0xffff;
-    param_7[6] = param_2;
-    *(char *)(param_7 + 2) = param_5;
-    *(int *)(param_7 + 0xe) = param_3;
-    *param_7 = param_4 != '\0' ? (short)0xb4 : 0;
-    if (param_3 != -1) {
-      actor_situation_try_new_target(actor_handle, param_3);
-    }
-    if ((short)param_2 >= 9 && (short)param_2 <= 0xc) {
-      if (random_math_real((unsigned int *)get_global_random_seed_address()) <
-          *(float *)0x253524) {
-        param_7[1] = 0x2d;
-        return 1;
-      }
-    }
-    if (*(char *)(actor + 6) == '\0') {
-      FUN_00014c10(actor_handle, param_7, 0);
-      if (param_7[4] != (short)0xffff) {
-        return 1;
-      }
-      *(char *)(param_7 + 7) = 0;
-    }
-  }
-  return result;
+__attribute__((naked, noinline))
+char FUN_00015040(int actor_handle __attribute__((unused)), short param_2 __attribute__((unused)), int param_3 __attribute__((unused)), char param_4 __attribute__((unused)), char param_5 __attribute__((unused)), char param_6 __attribute__((unused)), short *param_7 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movb 0x160(%%eax), %%dl\n\t"
+      "xorb %%cl, %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%dl, %%dl\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movb %%cl, -0x1(%%ebp)\n\t"
+      "jne .LFUN_00015040_6\n\t"
+      "movl 0x20(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00015040_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2c\n\t"
+      "pushl $0x253504\n\t"
+      "pushl $0x25334c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00015040_1:\n\t"
+      "pushl $0x30\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movb 0x14(%%ebp), %%cl\n\t"
+      "movb 0x1c(%%ebp), %%al\n\t"
+      "movw 0xc(%%ebp), %%di\n\t"
+      "movb 0x18(%%ebp), %%dl\n\t"
+      "addl $0xc, %%esp\n\t"
+      "negb %%cl\n\t"
+      "movb %%al, 0x5(%%esi)\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movw $0xffff, 0x8(%%esi)\n\t"
+      "movw %%di, 0xc(%%esi)\n\t"
+      "movb %%dl, 0x4(%%esi)\n\t"
+      "movl %%eax, 0x1c(%%esi)\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl $0xb4, %%ecx\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movw %%cx, (%%esi)\n\t"
+      "je .LFUN_00015040_2\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c308e0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00015040_2:\n\t"
+      "cmpw $9, %%di\n\t"
+      "jl .LFUN_00015040_4\n\t"
+      "cmpw $0xc, %%di\n\t"
+      "jg .LFUN_00015040_4\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "fcomps 0x253524\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00015040_4\n\t"
+      "movw $0x2d, 0x2(%%esi)\n\t"
+      ".LFUN_00015040_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00015040_4:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movb 0x6(%%ecx), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00015040_5\n\t"
+      "pushl $0\n\t"
+      "call *%[c14c10]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $-1, 0x8(%%esi)\n\t"
+      "jne .LFUN_00015040_3\n\t"
+      "movb $0, 0xe(%%esi)\n\t"
+      ".LFUN_00015040_5:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00015040_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%cl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b15040_dget), [assert] "m"(b15040_assert), [exitfn] "m"(b15040_exitfn), [memset] "m"(b15040_memset), [c308e0] "m"(b15040_c308e0), [gseed] "m"(b15040_gseed), [rmreal] "m"(b15040_rmreal), [c14c10] "m"(b15040_c14c10)
+      : "memory");
 }
+#else
+#error "FUN_00015040: clang naked draft required"
+#endif
+
 
 /* FUN_00015150 (0x15150)
  * Reset actor look-frame and conditionally start the unit running blindly.
@@ -2528,85 +2688,180 @@ LAB_done:
   return 1;
 }
 
-/* FUN_00016210 (0x16210)
- * Initialize guard-mode action state (post-combat variant).
- *
- * Similar to FUN_00016050 but adds actor-type tag lookup and random-range
- * timer for pre-combat delay. Handles combat-transition type 2 prop
- * assignment.
- *
- * Confirmed: datum_get(actor_data, actor_handle) → actor.
- * Confirmed: tag_get(0x61637472, actor+0x58) → actor tag.
- * Confirmed: assert path "c:\halo\SOURCE\ai\action_guard.c" at 0xed. */
-char FUN_00016210(int actor_handle, int param_2, short *param_3)
-{
-  char *actor;
-  char *tag;
-  char cVar1;
-  int lo;
-  int hi;
+/* FUN_00016210 (0x16210) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b16210_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b16210_tag)(int, int) = tag_get;
+static void (*const b16210_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b16210_exitfn)(int) = system_exit;
+static void *(*const b16210_memset)(void *, int, unsigned int) = csmemset;
+static int *(*const b16210_gseed)(void) = get_global_random_seed_address;
+static float (*const b16210_rrange)(int *, float, float) = random_real_range;
+static void (*const b16210_ftol)(void) = FUN_001d9068;
+static float (*const b16210_norm)(float *) = normalize3d;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  tag = (char *)tag_get(0x61637472, *(int *)(actor + 0x58));
-  if (param_3 == (short *)0) {
-    display_assert("state_data", "c:\\halo\\SOURCE\\ai\\action_guard.c", 0xed,
-                   1);
-    system_exit(-1);
-  }
-  csmemset(param_3, 0, 0x44);
-  if (*(char *)(actor + 0x160) == '\0' && *(char *)(actor + 6) == '\0') {
-    *param_3 = 0;
-    *(char *)(param_3 + 4) = 1;
-    param_3[6] = 0;
-    *(char *)((char *)param_3 + 9) = 0 < *(short *)(param_2 + 0xc);
-    if (*(short *)(actor + 0x3a8) <= 0 ||
-        *(char *)((char *)param_3 + 9) != '\0') {
-      cVar1 = '\0';
-    } else {
-      cVar1 = '\x01';
-    }
-    *(char *)(param_3 + 5) = cVar1;
-    if (cVar1 == '\0') {
-      if (*(char *)((char *)param_3 + 9) == '\0') {
-        lo = *(int *)(tag + 0x2d0);
-        hi = *(int *)(tag + 0x2d4);
-      } else {
-        lo = *(int *)(tag + 0x298);
-        hi = *(int *)(tag + 0x29c);
-      }
-      param_3[6] = (short)(int)random_real_range(
-        get_global_random_seed_address(), *(float *)&lo, *(float *)&hi);
-    }
-    if (*(short *)(param_2 + 8) == -1) {
-      *(char *)(param_3 + 7) = 1;
-      param_3[0x12] = 0;
-      *(int *)(param_3 + 0x1e) = -1;
-      return 1;
-    }
-    *(char *)(param_3 + 7) = 0;
-    param_3[0x12] = 3;
-    param_3[0x14] = *(short *)(param_2 + 8);
-    if (*(char *)(param_2 + 0x20) != '\0') {
-      *(char *)(param_3 + 10) = 1;
-      *((char *)param_3 + 0x15) = 1;
-      *(float *)(param_3 + 0xc) =
-        *(float *)(param_2 + 0x24) - *(float *)(actor + 0x12c);
-      *(float *)(param_3 + 0xe) =
-        *(float *)(param_2 + 0x28) - *(float *)(actor + 0x130);
-      *(float *)(param_3 + 0x10) =
-        *(float *)(param_2 + 0x2c) - *(float *)(actor + 0x134);
-      if (normalize3d((float *)(param_3 + 0xc)) == *(float *)0x2533c0) {
-        *(char *)(param_3 + 10) = 0;
-        *(int *)(param_3 + 0x1e) = -1;
-        return 1;
-      }
-    }
-  } else {
-    param_3[0x12] = 1;
-  }
-  *(int *)(param_3 + 0x1e) = -1;
-  return 1;
+__attribute__((naked, noinline))
+char FUN_00016210(int actor_handle __attribute__((unused)), int param_2 __attribute__((unused)), short *param_3 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x58(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jne .LFUN_00016210_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xed\n\t"
+      "pushl $0x253638\n\t"
+      "pushl $0x25334c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00016210_1:\n\t"
+      "pushl $0x44\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movb 0x160(%%edi), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00016210_8\n\t"
+      "movb 0x6(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00016210_8\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "movw $0, (%%esi)\n\t"
+      "movb $1, 0x8(%%esi)\n\t"
+      "movw $0, 0xc(%%esi)\n\t"
+      "cmpw $0, 0xc(%%ebx)\n\t"
+      "setg %%al\n\t"
+      "movb %%al, 0x9(%%esi)\n\t"
+      "cmpw $0, 0x3a8(%%edi)\n\t"
+      "jle .LFUN_00016210_2\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00016210_2\n\t"
+      "movl $1, %%eax\n\t"
+      "jmp .LFUN_00016210_3\n\t"
+      ".LFUN_00016210_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_00016210_3:\n\t"
+      "testb %%al, %%al\n\t"
+      "movb %%al, 0xa(%%esi)\n\t"
+      "jne .LFUN_00016210_6\n\t"
+      "movb 0x9(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "je .LFUN_00016210_4\n\t"
+      "movl 0x29c(%%eax), %%ecx\n\t"
+      "movl 0x298(%%eax), %%edx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "movl %%ecx, 0x10(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "jmp .LFUN_00016210_5\n\t"
+      ".LFUN_00016210_4:\n\t"
+      "movl 0x2d4(%%eax), %%edx\n\t"
+      "movl 0x2d0(%%eax), %%eax\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "movl %%edx, 0x10(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      ".LFUN_00016210_5:\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rrange]\n\t"
+      "fmuls 0x253394\n\t"
+      "addl $0xc, %%esp\n\t"
+      "call *%[ftol]\n\t"
+      "movw %%ax, 0xc(%%esi)\n\t"
+      ".LFUN_00016210_6:\n\t"
+      "cmpw $-1, 0x8(%%ebx)\n\t"
+      "jne .LFUN_00016210_7\n\t"
+      "popl %%edi\n\t"
+      "movb $1, 0xe(%%esi)\n\t"
+      "movw $0, 0x24(%%esi)\n\t"
+      "movl $0xffffffff, 0x3c(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00016210_7:\n\t"
+      "movb $0, 0xe(%%esi)\n\t"
+      "movw $3, 0x24(%%esi)\n\t"
+      "movw 0x8(%%ebx), %%ax\n\t"
+      "movw %%ax, 0x28(%%esi)\n\t"
+      "movb 0x20(%%ebx), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00016210_9\n\t"
+      "movb $1, 0x14(%%esi)\n\t"
+      "movb $1, 0x15(%%esi)\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "fsubs 0x12c(%%edi)\n\t"
+      "leal 0x18(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "fstps (%%eax)\n\t"
+      "flds 0x28(%%ebx)\n\t"
+      "fsubs 0x130(%%edi)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "flds 0x2c(%%ebx)\n\t"
+      "fsubs 0x134(%%edi)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .LFUN_00016210_9\n\t"
+      "popl %%edi\n\t"
+      "movb $0, 0x14(%%esi)\n\t"
+      "movl $0xffffffff, 0x3c(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00016210_8:\n\t"
+      "movw $1, 0x24(%%esi)\n\t"
+      ".LFUN_00016210_9:\n\t"
+      "popl %%edi\n\t"
+      "movl $0xffffffff, 0x3c(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b16210_dget), [tag] "m"(b16210_tag), [assert] "m"(b16210_assert), [exitfn] "m"(b16210_exitfn), [memset] "m"(b16210_memset), [gseed] "m"(b16210_gseed), [rrange] "m"(b16210_rrange), [ftol] "m"(b16210_ftol), [norm] "m"(b16210_norm)
+      : "memory");
 }
+#else
+#error "FUN_00016210: clang naked draft required"
+#endif
+
 
 /* FUN_000163d0 (0x163d0) — Firing-position combat state evaluator.
  *
@@ -3038,125 +3293,243 @@ int FUN_00016960(float *param_1, float *param_2)
   return 0;
 }
 
-/* FUN_000169a0 (0x169a0)
- * Command-list step execution callback for actor scripted-look behavior.
- * Dispatches on the command type (*cmd_entry) to apply the appropriate
- * state change. Called with @<esi>=state_ptr (the actor's look state block).
- *
- * State block (ESI) layout:
- *   ESI[0]  = command_index (byte, current entry index in the command list)
- *   ESI[1]  = loop_count (byte, incremented on each loop)
- *   ESI[4]  = flags (byte: bit 0=?, bit 3=?, bit 4=?)
- *   ESI[5]  = flags2 (byte: bit 0=active?, bit 2=?)
- *   ESI[8:9] = int16 index
- *
- * Confirmed: ESI not in stack frame; reads [ESI],[ESI+1],[ESI+4],[ESI+5],
- *   [ESI+8] from raw disasm.
- * Confirmed: switch table at 0x16bac (byte lookup) + 0x16b8c (DWORD jumps).
- * Confirmed: assert strings "c:\\halo\\SOURCE\\ai\\action_obey.c". */
-void FUN_000169a0(int actor_handle, int unit_handle, short scenario_idx,
-                  int param_4, char *out_index, void *state_ptr /* @<esi> */)
+/* FUN_000169a0 (0x169a0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b169a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static scenario_t * (*const b169a0_c18e380)(void) = global_scenario_get;
+static void *(*const b169a0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b169a0_c2f1a0)(int actor_handle) = FUN_0002f1a0;
+static char * (*const b169a0_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
+static void (*const b169a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void *(*const b169a0_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void (*const b169a0_c27870)(int actor_handle) = FUN_00027870;
+
+__attribute__((naked, noinline))
+void FUN_000169a0(int actor_handle __attribute__((unused)), int unit_handle __attribute__((unused)), short scenario_idx __attribute__((unused)), int param_4 __attribute__((unused)), char *out_index __attribute__((unused)), void *state_ptr __attribute__((unused)))
 {
-  char *actor;
-  char *scenario;
-  char *cmd_entry;
-  short cmd_type;
-  int idx;
-  char *obj;
-  char local_buf[512];
-  char *sp;
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  scenario = (char *)global_scenario_get();
-  cmd_entry =
-    (char *)tag_block_get_element(scenario + 0x438, (int)scenario_idx, 0x60);
-
-  sp = (char *)state_ptr; /* ESI: state block */
-
-  idx = (int)(unsigned char)sp[0];
-  if (idx >= *(int *)(cmd_entry + 0x30)) {
-    return;
-  }
-  cmd_entry = (char *)tag_block_get_element(cmd_entry + 0x30, idx, 0x20);
-
-  cmd_type = *(short *)cmd_entry - 1;
-  if ((unsigned short)cmd_type > 0x18) {
-    return;
-  }
-
-  switch ((int)(unsigned char)cmd_type) {
-  case 0: /* case 1 */
-  case 1: /* case 2 */
-    if (unit_handle == *(int *)(actor + 0x18)) {
-      FUN_0002f1a0(actor_handle);
-    }
-    if (param_4 != 0) {
-      *(char *)(param_4 + 4) = 0;
-      *(char *)(param_4 + 0x18) = 0;
-      return;
-    }
-    break;
-  case 2: /* case 3 */
-  case 0x15: /* case 0x16 */
-    sp[5] = sp[5] & (char)0xfe;
-    *(short *)(sp + 8) = (short)0xffff;
-    return;
-  case 3: /* case 4 */
-  case 0x16: /* case 0x17 */
-  case 0x17: /* case 0x18 */
-  case 0x18: /* case 0x19 */
-    if (unit_handle == *(int *)(actor + 0x18)) {
-      FUN_00027870(actor_handle);
-    }
-    break;
-  case 6: /* case 7 */
-    if (param_4 != 0) {
-      *(char *)(param_4 + 0x36) = 0;
-      return;
-    }
-    break;
-  case 9: /* case 10 */
-  case 0xa: /* case 0xb */
-    sp[5] = sp[5] & (char)0xfb;
-    *(short *)(sp + 8) = 0;
-    return;
-  case 0xc: /* case 0xd */
-    obj = (char *)object_try_and_get_and_verify_type(unit_handle, 1);
-    if (obj != NULL) {
-      *(unsigned int *)(obj + 0x424) &= 0xfffffff3;
-      return;
-    }
-    break;
-  case 0x13: /* case 0x14 */
-    if (*(short *)(cmd_entry + 2) == 1) {
-      char flags = sp[4];
-      sp[4] = flags & (char)0xf7;
-      if ((~(flags >> 3) & 1) == 0) {
-        sp[4] = flags & (char)0xe7;
-        return;
-      }
-      sp[4] = (flags & (char)0xf7) | (char)0x10;
-    }
-    if (*(short *)(cmd_entry + 0x16) == (short)(unsigned char)sp[0]) {
-      ai_debug_describe_actor(actor_handle, -1, 1, local_buf, 0x200);
-      error(2, "%s: command list %s entry #%d tried to loop to itself",
-            (int)local_buf, (int)cmd_entry, (int)(unsigned char)sp[0]);
-      return;
-    }
-    if ((unsigned char)sp[1] > 9) {
-      ai_debug_describe_actor(actor_handle, -1, 1, local_buf, 0x200);
-      error(2, "%s: command list %s is stuck looping (aborting on loop #%d)",
-            (int)local_buf, (int)cmd_entry, (int)(unsigned char)sp[0]);
-      return;
-    }
-    if (out_index != NULL)
-      *out_index = *(char *)(cmd_entry + 0x16);
-    sp[1]++;
-    return;
-  default:
-    break;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x200, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movswl 0x10(%%ebp), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl $0x60\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x438, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movzbl (%%esi), %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x30(%%edi), %%edx\n\t"
+      "leal 0x30(%%edi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jge .LFUN_000169a0_13\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movswl (%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "decl %%ecx\n\t"
+      "cmpl $0x18, %%ecx\n\t"
+      "ja .LFUN_000169a0_13\n\t"
+      "movzbl 0x16bac(%%ecx), %%ecx\n\t"
+      "jmp *.LFUN_000169a0_jt(,%%ecx,4)\n\t"
+      ".LFUN_000169a0_1:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "cmpl 0x18(%%ebx), %%edx\n\t"
+      "jne .LFUN_000169a0_2\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c2f1a0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_000169a0_2:\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .LFUN_000169a0_13\n\t"
+      "popl %%edi\n\t"
+      "movb %%cl, 0x4(%%eax)\n\t"
+      "movb %%cl, 0x18(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000169a0_3:\n\t"
+      "movb 0x5(%%esi), %%al\n\t"
+      "andb $0xfe, %%al\n\t"
+      "popl %%edi\n\t"
+      "movb %%al, 0x5(%%esi)\n\t"
+      "movw $0xffff, 0x8(%%esi)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000169a0_4:\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .LFUN_000169a0_13\n\t"
+      "popl %%edi\n\t"
+      "movb %%cl, 0x36(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000169a0_5:\n\t"
+      "movb 0x5(%%esi), %%al\n\t"
+      "andb $0xfb, %%al\n\t"
+      "popl %%edi\n\t"
+      "movb %%al, 0x5(%%esi)\n\t"
+      "movw $0, 0x8(%%esi)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000169a0_6:\n\t"
+      "cmpw $1, 0x2(%%eax)\n\t"
+      "jne .LFUN_000169a0_7\n\t"
+      "movb 0x4(%%esi), %%dl\n\t"
+      "movb %%dl, %%cl\n\t"
+      "shrb $3, %%cl\n\t"
+      "notb %%cl\n\t"
+      "andb $1, %%cl\n\t"
+      "andb $0xf7, %%dl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movb %%dl, 0x4(%%esi)\n\t"
+      "je .LFUN_000169a0_8\n\t"
+      "orb $0x10, %%dl\n\t"
+      "movb %%dl, 0x4(%%esi)\n\t"
+      ".LFUN_000169a0_7:\n\t"
+      "movzbl (%%esi), %%ecx\n\t"
+      "cmpw %%cx, 0x16(%%eax)\n\t"
+      "jne .LFUN_000169a0_9\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x200\n\t"
+      "leal -0x200(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c49ac0]\n\t"
+      "movzbl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x200(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x25370c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x28, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000169a0_8:\n\t"
+      "andb $0xef, %%dl\n\t"
+      "popl %%edi\n\t"
+      "movb %%dl, 0x4(%%esi)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000169a0_9:\n\t"
+      "cmpb $0xa, 0x1(%%esi)\n\t"
+      "jb .LFUN_000169a0_10\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0x200\n\t"
+      "leal -0x200(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c49ac0]\n\t"
+      "movzbl (%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x200(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2536d0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x28, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000169a0_10:\n\t"
+      "movb 0x16(%%eax), %%cl\n\t"
+      "movl 0x18(%%ebp), %%edx\n\t"
+      "movb %%cl, (%%edx)\n\t"
+      "movb 0x1(%%esi), %%al\n\t"
+      "incb %%al\n\t"
+      "popl %%edi\n\t"
+      "movb %%al, 0x1(%%esi)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000169a0_11:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000169a0_13\n\t"
+      "movl 0x424(%%eax), %%ecx\n\t"
+      "andl $0xfffffff3, %%ecx\n\t"
+      "popl %%edi\n\t"
+      "movl %%ecx, 0x424(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000169a0_12:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "cmpl 0x18(%%ebx), %%ecx\n\t"
+      "jne .LFUN_000169a0_13\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c27870]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_000169a0_13:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_000169a0_jt:\n\t"
+      ".long .LFUN_000169a0_1\n\t"
+      ".long .LFUN_000169a0_3\n\t"
+      ".long .LFUN_000169a0_12\n\t"
+      ".long .LFUN_000169a0_4\n\t"
+      ".long .LFUN_000169a0_5\n\t"
+      ".long .LFUN_000169a0_11\n\t"
+      ".long .LFUN_000169a0_6\n\t"
+      ".long .LFUN_000169a0_13\n\t"
+      ".text\n\t"
+      :
+      : [dget] "m"(b169a0_dget), [c18e380] "m"(b169a0_c18e380), [elem] "m"(b169a0_elem), [c2f1a0] "m"(b169a0_c2f1a0), [c49ac0] "m"(b169a0_c49ac0), [c8f390] "m"(b169a0_c8f390), [tryget] "m"(b169a0_tryget), [c27870] "m"(b169a0_c27870)
+      : "memory");
 }
+#else
+#error "FUN_000169a0: clang naked draft required"
+#endif
+
 
 /* actor_look_secondary_stop / actor_look_secondary_stop (0x16bd0)
  * Command-list initialization callback for prop interest dispatch.
@@ -5745,50 +6118,102 @@ void FUN_00019280(int actor_handle)
                                    (void (*)(void))FUN_00019230, 0);
 }
 
-/* FUN_000192b0 (0x192b0)
- * Execute actor command-list "obey" action update.
- *
- * Dispatches the prop-interest iteration via actor_look_compute_prop_interest
- * with the FUN_00019110 callback. If the finished-flag is set and the actor
- * hasn't posted combat yet, checks encounter flags and actor-type flags to
- * decide whether to post combat. Returns 1 if actor's current action (0x6c)
- * is 0xb and post_combat is set, else 0.
- *
- * Confirmed: datum_get(actor_data, actor_handle) → actor.
- * Confirmed: LEA ECX,[EBP-1] → address of local_finished byte.
- * Confirmed: actor_look_compute_prop_interest callback=FUN_00019110. */
-int FUN_000192b0(int actor_handle)
-{
-  char *actor;
-  char *encounter_elem;
-  int *tag;
-  char finished;
+/* FUN_000192b0 (0x192b0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b192b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b192b0_c16d40)(int actor_handle, int param_2, short *param_3, void (*callback)(void), int param_5) = actor_look_compute_prop_interest;
+static scenario_t * (*const b192b0_c18e380)(void) = global_scenario_get;
+static void *(*const b192b0_elem)(void *, int, int) = tag_block_get_element;
+static void *(*const b192b0_tag)(int, int) = tag_get;
+static int (*const b192b0_gtime)(void) = game_time_get;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  finished = 1;
-  actor_look_compute_prop_interest(actor_handle, 0, (short *)(actor + 0x9c),
-                                   (void (*)(void))FUN_00019110,
-                                   (int)&finished);
-  if (finished != '\0' && *(char *)(actor + 0xa1) == '\0') {
-    encounter_elem =
-      (char *)tag_block_get_element((char *)global_scenario_get() + 0x438,
-                                    (int)*(short *)(actor + 0x9c), 0x60);
-    if ((*(char *)(encounter_elem + 0x20) & 0x10) != 0 &&
-        *(char *)(actor + 0x15c) != '\0') {
-      tag = (int *)tag_get(0x61637472, *(int *)(actor + 0x58));
-      if ((*tag & 0x200000) != 0) {
-        goto LAB_done;
-      }
-    }
-    *(int *)(actor + 0x94) = game_time_get();
-    *(char *)(actor + 0xa1) = 1;
-  }
-LAB_done:
-  if (*(short *)(actor + 0x6c) == 0xb && *(char *)(actor + 0xa1) != '\0') {
-    return 1;
-  }
-  return 0;
+__attribute__((naked, noinline))
+int FUN_000192b0(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "leal -0x1(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "pushl $0x19110\n\t"
+      "leal 0x9c(%%edi), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "call *%[c16d40]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000192b0_2\n\t"
+      "movb 0x5(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000192b0_2\n\t"
+      "movswl (%%esi), %%edx\n\t"
+      "pushl $0x60\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x438, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movb 0x20(%%eax), %%cl\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb $0x10, %%cl\n\t"
+      "je .LFUN_000192b0_1\n\t"
+      "movb 0x15c(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000192b0_1\n\t"
+      "movl 0x58(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl $0x200000, %%ecx\n\t"
+      "je .LFUN_000192b0_2\n\t"
+      ".LFUN_000192b0_1:\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, 0x94(%%edi)\n\t"
+      "movb $1, 0x5(%%esi)\n\t"
+      ".LFUN_000192b0_2:\n\t"
+      "cmpw $0xb, 0x6c(%%edi)\n\t"
+      "jne .LFUN_000192b0_3\n\t"
+      "movb 0x5(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000192b0_3\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000192b0_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b192b0_dget), [c16d40] "m"(b192b0_c16d40), [c18e380] "m"(b192b0_c18e380), [elem] "m"(b192b0_elem), [tag] "m"(b192b0_tag), [gtime] "m"(b192b0_gtime)
+      : "memory");
 }
+#else
+#error "FUN_000192b0: clang naked draft required"
+#endif
+
 
 /* FUN_00019370 (0x19370) — XBE naked draft (batch 69). */
 #if defined(__clang__)
@@ -6199,73 +6624,158 @@ int FUN_000198d0(int actor_handle, int param_2, char *state_data)
   return 0;
 }
 
-/* FUN_00019940 (0x19940)
- * Per-tick update for action_search: checks if the search has been found
- * or timed out, increments/decrements counters, fires look-event if needed.
- *
- * Confirmed: datum_get(actor_data, actor_handle) at 0x19948.
- * Confirmed: tag_get(0x61637472, actor+0x58).
- * Confirmed: actor+0x9c = search done; actor+0x9e/0xbc/0xc0 = tick counters. */
-void FUN_00019940(int actor_handle)
-{
-  char *actor;
-  char *tag_data;
-  char *prop;
-  int remain;
+/* FUN_00019940 (0x19940) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b19940_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b19940_tag)(int, int) = tag_get;
+static int (*const b19940_c3b380)(int actor_handle) = actor_target_unit_index;
+static void (*const b19940_c46f10)(int16_t type, int unit_handle, int param3, int param4, int16_t param5, int16_t param6, int16_t param7) = FUN_00046f10;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(char *)(actor + 0x9c) != '\0') {
-    return;
-  }
-  tag_data = (char *)tag_get(0x61637472, *(int *)(actor + 0x58));
-  *(char *)(actor + 0x9f) = 0;
-  if ((*(short *)(tag_data + 0x2f8) == 4) ||
-      ((*(tag_data) & 2) != 0 && *(short *)(actor + 0xa4) == 0 &&
-       *(short *)(actor + 0x268) == 5)) {
-    if (*(short *)(tag_data + 0x2f8) != 4) {
-      prop = (char *)datum_get(prop_data, *(int *)(actor + 0x270));
-      if (*(char *)(prop + 0x121) >= 3) {
-        goto skip_flag;
-      }
-    }
-    *(char *)(actor + 0x9f) = 1;
-  }
-skip_flag:
-  if (*(char *)(actor + 0x9e) != '\0') {
-    if (0 < *(int *)(actor + 0xc0)) {
-      *(int *)(actor + 0xc0) = *(int *)(actor + 0xc0) - 1;
-    }
-    remain = *(int *)(actor + 0xc0);
-    if (remain == 0) {
-      *(char *)(actor + 0x9c) = 1;
-    }
-    if (*(int *)(actor + 0x18) != -1) {
-      if (*(short *)(actor + 0xa4) == 0) {
-        if ((*(char *)(actor + 0x3bd) == '\0') &&
-            (*(char *)(actor + 0x9c) != '\0' ||
-             (remain + 0x5a < *(int *)(actor + 0xbc)))) {
-          *(int *)(actor + 0x3bd) = 1;
-          FUN_00046f10(0xd, *(int *)(actor + 0x18),
-                       actor_target_unit_index(actor_handle), -1, -1, -1, 0);
-          *(char *)(actor + 0x3bd) = 1;
-          return;
-        }
-      } else if (remain == 0) {
-        FUN_00046f10(0x12, *(int *)(actor + 0x18),
-                     actor_target_unit_index(actor_handle), -1, -1, -1, 0);
-        return;
-      }
-    }
-  } else {
-    if ((*(char *)(actor + 0x504) == '\0') && (*(char *)(actor + 6) == '\0')) {
-      *(int *)(actor + 0xc4) = *(int *)(actor + 0xc4) + 1;
-      if (*(int *)(actor + 0xc4) >= 0x78) {
-        *(char *)(actor + 0x9d) = 1;
-        *(char *)(actor + 0x9c) = 1;
-      }
-    }
-  }
+__attribute__((naked, noinline))
+void FUN_00019940(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x9c(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00019940_9\n\t"
+      "movl 0x58(%%esi), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $4, 0x2f8(%%eax)\n\t"
+      "movb $1, %%bl\n\t"
+      "je .LFUN_00019940_1\n\t"
+      "movb $0, 0x9f(%%esi)\n\t"
+      "testb $2, (%%eax)\n\t"
+      "je .LFUN_00019940_2\n\t"
+      "cmpw $0, 0xa4(%%esi)\n\t"
+      "jne .LFUN_00019940_2\n\t"
+      "cmpw $5, 0x268(%%esi)\n\t"
+      "jne .LFUN_00019940_2\n\t"
+      "movl 0x270(%%esi), %%edx\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movb 0x121(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpb $2, %%cl\n\t"
+      "jg .LFUN_00019940_2\n\t"
+      ".LFUN_00019940_1:\n\t"
+      "movb %%bl, 0x9f(%%esi)\n\t"
+      ".LFUN_00019940_2:\n\t"
+      "movb 0x9e(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00019940_7\n\t"
+      "movl 0xc0(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .LFUN_00019940_3\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, 0xc0(%%esi)\n\t"
+      ".LFUN_00019940_3:\n\t"
+      "movl 0xc0(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00019940_4\n\t"
+      "movb %%bl, 0x9c(%%esi)\n\t"
+      ".LFUN_00019940_4:\n\t"
+      "cmpl $-1, 0x18(%%esi)\n\t"
+      "je .LFUN_00019940_8\n\t"
+      "cmpw $0, 0xa4(%%esi)\n\t"
+      "jne .LFUN_00019940_6\n\t"
+      "movb 0x3bd(%%esi), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_00019940_8\n\t"
+      "movb 0x9c(%%esi), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_00019940_5\n\t"
+      "movl 0xbc(%%esi), %%ecx\n\t"
+      "addl $0x5a, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jge .LFUN_00019940_8\n\t"
+      ".LFUN_00019940_5:\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c3b380]\n\t"
+      "movl 0x18(%%esi), %%ecx\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0xd\n\t"
+      "call *%[c46f10]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movb %%bl, 0x3bd(%%esi)\n\t"
+      "popl %%ebx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00019940_6:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00019940_8\n\t"
+      "pushl %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c3b380]\n\t"
+      "movl 0x18(%%esi), %%edx\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x12\n\t"
+      "call *%[c46f10]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00019940_7:\n\t"
+      "movb 0x504(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00019940_8\n\t"
+      "movb 0x6(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00019940_8\n\t"
+      "movl 0xc4(%%esi), %%ecx\n\t"
+      "incl %%ecx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "cmpl $0x78, %%eax\n\t"
+      "movl %%ecx, 0xc4(%%esi)\n\t"
+      "jle .LFUN_00019940_8\n\t"
+      "movb %%bl, 0x9d(%%esi)\n\t"
+      "movb %%bl, 0x9c(%%esi)\n\t"
+      ".LFUN_00019940_8:\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_00019940_9:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b19940_dget), [tag] "m"(b19940_tag), [c3b380] "m"(b19940_c3b380), [c46f10] "m"(b19940_c46f10)
+      : "memory");
 }
+#else
+#error "FUN_00019940: clang naked draft required"
+#endif
+
 
 /* FUN_00019ac0 (0x19ac0)
  * Mark actor look-state as interrupted (target type 1 path).
@@ -6363,39 +6873,74 @@ void FUN_00019b20(int actor_handle)
   *(char *)(actor + 0x425) = 1;
 }
 
-/* FUN_00019c70 (0x19c70)
- * Randomize actor look timers from actor-type tag ranges.
- *
- * Selects min/max from tag+0x344/0x348 (look_type==0) or
- * tag+0x34c/0x350 (look_type!=0). Generates a random float in
- * [min,max], multiplies by 30 (ticks/sec), converts to int, and
- * stores in both actor+0xbc and actor+0xc0.
- *
- * Confirmed: CMP WORD [ESI+0xa4],0 selects range pair.
- * Confirmed: FMUL [0x253394] → multiply by 30.0f.
- * Confirmed: CALL _ftol2 → (int) cast. */
-void FUN_00019c70(int actor_handle)
-{
-  char *actor;
-  char *tag;
-  float lo;
-  float hi;
-  int ticks;
+/* FUN_00019c70 (0x19c70) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b19c70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b19c70_tag)(int, int) = tag_get;
+static int *(*const b19c70_gseed)(void) = get_global_random_seed_address;
+static float (*const b19c70_rrange)(int *, float, float) = random_real_range;
+static void (*const b19c70_ftol)(void) = FUN_001d9068;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  tag = (char *)tag_get(0x61637472, *(int *)(actor + 0x58));
-  if (*(short *)(actor + 0xa4) == 0) {
-    hi = *(float *)(tag + 0x348);
-    lo = *(float *)(tag + 0x344);
-  } else {
-    hi = *(float *)(tag + 0x350);
-    lo = *(float *)(tag + 0x34c);
-  }
-  ticks = (int)(random_real_range(get_global_random_seed_address(), lo, hi) *
-                TICKS_PER_SECOND);
-  *(int *)(actor + 0xbc) = ticks;
-  *(int *)(actor + 0xc0) = ticks;
+__attribute__((naked, noinline))
+void FUN_00019c70(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x58(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $0, 0xa4(%%esi)\n\t"
+      "jne .LFUN_00019c70_1\n\t"
+      "movl 0x348(%%eax), %%ecx\n\t"
+      "movl 0x344(%%eax), %%edx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "jmp .LFUN_00019c70_2\n\t"
+      ".LFUN_00019c70_1:\n\t"
+      "movl 0x350(%%eax), %%edx\n\t"
+      "movl 0x34c(%%eax), %%eax\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      ".LFUN_00019c70_2:\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rrange]\n\t"
+      "fmuls 0x253394\n\t"
+      "addl $0xc, %%esp\n\t"
+      "call *%[ftol]\n\t"
+      "movl %%eax, 0xbc(%%esi)\n\t"
+      "movl %%eax, 0xc0(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b19c70_dget), [tag] "m"(b19c70_tag), [gseed] "m"(b19c70_gseed), [rrange] "m"(b19c70_rrange), [ftol] "m"(b19c70_ftol)
+      : "memory");
 }
+#else
+#error "FUN_00019c70: clang naked draft required"
+#endif
+
 
 /* actor_look_secondary (0x19d00) — Secondary actor aim/fire target evaluation.
  *
@@ -6566,36 +7111,77 @@ void FUN_0001a050(int actor_handle)
   *(short *)(actor + 0x3fc) = 0;
 }
 
-/* FUN_0001a080 (0x1a080)
- * Initialize action_uncover state data for a non-retreating, non-berserk actor.
- *
- * Validates state_data != NULL, zeros the 0x34-byte buffer, then checks
- * two actor flags: if the actor is not retreating (actor+0x160 == 0) AND
- * not berserk (actor+6 == 0), fills in the initial state: type=0 at
- * state_data+8, param_2 at state_data+3, and returns 1.  Returns 0 if
- * either flag is set.
- *
- * Confirmed: display_assert "state_data", action_uncover.c line 0x22.
- * Confirmed: csmemset(state_data, 0, 0x34); MOV word [state_data+8],0x0.
- * Confirmed: MOV byte [state_data+3],param_2; actor+0x160 and actor+6 checks.
- * Confirmed: MOV AL,0x1 (success path); MOV AL,BL (BL=0, failure path). */
-int FUN_0001a080(int actor_handle, char param_2, char *state_data)
+/* FUN_0001a080 (0x1a080) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b1a080_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b1a080_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1a080_exitfn)(int) = system_exit;
+static void *(*const b1a080_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
+int FUN_0001a080(int actor_handle __attribute__((unused)), char param_2 __attribute__((unused)), char *state_data __attribute__((unused)))
 {
-  char *actor;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (state_data == NULL) {
-    display_assert("state_data", "c:\\halo\\SOURCE\\ai\\action_uncover.c", 0x22,
-                   1);
-    system_exit(-1);
-  }
-  csmemset(state_data, 0, 0x34);
-  if ((*(char *)(actor + 0x160) == '\0') && (*(char *)(actor + 6) == '\0')) {
-    *(short *)(state_data + 8) = 0;
-    *(char *)(state_data + 3) = param_2;
-    return 1;
-  }
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "jne .LFUN_0001a080_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x22\n\t"
+      "pushl $0x253dd4\n\t"
+      "pushl $0x25334c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0001a080_1:\n\t"
+      "pushl $0x34\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movb 0x160(%%edi), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0001a080_2\n\t"
+      "movb 0x6(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0001a080_2\n\t"
+      "movb 0xc(%%ebp), %%dl\n\t"
+      "popl %%edi\n\t"
+      "movw $0, 0x8(%%esi)\n\t"
+      "movb %%dl, 0x3(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0001a080_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1a080_dget), [assert] "m"(b1a080_assert), [exitfn] "m"(b1a080_exitfn), [memset] "m"(b1a080_memset)
+      : "memory");
 }
+#else
+#error "FUN_0001a080: clang naked draft required"
+#endif
+
 
 /* FUN_0001a100 (0x1a100)
  * Initialize uncover action state from a firing-position record.
@@ -7274,47 +7860,75 @@ void FUN_0001abd0(int actor_handle)
   *(int *)(actor + 0xe4) = -1;
 }
 
-/* FUN_0001ac00 (0x1ac00)
- * Set up wander/idle look output block in actor record.
- * Selects move-type=3/nav=0 if mounted, or move-type=0 only if not. In flee
- * mode (actor+0xc8 set), sets move-type=4/nav=4 and copies flee target pos.
- * Clears look-suppression flags; sets look-speed=4.
- *
- * Confirmed: datum_get(actor_data, actor_handle) at 0x1ac08.
- * Confirmed: CMP byte [EAX+0xc8],0; FUN_0002a3d0(actor_handle) for mount check.
- */
-void FUN_0001ac00(int actor_handle)
+/* FUN_0001ac00 (0x1ac00) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b1ac00_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char (*const b1ac00_c2a3d0)(int actor_handle) = FUN_0002a3d0;
+
+__attribute__((naked, noinline))
+void FUN_0001ac00(int actor_handle __attribute__((unused)))
 {
-  char *actor;
-  int *src;
-  int *dst;
-  int v;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(char *)(actor + 0xc8) != '\0') {
-    v = 4;
-    *(short *)(actor + 0x3e8) = (short)v;
-    *(short *)(actor + 0x3ec) = (short)v;
-    src = (int *)(actor + 0xd8);
-    dst = (int *)(actor + 0x3f0);
-    *dst = *src;
-    dst[1] = src[1];
-    dst[2] = src[2];
-  } else {
-    if (FUN_0002a3d0(actor_handle) != '\0') {
-      *(short *)(actor + 0x3e8) = 3;
-      *(short *)(actor + 0x3ec) = 0;
-    } else {
-      *(short *)(actor + 0x3e8) = 0;
-    }
-  }
-  *(char *)(actor + 0x454) = 0;
-  *(char *)(actor + 0x426) = 0;
-  *(char *)(actor + 0x427) = 0;
-  *(char *)(actor + 0x428) = 0;
-  *(char *)(actor + 0x424) = 0;
-  *(char *)(actor + 0x425) = 0;
-  *(short *)(actor + 0x3fc) = 4;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0xc8(%%esi), %%al\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpb %%bl, %%al\n\t"
+      "je .LFUN_0001ac00_1\n\t"
+      "movl $4, %%eax\n\t"
+      "movw %%ax, 0x3e8(%%esi)\n\t"
+      "movw %%ax, 0x3ec(%%esi)\n\t"
+      "leal 0xd8(%%esi), %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "leal 0x3f0(%%esi), %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl %%eax, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "jmp .LFUN_0001ac00_3\n\t"
+      ".LFUN_0001ac00_1:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c2a3d0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0001ac00_2\n\t"
+      "movw $3, 0x3e8(%%esi)\n\t"
+      "movw %%bx, 0x3ec(%%esi)\n\t"
+      "jmp .LFUN_0001ac00_3\n\t"
+      ".LFUN_0001ac00_2:\n\t"
+      "movw %%bx, 0x3e8(%%esi)\n\t"
+      ".LFUN_0001ac00_3:\n\t"
+      "popl %%edi\n\t"
+      "movb %%bl, 0x454(%%esi)\n\t"
+      "movb %%bl, 0x426(%%esi)\n\t"
+      "movb %%bl, 0x427(%%esi)\n\t"
+      "movb %%bl, 0x428(%%esi)\n\t"
+      "movb %%bl, 0x424(%%esi)\n\t"
+      "movb %%bl, 0x425(%%esi)\n\t"
+      "movw $4, 0x3fc(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1ac00_dget), [c2a3d0] "m"(b1ac00_c2a3d0)
+      : "memory");
 }
+#else
+#error "FUN_0001ac00: clang naked draft required"
+#endif
+
 
 /* FUN_00024ca0 (0x24ca0)
  * Check if a firing position index is in the actor's active set.
@@ -10300,70 +10914,135 @@ short FUN_00027090(int actor_handle __attribute__((unused)), void *param_2 __att
 #endif
 
 
-/* FUN_000272d0 (0x272d0)
- * Assign a firing position to an actor, evicting any previous occupant.
- *
- * If param_2 == -1: clears actor firing position via FUN_0002f1a0, sets
- * actor+0x3b8 = -1. Else: validates encounter, displaces any current
- * holder of the slot (param_4), sets actor+0x3b8 = param_2, updates the
- * platform prop if needed, and calls encounter_verify_firing_position_owner_actor_indices.
- *
- * Confirmed: datum_get(actor_data, actor_handle) at 0x272e3.
- * Confirmed: assert on actor->meta.encounter_index != NONE at 0x27305.
- * Confirmed: actor_move_to_firing_position = attempt move to position. */
-short FUN_000272d0(int actor_handle, short param_2, void *param_3, int param_4,
-                   unsigned int param_5, char param_6)
-{
-  char *actor;
-  char *prev_actor;
-  char cancel;
+/* FUN_000272d0 (0x272d0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b272d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b272d0_c2f1a0)(int actor_handle) = FUN_0002f1a0;
+static void (*const b272d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b272d0_exitfn)(int) = system_exit;
+static void (*const b272d0_c24be0)(int actor_handle, short param_2, char param_3) = FUN_00024be0;
+static char (*const b272d0_c2d900)(int actor_handle, int16_t param_2, void *param_3) = actor_move_to_firing_position;
+static void (*const b272d0_c5b370)(int encounter_handle) = encounter_verify_firing_position_owner_actor_indices;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if ((short)param_2 == -1) {
-    FUN_0002f1a0(actor_handle);
-  } else {
-    if (*(int *)(actor + 0x34) == -1) {
-      display_assert("actor->meta.encounter_index != NONE",
-                     "c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 0x97b, 1);
-      system_exit(-1);
-    }
-    if (*(short *)(actor + 0x3b8) != -1 &&
-        *(short *)(actor + 0x3b8) != param_2) {
-      FUN_00024be0(actor_handle, *(short *)(actor + 0x3b8), 1);
-    }
-    if (param_4 != -1) {
-      prev_actor = (char *)datum_get(actor_data, param_4);
-      if (actor_handle == param_4) {
-        display_assert("actor_index != previous_owner",
-                       "c:\\halo\\SOURCE\\ai\\actor_firing_position.c", 0x988,
-                       1);
-        system_exit(-1);
-      }
-      FUN_0002f1a0(param_4);
-      *(short *)(prev_actor + 0x3b8) = -1;
-    }
-    if (*(short *)(actor + 0x3b8) != (short)param_2) {
-      *(short *)(actor + 0x3b8) = (short)param_2;
-      *(char *)(actor + 0x3ba) = (char)(param_6 == '\0');
-      *(char *)(actor + 0x3bb) = 0;
-      cancel = (char)actor_move_to_firing_position(
-        actor_handle, param_2,
-        (void *)(-(unsigned int)(param_6 != '\0') & param_5));
-      if (cancel != '\0') {
-        goto done;
-      }
-    } else {
-      goto done;
-    }
-  }
-  *(short *)(actor + 0x3b8) = -1;
-done:
-  if (*(int *)(actor + 0x34) != -1) {
-    encounter_verify_firing_position_owner_actor_indices(
-      *(int *)(actor + 0x34));
-  }
-  return *(short *)(actor + 0x3b8);
+__attribute__((naked, noinline))
+short FUN_000272d0(int actor_handle __attribute__((unused)), short param_2 __attribute__((unused)), void *param_3 __attribute__((unused)), int param_4 __attribute__((unused)), unsigned int param_5 __attribute__((unused)), char param_6 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $-1, %%di\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jne .LFUN_000272d0_1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c2f1a0]\n\t"
+      "addl $4, %%esp\n\t"
+      "jmp .LFUN_000272d0_6\n\t"
+      ".LFUN_000272d0_1:\n\t"
+      "cmpl $-1, 0x34(%%esi)\n\t"
+      "jne .LFUN_000272d0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x97b\n\t"
+      "pushl $0x254c8c\n\t"
+      "pushl $0x255070\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000272d0_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x3b8(%%esi), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_000272d0_3\n\t"
+      "cmpw %%di, %%ax\n\t"
+      "je .LFUN_000272d0_3\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c24be0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000272d0_3:\n\t"
+      "movl 0x14(%%ebp), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_000272d0_5\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%edi, %%ebx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jne .LFUN_000272d0_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x988\n\t"
+      "pushl $0x254c8c\n\t"
+      "pushl $0x255050\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000272d0_4:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c2f1a0]\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "addl $4, %%esp\n\t"
+      "movw $0xffff, 0x3b8(%%edx)\n\t"
+      ".LFUN_000272d0_5:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "cmpw %%di, 0x3b8(%%esi)\n\t"
+      "je .LFUN_000272d0_7\n\t"
+      "movb 0x1c(%%ebp), %%al\n\t"
+      "movl 0x18(%%ebp), %%edx\n\t"
+      "testb %%al, %%al\n\t"
+      "sete %%cl\n\t"
+      "negb %%al\n\t"
+      "movw %%di, 0x3b8(%%esi)\n\t"
+      "movb %%cl, 0x3ba(%%esi)\n\t"
+      "movb $0, 0x3bb(%%esi)\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "andl %%edx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c2d900]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000272d0_7\n\t"
+      ".LFUN_000272d0_6:\n\t"
+      "movw $0xffff, 0x3b8(%%esi)\n\t"
+      ".LFUN_000272d0_7:\n\t"
+      "movl 0x34(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000272d0_8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c5b370]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_000272d0_8:\n\t"
+      "movw 0x3b8(%%esi), %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b272d0_dget), [c2f1a0] "m"(b272d0_c2f1a0), [assert] "m"(b272d0_assert), [exitfn] "m"(b272d0_exitfn), [c24be0] "m"(b272d0_c24be0), [c2d900] "m"(b272d0_c2d900), [c5b370] "m"(b272d0_c5b370)
+      : "memory");
 }
+#else
+#error "FUN_000272d0: clang naked draft required"
+#endif
+
 
 /* FUN_00027410 (0x27410) — XBE naked draft (batch 69). */
 #if defined(__clang__)
@@ -11193,132 +11872,240 @@ void FUN_00027f40(int actor_handle, void *dir_ptr, void *out1, void *out2)
     *(float *)(tag_data + 0x134), cos_angles);
 }
 
-/* FUN_00027ff0 (0x27ff0)
- * Evaluates firing positions for an actor's look-at target.
- * Iterates over firing positions via object iterator, scores each
- * by recency and distance, checks direction constraints via
- * FUN_00027dd0/FUN_00027e50, and returns the best candidate.
- *
- * Confirmed: param_1=actor_handle, param_2/param_3=direction flags,
- *   param_4=output struct (short result, int index), param_5=out_flag.
- *   Returns true if a suitable firing position was found. */
-char FUN_00027ff0(int actor_handle, char param_2, char param_3, short *output,
-                  char *out_flag)
+/* FUN_00027ff0 (0x27ff0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b27ff0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b27ff0_tag)(int, int) = tag_get;
+static int (*const b27ff0_gtime)(void) = game_time_get;
+static void (*const b27ff0_c4a6e0)(int actor_handle) = ai_debug_idle_look_clear;
+static void (*const b27ff0_c64540)(int *out, int actor_handle) = FUN_00064540;
+static int (*const b27ff0_c64570)(int *iter) = FUN_00064570;
+static void (*const b27ff0_c4a710)(int index, float value) = ai_debug_idle_look_addprop;
+static bool (*const b27ff0_c27dd0)(float *dir, float *vec2, float threshold) = FUN_00027dd0;
+static bool (*const b27ff0_c27e50)(float *dir, float *vec2, float *limit, float threshold, float *output) = FUN_00027e50;
+
+__attribute__((naked, noinline))
+char FUN_00027ff0(int actor_handle __attribute__((unused)), char param_2 __attribute__((unused)), char param_3 __attribute__((unused)), short *output __attribute__((unused)), char *out_flag __attribute__((unused)))
 {
-  char *actor;
-  char *tag_data;
-  int current_tick;
-  float tag_threshold;
-  float tag_fov;
-  float cos_yaw;
-  float cos_pitch;
-  int iter[2];
-  char *item;
-  float best_score;
-  float item_score;
-  int best_index;
-  char *best_item;
-  char best_flag;
-  char item_flag;
-  int item_timestamp;
-  char check_result;
-  (void)check_result;
-  (void)cos_pitch;
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  tag_data = (char *)tag_get('actr', *(int *)(actor + 0x58));
-  best_index = -1;
-  best_score = 0.0f;
-  best_item = 0;
-  best_flag = 0;
-  current_tick = game_time_get();
-  tag_threshold = *(float *)(tag_data + 0x12c);
-  tag_fov = *(float *)(tag_data + 0x134);
-
-  if (*(short *)(actor + 0x6a) == 3) {
-    cos_yaw = x87_fcos(*(float *)(tag_data + 0xbc));
-    cos_pitch = x87_fcos(*(float *)(tag_data + 0xc0));
-  } else {
-    cos_yaw = x87_fcos(*(float *)(tag_data + 0xb4));
-    cos_pitch = x87_fcos(*(float *)(tag_data + 0xb8));
-  }
-
-  if (actor_handle == *(int *)0x5ac9f8) {
-    ai_debug_idle_look_clear(actor_handle);
-  }
-
-  FUN_00064540(iter, actor_handle);
-  item = (char *)FUN_00064570(iter);
-
-  if (item != 0) {
-    do {
-      item_flag = 0;
-      item_score = 0.0f;
-
-      if (*(short *)(item + 0x24) < 2 || *(short *)(item + 0x24) > 3 ||
-          *(short *)(item + 0x32) == 0) {
-        *(float *)(item + 0x58) = 0.0f;
-      } else if (*(float *)(item + 0x54) > 0.0f) {
-        item_timestamp = *(int *)(item + 0x5c);
-        if (item_timestamp == -1) {
-          item_score = 1.0f;
-        } else {
-          item_score =
-            ((float)current_tick - (float)item_timestamp) * (1.0f / 600.0f) -
-            1.0f;
-        }
-        item_score = (*(float *)(item + 0x54) - *(float *)(item + 0x58)) /
-                       *(float *)(item + 0x54) +
-                     item_score;
-        if (item_score > 1.0f) {
-          item_score = 1.0f;
-        }
-        item_score = item_score * *(float *)(item + 0x54);
-        if (*(float *)(item + 0x54) <= *(float *)(item + 0x58)) {
-          item_flag = 0;
-        } else {
-          item_flag = 1;
-        }
-      }
-
-      if (actor_handle == *(int *)0x5ac9f8) {
-        ai_debug_idle_look_addprop(iter[0], item_score);
-      }
-
-      if (item_score > 0.0f) {
-        check_result = 0;
-        if (param_3 == 0) {
-          check_result =
-            (char)FUN_00027e50((float *)(item + 0xe0), (float *)(actor + 0x5b0),
-                               (float *)(actor + 0x5a4), tag_fov, &cos_yaw);
-        } else if (param_2 == 0 || item_flag == 0) {
-          check_result = (char)FUN_00027dd0(
-            (float *)(item + 0xe0), (float *)(actor + 0x5a4), tag_threshold);
-        }
-
-        if (check_result != 0 && item_score > best_score) {
-          best_index = iter[0];
-          best_item = item;
-          best_score = item_score;
-          best_flag = item_flag;
-        }
-      }
-
-      item = (char *)FUN_00064570(iter);
-    } while (item != 0);
-
-    if (best_index != -1) {
-      *(int *)(best_item + 0x5c) = current_tick;
-      *(float *)(best_item + 0x58) = *(float *)(best_item + 0x54);
-      output[0] = 1;
-      *(int *)(output + 2) = best_index;
-      *out_flag = best_flag;
-      return 1;
-    }
-  }
-
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x30, %%esp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x58(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl $0xffffffff, -0x10(%%ebp)\n\t"
+      "movl $0, -0xc(%%ebp)\n\t"
+      "movl $0, -0x18(%%ebp)\n\t"
+      "movb $0, -0x2(%%ebp)\n\t"
+      "call *%[gtime]\n\t"
+      "cmpw $3, 0x6a(%%edi)\n\t"
+      "movl 0x12c(%%esi), %%edx\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "movl 0x134(%%esi), %%eax\n\t"
+      "movl %%edx, -0x1c(%%ebp)\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "jne .LFUN_00027ff0_1\n\t"
+      "flds 0xbc(%%esi)\n\t"
+      "fcos\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "flds 0xc0(%%esi)\n\t"
+      "jmp .LFUN_00027ff0_2\n\t"
+      ".LFUN_00027ff0_1:\n\t"
+      "flds 0xb4(%%esi)\n\t"
+      "fcos\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "flds 0xb8(%%esi)\n\t"
+      ".LFUN_00027ff0_2:\n\t"
+      "fcos\n\t"
+      "cmpl 0x5ac9f8, %%ebx\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "jne .LFUN_00027ff0_3\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c4a6e0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_00027ff0_3:\n\t"
+      "leal -0x30(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c64540]\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c64570]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_00027ff0_17\n\t"
+      ".LFUN_00027ff0_4:\n\t"
+      "movw 0x24(%%esi), %%ax\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "cmpw $2, %%ax\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      "movb %%bl, -0x1(%%ebp)\n\t"
+      "jl .LFUN_00027ff0_9\n\t"
+      "cmpw $3, %%ax\n\t"
+      "jg .LFUN_00027ff0_9\n\t"
+      "cmpw $0, 0x32(%%esi)\n\t"
+      "je .LFUN_00027ff0_9\n\t"
+      "flds 0x54(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00027ff0_10\n\t"
+      "movl 0x5c(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jne .LFUN_00027ff0_5\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .LFUN_00027ff0_6\n\t"
+      ".LFUN_00027ff0_5:\n\t"
+      "fildl -0x14(%%ebp)\n\t"
+      "fisubl -0x8(%%ebp)\n\t"
+      "fmuls 0x2552a8\n\t"
+      "fsubs 0x2533c8\n\t"
+      ".LFUN_00027ff0_6:\n\t"
+      "flds 0x54(%%esi)\n\t"
+      "fsubs 0x58(%%esi)\n\t"
+      "fdivs 0x54(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00027ff0_7\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c8\n\t"
+      ".LFUN_00027ff0_7:\n\t"
+      "fmuls 0x54(%%esi)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x54(%%esi)\n\t"
+      "fcomps 0x58(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00027ff0_8\n\t"
+      "movb $1, %%bl\n\t"
+      "movb %%bl, -0x1(%%ebp)\n\t"
+      "jmp .LFUN_00027ff0_10\n\t"
+      ".LFUN_00027ff0_8:\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "movb %%bl, -0x1(%%ebp)\n\t"
+      "jmp .LFUN_00027ff0_10\n\t"
+      ".LFUN_00027ff0_9:\n\t"
+      "movl $0, 0x58(%%esi)\n\t"
+      ".LFUN_00027ff0_10:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl 0x5ac9f8, %%eax\n\t"
+      "jne .LFUN_00027ff0_11\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl -0x30(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c4a710]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00027ff0_11:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00027ff0_16\n\t"
+      "movb 0x10(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00027ff0_13\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00027ff0_12\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .LFUN_00027ff0_15\n\t"
+      ".LFUN_00027ff0_12:\n\t"
+      "movl -0x1c(%%ebp), %%ecx\n\t"
+      "leal 0xe0(%%esi), %%eax\n\t"
+      "leal 0x5a4(%%edi), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c27dd0]\n\t"
+      "addl $4, %%esp\n\t"
+      "jmp .LFUN_00027ff0_14\n\t"
+      ".LFUN_00027ff0_13:\n\t"
+      "leal -0x28(%%ebp), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "movl -0x20(%%ebp), %%ebx\n\t"
+      "leal 0xe0(%%esi), %%eax\n\t"
+      "leal 0x5b0(%%edi), %%ecx\n\t"
+      "leal 0x5a4(%%edi), %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c27e50]\n\t"
+      "movb -0x1(%%ebp), %%bl\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00027ff0_14:\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00027ff0_16\n\t"
+      ".LFUN_00027ff0_15:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomps -0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00027ff0_16\n\t"
+      "movl -0x30(%%ebp), %%edx\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl %%esi, -0x18(%%ebp)\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "movb %%bl, -0x2(%%ebp)\n\t"
+      ".LFUN_00027ff0_16:\n\t"
+      "leal -0x30(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c64570]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00027ff0_4\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_00027ff0_17\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "movl %%edx, 0x5c(%%eax)\n\t"
+      "movl 0x54(%%eax), %%edx\n\t"
+      "movl %%edx, 0x58(%%eax)\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movb -0x2(%%ebp), %%cl\n\t"
+      "movw $1, (%%eax)\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%cl, (%%eax)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00027ff0_17:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b27ff0_dget), [tag] "m"(b27ff0_tag), [gtime] "m"(b27ff0_gtime), [c4a6e0] "m"(b27ff0_c4a6e0), [c64540] "m"(b27ff0_c64540), [c64570] "m"(b27ff0_c64570), [c4a710] "m"(b27ff0_c4a710), [c27dd0] "m"(b27ff0_c27dd0), [c27e50] "m"(b27ff0_c27e50)
+      : "memory");
 }
+#else
+#error "FUN_00027ff0: clang naked draft required"
+#endif
+
 
 /* FUN_00028cc0 (0x28cc0)
  * Primary look update: evaluates whether the actor should be looking/aiming
@@ -12292,51 +13079,70 @@ LAB_0002a0c3:
   *(short *)(actor + 0x6f8) = 0;
 }
 
-/* FUN_0002a2b0 (0x2a2b0)
- * Update the actor's look-direction validity flag (actor+0x505).
- *
- * Reads the actor record and the look-specification slot at actor+0x3ec.
- * If the spec type word (actor+0x3ec) is 0 (no look command active) and the
- * actor is not in a vehicle (FUN_0002a3d0 returns 0), the look-priority word
- * at actor+0x3e8 is reset to 0.
- *
- * If the look-priority (actor+0x3e8) is > 2 AND a look spec is active
- * (actor+0x3ec != 0), FUN_00028660 is called with EBX=&actor[0x3ec] and
- * EDI=&actor[0x524] (the look-direction float[3] output buffer).  On success
- * actor+0x505 is set to 1; on failure or when no look spec is active it is
- * set to 0.
- *
- * Confirmed: cdecl, single stack arg (actor_handle).
- * Confirmed: datum_get(actor_data=DAT_006325a4, actor_handle) at 0x2a2c0.
- * Confirmed: EBX = &actor[0x3ec] via LEA EBX,[ESI+0x3ec] at 0x2a2c7.
- * Confirmed: CMP word [EBX],0x0 at 0x2a2d0; JNZ 0x2a2ec.
- * Confirmed: CALL FUN_0002a3d0(actor_handle) at 0x2a2d7; TEST AL,AL.
- * Confirmed: MOV word [ESI+0x3e8],0x0 at 0x2a2e3 when spec==0 && not mounted.
- * Confirmed: CMP word [ESI+0x3e8],0x3 (JL skip) at 0x2a2ec; CMP [EBX],0x0 (JZ
- * skip). Confirmed: LEA EDI,[ESI+0x524] at 0x2a2ff; PUSH actor_handle; CALL
- * 0x28660. Confirmed: FUN_00028660 register args: EBX=short*look_spec,
- * EDI=float*direction. Confirmed: MOV byte [ESI+0x505],0x1 on success at
- * 0x2a313; RET. Confirmed: MOV byte [ESI+0x505],0x0 on fallthrough at 0x2a31f;
- * RET. Inferred: actor+0x3e8 = look priority (int16_t); actor+0x3ec = look spec
- * type (int16_t). Inferred: actor+0x505 = look-direction valid flag (char).
- * Inferred: actor+0x524 = computed look direction (float[3]). */
-void FUN_0002a2b0(int actor_handle)
-{
-  char *actor = (char *)datum_get(actor_data, actor_handle);
-  short *look_spec = (short *)(actor + 0x3ec);
+/* FUN_0002a2b0 (0x2a2b0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b2a2b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char (*const b2a2b0_c2a3d0)(int actor_handle) = FUN_0002a3d0;
+static char (*const b2a2b0_c28660)(int actor_handle, short *look_spec, float *direction) = FUN_00028660;
 
-  if (*look_spec == 0) {
-    if (!FUN_0002a3d0(actor_handle))
-      *(short *)(actor + 0x3e8) = 0;
-  }
-  if (*(short *)(actor + 0x3e8) >= 3 && *look_spec != 0) {
-    if (FUN_00028660(actor_handle, look_spec, (float *)(actor + 0x524))) {
-      actor[0x505] = 1;
-      return;
-    }
-  }
-  actor[0x505] = 0;
+__attribute__((naked, noinline))
+void FUN_0002a2b0(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "leal 0x3ec(%%esi), %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, (%%ebx)\n\t"
+      "jne .LFUN_0002a2b0_1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c2a3d0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0002a2b0_1\n\t"
+      "movw $0, 0x3e8(%%esi)\n\t"
+      ".LFUN_0002a2b0_1:\n\t"
+      "cmpw $3, 0x3e8(%%esi)\n\t"
+      "jl .LFUN_0002a2b0_2\n\t"
+      "cmpw $0, (%%ebx)\n\t"
+      "je .LFUN_0002a2b0_2\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "leal 0x524(%%esi), %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c28660]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0002a2b0_2\n\t"
+      "popl %%edi\n\t"
+      "movb $1, 0x505(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0002a2b0_2:\n\t"
+      "popl %%edi\n\t"
+      "movb $0, 0x505(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2a2b0_dget), [c2a3d0] "m"(b2a2b0_c2a3d0), [c28660] "m"(b2a2b0_c28660)
+      : "memory");
 }
+#else
+#error "FUN_0002a2b0: clang naked draft required"
+#endif
+
 
 /* FUN_0002a330 (0x2a330) — Set actor 'looking' active flags.
  * Sets the byte at actor+0x402 and actor+0x46e both to 1. */
