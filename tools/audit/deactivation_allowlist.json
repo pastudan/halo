@@ -16399,5 +16399,68 @@
     "object": "object_lights.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdedf0",
+    "name": "FUN_000dedf0",
+    "object": "interface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdefb0",
+    "name": "interface_draw_screen",
+    "object": "interface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdf350",
+    "name": "profile_graph_toggle",
+    "object": "interface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdf3d0",
+    "name": "FUN_000df3d0",
+    "object": "interface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdf4e0",
+    "name": "FUN_000df4e0",
+    "object": "interface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdff00",
+    "name": "interface_get_rgb_color",
+    "object": "interface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdff70",
+    "name": "interface_draw_fullscreen_overlays",
+    "object": "interface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdff90",
+    "name": "interface_draw_bitmap",
+    "object": "interface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe0110",
+    "name": "FUN_000e0110",
+    "object": "interface.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
