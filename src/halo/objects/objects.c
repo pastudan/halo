@@ -12741,35 +12741,37 @@ void FUN_00085000(int tag_index, const char *name)
   }
 }
 
-/* 0x85280 */
-void FUN_00085280(float *param_1, float *param_2, float *param_3, float param_4, short param_5, int param_6)
+/* 0x85280 — Publish antenna/camera observer globals and refresh director. */
+void FUN_00085280(float *position, float *forward, float *up, float param_4,
+                  short param_5, int param_6)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
+  static const float k_observer_tick = 9.999999747378752e-05f;
 
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: mov word ptr [0x2ee5a2], 0 */
-  /* relift: relift: mov word ptr [0x2ee5a4], 0xffff */
-  /* mem[0x002ee5ac] = ecx */
-  /* mem[0x002ee5b0] = edx */
-  /* mem[0x002ee5b4] = eax */
-  /* mem[0x002ee5b8] = edx */
-  /* mem[0x002ee5bc] = eax */
-  /* mem[0x002ee5c0] = ecx */
-  /* mem[0x002ee5c4] = eax */
-  /* mem[0x002ee5c8] = ecx */
-  /* mem[0x002ee5cc] = edx */
-  /* mem[0x002ee5d0] = eax */
-  /* mem[0x002ee5d0] = 0x3f9c61aa */
-  /* mem[0x002ee5d4] = edx */
-  /* relift: relift: fstp dword ptr [0x2ee5a8] */
+  *(int16_t *)0x2ee5a2 = 0;
+  *(int16_t *)0x2ee5a4 = -1;
+
+  *(float *)0x2ee5ac = position[0];
+  *(float *)0x2ee5b0 = position[1];
+  *(float *)0x2ee5b4 = position[2];
+
+  *(float *)0x2ee5b8 = forward[0];
+  *(float *)0x2ee5bc = forward[1];
+  *(float *)0x2ee5c0 = forward[2];
+
+  *(float *)0x2ee5c4 = up[0];
+  *(float *)0x2ee5c8 = up[1];
+  *(float *)0x2ee5cc = up[2];
+
+  if (param_4 != *(float *)0x2533c0)
+    *(float *)0x2ee5d0 = param_4;
+  else
+    *(float *)0x2ee5d0 = 1.22173047f;
+
+  *(float *)0x2ee5a8 = (float)(param_5 / 16);
+  *(int *)0x2ee5d4 = param_6;
+
   director_update(0.0f);
-  observer_update(0.0f);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  observer_update(k_observer_tick);
 }
 
 /* 0x85350 */
@@ -12865,26 +12867,46 @@ finish:
   get_particle_world_position(glow_widget_ptr, particle_ptr, ratio);
 }
 
-/* 0x1342a0 */
+/* 0x1342a0 — Allocate and chain glow normal particles for a widget. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(1)))
+#endif
 void FUN_001342a0(int glow_widget_ptr)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *widget = (char *)glow_widget_ptr;
+  char *glow_def;
+  int16_t count;
+  int index;
+  char alternate = 1;
+  int previous_particle = 0;
+  int particle;
 
-  tag_get('!wlg', 0);
-  glow_normal_particle_new(esi, 0, 0);
-  /* test eax, eax -> je 0x134344 */
-  /* relift: test byte ptr [ecx + 0x28], 2 -> je 0x1342f5 */
-  /* relift: test byte ptr [ecx + 0x28], 4 -> je 0x134318 */
-  /* test ecx, ecx -> jne 0x134328 */
-  /* test edi, edi -> je 0x13432f */
+  glow_def = (char *)tag_get('!wlg', *(int *)(widget + 0x224));
+  count = *(int16_t *)(widget + 0x24c);
+  for (index = 0; index < count; index++) {
+    particle = glow_normal_particle_new(glow_widget_ptr, (short)index, count);
+    if (particle == 0)
+      break;
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+    if ((glow_def[0x28] & 2) != 0)
+      *(int *)(particle + 0x54) |= 1;
+
+    if ((glow_def[0x28] & 4) != 0) {
+      if (alternate)
+        *(int *)(particle + 0x54) &= ~1;
+      else
+        *(int *)(particle + 0x54) |= 1;
+      alternate = !alternate;
+    }
+
+    if (*(int *)(widget + 0x250) == 0)
+      *(int *)(widget + 0x250) = particle;
+    if (previous_particle != 0)
+      *(int *)(previous_particle + 0x5c) = particle;
+    *(int *)(particle + 0x60) = previous_particle;
+    previous_particle = particle;
+    *(int *)(widget + 0x254) = particle;
+  }
 }
 
 /* 0x134350 */

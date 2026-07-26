@@ -1891,28 +1891,40 @@ void FUN_001390d0(int material, int bitmap_ref, uint16_t *indices, float bary_u,
 }
 /* --- damage.obj batch drafts (2026-07-26) --- */
 
-/* 0x136700 */
-void object_get_maximum_shield_vitality(void)
+/* 0x136700 — Maximum shield vitality, optionally scaled by game difficulty. */
+float object_get_maximum_shield_vitality(int object_handle,
+                                         char use_shield_multiplier)
 {
-  int ecx = 0;
+  char *obj = (char *)object_get_and_verify_type(object_handle, -1);
+  float maximum = *(float *)(obj + 0x8c);
 
-  object_get_and_verify_type(0, 0);
-  /* test (char)ecx, (char)ecx -> jne 0x13673a */
-  FUN_000b55b0(0, 0);
+  if (use_shield_multiplier)
+    return maximum;
 
-  (void)ecx;
+  return FUN_000b55b0(2, *(int16_t *)(obj + 0x68)) * maximum;
 }
 
-/* 0x138f30 */
-void FUN_00138f30(void)
+/* 0x138f30 — Bilinear interpolation of a 2D vector (regparm). */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(4)))
+#endif
+void FUN_00138f30(float *output, float *vertex_d, float *vertex_c, float *base,
+                  float u, float v)
 {
-  /* relift: no calls detected — manual review */
+  output[0] = base[0] + (vertex_d[0] - base[0]) * u + (vertex_c[0] - base[0]) * v;
+  output[1] = base[1] + (vertex_d[1] - base[1]) * u + (vertex_c[1] - base[1]) * v;
 }
 
-/* 0x138f70 */
-void FUN_00138f70(float *output, float *vertex_c, float *vertex_d, float *base, float u, float v)
+/* 0x138f70 — Bilinear interpolation of a 3D vector (regparm). */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(4)))
+#endif
+void FUN_00138f70(float *output, float *vertex_d, float *vertex_c, float *base,
+                  float u, float v)
 {
-  /* relift: no calls detected — manual review */
+  output[0] = base[0] + (vertex_d[0] - base[0]) * u + (vertex_c[0] - base[0]) * v;
+  output[1] = base[1] + (vertex_d[1] - base[1]) * u + (vertex_c[1] - base[1]) * v;
+  output[2] = base[2] + (vertex_d[2] - base[2]) * u + (vertex_c[2] - base[2]) * v;
 }
 
 /* 0x138fd0 */
@@ -1933,20 +1945,28 @@ void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices, fl
 }
 /* --- damage.obj orphan shells (2026-07-26) --- */
 
-/* 0x136b40 */
+/* 0x136b40 — Attach collision damage effect to an object once. */
 void FUN_00136b40(int object_handle)
 {
-  int eax = 0;
+  char *obj = (char *)object_get_and_verify_type(object_handle, -1);
+  char *obj_tag;
+  char *coll_tag;
+  int coll_index;
 
-  object_get_and_verify_type(0, 0);
-  /* test (char)eax, 8 -> jne 0x136bba */
-  tag_get('ejbo', 0);
-  /* cmp eax, -1 -> je 0x136b9d */
-  tag_get('lloc', 0);
-  FUN_0009ec30(0, 0, 0, 0, 0.0f, 0.0f, 0, 0);
-  FUN_00136a00(0, 0);
+  if ((obj[0xb6] & 8) != 0)
+    return;
 
-  (void)eax;
+  obj_tag = (char *)tag_get('ejbo', *(int *)obj);
+  coll_index = *(int *)(obj_tag + 0x7c);
+  if (coll_index != -1) {
+    coll_tag = (char *)tag_get('coll', coll_index);
+    FUN_0009ec30(*(int *)(coll_tag + 0x1a4), object_handle, object_handle, -1,
+                 0.0f, 0.0f, 0, 0);
+  }
+
+  obj[0xb6] |= 8;
+  *(int *)(obj + 0x98) = 0;
+  FUN_00136a00(object_handle, 0);
 }
 
 /* 0x136bc0 */

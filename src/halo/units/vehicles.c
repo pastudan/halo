@@ -423,11 +423,13 @@ void FUN_001b5500(int a0)
   (void)esi;
 }
 
-/* 0x1b5580 */
-void vehicle_causes_collision_damage(void)
+/* 0x1b5580 — Place vehicle and apply collision damage from placement. */
+void vehicle_causes_collision_damage(int vehicle_handle, void *placement)
 {
-  unit_place(0, (void *)0);
-  FUN_0013d870(0, (void *)0);
+  char *place = (char *)placement;
+
+  unit_place(vehicle_handle, place + 0x48);
+  FUN_0013d870(vehicle_handle, place + 0x28);
 }
 
 /* 0x1b55c0 */
