@@ -3057,22 +3057,71 @@ void FUN_0006a2a0(void)
 #endif
 
 
-/* 0x6a310 */
+/* FUN_0006a310 (0x6a310) — XBE naked draft (batch 363). */
+#if defined(__clang__)
+static int (*const b6a310_c64ec0)(char *prop, int tag, void *out) = (void *)FUN_00064ec0;
+static void (*const b6a310_c6f9d0)(void) = (void *)FUN_0006f9d0;
+
+__attribute__((naked, noinline))
 void FUN_0006a310(void)
 {
-  int eax = 0;
-
-  FUN_00064ec0(0, 0, 0);
-  /* cmp eax, 7 -> ja 0x6a35e */
-  FUN_0006f9d0();
-  /* relift: relift: mov word ptr [0x3340f0], 4 */
-  FUN_0006f9d0();
-  /* relift: relift: mov word ptr [0x3340f0], 1 */
-  /* mem[0xa35e0006] = eax */
-  /* mem[0x90900006] = eax */
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x3340f0\n\t"
+      "pushl $0x112\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c64ec0]\n\t"
+      "movzwl 0x3340f0, %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "decl %%eax\n\t"
+      "cmpl $7, %%eax\n\t"
+      "ja .LFUN_0006a310_3\n\t"
+      "jmp *.LFUN_0006a310_jt(,%%eax,4)\n\t"
+      ".LFUN_0006a310_1:\n\t"
+      "movl 0x3340dc, %%ecx\n\t"
+      "pushl $0x260224\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c6f9d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "movw $4, 0x3340f0\n\t"
+      ".LFUN_0006a310_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0006a310_3:\n\t"
+      "movl 0x3340dc, %%edx\n\t"
+      "pushl $0x260208\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c6f9d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "movw $1, 0x3340f0\n\t"
+      ".LFUN_0006a310_4:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "decl %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_0006a310_jt:\n\t"
+      ".long .LFUN_0006a310_4\n\t"
+      ".long .LFUN_0006a310_3\n\t"
+      ".long .LFUN_0006a310_1\n\t"
+      ".long .LFUN_0006a310_2\n\t"
+      ".long .LFUN_0006a310_3\n\t"
+      ".long .LFUN_0006a310_3\n\t"
+      ".long .LFUN_0006a310_1\n\t"
+      ".long .LFUN_0006a310_1\n\t"
+      ".text\n\t"
+      :
+      : [c64ec0] "m"(b6a310_c64ec0), [c6f9d0] "m"(b6a310_c6f9d0)
+      : "memory");
 }
+#else
+#error "FUN_0006a310: clang naked draft required"
+#endif
+
 
 /* FUN_0006a3b0 (0x6a3b0) — XBE naked draft (batch 309). */
 #if defined(__clang__)

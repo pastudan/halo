@@ -7608,27 +7608,66 @@ void FUN_00104710(void)
 #endif
 
 
-/* 0x104950 */
+/* FUN_00104950 (0x104950) — XBE naked draft (batch 364). */
+#if defined(__clang__)
+static void (*const b104950_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b104950_exitfn)(int) = system_exit;
+static bool (*const b104950_c103d30)(void) = (void *)FUN_00103d30;
+static int (*const b104950_c1d98ad)(void *stream, const char *format, ...) = (void *)crt_fprintf;
+static void (*const b104950_c1d9850)(void) = (void *)FUN_001d9850;
+static int (*const b104950_c1d9bd2)(void *stream) = (void *)crt_fflush;
+
+__attribute__((naked, noinline))
 void FUN_00104950(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* test eax, eax -> jne 0x10497a */
-  display_assert((char *)0x00263510, (char *)0x0028b838, 669, 0);
-  system_exit(0);
-  FUN_00103d30();
-  /* test (char)eax, (char)eax -> je 0x1049c6 */
-  crt_fprintf((void *)(uintptr_t)eax, (char *)0x0028bc08);
-  FUN_001d9850();
-  crt_fprintf((void *)(uintptr_t)ecx, (char *)0x00260ee4);
-  crt_fflush((void *)(uintptr_t)edx);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00104950_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x29d\n\t"
+      "pushl $0x28b838\n\t"
+      "pushl $0x263510\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00104950_1:\n\t"
+      "call *%[c103d30]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00104950_2\n\t"
+      "movl 0x46e394, %%eax\n\t"
+      "pushl $0x28bc08\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl 0x46e394, %%eax\n\t"
+      "leal 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9850]\n\t"
+      "movl 0x46e394, %%ecx\n\t"
+      "pushl $0x260ee4\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl 0x46e394, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9bd2]\n\t"
+      "addl $0x20, %%esp\n\t"
+      ".LFUN_00104950_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b104950_assert), [exitfn] "m"(b104950_exitfn), [c103d30] "m"(b104950_c103d30), [c1d98ad] "m"(b104950_c1d98ad), [c1d9850] "m"(b104950_c1d9850), [c1d9bd2] "m"(b104950_c1d9bd2)
+      : "memory");
 }
+#else
+#error "FUN_00104950: clang naked draft required"
+#endif
+
 
 /* FUN_001049d0 (0x1049d0) — XBE naked draft (batch 310). */
 #if defined(__clang__)
@@ -8675,34 +8714,82 @@ void FUN_00132e20(void)
   (void)ecx;
 }
 
-/* 0x132ea0 */
+/* FUN_00132ea0 (0x132ea0) — XBE naked draft (batch 362). */
+#if defined(__clang__)
+static int (*const b132ea0_c1198f0)(data_t *data, int prev_index) = (void *)data_next_index;
+static void *(*const b132ea0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b132ea0_tag)(int, int) = tag_get;
+static void (*const b132ea0_c131fc0)(void) = (void *)FUN_00131fc0;
+
+__attribute__((naked, noinline))
 void FUN_00132ea0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edi = 0;
-
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* cmp edi, -1 -> je 0x132f2e */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('galf', 0);
-  /* cmp (int16_t)eax, 5 -> jge 0x132f16 */
-  FUN_00131fc0();
-  data_next_index((void *)(uintptr_t)ecx, 0);
-  /* cmp edi, -1 -> jne 0x132ec0 */
-  /* test eax, eax -> je 0x132f62 */
-  data_delete_all((void *)(uintptr_t)eax);
-  /* test eax, eax -> je 0x132f72 */
-  data_delete_all((void *)(uintptr_t)eax);
-  /* test eax, eax -> je 0x132f92 */
-  data_make_invalid((void *)(uintptr_t)eax);
-  /* test eax, eax -> je 0x132fa2 */
-  data_make_invalid((void *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5a90d0, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1198f0]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_00132ea0_3\n\t"
+      "pushl %%esi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00132ea0_1:\n\t"
+      "movl 0x5a90d0, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x666c6167\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "incw 0x6(%%esi)\n\t"
+      "cmpl $-1, %%edx\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movw 0x6(%%esi), %%ax\n\t"
+      "je .LFUN_00132ea0_2\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jge .LFUN_00132ea0_2\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .LFUN_00132ea0_2\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c131fc0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00132ea0_2:\n\t"
+      "movl 0x5a90d0, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1198f0]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .LFUN_00132ea0_1\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_00132ea0_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1198f0] "m"(b132ea0_c1198f0), [dget] "m"(b132ea0_dget), [tag] "m"(b132ea0_tag), [c131fc0] "m"(b132ea0_c131fc0)
+      : "memory");
 }
+#else
+#error "FUN_00132ea0: clang naked draft required"
+#endif
+
 
 /* FUN_00132fb0 (0x132fb0) — XBE naked draft (batch 355). */
 #if defined(__clang__)
@@ -10109,16 +10196,57 @@ void get_particle_world_position(int glow_widget, int particle_ptr, float param_
 
 
 
-/* 0x149c60 */
-char FUN_00149c60(int *block_ptr, void *transformed_2c, void *transformed_20, float scale, float best_dist, float *result)
+/* FUN_00149c60 (0x149c60) — XBE naked draft (batch 363). */
+#if defined(__clang__)
+static char (*const b149c60_c149680)(void *state, int node_index) = (void *)FUN_00149680;
+
+__attribute__((naked, noinline))
+char FUN_00149c60(int *block_ptr __attribute__((unused)), void *transformed_2c __attribute__((unused)), void *transformed_20 __attribute__((unused)), float scale __attribute__((unused)), float best_dist __attribute__((unused)), float *result __attribute__((unused)))
 {
-  int ecx = 0;
-
-  FUN_00149680((void *)(uintptr_t)ecx, 0);
-  return 0;
-
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x22c, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "flds 0x18(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x22c(%%ebp)\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x220(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "movl %%ecx, -0x228(%%ebp)\n\t"
+      "movl 0x1c(%%ebp), %%ecx\n\t"
+      "movl %%edx, -0x224(%%ebp)\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testb $5, %%ah\n\t"
+      "movl %%ecx, -0x21c(%%ebp)\n\t"
+      "movl %%edx, -0x218(%%ebp)\n\t"
+      "jp .LFUN_00149c60_1\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .LFUN_00149c60_2\n\t"
+      ".LFUN_00149c60_1:\n\t"
+      "flds 0x18(%%ebp)\n\t"
+      ".LFUN_00149c60_2:\n\t"
+      "fstps (%%ecx)\n\t"
+      "movl %%edx, 0x1c(%%ecx)\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x22c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c149680]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c149680] "m"(b149c60_c149680)
+      : "memory");
 }
+#else
+#error "FUN_00149c60: clang naked draft required"
+#endif
+
 
 /* FUN_00149ce0 (0x149ce0) — XBE naked draft (batch 297). */
 #if defined(__clang__)

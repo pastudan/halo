@@ -1745,19 +1745,51 @@ void XMountAlternateTitleA(void)
 #endif
 
 
-/* 0x1d3ee5 */
+/* XUnmountAlternateTitleA (0x1d3ee5) — XBE naked draft (batch 365). */
+#if defined(__clang__)
+static int (*const b1d3ee5_c1d90f0)(char *buffer, const char *format, ...) = (void *)crt_sprintf;
+
+__attribute__((naked, noinline))
 void XUnmountAlternateTitleA(void)
 {
-  int eax = 0;
-  int ebp = 0;
-
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0x002c1e30);
-  /* relift: cmp byte ptr [ebp + 8], 0x58 -> jne 0x1d3f37 */
-  /* test eax, eax -> jl 0x1d3f37 */
-
-  (void)eax;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10c, %%esp\n\t"
+      "andb $0xdf, 0x8(%%ebp)\n\t"
+      "movsbl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10c(%%ebp), %%eax\n\t"
+      "pushl $0x2c1e30\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "leal -0x10c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x2530e4\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x253224\n\t"
+      "cmpb $0x58, 0x8(%%ebp)\n\t"
+      "jne .LXUnmountAlternateTitleA_1\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LXUnmountAlternateTitleA_1\n\t"
+      "andb $0, 0x4ee168\n\t"
+      ".LXUnmountAlternateTitleA_1:\n\t"
+      "pushl %%eax\n\t"
+      "call *0x2531d0\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d90f0] "m"(b1d3ee5_c1d90f0)
+      : "memory");
 }
+#else
+#error "XUnmountAlternateTitleA: clang naked draft required"
+#endif
+
 
 /* FUN_001d3f42 (0x1d3f42) — XBE naked draft (batch 343). */
 #if defined(__clang__)
@@ -2275,23 +2307,62 @@ void FUN_001d42c3(void)
 #endif
 
 
-/* 0x1d4345 */
+/* xbe_main_thread (0x1d4345) — XBE naked draft (batch 365). */
+#if defined(__clang__)
+static void (*const b1d4345_c1d8259)(void) = (void *)XapiInitProcess;
+static void (*const b1d4345_c1d871b)(void) = (void *)_rtinit;
+static void (*const b1d4345_c1d86c3)(void) = (void *)_cinit;
+static int __cdecl (*const b1d4345_c191330)(int argc, const char **argv, const char **envp) = (void *)main;
+static void (*const b1d4345_c1d81f4)(void) = (void *)XapiBootToDash;
+
+__attribute__((naked, noinline))
 void xbe_main_thread(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  XapiInitProcess();
-  /* test eax, eax -> je 0x1d435f */
-  /* test ecx, ecx -> je 0x1d438c */
-  _rtinit();
-  _cinit();
-  main(0, (const char **)(uintptr_t)0, (const char **)(uintptr_t)0);
-  XapiBootToDash();
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "call *%[c1d8259]\n\t"
+      "movl 0x20, %%eax\n\t"
+      "movl 0x250(%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lxbe_main_thread_1\n\t"
+      "movl 0x24(%%eax), %%ecx\n\t"
+      "jmp .Lxbe_main_thread_2\n\t"
+      ".Lxbe_main_thread_1:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      ".Lxbe_main_thread_2:\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lxbe_main_thread_3\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x28, %%eax\n\t"
+      "movl 4, %%edi\n\t"
+      "movl 0x4ee170, %%edx\n\t"
+      "movl (%%edi,%%edx,4), %%edx\n\t"
+      "subl 0x28(%%eax), %%edx\n\t"
+      "movb $1, (%%ecx)\n\t"
+      "addl $4, %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "popl %%edi\n\t"
+      ".Lxbe_main_thread_3:\n\t"
+      "call *%[c1d871b]\n\t"
+      "call *%[c1d86c3]\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "call *%[c191330]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "pushl $1\n\t"
+      "call *%[c1d81f4]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c1d8259] "m"(b1d4345_c1d8259), [c1d871b] "m"(b1d4345_c1d871b), [c1d86c3] "m"(b1d4345_c1d86c3), [c191330] "m"(b1d4345_c191330), [c1d81f4] "m"(b1d4345_c1d81f4)
+      : "memory");
 }
+#else
+#error "xbe_main_thread: clang naked draft required"
+#endif
+
 
 /* 0x1d43b4 */
 void entry(void)

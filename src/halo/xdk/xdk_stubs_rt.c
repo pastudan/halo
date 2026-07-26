@@ -82,26 +82,92 @@ int IDirectSoundBuffer_SetBufferData(void *buffer, void *data, uint32_t size);
 int IDirectSoundStream_SetFrequency(void *stream, int frequency);
 int DirectSoundCreateBuffer(void *desc, void **out_buffer);
 
+/* SetThreadPriorityBoost (0x1cfa3f) — XBE naked draft (batch 364). */
+#if defined(__clang__)
+static void __stdcall (*const b1cfa3f_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void SetThreadPriorityBoost(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jl 0x1cfa79 */
-  XapiSetLastNTError(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "leal 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0x2530ac\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *0x2530a8\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LSetThreadPriorityBoost_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl %%eax, 0xc(%%ebp)\n\t"
+      "setne %%al\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *0x2530b4\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "call *0x2530a0\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "jmp .LSetThreadPriorityBoost_2\n\t"
+      ".LSetThreadPriorityBoost_1:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LSetThreadPriorityBoost_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1cfa3f_c1d2296)
+      : "memory");
 }
+#else
+#error "SetThreadPriorityBoost: clang naked draft required"
+#endif
 
-/* 0x1cfa85 */
+
+/* FUN_001cfa85 (0x1cfa85) — XBE naked draft (batch 365). */
+#if defined(__clang__)
+static void __stdcall (*const b1cfa85_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void FUN_001cfa85(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jl 0x1cfaba */
-  XapiSetLastNTError(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "leal 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0x2530ac\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *0x2530a8\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_001cfa85_1\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpb %%al, 0x73(%%ecx)\n\t"
+      "setne %%al\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "call *0x2530a0\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "jmp .LFUN_001cfa85_2\n\t"
+      ".LFUN_001cfa85_1:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_001cfa85_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1cfa85_c1d2296)
+      : "memory");
 }
+#else
+#error "FUN_001cfa85: clang naked draft required"
+#endif
+
 
 /* 0x1cfac6 */
 void FUN_001cfac6(void)

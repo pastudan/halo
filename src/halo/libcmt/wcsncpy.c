@@ -161,26 +161,58 @@ void __global_unwind2(void)
   RtlUnwind(0, (void *)(uintptr_t)0x001dbd0c, 0, 0);
 }
 
-/* 0x1dbd36 */
+/* __local_unwind2 (0x1dbd36) — XBE naked draft (batch 363). */
+#if defined(__clang__)
+static void (*const b1dbd36_c1dbdca)(void) = (void *)FUN_001dbdca;
+
+__attribute__((naked, noinline))
 void __local_unwind2(void)
 {
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* cmp esi, -1 -> je 0x1dbd90 */
-  /* relift: cmp esi, dword ptr [esp + 0x24] -> je 0x1dbd90 */
-  /* relift: cmp dword ptr [ebx + esi*4 + 4], 0 -> jne 0x1dbd8e */
-  FUN_001dbdca();
-  /* relift: cmp dword ptr [ecx + 4], 0x1dbd14 -> jne 0x1dbdc0 */
-  /* relift: cmp dword ptr [ecx + 8], edx -> jne 0x1dbdc0 */
-
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%esp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $-2\n\t"
+      "pushl $0x1dbd14\n\t"
+      "pushl 0\n\t"
+      "movl %%esp, 0\n\t"
+      ".L__local_unwind2_1:\n\t"
+      "movl 0x20(%%esp), %%eax\n\t"
+      "movl 0x8(%%eax), %%ebx\n\t"
+      "movl 0xc(%%eax), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .L__local_unwind2_3\n\t"
+      "cmpl 0x24(%%esp), %%esi\n\t"
+      "je .L__local_unwind2_3\n\t"
+      "leal (%%esi,%%esi,2), %%esi\n\t"
+      "movl (%%ebx,%%esi,4), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%esp)\n\t"
+      "movl %%ecx, 0xc(%%eax)\n\t"
+      "cmpl $0, 0x4(%%ebx,%%esi,4)\n\t"
+      "jne .L__local_unwind2_2\n\t"
+      "pushl $0x101\n\t"
+      "movl 0x8(%%ebx,%%esi,4), %%eax\n\t"
+      "call *%[c1dbdca]\n\t"
+      "call *0x8(%%ebx,%%esi,4)\n\t"
+      ".L__local_unwind2_2:\n\t"
+      "jmp .L__local_unwind2_1\n\t"
+      ".L__local_unwind2_3:\n\t"
+      "popl 0\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c1dbdca] "m"(b1dbd36_c1dbdca)
+      : "memory");
 }
+#else
+#error "__local_unwind2: clang naked draft required"
+#endif
+
 
 /* 0x1dbdca */
 void FUN_001dbdca(void)

@@ -549,11 +549,33 @@ void XGetDevices(void);
 void XGetDeviceChanges(void);
 void XID_fCloseDevice(void);
 
+/* QueueUserAPC (0x1cfb73) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void QueueUserAPC(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl $0\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "pushl $0x1cfb68\n\t"
+      "pushl 0x18(%%esp)\n\t"
+      "call *0x2530c4\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "setge %%cl\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "QueueUserAPC: clang naked draft required"
+#endif
+
 
 /* ExitThread (0x1cfbab) — XBE naked draft (batch 347). */
 #if defined(__clang__)
@@ -2755,11 +2777,34 @@ void D3DDevice_CreateCubeTexture(void)
   /* relift: FUN_001ef330(0, 0, 0, 0); */
 }
 
-/* 0x001e6ba0 */
+/* D3DDevice_CreateImageSurface (0x1e6ba0) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+static void b1e6ba0_c1ef330_tgt(void) { return; }
+static void (*const b1e6ba0_c1ef330)(void) = b1e6ba0_c1ef330_tgt;
+
+__attribute__((naked, noinline))
 void D3DDevice_CreateImageSurface(void)
 {
-  /* relift: FUN_001ef330(0, 0, 0, 0); */
+  __asm__ volatile(
+      "movl 0x10(%%esp), %%eax\n\t"
+      "movl 0xc(%%esp), %%ecx\n\t"
+      "movl 0x8(%%esp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%esp), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ef330]\n\t"
+      "ret\n\t"
+      :
+      : [c1ef330] "m"(b1e6ba0_c1ef330)
+      : "memory");
 }
+#else
+#error "D3DDevice_CreateImageSurface: clang naked draft required"
+#endif
+
 
 /* 0x001e6bc0 */
 void D3DDevice_SetRenderState(void)
@@ -2781,18 +2826,54 @@ void D3DDevice_SetRenderState(void)
   (void)esi;
 }
 
-/* 0x001e6d10 */
+/* D3DDevice_MultiplyTransform (0x1e6d10) — XBE naked draft (batch 363). */
+#if defined(__clang__)
+static void b1e6d10_c1f2340_tgt(void) { return; }
+static void (*const b1e6d10_c1f2340)(void) = b1e6d10_c1f2340_tgt;
+static void __stdcall (*const b1e6d10_c1e6bd0)(uint32_t type, void *matrix) = (void *)D3DDevice_SetTransform;
+
+__attribute__((naked, noinline))
 void D3DDevice_MultiplyTransform(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* relift: FUN_001f2340(0, 0, 0); */
-  D3DDevice_SetTransform(esi, (void *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "andl $0xfffffff0, %%esp\n\t"
+      "subl $0x88, %%esp\n\t"
+      "movl 0x1fe6a0, %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl $0x10, %%ecx\n\t"
+      "leal 0x10(%%esp), %%edi\n\t"
+      "rep movsl\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "leal 0x22(%%esi), %%eax\n\t"
+      "shll $6, %%eax\n\t"
+      "addl %%edx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x14(%%esp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x58(%%esp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1f2340]\n\t"
+      "leal 0x50(%%esp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1e6bd0]\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1f2340] "m"(b1e6d10_c1f2340), [c1e6bd0] "m"(b1e6d10_c1e6bd0)
+      : "memory");
 }
+#else
+#error "D3DDevice_MultiplyTransform: clang naked draft required"
+#endif
+
 
 /* 0x001e6d60 */
 void D3DDevice_GetViewport(void)
@@ -2912,25 +2993,65 @@ void D3DDevice_SwitchTexture(void)
 #endif
 
 
-/* 0x001e6f30 */
+/* D3DDevice_AddRef (0x1e6f30) — XBE naked draft (batch 368). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void D3DDevice_AddRef(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x1fe6a0, %%eax\n\t"
+      "movl 0x408(%%eax), %%ecx\n\t"
+      "incl %%ecx\n\t"
+      "movl %%ecx, 0x408(%%eax)\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "D3DDevice_AddRef: clang naked draft required"
+#endif
 
-/* 0x001e6f50 */
+
+/* D3DDevice_Release (0x1e6f50) — XBE naked draft (batch 361). */
+#if defined(__clang__)
+static void b1e6f50_c1f3a90_tgt(void) { return; }
+static void (*const b1e6f50_c1f3a90)(void) = b1e6f50_c1f3a90_tgt;
+
+__attribute__((naked, noinline))
 void D3DDevice_Release(void)
 {
-  int eax = 0;
-
-  /* cmp eax, 1 -> jne 0x1e6f7e */
-  /* relift: FUN_001f3a90(0, 0); */
-  /* mem[0x001fe6a4] = eax */
-  /* mem[0x001fe6a0] = eax */
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%edi\n\t"
+      "movl 0x1fe6a0, %%edi\n\t"
+      "movl 0x408(%%edi), %%eax\n\t"
+      "cmpl $1, %%eax\n\t"
+      "jne .LD3DDevice_Release_1\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "call *%[c1f3a90]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $0xae4, %%ecx\n\t"
+      "movl %%eax, 0x1fe6a4\n\t"
+      "movl %%eax, 0x1fe6a0\n\t"
+      "rep stosl\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      ".LD3DDevice_Release_1:\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, 0x408(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      :
+      : [c1f3a90] "m"(b1e6f50_c1f3a90)
+      : "memory");
 }
+#else
+#error "D3DDevice_Release: clang naked draft required"
+#endif
+
 
 /* 0x001e6fa0 */
 void D3DDevice_BlockOnFence(void)
@@ -3011,12 +3132,39 @@ void D3DDevice_GetProjectionViewportMatrix(void)
   D3DDevice_SetRenderStateNotInline();
 }
 
-/* 0x001e7180 */
+/* D3DDevice_GetModelView (0x1e7180) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void D3DDevice_GetModelView(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x1fe6a0, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%esp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LD3DDevice_GetModelView_1\n\t"
+      "pushl %%esi\n\t"
+      "leal 0x5e0(%%eax), %%esi\n\t"
+      "movl $0x10, %%ecx\n\t"
+      "rep movsl\n\t"
+      "popl %%esi\n\t"
+      ".LD3DDevice_GetModelView_1:\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "shrl $0x1f, %%eax\n\t"
+      "notl %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "D3DDevice_GetModelView: clang naked draft required"
+#endif
+
 
 /* 0x001e7200 */
 void D3DDevice_GetTile(void)
@@ -4102,11 +4250,34 @@ void D3DDevice_IsBusy(void)
 #endif
 
 
-/* 0x001e8a40 */
+/* D3DDevice_BeginVisibilityTest (0x1e8a40) — XBE naked draft (batch 363). */
+#if defined(__clang__)
+static void (*const b1e8a40_c1efe10)(void) = (void *)XMETAL_StartPush;
+
+__attribute__((naked, noinline))
 void D3DDevice_BeginVisibilityTest(void)
 {
-  XMETAL_StartPush();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0x1fe6a0, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1efe10]\n\t"
+      "movl $1, %%ecx\n\t"
+      "movl $0x817c8, (%%eax)\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "addl $0xc, %%eax\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c1efe10] "m"(b1e8a40_c1efe10)
+      : "memory");
 }
+#else
+#error "D3DDevice_BeginVisibilityTest: clang naked draft required"
+#endif
+
 
 /* D3DDevice_EndVisibilityTest (0x1e8a70) — XBE naked draft (batch 329). */
 #if defined(__clang__)
@@ -5399,17 +5570,36 @@ void D3DDevice_SetRenderState_StencilFail(uint32_t value)
   (void)edx;
 }
 
-/* 0x001ea3f0 */
+/* D3DDevice_SetRenderState_YuvEnable (0x1ea3f0) — XBE naked draft (batch 363). */
+#if defined(__clang__)
+static void (*const b1ea3f0_c1efe10)(void) = (void *)XMETAL_StartPush;
+static void b1ea3f0_c1e9f80_tgt(void) { return; }
+static void (*const b1ea3f0_c1e9f80)(void) = b1ea3f0_c1e9f80_tgt;
+
+__attribute__((naked, noinline))
 void D3DDevice_SetRenderState_YuvEnable(void)
 {
-  int eax = 0;
-
-  /* mem[0x001fb8c0] = eax */
-  XMETAL_StartPush();
-  /* relift: FUN_001e9f80(0, 0); */
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x1fe6a0, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, 0x1fb8c0\n\t"
+      "call *%[c1efe10]\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c1e9f80]\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c1efe10] "m"(b1ea3f0_c1efe10), [c1e9f80] "m"(b1ea3f0_c1e9f80)
+      : "memory");
 }
+#else
+#error "D3DDevice_SetRenderState_YuvEnable: clang naked draft required"
+#endif
+
 
 /* D3DDevice_SetRenderState_OcclusionCullEnable (0x1ea420) — XBE naked draft (batch 330). */
 #if defined(__clang__)
@@ -6102,12 +6292,30 @@ void D3DDevice_SelectVertexShader(void)
 #endif
 
 
-/* 0x001eb540 */
+/* D3DDevice_GetVertexShaderSize (0x1eb540) — XBE naked draft (batch 362). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void D3DDevice_GetVertexShaderSize(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x8(%%esp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LD3DDevice_GetVertexShaderSize_1\n\t"
+      "movl 0x4(%%esp), %%ecx\n\t"
+      "movl 0xf(%%ecx), %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      ".LD3DDevice_GetVertexShaderSize_1:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "D3DDevice_GetVertexShaderSize: clang naked draft required"
+#endif
+
 
 /* D3DDevice_GetVertexShaderType (0x1eb560) — XBE naked draft (batch 332). */
 #if defined(__clang__)
@@ -9486,28 +9694,74 @@ void CDevice_MakeSpace(void)
 #endif
 
 
-/* 0x001efd80 */
+/* D3D_BlockOnResource (0x1efd80) — XBE naked draft (batch 368). */
+#if defined(__clang__)
+static void b1efd80_c1ed870_tgt(void) { return; }
+static void (*const b1efd80_c1ed870)(void) = b1efd80_c1ed870_tgt;
+static void __stdcall (*const b1efd80_c1efa80)(uint32_t time, int param2) = (void *)D3D_BlockOnTime;
+
+__attribute__((naked, noinline))
 void D3D_BlockOnResource(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
-
-  /* test eax, eax -> je 0x1efdfe */
-  /* test edi, edi -> je 0x1efdc6 */
-  /* relift: FUN_001ed870(0); */
-  /* test eax, eax -> je 0x1efdc4 */
-  D3D_BlockOnTime(edx, 0);
-  /* relift: FUN_001ed870(0); */
-  D3D_BlockOnTime(ecx, 0);
-  D3D_BlockOnTime(edi, 0);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
+  __asm__ volatile(
+      "movl 0x1fe6a0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LD3D_BlockOnResource_4\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%esp), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "andl $0x70000, %%eax\n\t"
+      "cmpl $0x50000, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "jne .LD3D_BlockOnResource_2\n\t"
+      "movl 0x14(%%esi), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LD3D_BlockOnResource_2\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1ed870]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LD3D_BlockOnResource_1\n\t"
+      "movl 0x1fe6a0, %%ecx\n\t"
+      "movl 0x1c(%%ecx), %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1efa80]\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".LD3D_BlockOnResource_1:\n\t"
+      "movl %%edi, %%esi\n\t"
+      ".LD3D_BlockOnResource_2:\n\t"
+      "movl 0x8(%%esi), %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1ed870]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl $0\n\t"
+      "je .LD3D_BlockOnResource_3\n\t"
+      "movl 0x1fe6a0, %%eax\n\t"
+      "movl 0x1c(%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1efa80]\n\t"
+      "popl %%edi\n\t"
+      "movl $0, 0x8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".LD3D_BlockOnResource_3:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1efa80]\n\t"
+      "popl %%edi\n\t"
+      "movl $0, 0x8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      ".LD3D_BlockOnResource_4:\n\t"
+      "ret\n\t"
+      :
+      : [c1ed870] "m"(b1efd80_c1ed870), [c1efa80] "m"(b1efd80_c1efa80)
+      : "memory");
 }
+#else
+#error "D3D_BlockOnResource: clang naked draft required"
+#endif
+
 
 /* XMETAL_StartPush (0x1efe10) — XBE naked draft (batch 339). */
 #if defined(__clang__)
@@ -12782,19 +13036,55 @@ void DirectSoundGetSampleTime(void)
   (void)0;
 }
 
-/* 0x002038df */
+/* DirectSoundUseFullHRTF (0x2038df) — XBE naked draft (batch 362). */
+#if defined(__clang__)
+static void (*const b2038df_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+
+__attribute__((naked, noinline))
 void DirectSoundUseFullHRTF(void)
 {
-  DirectSoundEnterCriticalSection();
-  /* mem[0x00222d64] = 0x20a2f5 */
+  __asm__ volatile(
+      "call *%[c20368b]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0x20a2f5, 0x222d64\n\t"
+      "je .LDirectSoundUseFullHRTF_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LDirectSoundUseFullHRTF_1:\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b2038df_c20368b)
+      : "memory");
 }
+#else
+#error "DirectSoundUseFullHRTF: clang naked draft required"
+#endif
 
-/* 0x002038fe */
+
+/* DirectSoundUseLightHRTF (0x2038fe) — XBE naked draft (batch 362). */
+#if defined(__clang__)
+static void (*const b2038fe_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+
+__attribute__((naked, noinline))
 void DirectSoundUseLightHRTF(void)
 {
-  DirectSoundEnterCriticalSection();
-  /* mem[0x00222d64] = 0x20a431 */
+  __asm__ volatile(
+      "call *%[c20368b]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0x20a431, 0x222d64\n\t"
+      "je .LDirectSoundUseLightHRTF_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LDirectSoundUseLightHRTF_1:\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b2038fe_c20368b)
+      : "memory");
 }
+#else
+#error "DirectSoundUseLightHRTF: clang naked draft required"
+#endif
+
 
 /* 0x00203936 */
 void DSound_CRefCount_AddRef(void)
@@ -13056,19 +13346,78 @@ void CDirectSound_GetEffectData(void)
 #endif
 
 
-/* 0x00203af2 */
+/* CDirectSound_CommitEffectData (0x203af2) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+static void (*const b203af2_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void b203af2_c207876_tgt(void) { return; }
+static void (*const b203af2_c207876)(void) = b203af2_c207876_tgt;
+
+__attribute__((naked, noinline))
 void CDirectSound_CommitEffectData(void)
 {
-  DirectSoundEnterCriticalSection();
-  /* relift: FUN_00207876(0, 0); */
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "call *%[c20368b]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x8(%%esp), %%eax\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "movl 0xd0(%%eax), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "call *%[c207876]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "popl %%esi\n\t"
+      "je .LCDirectSound_CommitEffectData_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSound_CommitEffectData_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b203af2_c20368b), [c207876] "m"(b203af2_c207876)
+      : "memory");
 }
+#else
+#error "CDirectSound_CommitEffectData: clang naked draft required"
+#endif
 
-/* 0x00203b25 */
+
+/* CDirectSound_SetMixBinHeadroom (0x203b25) — XBE naked draft (batch 361). */
+#if defined(__clang__)
+static void (*const b203b25_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b203b25_c206dc4)(void) = (void *)CMcpxAPU_SetMixBinHeadroom;
+
+__attribute__((naked, noinline))
 void CDirectSound_SetMixBinHeadroom(void)
 {
-  DirectSoundEnterCriticalSection();
-  CMcpxAPU_SetMixBinHeadroom();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "pushl 0x14(%%esp)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x10(%%esp), %%eax\n\t"
+      "pushl 0x14(%%esp)\n\t"
+      "movl 0xc(%%eax), %%ecx\n\t"
+      "call *%[c206dc4]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .LCDirectSound_SetMixBinHeadroom_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSound_SetMixBinHeadroom_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b203b25_c20368b), [c206dc4] "m"(b203b25_c206dc4)
+      : "memory");
 }
+#else
+#error "CDirectSound_SetMixBinHeadroom: clang naked draft required"
+#endif
+
 
 /* CDirectSound_SetAllParameters (0x203b5a) — XBE naked draft (batch 352). */
 #if defined(__clang__)
@@ -13649,26 +13998,113 @@ void CDirectSoundVoice_SetVolume(void)
 #endif
 
 
-/* 0x00203fa3 */
+/* CDirectSoundVoice_SetLFO (0x203fa3) — XBE naked draft (batch 364). */
+#if defined(__clang__)
+static void (*const b203fa3_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b203fa3_c209c05)(void) = (void *)CMcpxVoiceClient_SetLFO;
+
+__attribute__((naked, noinline))
 void CDirectSoundVoice_SetLFO(void)
 {
-  DirectSoundEnterCriticalSection();
-  CMcpxVoiceClient_SetLFO();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x10(%%esp), %%eax\n\t"
+      "movl 0x14(%%eax), %%ecx\n\t"
+      "call *%[c209c05]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .LCDirectSoundVoice_SetLFO_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundVoice_SetLFO_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b203fa3_c20368b), [c209c05] "m"(b203fa3_c209c05)
+      : "memory");
 }
+#else
+#error "CDirectSoundVoice_SetLFO: clang naked draft required"
+#endif
 
-/* 0x00203fd4 */
+
+/* CDirectSoundVoice_SetEG (0x203fd4) — XBE naked draft (batch 364). */
+#if defined(__clang__)
+static void (*const b203fd4_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b203fd4_c209d16)(void) = (void *)CMcpxVoiceClient_SetEG;
+
+__attribute__((naked, noinline))
 void CDirectSoundVoice_SetEG(void)
 {
-  DirectSoundEnterCriticalSection();
-  CMcpxVoiceClient_SetEG();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x10(%%esp), %%eax\n\t"
+      "movl 0x14(%%eax), %%ecx\n\t"
+      "call *%[c209d16]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .LCDirectSoundVoice_SetEG_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundVoice_SetEG_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b203fd4_c20368b), [c209d16] "m"(b203fd4_c209d16)
+      : "memory");
 }
+#else
+#error "CDirectSoundVoice_SetEG: clang naked draft required"
+#endif
 
-/* 0x00204005 */
+
+/* CDirectSoundVoice_SetFilter (0x204005) — XBE naked draft (batch 364). */
+#if defined(__clang__)
+static void (*const b204005_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b204005_c208da2)(void) = (void *)CMcpxVoiceClient_SetFilter;
+
+__attribute__((naked, noinline))
 void CDirectSoundVoice_SetFilter(void)
 {
-  DirectSoundEnterCriticalSection();
-  CMcpxVoiceClient_SetFilter();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x10(%%esp), %%eax\n\t"
+      "movl 0x14(%%eax), %%ecx\n\t"
+      "call *%[c208da2]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .LCDirectSoundVoice_SetFilter_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundVoice_SetFilter_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b204005_c20368b), [c208da2] "m"(b204005_c208da2)
+      : "memory");
 }
+#else
+#error "CDirectSoundVoice_SetFilter: clang naked draft required"
+#endif
+
 
 /* CDirectSoundVoice_SetHeadroom (0x204036) — XBE naked draft (batch 349). */
 #if defined(__clang__)
@@ -14318,12 +14754,41 @@ void CDirectSoundBuffer_StopEx(void)
 #endif
 
 
-/* 0x00204437 */
+/* CDirectSoundBuffer_GetStatus (0x204437) — XBE naked draft (batch 364). */
+#if defined(__clang__)
+static void (*const b204437_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b204437_c20b0ac)(void) = (void *)CMcpxBuffer_GetStatus;
+
+__attribute__((naked, noinline))
 void CDirectSoundBuffer_GetStatus(void)
 {
-  DirectSoundEnterCriticalSection();
-  CMcpxBuffer_GetStatus();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x10(%%esp), %%eax\n\t"
+      "movl 0x20(%%eax), %%ecx\n\t"
+      "call *%[c20b0ac]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .LCDirectSoundBuffer_GetStatus_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundBuffer_GetStatus_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b204437_c20368b), [c20b0ac] "m"(b204437_c20b0ac)
+      : "memory");
 }
+#else
+#error "CDirectSoundBuffer_GetStatus: clang naked draft required"
+#endif
+
 
 /* CDirectSoundBuffer_SetLoopRegion (0x204468) — XBE naked draft (batch 337). */
 #if defined(__clang__)
@@ -14378,12 +14843,42 @@ void CDirectSoundBuffer_SetLoopRegion(void)
 #endif
 
 
-/* 0x002044b5 */
+/* CDirectSoundBuffer_GetCurrentPosition (0x2044b5) — XBE naked draft (batch 361). */
+#if defined(__clang__)
+static void (*const b2044b5_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b2044b5_c20b0f7)(void) = (void *)CMcpxBuffer_GetCurrentPosition;
+
+__attribute__((naked, noinline))
 void CDirectSoundBuffer_GetCurrentPosition(void)
 {
-  DirectSoundEnterCriticalSection();
-  CMcpxBuffer_GetCurrentPosition();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "pushl 0x14(%%esp)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x10(%%esp), %%eax\n\t"
+      "pushl 0x14(%%esp)\n\t"
+      "movl 0x20(%%eax), %%ecx\n\t"
+      "call *%[c20b0f7]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .LCDirectSoundBuffer_GetCurrentPosition_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundBuffer_GetCurrentPosition_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b2044b5_c20368b), [c20b0f7] "m"(b2044b5_c20b0f7)
+      : "memory");
 }
+#else
+#error "CDirectSoundBuffer_GetCurrentPosition: clang naked draft required"
+#endif
+
 
 /* CDirectSoundBuffer_Lock (0x2044ea) — XBE naked draft (batch 314). */
 #if defined(__clang__)
@@ -14478,38 +14973,41 @@ void CDirectSoundBuffer_Lock(void)
 #endif
 
 
-/* 0x00204590 */
+/* CDirectSoundBuffer_SetCurrentPosition (0x204590) — XBE naked draft (batch 364). */
+#if defined(__clang__)
+static void (*const b204590_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b204590_c20b8d7)(void) = (void *)CMcpxBuffer_SetCurrentPosition;
+
+__attribute__((naked, noinline))
 void CDirectSoundBuffer_SetCurrentPosition(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  DirectSoundEnterCriticalSection();
-  CMcpxBuffer_SetCurrentPosition();
-  /* relift: cmp dword ptr [esi + 0x24], edi -> je 0x204600 */
-  /* relift: cmp dword ptr [esi + 0x28], edi -> jbe 0x204600 */
-  /* cmp ecx, ebx -> jb 0x2045f9 */
-  /* cmp ecx, edx -> jae 0x2045ff */
-  /* relift: cmp edi, dword ptr [esi + 0x28] -> jb 0x2045d8 */
-  /* relift: cmp dword ptr [edi + 0x24], 0 -> je 0x204633 */
-  /* test esi, esi -> jbe 0x204632 */
-  /* relift: cmp dword ptr [eax - 8], -1 -> jne 0x204632 */
-  /* test esi, esi -> jbe 0x204665 */
-  /* relift: cmp edi, dword ptr [ecx] -> jbe 0x20465f */
-  /* relift: FUN_00203704(0, 0); */
-  /* cmp edx, esi -> jb 0x204644 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x10(%%esp), %%eax\n\t"
+      "movl 0x20(%%eax), %%ecx\n\t"
+      "call *%[c20b8d7]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .LCDirectSoundBuffer_SetCurrentPosition_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundBuffer_SetCurrentPosition_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b204590_c20368b), [c20b8d7] "m"(b204590_c20b8d7)
+      : "memory");
 }
+#else
+#error "CDirectSoundBuffer_SetCurrentPosition: clang naked draft required"
+#endif
+
 
 /* CDirectSoundStream_GetInfo (0x20466c) — XBE naked draft (batch 344). */
 #if defined(__clang__)
@@ -14556,26 +15054,113 @@ void CDirectSoundStream_GetInfo(void)
 #endif
 
 
-/* 0x002046b7 */
+/* CDirectSoundStream_Discontinuity (0x2046b7) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+static void (*const b2046b7_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b2046b7_c20c752)(void) = (void *)CMcpxStream_Discontinuity;
+
+__attribute__((naked, noinline))
 void CDirectSoundStream_Discontinuity(void)
 {
-  DirectSoundEnterCriticalSection();
-  CMcpxStream_Discontinuity();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0xc(%%esp), %%eax\n\t"
+      "movl 0x24(%%eax), %%ecx\n\t"
+      "call *%[c20c752]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .LCDirectSoundStream_Discontinuity_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundStream_Discontinuity_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b2046b7_c20368b), [c20c752] "m"(b2046b7_c20c752)
+      : "memory");
 }
+#else
+#error "CDirectSoundStream_Discontinuity: clang naked draft required"
+#endif
 
-/* 0x002046e4 */
+
+/* CDirectSoundStream_Flush (0x2046e4) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+static void (*const b2046e4_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b2046e4_c20c3fe)(void) = (void *)CMcpxStream_Flush;
+
+__attribute__((naked, noinline))
 void CDirectSoundStream_Flush(void)
 {
-  DirectSoundEnterCriticalSection();
-  CMcpxStream_Flush();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0xc(%%esp), %%eax\n\t"
+      "movl 0x24(%%eax), %%ecx\n\t"
+      "call *%[c20c3fe]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .LCDirectSoundStream_Flush_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundStream_Flush_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b2046e4_c20368b), [c20c3fe] "m"(b2046e4_c20c3fe)
+      : "memory");
 }
+#else
+#error "CDirectSoundStream_Flush: clang naked draft required"
+#endif
 
-/* 0x00204711 */
+
+/* CDirectSoundStream_GetStatus__r1 (0x204711) — XBE naked draft (batch 361). */
+#if defined(__clang__)
+static void (*const b204711_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void b204711_c20bc71_tgt(void) { return; }
+static void (*const b204711_c20bc71)(void) = b204711_c20bc71_tgt;
+
+__attribute__((naked, noinline))
 void CDirectSoundStream_GetStatus__r1(void)
 {
-  DirectSoundEnterCriticalSection();
-  /* relift: FUN_0020bc71(0, 0); */
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "call *%[c20368b]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x8(%%esp), %%eax\n\t"
+      "movl 0x24(%%eax), %%ecx\n\t"
+      "call *%[c20bc71]\n\t"
+      "movl 0xc(%%esp), %%ecx\n\t"
+      "negl %%eax\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "negl %%eax\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "popl %%esi\n\t"
+      "je .LCDirectSoundStream_GetStatus__r1_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundStream_GetStatus__r1_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b204711_c20368b), [c20bc71] "m"(b204711_c20bc71)
+      : "memory");
 }
+#else
+#error "CDirectSoundStream_GetStatus__r1: clang naked draft required"
+#endif
+
 
 /* 0x00204746 */
 void CDirectSoundStream_Process(void)
@@ -14734,17 +15319,53 @@ void CDirectSoundBuffer_SetConeOutsideVolume(void)
   DirectSoundEnterCriticalSection();
 }
 
-/* 0x002049d8 */
+/* CDirectSoundBuffer_SetMaxDistance (0x2049d8) — XBE naked draft (batch 362). */
+#if defined(__clang__)
+static void (*const b2049d8_c2041f0)(void) = (void *)CDirectSoundVoice_SetMaxDistance;
+
+__attribute__((naked, noinline))
 void CDirectSoundBuffer_SetMaxDistance(void)
 {
-  CDirectSoundVoice_SetMaxDistance();
+  __asm__ volatile(
+      "pushl 0xc(%%esp)\n\t"
+      "flds 0xc(%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "call *%[c2041f0]\n\t"
+      "ret\n\t"
+      :
+      : [c2041f0] "m"(b2049d8_c2041f0)
+      : "memory");
 }
+#else
+#error "CDirectSoundBuffer_SetMaxDistance: clang naked draft required"
+#endif
 
-/* 0x002049f0 */
+
+/* CDirectSoundBuffer_SetMinDistance (0x2049f0) — XBE naked draft (batch 362). */
+#if defined(__clang__)
+static void (*const b2049f0_c20422f)(void) = (void *)CDirectSoundVoice_SetMinDistance;
+
+__attribute__((naked, noinline))
 void CDirectSoundBuffer_SetMinDistance(void)
 {
-  CDirectSoundVoice_SetMinDistance();
+  __asm__ volatile(
+      "pushl 0xc(%%esp)\n\t"
+      "flds 0xc(%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "call *%[c20422f]\n\t"
+      "ret\n\t"
+      :
+      : [c20422f] "m"(b2049f0_c20422f)
+      : "memory");
 }
+#else
+#error "CDirectSoundBuffer_SetMinDistance: clang naked draft required"
+#endif
+
 
 /* 0x00204a08 */
 void CDirectSoundBuffer_SetMode(void)
@@ -14833,11 +15454,38 @@ void CDirectSoundStream_SetConeAngles(void)
   CDirectSoundVoice_SetConeAngles();
 }
 
-/* 0x00204b28 */
+/* CDirectSoundStream_SetConeOrientation (0x204b28) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+static void (*const b204b28_c204163)(void) = (void *)CDirectSoundVoice_SetConeOrientation;
+
+__attribute__((naked, noinline))
 void CDirectSoundStream_SetConeOrientation(void)
 {
-  CDirectSoundVoice_SetConeOrientation();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl 0x18(%%ebp)\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "subl $0xc, %%esp\n\t"
+      "fstps 0x8(%%esp)\n\t"
+      "addl $4, %%eax\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fstps 0x4(%%esp)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c204163]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c204163] "m"(b204b28_c204163)
+      : "memory");
 }
+#else
+#error "CDirectSoundStream_SetConeOrientation: clang naked draft required"
+#endif
+
 
 /* 0x00204b55 */
 void CDirectSoundStream_SetConeOutsideVolume(void)
@@ -14863,25 +15511,95 @@ void CDirectSoundStream_SetMode(void)
   CDirectSoundVoice_SetMode();
 }
 
-/* 0x00204bbd */
+/* CDirectSoundStream_SetPosition (0x204bbd) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+static void (*const b204bbd_c2042a9)(void) = (void *)CDirectSoundVoice_SetPosition;
+
+__attribute__((naked, noinline))
 void CDirectSoundStream_SetPosition(void)
 {
-  CDirectSoundVoice_SetPosition();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl 0x18(%%ebp)\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "subl $0xc, %%esp\n\t"
+      "fstps 0x8(%%esp)\n\t"
+      "addl $4, %%eax\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fstps 0x4(%%esp)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c2042a9]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c2042a9] "m"(b204bbd_c2042a9)
+      : "memory");
 }
+#else
+#error "CDirectSoundStream_SetPosition: clang naked draft required"
+#endif
 
-/* 0x00204bea */
+
+/* CDirectSoundStream_SetVelocity (0x204bea) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+static void (*const b204bea_c2042fb)(void) = (void *)CDirectSoundVoice_SetVelocity;
+
+__attribute__((naked, noinline))
 void CDirectSoundStream_SetVelocity(void)
 {
-  CDirectSoundVoice_SetVelocity();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl 0x18(%%ebp)\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "subl $0xc, %%esp\n\t"
+      "fstps 0x8(%%esp)\n\t"
+      "addl $4, %%eax\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fstps 0x4(%%esp)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c2042fb]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c2042fb] "m"(b204bea_c2042fb)
+      : "memory");
 }
+#else
+#error "CDirectSoundStream_SetVelocity: clang naked draft required"
+#endif
 
-/* 0x00204c17 */
+
+/* CDirectSoundStream_SetI3DL2Source (0x204c17) — XBE naked draft (batch 362). */
+#if defined(__clang__)
+static void (*const b204c17_c20434d)(void) = (void *)CDirectSoundVoice_SetI3DL2Source;
+
+__attribute__((naked, noinline))
 void CDirectSoundStream_SetI3DL2Source(void)
 {
-  CDirectSoundVoice_SetI3DL2Source();
-  IDirectSound_AddRef();
-  IDirectSound_AddRef();
+  __asm__ volatile(
+      "pushl 0xc(%%esp)\n\t"
+      "movl 0x8(%%esp), %%eax\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c20434d]\n\t"
+      "ret\n\t"
+      :
+      : [c20434d] "m"(b204c17_c20434d)
+      : "memory");
 }
+#else
+#error "CDirectSoundStream_SetI3DL2Source: clang naked draft required"
+#endif
+
 
 /* 0x00204c5d */
 void IDirectSound_GetCaps(void)
@@ -14895,23 +15613,105 @@ void IDirectSound_GetSpeakerConfig(void)
   CDirectSound_GetSpeakerConfig();
 }
 
-/* 0x00204c95 */
+/* IDirectSound_DownloadEffectsImage (0x204c95) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+static void (*const b204c95_c203a21)(void) = (void *)CDirectSound_DownloadEffectsImage;
+
+__attribute__((naked, noinline))
 void IDirectSound_DownloadEffectsImage(void)
 {
-  CDirectSound_DownloadEffectsImage();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl 0x18(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl 0x14(%%ebp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0x10(%%ebp)\n\t"
+      "addl $-8, %%eax\n\t"
+      "pushl 0xc(%%ebp)\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c203a21]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c203a21] "m"(b204c95_c203a21)
+      : "memory");
 }
+#else
+#error "IDirectSound_DownloadEffectsImage: clang naked draft required"
+#endif
 
-/* 0x00204cbc */
+
+/* IDirectSound_GetEffectData (0x204cbc) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+static void (*const b204cbc_c203ab0)(void) = (void *)CDirectSound_GetEffectData;
+
+__attribute__((naked, noinline))
 void IDirectSound_GetEffectData(void)
 {
-  CDirectSound_GetEffectData();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl 0x18(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl 0x14(%%ebp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0x10(%%ebp)\n\t"
+      "addl $-8, %%eax\n\t"
+      "pushl 0xc(%%ebp)\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c203ab0]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c203ab0] "m"(b204cbc_c203ab0)
+      : "memory");
 }
+#else
+#error "IDirectSound_GetEffectData: clang naked draft required"
+#endif
 
-/* 0x00204ce3 */
+
+/* IDirectSound_SetEffectData (0x204ce3) — XBE naked draft (batch 364). */
+#if defined(__clang__)
+static void (*const b204ce3_c203a65)(void) = (void *)CDirectSound_SetEffectData;
+
+__attribute__((naked, noinline))
 void IDirectSound_SetEffectData(void)
 {
-  CDirectSound_SetEffectData();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl 0x1c(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl 0x18(%%ebp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0x14(%%ebp)\n\t"
+      "addl $-8, %%eax\n\t"
+      "pushl 0x10(%%ebp)\n\t"
+      "negl %%ecx\n\t"
+      "pushl 0xc(%%ebp)\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c203a65]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c203a65] "m"(b204ce3_c203a65)
+      : "memory");
 }
+#else
+#error "IDirectSound_SetEffectData: clang naked draft required"
+#endif
+
 
 /* IDirectSound_CommitEffectData (0x204d0d) — XBE naked draft (batch 350). */
 #if defined(__clang__)
@@ -14945,17 +15745,61 @@ void IDirectSound_EnableHeadphones(void)
   CDirectSound_EnableHeadphones();
 }
 
-/* 0x00204d41 */
+/* IDirectSound_SetMixBinHeadroom (0x204d41) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+static void (*const b204d41_c203b25)(void) = (void *)CDirectSound_SetMixBinHeadroom;
+
+__attribute__((naked, noinline))
 void IDirectSound_SetMixBinHeadroom(void)
 {
-  CDirectSound_SetMixBinHeadroom();
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "addl $-8, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c203b25]\n\t"
+      "ret\n\t"
+      :
+      : [c203b25] "m"(b204d41_c203b25)
+      : "memory");
 }
+#else
+#error "IDirectSound_SetMixBinHeadroom: clang naked draft required"
+#endif
 
-/* 0x00204d61 */
+
+/* IDirectSound_SetAllParameters (0x204d61) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+static void (*const b204d61_c203b5a)(void) = (void *)CDirectSound_SetAllParameters;
+
+__attribute__((naked, noinline))
 void IDirectSound_SetAllParameters(void)
 {
-  CDirectSound_SetAllParameters();
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "addl $-8, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c203b5a]\n\t"
+      "ret\n\t"
+      :
+      : [c203b5a] "m"(b204d61_c203b5a)
+      : "memory");
 }
+#else
+#error "IDirectSound_SetAllParameters: clang naked draft required"
+#endif
+
 
 /* IDirectSound_SetDistanceFactor (0x204d81) — XBE naked draft (batch 359). */
 #if defined(__clang__)
@@ -15248,23 +16092,90 @@ void IDirectSoundBuffer_SetHeadroom(void)
   CDirectSoundVoice_SetHeadroom();
 }
 
-/* 0x00204fcb */
+/* IDirectSoundBuffer_SetMixBinVolumes_12 (0x204fcb) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+static void (*const b204fcb_c204075)(void) = (void *)CDirectSoundVoice_SetMixBinVolumes;
+
+__attribute__((naked, noinline))
 void IDirectSoundBuffer_SetMixBinVolumes_12(void)
 {
-  CDirectSoundVoice_SetMixBinVolumes();
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "addl $-0x1c, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c204075]\n\t"
+      "ret\n\t"
+      :
+      : [c204075] "m"(b204fcb_c204075)
+      : "memory");
 }
+#else
+#error "IDirectSoundBuffer_SetMixBinVolumes_12: clang naked draft required"
+#endif
 
-/* 0x00204feb */
+
+/* IDirectSoundBuffer_SetAllParameters (0x204feb) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+static void (*const b204feb_c2040e9)(void) = (void *)CDirectSoundVoice_SetAllParameters;
+
+__attribute__((naked, noinline))
 void IDirectSoundBuffer_SetAllParameters(void)
 {
-  CDirectSoundVoice_SetAllParameters();
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "addl $-0x1c, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c2040e9]\n\t"
+      "ret\n\t"
+      :
+      : [c2040e9] "m"(b204feb_c2040e9)
+      : "memory");
 }
+#else
+#error "IDirectSoundBuffer_SetAllParameters: clang naked draft required"
+#endif
 
-/* 0x0020500b */
+
+/* IDirectSoundBuffer_SetConeAngles (0x20500b) — XBE naked draft (batch 363). */
+#if defined(__clang__)
+static void (*const b20500b_c204124)(void) = (void *)CDirectSoundVoice_SetConeAngles;
+
+__attribute__((naked, noinline))
 void IDirectSoundBuffer_SetConeAngles(void)
 {
-  CDirectSoundVoice_SetConeAngles();
+  __asm__ volatile(
+      "pushl 0x10(%%esp)\n\t"
+      "movl 0x8(%%esp), %%eax\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "addl $-0x1c, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c204124]\n\t"
+      "ret\n\t"
+      :
+      : [c204124] "m"(b20500b_c204124)
+      : "memory");
 }
+#else
+#error "IDirectSoundBuffer_SetConeAngles: clang naked draft required"
+#endif
+
 
 /* IDirectSoundBuffer_SetConeOrientation (0x20502f) — XBE naked draft (batch 355). */
 #if defined(__clang__)
@@ -15303,11 +16214,33 @@ void IDirectSoundBuffer_SetConeOrientation(void)
 #endif
 
 
-/* 0x00205064 */
+/* IDirectSoundBuffer_SetConeOutsideVolume (0x205064) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+static void (*const b205064_c2041b5)(void) = (void *)CDirectSoundVoice_SetConeOutsideVolume;
+
+__attribute__((naked, noinline))
 void IDirectSoundBuffer_SetConeOutsideVolume(void)
 {
-  CDirectSoundVoice_SetConeOutsideVolume();
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "addl $-0x1c, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c2041b5]\n\t"
+      "ret\n\t"
+      :
+      : [c2041b5] "m"(b205064_c2041b5)
+      : "memory");
 }
+#else
+#error "IDirectSoundBuffer_SetConeOutsideVolume: clang naked draft required"
+#endif
+
 
 /* IDirectSoundBuffer_SetMaxDistance (0x205084) — XBE naked draft (batch 359). */
 #if defined(__clang__)
@@ -15369,11 +16302,33 @@ void IDirectSoundBuffer_SetMinDistance(void)
 #endif
 
 
-/* 0x002050cc */
+/* IDirectSoundBuffer_SetMode (0x2050cc) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+static void (*const b2050cc_c20426e)(void) = (void *)CDirectSoundVoice_SetMode;
+
+__attribute__((naked, noinline))
 void IDirectSoundBuffer_SetMode(void)
 {
-  CDirectSoundVoice_SetMode();
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "addl $-0x1c, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c20426e]\n\t"
+      "ret\n\t"
+      :
+      : [c20426e] "m"(b2050cc_c20426e)
+      : "memory");
 }
+#else
+#error "IDirectSoundBuffer_SetMode: clang naked draft required"
+#endif
+
 
 /* IDirectSoundBuffer_SetPosition (0x2050ec) — XBE naked draft (batch 355). */
 #if defined(__clang__)
@@ -15449,18 +16404,63 @@ void IDirectSoundBuffer_SetVelocity(void)
 #endif
 
 
-/* 0x00205156 */
+/* IDirectSoundBuffer_PlayEx (0x205156) — XBE naked draft (batch 363). */
+#if defined(__clang__)
+static void (*const b205156_c2043a4)(void) = (void *)CDirectSoundBuffer_PlayEx;
+
+__attribute__((naked, noinline))
 void IDirectSoundBuffer_PlayEx(void)
 {
-  CDirectSoundBuffer_PlayEx();
+  __asm__ volatile(
+      "pushl 0x10(%%esp)\n\t"
+      "movl 0x8(%%esp), %%eax\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "addl $-0x1c, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c2043a4]\n\t"
+      "ret\n\t"
+      :
+      : [c2043a4] "m"(b205156_c2043a4)
+      : "memory");
 }
+#else
+#error "IDirectSoundBuffer_PlayEx: clang naked draft required"
+#endif
 
-/* 0x0020517a */
+
+/* IDirectSoundBuffer_StopEx (0x20517a) — XBE naked draft (batch 363). */
+#if defined(__clang__)
+static void (*const b20517a_c2043e1)(void) = (void *)CDirectSoundBuffer_StopEx;
+
+__attribute__((naked, noinline))
 void IDirectSoundBuffer_StopEx(void)
 {
-  CDirectSoundBuffer_StopEx();
-  CDirectSoundBuffer_SetLoopRegion();
+  __asm__ volatile(
+      "pushl 0x10(%%esp)\n\t"
+      "movl 0x8(%%esp), %%eax\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "addl $-0x1c, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c2043e1]\n\t"
+      "ret\n\t"
+      :
+      : [c2043e1] "m"(b20517a_c2043e1)
+      : "memory");
 }
+#else
+#error "IDirectSoundBuffer_StopEx: clang naked draft required"
+#endif
+
 
 /* 0x002051be */
 void IDirectSoundBuffer_GetStatus(void)
@@ -15468,12 +16468,33 @@ void IDirectSoundBuffer_GetStatus(void)
   CDirectSoundBuffer_GetStatus();
 }
 
-/* 0x002051da */
+/* IDirectSoundBuffer_GetCurrentPosition (0x2051da) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+static void (*const b2051da_c2044b5)(void) = (void *)CDirectSoundBuffer_GetCurrentPosition;
+
+__attribute__((naked, noinline))
 void IDirectSoundBuffer_GetCurrentPosition(void)
 {
-  CDirectSoundBuffer_GetCurrentPosition();
-  CDirectSoundBuffer_SetCurrentPosition();
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "addl $-0x1c, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c2044b5]\n\t"
+      "ret\n\t"
+      :
+      : [c2044b5] "m"(b2051da_c2044b5)
+      : "memory");
 }
+#else
+#error "IDirectSoundBuffer_GetCurrentPosition: clang naked draft required"
+#endif
+
 
 /* IDirectSoundBuffer_Lock (0x205216) — XBE naked draft (batch 358). */
 #if defined(__clang__)
@@ -15969,19 +16990,79 @@ void CDirectSoundBuffer_SetBufferData(void)
 #endif
 
 
-/* 0x002057dd */
+/* CDirectSoundBuffer_Play (0x2057dd) — XBE naked draft (batch 361). */
+#if defined(__clang__)
+static void (*const b2057dd_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b2057dd_c2043a4)(void) = (void *)CDirectSoundBuffer_PlayEx;
+
+__attribute__((naked, noinline))
 void CDirectSoundBuffer_Play(void)
 {
-  DirectSoundEnterCriticalSection();
-  CDirectSoundBuffer_PlayEx();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "pushl 0x18(%%esp)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl 0x18(%%esp)\n\t"
+      "call *%[c2043a4]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .LCDirectSoundBuffer_Play_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundBuffer_Play_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b2057dd_c20368b), [c2043a4] "m"(b2057dd_c2043a4)
+      : "memory");
 }
+#else
+#error "CDirectSoundBuffer_Play: clang naked draft required"
+#endif
 
-/* 0x0020580f */
+
+/* CDirectSoundBuffer_Stop (0x20580f) — XBE naked draft (batch 361). */
+#if defined(__clang__)
+static void (*const b20580f_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b20580f_c2043e1)(void) = (void *)CDirectSoundBuffer_StopEx;
+
+__attribute__((naked, noinline))
 void CDirectSoundBuffer_Stop(void)
 {
-  DirectSoundEnterCriticalSection();
-  CDirectSoundBuffer_StopEx();
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c20368b]\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl 0x18(%%esp)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c2043e1]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "je .LCDirectSoundBuffer_Stop_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundBuffer_Stop_1:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b20580f_c20368b), [c2043e1] "m"(b20580f_c2043e1)
+      : "memory");
 }
+#else
+#error "CDirectSoundBuffer_Stop: clang naked draft required"
+#endif
+
 
 /* CDirectSoundBuffer_SetNotificationPositions (0x20583f) — XBE naked draft (batch 333). */
 #if defined(__clang__)
@@ -16039,41 +17120,40 @@ void CDirectSoundBuffer_SetNotificationPositions(void)
 #endif
 
 
-/* 0x00205894 */
+/* CDirectSoundBuffer_SetOutputBuffer (0x205894) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+static void (*const b205894_c20368b)(void) = (void *)DirectSoundEnterCriticalSection;
+static void (*const b205894_c2055e4)(void) = (void *)CDirectSoundVoice_SetOutputBuffer;
+
+__attribute__((naked, noinline))
 void CDirectSoundBuffer_SetOutputBuffer(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  DirectSoundEnterCriticalSection();
-  CDirectSoundVoice_SetOutputBuffer();
-  DirectSoundEnterCriticalSection();
-  /* cmp edi, eax -> je 0x20593e */
-  /* relift: FUN_002045c1(0, 0, 0); */
-  CDirectSoundBuffer_GetStatus();
-  /* test eax, eax -> jl 0x20593b */
-  /* cmp edi, ecx -> jb 0x20591b */
-  /* cmp edi, edx -> jae 0x20591b */
-  /* relift: FUN_002045c1(0, 0, 0); */
-  /* relift: FUN_002045c1(0, 0, 0); */
-  DirectSoundEnterCriticalSection();
-  /* relift: FUN_00204605(0); */
-  /* relift: FUN_002054a8(0, 0, 0, *(int *)((char *)esi + 0x14)); */
-  /* test eax, eax -> jl 0x2059a8 */
-  DirectSoundEnterCriticalSection();
-  /* relift: FUN_002048f9(0); */
-  /* relift: FUN_0020490f(0); */
-  /* test edi, edi -> je 0x2059e9 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "call *%[c2055e4]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .LCDirectSoundBuffer_SetOutputBuffer_1\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSoundBuffer_SetOutputBuffer_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b205894_c20368b), [c2055e4] "m"(b205894_c2055e4)
+      : "memory");
 }
+#else
+#error "CDirectSoundBuffer_SetOutputBuffer: clang naked draft required"
+#endif
+
 
 /* 0x002059f9 */
 void CDirectSoundStream_AddRef(void)
@@ -16221,12 +17301,33 @@ void IDirectSoundBuffer_Stop(void)
 #endif
 
 
-/* 0x00205b9f */
+/* IDirectSoundBuffer_SetNotificationPositions (0x205b9f) — XBE naked draft (batch 368). */
+#if defined(__clang__)
+static void (*const b205b9f_c20583f)(void) = (void *)CDirectSoundBuffer_SetNotificationPositions;
+
+__attribute__((naked, noinline))
 void IDirectSoundBuffer_SetNotificationPositions(void)
 {
-  CDirectSoundBuffer_SetNotificationPositions();
-  CDirectSoundVoice_SetFrequency();
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "addl $-0x1c, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c20583f]\n\t"
+      "ret\n\t"
+      :
+      : [c20583f] "m"(b205b9f_c20583f)
+      : "memory");
 }
+#else
+#error "IDirectSoundBuffer_SetNotificationPositions: clang naked draft required"
+#endif
+
 
 /* 0x00205bd3 */
 void IDirectSoundStream_SetOutputBuffer(void)
@@ -16489,11 +17590,34 @@ void CDirectSound_CreateSoundStream(void)
 #endif
 
 
-/* 0x002060d4 */
+/* IDirectSound_CreateSoundBuffer (0x2060d4) — XBE naked draft (batch 363). */
+#if defined(__clang__)
+static void (*const b2060d4_c205f6d)(void) = (void *)CDirectSound_CreateSoundBuffer;
+
+__attribute__((naked, noinline))
 void IDirectSound_CreateSoundBuffer(void)
 {
-  CDirectSound_CreateSoundBuffer();
+  __asm__ volatile(
+      "pushl 0x10(%%esp)\n\t"
+      "movl 0x8(%%esp), %%eax\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "addl $-8, %%eax\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c205f6d]\n\t"
+      "ret\n\t"
+      :
+      : [c205f6d] "m"(b2060d4_c205f6d)
+      : "memory");
 }
+#else
+#error "IDirectSound_CreateSoundBuffer: clang naked draft required"
+#endif
+
 
 /* 0x002060f8 */
 void IDirectSound_CreateSoundStream(void)
@@ -16942,11 +18066,41 @@ void CMcpxAPU_SetMixBinHeadroom(void)
 #endif
 
 
-/* 0x00207234 */
+/* CMcpxAPU_Set3dParameters (0x207234) — XBE naked draft (batch 361). */
+#if defined(__clang__)
+static void (*const b207234_c206a5e)(void) = (void *)CMcpxAPU_Commit3dSettings;
+
+__attribute__((naked, noinline))
 void CMcpxAPU_Set3dParameters(void)
 {
-  CMcpxAPU_Commit3dSettings();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0x8(%%esp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "pushl $0x10\n\t"
+      "popl %%ecx\n\t"
+      "leal 0x144(%%eax), %%edi\n\t"
+      "rep movsl\n\t"
+      "orb $0xff, 0x1b4(%%eax)\n\t"
+      "cmpl $0, 0x10(%%esp)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "je .LCMcpxAPU_Set3dParameters_1\n\t"
+      "pushl $0\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "call *%[c206a5e]\n\t"
+      ".LCMcpxAPU_Set3dParameters_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c206a5e] "m"(b207234_c206a5e)
+      : "memory");
 }
+#else
+#error "CMcpxAPU_Set3dParameters: clang naked draft required"
+#endif
+
 
 /* CMcpxAPU_Set3dDistanceFactor (0x207265) — XBE naked draft (batch 350). */
 #if defined(__clang__)
@@ -17029,17 +18183,73 @@ void CMcpxAPU_Set3dRolloffFactor(void)
 #endif
 
 
-/* 0x00207309 */
+/* CMcpxAPU_Set3dPosition (0x207309) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+static void (*const b207309_c206a5e)(void) = (void *)CMcpxAPU_Commit3dSettings;
+
+__attribute__((naked, noinline))
 void CMcpxAPU_Set3dPosition(void)
 {
-  CMcpxAPU_Commit3dSettings();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0x8(%%esp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x148(%%ecx), %%edi\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      "orb $0xff, 0x1b4(%%ecx)\n\t"
+      "cmpl $0, 0x10(%%esp)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "je .LCMcpxAPU_Set3dPosition_1\n\t"
+      "pushl $0\n\t"
+      "call *%[c206a5e]\n\t"
+      ".LCMcpxAPU_Set3dPosition_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c206a5e] "m"(b207309_c206a5e)
+      : "memory");
 }
+#else
+#error "CMcpxAPU_Set3dPosition: clang naked draft required"
+#endif
 
-/* 0x00207334 */
+
+/* CMcpxAPU_Set3dVelocity (0x207334) — XBE naked draft (batch 366). */
+#if defined(__clang__)
+static void (*const b207334_c206a5e)(void) = (void *)CMcpxAPU_Commit3dSettings;
+
+__attribute__((naked, noinline))
 void CMcpxAPU_Set3dVelocity(void)
 {
-  CMcpxAPU_Commit3dSettings();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0x8(%%esp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x154(%%ecx), %%edi\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      "orl $0x40, 0x1b4(%%ecx)\n\t"
+      "cmpl $0, 0x10(%%esp)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "je .LCMcpxAPU_Set3dVelocity_1\n\t"
+      "pushl $0\n\t"
+      "call *%[c206a5e]\n\t"
+      ".LCMcpxAPU_Set3dVelocity_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c206a5e] "m"(b207334_c206a5e)
+      : "memory");
 }
+#else
+#error "CMcpxAPU_Set3dVelocity: clang naked draft required"
+#endif
+
 
 /* CMcpxAPU_SetI3DL2Listener (0x20735f) — XBE naked draft (batch 338). */
 #if defined(__clang__)
@@ -17738,18 +18948,75 @@ void CMcpxVoiceClient_Commit3dSettings(void)
 #endif
 
 
-/* 0x0020a0ef */
+/* CMcpxVoiceClient_Set3dParameters (0x20a0ef) — XBE naked draft (batch 361). */
+#if defined(__clang__)
+static void (*const b20a0ef_c209e6d)(void) = (void *)CMcpxVoiceClient_Commit3dSettings;
+
+__attribute__((naked, noinline))
 void CMcpxVoiceClient_Set3dParameters(void)
 {
-  CMcpxVoiceClient_Commit3dSettings();
-  CMcpxVoiceClient_Commit3dSettings();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0x8(%%esp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "pushl $0x10\n\t"
+      "popl %%ecx\n\t"
+      "leal 0x1c(%%eax), %%edi\n\t"
+      "rep movsl\n\t"
+      "orb $0xff, 0x80(%%eax)\n\t"
+      "cmpl $0, 0x10(%%esp)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "je .LCMcpxVoiceClient_Set3dParameters_1\n\t"
+      "pushl $0\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "call *%[c209e6d]\n\t"
+      ".LCMcpxVoiceClient_Set3dParameters_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c209e6d] "m"(b20a0ef_c209e6d)
+      : "memory");
 }
+#else
+#error "CMcpxVoiceClient_Set3dParameters: clang naked draft required"
+#endif
 
-/* 0x0020a145 */
+
+/* CMcpxVoiceClient_Set3dConeOrientation (0x20a145) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+static void (*const b20a145_c209e6d)(void) = (void *)CMcpxVoiceClient_Commit3dSettings;
+
+__attribute__((naked, noinline))
 void CMcpxVoiceClient_Set3dConeOrientation(void)
 {
-  CMcpxVoiceClient_Commit3dSettings();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0x8(%%esp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x40(%%ecx), %%edi\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      "orl $0x18, 0x80(%%ecx)\n\t"
+      "cmpl $0, 0x10(%%esp)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "je .LCMcpxVoiceClient_Set3dConeOrientation_1\n\t"
+      "pushl $0\n\t"
+      "call *%[c209e6d]\n\t"
+      ".LCMcpxVoiceClient_Set3dConeOrientation_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c209e6d] "m"(b20a145_c209e6d)
+      : "memory");
 }
+#else
+#error "CMcpxVoiceClient_Set3dConeOrientation: clang naked draft required"
+#endif
+
 
 /* CMcpxVoiceClient_Set3dConeOutsideVolume (0x20a16d) — XBE naked draft (batch 350). */
 #if defined(__clang__)
@@ -17859,17 +19126,73 @@ void CMcpxVoiceClient_Set3dMode(void)
 #endif
 
 
-/* 0x0020a1f1 */
+/* CMcpxVoiceClient_Set3dPosition (0x20a1f1) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+static void (*const b20a1f1_c209e6d)(void) = (void *)CMcpxVoiceClient_Commit3dSettings;
+
+__attribute__((naked, noinline))
 void CMcpxVoiceClient_Set3dPosition(void)
 {
-  CMcpxVoiceClient_Commit3dSettings();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0x8(%%esp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x20(%%ecx), %%edi\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      "orb $0xff, 0x80(%%ecx)\n\t"
+      "cmpl $0, 0x10(%%esp)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "je .LCMcpxVoiceClient_Set3dPosition_1\n\t"
+      "pushl $0\n\t"
+      "call *%[c209e6d]\n\t"
+      ".LCMcpxVoiceClient_Set3dPosition_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c209e6d] "m"(b20a1f1_c209e6d)
+      : "memory");
 }
+#else
+#error "CMcpxVoiceClient_Set3dPosition: clang naked draft required"
+#endif
 
-/* 0x0020a219 */
+
+/* CMcpxVoiceClient_Set3dVelocity (0x20a219) — XBE naked draft (batch 367). */
+#if defined(__clang__)
+static void (*const b20a219_c209e6d)(void) = (void *)CMcpxVoiceClient_Commit3dSettings;
+
+__attribute__((naked, noinline))
 void CMcpxVoiceClient_Set3dVelocity(void)
 {
-  CMcpxVoiceClient_Commit3dSettings();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0x8(%%esp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x2c(%%ecx), %%edi\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      "orl $0x40, 0x80(%%ecx)\n\t"
+      "cmpl $0, 0x10(%%esp)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "je .LCMcpxVoiceClient_Set3dVelocity_1\n\t"
+      "pushl $0\n\t"
+      "call *%[c209e6d]\n\t"
+      ".LCMcpxVoiceClient_Set3dVelocity_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c209e6d] "m"(b20a219_c209e6d)
+      : "memory");
 }
+#else
+#error "CMcpxVoiceClient_Set3dVelocity: clang naked draft required"
+#endif
+
 
 /* CMcpxVoiceClient_SetI3DL2Source (0x20a241) — XBE naked draft (batch 343). */
 #if defined(__clang__)
@@ -18446,12 +19769,29 @@ void CMcpxBuffer_SetCurrentPosition(void)
 #endif
 
 
-/* 0x0020ba90 */
+/* CMcpxBuffer_SetBufferData (0x20ba90) — XBE naked draft (batch 368). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void CMcpxBuffer_SetBufferData(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x148(%%ecx), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testb $4, 0xe(%%edx)\n\t"
+      "jne .LCMcpxBuffer_SetBufferData_1\n\t"
+      ".byte 0xe9, 0xf0, 0xf9, 0xff, 0xff\n\t"
+      ".LCMcpxBuffer_SetBufferData_1:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "CMcpxBuffer_SetBufferData: clang naked draft required"
+#endif
+
 
 /* CMcpxBuffer_Play (0x20baa4) — XBE naked draft (batch 344). */
 #if defined(__clang__)

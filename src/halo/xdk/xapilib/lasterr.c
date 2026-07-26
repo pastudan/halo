@@ -647,12 +647,31 @@ int FUN_001d29eb(int param_1, void *param_2, int param_3)
   (void)ebp;
 }
 
-/* 0x1d2ad3 */
+/* FUN_001d2ad3 (0x1d2ad3) — XBE naked draft (batch 362). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_001d2ad3(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "cmpl $9, %%eax\n\t"
+      "jg .LFUN_001d2ad3_1\n\t"
+      "addl $0x30, %%eax\n\t"
+      "jmp .LFUN_001d2ad3_2\n\t"
+      ".LFUN_001d2ad3_1:\n\t"
+      "addl $0x37, %%eax\n\t"
+      ".LFUN_001d2ad3_2:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001d2ad3: clang naked draft required"
+#endif
+
 
 /* FUN_001d2ae7 (0x1d2ae7) — XBE naked draft (batch 320). */
 #if defined(__clang__)

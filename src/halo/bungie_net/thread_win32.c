@@ -837,23 +837,60 @@ void create_mutex(void)
 #endif
 
 
-/* 0x81910 */
+/* FUN_00081910 (0x81910) — XBE naked draft (batch 368). */
+#if defined(__clang__)
+static void (*const b81910_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b81910_exitfn)(int) = system_exit;
+static int __stdcall (*const b81910_c1cf900)(int handle) = (void *)CloseHandle;
+
+__attribute__((naked, noinline))
 void FUN_00081910(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x8193b */
-  display_assert((char *)0x00265fb4, (char *)0x00265f5c, 240, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0x81962 */
-  display_assert((char *)0x00265fc4, (char *)0x00265f5c, 241, 0);
-  system_exit(0);
-  CloseHandle(0);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00081910_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf0\n\t"
+      "pushl $0x265f5c\n\t"
+      "pushl $0x265fb4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00081910_1:\n\t"
+      "movb 0x24(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00081910_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf1\n\t"
+      "pushl $0x265f5c\n\t"
+      "pushl $0x265fc4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00081910_2:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1cf900]\n\t"
+      "movb $0, 0x4(%%esi)\n\t"
+      "movl $0, (%%esi)\n\t"
+      "movb $0, 0x24(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b81910_assert), [exitfn] "m"(b81910_exitfn), [c1cf900] "m"(b81910_c1cf900)
+      : "memory");
 }
+#else
+#error "FUN_00081910: clang naked draft required"
+#endif
+
 
 /* FUN_00081980 (0x81980) — XBE naked draft (batch 343). */
 #if defined(__clang__)

@@ -4464,36 +4464,110 @@ unsigned char FUN_00180770(float alpha)
   (void)eax;
 }
 
-/* 0x180820 */
+/* compress_real_to_int16 (0x180820) — XBE naked draft (batch 368). */
+#if defined(__clang__)
+static void (*const b180820_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b180820_exitfn)(int) = system_exit;
+static double (*const b180820_c1d9c2b)(double x) = (void *)floor;
+
+__attribute__((naked, noinline))
 void compress_real_to_int16(void)
 {
-  int eax = 0;
-
-  /* relift: relift: fcomp dword ptr [0x255e94] */
-  /* test (char)eax, 1 -> jne 0x180844 */
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-  display_assert((char *)0x002b00b8, (char *)0x002afe38, 55, 0);
-  system_exit(0);
-  floor(0.0f);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x255e94\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lcompress_real_to_int16_1\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jnp .Lcompress_real_to_int16_2\n\t"
+      ".Lcompress_real_to_int16_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x37\n\t"
+      "pushl $0x2afe38\n\t"
+      "pushl $0x2b00b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcompress_real_to_int16_2:\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "subl $8, %%esp\n\t"
+      "fmuls 0x2b00b4\n\t"
+      "fstpl (%%esp)\n\t"
+      "call *%[c1d9c2b]\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fistps -0x4(%%ebp)\n\t"
+      "movw -0x4(%%ebp), %%ax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b180820_assert), [exitfn] "m"(b180820_exitfn), [c1d9c2b] "m"(b180820_c1d9c2b)
+      : "memory");
 }
+#else
+#error "compress_real_to_int16: clang naked draft required"
+#endif
 
-/* 0x180890 */
-short FUN_00180890(float f)
+
+/* FUN_00180890 (0x180890) — XBE naked draft (batch 365). */
+#if defined(__clang__)
+static double (*const b180890_c1d9c2b)(double x) = (void *)floor;
+
+__attribute__((naked, noinline))
+short FUN_00180890(float f __attribute__((unused)))
 {
-  int eax = 0;
-
-  /* relift: relift: fcomp dword ptr [0x255e94] */
-  /* relift: relift: fld dword ptr [0x255e94] */
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x1808c4 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  floor(0.0f);
-  return 0;
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x255e94\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00180890_1\n\t"
+      "flds 0x255e94\n\t"
+      "jmp .LFUN_00180890_3\n\t"
+      ".LFUN_00180890_1:\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00180890_2\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .LFUN_00180890_3\n\t"
+      ".LFUN_00180890_2:\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      ".LFUN_00180890_3:\n\t"
+      "fmuls 0x2b00b4\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "call *%[c1d9c2b]\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fistps -0x4(%%ebp)\n\t"
+      "movw -0x4(%%ebp), %%ax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d9c2b] "m"(b180890_c1d9c2b)
+      : "memory");
 }
+#else
+#error "FUN_00180890: clang naked draft required"
+#endif
+
 
 /* 0x181060 */
 unsigned char *FUN_00181060(void *lens_flare_params)

@@ -931,20 +931,50 @@ void FUN_001d0c91(void)
   (void)eax;
 }
 
-/* 0x1d0cbf */
+/* FUN_001d0cbf (0x1d0cbf) — XBE naked draft (batch 365). */
+#if defined(__clang__)
+static void __stdcall (*const b1d0cbf_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void FUN_001d0cbf(void)
 {
-  int eax = 0;
-  int ebp = 0;
-
-  /* relift: test byte ptr [ebp + 0x11], 0x80 -> je 0x1d0cd5 */
-  /* relift: cmp dword ptr [ebp + 0xc], 0 -> je 0x1d0cd5 */
-  /* test eax, eax -> jl 0x1d0cef */
-  XapiSetLastNTError(0);
-
-  (void)eax;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "testb $0x80, 0x11(%%ebp)\n\t"
+      "je .LFUN_001d0cbf_1\n\t"
+      "cmpl $0, 0xc(%%ebp)\n\t"
+      "je .LFUN_001d0cbf_1\n\t"
+      "pushl $0xc000000d\n\t"
+      "jmp .LFUN_001d0cbf_3\n\t"
+      ".LFUN_001d0cbf_1:\n\t"
+      "pushl 0x10(%%ebp)\n\t"
+      "leal 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x25314c\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_001d0cbf_2\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "jmp .LFUN_001d0cbf_4\n\t"
+      ".LFUN_001d0cbf_2:\n\t"
+      "pushl %%eax\n\t"
+      ".LFUN_001d0cbf_3:\n\t"
+      "call *%[c1d2296]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_001d0cbf_4:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1d0cbf_c1d2296)
+      : "memory");
 }
+#else
+#error "FUN_001d0cbf: clang naked draft required"
+#endif
+
 
 /* 0x1d0cfb */
 void FUN_001d0cfb(void)
