@@ -3808,30 +3808,17 @@ int16_t FUN_000ce420(int list_handle)
   return *(int16_t *)((char *)node + 6);
 }
 
-/* FUN_000cab80 (0xcab80) — XBE naked draft (batch 188). */
-#if defined(__clang__)
-static void *(*const bcab80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_000cab80(int handle __attribute__((unused)))
+/* FUN_000cab80 (0xcab80) — readable C lift: pop HS thread stack. */
+void FUN_000cab80(int handle)
 {
-  __asm__ volatile(
-      "movl 0x5aa6c4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%eax), %%edx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ecx, 0x10(%%eax)\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bcab80_dget)
-      : "memory");
+  char *node;
+  int *stack;
+
+  node = (char *)datum_get(*(data_t **)0x5aa6c4, handle);
+  stack = *(int **)(node + 0x10);
+  *(int *)(node + 0x10) = *stack;
 }
-#else
-#error "FUN_000cab80: clang naked draft required"
-#endif
+
 
 
 /* FUN_000ca4e0 (0xca4e0) — readable C lift: boolean tostring. */
@@ -5463,87 +5450,54 @@ const char *FUN_000ca890(int datum_index)
   return *(const char **)((char *)entry + 4);
 }
 
-/* FUN_000cacf0 (0xcacf0) — XBE naked draft (batch 142). */
-#if defined(__clang__)
-static void *(*const bcacf0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bcacf0_ccab80)(int handle) = FUN_000cab80;
-
-__attribute__((naked, noinline))
-void FUN_000cacf0(int thread_index __attribute__((unused)))
+/* FUN_000cacf0 (0xcacf0) — readable C lift: HS thread stack/control cleanup. */
+void FUN_000cacf0(int thread_index)
 {
-  __asm__ volatile(
-      "movl 0x5aa6c4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000cacf0_3\n\t"
-      "movb 0x3(%%esi), %%al\n\t"
-      "testb $2, %%al\n\t"
-      "movl $0, 0x8(%%esi)\n\t"
-      "je .LFUN_000cacf0_1\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "andb $0xfd, %%al\n\t"
-      "movl %%ecx, 0x8(%%esi)\n\t"
-      "movb %%al, 0x3(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000cacf0_1:\n\t"
-      "movl 0x10(%%esi), %%edx\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000cacf0_2\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0x14, 0x2(%%eax)\n\t"
-      "jne .LFUN_000cacf0_2\n\t"
-      "movl 0x5aa6c4, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%eax), %%edx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ecx, 0x10(%%eax)\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000cacf0_2:\n\t"
-      "movl 0x10(%%esi), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000cacf0_3\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000cacf0_3\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0x14, 0x2(%%eax)\n\t"
-      "jne .LFUN_000cacf0_3\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[ccab80]\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[ccab80]\n\t"
-      "andb $0xfe, 0x3(%%esi)\n\t"
-      ".LFUN_000cacf0_3:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bcacf0_dget), [ccab80] "m"(bcacf0_ccab80)
-      : "memory");
+  char *thread;
+  int expr;
+  unsigned char flags;
+  int *stack;
+  int handle;
+  char *node;
+  int *link;
+
+  thread = (char *)datum_get(*(data_t **)0x5aa6c4, thread_index);
+  expr = *(int *)(thread + 8);
+  if (expr == -1)
+    return;
+  flags = (unsigned char)thread[3];
+  *(int *)(thread + 8) = 0;
+  if (flags & 2) {
+    *(int *)(thread + 8) = *(int *)(thread + 0xc);
+    thread[3] = (char)(flags & (unsigned char)~2);
+    return;
+  }
+  stack = *(int **)(thread + 0x10);
+  handle = stack[1];
+  if (handle != -1) {
+    node = (char *)datum_get(*(data_t **)0x5aa6c8, handle);
+    if (*(int16_t *)(node + 2) == 0x14) {
+      thread = (char *)datum_get(*(data_t **)0x5aa6c4, thread_index);
+      stack = *(int **)(thread + 0x10);
+      *(int *)(thread + 0x10) = *stack;
+      return;
+    }
+  }
+  stack = *(int **)(thread + 0x10);
+  link = (int *)*stack;
+  if (!link)
+    return;
+  handle = link[1];
+  if (handle == -1)
+    return;
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, handle);
+  if (*(int16_t *)(node + 2) != 0x14)
+    return;
+  FUN_000cab80(thread_index);
+  FUN_000cab80(thread_index);
+  thread[3] = (char)(thread[3] & (unsigned char)~1);
 }
-#else
-#error "FUN_000cacf0: clang naked draft required"
-#endif
+
 
 
 /* FUN_000cae00 (0xcae00) — readable C lift: find script index by name. */
