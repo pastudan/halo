@@ -10349,7 +10349,7 @@
         },
         {
           "addr": "0x1c1280",
-          "decl": "char FUN_001c1280(int profile_handle, void *out_path);",
+          "decl": "void FUN_001c1280(void);",
           "ported": true,
           "name": "FUN_001c1280"
         },
@@ -12195,7 +12195,8 @@
         {
           "addr": "0xc8ec0",
           "decl": "char FUN_000c8ec0(int16_t function_index, int root_datum);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000c8ec0"
         },
         {
           "addr": "0xc8f40",
@@ -23511,19 +23512,21 @@
       "functions": [
         {
           "addr": "0x1c1b00",
-          "decl": "void FUN_001c1b00(int profile_handle, void *out @<esi>);",
+          "decl": "void FUN_001c1b00(int profile_handle, void *out@<esi>);",
           "ported": false,
           "name": "FUN_001c1b00"
         },
         {
           "addr": "0x1c1ba0",
           "decl": "void FUN_001c1ba0(void);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_001c1ba0"
         },
         {
           "addr": "0x1c1bc0",
           "decl": "void player_profile_get_from_path(int profile_handle, void *out);",
-          "ported": true
+          "ported": true,
+          "name": "player_profile_get_from_path"
         },
         {
           "addr": "0x1c1c00",
@@ -23538,7 +23541,8 @@
         {
           "addr": "0x1c1da0",
           "decl": "void FUN_001c1da0(void);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_001c1da0"
         },
         {
           "addr": "0x1c1dc0",

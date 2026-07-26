@@ -177,9 +177,9 @@ static int (*const b1c1c00_c100860)(void) = main_get_current_solo_level;
 static void (*const b1c1c00_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1c1c00_exitfn)(int) = system_exit;
 static void (*const b1c1c00_ce09e0)(void) = (void *)player_ui_get_active_player_profile_index;
-static void (*const b1c1c00_ce0980)(void) = player_ui_get_active_player_profile;
-static void (*const b1c1c00_c1c1bc0)(void) = player_profile_get_from_path;
-static void (*const b1c1c00_ce1490)(void) = player_ui_set_active_player_profile;
+static void (*const b1c1c00_ce0980)(void) = (void (*)(void))player_ui_get_active_player_profile;
+static void (*const b1c1c00_c1c1bc0)(void) = (void (*)(void))player_profile_get_from_path;
+static void (*const b1c1c00_ce1490)(void) = (void (*)(void))player_ui_set_active_player_profile;
 
 __attribute__((naked, noinline))
 void FUN_001c1c00(void)
@@ -274,9 +274,9 @@ static void (*const b1c1cc0_exitfn)(int) = system_exit;
 static int (*const b1c1cc0_c100860)(void) = main_get_current_solo_level;
 static int16_t (*const b1c1cc0_ca7460)(void) = game_difficulty_level_get;
 static void (*const b1c1cc0_ce09e0)(void) = (void *)player_ui_get_active_player_profile_index;
-static void (*const b1c1cc0_ce0980)(void) = player_ui_get_active_player_profile;
-static void (*const b1c1cc0_c1c1b00)(void) = FUN_001c1b00;
-static void (*const b1c1cc0_ce1490)(void) = player_ui_set_active_player_profile;
+static void (*const b1c1cc0_ce0980)(void) = (void (*)(void))player_ui_get_active_player_profile;
+static void (*const b1c1cc0_c1c1b00)(void) = (void (*)(void))FUN_001c1b00;
+static void (*const b1c1cc0_ce1490)(void) = (void (*)(void))player_ui_set_active_player_profile;
 static void (*const b1c1cc0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
@@ -927,7 +927,7 @@ static void * (*const b1c22e0_c8e0b0)(void *destination, void *source, size_t si
 static void (*const b1c22e0_c1c2890)(void) = saved_game_file_close;
 static void (*const b1c22e0_c1c2b10)(void) = (void *)saved_game_files_release_mutex;
 static game_variant_t * (*const b1c22e0_caa190)(game_variant_t *out) = game_engine_slayer_default;
-static void (*const b1c22e0_c1c4600)(void) = saved_game_file_get_display_name;
+static void (*const b1c22e0_c1c4600)(void) = (void (*)(void))saved_game_file_get_display_name;
 static wchar_t * (*const b1c22e0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 
 __attribute__((naked, noinline))

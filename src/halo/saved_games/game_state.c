@@ -377,6 +377,7 @@ void game_state_lruv_cache_new(void)
   *(void **)0x4ea9ac = game_state_malloc(DAT_00265d1c, 0, 0x14c);
 }
 
+
 /* FUN_001c00c0 (0x1c00c0) — XBE naked draft (batch 250). */
 #if defined(__clang__)
 static void (*const b1c00c0_assert)(const char *, const char *, int, bool) = display_assert;

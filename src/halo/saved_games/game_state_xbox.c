@@ -733,7 +733,7 @@ void game_state_read_core(void)
 /* FUN_001c0780 (0x1c0780) — XBE naked draft (batch 277). */
 #if defined(__clang__)
 static void (*const b1c0780_chkstk)(void) = FUN_001d90e0;
-static void (*const b1c0780_ce0bf0)(void) = player_ui_get_path_to_local_player_profile_directory;
+static void (*const b1c0780_ce0bf0)(void) = (void (*)(void))player_ui_get_path_to_local_player_profile_directory;
 static char * (*const b1c0780_c8dc30)(char *destination, const char *source) = FUN_0008dc30;
 static int __stdcall (*const b1c0780_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = CreateFileA;
 static unsigned int __stdcall (*const b1c0780_c1d1d4a)(int handle, unsigned int *high_size) = GetFileSize;
@@ -902,7 +902,7 @@ static unsigned int __stdcall (*const b1c0ac0_c1d1610)(int handle, int distance,
 static int __stdcall (*const b1c0ac0_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = WriteFile;
 static int (*const b1c0ac0_c1d2240)(void) = xapi_GetLastError;
 static char * (*const b1c0ac0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b1c0ac0_ce0bf0)(void) = player_ui_get_path_to_local_player_profile_directory;
+static void (*const b1c0ac0_ce0bf0)(void) = (void (*)(void))player_ui_get_path_to_local_player_profile_directory;
 static bool __stdcall (*const b1c0ac0_c1d0ff9)(const char *path) = DeleteFileA;
 static int __stdcall (*const b1c0ac0_c1cf900)(int handle) = CloseHandle;
 
@@ -1049,7 +1049,7 @@ void game_state_write_to_persistent_storage(int param_1 __attribute__((unused)),
 /* FUN_001c0d50 (0x1c0d50) — readable C lift. */
 void FUN_001c0d50(int a0, int a1, int a2, int a3)
 {
-  FUN_001c53f0(a0, 0, a1, a2, a3);
+  ((void (*)(int, int, int, int, int))FUN_001c53f0)(a0, 0, a1, a2, a3);
 }
 
 /* player_profile_delete (0x1c0da0) — XBE naked draft (batch 251). */

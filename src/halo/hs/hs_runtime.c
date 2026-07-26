@@ -4229,75 +4229,24 @@ char FUN_000c8e00(int16_t function_index __attribute__((unused)), int root_datum
 #endif
 
 
-/* FUN_000c8ec0 (0xc8ec0) — XBE naked draft (batch 150). */
-#if defined(__clang__)
-static void (*const bc8ec0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc8ec0_exitfn)(int) = system_exit;
-static void * (*const bc8ec0_cc3d00)(int16_t function_index) = hs_function_table_get;
-static char (*const bc8ec0_cc55d0)(const char *name, int *out_handles, int16_t max_count, int root_handle) = FUN_000c55d0;
-static bool (*const bc8ec0_cc7d80)(int datum_index, int16_t check_type) = hs_type_check;
-
-__attribute__((naked, noinline))
-char FUN_000c8ec0(int16_t function_index __attribute__((unused)), int root_datum __attribute__((unused)))
+/* FUN_000c8ec0 (0xc8ec0) — readable C lift. */
+char FUN_000c8ec0(int16_t function_index, int root_datum)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $0x17, %%si\n\t"
-      "pushl %%edi\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jl .LFUN_000c8ec0_1\n\t"
-      "jle .LFUN_000c8ec0_2\n\t"
-      ".LFUN_000c8ec0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x29a\n\t"
-      "pushl $0x27cdc0\n\t"
-      "pushl $0x27d250\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000c8ec0_2:\n\t"
-      "leal 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cc3d00]\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%ecx\n\t"
-      "movl $1, %%ebx\n\t"
-      "call *%[cc55d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "je .LFUN_000c8ec0_3\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $0x25\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cc7d80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c8ec0_3:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bc8ec0_assert), [exitfn] "m"(bc8ec0_exitfn), [cc3d00] "m"(bc8ec0_cc3d00), [cc55d0] "m"(bc8ec0_cc55d0), [cc7d80] "m"(bc8ec0_cc7d80)
-      : "memory");
+  char result;
+  void *entry;
+  const char *name;
+
+  result = 0;
+  if (function_index != 0x17) {
+    display_assert((const char *)0x27d250, (const char *)0x27cdc0, 0x29a, 1);
+    system_exit(-1);
+  }
+  entry = hs_function_table_get(function_index);
+  name = *(const char **)((char *)entry + 4);
+  if (!FUN_000c55d0(name, (int *)&function_index, 1, root_datum))
+    return result;
+  return (char)hs_type_check(function_index, 0x25);
 }
-#else
-#error "FUN_000c8ec0: clang naked draft required"
-#endif
 
 
 /* FUN_000c95f0 (0xc95f0) — readable C lift: collect object list from players. */
@@ -4434,6 +4383,7 @@ char FUN_000c9700(int object_handle, int unused, float distance)
   }
   return FUN_001aa430(object_handle, pos, distance * *(float *)0x253d4c);
 }
+
 
 /* FUN_000c9770 (0xc9770) — readable C lift: any list unit facing param. */
 char FUN_000c9770(int list_handle, int param, float distance)
