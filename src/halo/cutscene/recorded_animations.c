@@ -255,33 +255,11 @@ void FUN_00094290(void)
   /* relift: no calls detected — manual review */
 }
 
-/* FUN_00094a70 (0x94a70) — XBE naked draft (batch 269). */
-#if defined(__clang__)
-static void (*const b94a70_c93780)(int a, int *cursor, int c) = FUN_00093780;
-
-__attribute__((naked, noinline))
-void FUN_00094a70(int a __attribute__((unused)), int *cursor __attribute__((unused)), int c __attribute__((unused)))
+/* FUN_00094a70 (0x94a70) — readable C lift (thin wrapper). */
+void FUN_00094a70(int a, int *cursor, int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c93780]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c93780] "m"(b94a70_c93780)
-      : "memory");
+  FUN_00093780(a, cursor, c);
 }
-#else
-#error "FUN_00094a70: clang naked draft required"
-#endif
 
 void FUN_00094ba0(void)
 {
