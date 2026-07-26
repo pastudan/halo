@@ -11672,7 +11672,7 @@
         {
           "addr": "0xc4160",
           "decl": "void FUN_000c4160(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4180",
@@ -17946,7 +17946,7 @@
         {
           "addr": "0xa2920",
           "decl": "void scripted_player_effect_set_rumble(int a0, float a1);",
-          "ported": false,
+          "ported": true,
           "name": "scripted_player_effect_set_rumble"
         },
         {
@@ -21781,7 +21781,7 @@
         },
         {
           "addr": "0x128c0",
-          "decl": "int action_avoid_setup(void * a0, void * a1);",
+          "decl": "int action_avoid_setup(int * a0, void * a1);",
           "ported": false
         },
         {

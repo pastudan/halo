@@ -4102,29 +4102,12 @@ void FUN_000c4130(int16_t block_offset, int16_t name_offset, int element_size)
   }
 }
 
-/* FUN_000c4160 (0xc4160) — XBE naked draft (batch 163). */
-#if defined(__clang__)
-static void (*const bc4160_cc4030)(const char *token) = FUN_000c4030;
-
-__attribute__((naked, noinline))
+/* FUN_000c4160 (0xc4160) — readable C lift. */
 void FUN_000c4160(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "movl $0x25bb40, %%esi\n\t"
-      "call *%[cc4030]\n\t"
-      "movl $0x27b978, %%esi\n\t"
-      "call *%[cc4030]\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [cc4030] "m"(bc4160_cc4030)
-      : "memory");
+  FUN_000c4030((const char *)0x25bb40);
+  FUN_000c4030((const char *)0x27b978);
 }
-#else
-#error "FUN_000c4160: clang naked draft required"
-#endif
-
 
 /* FUN_000c4180 (0xc4180) — XBE naked draft (batch 163). */
 #if defined(__clang__)
