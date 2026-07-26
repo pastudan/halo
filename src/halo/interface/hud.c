@@ -458,46 +458,91 @@ void hud_player_set_vehicle_seat(unsigned __int16 local_player_index,
                                            vehicle_tag_handle, 0, 0);
 }
 
-/* Draws a 16-segment HUD ring (e.g. a charge/cooldown indicator).  param_1
- * sets the ring radius via tan(); each of 16 vertices is placed on the circle
- * at depth -0.0625, transformed by the HUD matrix at 0x5065e8, then drawn as
- * connected segments with style param_2. */
-void hud_set_element_digital(float param_1, const void *param_2)
+/* hud_set_element_digital (0xd0c80) — XBE naked draft (batch 88). */
+#if defined(__clang__)
+static void (*const bd0c80_xfrmpt)(float *, float *, float *) = matrix_transform_point;
+static void (*const bd0c80_c17eb10)(float *vert_a, float *vert_b, int param_3) = FUN_0017eb10;
+
+__attribute__((naked, noinline))
+void hud_set_element_digital(float value __attribute__((unused)), const void *draw_ptr __attribute__((unused)))
 {
-  float vertices[16][3];
-  float radius;
-  float angle;
-  float *vertex;
-  int i;
-  int index;
-  int remaining;
-
-  radius = x87_fptan(param_1 * *(float *)0x253398) * *(float *)0x255d90;
-
-  angle = 0.0f;
-  for (i = 0; i < 16; i++) {
-    vertices[i][2] = -0.0625f;
-#if defined(_MSC_VER) && !defined(__clang__)
-    vertices[i][0] = (float)cos((double)angle) * radius;
-    vertices[i][1] = (float)sin((double)angle) * radius;
-#else
-    vertices[i][0] = x87_fcos(angle) * radius;
-    vertices[i][1] = x87_fsin(angle) * radius;
-#endif
-    matrix_transform_point((float *)0x5065e8, vertices[i], vertices[i]);
-    angle += *(float *)0x26b164;
-  }
-
-  index = 1;
-  vertex = vertices[0];
-  remaining = 16;
-  do {
-    FUN_0017eb10(vertex, vertices[index % 16], (int)(long)param_2);
-    index++;
-    vertex += 3;
-    remaining--;
-  } while (remaining != 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc4, %%esp\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "pushl %%ebx\n\t"
+      "fmuls 0x253398\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl $0, 0x8(%%ebp)\n\t"
+      "fptan\n\t"
+      "leal -0xc4(%%ebp), %%esi\n\t"
+      "movl $0x10, %%edi\n\t"
+      "movl $0xbd800000, %%ebx\n\t"
+      "fstp %%st(0)\n\t"
+      "fmuls 0x255d90\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lhud_set_element_digital_1:\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "pushl %%esi\n\t"
+      "fcos\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x5065e8\n\t"
+      "movl %%ebx, 0x8(%%esi)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "fstps (%%esi)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fsin\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "fstps 0x4(%%esi)\n\t"
+      "call *%[xfrmpt]\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fadds 0x26b164\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl $0xc, %%esi\n\t"
+      "decl %%edi\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      "jne .Lhud_set_element_digital_1\n\t"
+      "movl $1, %%esi\n\t"
+      "leal -0xc4(%%ebp), %%edi\n\t"
+      "movl $0x10, %%ebx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lhud_set_element_digital_2:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%esi, %%eax\n\t"
+      "andl $0x8000000f, %%eax\n\t"
+      "jns .Lhud_set_element_digital_3\n\t"
+      "decl %%eax\n\t"
+      "orl $0xfffffff0, %%eax\n\t"
+      "incl %%eax\n\t"
+      ".Lhud_set_element_digital_3:\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "leal -0xc4(%%ebp,%%ecx,4), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c17eb10]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "incl %%esi\n\t"
+      "addl $0xc, %%edi\n\t"
+      "decl %%ebx\n\t"
+      "jne .Lhud_set_element_digital_2\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [xfrmpt] "m"(bd0c80_xfrmpt), [c17eb10] "m"(bd0c80_c17eb10)
+      : "memory");
 }
+#else
+#error "hud_set_element_digital: clang naked draft required"
+#endif
+
 
 void hud_load(bool a1)
 {

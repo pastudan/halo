@@ -348,73 +348,95 @@ bool FUN_00062020(int16_t *obstacle_set, uint32_t datum, uint16_t flags,
 #include "../../common.h"
 #include "../../x87_math.h"
 
-/* 0x0062410 — FUN_00062410
- *
- * Obstacle-disc overlap query: given an obstacle-disc set (obstacles), a disc
- * index to skip (disc_index_skip), a 2D query centre (position_xy[0]=x,
- * position_xy[1]=y), and a radius pad, returns the index of the FIRST disc
- * (other than the skipped one) whose inflated circle contains/overlaps the
- * query point, or -1 (NONE) if none do.
- *
- * Per disc, using the obstacle-set layout shared with FUN_00062020 /
- * FUN_00062680 (base+2 = int16 disc_count; disc[] base at +8, stride 0x18;
- * disc +8 = float x, +0xc = float y, +0x10 = float radius):
- *     dx = disc.x - position_xy[0]
- *     dy = disc.y - position_xy[1]
- *     sum_radius = disc.radius + radius
- *   overlap when  NOT( sum_radius^2 < dy^2 + dx^2 )
- * i.e. the disc is returned when its inflated radius squared is >= the squared
- * centre distance.  Loop scans discs in order and returns the first match.
- *
- * FPU order is disassembly-authoritative: sum_radius is disc.radius + radius,
- * the subtractions are disc-field MINUS position, and the distance term is
- * evaluated dy*dy + dx*dx (matching the decompile's fVar4*fVar4 + fVar3*fVar3);
- * the comparison primitive is `<`.  disc_count is re-read from memory each
- * iteration exactly as the original does.
- *
- * Bounds assert (c:\halo\source\ai\path.h:0x18c): disc index in
- * [0, disc_count) and disc_count <= MAXIMUM_DISC_COUNT (0x80); the assert
- * macro is display_assert + system_exit(-1) (do NOT lift as hcf).
- *
- * ABI: cdecl, 4 stack args, short return (disc index or -1).
- */
-short FUN_00062410(void *obstacles, short disc_index_skip, float *position_xy,
-                   float radius)
-{
-  char *base;
-  short i;
-  short disc_count;
-  char *disc;
-  float sum_radius;
-  float dx;
-  float dy;
+/* FUN_00062410 (0x62410) — XBE naked draft (batch 88). */
+#if defined(__clang__)
+static void (*const b62410_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b62410_exitfn)(int) = system_exit;
 
-  base = (char *)obstacles;
-  disc_count = *(short *)(base + 2);
-  i = 0;
-  if (disc_count > 0) {
-    do {
-      if (i != disc_index_skip) {
-        if (i < 0 || disc_count <= i || disc_count > 0x80) {
-          display_assert("disc_index>=0 && disc_index<obstacles->disc_count && "
-                         "obstacles->disc_count<=MAXIMUM_DISC_COUNT",
-                         "c:\\halo\\source\\ai\\path.h", 0x18c, 1);
-          system_exit(-1);
-        }
-        disc = base + 8 + i * 0x18;
-        sum_radius = *(float *)(disc + 0x10) + radius;
-        dx = *(float *)(disc + 8) - position_xy[0];
-        dy = *(float *)(disc + 0xc) - position_xy[1];
-        if (!(sum_radius * sum_radius < dy * dy + dx * dx)) {
-          return i;
-        }
-      }
-      disc_count = *(short *)(base + 2);
-      i = i + 1;
-    } while (i < disc_count);
-  }
-  return -1;
+__attribute__((naked, noinline))
+short FUN_00062410(void *obstacles __attribute__((unused)), short disc_index_skip __attribute__((unused)), float *position_xy __attribute__((unused)), float radius __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .LFUN_00062410_5\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      ".LFUN_00062410_1:\n\t"
+      "cmpw 0xc(%%ebp), %%si\n\t"
+      "je .LFUN_00062410_4\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_00062410_2\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jge .LFUN_00062410_2\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00062410_3\n\t"
+      ".LFUN_00062410_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18c\n\t"
+      "pushl $0x25e990\n\t"
+      "pushl $0x25e930\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00062410_3:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal 0x8(%%edi,%%eax,8), %%eax\n\t"
+      "flds 0x10(%%eax)\n\t"
+      "fadds 0x14(%%ebp)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fsubs (%%ebx)\n\t"
+      "flds 0xc(%%eax)\n\t"
+      "fsubs 0x4(%%ebx)\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      "fcompp\n\t"
+      "fstp %%st(0)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $1, %%ah\n\t"
+      "fstp %%st(0)\n\t"
+      "je .LFUN_00062410_6\n\t"
+      ".LFUN_00062410_4:\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "incl %%esi\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .LFUN_00062410_1\n\t"
+      ".LFUN_00062410_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "orw $0xffff, %%ax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00062410_6:\n\t"
+      "popl %%edi\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b62410_assert), [exitfn] "m"(b62410_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00062410: clang naked draft required"
+#endif
+
 
 /* FUN_00062680 (0x62680) — XBE naked draft (batch 82). */
 #if defined(__clang__)
@@ -823,66 +845,96 @@ void FUN_000625a0(void *obstacles __attribute__((unused)), short disc_index __at
 #endif
 
 
-/* FUN_000628b0 (0x628b0)  --  cluster_partition_assign_groups
- * (cluster_partitions.c)
- *
- * Partitions the elements of a cluster-partition set into connected groups.
- * The set header is two shorts: [0] = running group-id counter (reset to 0
- * here and bumped once per new group), [1] = element count.  Each element is
- * 0xc shorts (0x18 bytes) wide; the short at element-index 5 (byte 0xa) holds
- * the assigned group id, with -1 meaning "unassigned".
- *
- * Pass 1 marks every element unassigned.  Pass 2 walks the elements; for each
- * still-unassigned element it allocates a new group id, calls FUN_00062680 to
- * produce a 128-bit membership bitset (out param), then stamps the new group id
- * into every element whose bit is set.
- *
- * ABI: cdecl, 2 stack args, void return (RET, no N).  The single call to
- * FUN_00062680 pushes ESI(partition), EDX(arg2), EBX(i), ECX(&mask) and is
- * followed by ADD ESP,0x10 => 4 dword args.  The local frame is only 0x10 bytes
- * (the 4-dword bitset); Ghidra's auStackY_1014[1017] is a hallucination and is
- * omitted.
- */
-void FUN_000628b0(int16_t *partition, uint32_t arg2)
+/* FUN_000628b0 (0x628b0) — XBE naked draft (batch 88). */
+#if defined(__clang__)
+static void (*const b628b0_c62680)(int16_t *partition, uint32_t arg2, int16_t index, uint32_t *out_mask) = FUN_00062680;
+
+__attribute__((naked, noinline))
+void FUN_000628b0(int16_t *partition __attribute__((unused)), uint32_t arg2 __attribute__((unused)))
 {
-  int16_t group_id;
-  int16_t i;
-  int16_t j;
-  uint32_t mask[4];
-
-  partition[0] = 0;
-
-  /* Pass 1: mark all elements unassigned. */
-  group_id = 0;
-  if (partition[1] > 0) {
-    do {
-      partition[group_id * 0xc + 5] = -1;
-      group_id = group_id + 1;
-    } while (group_id < partition[1]);
-  }
-
-  /* Pass 2: assign a group id to each connected component. */
-  i = 0;
-  if (partition[1] > 0) {
-    do {
-      if (partition[i * 0xc + 5] == -1) {
-        group_id = partition[0];
-        partition[0] = group_id + 1;
-        FUN_00062680(partition, arg2, i, mask);
-        j = 0;
-        if (partition[1] > 0) {
-          do {
-            if ((mask[(int)j >> 5] & (1 << ((uint8_t)j & 0x1f))) != 0) {
-              partition[j * 0xc + 5] = group_id;
-            }
-            j = j + 1;
-          } while (j < partition[1]);
-        }
-      }
-      i = i + 1;
-    } while (i < partition[1]);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpw %%ax, 0x2(%%esi)\n\t"
+      "movw $0, (%%esi)\n\t"
+      "jle .LFUN_000628b0_2\n\t"
+      ".LFUN_000628b0_1:\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "leal (%%ecx,%%ecx,2), %%ecx\n\t"
+      "incl %%eax\n\t"
+      "movw $0xffff, 0xa(%%esi,%%ecx,8)\n\t"
+      "cmpw 0x2(%%esi), %%ax\n\t"
+      "jl .LFUN_000628b0_1\n\t"
+      ".LFUN_000628b0_2:\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpw %%bx, 0x2(%%esi)\n\t"
+      "movl %%ebx, 0x8(%%ebp)\n\t"
+      "jle .LFUN_000628b0_7\n\t"
+      "pushl %%edi\n\t"
+      "jmp .LFUN_000628b0_3\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LFUN_000628b0_3:\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%edx\n\t"
+      "cmpw $-1, 0xa(%%esi,%%edx,8)\n\t"
+      "jne .LFUN_000628b0_6\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movw (%%esi), %%di\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "leal 0x1(%%edi), %%eax\n\t"
+      "movw %%ax, (%%esi)\n\t"
+      "call *%[c62680]\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw %%dx, 0x2(%%esi)\n\t"
+      "jle .LFUN_000628b0_6\n\t"
+      ".LFUN_000628b0_4:\n\t"
+      "movswl %%dx, %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%ebx\n\t"
+      "shll %%cl, %%ebx\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "sarl $5, %%ecx\n\t"
+      "testl %%ebx, -0x10(%%ebp,%%ecx,4)\n\t"
+      "je .LFUN_000628b0_5\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "movw %%di, 0xa(%%esi,%%eax,8)\n\t"
+      ".LFUN_000628b0_5:\n\t"
+      "incl %%edx\n\t"
+      "cmpw 0x2(%%esi), %%dx\n\t"
+      "jl .LFUN_000628b0_4\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      ".LFUN_000628b0_6:\n\t"
+      "incl %%ebx\n\t"
+      "cmpw 0x2(%%esi), %%bx\n\t"
+      "movl %%ebx, 0x8(%%ebp)\n\t"
+      "jl .LFUN_000628b0_3\n\t"
+      "popl %%edi\n\t"
+      ".LFUN_000628b0_7:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c62680] "m"(b628b0_c62680)
+      : "memory");
 }
+#else
+#error "FUN_000628b0: clang naked draft required"
+#endif
+
 
 /* FUN_00099070 (0x99070)
  *
@@ -2481,37 +2533,93 @@ void reference_list_copy(void *result, void *source)
   }
 }
 
-/* Allocate the three cluster-partition globals (0x191500).
- * out[0] = game_state_malloc("<name>"... , "cluster references", 0x800) -- the
- *          per-cluster head block (0x800 bytes).
- * out[1] = game_state_data_new("<name> reference", 0x800, 0xc) built from the
- *          intermediate "cluster <name>" name buffer.
- * out[2] = game_state_data_new("<name> reference", 0x800, 0xc) built from the
- *          intermediate "<name> cluster" name buffer.
- * If any allocation fails, error(0, "couldn't allocate %s cluster partition
- * globals", name). Confirmed (disasm 0x191500-0x1915cf): cdecl(out @EBP+8=ESI,
- * name @EBP+0xc=EDI); two 256-byte scratch buffers (local_204/local_104, frame
- * SUB ESP,0x200, no _chkstk); crt_sprintf/game_state_malloc/game_state_data_new
- * all cdecl (first push = last arg). Failure test order out[0], out[2], out[1]
- * matches the TEST sequence; the last data_new result is held for that test. */
-void cluster_partition_globals_new(void **out, const char *name)
-{
-  char buffer[256];
-  char name_buffer[256];
-  void *references;
+/* cluster_partition_globals_new (0x191500) — XBE naked draft (batch 88). */
+#if defined(__clang__)
+static void * (*const b191500_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
+static int (*const b191500_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static data_t * (*const b191500_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
+static void (*const b191500_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
-  out[0] = game_state_malloc(name, "cluster references", 0x800);
-  crt_sprintf(name_buffer, "cluster %s", name);
-  crt_sprintf(buffer, "%s reference", name_buffer);
-  out[1] = game_state_data_new(buffer, 0x800, 0xc);
-  crt_sprintf(name_buffer, "%s cluster", name);
-  crt_sprintf(buffer, "%s reference", name_buffer);
-  references = game_state_data_new(buffer, 0x800, 0xc);
-  out[2] = references;
-  if (out[0] == 0 || references == 0 || out[1] == 0) {
-    error(0, "couldn't allocate %s cluster partition globals", name);
-  }
+__attribute__((naked, noinline))
+void cluster_partition_globals_new(void **out __attribute__((unused)), const char *name __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x200, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "pushl $0x800\n\t"
+      "pushl $0x2b2654\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "leal -0x100(%%ebp), %%eax\n\t"
+      "pushl $0x2b2648\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d90f0]\n\t"
+      "leal -0x100(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x200(%%ebp), %%edx\n\t"
+      "pushl $0x280e94\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d90f0]\n\t"
+      "pushl $0xc\n\t"
+      "leal -0x200(%%ebp), %%eax\n\t"
+      "pushl $0x800\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1bfe10]\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x100(%%ebp), %%ecx\n\t"
+      "pushl $0x2b263c\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      "call *%[c1d90f0]\n\t"
+      "leal -0x100(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x200(%%ebp), %%eax\n\t"
+      "pushl $0x280e94\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0x48, %%esp\n\t"
+      "pushl $0xc\n\t"
+      "leal -0x200(%%ebp), %%ecx\n\t"
+      "pushl $0x800\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1bfe10]\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "je .Lcluster_partition_globals_new_1\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lcluster_partition_globals_new_1\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lcluster_partition_globals_new_2\n\t"
+      ".Lcluster_partition_globals_new_1:\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x2b260c\n\t"
+      "pushl $0\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lcluster_partition_globals_new_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1bfbf0] "m"(b191500_c1bfbf0), [c1d90f0] "m"(b191500_c1d90f0), [c1bfe10] "m"(b191500_c1bfe10), [c8f390] "m"(b191500_c8f390)
+      : "memory");
 }
+#else
+#error "cluster_partition_globals_new: clang naked draft required"
+#endif
+
 
 /* Clear a cluster partition (0x1915d0).
  * Resets the per-cluster head array (partition[0], 0x800 bytes) to the empty
@@ -3698,54 +3806,104 @@ void FUN_00195650(void *out, int *indices, short count)
   }
 }
 
-/* 0x1956d0 - build a dynamic structure-triangle set for the render pipeline.
- *
- * Allocates a widget/triangle slot sized for count triangles
- * (rasterizer_widget_submit), maps it (rasterizer_widget_begin -> triangles
- * buffer), then fills it: when param_2 (the per-32-surface bitmask) is NULL the
- * caller supplies a plain index list in param_1 and FUN_00195650 copies the
- * sorted elements; otherwise FUN_00195550 gathers the mask-selected surfaces.
- * Finalizes the slot (rasterizer_widget_set_texture) and returns the slot
- * handle, or -1 when count <= 0 or the allocation fails.
- *
- * Register ABI: count arrives in ESI (int16, TEST SI,SI); param_1 and param_2
- * are stack args ([EBP+8], [EBP+0xc]).  scenario_get() is called for its side
- * effect and the result discarded (EAX is immediately reloaded with -1).  A
- * NULL triangles buffer is a hard assert (structure_render.c:0x1e6).  The
- * one-shot allocation-failure warning is gated by the word at 0x32bd60. */
-int FUN_001956d0(void *param_1, void *param_2, short param_3)
-{
-  int handle;
-  void *triangles;
+/* FUN_001956d0 (0x1956d0) — XBE naked draft (batch 88). */
+#if defined(__clang__)
+static void * (*const b1956d0_c18e3c0)(void) = scenario_get;
+static int (*const b1956d0_c17c970)(int mode) = rasterizer_widget_submit;
+static void * (*const b1956d0_c17c980)(int handle) = rasterizer_widget_begin;
+static void (*const b1956d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1956d0_exitfn)(int) = system_exit;
+static void (*const b1956d0_c195550)(short surface_count, int *out_indices, unsigned int *mask, int out_surfaces) = FUN_00195550;
+static void (*const b1956d0_c17c990)(int handle) = rasterizer_widget_set_texture;
+static void (*const b1956d0_c195650)(void *out, int *indices, int16_t count) = FUN_00195650;
+static void (*const b1956d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
-  scenario_get();
-  if (0 < param_3) {
-    handle = rasterizer_widget_submit((int)param_3);
-    if (handle != -1) {
-      triangles = rasterizer_widget_begin(handle);
-      if (triangles == NULL) {
-        display_assert("triangles",
-                       "c:\\halo\\SOURCE\\structures\\structure_render.c", 0x1e6,
-                       true);
-        system_exit(-1);
-      }
-      if (param_2 == NULL) {
-        FUN_00195650(triangles, (int *)param_1, param_3);
-        rasterizer_widget_set_texture(handle);
-        return handle;
-      }
-      FUN_00195550(param_3, (int *)param_1, (unsigned int *)param_2,
-                   (int)triangles);
-      rasterizer_widget_set_texture(handle);
-      return handle;
-    }
-    if (*(short *)0x32bd60 != 0) {
-      error(2, "unable to allocate dynamic structure triangles.");
-      *(short *)0x32bd60 = 0;
-    }
-  }
-  return -1;
+__attribute__((naked, noinline))
+int FUN_001956d0(void *param_1 __attribute__((unused)), void *param_2 __attribute__((unused)), int16_t count __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c18e3c0]\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "testw %%si, %%si\n\t"
+      "jle .LFUN_001956d0_5\n\t"
+      "movswl %%si, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c17c970]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .LFUN_001956d0_3\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c17c980]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_001956d0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1e6\n\t"
+      "pushl $0x2b347c\n\t"
+      "pushl $0x2a2c84\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001956d0_1:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "je .LFUN_001956d0_2\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c195550]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c17c990]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001956d0_2:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "movl %%esi, %%edx\n\t"
+      "call *%[c195650]\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c17c990]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001956d0_3:\n\t"
+      "cmpw $0, 0x32bd60\n\t"
+      "je .LFUN_001956d0_4\n\t"
+      "pushl $0x2b34e8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "movw $0, 0x32bd60\n\t"
+      ".LFUN_001956d0_4:\n\t"
+      "movl %%ebx, %%eax\n\t"
+      ".LFUN_001956d0_5:\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e3c0] "m"(b1956d0_c18e3c0), [c17c970] "m"(b1956d0_c17c970), [c17c980] "m"(b1956d0_c17c980), [assert] "m"(b1956d0_assert), [exitfn] "m"(b1956d0_exitfn), [c195550] "m"(b1956d0_c195550), [c17c990] "m"(b1956d0_c17c990), [c195650] "m"(b1956d0_c195650), [c8f390] "m"(b1956d0_c8f390)
+      : "memory");
 }
+#else
+#error "FUN_001956d0: clang naked draft required"
+#endif
+
 
 /* FUN_001959f0 (0x1959f0)
  *

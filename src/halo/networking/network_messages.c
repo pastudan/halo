@@ -1748,36 +1748,94 @@ int FUN_0011ba50(short *table __attribute__((unused)), void *key __attribute__((
 #endif
 
 
-/* hashtable_find — look up a key, return pointer to value (0x11bb70).
- * Source: hashtable.c line 0x4d. */
-int FUN_0011bb70(short *table, void *key)
-{
-  short *psVar1;
-  char found;
-  int element_ptr;
-  short slot;
+/* FUN_0011bb70 (0x11bb70) — XBE naked draft (batch 88). */
+#if defined(__clang__)
+static void (*const b11bb70_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11bb70_exitfn)(int) = system_exit;
+static int (*const b11bb70_c11ba50)(short *table, void *key, unsigned short *slot_index_out) = FUN_0011ba50;
+static int (*const b11bb70_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
 
-  psVar1 = table;
-  if ((((table == NULL) || (*table < 1)) || (table[1] < 1)) ||
-      (((*(float *)(table + 4) <= 0.0f) ||
-        (*(float *)(table + 4) > 1.0f)) ||
-       ((table[3] != -1 &&
-         ((1 << ((unsigned char)table[3] & 0x1f)) !=
-          *(int *)(table + 0x10)))))) {
-    display_assert("hashtable_valid(table)",
-                   "c:\\halo\\SOURCE\\memory\\hashtable.c", 0x4d, 1);
-    system_exit(-1);
-  }
-  if (psVar1[2] != 0) {
-    found = (char)FUN_0011ba50(psVar1, key, (unsigned short *)&slot);
-    if (found != '\0') {
-      element_ptr = array_get_element((int *)(psVar1 + 0xe), (int)slot,
-                                      (int)psVar1[1]);
-      return element_ptr + *psVar1;
-    }
-  }
-  return 0;
+__attribute__((naked, noinline))
+int FUN_0011bb70(short *table __attribute__((unused)), void *key __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_0011bb70_1\n\t"
+      "cmpw %%di, (%%esi)\n\t"
+      "jle .LFUN_0011bb70_1\n\t"
+      "cmpw %%di, 0x2(%%esi)\n\t"
+      "jle .LFUN_0011bb70_1\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_0011bb70_1\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_0011bb70_1\n\t"
+      "movw 0x6(%%esi), %%cx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .LFUN_0011bb70_2\n\t"
+      "movl $1, %%eax\n\t"
+      "shll %%cl, %%eax\n\t"
+      "cmpl 0x20(%%esi), %%eax\n\t"
+      "je .LFUN_0011bb70_2\n\t"
+      ".LFUN_0011bb70_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4d\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl $0x28f69c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011bb70_2:\n\t"
+      "cmpw $0, 0x4(%%esi)\n\t"
+      "je .LFUN_0011bb70_3\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "leal 0xa(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c11ba50]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0011bb70_3\n\t"
+      "movswl 0x2(%%esi), %%eax\n\t"
+      "movswl 0xa(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x1c(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c117ee0]\n\t"
+      "movswl (%%esi), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011bb70_3:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11bb70_assert), [exitfn] "m"(b11bb70_exitfn), [c11ba50] "m"(b11bb70_c11ba50), [c117ee0] "m"(b11bb70_c117ee0)
+      : "memory");
 }
+#else
+#error "FUN_0011bb70: clang naked draft required"
+#endif
+
 
 /* FUN_0011bc20 (0x11bc20) — XBE naked draft (batch 82). */
 #if defined(__clang__)
@@ -2251,34 +2309,98 @@ int FUN_0011beb0(short *table __attribute__((unused)), short growth_bits __attri
 #endif
 
 
-/* hashtable_insert — validate, grow if needed, then put (0x11c0f0).
- * Source: hashtable.c line 0x5d. */
-int FUN_0011c0f0(short *table, void *key)
-{
-  char grew;
-  int result;
+/* FUN_0011c0f0 (0x11c0f0) — XBE naked draft (batch 88). */
+#if defined(__clang__)
+static void (*const b11c0f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11c0f0_exitfn)(int) = system_exit;
+static int (*const b11c0f0_c11beb0)(short *table, short growth_bits) = FUN_0011beb0;
+static int (*const b11c0f0_c11be10)(short *table, void *key) = FUN_0011be10;
 
-  if (((((table == NULL) || (*table < 1)) || (table[1] < 1)) ||
-       ((*(float *)(table + 4) <= 0.0f) ||
-        (*(float *)(table + 4) > 1.0f))) ||
-      ((table[3] != -1 &&
-        ((1 << ((unsigned char)table[3] & 0x1f)) !=
-         *(int *)(table + 0x10))))) {
-    display_assert("hashtable_valid(table)",
-                   "c:\\halo\\SOURCE\\memory\\hashtable.c", 0x5d, 1);
-    system_exit(-1);
-  }
-  if ((table[3] == -1) ||
-      ((float)*(int *)(table + 0x10) * *(float *)(table + 4) <=
-       (float)(int)table[2])) {
-    grew = (char)FUN_0011beb0(table, (short)((table[3] == -1) + 1));
-    if (grew == '\0') {
-      return 0;
-    }
-  }
-  result = FUN_0011be10(table, key);
-  return result;
+__attribute__((naked, noinline))
+int FUN_0011c0f0(short *table __attribute__((unused)), void *key __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_0011c0f0_1\n\t"
+      "cmpw $0, (%%esi)\n\t"
+      "jle .LFUN_0011c0f0_1\n\t"
+      "cmpw $0, 0x2(%%esi)\n\t"
+      "jle .LFUN_0011c0f0_1\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_0011c0f0_1\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_0011c0f0_1\n\t"
+      "movw 0x6(%%esi), %%cx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .LFUN_0011c0f0_2\n\t"
+      "movl $1, %%eax\n\t"
+      "shll %%cl, %%eax\n\t"
+      "cmpl 0x20(%%esi), %%eax\n\t"
+      "je .LFUN_0011c0f0_2\n\t"
+      ".LFUN_0011c0f0_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5d\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl $0x28f69c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011c0f0_2:\n\t"
+      "movw 0x6(%%esi), %%cx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .LFUN_0011c0f0_3\n\t"
+      "movswl 0x4(%%esi), %%edx\n\t"
+      "movl %%edx, 0x8(%%ebp)\n\t"
+      "fildl 0x8(%%ebp)\n\t"
+      "fildl 0x20(%%esi)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_0011c0f0_4\n\t"
+      ".LFUN_0011c0f0_3:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "sete %%al\n\t"
+      "incl %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c11beb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0011c0f0_4\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011c0f0_4:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[c11be10]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11c0f0_assert), [exitfn] "m"(b11c0f0_exitfn), [c11beb0] "m"(b11c0f0_c11beb0), [c11be10] "m"(b11c0f0_c11be10)
+      : "memory");
 }
+#else
+#error "FUN_0011c0f0: clang naked draft required"
+#endif
+
 
 /* ========================================================================
  * lra_cache.c — LRU/LRA cache implementation

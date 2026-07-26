@@ -1513,50 +1513,100 @@ bool lruv_block_touched(void *lruv, int block_index)
   return *(int *)block->unk_14 == c->field_30;
 }
 
-/* lruv_cache_get_page_usage (0x11da60)
- *
- * Build a per-page usage/flag map for the cache.  Zeroes the caller's
- * usage buffer (page_count bytes, one byte per page), then walks every
- * cache block via the inline data_t and stamps the page range the block
- * occupies [first_page_index, first_page_index + page_count) with a
- * flag byte:
- *   bit0 (1) always set for a page owned by a block
- *   bit3 (8) set when the optional query callback (cache+0x24) reports
- *            the block's datum handle as in-use (checks non-NULL first)
- *   bit1 (2) set when the block's stamp (block+0x14) equals the cache's
- *            current generation (field_30) - touched this cycle
- *   bit2 (4) set when the block's stamp + 0x1e is older than the current
- *            generation - stale.
- * Runs the full integrity check first.
- * Source: c:\halo\SOURCE\memory\lruv_cache.c
- */
-void lruv_cache_get_page_usage(void *cache, unsigned char *usage)
+/* lruv_cache_get_page_usage (0x11da60) — XBE naked draft (batch 88). */
+#if defined(__clang__)
+static void (*const b11da60_c11d550)(void *cache, char do_full_check) = lruv_cache_verify;
+static void *(*const b11da60_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b11da60_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b11da60_c119810)(data_iter_t *iterator) = data_iterator_next;
+
+__attribute__((naked, noinline))
+void lruv_cache_get_page_usage(void *cache __attribute__((unused)), unsigned char *usage __attribute__((unused)))
 {
-  lruv_cache_t *c = (lruv_cache_t *)cache;
-  lruv_cache_block_t *block;
-  data_iter_t iter;
-  unsigned char flags;
-
-  lruv_cache_verify(cache, 1);
-  csmemset(usage, 0, c->page_count);
-  data_iterator_new(&iter, c->blocks);
-
-  block = (lruv_cache_block_t *)data_iterator_next(&iter);
-  while (block != NULL) {
-    flags = 1;
-    if (c->query_cb != NULL && (char)c->query_cb(iter.datum_handle) != 0) {
-      flags = 9;
-    }
-    if (*(unsigned int *)block->unk_14 == (unsigned int)c->field_30) {
-      flags |= 2;
-    }
-    if (*(unsigned int *)block->unk_14 + 0x1e < (unsigned int)c->field_30) {
-      flags |= 4;
-    }
-    csmemset(usage + block->first_page_index, flags, block->page_count);
-    block = (lruv_cache_block_t *)data_iterator_next(&iter);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c11d550]\n\t"
+      "movl 0x28(%%edi), %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x3c(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $0x20, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Llruv_cache_get_page_usage_5\n\t"
+      "pushl %%ebx\n\t"
+      ".Llruv_cache_get_page_usage_1:\n\t"
+      "movl 0x24(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movb $1, %%bl\n\t"
+      "je .Llruv_cache_get_page_usage_2\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Llruv_cache_get_page_usage_2\n\t"
+      "movb $9, %%bl\n\t"
+      ".Llruv_cache_get_page_usage_2:\n\t"
+      "movl 0x14(%%esi), %%eax\n\t"
+      "movl 0x30(%%edi), %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jne .Llruv_cache_get_page_usage_3\n\t"
+      "orb $2, %%bl\n\t"
+      ".Llruv_cache_get_page_usage_3:\n\t"
+      "addl $0x1e, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jae .Llruv_cache_get_page_usage_4\n\t"
+      "orb $4, %%bl\n\t"
+      ".Llruv_cache_get_page_usage_4:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movzbl %%bl, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "addl %%eax, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[memset]\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Llruv_cache_get_page_usage_1\n\t"
+      "popl %%ebx\n\t"
+      ".Llruv_cache_get_page_usage_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11d550] "m"(b11da60_c11d550), [memset] "m"(b11da60_memset), [c1197b0] "m"(b11da60_c1197b0), [c119810] "m"(b11da60_c119810)
+      : "memory");
 }
+#else
+#error "lruv_cache_get_page_usage: clang naked draft required"
+#endif
+
 
 /* lruv_resize (0x11db00)
  *

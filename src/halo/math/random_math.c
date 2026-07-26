@@ -1061,14 +1061,90 @@ void FUN_0010c3c0(void)
   (void)eax;
 }
 
-/* 0x10c440 */
-float FUN_0010c440(float *param_1, float *param_2)
+/* FUN_0010c440 (0x10c440) — XBE naked draft (batch 88). */
+#if defined(__clang__)
+static void (*const b10c440_c1d94f0)(void) = FUN_001d94f0;
+
+__attribute__((naked, noinline))
+float FUN_0010c440(float *param_1 __attribute__((unused)), float *param_2 __attribute__((unused)))
 {
-  int eax = 0;
-
-  /* test (char)eax, 0x41 -> jne 0x10c4d9 */
-  FUN_001d94f0();
-  return 0;
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "flds 0x2533c0\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "flds (%%ecx)\n\t"
+      "flds 0x4(%%edx)\n\t"
+      "flds (%%edx)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      "fld %%st(5)\n\t"
+      ".byte 0xd8, 0xce\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      ".byte 0xde, 0xc9\n\t"
+      "fstps 0xc(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .LFUN_0010c440_4\n\t"
+      "fstp %%st(0)\n\t"
+      "flds (%%edx)\n\t"
+      "fmuls (%%ecx)\n\t"
+      "flds 0x4(%%edx)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsts 0x8(%%ebp)\n\t"
+      "fdivs 0xc(%%ebp)\n\t"
+      "fmuls 0x8(%%ebp)\n\t"
+      ".byte 0xdc, 0xc0\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fcoms 0x255e94\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_0010c440_1\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0xbf800000, 0xc(%%ebp)\n\t"
+      "jmp .LFUN_0010c440_3\n\t"
+      ".LFUN_0010c440_1:\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_0010c440_2\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0x3f800000, 0xc(%%ebp)\n\t"
+      "jmp .LFUN_0010c440_3\n\t"
+      ".LFUN_0010c440_2:\n\t"
+      "fstps 0xc(%%ebp)\n\t"
+      ".LFUN_0010c440_3:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "call *%[c1d94f0]\n\t"
+      "fmuls 0x253398\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_0010c440_4\n\t"
+      "fsubrs 0x256980\n\t"
+      ".LFUN_0010c440_4:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d94f0] "m"(b10c440_c1d94f0)
+      : "memory");
 }
+#else
+#error "FUN_0010c440: clang naked draft required"
+#endif
+

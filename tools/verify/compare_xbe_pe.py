@@ -1043,7 +1043,7 @@ def main() -> int:
         ("FUN_0011b650", 0x11b650, 0x11b745),
         ("actor_action_try_to_throw_grenade", 0x1fa60, 0x1fb79),
         # gameplay wave 86 (2026-07-26) — priority Capstone weaks
-        ("FUN_0011a430", 0x11a430, 0x11a534, [(0x11a534, 0x11a548)]),
+        ("FUN_0011a430", 0x11a430, 0x11a532, [(0x11a534, 0x11a548)]),
         ("ai_debug_get_path_storage", 0x49120, 0x4921b),
         ("actor_aim_jump", 0x2ace0, 0x2add4),
         ("actor_action_consider_grenade", 0x1fb80, 0x1fc91),
@@ -1068,6 +1068,19 @@ def main() -> int:
         ("closest_point_to_attractor", 0x5f3c0, 0x5f483),
         ("FUN_000625a0", 0x625a0, 0x62673),
         ("actor_action_allow_cover_seeking", 0x1ccc0, 0x1cd96),
+        # gameplay wave 88 (2026-07-26) — AI/structures/net/HUD Capstone weaks
+        ("actor_action_handle_grenade_throwing", 0x205a0, 0x2066f),
+        ("path_attractor_weight", 0x5f490, 0x5f549),
+        ("lruv_cache_get_page_usage", 0x11da60, 0x11db00),
+        ("FUN_001956d0", 0x1956d0, 0x19578c),
+        ("FUN_0011c0f0", 0x11c0f0, 0x11c1ac),
+        ("FUN_0010c440", 0x10c440, 0x10c502),
+        ("FUN_000628b0", 0x628b0, 0x62960),
+        ("FUN_0011bb70", 0x11bb70, 0x11bc1c),
+        ("FUN_00062410", 0x62410, 0x624b0),
+        ("actor_action_handle_combat_transition", 0x204f0, 0x20598),
+        ("cluster_partition_globals_new", 0x191500, 0x1915d0),
+        ("hud_set_element_digital", 0xd0c80, 0xd0d44),
     ]
 
     xbe = Xbe.from_file(args.xbe)

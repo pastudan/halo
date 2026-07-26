@@ -1639,42 +1639,98 @@ void closest_point_to_attractor(float *segment_start __attribute__((unused)), fl
 #endif
 
 
-/* 0x5f490 — compute path attractor weight from a step position. */
-float path_attractor_weight(void *path_state, float *node_pos, float *step_pos,
-                            float *out_dist)
+/* path_attractor_weight (0x5f490) — XBE naked draft (batch 88). */
+#if defined(__clang__)
+static void (*const b5f490_c5f3c0)(float *segment_start, float *segment_end, float *reference, float *out_point) = closest_point_to_attractor;
+static void (*const b5f490_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b5f490_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+float path_attractor_weight(void *path_state __attribute__((unused)), float *node_pos __attribute__((unused)), float *step_pos __attribute__((unused)), float *out_dist __attribute__((unused)))
 {
-  char *path;
-  float closest[3];
-  float delta[3];
-  float dist_sq;
-  float dist;
-  float weight;
-
-  path = (char *)path_state;
-  closest_point_to_attractor(step_pos, (float *)(path + 0x28), node_pos,
-                             closest);
-
-  delta[0] = closest[0] - *(float *)(path + 0x28);
-  delta[1] = closest[1] - *(float *)(path + 0x2c);
-  delta[2] = closest[2] - *(float *)(path + 0x30);
-  dist_sq = delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2];
-
-  weight = 0.0f;
-  dist = 3.4028235e38f;
-  if (dist_sq < *(float *)(path + 0x38) * *(float *)(path + 0x38)) {
-    dist = sqrtf(dist_sq);
-    weight = (*(float *)0x2533c8 - dist / *(float *)(path + 0x38)) *
-             *(float *)(path + 0x3c);
-  }
-
-  if (out_dist == 0) {
-    display_assert("out_dist",
-                   "c:\\halo\\SOURCE\\ai\\path.c", 0x65f, 1);
-    system_exit(-1);
-  }
-  *out_dist = dist;
-  return weight;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x14, %%esp\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "leal -0x14(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x28(%%edi), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      "movl $0x7f7fffff, -0x4(%%ebp)\n\t"
+      "call *%[c5f3c0]\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fsubs (%%esi)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fsubs 0x4(%%esi)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fsubs 0x8(%%esi)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x38(%%edi)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(2)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lpath_attractor_weight_1\n\t"
+      "fsqrt\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "fdivs 0x38(%%edi)\n\t"
+      "fsubrs 0x2533c8\n\t"
+      "fmuls 0x3c(%%edi)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jmp .Lpath_attractor_weight_2\n\t"
+      ".Lpath_attractor_weight_1:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lpath_attractor_weight_2:\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lpath_attractor_weight_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x65f\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e5c4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lpath_attractor_weight_3:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c5f3c0] "m"(b5f490_c5f3c0), [assert] "m"(b5f490_assert), [exitfn] "m"(b5f490_exitfn)
+      : "memory");
 }
+#else
+#error "path_attractor_weight: clang naked draft required"
+#endif
+
 
 /* 0x5f550 */
 char path_state_estimated_distance(void *path_state, void *fp_element, int surface_index, float *result, float *opt_min_clearance, float *opt_out_vec)
