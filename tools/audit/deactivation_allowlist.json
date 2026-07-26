@@ -10309,5 +10309,250 @@
     "object": "player_ui.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x81ec0",
+    "name": "transport_get_nonce",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x81f30",
+    "name": "transport_nonce_is_equal",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x81fa0",
+    "name": "FUN_00081fa0",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82060",
+    "name": "transport_get_xnaddr",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82090",
+    "name": "transport_get_key_id",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x820d0",
+    "name": "transport_get_key",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82310",
+    "name": "create_endpoint_set",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82410",
+    "name": "delete_endpoint_set",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x824a0",
+    "name": "FUN_000824a0",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x824d0",
+    "name": "poll_endpoint_set",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82700",
+    "name": "add_endpoint_to_set",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82940",
+    "name": "rewind_endpoint_set",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x829b0",
+    "name": "FUN_000829b0",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82a30",
+    "name": "FUN_00082a30",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82a90",
+    "name": "FUN_00082a90",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82bd0",
+    "name": "FUN_00082bd0",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82c90",
+    "name": "FUN_00082c90",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82cf0",
+    "name": "FUN_00082cf0",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82d70",
+    "name": "get_next_endpoint_from_set",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x82df0",
+    "name": "count_endpoints_in_set",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x83040",
+    "name": "FUN_00083040",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x83100",
+    "name": "transport_server_initialize",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x831e0",
+    "name": "FUN_000831e0",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x83220",
+    "name": "FUN_00083220",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x83260",
+    "name": "FUN_00083260",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x832a0",
+    "name": "FUN_000832a0",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x83bd0",
+    "name": "FUN_00083bd0",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x83e20",
+    "name": "FUN_00083e20",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x84080",
+    "name": "FUN_00084080",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x841b0",
+    "name": "FUN_000841b0",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x843a0",
+    "name": "FUN_000843a0",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x84450",
+    "name": "FUN_00084450",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x84740",
+    "name": "FUN_00084740",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x84940",
+    "name": "FUN_00084940",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x84970",
+    "name": "FUN_00084970",
+    "object": "transport_endpoint_set_winsock.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

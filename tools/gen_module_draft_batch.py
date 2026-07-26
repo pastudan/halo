@@ -72,11 +72,13 @@ def parse_params(decl: str) -> list[str]:
 
 def ret_kind(decl: str) -> str:
     head = decl.split("(", 1)[0].strip()
-    if head.startswith("char *") or head.endswith("*"):
+    if head.startswith("void ") and "*" not in head:
+        return "void"
+    if "*" in head:
         return "ptr"
-    if re.search(r"\bchar\b", head) and "*" not in head:
+    if re.search(r"\bchar\b", head):
         return "char"
-    if re.search(r"\b(int|short|long|bool|float|double|wchar_t|size_t|uint)\b", head):
+    if re.search(r"\b(int|short|long|bool|float|double|wchar_t|size_t|uint|int64_t|int32_t|int16_t)\b", head):
         return "scalar"
     return "void"
 

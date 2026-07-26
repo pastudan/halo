@@ -25500,143 +25500,178 @@
         },
         {
           "addr": "0x81ec0",
-          "decl": "void transport_get_nonce(void *dst, int bytes);"
+          "decl": "void transport_get_nonce(void *dst, int bytes);",
+          "ported": false
         },
         {
           "addr": "0x81f30",
-          "decl": "void transport_nonce_is_equal(void);"
+          "decl": "void transport_nonce_is_equal(void);",
+          "ported": false
         },
         {
           "addr": "0x81fa0",
-          "decl": "void FUN_00081fa0(void);"
+          "decl": "void FUN_00081fa0(void);",
+          "ported": false
         },
         {
           "addr": "0x82060",
-          "decl": "void *transport_get_xnaddr(void *dst);"
+          "decl": "void *transport_get_xnaddr(void *dst);",
+          "ported": false
         },
         {
           "addr": "0x82090",
-          "decl": "int64_t transport_get_key_id(void);"
+          "decl": "int64_t transport_get_key_id(void);",
+          "ported": false
         },
         {
           "addr": "0x820d0",
-          "decl": "void *transport_get_key(void *dst);"
+          "decl": "void *transport_get_key(void *dst);",
+          "ported": false
         },
         {
           "addr": "0x82310",
-          "decl": "int create_endpoint_set(int count);"
+          "decl": "int create_endpoint_set(int count);",
+          "ported": false
         },
         {
           "addr": "0x82410",
-          "decl": "void delete_endpoint_set(int set);"
+          "decl": "void delete_endpoint_set(int set);",
+          "ported": false
         },
         {
           "addr": "0x824a0",
-          "decl": "void FUN_000824a0(void);"
+          "decl": "void FUN_000824a0(void);",
+          "ported": false
         },
         {
           "addr": "0x824d0",
-          "decl": "int poll_endpoint_set(int endpoint_set, unsigned short timeout);"
+          "decl": "int poll_endpoint_set(int endpoint_set, unsigned short timeout);",
+          "ported": false
         },
         {
           "addr": "0x82700",
-          "decl": "int add_endpoint_to_set(int endpoint, void *set);"
+          "decl": "int add_endpoint_to_set(int endpoint, void *set);",
+          "ported": false
         },
         {
           "addr": "0x82940",
-          "decl": "void rewind_endpoint_set(int endpoint_set);"
+          "decl": "void rewind_endpoint_set(int endpoint_set);",
+          "ported": false
         },
         {
           "addr": "0x829b0",
-          "decl": "int FUN_000829b0(int endpoint_set);"
+          "decl": "int FUN_000829b0(int endpoint_set);",
+          "ported": false
         },
         {
           "addr": "0x82a30",
-          "decl": "int FUN_00082a30(int endpoint_set);"
+          "decl": "int FUN_00082a30(int endpoint_set);",
+          "ported": false
         },
         {
           "addr": "0x82a90",
-          "decl": "void FUN_00082a90(void);"
+          "decl": "void FUN_00082a90(void);",
+          "ported": false
         },
         {
           "addr": "0x82bd0",
-          "decl": "void FUN_00082bd0(void);"
+          "decl": "void FUN_00082bd0(void);",
+          "ported": false
         },
         {
           "addr": "0x82c90",
-          "decl": "void FUN_00082c90(void);"
+          "decl": "void FUN_00082c90(void);",
+          "ported": false
         },
         {
           "addr": "0x82cf0",
-          "decl": "void FUN_00082cf0(void);"
+          "decl": "void FUN_00082cf0(void);",
+          "ported": false
         },
         {
           "addr": "0x82d70",
-          "decl": "int get_next_endpoint_from_set(int type);"
+          "decl": "int get_next_endpoint_from_set(int type);",
+          "ported": false
         },
         {
           "addr": "0x82df0",
-          "decl": "void count_endpoints_in_set(void);"
+          "decl": "void count_endpoints_in_set(void);",
+          "ported": false
         },
         {
           "addr": "0x83040",
-          "decl": "char FUN_00083040(int endpoint, unsigned short timeout);"
+          "decl": "char FUN_00083040(int endpoint, unsigned short timeout);",
+          "ported": false
         },
         {
           "addr": "0x83100",
-          "decl": "void transport_server_initialize(void);"
+          "decl": "void transport_server_initialize(void);",
+          "ported": false
         },
         {
           "addr": "0x831e0",
-          "decl": "void FUN_000831e0(void);"
+          "decl": "void FUN_000831e0(void);",
+          "ported": false
         },
         {
           "addr": "0x83220",
-          "decl": "void FUN_00083220(void);"
+          "decl": "void FUN_00083220(void);",
+          "ported": false
         },
         {
           "addr": "0x83260",
-          "decl": "void FUN_00083260(void);"
+          "decl": "void FUN_00083260(void);",
+          "ported": false
         },
         {
           "addr": "0x832a0",
-          "decl": "void FUN_000832a0(void);"
+          "decl": "void FUN_000832a0(void);",
+          "ported": false
         },
         {
           "addr": "0x83bd0",
-          "decl": "short FUN_00083bd0(int endpoint, int flag);"
+          "decl": "short FUN_00083bd0(int endpoint, int flag);",
+          "ported": false
         },
         {
           "addr": "0x83e20",
-          "decl": "short FUN_00083e20(int endpoint, int address);"
+          "decl": "short FUN_00083e20(int endpoint, int address);",
+          "ported": false
         },
         {
           "addr": "0x84080",
-          "decl": "void FUN_00084080(void);"
+          "decl": "void FUN_00084080(void);",
+          "ported": false
         },
         {
           "addr": "0x841b0",
-          "decl": "short FUN_000841b0(int endpoint, int address, int process_ref);"
+          "decl": "short FUN_000841b0(int endpoint, int address, int process_ref);",
+          "ported": false
         },
         {
           "addr": "0x843a0",
-          "decl": "short FUN_000843a0(int endpoint);"
+          "decl": "short FUN_000843a0(int endpoint);",
+          "ported": false
         },
         {
           "addr": "0x84450",
-          "decl": "int FUN_00084450(int listening_endpoint);"
+          "decl": "int FUN_00084450(int listening_endpoint);",
+          "ported": false
         },
         {
           "addr": "0x84740",
-          "decl": "int FUN_00084740(int endpoint, void *message, int size, int dest_address);"
+          "decl": "int FUN_00084740(int endpoint, void *message, int size, int dest_address);",
+          "ported": false
         },
         {
           "addr": "0x84940",
-          "decl": "int FUN_00084940(int listening_endpoint);"
+          "decl": "int FUN_00084940(int listening_endpoint);",
+          "ported": false
         },
         {
           "addr": "0x84970",
-          "decl": "void FUN_00084970(void);"
+          "decl": "void FUN_00084970(void);",
+          "ported": false
         }
       ],
       "name": "transport_endpoint_set_winsock.obj",
