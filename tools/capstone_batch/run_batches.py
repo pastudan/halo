@@ -444,6 +444,9 @@ def main() -> int:
             return 1
         print("ALL 100%")
     if args.commit:
+        if not batches:
+            print("nothing to commit (no batches generated)")
+            return 0
         # NUL-delimited so paths with spaces (e.g. "saved games/") stay intact.
         all_files: set[str] = set()
         for b in batches:
