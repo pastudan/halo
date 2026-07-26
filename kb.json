@@ -11676,7 +11676,7 @@
         {
           "addr": "0xc40f0",
           "decl": "void FUN_000c40f0(int16_t name_offset, int element_size, void *block@<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000c40f0"
         },
         {

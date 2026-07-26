@@ -3910,53 +3910,19 @@ void FUN_000c40b0(const char **tokens, int16_t start, int16_t end)
   }
 }
 
-/* FUN_000c40f0 (0xc40f0) — XBE naked draft (batch 165). */
-#if defined(__clang__)
-static void *(*const bc40f0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const bc40f0_cc4030)(const char *token) = FUN_000c4030;
-
-__attribute__((naked, noinline))
-void FUN_000c40f0(int16_t name_offset __attribute__((unused)), int element_size __attribute__((unused)), void *block __attribute__((unused)))
+/* FUN_000c40f0 (0xc40f0) — readable C lift: intern names from tag block. */
+void FUN_000c40f0(int16_t name_offset, int element_size, void *block /*@<ebx>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_000c40f0_2\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "nop\n\t"
-      ".LFUN_000c40f0_1:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "movswl 0x8(%%ebp), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "leal (%%ecx,%%eax,1), %%esi\n\t"
-      "call *%[cc4030]\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_000c40f0_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000c40f0_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(bc40f0_elem), [cc4030] "m"(bc40f0_cc4030)
-      : "memory");
-}
-#else
-#error "FUN_000c40f0: clang naked draft required"
-#endif
+  int16_t i;
+  int count;
+  char *elem;
 
+  count = *(int *)block;
+  for (i = 0; i < count; i++) {
+    elem = (char *)tag_block_get_element(block, (int)i, element_size);
+    FUN_000c4030((const char *)(elem + (int)name_offset));
+  }
+}
 
 /* FUN_000c4130 (0xc4130) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c4130(int16_t block_offset, int16_t name_offset, int element_size)

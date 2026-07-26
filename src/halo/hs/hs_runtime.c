@@ -3725,31 +3725,33 @@ int16_t FUN_000caf40(float x)
   return (int16_t)(int)x;
 }
 
-/* FUN_000caf60 (0xcaf60) — XBE naked draft (batch 167). */
-#if defined(__clang__)
-static void (*const bcaf60_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-int FUN_000caf60(float value __attribute__((unused)))
+<<<<<<< Updated upstream
+/* FUN_000caf60 (0xcaf60) — readable C lift: fld + MSVC _ftol2 (FUN_001d9068). */
+int FUN_000caf60(float value)
 {
+  int result;
+  void (*const ftol)(void) = (void (*)(void))FUN_001d9068;
   __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "popl %%ebp\n\t"
-      "jmp *%[ftol]\n\t"
-      :
-      : [ftol] "m"(bcaf60_ftol)
-      : "memory");
+      "flds %1\n\t"
+      "call *%2\n\t"
+      "movl %%eax, %0"
+      : "=m"(result)
+      : "m"(value), "m"(ftol)
+      : "eax", "edx", "ecx", "cc", "memory");
+  return result;
 }
-#else
-#error "FUN_000caf60: clang naked draft required"
-#endif
+=======
+/* FUN_000caf60 (0xcaf60) — readable C lift: float→int via MSVC _ftol2. */
+int FUN_000caf60(float value)
+{
+  return (int)value;
+}
 
 
 
 
 
+>>>>>>> Stashed changes
 
 /* FUN_000caf70 (0xcaf70) — readable C lift from XBE leaf (int16 identity). */
 int16_t FUN_000caf70(int16_t value)
@@ -4909,52 +4911,33 @@ void FUN_000c9c80(int object_handle __attribute__((unused)), int region_name __a
 #endif
 
 
-/* FUN_000c9d40 (0xc9d40) — XBE naked draft (batch 171). */
-#if defined(__clang__)
-static int (*const bc9d40_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
-static void (*const bc9d40_c13ddd0)(int object_handle) = FUN_0013ddd0;
-static int (*const bc9d40_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
-
-__attribute__((naked, noinline))
-void FUN_000c9d40(int list_handle __attribute__((unused)))
+<<<<<<< Updated upstream
+/* FUN_000c9d40 (0xc9d40) — readable C lift: delete each object in list. */
+void FUN_000c9d40(int list_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cce450]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c9d40_2\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_000c9d40_1:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13ddd0]\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cce320]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_000c9d40_1\n\t"
-      ".LFUN_000c9d40_2:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cce450] "m"(bc9d40_cce450), [c13ddd0] "m"(bc9d40_c13ddd0), [cce320] "m"(bc9d40_cce320)
-      : "memory");
-}
-#else
-#error "FUN_000c9d40: clang naked draft required"
-#endif
+  int iter;
+  int obj;
+=======
+/* FUN_000c9d40 (0xc9d40) — readable C lift: iterate object list + destroy. */
+void FUN_000c9d40(int list_handle)
+{
+  int iter_state;
+  int object_handle;
 
+  object_handle = FUN_000ce450(list_handle, &iter_state);
+  while (object_handle != -1) {
+    FUN_0013ddd0(object_handle);
+    object_handle = FUN_000ce320(list_handle, &iter_state);
+  }
+}
+>>>>>>> Stashed changes
+
+  obj = FUN_000ce450(list_handle, &iter);
+  while (obj != -1) {
+    FUN_0013ddd0(obj);
+    obj = FUN_000ce320(list_handle, &iter);
+  }
+}
 
 /* FUN_000c9d80 (0xc9d80) — readable C lift: delete objects of type. */
 void FUN_000c9d80(int object_type)
@@ -5954,30 +5937,33 @@ void FUN_000ce050(int save_type, int slot)
   crt_sprintf(buf, (const char *)0x280e94, save_type);
   game_state_data_new(buf, (int16_t)slot, 0xc);
 }
-/* FUN_000ce0c0 (0xce0c0) — readable C lift: prepend linked datum node. */
+/* FUN_000ce0c0 (0xce0c0) — readable C lift: prepend object-list node. */
 void FUN_000ce0c0(data_t *data, int *head, int object_handle)
 {
-  int node_handle;
+  extern char DAT_00280ea4[];
+  int neu;
   char *node;
-  node_handle = data_new_at_index(data);
-  if (node_handle == -1)
+
+  neu = data_new_at_index(data);
+  if (neu == -1) {
+    error(2, DAT_00280ea4, data, (int)*(int16_t *)((char *)data + 0x20));
     return;
-  node = (char *)datum_get(data, node_handle);
+  }
+  node = (char *)datum_get(data, neu);
   *(int *)(node + 4) = object_handle;
   *(int *)(node + 8) = *head;
-  *head = node_handle;
+  *head = neu;
 }
 
 /* FUN_000ce110 (0xce110) — readable C lift: delete linked datum chain. */
 void FUN_000ce110(data_t *data, int link)
 {
   char *node;
-  int next;
+
   while (link != -1) {
     node = (char *)datum_get(data, link);
-    next = *(int *)(node + 8);
     datum_delete(data, link);
-    link = next;
+    link = *(int *)(node + 8);
   }
 }
 
@@ -5997,11 +5983,15 @@ void FUN_000ce150(void)
 /* object_list_delete (0xce240) — readable C lift. */
 void object_list_delete(int list_handle)
 {
+  extern char DAT_00280ef0[];
+  extern char DAT_00280f0c[];
   char *node;
-  if (list_handle == -1) return;
+
+  if (list_handle == -1)
+    return;
   node = (char *)datum_get(*(data_t **)0x5aa698, list_handle);
-  if (*(short *)(node + 4) != 0) {
-    display_assert((const char *)0x280ef0, (const char *)0x280f0c, 0x64, 1);
+  if (*(int16_t *)(node + 4) != 0) {
+    display_assert(DAT_00280ef0, DAT_00280f0c, 0x64, 1);
     system_exit(-1);
   }
   FUN_000ce110(*(data_t **)0x5aa694, *(int *)(node + 8));

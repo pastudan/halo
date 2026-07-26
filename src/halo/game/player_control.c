@@ -109,56 +109,35 @@ char player_control_action_test_look_relative_down(void)
 
 
 
-/* limit2d (0xb6e10) — XBE naked draft (batch 161). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char limit2d(float *vec __attribute__((unused)), float max_len __attribute__((unused)))
+/* FUN_000b6dd0 (0xb6dd0) — readable C lift: wrap angle delta into (-pi, pi]. */
+float FUN_000b6dd0(float a, float b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "flds (%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstp %%st(2)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Llimit2d_1\n\t"
-      "fsqrt\n\t"
-      "movb $1, %%al\n\t"
-      "fdivrs 0xc(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "fstps (%%ecx)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "fstps 0x4(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Llimit2d_1:\n\t"
-      "fstp %%st(0)\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float d = b - a;
+  /* DAT_00256980=pi, DAT_00255a54=2pi, DAT_0026e280=-pi */
+  if (!(d < *(float *)0x256980) && d == d)
+    d -= *(float *)0x255a54;
+  if (!(d > *(float *)0x26e280) && d == d)
+    d += *(float *)0x255a54;
+  return d;
 }
-#else
-#error "limit2d: clang naked draft required"
-#endif
 
+/* limit2d (0xb6e10) — readable C lift: clamp 2D vector to max length. */
+char limit2d(float *vec, float max_len)
+{
+  float x = vec[0];
+  float y = vec[1];
+  float mag2 = x * x + y * y;
+  float max2 = max_len * max_len;
+  float scale;
+
+  /* MSVC: test ah,0x41; jne => not-above (mag2 <= max2 or NaN) */
+  if (!(mag2 > max2))
+    return 0;
+  scale = max_len / __builtin_sqrtf(mag2);
+  vec[0] = x * scale;
+  vec[1] = y * scale;
+  return 1;
+}
 
 /* interpolate_scalar (0xb6e60) — XBE naked draft (batch 169). */
 #if defined(__clang__)
@@ -346,7 +325,7 @@ int player_control_get_aiming_unit_index(int16_t local_player_index)
   slot = (int *)(base + ((int)local_player_index * 0x40) + 0x10);
   return unit_get_aiming_unit_index(*slot);
 }
-/* /* player_control_get_target_object_index (0xb6620) — readable C lift. */
+/* player_control_get_target_object_index (0xb6620) — readable C lift. */
 int player_control_get_target_object_index(int16_t local_player_index)
 {
   unsigned char *base;
