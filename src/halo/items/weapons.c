@@ -1539,98 +1539,47 @@ static char *weapon_get_trigger_entry(void *weapon_obj, int16_t trigger_index)
   return (char *)weapon_obj + (int)trigger_index * 36 + 0x210;
 }
 
-/* weapon_place (0xfad60) — XBE naked draft (batch 141). */
-#if defined(__clang__)
-static void *(*const bfad60_get)(int, int) = object_get_and_verify_type;
-static void *(*const bfad60_tag)(int, int) = tag_get;
-static void *(*const bfad60_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-int weapon_place(int weapon_handle __attribute__((unused)), void *placement __attribute__((unused)))
+/* weapon_place (0xfad60) — readable C lift. */
+int weapon_place(int weapon_handle, void *placement)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $4\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x4f0(%%eax), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "addl $0x4f0, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .Lweapon_place_4\n\t"
-      "pushl $0x70\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw 0x48(%%edi), %%cx\n\t"
-      "movw 0x8(%%eax), %%dx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw %%dx, %%cx\n\t"
-      "jle .Lweapon_place_1\n\t"
-      "movswl %%dx, %%ecx\n\t"
-      "jmp .Lweapon_place_2\n\t"
-      ".Lweapon_place_1:\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      ".Lweapon_place_2:\n\t"
-      "movw %%cx, 0x25e(%%esi)\n\t"
-      "movw 0xa(%%eax), %%ax\n\t"
-      "movw 0x4a(%%edi), %%cx\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "jg .Lweapon_place_3\n\t"
-      "movswl %%cx, %%eax\n\t"
-      ".Lweapon_place_3:\n\t"
-      "movw %%ax, 0x260(%%esi)\n\t"
-      ".Lweapon_place_4:\n\t"
-      "movb $1, %%dl\n\t"
-      "testb %%dl, 0x4c(%%edi)\n\t"
-      "movl $0xffffffdf, %%eax\n\t"
-      "movl $0x20, %%ecx\n\t"
-      "je .Lweapon_place_5\n\t"
-      "orl %%ecx, 0x4(%%esi)\n\t"
-      "jmp .Lweapon_place_6\n\t"
-      ".Lweapon_place_5:\n\t"
-      "andl %%eax, 0x4(%%esi)\n\t"
-      ".Lweapon_place_6:\n\t"
-      "orb $2, 0x6(%%esi)\n\t"
-      "testb $4, 0x4c(%%edi)\n\t"
-      "jne .Lweapon_place_7\n\t"
-      "orl %%ecx, 0x1a4(%%esi)\n\t"
-      "jmp .Lweapon_place_8\n\t"
-      ".Lweapon_place_7:\n\t"
-      "andl %%eax, 0x1a4(%%esi)\n\t"
-      ".Lweapon_place_8:\n\t"
-      "testb %%dl, 0x4c(%%edi)\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "jne .Lweapon_place_9\n\t"
-      "flds 0x14(%%esi)\n\t"
-      "fadds 0x2533e8\n\t"
-      "fstps 0x14(%%esi)\n\t"
-      ".Lweapon_place_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bfad60_get), [tag] "m"(bfad60_tag), [elem] "m"(bfad60_elem)
-      : "memory");
-}
-#else
-#error "weapon_place: clang naked draft required"
-#endif
+  char *weapon;
+  char *tag;
+  char *mag_block;
+  char *mag_elem;
+  char *place = (char *)placement;
+  int16_t a, b;
 
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  tag = (char *)tag_get(0x77656170, *(int *)weapon);
+  mag_block = tag + 0x4f0;
+  if (*(int *)mag_block > 0) {
+    mag_elem = (char *)tag_block_get_element(mag_block, 0, 0x70);
+    a = *(int16_t *)(place + 0x48);
+    b = *(int16_t *)(mag_elem + 8);
+    if (a > b)
+      a = b;
+    *(int16_t *)(weapon + 0x25e) = a;
+    a = *(int16_t *)(mag_elem + 0xa);
+    b = *(int16_t *)(place + 0x4a);
+    if (b > a)
+      ; /* keep a */
+    else
+      a = b;
+    *(int16_t *)(weapon + 0x260) = a;
+  }
+  if (place[0x4c] & 1)
+    *(int *)(weapon + 4) |= 0x20;
+  else
+    *(int *)(weapon + 4) &= ~0x20;
+  weapon[6] |= 2;
+  if (!(place[0x4c] & 4))
+    *(int *)(weapon + 0x1a4) |= 0x20;
+  else
+    *(int *)(weapon + 0x1a4) &= ~0x20;
+  if (!(place[0x4c] & 1))
+    *(float *)(weapon + 0x14) += *(float *)0x2533e8;
+  return weapon_handle;
+}
 
 /* weapon_can_be_fired (0xfaf50) — readable C lift. */
 char weapon_can_be_fired(int weapon_handle)
@@ -1727,116 +1676,7 @@ float FUN_000fb510(int weapon_handle, int16_t trigger_index)
   return *(float *)0x2533c0;
 }
 
-/* 0xfb5a0 — trigger ready to fire (charge vs firing-heat threshold). */
-/* 0xfb5a0 — trigger ready (weapon@eax, trigger@ecx). */
-#if defined(__clang__)
-static void *(*const FUN_000fb5a0_get)(int, int) = object_get_and_verify_type;
-static char *(*const FUN_000fb5a0_entry)(void *, int16_t) = FUN_000fb320;
-static void *(*const FUN_000fb5a0_tag)(int, int) = tag_get;
-static void *(*const FUN_000fb5a0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-char FUN_000fb5a0(int weapon_handle __attribute__((unused)),
-                  int16_t trigger_index __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[entry]\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x77656170\n\t"
-      "movl %%eax, -4(%%ebp)\n\t"
-      "call *%[tag]\n\t"
-      "movswl %%si, %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "pushl $0x114\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x4fc(%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl -4(%%ebp), %%esi\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "xorb %%dl, %%dl\n\t"
-      "testb $2, %%ch\n\t"
-      "je 1f\n\t"
-      "flds 0x1e4(%%edi)\n\t"
-      "jmp 2f\n\t"
-      "1:\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "2:\n\t"
-      "flds 8(%%eax)\n\t"
-      "fsubs 4(%%eax)\n\t"
-      "fmulp %%st(1)\n\t"
-      "fadds 4(%%eax)\n\t"
-      "fcoms 0x253f44\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne 3f\n\t"
-      "fdivrs 0x253394\n\t"
-      "jmp 4f\n\t"
-      "3:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      "4:\n\t"
-      "flds 0x444(%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne 5f\n\t"
-      "flds 0x1f0(%%edi)\n\t"
-      "fmuls 0x444(%%ebx)\n\t"
-      "fadds 0x2533c8\n\t"
-      "fmulp %%st(1)\n\t"
-      "5:\n\t"
-      "movsbl (%%esi), %%eax\n\t"
-      "movl %%eax, -4(%%ebp)\n\t"
-      "fildl -4(%%ebp)\n\t"
-      "fadds 0x2533c8\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $1, %%ah\n\t"
-      "jne 6f\n\t"
-      "movb $1, %%dl\n\t"
-      "6:\n\t"
-      "testb $8, %%cl\n\t"
-      "je 7f\n\t"
-      "testb $2, 0x1a4(%%edi)\n\t"
-      "je 7f\n\t"
-      "testb $1, 4(%%esi)\n\t"
-      "jne 7f\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%dl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_000fb5a0_get), [entry] "m"(FUN_000fb5a0_entry),
-        [tag] "m"(FUN_000fb5a0_tag), [elem] "m"(FUN_000fb5a0_elem)
-      : "memory");
-}
-#else
+/* FUN_000fb5a0 (0xfb5a0) — readable C lift. */
 char FUN_000fb5a0(int weapon_handle, int16_t trigger_index)
 {
   char *weapon_obj;
@@ -1882,7 +1722,6 @@ char FUN_000fb5a0(int weapon_handle, int16_t trigger_index)
 
   return result;
 }
-#endif
 
 /* FUN_000fb690 (0xfb690) — readable C lift: clear magazine state. */
 void FUN_000fb690(int weapon_handle /*@<eax>*/, int16_t magazine_index /*@<cx>*/)
@@ -1899,69 +1738,30 @@ void FUN_000fb690(int weapon_handle /*@<eax>*/, int16_t magazine_index /*@<cx>*/
   *(int16_t *)((char *)mag + 2) = 0;
 }
 
-/* FUN_000fb7d0 (0xfb7d0) — XBE naked draft (batch 140). */
-#if defined(__clang__)
-static void *(*const bfb7d0_get)(int, int) = object_get_and_verify_type;
-static void *(*const bfb7d0_tryget)(int, int) = object_try_and_get_and_verify_type;
-static int (*const bfb7d0_c9eb40)(int param_1, int param_2, short param_3, short param_4, short param_5) = FUN_0009eb40;
-
-__attribute__((naked, noinline))
-int FUN_000fb7d0(int effect_tag __attribute__((unused)), int weapon_handle __attribute__((unused)))
+/* FUN_000fb7d0 (0xfb7d0) — readable C lift. */
+int FUN_000fb7d0(int effect_tag, int weapon_handle)
 {
-  __asm__ volatile(
-      "orl $0xffffffff, %%eax\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_000fb7d0_4\n\t"
-      "pushl $4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movb 0x4(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $1, %%cl\n\t"
-      "movl %%esi, %%edi\n\t"
-      "je .LFUN_000fb7d0_1\n\t"
-      "movl 0xcc(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000fb7d0_1\n\t"
-      "movl %%eax, %%edi\n\t"
-      ".LFUN_000fb7d0_1:\n\t"
-      "pushl $4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl 0xcc(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000fb7d0_2\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000fb7d0_2:\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_000fb7d0_3\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c9eb40]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      ".LFUN_000fb7d0_3:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      ".LFUN_000fb7d0_4:\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bfb7d0_get), [tryget] "m"(bfb7d0_tryget), [c9eb40] "m"(bfb7d0_c9eb40)
-      : "memory");
-}
-#else
-#error "FUN_000fb7d0: clang naked draft required"
-#endif
+  char *weapon;
+  int owner;
+  int parent;
 
+  if (effect_tag == -1)
+    return -1;
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  owner = weapon_handle;
+  if ((weapon[4] & 1) != 0) {
+    parent = *(int *)(weapon + 0xcc);
+    if (parent != -1)
+      owner = parent;
+  }
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  parent = *(int *)(weapon + 0xcc);
+  if (parent != -1)
+    (void)object_try_and_get_and_verify_type(parent, 3);
+  if (owner == -1)
+    return -1;
+  return FUN_0009eb40(effect_tag, owner, -1, -1, -1);
+}
 
 /* weapon_trigger_release_charge (0xfb880) — readable C lift. */
 void weapon_trigger_release_charge(int weapon_handle, int16_t trigger_index,

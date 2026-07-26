@@ -33564,7 +33564,7 @@
         {
           "addr": "0xfad60",
           "decl": "int weapon_place(int weapon_handle, void *placement);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfae30",
@@ -33664,8 +33664,8 @@
         },
         {
           "addr": "0xfb5a0",
-          "decl": "char FUN_000fb5a0(int weapon_handle@<eax>, int16_t trigger_index@<ecx>);",
-          "ported": false
+          "decl": "char FUN_000fb5a0(int weapon_handle @<eax>, int16_t trigger_index @<ecx>);",
+          "ported": true
         },
         {
           "addr": "0xfb690",
@@ -33681,8 +33681,8 @@
         },
         {
           "addr": "0xfb7d0",
-          "decl": "int FUN_000fb7d0(int effect_tag, int weapon_handle);",
-          "ported": false
+          "decl": "int FUN_000fb7d0(int effect_tag @<ebx>, int weapon_handle @<esi>);",
+          "ported": true
         },
         {
           "addr": "0xfb880",
