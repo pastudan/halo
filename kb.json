@@ -11804,7 +11804,7 @@
         },
         {
           "addr": "0xc4ae0",
-          "decl": "void FUN_000c4ae0(int16_t function_index@<eax>, char *dest);",
+          "decl": "void FUN_000c4ae0(int16_t function_index, char *dest);",
           "ported": true
         },
         {
@@ -12339,12 +12339,12 @@
         {
           "addr": "0xca010",
           "decl": "float FUN_000ca010(int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca030",
           "decl": "void FUN_000ca030(int object_handle, float value);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca050",
@@ -12510,7 +12510,7 @@
         {
           "addr": "0xcaf40",
           "decl": "int16_t FUN_000caf40(float x);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcaf60",
