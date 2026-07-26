@@ -10211,7 +10211,7 @@
         },
         {
           "addr": "0x1bfb60",
-          "decl": "void FUN_001bfb60(void);",
+          "decl": "void FUN_001bfb60(const char *name, const char *label, int size, char starred);",
           "ported": false
         },
         {
@@ -10226,7 +10226,7 @@
         },
         {
           "addr": "0x1c00c0",
-          "decl": "void FUN_001c00c0(void);",
+          "decl": "void *FUN_001c00c0(void *base, unsigned int size, unsigned int region_size);",
           "ported": false
         }
       ],
@@ -12239,7 +12239,8 @@
         {
           "addr": "0xc9700",
           "decl": "char FUN_000c9700(int object_handle, int unused, float distance);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000c9700"
         },
         {
           "addr": "0xc9770",
@@ -23507,8 +23508,9 @@
       "functions": [
         {
           "addr": "0x1c1b00",
-          "decl": "void FUN_001c1b00(void);",
-          "ported": false
+          "decl": "void FUN_001c1b00(int profile_handle, void *out @<esi>);",
+          "ported": false,
+          "name": "FUN_001c1b00"
         },
         {
           "addr": "0x1c1ba0",
@@ -23547,7 +23549,7 @@
         },
         {
           "addr": "0x1c1f70",
-          "decl": "void FUN_001c1f70(void);",
+          "decl": "void FUN_001c1f70(int profile_index);",
           "ported": false
         },
         {
@@ -23557,7 +23559,7 @@
         },
         {
           "addr": "0x1c20d0",
-          "decl": "void FUN_001c20d0(void);",
+          "decl": "char FUN_001c20d0(int file_index, wchar_t *out_name);",
           "ported": false
         },
         {
@@ -23582,7 +23584,7 @@
         },
         {
           "addr": "0x1c26b0",
-          "decl": "void FUN_001c26b0(void);",
+          "decl": "void FUN_001c26b0(int a0, int a1, int a2);",
           "ported": false
         },
         {
@@ -23767,7 +23769,7 @@
         },
         {
           "addr": "0x1c4600",
-          "decl": "void saved_game_file_get_display_name(void);",
+          "decl": "wchar_t *saved_game_file_get_display_name(int file_index);",
           "ported": false
         },
         {

@@ -86,7 +86,7 @@ static void * (*const b1c1b00_c8e0b0)(void *destination, void *source, size_t si
 static bool (*const b1c1b00_c81630)(int priority_flags, void *function, int param, void **thread_reference) = thread_new;
 
 __attribute__((naked, noinline))
-void FUN_001c1b00(void *out __attribute__((unused)), int profile_handle __attribute__((unused)))
+void FUN_001c1b00(int profile_handle __attribute__((unused)), void *out __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -165,8 +165,10 @@ void player_profile_get_from_path(int profile_handle, void *out)
     display_assert(DAT_002829b0, DAT_002b9f70, 0x100, 1);
     system_exit(-1);
   }
-  if (profile_handle != -1)
-    FUN_001c1b00(out, profile_handle);
+  if (profile_handle != -1) {
+    __asm__ volatile("movl %0, %%esi" : : "r"(out) : "esi");
+    FUN_001c1b00(profile_handle, out);
+  }
 }
 
 /* FUN_001c1c00 (0x1c1c00) — XBE naked draft (batch 259). */
@@ -571,43 +573,16 @@ void FUN_001c1e20(void)
 #endif
 
 
-/* FUN_001c1f70 (0x1c1f70) — XBE naked draft (batch 287). */
-#if defined(__clang__)
-static char (*const b1c1f70_c1c46c0)(int param_1) = delete_enumerated_saved_game_file;
-static void (*const b1c1f70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_001c1f70(void)
+/* FUN_001c1f70 (0x1c1f70) — readable C lift. */
+void FUN_001c1f70(int profile_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_001c1f70_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c46c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c1f70_1\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x2ba4d4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_001c1f70_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c46c0] "m"(b1c1f70_c1c46c0), [c8f390] "m"(b1c1f70_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_001c1f70: clang naked draft required"
-#endif
+  extern char DAT_002ba4d4[];
 
+  if (profile_index == -1)
+    return;
+  if (!delete_enumerated_saved_game_file(profile_index))
+    error(2, DAT_002ba4d4, profile_index);
+}
 
 /* playlist_profile_get (0x1c1fa0) — XBE naked draft (batch 251). */
 #if defined(__clang__)
@@ -747,47 +722,18 @@ void playlist_profile_get(void)
 #endif
 
 
-/* FUN_001c20d0 (0x1c20d0) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-static void (*const b1c20d0_c1c4600)(void) = saved_game_file_get_display_name;
-static wchar_t * (*const b1c20d0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-
-__attribute__((naked, noinline))
-void FUN_001c20d0(void)
+/* FUN_001c20d0 (0x1c20d0) — readable C lift. */
+char FUN_001c20d0(int file_index, wchar_t *out_name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c4600]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c20d0_1\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl $0x7f\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19dc90]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw $0, 0xfe(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c20d0_1:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c4600] "m"(b1c20d0_c1c4600), [c19dc90] "m"(b1c20d0_c19dc90)
-      : "memory");
-}
-#else
-#error "FUN_001c20d0: clang naked draft required"
-#endif
+  wchar_t *name;
 
+  name = saved_game_file_get_display_name(file_index);
+  if (!name)
+    return 0;
+  ustrncpy(out_name, name, 0x7f);
+  out_name[0x7f] = 0;
+  return 1;
+}
 
 /* 0x1c2110 */
 void FUN_001c2110(void)
@@ -1361,42 +1307,15 @@ void playlist_profile_write(void)
 #endif
 
 
-/* FUN_001c26b0 (0x1c26b0) — XBE naked draft (batch 267). */
-#if defined(__clang__)
-static void (*const b1c26b0_c1c2120)(void) = FUN_001c2120;
-static void (*const b1c26b0_c1c53f0)(void) = FUN_001c53f0;
-
-__attribute__((naked, noinline))
-void FUN_001c26b0(void)
+/* FUN_001c26b0 (0x1c26b0) — readable C lift. */
+void FUN_001c26b0(int a0, int a1, int a2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpb $1, 0x32eb90\n\t"
-      "jne .LFUN_001c26b0_1\n\t"
-      "call *%[c1c2120]\n\t"
-      "movb $0, 0x32eb90\n\t"
-      ".LFUN_001c26b0_1:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1c53f0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c2120] "m"(b1c26b0_c1c2120), [c1c53f0] "m"(b1c26b0_c1c53f0)
-      : "memory");
+  if (*(char *)0x32eb90 == 1) {
+    FUN_001c2120();
+    *(char *)0x32eb90 = 0;
+  }
+  FUN_001c53f0(a0, 1, a1, a2, 1);
 }
-#else
-#error "FUN_001c26b0: clang naked draft required"
-#endif
-
 
 /* playlist_profile_delete (0x1c26f0) — XBE naked draft (batch 270). */
 #if defined(__clang__)
@@ -4566,7 +4485,7 @@ static wchar_t * (*const b1c4600_c19dc90)(wchar_t *dest, wchar_t *src, size_t co
 static void (*const b1c4600_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void saved_game_file_get_display_name(void)
+wchar_t *saved_game_file_get_display_name(int file_index __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

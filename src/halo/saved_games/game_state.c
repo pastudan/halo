@@ -344,95 +344,38 @@ fail:
 }
 /* --- game_state.obj batch drafts (2026-07-26) --- */
 
-/* FUN_001bfb60 (0x1bfb60) — XBE naked draft (batch 281). */
-#if defined(__clang__)
-static void * (*const b1bfb60_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
-static int (*const b1bfb60_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
-static int (*const b1bfb60_c1d9bd2)(void *stream) = crt_fflush;
-
-__attribute__((naked, noinline))
-void FUN_001bfb60(void)
+/* FUN_001bfb60 (0x1bfb60) — readable C lift: gamestate.txt allocation log. */
+void FUN_001bfb60(const char *name, const char *label, int size, char starred)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4ea990, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001bfb60_1\n\t"
-      "pushl $0x265938\n\t"
-      "pushl $0x2b99c8\n\t"
-      "call *%[c1d9e59]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x4ea990\n\t"
-      "je .LFUN_001bfb60_3\n\t"
-      ".LFUN_001bfb60_1:\n\t"
-      "movb 0x14(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl $0x2686f4, %%ecx\n\t"
-      "jne .LFUN_001bfb60_2\n\t"
-      "movl $0x25386f, %%ecx\n\t"
-      ".LFUN_001bfb60_2:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x2b99b4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d98ad]\n\t"
-      "movl 0x4ea990, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d9bd2]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      ".LFUN_001bfb60_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d9e59] "m"(b1bfb60_c1d9e59), [c1d98ad] "m"(b1bfb60_c1d98ad), [c1d9bd2] "m"(b1bfb60_c1d9bd2)
-      : "memory");
+  void *stream;
+  extern char DAT_00265938[];
+  extern char DAT_002b99c8[];
+  extern char DAT_002b99b4[];
+  extern char DAT_002686f4[];
+  extern char DAT_0025386f[];
+
+  stream = *(void **)0x4ea990;
+  if (!stream) {
+    stream = crt_fopen(DAT_002b99c8, DAT_00265938);
+    *(void **)0x4ea990 = stream;
+    if (!stream)
+      return;
+  }
+  crt_fprintf(stream, DAT_002b99b4, name, label, size,
+              starred ? DAT_002686f4 : DAT_0025386f);
+  crt_fflush(*(void **)0x4ea990);
 }
-#else
-#error "FUN_001bfb60: clang naked draft required"
-#endif
 
-
-/* game_state_lruv_cache_new (0x1c0070) — XBE naked draft (batch 272). */
-#if defined(__clang__)
-static void (*const b1c0070_c1190b0)(uint32_t *checksum) = crc_new;
-static void (*const b1c0070_c1c00c0)(void) = FUN_001c00c0;
-static void (*const b1c0070_c1c0260)(void) = game_state_create_or_open_file;
-static void * (*const b1c0070_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
-
-__attribute__((naked, noinline))
+/* game_state_lruv_cache_new (0x1c0070) — readable C lift. */
 void game_state_lruv_cache_new(void)
 {
-  __asm__ volatile(
-      "pushl $0x4ea9a0\n\t"
-      "call *%[c1190b0]\n\t"
-      "pushl $0x40000\n\t"
-      "pushl $0x305000\n\t"
-      "pushl $0x80061000\n\t"
-      "call *%[c1c00c0]\n\t"
-      "movl %%eax, 0x4ea994\n\t"
-      "call *%[c1c0260]\n\t"
-      "pushl $0x14c\n\t"
-      "pushl $0\n\t"
-      "pushl $0x265d1c\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "movl %%eax, 0x4ea9ac\n\t"
-      "ret\n\t"
-      :
-      : [c1190b0] "m"(b1c0070_c1190b0), [c1c00c0] "m"(b1c0070_c1c00c0), [c1c0260] "m"(b1c0070_c1c0260), [c1bfbf0] "m"(b1c0070_c1bfbf0)
-      : "memory");
-}
-#else
-#error "game_state_lruv_cache_new: clang naked draft required"
-#endif
+  extern char DAT_00265d1c[];
 
+  crc_new((uint32_t *)0x4ea9a0);
+  *(void **)0x4ea994 = FUN_001c00c0((void *)0x80061000, 0x305000, 0x40000);
+  game_state_create_or_open_file();
+  *(void **)0x4ea9ac = game_state_malloc(DAT_00265d1c, 0, 0x14c);
+}
 
 /* FUN_001c00c0 (0x1c00c0) — XBE naked draft (batch 250). */
 #if defined(__clang__)
@@ -442,7 +385,9 @@ static int (*const b1c00c0_c1bdd40)(void) = FUN_001bdd40;
 static void __stdcall (*const b1c00c0_c1d371d)(void *addr, unsigned int size, unsigned int protect) = physical_memory_protect;
 
 __attribute__((naked, noinline))
-void FUN_001c00c0(void)
+void *FUN_001c00c0(void *base __attribute__((unused)),
+                   unsigned int size __attribute__((unused)),
+                   unsigned int region_size __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

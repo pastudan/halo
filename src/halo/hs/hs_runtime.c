@@ -3725,7 +3725,6 @@ int16_t FUN_000caf40(float x)
   return (int16_t)(int)x;
 }
 
-<<<<<<< Updated upstream
 /* FUN_000caf60 (0xcaf60) — readable C lift: fld + MSVC _ftol2 (FUN_001d9068). */
 int FUN_000caf60(float value)
 {
@@ -3740,18 +3739,6 @@ int FUN_000caf60(float value)
       : "eax", "edx", "ecx", "cc", "memory");
   return result;
 }
-=======
-/* FUN_000caf60 (0xcaf60) — readable C lift: float→int via MSVC _ftol2. */
-int FUN_000caf60(float value)
-{
-  return (int)value;
-}
-
-
-
-
-
->>>>>>> Stashed changes
 
 /* FUN_000caf70 (0xcaf70) — readable C lift from XBE leaf (int16 identity). */
 int16_t FUN_000caf70(int16_t value)
@@ -4429,157 +4416,40 @@ char FUN_000c9650(int16_t game_flag __attribute__((unused)), int list_handle __a
 #endif
 
 
-/* FUN_000c9700 (0xc9700) — XBE naked draft (batch 151). */
-#if defined(__clang__)
-static void *(*const bc9700_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void (*const bc9700_c1a9200)(int object_handle, float *out_position) = unit_get_head_position;
-static void *(*const bc9700_get)(int, int) = object_get_and_verify_type;
-static char (*const bc9700_c1aa430)(int unit_handle, float *point, float half_angle) = FUN_001aa430;
-
-__attribute__((naked, noinline))
-char FUN_000c9700(int object_handle __attribute__((unused)), int unused __attribute__((unused)), float distance __attribute__((unused)))
+/* FUN_000c9700 (0xc9700) — readable C lift: unit facing point within angle. */
+char FUN_000c9700(int object_handle, int unused, float distance)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000c9700_3\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c9700_1\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1a9200]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .LFUN_000c9700_2\n\t"
-      ".LFUN_000c9700_1:\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "addl $8, %%esp\n\t"
-      "addl $0x50, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".LFUN_000c9700_2:\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "fmuls 0x253d4c\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1aa430]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000c9700_3:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tryget] "m"(bc9700_tryget), [c1a9200] "m"(bc9700_c1a9200), [get] "m"(bc9700_get), [c1aa430] "m"(bc9700_c1aa430)
-      : "memory");
+  float pos[3];
+  char *obj;
+
+  if (unused == -1)
+    return 0;
+  if (object_try_and_get_and_verify_type(unused, 3)) {
+    unit_get_head_position(unused, pos);
+  } else {
+    obj = (char *)object_get_and_verify_type(unused, -1);
+    pos[0] = *(float *)(obj + 0x50);
+    pos[1] = *(float *)(obj + 0x54);
+    pos[2] = *(float *)(obj + 0x58);
+  }
+  return FUN_001aa430(object_handle, pos, distance * *(float *)0x253d4c);
 }
-#else
-#error "FUN_000c9700: clang naked draft required"
-#endif
 
-
-/* FUN_000c9770 (0xc9770) — XBE naked draft (batch 143). */
-#if defined(__clang__)
-static int (*const bc9770_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
-static void *(*const bc9770_tryget)(int, int) = object_try_and_get_and_verify_type;
-static char (*const bc9770_cc9700)(int object_handle, int unused, float distance) = FUN_000c9700;
-static int (*const bc9770_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
-
-__attribute__((naked, noinline))
-char FUN_000c9770(int list_handle __attribute__((unused)), int param __attribute__((unused)), float distance __attribute__((unused)))
+/* FUN_000c9770 (0xc9770) — readable C lift: any list unit facing param. */
+char FUN_000c9770(int list_handle, int param, float distance)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[cce450]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000c9770_4\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      ".LFUN_000c9770_1:\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c9770_2\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cc9700]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000c9770_3\n\t"
-      ".LFUN_000c9770_2:\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cce320]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_000c9770_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c9770_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c9770_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cce450] "m"(bc9770_cce450), [tryget] "m"(bc9770_tryget), [cc9700] "m"(bc9770_cc9700), [cce320] "m"(bc9770_cce320)
-      : "memory");
-}
-#else
-#error "FUN_000c9770: clang naked draft required"
-#endif
+  int iter;
+  int obj;
 
+  obj = FUN_000ce450(list_handle, &iter);
+  while (obj != -1) {
+    if (object_try_and_get_and_verify_type(obj, 3) &&
+        FUN_000c9700(obj, param, distance))
+      return 1;
+    obj = FUN_000ce320(list_handle, &iter);
+  }
+  return 0;
+}
 
 /* FUN_000c97f0 (0xc97f0) — readable C lift. */
 void FUN_000c97f0(int object_handle, int16_t scenario_index, float distance)
@@ -4911,26 +4781,11 @@ void FUN_000c9c80(int object_handle __attribute__((unused)), int region_name __a
 #endif
 
 
-<<<<<<< Updated upstream
 /* FUN_000c9d40 (0xc9d40) — readable C lift: delete each object in list. */
 void FUN_000c9d40(int list_handle)
 {
   int iter;
   int obj;
-=======
-/* FUN_000c9d40 (0xc9d40) — readable C lift: iterate object list + destroy. */
-void FUN_000c9d40(int list_handle)
-{
-  int iter_state;
-  int object_handle;
-
-  object_handle = FUN_000ce450(list_handle, &iter_state);
-  while (object_handle != -1) {
-    FUN_0013ddd0(object_handle);
-    object_handle = FUN_000ce320(list_handle, &iter_state);
-  }
-}
->>>>>>> Stashed changes
 
   obj = FUN_000ce450(list_handle, &iter);
   while (obj != -1) {
