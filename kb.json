@@ -18591,7 +18591,8 @@
         {
           "addr": "0xbaba0",
           "decl": "void placement_data_set_change_color(void *placement, float *color);",
-          "ported": false
+          "ported": true,
+          "name": "placement_data_set_change_color"
         },
         {
           "addr": "0xbac10",
@@ -28316,8 +28317,9 @@
         },
         {
           "addr": "0x1a0db0",
-          "decl": "char FUN_001a0db0(int biped_handle);",
-          "ported": false
+          "decl": "int FUN_001a0db0(int unit_handle);",
+          "ported": false,
+          "name": "FUN_001a0db0"
         },
         {
           "addr": "0x1a0e00",
@@ -33733,7 +33735,7 @@
         {
           "addr": "0xfc710",
           "decl": "int16_t weapon_rotate_zoom_level(int weapon_handle, int16_t zoom_level);",
-          "ported": true,
+          "ported": false,
           "name": "weapon_rotate_zoom_level"
         },
         {
@@ -39233,7 +39235,8 @@
         {
           "addr": "0x139310",
           "decl": "void light_delete(int light_handle);",
-          "ported": false
+          "ported": true,
+          "name": "light_delete"
         },
         {
           "addr": "0x139480",
