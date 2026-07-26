@@ -462,88 +462,30 @@ char FUN_00042e60(int actor, int unit, int prop)
   return 0;
 }
 
-/* FUN_00042eb0 (0x42eb0) — XBE naked draft (batch 142). */
-#if defined(__clang__)
-static char (*const b42eb0_c42d80)(int actor, int unit, int prop) = FUN_00042d80;
-static void *(*const b42eb0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b42eb0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-char FUN_00042eb0(int actor __attribute__((unused)), int unit __attribute__((unused)), int prop __attribute__((unused)))
+/* FUN_00042eb0 (0x42eb0) — readable C lift. */
+char FUN_00042eb0(int actor, int unit, int prop)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c42d80]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00042eb0_2\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl 0x1a4(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00042eb0_2\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_00042eb0_2\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x6325a4, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%esi), %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .LFUN_00042eb0_1\n\t"
-      "cmpl 0x34(%%eax), %%ecx\n\t"
-      "jne .LFUN_00042eb0_1\n\t"
-      "movw 0x3c(%%esi), %%cx\n\t"
-      "cmpw 0x3c(%%eax), %%cx\n\t"
-      "jne .LFUN_00042eb0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00042eb0_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00042eb0_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c42d80] "m"(b42eb0_c42d80), [get] "m"(b42eb0_get), [dget] "m"(b42eb0_dget)
-      : "memory");
+  void *obj;
+  int other_actor;
+  char *a;
+  char *b;
+
+  if (!FUN_00042d80(actor, unit, prop))
+    return 0;
+  obj = object_get_and_verify_type(actor, 3);
+  other_actor = *(int *)((char *)obj + 0x1a4);
+  if (other_actor == -1 || prop == -1)
+    return 0;
+  a = (char *)datum_get(*(data_t **)0x6325a4, other_actor);
+  b = (char *)datum_get(*(data_t **)0x6325a4, prop);
+  if (*(int *)(a + 0x34) == -1)
+    return 0;
+  if (*(int *)(a + 0x34) != *(int *)(b + 0x34))
+    return 0;
+  if (*(short *)(a + 0x3c) != *(short *)(b + 0x3c))
+    return 0;
+  return 1;
 }
-#else
-#error "FUN_00042eb0: clang naked draft required"
-#endif
-
-
 /* FUN_00042f40 (0x42f40) — readable C lift: thin wrapper. */
 char FUN_00042f40(int a, int b, int actor)
 {
