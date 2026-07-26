@@ -10,7 +10,7 @@ void ai_scripting_follow_distance(int encounter_handle, int actor_handle, int se
     error(2, (const char *)0x25d1d0, hs_runtime_get_executing_thread_name());
     (void)actor_handle;
   }
-  FUN_00058af0(seat_list, 1, encounter_handle);
+  ((void (*)(int, int, int))(void *)&FUN_00058af0)(seat_list, 1, encounter_handle);
 }
 
 /* FUN_00058d40 (0x58d40) — XBE naked draft (batch 124). */

@@ -35747,7 +35747,7 @@
         },
         {
           "addr": "0x58af0",
-          "decl": "void FUN_00058af0(int seat_list, int mode, int encounter_handle @<eax>);",
+          "decl": "void FUN_00058af0(int actor_handle, int vehicle_handle, void *seat_list, char require_pilot);",
           "ported": false
         },
         {
