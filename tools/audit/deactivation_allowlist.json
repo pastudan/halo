@@ -17631,5 +17631,250 @@
     "object": "rasterizer_text.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155350",
+    "name": "FUN_00155350",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155380",
+    "name": "FUN_00155380",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1553a0",
+    "name": "FUN_001553a0",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1553d0",
+    "name": "FUN_001553d0",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155560",
+    "name": "FUN_00155560",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155880",
+    "name": "FUN_00155880",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1559a0",
+    "name": "_rasterizer_reset_state",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1559b0",
+    "name": "rasterizer_spin_begin",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1559c0",
+    "name": "rasterizer_spin_end",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1559d0",
+    "name": "_rasterizer_windows_begin",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155a00",
+    "name": "_rasterizer_window_get_fog",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155a40",
+    "name": "_rasterizer_windows_end",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155a70",
+    "name": "_rasterizer_frame_end",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155b60",
+    "name": "FUN_00155b60",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155b90",
+    "name": "_rasterizer_dispose",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155c10",
+    "name": "FUN_00155c10",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155c20",
+    "name": "rasterizer_set_texture_bitmap_data",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155cc0",
+    "name": "FUN_00155cc0",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155cf0",
+    "name": "rasterizer_set_texture_direct",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155da0",
+    "name": "rasterizer_set_texture_direct_non_blocking",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x155e80",
+    "name": "rasterizer_set_texture",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x156070",
+    "name": "FUN_00156070",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1560a0",
+    "name": "rasterizer_set_texture_non_blocking",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x156250",
+    "name": "rasterizer_get_target",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x156440",
+    "name": "rasterizer_set_vertex_shader",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x156510",
+    "name": "rasterizer_set_pixel_shader",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x156710",
+    "name": "rasterizer_set_model_skinning",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x156850",
+    "name": "rasterizer_set_model_lighting_point_light",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1569f0",
+    "name": "FUN_001569f0",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x156a90",
+    "name": "FUN_00156a90",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x156ab0",
+    "name": "rasterizer_set_model_lighting",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x156c30",
+    "name": "rasterizer_set_frustum_z",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x156d80",
+    "name": "SetupSmartStates",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x156e00",
+    "name": "FUN_00156e00",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x157010",
+    "name": "FUN_00157010",
+    "object": "rasterizer_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

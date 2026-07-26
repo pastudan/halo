@@ -20945,19 +20945,23 @@
       "functions": [
         {
           "addr": "0x155350",
-          "decl": "void FUN_00155350(void);"
+          "decl": "void FUN_00155350(void);",
+          "ported": false
         },
         {
           "addr": "0x155380",
-          "decl": "void FUN_00155380(void);"
+          "decl": "void FUN_00155380(void);",
+          "ported": false
         },
         {
           "addr": "0x1553a0",
-          "decl": "void FUN_001553a0(void);"
+          "decl": "void FUN_001553a0(void);",
+          "ported": false
         },
         {
           "addr": "0x1553d0",
-          "decl": "void FUN_001553d0(void);"
+          "decl": "void FUN_001553d0(void);",
+          "ported": false
         },
         {
           "addr": "0x1553f0",
@@ -20966,7 +20970,8 @@
         },
         {
           "addr": "0x155560",
-          "decl": "void FUN_00155560(void);"
+          "decl": "void FUN_00155560(void);",
+          "ported": false
         },
         {
           "addr": "0x155580",
@@ -20975,123 +20980,153 @@
         },
         {
           "addr": "0x155880",
-          "decl": "void FUN_00155880(void);"
+          "decl": "void FUN_00155880(void);",
+          "ported": false
         },
         {
           "addr": "0x1559a0",
-          "decl": "void _rasterizer_reset_state(void);"
+          "decl": "void _rasterizer_reset_state(void);",
+          "ported": false
         },
         {
           "addr": "0x1559b0",
-          "decl": "void rasterizer_spin_begin(void);"
+          "decl": "void rasterizer_spin_begin(void);",
+          "ported": false
         },
         {
           "addr": "0x1559c0",
-          "decl": "void rasterizer_spin_end(void);"
+          "decl": "void rasterizer_spin_end(void);",
+          "ported": false
         },
         {
           "addr": "0x1559d0",
-          "decl": "void _rasterizer_windows_begin(void);"
+          "decl": "void _rasterizer_windows_begin(void);",
+          "ported": false
         },
         {
           "addr": "0x155a00",
-          "decl": "void _rasterizer_window_get_fog(void);"
+          "decl": "void _rasterizer_window_get_fog(void);",
+          "ported": false
         },
         {
           "addr": "0x155a40",
-          "decl": "void _rasterizer_windows_end(void);"
+          "decl": "void _rasterizer_windows_end(void);",
+          "ported": false
         },
         {
           "addr": "0x155a70",
-          "decl": "void _rasterizer_frame_end(void);"
+          "decl": "void _rasterizer_frame_end(void);",
+          "ported": false
         },
         {
           "addr": "0x155b60",
-          "decl": "void FUN_00155b60(void);"
+          "decl": "void FUN_00155b60(void);",
+          "ported": false
         },
         {
           "addr": "0x155b90",
-          "decl": "void _rasterizer_dispose(void);"
+          "decl": "void _rasterizer_dispose(void);",
+          "ported": false
         },
         {
           "addr": "0x155c10",
-          "decl": "void FUN_00155c10(void);"
+          "decl": "void FUN_00155c10(void);",
+          "ported": false
         },
         {
           "addr": "0x155c20",
-          "decl": "void rasterizer_set_texture_bitmap_data(int stage, void *bitmap_data);"
+          "decl": "void rasterizer_set_texture_bitmap_data(int stage, void *bitmap_data);",
+          "ported": false
         },
         {
           "addr": "0x155cc0",
-          "decl": "void FUN_00155cc0(void);"
+          "decl": "void FUN_00155cc0(void);",
+          "ported": false
         },
         {
           "addr": "0x155cf0",
-          "decl": "void rasterizer_set_texture_direct(int stage, int bitmap_tag_index, int frame_index);"
+          "decl": "void rasterizer_set_texture_direct(int stage, int bitmap_tag_index, int frame_index);",
+          "ported": false
         },
         {
           "addr": "0x155da0",
-          "decl": "void rasterizer_set_texture_direct_non_blocking(void);"
+          "decl": "void rasterizer_set_texture_direct_non_blocking(void);",
+          "ported": false
         },
         {
           "addr": "0x155e80",
-          "decl": "void rasterizer_set_texture(int stage, int a2, int bitmap_type, int bitmap_index, int frame_index);"
+          "decl": "void rasterizer_set_texture(int stage, int a2, int bitmap_type, int bitmap_index, int frame_index);",
+          "ported": false
         },
         {
           "addr": "0x156070",
-          "decl": "void FUN_00156070(void);"
+          "decl": "void FUN_00156070(void);",
+          "ported": false
         },
         {
           "addr": "0x1560a0",
-          "decl": "void rasterizer_set_texture_non_blocking(void);"
+          "decl": "void rasterizer_set_texture_non_blocking(void);",
+          "ported": false
         },
         {
           "addr": "0x156250",
-          "decl": "void rasterizer_get_target(void);"
+          "decl": "void rasterizer_get_target(void);",
+          "ported": false
         },
         {
           "addr": "0x156440",
-          "decl": "void rasterizer_set_vertex_shader(void);"
+          "decl": "void rasterizer_set_vertex_shader(void);",
+          "ported": false
         },
         {
           "addr": "0x156510",
-          "decl": "void rasterizer_set_pixel_shader(void *state);"
+          "decl": "void rasterizer_set_pixel_shader(void *state);",
+          "ported": false
         },
         {
           "addr": "0x156710",
-          "decl": "void rasterizer_set_model_skinning(void *a1);"
+          "decl": "void rasterizer_set_model_skinning(void *a1);",
+          "ported": false
         },
         {
           "addr": "0x156850",
-          "decl": "void rasterizer_set_model_lighting_point_light(void);"
+          "decl": "void rasterizer_set_model_lighting_point_light(void);",
+          "ported": false
         },
         {
           "addr": "0x1569f0",
-          "decl": "void FUN_001569f0(void);"
+          "decl": "void FUN_001569f0(void);",
+          "ported": false
         },
         {
           "addr": "0x156a90",
-          "decl": "void FUN_00156a90(void);"
+          "decl": "void FUN_00156a90(void);",
+          "ported": false
         },
         {
           "addr": "0x156ab0",
-          "decl": "void rasterizer_set_model_lighting(void *lighting);"
+          "decl": "void rasterizer_set_model_lighting(void *lighting);",
+          "ported": false
         },
         {
           "addr": "0x156c30",
-          "decl": "void rasterizer_set_frustum_z(float near_z, float far_z);"
+          "decl": "void rasterizer_set_frustum_z(float near_z, float far_z);",
+          "ported": false
         },
         {
           "addr": "0x156d80",
-          "decl": "void SetupSmartStates(void);"
+          "decl": "void SetupSmartStates(void);",
+          "ported": false
         },
         {
           "addr": "0x156e00",
-          "decl": "void FUN_00156e00(void);"
+          "decl": "void FUN_00156e00(void);",
+          "ported": false
         },
         {
           "addr": "0x157010",
-          "decl": "void FUN_00157010(void);"
+          "decl": "void FUN_00157010(void);",
+          "ported": false
         }
       ],
       "name": "rasterizer_xbox.obj",
