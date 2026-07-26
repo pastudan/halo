@@ -350,7 +350,7 @@
         },
         {
           "addr": "0x88d50",
-          "decl": "void first_person_camera_for_unit_and_vector(void);",
+          "decl": "void first_person_camera_for_unit_and_vector(void *dest @<eax>, int object_handle @<ecx>, void *arg @<esi>);",
           "ported": false
         },
         {
@@ -17219,8 +17219,8 @@
       "functions": [
         {
           "addr": "0x89240",
-          "decl": "void FUN_00089240(void);",
-          "ported": false
+          "decl": "void FUN_00089240(int object_handle, void *arg);",
+          "ported": true
         },
         {
           "addr": "0x89270",
@@ -17409,7 +17409,7 @@
         },
         {
           "addr": "0x8cf10",
-          "decl": "void FUN_0008cf10(void);",
+          "decl": "void FUN_0008cf10(float *angles, float pitch, float *vec);",
           "ported": true
         },
         {

@@ -1424,40 +1424,12 @@ void observer_update(float delta_time)
 }
 /* --- observer.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00089240 (0x89240) — XBE naked draft (batch 174). */
-#if defined(__clang__)
-static void *(*const b89240_get)(int, int) = object_get_and_verify_type;
-static void (*const b89240_c88d50)(void) = first_person_camera_for_unit_and_vector;
-
-__attribute__((naked, noinline))
-void FUN_00089240(void)
+/* FUN_00089240 (0x89240) — readable C lift. */
+void FUN_00089240(int object_handle, void *arg)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "addl $0x1ec, %%eax\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c88d50]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b89240_get), [c88d50] "m"(b89240_c88d50)
-      : "memory");
+  char *obj = (char *)object_get_and_verify_type(object_handle, 3);
+  first_person_camera_for_unit_and_vector(obj + 0x1ec, object_handle, arg);
 }
-#else
-#error "FUN_00089240: clang naked draft required"
-#endif
-
 
 /* first_person_camera_update (0x89270) — XBE naked draft (batch 138). */
 #if defined(__clang__)
@@ -1465,7 +1437,7 @@ static int (*const b89270_cb6870)(int16_t local_player_index) = player_control_g
 static void (*const b89270_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b89270_exitfn)(int) = system_exit;
 static float * (*const b89270_cb7f10)(int16_t local_player_index, float *out_direction) = player_control_get_facing_direction;
-static void (*const b89270_c88d50)(void) = first_person_camera_for_unit_and_vector;
+static void (*const b89270_c88d50)(void *, int, void *) = first_person_camera_for_unit_and_vector;
 static float (*const b89270_cb6690)(int16_t local_player_index) = player_control_get_field_of_view;
 
 __attribute__((naked, noinline))
