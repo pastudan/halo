@@ -273,17 +273,50 @@ void point_physics_definition_interpolate(float *definition_a, float *definition
   definition_out[0x30 / 4] = one_minus_t * definition_a[0x30 / 4] + t * definition_b[0x30 / 4];
 }
 
-/* 0x154a20 */
-void FUN_00154a20(void)
+/* 0x154a20 — debug-draw a point-physics particle (color by media flag).
+ * XBE: particle@eax, position@edx, scale on stack. */
+#if defined(__clang__)
+static void (*const FUN_00154a20_fn)(char, float *, float, void *) =
+    FUN_00189150;
+
+__attribute__((naked, noinline))
+void FUN_00154a20(void *particle __attribute__((unused)) /* @eax */,
+                  float *position __attribute__((unused)) /* @edx */,
+                  float scale __attribute__((unused)))
 {
-  int eax = 0;
-  int edx = 0;
-
-  FUN_00189150(0, (float *)(uintptr_t)edx, 0.0f, (void *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "testb $2, (%%eax)\n\t"
+      "movl 0x2ee6d0, %%eax\n\t"
+      "jne 1f\n\t"
+      "movl 0x2ee6d4, %%eax\n\t"
+      "1:\n\t"
+      "movl 8(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $1\n\t"
+      "call *%[f]\n\t"
+      "addl $16, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [f] "m"(FUN_00154a20_fn)
+      : "memory");
 }
+#else
+void FUN_00154a20(void *particle /* @eax */, float *position /* @edx */,
+                  float scale)
+{
+  void *color;
+
+  color = *(void **)0x2ee6d0;
+  if ((*(unsigned char *)particle & 2) == 0)
+    color = *(void **)0x2ee6d4;
+  FUN_00189150(1, position, scale, color);
+}
+#endif
 
 /* 0x154a50 */
 int FUN_00154a50(int flags, int physics_tag_data, int *collision_location, int object_handle, float *position, float *velocity, float *force, float *collision_normal_out, int16_t *surface_index_out, float radius, float delta_time)

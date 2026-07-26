@@ -1235,41 +1235,52 @@ float FUN_000fb510(int weapon_handle, int16_t trigger_index)
   return *(float *)0x2533c0;
 }
 
-/* 0xfb5a0 — trigger ready to fire */
+/* 0xfb5a0 — trigger ready to fire (charge vs firing-heat threshold). */
+#if defined(__clang__)
+__attribute__((noinline))
+#endif
 char FUN_000fb5a0(int weapon_handle, int16_t trigger_index)
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *trigger_entry = weapon_get_trigger_entry(weapon_obj, trigger_index);
-  char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-  char *trig_def = (char *)tag_block_get_element((void *)(tag_data + 0x4fc),
-                                                 (int)trigger_index, 0x114);
+  char *weapon_obj;
+  char *trigger_entry;
+  char *tag_data;
+  char *trig_def;
+  uint32_t trig_flags;
   float threshold;
   float charge;
-  char result = 0;
+  char result;
 
-  if ((trig_def[0] & 2) != 0)
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  trigger_entry = FUN_000fb320(weapon_obj, trigger_index);
+  tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
+  trig_def = (char *)tag_block_get_element((void *)(tag_data + 0x4fc),
+                                           (int)trigger_index, 0x114);
+  trig_flags = *(uint32_t *)trig_def;
+  result = 0;
+
+  if ((trig_flags & 0x200) != 0)
     charge = *(float *)(weapon_obj + 0x1e4);
   else
     charge = *(float *)(trigger_entry + 0x10);
 
-  threshold = (*(float *)(trig_def + 8) - *(float *)(trig_def + 4)) *
-                charge +
+  threshold = (*(float *)(trig_def + 8) - *(float *)(trig_def + 4)) * charge +
               *(float *)(trig_def + 4);
-
-  if (threshold == *(float *)0x253f44)
-    threshold = 0.0f;
+  /* XBE: fcom sentinel; AH&0x41 => threshold <= 0 / unordered -> 0.0 */
+  if (!(threshold > *(float *)0x253f44))
+    threshold = *(float *)0x2533c0;
   else
     threshold = *(float *)0x253394 / threshold;
 
-  if (*(float *)(tag_data + 0x444) != 0.0f)
+  /* XBE: fcomp 0.0; AH&0x41 => age heat factor <= 0 -> skip scale */
+  if (*(float *)(tag_data + 0x444) > *(float *)0x2533c0)
     threshold = (*(float *)(weapon_obj + 0x1f0) * *(float *)(tag_data + 0x444) +
-                 1.0f) *
+                 *(float *)0x2533c8) *
                 threshold;
 
-  if ((float)(char)trigger_entry[0] + 1.0f >= threshold)
+  if ((float)(signed char)trigger_entry[0] + *(float *)0x2533c8 >= threshold)
     result = 1;
 
-  if ((trig_def[0] & 8) != 0 && (*(uint8_t *)(weapon_obj + 0x1a4) & 2) != 0 &&
+  if ((trig_flags & 8) != 0 && (*(uint8_t *)(weapon_obj + 0x1a4) & 2) != 0 &&
       (trigger_entry[4] & 1) == 0)
     return 0;
 
@@ -1651,7 +1662,10 @@ void weapon_owner_update(int weapon_handle, int16_t owner_state, float t)
   }
 }
 
-/* 0xfc550 */
+/* 0xfc550 — build HUD magazine/heat state (10-byte magazine records). */
+#if defined(__clang__)
+__attribute__((noinline))
+#endif
 void weapon_build_weapon_interface_state(int weapon_handle, int out_state)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
@@ -1667,10 +1681,10 @@ void weapon_build_weapon_interface_state(int weapon_handle, int out_state)
   for (magazine_index = 0; (int)magazine_index < *(int *)(tag_data + 0x4f0);
        magazine_index++) {
     char *mag_entry =
-      (char *)weapon_obj + ((int)magazine_index * 3 + 0x96) * 4;
+        (char *)weapon_obj + ((int)magazine_index * 3 + 0x96) * 4;
     char *mag_def = (char *)tag_block_get_element(
-      (void *)(tag_data + 0x4f0), (int)magazine_index, 0x70);
-    char *out_mag = state + 0xc + (int)magazine_index * 8;
+        (void *)(tag_data + 0x4f0), (int)magazine_index, 0x70);
+    char *out_mag = state + 0xc + (int)magazine_index * 10;
     char reloading;
 
     if (*(int16_t *)mag_entry == 1 || *(int16_t *)mag_entry == 3)
@@ -1683,8 +1697,7 @@ void weapon_build_weapon_interface_state(int weapon_handle, int out_state)
     *(int16_t *)(out_mag + 2) = *(int16_t *)(mag_entry + 8);
     *(int16_t *)(out_mag + 4) = *(int16_t *)(mag_def + 0xa);
     *(int16_t *)(out_mag + 6) = *(int16_t *)(mag_entry + 6);
-    *(int16_t *)(state + 0xa + (int)magazine_index * 2 + 8) =
-      *(int16_t *)(mag_def + 8);
+    *(int16_t *)(out_mag + 8) = *(int16_t *)(mag_def + 8);
   }
 }
 

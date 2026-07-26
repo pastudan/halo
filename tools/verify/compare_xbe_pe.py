@@ -424,6 +424,15 @@ def main() -> int:
         ("items_initialize_for_new_map", 0xf5fa0, 0xf5fb0),
         ("breakable_surfaces_reset", 0x1459d0, 0x1459e0),
         ("weapon_delete", 0xfbea0, 0xfbf00),
+        # gameplay wave 34 (2026-07-26)
+        ("FUN_00145560", 0x145560, 0x145580),
+        ("object_get_type", 0xf5f10, 0xf5f30),
+        ("FUN_00154a20", 0x154a20, 0x154a50),
+        ("render_debug_collision_sphere", 0x14ad60, 0x14ad80),
+        ("render_debug_collision_cylinder", 0x14ad80, 0x14adb0),
+        ("object_propagate_flag_to_children", 0x13ee60, 0x13ef00),
+        ("weapon_build_weapon_interface_state", 0xfc550, 0xfc690),
+        ("FUN_000fb5a0", 0xfb5a0, 0xfb690),
     ]
 
     xbe = Xbe.from_file(args.xbe)

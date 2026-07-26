@@ -946,15 +946,36 @@ void FUN_00146a90(int surface_id, void *damage_params, int unknown)
 }
 /* --- breakable_surfaces.obj batch drafts (2026-07-26) --- */
 
-/* 0x145560 */
-void FUN_00145560(void)
+/* 0x145560 — forward device placement extras into object script data. */
+#if defined(__clang__)
+static void (*const FUN_00145560_fn)(int, void *) = FUN_0013d870;
+
+__attribute__((naked, noinline))
+void FUN_00145560(int object_handle __attribute__((unused)),
+                  char *placement __attribute__((unused)))
 {
-  int eax = 0;
-
-  FUN_0013d870(0, (void *)(uintptr_t)eax);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 8(%%ebp), %%ecx\n\t"
+      "addl $0x28, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[f]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [f] "m"(FUN_00145560_fn)
+      : "memory");
 }
+#else
+void FUN_00145560(int object_handle, char *placement)
+{
+  FUN_0013d870(object_handle, (void *)(placement + 0x28));
+}
+#endif
 
 /* 0x145580 — pick a default animation for a newly placed device object. */
 char FUN_00145580(int object_handle)

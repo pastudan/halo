@@ -4525,27 +4525,34 @@ void attachments_new(int object_handle)
  * the "created" flag at obj+0xf4+i is clear and the child handle is valid,
  * optionally calls object_wake (param_1) and/or object_move_to_limbo (param_2).
  * object_handle in EAX (register arg). */
+#if defined(__clang__)
+__attribute__((optnone, noinline))
+#endif
 void object_propagate_flag_to_children(int object_handle /* @<eax> */,
-                                       int param_1, int param_2)
+                                       char do_wake, char do_limbo)
 {
-  int *obj;
-  void *tag_data;
+  char *obj;
+  char *tag_data;
   int16_t i;
   int count;
+  int child;
 
-  obj = (int *)object_get_and_verify_type(object_handle, -1);
-  if ((obj[1] & 0x100) == 0)
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  if ((*(int *)(obj + 4) & 0x100) == 0)
     return;
 
-  tag_data = tag_get(0x6f626a65, obj[0]);
-  count = *(int *)((char *)tag_data + 0x140);
+  tag_data = (char *)tag_get(0x6f626a65, *(int *)obj); /* 'obje' */
+  count = *(int *)(tag_data + 0x140);
   i = 0;
   while ((int)i < count) {
-    if (*((char *)obj + 0xf4 + (int)i) == 0 && obj[(int)i + 0x3f] != -1) {
-      if (param_1 != 0)
-        object_wake(obj[(int)i + 0x3f]);
-      if (param_2 != 0)
-        object_move_to_limbo(obj[(int)i + 0x3f]);
+    if (obj[0xf4 + (int)i] == 0) {
+      child = *(int *)(obj + 0xfc + (int)i * 4);
+      if (child != -1) {
+        if (do_wake != 0)
+          object_wake(child);
+        if (do_limbo != 0)
+          object_move_to_limbo(child);
+      }
     }
     i++;
   }

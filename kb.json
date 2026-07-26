@@ -4866,7 +4866,7 @@
         },
         {
           "addr": "0x145560",
-          "decl": "void FUN_00145560(void);",
+          "decl": "void FUN_00145560(int object_handle, char *placement);",
           "ported": false
         },
         {
@@ -13997,7 +13997,7 @@
         },
         {
           "addr": "0xf5f10",
-          "decl": "void object_get_type(void);",
+          "decl": "int object_get_type(void);",
           "ported": false
         },
         {
@@ -16758,7 +16758,7 @@
         },
         {
           "addr": "0x13ee60",
-          "decl": "void object_propagate_flag_to_children(int object_handle@<eax>, int param_1, int param_2);",
+          "decl": "void object_propagate_flag_to_children(int object_handle@<eax>, char do_wake, char do_limbo);",
           "ported": false
         },
         {
@@ -19717,7 +19717,7 @@
         },
         {
           "addr": "0x154a20",
-          "decl": "void FUN_00154a20(void);",
+          "decl": "void FUN_00154a20(void *particle@<eax>, float *position@<edx>, float scale);",
           "ported": false
         },
         {
@@ -33582,7 +33582,7 @@
         },
         {
           "addr": "0xfb5a0",
-          "decl": "char FUN_000fb5a0(int weapon_handle, int16_t trigger_index);",
+          "decl": "char FUN_000fb5a0(int weapon_handle@<eax>, int16_t trigger_index@<ecx>);",
           "ported": false
         },
         {
@@ -38075,12 +38075,12 @@
         },
         {
           "addr": "0x14ad60",
-          "decl": "void render_debug_collision_sphere(void);",
+          "decl": "void render_debug_collision_sphere(void *sphere, void *color);",
           "ported": false
         },
         {
           "addr": "0x14ad80",
-          "decl": "void render_debug_collision_cylinder(void);",
+          "decl": "void render_debug_collision_cylinder(void *cylinder, void *color);",
           "ported": false
         },
         {

@@ -1884,15 +1884,33 @@ void FUN_000f5900(void)
   }
 }
 
-/* 0xf5f10 */
-void object_get_type(void)
+/* 0xf5f10 — remaining UTF-16 capacity in the item-name edit buffer. */
+#if defined(__clang__)
+static int (*const object_get_type_ustrlen)(const unsigned short *) = ustrlen;
+
+__attribute__((naked, noinline))
+int object_get_type(void)
 {
-  int eax = 0;
-
-  ustrlen((void *)(uintptr_t)eax);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x46cf08, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[f]\n\t"
+      "leal 2(%%eax,%%eax), %%ecx\n\t"
+      "movzwl 0x46cefc, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [f] "m"(object_get_type_ustrlen)
+      : "memory");
 }
+#else
+int object_get_type(void)
+{
+  int len = ustrlen(*(const unsigned short **)0x46cf08);
+  return (int)*(uint16_t *)0x46cefc - (len + len + 2);
+}
+#endif
 
 /* 0xf5f90 — items TU init alias (XBE: jmp FUN_000f57a0). */
 void items_initialize(void)
