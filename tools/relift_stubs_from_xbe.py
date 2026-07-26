@@ -115,6 +115,107 @@ def is_relift_draft(body: str) -> bool:
     return any(m in body for m in markers)
 
 
+def _body_code_lines(body: str) -> list[str]:
+    """Non-comment, non-empty source lines from a function body."""
+    stripped = strip_c_comments(body)
+    out: list[str] = []
+    for ln in stripped.splitlines():
+        ln = ln.strip()
+        if ln:
+            out.append(ln)
+    return out
+
+
+def body_placeholder_score(body: str) -> dict[str, int]:
+    """Heuristic placeholder density inside one function body."""
+    return {
+        "z2": len(re.findall(r"\w+\([^)]*\b0\b[^)]*,\s*[^)]*\b0\b", body)),
+        "ztail": len(re.findall(r",\s*0\s*\)", body)),
+        "regcast": len(
+            re.findall(
+                r"\((?:char|void|unsigned char|wchar_t|float|int|data_t)[^)]*\)"
+                r"\(uintptr_t\)(?:eax|ebx|ecx|edx|esi|edi)",
+                body,
+            )
+        ),
+        "relift": body.count("relift:"),
+        "cmp": len(re.findall(r"/\*\s*(?:cmp|test|mem\[)", body)),
+    }
+
+
+def nontrivial_logic_lines(body: str) -> int:
+    """Count real C statements beyond relift stubs / register silencing."""
+    n = 0
+    for ln in _body_code_lines(body):
+        if re.fullmatch(r"\(void\)\s*[A-Za-z_][A-Za-z0-9_]*\s*;", ln):
+            continue
+        if re.fullmatch(r"(?:int|char|short|long|float|double)\s+\w+\s*=\s*0\s*;", ln):
+            continue
+        if re.fullmatch(r"return\s+(?:0|NULL)\s*;", ln):
+            continue
+        if ln.startswith("/*"):
+            continue
+        if re.search(r"\b(?:if|while|for|switch|do|goto)\b", ln):
+            n += 2
+            continue
+        if re.search(r"\*\([^)]+\)\s*=", ln) or re.search(r"\w+\[[^\]]+\]\s*=", ln):
+            n += 2
+            continue
+        if re.search(r"\w+\([^)]*\)\s*;", ln):
+            # ignore pure-placeholder call lines (many literal zeros, no identifiers)
+            args = ln[ln.find("(") + 1 : ln.rfind(")")]
+            if args and not re.search(r"\b0\b", args):
+                n += 1
+            elif re.search(r"\b(?:param_|local_|lift_a|\*)\b", args):
+                n += 1
+            continue
+        if re.search(r"(?:\+\+|--|[+\-*/%&|^]=|=(?!=))", ln):
+            n += 1
+    return n
+
+
+def is_handwritten_draft(body: str, param_names: list[str] | None = None) -> bool:
+    """True when the body already has meaningful hand port logic."""
+    if param_names:
+        for p in param_names:
+            if p.startswith("unused_arg"):
+                continue
+            if re.search(rf"\b{re.escape(p)}\b", strip_c_comments(body)):
+                return True
+    if nontrivial_logic_lines(body) >= 10:
+        return True
+    stripped = strip_c_comments(body)
+    if re.search(r"\b(?:if|while|for|switch|do)\s*\(", stripped):
+        if nontrivial_logic_lines(body) >= 4:
+            return True
+    if re.search(r"/\*[^*]*Confirmed:", body, re.I):
+        return True
+    if re.search(r"/\*[^*]*(?:do-while|Winged-edge|tail-call)", body, re.I):
+        return True
+    return False
+
+
+def is_weak_draft(body: str, param_names: list[str] | None = None) -> bool:
+    """Relift/placeholder-heavy body safe to replace from XBE."""
+    if is_handwritten_draft(body, param_names):
+        return False
+    if is_relift_draft(body):
+        return True
+    score = body_placeholder_score(body)
+    weak_pts = (
+        score["z2"] * 3
+        + min(score["ztail"], 40)
+        + score["regcast"] * 2
+        + score["relift"]
+        + score["cmp"]
+    )
+    if weak_pts >= 6 and nontrivial_logic_lines(body) <= 6:
+        return True
+    if score["z2"] >= 1 and nontrivial_logic_lines(body) <= 3:
+        return True
+    return False
+
+
 def fn_name_from_decl(decl: str, addr: str) -> str:
     return GEN.fn_name(decl, addr)
 
@@ -1148,6 +1249,7 @@ def relift_object(
     occurrence: int = 0,
     dry_run: bool = False,
     force: bool = False,
+    weak: bool = False,
 ) -> dict:
     kb = json.loads((ROOT / "kb.json").read_text())
     matches = [o for o in kb["objects"] if o["name"] == object_name]
@@ -1199,10 +1301,18 @@ def relift_object(
             continue
         sig_start, body_start, body_end = span
         body = src[body_start:body_end]
-        if not is_stub_body(body) and not force:
+        decl_san = GEN.sanitize_decl_for_c(decl)
+        param_names = GEN.parse_params(decl_san)
+        sig_peek = signature_from_source(src, name) or decl
+        param_names = GEN.parse_params(GEN.sanitize_decl_for_c(sig_peek + ";")) or param_names
+        if weak:
+            if not is_weak_draft(body, param_names):
+                skipped += 1
+                continue
+        elif not is_stub_body(body) and not force:
             skipped += 1
             continue
-        if force and not is_relift_draft(body):
+        elif force and not is_relift_draft(body):
             skipped += 1
             continue
         stub_before += 1
@@ -1264,13 +1374,22 @@ def main() -> None:
     ap.add_argument("--occurrence", type=int, default=0)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force", action="store_true", help="Re-relift prior relift drafts")
+    ap.add_argument(
+        "--weak",
+        action="store_true",
+        help="Re-relift weak placeholder-heavy drafts (skip hand-written bodies)",
+    )
     args = ap.parse_args()
 
     total = 0
     results = []
     for obj in args.object:
         r = relift_object(
-            obj, occurrence=args.occurrence, dry_run=args.dry_run, force=args.force
+            obj,
+            occurrence=args.occurrence,
+            dry_run=args.dry_run,
+            force=args.force,
+            weak=args.weak,
         )
         results.append(r)
         total += r["relifted"]

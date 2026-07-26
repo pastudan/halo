@@ -19,14 +19,15 @@ ROOT = Path(__file__).resolve().parents[1]
 
 PRIORITY = [
     "collision_bsp.obj",
-    "players.obj",
     "player_control.obj",
     "hs.obj",
     "hs_runtime.obj",
     "objects.obj",
     "units.obj",
+    "bipeds.obj",
     "weapons.obj",
     "encounters.obj",
+    "players.obj",
     "vehicles.obj",
     "ai.obj",
     "main.obj",
@@ -53,11 +54,8 @@ def load_relift():
 
 def count_zero_calls(text: str) -> dict[str, int]:
     """Heuristic counts of placeholder call sites."""
-    # foo(0, 0) or foo(0,0) — two or more bare zero args
     z2 = len(re.findall(r"\w+\([^)]*\b0\b[^)]*,\s*[^)]*\b0\b", text))
-    # trailing , 0) — last arg is literal zero (excludes 0x)
     ztail = len(re.findall(r",\s*0\s*\)", text))
-    # (void *...)0 in calls — register placeholders
     regcast = len(
         re.findall(
             r"\((?:char|void|unsigned char|wchar_t|float|int|data_t)[^)]*\)"
@@ -82,16 +80,25 @@ def module_stats(kb: dict, relift, object_name: str) -> dict | None:
         return None
     text = path.read_text()
     drafts = 0
+    weak = 0
     for f in obj.get("functions", []):
         if f.get("ported") is not False:
             continue
         addr = f["addr"].lower()
         name = relift.fn_name_from_decl(f.get("decl") or "", addr)
         span = relift.find_function_def_for_addr(text, name, addr)
-        if span and relift.is_relift_draft(text[span[1] : span[2]]):
+        if not span:
+            continue
+        body = text[span[1] : span[2]]
+        decl = f.get("decl") or ""
+        param_names = relift.GEN.parse_params(relift.GEN.sanitize_decl_for_c(decl + ";"))
+        if relift.is_relift_draft(body):
             drafts += 1
+        if relift.is_weak_draft(body, param_names):
+            weak += 1
     stats = count_zero_calls(text)
     stats["drafts"] = drafts
+    stats["weak"] = weak
     stats["source"] = src_rel
     return stats
 
@@ -131,13 +138,24 @@ def main() -> None:
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-build", action="store_true")
     ap.add_argument("--stats-only", action="store_true")
+    ap.add_argument(
+        "--weak",
+        action="store_true",
+        help="Include placeholder-heavy non-relift drafts (skip hand-written)",
+    )
+    ap.add_argument(
+        "--force",
+        action="store_true",
+        help="Only re-relift existing relift-marker drafts",
+    )
     args = ap.parse_args()
 
     relift = load_relift()
     kb = json.loads((ROOT / "kb.json").read_text())
     objects = args.object or PRIORITY
+    use_weak = args.weak or not args.force
 
-    print("module                         drafts  z2  ztail regcast  relift")
+    print("module                         weak  z2  ztail regcast  relift")
     before_all: dict[str, dict] = {}
     for on in objects:
         st = module_stats(kb, relift, on)
@@ -145,7 +163,7 @@ def main() -> None:
             continue
         before_all[on] = st
         print(
-            f"{on:30} {st['drafts']:6} {st['z2']:4} {st['ztail']:5} "
+            f"{on:30} {st['weak']:5} {st['z2']:4} {st['ztail']:5} "
             f"{st['regcast']:7} {st['relift']:6}"
         )
 
@@ -161,7 +179,8 @@ def main() -> None:
             on,
             occurrence=args.occurrence,
             dry_run=args.dry_run,
-            force=True,
+            force=args.force,
+            weak=use_weak,
         )
         total += r["relifted"]
         label = on if not r.get("occurrence") else f"{on}[{r['occurrence']}]"
@@ -175,19 +194,21 @@ def main() -> None:
     if args.dry_run:
         return
 
-    # reload kb for post stats
     kb = json.loads((ROOT / "kb.json").read_text())
     print("\nAfter refine:")
-    print("module                         drafts  z2  ztail regcast  relift  delta_z2")
+    print(
+        "module                         weak  z2  ztail regcast  relift  dz2  dreg"
+    )
     for on in objects:
         st = module_stats(kb, relift, on)
         if not st:
             continue
         b = before_all.get(on, {})
         dz2 = st["z2"] - b.get("z2", 0)
+        dreg = st["regcast"] - b.get("regcast", 0)
         print(
-            f"{on:30} {st['drafts']:6} {st['z2']:4} {st['ztail']:5} "
-            f"{st['regcast']:7} {st['relift']:6} {dz2:+4}"
+            f"{on:30} {st['weak']:5} {st['z2']:4} {st['ztail']:5} "
+            f"{st['regcast']:7} {st['relift']:6} {dz2:+4} {dreg:+4}"
         )
 
     if not args.no_build and total:
