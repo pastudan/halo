@@ -254,6 +254,90 @@ int FUN_001c19c0(void)
 
 # --- sound ---
 H(
+    0x1C7500,
+    "sound/game_sound.c",
+    "scripted_sound_time",
+    """
+/* scripted_sound_time (0x1c7500) — readable C lift. */
+int scripted_sound_time(int a0)
+{
+  if (a0 == -1)
+    return 0;
+  void *snd = tag_get(0x736e6421, a0);
+  if (*(int *)((char *)snd + 0x90) == -1)
+    return 0;
+  int remain = *(int *)((char *)snd + 0x90) - game_time_get();
+  return remain > 0 ? remain : 0;
+}
+""",
+)
+H(
+    0x1C7550,
+    "sound/game_sound.c",
+    "scripted_sound_stop",
+    """
+/* scripted_sound_stop (0x1c7550) — readable C lift. */
+void scripted_sound_stop(int a0)
+{
+  if (a0 == -1)
+    return;
+  void *snd = tag_get(0x736e6421, a0);
+  int impulse = *(int *)((char *)snd + 0x94);
+  if (impulse == -1)
+    return;
+  sound_stop_impulse(impulse);
+  *(int *)((char *)snd + 0x94) = -1;
+  *(int *)((char *)snd + 0x90) = -1;
+}
+""",
+)
+H(
+    0x1C7650,
+    "sound/game_sound.c",
+    "scripted_looping_sound_set_scale",
+    """
+/* scripted_looping_sound_set_scale (0x1c7650) — readable C lift. */
+void scripted_looping_sound_set_scale(int a0, float a1)
+{
+  if (a0 == -1)
+    return;
+  void *tag = tag_get(0x6c736e64, a0);
+  int handle = *(int *)((char *)tag + 0x1c);
+  if (handle == -1)
+    return;
+  void *d = datum_get(*(void **)0x5054e4, handle);
+  float v = a1;
+  if (!(v >= *(float *)0x2533c0))
+    v = *(float *)0x2533c0;
+  *(float *)((char *)d + 8) = v;
+}
+""",
+)
+H(
+    0x1C76C0,
+    "sound/game_sound.c",
+    "scripted_looping_sound_set_alternate",
+    """
+/* scripted_looping_sound_set_alternate (0x1c76c0) — readable C lift. */
+void scripted_looping_sound_set_alternate(int a0, int a1)
+{
+  if (a0 == -1)
+    return;
+  void *tag = tag_get(0x6c736e64, a0);
+  int handle = *(int *)((char *)tag + 0x1c);
+  if (handle == -1)
+    return;
+  void *d = datum_get(*(void **)0x5054e4, handle);
+  unsigned int flags = *(unsigned int *)((char *)d + 4);
+  if (a1)
+    flags |= 8u;
+  else
+    flags &= ~8u;
+  *(unsigned int *)((char *)d + 4) = flags;
+}
+""",
+)
+H(
     0x1C88A0,
     "sound/sound_manager.c",
     "sound_is_active",
@@ -703,9 +787,29 @@ def commit_chunk(n: int, paths: set[Path], do_push: bool = True) -> str | None:
     return sha
 
 
-def prove_addr(name: str, addr: int, seeds: int, timeout: float) -> dict:
+def prove_addr(
+    name: str,
+    addr: int,
+    seeds: int,
+    timeout: float,
+    src: str | None = None,
+) -> dict:
     if not ensure_oracle(addr):
         return {"ok": False, "err": "oracle", "passed": 0, "failed": 0, "errors": 0}
+    if src:
+        from tu_compile import docker_compile
+
+        src_rel = src.replace("\\", "/")
+        if "src/halo/" in src_rel:
+            src_rel = src_rel.split("src/halo/", 1)[1]
+        if not docker_compile(src_rel):
+            return {
+                "ok": False,
+                "err": "compile",
+                "passed": 0,
+                "failed": 0,
+                "errors": 0,
+            }
     res = run_unicorn(name, addr, seeds, timeout=timeout)
     if not clear_pass(res, seeds):
         res2 = run_unicorn(hex(addr), addr, seeds, timeout=timeout)
@@ -1078,7 +1182,7 @@ def main() -> int:
                     continue
 
         t0 = time.time()
-        res = prove_addr(name, ai, args.seeds, args.timeout)
+        res = prove_addr(name, ai, args.seeds, args.timeout, src=src)
         print(
             f"  unicorn {res.get('passed')}/{res.get('failed')}/{res.get('errors')} "
             f"ok={res.get('ok')} dt={time.time()-t0:.1f}",

@@ -1495,99 +1495,31 @@ int game_looping_sound_new(int object_index __attribute__((unused)), int sound_t
 #endif
 
 
-/* scripted_sound_time (0x1c7500) — XBE naked draft (batch 265). */
-#if defined(__clang__)
-static void *(*const b1c7500_tag)(int, int) = tag_get;
-static int (*const b1c7500_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-int scripted_sound_time(int a0 __attribute__((unused)))
+/* scripted_sound_time (0x1c7500) — readable C lift. */
+int scripted_sound_time(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lscripted_sound_time_1\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x736e6421\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x90(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lscripted_sound_time_1\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x90(%%esi), %%ecx\n\t"
-      "subl %%eax, %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "setle %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "decl %%eax\n\t"
-      "andl %%ecx, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lscripted_sound_time_1:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b1c7500_tag), [gtime] "m"(b1c7500_gtime)
-      : "memory");
+  if (a0 == -1)
+    return 0;
+  void *snd = tag_get(0x736e6421, a0);
+  if (*(int *)((char *)snd + 0x90) == -1)
+    return 0;
+  int remain = *(int *)((char *)snd + 0x90) - game_time_get();
+  return remain > 0 ? remain : 0;
 }
-#else
-#error "scripted_sound_time: clang naked draft required"
-#endif
 
-
-/* scripted_sound_stop (0x1c7550) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-static void *(*const b1c7550_tag)(int, int) = tag_get;
-static void (*const b1c7550_c1cd450)(int sound_index) = sound_stop_impulse;
-
-__attribute__((naked, noinline))
-void scripted_sound_stop(int a0 __attribute__((unused)))
+/* scripted_sound_stop (0x1c7550) — readable C lift. */
+void scripted_sound_stop(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lscripted_sound_stop_2\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x736e6421\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x94(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lscripted_sound_stop_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1cd450]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0xffffffff, 0x94(%%esi)\n\t"
-      "movl $0xffffffff, 0x90(%%esi)\n\t"
-      ".Lscripted_sound_stop_1:\n\t"
-      "popl %%esi\n\t"
-      ".Lscripted_sound_stop_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b1c7550_tag), [c1cd450] "m"(b1c7550_c1cd450)
-      : "memory");
+  if (a0 == -1)
+    return;
+  void *snd = tag_get(0x736e6421, a0);
+  int impulse = *(int *)((char *)snd + 0x94);
+  if (impulse == -1)
+    return;
+  sound_stop_impulse(impulse);
+  *(int *)((char *)snd + 0x94) = -1;
+  *(int *)((char *)snd + 0x90) = -1;
 }
-#else
-#error "scripted_sound_stop: clang naked draft required"
-#endif
-
 
 /* scripted_foley_predict (0x1c75a0) — XBE naked draft (batch 281). */
 #if defined(__clang__)
@@ -1674,115 +1606,39 @@ void scripted_foley_predict(int a0 __attribute__((unused)))
 #endif
 
 
-/* scripted_looping_sound_set_scale (0x1c7650) — XBE naked draft (batch 276). */
-#if defined(__clang__)
-static void *(*const b1c7650_tag)(int, int) = tag_get;
-static void *(*const b1c7650_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void scripted_looping_sound_set_scale(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
+/* scripted_looping_sound_set_scale (0x1c7650) — readable C lift. */
+void scripted_looping_sound_set_scale(int a0, float a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lscripted_looping_sound_set_scale_3\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6c736e64\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x1c(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lscripted_looping_sound_set_scale_3\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5054e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lscripted_looping_sound_set_scale_1\n\t"
-      "flds 0x2533c0\n\t"
-      "fstps 0x8(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lscripted_looping_sound_set_scale_1:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lscripted_looping_sound_set_scale_2\n\t"
-      "flds 0x2533c8\n\t"
-      "fstps 0x8(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lscripted_looping_sound_set_scale_2:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fstps 0x8(%%ecx)\n\t"
-      ".Lscripted_looping_sound_set_scale_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b1c7650_tag), [dget] "m"(b1c7650_dget)
-      : "memory");
+  if (a0 == -1)
+    return;
+  void *tag = tag_get(0x6c736e64, a0);
+  int handle = *(int *)((char *)tag + 0x1c);
+  if (handle == -1)
+    return;
+  void *d = datum_get(*(void **)0x5054e4, handle);
+  float v = a1;
+  if (!(v >= *(float *)0x2533c0))
+    v = *(float *)0x2533c0;
+  *(float *)((char *)d + 8) = v;
 }
-#else
-#error "scripted_looping_sound_set_scale: clang naked draft required"
-#endif
 
-
-/* scripted_looping_sound_set_alternate (0x1c76c0) — XBE naked draft (batch 283). */
-#if defined(__clang__)
-static void *(*const b1c76c0_tag)(int, int) = tag_get;
-static void *(*const b1c76c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void scripted_looping_sound_set_alternate(int a0 __attribute__((unused)), int a1 __attribute__((unused)))
+/* scripted_looping_sound_set_alternate (0x1c76c0) — readable C lift. */
+void scripted_looping_sound_set_alternate(int a0, int a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lscripted_looping_sound_set_alternate_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6c736e64\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x1c(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lscripted_looping_sound_set_alternate_2\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5054e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "je .Lscripted_looping_sound_set_alternate_1\n\t"
-      "orl $8, %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lscripted_looping_sound_set_alternate_1:\n\t"
-      "andl $0xfffffff7, %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      ".Lscripted_looping_sound_set_alternate_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b1c76c0_tag), [dget] "m"(b1c76c0_dget)
-      : "memory");
+  if (a0 == -1)
+    return;
+  void *tag = tag_get(0x6c736e64, a0);
+  int handle = *(int *)((char *)tag + 0x1c);
+  if (handle == -1)
+    return;
+  void *d = datum_get(*(void **)0x5054e4, handle);
+  unsigned int flags = *(unsigned int *)((char *)d + 4);
+  if (a1)
+    flags |= 8u;
+  else
+    flags &= ~8u;
+  *(unsigned int *)((char *)d + 4) = flags;
 }
-#else
-#error "scripted_looping_sound_set_alternate: clang naked draft required"
-#endif
-
 
 /* unattached_looping_sound_start (0x1c7710) — XBE naked draft (batch 287). */
 #if defined(__clang__)

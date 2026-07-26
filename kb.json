@@ -10047,12 +10047,12 @@
         {
           "addr": "0x1c7500",
           "decl": "int scripted_sound_time(int a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c7550",
           "decl": "void scripted_sound_stop(int a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c75a0",
@@ -10062,12 +10062,12 @@
         {
           "addr": "0x1c7650",
           "decl": "void scripted_looping_sound_set_scale(int a0, float a1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c76c0",
           "decl": "void scripted_looping_sound_set_alternate(int a0, int a1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c7710",
