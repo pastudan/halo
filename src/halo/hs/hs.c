@@ -4348,106 +4348,35 @@ void hs_help(const char *name)
 
 
 
-/* hs_doc (0xc4e90) — XBE naked draft (batch 136). */
-#if defined(__clang__)
-static void * (*const bc4e90_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
-static void (*const bc4e90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc4e90_exitfn)(int) = system_exit;
-static void (*const bc4e90_cc4a40)(int16_t function_index, char *buffer) = FUN_000c4a40;
-static int (*const bc4e90_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
-static char * (*const bc4e90_c8dff0)(char *destination, const char *source) = csstrcpy;
-static int (*const bc4e90_c1d9dac)(void *stream) = crt_fclose;
-
-__attribute__((naked, noinline))
+/* hs_doc (0xc4e90) — readable C lift: dump HS function docs to file. */
 void hs_doc(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x804, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x265938\n\t"
-      "pushl $0x27bb24\n\t"
-      "call *%[c1d9e59]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $0x2f1588, -0x4(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lhs_doc_1:\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .Lhs_doc_2\n\t"
-      "cmpw $0x1a2, %%di\n\t"
-      "jl .Lhs_doc_3\n\t"
-      ".Lhs_doc_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x20a\n\t"
-      "pushl $0x27b8c8\n\t"
-      "pushl $0x27b8ec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhs_doc_3:\n\t"
-      "leal -0x804(%%ebp), %%esi\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[cc4a40]\n\t"
-      "leal -0x804(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2686c4\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1d98ad]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .Lhs_doc_4\n\t"
-      "cmpw $0x1a2, %%di\n\t"
-      "jl .Lhs_doc_5\n\t"
-      ".Lhs_doc_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x20a\n\t"
-      "pushl $0x27b8c8\n\t"
-      "pushl $0x27b8ec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhs_doc_5:\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "movl 0x10(%%ecx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x804(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8dff0]\n\t"
-      "leal -0x804(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x27bb1c\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1d98ad]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "incl %%edi\n\t"
-      "addl $4, %%esi\n\t"
-      "cmpw $0x1a2, %%di\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jl .Lhs_doc_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1d9dac]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d9e59] "m"(bc4e90_c1d9e59), [assert] "m"(bc4e90_assert), [exitfn] "m"(bc4e90_exitfn), [cc4a40] "m"(bc4e90_cc4a40), [c1d98ad] "m"(bc4e90_c1d98ad), [c8dff0] "m"(bc4e90_c8dff0), [c1d9dac] "m"(bc4e90_c1d9dac)
-      : "memory");
+  void *fp;
+  char buf[0x804];
+  int16_t i;
+  void **slot;
+  void *entry;
+
+  fp = crt_fopen((const char *)0x27bb24, (const char *)0x265938);
+  slot = (void **)0x2f1588;
+  for (i = 0; i < 0x1a2; i++) {
+    if (i < 0 || i >= 0x1a2) {
+      display_assert((const char *)0x27b8ec, (const char *)0x27b8c8, 0x20a, true);
+      system_exit(-1);
+    }
+    FUN_000c4a40(i, buf);
+    crt_fprintf(fp, (const char *)0x2686c4, buf);
+    if (i < 0 || i >= 0x1a2) {
+      display_assert((const char *)0x27b8ec, (const char *)0x27b8c8, 0x20a, true);
+      system_exit(-1);
+    }
+    entry = slot[i];
+    csstrcpy(buf, *(const char **)((char *)entry + 0x10));
+    crt_fprintf(fp, (const char *)0x27bb1c, buf);
+  }
+  crt_fclose(fp);
 }
-#else
-#error "hs_doc: clang naked draft required"
-#endif
+
 
 
 /* FUN_000c4f90 (0xc4f90) — readable C lift: recompile/reload HS if needed. */

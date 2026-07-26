@@ -11866,7 +11866,7 @@
         {
           "addr": "0xc4e90",
           "decl": "void hs_doc(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4f90",
