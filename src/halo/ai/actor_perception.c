@@ -1803,87 +1803,206 @@ void actor_perception_find_sense_position(int actor_handle, float *position,
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((regparm(1)))
 #endif
-/* 0x31c00 — pick the closest swarm member unit to a reference point.
- * Owner handle arrives in EAX; swarm_origin pointer in EDI at the XBE call site. */
-int actor_perception_unit_from_swarm(int owner_handle, int unit_handle,
-                                     char verify_flag, float *swarm_origin)
+/* actor_perception_unit_from_swarm (0x31c00) — XBE naked draft (batch 82). */
+#if defined(__clang__)
+static void *(*const b31c00_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b31c00_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b31c00_exitfn)(int) = system_exit;
+static int (*const b31c00_c13ec50)(int object_handle) = object_mark;
+static void *(*const b31c00_get)(int, int) = object_get_and_verify_type;
+static vector3_t * (*const b31c00_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+
+__attribute__((naked, noinline))
+int actor_perception_unit_from_swarm(int owner_handle __attribute__((unused)), int unit_handle __attribute__((unused)), char verify_flag __attribute__((unused)), float *swarm_origin __attribute__((unused)))
 {
-  char *owner_actor;
-  char *swarm;
-  char *unit;
-  int best_unit;
-  float best_dist_sq;
-  int16_t member_count;
-  int member_index;
-  float delta[3];
-  float dist_sq;
-
-  owner_actor = (char *)datum_get(actor_data, owner_handle);
-  if (*(char *)(owner_actor + 6) == 0) {
-    display_assert("actor->meta.active",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x68d, 1);
-    system_exit(-1);
-  }
-
-  best_unit = -1;
-  best_dist_sq = 3.4028235e38f;
-  {
-    float *origin = (float *)((char *)swarm_origin + 0xc);
-
-    if (*(int *)(owner_actor + 0x28) != -1) {
-      swarm = (char *)datum_get(*(void **)0x6325a0, *(int *)(owner_actor + 0x28));
-      member_count = *(int16_t *)(swarm + 2);
-      for (member_index = 0; member_index < member_count; member_index++) {
-        char *member =
-            (char *)datum_get(*(void **)0x63259c,
-                              *(int *)(swarm + member_index * 4 + 0x58));
-        delta[0] = origin[0] - *(float *)(member + 4);
-        delta[1] = origin[1] - *(float *)(member + 8);
-        delta[2] = origin[2] - *(float *)(member + 0xc);
-        dist_sq = delta[0] * delta[0] + delta[1] * delta[1] +
-                  delta[2] * delta[2];
-        if ((*(char *)(member + 2) & 2) != 0)
-          dist_sq *= *(float *)0x2561f0;
-        else if (*(int *)(swarm + member_index * 4 + 0x18) == unit_handle)
-          dist_sq *= *(float *)0x256134;
-        if (dist_sq <= best_dist_sq) {
-          best_dist_sq = dist_sq;
-          best_unit = *(int *)(swarm + member_index * 4 + 0x18);
-        }
-        if (verify_flag)
-          object_mark(*(int *)(swarm + member_index * 4 + 0x18));
-      }
-    } else {
-      int chain_unit = *(int *)(owner_actor + 0x24);
-      while (chain_unit != -1) {
-        float unit_pos[3];
-        unit = (char *)object_get_and_verify_type(chain_unit, 3);
-        object_get_world_position(chain_unit, (vector3_t *)unit_pos);
-        delta[0] = origin[0] - unit_pos[0];
-        delta[1] = origin[1] - unit_pos[1];
-        delta[2] = origin[2] - unit_pos[2];
-        dist_sq = delta[0] * delta[0] + delta[1] * delta[1] +
-                  delta[2] * delta[2];
-        if (chain_unit == unit_handle)
-          dist_sq *= *(float *)0x256134;
-        if (dist_sq <= best_dist_sq) {
-          best_dist_sq = dist_sq;
-          best_unit = chain_unit;
-        }
-        if (verify_flag)
-          object_mark(chain_unit);
-        chain_unit = *(int *)(unit + 0x1ac);
-      }
-    }
-  }
-
-  if (unit_handle != -1 && best_unit == -1) {
-    display_assert("result != NONE",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x6d9, 1);
-    system_exit(-1);
-  }
-  return best_unit;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movb 0x6(%%ebx), %%al\n\t"
+      "orl $0xffffffff, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "jne .Lactor_perception_unit_from_swarm_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x68d\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x2561f4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_unit_from_swarm_1:\n\t"
+      "movl 0x28(%%ebx), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_perception_unit_from_swarm_8\n\t"
+      "movl 0x6325a0, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, 0x2(%%ebx)\n\t"
+      "movl $0x7f7fffff, -0xc(%%ebp)\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      "jle .Lactor_perception_unit_from_swarm_15\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lactor_perception_unit_from_swarm_2:\n\t"
+      "movswl -0x8(%%ebp), %%esi\n\t"
+      "movl 0x58(%%ebx,%%esi,4), %%eax\n\t"
+      "movl 0x63259c, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0x2(%%eax), %%cl\n\t"
+      "flds 0xc(%%edi)\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $2, %%cl\n\t"
+      "fsubs 0x4(%%eax)\n\t"
+      "flds 0x10(%%edi)\n\t"
+      "fsubs 0x8(%%eax)\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fsubs 0xc(%%eax)\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "je .Lactor_perception_unit_from_swarm_3\n\t"
+      "fmuls 0x2561f0\n\t"
+      "jmp .Lactor_perception_unit_from_swarm_4\n\t"
+      ".Lactor_perception_unit_from_swarm_3:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "cmpl %%edx, 0x18(%%ebx,%%esi,4)\n\t"
+      "jne .Lactor_perception_unit_from_swarm_4\n\t"
+      "fmuls 0x256134\n\t"
+      ".Lactor_perception_unit_from_swarm_4:\n\t"
+      "fcoms -0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_perception_unit_from_swarm_5\n\t"
+      "movl 0x18(%%ebx,%%esi,4), %%eax\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .Lactor_perception_unit_from_swarm_6\n\t"
+      ".Lactor_perception_unit_from_swarm_5:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lactor_perception_unit_from_swarm_6:\n\t"
+      "movb 0x10(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_perception_unit_from_swarm_7\n\t"
+      "movl 0x18(%%ebx,%%esi,4), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13ec50]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lactor_perception_unit_from_swarm_7:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "incl %%eax\n\t"
+      "cmpw 0x2(%%ebx), %%ax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jl .Lactor_perception_unit_from_swarm_2\n\t"
+      "jmp .Lactor_perception_unit_from_swarm_14\n\t"
+      ".Lactor_perception_unit_from_swarm_8:\n\t"
+      "movl 0x24(%%ebx), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "movl $0x7f7fffff, -0xc(%%ebp)\n\t"
+      "je .Lactor_perception_unit_from_swarm_14\n\t"
+      ".Lactor_perception_unit_from_swarm_9:\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[c1412f0]\n\t"
+      "flds 0xc(%%edi)\n\t"
+      "fsubs -0x18(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "flds 0x10(%%edi)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "fsubs -0x14(%%ebp)\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fsubs -0x10(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .Lactor_perception_unit_from_swarm_10\n\t"
+      "fmuls 0x256134\n\t"
+      ".Lactor_perception_unit_from_swarm_10:\n\t"
+      "fcoms -0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_perception_unit_from_swarm_11\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "jmp .Lactor_perception_unit_from_swarm_12\n\t"
+      ".Lactor_perception_unit_from_swarm_11:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lactor_perception_unit_from_swarm_12:\n\t"
+      "movb 0x10(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_perception_unit_from_swarm_13\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c13ec50]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lactor_perception_unit_from_swarm_13:\n\t"
+      "movl 0x1ac(%%ebx), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne .Lactor_perception_unit_from_swarm_9\n\t"
+      ".Lactor_perception_unit_from_swarm_14:\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      ".Lactor_perception_unit_from_swarm_15:\n\t"
+      "cmpl $-1, 0xc(%%ebp)\n\t"
+      "je .Lactor_perception_unit_from_swarm_16\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne .Lactor_perception_unit_from_swarm_16\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6d9\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x2561b4\n\t"
+      "call *%[assert]\n\t"
+      "pushl %%esi\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_unit_from_swarm_16:\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b31c00_dget), [assert] "m"(b31c00_assert), [exitfn] "m"(b31c00_exitfn), [c13ec50] "m"(b31c00_c13ec50), [get] "m"(b31c00_get), [c1412f0] "m"(b31c00_c1412f0)
+      : "memory");
 }
+#else
+#error "actor_perception_unit_from_swarm: clang naked draft required"
+#endif
+
 
 /* prop_position_refresh (0x31df0) — XBE naked draft (batch 80). */
 #if defined(__clang__)
@@ -2203,85 +2322,202 @@ void prop_position_refresh(int actor_handle __attribute__((unused)), int prop_ha
 #endif
 
 
-/* 0x32170 — register a vehicle danger zone on an actor. */
-char FUN_00032170(float *sense_pos_out, int actor_handle, int unit_handle,
-                  char flag)
+/* FUN_00032170 (0x32170) — XBE naked draft (batch 82). */
+#if defined(__clang__)
+static void *(*const b32170_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b32170_get)(int, int) = object_get_and_verify_type;
+static void *(*const b32170_tag)(int, int) = tag_get;
+static vector3_t * (*const b32170_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+static void (*const b32170_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = actor_perception_find_sense_position;
+static void *(*const b32170_memset)(void *, int, unsigned int) = csmemset;
+static bool (*const b32170_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
+
+__attribute__((naked, noinline))
+char FUN_00032170(float *sense_pos_out __attribute__((unused)), int actor_handle __attribute__((unused)), int unit_handle __attribute__((unused)), char flag __attribute__((unused)))
 {
-  char *actor;
-  char *vehicle;
-  char *vehicle_def;
-  char sense_block[0x4c];
-  char *sense_pos;
-  float world_pos[3];
-  float delta[3];
-  float dist;
-  float vel_sq;
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(int *)(actor + 0x158) != -1)
-    return 0;
-
-  vehicle = (char *)object_get_and_verify_type(unit_handle, 2);
-  vehicle_def = (char *)tag_get('ihev', *(int *)vehicle);
-  if (*(char *)(vehicle_def + 0x2f0) >= 0)
-    return 0;
-
-  vel_sq = *(float *)(vehicle + 0x18) * *(float *)(vehicle + 0x18) +
-           *(float *)(vehicle + 0x1c) * *(float *)(vehicle + 0x1c) +
-           *(float *)(vehicle + 0x20) * *(float *)(vehicle + 0x20);
-  if (vel_sq > *(float *)0x25620c)
-    return 0;
-
-  object_get_world_position(unit_handle, (vector3_t *)world_pos);
-  if (sense_pos_out == 0) {
-    actor_perception_find_sense_position(actor_handle, world_pos, -1,
-                                         sense_block);
-    sense_pos = sense_block;
-  } else {
-    sense_pos = (char *)sense_pos_out;
-  }
-
-  delta[0] = world_pos[0] - *(float *)(sense_pos + 0xc);
-  delta[1] = world_pos[1] - *(float *)(sense_pos + 0x10);
-  delta[2] = world_pos[2] - *(float *)(sense_pos + 0x14);
-  dist = sqrtf(delta[0] * delta[0] + delta[1] * delta[1] +
-               delta[2] * delta[2]);
-
-  if (dist > *(float *)(vehicle_def + 4) + *(float *)0x253f34)
-    return 0;
-
-  if (*(int16_t *)(actor + 0x280) >= 3) {
-    if (*(int16_t *)(actor + 0x280) != 3)
-      return 0;
-    if (*(int *)(actor + 0x28c) == unit_handle &&
-        dist <= *(float *)(actor + 0x2d4))
-      return 0;
-  }
-
-  csmemset(actor + 0x280, 0, 0x6c);
-  *(int *)(actor + 0x28c) = unit_handle;
-  *(int16_t *)(actor + 0x280) = 3;
-  *(int *)(actor + 0x290) = *(int *)(vehicle + 0x2d4);
-  *(int *)(actor + 0x294) = *(int *)(vehicle_def + 4);
-  *(float *)(actor + 0x298) = world_pos[0];
-  *(float *)(actor + 0x29c) = world_pos[1];
-  *(float *)(actor + 0x2a0) = world_pos[2];
-  *(float *)(actor + 0x2a4) = *(float *)(vehicle + 0x18);
-  *(float *)(actor + 0x2a8) = *(float *)(vehicle + 0x1c);
-  *(float *)(actor + 0x2ac) = *(float *)(vehicle + 0x20);
-  *(int16_t *)(actor + 0x284) = 0x14;
-  *(char *)(actor + 0x286) = flag;
-  *(int16_t *)(actor + 0x282) = 0;
-
-  if (*(int *)(actor + 0x290) != -1) {
-    char *parent =
-        (char *)object_get_and_verify_type(*(int *)(vehicle + 0x2d4), 3);
-    if (!game_allegiance_get_team_is_friendly(*(int16_t *)(actor + 0x3e),
-                                              *(int16_t *)(parent + 0x68)))
-      *(int16_t *)(actor + 0x282) = 1;
-  }
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x4c, %%esp\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x158(%%esi), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "jne .LFUN_00032170_5\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl $2\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x76656869\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x2f0(%%eax), %%cl\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jns .LFUN_00032170_4\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "flds 0x18(%%ebx)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps 0x25620c\n\t"
+      "fstp %%st(0)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $0x41, %%ah\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .LFUN_00032170_4\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1412f0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_00032170_1\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "leal -0x4c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $-1\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c31a90]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "leal -0x4c(%%ebp), %%edi\n\t"
+      ".LFUN_00032170_1:\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "fsubs 0xc(%%edi)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fsubs 0x10(%%edi)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fsubs 0x14(%%edi)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fadds 0x253f34\n\t"
+      "fcomps -0x4(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00032170_4\n\t"
+      "movw 0x280(%%esi), %%ax\n\t"
+      "cmpw $3, %%ax\n\t"
+      "leal 0x280(%%esi), %%edi\n\t"
+      "jl .LFUN_00032170_2\n\t"
+      "jne .LFUN_00032170_4\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "cmpl %%ecx, 0x28c(%%esi)\n\t"
+      "je .LFUN_00032170_4\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2d4(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00032170_4\n\t"
+      ".LFUN_00032170_2:\n\t"
+      "pushl $0x6c\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "call *%[memset]\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x28c(%%esi)\n\t"
+      "movw $3, (%%edi)\n\t"
+      "movl 0x2d4(%%ebx), %%eax\n\t"
+      "movl %%eax, 0x290(%%esi)\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x294(%%esi)\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "leal 0x298(%%esi), %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movl 0x18(%%ebx), %%eax\n\t"
+      "leal 0x2a4(%%esi), %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl 0x1c(%%ebx), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl 0x20(%%ebx), %%eax\n\t"
+      "movb 0x10(%%ebp), %%cl\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movl 0x290(%%esi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movw $0x14, 0x284(%%esi)\n\t"
+      "movb %%cl, 0x286(%%esi)\n\t"
+      "movw $0, 0x282(%%esi)\n\t"
+      "je .LFUN_00032170_3\n\t"
+      "movl 0x2d4(%%ebx), %%edx\n\t"
+      "pushl $3\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movswl 0x68(%%eax), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x3e(%%esi), %%cx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ca7a30]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00032170_3\n\t"
+      "movw $1, 0x282(%%esi)\n\t"
+      ".LFUN_00032170_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00032170_4:\n\t"
+      "xorb %%al, %%al\n\t"
+      ".LFUN_00032170_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b32170_dget), [get] "m"(b32170_get), [tag] "m"(b32170_tag), [c1412f0] "m"(b32170_c1412f0), [c31a90] "m"(b32170_c31a90), [memset] "m"(b32170_memset), [ca7a30] "m"(b32170_ca7a30)
+      : "memory");
 }
+#else
+#error "FUN_00032170: clang naked draft required"
+#endif
+
 
 /* actor_perception_refresh_danger_zone (0x32380) — XBE naked draft (batch 79). */
 #if defined(__clang__)

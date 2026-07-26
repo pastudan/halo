@@ -979,6 +979,19 @@ def main() -> int:
         ("prop_add", 0x64170, 0x643c2),
         ("FUN_0005ef80", 0x5ef80, 0x5f1cc),
         ("prop_new_unacknowledged", 0x645a0, 0x647c0),
+        # gameplay wave 82 (2026-07-26) — net/structures/physics Capstone weaks
+        ("FUN_0011bc20", 0x11bc20, 0x11be0b),
+        ("FUN_00062680", 0x62680, 0x628a7),
+        ("cluster_partition_add_object", 0x1917a0, 0x19199f),
+        ("actor_pursuit_find_nearby_actors", 0x20280, 0x20468),
+        ("FUN_00032170", 0x32170, 0x32377),
+        ("collision_surface_test_line2d", 0x147d10, 0x147ecc),
+        ("actor_perception_unit_from_swarm", 0x31c00, 0x31de4),
+        ("collision_surface_area", 0x1477f0, 0x14798c),
+        ("structure_render_surface_from_point_and_leaf", 0x198580, 0x198726),
+        ("FUN_00197310", 0x197310, 0x1974e4),
+        ("FUN_0011b2a0", 0x11b2a0, 0x11b520, [(0x11b520, 0x11b540)]),
+        ("FUN_00197130", 0x197130, 0x19730b),
     ]
 
     xbe = Xbe.from_file(args.xbe)

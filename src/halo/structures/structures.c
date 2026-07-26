@@ -416,135 +416,212 @@ short FUN_00062410(void *obstacles, short disc_index_skip, float *position_xy,
   return -1;
 }
 
-/* 0x0062680 — FUN_00062680
- *
- * Given an obstacle-disc set (obstacles), a shared radius pad (arg2, an
- * IEEE-754 float smuggled through a uint32_t stack slot — the ported caller
- * forwards it as an opaque dword), a seed disc index, and an output bitvector,
- * marks every disc reachable from the seed by "inflated-circle overlap"
- * connectivity.
- *
- * Two discs A and B are connected when the squared centre distance is <= the
- * squared sum of their pad-inflated radii:
- *     dx = B.x - A.x ; dy = B.y - A.y
- *     dx*dx + dy*dy <= ((pad + B.radius) + (pad + A.radius))^2
- * The search is an iterative worklist flood-fill seeded at seed_disc_index; the
- * result is a 1-bit-per-disc membership bitvector (index>>5 dword,
- * 1<<(index&31) bit).
- *
- * Obstacle-set layout (byte offsets from the base pointer, disasm-confirmed):
- *   +0x02  int16  disc_count           (0 <= disc_count <= 0x80)
- *   +0x08  disc[] base, stride 0x18 (24 bytes)
- *     disc +0x08 float x
- *     disc +0x0c float y
- *     disc +0x10 float radius
- * MAXIMUM_DISC_COUNT = 0x80 = 128.
- *
- * FPU order is disassembly-authoritative (0x17a-0x1ad): the inflated-radius sum
- * evaluates the candidate term first, then the current term; the distance
- * squared evaluates dx*dx before dy*dy.  Preserve the parenthesisation for
- * VC71.
- *
- * ABI: cdecl, 4 stack args, void return.
- */
-void FUN_00062680(int16_t *partition, uint32_t arg2, int16_t index,
-                  uint32_t *out_mask)
+/* FUN_00062680 (0x62680) — XBE naked draft (batch 82). */
+#if defined(__clang__)
+static void (*const b62680_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b62680_exitfn)(int) = system_exit;
+static void *(*const b62680_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
+void FUN_00062680(int16_t *partition __attribute__((unused)), uint32_t arg2 __attribute__((unused)), int16_t index __attribute__((unused)), uint32_t *out_mask __attribute__((unused)))
 {
-  uint32_t *mask_word;
-  int cand_base;
-  float inflated_sum;
-  float dx;
-  float dy;
-  int top_prev;
-  int16_t disc_idx;
-  int i;
-  int16_t disc_count;
-  uint32_t bit;
-  int16_t stack[128];
-  int cur_base;
-  int top;
-  int base;
-
-  base = (int)partition;
-
-  if ((*(int16_t *)(base + 2) < 0) || (0x80 < *(int16_t *)(base + 2))) {
-    display_assert(
-      "obstacles->disc_count>=0 && obstacles->disc_count<=MAXIMUM_DISC_COUNT",
-      "c:\\halo\\SOURCE\\ai\\path_obstacles.c", 0x183, 1);
-    system_exit(-1);
-  }
-  csmemset(out_mask, 0, ((*(int16_t *)(base + 2) + 0x1f) >> 5) * 4);
-  if (index != -1) {
-    if ((index < 0) || (*(int16_t *)(base + 2) <= index)) {
-      display_assert(
-        "seed_disc_index>=0 && seed_disc_index<obstacles->disc_count",
-        "c:\\halo\\SOURCE\\ai\\path_obstacles.c", 0x18c, 1);
-      system_exit(-1);
-    }
-    /* stage index through top (dead until the loop reassigns it) — matches
-     * the original's register flow (permuter-found, byte-verified) */
-    top = index;
-    mask_word = &out_mask[(int)top >> 5];
-    stack[0] = top;
-    *mask_word = *mask_word | 1 << ((uint8_t)top & 0x1f);
-    i = 1;
-    do {
-      i = i + -1;
-      disc_idx = stack[(int16_t)i];
-      top = i;
-      if (((disc_idx < 0) || (*(int16_t *)(base + 2) <= disc_idx)) ||
-          (0x80 < *(int16_t *)(base + 2))) {
-        display_assert("disc_index>=0 && disc_index<obstacles->disc_count && "
-                       "obstacles->disc_count<=MAXIMUM_DISC_COUNT",
-                       "c:\\halo\\source\\ai\\path.h", 0x18c, 1);
-        system_exit(-1);
-      }
-      disc_count = *(int16_t *)(base + 2);
-      cur_base = base + 8 + disc_idx * 0x18;
-      disc_idx = 0;
-      if (0 < disc_count) {
-        do {
-          i = (int)disc_idx;
-          bit = 1 << ((uint8_t)disc_idx & 0x1f);
-          mask_word = &out_mask[i >> 5];
-          if ((*mask_word & bit) == 0) {
-            if (((disc_idx < 0) || (disc_count <= disc_idx)) ||
-                (0x80 < disc_count)) {
-              display_assert(
-                "disc_index>=0 && disc_index<obstacles->disc_count && "
-                "obstacles->disc_count<=MAXIMUM_DISC_COUNT",
-                "c:\\halo\\source\\ai\\path.h", 0x18c, 1);
-              system_exit(-1);
-            }
-            top_prev = top;
-            cand_base = base + 8 + i * 0x18;
-            inflated_sum =
-              (*(float *)&arg2 + *(float *)(base + 0x18 + i * 0x18)) +
-              (*(float *)&arg2 + *(float *)(cur_base + 0x10));
-            dx = *(float *)(cand_base + 8) - *(float *)(cur_base + 8);
-            dy = *(float *)(cand_base + 0xc) - *(float *)(cur_base + 0xc);
-            if (dx * dx + dy * dy <= inflated_sum * inflated_sum) {
-              disc_count = (int16_t)top;
-              *mask_word = *mask_word | bit;
-              if (0x7f < disc_count) {
-                display_assert("stack_top<MAXIMUM_DISC_COUNT",
-                               "c:\\halo\\SOURCE\\ai\\path_obstacles.c", 0x1a5,
-                               1);
-                system_exit(-1);
-              }
-              stack[disc_count] = disc_idx;
-              top = top_prev + 1;
-            }
-          }
-          disc_count = *(int16_t *)(base + 2);
-          disc_idx = disc_idx + 1;
-          i = top;
-        } while (disc_idx < disc_count);
-      }
-    } while (0 < (int16_t)i);
-  }
-  return;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x108, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .LFUN_00062680_1\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00062680_2\n\t"
+      ".LFUN_00062680_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x183\n\t"
+      "pushl $0x25ee38\n\t"
+      "pushl $0x25edf0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00062680_2:\n\t"
+      "movswl 0x2(%%edi), %%eax\n\t"
+      "movl 0x14(%%ebp), %%ebx\n\t"
+      "addl $0x1f, %%eax\n\t"
+      "sarl $5, %%eax\n\t"
+      "shll $2, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[memset]\n\t"
+      "movw 0x10(%%ebp), %%si\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .LFUN_00062680_14\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_00062680_3\n\t"
+      "cmpw 0x2(%%edi), %%si\n\t"
+      "jl .LFUN_00062680_4\n\t"
+      ".LFUN_00062680_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18c\n\t"
+      "pushl $0x25ee38\n\t"
+      "pushl $0x25ee70\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00062680_4:\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "sarl $5, %%edx\n\t"
+      "leal (%%ebx,%%edx,4), %%eax\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movw %%si, -0x108(%%ebp)\n\t"
+      "movl $1, %%ebx\n\t"
+      "orl %%edx, %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LFUN_00062680_5:\n\t"
+      "decl %%ebx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "movw -0x108(%%ebp,%%eax,2), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "jl .LFUN_00062680_6\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jge .LFUN_00062680_6\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00062680_7\n\t"
+      ".LFUN_00062680_6:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18c\n\t"
+      "pushl $0x25e990\n\t"
+      "pushl $0x25e930\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00062680_7:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "leal 0x8(%%edi,%%ecx,8), %%edx\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movl %%edx, 0x10(%%ebp)\n\t"
+      "jle .LFUN_00062680_13\n\t"
+      ".LFUN_00062680_8:\n\t"
+      "movl 0x14(%%ebp), %%ebx\n\t"
+      "movswl %%dx, %%esi\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edi\n\t"
+      "shll %%cl, %%edi\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "sarl $5, %%ecx\n\t"
+      "leal (%%ebx,%%ecx,4), %%ebx\n\t"
+      "testl %%edi, (%%ebx)\n\t"
+      "jne .LFUN_00062680_12\n\t"
+      "testw %%dx, %%dx\n\t"
+      "jl .LFUN_00062680_9\n\t"
+      "cmpw %%ax, %%dx\n\t"
+      "jge .LFUN_00062680_9\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00062680_10\n\t"
+      ".LFUN_00062680_9:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18c\n\t"
+      "pushl $0x25e990\n\t"
+      "pushl $0x25e930\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00062680_10:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "leal (%%esi,%%esi,2), %%eax\n\t"
+      "fadds 0x18(%%ecx,%%eax,8)\n\t"
+      "leal 0x8(%%ecx,%%eax,8), %%eax\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fadds 0x10(%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fsubs 0x8(%%ecx)\n\t"
+      "flds 0xc(%%eax)\n\t"
+      "fsubs 0xc(%%ecx)\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      "fcompp\n\t"
+      "fstp %%st(0)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $1, %%ah\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .LFUN_00062680_12\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      "orl %%edi, %%ecx\n\t"
+      "cmpw $0x80, %%si\n\t"
+      "movl %%ecx, (%%ebx)\n\t"
+      "jl .LFUN_00062680_11\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a5\n\t"
+      "pushl $0x25ee38\n\t"
+      "pushl $0x25ebb0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00062680_11:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "incl %%esi\n\t"
+      "movw %%dx, -0x108(%%ebp,%%eax,2)\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      ".LFUN_00062680_12:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movw 0x2(%%ecx), %%ax\n\t"
+      "incl %%edx\n\t"
+      "cmpw %%ax, %%dx\n\t"
+      "movl %%edx, 0x10(%%ebp)\n\t"
+      "jl .LFUN_00062680_8\n\t"
+      "movl -0x4(%%ebp), %%ebx\n\t"
+      "movl %%ecx, %%edi\n\t"
+      ".LFUN_00062680_13:\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jg .LFUN_00062680_5\n\t"
+      ".LFUN_00062680_14:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b62680_assert), [exitfn] "m"(b62680_exitfn), [memset] "m"(b62680_memset)
+      : "memory");
 }
+#else
+#error "FUN_00062680: clang naked draft required"
+#endif
+
 
 /* 0x624b0 - find the nearest obstacle disc a ray/segment intersects.
  * (TU: c:\halo\source\ai\path.h, inlined into path_obstacles.c)
@@ -2373,93 +2450,215 @@ int *FUN_00191750(short cluster_index /* @<esi> */, int **partition)
   return *partition + cluster_index;
 }
 
-/* Add an object to a cluster partition (0x1917a0).
- * Finds all clusters overlapping position+radius via structure_find_in_cluster,
- * then for each cluster: allocates a per-object cluster reference
- * (partition[2]) linking into *first_cluster_ref, and a per-cluster object
- * reference (partition[1]) linking into the cluster head array (partition[0]).
- */
-void cluster_partition_add_object(void *partition, int object_handle,
-                                  void *first_cluster_ref, void *position,
-                                  uint32_t radius_fp, void *location)
+/* cluster_partition_add_object (0x1917a0) — XBE naked draft (batch 82). */
+#if defined(__clang__)
+static void (*const b1917a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1917a0_exitfn)(int) = system_exit;
+static int16_t (*const b1917a0_c199230)(uint16_t cluster_count, float *position, float radius, int max_count, short *out_indices) = structure_find_in_cluster;
+static void (*const b1917a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static int (*const b1917a0_c119610)(data_t *data) = data_new_at_index;
+static void *(*const b1917a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void * (*const b1917a0_c18e3c0)(void) = scenario_get;
+
+__attribute__((naked, noinline))
+void cluster_partition_add_object(void *partition __attribute__((unused)), int object_handle __attribute__((unused)), void *first_cluster_ref __attribute__((unused)), void *position __attribute__((unused)), uint32_t radius_fp __attribute__((unused)), void *location __attribute__((unused)))
 {
-  int **part = (int **)partition;
-  int *first_ref = (int *)first_cluster_ref;
-  short *pos = (short *)position;
-  char *loc = (char *)location;
-  short local_clusters[64];
-  uint16_t cluster_bsp_index;
-  union {
-    uint32_t u;
-    float f;
-  } rad;
-  int16_t cluster_count;
-
-  assert_halt(partition);
-  assert_halt(first_cluster_ref);
-  assert_halt(*first_ref == -1);
-  assert_halt(position);
-  assert_halt(location);
-
-  cluster_bsp_index = *(uint16_t *)(loc + 4);
-  rad.u = radius_fp;
-
-  cluster_count = structure_find_in_cluster(cluster_bsp_index, (float *)pos,
-                                            rad.f, 0x40, local_clusters);
-
-  if (cluster_count > 0x40) {
-    error(2, "an object or light spanned %d clusters.", (int)cluster_count);
-    cluster_count = 0x40;
-  }
-
-  {
-    int i;
-    short *cluster_ptr = local_clusters;
-    for (i = 0; i < (int)(uint16_t)cluster_count; i++, cluster_ptr++) {
-      short cluster_index = *cluster_ptr;
-
-      {
-        data_t *obj_ref_data = (data_t *)part[2];
-        int obj_ref_handle = data_new_at_index(obj_ref_data);
-        if (obj_ref_handle == -1) {
-          error(2, "WARNING: maximum %ss per map (%d) exceeded.", obj_ref_data,
-                (int)*(short *)((char *)obj_ref_data + 0x20));
-        } else {
-          int *obj_ref = (int *)datum_get(obj_ref_data, obj_ref_handle);
-          obj_ref[1] = (int)cluster_index;
-          obj_ref[2] = *first_ref;
-          *first_ref = obj_ref_handle;
-        }
-      }
-
-      if (cluster_index < 0 ||
-          (int)cluster_index >= *(int *)((char *)scenario_get() + 0x134)) {
-        display_assert(
-          "cluster_index>=0 && "
-          "cluster_index<global_structure_bsp_get()->clusters.count",
-          "c:\\halo\\SOURCE\\structures\\cluster_partitions.c", 0xd5, true);
-        system_exit(-1);
-      }
-
-      {
-        int *cluster_head = &part[0][(int)cluster_index];
-        data_t *cluster_ref_data = (data_t *)part[1];
-        int cluster_ref_handle = data_new_at_index(cluster_ref_data);
-        if (cluster_ref_handle == -1) {
-          error(2, "WARNING: maximum %ss per map (%d) exceeded.",
-                cluster_ref_data,
-                (int)*(short *)((char *)cluster_ref_data + 0x20));
-        } else {
-          int *cluster_ref =
-            (int *)datum_get(cluster_ref_data, cluster_ref_handle);
-          cluster_ref[1] = object_handle;
-          cluster_ref[2] = *cluster_head;
-          *cluster_head = cluster_ref_handle;
-        }
-      }
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x80, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lcluster_partition_add_object_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6f\n\t"
+      "pushl $0x2b26b8\n\t"
+      "pushl $0x2b2748\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcluster_partition_add_object_1:\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lcluster_partition_add_object_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x70\n\t"
+      "pushl $0x2b26b8\n\t"
+      "pushl $0x2b2730\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcluster_partition_add_object_2:\n\t"
+      "cmpl $-1, (%%esi)\n\t"
+      "je .Lcluster_partition_add_object_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x71\n\t"
+      "pushl $0x2b26b8\n\t"
+      "pushl $0x2b2710\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcluster_partition_add_object_3:\n\t"
+      "movl 0x14(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lcluster_partition_add_object_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x72\n\t"
+      "pushl $0x2b26b8\n\t"
+      "pushl $0x267114\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcluster_partition_add_object_4:\n\t"
+      "movl 0x1c(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lcluster_partition_add_object_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x73\n\t"
+      "pushl $0x2b26b8\n\t"
+      "pushl $0x29c114\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcluster_partition_add_object_5:\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "leal -0x80(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x4(%%esi), %%dx\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c199230]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpw $0x40, %%ax\n\t"
+      "jle .Lcluster_partition_add_object_6\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2b26e8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl $0x40, %%eax\n\t"
+      ".Lcluster_partition_add_object_6:\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lcluster_partition_add_object_14\n\t"
+      "movzwl %%ax, %%edx\n\t"
+      "leal -0x80(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x14(%%ebp)\n\t"
+      "movl %%edx, 0x1c(%%ebp)\n\t"
+      "pushl %%ebx\n\t"
+      "jmp .Lcluster_partition_add_object_7\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lcluster_partition_add_object_7:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ecx), %%esi\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movw (%%eax), %%bx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c119610]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lcluster_partition_add_object_8\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movswl %%bx, %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edi, (%%ecx)\n\t"
+      "jmp .Lcluster_partition_add_object_9\n\t"
+      ".Lcluster_partition_add_object_8:\n\t"
+      "movswl 0x20(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x280ea4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lcluster_partition_add_object_9:\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl .Lcluster_partition_add_object_10\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl 0x134(%%eax), %%edx\n\t"
+      "movswl %%bx, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jl .Lcluster_partition_add_object_11\n\t"
+      ".Lcluster_partition_add_object_10:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd5\n\t"
+      "pushl $0x2b26b8\n\t"
+      "pushl $0x2b2668\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcluster_partition_add_object_11:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movswl %%bx, %%edx\n\t"
+      "leal (%%ecx,%%edx,4), %%ebx\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl 0x4(%%edx), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c119610]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lcluster_partition_add_object_12\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edi, (%%ebx)\n\t"
+      "jmp .Lcluster_partition_add_object_13\n\t"
+      ".Lcluster_partition_add_object_12:\n\t"
+      "movswl 0x20(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x280ea4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lcluster_partition_add_object_13:\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "addl $2, %%ecx\n\t"
+      "decl %%eax\n\t"
+      "movl %%ecx, 0x14(%%ebp)\n\t"
+      "movl %%eax, 0x1c(%%ebp)\n\t"
+      "jne .Lcluster_partition_add_object_7\n\t"
+      "popl %%ebx\n\t"
+      ".Lcluster_partition_add_object_14:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1917a0_assert), [exitfn] "m"(b1917a0_exitfn), [c199230] "m"(b1917a0_c199230), [c8f390] "m"(b1917a0_c8f390), [c119610] "m"(b1917a0_c119610), [dget] "m"(b1917a0_dget), [c18e3c0] "m"(b1917a0_c18e3c0)
+      : "memory");
 }
+#else
+#error "cluster_partition_add_object: clang naked draft required"
+#endif
+
 
 /* Remove an object from a cluster partition (0x1919a0).
  * Walks the per-object cluster reference chain (*first_cluster_ref),
@@ -4360,207 +4559,384 @@ void FUN_00195790(int *surface_material_offsets __attribute__((unused)), unsigne
 #endif
 
 
-/* 0x197130 - gather visible clusters referenced by a BSP leaf's surfaces.
- *
- * Register ABI (prologue at 0x197130): MOV EBX,[EBP+0x2c] then MOV ESI,EAX; the
- * only register arg is leaf@<eax> (BSP node/leaf value; its sign bit is a
- * node/leaf discriminator, masked off with &0x7fffffff for the leaf index).
- * Stack args: bounds ([EBP+0x8] parent_bounds), param_2 ([EBP+0xc] per-call
- * visited-cluster bitset base), param_3 ([EBP+0x10] int* out cluster array),
- * count ([EBP+0x14] out capacity), center ([EBP+0x18] cull-sphere center,
- * null-checked only), radius ([EBP+0x1c], unused here), cull_bounds
- * ([EBP+0x20]), param_8 ([EBP+0x24]), param_9 ([EBP+0x28]), intersection
- * ([EBP+0x2c], mode: the incoming value is read into EBX and the slot is then
- * reused as the running output accumulator that is returned).
- *
- * Resolves the leaf element (scenario+0xe0, stride 0x10), validates it, derives
- * child bounds via FUN_00196eb0, and (unless intersection==2) culls against the
- * cull bounds via FUN_00196a60/FUN_00196b10 taking the min classification.  If
- * the leaf is at all visible it walks the leaf's surface run (scenario+0xec,
- * stride 8), and for each surface's cluster index sets a bit in the global
- * cluster visibility set at 0x5137d0 gated bitset and, if newly visible and not
- * already recorded in the per-call bitset, appends the cluster to the out array
- * (until count is reached).  Returns the number of clusters appended. */
-int FUN_00197130(float *bounds, void *param_2, int *param_3, int count,
-                 float *center, float radius, float *cull_bounds, int param_8,
-                 int param_9, int intersection, int leaf /* @<eax> */)
+/* FUN_00197130 (0x197130) — XBE naked draft (batch 82). */
+#if defined(__clang__)
+static void * (*const b197130_c18e3c0)(void) = scenario_get;
+static void *(*const b197130_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b197130_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b197130_exitfn)(int) = system_exit;
+static float * (*const b197130_c196eb0)(float *parent_bounds, unsigned char *fractions, float *out_bounds) = FUN_00196eb0;
+static int (*const b197130_c196a60)(float *cull_bounds, float *bounds) = FUN_00196a60;
+static int (*const b197130_c196b10)(float *bounds, int param_2, int param_3) = FUN_00196b10;
+
+__attribute__((naked, noinline))
+int FUN_00197130(float *bounds __attribute__((unused)), void *param_2 __attribute__((unused)), int *param_3 __attribute__((unused)), int count __attribute__((unused)), float *center __attribute__((unused)), float radius __attribute__((unused)), float *cull_bounds __attribute__((unused)), int param_8 __attribute__((unused)), int param_9 __attribute__((unused)), int intersection __attribute__((unused)), int leaf __attribute__((unused)))
 {
-  void *scenario;
-  char *leaf_element;
-  int accumulator;
-  int cull_result;
-  float local_20[6];
-
-  (void)radius;
-  accumulator = 0;
-  scenario = scenario_get();
-  leaf_element = (char *)tag_block_get_element((char *)scenario + 0xe0,
-                                               leaf & 0x7fffffff, 0x10);
-
-  if ((short)intersection == 0) {
-    display_assert("intersection",
-                   "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x2f0,
-                   true);
-    system_exit(-1);
-  }
-  if (bounds == (float *)0) {
-    display_assert("parent_bounds",
-                   "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x2f1,
-                   true);
-    system_exit(-1);
-  }
-  if (center == (float *)0) {
-    display_assert("cull_sphere_center",
-                   "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x2f2,
-                   true);
-    system_exit(-1);
-  }
-  if (cull_bounds == (float *)0) {
-    display_assert("cull_bounds",
-                   "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x2f3,
-                   true);
-    system_exit(-1);
-  }
-  if (*(short *)(leaf_element + 8) < 0 ||
-      *(int *)((char *)scenario + 0x134) <= (int)*(short *)(leaf_element + 8)) {
-    display_assert(
-        "leaf->cluster_index>=0 && leaf->cluster_index<structure->clusters.count",
-        "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x2f4, true);
-    system_exit(-1);
-  }
-
-  FUN_00196eb0(bounds, (unsigned char *)leaf_element, local_20);
-
-  cull_result = (short)intersection;
-  if ((short)intersection != 2) {
-    int a = FUN_00196a60(cull_bounds, local_20);
-    int b = FUN_00196b10(local_20, param_8, param_9);
-    cull_result = a;
-    if ((short)b < (short)a) {
-      cull_result = b;
-    }
-  }
-
-  if ((short)cull_result != 0) {
-    int i;
-    int first = *(int *)(leaf_element + 0xc);
-    int end = (int)*(short *)(leaf_element + 0xa) + first;
-    char *surface_block = (char *)scenario + 0xec;
-    for (i = first; i < end; i++) {
-      int *elem = (int *)tag_block_get_element(surface_block, i, 8);
-      int cluster = *elem;
-      int word_off = (cluster >> 5) * 4;
-      unsigned int mask = 1u << (cluster & 0x1f);
-      if ((mask & *(unsigned int *)((char *)0x5137d0 + word_off)) != 0) {
-        unsigned int *per_call = (unsigned int *)((char *)param_2 + word_off);
-        if ((mask & *per_call) == 0) {
-          if ((short)count <= (short)accumulator) {
-            break;
-          }
-          *per_call |= mask;
-          param_3[(short)accumulator] = cluster;
-          accumulator = accumulator + 1;
-        }
-      }
-      end = (int)*(short *)(leaf_element + 0xa) + *(int *)(leaf_element + 0xc);
-    }
-  }
-
-  return accumulator;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x1c, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x2c(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl $0, 0x2c(%%ebp)\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "pushl $0x10\n\t"
+      "andl $0x7fffffff, %%esi\n\t"
+      "leal 0xe0(%%edi), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testw %%bx, %%bx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "jne .LFUN_00197130_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2f0\n\t"
+      "pushl $0x2b36c8\n\t"
+      "pushl $0x2b3798\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00197130_1:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00197130_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2f1\n\t"
+      "pushl $0x2b36c8\n\t"
+      "pushl $0x2b3788\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00197130_2:\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00197130_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2f2\n\t"
+      "pushl $0x2b36c8\n\t"
+      "pushl $0x2b3774\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00197130_3:\n\t"
+      "movl 0x20(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00197130_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2f3\n\t"
+      "pushl $0x2b36c8\n\t"
+      "pushl $0x2b3768\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00197130_4:\n\t"
+      "movw 0x8(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .LFUN_00197130_5\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "cmpl 0x134(%%edi), %%ecx\n\t"
+      "jl .LFUN_00197130_6\n\t"
+      ".LFUN_00197130_5:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2f4\n\t"
+      "pushl $0x2b36c8\n\t"
+      "pushl $0x2b3720\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00197130_6:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "leal -0x1c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c196eb0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $2, %%bx\n\t"
+      "je .LFUN_00197130_7\n\t"
+      "movl 0x20(%%ebp), %%ecx\n\t"
+      "leal -0x1c(%%ebp), %%edx\n\t"
+      "call *%[c196a60]\n\t"
+      "movl 0x28(%%ebp), %%ecx\n\t"
+      "movl 0x24(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "call *%[c196b10]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "jle .LFUN_00197130_7\n\t"
+      "movl %%eax, %%ebx\n\t"
+      ".LFUN_00197130_7:\n\t"
+      "testw %%bx, %%bx\n\t"
+      "je .LFUN_00197130_10\n\t"
+      "movswl 0xa(%%esi), %%eax\n\t"
+      "movl 0xc(%%esi), %%ebx\n\t"
+      "addl %%ebx, %%eax\n\t"
+      "cmpl %%eax, %%ebx\n\t"
+      "jge .LFUN_00197130_10\n\t"
+      "addl $0xec, %%edi\n\t"
+      "movl %%edi, 0x8(%%ebp)\n\t"
+      ".LFUN_00197130_8:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $8\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%esi\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl $1, %%edx\n\t"
+      "sarl $5, %%eax\n\t"
+      "shll %%cl, %%edx\n\t"
+      "shll $2, %%eax\n\t"
+      "movl 0x5137d0(%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%ecx, %%edx\n\t"
+      "je .LFUN_00197130_9\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl (%%eax,%%ecx,1), %%ecx\n\t"
+      "testl %%ecx, %%edx\n\t"
+      "jne .LFUN_00197130_9\n\t"
+      "movw 0x14(%%ebp), %%di\n\t"
+      "cmpw %%di, 0x2c(%%ebp)\n\t"
+      "jge .LFUN_00197130_10\n\t"
+      "orl %%edx, %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl %%ecx, (%%eax,%%edx,1)\n\t"
+      "movl 0x2c(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "incl %%eax\n\t"
+      "movl %%esi, (%%edx,%%ecx,4)\n\t"
+      "movl %%eax, 0x2c(%%ebp)\n\t"
+      ".LFUN_00197130_9:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movswl 0xa(%%eax), %%ecx\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "incl %%ebx\n\t"
+      "addl %%edx, %%ecx\n\t"
+      "cmpl %%ecx, %%ebx\n\t"
+      "jl .LFUN_00197130_8\n\t"
+      ".LFUN_00197130_10:\n\t"
+      "movw 0x2c(%%ebp), %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e3c0] "m"(b197130_c18e3c0), [elem] "m"(b197130_elem), [assert] "m"(b197130_assert), [exitfn] "m"(b197130_exitfn), [c196eb0] "m"(b197130_c196eb0), [c196a60] "m"(b197130_c196a60), [c196b10] "m"(b197130_c196b10)
+      : "memory");
 }
+#else
+#error "FUN_00197130: clang naked draft required"
+#endif
 
-/* 0x197310 - project a structure surface's vertices to screen and clip.
- *
- * Register ABI (prologue at 0x197310): MOV EBX,EAX / MOV EDI,ECX / MOV ESI,EDX
- *   verts@<eax>  -> float* source vertex array (stride 3 floats)
- *   plane@<ecx>  -> float* plane {nx,ny,nz,d}
- *   ref@<edx>    -> float* reference point; byte at ref+0x24 flips winding
- * Stack args: arg1 (matrix container; transform matrix at arg1+0x10),
- *   count (int16_t vertex count), sign (winding direction, +/-1),
- *   out (short* result: [0]=clipped vertex count, then {float x,float y} pairs
- *   at byte offsets +4,+8,... i.e. 8-byte stride starting at out+4).
- *
- * Computes signed distance of ref from plane, scaled by sign; if the magnitude
- * is below the 0x2674e8 epsilon the surface is coplanar (return 2); if the
- * signed side is <= 0 the surface faces away (return 1).  Otherwise transforms
- * each vertex through the matrix into a 3-float scratch buffer, clips the
- * polygon against 0x2b35c4, perspective-divides each surviving vertex
- * (ooz = k / z, k at 0x255e94) walking forward (sign==1) or backward, and
- * writes the 2D coords to out.  Returns 1 if fewer than 3 vertices survive,
- * else 0.  0x2533c0 == 0.0f threshold. */
-short FUN_00197310(void *verts, void *plane, void *ref, void *arg1,
-                   int16_t count, int sign, short *out)
+
+/* FUN_00197310 (0x197310) — XBE naked draft (batch 82). */
+#if defined(__clang__)
+static void * (*const b197310_c18e3c0)(void) = scenario_get;
+static void (*const b197310_xfrmpt)(float *, float *, float *) = matrix_transform_point;
+static int16_t (*const b197310_c106960)(int16_t count, float *verts, float *plane, int16_t max_count, float *out_verts, uint32_t *out_bitmask, float epsilon, void *changed) = convex_polygon3d_clip_to_plane;
+static void (*const b197310_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b197310_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+short FUN_00197310(void *verts __attribute__((unused)), void *plane __attribute__((unused)), void *ref __attribute__((unused)), void *arg1 __attribute__((unused)), int16_t count __attribute__((unused)), int sign __attribute__((unused)), short *out __attribute__((unused)))
 {
-  float *v = (float *)verts;
-  float *p = (float *)plane;
-  float *r = (float *)ref;
-  float buf[256][3];
-  float side;
-  float ooz;
-  int orig_sign;
-  int j;
-  short idx;
-  short end;
-  short oidx;
-
-  scenario_get();
-  *out = 0;
-  orig_sign = (short)sign;
-  side = (r[2] * p[2] + r[1] * p[1] + r[0] * p[0] - p[3]) * (float)orig_sign;
-  if (*((char *)ref + 0x24) != '\0') {
-    sign = -sign;
-  }
-  if (fabs(side) < *(double *)0x002674e8) {
-    return 2;
-  }
-  if (side <= *(float *)0x002533c0) {
-    return 1;
-  }
-
-  if (count > 0) {
-    float *mtx = (float *)((char *)arg1 + 0x10);
-    for (j = 0; j < count; j++) {
-      matrix_transform_point(mtx, v + j * 3, &buf[j][0]);
-    }
-  }
-
-  *out = convex_polygon3d_clip_to_plane(count, &buf[0][0], (float *)0x002b35c4,
-                                        0x100, &buf[0][0], (uint32_t *)0,
-                                        0.0001f, (void *)0x1);
-  if (*out == -1) {
-    display_assert("result->vertex_count!=NONE",
-                   "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x485,
-                   true);
-    system_exit(-1);
-  }
-
-  if (sign == 1) {
-    idx = 0;
-    end = *out;
-  } else {
-    idx = (short)(*out - 1);
-    end = -1;
-  }
-  oidx = 0;
-  if (idx != end) {
-    do {
-      int e = (int)idx;
-      ooz = *(float *)0x00255e94 / buf[e][2];
-      if (ooz <= *(float *)0x002533c0) {
-        display_assert("ooz>0.f",
-                       "c:\\halo\\SOURCE\\structures\\structure_visibility.c",
-                       0x497, true);
-        system_exit(-1);
-      }
-      *(float *)(out + oidx * 4 + 2) = ooz * buf[e][0];
-      *(float *)(out + oidx * 4 + 4) = ooz * buf[e][1];
-      idx = (short)(idx + sign);
-      oidx = (short)(oidx + 1);
-    } while (idx != end);
-  }
-
-  return (short)(*out < 3);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc08, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl %%ecx, %%edi\n\t"
+      "movl %%edx, %%esi\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movw $0, (%%eax)\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movb 0x24(%%esi), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%esi)\n\t"
+      "fmuls (%%edi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0xc(%%edi)\n\t"
+      "fimull -0x4(%%ebp)\n\t"
+      "je .LFUN_00197310_1\n\t"
+      "negl %%eax\n\t"
+      "movl %%eax, 0x10(%%ebp)\n\t"
+      ".LFUN_00197310_1:\n\t"
+      "fld %%st(0)\n\t"
+      "fabs\n\t"
+      "fcompl 0x2674e8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00197310_2\n\t"
+      "popl %%edi\n\t"
+      "fstp %%st(0)\n\t"
+      "popl %%esi\n\t"
+      "movl $2, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00197310_2:\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00197310_11\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .LFUN_00197310_4\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "addl $0x10, %%edx\n\t"
+      "leal -0xc08(%%ebp), %%edi\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "subl %%ebx, %%edi\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "movzwl %%ax, %%ebx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00197310_3:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "leal (%%edi,%%esi,1), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[xfrmpt]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl $0xc, %%esi\n\t"
+      "decl %%ebx\n\t"
+      "jne .LFUN_00197310_3\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      ".LFUN_00197310_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x38d1b717\n\t"
+      "pushl $0\n\t"
+      "leal -0xc08(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x100\n\t"
+      "pushl $0x2b35c4\n\t"
+      "leal -0xc08(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c106960]\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "addl $0x20, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "movw %%ax, (%%esi)\n\t"
+      "jne .LFUN_00197310_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x485\n\t"
+      "pushl $0x2b36c8\n\t"
+      "pushl $0x2b37b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00197310_5:\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "cmpw $1, 0x10(%%ebp)\n\t"
+      "jne .LFUN_00197310_6\n\t"
+      "movw (%%esi), %%dx\n\t"
+      "movw %%dx, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_00197310_7\n\t"
+      ".LFUN_00197310_6:\n\t"
+      "movw (%%esi), %%di\n\t"
+      "decw %%di\n\t"
+      "movl $0xffffffff, -0x4(%%ebp)\n\t"
+      ".LFUN_00197310_7:\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpw -0x4(%%ebp), %%di\n\t"
+      "je .LFUN_00197310_10\n\t"
+      "jmp .LFUN_00197310_8\n\t"
+      "leal (%%esp), %%esp\n\t"
+      "nop\n\t"
+      ".LFUN_00197310_8:\n\t"
+      "flds 0x255e94\n\t"
+      "movswl %%di, %%esi\n\t"
+      "leal (%%esi,%%esi,2), %%esi\n\t"
+      "shll $2, %%esi\n\t"
+      "fdivs -0xc00(%%ebp,%%esi,1)\n\t"
+      "fsts -0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00197310_9\n\t"
+      "pushl $1\n\t"
+      "pushl $0x497\n\t"
+      "pushl $0x2b36c8\n\t"
+      "pushl $0x2b37a8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00197310_9:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "fmuls -0xc08(%%ebp,%%esi,1)\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "leal (%%ecx,%%eax,8), %%eax\n\t"
+      "addl %%edx, %%edi\n\t"
+      "incl %%ebx\n\t"
+      "cmpw -0x4(%%ebp), %%di\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls -0xc04(%%ebp,%%esi,1)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "jne .LFUN_00197310_8\n\t"
+      ".LFUN_00197310_10:\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpw $3, (%%edx)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "setl %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00197310_11:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e3c0] "m"(b197310_c18e3c0), [xfrmpt] "m"(b197310_xfrmpt), [c106960] "m"(b197310_c106960), [assert] "m"(b197310_assert), [exitfn] "m"(b197310_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00197310: clang naked draft required"
+#endif
+
 
 /* 0x1974f0 - resolve a structure-connection plane and dispatch the edge solve.
  *
@@ -5059,99 +5435,192 @@ void structures_cluster_marker_end(void)
   *(uint8_t *)0x4d92e1 = 0;
 }
 
-/* structure_render_surface_from_point_and_leaf (0x198580)
- *
- * Walks the surfaces of one BSP leaf (leaf_index into the scenario's leaf tag
- * block at +0xe0, element 0x10; low 31 bits used as index) looking for one
- * whose material's first field matches material_type.  For each surface whose
- * material reference is valid (!= -1) and matches, it resolves the surface's
- * triangle (indices tag block at +0xf8, element 6 = 3 uint16), finds the
- * geometry material/section (via structure_bsp_find_material_for_surface, which
- * writes out_collection_index / out_geometry_index), fetches the three vertex
- * positions (vertex stride 0x20, vertices base at section+0xf8) into three
- * vec3 buffers, and hands them to FUN_0010d830 (ray/point-vs-triangle test)
- * along with the caller's context and the out_u/out_v pointers.  On the first
- * triangle that passes, it stores the surface index into *out_surface and
- * returns 1; otherwise 0.
- *
- * Confirmed from disassembly at 0x198580:
- *   - param_2 masked with 0x7fffffff before use as a tag-block index (§7
- *     datum/handle low-word extraction).
- *   - CDECL arg mis-group (§7): Ghidra rendered the material lookup as a 5-arg
- *     call + a 1-arg call.  The disasm (6 pushes, two ADD ESP,0xc) proves TWO
- *     3-arg tag_block_get_element calls: first resolves the structure_bsp
- *     reference (scenario+0xb0, index 0, size 0x60); its RESULT is the block
- *     base of the second call (index surface_ref[1], element size 0xc).
- *   - Only surface modes 0 and 1 (short at section+0xb0) proceed to rasterize.
- *   - Return is a bool in AL only (Ghidra's CONCAT31 / (x & 0xffffff00) high
- *     bytes are garbage EAX residue, not part of the value).
- *   - FUN_001935f0 (structure_bsp_find_material_for_surface) is invoked with 4
- *     cdecl args and writes the two short OUT params, which are read back
- *     immediately.
- */
-char structure_render_surface_from_point_and_leaf(
-  void *render_context, uint32_t leaf_index, int material_type,
-  int16_t *out_collection_index, int16_t *out_geometry_index,
-  int32_t *out_surface, float *out_u, float *out_v)
+/* structure_render_surface_from_point_and_leaf (0x198580) — XBE naked draft (batch 82). */
+#if defined(__clang__)
+static void * (*const b198580_c18e3c0)(void) = scenario_get;
+static void *(*const b198580_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b198580_c1935f0)(void *scenario, int surface_index, int16_t *out_collection_index, int16_t *out_geometry_index) = structure_bsp_find_material_for_surface;
+static void (*const b198580_c180500)(float *param_1, float *param_2) = FUN_00180500;
+static char (*const b198580_c10d830)(float *p1, float *p2, float *p3, float *p4, float *out_u, float *out_v) = FUN_0010d830;
+
+__attribute__((naked, noinline))
+char structure_render_surface_from_point_and_leaf(void *render_context __attribute__((unused)), uint32_t leaf_index __attribute__((unused)), int material_type __attribute__((unused)), int16_t *out_collection_index __attribute__((unused)), int16_t *out_geometry_index __attribute__((unused)), int32_t *out_surface __attribute__((unused)), float *out_u __attribute__((unused)), float *out_v __attribute__((unused)))
 {
-  void *scenario;
-  char *leaf;
-  int start;
-  int end;
-  int surface;
-  int *surface_ref;
-  void *structure_bsp;
-  int *material;
-  uint16_t *tri;
-  char *collection;
-  char *section;
-  char *vertices;
-  float v0[3];
-  float v1[3];
-  float v2[3];
-
-  scenario = scenario_get();
-  leaf = tag_block_get_element((char *)scenario + 0xe0,
-                               (int)(leaf_index & 0x7fffffff), 0x10);
-  start = *(int *)(leaf + 0xc);
-  end = *(int16_t *)(leaf + 0xa) + start;
-  if (end <= start) {
-    return 0;
-  }
-
-  surface = start;
-  do {
-    surface_ref = tag_block_get_element((char *)scenario + 0xec, surface, 8);
-    if (surface_ref[1] != -1) {
-      structure_bsp = tag_block_get_element((char *)scenario + 0xb0, 0, 0x60);
-      material = tag_block_get_element(structure_bsp, surface_ref[1], 0xc);
-      if (*material == material_type) {
-        tri = tag_block_get_element((char *)scenario + 0xf8, *surface_ref, 6);
-        structure_bsp_find_material_for_surface(
-          scenario, *surface_ref, out_collection_index, out_geometry_index);
-        collection = tag_block_get_element((char *)scenario + 0x104,
-                                           (int)*out_collection_index, 0x20);
-        section = tag_block_get_element(collection + 0x14,
-                                        (int)*out_geometry_index, 0x100);
-        if (*(int16_t *)(section + 0xb0) == 0 ||
-            *(int16_t *)(section + 0xb0) == 1) {
-          vertices = *(char **)(section + 0xf8);
-          FUN_00180500((float *)(vertices + (uint32_t)tri[0] * 0x20), v0);
-          FUN_00180500((float *)(vertices + (uint32_t)tri[1] * 0x20), v1);
-          FUN_00180500((float *)(vertices + (uint32_t)tri[2] * 0x20), v2);
-          if (FUN_0010d830((float *)render_context, v0, v1, v2, out_u, out_v) !=
-              0) {
-            *out_surface = *surface_ref;
-            return 1;
-          }
-        }
-      }
-    }
-    surface = surface + 1;
-  } while (surface < end);
-
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x2c, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl $0x10\n\t"
+      "andl $0x7fffffff, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0xe0(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xc(%%eax), %%esi\n\t"
+      "movswl 0xa(%%eax), %%edx\n\t"
+      "addl %%esi, %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorb %%cl, %%cl\n\t"
+      "cmpl %%edx, %%esi\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "jge .Lstructure_render_surface_from_point_and_leaf_6\n\t"
+      ".Lstructure_render_surface_from_point_and_leaf_1:\n\t"
+      "pushl $8\n\t"
+      "leal 0xec(%%edi), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x4(%%ebx), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lstructure_render_surface_from_point_and_leaf_4\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x60\n\t"
+      "leal 0xb0(%%edi), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "jne .Lstructure_render_surface_from_point_and_leaf_4\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "pushl $6\n\t"
+      "pushl %%edx\n\t"
+      "leal 0xf8(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x18(%%ebp), %%esi\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, 0xc(%%ebp)\n\t"
+      "call *%[c1935f0]\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movswl (%%eax), %%ecx\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x104(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "movswl (%%esi), %%ecx\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x14, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movw 0xb0(%%esi), %%ax\n\t"
+      "addl $0x34, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lstructure_render_surface_from_point_and_leaf_2\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .Lstructure_render_surface_from_point_and_leaf_3\n\t"
+      ".Lstructure_render_surface_from_point_and_leaf_2:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movzwl (%%eax), %%ecx\n\t"
+      "movl 0xf8(%%esi), %%eax\n\t"
+      "leal -0x2c(%%ebp), %%edx\n\t"
+      "shll $5, %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c180500]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movzwl 0x2(%%eax), %%ecx\n\t"
+      "movl 0xf8(%%esi), %%eax\n\t"
+      "leal -0x20(%%ebp), %%edx\n\t"
+      "shll $5, %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c180500]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movzwl 0x4(%%eax), %%ecx\n\t"
+      "movl 0xf8(%%esi), %%eax\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "shll $5, %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c180500]\n\t"
+      "movl 0x24(%%ebp), %%edx\n\t"
+      "movl 0x20(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "leal -0x20(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x2c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c10d830]\n\t"
+      "addl $0x30, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lstructure_render_surface_from_point_and_leaf_5\n\t"
+      ".Lstructure_render_surface_from_point_and_leaf_3:\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      ".Lstructure_render_surface_from_point_and_leaf_4:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movswl 0xa(%%eax), %%edx\n\t"
+      "movl 0xc(%%eax), %%ecx\n\t"
+      "incl %%esi\n\t"
+      "addl %%ecx, %%edx\n\t"
+      "cmpl %%edx, %%esi\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "jl .Lstructure_render_surface_from_point_and_leaf_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lstructure_render_surface_from_point_and_leaf_5:\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl 0x1c(%%ebp), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lstructure_render_surface_from_point_and_leaf_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%cl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e3c0] "m"(b198580_c18e3c0), [elem] "m"(b198580_elem), [c1935f0] "m"(b198580_c1935f0), [c180500] "m"(b198580_c180500), [c10d830] "m"(b198580_c10d830)
+      : "memory");
 }
+#else
+#error "structure_render_surface_from_point_and_leaf: clang naked draft required"
+#endif
+
 
 /* Resolve the planar-fog definition index for a BSP cluster/leaf.
  * index == -1 returns the -1 sentinel. When flag == 0 the fog reference is
