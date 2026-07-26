@@ -1263,6 +1263,8 @@ def main() -> int:
         ("set_game_connection", 0xfff70, 0xfff7f),
         ("items_dispose_from_old_map", 0xf6740, 0xf674f),
         ("ai_communication_dispose_from_old_map", 0x42ca0, 0x42cad),
+        # gameplay wave 103 (2026-07-26) — final Capstone weak
+        ("FUN_001954d0", 0x1954d0, 0x1954dd),
     ]
 
     xbe = Xbe.from_file(args.xbe)
