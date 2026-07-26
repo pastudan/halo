@@ -2355,29 +2355,11 @@ char FUN_000fba00(short value, short threshold)
   return value >= threshold;
 }
 
-/* FUN_000fbcf0 (0xfbcf0) — XBE naked draft (batch 171). */
-#if defined(__clang__)
-static float (*const bfbcf0_c1d9e70)(float base, float exponent) = FUN_001d9e70;
-
-__attribute__((naked, noinline))
-float FUN_000fbcf0(float base __attribute__((unused)), float exponent __attribute__((unused)))
+/* FUN_000fbcf0 (0xfbcf0) — readable C lift. */
+float FUN_000fbcf0(float base, float exponent)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "popl %%ebp\n\t"
-      "jmp *%[c1d9e70]\n\t"
-      :
-      : [c1d9e70] "m"(bfbcf0_c1d9e70)
-      : "memory");
+  return FUN_001d9e70(base, exponent);
 }
-#else
-#error "FUN_000fbcf0: clang naked draft required"
-#endif
-
-
 /* 0xfbd10 — initialize magazines/triggers for a newly created weapon. */
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((noinline))

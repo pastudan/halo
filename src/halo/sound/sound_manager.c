@@ -3351,41 +3351,15 @@ void FUN_001c8ee0(void *pitch_range)
     *(unsigned int *)(p + 0x34) = 1u << p[0x38];
 }
 
-/* FUN_001cb1a0 (0x1cb1a0) — XBE naked draft (batch 277). */
-#if defined(__clang__)
-static short (*const b1cb1a0_c1c9b40)(int channel_index) = sound_dsound_channel_resolve;
-static void (*const b1cb1a0_c1cb0c0)(int channel) = FUN_001cb0c0;
-
-__attribute__((naked, noinline))
-void FUN_001cb1a0(int channel_index __attribute__((unused)), int param __attribute__((unused)))
+/* FUN_001cb1a0 (0x1cb1a0) — readable C lift. */
+void FUN_001cb1a0(int channel_index, int param)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "call *%[c1c9b40]\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "je .LFUN_001cb1a0_1\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1cb0c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_001cb1a0_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c9b40] "m"(b1cb1a0_c1c9b40), [c1cb0c0] "m"(b1cb1a0_c1cb0c0)
-      : "memory");
+  short ch;
+  (void)param;
+  ch = sound_dsound_channel_resolve(channel_index);
+  if (ch != (short)0xffff)
+    FUN_001cb0c0((int)ch);
 }
-#else
-#error "FUN_001cb1a0: clang naked draft required"
-#endif
-
-
 /* FUN_001cb1d0 (0x1cb1d0) — XBE naked draft (batch 288). */
 #if defined(__clang__)
 static short (*const b1cb1d0_c1c9b40)(int channel_index) = sound_dsound_channel_resolve;
@@ -5396,58 +5370,21 @@ void sound_stop_impulse_by_source_and_definition(int source __attribute__((unuse
 #endif
 
 
-/* sound_stop_all (0x1cd540) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-static int (*const b1cd540_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void (*const b1cd540_c1cca60)(int sound_handle) = sound_stop_channel;
-static void (*const b1cd540_c119720)(data_t *data) = data_make_valid;
-
-__attribute__((naked, noinline))
+/* sound_stop_all (0x1cd540) — readable C lift. */
 void sound_stop_all(void)
 {
-  __asm__ volatile(
-      "movb 0x4eaf40, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_stop_all_3\n\t"
-      "movl 0x4fdba4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .Lsound_stop_all_2\n\t"
-      ".Lsound_stop_all_1:\n\t"
-      "call *%[c1cca60]\n\t"
-      "movl 0x4fdba4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "jne .Lsound_stop_all_1\n\t"
-      ".Lsound_stop_all_2:\n\t"
-      "movl 0x4fdba0, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119720]\n\t"
-      "movl 0x4eaf48, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "call *0x2c(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      ".Lsound_stop_all_3:\n\t"
-      "movl $0, 0x4eaf44\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(b1cd540_c1198f0), [c1cca60] "m"(b1cd540_c1cca60), [c119720] "m"(b1cd540_c119720)
-      : "memory");
+  int idx;
+  if (*(unsigned char *)0x4eaf40) {
+    idx = data_next_index(*(data_t **)0x4fdba4, -1);
+    while (idx != -1) {
+      sound_stop_channel(idx);
+      idx = data_next_index(*(data_t **)0x4fdba4, idx);
+    }
+    data_make_valid(*(data_t **)0x4fdba0);
+    ((void (*)(void))(*(void **)(*(unsigned int *)0x4eaf48 + 0x2c)))();
+  }
+  *(unsigned int *)0x4eaf44 = 0;
 }
-#else
-#error "sound_stop_all: clang naked draft required"
-#endif
-
-
 /* FUN_001cd690 (0x1cd690) — XBE naked draft (batch 268). */
 #if defined(__clang__)
 static bool (*const b1cd690_cba5e0)(void) = players_are_all_dead;

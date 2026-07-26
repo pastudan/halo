@@ -24921,7 +24921,8 @@
         {
           "addr": "0x1cb1a0",
           "decl": "void FUN_001cb1a0(int channel_index, int param);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001cb1a0"
         },
         {
           "addr": "0x1cb1d0",
@@ -25000,8 +25001,9 @@
         },
         {
           "addr": "0x1cc2f0",
-          "decl": "void FUN_001cc2f0(int sound_handle@<eax>, int tag_index@<esi>);",
-          "ported": false
+          "decl": "void FUN_001cc2f0(int sound_handle, int tag_index);",
+          "ported": false,
+          "name": "FUN_001cc2f0"
         },
         {
           "addr": "0x1cc440",
@@ -25046,7 +25048,8 @@
         {
           "addr": "0x1cd540",
           "decl": "void sound_stop_all(void);",
-          "ported": false
+          "ported": true,
+          "name": "sound_stop_all"
         },
         {
           "addr": "0x1cd690",
@@ -33657,7 +33660,8 @@
         {
           "addr": "0xfbcf0",
           "decl": "float FUN_000fbcf0(float base, float exponent);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000fbcf0"
         },
         {
           "addr": "0xfbd10",
