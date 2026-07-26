@@ -11005,12 +11005,12 @@
         {
           "addr": "0xc2120",
           "decl": "void FUN_000c2120(short function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc2140",
           "decl": "void FUN_000c2140(short function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc2160",
@@ -39145,7 +39145,7 @@
         {
           "addr": "0x139300",
           "decl": "char lights_enable(char active);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x139350",
