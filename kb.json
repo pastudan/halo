@@ -23563,7 +23563,8 @@
         {
           "addr": "0x1c20d0",
           "decl": "char FUN_001c20d0(int file_index, wchar_t *out_name);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001c20d0"
         },
         {
           "addr": "0x1c2110",
