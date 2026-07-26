@@ -1291,6 +1291,19 @@ def main() -> int:
         ("particle_new", 0xa1fd0, 0xa2564),
         ("actor_emotion_update", 0x32cb0, 0x3330e),
         ("object_new", 0x143c80, 0x144238),
+        # gameplay wave 106 (2026-07-26) — UI/AI/camera Capstone weaks
+        ("FUN_000edfb0", 0xedfb0, 0xee4a4),
+        ("FUN_000ec2c0", 0xec2c0, 0xec7df),
+        ("ui_widget_handle_event_handler", 0xe6ed0, 0xe73aa),
+        ("FUN_000d9960", 0xd9960, 0xd9ead),
+        ("FUN_000eba70", 0xeba70, 0xebfba),
+        ("FUN_000bb670", 0xbb670, 0xbbb75),
+        ("editor_camera_flying_update", 0x88260, 0x887df),
+        ("ai_disconnect_from_structure_bsp", 0x40a80, 0x40f74),
+        ("ai_handle_editing", 0x41e80, 0x4238b),
+        ("FUN_00085c80", 0x85c80, 0x86153),
+        ("network_pregame_status_screen_update", 0xf1ed0, 0xf2388),
+        ("player_effect_get_camera_effect_matrix", 0xa3370, 0xa3887),
     ]
 
     xbe = Xbe.from_file(args.xbe)
