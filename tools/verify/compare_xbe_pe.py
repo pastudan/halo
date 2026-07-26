@@ -706,6 +706,25 @@ def main() -> int:
         ("FUN_001a9f20", 0x1a9f20, 0x1aa071),
         ("FUN_00136150", 0x136150, 0x1362c4),
         ("FUN_001a1a10", 0x1a1a10, 0x1a1b8b),
+        # gameplay wave 61 (2026-07-26)
+        (
+            "virtual_keyboard_process_input",
+            0xf63f0,
+            0xf66ea,
+            [(0xf66ec, 0xf673c)],
+        ),
+        ("FUN_00145490", 0x145490, 0x145551),
+        ("FUN_00134ae0", 0x134ae0, 0x134bd1),
+        ("FUN_001a8550", 0x1a8550, 0x1a868f),
+        ("FUN_001a7ea0", 0x1a7ea0, 0x1a7f71),
+        ("FUN_001a6d10", 0x1a6d10, 0x1a6e19),
+        ("FUN_000adf70", 0xadf70, 0xae0a0),
+        ("FUN_001a9c90", 0x1a9c90, 0x1a9d99),
+        ("FUN_0013a5f0", 0x13a5f0, 0x13a738),
+        ("unit_try_and_exit_seat", 0x1b3580, 0x1b3690),
+        ("FUN_001390d0", 0x1390d0, 0x1391d9),
+        ("unit_place", 0x1b24d0, 0x1b2610),
+        ("FUN_0013aa10", 0x13aa10, 0x13ab20),
     ]
 
     xbe = Xbe.from_file(args.xbe)

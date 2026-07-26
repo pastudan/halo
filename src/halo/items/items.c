@@ -494,154 +494,296 @@ struct virtual_keyboard_event {
                     button id (low byte) + pressed flag (byte +1) */
 };
 
+/* virtual_keyboard_process_input (0xf63f0) — XBE naked draft (batch 61). */
+#if defined(__clang__)
+static unsigned int (*const bf63f0_c8e370)(void) = system_milliseconds;
+static bool (*const bf63f0_cdc250)(void *event_data, int16_t player_index) = event_manager_get_next_event;
+static void (*const bf63f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bf63f0_exitfn)(int) = system_exit;
+static void *(*const bf63f0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const bf63f0_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
+static void (*const bf63f0_cf5f30)(void) = FUN_000f5f30;
+static char (*const bf63f0_cf5660)(void) = FUN_000f5660;
+static char (*const bf63f0_cf56b0)(void) = FUN_000f56b0;
+static char (*const bf63f0_cf5700)(void) = FUN_000f5700;
+static char (*const bf63f0_cf5750)(void) = FUN_000f5750;
+static char (*const bf63f0_cf5fb0)(void) = FUN_000f5fb0;
+static char (*const bf63f0_cf57a0)(void) = FUN_000f57a0;
+
+__attribute__((naked, noinline))
 void virtual_keyboard_process_input(void)
 {
-  struct virtual_keyboard_event event;
-  int now_ms;
-  int action; /* selected move/action code, -1 = none */
-  int timer_tmp; /* value stored back into repeat_timer via the shared tail */
-  char moved; /* nonzero once a handler accepted the move */
-  char pressed; /* button pressed-flag byte */
-
-  now_ms = system_milliseconds();
-  action = -1;
-  moved = 0;
-
-  if (!event_manager_get_next_event(&event, -1))
-    return;
-
-  do {
-    if (event.type == 1) {
-      /* analog stick: cardinal only at full deflection */
-      if ((short)(event.data >> 16) == 0x7fff) {
-        action = 2;
-      } else if ((short)(event.data >> 16) == -0x8000) {
-        action = 3;
-      } else if ((short)event.data == -0x8000) {
-        action = 0;
-      } else {
-        timer_tmp = *(int *)0x46cf58;
-        if ((short)event.data == 0x7fff)
-          goto set_dir_right;
-      }
-    } else if (event.type == 3) {
-      /* button: high byte = pressed flag, low byte = button id */
-      pressed = (char)(event.data >> 8);
-      switch (event.data & 0xff) {
-      case 0: /* A: select current character */
-        if (pressed == 1)
-          action = 4;
-        break;
-      case 1: /* B / start: back */
-      case 0xd:
-        if (pressed == 1)
-          action = 5;
-        break;
-      case 2: /* X: accept / clear */
-        if (pressed == 1) {
-          if (*(unsigned char *)0x46cf07 == 1) {
-            if (*(short *)0x46cefc == 0)
-              display_assert("virtual_keyboard_globals.buffer_size>0",
-                             "c:\\halo\\SOURCE\\interface\\virtual_keyboard.c",
-                             0x27a, true);
-            csmemset(*(char **)0x46cf08, 0, (unsigned int)*(short *)0x46cefc);
-            *(char **)0x46cf0c = *(char **)0x46cf08;
-            *(unsigned char *)0x46cf07 = 0;
-            ui_play_audio_feedback_sound(1);
-            moved = 1;
-          } else {
-            FUN_000f5f30();
-            moved = 1;
-          }
-        }
-        break;
-      case 6: /* cursor left */
-        if (pressed == 1) {
-          if (*(char **)0x46cf08 < *(char **)0x46cf0c)
-            *(char **)0x46cf0c -= 1;
-        cursor_moved:
-          *(unsigned char *)0x46cf07 = 0;
-          ui_play_audio_feedback_sound(1);
-          moved = 1;
-        }
-        break;
-      case 7: /* cursor right */
-        if (pressed == 1) {
-          if (**(char **)0x46cf0c != 0)
-            *(char **)0x46cf0c += 1;
-          goto cursor_moved;
-        }
-        break;
-      case 8: /* dpad up (auto-repeat gated) */
-        if (*(short *)0x46cefe != 2 ||
-            0xf9 < (unsigned int)(now_ms - *(int *)0x46cf58) || pressed == 1) {
-          action = 2;
-          *(int *)0x46cf58 = now_ms;
-        }
-        break;
-      case 9: /* dpad down */
-        if (*(short *)0x46cefe != 3 ||
-            0xf9 < (unsigned int)(now_ms - *(int *)0x46cf58) || pressed == 1) {
-          action = 3;
-          *(int *)0x46cf58 = now_ms;
-        }
-        break;
-      case 10: /* dpad left */
-        if (*(short *)0x46cefe != 0 ||
-            0xf9 < (unsigned int)(now_ms - *(int *)0x46cf58) || pressed == 1) {
-          action = 0;
-          *(int *)0x46cf58 = now_ms;
-        }
-        break;
-      case 0xb: /* dpad right */
-        timer_tmp = now_ms;
-        if (*(short *)0x46cefe != 1 ||
-            0xf9 < (unsigned int)(now_ms - *(int *)0x46cf58) || pressed == 1) {
-        set_dir_right:
-          *(int *)0x46cf58 = timer_tmp;
-          action = 1;
-        }
-        break;
-      case 0xc: /* home / reset to origin */
-        if (pressed == 1) {
-          *(short *)0x46cef8 = 0;
-          *(short *)0x46cefa = 0;
-          action = 4;
-        }
-        break;
-      }
-    }
-  } while (event_manager_get_next_event(&event, -1));
-
-  if (action != -1) {
-    *(short *)0x46cf00 = (short)(char)((
-      char *)0x28a790)[(int)*(short *)0x46cefa + *(short *)0x46cef8 * 0xb];
-    switch (action) {
-    case 0:
-      moved = FUN_000f5660();
-      break;
-    case 1:
-      moved = FUN_000f56b0();
-      break;
-    case 2:
-      moved = FUN_000f5700();
-      break;
-    case 3:
-      moved = FUN_000f5750();
-      break;
-    case 4:
-      moved = FUN_000f5fb0();
-      break;
-    case 5:
-      moved = FUN_000f57a0();
-      break;
-    }
-    if (moved == 1) {
-      *(short *)0x46cefe = (short)action;
-      *(int *)0x46cf10 = now_ms;
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c8e370]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "orl $0xffffffff, %%esi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[cdc250]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lvirtual_keyboard_process_input_34\n\t"
+      "jmp .Lvirtual_keyboard_process_input_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lvirtual_keyboard_process_input_1:\n\t"
+      "movswl -0x8(%%ebp), %%eax\n\t"
+      "decl %%eax\n\t"
+      "je .Lvirtual_keyboard_process_input_20\n\t"
+      "movl $2, %%edx\n\t"
+      "subl %%edx, %%eax\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movzbl %%al, %%ecx\n\t"
+      "cmpl $0xd, %%ecx\n\t"
+      "ja .Lvirtual_keyboard_process_input_25\n\t"
+      "jmp *.Lvirtual_keyboard_process_input_jt0(,%%ecx,4)\n\t"
+      ".Lvirtual_keyboard_process_input_2:\n\t"
+      "cmpb $1, %%ah\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      "movl $4, %%esi\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_3:\n\t"
+      "cmpb $1, %%ah\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      "movl $5, %%esi\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_4:\n\t"
+      "cmpw %%dx, 0x46cefe\n\t"
+      "jne .Lvirtual_keyboard_process_input_5\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "subl 0x46cf58, %%ecx\n\t"
+      "cmpl $0xfa, %%ecx\n\t"
+      "jae .Lvirtual_keyboard_process_input_5\n\t"
+      "cmpb $1, %%ah\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_5:\n\t"
+      "movl %%edx, %%esi\n\t"
+      "movl %%edi, 0x46cf58\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_6:\n\t"
+      "cmpw $0, 0x46cefe\n\t"
+      "jne .Lvirtual_keyboard_process_input_7\n\t"
+      "movl 0x46cf58, %%ecx\n\t"
+      "movl %%edi, %%edx\n\t"
+      "subl %%ecx, %%edx\n\t"
+      "cmpl $0xfa, %%edx\n\t"
+      "jae .Lvirtual_keyboard_process_input_7\n\t"
+      "cmpb $1, %%ah\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_7:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movl %%edi, 0x46cf58\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_8:\n\t"
+      "cmpw $3, 0x46cefe\n\t"
+      "jne .Lvirtual_keyboard_process_input_9\n\t"
+      "movl 0x46cf58, %%edx\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "subl %%edx, %%ecx\n\t"
+      "cmpl $0xfa, %%ecx\n\t"
+      "jae .Lvirtual_keyboard_process_input_9\n\t"
+      "cmpb $1, %%ah\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_9:\n\t"
+      "movl $3, %%esi\n\t"
+      "movl %%edi, 0x46cf58\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_10:\n\t"
+      "cmpw $1, 0x46cefe\n\t"
+      "jne .Lvirtual_keyboard_process_input_11\n\t"
+      "movl 0x46cf58, %%ecx\n\t"
+      "movl %%edi, %%edx\n\t"
+      "subl %%ecx, %%edx\n\t"
+      "cmpl $0xfa, %%edx\n\t"
+      "jae .Lvirtual_keyboard_process_input_11\n\t"
+      "cmpb $1, %%ah\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_11:\n\t"
+      "movl %%edi, 0x46cf58\n\t"
+      "jmp .Lvirtual_keyboard_process_input_24\n\t"
+      ".Lvirtual_keyboard_process_input_12:\n\t"
+      "cmpb $1, %%ah\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw %%ax, 0x46cef8\n\t"
+      "movw %%ax, 0x46cefa\n\t"
+      "movl $4, %%esi\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_13:\n\t"
+      "cmpb $1, %%ah\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      "movb 0x46cf07, %%al\n\t"
+      "cmpb %%ah, %%al\n\t"
+      "jne .Lvirtual_keyboard_process_input_15\n\t"
+      "cmpw $0, 0x46cefc\n\t"
+      "ja .Lvirtual_keyboard_process_input_14\n\t"
+      "pushl $1\n\t"
+      "pushl $0x27a\n\t"
+      "pushl $0x28a854\n\t"
+      "pushl $0x28aa58\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lvirtual_keyboard_process_input_14:\n\t"
+      "movzwl 0x46cefc, %%eax\n\t"
+      "movl 0x46cf08, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x46cf08, %%edx\n\t"
+      "pushl $1\n\t"
+      "movl %%edx, 0x46cf0c\n\t"
+      "movb $0, 0x46cf07\n\t"
+      "call *%[ce5ab0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_15:\n\t"
+      "call *%[cf5f30]\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_16:\n\t"
+      "cmpb $1, %%ah\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      "movl 0x46cf0c, %%eax\n\t"
+      "cmpl 0x46cf08, %%eax\n\t"
+      "movb $0, 0x46cf07\n\t"
+      "jbe .Lvirtual_keyboard_process_input_18\n\t"
+      "subl %%edx, %%eax\n\t"
+      ".Lvirtual_keyboard_process_input_17:\n\t"
+      "movl %%eax, 0x46cf0c\n\t"
+      ".Lvirtual_keyboard_process_input_18:\n\t"
+      "pushl $1\n\t"
+      "call *%[ce5ab0]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_19:\n\t"
+      "cmpb $1, %%ah\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      "movl 0x46cf0c, %%ecx\n\t"
+      "movb $0, 0x46cf07\n\t"
+      "cmpw $0, (%%ecx)\n\t"
+      "je .Lvirtual_keyboard_process_input_18\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "addl %%edx, %%eax\n\t"
+      "jmp .Lvirtual_keyboard_process_input_17\n\t"
+      ".Lvirtual_keyboard_process_input_20:\n\t"
+      "movw -0x2(%%ebp), %%ax\n\t"
+      "cmpw $0x7fff, %%ax\n\t"
+      "jne .Lvirtual_keyboard_process_input_21\n\t"
+      "movl $2, %%esi\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_21:\n\t"
+      "cmpw $0x8000, %%ax\n\t"
+      "jne .Lvirtual_keyboard_process_input_22\n\t"
+      "movl $3, %%esi\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_22:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "cmpw $0x8000, %%ax\n\t"
+      "jne .Lvirtual_keyboard_process_input_23\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "jmp .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_23:\n\t"
+      "cmpw $0x7fff, %%ax\n\t"
+      "jne .Lvirtual_keyboard_process_input_25\n\t"
+      ".Lvirtual_keyboard_process_input_24:\n\t"
+      "movl $1, %%esi\n\t"
+      ".Lvirtual_keyboard_process_input_25:\n\t"
+      "leal -0x8(%%ebp), %%edx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[cdc250]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lvirtual_keyboard_process_input_1\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lvirtual_keyboard_process_input_34\n\t"
+      "movswl 0x46cef8, %%eax\n\t"
+      "movswl 0x46cefa, %%ecx\n\t"
+      "imull $0xb, %%eax, %%eax\n\t"
+      "cmpl $5, %%esi\n\t"
+      "movsbw 0x28a790(%%eax,%%ecx,1), %%dx\n\t"
+      "movw %%dx, 0x46cf00\n\t"
+      "ja .Lvirtual_keyboard_process_input_33\n\t"
+      "jmp *.Lvirtual_keyboard_process_input_jt1(,%%esi,4)\n\t"
+      ".Lvirtual_keyboard_process_input_26:\n\t"
+      "call *%[cf5660]\n\t"
+      "jmp .Lvirtual_keyboard_process_input_32\n\t"
+      ".Lvirtual_keyboard_process_input_27:\n\t"
+      "call *%[cf56b0]\n\t"
+      "jmp .Lvirtual_keyboard_process_input_32\n\t"
+      ".Lvirtual_keyboard_process_input_28:\n\t"
+      "call *%[cf5700]\n\t"
+      "jmp .Lvirtual_keyboard_process_input_32\n\t"
+      ".Lvirtual_keyboard_process_input_29:\n\t"
+      "call *%[cf5750]\n\t"
+      "jmp .Lvirtual_keyboard_process_input_32\n\t"
+      ".Lvirtual_keyboard_process_input_30:\n\t"
+      "call *%[cf5fb0]\n\t"
+      "jmp .Lvirtual_keyboard_process_input_32\n\t"
+      ".Lvirtual_keyboard_process_input_31:\n\t"
+      "call *%[cf57a0]\n\t"
+      ".Lvirtual_keyboard_process_input_32:\n\t"
+      "movb %%al, %%bl\n\t"
+      ".Lvirtual_keyboard_process_input_33:\n\t"
+      "cmpb $1, %%bl\n\t"
+      "jne .Lvirtual_keyboard_process_input_34\n\t"
+      "movl %%edi, 0x46cf10\n\t"
+      "movw %%si, 0x46cefe\n\t"
+      ".Lvirtual_keyboard_process_input_34:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lvirtual_keyboard_process_input_jt0:\n\t"
+      ".long .Lvirtual_keyboard_process_input_2\n\t"
+      ".long .Lvirtual_keyboard_process_input_3\n\t"
+      ".long .Lvirtual_keyboard_process_input_13\n\t"
+      ".long .Lvirtual_keyboard_process_input_25\n\t"
+      ".long .Lvirtual_keyboard_process_input_25\n\t"
+      ".long .Lvirtual_keyboard_process_input_25\n\t"
+      ".long .Lvirtual_keyboard_process_input_16\n\t"
+      ".long .Lvirtual_keyboard_process_input_19\n\t"
+      ".long .Lvirtual_keyboard_process_input_4\n\t"
+      ".long .Lvirtual_keyboard_process_input_8\n\t"
+      ".long .Lvirtual_keyboard_process_input_6\n\t"
+      ".long .Lvirtual_keyboard_process_input_10\n\t"
+      ".long .Lvirtual_keyboard_process_input_12\n\t"
+      ".long .Lvirtual_keyboard_process_input_3\n\t"
+      ".text\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lvirtual_keyboard_process_input_jt1:\n\t"
+      ".long .Lvirtual_keyboard_process_input_26\n\t"
+      ".long .Lvirtual_keyboard_process_input_27\n\t"
+      ".long .Lvirtual_keyboard_process_input_28\n\t"
+      ".long .Lvirtual_keyboard_process_input_29\n\t"
+      ".long .Lvirtual_keyboard_process_input_30\n\t"
+      ".long .Lvirtual_keyboard_process_input_31\n\t"
+      ".text\n\t"
+      :
+      : [c8e370] "m"(bf63f0_c8e370), [cdc250] "m"(bf63f0_cdc250), [assert] "m"(bf63f0_assert), [exitfn] "m"(bf63f0_exitfn), [memset] "m"(bf63f0_memset), [ce5ab0] "m"(bf63f0_ce5ab0), [cf5f30] "m"(bf63f0_cf5f30), [cf5660] "m"(bf63f0_cf5660), [cf56b0] "m"(bf63f0_cf56b0), [cf5700] "m"(bf63f0_cf5700), [cf5750] "m"(bf63f0_cf5750), [cf5fb0] "m"(bf63f0_cf5fb0), [cf57a0] "m"(bf63f0_cf57a0)
+      : "memory");
 }
+#else
+#error "virtual_keyboard_process_input: clang naked draft required"
+#endif
+
 
 /* items_dispose_from_old_map (0xf6740)
  * Guarded per-frame virtual-keyboard input pump. If the

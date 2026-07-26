@@ -2469,49 +2469,126 @@ float FUN_00138f10(float base, float a, float b, float t1, float t2)
   return base + (a - base) * t1 + (b - base) * t2;
 }
 
-/*
- * FUN_001390d0 — Sample a material lightmap at a barycentrically interpolated
- * UV position and write the result as float RGB.
- *
- * Reads UV coordinates from three environment vertices (indexed by
- * indices[0..2]), interpolates using barycentric weights bary_u/bary_v, samples
- * the 2D bitmap at that position, and converts the resulting 32-bit pixel to
- * float RGB in out_rgb.
- *
- * Asserts material vertices are environment_uncompressed (0) or compressed (1).
- * Source: c:\halo\SOURCE\objects\object_lights.c:0xa7
- *
- * 0x1390d0 / damage.obj
- */
-void FUN_001390d0(int material, int bitmap_ref, uint16_t *indices, float bary_u,
-                  float bary_v, float *out_rgb)
+/* FUN_001390d0 (0x1390d0) — XBE naked draft (batch 61). */
+#if defined(__clang__)
+static void (*const b1390d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1390d0_exitfn)(int) = system_exit;
+static void (*const b1390d0_c1805f0)(int param_1, float *param_2) = FUN_001805f0;
+static unsigned int (*const b1390d0_c7dad0)(int bitmap_ref, float *uv, float level, float *out) = bitmap_2d_get_pixel;
+static void (*const b1390d0_c7afb0)(unsigned int color, float *dst) = pixel32_to_real_rgb_color;
+static char (*const b1390d0_cab9c0)(void) = FUN_000ab9c0;
+
+__attribute__((naked, noinline))
+void FUN_001390d0(int material __attribute__((unused)), int bitmap_ref __attribute__((unused)), uint16_t *indices __attribute__((unused)), float bary_u __attribute__((unused)), float bary_v __attribute__((unused)), float *out_rgb __attribute__((unused)))
 {
-  float v0[2];
-  float v1[2];
-  float v2[2];
-  float uv[2];
-
-  if (*(int16_t *)(material + 0xb0) != 0 &&
-      *(int16_t *)(material + 0xb0) != 1) {
-    display_assert(
-      "material->vertices.type==_rasterizer_vertex_type_environment_"
-      "uncompressed"
-      " || "
-      "material->vertices.type==_rasterizer_vertex_type_environment_compressed",
-      "c:\\halo\\SOURCE\\objects\\object_lights.c", 0xa7, 1);
-    system_exit(-1);
-  }
-
-  FUN_001805f0((int)indices[0] * 0x20 + *(int *)(material + 0xf8), v0);
-  FUN_001805f0((int)indices[1] * 0x20 + *(int *)(material + 0xf8), v1);
-  FUN_001805f0((int)indices[2] * 0x20 + *(int *)(material + 0xf8), v2);
-
-  uv[0] = v0[0] + (v1[0] - v0[0]) * bary_u + (v2[0] - v0[0]) * bary_v;
-  uv[1] = v0[1] + (v1[1] - v0[1]) * bary_u + (v2[1] - v0[1]) * bary_v;
-
-  pixel32_to_real_rgb_color(bitmap_2d_get_pixel(bitmap_ref, uv, 0.3f, out_rgb),
-                            out_rgb);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x20, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movw 0xb0(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "pushl %%edi\n\t"
+      "je .LFUN_001390d0_1\n\t"
+      "cmpw $1, %%ax\n\t"
+      "je .LFUN_001390d0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa7\n\t"
+      "pushl $0x29b324\n\t"
+      "pushl $0x29b350\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001390d0_1:\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "movzwl (%%edi), %%ecx\n\t"
+      "leal -0x20(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xf8(%%esi), %%eax\n\t"
+      "shll $5, %%ecx\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1805f0]\n\t"
+      "movzwl 0x2(%%edi), %%eax\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0xf8(%%esi), %%edx\n\t"
+      "shll $5, %%eax\n\t"
+      "addl %%edx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1805f0]\n\t"
+      "movzwl 0x4(%%edi), %%edx\n\t"
+      "movl 0xf8(%%esi), %%edi\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "shll $5, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "addl %%edi, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1805f0]\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "fsubs -0x20(%%ebp)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "fmuls 0x14(%%ebp)\n\t"
+      "pushl $0x3e99999a\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "fsubs -0x20(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "fmuls 0x18(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadds -0x20(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fsubs -0x1c(%%ebp)\n\t"
+      "fmuls 0x14(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fsubs -0x1c(%%ebp)\n\t"
+      "fmuls 0x18(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadds -0x1c(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "call *%[c7dad0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c7afb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "movl 0x46f074, %%eax\n\t"
+      "cmpb $0, (%%eax)\n\t"
+      "je .LFUN_001390d0_2\n\t"
+      "call *%[cab9c0]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001390d0_2\n\t"
+      "movb $1, %%al\n\t"
+      "ret\n\t"
+      ".LFUN_001390d0_2:\n\t"
+      "xorb %%al, %%al\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1390d0_assert), [exitfn] "m"(b1390d0_exitfn), [c1805f0] "m"(b1390d0_c1805f0), [c7dad0] "m"(b1390d0_c7dad0), [c7afb0] "m"(b1390d0_c7afb0), [cab9c0] "m"(b1390d0_cab9c0)
+      : "memory");
 }
+#else
+#error "FUN_001390d0: clang naked draft required"
+#endif
+
 /* --- damage.obj batch drafts (2026-07-26) --- */
 
 /* 0x136700 — Maximum shield vitality, optionally scaled by game difficulty. */
