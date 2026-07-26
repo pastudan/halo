@@ -1390,32 +1390,11 @@ void unlock_handle(void)
 #endif
 
 
-/* FUN_0011f6d0 (0x11f6d0) — XBE naked draft (batch 146). */
-#if defined(__clang__)
-static void * (*const b11f6d0_c11f1e0)(int alloc_size, void *pool, const char *file, unsigned int line) = stack_memory_pool_alloc_internal;
-
-__attribute__((naked, noinline))
-void FUN_0011f6d0(void)
+/* FUN_0011f6d0 (0x11f6d0) — readable C lift. */
+void *FUN_0011f6d0(int alloc_size, void *pool, const char *file, unsigned int line)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c11f1e0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11f1e0] "m"(b11f6d0_c11f1e0)
-      : "memory");
+  return stack_memory_pool_alloc_internal(alloc_size, pool, file, line);
 }
-#else
-#error "FUN_0011f6d0: clang naked draft required"
-#endif
-
 
 /* pool_new_handle (0x11f810) — XBE naked draft (batch 151). */
 #if defined(__clang__)

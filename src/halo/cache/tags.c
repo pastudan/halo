@@ -1146,33 +1146,12 @@ void FUN_001bab60(void)
 #endif
 
 
-/* FUN_001bac00 (0x1bac00) — XBE naked draft (batch 269). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001bac00(void)
+/* FUN_001bac00 (0x1bac00) — readable C lift. */
+void FUN_001bac00(unsigned char bit)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%cl\n\t"
-      "movl 0x32ea98, %%eax\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl 0x904(%%eax), %%ecx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "movl %%edx, 0x904(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  char *base = *(char **)0x32ea98;
+  *(unsigned int *)(base + 0x904) |= (1u << bit);
 }
-#else
-#error "FUN_001bac00: clang naked draft required"
-#endif
-
 
 /* FUN_001bac70 (0x1bac70) — XBE naked draft (batch 282). */
 #if defined(__clang__)

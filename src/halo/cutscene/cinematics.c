@@ -1303,79 +1303,37 @@ void FUN_00093ac0(void)
 #endif
 
 
-/* FUN_00093b60 (0x93b60) — XBE naked draft (batch 252). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00093b60(void)
+/* FUN_00093b60 (0x93b60) — readable C lift. */
+void FUN_00093b60(int16_t *dst, const int8_t *src)
 {
-  __asm__ volatile(
-      "movsbw (%%edx), %%cx\n\t"
-      "addw %%cx, (%%eax)\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "cmpw $0x3e8, %%cx\n\t"
-      "jle .LFUN_00093b60_1\n\t"
-      "addl $0xfffffc18, %%ecx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      "movsbw 0x1(%%edx), %%dx\n\t"
-      "addw %%dx, 0x2(%%eax)\n\t"
-      "ret\n\t"
-      ".LFUN_00093b60_1:\n\t"
-      "cmpw $0xfc18, %%cx\n\t"
-      "jge .LFUN_00093b60_2\n\t"
-      "addl $0x3e8, %%ecx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      ".LFUN_00093b60_2:\n\t"
-      "movsbw 0x1(%%edx), %%dx\n\t"
-      "addw %%dx, 0x2(%%eax)\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int v = (int16_t)(*dst + (int8_t)src[0]);
+  if (v > 1000) {
+    v -= 1000;
+    *dst = (int16_t)v;
+  } else if (v < -1000) {
+    v += 1000;
+    *dst = (int16_t)v;
+  } else {
+    *dst = (int16_t)v;
+  }
+  dst[1] = (int16_t)(dst[1] + (int8_t)src[1]);
 }
-#else
-#error "FUN_00093b60: clang naked draft required"
-#endif
 
-
-/* FUN_00093ba0 (0x93ba0) — XBE naked draft (batch 252). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00093ba0(void)
+/* FUN_00093ba0 (0x93ba0) — readable C lift. */
+void FUN_00093ba0(int16_t *dst, const int16_t *src)
 {
-  __asm__ volatile(
-      "movw (%%edx), %%cx\n\t"
-      "addw %%cx, (%%eax)\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "cmpw $0x3e8, %%cx\n\t"
-      "jle .LFUN_00093ba0_1\n\t"
-      "addl $0xfffffc18, %%ecx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      "movw 0x2(%%edx), %%dx\n\t"
-      "addw %%dx, 0x2(%%eax)\n\t"
-      "ret\n\t"
-      ".LFUN_00093ba0_1:\n\t"
-      "cmpw $0xfc18, %%cx\n\t"
-      "jge .LFUN_00093ba0_2\n\t"
-      "addl $0x3e8, %%ecx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      ".LFUN_00093ba0_2:\n\t"
-      "movw 0x2(%%edx), %%dx\n\t"
-      "addw %%dx, 0x2(%%eax)\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int v = (int16_t)(*dst + *src);
+  if (v > 1000) {
+    v -= 1000;
+    *dst = (int16_t)v;
+  } else if (v < -1000) {
+    v += 1000;
+    *dst = (int16_t)v;
+  } else {
+    *dst = (int16_t)v;
+  }
+  dst[1] = (int16_t)(dst[1] + src[1]);
 }
-#else
-#error "FUN_00093ba0: clang naked draft required"
-#endif
-
 
 /* FUN_00093be0 (0x93be0) — XBE naked draft (batch 280). */
 #if defined(__clang__)

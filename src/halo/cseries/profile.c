@@ -3100,39 +3100,14 @@ void profile_rasterizer_stalls(void)
 #endif
 
 
-/* FUN_00091350 (0x91350) — XBE naked draft (batch 270). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00091350(void)
+/* FUN_00091350 (0x91350) — readable C lift. */
+void FUN_00091350(uint32_t *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      ".byte 0x0f, 0x31\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "popl %%edx\n\t"
-      "popl %%eax\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  uint32_t lo, hi;
+  RDTSC(lo, hi);
+  out[0] = lo;
+  out[1] = hi;
 }
-#else
-#error "FUN_00091350: clang naked draft required"
-#endif
-
 
 /* FUN_00091380 (0x91380) — XBE naked draft (batch 255). */
 #if defined(__clang__)
@@ -3185,39 +3160,14 @@ void FUN_00091380(void)
 #endif
 
 
-/* FUN_00091b70 (0x91b70) — XBE naked draft (batch 270). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_00091b70 (0x91b70) — readable C lift. */
 void FUN_00091b70(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      ".byte 0x0f, 0x31\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "popl %%edx\n\t"
-      "popl %%eax\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0x449cb0\n\t"
-      "movl %%ecx, 0x449cb4\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  uint32_t lo, hi;
+  RDTSC(lo, hi);
+  *(uint32_t *)0x449cb0 = lo;
+  *(uint32_t *)0x449cb4 = hi;
 }
-#else
-#error "FUN_00091b70: clang naked draft required"
-#endif
-
 
 /* FUN_00091ba0 (0x91ba0) — XBE naked draft (batch 255). */
 #if defined(__clang__)

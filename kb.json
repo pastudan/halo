@@ -5492,14 +5492,14 @@
         },
         {
           "addr": "0x93b60",
-          "decl": "void FUN_00093b60(void);",
-          "ported": false,
+          "decl": "void FUN_00093b60(int16_t *dst@<eax>, const int8_t *src@<edx>);",
+          "ported": true,
           "name": "FUN_00093b60"
         },
         {
           "addr": "0x93ba0",
-          "decl": "void FUN_00093ba0(void);",
-          "ported": false,
+          "decl": "void FUN_00093ba0(int16_t *dst@<eax>, const int16_t *src@<edx>);",
+          "ported": true,
           "name": "FUN_00093ba0"
         },
         {
@@ -6336,8 +6336,8 @@
         },
         {
           "addr": "0x11f6d0",
-          "decl": "void FUN_0011f6d0(void);",
-          "ported": false
+          "decl": "void *FUN_0011f6d0(int alloc_size, void *pool@<edx>, const char *file@<ecx>, unsigned int line@<eax>);",
+          "ported": true
         },
         {
           "addr": "0x11f810",
@@ -19988,7 +19988,7 @@
         },
         {
           "addr": "0x91350",
-          "decl": "void FUN_00091350(void);",
+          "decl": "void FUN_00091350(uint32_t *out@<ecx>);",
           "ported": false
         },
         {
@@ -20049,7 +20049,7 @@
         {
           "addr": "0x91b70",
           "decl": "void FUN_00091b70(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x91ba0",
@@ -25402,8 +25402,8 @@
         },
         {
           "addr": "0x1bac00",
-          "decl": "void FUN_001bac00(void);",
-          "ported": false
+          "decl": "void FUN_001bac00(unsigned char bit);",
+          "ported": true
         },
         {
           "addr": "0x1bac70",
