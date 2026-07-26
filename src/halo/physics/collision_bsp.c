@@ -2518,3 +2518,177 @@ char FUN_0014e640(void *model, float *origin, float *offset, void *result_v)
   *(float *)(result + 0x20) = offset[2] * t + origin[2];
   return 1;
 }
+
+
+
+/* 0x14dce0 — test one object (and children/siblings) against a segment. */
+char FUN_0014dce0(int object_handle, unsigned int type_mask, int param_3,
+                  int origin, int direction, int exclude_handle,
+                  void *collision_result)
+{
+  char *result;
+  char *obj;
+  char hit;
+  unsigned int type_bit;
+  float *origin_v;
+  float *dir_v;
+  float radius;
+  char xform[0x28];
+  char hit_buf[0x484];
+  char features[0x64];
+  float out_plane[5];
+  float t_hit;
+  int child;
+  short first_idx;
+  int node_base;
+  int plane_src;
+  short mat;
+
+  result = (char *)collision_result;
+  hit = 0;
+  origin_v = (float *)origin;
+  dir_v = (float *)direction;
+
+  while (object_handle != -1) {
+    if (object_handle == exclude_handle) {
+      obj = (char *)object_get_and_verify_type(object_handle, -1);
+      if (!obj) {
+        break;
+      }
+      object_handle = *(int *)(obj + 0xc4);
+      continue;
+    }
+
+    obj = (char *)object_get_and_verify_type(object_handle, -1);
+    if (!obj || (obj[4] & 1) != 0) {
+      goto advance;
+    }
+    type_bit = 1u << ((unsigned)(*(unsigned short *)(obj + 0x64)) + 8);
+    if ((type_mask & type_bit) == 0) {
+      goto advance;
+    }
+
+    radius = *(float *)(obj + 0x5c);
+    if (!fast_vector_intersects_sphere(origin_v, dir_v, (float *)(obj + 0x50),
+                                       radius)) {
+      goto advance;
+    }
+
+    if ((type_bit & 2) != 0 && (type_mask & 0x400000) != 0) {
+      if (FUN_001509c0((int *)features, object_handle) &&
+          FUN_00150b60(features, origin_v, dir_v, out_plane)) {
+        t_hit = out_plane[0];
+        if (*(float *)(result + 0x14) > t_hit) {
+          *(float *)(result + 0x14) = t_hit;
+          *(float *)(result + 0x24) = out_plane[1];
+          *(float *)(result + 0x28) = out_plane[2];
+          *(float *)(result + 0x2c) = out_plane[3];
+          *(float *)(result + 0x30) = out_plane[4];
+          *(short *)result = 3;
+          hit = 1;
+        }
+      }
+    } else if (FUN_0014c8e0((int *)xform, object_handle) &&
+               FUN_0014cb00((int)(int *)xform, (void *)param_3, origin_v, dir_v,
+                            (int16_t *)hit_buf)) {
+      t_hit = *(float *)(hit_buf + 8);
+      if (*(float *)(result + 0x14) > t_hit) {
+        first_idx = *(short *)hit_buf;
+        *(float *)(result + 0x14) = t_hit;
+        *(short *)result = 3;
+        node_base = *(int *)(xform + 0xc);
+        plane_src = node_base + (int)first_idx * 0x34;
+        FUN_0010a1c0((float *)plane_src, *(float **)(hit_buf + 0xc),
+                     (float *)(result + 0x24));
+        if (*(int *)(hit_buf + 0x14) < 0) {
+          plane_negate((float *)(result + 0x24), (float *)(result + 0x24));
+        }
+        mat = (short)FUN_0014da80(*(int *)(xform + 4),
+                                  *(short *)(hit_buf + 0x1a));
+        *(short *)(result + 0x34) = mat;
+        *(int *)(result + 0x38) = object_handle;
+        *(short *)(result + 0x3c) = *(short *)(hit_buf + 2);
+        *(short *)(result + 0x3e) = first_idx;
+        *(short *)(result + 0x40) = *(short *)(hit_buf + 4);
+        *(int *)(result + 0x44) = *(int *)(hit_buf + 0x10);
+        *(int *)(result + 0x48) = *(int *)(hit_buf + 0x14);
+        result[0x4c] = hit_buf[0x18];
+        result[0x4d] = hit_buf[0x19];
+        *(short *)(result + 0x4e) = *(short *)(hit_buf + 0x1a);
+        hit = 1;
+      }
+    }
+
+    child = *(int *)(obj + 0xc8);
+    if (child != -1) {
+      if (FUN_0014dce0(child, type_mask, param_3, origin, direction,
+                       exclude_handle, collision_result)) {
+        hit = 1;
+      }
+    }
+
+  advance:
+    obj = (char *)object_get_and_verify_type(object_handle, -1);
+    if (!obj) {
+      break;
+    }
+    object_handle = *(int *)(obj + 0xc4);
+  }
+  return hit;
+}
+
+/* 0x14ea10 — sphere vs object list. Type jump-table not fully lifted yet. */
+char FUN_0014ea10(unsigned int type_mask, int first_handle, float *origin,
+                  float radius, float param_5, float param_6, int exclude_handle,
+                  int result)
+{
+  int handle;
+  char *obj;
+  char hit;
+  float dx, dy, dz;
+  float rr;
+  unsigned int type_bit;
+  int type_id;
+  int child;
+
+  (void)param_5;
+  (void)param_6;
+  (void)result;
+  hit = 0;
+  handle = first_handle;
+
+  while (handle != -1) {
+    if (handle != exclude_handle) {
+      obj = (char *)object_get_and_verify_type(handle, -1);
+      if (obj && (obj[4] & 1) == 0 && (*(int *)(obj + 4) & 0x1000000) == 0) {
+        if (!((obj[0xb6] & 4) != 0 && *(short *)(obj + 0x64) == 0)) {
+          dx = *(float *)(obj + 0x50) - origin[0];
+          dy = *(float *)(obj + 0x54) - origin[1];
+          dz = *(float *)(obj + 0x58) - origin[2];
+          rr = *(float *)(obj + 0x5c) + radius;
+          if (dx * dx + dy * dy + dz * dz <= rr * rr) {
+            type_id = *(short *)(obj + 0x64);
+            type_bit = 1u << (type_id + 8);
+            if ((type_mask & type_bit) != 0) {
+              /* TODO: dispatch 0x14ec10 jump table per object type */
+              hit = 1;
+              child = *(int *)(obj + 0xc8);
+              if (child != -1) {
+                if (FUN_0014ea10(type_mask, child, origin, radius, param_5,
+                                 param_6, exclude_handle, result)) {
+                  hit = 1;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    obj = (char *)object_get_and_verify_type(handle, -1);
+    if (!obj) {
+      break;
+    }
+    handle = *(int *)(obj + 0xc4);
+  }
+  return hit;
+}

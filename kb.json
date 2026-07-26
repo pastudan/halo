@@ -501,7 +501,7 @@
         },
         {
           "addr": "0x150b60",
-          "decl": "void FUN_00150b60(void);"
+          "decl": "char FUN_00150b60(void *features, float *origin, float *direction, float *out_t_plane);"
         },
         {
           "addr": "0x150c80",
@@ -36405,7 +36405,8 @@
         },
         {
           "addr": "0x14dce0",
-          "decl": "char FUN_0014dce0(int object_handle, unsigned int type_mask, int param_3, int origin, int direction, int exclude_handle, void *collision_result);"
+          "decl": "char FUN_0014dce0(int object_handle, unsigned int type_mask, int param_3, int origin, int direction, int exclude_handle, void *collision_result);",
+          "ported": false
         },
         {
           "addr": "0x14e640",
@@ -36424,7 +36425,8 @@
         },
         {
           "addr": "0x14ea10",
-          "decl": "void FUN_0014ea10(unsigned int type_mask, int first_handle, float *origin, float radius, float param_5, float param_6, int exclude_handle, int param_8);"
+          "decl": "char FUN_0014ea10(unsigned int type_mask, int first_handle, float *origin, float radius, float param_5, float param_6, int exclude_handle, int result);",
+          "ported": false
         }
       ],
       "name": "collision_bsp.obj",
