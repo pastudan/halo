@@ -339,6 +339,14 @@ def main() -> int:
         ("FUN_000f3690", 0xf3690, 0xf3740),
         ("FUN_0019cff0", 0x19cff0, 0x19d070),
         ("first_person_weapon_get_marker_by_name", 0xdd190, 0xdd260),
+        # gameplay wave 23 (2026-07-26)
+        ("vehicle_accelerate", 0x1b5c90, 0x1b5d90),
+        ("FUN_001a4440", 0x1a4440, 0x1a4990),
+        ("FUN_001a4990", 0x1a4990, 0x1a4a50),
+        ("player_aim_projectile", 0xa6130, 0xa6470),
+        ("get_particle_world_position", 0x1339a0, 0x134070),
+        ("FUN_001336a0", 0x1336a0, 0x133750),
+        ("FUN_001335e0", 0x1335e0, 0x1336a0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

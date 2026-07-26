@@ -810,9 +810,9 @@ char FUN_00130b70(void *client, const char *data, int count)
   /* test (char)eax, 1 -> jne 0x1335fd */
   display_assert((char *)0x0029aae4, (char *)0x0025ed80, 1530, 0);
   system_exit(0);
-  FUN_001335e0();
-  FUN_001335e0();
-  FUN_001335e0();
+  FUN_001335e0(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+  FUN_001335e0(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+  FUN_001335e0(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
   /* test eax, eax -> jne 0x1337bb */
   game_state_data_new((char *)0x0029ab58, 0, 604);
   /* mem[0x005a90c8] = eax */
@@ -861,9 +861,12 @@ char FUN_00130b70(void *client, const char *data, int count)
   /* test (int16_t)eax, (int16_t)eax -> jle 0x133b06 */
   /* relift: cmp ecx, dword ptr [ebp - 0x14] -> jge 0x133b0c */
   /* cmp ebx, 4 -> jl 0x133b00 */
-  FUN_001336a0();
-  FUN_001336a0();
-  FUN_001336a0();
+  FUN_001336a0((float *)0, (float *)0, (float *)0, (float *)0, (float *)0, 0.0f,
+               0.0f, 0.0f, 0.0f, 0.0f);
+  FUN_001336a0((float *)0, (float *)0, (float *)0, (float *)0, (float *)0, 0.0f,
+               0.0f, 0.0f, 0.0f, 0.0f);
+  FUN_001336a0((float *)0, (float *)0, (float *)0, (float *)0, (float *)0, 0.0f,
+               0.0f, 0.0f, 0.0f, 0.0f);
   tag_get(0x676c7721, 0);
   /* cmp (int16_t)eax, 0xffff -> je 0x1340e2 */
   object_get_function_value(0, 0, (void *)(uintptr_t)ecx);

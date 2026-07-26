@@ -736,19 +736,38 @@ void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
   }
 }
 
-/* 0x1b5c90 */
+/* 0x1b5c90 — add an impulse to vehicle velocity and clear the grounded bit. */
 void vehicle_accelerate(int handle, float *velocity)
 {
-  int eax = 0;
+  char *veh;
+  char *vehi;
+  float *global_up;
+  float lateral[3];
+  float len;
 
-  object_get_and_verify_type(handle, 2);
-  tag_get('ihev', *(int *)(eax));
-  /* cmp eax, -1 -> je 0x1b5d87 */
-  tag_get('syhp', 0);
-  normalize3d((float *)0);
-  /* test (char)eax, 0x41 -> jne 0x1b5d7c */
+  veh = (char *)object_get_and_verify_type(handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh); /* 'vehi' */
+  if (*(int *)(vehi + 0x8c) == -1)
+    return;
 
-  (void)eax;
+  (void)tag_get(0x70687973, *(int *)(vehi + 0x8c)); /* 'phys' */
+
+  *(float *)(veh + 0x18) += velocity[0];
+  *(float *)(veh + 0x1c) += velocity[1];
+  *(float *)(veh + 0x20) += velocity[2];
+
+  global_up = *(float **)0x31fc44;
+  /* XBE builds cross(up, velocity) into a temp, then scales by |temp|*k. */
+  cross_product3d(global_up, velocity, lateral);
+  len = normalize3d(lateral);
+  if (len > 0.0f) {
+    float scale = len * *(float *)0x256980;
+    *(float *)(veh + 0x3c) += lateral[0] * scale;
+    *(float *)(veh + 0x40) += lateral[1] * scale;
+    *(float *)(veh + 0x44) += lateral[2] * scale;
+  }
+
+  *(int *)(veh + 4) &= ~0x20;
 }
 
 /* 0x1b5d90 */

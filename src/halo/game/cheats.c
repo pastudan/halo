@@ -464,46 +464,114 @@ void FUN_000a6030(void)
   (void)edi;
 }
 
-/* 0xa6130 */
-void player_aim_projectile(void)
+/* 0xa6130 — aim a projectile from a player's controlled unit along aim_direction. */
+int player_aim_projectile(int player_handle, float *out_position,
+                          float *aim_direction)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
+  char *player;
+  int aiming_unit;
+  int16_t zoom;
+  char aim_buf[0x6c];
+  float cam_pos[3];
+  float cam_fwd[3];
+  float aim_copy[3];
+  float delta[3];
+  float scaled_fwd[3];
+  float cone_axis[3];
+  float pinned[3];
+  float dist;
+  int object_handle = -1;
+  int16_t stack_depth;
+  char ok;
 
-  datum_get((void *)(uintptr_t)ecx, 0);
-  unit_get_aiming_unit_index(0);
-  valid_real_normal3d((float *)(uintptr_t)edi);
-  /* test (char)eax, (char)eax -> jne 0xa61b9 */
-  csprintf((char *)0x005ab100, (char *)0x00254a24);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [0x4761d8], 0x20 -> jl 0xa61e0 */
-  display_assert((char *)0x00253440, (char *)0x0026b08c, 79, 0);
-  system_exit(0);
-  unit_get_zoom_level(0);
-  FUN_000a5610();
-  /* test (char)eax, (char)eax -> je 0xa641c */
-  director_camera_deterministic();
-  FUN_000a6030();
-  /* test (char)eax, (char)eax -> je 0xa62ce */
-  normalize3d((float *)0);
-  object_get_and_verify_type(0, 0);
-  normalize3d((float *)0);
-  FUN_0014df70(0, (float *)0, (float *)0, 0, (void *)0);
-  normalize3d((float *)(uintptr_t)ecx);
-  FUN_0010c780((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, 0.0f, (float *)(uintptr_t)eax);
-  pin_normal_to_cone3d((float *)(uintptr_t)ecx, (float *)(uintptr_t)edi, 0.0f, 0.0f, (float *)0);
-  /* relift: cmp word ptr [0x4761d8], 1 -> jg 0xa6446 */
-  display_assert((char *)0x00253418, (char *)0x0026b08c, 140, 0);
-  system_exit(0);
-  game_time_get();
+  player = (char *)datum_get(*(data_t **)0x5aa6d4, player_handle);
+  aiming_unit = unit_get_aiming_unit_index(*(int *)(player + 0x34));
+  if (!valid_real_normal3d(aim_direction)) {
+    csprintf((char *)0x5ab100, (char *)0x254a24, (char *)0x255554,
+             (double)aim_direction[0], (double)aim_direction[1],
+             (double)aim_direction[2]);
+    display_assert((char *)0x5ab100, (char *)0x26b08c, 0x4d, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
+  stack_depth = *(int16_t *)0x4761d8;
+  if (stack_depth >= 0x20) {
+    display_assert((char *)0x253440, (char *)0x26b08c, 0x4f, 1);
+    system_exit(-1);
+  }
+  *(int16_t *)(0x5a8c80 + (int)stack_depth * 2) = 6;
+  *(int16_t *)0x4761d8 = (int16_t)(stack_depth + 1);
+
+  zoom = unit_get_zoom_level(aiming_unit);
+  /* FUN_000a5610 fills aim_buf from the aiming unit / zoom level. */
+  ok = ((char (*)(int, void *, int16_t))FUN_000a5610)(aiming_unit, aim_buf, zoom);
+  if (ok) {
+    director_camera_deterministic();
+    aim_copy[0] = aim_direction[0];
+    aim_copy[1] = aim_direction[1];
+    aim_copy[2] = aim_direction[2];
+    ok = ((char (*)(void *, void *, void *, int, uint16_t, void *))FUN_000a6030)(
+        aim_buf, cam_pos, cam_fwd, *(int *)(player + 0x34),
+        *(uint16_t *)(player + 0x20), (void *)0);
+    if (ok) {
+      delta[0] = cam_fwd[0] - out_position[0];
+      delta[1] = cam_fwd[1] - out_position[1];
+      delta[2] = cam_fwd[2] - out_position[2];
+      if (normalize3d(delta) == 0.0f) {
+        delta[0] = aim_copy[0];
+        delta[1] = aim_copy[1];
+        delta[2] = aim_copy[2];
+      }
+      object_handle = *(int *)(aim_buf + 0); /* filled by aim helpers when present */
+    }
+
+    {
+      char *unit = (char *)object_get_and_verify_type(aiming_unit, 3);
+      float origin[3];
+      float dir[3];
+      float dummy[3];
+      int16_t hit;
+
+      origin[0] = cam_pos[0];
+      origin[1] = cam_pos[1];
+      origin[2] = cam_pos[2];
+      dir[0] = cam_fwd[0] - *(float *)(unit + 0xc);
+      dir[1] = cam_fwd[1] - *(float *)(unit + 0x10);
+      dir[2] = cam_fwd[2] - *(float *)(unit + 0x14);
+      dist = sqrtf(dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2]);
+      normalize3d(cam_fwd);
+      origin[0] += cam_fwd[0] * dist;
+      origin[1] += cam_fwd[1] * dist;
+      origin[2] += cam_fwd[2] * dist;
+      scaled_fwd[0] = cam_fwd[0] * *(float *)0x26b0b0;
+      scaled_fwd[1] = cam_fwd[1] * *(float *)0x26b0b0;
+      scaled_fwd[2] = cam_fwd[2] * *(float *)0x26b0b0;
+      FUN_0014df70(0x1000e9, origin, scaled_fwd, *(int *)(player + 0x34), &hit);
+      (void)dummy;
+      (void)unit;
+    }
+
+    cone_axis[0] = cam_fwd[0] - out_position[0];
+    cone_axis[1] = cam_fwd[1] - out_position[1];
+    cone_axis[2] = cam_fwd[2] - out_position[2];
+    if (normalize3d(cone_axis) == 0.0f) {
+      cone_axis[0] = aim_direction[0];
+      cone_axis[1] = aim_direction[1];
+      cone_axis[2] = aim_direction[2];
+    }
+    FUN_0010c780(delta, cone_axis, *(float *)(aim_buf + 0x18), pinned);
+    pin_normal_to_cone3d(pinned, aim_direction, sinf(*(float *)(aim_buf + 0x10)),
+                         cosf(*(float *)(aim_buf + 0x10)), aim_direction);
+  }
+
+  if (*(int16_t *)0x4761d8 <= 1) {
+    display_assert((char *)0x253418, (char *)0x26b08c, 0x8c, 1);
+    system_exit(-1);
+  }
+  *(int16_t *)0x4761d8 = (int16_t)(*(int16_t *)0x4761d8 - 1);
+  *(int *)(player + 0x40) = object_handle;
+  *(int *)(player + 0x44) = game_time_get();
+  return object_handle;
 }
 
 /* 0xa6930 */

@@ -500,12 +500,12 @@
         },
         {
           "addr": "0x1335e0",
-          "decl": "void FUN_001335e0(void);",
+          "decl": "float FUN_001335e0(float a, float b, float c, float d, float ta, float tb, float tc, float td, float t);",
           "ported": false
         },
         {
           "addr": "0x1336a0",
-          "decl": "void FUN_001336a0(void);",
+          "decl": "void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3, float t0, float t1, float t2, float t3, float time);",
           "ported": false
         },
         {
@@ -685,7 +685,7 @@
         },
         {
           "addr": "0x1a4990",
-          "decl": "void FUN_001a4990(void);",
+          "decl": "char FUN_001a4990(int unit_handle);",
           "ported": false
         },
         {
@@ -5264,7 +5264,7 @@
         },
         {
           "addr": "0xa6130",
-          "decl": "void player_aim_projectile(void);",
+          "decl": "int player_aim_projectile(int player_handle, float *out_position, float *aim_direction);",
           "ported": false
         },
         {
