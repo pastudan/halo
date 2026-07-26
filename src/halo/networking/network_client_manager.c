@@ -2535,48 +2535,16 @@ void network_game_client_countdown_timer_update(void *client, int16_t timer)
   *(uint16_t *)((char *)client + 0xca4) = (uint16_t)timer;
 }
 
-/* network_game_client_advertised_game_is_valid (0x125cb0) — XBE naked draft (batch 177). */
-#if defined(__clang__)
-static unsigned int (*const b125cb0_c8e370)(void) = system_milliseconds;
-
-__attribute__((naked, noinline))
-char network_game_client_advertised_game_is_valid(void *game __attribute__((unused)))
+/* network_game_client_advertised_game_is_valid (0x125cb0) — readable C lift. */
+char network_game_client_advertised_game_is_valid(void *game)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movb 0xe1(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $1, %%bl\n\t"
-      "je .Lnetwork_game_client_advertised_game_is_valid_1\n\t"
-      "call *%[c8e370]\n\t"
-      "subl 0x2c(%%esi), %%eax\n\t"
-      "cmpl $0x1770, %%eax\n\t"
-      "jle .Lnetwork_game_client_advertised_game_is_valid_2\n\t"
-      ".Lnetwork_game_client_advertised_game_is_valid_1:\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_advertised_game_is_valid_2:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8e370] "m"(b125cb0_c8e370)
-      : "memory");
+  unsigned char *g = (unsigned char *)game;
+  if (g[0xe1] == 0)
+    return 0;
+  if ((int)(system_milliseconds() - *(unsigned int *)(g + 0x2c)) > 0x1770)
+    return 0;
+  return 1;
 }
-#else
-#error "network_game_client_advertised_game_is_valid: clang naked draft required"
-#endif
-
-
 /* FUN_00125ce0 (0x125ce0) — XBE naked draft (batch 113). */
 #if defined(__clang__)
 static unsigned int (*const b125ce0_c8e370)(void) = system_milliseconds;
