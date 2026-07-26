@@ -1,4 +1,6 @@
 #include <stdint.h>
+void FUN_0016f910(int a0);
+void FUN_0016fa40(int a0);
 /*
  * rasterizer_xbox_dynavobgeom.c
  *
@@ -1880,8 +1882,10 @@ void FUN_0015ee80(void)
 #endif
 
 
-void FUN_0015f1f0(void) {
-  ((void (*)(int))0x16f910)(0x1b);
+/* FUN_0015f1f0 (0x15f1f0) — readable C lift. */
+void FUN_0015f1f0(void)
+{
+  FUN_0016f910(0x1b);
 }
 
 
@@ -2967,8 +2971,10 @@ void FUN_0015f8e0(void *parameters __attribute__((unused)), void *vertices __att
 #endif
 
 
-void FUN_00160920(void) {
-  ((void (*)(int))0x16fa40)(3);
+/* FUN_00160920 (0x160920) — readable C lift. */
+void FUN_00160920(void)
+{
+  FUN_0016fa40(3);
 }
 
 
@@ -2980,14 +2986,18 @@ void _rasterizer_hud_end(void)
   (void)0;
 }
 
-void FUN_00160980(void) {
-  ((void (*)(int))0x16fa40)(0xb);
+/* FUN_00160980 (0x160980) — readable C lift. */
+void FUN_00160980(void)
+{
+  FUN_0016fa40(0xb);
 }
 
 
 
-void FUN_00160bc0(void) {
-  ((void (*)(int))0x16fa40)(0xd);
+/* FUN_00160bc0 (0x160bc0) — readable C lift. */
+void FUN_00160bc0(void)
+{
+  FUN_0016fa40(0xd);
 }
 
 
@@ -8649,8 +8659,10 @@ void FUN_00165cb0(void)
 #endif
 
 
-void FUN_00165dd0(void) {
-  ((void (*)(int))0x16fa40)(0x11);
+/* FUN_00165dd0 (0x165dd0) — readable C lift. */
+void FUN_00165dd0(void)
+{
+  FUN_0016fa40(0x11);
 }
 
 
