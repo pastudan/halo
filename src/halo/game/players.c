@@ -4515,33 +4515,14 @@ void FUN_000bdf80(int16_t function_index, int thread_handle)
 }
 
 
-/* FUN_000be250 (0xbe250) — XBE naked draft (batch 194). */
-#if defined(__clang__)
-static void (*const bbe250_cc9a50)(void) = FUN_000c9a50;
-static void (*const bbe250_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000be250(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000be250 (0xbe250) — readable C lift (thin wrapper). */
+void FUN_000be250(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "call *%[cc9a50]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc9a50] "m"(bbe250_cc9a50), [ccbf80] "m"(bbe250_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  FUN_000c9a50();
+  hs_return(thread_datum, 0);
 }
-#else
-#error "FUN_000be250: clang naked draft required"
-#endif
-
 
 /* 0xbdf40 — HS script function handler: evaluate a macro function and, on a
  * non-null result record, forward the record's first dword to FUN_000c95d0,
@@ -7259,33 +7240,14 @@ void FUN_000bfd10(int16_t function_index, int thread_datum, char init)
 }
 
 
-/* FUN_000bfd30 (0xbfd30) — XBE naked draft (batch 194). */
-#if defined(__clang__)
-static void (*const bbfd30_ca6b50)(void) = FUN_000a6b50;
-static void (*const bbfd30_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000bfd30(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000bfd30 (0xbfd30) — readable C lift (thin wrapper). */
+void FUN_000bfd30(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "call *%[ca6b50]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ca6b50] "m"(bbfd30_ca6b50), [ccbf80] "m"(bbfd30_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  FUN_000a6b50();
+  hs_return(thread_datum, 0);
 }
-#else
-#error "FUN_000bfd30: clang naked draft required"
-#endif
-
 
 void FUN_000bfd50(int16_t function_index, int thread_datum, char init)
 {
@@ -7294,33 +7256,14 @@ void FUN_000bfd50(int16_t function_index, int thread_datum, char init)
 }
 
 
-/* FUN_000bfd70 (0xbfd70) — XBE naked draft (batch 195). */
-#if defined(__clang__)
-static void (*const bbfd70_ca6ba0)(void) = FUN_000a6ba0;
-static void (*const bbfd70_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000bfd70(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000bfd70 (0xbfd70) — readable C lift (thin wrapper). */
+void FUN_000bfd70(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "call *%[ca6ba0]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ca6ba0] "m"(bbfd70_ca6ba0), [ccbf80] "m"(bbfd70_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  FUN_000a6ba0();
+  hs_return(thread_datum, 0);
 }
-#else
-#error "FUN_000bfd70: clang naked draft required"
-#endif
-
 
 void FUN_000bfd90(int16_t function_index, int thread_datum, char init)
 {
@@ -7343,61 +7286,23 @@ void FUN_000bfe10(int16_t function_index, int thread_datum, char init)
 }
 
 
-/* FUN_000c01b0 (0xc01b0) — XBE naked draft (batch 195). */
-#if defined(__clang__)
-static void (*const bc01b0_c54df0)(void) = FUN_00054df0;
-static void (*const bc01b0_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c01b0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c01b0 (0xc01b0) — readable C lift (thin wrapper). */
+void FUN_000c01b0(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "call *%[c54df0]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c54df0] "m"(bc01b0_c54df0), [ccbf80] "m"(bc01b0_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  FUN_00054df0();
+  hs_return(thread_datum, 0);
 }
-#else
-#error "FUN_000c01b0: clang naked draft required"
-#endif
 
-
-/* FUN_000c0210 (0xc0210) — XBE naked draft (batch 195). */
-#if defined(__clang__)
-static void (*const bc0210_c54e20)(void) = FUN_00054e20;
-static void (*const bc0210_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c0210(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c0210 (0xc0210) — readable C lift (thin wrapper). */
+void FUN_000c0210(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "call *%[c54e20]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c54e20] "m"(bc0210_c54e20), [ccbf80] "m"(bc0210_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  FUN_00054e20();
+  hs_return(thread_datum, 0);
 }
-#else
-#error "FUN_000c0210: clang naked draft required"
-#endif
-
 
 /* 0xbdfe0 — HS script function handler: evaluate a macro function and, on a
  * non-null result record, forward a cluster index + object handle to
