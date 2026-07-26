@@ -3165,17 +3165,38 @@ void main_save_cancel(void)
   *(char *)0x46da28 = 0;
 }
 
+/* main_save_map_safe (0x100330) — XBE naked draft (batch 187). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void main_save_map_safe(void)
 {
-  if (*(char *)0x46da28 != 0 && *(char *)0x46da2a != 0)
-    return;
-  *(char *)0x46da28 = 1;
-  *(char *)0x46da29 = 1;
-  *(char *)0x46da2a = 1;
-  *(int *)0x46da2c = 0;
-  *(int *)0x46da30 = 0;
-  *(int16_t *)0x46da38 = 0;
+  __asm__ volatile(
+      "movb 0x46da28, %%al\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpb %%cl, %%al\n\t"
+      "je .Lmain_save_map_safe_1\n\t"
+      "cmpb %%cl, 0x46da2a\n\t"
+      "je .Lmain_save_map_safe_2\n\t"
+      ".Lmain_save_map_safe_1:\n\t"
+      "movb $1, %%al\n\t"
+      "movb %%al, 0x46da28\n\t"
+      "movb %%al, 0x46da29\n\t"
+      "movb %%al, 0x46da2a\n\t"
+      "movl %%ecx, 0x46da2c\n\t"
+      "movl %%ecx, 0x46da30\n\t"
+      "movw %%cx, 0x46da38\n\t"
+      ".Lmain_save_map_safe_2:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "main_save_map_safe: clang naked draft required"
+#endif
+
 
 void main_won_map(void)
 {
@@ -3379,12 +3400,29 @@ void main_skip(int16_t level __attribute__((unused)))
 #endif
 
 
+/* main_menu_unload (0x100690) — XBE naked draft (batch 188). */
+#if defined(__clang__)
+static void (*const b100690_ce4640)(void) = ui_widget_stop_attract_mode;
+static void (*const b100690_ce43d0)(char active) = main_menu_active;
+
+__attribute__((naked, noinline))
 void main_menu_unload(void)
 {
-  ui_widget_stop_attract_mode();
-  main_menu_active(0);
-  *(char *)0x46da42 = 0;
+  __asm__ volatile(
+      "call *%[ce4640]\n\t"
+      "pushl $0\n\t"
+      "call *%[ce43d0]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $0, 0x46da42\n\t"
+      "ret\n\t"
+      :
+      : [ce4640] "m"(b100690_ce4640), [ce43d0] "m"(b100690_ce43d0)
+      : "memory");
 }
+#else
+#error "main_menu_unload: clang naked draft required"
+#endif
+
 
 void main_menu_switch_to_single_player(void)
 {
@@ -3654,12 +3692,30 @@ void main_save_map_no_timeout(void)
   *(char *)0x46da2a = 0;
 }
 
+/* main_roll_credits (0x102070) — XBE naked draft (batch 188). */
+#if defined(__clang__)
+static void (*const b102070_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b102070_c101fe0)(void) = main_menu_load;
+static void (*const b102070_cdc110)(void) = FUN_000dc110;
+
+__attribute__((naked, noinline))
 void main_roll_credits(void)
 {
-  error(2, (char *)0x28b68c);
-  main_menu_load();
-  FUN_000dc110();
+  __asm__ volatile(
+      "pushl $0x28b68c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "call *%[c101fe0]\n\t"
+      "jmp *%[cdc110]\n\t"
+      :
+      : [c8f390] "m"(b102070_c8f390), [c101fe0] "m"(b102070_c101fe0), [cdc110] "m"(b102070_cdc110)
+      : "memory");
 }
+#else
+#error "main_roll_credits: clang naked draft required"
+#endif
+
 
 /* FUN_001008a0 (0x1008a0) — XBE naked draft (batch 150). */
 #if defined(__clang__)

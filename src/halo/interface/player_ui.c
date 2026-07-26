@@ -126,11 +126,28 @@ void FUN_000e0620(void)
 #endif
 
 
-/* 0xe0720 */
+/* player_ui_reset_single_player_local_player_controllers (0xe0720) — XBE naked draft (batch 188). */
+#if defined(__clang__)
+static void *(*const be0720_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void player_ui_reset_single_player_local_player_controllers(void)
 {
-  csmemset((void *)0x0046bfc4, 0, 0);
+  __asm__ volatile(
+      "pushl $8\n\t"
+      "pushl $-1\n\t"
+      "pushl $0x46bfc4\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(be0720_memset)
+      : "memory");
 }
+#else
+#error "player_ui_reset_single_player_local_player_controllers: clang naked draft required"
+#endif
+
 
 /* player_ui_set_single_player_local_player_controller (0xe0740) — XBE naked draft (batch 153). */
 #if defined(__clang__)

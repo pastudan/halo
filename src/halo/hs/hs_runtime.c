@@ -3837,10 +3837,32 @@ float FUN_000caf10(int value __attribute__((unused)))
 #endif
 
 
-float FUN_000caf20(int16_t value)
+/* FUN_000caf20 (0xcaf20) — XBE naked draft (batch 188). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+float FUN_000caf20(int16_t value __attribute__((unused)))
 {
-  return (float)(value + 1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "fildl 0x8(%%ebp)\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000caf20: clang naked draft required"
+#endif
+
 
 /* FUN_000caf40 (0xcaf40) — XBE naked draft (batch 175). */
 #if defined(__clang__)
@@ -4072,14 +4094,31 @@ int16_t FUN_000ce420(int list_handle __attribute__((unused)))
 #endif
 
 
-void FUN_000cab80(int handle)
+/* FUN_000cab80 (0xcab80) — XBE naked draft (batch 188). */
+#if defined(__clang__)
+static void *(*const bcab80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void FUN_000cab80(int handle __attribute__((unused)))
 {
-  char *datum;
-  int *list;
-  datum = (char *)datum_get(*(data_t **)0x5aa6c4, handle);
-  list = *(int **)(datum + 0x10);
-  *(int *)(datum + 0x10) = *list;
+  __asm__ volatile(
+      "movl 0x5aa6c4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%eax), %%edx\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ecx, 0x10(%%eax)\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bcab80_dget)
+      : "memory");
 }
+#else
+#error "FUN_000cab80: clang naked draft required"
+#endif
+
 
 /* FUN_000ca4e0 (0xca4e0) — XBE naked draft (batch 167). */
 #if defined(__clang__)
@@ -8720,14 +8759,29 @@ void FUN_000cdf70(void *header __attribute__((unused)), void *src __attribute__(
 #endif
 
 
+/* FUN_000ce4a0 (0xce4a0) — XBE naked draft (batch 188). */
+#if defined(__clang__)
+static int __stdcall (*const bce4a0_c1cf900)(int handle) = CloseHandle;
+
+__attribute__((naked, noinline))
 void FUN_000ce4a0(void)
 {
-  int handle;
-
-  handle = *(int *)0x46b814;
-  if (handle != 0)
-    CloseHandle(handle);
+  __asm__ volatile(
+      "movl 0x46b814, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000ce4a0_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1cf900]\n\t"
+      ".LFUN_000ce4a0_1:\n\t"
+      "ret\n\t"
+      :
+      : [c1cf900] "m"(bce4a0_c1cf900)
+      : "memory");
 }
+#else
+#error "FUN_000ce4a0: clang naked draft required"
+#endif
+
 /* --- hs_runtime.obj orphan shells (2026-07-26) --- */
 
 /* 0xc9f90 */
