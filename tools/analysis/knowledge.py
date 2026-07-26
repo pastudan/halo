@@ -417,7 +417,10 @@ __attribute__((naked)) { decl.replace(name, 'THUNK('+name+')') }
 								)
 							)
 						):
-							f.write(f'// skipped non-decl prose: {_ds[:120]}\n')
+							# Collapse newlines — a multi-line slice would leave bare
+							# continuation lines in decl.h and break every TU compile.
+							_one = ' '.join(_ds.split())
+							f.write(f'// skipped non-decl prose: {_one[:120]}\n')
 							continue
 						f.write(f'HFUNC {decl_str}\n')
 				f.write('\n')
