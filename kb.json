@@ -5200,13 +5200,13 @@
         {
           "addr": "0xa5590",
           "decl": "float FUN_000a5590(float x, float y);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a5590"
         },
         {
           "addr": "0xa55e0",
           "decl": "float FUN_000a55e0(float a, float b, float c, float d);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a55e0"
         },
         {
@@ -7715,7 +7715,7 @@
         {
           "addr": "0xdb1e0",
           "decl": "void FUN_000db1e0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xdb250",
@@ -11259,7 +11259,7 @@
         {
           "addr": "0xc2a80",
           "decl": "void FUN_000c2a80(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc2ad0",
@@ -11664,12 +11664,12 @@
         {
           "addr": "0xc4030",
           "decl": "void FUN_000c4030(const char *token@<esi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc40b0",
           "decl": "void FUN_000c40b0(const char **tokens, int16_t start@<ecx>, int16_t end@<eax>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc40f0",
@@ -12045,7 +12045,7 @@
         {
           "addr": "0xc6a30",
           "decl": "int16_t FUN_000c6a30(const char *str, const char **names, int16_t count);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc6a70",
@@ -12243,7 +12243,7 @@
         {
           "addr": "0xc97f0",
           "decl": "void FUN_000c97f0(int object_handle, int16_t scenario_index, float distance);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9840",
@@ -12258,7 +12258,7 @@
         {
           "addr": "0xc9990",
           "decl": "void FUN_000c9990(int16_t name_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc99e0",
@@ -12313,7 +12313,7 @@
         {
           "addr": "0xc9d80",
           "decl": "void FUN_000c9d80(int object_type);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9de0",
@@ -12393,32 +12393,32 @@
         {
           "addr": "0xca4e0",
           "decl": "void FUN_000ca4e0(int16_t type, char flag, char *buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca530",
           "decl": "void FUN_000ca530(int16_t type, float value, char *buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca580",
           "decl": "void FUN_000ca580(int16_t type, int16_t value, char *buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca5d0",
           "decl": "void FUN_000ca5d0(int16_t type, int value, char *buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca620",
           "decl": "void FUN_000ca620(int16_t type, int value, char *buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca670",
           "decl": "void FUN_000ca670(int16_t type, int16_t enum_index, char *buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca700",
@@ -12714,7 +12714,7 @@
         {
           "addr": "0xce050",
           "decl": "void FUN_000ce050(int save_type, int slot);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce090",
@@ -12759,7 +12759,7 @@
         {
           "addr": "0xce2b0",
           "decl": "void FUN_000ce2b0(int list_handle, int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce320",
@@ -14103,7 +14103,7 @@
         {
           "addr": "0xf6a60",
           "decl": "void item_get_position_even_if_in_inventory(int item_handle, float *out);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf6af0",
@@ -17879,7 +17879,7 @@
         {
           "addr": "0xb7e30",
           "decl": "float *player_control_get_facing_angles(int16_t local_player_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb7f10",
@@ -18414,7 +18414,7 @@
         {
           "addr": "0xe1490",
           "decl": "void player_ui_set_active_player_profile(int16_t local_player_index, int profile_handle, void *profile);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe1500",
@@ -35090,7 +35090,7 @@
         {
           "addr": "0x539c0",
           "decl": "void FUN_000539c0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000539c0"
         },
         {
@@ -35108,7 +35108,7 @@
         {
           "addr": "0x53af0",
           "decl": "void FUN_00053af0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00053af0"
         }
       ],
@@ -35395,7 +35395,7 @@
         {
           "addr": "0x53bf0",
           "decl": "void FUN_00053bf0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x53c50",
@@ -35980,7 +35980,7 @@
         {
           "addr": "0x5b6e0",
           "decl": "char encounter_pursuit_position_already_examined(int encounter_handle, int position_hash, int16_t pursuit_index, int min_time, int16_t *out_count, int *out_time);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x5b790",
@@ -38970,7 +38970,7 @@
         {
           "addr": "0x24890",
           "decl": "char FUN_00024890(int actor_handle, void *state, char *actor @<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x24900",
