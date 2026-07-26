@@ -2529,47 +2529,22 @@ void FUN_000bb1f0(int player_index , int16_t param2)
 }
 
 
-/* player_get_starting_location_count (0xbaa90) — XBE naked draft (batch 176). */
-#if defined(__clang__)
-static scenario_t * (*const bbaa90_c18e380)(void) = global_scenario_get;
-static void *(*const bbaa90_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
+/* player_get_starting_location_count (0xbaa90) — readable C lift. */
 int16_t player_get_starting_location_count(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "call *%[c18e380]\n\t"
-      "movl 0x5ac9f4, %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "movw 0x354(%%eax), %%si\n\t"
-      "je .Lplayer_get_starting_location_count_1\n\t"
-      "pushl $0xb0\n\t"
-      "andl $0xffff, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xa4(%%eax), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .Lplayer_get_starting_location_count_1\n\t"
-      "movw %%cx, %%ax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".Lplayer_get_starting_location_count_1:\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bbaa90_c18e380), [elem] "m"(bbaa90_elem)
-      : "memory");
+  scenario_t *scen = global_scenario_get();
+  int16_t fallback = *(int16_t *)((char *)scen + 0x354);
+  int idx = *(int *)0x5ac9f4;
+  void *el;
+  int count;
+  if (idx == -1)
+    return fallback;
+  el = tag_block_get_element((char *)scen + 0x42c, idx & 0xffff, 0xb0);
+  count = *(int *)((char *)el + 0xa4);
+  if (count <= 0)
+    return fallback;
+  return (int16_t)count;
 }
-#else
-#error "player_get_starting_location_count: clang naked draft required"
-#endif
-
-
 void *player_get_starting_location(int16_t index)
 {
   void *scenario;
