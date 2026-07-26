@@ -2421,51 +2421,57 @@ int FUN_00106290(int16_t count, void *index_array, void *vertex_base,
   return 1;
 }
 
-/* FUN_00106330 (0x106330)
- *
- * 2D polygon signed-area accumulation (triangle-fan / shoelace) returning the
- * absolute area. Points are stored as float[2] pairs (x, y) with stride 2;
- * vertex 0 (points[0], points[1]) is the fan anchor. For each triangle
- * (anchor, cur = points[i], next = points[i+1]), i running over count-2
- * iterations, accumulates half the 2D cross product of the two edge vectors
- * measured from the anchor:
- *   cross = (next.y - anchor.y) * (cur.x - anchor.x)
- *         - (next.x - anchor.x) * (cur.y - anchor.y)
- *   area += 0.5 * cross
- * Returns fabs(area).
- *
- * Confirmed from disasm: seed FLOAT_002533c0 = 0.0f, scale _DAT_00253398 =
- * 0.5f (both single-precision, byte-verified). Cross-product operand order is
- * A*B - C*D (hazard #4, verified against FSUBP direction). x87 extended
- * intermediates are preserved as double; do not reassociate. Loop count is
- * unsigned 16-bit ((unsigned short)(count - 2)); guarded by count > 2. Leaf,
- * cdecl, result left in ST0 with a trailing FABS.
- */
-float FUN_00106330(int16_t count, float *points)
-{
-  float area;
-  float *p;
-  unsigned int n;
+/* FUN_00106330 (0x106330) — XBE naked draft (batch 94). */
+#if defined(__clang__)
 
-  area = 0.0f; /* FLOAT_002533c0 seed */
-  if (count > 2) {
-    n = (unsigned int)(unsigned short)(count - 2);
-    p = points + 2;
-    do {
-      n = n - 1;
-      /* Signed area of triangle (anchor, cur, next), doubled; scaled by 0.5.
-       * Reference computes (next.x-x0)*(cur.y-y0) - (next.y-y0)*(cur.x-x0);
-       * result is negated vs the standard fan cross but fabs() absorbs the
-       * sign. MSVC schedules this as a pairwise x87 multiply. */
-      area = ((p[2] - points[0]) * (p[1] - points[1]) -
-              (p[3] - points[1]) * (p[0] - points[0])) *
-               0.5f /* _DAT_00253398 */
-             + area;
-      p = p + 2;
-    } while (n != 0);
-  }
-  return (float)fabs(area); /* FABS */
+
+__attribute__((naked, noinline))
+float FUN_00106330(int16_t count __attribute__((unused)), float *points __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "flds 0x2533c0\n\t"
+      "cmpw $2, %%dx\n\t"
+      "jle .LFUN_00106330_2\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "addl $-2, %%edx\n\t"
+      "leal 0x8(%%ecx), %%eax\n\t"
+      "movzwl %%dx, %%edx\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".LFUN_00106330_1:\n\t"
+      "flds (%%eax)\n\t"
+      "addl $8, %%eax\n\t"
+      "decl %%edx\n\t"
+      "fsubs (%%ecx)\n\t"
+      "flds -0x4(%%eax)\n\t"
+      "fsubs 0x4(%%ecx)\n\t"
+      "flds (%%eax)\n\t"
+      "fsubs (%%ecx)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs 0x4(%%ecx)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      "fxch %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fmuls 0x253398\n\t"
+      ".byte 0xde, 0xc3\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .LFUN_00106330_1\n\t"
+      ".LFUN_00106330_2:\n\t"
+      "fabs\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00106330: clang naked draft required"
+#endif
+
 
 /* FUN_0018e420 (0x18e420)
  *

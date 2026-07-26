@@ -3183,26 +3183,61 @@ void FUN_0011c480(int cache __attribute__((unused)))
 #endif
 
 
-/* lra_cache_unlock_block — release a specific block (0x11c4d0).
- * Source: lra_cache.c line 0x11a. */
-void FUN_0011c4d0(int cache, void *pointer)
-{
-  int block_header;
+/* FUN_0011c4d0 (0x11c4d0) — XBE naked draft (batch 94). */
+#if defined(__clang__)
+static void (*const b11c4d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11c4d0_exitfn)(int) = system_exit;
+static void (*const b11c4d0_c11c290)(int cache) = FUN_0011c290;
+static void (*const b11c4d0_c11c210)(int cache, int block) = FUN_0011c210;
 
-  if (pointer == NULL) {
-    display_assert("pointer",
-                   "c:\\halo\\SOURCE\\memory\\lra_cache.c", 0x11a, 1);
-    system_exit(-1);
-  }
-  block_header = (int)pointer - 0x10;
-  FUN_0011c290(cache);
-  FUN_0011c210(cache, block_header);
-  if ((*(unsigned char *)(block_header + 4) & 2) == 0) {
-    (*(void (**)(int))(cache + 0x34))(*(int *)block_header);
-    *(unsigned int *)(block_header + 4) =
-      (*(unsigned int *)(block_header + 4) & ~1U) | 2;
-  }
+__attribute__((naked, noinline))
+void FUN_0011c4d0(int cache __attribute__((unused)), void *pointer __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x10(%%eax), %%esi\n\t"
+      "jne .LFUN_0011c4d0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x11a\n\t"
+      "pushl $0x28f768\n\t"
+      "pushl $0x267eec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011c4d0_1:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[c11c290]\n\t"
+      "call *%[c11c210]\n\t"
+      "testb $2, 0x4(%%esi)\n\t"
+      "jne .LFUN_0011c4d0_2\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x34(%%ebx)\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "andl $0xfffffffe, %%ecx\n\t"
+      "addl $4, %%esp\n\t"
+      "orl $2, %%ecx\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      ".LFUN_0011c4d0_2:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11c4d0_assert), [exitfn] "m"(b11c4d0_exitfn), [c11c290] "m"(b11c4d0_c11c290), [c11c210] "m"(b11c4d0_c11c210)
+      : "memory");
 }
+#else
+#error "FUN_0011c4d0: clang naked draft required"
+#endif
+
 
 /* ========================================================================
  * Already-ported: initialize_network_game_packets (0x12b640)

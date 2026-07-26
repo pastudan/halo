@@ -1146,6 +1146,19 @@ def main() -> int:
         ("convex_polygon2d_verify", 0x106900, 0x106956),
         ("FUN_00180500", 0x180500, 0x180567),
         ("system_unique_identifiers_equal", 0x8e320, 0x8e36e),
+        # gameplay wave 94 (2026-07-26) — HUD/AI/rasterizer Capstone weaks
+        ("symbol_table_dispose", 0x92090, 0x92106),
+        ("hud_get_nav_point_data", 0xd5f40, 0xd5faa),
+        ("ai_debug_clear_storage", 0x49000, 0x4907e),
+        ("FUN_001805f0", 0x1805f0, 0x180652),
+        ("FUN_0011c4d0", 0x11c4d0, 0x11c52d),
+        ("FUN_00027870", 0x27870, 0x278df),
+        ("FUN_00106330", 0x106330, 0x106382),
+        ("hud_enable_custom_state_message", 0xd4f00, 0xd4f70),
+        ("rasterizer_memory_pool_alloc", 0x182530, 0x182581),
+        ("actor_action_handle_combat_failure", 0x1f920, 0x1f976),
+        ("hud_set_state_message_text", 0xd4e90, 0xd4ef9),
+        ("ai_debug_select_actor", 0x4b1b0, 0x4b213),
     ]
 
     xbe = Xbe.from_file(args.xbe)

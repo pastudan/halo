@@ -12548,38 +12548,59 @@ void FUN_00027410(int actor_handle __attribute__((unused)), void *ctx __attribut
 #endif
 
 
-/* FUN_00027870 (0x27870)
- * Stop scripted look: log debug message and clear the scripted-look fields.
- *
- * If the scripted-look counter at actor+0x544 is > 0 AND the AI debug display
- * flag (0x5aca5d) is non-zero, describes the actor via ai_debug_describe_actor
- * and prints a console "look-stop" line.  Then clears actor+0x544, actor+0x546,
- * and actor+0x548 (scripted-look timer/type/state words).
- *
- * Confirmed: CMP word ptr [ESI+0x544],0x0 / JLE at 0x27889/0x27891 — signed.
- * Confirmed: MOV AL,[0x5aca5d] / TEST AL,AL / JZ at 0x27893/0x27898/0x2789a.
- * Confirmed: PUSH 0x100; PUSH 0x5ab100 (error_string_buffer); PUSH 0x0;
- *   PUSH -0x1; PUSH EDI; CALL 0x49ac0 at 0x2789c.
- * Confirmed: PUSH EAX (return ptr from ai_debug_describe_actor);
- *   PUSH 0x255144 ("%s: look-stop"); PUSH 0x0; CALL 0xff4d0 at 0x278b0.
- * Confirmed: MOV word [ESI+0x546],0x0; MOV word [ESI+0x544],0x0;
- *   MOV word [ESI+0x548],0x0 at 0x278c0-0x278d3.
- * Inferred: actor+0x544 = scripted-look state counter (int16_t).
- * Inferred: actor+0x546, actor+0x548 = scripted-look type/state words. */
-void FUN_00027870(int actor_handle)
+/* FUN_00027870 (0x27870) — XBE naked draft (batch 94). */
+#if defined(__clang__)
+static void *(*const b27870_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const b27870_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
+static void (*const b27870_cff4d0)(int channel, const char *format, ...) = console_printf;
+
+__attribute__((naked, noinline))
+void FUN_00027870(int actor_handle __attribute__((unused)))
 {
-  char *actor;
-  char *desc;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(short *)(actor + 0x544) > 0 && *(char *)0x5aca5d != '\0') {
-    desc =
-      ai_debug_describe_actor(actor_handle, -1, 0, error_string_buffer, 0x100);
-    console_printf(0, "%s: look-stop", desc);
-  }
-  *(short *)(actor + 0x546) = 0;
-  *(short *)(actor + 0x544) = 0;
-  *(short *)(actor + 0x548) = 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, 0x544(%%esi)\n\t"
+      "jle .LFUN_00027870_1\n\t"
+      "movb 0x5aca5d, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00027870_1\n\t"
+      "pushl $0x100\n\t"
+      "pushl $0x5ab100\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c49ac0]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x255144\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x20, %%esp\n\t"
+      ".LFUN_00027870_1:\n\t"
+      "popl %%edi\n\t"
+      "movw $0, 0x546(%%esi)\n\t"
+      "movw $0, 0x544(%%esi)\n\t"
+      "movw $0, 0x548(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b27870_dget), [c49ac0] "m"(b27870_c49ac0), [cff4d0] "m"(b27870_cff4d0)
+      : "memory");
 }
+#else
+#error "FUN_00027870: clang naked draft required"
+#endif
+
 
 /* FUN_000278e0 (0x278e0) — XBE naked draft (batch 75). */
 #if defined(__clang__)

@@ -732,23 +732,55 @@ void hud_render_timer(void)
   }
 }
 
-/* hud_enable_custom_state_message (0xd4f00)
- * Toggle help text display state for a player. */
-void hud_enable_custom_state_message(short param_1, char param_2)
-{
-  int base;
+/* hud_enable_custom_state_message (0xd4f00) — XBE naked draft (batch 94). */
+#if defined(__clang__)
+static wchar_t * (*const bd4f00_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 
-  base = param_1 * 0x460 + *(int *)0x46bd18;
-  *(unsigned char *)(base + 0x45e) =
-      *(unsigned char *)(base + 0x45e) | (*(char *)(base + 0x458) != param_2);
-  *(char *)(base + 0x458) = param_2;
-  *(int *)(base + 0x454) = 0;
-  if (param_2 != '\0') {
-    *(int *)(base + 0x454) = 0;
-    ustrncpy((wchar_t *)(base + 0x230), (wchar_t *)0x26cdf0, 0xff);
-  }
-  *(char *)(base + 0x45f) = param_2;
+__attribute__((naked, noinline))
+void hud_enable_custom_state_message(short param_1 __attribute__((unused)), char param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x46bd18, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "movb 0xc(%%ebp), %%bl\n\t"
+      "pushl %%esi\n\t"
+      "movswl 0x8(%%ebp), %%esi\n\t"
+      "imull $0x460, %%esi, %%esi\n\t"
+      "movb 0x458(%%esi,%%ecx,1), %%al\n\t"
+      "movb 0x45e(%%esi,%%ecx,1), %%dl\n\t"
+      "addl %%ecx, %%esi\n\t"
+      "cmpb %%bl, %%al\n\t"
+      "setne %%al\n\t"
+      "orb %%al, %%dl\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpb %%al, %%bl\n\t"
+      "movb %%dl, 0x45e(%%esi)\n\t"
+      "movb %%bl, 0x458(%%esi)\n\t"
+      "movl %%eax, 0x454(%%esi)\n\t"
+      "je .Lhud_enable_custom_state_message_1\n\t"
+      "pushl $0xff\n\t"
+      "leal 0x230(%%esi), %%ecx\n\t"
+      "pushl $0x26cdf0\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, 0x454(%%esi)\n\t"
+      "call *%[c19dc90]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lhud_enable_custom_state_message_1:\n\t"
+      "movb %%bl, 0x45f(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c19dc90] "m"(bd4f00_c19dc90)
+      : "memory");
 }
+#else
+#error "hud_enable_custom_state_message: clang naked draft required"
+#endif
+
 
 /* hud_set_state_text (0xd4f70)
  * Set help text string for a player. */
@@ -858,21 +890,54 @@ void hud_set_state_message_icon(short param_1, short param_2, int param_3)
   }
 }
 
-/* hud_set_state_message_text (0xd4e90)
- * Set a tag reference value for a HUD message element. */
-void hud_set_state_message_text(short param_1, short param_2, short param_3,
-                                unsigned char param_4)
-{
-  int iVar1;
+/* hud_set_state_message_text (0xd4e90) — XBE naked draft (batch 94). */
+#if defined(__clang__)
 
-  iVar1 = param_1 * 0x460 + *(int *)0x46bd18;
-  if (*(char *)(iVar1 + 0x458) != '\0' &&
-      *(char *)(*(int *)0x46bd10 + 1) == '\0' && *(int *)(iVar1 + 0x454) != 0) {
-    *(short *)(iVar1 + 0x434 + param_2 * 4) = param_3;
-    *(unsigned char *)(iVar1 + 0x436 + param_2 * 4) = param_4;
-    *(unsigned char *)(iVar1 + 0x459) |= (unsigned char)(1 << (unsigned char)param_2);
-  }
+
+__attribute__((naked, noinline))
+void hud_set_state_message_text(short param_1 __attribute__((unused)), short param_2 __attribute__((unused)), short param_3 __attribute__((unused)), unsigned char param_4 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x46bd18, %%edx\n\t"
+      "imull $0x460, %%eax, %%eax\n\t"
+      "movb 0x458(%%eax,%%edx,1), %%cl\n\t"
+      "addl %%edx, %%eax\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lhud_set_state_message_text_1\n\t"
+      "movl 0x46bd10, %%ecx\n\t"
+      "movb 0x1(%%ecx), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .Lhud_set_state_message_text_1\n\t"
+      "movl 0x454(%%eax), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lhud_set_state_message_text_1\n\t"
+      "movw 0x10(%%ebp), %%dx\n\t"
+      "movb 0x14(%%ebp), %%cl\n\t"
+      "pushl %%esi\n\t"
+      "movswl 0xc(%%ebp), %%esi\n\t"
+      "movw %%dx, 0x434(%%eax,%%esi,4)\n\t"
+      "movb %%cl, 0x436(%%eax,%%esi,4)\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "movb $1, %%dl\n\t"
+      "shlb %%cl, %%dl\n\t"
+      "movb 0x459(%%eax), %%cl\n\t"
+      "popl %%esi\n\t"
+      "orb %%dl, %%cl\n\t"
+      "movb %%cl, 0x459(%%eax)\n\t"
+      ".Lhud_set_state_message_text_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "hud_set_state_message_text: clang naked draft required"
+#endif
+
 
 /* Find a message slot in the 4-entry array at base (each 0x8c bytes).
  * Prefers: exact match (tag_handle + param2), then free slot, then oldest.
@@ -1627,23 +1692,61 @@ short hud_find_nav_point_by_name(const char *param_1 __attribute__((unused)))
 #endif
 
 
-/* hud_get_nav_point_data (0xd5f40)
- * Returns pointer to a player's nav point data (0x30 bytes per player). */
-int hud_get_nav_point_data(short param_1)
+/* hud_get_nav_point_data (0xd5f40) — XBE naked draft (batch 94). */
+#if defined(__clang__)
+static void (*const bd5f40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bd5f40_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int hud_get_nav_point_data(short param_1 __attribute__((unused)))
 {
-  if (param_1 < 0 || param_1 >= 4) {
-    display_assert("local_player_index>=0&&local_player_index<MAXIMUM_NUMBER_"
-                   "OF_LOCAL_PLAYERS",
-                   "c:\\halo\\SOURCE\\interface\\hud_nav_points.c", 0x5f, 1);
-    system_exit(-1);
-  }
-  if (*(int *)0x46bd1c == 0) {
-    display_assert("nav_point_data",
-                   "c:\\halo\\SOURCE\\interface\\hud_nav_points.c", 0x60, 1);
-    system_exit(-1);
-  }
-  return param_1 * 0x30 + *(int *)0x46bd1c;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lhud_get_nav_point_data_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lhud_get_nav_point_data_2\n\t"
+      ".Lhud_get_nav_point_data_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5f\n\t"
+      "pushl $0x281d8c\n\t"
+      "pushl $0x281d40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhud_get_nav_point_data_2:\n\t"
+      "movl 0x46bd1c, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lhud_get_nav_point_data_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x60\n\t"
+      "pushl $0x281d8c\n\t"
+      "pushl $0x281d30\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhud_get_nav_point_data_3:\n\t"
+      "movl 0x46bd1c, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "shll $4, %%eax\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bd5f40_assert), [exitfn] "m"(bd5f40_exitfn)
+      : "memory");
 }
+#else
+#error "hud_get_nav_point_data: clang naked draft required"
+#endif
+
 
 /* hud_nav_points_initialize (0xd5fb0)
  * Allocates nav point data via game_state_malloc. */

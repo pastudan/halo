@@ -41,33 +41,61 @@ void ai_debug_dispose_from_old_map(void)
   csstrcpy((char *)0x5ac9d2, (const char *)0x25386f);
 }
 
-/* ai_debug_clear_storage: assert that both debug arrays are allocated, then
- * zero them. Asserts actor_debug_array != NULL (line 0xd0 = 208) and
- * actor_path_debug_array != NULL (line 0xd3 = 211) before zeroing each.
- *
- * Confirmed: __FILE__ = "c:\halo\SOURCE\ai\ai_debug.c" (0x25ab74)
- *   line 0xd0 (208) — actor_debug_array assert
- *   line 0xd3 (211) — actor_path_debug_array assert
- * Called from ai_debug_initialize_for_new_map (ai_debug.obj, 0x4c0f0).
- *
- * Note: decompiler showed csmemset size for path array as &DAT_00394f80
- * (treating immediate as address dereference).  Disassembly confirms
- * PUSH 0x394f80 — it is a literal immediate size, not a pointer. */
+/* ai_debug_clear_storage (0x49000) — XBE naked draft (batch 94). */
+#if defined(__clang__)
+static void (*const b49000_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b49000_exitfn)(int) = system_exit;
+static void *(*const b49000_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void ai_debug_clear_storage(void)
 {
-  if (*(void **)0x331f58 == NULL) {
-    display_assert("actor_debug_array", "c:\\halo\\SOURCE\\ai\\ai_debug.c",
-                   0xd0, 1);
-    system_exit(-1);
-  }
-  csmemset(*(void **)0x331f58, 0, 0x657c00);
-  if (*(void **)0x331f5c == NULL) {
-    display_assert("actor_path_debug_array", "c:\\halo\\SOURCE\\ai\\ai_debug.c",
-                   0xd3, 1);
-    system_exit(-1);
-  }
-  csmemset(*(void **)0x331f5c, 0, 0x394f80);
+  __asm__ volatile(
+      "movl 0x331f58, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lai_debug_clear_storage_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd0\n\t"
+      "pushl $0x25ab74\n\t"
+      "pushl $0x25abac\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_debug_clear_storage_1:\n\t"
+      "movl 0x331f58, %%eax\n\t"
+      "pushl $0x657c00\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x331f5c, %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lai_debug_clear_storage_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd3\n\t"
+      "pushl $0x25ab74\n\t"
+      "pushl $0x25ab94\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_debug_clear_storage_2:\n\t"
+      "movl 0x331f5c, %%ecx\n\t"
+      "pushl $0x394f80\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b49000_assert), [exitfn] "m"(b49000_exitfn), [memset] "m"(b49000_memset)
+      : "memory");
 }
+#else
+#error "ai_debug_clear_storage: clang naked draft required"
+#endif
+
 
 /* ai_debug_actor_deleted: scan actor_path_debug_array (0x20 entries, stride
  * 0x1ca7c) and clear the active flag (offset +0xc) for any entry whose actor
@@ -469,51 +497,56 @@ void ai_debug_update(void)
  *   3 args to csmemset(0x629d44,...) + 3 args to csmemset(0x62a3b4,...) +
  *   2 args to ai_debug_select_actor = 8 dwords = 0x20 bytes. */
 
-/* ai_debug_select_actor: reinitialize secondary encounter debug state when
- * either the encounter index or param_2 changes.  Calls
- * ai_debug_select_encounter(encounter_idx) to reset the primary per-encounter
- * debug block, then updates the secondary encounter index (0x5ac9f8), clears
- * the stride-loop byte array at 0x62a3b5 (0x200 entries, stride 0x40), and
- * stores param_2 into the 0x6323d8 globals block (with 0x6323d4 as a non-(-1)
- * boolean and 0x6323dc zeroed as a word).
- *
- * No __FILE__ string.  Called from ai_debug_select_encounter (0x49220),
- * FUN_0004b7a0, ai_debug_change_selected_actor, FUN_00054e20.
- *
- * Call-site verification (only one CALL):
- *   0x4b1ca: PUSH EAX — EAX set from [EBP+0x8] at 0x4b1b3 = encounter_idx
- *   -> ai_debug_select_encounter(encounter_idx)  [match]
- *   ADD ESP,0x4 confirms cdecl 1-arg cleanup.
- *
- * Store-offset table (absolute addresses):
- *   [0x5ac9f8] <- ESI (param_2)      dword
- *   [0x629d40] <- DL=0               byte  (XOR EDX,EDX)
- *   [0x62a3b5 + n*0x40] <- DL=0      byte  loop n=0..0x1ff
- *   [0x6323d4] <- (param_2 != -1)    byte  (SETNZ AL)
- *   [0x6323d8] <- ESI (param_2)      dword
- *   [0x6323dc] <- DX=0               word  (MOV word ptr [0x6323dc],DX) */
-void ai_debug_select_actor(int encounter_idx, int param_2)
-{
-  uint8_t *p;
-  int n;
+/* ai_debug_select_actor (0x4b1b0) — XBE naked draft (batch 94). */
+#if defined(__clang__)
+static void (*const b4b1b0_c49220)(int encounter_idx) = ai_debug_select_encounter;
 
-  if (*(int32_t *)0x5ac9f4 != encounter_idx ||
-      *(int32_t *)0x5ac9f8 != param_2) {
-    ai_debug_select_encounter(encounter_idx);
-    *(int32_t *)0x5ac9f8 = param_2;
-    *(uint8_t *)0x629d40 = 0;
-    p = (uint8_t *)0x62a3b5;
-    n = 0x200;
-    do {
-      *p = 0;
-      p += 0x40;
-      n--;
-    } while (n != 0);
-    *(uint8_t *)0x6323d4 = (param_2 != -1);
-    *(int32_t *)0x6323d8 = param_2;
-    *(uint16_t *)0x6323dc = 0;
-  }
+__attribute__((naked, noinline))
+void ai_debug_select_actor(int encounter_idx __attribute__((unused)), int param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl %%eax, 0x5ac9f4\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "jne .Lai_debug_select_actor_1\n\t"
+      "cmpl %%esi, 0x5ac9f8\n\t"
+      "je .Lai_debug_select_actor_3\n\t"
+      ".Lai_debug_select_actor_1:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c49220]\n\t"
+      "addl $4, %%esp\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movl %%esi, 0x5ac9f8\n\t"
+      "movb %%dl, 0x629d40\n\t"
+      "movl $0x62a3b5, %%eax\n\t"
+      "movl $0x200, %%ecx\n\t"
+      "jmp .Lai_debug_select_actor_2\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lai_debug_select_actor_2:\n\t"
+      "movb %%dl, (%%eax)\n\t"
+      "addl $0x40, %%eax\n\t"
+      "decl %%ecx\n\t"
+      "jne .Lai_debug_select_actor_2\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "setne %%al\n\t"
+      "movb %%al, 0x6323d4\n\t"
+      "movl %%esi, 0x6323d8\n\t"
+      "movw %%dx, 0x6323dc\n\t"
+      ".Lai_debug_select_actor_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c49220] "m"(b4b1b0_c49220)
+      : "memory");
 }
+#else
+#error "ai_debug_select_actor: clang naked draft required"
+#endif
+
 
 /* ai_debug_initialize_for_new_map: look up the encounter named DAT_005ac9d2 in
  * the scenario encounter list, reset debug encounter state, then if the

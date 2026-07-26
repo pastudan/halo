@@ -533,25 +533,59 @@ void FUN_00180570(int param_1, float *param_2)
   param_2[2] = result[2];
 }
 
-/* rasterizer_geometry_vertex_get_texcoord: copy 2-float texcoord from
- * compressed vertex to output (0x1805f0) */
-void FUN_001805f0(int param_1, float *param_2)
+/* FUN_001805f0 (0x1805f0) — XBE naked draft (batch 94). */
+#if defined(__clang__)
+static void (*const b1805f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1805f0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void FUN_001805f0(int param_1 __attribute__((unused)), float *param_2 __attribute__((unused)))
 {
-  if (param_1 == 0) {
-    display_assert("vertex",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x1ce,
-                   1);
-    system_exit(-1);
-  }
-  if (param_2 == 0) {
-    display_assert("texcoord",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x1cf,
-                   1);
-    system_exit(-1);
-  }
-  param_2[0] = *(float *)(param_1 + 0x18);
-  param_2[1] = *(float *)(param_1 + 0x1c);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_001805f0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1ce\n\t"
+      "pushl $0x2afe38\n\t"
+      "pushl $0x29cb70\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001805f0_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_001805f0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1cf\n\t"
+      "pushl $0x2afe38\n\t"
+      "pushl $0x2b0094\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001805f0_2:\n\t"
+      "movl 0x18(%%esi), %%eax\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "movl 0x1c(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1805f0_assert), [exitfn] "m"(b1805f0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_001805f0: clang naked draft required"
+#endif
+
 
 /* rasterizer_geometry_vertex_get_normal_packed: unpack normal from packed value
  * ptr (0x180660) */
@@ -1815,27 +1849,57 @@ void rasterizer_memory_pool_reset(void)
   *(int *)0x4d048c = 0;
 }
 
-/* rasterizer_memory_pool_alloc: allocate from memory pool, optionally copying
- * data (0x182530) */
-int rasterizer_memory_pool_alloc(int data, int size)
-{
-  unsigned int new_offset;
-  int result;
+/* rasterizer_memory_pool_alloc (0x182530) — XBE naked draft (batch 94). */
+#if defined(__clang__)
+static void * (*const b182530_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void (*const b182530_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
-  new_offset = *(unsigned int *)0x4d048c + size;
-  result = 0;
-  if (new_offset < 0x18001) {
-    result = *(int *)0x4d0488 + *(int *)0x4d048c;
-    *(unsigned int *)0x4d048c = new_offset;
-    if (data != 0) {
-      csmemcpy((void *)result, (void *)data, size);
-      return result;
-    }
-  } else {
-    error(2, "### ERROR rasterizer memory pool exceeded");
-  }
-  return result;
+__attribute__((naked, noinline))
+int rasterizer_memory_pool_alloc(int data __attribute__((unused)), int size __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x4d048c, %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "leal (%%ecx,%%edx,1), %%eax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpl $0x18000, %%eax\n\t"
+      "ja .Lrasterizer_memory_pool_alloc_1\n\t"
+      "movl 0x4d0488, %%esi\n\t"
+      "movl %%eax, 0x4d048c\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "addl %%ecx, %%esi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lrasterizer_memory_pool_alloc_2\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrasterizer_memory_pool_alloc_1:\n\t"
+      "pushl $0x2b07b0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lrasterizer_memory_pool_alloc_2:\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8e0b0] "m"(b182530_c8e0b0), [c8f390] "m"(b182530_c8f390)
+      : "memory");
 }
+#else
+#error "rasterizer_memory_pool_alloc: clang naked draft required"
+#endif
+
 
 /* rasterizer_memory_pool_copy: assert data non-null then copy into pool
  * (0x182590) */
