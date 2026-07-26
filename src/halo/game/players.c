@@ -3451,111 +3451,285 @@ void players_update_before_game_client(int player_handle, int anchor_unit,
     *((char *)players_globals + 0x2e) = 0;
 }
 
-/* Move all local players onto a structure BSP after load (0xbca60). */
+/* players_reconnect_to_structure_bsp (0xbca60) — XBE naked draft (batch 111). */
+#if defined(__clang__)
+static scenario_t * (*const bbca60_c18e380)(void) = global_scenario_get;
+static void *(*const bbca60_elem)(void *, int, int) = tag_block_get_element;
+static char (*const bbca60_c4dc30)(int, float *, int) = FUN_0014dc30;
+static void (*const bbca60_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const bbca60_c119810)(data_iter_t *iterator) = data_iterator_next;
+static char (*const bbca60_c18ef00)(int cluster_index, int object_handle) = FUN_0018ef00;
+static void (*const bbca60_c1a0890)(int unit_handle, vector3_t *out_pos, float *out_height_offset, float *out_camera_height) = biped_get_camera_height_and_offset;
+static int (*const bbca60_c18e720)(int point) = FUN_0018e720;
+static void * (*const bbca60_c18e3c0)(void) = scenario_get;
+static void (*const bbca60_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bbca60_exitfn)(int) = system_exit;
+static __int16 (*const bbca60_cba4c0)(__int16 a1) = local_player_get_next;
+static int (*const bbca60_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
+static void *(*const bbca60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bbca60_cbc920)(int player_handle, int anchor_unit, float *position) = players_update_before_game_client;
+
+__attribute__((naked, noinline))
 void players_reconnect_to_structure_bsp(void)
 {
-  void *scenario;
-  void *trigger_block;
-  int16_t structure_bsp_index;
-  int16_t local_player_index;
-  int player_handle;
-  char *player;
-  int unit_handle;
-  float probe_position[3];
-  float floor_height;
-  char adjust_height;
-  int anchor_unit;
-  data_iter_t iter;
-  vector3_t camera_pos;
-  float height_offset;
-  float camera_height;
-  int cluster_index;
-  void *surface_block;
-
-  if (*(int16_t *)((char *)players_globals + 0x2a) == (int16_t)NONE)
-    return;
-  if (*(int16_t *)((char *)players_globals + 0x24) <= 1)
-    return;
-
-  scenario = global_scenario_get();
-  structure_bsp_index = *(int16_t *)((char *)players_globals + 0x2a);
-  trigger_block = tag_block_get_element((char *)scenario + 0x39c,
-                                        (unsigned short)structure_bsp_index, 8);
-  if (*(int16_t *)((char *)trigger_block + 6) == (int16_t)NONE)
-    goto finish;
-
-  probe_position[0] = *(float *)((char *)trigger_block + 0x24);
-  probe_position[1] = *(float *)((char *)trigger_block + 0x28);
-  probe_position[2] = *(float *)((char *)trigger_block + 0x2c);
-  floor_height = 0.0f;
-  while (FUN_0014dc30(0x4029, probe_position, 0)) {
-    probe_position[2] = probe_position[2] + *(float *)0x2533e8;
-    floor_height = probe_position[2];
-    if (floor_height <= *(float *)0x2533e4)
-      break;
-  }
-  adjust_height = (char)(floor_height <= *(float *)0x2533e4);
-
-  anchor_unit = NONE;
-  data_iterator_new(&iter, player_data);
-  while ((player = (char *)data_iterator_next(&iter)) != NULL) {
-    unit_handle = *(int *)(player + 0x34);
-    if (unit_handle == NONE)
-      continue;
-
-    trigger_block = tag_block_get_element((char *)scenario + 0x39c,
-                                          (unsigned short)structure_bsp_index,
-                                          8);
-    if (!FUN_0018ef00((int)*(int16_t *)trigger_block, unit_handle))
-      continue;
-
-    biped_get_camera_height_and_offset(unit_handle, &camera_pos, &height_offset,
-                                       &camera_height);
-    cluster_index = FUN_0018e720((int)(player + 0x50));
-    if (cluster_index == NONE)
-      continue;
-
-    cluster_index = FUN_0018e720(cluster_index + 0x10) & 0x7fffffff;
-    surface_block = tag_block_get_element((char *)scenario_get() + 0xe0,
-                                          cluster_index, 0x5c);
-    if (*(int16_t *)((char *)surface_block + 8) == (int16_t)NONE)
-      continue;
-
-    if (!adjust_height) {
-      probe_position[0] = camera_pos.x;
-      probe_position[1] = camera_pos.y;
-      probe_position[2] = camera_pos.z;
-    } else {
-      probe_position[2] = floor_height + probe_position[2];
-    }
-    anchor_unit = unit_handle;
-    break;
-  }
-
-  if (anchor_unit == NONE) {
-    error(2, (char *)0x26eecc);
-    goto finish;
-  }
-
-  local_player_index = local_player_get_next(NONE);
-  while (local_player_index != NONE) {
-    player_handle = local_player_get_player_index(local_player_index);
-    if (player_handle != NONE) {
-      player = (char *)datum_get(player_data, player_handle);
-      unit_handle = *(int *)(player + 0x34);
-      if (unit_handle != NONE && unit_handle != anchor_unit)
-        players_update_before_game_client(player_handle, anchor_unit,
-                                          probe_position);
-    }
-    local_player_index = local_player_get_next(local_player_index);
-  }
-
-finish:
-  *(int16_t *)((char *)players_globals + 0x2a) = (int16_t)NONE;
-  data_iterator_new(&iter, player_data);
-  while ((player = (char *)data_iterator_next(&iter)) != NULL)
-    *(int16_t *)(player + 0x3c) = (int16_t)NONE;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x38, %%esp\n\t"
+      "movl 0x5aa6cc, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "cmpw %%di, 0x2a(%%eax)\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_13\n\t"
+      "cmpw $1, 0x24(%%eax)\n\t"
+      "jle .Lplayers_reconnect_to_structure_bsp_13\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c18e380]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x5aa6cc, %%eax\n\t"
+      "movswl 0x2a(%%eax), %%ecx\n\t"
+      "pushl $8\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x39c(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "movw 0x6(%%eax), %%ax\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw %%di, %%ax\n\t"
+      "movl %%edi, -0xc(%%ebp)\n\t"
+      "movb %%bl, -0x1(%%ebp)\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_3\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "pushl $0x5c\n\t"
+      "pushl %%eax\n\t"
+      "addl $0x4e4, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl $0x24, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, -0x1c(%%ebp)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, -0x18(%%ebp)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_1:\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x1c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x4029\n\t"
+      "call *%[c4dc30]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_2\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fadds 0x2533e8\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fadds 0x2533e8\n\t"
+      "fsts -0x8(%%ebp)\n\t"
+      "fcomps 0x2533e4\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lplayers_reconnect_to_structure_bsp_1\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_2:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "fcomps 0x2533e4\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lplayers_reconnect_to_structure_bsp_3\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_3:\n\t"
+      "movl 0x5aa6d4, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x38(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x38(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_8\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_4:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .Lplayers_reconnect_to_structure_bsp_9\n\t"
+      "movl 0x34(%%edi), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_7\n\t"
+      "movl 0x5aa6cc, %%edx\n\t"
+      "movw 0x2a(%%edx), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_7\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "pushl $8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x39c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw (%%eax), %%cx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c18ef00]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_7\n\t"
+      "leal -0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x34(%%edi), %%edx\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1a0890]\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e720]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_7\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c18e720]\n\t"
+      "andl $0x7fffffff, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e3c0]\n\t"
+      "addl $0xe0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movswl 0x8(%%eax), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_7\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lplayers_reconnect_to_structure_bsp_5\n\t"
+      "movl -0x28(%%ebp), %%edx\n\t"
+      "movl -0x24(%%ebp), %%eax\n\t"
+      "movl -0x20(%%ebp), %%ecx\n\t"
+      "movl %%edx, -0x1c(%%ebp)\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "movl %%ecx, -0x14(%%ebp)\n\t"
+      "jmp .Lplayers_reconnect_to_structure_bsp_6\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_5:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fadds -0x14(%%ebp)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_6:\n\t"
+      "movl 0x34(%%edi), %%edx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movb $1, %%bl\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_7:\n\t"
+      "leal -0x38(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lplayers_reconnect_to_structure_bsp_4\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .Lplayers_reconnect_to_structure_bsp_9\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_8:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x63a\n\t"
+      "pushl $0x26eb68\n\t"
+      "pushl $0x26eecc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .Lplayers_reconnect_to_structure_bsp_12\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_9:\n\t"
+      "pushl $-1\n\t"
+      "call *%[cba4c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_12\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_10:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cba3c0]\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%eax), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_11\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_11\n\t"
+      "leal -0x1c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[cbc920]\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0xffff, 0x3c(%%eax)\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_11:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cba4c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "cmpw $-1, %%si\n\t"
+      "jne .Lplayers_reconnect_to_structure_bsp_10\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_12:\n\t"
+      "movl 0x5aa6cc, %%ecx\n\t"
+      "popl %%esi\n\t"
+      "movw $0xffff, 0x2a(%%ecx)\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_13:\n\t"
+      "movl 0x5aa6d4, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x38(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x38(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lplayers_reconnect_to_structure_bsp_15\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_14:\n\t"
+      "leal -0x38(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movw %%di, 0x3c(%%eax)\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lplayers_reconnect_to_structure_bsp_14\n\t"
+      ".Lplayers_reconnect_to_structure_bsp_15:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(bbca60_c18e380), [elem] "m"(bbca60_elem), [c4dc30] "m"(bbca60_c4dc30), [c1197b0] "m"(bbca60_c1197b0), [c119810] "m"(bbca60_c119810), [c18ef00] "m"(bbca60_c18ef00), [c1a0890] "m"(bbca60_c1a0890), [c18e720] "m"(bbca60_c18e720), [c18e3c0] "m"(bbca60_c18e3c0), [assert] "m"(bbca60_assert), [exitfn] "m"(bbca60_exitfn), [cba4c0] "m"(bbca60_cba4c0), [cba3c0] "m"(bbca60_cba3c0), [dget] "m"(bbca60_dget), [cbc920] "m"(bbca60_cbc920)
+      : "memory");
 }
+#else
+#error "players_reconnect_to_structure_bsp: clang naked draft required"
+#endif
+
 
 void FUN_000c0b70(int16_t function_index, int thread_datum, char init)
 {

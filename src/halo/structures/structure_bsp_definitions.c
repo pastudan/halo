@@ -236,56 +236,237 @@ void leaf_map_build_portals_from_leaf(void)
   (void)edi;
 }
 
-/* 0x192f80 */
+/* leaf_map_build_leaf_face_for_leaf_on_node (0x192f80) — XBE naked draft (batch 114). */
+#if defined(__clang__)
+static void *(*const b192f80_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b192f80_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b192f80_exitfn)(int) = system_exit;
+static void (*const b192f80_c192c30)(void) = intersect_planes3d;
+static int16_t (*const b192f80_c106510)(int16_t count, float *points, float *line, int16_t max_count, float *out_points, uint32_t *out_bitmask, uint8_t *changed, float epsilon) = convex_polygon2d_clip_to_plane;
+static int16_t (*const b192f80_c1b9ad0)(void *tag_block) = tag_block_add_element;
+static bool (*const b192f80_c1b9a90)(void *block, int count) = tag_block_resize;
+static void * (*const b192f80_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
 void leaf_map_build_leaf_face_for_leaf_on_node(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 12);
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x193122 */
-  /* relift: cmp word ptr [ebp - 0x228], 0 -> je 0x1931d2 */
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x192ff8 */
-  /* cmp (int16_t)edi, (int16_t)eax -> jl 0x193015 */
-  display_assert((char *)0x002b2900, (char *)0x002b28b4, 59, 0);
-  system_exit(0);
-  /* relift: cmp esi, dword ptr [ebp + 0xc] -> je 0x193112 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
-  intersect_planes3d();
-  /* cmp (int16_t)eax, 1 -> jne 0x193106 */
-  convex_polygon2d_clip_to_plane(edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, 64, (float *)(uintptr_t)edx, (void *)0, (void *)0, 0.0f);
-  display_assert((char *)0x002b2acc, (char *)0x002b28b4, 227, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x193112 */
-  /* cmp (int16_t)edi, (int16_t)eax -> jl 0x192fe0 */
-  /* relift: cmp word ptr [ebp - 0x228], 0 -> je 0x1931d2 */
-  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
-  tag_block_add_element((void *)(uintptr_t)esi);
-  /* cmp (int16_t)eax, 0xffff -> je 0x1931bf */
-  tag_block_get_element((void *)(uintptr_t)esi, 0, 16);
-  tag_block_resize((void *)(uintptr_t)eax, 0);
-  /* test (char)eax, (char)eax -> je 0x1931a5 */
-  csmemcpy((void *)(uintptr_t)eax, (void *)(uintptr_t)edx, ecx);
-  /* test eax, eax -> jne 0x1931d2 */
-  /* mem[0x004d8e94] = 0x2b2aa8 */
-  /* test eax, eax -> jne 0x1931d2 */
-  /* mem[0x004d8e94] = 0x2b2a88 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x228, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "andl $0x7fffffff, %%eax\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%eax\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0xc, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "movl $0x81, %%ecx\n\t"
+      "movl $0x3271e0, %%esi\n\t"
+      "leal -0x228(%%ebp), %%edi\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "movw 0x4d8e90, %%ax\n\t"
+      "rep movsl\n\t"
+      "addl $0x18, %%esp\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lleaf_map_build_leaf_face_for_leaf_on_node_7\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lleaf_map_build_leaf_face_for_leaf_on_node_1:\n\t"
+      "cmpw $0, -0x228(%%ebp)\n\t"
+      "je .Lleaf_map_build_leaf_face_for_leaf_on_node_10\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Lleaf_map_build_leaf_face_for_leaf_on_node_2\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jl .Lleaf_map_build_leaf_face_for_leaf_on_node_3\n\t"
+      ".Lleaf_map_build_leaf_face_for_leaf_on_node_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3b\n\t"
+      "pushl $0x2b28b4\n\t"
+      "pushl $0x2b2900\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lleaf_map_build_leaf_face_for_leaf_on_node_3:\n\t"
+      "movswl 0x4d8e90, %%eax\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "movl 0x4d8a8c(,%%eax,4), %%esi\n\t"
+      "cmpl 0xc(%%ebp), %%esi\n\t"
+      "je .Lleaf_map_build_leaf_face_for_leaf_on_node_6\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl %%esi, %%edx\n\t"
+      "pushl $0xc\n\t"
+      "andl $0x7fffffff, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0xc, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "jns .Lleaf_map_build_leaf_face_for_leaf_on_node_4\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fchs\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fchs\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fchs\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fchs\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lleaf_map_build_leaf_face_for_leaf_on_node_4:\n\t"
+      "movl -0x18(%%ebp), %%esi\n\t"
+      "leal -0x24(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c192c30]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .Lleaf_map_build_leaf_face_for_leaf_on_node_5\n\t"
+      "pushl $0x39800000\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "leal -0x224(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x228(%%ebp), %%edx\n\t"
+      "pushl $0x40\n\t"
+      "leal -0x24(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x224(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c106510]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "movw %%ax, -0x228(%%ebp)\n\t"
+      "jne .Lleaf_map_build_leaf_face_for_leaf_on_node_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe3\n\t"
+      "pushl $0x2b28b4\n\t"
+      "pushl $0x2b2acc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .Lleaf_map_build_leaf_face_for_leaf_on_node_6\n\t"
+      ".Lleaf_map_build_leaf_face_for_leaf_on_node_5:\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lleaf_map_build_leaf_face_for_leaf_on_node_6\n\t"
+      "movw %%ax, -0x228(%%ebp)\n\t"
+      ".Lleaf_map_build_leaf_face_for_leaf_on_node_6:\n\t"
+      "movw 0x4d8e90, %%ax\n\t"
+      "incl %%edi\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jl .Lleaf_map_build_leaf_face_for_leaf_on_node_1\n\t"
+      ".Lleaf_map_build_leaf_face_for_leaf_on_node_7:\n\t"
+      "cmpw $0, -0x228(%%ebp)\n\t"
+      "je .Lleaf_map_build_leaf_face_for_leaf_on_node_10\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x18\n\t"
+      "andl $0x7fffffff, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "addl $4, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1b9ad0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lleaf_map_build_leaf_face_for_leaf_on_node_9\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl %%ecx, (%%esi)\n\t"
+      "movswl -0x228(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0x4(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1b9a90]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lleaf_map_build_leaf_face_for_leaf_on_node_8\n\t"
+      "movswl -0x228(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "shll $3, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x224(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lleaf_map_build_leaf_face_for_leaf_on_node_8:\n\t"
+      "movl 0x4d8e94, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lleaf_map_build_leaf_face_for_leaf_on_node_10\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $0x2b2aa8, 0x4d8e94\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lleaf_map_build_leaf_face_for_leaf_on_node_9:\n\t"
+      "movl 0x4d8e94, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lleaf_map_build_leaf_face_for_leaf_on_node_10\n\t"
+      "movl $0x2b2a88, 0x4d8e94\n\t"
+      ".Lleaf_map_build_leaf_face_for_leaf_on_node_10:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b192f80_elem), [assert] "m"(b192f80_assert), [exitfn] "m"(b192f80_exitfn), [c192c30] "m"(b192f80_c192c30), [c106510] "m"(b192f80_c106510), [c1b9ad0] "m"(b192f80_c1b9ad0), [c1b9a90] "m"(b192f80_c1b9a90), [c8e0b0] "m"(b192f80_c8e0b0)
+      : "memory");
 }
+#else
+#error "leaf_map_build_leaf_face_for_leaf_on_node: clang naked draft required"
+#endif
+
 
 /* 0x1931e0 */
 void FUN_001931e0(void)

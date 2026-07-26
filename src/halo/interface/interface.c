@@ -252,70 +252,351 @@ void FUN_000dedf0(void)
   (void)esi;
 }
 
-/* 0xdefb0 */
+/* interface_draw_screen (0xdefb0) — XBE naked draft (batch 109). */
+#if defined(__clang__)
+static void (*const bdefb0_cdedf0)(void) = FUN_000dedf0;
+static void *(*const bdefb0_tag)(int, int) = tag_get;
+static void *(*const bdefb0_elem)(void *, int, int) = tag_block_get_element;
+static int16_t (*const bdefb0_cb6a70)(int16_t local_player_index) = player_control_get_zoom_level;
+static void *(*const bdefb0_memset)(void *, int, unsigned int) = csmemset;
+static int16_t (*const bdefb0_c100b00)(void) = main_get_window_count;
+static void (*const bdefb0_c10b820)(float a, float b, float blend, float *out) = scalars_interpolate;
+static void (*const bdefb0_c17d9d0)(void) = FUN_0017d9d0;
+static void (*const bdefb0_c17cb90)(void *decal) = FUN_0017cb90;
+static void (*const bdefb0_cd1400)(void) = FUN_000d1400;
+static void (*const bdefb0_cafdf0)(void) = FUN_000afdf0;
+
+__attribute__((naked, noinline))
 void interface_draw_screen(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* relift: cmp word ptr [0x506548], -1 -> je 0xdf341 */
-  FUN_000dedf0();
-  /* cmp eax, -1 -> je 0xdf32d */
-  tag_get('ihpw', 0);
-  /* test ecx, ecx -> jle 0xdf32d */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 184);
-  player_control_get_zoom_level(ecx);
-  csmemset((void *)0, 0, 0);
-  /* test (char)ebx, (char)ebx -> jne 0xdf03b */
-  /* relift: test byte ptr [esi + 4], 1 -> jne 0xdf08e */
-  main_get_window_count();
-  /* cmp (int16_t)eax, 1 -> jg 0xdf04b */
-  /* cmp eax, -1 -> je 0xdf08e */
-  tag_get(0x6269746d, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  main_get_window_count();
-  /* cmp (int16_t)eax, 1 -> jg 0xdf13d */
-  /* test (char)ebx, (char)ebx -> jne 0xdf0ab */
-  /* relift: test byte ptr [esi + 0x40], 1 -> jne 0xdf141 */
-  /* test (char)eax, 0x41 -> jne 0xdf100 */
-  scalars_interpolate(0.0f, 0.0f, 0.0f, (float *)(uintptr_t)edx);
-  /* test (char)eax, 0x41 -> jne 0xdf13b */
-  /* test (char)ebx, (char)ebx -> jne 0xdf14b */
-  /* relift: test byte ptr [esi + 0x6c], 1 -> jne 0xdf202 */
-  /* relift: test byte ptr [esi + 0x6c], 2 -> je 0xdf190 */
-  /* test (char)eax, 0x41 -> jne 0xdf187 */
-  FUN_0017d9d0();
-  FUN_0017d9d0();
-  /* test (char)eax, 0x41 -> jne 0xdf1d8 */
-  FUN_0017d9d0();
-  /* test (char)eax, 0x41 -> jne 0xdf1fc */
-  /* test (char)ebx, (char)ebx -> jne 0xdf20f */
-  /* relift: test byte ptr [esi + 0x8c], 1 -> jne 0xdf311 */
-  /* test (char)eax, 0x41 -> jne 0xdf251 */
-  FUN_0017d9d0();
-  FUN_0017d9d0();
-  /* test (char)eax, 0x41 -> jne 0xdf2a8 */
-  FUN_0017d9d0();
-  /* test (char)eax, 0x41 -> jne 0xdf30f */
-  FUN_0017cb90((void *)(uintptr_t)eax);
-  FUN_000d1400();
-  FUN_000afdf0();
-  FUN_0017cb90((void *)(uintptr_t)eax);
-  FUN_000d1400();
-  FUN_000afdf0();
-  FUN_0017cb90((void *)0);
-  FUN_000d1400();
-  FUN_000afdf0();
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x44, %%esp\n\t"
+      "cmpw $-1, 0x506548\n\t"
+      "je .Linterface_draw_screen_36\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cdedf0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Linterface_draw_screen_35\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x77706869\n\t"
+      "call *%[tag]\n\t"
+      "movl 0xac(%%eax), %%ecx\n\t"
+      "addl $0xac, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .Linterface_draw_screen_35\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0xb8\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x506548, %%cx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[cb6a70]\n\t"
+      "pushl $0x38\n\t"
+      "leal -0x44(%%ebp), %%edx\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "setne %%bl\n\t"
+      "call *%[memset]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .Linterface_draw_screen_1\n\t"
+      "testb $1, 0x4(%%esi)\n\t"
+      "jne .Linterface_draw_screen_4\n\t"
+      ".Linterface_draw_screen_1:\n\t"
+      "call *%[c100b00]\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jg .Linterface_draw_screen_2\n\t"
+      "movl 0x24(%%esi), %%eax\n\t"
+      "jmp .Linterface_draw_screen_3\n\t"
+      ".Linterface_draw_screen_2:\n\t"
+      "movl 0x34(%%esi), %%eax\n\t"
+      ".Linterface_draw_screen_3:\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Linterface_draw_screen_4\n\t"
+      "pushl $0x30\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6269746d\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x60, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, -0x3c(%%ebp)\n\t"
+      "movb 0x6c(%%esi), %%al\n\t"
+      "shrb $2, %%al\n\t"
+      "andb $1, %%al\n\t"
+      "movb %%al, -0x23(%%ebp)\n\t"
+      "movb 0x8c(%%esi), %%cl\n\t"
+      "shrb $3, %%cl\n\t"
+      "addl $0xc, %%esp\n\t"
+      "andb $1, %%cl\n\t"
+      "movb %%cl, -0x22(%%ebp)\n\t"
+      ".Linterface_draw_screen_4:\n\t"
+      "call *%[c100b00]\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jg .Linterface_draw_screen_12\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .Linterface_draw_screen_5\n\t"
+      "testb $1, 0x40(%%esi)\n\t"
+      "jne .Linterface_draw_screen_13\n\t"
+      ".Linterface_draw_screen_5:\n\t"
+      "flds 0x44(%%esi)\n\t"
+      "movl $0, -0xc(%%ebp)\n\t"
+      "fcomps 0x48(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Linterface_draw_screen_9\n\t"
+      "flds 0x506578\n\t"
+      "fsubs 0x44(%%esi)\n\t"
+      "flds 0x48(%%esi)\n\t"
+      "fsubs 0x44(%%esi)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Linterface_draw_screen_6\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      "jmp .Linterface_draw_screen_8\n\t"
+      ".Linterface_draw_screen_6:\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Linterface_draw_screen_7\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0x3f800000, -0x8(%%ebp)\n\t"
+      "jmp .Linterface_draw_screen_8\n\t"
+      ".Linterface_draw_screen_7:\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      ".Linterface_draw_screen_8:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl 0x50(%%esi), %%ecx\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x4c(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c10b820]\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "jmp .Linterface_draw_screen_10\n\t"
+      ".Linterface_draw_screen_9:\n\t"
+      "flds 0x50(%%esi)\n\t"
+      ".Linterface_draw_screen_10:\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Linterface_draw_screen_11\n\t"
+      "fstps -0x40(%%ebp)\n\t"
+      "movw $2, -0x42(%%ebp)\n\t"
+      "jmp .Linterface_draw_screen_12\n\t"
+      ".Linterface_draw_screen_11:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Linterface_draw_screen_12:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .Linterface_draw_screen_14\n\t"
+      ".Linterface_draw_screen_13:\n\t"
+      "testb $1, 0x6c(%%esi)\n\t"
+      "jne .Linterface_draw_screen_24\n\t"
+      ".Linterface_draw_screen_14:\n\t"
+      "movl 0x70(%%esi), %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "testb $2, 0x6c(%%esi)\n\t"
+      "je .Linterface_draw_screen_18\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Linterface_draw_screen_15\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Linterface_draw_screen_17\n\t"
+      ".Linterface_draw_screen_15:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Linterface_draw_screen_16\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Linterface_draw_screen_17\n\t"
+      ".Linterface_draw_screen_16:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      ".Linterface_draw_screen_17:\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      ".Linterface_draw_screen_18:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x6e(%%esi), %%cx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c17d9d0]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Linterface_draw_screen_19\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Linterface_draw_screen_21\n\t"
+      ".Linterface_draw_screen_19:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x6e(%%esi), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c17d9d0]\n\t"
+      "fcomps 0x2533c8\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Linterface_draw_screen_20\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Linterface_draw_screen_21\n\t"
+      ".Linterface_draw_screen_20:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x6e(%%esi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c17d9d0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Linterface_draw_screen_21:\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Linterface_draw_screen_22\n\t"
+      "fstps -0x38(%%ebp)\n\t"
+      "jmp .Linterface_draw_screen_23\n\t"
+      ".Linterface_draw_screen_22:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Linterface_draw_screen_23:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .Linterface_draw_screen_25\n\t"
+      ".Linterface_draw_screen_24:\n\t"
+      "testb $1, 0x8c(%%esi)\n\t"
+      "jne .Linterface_draw_screen_34\n\t"
+      ".Linterface_draw_screen_25:\n\t"
+      "testb $2, 0x8c(%%esi)\n\t"
+      "movl 0x90(%%esi), %%ecx\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "je .Linterface_draw_screen_29\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Linterface_draw_screen_26\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Linterface_draw_screen_28\n\t"
+      ".Linterface_draw_screen_26:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Linterface_draw_screen_27\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Linterface_draw_screen_28\n\t"
+      ".Linterface_draw_screen_27:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      ".Linterface_draw_screen_28:\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      ".Linterface_draw_screen_29:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x8e(%%esi), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c17d9d0]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Linterface_draw_screen_30\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Linterface_draw_screen_32\n\t"
+      ".Linterface_draw_screen_30:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x8e(%%esi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c17d9d0]\n\t"
+      "fcomps 0x2533c8\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Linterface_draw_screen_31\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Linterface_draw_screen_32\n\t"
+      ".Linterface_draw_screen_31:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x8e(%%esi), %%cx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c17d9d0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Linterface_draw_screen_32:\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Linterface_draw_screen_33\n\t"
+      "fstps -0x34(%%ebp)\n\t"
+      "movb 0x8c(%%esi), %%dl\n\t"
+      "shrb $2, %%dl\n\t"
+      "andb $1, %%dl\n\t"
+      "movb %%dl, -0x24(%%ebp)\n\t"
+      "addl $0x94, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "movl %%eax, -0x30(%%ebp)\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl %%ecx, -0x2c(%%ebp)\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "leal -0x44(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edx, -0x28(%%ebp)\n\t"
+      "call *%[c17cb90]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "call *%[cd1400]\n\t"
+      "call *%[cafdf0]\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Linterface_draw_screen_33:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Linterface_draw_screen_34:\n\t"
+      "leal -0x44(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c17cb90]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "call *%[cd1400]\n\t"
+      "call *%[cafdf0]\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Linterface_draw_screen_35:\n\t"
+      "pushl $0\n\t"
+      "call *%[c17cb90]\n\t"
+      "addl $4, %%esp\n\t"
+      "call *%[cd1400]\n\t"
+      "call *%[cafdf0]\n\t"
+      ".Linterface_draw_screen_36:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cdedf0] "m"(bdefb0_cdedf0), [tag] "m"(bdefb0_tag), [elem] "m"(bdefb0_elem), [cb6a70] "m"(bdefb0_cb6a70), [memset] "m"(bdefb0_memset), [c100b00] "m"(bdefb0_c100b00), [c10b820] "m"(bdefb0_c10b820), [c17d9d0] "m"(bdefb0_c17d9d0), [c17cb90] "m"(bdefb0_c17cb90), [cd1400] "m"(bdefb0_cd1400), [cafdf0] "m"(bdefb0_cafdf0)
+      : "memory");
 }
+#else
+#error "interface_draw_screen: clang naked draft required"
+#endif
+
 
 /* 0xdf350 */
 void profile_graph_toggle(int a0)

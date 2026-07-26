@@ -1330,146 +1330,306 @@ float point_to_line_distance3d(float *p1 __attribute__((unused)), float *p2 __at
 #endif
 
 
-/* actor_action_set_default_state (0x1d7c0) — Transition an actor to a default
- * action state. If state == -1 (0xffff), uses actor+0x60 or actor+0x62 as
- * a fallback state index. Dispatches through a 12-entry switch:
- *   cases 0,2-7: lookup table at 0x2542e8 maps state to an action type,
- *     then calls FUN_00012000 to build action data and actor_action_change(2).
- *   case 1: set actor+0x6a = 1, call actor_action_change(1, 0).
- *   case 8: call FUN_00015880, then actor_action_change(6).
- *   case 9: if already in action 6, set actor+0xaa = 1; else try FUN_00015900
- *     and actor_action_change(6).
- *   case 10: set panic state fields, try actor_action_handle_lost_contact,
- *     fallback to FUN_00015880 + actor_action_change(6).
- *   case 11: try FUN_00015040(0xd, ...), then FUN_00015880 fallback.
- * Falls through to a final idle check: if action==0, try FUN_00012000(0, -1)
- * and actor_action_change(2).
- *
- * Confirmed: jump table at 0x1da74. Confirmed: lookup table at 0x2542e8
- * = {0, 0, 0, 1, 2, 3, 4, 5, 0, 0, 0, 0}.
- * Confirmed: game_time_get() throttle with +0x2d cooldown at actor+0x64.
- */
-char actor_action_set_default_state(int actor_handle, short state)
+/* actor_action_set_default_state (0x1d7c0) — XBE naked draft (batch 109). */
+#if defined(__clang__)
+static void *(*const b1d7c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const b1d7c0_gtime)(void) = game_time_get;
+static void (*const b1d7c0_c1d030)(int actor_handle, int new_action_type, int param_3) = actor_action_change;
+static int (*const b1d7c0_c15880)(int actor_handle, char *state_data) = FUN_00015880;
+static char (*const b1d7c0_c12000)(int actor_handle, int param_2, int param_3, int state_data) = FUN_00012000;
+static int (*const b1d7c0_c15900)(int actor_handle, short param_2, char *state_data) = FUN_00015900;
+static int16_t (*const b1d7c0_c1d6d0)(int actor_handle) = actor_action_try_to_panic;
+static char (*const b1d7c0_c1ef90)(int actor_handle) = actor_action_handle_lost_contact;
+static char (*const b1d7c0_c15040)(int actor_handle, short param_2, int param_3, char param_4, char param_5, char param_6, short *param_7) = FUN_00015040;
+
+__attribute__((naked, noinline))
+char actor_action_set_default_state(int actor_handle __attribute__((unused)), short state __attribute__((unused)))
 {
-  char *actor;
-  int game_time;
-  int switch_val;
-  short local_88[66];
-  char result;
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  game_time = game_time_get();
-  result = 0;
-
-  /* Throttle: if state == -1 and we have a valid timestamp, skip if within
-   * cooldown */
-  if (state == (short)-1 && *(int *)(actor + 0x64) != -1 &&
-      *(int *)(actor + 0x64) + 0x2d >= game_time) {
-    return 0;
-  }
-
-  *(int *)(actor + 0x64) = game_time;
-
-  if (state != (short)-1) {
-    /* state already specified, skip fallback resolution */
-  } else {
-    /* Resolve fallback state from actor fields */
-    if (*(unsigned short *)(actor + 0x60) != 0xffff) {
-      state = *(short *)(actor + 0x60);
-      *(short *)(actor + 0x60) = (short)0xffff;
-    } else {
-      if (*(unsigned short *)(actor + 0x62) == 0xffff)
-        state = 0;
-      else
-        state = *(short *)(actor + 0x62);
-    }
-  }
-
-  switch_val = (int)state;
-
-  switch (switch_val) {
-  case 0:
-  case 2:
-  case 3:
-  case 4:
-  case 5:
-  case 6:
-  case 7:
-    if (*(short *)(actor + 0x6c) == 2 &&
-        *(short *)(actor + 0x9c) == *(short *)(0x2542e8 + switch_val * 2))
-      break;
-    if (FUN_00012000(actor_handle, (int)*(short *)(0x2542e8 + switch_val * 2),
-                     -1, (int)local_88))
-      goto action_change_2;
-    break;
-  case 1:
-    if (*(short *)(actor + 0x6a) != 1) {
-      *(short *)(actor + 0x6a) = 1;
-      actor_action_change(actor_handle, 1, 0);
-      result = 1;
-      return result;
-    }
-    break;
-  case 8:
-    if ((*(short *)(actor + 0x6c) != 6 || *(short *)(actor + 0xc0) != 1) &&
-        FUN_00015880(actor_handle, (char *)local_88)) {
-      actor_action_change(actor_handle, 6, (int)local_88);
-      result = 1;
-      return result;
-    }
-    break;
-  case 9:
-    if (*(short *)(actor + 0x6c) == 6) {
-      if (*(short *)(actor + 0xc0) != 3)
-        *(char *)(actor + 0xaa) = 1;
-    } else {
-      if (FUN_00015900(actor_handle, 0, (char *)local_88)) {
-        actor_action_change(actor_handle, 6, (int)local_88);
-        result = 1;
-        return result;
-      }
-    }
-    break;
-  case 10:
-    if (actor_action_try_to_panic(actor_handle) != 3) {
-      *(short *)(actor + 0x6a) = 3;
-      *(short *)(actor + 0x72) = 2;
-      *(short *)(actor + 0x6e) = 2;
-      if (!actor_action_handle_lost_contact(actor_handle) &&
-          FUN_00015880(actor_handle, (char *)local_88)) {
-        actor_action_change(actor_handle, 6, (int)local_88);
-        result = 1;
-        return result;
-      }
-    }
-    break;
-  case 11:
-    if (*(short *)(actor + 0x6c) != 4) {
-      if (FUN_00015040(actor_handle, 0xd, -1, 1, 0, 0, (short *)local_88)) {
-        actor_action_change(actor_handle, 4, (int)local_88);
-        result = 1;
-        return result;
-      }
-      if (*(short *)(actor + 0x6c) != 6 &&
-          FUN_00015880(actor_handle, (char *)local_88)) {
-        actor_action_change(actor_handle, 6, (int)local_88);
-        result = 1;
-        return result;
-      }
-    }
-    break;
-  }
-
-  /* Final idle fallback: if actor is in action 0, try alert action */
-  if (*(short *)(actor + 0x6c) == 0 &&
-      FUN_00012000(actor_handle, 0, -1, (int)local_88)) {
-  action_change_2:
-    actor_action_change(actor_handle, 2, (int)local_88);
-    result = 1;
-  }
-
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x84, %%esp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[gtime]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "jne .Lactor_action_set_default_state_1\n\t"
+      "movl 0x64(%%esi), %%edx\n\t"
+      "cmpl $-1, %%edx\n\t"
+      "je .Lactor_action_set_default_state_1\n\t"
+      "addl $0x2d, %%edx\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "jge .Lactor_action_set_default_state_11\n\t"
+      ".Lactor_action_set_default_state_1:\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "movl %%eax, 0x64(%%esi)\n\t"
+      "je .Lactor_action_set_default_state_2\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "jmp .Lactor_action_set_default_state_4\n\t"
+      ".Lactor_action_set_default_state_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x60(%%esi), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lactor_action_set_default_state_3\n\t"
+      "movw $0xffff, 0x60(%%esi)\n\t"
+      "jmp .Lactor_action_set_default_state_4\n\t"
+      ".Lactor_action_set_default_state_3:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x62(%%esi), %%ax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "sete %%cl\n\t"
+      "decl %%ecx\n\t"
+      "andl %%ecx, %%eax\n\t"
+      ".Lactor_action_set_default_state_4:\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl $0xb, %%eax\n\t"
+      "ja .Lactor_action_set_default_state_9\n\t"
+      "jmp *.Lactor_action_set_default_state_jt(,%%eax,4)\n\t"
+      ".Lactor_action_set_default_state_5:\n\t"
+      "movl $1, %%eax\n\t"
+      "cmpw %%ax, 0x6a(%%esi)\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movw %%ax, 0x6a(%%esi)\n\t"
+      "call *%[c1d030]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%bl\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_set_default_state_6:\n\t"
+      "cmpw $6, 0x6c(%%esi)\n\t"
+      "jne .Lactor_action_set_default_state_7\n\t"
+      "cmpw $1, 0xc0(%%esi)\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      ".Lactor_action_set_default_state_7:\n\t"
+      "leal -0x84(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c15880]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      "leal -0x84(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $6\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d030]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%bl\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_set_default_state_8:\n\t"
+      "cmpw $6, 0x6c(%%esi)\n\t"
+      "jne .Lactor_action_set_default_state_12\n\t"
+      "cmpw $3, 0xc0(%%esi)\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      "movb $1, 0xaa(%%esi)\n\t"
+      ".Lactor_action_set_default_state_9:\n\t"
+      "cmpw $0, 0x6c(%%esi)\n\t"
+      "jne .Lactor_action_set_default_state_11\n\t"
+      "leal -0x84(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $-1\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c12000]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_set_default_state_11\n\t"
+      "leal -0x84(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      ".Lactor_action_set_default_state_10:\n\t"
+      "pushl $2\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d030]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, %%bl\n\t"
+      ".Lactor_action_set_default_state_11:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_set_default_state_12:\n\t"
+      "leal -0x84(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c15900]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      "leal -0x84(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $6\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d030]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%bl\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_set_default_state_13:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d6d0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $3, %%ax\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      "movl $2, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movw $3, 0x6a(%%esi)\n\t"
+      "movw %%ax, 0x72(%%esi)\n\t"
+      "movw %%ax, 0x6e(%%esi)\n\t"
+      "call *%[c1ef90]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_action_set_default_state_9\n\t"
+      "leal -0x84(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c15880]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      "leal -0x84(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $6\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d030]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%bl\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_set_default_state_14:\n\t"
+      "cmpw $4, 0x6c(%%esi)\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      "leal -0x84(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "pushl $-1\n\t"
+      "pushl $0xd\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c15040]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_set_default_state_15\n\t"
+      "leal -0x84(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $4\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d030]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%bl\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_set_default_state_15:\n\t"
+      "cmpw $6, 0x6c(%%esi)\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      "leal -0x84(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c15880]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      "leal -0x84(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $6\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d030]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%bl\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_set_default_state_16:\n\t"
+      "cmpw $2, 0x6c(%%esi)\n\t"
+      "jne .Lactor_action_set_default_state_17\n\t"
+      "movw 0x9c(%%esi), %%cx\n\t"
+      "cmpw 0x2542e8(,%%eax,2), %%cx\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      ".Lactor_action_set_default_state_17:\n\t"
+      "movswl 0x2542e8(,%%eax,2), %%eax\n\t"
+      "leal -0x84(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c12000]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_set_default_state_9\n\t"
+      "leal -0x84(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "jmp .Lactor_action_set_default_state_10\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lactor_action_set_default_state_jt:\n\t"
+      ".long .Lactor_action_set_default_state_16\n\t"
+      ".long .Lactor_action_set_default_state_5\n\t"
+      ".long .Lactor_action_set_default_state_16\n\t"
+      ".long .Lactor_action_set_default_state_16\n\t"
+      ".long .Lactor_action_set_default_state_16\n\t"
+      ".long .Lactor_action_set_default_state_16\n\t"
+      ".long .Lactor_action_set_default_state_16\n\t"
+      ".long .Lactor_action_set_default_state_16\n\t"
+      ".long .Lactor_action_set_default_state_6\n\t"
+      ".long .Lactor_action_set_default_state_8\n\t"
+      ".long .Lactor_action_set_default_state_13\n\t"
+      ".long .Lactor_action_set_default_state_14\n\t"
+      ".text\n\t"
+      :
+      : [dget] "m"(b1d7c0_dget), [gtime] "m"(b1d7c0_gtime), [c1d030] "m"(b1d7c0_c1d030), [c15880] "m"(b1d7c0_c15880), [c12000] "m"(b1d7c0_c12000), [c15900] "m"(b1d7c0_c15900), [c1d6d0] "m"(b1d7c0_c1d6d0), [c1ef90] "m"(b1d7c0_c1ef90), [c15040] "m"(b1d7c0_c15040)
+      : "memory");
 }
+#else
+#error "actor_action_set_default_state: clang naked draft required"
+#endif
+
 
 /* actor_action_handle_initial_action (0x1dab0)
  * If the actor is in the idle action (0x6c == 0) and has a non-zero
@@ -3501,55 +3661,285 @@ bool FUN_000210b0(int actor_handle)
 }
 /* --- actions.obj batch drafts (2026-07-26) --- */
 
-/* 0x1b8a0 */
+/* action_vehicle_perform (0x1b8a0) — XBE naked draft (batch 111). */
+#if defined(__clang__)
+static void *(*const b1b8a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b1b8a0_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void (*const b1b8a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1b8a0_exitfn)(int) = system_exit;
+static void (*const b1b8a0_c1ada0)(void) = FUN_0001ada0;
+static int (*const b1b8a0_gtime)(void) = game_time_get;
+static float (*const b1b8a0_c121a0)(const float *a, const float *b) = distance_squared3d;
+static char (*const b1b8a0_c1aeb0)(int actor_handle, int vehicle_handle, short seat_index, int param_4, float *out_attach0, float *out_attach1, float *out_attach2, int param_8, int param_9, int param_10, int param_11) = FUN_0001aeb0;
+static bool (*const b1b8a0_c1b2b80)(int unit_handle, int vehicle_handle, int16_t seat_index) = unit_board_vehicle;
+static void (*const b1b8a0_c2f1a0)(int actor_handle) = FUN_0002f1a0;
+static char (*const b1b8a0_c1b280)(int actor_handle, int object_handle, float *in_attach0, float *in_attach1, float *in_attach2, int param_6, float *out_position, int *out_handle) = FUN_0001b280;
+static char (*const b1b8a0_c2d720)(int actor_handle, float *destination, int param_3, int param_4) = actor_move_to_point;
+
+__attribute__((naked, noinline))
 void action_vehicle_perform(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  object_try_and_get_and_verify_type(0, 2);
-  /* test (char)eax, (char)eax -> je 0x1b8f4 */
-  display_assert((char *)0x00253380, (char *)0x00253f50, 161, 1);
-  system_exit(-1);
-  /* cmp ecx, eax -> je 0x1b90a */
-  /* test (char)ecx, (char)ecx -> jne 0x1b925 */
-  /* test esi, esi -> jne 0x1b94a */
-  /* test (char)eax, (char)eax -> jne 0x1bb93 */
-  /* test (char)eax, (char)eax -> jne 0x1bb93 */
-  FUN_0001ada0();
-  /* test (char)eax, (char)eax -> je 0x1b91e */
-  game_time_get();
-  /* cmp eax, edx -> jl 0x1b9df */
-  distance_squared3d((const float *)((char *)eax + 0xb0), (const float *)((char *)eax + 0x12c));
-  /* relift: relift: fcomp dword ptr [0x253f74] */
-  /* relift: cmp word ptr [edi + 0xaa], 8 -> jge 0x1b91e */
-  FUN_0001aeb0(0, 0, 0, 0, (void *)0, (float *)0, (float *)0, 0, 0, 0, 0);
-  /* test (char)eax, (char)eax -> je 0x1b91e */
-  /* test (char)eax, (char)eax -> je 0x1ba57 */
-  /* relift: cmp word ptr [edi + 0xc6], 0x1e -> jl 0x1ba60 */
-  /* test (char)eax, (char)eax -> je 0x1baa5 */
-  /* test (char)eax, (char)eax -> je 0x1ba97 */
-  unit_board_vehicle(0, 0, 0);
-  FUN_0002f1a0(0);
-  /* test (char)eax, (char)eax -> je 0x1bb36 */
-  FUN_0001b280(0, 0, (void *)0, (float *)((char *)eax + 0xa3), (float *)((char *)eax + 0xcc), 0, (float *)0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x1bb0c */
-  actor_move_to_point(0, (float *)((char *)eax + 0xcc), 0, 0);
-  /* test (char)eax, (char)eax -> je 0x1bb0c */
-  /* cmp (int16_t)eax, (int16_t)ecx -> jle 0x1bb36 */
-  distance_squared3d((const float *)((char *)eax + 0x12c), (void *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x28, %%esp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x9c(%%edi), %%ecx\n\t"
+      "pushl $2\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[tryget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x6(%%edi), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Laction_vehicle_perform_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa1\n\t"
+      "pushl $0x253f50\n\t"
+      "pushl $0x253380\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Laction_vehicle_perform_1:\n\t"
+      "movl 0x158(%%edi), %%ecx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "je .Laction_vehicle_perform_2\n\t"
+      "movb $1, 0xa5(%%edi)\n\t"
+      "jmp .Laction_vehicle_perform_4\n\t"
+      ".Laction_vehicle_perform_2:\n\t"
+      "movb 0xa4(%%edi), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Laction_vehicle_perform_4\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Laction_vehicle_perform_5\n\t"
+      "movl %%eax, 0x9c(%%edi)\n\t"
+      ".Laction_vehicle_perform_3:\n\t"
+      "movb $1, 0xa6(%%edi)\n\t"
+      ".Laction_vehicle_perform_4:\n\t"
+      "movb 0xa5(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Laction_vehicle_perform_18\n\t"
+      "movb 0xa6(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Laction_vehicle_perform_18\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Laction_vehicle_perform_5:\n\t"
+      "movl 0xc0(%%edi), %%edx\n\t"
+      "movl 0xbc(%%edi), %%eax\n\t"
+      "movl 0x9c(%%edi), %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movb 0xa2(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "sete %%cl\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ada0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Laction_vehicle_perform_3\n\t"
+      "call *%[gtime]\n\t"
+      "movl 0xac(%%edi), %%edx\n\t"
+      "addl $0x96, %%edx\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "jl .Laction_vehicle_perform_8\n\t"
+      "leal 0x12c(%%edi), %%esi\n\t"
+      "leal 0xb0(%%edi), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, 0xac(%%edi)\n\t"
+      "call *%[c121a0]\n\t"
+      "fcomps 0x253f74\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Laction_vehicle_perform_6\n\t"
+      "incw 0xaa(%%edi)\n\t"
+      "jmp .Laction_vehicle_perform_7\n\t"
+      ".Laction_vehicle_perform_6:\n\t"
+      "movw $0, 0xaa(%%edi)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%ebx)\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "movl %%edx, 0x8(%%ebx)\n\t"
+      ".Laction_vehicle_perform_7:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      ".Laction_vehicle_perform_8:\n\t"
+      "cmpw $8, 0xaa(%%edi)\n\t"
+      "jge .Laction_vehicle_perform_3\n\t"
+      "leal -0x3(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x1(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x2(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movb 0xa2(%%edi), %%al\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "testb %%al, %%al\n\t"
+      "sete %%al\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0xa0(%%edi), %%cx\n\t"
+      "leal -0x1c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x9c(%%edi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1aeb0]\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Laction_vehicle_perform_3\n\t"
+      "movb -0x3(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Laction_vehicle_perform_9\n\t"
+      "incw 0xc6(%%edi)\n\t"
+      "cmpw $0x1e, 0xc6(%%edi)\n\t"
+      "jl .Laction_vehicle_perform_10\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "movb $1, -0x2(%%ebp)\n\t"
+      "jmp .Laction_vehicle_perform_11\n\t"
+      ".Laction_vehicle_perform_9:\n\t"
+      "movw $0, 0xc6(%%edi)\n\t"
+      ".Laction_vehicle_perform_10:\n\t"
+      "movb -0x2(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Laction_vehicle_perform_13\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Laction_vehicle_perform_12\n\t"
+      ".Laction_vehicle_perform_11:\n\t"
+      "movl 0x9c(%%edi), %%ecx\n\t"
+      "movl 0x18(%%edi), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0xa0(%%edi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1b2b80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0xa4(%%edi)\n\t"
+      "jmp .Laction_vehicle_perform_15\n\t"
+      ".Laction_vehicle_perform_12:\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c2f1a0]\n\t"
+      "addl $4, %%esp\n\t"
+      "jmp .Laction_vehicle_perform_15\n\t"
+      ".Laction_vehicle_perform_13:\n\t"
+      "movb 0x4c(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Laction_vehicle_perform_15\n\t"
+      "leal 0xe4(%%edi), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "leal 0xcc(%%edi), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "leal 0xa3(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x9c(%%edi), %%eax\n\t"
+      "call *%[c1b280]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Laction_vehicle_perform_14\n\t"
+      "movl 0x9c(%%edi), %%ecx\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c2d720]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Laction_vehicle_perform_14\n\t"
+      "movw $0, 0xa8(%%edi)\n\t"
+      "jmp .Laction_vehicle_perform_15\n\t"
+      ".Laction_vehicle_perform_14:\n\t"
+      "incw 0xa8(%%edi)\n\t"
+      "movb 0xa2(%%edi), %%cl\n\t"
+      "movw 0xa8(%%edi), %%ax\n\t"
+      "negb %%cl\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl $0xffffffd3, %%ecx\n\t"
+      "addl $0x32, %%ecx\n\t"
+      "cmpw %%cx, %%ax\n\t"
+      "jle .Laction_vehicle_perform_15\n\t"
+      "movb $1, 0xa6(%%edi)\n\t"
+      ".Laction_vehicle_perform_15:\n\t"
+      "leal -0x1c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0x12c(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c121a0]\n\t"
+      "fcomps 0x2533c8\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Laction_vehicle_perform_16\n\t"
+      "movl $1, %%eax\n\t"
+      "jmp .Laction_vehicle_perform_17\n\t"
+      ".Laction_vehicle_perform_16:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Laction_vehicle_perform_17:\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "leal 0xd8(%%edi), %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movb %%al, 0xc8(%%edi)\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movb -0x2(%%ebp), %%cl\n\t"
+      "movb %%al, 0xc5(%%edi)\n\t"
+      "movb %%cl, 0xc4(%%edi)\n\t"
+      "jmp .Laction_vehicle_perform_4\n\t"
+      ".Laction_vehicle_perform_18:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1b8a0_dget), [tryget] "m"(b1b8a0_tryget), [assert] "m"(b1b8a0_assert), [exitfn] "m"(b1b8a0_exitfn), [c1ada0] "m"(b1b8a0_c1ada0), [gtime] "m"(b1b8a0_gtime), [c121a0] "m"(b1b8a0_c121a0), [c1aeb0] "m"(b1b8a0_c1aeb0), [c1b2b80] "m"(b1b8a0_c1b2b80), [c2f1a0] "m"(b1b8a0_c2f1a0), [c1b280] "m"(b1b8a0_c1b280), [c2d720] "m"(b1b8a0_c2d720)
+      : "memory");
 }
+#else
+#error "action_vehicle_perform: clang naked draft required"
+#endif
+
 
 /* 0x1bcd0 */
 char action_vehicle_setup_impromptu(int actor_handle, int vehicle_handle, float param_3, float param_4, void *out_state)

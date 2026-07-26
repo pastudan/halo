@@ -996,114 +996,271 @@ char ai_conversation_line_begin(int conversation_handle)
   }
 }
 
-char FUN_00043a20(int conversation_handle)
-{
-  char *conversation;
-  char *def;
-  char comm_buf[0x40];
-  short impulse;
-  int i;
+/* FUN_00043a20 (0x43a20) — XBE naked draft (batch 111). */
+#if defined(__clang__)
+static void *(*const b43a20_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static scenario_t * (*const b43a20_c18e380)(void) = global_scenario_get;
+static void *(*const b43a20_elem)(void *, int, int) = tag_block_get_element;
+static char (*const b43a20_c1cb990)(void) = sound_scripted_dialog_is_playing;
+static short (*const b43a20_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = FUN_001a68d0;
+static void *(*const b43a20_memset)(void *, int, unsigned int) = csmemset;
+static const char * (*const b43a20_c1ba1f0)(int tag_index) = tag_get_name;
+static void (*const b43a20_cff4d0)(int channel, const char *format, ...) = console_printf;
+static void (*const b43a20_c1a6ef0)(int actor, short count, void *comm_buf) = FUN_001a6ef0;
+static void (*const b43a20_c1c7f80)(int a0, int a1, float a2) = scripted_sound_new;
+static int (*const b43a20_c1c7500)(int a0) = scripted_sound_time;
+static void *(*const b43a20_get)(int, int) = object_get_and_verify_type;
 
-  conversation = (char *)datum_get(*(data_t **)0x6324ec, conversation_handle);
-  def = (char *)tag_block_get_element(
-      (char *)global_scenario_get() + 0x468, 0x74,
-      *(int16_t *)(conversation + 2));
-  if (conversation[0x63])
-    return conversation[0x63];
-  if (conversation[0x61])
-    goto wait_line;
-  if (*(int *)(conversation + 0x5c) == -1)
-    goto mark_started;
-  if ((*(uint8_t *)(conversation + 0x4e) & 0x30) != 0) {
-    int count = *(int *)(def + 0x50);
-    char found = 0;
-    for (i = 0; i < count; i++) {
-      int actor = *(int *)(conversation + 0x28 + i * 4);
-      if (actor == -1)
-        continue;
-      {
-        char *actor_data = (char *)datum_get(*(data_t **)0x6325a4, actor);
-        if ((*(uint8_t *)(conversation + 0x4e) & 0x20) &&
-            actor == *(int *)(conversation + 0x50))
-          found = 1;
-        else if ((*(uint8_t *)(conversation + 0x4e) & 0x10) &&
-                 *(int16_t *)(actor_data + 0x6c) == 0xc &&
-                 *(int *)(actor_data + 0xa8) != -1 &&
-                 actor_data[0xa1] == 0 && actor_data[0xa0] == 0)
-          found = 1;
-      }
-    }
-    if (found)
-      goto mark_started;
-  }
-  if (sound_scripted_dialog_is_playing())
-    return conversation[0x63];
-  if (*(int *)(conversation + 0x54) != -1 && !conversation[0x60]) {
-    csmemset(comm_buf, 0, 0x30);
-    *(int16_t *)(comm_buf + 2) = -1;
-    *(int16_t *)(comm_buf + 0x14) = -1;
-    *(int16_t *)(comm_buf + 0x18) = -1;
-    *(int16_t *)(comm_buf + 0x16) = -1;
-    *(int *)(comm_buf + 0x10) = *(int *)(conversation + 0x58);
-    *(int16_t *)comm_buf = 6;
-    *(int *)(comm_buf + 4) = *(int *)(conversation + 0x5c);
-    *(int16_t *)(comm_buf + 0x1c) = 1;
-    *(int16_t *)(comm_buf + 0x1e) = 1;
-    *(int *)(comm_buf + 0x20) = *(int *)(conversation + 0x54);
-    if (*(char *)0x5aca5f != 0) {
-      console_printf(0, (char *)0x259c08, def,
-                     tag_get_name(*(int *)(conversation + 0x5c)));
-    }
-    {
-      short vocal = 6;
-      int sound = 0;
-      impulse = FUN_001a68d0(*(int *)(conversation + 0x54), 1, 0, 0, NULL,
-                             &vocal, &sound);
-    }
-    if (impulse > 1) {
-      FUN_001a6ef0(impulse, 1, comm_buf);
-      conversation[0x61] = 1;
-      conversation[5] = 1;
-      return conversation[0x63];
-    }
-  } else {
-    scripted_sound_new(*(int *)(conversation + 0x5c), -1, 1.0f);
-    conversation[0x61] = 1;
-    conversation[5] = 1;
-    return conversation[0x63];
-  }
-mark_started:
-  conversation[0x61] = 1;
-  conversation[5] = 1;
-  return conversation[0x63];
-wait_line:
-  if (*(int *)(conversation + 0x54) == -1) {
-    if (*(int *)(conversation + 0x5c) == -1 ||
-        scripted_sound_time(*(int *)(conversation + 0x5c)) == 0)
-      conversation[0x62] = 0;
-    else
-      conversation[0x62] = 1;
-  } else {
-    char *obj = (char *)object_get_and_verify_type(*(int *)(conversation + 0x54), 3);
-    conversation[0x62] = *(int16_t *)(obj + 0x338) != 6;
-  }
-  if (!conversation[0x62])
-    return conversation[0x63];
-  if (*(int16_t *)(conversation + 0x4c) > 0) {
-    *(int16_t *)(conversation + 0x4c) = (int16_t)(*(int16_t *)(conversation + 0x4c) - 1);
-    return conversation[0x63];
-  }
-  if ((*(uint8_t *)(conversation + 0x4e) & 8) == 0)
-    return conversation[0x63];
-  if (!conversation[8])
-    conversation[8] = 1, conversation[9] = 0;
-  if (conversation[9]) {
-    conversation[8] = 0;
-    return conversation[0x63];
-  }
-  conversation[0x63] = 0;
-  return conversation[0x63];
+__attribute__((naked, noinline))
+char FUN_00043a20(int conversation_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x40, %%esp\n\t"
+      "movl 0x6324ec, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movswl 0x2(%%esi), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl $0x74\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x468, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movb 0x63(%%esi), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "jne .LFUN_00043a20_18\n\t"
+      "movb 0x61(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00043a20_10\n\t"
+      "cmpl $-1, 0x5c(%%esi)\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "je .LFUN_00043a20_8\n\t"
+      "movw 0x4e(%%esi), %%ax\n\t"
+      "testb $0x30, %%al\n\t"
+      "je .LFUN_00043a20_4\n\t"
+      "movl 0x50(%%ecx), %%eax\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .LFUN_00043a20_4\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_00043a20_1:\n\t"
+      "movl 0x28(%%esi,%%eax,4), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_00043a20_3\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movw 0x4e(%%esi), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $0x20, %%cl\n\t"
+      "jne .LFUN_00043a20_2\n\t"
+      "testb $0x10, %%cl\n\t"
+      "je .LFUN_00043a20_3\n\t"
+      "cmpl 0x50(%%esi), %%edi\n\t"
+      "jne .LFUN_00043a20_3\n\t"
+      ".LFUN_00043a20_2:\n\t"
+      "cmpw $0xc, 0x6c(%%eax)\n\t"
+      "jne .LFUN_00043a20_3\n\t"
+      "cmpl $-1, 0xa8(%%eax)\n\t"
+      "je .LFUN_00043a20_3\n\t"
+      "movb 0xa1(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_00043a20_3\n\t"
+      "movb 0xa0(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_00043a20_3\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      ".LFUN_00043a20_3:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl 0x50(%%ecx), %%edx\n\t"
+      "incl %%ebx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "jl .LFUN_00043a20_1\n\t"
+      ".LFUN_00043a20_4:\n\t"
+      "call *%[c1cb990]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00043a20_9\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00043a20_9\n\t"
+      "movl 0x54(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00043a20_6\n\t"
+      "movb 0x60(%%esi), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_00043a20_6\n\t"
+      "movl 0x5c(%%esi), %%edx\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      "movl $1, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0\n\t"
+      "pushl $6\n\t"
+      "pushl %%eax\n\t"
+      "movl $0xffffffff, -0x10(%%ebp)\n\t"
+      "call *%[c1a68d0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "cmpw %%bx, %%di\n\t"
+      "je .LFUN_00043a20_9\n\t"
+      "testw %%di, %%di\n\t"
+      "jle .LFUN_00043a20_8\n\t"
+      "pushl $0x30\n\t"
+      "leal -0x40(%%ebp), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x5c(%%esi), %%eax\n\t"
+      "movl 0x54(%%esi), %%edx\n\t"
+      "orl $0xffffffff, %%ecx\n\t"
+      "movw %%cx, -0x3e(%%ebp)\n\t"
+      "movw %%cx, -0x2c(%%ebp)\n\t"
+      "movw %%cx, -0x28(%%ebp)\n\t"
+      "movw %%cx, -0x2a(%%ebp)\n\t"
+      "movl 0x58(%%esi), %%ecx\n\t"
+      "movl %%ecx, -0x30(%%ebp)\n\t"
+      "movb 0x5aca5f, %%cl\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movw $6, -0x40(%%ebp)\n\t"
+      "movl %%eax, -0x3c(%%ebp)\n\t"
+      "movw %%bx, -0x24(%%ebp)\n\t"
+      "movw %%bx, -0x22(%%ebp)\n\t"
+      "movl %%edx, -0x20(%%ebp)\n\t"
+      "movw $0, -0x1c(%%ebp)\n\t"
+      "je .LFUN_00043a20_5\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x259c08\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00043a20_5:\n\t"
+      "movl 0x54(%%esi), %%edx\n\t"
+      "leal -0x40(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1a6ef0]\n\t"
+      "jmp .LFUN_00043a20_7\n\t"
+      ".LFUN_00043a20_6:\n\t"
+      "movl 0x5c(%%esi), %%eax\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1c7f80]\n\t"
+      ".LFUN_00043a20_7:\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00043a20_8:\n\t"
+      "movb $1, 0x61(%%esi)\n\t"
+      "movb $1, 0x5(%%esi)\n\t"
+      ".LFUN_00043a20_9:\n\t"
+      "movb 0x61(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "je .LFUN_00043a20_18\n\t"
+      ".LFUN_00043a20_10:\n\t"
+      "movb 0x62(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00043a20_14\n\t"
+      "movl 0x54(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_00043a20_12\n\t"
+      "movl 0x5c(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00043a20_11\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1c7500]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00043a20_11\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movb %%al, 0x62(%%esi)\n\t"
+      "jmp .LFUN_00043a20_13\n\t"
+      ".LFUN_00043a20_11:\n\t"
+      "movl $1, %%eax\n\t"
+      "movb %%al, 0x62(%%esi)\n\t"
+      "jmp .LFUN_00043a20_13\n\t"
+      ".LFUN_00043a20_12:\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $6, 0x338(%%eax)\n\t"
+      "setne %%cl\n\t"
+      "movb %%cl, 0x62(%%esi)\n\t"
+      ".LFUN_00043a20_13:\n\t"
+      "movb 0x62(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00043a20_18\n\t"
+      ".LFUN_00043a20_14:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x4c(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .LFUN_00043a20_15\n\t"
+      "decl %%eax\n\t"
+      "movw %%ax, 0x4c(%%esi)\n\t"
+      "movb 0x63(%%esi), %%al\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00043a20_15:\n\t"
+      "testb $8, 0x4e(%%esi)\n\t"
+      "movb $1, 0x63(%%esi)\n\t"
+      "je .LFUN_00043a20_18\n\t"
+      "movb 0x8(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00043a20_16\n\t"
+      "movb $1, 0x8(%%esi)\n\t"
+      "movb $0, 0x9(%%esi)\n\t"
+      ".LFUN_00043a20_16:\n\t"
+      "movb 0x9(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00043a20_17\n\t"
+      "movb 0x63(%%esi), %%al\n\t"
+      "movb $0, 0x8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00043a20_17:\n\t"
+      "movb $0, 0x63(%%esi)\n\t"
+      ".LFUN_00043a20_18:\n\t"
+      "movb 0x63(%%esi), %%al\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b43a20_dget), [c18e380] "m"(b43a20_c18e380), [elem] "m"(b43a20_elem), [c1cb990] "m"(b43a20_c1cb990), [c1a68d0] "m"(b43a20_c1a68d0), [memset] "m"(b43a20_memset), [c1ba1f0] "m"(b43a20_c1ba1f0), [cff4d0] "m"(b43a20_cff4d0), [c1a6ef0] "m"(b43a20_c1a6ef0), [c1c7f80] "m"(b43a20_c1c7f80), [c1c7500] "m"(b43a20_c1c7500), [get] "m"(b43a20_get)
+      : "memory");
 }
+#else
+#error "FUN_00043a20: clang naked draft required"
+#endif
+
 
 void FUN_00043ce0(int actor)
 {
@@ -1191,196 +1348,549 @@ void FUN_00043ea0(void *comm, int actor, int stack_a)
 }
 
 
-void ai_communication_update_speech_timers(int unit, int16_t type, int a,
-                                           int16_t dialogue_index,
-                                           int16_t reply_index)
+/* ai_communication_update_speech_timers (0x43f20) — XBE naked draft (batch 114). */
+#if defined(__clang__)
+static void *(*const b43f20_get)(int, int) = object_get_and_verify_type;
+static void *(*const b43f20_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const b43f20_gtime)(void) = game_time_get;
+static void (*const b43f20_c43ce0)(int actor /* */) = FUN_00043ce0;
+static int16_t (*const b43f20_c3a770)(int16_t actor_type) = FUN_0003a770;
+static char * (*const b43f20_c1a67b0)(short param_1, unsigned char param_2) = FUN_001a67b0;
+static char * (*const b43f20_c1a6ca0)(short param_1) = FUN_001a6ca0;
+static void (*const b43f20_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b43f20_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b43f20_exitfn)(int) = system_exit;
+static short (*const b43f20_cfff80)(void) = game_connection;
+static void (*const b43f20_ftol)(void) = FUN_001d9068;
+
+__attribute__((naked, noinline))
+void ai_communication_update_speech_timers(int unit /* */ __attribute__((unused)), int16_t type __attribute__((unused)), int a __attribute__((unused)), int16_t dialogue_index __attribute__((unused)), int16_t reply_index __attribute__((unused)))
 {
-  char *unit_obj;
-  char *actor_data = NULL;
-  int now;
-  int team;
-  int base_time;
-
-  unit_obj = (char *)object_get_and_verify_type(unit, 3);
-  if (*(int *)(unit_obj + 0x1a4) != -1)
-    actor_data = (char *)datum_get(*(data_t **)0x6325a4, *(int *)(unit_obj + 0x1a4));
-  now = game_time_get();
-  base_time = now + (((int)*(int16_t *)(unit_obj + 0x3aa) - 0x2d) < 0 ? -1 : 0) &
-                      ((int)*(int16_t *)(unit_obj + 0x3aa) - 0x2d);
-  *(int *)(unit_obj + 0x3a0) = base_time;
-  if (!actor_data)
-    return;
-  if (*(int *)(unit_obj + 0x1a4) != -1)
-    FUN_00043ce0(*(int *)(unit_obj + 0x1a4));
-  team = FUN_0003a770(*(int16_t *)(actor_data + 4));
-  team = (team & 2) ? 0 : ((team & 4) ? 1 : -1);
-  if (type <= 5) {
-    char *globals = *(char **)0x632574;
-    int *slot = (int *)(globals + team * 4 + 0x14);
-    if (*slot <= now)
-      *slot = now;
-    if (type >= 3) {
-      slot = (int *)(globals + team * 4 + 0x1c);
-      if (*slot <= now)
-        *slot = now;
-    }
-    if (type >= 5) {
-      slot = (int *)(globals + team * 4 + 0x24);
-      if (*slot <= now)
-        *slot = now;
-    }
-    if (*(char *)0x5aca54 != 0) {
-      error(2, (char *)0x259cbc, FUN_001a6ca0(type), FUN_001a67b0(type, 1),
-            *(const char **)(0x2c8d68 + team * 8), now - base_time);
-    }
-  }
-  if (dialogue_index != -1) {
-    if (dialogue_index < 0 || dialogue_index >= *(int16_t *)0x331f08) {
-      display_assert((char *)0x259c68,
-                     "c:\\halo\\SOURCE\\ai\\ai_communication.c", 0xc9c, 1);
-      system_exit(-1);
-    }
-    {
-      char *entry = (char *)(*(char **)0x331f0c +
-                             ((team + dialogue_index * 2) * 8));
-      char *dialogue = (char *)(0x257e48 + dialogue_index * 0x28);
-      *(int *)entry = base_time;
-      if (!game_connection() && *(char *)0x5aca46 == 0 &&
-          *(float *)(dialogue + 0x14) <= *(float *)0x2533c0)
-        *(int *)(entry + 4) =
-            ftol2(*(float *)(dialogue + 0x14) * *(float *)0x253394 +
-                  (float)base_time);
-    }
-  }
-  if (reply_index != -1) {
-    if (reply_index < 0 || reply_index >= *(int16_t *)0x331f10) {
-      display_assert((char *)0x259c18,
-                     "c:\\halo\\SOURCE\\ai\\ai_communication.c", 0xcaf, 1);
-      system_exit(-1);
-    }
-    {
-      char *entry = (char *)(*(char **)0x331f14 +
-                             ((team + reply_index * 2) * 8));
-      char *reply = (char *)(0x258eb0 + reply_index * 0x24);
-      *(int *)entry = base_time;
-      if (!game_connection() && *(char *)0x5aca46 == 0 &&
-          *(float *)(reply + 0x1c) <= *(float *)0x2533c0)
-        *(int *)(entry + 4) =
-            ftol2(*(float *)(reply + 0x1c) * *(float *)0x253394 +
-                  (float)base_time);
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x1a4(%%edi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lai_communication_update_speech_timers_1\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "jmp .Lai_communication_update_speech_timers_2\n\t"
+      ".Lai_communication_update_speech_timers_1:\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%ebx\n\t"
+      ".Lai_communication_update_speech_timers_2:\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movswl 0x3aa(%%edi), %%eax\n\t"
+      "addl $-0x2d, %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "setl %%dl\n\t"
+      "movl %%esi, -0x8(%%ebp)\n\t"
+      "decl %%edx\n\t"
+      "andl %%edx, %%eax\n\t"
+      "addl %%eax, %%esi\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "movl %%esi, -0xc(%%ebp)\n\t"
+      "movl %%esi, 0x3a0(%%edi)\n\t"
+      "je .Lai_communication_update_speech_timers_20\n\t"
+      "movl 0x1a4(%%edi), %%eax\n\t"
+      "call *%[c43ce0]\n\t"
+      "movl 0x1a4(%%edi), %%edi\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x4(%%eax), %%cx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c3a770]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb $2, %%al\n\t"
+      "je .Lai_communication_update_speech_timers_3\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "jmp .Lai_communication_update_speech_timers_4\n\t"
+      ".Lai_communication_update_speech_timers_3:\n\t"
+      "testb $4, %%al\n\t"
+      "je .Lai_communication_update_speech_timers_20\n\t"
+      "movl $1, -0x4(%%ebp)\n\t"
+      ".Lai_communication_update_speech_timers_4:\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "cmpw $5, %%di\n\t"
+      "jg .Lai_communication_update_speech_timers_11\n\t"
+      "movswl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x632574, %%edx\n\t"
+      "movl 0x14(%%edx,%%eax,4), %%ecx\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "jg .Lai_communication_update_speech_timers_5\n\t"
+      "movl %%esi, %%ecx\n\t"
+      ".Lai_communication_update_speech_timers_5:\n\t"
+      "cmpw $3, %%di\n\t"
+      "movl %%ecx, 0x14(%%edx,%%eax,4)\n\t"
+      "jl .Lai_communication_update_speech_timers_7\n\t"
+      "movl 0x632574, %%edx\n\t"
+      "movl 0x1c(%%edx,%%eax,4), %%ecx\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "jg .Lai_communication_update_speech_timers_6\n\t"
+      "movl %%esi, %%ecx\n\t"
+      ".Lai_communication_update_speech_timers_6:\n\t"
+      "movl %%ecx, 0x1c(%%edx,%%eax,4)\n\t"
+      ".Lai_communication_update_speech_timers_7:\n\t"
+      "cmpw $5, %%di\n\t"
+      "jl .Lai_communication_update_speech_timers_9\n\t"
+      "movl 0x632574, %%edx\n\t"
+      "movl 0x24(%%edx,%%eax,4), %%ecx\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "jg .Lai_communication_update_speech_timers_8\n\t"
+      "movl %%esi, %%ecx\n\t"
+      ".Lai_communication_update_speech_timers_8:\n\t"
+      "movl %%ecx, 0x24(%%edx,%%eax,4)\n\t"
+      ".Lai_communication_update_speech_timers_9:\n\t"
+      "movb 0x5aca54, %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lai_communication_update_speech_timers_11\n\t"
+      "cmpw $3, %%di\n\t"
+      "movl $0x2598c4, %%ecx\n\t"
+      "jge .Lai_communication_update_speech_timers_10\n\t"
+      "movl $0x2598cc, %%ecx\n\t"
+      ".Lai_communication_update_speech_timers_10:\n\t"
+      "movl -0x8(%%ebp), %%ebx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl 0x2c8d68(,%%eax,8), %%edi\n\t"
+      "subl %%ebx, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1a67b0]\n\t"
+      "movw 0x10(%%ebp), %%si\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "movswl %%si, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1a6ca0]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x259cbc\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "jmp .Lai_communication_update_speech_timers_12\n\t"
+      ".Lai_communication_update_speech_timers_11:\n\t"
+      "movl -0x8(%%ebp), %%ebx\n\t"
+      "movw 0x10(%%ebp), %%si\n\t"
+      ".Lai_communication_update_speech_timers_12:\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .Lai_communication_update_speech_timers_16\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lai_communication_update_speech_timers_13\n\t"
+      "cmpw 0x331f08, %%si\n\t"
+      "jl .Lai_communication_update_speech_timers_14\n\t"
+      ".Lai_communication_update_speech_timers_13:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xc9c\n\t"
+      "pushl $0x2599b4\n\t"
+      "pushl $0x259c68\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_communication_update_speech_timers_14:\n\t"
+      "movswl -0x4(%%ebp), %%edx\n\t"
+      "movl 0x331f0c, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,4), %%edi\n\t"
+      "leal (%%edx,%%eax,2), %%eax\n\t"
+      "leal (%%ecx,%%eax,8), %%esi\n\t"
+      "leal 0x257e48(,%%edi,8), %%edi\n\t"
+      "movl %%ebx, (%%esi)\n\t"
+      "call *%[cfff80]\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lai_communication_update_speech_timers_15\n\t"
+      "movb 0x5aca46, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lai_communication_update_speech_timers_16\n\t"
+      ".Lai_communication_update_speech_timers_15:\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lai_communication_update_speech_timers_16\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fmuls 0x253394\n\t"
+      "fiaddl -0xc(%%ebp)\n\t"
+      "call *%[ftol]\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      ".Lai_communication_update_speech_timers_16:\n\t"
+      "movw 0x14(%%ebp), %%si\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .Lai_communication_update_speech_timers_20\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lai_communication_update_speech_timers_17\n\t"
+      "cmpw 0x331f10, %%si\n\t"
+      "jl .Lai_communication_update_speech_timers_18\n\t"
+      ".Lai_communication_update_speech_timers_17:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xcaf\n\t"
+      "pushl $0x2599b4\n\t"
+      "pushl $0x259c18\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_communication_update_speech_timers_18:\n\t"
+      "movswl -0x4(%%ebp), %%edx\n\t"
+      "movl 0x331f14, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,8), %%edi\n\t"
+      "leal (%%edx,%%eax,2), %%eax\n\t"
+      "leal (%%ecx,%%eax,8), %%esi\n\t"
+      "leal 0x258eb0(,%%edi,4), %%edi\n\t"
+      "movl %%ebx, (%%esi)\n\t"
+      "call *%[cfff80]\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lai_communication_update_speech_timers_19\n\t"
+      "movb 0x5aca46, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lai_communication_update_speech_timers_20\n\t"
+      ".Lai_communication_update_speech_timers_19:\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lai_communication_update_speech_timers_20\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "fmuls 0x253394\n\t"
+      "fiaddl -0xc(%%ebp)\n\t"
+      "call *%[ftol]\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      ".Lai_communication_update_speech_timers_20:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b43f20_get), [dget] "m"(b43f20_dget), [gtime] "m"(b43f20_gtime), [c43ce0] "m"(b43f20_c43ce0), [c3a770] "m"(b43f20_c3a770), [c1a67b0] "m"(b43f20_c1a67b0), [c1a6ca0] "m"(b43f20_c1a6ca0), [c8f390] "m"(b43f20_c8f390), [assert] "m"(b43f20_assert), [exitfn] "m"(b43f20_exitfn), [cfff80] "m"(b43f20_cfff80), [ftol] "m"(b43f20_ftol)
+      : "memory");
 }
+#else
+#error "ai_communication_update_speech_timers: clang naked draft required"
+#endif
 
-float ai_communication_get_player_rating(int unit, char use_teams, int *out_unit,
-                                         int *out_handle)
+
+/* ai_communication_get_player_rating (0x441c0) — XBE naked draft (batch 110). */
+#if defined(__clang__)
+static void (*const b441c0_c1a9200)(int object_handle, float *out_position) = unit_get_head_position;
+static void (*const b441c0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b441c0_c119810)(data_iter_t *iterator) = data_iterator_next;
+static int (*const b441c0_c13d7f0)(int object_handle) = object_get_root_parent;
+static void *(*const b441c0_get)(int, int) = object_get_and_verify_type;
+static bool (*const b441c0_c18e800)(int cluster_index, int16_t cluster_index1) = scenario_ensure_point_within_world;
+static void (*const b441c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b441c0_exitfn)(int) = system_exit;
+static bool (*const b441c0_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
+static void (*const b441c0_c1a9900)(int unit_handle, void *out_aiming) = unit_scripting_unit_driver;
+
+__attribute__((naked, noinline))
+float ai_communication_get_player_rating(int unit __attribute__((unused)), char use_teams __attribute__((unused)), int *out_unit __attribute__((unused)), int *out_handle __attribute__((unused)))
 {
-  float pos[3];
-  data_iter_t iter;
-  char *player;
-  float best_rating = *(float *)0x2533c8;
-  int best_unit = -1;
-  int best_handle = -1;
-  char found = 0;
-
-  unit_get_head_position(unit, pos);
-  data_iterator_new(&iter, *(data_t **)0x5aa6d4);
-  player = (char *)data_iterator_next(&iter);
-  while (player != NULL) {
-    if (*(int *)(player + 0x34) != -1) {
-      float other[3];
-      float delta[3];
-      float dist_sq;
-      float rating;
-      char blocked;
-      unit_get_head_position(*(int *)(player + 0x34), other);
-      delta[0] = pos[0] - other[0];
-      delta[1] = pos[1] - other[1];
-      delta[2] = pos[2] - other[2];
-      dist_sq = delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2];
-      if (dist_sq <= *(float *)0x257e34 * *(float *)0x257e34) {
-        if (use_teams) {
-          char *root_a;
-          char *root_b;
-          int16_t team_a;
-          int16_t team_b;
-          root_a = (char *)object_get_and_verify_type(
-              object_get_root_parent(unit), -1);
-          team_a = *(int16_t *)(root_a + 0x4c);
-          root_b = (char *)object_get_and_verify_type(
-              object_get_root_parent(*(int *)(player + 0x34)), -1);
-          team_b = *(int16_t *)(root_b + 0x4c);
-          if (team_a != -1 && team_b != -1 &&
-              !scenario_ensure_point_within_world(team_b, team_a))
-            goto next_player;
-        }
-        blocked = 0;
-        {
-          int16_t collision[40];
-          int depth;
-          if (*(volatile int16_t *)0x4761d8 >= 0x20) {
-            display_assert((char *)0x253440,
-                           "c:\\halo\\SOURCE\\ai\\ai_communication.c", 0xe91,
-                           1);
-            system_exit(-1);
-          }
-          depth = *(volatile short *)0x4761d8;
-          *(int16_t *)(0x5a8c80 + depth * 2) = 3;
-          *(volatile short *)0x4761d8 = depth + 1;
-          blocked = FUN_0014df70(0x27, pos, delta, -1, collision);
-          if (*(volatile short *)0x4761d8 <= 1) {
-            display_assert((char *)0x253418,
-                           "c:\\halo\\SOURCE\\ai\\ai_communication.c", 0xe97,
-                           1);
-            system_exit(-1);
-          }
-          *(volatile short *)0x4761d8 = (short)(depth);
-          if (dist_sq > *(float *)0x257e38 * *(float *)0x257e38 && blocked)
-            goto next_player;
-        }
-        {
-          float dist = sqrtf(dist_sq);
-          rating = *(float *)0x2533c8;
-          if (dist <= *(float *)0x257e3c)
-            rating = *(float *)0x253f40;
-          else
-            rating = *(float *)0x2533c8 +
-                     (dist - *(float *)0x257e38) /
-                         (*(float *)0x257e3c - *(float *)0x257e38);
-          if (blocked)
-            rating += *(float *)0x253398;
-          if (dist <= *(float *)0x253f44) {
-            float driver[3];
-            unit_scripting_unit_driver(*(int *)(player + 0x34), driver);
-            rating += (driver[0] * delta[0] + driver[1] * delta[1] +
-                       driver[2] * delta[2]) /
-                          dist;
-            if (rating <= *(float *)0x257e40)
-              rating = *(float *)0x2533c8 -
-                       (rating - *(float *)0x257e40) /
-                           (*(float *)0x2533c8 - *(float *)0x257e40) *
-                           *(float *)0x259cd0;
-          }
-          if (rating <= best_rating) {
-            best_rating = rating;
-            best_unit = *(int *)(player + 0x34);
-            best_handle = dist_sq;
-            found = 1;
-          }
-        }
-      }
-    }
-  next_player:
-    player = (char *)data_iterator_next(&iter);
-  }
-  if (!found)
-    return *(float *)0x2533c8;
-  if (out_handle)
-    *out_handle = best_handle;
-  if (out_unit)
-    *out_unit = best_unit;
-  return best_rating;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xb4, %%esp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x3c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0xffffffff, -0x20(%%ebp)\n\t"
+      "movl $0, -0x1c(%%ebp)\n\t"
+      "movl $0x7f7fffff, -0x24(%%ebp)\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "call *%[c1a9200]\n\t"
+      "movl 0x5aa6d4, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x64(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x64(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Lai_communication_get_player_rating_14\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "jmp .Lai_communication_get_player_rating_1\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lai_communication_get_player_rating_1:\n\t"
+      "movl 0x34(%%edi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lai_communication_get_player_rating_13\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "call *%[c1a9200]\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      "fsubs -0x30(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds -0x38(%%ebp)\n\t"
+      "fsubs -0x2c(%%ebp)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds -0x34(%%ebp)\n\t"
+      "fsubs -0x28(%%ebp)\n\t"
+      "fsts -0x10(%%ebp)\n\t"
+      "fmuls -0x10(%%ebp)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls -0x14(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x257e34\n\t"
+      "fmuls 0x257e34\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lai_communication_get_player_rating_13\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "xorb %%cl, %%cl\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_communication_get_player_rating_6\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c13d7f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0x34(%%edi), %%ecx\n\t"
+      "movw 0x4c(%%eax), %%si\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13d7f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movswl 0x4c(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .Lai_communication_get_player_rating_2\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lai_communication_get_player_rating_2\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c18e800]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_communication_get_player_rating_13\n\t"
+      ".Lai_communication_get_player_rating_2:\n\t"
+      "incw 0x5ac5d4\n\t"
+      "cmpw $0x20, 0x4761d8\n\t"
+      "jl .Lai_communication_get_player_rating_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe91\n\t"
+      "pushl $0x2599b4\n\t"
+      "pushl $0x253440\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_communication_get_player_rating_3:\n\t"
+      "movw 0x4761d8, %%ax\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      "fsubs -0x30(%%ebp)\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "incw %%ax\n\t"
+      "movw %%ax, 0x4761d8\n\t"
+      "fstps -0x54(%%ebp)\n\t"
+      "leal -0xb4(%%ebp), %%eax\n\t"
+      "flds -0x38(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "fsubs -0x2c(%%ebp)\n\t"
+      "pushl $-1\n\t"
+      "leal -0x54(%%ebp), %%ecx\n\t"
+      "movw $3, 0x5a8c80(,%%edx,2)\n\t"
+      "fstps -0x50(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "flds -0x34(%%ebp)\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "fsubs -0x28(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x27\n\t"
+      "fstps -0x4c(%%ebp)\n\t"
+      "call *%[ray]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpw $1, 0x4761d8\n\t"
+      "movb %%al, %%bl\n\t"
+      "jg .Lai_communication_get_player_rating_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe97\n\t"
+      "pushl $0x2599b4\n\t"
+      "pushl $0x253418\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_communication_get_player_rating_4:\n\t"
+      "flds 0x257e38\n\t"
+      "decw 0x4761d8\n\t"
+      "fmuls 0x257e38\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lai_communication_get_player_rating_5\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lai_communication_get_player_rating_5\n\t"
+      "xorb %%cl, %%cl\n\t"
+      "jmp .Lai_communication_get_player_rating_6\n\t"
+      ".Lai_communication_get_player_rating_5:\n\t"
+      "movb $1, %%cl\n\t"
+      ".Lai_communication_get_player_rating_6:\n\t"
+      "flds 0x2533c8\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fsqrt\n\t"
+      "fsts -0xc(%%ebp)\n\t"
+      "fcomps 0x257e3c\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lai_communication_get_player_rating_11\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fcomps 0x257e38\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lai_communication_get_player_rating_7\n\t"
+      "flds 0x253f40\n\t"
+      "jmp .Lai_communication_get_player_rating_8\n\t"
+      ".Lai_communication_get_player_rating_7:\n\t"
+      "flds 0x257e3c\n\t"
+      "fsubs -0xc(%%ebp)\n\t"
+      "flds 0x257e3c\n\t"
+      "fsubs 0x257e38\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fadds 0x2533c8\n\t"
+      ".Lai_communication_get_player_rating_8:\n\t"
+      "testb %%cl, %%cl\n\t"
+      "fsts -0x8(%%ebp)\n\t"
+      "je .Lai_communication_get_player_rating_9\n\t"
+      "fadds 0x253398\n\t"
+      "fsts -0x8(%%ebp)\n\t"
+      ".Lai_communication_get_player_rating_9:\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fcomps 0x253f44\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lai_communication_get_player_rating_11\n\t"
+      "movl 0x34(%%edi), %%ecx\n\t"
+      "fstp %%st(0)\n\t"
+      "leal -0x48(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1a9900]\n\t"
+      "flds -0x40(%%ebp)\n\t"
+      "fmuls -0x10(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds -0x44(%%ebp)\n\t"
+      "fmuls -0x14(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmuls -0x48(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fdivs -0xc(%%ebp)\n\t"
+      "fcoms 0x257e40\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lai_communication_get_player_rating_10\n\t"
+      "fsubrs 0x2533c8\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs 0x257e40\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fmuls 0x259cd0\n\t"
+      "fsubrs 0x2533c4\n\t"
+      "fadds -0x8(%%ebp)\n\t"
+      "jmp .Lai_communication_get_player_rating_11\n\t"
+      ".Lai_communication_get_player_rating_10:\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      ".Lai_communication_get_player_rating_11:\n\t"
+      "fcoms -0x1c(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lai_communication_get_player_rating_12\n\t"
+      "movl 0x34(%%edi), %%edx\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl %%edx, -0x20(%%ebp)\n\t"
+      "movl %%eax, -0x24(%%ebp)\n\t"
+      "jmp .Lai_communication_get_player_rating_13\n\t"
+      ".Lai_communication_get_player_rating_12:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lai_communication_get_player_rating_13:\n\t"
+      "leal -0x64(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lai_communication_get_player_rating_1\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "jne .Lai_communication_get_player_rating_15\n\t"
+      ".Lai_communication_get_player_rating_14:\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Lai_communication_get_player_rating_16\n\t"
+      ".Lai_communication_get_player_rating_15:\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      ".Lai_communication_get_player_rating_16:\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "popl %%edi\n\t"
+      "je .Lai_communication_get_player_rating_17\n\t"
+      "movl -0x24(%%ebp), %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      ".Lai_communication_get_player_rating_17:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lai_communication_get_player_rating_18\n\t"
+      "movl -0x20(%%ebp), %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      ".Lai_communication_get_player_rating_18:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1a9200] "m"(b441c0_c1a9200), [c1197b0] "m"(b441c0_c1197b0), [c119810] "m"(b441c0_c119810), [c13d7f0] "m"(b441c0_c13d7f0), [get] "m"(b441c0_get), [c18e800] "m"(b441c0_c18e800), [assert] "m"(b441c0_assert), [exitfn] "m"(b441c0_exitfn), [ray] "m"(b441c0_ray), [c1a9900] "m"(b441c0_c1a9900)
+      : "memory");
 }
+#else
+#error "ai_communication_get_player_rating: clang naked draft required"
+#endif
+
 
 void ai_conversation_unit_died(int unit_handle, char param_2)
 {
@@ -2178,18 +2688,267 @@ void ai_conversation_find_participant(int conversation_handle __attribute__((unu
 #endif
 
 
-void FUN_00044fd0(int unit_handle, uint16_t priority, uint16_t type,
-                  void *comm_data)
+/* FUN_00044fd0 (0x44fd0) — XBE naked draft (batch 113). */
+#if defined(__clang__)
+static void *(*const b44fd0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b44fd0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const b44fd0_c8dff0)(char *destination, const char *source) = csstrcpy;
+static scenario_t * (*const b44fd0_c18e380)(void) = global_scenario_get;
+static void *(*const b44fd0_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b44fd0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static const char * (*const b44fd0_c3a760)(int16_t actor_type) = FUN_0003a760;
+static char * (*const b44fd0_c1a67b0)(short param_1, unsigned char param_2) = FUN_001a67b0;
+static char * (*const b44fd0_c1a6ca0)(short param_1) = FUN_001a6ca0;
+static char * (*const b44fd0_c8dc30)(char *destination, const char *source) = FUN_0008dc30;
+static const char * (*const b44fd0_c42cb0)(int16_t type) = ai_communication_get_type_name;
+static void (*const b44fd0_cff4d0)(int channel, const char *format, ...) = console_printf;
+static char * (*const b44fd0_c1a6d10)(int unit_handle, char full_path, int16_t max_len, char *output) = FUN_001a6d10;
+static char * (*const b44fd0_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
+static void (*const b44fd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b44fd0_c43f20)(int unit /* */, int16_t type, int a, int16_t dialogue_index, int16_t reply_index) = ai_communication_update_speech_timers;
+
+__attribute__((naked, noinline))
+void FUN_00044fd0(int unit_handle __attribute__((unused)), uint16_t priority __attribute__((unused)), uint16_t type __attribute__((unused)), void *comm_data __attribute__((unused)))
 {
-  if (type <= 0xa) {
-    static void *dispatch[11];
-    (void)dispatch;
-  }
-  if (*(char *)0x5aca51 == 0)
-    return;
-  ai_communication_packet_new(comm_data);
-  FUN_001a6ef0(unit_handle, (short)priority, comm_data);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x600, %%esp\n\t"
+      "movswl 0xc(%%ebp), %%eax\n\t"
+      "cmpl $0xa, %%eax\n\t"
+      "ja .LFUN_00044fd0_1\n\t"
+      "movzbl 0x45278(%%eax), %%eax\n\t"
+      "jmp *.LFUN_00044fd0_jt(,%%eax,4)\n\t"
+      ".LFUN_00044fd0_1:\n\t"
+      "movb 0x5aca51, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .LFUN_00044fd0_12\n\t"
+      "pushl $3\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl 0x1a4(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_00044fd0_4\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x34(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_00044fd0_2\n\t"
+      "leal -0x100(%%ebp), %%edx\n\t"
+      "pushl $0x253d38\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8dff0]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .LFUN_00044fd0_3\n\t"
+      ".LFUN_00044fd0_2:\n\t"
+      "andl $0xffff, %%eax\n\t"
+      "pushl $0xb0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x42c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movswl 0x3a(%%esi), %%eax\n\t"
+      "pushl $0xe8\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x80(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x100(%%ebp), %%edx\n\t"
+      "pushl $0x253d30\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0x28, %%esp\n\t"
+      ".LFUN_00044fd0_3:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x4(%%esi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c3a760]\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x100(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x600(%%ebp), %%edx\n\t"
+      "pushl $0x259f70\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .LFUN_00044fd0_8\n\t"
+      ".LFUN_00044fd0_4:\n\t"
+      "movw 0x6a(%%eax), %%cx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .LFUN_00044fd0_5\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "pushl $0x24\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x204, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x600(%%ebp), %%ecx\n\t"
+      "pushl $0x259f68\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "jmp .LFUN_00044fd0_8\n\t"
+      ".LFUN_00044fd0_5:\n\t"
+      "movl 0x1c8(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00044fd0_6\n\t"
+      "andl $0xffff, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x259f5c\n\t"
+      "leal -0x600(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "jmp .LFUN_00044fd0_7\n\t"
+      ".LFUN_00044fd0_6:\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "andl $0xffff, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x259f50\n\t"
+      "leal -0x600(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      ".LFUN_00044fd0_7:\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00044fd0_8:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "jne .LFUN_00044fd0_9\n\t"
+      "movl $0x259f48, %%eax\n\t"
+      "jmp .LFUN_00044fd0_10\n\t"
+      ".LFUN_00044fd0_9:\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1a67b0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00044fd0_10:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1a6ca0]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x259f40\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c1d90f0]\n\t"
+      "leal -0x600(%%ebp), %%eax\n\t"
+      "pushl $0x5ab100\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8dc30]\n\t"
+      "movl 0x14(%%ebp), %%edi\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LFUN_00044fd0_11\n\t"
+      "movw 0x6(%%edi), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_00044fd0_11\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "leal (%%edx,%%edx,4), %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x257e48(,%%ecx,8), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c42cb0]\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x259f34\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c1d90f0]\n\t"
+      "leal -0x600(%%ebp), %%ecx\n\t"
+      "pushl $0x5ab100\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8dc30]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      ".LFUN_00044fd0_11:\n\t"
+      "leal -0x600(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .LFUN_00044fd0_13\n\t"
+      ".LFUN_00044fd0_12:\n\t"
+      "movl 0x14(%%ebp), %%edi\n\t"
+      ".LFUN_00044fd0_13:\n\t"
+      "movb 0x5aca53, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00044fd0_14\n\t"
+      "pushl $3\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, 0x338(%%esi)\n\t"
+      "jle .LFUN_00044fd0_14\n\t"
+      "leal -0x200(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x200\n\t"
+      "pushl $1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1a6d10]\n\t"
+      "movl 0x1a4(%%esi), %%edx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x200\n\t"
+      "leal -0x400(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c49ac0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x259f2c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_00044fd0_14:\n\t"
+      "movb 0xa(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00044fd0_15\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x6(%%edi), %%ax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[c43f20]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_00044fd0_15:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_00044fd0_16:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_00044fd0_jt:\n\t"
+      ".long .LFUN_00044fd0_16\n\t"
+      ".long .LFUN_00044fd0_1\n\t"
+      ".text\n\t"
+      :
+      : [get] "m"(b44fd0_get), [dget] "m"(b44fd0_dget), [c8dff0] "m"(b44fd0_c8dff0), [c18e380] "m"(b44fd0_c18e380), [elem] "m"(b44fd0_elem), [c1d90f0] "m"(b44fd0_c1d90f0), [c3a760] "m"(b44fd0_c3a760), [c1a67b0] "m"(b44fd0_c1a67b0), [c1a6ca0] "m"(b44fd0_c1a6ca0), [c8dc30] "m"(b44fd0_c8dc30), [c42cb0] "m"(b44fd0_c42cb0), [cff4d0] "m"(b44fd0_cff4d0), [c1a6d10] "m"(b44fd0_c1a6d10), [c49ac0] "m"(b44fd0_c49ac0), [c8f390] "m"(b44fd0_c8f390), [c43f20] "m"(b44fd0_c43f20)
+      : "memory");
 }
+#else
+#error "FUN_00044fd0: clang naked draft required"
+#endif
+
 
 void FUN_00045290(int unit_handle, uint16_t priority, uint16_t type,
                   void *comm_data)
@@ -4263,29 +5022,258 @@ char FUN_00046b60(int16_t conversation_index, char allow_finish)
   }
 }
 
+/* ai_conversation_update (0x46cb0) — XBE naked draft (batch 113). */
+#if defined(__clang__)
+static int (*const b46cb0_gtime)(void) = game_time_get;
+static void (*const b46cb0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b46cb0_c119810)(data_iter_t *iterator) = data_iterator_next;
+static scenario_t * (*const b46cb0_c18e380)(void) = global_scenario_get;
+static void *(*const b46cb0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b46cb0_cff4d0)(int channel, const char *format, ...) = console_printf;
+static char (*const b46cb0_c45a10)(int conversation_handle, char *flag_out) = ai_conversation_begin;
+static void (*const b46cb0_c435b0)(int handle, char param_b, char param_c) = ai_conversation_finish;
+static char (*const b46cb0_c43a20)(int conversation_handle) = FUN_00043a20;
+static void *(*const b46cb0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char (*const b46cb0_c43870)(int conversation_handle) = ai_conversation_line_begin;
+
+__attribute__((naked, noinline))
 void ai_conversation_update(void)
 {
-  data_iter_t iter;
-  char *conversation;
-  int now = game_time_get();
-
-  data_iterator_new(&iter, *(data_t **)0x6324ec);
-  conversation = (char *)data_iterator_next(&iter);
-  while (conversation != NULL) {
-    if (conversation[5]) {
-      if (*(int16_t *)(conversation + 0x4c) > 0)
-        *(int16_t *)(conversation + 0x4c) =
-            (int16_t)(*(int16_t *)(conversation + 0x4c) - 1);
-      else
-        FUN_00043a20(iter.datum_handle);
-    }
-    if (*(int *)(conversation + 0xc) != 0 &&
-        now - *(int *)(conversation + 0xc) > 0x708) {
-      ai_conversation_finish(iter.datum_handle, 0, 0);
-    }
-    conversation = (char *)data_iterator_next(&iter);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x1c, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "movl 0x6324ec, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x1c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x1c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lai_conversation_update_22\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      ".Lai_conversation_update_1:\n\t"
+      "movswl 0x2(%%esi), %%eax\n\t"
+      "pushl $0x74\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x468, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movb 0x6(%%esi), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movl %%edi, -0x8(%%ebp)\n\t"
+      "jne .Lai_conversation_update_6\n\t"
+      "movl 0xc(%%esi), %%ecx\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "cdq\n\t"
+      "movl $0x1e, %%ecx\n\t"
+      "idivl %%ecx\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jne .Lai_conversation_update_3\n\t"
+      "movb 0x5aca5f, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_conversation_update_2\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x25a42c\n\t"
+      "pushl %%edx\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lai_conversation_update_2:\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "leal -0x1(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c45a10]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lai_conversation_update_3:\n\t"
+      "movb 0x6(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lai_conversation_update_6\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lai_conversation_update_5\n\t"
+      "movb 0x5aca5f, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_conversation_update_4\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x25a3fc\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lai_conversation_update_4:\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c435b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lai_conversation_update_5:\n\t"
+      "movb 0x6(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_conversation_update_12\n\t"
+      ".Lai_conversation_update_6:\n\t"
+      "movb 0x7(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lai_conversation_update_13\n\t"
+      "movw 0x48(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lai_conversation_update_7\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "cmpl 0x5c(%%edi), %%edx\n\t"
+      "jge .Lai_conversation_update_7\n\t"
+      "movb $1, %%al\n\t"
+      "jmp .Lai_conversation_update_8\n\t"
+      ".Lai_conversation_update_7:\n\t"
+      "xorb %%al, %%al\n\t"
+      ".Lai_conversation_update_8:\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_conversation_update_9\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "call *%[c43a20]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_conversation_update_12\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl 0x6324ec, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movswl 0x2(%%eax), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl $0x74\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x468, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lai_conversation_update_9:\n\t"
+      "incw 0x48(%%esi)\n\t"
+      "movswl 0x48(%%esi), %%eax\n\t"
+      "cmpl 0x5c(%%edi), %%eax\n\t"
+      "jge .Lai_conversation_update_10\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "call *%[c43870]\n\t"
+      "jmp .Lai_conversation_update_8\n\t"
+      ".Lai_conversation_update_10:\n\t"
+      "movb 0x5aca5f, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_conversation_update_11\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x25a3e0\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lai_conversation_update_11:\n\t"
+      "movb $1, 0x7(%%esi)\n\t"
+      ".Lai_conversation_update_12:\n\t"
+      "movb 0x7(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_conversation_update_14\n\t"
+      ".Lai_conversation_update_13:\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "pushl $1\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c435b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .Lai_conversation_update_21\n\t"
+      ".Lai_conversation_update_14:\n\t"
+      "movb 0x6(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_conversation_update_21\n\t"
+      "movl 0x50(%%edi), %%eax\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lai_conversation_update_21\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "jmp .Lai_conversation_update_15\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lai_conversation_update_15:\n\t"
+      "movl 0x14(%%esi), %%eax\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "testl %%edx, %%eax\n\t"
+      "je .Lai_conversation_update_20\n\t"
+      "movl 0x28(%%esi,%%ecx,4), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .Lai_conversation_update_20\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x1dc(%%eax)\n\t"
+      "movl 0x18(%%eax), %%ecx\n\t"
+      "movl $0xffffffff, 0x1e0(%%eax)\n\t"
+      "movl 0x54(%%esi), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jne .Lai_conversation_update_16\n\t"
+      "movl 0x58(%%esi), %%edx\n\t"
+      "movl %%edx, 0x1e0(%%eax)\n\t"
+      "jmp .Lai_conversation_update_20\n\t"
+      ".Lai_conversation_update_16:\n\t"
+      "movl 0x58(%%esi), %%edi\n\t"
+      "cmpl %%edi, %%ecx\n\t"
+      "jne .Lai_conversation_update_17\n\t"
+      "testb $1, 0x4e(%%esi)\n\t"
+      "je .Lai_conversation_update_17\n\t"
+      "movl %%edx, 0x1e0(%%eax)\n\t"
+      "jmp .Lai_conversation_update_19\n\t"
+      ".Lai_conversation_update_17:\n\t"
+      "movw 0x4e(%%esi), %%cx\n\t"
+      "testb $2, %%cl\n\t"
+      "je .Lai_conversation_update_18\n\t"
+      "movl %%edx, 0x1e0(%%eax)\n\t"
+      "jmp .Lai_conversation_update_19\n\t"
+      ".Lai_conversation_update_18:\n\t"
+      "testb $4, %%cl\n\t"
+      "je .Lai_conversation_update_19\n\t"
+      "movl %%edi, 0x1e0(%%eax)\n\t"
+      ".Lai_conversation_update_19:\n\t"
+      "movl -0x8(%%ebp), %%edi\n\t"
+      ".Lai_conversation_update_20:\n\t"
+      "movl 0x50(%%edi), %%eax\n\t"
+      "incl %%ebx\n\t"
+      "movswl %%bx, %%ecx\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jl .Lai_conversation_update_15\n\t"
+      ".Lai_conversation_update_21:\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lai_conversation_update_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".Lai_conversation_update_22:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [gtime] "m"(b46cb0_gtime), [c1197b0] "m"(b46cb0_c1197b0), [c119810] "m"(b46cb0_c119810), [c18e380] "m"(b46cb0_c18e380), [elem] "m"(b46cb0_elem), [cff4d0] "m"(b46cb0_cff4d0), [c45a10] "m"(b46cb0_c45a10), [c435b0] "m"(b46cb0_c435b0), [c43a20] "m"(b46cb0_c43a20), [dget] "m"(b46cb0_dget), [c43870] "m"(b46cb0_c43870)
+      : "memory");
 }
+#else
+#error "ai_conversation_update: clang naked draft required"
+#endif
+
 
 /* FUN_00046f10 (0x46f10) — XBE naked draft (batch 75). */
 #if defined(__clang__)

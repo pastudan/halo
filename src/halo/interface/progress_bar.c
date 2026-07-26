@@ -1107,80 +1107,329 @@ void D3DXMatrixIdentity(void)
   /* relift: no calls detected — manual review */
 }
 
-/* 0xe2220 */
-void SetRenderStateSmart(int state, int value)
+/* SetRenderStateSmart (0xe2220) — XBE naked draft (batch 110). */
+#if defined(__clang__)
+static void (*const be2220_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
+static void (*const be2220_c1e9320)(void) = D3DDevice_SetRenderState_PSTextureModes;
+static void (*const be2220_c1e9aa0)(void) = D3DDevice_SetRenderState_VertexBlend;
+static void (*const be2220_c1e9680)(void) = D3DDevice_SetRenderState_FogColor;
+static void __stdcall (*const be2220_c1e99b0)(uint32_t value) = D3DDevice_SetRenderState_FillMode;
+static void (*const be2220_c1e99f0)(void) = D3DDevice_SetRenderState_BackFillMode;
+static void (*const be2220_c1e9a40)(void) = D3DDevice_SetRenderState_TwoSidedLighting;
+static void (*const be2220_c1e9780)(void) = D3DDevice_SetRenderState_NormalizeNormals;
+static void __stdcall (*const be2220_c1ea290)(uint32_t enable) = D3DDevice_SetRenderState_ZEnable;
+static void __stdcall (*const be2220_c1ea300)(uint32_t value) = D3DDevice_SetRenderState_StencilEnable;
+static void __stdcall (*const be2220_c1ea380)(uint32_t value) = D3DDevice_SetRenderState_StencilFail;
+static void __stdcall (*const be2220_c1e96d0)(uint32_t mode) = D3DDevice_SetRenderState_CullMode;
+static void (*const be2220_c1e9740)(void) = D3DDevice_SetRenderState_FrontFace;
+static void (*const be2220_c1e97b0)(void) = D3DDevice_SetRenderState_TextureFactor;
+static void __stdcall (*const be2220_c1e98e0)(uint32_t value) = D3DDevice_SetRenderState_ZBias;
+static void (*const be2220_c1e9960)(void) = D3DDevice_SetRenderState_LogicOp;
+static void (*const be2220_c1e9620)(void) = D3DDevice_SetRenderState_EdgeAntiAlias;
+static void (*const be2220_c1ea540)(void) = D3DDevice_SetRenderState_MultiSampleAntiAlias;
+static void (*const be2220_c1ea590)(void) = D3DDevice_SetRenderState_MultiSampleMask;
+static void (*const be2220_c1e92f0)(void) = D3DDevice_SetRenderState_MultiSampleType;
+static void (*const be2220_c1e9650)(void) = D3DDevice_SetRenderState_ShadowFunc;
+static void (*const be2220_c1e9800)(void) = D3DDevice_SetRenderState_LineWidth;
+static void (*const be2220_c1e9860)(void) = D3DDevice_SetRenderState_Dxt1NoiseEnable;
+static void (*const be2220_c1ea3f0)(void) = D3DDevice_SetRenderState_YuvEnable;
+static void (*const be2220_c1ea420)(void) = D3DDevice_SetRenderState_OcclusionCullEnable;
+static void (*const be2220_c1ea480)(void) = D3DDevice_SetRenderState_StencilCullEnable;
+static void (*const be2220_c1ea4e0)(void) = D3DDevice_SetRenderState_RopZCmpAlwaysRead;
+static void (*const be2220_c1ea500)(void) = D3DDevice_SetRenderState_RopZRead;
+static void (*const be2220_c1ea520)(void) = D3DDevice_SetRenderState_DoNotCullUncompressed;
+static void (*const be2220_c1e9380)(uint32_t reg_index, uint32_t value) = D3DDevice_SetRenderState_Deferred;
+
+__attribute__((naked, noinline))
+void SetRenderStateSmart(int state __attribute__((unused)), int value __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* cmp esi, 0x52 -> jge 0xe2249 */
-  D3DDevice_SetRenderState_Simple(edi, 0);
-  /* cmp esi, 0x74 -> jge 0xe225a */
-  D3DDevice_SetRenderState_PSTextureModes();
-  /* cmp esi, 0x75 -> jne 0xe2279 */
-  D3DDevice_SetRenderState_VertexBlend();
-  /* cmp esi, 0x76 -> jne 0xe228a */
-  D3DDevice_SetRenderState_FogColor();
-  /* cmp esi, 0x77 -> jne 0xe229b */
-  D3DDevice_SetRenderState_FillMode(eax);
-  /* cmp esi, 0x78 -> jne 0xe22ac */
-  D3DDevice_SetRenderState_BackFillMode();
-  /* cmp esi, 0x79 -> jne 0xe22bd */
-  D3DDevice_SetRenderState_TwoSidedLighting();
-  /* cmp esi, 0x7a -> jne 0xe22ce */
-  D3DDevice_SetRenderState_NormalizeNormals();
-  /* cmp esi, 0x7b -> jne 0xe22df */
-  D3DDevice_SetRenderState_ZEnable(ecx);
-  /* cmp esi, 0x7c -> jne 0xe22f0 */
-  D3DDevice_SetRenderState_StencilEnable(edx);
-  /* cmp esi, 0x7d -> jne 0xe2301 */
-  D3DDevice_SetRenderState_StencilFail(eax);
-  /* cmp esi, 0x7f -> jne 0xe2312 */
-  D3DDevice_SetRenderState_CullMode(ecx);
-  /* cmp esi, 0x7e -> jne 0xe2323 */
-  D3DDevice_SetRenderState_FrontFace();
-  /* cmp esi, 0x80 -> jne 0xe2337 */
-  D3DDevice_SetRenderState_TextureFactor();
-  /* cmp esi, 0x81 -> jne 0xe234b */
-  D3DDevice_SetRenderState_ZBias(ecx);
-  /* cmp esi, 0x82 -> jne 0xe235f */
-  D3DDevice_SetRenderState_LogicOp();
-  /* cmp esi, 0x83 -> jne 0xe2373 */
-  D3DDevice_SetRenderState_EdgeAntiAlias();
-  /* cmp esi, 0x84 -> jne 0xe2387 */
-  D3DDevice_SetRenderState_MultiSampleAntiAlias();
-  /* cmp esi, 0x85 -> jne 0xe239b */
-  D3DDevice_SetRenderState_MultiSampleMask();
-  /* cmp esi, 0x86 -> jne 0xe23af */
-  D3DDevice_SetRenderState_MultiSampleType();
-  /* cmp esi, 0x87 -> jne 0xe23c3 */
-  D3DDevice_SetRenderState_ShadowFunc();
-  /* cmp esi, 0x88 -> jne 0xe23d7 */
-  D3DDevice_SetRenderState_LineWidth();
-  /* cmp esi, 0x89 -> jne 0xe23eb */
-  D3DDevice_SetRenderState_Dxt1NoiseEnable();
-  /* cmp esi, 0x8a -> jne 0xe23ff */
-  D3DDevice_SetRenderState_YuvEnable();
-  /* cmp esi, 0x8b -> jne 0xe2413 */
-  D3DDevice_SetRenderState_OcclusionCullEnable();
-  /* cmp esi, 0x8c -> jne 0xe2427 */
-  D3DDevice_SetRenderState_StencilCullEnable();
-  /* cmp esi, 0x8d -> jne 0xe243b */
-  D3DDevice_SetRenderState_RopZCmpAlwaysRead();
-  /* cmp esi, 0x8e -> jne 0xe244f */
-  D3DDevice_SetRenderState_RopZRead();
-  /* cmp esi, 0x8f -> jne 0xe2460 */
-  D3DDevice_SetRenderState_DoNotCullUncompressed();
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpl $0x52, %%esi\n\t"
+      "jge .LSetRenderStateSmart_1\n\t"
+      "movl 0x282b90(,%%esi,4), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "movl %%edi, %%edx\n\t"
+      "call *%[c1e9350]\n\t"
+      "movl %%edi, 0x1fb698(,%%esi,4)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_1:\n\t"
+      "cmpl $0x74, %%esi\n\t"
+      "jge .LSetRenderStateSmart_2\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "jmp .LSetRenderStateSmart_10000\n\t"
+      ".LSetRenderStateSmart_2:\n\t"
+      "jne .LSetRenderStateSmart_3\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e9320]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_3:\n\t"
+      "cmpl $0x75, %%esi\n\t"
+      "jne .LSetRenderStateSmart_4\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e9aa0]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_4:\n\t"
+      "cmpl $0x76, %%esi\n\t"
+      "jne .LSetRenderStateSmart_5\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1e9680]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_5:\n\t"
+      "cmpl $0x77, %%esi\n\t"
+      "jne .LSetRenderStateSmart_6\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e99b0]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_6:\n\t"
+      "cmpl $0x78, %%esi\n\t"
+      "jne .LSetRenderStateSmart_7\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e99f0]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_7:\n\t"
+      "cmpl $0x79, %%esi\n\t"
+      "jne .LSetRenderStateSmart_8\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1e9a40]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_8:\n\t"
+      "cmpl $0x7a, %%esi\n\t"
+      "jne .LSetRenderStateSmart_9\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e9780]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_9:\n\t"
+      "cmpl $0x7b, %%esi\n\t"
+      "jne .LSetRenderStateSmart_10\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ea290]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_10:\n\t"
+      "cmpl $0x7c, %%esi\n\t"
+      "jne .LSetRenderStateSmart_11\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1ea300]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_11:\n\t"
+      "cmpl $0x7d, %%esi\n\t"
+      "jne .LSetRenderStateSmart_12\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ea380]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_12:\n\t"
+      "cmpl $0x7f, %%esi\n\t"
+      "jne .LSetRenderStateSmart_13\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e96d0]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_13:\n\t"
+      "cmpl $0x7e, %%esi\n\t"
+      "jne .LSetRenderStateSmart_14\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1e9740]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_14:\n\t"
+      "cmpl $0x80, %%esi\n\t"
+      "jne .LSetRenderStateSmart_15\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e97b0]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_15:\n\t"
+      "cmpl $0x81, %%esi\n\t"
+      "jne .LSetRenderStateSmart_16\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e98e0]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_16:\n\t"
+      "cmpl $0x82, %%esi\n\t"
+      "jne .LSetRenderStateSmart_17\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1e9960]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_17:\n\t"
+      "cmpl $0x83, %%esi\n\t"
+      "jne .LSetRenderStateSmart_18\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e9620]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_18:\n\t"
+      "cmpl $0x84, %%esi\n\t"
+      "jne .LSetRenderStateSmart_19\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ea540]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_19:\n\t"
+      "cmpl $0x85, %%esi\n\t"
+      "jne .LSetRenderStateSmart_20\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1ea590]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_20:\n\t"
+      "cmpl $0x86, %%esi\n\t"
+      "jne .LSetRenderStateSmart_21\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e92f0]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_21:\n\t"
+      "cmpl $0x87, %%esi\n\t"
+      "jne .LSetRenderStateSmart_22\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e9650]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_22:\n\t"
+      "cmpl $0x88, %%esi\n\t"
+      "jne .LSetRenderStateSmart_23\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1e9800]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_23:\n\t"
+      "cmpl $0x89, %%esi\n\t"
+      "jne .LSetRenderStateSmart_24\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e9860]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_24:\n\t"
+      "cmpl $0x8a, %%esi\n\t"
+      "jne .LSetRenderStateSmart_25\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ea3f0]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_25:\n\t"
+      "cmpl $0x8b, %%esi\n\t"
+      "jne .LSetRenderStateSmart_26\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1ea420]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_26:\n\t"
+      "cmpl $0x8c, %%esi\n\t"
+      "jne .LSetRenderStateSmart_27\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ea480]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_27:\n\t"
+      "cmpl $0x8d, %%esi\n\t"
+      "jne .LSetRenderStateSmart_28\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ea4e0]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_28:\n\t"
+      "cmpl $0x8e, %%esi\n\t"
+      "jne .LSetRenderStateSmart_29\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1ea500]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_29:\n\t"
+      "cmpl $0x8f, %%esi\n\t"
+      "jne .LSetRenderStateSmart_30\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ea520]\n\t"
+      ".LSetRenderStateSmart_30:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetRenderStateSmart_10000:\n\t"
+      "jmp *%[c1e9380]\n\t"
+      :
+      : [c1e9350] "m"(be2220_c1e9350), [c1e9320] "m"(be2220_c1e9320), [c1e9aa0] "m"(be2220_c1e9aa0), [c1e9680] "m"(be2220_c1e9680), [c1e99b0] "m"(be2220_c1e99b0), [c1e99f0] "m"(be2220_c1e99f0), [c1e9a40] "m"(be2220_c1e9a40), [c1e9780] "m"(be2220_c1e9780), [c1ea290] "m"(be2220_c1ea290), [c1ea300] "m"(be2220_c1ea300), [c1ea380] "m"(be2220_c1ea380), [c1e96d0] "m"(be2220_c1e96d0), [c1e9740] "m"(be2220_c1e9740), [c1e97b0] "m"(be2220_c1e97b0), [c1e98e0] "m"(be2220_c1e98e0), [c1e9960] "m"(be2220_c1e9960), [c1e9620] "m"(be2220_c1e9620), [c1ea540] "m"(be2220_c1ea540), [c1ea590] "m"(be2220_c1ea590), [c1e92f0] "m"(be2220_c1e92f0), [c1e9650] "m"(be2220_c1e9650), [c1e9800] "m"(be2220_c1e9800), [c1e9860] "m"(be2220_c1e9860), [c1ea3f0] "m"(be2220_c1ea3f0), [c1ea420] "m"(be2220_c1ea420), [c1ea480] "m"(be2220_c1ea480), [c1ea4e0] "m"(be2220_c1ea4e0), [c1ea500] "m"(be2220_c1ea500), [c1ea520] "m"(be2220_c1ea520), [c1e9380] "m"(be2220_c1e9380)
+      : "memory");
 }
+#else
+#error "SetRenderStateSmart: clang naked draft required"
+#endif
+
 
 /* 0xe2470 */
 void SetTextureStageStateSmart(int stage, int state, int value)
