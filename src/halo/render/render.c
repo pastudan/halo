@@ -470,8 +470,9 @@ void FUN_00184690(void)
 
 
 /* FUN_00184710 (0x184710) — readable C lift (auto_lift_trivial). */
+void FUN_00158ae0(int mode);
 void FUN_00184710(void) {
-  ((void (*)(int))0x158ae0)(0);
+  FUN_00158ae0(0);
 }
 
 

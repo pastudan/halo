@@ -343,8 +343,9 @@ void FUN_0017cea0(void)
 }
 
 /* FUN_0017ceb0 (0x17ceb0) — readable C lift (auto_lift_trivial). */
+void FUN_00165420(void);
 void FUN_0017ceb0(void) {
-  ((void (*)(void))0x165420)();
+  FUN_00165420();
 }
 
 
@@ -464,8 +465,9 @@ void FUN_0017cf10(int pass_index __attribute__((unused)))
 
 
 /* FUN_0017cf20 (0x17cf20) — readable C lift (auto_lift_trivial). */
+void FUN_001677d0(void);
 void FUN_0017cf20(void) {
-  ((void (*)(void))0x1677d0)();
+  FUN_001677d0();
 }
 
 
