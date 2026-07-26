@@ -7877,7 +7877,7 @@
         {
           "addr": "0x1996d0",
           "decl": "void *file_reference_copy(void *dst, void *src);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1997f0",
@@ -38272,7 +38272,7 @@
         {
           "addr": "0x14ad80",
           "decl": "void render_debug_collision_cylinder(void *cylinder, void *color);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x14adb0",

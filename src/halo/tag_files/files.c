@@ -1814,39 +1814,13 @@ void file_printf(void)
 #endif
 
 
-/* file_reference_copy (0x1996d0) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-static file_ref_t * (*const b1996d0_c199620)(file_ref_t *info) = file_reference_verify;
-static void * (*const b1996d0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-void file_reference_copy(void)
+/* file_reference_copy (0x1996d0) — readable C lift. */
+void *file_reference_copy(void *dst, void *src)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c199620]\n\t"
-      "pushl $0x108\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c199620] "m"(b1996d0_c199620), [c8e0b0] "m"(b1996d0_c8e0b0)
-      : "memory");
+  file_reference_verify((file_ref_t *)src);
+  csmemcpy(dst, src, 0x108);
+  return dst;
 }
-#else
-#error "file_reference_copy: clang naked draft required"
-#endif
-
 
 /* directory_create_or_delete_contents (0x199a60) — XBE naked draft (batch 272). */
 #if defined(__clang__)
