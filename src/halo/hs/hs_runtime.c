@@ -5021,67 +5021,29 @@ void FUN_000c9e50(int object_handle, int attach_object, int marker_id)
       0.0f);
 }
 
-/* FUN_000c9ec0 (0xc9ec0) — XBE naked draft (batch 153). */
-#if defined(__clang__)
-static scenario_t * (*const bc9ec0_c18e380)(void) = global_scenario_get;
-static void *(*const bc9ec0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const bc9ec0_c136750)(void *damage_params, int tag_index) = damage_data_new;
-static void (*const bc9ec0_c18f180)(void *location_out, void *point) = scenario_location_from_point;
-static void (*const bc9ec0_c138e30)(void *damage_params, int target_index) = FUN_00138e30;
-
-__attribute__((naked, noinline))
-void FUN_000c9ec0(int damage_type __attribute__((unused)), int16_t scenario_index __attribute__((unused)))
+/* FUN_000c9ec0 (0xc9ec0) — readable C lift: damage at cutscene flag. */
+void FUN_000c9ec0(int damage_type, int16_t scenario_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x54, %%esp\n\t"
-      "movswl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x5c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x4e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x54(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c136750]\n\t"
-      "leal 0x24(%%esi), %%eax\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "movl %%ecx, -0x2c(%%ebp)\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, -0x28(%%ebp)\n\t"
-      "movl 0x8(%%esi), %%esi\n\t"
-      "leal -0x40(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%esi, -0x24(%%ebp)\n\t"
-      "movl %%ecx, -0x38(%%ebp)\n\t"
-      "movl %%edx, -0x34(%%ebp)\n\t"
-      "movl %%esi, -0x30(%%ebp)\n\t"
-      "call *%[c18f180]\n\t"
-      "leal -0x54(%%ebp), %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c138e30]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc9ec0_c18e380), [elem] "m"(bc9ec0_elem), [c136750] "m"(bc9ec0_c136750), [c18f180] "m"(bc9ec0_c18f180), [c138e30] "m"(bc9ec0_c138e30)
-      : "memory");
-}
-#else
-#error "FUN_000c9ec0: clang naked draft required"
-#endif
+  char damage[0x54];
+  char *flag;
+  float world[3];
+  scenario_t *scen;
 
+  scen = global_scenario_get();
+  flag = (char *)tag_block_get_element((char *)scen + 0x4e4, (int)scenario_index, 0x5c);
+  damage_data_new(damage, damage_type);
+  world[0] = *(float *)(flag + 0x24);
+  world[1] = *(float *)(flag + 0x28);
+  world[2] = *(float *)(flag + 0x2c);
+  *(float *)(damage + 0x28) = world[0];
+  *(float *)(damage + 0x2c) = world[1];
+  *(float *)(damage + 0x30) = world[2];
+  *(float *)(damage + 0x1c) = world[0];
+  *(float *)(damage + 0x20) = world[1];
+  *(float *)(damage + 0x24) = world[2];
+  scenario_location_from_point(damage + 0x14, flag + 0x24);
+  FUN_00138e30(damage, -1);
+}
 
 /* FUN_000c9f30 (0xc9f30) — readable C lift: apply damage at object world pos. */
 void FUN_000c9f30(int damage_type, int object_handle)
