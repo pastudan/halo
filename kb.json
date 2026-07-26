@@ -36040,17 +36040,23 @@
         },
         {
           "addr": "0x64170",
-          "decl": "void prop_add(void);",
+          "decl": "void prop_add(int actor_handle, int prop_index, int unit_handle);",
+          "name": "prop_add",
+          "source_path": "src/halo/ai/props.c",
           "ported": false
         },
         {
           "addr": "0x643d0",
-          "decl": "void FUN_000643d0(void);",
+          "decl": "void FUN_000643d0(int actor_handle);",
+          "name": "FUN_000643d0",
+          "source_path": "src/halo/ai/props.c",
           "ported": false
         },
         {
           "addr": "0x645a0",
-          "decl": "void prop_new_unacknowledged(void);",
+          "decl": "int prop_new_unacknowledged(int actor_handle, int unit_handle, char friendly);",
+          "name": "prop_new_unacknowledged",
+          "source_path": "src/halo/ai/props.c",
           "ported": false
         },
         {
@@ -36075,17 +36081,23 @@
         },
         {
           "addr": "0x64b40",
-          "decl": "int FUN_00064b40(int a, int b, int c, int d);",
+          "decl": "int FUN_00064b40(int actor_handle, int unit_handle, char create_if_needed, char refresh_flag);",
+          "name": "FUN_00064b40",
+          "source_path": "src/halo/ai/props.c",
           "ported": false
         },
         {
           "addr": "0x64cd0",
-          "decl": "void FUN_00064cd0(void);",
+          "decl": "int FUN_00064cd0(char *prop, int tag, void *out);",
+          "name": "FUN_00064cd0",
+          "source_path": "src/halo/ai/props.c",
           "ported": false
         },
         {
           "addr": "0x64ec0",
-          "decl": "void FUN_00064ec0(void);",
+          "decl": "int FUN_00064ec0(char *prop, int tag, void *out);",
+          "name": "FUN_00064ec0",
+          "source_path": "src/halo/ai/props.c",
           "ported": false
         },
         {
@@ -40192,11 +40204,15 @@
         {
           "addr": "0x5eae0",
           "decl": "char path_state_build_path(unsigned int path_buf, unsigned int *nav_state_out);",
-          "ported": true
+          "name": "path_state_build_path",
+          "source_path": "src/halo/ai/path.c",
+          "ported": false
         },
         {
           "addr": "0x5ef80",
-          "decl": "char FUN_0005ef80(unsigned int *path_buf @<edi>);",
+          "decl": "char FUN_0005ef80(unsigned int *path_buf);",
+          "name": "FUN_0005ef80",
+          "source_path": "src/halo/ai/path.c",
           "ported": false
         },
         {

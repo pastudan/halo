@@ -1954,7 +1954,7 @@ void actor_perception_refresh_test_object(void)
   /* test (char)eax, (char)eax -> jne 0x346c9 */
   /* test (char)eax, 0x41 -> je 0x346cd */
   /* test (char)ecx, (char)ecx -> je 0x34930 */
-  prop_new_unacknowledged();
+  prop_new_unacknowledged(0, 0, 0);
   /* cmp eax, -1 -> je 0x34930 */
   prop_position_refresh();
   /* test (char)eax, (char)eax -> jne 0x34930 */
@@ -2189,7 +2189,7 @@ void actor_perception_refresh(void)
   qsort((void *)0, 0, 12, (void *)0);
   /* relift: cmp word ptr [ebp - 0x6be], (int16_t)edi -> jle 0x3546f */
   /* relift: cmp dword ptr [ebp + eax - 0x6b8], ebx -> jne 0x353ae */
-  prop_new_unacknowledged();
+  prop_new_unacknowledged(0, 0, 0);
   /* cmp eax, ebx -> je 0x353c4 */
   prop_position_refresh();
   /* relift: cmp (int16_t)edi, word ptr [ebp - 0x6be] -> jl 0x35370 */
@@ -2206,7 +2206,7 @@ void actor_perception_refresh(void)
   qsort((void *)0, 0, 12, (void *)0);
   /* relift: cmp word ptr [ebp - 0xcc2], 0 -> jle 0x355e0 */
   /* relift: cmp dword ptr [ebp + eax - 0xcbc], -1 -> jne 0x35517 */
-  prop_new_unacknowledged();
+  prop_new_unacknowledged(0, 0, 0);
   /* cmp eax, -1 -> je 0x35525 */
   prop_position_refresh();
   /* relift: cmp (int16_t)ebx, word ptr [ebp - 0x1c] -> jge 0x3553e */

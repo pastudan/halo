@@ -540,7 +540,7 @@ void FUN_000680a0(void)
   /* cmp (int16_t)edi, 0x100 -> jae 0x6a2f8 */
   /* test eax, eax -> jg 0x6a2b0 */
   FUN_0006f9d0();
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
   /* cmp eax, 7 -> ja 0x6a35e */
   FUN_0006f9d0();
   FUN_0006f9d0();
@@ -673,7 +673,7 @@ void FUN_0006bcb0(void)
   debug_malloc(eax, 0, (char *)0, 0);
   FUN_00068a30(0, (char *)0x00260304);
   FUN_0006a310();
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
   TIFFGetField();
   TIFFScanlineSize();
   /* cmp ebx, eax -> jae 0x6bd79 */
@@ -708,7 +708,7 @@ void FUN_0006be40(void)
   /* cmp eax, edi -> jne 0x6bee2 */
   FUN_00068a30(0, (char *)0x002602d0);
   FUN_0006a310();
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
   TIFFGetField();
   TIFFScanlineSize();
   /* cmp edi, eax -> jae 0x6bf48 */
@@ -747,11 +747,11 @@ void FUN_0006c080(void)
   int edi = 0;
   int ebp = 0;
 
-  FUN_00064ec0();
-  FUN_00064ec0();
-  FUN_00064ec0();
-  FUN_00064ec0();
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
+  FUN_00064ec0(0, 0, 0);
+  FUN_00064ec0(0, 0, 0);
+  FUN_00064ec0(0, 0, 0);
+  FUN_00064ec0(0, 0, 0);
   TIFFFlushData();
   /* relift: cmp word ptr [ebp - 8], 0 -> jne 0x6c119 */
   /* relift: cmp word ptr [ebp - 4], 0xff -> je 0x6c32d */
@@ -786,9 +786,9 @@ void FUN_0006c080(void)
   FUN_0006b8e0();
   FUN_0006bcb0();
   debug_free((void *)(uintptr_t)esi, (char *)0x00260264, 248);
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
   /* cmp ecx, 0xf -> ja 0x6c58b */
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
   /* cmp eax, 1 -> je 0x6c472 */
   /* cmp eax, 2 -> jle 0x6c467 */
   /* cmp eax, 4 -> jle 0x6c472 */
@@ -2278,9 +2278,9 @@ void FUN_0007f150(void)
   file_reference_get_name((void *)(uintptr_t)esi, 13, (char *)(uintptr_t)eax);
   FUN_0006d8e0((char *)(uintptr_t)eax, (char *)0);
   TIFFScanlineSize();
-  FUN_00064ec0();
-  FUN_00064ec0();
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
+  FUN_00064ec0(0, 0, 0);
+  FUN_00064ec0(0, 0, 0);
   TIFFGetField();
   TIFFGetField();
   TIFFGetField();

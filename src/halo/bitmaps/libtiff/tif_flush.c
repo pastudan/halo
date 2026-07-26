@@ -597,7 +597,7 @@ void FUN_0006a310(void)
 {
   int eax = 0;
 
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
   /* cmp eax, 7 -> ja 0x6a35e */
   FUN_0006f9d0();
   /* relift: relift: mov word ptr [0x3340f0], 4 */
@@ -879,7 +879,7 @@ void FUN_0006ba70(void)
   debug_malloc(eax, 0, (char *)0, 0);
   FUN_00068a30(0, (char *)0x00260304);
   FUN_0006a310();
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
   TIFFGetField();
   TIFFScanlineSize();
   /* cmp ebx, eax -> jae 0x6bd79 */

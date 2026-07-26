@@ -218,9 +218,9 @@ void FUN_0007fa00(void)
   file_reference_get_name((void *)(uintptr_t)esi, 13, (char *)(uintptr_t)eax);
   FUN_0006d8e0((char *)(uintptr_t)eax, (char *)0);
   TIFFScanlineSize();
-  FUN_00064ec0();
-  FUN_00064ec0();
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
+  FUN_00064ec0(0, 0, 0);
+  FUN_00064ec0(0, 0, 0);
   TIFFGetField();
   TIFFGetField();
   TIFFGetField();

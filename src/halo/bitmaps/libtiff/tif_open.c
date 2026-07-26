@@ -8,9 +8,9 @@ void FUN_0006c400(void)
   int eax = 0;
   int ecx = 0;
 
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
   /* cmp ecx, 0xf -> ja 0x6c58b */
-  FUN_00064ec0();
+  FUN_00064ec0(0, 0, 0);
   /* cmp eax, 1 -> je 0x6c472 */
   /* cmp eax, 2 -> jle 0x6c467 */
   /* cmp eax, 4 -> jle 0x6c472 */

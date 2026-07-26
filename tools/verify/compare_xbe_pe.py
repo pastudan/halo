@@ -137,6 +137,12 @@ def main() -> int:
         ("ai_find_inactive_encounters", 0x3fb40, 0x3fc90),
         ("ai_release_inactive_encounters", 0x3fc90, 0x3fdbd),
         ("actor_berserk", 0x31440, 0x314f0),
+        # path build + prop lifecycle (2026-07-26 wave)
+        ("path_state_build_path", 0x5eae0, 0x5ef80),
+        ("FUN_0005ef80", 0x5ef80, 0x5f1d0),
+        ("prop_add", 0x64170, 0x643d0),
+        ("FUN_00064b40", 0x64b40, 0x64cd0),
+        ("FUN_00064cd0", 0x64cd0, 0x64f50),
     ]
 
     xbe = Xbe.from_file(args.xbe)

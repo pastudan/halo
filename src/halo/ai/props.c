@@ -545,54 +545,112 @@ char FUN_00063e90(int scenario, unsigned char bsp_idx, float *origin,
   return 1;
 }
 
-/* 0x64170 */
-void prop_add(void)
+/* 0x64170 — link a new prop into an actor's prop chain. */
+void prop_add(int actor_handle, int prop_index, int unit_handle)
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *actor;
+  char *prop;
+  char *unit;
+  void *unit_tag;
+  char is_biped_flag;
+  char orphan_flag;
+  int16_t status_word;
+  int now;
 
-  game_time_get();
-  /* cmp eax, edi -> je 0x641a2 */
-  /* cmp esi, eax -> jl 0x643bb */
-  error(0, (void *)0x0025f1a8);
-  /* mem[0x002c97b8] = esi */
-  datum_get((void *)0, 0);
-  datum_get((void *)0, 0);
-  object_get_and_verify_type(0, 0);
-  tag_get('tinu', 0);
-  /* cmp ebx, eax -> jne 0x64280 */
-  display_assert((void *)0x0025f180, (void *)0x0025f134, 232, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [edi + 0x64], 0 -> je 0x642a7 */
-  display_assert((void *)0x0025f150, (void *)0x0025f134, 233, 0);
-  system_exit(0);
-  game_allegiance_get_team_is_friendly(0, 0);
-  game_team_is_ally(0, 0);
-  game_team_ally_status_changed(0, 0);
-  /* relift: cmp word ptr [edi + 0x3d0], 0 -> jne 0x64328 */
-  /* relift: cmp dword ptr [edi + 0x1a8], ebx -> je 0x6436d */
-  game_time_get();
-  /* test (char)eax, (char)eax -> je 0x64388 */
-  /* cmp eax, ebx -> je 0x643a8 */
-  datum_get((void *)0, 0);
+  if (prop_index == -1) {
+    now = game_time_get();
+    if (*(int *)0x2c97b8 != -1 && now < *(int *)0x2c97b8 + 900) {
+      error(2, (char *)0x0025f1a8);
+    }
+    *(int *)0x2c97b8 = now;
+    return;
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)esi;
-  (void)edi;
+  actor = (char *)datum_get(actor_data, actor_handle);
+  prop = (char *)datum_get(prop_data, prop_index);
+  *(int *)(prop + 4) = actor_handle;
+  *(int16_t *)(prop + 0x66) = -1;
+  *(int16_t *)(prop + 0x6c) = -1;
+  *(int *)(prop + 0x18) = unit_handle;
+  *(char *)(prop + 0x74) = 0;
+  *(int *)(prop + 0x70) = 0;
+  *(int16_t *)(prop + 0xb0) = -1;
+  *(char *)(prop + 0xb8) = 0;
+  *(int *)(prop + 0xb4) = -1;
+  *(int *)(prop + 0x7c) = -1;
+  *(int *)(prop + 0x8c) = -1;
+  *(char *)(prop + 0x4e) = 0;
+  *(int *)(prop + 0x1c) = -1;
+  *(int *)(prop + 0xc) = -1;
+  *(int16_t *)(prop + 0x6a) = 0;
+  *(int *)(prop + 0xa0) = -1;
+
+  if (unit_handle != -1) {
+    unit = (char *)object_get_and_verify_type(unit_handle, 3);
+    unit_tag = tag_get('unit', *(int *)unit);
+    if (unit_handle == *(int *)(actor + 0x18)) {
+      display_assert("unit_index != actor->meta.unit_index",
+                     "c:\\halo\\SOURCE\\ai\\props.c", 0xe8, 1);
+      system_exit(-1);
+    }
+    if (*(int16_t *)(unit + 0x64) != 0) {
+      display_assert("prop_unit->object.type == _object_type_biped",
+                     "c:\\halo\\SOURCE\\ai\\props.c", 0xe9, 1);
+      system_exit(-1);
+    }
+    *(int16_t *)(prop + 0x12) = *(int16_t *)(unit + 0x68);
+    *(char *)(prop + 0x60) = game_allegiance_get_team_is_friendly(
+        *(int16_t *)(prop + 0x12), *(int16_t *)(actor + 0x3e));
+    *(char *)(prop + 0x61) =
+        game_team_is_ally(*(int16_t *)(prop + 0x12),
+                          *(int16_t *)(actor + 0x3e));
+    *(char *)(prop + 0x62) = game_team_ally_status_changed(
+        *(int16_t *)(prop + 0x12), *(int16_t *)(actor + 0x3e));
+    is_biped_flag = (char)((*(char *)(unit + 0xb6) >> 2) & 1);
+    *(char *)(prop + 0x127) = is_biped_flag;
+    *(int *)(prop + 0x20) = *(int *)(unit_tag + 0x284);
+    if (is_biped_flag != 0 && *(int16_t *)(unit + 0x3d0) == 0)
+      orphan_flag = 1;
+    else
+      orphan_flag = 0;
+    *(char *)(prop + 0x128) = orphan_flag;
+    *(int16_t *)(prop + 0x76) = (int16_t)(orphan_flag ? 0x3e8 : 0);
+    *(char *)(prop + 0x12e) = (*(int *)(unit + 0x70) != -1);
+    if (*(int *)(unit + 0x1a8) != -1) {
+      *(char *)(prop + 0x14) = 1;
+      *(int *)(prop + 0x1c) = *(int *)(unit + 0x1a8);
+      *(int *)(prop + 0x28) = game_time_get();
+    } else {
+      *(int *)(prop + 0x1c) = *(int *)(unit + 0x1a4);
+    }
+    if (*(char *)(prop + 0x12e) != 0)
+      status_word = 6;
+    else if (*(int *)(prop + 0x1c) != unit_handle) {
+      char *owner;
+
+      owner = (char *)datum_get(*(void **)0x6325a4, *(int *)(prop + 0x1c));
+      status_word = *(int16_t *)(owner + 4);
+    } else {
+      status_word = -1;
+    }
+    *(int16_t *)(prop + 0x10) = status_word;
+  }
+
+  *(int *)(prop + 8) = *(int *)(actor + 0x50);
+  *(int *)(actor + 0x50) = prop_index;
 }
 
 /* 0x643d0 */
-void FUN_000643d0(void)
+void FUN_000643d0(int actor_handle)
 {
-  data_new_at_index((void *)0);
-  prop_add();
+  int prop_index;
+
+  prop_index = data_new_at_index(prop_data);
+  prop_add(actor_handle, prop_index, -1);
 }
 
 /* 0x645a0 */
-void prop_new_unacknowledged(void)
+int prop_new_unacknowledged(int actor_handle, int unit_handle, char friendly)
 {
   int eax = 0;
   int ebx = 0;
@@ -600,6 +658,10 @@ void prop_new_unacknowledged(void)
   int esi = 0;
   int edi = 0;
   int ebp = 0;
+
+  (void)actor_handle;
+  (void)unit_handle;
+  (void)friendly;
 
   datum_get((void *)0, 0);
   datum_get((void *)0, 0);
@@ -624,7 +686,7 @@ void prop_new_unacknowledged(void)
   FUN_0003b410(0, 0, 0);
   FUN_00064400(0, 0);
   csmemset((void *)0, 0, 312);
-  prop_add();
+  prop_add(0, 0, -1);
 
   (void)eax;
   (void)ebx;
@@ -632,6 +694,7 @@ void prop_new_unacknowledged(void)
   (void)esi;
   (void)edi;
   (void)ebp;
+  return -1;
 }
 
 /* 0x647c0 */
@@ -651,7 +714,7 @@ void prop_orphan_transition(void)
   int edi = 0;
 
   data_new_at_index((void *)0);
-  prop_add();
+  prop_add(0, 0, -1);
   /* cmp esi, -1 -> je 0x6495b */
   datum_get((void *)0, 0);
   datum_get((void *)0, 0);
@@ -678,7 +741,7 @@ void prop_orphan_from_friend(void)
   int edi = 0;
 
   data_new_at_index((void *)0);
-  prop_add();
+  prop_add(0, 0, -1);
   /* cmp esi, -1 -> je 0x64a54 */
   datum_get((void *)0, 0);
   datum_get((void *)0, 0);
@@ -704,70 +767,151 @@ void prop_orphan_update_information(void)
   FUN_000647c0();
 }
 
-/* 0x64b40 */
-int FUN_00064b40(int a, int b, int c, int d)
+/* 0x64b40 — create/refresh a prop acknowledgement for a perceived unit. */
+int FUN_00064b40(int actor_handle, int unit_handle, char create_if_needed,
+                 char refresh_flag)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *actor;
+  char *unit;
+  char *prop;
+  int owner_handle;
+  int prop_handle;
+  char friendly;
+  char ack;
 
-  /* cmp esi, -1 -> je 0x64cc3 */
-  datum_get((void *)0, 0);
-  object_get_and_verify_type(0, 0);
-  /* relift: cmp word ptr [ecx + 0x64], 0 -> jne 0x64cc2 */
-  /* relift: cmp dword ptr [ebp - 4], ebx -> je 0x64cc2 */
-  datum_get((void *)0, 0);
-  datum_get((void *)0, 0);
-  /* cmp edx, esi -> je 0x64bf9 */
-  /* test dl, dl -> je 0x64bc0 */
-  /* cmp edx, -1 -> je 0x64bc0 */
-  /* cmp edi, -1 -> jne 0x64cc2 */
-  /* test (char)eax, (char)eax -> je 0x64cc2 */
-  /* test (char)ecx, (char)ecx -> je 0x64cc2 */
-  game_allegiance_get_team_is_friendly(0, 0);
-  prop_new_unacknowledged();
-  /* cmp edi, -1 -> je 0x64cc2 */
-  datum_get((void *)0, 0);
+  prop_handle = -1;
+  if (unit_handle == -1)
+    return -1;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  if (*(int *)(unit + 0x1a8) != -1)
+    owner_handle = *(int *)(unit + 0x1a8);
+  else
+    owner_handle = *(int *)(unit + 0x1a4);
+
+  if (*(int16_t *)(unit + 0x64) != 0)
+    return -1;
+  if (owner_handle == actor_handle)
+    return -1;
+
+  prop_handle = *(int *)(actor + 0x50);
+  while (prop_handle != -1) {
+    prop = (char *)datum_get(prop_data, prop_handle);
+    if (*(int *)(prop + 0x18) == unit_handle)
+      goto found_prop;
+    if (*(char *)(prop + 0x14) == 0) {
+      prop_handle = *(int *)(prop + 8);
+      continue;
+    }
+    if (*(int *)(prop + 0x1c) == -1) {
+      prop_handle = *(int *)(prop + 8);
+      continue;
+    }
+    if (*(int *)(prop + 0x1c) != owner_handle) {
+      prop_handle = *(int *)(prop + 8);
+      continue;
+    }
+  found_prop:
+    if (*(int *)(prop + 0xc) != -1)
+      prop_handle = *(int *)(prop + 0xc);
+    if (prop_handle != -1)
+      return prop_handle;
+    break;
+  }
+
+  if (create_if_needed == 0)
+    return -1;
+  if (*(char *)(actor + 8) == 0)
+    return -1;
+
+  friendly = game_allegiance_get_team_is_friendly(*(int16_t *)(unit + 0x68),
+                                                  *(int16_t *)(actor + 0x3e));
+  prop_handle =
+      prop_new_unacknowledged(actor_handle, unit_handle, friendly);
+  if (prop_handle == -1)
+    return -1;
+
+  prop = (char *)datum_get(prop_data, prop_handle);
   prop_position_refresh();
+  *(int16_t *)(prop + 0x6a) = 0x1e;
+  *(char *)(prop + 0x126) = 1;
+  if (refresh_flag == 0)
+    return prop_handle;
+
   prop_status_refresh();
-  /* relift: cmp word ptr [esi + 0x30], 2 -> jl 0x64cc2 */
+  if (*(int16_t *)(prop + 0x30) < 2)
+    return prop_handle;
+
   actor_expected_acknowledgement();
-  actor_perception_acknowledge(0, 0, 0, 0);
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  actor_perception_acknowledge(actor_handle, prop_handle, 0, 0);
+  ack = 0;
+  *(int16_t *)(prop + 0x24) = 3;
+  actor_perception_acknowledge(actor_handle, prop_handle, ack, 0);
+  return prop_handle;
 }
 
-/* 0x64cd0 */
-void FUN_00064cd0(void)
+/* 0x64cd0 — read a typed field from a prop structure (tag dispatch). */
+int FUN_00064cd0(char *prop, int tag, void *out)
 {
-  int eax = 0;
-  int ebx = 0;
-
-  TIFFVGetField();
-  /* test eax, eax -> jne 0x64e74 */
-  /* cmp ebx, 0x119 -> jg 0x64dca */
-  /* cmp eax, 0x1a -> ja 0x64e3e */
-  /* cmp ebx, 0x13d -> jg 0x64e30 */
-
-  (void)eax;
-  (void)ebx;
+  switch (tag) {
+  case 0xfe:
+    *(int16_t *)out = *(int16_t *)(prop + 0x34);
+    return 1;
+  case 0xff:
+    *(int16_t *)out = *(int16_t *)(prop + 0x36);
+    return 1;
+  case 0x100:
+    *(int16_t *)out = *(int16_t *)(prop + 0x3e);
+    return 1;
+  case 0x101:
+    *(int16_t *)out = *(int16_t *)(prop + 0x40);
+    return 1;
+  case 0x102:
+    *(int16_t *)out = *(int16_t *)(prop + 0x42);
+    return 1;
+  case 0x103:
+    *(int16_t *)out = *(int16_t *)(prop + 0x44);
+    return 1;
+  case 0x104:
+    *(int *)out = *(int *)(prop + 0x48);
+    return 1;
+  case 0x105:
+    *(int16_t *)out = *(int16_t *)(prop + 0x4c);
+    return 1;
+  case 0x119:
+    *(int16_t *)out = *(int16_t *)(prop + 0x50);
+    return 1;
+  case 0x11c:
+    *(int16_t *)out = *(int16_t *)(prop + 0x5e);
+    return 1;
+  case 0x125:
+    *(int16_t *)out = *(int16_t *)(prop + 0x5c);
+    return 1;
+  case 0x128:
+    *(int *)out = *(int *)(prop + 0x6c);
+    return 1;
+  case 0x13d:
+    *(int16_t *)out = *(int16_t *)(prop + 0x46);
+    return 1;
+  case 0x80e4:
+    *(int16_t *)out = *(int16_t *)(prop + 0x38) - 1;
+    return 1;
+  case 0x80e5:
+    *(int16_t *)out = *(int16_t *)(prop + 0x24);
+    return 1;
+  case 0x80e6:
+    *(int *)out = *(int *)(prop + 0x30);
+    return 1;
+  default:
+    return 0;
+  }
 }
 
-/* 0x64ec0 */
-void FUN_00064ec0(void)
+/* 0x64ec0 — wrapper around FUN_00064cd0. */
+int FUN_00064ec0(char *prop, int tag, void *out)
 {
-  FUN_00064cd0();
+  return FUN_00064cd0(prop, tag, out);
 }
 
 /* 0x64f50 */

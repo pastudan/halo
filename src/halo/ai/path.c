@@ -986,39 +986,97 @@ write_result:
   return 1;
 }
 
-/* 0x5ef80 */
+/* 0x5ef80 — allocate the initial path-search node and heap-insert it. */
 char FUN_0005ef80(unsigned int *path_buf)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edi = 0;
+  char *path;
+  int focus_surface;
+  int16_t node_index;
+  int16_t estimated_cost;
+  char *node;
+  unsigned int hash_slot;
+  void *scenario;
+  void *bsp;
+  float dist_sq;
+  float dist;
+  int cost_i;
 
-  /* cmp eax, -1 -> je 0x5f086 */
-  /* relift: relift: fcomp dword ptr [0x25ddb8] */
-  /* test (char)eax, 0x41 -> jne 0x5f086 */
-  tag_block_get_element((void *)(uintptr_t)*(int *)((char *)edi + 0x64), 0, 0);
-  /* test ecx, ecx -> jl 0x5efca */
-  /* relift: cmp ecx, dword ptr [eax + 0x3c] -> jl 0x5efea */
-  display_assert((char *)0x0025e4c0, (char *)0x0025e0ac, 689, 1);
-  system_exit(-1);
-  /* test (char)eax, (char)eax -> je 0x5f08d */
-  FUN_001d9068();
-  error(2, (char *)0x0025e448);
-  /* relift: cmp word ptr [edi + 0x80], 0 -> je 0x5f0c5 */
-  display_assert((char *)0x0025e42c, (char *)0x0025e0ac, 716, 1);
-  system_exit(-1);
-  tag_block_get_element((void *)(uintptr_t)*(int *)((char *)edi + 0x64), 0, 0);
-  /* test ecx, ecx -> jl 0x5f156 */
-  /* relift: cmp ecx, dword ptr [eax + 0x3c] -> jl 0x5f176 */
-  display_assert((char *)0x0025e3d0, (char *)0x0025e0ac, 739, 1);
-  system_exit(-1);
-  /* test (char)eax, (char)eax -> je 0x5f1a1 */
-  path_heap_insert((void *)0, 0, 0);
-  return 0;
+  path = (char *)path_buf;
+  focus_surface = *(int *)(path + 0x20);
+  if (focus_surface == -1)
+    return 0;
 
-  (void)eax;
-  (void)ecx;
-  (void)edi;
+  if (*(float *)(path + 0x1c) >= -1000.0f)
+    return 0;
+
+  scenario = *(void **)(path + 0x64);
+  bsp = tag_block_get_element((char *)scenario + 0xb0, 0, 0x60);
+  if (focus_surface < 0 ||
+      focus_surface >= *(int *)((char *)bsp + 0x3c)) {
+    display_assert("current_surface>=0 && "
+                   "current_surface<scenario->structure_bsp.surface_count",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x2b1, 1);
+    system_exit(-1);
+  }
+
+  cost_i = 0;
+  estimated_cost = 0;
+  if (*(char *)(path + 0x4c) != 0) {
+    float dx;
+    float dy;
+    float dz;
+
+    dx = *(float *)(path + 0x50) - *(float *)(path + 0x14);
+    dy = *(float *)(path + 0x54) - *(float *)(path + 0x18);
+    dz = *(float *)(path + 0x58) - *(float *)(path + 0x1c);
+    dist_sq = dx * dx + dy * dy + dz * dz;
+    dist = sqrtf(dist_sq);
+    cost_i = (int)(dist * *(float *)0x253f34);
+    if (cost_i >= 0x7fff) {
+      error(2, (char *)0x0025e448);
+      return 0;
+    }
+    estimated_cost = (int16_t)cost_i;
+  }
+
+  if (*(int16_t *)(path + 0x80) == 0) {
+    display_assert("state->node_count>0", "c:\\halo\\SOURCE\\ai\\path.c", 0x2cc,
+                   1);
+    system_exit(-1);
+  }
+
+  node_index = *(int16_t *)(path + 0x80);
+  node = path + node_index * 0x44 + 0x84;
+  *(int16_t *)(path + 0x80) = node_index + 1;
+
+  *(int16_t *)(node + 2) = -1;
+  *(int *)(node + 4) = -1;
+  *(int *)(node + 8) = focus_surface;
+  *(int *)(node + 0xc) = *(int *)(path + 0x14);
+  *(int *)(node + 0x10) = *(int *)(path + 0x18);
+  *(int *)(node + 0x14) = *(int *)(path + 0x1c);
+  *(int *)(node + 0x18) = 0;
+  *(int *)(node + 0x20) = 0;
+  *(int *)(node + 0x24) = 0;
+  *(int *)(node + 0x1c) = 0x7f7fffff;
+  *(int16_t *)(node + 0x2e) = 0;
+  *(int16_t *)(node + 0x32) = -1;
+  *(int *)(node + 0x28) = cost_i;
+  *(int16_t *)(node + 0x2c) = estimated_cost;
+
+  if (*(char *)(path + 0x4c) != 0) {
+    *(int *)(path + 0x6c) = cost_i;
+    *(int16_t *)(path + 0x68) = node_index;
+    *(float *)(path + 0x74) = *(float *)(path + 0x14);
+    *(float *)(path + 0x78) = *(float *)(path + 0x18);
+    *(float *)(path + 0x7c) = *(float *)(path + 0x1c);
+    *(int *)(path + 0x70) = cost_i;
+  }
+
+  hash_slot = (unsigned int)(focus_surface & 0x1ff) << 4;
+  *(int16_t *)(path + hash_slot + 0x1208a) = node_index;
+  path_heap_insert(path, node_index, estimated_cost);
+  return 1;
 }
 
 /* 0x5f1d0 */

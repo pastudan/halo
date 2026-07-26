@@ -236,7 +236,8 @@ void ai_conversation_advance(short param_1)
 char actor_is_fighting(int actor_handle);
 char FUN_0003b120(int actor);
 void ai_conversation_finish(int handle, char param_b, char param_c);
-int FUN_00064b40(int a, int b, int c, int d);
+int FUN_00064b40(int actor_handle, int unit_handle, char create_if_needed,
+                 char refresh_flag);
 int16_t FUN_0003a770(int16_t actor_type);
 
 const char *ai_communication_get_type_name(int16_t type)
@@ -502,7 +503,8 @@ static short ftol2(float value)
 
 char actor_is_fighting(int actor_handle);
 char FUN_0003b120(int actor);
-int FUN_00064b40(int a, int b, int c, int d);
+int FUN_00064b40(int actor_handle, int unit_handle, char create_if_needed,
+                 char refresh_flag);
 int16_t FUN_0003a770(int16_t actor_type);
 short FUN_001a68d0(int unit_handle, short priority, char param_3, char param_4,
                    int *param_5, short *vocalization_type_ref,
