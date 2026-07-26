@@ -370,21 +370,100 @@ void player_ui_get_edit_playlist_profile(void)
   saved_game_file_get_type();
 }
 
-/* 0xe0ee0 */
+/* player_ui_edit_profile_is_dirty (0xe0ee0) — XBE naked draft (batch 137). */
+#if defined(__clang__)
+static void (*const be0ee0_c1c29a0)(void) = saved_game_file_get_type;
+static void (*const be0ee0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static int (*const be0ee0_c8da40)(const void *a, const void *b, int size) = csmemcmp;
+
+__attribute__((naked, noinline))
 void player_ui_edit_profile_is_dirty(void)
 {
-  int eax = 0;
-
-  /* cmp eax, -1 -> je 0xe0fbd */
-  saved_game_file_get_type();
-  error(0, (char *)0x0028298c);
-  csmemcmp((void *)0x0046c0a4, (void *)0x0046c03c, 104);
-  /* test eax, eax -> je 0xe0f59 */
-  csmemcmp((void *)0x0046c0a4, (void *)0x0046c03c, 48);
-  /* test eax, eax -> je 0xe0fad */
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x46c038, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayer_ui_edit_profile_is_dirty_5\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1c29a0]\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "subl %%ebx, %%eax\n\t"
+      "je .Lplayer_ui_edit_profile_is_dirty_3\n\t"
+      "decl %%eax\n\t"
+      "je .Lplayer_ui_edit_profile_is_dirty_1\n\t"
+      "pushl $0x28298c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_edit_profile_is_dirty_1:\n\t"
+      "movl 0x46c108, %%eax\n\t"
+      "movl 0x46c0a0, %%ecx\n\t"
+      "pushl $0x68\n\t"
+      "pushl $0x46c03c\n\t"
+      "pushl $0x46c0a4\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movw %%bx, 0x46c108\n\t"
+      "movw %%bx, 0x46c0a0\n\t"
+      "call *%[c8da40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lplayer_ui_edit_profile_is_dirty_2\n\t"
+      "movb $1, %%bl\n\t"
+      ".Lplayer_ui_edit_profile_is_dirty_2:\n\t"
+      "movw -0x8(%%ebp), %%ax\n\t"
+      "movw -0x4(%%ebp), %%dx\n\t"
+      "movw %%ax, 0x46c0a0\n\t"
+      "movb %%bl, %%al\n\t"
+      "movw %%dx, 0x46c108\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_edit_profile_is_dirty_3:\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x46c0be, %%si\n\t"
+      "pushl %%edi\n\t"
+      "movw 0x46c056, %%di\n\t"
+      "pushl $0x30\n\t"
+      "pushl $0x46c03c\n\t"
+      "pushl $0x46c0a4\n\t"
+      "movw %%bx, 0x46c0be\n\t"
+      "movw %%bx, 0x46c056\n\t"
+      "call *%[c8da40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lplayer_ui_edit_profile_is_dirty_4\n\t"
+      "movb $1, %%bl\n\t"
+      ".Lplayer_ui_edit_profile_is_dirty_4:\n\t"
+      "movw %%di, 0x46c056\n\t"
+      "popl %%edi\n\t"
+      "movw %%si, 0x46c0be\n\t"
+      "popl %%esi\n\t"
+      ".Lplayer_ui_edit_profile_is_dirty_5:\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1c29a0] "m"(be0ee0_c1c29a0), [c8f390] "m"(be0ee0_c8f390), [c8da40] "m"(be0ee0_c8da40)
+      : "memory");
 }
+#else
+#error "player_ui_edit_profile_is_dirty: clang naked draft required"
+#endif
+
 
 /* 0xe0fd0 */
 void player_ui_activate_all_solo_levels(void)
@@ -853,130 +932,332 @@ void player_ui_end_editing_profile(void)
   (void)0;
 }
 
-/* 0xe1770 */
-void FUN_000e1770(int a0)
+/* FUN_000e1770 (0xe1770) — XBE naked draft (batch 130). */
+#if defined(__clang__)
+static void (*const be1770_ce1000)(void) = FUN_000e1000;
+static void (*const be1770_c1c1bc0)(void) = player_profile_get_from_path;
+static void (*const be1770_ce10c0)(void) = FUN_000e10c0;
+static void (*const be1770_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
+static void (*const be1770_c1e9320)(void) = D3DDevice_SetRenderState_PSTextureModes;
+static void (*const be1770_c1e9aa0)(void) = D3DDevice_SetRenderState_VertexBlend;
+static void (*const be1770_c1e9680)(void) = D3DDevice_SetRenderState_FogColor;
+static void __stdcall (*const be1770_c1e99b0)(uint32_t value) = D3DDevice_SetRenderState_FillMode;
+static void (*const be1770_c1e99f0)(void) = D3DDevice_SetRenderState_BackFillMode;
+static void (*const be1770_c1e9a40)(void) = D3DDevice_SetRenderState_TwoSidedLighting;
+static void (*const be1770_c1e9780)(void) = D3DDevice_SetRenderState_NormalizeNormals;
+static void __stdcall (*const be1770_c1ea290)(uint32_t enable) = D3DDevice_SetRenderState_ZEnable;
+static void __stdcall (*const be1770_c1ea300)(uint32_t value) = D3DDevice_SetRenderState_StencilEnable;
+static void __stdcall (*const be1770_c1ea380)(uint32_t value) = D3DDevice_SetRenderState_StencilFail;
+static void __stdcall (*const be1770_c1e96d0)(uint32_t mode) = D3DDevice_SetRenderState_CullMode;
+static void (*const be1770_c1e9740)(void) = D3DDevice_SetRenderState_FrontFace;
+static void (*const be1770_c1e97b0)(void) = D3DDevice_SetRenderState_TextureFactor;
+static void __stdcall (*const be1770_c1e98e0)(uint32_t value) = D3DDevice_SetRenderState_ZBias;
+static void (*const be1770_c1e9960)(void) = D3DDevice_SetRenderState_LogicOp;
+static void (*const be1770_c1e9620)(void) = D3DDevice_SetRenderState_EdgeAntiAlias;
+static void (*const be1770_c1ea540)(void) = D3DDevice_SetRenderState_MultiSampleAntiAlias;
+static void (*const be1770_c1ea590)(void) = D3DDevice_SetRenderState_MultiSampleMask;
+static void (*const be1770_c1e92f0)(void) = D3DDevice_SetRenderState_MultiSampleType;
+static void (*const be1770_c1e9650)(void) = D3DDevice_SetRenderState_ShadowFunc;
+static void (*const be1770_c1e9800)(void) = D3DDevice_SetRenderState_LineWidth;
+static void (*const be1770_c1e9860)(void) = D3DDevice_SetRenderState_Dxt1NoiseEnable;
+static void (*const be1770_c1ea3f0)(void) = D3DDevice_SetRenderState_YuvEnable;
+static void (*const be1770_c1ea420)(void) = D3DDevice_SetRenderState_OcclusionCullEnable;
+static void (*const be1770_c1ea480)(void) = D3DDevice_SetRenderState_StencilCullEnable;
+static void (*const be1770_c1ea4e0)(void) = D3DDevice_SetRenderState_RopZCmpAlwaysRead;
+static void (*const be1770_c1ea500)(void) = D3DDevice_SetRenderState_RopZRead;
+static void (*const be1770_c1ea520)(void) = D3DDevice_SetRenderState_DoNotCullUncompressed;
+static void (*const be1770_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = D3DDevice_SetTextureStageState;
+static void (*const be1770_c1e9ae0)(void) = D3DDevice_SetTextureState_TexCoordIndex;
+static void __stdcall (*const be1770_c1e9c20)(uint32_t stage, uint32_t color) = D3DDevice_SetTextureState_BorderColor;
+static void (*const be1770_c1e9c60)(void) = D3DDevice_SetTextureState_ColorKeyColor;
+static void (*const be1770_c1e9bc0)(void) = D3DDevice_SetTextureState_BumpEnv;
+static int __stdcall (*const be1770_c1e7d50)(int back_buffer, uint32_t type, void **out_surface) = D3DDevice_GetBackBuffer;
+static void (*const be1770_c1e9380)(uint32_t reg_index, uint32_t value) = D3DDevice_SetRenderState_Deferred;
+
+__attribute__((naked, noinline))
+void FUN_000e1770(int a0 __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* relift: cmp dword ptr [0x46bf10], -1 -> je 0xe17a4 */
-  FUN_000e1000();
-  player_profile_get_from_path();
-  FUN_000e10c0();
-  /* cmp esi, 0x52 -> jge 0xe17cb */
-  D3DDevice_SetRenderState_Simple(0, 0);
-  /* cmp esi, 0x74 -> jge 0xe17d9 */
-  D3DDevice_SetRenderState_PSTextureModes();
-  /* cmp esi, 0x75 -> jne 0xe17ee */
-  D3DDevice_SetRenderState_VertexBlend();
-  /* cmp esi, 0x76 -> jne 0xe17fa */
-  D3DDevice_SetRenderState_FogColor();
-  /* cmp esi, 0x77 -> jne 0xe1806 */
-  D3DDevice_SetRenderState_FillMode(edi);
-  /* cmp esi, 0x78 -> jne 0xe1812 */
-  D3DDevice_SetRenderState_BackFillMode();
-  /* cmp esi, 0x79 -> jne 0xe181e */
-  D3DDevice_SetRenderState_TwoSidedLighting();
-  /* cmp esi, 0x7a -> jne 0xe182a */
-  D3DDevice_SetRenderState_NormalizeNormals();
-  /* cmp esi, 0x7b -> jne 0xe1836 */
-  D3DDevice_SetRenderState_ZEnable(edi);
-  /* cmp esi, 0x7c -> jne 0xe1842 */
-  D3DDevice_SetRenderState_StencilEnable(edi);
-  /* cmp esi, 0x7d -> jne 0xe184e */
-  D3DDevice_SetRenderState_StencilFail(edi);
-  /* cmp esi, 0x7f -> jne 0xe185a */
-  D3DDevice_SetRenderState_CullMode(edi);
-  /* cmp esi, 0x7e -> jne 0xe1866 */
-  D3DDevice_SetRenderState_FrontFace();
-  /* cmp esi, 0x80 -> jne 0xe1875 */
-  D3DDevice_SetRenderState_TextureFactor();
-  /* cmp esi, 0x81 -> jne 0xe1884 */
-  D3DDevice_SetRenderState_ZBias(edi);
-  /* cmp esi, 0x82 -> jne 0xe1893 */
-  D3DDevice_SetRenderState_LogicOp();
-  /* cmp esi, 0x83 -> jne 0xe18a2 */
-  D3DDevice_SetRenderState_EdgeAntiAlias();
-  /* cmp esi, 0x84 -> jne 0xe18b1 */
-  D3DDevice_SetRenderState_MultiSampleAntiAlias();
-  /* cmp esi, 0x85 -> jne 0xe18c0 */
-  D3DDevice_SetRenderState_MultiSampleMask();
-  /* cmp esi, 0x86 -> jne 0xe18cf */
-  D3DDevice_SetRenderState_MultiSampleType();
-  /* cmp esi, 0x87 -> jne 0xe18de */
-  D3DDevice_SetRenderState_ShadowFunc();
-  /* cmp esi, 0x88 -> jne 0xe18ed */
-  D3DDevice_SetRenderState_LineWidth();
-  /* cmp esi, 0x89 -> jne 0xe18fc */
-  D3DDevice_SetRenderState_Dxt1NoiseEnable();
-  /* cmp esi, 0x8a -> jne 0xe190b */
-  D3DDevice_SetRenderState_YuvEnable();
-  /* cmp esi, 0x8b -> jne 0xe191a */
-  D3DDevice_SetRenderState_OcclusionCullEnable();
-  /* cmp esi, 0x8c -> jne 0xe1929 */
-  D3DDevice_SetRenderState_StencilCullEnable();
-  /* cmp esi, 0x8d -> jne 0xe1938 */
-  D3DDevice_SetRenderState_RopZCmpAlwaysRead();
-  /* cmp esi, 0x8e -> jne 0xe1947 */
-  D3DDevice_SetRenderState_RopZRead();
-  /* cmp esi, 0x8f -> jne 0xe1955 */
-  D3DDevice_SetRenderState_DoNotCullUncompressed();
-  /* cmp edx, 0x16 -> jge 0xe196c */
-  D3DDevice_SetTextureStageState(eax, 0, 0);
-  /* cmp edx, 0x1c -> jne 0xe1979 */
-  D3DDevice_SetTextureState_TexCoordIndex();
-  /* cmp edx, 0x1d -> jne 0xe1986 */
-  D3DDevice_SetTextureState_BorderColor(ecx, eax);
-  /* cmp edx, 0x1e -> jne 0xe1993 */
-  D3DDevice_SetTextureState_ColorKeyColor();
-  /* cmp edx, 0x1b -> jg 0xe19a0 */
-  D3DDevice_SetTextureState_BumpEnv();
-  D3DDevice_GetBackBuffer(0, ecx, (void *)(uintptr_t)eax);
-  D3DDevice_CreateTexture(eax, edx, ecx, eax, edx, ecx, (void *)(uintptr_t)eax);
-  D3DDevice_SetRenderTarget((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
-  D3DDevice_GetDepthStencilSurface((void *)(uintptr_t)eax);
-  D3DDevice_Clear(edx, (void *)(uintptr_t)ecx, eax, edx, 0.0f, eax);
-  D3DDevice_SetTransform(ecx, (void *)(uintptr_t)eax);
-  D3DDevice_GetTransform(ecx, (void *)(uintptr_t)eax);
-  /* cmp esi, 0x52 -> jge 0xe1a6f */
-  D3DDevice_SetRenderState_Simple(0, 0);
-  /* cmp esi, 0x74 -> jge 0xe1a82 */
-  D3DDevice_SetRenderState_Deferred(0, 0);
-  D3DDevice_SetRenderState_PSTextureModes();
-  /* cmp esi, 0x75 -> jne 0xe1a9f */
-  D3DDevice_SetRenderState_VertexBlend();
-  /* cmp esi, 0x76 -> jne 0xe1aaf */
-  D3DDevice_SetRenderState_FogColor();
-  /* cmp esi, 0x77 -> jne 0xe1abf */
-  D3DDevice_SetRenderState_FillMode(edi);
-  /* cmp esi, 0x78 -> jne 0xe1acf */
-  D3DDevice_SetRenderState_BackFillMode();
-  /* cmp esi, 0x79 -> jne 0xe1adf */
-  D3DDevice_SetRenderState_TwoSidedLighting();
-  /* cmp esi, 0x7a -> jne 0xe1aef */
-  D3DDevice_SetRenderState_NormalizeNormals();
-  /* cmp esi, 0x7b -> jne 0xe1aff */
-  D3DDevice_SetRenderState_ZEnable(edi);
-  /* cmp esi, 0x7c -> jne 0xe1b0f */
-  D3DDevice_SetRenderState_StencilEnable(edi);
-  /* cmp esi, 0x7d -> jne 0xe1b1f */
-  D3DDevice_SetRenderState_StencilFail(edi);
-  /* cmp esi, 0x7f -> jne 0xe1b2f */
-  D3DDevice_SetRenderState_CullMode(edi);
-  /* cmp esi, 0x7e -> jne 0xe1b3f */
-  D3DDevice_SetRenderState_FrontFace();
-  /* cmp esi, 0x80 -> jne 0xe1b52 */
-  D3DDevice_SetRenderState_TextureFactor();
-  /* cmp esi, 0x81 -> jne 0xe1b65 */
-  D3DDevice_SetRenderState_ZBias(edi);
-  /* cmp esi, 0x82 -> jne 0xe1b78 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "movb %%al, 0x46bf0b\n\t"
+      "cmpl $-1, 0x46bf10\n\t"
+      "je .LFUN_000e1770_1\n\t"
+      "pushl %%esi\n\t"
+      "movl $0x282b78, %%esi\n\t"
+      "call *%[ce1000]\n\t"
+      "movl 0x46bf10, %%ecx\n\t"
+      "pushl $0x46bee0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1c1bc0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_000e1770_1:\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "call *%[ce10c0]\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "cmpl $0x52, %%esi\n\t"
+      "jge .LFUN_000e1770_2\n\t"
+      "movl 0x282b90(,%%esi,4), %%ecx\n\t"
+      "movl %%edi, %%edx\n\t"
+      "call *%[c1e9350]\n\t"
+      "movl %%edi, 0x1fb698(,%%esi,4)\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_2:\n\t"
+      "cmpl $0x74, %%esi\n\t"
+      "jge .LFUN_000e1770_3\n\t"
+      "movl %%edi, %%edx\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "jmp .LFUN_000e1770_10000\n\t"
+      ".LFUN_000e1770_3:\n\t"
+      "jne .LFUN_000e1770_4\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e9320]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_4:\n\t"
+      "cmpl $0x75, %%esi\n\t"
+      "jne .LFUN_000e1770_5\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e9aa0]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_5:\n\t"
+      "cmpl $0x76, %%esi\n\t"
+      "jne .LFUN_000e1770_6\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e9680]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_6:\n\t"
+      "cmpl $0x77, %%esi\n\t"
+      "jne .LFUN_000e1770_7\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e99b0]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_7:\n\t"
+      "cmpl $0x78, %%esi\n\t"
+      "jne .LFUN_000e1770_8\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e99f0]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_8:\n\t"
+      "cmpl $0x79, %%esi\n\t"
+      "jne .LFUN_000e1770_9\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e9a40]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_9:\n\t"
+      "cmpl $0x7a, %%esi\n\t"
+      "jne .LFUN_000e1770_10\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e9780]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_10:\n\t"
+      "cmpl $0x7b, %%esi\n\t"
+      "jne .LFUN_000e1770_11\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ea290]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_11:\n\t"
+      "cmpl $0x7c, %%esi\n\t"
+      "jne .LFUN_000e1770_12\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ea300]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_12:\n\t"
+      "cmpl $0x7d, %%esi\n\t"
+      "jne .LFUN_000e1770_13\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ea380]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_13:\n\t"
+      "cmpl $0x7f, %%esi\n\t"
+      "jne .LFUN_000e1770_14\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e96d0]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_14:\n\t"
+      "cmpl $0x7e, %%esi\n\t"
+      "jne .LFUN_000e1770_15\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e9740]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_15:\n\t"
+      "cmpl $0x80, %%esi\n\t"
+      "jne .LFUN_000e1770_16\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e97b0]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_16:\n\t"
+      "cmpl $0x81, %%esi\n\t"
+      "jne .LFUN_000e1770_17\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e98e0]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_17:\n\t"
+      "cmpl $0x82, %%esi\n\t"
+      "jne .LFUN_000e1770_18\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e9960]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_18:\n\t"
+      "cmpl $0x83, %%esi\n\t"
+      "jne .LFUN_000e1770_19\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e9620]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_19:\n\t"
+      "cmpl $0x84, %%esi\n\t"
+      "jne .LFUN_000e1770_20\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ea540]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_20:\n\t"
+      "cmpl $0x85, %%esi\n\t"
+      "jne .LFUN_000e1770_21\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ea590]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_21:\n\t"
+      "cmpl $0x86, %%esi\n\t"
+      "jne .LFUN_000e1770_22\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e92f0]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_22:\n\t"
+      "cmpl $0x87, %%esi\n\t"
+      "jne .LFUN_000e1770_23\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e9650]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_23:\n\t"
+      "cmpl $0x88, %%esi\n\t"
+      "jne .LFUN_000e1770_24\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e9800]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_24:\n\t"
+      "cmpl $0x89, %%esi\n\t"
+      "jne .LFUN_000e1770_25\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e9860]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_25:\n\t"
+      "cmpl $0x8a, %%esi\n\t"
+      "jne .LFUN_000e1770_26\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ea3f0]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_26:\n\t"
+      "cmpl $0x8b, %%esi\n\t"
+      "jne .LFUN_000e1770_27\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ea420]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_27:\n\t"
+      "cmpl $0x8c, %%esi\n\t"
+      "jne .LFUN_000e1770_28\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ea480]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_28:\n\t"
+      "cmpl $0x8d, %%esi\n\t"
+      "jne .LFUN_000e1770_29\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ea4e0]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_29:\n\t"
+      "cmpl $0x8e, %%esi\n\t"
+      "jne .LFUN_000e1770_30\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ea500]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_30:\n\t"
+      "cmpl $0x8f, %%esi\n\t"
+      "jne .LFUN_000e1770_31\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ea520]\n\t"
+      ".LFUN_000e1770_31:\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "cmpl $0x16, %%edx\n\t"
+      "jge .LFUN_000e1770_32\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e9410]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_32:\n\t"
+      "cmpl $0x1c, %%edx\n\t"
+      "jne .LFUN_000e1770_33\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e9ae0]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_33:\n\t"
+      "cmpl $0x1d, %%edx\n\t"
+      "jne .LFUN_000e1770_34\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e9c20]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_34:\n\t"
+      "cmpl $0x1e, %%edx\n\t"
+      "jne .LFUN_000e1770_35\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e9c60]\n\t"
+      "ret\n\t"
+      ".LFUN_000e1770_35:\n\t"
+      "cmpl $0x1b, %%edx\n\t"
+      "jg .LFUN_000e1770_36\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e9bc0]\n\t"
+      ".LFUN_000e1770_36:\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1e7d50]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      ".LFUN_000e1770_10000:\n\t"
+      "jmp *%[c1e9380]\n\t"
+      :
+      : [ce1000] "m"(be1770_ce1000), [c1c1bc0] "m"(be1770_c1c1bc0), [ce10c0] "m"(be1770_ce10c0), [c1e9350] "m"(be1770_c1e9350), [c1e9320] "m"(be1770_c1e9320), [c1e9aa0] "m"(be1770_c1e9aa0), [c1e9680] "m"(be1770_c1e9680), [c1e99b0] "m"(be1770_c1e99b0), [c1e99f0] "m"(be1770_c1e99f0), [c1e9a40] "m"(be1770_c1e9a40), [c1e9780] "m"(be1770_c1e9780), [c1ea290] "m"(be1770_c1ea290), [c1ea300] "m"(be1770_c1ea300), [c1ea380] "m"(be1770_c1ea380), [c1e96d0] "m"(be1770_c1e96d0), [c1e9740] "m"(be1770_c1e9740), [c1e97b0] "m"(be1770_c1e97b0), [c1e98e0] "m"(be1770_c1e98e0), [c1e9960] "m"(be1770_c1e9960), [c1e9620] "m"(be1770_c1e9620), [c1ea540] "m"(be1770_c1ea540), [c1ea590] "m"(be1770_c1ea590), [c1e92f0] "m"(be1770_c1e92f0), [c1e9650] "m"(be1770_c1e9650), [c1e9800] "m"(be1770_c1e9800), [c1e9860] "m"(be1770_c1e9860), [c1ea3f0] "m"(be1770_c1ea3f0), [c1ea420] "m"(be1770_c1ea420), [c1ea480] "m"(be1770_c1ea480), [c1ea4e0] "m"(be1770_c1ea4e0), [c1ea500] "m"(be1770_c1ea500), [c1ea520] "m"(be1770_c1ea520), [c1e9410] "m"(be1770_c1e9410), [c1e9ae0] "m"(be1770_c1e9ae0), [c1e9c20] "m"(be1770_c1e9c20), [c1e9c60] "m"(be1770_c1e9c60), [c1e9bc0] "m"(be1770_c1e9bc0), [c1e7d50] "m"(be1770_c1e7d50), [c1e9380] "m"(be1770_c1e9380)
+      : "memory");
 }
+#else
+#error "FUN_000e1770: clang naked draft required"
+#endif
+

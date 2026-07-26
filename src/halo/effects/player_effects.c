@@ -636,17 +636,99 @@ void FUN_000a2a90(void)
   (void)0;
 }
 
-/* 0xa2ab0 */
+/* FUN_000a2ab0 (0xa2ab0) — XBE naked draft (batch 136). */
+#if defined(__clang__)
+static void (*const ba2ab0_ftol)(void) = FUN_001d9068;
+
+__attribute__((naked, noinline))
 void FUN_000a2ab0(void)
 {
-  int eax = 0;
-
-  /* relift: cmp word ptr [eax*2 + 0x2ef7e0], 0 -> je 0xa2b90 */
-  FUN_001d9068();
-  /* test (char)eax, 0x41 -> jne 0xa2b6f */
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "fmuls 0x253394\n\t"
+      "movw 0x1a(%%edx), %%ax\n\t"
+      "cmpw 0x2(%%ebx), %%ax\n\t"
+      "fstps 0x14(%%ebp)\n\t"
+      "jle .LFUN_000a2ab0_1\n\t"
+      "movswl 0xde(%%edx), %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "fmuls 0x10(%%ebx)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_000a2ab0_5\n\t"
+      ".LFUN_000a2ab0_1:\n\t"
+      "movswl (%%ebx), %%eax\n\t"
+      "cmpw $0, 0x2ef7e0(,%%eax,2)\n\t"
+      "je .LFUN_000a2ab0_5\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x18(%%edx), %%edi\n\t"
+      "movl $0xe, %%ecx\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "rep movsl\n\t"
+      "fmuls 0x28(%%edx)\n\t"
+      "fsts 0x28(%%edx)\n\t"
+      "call *%[ftol]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movw %%ax, 0xde(%%ecx)\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "popl %%edi\n\t"
+      "flds 0x2533c8\n\t"
+      "popl %%esi\n\t"
+      ".byte 0xd8, 0xe1\n\t"
+      "fmuls 0x10(%%ebp)\n\t"
+      ".byte 0xd8, 0xc1\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_000a2ab0_2\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .LFUN_000a2ab0_4\n\t"
+      ".LFUN_000a2ab0_2:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "flds 0x2533c8\n\t"
+      ".byte 0xd8, 0xe1\n\t"
+      "fmuls 0x10(%%ebp)\n\t"
+      ".byte 0xd8, 0xc1\n\t"
+      "fcomps 0x20(%%ebx)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_000a2ab0_3\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "jmp .LFUN_000a2ab0_4\n\t"
+      ".LFUN_000a2ab0_3:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "flds 0x2533c8\n\t"
+      ".byte 0xd8, 0xe1\n\t"
+      "fmuls 0x10(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      ".LFUN_000a2ab0_4:\n\t"
+      "movb 0xe8(%%ecx), %%al\n\t"
+      "fstps 0x3c(%%ecx)\n\t"
+      "orb $1, %%al\n\t"
+      "movb %%al, 0xe8(%%ecx)\n\t"
+      ".LFUN_000a2ab0_5:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ftol] "m"(ba2ab0_ftol)
+      : "memory");
 }
+#else
+#error "FUN_000a2ab0: clang naked draft required"
+#endif
+
 
 /* 0xa2ba0 */
 void FUN_000a2ba0(int unit_index, float damage_amount, float scale, float *effect_data, void *effect)
@@ -709,22 +791,100 @@ void scripted_player_effect_stop(int a0)
   (void)0;
 }
 
-/* 0xa2ed0 */
+/* player_telefrag_effect_start (0xa2ed0) — XBE naked draft (batch 136). */
+#if defined(__clang__)
+static void *(*const ba2ed0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const ba2ed0_ca2690)(int16_t local_player_index) = player_effect_get;
+static void (*const ba2ed0_cb9da0)(short local_player_index, int left_motor, int right_motor) = rumble_set_direct_motors;
+static void (*const ba2ed0_ca2ab0)(void) = FUN_000a2ab0;
+static void (*const ba2ed0_ca2ba0)(int unit_index, float damage_amount, float scale, float *effect_data, void *effect) = FUN_000a2ba0;
+
+__attribute__((naked, noinline))
 void player_telefrag_effect_start(void)
 {
-  int ecx = 0;
-  int esi = 0;
-
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp esi, -1 -> je 0xa2fb7 */
-  player_effect_get(esi);
-  rumble_set_direct_motors(0, 0, 0);
-  FUN_000a2ab0();
-  FUN_000a2ba0(0, 0.0f, 0.0f, (float *)0, (void *)0);
-
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x84, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw $0, -0x3c(%%ebp)\n\t"
+      "movl $0xd, %%ecx\n\t"
+      "leal -0x3a(%%ebp), %%edi\n\t"
+      "rep stosl\n\t"
+      "stosw\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $0x11, %%ecx\n\t"
+      "leal -0x80(%%ebp), %%edi\n\t"
+      "movl $0, -0x84(%%ebp)\n\t"
+      "rep stosl\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movswl 0x2(%%eax), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lplayer_telefrag_effect_start_1\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ca2690]\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "fmull 0x26aed0\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x2ee6c4, %%eax\n\t"
+      "fstps -0x7c(%%ebp)\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%edx, -0x1c(%%ebp)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%ecx, -0x14(%%ebp)\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "movl $0x3f800000, -0x84(%%ebp)\n\t"
+      "movw $1, -0x3c(%%ebp)\n\t"
+      "movw $2, -0x3a(%%ebp)\n\t"
+      "movl $0x3f800000, -0x2c(%%ebp)\n\t"
+      "movl $0, -0x18(%%ebp)\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "call *%[cb9da0]\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x3c(%%ebp), %%ebx\n\t"
+      "call *%[ca2ab0]\n\t"
+      "movl -0x4(%%ebp), %%ebx\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x84(%%ebp), %%eax\n\t"
+      "call *%[ca2ba0]\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "popl %%ebx\n\t"
+      ".Lplayer_telefrag_effect_start_1:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(ba2ed0_dget), [ca2690] "m"(ba2ed0_ca2690), [cb9da0] "m"(ba2ed0_cb9da0), [ca2ab0] "m"(ba2ed0_ca2ab0), [ca2ba0] "m"(ba2ed0_ca2ba0)
+      : "memory");
 }
+#else
+#error "player_telefrag_effect_start: clang naked draft required"
+#endif
+
 
 /* player_effect_get_screen_flash (0xa2fc0) — XBE naked draft (batch 113). */
 #if defined(__clang__)

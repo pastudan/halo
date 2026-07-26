@@ -96,30 +96,105 @@ uint8_t structure_bsp_cluster_sound_encoding(void *bsp, int16_t from_cluster,
 }
 /* --- structure_bsp_definitions.obj batch drafts (2026-07-26) --- */
 
-/* 0x1929a0 */
+/* FUN_001929a0 (0x1929a0) — XBE naked draft (batch 135). */
+#if defined(__clang__)
+static void *(*const b1929a0_elem)(void *, int, int) = tag_block_get_element;
+static uint8_t (*const b1929a0_c99270)(float *plane, uint32_t basis) = FUN_00099270;
+static void (*const b1929a0_c992d0)(float *point_2d, float *plane, int16_t projection, uint8_t sign, float *out_point) = project_point2d;
+
+__attribute__((naked, noinline))
 void FUN_001929a0(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 12);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* test (char)eax, 1 -> jne 0x1929f8 */
-  /* test (char)eax, 1 -> jne 0x1929fa */
-  /* test (char)eax, 1 -> jne 0x192a0c */
-  FUN_00099270((float *)(uintptr_t)esi, edi);
-  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
-  project_point2d((float *)(uintptr_t)eax, (float *)0, 0, 0, (float *)0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%edx\n\t"
+      "addl $0xc, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "flds (%%esi)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "fabs\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fabs\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fabs\n\t"
+      ".byte 0xd8, 0xd1\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001929a0_1\n\t"
+      "fcomp %%st(2)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001929a0_2\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $2, %%edi\n\t"
+      "fstp %%st(0)\n\t"
+      "jmp .LFUN_001929a0_4\n\t"
+      ".LFUN_001929a0_1:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_001929a0_2:\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001929a0_3\n\t"
+      "movl $1, %%edi\n\t"
+      "jmp .LFUN_001929a0_4\n\t"
+      ".LFUN_001929a0_3:\n\t"
+      "xorl %%edi, %%edi\n\t"
+      ".LFUN_001929a0_4:\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c99270]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%ecx\n\t"
+      "movb %%al, -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $8\n\t"
+      "pushl %%eax\n\t"
+      "addl $4, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c992d0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b1929a0_elem), [c99270] "m"(b1929a0_c99270), [c992d0] "m"(b1929a0_c992d0)
+      : "memory");
 }
+#else
+#error "FUN_001929a0: clang naked draft required"
+#endif
+
 
 /* render_debug_leaf_faces (0x192a50) — XBE naked draft (batch 123). */
 #if defined(__clang__)
@@ -901,28 +976,109 @@ void leaf_map_build_leaf_face_for_leaf_on_node(void)
 #endif
 
 
-/* 0x1931e0 */
+/* FUN_001931e0 (0x1931e0) — XBE naked draft (batch 135). */
+#if defined(__clang__)
+static void *(*const b1931e0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b1931e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1931e0_exitfn)(int) = system_exit;
+static void (*const b1931e0_c192da0)(void) = leaf_map_build_portals_from_leaf;
+static void (*const b1931e0_c1931e0)(void) = FUN_001931e0;
+
+__attribute__((naked, noinline))
 void FUN_001931e0(void)
 {
-  int eax = 0;
-  int edi = 0;
-
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 12);
-  /* test (int16_t)edi, (int16_t)edi -> jne 0x193210 */
-  /* relift: cmp word ptr [0x4d8e90], 0x100 -> jl 0x193238 */
-  display_assert((char *)0x002b2878, (char *)0x002b28b4, 42, 0);
-  system_exit(0);
-  /* cmp eax, -1 -> je 0x193287 */
-  leaf_map_build_portals_from_leaf();
-  /* relift: tail-call FUN_001931e0(); */
-  /* relift: cmp word ptr [0x4d8e90], 0 -> jg 0x1932ae */
-  display_assert((char *)0x002b28dc, (char *)0x002b28b4, 51, 0);
-  system_exit(0);
-  /* cmp (int16_t)edi, 2 -> jl 0x193202 */
-
-  (void)eax;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "jmp .LFUN_001931e0_2\n\t"
+      ".LFUN_001931e0_1:\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      ".LFUN_001931e0_2:\n\t"
+      "testw %%di, %%di\n\t"
+      "jne .LFUN_001931e0_3\n\t"
+      "orl $0x80000000, %%esi\n\t"
+      ".LFUN_001931e0_3:\n\t"
+      "cmpw $0x100, 0x4d8e90\n\t"
+      "jl .LFUN_001931e0_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2a\n\t"
+      "pushl $0x2b28b4\n\t"
+      "pushl $0x2b2878\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001931e0_4:\n\t"
+      "movswl 0x4d8e90, %%ecx\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movswl %%di, %%edx\n\t"
+      "movl %%esi, 0x4d8a90(,%%ecx,4)\n\t"
+      "incw 0x4d8e90\n\t"
+      "movl 0x4(%%eax,%%edx,4), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jns .LFUN_001931e0_5\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001931e0_6\n\t"
+      "movl 0x4d8e90, %%ecx\n\t"
+      "decl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "andl $0x7fffffff, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c192da0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .LFUN_001931e0_6\n\t"
+      ".LFUN_001931e0_5:\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1931e0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_001931e0_6:\n\t"
+      "cmpw $0, 0x4d8e90\n\t"
+      "jg .LFUN_001931e0_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x33\n\t"
+      "pushl $0x2b28b4\n\t"
+      "pushl $0x2b28dc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001931e0_7:\n\t"
+      "decw 0x4d8e90\n\t"
+      "incl %%edi\n\t"
+      "cmpw $2, %%di\n\t"
+      "jl .LFUN_001931e0_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b1931e0_elem), [assert] "m"(b1931e0_assert), [exitfn] "m"(b1931e0_exitfn), [c192da0] "m"(b1931e0_c192da0), [c1931e0] "m"(b1931e0_c1931e0)
+      : "memory");
 }
+#else
+#error "FUN_001931e0: clang naked draft required"
+#endif
+
 
 /* 0x1932d0 */
 void FUN_001932d0(void)

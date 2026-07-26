@@ -1939,28 +1939,114 @@ void actor_situation_update(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* 0x308e0 */
-void actor_situation_try_new_target(int actor_handle, int target)
+/* actor_situation_try_new_target (0x308e0) — XBE naked draft (batch 133). */
+#if defined(__clang__)
+static void *(*const b308e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static float (*const b308e0_c2fd10)(int actor_handle, int clump_item_handle) = actor_compute_prop_target_weight;
+static void (*const b308e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b308e0_exitfn)(int) = system_exit;
+static void (*const b308e0_c300b0)(int actor_handle) = actor_situation_update_target_status;
+static void (*const b308e0_c302b0)(int actor_handle) = actor_situation_combat_status_update;
+
+__attribute__((naked, noinline))
+void actor_situation_try_new_target(int actor_handle __attribute__((unused)), int target __attribute__((unused)))
 {
-  int eax = 0;
-
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), actor_handle);
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), target);
-  /* cmp eax, -1 -> jne 0x30921 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
-  actor_compute_prop_target_weight(actor_handle, target);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x309bf */
-  /* test (char)eax, (char)eax -> jne 0x30977 */
-  display_assert((char *)0x002560cc, (char *)0x00255fb0, 4685, 1);
-  system_exit(-1);
-  /* test eax, eax -> je 0x3098b */
-  /* test (char)eax, 1 -> jne 0x309bf */
-  actor_situation_update_target_status(actor_handle);
-  actor_situation_combat_status_update(actor_handle);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x5ab23c, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x270(%%esi), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lactor_situation_try_new_target_1\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "jmp .Lactor_situation_try_new_target_2\n\t"
+      ".Lactor_situation_try_new_target_1:\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      ".Lactor_situation_try_new_target_2:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c2fd10]\n\t"
+      "fsts 0x50(%%ebx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_situation_try_new_target_5\n\t"
+      "movb 0x60(%%ebx), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_situation_try_new_target_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x124d\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x2560cc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_situation_try_new_target_3:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lactor_situation_try_new_target_4\n\t"
+      "flds 0x50(%%ebx)\n\t"
+      "fcomps 0x50(%%eax)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lactor_situation_try_new_target_5\n\t"
+      ".Lactor_situation_try_new_target_4:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "movw $0, 0x268(%%esi)\n\t"
+      "movl %%edx, 0x270(%%esi)\n\t"
+      "movl $0xffffffff, 0x26c(%%esi)\n\t"
+      "call *%[c300b0]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c302b0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_situation_try_new_target_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b308e0_dget), [c2fd10] "m"(b308e0_c2fd10), [assert] "m"(b308e0_assert), [exitfn] "m"(b308e0_exitfn), [c300b0] "m"(b308e0_c300b0), [c302b0] "m"(b308e0_c302b0)
+      : "memory");
 }
+#else
+#error "actor_situation_try_new_target: clang naked draft required"
+#endif
+
 
 /* actor_perception_friend_prop_is_attacking (0x309d0) — XBE naked draft (batch 118). */
 #if defined(__clang__)
@@ -2462,35 +2548,72 @@ unsigned int FUN_00030d10(int actor_handle __attribute__((unused)), float *chanc
 #endif
 
 
-/* 0x30e60 */
+/* FUN_00030e60 (0x30e60) — XBE naked draft (batch 132). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00030e60(void)
 {
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* test (int16_t)edx, (int16_t)edx -> jle 0x30e9c */
-  /* relift: cmp dword ptr [ebx + esi + 8], edi -> je 0x30e94 */
-  /* cmp (int16_t)ecx, (int16_t)edx -> jl 0x30e80 */
-  /* relift: cmp (int16_t)edx, word ptr [ebp + 0x10] -> jge 0x30ed6 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
-  /* cmp (int16_t)edx, 2 -> jl 0x30f43 */
-  /* cmp (int16_t)edx, 3 -> jg 0x30f43 */
-  /* test dl, dl -> je 0x30f43 */
-  /* test dl, dl -> je 0x30f1b */
-  /* test dl, dl -> je 0x30f37 */
-  /* relift: cmp word ptr [ecx + 0x32], 2 -> jl 0x30f43 */
-
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movw (%%ecx), %%dx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testw %%dx, %%dx\n\t"
+      "jle .LFUN_00030e60_3\n\t"
+      "jmp .LFUN_00030e60_1\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00030e60_1:\n\t"
+      "movswl %%cx, %%ebx\n\t"
+      "imull $0x1c, %%ebx, %%ebx\n\t"
+      "cmpl %%edi, 0x8(%%ebx,%%esi,1)\n\t"
+      "je .LFUN_00030e60_2\n\t"
+      "incl %%ecx\n\t"
+      "cmpw %%dx, %%cx\n\t"
+      "jl .LFUN_00030e60_1\n\t"
+      "jmp .LFUN_00030e60_3\n\t"
+      ".LFUN_00030e60_2:\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "jne .LFUN_00030e60_4\n\t"
+      ".LFUN_00030e60_3:\n\t"
+      "cmpw 0x10(%%ebp), %%dx\n\t"
+      "jge .LFUN_00030e60_4\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "leal 0x1(%%edx), %%eax\n\t"
+      "movw %%ax, (%%ecx)\n\t"
+      "movswl %%dx, %%eax\n\t"
+      "imull $0x1c, %%eax, %%eax\n\t"
+      "leal (%%eax,%%esi,1), %%ecx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movl %%eax, 0x8(%%ecx)\n\t"
+      "movl %%eax, 0x18(%%ecx)\n\t"
+      "movw %%si, (%%ecx)\n\t"
+      "movl %%esi, 0xc(%%ecx)\n\t"
+      "movw %%si, 0x10(%%ecx)\n\t"
+      "movl $0x7f7fffff, 0x14(%%ecx)\n\t"
+      "movw %%dx, %%ax\n\t"
+      ".LFUN_00030e60_4:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00030e60: clang naked draft required"
+#endif
+
 
 /* FUN_00030f50 (0x30f50) — XBE naked draft (batch 107). */
 #if defined(__clang__)
@@ -5565,46 +5688,117 @@ void actor_emotion_update(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* 0x33330 */
-void actor_perception_become_acknowledged(int actor_handle, int prop_handle,
-                                          char *param_3)
+/* actor_perception_become_acknowledged (0x33330) — XBE naked draft (batch 131). */
+#if defined(__clang__)
+static void *(*const b33330_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char (*const b33330_c32940)(int actor_handle, int prop_handle) = actor_expected_acknowledgement;
+static void (*const b33330_c3b410)(int actor_handle, int old_prop, int new_prop) = FUN_0003b410;
+static void (*const b33330_c64a80)(int actor_handle, int prop_handle) = prop_iterator_next;
+static void (*const b33330_c2f2b0)(int actor_handle, int prop_handle, int param_3, char param_4) = actor_perception_acknowledge;
+
+__attribute__((naked, noinline))
+void actor_perception_become_acknowledged(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)), char *param_3 __attribute__((unused)))
 {
-  char *prop;
-  char *parent_prop;
-  char parent_exists;
-  char expected;
-
-  expected = 0;
-  prop = (char *)datum_get(prop_data, prop_handle);
-  if (*(int16_t *)(prop + 0x24) >= 2 && *(int16_t *)(prop + 0x24) <= 3)
-    goto finish;
-
-  parent_exists = *(int *)(prop + 0xc) != -1;
-  expected = actor_expected_acknowledgement(actor_handle, prop_handle);
-  if (parent_exists != 0) {
-    parent_prop = (char *)datum_get(prop_data, *(int *)(prop + 0xc));
-    *(int *)(prop + 0x50) = *(int *)(parent_prop + 0x50);
-    *(int *)(prop + 0x54) = *(int *)(parent_prop + 0x54);
-    *(int *)(prop + 0x58) = *(int *)(parent_prop + 0x58);
-    *(int *)(prop + 0x5c) = *(int *)(parent_prop + 0x5c);
-    *(int16_t *)(prop + 0x9c) = *(int16_t *)(parent_prop + 0x9c);
-    *(int *)(prop + 0xa0) = *(int *)(parent_prop + 0xa0);
-    *(char *)(prop + 0xa4) = *(char *)(parent_prop + 0xa4);
-    *(int16_t *)(prop + 0xa6) = *(int16_t *)(parent_prop + 0xa6);
-    *(int16_t *)(prop + 0xa8) = *(int16_t *)(parent_prop + 0xa8);
-    FUN_0003b410(actor_handle, *(int *)(prop + 0xc), prop_handle);
-    prop_iterator_next(actor_handle, *(int *)(prop + 0xc));
-    *(int *)(prop + 0xc) = -1;
-  }
-
-  *(int16_t *)(prop + 0x24) = 3;
-  actor_perception_acknowledge(actor_handle, prop_handle, expected,
-                               parent_exists);
-
-finish:
-  if (param_3 != 0)
-    *param_3 = expected;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movw 0x24(%%esi), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "xorb %%dl, %%dl\n\t"
+      "cmpw $2, %%cx\n\t"
+      "jl .Lactor_perception_become_acknowledged_1\n\t"
+      "cmpw $3, %%cx\n\t"
+      "jle .Lactor_perception_become_acknowledged_3\n\t"
+      ".Lactor_perception_become_acknowledged_1:\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "setne -0x4(%%ebp)\n\t"
+      "call *%[c32940]\n\t"
+      "movb %%al, -0x8(%%ebp)\n\t"
+      "movb -0x4(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_perception_become_acknowledged_2\n\t"
+      "movl 0xc(%%esi), %%ecx\n\t"
+      "movl 0x5ab23c, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x50(%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x50(%%esi)\n\t"
+      "movl 0x54(%%eax), %%edx\n\t"
+      "movl %%edx, 0x54(%%esi)\n\t"
+      "movl 0x58(%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x58(%%esi)\n\t"
+      "movl 0x5c(%%eax), %%edx\n\t"
+      "movl %%edx, 0x5c(%%esi)\n\t"
+      "movw 0x9c(%%eax), %%cx\n\t"
+      "movw %%cx, 0x9c(%%esi)\n\t"
+      "movl 0xa0(%%eax), %%edx\n\t"
+      "movl %%edx, 0xa0(%%esi)\n\t"
+      "movb 0xa4(%%eax), %%cl\n\t"
+      "movb %%cl, 0xa4(%%esi)\n\t"
+      "movw 0xa6(%%eax), %%dx\n\t"
+      "movl 0xc(%%esi), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movw %%dx, 0xa6(%%esi)\n\t"
+      "movw 0xa8(%%eax), %%ax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "movw %%ax, 0xa8(%%esi)\n\t"
+      "call *%[c3b410]\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c64a80]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movl $0xffffffff, 0xc(%%esi)\n\t"
+      ".Lactor_perception_become_acknowledged_2:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "movw $3, 0x24(%%esi)\n\t"
+      "call *%[c2f2b0]\n\t"
+      "movb -0x8(%%ebp), %%dl\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      ".Lactor_perception_become_acknowledged_3:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "je .Lactor_perception_become_acknowledged_4\n\t"
+      "movb %%dl, (%%ecx)\n\t"
+      ".Lactor_perception_become_acknowledged_4:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b33330_dget), [c32940] "m"(b33330_c32940), [c3b410] "m"(b33330_c3b410), [c64a80] "m"(b33330_c64a80), [c2f2b0] "m"(b33330_c2f2b0)
+      : "memory");
 }
+#else
+#error "actor_perception_become_acknowledged: clang naked draft required"
+#endif
+
 
 /* prop_status_refresh (0x33440) — XBE naked draft (batch 79). */
 #if defined(__clang__)

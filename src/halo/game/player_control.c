@@ -399,52 +399,125 @@ float player_control_get_field_of_view(int16_t local_player_index)
   return *(float *)((char *)unit_tag + 0x1a0);
 }
 
-/* Fill out_info with the unit/vehicle camera used for this local player:
- * +0 object handle, +4 seat index, +8 camera tag ptr, +0xc seat position. */
-void player_control_get_unit_camera_info(int16_t local_player_index,
-                                         void *out_info)
-{
-  char *out;
-  int unit_handle;
-  void *unit_obj;
-  int parent_handle;
-  void *parent_obj;
-  void *vehi_tag;
-  void *seat_elem;
-  void *unit_tag;
+/* player_control_get_unit_camera_info (0xb6740) — XBE naked draft (batch 130). */
+#if defined(__clang__)
+static void (*const bb6740_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb6740_exitfn)(int) = system_exit;
+static void *(*const bb6740_get)(int, int) = object_get_and_verify_type;
+static void (*const bb6740_useat)(int, float *) = unit_set_seat_state;
+static void *(*const bb6740_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void *(*const bb6740_tag)(int, int) = tag_get;
+static void *(*const bb6740_elem)(void *, int, int) = tag_block_get_element;
 
-  assert_halt(out_info != NULL);
-  out = (char *)out_info;
-  assert_halt(local_player_index >= 0 &&
-              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
-  *(int *)(out + 8) = 0;
-  unit_handle = *(int *)((char *)player_control_globals +
-                         (int)local_player_index * 0x40 + 0x10);
-  *(int *)out = unit_handle;
-  *(int16_t *)(out + 4) = (int16_t)NONE;
-  if (unit_handle == NONE)
-    return;
-  unit_obj = object_get_and_verify_type(unit_handle, 3);
-  unit_set_seat_state(unit_handle, (float *)(out + 0xc));
-  parent_handle = *(int *)((char *)unit_obj + 0xcc);
-  if (parent_handle != NONE) {
-    parent_obj = object_try_and_get_and_verify_type(parent_handle, 2);
-    if (parent_obj) {
-      vehi_tag = tag_get(0x76656869 /* 'vehi' */, *(int *)parent_obj);
-      seat_elem = tag_block_get_element((char *)vehi_tag + 0x2e4,
-                                        *(int16_t *)((char *)unit_obj + 0x2a0),
-                                        0x11c);
-      *(int *)out = parent_handle;
-      *(void **)(out + 8) = (char *)seat_elem + 0x84;
-      *(int16_t *)(out + 4) = *(int16_t *)((char *)unit_obj + 0x2a0);
-      unit_obj = object_get_and_verify_type(parent_handle, 3);
-    }
-  }
-  if (*(int16_t *)(out + 4) == (int16_t)NONE) {
-    unit_tag = tag_get(0x756e6974 /* 'unit' */, *(int *)unit_obj);
-    *(void **)(out + 8) = (char *)unit_tag + 0x1a8;
-  }
+__attribute__((naked, noinline))
+void player_control_get_unit_camera_info(int16_t local_player_index __attribute__((unused)), void *out_info __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lplayer_control_get_unit_camera_info_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x402\n\t"
+      "pushl $0x26e1e8\n\t"
+      "pushl $0x26e274\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_control_get_unit_camera_info_1:\n\t"
+      "movw 0x8(%%ebp), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "movl $0, 0x8(%%esi)\n\t"
+      "jl .Lplayer_control_get_unit_camera_info_2\n\t"
+      "cmpw $4, %%di\n\t"
+      "jl .Lplayer_control_get_unit_camera_info_3\n\t"
+      ".Lplayer_control_get_unit_camera_info_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb1\n\t"
+      "pushl $0x26e1e8\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_control_get_unit_camera_info_3:\n\t"
+      "movl 0x457090, %%ecx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "shll $6, %%eax\n\t"
+      "movl 0x10(%%eax,%%ecx,1), %%edx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%edx, (%%esi)\n\t"
+      "movw $0xffff, 0x4(%%esi)\n\t"
+      "je .Lplayer_control_get_unit_camera_info_5\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "leal 0xc(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[useat]\n\t"
+      "movl 0xcc(%%edi), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayer_control_get_unit_camera_info_4\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lplayer_control_get_unit_camera_info_4\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x76656869\n\t"
+      "call *%[tag]\n\t"
+      "movswl 0x2a0(%%edi), %%ecx\n\t"
+      "pushl $0x11c\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x2e4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xcc(%%edi), %%edx\n\t"
+      "addl $0x84, %%eax\n\t"
+      "movl %%edx, (%%esi)\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "movw 0x2a0(%%edi), %%ax\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "pushl $3\n\t"
+      "pushl %%ecx\n\t"
+      "movw %%ax, 0x4(%%esi)\n\t"
+      "call *%[get]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      ".Lplayer_control_get_unit_camera_info_4:\n\t"
+      "cmpw $-1, 0x4(%%esi)\n\t"
+      "jne .Lplayer_control_get_unit_camera_info_5\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "addl $0x1a8, %%eax\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      ".Lplayer_control_get_unit_camera_info_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bb6740_assert), [exitfn] "m"(bb6740_exitfn), [get] "m"(bb6740_get), [useat] "m"(bb6740_useat), [tryget] "m"(bb6740_tryget), [tag] "m"(bb6740_tag), [elem] "m"(bb6740_elem)
+      : "memory");
 }
+#else
+#error "player_control_get_unit_camera_info: clang naked draft required"
+#endif
+
 
 /* FUN_000b7f90 (0xb7f90) — XBE naked draft (batch 105). */
 #if defined(__clang__)

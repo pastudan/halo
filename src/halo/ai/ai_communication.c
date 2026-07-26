@@ -592,35 +592,104 @@ void ai_conversation_stop(int conversation_index)
   }
 }
 
-void ai_conversation_actor_deleted(int actor_handle)
+/* ai_conversation_actor_deleted (0x44590) — XBE naked draft (batch 137). */
+#if defined(__clang__)
+static void (*const b44590_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b44590_c119810)(data_iter_t *iterator) = data_iterator_next;
+static scenario_t * (*const b44590_c18e380)(void) = global_scenario_get;
+static void *(*const b44590_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b44590_c435b0)(int handle, char param_b, char param_c) = ai_conversation_finish;
+
+__attribute__((naked, noinline))
+void ai_conversation_actor_deleted(int actor_handle __attribute__((unused)))
 {
-  data_iter_t iter;
-  char *conversation;
-
-  data_iterator_new(&iter, *(data_t **)0x6324ec);
-  conversation = (char *)data_iterator_next(&iter);
-  while (conversation != NULL) {
-    char *def = (char *)tag_block_get_element(
-        (char *)global_scenario_get() + 0x468, 0x74,
-        *(int16_t *)(conversation + 2));
-    int count = *(int *)(def + 0x50);
-    int i;
-
-    for (i = 0; i < count; i++) {
-      if (*(int *)(conversation + 0x28 + i * 4) == actor_handle) {
-        if ((*(uint8_t *)(def + 0x20) & 1) != 0) {
-          ai_conversation_finish(iter.datum_handle, 0, 0);
-          break;
-        }
-        *(int *)(conversation + 0x14) &= ~(1 << i);
-        *(int *)(conversation + 0x28 + i * 4) = -1;
-        if (*(int16_t *)(conversation + 0x4a) == 0)
-          conversation[0x63] = 1;
-      }
-    }
-    conversation = (char *)data_iterator_next(&iter);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x6324ec, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lai_conversation_actor_deleted_6\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl $1, %%ebx\n\t"
+      ".Lai_conversation_actor_deleted_1:\n\t"
+      "movswl 0x2(%%esi), %%eax\n\t"
+      "pushl $0x74\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x468, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x50(%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .Lai_conversation_actor_deleted_5\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "jmp .Lai_conversation_actor_deleted_2\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lai_conversation_actor_deleted_2:\n\t"
+      "movl 0x28(%%esi,%%ecx,4), %%edi\n\t"
+      "cmpl 0x8(%%ebp), %%edi\n\t"
+      "jne .Lai_conversation_actor_deleted_3\n\t"
+      "testb %%bl, 0x20(%%eax)\n\t"
+      "jne .Lai_conversation_actor_deleted_4\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "shll %%cl, %%edi\n\t"
+      "notl %%edi\n\t"
+      "andl %%edi, 0x14(%%esi)\n\t"
+      "movl $0xffffffff, 0x28(%%esi,%%ecx,4)\n\t"
+      "cmpw %%dx, 0x4a(%%esi)\n\t"
+      "jne .Lai_conversation_actor_deleted_3\n\t"
+      "movb %%bl, 0x63(%%esi)\n\t"
+      ".Lai_conversation_actor_deleted_3:\n\t"
+      "movl 0x50(%%eax), %%edi\n\t"
+      "incl %%edx\n\t"
+      "movswl %%dx, %%ecx\n\t"
+      "cmpl %%edi, %%ecx\n\t"
+      "jl .Lai_conversation_actor_deleted_2\n\t"
+      "jmp .Lai_conversation_actor_deleted_5\n\t"
+      ".Lai_conversation_actor_deleted_4:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c435b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lai_conversation_actor_deleted_5:\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lai_conversation_actor_deleted_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".Lai_conversation_actor_deleted_6:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1197b0] "m"(b44590_c1197b0), [c119810] "m"(b44590_c119810), [c18e380] "m"(b44590_c18e380), [elem] "m"(b44590_elem), [c435b0] "m"(b44590_c435b0)
+      : "memory");
 }
+#else
+#error "ai_conversation_actor_deleted: clang naked draft required"
+#endif
+
 /* --- ai_communication.obj batch2 drafts (2026-07-26) --- */
 
 #include "../../x87_math.h"
@@ -1787,42 +1856,115 @@ void FUN_00043ce0(int actor)
       ftol2(range * *(float *)0x253394 + (float)delay);
 }
 
-void actor_communication_update(int actor_handle)
-{
-  char comm_buf[0x38];
-  char *actor_data;
-  char is_player;
-  short impulse;
+/* actor_communication_update (0x43db0) — XBE naked draft (batch 133). */
+#if defined(__clang__)
+static void *(*const b43db0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char (*const b43db0_c3b120)(int actor) = FUN_0003b120;
+static void (*const b43db0_c43ce0)(int actor /* */) = FUN_00043ce0;
+static short (*const b43db0_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = FUN_001a68d0;
+static void *(*const b43db0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b43db0_c42d20)(void *packet) = ai_communication_packet_new;
+static void (*const b43db0_c1a6ef0)(int actor, short count, void *comm_buf) = FUN_001a6ef0;
 
-  actor_data = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  if (*(int16_t *)(actor_data + 0x6a) < 2)
-    return;
-  if (*(char *)(*(char **)0x632574 + 0x10) == 0)
-    return;
-  is_player = FUN_0003b120(actor_handle);
-  if (*(int16_t *)(actor_data + 0x6ce) != 0 &&
-      actor_data[0x6cc] == is_player)
-    return;
-  if (*(int16_t *)(actor_data + 0x6ce) > 0) {
-    *(int16_t *)(actor_data + 0x6ce) = (int16_t)(*(int16_t *)(actor_data + 0x6ce) - 1);
-    if (*(int16_t *)(actor_data + 0x6ce) != 0)
-      return;
-  }
-  FUN_00043ce0(actor_handle);
-  {
-    short vocal = 1;
-    int sound = 0;
-    impulse = FUN_001a68d0(*(int *)(actor_data + 0x18), 1, 1, 0, NULL, &vocal,
-                           &sound);
-  }
-  if (impulse <= 0)
-    return;
-  csmemset(comm_buf, 0, 0x30);
-  ai_communication_packet_new(comm_buf);
-  *(int16_t *)(comm_buf + 2) = is_player;
-  *(int *)(comm_buf + 4) = -1;
-  FUN_001a6ef0(impulse, 1, comm_buf);
+__attribute__((naked, noinline))
+void actor_communication_update(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x38, %%esp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, 0x6a(%%esi)\n\t"
+      "jl .Lactor_communication_update_4\n\t"
+      "movl 0x632574, %%ecx\n\t"
+      "movb 0x10(%%ecx), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_communication_update_4\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c3b120]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $0, 0x6ce(%%esi)\n\t"
+      "movb %%al, %%bl\n\t"
+      "je .Lactor_communication_update_1\n\t"
+      "cmpb %%bl, 0x6cc(%%esi)\n\t"
+      "je .Lactor_communication_update_2\n\t"
+      ".Lactor_communication_update_1:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c43ce0]\n\t"
+      ".Lactor_communication_update_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x6ce(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lactor_communication_update_3\n\t"
+      "decl %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movw %%ax, 0x6ce(%%esi)\n\t"
+      "jne .Lactor_communication_update_3\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "testb %%bl, %%bl\n\t"
+      "setne %%dl\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "pushl $1\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "movl 0x18(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl $0xffffffff, -0x8(%%ebp)\n\t"
+      "call *%[c1a68d0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "testw %%di, %%di\n\t"
+      "jle .Lactor_communication_update_3\n\t"
+      "pushl $0x30\n\t"
+      "leal -0x38(%%ebp), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movw -0x4(%%ebp), %%cx\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movw %%cx, -0x36(%%ebp)\n\t"
+      "movl %%edx, -0x34(%%ebp)\n\t"
+      "movw $1, -0x38(%%ebp)\n\t"
+      "call *%[c42d20]\n\t"
+      "movl 0x18(%%esi), %%edx\n\t"
+      "leal -0x38(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1a6ef0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      ".Lactor_communication_update_3:\n\t"
+      "popl %%ebx\n\t"
+      ".Lactor_communication_update_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b43db0_dget), [c3b120] "m"(b43db0_c3b120), [c43ce0] "m"(b43db0_c43ce0), [c1a68d0] "m"(b43db0_c1a68d0), [memset] "m"(b43db0_memset), [c42d20] "m"(b43db0_c42d20), [c1a6ef0] "m"(b43db0_c1a6ef0)
+      : "memory");
 }
+#else
+#error "actor_communication_update: clang naked draft required"
+#endif
+
 
 void FUN_00043ea0(void *comm, int actor, int stack_a)
 {
@@ -4131,29 +4273,110 @@ void FUN_000454a0(int actor /* */ __attribute__((unused)), int stack_a __attribu
 #endif
 
 
-int FUN_00045830(int type, int unit, int actor, int target, int16_t subtype,
-                 int16_t index, float max_dist)
+/* FUN_00045830 (0x45830) — XBE naked draft (batch 134). */
+#if defined(__clang__)
+static void (*const b45830_c1a9200)(int object_handle, float *out_position) = unit_get_head_position;
+static void (*const b45830_c54680)(unsigned int combined_index, void *iter) = FUN_00054680;
+static int (*const b45830_c54750)(void *iter) = FUN_00054750;
+static void (*const b45830_c454a0)(int actor /* */, int stack_a, float *pos, int stack_c, float radius, float rating, int16_t anim_a, int16_t anim_b, int stack_d, int stack_e, char flags) = FUN_000454a0;
+
+__attribute__((naked, noinline))
+int FUN_00045830(int type /* */ __attribute__((unused)), int unit /* */ __attribute__((unused)), int actor /* */ __attribute__((unused)), int target /* */ __attribute__((unused)), int16_t subtype __attribute__((unused)), int16_t index __attribute__((unused)), float max_dist __attribute__((unused)))
 {
-  short look_buf[4];
-  (void)max_dist;
-  if (unit == -1 || actor == -1 || target == -1)
-    return -1;
-  if (!object_try_and_get_and_verify_type(target, 3))
-    return -1;
-  {
-    char *prop = (char *)datum_get(*(data_t **)0x5ab23c, actor);
-    if (*(int16_t *)(prop + 0x24) >= 2 && *(int16_t *)(prop + 0x24) <= 3) {
-      look_buf[0] = 1;
-      *(int *)&look_buf[1] = actor;
-    } else {
-      look_buf[0] = 3;
-      *(int *)&look_buf[1] = target;
-      unit_get_head_position(target, (float *)&look_buf[1]);
-    }
-  }
-  FUN_00027a60(unit, subtype, 5, look_buf);
-  return actor;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x38, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      "je .LFUN_00045830_7\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_00045830_1\n\t"
+      "leal -0x20(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1a9200]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00045830_1:\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_00045830_2\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1a9200]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00045830_2:\n\t"
+      "leal -0x38(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c54680]\n\t"
+      "leal -0x38(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c54750]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00045830_6\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      ".LFUN_00045830_3:\n\t"
+      "movl 0x20(%%ebp), %%ecx\n\t"
+      "movl 0x1c(%%ebp), %%edx\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x28(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x20(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c454a0]\n\t"
+      "fcoms -0x8(%%ebp)\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00045830_4\n\t"
+      "movl -0x28(%%ebp), %%ecx\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_00045830_5\n\t"
+      ".LFUN_00045830_4:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_00045830_5:\n\t"
+      "leal -0x38(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c54750]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00045830_3\n\t"
+      ".LFUN_00045830_6:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      ".LFUN_00045830_7:\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1a9200] "m"(b45830_c1a9200), [c54680] "m"(b45830_c54680), [c54750] "m"(b45830_c54750), [c454a0] "m"(b45830_c454a0)
+      : "memory");
 }
+#else
+#error "FUN_00045830: clang naked draft required"
+#endif
+
 
 /* ai_communication_find_global_actor_to_talk (0x458f0) — XBE naked draft (batch 126). */
 #if defined(__clang__)

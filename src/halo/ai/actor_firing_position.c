@@ -239,32 +239,114 @@ void FUN_00024130(void)
 #endif
 
 
-/* 0x24370 */
+/* FUN_00024370 (0x24370) — XBE naked draft (batch 132). */
+#if defined(__clang__)
+static void *(*const b24370_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b24370_tag)(int, int) = tag_get;
+static char (*const b24370_c2b720)(int actor_handle, float *dest_pos, float *dist_out) = actor_path_3d_available;
+static void * (*const b24370_c18e3c0)(void) = scenario_get;
+static char (*const b24370_c5e830)(int param_1, int *param_2, int param_3, int *param_4, unsigned char *param_5, float *param_6) = path_3d_available;
+static void (*const b24370_c24000)(void *ctx, float score, int type, void *position) = FUN_00024000;
+
+__attribute__((naked, noinline))
 void FUN_00024370(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  datum_get((void *)(uintptr_t)eax, 0);
-  tag_get('rtca', 0);
-  /* test (char)ecx, (char)ecx -> je 0x2442f */
-  /* test esi, esi -> jne 0x243c9 */
-  actor_path_3d_available(0, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
-  /* test (char)eax, (char)eax -> je 0x2441d */
-  scenario_get();
-  path_3d_available(0, (void *)0, 0, (void *)0, (unsigned char *)0, (float *)0);
-  /* test (char)eax, (char)eax -> je 0x2441d */
-  FUN_00024000((void *)(uintptr_t)eax, 0.0f, 25, (void *)0);
-  /* test (char)eax, (char)eax -> jne 0x2442f */
-  /* test esi, esi -> jne 0x2443d */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x58(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movb 0x44(%%eax), %%cl\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_00024370_3\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00024370_1\n\t"
+      "flds 0x660(%%eax)\n\t"
+      "popl %%edi\n\t"
+      "fadds 0x254cc0\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "fstps 0x660(%%eax)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00024370_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "leal 0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl $0, 0x10(%%ebp)\n\t"
+      "call *%[c2b720]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00024370_2\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x12c, %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e3c0]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c5e830]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00024370_2\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl $0x19\n\t"
+      "pushl $0x41700000\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c24000]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_00024370_3\n\t"
+      ".LFUN_00024370_2:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movb $1, 0x31(%%esi)\n\t"
+      "movb 0x14(%%ecx), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00024370_3\n\t"
+      "movb $0, 0x30(%%esi)\n\t"
+      ".LFUN_00024370_3:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00024370_4\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00024370_4:\n\t"
+      "movzbl 0x30(%%esi), %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b24370_dget), [tag] "m"(b24370_tag), [c2b720] "m"(b24370_c2b720), [c18e3c0] "m"(b24370_c18e3c0), [c5e830] "m"(b24370_c5e830), [c24000] "m"(b24370_c24000)
+      : "memory");
 }
+#else
+#error "FUN_00024370: clang naked draft required"
+#endif
+
 
 /* FUN_00024450 (0x24450) — XBE naked draft (batch 120). */
 #if defined(__clang__)
@@ -434,26 +516,109 @@ void FUN_00024450(void)
 #endif
 
 
-/* 0x245d0 */
+/* post_evaluator_hide (0x245d0) — XBE naked draft (batch 135). */
+#if defined(__clang__)
+static void (*const b245d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b245d0_exitfn)(int) = system_exit;
+static void (*const b245d0_c24000)(void *ctx, float score, int type, void *position) = FUN_00024000;
+
+__attribute__((naked, noinline))
 void post_evaluator_hide(void)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (char)eax, (char)eax -> je 0x24687 */
-  /* test esi, esi -> jne 0x24608 */
-  /* test (char)eax, (char)eax -> je 0x2464a */
-  /* test (char)eax, (char)eax -> jne 0x24678 */
-  display_assert((char *)0, (char *)0x00254c8c, 1117, 0);
-  system_exit(0);
-  FUN_00024000((void *)(uintptr_t)edi, 0.0f, 18, (void *)0);
-  /* test esi, esi -> jne 0x24694 */
-
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "movb 0x5fc(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lpost_evaluator_hide_9\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lpost_evaluator_hide_1\n\t"
+      "flds 0x660(%%edi)\n\t"
+      "movl $1, %%eax\n\t"
+      "fadds 0x254cc8\n\t"
+      "fstps 0x660(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lpost_evaluator_hide_1:\n\t"
+      "movswl 0x6(%%esi), %%eax\n\t"
+      "cmpl $4, %%eax\n\t"
+      "movl $0, 0xc(%%ebp)\n\t"
+      "ja .Lpost_evaluator_hide_7\n\t"
+      "jmp *.Lpost_evaluator_hide_jt(,%%eax,4)\n\t"
+      ".Lpost_evaluator_hide_2:\n\t"
+      "movl $0x41400000, 0xc(%%ebp)\n\t"
+      "jmp .Lpost_evaluator_hide_8\n\t"
+      ".Lpost_evaluator_hide_3:\n\t"
+      "movl $0x41200000, 0xc(%%ebp)\n\t"
+      "jmp .Lpost_evaluator_hide_8\n\t"
+      ".Lpost_evaluator_hide_4:\n\t"
+      "movb 0x8(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lpost_evaluator_hide_6\n\t"
+      "movl $0x40c00000, 0xc(%%ebp)\n\t"
+      "jmp .Lpost_evaluator_hide_8\n\t"
+      ".Lpost_evaluator_hide_5:\n\t"
+      "movl $0x40800000, 0xc(%%ebp)\n\t"
+      "jmp .Lpost_evaluator_hide_8\n\t"
+      ".Lpost_evaluator_hide_6:\n\t"
+      "movb $1, 0x31(%%esi)\n\t"
+      "movb 0x14(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lpost_evaluator_hide_8\n\t"
+      "movb $0, 0x30(%%esi)\n\t"
+      "jmp .Lpost_evaluator_hide_8\n\t"
+      ".Lpost_evaluator_hide_7:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x45d\n\t"
+      "pushl $0x254c8c\n\t"
+      "pushl $0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lpost_evaluator_hide_8:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl $0x12\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c24000]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lpost_evaluator_hide_9:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lpost_evaluator_hide_10\n\t"
+      "popl %%edi\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lpost_evaluator_hide_10:\n\t"
+      "movzbl 0x30(%%esi), %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lpost_evaluator_hide_jt:\n\t"
+      ".long .Lpost_evaluator_hide_6\n\t"
+      ".long .Lpost_evaluator_hide_4\n\t"
+      ".long .Lpost_evaluator_hide_2\n\t"
+      ".long .Lpost_evaluator_hide_5\n\t"
+      ".long .Lpost_evaluator_hide_3\n\t"
+      ".text\n\t"
+      :
+      : [assert] "m"(b245d0_assert), [exitfn] "m"(b245d0_exitfn), [c24000] "m"(b245d0_c24000)
+      : "memory");
 }
+#else
+#error "post_evaluator_hide: clang naked draft required"
+#endif
+
 
 /* 0x246b0 */
 void FUN_000246b0(void)

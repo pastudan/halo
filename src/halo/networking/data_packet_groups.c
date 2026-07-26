@@ -1,34 +1,107 @@
 /* --- data_packet_groups.obj batch drafts (2026-07-26) --- */
 
-/* 0x11abb0 */
+/* data_packet_group_append_packet_header (0x11abb0) — XBE naked draft (batch 134). */
+#if defined(__clang__)
+static void (*const b11abb0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11abb0_exitfn)(int) = system_exit;
+static void (*const b11abb0_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
+
+__attribute__((naked, noinline))
 void data_packet_group_append_packet_header(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  display_assert((char *)0x0028f318, (char *)0x0028f1f0, 172, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [edi], 0 -> jge 0x11ac12 */
-  display_assert((char *)0x0028f3c4, (char *)0x0028f1f0, 173, 0);
-  system_exit(0);
-  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x11ac24 */
-  /* relift: cmp (int16_t)ebx, word ptr [eax + 4] -> jl 0x11ac44 */
-  display_assert((char *)0x0028f380, (char *)0x0028f1f0, 174, 0);
-  system_exit(0);
-  /* cmp ecx, eax -> jae 0x11ac7d */
-  FUN_00118be0((void *)0x003220c0, (void *)(uintptr_t)esi, 0);
-  /* mem[0x0046e804] = eax */
-  /* mem[0x0046e804] = eax */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "movswl (%%edi), %%esi\n\t"
+      "addl %%eax, %%esi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0, 0x10(%%ebp)\n\t"
+      "jne .Ldata_packet_group_append_packet_header_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xac\n\t"
+      "pushl $0x28f1f0\n\t"
+      "pushl $0x28f318\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldata_packet_group_append_packet_header_1:\n\t"
+      "cmpw $0, (%%edi)\n\t"
+      "jge .Ldata_packet_group_append_packet_header_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xad\n\t"
+      "pushl $0x28f1f0\n\t"
+      "pushl $0x28f3c4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldata_packet_group_append_packet_header_2:\n\t"
+      "movw 0x14(%%ebp), %%bx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl .Ldata_packet_group_append_packet_header_3\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpw 0x4(%%eax), %%bx\n\t"
+      "jl .Ldata_packet_group_append_packet_header_4\n\t"
+      ".Ldata_packet_group_append_packet_header_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xae\n\t"
+      "pushl $0x28f1f0\n\t"
+      "pushl $0x28f380\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldata_packet_group_append_packet_header_4:\n\t"
+      "movswl (%%edi), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl 0xc(%%edx), %%eax\n\t"
+      "incl %%ecx\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jae .Ldata_packet_group_append_packet_header_5\n\t"
+      "pushl $1\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x3220c0\n\t"
+      "movb %%bl, (%%esi)\n\t"
+      "call *%[c118be0]\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "incw (%%edi)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "popl %%edi\n\t"
+      "sete %%cl\n\t"
+      "popl %%esi\n\t"
+      "movl %%eax, 0x46e804\n\t"
+      "movb %%cl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ldata_packet_group_append_packet_header_5:\n\t"
+      "movl $0x28f350, %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "popl %%edi\n\t"
+      "sete %%cl\n\t"
+      "popl %%esi\n\t"
+      "movl %%eax, 0x46e804\n\t"
+      "movb %%cl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11abb0_assert), [exitfn] "m"(b11abb0_exitfn), [c118be0] "m"(b11abb0_c118be0)
+      : "memory");
 }
+#else
+#error "data_packet_group_append_packet_header: clang naked draft required"
+#endif
+
 
 /* encode_packet_group (0x11aca0) — XBE naked draft (batch 127). */
 #if defined(__clang__)

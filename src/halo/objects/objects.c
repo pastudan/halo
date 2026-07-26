@@ -8333,65 +8333,107 @@ void object_dump_write(void *stats /* @<esi> */, void *file)
       pcVar1);
 }
 
-/* 0x140a00 / objects.obj — Select random region permutations for an object
- * matching a given variant number. For each region in the model, finds
- * available permutations matching the variant, picks one randomly, and
- * stores its index in the object's region permutation array at obj+0x130.
- * Returns 1 if all regions had at least one valid permutation; 0 if any
- * region had no available permutations matching the variant.
- * object_handle in EAX (register arg).
- * Confirmed: PUSH -1; PUSH EAX; CALL object_get_and_verify_type.
- * Confirmed: tag_block at model_tag+0xc4, element size 0x4c.
- * Confirmed: calls object_find_region_permutations_available_with_variant.
- * Confirmed: if count==0, tries variant=0 as fallback.
- * Confirmed: random_range(get_global_random_seed_address(), 0, count). */
-char object_select_random_region_permutations_by_variant(
-    int object_handle /* @<eax> */, void *model_tag, int16_t variant)
+/* object_select_random_region_permutations_by_variant (0x140a00) — XBE naked draft (batch 136). */
+#if defined(__clang__)
+static void *(*const b140a00_get)(int, int) = object_get_and_verify_type;
+static void *(*const b140a00_elem)(void *, int, int) = tag_block_get_element;
+static int16_t (*const b140a00_c13e3f0)(void *region_element, int16_t variant, int16_t *output) = object_find_region_permutations_available_with_variant;
+static int *(*const b140a00_gseed)(void) = get_global_random_seed_address;
+static int16_t (*const b140a00_c10b2d0)(unsigned int *seed, int16_t min, int16_t max) = random_range;
+
+__attribute__((naked, noinline))
+char object_select_random_region_permutations_by_variant(int object_handle __attribute__((unused)), void *model_tag __attribute__((unused)), int16_t variant __attribute__((unused)))
 {
-  char *obj;
-  int16_t region_count;
-  char all_ok;
-  int16_t i;
-  char *model = (char *)model_tag;
-  int16_t avail_buf[32];
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  region_count = 0;
-  all_ok = 1;
-  i = 0;
-  if (*(int *)(model + 0xc4) > 0) {
-    do {
-      int16_t count;
-      char *region;
-
-      region = (char *)tag_block_get_element(
-          (void *)(model + 0xc4), (int)i, 0x4c);
-      count = object_find_region_permutations_available_with_variant(
-          region, variant, avail_buf);
-      if (count == 0 &&
-          (variant == -1 ||
-           (count = object_find_region_permutations_available_with_variant(
-                region, 0, avail_buf),
-            count == 0))) {
-        *(unsigned char *)(obj + 0x130 + (int)i) = 0;
-        all_ok = 0;
-      } else {
-        int16_t chosen;
-        if (count == 1) {
-          chosen = 0;
-        } else {
-          int *seed = get_global_random_seed_address();
-          chosen = random_range((unsigned int *)seed, 0, count);
-        }
-        *(unsigned char *)(obj + 0x130 + (int)i) =
-            (unsigned char)*(unsigned char *)((char *)avail_buf + chosen * 2);
-      }
-      region_count = region_count + 1;
-      i = region_count;
-    } while ((int)i < *(int *)(model + 0xc4));
-  }
-  return all_ok;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x4c, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl 0xc4(%%ebx), %%ecx\n\t"
+      "addl $0xc4, %%ebx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%edi, %%ecx\n\t"
+      "movb $1, %%al\n\t"
+      "movb %%al, -0x1(%%ebp)\n\t"
+      "movl %%edi, -0xc(%%ebp)\n\t"
+      "jle .Lobject_select_random_region_permutations_by_variant_7\n\t"
+      "pushl %%esi\n\t"
+      ".Lobject_select_random_region_permutations_by_variant_1:\n\t"
+      "pushl $0x4c\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "leal -0x4c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c13e3f0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lobject_select_random_region_permutations_by_variant_3\n\t"
+      "cmpw $-1, 0xc(%%ebp)\n\t"
+      "je .Lobject_select_random_region_permutations_by_variant_2\n\t"
+      "leal -0x4c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[c13e3f0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lobject_select_random_region_permutations_by_variant_3\n\t"
+      ".Lobject_select_random_region_permutations_by_variant_2:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movb $0, 0x130(%%edi,%%ecx,1)\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "jmp .Lobject_select_random_region_permutations_by_variant_6\n\t"
+      ".Lobject_select_random_region_permutations_by_variant_3:\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .Lobject_select_random_region_permutations_by_variant_4\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .Lobject_select_random_region_permutations_by_variant_5\n\t"
+      ".Lobject_select_random_region_permutations_by_variant_4:\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10b2d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lobject_select_random_region_permutations_by_variant_5:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movb -0x4c(%%ebp,%%edx,2), %%al\n\t"
+      "movb %%al, 0x130(%%edi,%%ecx,1)\n\t"
+      ".Lobject_select_random_region_permutations_by_variant_6:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "incl %%eax\n\t"
+      "movswl %%ax, %%edi\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "cmpl (%%ebx), %%edi\n\t"
+      "jl .Lobject_select_random_region_permutations_by_variant_1\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%esi\n\t"
+      ".Lobject_select_random_region_permutations_by_variant_7:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b140a00_get), [elem] "m"(b140a00_elem), [c13e3f0] "m"(b140a00_c13e3f0), [gseed] "m"(b140a00_gseed), [c10b2d0] "m"(b140a00_c10b2d0)
+      : "memory");
 }
+#else
+#error "object_select_random_region_permutations_by_variant: clang naked draft required"
+#endif
+
 
 /* object_choose_random_change_colors (0x13e1f0) — XBE naked draft (batch 116). */
 #if defined(__clang__)
@@ -9911,66 +9953,121 @@ void object_adjust_interpolation_position(int object_handle, vector3_t *delta)
   }
 }
 
-/* Set region permutation by marker name (0x1402c0).
- * Searches model regions for a permutation whose name matches marker_name
- * (case-insensitive). If found, sets the object's region permutation index
- * at obj+0x130+region. If region_index is -1, searches all regions;
- * otherwise only the specified region. If param_4 is 0, forces the
- * permutation index to 0 regardless of the match position. */
-void object_permute_region(int object_handle, const char *marker_name,
-                           short region_index, char param_4)
+/* object_permute_region (0x1402c0) — XBE naked draft (batch 131). */
+#if defined(__clang__)
+static void *(*const b1402c0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1402c0_tag)(int, int) = tag_get;
+static void *(*const b1402c0_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b1402c0_c1dd801)(const char *a, const char *b) = crt_stricmp;
+
+__attribute__((naked, noinline))
+void object_permute_region(int object_handle __attribute__((unused)), const char *marker_name __attribute__((unused)), short region_index __attribute__((unused)), char param_4 __attribute__((unused)))
 {
-  char *obj;
-  char *obje_tag;
-  int model_tag_index;
-  char *mode_tag;
-  int *regions_block;
-  short region_iter;
-  int region_i;
-  char *region_element;
-  int *permutations_block;
-  short perm_iter;
-  int perm_i;
-  char *perm_element;
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  obje_tag = (char *)tag_get(0x6f626a65, *(int *)obj);
-  model_tag_index = *(int *)(obje_tag + 0x34);
-  if (model_tag_index == -1)
-    return;
-
-  mode_tag = (char *)tag_get(0x6d6f6465, model_tag_index);
-  regions_block = (int *)(mode_tag + 0xc4);
-  region_i = 0;
-  if (*regions_block <= 0)
-    return;
-
-  region_iter = 0;
-  do {
-    if (region_index == -1 || region_index == region_iter) {
-      region_element =
-        (char *)tag_block_get_element(regions_block, region_i, 0x4c);
-      permutations_block = (int *)(region_element + 0x40);
-      perm_iter = 0;
-      if (*permutations_block > 0) {
-        perm_i = 0;
-        do {
-          perm_element =
-            (char *)tag_block_get_element(permutations_block, perm_i, 0x58);
-          if (crt_stricmp(perm_element, marker_name) == 0) {
-            *(char *)(obj + 0x130 + region_i) =
-              param_4 ? (char)perm_iter : (char)0;
-            break;
-          }
-          perm_iter = perm_iter + 1;
-          perm_i = (int)perm_iter;
-        } while (perm_i < *permutations_block);
-      }
-    }
-    region_iter = region_iter + 1;
-    region_i = (int)region_iter;
-  } while (region_i < *regions_block);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x34(%%eax), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_permute_region_8\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6d6f6465\n\t"
+      "call *%[tag]\n\t"
+      "leal 0xc4(%%eax), %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "jle .Lobject_permute_region_8\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "jmp .Lobject_permute_region_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lobject_permute_region_1:\n\t"
+      "movw 0x10(%%ebp), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lobject_permute_region_2\n\t"
+      "cmpw %%dx, %%ax\n\t"
+      "jne .Lobject_permute_region_7\n\t"
+      ".Lobject_permute_region_2:\n\t"
+      "pushl $0x4c\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "leal 0x40(%%eax), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lobject_permute_region_7\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lobject_permute_region_3:\n\t"
+      "pushl $0x58\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dd801]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lobject_permute_region_4\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "incl %%edi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lobject_permute_region_3\n\t"
+      "jmp .Lobject_permute_region_7\n\t"
+      ".Lobject_permute_region_4:\n\t"
+      "movb 0x14(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_permute_region_5\n\t"
+      "movswl %%di, %%eax\n\t"
+      "jmp .Lobject_permute_region_6\n\t"
+      ".Lobject_permute_region_5:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lobject_permute_region_6:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movb %%al, 0x130(%%ebx,%%ecx,1)\n\t"
+      ".Lobject_permute_region_7:\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "incl %%edx\n\t"
+      "movswl %%dx, %%ebx\n\t"
+      "cmpl %%eax, %%ebx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "jl .Lobject_permute_region_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lobject_permute_region_8:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1402c0_get), [tag] "m"(b1402c0_tag), [elem] "m"(b1402c0_elem), [c1dd801] "m"(b1402c0_c1dd801)
+      : "memory");
 }
+#else
+#error "object_permute_region: clang naked draft required"
+#endif
+
 
 /* Query an outgoing object function value (0x1403a0).
  * If function_index is -1, writes 1.0f and returns true.
@@ -11074,94 +11171,123 @@ void objects_scripting_set_scale(int param_1, int param_2, int16_t param_3)
   }
 }
 
-/*
- * object_delete_internal — recursive object deletion implementation.
- *
- * Recursively deletes an object's child chain (obj+0xC8), and optionally
- * its sibling chain (obj+0xC4) when delete_sibling is nonzero. For each
- * object:
- *   1. If the game engine is running and the object is a weapon (type==2),
- *      asserts that it is not a flag (CTF flag weapon).
- *   2. Recursively deletes children and optionally siblings.
- *   3. Sets datum header bit 0x08 (pending deletion).
- *   4. If the object's tag definition has a children block (tag+0x34 != -1)
- *      and obj->flags bit 0 is clear, propagates deletion to attached
- *      children via object_propagate_flag_to_children (EAX=handle, args 1,0).
- *   5. Sets obj->flags bit 0 (deleted/inactive).
- *   6. Clears datum header bit 0x02 (active).
- *   7. Removes the object from the name list via object_remove_from_name_list (EDI=handle).
- *
- * Confirmed: cdecl, 2 stack args (PUSH+PUSH, ADD ESP,0x8 at recursive sites).
- * Confirmed: CALL 0x0013d680 — object_get_and_verify_type(handle, -1).
- * Confirmed: CALL 0x000a8e30 — game_engine_running(), no args, returns bool.
- * Confirmed: CMP word ptr [ESI+0x64],0x2 — checks object type == weapon.
- * Confirmed: CALL 0x000fb0c0 — weapon_is_flag(handle), 1 cdecl arg.
- * Confirmed: CALL 0x0008d9f0 — display_assert with line 0x33d (829).
- * Confirmed: CALL 0x0008e2f0 — system_exit(-1), NOT thunk_FUN_001029a0.
- * Confirmed: [ESI+0xC8] — child object handle for recursive delete.
- * Confirmed: [ESI+0xC4] — sibling object handle (conditional on
- * delete_sibling). Confirmed: OR AL,0x8 / MOV [EBX+0x2],AL — sets datum header
- * bit 0x08. Confirmed: MOV EAX,EDI before CALL 0x0013ee60 — EAX register arg =
- * handle. Confirmed: PUSH 0x0 / PUSH 0x1 — object_propagate_flag_to_children stack args (1, 0).
- * Confirmed: TEST byte ptr [ESI+0x4],0x1 — checks obj->flags bit 0.
- * Confirmed: OR dword ptr [ESI+0x4],0x1 — sets obj->flags bit 0.
- * Confirmed: AND CL,0xfd / MOV [EAX+0x2],CL — clears datum header bit 0x02.
- * Confirmed: CALL 0x0013eff0 — no stack args, EDI register arg = handle.
- */
-void object_delete_internal(int object_handle, int delete_sibling)
+/* object_delete_internal (0x140bc0) — XBE naked draft (batch 131). */
+#if defined(__clang__)
+static void *(*const b140bc0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b140bc0_get)(int, int) = object_get_and_verify_type;
+static bool (*const b140bc0_gerun)(void) = game_engine_running;
+static bool (*const b140bc0_cfb0c0)(int object_index) = weapon_is_flag;
+static void (*const b140bc0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b140bc0_exitfn)(int) = system_exit;
+static void (*const b140bc0_c140bc0)(int object_handle, int delete_sibling) = object_delete_internal;
+static void *(*const b140bc0_tag)(int, int) = tag_get;
+static void (*const b140bc0_c13ee60)(int object_handle, char do_wake, char do_limbo) = object_propagate_flag_to_children;
+static void (*const b140bc0_c13eff0)(int object_handle) = object_remove_from_name_list;
+
+__attribute__((naked, noinline))
+void object_delete_internal(int object_handle __attribute__((unused)), int delete_sibling __attribute__((unused)))
 {
-  object_header_data_t *hdr =
-    (object_header_data_t *)datum_get(*(data_t **)0x5a8d50, object_handle);
-  object_data_t *obj =
-    (object_data_t *)object_get_and_verify_type(object_handle, -1);
-
-  /* If the game engine is running and this is a weapon, assert it's not a
-   * flag (CTF flags should not be deleted this way). */
-  if (game_engine_running() && obj->type == 2) {
-    if (weapon_is_flag(object_handle)) {
-      display_assert("!(weapon_is_flag(object_index))",
-                     "c:\\halo\\SOURCE\\objects\\objects.c", 0x33d, 1);
-      system_exit(-1);
-    }
-  }
-
-  /* Recursively delete child objects (obj+0xC8). */
-  if (obj->unk_200.value != -1) {
-    object_delete_internal(obj->unk_200.value, 1);
-  }
-
-  /* Optionally recursively delete sibling objects (obj+0xC4). */
-  if ((char)delete_sibling != 0 && obj->next_object_index.value != -1) {
-    object_delete_internal(obj->next_object_index.value, 1);
-  }
-
-  /* Mark datum header with pending-deletion bit (0x08). */
-  hdr->unk_2 |= 0x08;
-
-  /* Re-fetch object pointer (may have been invalidated by recursive calls). */
-  obj = (object_data_t *)object_get_and_verify_type(object_handle, -1);
-
-  /* Check if the object's tag definition has a children block. */
-  {
-    void *tag_def = tag_get(0x6f626a65, (int)obj->tag_index);
-    if (*(int *)((char *)tag_def + 0x34) != -1 && (obj->flags & 1) == 0) {
-      /* Propagate deletion to attached children. */
-      object_propagate_flag_to_children(object_handle, 1, 0);
-    }
-  }
-
-  /* Re-fetch datum header (recursive calls may have moved pool memory). */
-  hdr = (object_header_data_t *)datum_get(*(data_t **)0x5a8d50, object_handle);
-
-  /* Set obj->flags bit 0 (deleted/inactive). */
-  obj->flags |= 1;
-
-  /* Clear datum header bit 0x02 (active). */
-  hdr->unk_2 &= (uint8_t)~0x02;
-
-  /* Remove the object from the name list. */
-  object_remove_from_name_list(object_handle);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[get]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_delete_internal_1\n\t"
+      "cmpw $2, 0x64(%%esi)\n\t"
+      "jne .Lobject_delete_internal_1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cfb0c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_delete_internal_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x33d\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29c010\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_delete_internal_1:\n\t"
+      "movl 0xc8(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_delete_internal_2\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c140bc0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_delete_internal_2:\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_delete_internal_3\n\t"
+      "movl 0xc4(%%esi), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lobject_delete_internal_3\n\t"
+      "pushl $1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c140bc0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_delete_internal_3:\n\t"
+      "movb 0x2(%%ebx), %%al\n\t"
+      "orb $8, %%al\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "movb %%al, 0x2(%%ebx)\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x34(%%eax), %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .Lobject_delete_internal_4\n\t"
+      "testb $1, 0x4(%%esi)\n\t"
+      "jne .Lobject_delete_internal_4\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c13ee60]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_delete_internal_4:\n\t"
+      "movl 0x5a8d50, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "orl $1, 0x4(%%esi)\n\t"
+      "movb 0x2(%%eax), %%cl\n\t"
+      "andb $0xfd, %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "movb %%cl, 0x2(%%eax)\n\t"
+      "call *%[c13eff0]\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b140bc0_dget), [get] "m"(b140bc0_get), [gerun] "m"(b140bc0_gerun), [cfb0c0] "m"(b140bc0_cfb0c0), [assert] "m"(b140bc0_assert), [exitfn] "m"(b140bc0_exitfn), [c140bc0] "m"(b140bc0_c140bc0), [tag] "m"(b140bc0_tag), [c13ee60] "m"(b140bc0_c13ee60), [c13eff0] "m"(b140bc0_c13eff0)
+      : "memory");
 }
+#else
+#error "object_delete_internal: clang naked draft required"
+#endif
+
 
 /*
  * object_delete — delete an object from the world.
@@ -15702,92 +15828,108 @@ void object_attach_to_marker(int parent_handle, void *marker_name,
   object_attach_to_parent(parent_handle, child_handle, *(int *)parent_markers);
 }
 
-/* 0x144770 / objects.obj — Create an object from a scenario palette entry.
- * Looks up the palette element, initializes placement data with its tag,
- * copies position and orientation from the placement data, then calls
- * object_new. On success, links the object to the scenario via
- * FUN_0013c500 and optionally adds it to the name list.
- * cdecl, 2 params.
- * Confirmed: SUB ESP,0x88 — placement buffer is 0x88 bytes.
- * Confirmed: LEA EAX,[EBP-0x88] = base of placement buffer.
- * Confirmed: object_placement_data_new(buf, tag_index, -1).
- * Confirmed: position at buf+0x18 (3 floats from param+8).
- * Confirmed: vectors3d_from_euler_angles3d(buf+0x34, buf+0x40, param+0x14).
- * Confirmed: bsp_index at buf+0x16 (short from param+6).
- * Confirmed: object_new(buf) returns handle.
- * Confirmed: FUN_0013c500(handle, param) post-links.
- * Confirmed: object_name_list_new called with EDI=handle, SI=name_index. */
-int object_new_from_scenario(void *placement_data, int palette_block)
+/* object_new_from_scenario (0x144770) — XBE naked draft (batch 135). */
+#if defined(__clang__)
+static void *(*const b144770_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b144770_opnew)(void *, int, int) = object_placement_data_new;
+static void (*const b144770_c10bbc0)(float *forward, float *up, float *angles) = vectors3d_from_euler_angles3d;
+static int (*const b144770_onew)(void *) = object_new;
+static void (*const b144770_c13c500)(int param_1, int param_2) = FUN_0013c500;
+static void (*const b144770_c13ef70)(int object_handle, int16_t name_index) = object_name_list_new;
+
+__attribute__((naked, noinline))
+int object_new_from_scenario(void *placement_data __attribute__((unused)), int palette_block __attribute__((unused)))
 {
-  char *param;
-  int result;
-  int tag_index;
-  char placement_buf[0x88];
-  char *element;
-
-  param = (char *)placement_data;
-  result = -1;
-
-  /* Check that the tag index at param[0] is not -1 */
-  if (*(int16_t *)param == -1)
-    return -1;
-
-  /* If object_globals byte 0 is nonzero and the placement flag bit 0 is set,
-   * skip creation (already placed). */
-  if (*(char *)*(int *)0x46f084 != '\0' &&
-      (*(unsigned char *)(param + 0x4) & 1) != 0)
-    return -1;
-
-  /* Check if name slot is available (name_index valid and slot free) */
-  {
-    int16_t name_idx = *(int16_t *)(param + 0x2);
-    if (name_idx != -1) {
-      if (name_idx < 0 || name_idx >= 0x200)
-        goto do_create;
-      if (*(int *)(*(int *)0x46f07c + (int)name_idx * 4) != -1)
-        return -1;
-    }
-  }
-
-do_create:
-  /* Look up the palette element to get the tag index */
-  element = (char *)tag_block_get_element(
-      (void *)palette_block, (int)*(int16_t *)param, 0x30);
-  tag_index = *(int *)(element + 0xc);
-  if (tag_index == -1)
-    return -1;
-
-  /* Initialize placement data */
-  object_placement_data_new(placement_buf, tag_index, -1);
-
-  /* Copy position (3 floats from param+8 to buf+0x18) */
-  {
-    int *src = (int *)(param + 0x8);
-    *(int *)(placement_buf + 0x18) = src[0];
-    *(int *)(placement_buf + 0x1c) = src[1];
-    *(int *)(placement_buf + 0x20) = src[2];
-  }
-
-  /* Compute forward/up vectors from euler angles */
-  vectors3d_from_euler_angles3d(
-      (float *)(placement_buf + 0x34),
-      (float *)(placement_buf + 0x40),
-      (float *)(param + 0x14));
-
-  /* Copy BSP index */
-  *(int16_t *)(placement_buf + 0x16) = *(int16_t *)(param + 0x6);
-
-  /* Create the object */
-  result = object_new(placement_buf);
-  if (result != -1) {
-    FUN_0013c500(result, (int)param);
-    if (*(int16_t *)(param + 0x2) != -1) {
-      object_name_list_new(result, *(int16_t *)(param + 0x2));
-    }
-  }
-
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x88, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movw (%%esi), %%cx\n\t"
+      "pushl %%edi\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .Lobject_new_from_scenario_3\n\t"
+      "movl 0x46f084, %%eax\n\t"
+      "cmpb $0, (%%eax)\n\t"
+      "je .Lobject_new_from_scenario_1\n\t"
+      "testb $1, 0x4(%%esi)\n\t"
+      "jne .Lobject_new_from_scenario_3\n\t"
+      ".Lobject_new_from_scenario_1:\n\t"
+      "movw 0x2(%%esi), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lobject_new_from_scenario_2\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lobject_new_from_scenario_2\n\t"
+      "cmpw $0x200, %%ax\n\t"
+      "jge .Lobject_new_from_scenario_2\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movl 0x46f07c, %%eax\n\t"
+      "cmpl $-1, (%%eax,%%edx,4)\n\t"
+      "jne .Lobject_new_from_scenario_3\n\t"
+      ".Lobject_new_from_scenario_2:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "pushl $0x30\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_new_from_scenario_3\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x88(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[opnew]\n\t"
+      "leal 0x8(%%esi), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%edx, -0x70(%%ebp)\n\t"
+      "leal 0x14(%%esi), %%edx\n\t"
+      "movl %%eax, -0x6c(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x48(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0x68(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x54(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c10bbc0]\n\t"
+      "movw 0x6(%%esi), %%dx\n\t"
+      "leal -0x88(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movw %%dx, -0x72(%%ebp)\n\t"
+      "call *%[onew]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lobject_new_from_scenario_3\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c13c500]\n\t"
+      "movswl 0x2(%%esi), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .Lobject_new_from_scenario_3\n\t"
+      "call *%[c13ef70]\n\t"
+      ".Lobject_new_from_scenario_3:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b144770_elem), [opnew] "m"(b144770_opnew), [c10bbc0] "m"(b144770_c10bbc0), [onew] "m"(b144770_onew), [c13c500] "m"(b144770_c13c500), [c13ef70] "m"(b144770_c13ef70)
+      : "memory");
 }
+#else
+#error "object_new_from_scenario: clang naked draft required"
+#endif
+
 
 /*
  * object_delete_recursive — object deactivation and deallocation.

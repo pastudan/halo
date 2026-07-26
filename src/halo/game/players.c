@@ -1364,56 +1364,120 @@ bool players_respawn_coop(void)
   return bVar2;
 }
 
-/* Priority-filtered pending action-result update (matches 0xbbfe0). */
-void FUN_000bbfe0(int player_handle, int16_t action_result_type,
-                  int object_handle, int16_t seat_index)
+/* FUN_000bbfe0 (0xbbfe0) — XBE naked draft (batch 130). */
+#if defined(__clang__)
+static void *(*const bbbfe0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const bbbfe0_get)(int, int) = object_get_and_verify_type;
+
+__attribute__((naked, noinline))
+void FUN_000bbfe0(int player_handle __attribute__((unused)), int16_t action_result_type __attribute__((unused)), int object_handle __attribute__((unused)), int16_t seat_index __attribute__((unused)))
 {
-  char *player;
-
-  player = (char *)datum_get(player_data, player_handle);
-  if (action_result_type != 11) {
-    int16_t current_type = *(int16_t *)(player + 0x28);
-    if (action_result_type == current_type) {
-      char *unit_obj;
-      char *cur_obj;
-      char *new_obj;
-      float cur_dx;
-      float cur_dy;
-      float cur_dz;
-      float new_dx;
-      float new_dy;
-      float new_dz;
-      float cur_dist;
-      float new_dist;
-
-      unit_obj =
-        (char *)object_get_and_verify_type(*(int *)(player + 0x34), -1);
-      cur_obj = (char *)object_get_and_verify_type(*(int *)(player + 0x24), -1);
-      new_obj = (char *)object_get_and_verify_type(object_handle, -1);
-
-      cur_dx = *(float *)(cur_obj + 0xc) - *(float *)(unit_obj + 0xc);
-      cur_dy = *(float *)(cur_obj + 0x10) - *(float *)(unit_obj + 0x10);
-      cur_dz = *(float *)(cur_obj + 0x14) - *(float *)(unit_obj + 0x14);
-
-      new_dx = *(float *)(new_obj + 0xc) - *(float *)(unit_obj + 0xc);
-      new_dy = *(float *)(new_obj + 0x10) - *(float *)(unit_obj + 0x10);
-      new_dz = *(float *)(new_obj + 0x14) - *(float *)(unit_obj + 0x14);
-
-      cur_dist =
-        xbox_sqrtf(cur_dx * cur_dx + cur_dy * cur_dy + cur_dz * cur_dz);
-      new_dist =
-        xbox_sqrtf(new_dx * new_dx + new_dy * new_dy + new_dz * new_dz);
-      if (cur_dist <= new_dist)
-        return;
-    } else if (action_result_type <= current_type) {
-      return;
-    }
-  }
-
-  *(int16_t *)(player + 0x28) = action_result_type;
-  *(int *)(player + 0x24) = object_handle;
-  *(int16_t *)(player + 0x2a) = seat_index;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0xb, %%ax\n\t"
+      "je .LFUN_000bbfe0_1\n\t"
+      "movw 0x28(%%ebx), %%cx\n\t"
+      "cmpw %%cx, %%ax\n\t"
+      "jne .LFUN_000bbfe0_3\n\t"
+      "movl 0x34(%%ebx), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x24(%%ebx), %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "addl $0xc, %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0xc, %%edi\n\t"
+      "call *%[get]\n\t"
+      "flds (%%edi)\n\t"
+      "fsubs (%%esi)\n\t"
+      "addl $0xc, %%eax\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "fsubs 0x4(%%esi)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "fsubs 0x8(%%esi)\n\t"
+      "flds (%%eax)\n\t"
+      "fsubs (%%esi)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs 0x4(%%esi)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fsubs 0x8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls -0xc(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fxch %%st(1)\n\t"
+      "fxch %%st(1)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_000bbfe0_2\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      ".LFUN_000bbfe0_1:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movw %%ax, 0x28(%%ebx)\n\t"
+      "movw 0x10(%%ebp), %%ax\n\t"
+      "movl %%edx, 0x24(%%ebx)\n\t"
+      "movw %%ax, 0x2a(%%ebx)\n\t"
+      ".LFUN_000bbfe0_2:\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000bbfe0_3:\n\t"
+      "jle .LFUN_000bbfe0_2\n\t"
+      "jmp .LFUN_000bbfe0_1\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [dget] "m"(bbbfe0_dget), [get] "m"(bbbfe0_get)
+      : "memory");
 }
+#else
+#error "FUN_000bbfe0: clang naked draft required"
+#endif
+
 
 void player_update_nearby_biped(int datum_handle, int object_handle)
 {
@@ -3117,40 +3181,107 @@ int FUN_000bac10(int tag_index, void *start_loc)
   return handle;
 }
 
-/* Post-teleport player/unit cleanup (0xba890). */
-void FUN_000ba890(int player_handle, int target_handle)
+/* FUN_000ba890 (0xba890) — XBE naked draft (batch 136). */
+#if defined(__clang__)
+static void *(*const bba890_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static bool (*const bba890_ca8e40)(void) = game_engine_can_score;
+static void (*const bba890_cb56f0)(int handle, int param_2, int param_3, int param_4) = FUN_000b56f0;
+static void (*const bba890_cba550)(int) = player_died;
+static void *(*const bba890_get)(int, int) = object_get_and_verify_type;
+static int (*const bba890_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
+static void (*const bba890_c13fb80)(int object_handle) = object_deactivate;
+static void (*const bba890_c13ffc0)(int object_handle, int flag) = object_set_garbage;
+
+__attribute__((naked, noinline))
+void FUN_000ba890(int player_handle __attribute__((unused)), int target_handle __attribute__((unused)))
 {
-  char *player;
-  int unit_handle;
-  char *unit_obj;
-  int16_t local_player_index;
-  int weapon_handle;
-
-  player = (char *)datum_get(player_data, player_handle);
-  unit_handle = *(int *)(player + 0x34);
-  if (unit_handle == NONE)
-    return;
-
-  if (game_engine_can_score())
-    FUN_000b56f0(unit_handle, NONE, NONE, NONE);
-
-  local_player_index = *(int16_t *)(player + 2);
-  *(int *)&players_globals->unk_0[0x14 + local_player_index * 4] = unit_handle;
-  player_died(player_handle);
-
-  unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
-  weapon_handle = unit_get_weapon(unit_handle, *(int16_t *)(unit_obj + 0x2a2));
-  *(int *)(unit_obj + 0x1c8) = NONE;
-  object_deactivate(unit_handle);
-  object_set_garbage(unit_handle, 0);
-  if (weapon_handle != NONE)
-    object_set_garbage(weapon_handle, 0);
-
-  if (target_handle != NONE)
-    *(int *)(player + 0x38) = target_handle;
-
-  *((char *)players_globals + 0x28) = 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x34(%%edi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000ba890_4\n\t"
+      "call *%[ca8e40]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000ba890_1\n\t"
+      "movl 0x34(%%edi), %%ecx\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[cb56f0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_000ba890_1:\n\t"
+      "movswl 0x2(%%edi), %%edx\n\t"
+      "movl 0x34(%%edi), %%eax\n\t"
+      "movl 0x5aa6cc, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, 0x14(%%ecx,%%edx,4)\n\t"
+      "call *%[cba550]\n\t"
+      "movswl 0x2(%%edi), %%edx\n\t"
+      "movl 0x5aa6cc, %%eax\n\t"
+      "movl 0x14(%%eax,%%edx,4), %%esi\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "call *%[get]\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x2a2(%%eax), %%cx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1adeb0]\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl $0xffffffff, 0x1c8(%%edx)\n\t"
+      "call *%[c13fb80]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c13ffc0]\n\t"
+      "addl $0x28, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .LFUN_000ba890_2\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c13ffc0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000ba890_2:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "je .LFUN_000ba890_3\n\t"
+      "movl %%eax, 0x38(%%edi)\n\t"
+      ".LFUN_000ba890_3:\n\t"
+      "movl 0x5aa6cc, %%eax\n\t"
+      "movb $0, 0x28(%%eax)\n\t"
+      ".LFUN_000ba890_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bba890_dget), [ca8e40] "m"(bba890_ca8e40), [cb56f0] "m"(bba890_cb56f0), [cba550] "m"(bba890_cba550), [get] "m"(bba890_get), [c1adeb0] "m"(bba890_c1adeb0), [c13fb80] "m"(bba890_c13fb80), [c13ffc0] "m"(bba890_c13ffc0)
+      : "memory");
 }
+#else
+#error "FUN_000ba890: clang naked draft required"
+#endif
+
 
 /* player_control_update_for_loaded_game_state (0xba970) — XBE naked draft (batch 128). */
 #if defined(__clang__)
@@ -3426,48 +3557,116 @@ void player_add_equipment(int unit_handle __attribute__((unused)), int16_t equip
 #endif
 
 
-/* Apply or extend an active-camo / vision powerup timer (0xbc320). */
-char player_handle_powerup(int player_handle, int16_t powerup_index,
-                           int16_t ticks)
+/* player_handle_powerup (0xbc320) — XBE naked draft (batch 132). */
+#if defined(__clang__)
+static void *(*const bbc320_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bbc320_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bbc320_exitfn)(int) = system_exit;
+static void *(*const bbc320_get)(int, int) = object_get_and_verify_type;
+static bool (*const bbc320_gerun)(void) = game_engine_running;
+
+__attribute__((naked, noinline))
+char player_handle_powerup(int player_handle __attribute__((unused)), int16_t powerup_index __attribute__((unused)), int16_t ticks __attribute__((unused)))
 {
-  char *player;
-  char *unit_obj;
-  int16_t remaining;
-
-  if (powerup_index < 0 || powerup_index >= 2) {
-    display_assert("powerup_index>=0 && powerup_index<2",
-                   "c:\\halo\\SOURCE\\game\\players.c", 0xaea, 1);
-    system_exit(NONE);
-  }
-
-  player = (char *)datum_get(player_data, player_handle);
-  if (powerup_index == 0) {
-    unit_obj = (char *)object_get_and_verify_type(*(int *)(player + 0x34), 3);
-    if ((*(unsigned char *)(unit_obj + 0x1b4) & 0x10) != 0)
-      return 0;
-  }
-
-  remaining = *(int16_t *)(player + 0x68 + powerup_index * 2);
-  if (remaining <= 0) {
-    if (powerup_index == 0) {
-      if (game_engine_running())
-        goto apply_ticks;
-      unit_obj = (char *)object_get_and_verify_type(*(int *)(player + 0x34), 3);
-      *(unsigned char *)(unit_obj + 0x1b4) |= 0x10;
-      *(int16_t *)(unit_obj + 0x3d2) = powerup_index;
-    } else {
-      if (game_engine_running())
-        goto apply_ticks;
-      unit_obj = (char *)object_get_and_verify_type(*(int *)(player + 0x34), 3);
-      *(unsigned char *)(unit_obj + 0x1b4) |= 0x20;
-    }
-  }
-
-apply_ticks:
-  *(int16_t *)(player + 0x68 + powerup_index * 2) =
-      (int16_t)(*(int16_t *)(player + 0x68 + powerup_index * 2) + ticks);
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movw 0xc(%%ebp), %%si\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%si, %%si\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "jl .Lplayer_handle_powerup_1\n\t"
+      "cmpw $2, %%si\n\t"
+      "jl .Lplayer_handle_powerup_2\n\t"
+      ".Lplayer_handle_powerup_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xaea\n\t"
+      "pushl $0x26eb68\n\t"
+      "pushl $0x26ee90\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_handle_powerup_2:\n\t"
+      "testw %%si, %%si\n\t"
+      "jne .Lplayer_handle_powerup_3\n\t"
+      "movl 0x34(%%ebx), %%eax\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movb 0x1b4(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $0x10, %%cl\n\t"
+      "je .Lplayer_handle_powerup_3\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayer_handle_powerup_3:\n\t"
+      "movswl %%si, %%esi\n\t"
+      "cmpw $0, 0x68(%%ebx,%%esi,2)\n\t"
+      "jne .Lplayer_handle_powerup_4\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%eax), %%edx\n\t"
+      "pushl $3\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lplayer_handle_powerup_6\n\t"
+      "movl 0x1b4(%%eax), %%ecx\n\t"
+      "orl $0x10, %%ecx\n\t"
+      "movw %%si, 0x3d2(%%eax)\n\t"
+      "jmp .Lplayer_handle_powerup_5\n\t"
+      ".Lplayer_handle_powerup_4:\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lplayer_handle_powerup_6\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%eax), %%ecx\n\t"
+      "pushl $3\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[get]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lplayer_handle_powerup_6\n\t"
+      "movl 0x1b4(%%eax), %%ecx\n\t"
+      "orl $0x20, %%ecx\n\t"
+      ".Lplayer_handle_powerup_5:\n\t"
+      "movl %%ecx, 0x1b4(%%eax)\n\t"
+      ".Lplayer_handle_powerup_6:\n\t"
+      "movw 0x10(%%ebp), %%dx\n\t"
+      "addw %%dx, 0x68(%%ebx,%%esi,2)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bbc320_dget), [assert] "m"(bbc320_assert), [exitfn] "m"(bbc320_exitfn), [get] "m"(bbc320_get), [gerun] "m"(bbc320_gerun)
+      : "memory");
 }
+#else
+#error "player_handle_powerup: clang naked draft required"
+#endif
+
 
 /* players_debug_render (0xbc520) — XBE naked draft (batch 120). */
 #if defined(__clang__)

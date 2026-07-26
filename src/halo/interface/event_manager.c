@@ -2728,34 +2728,119 @@ void FUN_000db1e0(void)
   (void)esi;
 }
 
-/* 0xdb250 */
+/* FUN_000db250 (0xdb250) — XBE naked draft (batch 132). */
+#if defined(__clang__)
+static void *(*const bdb250_tryget)(int, int) = object_try_and_get_and_verify_type;
+static char (*const bdb250_cab9a0)(void) = FUN_000ab9a0;
+static void *(*const bdb250_get)(int, int) = object_get_and_verify_type;
+static void (*const bdb250_c140070)(int object_handle, float *position_out, float *direction_out) = object_get_root_location;
+static bool (*const bdb250_gerun)(void) = game_engine_running;
+
+__attribute__((naked, noinline))
 void FUN_000db250(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edi = 0;
-
-  object_try_and_get_and_verify_type(0, 0);
-  /* test eax, eax -> je 0xdb31b */
-  FUN_000ab9a0();
-  /* test (char)eax, (char)eax -> je 0xdb31b */
-  object_get_and_verify_type(0, 0);
-  /* test (char)eax, 8 -> jne 0xdb313 */
-  /* test (char)eax, (char)eax -> je 0xdb2a4 */
-  /* cmp (char)eax, 3 -> jne 0xdb313 */
-  object_get_root_location(0, (float *)(uintptr_t)eax, (float *)0);
-  game_engine_running();
-  /* test (char)eax, (char)eax -> jne 0xdb2c9 */
-  /* relift: test byte ptr [edi + 0x1b4], 0x10 -> je 0xdb2c9 */
-  /* test (char)eax, 1 -> je 0xdb301 */
-  /* test (char)eax, (char)eax -> jne 0xdb301 */
-  /* test (char)ecx, (char)ecx -> je 0xdb30b */
-  /* test (char)eax, (char)eax -> jne 0xdb313 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000db250_8\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cab9a0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000db250_8\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x1b8(%%edi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $8, %%ah\n\t"
+      "jne .LFUN_000db250_7\n\t"
+      "movb 0x23d(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000db250_1\n\t"
+      "cmpb $3, %%al\n\t"
+      "jne .LFUN_000db250_7\n\t"
+      ".LFUN_000db250_1:\n\t"
+      "pushl $0\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c140070]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000db250_2\n\t"
+      "testb $0x10, 0x1b4(%%edi)\n\t"
+      "je .LFUN_000db250_2\n\t"
+      "xorb %%cl, %%cl\n\t"
+      "jmp .LFUN_000db250_3\n\t"
+      ".LFUN_000db250_2:\n\t"
+      "movb $1, %%cl\n\t"
+      ".LFUN_000db250_3:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "movl 0x46bd0c, %%edx\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls -0xc(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps 0x2d4(%%edx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "je .LFUN_000db250_4\n\t"
+      "movb 0x46bd34, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000db250_4\n\t"
+      "xorb %%al, %%al\n\t"
+      "jmp .LFUN_000db250_5\n\t"
+      ".LFUN_000db250_4:\n\t"
+      "movb $1, %%al\n\t"
+      ".LFUN_000db250_5:\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_000db250_6\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000db250_7\n\t"
+      ".LFUN_000db250_6:\n\t"
+      "popl %%edi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000db250_7:\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000db250_8:\n\t"
+      "popl %%edi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tryget] "m"(bdb250_tryget), [cab9a0] "m"(bdb250_cab9a0), [get] "m"(bdb250_get), [c140070] "m"(bdb250_c140070), [gerun] "m"(bdb250_gerun)
+      : "memory");
 }
+#else
+#error "FUN_000db250: clang naked draft required"
+#endif
+
 
 /* render_blip (0xdb330) — XBE naked draft (batch 122). */
 #if defined(__clang__)

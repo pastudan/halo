@@ -587,28 +587,104 @@ void render_camera_new(void)
   (void)eax;
 }
 
-/* 0x185830 */
+/* render_camera_hack_frustum_z (0x185830) — XBE naked draft (batch 135). */
+#if defined(__clang__)
+static void (*const b185830_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b185830_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void render_camera_hack_frustum_z(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* test esi, esi -> je 0x185845 */
-  /* test (char)eax, (char)eax -> jne 0x185865 */
-  display_assert((char *)0x002b12dc, (char *)0x002b12b4, 271, 0);
-  system_exit(0);
-  /* mem[0x004d0d08] = eax */
-  /* mem[0x004d0d0c] = ecx */
-  /* mem[0x004d0d10] = edx */
-  /* mem[0x004d0d14] = eax */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lrender_camera_hack_frustum_z_1\n\t"
+      "movb 0x140(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lrender_camera_hack_frustum_z_2\n\t"
+      ".Lrender_camera_hack_frustum_z_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x10f\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x2b12dc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_hack_frustum_z_2:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x255e94\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lrender_camera_hack_frustum_z_3\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fcomps 0x255e94\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lrender_camera_hack_frustum_z_3\n\t"
+      "movl 0x14c(%%esi), %%eax\n\t"
+      "movl %%eax, 0x4d0d08\n\t"
+      "movl 0x15c(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x4d0d0c\n\t"
+      "movl 0x16c(%%esi), %%edx\n\t"
+      "movl %%edx, 0x4d0d10\n\t"
+      "movl 0x17c(%%esi), %%eax\n\t"
+      "movl %%eax, 0x4d0d14\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrender_camera_hack_frustum_z_3:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lrender_camera_hack_frustum_z_4\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lrender_camera_hack_frustum_z_4\n\t"
+      "movl 0x4d0d08, %%ecx\n\t"
+      "movl %%ecx, 0x14c(%%esi)\n\t"
+      "movl 0x4d0d0c, %%edx\n\t"
+      "movl %%edx, 0x15c(%%esi)\n\t"
+      "movl 0x4d0d10, %%eax\n\t"
+      "movl %%eax, 0x16c(%%esi)\n\t"
+      "movl 0x4d0d14, %%ecx\n\t"
+      "movl %%ecx, 0x17c(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrender_camera_hack_frustum_z_4:\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "movl $0, 0x14c(%%esi)\n\t"
+      "fsubs 0xc(%%ebp)\n\t"
+      "movl $0, 0x15c(%%esi)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fadds 0x10(%%ebp)\n\t"
+      ".byte 0xd8, 0xf1\n\t"
+      "fchs\n\t"
+      "fstps 0x16c(%%esi)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fmuls 0x10(%%ebp)\n\t"
+      "fmuls 0x25eeac\n\t"
+      ".byte 0xd8, 0xf1\n\t"
+      "fstps 0x17c(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "fstp %%st(0)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b185830_assert), [exitfn] "m"(b185830_exitfn)
+      : "memory");
 }
+#else
+#error "render_camera_hack_frustum_z: clang naked draft required"
+#endif
+
 
 /* render_camera_build_frustum_bounds (0x185950) — XBE naked draft (batch 128). */
 #if defined(__clang__)
@@ -1329,32 +1405,103 @@ char render_camera_view_to_screen(int *param_1 __attribute__((unused)), int *par
 #endif
 
 
-/* 0x186230 */
-void render_camera_screen_to_view(void *camera, void *frustum, float *screen_point, float *view_vector)
+/* render_camera_screen_to_view (0x186230) — XBE naked draft (batch 136). */
+#if defined(__clang__)
+static void (*const b186230_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b186230_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void render_camera_screen_to_view(void *camera __attribute__((unused)), void *frustum __attribute__((unused)), float *screen_point __attribute__((unused)), float *view_vector __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int edi = 0;
-
-  /* test eax, eax -> jne 0x18625a */
-  display_assert((char *)0x00266e9c, (char *)0x002b12b4, 1018, 0);
-  system_exit(0);
-  display_assert((char *)0x002b14b8, (char *)0x002b12b4, 1019, 0);
-  system_exit(0);
-  /* test ebx, ebx -> jne 0x1862ab */
-  display_assert((char *)0x002b14c0, (char *)0x002b12b4, 1020, 0);
-  system_exit(0);
-  /* test edi, edi -> jne 0x1862d2 */
-  display_assert((char *)0x002b14dc, (char *)0x002b12b4, 1021, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0x1862fc */
-  display_assert((char *)0x002b1454, (char *)0x002b12b4, 1028, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lrender_camera_screen_to_view_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3fa\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x266e9c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_screen_to_view_1:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lrender_camera_screen_to_view_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3fb\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x2b14b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_screen_to_view_2:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lrender_camera_screen_to_view_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3fc\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x2b14c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_screen_to_view_3:\n\t"
+      "movl 0x14(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lrender_camera_screen_to_view_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3fd\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x2b14dc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_screen_to_view_4:\n\t"
+      "movb 0x140(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lrender_camera_screen_to_view_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x404\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x2b1454\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_screen_to_view_5:\n\t"
+      "flds (%%ebx)\n\t"
+      "fsubs 0x164(%%esi)\n\t"
+      "fdivs 0x144(%%esi)\n\t"
+      "fstps (%%edi)\n\t"
+      "flds 0x168(%%esi)\n\t"
+      "fadds 0x4(%%ebx)\n\t"
+      "fdivs 0x158(%%esi)\n\t"
+      "movl $0xbf800000, 0x8(%%edi)\n\t"
+      "fchs\n\t"
+      "fstps 0x4(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b186230_assert), [exitfn] "m"(b186230_exitfn)
+      : "memory");
 }
+#else
+#error "render_camera_screen_to_view: clang naked draft required"
+#endif
+
 
 /* render_camera_screen_to_world (0x186330) — XBE naked draft (batch 127). */
 #if defined(__clang__)
@@ -1628,12 +1775,107 @@ void render_camera_triangle_frontfacing(void)
   (void)0;
 }
 
-/* 0x186690 */
+/* render_frustum_build_point_flags (0x186690) — XBE naked draft (batch 135). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void render_frustum_build_point_flags(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "flds 0x7c(%%ecx)\n\t"
+      "fmuls 0x4(%%edx)\n\t"
+      "pushl %%esi\n\t"
+      "flds 0x80(%%ecx)\n\t"
+      "fmuls 0x8(%%edx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x78(%%ecx)\n\t"
+      "fmuls (%%edx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0x84(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lrender_frustum_build_point_flags_1\n\t"
+      "movl $1, %%esi\n\t"
+      "jmp .Lrender_frustum_build_point_flags_2\n\t"
+      ".Lrender_frustum_build_point_flags_1:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      ".Lrender_frustum_build_point_flags_2:\n\t"
+      "flds 0x8c(%%ecx)\n\t"
+      "fmuls 0x4(%%edx)\n\t"
+      "flds 0x90(%%ecx)\n\t"
+      "fmuls 0x8(%%edx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x88(%%ecx)\n\t"
+      "fmuls (%%edx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0x94(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lrender_frustum_build_point_flags_3\n\t"
+      "movl $2, %%eax\n\t"
+      "jmp .Lrender_frustum_build_point_flags_4\n\t"
+      ".Lrender_frustum_build_point_flags_3:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lrender_frustum_build_point_flags_4:\n\t"
+      "flds 0x9c(%%ecx)\n\t"
+      "orl %%eax, %%esi\n\t"
+      "fmuls 0x4(%%edx)\n\t"
+      "flds 0xa0(%%ecx)\n\t"
+      "fmuls 0x8(%%edx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%edx)\n\t"
+      "fmuls 0x98(%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0xa4(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lrender_frustum_build_point_flags_5\n\t"
+      "movl $8, %%eax\n\t"
+      "jmp .Lrender_frustum_build_point_flags_6\n\t"
+      ".Lrender_frustum_build_point_flags_5:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lrender_frustum_build_point_flags_6:\n\t"
+      "flds 0xac(%%ecx)\n\t"
+      "orl %%eax, %%esi\n\t"
+      "fmuls 0x4(%%edx)\n\t"
+      "flds 0xb0(%%ecx)\n\t"
+      "fmuls 0x8(%%edx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%edx)\n\t"
+      "fmuls 0xa8(%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0xb4(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lrender_frustum_build_point_flags_7\n\t"
+      "movl $4, %%eax\n\t"
+      "orl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrender_frustum_build_point_flags_7:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "orl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "render_frustum_build_point_flags: clang naked draft required"
+#endif
+
 
 /* 0x186790 */
 void render_frustum_triangle_visible(void)
@@ -3351,33 +3593,96 @@ void render_contrail(void)
 #endif
 
 
-/* 0x1887b0 */
+/* FUN_001887b0 (0x1887b0) — XBE naked draft (batch 134). */
+#if defined(__clang__)
+static int (*const b1887b0_c1198f0)(data_t *data, int prev_index) = data_next_index;
+static void *(*const b1887b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b1887b0_tag)(int, int) = tag_get;
+static void (*const b1887b0_c188010)(void) = render_contrail;
+
+__attribute__((naked, noinline))
 void FUN_001887b0(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* test (char)eax, (char)eax -> je 0x18885c */
-  data_next_index((void *)(uintptr_t)eax, 0);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('tnoc', 0);
-  /* test ecx, edx -> je 0x188835 */
-  /* relift: cmp word ptr [ebx], 2 -> jl 0x188835 */
-  render_contrail();
-  /* cmp (int16_t)esi, 4 -> jl 0x188810 */
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* relift: tail-call FUN_001887b0(); */
-  /* relift: tail-call FUN_001887b0(); */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movb 0x32574a, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001887b0_5\n\t"
+      "movl 0x5aa8c0, %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1198f0]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "je .LFUN_001887b0_5\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jmp .LFUN_001887b0_2\n\t"
+      ".LFUN_001887b0_1:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      ".LFUN_001887b0_2:\n\t"
+      "movl 0x5aa8c0, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x4(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x636f6e74\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "leal 0x2c(%%edi), %%ebx\n\t"
+      "nop\n\t"
+      ".LFUN_001887b0_3:\n\t"
+      "movb 0x18(%%eax), %%cl\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "testl %%edx, %%ecx\n\t"
+      "je .LFUN_001887b0_4\n\t"
+      "cmpw $2, (%%ebx)\n\t"
+      "jl .LFUN_001887b0_4\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c188010]\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_001887b0_4:\n\t"
+      "incl %%esi\n\t"
+      "addl $2, %%ebx\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .LFUN_001887b0_3\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl 0x5aa8c0, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1198f0]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jne .LFUN_001887b0_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_001887b0_5:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1198f0] "m"(b1887b0_c1198f0), [dget] "m"(b1887b0_dget), [tag] "m"(b1887b0_tag), [c188010] "m"(b1887b0_c188010)
+      : "memory");
 }
+#else
+#error "FUN_001887b0: clang naked draft required"
+#endif
+
 
 /* 0x188880 */
 void FUN_00188880(void)
