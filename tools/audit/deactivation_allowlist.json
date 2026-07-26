@@ -2961,6 +2961,13 @@
     "since": "2026-07-25"
   },
   {
+    "addr": "0xbb670",
+    "name": "FUN_000bb670",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
     "addr": "0xbbb80",
     "name": "player_teleport",
     "object": "players.obj",
@@ -2977,6 +2984,20 @@
   {
     "addr": "0xbbbe0",
     "name": "find_best_starting_location_index",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbc6c0",
+    "name": "debug_player_teleport",
+    "object": "players.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xbac10",
+    "name": "FUN_000bac10",
     "object": "players.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"

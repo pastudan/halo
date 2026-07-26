@@ -2577,6 +2577,224 @@ int16_t find_best_starting_location_index(int team_or_player)
   return best;
 }
 
+/* Core player teleport: probe collision along candidate offsets and commit the
+ * unit transform when biped_fix_position succeeds.
+ *
+ * a (arg2): target object handle cast through void*, or NONE for a direct
+ *           placement using b alone.
+ * b (arg3): float *teleport_facing_or_position — initial/facing data for
+ *           biped_fix_position on the simple path; co-op anchor teleports pass
+ *           the desired world position (often unit+0x50 from the anchor). */
+char FUN_000bb670(int player_handle, void *a, void *b)
+{
+  char success;
+  char *player;
+  int unit_handle;
+  char *unit_obj;
+  int target_handle;
+  float *teleport_data;
+  int root_handle;
+  char *root_obj;
+  char *target_unit_obj;
+  float direction[3];
+  float height_offset;
+  float placement_scale;
+  float matrix[12];
+  float probe_position[3];
+  float random_direction[3];
+  float scaled_offset[3];
+  float facing_copy[3];
+  int16_t direction_index;
+  int random_try;
+  void *scenario;
+  int cluster_count;
+  int cluster_index;
+  void *player_settings;
+  int effect_index;
+
+  player = (char *)datum_get(player_data, player_handle);
+  unit_handle = *(int *)(player + 0x34);
+  unit_obj = (char *)object_get_and_verify_type(unit_handle, 1);
+  target_handle = (int)a;
+  teleport_data = (float *)b;
+  success = 0;
+
+  if (target_handle == NONE)
+    goto simple_teleport;
+
+  if (*(int16_t *)((char *)players_globals + 0x24) <= 1) {
+    display_assert("source_unit_index==NONE || local_player_count()>1",
+                   "c:\\halo\\SOURCE\\game\\players.c", 0x4f7, 1);
+    system_exit(NONE);
+  }
+
+  root_handle = object_get_root_parent(target_handle);
+  if (root_handle == target_handle)
+    goto simple_teleport;
+
+  root_handle = object_get_root_parent(target_handle);
+  (void)object_get_and_verify_type(target_handle, 3);
+  root_obj = (char *)object_get_and_verify_type(root_handle, NONE);
+  direction[0] = *(float *)(root_obj + 0x18);
+  direction[1] = *(float *)(root_obj + 0x1c);
+  direction[2] = *(float *)(root_obj + 0x20);
+
+  if (direction[1] * direction[1] + direction[0] * direction[0] <
+      *(float *)0x2533c0 * *(float *)0x2533c0) {
+    if (*(float *)(root_obj + 0x2c) == *(float *)0x254b50)
+      target_unit_obj = root_obj + 0x30;
+    else
+      target_unit_obj = root_obj + 0x24;
+    direction[0] = *(float *)(target_unit_obj + 0);
+    direction[1] = *(float *)(target_unit_obj + 4);
+    direction[2] = *(float *)(target_unit_obj + 8);
+  }
+
+  {
+    void *biped_tag;
+
+    biped_tag = tag_get(0x62697064 /* 'dpib' */, *(int *)unit_obj);
+    placement_scale = *(float *)((char *)biped_tag + 0x42c);
+    height_offset =
+        placement_scale * *(float *)0x254644 + *(float *)(root_obj + 0x5c);
+  }
+
+  direction[2] = 0.0f;
+  if (sqrtf(direction[0] * direction[0] + direction[1] * direction[1] +
+            direction[2] * direction[2]) <= *(float *)0x2533c0) {
+    display_assert("magnitude3d(&best_adjustment_vector)",
+                   "c:\\halo\\SOURCE\\game\\players.c", 0x521, 1);
+    system_exit(NONE);
+  }
+  if (height_offset <= *(float *)0x2533c0) {
+    display_assert("scale", "c:\\halo\\SOURCE\\game\\players.c", 0x522, 1);
+    system_exit(NONE);
+  }
+
+  direction[0] = -direction[0];
+  direction[1] = -direction[1];
+  direction[2] = -direction[2];
+  normalize3d(direction);
+
+  matrix4x3_from_forward_up_position(matrix, (float *)(unit_obj + 0x50),
+                                     direction, *(float **)0x31fc44);
+  matrix[0] = height_offset;
+
+  for (direction_index = 0; direction_index < 9; direction_index++) {
+    float *probe_dir;
+
+    probe_dir = (float *)(0x26ea88 + (int)direction_index * 12);
+    matrix_transform_point(matrix, probe_dir, probe_position);
+    success = biped_fix_position(unit_handle, (int)unit_obj,
+                                 probe_position, NULL, 2.0f, 0, 0, 1);
+    if (success)
+      break;
+
+    for (random_try = 0; random_try < 8; random_try++) {
+      random_seed_get_direction3d((unsigned int *)get_global_random_seed_address(),
+                                  random_direction);
+      scaled_offset[0] =
+          random_direction[0] * placement_scale + probe_position[0];
+      scaled_offset[1] =
+          random_direction[1] * placement_scale + probe_position[1];
+      scaled_offset[2] =
+          random_direction[2] * placement_scale + probe_position[2];
+      success = biped_fix_position(unit_handle, (int)unit_obj,
+                                   scaled_offset, NULL, 2.0f, 0, 0, 1);
+      if (success)
+        break;
+    }
+    if (success)
+      break;
+  }
+  goto finish;
+
+simple_teleport:
+  success = biped_fix_position(unit_handle, target_handle, teleport_data, NULL,
+                               2.0f, 0, 0, 1);
+
+finish:
+  *(int16_t *)(player + 0x3c) = (int16_t)NONE;
+  if (!success)
+    goto teleport_failed;
+
+  scenario = global_scenario_get();
+  if (*(int *)(player + 0x34) == NONE) {
+    display_assert("player->unit_index!=NONE",
+                   "c:\\halo\\SOURCE\\game\\players.c", 0x566, 1);
+    system_exit(NONE);
+  }
+
+  cluster_count = *(int *)((char *)scenario + 0x39c);
+  for (cluster_index = 0; cluster_index < cluster_count; cluster_index++) {
+    void *cluster_elem;
+
+    cluster_elem = tag_block_get_element((char *)scenario + 0x39c, cluster_index,
+                                         8);
+    if (*(int16_t *)cluster_elem == *(int16_t *)0x326a0c) {
+      if (FUN_000ba850(*(int16_t *)cluster_elem, unit_handle)) {
+        success = 0;
+        goto teleport_failed;
+      }
+    }
+  }
+
+  *(float *)(unit_obj + 0x18) = **(float **)0x31fc38;
+  *(float *)(unit_obj + 0x1c) = (*(float **)0x31fc38)[1];
+  *(float *)(unit_obj + 0x20) = (*(float **)0x31fc38)[2];
+
+  if (target_handle != NONE) {
+    char *target_unit;
+    char *target_biped;
+
+    target_unit = (char *)object_get_and_verify_type(target_handle, 3);
+    facing_copy[0] = *(float *)(target_unit + 0x24);
+    facing_copy[1] = *(float *)(target_unit + 0x28);
+    facing_copy[2] = *(float *)(target_unit + 0x2c);
+    *(float *)(unit_obj + 0x1d4) = facing_copy[0];
+    *(float *)(unit_obj + 0x1d8) = facing_copy[1];
+    *(float *)(unit_obj + 0x1dc) = facing_copy[2];
+    *(float *)(unit_obj + 0x1e0) = facing_copy[0];
+    *(float *)(unit_obj + 0x1e4) = facing_copy[1];
+    *(float *)(unit_obj + 0x1e8) = facing_copy[2];
+    *(float *)(unit_obj + 0x204) = facing_copy[0];
+    *(float *)(unit_obj + 0x208) = facing_copy[1];
+    *(float *)(unit_obj + 0x20c) = facing_copy[2];
+
+    target_biped = (char *)object_try_and_get_and_verify_type(target_handle, 1);
+    if (target_biped) {
+      *(int *)(unit_obj + 0x42c) = *(int *)(target_biped + 0x42c);
+      *(char *)(unit_obj + 0x42b) = *(char *)(target_biped + 0x42b);
+    }
+
+    if (*(int16_t *)(player + 2) != (int16_t)NONE)
+      player_control_set_facing((uint16_t) * (int16_t *)(player + 2),
+                                facing_copy);
+
+    player_settings =
+        tag_block_get_element((char *)game_globals_get() + 0x170, 0, 0xf4);
+    effect_index = *(int *)((char *)player_settings + 0xc4);
+    if (effect_index != NONE) {
+      players_update_pvs((char *)players_globals + 0x30, 0);
+      FUN_0009ec30(effect_index, unit_handle, unit_handle, (short)NONE, 0.0f,
+                   0.0f, 0, 0);
+    }
+  }
+
+  FUN_000ba890(player_handle, target_handle);
+  return success;
+
+teleport_failed:
+  error(2, (char *)0x26edd8);
+  if (*(int16_t *)(player + 2) == (int16_t)NONE) {
+    display_assert("player->local_player_index!=NONE",
+                   "c:\\halo\\SOURCE\\game\\players.c", 0x5a7, 1);
+    system_exit(NONE);
+  }
+  FUN_000ba890(player_handle, target_handle);
+  return 0;
+}
+
 /* Teleport wrapper: exit seat if needed, then FUN_000bb670. */
 char player_teleport(int player_handle, void *a, void *b)
 {
@@ -2592,6 +2810,54 @@ char player_teleport(int player_handle, void *a, void *b)
   if (*(int *)((char *)unit_obj + 0xcc) != NONE)
     unit_exit_seat_end(unit_handle);
   return FUN_000bb670(player_handle, a, b);
+}
+
+/* Debug teleport local player A onto local player B's unit. */
+void debug_player_teleport(int16_t local_a, int16_t local_b)
+{
+  int unit_a;
+  int unit_b;
+  int player_a;
+  char *unit_obj;
+
+  player_a = local_player_get_player_index(local_a);
+  if (player_a == NONE)
+    unit_a = NONE;
+  else
+    unit_a = *(int *)((char *)datum_get(player_data, player_a) + 0x34);
+
+  if (local_player_get_player_index(local_b) == NONE)
+    unit_b = NONE;
+  else
+    unit_b = *(int *)((char *)datum_get(
+                          player_data, local_player_get_player_index(local_b)) +
+                      0x34);
+
+  if (unit_a == NONE || unit_b == NONE)
+    return;
+  unit_obj = (char *)object_get_and_verify_type(unit_b, 3);
+  FUN_000bb670(player_index_from_unit_index(unit_a), (void *)unit_b,
+               unit_obj + 0x50);
+}
+
+/* Spawn an object at a starting-location record (EDI). */
+int FUN_000bac10(int tag_index, void *start_loc)
+{
+  char placement[0x88];
+  int handle;
+  char *obj;
+
+  if (*(int *)((char *)start_loc + 0xc) == NONE)
+    return NONE;
+  object_placement_data_new(placement, *(int *)((char *)start_loc + 0xc),
+                            tag_index);
+  handle = object_new(placement);
+  if (handle == NONE)
+    return NONE;
+  obj = (char *)object_get_and_verify_type(handle, 4);
+  *(int16_t *)(obj + 0x25e) = *(int16_t *)((char *)start_loc + 0x12);
+  *(int16_t *)(obj + 0x260) = *(int16_t *)((char *)start_loc + 0x10);
+  return handle;
 }
 
 void FUN_000bdf80(int16_t function_index, int thread_datum, char init)

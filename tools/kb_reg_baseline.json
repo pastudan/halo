@@ -215,6 +215,8 @@
     "0xb9e30": "uint32_t rumble_calculate(char *slot@<eax>);",
     "0xba290": "void player_register_machine(unsigned __int16 local_player_index@<eax>, int player_handle);",
     "0xba850": "char FUN_000ba850(int16_t cluster_index@<ax>, int object_handle);",
+    "0xba890": "void FUN_000ba890(int player_handle@<eax>, int target_handle);",
+    "0xbac10": "int FUN_000bac10(int tag_index, void *start_loc@<edi>);",
     "0xbac80": "void players_update_pvs(void *combined_pvs@<edi>, bool local_player_only);",
     "0xbaeb0": "void player_reset_action_result(int player_handle@<eax>);",
     "0xbaed0": "bool player_try_to_enter_vehicle(int player_handle@<eax>);",

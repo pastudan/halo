@@ -17216,7 +17216,7 @@
         },
         {
           "addr": "0xba890",
-          "decl": "void FUN_000ba890(void);"
+          "decl": "void FUN_000ba890(int player_handle@<eax>, int target_handle);"
         },
         {
           "addr": "0xba970",
@@ -17239,7 +17239,8 @@
         },
         {
           "addr": "0xbac10",
-          "decl": "void FUN_000bac10(void);"
+          "decl": "int FUN_000bac10(int tag_index, void *start_loc@<edi>);",
+          "ported": false
         },
         {
           "addr": "0xbac80",
@@ -17332,7 +17333,8 @@
         },
         {
           "addr": "0xbb670",
-          "decl": "char FUN_000bb670(int player_handle, void *a, void *b);"
+          "decl": "char FUN_000bb670(int player_handle, void *a, void *b);",
+          "ported": false
         },
         {
           "addr": "0xbbb80",
@@ -17378,7 +17380,8 @@
         },
         {
           "addr": "0xbc6c0",
-          "decl": "void debug_player_teleport(void);"
+          "decl": "void debug_player_teleport(int16_t local_a, int16_t local_b);",
+          "ported": false
         },
         {
           "addr": "0xbc750",
