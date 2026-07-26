@@ -179,64 +179,99 @@ void FUN_0010aa60(short type_index, void *buffer)
   }
 }
 
-/*
- * periodic_functions_initialize — allocate and pre-compute all
- * periodic/transition function lookup tables used by the animation and effect
- * systems.
- *
- * Two table arrays (each entry is a 0x400-byte buffer of uint8 samples):
- *   0x46e3b8[0..11] — 12 periodic function types (one=1, zero=0, cosine, cosine
- *       variable, diagonal-saw, saw-wave, triangle, soft-triangle, gaussian,
- *       stutter 4-harmonic x2, square-wave).
- *   0x46e3a0[0..5]  — 6 transition function types.
- *
- * Confirmed: cdecl, no args, void return.
- * Confirmed: 0x46e39c = function_tables_initialized byte flag.
- * Confirmed: CALL 0x10b0d0 (get_global_random_seed_address), seed set to
- * 0x20f3f660. Confirmed: PUSH EBX(0); PUSH 0x400; CALL 0x8ee60 (debug_malloc)
- * per table. Confirmed: PUSH EAX; PUSH EDI → CALL 0x10aa60
- * (FUN_0010aa60(type_index, buf)). Confirmed: MOV EBX,EDI; PUSH EAX → CALL
- * 0x10a930 (FUN_0010a930 BX=type, buf). Confirmed: CMP DI,0xc loop limit (12);
- * CMP DI,0x6 (6).
- */
+/* periodic_functions_initialize (0x10ad10) — XBE naked draft (batch 89). */
+#if defined(__clang__)
+static void (*const b10ad10_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b10ad10_exitfn)(int) = system_exit;
+static int *(*const b10ad10_gseed)(void) = get_global_random_seed_address;
+static void * (*const b10ad10_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
+static void (*const b10ad10_c10aa60)(short type_index, void *buffer) = FUN_0010aa60;
+static void (*const b10ad10_c10a930)(int16_t type_index, void *buffer) = FUN_0010a930;
+
+__attribute__((naked, noinline))
 void periodic_functions_initialize(void)
 {
-  int i;
-  void *buf;
-  int *tables;
-
-  if (*(uint8_t *)0x46e39c) {
-    display_assert("!function_tables_initialized",
-                   "c:\\halo\\SOURCE\\math\\periodic_functions.c", 0x43, 1);
-    system_exit(-1);
-  }
-  *(uint8_t *)0x46e39c = 1;
-  *get_global_random_seed_address() = 0x20f3f660;
-
-  tables = (int *)0x46e3b8;
-  for (i = 0; i < 12; i++, tables++) {
-    buf = debug_malloc(0x400, 0, "c:\\halo\\SOURCE\\math\\periodic_functions.c",
-                       0x4e);
-    *tables = (int)buf;
-    if (!buf) {
-      *(uint8_t *)0x46e39c = 0;
-    } else {
-      FUN_0010aa60(i, buf);
-    }
-  }
-
-  tables = (int *)0x46e3a0;
-  for (i = 0; i < 6; i++, tables++) {
-    buf = debug_malloc(0x400, 0, "c:\\halo\\SOURCE\\math\\periodic_functions.c",
-                       0x60);
-    *tables = (int)buf;
-    if (!buf) {
-      *(uint8_t *)0x46e39c = 0;
-    } else {
-      FUN_0010a930(i, buf);
-    }
-  }
+  __asm__ volatile(
+      "movb 0x46e39c, %%al\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpb %%bl, %%al\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .Lperiodic_functions_initialize_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x43\n\t"
+      "pushl $0x28c80c\n\t"
+      "pushl $0x28c8f8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lperiodic_functions_initialize_1:\n\t"
+      "movb $1, 0x46e39c\n\t"
+      "call *%[gseed]\n\t"
+      "movl $0x20f3f660, (%%eax)\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movl $0x46e3b8, %%esi\n\t"
+      ".Lperiodic_functions_initialize_2:\n\t"
+      "pushl $0x4e\n\t"
+      "pushl $0x28c80c\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x400\n\t"
+      "call *%[c8ee60]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "je .Lperiodic_functions_initialize_3\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c10aa60]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lperiodic_functions_initialize_4\n\t"
+      ".Lperiodic_functions_initialize_3:\n\t"
+      "movb %%bl, 0x46e39c\n\t"
+      ".Lperiodic_functions_initialize_4:\n\t"
+      "incl %%edi\n\t"
+      "addl $4, %%esi\n\t"
+      "cmpw $0xc, %%di\n\t"
+      "jl .Lperiodic_functions_initialize_2\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movl $0x46e3a0, %%esi\n\t"
+      ".Lperiodic_functions_initialize_5:\n\t"
+      "pushl $0x60\n\t"
+      "pushl $0x28c80c\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x400\n\t"
+      "call *%[c8ee60]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "je .Lperiodic_functions_initialize_6\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "call *%[c10a930]\n\t"
+      "addl $4, %%esp\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "jmp .Lperiodic_functions_initialize_7\n\t"
+      ".Lperiodic_functions_initialize_6:\n\t"
+      "movb %%bl, 0x46e39c\n\t"
+      ".Lperiodic_functions_initialize_7:\n\t"
+      "incl %%edi\n\t"
+      "addl $4, %%esi\n\t"
+      "cmpw $6, %%di\n\t"
+      "jl .Lperiodic_functions_initialize_5\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b10ad10_assert), [exitfn] "m"(b10ad10_exitfn), [gseed] "m"(b10ad10_gseed), [c8ee60] "m"(b10ad10_c8ee60), [c10aa60] "m"(b10ad10_c10aa60), [c10a930] "m"(b10ad10_c10a930)
+      : "memory");
 }
+#else
+#error "periodic_functions_initialize: clang naked draft required"
+#endif
+
 
 /* Factorial: n! for n>=0; returns 1 for n<=1, 0 for n<0.
  * 0x10add0 / random_math.obj (probability.c)

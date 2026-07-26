@@ -1081,6 +1081,19 @@ def main() -> int:
         ("actor_action_handle_combat_transition", 0x204f0, 0x20598),
         ("cluster_partition_globals_new", 0x191500, 0x1915d0),
         ("hud_set_element_digital", 0xd0c80, 0xd0d44),
+        # gameplay wave 89 (2026-07-26) — AI/net/units/rasterizer Capstone weaks
+        ("actor_perception_acknowledge", 0x2f2b0, 0x2f379),
+        ("FUN_0011be10", 0x11be10, 0x11beaa),
+        ("FUN_0011a230", 0x11a230, 0x11a2cf),
+        ("periodic_functions_initialize", 0x10ad10, 0x10add0),
+        ("unit_drop_grenades_on_death", 0x1abb20, 0x1abbca),
+        ("reference_list_copy", 0x191440, 0x1914f6),
+        ("actor_move_to_firing_position", 0x2d900, 0x2d9ae),
+        ("actor_move_to_move_position", 0x2d850, 0x2d8fb),
+        ("actor_path_input_new", 0x2a470, 0x2a52c),
+        ("rasterizer_transparent_geometry_group_to_presorted_index", 0x1844b0, 0x184567),
+        ("FUN_00191bd0", 0x191bd0, 0x191c6f),
+        ("shell_update", 0x105c80, 0x105d18),
     ]
 
     xbe = Xbe.from_file(args.xbe)

@@ -45,30 +45,92 @@
 /* last decode error string global at 0x46e804 */
 #define s_last_decode_error (*(char **)0x46e804)
 
-/* decode_string — copy a string from source into the state buffer (0x11a230).
- * Source: data_encoding.c line 0xb6. */
-bool FUN_0011a230(int *state, const char *source, short max_length)
-{
-  short string_length;
-  int dest;
+/* FUN_0011a230 (0x11a230) — XBE naked draft (batch 89). */
+#if defined(__clang__)
+static int (*const b11a230_c8d8d0)(const char *s, int n) = strnlen;
+static void (*const b11a230_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11a230_exitfn)(int) = system_exit;
+static void * (*const b11a230_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
 
-  string_length = strnlen(source, (int)max_length);
-  dest = *state + state[1];
-  if (state[2] < (int)string_length + 1 + state[1]) {
-    display_assert("state->offset+string_length+1<=state->buffer_size",
-                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0xb6, 1);
-    system_exit(-1);
-  }
-  if ((state[1] + 1 + (int)string_length <= state[2]) &&
-      ((char)state[3] == '\0')) {
-    csstrncpy((char *)dest, source, (int)string_length);
-    *(char *)((int)string_length + dest) = 0;
-    state[1] = state[1] + (int)string_length + 1;
-    return (char)state[3] == '\0';
-  }
-  *(char *)(state + 3) = 1;
-  return (char)state[3] == '\0';
+__attribute__((naked, noinline))
+bool FUN_0011a230(int *state __attribute__((unused)), const char *source __attribute__((unused)), short max_length __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0x10(%%ebp), %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8d8d0]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl (%%esi), %%ebx\n\t"
+      "movswl %%ax, %%edi\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "leal 0x1(%%edi,%%ecx,1), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "addl %%ecx, %%ebx\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "jle .LFUN_0011a230_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb6\n\t"
+      "pushl $0x28eef8\n\t"
+      "pushl $0x28f010\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011a230_1:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "leal 0x1(%%eax,%%edi,1), %%ecx\n\t"
+      "cmpl 0x8(%%esi), %%ecx\n\t"
+      "jg .LFUN_0011a230_2\n\t"
+      "movb 0xc(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0011a230_2\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c8de70]\n\t"
+      "movb $0, (%%edi,%%ebx,1)\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "movb 0xc(%%esi), %%cl\n\t"
+      "addl $0xc, %%esp\n\t"
+      "incl %%edi\n\t"
+      "addl %%edi, %%eax\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      "popl %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testb %%cl, %%cl\n\t"
+      "popl %%esi\n\t"
+      "sete %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011a230_2:\n\t"
+      "movb $1, 0xc(%%esi)\n\t"
+      "movb 0xc(%%esi), %%cl\n\t"
+      "popl %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testb %%cl, %%cl\n\t"
+      "popl %%esi\n\t"
+      "sete %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8d8d0] "m"(b11a230_c8d8d0), [assert] "m"(b11a230_assert), [exitfn] "m"(b11a230_exitfn), [c8de70] "m"(b11a230_c8de70)
+      : "memory");
 }
+#else
+#error "FUN_0011a230: clang naked draft required"
+#endif
+
 
 /* decode_state_new — initialize a decode state struct (0x11a2d0).
  * Source: data_encoding.c line 0xcc. */
@@ -2047,31 +2109,92 @@ void FUN_0011bc20(short *table __attribute__((unused)), void *key __attribute__(
 #endif
 
 
-/* hashtable_put — insert a key into a slot (0x11be10).
- * Source: hashtable.c line 0xf1. Takes table via @EAX register arg. */
-int FUN_0011be10(short *table, void *key)
-{
-  unsigned int *bitmap_word;
-  char found;
-  int element_ptr;
-  short slot;
+/* FUN_0011be10 (0x11be10) — XBE naked draft (batch 89). */
+#if defined(__clang__)
+static int (*const b11be10_c11ba50)(short *table, void *key, unsigned short *slot_index_out) = FUN_0011ba50;
+static void (*const b11be10_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11be10_exitfn)(int) = system_exit;
+static int (*const b11be10_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
+static void * (*const b11be10_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 
-  found = (char)FUN_0011ba50(table, key, (unsigned short *)&slot);
-  if (found != '\0') {
-    display_assert("putting key already in hashtable",
-                   "c:\\halo\\SOURCE\\memory\\hashtable.c", 0xf1, 1);
-    system_exit(-1);
-    return 0;
-  }
-  element_ptr = array_get_element((int *)(table + 0xe), (int)slot,
-                                  (int)table[1]);
-  csmemcpy((void *)element_ptr, key, (int)*table);
-  bitmap_word = (unsigned int *)(*(int *)(table + 0xc) +
-                ((int)slot >> 5) * 4);
-  *bitmap_word = *bitmap_word | (1 << ((unsigned char)slot & 0x1f));
-  table[2] = table[2] + 1;
-  return *table + element_ptr;
+__attribute__((naked, noinline))
+int FUN_0011be10(short *table __attribute__((unused)), void *key __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "call *%[c11ba50]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0011be10_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf1\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl $0x28f6d4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011be10_1:\n\t"
+      "movswl 0x2(%%esi), %%edx\n\t"
+      "movswl -0x4(%%ebp), %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0x1c(%%esi), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c117ee0]\n\t"
+      "movswl (%%esi), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c8e0b0]\n\t"
+      "movl 0x18(%%esi), %%ecx\n\t"
+      "movl %%edi, %%eax\n\t"
+      "sarl $5, %%eax\n\t"
+      "leal (%%ecx,%%eax,4), %%eax\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "movl (%%eax), %%edi\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "orl %%edx, %%edi\n\t"
+      "movl %%edi, (%%eax)\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "addl %%ebx, %%eax\n\t"
+      "incw 0x4(%%esi)\n\t"
+      "popl %%ebx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11ba50] "m"(b11be10_c11ba50), [assert] "m"(b11be10_assert), [exitfn] "m"(b11be10_exitfn), [c117ee0] "m"(b11be10_c117ee0), [c8e0b0] "m"(b11be10_c8e0b0)
+      : "memory");
 }
+#else
+#error "FUN_0011be10: clang naked draft required"
+#endif
+
 
 /* FUN_0011beb0 (0x11beb0) — XBE naked draft (batch 81). */
 #if defined(__clang__)

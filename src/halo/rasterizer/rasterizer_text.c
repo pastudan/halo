@@ -3150,44 +3150,88 @@ void *rasterizer_transparent_geometry_group_get(short group_presorted_index)
   return (void *)(group_presorted_index * 0xa0 + *(int *)0x4d0cec);
 }
 
-/* rasterizer_transparent_geometry_group_to_presorted_index: convert group
- * pointer to presorted index (0x1844b0) */
-short rasterizer_transparent_geometry_group_to_presorted_index(
-  unsigned int group)
-{
-  unsigned int base;
-  int count;
-  short index;
-  unsigned int offset;
-  unsigned int remainder;
+/* rasterizer_transparent_geometry_group_to_presorted_index (0x1844b0) — XBE naked draft (batch 89). */
+#if defined(__clang__)
+static void (*const b1844b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1844b0_exitfn)(int) = system_exit;
 
-  base = *(unsigned int *)0x4d0cec;
-  count = *(int *)0x4d0cf4;
-  index = -1;
-  if (group >= base && group < base + (unsigned int)(count * 0xa0)) {
-    index = (short)((int)(group - base) / 0xa0);
-    if (index < 0 || count <= index) {
-      display_assert(
-        "group_presorted_index>=0 && "
-        "group_presorted_index<transparent_geometry_group_count",
-        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_transparent_geometry.c", 0xcb,
-        1);
-      system_exit(-1);
-    }
-    offset = group - base;
-    remainder = offset % 0xa0;
-    if (remainder != 0) {
-      display_assert(
-        "((unsigned long)group-(unsigned "
-        "long)transparent_geometry_groups)%sizeof(struct "
-        "transparent_geometry_group)==0",
-        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_transparent_geometry.c", 0xcc,
-        1);
-      system_exit(-1);
-    }
-  }
-  return index;
+__attribute__((naked, noinline))
+short rasterizer_transparent_geometry_group_to_presorted_index(unsigned int group __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x4d0cec, %%edi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "cmpl %%edi, %%ebx\n\t"
+      "jb .Lrasterizer_transparent_geometry_group_to_presorted_index_4\n\t"
+      "movl 0x4d0cf4, %%ecx\n\t"
+      "leal (%%ecx,%%ecx,4), %%ecx\n\t"
+      "shll $5, %%ecx\n\t"
+      "addl %%edi, %%ecx\n\t"
+      "cmpl %%ecx, %%ebx\n\t"
+      "jae .Lrasterizer_transparent_geometry_group_to_presorted_index_4\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "subl %%edi, %%ecx\n\t"
+      "movl $0x66666667, %%eax\n\t"
+      "imull %%ecx\n\t"
+      "sarl $6, %%edx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "shrl $0x1f, %%eax\n\t"
+      "addl %%eax, %%edx\n\t"
+      "movl %%edx, %%esi\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lrasterizer_transparent_geometry_group_to_presorted_index_1\n\t"
+      "movl 0x4d0cf4, %%eax\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jl .Lrasterizer_transparent_geometry_group_to_presorted_index_2\n\t"
+      ".Lrasterizer_transparent_geometry_group_to_presorted_index_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xcb\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl $0x2b0d50\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl 0x4d0cec, %%edi\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_transparent_geometry_group_to_presorted_index_2:\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "subl %%edi, %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movl $0xa0, %%ecx\n\t"
+      "divl %%ecx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "je .Lrasterizer_transparent_geometry_group_to_presorted_index_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0xcc\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl $0x2b0da8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_transparent_geometry_group_to_presorted_index_3:\n\t"
+      "movw %%si, %%ax\n\t"
+      ".Lrasterizer_transparent_geometry_group_to_presorted_index_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1844b0_assert), [exitfn] "m"(b1844b0_exitfn)
+      : "memory");
 }
+#else
+#error "rasterizer_transparent_geometry_group_to_presorted_index: clang naked draft required"
+#endif
+
 /* --- rasterizer_text.obj batch drafts (2026-07-26) --- */
 
 /* 0x180770 */

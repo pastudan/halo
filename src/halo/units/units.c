@@ -11044,45 +11044,96 @@ void unit_aiming_vector(int unit_handle __attribute__((unused)))
 #endif
 
 
-/* unit_drop_grenades_on_death (0x1abb20)
- * Creates grenade weapon objects for each grenade the unit carries and drops
- * them. Iterates over 2 grenade types. For each, looks up the grenade tag
- * from game globals, creates weapon objects, disconnects from map, then
- * detaches (drops physically). Register arg: unit_handle in EAX. */
-void unit_drop_grenades_on_death(int unit_handle)
+/* unit_drop_grenades_on_death (0x1abb20) — XBE naked draft (batch 89). */
+#if defined(__clang__)
+static void *(*const b1abb20_get)(int, int) = object_get_and_verify_type;
+static void * (*const b1abb20_c18e450)(void) = game_globals_get;
+static void *(*const b1abb20_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b1abb20_opnew)(void *, int, int) = object_placement_data_new;
+static int (*const b1abb20_onew)(void *) = object_new;
+static void (*const b1abb20_c13fd00)(int object_handle) = object_disconnect_from_map;
+static void (*const b1abb20_c1ab990)(int unit_handle, int weapon_handle) = unit_detach_weapon;
+
+__attribute__((naked, noinline))
+void unit_drop_grenades_on_death(int unit_handle __attribute__((unused)))
 {
-  char *unit;
-  char *grenade_count_ptr;
-  int grenade_type;
-  int globals;
-  int grenade_tag;
-  int new_handle;
-  char placement[136];
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  grenade_count_ptr = unit + 0x2ce;
-
-  /* The binary uses a negative-offset trick to compute the grenade type index:
-   * ESI = 0xFFFFFD32 - unit_addr; index = ESI + grenade_count_ptr
-   * Since 0xFFFFFD32 + 0x2CE = 0 (mod 2^32), this yields index = type (0 or 1).
-   * We compute the type directly. */
-  for (grenade_type = 0; grenade_type < NUMBER_OF_UNIT_GRENADE_TYPES; grenade_type++) {
-    globals = (int)game_globals_get();
-    grenade_tag = (int)tag_block_get_element(
-        (void *)(globals + 0x128), grenade_type, 0x44);
-
-    while (*grenade_count_ptr > 0) {
-      object_placement_data_new(placement, *(int *)(grenade_tag + 0x30), unit_handle);
-      new_handle = object_new(placement);
-      if (new_handle != -1) {
-        object_disconnect_from_map(new_handle);
-        unit_detach_weapon(unit_handle, new_handle);
-      }
-      *grenade_count_ptr = *grenade_count_ptr - 1;
-    }
-    grenade_count_ptr++;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x94, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl $0xfffffd32, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "subl %%eax, %%esi\n\t"
+      "leal 0x2ce(%%eax), %%ebx\n\t"
+      "movl %%esi, -0xc(%%ebp)\n\t"
+      "movl $2, -0x4(%%ebp)\n\t"
+      ".Lunit_drop_grenades_on_death_1:\n\t"
+      "leal (%%esi,%%ebx,1), %%eax\n\t"
+      "pushl $0x44\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e450]\n\t"
+      "addl $0x128, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movb (%%ebx), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jle .Lunit_drop_grenades_on_death_4\n\t"
+      ".Lunit_drop_grenades_on_death_2:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl 0x30(%%ecx), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x94(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[opnew]\n\t"
+      "leal -0x94(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[onew]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lunit_drop_grenades_on_death_3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c13fd00]\n\t"
+      "addl $4, %%esp\n\t"
+      "call *%[c1ab990]\n\t"
+      ".Lunit_drop_grenades_on_death_3:\n\t"
+      "movb (%%ebx), %%cl\n\t"
+      "decb %%cl\n\t"
+      "movb %%cl, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movb %%cl, (%%ebx)\n\t"
+      "jg .Lunit_drop_grenades_on_death_2\n\t"
+      "movl -0xc(%%ebp), %%esi\n\t"
+      ".Lunit_drop_grenades_on_death_4:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "incl %%ebx\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jne .Lunit_drop_grenades_on_death_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1abb20_get), [c18e450] "m"(b1abb20_c18e450), [elem] "m"(b1abb20_elem), [opnew] "m"(b1abb20_opnew), [onew] "m"(b1abb20_onew), [c13fd00] "m"(b1abb20_c13fd00), [c1ab990] "m"(b1abb20_c1ab990)
+      : "memory");
 }
+#else
+#error "unit_drop_grenades_on_death: clang naked draft required"
+#endif
+
 
 /* unit_drop_weapons_on_death (0x1abbd0) — XBE naked draft (batch 58). */
 #if defined(__clang__)

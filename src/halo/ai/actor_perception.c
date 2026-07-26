@@ -73,46 +73,94 @@ void FUN_0002f230(int actor_handle)
   actor_path_refresh(actor_handle, 1, NULL);
 }
 
-/* actor_perception_acknowledge (0x2f2b0)
- * Acknowledge a damaging prop for an actor. Validates ownership and prop type,
- * clears acknowledgement fields, sets the acknowledged flag, then dispatches
- * to the update function.
- *
- * Asserts: prop->owner_actor_index == actor_index (line 0x40d)
- *          prop_acknowledged(prop) — type in [2,3] (line 0x40e)
- *          prop->orphan_prop_index == NONE (line 0x40f) */
-void actor_perception_acknowledge(int actor_handle, int prop_handle,
-                                  int param_3, char param_4)
+/* actor_perception_acknowledge (0x2f2b0) — XBE naked draft (batch 89). */
+#if defined(__clang__)
+static void *(*const b2f2b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b2f2b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b2f2b0_exitfn)(int) = system_exit;
+static void (*const b2f2b0_c36f20)(int actor_handle, int prop_handle, int param_3, char param_4) = FUN_00036f20;
+
+__attribute__((naked, noinline))
+void actor_perception_acknowledge(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)), int param_3 __attribute__((unused)), char param_4 __attribute__((unused)))
 {
-  char *prop;
-
-  prop = (char *)datum_get(*(data_t **)0x5ab23c, prop_handle);
-
-  if (*(int *)(prop + 4) != actor_handle) {
-    display_assert("prop->owner_actor_index == actor_index",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x40d, 1);
-    system_exit(-1);
-  }
-
-  if (*(short *)(prop + 0x24) < 2 || *(short *)(prop + 0x24) > 3) {
-    display_assert("prop_acknowledged(prop)",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x40e, 1);
-    system_exit(-1);
-  }
-
-  if (*(int *)(prop + 0xc) != -1) {
-    display_assert("prop->orphan_prop_index == NONE",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x40f, 1);
-    system_exit(-1);
-  }
-
-  *(char *)(prop + 0xba) = 0;
-  *(char *)(prop + 0xb9) = 0;
-  *(char *)(prop + 0xbb) = 0;
-  *(char *)(prop + 0x64) = 1;
-
-  FUN_00036f20(actor_handle, prop_handle, param_3, param_4);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "je .Lactor_perception_acknowledge_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x40d\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x255f88\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_acknowledge_1:\n\t"
+      "movw 0x24(%%esi), %%ax\n\t"
+      "cmpw $2, %%ax\n\t"
+      "jl .Lactor_perception_acknowledge_2\n\t"
+      "cmpw $3, %%ax\n\t"
+      "jle .Lactor_perception_acknowledge_3\n\t"
+      ".Lactor_perception_acknowledge_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x40e\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x255f70\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_acknowledge_3:\n\t"
+      "cmpl $-1, 0xc(%%esi)\n\t"
+      "je .Lactor_perception_acknowledge_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x40f\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x255f50\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_acknowledge_4:\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "xorb %%al, %%al\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "movb %%al, 0xba(%%esi)\n\t"
+      "movb %%al, 0xb9(%%esi)\n\t"
+      "movb %%al, 0xbb(%%esi)\n\t"
+      "movb $1, 0x64(%%esi)\n\t"
+      "call *%[c36f20]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2f2b0_dget), [assert] "m"(b2f2b0_assert), [exitfn] "m"(b2f2b0_exitfn), [c36f20] "m"(b2f2b0_c36f20)
+      : "memory");
 }
+#else
+#error "actor_perception_acknowledge: clang naked draft required"
+#endif
+
 
 /* FUN_0002f380 (0x2f380) — XBE naked draft (batch 86). */
 #if defined(__clang__)

@@ -1779,52 +1779,87 @@ void FUN_00105980(float *matrix, short *out_vertex_count,
   *out_index_run_count = (short)local_1c;
 }
 
-/* 0x105c80 - classify a 2D vertex set as empty/point/collinear/planar.
- *
- * Register ABI (prologue at 0x105c80): no entry moves; ESI/EDI are zeroed at
- * entry, so the only register argument is EBX.
- *   vertex_count : stack [EBP+0x8] (short, number of 2D vertices)
- *   vertices@<ebx> : float* array of 2D points, stride 2 floats (8 bytes)
- *
- * Runs a small state machine over the points.  state (-1) records the first
- * point p0 and advances to 0.  state 0 tries to build a 2D line through p0 and
- * the current point via plane2d_from_points; a non-null result (a real edge)
- * advances to 1.  state 1 evaluates the line equation nx*x+ny*y-d at each
- * later point; the first point off the line (|eval| >= 0x2533d0 epsilon)
- * advances to 2 and terminates the scan.  Returns the final state: -1 (no
- * vertices), 0 (all coincident), 1 (all collinear), 2 (genuinely planar).
- * 0x2533d0 is a double epsilon. */
-short shell_update(short vertex_count, float *vertices /* @<ebx> */)
-{
-  float line[3]; /* [EBP-0x14]=nx, [EBP-0x10]=ny, [EBP-0xc]=d */
-  float p0[2];   /* [EBP-0x8], [EBP-0x4] */
-  short state;
-  short i;
-  float eval;
+/* shell_update (0x105c80) — XBE naked draft (batch 89). */
+#if defined(__clang__)
+static float * (*const b105c80_c99400)(float *out_line, float *point_a, float *point_b) = plane2d_from_points;
 
-  state = -1;
-  for (i = 0; i < vertex_count; i++) {
-    int s = (int)state;
-    if (s == -1) {
-      p0[0] = vertices[i * 2];
-      p0[1] = vertices[i * 2 + 1];
-      state = 0;
-    } else if (s == 0) {
-      if (plane2d_from_points(line, &vertices[i * 2], p0) != (float *)0) {
-        state = 1;
-      }
-    } else if (s == 1) {
-      eval = line[0] * vertices[i * 2] + line[1] * vertices[i * 2 + 1] - line[2];
-      if (fabs(eval) >= *(double *)0x002533d0) {
-        state = 2;
-      }
-    }
-    if (state >= 2) {
-      break;
-    }
-  }
-  return state;
+__attribute__((naked, noinline))
+short shell_update(short vertex_count __attribute__((unused)), float *vertices __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x14, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "orl $0xffffffff, %%esi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lshell_update_1:\n\t"
+      "cmpw 0x8(%%ebp), %%di\n\t"
+      "jge .Lshell_update_5\n\t"
+      "movswl %%si, %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lshell_update_3\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lshell_update_2\n\t"
+      "cmpl $1, %%eax\n\t"
+      "jne .Lshell_update_4\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "movswl %%di, %%eax\n\t"
+      "fmuls 0x4(%%ebx,%%eax,8)\n\t"
+      "leal (%%ebx,%%eax,8), %%eax\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls (%%eax)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs -0xc(%%ebp)\n\t"
+      "fabs\n\t"
+      "fcompl 0x2533d0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lshell_update_4\n\t"
+      "movl $2, %%esi\n\t"
+      "jmp .Lshell_update_4\n\t"
+      ".Lshell_update_2:\n\t"
+      "movswl %%di, %%edx\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal (%%ebx,%%edx,8), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c99400]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lshell_update_4\n\t"
+      "movl $1, %%esi\n\t"
+      "jmp .Lshell_update_4\n\t"
+      ".Lshell_update_3:\n\t"
+      "movswl %%di, %%edx\n\t"
+      "movl (%%ebx,%%edx,8), %%eax\n\t"
+      "movl 0x4(%%ebx,%%edx,8), %%ecx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "xorl %%esi, %%esi\n\t"
+      ".Lshell_update_4:\n\t"
+      "incl %%edi\n\t"
+      "cmpw $2, %%si\n\t"
+      "jl .Lshell_update_1\n\t"
+      ".Lshell_update_5:\n\t"
+      "popl %%edi\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c99400] "m"(b105c80_c99400)
+      : "memory");
 }
+#else
+#error "shell_update: clang naked draft required"
+#endif
+
 
 /* convex_hull2d_reduce (0x105d20) — XBE naked draft (batch 80). */
 #if defined(__clang__)
@@ -2477,61 +2512,94 @@ void reference_list_remove(data_t *data, int *head, int value)
   system_exit(-1);
 }
 
-/* reference_list_copy (0x191440) — Copy a reference_list's entries from source
- * into result. Both lists must have identical size and maximum_count
- * (asserted).
- *
- * For each slot in [0, maximum_count): if the source entry is live (its first
- * word != 0) the 12-byte (3-dword) entry is copied verbatim; otherwise, if the
- * result entry is live, it is removed via datum_delete(result, index).
- *
- * Struct offsets (reference_lists.h):
- *   +0x20 maximum_count (int16)   +0x22 size (int16)   +0x34 entry array ptr
- * Entry stride = 0xc (12 bytes) = 3 dwords; both pointers advance by 0xc/iter.
- *
- * Confirmed (disasm): cdecl(result @EBP+8 = EDI, source @EBP+0xc = EBX);
- * size mismatch asserts at line 0x88 (136), maximum_count mismatch at line 0x89
- * (137), reason strings shown, halt=1, then system_exit(-1). The loop count
- * [result+0x20] is RE-READ from memory each iteration (CMP SI,word[EDI+0x20]),
- * and the index is a signed int16 (JL). datum_delete push order is EDI then
- * MOVSX-of-SI => datum_delete(result, (int)index). No FPU. */
-void reference_list_copy(void *result, void *source)
+/* reference_list_copy (0x191440) — XBE naked draft (batch 89). */
+#if defined(__clang__)
+static void (*const b191440_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b191440_exitfn)(int) = system_exit;
+static void (*const b191440_c1196d0)(data_t *data, int datum_handle) = datum_delete;
+
+__attribute__((naked, noinline))
+void reference_list_copy(void *result __attribute__((unused)), void *source __attribute__((unused)))
 {
-  short *result_entry;
-  short *source_entry;
-  short index;
-
-  if (*(short *)((char *)result + 0x22) != *(short *)((char *)source + 0x22)) {
-    display_assert("result->size==source->size",
-                   "..\\objects\\reference_lists.h", 0x88, 1);
-    system_exit(-1);
-  }
-  if (*(short *)((char *)result + 0x20) != *(short *)((char *)source + 0x20)) {
-    display_assert("result->maximum_count==source->maximum_count",
-                   "..\\objects\\reference_lists.h", 0x89, 1);
-    system_exit(-1);
-  }
-
-  result_entry = *(short **)((char *)result + 0x34);
-  source_entry = *(short **)((char *)source + 0x34);
-  index = 0;
-  if (0 < *(short *)((char *)result + 0x20)) {
-    do {
-      if (*source_entry == 0) {
-        if (*result_entry != 0) {
-          datum_delete((data_t *)result, (int)index);
-        }
-      } else {
-        *(int *)result_entry = *(int *)source_entry;
-        *(int *)(result_entry + 2) = *(int *)(source_entry + 2);
-        *(int *)(result_entry + 4) = *(int *)(source_entry + 4);
-      }
-      index = index + 1;
-      result_entry = result_entry + 6;
-      source_entry = source_entry + 6;
-    } while (index < *(short *)((char *)result + 0x20));
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movw 0x22(%%edi), %%ax\n\t"
+      "cmpw 0x22(%%ebx), %%ax\n\t"
+      "je .Lreference_list_copy_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x88\n\t"
+      "pushl $0x2b25a0\n\t"
+      "pushl $0x2b25f0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lreference_list_copy_1:\n\t"
+      "movw 0x20(%%edi), %%cx\n\t"
+      "cmpw 0x20(%%ebx), %%cx\n\t"
+      "je .Lreference_list_copy_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x89\n\t"
+      "pushl $0x2b25a0\n\t"
+      "pushl $0x2b25c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lreference_list_copy_2:\n\t"
+      "movl 0x34(%%edi), %%eax\n\t"
+      "movl 0x34(%%ebx), %%ebx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpw %%si, 0x20(%%edi)\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "jle .Lreference_list_copy_6\n\t"
+      ".Lreference_list_copy_3:\n\t"
+      "cmpw $0, (%%ebx)\n\t"
+      "je .Lreference_list_copy_4\n\t"
+      "movl %%ebx, %%edx\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "jmp .Lreference_list_copy_5\n\t"
+      ".Lreference_list_copy_4:\n\t"
+      "cmpw $0, (%%eax)\n\t"
+      "je .Lreference_list_copy_5\n\t"
+      "movswl %%si, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1196d0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lreference_list_copy_5:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "incl %%esi\n\t"
+      "addl $0xc, %%eax\n\t"
+      "addl $0xc, %%ebx\n\t"
+      "cmpw 0x20(%%edi), %%si\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "jl .Lreference_list_copy_3\n\t"
+      ".Lreference_list_copy_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b191440_assert), [exitfn] "m"(b191440_exitfn), [c1196d0] "m"(b191440_c1196d0)
+      : "memory");
 }
+#else
+#error "reference_list_copy: clang naked draft required"
+#endif
+
 
 /* cluster_partition_globals_new (0x191500) — XBE naked draft (batch 88). */
 #if defined(__clang__)
@@ -3128,48 +3196,90 @@ void FUN_00191ba0(void *base)
   tag_block_resize((char *)base + 0x10, 0);
 }
 
-/* 0x191bd0 - search the leaf-map node stack for a node referencing a value.
- * (TU: c:\halo\SOURCE\structures\leaf_map.c)
- *
- * Register ABI (prologue at 0x191bd0): direct use of EBX with no entry moves;
- * the only register arg is search_value@<ebx> (int). Stack args: param_1
- * ([EBP+0x8], a pointer whose first field is the tag_block searched) and out
- * ([EBP+0xc], char* flag). Walks the node stack from the top for each level
- * (levels_up in [0,node_stack_count); count @ 0x4d8e90, stack @ 0x4d8a8c[count]
- * i.e. node_stack-1). Each stacked node's low 31 bits index a 0xc-stride
- * tag_block element; when that element's first field equals search_value it
- * writes the node's sign bit to *out and returns 1. Returns 0 if no level
- * matches (or the stack is empty). */
-char FUN_00191bd0(int search_value /* @<ebx> */, void **param_1, char *out)
-{
-  short count;
-  short i;
-  int node;
-  int *element;
+/* FUN_00191bd0 (0x191bd0) — XBE naked draft (batch 89). */
+#if defined(__clang__)
+static void (*const b191bd0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b191bd0_exitfn)(int) = system_exit;
+static void *(*const b191bd0_elem)(void *, int, int) = tag_block_get_element;
 
-  count = *(short *)0x004d8e90;
-  i = 0;
-  if (count <= 0) {
-    return 0;
-  }
-  do {
-    if (i < 0 || i >= count) {
-      display_assert(
-          "levels_up>=0 && levels_up<leaf_map_globals.node_stack_count",
-          "c:\\halo\\SOURCE\\structures\\leaf_map.c", 0x3b, true);
-      system_exit(-1);
-    }
-    node = *(int *)(0x004d8a8c + ((int)count - (int)i) * 4);
-    element = (int *)tag_block_get_element(*param_1, node & 0x7fffffff, 0xc);
-    if (*element == search_value) {
-      *out = (char)((node & 0x80000000) != 0);
-      return 1;
-    }
-    count = *(short *)0x004d8e90;
-    i = (short)(i + 1);
-  } while (i < count);
-  return 0;
+__attribute__((naked, noinline))
+char FUN_00191bd0(int search_value __attribute__((unused)), void **param_1 __attribute__((unused)), char *out __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movw 0x4d8e90, %%ax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorb %%cl, %%cl\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .LFUN_00191bd0_5\n\t"
+      ".LFUN_00191bd0_1:\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .LFUN_00191bd0_2\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jl .LFUN_00191bd0_3\n\t"
+      ".LFUN_00191bd0_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3b\n\t"
+      "pushl $0x2b28b4\n\t"
+      "pushl $0x2b2900\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movw 0x4d8e90, %%ax\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00191bd0_3:\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "movl 0x4d8a8c(,%%eax,4), %%esi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%esi, %%edx\n\t"
+      "pushl $0xc\n\t"
+      "andl $0x7fffffff, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "je .LFUN_00191bd0_4\n\t"
+      "movw 0x4d8e90, %%ax\n\t"
+      "incl %%edi\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jl .LFUN_00191bd0_1\n\t"
+      "popl %%edi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00191bd0_4:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl $0x80000000, %%esi\n\t"
+      "setne %%dl\n\t"
+      "popl %%edi\n\t"
+      "movb %%dl, (%%eax)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00191bd0_5:\n\t"
+      "popl %%edi\n\t"
+      "movb %%cl, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b191bd0_assert), [exitfn] "m"(b191bd0_exitfn), [elem] "m"(b191bd0_elem)
+      : "memory");
 }
+#else
+#error "FUN_00191bd0: clang naked draft required"
+#endif
+
 
 /* 0x191c70 - linear-search a tag_block for the element referencing a value.
  * (TU: c:\halo\SOURCE\structures\leaf_map.c)
