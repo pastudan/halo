@@ -29610,7 +29610,7 @@
         },
         {
           "addr": "0x1b6ca0",
-          "decl": "void FUN_001b6ca0(void);",
+          "decl": "void FUN_001b6ca0(int vehicle_handle);",
           "ported": false
         },
         {
@@ -29620,7 +29620,7 @@
         },
         {
           "addr": "0x1b7020",
-          "decl": "void FUN_001b7020(void);",
+          "decl": "void FUN_001b7020(int vehicle_handle);",
           "ported": false
         },
         {
@@ -29635,7 +29635,7 @@
         },
         {
           "addr": "0x1b77f0",
-          "decl": "void FUN_001b77f0(void);",
+          "decl": "void FUN_001b77f0(int vehicle_handle@<eax>, void *scratch, void *wheel_state);",
           "ported": false
         },
         {

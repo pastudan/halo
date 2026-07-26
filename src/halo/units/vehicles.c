@@ -984,22 +984,60 @@ void FUN_001b69a0(void)
   (void)eax;
 }
 
-/* 0x1b6ca0 */
-void FUN_001b6ca0(void)
+/* 0x1b6ca0 — Decay vehicle impulse and re-seat orientation after a collision. */
+void FUN_001b6ca0(int vehicle_handle)
 {
-  int eax = 0;
-  int edi = 0;
+  char *veh;
+  float position[3];
+  float forward[3];
+  float up[3];
+  float rot_matrix[12];
+  float axis[3];
+  float angle;
+  float *global_vel;
 
-  object_get_and_verify_type(0, 2);
-  normalize3d((void *)0);
-  FUN_001092d0((void *)0, (void *)0, 0.0f, 0.0f);
-  matrix_scale_transform_vector((void *)0, (float *)((char *)eax + 0x24), (void *)0);
-  matrix_scale_transform_vector((void *)0, (float *)((char *)eax + 0x30), (void *)0);
-  /* relift: cmp word ptr [edi + 0x426], 0 -> jne 0x1b6df2 */
-  object_set_position(0, (void *)0, (void *)0, (void *)0);
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  *(int16_t *)(veh + 0x426) -= 1;
 
-  (void)eax;
-  (void)edi;
+  *(float *)(veh + 0x18) *= *(float *)0x2b7cf8;
+  *(float *)(veh + 0x1c) *= *(float *)0x2b7cf8;
+  *(float *)(veh + 0x20) *= *(float *)0x2b7cf8;
+  *(float *)(veh + 0x3c) *= *(float *)0x2b7cf8;
+  *(float *)(veh + 0x40) *= *(float *)0x2b7cf8;
+  *(float *)(veh + 0x44) *= *(float *)0x2b7cf8;
+
+  position[0] = *(float *)(veh + 0xc) + *(float *)(veh + 0x18);
+  position[1] = *(float *)(veh + 0x10) + *(float *)(veh + 0x1c);
+  position[2] = *(float *)(veh + 0x14) + *(float *)(veh + 0x20);
+
+  axis[0] = *(float *)(veh + 0x3c);
+  axis[1] = *(float *)(veh + 0x40);
+  axis[2] = *(float *)(veh + 0x44);
+  angle = normalize3d(axis);
+  if (angle > 0.0f) {
+    FUN_001092d0(rot_matrix, axis, sinf(angle), cosf(angle));
+    matrix_scale_transform_vector(rot_matrix, (float *)(veh + 0x24), forward);
+    matrix_scale_transform_vector(rot_matrix, (float *)(veh + 0x30), up);
+  } else {
+    forward[0] = *(float *)(veh + 0x24);
+    forward[1] = *(float *)(veh + 0x28);
+    forward[2] = *(float *)(veh + 0x2c);
+    up[0] = *(float *)(veh + 0x30);
+    up[1] = *(float *)(veh + 0x34);
+    up[2] = *(float *)(veh + 0x38);
+  }
+
+  if (*(int16_t *)(veh + 0x426) == 0) {
+    global_vel = *(float **)0x31fc38;
+    *(float *)(veh + 0x18) = global_vel[0];
+    *(float *)(veh + 0x1c) = global_vel[1];
+    *(float *)(veh + 0x20) = global_vel[2];
+    *(float *)(veh + 0x3c) = global_vel[0];
+    *(float *)(veh + 0x40) = global_vel[1];
+    *(float *)(veh + 0x44) = global_vel[2];
+  }
+
+  object_set_position(vehicle_handle, position, forward, up);
 }
 
 /* 0x1b6e20 */
@@ -1033,37 +1071,84 @@ void FUN_001b6e20(void)
   (void)local_14;
 }
 
-/* 0x1b7020 */
-void FUN_001b7020(void)
+/* 0x1b7020 — Spawn wheel dust effects from ground contact markers. */
+void FUN_001b7020(int vehicle_handle)
 {
-  int eax = 0;
-  int ecx = 0;
-  int ebp = 0;
-  int local_8 = 0;
+  char *veh;
+  char *vehi;
+  char marker_buf[0x7b4];
+  int marker_count;
+  int marker_index;
+  float scale;
+  float dir[3];
+  float origin[3];
+  float collision[0x40];
+  float marker_points[12];
+  float marker_forwards[3];
+  float rgb[3];
 
-  object_get_and_verify_type(0, 2);
-  tag_get('ihev', *(int *)(eax));
-  /* cmp eax, -1 -> je 0x1b729e */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b729e */
-  object_get_markers_by_string_id(0, (void *)0x002b7d18, (void *)0, 15);
-  random_math_get_local_seed_address();
-  random_direction3d((int *)((char *)/* [ebp + eax - 0x7b4] */ + 0x3c), (float *)0, 0.0f, 0.0f, (float *)0);
-  FUN_0014df70(97, (float *)((char *)/* [ebp + eax - 0x7b4] */ + 0x60), (void *)0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x1b7289 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x1b7142 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b7289 */
-  FUN_0010c8e0((float *)0, (float *)0, (float *)0);
-  FUN_0010c8e0((void *)0, (void *)0, (void *)0);
-  effect_new_unattached_from_markers(0, -1, (float *)0, 4, (void *)0, (void *)0, (void *)0, local_8, local_8, 0.0f, 0.0f, 1);
-  /* cmp eax, ecx -> jl 0x1b70a2 */
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh);
+  if (*(int *)(vehi + 0x3ec) == -1)
+    return;
+  if (*(float *)(veh + 0x2e8) <= 0.0f)
+    return;
 
-  (void)eax;
-  (void)ecx;
-  (void)ebp;
-  (void)local_8;
+  marker_count = object_get_markers_by_string_id(
+      vehicle_handle, (void *)0x002b7d18, marker_buf, 15);
+  if (marker_count <= 0)
+    return;
+
+  for (marker_index = 0; marker_index < marker_count; marker_index++) {
+    char *marker;
+    float ray_origin[3];
+
+    float effect_fwd[3];
+    int copy_index;
+
+    marker = marker_buf + marker_index * 0x6c;
+    random_direction3d((int *)random_math_get_local_seed_address(),
+                       (float *)(marker + 0x3c), 0.0f, 15.0f, dir);
+    ray_origin[0] = *(float *)(marker + 0x60);
+    ray_origin[1] = *(float *)(marker + 0x64);
+    ray_origin[2] = *(float *)(marker + 0x68);
+
+    if (!FUN_0014df70(0x61, ray_origin, dir, vehicle_handle,
+                      (int16_t *)collision))
+      continue;
+
+    scale = -*(float *)(marker + 0x44) * (1.0f - *(float *)(collision + 0x20));
+    scale *= *(float *)(veh + 0x2e8);
+    if (scale <= 0.0f)
+      continue;
+    if (scale > 1.0f)
+      scale = 1.0f;
+
+    marker_points[0] = *(float *)(collision + 0x24) * *(float *)0x253398 +
+                       *(float *)(marker + 0x60);
+    marker_points[1] = *(float *)(collision + 0x28) * *(float *)0x253398 +
+                       *(float *)(marker + 0x64);
+    marker_points[2] = *(float *)(collision + 0x2c) * *(float *)0x253398 +
+                       *(float *)(marker + 0x68);
+    for (copy_index = 1; copy_index < 4; copy_index++) {
+      marker_points[copy_index * 3 + 0] = marker_points[0];
+      marker_points[copy_index * 3 + 1] = marker_points[1];
+      marker_points[copy_index * 3 + 2] = marker_points[2];
+    }
+
+    origin[0] = *(float *)(collision + 0x30);
+    origin[1] = *(float *)(collision + 0x34);
+    origin[2] = *(float *)(collision + 0x38);
+    effect_fwd[0] = -dir[0];
+    effect_fwd[1] = -dir[1];
+    effect_fwd[2] = -dir[2];
+    FUN_0010c8e0(origin, effect_fwd, rgb);
+    FUN_0010c8e0((float *)(marker + 0x60), dir, marker_forwards);
+
+    effect_new_unattached_from_markers(
+        *(int *)(vehi + 0x3ec), -1, NULL, 4, (void *)0x002b7cfc,
+        marker_points, marker_forwards, scale, scale, 0.0f, 0.0f, 1.0f);
+  }
 }
 
 /* 0x1b72b0 — Apply wheel-collision damage and scrape sounds to a vehicle. */
@@ -1078,11 +1163,10 @@ void FUN_001b72b0(int vehicle_handle, void *contact_point, void *wheel_state)
   float contact[3];
   float dist;
   float scale;
-  float damage_scale;
+  float damage_amount;
   int wheel_count;
   int wheel_index;
   char damage_params[0x54];
-  float pos[3];
 
   veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
   vehi = (char *)tag_get(0x76656869, *(int *)veh);
@@ -1106,38 +1190,41 @@ void FUN_001b72b0(int vehicle_handle, void *contact_point, void *wheel_state)
 
   wheel_flags = (char *)wheel_state;
   for (wheel_index = 0; wheel_index < wheel_count; wheel_index++) {
-    char *wheel_entry;
-
-    wheel_entry = (char *)tag_block_get_element(phys + 0x74, wheel_index, 0x80);
     if ((wheel_flags[wheel_index * 0x130] & 2) == 0)
       continue;
 
     scale = (dist - *(float *)0x255ca0) * *(float *)0x2b7d34;
     if (*(int *)(damage_block + 0x48) != -1) {
       damage_data_new(damage_params, *(int *)(damage_block + 0x48));
-      damage_scale = vehicle_clamp_unit_float(scale);
-      pos[0] = *(float *)(veh + 0x50);
-      pos[1] = *(float *)(veh + 0x54);
-      pos[2] = *(float *)(veh + 0x58);
-      *(float *)(damage_params + 0x1c) = pos[0];
-      *(float *)(damage_params + 0x20) = pos[1];
-      *(float *)(damage_params + 0x24) = pos[2];
+      if (scale <= 0.0f)
+        damage_amount = 0.0f;
+      else if (scale >= 1.0f)
+        damage_amount = 1.0f;
+      else
+        damage_amount = scale;
+      *(float *)(damage_params + 0x1c) = *(float *)(veh + 0x50);
+      *(float *)(damage_params + 0x20) = *(float *)(veh + 0x54);
+      *(float *)(damage_params + 0x24) = *(float *)(veh + 0x58);
       *(float *)(damage_params + 0x34) = contact[0];
       *(float *)(damage_params + 0x38) = contact[1];
       *(float *)(damage_params + 0x3c) = contact[2];
-      *(float *)(damage_params + 0x40) = damage_scale;
+      *(float *)(damage_params + 0x40) = damage_amount;
       object_cause_damage(damage_params, vehicle_handle, -1, -1, -1, 0);
-      (void)wheel_entry;
     }
 
     if (*(int *)(vehi + 0x3cc) == -1)
-      continue;
+      return;
 
-    damage_scale = vehicle_clamp_unit_float(scale);
+    if (scale <= 0.0f)
+      damage_amount = 0.0f;
+    else if (scale >= 1.0f)
+      damage_amount = 1.0f;
+    else
+      damage_amount = scale;
     object_impulse_sound_new(
         vehicle_handle, *(int *)(vehi + 0x3cc), -1,
         (float *)(uintptr_t)*(int *)(0x31fc1c),
-        (float *)(uintptr_t)*(int *)(0x31fc3c), damage_scale);
+        (float *)(uintptr_t)*(int *)(0x31fc3c), damage_amount);
     return;
   }
 }
@@ -1150,23 +1237,23 @@ char FUN_001b74d0(int vehicle_handle)
   char *vehi;
   char *rtna;
   char *phys;
+  char *rtna_root;
   char *antenna_block;
   char *antenna_elem;
-  float object_matrix[0x21];
+  float object_matrix[12];
   float world_point[3];
   float world_dir[3];
+  char collision[0xd4];
   float ray_origin[3];
-  float ray_dir[3];
-  float hit_buffer[0x35];
+  float ray_direction[3];
   float hit_distance;
-  float blend;
+  float hit_blend;
+  float factor;
   float max_blend;
   float sound_scale;
   int antenna_count;
   int antenna_index;
-  char updated;
 
-  updated = 0;
   veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
   vehi = (char *)tag_get(0x76656869, *(int *)veh);
   if (*(int *)(vehi + 0x44) == -1)
@@ -1176,26 +1263,27 @@ char FUN_001b74d0(int vehicle_handle)
   if (*(int *)(rtna + 0x24) == 0)
     return 0;
 
-  antenna_block = (char *)tag_block_get_element(rtna + 0x24, 0, 0x74);
-  if (antenna_block == 0)
+  rtna_root = (char *)tag_block_get_element(rtna + 0x24, 0, 0x74);
+  if (rtna_root == 0)
     return 0;
 
   phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c));
   matrix4x3_from_forward_up_position(object_matrix, (float *)(veh + 0xc),
                                      (float *)(veh + 0x24), (float *)(veh + 0x30));
 
-  antenna_count = *(int *)(antenna_block + 0x68);
+  antenna_block = rtna_root + 0x68;
+  antenna_count = *(int *)antenna_block;
   max_blend = 0.0f;
   for (antenna_index = 0; antenna_index < antenna_count; antenna_index++) {
     char *wheel_entry;
-    char *region_entry;
-    float antenna_t;
-    float ray_param;
-    float factor;
+    float span;
+    float ray_t;
+    float doubled_span;
+    float candidate;
     unsigned char packed;
 
     antenna_elem =
-        (char *)tag_block_get_element(antenna_block + 0x68, antenna_index, 0x14);
+        (char *)tag_block_get_element(antenna_block, antenna_index, 0x14);
     if (*(int16_t *)antenna_elem < 0)
       continue;
 
@@ -1204,48 +1292,47 @@ char FUN_001b74d0(int vehicle_handle)
     if (*(int16_t *)(antenna_elem + 2) == -1)
       continue;
 
-    region_entry = (char *)tag_block_get_element(rtna + 0x74,
-                                                   *(int16_t *)(antenna_elem + 2),
-                                                   0xb4);
+    (void)tag_block_get_element(rtna + 0x74, *(int16_t *)(antenna_elem + 2), 0xb4);
+
     if (*(unsigned char *)(veh + 0x44c + antenna_index) == 0xff)
       factor = 1.0f;
-    else {
+    else
       factor = (float)*(unsigned char *)(veh + 0x44c + antenna_index) *
                *(float *)0x261518;
-    }
 
     matrix_transform_point(object_matrix, (float *)(wheel_entry + 0x38), world_point);
     matrix_transform_vector(object_matrix, (float *)(wheel_entry + 0x50), world_dir);
 
-    antenna_t = *(float *)(antenna_elem + 4) - *(float *)(antenna_elem + 8);
-    ray_param = *(float *)(antenna_elem + 8) - *(float *)(phys + 0x14);
-    ray_origin[0] = world_point[0] + world_dir[0] * (antenna_t - ray_param);
-    ray_origin[1] = world_point[1] + world_dir[1] * (antenna_t - ray_param);
-    ray_origin[2] = world_point[2] + world_dir[2] * (antenna_t - ray_param);
-    ray_dir[0] = world_dir[0] * antenna_t;
-    ray_dir[1] = world_dir[1] * antenna_t;
-    ray_dir[2] = world_dir[2] * antenna_t;
+    span = *(float *)(antenna_elem + 4) - *(float *)(antenna_elem + 8);
+    ray_t = span - (*(float *)(antenna_elem + 8) - *(float *)(phys + 0x14));
+    doubled_span = span + span;
+    ray_origin[0] = world_dir[0] * ray_t + world_point[0];
+    ray_origin[1] = world_dir[1] * ray_t + world_point[1];
+    ray_origin[2] = world_dir[2] * ray_t + world_point[2];
+    ray_direction[0] = world_dir[0] * doubled_span;
+    ray_direction[1] = world_dir[1] * doubled_span;
+    ray_direction[2] = world_dir[2] * doubled_span;
 
-    if (!FUN_0014df70(0xc0a0, ray_origin, ray_dir, vehicle_handle,
-                      (int16_t *)hit_buffer))
+    if (!FUN_0014df70(0xc0a0, ray_origin, ray_direction, vehicle_handle,
+                      (int16_t *)collision))
       continue;
 
-    hit_distance = *(float *)((char *)hit_buffer + 0x14);
-    blend = (1.0f - hit_distance) * 2.0f;
-    blend = vehicle_clamp_unit_float(blend);
-    if ((1.0f - blend) > max_blend)
-      max_blend = 1.0f - blend;
+    hit_distance = *(float *)(collision + 0x14);
+    hit_blend = (1.0f - hit_distance) * 2.0f;
+    hit_blend = vehicle_clamp_unit_float(hit_blend);
+    candidate = hit_blend - factor;
+    if (candidate > max_blend)
+      max_blend = candidate;
     packed = quantize_real_to_byte_lower_bound(
-        0.0f, 1.0f, (blend + factor) * *(float *)0x253398);
+        0.0f, 1.0f, (hit_blend + factor) * *(float *)0x253398);
     *(unsigned char *)(veh + 0x44c + antenna_index) = packed;
-    (void)region_entry;
   }
 
   if (*(int *)(vehi + 0x3bc) == -1)
-    return updated;
+    return 0;
 
   if (max_blend <= *(float *)0x2533e4)
-    return updated;
+    return 0;
 
   sound_scale =
       (max_blend - *(float *)0x2533e4) * *(float *)0x2b7d38;
@@ -1257,27 +1344,87 @@ char FUN_001b74d0(int vehicle_handle)
   return 1;
 }
 
-/* 0x1b77f0 */
-void FUN_001b77f0(void)
+/* 0x1b77f0 — Apply wheel-suspension dust effects from wheel contact state. */
+void FUN_001b77f0(int vehicle_handle, void *scratch, void *wheel_state)
 {
-  int eax = 0;
-  int ecx = 0;
+  char *veh;
+  char *vehi;
+  char *phys;
+  char *wheel_block;
+  char *wheel_flags;
+  int wheel_count;
+  int wheel_index;
 
-  object_get_and_verify_type(eax, 2);
-  tag_get('ihev', *(int *)(eax));
-  tag_get('syhp', 0);
-  /* cmp ecx, -1 -> je 0x1b79b8 */
-  tag_block_get_element((void *)0, 0, 0);
-  /* test (char)eax, 2 -> je 0x1b79a2 */
-  /* relift: relift: fcomp dword ptr [0x25bc08] */
-  /* test (char)eax, 0x41 -> jne 0x1b79a2 */
-  /* relift: relift: fld dword ptr [0x2533dc] */
-  /* test (char)eax, 0x41 -> jne 0x1b7966 */
-  FUN_0009f430(0, 0, 0, (void *)0, (void *)0, (void *)0, 0.0f);
-  /* cmp eax, ecx -> jl 0x1b7850 */
+  (void)scratch;
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh);
+  phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c));
+  if (*(int *)(vehi + 0x3dc) == -1)
+    return;
 
-  (void)eax;
-  (void)ecx;
+  wheel_block = phys + 0x74;
+  wheel_count = *(int *)wheel_block;
+  if (wheel_count <= 0)
+    return;
+
+  wheel_flags = (char *)wheel_state;
+  for (wheel_index = 0; wheel_index < wheel_count; wheel_index++) {
+    char *wheel_entry;
+    char *wheel_info;
+    float velocity[3];
+    float mag;
+    float scale;
+    float offset;
+    float impulse_point[3];
+    float force[3];
+    float effect_scale;
+    int effect_kind;
+
+    wheel_info = wheel_flags + wheel_index * 0x130;
+    if ((wheel_info[0] & 2) == 0)
+      continue;
+
+    wheel_entry = (char *)tag_block_get_element(wheel_block, wheel_index, 0x80);
+    velocity[0] = *(float *)(wheel_info + 0x54);
+    velocity[1] = *(float *)(wheel_info + 0x58);
+    velocity[2] = *(float *)(wheel_info + 0x5c);
+    mag = sqrtf(velocity[0] * velocity[0] + velocity[1] * velocity[1] +
+                velocity[2] * velocity[2]);
+    if (mag > *(float *)0x25bc08)
+      continue;
+
+    scale = (mag - *(float *)0x25bc08) * *(float *)0x2b7d3c;
+    offset = *(float *)(wheel_info + 0x74) - *(float *)(wheel_entry + 0x68) +
+             *(float *)0x2b2264;
+    impulse_point[0] = offset * *(float *)(wheel_info + 0x60) +
+                       *(float *)(wheel_info + 4);
+    impulse_point[1] = offset * *(float *)(wheel_info + 0x64) +
+                       *(float *)(wheel_info + 8);
+    impulse_point[2] = offset * *(float *)(wheel_info + 0x68) +
+                       *(float *)(wheel_info + 0xc);
+
+    force[0] = *(float *)0x2533dc / mag * velocity[0];
+    force[1] = *(float *)0x2533dc / mag * velocity[1];
+    force[2] = *(float *)0x2533dc / mag * velocity[2];
+    force[0] = force[0] * *(float *)(wheel_info + 0x60) * *(float *)0x253398 +
+               force[0];
+    force[1] = force[1] * *(float *)(wheel_info + 0x64) * *(float *)0x253398 +
+               force[1];
+    force[2] = force[2] * *(float *)(wheel_info + 0x68) * *(float *)0x253398 +
+               force[2];
+
+    effect_scale = scale;
+    if (effect_scale <= 0.0f)
+      effect_scale = 0.0f;
+    else if (effect_scale >= 1.0f)
+      effect_scale = 1.0f;
+
+    effect_kind = ((*(unsigned char *)(wheel_entry + 0x24) & 1) == 0) ? 9 : 8;
+    FUN_0009f430(
+        *(int *)(vehi + 0x3dc), (short)effect_kind,
+        *(short *)(wheel_info + 0x70), impulse_point, force,
+        (void *)((char *)veh + 0x48), effect_scale);
+  }
 }
 
 /* vehicle_export_function_values (0x1b79c0) — fill vehicle+0xd4 function-value
