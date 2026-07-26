@@ -455,69 +455,17 @@ char FUN_00190550(int *collision_location __attribute__((unused)), float *positi
 #endif
 
 
-/* FUN_00190670 (0x190670) — XBE naked draft (batch 289). */
-#if defined(__clang__)
-static char (*const b190670_c190550)(int *collision_location, float *position, float *wind_out, int flags) = FUN_00190550;
-
-__attribute__((naked, noinline))
-void FUN_00190670(void)
+/* FUN_00190670 (0x190670) — readable C lift. */
+void FUN_00190670(int a0, int a1, int a2, int a3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "orl $8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c190550]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c190550] "m"(b190670_c190550)
-      : "memory");
+  FUN_00190550(a0, a1, a2, a3 | 8);
 }
-#else
-#error "FUN_00190670: clang naked draft required"
-#endif
 
-
-/* FUN_00190690 (0x190690) — XBE naked draft (batch 289). */
-#if defined(__clang__)
-static char (*const b190690_c190550)(int *collision_location, float *position, float *wind_out, int flags) = FUN_00190550;
-
-__attribute__((naked, noinline))
-void FUN_00190690(void)
+/* FUN_00190690 (0x190690) — readable C lift. */
+void FUN_00190690(int a0, int a1, int a2, int a3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "orl $4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c190550]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c190550] "m"(b190690_c190550)
-      : "memory");
+  FUN_00190550(a0, a1, a2, a3 | 4);
 }
-#else
-#error "FUN_00190690: clang naked draft required"
-#endif
-
 
 /* 0x1906b0 */
 void *FUN_001906b0(void *shader, int shader_type)

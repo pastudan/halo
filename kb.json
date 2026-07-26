@@ -23929,13 +23929,13 @@
         },
         {
           "addr": "0x190670",
-          "decl": "void FUN_00190670(void);",
-          "ported": false
+          "decl": "void FUN_00190670(int a0, int a1, int a2, int a3);",
+          "ported": true
         },
         {
           "addr": "0x190690",
-          "decl": "void FUN_00190690(void);",
-          "ported": false
+          "decl": "void FUN_00190690(int a0, int a1, int a2, int a3);",
+          "ported": true
         },
         {
           "addr": "0x1906b0",
