@@ -6248,77 +6248,18 @@ void FUN_000ce110(data_t *data __attribute__((unused)), int link __attribute__((
 #endif
 
 
-/* FUN_000ce150 (0xce150) — XBE naked draft (batch 156). */
-#if defined(__clang__)
-static data_t * (*const bce150_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
-static int (*const bce150_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-
-__attribute__((naked, noinline))
+/* FUN_000ce150 (0xce150) — readable C lift: init object list data arrays. */
 void FUN_000ce150(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x100, %%esp\n\t"
-      "pushl $0xc\n\t"
-      "pushl $0x30\n\t"
-      "pushl $0x280edc\n\t"
-      "call *%[c1bfe10]\n\t"
-      "pushl $0x280ed0\n\t"
-      "movl %%eax, 0x5aa698\n\t"
-      "leal -0x100(%%ebp), %%eax\n\t"
-      "pushl $0x280e94\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d90f0]\n\t"
-      "pushl $0xc\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1bfe10]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "movl %%eax, 0x5aa694\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c1bfe10] "m"(bce150_c1bfe10), [c1d90f0] "m"(bce150_c1d90f0)
-      : "memory");
-}
-#else
-#error "FUN_000ce150: clang naked draft required"
-#endif
+  extern char DAT_00280edc[];
+  extern char DAT_00280ed0[];
+  extern char DAT_00280e94[];
+  char buf[0x100];
 
+  *(data_t **)0x5aa698 = game_state_data_new(DAT_00280edc, 0x30, 0xc);
+  crt_sprintf(buf, DAT_00280e94, DAT_00280ed0);
+  *(data_t **)0x5aa694 = game_state_data_new(buf, 0x80, 0xc);
+}
 
 /* object_list_delete (0xce240) — XBE naked draft (batch 157). */
 #if defined(__clang__)
