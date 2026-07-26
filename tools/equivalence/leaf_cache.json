@@ -1,21 +1,17 @@
 {
-  "0x38": {
-    "confidence": "high",
-    "coverage_pct": 88.8
+  "0x19e6c0": {
+    "class": "non_leaf"
+  },
+  "0x1ccbe0": {
+    "class": "non_leaf"
   },
   "0x4": {
     "confidence": "weak",
     "coverage_pct": 100.0
   },
-  "0x42df0": {
-    "class": "non_leaf"
-  },
-  "0x966b0": {
-    "class": "non_leaf"
-  },
-  "0xe3cb0": {
-    "confidence": "weak",
-    "coverage_pct": 72.4,
-    "class": "leaf"
+  "0x4b220": {
+    "class": "non_leaf",
+    "confidence": "moderate",
+    "coverage_pct": 53.7
   }
 }

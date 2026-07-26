@@ -34870,8 +34870,9 @@
         },
         {
           "addr": "0x4b220",
-          "decl": "void FUN_0004b220(void);",
-          "ported": false
+          "decl": "void FUN_0004b220(float *point @<eax>);",
+          "ported": true,
+          "name": "FUN_0004b220"
         },
         {
           "addr": "0x4b2b0",
@@ -35014,8 +35015,9 @@
         },
         {
           "addr": "0x53960",
-          "decl": "void FUN_00053960(void);",
-          "ported": false
+          "decl": "unsigned short FUN_00053960(void);",
+          "ported": true,
+          "name": "FUN_00053960"
         },
         {
           "addr": "0x539c0",

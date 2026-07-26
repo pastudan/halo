@@ -3486,64 +3486,29 @@ void ai_debug_teleport_to(int actor_index __attribute__((unused)))
 #endif
 
 
-/* FUN_0004b220 (0x4b220) — XBE naked draft (batch 154). */
-#if defined(__clang__)
-static void * (*const b4b220_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;
-
-__attribute__((naked, noinline))
-void FUN_0004b220(void)
+/* FUN_0004b220 (0x4b220) — readable C lift.
+ * point arrives in EAX (kb: @<eax>); cdecl param matches harness. */
+void FUN_0004b220(float *point)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c8a4e0]\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x5ac9a0\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl %%edx, 0x5ac9a4\n\t"
-      "movl 0x8(%%esi), %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%esi, 0x5ac9a8\n\t"
-      "movl %%esi, 0x5ac9b8\n\t"
-      "movl %%ecx, 0x5ac9b0\n\t"
-      "movl %%edx, 0x5ac9b4\n\t"
-      "popl %%esi\n\t"
-      "je .LFUN_0004b220_1\n\t"
-      "flds (%%eax)\n\t"
-      "fsubs 0x5ac9a0\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x5ac9a4\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs 0x5ac9a8\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fstp %%st(3)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fmuls 0x25afc0\n\t"
-      "fstps 0x5ac990\n\t"
-      "ret\n\t"
-      ".LFUN_0004b220_1:\n\t"
-      "movl $0x3d4ccccd, 0x5ac990\n\t"
-      "ret\n\t"
-      :
-      : [c8a4e0] "m"(b4b220_c8a4e0)
-      : "memory");
+  float *cam;
+  float dx, dy, dz;
+
+  cam = (float *)observer_get_camera(0);
+  *(float *)0x5ac9a0 = point[0];
+  *(float *)0x5ac9a4 = point[1];
+  *(float *)0x5ac9a8 = point[2];
+  *(float *)0x5ac9b8 = point[2];
+  *(float *)0x5ac9b0 = point[0];
+  *(float *)0x5ac9b4 = point[1];
+  if (!cam) {
+    *(float *)0x5ac990 = 0.05f; /* 0x3d4ccccd */
+    return;
+  }
+  dx = cam[0] - point[0];
+  dy = cam[1] - point[1];
+  dz = cam[2] - point[2];
+  *(float *)0x5ac990 = __builtin_sqrtf(dx * dx + dy * dy + dz * dz) * *(float *)0x25afc0;
 }
-#else
-#error "FUN_0004b220: clang naked draft required"
-#endif
-
-
 /* FUN_0004b2b0 (0x4b2b0) — readable C lift: advance debug point by dt*vel. */
 float *FUN_0004b2b0(void)
 {
@@ -13938,54 +13903,18 @@ int16_t FUN_000538d0(void) {
 
 
 
-/* FUN_00053960 (0x53960) — XBE naked draft (batch 151). */
-#if defined(__clang__)
-static void (*const b53960_c59b10)(void *iter, char flag) = encounter_iterator_next;
-static int (*const b53960_c59b50)(void *iter) = FUN_00059b50;
-
-__attribute__((naked, noinline))
-void FUN_00053960(void)
+/* FUN_00053960 (0x53960) — readable C lift. */
+unsigned short FUN_00053960(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c59b10]\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c59b50]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00053960_2\n\t"
-      ".LFUN_00053960_1:\n\t"
-      "movzbw 0x6(%%eax), %%dx\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "addl %%edx, %%esi\n\t"
-      "call *%[c59b50]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00053960_1\n\t"
-      ".LFUN_00053960_2:\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c59b10] "m"(b53960_c59b10), [c59b50] "m"(b53960_c59b50)
-      : "memory");
+  unsigned char iter[0x1c];
+  void *enc;
+  unsigned short sum = 0;
+
+  encounter_iterator_next(iter, 0);
+  for (enc = (void *)FUN_00059b50(iter); enc; enc = (void *)FUN_00059b50(iter))
+    sum = (unsigned short)(sum + *(unsigned char *)((char *)enc + 6));
+  return sum;
 }
-#else
-#error "FUN_00053960: clang naked draft required"
-#endif
-
-
 /* FUN_000539c0 (0x539c0) — XBE naked draft (batch 167). */
 #if defined(__clang__)
 static int (*const b539c0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
