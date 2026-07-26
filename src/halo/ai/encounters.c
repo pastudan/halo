@@ -5785,116 +5785,60 @@ void encounter_modify_pursuit_desires(int encounter_handle __attribute__((unused
 #endif
 
 
-/* encounters_initialize (0x566a0) — XBE naked draft (batch 232). */
-#if defined(__clang__)
-static const char * (*const b566a0_ccb980)(void) = hs_runtime_get_executing_thread_name;
-static void (*const b566a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static int16_t (*const b566a0_ca7460)(void) = game_difficulty_level_get;
-static void (*const b566a0_ca7eb0)(int16_t team_a, char is_player, int16_t team_b, char is_timer, int16_t threshold, int16_t timer, char is_ally) = game_allegiance_create;
-
-__attribute__((naked, noinline))
-void encounters_initialize(int16_t team_a __attribute__((unused)), int16_t team_b __attribute__((unused)))
+/* encounters_initialize (0x566a0) — readable C lift. */
+void encounters_initialize(int16_t team_a, int16_t team_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movb 0x5aca59, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lencounters_initialize_1\n\t"
-      "movswl 0xc(%%ebp), %%eax\n\t"
-      "movswl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccb980]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25c994\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencounters_initialize_1:\n\t"
-      "orl $0xffffffff, %%ecx\n\t"
-      "cmpw %%cx, 0x8(%%ebp)\n\t"
-      "je .Lencounters_initialize_9\n\t"
-      "cmpw %%cx, 0xc(%%ebp)\n\t"
-      "je .Lencounters_initialize_9\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpw $1, %%ax\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "movb $0, -0x4(%%ebp)\n\t"
-      "jne .Lencounters_initialize_2\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "jmp .Lencounters_initialize_3\n\t"
-      ".Lencounters_initialize_2:\n\t"
-      "cmpw $1, 0xc(%%ebp)\n\t"
-      "jne .Lencounters_initialize_3\n\t"
-      "movl %%eax, %%esi\n\t"
-      ".Lencounters_initialize_3:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "subl $2, %%edx\n\t"
-      "je .Lencounters_initialize_4\n\t"
-      "subl $3, %%edx\n\t"
-      "jne .Lencounters_initialize_5\n\t"
-      ".Lencounters_initialize_4:\n\t"
-      "movw $0x12c, -0xc(%%ebp)\n\t"
-      "movw $0x1c2, -0xa(%%ebp)\n\t"
-      "movw $0x4b0, -0x8(%%ebp)\n\t"
-      "movw $0xa8c, -0x6(%%ebp)\n\t"
-      "movb $1, %%bl\n\t"
-      "movl $5, %%edi\n\t"
-      "call *%[ca7460]\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movw -0xc(%%ebp,%%edx,2), %%cx\n\t"
-      "cmpw $2, %%si\n\t"
-      "sete %%al\n\t"
-      "cmpw %%si, 0xc(%%ebp)\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "jne .Lencounters_initialize_5\n\t"
-      "movl $1, %%edx\n\t"
-      "jmp .Lencounters_initialize_6\n\t"
-      ".Lencounters_initialize_5:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lencounters_initialize_7\n\t"
-      ".Lencounters_initialize_6:\n\t"
-      "cmpw %%si, %%ax\n\t"
-      "jne .Lencounters_initialize_7\n\t"
-      "movl $1, %%esi\n\t"
-      "jmp .Lencounters_initialize_8\n\t"
-      ".Lencounters_initialize_7:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".Lencounters_initialize_8:\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca7eb0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lencounters_initialize_9:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccb980] "m"(b566a0_ccb980), [c8f390] "m"(b566a0_c8f390), [ca7460] "m"(b566a0_ca7460), [ca7eb0] "m"(b566a0_ca7eb0)
-      : "memory");
+  int16_t special;
+  int16_t timer_val;
+  int16_t threshold_const;
+  char is_ally;
+  char configured;
+  int16_t is_player;
+  int16_t is_timer;
+  int16_t table[4];
+
+  if (*(char *)0x5aca59)
+    error(2, (const char *)0x25c994, hs_runtime_get_executing_thread_name(), (int)team_a, (int)team_b);
+
+  if (team_a == -1 || team_b == -1)
+    return;
+
+  special = -1;
+  is_ally = 0;
+  configured = 0;
+  threshold_const = -1;
+  timer_val = -1;
+
+  if (team_a == 1)
+    special = team_b;
+  else if (team_b == 1)
+    special = team_a;
+
+  if (special == 2 || special == 5) {
+    table[0] = 0x12c;
+    table[1] = 0x1c2;
+    table[2] = 0x4b0;
+    table[3] = 0xa8c;
+    configured = 1;
+    threshold_const = 5;
+    timer_val = table[game_difficulty_level_get()];
+    is_ally = (special == 2) ? 1 : 0;
+  }
+
+  if (special == 2 || special == 5)
+    is_timer = (team_b == special) ? 1 : 0;
+  else
+    is_timer = 0;
+
+  if (configured && team_a == special)
+    is_player = 1;
+  else
+    is_player = 0;
+
+  game_allegiance_create(
+      team_a, (char)is_player, team_b, (char)is_timer,
+      threshold_const, timer_val, is_ally);
 }
-#else
-#error "encounters_initialize: clang naked draft required"
-#endif
 
 
 /* encounter_pursuit_position_already_examined (0x5b6e0) — XBE naked draft (batch 224). */
@@ -6271,123 +6215,48 @@ void FUN_00053c50(void)
 #endif
 
 
-/* FUN_00053f40 (0x53f40) — XBE naked draft (batch 223). */
-#if defined(__clang__)
-static int *(*const b53f40_gseed)(void) = get_global_random_seed_address;
-static float (*const b53f40_rrange)(int *, float, float) = random_real_range;
-
-__attribute__((naked, noinline))
-short FUN_00053f40(float *weights __attribute__((unused)), short stride __attribute__((unused)), short count __attribute__((unused)), short weight_offset __attribute__((unused)), int *bitvector __attribute__((unused)))
+/* FUN_00053f40 (0x53f40) — readable C lift. */
+int16_t FUN_00053f40(float *weights, int16_t stride, int16_t count, int16_t weight_offset, int *bitvector)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movswl 0x14(%%ebp), %%ecx\n\t"
-      "flds 0x2533c0\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "movw 0x10(%%ebp), %%cx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "testw %%cx, %%cx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edx, 0x14(%%ebp)\n\t"
-      "jle .LFUN_00053f40_5\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movzwl %%cx, %%edi\n\t"
-      ".LFUN_00053f40_1:\n\t"
-      "movl 0x18(%%ebp), %%ebx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%esi\n\t"
-      "shll %%cl, %%esi\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "sarl $5, %%ecx\n\t"
-      "testl %%esi, (%%ebx,%%ecx,4)\n\t"
-      "jne .LFUN_00053f40_2\n\t"
-      "fadds (%%edx)\n\t"
-      ".LFUN_00053f40_2:\n\t"
-      "movswl 0xc(%%ebp), %%ebx\n\t"
-      "incl %%eax\n\t"
-      "addl %%ebx, %%edx\n\t"
-      "decl %%edi\n\t"
-      "jne .LFUN_00053f40_1\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00053f40_7\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x2533c0\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%edx, %%edx\n\t"
-      ".LFUN_00053f40_3:\n\t"
-      "movswl %%dx, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edi\n\t"
-      "shll %%cl, %%edi\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "sarl $5, %%eax\n\t"
-      "testl %%edi, (%%ecx,%%eax,4)\n\t"
-      "jne .LFUN_00053f40_4\n\t"
-      "fadds (%%esi)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .LFUN_00053f40_6\n\t"
-      ".LFUN_00053f40_4:\n\t"
-      "incl %%edx\n\t"
-      "addl %%ebx, %%esi\n\t"
-      "cmpw 0x10(%%ebp), %%dx\n\t"
-      "jl .LFUN_00053f40_3\n\t"
-      "movl $0xffffffff, %%eax\n\t"
-      ".LFUN_00053f40_5:\n\t"
-      "popl %%edi\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00053f40_6:\n\t"
-      "popl %%edi\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%esi\n\t"
-      "movw %%dx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00053f40_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [gseed] "m"(b53f40_gseed), [rrange] "m"(b53f40_rrange)
-      : "memory");
+  float total;
+  float pick;
+  float acc;
+  int16_t i;
+  char *base;
+  char *p;
+
+  if (count <= 0)
+    return -1;
+
+  base = (char *)weights + weight_offset;
+  total = 0.0f;
+  p = base;
+  for (i = 0; i < count; i++) {
+    int word = i >> 5;
+    int bit = 1 << (i & 0x1f);
+    if ((bitvector[word] & bit) == 0)
+      total += *(float *)p;
+    p += stride;
+  }
+
+  if (!(total > 0.0f))
+    return -1;
+
+  pick = random_real_range(get_global_random_seed_address(), 0.0f, total);
+  acc = 0.0f;
+  p = base;
+  for (i = 0; i < count; i++) {
+    int word = i >> 5;
+    int bit = 1 << (i & 0x1f);
+    if ((bitvector[word] & bit) == 0) {
+      acc += *(float *)p;
+      if (!(pick > acc))
+        return i;
+    }
+    p += stride;
+  }
+  return -1;
 }
-#else
-#error "FUN_00053f40: clang naked draft required"
-#endif
 
 
 /* FUN_000564b0 (0x564b0) — XBE naked draft (batch 232). */
@@ -8501,140 +8370,63 @@ void encounter_build_firing_position_owner_actor_indices(int encounter_handle __
 #endif
 
 
-/* encounter_post_combat_select_random_behavior (0x5bad0) — XBE naked draft (batch 221). */
-#if defined(__clang__)
-static int *(*const b5bad0_gseed)(void) = get_global_random_seed_address;
-static float (*const b5bad0_rmreal)(unsigned int *) = random_math_real;
-static void (*const b5bad0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5bad0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int16_t encounter_post_combat_select_random_behavior(void *samples __attribute__((unused)), int *out __attribute__((unused)))
+/* encounter_post_combat_select_random_behavior (0x5bad0) — readable C lift. */
+int16_t encounter_post_combat_select_random_behavior(void *out, void *samples)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "flds 0x2533c0\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "leal 0x4(%%ebx), %%ecx\n\t"
-      "jmp .Lencounter_post_combat_select_random_behavior_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lencounter_post_combat_select_random_behavior_1:\n\t"
-      "flds (%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lencounter_post_combat_select_random_behavior_2\n\t"
-      "cmpl $-1, -0x4(%%ecx)\n\t"
-      "je .Lencounter_post_combat_select_random_behavior_2\n\t"
-      "fadds (%%ecx)\n\t"
-      "movl %%edx, %%esi\n\t"
-      "incl %%edi\n\t"
-      ".Lencounter_post_combat_select_random_behavior_2:\n\t"
-      "incl %%edx\n\t"
-      "addl $0x20, %%ecx\n\t"
-      "cmpw $4, %%dx\n\t"
-      "jl .Lencounter_post_combat_select_random_behavior_1\n\t"
-      "cmpw $1, %%di\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "jle .Lencounter_post_combat_select_random_behavior_7\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rmreal]\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "addl $4, %%esp\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lencounter_post_combat_select_random_behavior_3:\n\t"
-      "movswl %%dx, %%eax\n\t"
-      "shll $5, %%eax\n\t"
-      "leal (%%eax,%%ebx,1), %%ecx\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lencounter_post_combat_select_random_behavior_4\n\t"
-      "cmpl $-1, (%%ecx)\n\t"
-      "je .Lencounter_post_combat_select_random_behavior_4\n\t"
-      "fadds 0x4(%%ecx)\n\t"
-      "fcoms -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lencounter_post_combat_select_random_behavior_5\n\t"
-      ".Lencounter_post_combat_select_random_behavior_4:\n\t"
-      "incl %%edx\n\t"
-      "cmpw $4, %%dx\n\t"
-      "jl .Lencounter_post_combat_select_random_behavior_3\n\t"
-      "jmp .Lencounter_post_combat_select_random_behavior_6\n\t"
-      ".Lencounter_post_combat_select_random_behavior_5:\n\t"
-      "movl %%edx, %%esi\n\t"
-      ".Lencounter_post_combat_select_random_behavior_6:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lencounter_post_combat_select_random_behavior_7:\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .Lencounter_post_combat_select_random_behavior_10\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lencounter_post_combat_select_random_behavior_8\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lencounter_post_combat_select_random_behavior_9\n\t"
-      ".Lencounter_post_combat_select_random_behavior_8:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa02\n\t"
-      "pushl $0x25d27c\n\t"
-      "pushl $0x25db08\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencounter_post_combat_select_random_behavior_9:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "shll $5, %%ecx\n\t"
-      "addl %%ebx, %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl 0xc(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0xc(%%eax)\n\t"
-      ".Lencounter_post_combat_select_random_behavior_10:\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [gseed] "m"(b5bad0_gseed), [rmreal] "m"(b5bad0_rmreal), [assert] "m"(b5bad0_assert), [exitfn] "m"(b5bad0_exitfn)
-      : "memory");
+  float total;
+  float pick;
+  float acc;
+  int16_t chosen;
+  int16_t n_pos;
+  int16_t i;
+  char *s;
+  int *o;
+
+  total = 0.0f;
+  chosen = -1;
+  n_pos = 0;
+  s = (char *)samples;
+  for (i = 0; i < 4; i++) {
+    float w = *(float *)(s + 4);
+    if (w > 0.0f && *(int *)s != -1) {
+      total += w;
+      chosen = i;
+      n_pos++;
+    }
+    s += 0x20;
+  }
+
+  if (n_pos > 1) {
+    pick = random_math_real((unsigned int *)get_global_random_seed_address()) * total;
+    acc = 0.0f;
+    chosen = -1;
+    for (i = 0; i < 4; i++) {
+      char *e = (char *)samples + (int)i * 0x20;
+      float w = *(float *)(e + 4);
+      if (w > 0.0f && *(int *)e != -1) {
+        acc += w;
+        if (!(pick > acc)) {
+          chosen = i;
+          break;
+        }
+      }
+    }
+  }
+
+  if (chosen != -1) {
+    if (chosen < 0 || chosen >= 4) {
+      display_assert((const char *)0x25db08, (const char *)0x25d27c, 0xa02, true);
+      system_exit(-1);
+    }
+    o = (int *)out;
+    s = (char *)samples + (int)chosen * 0x20;
+    o[0] = *(int *)s;
+    o[1] = *(int *)(s + 4);
+    o[2] = *(int *)(s + 8);
+    o[3] = *(int *)(s + 0xc);
+  }
+  return chosen;
 }
-#else
-#error "encounter_post_combat_select_random_behavior: clang naked draft required"
-#endif
 
 
 /* FUN_0005B790 (0x5b790) — XBE naked draft (batch 220). */
@@ -8948,7 +8740,7 @@ static void (*const b5bbe0_c64540)(int *out, int actor_handle) = FUN_00064540;
 static int (*const b5bbe0_c64570)(int *iter) = FUN_00064570;
 static char (*const b5bbe0_c5ac60)(int *samples, int score, float y, float x, float z) = FUN_0005ac60;
 static void *(*const b5bbe0_get)(int, int) = object_get_and_verify_type;
-static int16_t (*const b5bbe0_c5bad0)(void *samples, int *out) = encounter_post_combat_select_random_behavior;
+static int16_t (*const b5bbe0_c5bad0)(void *out, void *samples) = encounter_post_combat_select_random_behavior;
 static int (*const b5bbe0_c43270)(int actor) = actor_communication_team;
 static int (*const b5bbe0_c64ab0)(int actor_handle, int object_handle) = prop_get_active_by_unit_index;
 static void (*const b5bbe0_assert)(const char *, const char *, int, bool) = display_assert;

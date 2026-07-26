@@ -34508,7 +34508,7 @@
         {
           "addr": "0x433b0",
           "decl": "int16_t ai_conversation_status(int16_t conversation_index);",
-          "ported": false,
+          "ported": true,
           "name": "ai_conversation_status"
         },
         {

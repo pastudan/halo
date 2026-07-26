@@ -1115,146 +1115,64 @@ void FUN_00043360(int look_arg, int unit, short priority, int actor)
   *(int *)((char *)buf + 4) = actor;
   FUN_00027a60(unit, (short)look_arg, priority, buf);
 }
-/* ai_conversation_status (0x433b0) — XBE naked draft (batch 125). */
-#if defined(__clang__)
-static void (*const b433b0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b433b0_c119810)(data_iter_t *iterator) = data_iterator_next;
-
-__attribute__((naked, noinline))
-int16_t ai_conversation_status(int16_t conversation_index __attribute__((unused)))
+/* ai_conversation_status (0x433b0) — readable C lift. */
+int16_t ai_conversation_status(int16_t conversation_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "movl 0x6324ec, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lai_conversation_status_7\n\t"
-      "jmp .Lai_conversation_status_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lai_conversation_status_1:\n\t"
-      "movw 0x8(%%ebp), %%cx\n\t"
-      "cmpw %%cx, 0x2(%%eax)\n\t"
-      "jne .Lai_conversation_status_6\n\t"
-      "movb 0x6(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lai_conversation_status_2\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lai_conversation_status_4\n\t"
-      ".Lai_conversation_status_2:\n\t"
-      "movb 0x5(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lai_conversation_status_3\n\t"
-      "movl $2, %%eax\n\t"
-      "jmp .Lai_conversation_status_4\n\t"
-      ".Lai_conversation_status_3:\n\t"
-      "movb 0x8(%%eax), %%cl\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testb %%cl, %%cl\n\t"
-      "setne %%dl\n\t"
-      "addl $3, %%edx\n\t"
-      "movl %%edx, %%eax\n\t"
-      ".Lai_conversation_status_4:\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jg .Lai_conversation_status_5\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".Lai_conversation_status_5:\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      ".Lai_conversation_status_6:\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lai_conversation_status_1\n\t"
-      "testw %%si, %%si\n\t"
-      "jne .Lai_conversation_status_11\n\t"
-      ".Lai_conversation_status_7:\n\t"
-      "movl 0x632574, %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "movw 0x2c(%%edx), %%bx\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jle .Lai_conversation_status_12\n\t"
-      "addl $0x34, %%edx\n\t"
-      ".Lai_conversation_status_8:\n\t"
-      "movw 0x8(%%ebp), %%cx\n\t"
-      "cmpw %%cx, -0x4(%%edx)\n\t"
-      "jne .Lai_conversation_status_9\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "cmpl %%esi, %%ecx\n\t"
-      "jle .Lai_conversation_status_9\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl %%ecx, %%esi\n\t"
-      ".Lai_conversation_status_9:\n\t"
-      "incl %%eax\n\t"
-      "addl $0x10, %%edx\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "jl .Lai_conversation_status_8\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .Lai_conversation_status_12\n\t"
-      "movl 0x632574, %%edx\n\t"
-      "movswl %%di, %%eax\n\t"
-      "addl $3, %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "movb 0x2(%%eax,%%edx,1), %%cl\n\t"
-      "addl %%edx, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lai_conversation_status_10\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl $5, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lai_conversation_status_10:\n\t"
-      "movb 0x3(%%eax), %%al\n\t"
-      "negb %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%esi\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "addl $7, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lai_conversation_status_11:\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lai_conversation_status_12:\n\t"
-      "movw -0x4(%%ebp), %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1197b0] "m"(b433b0_c1197b0), [c119810] "m"(b433b0_c119810)
-      : "memory");
+  data_iter_t iter;
+  char *rec;
+  int16_t best;
+  int16_t status;
+  char *scenario;
+  int16_t count;
+  int16_t i;
+  int16_t best_i;
+  int best_val;
+
+  best = 0;
+  data_iterator_new(&iter, *(data_t **)0x6324ec);
+  for (rec = (char *)data_iterator_next(&iter); rec; rec = (char *)data_iterator_next(&iter)) {
+    if (*(int16_t *)(rec + 2) != conversation_index)
+      continue;
+    if (!rec[6])
+      status = 1;
+    else if (!rec[5])
+      status = 2;
+    else
+      status = (int16_t)(3 + (rec[8] != 0));
+    if (best <= status)
+      best = status;
+  }
+
+  if (best != 0)
+    return best;
+
+  scenario = *(char **)0x632574;
+  count = *(int16_t *)(scenario + 0x2c);
+  best_val = -1;
+  best_i = -1;
+  for (i = 0; i < count; i++) {
+    char *edx = scenario + 0x34 + (int)i * 0x10;
+    if (*(int16_t *)(edx - 4) != conversation_index)
+      continue;
+    {
+      int val = *(int *)edx;
+      if (val > best_val) {
+        best_i = i;
+        best_val = val;
+      }
+    }
+  }
+
+  if (best_i == -1)
+    return 0;
+
+  {
+    char *e = scenario + ((int)best_i + 3) * 0x10;
+    if (e[2])
+      return 5;
+    return e[3] ? 6 : 7;
+  }
 }
-#else
-#error "ai_conversation_status: clang naked draft required"
-#endif
 
 
 /* ai_conversation_finish (0x435b0) — XBE naked draft (batch 122). */
@@ -9597,69 +9515,24 @@ void FUN_00046f10(int16_t type __attribute__((unused)), int unit_handle __attrib
 
 /* --- ai_communication.obj orphan shells (2026-07-26) --- */
 
-/* ai_debug_initialize (0x48e90) — XBE naked draft (batch 92). */
-#if defined(__clang__)
-static void *(*const b48e90_memset)(void *, int, unsigned int) = csmemset;
-static void * (*const b48e90_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b48e90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b48e90_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* ai_debug_initialize (0x48e90) — readable C lift. */
 void ai_debug_initialize(void)
 {
-  __asm__ volatile(
-      "pushl $0x85b2c\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5ac9c0\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x331f58, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl $0xffffffff, 0x5ac9f8\n\t"
-      "movl $0xffffffff, 0x5ac9f4\n\t"
-      "movl $1, 0x5acab4\n\t"
-      "movb $1, 0x5aca65\n\t"
-      "jne .Lai_debug_initialize_1\n\t"
-      "pushl $0x93\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl $0\n\t"
-      "pushl $0x657c00\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%eax, 0x331f58\n\t"
-      ".Lai_debug_initialize_1:\n\t"
-      "movl 0x331f5c, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lai_debug_initialize_2\n\t"
-      "pushl $0x94\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x394f80\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%eax, 0x331f5c\n\t"
-      ".Lai_debug_initialize_2:\n\t"
-      "movl 0x331f58, %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lai_debug_initialize_3\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lai_debug_initialize_4\n\t"
-      ".Lai_debug_initialize_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x96\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl $0x25ab48\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_debug_initialize_4:\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b48e90_memset), [c8ee60] "m"(b48e90_c8ee60), [assert] "m"(b48e90_assert), [exitfn] "m"(b48e90_exitfn)
-      : "memory");
+  csmemset((void *)0x5ac9c0, 0, 0x85b2c);
+  *(int *)0x5ac9f8 = -1;
+  *(int *)0x5ac9f4 = -1;
+  *(int *)0x5acab4 = 1;
+  *(char *)0x5aca65 = 1;
+
+  if (!*(void **)0x331f58)
+    *(void **)0x331f58 = debug_malloc(0x657c00, false, (const char *)0x25ab74, 0x93);
+
+  if (!*(void **)0x331f5c)
+    *(void **)0x331f5c = debug_malloc(0x394f80, false, (const char *)0x25ab74, 0x94);
+
+  if (!*(void **)0x331f58 || !*(void **)0x331f5c) {
+    display_assert((const char *)0x25ab48, (const char *)0x25ab74, 0x96, true);
+    system_exit(-1);
+  }
 }
-#else
-#error "ai_debug_initialize: clang naked draft required"
-#endif
 
