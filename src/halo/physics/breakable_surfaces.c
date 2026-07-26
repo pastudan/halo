@@ -1042,21 +1042,57 @@ char FUN_00145580(int object_handle __attribute__((unused)))
 #endif
 
 
-/* 0x145610 — tick a device object's bound animation; rewind on wrap. */
-char FUN_00145610(int object_handle)
-{
-  char *obj;
-  int16_t anim_result;
+/* FUN_00145610 (0x145610) — XBE naked draft (batch 238). */
+#if defined(__clang__)
+static void *(*const b145610_get)(int, int) = object_get_and_verify_type;
+static int (*const b145610_c121c30)(int update_kind, int animation_graph_tag_index, short *state, int *out_sound) = animation_update_internal;
 
-  obj = (char *)object_get_and_verify_type(object_handle, 0x40);
-  if ((obj[0x1a4] & 1) == 0)
-    return 1;
-  anim_result = (int16_t)animation_update_internal(
-      1, *(int *)(obj + 0x7c), (short *)(obj + 0x80), 0);
-  if (anim_result == 2)
-    *(int16_t *)(obj + 0x82) -= 1;
-  return 1;
+__attribute__((naked, noinline))
+char FUN_00145610(int object_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x1a4(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $1, %%al\n\t"
+      "je .LFUN_00145610_1\n\t"
+      "movl 0x7c(%%esi), %%eax\n\t"
+      "pushl $0\n\t"
+      "leal 0x80(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $1\n\t"
+      "call *%[c121c30]\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "subl $2, %%eax\n\t"
+      "movb $1, %%al\n\t"
+      "jne .LFUN_00145610_2\n\t"
+      "decw 0x82(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00145610_1:\n\t"
+      "movb $1, %%al\n\t"
+      ".LFUN_00145610_2:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b145610_get), [c121c30] "m"(b145610_c121c30)
+      : "memory");
 }
+#else
+#error "FUN_00145610: clang naked draft required"
+#endif
+
 
 /* 0x145660 — bind an animation permutation onto a device/machine object.
  * object_handle arrives in EAX; tag/name/frame are cdecl stack args. */

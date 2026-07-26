@@ -4221,25 +4221,67 @@ void encounters_unit_died(int unit_handle)
   }
 }
 
-/* encounter_force_activate (0x5ba70) — Force an encounter active by setting
- * the respawn timer to 150 ticks and calling the activation handler. */
-void encounter_force_activate(int encounter_handle)
-{
-  char *encounter;
-  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
-  *(int16_t *)(encounter + 0xe) = 0x96;
-  FUN_0005a4e0(encounter_handle);
-}
+/* encounter_force_activate (0x5ba70) — XBE naked draft (batch 238). */
+#if defined(__clang__)
+static void *(*const b5ba70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 
-/* encounter_force_deactivate (0x5baa0) — Force an encounter inactive by setting
- * the respawn timer to 0 and calling the deactivation handler. */
-void encounter_force_deactivate(int encounter_handle)
+__attribute__((naked, noinline))
+void encounter_force_activate(int encounter_handle __attribute__((unused)))
 {
-  char *encounter;
-  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
-  *(int16_t *)(encounter + 0xe) = 0;
-  FUN_0005a640(encounter_handle);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "movw $0x96, 0xe(%%eax)\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x4b, 0xea, 0xff, 0xff\n\t"
+      :
+      : [dget] "m"(b5ba70_dget)
+      : "memory");
 }
+#else
+#error "encounter_force_activate: clang naked draft required"
+#endif
+
+
+/* encounter_force_deactivate (0x5baa0) — XBE naked draft (batch 238). */
+#if defined(__clang__)
+static void *(*const b5baa0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void encounter_force_deactivate(int encounter_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "movw $0, 0xe(%%eax)\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x7b, 0xeb, 0xff, 0xff\n\t"
+      :
+      : [dget] "m"(b5baa0_dget)
+      : "memory");
+}
+#else
+#error "encounter_force_deactivate: clang naked draft required"
+#endif
+
 
 /* 0x5c940 — encounter_update_platoon_rules.
  * For each platoon in the encounter, evaluates two rule conditions:
@@ -5325,22 +5367,50 @@ void FUN_00053bf0(void)
   ((void(__cdecl *)(char *, int, int16_t *))0x53800)((char *)0x5ab280, 3, timer_values);
 }
 
-/* 0x53b80 — Debug overlay: write per-team encounter activation timers. */
+/* FUN_00053b80 (0x53b80) — XBE naked draft (batch 238). */
+#if defined(__clang__)
+static int (*const b53b80_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static void (*const b53b80_c53800)(void) = FUN_00053800;
+
+__attribute__((naked, noinline))
 void FUN_00053b80(void)
 {
-  int16_t timer_values[3];
-  volatile int dead_load;
-
-  crt_sprintf((char *)0x5ab280, (const char *)0x25c1d8, (int)*(int16_t *)0x5ac5d6,
-              (int)*(int16_t *)0x5ac65e, (int)*(int16_t *)0x5ac6e6,
-              (int)*(int16_t *)0x5ac906);
-  timer_values[0] = 0x96;
-  timer_values[1] = 0x12c;
-  timer_values[2] = 0x1c2;
-  dead_load = *(int *)0x2ee6c4;
-  (void)dead_load;
-  ((void(__cdecl *)(char *, int, int16_t *))0x53800)((char *)0x5ab280, 3, timer_values);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movswl 0x5ac906, %%eax\n\t"
+      "movswl 0x5ac6e6, %%ecx\n\t"
+      "movswl 0x5ac65e, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movswl 0x5ac5d6, %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x25c1d8\n\t"
+      "pushl $0x5ab280\n\t"
+      "movw $0x96, -0x8(%%ebp)\n\t"
+      "movw $0x12c, -0x6(%%ebp)\n\t"
+      "movw $0x1c2, -0x4(%%ebp)\n\t"
+      "call *%[c1d90f0]\n\t"
+      "movl 0x2ee6c4, %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $3\n\t"
+      "pushl $0x5ab280\n\t"
+      "call *%[c53800]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d90f0] "m"(b53b80_c1d90f0), [c53800] "m"(b53b80_c53800)
+      : "memory");
 }
+#else
+#error "FUN_00053b80: clang naked draft required"
+#endif
+
 
 /* FUN_00053e80 (0x53e80) — XBE naked draft (batch 237). */
 #if defined(__clang__)
@@ -6531,36 +6601,106 @@ void FUN_000564b0(int encounter_handle __attribute__((unused)), int team_index _
 #endif
 
 
-/* 0x565c0 — Set encounter team from named allegiance side. */
-void FUN_000565c0(int encounter_handle, int team_index, int side_name_ptr)
+/* FUN_000565c0 (0x565c0) — XBE naked draft (batch 238). */
+#if defined(__clang__)
+static scenario_t * (*const b565c0_c18e380)(void) = global_scenario_get;
+static void (*const b565c0_c54220)(unsigned int combined_index, void *scenario, char *buffer, int buffer_size) = FUN_00054220;
+static const char * (*const b565c0_ccb980)(void) = hs_runtime_get_executing_thread_name;
+static void (*const b565c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static int (*const b565c0_c1dd801)(const char *a, const char *b) = crt_stricmp;
+static void (*const b565c0_c55dd0)(int encounter_handle, int dest_encounter, int param_3, int param_4) = FUN_00055dd0;
+
+__attribute__((naked, noinline))
+void FUN_000565c0(int encounter_handle __attribute__((unused)), int team_index __attribute__((unused)), int side_name __attribute__((unused)))
 {
-  char name_a[0x200];
-  char name_b[0x200];
-  char is_attacker;
-  const char *side_name = (const char *)side_name_ptr;
-
-  if (*(char *)0x5aca57 != 0 || *(char *)0x5aca59 != 0) {
-    FUN_00054220((unsigned int)encounter_handle, global_scenario_get(), name_a,
-                 0x200);
-    FUN_00054220((unsigned int)team_index, global_scenario_get(), name_b, 0x200);
-    error(2, (const char *)0x25c970, name_a, name_b,
-          hs_runtime_get_executing_thread_name());
-  }
-
-  if (((int(__cdecl *)(const char *, const char *))0x1dd801)(
-          side_name, (const char *)0x259738) == 0) {
-    is_attacker = 1;
-  } else if (((int(__cdecl *)(const char *, const char *))0x1dd801)(
-                 side_name, (const char *)0x259730) == 0) {
-    is_attacker = 0;
-  } else {
-    error(2, (const char *)0x25c920, side_name);
-    is_attacker = 0;
-  }
-
-  ((void(__cdecl *)(int, int, int, char))0x55dd0)(encounter_handle, team_index, 1,
-                                                  is_attacker);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x404, %%esp\n\t"
+      "movb 0x5aca57, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "jne .LFUN_000565c0_1\n\t"
+      "movb 0x5aca59, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000565c0_2\n\t"
+      ".LFUN_000565c0_1:\n\t"
+      "leal -0x404(%%ebp), %%eax\n\t"
+      "pushl $0x200\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c54220]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "leal -0x204(%%ebp), %%ecx\n\t"
+      "pushl $0x200\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c18e380]\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c54220]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "leal -0x204(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x404(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ccb980]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x25c970\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000565c0_2:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "pushl $0x259738\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1dd801]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000565c0_3\n\t"
+      "movb $1, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_000565c0_5\n\t"
+      ".LFUN_000565c0_3:\n\t"
+      "pushl $0x259730\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1dd801]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000565c0_4\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x25c920\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000565c0_4:\n\t"
+      "movb $0, -0x4(%%ebp)\n\t"
+      ".LFUN_000565c0_5:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[c55dd0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(b565c0_c18e380), [c54220] "m"(b565c0_c54220), [ccb980] "m"(b565c0_ccb980), [c8f390] "m"(b565c0_c8f390), [c1dd801] "m"(b565c0_c1dd801), [c55dd0] "m"(b565c0_c55dd0)
+      : "memory");
 }
+#else
+#error "FUN_000565c0: clang naked draft required"
+#endif
+
 
 /* FUN_00057380 (0x57380) — XBE naked draft (batch 227). */
 #if defined(__clang__)

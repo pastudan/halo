@@ -106,12 +106,30 @@ void lights_initialize_for_new_map(void)
 #endif
 
 
-/* 0x1392e0 */
+/* lights_dispose_from_old_map (0x1392e0) — XBE naked draft (batch 238). */
+#if defined(__clang__)
+static void (*const b1392e0_c119550)(data_t *data) = data_make_invalid;
+static void (*const b1392e0_c191600)(void *partition) = cluster_partition_dispose;
+
+__attribute__((naked, noinline))
 void lights_dispose_from_old_map(void)
 {
-  data_make_invalid(*(void **)0x5a90bc);
-  cluster_partition_dispose((void *)0x005a90b0);
+  __asm__ volatile(
+      "movl 0x5a90bc, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119550]\n\t"
+      "pushl $0x5a90b0\n\t"
+      "call *%[c191600]\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c119550] "m"(b1392e0_c119550), [c191600] "m"(b1392e0_c191600)
+      : "memory");
 }
+#else
+#error "lights_dispose_from_old_map: clang naked draft required"
+#endif
+
 
 /* 0x139300 — set the global lights-active flag (returns the stored value). */
 char lights_enable(char active)
