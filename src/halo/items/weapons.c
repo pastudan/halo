@@ -1839,162 +1839,19 @@ float FUN_000fbcf0(float base, float exponent)
 {
   return FUN_001d9e70(base, exponent);
 }
-/* 0xfbd10 — initialize magazines/triggers for a newly created weapon. */
-#if defined(__i386__) && defined(__GNUC__)
-__attribute__((noinline))
-#endif
-#if defined(__clang__)
-static void *(*const wnew_get)(int, int) = object_get_and_verify_type;
-static void *(*const wnew_tag)(int, int) = tag_get;
-static void *(*const wnew_elem)(void *, int, int) = tag_block_get_element;
-static void (*const wnew_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const wnew_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-char weapon_new(int weapon_handle __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movb $0, 488(%%edi)\n\t"
-      "movl $0xffffffff, 628(%%edi)\n\t"
-      "movl 1264(%%eax), %%ecx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%esi, %%ecx\n\t"
-      "movl %%eax, -8(%%ebp)\n\t"
-      "movl %%esi, -4(%%ebp)\n\t"
-      "jle .Lweapon_new_6\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lweapon_new_1:\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, -4(%%ebp)\n\t"
-      "jl .Lweapon_new_2\n\t"
-      "cmpl 1264(%%eax), %%esi\n\t"
-      "jl .Lweapon_new_3\n\t"
-      ".Lweapon_new_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x672\n\t"
-      "pushl $0x28ad48\n\t"
-      "pushl $0x28adb8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweapon_new_3:\n\t"
-      "leal 150(%%esi,%%esi,2), %%eax\n\t"
-      "leal (%%edi,%%eax,4), %%ebx\n\t"
-      "movl -8(%%ebp), %%eax\n\t"
-      "pushl $0x70\n\t"
-      "addl $0x4f0, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw 6(%%eax), %%cx\n\t"
-      "movw 10(%%eax), %%dx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw %%dx, %%cx\n\t"
-      "jle .Lweapon_new_4\n\t"
-      "movswl %%dx, %%ecx\n\t"
-      "jmp .Lweapon_new_5\n\t"
-      ".Lweapon_new_4:\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      ".Lweapon_new_5:\n\t"
-      "movw %%cx, 8(%%ebx)\n\t"
-      "movw 6(%%eax), %%dx\n\t"
-      "movl -4(%%ebp), %%eax\n\t"
-      "subw %%cx, %%dx\n\t"
-      "incl %%eax\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "movl %%eax, -4(%%ebp)\n\t"
-      "movl -8(%%ebp), %%eax\n\t"
-      "addl $0x4f0, %%eax\n\t"
-      "movw %%dx, 6(%%ebx)\n\t"
-      "cmpl (%%eax), %%esi\n\t"
-      "jl .Lweapon_new_1\n\t"
-      "movl -8(%%ebp), %%eax\n\t"
-      ".Lweapon_new_6:\n\t"
-      "movl 1276(%%eax), %%ecx\n\t"
-      "addl $0x4fc, %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpl %%esi, %%ecx\n\t"
-      "movl %%esi, -8(%%ebp)\n\t"
-      "movl %%eax, -4(%%ebp)\n\t"
-      "jle .Lweapon_new_10\n\t"
-      ".Lweapon_new_7:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, -8(%%ebp)\n\t"
-      "jl .Lweapon_new_8\n\t"
-      "cmpl 1276(%%eax), %%esi\n\t"
-      "jl .Lweapon_new_9\n\t"
-      ".Lweapon_new_8:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x667\n\t"
-      "pushl $0x28ad48\n\t"
-      "pushl $0x28ad68\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweapon_new_9:\n\t"
-      "movl -4(%%ebp), %%edx\n\t"
-      "pushl $0x114\n\t"
-      "leal (%%esi,%%esi,8), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "leal 528(%%edi,%%ecx,4), %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "movl -8(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "incl %%eax\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "movl %%eax, -8(%%ebp)\n\t"
-      "movl -4(%%ebp), %%eax\n\t"
-      "movl $0xffffffff, 32(%%ebx)\n\t"
-      "movb $0x7f, (%%ebx)\n\t"
-      "cmpl (%%eax), %%esi\n\t"
-      "jl .Lweapon_new_7\n\t"
-      ".Lweapon_new_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(wnew_get), [tag] "m"(wnew_tag), [elem] "m"(wnew_elem), [assert] "m"(wnew_assert), [exitfn] "m"(wnew_exitfn)
-      : "memory");
-}
-#else
+/* weapon_new (0xfbd10) — readable C lift. */
 char weapon_new(int weapon_handle)
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
+  extern char DAT_0028adb8[];
+  extern char DAT_0028ad48[];
+  extern char DAT_0028ad68[];
+  char *weapon_obj;
+  char *tag_data;
   int16_t magazine_index;
   int16_t trigger_index;
 
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
   weapon_obj[0x1e8] = 0;
   *(int *)(weapon_obj + 0x274) = -1;
 
@@ -2006,14 +1863,13 @@ char weapon_new(int weapon_handle)
     int16_t max_loaded;
     int16_t loaded;
 
-    tag_get(0x77656170, *(int *)weapon_obj);
+    (void)tag_get(0x77656170, *(int *)weapon_obj);
     if ((int16_t)magazine_index < 0 ||
         (int)magazine_index >= *(int *)(tag_data + 0x4f0)) {
-      display_assert((char *)0x0028adb8, (char *)0x0028ad48, 0x672, 1);
+      display_assert(DAT_0028adb8, DAT_0028ad48, 0x672, 1);
       system_exit(-1);
     }
-    mag_entry =
-        (char *)weapon_obj + ((int)magazine_index * 3 + 0x96) * 4;
+    mag_entry = (char *)weapon_obj + ((int)magazine_index * 3 + 0x96) * 4;
     mag_def = (char *)tag_block_get_element((void *)(tag_data + 0x4f0),
                                             (int)magazine_index, 0x70);
     initial_total = *(int16_t *)(mag_def + 6);
@@ -2027,24 +1883,21 @@ char weapon_new(int weapon_handle)
        trigger_index++) {
     char *trigger_entry;
 
-    tag_get(0x77656170, *(int *)weapon_obj);
+    (void)tag_get(0x77656170, *(int *)weapon_obj);
     if ((int16_t)trigger_index < 0 ||
         (int)trigger_index >= *(int *)(tag_data + 0x4fc)) {
-      display_assert((char *)0x0028ad68, (char *)0x0028ad48, 0x667, 1);
+      display_assert(DAT_0028ad68, DAT_0028ad48, 0x667, 1);
       system_exit(-1);
     }
-    trigger_entry =
-        (char *)weapon_obj + (int)trigger_index * 36 + 0x210;
-    tag_block_get_element((void *)(tag_data + 0x4fc), (int)trigger_index,
-                          0x114);
+    trigger_entry = (char *)weapon_obj + (int)trigger_index * 36 + 0x210;
+    (void)tag_block_get_element((void *)(tag_data + 0x4fc), (int)trigger_index,
+                                0x114);
     *(int *)(trigger_entry + 0x20) = -1;
     trigger_entry[0] = (char)0x7f;
   }
 
   return 1;
 }
-#endif
-
 
 /* 0xfbea0 — assert non-deletable network weapons are not deleted in MP. */
 #if defined(__i386__) && defined(__GNUC__)
@@ -2503,138 +2356,54 @@ void weapon_owner_update(int weapon_handle, int16_t owner_state, float t)
 }
 
 
-/* 0xfc550 — build HUD magazine/heat state (10-byte magazine records). */
-/* weapon_build_weapon_interface_state (0xfc550) — XBE naked draft (batch 227). */
-#if defined(__clang__)
-static void *(*const bfc550_get)(int, int) = object_get_and_verify_type;
-static void *(*const bfc550_tag)(int, int) = tag_get;
-static void (*const bfc550_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bfc550_exitfn)(int) = system_exit;
-static void *(*const bfc550_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void weapon_build_weapon_interface_state(int weapon_handle __attribute__((unused)), int out_state __attribute__((unused)))
+/* weapon_build_weapon_interface_state (0xfc550) — readable C lift. */
+void weapon_build_weapon_interface_state(int weapon_handle, int out_state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x1ec(%%ebx), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x1f0(%%ebx), %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movb 0x1dc(%%ebx), %%dl\n\t"
-      "andb $1, %%dl\n\t"
-      "leal 0x4f0(%%esi), %%eax\n\t"
-      "movb %%dl, 0x8(%%ecx)\n\t"
-      "movw (%%eax), %%dx\n\t"
-      "movw %%dx, 0xa(%%ecx)\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%esi, %%ecx\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jle .Lweapon_build_weapon_interface_state_6\n\t"
-      "pushl %%edi\n\t"
-      ".Lweapon_build_weapon_interface_state_1:\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, -0x4(%%ebp)\n\t"
-      "jl .Lweapon_build_weapon_interface_state_2\n\t"
-      "cmpl 0x4f0(%%eax), %%esi\n\t"
-      "jl .Lweapon_build_weapon_interface_state_3\n\t"
-      ".Lweapon_build_weapon_interface_state_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x672\n\t"
-      "pushl $0x28ad48\n\t"
-      "pushl $0x28adb8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweapon_build_weapon_interface_state_3:\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "pushl $0x70\n\t"
-      "leal 0x96(%%esi,%%esi,2), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "leal (%%ebx,%%ecx,4), %%edi\n\t"
-      "call *%[elem]\n\t"
-      "movw (%%edi), %%cx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $1, %%cx\n\t"
-      "je .Lweapon_build_weapon_interface_state_4\n\t"
-      "cmpw $3, %%cx\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "jne .Lweapon_build_weapon_interface_state_5\n\t"
-      ".Lweapon_build_weapon_interface_state_4:\n\t"
-      "movl $1, -0x8(%%ebp)\n\t"
-      ".Lweapon_build_weapon_interface_state_5:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "leal (%%esi,%%esi,4), %%ecx\n\t"
-      "leal (%%edx,%%ecx,2), %%ecx\n\t"
-      "movb -0x8(%%ebp), %%dl\n\t"
-      "movb %%dl, 0xc(%%ecx)\n\t"
-      "cmpw $0, (%%edi)\n\t"
-      "sete %%dl\n\t"
-      "movb %%dl, 0xd(%%ecx)\n\t"
-      "movw 0x8(%%edi), %%dx\n\t"
-      "movw %%dx, 0xe(%%ecx)\n\t"
-      "movw 0xa(%%eax), %%dx\n\t"
-      "movw %%dx, 0x10(%%ecx)\n\t"
-      "movw 0x6(%%edi), %%dx\n\t"
-      "movw %%dx, 0x12(%%ecx)\n\t"
-      "movw 0x8(%%eax), %%dx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "leal 0xa(%%esi,%%esi,4), %%ecx\n\t"
-      "movw %%dx, (%%eax,%%ecx,2)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "cmpl (%%ecx), %%esi\n\t"
-      "jl .Lweapon_build_weapon_interface_state_1\n\t"
-      "popl %%edi\n\t"
-      ".Lweapon_build_weapon_interface_state_6:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [get] "m"(bfc550_get), [tag] "m"(bfc550_tag), [assert] "m"(bfc550_assert), [exitfn] "m"(bfc550_exitfn), [elem] "m"(bfc550_elem)
-      : "memory");
-}
-#else
-#error "weapon_build_weapon_interface_state: clang naked draft required"
-#endif
+  extern char DAT_0028adb8[];
+  extern char DAT_0028ad48[];
+  char *weapon;
+  char *tag_data;
+  char *out;
+  void *mag_block;
+  int count;
+  int16_t i;
 
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  tag_data = (char *)tag_get(0x77656170, *(int *)weapon);
+  out = (char *)out_state;
+
+  *(int *)out = *(int *)(weapon + 0x1ec);
+  *(int *)(out + 4) = *(int *)(weapon + 0x1f0);
+  out[8] = (char)(weapon[0x1dc] & 1);
+  mag_block = (void *)(tag_data + 0x4f0);
+  *(int16_t *)(out + 0xa) = *(int16_t *)mag_block;
+  count = *(int *)mag_block;
+
+  for (i = 0; (int)i < count; i++) {
+    char *mag_entry;
+    char *mag_def;
+    char *rec;
+    int16_t state;
+    char busy;
+
+    (void)tag_get(0x77656170, *(int *)weapon);
+    if ((int16_t)i < 0 || (int)i >= *(int *)(tag_data + 0x4f0)) {
+      display_assert(DAT_0028adb8, DAT_0028ad48, 0x672, 1);
+      system_exit(-1);
+    }
+    mag_entry = weapon + ((int)i * 3 + 0x96) * 4;
+    mag_def = (char *)tag_block_get_element(mag_block, (int)i, 0x70);
+    state = *(int16_t *)mag_entry;
+    busy = (state == 1 || state == 3) ? 1 : 0;
+    rec = out + 0xc + (int)i * 10;
+    rec[0] = busy;
+    rec[1] = (state == 0) ? 1 : 0;
+    *(int16_t *)(rec + 2) = *(int16_t *)(mag_entry + 8);
+    *(int16_t *)(rec + 4) = *(int16_t *)(mag_def + 0xa);
+    *(int16_t *)(rec + 6) = *(int16_t *)(mag_entry + 6);
+    *(int16_t *)(rec + 8) = *(int16_t *)(mag_def + 8);
+  }
+}
 
 /* 0xfc690 — true if magazine 0 is currently in the reloading state. */
 char weapon_reloading(int weapon_handle)
@@ -2674,143 +2443,54 @@ int16_t weapon_rotate_zoom_level(int weapon_handle, int16_t zoom_level)
   if ((int)zoom_level == (int)levels - 1) return -1;
   return 0;
 }
-/* 0xfc780 — interpolate weapon zoom magnification for a zoom level. */
-/* weapon_get_zoom_magnification (0xfc780) — XBE naked draft (batch 227). */
-#if defined(__clang__)
-static void *(*const bfc780_get)(int, int) = object_get_and_verify_type;
-static void *(*const bfc780_tag)(int, int) = tag_get;
-static float (*const bfc780_c1d9e70)(float base, float exponent) = FUN_001d9e70;
-static char * (*const bfc780_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const bfc780_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bfc780_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-float weapon_get_zoom_magnification(int weapon_handle __attribute__((unused)), int16_t zoom_level __attribute__((unused)))
+/* weapon_get_zoom_magnification (0xfc780) — readable C lift. */
+float weapon_get_zoom_magnification(int weapon_handle, int16_t zoom_level)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "movl $0x3f800000, -0x4(%%ebp)\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movw 0xc(%%ebp), %%dx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testw %%dx, %%dx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "jl .Lweapon_get_zoom_magnification_8\n\t"
-      "movw 0x3da(%%ecx), %%ax\n\t"
-      "cmpw %%ax, %%dx\n\t"
-      "jge .Lweapon_get_zoom_magnification_8\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jle .Lweapon_get_zoom_magnification_1\n\t"
-      "movswl %%dx, %%edx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "decl %%eax\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "fidivl 0xc(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "jmp .Lweapon_get_zoom_magnification_2\n\t"
-      ".Lweapon_get_zoom_magnification_1:\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      ".Lweapon_get_zoom_magnification_2:\n\t"
-      "flds 0x3dc(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lweapon_get_zoom_magnification_3\n\t"
-      "movl 0x3dc(%%ecx), %%edx\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "jmp .Lweapon_get_zoom_magnification_4\n\t"
-      ".Lweapon_get_zoom_magnification_3:\n\t"
-      "movl $0x3f800000, 0xc(%%ebp)\n\t"
-      ".Lweapon_get_zoom_magnification_4:\n\t"
-      "flds 0x3e0(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lweapon_get_zoom_magnification_5\n\t"
-      "movl 0x3e0(%%ecx), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jmp .Lweapon_get_zoom_magnification_6\n\t"
-      ".Lweapon_get_zoom_magnification_5:\n\t"
-      "movl $0x3f800000, -0x4(%%ebp)\n\t"
-      ".Lweapon_get_zoom_magnification_6:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fdivs 0xc(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "call *%[c1d9e70]\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x7f800000, %%edx\n\t"
-      "cmpl $0x7f800000, %%edx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "jne .Lweapon_get_zoom_magnification_7\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5a2\n\t"
-      "pushl $0x28ad48\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x28aeec\n\t"
-      "pushl $0x25eb8c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweapon_get_zoom_magnification_7:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lweapon_get_zoom_magnification_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5a3\n\t"
-      "pushl $0x28ad48\n\t"
-      "pushl $0x28aed8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweapon_get_zoom_magnification_8:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [get] "m"(bfc780_get), [tag] "m"(bfc780_tag), [c1d9e70] "m"(bfc780_c1d9e70), [c8d9d0] "m"(bfc780_c8d9d0), [assert] "m"(bfc780_assert), [exitfn] "m"(bfc780_exitfn)
-      : "memory");
-}
-#else
-#error "weapon_get_zoom_magnification: clang naked draft required"
-#endif
+  extern char DAT_0028ad48[];
+  extern char DAT_0028aeec[];
+  extern char DAT_0028aed8[];
+  extern char DAT_0025eb8c[];
+  float result;
+  float t;
+  float min_mag;
+  float max_mag;
+  char *weapon;
+  char *tag_data;
+  int16_t levels;
 
+  result = 1.0f;
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  tag_data = (char *)tag_get(0x77656170, *(int *)weapon);
+  levels = *(int16_t *)(tag_data + 0x3da);
+  if (zoom_level < 0 || zoom_level >= levels)
+    return result;
+
+  if (levels > 1)
+    t = (float)zoom_level / (float)(levels - 1);
+  else
+    t = 0.0f;
+
+  min_mag = *(float *)(tag_data + 0x3dc);
+  if (!(min_mag > *(float *)0x2533c0))
+    min_mag = 1.0f;
+  max_mag = *(float *)(tag_data + 0x3e0);
+  if (!(max_mag > *(float *)0x2533c0))
+    max_mag = 1.0f;
+
+  result = FUN_001d9e70(max_mag / min_mag, t) * min_mag;
+  if ((*(unsigned int *)&result & 0x7f800000u) == 0x7f800000u) {
+    display_assert(
+        csprintf((char *)0x5ab100, DAT_0025eb8c, DAT_0028aeec,
+                 *(unsigned int *)&result, (double)result),
+        DAT_0028ad48, 0x5a2, 1);
+    system_exit(-1);
+  }
+  if (!(result > *(float *)0x2533c0)) {
+    display_assert(DAT_0028aed8, DAT_0028ad48, 0x5a3, 1);
+    system_exit(-1);
+  }
+  return result;
+}
 
 /* weapon_get_field_of_view (0xfc8e0) — readable C lift. */
 float weapon_get_field_of_view(int weapon_handle, float base_fov, int16_t zoom_level)

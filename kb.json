@@ -33726,7 +33726,7 @@
         {
           "addr": "0xfbd10",
           "decl": "char weapon_new(int weapon_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfbea0",
@@ -33753,7 +33753,7 @@
         {
           "addr": "0xfc550",
           "decl": "void weapon_build_weapon_interface_state(int weapon_handle, int out_state);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfc690",
@@ -33769,7 +33769,7 @@
         {
           "addr": "0xfc780",
           "decl": "float weapon_get_zoom_magnification(int weapon_handle, int16_t zoom_level);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfc8e0",
