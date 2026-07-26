@@ -5370,7 +5370,7 @@
         {
           "addr": "0x92e20",
           "decl": "void cinematic_start(void);",
-          "ported": false,
+          "ported": true,
           "name": "cinematic_start"
         },
         {
@@ -5487,13 +5487,13 @@
         },
         {
           "addr": "0x93b60",
-          "decl": "void FUN_00093b60(short *accum, const signed char *delta);",
+          "decl": "void FUN_00093b60(void);",
           "ported": false,
           "name": "FUN_00093b60"
         },
         {
           "addr": "0x93ba0",
-          "decl": "void FUN_00093ba0(short *accum, const short *delta);",
+          "decl": "void FUN_00093ba0(void);",
           "ported": false,
           "name": "FUN_00093ba0"
         },

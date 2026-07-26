@@ -33,38 +33,16 @@ bool cinematic_in_progress(void)
 }
 /* --- cinematics.obj batch drafts (2026-07-26) --- */
 
-/* cinematic_start (0x92e20) — XBE naked draft (batch 279). */
-#if defined(__clang__)
-static void (*const b92e20_cba6d0)(bool) = player_input_enable;
-static void (*const b92e20_c3f7b0)(char param_1) = ai_globals_dialogue_triggers_enabled;
-static int (*const b92e20_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
+/* cinematic_start (0x92e20) — readable C lift. */
 void cinematic_start(void)
 {
-  __asm__ volatile(
-      "pushl $0\n\t"
-      "call *%[cba6d0]\n\t"
-      "pushl $0\n\t"
-      "call *%[c3f7b0]\n\t"
-      "movl 0x44df00, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $1, 0x8(%%eax)\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x44df00, %%ecx\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl 0x44df00, %%edx\n\t"
-      "movb $1, 0x9(%%edx)\n\t"
-      ".byte 0xe9, 0x89, 0x4e, 0x06, 0x00\n\t"
-      :
-      : [cba6d0] "m"(b92e20_cba6d0), [c3f7b0] "m"(b92e20_c3f7b0), [gtime] "m"(b92e20_gtime)
-      : "memory");
+  player_input_enable(0);
+  ai_globals_dialogue_triggers_enabled(0);
+  *(unsigned char *)(*(unsigned char **)0x44df00 + 8) = 1;
+  *(unsigned int *)(*(unsigned char **)0x44df00 + 4) = (unsigned int)game_time_get();
+  *(unsigned char *)(*(unsigned char **)0x44df00 + 9) = 1;
+  projectiles_delete_all();
 }
-#else
-#error "cinematic_start: clang naked draft required"
-#endif
-
-
 void cinematic_skip_start(void) {
   uint8_t *base = *(uint8_t **)0x44df00;
   *(uint8_t *)(base + 0xa) = (uint8_t)1;
@@ -1443,7 +1421,7 @@ void FUN_00093be0(void)
 static void (*const b93c20_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b93c20_exitfn)(int) = system_exit;
 static void (*const b93c20_c10cc40)(float *out, float *angles) = angles_to_vector;
-static void (*const b93c20_c93b60)(void) = FUN_00093b60;
+static void (*const b93c20_c93b60)(void) = (void (*)(void))FUN_00093b60;
 static void (*const b93c20_c93be0)(void) = FUN_00093be0;
 
 __attribute__((naked, noinline))
@@ -1658,7 +1636,7 @@ void FUN_00093c20(void)
 static void (*const b93e20_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b93e20_exitfn)(int) = system_exit;
 static void (*const b93e20_c10cc40)(float *out, float *angles) = angles_to_vector;
-static void (*const b93e20_c93ba0)(void) = FUN_00093ba0;
+static void (*const b93e20_c93ba0)(void) = (void (*)(void))FUN_00093ba0;
 static void (*const b93e20_c93be0)(void) = FUN_00093be0;
 
 __attribute__((naked, noinline))
