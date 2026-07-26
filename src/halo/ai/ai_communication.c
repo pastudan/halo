@@ -913,51 +913,18 @@ char FUN_00043090(int actor __attribute__((unused)), int unit __attribute__((unu
 #endif
 
 
-/* actor_communication_team (0x43270) — XBE naked draft (batch 172). */
-#if defined(__clang__)
-static void *(*const b43270_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int16_t (*const b43270_c3a770)(int16_t actor_type) = FUN_0003a770;
-
-__attribute__((naked, noinline))
-int actor_communication_team(int actor __attribute__((unused)))
+/* actor_communication_team (0x43270) — readable C lift (ai campaign). */
+int actor_communication_team(int actor)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x4(%%eax), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c3a770]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "orl $0xffffffff, %%ecx\n\t"
-      "testb $2, %%al\n\t"
-      "je .Lactor_communication_team_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_communication_team_1:\n\t"
-      "testb $4, %%al\n\t"
-      "je .Lactor_communication_team_2\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_communication_team_2:\n\t"
-      "movw %%cx, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b43270_dget), [c3a770] "m"(b43270_c3a770)
-      : "memory");
+  void *a = datum_get(*(void **)0x6325a4, actor);
+  unsigned short t = *(unsigned short *)((char *)a + 4);
+  int flags = (int)(short)FUN_0003a770((short)t);
+  if (flags & 2)
+    return 0;
+  if (flags & 4)
+    return 1;
+  return (flags & ~0xFFFF) | 0xFFFF;
 }
-#else
-#error "actor_communication_team: clang naked draft required"
-#endif
-
 
 /* ai_conversation_line (0x434c0) — XBE naked draft (batch 156). */
 #if defined(__clang__)

@@ -719,26 +719,11 @@ void FUN_0017d000(void)
 #endif
 
 
-/* FUN_0017d010 (0x17d010) — XBE naked draft (batch 400). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017d010(float *position __attribute__((unused)), float radius __attribute__((unused)), float *scale2d __attribute__((unused)), float angle __attribute__((unused)), uint32_t color __attribute__((unused)))
+/* FUN_0017d010 (0x17d010) — readable C lift (jmp thunk). */
+void FUN_0017d010(float *position, float radius, float *scale2d, float angle, uint32_t color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xb7, 0xe7, 0xff, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_0017b7d0(position, radius, scale2d, angle, color);
 }
-#else
-#error "FUN_0017d010: clang naked draft required"
-#endif
-
 
 /* 0x17d020 */
 void FUN_0017d020(void)
