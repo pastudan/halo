@@ -2836,7 +2836,7 @@
           "addr": "0x20470",
           "decl": "char actor_action_handle_berserk_transition(int actor_handle, short param_2);",
           "name": "actor_action_handle_berserk_transition",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x204f0",
