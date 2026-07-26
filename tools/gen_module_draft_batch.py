@@ -18,7 +18,7 @@ def slug(name: str) -> str:
 
 
 def sanitize_decl_for_c(decl: str) -> str:
-    return re.sub(r"(\w+)@<[^>]+>", r"\1", decl)
+    return re.sub(r"\s*@<[^>]+>", "", decl)
 
 
 def clean_param_name(name: str) -> str:
