@@ -23552,7 +23552,8 @@
         {
           "addr": "0x1c1f70",
           "decl": "void FUN_001c1f70(int profile_index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001c1f70"
         },
         {
           "addr": "0x1c1fa0",
