@@ -12322,7 +12322,8 @@
         {
           "addr": "0xc9de0",
           "decl": "void FUN_000c9de0(int effect_tag, int16_t scenario_index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000c9de0"
         },
         {
           "addr": "0xc9e50",

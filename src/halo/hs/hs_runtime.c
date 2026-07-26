@@ -4970,64 +4970,30 @@ void FUN_000c9d80(int object_type)
   }
   FUN_00145490();
 }
-/* FUN_000c9de0 (0xc9de0) — XBE naked draft (batch 156). */
-#if defined(__clang__)
-static scenario_t * (*const bc9de0_c18e380)(void) = global_scenario_get;
-static void *(*const bc9de0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const bc9de0_c10cc40)(float *out, float *angles) = angles_to_vector;
-static int (*const bc9de0_c9f0e0)(int effect_tag_index, int object_index, float *translational_velocity, short marker_count, void *effect_definition, float *marker_points, float *marker_forwards, float scale_a, float scale_b, float unknown1, float unknown2, float unknown3) = effect_new_unattached_from_markers;
-
-__attribute__((naked, noinline))
-void FUN_000c9de0(int effect_tag __attribute__((unused)), int16_t scenario_index __attribute__((unused)))
+/* FUN_000c9de0 (0xc9de0) — readable C lift: unattached effect at cutscene flag. */
+void FUN_000c9de0(int effect_tag, int16_t scenario_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movswl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x5c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x4e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "leal 0x30(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c10cc40]\n\t"
-      "movl 0x31fc38, %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl $0x3f800000\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "addl $0x24, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c9f0e0]\n\t"
-      "addl $0x44, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc9de0_c18e380), [elem] "m"(bc9de0_elem), [c10cc40] "m"(bc9de0_c10cc40), [c9f0e0] "m"(bc9de0_c9f0e0)
-      : "memory");
-}
-#else
-#error "FUN_000c9de0: clang naked draft required"
-#endif
+  char *flag;
+  float angles[3];
+  scenario_t *scen;
 
+  scen = global_scenario_get();
+  flag = (char *)tag_block_get_element((char *)scen + 0x4e4, (int)scenario_index, 0x5c);
+  angles_to_vector(angles, (float *)(flag + 0x30));
+  effect_new_unattached_from_markers(
+      effect_tag,
+      -1,
+      *(float **)0x31fc38,
+      1,
+      0,
+      (float *)(flag + 0x24),
+      angles,
+      1.0f,
+      1.0f,
+      0.0f,
+      0.0f,
+      1.0f);
+}
 
 /* FUN_000c9e50 (0xc9e50) — XBE naked draft (batch 152). */
 #if defined(__clang__)
