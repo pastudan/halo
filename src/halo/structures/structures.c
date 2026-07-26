@@ -5610,60 +5610,16 @@ void set_file_location_volume_name(int16_t location, const char *volume_name)
 /* --- structures.obj batch drafts (2026-07-26) --- */
 
 /* 0x620f0 */
-void obstacles_get_discs_in_sphere(void)
+void obstacles_get_discs_in_sphere(int16_t *partition, float *ref_point,
+                                   float radius, float *vector, void *obstacles,
+                                   void *scenario)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* cmp esi, -1 -> jne 0x62121 */
-  display_assert((char *)0x0025ee5c, (char *)0x0025ee38, 152, 0);
-  system_exit(0);
-  object_get_and_verify_type(0, 0);
-  object_find_in_radius(0, 195, (void *)(uintptr_t)eax, (float *)0, 0.0f, (void *)0, 0);
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x62403 */
-  object_get_and_verify_type(0, 0);
-  /* relift: cmp edi, dword ptr [ebp + 0x1c] -> je 0x623eb */
-  /* relift: test byte ptr [ebx + 4], 1 -> jne 0x623eb */
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x621b8 */
-  /* relift: test byte ptr [ebx + 0xb6], 4 -> jne 0x623eb */
-  /* cmp (int16_t)eax, 7 -> jne 0x621f1 */
-  tag_get('hcam', 0);
-  /* test (char)eax, 1 -> je 0x623eb */
-  /* test (char)eax, 2 -> je 0x621f1 */
-  /* relift: cmp dword ptr [ebx + 0x1b8], 0x3f800000 -> je 0x623eb */
-  FUN_00061ec0((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, 0.0f);
-  /* test (char)eax, (char)eax -> je 0x623eb */
-  tag_get('ejbo', 0);
-  tag_get('lloc', 0);
-  /* test (char)ecx, 8 -> jne 0x623eb */
-  object_get_world_matrix(0, (void *)(uintptr_t)eax);
-  tag_block_get_element((void *)(uintptr_t)esi, 0, 32);
-  /* cmp (int16_t)eax, 0xffff -> je 0x622b3 */
-  object_get_node_matrix(0, eax);
-  matrix_transform_point((float *)(uintptr_t)edi, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
-  matrix_transform_point((float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
-  /* test (char)eax, 0x41 -> je 0x623d4 */
-  /* test (char)eax, 0x41 -> jne 0x6232a */
-  /* test (char)eax, 1 -> jne 0x623d4 */
-  /* relift: cmp word ptr [ebx + 0x64], (int16_t)esi -> jne 0x623be */
-  /* test (char)eax, 0x41 -> jne 0x623be */
-  FUN_00013070((float *)(uintptr_t)eax, (float *)(uintptr_t)ecx);
-  /* test (char)eax, 0x41 -> jne 0x623be */
-  FUN_00062020((void *)(uintptr_t)eax, edi, esi, (float *)(uintptr_t)edx, ecx);
-  /* cmp eax, edx -> jl 0x62273 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  (void)partition;
+  (void)ref_point;
+  (void)radius;
+  (void)vector;
+  (void)obstacles;
+  (void)scenario;
 }
 
 /* 0x105160 */

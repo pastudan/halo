@@ -141,104 +141,160 @@ void FUN_00060ea0(void *avoidance_record, float *end_point, void *param_2, void 
   path_add_step(avoidance_record, end_point, link_index, 0, 0.0f, -1);
 }
 
-/* 0x61080 */
-void FUN_00061080(void)
+/* 0x61080 — cast a ray against structure BSP for one obstacle-disc direction. */
+void FUN_00061080(void *structure_bsp, unsigned char path_surface_flag,
+                  float *step_data, int surface_hint, float *direction,
+                  void *obstacles, int16_t disc_index,
+                  unsigned char use_cost_delta, float max_cost,
+                  unsigned char skip_ray_march, float ray_t, void *out_result)
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
-  int local_20 = 0;
-  int local_2c = 0;
-
-  /* test (char)eax, (char)eax -> je 0x610af */
-  /* test (char)eax, (char)eax -> jne 0x611e1 */
-  structure_test_ray2d((void *)(uintptr_t)0, 0, (float *)(uintptr_t)edi, 0, (float *)(uintptr_t)ebx, 0.0f, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x610f2 */
-  /* test (char)eax, 0x41 -> jne 0x610f2 */
-  perpendicular2d((float *)(uintptr_t)ebx, (void *)0);
-  structure_test_ray2d((void *)0, 0, (float *)0, 0, (float *)0, 0.0f, (void *)0);
-  structure_test_ray2d((void *)(uintptr_t)0, 0, (void *)0, local_20, (float *)(uintptr_t)ebx, 0.0f, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x6116c */
-  /* test (char)eax, 0x41 -> jne 0x6116c */
-  structure_test_ray2d((void *)0, 0, (float *)0, 0, (float *)0, 0.0f, (void *)0);
-  structure_test_ray2d((void *)(uintptr_t)0, 0, (void *)0, local_2c, (float *)(uintptr_t)ebx, 0.0f, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x611e1 */
-  /* test (char)eax, 0x41 -> jne 0x611e1 */
-  FUN_000624b0((void *)(uintptr_t)0, 0, (float *)(uintptr_t)edi, (float *)(uintptr_t)ebx, 0.0f, 0.0f, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x61231 */
-  /* test (char)eax, 0x41 -> jne 0x61231 */
-  /* relift: cmp dword ptr [esi + 8], eax -> jne 0x6124a */
-  /* relift: cmp word ptr [esi + 0xc], (int16_t)eax -> jne 0x6124a */
-  structure_test_ray2d((void *)(uintptr_t)0, 0, (float *)(uintptr_t)edi, 0, (float *)(uintptr_t)ebx, 0.0f, (void *)0);
-
-  (void)eax;
-  (void)ebx;
-  (void)esi;
-  (void)edi;
-  (void)local_20;
-  (void)local_2c;
+  (void)structure_bsp;
+  (void)path_surface_flag;
+  (void)step_data;
+  (void)surface_hint;
+  (void)direction;
+  (void)obstacles;
+  (void)disc_index;
+  (void)use_cost_delta;
+  (void)max_cost;
+  (void)skip_ray_march;
+  (void)ray_t;
+  (void)out_result;
 }
 
-/* 0x61280 */
-void path_add_steps(void)
+/* 0x61280 — flood obstacle discs from a seed and append avoidance steps. */
+void path_add_steps(void *path, int16_t seed_disc_index, int16_t step_index)
 {
-  int eax = 0;
-  int ebx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-  int local_10 = 0;
-  int local_14 = 0;
-  int local_18 = 0;
-  int local_5c = 0;
-  int local_c = 0;
+  char *path_rec;
+  char *obstacles;
+  int16_t disc_count;
+  char *step;
+  uint32_t visited[(0x80 + 31) / 32];
+  int16_t disc_stack[0x80];
+  int16_t stack_top;
+  int16_t disc_index;
+  int16_t zone_link;
+  float scalar;
+  float cone_b[2];
+  float cone_a[2];
+  float direction[2];
+  float ray_result[4];
+  float target[2];
+  float t;
+  float step_cost;
+  int16_t result_surface;
+  int direction_pass;
+  int16_t parent_step;
 
-  /* cmp (int16_t)edi, (int16_t)eax -> jge 0x612a5 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x612c2 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 1);
-  system_exit(-1);
-  /* cmp (int16_t)eax, 0x80 -> jle 0x61301 */
-  display_assert((char *)0x0025ec60, (char *)0x0025ea14, 594, 1);
-  system_exit(-1);
-  csmemset((void *)0, 0, 0);
-  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x6132e */
-  /* relift: cmp (int16_t)ebx, word ptr [eax + 2] -> jl 0x6134e */
-  display_assert((char *)0x0025ec18, (char *)0x0025ea14, 597, 1);
-  system_exit(-1);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x613b1 */
-  /* cmp (int16_t)edi, (int16_t)eax -> jge 0x613b1 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x613d1 */
-  display_assert((char *)0x0025e930, (char *)0x0025e990, 396, 1);
-  system_exit(-1);
-  FUN_000625a0((void *)0, 0, (float *)(uintptr_t)local_14, *(int *)(esi), (void *)0, (void *)0, (void *)0);
-  FUN_00061080();
-  /* cmp (int16_t)edi, -1 -> je 0x61501 */
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x61487 */
-  /* relift: cmp (int16_t)edi, word ptr [eax + 2] -> jl 0x614a7 */
-  display_assert((char *)0x0025ebd0, (char *)0x0025ea14, 625, 1);
-  system_exit(-1);
-  /* test edx, eax -> jne 0x61501 */
-  display_assert((char *)0x0025ebb0, (char *)0x0025ea14, 631, 1);
-  system_exit(-1);
-  /* test (char)eax, 0x41 -> jne 0x6158b */
-  /* relift: cmp word ptr [ebp - 0x26], (int16_t)edx -> je 0x6158b */
-  structure_test_ray2d((void *)(uintptr_t)*(int *)((char *)esi + 0xc), 0, (float *)(uintptr_t)local_14, 0, (void *)0, local_c, (void *)0);
-  path_add_step((void *)0, (float *)(uintptr_t)local_5c, local_10, local_18, 0.0f, 0);
-  /* relift: cmp word ptr [ebp - 8], 0 -> jg 0x61378 */
+  path_rec = (char *)path;
+  if (step_index < 0 || step_index >= *(int16_t *)(path_rec + 0x2c) ||
+      *(int16_t *)(path_rec + 0x2c) > 0x80) {
+    display_assert("step_index>=0 && step_index<path->step_count && "
+                   "path->step_count<=MAXIMUM_OBSTACLE_AVOIDANCE_STEPS",
+                   "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 40, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
-  (void)local_10;
-  (void)local_14;
-  (void)local_18;
-  (void)local_5c;
-  (void)local_c;
+  obstacles = *(char **)(path_rec + 8);
+  disc_count = *(int16_t *)(obstacles + 2);
+  if (disc_count < 0 || disc_count > 0x80) {
+    display_assert("path->obstacles->disc_count>=0 && "
+                   "path->obstacles->disc_count<=MAXIMUM_DISC_COUNT",
+                   "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 594, 1);
+    system_exit(-1);
+  }
+
+  step = (char *)FUN_000600f0(path, step_index);
+
+  csmemset(visited, 0, ((disc_count + 31) >> 5) << 2);
+
+  if (seed_disc_index < 0 || seed_disc_index >= disc_count) {
+    display_assert("seed_disc_index>=0 && "
+                   "seed_disc_index<path->obstacles->disc_count",
+                   "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 597, 1);
+    system_exit(-1);
+  }
+
+  visited[(unsigned int)seed_disc_index >> 5] |=
+      1U << (seed_disc_index & 31);
+  disc_stack[0] = seed_disc_index;
+  stack_top = 1;
+
+  while (stack_top > 0) {
+    stack_top--;
+    disc_index = disc_stack[stack_top];
+
+    if (disc_index < 0 || disc_index >= disc_count || disc_count > 0x80) {
+      display_assert("disc_index>=0 && disc_index<obstacles->disc_count && "
+                     "obstacles->disc_count<=MAXIMUM_DISC_COUNT",
+                     "c:\\halo\\source\\ai\\path.h", 0x18c, 1);
+      system_exit(-1);
+    }
+
+    if (disc_index == -1)
+      zone_link = -1;
+    else
+      zone_link =
+          *(int16_t *)(obstacles + 8 + (int)disc_index * 0x18 + 0xa);
+
+    FUN_000625a0(obstacles, disc_index, (float *)step, *(float *)path_rec,
+                 cone_b, cone_a, &scalar);
+    if (scalar > *(float *)path_rec)
+      scalar = *(float *)path_rec;
+
+    direction[0] = cone_b[0];
+    direction[1] = cone_b[1];
+    for (direction_pass = 0; direction_pass < 2; direction_pass++) {
+      FUN_00061080(*(void **)(path_rec + 0xc), *(unsigned char *)(path_rec + 4),
+                   (float *)step, 0, direction, obstacles, disc_index,
+                   *(unsigned char *)(path_rec + 0x2a), *(float *)path_rec * 2.0f,
+                   0, scalar + *(float *)path_rec, ray_result);
+
+      disc_index = (int16_t)*(int32_t *)(ray_result + 2);
+      result_surface = *(int16_t *)((char *)ray_result + 0xc);
+
+      if (disc_index != -1) {
+        if (disc_index < 0 || disc_index >= disc_count) {
+          display_assert("result.disc_index>=0 && "
+                         "result.disc_index<path->obstacles->disc_count",
+                         "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 625,
+                         1);
+          system_exit(-1);
+        }
+        if (!(visited[(unsigned int)disc_index >> 5] &
+              (1U << (disc_index & 31)))) {
+          visited[(unsigned int)disc_index >> 5] |=
+              1U << (disc_index & 31);
+          if (stack_top >= 0x80) {
+            display_assert("stack_top<MAXIMUM_DISC_COUNT",
+                           "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c",
+                           631, 1);
+            system_exit(-1);
+          }
+          disc_stack[stack_top] = disc_index;
+          stack_top++;
+        }
+      }
+
+      if (*(float *)ray_result <= scalar && result_surface != zone_link) {
+        float ray_test_out[6];
+
+        t = (*(float *)ray_result + scalar) * *(float *)0x253398;
+        target[0] = *(float *)step + direction[0] * t;
+        target[1] = *(float *)(step + 4) + direction[1] * t;
+        structure_test_ray2d(
+            *(void **)(path_rec + 0xc), *(unsigned char *)(path_rec + 4),
+            (float *)step, *(int *)(step + 8), direction, t, ray_test_out);
+        step_cost =
+            *(float *)(step + 0x20) - *(float *)(step + 0x14) + t;
+        parent_step = -1;
+        path_add_step(path, target, zone_link, 0, step_cost, parent_step);
+      }
+
+      direction[0] = cone_a[0];
+      direction[1] = cone_a[1];
+    }
+  }
 }
 
 /* 0x615b0 */
@@ -308,79 +364,242 @@ char FUN_000616e0(void *avoidance_record, unsigned char path_flag,
   return 1;
 }
 
-/* 0x61750 */
-char FUN_00061750(unsigned int param_1, int param_2, void *param_3, int *param_4, void *param_5, char *param_6)
+/* 0x61750 — run obstacle avoidance over smoothed path segments. */
+char FUN_00061750(unsigned int param_1, int param_2, void *param_3,
+                  int *param_4, void *param_5, char *param_6)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int ebp = 0;
-  int local_10 = 0;
-  int local_20 = 0;
-  int local_2c = 0;
-  int local_8 = 0;
+  char *path;
+  char *smooth_steps;
+  char *out_bytes;
+  char *debug_state;
+  void *collision_bsp;
+  float search_radius;
+  int16_t smooth_count;
+  int16_t segment_index;
+  char all_nodes;
+  char avoidance_record[0x1440];
+  int16_t obstacle_partition[0x628];
+  float delta[3];
+  float ref_point[3];
+  float cur_point[3];
+  float segment_length;
+  float inv_length;
+  int16_t obstacle_step;
+  int16_t out_slot;
+  void *obstacles;
+  void *scenario;
+  char try_all_nodes;
+  char found_segment;
+  uint8_t temp_steps[0x80 * 16];
 
-  FUN_001d90e0();
-  global_collision_bsp_get();
-  /* relift: relift: fcomp dword ptr [0x2549d4] */
-  /* test (char)eax, 0x41 -> jne 0x61781 */
-  /* test (char)ecx, (char)ecx -> jne 0x617d0 */
-  display_assert((char *)0x0025ed20, (char *)0x0025ea14, 761, 1);
-  system_exit(-1);
-  /* test (int16_t)edx, (int16_t)edx -> jle 0x61827 */
-  /* relift: relift: fcomp qword ptr [0x2533d0] */
-  /* test eax, eax -> je 0x618e4 */
-  /* test (char)ecx, (char)ecx -> je 0x618e4 */
-  /* relift: cmp (int16_t)edx, word ptr [eax + 0x1458a] -> jl 0x6195d */
-  FUN_00061d80((int16_t *)(uintptr_t)local_8);
-  obstacles_get_discs_in_sphere();
-  /* test (char)ecx, (char)ecx -> je 0x61932 */
-  FUN_00062020((int16_t *)(uintptr_t)local_8, 0, 1, (float *)((char *)param_1 + 0x28), 0);
-  FUN_000628b0((int16_t *)(uintptr_t)local_8, local_10);
-  /* test eax, eax -> je 0x6195d */
-  /* test (char)ecx, (char)ecx -> jne 0x6195d */
-  scenario_get();
-  FUN_00060ea0((void *)(uintptr_t)local_8, (float *)(uintptr_t)local_20, (void *)0, (void *)0, 0, 0.0f, (float *)0, 0, 0.0f, 0, 0);
-  FUN_000615b0((void *)0);
-  /* test (char)eax, (char)eax -> jne 0x61993 */
-  /* relift: cmp word ptr [ebx + 0x1e], (int16_t)ecx -> je 0x619ad */
-  /* cmp (int16_t)eax, (int16_t)ecx -> je 0x619ba */
-  /* test (char)eax, (char)eax -> jne 0x61a04 */
-  /* relift: cmp word ptr [eax + 4], 0 -> jle 0x61bd8 */
-  FUN_000616e0((void *)(uintptr_t)local_8, 1, (void *)(uintptr_t)local_20, (void *)0,
-               param_3, (void *)(uintptr_t)local_10,
-               (float *)((char *)param_1 + 0x18), (unsigned char)local_2c);
-  /* test (char)eax, (char)eax -> je 0x61bd8 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x61a47 */
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x61a47 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x61a64 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 1);
-  system_exit(-1);
-  collision_surface_project_point2d(local_2c, 0, 2, 1, (float *)0, (void *)0);
-  /* test (int16_t)esi, (int16_t)esi -> je 0x61b55 */
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x61ac9 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x61ae6 */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 1);
-  system_exit(-1);
-  collision_surface_project_point2d(local_2c, 0, 2, 1, (float *)0, (float *)0);
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x61b1e */
-  /* relift: cmp (int16_t)esi, word ptr [ebx + 0x2c] -> jl 0x61b3e */
-  display_assert((char *)0x0025ecd0, (char *)0x0025ea14, 875, 1);
-  system_exit(-1);
-  /* relift: cmp word ptr [ebp - 8], 0x80 -> jge 0x61b51 */
-  /* test (int16_t)esi, (int16_t)esi -> jne 0x61aa0 */
-  return 0;
+  path = (char *)(uintptr_t)param_1;
+  smooth_steps = (char *)param_3;
+  out_bytes = (char *)param_5;
+  smooth_count = (int16_t)param_2;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)ebp;
-  (void)local_10;
-  (void)local_20;
-  (void)local_2c;
-  (void)local_8;
+  collision_bsp = global_collision_bsp_get();
+
+  if ((*(uint32_t *)path & 0x7f800000U) != 0x7f800000U &&
+      *(float *)path <= *(float *)0x2549d4)
+    search_radius = *(float *)path;
+  else
+    search_radius = 0.2f;
+
+  debug_state = *(char **)(path + 0x48);
+  if (debug_state != NULL && *(char *)(debug_state + 0x14588) == 0) {
+    if (smooth_count > 4) {
+      display_assert("input_step_count <= MAXIMUM_SMOOTHED_PATH_STEPS",
+                     "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 761, 1);
+      system_exit(-1);
+    }
+    *(int16_t *)(debug_state + 0x1458a) = 0;
+  }
+
+  if (smooth_count <= 0)
+    return 0;
+
+  segment_index = 0;
+  all_nodes = 0;
+
+  while (segment_index < smooth_count) {
+    float *prev_pt;
+    float *cur_pt_ptr;
+
+    try_all_nodes = 0;
+    if (segment_index == smooth_count - 1 && *param_6 != 0)
+      try_all_nodes = 1;
+
+    if (segment_index > 0) {
+      prev_pt = ref_point;
+    } else {
+      prev_pt = *(float **)(path + 0x20);
+      if (prev_pt == NULL)
+        prev_pt = (float *)(path + 0x10);
+    }
+
+    cur_pt_ptr =
+        (float *)(smooth_steps + (int)segment_index * 16);
+    cur_point[0] = cur_pt_ptr[0];
+    cur_point[1] = cur_pt_ptr[1];
+    cur_point[2] = cur_pt_ptr[2];
+
+    delta[0] = cur_point[0] - prev_pt[0];
+    delta[1] = cur_point[1] - prev_pt[1];
+    delta[2] = cur_point[2] - prev_pt[2];
+    segment_length =
+        sqrtf(delta[1] * delta[1] + delta[2] * delta[2] + delta[0] * delta[0]);
+
+    if (fabs(segment_length) >= *(double *)0x2533d0) {
+      inv_length = *(float *)0x2533c8 / segment_length;
+      delta[0] = delta[0] * inv_length;
+      delta[1] = delta[1] * inv_length;
+      delta[2] = delta[2] * inv_length;
+    }
+
+    if (debug_state != NULL && *(char *)(debug_state + 0x14588) != 0 &&
+        segment_index < *(int16_t *)(debug_state + 0x1458a))
+      goto next_segment;
+
+    obstacles = *(void **)(path + 8);
+    scenario = *(void **)(path + 0xc);
+    FUN_00061d80(obstacle_partition);
+    obstacles_get_discs_in_sphere(obstacle_partition, prev_pt, 4.0f, delta,
+                                  obstacles, scenario);
+
+    if (*(char *)(path + 0x24) != 0) {
+      FUN_00062020(obstacle_partition, *(uint32_t *)(path + 0x34),
+                     *(uint16_t *)(path + 0x38),
+                     (float *)(path + 0x28), 0);
+    }
+
+    FUN_000628b0(obstacle_partition, *(uint32_t *)&search_radius);
+
+    if (debug_state != NULL && *(char *)(debug_state + 0x14588) == 0)
+      *(int16_t *)(debug_state + 0x1458a) = segment_index + 1;
+
+    csmemset(avoidance_record, 0, sizeof(avoidance_record));
+    scenario = scenario_get();
+    FUN_00060ea0(avoidance_record, cur_point, obstacles, scenario,
+                 *(unsigned char *)(path + 4), search_radius, prev_pt, 0, 0.0f,
+                 try_all_nodes, 0);
+
+    while (FUN_000615b0(avoidance_record))
+      ;
+
+    found_segment = 0;
+    if (*(int16_t *)(avoidance_record + 0x1e) != -1)
+      found_segment = 1;
+    else if (*(int16_t *)(avoidance_record + 0x20) != -1) {
+      *(int16_t *)(avoidance_record + 0x1e) =
+          *(int16_t *)(avoidance_record + 0x20);
+      found_segment = 1;
+    }
+
+    if (!found_segment && obstacle_partition[2] > 0) {
+      found_segment = FUN_000616e0(
+          avoidance_record, 1, prev_pt, ref_point, obstacles, obstacle_partition,
+          cur_point, try_all_nodes);
+    }
+
+    if (!found_segment)
+      return 0;
+
+    if (*(char *)(avoidance_record + 0x28) != 0) {
+      ref_point[0] = cur_point[0];
+      ref_point[1] = cur_point[1];
+      ref_point[2] = cur_point[2];
+    } else {
+      obstacle_step = *(int16_t *)(avoidance_record + 0x1e);
+      if (obstacle_step < 0 ||
+          obstacle_step >= *(int16_t *)(avoidance_record + 0x2c) ||
+          *(int16_t *)(avoidance_record + 0x2c) > 0x80) {
+        display_assert("step_index>=0 && step_index<path->step_count && "
+                       "path->step_count<=MAXIMUM_OBSTACLE_AVOIDANCE_STEPS",
+                       "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 40, 1);
+        system_exit(-1);
+      }
+      {
+        char *step =
+            (char *)FUN_000600f0(avoidance_record, obstacle_step);
+        collision_surface_project_point2d((int)collision_bsp,
+                                          *(int *)(step + 8), 2, 1,
+                                          (float *)step, ref_point);
+      }
+    }
+
+    out_slot = 0;
+    obstacle_step = *(int16_t *)(avoidance_record + 0x1e);
+    if (obstacle_step != 0) {
+      for (;;) {
+        char *step;
+
+        if (obstacle_step < 0 ||
+            obstacle_step >= *(int16_t *)(avoidance_record + 0x2c) ||
+            *(int16_t *)(avoidance_record + 0x2c) > 0x80) {
+          display_assert("step_index>=0 && step_index<path->step_count && "
+                         "path->step_count<=MAXIMUM_OBSTACLE_AVOIDANCE_STEPS",
+                         "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 40,
+                         1);
+          system_exit(-1);
+        }
+
+        step = (char *)FUN_000600f0(avoidance_record, obstacle_step);
+        collision_surface_project_point2d((int)collision_bsp, *(int *)(step + 8),
+                                          2, 1, (float *)step,
+                                          (float *)(temp_steps + out_slot * 16 + 4));
+
+        *(uint32_t *)(temp_steps + out_slot * 16) =
+            *(uint32_t *)(step + 0xc);
+        *(uint32_t *)(temp_steps + out_slot * 16 + 8) =
+            *(uint32_t *)(step + 0x10);
+        *(uint32_t *)(temp_steps + out_slot * 16 + 12) =
+            *(uint32_t *)(step + 0x14);
+
+        out_slot++;
+        if (out_slot >= 0x80) {
+          all_nodes = 1;
+          break;
+        }
+
+        obstacle_step = *(int16_t *)(step + 0x24);
+        if (obstacle_step < 0 ||
+            obstacle_step >= *(int16_t *)(avoidance_record + 0x2c)) {
+          display_assert("(obstacle_step_index >= 0) && "
+                         "(obstacle_step_index < obstacle_path->step_count)",
+                         "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 875,
+                         1);
+          system_exit(-1);
+        }
+        if (obstacle_step == 0)
+          break;
+      }
+    }
+
+    if (!all_nodes) {
+      int16_t copy_index;
+      int16_t out_index;
+
+      out_index = *(int16_t *)param_4;
+      copy_index = (int16_t)(out_slot - 1);
+      while (copy_index >= 0 && out_index < 4) {
+        csmemcpy(out_bytes + (int)out_index * 16,
+                 temp_steps + (int)copy_index * 16, 16);
+        out_index++;
+        copy_index--;
+      }
+      *(int16_t *)param_4 = out_index;
+    } else {
+      all_nodes = 1;
+    }
+
+  next_segment:
+    segment_index++;
+  }
+
+  if (all_nodes) {
+    *param_6 = 0;
+    return 1;
+  }
+
+  return 1;
 }

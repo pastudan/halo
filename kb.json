@@ -25485,7 +25485,7 @@
         },
         {
           "addr": "0x620f0",
-          "decl": "void obstacles_get_discs_in_sphere(void);",
+          "decl": "void obstacles_get_discs_in_sphere(int16_t *partition, float *ref_point, float radius, float *vector, void *obstacles, void *scenario);",
           "ported": false
         },
         {
@@ -40395,12 +40395,12 @@
         },
         {
           "addr": "0x61080",
-          "decl": "void FUN_00061080(void);",
+          "decl": "void FUN_00061080(void *structure_bsp, unsigned char path_surface_flag, float *step_data, int surface_hint, float *direction, void *obstacles, int16_t disc_index, unsigned char use_cost_delta, float max_cost, unsigned char skip_ray_march, float ray_t, void *out_result);",
           "ported": false
         },
         {
           "addr": "0x61280",
-          "decl": "void path_add_steps(void);",
+          "decl": "void path_add_steps(void *path @<esi>, int16_t seed_disc_index @<ax>, int16_t step_index);",
           "ported": false
         },
         {
