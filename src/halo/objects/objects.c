@@ -1678,31 +1678,59 @@ void FUN_00135f90(void)
 #endif
 
 
-/* Reset widget data pool, then call each widget type's initialize_for_new_map.
- * 0x136040 / objects.obj
- */
+/* FUN_00136040 (0x136040) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void (*const b136040_c119b20)(data_t *data) = data_delete_all;
+static void (*const b136040_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b136040_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_00136040(void)
 {
-  short sVar1;
-  void **ppuVar2;
-
-  data_delete_all(*(data_t **)0x5a90c4);
-  sVar1 = 0;
-  ppuVar2 = (void **)0x323534;
-  do {
-    if ((sVar1 < 0) || (4 < sVar1)) {
-      display_assert("type>=0 && type<NUMBER_OF_WIDGET_TYPES",
-                     "c:\\halo\\source\\objects\\widgets\\widget_types.h", 0x96,
-                     1);
-      system_exit(-1);
-    }
-    if (*ppuVar2 != 0) {
-      ((void (*)(void)) * ppuVar2)();
-    }
-    sVar1 = sVar1 + 1;
-    ppuVar2 = ppuVar2 + 10;
-  } while (sVar1 < 5);
+  __asm__ volatile(
+      "movl 0x5a90c4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119b20]\n\t"
+      "addl $4, %%esp\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movl $0x323534, %%edi\n\t"
+      ".LFUN_00136040_1:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_00136040_2\n\t"
+      "cmpw $5, %%si\n\t"
+      "jl .LFUN_00136040_3\n\t"
+      ".LFUN_00136040_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x96\n\t"
+      "pushl $0x29ae0c\n\t"
+      "pushl $0x29ade4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00136040_3:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00136040_4\n\t"
+      "call *%%eax\n\t"
+      ".LFUN_00136040_4:\n\t"
+      "incl %%esi\n\t"
+      "addl $0x28, %%edi\n\t"
+      "cmpw $5, %%si\n\t"
+      "jl .LFUN_00136040_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c119b20] "m"(b136040_c119b20), [assert] "m"(b136040_assert), [exitfn] "m"(b136040_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00136040: clang naked draft required"
+#endif
+
 
 /* FUN_001360a0 (0x1360a0) — XBE naked draft (batch 69). */
 #if defined(__clang__)
@@ -1820,30 +1848,55 @@ short FUN_00135f20(int group_tag)
 }
 #endif
 
-/* Call each widget type's dispose function.
- * 0x136100 / objects.obj
- */
+/* FUN_00136100 (0x136100) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void (*const b136100_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b136100_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_00136100(void)
 {
-  short sVar1;
-  void **ppuVar2;
-
-  sVar1 = 0;
-  ppuVar2 = (void **)0x32353c;
-  do {
-    if ((sVar1 < 0) || (4 < sVar1)) {
-      display_assert("type>=0 && type<NUMBER_OF_WIDGET_TYPES",
-                     "c:\\halo\\source\\objects\\widgets\\widget_types.h", 0x96,
-                     1);
-      system_exit(-1);
-    }
-    if (*ppuVar2 != 0) {
-      ((void (*)(void)) * ppuVar2)();
-    }
-    sVar1 = sVar1 + 1;
-    ppuVar2 = ppuVar2 + 10;
-  } while (sVar1 < 5);
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movl $0x32353c, %%edi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00136100_1:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_00136100_2\n\t"
+      "cmpw $5, %%si\n\t"
+      "jl .LFUN_00136100_3\n\t"
+      ".LFUN_00136100_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x96\n\t"
+      "pushl $0x29ae0c\n\t"
+      "pushl $0x29ade4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00136100_3:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00136100_4\n\t"
+      "call *%%eax\n\t"
+      ".LFUN_00136100_4:\n\t"
+      "incl %%esi\n\t"
+      "addl $0x28, %%edi\n\t"
+      "cmpw $5, %%si\n\t"
+      "jl .LFUN_00136100_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b136100_assert), [exitfn] "m"(b136100_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00136100: clang naked draft required"
+#endif
+
 
 /* FUN_00136150 (0x136150) — XBE naked draft (batch 60). */
 #if defined(__clang__)
@@ -3862,33 +3915,56 @@ void FUN_0013b150(void)
 #endif
 
 
-/* FUN_0013c030 (0x13c030 / objects.obj) — depth-first walk of an object's child
- * hierarchy, forwarding two opaque parameters down the tree.
- *
- * For each object node (param_1), verifies the datum (object_get_and_verify_type
- * with type_mask -1), recurses into the first-child handle (node+0xc8) carrying
- * param_2/param_3 unchanged, then advances along the sibling chain (node+0xc4)
- * until the handle is -1.
- *
- * Confirmed: 3 cdecl args. param_1 @ [EBP+0x8] (ESI), param_2 @ [EBP+0xc],
- * param_3 @ [EBP+0x10] (EBX). param_2/param_3 are only forwarded to the
- * recursion (no local use).
- * Confirmed: object_get_and_verify_type(param_1, -1) is called twice per node;
- * the first result (EDI) supplies the child (+0xc8) and sibling (+0xc4) handles,
- * the second call's result is discarded (re-verify side effect).
- * Confirmed: tail iteration over sibling chain (CMP ESI,-1; JNZ loop).
- */
-void FUN_0013c030(int param_1, int param_2, int param_3)
-{
-  int node;
+/* FUN_0013c030 (0x13c030) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b13c030_get)(int, int) = object_get_and_verify_type;
+static void (*const b13c030_c13c030)(int param_1, int param_2, int param_3) = FUN_0013c030;
 
-  while (param_1 != -1) {
-    node = (int)object_get_and_verify_type(param_1, -1);
-    object_get_and_verify_type(param_1, -1);
-    FUN_0013c030(*(int *)(node + 0xc8), param_2, param_3);
-    param_1 = *(int *)(node + 0xc4);
-  }
+__attribute__((naked, noinline))
+void FUN_0013c030(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_0013c030_2\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "pushl %%edi\n\t"
+      ".LFUN_0013c030_1:\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0xc8(%%edi), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13c030]\n\t"
+      "movl 0xc4(%%edi), %%esi\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne .LFUN_0013c030_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_0013c030_2:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b13c030_get), [c13c030] "m"(b13c030_c13c030)
+      : "memory");
 }
+#else
+#error "FUN_0013c030: clang naked draft required"
+#endif
+
 
 /* FUN_0013c100 (0x13c100) — XBE naked draft (batch 65). */
 #if defined(__clang__)
@@ -5393,38 +5469,56 @@ int FUN_0013cab0(int param_1 __attribute__((unused)), int param_2 __attribute__(
 #endif
 
 
-/*
- * FUN_0013cb30 (0x13cb30 / object_types.c) — delete all unnamed scenery and
- * light-fixture objects.
- *
- * Walks the object table for type_mask 0x240 (scenery | light_fixture) via an
- * object_iter_t and deletes every matching object whose name_index (obj+0x6a)
- * is -1 (NONE) — i.e. transient placements with no scenario name; named ones
- * are left intact. Called by scenario_switch_structure_bsp (0x18eb40) during a
- * structure-BSP switch; the sibling FUN_0013cb80 below refreshes/respawns the
- * placements for the new BSP cluster.
- *
- * Confirmed (disasm 0x13cb30): object_iterator_new(&iter,0x240,0); first
- * object_iterator_next(&iter); while EAX!=0 { CMP word ptr [EAX+0x6a],-1
- * (name_index); JNZ skip; MOV EDX,[EBP-0x8]; object_delete(EDX); skip:
- * object_iterator_next(&iter) }. [EBP-0x8] is iter.last_handle (iterator+0x8,
- * EBP-0x10 base) — the handle written by object_iterator_next, NOT a separate
- * local (Ghidra split it as `local_c`; buffer-alias trap).
- */
+/* FUN_0013cb30 (0x13cb30) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void (*const b13cb30_c13d6f0)(void *iter, int type_mask, int flags) = object_iterator_new;
+static void * (*const b13cb30_c13d730)(void *iter) = object_iterator_next;
+static void (*const b13cb30_odel)(int) = object_delete;
+
+__attribute__((naked, noinline))
 void FUN_0013cb30(void)
 {
-  object_iter_t iter;
-  short *object;
-
-  object_iterator_new(&iter, 0x240, 0);
-  object = (short *)object_iterator_next(&iter);
-  while (object != (short *)0) {
-    if (*(short *)((char *)object + 0x6a) == -1) {
-      object_delete(iter.last_handle);
-    }
-    object = (short *)object_iterator_next(&iter);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "pushl $0\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl $0x240\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c13d6f0]\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13d730]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0013cb30_3\n\t"
+      ".LFUN_0013cb30_1:\n\t"
+      "cmpw $-1, 0x6a(%%eax)\n\t"
+      "jne .LFUN_0013cb30_2\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[odel]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_0013cb30_2:\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c13d730]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0013cb30_1\n\t"
+      ".LFUN_0013cb30_3:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c13d6f0] "m"(b13cb30_c13d6f0), [c13d730] "m"(b13cb30_c13d730), [odel] "m"(b13cb30_odel)
+      : "memory");
 }
+#else
+#error "FUN_0013cb30: clang naked draft required"
+#endif
+
 
 /* FUN_0013cb80 (0x13cb80) — XBE naked draft (batch 58). */
 #if defined(__clang__)
@@ -21401,21 +21495,54 @@ float FUN_001397f0(float param_1, float param_2)
   return 1.0f - (param_2 * param_2) / (param_1 * param_1);
 }
 
-/* Scripting hook: attaches child object param_3 to parent param_1 at a marker,
-   but only when both handles are valid and the child is not already attached
-   (object+0xcc == -1). */
-void objects_scripting_attach(int param_1, int param_2, int param_3, int param_4)
-{
-  int object_ptr;
+/* objects_scripting_attach (0x144ae0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b144ae0_get)(int, int) = object_get_and_verify_type;
+static void (*const b144ae0_c144860)(int parent_handle, void *marker_name, int child_handle, void *child_marker_name) = object_attach_to_marker;
 
-  if ((param_1 != -1) && (param_3 != -1)) {
-    object_ptr = (int)object_get_and_verify_type(param_3, 0xffffffff);
-    if (*(int *)(object_ptr + 0xcc) == -1) {
-      object_attach_to_marker(param_1, (void *)param_2, param_3, (void *)param_4);
-    }
-  }
-  return;
+__attribute__((naked, noinline))
+void objects_scripting_attach(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)), int param_4 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lobjects_scripting_attach_2\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lobjects_scripting_attach_1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl 0xcc(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "jne .Lobjects_scripting_attach_1\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c144860]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lobjects_scripting_attach_1:\n\t"
+      "popl %%esi\n\t"
+      ".Lobjects_scripting_attach_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b144ae0_get), [c144860] "m"(b144ae0_c144860)
+      : "memory");
 }
+#else
+#error "objects_scripting_attach: clang naked draft required"
+#endif
+
 
 /* FUN_0013c080 (0x13c080) — XBE naked draft (batch 66). */
 #if defined(__clang__)

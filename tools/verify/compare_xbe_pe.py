@@ -829,6 +829,17 @@ def main() -> int:
         ("FUN_001360a0", 0x1360a0, 0x1360fe),
         ("FUN_001a6cd0", 0x1a6cd0, 0x1a6d0f),
         ("FUN_000f7fa0", 0xf7fa0, 0xf7ff8),
+        # gameplay wave 70 (2026-07-26)
+        ("valid_real_matrix4x3", 0xf6d00, 0xf6d51),
+        ("FUN_001ab870", 0x1ab870, 0x1ab8b9),
+        ("FUN_0013c030", 0x13c030, 0x13c077),
+        ("FUN_001aa360", 0x1aa360, 0x1aa3bf),
+        ("FUN_00136040", 0x136040, 0x136097),
+        ("FUN_00136890", 0x136890, 0x1368d6),
+        ("objects_scripting_attach", 0x144ae0, 0x144b21),
+        ("FUN_0013cb30", 0x13cb30, 0x13cb7d),
+        ("FUN_001a6820", 0x1a6820, 0x1a6867),
+        ("FUN_00136100", 0x136100, 0x136150),
     ]
 
     xbe = Xbe.from_file(args.xbe)

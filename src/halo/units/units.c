@@ -633,34 +633,54 @@ short FUN_001a67e0(const char *param_1 __attribute__((unused)))
 
 
 
-/* FUN_001a6820 (0x1a6820)
- *
- * Returns verify_tag_reference result for the animation at index bool(param_2)
- * (0 or 1, clamped to count-1) from the tag block at param_1+0x2a8.
- * Returns -1 if clamped index is negative (count == 0).
- *
- * Confirmed: MOV AL,[ebp+0xc]; XOR ECX,ECX; TEST AL,AL; MOV EAX,[edx+0x2a8];
- * SETNE CL; ADD EDX,0x2a8; DEC EAX; MOVSX ECX,CX; CMP ECX,EAX; JG skip;
- * MOV EAX,ECX; TEST AX,AX; JGE proceed; OR EAX,-1; RET.
- */
-int FUN_001a6820(int param_1, char param_2)
-{
-  int iVar1;
-  int *block;
-  int bVal;
+/* FUN_001a6820 (0x1a6820) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b1a6820_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b1a6820_c19b120)(int *tag_ref) = verify_tag_reference;
 
-  bVal = (int)(short)(unsigned short)(param_2 != '\0');
-  iVar1 = *(int *)(param_1 + 0x2a8) - 1;
-  block = (int *)(param_1 + 0x2a8);
-  if (bVal <= iVar1) {
-    iVar1 = bVal;
-  }
-  if ((short)iVar1 < 0) {
-    return -1;
-  }
-  return (int)verify_tag_reference(
-    (int *)tag_block_get_element(block, (int)(short)iVar1, 0x30));
+__attribute__((naked, noinline))
+int FUN_001a6820(int param_1 __attribute__((unused)), char param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testb %%al, %%al\n\t"
+      "movl 0x2a8(%%edx), %%eax\n\t"
+      "setne %%cl\n\t"
+      "addl $0x2a8, %%edx\n\t"
+      "decl %%eax\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jg .LFUN_001a6820_1\n\t"
+      "movl %%ecx, %%eax\n\t"
+      ".LFUN_001a6820_1:\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jge .LFUN_001a6820_2\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001a6820_2:\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "pushl $0x30\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19b120]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b1a6820_elem), [c19b120] "m"(b1a6820_c19b120)
+      : "memory");
 }
+#else
+#error "FUN_001a6820: clang naked draft required"
+#endif
+
 
 /* FUN_001a6870 (0x1a6870) — XBE naked draft (batch 68). */
 #if defined(__clang__)
@@ -3700,38 +3720,58 @@ void unit_debug_ninja_rope(int unit_handle)
   global_current_collision_user_depth -= 1;
 }
 
-/* FUN_001aa360 (0x1aa360) — unit_set_user_animation
- *
- * Validates a user animation index against the range
- * [0, NUMBER_OF_UNIT_USER_ANIMATIONS). The function resolves the unit tag
- * and its animation tag (antr) but does not use them beyond validation.
- * Asserts if the index is out of range. Returns 0 (AL cleared to 0).
- *
- * Confirmed: cdecl, 3 stack params (unit_handle, param_2, index).
- * Confirmed: assert "index>=0 && index<NUMBER_OF_UNIT_USER_ANIMATIONS"
- *   at line 0x1a21 in units.c.
- * Confirmed: NUMBER_OF_UNIT_USER_ANIMATIONS == 2 (CMP AX,0x2).
- * Confirmed: returns AL=0 (XOR AL,AL at 001aa3bb).
- */
-char FUN_001aa360(int unit_handle, int param_2, int16_t index)
+/* FUN_001aa360 (0x1aa360) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b1aa360_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1aa360_tag)(int, int) = tag_get;
+static void (*const b1aa360_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1aa360_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+char FUN_001aa360(int unit_handle __attribute__((unused)), int param_2 __attribute__((unused)), int16_t index __attribute__((unused)))
 {
-  char *unit;
-  int unit_tag_index;
-  char *unit_tag;
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  unit_tag_index = *(int *)unit;
-  unit_tag = (char *)tag_get(0x756e6974, unit_tag_index);
-  tag_get(0x616e7472, *(int *)(unit_tag + 0x44));
-
-  if (index < 0 || index >= 2) {
-    display_assert("index>=0 && index<NUMBER_OF_UNIT_USER_ANIMATIONS",
-                   "c:\\halo\\SOURCE\\units\\units.c", 0x1a21, 1);
-    system_exit(-1);
-  }
-
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x44(%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x616e7472\n\t"
+      "call *%[tag]\n\t"
+      "movw 0x10(%%ebp), %%ax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .LFUN_001aa360_1\n\t"
+      "cmpw $2, %%ax\n\t"
+      "jl .LFUN_001aa360_2\n\t"
+      ".LFUN_001aa360_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a21\n\t"
+      "pushl $0x2b68c0\n\t"
+      "pushl $0x2b6ac0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001aa360_2:\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1aa360_get), [tag] "m"(b1aa360_tag), [assert] "m"(b1aa360_assert), [exitfn] "m"(b1aa360_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_001aa360: clang naked draft required"
+#endif
+
 
 /* FUN_001aa430 (0x1aa430) — XBE naked draft (batch 64). */
 #if defined(__clang__)
@@ -4477,27 +4517,55 @@ void unit_set_animation(int unit_handle, int anim_graph_tag_index,
   }
 }
 
-/* FUN_001ab870 (0x1ab870)
- * Updates an animation state and optionally triggers an impulse sound.
- * Calls animation_update_internal with update_kind=1, using the animation
- * graph tag index and state pointer passed via @ecx/@edx.
- * If the update produces a sound index (!= -1), plays it via
- * object_impulse_sound_new with scale 1.0. Returns the animation result. */
-int16_t FUN_001ab870(void *animation_state, int animation_graph_tag_index,
-                     int unit_handle)
-{
-  int16_t result;
-  int sound_index;
+/* FUN_001ab870 (0x1ab870) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static int (*const b1ab870_c121c30)(int update_kind, int animation_graph_tag_index, short *state, int *out_sound) = animation_update_internal;
+static int (*const b1ab870_c1c7e70)(int object_handle, int tag_index, int16_t marker, float *position, float *forward, float scale) = object_impulse_sound_new;
 
-  result = (int16_t)animation_update_internal(
-      1, animation_graph_tag_index, (short *)animation_state, &sound_index);
-  if (sound_index != -1) {
-    object_impulse_sound_new(unit_handle, sound_index, 0,
-                             *(float **)0x31fc1c,
-                             *(float **)0x31fc3c, 1.0f);
-  }
-  return result;
+__attribute__((naked, noinline))
+int16_t FUN_001ab870(void *animation_state __attribute__((unused)), int animation_graph_tag_index __attribute__((unused)), int unit_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $1\n\t"
+      "call *%[c121c30]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001ab870_1\n\t"
+      "movl 0x31fc3c, %%ecx\n\t"
+      "movl 0x31fc1c, %%edx\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1c7e70]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".LFUN_001ab870_1:\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c121c30] "m"(b1ab870_c121c30), [c1c7e70] "m"(b1ab870_c1c7e70)
+      : "memory");
 }
+#else
+#error "FUN_001ab870: clang naked draft required"
+#endif
+
 
 /* FUN_001ab8c0 (0x1ab8c0) — XBE naked draft (batch 67). */
 #if defined(__clang__)

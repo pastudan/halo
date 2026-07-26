@@ -1215,29 +1215,58 @@ char valid_real_vector3d_axes3(float *a, float *b, float *c)
   return '\0';
 }
 
-/* valid_real_matrix4x3 (0xf6d00)
- *
- * Validate a 4x3 affine matrix: 1 scale scalar @ +0x00, three orthonormal
- * axis vectors @ +0x04/+0x10/+0x1C, and a translation point @ +0x28.
- * The scale scalar is finite (not inf/NaN) when its IEEE-754 exponent bits
- * (mask 0x7f800000) are NOT all set. Then the axis triple and the point are
- * validated by their respective helpers. Returns 1 only when every check
- * passes; 0 on any failure or non-finite scale.
- *
- * Ghidra mistyped this void(void); it is a bool-returning cdecl fn taking one
- * float* matrix pointer (proven by the render_cameras.c thunk typedef). Nested
- * -if shape preserved: single success return, fall-through failure. */
-char valid_real_matrix4x3(float *mat)
+/* valid_real_matrix4x3 (0xf6d00) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static char (*const bf6d00_cf6c40)(float *a, float *b, float *c) = valid_real_vector3d_axes3;
+static bool (*const bf6d00_ca16b0)(float *point) = valid_real_point3d;
+
+__attribute__((naked, noinline))
+char valid_real_matrix4x3(float *mat __attribute__((unused)))
 {
-  if ((*(uint32_t *)mat & 0x7f800000) != 0x7f800000) {
-    if (valid_real_vector3d_axes3(mat + 1, mat + 4, mat + 7) != '\0') {
-      if (valid_real_point3d(mat + 10)) {
-        return '\x01';
-      }
-    }
-  }
-  return '\0';
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "je .Lvalid_real_matrix4x3_1\n\t"
+      "leal 0x1c(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0x10(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x4(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[cf6c40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lvalid_real_matrix4x3_1\n\t"
+      "addl $0x28, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ca16b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lvalid_real_matrix4x3_1\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lvalid_real_matrix4x3_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cf6c40] "m"(bf6d00_cf6c40), [ca16b0] "m"(bf6d00_ca16b0)
+      : "memory");
 }
+#else
+#error "valid_real_matrix4x3: clang naked draft required"
+#endif
+
 
 /* item_set_position (0xf6d60) — XBE naked draft (batch 49). */
 #if defined(__clang__)
