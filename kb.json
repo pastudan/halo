@@ -18403,7 +18403,7 @@
         {
           "addr": "0xe1000",
           "decl": "void FUN_000e1000(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e1000"
         },
         {
@@ -36032,8 +36032,9 @@
         },
         {
           "addr": "0x5bbe0",
-          "decl": "void FUN_0005bbe0(int encounter_handle);",
-          "ported": false
+          "decl": "void FUN_0005bbe0(int encounter_handle __attribute__((unused)));",
+          "ported": false,
+          "name": "FUN_0005bbe0"
         },
         {
           "addr": "0x5c3a0",

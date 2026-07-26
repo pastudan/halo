@@ -2408,8 +2408,8 @@
     "class": "non_leaf"
   },
   "0x64": {
-    "confidence": "moderate",
-    "coverage_pct": 55.4
+    "confidence": "weak",
+    "coverage_pct": 30.1
   },
   "0x648a0": {
     "class": "non_leaf"
@@ -4343,6 +4343,11 @@
     "class": "non_leaf",
     "confidence": "weak",
     "coverage_pct": 100.0
+  },
+  "0xe1000": {
+    "class": "non_leaf",
+    "confidence": "moderate",
+    "coverage_pct": 53.2
   },
   "0xe2170": {
     "class": "non_leaf",
