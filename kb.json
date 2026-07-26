@@ -15019,7 +15019,7 @@
         {
           "addr": "0x124d00",
           "decl": "int16_t FUN_00124d00(void *client);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x124d50",
@@ -15095,7 +15095,7 @@
         {
           "addr": "0x125c60",
           "decl": "void network_game_client_countdown_timer_update(void *client, int16_t timer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x125cb0",
@@ -28045,7 +28045,7 @@
         {
           "addr": "0x19e600",
           "decl": "int ufgetc(void *stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e640",
@@ -28125,7 +28125,7 @@
         {
           "addr": "0x19eee0",
           "decl": "int ufclose(void *stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19ef20",
@@ -39856,7 +39856,7 @@
         {
           "addr": "0x964d0",
           "decl": "void device_set_never_appears_locked(int a0, int a1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x96510",
@@ -39866,12 +39866,12 @@
         {
           "addr": "0x965f0",
           "decl": "void device_one_sided_set(int a0, int a1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x96630",
           "decl": "void device_operates_automatically_set(int a0, int a1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x96670",

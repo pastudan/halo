@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* --- devices.obj batch drafts (2026-07-26) --- */
 
 /* device_new (0x960c0) — XBE naked draft (batch 275). */
@@ -437,47 +438,24 @@ int device_get_power(int a0 __attribute__((unused)))
 #endif
 
 
-/* device_set_never_appears_locked (0x964d0) — XBE naked draft (batch 279). */
-#if defined(__clang__)
-static void *(*const b964d0_tryget)(int, int) = object_try_and_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void device_set_never_appears_locked(int a0 __attribute__((unused)), int a1 __attribute__((unused)))
+/* device_set_never_appears_locked (0x964d0) — readable C lift (assert wrapper). */
+void device_set_never_appears_locked(int a0, int a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Ldevice_set_never_appears_locked_2\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Ldevice_set_never_appears_locked_2\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl 0x1c4(%%eax), %%ecx\n\t"
-      "je .Ldevice_set_never_appears_locked_1\n\t"
-      "orl $4, %%ecx\n\t"
-      "movl %%ecx, 0x1c4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldevice_set_never_appears_locked_1:\n\t"
-      "andl $0xfffffffb, %%ecx\n\t"
-      "movl %%ecx, 0x1c4(%%eax)\n\t"
-      ".Ldevice_set_never_appears_locked_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tryget] "m"(b964d0_tryget)
-      : "memory");
+  if (a0 == -1) {
+    return;
+  }
+  {
+    void *obj = object_try_and_get_and_verify_type(a0, 0x80);
+    if (!obj) {
+      return;
+    }
+    uint32_t flags = *(uint32_t *)((char *)obj + 0x1c4);
+    if (a1) {
+      flags |= 4;
+    }
+    *(uint32_t *)((char *)obj + 0x1c4) = flags;
+  }
 }
-#else
-#error "device_set_never_appears_locked: clang naked draft required"
-#endif
-
 
 /* device_group_set_actual_value (0x96510) — XBE naked draft (batch 267). */
 #if defined(__clang__)
@@ -571,85 +549,37 @@ void device_group_set_actual_value(int a0 __attribute__((unused)), float a1 __at
 #endif
 
 
-/* device_one_sided_set (0x965f0) — XBE naked draft (batch 281). */
-#if defined(__clang__)
-static void *(*const b965f0_tryget)(int, int) = object_try_and_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void device_one_sided_set(int a0 __attribute__((unused)), int a1 __attribute__((unused)))
+/* device_one_sided_set (0x965f0) — readable C lift (assert wrapper). */
+void device_one_sided_set(int a0, int a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Ldevice_one_sided_set_2\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl 0x1c4(%%eax), %%ecx\n\t"
-      "je .Ldevice_one_sided_set_1\n\t"
-      "orl $2, %%ecx\n\t"
-      "movl %%ecx, 0x1c4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldevice_one_sided_set_1:\n\t"
-      "andl $0xfffffffd, %%ecx\n\t"
-      "movl %%ecx, 0x1c4(%%eax)\n\t"
-      ".Ldevice_one_sided_set_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tryget] "m"(b965f0_tryget)
-      : "memory");
+  {
+    void *obj = object_try_and_get_and_verify_type(a0, 0x80);
+    if (!obj) {
+      return;
+    }
+    uint32_t flags = *(uint32_t *)((char *)obj + 0x1c4);
+    if (a1) {
+      flags |= 2;
+    }
+    *(uint32_t *)((char *)obj + 0x1c4) = flags;
+  }
 }
-#else
-#error "device_one_sided_set: clang naked draft required"
-#endif
 
-
-/* device_operates_automatically_set (0x96630) — XBE naked draft (batch 281). */
-#if defined(__clang__)
-static void *(*const b96630_tryget)(int, int) = object_try_and_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void device_operates_automatically_set(int a0 __attribute__((unused)), int a1 __attribute__((unused)))
+/* device_operates_automatically_set (0x96630) — readable C lift (assert wrapper). */
+void device_operates_automatically_set(int a0, int a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Ldevice_operates_automatically_set_2\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl 0x1c4(%%eax), %%ecx\n\t"
-      "jne .Ldevice_operates_automatically_set_1\n\t"
-      "orl $1, %%ecx\n\t"
-      "movl %%ecx, 0x1c4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldevice_operates_automatically_set_1:\n\t"
-      "andl $0xfffffffe, %%ecx\n\t"
-      "movl %%ecx, 0x1c4(%%eax)\n\t"
-      ".Ldevice_operates_automatically_set_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tryget] "m"(b96630_tryget)
-      : "memory");
+  {
+    void *obj = object_try_and_get_and_verify_type(a0, 0x80);
+    if (!obj) {
+      return;
+    }
+    uint32_t flags = *(uint32_t *)((char *)obj + 0x1c4);
+    if (!a1) {
+      flags |= 1;
+    }
+    *(uint32_t *)((char *)obj + 0x1c4) = flags;
+  }
 }
-#else
-#error "device_operates_automatically_set: clang naked draft required"
-#endif
-
 
 /* device_group_change_only_once_more_set (0x96670) — XBE naked draft (batch 277). */
 #if defined(__clang__)

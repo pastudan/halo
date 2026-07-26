@@ -327,6 +327,59 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
             f"{sig}\n{{\n  {ret}{fn}(*(void **)0x{g.group(1)}, {ps[0]});\n}}\n"
         )
 
+
+    # object_get + tag_get → return 1
+    if (
+        len(mid) == 10
+        and mid[0] == ("mov", "eax, dword ptr [ebp + 8]")
+        and mid[1][0] == "push"
+        and mid[2] == ("push", "eax")
+        and mid[3][0] == "call"
+        and mid[4][0] == "mov"
+        and "ecx, dword ptr [eax]" in mid[4][1]
+        and mid[5] == ("push", "ecx")
+        and mid[6][0] == "push"
+        and mid[7][0] == "call"
+        and mid[8][0] == "add"
+        and mid[9] == ("mov", "al, 1")
+    ):
+        f1, f2 = callee(mid[3][1]), callee(mid[7][1])
+        if f1 and f2 and ps:
+            ret = "" if is_void else "return "
+            return (
+                f"{sig}\n{{\n"
+                f"  void *obj = {f1}({ps[0]}, {mid[1][1]});\n"
+                f"  {f2}(*(void **)obj, {mid[6][1]});\n"
+                f"  {ret}1;\n"
+                f"}}\n"
+            )
+
+    # datum_get from global + fld float field
+    if (
+        len(mid) == 7
+        and mid[0][0] == "movsx"
+        and "word ptr [ebp + 8]" in mid[0][1]
+        and mid[1][0] == "mov"
+        and "ecx, dword ptr [0x" in mid[1][1]
+        and mid[2] == ("push", "eax")
+        and mid[3] == ("push", "ecx")
+        and mid[4][0] == "call"
+        and mid[5][0] == "add"
+        and mid[6][0] == "fld"
+    ):
+        fn = callee(mid[4][1])
+        g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[1][1])
+        off_m = re.search(r"\[eax(?: \+ (0x[0-9a-f]+|\d+))?\]", mid[6][1])
+        if fn and g and off_m and ps:
+            o = int(off_m.group(1), 0) if off_m.group(1) else 0
+            ret = "" if is_void else "return "
+            return (
+                f"{sig}\n{{\n"
+                f"  void *d = {fn}(*(void **)0x{g.group(1)}, {ps[0]});\n"
+                f"  {ret}*(float *)((char *)d + 0x{o:x});\n"
+                f"}}\n"
+            )
+
     return None
 
 
@@ -375,7 +428,7 @@ def main() -> int:
             continue
         end = starts[i + 1] if i + 1 < len(starts) else ai + 64
         size = end - ai
-        if size > 64:
+        if size > 96:
             continue
         sp = resolve_src(src)
         if not sp:

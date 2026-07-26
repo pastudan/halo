@@ -2019,108 +2019,6 @@ void vehicle_render_debug(int vehicle_handle __attribute__((unused)))
 
 /* FUN_001b5f20 (0x1b5f20) — Project a delta vector onto a reference axis and
  * clamp its length. Register args: a@<eax>, b@<ecx>, out@<esi>. */
-#if defined(__clang__)
-static short (*const FUN_001b5f20_clamp)(float *, float) = FUN_000a57b0;
-
-__attribute__((naked, noinline))
-float *FUN_001b5f20(float *a __attribute__((unused)),
-                    float *b __attribute__((unused)),
-                    float *out __attribute__((unused)),
-                    float scale_a __attribute__((unused)),
-                    float scale_b __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "flds (%%ecx)\n\t"
-      "fsubs (%%eax)\n\t"
-      "fstps (%%esi)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "fsts 0x8(%%esi)\n\t"
-      "fadds 0x32512c\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "movl -4(%%ebp), %%eax\n\t"
-      "movl %%eax, 8(%%esi)\n\t"
-      "flds (%%ecx)\n\t"
-      "fmuls (%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      "faddp %%st(1)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "faddp %%st(1)\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "fcomps 0x253f44\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne 1f\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "flds (%%esi)\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "flds (%%ecx)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fld %%st(5)\n\t"
-      "fmul %%st(6), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      "fld %%st(6)\n\t"
-      "fmul %%st(7), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      ".byte 0xde, 0xf9\n\t" /* fdivp st(1) — gas AT&T swaps fdivp/fdivrp */
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      ".byte 0xde, 0xf9\n\t" /* fdivp st(1) */
-
-      "flds 0x8(%%ebp)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "fmulp %%st(1)\n\t"
-      "fadds 0xc(%%ebp)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "movl 8(%%ebp), %%edx\n\t"
-      "fstp %%st(0)\n\t"
-      "pushl %%edx\n\t"
-      "fstp %%st(0)\n\t"
-      "pushl %%esi\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "call *%[clamp]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "1:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ecx, 8(%%ebp)\n\t"
-      "call *%[clamp]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [clamp] "m"(FUN_001b5f20_clamp)
-      : "memory");
-}
-#else
 float *FUN_001b5f20(float *a, float *b, float *out, float scale_a, float scale_b)
 {
   float dot;
@@ -2132,7 +2030,7 @@ float *FUN_001b5f20(float *a, float *b, float *out, float scale_a, float scale_b
   out[2] = (b[2] - a[2]) + *(float *)0x32512c;
 
   dot = out[0] * b[0] + out[1] * b[1] + out[2] * b[2];
-  if (dot <= *(float *)0x253f44) {
+  if (dot <= 0.0001f) {
     FUN_000a57b0(out, scale_b);
     return out;
   }
@@ -2142,7 +2040,7 @@ float *FUN_001b5f20(float *a, float *b, float *out, float scale_a, float scale_b
   FUN_000a57b0(out, limit);
   return out;
 }
-#endif
+
 
 /* 0x1b5ff0 — accumulate throttle/steer into antipodal wheel channels.
  * wheel_state arrives in EDI (register); handle/physics_buffer are cdecl. */

@@ -1028,42 +1028,15 @@ void *FUN_00124c80(void *client)
   return (void *)((char *)client + 4);
 }
 
-/* FUN_00124d00 (0x124d00) — XBE naked draft (batch 177). */
-#if defined(__clang__)
-static void (*const b124d00_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b124d00_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int16_t FUN_00124d00(void *client __attribute__((unused)))
+/* FUN_00124d00 (0x124d00) — readable C lift (assert wrapper). */
+int16_t FUN_00124d00(void *client)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00124d00_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2bc\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x2917a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00124d00_1:\n\t"
-      "movw 0xca4(%%esi), %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b124d00_assert), [exitfn] "m"(b124d00_exitfn)
-      : "memory");
+  if (client == NULL) {
+    display_assert((const char *)0x2917a8, (const char *)0x291774, 0x2bc, 1);
+    system_exit(-1);
+  }
+  return *(uint16_t *)((char *)client + 0xca4);
 }
-#else
-#error "FUN_00124d00: clang naked draft required"
-#endif
-
 
 /* network_game_client_address_matches_server (0x124d50) — XBE naked draft (batch 141). */
 #if defined(__clang__)
@@ -2552,48 +2525,15 @@ char FUN_00125b90(void *client __attribute__((unused)), short request_type __att
 #endif
 
 
-/* network_game_client_countdown_timer_update (0x125c60) — XBE naked draft (batch 173). */
-#if defined(__clang__)
-static void (*const b125c60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b125c60_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void network_game_client_countdown_timer_update(void *client __attribute__((unused)), int16_t timer __attribute__((unused)))
+/* network_game_client_countdown_timer_update (0x125c60) — readable C lift (assert wrapper). */
+void network_game_client_countdown_timer_update(void *client, int16_t timer)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lnetwork_game_client_countdown_timer_update_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5c3\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x2917a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movw 0xc(%%ebp), %%ax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movw %%ax, 0xca4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_countdown_timer_update_1:\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "movw %%cx, 0xca4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b125c60_assert), [exitfn] "m"(b125c60_exitfn)
-      : "memory");
+  if (client == NULL) {
+    display_assert((const char *)0x2917a8, (const char *)0x291774, 0x5c3, 1);
+    system_exit(-1);
+  }
+  *(uint16_t *)((char *)client + 0xca4) = (uint16_t)timer;
 }
-#else
-#error "network_game_client_countdown_timer_update: clang naked draft required"
-#endif
-
 
 /* network_game_client_advertised_game_is_valid (0x125cb0) — XBE naked draft (batch 177). */
 #if defined(__clang__)

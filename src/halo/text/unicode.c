@@ -974,45 +974,15 @@ int utolower(int c)
   return (int)((towlower_fn)FUN_001da8e3)((unsigned short)c);
 }
 
-/* ufgetc (0x19e600) — XBE naked draft (batch 283). */
-#if defined(__clang__)
-static void (*const b19e600_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19e600_exitfn)(int) = system_exit;
-static int (*const b19e600_c1dc512)(void *stream) = _fgetwc;
-
-__attribute__((naked, noinline))
-int ufgetc(void *stream __attribute__((unused)))
+/* ufgetc (0x19e600) — readable C lift (assert wrapper). */
+int ufgetc(void *stream)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lufgetc_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x24d\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b4948\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lufgetc_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1dc512]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b19e600_assert), [exitfn] "m"(b19e600_exitfn), [c1dc512] "m"(b19e600_c1dc512)
-      : "memory");
+  if (stream == NULL) {
+    display_assert((const char *)0x2b4948, (const char *)0x2b45b4, 0x24d, 1);
+    system_exit(-1);
+  }
+  return _fgetwc(stream);
 }
-#else
-#error "ufgetc: clang naked draft required"
-#endif
-
 
 /* ufputc (0x19e640) — XBE naked draft (batch 278). */
 #if defined(__clang__)
@@ -1739,45 +1709,15 @@ void *ufopen(const wchar_t *path, const wchar_t *mode)
   return FUN_001dccf5(path, mode);
 }
 
-/* ufclose (0x19eee0) — XBE naked draft (batch 283). */
-#if defined(__clang__)
-static void (*const b19eee0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19eee0_exitfn)(int) = system_exit;
-static int (*const b19eee0_c1d9dac)(void *stream) = crt_fclose;
-
-__attribute__((naked, noinline))
-int ufclose(void *stream __attribute__((unused)))
+/* ufclose (0x19eee0) — readable C lift (assert wrapper). */
+int ufclose(void *stream)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lufclose_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x384\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b4948\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lufclose_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9dac]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b19eee0_assert), [exitfn] "m"(b19eee0_exitfn), [c1d9dac] "m"(b19eee0_c1d9dac)
-      : "memory");
+  if (stream == NULL) {
+    display_assert((const char *)0x2b4948, (const char *)0x2b45b4, 0x384, 1);
+    system_exit(-1);
+  }
+  return crt_fclose(stream);
 }
-#else
-#error "ufclose: clang naked draft required"
-#endif
-
 
 /* 0x19ef20 */
 void *ufreopen(const wchar_t *path, const wchar_t *mode, void *stream)

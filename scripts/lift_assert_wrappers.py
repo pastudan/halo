@@ -93,7 +93,8 @@ def is_void(sig: str) -> bool:
 
 
 def parse_assert(ops: list[tuple[str, str]], i: int) -> dict | None:
-    if i + 7 >= len(ops):
+    """Parse display_assert+system_exit; add esp may be delayed after other ops."""
+    if i + 6 >= len(ops):
         return None
     if not (
         ops[i] == ("push", "1")
@@ -105,14 +106,16 @@ def parse_assert(ops: list[tuple[str, str]], i: int) -> dict | None:
         and ops[i + 5] == ("push", "-1")
         and ops[i + 6][0] == "call"
         and f"{SYSTEM_EXIT:x}" in ops[i + 6][1]
-        and ops[i + 7][0] == "add"
     ):
         return None
+    j = i + 7
+    if j < len(ops) and ops[j][0] == "add" and "esp" in ops[j][1]:
+        j += 1
     return {
         "line": ops[i + 1][1],
         "file": ops[i + 2][1],
         "msg": ops[i + 3][1],
-        "next": i + 8,
+        "next": j,
     }
 
 
@@ -129,6 +132,28 @@ def callee(op: str, name_by: dict) -> str | None:
     if not m:
         return None
     return name_by.get(int(m.group(1), 16))
+
+
+def ensure_params(sig: str, ps: list[str], n: int, kinds: list[str] | None = None) -> tuple[str, list[str]]:
+    """Synthesize missing cdecl params when kb decl is `void foo(void)` but stack args exist."""
+    if len(ps) >= n:
+        return sig, ps
+    kinds = kinds or ["void *"] * n
+    names = [f"a{i}" for i in range(n)]
+    # reuse existing names
+    for i, p in enumerate(ps):
+        names[i] = p
+    plist = ", ".join(f"{kinds[i]} {names[i]}" for i in range(n))
+    # rebuild sig
+    ret_t = sig.split("(")[0].strip()
+    if ret_t.endswith(sig.split("(")[0].split()[-1] if False else ""):
+        pass
+    # extract return type + name
+    m = re.match(r"^(.*\b)(\w+)\s*$", ret_t)
+    if not m:
+        return sig, ps
+    new_sig = f"{m.group(1)}{m.group(2)}({plist})"
+    return new_sig, names
 
 
 def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) -> str | None:
@@ -151,13 +176,17 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
         and body[5][0] == "jne"
     ):
         ab = parse_assert(body, 6)
-        if not ab or not ps:
-            pass
-        else:
+        if ab:
+            sig1, ps1 = ensure_params(sig, ps, 1, ["void *"])
             mid = body[ab["next"] :]
-            # strip trailing pops
             while mid and mid[-1][0] == "pop" and mid[-1][1] in ("ebp", "esi", "ebx", "edi"):
                 mid = mid[:-1]
+            mid = [
+                x
+                for x in mid
+                if not (x[0] == "pop" and x[1] == "esi")
+                and not (x[0] == "add" and "esp" in x[1])
+            ]
 
             # mov ax/eax/al, [esi(+off)]
             if len(mid) == 1 and mid[0][0] == "mov":
@@ -166,17 +195,20 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                     mid[0][1],
                 )
                 if m:
-                    reg, width, off = m.group(1), m.group(2), m.group(3)
+                    width, off = m.group(2), m.group(3)
                     o = int(off, 0) if off else 0
                     ctype = {"byte": "uint8_t", "word": "uint16_t", "dword": "uint32_t"}[
                         width
                     ]
+                    # promote void return to integer
+                    if is_void(sig1):
+                        sig1 = sig1.replace("void ", f"{ctype} ", 1)
                     return (
-                        f"{sig}\n{{\n"
-                        f"  if ({ps[0]} == NULL) {{\n"
+                        f"{sig1}\n{{\n"
+                        f"  if ({ps1[0]} == NULL) {{\n"
                         f"{assert_c(ab, '    ')}"
                         f"  }}\n"
-                        f"  {ret}*({ctype} *)((char *){ps[0]} + 0x{o:x});\n"
+                        f"  return *({ctype} *)((char *){ps1[0]} + 0x{o:x});\n"
                         f"}}\n"
                     )
 
@@ -190,17 +222,18 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                     width, off = m.group(1), m.group(2)
                     o = int(off, 0) if off else 0
                     ctype = "int8_t" if width == "byte" else "int16_t"
+                    if is_void(sig1):
+                        sig1 = sig1.replace("void ", "int ", 1)
                     return (
-                        f"{sig}\n{{\n"
-                        f"  if ({ps[0]} == NULL) {{\n"
+                        f"{sig1}\n{{\n"
+                        f"  if ({ps1[0]} == NULL) {{\n"
                         f"{assert_c(ab, '    ')}"
                         f"  }}\n"
-                        f"  {ret}({ctype})*({ctype} *)((char *){ps[0]} + 0x{o:x});\n"
+                        f"  return ({ctype})*({ctype} *)((char *){ps1[0]} + 0x{o:x});\n"
                         f"}}\n"
                     )
 
-            # bit extract: xor eax,eax; mov al,[esi+off]; pop esi; and/shr/...; pop ebp
-            # (pops already stripped except ops between load and end may include and/shr)
+            # bit extract
             if (
                 len(mid) >= 2
                 and mid[0] == ("xor", "eax, eax")
@@ -213,8 +246,7 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                 if m:
                     o = int(m.group(1), 0) if m.group(1) else 0
                     rest = mid[2:]
-                    # allow: and eax, IMM; shr eax, IMM; not eax; and eax, 1
-                    expr = f"(uint32_t)*(uint8_t *)((char *){ps[0]} + 0x{o:x})"
+                    expr = f"(uint32_t)*(uint8_t *)((char *){ps1[0]} + 0x{o:x})"
                     ok = True
                     for mnem, op in rest:
                         if mnem == "and" and op.startswith("eax,"):
@@ -227,16 +259,18 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                             ok = False
                             break
                     if ok:
+                        if is_void(sig1):
+                            sig1 = sig1.replace("void ", "int ", 1)
                         return (
-                            f"{sig}\n{{\n"
-                            f"  if ({ps[0]} == NULL) {{\n"
+                            f"{sig1}\n{{\n"
+                            f"  if ({ps1[0]} == NULL) {{\n"
                             f"{assert_c(ab, '    ')}"
                             f"  }}\n"
-                            f"  {ret}(int){expr};\n"
+                            f"  return (int){expr};\n"
                             f"}}\n"
                         )
 
-            # store word from arg1: mov ax,[ebp+0xc]; mov [esi+off], ax
+            # store word from arg1
             if (
                 len(mid) == 2
                 and mid[0] == ("mov", "ax, word ptr [ebp + 0xc]")
@@ -247,16 +281,122 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                     r", ax$",
                     mid[1][1],
                 )
-                if m and len(ps) >= 2:
+                sig2, ps2 = ensure_params(sig, ps, 2, ["void *", "int16_t"])
+                if m and len(ps2) >= 2:
                     o = int(m.group(1), 0) if m.group(1) else 0
                     return (
-                        f"{sig}\n{{\n"
-                        f"  if ({ps[0]} == NULL) {{\n"
+                        f"{sig2}\n{{\n"
+                        f"  if ({ps2[0]} == NULL) {{\n"
                         f"{assert_c(ab, '    ')}"
                         f"  }}\n"
-                        f"  *(uint16_t *)((char *){ps[0]} + 0x{o:x}) = (uint16_t){ps[1]};\n"
+                        f"  *(uint16_t *)((char *){ps2[0]} + 0x{o:x}) = (uint16_t){ps2[1]};\n"
                         f"}}\n"
                     )
+
+            # forward call: push esi; call F
+            if len(mid) == 2 and mid[0] == ("push", "esi") and mid[1][0] == "call":
+                fn = callee(mid[1][1], name_by)
+                if fn:
+                    if is_void(sig1):
+                        r = ""
+                    else:
+                        r = "return "
+                    return (
+                        f"{sig1}\n{{\n"
+                        f"  if ({ps1[0]} == NULL) {{\n"
+                        f"{assert_c(ab, '    ')}"
+                        f"  }}\n"
+                        f"  {r}{fn}({ps1[0]});\n"
+                        f"}}\n"
+                    )
+
+            # 2-arg forward after null-check on arg1 (esi from ebp+0xc)
+            if (
+                len(mid) == 3
+                and mid[0] == ("mov", "eax, dword ptr [ebp + 8]")
+                and mid[1] == ("push", "esi")
+                and mid[2][0] == "call"
+            ):
+                fn = callee(mid[2][1], name_by)
+                # esi was loaded from ebp+0xc
+                sig2, ps2 = ensure_params(sig, ps, 2, ["int", "void *"])
+                if fn:
+                    r = "" if is_void(sig2) else "return "
+                    return (
+                        f"{sig2}\n{{\n"
+                        f"  if ({ps2[1]} == NULL) {{\n"
+                        f"{assert_c(ab, '    ')}"
+                        f"  }}\n"
+                        f"  {r}{fn}({ps2[0]}, {ps2[1]});\n"
+                        f"}}\n"
+                    )
+
+            # dual assert path — restore mid before add-strip for second assert parse
+            mid_raw = body[ab["next"] :]
+            while mid_raw and mid_raw[-1][0] == "pop" and mid_raw[-1][1] in ("ebp", "esi"):
+                mid_raw = mid_raw[:-1]
+            if (
+                len(mid_raw) >= 5
+                and mid_raw[0][0] == "mov"
+                and "al, byte ptr [0x" in mid_raw[0][1]
+                and mid_raw[1] == ("test", "al, al")
+                and mid_raw[2][0] == "jne"
+            ):
+                ab2 = parse_assert(mid_raw, 3)
+                if ab2:
+                    mid2 = mid_raw[ab2["next"] :]
+                    mid2 = [
+                        x
+                        for x in mid2
+                        if not (x[0] == "pop" and x[1] in ("esi", "ebp"))
+                        and not (x[0] == "add" and "esp" in x[1])
+                    ]
+                    g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid_raw[0][1])
+                    if g and len(mid2) == 1 and mid2[0][0] == "movsx":
+                        m = re.match(
+                            r"eax, byte ptr \[esi(?: \+ (0x[0-9a-f]+|\d+))?\]$",
+                            mid2[0][1],
+                        )
+                        if m:
+                            o = int(m.group(1), 0) if m.group(1) else 0
+                            if is_void(sig1):
+                                sig1 = sig1.replace("void ", "int ", 1)
+                            return (
+                                f"{sig1}\n{{\n"
+                                f"  if ({ps1[0]} == NULL) {{\n"
+                                f"{assert_c(ab, '    ')}"
+                                f"  }}\n"
+                                f"  if (*(uint8_t *)0x{g.group(1)} == 0) {{\n"
+                                f"{assert_c(ab2, '    ')}"
+                                f"  }}\n"
+                                f"  return (int8_t)*(int8_t *)((char *){ps1[0]} + 0x{o:x});\n"
+                                f"}}\n"
+                            )
+                    if (
+                        g
+                        and len(mid2) == 2
+                        and mid2[0][0] == "mov"
+                        and mid2[1] == ("inc", "eax")
+                    ):
+                        m = re.match(
+                            r"eax, dword ptr \[esi(?: \+ (0x[0-9a-f]+|\d+))?\]$",
+                            mid2[0][1],
+                        )
+                        if m:
+                            o = int(m.group(1), 0) if m.group(1) else 0
+                            if is_void(sig1):
+                                sig1 = sig1.replace("void ", "int ", 1)
+                            return (
+                                f"{sig1}\n{{\n"
+                                f"  if ({ps1[0]} == NULL) {{\n"
+                                f"{assert_c(ab, '    ')}"
+                                f"  }}\n"
+                                f"  if (*(uint8_t *)0x{g.group(1)} == 0) {{\n"
+                                f"{assert_c(ab2, '    ')}"
+                                f"  }}\n"
+                                f"  return *(uint32_t *)((char *){ps1[0]} + 0x{o:x}) + 1;\n"
+                                f"}}\n"
+                            )
 
             # dual assert (null + global byte), then simple load
             # after first assert: mov al,[imm]; test al,al; jne; ASSERT2; load
@@ -356,7 +496,6 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                             )
 
     # --- Pattern: index bounds 0..4, assert, table byte load/store ---
-    # push ebp; mov ebp,esp; push esi; mov si,[ebp+8]; test si,si; jl; cmp si,4; jl; ASSERT; body
     if (
         len(body) >= 14
         and body[0] == ("push", "ebp")
@@ -369,11 +508,11 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
         and body[7][0] == "jl"
     ):
         ab = parse_assert(body, 8)
-        if ab and ps:
+        if ab:
+            sigi, psi = ensure_params(sig, ps, 1, ["int16_t"])
             mid = body[ab["next"] :]
             while mid and mid[-1][0] == "pop" and mid[-1][1] in ("ebp", "esi"):
                 mid = mid[:-1]
-            # movsx eax,si; imul eax,eax,STRIDE; mov byte ptr [eax+BASE], 1
             if (
                 len(mid) == 3
                 and mid[0] == ("movsx", "eax, si")
@@ -393,22 +532,24 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                 if im and ms:
                     stride, base, val = im.group(1), ms.group(1), ms.group(2)
                     return (
-                        f"{sig}\n{{\n"
-                        f"  if ((int16_t){ps[0]} < 0 || (int16_t){ps[0]} >= 4) {{\n"
+                        f"{sigi}\n{{\n"
+                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= 4) {{\n"
                         f"{assert_c(ab, '    ')}"
                         f"  }}\n"
-                        f"  *(uint8_t *)(0x{int(base,16):x} + (int)(int16_t){ps[0]} * {stride}) = "
+                        f"  *(uint8_t *)(0x{int(base, 16):x} + (int)(int16_t){psi[0]} * {stride}) = "
                         f"(uint8_t){val};\n"
                         f"}}\n"
                     )
                 if im and ml:
                     stride, base = im.group(1), ml.group(1)
+                    if is_void(sigi):
+                        sigi = sigi.replace("void ", "uint8_t ", 1)
                     return (
-                        f"{sig}\n{{\n"
-                        f"  if ((int16_t){ps[0]} < 0 || (int16_t){ps[0]} >= 4) {{\n"
+                        f"{sigi}\n{{\n"
+                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= 4) {{\n"
                         f"{assert_c(ab, '    ')}"
                         f"  }}\n"
-                        f"  {ret}*(uint8_t *)(0x{int(base,16):x} + (int)(int16_t){ps[0]} * {stride});\n"
+                        f"  return *(uint8_t *)(0x{int(base, 16):x} + (int)(int16_t){psi[0]} * {stride});\n"
                         f"}}\n"
                     )
 
