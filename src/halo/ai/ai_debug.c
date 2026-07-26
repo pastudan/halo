@@ -12072,84 +12072,36 @@ void FUN_0004c920(int actor_handle __attribute__((unused)), char debug_selected 
 #endif
 
 
-/* FUN_00052ab0 (0x52ab0) — XBE naked draft (batch 145). */
-#if defined(__clang__)
-static void (*const b52ab0_c4b220)(float *point) = FUN_0004b220;
-static char * (*const b52ab0_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
-static void (*const b52ab0_c4b2b0)(void) = (void *)FUN_0004b2b0;
-static void (*const b52ab0_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
-static void (*const b52ab0_c4c560)(void) = FUN_0004c560;
-
-__attribute__((naked, noinline))
+/* FUN_00052ab0 (0x52ab0) — readable C lift. */
 void FUN_00052ab0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $0x20, %%ebx\n\t"
-      ".LFUN_00052ab0_1:\n\t"
-      "movl 0x331f5c, %%eax\n\t"
-      "leal (%%edi,%%eax,1), %%esi\n\t"
-      "movb 0xc(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00052ab0_2\n\t"
-      "movb 0xd(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00052ab0_2\n\t"
-      "movl 0x31fc44, %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "fadds 0x28(%%esi)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fadds 0x2c(%%esi)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "fadds 0x30(%%esi)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "call *%[c4b220]\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "pushl $0x100\n\t"
-      "leal -0x10c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c49ac0]\n\t"
-      "movl 0x2ee6d0, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c4b2b0]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "call *%[c189cb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "call *%[c4c560]\n\t"
-      ".LFUN_00052ab0_2:\n\t"
-      "addl $0x1ca7c, %%edi\n\t"
-      "decl %%ebx\n\t"
-      "jne .LFUN_00052ab0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c4b220] "m"(b52ab0_c4b220), [c49ac0] "m"(b52ab0_c49ac0), [c4b2b0] "m"(b52ab0_c4b2b0), [c189cb0] "m"(b52ab0_c189cb0), [c4c560] "m"(b52ab0_c4c560)
-      : "memory");
-}
-#else
-#error "FUN_00052ab0: clang naked draft required"
-#endif
+  int i;
+  char *slot;
+  float pos[3];
+  char buf[0x100];
+  char *base;
+  float *cam;
+  void *color;
+  float *drawn;
 
+  base = *(char **)0x331f5c;
+  for (i = 0; i < 0x20; i++) {
+    slot = base + i * 0x1ca7c;
+    if (slot[0xc] == 0 || slot[0xd] == 0) {
+      continue;
+    }
+    cam = *(float **)0x31fc44;
+    pos[0] = cam[0] + *(float *)(slot + 0x28);
+    pos[1] = cam[1] + *(float *)(slot + 0x2c);
+    pos[2] = cam[2] + *(float *)(slot + 0x30);
+    FUN_0004b220(pos);
+    ai_debug_describe_actor(*(int *)slot, -1, 1, buf, 0x100);
+    color = *(void **)0x2ee6d0;
+    drawn = FUN_0004b2b0();
+    FUN_00189cb0(1, drawn, buf, (int)(uintptr_t)color);
+    FUN_0004c560();
+  }
+}
 
 /* FUN_00052b60 (0x52b60) — readable C lift. */
 void FUN_00052b60(char reverse_iteration)

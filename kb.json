@@ -35012,7 +35012,7 @@
         {
           "addr": "0x52ab0",
           "decl": "void FUN_00052ab0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x52b60",
