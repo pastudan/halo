@@ -1255,96 +1255,183 @@ void FUN_000de3f0(int local_player_index)
   FUN_000ddbd0(local_player_index, next_state, 0);
 }
 
-/* 0xde560 */
-void FUN_000de560(void)
+/* 0xde560 — Per-frame first-person weapon animation and overlay update. */
+void FUN_000de560(int local_player_index)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *fp;
+  int weapon_handle;
+  char *weapon_obj;
+  char *weapon_tag;
+  char *mode_tag;
+  int unit_handle;
+  int sound_index;
+  char low_speed;
+  float speed;
+  int16_t anim_result;
 
-  /* cmp (int16_t)esi, 4 -> jl 0xde597 */
-  display_assert((char *)0x00266fc0, (char *)0x00282294, 1433, 0);
-  system_exit(0);
-  /* cmp eax, ebx -> je 0xde5db */
-  object_try_and_get_and_verify_type(0, 0);
-  /* test eax, eax -> jne 0xde5db */
-  error(0, (char *)0x002823ac);
-  /* cmp eax, ebx -> je 0xdeb43 */
-  /* relift: cmp dword ptr [esi + 8], ebx -> je 0xdeb43 */
-  object_get_and_verify_type(0, 0);
-  object_get_and_verify_type(0, 0);
-  tag_get('paew', 0);
-  tag_get('edom', 0);
-  tag_get('rtna', 0);
-  /* cmp (int16_t)eax, 3 -> je 0xde651 */
-  /* cmp (int16_t)eax, 1 -> jne 0xde683 */
-  /* relift: test byte ptr [ebx + 0x1dc], 2 -> je 0xde66a */
-  FUN_000ddbd0(0, 22, 0);
-  /* relift: test byte ptr [ebx + 0x1dc], 1 -> jne 0xde683 */
-  FUN_000ddbd0(0, 0, 0);
-  animation_update_internal(0, 0, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
-  /* cmp (int16_t)eax, 1 -> je 0xde6b0 */
-  /* cmp (int16_t)eax, 2 -> jne 0xde6b0 */
-  FUN_000de3f0(esi);
-  /* relift: cmp dword ptr [ebp - 8], -1 -> je 0xde6fd */
-  director_get_perspective(eax);
-  /* test (int16_t)eax, (int16_t)eax -> jne 0xde6fd */
-  object_impulse_sound_new(0, 0, 0, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0.0f);
-  /* test (char)eax, 0x41 -> jne 0xde73b */
-  unit_flying_through_air(0);
-  /* test (char)eax, (char)eax -> je 0xde74f */
-  animation_update_internal(0, 0, (void *)(uintptr_t)eax, (void *)0);
-  /* test (char)ebx, (char)ebx -> jne 0xde7cb */
-  /* relift: cmp word ptr [esi + 0xc], 0 -> jne 0xde785 */
-  FUN_000dd4d0(0, 0);
-  /* test (char)ebx, (char)ebx -> je 0xde7cb */
-  /* test ecx, ecx -> jne 0xde7a2 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 28);
-  /* relift: cmp dword ptr [eax + 0x10], 3 -> jle 0xde7c4 */
-  /* cmp (int16_t)eax, 0xffff -> jne 0xde821 */
-  /* relift: cmp word ptr [esi + 0xc], 4 -> jne 0xde86e */
-  /* test ecx, ecx -> jne 0xde7f1 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 28);
-  /* relift: cmp dword ptr [eax + 0x10], 0xf -> jle 0xde818 */
-  /* relift: cmp word ptr [esi + 0xc], 4 -> jne 0xde868 */
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
-  FUN_001daf7e();
-  /* test (char)eax, (char)eax -> je 0xde9b3 */
-  accelerate_to_position((float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0);
-  accelerate_to_position((float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0);
-  FUN_000b6dd0(0.0f, 0.0f);
-  FUN_000b6dd0(0.0f, 0.0f);
-  /* test (char)eax, 0x41 -> jne 0xde932 */
-  /* test (char)eax, 0x41 -> jne 0xde962 */
-  accelerate_to_position((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0);
-  accelerate_to_position((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0);
-  accelerate_to_position((float *)(uintptr_t)ebx, (float *)(uintptr_t)edi, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0);
-  /* cmp eax, 0x3f800000 -> jne 0xde9e7 */
-  /* test (int16_t)eax, (int16_t)eax -> jle 0xdea0c */
-  /* relift: cmp word ptr [esi + 0x88], (int16_t)eax -> jl 0xdea0c */
-  player_control_get_autoaim_level(edi);
-  player_control_get_zoom_level(edi);
-  /* cmp (int16_t)eax, 0xffff -> jne 0xdeb26 */
-  /* relift: cmp word ptr [esi + 0xc], 0 -> jne 0xdeb1e */
-  game_globals_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  FUN_000849f0(0.0f, 0.0f);
-  FUN_001d9068();
-  /* relift: cmp (int16_t)eax, word ptr [esi + 0xe] -> jle 0xdeb43 */
-  real_local_random();
-  /* test (char)eax, 1 -> jne 0xdeb43 */
-  FUN_000ddbd0(0, 0, 0);
-  FUN_000dce00(0);
+  if ((int16_t)local_player_index < 0 || (int16_t)local_player_index >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 0x599, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  fp = (char *)(*(int *)0x46bea8 + (int)(int16_t)local_player_index * 0x1ea0);
+  weapon_handle = *(int *)(fp + 8);
+  if (weapon_handle != -1) {
+    weapon_obj = (char *)object_try_and_get_and_verify_type(weapon_handle, 4);
+    if (weapon_obj == 0) {
+      error(3, (char *)0x002823ac, local_player_index, weapon_handle);
+      *(int *)(fp + 8) = -1;
+    }
+  }
+
+  unit_handle = *(int *)(fp + 4);
+  if (unit_handle == -1 || *(int *)(fp + 8) == -1)
+    goto finish;
+
+  weapon_obj = (char *)object_get_and_verify_type(*(int *)(fp + 8), 4);
+  weapon_tag = (char *)tag_get(0x77656170, *(int *)weapon_obj);
+  mode_tag = (char *)tag_get(0x6d6f6465, *(int *)(weapon_tag + 0x468));
+
+  if (*(int16_t *)(fp + 0xc) == 3 || *(int16_t *)(fp + 0xc) == 1) {
+    if ((*(unsigned char *)(weapon_obj + 0x1dc) & 2) != 0)
+      FUN_000ddbd0(local_player_index, 0x16, 1);
+    if ((*(unsigned char *)(weapon_obj + 0x1dc) & 1) == 0)
+      FUN_000ddbd0(local_player_index, 0, 1);
+  }
+
+  sound_index = -1;
+  anim_result = (int16_t)animation_update_internal(
+      0, *(int *)(weapon_tag + 0x478), (int16_t *)(fp + 0x16), &sound_index);
+  if (anim_result == 1 || anim_result == 2)
+    FUN_000de3f0(local_player_index);
+
+  if (sound_index != -1 &&
+      director_get_perspective((int16_t)local_player_index) == 0) {
+    *(int *)(fp + 0x1e98) = object_impulse_sound_new(
+        *(int *)(fp + 8), sound_index, -1, (float *)(uintptr_t)*(int *)0x31fc1c,
+        (float *)(uintptr_t)*(int *)0x31fc3c, 1.0f);
+    *(int16_t *)(fp + 0x1e9c) = *(int16_t *)(fp + 0xc);
+  }
+
+  speed = sqrtf(*(float *)(weapon_obj + 0x228) * *(float *)(weapon_obj + 0x228) +
+                *(float *)(weapon_obj + 0x22c) * *(float *)(weapon_obj + 0x22c) +
+                *(float *)(weapon_obj + 0x230) * *(float *)(weapon_obj + 0x230));
+  low_speed = (speed <= *(float *)0x25496c);
+  if (unit_flying_through_air(unit_handle))
+    low_speed = 0;
+
+  if (*(int16_t *)(fp + 0x1a) != -1) {
+    if (!low_speed && *(int16_t *)(fp + 0xc) == 0)
+      FUN_000dd4d0((int16_t)local_player_index, 6);
+    *(int16_t *)(fp + 0x1a) = -1;
+  } else if (low_speed) {
+    char *rtna = (char *)tag_get(0x616e7472, *(int *)(mode_tag + 0x44));
+    char *block = (char *)tag_block_get_element(rtna + 0x48, 0, 0x1c);
+    if (block != 0) {
+      *(int16_t *)(fp + 0x1c) = 0;
+      if (*(int *)(block + 0x10) > 3)
+        *(int16_t *)(fp + 0x1a) =
+            *(int16_t *)(*(int *)(block + 0x14) + 6);
+      else
+        *(int16_t *)(fp + 0x1a) = -1;
+    }
+  }
+
+  if (*(int16_t *)(fp + 0x20) == -1) {
+    if (*(int16_t *)(fp + 0xc) == 4) {
+      char *rtna = (char *)tag_get(0x616e7472, *(int *)(mode_tag + 0x44));
+      char *block = (char *)tag_block_get_element(rtna + 0x48, 0, 0x1c);
+      if (block != 0) {
+        *(int *)(fp + 0x24) = 0;
+        if (*(int *)(block + 0x10) > 0xf)
+          *(int16_t *)(fp + 0x20) =
+              *(int16_t *)(*(int *)(block + 0x14) + 0x1e);
+        else
+          *(int16_t *)(fp + 0x20) = -1;
+      }
+    }
+  } else if (*(int16_t *)(fp + 0xc) == 4) {
+    char *animation = (char *)tag_block_get_element(
+        mode_tag + 0x74, (int)*(int16_t *)(fp + 0x20), 0xb4);
+    float frame = (*(float *)(weapon_obj + 0x1f4) + 1.0f) * 2.0f +
+                  *(float *)(fp + 0x24);
+    frame *= (float)(*(int16_t *)(animation + 0x22));
+    *(float *)(fp + 0x24) = frame;
+  } else {
+    *(int16_t *)(fp + 0x20) = -1;
+  }
+
+  if (*(char *)(fp + 0x50) != 0) {
+    float pitch_delta;
+    float yaw_delta;
+    float clamped_pitch;
+    float clamped_yaw;
+
+    accelerate_to_position((float *)(fp + 0x30), (float *)(fp + 0x38), 0.0f,
+                           0.0625f, 0.5f, -1.0f, 1.0f, 0);
+    accelerate_to_position((float *)(fp + 0x34), (float *)(fp + 0x3c), 0.0f,
+                           0.0625f, 0.5f, -1.0f, 1.0f, 0);
+    pitch_delta = FUN_000b6dd0(*(float *)(fp + 0x60), *(float *)(fp + 0x68));
+    yaw_delta = FUN_000b6dd0(*(float *)(fp + 0x64), *(float *)(fp + 0x6c));
+    pitch_delta *= *(float *)0x253394;
+    yaw_delta *= *(float *)0x282490;
+
+    if (pitch_delta <= *(float *)0x255e94)
+      clamped_pitch = -1.0f;
+    else if (pitch_delta >= 1.0f)
+      clamped_pitch = 1.0f;
+    else
+      clamped_pitch = pitch_delta;
+
+    if (yaw_delta <= *(float *)0x255e94)
+      clamped_yaw = -1.0f;
+    else if (yaw_delta >= 1.0f)
+      clamped_yaw = 1.0f;
+    else
+      clamped_yaw = yaw_delta;
+
+    accelerate_to_position((float *)(fp + 0x40), (float *)(fp + 0x48),
+                           clamped_pitch, 0.2f, 0.5f, -1.0f, 1.0f, 0);
+    accelerate_to_position((float *)(fp + 0x44), (float *)(fp + 0x4c),
+                           clamped_yaw, 0.2f, 0.5f, -1.0f, 1.0f, 0);
+    accelerate_to_position((float *)(fp + 0x28), (float *)(fp + 0x2c), 0.0f,
+                           0.01f, 0.0f, 0.0f, 0.0f, 0);
+    if (*(float *)(fp + 0x28) == 1.0f)
+      *(float *)(fp + 0x2c) = 0.0f;
+  }
+
+  if (*(int16_t *)(fp + 0x8a) > 0) {
+    *(int16_t *)(fp + 0x88) += 1;
+    if (*(int16_t *)(fp + 0x88) >= *(int16_t *)(fp + 0x8a))
+      *(int16_t *)(fp + 0x8a) = 0;
+  }
+
+  if (player_control_get_autoaim_level((int16_t)local_player_index) <= 0.0f &&
+      player_control_get_zoom_level((int16_t)local_player_index) == -1 &&
+      *(float *)(fp + 0x28) == 0.0f && *(float *)(fp + 0x30) == 0.0f &&
+      *(float *)(fp + 0x34) == 0.0f && *(float *)(fp + 0x40) == 0.0f &&
+      *(float *)(fp + 0x44) == 0.0f && *(int16_t *)(fp + 0xc) == 0) {
+    char *globals = (char *)game_globals_get();
+    char *entry = (char *)tag_block_get_element(globals + 0x170, 0, 0xf4);
+    if (*(int16_t *)(fp + 0xe) == 0) {
+      float range = FUN_000849f0(*(float *)(entry + 0x9c),
+                                 *(float *)(entry + 0xa0));
+      range *= *(float *)0x253394;
+      *(int16_t *)(fp + 0xe) = (int16_t)(int)range;
+    }
+    *(int16_t *)(fp + 0x10) += 1;
+    if (*(int16_t *)(fp + 0x10) > *(int16_t *)(fp + 0xe)) {
+      *(int16_t *)(fp + 0xe) = 0;
+      if (real_local_random() <= *(float *)(entry + 0xa4))
+        FUN_000ddbd0(local_player_index, 5, 1);
+    }
+  } else if (*(int16_t *)(fp + 0xc) == 5) {
+    *(int16_t *)(fp + 0x10) = 0;
+    FUN_000ddbd0(local_player_index, 0, 1);
+  } else {
+    *(int16_t *)(fp + 0x10) = 0;
+  }
+
+finish:
+  *(int16_t *)(fp + 0x12) -= 1;
 }

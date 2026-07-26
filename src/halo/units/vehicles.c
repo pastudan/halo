@@ -790,19 +790,35 @@ void vehicle_render_debug(void)
   (void)edx;
 }
 
-/* 0x1b5f20 */
-void FUN_001b5f20(void)
+/* FUN_001b5f20 (0x1b5f20) — Project a delta vector onto a reference axis and
+ * clamp its length. Register args: a@<eax>, b@<ecx>, out@<esi>. */
+float *FUN_001b5f20(float *a, float *b, float *out, float scale_a, float scale_b)
 {
-  int eax = 0;
-  int esi = 0;
+  float dot;
+  float len_sq;
+  float ratio;
+  float limit;
 
-  /* relift: relift: fcomp dword ptr [0x253f44] */
-  /* test (char)eax, 0x41 -> jne 0x1b5fd5 */
-  FUN_000a57b0((float *)0, 0.0f);
-  FUN_000a57b0((float *)(uintptr_t)esi, 0);
+  out[0] = b[0] - a[0];
+  out[1] = b[1] - a[1];
+  out[2] = (b[2] - a[2]) + *(float *)0x32512c;
 
-  (void)eax;
-  (void)esi;
+  dot = out[0] * b[0] + out[1] * b[1] + out[2] * b[2];
+  if (dot <= *(float *)0x253f44) {
+    FUN_000a57b0(out, scale_b);
+    return out;
+  }
+
+  len_sq = b[0] * b[0] + b[1] * b[1] + b[2] * b[2];
+  if (len_sq <= *(float *)0x253f44) {
+    FUN_000a57b0(out, scale_b);
+    return out;
+  }
+
+  ratio = (out[0] * b[0] + out[1] * b[1] + out[2] * out[2]) / (dot * dot);
+  limit = (scale_a - scale_b) * ratio + scale_b;
+  FUN_000a57b0(out, limit);
+  return out;
 }
 
 /* 0x1b5ff0 */
@@ -905,83 +921,257 @@ void FUN_001b6560(int vehicle_handle, void *wheel_buffer, void *scratch_buffer)
   char *veh;
   char *vehi;
   char *phys;
-  float local_force[3];
+  float thrust[3];
+  float projected[3];
+  float basis[9];
+  float ground_normal[3];
   float side[3];
+  float matrix_a[9];
+  float matrix_b[9];
+  float quat[4];
+  float angle;
+  float axis[3];
+  float force[3];
   float speed;
-  float new_suspension;
+  float suspension_delta;
+  float scale;
+  float div_max;
+  float cos_t;
+  float sin_t;
+  float *wb;
 
   veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
   vehi = (char *)tag_get(0x76656869, *(int *)veh);
   phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c));
-  if (*(int *)(phys + 0x68) != 2)
+  wb = (float *)wheel_buffer;
+  if (*(int *)(phys + 0x68) != 2) {
+    force[0] = 0.0f;
+    force[1] = 0.0f;
+    force[2] = 0.0f;
+    side[0] = 0.0f;
+    side[1] = 0.0f;
+    side[2] = 0.0f;
+    FUN_00154270(vehicle_handle, wheel_buffer, scratch_buffer, force, side);
     return;
+  }
+
+  thrust[0] = *(float *)(veh + 0x42c) * *(float *)(veh + 0x24);
+  thrust[1] = *(float *)(veh + 0x42c) * *(float *)(veh + 0x28);
+  thrust[2] = *(float *)(veh + 0x42c) * *(float *)(veh + 0x2c);
 
   if (*(float *)(veh + 0x42c) <= 0.0f)
-    FUN_001b5f20();
+    div_max = *(float *)(vehi + 0x2fc);
   else
-    FUN_001b5f20();
+    div_max = *(float *)(vehi + 0x2f8);
+  if (div_max > 0.0f) {
+    float inv = *(float *)(veh + 0x42c) / div_max;
+    if (*(float *)(veh + 0x42c) <= 0.0f)
+      inv = -inv;
+    FUN_001b5f20((float *)(veh + 0x18), thrust, projected, inv * *(float *)(phys + 0x300),
+                 inv * *(float *)(phys + 0x304));
+  } else {
+    projected[0] = 0.0f;
+    projected[1] = 0.0f;
+    projected[2] = 0.0f;
+  }
 
-  local_force[0] = 0.0f;
-  local_force[1] = 0.0f;
-  local_force[2] = 0.0f;
-  side[0] = 0.0f;
-  side[1] = 0.0f;
-  side[2] = 0.0f;
+  scale = *(float *)(phys + 8) * *(float *)(veh + 0x2e8);
+  force[0] = projected[0] * scale;
+  force[1] = projected[1] * scale;
+  force[2] = projected[2] * scale;
 
-  speed = magnitude3d((float *)(veh + 0x3c));
-  new_suspension = *(float *)(veh + 0x448);
-  if (speed <= new_suspension) {
-    float delta = (1.0f - new_suspension);
+  FUN_0010a2c0(basis, (float *)(veh + 0x24), (float *)(veh + 0x30));
+
+  ground_normal[0] = -*(float *)(veh + 0x1d4);
+  ground_normal[1] = -*(float *)(veh + 0x1d8);
+  ground_normal[2] = -*(float *)(veh + 0x1dc);
+  if (normalize3d(ground_normal) <= 0.0f) {
+    float *fallback = (float *)0x31fc44;
+    ground_normal[0] = *(float *)fallback;
+    ground_normal[1] = *(float *)(fallback + 4);
+    ground_normal[2] = *(float *)(fallback + 8);
+  }
+
+  if (!FUN_001aa4d0(vehicle_handle)) {
+    cos_t = cosf(*(float *)(phys + 0x364));
+    sin_t = sinf(*(float *)(phys + 0x364));
+    FUN_0010c700(ground_normal, (float *)(veh + 0x1d4), cos_t, sin_t);
+  }
+
+  {
+    float steer = (ground_normal[1] * *(float *)(veh + 0x1c) -
+                   ground_normal[0] * *(float *)(veh + 0x20)) /
+                  *(float *)(vehi + 0x2f8);
+    steer *= *(float *)(phys + 0x308);
+    cos_t = cosf(steer);
+    sin_t = sinf(steer);
+    FUN_0010c690(ground_normal, (float *)(veh + 0x1d4), cos_t, sin_t);
+  }
+
+  side[0] = ground_normal[1] * force[2] - ground_normal[2] * force[1];
+  side[1] = ground_normal[2] * force[0] - ground_normal[0] * force[2];
+  side[2] = ground_normal[0] * force[1] - ground_normal[1] * force[0];
+
+  FUN_00109c70(basis, side, matrix_a);
+  FUN_00109c70(matrix_a, ground_normal, matrix_b);
+  FUN_0010a330(matrix_b, quat);
+  FUN_0010caf0(quat, &angle, axis);
+
+  angle = -angle * *(float *)(phys + 0x314) * *(float *)0x267328;
+  force[0] = projected[0] * angle;
+  force[1] = projected[1] * angle;
+  force[2] = projected[2] * angle;
+  force[0] -= *(float *)(veh + 0x3c);
+  force[1] -= *(float *)(veh + 0x40);
+  force[2] -= *(float *)(veh + 0x44);
+
+  scale = *(float *)(phys + 0x58) + *(float *)(phys + 0x54) + *(float *)(phys + 0x50);
+  scale *= *(float *)0x259ec0;
+  force[0] *= scale;
+  force[1] *= scale;
+  force[2] *= scale;
+
+  force[0] *= *(float *)(veh + 0x2e8);
+  force[1] *= *(float *)(veh + 0x2e8);
+  force[2] *= *(float *)(veh + 0x2e8);
+
+  speed = sqrtf(*(float *)(veh + 0x3c) * *(float *)(veh + 0x3c) +
+                *(float *)(veh + 0x40) * *(float *)(veh + 0x40) +
+                *(float *)(veh + 0x44) * *(float *)(veh + 0x44));
+  speed /= *(float *)(phys + 0x314);
+
+  if (speed <= *(float *)(veh + 0x448)) {
+    float delta = (1.0f - *(float *)(veh + 0x448));
     delta = delta * delta * *(float *)0x2549d4;
     if (delta < *(float *)0x25bb10)
       delta = *(float *)0x25bb10;
     else if (delta > *(float *)0x2533e8)
       delta = *(float *)0x2533e8;
-    new_suspension = speed - *(float *)(veh + 0x448);
-    if (new_suspension > delta)
-      new_suspension = delta;
+    suspension_delta = speed - *(float *)(veh + 0x448);
+    if (suspension_delta > delta)
+      suspension_delta = delta;
   } else {
-    new_suspension = new_suspension * new_suspension * *(float *)0x2533e8;
-    if (new_suspension > *(float *)0x29d9ac)
-      new_suspension = *(float *)0x29d9ac;
-    new_suspension = -new_suspension;
+    suspension_delta = *(float *)(veh + 0x448) * *(float *)(veh + 0x448) *
+                       *(float *)0x2533e8;
+    if (suspension_delta > *(float *)0x29d9ac)
+      suspension_delta = *(float *)0x29d9ac;
+    suspension_delta = -suspension_delta;
     speed = speed - *(float *)(veh + 0x448);
-    if (speed < new_suspension)
-      speed = new_suspension;
-    new_suspension = speed;
+    if (speed < suspension_delta)
+      speed = suspension_delta;
+    suspension_delta = speed;
   }
-  *(float *)(veh + 0x448) = new_suspension + *(float *)(veh + 0x448);
+  *(float *)(veh + 0x448) = suspension_delta + *(float *)(veh + 0x448);
 
-  *(float *)((char *)wheel_buffer + 0x18) = *(float *)(veh + 0x2e8);
+  wb[6] = *(float *)(veh + 0x2e8);
   csmemcpy((char *)wheel_buffer + 0x1c, (char *)0x31fc5c, 0x10);
-  *(float *)((char *)wheel_buffer + 0x78) = *(float *)(veh + 0x2e8);
+  wb[30] = *(float *)(veh + 0x2e8);
   csmemcpy((char *)wheel_buffer + 0x7c, (char *)0x31fc5c, 0x10);
 
-  FUN_00154270(vehicle_handle, wheel_buffer, scratch_buffer, local_force, side);
+  FUN_00154270(vehicle_handle, wheel_buffer, scratch_buffer, force, side);
 }
 
-/* 0x1b69a0 */
-void FUN_001b69a0(void)
+/* FUN_001b69a0 (0x1b69a0) — Flying-vehicle wheel force setup (physics type 2).
+ * wheel_buffer arrives in EDI from the caller. */
+void FUN_001b69a0(int vehicle_handle, void *wheel_buffer, void *scratch_buffer)
 {
-  int eax = 0;
+  char *veh;
+  char *vehi;
+  char *phys;
+  char *wb;
+  float ground[3];
+  float thrust_axis[3];
+  float steer;
+  float cos_t;
+  float sin_t;
+  float temp_a[9];
+  float temp_b[12];
+  float temp_c[12];
+  float local_mat[12];
+  float force[3];
+  float side[3];
+  float scale;
 
-  object_get_and_verify_type(0, 2);
-  tag_get('ihev', *(int *)(eax));
-  tag_get('syhp', 0);
-  /* cmp eax, 2 -> jne 0x1b6c7f */
-  normalize3d((float *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  FUN_0010c690((void *)0, (void *)0, 0.0f, 0.0f);
-  matrix_from_forward_and_up((void *)0, (float *)((char *)eax + 0x24), (float *)((char *)eax + 0x30));
-  matrix_from_forward_and_up((void *)0, (void *)0, (void *)0);
-  matrix_inverse((void *)0, (void *)0);
-  matrix4x3_multiply((void *)0, (void *)0, (void *)0);
-  FUN_00109fc0((void *)0, (void *)0);
-  FUN_0010caf0((void *)0, (void *)0, (void *)0);
-  FUN_00154270(0, 0, 0, 0, 0);
-  FUN_00154270(0, 0, 0, 0, 0);
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh);
+  phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c));
+  wb = (char *)wheel_buffer;
+  if (*(int *)(phys + 0x68) != 2) {
+    force[0] = 0.0f;
+    force[1] = 0.0f;
+    force[2] = 0.0f;
+    side[0] = 0.0f;
+    side[1] = 0.0f;
+    side[2] = 0.0f;
+    FUN_00154270(vehicle_handle, wheel_buffer, scratch_buffer, force, side);
+    return;
+  }
 
-  (void)eax;
+  ground[0] = -*(float *)(veh + 0x1d4);
+  ground[1] = -*(float *)(veh + 0x1d8);
+  ground[2] = -*(float *)(veh + 0x1dc);
+  thrust_axis[0] = ground[1] * *(float *)(veh + 0x1dc) -
+                   ground[2] * *(float *)(veh + 0x1d8);
+  thrust_axis[1] = ground[2] * *(float *)(veh + 0x1d4) -
+                   ground[0] * *(float *)(veh + 0x1dc);
+  thrust_axis[2] = ground[0] * *(float *)(veh + 0x1d8) -
+                   ground[1] * *(float *)(veh + 0x1d4);
+  if (normalize3d(thrust_axis) <= 0.0f) {
+    thrust_axis[0] = 1.0f;
+    thrust_axis[1] = 0.0f;
+    thrust_axis[2] = 0.0f;
+  }
+
+  steer = *(float *)(veh + 0x20) * *(float *)(veh + 0x2c) +
+          *(float *)(veh + 0x1c) * *(float *)(veh + 0x28) +
+          *(float *)(veh + 0x18) * *(float *)(veh + 0x24);
+  steer = (*(float *)(veh + 0x42c) - steer) * *(float *)(phys + 8) *
+          *(float *)0x2533e8;
+  if (*(float *)(vehi + 0x2f8) > 0.0f)
+    steer /= *(float *)(vehi + 0x2f8);
+  steer = fabsf(steer);
+  steer *= *(float *)(phys + 8) * *(float *)0x32512c * *(float *)0x2b7cf4;
+
+  force[0] = steer * *(float *)(veh + 0x30);
+  force[1] = steer * *(float *)(veh + 0x34);
+  force[2] = steer * *(float *)(veh + 0x38);
+
+  side[0] = *(float *)(veh + 0x1c) * ground[2] - ground[1] * *(float *)(veh + 0x20);
+  side[1] = ground[0] * *(float *)(veh + 0x20) - *(float *)(veh + 0x18) * ground[2];
+  side[2] = *(float *)(veh + 0x18) * ground[1] - ground[0] * *(float *)(veh + 0x1c);
+  scale = side[0] * thrust_axis[0] + side[1] * thrust_axis[1] +
+          side[2] * thrust_axis[2];
+  scale *= *(float *)0x2568bc;
+  if (*(float *)(vehi + 0x2f8) > 0.0f)
+    scale /= *(float *)(vehi + 0x2f8);
+  cos_t = cosf(scale);
+  sin_t = sinf(scale);
+  FUN_0010c690(thrust_axis, ground, cos_t, sin_t);
+
+  matrix_from_forward_and_up(temp_b, (float *)(veh + 0x24), (float *)(veh + 0x30));
+  matrix_from_forward_and_up(temp_c, thrust_axis, ground);
+  matrix_inverse(temp_b, temp_a);
+  matrix4x3_multiply(temp_a, temp_c, local_mat);
+  FUN_00109fc0(local_mat, temp_a);
+  FUN_0010caf0(temp_a, &scale, side);
+
+  scale = -scale * *(float *)(phys + 8) * *(float *)(phys + 8) *
+          *(float *)0x2533e8;
+  force[0] = side[0] * scale * *(float *)(veh + 0x2e8);
+  force[1] = side[1] * scale * *(float *)(veh + 0x2e8);
+  force[2] = side[2] * scale * *(float *)(veh + 0x2e8);
+  force[0] -= scale * *(float *)(veh + 0x3c);
+  force[1] -= scale * *(float *)(veh + 0x40);
+  force[2] -= scale * *(float *)(veh + 0x44);
+
+  *(float *)(wb + 0x18) = *(float *)(veh + 0x2e8);
+  *(int *)(wb + 0x28) = 0x3f800000;
+  csmemset(wb + 0x1c, 0, 0x10);
+  *(float *)(wb + 0x78) = *(float *)(veh + 0x2e8);
+  *(int *)(wb + 0x88) = 0x3f800000;
+  csmemset(wb + 0x7c, 0, 0x10);
+
+  FUN_00154270(vehicle_handle, wheel_buffer, scratch_buffer, force, thrust_axis);
 }
 
 /* 0x1b6ca0 — Decay vehicle impulse and re-seat orientation after a collision. */
@@ -1040,35 +1230,91 @@ void FUN_001b6ca0(int vehicle_handle)
   object_set_position(vehicle_handle, position, forward, up);
 }
 
-/* 0x1b6e20 */
-void FUN_001b6e20(void)
+/* 0x1b6e20 — Spawn vehicle scrape/spark effects from wheel contact markers. */
+void FUN_001b6e20(int vehicle_handle)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int ebp = 0;
-  int local_14 = 0;
+  char *veh;
+  char *vehi;
+  char marker_buf[0x78c];
+  int marker_count_a;
+  int marker_count_b;
+  int marker_total;
+  int marker_index;
+  float scale_base;
+  float dir[3];
+  float ray_origin[3];
+  float collision[0x40];
+  float marker_points[9];
+  float marker_forwards[9];
+  float rgb[3];
+  float effect_scale;
 
-  object_get_and_verify_type(0, 2);
-  tag_get('ihev', *(int *)(eax));
-  /* cmp eax, -1 -> je 0x1b7010 */
-  object_get_markers_by_string_id(0, (void *)0x002b7d18, (void *)0, 15);
-  object_get_markers_by_string_id(0, (void *)0x002b7d08, (void *)0, 16);
-  random_math_get_local_seed_address();
-  random_direction3d((void *)0, (float *)0, 0.0f, 0.0f, (float *)0);
-  /* relift: cmp (int16_t)ebx, word ptr [ebp - 0x1c] -> jge 0x1b6ee8 */
-  FUN_0014df70(0, (float *)0, (float *)0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x1b7000 */
-  FUN_0010c8e0((void *)0, (void *)0, (void *)0);
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  effect_new_unattached_from_markers(0, -1, (float *)0, 3, (void *)0, (void *)0, (void *)0, local_14, local_14, 0.0f, 0.0f, 0.0f);
-  /* cmp eax, ecx -> jl 0x1b6eb0 */
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh);
+  if (*(int *)(vehi + 0x3ec) == -1)
+    return;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)ebp;
-  (void)local_14;
+  marker_count_a = object_get_markers_by_string_id(
+      vehicle_handle, (void *)0x002b7d18, marker_buf, 15);
+  marker_count_b = object_get_markers_by_string_id(
+      vehicle_handle, (void *)0x002b7d08,
+      marker_buf + marker_count_a * 0x6c, 16 - marker_count_a);
+  marker_total = marker_count_a + marker_count_b;
+  if (marker_total <= 0)
+    return;
+
+  for (marker_index = 0; marker_index < marker_total; marker_index++) {
+    char *marker;
+    int copy_index;
+
+    marker = marker_buf + marker_index * 0x6c;
+    random_direction3d((int *)random_math_get_local_seed_address(),
+                       (float *)(marker + 0x3c), 0.0f, 0.0f, dir);
+    ray_origin[0] = *(float *)(marker + 0x60);
+    ray_origin[1] = *(float *)(marker + 0x64);
+    ray_origin[2] = *(float *)(marker + 0x68);
+
+    if (marker_index >= marker_count_a)
+      scale_base = *(float *)(veh + 0x448);
+    else
+      scale_base = *(float *)(veh + 0x444);
+    scale_base *= *(float *)0x254640;
+    scale_base += *(float *)0x253f40;
+
+    if (!FUN_0014df70(0x61, ray_origin, dir, vehicle_handle,
+                      (int16_t *)collision))
+      continue;
+
+    ray_origin[0] = dir[0] * scale_base + *(float *)(marker + 0x60);
+    ray_origin[1] = dir[1] * scale_base + *(float *)(marker + 0x64);
+    ray_origin[2] = dir[2] * scale_base + *(float *)(marker + 0x68);
+
+    marker_points[0] = *(float *)(collision + 0x24) + *(float *)(marker + 0x60);
+    marker_points[1] = *(float *)(collision + 0x28) + *(float *)(marker + 0x64);
+    marker_points[2] = *(float *)(collision + 0x2c) + *(float *)(marker + 0x68);
+    for (copy_index = 1; copy_index < 3; copy_index++) {
+      marker_points[copy_index * 3 + 0] = marker_points[0];
+      marker_points[copy_index * 3 + 1] = marker_points[1];
+      marker_points[copy_index * 3 + 2] = marker_points[2];
+    }
+
+    FUN_0010c8e0((float *)(collision + 0x30), dir, rgb);
+    marker_forwards[0] = -dir[0];
+    marker_forwards[1] = -dir[1];
+    marker_forwards[2] = -dir[2];
+    marker_forwards[3] = marker_forwards[0];
+    marker_forwards[4] = marker_forwards[1];
+    marker_forwards[5] = marker_forwards[2];
+    marker_forwards[6] = marker_forwards[0];
+    marker_forwards[7] = marker_forwards[1];
+    marker_forwards[8] = marker_forwards[2];
+
+    effect_scale = *(float *)0x2533c8 - *(float *)(collision + 0x20);
+    effect_new_unattached_from_markers(
+        *(int *)(vehi + 0x3ec), -1, NULL, 3, (void *)0x002b7cfc,
+        marker_points, marker_forwards, effect_scale, effect_scale, 0.0f,
+        0.0f, 0.0f);
+  }
 }
 
 /* 0x1b7020 — Spawn wheel dust effects from ground contact markers. */
@@ -1652,7 +1898,7 @@ void FUN_001b81d0(int object_handle, void *wheel_buffer)
   if (*(unsigned short *)(object + 0x424) & 2) {
     wheel_stride = *(int *)(physics_tag + 0x74) * 0x130;
     csmemset(wheel_buffer, 0, wheel_stride);
-    FUN_001b6e20();
+    FUN_001b6e20(object_handle);
   }
   (void)physics_tag;
 }

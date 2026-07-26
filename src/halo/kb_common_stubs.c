@@ -14164,7 +14164,7 @@ void FUN_001b8f10(void)
   tag_get('ihev', 0);
   tag_get('syhp', 0);
   /* test (char)eax, 0x41 -> jne 0x1b8f60 */
-  FUN_001b69a0();
+  FUN_001b69a0(0, 0, 0);
   FUN_001b7020(0);
   FUN_001b6560(0, 0, 0);
   FUN_001b7020(0);
