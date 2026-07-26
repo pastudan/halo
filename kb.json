@@ -17987,7 +17987,8 @@
         {
           "addr": "0xa2a10",
           "decl": "void player_effect_get_damage_indicators(int player_index, void *out);",
-          "ported": false
+          "ported": true,
+          "name": "player_effect_get_damage_indicators"
         },
         {
           "addr": "0xa2a70",

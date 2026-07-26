@@ -610,66 +610,24 @@ void player_effect_screen_fade_out(float a0, int a1, int a2, short a3)
   *(int *)(p + 0x3bc) = game_time_get();
 }
 
-/* player_effect_get_damage_indicators (0xa2a10) — XBE naked draft (batch 157). */
-#if defined(__clang__)
-static char * (*const ba2a10_ca2690)(int16_t local_player_index) = player_effect_get;
-static void * (*const ba2a10_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static int16_t (*const ba2a10_cb5ae0)(void) = game_time_get_elapsed;
-
-__attribute__((naked, noinline))
-void player_effect_get_damage_indicators(int player_index __attribute__((unused)), void *out __attribute__((unused)))
+/* player_effect_get_damage_indicators (0xa2a10) — readable C lift. */
+void player_effect_get_damage_indicators(int player_index, void *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca2690]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "leal 0xe4(%%eax), %%esi\n\t"
-      "pushl $4\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl $4, %%edi\n\t"
-      ".Lplayer_effect_get_damage_indicators_1:\n\t"
-      "cmpb $0, (%%esi)\n\t"
-      "je .Lplayer_effect_get_damage_indicators_4\n\t"
-      "call *%[cb5ae0]\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movzbl (%%esi), %%eax\n\t"
-      "addl %%eax, %%edx\n\t"
-      "cmpl $0xff, %%edx\n\t"
-      "jge .Lplayer_effect_get_damage_indicators_2\n\t"
-      "call *%[cb5ae0]\n\t"
-      "movzbl (%%esi), %%ecx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "jmp .Lplayer_effect_get_damage_indicators_3\n\t"
-      ".Lplayer_effect_get_damage_indicators_2:\n\t"
-      "movl $0xff, %%eax\n\t"
-      ".Lplayer_effect_get_damage_indicators_3:\n\t"
-      "movb %%al, (%%esi)\n\t"
-      ".Lplayer_effect_get_damage_indicators_4:\n\t"
-      "incl %%esi\n\t"
-      "decl %%edi\n\t"
-      "jne .Lplayer_effect_get_damage_indicators_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ca2690] "m"(ba2a10_ca2690), [c8e0b0] "m"(ba2a10_c8e0b0), [cb5ae0] "m"(ba2a10_cb5ae0)
-      : "memory");
+  char *p = player_effect_get((int16_t)player_index);
+  char *src = p + 0xe4;
+  int i;
+  csmemcpy(out, src, 4);
+  for (i = 0; i < 4; i++) {
+    if (src[i] != 0) {
+      int v = (int)game_time_get_elapsed() + (unsigned char)src[i];
+      if (v >= 0xff)
+        src[i] = (char)0xff;
+      else
+        src[i] = (char)((int)game_time_get_elapsed() + (unsigned char)src[i]);
+    }
+    src++;
+  }
 }
-#else
-#error "player_effect_get_damage_indicators: clang naked draft required"
-#endif
-
-
 /* player_effect_clear_damage_indicators (0xa2a70) — readable C lift. */
 void player_effect_clear_damage_indicators(int player_index)
 {
