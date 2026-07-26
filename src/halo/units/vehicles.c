@@ -435,7 +435,7 @@ void FUN_001b4dc0(int handle, void *damage_data, unsigned int flags,
 }
 
 /* 0x1b5400 — Exit seated units whose seat name matches a substring. */
-int FUN_001b5400(int unit_handle, int seat_name_substr)
+int16_t FUN_001b5400(int unit_handle, int seat_name_substr)
 {
   object_iter_t iter;
   char *unit_tag;
@@ -450,7 +450,10 @@ int FUN_001b5400(int unit_handle, int seat_name_substr)
 
   unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
   unit_tag = (char *)tag_get('tinu', *(int *)unit_obj);
-  match_any = (needle == 0 || csstrlen(needle) == 0);
+  if (needle != 0 && csstrlen(needle) != 0)
+    match_any = 0;
+  else
+    match_any = 1;
 
   object_iterator_new(&iter, 3, 0);
   while ((unit_obj = (char *)object_iterator_next(&iter)) != 0) {
@@ -472,10 +475,10 @@ int FUN_001b5400(int unit_handle, int seat_name_substr)
     if (!unit_try_and_exit_seat(iter.last_handle))
       continue;
 
-    exit_count++;
+    exit_count = (int16_t)(exit_count + 1);
   }
 
-  return (int)exit_count;
+  return exit_count;
 }
 
 /* 0x1b5500 — Exit vehicle seat when unit is seated with a valid seat index. */
@@ -684,10 +687,13 @@ void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
       (char *)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[2],
                                     0xb4);
     if (*(float *)(vehicle + 0x42c) <= 0.0f) {
-      frame = 0.0f;
-    } else {
       frame = *(float *)(vehicle + 0x42c) / *(float *)(vehicle_tag + 0x2fc);
+      frame *= *(float *)0x253398;
       frame = *(float *)0x253398 - frame;
+    } else {
+      frame = *(float *)(vehicle + 0x42c) / *(float *)(vehicle_tag + 0x2f8);
+      frame += 1.0f;
+      frame *= *(float *)0x253398;
     }
     frame = vehicle_clamp_unit_float(frame);
     frame *= (float)(*(int16_t *)(animation + 0x22) - 1);
@@ -702,13 +708,10 @@ void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
     steer = *(float *)(vehicle + 0x20) * *(float *)(vehicle + 0x2c) +
             *(float *)(vehicle + 0x1c) * *(float *)(vehicle + 0x28) +
             *(float *)(vehicle + 0x18) * *(float *)(vehicle + 0x24);
-    if (!(steer > 0.0f))
+    if (steer <= 0.0f)
       frame = 0.0f;
-    else {
-      if (steer < 0.0f)
-        steer = -steer;
-      frame = vehicle_clamp_unit_float(steer / *(float *)(vehicle_tag + 0x2f8));
-    }
+    else
+      frame = vehicle_clamp_unit_float(steer / fabsf(*(float *)(vehicle_tag + 0x2f8)));
     frame *= (float)(*(int16_t *)(animation + 0x22) - 1);
     vehicle_preprocess_apply_frame(vehicle_tag, node_block, 3, node_output,
                                  frame);
@@ -1682,24 +1685,34 @@ void vehicle_export_function_values(int vehicle_handle)
   float *out;
   int16_t *fn_idx;
   int slot;
+  float max_fwd_tag;
+  float max_back_tag;
   float max_fwd;
-  float max_back;
   float max_right_a;
   float max_right_b;
+  float max_right_max;
   float max_up_a;
   float max_up_b;
+  float max_up_max;
   float value;
 
   veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
   vehi = (char *)tag_get(0x76656869, *(int *)veh);
-  max_fwd = fabsf(*(float *)(vehi + 0x2f8));
-  max_back = fabsf(*(float *)(vehi + 0x2fc));
-  if (max_fwd < max_back)
-    max_fwd = max_back;
+  max_fwd_tag = fabsf(*(float *)(vehi + 0x2f8));
+  max_back_tag = fabsf(*(float *)(vehi + 0x2fc));
+  max_fwd = max_fwd_tag;
+  if (max_fwd < max_back_tag)
+    max_fwd = max_back_tag;
   max_right_a = fabsf(*(float *)(vehi + 0x330));
   max_right_b = fabsf(*(float *)(vehi + 0x334));
+  max_right_max = max_right_a;
+  if (max_right_max < max_right_b)
+    max_right_max = max_right_b;
   max_up_a = fabsf(*(float *)(vehi + 0x308));
   max_up_b = fabsf(*(float *)(vehi + 0x30c));
+  max_up_max = max_up_a;
+  if (max_up_max < max_up_b)
+    max_up_max = max_up_b;
 
   out = (float *)(veh + 0xd4);
   fn_idx = (int16_t *)(vehi + 0x31c);
@@ -1717,21 +1730,26 @@ void vehicle_export_function_values(int vehicle_handle)
     }
     switch (index + 1) {
     case 1:
+    case 28:
+    case 29:
+    case 30:
+    case 31:
       value = fabsf(*(float *)(veh + 0x42c)) / max_fwd;
       break;
     case 2:
-      value = *(float *)(veh + 0x42c) / max_fwd;
       if (*(float *)(veh + 0x42c) <= 0.0f)
-        value = 0.0f / max_fwd;
+        value = 0.0f;
+      else
+        value = *(float *)(veh + 0x42c) / max_fwd_tag;
       break;
     case 3:
-      value = *(float *)(veh + 0x42c) / max_fwd;
-      if (*(float *)(veh + 0x42c) > 0.0f)
-        value = fabsf(*(float *)(vehi + 0x2fc));
-      value = *(float *)(veh + 0x42c) / max_fwd;
+      if (*(float *)(veh + 0x42c) <= 0.0f)
+        value = 0.0f;
+      else
+        value = fabsf(*(float *)(veh + 0x42c)) / max_back_tag;
       break;
     case 4:
-      value = fabsf(*(float *)(veh + 0x42c)) / max_back;
+      value = fabsf(*(float *)(veh + 0x42c)) / max_back_tag;
       break;
     case 5:
       value = fabsf(*(float *)(veh + 0x430)) / max_right_a;
@@ -1740,13 +1758,12 @@ void vehicle_export_function_values(int vehicle_handle)
       value = fabsf(*(float *)(veh + 0x430)) / max_right_b;
       break;
     case 7:
-      value = fabsf(*(float *)(veh + 0x430)) /
-              (max_right_a > max_right_b ? max_right_a : max_right_b);
+      a = fabsf(*(float *)(veh + 0x42c)) / max_fwd;
+      b = fabsf(*(float *)(veh + 0x430)) / max_right_max;
+      value = a > b ? a : b;
       break;
     case 8:
-      a = fabsf(*(float *)(veh + 0x42c)) / max_fwd;
-      b = fabsf(*(float *)(veh + 0x430)) / max_right_a;
-      value = a > b ? a : b;
+      value = fabsf(*(float *)(veh + 0x434)) / max_up_max;
       break;
     case 9:
       value = fabsf(*(float *)(veh + 0x434)) / max_up_a;
@@ -1755,20 +1772,19 @@ void vehicle_export_function_values(int vehicle_handle)
       value = fabsf(*(float *)(veh + 0x434)) / max_up_b;
       break;
     case 11:
-      value = fabsf(*(float *)(veh + 0x434)) /
-              (max_up_a > max_up_b ? max_up_a : max_up_b);
-      break;
-    case 12:
       if ((*(unsigned char *)(veh + 0x424) & 4) != 0)
         value = 0.0f;
       else
         value = 1.0f;
       break;
-    case 13:
+    case 12:
       if ((*(unsigned char *)(veh + 0x424) & 8) != 0)
         value = 0.0f;
       else
         value = 1.0f;
+      break;
+    case 13:
+      value = 0.0f;
       break;
     case 14:
       value = magnitude3d((float *)(veh + 0x18)) / max_fwd;
@@ -1786,39 +1802,39 @@ void vehicle_export_function_values(int vehicle_handle)
         value = 0.0f;
       break;
     case 17:
-    case 18:
       value =
           fabsf(*(float *)(veh + 0x20) * *(float *)(veh + 0x2c) +
                 *(float *)(veh + 0x1c) * *(float *)(veh + 0x28) +
                 *(float *)(veh + 0x18) * *(float *)(veh + 0x24)) /
           max_fwd;
       break;
+    case 18:
     case 19:
+      value =
+          fabsf(*(float *)(veh + 0x20) * *(float *)(veh + 0x38) +
+                *(float *)(veh + 0x1c) * *(float *)(veh + 0x34) +
+                *(float *)(veh + 0x18) * *(float *)(veh + 0x30)) /
+          max_fwd;
+      break;
     case 20:
       value = *(float *)(veh + 0x43c) / *(float *)(vehi + 0x310);
       break;
     case 21:
-    case 22:
       value = *(float *)(veh + 0x440) / *(float *)(vehi + 0x310);
       break;
-    case 23:
+    case 22:
       value = fabsf(*(float *)(veh + 0x42c) - *(float *)(veh + 0x434)) /
               max_fwd;
       break;
-    case 24:
+    case 23:
       value = fabsf(*(float *)(veh + 0x434) + *(float *)(veh + 0x42c)) /
               max_fwd;
       break;
+    case 24:
     case 25:
     case 26:
     case 27:
       value = *(float *)(veh + 0x438) / *(float *)(vehi + 0x310);
-      break;
-    case 28:
-    case 29:
-    case 30:
-    case 31:
-      value = fabsf(*(float *)(veh + 0x42c)) / max_fwd;
       break;
     case 32: {
       float cross[3];
@@ -1829,12 +1845,32 @@ void vehicle_export_function_values(int vehicle_handle)
       break;
     }
     case 33:
-      value = *(float *)(veh + 0x448);
-      break;
-    case 34:
       value = *(float *)(veh + 0x444);
       break;
-    case 35:
+    case 34:
+      value = *(float *)(veh + 0x448);
+      break;
+    case 35: {
+      float ratio_a;
+      float ratio_b;
+      float t;
+      unsigned char blend = *(unsigned char *)(veh + 0x428);
+      ratio_a =
+          fabsf(*(float *)(veh + 0x20) * *(float *)(veh + 0x2c) +
+                *(float *)(veh + 0x1c) * *(float *)(veh + 0x28) +
+                *(float *)(veh + 0x18) * *(float *)(veh + 0x24)) /
+          max_fwd;
+      ratio_b = fabsf(*(float *)(veh + 0x42c)) / max_fwd_tag;
+      t = (float)blend * *(float *)0x2549d4 + *(float *)0x2533c8;
+      t *= *(float *)0x253398;
+      if (t <= 0.0f)
+        t = 0.0f;
+      else if (t >= 1.0f)
+        t = 1.0f;
+      value = ratio_a + (ratio_b - ratio_a) * t;
+      break;
+    }
+    case 36:
       value = magnitude3d((float *)(veh + 0x18)) / *(float *)(vehi + 0x2f8);
       value = value * *(float *)(veh + 0x448) - *(float *)0x2533e8;
       value *= *(float *)0x2b7d40;

@@ -1182,6 +1182,9 @@ void first_person_weapon_message_from_unit(int unit_handle, int message_type)
 }
 
 /* 0xde3f0 — Advance first-person weapon state for one local player. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(1)))
+#endif
 void FUN_000de3f0(int local_player_index)
 {
   static const unsigned char state_to_case[0x18] = {
@@ -1197,7 +1200,7 @@ void FUN_000de3f0(int local_player_index)
   int next_state;
 
   if ((int16_t)local_player_index < 0 || (int16_t)local_player_index >= 4) {
-    display_assert((char *)0x00266fc0, (char *)0x00282294, 1433, 1);
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 0x599, 1);
     system_exit(-1);
   }
 
@@ -1218,6 +1221,8 @@ void FUN_000de3f0(int local_player_index)
   case 4:
     *(int16_t *)(fp + 0x18) -= 1;
     return;
+  case 5:
+    return;
   case 3:
     unit = (char *)object_get_and_verify_type(*(int *)(fp + 8), 4);
     paew = (char *)tag_get(0x77656170, *(int *)unit);
@@ -1235,23 +1240,20 @@ void FUN_000de3f0(int local_player_index)
       return;
     }
     dual_state = *(int16_t *)(fp + 0x1e94);
-    if (dual_state == 0 || dual_state == -1 || dual_state == 2) {
+    if (dual_state == 0 || dual_state == (int16_t)-1 || dual_state == 2) {
       FUN_000ddbd0(local_player_index, 0, 0);
       return;
     }
-    if (dual_state == 1)
-      break;
-    display_assert((char *)0x002823e8, (char *)0x00282294, 799, 1);
-    system_exit(-1);
-  case 5:
-    return;
+    if (dual_state != 1) {
+      display_assert((char *)0x002823e8, (char *)0x00282294, 0x31f, 1);
+      system_exit(-1);
+    }
+    break;
   default:
     return;
   }
 
   next_state = *(unsigned char *)(fp + 0x1e90) ? 16 : 17;
-  if (next_state == -1)
-    return;
   FUN_000ddbd0(local_player_index, next_state, 0);
 }
 

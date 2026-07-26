@@ -1299,7 +1299,7 @@ after_modifier:
         /* BUG1-FIX: arg7 = &damage_scale (EBP-0xc), NOT &body_damage.
          * After the call, damage_scale holds the remaining body damage.
          * Disasm at 0x1382db: LEA ECX,[EBP-0xc]; PUSH ECX → last arg. */
-        FUN_00136bc0(current_object_handle, collision_model, (int)material_data,
+        FUN_00136bc0(current_object_handle, collision_model, material_data,
                      jpt_offset, damage_params, &damage_flags, &shield_damage,
                      &damage_scale);
         coll_data = (unsigned char *)collision_model;
@@ -2028,8 +2028,8 @@ void FUN_00136b40(int object_handle)
   FUN_00136a00(object_handle, 0);
 }
 
-/* 0x136bc0 */
-void FUN_00136bc0(int current_object_handle, void *collision_model, int material,
+/* 0x136bc0 — Apply shield damage from a collision hit. */
+void FUN_00136bc0(int current_object_handle, void *collision_model, void *material,
                   void *damage_effect, void *damage_params, unsigned int *flags,
                   float *shield_damage, float *body_damage)
 {
@@ -2042,10 +2042,10 @@ void FUN_00136bc0(int current_object_handle, void *collision_model, int material
   float max_shield;
   float recharge_frac;
   float scaled;
-  float actual;
   char report_shield;
   char friendly_fire;
 
+  (void)damage_params;
   obj = (char *)object_get_and_verify_type(current_object_handle, -1);
   coll = (char *)collision_model;
   mat = (char *)material;
@@ -2073,18 +2073,17 @@ void FUN_00136bc0(int current_object_handle, void *collision_model, int material
                  max_shield;
 
   if (max_shield > 0.0f)
-    recharge_frac = 1.0f / max_shield;
+    recharge_frac = *(float *)0x2533c8 / max_shield;
   else
     recharge_frac = 0.0f;
 
   if ((*flags & 0x10) == 0 || (coll[0] & 4) == 0) {
-    shield_apply = (1.0f - *(float *)(mat + 0x28)) * remaining;
+    shield_apply = (*(float *)0x2533c8 - *(float *)(mat + 0x28)) * remaining;
     if (*(float *)(obj + 0x94) > *(float *)(coll + 0xf0) &&
         *(float *)(coll + 0xf0) > 0.0f) {
       float ratio = *(float *)(obj + 0x94) / *(float *)(coll + 0xf0);
-      float t = transition_function_evaluate(
-          *(short *)(coll + 0xec), ratio);
-      shield_apply *= (1.0f - *(float *)(coll + 0xf4)) * t +
+      float t = transition_function_evaluate(*(short *)(coll + 0xec), ratio);
+      shield_apply *= (*(float *)0x2533c8 - *(float *)(coll + 0xf4)) * t +
                       *(float *)(coll + 0xf4);
     }
   }
@@ -2117,11 +2116,10 @@ void FUN_00136bc0(int current_object_handle, void *collision_model, int material
   if (scaled > *(float *)0x253f44)
     report_shield = 1;
 
-  actual = recharge_frac * scaled;
-  if (actual > *(float *)(obj + 0x94) || *(short *)jpt == 3) {
-    remaining += scaled - max_shield * *(float *)(obj + 0x94);
-    if (remaining < 0.0f)
-      remaining = 0.0f;
+  if (scaled > *(float *)(obj + 0x94) || *(short *)jpt == 3) {
+    float overflow = scaled - recharge_frac * *(float *)(obj + 0x94);
+    if (overflow >= 0.0f)
+      remaining += overflow;
     *(float *)(obj + 0x94) = 0.0f;
     if ((*(unsigned char *)(obj + 0xb6) & 8) == 0) {
       object_deplete_shield(current_object_handle);
@@ -2129,7 +2127,7 @@ void FUN_00136bc0(int current_object_handle, void *collision_model, int material
     }
   } else {
     if ((*(unsigned char *)(obj + 0xb6) & 8) == 0)
-      *(float *)(obj + 0x94) -= actual;
+      *(float *)(obj + 0x94) -= scaled;
     if ((*(unsigned char *)(obj + 0xb6) & 2) == 0 &&
         *(float *)(obj + 0x94) <= *(float *)(coll + 0x184)) {
       FUN_001369e0(current_object_handle, *(int *)(coll + 0x194));
@@ -2142,21 +2140,19 @@ shield_recharge:
     float pool = *body_damage - remaining;
     pool *= recharge_frac;
     if ((*(unsigned char *)(obj + 0xb6) & 8) == 0)
-      *(float *)(obj + 0x98) = 1.0f;
+      *(float *)(obj + 0x98) = *(float *)0x2533c8;
     *(float *)(obj + 0xa4) += pool;
-    if (*(float *)(obj + 0x98) > 1.0f)
-      *(float *)(obj + 0x98) = 1.0f;
-    if (*(float *)(obj + 0xa4) > 1.0f)
-      *(float *)(obj + 0xa4) = 1.0f;
+    if (*(float *)(obj + 0x98) > *(float *)0x2533c8)
+      *(float *)(obj + 0x98) = *(float *)0x2533c8;
+    if (*(float *)(obj + 0xa4) > *(float *)0x2533c8)
+      *(float *)(obj + 0xa4) = *(float *)0x2533c8;
   }
 
 write_outputs:
   if (shield_apply > *(float *)(coll + 0x108)) {
-    if (*(float *)(obj + 0x94) == 0.0f) {
-      FUN_001d9068();
+    if (*(float *)(obj + 0x94) == 0.0f)
       *(short *)(obj + 0xb4) =
           (short)(int)(*(float *)(coll + 0x10c) * *(float *)0x253394);
-    }
   }
   *shield_damage = shield_apply;
   *body_damage = remaining;
@@ -2453,8 +2449,8 @@ void FUN_00138900(void *damage_params, int object_handle, char recursive)
           break;
         }
 
-        object_get_root_parent(object_handle);
-        if (!FUN_0014df70(0xc221, (float *)(dp + 0x28), probe_dir, 0,
+        int root_parent = object_get_root_parent(object_handle);
+        if (!FUN_0014df70(0xc221, (float *)(dp + 0x28), probe_dir, root_parent,
                           collision_buf)) {
           blocked = 0;
           break;
@@ -2468,8 +2464,8 @@ void FUN_00138900(void *damage_params, int object_handle, char recursive)
           seg[0] = *(float *)(obj + 0x50) - hit_pos[0];
           seg[1] = *(float *)(obj + 0x54) - hit_pos[1];
           seg[2] = *(float *)(obj + 0x58) - hit_pos[2];
-          object_get_root_parent(object_handle);
-          if (!FUN_0014df70(0xc221, hit_pos, seg, 0, collision_buf))
+          int root_parent = object_get_root_parent(object_handle);
+          if (!FUN_0014df70(0xc221, hit_pos, seg, root_parent, collision_buf))
             blocked = 0;
         }
         axis++;
@@ -2479,9 +2475,9 @@ void FUN_00138900(void *damage_params, int object_handle, char recursive)
       seg[0] = *(float *)(obj + 0x50) - *(float *)(dp + 0x28);
       seg[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x30);
       seg[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x38);
-      object_get_root_parent(object_handle);
-      blocked = (char)!FUN_0014df70(0xc221, (float *)(dp + 0x28), seg, 0,
-                                    collision_buf);
+      int root_parent = object_get_root_parent(object_handle);
+      blocked = (char)!FUN_0014df70(0xc221, (float *)(dp + 0x28), seg,
+                                    root_parent, collision_buf);
     }
 
     if (blocked != 0)
