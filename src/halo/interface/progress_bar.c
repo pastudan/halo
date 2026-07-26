@@ -1834,7 +1834,7 @@ void FUN_000e2820(float *unused, float alpha, float *color, float progress)
 {
   float rect[4];
   (void)unused;
-  rect[0] = 640.0f; rect[1] = 480.0f; rect[2] = 0.0f; rect[3] = 0.0f;
+  rect[0]=640.0f; rect[1]=480.0f; rect[2]=0.0f; rect[3]=0.0f;
   progress_bar_draw_loading_bar(rect, color, alpha, progress);
 }
 
@@ -1842,7 +1842,7 @@ void FUN_000e2820(float *unused, float alpha, float *color, float progress)
 void FUN_000e2880(float *color /*@<ecx>*/, float progress)
 {
   float rect[4];
-  rect[0] = 640.0f; rect[1] = 480.0f; rect[2] = 0.0f; rect[3] = 0.0f;
+  rect[0]=640.0f; rect[1]=480.0f; rect[2]=0.0f; rect[3]=0.0f;
   progress_bar_draw_loading_bar(rect, color, 1.0f, progress);
 }
 
