@@ -994,55 +994,25 @@ char FUN_00024890(int actor_handle __attribute__((unused)), void *state __attrib
 #endif
 
 
-/* FUN_00024900 (0x24900) — XBE naked draft (batch 163). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_00024900(int actor_handle __attribute__((unused)), void *query_buf __attribute__((unused)))
+/* FUN_00024900 (0x24900) — readable C lift.
+ * query_buf@edi. */
+char FUN_00024900(int actor_handle, void *query_buf)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "movl $0, 0x660(%%edi)\n\t"
-      "movl $0x254c30, %%esi\n\t"
-      ".LFUN_00024900_1:\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .LFUN_00024900_3\n\t"
-      "movb 0x4(%%edi), %%cl\n\t"
-      "movl $1, %%ebx\n\t"
-      "shll %%cl, %%ebx\n\t"
-      "movswl -0x4(%%esi), %%ecx\n\t"
-      "testl %%ebx, %%ecx\n\t"
-      "je .LFUN_00024900_2\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00024900_2:\n\t"
-      "addl $8, %%esi\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00024900_1\n\t"
-      ".LFUN_00024900_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  char *qb = (char *)query_buf;
+  void **entry;
+  char ok = 1;
+
+  *(int *)(qb + 0x660) = 0;
+  for (entry = (void **)0x254c30; *entry; entry = (void **)((char *)entry + 8)) {
+    unsigned bit = 1u << (unsigned char)qb[4];
+    if (bit & (unsigned)(int)*(short *)((char *)entry - 4)) {
+      ok = ((char (*)(int, void *, int))*entry)(actor_handle, query_buf, 0);
+    }
+    if (!ok)
+      break;
+  }
+  return ok;
 }
-#else
-#error "FUN_00024900: clang naked draft required"
-#endif
-
-
 /* FUN_00024950 (0x24950) — XBE naked draft (batch 127). */
 #if defined(__clang__)
 static void (*const b24950_assert)(const char *, const char *, int, bool) = display_assert;

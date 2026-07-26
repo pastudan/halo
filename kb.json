@@ -38915,7 +38915,7 @@
         {
           "addr": "0x24900",
           "decl": "char FUN_00024900(int actor_handle, void *query_buf @<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x24950",
