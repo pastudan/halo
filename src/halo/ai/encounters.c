@@ -8005,13 +8005,14 @@ int16_t encounter_post_combat_select_random_behavior(void *out, void *samples)
   char *s;
   int *o;
 
-  total = 0.0f;
+  /* XBE loads accumulator from DAT_002533c0 (0.0f), not a C 0.0 literal. */
+  total = *(float *)0x2533c0;
   chosen = -1;
   n_pos = 0;
   s = (char *)samples;
   for (i = 0; i < 4; i++) {
     float w = *(float *)(s + 4);
-    if (w > 0.0f && *(int *)s != -1) {
+    if (w > *(float *)0x2533c0 && *(int *)s != -1) {
       total += w;
       chosen = i;
       n_pos++;
@@ -8021,14 +8022,15 @@ int16_t encounter_post_combat_select_random_behavior(void *out, void *samples)
 
   if (n_pos > 1) {
     pick = random_math_real((unsigned int *)get_global_random_seed_address()) * total;
+    /* Keep chosen from first pass; second loop only overwrites on hit.
+       Break when acc > pick (fcom + test ah,0x41 / je). */
     acc = 0.0f;
-    chosen = -1;
     for (i = 0; i < 4; i++) {
       char *e = (char *)samples + (int)i * 0x20;
       float w = *(float *)(e + 4);
-      if (w > 0.0f && *(int *)e != -1) {
+      if (w > *(float *)0x2533c0 && *(int *)e != -1) {
         acc += w;
-        if (!(pick > acc)) {
+        if (acc > pick) {
           chosen = i;
           break;
         }

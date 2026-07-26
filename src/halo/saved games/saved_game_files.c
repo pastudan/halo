@@ -86,7 +86,7 @@ static void * (*const b1c1b00_c8e0b0)(void *destination, void *source, size_t si
 static bool (*const b1c1b00_c81630)(int priority_flags, void *function, int param, void **thread_reference) = thread_new;
 
 __attribute__((naked, noinline))
-void FUN_001c1b00(void)
+void FUN_001c1b00(void *out __attribute__((unused)), int profile_handle __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -165,7 +165,7 @@ void player_profile_get_from_path(int profile_handle, void *out)
     system_exit(-1);
   }
   if (profile_handle != -1)
-    FUN_001c1b00(profile_handle);
+    FUN_001c1b00(out, profile_handle);
 }
 
 /* FUN_001c1c00 (0x1c1c00) — XBE naked draft (batch 259). */
@@ -2108,7 +2108,7 @@ static void (*const b1c2d20_c8f390)(unsigned __int16 a1, const char *a2, ...) = 
 static bool (*const b1c2d20_c19a930)(file_ref_t *info) = file_close;
 
 __attribute__((naked, noinline))
-void saved_game_file_retrieve_player1_last_used_profile_directory(void)
+char saved_game_file_retrieve_player1_last_used_profile_directory(void *out_path __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3244,7 +3244,7 @@ static void (*const b1c38d0_c818d0)(int *mutex_reference) = release_mutex;
 static void (*const b1c38d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void saved_game_file_find_profile_index_for_directory_path(void)
+int saved_game_file_find_profile_index_for_directory_path(void *path __attribute__((unused)), int unused __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
