@@ -322,37 +322,40 @@ void FUN_00024130(void)
 
 
 /* FUN_00024370 (0x24370) — readable C lift. */
-int FUN_00024370(int actor_handle, void *ctx, void *cand)
+int FUN_00024370(int actor_handle, void *actor, void *fp)
 {
-  char *actor;
-  float dist_out;
+  void *unit;
+  int local;
+  char ok;
   void *scenario;
 
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  (void)tag_get(0x61637472, *(int *)(actor + 0x58));
-  if (*(unsigned char *)((char *)ctx + 0x44) == 0)
-    goto done;
-  if (cand == 0) {
-    *(float *)((char *)ctx + 0x660) =
-        *(float *)((char *)ctx + 0x660) + *(float *)0x254cc0;
+  unit = datum_get(*(data_t **)0x6325a4, actor_handle);
+  tag_get(0x61637472, *(int *)((char *)unit + 0x58));
+  if (*((unsigned char *)actor + 0x44) == 0) {
+    if (fp == 0)
+      return 1;
+    return (int)(unsigned char)*((unsigned char *)fp + 0x30);
+  }
+  if (fp == 0) {
+    *(float *)((char *)actor + 0x660) += *(float *)0x254cc0;
     return 1;
   }
-  dist_out = 0.0f;
-  if (actor_path_3d_available(actor_handle, *(float **)cand, &dist_out)) {
+  local = 0;
+  ok = actor_path_3d_available(actor_handle, *(float **)fp, (float *)&local);
+  if (ok) {
     scenario = scenario_get();
-    if (path_3d_available((int)scenario, (int *)(actor + 0x12c), *(int *)&dist_out,
-                          *(int **)cand, 0, 0)) {
-      FUN_00024000(ctx, 15.0f, 0x19, 0, ctx);
-      goto done;
-    }
+    ok = path_3d_available((int)scenario, (int *)((char *)unit + 0x12c), local, *(int **)fp, (unsigned char *)0, (float *)0);
+    if (ok)
+      FUN_00024000(actor, 15.0f, 0x19, (void *)0, (void *)0);
+    else
+      goto fail_flags;
+  } else {
+fail_flags:
+    *((unsigned char *)fp + 0x31) = 1;
+    if (*((unsigned char *)actor + 0x14) == 0)
+      *((unsigned char *)fp + 0x30) = 0;
   }
-  *((unsigned char *)cand + 0x31) = 1;
-  if (*(unsigned char *)((char *)ctx + 0x14) == 0)
-    *((unsigned char *)cand + 0x30) = 0;
-done:
-  if (cand == 0)
-    return 1;
-  return *(unsigned char *)((char *)cand + 0x30);
+  return (fp == 0) ? 1 : (int)(unsigned char)*((unsigned char *)fp + 0x30);
 }
 
 /* FUN_00024450 (0x24450) — XBE naked draft (batch 120). */

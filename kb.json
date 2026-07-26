@@ -20339,7 +20339,7 @@
         },
         {
           "addr": "0xe1f00",
-          "decl": "void FUN_000e1f00(void);",
+          "decl": "int FUN_000e1f00(uint32_t reg@<edx>, float unused, float a, float b);",
           "ported": true,
           "name": "FUN_000e1f00"
         },
@@ -38972,7 +38972,7 @@
         },
         {
           "addr": "0x24370",
-          "decl": "int FUN_00024370(int actor_handle, void *ctx, void *cand);",
+          "decl": "int FUN_00024370(int actor_handle, void *actor, void *fp);",
           "ported": true,
           "name": "FUN_00024370"
         },
