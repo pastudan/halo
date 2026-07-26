@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """
 Generate decomp.dev-compatible progress report from existing project data.
 
