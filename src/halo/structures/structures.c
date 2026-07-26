@@ -5212,131 +5212,230 @@ int16_t structure_clusters_in_cone(int16_t starting_cluster, float *point,
   return (int16_t)output_count;
 }
 
-/* structure_test_vector (0x198cb0)
- *
- * Traces a vector (point + direction) through the BSP, iteratively firing a
- * collision raycast (FUN_0014df70, flags 0x21) from the current working point
- * and, on each hit, asking structure_render_surface_from_point_and_leaf whether
- * the hit surface's material matches.  A matching surface whose collection
- * element (scenario+0x104, stride 0x20) is not the -1 sentinel terminates the
- * trace with success (returns 1).  If the collision result requests a continued
- * trace (result byte +0x4c bit0), the working point is nudged forward along the
- * direction by the tiny constant at 0x29ca28 (2^-12) and the loop repeats;
- * otherwise the trace ends with 0.
- *
- * Confirmed from disassembly at 0x198cb0:
- *   - Collision result is an 80-byte (0x50) struct written by FUN_0014df70 via
- *     LEA [EBP-0x54]; read fields: +0x0c leaf/cluster index (dword),
- * +0x18..0x20 hit point (vec3), +0x48 material ref (masked & 0x7fffffff), +0x4c
- * status byte (bit0 = continue-trace).  Sized per hazard #5 / units.c:9411
- * sibling.
- *   - Collision user-stack depth guard (global at 0x4761d8, int16) is pushed/
- *     popped each iteration with the 0xf marker on the stack array at 0x5a8c80.
- *   - FUN_00198580 called cdecl with 8 args (ADD ESP,0x20), char return in AL:
- *     (out_point, leaf, material&0x7fffffff, p4..p8).  p4
- * (out_collection_index) is the only out-pointer the caller itself dereferences
- * (validity check).
- *   - Assert condition strings (single-letter param names): "p", "v",
- *     "material_index", "surface_index", "s", "t" at lines 0x188-0x18d.
- */
-char structure_test_vector(float *point, float *direction, float *out_point,
-                           int16_t *out_collection_index,
-                           int16_t *out_material_index,
-                           int32_t *out_surface_index, float *out_u,
-                           float *out_v)
+/* structure_test_vector (0x198cb0) — XBE naked draft (batch 56). */
+#if defined(__clang__)
+static void (*const b198cb0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b198cb0_exitfn)(int) = system_exit;
+static bool (*const b198cb0_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
+static void * (*const b198cb0_c18e3c0)(void) = scenario_get;
+static char (*const b198cb0_c198580)(void *render_context, uint32_t leaf_index, int material_type, int16_t *out_collection_index, int16_t *out_geometry_index, int32_t *out_surface, float *out_u, float *out_v) = structure_render_surface_from_point_and_leaf;
+static void *(*const b198cb0_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+char structure_test_vector(float *point __attribute__((unused)), float *direction __attribute__((unused)), float *out_point __attribute__((unused)), int16_t *out_collection_index __attribute__((unused)), int16_t *out_material_index __attribute__((unused)), int32_t *out_surface_index __attribute__((unused)), float *out_u __attribute__((unused)), float *out_v __attribute__((unused)))
 {
-  char result;
-  char terminate;
-  int16_t depth;
-  void *scenario;
-  int16_t *plane;
-  char collision_result[80];
-
-  result = 0;
-  if (point == NULL) {
-    display_assert("p", "c:\\halo\\SOURCE\\structures\\structures.c", 0x188,
-                   true);
-    system_exit(-1);
-  }
-  if (direction == NULL) {
-    display_assert("v", "c:\\halo\\SOURCE\\structures\\structures.c", 0x189,
-                   true);
-    system_exit(-1);
-  }
-  if (out_material_index == NULL) {
-    display_assert("material_index",
-                   "c:\\halo\\SOURCE\\structures\\structures.c", 0x18a, true);
-    system_exit(-1);
-  }
-  if (out_surface_index == NULL) {
-    display_assert("surface_index",
-                   "c:\\halo\\SOURCE\\structures\\structures.c", 0x18b, true);
-    system_exit(-1);
-  }
-  if (out_u == NULL) {
-    display_assert("s", "c:\\halo\\SOURCE\\structures\\structures.c", 0x18c,
-                   true);
-    system_exit(-1);
-  }
-  if (out_v == NULL) {
-    display_assert("t", "c:\\halo\\SOURCE\\structures\\structures.c", 0x18d,
-                   true);
-    system_exit(-1);
-  }
-
-  out_point[0] = point[0];
-  out_point[1] = point[1];
-  out_point[2] = point[2];
-
-  do {
-    terminate = 1;
-    if (*(int16_t *)0x4761d8 >= 32) {
-      display_assert("global_current_collision_user_depth < "
-                     "MAXIMUM_COLLISION_USER_STACK_DEPTH",
-                     "c:\\halo\\SOURCE\\structures\\structures.c", 0x196, true);
-      system_exit(-1);
-    }
-    depth = *(int16_t *)0x4761d8;
-    *(int16_t *)0x4761d8 = depth + 1;
-    *(int16_t *)(0x5a8c80 + depth * 2) = 0xf;
-
-    if (FUN_0014df70(0x21, out_point, direction, -1,
-                     (int16_t *)collision_result) != 0) {
-      scenario = scenario_get();
-      out_point[0] = *(float *)(collision_result + 0x18);
-      out_point[1] = *(float *)(collision_result + 0x1c);
-      out_point[2] = *(float *)(collision_result + 0x20);
-      if (structure_render_surface_from_point_and_leaf(
-            out_point, *(uint32_t *)(collision_result + 0xc),
-            *(uint32_t *)(collision_result + 0x48) & 0x7fffffff,
-            out_collection_index, out_material_index, out_surface_index, out_u,
-            out_v) != 0) {
-        plane = (int16_t *)tag_block_get_element(
-          (char *)scenario + 0x104, (int)*out_collection_index, 0x20);
-        if (*plane != -1) {
-          result = 1;
-          goto done;
-        }
-      }
-      if ((collision_result[0x4c] & 1) != 0) {
-        terminate = 0;
-        out_point[0] = direction[0] * *(float *)0x29ca28 + out_point[0];
-        out_point[1] = direction[1] * *(float *)0x29ca28 + out_point[1];
-        out_point[2] = direction[2] * *(float *)0x29ca28 + out_point[2];
-      }
-    }
-
-  done:
-    if (*(int16_t *)0x4761d8 < 2) {
-      display_assert("global_current_collision_user_depth > 1",
-                     "c:\\halo\\SOURCE\\structures\\structures.c", 0x1aa, true);
-      system_exit(-1);
-    }
-    *(int16_t *)0x4761d8 = *(int16_t *)0x4761d8 - 1;
-  } while (terminate == 0);
-
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x54, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "jne .Lstructure_test_vector_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x188\n\t"
+      "pushl $0x2b3954\n\t"
+      "pushl $0x26856c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_test_vector_1:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lstructure_test_vector_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x189\n\t"
+      "pushl $0x2b3954\n\t"
+      "pushl $0x2a3e7c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_test_vector_2:\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lstructure_test_vector_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18a\n\t"
+      "pushl $0x2b3954\n\t"
+      "pushl $0x2b39ec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_test_vector_3:\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lstructure_test_vector_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18b\n\t"
+      "pushl $0x2b3954\n\t"
+      "pushl $0x2b39dc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_test_vector_4:\n\t"
+      "movl 0x20(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lstructure_test_vector_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18c\n\t"
+      "pushl $0x2b3954\n\t"
+      "pushl $0x2b39d8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_test_vector_5:\n\t"
+      "movl 0x24(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lstructure_test_vector_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18d\n\t"
+      "pushl $0x2b3954\n\t"
+      "pushl $0x269cdc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_test_vector_6:\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "movl 0x14(%%ebp), %%ebx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edi), %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%edi), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "nop\n\t"
+      ".Lstructure_test_vector_7:\n\t"
+      "cmpw $0x20, 0x4761d8\n\t"
+      "movb $1, 0xb(%%ebp)\n\t"
+      "jl .Lstructure_test_vector_8\n\t"
+      "pushl $1\n\t"
+      "pushl $0x196\n\t"
+      "pushl $0x2b3954\n\t"
+      "pushl $0x253440\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_test_vector_8:\n\t"
+      "movw 0x4761d8, %%ax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "incw %%ax\n\t"
+      "movw %%ax, 0x4761d8\n\t"
+      "leal -0x54(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x21\n\t"
+      "movw $0xf, 0x5a8c80(,%%edx,2)\n\t"
+      "call *%[ray]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lstructure_test_vector_10\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl -0x38(%%ebp), %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl -0x3c(%%ebp), %%eax\n\t"
+      "movl %%esi, %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl -0x34(%%ebp), %%eax\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl 0x24(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movl 0x20(%%ebp), %%edx\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x48(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "andl $0x7fffffff, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c198580]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lstructure_test_vector_9\n\t"
+      "movswl (%%ebx), %%ecx\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x104, %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $-1, (%%eax)\n\t"
+      "je .Lstructure_test_vector_9\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "jmp .Lstructure_test_vector_10\n\t"
+      ".Lstructure_test_vector_9:\n\t"
+      "testb $1, -0x8(%%ebp)\n\t"
+      "je .Lstructure_test_vector_10\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "flds (%%eax)\n\t"
+      "movb $0, 0xb(%%ebp)\n\t"
+      "fmuls 0x29ca28\n\t"
+      "fadds (%%esi)\n\t"
+      "fstps (%%esi)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fmuls 0x29ca28\n\t"
+      "fadds 0x4(%%esi)\n\t"
+      "fstps 0x4(%%esi)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fmuls 0x29ca28\n\t"
+      "fadds 0x8(%%esi)\n\t"
+      "fstps 0x8(%%esi)\n\t"
+      ".Lstructure_test_vector_10:\n\t"
+      "cmpw $1, 0x4761d8\n\t"
+      "jg .Lstructure_test_vector_11\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1aa\n\t"
+      "pushl $0x2b3954\n\t"
+      "pushl $0x253418\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_test_vector_11:\n\t"
+      "movb 0xb(%%ebp), %%al\n\t"
+      "decw 0x4761d8\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lstructure_test_vector_7\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [assert] "m"(b198cb0_assert), [exitfn] "m"(b198cb0_exitfn), [ray] "m"(b198cb0_ray), [c18e3c0] "m"(b198cb0_c18e3c0), [c198580] "m"(b198cb0_c198580), [elem] "m"(b198cb0_elem)
+      : "memory");
 }
+#else
+#error "structure_test_vector: clang naked draft required"
+#endif
+
 
 /* FUN_00198f10 (0x198f10) — resolve planar-fog render parameters
  *

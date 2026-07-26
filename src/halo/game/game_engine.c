@@ -1610,181 +1610,568 @@ bool game_engine_game_over(void)
   return false;
 }
 
-/* game_engine_get_score_hud_text (0xac4e0)
- *
- * Format a default HUD message for a scoring/death/status event.
- * param_2 selects the message type.  When the engine vtable has a
- * slot-0x7c callback that returns true, param_2 values 7-12 are
- * remapped to their "personal" equivalents (14-19) and the engine's
- * slot-0x48 callback is called to get a score value for the (%d) suffix.
- *
- * Register args: buffer in EDI, buffer_capacity in ESI.
- */
-bool game_engine_get_score_hud_text(int player_handle, int param_2,
-                                    int hud_player, wchar_t *buffer,
-                                    int buffer_capacity)
+/* game_engine_get_score_hud_text (0xac4e0) — XBE naked draft (batch 56). */
+#if defined(__clang__)
+static void *(*const bac4e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bac4e0_c19e9f0)(wchar_t *buffer, int buffer_size, const wchar_t *format, ...) = unicode_sprintf;
+static void (*const bac4e0_cb2610)(int event_type) = game_engine_post_event;
+
+__attribute__((naked, noinline))
+bool game_engine_get_score_hud_text(int player_handle __attribute__((unused)), int param_2 __attribute__((unused)), int hud_player __attribute__((unused)), wchar_t *buffer __attribute__((unused)), int buffer_capacity __attribute__((unused)))
 {
-  char *player_datum;
-  char *other;
-  int score;
-  bool result;
-
-  result = true;
-  player_datum = (char *)datum_get(player_data, player_handle);
-  score = 0;
-
-  if (current_game_engine) {
-    bool (*has_score)(int) = ((bool (**)(int))current_game_engine)[0x7c / 4];
-    if (has_score && has_score(1)) {
-      int (*get_score)(int, int);
-      switch (param_2) {
-      case 7:
-        param_2 = 0x10;
-        break;
-      case 8:
-        param_2 = 0x13;
-        break;
-      case 9:
-        param_2 = 0xf;
-        break;
-      case 10:
-        param_2 = 0xe;
-        break;
-      case 11:
-        param_2 = 0x12;
-        break;
-      case 12:
-        param_2 = 0x11;
-        break;
-      default:
-        if (param_2 < 0xe || param_2 > 0x13)
-          goto main_switch;
-        break;
-      }
-      get_score = ((int (**)(int, int))current_game_engine)[0x48 / 4];
-      score = get_score(player_handle, 1);
-    }
-  }
-
-main_switch:
-  switch (param_2) {
-  case 0:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c63c,
-                    player_datum + 4);
-    break;
-  case 1:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c62c,
-                    player_datum + 4);
-    break;
-  case 2:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c5ec,
-                    player_datum + 4);
-    break;
-  case 3:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c5b4,
-                    player_datum + 4);
-    break;
-  case 4:
-    other = (char *)datum_get(player_data, hud_player);
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c58c,
-                    player_datum + 4, other + 4);
-    break;
-  case 5:
-    other = (char *)datum_get(player_data, hud_player);
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c560,
-                    player_datum + 4, other + 4);
-    break;
-  case 6:
-    datum_get(player_data, hud_player);
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c524,
-                    player_datum + 4);
-    break;
-  case 7:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c4b0);
-    game_engine_post_event(0xe);
-    break;
-  case 8:
-    other = (char *)datum_get(player_data, hud_player);
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c440,
-                    other + 4);
-    break;
-  case 9:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c4cc);
-    game_engine_post_event(0xf);
-    break;
-  case 10:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c4e8);
-    game_engine_post_event(0x10);
-    break;
-  case 11:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c45c);
-    game_engine_post_event(0x12);
-    break;
-  case 12:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c494);
-    game_engine_post_event(0x11);
-    break;
-  case 13:
-    other = (char *)datum_get(player_data, hud_player);
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c504,
-                    other + 4);
-    break;
-  case 14:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c41c, score);
-    game_engine_post_event(0x10);
-    break;
-  case 15:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c3f8, score);
-    game_engine_post_event(0xf);
-    break;
-  case 16:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c3d4, score);
-    game_engine_post_event(0xe);
-    break;
-  case 17:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c3ac, score);
-    game_engine_post_event(0x11);
-    break;
-  case 18:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c368, score);
-    game_engine_post_event(0x12);
-    break;
-  case 19:
-    other = (char *)datum_get(player_data, hud_player);
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c33c,
-                    other + 4, score);
-    break;
-  case 23:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c30c);
-    break;
-  case 24:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c2e0);
-    break;
-  case 25:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c2c4,
-                    hud_player);
-    break;
-  case 26:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c28c);
-    break;
-  case 27:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c258);
-    break;
-  case 28:
-    other = (char *)datum_get(player_data, hud_player);
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c550,
-                    other + 4);
-    break;
-  case 29:
-    unicode_sprintf(buffer, buffer_capacity, (const wchar_t *)0x26c230);
-    break;
-  default:
-    result = false;
-    break;
-  }
-  buffer[buffer_capacity - 1] = 0;
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl 0x456b60, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lgame_engine_get_score_hud_text_9\n\t"
+      "movl 0x7c(%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lgame_engine_get_score_hud_text_9\n\t"
+      "pushl $1\n\t"
+      "call *%%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lgame_engine_get_score_hud_text_10\n\t"
+      "leal -0x7(%%ecx), %%eax\n\t"
+      "cmpl $5, %%eax\n\t"
+      "ja .Lgame_engine_get_score_hud_text_7\n\t"
+      "jmp *.Lgame_engine_get_score_hud_text_jt0(,%%eax,4)\n\t"
+      ".Lgame_engine_get_score_hud_text_1:\n\t"
+      "movl $0xe, 0xc(%%ebp)\n\t"
+      "jmp .Lgame_engine_get_score_hud_text_8\n\t"
+      ".Lgame_engine_get_score_hud_text_2:\n\t"
+      "movl $0xf, 0xc(%%ebp)\n\t"
+      "jmp .Lgame_engine_get_score_hud_text_8\n\t"
+      ".Lgame_engine_get_score_hud_text_3:\n\t"
+      "movl $0x10, 0xc(%%ebp)\n\t"
+      "jmp .Lgame_engine_get_score_hud_text_8\n\t"
+      ".Lgame_engine_get_score_hud_text_4:\n\t"
+      "movl $0x11, 0xc(%%ebp)\n\t"
+      "jmp .Lgame_engine_get_score_hud_text_8\n\t"
+      ".Lgame_engine_get_score_hud_text_5:\n\t"
+      "movl $0x12, 0xc(%%ebp)\n\t"
+      "jmp .Lgame_engine_get_score_hud_text_8\n\t"
+      ".Lgame_engine_get_score_hud_text_6:\n\t"
+      "movl $0x13, 0xc(%%ebp)\n\t"
+      "jmp .Lgame_engine_get_score_hud_text_8\n\t"
+      ".Lgame_engine_get_score_hud_text_7:\n\t"
+      "cmpl $0xe, %%ecx\n\t"
+      "jl .Lgame_engine_get_score_hud_text_10\n\t"
+      "cmpl $0x13, %%ecx\n\t"
+      "jg .Lgame_engine_get_score_hud_text_10\n\t"
+      ".Lgame_engine_get_score_hud_text_8:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl 0x456b60, %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl %%edx\n\t"
+      "call *0x48(%%eax)\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%ebx\n\t"
+      ".Lgame_engine_get_score_hud_text_9:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      ".Lgame_engine_get_score_hud_text_10:\n\t"
+      "cmpl $0x1d, %%ecx\n\t"
+      "ja .Lgame_engine_get_score_hud_text_38\n\t"
+      "jmp *.Lgame_engine_get_score_hud_text_jt1(,%%ecx,4)\n\t"
+      ".Lgame_engine_get_score_hud_text_11:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "addl $4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x26c63c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_12:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "addl $4, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x26c62c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_13:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x26c5ec\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_14:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "addl $4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x26c5b4\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_15:\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "addl $4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x26c58c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_16:\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "addl $4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x26c560\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_17:\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x26c550\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_18:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0x5aa6d4, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x26c524\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_19:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0x5aa6d4, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x26c504\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_20:\n\t"
+      "pushl $0x26c4e8\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "pushl $0x10\n\t"
+      "call *%[cb2610]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_21:\n\t"
+      "pushl $0x26c4cc\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "pushl $0xf\n\t"
+      "call *%[cb2610]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_22:\n\t"
+      "pushl $0x26c4b0\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "pushl $0xe\n\t"
+      "call *%[cb2610]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_23:\n\t"
+      "pushl $0x26c494\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "pushl $0x11\n\t"
+      "call *%[cb2610]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_24:\n\t"
+      "pushl $0x26c45c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "pushl $0x12\n\t"
+      "call *%[cb2610]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_25:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x26c440\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_26:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x26c41c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "pushl $0x10\n\t"
+      "call *%[cb2610]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_27:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x26c3f8\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "pushl $0xf\n\t"
+      "call *%[cb2610]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_28:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x26c3d4\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "pushl $0xe\n\t"
+      "call *%[cb2610]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_29:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x26c3ac\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "pushl $0x11\n\t"
+      "call *%[cb2610]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_30:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x26c368\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "pushl $0x12\n\t"
+      "call *%[cb2610]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_31:\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "pushl %%ebx\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x26c33c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_32:\n\t"
+      "pushl $0x26c30c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_33:\n\t"
+      "pushl $0x26c2e0\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_34:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x26c2c4\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_35:\n\t"
+      "pushl $0x26c28c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_36:\n\t"
+      "pushl $0x26c258\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_37:\n\t"
+      "pushl $0x26c230\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19e9f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_get_score_hud_text_38:\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "movw $0, -0x2(%%edi,%%esi,2)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lgame_engine_get_score_hud_text_jt0:\n\t"
+      ".long .Lgame_engine_get_score_hud_text_3\n\t"
+      ".long .Lgame_engine_get_score_hud_text_6\n\t"
+      ".long .Lgame_engine_get_score_hud_text_2\n\t"
+      ".long .Lgame_engine_get_score_hud_text_1\n\t"
+      ".long .Lgame_engine_get_score_hud_text_5\n\t"
+      ".long .Lgame_engine_get_score_hud_text_4\n\t"
+      ".text\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lgame_engine_get_score_hud_text_jt1:\n\t"
+      ".long .Lgame_engine_get_score_hud_text_11\n\t"
+      ".long .Lgame_engine_get_score_hud_text_12\n\t"
+      ".long .Lgame_engine_get_score_hud_text_13\n\t"
+      ".long .Lgame_engine_get_score_hud_text_14\n\t"
+      ".long .Lgame_engine_get_score_hud_text_15\n\t"
+      ".long .Lgame_engine_get_score_hud_text_16\n\t"
+      ".long .Lgame_engine_get_score_hud_text_18\n\t"
+      ".long .Lgame_engine_get_score_hud_text_22\n\t"
+      ".long .Lgame_engine_get_score_hud_text_25\n\t"
+      ".long .Lgame_engine_get_score_hud_text_21\n\t"
+      ".long .Lgame_engine_get_score_hud_text_20\n\t"
+      ".long .Lgame_engine_get_score_hud_text_24\n\t"
+      ".long .Lgame_engine_get_score_hud_text_23\n\t"
+      ".long .Lgame_engine_get_score_hud_text_19\n\t"
+      ".long .Lgame_engine_get_score_hud_text_26\n\t"
+      ".long .Lgame_engine_get_score_hud_text_27\n\t"
+      ".long .Lgame_engine_get_score_hud_text_28\n\t"
+      ".long .Lgame_engine_get_score_hud_text_29\n\t"
+      ".long .Lgame_engine_get_score_hud_text_30\n\t"
+      ".long .Lgame_engine_get_score_hud_text_31\n\t"
+      ".long .Lgame_engine_get_score_hud_text_38\n\t"
+      ".long .Lgame_engine_get_score_hud_text_38\n\t"
+      ".long .Lgame_engine_get_score_hud_text_38\n\t"
+      ".long .Lgame_engine_get_score_hud_text_32\n\t"
+      ".long .Lgame_engine_get_score_hud_text_33\n\t"
+      ".long .Lgame_engine_get_score_hud_text_34\n\t"
+      ".long .Lgame_engine_get_score_hud_text_35\n\t"
+      ".long .Lgame_engine_get_score_hud_text_36\n\t"
+      ".long .Lgame_engine_get_score_hud_text_17\n\t"
+      ".long .Lgame_engine_get_score_hud_text_37\n\t"
+      ".text\n\t"
+      :
+      : [dget] "m"(bac4e0_dget), [c19e9f0] "m"(bac4e0_c19e9f0), [cb2610] "m"(bac4e0_cb2610)
+      : "memory");
 }
+#else
+#error "game_engine_get_score_hud_text: clang naked draft required"
+#endif
+
 
 /* match_game_type (0xacb10)
  *

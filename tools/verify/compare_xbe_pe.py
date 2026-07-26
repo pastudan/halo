@@ -52,6 +52,7 @@ def pe_fn_bytes(pe: pefile.PE, name: str) -> tuple[bytes, int]:
     size = min((nxt - addr) if nxt else 0x800, 0x8000)
     off = pe.get_offset_from_rva(addr - base)
     data = pe.__data__[off : off + size]
+    md = Cs(CS_ARCH_X86, CS_MODE_32)
     # Strip trailing padding bytes, then drop trailing NOP instructions
     # (clang often emits multi-byte NOPs that may be truncated at the next export).
     # Keep a single 0x90 immediately after RET — XBE jump-table bodies often
@@ -60,7 +61,6 @@ def pe_fn_bytes(pe: pefile.PE, name: str) -> tuple[bytes, int]:
         if data[-1] == 0x90 and data[-2] == 0xC3:
             break
         data = data[:-1]
-    md = Cs(CS_ARCH_X86, CS_MODE_32)
     while True:
         insns = list(md.disasm(data, addr))
         if len(insns) < 2 or insns[-1].mnemonic != "nop":
@@ -70,7 +70,51 @@ def pe_fn_bytes(pe: pefile.PE, name: str) -> tuple[bytes, int]:
         if insns[-2].mnemonic == "ret" and insns[-1].size == 1:
             break
         data = data[: insns[-1].address - addr]
+    # Truncate after final RET (+ optional single-byte nop). Prevents post-RET
+    # JT/pad residue from decoding as trailing opcodes (batch 56 FUN_001ad260).
+    insns = list(md.disasm(data, addr))
+    ret_idxs = [i for i, ins in enumerate(insns) if ins.mnemonic == "ret"]
+    if ret_idxs:
+        ri = ret_idxs[-1]
+        end_off = insns[ri].address + insns[ri].size - addr
+        if (
+            ri + 1 < len(insns)
+            and insns[ri + 1].mnemonic == "nop"
+            and insns[ri + 1].size == 1
+            and insns[ri + 1].address == addr + end_off
+        ):
+            end_off += 1
+        data = data[:end_off]
     return data, addr
+
+
+def xbe_mnemonics(data: bytes, va: int, skip: list[tuple[int, int]] | None = None) -> list[str]:
+    """Disassemble XBE bytes, skipping absolute [start, end) jump-table gaps."""
+    if not skip:
+        return mnemonics(data, va)
+    md = Cs(CS_ARCH_X86, CS_MODE_32)
+    ranges = sorted(skip)
+    out: list[str] = []
+    pos = 0
+    while pos < len(data):
+        abspos = va + pos
+        for s, e in ranges:
+            if s <= abspos < e:
+                pos = e - va
+                break
+        else:
+            chunk = list(md.disasm(data[pos : pos + 16], abspos))
+            if not chunk:
+                pos += 1
+                continue
+            insn = chunk[0]
+            crossed = [s for s, e in ranges if insn.address < s < insn.address + insn.size]
+            if crossed:
+                pos = min(crossed) - va
+                continue
+            out.append(insn.mnemonic)
+            pos += insn.size
+    return out
 
 
 def main() -> int:
@@ -316,7 +360,7 @@ def main() -> int:
         # gameplay wave 17 (2026-07-26)
         ("FUN_001b8570", 0x1b8570, 0x1b8f08),
         ("item_update", 0xf7340, 0xf7ca1),
-        ("FUN_000fd570", 0xfd570, 0xfdc8e),
+        ("FUN_000fd570", 0xfd570, 0xfdc87),
         ("FUN_001377d0", 0x1377d0, 0x137d12),
         # gameplay wave 18 (2026-07-26)
         ("FUN_001b8570", 0x1b8570, 0x1b8f08),
@@ -525,7 +569,7 @@ def main() -> int:
         ("FUN_00135510", 0x135510, 0x135f1b),
         ("item_update", 0xf7340, 0xf7ca1),
         ("FUN_0019fa20", 0x19fa20, 0x1a01c3),
-        ("FUN_000fd570", 0xfd570, 0xfdc8e),
+        ("FUN_000fd570", 0xfd570, 0xfdc87),
         # gameplay wave 46 (2026-07-26)
         ("get_particle_world_position", 0x1339a0, 0x134061),
         ("FUN_000de560", 0xde560, 0xdeb4f),
@@ -554,8 +598,8 @@ def main() -> int:
         ("FUN_00139e50", 0x139e50, 0x13a242),
         ("unit_aiming_vector", 0x1ab410, 0x1ab76b),
         # gameplay wave 50 (2026-07-26)
-        ("FUN_001a2f40", 0x1a2f40, 0x1a4436),
-        ("FUN_001b3690", 0x1b3690, 0x1b4dac),
+        ("FUN_001a2f40", 0x1a2f40, 0x1a440a),
+        ("FUN_001b3690", 0x1b3690, 0x1b4da9),
         ("FUN_000f9c40", 0xf9c40, 0xfac17),
         ("FUN_000f90d0", 0xf90d0, 0xf9c28),
         ("object_cause_damage", 0x137d20, 0x1384d3),
@@ -565,7 +609,7 @@ def main() -> int:
         ("FUN_001a03c0", 0x1a03c0, 0x1a0859),
         ("unit_cause_player_melee_damage", 0x1aea90, 0x1af0ca),
         ("FUN_001234b0", 0x1234b0, 0x12398d),
-        ("unit_throw_grenade_begin", 0x1b2090, 0x1b223c),
+        ("unit_throw_grenade_begin", 0x1b2090, 0x1b2239),
         ("FUN_00136f40", 0x136f40, 0x137158),
         ("weapon_overcharged", 0xfb2f0, 0xfb508),
         ("object_damage_update", 0x1384e0, 0x1388f3),
@@ -579,7 +623,7 @@ def main() -> int:
         ("unit_find_best_enter_seat", 0x1ad800, 0x1ada86),
         ("unit_exit_seat_end", 0x1b2dd0, 0x1b3055),
         # gameplay wave 53 (2026-07-26)
-        ("FUN_001a6350", 0x1a6350, 0x1a6798),
+        ("FUN_001a6350", 0x1a6350, 0x1a6796),
         ("FUN_00121d60", 0x121d60, 0x122059),
         ("animation_get_node_orientations", 0x121640, 0x121938),
         ("FUN_001ab110", 0x1ab110, 0x1ab40a),
@@ -605,6 +649,21 @@ def main() -> int:
         ("unit_adjust_plan_overlap", 0x1acb70, 0x1acd67),
         ("unit_died", 0x1b3060, 0x1b32ce),
         ("FUN_001a2b90", 0x1a2b90, 0x1a2d8e),
+        # gameplay wave 56 (2026-07-26)
+        # Ends stop at final RET (before align nop / JT); multi-JT uses skips.
+        ("FUN_001ad260", 0x1ad260, 0x1ad713),
+        ("FUN_001b0d90", 0x1b0d90, 0x1b1229),
+        (
+            "unit_impulse_to_animation_kind",
+            0x1a9560,
+            0x1a979d,
+            [(0x1a969c, 0x1a96d4), (0x1a96d4, 0x1a96dc)],
+        ),
+        ("unit_animation_start_action", 0x1a8990, 0x1a8af8),
+        ("FUN_001a2440", 0x1a2440, 0x1a25c0),
+        ("FUN_001a0be0", 0x1a0be0, 0x1a0da9),
+        ("structure_test_vector", 0x198cb0, 0x198f0a),
+        ("game_engine_get_score_hud_text", 0xac4e0, 0xac9d8),
     ]
 
     xbe = Xbe.from_file(args.xbe)
@@ -614,11 +673,46 @@ def main() -> int:
     print("=== Structural mnemonic match (XBE orig vs clang lift) ===")
     print("(Interim — VC71 needs RXDK CL.Exe; equivalence needs delinked .obj)\n")
 
-    for name, va, end in targets:
+    for target in targets:
+        if len(target) == 4:
+            name, va, end, skip = target
+        else:
+            name, va, end = target
+            skip = None
         orig = xbe_bytes(xbe, va, end)
         cand, cand_va = pe_fn_bytes(pe, name)
-        o_m = mnemonics(orig, va)
+        # Unexported neighbors can sit between this export and the next
+        # (batch 56 FUN_001a0be0). Only trim when PE is longer than the XBE
+        # window and a RET (+ nops + push ebp) lands near that window size.
+        if len(cand) > len(orig) + 16:
+            md = Cs(CS_ARCH_X86, CS_MODE_32)
+            insns = list(md.disasm(cand, cand_va))
+            best_off = None
+            for i, insn in enumerate(insns):
+                if insn.mnemonic != "ret":
+                    continue
+                off = insn.address + insn.size - cand_va
+                if abs(off - len(orig)) > 32:
+                    continue
+                j = i + 1
+                while j < len(insns) and insns[j].mnemonic == "nop":
+                    j += 1
+                if (
+                    j < len(insns)
+                    and insns[j].mnemonic == "push"
+                    and insns[j].op_str == "ebp"
+                ):
+                    best_off = off
+                    break
+            if best_off is not None:
+                cand = cand[:best_off]
+        o_m = xbe_mnemonics(orig, va, skip)
         c_m = mnemonics(cand, cand_va)
+        # Normalize trailing align nops so RET-vs-RET+nop ends still match.
+        while o_m and o_m[-1] == "nop":
+            o_m.pop()
+        while c_m and c_m[-1] == "nop":
+            c_m.pop()
         ratio = SequenceMatcher(None, o_m, c_m, autojunk=False).ratio() * 100.0
         o_calls = sum(1 for m in o_m if m == "call")
         c_calls = sum(1 for m in c_m if m == "call")

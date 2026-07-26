@@ -1206,126 +1206,201 @@ char FUN_001a0b30(int unit_handle /* @edi */)
   return 0;
 }
 
-/* FUN_001a0be0 (0x1a0be0)
- *
- * Per-frame biped world-boundary check. If the biped falls outside the world
- * or below the kill-volume threshold, applies damage and/or erases the biped.
- *
- * Register arg (confirmed from caller FUN_001a5300 at 0x1a61d1):
- *   @edi  unit_handle  — biped datum handle
- * Stack arg:
- *   vertical_speed  [EBP+0x8]  — current vertical speed (float, from local_24
- *     in caller = camera Z delta or velocity component)
- *
- * Logic summary:
- *   1. Get biped object and tag. Get game_globals physics block element [0].
- *   2. Compute bVar1 (= "is_protected"): set true if obj+0x1b4 bit 0x1000 set
- *      OR tag+0x2f4 bit 7 (0x80) set.
- *   3. If multiplayer-engine running (DAT_5aa891) AND obj+0x1c8 != -1: skip.
- *   4. If vertical_speed > physics[0x90] (kill-height threshold):
- *      - If not protected: build damage params from physics[0x1c] tag ref,
- *        call damage_data_new + object_cause_damage.
- *      - Compute t = clamp01((speed - low) / (high - low)) and return.
- *   5. Else (below threshold):
- *      - Check tag flag bit 2 (0x4) at tag+0x2f4 and vertical speed.
- *      - If not flying and falling fast: possibly apply damage, then erase.
- *
- * Confirmed: tag_block_get_element(game_globals+0x188, 0, 0x98).
- * Confirmed: TEST AH,0x10 checks obj+0x1b4 bit 0x1000.
- * Confirmed: physics block offsets 0x8c (fall speed), 0x90 (jump height),
- *   0x94 (climb height), 0x38/0x1c (damage tag refs).
- * Confirmed: damage_data_new, object_cause_damage call arg counts from disasm.
- * Confirmed: clamp01 via FCOMP+FNSTSW+TEST pattern.
- * Confirmed: erasing path = player_index_from_unit_index +
- * ai_debug_describe_actor
- *   + error("fell outside world") + object_delete.
- * Inferred: vertical_speed param meaning (from call site local_24 in 0x1a5300).
- * Uncertain: exact semantics of obj+0x1b4 bit 0x1000 (possibly "in vehicle" or
- *   "has shield").
- */
-void FUN_001a0be0(float vertical_speed, int unit_handle /* @edi */)
+/* FUN_001a0be0 (0x1a0be0) — XBE naked draft (batch 56). */
+#if defined(__clang__)
+static void *(*const b1a0be0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a0be0_tag)(int, int) = tag_get;
+static void * (*const b1a0be0_c18e450)(void) = game_globals_get;
+static void *(*const b1a0be0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b1a0be0_c136750)(void *damage_params, int tag_index) = damage_data_new;
+static void (*const b1a0be0_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = object_cause_damage;
+static bool (*const b1a0be0_gerun)(void) = game_engine_running;
+static int (*const b1a0be0_cba500)(int) = player_index_from_unit_index;
+static char * (*const b1a0be0_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
+static const char * (*const b1a0be0_c1ba1f0)(int tag_index) = tag_get_name;
+static const char * (*const b1a0be0_c19b0d0)(const char *tag_name) = tag_name_strip_path;
+static void (*const b1a0be0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b1a0be0_odel)(int) = object_delete;
+
+__attribute__((naked, noinline))
+void FUN_001a0be0(float vertical_speed __attribute__((unused)), int unit_handle __attribute__((unused)))
 {
-  char *obj;
-  char *biped_tag;
-  char *physics;
-  char damage_params[0x54]; /* damage_data_new clears through +0x53. */
-  float t;
-  int actor_handle;
-  int player_idx;
-  const char *tag_name;
-  const char *actor_desc;
-  char is_protected;
-
-  obj = (char *)object_get_and_verify_type(unit_handle, 1);
-  biped_tag = (char *)tag_get(0x62697064, *(int *)obj);
-  physics =
-    (char *)tag_block_get_element((char *)game_globals_get() + 0x188, 0, 0x98);
-
-  /* is_protected = obj has special flag OR tag marks it protected */
-  if ((*(uint32_t *)(obj + 0x1b4) & 0x1000) != 0 ||
-      *(int8_t *)(biped_tag + 0x2f4) < 0) {
-    is_protected = 1;
-  } else {
-    is_protected = 0;
-  }
-
-  /* In multiplayer with a vehicle: skip all checks */
-  if (*(uint8_t *)0x5aa891 != 0 && *(int *)(obj + 0x1c8) != -1) {
-    return;
-  }
-
-  if (vertical_speed > *(float *)(physics + 0x90)) {
-    /* Above jump-height threshold: if protected return early, else damage +
-     * return */
-    if (is_protected) {
-      return;
-    }
-    damage_data_new(damage_params, *(int *)(physics + 0x1c));
-    /* Compute lerp t = clamp01((speed - low) / (high - low)) */
-    t = (vertical_speed - *(float *)(physics + 0x90)) /
-        (*(float *)(physics + 0x94) - *(float *)(physics + 0x90));
-    if (t < *(float *)0x2533c0) {
-      t = 0.0f;
-    } else if (!(t <= *(float *)0x2533c8)) {
-      t = 1.0f;
-    }
-    object_cause_damage(damage_params, unit_handle, -1, -1, -1, 0);
-    return;
-  }
-
-  /* Below threshold — check for fall/erase conditions */
-  if ((*(uint8_t *)(biped_tag + 0x2f4) & 0x4) != 0) {
-    return;
-  }
-  if (!(*(float *)(obj + 0x20) < -(*(float *)(physics + 0x8c)))) {
-    return;
-  }
-  if (!is_protected && (*(uint8_t *)(obj + 0xb6) & 0x4) == 0) {
-    damage_data_new(damage_params, *(int *)(physics + 0x38));
-    object_cause_damage(damage_params, unit_handle, -1, -1, -1, 0);
-  }
-  if (game_engine_running() != 0) {
-    return;
-  }
-  if ((*(uint32_t *)(obj + 0x4) & 0x200000) == 0) {
-    return;
-  }
-  player_idx = player_index_from_unit_index(unit_handle);
-  if (player_idx != -1) {
-    return;
-  }
-  actor_handle = *(int *)(obj + 0x1a8);
-  if (actor_handle == -1) {
-    actor_handle = *(int *)(obj + 0x1a4);
-  }
-  actor_desc = ai_debug_describe_actor(actor_handle, unit_handle, 1,
-                                       (char *)0x5ab100, 0x100);
-  tag_name = tag_get_name(*(int *)obj);
-  tag_name = tag_name_strip_path(tag_name);
-  error(2, "WARNING: biped %s (%s) fell outside world and was erased", tag_name,
-        actor_desc);
-  object_delete(unit_handle);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x58, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl $0x98\n\t"
+      "pushl $0\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "call *%[c18e450]\n\t"
+      "addl $0x188, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x1b4(%%esi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb $0x10, %%ah\n\t"
+      "jne .LFUN_001a0be0_1\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movb 0x2f4(%%ecx), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "js .LFUN_001a0be0_1\n\t"
+      "xorb %%cl, %%cl\n\t"
+      "jmp .LFUN_001a0be0_2\n\t"
+      ".LFUN_001a0be0_1:\n\t"
+      "movb $1, %%cl\n\t"
+      ".LFUN_001a0be0_2:\n\t"
+      "movb 0x5aa891, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001a0be0_3\n\t"
+      "cmpl $-1, 0x1c8(%%esi)\n\t"
+      "jne .LFUN_001a0be0_9\n\t"
+      ".LFUN_001a0be0_3:\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x90(%%ebx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a0be0_6\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_001a0be0_9\n\t"
+      "movl 0x1c(%%ebx), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x58(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c136750]\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fsubs 0x90(%%ebx)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds 0x94(%%ebx)\n\t"
+      "fsubs 0x90(%%ebx)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fsts -0x18(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a0be0_4\n\t"
+      "movl $0, -0x18(%%ebp)\n\t"
+      "jmp .LFUN_001a0be0_5\n\t"
+      ".LFUN_001a0be0_4:\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a0be0_5\n\t"
+      "movl $0x3f800000, -0x18(%%ebp)\n\t"
+      ".LFUN_001a0be0_5:\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "leal -0x58(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c137d20]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001a0be0_6:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movb $4, %%dl\n\t"
+      "testb %%dl, 0x2f4(%%eax)\n\t"
+      "jne .LFUN_001a0be0_9\n\t"
+      "flds 0x8c(%%ebx)\n\t"
+      "fchs\n\t"
+      "fcomps 0x20(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a0be0_9\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_001a0be0_7\n\t"
+      "testb %%dl, 0xb6(%%esi)\n\t"
+      "jne .LFUN_001a0be0_7\n\t"
+      "movl 0x38(%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x58(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c136750]\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "leal -0x58(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c137d20]\n\t"
+      "addl $0x20, %%esp\n\t"
+      ".LFUN_001a0be0_7:\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a0be0_9\n\t"
+      "testl $0x200000, 0x4(%%esi)\n\t"
+      "je .LFUN_001a0be0_9\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cba500]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_001a0be0_9\n\t"
+      "movl 0x1a8(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_001a0be0_8\n\t"
+      "movl 0x1a4(%%esi), %%eax\n\t"
+      ".LFUN_001a0be0_8:\n\t"
+      "pushl $0x100\n\t"
+      "pushl $0x5ab100\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c49ac0]\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19b0d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2b4d20\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[odel]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a0be0_9:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [get] "m"(b1a0be0_get), [tag] "m"(b1a0be0_tag), [c18e450] "m"(b1a0be0_c18e450), [elem] "m"(b1a0be0_elem), [c136750] "m"(b1a0be0_c136750), [c137d20] "m"(b1a0be0_c137d20), [gerun] "m"(b1a0be0_gerun), [cba500] "m"(b1a0be0_cba500), [c49ac0] "m"(b1a0be0_c49ac0), [c1ba1f0] "m"(b1a0be0_c1ba1f0), [c19b0d0] "m"(b1a0be0_c19b0d0), [c8f390] "m"(b1a0be0_c8f390), [odel] "m"(b1a0be0_odel)
+      : "memory");
 }
+#else
+#error "FUN_001a0be0: clang naked draft required"
+#endif
+
 
 /* biped_flying_through_air (0x1a0db0)
  *
@@ -3159,109 +3234,177 @@ char FUN_001a2290(int unit_handle)
   return success;
 }
 
-/* FUN_001a2440 (0x1a2440) — per-tick footstep / animation-marker event step
- *
- * Step in the biped update dispatcher (FUN_001a6350). Classifies the biped's
- * movement state (object+0x253):
- *   - states 2,3  -> walking (is_walking)
- *   - states 4..7 -> moving fast enough if horizontal velocity squared
- *     (object+0x228..0x230) exceeds threshold 0x25337c (is_fast)
- * If the biped has an active animation (object+0x80 != NONE), looks up the
- * 'antr' animation graph (via object+0x7c) and the current animation element
- * (object+0x80, stride 0xb4 in antr+0x74):
- *   - walking and on the animation's first frame (object+0x82 == 0): fires two
- *     collision-user events (param_2 = 3, indices 0 then 1).
- *   - fast and the current frame matches one of the element's two footstep
- *     marker frames (element+0x40 / element+0x41): fires one event with
- *     index = which marker matched (0 = +0x40, 1 = +0x41) and param_2 = whether
- *     the biped is crouched (object+0x257 == 2).
- * Then runs the slip/recovery counter at object+0x45b based on object+0x42a:
- *   - 0x42a == 0: increment the counter; once it reaches 4 fire two events
- *     (param_2 = 3, indices 0,1) and reset the counter to 0.
- *   - 0x42a == 1: latch the counter to 1 and return.
- *   - otherwise:  reset the counter to 0.
- *
- * unit_handle arrives in EDI (register parameter); no stack arguments.
- *
- * Confirmed: object_get_and_verify_type(unit_handle, 1); tag_get('bipd',...)
- * and tag_get('antr', object+0x7c); tag_block_get_element(antr+0x74, idx,
- * 0xb4); jump table at 0x1a25c0 (states 2..7); velocity sum-of-squares vs
- * 0x25337c; FUN_001a0f10(unit, param_2, idx) idx routed to BX.
- */
-void FUN_001a2440(int unit_handle /* @edi */)
+/* FUN_001a2440 (0x1a2440) — XBE naked draft (batch 56). */
+#if defined(__clang__)
+static void *(*const b1a2440_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a2440_tag)(int, int) = tag_get;
+static void *(*const b1a2440_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b1a2440_c1a0f10)(int unit_handle, int param_2, short index) = FUN_001a0f10;
+
+__attribute__((naked, noinline))
+void FUN_001a2440(int unit_handle __attribute__((unused)))
 {
-  unsigned int *object;
-  char *anim_elem;
-  char is_walking;
-  char is_fast;
-  char matched_second;
-  char counter;
-
-  object = (unsigned int *)object_get_and_verify_type(unit_handle, 1);
-  tag_get(0x62697064, (int)object[0]); /* 'bipd' */
-
-  is_walking = 0;
-  is_fast = 0;
-  switch (*(char *)((int)object + 0x253)) {
-  case 2:
-  case 3:
-    is_walking = 1;
-    break;
-  case 4:
-  case 5:
-  case 6:
-  case 7:
-    if (*(float *)(object + 0x8a) * *(float *)(object + 0x8a) +
-          *(float *)(object + 0x8b) * *(float *)(object + 0x8b) +
-          *(float *)(object + 0x8c) * *(float *)(object + 0x8c) >
-        *(float *)0x25337c) {
-      is_fast = 1;
-    }
-    break;
-  default:
-    break;
-  }
-
-  if (*(short *)((int)object + 0x80) != -1) {
-    anim_elem = (char *)tag_get(0x616e7472, (int)object[0x1f]); /* 'antr' */
-    anim_elem = (char *)tag_block_get_element(
-      anim_elem + 0x74, (int)*(short *)((int)object + 0x80), 0xb4);
-    if (is_walking) {
-      if (*(short *)((int)object + 0x82) == 0) {
-        FUN_001a0f10(unit_handle, 3, 0);
-        FUN_001a0f10(unit_handle, 3, 1);
-      }
-    } else if (is_fast && ((anim_elem[0x40] != 0) || (anim_elem[0x41] != 0)) &&
-               ((*(short *)((int)object + 0x82) ==
-                 (unsigned char)anim_elem[0x40]) ||
-                (*(short *)((int)object + 0x82) ==
-                 (unsigned char)anim_elem[0x41]))) {
-      matched_second =
-        (*(short *)((int)object + 0x82) != (unsigned char)anim_elem[0x40]);
-      FUN_001a0f10(unit_handle, (*(char *)((int)object + 0x257) == 2),
-                   matched_second);
-    }
-  }
-
-  switch (*(char *)((int)object + 0x42a)) {
-  case 0:
-    if (*(char *)((int)object + 0x45b) < 1) {
-      return;
-    }
-    counter = (char)(*(char *)((int)object + 0x45b) + 1);
-    *(char *)((int)object + 0x45b) = counter;
-    if (counter < 4) {
-      return;
-    }
-    FUN_001a0f10(unit_handle, 3, 0);
-    FUN_001a0f10(unit_handle, 3, 1);
-    break;
-  case 1:
-    *(char *)((int)object + 0x45b) = 1;
-    return;
-  }
-  *(char *)((int)object + 0x45b) = 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "movsbl 0x253(%%esi), %%eax\n\t"
+      "addl $-2, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "cmpl $5, %%eax\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "ja .LFUN_001a2440_3\n\t"
+      "jmp *.LFUN_001a2440_jt(,%%eax,4)\n\t"
+      ".LFUN_001a2440_1:\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .LFUN_001a2440_3\n\t"
+      ".LFUN_001a2440_2:\n\t"
+      "flds 0x230(%%esi)\n\t"
+      "flds 0x22c(%%esi)\n\t"
+      "flds 0x228(%%esi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fcomps 0x25337c\n\t"
+      "fstp %%st(0)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $0x41, %%ah\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .LFUN_001a2440_3\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      ".LFUN_001a2440_3:\n\t"
+      "cmpw $-1, 0x80(%%esi)\n\t"
+      "je .LFUN_001a2440_8\n\t"
+      "movl 0x7c(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x616e7472\n\t"
+      "call *%[tag]\n\t"
+      "movswl 0x80(%%esi), %%edx\n\t"
+      "pushl $0xb4\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x74, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_001a2440_4\n\t"
+      "cmpw $0, 0x82(%%esi)\n\t"
+      "jne .LFUN_001a2440_8\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "call *%[c1a0f10]\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "movl $1, %%ebx\n\t"
+      "call *%[c1a0f10]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "jmp .LFUN_001a2440_8\n\t"
+      ".LFUN_001a2440_4:\n\t"
+      "movb -0x1(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_001a2440_8\n\t"
+      "movb 0x40(%%eax), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .LFUN_001a2440_5\n\t"
+      "movb 0x41(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_001a2440_8\n\t"
+      ".LFUN_001a2440_5:\n\t"
+      "movswl 0x82(%%esi), %%ecx\n\t"
+      "movzbl %%dl, %%edx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jne .LFUN_001a2440_6\n\t"
+      "xorb %%al, %%al\n\t"
+      "jmp .LFUN_001a2440_7\n\t"
+      ".LFUN_001a2440_6:\n\t"
+      "movzbl 0x41(%%eax), %%eax\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jne .LFUN_001a2440_8\n\t"
+      "movb $1, %%al\n\t"
+      ".LFUN_001a2440_7:\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testb %%al, %%al\n\t"
+      "movb 0x257(%%esi), %%al\n\t"
+      "setne %%bl\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpb $2, %%al\n\t"
+      "sete %%cl\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1a0f10]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_001a2440_8:\n\t"
+      "movsbl 0x42a(%%esi), %%eax\n\t"
+      "subl $0, %%eax\n\t"
+      "je .LFUN_001a2440_9\n\t"
+      "decl %%eax\n\t"
+      "jne .LFUN_001a2440_10\n\t"
+      "movb $1, 0x45b(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001a2440_9:\n\t"
+      "movb 0x45b(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jle .LFUN_001a2440_11\n\t"
+      "incb %%al\n\t"
+      "cmpb $3, %%al\n\t"
+      "movb %%al, 0x45b(%%esi)\n\t"
+      "jle .LFUN_001a2440_11\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "call *%[c1a0f10]\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "movl $1, %%ebx\n\t"
+      "call *%[c1a0f10]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_001a2440_10:\n\t"
+      "movb $0, 0x45b(%%esi)\n\t"
+      ".LFUN_001a2440_11:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_001a2440_jt:\n\t"
+      ".long .LFUN_001a2440_1\n\t"
+      ".long .LFUN_001a2440_1\n\t"
+      ".long .LFUN_001a2440_2\n\t"
+      ".long .LFUN_001a2440_2\n\t"
+      ".long .LFUN_001a2440_2\n\t"
+      ".long .LFUN_001a2440_2\n\t"
+      ".text\n\t"
+      :
+      : [get] "m"(b1a2440_get), [tag] "m"(b1a2440_tag), [elem] "m"(b1a2440_elem), [c1a0f10] "m"(b1a2440_c1a0f10)
+      : "memory");
 }
+#else
+#error "FUN_001a2440: clang naked draft required"
+#endif
+
 
 /* FUN_001a25e0 (0x1a25e0) — XBE naked draft (batch 54). */
 #if defined(__clang__)
