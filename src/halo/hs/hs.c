@@ -64,7 +64,7 @@ void FUN_000c0cd0(int16_t function_index, int thread_datum, char init)
   result =
     (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
   if (result != NULL) {
-    FUN_00057d00(result[0], result[1]);
+    FUN_00057d00(result[0], result[1], (int16_t)result[2]);
     hs_return(thread_datum, 0);
   }
 }

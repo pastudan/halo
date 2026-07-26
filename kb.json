@@ -32837,7 +32837,8 @@
         },
         {
           "addr": "0x53c50",
-          "decl": "void FUN_00053c50(void);"
+          "decl": "void FUN_00053c50(void);",
+          "ported": false
         },
         {
           "addr": "0x53da0",
@@ -32861,7 +32862,8 @@
         },
         {
           "addr": "0x53f40",
-          "decl": "void FUN_00053f40(void);"
+          "decl": "short FUN_00053f40(float *weights, short stride, short count, short weight_offset, int *bitvector);",
+          "ported": false
         },
         {
           "addr": "0x54020",
@@ -32880,11 +32882,13 @@
         },
         {
           "addr": "0x564b0",
-          "decl": "void FUN_000564b0(int a0, int a1);"
+          "decl": "void FUN_000564b0(int encounter_handle, int team_index);",
+          "ported": false
         },
         {
           "addr": "0x565c0",
-          "decl": "void FUN_000565c0(int a0, int a1, int a2);"
+          "decl": "void FUN_000565c0(int encounter_handle, int team_index, int side_name);",
+          "ported": false
         },
         {
           "addr": "0x566a0",
@@ -32998,7 +33002,8 @@
         },
         {
           "addr": "0x57380",
-          "decl": "short FUN_00057380(int value);"
+          "decl": "short FUN_00057380(int unit_handle);",
+          "ported": false
         },
         {
           "addr": "0x575d0",
@@ -33057,7 +33062,8 @@
         },
         {
           "addr": "0x57d00",
-          "decl": "void FUN_00057d00(int a, int b);"
+          "decl": "void FUN_00057d00(int unit_handle, int encounter_index, int16_t profile_index);",
+          "ported": false
         },
         {
           "addr": "0x57ef0",
@@ -33192,11 +33198,13 @@
         },
         {
           "addr": "0x58af0",
-          "decl": "void FUN_00058af0(void);"
+          "decl": "void FUN_00058af0(int actor_handle, int vehicle_handle, void *seat_list, char require_pilot);",
+          "ported": false
         },
         {
           "addr": "0x58c40",
-          "decl": "void FUN_00058c40(int a0, int a1, int a2);"
+          "decl": "void FUN_00058c40(int encounter_handle, int actor_handle, int seat_list);",
+          "ported": false
         },
         {
           "addr": "0x58fa0",
@@ -33210,7 +33218,8 @@
         },
         {
           "addr": "0x58fd0",
-          "decl": "void FUN_00058fd0(int encounter_handle, char flag, int bit_vector_size, int pvs, char *out_cluster_bv);"
+          "decl": "void FUN_00058fd0(int encounter_handle, char update_actor_visibility, int cluster_count, int pvs, char *out_cluster_bv);",
+          "ported": false
         },
         {
           "addr": "0x59480",
@@ -33289,7 +33298,8 @@
         },
         {
           "addr": "0x59dd0",
-          "decl": "void encounter_determine_pursuit_availability(void);"
+          "decl": "void encounter_determine_pursuit_availability(int encounter_handle, int actor_handle, int16_t *mode, char flag, char *out_guard, char *out_active, char *out_limit_a, char *out_limit_b, char *out_nearby, char *out_has_target, char *out_summary);",
+          "ported": false
         },
         {
           "addr": "0x5a050",
@@ -33385,11 +33395,13 @@
         },
         {
           "addr": "0x5b370",
-          "decl": "void encounter_verify_firing_position_owner_actor_indices(int encounter_handle);"
+          "decl": "void encounter_verify_firing_position_owner_actor_indices(int encounter_handle);",
+          "ported": false
         },
         {
           "addr": "0x5b4b0",
-          "decl": "void encounter_build_firing_position_owner_actor_indices(int encounter_handle, int *firing_position_owner_actor_indices);"
+          "decl": "void encounter_build_firing_position_owner_actor_indices(int encounter_handle, int *firing_position_owner_actor_indices);",
+          "ported": false
         },
         {
           "addr": "0x5b5e0",
@@ -33403,7 +33415,8 @@
         },
         {
           "addr": "0x5b790",
-          "decl": "bool FUN_0005B790(int encounter_handle, int platoon_index, int flag);"
+          "decl": "char FUN_0005B790(int encounter_handle, int16_t squad_index, int flag);",
+          "ported": false
         },
         {
           "addr": "0x5ba70",
@@ -33417,19 +33430,23 @@
         },
         {
           "addr": "0x5bad0",
-          "decl": "void encounter_post_combat_select_random_behavior(void);"
+          "decl": "int16_t encounter_post_combat_select_random_behavior(void *samples, int *out);",
+          "ported": false
         },
         {
           "addr": "0x5bbe0",
-          "decl": "void FUN_0005bbe0(int encounter_handle);"
+          "decl": "void FUN_0005bbe0(int encounter_handle);",
+          "ported": false
         },
         {
           "addr": "0x5c3a0",
-          "decl": "bool encounter_get_actor_starting_location(int platoon_index, int delay, int flag, int encounter_handle /* @<ebx> */);"
+          "decl": "char encounter_get_actor_starting_location(int16_t profile_index, int delay, int flag, int encounter_handle);",
+          "ported": false
         },
         {
           "addr": "0x5c510",
-          "decl": "void encounter_spawn_actor(int profile_index, int squad_index);"
+          "decl": "char encounter_spawn_actor(int encounter_handle, int16_t squad_index);",
+          "ported": false
         },
         {
           "addr": "0x5c630",
@@ -33438,7 +33455,8 @@
         },
         {
           "addr": "0x5c680",
-          "decl": "void FUN_0005c680(int encounter_handle);"
+          "decl": "void FUN_0005c680(int encounter_handle);",
+          "ported": false
         },
         {
           "addr": "0x5c940",
@@ -33447,7 +33465,8 @@
         },
         {
           "addr": "0x5ca80",
-          "decl": "void FUN_0005ca80(int encounter_handle);"
+          "decl": "void FUN_0005ca80(int encounter_handle);",
+          "ported": false
         },
         {
           "addr": "0x5d200",

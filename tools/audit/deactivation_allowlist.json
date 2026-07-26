@@ -5493,5 +5493,138 @@
     "object": "encounters.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"
+  },
+  {
+    "addr": "0x53c50",
+    "name": "FUN_00053c50",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x53f40",
+    "name": "FUN_00053f40",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x564b0",
+    "name": "FUN_000564b0",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x565c0",
+    "name": "FUN_000565c0",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x57380",
+    "name": "FUN_00057380",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x57d00",
+    "name": "FUN_00057d00",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x58af0",
+    "name": "FUN_00058af0",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x58c40",
+    "name": "FUN_00058c40",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x58fd0",
+    "name": "FUN_00058fd0",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x59dd0",
+    "name": "encounter_determine_pursuit_availability",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x5b370",
+    "name": "encounter_verify_firing_position_owner_actor_indices",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x5b4b0",
+    "name": "encounter_build_firing_position_owner_actor_indices",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x5b790",
+    "name": "FUN_0005B790",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x5bad0",
+    "name": "encounter_post_combat_select_random_behavior",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x5bbe0",
+    "name": "FUN_0005bbe0",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x5c3a0",
+    "name": "encounter_get_actor_starting_location",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x5c510",
+    "name": "encounter_spawn_actor",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x5c680",
+    "name": "FUN_0005c680",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x5ca80",
+    "name": "FUN_0005ca80",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]
