@@ -32333,27 +32333,33 @@
         },
         {
           "addr": "0x96d70",
-          "decl": "void FUN_00096d70(void);"
+          "decl": "void FUN_00096d70(void);",
+          "ported": false
         },
         {
           "addr": "0x96f20",
-          "decl": "int FUN_00096f20(int a0, float a1);"
+          "decl": "int FUN_00096f20(int a0, float a1);",
+          "ported": false
         },
         {
           "addr": "0x97040",
-          "decl": "void FUN_00097040(int a0, float a1);"
+          "decl": "void FUN_00097040(int a0, float a1);",
+          "ported": false
         },
         {
           "addr": "0x97080",
-          "decl": "void FUN_00097080(int object, void *ctrl_block);"
+          "decl": "void FUN_00097080(int object, void *ctrl_block);",
+          "ported": false
         },
         {
           "addr": "0x97220",
-          "decl": "int FUN_00097220(int a0, float a1);"
+          "decl": "int FUN_00097220(int a0, float a1);",
+          "ported": false
         },
         {
           "addr": "0x97260",
-          "decl": "void FUN_00097260(int a0, float a1);"
+          "decl": "void FUN_00097260(int a0, float a1);",
+          "ported": false
         }
       ],
       "name": "edit_text.obj",
