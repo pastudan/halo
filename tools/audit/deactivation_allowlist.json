@@ -17253,5 +17253,12 @@
     "object": "random_math.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x106960",
+    "name": "convex_polygon3d_clip_to_plane",
+    "object": "geometry.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
