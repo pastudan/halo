@@ -34789,7 +34789,7 @@
         {
           "addr": "0x4a220",
           "decl": "void ai_debug_speak(int a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x4a290",
