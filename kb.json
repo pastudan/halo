@@ -18908,7 +18908,7 @@
         {
           "addr": "0xbe660",
           "decl": "void FUN_000be660(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbe6a0",
@@ -18948,7 +18948,7 @@
         {
           "addr": "0xbe860",
           "decl": "void FUN_000be860(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbe8a0",
@@ -18963,7 +18963,7 @@
         {
           "addr": "0xbe930",
           "decl": "void FUN_000be930(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbe970",
@@ -18973,12 +18973,12 @@
         {
           "addr": "0xbe990",
           "decl": "void FUN_000be990(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbe9d0",
           "decl": "void FUN_000be9d0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbea10",
@@ -18988,7 +18988,7 @@
         {
           "addr": "0xbea50",
           "decl": "void FUN_000bea50(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbea90",
@@ -19083,7 +19083,7 @@
         {
           "addr": "0xbef00",
           "decl": "void FUN_000bef00(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbef40",
@@ -19283,7 +19283,7 @@
         {
           "addr": "0xbf9f0",
           "decl": "void FUN_000bf9f0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbfa30",
@@ -19393,7 +19393,7 @@
         {
           "addr": "0xbfeb0",
           "decl": "void FUN_000bfeb0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbfef0",
@@ -19413,7 +19413,7 @@
         {
           "addr": "0xbffb0",
           "decl": "void FUN_000bffb0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbfff0",
