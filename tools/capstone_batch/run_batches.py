@@ -364,7 +364,7 @@ def main() -> int:
     ap.add_argument(
         "--wave-weaks",
         action="store_true",
-        help="re-port symbols already in compare_xbe_pe that still score <100%",
+        help="re-port symbols already in compare_xbe_pe that still score <100%%",
     )
     ap.add_argument("--build", action="store_true")
     ap.add_argument("--register", action="store_true")
