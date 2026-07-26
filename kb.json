@@ -4676,7 +4676,7 @@
         },
         {
           "addr": "0x7c8f0",
-          "decl": "void bitmap_delete(void *);",
+          "decl": "*    bitmap_delete (0x7c8f0).\n *  - Clears global_screenshot_count to 0 at exit.\n */\nvoid screenshot_render(void *a1);",
           "ported": true
         },
         {
@@ -4980,7 +4980,7 @@
         },
         {
           "addr": "0x1bc6b0",
-          "decl": "bool cache_files_precache_in_progress(void);",
+          "decl": "*    if cache_files_precache_in_progress (0x1bc6b0) returns true, the\n *    loop calls 0x1d0362(1) (stdcall sleep/yield) each iteration.\n *  - After the wait (or if throttle was skipped), stores a \"frame end\"\n *    snapshot (qword_325678 + 1) into unk_time_globals.unk_32\n *    (0x46da00/0x46da04).\n *  - Computes frames elapsed since last vblank target as a signed int64\n *    (frame_end - unk_8), clamped to [0, 0x7fff] \u2192 int16_t frames_delta.\n *    Captures synced = (0x46dd96 == 0x46dd98) at frame-end snapshot time.\n *  - Appends a debug timing string to the buffer at 0x46ddfc using\n *    csstrlen (0x8df60, called twice due to MSVC pre-push interleaving)\n *    and snprintf (0x1d9179). Format: \"%6I64d(targ%6I64d %s%2d)\" with\n *    entry flip count, target (unk_8), label, and elapsed ticks.\n *    Label is \"THROTTLE\" if we waited, \"SYNCED  \" if on-time, else\n *    \"LAPSED  \".\n *  - Writes 0x46dd9a (frame-pacing active flag): 1 iff 0x46dd96 > 0 &&\n *    frames_delta == 0, else 0.\n *  - Calls 0x8f880(frames_delta, synced, debug_buf) to store per-frame\n *    profile counters.\n */\nvoid main_rasterizer_throttle(void);",
           "ported": true
         },
         {
@@ -8346,7 +8346,7 @@
         },
         {
           "addr": "0xa7780",
-          "decl": "void game_initialize_for_new_map(void);",
+          "decl": "* game_initialize_for_new_map (0xa7780), error_occurred (0x8f600),\n * create_local_players (0x1000d0), game_time_start (0xb5f40),\n * game_initial_pulse (0xa73c0).\n *  - On game_load failure: error(0, \"game_load() failed.\").\n *  - On error_occurred: error(0, \"main_new_map() failed.\").\n *  - Clears many main_globals flags after game_initial_pulse.\n *  - Copies 0x46da3f to 0x46da3e before clearing 0x46da3f.\n *  - Sets word at 0x46da40 to 0xffff (-1).\n *  - If byte at 0x46da54 is set, calls 0x1bfee0 (cache file precache).\n *  - Calls ui_widgets_disable_pause_game(0x1e) at exit.\n */\nvoid main_new_map(game_options_t *game_options);",
           "ported": true
         },
         {
@@ -10490,7 +10490,7 @@
         },
         {
           "addr": "0xb5d00",
-          "decl": "void game_time_set_speed(float);",
+          "decl": "*    the saved speed via game_time_set_speed(saved_speed), then zeroes both\n *    globals.\n *  - Float constant 0x3d088889 = ~0.0333f (1/30 sec, one game tick at 30 Hz).\n *  - Float constant 0x3f800000 = 1.0f.\n *  - FSTP/PUSH round-trip: saved speed is stored as float (4 bytes) on the\n *    stack [EBP-4] and reloaded into EAX before being pushed as a raw dword.\n */\nvoid main_skip_private(void);",
           "ported": true
         },
         {
@@ -14261,7 +14261,7 @@
         },
         {
           "addr": "0x100090",
-          "decl": "int __cdecl sort_desired_local_player_controllers(const void *a1, const void *a2);",
+          "decl": "int __cdecl sort_desired_local_player_controllers(const void *a1,\n                                                  const void *a2);",
           "ported": true
         },
         {
@@ -14432,7 +14432,7 @@
         },
         {
           "addr": "0x100910",
-          "decl": "void compute_window_bounds(int player_index, int num_players, viewport_bounds_t *a3, viewport_bounds_t *a4);",
+          "decl": "void compute_window_bounds(int player_index, int num_players,\n                           viewport_bounds_t *full_bounds,\n                           viewport_bounds_t *split_bounds);",
           "ported": true
         },
         {
@@ -14577,7 +14577,7 @@
         },
         {
           "addr": "0x1029a0",
-          "decl": "void halt_and_catch_fire(void);",
+          "decl": "* halt_and_catch_fire (0x1029a0) \u2014 fatal-error \"bluescreen\" renderer.\n * Entered after an unrecoverable engine fault. Guards against re-entrant\n * invocation with an INT3 breakpoint, then silences rumble on every\n * connected gamepad and resolves the interface (or fallback system) font.\n * Loops forever: rebuilds a throwaway camera/frustum from the default\n * camera globals, mirrors it into the shared render camera, begins the\n * rasterizer window, draws the build version string and the last\n * recorded error message, then presents the frame. Never returns.\n */\nvoid halt_and_catch_fire(void);",
           "ported": true
         },
         {
@@ -14608,7 +14608,7 @@
         },
         {
           "addr": "0x103530",
-          "decl": "void FUN_00103530(int base, char (*visit)(uint32_t, int, uint32_t *, uint32_t), uint32_t visit_arg, uint32_t mark, int node_index);",
+          "decl": "void FUN_00103530(int base, char (*visit)(uint32_t, int, uint32_t *, uint32_t),\n                  uint32_t visit_arg, uint32_t mark, int node_index);",
           "ported": true,
           "source_path": "src/halo/main/main.c"
         },
@@ -26736,7 +26736,7 @@
         },
         {
           "addr": "0x82940",
-          "decl": "void rewind_endpoint_set(int endpoint_set);",
+          "decl": "void rewind_endpoint_set(void *a0);",
           "ported": true
         },
         {
@@ -27654,7 +27654,7 @@
         },
         {
           "addr": "0xf0a30",
-          "decl": "void ui_widget_game_data_function_invoke(void *widget, unsigned short game_data_input_reference_function);",
+          "decl": "void ui_widget_game_data_function_invoke(\n  void *widget, unsigned __int16 game_data_input_reference_function);",
           "ported": true
         },
         {
@@ -27684,7 +27684,7 @@
         },
         {
           "addr": "0xf0ea0",
-          "decl": "void ui_widget_game_data_build_version(int a2);",
+          "decl": "void ui_widget_game_data_build_version(int widget);",
           "ported": true
         },
         {

@@ -1776,54 +1776,19 @@ int add_endpoint_to_set(int endpoint __attribute__((unused)), void *set __attrib
 #endif
 
 
-/* rewind_endpoint_set (0x82940) — XBE naked draft (batch 276). */
-#if defined(__clang__)
-static void (*const b82940_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b82940_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void rewind_endpoint_set(int endpoint_set __attribute__((unused)))
+/* rewind_endpoint_set (0x82940) — readable C lift. */
+void rewind_endpoint_set(void *a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lrewind_endpoint_set_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x26d\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x266450\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrewind_endpoint_set_1:\n\t"
-      "movb 0x335090, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrewind_endpoint_set_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x26e\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x265fe4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrewind_endpoint_set_2:\n\t"
-      "movl $0, 0x110(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b82940_assert), [exitfn] "m"(b82940_exitfn)
-      : "memory");
+  if (a0 == NULL) {
+    display_assert((const char *)0x266450, (const char *)0x266458, 0x26d, 1);
+    system_exit(-1);
+  }
+  if (*(uint8_t *)0x335090 == 0) {
+    display_assert((const char *)0x265fe4, (const char *)0x266458, 0x26e, 1);
+    system_exit(-1);
+  }
+  *(uint32_t *)((char *)a0 + 0x110) = 0;
 }
-#else
-#error "rewind_endpoint_set: clang naked draft required"
-#endif
-
 
 /* FUN_000829b0 (0x829b0) — XBE naked draft (batch 266). */
 #if defined(__clang__)
