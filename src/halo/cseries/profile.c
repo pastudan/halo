@@ -518,39 +518,122 @@ void profile_lapsed_msec(void)
   (void)0;
 }
 
-/* 0x8f8e0 */
+/* find_profile_section (0x8f8e0) — XBE naked draft (batch 252). */
+#if defined(__clang__)
+static void (*const b8f8e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b8f8e0_exitfn)(int) = system_exit;
+static void *(*const b8f8e0_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void find_profile_section(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* cmp esi, ebx -> jne 0x8f90e */
-  display_assert((char *)0x002684a4, (char *)0x002683fc, 559, 0);
-  system_exit(0);
-  /* relift: cmp byte ptr [esi + 8], (char)ebx -> jne 0x8f933 */
-  display_assert((char *)0x00268494, (char *)0x002683fc, 560, 0);
-  system_exit(0);
-  /* cmp eax, -1 -> je 0x8f97b */
-  /* cmp eax, ebx -> jl 0x8f957 */
-  /* cmp eax, ecx -> jge 0x8f957 */
-  /* relift: cmp dword ptr [eax*4 + 0x3361b4], esi -> je 0x8fa30 */
-  display_assert((char *)0x00268458, (char *)0x002683fc, 566, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [0x3361b0], 0x100 -> jl 0x8f9a6 */
-  display_assert((char *)0x00268420, (char *)0x002683fc, 570, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)ecx, 0, 960);
-  csmemset((void *)(uintptr_t)edx, 0, 480);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpl %%ebx, %%esi\n\t"
+      "jne .Lfind_profile_section_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x22f\n\t"
+      "pushl $0x2683fc\n\t"
+      "pushl $0x2684a4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lfind_profile_section_1:\n\t"
+      "cmpb %%bl, 0x8(%%esi)\n\t"
+      "jne .Lfind_profile_section_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x230\n\t"
+      "pushl $0x2683fc\n\t"
+      "pushl $0x268494\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lfind_profile_section_2:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lfind_profile_section_4\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "jl .Lfind_profile_section_3\n\t"
+      "movswl 0x3361b0, %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jge .Lfind_profile_section_3\n\t"
+      "cmpl %%esi, 0x3361b4(,%%eax,4)\n\t"
+      "je .Lfind_profile_section_6\n\t"
+      ".Lfind_profile_section_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x236\n\t"
+      "pushl $0x2683fc\n\t"
+      "pushl $0x268458\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lfind_profile_section_4:\n\t"
+      "cmpw $0x100, 0x3361b0\n\t"
+      "jl .Lfind_profile_section_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x23a\n\t"
+      "pushl $0x2683fc\n\t"
+      "pushl $0x268420\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lfind_profile_section_5:\n\t"
+      "movswl 0x3361b0, %%edx\n\t"
+      "movl %%edx, 0x4(%%esi)\n\t"
+      "incw 0x3361b0\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "pushl $0x3c0\n\t"
+      "leal 0x208(%%esi), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%esi, 0x3361b4(,%%eax,4)\n\t"
+      "call *%[memset]\n\t"
+      "pushl $0x1e0\n\t"
+      "leal 0x28(%%esi), %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[memset]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movl %%ebx, 0x18(%%esi)\n\t"
+      "movl %%ebx, 0x20(%%esi)\n\t"
+      "movl %%ebx, 0x24(%%esi)\n\t"
+      "movw $0xffff, 0xa(%%esi)\n\t"
+      "movl %%ebx, 0x5c8(%%esi)\n\t"
+      "movl %%ebx, 0x5d0(%%esi)\n\t"
+      "movl %%ebx, 0x5d4(%%esi)\n\t"
+      "movl %%ebx, 0x5cc(%%esi)\n\t"
+      "movl %%ebx, 0x5e0(%%esi)\n\t"
+      "movl %%ebx, 0x5e4(%%esi)\n\t"
+      "movl %%ebx, 0x5d8(%%esi)\n\t"
+      "movl %%ebx, 0x5f0(%%esi)\n\t"
+      "movl %%ebx, 0x5f4(%%esi)\n\t"
+      "movl %%ebx, 0x5e8(%%esi)\n\t"
+      ".Lfind_profile_section_6:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b8f8e0_assert), [exitfn] "m"(b8f8e0_exitfn), [memset] "m"(b8f8e0_memset)
+      : "memory");
 }
+#else
+#error "find_profile_section: clang naked draft required"
+#endif
+
 
 /* 0x8fb60 */
 void FUN_0008fb60(void)
@@ -665,33 +748,151 @@ void FUN_00090180(void)
   (void)0;
 }
 
-/* 0x901d0 */
+/* compare_profile_sections (0x901d0) — XBE naked draft (batch 249). */
+#if defined(__clang__)
+static void (*const b901d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b901d0_exitfn)(int) = system_exit;
+static int (*const b901d0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
+
+__attribute__((naked, noinline))
 void compare_profile_sections(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* test (char)ebx, (char)ebx -> je 0x90251 */
-  /* test (char)ebx, (char)ebx -> je 0x901fe */
-  /* test dl, dl -> je 0x902c9 */
-  display_assert((char *)0x00255ee8, (char *)0x002683fc, 844, 0);
-  system_exit(0);
-  /* cmp eax, ecx -> jl 0x902c9 */
-  /* cmp edx, esi -> jbe 0x90258 */
-  /* cmp eax, ecx -> jg 0x90262 */
-  /* cmp edx, esi -> jb 0x902c9 */
-  /* test (char)eax, 0x41 -> jne 0x902bc */
-  csstrcmp((char *)(uintptr_t)edx, (char *)(uintptr_t)ecx);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "movb 0x8(%%eax), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "je .Lcompare_profile_sections_1\n\t"
+      "movl (%%ecx), %%esi\n\t"
+      "movb 0x8(%%esi), %%bl\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lcompare_profile_sections_4\n\t"
+      ".Lcompare_profile_sections_1:\n\t"
+      "movl (%%ecx), %%ecx\n\t"
+      "movb 0x8(%%ecx), %%bl\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lcompare_profile_sections_2\n\t"
+      "testb %%dl, %%dl\n\t"
+      "je .Lcompare_profile_sections_13\n\t"
+      ".Lcompare_profile_sections_2:\n\t"
+      "movswl 0x3365b8, %%edx\n\t"
+      "subl $0, %%edx\n\t"
+      "je .Lcompare_profile_sections_14\n\t"
+      "decl %%edx\n\t"
+      "je .Lcompare_profile_sections_7\n\t"
+      "decl %%edx\n\t"
+      "je .Lcompare_profile_sections_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x34c\n\t"
+      "pushl $0x2683fc\n\t"
+      "pushl $0x255ee8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcompare_profile_sections_3:\n\t"
+      "movl 0x20(%%eax), %%edx\n\t"
+      "movl 0x20(%%ecx), %%esi\n\t"
+      "movl 0x24(%%eax), %%eax\n\t"
+      "movl 0x24(%%ecx), %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lcompare_profile_sections_13\n\t"
+      "jg .Lcompare_profile_sections_4\n\t"
+      "cmpl %%esi, %%edx\n\t"
+      "jbe .Lcompare_profile_sections_5\n\t"
+      ".Lcompare_profile_sections_4:\n\t"
+      "popl %%esi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcompare_profile_sections_5:\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jg .Lcompare_profile_sections_6\n\t"
+      "jl .Lcompare_profile_sections_13\n\t"
+      "cmpl %%esi, %%edx\n\t"
+      "jb .Lcompare_profile_sections_13\n\t"
+      ".Lcompare_profile_sections_6:\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcompare_profile_sections_7:\n\t"
+      "movl 0x5c8(%%eax), %%edx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "movl %%edx, 0x8(%%ebp)\n\t"
+      "jne .Lcompare_profile_sections_8\n\t"
+      "fldl 0x2602c0\n\t"
+      "jmp .Lcompare_profile_sections_9\n\t"
+      ".Lcompare_profile_sections_8:\n\t"
+      "fildl 0x5e0(%%eax)\n\t"
+      "fidivl 0x8(%%ebp)\n\t"
+      ".Lcompare_profile_sections_9:\n\t"
+      "movl 0x5c8(%%ecx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "jne .Lcompare_profile_sections_10\n\t"
+      "fldl 0x2602c0\n\t"
+      "jmp .Lcompare_profile_sections_11\n\t"
+      ".Lcompare_profile_sections_10:\n\t"
+      "fildl 0x5e0(%%ecx)\n\t"
+      "fidivl 0x8(%%ebp)\n\t"
+      ".Lcompare_profile_sections_11:\n\t"
+      "fld %%st(1)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lcompare_profile_sections_12\n\t"
+      "fstp %%st(0)\n\t"
+      "popl %%esi\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0xffffffff, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcompare_profile_sections_12:\n\t"
+      "fxch %%st(1)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lcompare_profile_sections_6\n\t"
+      ".Lcompare_profile_sections_13:\n\t"
+      "popl %%esi\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcompare_profile_sections_14:\n\t"
+      "movl (%%ecx), %%ecx\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8dcb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b901d0_assert), [exitfn] "m"(b901d0_exitfn), [c8dcb0] "m"(b901d0_c8dcb0)
+      : "memory");
 }
+#else
+#error "compare_profile_sections: clang naked draft required"
+#endif
+
 
 /* profile_dump (0x902f0) — XBE naked draft (batch 243). */
 #if defined(__clang__)
@@ -2053,19 +2254,131 @@ void FUN_00091c70(void)
   (void)esi;
 }
 
-/* 0x91cf0 */
+/* FUN_00091cf0 (0x91cf0) — XBE naked draft (batch 251). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00091cf0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "jbe .LFUN_00091cf0_5\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "nop\n\t"
+      ".LFUN_00091cf0_1:\n\t"
+      "leal 0x2(%%eax), %%esi\n\t"
+      "cmpl %%edi, %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "ja .LFUN_00091cf0_4\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00091cf0_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%ebx), %%ax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw (%%esi), %%cx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *0xc(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00091cf0_3\n\t"
+      "movl %%esi, %%ebx\n\t"
+      ".LFUN_00091cf0_3:\n\t"
+      "addl $2, %%esi\n\t"
+      "cmpl %%edi, %%esi\n\t"
+      "jbe .LFUN_00091cf0_2\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      ".LFUN_00091cf0_4:\n\t"
+      "movw (%%edi), %%dx\n\t"
+      "movw (%%ebx), %%cx\n\t"
+      "movw %%dx, (%%ebx)\n\t"
+      "movw %%cx, (%%edi)\n\t"
+      "subl $2, %%edi\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "ja .LFUN_00091cf0_1\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_00091cf0_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00091cf0: clang naked draft required"
+#endif
 
-/* 0x91d50 */
+
+/* FUN_00091d50 (0x91d50) — XBE naked draft (batch 252). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00091d50(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "jbe .LFUN_00091d50_5\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "nop\n\t"
+      ".LFUN_00091d50_1:\n\t"
+      "leal 0x4(%%eax), %%esi\n\t"
+      "cmpl %%edi, %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "ja .LFUN_00091d50_4\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00091d50_2:\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *0xc(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00091d50_3\n\t"
+      "movl %%esi, %%ebx\n\t"
+      ".LFUN_00091d50_3:\n\t"
+      "addl $4, %%esi\n\t"
+      "cmpl %%edi, %%esi\n\t"
+      "jbe .LFUN_00091d50_2\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      ".LFUN_00091d50_4:\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "movl %%edx, (%%ebx)\n\t"
+      "movl %%ecx, (%%edi)\n\t"
+      "subl $4, %%edi\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "ja .LFUN_00091d50_1\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_00091d50_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00091d50: clang naked draft required"
+#endif
+
 
 /* FUN_00091da0 (0x91da0) — XBE naked draft (batch 242). */
 #if defined(__clang__)

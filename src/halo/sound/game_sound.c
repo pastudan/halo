@@ -882,35 +882,122 @@ void game_sound_restore(void)
   (void)esi;
 }
 
-/* 0x1c7230 */
-int game_looping_sound_new(int object_index, int sound_tag_index, void *marker_name, short scale_index)
+/* game_looping_sound_new (0x1c7230) — XBE naked draft (batch 252). */
+#if defined(__clang__)
+static void (*const b1c7230_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1c7230_exitfn)(int) = system_exit;
+static short (*const b1c7230_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
+static int (*const b1c7230_c119610)(data_t *data) = data_new_at_index;
+static void *(*const b1c7230_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+int game_looping_sound_new(int object_index __attribute__((unused)), int sound_tag_index __attribute__((unused)), void *marker_name __attribute__((unused)), short scale_index __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test edi, edi -> jne 0x1c7263 */
-  display_assert((char *)0x002bc488, (char *)0x002bc464, 239, 0);
-  system_exit(0);
-  /* cmp ebx, -1 -> je 0x1c7320 */
-  /* cmp esi, -1 -> je 0x1c7290 */
-  object_get_markers_by_string_id(0, (void *)(uintptr_t)edi, (void *)(uintptr_t)eax, 0);
-  /* test (int16_t)eax, (int16_t)eax -> je 0x1c7316 */
-  data_new_at_index((void *)(uintptr_t)ecx);
-  /* cmp edi, -1 -> je 0x1c730d */
-  datum_get((void *)(uintptr_t)edx, 0);
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x6c, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "orl $0xffffffff, %%esi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lgame_looping_sound_new_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xef\n\t"
+      "pushl $0x2bc464\n\t"
+      "pushl $0x2bc488\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lgame_looping_sound_new_1:\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .Lgame_looping_sound_new_5\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lgame_looping_sound_new_2\n\t"
+      "pushl $1\n\t"
+      "leal -0x6c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[markers]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lgame_looping_sound_new_4\n\t"
+      ".Lgame_looping_sound_new_2:\n\t"
+      "movl 0x5054e4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119610]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lgame_looping_sound_new_3\n\t"
+      "movl 0x5054e4, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movw 0x14(%%ebp), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "movl %%esi, 0x10(%%eax)\n\t"
+      "movl %%ebx, 0xc(%%eax)\n\t"
+      "movw $2, 0x2(%%eax)\n\t"
+      "movl $0, 0x4(%%eax)\n\t"
+      "movw %%cx, 0x18(%%eax)\n\t"
+      "movl $0xffffffff, 0x14(%%eax)\n\t"
+      "je .Lgame_looping_sound_new_3\n\t"
+      "movw -0x6c(%%ebp), %%dx\n\t"
+      "movw %%dx, 0x1a(%%eax)\n\t"
+      "movl -0x40(%%ebp), %%edx\n\t"
+      "leal 0x1c(%%eax), %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl -0x3c(%%ebp), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl -0x38(%%ebp), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movl -0x64(%%ebp), %%ecx\n\t"
+      "addl $0x28, %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl -0x60(%%ebp), %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl -0x5c(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      ".Lgame_looping_sound_new_3:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_looping_sound_new_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_looping_sound_new_5:\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1c7230_assert), [exitfn] "m"(b1c7230_exitfn), [markers] "m"(b1c7230_markers), [c119610] "m"(b1c7230_c119610), [dget] "m"(b1c7230_dget)
+      : "memory");
 }
+#else
+#error "game_looping_sound_new: clang naked draft required"
+#endif
+
 
 /* 0x1c7500 */
 int scripted_sound_time(int a0)

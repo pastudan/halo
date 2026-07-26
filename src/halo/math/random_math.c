@@ -1111,16 +1111,68 @@ void FUN_0010c920(float *v1, float *v2, float t, float *out)
 }
 /* --- random_math.obj batch drafts (2026-07-26) --- */
 
-/* 0x10c3c0 */
+/* FUN_0010c3c0 (0x10c3c0) — XBE naked draft (batch 247). */
+#if defined(__clang__)
+static void (*const b10c3c0_c1d94f0)(void) = FUN_001d94f0;
+
+__attribute__((naked, noinline))
 void FUN_0010c3c0(void)
 {
-  int eax = 0;
-
-  /* test (char)eax, 0x41 -> jne 0x10c407 */
-  FUN_001d94f0();
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "flds (%%esi)\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "fmuls (%%edi)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcoms 0x255e94\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_0010c3c0_1\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0xbf800000, 0x8(%%ebp)\n\t"
+      "jmp .LFUN_0010c3c0_3\n\t"
+      ".LFUN_0010c3c0_1:\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_0010c3c0_2\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0x3f800000, 0x8(%%ebp)\n\t"
+      "jmp .LFUN_0010c3c0_3\n\t"
+      ".LFUN_0010c3c0_2:\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      ".LFUN_0010c3c0_3:\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "call *%[c1d94f0]\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fmuls (%%esi)\n\t"
+      "flds (%%edi)\n\t"
+      "popl %%edi\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "popl %%esi\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_0010c3c0_4\n\t"
+      "fchs\n\t"
+      ".LFUN_0010c3c0_4:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d94f0] "m"(b10c3c0_c1d94f0)
+      : "memory");
 }
+#else
+#error "FUN_0010c3c0: clang naked draft required"
+#endif
+
 
 /* FUN_0010c440 (0x10c440) — XBE naked draft (batch 88). */
 #if defined(__clang__)

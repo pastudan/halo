@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -76,6 +77,16 @@ def pe_fn_bytes(pe: pefile.PE, name: str) -> tuple[bytes, int]:
         # Keep only XBE-style single-byte align nop after RET; strip clang
         # multi-byte NOP padding (e.g. 66 2E 0F 1F 84 00 ...).
         if insns[-2].mnemonic == "ret" and insns[-1].size == 1:
+            break
+        data = data[: insns[-1].address - addr]
+    # Strip trailing identity LEA pads (clang align: lea ecx,[ecx] / lea esp,[esp]).
+    while True:
+        insns = list(md.disasm(data, addr))
+        if not insns or insns[-1].mnemonic != "lea":
+            break
+        op = insns[-1].op_str.replace(" ", "")
+        m = re.fullmatch(r"([a-z]+),\[(\1)(?:\+0x0|\+0)?\]", op)
+        if not m:
             break
         data = data[: insns[-1].address - addr]
     # Truncate after final RET (+ optional single-byte nop) only when the
@@ -2821,6 +2832,110 @@ def main() -> int:
         ("poll_endpoint_set", 0x824d0, 0x826f7),
         ("bitmap_format_to_a8r8g8b8", 0x7d0d0, 0x7d2ad),
         ("action_alert_next_position", 0x12350, 0x12652),
+        # gameplay wave 245 (2026-07-26) — Capstone weaks
+        ("bitmap_cube_map_face_extract", 0x7e7e0, 0x7ea59),
+        ("FUN_00190380", 0x190380, 0x1904fc),
+        ("FUN_00093c20", 0x93c20, 0x93e14),
+        ("FUN_00093e20", 0x93e20, 0x9401b),
+        ("FUN_00108060", 0x108060, 0x10826f),
+        ("bitmap_3d_compress_to_mipmap", 0x7c070, 0x7c270),
+        ("FUN_001c3c40", 0x1c3c40, 0x1c3e36),
+        ("FUN_000798e0", 0x798e0, 0x79ba1),
+        ("FUN_0007a1e0", 0x7a1e0, 0x7a499),
+        ("targa_export", 0x7f3a0, 0x7f56d),
+        ("rgb_color_to_hsv_color", 0x7a780, 0x7a966),
+        ("bitmap_2d_uncompress_from_mipmap", 0x7a4a0, 0x7a747),
+        # gameplay wave 246 (2026-07-26) — Capstone weaks
+        ("FUN_00079bb0", 0x79bb0, 0x79e61),
+        ("FUN_00083e20", 0x83e20, 0x83ff7),
+        ("FUN_001bef80", 0x1bef80, 0x1bf079),
+        ("FUN_001be6b0", 0x1be6b0, 0x1be7a9),
+        ("FUN_00075800", 0x75800, 0x75a1d),
+        ("FUN_00199b20", 0x199b20, 0x199d36),
+        ("FUN_001c43f0", 0x1c43f0, 0x1c45f2),
+        ("inverse_kinematics_adjust_matrices", 0x120fd0, 0x121324),
+        ("get_edge_vertex", 0x107ec0, 0x108052),
+        ("FUN_001baca0", 0x1baca0, 0x1bad9d),
+        ("get_face_vertex", 0x108270, 0x1083f1),
+        ("hsv_color_to_rgb_color", 0x7a970, 0x7ab2c),
+        # gameplay wave 247 (2026-07-26) — Capstone weaks
+        ("cache_copy_get_status", 0x1badc0, 0x1baf45),
+        ("FUN_001c3e40", 0x1c3e40, 0x1c4022),
+        ("FUN_001c4210", 0x1c4210, 0x1c43ee),
+        ("FUN_001c4030", 0x1c4030, 0x1c420a),
+        ("FUN_001bb970", 0x1bb970, 0x1bbb54),
+        ("bitmap_3d_slice_insert", 0x7e560, 0x7e7dc),
+        ("FUN_0007ea60", 0x7ea60, 0x7ecdc),
+        ("FUN_001ba2f0", 0x1ba2f0, 0x1ba5cb),
+        ("FUN_001c9e20", 0x1c9e20, 0x1ca124),
+        ("FUN_0010c3c0", 0x10c3c0, 0x10c431),
+        ("FUN_0007ba50", 0x7ba50, 0x7bca8),
+        ("FUN_001be7b0", 0x1be7b0, 0x1be920),
+        # gameplay wave 248 (2026-07-26) — Capstone weaks
+        ("bitmap_compress_to_mipmap", 0x7be60, 0x7c069),
+        ("FUN_00120710", 0x120710, 0x12078c),
+        ("FUN_000796e0", 0x796e0, 0x798d9),
+        ("FUN_00084740", 0x84740, 0x84895),
+        ("FUN_0001ada0", 0x1ada0, 0x1aeb0),
+        ("simple_cache_copy_thread", 0x1bbea0, 0x1bc272),
+        ("FUN_00107c30", 0x107c30, 0x107d3b),
+        ("FUN_001bd210", 0x1bd210, 0x1bd399),
+        ("add_endpoint_to_set", 0x82700, 0x82850),
+        ("FUN_001bc3b0", 0x1bc3b0, 0x1bc549),
+        ("FUN_001ca130", 0x1ca130, 0x1ca2a8),
+        ("FUN_001d7a59", 0x1d7a59, 0x1d7ac5),
+        # gameplay wave 249 (2026-07-26) — Capstone weaks
+        ("FUN_001c15c0", 0x1c15c0, 0x1c171d),
+        ("compare_profile_sections", 0x901d0, 0x902e4),
+        ("playlist_profile_write", 0x1c2550, 0x1c26ad),
+        ("FUN_00109a60", 0x109a60, 0x109b95),
+        ("sound_cache_request_sound", 0x1be550, 0x1be6ac),
+        ("action_alert_perform", 0x12660, 0x128b4),
+        ("FUN_001c4850", 0x1c4850, 0x1c498a),
+        ("FUN_001bafa0", 0x1bafa0, 0x1bb182),
+        ("cinematic_render", 0x93140, 0x93638),
+        ("FUN_001ccbe0", 0x1ccbe0, 0x1ccca0),
+        ("saved_game_file_find_profile_index_for_directory_path", 0x1c38d0, 0x1c3a26),
+        ("apply_angle_vector", 0x94860, 0x94961),
+        # gameplay wave 250 (2026-07-26) — Capstone weaks
+        ("FUN_000800d0", 0x800d0, 0x80207),
+        ("FUN_00111770", 0x111770, 0x111908),
+        ("FUN_0010a5e0", 0x10a5e0, 0x10a707),
+        ("FUN_00107d40", 0x107d40, 0x107da6),
+        ("FUN_001d63d5", 0x1d63d5, 0x1d63e8),
+        ("XapiMapLetterToDirectory", 0x1d7e6b, 0x1d819f),
+        ("FUN_001b9e70", 0x1b9e70, 0x1b9f9a),
+        ("animation_update_internal", 0x121c30, 0x121d5c),
+        ("FUN_00122690", 0x122690, 0x122a49),
+        ("FUN_001c00c0", 0x1c00c0, 0x1c021c),
+        ("shader_get_vertex_shader_permutation", 0x190710, 0x190810),
+        ("shader_environment_texture_animation_evaluate", 0x190a90, 0x190bd3),
+        # gameplay wave 251 (2026-07-26) — Capstone weaks
+        ("FUN_001c0ee0", 0x1c0ee0, 0x1c0f66),
+        ("FUN_00130b70", 0x130b70, 0x130d40),
+        ("FUN_001c1e20", 0x1c1e20, 0x1c1f6f),
+        ("FUN_001d7749", 0x1d7749, 0x1d77b3),
+        ("player_profile_delete", 0x1c0da0, 0x1c0ecb),
+        ("playlist_profile_get", 0x1c1fa0, 0x1c20cb),
+        ("FUN_001d7d84", 0x1d7d84, 0x1d7e6b),
+        ("FUN_000841b0", 0x841b0, 0x842f3),
+        ("FUN_00091cf0", 0x91cf0, 0x91d4a),
+        ("FUN_00083bd0", 0x83bd0, 0x83cde),
+        ("FUN_00123990", 0x123990, 0x123a99),
+        ("apply_multi_vector", 0x94970, 0x94a6a),
+        # gameplay wave 252 (2026-07-26) — Capstone weaks
+        ("bitmap_sharpen", 0x7b310, 0x7b468),
+        ("find_profile_section", 0x8f8e0, 0x8fa34),
+        ("interpolate_node_orientations", 0x120ba0, 0x120ca2),
+        ("game_looping_sound_new", 0x1c7230, 0x1c7329),
+        ("FUN_00012c30", 0x12c30, 0x12e42),
+        ("palette_find_closest_match", 0x7d300, 0x7d3f5),
+        ("saved_game_file_close", 0x1c2890, 0x1c2993),
+        ("FUN_00091d50", 0x91d50, 0x91da0),
+        ("FUN_00108c60", 0x108c60, 0x108ccd),
+        ("FUN_00093b60", 0x93b60, 0x93ba0),
+        ("FUN_00093ba0", 0x93ba0, 0x93bdd),
+        ("parse_string", 0x19be30, 0x19c05d),
     ]
 
     xbe = Xbe.from_file(args.xbe)

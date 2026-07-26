@@ -3356,26 +3356,105 @@ void sound_initialize(void **driver_out)
   }
 }
 
-float FUN_001ccbe0(int channel_index /* @<eax> */, void *source /* @<edi> */)
+/* FUN_001ccbe0 (0x1ccbe0) — XBE naked draft (batch 249). */
+#if defined(__clang__)
+static void (*const b1ccbe0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1ccbe0_exitfn)(int) = system_exit;
+static void * (*const b1ccbe0_c1cbac0)(short listener_index) = sound_listener_get;
+
+__attribute__((naked, noinline))
+float FUN_001ccbe0(int channel_index __attribute__((unused)), void *source __attribute__((unused)))
 {
-  switch (*(int16_t *)source) {
-  case 0:
-    return *(float *)0x2533c0;
-  case 1:
-    if (!*(char *)sound_listener_get((short)channel_index)) {
-      display_assert((char *)0x2c1624, "c:\\halo\\SOURCE\\sound\\sound_manager.c",
-                     0x574, 1);
-      system_exit(-1);
-    }
-    return sound_listener_distance_sq(channel_index, source);
-  case 2:
-    return sound_source_distance_sq(source);
-  default:
-    display_assert((char *)0, "c:\\halo\\SOURCE\\sound\\sound_manager.c", 0x57a, 1);
-    system_exit(-1);
-    return 0.0f;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movswl (%%edi), %%eax\n\t"
+      "subl $0, %%eax\n\t"
+      "je .LFUN_001ccbe0_5\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_001ccbe0_4\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_001ccbe0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x57a\n\t"
+      "pushl $0x2c12cc\n\t"
+      "pushl $0\n\t"
+      ".LFUN_001ccbe0_1:\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001ccbe0_2:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001ccbe0_3:\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "popl %%esi\n\t"
+      "flds 0x10(%%edi)\n\t"
+      "flds 0xc(%%edi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001ccbe0_4:\n\t"
+      "call *%[c1cbac0]\n\t"
+      "flds 0x2c(%%eax)\n\t"
+      "fsubs 0xc(%%edi)\n\t"
+      "addl $0x2c, %%eax\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs 0x10(%%edi)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fsubs 0x14(%%edi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "call *%[c1cbac0]\n\t"
+      "cmpb $0, (%%eax)\n\t"
+      "jne .LFUN_001ccbe0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x574\n\t"
+      "pushl $0x2c12cc\n\t"
+      "pushl $0x2c1624\n\t"
+      "jmp .LFUN_001ccbe0_1\n\t"
+      ".LFUN_001ccbe0_5:\n\t"
+      "flds 0x2533c0\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1ccbe0_assert), [exitfn] "m"(b1ccbe0_exitfn), [c1cbac0] "m"(b1ccbe0_c1cbac0)
+      : "memory");
 }
+#else
+#error "FUN_001ccbe0: clang naked draft required"
+#endif
+
 
 float FUN_001ccca0(int channel_index /* @<eax> */, void *source /* @<edi> */)
 {

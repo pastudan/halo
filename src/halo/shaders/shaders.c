@@ -40,17 +40,155 @@ char FUN_00190240(float *position, float *wind_out, int wind_flags, int object_h
 
 }
 
-/* 0x190380 */
+/* FUN_00190380 (0x190380) — XBE naked draft (batch 245). */
+#if defined(__clang__)
+static int *(*const b190380_gseed)(void) = get_global_random_seed_address;
+static void (*const b190380_c10b380)(unsigned int *seed, float *out) = random_seed_get_direction3d;
+static void (*const b190380_c89a20)(void) = FUN_00089a20;
+
+__attribute__((naked, noinline))
 void FUN_00190380(void)
 {
-  int eax = 0;
-
-  get_global_random_seed_address();
-  random_seed_get_direction3d((void *)(uintptr_t)eax, (float *)0);
-  FUN_00089a20();
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x38, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl $0x5057c4, %%ebx\n\t"
+      "movl $8, -0x10(%%ebp)\n\t"
+      ".LFUN_00190380_1:\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "movl $3, %%edi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00190380_2:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10b380]\n\t"
+      "addl $8, %%esp\n\t"
+      "addl $0x300, %%esi\n\t"
+      "decl %%edi\n\t"
+      "jne .LFUN_00190380_2\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "addl $0x60, %%ebx\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "jne .LFUN_00190380_1\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "movl $1, %%eax\n\t"
+      "movl $0x5057d0, -0x8(%%ebp)\n\t"
+      "movl $8, -0x1c(%%ebp)\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".LFUN_00190380_3:\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movb %%al, %%cl\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "movb %%al, %%dl\n\t"
+      "subb $2, %%cl\n\t"
+      "movl $1, -0xc(%%ebp)\n\t"
+      "andl $7, %%edx\n\t"
+      "andl $7, %%ecx\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0x38(%%ebp)\n\t"
+      "andl $7, %%eax\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "decl %%esi\n\t"
+      "movl %%esi, -0x18(%%ebp)\n\t"
+      "movl %%eax, -0x2c(%%ebp)\n\t"
+      "movzwl %%cx, %%eax\n\t"
+      "fildl -0x18(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movzwl %%dx, %%edx\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "movl %%edx, -0x30(%%ebp)\n\t"
+      "movl %%eax, -0x34(%%ebp)\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "movl $7, -0x18(%%ebp)\n\t"
+      ".LFUN_00190380_4:\n\t"
+      "fildl -0xc(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%edi\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "fmuls 0x268ed0\n\t"
+      "addl $-0xc, %%edi\n\t"
+      "movl $3, -0x14(%%ebp)\n\t"
+      "fadds -0x20(%%ebp)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      ".LFUN_00190380_5:\n\t"
+      "movl -0x24(%%ebp), %%edx\n\t"
+      "movl -0x28(%%ebp), %%eax\n\t"
+      "movl -0x2c(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl %%eax\n\t"
+      "leal (%%esi,%%ecx,1), %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%edx\n\t"
+      "movl -0x30(%%ebp), %%eax\n\t"
+      "shll $5, %%edx\n\t"
+      "addl %%esi, %%eax\n\t"
+      "addl $0x5057c4, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x34(%%ebp), %%edx\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "shll $5, %%ecx\n\t"
+      "leal (%%esi,%%edx,1), %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "addl $0x5057c4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "shll $5, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "addl $0x5057c4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c89a20]\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "addl $0x20, %%esp\n\t"
+      "addl $8, %%esi\n\t"
+      "addl $0x300, %%edi\n\t"
+      "addl $0x300, %%ebx\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "jne .LFUN_00190380_5\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "incl %%edx\n\t"
+      "addl $0xc, %%ecx\n\t"
+      "decl %%eax\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "jne .LFUN_00190380_4\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl -0x1c(%%ebp), %%ecx\n\t"
+      "movl -0x38(%%ebp), %%eax\n\t"
+      "incl %%esi\n\t"
+      "addl $0x60, %%edx\n\t"
+      "decl %%ecx\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "movl %%ecx, -0x1c(%%ebp)\n\t"
+      "jne .LFUN_00190380_3\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [gseed] "m"(b190380_gseed), [c10b380] "m"(b190380_c10b380), [c89a20] "m"(b190380_c89a20)
+      : "memory");
 }
+#else
+#error "FUN_00190380: clang naked draft required"
+#endif
+
 
 /* 0x190500 */
 void wind_initialize_for_new_map(void)
@@ -133,38 +271,139 @@ void *FUN_001906b0(void *shader, int shader_type)
   (void)ebp;
 }
 
-/* 0x190710 */
-int shader_get_vertex_shader_permutation(void *shader)
+/* shader_get_vertex_shader_permutation (0x190710) — XBE naked draft (batch 250). */
+#if defined(__clang__)
+static void (*const b190710_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b190710_exitfn)(int) = system_exit;
+static void * (*const b190710_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
+
+__attribute__((naked, noinline))
+int shader_get_vertex_shader_permutation(void *shader __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test edi, edi -> jne 0x19073b */
-  display_assert((char *)0x002a18b8, (char *)0x002b2348, 20, 0);
-  system_exit(0);
-  /* cmp edi, -1 -> je 0x190807 */
-  /* cmp eax, 5 -> ja 0x190807 */
-  FUN_001906b0((void *)(uintptr_t)edi, 0);
-  /* test (char)eax, 0x41 -> jne 0x190807 */
-  FUN_001906b0((void *)(uintptr_t)edi, 0);
-  /* cmp ecx, -1 -> je 0x190807 */
-  FUN_001906b0((void *)(uintptr_t)edi, 0);
-  FUN_001906b0((void *)(uintptr_t)edi, 0);
-  /* cmp (int16_t)esi, 1 -> jne 0x1907f6 */
-  FUN_001906b0((void *)(uintptr_t)edi, 0);
-  /* cmp (int16_t)esi, 1 -> jne 0x1907f6 */
-  FUN_001906b0((void *)(uintptr_t)edi, 0);
-  /* test (char)ecx, 8 -> jne 0x1907f6 */
-  /* relift: test byte ptr [edi], 4 -> je 0x190809 */
-  return 0;
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lshader_get_vertex_shader_permutation_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x14\n\t"
+      "pushl $0x2b2348\n\t"
+      "pushl $0x2a18b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .Lshader_get_vertex_shader_permutation_2\n\t"
+      ".Lshader_get_vertex_shader_permutation_1:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lshader_get_vertex_shader_permutation_9\n\t"
+      ".Lshader_get_vertex_shader_permutation_2:\n\t"
+      "movswl 0x24(%%edi), %%eax\n\t"
+      "decl %%eax\n\t"
+      "cmpl $5, %%eax\n\t"
+      "ja .Lshader_get_vertex_shader_permutation_9\n\t"
+      "jmp *.Lshader_get_vertex_shader_permutation_jt(,%%eax,4)\n\t"
+      ".Lshader_get_vertex_shader_permutation_3:\n\t"
+      "pushl $4\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1906b0]\n\t"
+      "flds 0x38(%%eax)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lshader_get_vertex_shader_permutation_9\n\t"
+      "movl $1, %%esi\n\t"
+      "popl %%edi\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lshader_get_vertex_shader_permutation_4:\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1906b0]\n\t"
+      "movl 0x58(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .Lshader_get_vertex_shader_permutation_9\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1906b0]\n\t"
+      "movw 0x5c(%%eax), %%si\n\t"
+      "addl $8, %%esp\n\t"
+      "incw %%si\n\t"
+      "popl %%edi\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lshader_get_vertex_shader_permutation_5:\n\t"
+      "pushl $5\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1906b0]\n\t"
+      "movw 0x2a(%%eax), %%si\n\t"
+      "addl $8, %%esp\n\t"
+      "incw %%si\n\t"
+      "cmpw $1, %%si\n\t"
+      "jne .Lshader_get_vertex_shader_permutation_8\n\t"
+      "pushl $5\n\t"
+      "jmp .Lshader_get_vertex_shader_permutation_7\n\t"
+      ".Lshader_get_vertex_shader_permutation_6:\n\t"
+      "pushl $6\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1906b0]\n\t"
+      "movw 0x2a(%%eax), %%si\n\t"
+      "addl $8, %%esp\n\t"
+      "incw %%si\n\t"
+      "cmpw $1, %%si\n\t"
+      "jne .Lshader_get_vertex_shader_permutation_8\n\t"
+      "pushl $6\n\t"
+      ".Lshader_get_vertex_shader_permutation_7:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1906b0]\n\t"
+      "movb 0x29(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $8, %%cl\n\t"
+      "jne .Lshader_get_vertex_shader_permutation_8\n\t"
+      "xorl %%esi, %%esi\n\t"
+      ".Lshader_get_vertex_shader_permutation_8:\n\t"
+      "testb $4, (%%edi)\n\t"
+      "je .Lshader_get_vertex_shader_permutation_10\n\t"
+      "movl $5, %%esi\n\t"
+      "popl %%edi\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lshader_get_vertex_shader_permutation_9:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      ".Lshader_get_vertex_shader_permutation_10:\n\t"
+      "popl %%edi\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lshader_get_vertex_shader_permutation_jt:\n\t"
+      ".long .Lshader_get_vertex_shader_permutation_4\n\t"
+      ".long .Lshader_get_vertex_shader_permutation_9\n\t"
+      ".long .Lshader_get_vertex_shader_permutation_9\n\t"
+      ".long .Lshader_get_vertex_shader_permutation_3\n\t"
+      ".long .Lshader_get_vertex_shader_permutation_5\n\t"
+      ".long .Lshader_get_vertex_shader_permutation_6\n\t"
+      ".text\n\t"
+      :
+      : [assert] "m"(b190710_assert), [exitfn] "m"(b190710_exitfn), [c1906b0] "m"(b190710_c1906b0)
+      : "memory");
 }
+#else
+#error "shader_get_vertex_shader_permutation: clang naked draft required"
+#endif
+
 
 /* 0x190830 */
 void shader_is_mirror(void)
@@ -270,37 +509,126 @@ char shader_type_is_valid_for_modifier(int16_t shader_type)
   return 0;
 }
 
-/* 0x190a90 */
+/* shader_environment_texture_animation_evaluate (0x190a90) — XBE naked draft (batch 250). */
+#if defined(__clang__)
+static void (*const b190a90_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b190a90_exitfn)(int) = system_exit;
+static void * (*const b190a90_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
+static float (*const b190a90_c10a5e0)(int16_t function_type, float input) = FUN_0010a5e0;
+
+__attribute__((naked, noinline))
 void shader_environment_texture_animation_evaluate(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  display_assert((char *)0x002a18b8, (char *)0x002b2348, 345, 0);
-  system_exit(0);
-  /* test ebx, ebx -> jne 0x190ae4 */
-  display_assert((char *)0x002b23c0, (char *)0x002b2348, 346, 0);
-  system_exit(0);
-  /* test edi, edi -> jne 0x190b0b */
-  display_assert((char *)0x002b23b4, (char *)0x002b2348, 347, 0);
-  system_exit(0);
-  FUN_001906b0((void *)(uintptr_t)esi, 0);
-  display_assert((char *)0x002b2390, (char *)0x002b2348, 352, 0);
-  system_exit(0);
-  display_assert((char *)0x002b236c, (char *)0x002b2348, 353, 0);
-  system_exit(0);
-  FUN_0010a5e0(eax, 0.0f);
-  FUN_0010a5e0(ecx, 0.0f);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lshader_environment_texture_animation_evaluate_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x159\n\t"
+      "pushl $0x2b2348\n\t"
+      "pushl $0x2a18b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lshader_environment_texture_animation_evaluate_1:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lshader_environment_texture_animation_evaluate_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x15a\n\t"
+      "pushl $0x2b2348\n\t"
+      "pushl $0x2b23c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lshader_environment_texture_animation_evaluate_2:\n\t"
+      "movl 0x14(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lshader_environment_texture_animation_evaluate_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x15b\n\t"
+      "pushl $0x2b2348\n\t"
+      "pushl $0x2b23b4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lshader_environment_texture_animation_evaluate_3:\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1906b0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "flds 0x154(%%esi)\n\t"
+      "addl $0x6c, %%esi\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lshader_environment_texture_animation_evaluate_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x160\n\t"
+      "pushl $0x2b2348\n\t"
+      "pushl $0x2b2390\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lshader_environment_texture_animation_evaluate_4:\n\t"
+      "flds 0xf4(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lshader_environment_texture_animation_evaluate_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x161\n\t"
+      "pushl $0x2b2348\n\t"
+      "pushl $0x2b236c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lshader_environment_texture_animation_evaluate_5:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "fdivs 0xe8(%%esi)\n\t"
+      "movw 0xe4(%%esi), %%ax\n\t"
+      "pushl %%ecx\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10a5e0]\n\t"
+      "fmuls 0xec(%%esi)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "addl $4, %%esp\n\t"
+      "fstps (%%ebx)\n\t"
+      "movw 0xf0(%%esi), %%cx\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fdivs 0xf4(%%esi)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c10a5e0]\n\t"
+      "fmuls 0xf8(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstps (%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b190a90_assert), [exitfn] "m"(b190a90_exitfn), [c1906b0] "m"(b190a90_c1906b0), [c10a5e0] "m"(b190a90_c10a5e0)
+      : "memory");
 }
+#else
+#error "shader_environment_texture_animation_evaluate: clang naked draft required"
+#endif
+
 
 /* 0x190be0 */
 void numeric_countdown_timer_set(int a0, int a1)

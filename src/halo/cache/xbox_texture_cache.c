@@ -446,11 +446,91 @@ void FUN_001bed90(void)
   (void)esi;
 }
 
-/* 0x1bef80 */
+/* FUN_001bef80 (0x1bef80) — XBE naked draft (batch 246). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_001bef80(void)
 {
-  /* relift: no calls detected — manual review */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x24, %%esp\n\t"
+      "flds (%%edx)\n\t"
+      "fmuls 0x2a41b8\n\t"
+      "flds 0x4(%%edx)\n\t"
+      "movl 0x31fc38, %%edx\n\t"
+      "fmuls 0x2a41b4\n\t"
+      "fsubrs 0x2533c8\n\t"
+      "flds 0x5066b4\n\t"
+      "fadds (%%edx)\n\t"
+      "fstps (%%eax)\n\t"
+      "flds 0x5066b8\n\t"
+      "fadds 0x4(%%edx)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "flds 0x5066bc\n\t"
+      "fadds 0x8(%%edx)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "flds 0x506690\n\t"
+      "fsubs 0x506684\n\t"
+      "flds 0x506694\n\t"
+      "fsubs 0x506688\n\t"
+      "flds 0x506698\n\t"
+      "fsubs 0x50668c\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "flds 0x50669c\n\t"
+      "fsubs 0x506684\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds 0x5066a0\n\t"
+      "fsubs 0x506688\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds 0x5066a4\n\t"
+      "fsubs 0x50668c\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "fadds 0x506684\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "fadds 0x506688\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "fadds 0x50668c\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "fadds -0xc(%%ebp)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "fadd %%st(1), %%st(0)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds -0x4(%%ebp)\n\t"
+      "fstp %%st(2)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fsubs (%%eax)\n\t"
+      "fstps (%%ecx)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fsubs 0x4(%%eax)\n\t"
+      "fstps 0x4(%%ecx)\n\t"
+      "fsubs 0x8(%%eax)\n\t"
+      "fstps 0x8(%%ecx)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001bef80: clang naked draft required"
+#endif
+
 
 /* 0x1bf080 */
 void texture_cache_new(void)

@@ -555,73 +555,235 @@ void apply_looking_vector(char *thread, void *event, int **stream)
   **stream += 0x10;
 }
 
-void apply_angle_vector(char *thread, void *event, int **stream)
-{
-  float vec[3];
+/* apply_angle_vector (0x94860) — XBE naked draft (batch 249). */
+#if defined(__clang__)
+static void (*const b94860_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b94860_exitfn)(int) = system_exit;
+static void (*const b94860_c10cc40)(float *out, float *angles) = angles_to_vector;
 
-  ra_check_ptr(thread, 0x38, (void *)0x2690a0);
-  ra_check_ptr(event, 0x39, (void *)0x269480);
-  {
-    int16_t t = *(int16_t *)event;
-    if (t < 0x10 || t > 0x16)
-      RA_EVENT_ASSERT(0x3a, (void *)0x269638);
-  }
-  ra_check_ptr(stream, 0x3b, (void *)0x269358);
-  angles_to_vector(vec, (float *)((char *)event + 4));
-  if (*(int16_t *)event != 0x15) {
-    float *dst = (float *)(thread + 0x1c);
-    dst[0] = vec[0];
-    dst[1] = vec[1];
-    dst[2] = vec[2];
-  }
-  if (*(int16_t *)event != 0x14) {
-    float *dst = (float *)(thread + 0x28);
-    dst[0] = vec[0];
-    dst[1] = vec[1];
-    dst[2] = vec[2];
-  }
-  if (*(int16_t *)event != 0x13) {
-    float *dst = (float *)(thread + 0x34);
-    dst[0] = vec[0];
-    dst[1] = vec[1];
-    dst[2] = vec[2];
-  }
-  **stream += 0xc;
-}
-
-void apply_multi_vector(char *thread, void *event, int **stream)
+__attribute__((naked, noinline))
+void apply_angle_vector(char *thread __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
 {
-  ra_check_ptr(thread, 0x56, (void *)0x2690a0);
-  ra_check_ptr(event, 0x57, (void *)0x269480);
-  {
-    int16_t t = *(int16_t *)event;
-    if (t < 0xc || t > 0xf)
-      RA_EVENT_ASSERT(0x58, (void *)0x2696b8);
-  }
-  ra_check_ptr(stream, 0x59, (void *)0x269358);
-  if (*(int16_t *)event != 0xe) {
-    float *src = (float *)((char *)event + 4);
-    float *dst = (float *)(thread + 0x1c);
-    dst[0] = src[0];
-    dst[1] = src[1];
-    dst[2] = src[2];
-  }
-  if (*(int16_t *)event != 0xd) {
-    float *src = (float *)((char *)event + 4);
-    float *dst = (float *)(thread + 0x28);
-    dst[0] = src[0];
-    dst[1] = src[1];
-    dst[2] = src[2];
-  }
-  if (*(int16_t *)event != 0xc) {
-    float *src = (float *)((char *)event + 4);
-    float *dst = (float *)(thread + 0x34);
-    dst[0] = src[0];
-    dst[1] = src[1];
-    dst[2] = src[2];
-  }
-  **stream += 0x10;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lapply_angle_vector_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x38\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_angle_vector_1:\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lapply_angle_vector_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x39\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_angle_vector_2:\n\t"
+      "movw (%%ebx), %%ax\n\t"
+      "cmpw $0x10, %%ax\n\t"
+      "jl .Lapply_angle_vector_3\n\t"
+      "cmpw $0x16, %%ax\n\t"
+      "jle .Lapply_angle_vector_4\n\t"
+      ".Lapply_angle_vector_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3a\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269638\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_angle_vector_4:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lapply_angle_vector_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3b\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_angle_vector_5:\n\t"
+      "leal 0x4(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c10cc40]\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0x15, (%%ebx)\n\t"
+      "je .Lapply_angle_vector_6\n\t"
+      "leal 0x1c(%%edi), %%ebx\n\t"
+      "movl %%edx, (%%ebx)\n\t"
+      "movl %%ecx, 0x4(%%ebx)\n\t"
+      "movl %%eax, 0x8(%%ebx)\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      ".Lapply_angle_vector_6:\n\t"
+      "cmpw $0x14, (%%ebx)\n\t"
+      "je .Lapply_angle_vector_7\n\t"
+      "leal 0x28(%%edi), %%ebx\n\t"
+      "movl %%edx, (%%ebx)\n\t"
+      "movl %%ecx, 0x4(%%ebx)\n\t"
+      "movl %%eax, 0x8(%%ebx)\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      ".Lapply_angle_vector_7:\n\t"
+      "cmpw $0x13, (%%ebx)\n\t"
+      "je .Lapply_angle_vector_8\n\t"
+      "addl $0x34, %%edi\n\t"
+      "movl %%edx, (%%edi)\n\t"
+      "movl %%ecx, 0x4(%%edi)\n\t"
+      "movl %%eax, 0x8(%%edi)\n\t"
+      ".Lapply_angle_vector_8:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $0xc, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b94860_assert), [exitfn] "m"(b94860_exitfn), [c10cc40] "m"(b94860_c10cc40)
+      : "memory");
 }
+#else
+#error "apply_angle_vector: clang naked draft required"
+#endif
+
+
+/* apply_multi_vector (0x94970) — XBE naked draft (batch 251). */
+#if defined(__clang__)
+static void (*const b94970_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b94970_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void apply_multi_vector(char *thread __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lapply_multi_vector_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x56\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_multi_vector_1:\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lapply_multi_vector_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x57\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_multi_vector_2:\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "cmpw $0xc, %%ax\n\t"
+      "jl .Lapply_multi_vector_3\n\t"
+      "cmpw $0xf, %%ax\n\t"
+      "jle .Lapply_multi_vector_4\n\t"
+      ".Lapply_multi_vector_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x58\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2696b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_multi_vector_4:\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lapply_multi_vector_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x59\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_multi_vector_5:\n\t"
+      "cmpw $0xe, (%%esi)\n\t"
+      "je .Lapply_multi_vector_6\n\t"
+      "leal 0x4(%%esi), %%eax\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "leal 0x1c(%%ebx), %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, 0x8(%%ecx)\n\t"
+      ".Lapply_multi_vector_6:\n\t"
+      "cmpw $0xd, (%%esi)\n\t"
+      "je .Lapply_multi_vector_7\n\t"
+      "leal 0x4(%%esi), %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "leal 0x28(%%ebx), %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl %%eax, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      ".Lapply_multi_vector_7:\n\t"
+      "cmpw $0xc, (%%esi)\n\t"
+      "je .Lapply_multi_vector_8\n\t"
+      "addl $4, %%esi\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "addl $0x34, %%ebx\n\t"
+      "movl %%edx, (%%ebx)\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "movl %%eax, 0x4(%%ebx)\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%ebx)\n\t"
+      ".Lapply_multi_vector_8:\n\t"
+      "addl $0x10, (%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b94970_assert), [exitfn] "m"(b94970_exitfn)
+      : "memory");
+}
+#else
+#error "apply_multi_vector: clang naked draft required"
+#endif
+
 
 char recorded_animation_apply_event_stream_v1(char *thread, void *event, int *ticks,
                                             int **cursor)
