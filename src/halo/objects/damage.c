@@ -79,40 +79,59 @@ char object_double_charge_shield(int object_handle)
   return 0;
 }
 
-/* FUN_00136840 (0x136840) — Recursively apply FUN_0013c740 to all child
- * objects in the object hierarchy.
- *
- * Starting from the given object, reads the first child handle at +0xC8,
- * then iterates siblings via the link at +0xC4. For each child, calls
- * FUN_0013c740; if it returns false, recurses into that child's subtree.
- *
- * Confirmed: object_get_and_verify_type(handle, -1) at 0x13684a for root.
- * Confirmed: MOV ESI,[EAX+0xc8] at 0x13684f reads first child handle.
- * Confirmed: object_get_and_verify_type(child, -1) at 0x136863 in loop.
- * Confirmed: MOV EDI,[EAX+0xc4] at 0x136868 reads next sibling handle.
- * Confirmed: CALL 0x0013c740 at 0x13686f with child handle in ESI.
- * Confirmed: recursive CALL 0x00136840 at 0x13687c if FUN_0013c740 returns 0.
- * Confirmed: void return, cdecl, 1 param.
- */
-void FUN_00136840(int object_handle)
-{
-  char *obj;
-  int child_handle;
-  int next_handle;
-  char result;
+/* FUN_00136840 (0x136840) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b136840_get)(int, int) = object_get_and_verify_type;
+static char (*const b136840_c13c740)(int object_handle) = FUN_0013c740;
+static void (*const b136840_c136840)(int object_handle) = FUN_00136840;
 
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  child_handle = *(int *)(obj + 0xc8);
-  while (child_handle != -1) {
-    obj = (char *)object_get_and_verify_type(child_handle, -1);
-    next_handle = *(int *)(obj + 0xc4);
-    result = FUN_0013c740(child_handle);
-    if (result == 0) {
-      FUN_00136840(child_handle);
-    }
-    child_handle = next_handle;
-  }
+__attribute__((naked, noinline))
+void FUN_00136840(int object_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0xc8(%%eax), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_00136840_3\n\t"
+      "pushl %%edi\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".LFUN_00136840_1:\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl 0xc4(%%eax), %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c13c740]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00136840_2\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c136840]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_00136840_2:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movl %%edi, %%esi\n\t"
+      "jne .LFUN_00136840_1\n\t"
+      "popl %%edi\n\t"
+      ".LFUN_00136840_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b136840_get), [c13c740] "m"(b136840_c13c740), [c136840] "m"(b136840_c136840)
+      : "memory");
 }
+#else
+#error "FUN_00136840: clang naked draft required"
+#endif
+
 
 /* FUN_00136890 (0x136890) — Find the player index that owns a given object.
  *

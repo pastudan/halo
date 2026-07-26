@@ -1,51 +1,65 @@
-/*
- * text_search_and_replace_function_table[1]  (0x000f52f0, __cdecl)
- *
- * Resolver that renders a single-digit wide replacement string from a widget
- * field.  Reads a signed 16-bit selector at (widget + 8), then writes the
- * digit + NUL terminator into a static wchar_t[2] result buffer at 0x0046cee8
- * and returns a pointer to it (EAX = 0x0046cee8 in every arm of the original).
- *
- *   selector -1 / 0 -> L"1"
- *   selector  1     -> L"2"
- *   selector  2     -> L"3"
- *   selector  3     -> L"4"
- *   otherwise       -> L"?"
- *
- * The original biases the selector by +1 and dispatches through a 5-entry jump
- * table (indices 0..4 for selector -1..3); the switch below reproduces that
- * dense mapping.  The 0x0046cee8 result buffer lies inside the delinker's
- * over-sized game_data build-version array, but is a distinct static owned by
- * this TU, so it is declared as its own symbol (word_46CEE8).
- *
- * ABI: sole cdecl stack arg 'widget' (no register args); leaf, no callees.
- */
-wchar_t *FUN_000f52f0(void *widget)
+/* FUN_000f52f0 (0xf52f0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+wchar_t * FUN_000f52f0(void *widget __attribute__((unused)))
 {
-  switch (*(short *)((char *)widget + 8)) {
-  case -1:
-  case 0:
-    word_46CEE8[0] = L'1';
-    word_46CEE8[1] = L'\0';
-    return word_46CEE8;
-  case 1:
-    word_46CEE8[0] = L'2';
-    word_46CEE8[1] = L'\0';
-    return word_46CEE8;
-  case 2:
-    word_46CEE8[0] = L'3';
-    word_46CEE8[1] = L'\0';
-    return word_46CEE8;
-  case 3:
-    word_46CEE8[0] = L'4';
-    word_46CEE8[1] = L'\0';
-    return word_46CEE8;
-  default:
-    word_46CEE8[0] = L'?';
-    word_46CEE8[1] = L'\0';
-    return word_46CEE8;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movswl 0x8(%%eax), %%eax\n\t"
+      "incl %%eax\n\t"
+      "cmpl $4, %%eax\n\t"
+      "ja .LFUN_000f52f0_5\n\t"
+      "jmp *.LFUN_000f52f0_jt(,%%eax,4)\n\t"
+      ".LFUN_000f52f0_1:\n\t"
+      "movw $0x31, 0x46cee8\n\t"
+      "movw $0, 0x46ceea\n\t"
+      "movl $0x46cee8, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000f52f0_2:\n\t"
+      "movw $0x32, 0x46cee8\n\t"
+      "movw $0, 0x46ceea\n\t"
+      "movl $0x46cee8, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000f52f0_3:\n\t"
+      "movw $0x33, 0x46cee8\n\t"
+      "movw $0, 0x46ceea\n\t"
+      "movl $0x46cee8, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000f52f0_4:\n\t"
+      "movw $0x34, 0x46cee8\n\t"
+      "movw $0, 0x46ceea\n\t"
+      "movl $0x46cee8, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000f52f0_5:\n\t"
+      "movw $0x3f, 0x46cee8\n\t"
+      "movw $0, 0x46ceea\n\t"
+      "movl $0x46cee8, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_000f52f0_jt:\n\t"
+      ".long .LFUN_000f52f0_1\n\t"
+      ".long .LFUN_000f52f0_1\n\t"
+      ".long .LFUN_000f52f0_2\n\t"
+      ".long .LFUN_000f52f0_3\n\t"
+      ".long .LFUN_000f52f0_4\n\t"
+      ".text\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000f52f0: clang naked draft required"
+#endif
+
 
 /* Virtual on-screen keyboard initialization (items.obj).
  * TU: c:\halo\SOURCE\interface\virtual_keyboard.c (__FILE__ assert @0x28a854).
@@ -798,53 +812,59 @@ void items_dispose_from_old_map(void)
   }
 }
 
-/*
- * FUN_000f6750 (0xf6750, __cdecl): apply an item definition's flag bits to a
- * live object instance.
- *
- * Resolves the object instance from its datum handle via
- * object_get_and_verify_type(object_datum, 8) [type_mask 8], then propagates
- * two flag bits from the definition struct (byte flags at definition+0x22)
- * into the object:
- *
- *   def+0x22 bit0 (0x1): drives the object flags word at obj+0x4 bit5 (0x20) --
- *       set -> OR 0x20, clear -> AND ~0x20.  In BOTH arms obj+0x4 is then also
- *       OR'd with 0x60000.  When the bit is CLEAR the object's float at
- *       obj+0x14 is additionally biased by +0.05f (*(float *)0x2533e8).
- *   def+0x22 bit2 (0x4): drives the secondary flags word at obj+0x1a4 bit5 with
- *       INVERTED sense -- clear -> OR 0x20, set -> AND ~0x20.
- *
- * The two consecutive stores to obj+0x4 (bare value, then value|0x60000) are
- * emitted verbatim by the original and are kept split for byte fidelity.
- *
- * ABI: two cdecl stack args (no register args). Sole callee
- * object_get_and_verify_type is cdecl. void return.
- */
-void FUN_000f6750(int object_datum, void *definition)
-{
-  void *obj;
-  unsigned int flags;
+/* FUN_000f6750 (0xf6750) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const bf6750_get)(int, int) = object_get_and_verify_type;
 
-  obj = object_get_and_verify_type(object_datum, 8);
-  if ((*(unsigned char *)((char *)definition + 0x22) & 1) == 0) {
-    flags = *(unsigned int *)((char *)obj + 4) & 0xffffffdf;
-  } else {
-    flags = *(unsigned int *)((char *)obj + 4) | 0x20;
-  }
-  *(unsigned int *)((char *)obj + 4) = flags;
-  *(unsigned int *)((char *)obj + 4) = flags | 0x60000;
-  if ((*(unsigned char *)((char *)definition + 0x22) & 4) == 0) {
-    *(unsigned int *)((char *)obj + 0x1a4) =
-      *(unsigned int *)((char *)obj + 0x1a4) | 0x20;
-  } else {
-    *(unsigned int *)((char *)obj + 0x1a4) =
-      *(unsigned int *)((char *)obj + 0x1a4) & 0xffffffdf;
-  }
-  if ((*(unsigned char *)((char *)definition + 0x22) & 1) == 0) {
-    *(float *)((char *)obj + 0x14) =
-      *(float *)((char *)obj + 0x14) + *(float *)0x2533e8;
-  }
+__attribute__((naked, noinline))
+void FUN_000f6750(int object_datum __attribute__((unused)), void *definition __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $1, 0x22(%%ecx)\n\t"
+      "movl $0xffffffdf, %%edx\n\t"
+      "je .LFUN_000f6750_1\n\t"
+      "orl $0x20, %%edi\n\t"
+      "jmp .LFUN_000f6750_2\n\t"
+      ".LFUN_000f6750_1:\n\t"
+      "andl %%edx, %%edi\n\t"
+      ".LFUN_000f6750_2:\n\t"
+      "movl %%edi, 0x4(%%eax)\n\t"
+      "orl $0x60000, %%edi\n\t"
+      "movl %%edi, 0x4(%%eax)\n\t"
+      "testb $4, 0x22(%%ecx)\n\t"
+      "jne .LFUN_000f6750_3\n\t"
+      "orl $0x20, 0x1a4(%%eax)\n\t"
+      "jmp .LFUN_000f6750_4\n\t"
+      ".LFUN_000f6750_3:\n\t"
+      "andl %%edx, 0x1a4(%%eax)\n\t"
+      ".LFUN_000f6750_4:\n\t"
+      "testb $1, 0x22(%%ecx)\n\t"
+      "popl %%edi\n\t"
+      "jne .LFUN_000f6750_5\n\t"
+      "flds 0x14(%%eax)\n\t"
+      "fadds 0x2533e8\n\t"
+      "fstps 0x14(%%eax)\n\t"
+      ".LFUN_000f6750_5:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bf6750_get)
+      : "memory");
 }
+#else
+#error "FUN_000f6750: clang naked draft required"
+#endif
+
 
 #include "x87_math.h"
 

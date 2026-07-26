@@ -581,32 +581,56 @@ char *FUN_001a67b0(short param_1, unsigned char param_2)
 }
 
 
-/* FUN_001a67e0 (0x1a67e0)
- *
- * Searches the global animation-name table at 0x32d7c8 for an entry whose
- * first string (column 0) matches param_1. The table has 0xd1 rows of 2
- * char* pointers each (stride = 8 bytes). Returns the row index [0, 0xd0]
- * on match, or -1 if not found.
- *
- * Confirmed: MOVSX EAX,SI; MOV ECX,[EAX*8 + 0x32d7c8]; PUSH EDI (param_1);
- * PUSH ECX; CALL csstrcmp; TEST EAX,EAX; JZ found; INC ESI; CMP SI,0xd1;
- * JL loop. Found: MOV AX,SI; Not-found: MOV AX,BX (BX = -1 via OR EBX,-1).
- */
-short FUN_001a67e0(const char *param_1)
-{
-  short sVar2;
-  int iVar1;
+/* FUN_001a67e0 (0x1a67e0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static int (*const b1a67e0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
 
-  sVar2 = 0;
-  do {
-    iVar1 = csstrcmp(((const char **)0x32d7c8)[(int)sVar2 * 2], param_1);
-    if (iVar1 == 0) {
-      return sVar2;
-    }
-    sVar2 = sVar2 + 1;
-  } while (sVar2 < 0xd1);
-  return -1;
+__attribute__((naked, noinline))
+short FUN_001a67e0(const char *param_1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".LFUN_001a67e0_1:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl 0x32d7c8(,%%eax,8), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8dcb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001a67e0_2\n\t"
+      "incl %%esi\n\t"
+      "cmpw $0xd1, %%si\n\t"
+      "jl .LFUN_001a67e0_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%bx, %%ax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001a67e0_2:\n\t"
+      "popl %%edi\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8dcb0] "m"(b1a67e0_c8dcb0)
+      : "memory");
 }
+#else
+#error "FUN_001a67e0: clang naked draft required"
+#endif
+
 
 
 /* FUN_001a6820 (0x1a6820)
@@ -730,32 +754,56 @@ char *FUN_001a6ca0(short param_1)
   return result;
 }
 
-/* FUN_001a6cd0 (0x1a6cd0)
- *
- * Searches the 11-entry dialogue-category pointer table at 0x32de50 for a
- * case-sensitive match with param_1 using csstrcmp. Returns the index (0–10)
- * on success. On no match, returns 0 (BX register held zero throughout).
- *
- * Confirmed: XOR EBX,EBX; XOR ESI,ESI; MOVSX EAX,SI; MOV ECX,[EAX*4+table];
- * PUSH EDI; PUSH ECX; CALL csstrcmp; TEST EAX,EAX; JE found;
- * INC ESI; CMP SI,0xb; JL loop; MOV AX,BX; RET.
- * found: MOV AX,SI; RET.
- */
-short FUN_001a6cd0(const char *param_1)
-{
-  unsigned short result;
-  unsigned short i;
+/* FUN_001a6cd0 (0x1a6cd0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static int (*const b1a6cd0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
 
-  result = 0;
-  i = 0;
-  do {
-    if (csstrcmp(((char **)0x32de50)[(short)i], param_1) == 0) {
-      return (short)i;
-    }
-    i++;
-  } while ((short)i < 0xb);
-  return (short)result;
+__attribute__((naked, noinline))
+short FUN_001a6cd0(const char *param_1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_001a6cd0_1:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl 0x32de50(,%%eax,4), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8dcb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001a6cd0_2\n\t"
+      "incl %%esi\n\t"
+      "cmpw $0xb, %%si\n\t"
+      "jl .LFUN_001a6cd0_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%bx, %%ax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001a6cd0_2:\n\t"
+      "popl %%edi\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8dcb0] "m"(b1a6cd0_c8dcb0)
+      : "memory");
 }
+#else
+#error "FUN_001a6cd0: clang naked draft required"
+#endif
+
 
 /* FUN_001a6d10 (0x1a6d10) — XBE naked draft (batch 61). */
 #if defined(__clang__)
@@ -9152,19 +9200,59 @@ float FUN_001a7d00(int datum_handle)
   return result;
 }
 
-/* FUN_001a7c70 (0x1a7c70)
- * Iterates child objects and calls FUN_001a7b50 on each. */
-void FUN_001a7c70(int parent_handle, int param_2, int param_3)
-{
-  int iter_state;
-  int child;
+/* FUN_001a7c70 (0x1a7c70) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static int (*const b1a7c70_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
+static void (*const b1a7c70_c1a7b50)(int datum_handle, float body_damage, float shield_damage) = FUN_001a7b50;
+static int (*const b1a7c70_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
 
-  child = FUN_000ce450(parent_handle, &iter_state);
-  while (child != -1) {
-    FUN_001a7b50(child, param_2, param_3);
-    child = FUN_000ce320(parent_handle, &iter_state);
-  }
+__attribute__((naked, noinline))
+void FUN_001a7c70(int parent_handle __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cce450]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001a7c70_2\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      ".LFUN_001a7c70_1:\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1a7b50]\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cce320]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_001a7c70_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_001a7c70_2:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cce450] "m"(b1a7c70_cce450), [c1a7b50] "m"(b1a7c70_c1a7b50), [cce320] "m"(b1a7c70_cce320)
+      : "memory");
 }
+#else
+#error "FUN_001a7c70: clang naked draft required"
+#endif
+
 
 /* unit_inventory_next_grenade (0x1a9980)
  * Cycles through grenade types to find the next available one. */
@@ -11056,37 +11144,60 @@ char *unit_get_weapon_name(int unit_handle, int unused)
   return weapon_get_label(weapon_handle);
 }
 
-/* unit_has_night_vision_weapon (0x1b13a0)
- * Checks whether the unit's current weapon has the night-vision flag
- * (bit 0x4000 at weapon tag offset 0x308). Returns true if zoom_level
- * is not 0xFF, a weapon exists, and the flag is set.
- * Register arg: unit_handle in ESI. */
-char unit_has_night_vision_weapon(int unit_handle)
-{
-  char *unit;
-  int weapon_handle;
-  char *weapon_data;
-  int tag_data;
-  char result;
+/* unit_has_night_vision_weapon (0x1b13a0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const b1b13a0_get)(int, int) = object_get_and_verify_type;
+static int (*const b1b13a0_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
+static void *(*const b1b13a0_tag)(int, int) = tag_get;
 
-  result = 0;
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  if (*(uint8_t *)(unit + 0x2d0) == 0xff) {
-    return result;
-  }
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  weapon_handle = unit_get_weapon(unit_handle,
-      *(int16_t *)(unit + 0x2a2));
-  if (weapon_handle == -1) {
-    return result;
-  }
-  weapon_data = (char *)object_get_and_verify_type(weapon_handle, 4);
-  tag_data = (int)tag_get(0x77656170, *(int *)weapon_data);
-  if (*(uint32_t *)(tag_data + 0x308) & 0x4000) {
-    return 1;
-  }
-  return result;
+__attribute__((naked, noinline))
+char unit_has_night_vision_weapon(int unit_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[get]\n\t"
+      "movb 0x2d0(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpb $0xff, %%cl\n\t"
+      "je .Lunit_has_night_vision_weapon_1\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movswl 0x2a2(%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1adeb0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lunit_has_night_vision_weapon_1\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x308(%%eax), %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb $0x40, %%ch\n\t"
+      "movb $1, %%al\n\t"
+      "jne .Lunit_has_night_vision_weapon_2\n\t"
+      ".Lunit_has_night_vision_weapon_1:\n\t"
+      "movb %%bl, %%al\n\t"
+      ".Lunit_has_night_vision_weapon_2:\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1b13a0_get), [c1adeb0] "m"(b1b13a0_c1adeb0), [tag] "m"(b1b13a0_tag)
+      : "memory");
 }
+#else
+#error "unit_has_night_vision_weapon: clang naked draft required"
+#endif
+
 
 /* unit_solo_player_integrated_night_vision_is_active (0x1b2610)
  * Returns true if there is exactly one local player, that player has a

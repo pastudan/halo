@@ -216,32 +216,53 @@ void projectile_export_function_values(int projectile_handle)
   } while (counter != 0);
 }
 
-/* Compute the peak-intercept fraction for a projectile detonation range.
- * Given a tag struct (via ECX) with two radius values at offsets 0x1e4 and
- * 0x1e8, and a range [range_begin, range_end], returns the position within
- * the range at which a parabolic distribution peaked:
- *   result = (r1^2 - r2^2) / (2 * (range_end - range_begin))
- * Returns 0.0 if the two radii are equal or if the range width is zero.
- * Used by the projectile trajectory system to locate the apex of a parabolic
- * detonation-effect distribution along the projectile's travel path. */
-float FUN_000f7fa0(void *tag, float range_begin, float range_end)
+/* FUN_000f7fa0 (0xf7fa0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+float FUN_000f7fa0(void *tag __attribute__((unused)), float range_begin __attribute__((unused)), float range_end __attribute__((unused)))
 {
-  float delta;
-  float r1;
-  float r2;
-
-  delta = range_end - range_begin;
-  r1 = *(float *)((char *)tag + 0x1e4);
-  r2 = *(float *)((char *)tag + 0x1e8);
-
-  if (r1 == r2) {
-    return 0.0f;
-  }
-  if (delta == 0.0f) {
-    return 0.0f;
-  }
-  return (r1 * r1 - r2 * r2) / (delta + delta);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fsubs 0x8(%%ebp)\n\t"
+      "fstps 0xc(%%ebp)\n\t"
+      "flds 0x2533c0\n\t"
+      "flds 0x1e4(%%ecx)\n\t"
+      "fcomps 0x1e8(%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .LFUN_000f7fa0_1\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .LFUN_000f7fa0_1\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x1e4(%%ecx)\n\t"
+      "flds 0x1e8(%%ecx)\n\t"
+      "fld %%st(1)\n\t"
+      "fmulp %%st(2)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      ".byte 0xde, 0xea\n\t" /* fsubp %st(2) — gas emits fsubrp for one-op form */
+      "flds 0xc(%%ebp)\n\t"
+      ".byte 0xdc, 0xc0\n\t" /* fadd %st(0), %st(0) (DC C0; gas prefers D8 C0) */
+      ".byte 0xde, 0xfa\n\t" /* fdivp %st(2) */
+      "fstp %%st(0)\n\t"
+      ".LFUN_000f7fa0_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000f7fa0: clang naked draft required"
+#endif
+
 
 /* Arm a projectile and detach it from its parent object.
  * Asserts that the projectile has a valid parent (parent_object_index != NONE
