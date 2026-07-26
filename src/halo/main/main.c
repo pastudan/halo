@@ -3268,6 +3268,7 @@ void FUN_00054df0(void);
  * Bogus single-symbol boundary — placeholder draft only. */
 void FUN_000e8e20(int a0)
 {
+
   int eax = 0;
   int ebx = 0;
   int ecx = 0;
@@ -3275,44 +3276,50 @@ void FUN_000e8e20(int a0)
   int esi = 0;
   int edi = 0;
   int ebp = 0;
+  int local_1a = 0;
+  int local_1c = 0;
+  int local_20 = 0;
+  int local_24 = 0;
+  int local_4 = 0;
+  int lift_a1 = 0;
 
-  display_assert((char *)0x00284a90, (char *)0x00283280, 2407, 0);
-  system_exit(0);
+  display_assert((char *)0x00284a90, (char *)0x00283280, 2407, 1);
+  system_exit(-1);
   /* cmp eax, -1 -> je 0xe905f */
-  tag_get_name(0);
-  csstrncpy((char *)(uintptr_t)eax, (char *)(uintptr_t)eax, 0);
-  csstr_tolower((char *)(uintptr_t)ecx);
-  crt_strstr((char *)(uintptr_t)edx, (char *)0x00284a8c);
+  tag_get_name(*(int *)(0x326a08));
+  csstrncpy((void *)0, (void *)0, 0);
+  csstr_tolower((void *)0);
+  crt_strstr((void *)0, (char *)0x00284a8c);
   /* test eax, eax -> je 0xe8eaf */
-  crt_strstr((char *)(uintptr_t)eax, (char *)0x00284a50);
+  crt_strstr((void *)0, (char *)0x00284a50);
   /* test eax, eax -> je 0xe8ed1 */
-  crt_strstr((char *)(uintptr_t)ecx, (char *)0x00284a14);
+  crt_strstr((void *)0, (char *)0x00284a14);
   /* test eax, eax -> je 0xe8ef3 */
-  crt_strstr((char *)(uintptr_t)edx, (char *)0x002849d8);
+  crt_strstr((void *)0, (char *)0x002849d8);
   /* test eax, eax -> je 0xe8f15 */
-  crt_strstr((char *)(uintptr_t)eax, (char *)0x0028499c);
+  crt_strstr((void *)0, (char *)0x0028499c);
   /* test eax, eax -> je 0xe8f37 */
-  crt_strstr((char *)(uintptr_t)ecx, (char *)0x00284960);
+  crt_strstr((void *)0, (char *)0x00284960);
   /* test eax, eax -> je 0xe8f56 */
-  crt_strstr((char *)(uintptr_t)edx, (char *)0x00284924);
+  crt_strstr((void *)0, (char *)0x00284924);
   /* test eax, eax -> je 0xe8f75 */
-  crt_strstr((char *)(uintptr_t)eax, (char *)0x002848e8);
+  crt_strstr((void *)0, (char *)0x002848e8);
   /* test eax, eax -> je 0xe8f94 */
-  crt_strstr((char *)(uintptr_t)ecx, (char *)0x002848ac);
+  crt_strstr((void *)0, (char *)0x002848ac);
   /* test eax, eax -> je 0xe8fb3 */
-  crt_strstr((char *)(uintptr_t)edx, (char *)0x00284870);
+  crt_strstr((void *)0, (char *)0x00284870);
   /* test eax, eax -> je 0xe9043 */
   player_ui_get_single_player_local_player_controller(0);
-  ui_widget_load_by_name_or_tag((char *)(uintptr_t)esi, 0, 0, 0, 0, 0, 0);
+  ui_widget_load_by_name_or_tag((char *)0x00284838, -1, 0, eax, -1, -1, -1);
   /* test eax, eax -> je 0xe902e */
   /* test esi, esi -> je 0xe9004 */
   /* relift: cmp word ptr [esi + 0xe], 1 -> je 0xe9024 */
   /* test esi, esi -> jne 0xe8ff6 */
-  display_assert((char *)0x00284808, (char *)0x00283280, 2438, 0);
-  system_exit(0);
-  error(0, (char *)0x002847e4);
-  error(0, (char *)0x002847a4);
-  error(0, (char *)0x00284768);
+  display_assert((char *)0x00284808, (char *)0x00283280, 2438, 1);
+  system_exit(-1);
+  error(2, (char *)0x002847e4);
+  error(2, (char *)0x002847a4);
+  error(2, (char *)0x00284768);
   network_game_in_progress();
   game_in_progress();
   /* test (char)eax, (char)eax -> je 0xe928e */
@@ -3320,11 +3327,12 @@ void FUN_000e8e20(int a0)
   /* test (char)eax, (char)eax -> jne 0xe928e */
   game_connection();
   /* cmp (int16_t)eax, 3 -> je 0xe928e */
+  /* relift: relift: mov (char)eax, byte ptr [0x46cc88] */
   /* test (char)eax, (char)eax -> jne 0xe928e */
   /* test eax, eax -> jne 0xe928e */
-  input_has_gamepad(esi);
+  input_has_gamepad(0);
   /* test (char)eax, (char)eax -> je 0xe9103 */
-  local_player_exists(esi);
+  local_player_exists(0);
   /* test (char)eax, (char)eax -> je 0xe9103 */
   input_get_gamepad_state(0);
   /* cmp (char)ecx, 1 -> je 0xe910e */
@@ -3340,14 +3348,14 @@ void FUN_000e8e20(int a0)
   /* cmp (int16_t)ebx, (int16_t)esi -> jne 0xe928b */
   /* test eax, eax -> jne 0xe9207 */
   network_game_client_get();
-  network_game_client_get_machine_index((void *)(uintptr_t)ebx);
-  FUN_00124c40((void *)(uintptr_t)ebx);
+  network_game_client_get_machine_index((void *)(uintptr_t)eax);
+  FUN_00124c40((void *)(uintptr_t)eax);
   /* cmp eax, 3 -> ja 0xe91f3 */
-  ui_widget_load_by_name_or_tag((char *)(uintptr_t)eax, 0, 0, 0, 0, 0, 0);
+  ui_widget_load_by_name_or_tag((char *)0x00284c84, -1, 0, 0, -1, -1, -1);
   /* test eax, eax -> jne 0xe928b */
-  error(0, (char *)0x00284c54);
+  error(2, (char *)0x00284c54);
   /* relift: cmp byte ptr [ebp - 1], 1 -> jne 0xe91ec */
-  error(0, (char *)0x00284bbc);
+  error(2, (char *)0x00284bbc);
   ui_widget_close((void *)(uintptr_t)eax);
   /* test eax, eax -> jl 0xe92ab */
   /* cmp eax, 1 -> jle 0xe926f */
@@ -3355,52 +3363,54 @@ void FUN_000e8e20(int a0)
   /* test eax, eax -> jne 0xe927d */
   game_time_get_paused();
   /* test (char)eax, (char)eax -> jne 0xe928b */
-  ui_widget_load_by_name_or_tag((char *)0x00284b84, 0, 0, 0, 0, 0, 0);
+  ui_widget_load_by_name_or_tag((char *)0x00284b84, -1, 0, 0, -1, -1, -1);
   /* test eax, eax -> jne 0xe928b */
-  error(0, (char *)0x00284b54);
+  error(2, (char *)0x00284b54);
   /* test eax, eax -> je 0xe92d7 */
   game_time_get_paused();
   /* cmp (char)eax, 1 -> jne 0xe928b */
   ui_widgets_close_all();
   /* mem[0x0046cc44] = ecx */
-  error(0, (char *)0x00284b00);
+  error(2, (char *)0x00284b00);
+  /* relift: relift: mov (char)eax, byte ptr [0x46cc82] */
   /* test (char)eax, (char)eax -> je 0xe92d7 */
   /* relift: cmp dword ptr [eax], 0 -> jne 0xe9286 */
   /* cmp eax, 0x46cc30 -> jl 0xe92c8 */
-  ui_widget_load_by_name_or_tag((char *)0x00284ad0, 0, 0, 0, 0, 0, 0);
+  ui_widget_load_by_name_or_tag((char *)0x00284ad0, -1, 0, 0, -1, -1, -1);
   /* test eax, eax -> jne 0xe928b */
-  error(0, (char *)0x00284aa0);
-  tag_get(0x44654c61, 0);
+  error(2, (char *)0x00284aa0);
+  tag_get('aLeD', lift_a1);
   /* test (char)ecx, 0x10 -> je 0xe9371 */
   /* cmp eax, 4 -> ja 0xe9368 */
   /* cmp eax, 4 -> ja 0xe938a */
-  display_assert((char *)0x00284cb8, (char *)0x00283280, 5392, 0);
-  system_exit(0);
+  display_assert((char *)0x00284cb8, (char *)0x00283280, 5392, 1);
+  system_exit(-1);
   /* test eax, eax -> jne 0xe93b8 */
   /* test ecx, ecx -> je 0xe93f1 */
   /* test eax, eax -> je 0xe93f1 */
   /* relift: cmp eax, dword ptr [ebp + 8] -> je 0xe93ef */
   /* test eax, eax -> jne 0xe93e0 */
-  ui_widget_load_by_name_or_tag((char *)0, 0, 0, 0, 0, 0, 0);
-  error(0, (char *)0x00283728);
-  display_assert((char *)0x002832d4, (char *)0x00283280, 644, 0);
-  system_exit(0);
+  ui_widget_load_by_name_or_tag((char *)0, lift_a1, 0, a0, 0, 0, 0);
+  error(2, (char *)0x00283728);
+  /* relift: relift: mov (char)eax, byte ptr [0x46cc82] */
+  display_assert((char *)0x002832d4, (char *)0x00283280, 644, 1);
+  system_exit(a0);
   system_milliseconds();
   /* mem[0x0046cc40] = eax */
   /* cmp eax, esi -> je 0xe951d */
-  thread_is_done((void *)(uintptr_t)eax);
+  thread_is_done((void *)(uintptr_t)*(int *)(0x46cc7c));
   /* test (char)eax, (char)eax -> je 0xe9807 */
-  thread_close((void *)(uintptr_t)eax);
+  thread_close((void *)(uintptr_t)*(int *)(0x46cc7c));
   /* mem[0x0046cc7c] = esi */
-  ui_widget_set_events_suppressed(esi);
+  ui_widget_set_events_suppressed(0);
   bink_playback_has_video();
   /* test (char)eax, (char)eax -> je 0xe94eb */
   bink_playback_stop();
-  ui_widget_load_error_screen(34, 0);
+  ui_widget_load_error_screen(34, 1);
   bink_playback_has_video();
   /* test (char)eax, (char)eax -> je 0xe950b */
   bink_playback_stop();
-  ui_widget_load_error_screen(33, 0);
+  ui_widget_load_error_screen(33, 1);
   ui_automation_is_active();
   /* test (char)eax, (char)eax -> jne 0xe9807 */
   FUN_000f5640();
@@ -3410,8 +3420,11 @@ void FUN_000e8e20(int a0)
   event_manager_tab_check();
   /* test (char)eax, (char)eax -> je 0xe9557 */
   event_manager_tab_process();
+  /* relift: relift: mov (int16_t)eax, word ptr [0x46cc68] */
   /* cmp (int16_t)eax, (int16_t)edi -> je 0xe9583 */
-  ui_widget_load_error_screen(eax, 0);
+  /* relift: relift: mov (char)ecx, byte ptr [0x46cc6a] */
+  ui_widget_load_error_screen(0, 0);
+  /* relift: relift: mov word ptr [0x46cc68], (int16_t)edi */
   /* relift: cmp word ptr [0x46cc50], (int16_t)edi -> jne 0xe979f */
   /* relift: cmp word ptr [0x46cc56], (int16_t)edi -> jne 0xe979f */
   /* relift: cmp word ptr [0x46cc5c], (int16_t)edi -> jne 0xe979f */
@@ -3427,45 +3440,48 @@ void FUN_000e8e20(int a0)
   /* relift: cmp byte ptr [eax + 0x15], 1 -> jne 0xe962c */
   /* test esi, esi -> je 0xe9776 */
   /* relift: cmp byte ptr [esi + 0x15], 1 -> je 0xe9686 */
+  /* relift: relift: mov (char)eax, byte ptr [0x46cc88] */
   /* test (char)eax, (char)eax -> je 0xe9679 */
   /* test esi, esi -> je 0xe9776 */
   /* test (char)ecx, (char)ecx -> je 0xe9686 */
   /* cmp (char)eax, 1 -> jne 0xe9776 */
-  tag_get('aLeD', 0);
-  event_manager_get_next_event((void *)(uintptr_t)eax, edx);
+  tag_get('aLeD', *(int *)(*(int *)(0x0046cc20)));
+  /* relift: relift: mov (char)eax, byte ptr [0x46cc85] */
+  event_manager_get_next_event((void *)0, 0);
   /* test (char)eax, (char)eax -> je 0xe9704 */
   /* test (char)eax, (char)eax -> jne 0xe96e7 */
-  ui_widget_process_event((void *)(uintptr_t)esi, (void *)(uintptr_t)edi, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
+  ui_widget_process_event((void *)(uintptr_t)*(int *)(0x0046cc20), (void *)(uintptr_t)eax, (void *)0, (void *)0);
   /* cmp (char)eax, 1 -> je 0xe9725 */
   /* relift: cmp esi, dword ptr [ebx] -> jne 0xe9725 */
-  event_manager_get_next_event((void *)(uintptr_t)ecx, eax);
+  event_manager_get_next_event((void *)0, 0);
   /* test (char)eax, (char)eax -> jne 0xe96c7 */
   /* test (char)eax, (char)eax -> jne 0xe9725 */
-  ui_widget_process_event((void *)(uintptr_t)esi, (void *)(uintptr_t)edi, (void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  ui_widget_process_event((void *)(uintptr_t)*(int *)(0x0046cc20), (void *)(uintptr_t)eax, (void *)0, (void *)0);
   ui_widget_pending_load_pop((void *)0, (void *)0);
   /* cmp eax, -1 -> je 0xe9773 */
-  ui_widget_load_by_name_or_tag((char *)0, 0, 0, 0, 0, 0, 0);
+  ui_widget_load_by_name_or_tag((char *)0, local_24, 0, local_1a, -1, -1, -1);
   /* test eax, eax -> je 0xe9773 */
-  ui_widget_pending_load_apply(0, 0, 0);
+  ui_widget_pending_load_apply(local_20, local_1c, 0);
   event_manager_flush();
   /* relift: cmp word ptr [esi], (int16_t)edi -> je 0xe97fc */
+  /* relift: relift: mov (char)eax, byte ptr [0x46cc88] */
   /* test (char)eax, (char)eax -> jne 0xe97d8 */
   network_game_in_progress();
   /* test (char)eax, (char)eax -> jne 0xe97d8 */
   game_time_get();
   /* cmp eax, 0x1e -> jge 0xe97d8 */
-  error(0, (char *)0x00284ce4);
-  ui_widget_display_error(edx, 0, eax, edx);
+  error(2, (char *)0x00284ce4);
+  ui_widget_display_error(0, 0, 0, 0);
   /* cmp esi, 0x46cc68 -> jl 0xe97a4 */
   /* test edi, edi -> je 0xe9823 */
   /* test ebx, ebx -> jne 0xe9843 */
-  display_assert((char *)0x00285974, (char *)0x002859a4, 478, 0);
-  system_exit(0);
+  display_assert((char *)0x00285974, (char *)0x002859a4, 478, 1);
+  system_exit(-1);
   /* test (int16_t)eax, (int16_t)eax -> jl 0xe9889 */
   /* cmp (int16_t)eax, 0x66 -> jae 0xe9889 */
   /* test (char)ebx, (char)ebx -> jne 0xe9882 */
   console_warning((char *)0x00285958);
-  error(0, (char *)0x00285938);
+  error(2, (char *)0x00285938);
   /* mem[0x0031e4c0] = 0xffffffff */
   csmemset((void *)0x0046cce8, 0, 80);
   player_ui_get_active_player_profile();
@@ -3478,13 +3494,13 @@ void FUN_000e8e20(int a0)
   /* cmp eax, ecx -> je 0xe9952 */
   /* test eax, eax -> jne 0xe998e */
   /* cmp eax, 0xa -> jl 0xe9920 */
-  tag_get('aLeD', 0);
+  tag_get('aLeD', *(int *)(a0));
   /* relift: cmp word ptr [edi], 2 -> je 0xe99cf */
-  display_assert((char *)0x00285a18, (char *)0x002859a4, 689, 0);
-  system_exit(0);
+  display_assert((char *)0x00285a18, (char *)0x002859a4, 689, 1);
+  system_exit(-1);
   /* relift: cmp dword ptr [edi + 0x3e0], 3 -> je 0xe99f8 */
-  display_assert((char *)0x002859e4, (char *)0x002859a4, 690, 0);
-  system_exit(0);
+  display_assert((char *)0x002859e4, (char *)0x002859a4, 690, 1);
+  system_exit(-1);
   player_ui_get_last_single_player_level_played();
   /* test (int16_t)eax, (int16_t)eax -> jge 0xe9a22 */
   player_ui_get_last_single_player_level_played();
@@ -3493,11 +3509,11 @@ void FUN_000e8e20(int a0)
   csmemset((void *)0x0046cce8, 0, 80);
   /* test (int16_t)eax, (int16_t)eax -> jl 0xe9aad */
   /* cmp (int16_t)eax, 0xa -> jl 0xe9acd */
-  display_assert((char *)0x00285aa4, (char *)0x002859a4, 724, 0);
-  system_exit(0);
-  error(0, (char *)0x00285a78);
-  error(0, (char *)0x00285a54);
-  ui_play_audio_feedback_sound(0);
+  display_assert((char *)0x00285aa4, (char *)0x002859a4, 724, 1);
+  system_exit(-1);
+  error(2, (char *)0x00285a78);
+  error(2, (char *)0x00285a54);
+  ui_play_audio_feedback_sound(4);
   player_ui_get_active_player_profile();
   player_profile_save_last_level_played();
   /* test dl, dl -> jne 0xe9b44 */
@@ -3511,16 +3527,16 @@ void FUN_000e8e20(int a0)
   /* test (int16_t)eax, (int16_t)eax -> je 0xe9bbf */
   /* cmp (int16_t)esi, 1 -> jle 0xe9b52 */
   /* cmp (char)ebx, 1 -> jne 0xe9ae9 */
-  main_set_map_name((char *)(uintptr_t)ecx);
+  main_set_map_name((char *)0);
   main_defer_map_map_change();
   /* test (int16_t)eax, (int16_t)eax -> jl 0xe9be6 */
   /* cmp (int16_t)eax, 4 -> jl 0xe9c06 */
-  display_assert((char *)0x00285ad8, (char *)0x002859a4, 787, 0);
-  system_exit(0);
-  main_set_difficulty(eax);
-  ui_play_audio_feedback_sound(0);
+  display_assert((char *)0x00285ad8, (char *)0x002859a4, 787, 1);
+  system_exit(-1);
   main_set_difficulty(0);
-  main_set_map_name((char *)(uintptr_t)eax);
+  ui_play_audio_feedback_sound(2);
+  main_set_difficulty(1);
+  main_set_map_name((const char *)(uintptr_t)*(int *)(0x31e498));
   set_game_connection(0);
   main_menu_switch_to_single_player();
   player_ui_remember_player1_profile(0);
@@ -3533,19 +3549,19 @@ void FUN_000e8e20(int a0)
   player_ui_clear_multiplayer_joins();
   player_ui_clear_multiplayer_variant();
   /* relift: cmp word ptr [esi + 8], -1 -> jne 0xe9cde */
-  display_assert((char *)0x00285b10, (char *)0x002859a4, 873, 0);
-  system_exit(0);
+  display_assert((char *)0x00285b10, (char *)0x002859a4, 873, 1);
+  system_exit(-1);
   player_ui_local_player_joined_multiplayer_game();
   dispose_global_network_game_server();
   dispose_global_network_game_client();
   player_ui_clear_multiplayer_variant();
   FUN_0012a250();
   /* test (char)eax, (char)eax -> je 0xe9d29 */
-  set_game_connection(0);
-  error(0, (char *)0x00285b54);
+  set_game_connection(1);
+  error(2, (char *)0x00285b54);
   dispose_global_network_game_server();
   player_ui_clear_multiplayer_variant();
-  network_game_set_accept_remote_connections(0);
+  network_game_set_accept_remote_connections(1);
   network_game_server_get();
   /* test eax, eax -> jne 0xe9d91 */
   game_engine_playlist_initialize();
@@ -3554,7 +3570,7 @@ void FUN_000e8e20(int a0)
   network_game_server_get();
   network_game_server_pause_countdown((void *)(uintptr_t)eax, 0);
   game_engine_playlist_begin();
-  set_game_connection(0);
+  set_game_connection(2);
   /* test (char)ebx, (char)ebx -> je 0xe9da5 */
   network_game_client_get();
   /* test eax, eax -> jne 0xe9da1 */
@@ -3564,7 +3580,7 @@ void FUN_000e8e20(int a0)
   dispose_global_network_game_server();
   network_game_set_accept_remote_connections(0);
   player_ui_clear_multiplayer_variant();
-  error(0, (char *)0x002828ac);
+  error(2, (char *)0x002828ac);
   /* cmp (int16_t)eax, (int16_t)ebx -> jl 0xe9fbd */
   /* cmp eax, ecx -> jge 0xe9fae */
   /* cmp ecx, ebx -> je 0xe9fae */
@@ -3574,25 +3590,25 @@ void FUN_000e8e20(int a0)
   FUN_00082bd0();
   /* cmp eax, ebx -> je 0xe9f43 */
   /* relift: cmp word ptr [ebp - 0xa], (int16_t)ebx -> je 0xe9f43 */
-  network_game_generate_join_game_token((void *)(uintptr_t)ecx);
+  network_game_generate_join_game_token((void *)0);
   network_game_client_get();
   network_game_client_initiate_join_game((void *)(uintptr_t)eax, (void *)0, (void *)0, (void *)0);
   /* test (char)eax, (char)eax -> je 0xe9f25 */
-  ui_widget_get_last_child((void *)(uintptr_t)esi);
+  ui_widget_get_last_child((void *)(uintptr_t)a0);
   /* test eax, eax -> je 0xe9ec3 */
-  widget_instance_get_child_index_from_parent((void *)(uintptr_t)esi);
-  ui_widget_load_by_name_or_tag((char *)0x002828e0, 0, 0, 0, 0, 0, 0);
+  widget_instance_get_child_index_from_parent((void *)(uintptr_t)a0);
+  ui_widget_load_by_name_or_tag((char *)0x002828e0, -1, 0, -1, *(int *)(eax), 0, eax);
   /* test eax, eax -> jne 0xe9f07 */
-  error(0, (char *)0x00283728);
-  set_game_connection(0);
+  error(2, (char *)0x00283728);
+  set_game_connection(1);
   network_game_abort();
-  error(0, (char *)0x00285d20);
-  error(0, (char *)0x00285ce8);
-  error(0, (char *)0x00285c90);
-  error(0, (char *)0x00285c70);
-  ui_play_audio_feedback_sound(0);
-  error(0, (char *)0x00285c08);
-  error(0, (char *)0x00285b90);
+  error(2, (char *)0x00285d20);
+  error(2, (char *)0x00285ce8);
+  error(2, (char *)0x00285c90);
+  error(2, (char *)0x00285c70);
+  ui_play_audio_feedback_sound(4);
+  error(2, (char *)0x00285c08);
+  error(2, (char *)0x00285b90);
   dispose_global_network_game_client();
   dispose_global_network_game_server();
   player_ui_clear_multiplayer_variant();
@@ -3603,7 +3619,7 @@ void FUN_000e8e20(int a0)
   FUN_0012a890();
   /* cmp (char)ebx, 1 -> jne 0xea046 */
   game_engine_playlist_begin();
-  set_game_connection(0);
+  set_game_connection(2);
   /* test (char)ebx, (char)ebx -> je 0xea05e */
   network_game_client_get();
   /* test eax, eax -> jne 0xea05a */
@@ -3612,74 +3628,77 @@ void FUN_000e8e20(int a0)
   dispose_global_network_game_client();
   dispose_global_network_game_server();
   player_ui_clear_multiplayer_variant();
-  error(0, (char *)0x00285d48);
+  error(2, (char *)0x00285d48);
+  /* relift: relift: mov word ptr [0x31fa94], 2 */
   player_ui_clear_multiplayer_joins();
   player_ui_clear_multiplayer_variant();
   dispose_global_network_game_server();
   dispose_global_network_game_client();
   network_game_set_accept_remote_connections(0);
+  /* relift: relift: mov word ptr [0x31fa94], 1 */
   player_ui_end_editing_profile();
   ui_widget_get_attract_mode_flag();
   /* test (char)eax, (char)eax -> jne 0xea0ca */
   ui_widget_start_title_music();
+  /* relift: relift: mov word ptr [0x31fa94], (int16_t)eax */
   game_engine_playlist_initialize();
-  game_engine_playlist_next(0, 0, 0);
+  game_engine_playlist_next(0, 0, 4);
   FUN_0012a190();
-  tag_get(0x44654c61, 0);
+  tag_get('aLeD', *(int *)(a0));
   /* relift: cmp word ptr [edi], 2 -> je 0xea146 */
-  display_assert((char *)0x00285db8, (char *)0x002859a4, 1228, 0);
-  system_exit(0);
+  display_assert((char *)0x00285db8, (char *)0x002859a4, 1228, 1);
+  system_exit(-1);
   /* relift: cmp dword ptr [edi + 0x3e0], 3 -> je 0xea16f */
-  display_assert((char *)0x00285d78, (char *)0x002859a4, 1229, 0);
-  system_exit(0);
+  display_assert((char *)0x00285d78, (char *)0x002859a4, 1229, 1);
+  system_exit(-1);
   saved_game_file_retrieve_last_used_multiplayer_map();
   /* test (char)eax, (char)eax -> je 0xea1dd */
-  crt_stricmp((char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
+  crt_stricmp((void *)0, (char *)0);
   /* test eax, eax -> je 0xea1c9 */
   /* relift: cmp word ptr [esi + 0x3c], (int16_t)edi -> jl 0xea1a0 */
-  tag_get(0x44654c61, 0);
+  tag_get('aLeD', *(int *)(a0));
   /* cmp ecx, 1 -> je 0xea256 */
-  display_assert((char *)0x00285ec0, (char *)0x002859a4, 1280, 0);
-  system_exit(0);
+  display_assert((char *)0x00285ec0, (char *)0x002859a4, 1280, 1);
+  system_exit(-1);
   tag_get('aLeD', 0);
   /* relift: cmp word ptr [eax], 0 -> jne 0xea278 */
   /* relift: cmp dword ptr [eax + 0x3e0], 3 -> je 0xea298 */
-  display_assert((char *)0x00285e70, (char *)0x002859a4, 1285, 0);
-  system_exit(0);
+  display_assert((char *)0x00285e70, (char *)0x002859a4, 1285, 1);
+  system_exit(-1);
   tag_get('aLeD', 0);
   /* relift: cmp word ptr [esi], 2 -> je 0xea2d3 */
-  display_assert((char *)0x00285db8, (char *)0x002859a4, 1288, 0);
-  system_exit(0);
+  display_assert((char *)0x00285db8, (char *)0x002859a4, 1288, 1);
+  system_exit(-1);
   /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xea2fc */
-  display_assert((char *)0x00285d78, (char *)0x002859a4, 1289, 0);
-  system_exit(0);
+  display_assert((char *)0x00285d78, (char *)0x002859a4, 1289, 1);
+  system_exit(-1);
   /* test (int16_t)eax, (int16_t)eax -> jl 0xea311 */
   /* cmp (int16_t)eax, 0xd -> jl 0xea331 */
-  display_assert((char *)0x00285e20, (char *)0x002859a4, 1298, 0);
-  system_exit(0);
+  display_assert((char *)0x00285e20, (char *)0x002859a4, 1298, 1);
+  system_exit(-1);
   crt_fopen((char *)0x00285e04, (char *)0x002658a4);
   /* test esi, esi -> je 0xea37e */
-  crt_fgets((char *)(uintptr_t)edx, 64, (void *)(uintptr_t)esi);
-  csstrtok((char *)(uintptr_t)eax, (char *)0x00285dfc);
-  crt_fclose((void *)(uintptr_t)esi);
-  main_set_multiplayer_map_name((char *)(uintptr_t)edi);
-  FUN_000ab040((char *)(uintptr_t)edi);
+  crt_fgets((void *)0, 64, (void *)(uintptr_t)eax);
+  csstrtok((void *)0, (char *)0x00285dfc);
+  crt_fclose((void *)(uintptr_t)eax);
+  main_set_multiplayer_map_name((void *)0);
+  FUN_000ab040((void *)0);
   network_game_server_get();
   /* test eax, eax -> je 0xea3a0 */
-  network_game_server_change_map_name(0, (char *)(uintptr_t)edi);
-  crt_stricmp((char *)(uintptr_t)edi, (char *)(uintptr_t)ecx);
+  network_game_server_change_map_name(eax, (void *)0);
+  crt_stricmp((void *)0, (char *)0);
   /* test eax, eax -> je 0xea3c5 */
   /* cmp esi, 0xd -> jl 0xea3a2 */
   saved_game_file_remember_last_used_multiplayer_map();
   /* mem[0x0031e494] = 0xffffffff */
-  csmemset((void *)0x005aa260, 0, 324);
-  tag_get('aLeD', 0);
+  csmemset((void *)0x005aa260, -1, 324);
+  tag_get('aLeD', *(int *)(a0));
   /* relift: cmp word ptr [esi], 2 -> je 0xea442 */
-  display_assert((char *)0x00285f48, (char *)0x002859a4, 1384, 0);
-  system_exit(0);
+  display_assert((char *)0x00285f48, (char *)0x002859a4, 1384, 1);
+  system_exit(-1);
   /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xea46b */
-  display_assert((char *)0x00285f08, (char *)0x002859a4, 1385, 0);
-  system_exit(0);
+  display_assert((char *)0x00285f08, (char *)0x002859a4, 1385, 1);
+  system_exit(-1);
   ui_widget_realloc(0, 400, (char *)0x002859a4, 1390);
   FUN_001c26b0();
   /* cmp (int16_t)eax, 3 -> jae 0xea4d5 */
@@ -3691,30 +3710,30 @@ void FUN_000e8e20(int a0)
   /* relift: cmp dword ptr [esi + ebx*4], eax -> je 0xea527 */
   /* cmp (int16_t)ecx, (int16_t)edx -> jb 0xea510 */
   /* test eax, eax -> je 0xea55e */
-  widget_free((void *)(uintptr_t)eax);
-  tag_get(0x44654c61, 0);
+  widget_free((void *)(*(int *)((char *)a0 + 0x40)));
+  tag_get('aLeD', *(int *)(a0));
   /* cmp ecx, 1 -> je 0xea5ba */
-  display_assert((char *)0x00286108, (char *)0x002859a4, 1465, 0);
-  system_exit(0);
+  display_assert((char *)0x00286108, (char *)0x002859a4, 1465, 1);
+  system_exit(-1);
   tag_get('aLeD', 0);
   /* relift: cmp dword ptr [eax + 0x3e0], ebx -> je 0xea600 */
-  display_assert((char *)0x002860b8, (char *)0x002859a4, 1470, 0);
-  system_exit(0);
+  display_assert((char *)0x002860b8, (char *)0x002859a4, 1470, 1);
+  system_exit(-1);
   tag_get('aLeD', 0);
   /* relift: cmp word ptr [esi], 2 -> je 0xea63b */
-  display_assert((char *)0x00286070, (char *)0x002859a4, 1473, 0);
-  system_exit(0);
+  display_assert((char *)0x00286070, (char *)0x002859a4, 1473, 1);
+  system_exit(-1);
   /* relift: cmp dword ptr [esi + 0x3e0], ebx -> je 0xea663 */
-  display_assert((char *)0x00286034, (char *)0x002859a4, 1474, 0);
-  system_exit(0);
+  display_assert((char *)0x00286034, (char *)0x002859a4, 1474, 1);
+  system_exit(-1);
   /* test (int16_t)eax, (int16_t)eax -> jl 0xea67d */
   /* cmp edx, ecx -> jl 0xea69d */
-  display_assert((char *)0x00285fe0, (char *)0x002859a4, 1483, 0);
-  system_exit(0);
+  display_assert((char *)0x00285fe0, (char *)0x002859a4, 1483, 1);
+  system_exit(-1);
   /* cmp esi, -1 -> jne 0xea6bf */
-  ui_play_audio_feedback_sound(0);
-  display_error_deferred(31, 0, 0, 0);
-  ui_play_audio_feedback_sound(0);
+  ui_play_audio_feedback_sound(4);
+  display_error_deferred(31, -1, 1, 0);
+  ui_play_audio_feedback_sound(4);
   playlist_profile_delete();
   /* test (char)eax, (char)eax -> je 0xea7f8 */
   network_game_server_get();
@@ -3723,25 +3742,25 @@ void FUN_000e8e20(int a0)
   saved_game_file_remember_last_used_multiplayer_variant_directory();
   crt_fopen((char *)0x00285fc0, (char *)0x002658a4);
   /* test ebx, ebx -> je 0xea7d2 */
-  crt_fgets((char *)(uintptr_t)edx, 128, (void *)(uintptr_t)ebx);
-  csstrtok((char *)(uintptr_t)eax, (char *)0x00285dfc);
-  csmemset((void *)(uintptr_t)ecx, 0, 104);
-  game_engine_get_variant_by_name((void *)(uintptr_t)eax, (char *)(uintptr_t)edx);
-  csmemcmp((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, 104);
+  crt_fgets((void *)0, 128, (void *)(uintptr_t)eax);
+  csstrtok((void *)0, (char *)0x00285dfc);
+  csmemset((void *)0, 0, 104);
+  game_engine_get_variant_by_name((void *)0, (void *)0);
+  csmemcmp((void *)0, (void *)0, 104);
   /* test eax, eax -> je 0xea7c6 */
-  crt_fclose((void *)(uintptr_t)ebx);
+  crt_fclose((void *)(uintptr_t)eax);
   player_ui_set_game_variant();
   /* test edi, edi -> je 0xea7ef */
-  network_game_server_change_game_variant((void *)(uintptr_t)edi, (void *)(uintptr_t)ecx);
-  error(0, (char *)0x00285f90);
+  network_game_server_change_game_variant((void *)(uintptr_t)a0, (void *)0);
+  error(2, (char *)0x00285f90);
   /* test eax, eax -> jne 0xea83d */
-  display_assert((char *)0x00286184, (char *)0x002859a4, 1572, 0);
-  system_exit(0);
+  display_assert((char *)0x00286184, (char *)0x002859a4, 1572, 1);
+  system_exit(-1);
   FUN_0012a0a0();
   /* test ebx, ebx -> je 0xea8f4 */
   /* relift: cmp byte ptr [ebx + 0xc0], 1 -> jne 0xea8f4 */
   network_game_client_get_local_machine_index();
-  network_player_is_valid((void *)(uintptr_t)eax);
+  network_player_is_valid((void *)((char *)(char *)eax + 0x242 - 0x1c));
   /* test (char)eax, (char)eax -> je 0xea89e */
   /* relift: cmp (int16_t)ecx, word ptr [ebp - 4] -> jne 0xea89e */
   /* relift: cmp (int16_t)edx, word ptr [eax + 2] -> je 0xea8b0 */
@@ -3749,34 +3768,34 @@ void FUN_000e8e20(int a0)
   network_game_client_get();
   network_game_client_update_local_player_data((void *)(uintptr_t)eax, (void *)0);
   /* test (char)eax, (char)eax -> jne 0xea8f4 */
-  error(0, (char *)0x00286150);
+  error(2, (char *)0x00286150);
   /* test ebx, ebx -> jne 0xea92c */
-  display_assert((char *)0x00286184, (char *)0x002859a4, 1618, 0);
-  system_exit(0);
+  display_assert((char *)0x00286184, (char *)0x002859a4, 1618, 1);
+  system_exit(-1);
   network_game_client_get();
-  network_game_client_get_state((void *)(uintptr_t)eax, (void *)(uintptr_t)ecx);
+  network_game_client_get_state((void *)(uintptr_t)eax, (void *)0);
   /* cmp (int16_t)eax, 2 -> jne 0xeaa03 */
   FUN_0012a0a0();
   network_game_client_get_local_machine_index();
-  display_assert((char *)0x002861a8, (char *)0x002859a4, 1627, 0);
-  system_exit(0);
+  display_assert((char *)0x002861a8, (char *)0x002859a4, 1627, 1);
+  system_exit(-1);
   /* cmp (int16_t)edi, -1 -> je 0xea9dd */
-  network_player_is_valid((void *)(uintptr_t)eax);
+  network_player_is_valid((void *)0);
   /* test (char)eax, (char)eax -> je 0xea9d3 */
   /* cmp (int16_t)edx, (int16_t)edi -> jne 0xea9d3 */
   /* relift: cmp (int16_t)eax, word ptr [ebx + 2] -> je 0xeaa01 */
-  network_game_client_add_player((void *)(uintptr_t)edx, ecx);
+  network_game_client_add_player((void *)(uintptr_t)local_4, 0);
   /* test (char)eax, (char)eax -> jne 0xeaa01 */
   network_game_log((char *)0x0028618c);
-  tag_get(0x44654c61, 0);
+  tag_get('aLeD', *(int *)(a0));
   /* mem[0x0031e494] = 0xffffffff */
-  csmemset((void *)0x005aa3c0, 0, 156);
+  csmemset((void *)0x005aa3c0, -1, 156);
   /* relift: cmp word ptr [edi], 2 -> je 0xeaa6d */
-  display_assert((char *)0x002861f8, (char *)0x002859a4, 1686, 0);
-  system_exit(0);
+  display_assert((char *)0x002861f8, (char *)0x002859a4, 1686, 1);
+  system_exit(-1);
   /* cmp eax, ebx -> je 0xeaaa0 */
-  display_assert((char *)0x002861b0, (char *)0x002859a4, 1688, 0);
-  system_exit(0);
+  display_assert((char *)0x002861b0, (char *)0x002859a4, 1688, 1);
+  system_exit(-1);
   ui_widget_realloc(0, 400, (char *)0x002859a4, 1693);
   FUN_001c0d50();
   /* cmp eax, ebx -> jne 0xeab29 */
@@ -3787,424 +3806,424 @@ void FUN_000e8e20(int a0)
   /* relift: cmp dword ptr [edx + ecx*4], eax -> je 0xeab5d */
   /* cmp ecx, edi -> jl 0xeab46 */
   /* test eax, eax -> je 0xeab8e */
-  widget_free((void *)(uintptr_t)eax);
+  widget_free((void *)(*(int *)((char *)a0 + 0x40)));
   /* test eax, eax -> je 0xeabb4 */
   /* relift: cmp word ptr [eax + 2], -1 -> jne 0xeabd4 */
-  display_assert((char *)0x002863b4, (char *)0x002859a4, 1763, 0);
-  system_exit(0);
-  tag_get(0x44654c61, 0);
+  display_assert((char *)0x002863b4, (char *)0x002859a4, 1763, 1);
+  system_exit(-1);
+  tag_get('aLeD', *(int *)(a0));
   /* relift: cmp word ptr [eax], 0 -> jne 0xeabf8 */
   /* relift: cmp dword ptr [eax + 0x3e0], 3 -> jge 0xeac18 */
-  display_assert((char *)0x00286360, (char *)0x002859a4, 1772, 0);
-  system_exit(0);
+  display_assert((char *)0x00286360, (char *)0x002859a4, 1772, 1);
+  system_exit(-1);
   tag_get('aLeD', 0);
   /* relift: cmp word ptr [esi], 2 -> je 0xeac53 */
-  display_assert((char *)0x00286320, (char *)0x002859a4, 1775, 0);
-  system_exit(0);
+  display_assert((char *)0x00286320, (char *)0x002859a4, 1775, 1);
+  system_exit(-1);
   /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xeac7c */
-  display_assert((char *)0x002862e8, (char *)0x002859a4, 1776, 0);
-  system_exit(0);
+  display_assert((char *)0x002862e8, (char *)0x002859a4, 1776, 1);
+  system_exit(-1);
   /* test (int16_t)eax, (int16_t)eax -> jl 0xeac93 */
   /* cmp eax, edx -> jl 0xeacb3 */
-  display_assert((char *)0x00286298, (char *)0x002859a4, 1784, 0);
-  system_exit(0);
+  display_assert((char *)0x00286298, (char *)0x002859a4, 1784, 1);
+  system_exit(-1);
   /* cmp eax, -1 -> je 0xead3f */
-  display_error_deferred(31, 0, 0, 0);
-  ui_play_audio_feedback_sound(0);
+  display_error_deferred(31, -1, 1, 0);
+  ui_play_audio_feedback_sound(4);
   player_profile_new();
   /* test (char)eax, (char)eax -> je 0xead28 */
   player_ui_get_single_player_local_player_from_controller(0);
   player_ui_set_active_player_profile();
-  error(0, (char *)0x00286264);
-  error(0, (char *)0x0028623c);
-  ui_play_audio_feedback_sound(0);
+  error(2, (char *)0x00286264);
+  error(2, (char *)0x0028623c);
+  ui_play_audio_feedback_sound(4);
   /* relift: cmp word ptr [esi + 2], -1 -> jne 0xead97 */
-  display_assert((char *)0x002863b4, (char *)0x002859a4, 1834, 0);
-  system_exit(0);
+  display_assert((char *)0x002863b4, (char *)0x002859a4, 1834, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xeadb3 */
   /* relift: cmp word ptr [esi + 0xe], 2 -> je 0xeadd3 */
   /* test esi, esi -> jne 0xeada5 */
-  display_assert((char *)0x00286498, (char *)0x002859a4, 1838, 0);
-  system_exit(0);
+  display_assert((char *)0x00286498, (char *)0x002859a4, 1838, 1);
+  system_exit(-1);
   tag_get('aLeD', 0);
   /* test ecx, ecx -> je 0xeae0d */
-  display_assert((char *)0x00286440, (char *)0x002859a4, 1845, 0);
-  system_exit(0);
+  display_assert((char *)0x00286440, (char *)0x002859a4, 1845, 1);
+  system_exit(-1);
   /* test (int16_t)eax, (int16_t)eax -> jl 0xeae21 */
   /* cmp eax, edx -> jl 0xeae41 */
-  display_assert((char *)0x002863f0, (char *)0x002859a4, 1851, 0);
-  system_exit(0);
-  display_error_deferred(31, ebx, 0, 0);
-  ui_play_audio_feedback_sound(0);
+  display_assert((char *)0x002863f0, (char *)0x002859a4, 1851, 1);
+  system_exit(-1);
+  display_error_deferred(31, a0, 1, 0);
+  ui_play_audio_feedback_sound(4);
   player_profile_new();
   /* test (char)eax, (char)eax -> je 0xeae9d */
   player_ui_set_active_player_profile();
-  error(0, (char *)0x00286264);
+  error(2, (char *)0x00286264);
   /* mem[0x0031e494] = 0xffffffff */
-  tag_get(0x44654c61, 0);
+  tag_get('aLeD', *(int *)(a0));
   /* relift: cmp word ptr [eax], 0 -> jne 0xeaef3 */
   /* relift: cmp dword ptr [eax + 0x3e0], 3 -> jge 0xeaf13 */
-  display_assert((char *)0x00286500, (char *)0x002859a4, 1896, 0);
-  system_exit(0);
-  tag_get(0x44654c61, 0);
+  display_assert((char *)0x00286500, (char *)0x002859a4, 1896, 1);
+  system_exit(-1);
+  tag_get('aLeD', 0);
   /* relift: cmp word ptr [edi], 2 -> je 0xeaf4f */
-  display_assert((char *)0x00286070, (char *)0x002859a4, 1899, 0);
-  system_exit(0);
-  display_assert((char *)0x00286034, (char *)0x002859a4, 1900, 0);
-  system_exit(0);
+  display_assert((char *)0x00286070, (char *)0x002859a4, 1899, 1);
+  system_exit(-1);
+  display_assert((char *)0x00286034, (char *)0x002859a4, 1900, 1);
+  system_exit(-1);
   /* test (int16_t)eax, (int16_t)eax -> jl 0xeaf90 */
   /* cmp eax, edx -> jl 0xeafb0 */
-  display_assert((char *)0x00285fe0, (char *)0x002859a4, 1909, 0);
-  system_exit(0);
+  display_assert((char *)0x00285fe0, (char *)0x002859a4, 1909, 1);
+  system_exit(-1);
   /* cmp eax, -1 -> je 0xeafef */
   player_ui_begin_editing_profile();
-  display_error_deferred(31, 0, 0, 0);
-  ui_play_audio_feedback_sound(0);
-  ui_play_audio_feedback_sound(0);
+  display_error_deferred(31, -1, 1, 0);
+  ui_play_audio_feedback_sound(4);
+  ui_play_audio_feedback_sound(4);
   /* mem[0x0031e494] = 0xffffffff */
   player_ui_end_editing_profile();
   player_ui_get_edit_playlist_profile();
   /* relift: cmp word ptr [esi + 0xe], 3 -> je 0xeb060 */
-  display_assert((char *)0x002865a0, (char *)0x002859a4, 1958, 0);
-  system_exit(0);
+  display_assert((char *)0x002865a0, (char *)0x002859a4, 1958, 1);
+  system_exit(-1);
   /* test edi, edi -> je 0xeb0c8 */
   /* cmp eax, 4 -> ja 0xeb097 */
-  error(0, (char *)0x0028657c);
+  error(2, (char *)0x0028657c);
   /* relift: cmp esi, dword ptr [edi + 0x18] -> je 0xeb0be */
-  csmemset((void *)(uintptr_t)ecx, 0, 24);
-  error(0, (char *)0x00286550);
+  csmemset((void *)((char *)eax + 0x4c), 0, 24);
+  error(2, (char *)0x00286550);
   player_ui_get_edit_playlist_profile();
-  virtual_keyboard_set_validation((wchar_t *)(uintptr_t)eax, 24, 0);
+  virtual_keyboard_set_validation((wchar_t *)(uintptr_t)eax, 24, 9);
   /* test (char)eax, (char)eax -> jne 0xeb12c */
-  error(0, (char *)0x002865d0);
-  error(0, (char *)0x00286550);
+  error(2, (char *)0x002865d0);
+  error(2, (char *)0x00286550);
   player_ui_get_edit_playlist_profile();
   /* cmp edi, ebx -> jne 0xeb193 */
-  display_assert((char *)0x002868d0, (char *)0x002859a4, 2040, 0);
-  system_exit(0);
+  display_assert((char *)0x002868d0, (char *)0x002859a4, 2040, 1);
+  system_exit(-1);
   /* cmp esi, ebx -> je 0xeb1ae */
   /* relift: cmp word ptr [esi + 0xe], 2 -> je 0xeb1ce */
   /* cmp esi, ebx -> jne 0xeb1a0 */
-  display_assert((char *)0x002868a8, (char *)0x002859a4, 2042, 0);
-  system_exit(0);
-  error(0, (char *)0x0028686c);
+  display_assert((char *)0x002868a8, (char *)0x002859a4, 2042, 1);
+  system_exit(-1);
+  error(2, (char *)0x0028686c);
   /* cmp edi, ebx -> jne 0xeb220 */
-  display_assert((char *)0x00286848, (char *)0x002859a4, 2051, 0);
-  system_exit(0);
+  display_assert((char *)0x00286848, (char *)0x002859a4, 2051, 1);
+  system_exit(-1);
   /* cmp esi, ebx -> je 0xeb23d */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb25d */
   /* cmp esi, ebx -> jne 0xeb230 */
-  display_assert((char *)0x0028681c, (char *)0x002859a4, 2053, 0);
-  system_exit(0);
+  display_assert((char *)0x0028681c, (char *)0x002859a4, 2053, 1);
+  system_exit(-1);
   /* cmp eax, 5 -> ja 0xeb2b1 */
-  error(0, (char *)0x002867dc);
+  error(2, (char *)0x002867dc);
   /* cmp edi, ebx -> jne 0xeb2e7 */
-  display_assert((char *)0x002867bc, (char *)0x002859a4, 2066, 0);
-  system_exit(0);
+  display_assert((char *)0x002867bc, (char *)0x002859a4, 2066, 1);
+  system_exit(-1);
   /* cmp esi, ebx -> je 0xeb300 */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb320 */
   /* cmp esi, ebx -> jne 0xeb2f3 */
-  display_assert((char *)0x0028678c, (char *)0x002859a4, 2068, 0);
-  system_exit(0);
-  error(0, (char *)0x00286748);
+  display_assert((char *)0x0028678c, (char *)0x002859a4, 2068, 1);
+  system_exit(-1);
+  error(2, (char *)0x00286748);
   /* cmp edi, ebx -> jne 0xeb372 */
-  display_assert((char *)0x00286720, (char *)0x002859a4, 2077, 0);
-  system_exit(0);
+  display_assert((char *)0x00286720, (char *)0x002859a4, 2077, 1);
+  system_exit(-1);
   /* cmp esi, ebx -> je 0xeb38d */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb3ad */
   /* cmp esi, ebx -> jne 0xeb380 */
-  display_assert((char *)0x002866e8, (char *)0x002859a4, 2079, 0);
-  system_exit(0);
-  error(0, (char *)0x002866a0);
+  display_assert((char *)0x002866e8, (char *)0x002859a4, 2079, 1);
+  system_exit(-1);
+  error(2, (char *)0x002866a0);
   /* cmp esi, ebx -> jne 0xeb405 */
-  display_assert((char *)0x0028667c, (char *)0x002859a4, 2088, 0);
-  system_exit(0);
+  display_assert((char *)0x0028667c, (char *)0x002859a4, 2088, 1);
+  system_exit(-1);
   /* cmp esi, ebx -> je 0xeb41e */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb441 */
   /* cmp esi, ebx -> jne 0xeb411 */
-  display_assert((char *)0x0028664c, (char *)0x002859a4, 2090, 0);
-  system_exit(0);
-  error(0, (char *)0x00286608);
-  ui_widgets_pop_stack(ecx);
-  error(0, (char *)0x00286550);
+  display_assert((char *)0x0028664c, (char *)0x002859a4, 2090, 1);
+  system_exit(-1);
+  error(2, (char *)0x00286608);
+  ui_widgets_pop_stack(0);
+  error(2, (char *)0x00286550);
   player_ui_get_edit_playlist_profile();
   /* test ebx, ebx -> je 0xeb6dd */
   /* test edi, edi -> jne 0xeb52f */
-  display_assert((char *)0x00286a64, (char *)0x002859a4, 2126, 0);
-  system_exit(0);
+  display_assert((char *)0x00286a64, (char *)0x002859a4, 2126, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xeb544 */
   /* relift: cmp word ptr [esi + 0xe], 2 -> je 0xeb564 */
   /* test esi, esi -> jne 0xeb536 */
-  display_assert((char *)0x00286a38, (char *)0x002859a4, 2128, 0);
-  system_exit(0);
-  error(0, (char *)0x002869f8);
+  display_assert((char *)0x00286a38, (char *)0x002859a4, 2128, 1);
+  system_exit(-1);
+  error(2, (char *)0x002869f8);
   /* test edi, edi -> jne 0xeb5b2 */
-  display_assert((char *)0x002869d4, (char *)0x002859a4, 2137, 0);
-  system_exit(0);
+  display_assert((char *)0x002869d4, (char *)0x002859a4, 2137, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xeb5cd */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb5ed */
   /* test esi, esi -> jne 0xeb5c0 */
-  display_assert((char *)0x002869a8, (char *)0x002859a4, 2139, 0);
-  system_exit(0);
+  display_assert((char *)0x002869a8, (char *)0x002859a4, 2139, 1);
+  system_exit(-1);
   /* cmp eax, 4 -> ja 0xeb62a */
-  error(0, (char *)0x00286968);
+  error(2, (char *)0x00286968);
   /* test esi, esi -> jne 0xeb660 */
-  display_assert((char *)0x00286950, (char *)0x002859a4, 2151, 0);
-  system_exit(0);
+  display_assert((char *)0x00286950, (char *)0x002859a4, 2151, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xeb67d */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb69d */
   /* test esi, esi -> jne 0xeb670 */
-  display_assert((char *)0x00286928, (char *)0x002859a4, 2153, 0);
-  system_exit(0);
-  error(0, (char *)0x002868f0);
-  ui_widgets_pop_stack(edx);
-  error(0, (char *)0x00286550);
+  display_assert((char *)0x00286928, (char *)0x002859a4, 2153, 1);
+  system_exit(-1);
+  error(2, (char *)0x002868f0);
+  ui_widgets_pop_stack(0);
+  error(2, (char *)0x00286550);
   player_ui_get_edit_playlist_profile();
   /* cmp edi, ebx -> jne 0xeb753 */
-  display_assert((char *)0x00286c9c, (char *)0x002859a4, 2187, 0);
-  system_exit(0);
+  display_assert((char *)0x00286c9c, (char *)0x002859a4, 2187, 1);
+  system_exit(-1);
   /* cmp esi, ebx -> je 0xeb76e */
   /* relift: cmp word ptr [esi + 0xe], 2 -> je 0xeb78e */
   /* cmp esi, ebx -> jne 0xeb760 */
-  display_assert((char *)0x00286c70, (char *)0x002859a4, 2189, 0);
-  system_exit(0);
-  error(0, (char *)0x00286c30);
+  display_assert((char *)0x00286c70, (char *)0x002859a4, 2189, 1);
+  system_exit(-1);
+  error(2, (char *)0x00286c30);
   /* cmp edi, ebx -> jne 0xeb7e0 */
-  display_assert((char *)0x00286c10, (char *)0x002859a4, 2198, 0);
-  system_exit(0);
+  display_assert((char *)0x00286c10, (char *)0x002859a4, 2198, 1);
+  system_exit(-1);
   /* cmp esi, ebx -> je 0xeb7fd */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb81d */
   /* cmp esi, ebx -> jne 0xeb7f0 */
-  display_assert((char *)0x00286be0, (char *)0x002859a4, 2200, 0);
-  system_exit(0);
-  error(0, (char *)0x00286ba0);
+  display_assert((char *)0x00286be0, (char *)0x002859a4, 2200, 1);
+  system_exit(-1);
+  error(2, (char *)0x00286ba0);
   /* cmp edi, ebx -> jne 0xeb86f */
-  display_assert((char *)0x00286b80, (char *)0x002859a4, 2209, 0);
-  system_exit(0);
+  display_assert((char *)0x00286b80, (char *)0x002859a4, 2209, 1);
+  system_exit(-1);
   /* cmp esi, ebx -> je 0xeb88d */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb8ad */
   /* cmp esi, ebx -> jne 0xeb880 */
-  display_assert((char *)0x00286b54, (char *)0x002859a4, 2211, 0);
-  system_exit(0);
-  error(0, (char *)0x00286b14);
+  display_assert((char *)0x00286b54, (char *)0x002859a4, 2211, 1);
+  system_exit(-1);
+  error(2, (char *)0x00286b14);
   /* cmp edi, ebx -> jne 0xeb8ff */
-  display_assert((char *)0x00286af4, (char *)0x002859a4, 2220, 0);
-  system_exit(0);
+  display_assert((char *)0x00286af4, (char *)0x002859a4, 2220, 1);
+  system_exit(-1);
   /* cmp esi, ebx -> je 0xeb91d */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb93d */
   /* cmp esi, ebx -> jne 0xeb910 */
-  display_assert((char *)0x00286ac8, (char *)0x002859a4, 2222, 0);
-  system_exit(0);
+  display_assert((char *)0x00286ac8, (char *)0x002859a4, 2222, 1);
+  system_exit(-1);
   /* cmp eax, 4 -> ja 0xeb989 */
-  error(0, (char *)0x00286a88);
+  error(2, (char *)0x00286a88);
   /* cmp esi, ebx -> jne 0xeb9bf */
-  display_assert((char *)0x00286950, (char *)0x002859a4, 2234, 0);
-  system_exit(0);
+  display_assert((char *)0x00286950, (char *)0x002859a4, 2234, 1);
+  system_exit(-1);
   /* cmp esi, ebx -> je 0xeb9dd */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb9fd */
   /* cmp esi, ebx -> jne 0xeb9d0 */
-  display_assert((char *)0x00286928, (char *)0x002859a4, 2236, 0);
-  system_exit(0);
-  error(0, (char *)0x002868f0);
-  ui_widgets_pop_stack(eax);
-  error(0, (char *)0x00286550);
+  display_assert((char *)0x00286928, (char *)0x002859a4, 2236, 1);
+  system_exit(-1);
+  error(2, (char *)0x002868f0);
+  ui_widgets_pop_stack(0);
+  error(2, (char *)0x00286550);
   player_ui_get_edit_playlist_profile();
   /* test edi, edi -> jne 0xebab0 */
-  display_assert((char *)0x00287034, (char *)0x002859a4, 2270, 0);
-  system_exit(0);
+  display_assert((char *)0x00287034, (char *)0x002859a4, 2270, 1);
+  system_exit(-1);
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebaed */
   /* test esi, esi -> jne 0xebac0 */
-  display_assert((char *)0x00287004, (char *)0x002859a4, 2272, 0);
-  system_exit(0);
+  display_assert((char *)0x00287004, (char *)0x002859a4, 2272, 1);
+  system_exit(-1);
   /* cmp eax, 3 -> ja 0xebb2d */
-  error(0, (char *)0x00286fc0);
+  error(2, (char *)0x00286fc0);
   /* test edi, edi -> jne 0xebb63 */
-  display_assert((char *)0x00286f98, (char *)0x002859a4, 2283, 0);
-  system_exit(0);
+  display_assert((char *)0x00286f98, (char *)0x002859a4, 2283, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xebb7d */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebb9d */
   /* test esi, esi -> jne 0xebb70 */
-  display_assert((char *)0x00286f64, (char *)0x002859a4, 2285, 0);
-  system_exit(0);
+  display_assert((char *)0x00286f64, (char *)0x002859a4, 2285, 1);
+  system_exit(-1);
   /* cmp eax, 3 -> ja 0xebbdd */
-  error(0, (char *)0x00286f20);
+  error(2, (char *)0x00286f20);
   /* test edi, edi -> jne 0xebc13 */
-  display_assert((char *)0x00286efc, (char *)0x002859a4, 2296, 0);
-  system_exit(0);
+  display_assert((char *)0x00286efc, (char *)0x002859a4, 2296, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xebc2d */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebc4d */
   /* test esi, esi -> jne 0xebc20 */
-  display_assert((char *)0x00286ecc, (char *)0x002859a4, 2298, 0);
-  system_exit(0);
-  error(0, (char *)0x00286e88);
+  display_assert((char *)0x00286ecc, (char *)0x002859a4, 2298, 1);
+  system_exit(-1);
+  error(2, (char *)0x00286e88);
   /* test edi, edi -> jne 0xebcb6 */
-  display_assert((char *)0x00286e6c, (char *)0x002859a4, 2308, 0);
-  system_exit(0);
+  display_assert((char *)0x00286e6c, (char *)0x002859a4, 2308, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xebccf */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebcef */
   /* test esi, esi -> jne 0xebcc2 */
-  display_assert((char *)0x00286e40, (char *)0x002859a4, 2310, 0);
-  system_exit(0);
-  error(0, (char *)0x00286e04);
+  display_assert((char *)0x00286e40, (char *)0x002859a4, 2310, 1);
+  system_exit(-1);
+  error(2, (char *)0x00286e04);
   /* test edi, edi -> jne 0xebd58 */
-  display_assert((char *)0x00286de4, (char *)0x002859a4, 2320, 0);
-  system_exit(0);
+  display_assert((char *)0x00286de4, (char *)0x002859a4, 2320, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xebd71 */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebd91 */
   /* test esi, esi -> jne 0xebd64 */
-  display_assert((char *)0x00286db8, (char *)0x002859a4, 2322, 0);
-  system_exit(0);
-  error(0, (char *)0x00286d78);
+  display_assert((char *)0x00286db8, (char *)0x002859a4, 2322, 1);
+  system_exit(-1);
+  error(2, (char *)0x00286d78);
   /* test edi, edi -> jne 0xebde5 */
-  display_assert((char *)0x00286d54, (char *)0x002859a4, 2331, 0);
-  system_exit(0);
+  display_assert((char *)0x00286d54, (char *)0x002859a4, 2331, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xebdfe */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebe1e */
   /* test esi, esi -> jne 0xebdf1 */
-  display_assert((char *)0x00286d24, (char *)0x002859a4, 2333, 0);
-  system_exit(0);
+  display_assert((char *)0x00286d24, (char *)0x002859a4, 2333, 1);
+  system_exit(-1);
   /* test eax, eax -> jl 0xebe34 */
   /* cmp eax, 0xf -> jg 0xebe34 */
-  error(0, (char *)0x00286ce0);
+  error(2, (char *)0x00286ce0);
   /* test edi, edi -> jne 0xebe6a */
-  display_assert((char *)0x00286cc0, (char *)0x002859a4, 2358, 0);
-  system_exit(0);
+  display_assert((char *)0x00286cc0, (char *)0x002859a4, 2358, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xebe83 */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebea3 */
   /* test esi, esi -> jne 0xebe76 */
-  display_assert((char *)0x002869a8, (char *)0x002859a4, 2360, 0);
-  system_exit(0);
+  display_assert((char *)0x002869a8, (char *)0x002859a4, 2360, 1);
+  system_exit(-1);
   /* cmp eax, 4 -> ja 0xebeef */
-  error(0, (char *)0x00286968);
+  error(2, (char *)0x00286968);
   /* test esi, esi -> jne 0xebf25 */
-  display_assert((char *)0x00286950, (char *)0x002859a4, 2372, 0);
-  system_exit(0);
+  display_assert((char *)0x00286950, (char *)0x002859a4, 2372, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xebf3e */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebf5e */
   /* test esi, esi -> jne 0xebf31 */
-  display_assert((char *)0x00286928, (char *)0x002859a4, 2374, 0);
-  system_exit(0);
-  error(0, (char *)0x002868f0);
-  ui_widgets_pop_stack(edx);
-  error(0, (char *)0x00286550);
+  display_assert((char *)0x00286928, (char *)0x002859a4, 2374, 1);
+  system_exit(-1);
+  error(2, (char *)0x002868f0);
+  ui_widgets_pop_stack(0);
+  error(2, (char *)0x00286550);
   player_ui_get_edit_playlist_profile();
   /* test ebx, ebx -> je 0xec292 */
   /* test edi, edi -> jne 0xec02f */
-  display_assert((char *)0x002871d8, (char *)0x002859a4, 2408, 0);
-  system_exit(0);
+  display_assert((char *)0x002871d8, (char *)0x002859a4, 2408, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xec044 */
   /* relift: cmp word ptr [esi + 0xe], 2 -> je 0xec064 */
   /* test esi, esi -> jne 0xec036 */
-  display_assert((char *)0x002871ac, (char *)0x002859a4, 2410, 0);
-  system_exit(0);
-  error(0, (char *)0x0028716c);
+  display_assert((char *)0x002871ac, (char *)0x002859a4, 2410, 1);
+  system_exit(-1);
+  error(2, (char *)0x0028716c);
   /* test edi, edi -> jne 0xec0c4 */
-  display_assert((char *)0x0028714c, (char *)0x002859a4, 2420, 0);
-  system_exit(0);
+  display_assert((char *)0x0028714c, (char *)0x002859a4, 2420, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xec0dd */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec0fd */
   /* test esi, esi -> jne 0xec0d0 */
-  display_assert((char *)0x00287120, (char *)0x002859a4, 2422, 0);
-  system_exit(0);
-  error(0, (char *)0x002870e4);
+  display_assert((char *)0x00287120, (char *)0x002859a4, 2422, 1);
+  system_exit(-1);
+  error(2, (char *)0x002870e4);
   /* test edi, edi -> jne 0xec15d */
-  display_assert((char *)0x002870c8, (char *)0x002859a4, 2432, 0);
-  system_exit(0);
+  display_assert((char *)0x002870c8, (char *)0x002859a4, 2432, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xec17d */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec19d */
   /* test esi, esi -> jne 0xec170 */
-  display_assert((char *)0x0028709c, (char *)0x002859a4, 2434, 0);
-  system_exit(0);
+  display_assert((char *)0x0028709c, (char *)0x002859a4, 2434, 1);
+  system_exit(-1);
   /* cmp eax, 5 -> ja 0xec1e3 */
-  error(0, (char *)0x0028705c);
+  error(2, (char *)0x0028705c);
   /* test esi, esi -> jne 0xec219 */
-  display_assert((char *)0x00286950, (char *)0x002859a4, 2447, 0);
-  system_exit(0);
+  display_assert((char *)0x00286950, (char *)0x002859a4, 2447, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xec232 */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec252 */
   /* test esi, esi -> jne 0xec225 */
-  display_assert((char *)0x00286928, (char *)0x002859a4, 2449, 0);
-  system_exit(0);
-  error(0, (char *)0x002868f0);
-  ui_widgets_pop_stack(edx);
-  error(0, (char *)0x00286550);
+  display_assert((char *)0x00286928, (char *)0x002859a4, 2449, 1);
+  system_exit(-1);
+  error(2, (char *)0x002868f0);
+  ui_widgets_pop_stack(0);
+  error(2, (char *)0x00286550);
   player_ui_get_edit_playlist_profile();
   /* test ebx, ebx -> je 0xec7cb */
   /* test edi, edi -> jne 0xec2ff */
-  display_assert((char *)0x00287654, (char *)0x002859a4, 2483, 0);
-  system_exit(0);
+  display_assert((char *)0x00287654, (char *)0x002859a4, 2483, 1);
+  system_exit(-1);
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec33d */
   /* test esi, esi -> jne 0xec310 */
-  display_assert((char *)0x00287624, (char *)0x002859a4, 2485, 0);
-  system_exit(0);
+  display_assert((char *)0x00287624, (char *)0x002859a4, 2485, 1);
+  system_exit(-1);
   /* cmp eax, 3 -> ja 0xec371 */
-  error(0, (char *)0x002875e0);
+  error(2, (char *)0x002875e0);
   /* test edi, edi -> jne 0xec3a7 */
-  display_assert((char *)0x002875b8, (char *)0x002859a4, 2496, 0);
-  system_exit(0);
+  display_assert((char *)0x002875b8, (char *)0x002859a4, 2496, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xec3c0 */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec3e0 */
   /* test esi, esi -> jne 0xec3b3 */
-  display_assert((char *)0x00287588, (char *)0x002859a4, 2498, 0);
-  system_exit(0);
+  display_assert((char *)0x00287588, (char *)0x002859a4, 2498, 1);
+  system_exit(-1);
   /* cmp eax, 5 -> ja 0xec426 */
-  error(0, (char *)0x00287548);
+  error(2, (char *)0x00287548);
   /* test edi, edi -> jne 0xec45c */
-  display_assert((char *)0x00287530, (char *)0x002859a4, 2511, 0);
-  system_exit(0);
+  display_assert((char *)0x00287530, (char *)0x002859a4, 2511, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xec475 */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec495 */
   /* test esi, esi -> jne 0xec468 */
-  display_assert((char *)0x00287508, (char *)0x002859a4, 2513, 0);
-  system_exit(0);
-  error(0, (char *)0x002874cc);
+  display_assert((char *)0x00287508, (char *)0x002859a4, 2513, 1);
+  system_exit(-1);
+  error(2, (char *)0x002874cc);
   /* test edi, edi -> jne 0xec4ea */
-  display_assert((char *)0x002874ac, (char *)0x002859a4, 2522, 0);
-  system_exit(0);
+  display_assert((char *)0x002874ac, (char *)0x002859a4, 2522, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xec503 */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec523 */
   /* test esi, esi -> jne 0xec4f6 */
-  display_assert((char *)0x00287480, (char *)0x002859a4, 2524, 0);
-  system_exit(0);
+  display_assert((char *)0x00287480, (char *)0x002859a4, 2524, 1);
+  system_exit(-1);
   /* cmp eax, 3 -> ja 0xec557 */
-  error(0, (char *)0x00287440);
+  error(2, (char *)0x00287440);
   /* test edi, edi -> jne 0xec58d */
-  display_assert((char *)0x0028741c, (char *)0x002859a4, 2535, 0);
-  system_exit(0);
+  display_assert((char *)0x0028741c, (char *)0x002859a4, 2535, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xec5ad */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec5cd */
   /* test esi, esi -> jne 0xec5a0 */
-  display_assert((char *)0x002873e8, (char *)0x002859a4, 2537, 0);
-  system_exit(0);
+  display_assert((char *)0x002873e8, (char *)0x002859a4, 2537, 1);
+  system_exit(-1);
   /* cmp eax, 3 -> ja 0xec601 */
-  error(0, (char *)0x002873a0);
+  error(2, (char *)0x002873a0);
   /* test edi, edi -> jne 0xec637 */
-  display_assert((char *)0x00287380, (char *)0x002859a4, 2548, 0);
-  system_exit(0);
+  display_assert((char *)0x00287380, (char *)0x002859a4, 2548, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xec650 */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec670 */
   /* test esi, esi -> jne 0xec643 */
-  display_assert((char *)0x00287354, (char *)0x002859a4, 2550, 0);
-  system_exit(0);
-  error(0, (char *)0x00287314);
+  display_assert((char *)0x00287354, (char *)0x002859a4, 2550, 1);
+  system_exit(-1);
+  error(2, (char *)0x00287314);
   /* test edi, edi -> jne 0xec6be */
-  display_assert((char *)0x002872f0, (char *)0x002859a4, 2559, 0);
-  system_exit(0);
+  display_assert((char *)0x002872f0, (char *)0x002859a4, 2559, 1);
+  system_exit(-1);
   /* test esi, esi -> je 0xec6dd */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec6fd */
   /* test esi, esi -> jne 0xec6d0 */
-  display_assert((char *)0x002872bc, (char *)0x002859a4, 2561, 0);
-  system_exit(0);
-  error(0, (char *)0x00287278);
+  display_assert((char *)0x002872bc, (char *)0x002859a4, 2561, 1);
+  system_exit(-1);
+  error(2, (char *)0x00287278);
   /* test eax, eax -> je 0xec784 */
   /* test esi, esi -> je 0xec74d */
   /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec76d */
   /* test esi, esi -> jne 0xec740 */
-  display_assert((char *)0x00287244, (char *)0x002859a4, 2574, 0);
-  system_exit(0);
+  display_assert((char *)0x00287244, (char *)0x002859a4, 2574, 1);
+  system_exit(-1);
   /* cmp eax, 3 -> ja 0xec7b5 */
-  error(0, (char *)0x00287200);
-  error(0, (char *)0x00286550);
+  error(2, (char *)0x00287200);
+  error(2, (char *)0x00286550);
 
   (void)eax;
   (void)ebx;
@@ -4213,6 +4232,12 @@ void FUN_000e8e20(int a0)
   (void)esi;
   (void)edi;
   (void)ebp;
+  (void)local_1a;
+  (void)local_1c;
+  (void)local_20;
+  (void)local_24;
+  (void)local_4;
+  (void)lift_a1;
 }
 
 void FUN_000ffeb0(char param_1)

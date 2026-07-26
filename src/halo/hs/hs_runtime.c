@@ -4699,10 +4699,10 @@ float *FUN_000c9f90(void)
 
   tag_loaded('!dns', (char *)(uintptr_t)esi);
   /* cmp eax, -1 -> je 0xc9fb5 */
-  tag_get('!dns', 0);
+  tag_get('!dns', eax);
   tag_loaded('dnsl', (char *)(uintptr_t)esi);
   /* cmp eax, -1 -> je 0xc9ff4 */
-  tag_get('dnsl', 0);
+  tag_get('dnsl', eax);
   /* test ecx, ecx -> jle 0xc9ff4 */
   tag_block_get_element((void *)(uintptr_t)eax, 0, 160);
   console_printf(0, (char *)0x00280430);
@@ -4718,7 +4718,7 @@ char hs_wake_by_name(void *block_entry)
 {
   int edi = 0;
 
-  FUN_000cae00((char *)(uintptr_t)edi);
+  FUN_000cae00((char *)(uintptr_t)block_entry);
   /* cmp edi, -1 -> je 0xcb9bc */
   FUN_000cacf0(0);
   return 0;
