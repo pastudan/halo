@@ -44,14 +44,36 @@ def func_name(fn: dict) -> str:
 
 
 def is_naked_near_def(lines: List[str], name: str, addr: str) -> bool:
+    """True if *this* function is still a Capstone naked draft.
+
+    Lookback is bounded to the current definition prologue so a prior naked
+    neighbor (common when readable lifts sit just below drafts) does not
+    false-positive and hide already-lifted C from the Unicorn queue.
+    """
     names = [n for n in (name, f"FUN_{int(addr, 16):08x}") if n]
+    target = int(addr, 16)
     for nm in names:
         pat = re.compile(rf"\b{re.escape(nm)}\s*\(")
         for i, line in enumerate(lines):
             if not pat.search(line):
                 continue
-            before = "\n".join(lines[max(0, i - 40) : i + 1])
+            # Bound prologue: stop at previous #endif / function close.
+            window_start = max(0, i - 14)
+            for j in range(i - 1, window_start - 1, -1):
+                s = lines[j].strip()
+                if s == "#endif" or s == "}":
+                    window_start = j + 1
+                    break
+            before = "\n".join(lines[window_start : i + 1])
             after = "\n".join(lines[i : min(len(lines), i + 20)])
+            head = "\n".join(lines[max(0, i - 4) : i + 1])
+            # Skip definition sites tagged for a different XBE address.
+            mentioned = [int(a, 16) for a in re.findall(r"0x[0-9a-fA-F]+", head)]
+            code_addrs = [a for a in mentioned if a >= 0x10000]
+            if code_addrs and target not in code_addrs:
+                continue
+            if re.search(r"readable\s+C\s+lift", head, re.I):
+                return False
             if NAKED_ATTR.search(before) or NAKED_ATTR.search(after):
                 return True
             if NAKED_MARK.search(before):
@@ -501,6 +523,28 @@ def main() -> int:
             phase = "confirm%d" % args.confirm_seeds
 
         if confirm_ok:
+            sp = ROOT / r["source"]
+            lines = sp.read_text(encoding="utf-8", errors="replace").splitlines()
+            if is_naked_near_def(lines, r["name"], r["addr"]):
+                stats["naked_blocked"] += 1
+                append_ledger(
+                    {
+                        "addr": ah,
+                        "name": r["name"],
+                        "ok": False,
+                        "phase": "naked_blocked",
+                        **{
+                            k: res100[k]
+                            for k in ("rc", "passed", "failed", "errors", "dt", "tail")
+                        },
+                    }
+                )
+                done.add(ah)
+                tested += 1
+                print(f"NAKED-BLOCK {ah} {r['name']}")
+                if args.limit and tested >= args.limit:
+                    break
+                continue
             stats["pass"] += 1
             r["fn"]["ported"] = True
             pending_flips.append(ah)
