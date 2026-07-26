@@ -17260,5 +17260,12 @@
     "object": "geometry.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x146be0",
+    "name": "FUN_00146be0",
+    "object": "bsp3d.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

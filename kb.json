@@ -36823,7 +36823,8 @@
       "functions": [
         {
           "addr": "0x146be0",
-          "decl": "void FUN_00146be0(void *damage_params);"
+          "decl": "void FUN_00146be0(void *damage_params);",
+          "ported": false
         },
         {
           "addr": "0x146db0",

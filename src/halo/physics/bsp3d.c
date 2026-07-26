@@ -340,3 +340,10 @@ int FUN_001470b0(int param_1, uint32_t param_2, uint32_t param_3,
 
   return leaf_count;
 }
+/* --- bsp3d.obj batch drafts (2026-07-26) --- */
+
+/* 0x146be0 */
+void FUN_00146be0(void *damage_params)
+{
+  (void)damage_params;
+}
