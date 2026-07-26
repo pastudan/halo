@@ -394,6 +394,29 @@ __attribute__((naked)) { decl.replace(name, 'THUNK('+name+')') }
 						if _fname in _skip_names:
 							f.write(f'// skipped xdk_stub placeholder: {decl_str.strip()}\n')
 							continue
+						# Reject prose / comment fragments agents sometimes write into
+						# kb.json "decl" (poisons every TU that includes decl.h).
+						_ds = decl_str.strip()
+						if (
+							'\n' in _ds
+							or _ds.startswith('*')
+							or not _ds.endswith(';')
+							or _ds.count('(') != 1
+							or _ds.count(')') != 1
+							or any(
+								x in _ds
+								for x in (
+									' then ',
+									' via ',
+									' returns ',
+									' helper',
+									' success ',
+									' result ',
+								)
+							)
+						):
+							f.write(f'// skipped non-decl prose: {_ds[:120]}\n')
+							continue
 						f.write(f'HFUNC {decl_str}\n')
 				f.write('\n')
 

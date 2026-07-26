@@ -771,7 +771,7 @@
       "functions": [
         {
           "addr": "0x1d9260",
-          "decl": "void __cdecl qsort(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *));",
+          "decl": "void FUN_001d9260(void);",
           "ported": false
         }
       ],
@@ -849,7 +849,7 @@
         },
         {
           "addr": "0x1dbea9",
-          "decl": "void __seh_longjmp_unwind@4(void);",
+          "decl": "void FUN_001dbea9(void);",
           "ported": true
         },
         {
@@ -3830,7 +3830,7 @@
         },
         {
           "addr": "0x16d40",
-          "decl": "void actor_look_compute_prop_interest(int actor_handle, int param_2, short *param_3, void (*callback)(void), int param_5);",
+          "decl": "void actor_look_compute_prop_interest(void);",
           "ported": true,
           "name": "actor_look_compute_prop_interest"
         },
@@ -4676,7 +4676,7 @@
         },
         {
           "addr": "0x7c8f0",
-          "decl": "*    bitmap_delete (0x7c8f0).\n *  - Clears global_screenshot_count to 0 at exit.\n */\nvoid screenshot_render(void *a1);",
+          "decl": "void screenshot_render(void *a1);",
           "ported": true
         },
         {
@@ -4980,8 +4980,9 @@
         },
         {
           "addr": "0x1bc6b0",
-          "decl": "*    if cache_files_precache_in_progress (0x1bc6b0) returns true, the\n *    loop calls 0x1d0362(1) (stdcall sleep/yield) each iteration.\n *  - After the wait (or if throttle was skipped), stores a \"frame end\"\n *    snapshot (qword_325678 + 1) into unk_time_globals.unk_32\n *    (0x46da00/0x46da04).\n *  - Computes frames elapsed since last vblank target as a signed int64\n *    (frame_end - unk_8), clamped to [0, 0x7fff] \u2192 int16_t frames_delta.\n *    Captures synced = (0x46dd96 == 0x46dd98) at frame-end snapshot time.\n *  - Appends a debug timing string to the buffer at 0x46ddfc using\n *    csstrlen (0x8df60, called twice due to MSVC pre-push interleaving)\n *    and snprintf (0x1d9179). Format: \"%6I64d(targ%6I64d %s%2d)\" with\n *    entry flip count, target (unk_8), label, and elapsed ticks.\n *    Label is \"THROTTLE\" if we waited, \"SYNCED  \" if on-time, else\n *    \"LAPSED  \".\n *  - Writes 0x46dd9a (frame-pacing active flag): 1 iff 0x46dd96 > 0 &&\n *    frames_delta == 0, else 0.\n *  - Calls 0x8f880(frames_delta, synced, debug_buf) to store per-frame\n *    profile counters.\n */\nvoid main_rasterizer_throttle(void);",
-          "ported": true
+          "decl": "void FUN_001bc6b0(void);",
+          "ported": true,
+          "name": "FUN_001bc6b0"
         },
         {
           "addr": "0x1bc6c0",
@@ -8346,7 +8347,7 @@
         },
         {
           "addr": "0xa7780",
-          "decl": "* game_initialize_for_new_map (0xa7780), error_occurred (0x8f600),\n * create_local_players (0x1000d0), game_time_start (0xb5f40),\n * game_initial_pulse (0xa73c0).\n *  - On game_load failure: error(0, \"game_load() failed.\").\n *  - On error_occurred: error(0, \"main_new_map() failed.\").\n *  - Clears many main_globals flags after game_initial_pulse.\n *  - Copies 0x46da3f to 0x46da3e before clearing 0x46da3f.\n *  - Sets word at 0x46da40 to 0xffff (-1).\n *  - If byte at 0x46da54 is set, calls 0x1bfee0 (cache file precache).\n *  - Calls ui_widgets_disable_pause_game(0x1e) at exit.\n */\nvoid main_new_map(game_options_t *game_options);",
+          "decl": "void main_new_map(game_options_t *game_options);",
           "ported": true
         },
         {
@@ -10490,7 +10491,7 @@
         },
         {
           "addr": "0xb5d00",
-          "decl": "*    the saved speed via game_time_set_speed(saved_speed), then zeroes both\n *    globals.\n *  - Float constant 0x3d088889 = ~0.0333f (1/30 sec, one game tick at 30 Hz).\n *  - Float constant 0x3f800000 = 1.0f.\n *  - FSTP/PUSH round-trip: saved speed is stored as float (4 bytes) on the\n *    stack [EBP-4] and reloaded into EAX before being pushed as a raw dword.\n */\nvoid main_skip_private(void);",
+          "decl": "void main_skip_private(void);",
           "ported": true
         },
         {
@@ -14261,7 +14262,7 @@
         },
         {
           "addr": "0x100090",
-          "decl": "int __cdecl sort_desired_local_player_controllers(const void *a1,\n                                                  const void *a2);",
+          "decl": "void FUN_00100090(void);",
           "ported": true
         },
         {
@@ -14432,7 +14433,7 @@
         },
         {
           "addr": "0x100910",
-          "decl": "void compute_window_bounds(int player_index, int num_players,\n                           viewport_bounds_t *full_bounds,\n                           viewport_bounds_t *split_bounds);",
+          "decl": "void FUN_00100910(void);",
           "ported": true
         },
         {
@@ -14442,8 +14443,9 @@
         },
         {
           "addr": "0x100b40",
-          "decl": "void main_new_map(game_options_t *game_options);",
-          "ported": true
+          "decl": "void FUN_00100b40(game_options_t *game_options);",
+          "ported": true,
+          "name": "FUN_00100b40"
         },
         {
           "addr": "0x100c10",
@@ -14452,8 +14454,9 @@
         },
         {
           "addr": "0x100de0",
-          "decl": "void main_skip_private(void);",
-          "ported": true
+          "decl": "void FUN_00100de0(void);",
+          "ported": true,
+          "name": "FUN_00100de0"
         },
         {
           "addr": "0x100eb0",
@@ -14567,8 +14570,9 @@
         },
         {
           "addr": "0x102510",
-          "decl": "void screenshot_render(void *a1@<edi>);",
-          "ported": true
+          "decl": "void FUN_00102510(void *a1@<edi>);",
+          "ported": true,
+          "name": "FUN_00102510"
         },
         {
           "addr": "0x102700",
@@ -14577,7 +14581,7 @@
         },
         {
           "addr": "0x1029a0",
-          "decl": "* halt_and_catch_fire (0x1029a0) \u2014 fatal-error \"bluescreen\" renderer.\n * Entered after an unrecoverable engine fault. Guards against re-entrant\n * invocation with an INT3 breakpoint, then silences rumble on every\n * connected gamepad and resolves the interface (or fallback system) font.\n * Loops forever: rebuilds a throwaway camera/frustum from the default\n * camera globals, mirrors it into the shared render camera, begins the\n * rasterizer window, draws the build version string and the last\n * recorded error message, then presents the frame. Never returns.\n */\nvoid halt_and_catch_fire(void);",
+          "decl": "void halt_and_catch_fire(void);",
           "ported": true
         },
         {
@@ -14608,7 +14612,7 @@
         },
         {
           "addr": "0x103530",
-          "decl": "void FUN_00103530(int base, char (*visit)(uint32_t, int, uint32_t *, uint32_t),\n                  uint32_t visit_arg, uint32_t mark, int node_index);",
+          "decl": "void FUN_00103530(void);",
           "ported": true,
           "source_path": "src/halo/main/main.c"
         },
@@ -15450,7 +15454,7 @@
         },
         {
           "addr": "0x11c310",
-          "decl": "int FUN_0011c310(const char *name, int size, void (*lock_proc)(void *, int), void (*unlock_proc)(void *), void *base_address);",
+          "decl": "void FUN_0011c310(void);",
           "name": "FUN_0011c310",
           "ported": true
         },
@@ -16789,7 +16793,7 @@
         },
         {
           "addr": "0x13f080",
-          "decl": "int FUN_0013f080(int param_1, char (*param_2)(int, int), int param_3, int param_4, int param_5, int *param_6);",
+          "decl": "void FUN_0013f080(void);",
           "ported": true,
           "source_path": "objects/objects.c"
         },
@@ -20015,7 +20019,7 @@
         },
         {
           "addr": "0x91ef0",
-          "decl": "void FUN_00091ef0(int *keys, int count, int (*cmp)(int, int));",
+          "decl": "void FUN_00091ef0(void);",
           "ported": false
         },
         {
@@ -31275,7 +31279,7 @@
         },
         {
           "addr": "0x108cd0",
-          "decl": "void FUN_00108cd0(void);",
+          "decl": "char FUN_00108cd0(int *rect, int *point);",
           "ported": true
         },
         {
@@ -31920,7 +31924,7 @@
         },
         {
           "addr": "0x11c870",
-          "decl": "void *lrar_cache_new(const char *name, unsigned int minimum_address, unsigned int maximum_address, short block_count, short alignment_bit, short boundary_bit, void (*lock_proc)(short *, short), void (*unlock_proc)(short *));",
+          "decl": "void lrar_cache_new(void);",
           "name": "lrar_cache_new",
           "ported": true,
           "source_path": "src/halo/memory/lruv_cache.c"
@@ -32032,7 +32036,7 @@
         },
         {
           "addr": "0x11d4a0",
-          "decl": "void lruv_cache_set_callbacks(void *cache, void (*delete_cb)(int), int (*query_cb)(int));",
+          "decl": "void FUN_0011d4a0(void);",
           "ported": true
         },
         {
@@ -32047,7 +32051,7 @@
         },
         {
           "addr": "0x11d780",
-          "decl": "void lruv_cache_initialize(void *cache, int name, int page_count, int page_size_bits, int maximum_block_count, void (*delete_cb)(int), int (*query_cb)(int));",
+          "decl": "void FUN_0011d780(void);",
           "ported": true
         },
         {
@@ -32100,7 +32104,7 @@
         },
         {
           "addr": "0x11dd60",
-          "decl": "void *lruv_new(int name, int page_count, int page_size_bits, int maximum_block_count, void (*delete_cb)(int), int (*query_cb)(int));",
+          "decl": "void FUN_0011dd60(void);",
           "ported": true
         },
         {
@@ -32116,7 +32120,7 @@
         },
         {
           "addr": "0x1bfe90",
-          "decl": "void *lruv_cache_new(const char *name, int capacity, int max_locked, int entry_size, void (*delete_cb)(int), int (*query_cb)(int));",
+          "decl": "void FUN_001bfe90(void);",
           "ported": true
         }
       ],
@@ -38093,13 +38097,13 @@
         },
         {
           "addr": "0x146e30",
-          "decl": "int bsp3d_clip_line_to_leaves(void *nodes, int node_index, float *p0, float *p1, void (*callback)(float *, float *, unsigned int, void *), void *data);",
+          "decl": "void bsp3d_clip_line_to_leaves(void);",
           "name": "bsp3d_clip_line_to_leaves",
           "ported": true
         },
         {
           "addr": "0x1470b0",
-          "decl": "int FUN_001470b0(int tag_base, uint32_t node_index, uint32_t flags, float *verts, int counts, float epsilon, void (*callback)(float *, int, unsigned int, unsigned int, void *), void *ctx);",
+          "decl": "void FUN_001470b0(void);",
           "ported": true
         }
       ],
@@ -39954,7 +39958,7 @@
       "functions": [
         {
           "addr": "0x147380",
-          "decl": "int FUN_00147380(int tag_base, uint32_t node_index, float *verts, int counts, float epsilon, void (*callback)(float *, int, unsigned int, unsigned int, void *), void *ctx);",
+          "decl": "void FUN_00147380(void);",
           "ported": false
         },
         {
