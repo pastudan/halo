@@ -30145,7 +30145,7 @@
         {
           "addr": "0x1be920",
           "decl": "void texture_cache_delete(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1be940",
@@ -30180,7 +30180,7 @@
         {
           "addr": "0x1bed30",
           "decl": "void texture_cache_flush(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bed50",
