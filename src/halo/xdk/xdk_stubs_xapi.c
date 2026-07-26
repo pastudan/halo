@@ -3196,29 +3196,189 @@ void D3DDevice_SetViewport(void *viewport)
   (void)edi;
 }
 
-/* 0x001e8400 */
+/* D3DDevice_SetLight (0x1e8400) — XBE naked draft (batch 310). */
+#if defined(__clang__)
+static void *__stdcall (*const b1e8400_c1d0bb9)(unsigned int flags, unsigned int size) = (void *)FUN_001d0bb9;
+static void *__stdcall (*const b1e8400_c1d0c16)(void *ptr) = (void *)LocalFree;
+static void b1e8400_c1f2600_tgt(void) { return; }
+static void (*const b1e8400_c1f2600)(void) = b1e8400_c1f2600_tgt;
+static void b1e8400_c1f2440_tgt(void) { return; }
+static void (*const b1e8400_c1f2440)(void) = b1e8400_c1f2440_tgt;
+static void b1e8400_c1f3c40_tgt(void) { return; }
+static void (*const b1e8400_c1f3c40)(void) = b1e8400_c1f3c40_tgt;
+static void b1e8400_c1f25c0_tgt(void) { return; }
+static void (*const b1e8400_c1f25c0)(void) = b1e8400_c1f25c0_tgt;
+
+__attribute__((naked, noinline))
 void D3DDevice_SetLight(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-
-  FUN_001d0bb9(0, eax);
-  /* test ebx, ebx -> jne 0x1e8450 */
-  /* test ecx, ecx -> je 0x1e8483 */
-  LocalFree((void *)(uintptr_t)eax);
-  /* relift: FUN_001f2600(0, 0); */
-  /* relift: cmp dword ptr [ebx], 2 -> jne 0x1e85c3 */
-  /* relift: FUN_001f2440(0, 0, 0); */
-  /* relift: FUN_001f3c40(0, 0); */
-  /* relift: FUN_001f3c40(0, 0); */
-  /* test (char)eax, 1 -> jne 0x1e85a0 */
-  /* relift: FUN_001f25c0(0, 0); */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
+  __asm__ volatile(
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x10(%%esp), %%ebx\n\t"
+      "pushl %%ebp\n\t"
+      "movl 0x1fe6a0, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x484(%%ebp), %%edi\n\t"
+      "cmpl %%edi, %%ebx\n\t"
+      "movl %%edi, 0x14(%%esp)\n\t"
+      "jb .LD3DDevice_SetLight_4\n\t"
+      "leal 0x10(%%ebx), %%eax\n\t"
+      "andl $0xfffffff0, %%eax\n\t"
+      "movl %%eax, 0x10(%%esp)\n\t"
+      "leal (%%eax,%%eax,8), %%eax\n\t"
+      "shll $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "call *%[c1d0bb9]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .LD3DDevice_SetLight_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "movl $0x8007000e, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      ".LD3DDevice_SetLight_1:\n\t"
+      "movl 0x480(%%ebp), %%edx\n\t"
+      "movl 0x488(%%ebp), %%ecx\n\t"
+      "leal 0x488(%%ebp), %%eax\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "subl %%edx, %%esi\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LD3DDevice_SetLight_3\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LD3DDevice_SetLight_2:\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "leal 0x8c(%%ecx), %%edx\n\t"
+      "addl %%esi, %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "cmpl $0, (%%edx)\n\t"
+      "movl %%edx, %%eax\n\t"
+      "jne .LD3DDevice_SetLight_2\n\t"
+      ".LD3DDevice_SetLight_3:\n\t"
+      "movl 0x480(%%ebp), %%esi\n\t"
+      "leal (%%edi,%%edi,8), %%edx\n\t"
+      "shll $4, %%edx\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "shrl $2, %%ecx\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "rep movsl\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $3, %%ecx\n\t"
+      "rep movsb\n\t"
+      "movl 0x10(%%esp), %%esi\n\t"
+      "movl 0x14(%%esp), %%ecx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "leal (%%eax,%%eax,8), %%ecx\n\t"
+      "shll $4, %%ecx\n\t"
+      "leal (%%edx,%%ebx,1), %%edi\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "shrl $2, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "rep stosl\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "andl $3, %%ecx\n\t"
+      "rep stosb\n\t"
+      "movl 0x480(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d0c16]\n\t"
+      "movl %%ebx, 0x480(%%ebp)\n\t"
+      "movl 0x1c(%%esp), %%ebx\n\t"
+      "movl %%esi, 0x484(%%ebp)\n\t"
+      ".LD3DDevice_SetLight_4:\n\t"
+      "movl 0x480(%%ebp), %%edx\n\t"
+      "movl 0x20(%%esp), %%esi\n\t"
+      "leal (%%ebx,%%ebx,8), %%ebx\n\t"
+      "shll $4, %%ebx\n\t"
+      "addl %%edx, %%ebx\n\t"
+      "movl $0x1a, %%ecx\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "rep movsl\n\t"
+      "movl 0x68(%%ebx), %%ecx\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "orl $3, %%ecx\n\t"
+      "cmpl $1, %%eax\n\t"
+      "movl %%ecx, 0x68(%%ebx)\n\t"
+      "je .LD3DDevice_SetLight_6\n\t"
+      "flds 0x40(%%ebx)\n\t"
+      "leal 0x6c(%%ebx), %%eax\n\t"
+      "fchs\n\t"
+      "pushl %%eax\n\t"
+      "fstps (%%eax)\n\t"
+      "flds 0x44(%%ebx)\n\t"
+      "fchs\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "flds 0x48(%%ebx)\n\t"
+      "fchs\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "call *%[c1f2600]\n\t"
+      "cmpl $2, (%%ebx)\n\t"
+      "jne .LD3DDevice_SetLight_6\n\t"
+      "movl 0x50(%%ebx), %%ecx\n\t"
+      "leal 0x7c(%%ebx), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "leal 0x78(%%ebx), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1f2440]\n\t"
+      "flds (%%edi)\n\t"
+      "fadds 0x2533c8\n\t"
+      "pushl %%ecx\n\t"
+      "fsubs (%%esi)\n\t"
+      "fstps 0x80(%%ebx)\n\t"
+      "flds 0x60(%%ebx)\n\t"
+      "fmuls 0x253398\n\t"
+      "fstps (%%esp)\n\t"
+      "call *%[c1f3c40]\n\t"
+      "fstps 0x20(%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "flds 0x64(%%ebx)\n\t"
+      "fmuls 0x253398\n\t"
+      "fstps (%%esp)\n\t"
+      "call *%[c1f3c40]\n\t"
+      "fsts 0x1c(%%esp)\n\t"
+      "fcomps 0x20(%%esp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LD3DDevice_SetLight_5\n\t"
+      "flds 0x20(%%esp)\n\t"
+      "fmuls 0x2c20e0\n\t"
+      "fstps 0x1c(%%esp)\n\t"
+      ".LD3DDevice_SetLight_5:\n\t"
+      "flds 0x20(%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "fsubs 0x20(%%esp)\n\t"
+      "fstps (%%esp)\n\t"
+      "call *%[c1f25c0]\n\t"
+      "fsts 0x84(%%ebx)\n\t"
+      "fmuls 0x1c(%%esp)\n\t"
+      "fchs\n\t"
+      "fstps 0x88(%%ebx)\n\t"
+      ".LD3DDevice_SetLight_6:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "popl %%edi\n\t"
+      "orl $0x20, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "popl %%ebp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c1d0bb9] "m"(b1e8400_c1d0bb9), [c1d0c16] "m"(b1e8400_c1d0c16), [c1f2600] "m"(b1e8400_c1f2600), [c1f2440] "m"(b1e8400_c1f2440), [c1f3c40] "m"(b1e8400_c1f3c40), [c1f25c0] "m"(b1e8400_c1f25c0)
+      : "memory");
 }
+#else
+#error "D3DDevice_SetLight: clang naked draft required"
+#endif
+
 
 /* 0x001e85e0 */
 void D3DDevice_LightEnable(void)
@@ -3360,38 +3520,88 @@ void D3DDevice_SetModelView(void)
   (void)edi;
 }
 
-/* 0x001e8d30 */
+/* D3DDevice_SetTile (0x1e8d30) — XBE naked draft (batch 308). */
+#if defined(__clang__)
+static void b1e8d30_c1f5e85_tgt(void) { return; }
+static void (*const b1e8d30_c1f5e85)(void) = b1e8d30_c1f5e85_tgt;
+static void b1e8d30_c1f6073_tgt(void) { return; }
+static void (*const b1e8d30_c1f6073)(void) = b1e8d30_c1f6073_tgt;
+
+__attribute__((naked, noinline))
 void D3DDevice_SetTile(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* relift: cmp dword ptr [esi + 4], eax -> je 0x1e8db4 */
-  /* relift: FUN_001f5e85(0, 0); */
-  /* relift: FUN_001f6073(0, 0); */
-  /* test esi, esi -> je 0x1e8e79 */
-  /* cmp esi, ecx -> jae 0x1e8e4e */
-  /* cmp eax, ecx -> jae 0x1e8e72 */
-  /* test esi, esi -> jne 0x1e8e30 */
-  /* test esi, esi -> je 0x1e8f09 */
-  /* cmp esi, ecx -> jae 0x1e8ede */
-  /* cmp eax, ecx -> jae 0x1e8f02 */
-  /* test esi, esi -> jne 0x1e8ec0 */
-  D3D_KickOffAndWaitForIdle();
-  /* cmp ebx, ecx -> jae 0x1e8f90 */
-  /* cmp edx, ecx -> jae 0x1e8fc0 */
-  /* test ecx, ecx -> je 0x1e8fb2 */
-  /* test ebx, ebx -> jne 0x1e8f73 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "movl 0x1fe6a0, %%edx\n\t"
+      "subl $0x18, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x24(%%esp), %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .LD3DDevice_SetTile_2\n\t"
+      "cmpl %%eax, 0x4(%%esi)\n\t"
+      "je .LD3DDevice_SetTile_2\n\t"
+      "movl $6, %%ecx\n\t"
+      "leal 0x8(%%esp), %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "rep movsl\n\t"
+      "movl 0xc(%%esp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "js .LD3DDevice_SetTile_1\n\t"
+      "movl %%eax, 0x20(%%esp)\n\t"
+      "movl %%eax, 0x1c(%%esp)\n\t"
+      ".LD3DDevice_SetTile_1:\n\t"
+      "movl 0x28(%%esp), %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "leal 0x21bc(%%edx,%%ecx,8), %%edi\n\t"
+      "movl $6, %%ecx\n\t"
+      "leal 0xc(%%esp), %%esi\n\t"
+      "rep movsl\n\t"
+      "movl 0x20(%%esp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x20(%%esp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x20(%%esp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x24(%%esp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x24(%%esp), %%ecx\n\t"
+      "andl $0x3ffffff, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x2308(%%edx), %%ecx\n\t"
+      "call *%[c1f5e85]\n\t"
+      "popl %%ebx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "addl $0x18, %%esp\n\t"
+      "ret\n\t"
+      ".LD3DDevice_SetTile_2:\n\t"
+      "movl 0x24(%%esp), %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "leal (%%edx,%%ecx,8), %%esi\n\t"
+      "movl 0x21d0(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x2308(%%edx), %%ecx\n\t"
+      "call *%[c1f6073]\n\t"
+      "leal 0x21bc(%%esi), %%edi\n\t"
+      "movl $6, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "rep stosl\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "addl $0x18, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c1f5e85] "m"(b1e8d30_c1f5e85), [c1f6073] "m"(b1e8d30_c1f6073)
+      : "memory");
 }
+#else
+#error "D3DDevice_SetTile: clang naked draft required"
+#endif
+
 
 /* 0x001e9000 */
 void D3DDevice_SetScissors(void)
@@ -3667,25 +3877,99 @@ void D3DDevice_SetRenderState_VertexBlend(void)
   (void)ecx;
 }
 
-/* 0x001e9ae0 */
+/* D3DDevice_SetTextureState_TexCoordIndex (0x1e9ae0) — XBE naked draft (batch 306). */
+#if defined(__clang__)
+static void (*const b1e9ae0_c1efe10)(void) = XMETAL_StartPush;
+
+__attribute__((naked, noinline))
 void D3DDevice_SetTextureState_TexCoordIndex(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* test ecx, ecx -> je 0x1e9b22 */
-  /* cmp ecx, 0x10000 -> jne 0x1e9b44 */
-  /* cmp ecx, 0x30000 -> je 0x1e9b52 */
-  /* cmp ecx, 0x40000 -> je 0x1e9b4b */
-  /* test edx, edx -> jne 0x1e9b6e */
-  /* test eax, eax -> je 0x1e9b6e */
-  XMETAL_StartPush();
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "movl 0x8(%%esp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%esp), %%ebx\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "shll $7, %%eax\n\t"
+      "pushl %%ebp\n\t"
+      "movl %%ecx, 0x1fb508(%%eax)\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x1fe6a0, %%esi\n\t"
+      "andl $0xffff0000, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl $0x20000, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "ja .LD3DDevice_SetTextureState_TexCoordIndex_3\n\t"
+      "je .LD3DDevice_SetTextureState_TexCoordIndex_2\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LD3DDevice_SetTextureState_TexCoordIndex_1\n\t"
+      "cmpl $0x10000, %%ecx\n\t"
+      "jne .LD3DDevice_SetTextureState_TexCoordIndex_4\n\t"
+      "movl $0x8511, %%edi\n\t"
+      "jmp .LD3DDevice_SetTextureState_TexCoordIndex_7\n\t"
+      ".LD3DDevice_SetTextureState_TexCoordIndex_1:\n\t"
+      "orl $0x180, 0x8(%%esi)\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "jmp .LD3DDevice_SetTextureState_TexCoordIndex_8\n\t"
+      ".LD3DDevice_SetTextureState_TexCoordIndex_2:\n\t"
+      "movl $0x2400, %%edi\n\t"
+      "jmp .LD3DDevice_SetTextureState_TexCoordIndex_8\n\t"
+      ".LD3DDevice_SetTextureState_TexCoordIndex_3:\n\t"
+      "cmpl $0x30000, %%ecx\n\t"
+      "je .LD3DDevice_SetTextureState_TexCoordIndex_6\n\t"
+      "cmpl $0x40000, %%ecx\n\t"
+      "je .LD3DDevice_SetTextureState_TexCoordIndex_5\n\t"
+      ".LD3DDevice_SetTextureState_TexCoordIndex_4:\n\t"
+      "movl $0x2402, %%edi\n\t"
+      "jmp .LD3DDevice_SetTextureState_TexCoordIndex_7\n\t"
+      ".LD3DDevice_SetTextureState_TexCoordIndex_5:\n\t"
+      "movl $0x2401, %%edi\n\t"
+      "jmp .LD3DDevice_SetTextureState_TexCoordIndex_8\n\t"
+      ".LD3DDevice_SetTextureState_TexCoordIndex_6:\n\t"
+      "movl $0x8512, %%edi\n\t"
+      ".LD3DDevice_SetTextureState_TexCoordIndex_7:\n\t"
+      "movl $1, %%eax\n\t"
+      ".LD3DDevice_SetTextureState_TexCoordIndex_8:\n\t"
+      "movl 0x4fc(%%esi), %%edx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jne .LD3DDevice_SetTextureState_TexCoordIndex_9\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LD3DDevice_SetTextureState_TexCoordIndex_9\n\t"
+      "orl $2, 0x8(%%esi)\n\t"
+      ".LD3DDevice_SetTextureState_TexCoordIndex_9:\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "movl $1, %%ebp\n\t"
+      "shll %%cl, %%ebp\n\t"
+      "shll %%cl, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "notl %%ebp\n\t"
+      "andl %%edx, %%ebp\n\t"
+      "orl %%eax, %%ebp\n\t"
+      "movl %%ebp, 0x4fc(%%esi)\n\t"
+      "call *%[c1efe10]\n\t"
+      "addl $0xc03c, %%ebx\n\t"
+      "movl %%edi, 0x4(%%eax)\n\t"
+      "movl %%edi, 0x8(%%eax)\n\t"
+      "movl %%edi, 0xc(%%eax)\n\t"
+      "shll $4, %%ebx\n\t"
+      "movl %%ebx, (%%eax)\n\t"
+      "addl $0x10, %%eax\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "popl %%edi\n\t"
+      "orl $0x194, %%eax\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c1efe10] "m"(b1e9ae0_c1efe10)
+      : "memory");
 }
+#else
+#error "D3DDevice_SetTextureState_TexCoordIndex: clang naked draft required"
+#endif
+
 
 /* 0x001e9bc0 */
 void D3DDevice_SetTextureState_BumpEnv(void)
@@ -4866,29 +5150,139 @@ void D3DDevice_GetPixelShader(void)
   (void)edi;
 }
 
-/* 0x001ec5c0 */
+/* D3DDevice_SetPixelShader (0x1ec5c0) — XBE naked draft (batch 312). */
+#if defined(__clang__)
+static void (*const b1ec5c0_c1e97b0)(void) = D3DDevice_SetRenderState_TextureFactor;
+static void (*const b1ec5c0_c1efe10)(void) = XMETAL_StartPush;
+static void b1ec5c0_c1e9d40_tgt(void) { return; }
+static void (*const b1ec5c0_c1e9d40)(void) = b1ec5c0_c1e9d40_tgt;
+
+__attribute__((naked, noinline))
 void D3DDevice_SetPixelShader(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  D3DDevice_SetRenderState_TextureFactor();
-  XMETAL_StartPush();
-  /* relift: FUN_001e9d40(0, 0); */
-  XMETAL_StartPush();
-  /* test esi, esi -> jne 0x1ec67f */
-  /* relift: FUN_001e9d40(0, 0); */
-  /* test ecx, ecx -> je 0x1ec749 */
-  /* relift: test byte ptr [ebx + 0xc], 0x10 -> jne 0x1ec76f */
-  /* mem[0x001fb868] = eax */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x1fe6a0, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x414(%%ebx), %%esi\n\t"
+      "movl %%eax, 0x414(%%ebx)\n\t"
+      "jne .LD3DDevice_SetPixelShader_2\n\t"
+      "movl 0x8(%%ebx), %%edx\n\t"
+      "movl 0x418(%%ebx), %%ecx\n\t"
+      "orl $0x408, %%edx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%edx, 0x8(%%ebx)\n\t"
+      "movl %%edx, %%eax\n\t"
+      "je .LD3DDevice_SetPixelShader_1\n\t"
+      "orl $0x40, %%eax\n\t"
+      "movl %%eax, 0x8(%%ebx)\n\t"
+      ".LD3DDevice_SetPixelShader_1:\n\t"
+      "movl 0x1fb898, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e97b0]\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1efe10]\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "call *%[c1e9d40]\n\t"
+      "movl $0x41e78, (%%eax)\n\t"
+      "movl $0x210000, 0x4(%%eax)\n\t"
+      "addl $8, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LD3DDevice_SetPixelShader_2:\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl 0x24(%%ecx), %%edx\n\t"
+      "pushl %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "orl 0x20(%%ecx), %%edx\n\t"
+      "movl 0x8(%%ebx), %%edi\n\t"
+      "movl %%edx, 0x418(%%ebx)\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl 0xec(%%ecx), %%edx\n\t"
+      "andl $0x100, %%edx\n\t"
+      "movl %%edx, 0x41c(%%ebx)\n\t"
+      "movl 0x8(%%eax), %%ebp\n\t"
+      "movl 0xd8(%%ebp), %%eax\n\t"
+      "orl $0x400, %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, 0x420(%%ebx)\n\t"
+      "movl %%edi, 0x8(%%ebx)\n\t"
+      "call *%[c1efe10]\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LD3DDevice_SetPixelShader_3\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "call *%[c1e9d40]\n\t"
+      ".LD3DDevice_SetPixelShader_3:\n\t"
+      "movl $0x200260, (%%eax)\n\t"
+      "leal 0x4(%%eax), %%edi\n\t"
+      "movl $8, %%ecx\n\t"
+      "movl %%ebp, %%esi\n\t"
+      "rep movsl\n\t"
+      "movl $0x800a60, 0x24(%%eax)\n\t"
+      "leal 0x28(%%ebp), %%esi\n\t"
+      "leal 0x28(%%eax), %%edi\n\t"
+      "movl $0x20, %%ecx\n\t"
+      "rep movsl\n\t"
+      "movl 0xa8(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0xac(%%eax)\n\t"
+      "movl $0x417f8, 0xa8(%%eax)\n\t"
+      "movl $0x81e20, 0xb0(%%eax)\n\t"
+      "movl 0xac(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0xb4(%%eax)\n\t"
+      "movl 0xb0(%%ebp), %%edx\n\t"
+      "movl %%edx, 0xb8(%%eax)\n\t"
+      "movl $0x241e40, 0xbc(%%eax)\n\t"
+      "leal 0xb4(%%ebp), %%esi\n\t"
+      "leal 0xc0(%%eax), %%edi\n\t"
+      "movl $9, %%ecx\n\t"
+      "rep movsl\n\t"
+      "movl $0x81e74, 0xe4(%%eax)\n\t"
+      "movl 0xdc(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0xe8(%%eax)\n\t"
+      "movl 0xe0(%%ebp), %%edx\n\t"
+      "movl %%edx, 0xec(%%eax)\n\t"
+      "movl 0x418(%%ebx), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LD3DDevice_SetPixelShader_4\n\t"
+      "movl $0x80288, 0xf0(%%eax)\n\t"
+      "movl 0x20(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0xf4(%%eax)\n\t"
+      "movl 0x24(%%ebp), %%edx\n\t"
+      "movl %%edx, 0xf8(%%eax)\n\t"
+      "addl $0xfc, %%eax\n\t"
+      "jmp .LD3DDevice_SetPixelShader_5\n\t"
+      ".LD3DDevice_SetPixelShader_4:\n\t"
+      "addl $0xf0, %%eax\n\t"
+      ".LD3DDevice_SetPixelShader_5:\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "testb $0x10, 0xc(%%ebx)\n\t"
+      "jne .LD3DDevice_SetPixelShader_6\n\t"
+      "movl $0x39, %%ecx\n\t"
+      "movl %%ebp, %%esi\n\t"
+      "movl $0x1fb698, %%edi\n\t"
+      "rep movsl\n\t"
+      "movl 0xd8(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x1fb868\n\t"
+      ".LD3DDevice_SetPixelShader_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c1e97b0] "m"(b1ec5c0_c1e97b0), [c1efe10] "m"(b1ec5c0_c1efe10), [c1e9d40] "m"(b1ec5c0_c1e9d40)
+      : "memory");
 }
+#else
+#error "D3DDevice_SetPixelShader: clang naked draft required"
+#endif
+
 
 /* 0x001ec780 */
 void D3DDevice_SetPixelShaderConstant(void)
@@ -5069,22 +5463,137 @@ void D3DDevice_DrawVerticesUP(void)
 #endif
 
 
-/* 0x001ecdb0 */
+/* D3DDevice_DrawIndexedVerticesUP (0x1ecdb0) — XBE naked draft (batch 308). */
+#if defined(__clang__)
+static void (*const b1ecdb0_c1f1eb0)(void) = CDevice_SetStateUP;
+static void (*const b1ecdb0_c1efe10)(void) = XMETAL_StartPush;
+static void b1ecdb0_c1efe30_tgt(void) { return; }
+static void (*const b1ecdb0_c1efe30)(void) = b1ecdb0_c1efe30_tgt;
+static void (*const b1ecdb0_c1ef9e0)(void) = D3D_SetFence;
+
+__attribute__((naked, noinline))
 void D3DDevice_DrawIndexedVerticesUP(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  CDevice_SetStateUP();
-  XMETAL_StartPush();
-  /* cmp eax, ecx -> jb 0x1ece37 */
-  /* relift: FUN_001efe30(0); */
-  /* test (char)eax, 0x10 -> je 0x1eced1 */
-  D3D_SetFence();
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x14, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x1fe6a0, %%edi\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "movl %%edi, -0x8(%%ebp)\n\t"
+      "call *%[c1f1eb0]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1efe10]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl $0x417fc, (%%eax)\n\t"
+      "movl 0xc(%%edi), %%edx\n\t"
+      "addl $8, %%eax\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "movl 0x7ec(%%edi), %%eax\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "movl 0x874(%%edi), %%ecx\n\t"
+      "orl $0x800, %%edx\n\t"
+      "movl %%ecx, -0x14(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "cmpl $0x10, %%ecx\n\t"
+      "movl %%edx, 0xc(%%edi)\n\t"
+      "leal 0x7f4(%%edi), %%edx\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "ja .LD3DDevice_DrawIndexedVerticesUP_1\n\t"
+      "movl $0x10, %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .LD3DDevice_DrawIndexedVerticesUP_3\n\t"
+      ".LD3DDevice_DrawIndexedVerticesUP_1:\n\t"
+      "movl $0x7ff, %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "divl 0x7e8(%%edi)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      ".LD3DDevice_DrawIndexedVerticesUP_2:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      ".LD3DDevice_DrawIndexedVerticesUP_3:\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jb .LD3DDevice_DrawIndexedVerticesUP_4\n\t"
+      "movl %%ecx, %%eax\n\t"
+      ".LD3DDevice_DrawIndexedVerticesUP_4:\n\t"
+      "movl 0x7e8(%%edi), %%esi\n\t"
+      "imull %%eax, %%esi\n\t"
+      "leal 0x3(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "subl %%eax, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, 0x14(%%ebp)\n\t"
+      "movl %%ecx, 0xc(%%ebp)\n\t"
+      "call *%[c1efe30]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "shll $0x12, %%esi\n\t"
+      "addl $4, %%eax\n\t"
+      "addl $0x40001818, %%esi\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "movl %%esi, (%%ecx)\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      ".LD3DDevice_DrawIndexedVerticesUP_5:\n\t"
+      "movzwl (%%edx), %%esi\n\t"
+      "addl $2, %%edx\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "imull 0x18(%%ebp), %%esi\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      "addl -0xc(%%ebp), %%esi\n\t"
+      ".LD3DDevice_DrawIndexedVerticesUP_6:\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "rep movsl\n\t"
+      "addl 0x4(%%ebx), %%esi\n\t"
+      "addl $8, %%ebx\n\t"
+      "decl %%eax\n\t"
+      "jne .LD3DDevice_DrawIndexedVerticesUP_6\n\t"
+      "decl 0x14(%%ebp)\n\t"
+      "jne .LD3DDevice_DrawIndexedVerticesUP_5\n\t"
+      "movl %%edi, 0x8(%%ebp)\n\t"
+      "movl %%edx, 0x10(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "je .LD3DDevice_DrawIndexedVerticesUP_7\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl -0x8(%%ebp), %%edi\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "jmp .LD3DDevice_DrawIndexedVerticesUP_2\n\t"
+      ".LD3DDevice_DrawIndexedVerticesUP_7:\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      "movl $0x417fc, (%%eax)\n\t"
+      "movl $0, 0x4(%%eax)\n\t"
+      "addl $8, %%eax\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "testb $0x10, %%ah\n\t"
+      "je .LD3DDevice_DrawIndexedVerticesUP_8\n\t"
+      "pushl $1\n\t"
+      "call *%[c1ef9e0]\n\t"
+      ".LD3DDevice_DrawIndexedVerticesUP_8:\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "andl $0xffffe7ff, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0xc(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1f1eb0] "m"(b1ecdb0_c1f1eb0), [c1efe10] "m"(b1ecdb0_c1efe10), [c1efe30] "m"(b1ecdb0_c1efe30), [c1ef9e0] "m"(b1ecdb0_c1ef9e0)
+      : "memory");
 }
+#else
+#error "D3DDevice_DrawIndexedVerticesUP: clang naked draft required"
+#endif
+
 
 /* 0x001ecef0 */
 void D3DDevice_DrawVertices(uint32_t primitive_type, uint32_t start_vertex, uint32_t vertex_count)
@@ -5820,19 +6329,128 @@ void D3D_GetAdapterDisplayMode(void)
   (void)ecx;
 }
 
-/* 0x001eee20 */
+/* D3D_CheckDeviceFormat (0x1eee20) — XBE naked draft (batch 311). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void D3D_CheckDeviceFormat(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LD3D_CheckDeviceFormat_1\n\t"
+      "movl $0x8876086c, %%eax\n\t"
+      "ret\n\t"
+      ".LD3D_CheckDeviceFormat_1:\n\t"
+      "cmpl $1, 0x8(%%esp)\n\t"
+      "je .LD3D_CheckDeviceFormat_2\n\t"
+      "movl $0x8876086b, %%eax\n\t"
+      "ret\n\t"
+      ".LD3D_CheckDeviceFormat_2:\n\t"
+      "movl 0xc(%%esp), %%eax\n\t"
+      "movb 0x1f9d58(%%eax), %%dl\n\t"
+      "movb $0x80, %%cl\n\t"
+      "testb %%dl, %%cl\n\t"
+      "je .LD3D_CheckDeviceFormat_5\n\t"
+      "movb 0x10(%%esp), %%al\n\t"
+      "testb $2, %%al\n\t"
+      "je .LD3D_CheckDeviceFormat_3\n\t"
+      "movl 0x18(%%esp), %%ecx\n\t"
+      "testb $0x40, 0x1f9d58(%%ecx)\n\t"
+      "jne .LD3D_CheckDeviceFormat_6\n\t"
+      "movl $0x8876086a, %%eax\n\t"
+      "ret\n\t"
+      ".LD3D_CheckDeviceFormat_3:\n\t"
+      "testb $1, %%al\n\t"
+      "je .LD3D_CheckDeviceFormat_4\n\t"
+      "movl 0x18(%%esp), %%edx\n\t"
+      "testb %%cl, 0x1f9d58(%%edx)\n\t"
+      "jne .LD3D_CheckDeviceFormat_6\n\t"
+      "movl $0x8876086a, %%eax\n\t"
+      "ret\n\t"
+      ".LD3D_CheckDeviceFormat_4:\n\t"
+      "movl 0x18(%%esp), %%eax\n\t"
+      "testb $0x3c, 0x1f9d58(%%eax)\n\t"
+      "jne .LD3D_CheckDeviceFormat_6\n\t"
+      ".LD3D_CheckDeviceFormat_5:\n\t"
+      "movl $0x8876086a, %%eax\n\t"
+      "ret\n\t"
+      ".LD3D_CheckDeviceFormat_6:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "D3D_CheckDeviceFormat: clang naked draft required"
+#endif
 
-/* 0x001eeea0 */
+
+/* Direct3D_CheckDeviceMultiSampleType (0x1eeea0) — XBE naked draft (batch 307). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void Direct3D_CheckDeviceMultiSampleType(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LDirect3D_CheckDeviceMultiSampleType_2\n\t"
+      "movl 0x8(%%esp), %%eax\n\t"
+      "movl $1, %%edx\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "je .LDirect3D_CheckDeviceMultiSampleType_1\n\t"
+      "movl $0x8876086b, %%eax\n\t"
+      "ret\n\t"
+      ".LDirect3D_CheckDeviceMultiSampleType_1:\n\t"
+      "cmpl %%edx, 0x10(%%esp)\n\t"
+      "je .LDirect3D_CheckDeviceMultiSampleType_4\n\t"
+      "movl 0xc(%%esp), %%eax\n\t"
+      "movb 0x1f9d58(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jns .LDirect3D_CheckDeviceMultiSampleType_4\n\t"
+      "movl 0x14(%%esp), %%ecx\n\t"
+      "cmpl $0x11, %%ecx\n\t"
+      "je .LDirect3D_CheckDeviceMultiSampleType_5\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LDirect3D_CheckDeviceMultiSampleType_5\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "andl $0xf0000, %%eax\n\t"
+      "cmpl $0x40000, %%eax\n\t"
+      "jbe .LDirect3D_CheckDeviceMultiSampleType_3\n\t"
+      ".LDirect3D_CheckDeviceMultiSampleType_2:\n\t"
+      "movl $0x8876086c, %%eax\n\t"
+      "ret\n\t"
+      ".LDirect3D_CheckDeviceMultiSampleType_3:\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "shrl $4, %%eax\n\t"
+      "andl $0xf, %%eax\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "jb .LDirect3D_CheckDeviceMultiSampleType_4\n\t"
+      "andl $0xf, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jb .LDirect3D_CheckDeviceMultiSampleType_4\n\t"
+      "cmpl $3, %%eax\n\t"
+      "ja .LDirect3D_CheckDeviceMultiSampleType_4\n\t"
+      "cmpl $3, %%ecx\n\t"
+      "jbe .LDirect3D_CheckDeviceMultiSampleType_5\n\t"
+      ".LDirect3D_CheckDeviceMultiSampleType_4:\n\t"
+      "movl $0x8876086a, %%eax\n\t"
+      "ret\n\t"
+      ".LDirect3D_CheckDeviceMultiSampleType_5:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "Direct3D_CheckDeviceMultiSampleType: clang naked draft required"
+#endif
+
 
 /* 0x001eef80 */
 void D3DDevice_CreateIndexBuffer(void)
@@ -5975,37 +6593,77 @@ void CDevice_KickOff(void)
   (void)0;
 }
 
-/* 0x001ef9e0 */
+/* D3D_SetFence (0x1ef9e0) — XBE naked draft (batch 312). */
+#if defined(__clang__)
+static void (*const b1ef9e0_c1efe10)(void) = XMETAL_StartPush;
+static void (*const b1ef9e0_c1ef930)(void) = CDevice_KickOff;
+
+__attribute__((naked, noinline))
 void D3D_SetFence(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  XMETAL_StartPush();
-  /* test (char)ebx, 2 -> jne 0x1efa6d */
-  CDevice_KickOff();
-  /* cmp ecx, edx -> jae 0x1efb3f */
-  /* cmp esi, eax -> jne 0x1efabc */
-  /* relift: tail-call D3D_SetFence(); */
-  /* relift: FUN_001ef7e0(0, 0); */
-  /* relift: FUN_001ef770(0, 0); */
-  /* cmp eax, 0x8000 -> jb 0x1efb27 */
-  /* relift: FUN_001ef860(0, 0); */
-  /* relift: FUN_001ef770(0, 0); */
-  /* cmp eax, 0x8000 -> jae 0x1efb45 */
-  /* relift: FUN_001ef860(0, 0); */
-  /* cmp eax, esi -> jb 0x1efb34 */
-  /* test eax, eax -> jne 0x1efb51 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x1fe6a0, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1efe10]\n\t"
+      "movl 0x1c(%%esi), %%edi\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movl %%ecx, 0xc(%%eax)\n\t"
+      "movl %%ecx, 0x14(%%eax)\n\t"
+      "movl $0x41d70, (%%eax)\n\t"
+      "movl %%edi, 0x4(%%eax)\n\t"
+      "movl $0x41d90, %%edx\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "movl %%edx, 0x10(%%eax)\n\t"
+      "movl 0x3e4(%%esi), %%edx\n\t"
+      "leal 0x18(%%eax), %%ecx\n\t"
+      "movl %%ecx, (%%esi)\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "shrl $1, %%ecx\n\t"
+      "andl $0x3f, %%ecx\n\t"
+      "leal 0x39(%%ecx,%%ecx,2), %%ebx\n\t"
+      "movl %%edi, (%%esi,%%ebx,4)\n\t"
+      "movb 0x10(%%esp), %%bl\n\t"
+      "testb $1, %%bl\n\t"
+      "leal (%%ecx,%%ecx,2), %%ecx\n\t"
+      "leal (%%esi,%%ecx,4), %%ecx\n\t"
+      "movl %%eax, 0xe8(%%ecx)\n\t"
+      "movl %%edx, 0xec(%%ecx)\n\t"
+      "je .LD3D_SetFence_1\n\t"
+      "movl 0x20(%%esi), %%ecx\n\t"
+      "incl %%ecx\n\t"
+      "andl $0xf, %%ecx\n\t"
+      "movl %%ecx, 0x20(%%esi)\n\t"
+      "pushl %%ebp\n\t"
+      "leal 0x9(%%ecx,%%ecx,2), %%ebp\n\t"
+      "leal (%%ecx,%%ecx,2), %%ecx\n\t"
+      "leal (%%esi,%%ecx,4), %%ecx\n\t"
+      "movl %%edi, (%%esi,%%ebp,4)\n\t"
+      "movl %%eax, 0x28(%%ecx)\n\t"
+      "movl %%edx, 0x2c(%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      ".LD3D_SetFence_1:\n\t"
+      "testb $2, %%bl\n\t"
+      "jne .LD3D_SetFence_2\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c1ef930]\n\t"
+      ".LD3D_SetFence_2:\n\t"
+      "addl $2, 0x1c(%%esi)\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c1efe10] "m"(b1ef9e0_c1efe10), [c1ef930] "m"(b1ef9e0_c1ef930)
+      : "memory");
 }
+#else
+#error "D3D_SetFence: clang naked draft required"
+#endif
+
 
 /* 0x001efb70 */
 void CDevice_MakeSpace(void)
@@ -6103,14 +6761,115 @@ void XMETAL_StartPush(void)
   (void)edi;
 }
 
-/* 0x001f02d0 */
+/* D3D_UpdateProjectionViewportTransform (0x1f02d0) — XBE naked draft (batch 307). */
+#if defined(__clang__)
+static void b1f02d0_c1f2340_tgt(void) { return; }
+static void (*const b1f02d0_c1f2340)(void) = b1f02d0_c1f2340_tgt;
+
+__attribute__((naked, noinline))
 void D3D_UpdateProjectionViewportTransform(void)
 {
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: FUN_001f2340(0, 0, 0); */
-  /* relift: FUN_001f3c30(0, 0); */
-  /* relift: FUN_001ef590(0, 0); */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "andl $0xfffffff0, %%esp\n\t"
+      "subl $0x58, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x1fe6a0, %%esi\n\t"
+      "movl 0xb08(%%esi), %%eax\n\t"
+      "fildl 0xb08(%%esi)\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "jge .LD3D_UpdateProjectionViewportTransform_1\n\t"
+      "fadds 0x25fb8c\n\t"
+      ".LD3D_UpdateProjectionViewportTransform_1:\n\t"
+      "fmuls 0x500(%%esi)\n\t"
+      "movl 0xb0c(%%esi), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "fmuls 0x253398\n\t"
+      "fsts 0x14(%%esp)\n\t"
+      "fildl 0xb0c(%%esi)\n\t"
+      "jge .LD3D_UpdateProjectionViewportTransform_2\n\t"
+      "fadds 0x25fb8c\n\t"
+      ".LD3D_UpdateProjectionViewportTransform_2:\n\t"
+      "fmuls 0x504(%%esi)\n\t"
+      "movl 0x1fb884, %%eax\n\t"
+      "cmpl $2, %%eax\n\t"
+      "fmuls 0x255964\n\t"
+      "fsts 0xc(%%esp)\n\t"
+      "fchs\n\t"
+      "fstps 0x18(%%esp)\n\t"
+      "flds 0xb14(%%esi)\n\t"
+      "fsubs 0xb10(%%esi)\n\t"
+      "fmuls 0x4f8(%%esi)\n\t"
+      "fstps 0x10(%%esp)\n\t"
+      "flds 0x4f8(%%esi)\n\t"
+      "fmuls 0xb10(%%esi)\n\t"
+      "fstps 0x1c(%%esp)\n\t"
+      "jne .LD3D_UpdateProjectionViewportTransform_3\n\t"
+      "flds 0x4f4(%%esi)\n\t"
+      "fmuls 0x4f8(%%esi)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xde, 0xca\n\t"
+      "flds 0xc(%%esp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(1)\n\t"
+      "fmuls 0x10(%%esp)\n\t"
+      "fstps 0x10(%%esp)\n\t"
+      "fld %%st(1)\n\t"
+      "fmuls 0x14(%%esp)\n\t"
+      "fstps 0x14(%%esp)\n\t"
+      "fld %%st(1)\n\t"
+      "fmuls 0x18(%%esp)\n\t"
+      "fstps 0x18(%%esp)\n\t"
+      "fld %%st(1)\n\t"
+      "fmuls 0x1c(%%esp)\n\t"
+      "fstps 0x1c(%%esp)\n\t"
+      "jmp .LD3D_UpdateProjectionViewportTransform_4\n\t"
+      ".LD3D_UpdateProjectionViewportTransform_3:\n\t"
+      "flds 0x2533c8\n\t"
+      "flds 0xc(%%esp)\n\t"
+      ".LD3D_UpdateProjectionViewportTransform_4:\n\t"
+      "movl 0x10(%%esp), %%edx\n\t"
+      "fxch %%st(2)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $0x10, %%ecx\n\t"
+      "leal 0x20(%%esp), %%edi\n\t"
+      "rep stosl\n\t"
+      "fstps 0x20(%%esp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fstps 0x34(%%esp)\n\t"
+      "movl 0x14(%%esp), %%eax\n\t"
+      "fstps 0x5c(%%esp)\n\t"
+      "movl 0x18(%%esp), %%ecx\n\t"
+      "movl %%edx, 0x48(%%esp)\n\t"
+      "movl 0x1c(%%esp), %%edx\n\t"
+      "movl %%eax, 0x50(%%esp)\n\t"
+      "leal 0x20(%%esp), %%eax\n\t"
+      "movl %%ecx, 0x54(%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x8c0(%%esi), %%ecx\n\t"
+      "movl %%edx, 0x5c(%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x5a0(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1f2340]\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "orl $2, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1f2340] "m"(b1f02d0_c1f2340)
+      : "memory");
 }
+#else
+#error "D3D_UpdateProjectionViewportTransform: clang naked draft required"
+#endif
+
 
 /* D3D_LazySetPointParams (0x1f05e0) — XBE naked draft (batch 303). */
 #if defined(__clang__)
@@ -6503,119 +7262,434 @@ void CDevice_SetStateVB(void)
 #endif
 
 
-/* 0x001f1eb0 */
+/* CDevice_SetStateUP (0x1f1eb0) — XBE naked draft (batch 305). */
+#if defined(__clang__)
+static void b1f1eb0_c1f1b50_tgt(void) { return; }
+static void (*const b1f1eb0_c1f1b50)(void) = b1f1eb0_c1f1b50_tgt;
+static void (*const b1f1eb0_c1efe10)(void) = XMETAL_StartPush;
+
+__attribute__((naked, noinline))
 void CDevice_SetStateUP(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: FUN_001f1b50(0); */
-  /* test (char)eax, 1 -> je 0x1f2244 */
-  /* cmp eax, edi -> jae 0x1f1f38 */
-  /* cmp ecx, 0x200 -> jb 0x1f1f00 */
-  XMETAL_StartPush();
-  /* test (char)edx, 4 -> jne 0x1f1f6c */
-  /* test (char)edx, 8 -> jne 0x1f1f84 */
-  /* test (char)edx, 0x10 -> jne 0x1f1f98 */
-  /* test (char)ecx, 0x20 -> jne 0x1f1fb0 */
-  /* cmp ebp, 2 -> je 0x1f200a */
-  /* cmp ebp, 2 -> je 0x1f2043 */
-  /* cmp ebp, 2 -> je 0x1f207d */
-  /* cmp ebp, 2 -> je 0x1f20b7 */
-  /* cmp ebp, 2 -> je 0x1f20f1 */
-  /* cmp ebp, 2 -> je 0x1f212b */
-  /* cmp ebp, 2 -> je 0x1f2165 */
-  /* cmp ebp, 2 -> je 0x1f219f */
-  XMETAL_StartPush();
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* relift: relift: fld dword ptr [0x1fa758] */
-  /* relift: FUN_001f3c50(0, 0); */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: FUN_001f3cb0(0); */
-  /* relift: FUN_001f3c30(0); */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: relift: fld dword ptr [0x1fb430] */
-  /* relift: relift: fld dword ptr [0x1fb434] */
-  /* relift: FUN_001f2530(0); */
-  /* relift: FUN_001f2530(0, 0); */
-  /* relift: FUN_001f2530(0, 0); */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test eax, eax -> je 0x1f2abf */
-  /* relift: FUN_001f2530(0, 0); */
-  /* cmp ecx, 0x11 -> je 0x1f2c05 */
-  /* test ecx, ecx -> je 0x1f2c05 */
-  /* cmp eax, 0x40000 -> jbe 0x1f2be6 */
-  /* cmp eax, 1 -> jb 0x1f2bde */
-  /* cmp ecx, 1 -> jb 0x1f2bde */
-  /* cmp eax, 3 -> ja 0x1f2bde */
-  /* cmp ecx, 3 -> ja 0x1f2bde */
-  /* cmp eax, 2 -> jbe 0x1f2c14 */
-  /* cmp eax, 0x80000000 -> jne 0x1f2bde */
-  /* cmp eax, 1 -> je 0x1f2c25 */
-  /* cmp eax, 2 -> je 0x1f2c25 */
-  /* test eax, eax -> jne 0x1f2bde */
-  D3DDevice_SetRenderStateNotInline();
-  D3DDevice_SetTextureStageStateNotInline();
-  D3DDevice_SetTransform(ecx, (void *)(uintptr_t)eax);
-  D3DDevice_SetShaderConstantMode();
-  D3DDevice_SetTile();
-  /* test eax, eax -> je 0x1f2e74 */
-  XMETAL_StartPush();
-  XMETAL_StartPush();
-  D3DDevice_SetShaderConstantMode();
-  XMETAL_StartPush();
-  D3DDevice_SetTransform(esi, (void *)0x001f9f48);
-  /* cmp esi, 0xa -> jb 0x1f3010 */
-  /* cmp esi, 0x134 -> je 0x1f3041 */
-  D3DDevice_SetRenderStateNotInline();
-  /* cmp esi, 0x15c -> jb 0x1f3030 */
-  D3DDevice_SetRenderStateNotInline();
-  D3DDevice_SetTextureStageStateNotInline();
-  /* cmp esi, 0x20 -> jb 0x1f3072 */
-  D3DDevice_SetTextureStageStateNotInline();
-  /* cmp edi, 4 -> jb 0x1f3070 */
-  D3DDevice_SetTextureStageStateNotInline();
-  D3DDevice_SetTextureStageStateNotInline();
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "subl $0xc, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "movl %%esi, 0x4(%%esp)\n\t"
+      "call *%[c1f1b50]\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "testb $1, %%ah\n\t"
+      "je .LCDevice_SetStateUP_21\n\t"
+      "andl $0xfffffeff, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "orl $0x80, %%eax\n\t"
+      "pushl %%ebp\n\t"
+      "movl 0x470(%%esi), %%ebp\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "testb $4, 0x4(%%ebp)\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ebp, 0x18(%%esp)\n\t"
+      "jne .LCDevice_SetStateUP_8\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "leal 0xc0(%%ebp), %%edx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LCDevice_SetStateUP_1:\n\t"
+      "movl 0x1fb508(%%ecx), %%eax\n\t"
+      "andl $0xffff, %%eax\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "jae .LCDevice_SetStateUP_2\n\t"
+      "shll $4, %%eax\n\t"
+      "leal 0x128(%%eax,%%ebp,1), %%eax\n\t"
+      "movl (%%eax), %%ebx\n\t"
+      "leal -0x8(%%edx), %%esi\n\t"
+      "movl %%ebx, (%%esi)\n\t"
+      "movl 0x4(%%eax), %%ebx\n\t"
+      "movl %%ebx, 0x4(%%esi)\n\t"
+      "movl 0x8(%%eax), %%ebx\n\t"
+      "movl %%ebx, 0x8(%%esi)\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "movl %%eax, 0xc(%%esi)\n\t"
+      "movl 0x10(%%esp), %%esi\n\t"
+      "jmp .LCDevice_SetStateUP_3\n\t"
+      ".LCDevice_SetStateUP_2:\n\t"
+      "movl $2, (%%edx)\n\t"
+      ".LCDevice_SetStateUP_3:\n\t"
+      "addl $0x80, %%ecx\n\t"
+      "addl $0x10, %%edx\n\t"
+      "cmpl $0x200, %%ecx\n\t"
+      "jb .LCDevice_SetStateUP_1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1efe10]\n\t"
+      "movl 0x4(%%ebp), %%edx\n\t"
+      "orl $0xffffffff, %%ecx\n\t"
+      "testb $4, %%dh\n\t"
+      "jne .LCDevice_SetStateUP_4\n\t"
+      "movl $0x4194c, (%%eax)\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "addl $8, %%eax\n\t"
+      ".LCDevice_SetStateUP_4:\n\t"
+      "movl 0x4(%%ebp), %%edx\n\t"
+      "testb $8, %%dh\n\t"
+      "jne .LCDevice_SetStateUP_5\n\t"
+      "movl $0x41950, (%%eax)\n\t"
+      "movl $0, 0x4(%%eax)\n\t"
+      "addl $8, %%eax\n\t"
+      ".LCDevice_SetStateUP_5:\n\t"
+      "movl 0x4(%%ebp), %%edx\n\t"
+      "testb $0x10, %%dh\n\t"
+      "jne .LCDevice_SetStateUP_6\n\t"
+      "movl $0x4195c, (%%eax)\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "addl $8, %%eax\n\t"
+      ".LCDevice_SetStateUP_6:\n\t"
+      "movl 0x4(%%ebp), %%ecx\n\t"
+      "testb $0x20, %%ch\n\t"
+      "jne .LCDevice_SetStateUP_7\n\t"
+      "movl $0x41960, (%%eax)\n\t"
+      "movl $0, 0x4(%%eax)\n\t"
+      "addl $8, %%eax\n\t"
+      ".LCDevice_SetStateUP_7:\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      ".LCDevice_SetStateUP_8:\n\t"
+      "movl 0x10(%%esp), %%eax\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "leal 0x7f8(%%eax), %%ecx\n\t"
+      "addl $0x7f4, %%eax\n\t"
+      "leal 0x3c(%%ebp), %%edx\n\t"
+      "movl $2, 0x14(%%esp)\n\t"
+      ".LCDevice_SetStateUP_9:\n\t"
+      "movl -0xc(%%edx), %%ebp\n\t"
+      "cmpl $2, %%ebp\n\t"
+      "je .LCDevice_SetStateUP_10\n\t"
+      "movl %%ebp, %%edi\n\t"
+      "shrl $4, %%edi\n\t"
+      "andl $0xf, %%edi\n\t"
+      "movzbl 0x1f9f88(%%edi), %%edi\n\t"
+      "andl $0xf, %%ebp\n\t"
+      "movzbl 0x1f9f90(%%ebp), %%ebp\n\t"
+      "imull %%ebp, %%edi\n\t"
+      "addl $3, %%edi\n\t"
+      "shrl $2, %%edi\n\t"
+      "movl %%edi, (%%eax)\n\t"
+      "movl -0x10(%%edx), %%ebp\n\t"
+      "addl %%edi, %%ebx\n\t"
+      "movl %%ebp, (%%ecx)\n\t"
+      "incl %%esi\n\t"
+      "addl $8, %%eax\n\t"
+      "addl $8, %%ecx\n\t"
+      ".LCDevice_SetStateUP_10:\n\t"
+      "movl 0x4(%%edx), %%ebp\n\t"
+      "cmpl $2, %%ebp\n\t"
+      "je .LCDevice_SetStateUP_11\n\t"
+      "movl %%ebp, %%edi\n\t"
+      "shrl $4, %%edi\n\t"
+      "andl $0xf, %%edi\n\t"
+      "movzbl 0x1f9f88(%%edi), %%edi\n\t"
+      "andl $0xf, %%ebp\n\t"
+      "movzbl 0x1f9f90(%%ebp), %%ebp\n\t"
+      "imull %%ebp, %%edi\n\t"
+      "addl $3, %%edi\n\t"
+      "shrl $2, %%edi\n\t"
+      "movl %%edi, (%%eax)\n\t"
+      "movl (%%edx), %%ebp\n\t"
+      "addl %%edi, %%ebx\n\t"
+      "movl %%ebp, (%%ecx)\n\t"
+      "incl %%esi\n\t"
+      "addl $8, %%eax\n\t"
+      "addl $8, %%ecx\n\t"
+      ".LCDevice_SetStateUP_11:\n\t"
+      "movl 0x14(%%edx), %%ebp\n\t"
+      "cmpl $2, %%ebp\n\t"
+      "je .LCDevice_SetStateUP_12\n\t"
+      "movl %%ebp, %%edi\n\t"
+      "shrl $4, %%edi\n\t"
+      "andl $0xf, %%edi\n\t"
+      "movzbl 0x1f9f88(%%edi), %%edi\n\t"
+      "andl $0xf, %%ebp\n\t"
+      "movzbl 0x1f9f90(%%ebp), %%ebp\n\t"
+      "imull %%ebp, %%edi\n\t"
+      "addl $3, %%edi\n\t"
+      "shrl $2, %%edi\n\t"
+      "movl %%edi, (%%eax)\n\t"
+      "movl 0x10(%%edx), %%ebp\n\t"
+      "addl %%edi, %%ebx\n\t"
+      "movl %%ebp, (%%ecx)\n\t"
+      "incl %%esi\n\t"
+      "addl $8, %%eax\n\t"
+      "addl $8, %%ecx\n\t"
+      ".LCDevice_SetStateUP_12:\n\t"
+      "movl 0x24(%%edx), %%ebp\n\t"
+      "cmpl $2, %%ebp\n\t"
+      "je .LCDevice_SetStateUP_13\n\t"
+      "movl %%ebp, %%edi\n\t"
+      "shrl $4, %%edi\n\t"
+      "andl $0xf, %%edi\n\t"
+      "movzbl 0x1f9f88(%%edi), %%edi\n\t"
+      "andl $0xf, %%ebp\n\t"
+      "movzbl 0x1f9f90(%%ebp), %%ebp\n\t"
+      "imull %%ebp, %%edi\n\t"
+      "addl $3, %%edi\n\t"
+      "shrl $2, %%edi\n\t"
+      "movl %%edi, (%%eax)\n\t"
+      "movl 0x20(%%edx), %%ebp\n\t"
+      "addl %%edi, %%ebx\n\t"
+      "movl %%ebp, (%%ecx)\n\t"
+      "incl %%esi\n\t"
+      "addl $8, %%eax\n\t"
+      "addl $8, %%ecx\n\t"
+      ".LCDevice_SetStateUP_13:\n\t"
+      "movl 0x34(%%edx), %%ebp\n\t"
+      "cmpl $2, %%ebp\n\t"
+      "je .LCDevice_SetStateUP_14\n\t"
+      "movl %%ebp, %%edi\n\t"
+      "shrl $4, %%edi\n\t"
+      "andl $0xf, %%edi\n\t"
+      "movzbl 0x1f9f88(%%edi), %%edi\n\t"
+      "andl $0xf, %%ebp\n\t"
+      "movzbl 0x1f9f90(%%ebp), %%ebp\n\t"
+      "imull %%ebp, %%edi\n\t"
+      "addl $3, %%edi\n\t"
+      "shrl $2, %%edi\n\t"
+      "movl %%edi, (%%eax)\n\t"
+      "movl 0x30(%%edx), %%ebp\n\t"
+      "addl %%edi, %%ebx\n\t"
+      "movl %%ebp, (%%ecx)\n\t"
+      "incl %%esi\n\t"
+      "addl $8, %%eax\n\t"
+      "addl $8, %%ecx\n\t"
+      ".LCDevice_SetStateUP_14:\n\t"
+      "movl 0x44(%%edx), %%ebp\n\t"
+      "cmpl $2, %%ebp\n\t"
+      "je .LCDevice_SetStateUP_15\n\t"
+      "movl %%ebp, %%edi\n\t"
+      "shrl $4, %%edi\n\t"
+      "andl $0xf, %%edi\n\t"
+      "movzbl 0x1f9f88(%%edi), %%edi\n\t"
+      "andl $0xf, %%ebp\n\t"
+      "movzbl 0x1f9f90(%%ebp), %%ebp\n\t"
+      "imull %%ebp, %%edi\n\t"
+      "addl $3, %%edi\n\t"
+      "shrl $2, %%edi\n\t"
+      "movl %%edi, (%%eax)\n\t"
+      "movl 0x40(%%edx), %%ebp\n\t"
+      "addl %%edi, %%ebx\n\t"
+      "movl %%ebp, (%%ecx)\n\t"
+      "incl %%esi\n\t"
+      "addl $8, %%eax\n\t"
+      "addl $8, %%ecx\n\t"
+      ".LCDevice_SetStateUP_15:\n\t"
+      "movl 0x54(%%edx), %%ebp\n\t"
+      "cmpl $2, %%ebp\n\t"
+      "je .LCDevice_SetStateUP_16\n\t"
+      "movl %%ebp, %%edi\n\t"
+      "shrl $4, %%edi\n\t"
+      "andl $0xf, %%edi\n\t"
+      "movzbl 0x1f9f88(%%edi), %%edi\n\t"
+      "andl $0xf, %%ebp\n\t"
+      "movzbl 0x1f9f90(%%ebp), %%ebp\n\t"
+      "imull %%ebp, %%edi\n\t"
+      "addl $3, %%edi\n\t"
+      "shrl $2, %%edi\n\t"
+      "movl %%edi, (%%eax)\n\t"
+      "movl 0x50(%%edx), %%ebp\n\t"
+      "addl %%edi, %%ebx\n\t"
+      "movl %%ebp, (%%ecx)\n\t"
+      "incl %%esi\n\t"
+      "addl $8, %%eax\n\t"
+      "addl $8, %%ecx\n\t"
+      ".LCDevice_SetStateUP_16:\n\t"
+      "movl 0x64(%%edx), %%ebp\n\t"
+      "cmpl $2, %%ebp\n\t"
+      "je .LCDevice_SetStateUP_17\n\t"
+      "movl %%ebp, %%edi\n\t"
+      "shrl $4, %%edi\n\t"
+      "andl $0xf, %%edi\n\t"
+      "movzbl 0x1f9f88(%%edi), %%edi\n\t"
+      "andl $0xf, %%ebp\n\t"
+      "movzbl 0x1f9f90(%%ebp), %%ebp\n\t"
+      "imull %%ebp, %%edi\n\t"
+      "addl $3, %%edi\n\t"
+      "shrl $2, %%edi\n\t"
+      "movl %%edi, (%%eax)\n\t"
+      "movl 0x60(%%edx), %%ebp\n\t"
+      "addl %%edi, %%ebx\n\t"
+      "movl %%ebp, (%%ecx)\n\t"
+      "incl %%esi\n\t"
+      "addl $8, %%eax\n\t"
+      "addl $8, %%ecx\n\t"
+      ".LCDevice_SetStateUP_17:\n\t"
+      "movl 0x14(%%esp), %%edi\n\t"
+      "addl $0x80, %%edx\n\t"
+      "decl %%edi\n\t"
+      "movl %%edi, 0x14(%%esp)\n\t"
+      "jne .LCDevice_SetStateUP_9\n\t"
+      "movl 0x10(%%esp), %%edi\n\t"
+      "movl 0x7f8(%%edi), %%ecx\n\t"
+      "leal 0x7f8(%%edi), %%eax\n\t"
+      "movl %%esi, 0x874(%%edi)\n\t"
+      "movl %%ebx, 0x7e8(%%edi)\n\t"
+      "movl %%ecx, 0x7ec(%%edi)\n\t"
+      "movl 0x7ec(%%edi,%%esi,8), %%edx\n\t"
+      "movl 0x7f0(%%edi,%%esi,8), %%ebp\n\t"
+      "negl %%edx\n\t"
+      "shll $2, %%edx\n\t"
+      "subl %%ebp, %%edx\n\t"
+      "addl %%ecx, %%edx\n\t"
+      "cmpl $1, %%esi\n\t"
+      "movl %%edx, 0x7f0(%%edi)\n\t"
+      "jbe .LCDevice_SetStateUP_19\n\t"
+      "decl %%esi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LCDevice_SetStateUP_18:\n\t"
+      "movl -0x4(%%eax), %%ecx\n\t"
+      "movl 0x8(%%eax), %%edx\n\t"
+      "movl (%%eax), %%ebx\n\t"
+      "shll $2, %%ecx\n\t"
+      "subl %%ecx, %%edx\n\t"
+      "subl %%ebx, %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "addl $8, %%eax\n\t"
+      "decl %%esi\n\t"
+      "jne .LCDevice_SetStateUP_18\n\t"
+      ".LCDevice_SetStateUP_19:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1efe10]\n\t"
+      "movl 0x18(%%esp), %%ecx\n\t"
+      "movl $0x401760, (%%eax)\n\t"
+      "addl $4, %%eax\n\t"
+      "addl $0x30, %%ecx\n\t"
+      "movl $0x10, %%edx\n\t"
+      ".LCDevice_SetStateUP_20:\n\t"
+      "movl (%%ecx), %%esi\n\t"
+      "movl %%esi, (%%eax)\n\t"
+      "addl $4, %%eax\n\t"
+      "addl $0x10, %%ecx\n\t"
+      "decl %%edx\n\t"
+      "jne .LCDevice_SetStateUP_20\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "popl %%ebx\n\t"
+      ".LCDevice_SetStateUP_21:\n\t"
+      "popl %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c1f1b50] "m"(b1f1eb0_c1f1b50), [c1efe10] "m"(b1f1eb0_c1efe10)
+      : "memory");
 }
+#else
+#error "CDevice_SetStateUP: clang naked draft required"
+#endif
 
-/* 0x001f30c0 */
+
+/* CDevice_FreeFrameBuffers (0x1f30c0) — XBE naked draft (batch 309). */
+#if defined(__clang__)
+static void b1f30c0_c1edba0_tgt(void) { return; }
+static void (*const b1f30c0_c1edba0)(void) = b1f30c0_c1edba0_tgt;
+static void (*const b1f30c0_c1e8d30)(void) = D3DDevice_SetTile;
+
+__attribute__((naked, noinline))
 void CDevice_FreeFrameBuffers(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int ebp = 0;
-
-  /* test eax, eax -> jne 0x1f30e4 */
-  /* cmp eax, ebp -> je 0x1f310f */
-  /* cmp ecx, ebp -> je 0x1f30f7 */
-  /* relift: FUN_001edba0(0); */
-  /* cmp eax, ebp -> je 0x1f313a */
-  /* cmp ecx, ebp -> je 0x1f3122 */
-  /* relift: FUN_001edba0(0); */
-  D3DDevice_SetTile();
-  /* relift: cmp dword ptr [esi + 0x2144], ebp -> je 0x1f319b */
-  D3DDevice_SetTile();
-  /* cmp eax, ebp -> je 0x1f31ae */
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "call *0x2532ac\n\t"
+      "xorl %%ebp, %%ebp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LCDevice_FreeFrameBuffers_1\n\t"
+      "movl 0x2308(%%esi), %%eax\n\t"
+      "pushl %%ebp\n\t"
+      "pushl $1\n\t"
+      "pushl $9\n\t"
+      "pushl %%eax\n\t"
+      "call *0x2532b0\n\t"
+      ".LCDevice_FreeFrameBuffers_1:\n\t"
+      "movl 0x40c(%%esi), %%eax\n\t"
+      "cmpl %%ebp, %%eax\n\t"
+      "je .LCDevice_FreeFrameBuffers_3\n\t"
+      "movl 0x14(%%eax), %%ecx\n\t"
+      "cmpl %%ebp, %%ecx\n\t"
+      "je .LCDevice_FreeFrameBuffers_2\n\t"
+      "movl %%ecx, %%eax\n\t"
+      ".LCDevice_FreeFrameBuffers_2:\n\t"
+      "movl 0x1c(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movl 0x40c(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1edba0]\n\t"
+      "movl %%ebp, 0x40c(%%esi)\n\t"
+      ".LCDevice_FreeFrameBuffers_3:\n\t"
+      "movl 0x410(%%esi), %%eax\n\t"
+      "cmpl %%ebp, %%eax\n\t"
+      "je .LCDevice_FreeFrameBuffers_5\n\t"
+      "movl 0x14(%%eax), %%ecx\n\t"
+      "cmpl %%ebp, %%ecx\n\t"
+      "je .LCDevice_FreeFrameBuffers_4\n\t"
+      "movl %%ecx, %%eax\n\t"
+      ".LCDevice_FreeFrameBuffers_4:\n\t"
+      "movl 0x1c(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movl 0x410(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1edba0]\n\t"
+      "movl %%ebp, 0x410(%%esi)\n\t"
+      ".LCDevice_FreeFrameBuffers_5:\n\t"
+      "cmpl %%ebp, 0x2198(%%esi)\n\t"
+      "movl 0x2531f4, %%ebx\n\t"
+      "je .LCDevice_FreeFrameBuffers_6\n\t"
+      "pushl %%ebp\n\t"
+      "pushl $1\n\t"
+      "call *%[c1e8d30]\n\t"
+      "movl 0x2198(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%%ebx\n\t"
+      "movl $6, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal 0x219c(%%esi), %%edi\n\t"
+      "movl %%ebp, 0x2198(%%esi)\n\t"
+      "rep stosl\n\t"
+      ".LCDevice_FreeFrameBuffers_6:\n\t"
+      "cmpl %%ebp, 0x2144(%%esi)\n\t"
+      "je .LCDevice_FreeFrameBuffers_7\n\t"
+      "pushl %%ebp\n\t"
+      "pushl %%ebp\n\t"
+      "call *%[c1e8d30]\n\t"
+      "movl 0x2144(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%%ebx\n\t"
+      "movl $0x12, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal 0x2150(%%esi), %%edi\n\t"
+      "movl %%ebp, 0x2144(%%esi)\n\t"
+      "rep stosl\n\t"
+      ".LCDevice_FreeFrameBuffers_7:\n\t"
+      "movl 0x2148(%%esi), %%eax\n\t"
+      "cmpl %%ebp, %%eax\n\t"
+      "je .LCDevice_FreeFrameBuffers_8\n\t"
+      "pushl %%eax\n\t"
+      "call *%%ebx\n\t"
+      "movl %%ebp, 0x2148(%%esi)\n\t"
+      ".LCDevice_FreeFrameBuffers_8:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c1edba0] "m"(b1f30c0_c1edba0), [c1e8d30] "m"(b1f30c0_c1e8d30)
+      : "memory");
 }
+#else
+#error "CDevice_FreeFrameBuffers: clang naked draft required"
+#endif
+
 
 /* 0x001f31c0 */
 void CDevice_InitializeFrameBuffers(void)
@@ -7035,217 +8109,241 @@ void D3D_AllocContiguousMemory(void)
   (void)ebp;
 }
 
-/* 0x001f5b5b */
+/* CMiniport_CreateCtxDmaObject (0x1f5b5b) — XBE naked draft (batch 308). */
+#if defined(__clang__)
+static void b1f5b5b_c1f5b01_tgt(void) { return; }
+static void (*const b1f5b5b_c1f5b01)(void) = b1f5b5b_c1f5b01_tgt;
+
+__attribute__((naked, noinline))
 void CMiniport_CreateCtxDmaObject(void)
 {
-  int eax = 0;
-  int esi = 0;
-  int ebp = 0;
-
-  /* relift: FUN_001f5b01(0, 0, 0, 0); */
-  /* relift: cmp dword ptr [ebp - 4], 2 -> je 0x1f5bdd */
-  /* relift: cmp dword ptr [ebp - 4], 3 -> jne 0x1f5bd1 */
-  /* relift: cmp dword ptr [ebp - 4], 1 -> jne 0x1f5bdd */
-  /* relift: FUN_001f834f(0, 0); */
-  /* relift: FUN_001f82ed(0, 0); */
-  /* relift: FUN_001f5786(0); */
-  /* relift: test byte ptr [esi + 0x3214], 0x10 -> je 0x1f5cec */
-  /* relift: test byte ptr [esi + 0x2400], 0x10 -> je 0x1f5cec */
-  /* relift: test byte ptr [esi + 0x3220], 0x10 -> je 0x1f5d18 */
-  /* relift: FUN_001f5130(0, 0); */
-  /* relift: cmp dword ptr [esi + 0x400100], 0 -> je 0x1f5d03 */
-  /* relift: FUN_001f4fc0(0, 0); */
-  /* relift: test dword ptr [esi + 0x100], 0x1000000 -> je 0x1f5cd1 */
-  /* relift: FUN_001f4be0(0, 0); */
-  /* relift: test byte ptr [eax], 0x10 -> jne 0x1f5d2e */
-  /* relift: cmp eax, dword ptr [esp + 4] -> jb 0x1f5d40 */
-
-  (void)eax;
-  (void)esi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0x10(%%ebp)\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "movl (%%edx), %%edi\n\t"
+      "movl %%esi, -0x8(%%ebp)\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "call *%[c1f5b01]\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "leal 0x1a0(%%edx), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "leal 0x1(%%edx), %%ebx\n\t"
+      "movl %%ebx, (%%ecx)\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "orl $3, %%eax\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "decl %%ecx\n\t"
+      "decl %%ecx\n\t"
+      "je .LCMiniport_CreateCtxDmaObject_2\n\t"
+      "decl %%ecx\n\t"
+      "je .LCMiniport_CreateCtxDmaObject_1\n\t"
+      "subl $0x3a, %%ecx\n\t"
+      "jne .LCMiniport_CreateCtxDmaObject_4\n\t"
+      "pushl $0x3d\n\t"
+      "jmp .LCMiniport_CreateCtxDmaObject_3\n\t"
+      ".LCMiniport_CreateCtxDmaObject_1:\n\t"
+      "pushl $3\n\t"
+      "jmp .LCMiniport_CreateCtxDmaObject_3\n\t"
+      ".LCMiniport_CreateCtxDmaObject_2:\n\t"
+      "pushl $2\n\t"
+      ".LCMiniport_CreateCtxDmaObject_3:\n\t"
+      "popl %%esi\n\t"
+      ".LCMiniport_CreateCtxDmaObject_4:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "shll $0x14, %%ecx\n\t"
+      "orl $0x3000, %%ecx\n\t"
+      "orl %%ecx, %%esi\n\t"
+      "cmpl $2, -0x4(%%ebp)\n\t"
+      "je .LCMiniport_CreateCtxDmaObject_6\n\t"
+      "cmpl $3, -0x4(%%ebp)\n\t"
+      "jne .LCMiniport_CreateCtxDmaObject_5\n\t"
+      "orl $0x30000, %%esi\n\t"
+      "jmp .LCMiniport_CreateCtxDmaObject_6\n\t"
+      ".LCMiniport_CreateCtxDmaObject_5:\n\t"
+      "cmpl $1, -0x4(%%ebp)\n\t"
+      "jne .LCMiniport_CreateCtxDmaObject_6\n\t"
+      "orl $0x20000, %%esi\n\t"
+      ".LCMiniport_CreateCtxDmaObject_6:\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "shll $4, %%ecx\n\t"
+      "addl %%edi, %%ecx\n\t"
+      "movl %%eax, 0x700008(%%ecx)\n\t"
+      "movl %%eax, 0x70000c(%%ecx)\n\t"
+      "orl $0x8000, %%esi\n\t"
+      "leal 0x70000(%%edx), %%eax\n\t"
+      "shll $4, %%eax\n\t"
+      "movl %%esi, (%%eax,%%edi,1)\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x700004(%%ecx)\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%ecx, %%edi\n\t"
+      ".byte 0xab\n\t"
+      ".byte 0xab\n\t"
+      ".byte 0xab\n\t"
+      ".byte 0xab\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "andw $0, 0x6(%%ecx)\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebx, 0x8(%%ecx)\n\t"
+      "movl %%edx, 0xc(%%ecx)\n\t"
+      "incl %%eax\n\t"
+      "popl %%ebx\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1f5b01] "m"(b1f5b5b_c1f5b01)
+      : "memory");
 }
+#else
+#error "CMiniport_CreateCtxDmaObject: clang naked draft required"
+#endif
 
-/* 0x001f5d4d */
+
+/* CMiniport_InitHardware (0x1f5d4d) — XBE naked draft (batch 305). */
+#if defined(__clang__)
+static void b1f5d4d_c1f5850_tgt(void) { return; }
+static void (*const b1f5d4d_c1f5850)(void) = b1f5d4d_c1f5850_tgt;
+static void b1f5d4d_c1f587b_tgt(void) { return; }
+static void (*const b1f5d4d_c1f587b)(void) = b1f5d4d_c1f587b_tgt;
+static void b1f5d4d_c1f58bc_tgt(void) { return; }
+static void (*const b1f5d4d_c1f58bc)(void) = b1f5d4d_c1f58bc_tgt;
+static void b1f5d4d_c1f59c6_tgt(void) { return; }
+static void (*const b1f5d4d_c1f59c6)(void) = b1f5d4d_c1f59c6_tgt;
+
+__attribute__((naked, noinline))
 void CMiniport_InitHardware(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: FUN_001f5850(0, 0); */
-  /* test eax, eax -> jne 0x1f5dc3 */
-  /* relift: FUN_001f587b(0, 0); */
-  /* test eax, eax -> je 0x1f5dbc */
-  /* test (char)eax, (char)eax -> jne 0x1f5e01 */
-  /* relift: FUN_001f58bc(0, 0); */
-  /* test eax, eax -> je 0x1f5dfd */
-  /* cmp eax, edx -> jb 0x1f5e3e */
-  /* relift: FUN_001f59c6(0, 0); */
-  /* relift: FUN_001f5ccb(0, 0, 0, 0); */
-  /* relift: FUN_001f7a6b(0, 0); */
-  /* relift: cmp eax, dword ptr [ecx] -> jne 0x1f5f0f */
-  /* relift: cmp eax, dword ptr [ecx + 0x400908] -> jne 0x1f5f0f */
-  /* test eax, 0xffffc000 -> jne 0x1f5f0f */
-  /* relift: test dword ptr [ebp + 0x18], ecx -> je 0x1f6060 */
-  /* relift: FUN_001f7a6b(0, 0); */
-  /* relift: cmp eax, dword ptr [esi + edi*4 + 0x400980] -> jne 0x1f5fff */
-  /* relift: cmp dword ptr [ebp + 0x20], 0 -> je 0x1f6060 */
-  /* relift: FUN_001f7a6b(0, 0); */
-  /* relift: cmp eax, dword ptr [edi] -> jne 0x1f604b */
-  /* relift: FUN_001f5ccb(0, 0, 0, 0); */
-  /* relift: FUN_001f7a6b(0, 0); */
-  /* relift: cmp eax, dword ptr [ecx] -> jne 0x1f60bc */
-  /* test eax, eax -> jne 0x1f615a */
-  /* relift: FUN_001f6073(0, 0); */
-  /* relift: cmp dword ptr [ebp - 4], 8 -> jl 0x1f615d */
-  /* relift: test byte ptr [esi + 0x3214], 0x10 -> je 0x1f6193 */
-  /* relift: test byte ptr [esi + 0x2400], 0x10 -> je 0x1f6193 */
-  /* relift: test byte ptr [esi + 0x3220], 0x10 -> je 0x1f61be */
-  /* relift: FUN_001f5130(0, 0); */
-  /* relift: cmp dword ptr [esi + 0x400100], ebx -> je 0x1f61a9 */
-  /* relift: FUN_001f4fc0(0, 0); */
-  /* relift: test dword ptr [esi + 0x100], 0x1000000 -> je 0x1f6178 */
-  /* relift: FUN_001f4be0(0, 0); */
-  /* relift: test byte ptr [eax], 0x10 -> jne 0x1f61c6 */
-  /* relift: FUN_001f7ae3(0); */
-  /* relift: cmp dword ptr [edi + 0x108], ebx -> je 0x1f6251 */
-  /* relift: cmp dword ptr [ebp - 4], 0x80 -> jb 0x1f622e */
-  /* relift: FUN_001f8d2e(0); */
-  /* test ebx, ebx -> je 0x1f634f */
-  /* test eax, eax -> jne 0x1f636c */
-  /* test ecx, ecx -> je 0x1f63bf */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0); */
-  /* relift: FUN_001f6310(0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* cmp eax, 0xcafebeef -> jne 0x1f661a */
-  /* relift: FUN_001f6310(0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0); */
-  /* test edi, edi -> jne 0x1f6744 */
-  /* relift: cmp dword ptr [edi + 0x1fb528], 1 -> je 0x1f6715 */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0); */
-  /* relift: FUN_001f6310(0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0); */
-  /* relift: FUN_001f6310(0, 0); */
-  /* test eax, eax -> je 0x1f68c4 */
-  /* relift: cmp dword ptr [eax + 0x1fb498], 0x16 -> je 0x1f68c4 */
-  /* cmp edi, ecx -> jne 0x1f6936 */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6440(0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f6310(0, 0, 0, 0); */
-  /* relift: FUN_001f64b0(0, 0); */
-  /* cmp eax, 1 -> jne 0x1f6ac9 */
-  /* test edi, edi -> jne 0x1f6aa1 */
-  /* relift: FUN_001f6510(0, 0); */
-  /* relift: FUN_001f6570(0, 0); */
-  /* relift: FUN_001f65d0(0); */
-  /* relift: FUN_001f65d0(0); */
-  /* relift: FUN_001f65d0(0); */
-  /* relift: FUN_001f65d0(0xcafebeef); */
-  /* relift: FUN_001f65d0(0); */
-  /* relift: FUN_001f66b0(0, 0); */
-  /* relift: FUN_001f6770(0, 0); */
-  /* relift: FUN_001f67d0(0, 0); */
-  /* cmp edi, ecx -> jne 0x1f6a9b */
-  /* relift: FUN_001f6820(0, 0, 0, 0); */
-  /* test ebx, ebx -> je 0x1f6bcf */
-  /* test eax, eax -> jne 0x1f6bec */
-  /* test ecx, ecx -> je 0x1f6c50 */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0); */
-  /* relift: FUN_001f6b90(0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* cmp eax, 0xcafebeef -> jne 0x1f6eac */
-  /* relift: FUN_001f6b90(0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0); */
-  /* test ebx, ebx -> jne 0x1f6fe3 */
-  /* relift: cmp dword ptr [0x1fb518], 1 -> je 0x1f6fb2 */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0); */
-  /* relift: FUN_001f6b90(0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0); */
-  /* test ecx, ecx -> jne 0x1f7101 */
-  /* relift: FUN_001f6b90(0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0); */
-  /* relift: FUN_001f6b90(0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0); */
-  /* relift: FUN_001f6b90(0, 0); */
-  /* test eax, eax -> je 0x1f7321 */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6cd0(0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6d40(0, 0); */
-  /* relift: FUN_001f6da0(0, 0); */
-  /* relift: FUN_001f6e00(0, 0); */
-  /* relift: FUN_001f6e60(0); */
-  /* relift: FUN_001f6e60(0); */
-  /* relift: FUN_001f6e60(0); */
-  /* relift: FUN_001f6e60(0xcafebeef); */
-  /* relift: FUN_001f6e60(0); */
-  /* relift: FUN_001f6f50(0, 0); */
-  /* relift: FUN_001f7010(0); */
-  /* relift: FUN_001f7080(0); */
-  /* cmp eax, 1 -> jne 0x1f7573 */
-  /* cmp edi, ebx -> jne 0x1f754b */
-  /* relift: FUN_001f7010(0); */
-  /* relift: FUN_001f70f0(0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f6b90(0, 0, 0, 0); */
-  /* relift: FUN_001f7180(0, 0); */
-  /* relift: FUN_001f71e0(0, 0); */
-  /* cmp edi, ebx -> jne 0x1f7541 */
-  /* relift: FUN_001f7240(0, 0, 0, 0); */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x1f52c0\n\t"
+      "leal 0x88(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x2531c8\n\t"
+      "andb $0, 0x1f8(%%esi)\n\t"
+      "andb $0, 0x1e8(%%esi)\n\t"
+      "leal 0x200(%%esi), %%eax\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "movl %%eax, 0x204(%%esi)\n\t"
+      "movl %%eax, (%%eax)\n\t"
+      "leal 0x1f0(%%esi), %%eax\n\t"
+      "incl %%ebx\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "movb $4, 0x1fa(%%esi)\n\t"
+      "movl %%ebx, 0x1fc(%%esi)\n\t"
+      "movb $4, 0x1ea(%%esi)\n\t"
+      "movl %%ebx, 0x1ec(%%esi)\n\t"
+      "movl %%eax, 0x1f4(%%esi)\n\t"
+      "movl %%eax, (%%eax)\n\t"
+      "call *%[c1f5850]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LCMiniport_InitHardware_2\n\t"
+      ".LCMiniport_InitHardware_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .LCMiniport_InitHardware_8\n\t"
+      ".LCMiniport_InitHardware_2:\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c1f587b]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LCMiniport_InitHardware_1\n\t"
+      "pushl %%edi\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $3\n\t"
+      "call *0x253278\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0\n\t"
+      "pushl -0xc(%%ebp)\n\t"
+      "leal 0x18(%%esi), %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x1f4b20\n\t"
+      "pushl %%edi\n\t"
+      "call *0x253288\n\t"
+      "pushl %%edi\n\t"
+      "call *0x253284\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LCMiniport_InitHardware_4\n\t"
+      ".LCMiniport_InitHardware_3:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .LCMiniport_InitHardware_7\n\t"
+      ".LCMiniport_InitHardware_4:\n\t"
+      "andl $0, 0x1a8(%%esi)\n\t"
+      "leal 0x1a4(%%esi), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "movl $0x1f4f90, (%%eax)\n\t"
+      "call *0x253280\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c1f58bc]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LCMiniport_InitHardware_3\n\t"
+      "leal 0x314(%%esi), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl $2, -0x8(%%ebp)\n\t"
+      "movl $0x100, %%edx\n\t"
+      ".LCMiniport_InitHardware_5:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LCMiniport_InitHardware_6:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "movl $0xffffff00, %%edi\n\t"
+      "movb %%al, (%%edi,%%ecx,1)\n\t"
+      "movl $0x100, %%edi\n\t"
+      "movb %%al, (%%ecx)\n\t"
+      "movb %%al, (%%edi,%%ecx,1)\n\t"
+      "incl %%eax\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "jb .LCMiniport_InitHardware_6\n\t"
+      "addl $0x300, -0x4(%%ebp)\n\t"
+      "decl -0x8(%%ebp)\n\t"
+      "jne .LCMiniport_InitHardware_5\n\t"
+      "movw $0x80c0, %%dx\n\t"
+      "movb %%bl, %%al\n\t"
+      "movl %%esi, %%ecx\n\t"
+      ".byte 0xee\n\t"
+      "movl %%ebx, 0xa4(%%esi)\n\t"
+      "call *%[c1f59c6]\n\t"
+      "negl %%eax\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "negl %%eax\n\t"
+      ".LCMiniport_InitHardware_7:\n\t"
+      "popl %%edi\n\t"
+      ".LCMiniport_InitHardware_8:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1f5850] "m"(b1f5d4d_c1f5850), [c1f587b] "m"(b1f5d4d_c1f587b), [c1f58bc] "m"(b1f5d4d_c1f58bc), [c1f59c6] "m"(b1f5d4d_c1f59c6)
+      : "memory");
 }
+#else
+#error "CMiniport_InitHardware: clang naked draft required"
+#endif
+
 
 /* 0x001f9165 */
 void D3D_ClearStateBlockFlags(void)
@@ -7798,60 +8896,318 @@ void D3DDevice_ApplyStateBlock(void)
   (void)ebp;
 }
 
-/* 0x001f98a6 */
+/* D3DDevice_CaptureStateBlock (0x1f98a6) — XBE naked draft (batch 305). */
+#if defined(__clang__)
+static uint32_t __stdcall (*const b1f98a6_c1ed930)(void *resource) = (void *)D3DResource_Release;
+static void b1f98a6_c1ed8f0_tgt(void) { return; }
+static void (*const b1f98a6_c1ed8f0)(void) = b1f98a6_c1ed8f0_tgt;
+static void (*const b1f98a6_c1ec100)(void) = D3DDevice_DeletePixelShader;
+static void (*const b1f98a6_c1eb6d0)(void) = D3DDevice_DeleteVertexShader;
+static void (*const b1f98a6_c1e6e60)(void) = D3DDevice_GetLightEnable;
+
+__attribute__((naked, noinline))
 void D3DDevice_CaptureStateBlock(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  D3DResource_Release((void *)(uintptr_t)eax);
-  /* test edi, edi -> je 0x1f98e9 */
-  /* relift: FUN_001ed8f0(0); */
-  /* relift: cmp eax, dword ptr [esi] -> jb 0x1f98c6 */
-  /* relift: cmp dword ptr [esi + 4], 0 -> je 0x1f991f */
-  /* test eax, eax -> je 0x1f990b */
-  D3DDevice_DeletePixelShader();
-  /* test eax, eax -> je 0x1f991a */
-  /* relift: cmp dword ptr [esi + 8], 0 -> je 0x1f994b */
-  /* test (char)eax, 1 -> je 0x1f9931 */
-  D3DDevice_DeleteVertexShader();
-  /* test (char)eax, 1 -> je 0x1f9946 */
-  /* relift: cmp dword ptr [esi + 0xc], 0 -> je 0x1f9982 */
-  /* test eax, eax -> je 0x1f995e */
-  D3DResource_Release((void *)(uintptr_t)eax);
-  /* test edi, edi -> je 0x1f9971 */
-  /* relift: FUN_001ed8f0(0); */
-  /* relift: cmp dword ptr [esi + 0x10], 0 -> jbe 0x1f99d1 */
-  D3DResource_Release((void *)(uintptr_t)eax);
-  /* relift: FUN_001ed8f0(0); */
-  /* relift: cmp eax, dword ptr [esi + 0x10] -> jb 0x1f998c */
-  /* relift: cmp ecx, dword ptr [eax + 0x14] -> jb 0x1f99e1 */
-  /* relift: cmp dword ptr [esi + 0x18], ecx -> jbe 0x1f9a38 */
-  /* relift: cmp ecx, dword ptr [eax + 0x18] -> jb 0x1f9a13 */
-  /* relift: cmp dword ptr [esi + 0x1c], ecx -> jbe 0x1f9a56 */
-  /* relift: cmp eax, dword ptr [esi + 0x1c] -> jb 0x1f9a41 */
-  /* relift: cmp dword ptr [esi + 0x20], ecx -> jbe 0x1f9a78 */
-  /* relift: cmp eax, dword ptr [esi + 0x20] -> jb 0x1f9a5d */
-  /* relift: cmp dword ptr [esi + 0x24], ecx -> jbe 0x1f9aa5 */
-  /* relift: cmp eax, dword ptr [ecx + 0x24] -> jb 0x1f9a82 */
-  /* relift: cmp dword ptr [esi + 0x28], 0 -> je 0x1f9ac1 */
-  /* relift: cmp dword ptr [esi + 0x2c], 0 -> je 0x1f9add */
-  /* relift: cmp dword ptr [esi + 0x30], 0 -> je 0x1f9af9 */
-  /* relift: cmp dword ptr [esi + 0x34], edx -> jbe 0x1f9b31 */
-  /* relift: cmp edx, dword ptr [eax + 0x34] -> jb 0x1f9b06 */
-  /* relift: cmp dword ptr [esi + 0x38], edi -> jbe 0x1f9b4c */
-  D3DDevice_GetLightEnable();
-  /* relift: cmp edi, dword ptr [esi + 0x38] -> jb 0x1f9b38 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x1fe6a0, %%eax\n\t"
+      "andl $0, -0x8(%%ebp)\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpl $0, (%%esi)\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "leal 0x3c(%%esi), %%ebx\n\t"
+      "jbe .LD3DDevice_CaptureStateBlock_4\n\t"
+      ".LD3DDevice_CaptureStateBlock_1:\n\t"
+      "movl 0x4(%%ebx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl (%%ebx), %%edi\n\t"
+      "je .LD3DDevice_CaptureStateBlock_2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ed930]\n\t"
+      ".LD3DDevice_CaptureStateBlock_2:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0xba0(%%eax,%%edi,4), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LD3DDevice_CaptureStateBlock_3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ed8f0]\n\t"
+      ".LD3DDevice_CaptureStateBlock_3:\n\t"
+      "movl %%edi, 0x4(%%ebx)\n\t"
+      "addl $8, %%ebx\n\t"
+      "incl -0x8(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "cmpl (%%esi), %%eax\n\t"
+      "jb .LD3DDevice_CaptureStateBlock_1\n\t"
+      ".LD3DDevice_CaptureStateBlock_4:\n\t"
+      "cmpl $0, 0x4(%%esi)\n\t"
+      "je .LD3DDevice_CaptureStateBlock_7\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LD3DDevice_CaptureStateBlock_5\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ec100]\n\t"
+      ".LD3DDevice_CaptureStateBlock_5:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x414(%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LD3DDevice_CaptureStateBlock_6\n\t"
+      "incl (%%eax)\n\t"
+      ".LD3DDevice_CaptureStateBlock_6:\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "addl $4, %%ebx\n\t"
+      ".LD3DDevice_CaptureStateBlock_7:\n\t"
+      "cmpl $0, 0x8(%%esi)\n\t"
+      "je .LD3DDevice_CaptureStateBlock_10\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "testb $1, %%al\n\t"
+      "je .LD3DDevice_CaptureStateBlock_8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1eb6d0]\n\t"
+      ".LD3DDevice_CaptureStateBlock_8:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl 0x474(%%ecx), %%eax\n\t"
+      "testb $1, %%al\n\t"
+      "je .LD3DDevice_CaptureStateBlock_9\n\t"
+      "movl 0x470(%%ecx), %%ecx\n\t"
+      "incl (%%ecx)\n\t"
+      ".LD3DDevice_CaptureStateBlock_9:\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "addl $4, %%ebx\n\t"
+      ".LD3DDevice_CaptureStateBlock_10:\n\t"
+      "cmpl $0, 0xc(%%esi)\n\t"
+      "je .LD3DDevice_CaptureStateBlock_13\n\t"
+      "movl 0x4(%%ebx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LD3DDevice_CaptureStateBlock_11\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ed930]\n\t"
+      ".LD3DDevice_CaptureStateBlock_11:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x47c(%%eax), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LD3DDevice_CaptureStateBlock_12\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ed8f0]\n\t"
+      ".LD3DDevice_CaptureStateBlock_12:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x478(%%eax), %%eax\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "movl %%edi, 0x4(%%ebx)\n\t"
+      "addl $8, %%ebx\n\t"
+      ".LD3DDevice_CaptureStateBlock_13:\n\t"
+      "andl $0, -0x8(%%ebp)\n\t"
+      "cmpl $0, 0x10(%%esi)\n\t"
+      "jbe .LD3DDevice_CaptureStateBlock_17\n\t"
+      ".LD3DDevice_CaptureStateBlock_14:\n\t"
+      "movl 0x8(%%ebx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl (%%ebx), %%edi\n\t"
+      "je .LD3DDevice_CaptureStateBlock_15\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ed930]\n\t"
+      ".LD3DDevice_CaptureStateBlock_15:\n\t"
+      "leal (%%edi,%%edi,2), %%edi\n\t"
+      "shll $2, %%edi\n\t"
+      "movl 0x1fb8e0(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "je .LD3DDevice_CaptureStateBlock_16\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ed8f0]\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      ".LD3DDevice_CaptureStateBlock_16:\n\t"
+      "movl 0x1fb8d8(%%edi), %%ecx\n\t"
+      "movl %%eax, 0x8(%%ebx)\n\t"
+      "movl %%ecx, 0x4(%%ebx)\n\t"
+      "addl $0xc, %%ebx\n\t"
+      "incl -0x8(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "cmpl 0x10(%%esi), %%eax\n\t"
+      "jb .LD3DDevice_CaptureStateBlock_14\n\t"
+      ".LD3DDevice_CaptureStateBlock_17:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpl %%ecx, 0x14(%%esi)\n\t"
+      "pushl $0x14\n\t"
+      "popl %%edx\n\t"
+      "jbe .LD3DDevice_CaptureStateBlock_19\n\t"
+      "leal 0x4(%%ebx), %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      ".LD3DDevice_CaptureStateBlock_18:\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl -0x8(%%ebp), %%edi\n\t"
+      "addl %%edx, -0x8(%%ebp)\n\t"
+      "leal 0xbc(%%eax), %%esi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "shll $4, %%esi\n\t"
+      "addl -0x4(%%ebp), %%esi\n\t"
+      "addl %%edx, %%ebx\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      "incl %%ecx\n\t"
+      ".byte 0xa5\n\t"
+      "cmpl 0x14(%%eax), %%ecx\n\t"
+      "jb .LD3DDevice_CaptureStateBlock_18\n\t"
+      "movl %%eax, %%esi\n\t"
+      ".LD3DDevice_CaptureStateBlock_19:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpl %%ecx, 0x18(%%esi)\n\t"
+      "jbe .LD3DDevice_CaptureStateBlock_21\n\t"
+      "leal 0x4(%%ebx), %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      ".LD3DDevice_CaptureStateBlock_20:\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl -0x8(%%ebp), %%edi\n\t"
+      "addl %%edx, -0x8(%%ebp)\n\t"
+      "leal 0xcc(%%eax), %%esi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "shll $4, %%esi\n\t"
+      "addl -0x4(%%ebp), %%esi\n\t"
+      "addl %%edx, %%ebx\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      ".byte 0xa5\n\t"
+      "incl %%ecx\n\t"
+      ".byte 0xa5\n\t"
+      "cmpl 0x18(%%eax), %%ecx\n\t"
+      "jb .LD3DDevice_CaptureStateBlock_20\n\t"
+      "movl %%eax, %%esi\n\t"
+      ".LD3DDevice_CaptureStateBlock_21:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl %%ecx, 0x1c(%%esi)\n\t"
+      "jbe .LD3DDevice_CaptureStateBlock_23\n\t"
+      ".LD3DDevice_CaptureStateBlock_22:\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "movl 0x1fb698(,%%edx,4), %%edx\n\t"
+      "movl %%edx, 0x4(%%ebx)\n\t"
+      "addl $8, %%ebx\n\t"
+      "incl %%eax\n\t"
+      "cmpl 0x1c(%%esi), %%eax\n\t"
+      "jb .LD3DDevice_CaptureStateBlock_22\n\t"
+      ".LD3DDevice_CaptureStateBlock_23:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl %%ecx, 0x20(%%esi)\n\t"
+      "jbe .LD3DDevice_CaptureStateBlock_25\n\t"
+      ".LD3DDevice_CaptureStateBlock_24:\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "shll $5, %%edx\n\t"
+      "addl 0x4(%%ebx), %%edx\n\t"
+      "addl $0xc, %%ebx\n\t"
+      "movl 0x1fb498(,%%edx,4), %%edx\n\t"
+      "movl %%edx, -0x4(%%ebx)\n\t"
+      "incl %%eax\n\t"
+      "cmpl 0x20(%%esi), %%eax\n\t"
+      "jb .LD3DDevice_CaptureStateBlock_24\n\t"
+      ".LD3DDevice_CaptureStateBlock_25:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl %%ecx, 0x24(%%esi)\n\t"
+      "jbe .LD3DDevice_CaptureStateBlock_27\n\t"
+      "leal 0x4(%%ebx), %%edx\n\t"
+      ".LD3DDevice_CaptureStateBlock_26:\n\t"
+      "movl (%%ebx), %%esi\n\t"
+      "addl $0x22, %%esi\n\t"
+      "shll $6, %%esi\n\t"
+      "addl -0x4(%%ebp), %%esi\n\t"
+      "pushl $0x10\n\t"
+      "movl %%edx, %%edi\n\t"
+      "popl %%ecx\n\t"
+      "rep movsl\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "addl $0x44, %%ebx\n\t"
+      "addl $0x44, %%edx\n\t"
+      "incl %%eax\n\t"
+      "cmpl 0x24(%%ecx), %%eax\n\t"
+      "jb .LD3DDevice_CaptureStateBlock_26\n\t"
+      "movl %%ecx, %%esi\n\t"
+      ".LD3DDevice_CaptureStateBlock_27:\n\t"
+      "cmpl $0, 0x28(%%esi)\n\t"
+      "je .LD3DDevice_CaptureStateBlock_28\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      "addl $0xb00, %%esi\n\t"
+      "pushl $6\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "popl %%ecx\n\t"
+      "rep movsl\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "addl $0x18, %%ebx\n\t"
+      ".LD3DDevice_CaptureStateBlock_28:\n\t"
+      "cmpl $0, 0x2c(%%esi)\n\t"
+      "je .LD3DDevice_CaptureStateBlock_29\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      "addl $0xb18, %%esi\n\t"
+      "pushl $0x11\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "popl %%ecx\n\t"
+      "rep movsl\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "addl $0x44, %%ebx\n\t"
+      ".LD3DDevice_CaptureStateBlock_29:\n\t"
+      "cmpl $0, 0x30(%%esi)\n\t"
+      "je .LD3DDevice_CaptureStateBlock_30\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      "addl $0xb5c, %%esi\n\t"
+      "pushl $0x11\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "popl %%ecx\n\t"
+      "rep movsl\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "addl $0x44, %%ebx\n\t"
+      ".LD3DDevice_CaptureStateBlock_30:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "cmpl %%edx, 0x34(%%esi)\n\t"
+      "jbe .LD3DDevice_CaptureStateBlock_32\n\t"
+      "leal 0x4(%%ebx), %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      ".LD3DDevice_CaptureStateBlock_31:\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl -0x8(%%ebp), %%edi\n\t"
+      "addl $0x6c, -0x8(%%ebp)\n\t"
+      "leal (%%eax,%%eax,8), %%esi\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "shll $4, %%esi\n\t"
+      "addl 0x480(%%eax), %%esi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x1a\n\t"
+      "addl $0x6c, %%ebx\n\t"
+      "popl %%ecx\n\t"
+      "incl %%edx\n\t"
+      "rep movsl\n\t"
+      "cmpl 0x34(%%eax), %%edx\n\t"
+      "jb .LD3DDevice_CaptureStateBlock_31\n\t"
+      "movl %%eax, %%esi\n\t"
+      ".LD3DDevice_CaptureStateBlock_32:\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "cmpl %%edi, 0x38(%%esi)\n\t"
+      "jbe .LD3DDevice_CaptureStateBlock_34\n\t"
+      ".LD3DDevice_CaptureStateBlock_33:\n\t"
+      "leal 0x4(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl (%%ebx)\n\t"
+      "call *%[c1e6e60]\n\t"
+      "addl $8, %%ebx\n\t"
+      "incl %%edi\n\t"
+      "cmpl 0x38(%%esi), %%edi\n\t"
+      "jb .LD3DDevice_CaptureStateBlock_33\n\t"
+      ".LD3DDevice_CaptureStateBlock_34:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1ed930] "m"(b1f98a6_c1ed930), [c1ed8f0] "m"(b1f98a6_c1ed8f0), [c1ec100] "m"(b1f98a6_c1ec100), [c1eb6d0] "m"(b1f98a6_c1eb6d0), [c1e6e60] "m"(b1f98a6_c1e6e60)
+      : "memory");
 }
+#else
+#error "D3DDevice_CaptureStateBlock: clang naked draft required"
+#endif
+
 
 /* 0x001f9b53 */
 void D3DDevice_DeleteStateBlock(void)
@@ -8213,34 +9569,110 @@ void CDirectSound_DoWork(void)
   /* relift: FUN_002073d9(0, 0); */
 }
 
-/* 0x00203e0a */
+/* CDirectSound_EnableHeadphones (0x203e0a) — XBE naked draft (batch 311). */
+#if defined(__clang__)
+static void (*const b203e0a_c20368b)(void) = DirectSoundEnterCriticalSection;
+static void b203e0a_c206df8_tgt(void) { return; }
+static void (*const b203e0a_c206df8)(void) = b203e0a_c206df8_tgt;
+static void b203e0a_c207b73_tgt(void) { return; }
+static void (*const b203e0a_c207b73)(void) = b203e0a_c207b73_tgt;
+static void b203e0a_c207aca_tgt(void) { return; }
+static void (*const b203e0a_c207aca)(void) = b203e0a_c207aca_tgt;
+
+__attribute__((naked, noinline))
 void CDirectSound_EnableHeadphones(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  DirectSoundEnterCriticalSection();
-  /* cmp ecx, edx -> je 0x203ebf */
-  /* relift: FUN_00206df8(0); */
-  /* test edi, edi -> jl 0x203ebe */
-  /* cmp ecx, -1 -> je 0x203ebe */
-  /* relift: FUN_00207b73(0, 0, 0, 52); */
-  /* test edi, edi -> jl 0x203ebe */
-  /* relift: cmp dword ptr [ebp + 0xc], 0 -> je 0x203e99 */
-  /* relift: FUN_00207aca(0, 0, 0, 52); */
-  /* relift: cmp dword ptr [ebp - 4], 0 -> je 0x203ed0 */
-  /* relift: test byte ptr [ecx + 0xc], 0x10 -> je 0x203f16 */
-  /* test eax, eax -> jne 0x203f2c */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x38, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "call *%[c20368b]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "shrl $0x1f, %%ecx\n\t"
+      "cmpl %%edx, 0xc(%%ebp)\n\t"
+      "setne %%dl\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "je .LCDirectSound_EnableHeadphones_6\n\t"
+      "cmpl %%edi, 0xc(%%ebp)\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "je .LCDirectSound_EnableHeadphones_1\n\t"
+      "orl $0x80000000, %%ebx\n\t"
+      "jmp .LCDirectSound_EnableHeadphones_2\n\t"
+      ".LCDirectSound_EnableHeadphones_1:\n\t"
+      "andl $0x7fffffff, %%ebx\n\t"
+      ".LCDirectSound_EnableHeadphones_2:\n\t"
+      "movl 0xc(%%esi), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c206df8]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jl .LCDirectSound_EnableHeadphones_5\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "movl %%ebx, 0x8(%%eax)\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "movl 0x10(%%eax), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LCDirectSound_EnableHeadphones_5\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "pushl $0x34\n\t"
+      "leal -0x38(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xd0(%%eax), %%ecx\n\t"
+      "call *%[c207b73]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jl .LCDirectSound_EnableHeadphones_5\n\t"
+      "cmpl $0, 0xc(%%ebp)\n\t"
+      "je .LCDirectSound_EnableHeadphones_3\n\t"
+      "andl $0xfffffffd, -0x28(%%ebp)\n\t"
+      "jmp .LCDirectSound_EnableHeadphones_4\n\t"
+      ".LCDirectSound_EnableHeadphones_3:\n\t"
+      "orl $2, -0x28(%%ebp)\n\t"
+      ".LCDirectSound_EnableHeadphones_4:\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "movl 0x10(%%eax), %%eax\n\t"
+      "movl 0xc(%%esi), %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl $0x34\n\t"
+      "leal -0x38(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xd0(%%esi), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c207aca]\n\t"
+      "movl %%eax, %%edi\n\t"
+      ".LCDirectSound_EnableHeadphones_5:\n\t"
+      "popl %%ebx\n\t"
+      ".LCDirectSound_EnableHeadphones_6:\n\t"
+      "cmpl $0, -0x4(%%ebp)\n\t"
+      "je .LCDirectSound_EnableHeadphones_7\n\t"
+      "pushl $0x222674\n\t"
+      "call *0x253098\n\t"
+      ".LCDirectSound_EnableHeadphones_7:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c20368b] "m"(b203e0a_c20368b), [c206df8] "m"(b203e0a_c206df8), [c207b73] "m"(b203e0a_c207b73), [c207aca] "m"(b203e0a_c207aca)
+      : "memory");
 }
+#else
+#error "CDirectSound_EnableHeadphones: clang naked draft required"
+#endif
+
 
 /* 0x00203f32 */
 void CDirectSoundVoice_SetPitch(void)
@@ -10581,87 +12013,235 @@ void CMcpxVoiceClient_SetPitch(void)
   (void)ebp;
 }
 
-/* 0x00209c05 */
+/* CMcpxVoiceClient_SetLFO (0x209c05) — XBE naked draft (batch 310). */
+#if defined(__clang__)
+static void b209c05_c2063cb_tgt(void) { return; }
+static void (*const b209c05_c2063cb)(void) = b209c05_c2063cb_tgt;
+static void b209c05_c208b9f_tgt(void) { return; }
+static void (*const b209c05_c208b9f)(void) = b209c05_c208b9f_tgt;
+static void b209c05_c208c03_tgt(void) { return; }
+static void (*const b209c05_c208c03)(void) = b209c05_c208c03_tgt;
+
+__attribute__((naked, noinline))
 void CMcpxVoiceClient_SetLFO(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* relift: FUN_002063cb(0, 0, 0, 0); */
-  /* test eax, eax -> jne 0x209c28 */
-  /* relift: FUN_00208b9f(0); */
-  /* cmp eax, 1 -> jne 0x209c35 */
-  /* relift: FUN_00208c03(0); */
-  /* relift: test byte ptr [esi + 8], 1 -> je 0x209d00 */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209c5b */
-  /* mem[0xfe8202f8] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209c6c */
-  /* mem[0xfe8202fc] = 1 */
-  /* relift: test byte ptr [esi + 8], 2 -> jne 0x209cac */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209c84 */
-  /* mem[0xfe820318] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209c98 */
-  /* mem[0xfe820350] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209cac */
-  /* mem[0xfe82036c] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209cc0 */
-  /* mem[0xfe820370] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209cd4 */
-  /* mem[0xfe8202fc] = 0 */
-  /* cmp ecx, edx -> jb 0x209c5b */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "call *%[c2063cb]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LCMcpxVoiceClient_SetLFO_1\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c208b9f]\n\t"
+      "jmp .LCMcpxVoiceClient_SetLFO_2\n\t"
+      ".LCMcpxVoiceClient_SetLFO_1:\n\t"
+      "cmpl $1, %%eax\n\t"
+      "jne .LCMcpxVoiceClient_SetLFO_2\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c208c03]\n\t"
+      ".LCMcpxVoiceClient_SetLFO_2:\n\t"
+      "testb $1, 0x8(%%esi)\n\t"
+      "je .LCMcpxVoiceClient_SetLFO_10\n\t"
+      "movl 0xe0(%%esi), %%eax\n\t"
+      "movl 0x10(%%eax), %%eax\n\t"
+      "movzwl 0x2(%%eax), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "decl %%eax\n\t"
+      "sarl $1, %%eax\n\t"
+      "incl %%eax\n\t"
+      "je .LCMcpxVoiceClient_SetLFO_10\n\t"
+      "pushl $4\n\t"
+      "popl %%eax\n\t"
+      ".LCMcpxVoiceClient_SetLFO_3:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetLFO_3\n\t"
+      "movl 0x10(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe8202f8\n\t"
+      ".LCMcpxVoiceClient_SetLFO_4:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetLFO_4\n\t"
+      "movl $1, 0xfe8202fc\n\t"
+      "testb $2, 0x8(%%esi)\n\t"
+      "jne .LCMcpxVoiceClient_SetLFO_7\n\t"
+      ".LCMcpxVoiceClient_SetLFO_5:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetLFO_5\n\t"
+      "movl 0x88(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe820318\n\t"
+      ".LCMcpxVoiceClient_SetLFO_6:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetLFO_6\n\t"
+      "movl 0x9c(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe820350\n\t"
+      ".LCMcpxVoiceClient_SetLFO_7:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetLFO_7\n\t"
+      "movl 0xa0(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe82036c\n\t"
+      ".LCMcpxVoiceClient_SetLFO_8:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetLFO_8\n\t"
+      "movl 0xa4(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe820370\n\t"
+      ".LCMcpxVoiceClient_SetLFO_9:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetLFO_9\n\t"
+      "movl $0, 0xfe8202fc\n\t"
+      "movl 0xe0(%%esi), %%edx\n\t"
+      "movl 0x10(%%edx), %%edx\n\t"
+      "movzwl 0x2(%%edx), %%edx\n\t"
+      "incl %%ecx\n\t"
+      "decl %%edx\n\t"
+      "sarl $1, %%edx\n\t"
+      "incl %%edx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jb .LCMcpxVoiceClient_SetLFO_3\n\t"
+      ".LCMcpxVoiceClient_SetLFO_10:\n\t"
+      "cmpl $0, -0x8(%%ebp)\n\t"
+      "popl %%esi\n\t"
+      "je .LCMcpxVoiceClient_SetLFO_11\n\t"
+      "movb -0x4(%%ebp), %%cl\n\t"
+      "call *0x2531b0\n\t"
+      ".LCMcpxVoiceClient_SetLFO_11:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c2063cb] "m"(b209c05_c2063cb), [c208b9f] "m"(b209c05_c208b9f), [c208c03] "m"(b209c05_c208c03)
+      : "memory");
 }
+#else
+#error "CMcpxVoiceClient_SetLFO: clang naked draft required"
+#endif
 
-/* 0x00209d16 */
+
+/* CMcpxVoiceClient_SetEG (0x209d16) — XBE naked draft (batch 308). */
+#if defined(__clang__)
+static void b209d16_c2063cb_tgt(void) { return; }
+static void (*const b209d16_c2063cb)(void) = b209d16_c2063cb_tgt;
+static void b209d16_c208c60_tgt(void) { return; }
+static void (*const b209d16_c208c60)(void) = b209d16_c208c60_tgt;
+static void b209d16_c208d09_tgt(void) { return; }
+static void (*const b209d16_c208d09)(void) = b209d16_c208d09_tgt;
+
+__attribute__((naked, noinline))
 void CMcpxVoiceClient_SetEG(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int ebp = 0;
-
-  /* relift: FUN_002063cb(0, 0, 0, 0); */
-  /* test eax, eax -> jne 0x209d39 */
-  /* relift: FUN_00208c60(0); */
-  /* cmp eax, 1 -> jne 0x209d46 */
-  /* relift: FUN_00208d09(0); */
-  /* relift: test byte ptr [esi + 8], 1 -> je 0x209e33 */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209d6c */
-  /* mem[0xfe8202f8] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209d7d */
-  /* mem[0xfe8202fc] = 1 */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209d8f */
-  /* mem[0xfe820318] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209da3 */
-  /* mem[0xfe820308] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209db7 */
-  /* mem[0xfe82030c] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209dcb */
-  /* mem[0xfe820310] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209ddf */
-  /* mem[0xfe820314] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209df3 */
-  /* mem[0xfe82036c] = edx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x209e07 */
-  /* mem[0xfe8202fc] = 0 */
-  /* cmp ecx, edx -> jb 0x209d6c */
-  /* relift: FUN_0020946f(0, 0); */
-  /* relift: test byte ptr [ebp + 8], 1 -> je 0x209e66 */
-  /* relift: FUN_00203664(0); */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "call *%[c2063cb]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LCMcpxVoiceClient_SetEG_1\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c208c60]\n\t"
+      "jmp .LCMcpxVoiceClient_SetEG_2\n\t"
+      ".LCMcpxVoiceClient_SetEG_1:\n\t"
+      "cmpl $1, %%eax\n\t"
+      "jne .LCMcpxVoiceClient_SetEG_2\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c208d09]\n\t"
+      ".LCMcpxVoiceClient_SetEG_2:\n\t"
+      "testb $1, 0x8(%%esi)\n\t"
+      "je .LCMcpxVoiceClient_SetEG_12\n\t"
+      "movl 0xe0(%%esi), %%eax\n\t"
+      "movl 0x10(%%eax), %%eax\n\t"
+      "movzwl 0x2(%%eax), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "decl %%eax\n\t"
+      "sarl $1, %%eax\n\t"
+      "incl %%eax\n\t"
+      "je .LCMcpxVoiceClient_SetEG_12\n\t"
+      "pushl $4\n\t"
+      "popl %%eax\n\t"
+      ".LCMcpxVoiceClient_SetEG_3:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetEG_3\n\t"
+      "movl 0x10(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe8202f8\n\t"
+      ".LCMcpxVoiceClient_SetEG_4:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetEG_4\n\t"
+      "movl $1, 0xfe8202fc\n\t"
+      ".LCMcpxVoiceClient_SetEG_5:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetEG_5\n\t"
+      "movl 0x88(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe820318\n\t"
+      ".LCMcpxVoiceClient_SetEG_6:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetEG_6\n\t"
+      "movl 0x8c(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe820308\n\t"
+      ".LCMcpxVoiceClient_SetEG_7:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetEG_7\n\t"
+      "movl 0x90(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe82030c\n\t"
+      ".LCMcpxVoiceClient_SetEG_8:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetEG_8\n\t"
+      "movl 0x94(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe820310\n\t"
+      ".LCMcpxVoiceClient_SetEG_9:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetEG_9\n\t"
+      "movl 0x98(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe820314\n\t"
+      ".LCMcpxVoiceClient_SetEG_10:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetEG_10\n\t"
+      "movl 0xa0(%%esi), %%edx\n\t"
+      "movl %%edx, 0xfe82036c\n\t"
+      ".LCMcpxVoiceClient_SetEG_11:\n\t"
+      "cmpl %%eax, 0xfe820010\n\t"
+      "jb .LCMcpxVoiceClient_SetEG_11\n\t"
+      "movl $0, 0xfe8202fc\n\t"
+      "movl 0xe0(%%esi), %%edx\n\t"
+      "movl 0x10(%%edx), %%edx\n\t"
+      "movzwl 0x2(%%edx), %%edx\n\t"
+      "incl %%ecx\n\t"
+      "decl %%edx\n\t"
+      "sarl $1, %%edx\n\t"
+      "incl %%edx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jb .LCMcpxVoiceClient_SetEG_3\n\t"
+      ".LCMcpxVoiceClient_SetEG_12:\n\t"
+      "cmpl $0, -0x8(%%ebp)\n\t"
+      "popl %%esi\n\t"
+      "je .LCMcpxVoiceClient_SetEG_13\n\t"
+      "movb -0x4(%%ebp), %%cl\n\t"
+      "call *0x2531b0\n\t"
+      ".LCMcpxVoiceClient_SetEG_13:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c2063cb] "m"(b209d16_c2063cb), [c208c60] "m"(b209d16_c208c60), [c208d09] "m"(b209d16_c208d09)
+      : "memory");
 }
+#else
+#error "CMcpxVoiceClient_SetEG: clang naked draft required"
+#endif
+
 
 /* 0x00209e6d */
 void CMcpxVoiceClient_Commit3dSettings(void)
@@ -11091,153 +12671,112 @@ void CMcpxBuffer_GetStatus(void)
   (void)esi;
 }
 
-/* 0x0020b0f7 */
+/* CMcpxBuffer_GetCurrentPosition (0x20b0f7) — XBE naked draft (batch 310). */
+#if defined(__clang__)
+static void b20b0f7_c2063cb_tgt(void) { return; }
+static void (*const b20b0f7_c2063cb)(void) = b20b0f7_c2063cb_tgt;
+static void b20b0f7_c209228_tgt(void) { return; }
+static void (*const b20b0f7_c209228)(void) = b20b0f7_c209228_tgt;
+static void b20b0f7_c207ea8_tgt(void) { return; }
+static void (*const b20b0f7_c207ea8)(void) = b20b0f7_c207ea8_tgt;
+
+__attribute__((naked, noinline))
 void CMcpxBuffer_GetCurrentPosition(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: FUN_002063cb(0, 0, 0, 0); */
-  /* cmp (char)eax, 3 -> jne 0x20b18c */
-  /* relift: FUN_00209228(0, 0); */
-  /* test eax, eax -> je 0x20b125 */
-  /* test edi, edi -> je 0x20b1aa */
-  /* relift: FUN_00207ea8(32); */
-  /* cmp eax, ecx -> jae 0x20b148 */
-  /* relift: test byte ptr [esi + 8], 0x10 -> je 0x20b17d */
-  /* cmp ebx, edx -> jb 0x20b17d */
-  /* cmp ebx, edx -> jae 0x20b17d */
-  /* test eax, eax -> je 0x20b19b */
-  /* test eax, eax -> je 0x20b1aa */
-  /* relift: cmp dword ptr [esi + 0x14c], 0 -> je 0x20b1f0 */
-  /* relift: tail-call CMcpxBuffer_GetCurrentPosition(); */
-  /* test eax, eax -> jl 0x20b1f0 */
-  /* relift: test dword ptr [esi + 8], 0x10000002 -> jne 0x20b214 */
-  /* test eax, eax -> je 0x20b20b */
-  /* relift: FUN_0020af57(0); */
-  /* relift: FUN_0020aee5(0, 0, 0, 0); */
-  /* cmp ebx, edi -> je 0x20b24e */
-  /* relift: test byte ptr [eax + 0xe], 4 -> je 0x20b24e */
-  /* relift: FUN_0020af28(0, 0, 0, 0); */
-  /* test esi, esi -> je 0x20b263 */
-  /* relift: FUN_0020af57(0); */
-  /* cmp edi, 2 -> jb 0x20b277 */
-  /* relift: FUN_0020b05a(0, 0); */
-  /* relift: test byte ptr [esi + 8], 0x40 -> jne 0x20b2f2 */
-  /* relift: FUN_0020b05a(0, 0); */
-  /* relift: cmp word ptr [eax + 0x12], (int16_t)edi -> jbe 0x20b35f */
-  /* relift: FUN_0020d2c6(0, 0, 0); */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b322 */
-  /* mem[0xfe820804] = ecx */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b33d */
-  /* mem[0xfe820808] = eax */
-  /* cmp edi, eax -> jb 0x20b313 */
-  /* relift: FUN_0020afb7(0); */
-  /* relift: test byte ptr [edi + 8], 0x40 -> jne 0x20b3e4 */
-  /* test eax, edx -> jne 0x20b3b0 */
-  /* cmp esi, 0x1e -> jbe 0x20b39f */
-  /* relift: FUN_00207ea8(32); */
-  CDirectSoundBufferSettings_SetBufferData();
-  /* relift: FUN_0020afb7(2047, 0, 0); */
-  /* cmp (char)eax, 3 -> jne 0x20b435 */
-  /* relift: test dword ptr [eax + 0xc], 0x82000 -> jne 0x20b413 */
-  /* relift: tail-call CMcpxBuffer_GetCurrentPosition(); */
-  /* relift: FUN_0020b269(0, 0); */
-  /* relift: FUN_0020b1c2(0, 0); */
-  /* relift: FUN_0020b269(0, 0); */
-  /* relift: FUN_0020af57(0); */
-  /* cmp edi, 5 -> jb 0x20b44a */
-  /* relift: FUN_002048e3(0); */
-  /* relift: test byte ptr [eax + 0xe], 4 -> je 0x20b483 */
-  /* relift: FUN_0020b269(0, 0); */
-  /* relift: FUN_0020b05a(0, 0); */
-  /* relift: FUN_00209596(0, 0); */
-  /* test edi, edi -> jl 0x20b4c7 */
-  /* test (char)eax, 0x20 -> jne 0x20b4c7 */
-  /* relift: FUN_0020b383(0, 0); */
-  /* relift: FUN_0020b295(0, 0); */
-  /* relift: FUN_0020b493(0); */
-  /* relift: FUN_002063cb(0, 0); */
-  /* relift: FUN_0020af03(0); */
-  /* relift: FUN_0020af03(0); */
-  /* relift: FUN_0020af03(0, 0); */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b576 */
-  /* mem[0xfe8202f8] = eax */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b586 */
-  /* mem[0xfe8202fc] = 1 */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b599 */
-  /* relift: FUN_00207ecf(0); */
-  /* mem[0xfe820304] = eax */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b5b2 */
-  /* mem[0xfe8203dc] = ecx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b5c3 */
-  /* mem[0xfe8203a4] = ecx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b5d4 */
-  /* mem[0xfe8202fc] = 0 */
-  /* cmp edi, eax -> jb 0x20b576 */
-  /* relift: test byte ptr [esi + 8], 2 -> jne 0x20b618 */
-  /* relift: FUN_0020af03(*(int *)((char *)esi + 0x228)); */
-  /* relift: cmp dword ptr [ebp - 8], 0 -> je 0x20b6ec */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b64c */
-  /* mem[0xfe8202f8] = eax */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b65c */
-  /* mem[0xfe8202fc] = 1 */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b66f */
-  /* relift: FUN_00207ecf(0); */
-  /* mem[0xfe820304] = eax */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b688 */
-  /* mem[0xfe820360] = 0xffffffff */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b69a */
-  /* mem[0xfe820364] = 0xffffffff */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b6ac */
-  /* mem[0xfe820368] = 0xffffffff */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b6be */
-  /* mem[0xfe8202fc] = 0 */
-  /* cmp edi, eax -> jb 0x20b64c */
-  /* relift: cmp dword ptr [ebp - 0x18], 0 -> je 0x20b6fb */
-  /* relift: FUN_0020af57(0); */
-  /* relift: cmp dword ptr [ebp - 8], 0 -> je 0x20b828 */
-  /* relift: test dword ptr [eax], 0x100000 -> jne 0x20b727 */
-  /* relift: FUN_002063cb(0, 0); */
-  /* relift: FUN_00208000(0); */
-  /* relift: cmp dword ptr [ebp + 8], 0 -> jne 0x20b74f */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b768 */
-  /* mem[0xfe8202f8] = eax */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b778 */
-  /* mem[0xfe8202fc] = 1 */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b78b */
-  /* relift: FUN_00207ecf(0); */
-  /* mem[0xfe820304] = eax */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b7a4 */
-  /* mem[0xfe820360] = ecx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b7b6 */
-  /* mem[0xfe820364] = ecx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b7c8 */
-  /* mem[0xfe820368] = ecx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b7da */
-  /* mem[0xfe8203d8] = ecx */
-  /* relift: cmp dword ptr [0xfe820010], eax -> jb 0x20b7eb */
-  /* mem[0xfe8202fc] = 0 */
-  /* cmp ebx, eax -> jb 0x20b768 */
-  /* relift: cmp dword ptr [ebp - 0x18], 0 -> je 0x20b828 */
-  /* relift: cmp dword ptr [esi + 0x14c], eax -> je 0x20b84e */
-  /* relift: FUN_0020af28(0, 0, 0, 0); */
-  /* cmp dl, 3 -> jne 0x20b872 */
-  /* relift: FUN_0020b4cc(0); */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "call *%[c2063cb]\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "andl $3, %%eax\n\t"
+      "cmpb $3, %%al\n\t"
+      "jne .LCMcpxBuffer_GetCurrentPosition_4\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c209228]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LCMcpxBuffer_GetCurrentPosition_1\n\t"
+      "movl %%ebx, (%%eax)\n\t"
+      ".LCMcpxBuffer_GetCurrentPosition_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LCMcpxBuffer_GetCurrentPosition_6\n\t"
+      "pushl $0x20\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c207ea8]\n\t"
+      "movl 0x148(%%esi), %%ecx\n\t"
+      "movl 0x10(%%ecx), %%ecx\n\t"
+      "movzwl 0xc(%%ecx), %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jae .LCMcpxBuffer_GetCurrentPosition_2\n\t"
+      "movl %%ecx, %%eax\n\t"
+      ".LCMcpxBuffer_GetCurrentPosition_2:\n\t"
+      "addl %%ebx, %%eax\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "testb $0x10, 0x8(%%esi)\n\t"
+      "je .LCMcpxBuffer_GetCurrentPosition_3\n\t"
+      "movl 0x148(%%esi), %%ecx\n\t"
+      "movl 0x50(%%ecx), %%edx\n\t"
+      "cmpl %%edx, %%ebx\n\t"
+      "jb .LCMcpxBuffer_GetCurrentPosition_3\n\t"
+      "movl 0x54(%%ecx), %%ecx\n\t"
+      "addl %%ecx, %%edx\n\t"
+      "cmpl %%edx, %%ebx\n\t"
+      "jae .LCMcpxBuffer_GetCurrentPosition_3\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "divl %%ecx\n\t"
+      "movl %%edx, (%%edi)\n\t"
+      "movl 0x148(%%esi), %%eax\n\t"
+      "movl 0x50(%%eax), %%eax\n\t"
+      "addl %%edx, %%eax\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "jmp .LCMcpxBuffer_GetCurrentPosition_6\n\t"
+      ".LCMcpxBuffer_GetCurrentPosition_3:\n\t"
+      "movl 0x148(%%esi), %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "divl 0x4c(%%ecx)\n\t"
+      "movl %%edx, (%%edi)\n\t"
+      "jmp .LCMcpxBuffer_GetCurrentPosition_6\n\t"
+      ".LCMcpxBuffer_GetCurrentPosition_4:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LCMcpxBuffer_GetCurrentPosition_5\n\t"
+      "movl 0x228(%%esi), %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      ".LCMcpxBuffer_GetCurrentPosition_5:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LCMcpxBuffer_GetCurrentPosition_6\n\t"
+      "movl 0x228(%%esi), %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      ".LCMcpxBuffer_GetCurrentPosition_6:\n\t"
+      "cmpl $0, -0x8(%%ebp)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "je .LCMcpxBuffer_GetCurrentPosition_7\n\t"
+      "movb -0x4(%%ebp), %%cl\n\t"
+      "call *0x2531b0\n\t"
+      ".LCMcpxBuffer_GetCurrentPosition_7:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c2063cb] "m"(b20b0f7_c2063cb), [c209228] "m"(b20b0f7_c209228), [c207ea8] "m"(b20b0f7_c207ea8)
+      : "memory");
 }
+#else
+#error "CMcpxBuffer_GetCurrentPosition: clang naked draft required"
+#endif
+
 
 /* 0x0020b873 */
 void CMcpxBuffer_Stop(void)
@@ -11257,51 +12796,112 @@ void CMcpxBuffer_Stop(void)
   (void)edi;
 }
 
-/* 0x0020b8d7 */
+/* CMcpxBuffer_SetCurrentPosition (0x20b8d7) — XBE naked draft (batch 310). */
+#if defined(__clang__)
+static void b20b8d7_c20b4cc_tgt(void) { return; }
+static void (*const b20b8d7_c20b4cc)(void) = b20b8d7_c20b4cc_tgt;
+static void b20b8d7_c2082fe_tgt(void) { return; }
+static void (*const b20b8d7_c2082fe)(void) = b20b8d7_c2082fe_tgt;
+static void b20b8d7_c20af03_tgt(void) { return; }
+static void (*const b20b8d7_c20af03)(void) = b20b8d7_c20af03_tgt;
+static void b20b8d7_c2063cb_tgt(void) { return; }
+static void (*const b20b8d7_c2063cb)(void) = b20b8d7_c2063cb_tgt;
+
+__attribute__((naked, noinline))
 void CMcpxBuffer_SetCurrentPosition(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* cmp (char)eax, 3 -> jne 0x20b9ab */
-  /* cmp (char)eax, 0x13 -> jne 0x20b921 */
-  /* relift: cmp dword ptr [ebp + 8], ecx -> jb 0x20b921 */
-  /* relift: FUN_0020b4cc(0); */
-  /* relift: FUN_002082fe(0, 0); */
-  /* relift: FUN_0020af03(0); */
-  /* relift: FUN_002063cb(0, 0); */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b957 */
-  /* mem[0xfe8202f8] = edx */
-  /* relift: cmp dword ptr [0xfe820010], 4 -> jb 0x20b968 */
-  /* mem[0xfe8203d8] = edi */
-  /* cmp ecx, edx -> jb 0x20b957 */
-  /* relift: FUN_002082fe(0); */
-  /* relift: FUN_0020b8a7(0); */
-  /* relift: FUN_0020b3e6(0, 0); */
-  /* relift: FUN_0020b4cc(0); */
-  /* relift: FUN_0020b269(0, 0); */
-  /* relift: FUN_0020b1c2(0, 0); */
-  /* relift: FUN_0020b439(0, 0); */
-  /* relift: test byte ptr [ebp + 8], 1 -> je 0x20ba1a */
-  /* relift: FUN_00203664(0); */
-  /* relift: FUN_0020b254(0, 0); */
-  /* relift: FUN_002094a6(0, 0); */
-  /* test eax, eax -> jl 0x20ba8c */
-  /* test edx, 0x40000 -> jne 0x20ba8c */
-  /* test edx, 0x82000 -> jne 0x20ba85 */
-  /* relift: cmp dword ptr [ecx + 0x48], 0 -> je 0x20ba8c */
-  /* relift: cmp dword ptr [ecx + 0x4c], 0 -> je 0x20ba8c */
-  /* relift: FUN_0020b493(0, 0); */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "andl $0, -0x4(%%ebp)\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "andl $3, %%eax\n\t"
+      "cmpb $3, %%al\n\t"
+      "jne .LCMcpxBuffer_SetCurrentPosition_6\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "andl $0x13, %%eax\n\t"
+      "cmpb $0x13, %%al\n\t"
+      "jne .LCMcpxBuffer_SetCurrentPosition_1\n\t"
+      "movl 0x148(%%esi), %%eax\n\t"
+      "movl 0x54(%%eax), %%ecx\n\t"
+      "addl 0x50(%%eax), %%ecx\n\t"
+      "cmpl %%ecx, 0x8(%%ebp)\n\t"
+      "jb .LCMcpxBuffer_SetCurrentPosition_1\n\t"
+      "pushl $0\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c20b4cc]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jl .LCMcpxBuffer_SetCurrentPosition_7\n\t"
+      ".LCMcpxBuffer_SetCurrentPosition_1:\n\t"
+      "pushl %%edi\n\t"
+      "pushl $4\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c2082fe]\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c20af03]\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[c2063cb]\n\t"
+      "movl 0xe0(%%esi), %%eax\n\t"
+      "movl 0x10(%%eax), %%eax\n\t"
+      "movzwl 0x2(%%eax), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "decl %%eax\n\t"
+      "sarl $1, %%eax\n\t"
+      "incl %%eax\n\t"
+      "je .LCMcpxBuffer_SetCurrentPosition_4\n\t"
+      "leal 0x10(%%esi), %%eax\n\t"
+      ".LCMcpxBuffer_SetCurrentPosition_2:\n\t"
+      "cmpl $4, 0xfe820010\n\t"
+      "jb .LCMcpxBuffer_SetCurrentPosition_2\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl %%edx, 0xfe8202f8\n\t"
+      ".LCMcpxBuffer_SetCurrentPosition_3:\n\t"
+      "cmpl $4, 0xfe820010\n\t"
+      "jb .LCMcpxBuffer_SetCurrentPosition_3\n\t"
+      "movl %%edi, 0xfe8203d8\n\t"
+      "movl 0xe0(%%esi), %%edx\n\t"
+      "movl 0x10(%%edx), %%edx\n\t"
+      "movzwl 0x2(%%edx), %%edx\n\t"
+      "incl %%ecx\n\t"
+      "addl $4, %%eax\n\t"
+      "decl %%edx\n\t"
+      "sarl $1, %%edx\n\t"
+      "incl %%edx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jb .LCMcpxBuffer_SetCurrentPosition_2\n\t"
+      ".LCMcpxBuffer_SetCurrentPosition_4:\n\t"
+      "cmpl $0, -0xc(%%ebp)\n\t"
+      "popl %%edi\n\t"
+      "je .LCMcpxBuffer_SetCurrentPosition_5\n\t"
+      "movb -0x8(%%ebp), %%cl\n\t"
+      "call *0x2531b0\n\t"
+      ".LCMcpxBuffer_SetCurrentPosition_5:\n\t"
+      "pushl $0\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c2082fe]\n\t"
+      "jmp .LCMcpxBuffer_SetCurrentPosition_7\n\t"
+      ".LCMcpxBuffer_SetCurrentPosition_6:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x228(%%esi)\n\t"
+      ".LCMcpxBuffer_SetCurrentPosition_7:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "popl %%esi\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c20b4cc] "m"(b20b8d7_c20b4cc), [c2082fe] "m"(b20b8d7_c2082fe), [c20af03] "m"(b20b8d7_c20af03), [c2063cb] "m"(b20b8d7_c2063cb)
+      : "memory");
 }
+#else
+#error "CMcpxBuffer_SetCurrentPosition: clang naked draft required"
+#endif
+
 
 /* 0x0020ba90 */
 void CMcpxBuffer_SetBufferData(void)
@@ -13247,56 +14847,127 @@ int send(void *xnet, unsigned int socket, const char *buf, int len, int flags)
   (void)lift_a5;
 }
 
-/* 0x0024b4e4 */
+/* MU_Init (0x24b4e4) — XBE naked draft (batch 306). */
+#if defined(__clang__)
+static void b24b4e4_c24b75b_tgt(void) { return; }
+static void (*const b24b4e4_c24b75b)(void) = b24b4e4_c24b75b_tgt;
+static void (*const b24b4e4_c24b724)(void) = IUsbInit_GetMaxDeviceTypeCount;
+static void b24b4e4_c24c4d3_tgt(void) { return; }
+static void (*const b24b4e4_c24c4d3)(void) = b24b4e4_c24c4d3_tgt;
+static void b24b4e4_c24b76e_tgt(void) { return; }
+static void (*const b24b4e4_c24b76e)(void) = b24b4e4_c24b76e_tgt;
+
+__attribute__((naked, noinline))
 void MU_Init(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* mem[0x004eb0c0] = eax */
-  /* mem[0x004eb0bc] = eax */
-  /* mem[0x004ee0c4] = edi */
-  /* relift: FUN_0024b75b(0, 0); */
-  /* test eax, eax -> je 0x24b535 */
-  IUsbInit_GetMaxDeviceTypeCount();
-  /* relift: cmp dword ptr [ebp - 8], esi -> jbe 0x24b5d5 */
-  /* test eax, eax -> jl 0x24b5d5 */
-  /* relift: FUN_0024c4d3(0); */
-  /* relift: cmp esi, dword ptr [ebp - 8] -> jb 0x24b565 */
-  /* relift: relift: mov byte ptr [0x24b241], (char)eax */
-  /* relift: FUN_0024b76e(0x0024b240); */
-  /* relift: cmp dword ptr [0x24b308], 0 -> jne 0x24b721 */
-  /* mem[0x0024b308] = 1 */
-  /* relift: relift: mov word ptr [0x4ee0c8], 4 */
-  /* relift: FUN_0024b75b(0, 0); */
-  /* test eax, eax -> jne 0x24b66c */
-  IUsbInit_GetMaxDeviceTypeCount();
-  /* relift: relift: mov byte ptr [0x24b368], (char)eax */
-  IUsbInit_GetMaxDeviceTypeCount();
-  /* relift: relift: mov byte ptr [0x24b380], (char)eax */
-  IUsbInit_GetMaxDeviceTypeCount();
-  /* relift: relift: mov byte ptr [0x24b398], (char)eax */
-  /* cmp ebx, eax -> jbe 0x24b692 */
-  /* mem[0x004ee0d0] = ecx */
-  /* mem[0x004ee0d0] = ecx */
-  /* mem[0x004ee0cc] = eax */
-  /* cmp edx, eax -> jb 0x24b6e5 */
-  /* relift: relift: mov byte ptr [0x24b2fd], (char)ebx */
-  /* relift: FUN_0024b76e(0x0024b2fc); */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $0xc04, %%ecx\n\t"
+      "movl $0x4eb0b8, %%edi\n\t"
+      "rep stosl\n\t"
+      "movl $0x4eb0bc, %%eax\n\t"
+      "pushl $0x60\n\t"
+      "movl %%eax, 0x4eb0c0\n\t"
+      "movl %%eax, 0x4eb0bc\n\t"
+      "call *0x2531bc\n\t"
+      "movl %%eax, %%edi\n\t"
+      "pushl $0x18\n\t"
+      "popl %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%edi, 0x4ee0c4\n\t"
+      "rep stosl\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "call *%[c24b75b]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LMU_Init_1\n\t"
+      "movl $8, -0x8(%%ebp)\n\t"
+      "jmp .LMU_Init_2\n\t"
+      ".LMU_Init_1:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0x24b218\n\t"
+      "call *%[c24b724]\n\t"
+      "pushl $8\n\t"
+      "popl %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jbe .LMU_Init_2\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      ".LMU_Init_2:\n\t"
+      "pushl $0x253024\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x2530e4\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpl %%esi, -0x8(%%ebp)\n\t"
+      "jbe .LMU_Init_5\n\t"
+      ".LMU_Init_3:\n\t"
+      "cmpl $9, %%esi\n\t"
+      "leal 0x41(%%esi), %%eax\n\t"
+      "ja .LMU_Init_4\n\t"
+      "leal 0x30(%%esi), %%eax\n\t"
+      ".LMU_Init_4:\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movb %%al, 0xb(%%ecx)\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl $0x3a\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x170\n\t"
+      "pushl $0x24b250\n\t"
+      "call *0x2531b8\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LMU_Init_5\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x18(%%eax), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "pushl $0x5c\n\t"
+      "popl %%ecx\n\t"
+      "movl %%edx, %%edi\n\t"
+      "rep stosl\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl %%esi, 0x4(%%edx)\n\t"
+      "movl $4, 0xc(%%edx)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movb $1, 0x1e(%%eax)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "orl $4, 0x14(%%eax)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "andl $0xffffffef, 0x14(%%eax)\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c24c4d3]\n\t"
+      "incl %%esi\n\t"
+      "cmpl -0x8(%%ebp), %%esi\n\t"
+      "jb .LMU_Init_3\n\t"
+      ".LMU_Init_5:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "cmpl $1, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movb %%al, 0x24b241\n\t"
+      "popl %%esi\n\t"
+      "jbe .LMU_Init_6\n\t"
+      "shll $1, 0x24b247\n\t"
+      ".LMU_Init_6:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0x24b240\n\t"
+      "call *%[c24b76e]\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c24b75b] "m"(b24b4e4_c24b75b), [c24b724] "m"(b24b4e4_c24b724), [c24c4d3] "m"(b24b4e4_c24c4d3), [c24b76e] "m"(b24b4e4_c24b76e)
+      : "memory");
 }
+#else
+#error "MU_Init: clang naked draft required"
+#endif
+
 
 /* 0x0024b724 */
 void IUsbInit_GetMaxDeviceTypeCount(void)

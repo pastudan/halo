@@ -460,43 +460,214 @@ void FUN_001d3739(void)
   (void)ebp;
 }
 
-/* 0x1d3a91 */
+/* XapiSelectCachePartition (0x1d3a91) — XBE naked draft (batch 307). */
+#if defined(__clang__)
+static void * (*const b1d3a91_c1da290)(void *dest, const void *src, size_t size) = memmove;
+
+__attribute__((naked, noinline))
 void XapiSelectCachePartition(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: cmp dword ptr [ebp - 0x34], esi -> jne 0x1d3b43 */
-  /* relift: cmp dword ptr [ebp - 0x228], ebx -> je 0x1d3b63 */
-  /* cmp eax, 0x29 -> jbe 0x1d3b7b */
-  /* test eax, eax -> jbe 0x1d3ba0 */
-  /* relift: cmp ebx, dword ptr [edx] -> jne 0x1d3b98 */
-  /* relift: cmp dword ptr [edx + 8], 0 -> jne 0x1d3c75 */
-  /* cmp ecx, eax -> jb 0x1d3b87 */
-  /* test eax, eax -> jbe 0x1d3bd3 */
-  /* relift: cmp dword ptr [ecx + 4], 0 -> je 0x1d3bbb */
-  /* relift: cmp dword ptr [ecx], esi -> je 0x1d3bc3 */
-  /* cmp edx, eax -> jb 0x1d3bb1 */
-  /* cmp edx, eax -> jne 0x1d3bca */
-  /* cmp esi, eax -> jb 0x1d3ba9 */
-  /* test edi, edi -> jne 0x1d3be0 */
-  /* cmp edi, ecx -> jb 0x1d3bea */
-  /* test ebx, ebx -> je 0x1d3c20 */
-  memmove((void *)(uintptr_t)eax, (void *)(uintptr_t)eax, eax);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x22c, %%esp\n\t"
+      "movl 0x10118, %%eax\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x10\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "pushl $3\n\t"
+      "leal -0x20(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x2c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0xc0100000\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edi, -0x2c(%%ebp)\n\t"
+      "movl $0x40, -0x24(%%ebp)\n\t"
+      "movl $0x2c1e50, -0x28(%%ebp)\n\t"
+      "call *0x253160\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jl .LXapiSelectCachePartition_18\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x200\n\t"
+      "leal -0x22c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x20(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl -0x4(%%ebp)\n\t"
+      "movl $0x800, -0x18(%%ebp)\n\t"
+      "movl %%edi, -0x14(%%ebp)\n\t"
+      "call *0x253178\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jl .LXapiSelectCachePartition_17\n\t"
+      "movl 0x25321c, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "decl %%eax\n\t"
+      "movl $0x97315286, %%edx\n\t"
+      "cmpl %%edx, -0x22c(%%ebp)\n\t"
+      "pushl $2\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "movl $0xaa550000, %%esi\n\t"
+      "popl %%ebx\n\t"
+      "jne .LXapiSelectCachePartition_1\n\t"
+      "cmpl %%esi, -0x34(%%ebp)\n\t"
+      "jne .LXapiSelectCachePartition_1\n\t"
+      "cmpl %%ebx, -0x228(%%ebp)\n\t"
+      "je .LXapiSelectCachePartition_2\n\t"
+      ".LXapiSelectCachePartition_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $0x80, %%ecx\n\t"
+      "leal -0x22c(%%ebp), %%edi\n\t"
+      "rep stosl\n\t"
+      "movl %%edx, -0x22c(%%ebp)\n\t"
+      "movl %%ebx, -0x228(%%ebp)\n\t"
+      "movl %%esi, -0x34(%%ebp)\n\t"
+      "xorl %%edi, %%edi\n\t"
+      ".LXapiSelectCachePartition_2:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "movl $1, (%%esi)\n\t"
+      "movl 0x25321c, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "cmpl $0x29, %%eax\n\t"
+      "jbe .LXapiSelectCachePartition_3\n\t"
+      "pushl $0x29\n\t"
+      "popl %%eax\n\t"
+      ".LXapiSelectCachePartition_3:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jbe .LXapiSelectCachePartition_6\n\t"
+      "leal -0x224(%%ebp), %%edx\n\t"
+      ".LXapiSelectCachePartition_4:\n\t"
+      "movl -0xc(%%ebp), %%ebx\n\t"
+      "cmpl (%%edx), %%ebx\n\t"
+      "jne .LXapiSelectCachePartition_5\n\t"
+      "cmpl $0, 0x8(%%edx)\n\t"
+      "jne .LXapiSelectCachePartition_19\n\t"
+      ".LXapiSelectCachePartition_5:\n\t"
+      "incl %%ecx\n\t"
+      "addl $0xc, %%edx\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jb .LXapiSelectCachePartition_4\n\t"
+      ".LXapiSelectCachePartition_6:\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      ".LXapiSelectCachePartition_7:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jbe .LXapiSelectCachePartition_13\n\t"
+      ".LXapiSelectCachePartition_8:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "leal -0x220(%%ebp), %%ecx\n\t"
+      ".LXapiSelectCachePartition_9:\n\t"
+      "cmpl $0, 0x4(%%ecx)\n\t"
+      "je .LXapiSelectCachePartition_10\n\t"
+      "cmpl %%esi, (%%ecx)\n\t"
+      "je .LXapiSelectCachePartition_11\n\t"
+      ".LXapiSelectCachePartition_10:\n\t"
+      "incl %%edx\n\t"
+      "addl $0xc, %%ecx\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "jb .LXapiSelectCachePartition_9\n\t"
+      ".LXapiSelectCachePartition_11:\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "jne .LXapiSelectCachePartition_12\n\t"
+      "leal 0x3(%%esi), %%edi\n\t"
+      ".LXapiSelectCachePartition_12:\n\t"
+      "incl %%esi\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jb .LXapiSelectCachePartition_8\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LXapiSelectCachePartition_14\n\t"
+      ".LXapiSelectCachePartition_13:\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "movl -0x22c(%%ebp,%%ecx,4), %%edi\n\t"
+      "addl $3, %%edi\n\t"
+      ".LXapiSelectCachePartition_14:\n\t"
+      "leal 0x3(%%eax), %%ecx\n\t"
+      "cmpl %%ecx, %%edi\n\t"
+      "jb .LXapiSelectCachePartition_15\n\t"
+      "leal 0x2(%%eax), %%edi\n\t"
+      ".LXapiSelectCachePartition_15:\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "decl %%eax\n\t"
+      "negl %%esi\n\t"
+      "sbbl %%esi, %%esi\n\t"
+      "andl %%eax, %%esi\n\t"
+      "cmpl $0, 0x8(%%ebp)\n\t"
+      "movl %%edi, (%%ecx)\n\t"
+      "jne .LXapiSelectCachePartition_16\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "je .LXapiSelectCachePartition_16\n\t"
+      "leal (%%ebx,%%ebx,2), %%eax\n\t"
+      "shll $2, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x224(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x218(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1da290]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LXapiSelectCachePartition_16:\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "leal (%%esi,%%esi,2), %%eax\n\t"
+      "leal -0x224(%%ebp,%%eax,4), %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "addl $-3, %%edi\n\t"
+      "cmpl %%ecx, 0x8(%%ebp)\n\t"
+      "movl %%edi, 0x4(%%eax)\n\t"
+      "sete %%dl\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x200\n\t"
+      "leal -0x22c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x20(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl -0x4(%%ebp)\n\t"
+      "call *0x25317c\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".LXapiSelectCachePartition_17:\n\t"
+      "pushl -0x4(%%ebp)\n\t"
+      "call *0x253090\n\t"
+      ".LXapiSelectCachePartition_18:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "popl %%edi\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      ".LXapiSelectCachePartition_19:\n\t"
+      "leal (%%ecx,%%ecx,2), %%edx\n\t"
+      "movl -0x220(%%ebp,%%edx,4), %%edi\n\t"
+      "addl $3, %%edi\n\t"
+      "movl %%ecx, %%ebx\n\t"
+      "movl $0, (%%esi)\n\t"
+      "jne .LXapiSelectCachePartition_14\n\t"
+      "jmp .LXapiSelectCachePartition_7\n\t"
+      :
+      : [c1da290] "m"(b1d3a91_c1da290)
+      : "memory");
 }
+#else
+#error "XapiSelectCachePartition: clang naked draft required"
+#endif
+
 
 /* 0x1d3c95 */
 void XMountUtilityDrive(void)
@@ -1487,12 +1658,120 @@ void FUN_001d4a34(void)
 #endif
 
 
-/* 0x1d4cd9 */
+/* FUN_001d4cd9 (0x1d4cd9) — XBE naked draft (batch 307). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_001d4cd9(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movb 0x4(%%eax), %%dl\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x2(%%eax), %%si\n\t"
+      "movzbl %%dl, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl 0x60(%%edi,%%ecx,4), %%ecx\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movb 0x5(%%eax), %%cl\n\t"
+      "movb %%cl, 0xf(%%ebp)\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "addl %%ecx, 0x30(%%edi)\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movb %%dl, -0x1(%%ebp)\n\t"
+      "je .LFUN_001d4cd9_10\n\t"
+      "jmp .LFUN_001d4cd9_2\n\t"
+      ".LFUN_001d4cd9_1:\n\t"
+      "movb -0x1(%%ebp), %%dl\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      ".LFUN_001d4cd9_2:\n\t"
+      "cmpl $0xff00, %%ecx\n\t"
+      "jbe .LFUN_001d4cd9_4\n\t"
+      "cmpl $0xff01, %%ecx\n\t"
+      "movl $0xff00, %%ebx\n\t"
+      "jne .LFUN_001d4cd9_3\n\t"
+      "addl $-0x10, %%ebx\n\t"
+      ".LFUN_001d4cd9_3:\n\t"
+      "andb $0, 0x5(%%eax)\n\t"
+      "jmp .LFUN_001d4cd9_5\n\t"
+      ".LFUN_001d4cd9_4:\n\t"
+      "movl %%ecx, %%ebx\n\t"
+      "movb 0xf(%%ebp), %%cl\n\t"
+      "movb %%cl, 0x5(%%eax)\n\t"
+      ".LFUN_001d4cd9_5:\n\t"
+      "andb $0xf8, 0x5(%%eax)\n\t"
+      "cmpw $0x80, %%bx\n\t"
+      "movw %%si, 0x2(%%eax)\n\t"
+      "movb %%dl, 0x4(%%eax)\n\t"
+      "movw %%bx, (%%eax)\n\t"
+      "jae .LFUN_001d4cd9_6\n\t"
+      "movzwl %%bx, %%ecx\n\t"
+      "leal 0x180(%%edi,%%ecx,8), %%esi\n\t"
+      "cmpl %%esi, (%%esi)\n\t"
+      "jne .LFUN_001d4cd9_9\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "shrl $3, %%edx\n\t"
+      "leal 0x160(%%edx,%%edi,1), %%edx\n\t"
+      "movl %%edx, 0x8(%%ebp)\n\t"
+      "andl $7, %%ecx\n\t"
+      "movb $1, %%dl\n\t"
+      "shlb %%cl, %%dl\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "orb %%dl, (%%ecx)\n\t"
+      "jmp .LFUN_001d4cd9_9\n\t"
+      ".LFUN_001d4cd9_6:\n\t"
+      "leal 0x180(%%edi), %%ecx\n\t"
+      "movl (%%ecx), %%esi\n\t"
+      "jmp .LFUN_001d4cd9_8\n\t"
+      ".LFUN_001d4cd9_7:\n\t"
+      "cmpw -0x8(%%esi), %%bx\n\t"
+      "jbe .LFUN_001d4cd9_9\n\t"
+      "movl (%%esi), %%esi\n\t"
+      ".LFUN_001d4cd9_8:\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "jne .LFUN_001d4cd9_7\n\t"
+      ".LFUN_001d4cd9_9:\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "leal 0x8(%%eax), %%ecx\n\t"
+      "movl %%esi, (%%ecx)\n\t"
+      "movl %%edx, 0xc(%%eax)\n\t"
+      "movl %%ecx, (%%edx)\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      "movzwl %%bx, %%ecx\n\t"
+      "subl %%ecx, 0x10(%%ebp)\n\t"
+      "shll $4, %%ecx\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "cmpl 0x2c(%%ecx), %%eax\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "jae .LFUN_001d4cd9_11\n\t"
+      "cmpl $0, 0x10(%%ebp)\n\t"
+      "jne .LFUN_001d4cd9_1\n\t"
+      ".LFUN_001d4cd9_10:\n\t"
+      "testb $0x10, 0xf(%%ebp)\n\t"
+      "jne .LFUN_001d4cd9_11\n\t"
+      "movw %%si, 0x2(%%eax)\n\t"
+      ".LFUN_001d4cd9_11:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001d4cd9: clang naked draft required"
+#endif
+
 
 /* 0x1d4dd3 */
 void FUN_001d4dd3(void)

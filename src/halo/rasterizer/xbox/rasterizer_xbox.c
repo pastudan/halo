@@ -476,57 +476,200 @@ void rasterizer_set_texture_direct_non_blocking(void)
   (void)edi;
 }
 
-/* 0x155e80 */
-void rasterizer_set_texture(int stage, int a2, int bitmap_type, int bitmap_index, int frame_index)
+/* rasterizer_set_texture (0x155e80) — XBE naked draft (batch 312). */
+#if defined(__clang__)
+static void (*const b155e80_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b155e80_exitfn)(int) = system_exit;
+static void *(*const b155e80_tag)(int, int) = tag_get;
+static void * (*const b155e80_c76ff0)(int tag_index, short bitmap_index) = FUN_00076ff0;
+static void (*const b155e80_c155c20)(int stage, void *bitmap_data) = rasterizer_set_texture_bitmap_data;
+static const char * (*const b155e80_c7c750)(short type) = bitmap_type_get_string;
+static void (*const b155e80_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+void rasterizer_set_texture(int stage __attribute__((unused)), int a2 __attribute__((unused)), int bitmap_type __attribute__((unused)), int bitmap_index __attribute__((unused)), int frame_index __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* cmp (int16_t)eax, 4 -> jl 0x155eb6 */
-  display_assert((char *)0x0029dda4, (char *)0x0029dc0c, 2058, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x155ec7 */
-  /* cmp (int16_t)edi, 3 -> jl 0x155ee7 */
-  display_assert((char *)0x00264a4c, (char *)0x0029dc0c, 2059, 0);
-  system_exit(0);
-  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x155ef5 */
-  /* cmp (int16_t)ebx, 4 -> jl 0x155f15 */
-  display_assert((char *)0x0029df10, (char *)0x0029dc0c, 2060, 0);
-  system_exit(0);
-  /* relift: relift: mov (char)eax, byte ptr [0x3256e1] */
-  /* test (char)eax, (char)eax -> jne 0x155f28 */
-  /* cmp (int16_t)ebx, 3 -> je 0x155fc0 */
-  /* cmp esi, -1 -> je 0x155fc0 */
-  tag_get('mtib', 0);
-  /* test ecx, ecx -> jle 0x155fc0 */
-  FUN_00076ff0(0, 0);
-  /* relift: cmp word ptr [esi + 0xa], (int16_t)edi -> jne 0x155f97 */
-  rasterizer_set_texture_bitmap_data(0, (void *)(uintptr_t)esi);
-  /* relift: relift: mov word ptr [0x476a4c], (int16_t)ecx */
-  /* relift: relift: mov word ptr [0x476a4e], (int16_t)edx */
-  bitmap_type_get_string(0);
-  bitmap_type_get_string(0);
-  error(0, (char *)0x0029ded0);
-  /* cmp eax, -1 -> je 0x156024 */
-  FUN_00076ff0(0, 0);
-  /* test esi, esi -> je 0x156024 */
-  rasterizer_set_texture_bitmap_data(0, (void *)(uintptr_t)esi);
-  /* relift: relift: mov word ptr [0x476a4c], (int16_t)ecx */
-  /* relift: relift: mov word ptr [0x476a4e], (int16_t)edx */
-  display_assert((char *)0x0029de9c, (char *)0x0029dc0c, 2117, 0);
-  error(0, (char *)0x0029de58);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "jl .Lrasterizer_set_texture_1\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jl .Lrasterizer_set_texture_2\n\t"
+      ".Lrasterizer_set_texture_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x80a\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29dda4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_set_texture_2:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Lrasterizer_set_texture_3\n\t"
+      "cmpw $3, %%di\n\t"
+      "jl .Lrasterizer_set_texture_4\n\t"
+      ".Lrasterizer_set_texture_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x80b\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x264a4c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_set_texture_4:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl .Lrasterizer_set_texture_5\n\t"
+      "cmpw $4, %%bx\n\t"
+      "jl .Lrasterizer_set_texture_6\n\t"
+      ".Lrasterizer_set_texture_5:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x80c\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29df10\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_set_texture_6:\n\t"
+      "movb 0x3256e1, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lrasterizer_set_texture_7\n\t"
+      "cmpw $3, %%bx\n\t"
+      "je .Lrasterizer_set_texture_9\n\t"
+      ".Lrasterizer_set_texture_7:\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lrasterizer_set_texture_9\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x6269746d\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x60(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .Lrasterizer_set_texture_9\n\t"
+      "movswl 0x18(%%ebp), %%eax\n\t"
+      "cdq\n\t"
+      "idivl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c76ff0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw %%di, 0xa(%%esi)\n\t"
+      "jne .Lrasterizer_set_texture_8\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c155c20]\n\t"
+      "movw 0x4(%%esi), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "negb %%al\n\t"
+      "popl %%edi\n\t"
+      "movw %%cx, 0x476a4c\n\t"
+      "movw 0x6(%%esi), %%dx\n\t"
+      "popl %%esi\n\t"
+      "movw %%dx, 0x476a4e\n\t"
+      "popl %%ebx\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "andl $0x476a4c, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrasterizer_set_texture_8:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c7c750]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0xa(%%esi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c7c750]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x29ded0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lrasterizer_set_texture_9:\n\t"
+      "movl 0x476204, %%edx\n\t"
+      "movswl %%di, %%edi\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "shll $4, %%ecx\n\t"
+      "movl 0xb8(%%ecx,%%edx,1), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lrasterizer_set_texture_10\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c76ff0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lrasterizer_set_texture_10\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c155c20]\n\t"
+      "movw 0x4(%%esi), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "negb %%al\n\t"
+      "popl %%edi\n\t"
+      "movw %%cx, 0x476a4c\n\t"
+      "movw 0x6(%%esi), %%dx\n\t"
+      "popl %%esi\n\t"
+      "movw %%dx, 0x476a4e\n\t"
+      "popl %%ebx\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "andl $0x476a4c, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrasterizer_set_texture_10:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x845\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29de9c\n\t"
+      "call *%[assert]\n\t"
+      "movswl 0x8(%%ebp), %%ecx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x29de58\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x24, %%esp\n\t"
+      "negb %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "andl $0x476a4c, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b155e80_assert), [exitfn] "m"(b155e80_exitfn), [tag] "m"(b155e80_tag), [c76ff0] "m"(b155e80_c76ff0), [c155c20] "m"(b155e80_c155c20), [c7c750] "m"(b155e80_c7c750), [c8f390] "m"(b155e80_c8f390)
+      : "memory");
 }
+#else
+#error "rasterizer_set_texture: clang naked draft required"
+#endif
+
 
 /* 0x156070 */
 void FUN_00156070(void)
@@ -534,57 +677,184 @@ void FUN_00156070(void)
   D3DCubeTexture_LockRect();
 }
 
-/* 0x1560a0 */
+/* rasterizer_set_texture_non_blocking (0x1560a0) — XBE naked draft (batch 311). */
+#if defined(__clang__)
+static void (*const b1560a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1560a0_exitfn)(int) = system_exit;
+static void *(*const b1560a0_tag)(int, int) = tag_get;
+static void * (*const b1560a0_c76ff0)(int tag_index, short bitmap_index) = FUN_00076ff0;
+static void *(*const b1560a0_xtex)(void *, bool, bool) = xbox_texture_cache_get_hardware_format;
+static const char * (*const b1560a0_c7c750)(short type) = bitmap_type_get_string;
+static void (*const b1560a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b1560a0_c155c20)(int stage, void *bitmap_data) = rasterizer_set_texture_bitmap_data;
+
+__attribute__((naked, noinline))
 void rasterizer_set_texture_non_blocking(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x1560b1 */
-  /* cmp (int16_t)eax, 4 -> jl 0x1560d1 */
-  display_assert((char *)0x0029dda4, (char *)0x0029dc0c, 2142, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x1560e2 */
-  /* cmp (int16_t)edi, 3 -> jl 0x156102 */
-  display_assert((char *)0x00264a4c, (char *)0x0029dc0c, 2143, 0);
-  system_exit(0);
-  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x156110 */
-  /* cmp (int16_t)ebx, 4 -> jl 0x156130 */
-  display_assert((char *)0x0029df10, (char *)0x0029dc0c, 2144, 0);
-  system_exit(0);
-  /* relift: relift: mov (char)eax, byte ptr [0x3256e1] */
-  /* test (char)eax, (char)eax -> jne 0x15613f */
-  /* cmp (int16_t)ebx, 3 -> je 0x1561b0 */
-  /* cmp esi, -1 -> je 0x1561b0 */
-  tag_get('mtib', 0);
-  /* test ecx, ecx -> jle 0x1561b0 */
-  FUN_00076ff0(0, 0);
-  xbox_texture_cache_get_hardware_format((void *)(uintptr_t)esi, 0, 0);
-  /* test eax, eax -> je 0x156204 */
-  /* relift: cmp word ptr [esi + 0xa], (int16_t)edi -> je 0x1561da */
-  bitmap_type_get_string(0);
-  bitmap_type_get_string(0);
-  error(0, (char *)0x0029ded0);
-  /* cmp eax, -1 -> je 0x15620b */
-  FUN_00076ff0(0, 0);
-  /* test esi, esi -> je 0x15620b */
-  rasterizer_set_texture_bitmap_data(0, (void *)(uintptr_t)esi);
-  /* relift: relift: mov word ptr [0x476a48], (int16_t)ecx */
-  /* relift: relift: mov word ptr [0x476a4a], (int16_t)edx */
-  display_assert((char *)0x0029df3c, (char *)0x0029dc0c, 2210, 0);
-  error(0, (char *)0x0029de58);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lrasterizer_set_texture_non_blocking_1\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jl .Lrasterizer_set_texture_non_blocking_2\n\t"
+      ".Lrasterizer_set_texture_non_blocking_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x85e\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29dda4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_set_texture_non_blocking_2:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Lrasterizer_set_texture_non_blocking_3\n\t"
+      "cmpw $3, %%di\n\t"
+      "jl .Lrasterizer_set_texture_non_blocking_4\n\t"
+      ".Lrasterizer_set_texture_non_blocking_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x85f\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x264a4c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_set_texture_non_blocking_4:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl .Lrasterizer_set_texture_non_blocking_5\n\t"
+      "cmpw $4, %%bx\n\t"
+      "jl .Lrasterizer_set_texture_non_blocking_6\n\t"
+      ".Lrasterizer_set_texture_non_blocking_5:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x860\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29df10\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_set_texture_non_blocking_6:\n\t"
+      "movb 0x3256e1, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lrasterizer_set_texture_non_blocking_7\n\t"
+      "cmpw $3, %%bx\n\t"
+      "je .Lrasterizer_set_texture_non_blocking_8\n\t"
+      ".Lrasterizer_set_texture_non_blocking_7:\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lrasterizer_set_texture_non_blocking_8\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x6269746d\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x60(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .Lrasterizer_set_texture_non_blocking_8\n\t"
+      "movswl 0x18(%%ebp), %%eax\n\t"
+      "cdq\n\t"
+      "idivl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c76ff0]\n\t"
+      "pushl $1\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[xtex]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lrasterizer_set_texture_non_blocking_10\n\t"
+      "cmpw %%di, 0xa(%%esi)\n\t"
+      "je .Lrasterizer_set_texture_non_blocking_9\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c7c750]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0xa(%%esi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c7c750]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x29ded0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lrasterizer_set_texture_non_blocking_8:\n\t"
+      "movl 0x476204, %%edx\n\t"
+      "movswl %%di, %%edi\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "shll $4, %%ecx\n\t"
+      "movl 0xb8(%%ecx,%%edx,1), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lrasterizer_set_texture_non_blocking_11\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c76ff0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lrasterizer_set_texture_non_blocking_11\n\t"
+      ".Lrasterizer_set_texture_non_blocking_9:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c155c20]\n\t"
+      "movw 0x4(%%esi), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movw %%cx, 0x476a48\n\t"
+      "movw 0x6(%%esi), %%dx\n\t"
+      "popl %%esi\n\t"
+      "movw %%dx, 0x476a4a\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrasterizer_set_texture_non_blocking_10:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrasterizer_set_texture_non_blocking_11:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x8a2\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29df3c\n\t"
+      "call *%[assert]\n\t"
+      "movswl 0x8(%%ebp), %%ecx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x29de58\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1560a0_assert), [exitfn] "m"(b1560a0_exitfn), [tag] "m"(b1560a0_tag), [c76ff0] "m"(b1560a0_c76ff0), [xtex] "m"(b1560a0_xtex), [c7c750] "m"(b1560a0_c7c750), [c8f390] "m"(b1560a0_c8f390), [c155c20] "m"(b1560a0_c155c20)
+      : "memory");
 }
+#else
+#error "rasterizer_set_texture_non_blocking: clang naked draft required"
+#endif
+
 
 /* 0x156250 */
 void rasterizer_get_target(void)
@@ -853,49 +1123,233 @@ void SetupSmartStates(void)
   (void)0;
 }
 
-/* 0x156e00 */
+/* FUN_00156e00 (0x156e00) — XBE naked draft (batch 308). */
+#if defined(__clang__)
+static void (*const b156e00_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b156e00_exitfn)(int) = system_exit;
+static void __stdcall (*const b156e00_c1e6ae0)(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture) = (void *)D3DDevice_CreateTexture;
+static void (*const b156e00_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
+static void (*const b156e00_c1e6b10)(void) = D3DDevice_CreateVolumeTexture;
+static void (*const b156e00_c1e6b40)(void) = D3DDevice_CreateCubeTexture;
+static void __stdcall (*const b156e00_c1edc70)(void *texture, unsigned int level, void *locked_rect, void *rect, unsigned int flags) = (void *)D3DTexture_LockRect;
+static void (*const b156e00_c1edd80)(void) = D3DVolumeTexture_LockBox;
+static void (*const b156e00_c1edd10)(void) = D3DCubeTexture_LockRect;
+
+__attribute__((naked, noinline))
 void FUN_00156e00(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* test eax, eax -> jne 0x156e2f */
-  display_assert((char *)0x0029dc40, (char *)0x0029dc0c, 239, 0);
-  system_exit(0);
-  D3DDevice_CreateTexture(0, 0, 0, 0, 0, 0, (void *)(uintptr_t)eax);
-  /* test eax, eax -> jl 0x156e4d */
-  FUN_00167ff0(0, (char *)0x0029e4b8);
-  D3DDevice_CreateVolumeTexture();
-  /* test (char)ebx, (char)ebx -> je 0x156e80 */
-  /* test eax, eax -> jl 0x156e80 */
-  FUN_00167ff0(0, (char *)0x0029e418);
-  D3DDevice_CreateCubeTexture();
-  /* test (char)ebx, (char)ebx -> je 0x156eab */
-  /* test eax, eax -> jge 0x156ebe */
-  FUN_00167ff0(0, (char *)0x0029e380);
-  /* test eax, eax -> je 0x156fc5 */
-  /* test ecx, ecx -> je 0x156fc5 */
-  /* test ecx, ecx -> je 0x156fc5 */
-  D3DTexture_LockRect((void *)(uintptr_t)eax, 0, (void *)(uintptr_t)ecx, (void *)0, 0);
-  D3DVolumeTexture_LockBox();
-  D3DCubeTexture_LockRect();
-  /* test (char)ebx, (char)ebx -> je 0x156f6f */
-  FUN_00167ff0(0, (char *)0x0029e300);
-  /* test (char)ebx, (char)ebx -> je 0x156fa4 */
-  FUN_00167ff0(0, (char *)0x0029e298);
-  display_assert((char *)0x0029e258, (char *)0x0029dc0c, 311, 0);
-  system_exit(0);
-  /* mem[0x003256a4] = eax */
-  /* mem[0x003256a8] = ecx */
-  /* mem[0x003256ac] = edx */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x28, %%esp\n\t"
+      "movl 0x476ab0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00156e00_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xef\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29dc40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00156e00_1:\n\t"
+      "pushl %%ebx\n\t"
+      "leal -0x14(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl $4\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "pushl $4\n\t"
+      "pushl $4\n\t"
+      "call *%[c1e6ae0]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_00156e00_2\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .LFUN_00156e00_3\n\t"
+      ".LFUN_00156e00_2:\n\t"
+      "pushl $0x29e4b8\n\t"
+      "pushl %%eax\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c167ff0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00156e00_3:\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $1\n\t"
+      "pushl $4\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "pushl $4\n\t"
+      "pushl $4\n\t"
+      "pushl $4\n\t"
+      "call *%[c1e6b10]\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_00156e00_4\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_00156e00_4\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .LFUN_00156e00_5\n\t"
+      ".LFUN_00156e00_4:\n\t"
+      "pushl $0x29e418\n\t"
+      "pushl %%eax\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c167ff0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00156e00_5:\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl $4\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "pushl $4\n\t"
+      "call *%[c1e6b40]\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_00156e00_6\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_00156e00_7\n\t"
+      ".LFUN_00156e00_6:\n\t"
+      "pushl $0x29e380\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c167ff0]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .LFUN_00156e00_16\n\t"
+      ".LFUN_00156e00_7:\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00156e00_16\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LFUN_00156e00_16\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LFUN_00156e00_16\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "leal -0x1c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "movw $0xf00, -0x4(%%ebp)\n\t"
+      "movw $0xf0f0, -0x2(%%ebp)\n\t"
+      "call *%[c1edc70]\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $0x10, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      ".LFUN_00156e00_8:\n\t"
+      "movl -0x18(%%ebp), %%esi\n\t"
+      "movl %%eax, %%edx\n\t"
+      "andl $1, %%edx\n\t"
+      "movw -0x4(%%ebp,%%edx,2), %%dx\n\t"
+      "movw %%dx, (%%esi,%%eax,2)\n\t"
+      "incl %%eax\n\t"
+      "decl %%ecx\n\t"
+      "jne .LFUN_00156e00_8\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1edd80]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $0x40, %%ecx\n\t"
+      ".LFUN_00156e00_9:\n\t"
+      "movl -0x20(%%ebp), %%esi\n\t"
+      "movl %%eax, %%edx\n\t"
+      "andl $1, %%edx\n\t"
+      "movw -0x4(%%ebp,%%edx,2), %%dx\n\t"
+      "movw %%dx, (%%esi,%%eax,2)\n\t"
+      "incl %%eax\n\t"
+      "decl %%ecx\n\t"
+      "jne .LFUN_00156e00_9\n\t"
+      "movb $1, %%bl\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movl $6, -0x10(%%ebp)\n\t"
+      ".LFUN_00156e00_10:\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1edd10]\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_00156e00_11\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .LFUN_00156e00_12\n\t"
+      ".LFUN_00156e00_11:\n\t"
+      "pushl $0x29e300\n\t"
+      "pushl $0\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c167ff0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00156e00_12:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $0x10, %%ecx\n\t"
+      ".LFUN_00156e00_13:\n\t"
+      "movl -0x18(%%ebp), %%edi\n\t"
+      "movl %%eax, %%edx\n\t"
+      "andl $1, %%edx\n\t"
+      "movw -0x4(%%ebp,%%edx,2), %%dx\n\t"
+      "movw %%dx, (%%edi,%%eax,2)\n\t"
+      "incl %%eax\n\t"
+      "decl %%ecx\n\t"
+      "jne .LFUN_00156e00_13\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_00156e00_14\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .LFUN_00156e00_15\n\t"
+      ".LFUN_00156e00_14:\n\t"
+      "pushl $0x29e298\n\t"
+      "pushl $0\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c167ff0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00156e00_15:\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "incl %%esi\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "jne .LFUN_00156e00_10\n\t"
+      "testb %%bl, %%bl\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "jne .LFUN_00156e00_17\n\t"
+      ".LFUN_00156e00_16:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x137\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29e258\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00156e00_17:\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movl %%eax, 0x3256a4\n\t"
+      "movl %%ecx, 0x3256a8\n\t"
+      "movl %%edx, 0x3256ac\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b156e00_assert), [exitfn] "m"(b156e00_exitfn), [c1e6ae0] "m"(b156e00_c1e6ae0), [c167ff0] "m"(b156e00_c167ff0), [c1e6b10] "m"(b156e00_c1e6b10), [c1e6b40] "m"(b156e00_c1e6b40), [c1edc70] "m"(b156e00_c1edc70), [c1edd80] "m"(b156e00_c1edd80), [c1edd10] "m"(b156e00_c1edd10)
+      : "memory");
 }
+#else
+#error "FUN_00156e00: clang naked draft required"
+#endif
+
 
 /* 0x157010 */
 void FUN_00157010(void)
