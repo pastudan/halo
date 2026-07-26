@@ -12365,12 +12365,12 @@
         },
         {
           "addr": "0xca3f0",
-          "decl": "void FUN_000ca3f0(int object_handle, int16_t scenario_index);",
+          "decl": "void FUN_000ca3f0(int object_handle, int scenario_index);",
           "ported": false
         },
         {
           "addr": "0xca410",
-          "decl": "void FUN_000ca410(int object_handle, int16_t scenario_index);",
+          "decl": "void FUN_000ca410(int object_handle, int scenario_index);",
           "ported": false
         },
         {
