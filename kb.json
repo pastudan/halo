@@ -17701,7 +17701,7 @@
         {
           "addr": "0xb63d0",
           "decl": "void player_control_initialize(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6430",
