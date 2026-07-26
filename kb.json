@@ -33865,8 +33865,8 @@
         },
         {
           "addr": "0xfd520",
-          "decl": "void FUN_000fd520(int param_a, int weapon_handle, int16_t trigger_index);",
-          "ported": false
+          "decl": "void FUN_000fd520(int16_t trigger_index @<eax>, int weapon_handle @<ecx>);",
+          "ported": true
         },
         {
           "addr": "0xfd570",

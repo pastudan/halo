@@ -3728,54 +3728,18 @@ void weapon_stop_reload(int weapon_handle)
   weapon_reset_state(weapon_handle);
 }
 
-/* FUN_000fd520 (0xfd520) — XBE naked draft (batch 170). */
-#if defined(__clang__)
-static void *(*const bfd520_get)(int, int) = object_get_and_verify_type;
-static char *(*const bfd520_fb320)(void *, short) = FUN_000fb320;
-static void *(*const bfd520_tag)(int, int) = tag_get;
-static void *(*const bfd520_elem)(void *, int, int) = tag_block_get_element;
-static void (*const bfd520_cfcec0)(int16_t trigger_index, int weapon_handle) = (void *)&FUN_000fcec0;
-
-__attribute__((naked, noinline))
-void FUN_000fd520(int param_a __attribute__((unused)), int weapon_handle __attribute__((unused)), int16_t trigger_index __attribute__((unused)))
+/* FUN_000fd520 (0xfd520) — readable C lift. */
+void FUN_000fd520(int16_t trigger_index, int weapon_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ecx, %%ebx\n\t"
-      "pushl $4\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[fb320]\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "pushl $0x114\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x4fc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl $0xffffffff, 0x200(%%edi)\n\t"
-      "call *%[cfcec0]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bfd520_get), [fb320] "m"(bfd520_fb320), [tag] "m"(bfd520_tag), [elem] "m"(bfd520_elem), [cfcec0] "m"(bfd520_cfcec0)
-      : "memory");
+  char *weapon;
+  char *weap_tag;
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  (void)FUN_000fb320(weapon, trigger_index);
+  weap_tag = (char *)tag_get(0x77656170, *(int *)weapon);
+  (void)tag_block_get_element((void *)(weap_tag + 0x4fc), (int)trigger_index, 0x114);
+  *(int *)(weapon + 0x200) = -1;
+  FUN_000fcec0(trigger_index, weapon_handle);
 }
-#else
-#error "FUN_000fd520: clang naked draft required"
-#endif
-
 
 /* 0xfd570 — fire projectile(s) from a weapon trigger. */
 #if defined(__clang__)
