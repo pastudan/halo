@@ -2118,38 +2118,13 @@ void FUN_000c1780(int16_t function_index __attribute__((unused)), int thread_dat
 #endif
 
 
-/* FUN_000c17c0 (0xc17c0) — XBE naked draft (batch 189). */
-#if defined(__clang__)
-static int (*const bc17c0_c853a0)(void) = FUN_000853a0;
-static void (*const bc17c0_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c17c0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c17c0 (0xc17c0) — readable C lift (HS wrapper). */
+void FUN_000c17c0(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[c853a0]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movw %%ax, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c853a0] "m"(bc17c0_c853a0), [ccbf80] "m"(bc17c0_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, (int)FUN_000853a0());
 }
-#else
-#error "FUN_000c17c0: clang naked draft required"
-#endif
-
 
 /* FUN_000c17f0 (0xc17f0) — readable C lift (HS wrapper). */
 void FUN_000c17f0(int16_t function_index, int thread_datum, char init)
@@ -2266,71 +2241,21 @@ void FUN_000c18b0(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, value);
 }
 
-/* FUN_000c18d0 (0xc18d0) — XBE naked draft (batch 190). */
-#if defined(__clang__)
-static void (*const bc18d0_ca7470)(void) = (void *)FUN_000A7470;
-static void (*const bc18d0_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c18d0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c18d0 (0xc18d0) — readable C lift (HS wrapper). */
+void FUN_000c18d0(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[ca7470]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movw %%ax, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ca7470] "m"(bc18d0_ca7470), [ccbf80] "m"(bc18d0_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, (int)FUN_000A7470());
 }
-#else
-#error "FUN_000c18d0: clang naked draft required"
-#endif
 
-
-/* FUN_000c1900 (0xc1900) — XBE naked draft (batch 184). */
-#if defined(__clang__)
-static int16_t (*const bc1900_ca7460)(void) = game_difficulty_level_get;
-static void (*const bc1900_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c1900(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c1900 (0xc1900) — readable C lift (HS wrapper). */
+void FUN_000c1900(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[ca7460]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movw %%ax, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ca7460] "m"(bc1900_ca7460), [ccbf80] "m"(bc1900_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, (int)game_difficulty_level_get());
 }
-#else
-#error "FUN_000c1900: clang naked draft required"
-#endif
-
 
 /* FUN_000c1930 (0xc1930) — readable C lift (HS wrapper). */
 void FUN_000c1930(int16_t function_index, int thread_datum, char init)
@@ -2443,236 +2368,61 @@ void FUN_000c19e0(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, 0);
 }
 
-/* FUN_000c1a00 (0xc1a00) — XBE naked draft (batch 184). */
-#if defined(__clang__)
-static char (*const bc1a00_cb6b10)(void) = player_control_action_test_jump;
-static void (*const bc1a00_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c1a00(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c1a00 (0xc1a00) — readable C lift (HS wrapper). */
+void FUN_000c1a00(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[cb6b10]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cb6b10] "m"(bc1a00_cb6b10), [ccbf80] "m"(bc1a00_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, (int)player_control_action_test_jump());
 }
-#else
-#error "FUN_000c1a00: clang naked draft required"
-#endif
 
-
-/* FUN_000c1a30 (0xc1a30) — XBE naked draft (batch 184). */
-#if defined(__clang__)
-static char (*const bc1a30_cb6b20)(void) = player_control_action_test_primary_trigger;
-static void (*const bc1a30_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c1a30(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c1a30 (0xc1a30) — readable C lift (HS wrapper). */
+void FUN_000c1a30(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[cb6b20]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cb6b20] "m"(bc1a30_cb6b20), [ccbf80] "m"(bc1a30_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, (int)player_control_action_test_primary_trigger());
 }
-#else
-#error "FUN_000c1a30: clang naked draft required"
-#endif
 
-
-/* FUN_000c1a60 (0xc1a60) — XBE naked draft (batch 185). */
-#if defined(__clang__)
-static char (*const bc1a60_cb6b30)(void) = player_control_action_test_grenade_trigger;
-static void (*const bc1a60_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c1a60(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c1a60 (0xc1a60) — readable C lift (HS wrapper). */
+void FUN_000c1a60(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[cb6b30]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cb6b30] "m"(bc1a60_cb6b30), [ccbf80] "m"(bc1a60_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, (int)player_control_action_test_grenade_trigger());
 }
-#else
-#error "FUN_000c1a60: clang naked draft required"
-#endif
 
-
-/* FUN_000c1a90 (0xc1a90) — XBE naked draft (batch 185). */
-#if defined(__clang__)
-static char (*const bc1a90_cb6b40)(void) = player_control_action_test_zoom;
-static void (*const bc1a90_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c1a90(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c1a90 (0xc1a90) — readable C lift (HS wrapper). */
+void FUN_000c1a90(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[cb6b40]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cb6b40] "m"(bc1a90_cb6b40), [ccbf80] "m"(bc1a90_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, (int)player_control_action_test_zoom());
 }
-#else
-#error "FUN_000c1a90: clang naked draft required"
-#endif
 
-
-/* FUN_000c1ac0 (0xc1ac0) — XBE naked draft (batch 185). */
-#if defined(__clang__)
-static char (*const bc1ac0_cb6af0)(void) = player_control_action_test_action;
-static void (*const bc1ac0_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c1ac0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c1ac0 (0xc1ac0) — readable C lift (HS wrapper). */
+void FUN_000c1ac0(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[cb6af0]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cb6af0] "m"(bc1ac0_cb6af0), [ccbf80] "m"(bc1ac0_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, (int)player_control_action_test_action());
 }
-#else
-#error "FUN_000c1ac0: clang naked draft required"
-#endif
 
-
-/* FUN_000c1af0 (0xc1af0) — XBE naked draft (batch 185). */
-#if defined(__clang__)
-static char (*const bc1af0_cb6ab0)(void) = player_control_action_test_accept;
-static void (*const bc1af0_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c1af0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c1af0 (0xc1af0) — readable C lift (HS wrapper). */
+void FUN_000c1af0(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[cb6ab0]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cb6ab0] "m"(bc1af0_cb6ab0), [ccbf80] "m"(bc1af0_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, (int)player_control_action_test_accept());
 }
-#else
-#error "FUN_000c1af0: clang naked draft required"
-#endif
 
-
-/* FUN_000c1b20 (0xc1b20) — XBE naked draft (batch 185). */
-#if defined(__clang__)
-static char (*const bc1b20_cb6ad0)(void) = player_control_action_test_back;
-static void (*const bc1b20_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c1b20(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c1b20 (0xc1b20) — readable C lift (HS wrapper). */
+void FUN_000c1b20(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[cb6ad0]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cb6ad0] "m"(bc1b20_cb6ad0), [ccbf80] "m"(bc1b20_ccbf80)
-      : "memory");
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, (int)player_control_action_test_back());
 }
-#else
-#error "FUN_000c1b20: clang naked draft required"
-#endif
-
 
 /* FUN_000c1b50 (0xc1b50) — XBE naked draft (batch 185). */
 #if defined(__clang__)

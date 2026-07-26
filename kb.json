@@ -10760,7 +10760,7 @@
         {
           "addr": "0xc17c0",
           "decl": "void FUN_000c17c0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc17f0",
@@ -10790,12 +10790,12 @@
         {
           "addr": "0xc18d0",
           "decl": "void FUN_000c18d0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1900",
           "decl": "void FUN_000c1900(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1930",
@@ -10820,37 +10820,37 @@
         {
           "addr": "0xc1a00",
           "decl": "void FUN_000c1a00(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1a30",
           "decl": "void FUN_000c1a30(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1a60",
           "decl": "void FUN_000c1a60(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1a90",
           "decl": "void FUN_000c1a90(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1ac0",
           "decl": "void FUN_000c1ac0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1af0",
           "decl": "void FUN_000c1af0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1b20",
           "decl": "void FUN_000c1b20(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1b50",
