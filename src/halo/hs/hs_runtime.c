@@ -4668,52 +4668,17 @@ char FUN_000c9770(int list_handle __attribute__((unused)), int param __attribute
 #endif
 
 
-/* FUN_000c97f0 (0xc97f0) — XBE naked draft (batch 168). */
-#if defined(__clang__)
-static scenario_t * (*const bc97f0_c18e380)(void) = global_scenario_get;
-static void *(*const bc97f0_elem)(void *, int, int) = tag_block_get_element;
-static char (*const bc97f0_c1aa430)(int unit_handle, float *point, float half_angle) = FUN_001aa430;
-
-__attribute__((naked, noinline))
-void FUN_000c97f0(int object_handle __attribute__((unused)), int16_t scenario_index __attribute__((unused)), float distance __attribute__((unused)))
+/* FUN_000c97f0 (0xc97f0) — readable C lift. */
+void FUN_000c97f0(int object_handle, int16_t scenario_index, float distance)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "xorb %%al, %%al\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .LFUN_000c97f0_1\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "fmuls 0x253d4c\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $0x5c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x4e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $0x24, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1aa430]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000c97f0_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc97f0_c18e380), [elem] "m"(bc97f0_elem), [c1aa430] "m"(bc97f0_c1aa430)
-      : "memory");
+  void *elem;
+  if (scenario_index == 0)
+    return;
+  elem = tag_block_get_element(
+      (char *)global_scenario_get() + 0x4e4, (int)scenario_index, 0x5c);
+  FUN_001aa430(object_handle, (float *)((char *)elem + 0x24),
+               distance * *(float *)0x253d4c);
 }
-#else
-#error "FUN_000c97f0: clang naked draft required"
-#endif
-
-
 /* FUN_000c9840 (0xc9840) — XBE naked draft (batch 140). */
 #if defined(__clang__)
 static int (*const bc9840_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;

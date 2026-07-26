@@ -12243,7 +12243,7 @@
         {
           "addr": "0xc97f0",
           "decl": "void FUN_000c97f0(int object_handle, int16_t scenario_index, float distance);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9840",
