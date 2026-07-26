@@ -3758,30 +3758,11 @@ int FUN_000caf20(int16_t value)
   return bits;
 }
 
-/* FUN_000caf40 (0xcaf40) — XBE naked draft (batch 175). */
-#if defined(__clang__)
-static void (*const bcaf40_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-int16_t FUN_000caf40(float value __attribute__((unused)))
+/* FUN_000caf40 (0xcaf40) — readable C lift. */
+int16_t FUN_000caf40(float x)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "call *%[ftol]\n\t"
-      "movw %%ax, 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ftol] "m"(bcaf40_ftol)
-      : "memory");
+  return (int16_t)(int)x;
 }
-#else
-#error "FUN_000caf40: clang naked draft required"
-#endif
-
 
 /* FUN_000caf60 (0xcaf60) — XBE naked draft (batch 167). */
 #if defined(__clang__)
@@ -4281,84 +4262,29 @@ char FUN_000c98e0(int object_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_000c99e0 (0xc99e0) — XBE naked draft (batch 181). */
-#if defined(__clang__)
-static char (*const bc99e0_cc98e0)(int object_handle) = FUN_000c98e0;
-static void (*const bc99e0_odel)(int) = object_delete;
-static void (*const bc99e0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_000c99e0(int object_handle __attribute__((unused)))
+/* FUN_000c99e0 (0xc99e0) — readable C lift. */
+void FUN_000c99e0(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000c99e0_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cc98e0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000c99e0_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[odel]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c99e0_1:\n\t"
-      "pushl $0x2803a8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000c99e0_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc98e0] "m"(bc99e0_cc98e0), [odel] "m"(bc99e0_odel), [c8f390] "m"(bc99e0_c8f390)
-      : "memory");
+  if (object_handle == -1)
+    return;
+  if (!FUN_000c98e0(object_handle)) {
+    object_delete(object_handle);
+    return;
+  }
+  error(2, (const char *)0x2803a8);
 }
-#else
-#error "FUN_000c99e0: clang naked draft required"
-#endif
 
-
-/* FUN_000c9a20 (0xc9a20) — XBE naked draft (batch 175). */
-#if defined(__clang__)
-static int (*const bc9a20_c140720)(int16_t index) = object_name_list_get_handle;
-static void (*const bc9a20_cc99e0)(int object_handle) = FUN_000c99e0;
-
-__attribute__((naked, noinline))
-void FUN_000c9a20(int16_t name_index __attribute__((unused)))
+/* FUN_000c9a20 (0xc9a20) — readable C lift. */
+void FUN_000c9a20(int16_t name_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_000c9a20_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c140720]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c9a20_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cc99e0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000c9a20_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c140720] "m"(bc9a20_c140720), [cc99e0] "m"(bc9a20_cc99e0)
-      : "memory");
+  int handle;
+  if (name_index == (int16_t)0xffff)
+    return;
+  handle = object_name_list_get_handle(name_index);
+  if (handle == -1)
+    return;
+  FUN_000c99e0(handle);
 }
-#else
-#error "FUN_000c9a20: clang naked draft required"
-#endif
-
 
 /* FUN_000ca110 (0xca110) — XBE naked draft (batch 174). */
 #if defined(__clang__)
@@ -5750,67 +5676,22 @@ void FUN_000c9f30(int damage_type __attribute__((unused)), int object_handle __a
 #endif
 
 
-/* FUN_000ca010 (0xca010) — XBE naked draft (batch 165). */
-#if defined(__clang__)
-static float * (*const bca010_cc9f90)(void) = FUN_000c9f90;
-
-__attribute__((naked, noinline))
-float FUN_000ca010(int object_handle __attribute__((unused)))
+/* FUN_000ca010 (0xca010) — readable C lift. */
+float FUN_000ca010(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "call *%[cc9f90]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "je .LFUN_000ca010_1\n\t"
-      "flds (%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ca010_1:\n\t"
-      "flds 0x2533c0\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc9f90] "m"(bca010_cc9f90)
-      : "memory");
+  float *p = FUN_000c9f90(object_handle);
+  if (p == 0)
+    return *(float *)0x2533c0;
+  return *p;
 }
-#else
-#error "FUN_000ca010: clang naked draft required"
-#endif
 
-
-/* FUN_000ca030 (0xca030) — XBE naked draft (batch 164). */
-#if defined(__clang__)
-static float * (*const bca030_cc9f90)(void) = FUN_000c9f90;
-
-__attribute__((naked, noinline))
-void FUN_000ca030(int object_handle __attribute__((unused)), float value __attribute__((unused)))
+/* FUN_000ca030 (0xca030) — readable C lift. */
+void FUN_000ca030(int object_handle, float value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "call *%[cc9f90]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "je .LFUN_000ca030_1\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      ".LFUN_000ca030_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc9f90] "m"(bca030_cc9f90)
-      : "memory");
+  float *p = FUN_000c9f90(object_handle);
+  if (p != 0)
+    *p = value;
 }
-#else
-#error "FUN_000ca030: clang naked draft required"
-#endif
-
 
 /* FUN_000ca050 (0xca050) — XBE naked draft (batch 141). */
 #if defined(__clang__)
@@ -8629,67 +8510,31 @@ void FUN_000ce4a0(void)
 
 /* --- hs_runtime.obj orphan shells (2026-07-26) --- */
 
-/* FUN_000c9f90 (0xc9f90) — XBE naked draft (batch 237). */
-#if defined(__clang__)
-static int (*const bc9f90_c1b9930)(int group_tag, const char *name, ...) = tag_loaded;
-static void *(*const bc9f90_tag)(int, int) = tag_get;
-static void *(*const bc9f90_elem)(void *, int, int) = tag_block_get_element;
-static void (*const bc9f90_cff4d0)(int channel, const char *format, ...) = console_printf;
-
-__attribute__((naked, noinline))
-float * FUN_000c9f90(void)
+/* FUN_000c9f90 (0xc9f90) — readable C lift: sound/looping-sound tag float ptr. */
+float *FUN_000c9f90(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl $0x736e6421\n\t"
-      "call *%[c1b9930]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c9f90_1\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x736e6421\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "addl $0x28, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000c9f90_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x6c736e64\n\t"
-      "call *%[c1b9930]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c9f90_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6c736e64\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x3c(%%eax), %%ecx\n\t"
-      "addl $0x3c, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_000c9f90_2\n\t"
-      "pushl $0xa0\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $4, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000c9f90_2:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x280430\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [c1b9930] "m"(bc9f90_c1b9930), [tag] "m"(bc9f90_tag), [elem] "m"(bc9f90_elem), [cff4d0] "m"(bc9f90_cff4d0)
-      : "memory");
-}
-#else
-#error "FUN_000c9f90: clang naked draft required"
-#endif
+  int idx;
+  void *tag;
+  int *count_ptr;
+  void *elem;
 
+  idx = tag_loaded(0x736e6421, (const char *)object_handle);
+  if (idx != -1) {
+    tag = tag_get(0x736e6421, idx);
+    return (float *)((char *)tag + 0x28);
+  }
+  idx = tag_loaded(0x6c736e64, (const char *)object_handle);
+  if (idx != -1) {
+    tag = tag_get(0x6c736e64, idx);
+    count_ptr = (int *)((char *)tag + 0x3c);
+    if (*count_ptr > 0) {
+      elem = tag_block_get_element(count_ptr, 0, 0xa0);
+      return (float *)((char *)elem + 4);
+    }
+  }
+  console_printf(0, (const char *)0x280430, object_handle);
+  return 0;
+}
 
 /* hs_wake_by_name (0xcb9a0) — readable C lift. */
 char hs_wake_by_name(const char *script_name)

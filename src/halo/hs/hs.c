@@ -4511,35 +4511,12 @@ void FUN_000c4a40(int16_t function_index __attribute__((unused)), char *buffer _
 #endif
 
 
-/* FUN_000c4ae0 (0xc4ae0) — XBE naked draft (batch 174). */
-#if defined(__clang__)
-static void * (*const bc4ae0_cc3d00)(int16_t function_index) = hs_function_table_get;
-static char * (*const bc4ae0_c8dff0)(char *destination, const char *source) = csstrcpy;
-
-__attribute__((naked, noinline))
-void FUN_000c4ae0(int16_t function_index __attribute__((unused)), char *dest __attribute__((unused)))
+/* FUN_000c4ae0 (0xc4ae0) — readable C lift. */
+void FUN_000c4ae0(int16_t function_index, char *dest)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cc3d00]\n\t"
-      "movl 0x10(%%eax), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8dff0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc3d00] "m"(bc4ae0_cc3d00), [c8dff0] "m"(bc4ae0_c8dff0)
-      : "memory");
+  void *fn = hs_function_table_get(function_index);
+  csstrcpy(dest, *(const char **)((char *)fn + 0x10));
 }
-#else
-#error "FUN_000c4ae0: clang naked draft required"
-#endif
-
 
 /* hs_evaluate_by_name (0xc4b00) — readable C lift. */
 char hs_evaluate_by_name(const char *name)
