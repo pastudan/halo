@@ -177,6 +177,12 @@ def main() -> int:
         ("ai_handle_unit_effect", 0x40860, 0x409a0),
         ("ai_consider_major_upgrade", 0x41250, 0x413c0),
         ("actor_combat_build_grenade_trajectory", 0x218d0, 0x219e0),
+        # combat + objects wave (2026-07-26)
+        ("actor_aim_projectile", 0x220c0, 0x22390),
+        ("FUN_00022b40", 0x22b40, 0x22ba0),
+        ("object_update", 0x1444f0, 0x1446a0),
+        ("FUN_00085000", 0x85000, 0x850ce),
+        ("FUN_00134070", 0x134070, 0x1342a0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

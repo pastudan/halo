@@ -1085,7 +1085,8 @@ bool weapon_aim(int weapon_handle, int16_t trigger_index, void *param_3,
 /* --- weapons.obj unset drafts (batch 2026-07-25) --- */
 
 float FUN_001d9e70(float base, float exponent);
-void actor_aim_projectile(float *origin, float *direction, int unit_handle);
+int actor_aim_projectile(int unit_handle, float *direction_in, float *direction_out,
+                         int *out_extra);
 
 static char *weapon_get_trigger_entry(void *weapon_obj, int16_t trigger_index)
 {
@@ -1995,7 +1996,7 @@ void FUN_000fd570(int weapon_handle, int16_t trigger_index)
         velocity[2] = world_up[2];
       }
     } else if (unit_handle != -1) {
-      actor_aim_projectile(origin, direction, unit_handle);
+      actor_aim_projectile(unit_handle, origin, direction, NULL);
     }
 
     proj_tag = *(int *)(trig_def + 0xa0);

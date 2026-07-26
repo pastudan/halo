@@ -15998,7 +15998,7 @@
           "source_path": "camera/bored_camera.c"
         },
         {
-          "decl": "void FUN_00085000(int param_1, const char *param_2);",
+          "decl": "void FUN_00085000(int tag_index, const char *name);",
           "addr": "0x85000",
           "ported": false
         },
@@ -16095,7 +16095,7 @@
         },
         {
           "addr": "0x134070",
-          "decl": "void FUN_00134070(int particle_ptr@<esi>, int glow_widget_ptr@<edi>, int object_handle, float delta, float ratio);",
+          "decl": "void FUN_00134070(int glow_widget_ptr, int particle_ptr, int object_handle, float delta, float ratio);",
           "ported": false
         },
         {
@@ -17107,7 +17107,7 @@
         },
         {
           "addr": "0x1444f0",
-          "decl": "int object_update(int param_1);",
+          "decl": "char object_update(int object_handle);",
           "name": "object_update",
           "ported": false
         },
@@ -33904,12 +33904,12 @@
         },
         {
           "addr": "0x220c0",
-          "decl": "void actor_aim_projectile(float *origin, float *direction, int unit_handle);",
+          "decl": "int actor_aim_projectile(int unit_handle, float *direction_in, float *direction_out, int *out_extra);",
           "ported": false
         },
         {
           "addr": "0x22b40",
-          "decl": "void FUN_00022b40(int actor_handle @<ebx>, float *aim_vector @<esi>);",
+          "decl": "void FUN_00022b40(int actor_handle, float *aim_vector);",
           "ported": false
         },
         {

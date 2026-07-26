@@ -1020,43 +1020,115 @@ fail:
   return 0;
 }
 
-/* 0x220c0 */
-void actor_aim_projectile(float *origin, float *direction, int unit_handle)
+/* 0x220c0 — Record projectile aim state for a unit firing solution. */
+int actor_aim_projectile(int unit_handle, float *direction_in, float *direction_out,
+                         int *out_extra)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
+  char *actor;
+  char *firing;
+  char *prop;
+  int prop_object;
+  float weapon_vec[3];
+  float perp[3];
+  float axis[3];
+  char do_rotate;
 
-  datum_get((void *)(uintptr_t)eax, 0);
-  game_time_get();
-  /* relift: cmp word ptr [ebx + 0x60c], 1 -> jne 0x2214a */
-  /* cmp eax, -1 -> je 0x2214a */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp (int16_t)ecx, 2 -> jl 0x2214a */
-  /* cmp (int16_t)ecx, 3 -> jg 0x2214a */
-  /* test esi, esi -> jne 0x22172 */
-  display_assert((char *)0x00254a50, (char *)0x00254910, 1071, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> je 0x221b5 */
-  normalize3d((float *)0);
-  valid_real_normal3d((float *)(uintptr_t)esi);
-  /* test (char)eax, (char)eax -> jne 0x2224c */
-  csprintf((char *)0x005ab100, (char *)0x00254a24);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-  actor_combat_get_weapon_vector(0, (float *)0);
-  normalize3d((float *)0);
-  perpendicular3d((float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
-  normalize3d((float *)(uintptr_t)ecx);
-  rotate_vector3d_by_sincos((float *)(uintptr_t)esi, (float *)(uintptr_t)ecx, 0.0f, 0.0f);
+  prop_object = -1;
+  actor = (char *)datum_get(*(void **)0x6325a4, unit_handle);
+  firing = (char *)((unit_handle & 0xffff) * 0x657c + *(int *)0x331f58);
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  if (*(int16_t *)(actor + 0x5f2) == 2)
+    *(int *)(firing + 0x5c) = game_time_get();
+
+  if (*(int16_t *)(actor + 0x60c) == 1) {
+    int prop_handle = *(int *)(actor + 0x610);
+    if (prop_handle != -1) {
+      prop = (char *)datum_get(*(void **)0x5ab23c, prop_handle);
+      if (*(int16_t *)(prop + 0x24) >= 2 && *(int16_t *)(prop + 0x24) <= 3)
+        prop_object = *(int *)(prop + 0x18);
+    }
+  }
+
+  if (direction_out == 0) {
+    display_assert((char *)0x254a50, (char *)0x254910, 0x42f, 0);
+    system_exit(-1);
+  }
+
+  *(char *)(firing + 0x60) = *(char *)(actor + 0x688);
+  direction_out[0] = direction_in[0];
+  direction_out[1] = direction_in[1];
+  direction_out[2] = direction_in[2];
+
+  if (*(char *)(actor + 0x688) != 0) {
+    direction_out[0] = *(float *)(actor + 0x68c);
+    direction_out[1] = *(float *)(actor + 0x690);
+    direction_out[2] = *(float *)(actor + 0x694);
+  } else {
+    *(float *)(firing + 0x7c) = *(float *)(actor + 0x67c);
+    *(float *)(firing + 0x80) = *(float *)(actor + 0x680);
+    *(float *)(firing + 0x84) = *(float *)(actor + 0x684);
+    direction_out[0] = *(float *)(actor + 0x67c) - direction_in[0];
+    direction_out[1] = *(float *)(actor + 0x680) - direction_in[1];
+    direction_out[2] = *(float *)(actor + 0x684) - direction_in[2];
+    normalize3d(direction_out);
+  }
+
+  if (!valid_real_normal3d(direction_out)) {
+    csprintf((char *)0x5ab100, (char *)0x254a24, (double)direction_out[0],
+             (double)direction_out[1], (double)direction_out[2]);
+    display_assert((char *)0x5ab100, (char *)0x254910, 0x442, 0);
+    system_exit(-1);
+  }
+
+  *(float *)(firing + 0x70) = direction_out[0];
+  *(float *)(firing + 0x74) = direction_out[1];
+  *(float *)(firing + 0x78) = direction_out[2];
+
+  actor_combat_get_weapon_vector(unit_handle, weapon_vec);
+  if (weapon_vec[0] * direction_out[0] + weapon_vec[1] * direction_out[1] +
+          weapon_vec[2] * direction_out[2] <=
+      *(float *)0x2533dc) {
+    *(char *)(firing + 0x88) = 0;
+  } else {
+    do_rotate = 1;
+    axis[0] = weapon_vec[1] * direction_out[2] -
+              weapon_vec[2] * direction_out[1];
+    axis[1] = weapon_vec[2] * direction_out[0] -
+              weapon_vec[0] * direction_out[2];
+    axis[2] = weapon_vec[0] * direction_out[1] -
+              weapon_vec[1] * direction_out[0];
+    normalize3d(axis);
+    if (axis[0] == *(float *)0x2533c0 && axis[1] == *(float *)0x2533c0 &&
+        axis[2] == *(float *)0x2533c0)
+      do_rotate = 0;
+    else {
+      perpendicular3d(weapon_vec, perp);
+      normalize3d(perp);
+      if (perp[0] == *(float *)0x2533c0 && perp[1] == *(float *)0x2533c0 &&
+          perp[2] == *(float *)0x2533c0)
+        do_rotate = 0;
+    }
+
+    if (do_rotate != 0) {
+      direction_out[0] = weapon_vec[0];
+      direction_out[1] = weapon_vec[1];
+      direction_out[2] = weapon_vec[2];
+      rotate_vector3d_by_sincos(direction_out, axis, 0.5f, 0.866025388f);
+    }
+
+    *(float *)(firing + 0x98) = direction_out[0];
+    *(float *)(firing + 0x9c) = direction_out[1];
+    *(float *)(firing + 0xa0) = direction_out[2];
+    *(char *)(firing + 0x88) = 1;
+  }
+
+  *(float *)(firing + 0x8c) = direction_out[0];
+  *(float *)(firing + 0x90) = direction_out[1];
+  *(float *)(firing + 0x94) = direction_out[2];
+
+  if (out_extra != 0)
+    *out_extra = *(int *)(actor + 0x698);
+  return prop_object;
 }
 
 /* 0x22dc0 */
@@ -1132,17 +1204,22 @@ void FUN_00022dc0(int actor_handle)
 }
 /* --- actor_combat.obj orphan shells (2026-07-26) --- */
 
-/* orphan 0x22b40 */
+/* 0x22b40 — Validate aim point and cache on actor when clear. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(2)))
+#endif
 void FUN_00022b40(int actor_handle, float *aim_vector)
 {
-  int eax = 0;
-  int esi = 0;
+  char *actor;
+  char *actv;
 
-  datum_get((void *)(uintptr_t)eax, 0);
-  tag_get('vtca', 0);
-  FUN_00021ae0(0, 0.0f, 0.0f, (float *)(uintptr_t)esi, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x22b95 */
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  actv = (char *)tag_get('vtca', *(int *)(actor + 0x5c));
+  if (FUN_00021ae0(actor_handle, *(float *)(actv + 0x188),
+                   *(float *)(actv + 0x19c), aim_vector, 0) == 0)
+    return;
 
-  (void)eax;
-  (void)esi;
+  *(float *)(actor + 0x6a8) = aim_vector[0];
+  *(float *)(actor + 0x6ac) = aim_vector[1];
+  *(float *)(actor + 0x6b0) = aim_vector[2];
 }
