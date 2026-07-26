@@ -17148,5 +17148,33 @@
     "object": "input_abstraction.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x11aca0",
+    "name": "encode_packet_group",
+    "object": "data_packet_groups.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x11abb0",
+    "name": "data_packet_group_append_packet_header",
+    "object": "data_packet_groups.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x11add0",
+    "name": "compute_packet_field_sizes",
+    "object": "data_packet_groups.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x11afa0",
+    "name": "_data_packet_encode",
+    "object": "data_packet_groups.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
