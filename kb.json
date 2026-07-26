@@ -27392,7 +27392,7 @@
         {
           "addr": "0xeab70",
           "decl": "char FUN_000eab70(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xeaba0",
@@ -27887,17 +27887,17 @@
         {
           "addr": "0x19d810",
           "decl": "int ustrcmp(const wchar_t *s1, const wchar_t *s2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19d8c0",
           "decl": "int ustrlen(const unsigned short *s);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19d930",
           "decl": "size_t ustrnlen(const wchar_t *s, size_t max_len);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19d9b0",
@@ -27907,12 +27907,12 @@
         {
           "addr": "0x19da20",
           "decl": "int ustrcoll(const wchar_t *s1, const wchar_t *s2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19dad0",
           "decl": "size_t ustrcspn(const wchar_t *s, const wchar_t *reject);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19db80",
@@ -27937,7 +27937,7 @@
         {
           "addr": "0x19de20",
           "decl": "size_t ustrspn(const wchar_t *s, const wchar_t *accept);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19ded0",
@@ -27982,7 +27982,7 @@
         {
           "addr": "0x19e3b0",
           "decl": "int ustrncasecmp(const wchar_t *s1, const wchar_t *s2, size_t count);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e460",
