@@ -1958,7 +1958,7 @@
     "class": "non_leaf"
   },
   "0x4": {
-    "confidence": "weak",
+    "confidence": "high",
     "coverage_pct": 100.0
   },
   "0x424": {
