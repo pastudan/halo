@@ -20362,7 +20362,7 @@
         {
           "addr": "0xe2680",
           "decl": "void FUN_000e2680(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe2820",

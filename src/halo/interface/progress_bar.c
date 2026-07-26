@@ -1829,38 +1829,16 @@ void FUN_000e2650(float x, float y, float z)
   D3DDevice_SetVertexData2f(0xa, x * 32.0f + z, y * 20.0f);
 }
 
-/* FUN_000e2680 (0xe2680) — XBE naked draft (batch 171). */
-#if defined(__clang__)
-static void __stdcall (*const be2680_c1ed280)(uint32_t reg, float a, float b) = D3DDevice_SetVertexData2f;
-
-__attribute__((naked, noinline))
-void FUN_000e2680(void)
+/* FUN_000e2680 (0xe2680) — readable C lift. */
+void FUN_000e2680(float x, float y, float z)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "subl $8, %%esp\n\t"
-      "fmuls 0x2546a4\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x282d40\n\t"
-      "fsubs 0x254df8\n\t"
-      "fsubs 0x254df8\n\t"
-      "fsubrs 0x8(%%ebp)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $0xa\n\t"
-      "call *%[c1ed280]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ed280] "m"(be2680_c1ed280)
-      : "memory");
+  float a = y * *(float *)0x2546a4;
+  float b = z * *(float *)0x282d40;
+  b = b - *(float *)0x254df8;
+  b = b - *(float *)0x254df8;
+  b = x - b;
+  D3DDevice_SetVertexData2f(0xa, b, a);
 }
-#else
-#error "FUN_000e2680: clang naked draft required"
-#endif
-
 
 /* FUN_000e2820 (0xe2820) — XBE naked draft (batch 168). */
 #if defined(__clang__)
