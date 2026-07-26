@@ -232,6 +232,12 @@ def main() -> int:
         ("vehicle_causes_collision_damage", 0x1b5580, 0x1b55c0),
         ("weapon_can_be_fired", 0xfaf50, 0xfafe0),
         ("weapon_useful", 0xfafe0, 0xfb010),
+        ("weapon_compute_movement_penalty", 0xfb010, 0xfb080),
+        ("FUN_00085350", 0x85350, 0x85380),
+        ("FUN_00138fd0", 0x138fd0, 0x1390d0),
+        ("vehicle_hover", 0x1b55c0, 0x1b55f0),
+        ("vehicle_is_flipped", 0x1b5680, 0x1b56b0),
+        ("FUN_001a0db0", 0x1a0db0, 0x1a0e00),
     ]
 
     xbe = Xbe.from_file(args.xbe)

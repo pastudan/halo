@@ -1675,9 +1675,7 @@ void prop_position_refresh(int actor_handle, int prop_handle, float *out_pos,
       else
         *(char *)(prop + 0x135) = 0;
       if (*(int *)(vehicle + 0x2d4) == unit_handle) {
-        char hover = 0;
-        vehicle_hover();
-        (void)hover;
+        char hover = vehicle_hover(*(int *)(unit + 0xcc));
         *(char *)(prop + 0x136) = hover;
       } else {
         *(char *)(prop + 0x136) = 0;

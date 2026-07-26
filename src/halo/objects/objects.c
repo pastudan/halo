@@ -11313,7 +11313,7 @@ void FUN_0013a740(int param_1, int param_2, float *param_3)
       }
       iVar8 = CALL_FUN_001bf570(uVar7, 0, 0);
       if (iVar8 != 0) {
-        FUN_00138fd0(iVar5, uVar7, (unsigned short *)(int)local_28[1], *(float *)&local_28[3], *(float *)&local_14, (int)pfVar3);
+        FUN_00138fd0(iVar5, uVar7, (unsigned short *)(int)local_28[1], *(float *)&local_28[3], *(float *)&local_14, pfVar3);
       }
     }
   }
@@ -11475,7 +11475,7 @@ char FUN_0013ab20(unsigned int param_1, int param_2, int *param_3)
           && (iVar4 = CALL_FUN_00138ee0(iVar2), iVar4 != 0)
           && (iVar4 = CALL_FUN_00138ee0(local_14), iVar4 != 0)) {
         CALL_FUN_001390d0(iVar6, local_14, puVar5, local_c, local_10, (void *)local_88);
-        FUN_00138fd0(iVar6, iVar2, puVar5, local_c, local_10, (int)local_40);
+        FUN_00138fd0(iVar6, iVar2, puVar5, local_c, local_10, local_40);
         CALL_FUN_00180570((unsigned int)*puVar5 * 0x20 + *(int *)(iVar6 + 0xf8), (void *)local_64);
         CALL_FUN_00180570((unsigned int)puVar5[1] * 0x20 + *(int *)(iVar6 + 0xf8), (void *)local_58);
         CALL_FUN_00180570((unsigned int)puVar5[2] * 0x20 + *(int *)(iVar6 + 0xf8), (void *)local_4c);
@@ -12774,11 +12774,11 @@ void FUN_00085280(float *position, float *forward, float *up, float param_4,
   observer_update(k_observer_tick);
 }
 
-/* 0x85350 */
-void FUN_00085350(float *param_1, float *param_2, float *param_3, float param_4, short param_5)
+/* 0x85350 — Bind antenna globals without a scenario tag index. */
+void FUN_00085350(float *position, float *forward, float *up, float param_4,
+                  short param_5)
 {
-  FUN_00085280((float *)(uintptr_t)param_1, (float *)(uintptr_t)param_2, (float *)(uintptr_t)param_3, param_4, param_5, -1);
-  /* relift: relift: mov (int16_t)eax, word ptr [0x2ee5a4] */
+  FUN_00085280(position, forward, up, param_4, param_5, -1);
 }
 
 /* 0x134070 — Advance one glow particle along its widget path. */

@@ -29525,7 +29525,7 @@
         },
         {
           "addr": "0x1b55c0",
-          "decl": "void vehicle_hover(void);",
+          "decl": "char vehicle_hover(int vehicle_handle);",
           "ported": false
         },
         {
@@ -29535,7 +29535,7 @@
         },
         {
           "addr": "0x1b5680",
-          "decl": "void vehicle_is_flipped(void);",
+          "decl": "char vehicle_is_flipped(int vehicle_handle);",
           "ported": false
         },
         {
@@ -39084,7 +39084,7 @@
         },
         {
           "addr": "0x138fd0",
-          "decl": "void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices, float u, float v, int param_6);",
+          "decl": "void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices, float u, float v, float *out_rgb);",
           "ported": false
         },
         {

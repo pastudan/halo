@@ -432,11 +432,13 @@ void vehicle_causes_collision_damage(int vehicle_handle, void *placement)
   FUN_0013d870(vehicle_handle, place + 0x28);
 }
 
-/* 0x1b55c0 */
-void vehicle_hover(void)
+/* 0x1b55c0 — Returns true when the vehicle tag has hover physics enabled. */
+char vehicle_hover(int vehicle_handle)
 {
-  object_get_and_verify_type(0, 0);
-  tag_get('ihev', 0);
+  char *vehicle_obj = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  char *vehicle_tag = (char *)tag_get('ihev', *(int *)vehicle_obj);
+
+  return (char)((*(unsigned int *)(vehicle_tag + 0x2f0) >> 7) & 1);
 }
 
 /* 0x1b5610 */
@@ -455,10 +457,14 @@ void FUN_001b5610(int a0, int a1)
   (void)edi;
 }
 
-/* 0x1b5680 */
-void vehicle_is_flipped(void)
+/* 0x1b5680 — True when the vehicle up-axis dot threshold is exceeded. */
+char vehicle_is_flipped(int vehicle_handle)
 {
-  object_get_and_verify_type(0, 0);
+  char *vehicle_obj = (char *)object_get_and_verify_type(vehicle_handle, 2);
+
+  if (*(float *)(vehicle_obj + 0x38) <= *(float *)0x2549d4)
+    return 0;
+  return 1;
 }
 
 /* 0x1b56b0 */

@@ -1704,12 +1704,21 @@ int FUN_00058700(int param_1)
   return ai_conversation_line(param_1);
 }
 
-/* FUN_00058710 (0x58710) — Frame-forwarding thunk (PUSH EBP;MOV EBP,ESP;POP
- * EBP;JMP 0x433b0) to ai_conversation_status. Inherits its ABI: a 16-bit stack
- * arg and a 16-bit AX return (mirror of neighbor FUN_00058700). */
+/* 0x58710 — Frame stub forwarding to ai_conversation_status. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((naked))
+#endif
 int16_t FUN_00058710(int16_t param_1)
 {
+#if defined(__i386__) && defined(__GNUC__)
+  __asm__(
+      "push %ebp\n\t"
+      "mov %ebp, %esp\n\t"
+      "pop %ebp\n\t"
+      "jmp ai_conversation_status");
+#else
   return ai_conversation_status(param_1);
+#endif
 }
 
 /* 0x00058720 — FUN_00058720 (ai_link_activation script command).
@@ -1962,12 +1971,21 @@ void FUN_00058a40(int combined_handle)
   }
 }
 
-/* FUN_00058ae0 (0x58ae0) — Tail-call wrapper for FUN_00055870 (ai_maneuver);
- * forwards combined_index. Dormant (ported=false); the original runs at
- * runtime. Signature follows FUN_00055870 now that it is lifted as 1-arg. */
+/* FUN_00058ae0 (0x58ae0) — Tail-call wrapper for FUN_00055870 (ai_maneuver). */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((naked))
+#endif
 void FUN_00058ae0(unsigned int combined_index)
 {
+#if defined(__i386__) && defined(__GNUC__)
+  __asm__(
+      "push %ebp\n\t"
+      "mov %ebp, %esp\n\t"
+      "pop %ebp\n\t"
+      "jmp FUN_00055870");
+#else
   FUN_00055870(combined_index);
+#endif
 }
 
 /* 0x00058fa0 — encounter_dispose stub.
@@ -4871,46 +4889,46 @@ void encounter_set_respawn(int encounter_handle, char flag)
 /* 0x53bf0 — Debug overlay: write per-team encounter respawn timers. */
 void FUN_00053bf0(void)
 {
-  int16_t values[3];
+  int16_t timer_values[3];
 
-  crt_sprintf((char *)0x5ab280, (const char *)0x25c218,
-              (int)*(int16_t *)0x5ac76e, (int)*(int16_t *)0x5ac7f6,
-              (int)*(int16_t *)0x5ac87e);
-  values[0] = 0x96;
-  values[1] = 0x12c;
-  values[2] = 0x1c2;
-  ((void(__cdecl *)(char *, int, int16_t *))0x53800)((char *)0x5ab280, 3,
-                                                      values);
+  crt_sprintf((char *)0x5ab280, (const char *)0x25c218, (int)*(int16_t *)0x5ac76e,
+              (int)*(int16_t *)0x5ac7f6, (int)*(int16_t *)0x5ac87e);
+  timer_values[0] = 0x96;
+  timer_values[1] = 0x12c;
+  timer_values[2] = 0x1c2;
+  ((void(__cdecl *)(char *, int, int16_t *))0x53800)((char *)0x5ab280, 3, timer_values);
 }
 
 /* 0x53b80 — Debug overlay: write per-team encounter activation timers. */
 void FUN_00053b80(void)
 {
-  int16_t values[3];
+  int16_t timer_values[3];
+  volatile int dead_load;
 
-  crt_sprintf((char *)0x5ab280, (const char *)0x25c1d8,
-              (int)*(int16_t *)0x5ac5d6, (int)*(int16_t *)0x5ac65e,
-              (int)*(int16_t *)0x5ac6e6, (int)*(int16_t *)0x5ac906);
-  values[0] = 0x96;
-  values[1] = 0x12c;
-  values[2] = 0x1c2;
-  ((void(__cdecl *)(char *, int, int16_t *))0x53800)((char *)0x5ab280, 3,
-                                                      values);
+  crt_sprintf((char *)0x5ab280, (const char *)0x25c1d8, (int)*(int16_t *)0x5ac5d6,
+              (int)*(int16_t *)0x5ac65e, (int)*(int16_t *)0x5ac6e6,
+              (int)*(int16_t *)0x5ac906);
+  timer_values[0] = 0x96;
+  timer_values[1] = 0x12c;
+  timer_values[2] = 0x1c2;
+  dead_load = *(int *)0x2ee6c4;
+  (void)dead_load;
+  ((void(__cdecl *)(char *, int, int16_t *))0x53800)((char *)0x5ab280, 3, timer_values);
 }
 
 /* 0x53e80 — Find firing-group index by name within an AI profile element. */
 int FUN_00053e80(void *ai_profile_element, const char *name)
 {
-  char *block;
+  char *block = (char *)ai_profile_element + 0x80;
   int i;
 
-  block = (char *)ai_profile_element + 0x80;
+  if (*(int *)block <= 0)
+    return -1;
+
   for (i = 0; i < *(int *)block; i++) {
     void *elem = tag_block_get_element(block, i, 0xe8);
-    if (((int(__cdecl *)(const char *, const char *, size_t))0x1e6596)(
-          (const char *)elem, name, 0x20) == 0) {
+    if (__strnicmp((const char *)elem, name, 0x20) == 0)
       return i;
-    }
   }
   return -1;
 }
@@ -4918,16 +4936,16 @@ int FUN_00053e80(void *ai_profile_element, const char *name)
 /* 0x53ee0 — Find platoon definition index by name within an encounter def. */
 int FUN_00053ee0(void *encounter_def, const char *name)
 {
-  char *block;
+  char *block = (char *)encounter_def + 0x8c;
   int i;
 
-  block = (char *)encounter_def + 0x8c;
+  if (*(int *)block <= 0)
+    return -1;
+
   for (i = 0; i < *(int *)block; i++) {
     void *elem = tag_block_get_element(block, i, 0xac);
-    if (((int(__cdecl *)(const char *, const char *, size_t))0x1e6596)(
-          (const char *)elem, name, 0x20) == 0) {
+    if (__strnicmp((const char *)elem, name, 0x20) == 0)
       return i;
-    }
   }
   return -1;
 }
@@ -5369,12 +5387,11 @@ void FUN_000565c0(int encounter_handle, int team_index, int side_name_ptr)
   const char *side_name = (const char *)side_name_ptr;
 
   if (*(char *)0x5aca57 != 0 || *(char *)0x5aca59 != 0) {
-    FUN_00054220((unsigned int)encounter_handle, (void *)global_scenario_get(),
-                 name_a, 0x200);
-    FUN_00054220((unsigned int)team_index, (void *)global_scenario_get(),
-                 name_b, 0x200);
+    FUN_00054220((unsigned int)encounter_handle, global_scenario_get(), name_a,
+                 0x200);
+    FUN_00054220((unsigned int)team_index, global_scenario_get(), name_b, 0x200);
     error(2, (const char *)0x25c970, name_a, name_b,
-          (const char *)hs_runtime_get_executing_thread_name());
+          hs_runtime_get_executing_thread_name());
   }
 
   if (((int(__cdecl *)(const char *, const char *))0x1dd801)(
@@ -5388,7 +5405,7 @@ void FUN_000565c0(int encounter_handle, int team_index, int side_name_ptr)
     is_attacker = 0;
   }
 
-  ((void(__cdecl *)(int, int, int, char))0x55dd0)(encounter_handle, 1, team_index,
+  ((void(__cdecl *)(int, int, int, char))0x55dd0)(encounter_handle, team_index, 1,
                                                   is_attacker);
 }
 

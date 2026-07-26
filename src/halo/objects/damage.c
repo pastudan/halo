@@ -1927,21 +1927,35 @@ void FUN_00138f70(float *output, float *vertex_d, float *vertex_c, float *base,
   output[2] = base[2] + (vertex_d[2] - base[2]) * u + (vertex_c[2] - base[2]) * v;
 }
 
-/* 0x138fd0 */
-void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices, float u, float v, int param_6)
+/* 0x138fd0 — Sample lightmap RGB at barycentric UV on a material surface. */
+void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices,
+                  float u, float v, float *out_rgb)
 {
-  int eax = 0;
+  char *mat = (char *)material;
+  float v0[2];
+  float v1[2];
+  float v2[2];
+  float uv[2];
+  unsigned int pixel;
+  int base_offset = *(int *)(mat + 0xb4);
 
-  /* cmp (int16_t)eax, 3 -> je 0x13900e */
-  display_assert((char *)0x0029b268, (char *)0x0029b324, 143, 0);
-  system_exit(0);
-  FUN_001806e0(0, (float *)(uintptr_t)eax);
-  FUN_001806e0(0, (float *)(uintptr_t)eax);
-  FUN_001806e0(0, (float *)(uintptr_t)eax);
-  bitmap_2d_get_pixel(0, (float *)0, 0.0f, (float *)0);
-  pixel32_to_real_rgb_color(eax, (float *)0);
+  if (*(int16_t *)(mat + 0xc4) != 2 && *(int16_t *)(mat + 0xc4) != 3) {
+    display_assert((char *)0x0029b268, (char *)0x0029b324, 0x8f, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
+  FUN_001806e0(
+      *(int *)(mat + 0xf8) + ((int)vertex_indices[0] + base_offset * 4) * 8, v0);
+  FUN_001806e0(
+      *(int *)(mat + 0xf8) + ((int)vertex_indices[1] + base_offset * 4) * 8, v1);
+  FUN_001806e0(
+      *(int *)(mat + 0xf8) + ((int)vertex_indices[2] + base_offset * 4) * 8, v2);
+
+  uv[0] = v0[0] + (v1[0] - v0[0]) * u + (v2[0] - v0[0]) * v;
+  uv[1] = v0[1] + (v1[1] - v0[1]) * u + (v2[1] - v0[1]) * v;
+
+  pixel = bitmap_2d_get_pixel(lightmap, uv, 1.0f, out_rgb);
+  pixel32_to_real_rgb_color(pixel, out_rgb);
 }
 /* --- damage.obj orphan shells (2026-07-26) --- */
 

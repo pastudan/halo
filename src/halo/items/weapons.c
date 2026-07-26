@@ -1175,30 +1175,26 @@ char weapon_useful(int weapon_handle)
   return (*(float *)(weapon_obj + 0x1f0) >= *(float *)0x2533c8) ? 1 : 0;
 }
 
-/* 0xfb010 */
+/* 0xfb010 — Movement penalty from weapon tag, gated by trigger mode. */
 float weapon_compute_movement_penalty(int weapon_handle, char aiming,
                                       char param_3)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
   char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
   float result;
+  int mode;
 
   if (aiming)
     result = *(float *)(tag_data + 0x400);
   else
     result = *(float *)(tag_data + 0x404);
 
-  switch ((int)*(int16_t *)(tag_data + 0x3fc)) {
-  case 1:
-  case 2:
+  mode = *(int16_t *)(tag_data + 0x3fc) - 1;
+  if (mode == 0 || mode == 1) {
     if (*(int16_t *)(weapon_obj + 0x258) != 1 &&
-        *(int16_t *)(weapon_obj + 0x264) != 1 &&
-        param_3 == 0) {
+        *(int16_t *)(weapon_obj + 0x264) != 1 && param_3 == 0) {
       return 0.0f;
     }
-    break;
-  default:
-    break;
   }
 
   return result;
