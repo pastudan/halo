@@ -894,291 +894,71 @@ int ustrncasecmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __
 #endif
 
 
-/* uisalpha (0x19e460) — XBE naked draft (batch 291). */
-#if defined(__clang__)
-static int (*const b19e460_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-
-__attribute__((naked, noinline))
-int uisalpha(int c __attribute__((unused)))
+/* uisalpha (0x19e460) — readable C lift. */
+int uisalpha(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x103\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc3e9]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc3e9] "m"(b19e460_c1dc3e9)
-      : "memory");
+  return FUN_001dc3e9(c, 0x103);
 }
-#else
-#error "uisalpha: clang naked draft required"
-#endif
 
-
-/* uisupper (0x19e480) — XBE naked draft (batch 291). */
-#if defined(__clang__)
-static int (*const b19e480_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-
-__attribute__((naked, noinline))
-int uisupper(int c __attribute__((unused)))
+/* uisupper (0x19e480) — readable C lift. */
+int uisupper(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc3e9]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc3e9] "m"(b19e480_c1dc3e9)
-      : "memory");
+  return FUN_001dc3e9(c, 1);
 }
-#else
-#error "uisupper: clang naked draft required"
-#endif
 
-
-/* uislower (0x19e4a0) — XBE naked draft (batch 291). */
-#if defined(__clang__)
-static int (*const b19e4a0_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-
-__attribute__((naked, noinline))
-int uislower(int c __attribute__((unused)))
+/* uislower (0x19e4a0) — readable C lift. */
+int uislower(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc3e9]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc3e9] "m"(b19e4a0_c1dc3e9)
-      : "memory");
+  return FUN_001dc3e9(c, 2);
 }
-#else
-#error "uislower: clang naked draft required"
-#endif
 
-
-/* uisdigit (0x19e4c0) — XBE naked draft (batch 291). */
-#if defined(__clang__)
-static int (*const b19e4c0_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-
-__attribute__((naked, noinline))
-int uisdigit(int c __attribute__((unused)))
+/* uisdigit (0x19e4c0) — readable C lift. */
+int uisdigit(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc3e9]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc3e9] "m"(b19e4c0_c1dc3e9)
-      : "memory");
+  return FUN_001dc3e9(c, 4);
 }
-#else
-#error "uisdigit: clang naked draft required"
-#endif
 
-
-/* uisxdigit (0x19e4e0) — XBE naked draft (batch 291). */
-#if defined(__clang__)
-static int (*const b19e4e0_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-
-__attribute__((naked, noinline))
-int uisxdigit(int c __attribute__((unused)))
+/* uisxdigit (0x19e4e0) — readable C lift. */
+int uisxdigit(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc3e9]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc3e9] "m"(b19e4e0_c1dc3e9)
-      : "memory");
+  return FUN_001dc3e9(c, 0x80);
 }
-#else
-#error "uisxdigit: clang naked draft required"
-#endif
 
-
-/* uisspace (0x19e500) — XBE naked draft (batch 292). */
-#if defined(__clang__)
-static int (*const b19e500_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-
-__attribute__((naked, noinline))
-int uisspace(int c __attribute__((unused)))
+/* uisspace (0x19e500) — readable C lift. */
+int uisspace(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc3e9]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc3e9] "m"(b19e500_c1dc3e9)
-      : "memory");
+  return FUN_001dc3e9(c, 8);
 }
-#else
-#error "uisspace: clang naked draft required"
-#endif
 
-
-/* uispunct (0x19e520) — XBE naked draft (batch 292). */
-#if defined(__clang__)
-static int (*const b19e520_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-
-__attribute__((naked, noinline))
-int uispunct(int c __attribute__((unused)))
+/* uispunct (0x19e520) — readable C lift. */
+int uispunct(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc3e9]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc3e9] "m"(b19e520_c1dc3e9)
-      : "memory");
+  return FUN_001dc3e9(c, 0x10);
 }
-#else
-#error "uispunct: clang naked draft required"
-#endif
 
-
-/* uisalnum (0x19e540) — XBE naked draft (batch 292). */
-#if defined(__clang__)
-static int (*const b19e540_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-
-__attribute__((naked, noinline))
-int uisalnum(int c __attribute__((unused)))
+/* uisalnum (0x19e540) — readable C lift. */
+int uisalnum(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x107\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc3e9]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc3e9] "m"(b19e540_c1dc3e9)
-      : "memory");
+  return FUN_001dc3e9(c, 0x107);
 }
-#else
-#error "uisalnum: clang naked draft required"
-#endif
 
-
-/* uisprint (0x19e560) — XBE naked draft (batch 292). */
-#if defined(__clang__)
-static int (*const b19e560_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-
-__attribute__((naked, noinline))
-int uisprint(int c __attribute__((unused)))
+/* uisprint (0x19e560) — readable C lift. */
+int uisprint(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x157\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc3e9]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc3e9] "m"(b19e560_c1dc3e9)
-      : "memory");
+  return FUN_001dc3e9(c, 0x157);
 }
-#else
-#error "uisprint: clang naked draft required"
-#endif
 
-
-/* uisgraph (0x19e580) — XBE naked draft (batch 292). */
-#if defined(__clang__)
-static int (*const b19e580_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-
-__attribute__((naked, noinline))
-int uisgraph(int c __attribute__((unused)))
+/* uisgraph (0x19e580) — readable C lift. */
+int uisgraph(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x117\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc3e9]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc3e9] "m"(b19e580_c1dc3e9)
-      : "memory");
+  return FUN_001dc3e9(c, 0x117);
 }
-#else
-#error "uisgraph: clang naked draft required"
-#endif
 
-
-/* uiscntrl (0x19e5a0) — XBE naked draft (batch 292). */
-#if defined(__clang__)
-static int (*const b19e5a0_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-
-__attribute__((naked, noinline))
-int uiscntrl(int c __attribute__((unused)))
+/* uiscntrl (0x19e5a0) — readable C lift. */
+int uiscntrl(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc3e9]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc3e9] "m"(b19e5a0_c1dc3e9)
-      : "memory");
+  return FUN_001dc3e9(c, 0x20);
 }
-#else
-#error "uiscntrl: clang naked draft required"
-#endif
-
 
 /* utoupper (0x19e5c0) — XBE naked draft (batch 288). */
 #if defined(__clang__)
