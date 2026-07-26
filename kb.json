@@ -12525,12 +12525,12 @@
         {
           "addr": "0xcaf80",
           "decl": "int FUN_000caf80(int16_t name_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcafc0",
           "decl": "int FUN_000cafc0(int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcaff0",
@@ -25112,7 +25112,7 @@
         {
           "addr": "0x1cf820",
           "decl": "void FUN_001cf820(void **out);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "sound_manager.obj",
