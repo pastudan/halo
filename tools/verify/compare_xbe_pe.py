@@ -673,6 +673,17 @@ def main() -> int:
         ("FUN_001a6ef0", 0x1a6ef0, 0x1a70c1),
         ("FUN_000f8920", 0xf8920, 0xf8d27),
         ("FUN_001b2780", 0x1b2780, 0x1b2b7d),
+        # gameplay wave 58 (2026-07-26)
+        ("FUN_000f4ea0", 0xf4ea0, 0xf528c),
+        ("FUN_0013bce0", 0x13bce0, 0x13c02c),
+        ("FUN_0013a740", 0x13a740, 0x13aa0d),
+        ("FUN_0013cb80", 0x13cb80, 0x13cdc4),
+        ("FUN_000f8720", 0xf8720, 0xf8912),
+        ("unit_drop_weapons_on_death", 0x1abbd0, 0x1abcca),
+        ("vehicle_scripting_load_magic", 0x1b3400, 0x1b357a),
+        ("FUN_000fc990", 0xfc990, 0xfcaef),
+        ("FUN_001a2900", 0x1a2900, 0x1a2a59),
+        ("vehicle_scripting_find_available_seats", 0x1adfc0, 0x1ae14c),
     ]
 
     xbe = Xbe.from_file(args.xbe)

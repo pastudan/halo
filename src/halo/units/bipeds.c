@@ -3677,83 +3677,156 @@ void FUN_001a2800(int unit_handle /* @eax */, const char *failure_kind)
   }
 }
 
-/* FUN_001a2900 (0x1a2900) — post-airborne update step
- *
- * Step in the biped update dispatcher (FUN_001a6350), reached when the biped
- * is airborne (object+0x424 bit 0). When the biped is flying through the air
- * (biped_flying_through_air) and the tag allows airborne aiming control
- * (tag+0x2f4 bit 8 / 0x100), and the movement state (object+0x253) is neither
- * 0x1f nor 0x29, perturbs the biped's aim/facing:
- *   - Picks a small random pitch in [3deg, 5deg] (random_real_range).
- *   - If the biped's airborne timer (object+0x38) is below threshold 0x2533f0,
- *     OR the horizontal facing (cross of object+0x30 with world up 0x31fc44)
- *     is degenerate (length <= 0x2533c0), uses a fully random yaw in [0, 2pi)
- *     to build the facing axis; otherwise uses the computed horizontal facing.
- *   - Scales the facing by the random pitch and adds it into object+0x3c
- *     (vector3d_scale_add), then runs the airborne aim helper FUN_001a2160.
- * Asserts the biped is airborne (object+0x424 bit 0). Writes the airborne
- * landing-prep state into *state (0x28 for states 0x27/0x28, 0x14 for state
- * 0x14 or when aiming control was active) and emits the "post-airborne" marker.
- *
- * unit_handle and state are both cdecl stack arguments (caller pushes
- * &update_state then unit_handle).
- *
- * Confirmed: object_get_and_verify_type(unit_handle, 1); tag_get('bipd',...);
- * biped_flying_through_air (0x1a0db0); random_real_range over global seed
- * (0x10b0d0) with min/max 0x3d567750/0x3db2b8c2; cross_product3d(object+0x30,
- * world_up, tmp); normalize3d (0x13010); FUN_000121e0(0, 2pi) random yaw;
- * vector3d_from_angle (0x10cc70); vector3d_scale_add (0x12f80) into
- * object+0x3c.
- */
-void FUN_001a2900(int unit_handle, char *state)
+/* FUN_001a2900 (0x1a2900) — XBE naked draft (batch 58). */
+#if defined(__clang__)
+static void *(*const b1a2900_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a2900_tag)(int, int) = tag_get;
+static char (*const b1a2900_c1a0db0)(int biped_handle) = FUN_001a0db0;
+static int *(*const b1a2900_gseed)(void) = get_global_random_seed_address;
+static float (*const b1a2900_rrange)(int *, float, float) = random_real_range;
+static void (*const b1a2900_cross)(float *, float *, float *) = cross_product3d;
+static float (*const b1a2900_norm)(float *) = normalize3d;
+static float (*const b1a2900_c121e0)(float min, float max) = FUN_000121e0;
+static void (*const b1a2900_c10cc70)(float *output, float angle) = vector3d_from_angle;
+static float *(*const b1a2900_vsca)(float *, float *, float, float *) = vector3d_scale_add;
+static void (*const b1a2900_c1a2160)(int unit_handle) = FUN_001a2160;
+static void (*const b1a2900_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1a2900_exitfn)(int) = system_exit;
+static void (*const b1a2900_c1a2800)(int unit_handle, const char *failure_kind) = FUN_001a2800;
+
+__attribute__((naked, noinline))
+void FUN_001a2900(int unit_handle __attribute__((unused)), char *state __attribute__((unused)))
 {
-  unsigned int *object;
-  int biped_tag;
-  char aim_control;
-  char move_state;
-  float pitch;
-  float facing[3];
-
-  object = (unsigned int *)object_get_and_verify_type(unit_handle, 1);
-  biped_tag = (int)tag_get(0x62697064, (int)object[0]); /* 'bipd' */
-
-  aim_control = 0;
-  if ((biped_flying_through_air(unit_handle) != 0) &&
-      (aim_control = 1, (*(unsigned int *)(biped_tag + 0x2f4) & 0x100) != 0)) {
-    move_state = *(char *)((int)object + 0x253);
-    if ((move_state != 0x1f) && (move_state != 0x29)) {
-      pitch = random_real_range(get_global_random_seed_address(), 0.05235988f,
-                                0.08726646f);
-      if (*(float *)(object + 0xe) /* +0x38 */ >= *(float *)0x2533f0) {
-        cross_product3d((float *)(object + 0xc) /* +0x30 */,
-                        *(float **)0x31fc44 /* world up */, facing);
-        if (normalize3d(facing) > *(float *)0x2533c0) {
-          goto have_facing;
-        }
-      }
-      vector3d_from_angle(facing, FUN_000121e0(0.0f, 6.2831855f));
-    have_facing:
-      vector3d_scale_add((float *)(object + 0xf) /* +0x3c */, facing, pitch,
-                         (float *)(object + 0xf));
-    }
-    FUN_001a2160(unit_handle);
-  }
-
-  if ((*(unsigned char *)(object + 0x109) /* +0x424 */ & 1) == 0) {
-    display_assert("TEST_FLAG(biped->biped.flags, _biped_airborne_bit)",
-                   "c:\\halo\\SOURCE\\units\\bipeds.c", 0xa61, true);
-    system_exit(-1);
-  }
-
-  move_state = *(char *)((int)object + 0x253);
-  if ((move_state == 0x27) || (move_state == 0x28)) {
-    *state = 0x28;
-  } else if ((move_state == 0x14) || (aim_control)) {
-    *state = 0x14;
-  }
-
-  FUN_001a2800(unit_handle, "post-airborne");
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c1a0db0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001a2900_4\n\t"
+      "movl 0x2f4(%%edi), %%eax\n\t"
+      "movb $1, %%bl\n\t"
+      "testb %%ah, %%bl\n\t"
+      "je .LFUN_001a2900_4\n\t"
+      "movb 0x253(%%esi), %%al\n\t"
+      "cmpb $0x1f, %%al\n\t"
+      "je .LFUN_001a2900_3\n\t"
+      "cmpb $0x29, %%al\n\t"
+      "je .LFUN_001a2900_3\n\t"
+      "pushl $0x3db2b8c2\n\t"
+      "pushl $0x3d567750\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rrange]\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds 0x38(%%esi)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fcomps 0x2533f0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a2900_1\n\t"
+      "movl 0x31fc44, %%ecx\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x30(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[cross]\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $0x10, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_001a2900_2\n\t"
+      ".LFUN_001a2900_1:\n\t"
+      "pushl $0x40c90fdb\n\t"
+      "pushl $0\n\t"
+      "call *%[c121e0]\n\t"
+      "fstps 0x4(%%esp)\n\t"
+      "addl $4, %%esp\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c10cc70]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_001a2900_2:\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "leal 0x3c(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[vsca]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_001a2900_3:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "call *%[c1a2160]\n\t"
+      ".LFUN_001a2900_4:\n\t"
+      "testb $1, 0x424(%%esi)\n\t"
+      "jne .LFUN_001a2900_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa61\n\t"
+      "pushl $0x2b4d5c\n\t"
+      "pushl $0x2b4f68\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a2900_5:\n\t"
+      "movb 0x253(%%esi), %%al\n\t"
+      "cmpb $0x27, %%al\n\t"
+      "je .LFUN_001a2900_7\n\t"
+      "cmpb $0x28, %%al\n\t"
+      "je .LFUN_001a2900_7\n\t"
+      "cmpb $0x14, %%al\n\t"
+      "je .LFUN_001a2900_6\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_001a2900_8\n\t"
+      ".LFUN_001a2900_6:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movb $0x14, (%%edx)\n\t"
+      "jmp .LFUN_001a2900_8\n\t"
+      ".LFUN_001a2900_7:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movb $0x28, (%%eax)\n\t"
+      ".LFUN_001a2900_8:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x2b4f58\n\t"
+      "call *%[c1a2800]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a2900_get), [tag] "m"(b1a2900_tag), [c1a0db0] "m"(b1a2900_c1a0db0), [gseed] "m"(b1a2900_gseed), [rrange] "m"(b1a2900_rrange), [cross] "m"(b1a2900_cross), [norm] "m"(b1a2900_norm), [c121e0] "m"(b1a2900_c121e0), [c10cc70] "m"(b1a2900_c10cc70), [vsca] "m"(b1a2900_vsca), [c1a2160] "m"(b1a2900_c1a2160), [assert] "m"(b1a2900_assert), [exitfn] "m"(b1a2900_exitfn), [c1a2800] "m"(b1a2900_c1a2800)
+      : "memory");
 }
+#else
+#error "FUN_001a2900: clang naked draft required"
+#endif
+
 
 /* FUN_001a2a60 (0x1a2a60) — post-landing update step
  *

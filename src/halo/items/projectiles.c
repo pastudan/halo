@@ -717,143 +717,211 @@ void FUN_000f8640(int projectile_handle)
   *(float *)(proj + 0x208) = 0.0f;
 }
 
-/*
- * Swept-sphere lateral collision test for a projectile (0xf8720).
- *
- * Tests whether a projectile's movement from its current world position to
- * new_pos would collide with the BSP. Three separate ray/segment casts are
- * performed:
- *
- *   1. A direct centre-line cast from proj_pos toward new_pos (flags 0x1000e9).
- *   2. A lateral cast offset +radius in the cross(up, delta) direction (0x89).
- *   3. A lateral cast offset -radius in that same direction (0x89).
- *
- * The cross direction is the unit vector perpendicular to both the world-up
- * vector and the movement delta.  If the delta is parallel to world-up the
- * function falls back to the global default forward vector.
- *
- * radius = *(float *)(tag_def + 0x1a0)
- * If radius < ~1e-7 the lateral sweeps are skipped and returns 0.
- *
- * Register args: projectile_handle@<eax>, new_pos@<edi>
- * Stack arg:     collision_result (int16_t *)
- * Returns: 1 if any cast hit, 0 if all missed.
- *
- * Confirmed: PUSH 0x20; PUSH EAX -> object_get_and_verify_type(handle, 0x20).
- * Confirmed: PUSH ECX; PUSH 0x70726f6a -> tag_get('proj', obj->tag_index).
- * Confirmed: ESI = LEA [EBX+0xc] = &obj->position (float[3] at offset 0xc).
- * Confirmed: EBX+0x1e4 = proj.field_1e4 used as max_distance arg.
- * Confirmed: first FUN_0014df70 call: flags=0x1000e9, origin=&proj_pos,
- *            dir=&delta, max_dist=proj.field_1e4, result=param_1.
- * Confirmed: EAX=[0x31fc44] -> global_up_vector_ptr (float*).
- * Confirmed: cross = cross(up_vec, delta) from FLD/FMUL/FSUBP sequences.
- * Confirmed: CALL 0x13010 -> normalize3d; FCOMP [0x2533c0] -> compare to 0.
- * Confirmed: fallback to EAX=[0x31fc40] -> global_default_fwd_ptr (float*).
- * Confirmed: tag_def[0x1a0] = sweep radius; FCOMP [0x253f44] ~= 1e-7.
- * Confirmed: second call flags=0x89, origin=[EBP-0x1c], dir=[EBP-0x10].
- * Confirmed: FUN_000130d0(0x89, [EBP-0x40], [EBP-0x34], ..) for neg-side.
- * Confirmed: FSTP ST0 at 0xf8898 discards -radius; ST2 (new_pos.z+r*cz) used
- *            directly in FSUB [EBP-0x14] at 0xf88d3 to compute dir.z.
- */
-bool FUN_000f8720(int projectile_handle, float *new_pos,
-                  int16_t *collision_result)
+/* FUN_000f8720 (0xf8720) — XBE naked draft (batch 58). */
+#if defined(__clang__)
+static void *(*const bf8720_get)(int, int) = object_get_and_verify_type;
+static void *(*const bf8720_tag)(int, int) = tag_get;
+static bool (*const bf8720_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
+static float (*const bf8720_norm)(float *) = normalize3d;
+static bool (*const bf8720_v30d0)(unsigned int, float *, float *, int, short *) = FUN_000130d0;
+
+__attribute__((naked, noinline))
+bool FUN_000f8720(int projectile_handle __attribute__((unused)), float *new_pos __attribute__((unused)), int16_t *collision_result __attribute__((unused)))
 {
-  char *proj;
-  void *tag_def;
-  float *proj_pos; /* &obj->position (float[3] at proj+0xc) */
-  float *up_vec;
-  float *fwd_vec;
-  float dx, dy, dz; /* movement delta: new_pos - proj_pos */
-  float radius;
-  /* cross direction: cross(up_vec, delta), stored in dir1 then normalized */
-  float delta[3]; /* movement direction for centre-line cast */
-  float dir1[3]; /* normalized cross direction; later reused as sweep dir */
-  /* positive-side origin: proj_pos + radius * cross */
-  float origin1[3];
-  /* positive-side endpoint (x,y); z held on FPU and used directly */
-  float pt_b1x, pt_b1y, pt_b1z;
-  /* negative-side origin: proj_pos - radius * cross */
-  float pt_a2[3];
-  /* negative-side endpoint: new_pos - radius * cross */
-  float pt_b2[3];
-
-  proj = (char *)object_get_and_verify_type(projectile_handle, 0x20);
-  tag_def = tag_get(0x70726f6a, *(int *)proj);
-  proj_pos = (float *)(proj + 0xc);
-
-  dx = new_pos[0] - proj_pos[0];
-  dy = new_pos[1] - proj_pos[1];
-  dz = new_pos[2] - proj_pos[2];
-
-  /* 1. Centre-line collision test (flags 0x1000e9). */
-  delta[0] = dx;
-  delta[1] = dy;
-  delta[2] = dz;
-  if (FUN_0014df70(0x1000e9, proj_pos, delta, *(int *)(proj + 0x1e4),
-                   collision_result)) {
-    return 1;
-  }
-
-  /* Check sweep radius; if too small skip lateral tests. */
-  radius = *(float *)((char *)tag_def + 0x1a0);
-  if (radius < *(float *)0x253f44) {
-    return 0;
-  }
-
-  /* Compute cross direction: cross(up_vec, delta). */
-  up_vec = *(float **)0x31fc44;
-  dir1[0] = dz * up_vec[1] - dy * up_vec[2];
-  dir1[1] = dx * up_vec[2] - dz * up_vec[0];
-  dir1[2] = dy * up_vec[0] - dx * up_vec[1];
-
-  if (normalize3d(dir1) == *(float *)0x2533c0) {
-    /* Degenerate (delta parallel to up): fall back to default forward. */
-    fwd_vec = *(float **)0x31fc40;
-    dir1[0] = fwd_vec[0];
-    dir1[1] = fwd_vec[1];
-    dir1[2] = fwd_vec[2];
-  }
-
-  /* Build positive-side origin: proj_pos + radius * cross_dir. */
-  origin1[0] = dir1[0] * radius + proj_pos[0];
-  origin1[1] = dir1[1] * radius + proj_pos[1];
-  origin1[2] = dir1[2] * radius + proj_pos[2];
-
-  /* Build positive-side endpoint: new_pos + radius * cross_dir. */
-  pt_b1x = dir1[0] * radius + new_pos[0];
-  pt_b1y = dir1[1] * radius + new_pos[1];
-  pt_b1z = dir1[2] * radius + new_pos[2];
-
-  /* Build negative-side origin: proj_pos - radius * cross_dir. */
-  pt_a2[0] = dir1[0] * (-radius) + proj_pos[0];
-  pt_a2[1] = dir1[1] * (-radius) + proj_pos[1];
-  pt_a2[2] = dir1[2] * (-radius) + proj_pos[2];
-
-  /* Build negative-side endpoint: new_pos - radius * cross_dir. */
-  pt_b2[0] = dir1[0] * (-radius) + new_pos[0];
-  pt_b2[1] = dir1[1] * (-radius) + new_pos[1];
-  pt_b2[2] = dir1[2] * (-radius) + new_pos[2];
-
-  /* Compute sweep direction for positive-side cast: pt_b1 - origin1. */
-  dir1[0] = pt_b1x - origin1[0];
-  dir1[1] = pt_b1y - origin1[1];
-  dir1[2] = pt_b1z - origin1[2];
-
-  /* 2. Positive-side lateral collision test (flags 0x89). */
-  if (FUN_0014df70(0x89, origin1, dir1, *(int *)(proj + 0x1e4),
-                   collision_result)) {
-    return 1;
-  }
-
-  /* 3. Negative-side lateral collision test: segment pt_a2 -> pt_b2 (flags
-   * 0x89). */
-  if (FUN_000130d0(0x89, pt_a2, pt_b2, *(int *)(proj + 0x1e4),
-                   collision_result)) {
-    return 1;
-  }
-
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x40, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x70726f6a\n\t"
+      "call *%[tag]\n\t"
+      "flds (%%edi)\n\t"
+      "fsubs 0xc(%%ebx)\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "leal 0xc(%%ebx), %%esi\n\t"
+      "pushl %%edx\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "movl 0x1e4(%%ebx), %%eax\n\t"
+      "fsubs 0x4(%%esi)\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "pushl %%esi\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "pushl $0x1000e9\n\t"
+      "fsubs 0x8(%%esi)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "call *%[ray]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000f8720_4\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "flds 0x1a0(%%ecx)\n\t"
+      "fcomps 0x253f44\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_000f8720_2\n\t"
+      ".LFUN_000f8720_1:\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000f8720_2:\n\t"
+      "flds (%%edi)\n\t"
+      "movl 0x31fc44, %%eax\n\t"
+      "fsubs (%%esi)\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "pushl %%edx\n\t"
+      "fsubs 0x4(%%esi)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fsubs 0x8(%%esi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      "fld %%st(2)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "fld %%st(2)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls (%%eax)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "fmuls (%%eax)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .LFUN_000f8720_3\n\t"
+      "movl 0x31fc40, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      ".LFUN_000f8720_3:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "flds 0x1a0(%%eax)\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "leal -0x1c(%%ebp), %%edx\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds (%%esi)\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds 0x4(%%esi)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds 0x8(%%esi)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x1a0(%%eax)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds (%%edi)\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds 0x4(%%edi)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fadds 0x8(%%edi)\n\t"
+      "flds 0x1a0(%%eax)\n\t"
+      "movl 0x1e4(%%ebx), %%eax\n\t"
+      "fchs\n\t"
+      "fld %%st(0)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds (%%esi)\n\t"
+      "fstps -0x40(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds 0x4(%%esi)\n\t"
+      "fstps -0x3c(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds 0x8(%%esi)\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "fstps -0x38(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "fstp %%st(0)\n\t"
+      "pushl $0x89\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds (%%edi)\n\t"
+      "fstps -0x34(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds 0x4(%%edi)\n\t"
+      "fstps -0x30(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds 0x8(%%edi)\n\t"
+      "fstps -0x2c(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fsubs -0x1c(%%ebp)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "fsubs -0x18(%%ebp)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "fsubs -0x14(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "call *%[ray]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000f8720_4\n\t"
+      "movl 0x1e4(%%ebx), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x34(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x40(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x89\n\t"
+      "call *%[v30d0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000f8720_1\n\t"
+      ".LFUN_000f8720_4:\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bf8720_get), [tag] "m"(bf8720_tag), [ray] "m"(bf8720_ray), [norm] "m"(bf8720_norm), [v30d0] "m"(bf8720_v30d0)
+      : "memory");
 }
+#else
+#error "FUN_000f8720: clang naked draft required"
+#endif
+
 
 /* FUN_000f8920 (0xf8920) — XBE naked draft (batch 57). */
 #if defined(__clang__)

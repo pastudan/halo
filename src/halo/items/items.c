@@ -1321,100 +1321,335 @@ void item_set_position(int item_handle __attribute__((unused)), float *position 
 #error "item_set_position: clang naked draft required"
 #endif
 
-/*
- * ui_widget_group.c
- *
- * TU: c:\halo\SOURCE\interface\ui_widget_group.c
- *   (recovered from the __FILE__ assert string passed to display_assert at
- *    0x000f4f28: "c:\halo\SOURCE\interface\ui_widget_group.c", line 0x1f5.)
- *
- * Shell UI tag preload for the current scenario.  Given the scenario tag
- * index, resolves the 'scnr' tag, force-loads the shared multiplayer game
- * text and white shell bitmap, then branches on the scenario type field
- * (scnr + 0x3c, signed int16: 0 = solo, 1 = multiplayer, 2 = main_menu) to
- * load the matching ui_widget_collection ('Soul') and, for the main menu, a
- * long list of string-list ('ustr'), sound ('snd!') and music ('lsnd') tags.
- * Every load is checked against -1 (NONE) and any failure is reported via
- * error(2, ...).  An unrecognized scenario type asserts and calls
- * system_exit(-1).
- *
- * cachebeta.xbe v01.10.12.2276, FUN_000f4ea0 @ 0x000f4ea0 (items.obj).
- */
+/* FUN_000f4ea0 (0xf4ea0) — XBE naked draft (batch 58). */
+#if defined(__clang__)
+static void *(*const bf4ea0_tag)(int, int) = tag_get;
+static int (*const bf4ea0_c1b9b00)(int tag_class, const char *name, int flags) = FUN_001b9b00;
+static void (*const bf4ea0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf4ea0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bf4ea0_exitfn)(int) = system_exit;
 
-void FUN_000f4ea0(int scenario_tag_index)
+__attribute__((naked, noinline))
+void FUN_000f4ea0(int scenario_tag_index __attribute__((unused)))
 {
-  void *scenario;
-  short scenario_type;
-
-  scenario = tag_get(0x73636e72 /* 'scnr' */, scenario_tag_index);
-
-  if (FUN_001b9b00(0x75737472 /* 'ustr' */, "ui\\multiplayer_game_text", 0) == -1)
-    error(2, "failed to load the multiplayer game text string list tag");
-
-  if (FUN_001b9b00(0x6269746d /* 'bitm' */, "ui\\shell\\bitmaps\\white", 0) == -1)
-    error(2, "generic white texture bitmap");
-
-  /* scnr + 0x3c is a signed int16 scenario type (MOVSX in the original). */
-  scenario_type = *(short *)((char *)scenario + 0x3c);
-
-  switch (scenario_type) {
-  case 0: /* solo */
-    if (FUN_001b9b00(0x536f756c /* 'Soul' */, "ui\\shell\\solo", 0) == -1)
-      error(2, "failed to load the solo scenario ui_widget_collection tag");
-    break;
-
-  case 1: /* multiplayer */
-    if (FUN_001b9b00(0x536f756c, "ui\\shell\\multiplayer", 0) == -1)
-      error(2, "failed to load the multiplayer scenario ui_widget_collection tag");
-    break;
-
-  case 2: /* main_menu */
-    if (FUN_001b9b00(0x536f756c, "ui\\shell\\main_menu", 0) == -1)
-      error(2, "failed to load the main menu scenario ui_widget_collection_tag");
-    if (FUN_001b9b00(0x76636b79 /* 'vcky' */, "ui\\english", 0) == -1)
-      error(2, "failed to load the browser's virtual keyboard tag");
-    if (FUN_001b9b00(0x75737472, "ui\\random_player_names", 0) == -1)
-      error(2, "failed to load random player names string list tag");
-    if (FUN_001b9b00(0x6d706c79 /* 'mply' */, "ui\\multiplayer_scenarios", 0) == -1)
-      error(2, "failed to load the multiplayer scenario description tag");
-    if (FUN_001b9b00(0x75737472, "ui\\saved_game_file_strings", 0) == -1)
-      error(2, "failed to load the default saved game filename string list tag");
-    if (FUN_001b9b00(0x75737472, "ui\\default_multiplayer_game_setting_names", 0) == -1)
-      error(2, "failed to load the default playlist profile names string list tag");
-    if (FUN_001b9b00(0x75737472, "ui\\shell\\strings\\game_variant_descriptions", 0) == -1)
-      error(2, "failed to load the multiplayer variant description string list tag");
-    if (FUN_001b9b00(0x75737472, "ui\\shell\\main_menu\\player_profiles_select\\difficulty_names", 0) == -1)
-      error(2, "failed to load the game difficulty name string list tag");
-    if (FUN_001b9b00(0x75737472, "ui\\shell\\strings\\default_player_profile_names", 0) == -1)
-      error(2, "failed to load the default player profile names string list tag");
-    if (FUN_001b9b00(0x75737472, "ui\\shell\\main_menu\\player_profiles_select\\button_set_long_descriptions", 0) == -1)
-      error(2, "failed to load the button set long descriptions string list tag");
-    if (FUN_001b9b00(0x75737472, "ui\\shell\\main_menu\\player_profiles_select\\button_set_short_descriptions", 0) == -1)
-      error(2, "failed to load the button set short descriptions string list tag");
-    if (FUN_001b9b00(0x75737472, "ui\\shell\\main_menu\\player_profiles_select\\joystick_set_defaults_descriptions", 0) == -1)
-      error(2, "failed to load the default joystick set descriptions string list tag");
-    if (FUN_001b9b00(0x75737472, "ui\\shell\\main_menu\\player_profiles_select\\joystick_set_short_descriptions", 0) == -1)
-      error(2, "failed to load the joystick set short descriptions string list tag");
-    if (FUN_001b9b00(0x75737472, "ui\\shell\\main_menu\\player_profiles_select\\profile_description_labels", 0) == -1)
-      error(2, "failed to load the profile description labels string list tag");
-    if (FUN_001b9b00(0x736e6421 /* 'snd!' */, "sound\\sfx\\ui\\cursor", 0) == -1)
-      error(2, "failed to load ui cursor sound tag");
-    if (FUN_001b9b00(0x736e6421, "sound\\sfx\\ui\\forward", 0) == -1)
-      error(2, "failed to load ui forward sound tag");
-    if (FUN_001b9b00(0x736e6421, "sound\\sfx\\ui\\back", 0) == -1)
-      error(2, "failed to load ui back sound tag");
-    if (FUN_001b9b00(0x736e6421, "sound\\sfx\\ui\\flag_failure", 0) == -1)
-      error(2, "failed to load ui failure sound tag");
-    if (FUN_001b9b00(0x6c736e64 /* 'lsnd' */, "sound\\music\\title1\\title1", 0) == -1)
-      error(2, "failed to load main menu title music");
-    break;
-
-  default:
-    display_assert("unknown scenario type",
-                   "c:\\halo\\SOURCE\\interface\\ui_widget_group.c", 0x1f5, true);
-    system_exit(-1);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x73636e72\n\t"
+      "call *%[tag]\n\t"
+      "pushl $0\n\t"
+      "pushl $0x288db8\n\t"
+      "pushl $0x75737472\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_1\n\t"
+      "pushl $0x28a6f4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_1:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28a6dc\n\t"
+      "pushl $0x6269746d\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_2\n\t"
+      "pushl $0x28a6bc\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_2:\n\t"
+      "movswl 0x3c(%%esi), %%eax\n\t"
+      "subl $0, %%eax\n\t"
+      "popl %%esi\n\t"
+      "je .LFUN_000f4ea0_23\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_000f4ea0_22\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_000f4ea0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1f5\n\t"
+      "pushl $0x28a690\n\t"
+      "pushl $0x28a678\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000f4ea0_3:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28a664\n\t"
+      "pushl $0x536f756c\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_4\n\t"
+      "pushl $0x28a624\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_4:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28a618\n\t"
+      "pushl $0x76636b79\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_5\n\t"
+      "pushl $0x28a5e4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_5:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28a5cc\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_6\n\t"
+      "pushl $0x28a598\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_6:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28a57c\n\t"
+      "pushl $0x6d706c79\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_7\n\t"
+      "pushl $0x28a544\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_7:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28a528\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_8\n\t"
+      "pushl $0x28a4e8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_8:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28a4bc\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_9\n\t"
+      "pushl $0x28a478\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_9:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x2898a4\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_10\n\t"
+      "pushl $0x28a430\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_10:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28a3f0\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_11\n\t"
+      "pushl $0x28a3b8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_11:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x2898d0\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_12\n\t"
+      "pushl $0x28a378\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_12:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x289cb8\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_13\n\t"
+      "pushl $0x28a328\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_13:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x289c10\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_14\n\t"
+      "pushl $0x28a2e0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_14:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x289d00\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_15\n\t"
+      "pushl $0x28a288\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_15:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x289c58\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_16\n\t"
+      "pushl $0x28a230\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_16:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x289780\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_17\n\t"
+      "pushl $0x28a1e8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_17:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28380c\n\t"
+      "pushl $0x736e6421\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_18\n\t"
+      "pushl $0x28a1c0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_18:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x2837f4\n\t"
+      "pushl $0x736e6421\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_19\n\t"
+      "pushl $0x28a19c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_19:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x2837e0\n\t"
+      "pushl $0x736e6421\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_20\n\t"
+      "pushl $0x28a178\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_20:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x2837c4\n\t"
+      "pushl $0x736e6421\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_21\n\t"
+      "pushl $0x28a154\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_21:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x2834e0\n\t"
+      "pushl $0x6c736e64\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_24\n\t"
+      "pushl $0x28a12c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000f4ea0_22:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28a114\n\t"
+      "pushl $0x536f756c\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_24\n\t"
+      "pushl $0x28a0d0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000f4ea0_23:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28a0c0\n\t"
+      "pushl $0x536f756c\n\t"
+      "call *%[c1b9b00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000f4ea0_24\n\t"
+      "pushl $0x28a084\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000f4ea0_24:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(bf4ea0_tag), [c1b9b00] "m"(bf4ea0_c1b9b00), [c8f390] "m"(bf4ea0_c8f390), [assert] "m"(bf4ea0_assert), [exitfn] "m"(bf4ea0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_000f4ea0: clang naked draft required"
+#endif
+
 /* --- items.obj batch drafts (2026-07-26) --- */
 
 /* 0xf4210 — refresh multiplayer settings select-list item widgets. */

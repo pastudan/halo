@@ -912,65 +912,153 @@ bool weapon_handle_potential_inventory_item(int weapon_handle,
   return found;
 }
 
-/* Begin a magazine reload cycle (0xfc990).
- * If the magazine state is idle (0) or post-reload (2), and the weapon is
- * not in an animation, starts the reload animation and effect. For dual-wield
- * weapons (tag+0x4e2 == 1), computes the animation variant from whether the
- * magazine is one round short of full.
- *
- * Confirmed: magazine_index in AX (register arg), 2 stack args (weapon_handle,
- * param_2). Confirmed: calls object_get_and_verify_type(weapon_handle, 4)
- * twice. Confirmed: calls FUN_000fb370(weapon_obj@<edi>, magazine_index@<si>).
- * Confirmed: calls weapon_set_animation_state(weapon_handle, 0,
- * magazine_index+5 @<bx>). Confirmed: calls weapon_start_effect(mag_def[0x44],
- * 0, 0, weapon_handle@<eax>). Confirmed: calls
- * first_person_weapon_message_from_weapon(weapon_handle, 9 or 10). Confirmed:
- * calls weapon_get_animation_frame(weapon_handle, 0, 7, iVar6). Confirmed:
- * clears bit 3 of weapon_obj[0x1dc] on non-early-exit path.
- */
-void FUN_000fc990(int16_t magazine_index, int weapon_handle, int param_2)
+/* FUN_000fc990 (0xfc990) — XBE naked draft (batch 58). */
+#if defined(__clang__)
+static void *(*const bfc990_get)(int, int) = object_get_and_verify_type;
+static void * (*const bfc990_cfb370)(void *weapon_obj, int16_t magazine_index) = FUN_000fb370;
+static void *(*const bfc990_tag)(int, int) = tag_get;
+static void *(*const bfc990_elem)(void *, int, int) = tag_block_get_element;
+static int (*const bfc990_cfba20)(int weapon_handle, char param_2, int16_t state) = weapon_set_animation_state;
+static int (*const bfc990_cfb6e0)(int trigger_effect, float scale, float param_3, int weapon_handle) = weapon_start_effect;
+static void (*const bfc990_cde3b0)(int object_handle, int param_2) = first_person_weapon_message_from_weapon;
+static int16_t (*const bfc990_cfb140)(int weapon_handle, int16_t param_2, int16_t param_3, int16_t param_4) = weapon_get_animation_frame;
+
+__attribute__((naked, noinline))
+void FUN_000fc990(int16_t magazine_index __attribute__((unused)), int weapon_handle __attribute__((unused)), int param_2 __attribute__((unused)))
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  int16_t *magazine_state =
-    (int16_t *)FUN_000fb370((void *)weapon_obj, magazine_index);
-  int tag_data = (int)tag_get(0x77656170, *(int *)weapon_obj);
-  char *mag_def = (char *)tag_block_get_element((char *)tag_data + 0x4f0,
-                                                (int)magazine_index, 0x70);
-
-  if (*magazine_state == 0 || *magazine_state == 2) {
-    int iVar6 = (int)object_get_and_verify_type(weapon_handle, 4);
-    if (*(char *)(iVar6 + 0x211) == 0 && *(char *)(iVar6 + 0x235) == 0 &&
-        *(char *)(iVar6 + 0x1e8) == 0) {
-      if (magazine_state[3] > 0 &&
-          magazine_state[4] < *(int16_t *)(mag_def + 0xa)) {
-        int16_t anim_variant = -1;
-        int16_t frame;
-        weapon_set_animation_state(weapon_handle, 0,
-                                   (int16_t)(magazine_index + 5));
-        weapon_start_effect(*(int *)(mag_def + 0x44), 0, 0, weapon_handle);
-        first_person_weapon_message_from_weapon(weapon_handle,
-                                                (magazine_state[4] != 0) + 9);
-
-        if (*(int16_t *)(tag_data + 0x4e2) == 1) {
-          int diff_is_one =
-            ((int)*(int16_t *)(mag_def + 0xa) - (int)magazine_state[4]) == 1;
-          if (param_2 == 0) {
-            anim_variant = diff_is_one ? 1 : -1;
-          } else {
-            anim_variant = diff_is_one ? 2 : 0;
-          }
-        }
-
-        *magazine_state = 1;
-        frame =
-          weapon_get_animation_frame(weapon_handle, 0, 7, anim_variant);
-        magazine_state[1] = frame;
-        magazine_state[2] = frame;
-      }
-      *(uint32_t *)(weapon_obj + 0x1dc) &= ~0x8u;
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "call *%[cfb370]\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[tag]\n\t"
+      "movswl %%bx, %%edx\n\t"
+      "pushl $0x70\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x4f0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movswl (%%edi), %%eax\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "subl $0, %%eax\n\t"
+      "je .LFUN_000fc990_1\n\t"
+      "subl $2, %%eax\n\t"
+      "jne .LFUN_000fc990_5\n\t"
+      ".LFUN_000fc990_1:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movb 0x211(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_000fc990_5\n\t"
+      "movb 0x235(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_000fc990_5\n\t"
+      "movb 0x1e8(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_000fc990_5\n\t"
+      "cmpw $0, 0x6(%%edi)\n\t"
+      "jle .LFUN_000fc990_4\n\t"
+      "movw 0x8(%%edi), %%cx\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "cmpw 0xa(%%edx), %%cx\n\t"
+      "jge .LFUN_000fc990_4\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0\n\t"
+      "addl $5, %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "orl $0xffffffff, %%esi\n\t"
+      "call *%[cfba20]\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl 0x44(%%ecx), %%edx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[cfb6e0]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpw %%ax, 0x8(%%edi)\n\t"
+      "setne %%al\n\t"
+      "addl $9, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cde3b0]\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "cmpw $1, 0x4e2(%%ecx)\n\t"
+      "jne .LFUN_000fc990_3\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000fc990_2\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movswl 0x8(%%edi), %%edx\n\t"
+      "movswl 0xa(%%eax), %%esi\n\t"
+      "subl %%edx, %%esi\n\t"
+      "decl %%esi\n\t"
+      "negl %%esi\n\t"
+      "sbbl %%esi, %%esi\n\t"
+      "andl $0xfffffffe, %%esi\n\t"
+      "addl $2, %%esi\n\t"
+      "jmp .LFUN_000fc990_3\n\t"
+      ".LFUN_000fc990_2:\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movswl 0x8(%%edi), %%ecx\n\t"
+      "movswl 0xa(%%edx), %%esi\n\t"
+      "subl %%ecx, %%esi\n\t"
+      "decl %%esi\n\t"
+      "negl %%esi\n\t"
+      "sbbl %%esi, %%esi\n\t"
+      "andl $0xfffffffe, %%esi\n\t"
+      "incl %%esi\n\t"
+      ".LFUN_000fc990_3:\n\t"
+      "pushl %%esi\n\t"
+      "pushl $7\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "movw $1, (%%edi)\n\t"
+      "call *%[cfb140]\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw %%ax, 0x2(%%edi)\n\t"
+      "movw %%ax, 0x4(%%edi)\n\t"
+      ".LFUN_000fc990_4:\n\t"
+      "andl $0xfffffff7, 0x1dc(%%esi)\n\t"
+      ".LFUN_000fc990_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfc990_get), [cfb370] "m"(bfc990_cfb370), [tag] "m"(bfc990_tag), [elem] "m"(bfc990_elem), [cfba20] "m"(bfc990_cfba20), [cfb6e0] "m"(bfc990_cfb6e0), [cde3b0] "m"(bfc990_cde3b0), [cfb140] "m"(bfc990_cfb140)
+      : "memory");
 }
+#else
+#error "FUN_000fc990: clang naked draft required"
+#endif
+
 
 /* Complete a magazine reload cycle (0xfcaf0).
  * Transfers rounds from unloaded reserve to the loaded count, capped by

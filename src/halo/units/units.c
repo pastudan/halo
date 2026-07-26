@@ -9885,53 +9885,114 @@ void unit_drop_grenades_on_death(int unit_handle)
   }
 }
 
-/* unit_drop_weapons_on_death (0x1abbd0)
- * Iterates over all 4 weapon slots and drops weapons not connected to the
- * map. For map-connected weapons, asserts with an error message. Updates
- * the next-weapon index if needed, clears the slot, and deletes the weapon
- * if it cannot be fired. Register arg: unit_handle in EAX. */
-void unit_drop_weapons_on_death(int unit_handle)
+/* unit_drop_weapons_on_death (0x1abbd0) — XBE naked draft (batch 58). */
+#if defined(__clang__)
+static void *(*const b1abbd0_get)(int, int) = object_get_and_verify_type;
+static const char * (*const b1abbd0_c1ba1f0)(int tag_index) = tag_get_name;
+static char * (*const b1abbd0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b1abbd0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1abbd0_exitfn)(int) = system_exit;
+static void (*const b1abbd0_c1ab990)(int unit_handle, int weapon_handle) = unit_detach_weapon;
+static char (*const b1abbd0_cfaf50)(int weapon_handle) = weapon_can_be_fired;
+static void (*const b1abbd0_odel)(int) = object_delete;
+
+__attribute__((naked, noinline))
+void unit_drop_weapons_on_death(int unit_handle __attribute__((unused)))
 {
-  char *unit;
-  int weapon_handle;
-  char *weapon_data;
-  int slot;
-  int *weapon_slot_ptr;
-  const char *unit_name;
-  const char *weapon_name;
-  const char *msg;
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  slot = 0;
-  weapon_slot_ptr = (int *)(unit + 0x2a8);
-
-  do {
-    weapon_handle = *weapon_slot_ptr;
-    if (weapon_handle != -1 &&
-        (int16_t)slot != *(int16_t *)(unit + 0x2a2)) {
-      weapon_data = (char *)object_get_and_verify_type(weapon_handle, 4);
-      if ((*(uint32_t *)(weapon_data + 4) & 0x800) != 0) {
-        weapon_name = tag_get_name(*(int *)weapon_data);
-        unit_name = tag_get_name(*(int *)unit);
-        msg = csprintf(error_string_buffer,
-            "a %s tried to drop a %s which was connected to the map.",
-            unit_name, weapon_name);
-        display_assert(msg, "c:\\halo\\SOURCE\\units\\units.c", 0x2132, 1);
-        system_exit(-1);
-      }
-      unit_detach_weapon(unit_handle, weapon_handle);
-      if ((int16_t)slot == *(int16_t *)(unit + 0x2a4)) {
-        *(int16_t *)(unit + 0x2a4) = *(int16_t *)(unit + 0x2a2);
-      }
-      *weapon_slot_ptr = -1;
-      if (!weapon_can_be_fired(weapon_handle)) {
-        object_delete(weapon_handle);
-      }
-    }
-    slot++;
-    weapon_slot_ptr++;
-  } while ((int16_t)slot < 4);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal 0x2a8(%%ebx), %%ecx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      ".Lunit_drop_weapons_on_death_1:\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl (%%edx), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lunit_drop_weapons_on_death_4\n\t"
+      "cmpw 0x2a2(%%ebx), %%ax\n\t"
+      "je .Lunit_drop_weapons_on_death_4\n\t"
+      "pushl $4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $8, %%ch\n\t"
+      "je .Lunit_drop_weapons_on_death_2\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2132\n\t"
+      "pushl $0x2b68c0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2b6ee0\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lunit_drop_weapons_on_death_2:\n\t"
+      "call *%[c1ab990]\n\t"
+      "movw -0x8(%%ebp), %%dx\n\t"
+      "cmpw 0x2a4(%%ebx), %%dx\n\t"
+      "jne .Lunit_drop_weapons_on_death_3\n\t"
+      "movw 0x2a2(%%ebx), %%ax\n\t"
+      "movw %%ax, 0x2a4(%%ebx)\n\t"
+      ".Lunit_drop_weapons_on_death_3:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl $0xffffffff, (%%ecx)\n\t"
+      "call *%[cfaf50]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lunit_drop_weapons_on_death_4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[odel]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lunit_drop_weapons_on_death_4:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "incl %%eax\n\t"
+      "addl $4, %%edx\n\t"
+      "cmpw $4, %%ax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "jl .Lunit_drop_weapons_on_death_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1abbd0_get), [c1ba1f0] "m"(b1abbd0_c1ba1f0), [c8d9d0] "m"(b1abbd0_c8d9d0), [assert] "m"(b1abbd0_assert), [exitfn] "m"(b1abbd0_exitfn), [c1ab990] "m"(b1abbd0_c1ab990), [cfaf50] "m"(b1abbd0_cfaf50), [odel] "m"(b1abbd0_odel)
+      : "memory");
 }
+#else
+#error "unit_drop_weapons_on_death: clang naked draft required"
+#endif
+
 
 /* unit_get_weapon_name (0x1ae700)
  * Returns the name string of the unit's currently selected weapon.
@@ -11792,118 +11853,188 @@ void unit_render_debug(int unit_handle __attribute__((unused)))
 #endif
 
 
-/* vehicle_scripting_find_available_seats (0x1adfc0) — find available seats
- * in a unit matching a substring filter and seat desire type.
- *
- * Iterates unit seats from the unit tag (0x756e6974), checks the seat name
- * against the substring filter, applies the seat desire type filter, and
- * stores matching seat indices in seat_indices up to max_seats.
- *
- * seat_desire_type values:
- *   -1 = NONE (no filter, accept all)
- *   0 = NOT driver (bit 2 clear)
- *   1 = gunner (bit 3 set)
- *   2 = neither driver nor gunner
- *   3 = driver (bit 2 set)
- *   default = accept
- *
- * Source: units.c line 0x178f-0x1790 asserts.
- */
-int16_t vehicle_scripting_find_available_seats(int unit_handle,
-                                               int seat_substring_addr,
-                                               int16_t seat_desire_type,
-                                               int16_t *seat_indices,
-                                               int16_t max_seats)
+/* vehicle_scripting_find_available_seats (0x1adfc0) — XBE naked draft (batch 58). */
+#if defined(__clang__)
+static void *(*const b1adfc0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1adfc0_tag)(int, int) = tag_get;
+static void (*const b1adfc0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1adfc0_exitfn)(int) = system_exit;
+static int (*const b1adfc0_c8df60)(const char *s1) = csstrlen;
+static void *(*const b1adfc0_elem)(void *, int, int) = tag_block_get_element;
+static char * (*const b1adfc0_c8dff0)(char *destination, const char *source) = csstrcpy;
+static char * (*const b1adfc0_c8d9a0)(char *s) = csstr_tolower;
+static char * (*const b1adfc0_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
+static char (*const b1adfc0_c1aa700)(int unit_handle, int16_t seat_index) = unit_seat_filled;
+
+__attribute__((naked, noinline))
+int16_t vehicle_scripting_find_available_seats(int unit_handle __attribute__((unused)), int seat_substring __attribute__((unused)), int16_t seat_desire_type __attribute__((unused)), int16_t *seat_indices __attribute__((unused)), int16_t max_seats __attribute__((unused)))
 {
-  const char *seat_substring;
-  char *unit;
-  int unit_tag;
-  char match_all;
-  short found_count;
-  int loop_idx;
-  uint32_t *seat_entry;
-  char seat_name_buf[256];
-  uint8_t bit_val;
-  char seat_filled;
-
-  seat_substring = (const char *)seat_substring_addr;
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  unit_tag = (int)tag_get(0x756e6974, *(int *)unit);
-
-  if (seat_substring == NULL) {
-    display_assert("seat_substring_name",
-                   "c:\\halo\\SOURCE\\units\\units.c", 0x178f, 1);
-    system_exit(-1);
-  }
-  if (seat_desire_type != -1 &&
-      (seat_desire_type < 0 || seat_desire_type >= 5)) {
-    display_assert("(seat_desire_type == NONE) || "
-                   "((seat_desire_type >= 0) && "
-                   "(seat_desire_type < NUMBER_OF_VEHICLE_SEAT_DESIRE_TYPES))",
-                   "c:\\halo\\SOURCE\\units\\units.c", 0x1790, 1);
-    system_exit(-1);
-  }
-
-  /* Determine if we should match all seats or filter by substring */
-  if (seat_substring != NULL && csstrlen(seat_substring) != 0) {
-    match_all = 0;
-  } else {
-    match_all = 1;
-  }
-
-  found_count = 0;
-  loop_idx = 0;
-  while ((short)loop_idx < *(int *)(unit_tag + 0x2e4)) {
-    seat_entry = (uint32_t *)tag_block_get_element(
-      (void *)(unit_tag + 0x2e4), loop_idx, 0x11c);
-
-    if (found_count >= max_seats) {
-      return found_count;
-    }
-
-    /* Copy and lowercase the seat name for comparison */
-    csstrcpy(seat_name_buf, (const char *)(seat_entry + 1));
-    csstr_tolower(seat_name_buf);
-
-    /* Check substring match */
-    if (!match_all && crt_strstr(seat_name_buf, seat_substring) == NULL) {
-      goto next_seat;
-    }
-
-    /* Check seat desire type filter */
-    switch ((int)seat_desire_type) {
-    case 0:
-      bit_val = ~(uint8_t)(*seat_entry >> 2);
-      break;
-    case 1:
-      bit_val = (uint8_t)(*seat_entry >> 3);
-      break;
-    case 2:
-      if ((*seat_entry & 4) != 0 || (*seat_entry & 8) != 0)
-        goto next_seat;
-      goto accept_seat;
-    case 3:
-      bit_val = (uint8_t)(*seat_entry >> 2);
-      break;
-    default:
-      goto accept_seat;
-    }
-    if ((bit_val & 1) == 0)
-      goto next_seat;
-
-  accept_seat:
-    seat_filled = unit_seat_filled(unit_handle, (int16_t)loop_idx);
-    if (seat_filled == '\0') {
-      seat_indices[found_count] = (int16_t)loop_idx;
-      found_count = found_count + 1;
-    }
-
-  next_seat:
-    loop_idx += 1;
-  }
-  return found_count;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x108, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jne .Lvehicle_scripting_find_available_seats_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x178f\n\t"
+      "pushl $0x2b68c0\n\t"
+      "pushl $0x2b71b4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lvehicle_scripting_find_available_seats_1:\n\t"
+      "movw 0x10(%%ebp), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lvehicle_scripting_find_available_seats_3\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lvehicle_scripting_find_available_seats_2\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jl .Lvehicle_scripting_find_available_seats_3\n\t"
+      ".Lvehicle_scripting_find_available_seats_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1790\n\t"
+      "pushl $0x2b68c0\n\t"
+      "pushl $0x2b7140\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lvehicle_scripting_find_available_seats_3:\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Lvehicle_scripting_find_available_seats_4\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "jne .Lvehicle_scripting_find_available_seats_5\n\t"
+      ".Lvehicle_scripting_find_available_seats_4:\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      ".Lvehicle_scripting_find_available_seats_5:\n\t"
+      "movl 0x2e4(%%esi), %%eax\n\t"
+      "leal 0x2e4(%%esi), %%ebx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%edi, -0x8(%%ebp)\n\t"
+      "jle .Lvehicle_scripting_find_available_seats_15\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lvehicle_scripting_find_available_seats_6:\n\t"
+      "pushl $0x11c\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw 0x18(%%ebp), %%di\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jge .Lvehicle_scripting_find_available_seats_15\n\t"
+      "leal 0x4(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x108(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8dff0]\n\t"
+      "leal -0x108(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8d9a0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lvehicle_scripting_find_available_seats_7\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x108(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lvehicle_scripting_find_available_seats_14\n\t"
+      ".Lvehicle_scripting_find_available_seats_7:\n\t"
+      "movswl 0x10(%%ebp), %%eax\n\t"
+      "cmpl $3, %%eax\n\t"
+      "ja .Lvehicle_scripting_find_available_seats_13\n\t"
+      "jmp *.Lvehicle_scripting_find_available_seats_jt(,%%eax,4)\n\t"
+      ".Lvehicle_scripting_find_available_seats_8:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "shrl $2, %%eax\n\t"
+      "notb %%al\n\t"
+      "jmp .Lvehicle_scripting_find_available_seats_12\n\t"
+      ".Lvehicle_scripting_find_available_seats_9:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "shrl $3, %%eax\n\t"
+      "jmp .Lvehicle_scripting_find_available_seats_12\n\t"
+      ".Lvehicle_scripting_find_available_seats_10:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "testb $4, %%al\n\t"
+      "jne .Lvehicle_scripting_find_available_seats_14\n\t"
+      "testb $8, %%al\n\t"
+      "je .Lvehicle_scripting_find_available_seats_13\n\t"
+      "jmp .Lvehicle_scripting_find_available_seats_14\n\t"
+      ".Lvehicle_scripting_find_available_seats_11:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "shrl $2, %%eax\n\t"
+      ".Lvehicle_scripting_find_available_seats_12:\n\t"
+      "andb $1, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lvehicle_scripting_find_available_seats_14\n\t"
+      ".Lvehicle_scripting_find_available_seats_13:\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1aa700]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lvehicle_scripting_find_available_seats_14\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movswl %%di, %%edx\n\t"
+      "movw %%si, (%%eax,%%edx,2)\n\t"
+      "incl %%edi\n\t"
+      ".Lvehicle_scripting_find_available_seats_14:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lvehicle_scripting_find_available_seats_6\n\t"
+      ".Lvehicle_scripting_find_available_seats_15:\n\t"
+      "movw %%di, %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lvehicle_scripting_find_available_seats_jt:\n\t"
+      ".long .Lvehicle_scripting_find_available_seats_8\n\t"
+      ".long .Lvehicle_scripting_find_available_seats_9\n\t"
+      ".long .Lvehicle_scripting_find_available_seats_10\n\t"
+      ".long .Lvehicle_scripting_find_available_seats_11\n\t"
+      ".text\n\t"
+      :
+      : [get] "m"(b1adfc0_get), [tag] "m"(b1adfc0_tag), [assert] "m"(b1adfc0_assert), [exitfn] "m"(b1adfc0_exitfn), [c8df60] "m"(b1adfc0_c8df60), [elem] "m"(b1adfc0_elem), [c8dff0] "m"(b1adfc0_c8dff0), [c8d9a0] "m"(b1adfc0_c8d9a0), [c1d9690] "m"(b1adfc0_c1d9690), [c1aa700] "m"(b1adfc0_c1aa700)
+      : "memory");
 }
+#else
+#error "vehicle_scripting_find_available_seats: clang naked draft required"
+#endif
+
 
 /* unit_leap_begin (0x1b1c70) — start a leap animation.
  *
@@ -12431,103 +12562,172 @@ void unit_scripting_enter_vehicle(int unit_handle, int vehicle_handle,
   }
 }
 
-/* vehicle_scripting_load_magic (0x1b3400) — load units into vehicle seats.
- *
- * Iterates child objects of the given group_handle. For each child that is
- * a biped/vehicle type and not dying/dead, tries to seat it in the vehicle.
- * Finds available seats via vehicle_scripting_find_available_seats, checks
- * seat type compatibility, handles existing vehicle occupancy, and calls
- * unit_board_vehicle. Returns the count of successfully seated units.
- *
- * Source: units.c
- */
-uint16_t vehicle_scripting_load_magic(int vehicle_handle, int seat_substring,
-                                      int group_handle)
+/* vehicle_scripting_load_magic (0x1b3400) — XBE naked draft (batch 58). */
+#if defined(__clang__)
+static void *(*const b1b3400_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1b3400_tag)(int, int) = tag_get;
+static int16_t (*const b1b3400_c1adfc0)(int unit_handle, int seat_substring, int16_t seat_desire_type, int16_t *seat_indices, int16_t max_seats) = vehicle_scripting_find_available_seats;
+static int (*const b1b3400_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
+static void *(*const b1b3400_elem)(void *, int, int) = tag_block_get_element;
+static char (*const b1b3400_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = FUN_001acd70;
+static void (*const b1b3400_c1b2dd0)(int unit_handle) = unit_exit_seat_end;
+static bool (*const b1b3400_c1b2b80)(int unit_handle, int vehicle_handle, int16_t seat_index) = unit_board_vehicle;
+static int (*const b1b3400_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
+
+__attribute__((naked, noinline))
+uint16_t vehicle_scripting_load_magic(int vehicle_handle __attribute__((unused)), int seat_substring __attribute__((unused)), int group_handle __attribute__((unused)))
 {
-  char *vehicle_unit;
-  int vehicle_tag;
-  int child_handle;
-  char *child_data;
-  int16_t seat_count;
-  short seat_indices[16];
-  int iter_state[1];
-  int inner_idx;
-  int16_t seat_idx;
-  int seat_element;
-  char seat_type_ok;
-  char board_ok;
-  uint16_t loaded_count;
-
-  loaded_count = 0;
-  if (vehicle_handle == NONE) {
-    return 0;
-  }
-
-  vehicle_unit = (char *)object_get_and_verify_type(vehicle_handle, 3);
-  vehicle_tag = (int)tag_get(0x756e6974, *(int *)vehicle_unit);
-
-  /* Find available seats matching the seat substring */
-  seat_count = vehicle_scripting_find_available_seats(
-    vehicle_handle, seat_substring, -1, seat_indices, 0x10);
-
-  /* Get first child of group */
-  child_handle = FUN_000ce450(group_handle, iter_state);
-  if (child_handle == NONE) {
-    return 0;
-  }
-
-  do {
-    child_data = (char *)object_get_and_verify_type(child_handle, -1);
-
-    /* Check if child is a biped or vehicle type (bit 0 or 1 of object_type) */
-    if (((1 << (*(uint8_t *)(child_data + 0x64) & 0x1f)) & 3) != 0 &&
-        (*(uint8_t *)(vehicle_unit + 0xb6) & 4) == 0) {
-      inner_idx = 0;
-      if ((short)seat_count > 0) {
-        do {
-          seat_idx = seat_indices[(short)inner_idx];
-          if (seat_idx != -1) {
-            seat_element = (int)tag_block_get_element(
-              (void *)(vehicle_tag + 0x2e4), (int)seat_idx, 0x11c);
-
-            /* Check seat type compatibility */
-            if (*(short *)(child_data + 0x64) != 1) {
-              seat_type_ok = FUN_001acd70(child_handle, (const char *)(seat_element + 4), 0, 0);
-              if (seat_type_ok == '\0') {
-                goto next_seat;
-              }
-            }
-
-            /* Handle existing vehicle occupancy */
-            if (*(int *)(child_data + 0xcc) != NONE) {
-              if (*(short *)(child_data + 0x2a0) != -1) {
-                unit_exit_seat_end(child_handle);
-              }
-              if (*(int *)(child_data + 0xcc) != NONE) {
-                goto next_seat;
-              }
-            }
-
-            /* Board the vehicle */
-            board_ok = unit_board_vehicle(child_handle, vehicle_handle, seat_idx);
-            if (board_ok != '\0') {
-              seat_indices[(short)inner_idx] = -1;
-              loaded_count = loaded_count + 1;
-              break;
-            }
-          }
-next_seat:
-          inner_idx = inner_idx + 1;
-        } while ((short)inner_idx < (short)seat_count);
-      }
-    }
-
-    /* Get next child */
-    child_handle = FUN_000ce320(group_handle, iter_state);
-  } while (child_handle != NONE);
-
-  return loaded_count;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x38, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "movl %%edi, -0x8(%%ebp)\n\t"
+      "je .Lvehicle_scripting_load_magic_10\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl $0x10\n\t"
+      "leal -0x38(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "call *%[c1adfc0]\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[cce450]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .Lvehicle_scripting_load_magic_10\n\t"
+      ".Lvehicle_scripting_load_magic_1:\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movb 0x64(%%edi), %%cl\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $3, %%dl\n\t"
+      "je .Lvehicle_scripting_load_magic_9\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "testb $4, 0xb6(%%eax)\n\t"
+      "jne .Lvehicle_scripting_load_magic_9\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpw %%ax, -0xc(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jle .Lvehicle_scripting_load_magic_9\n\t"
+      ".Lvehicle_scripting_load_magic_2:\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "movw -0x38(%%ebp,%%ecx,2), %%si\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .Lvehicle_scripting_load_magic_7\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movswl %%si, %%edx\n\t"
+      "pushl $0x11c\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x2e4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $1, 0x64(%%edi)\n\t"
+      "je .Lvehicle_scripting_load_magic_3\n\t"
+      "pushl $0\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[c1acd70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lvehicle_scripting_load_magic_6\n\t"
+      ".Lvehicle_scripting_load_magic_3:\n\t"
+      "movl 0xcc(%%edi), %%ecx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "je .Lvehicle_scripting_load_magic_5\n\t"
+      "cmpw %%ax, 0x2a0(%%edi)\n\t"
+      "je .Lvehicle_scripting_load_magic_4\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1b2dd0]\n\t"
+      "addl $4, %%esp\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      ".Lvehicle_scripting_load_magic_4:\n\t"
+      "cmpl %%eax, 0xcc(%%edi)\n\t"
+      "jne .Lvehicle_scripting_load_magic_6\n\t"
+      ".Lvehicle_scripting_load_magic_5:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1b2b80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lvehicle_scripting_load_magic_8\n\t"
+      ".Lvehicle_scripting_load_magic_6:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      ".Lvehicle_scripting_load_magic_7:\n\t"
+      "incl %%eax\n\t"
+      "cmpw -0xc(%%ebp), %%ax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jl .Lvehicle_scripting_load_magic_2\n\t"
+      "jmp .Lvehicle_scripting_load_magic_9\n\t"
+      ".Lvehicle_scripting_load_magic_8:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movswl -0x4(%%ebp), %%edx\n\t"
+      "incl %%eax\n\t"
+      "movw $0xffff, -0x38(%%ebp,%%edx,2)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      ".Lvehicle_scripting_load_magic_9:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[cce320]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "jne .Lvehicle_scripting_load_magic_1\n\t"
+      "movw -0x8(%%ebp), %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lvehicle_scripting_load_magic_10:\n\t"
+      "movw %%di, %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1b3400_get), [tag] "m"(b1b3400_tag), [c1adfc0] "m"(b1b3400_c1adfc0), [cce450] "m"(b1b3400_cce450), [elem] "m"(b1b3400_elem), [c1acd70] "m"(b1b3400_c1acd70), [c1b2dd0] "m"(b1b3400_c1b2dd0), [c1b2b80] "m"(b1b3400_c1b2b80), [cce320] "m"(b1b3400_cce320)
+      : "memory");
 }
+#else
+#error "vehicle_scripting_load_magic: clang naked draft required"
+#endif
+
 
 /* unit_try_and_exit_seat (0x1b3580) — attempt to exit the current seat.
  *
