@@ -15137,7 +15137,7 @@
         {
           "addr": "0x126700",
           "decl": "void network_game_client_new_advertised_game(void *client, void *message);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x126750",
@@ -27810,7 +27810,7 @@
         {
           "addr": "0xf3540",
           "decl": "void mp_level_select_list_update_displayed_items(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf3590",
@@ -27820,7 +27820,7 @@
         {
           "addr": "0xf3640",
           "decl": "void get_editable_playlist_profile_display_name(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf3690",
