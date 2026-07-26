@@ -19563,52 +19563,52 @@
         {
           "addr": "0xc06f0",
           "decl": "void FUN_000c06f0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0730",
           "decl": "void FUN_000c0730(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0770",
           "decl": "void FUN_000c0770(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc07b0",
           "decl": "void FUN_000c07b0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc07f0",
           "decl": "void FUN_000c07f0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0830",
           "decl": "void FUN_000c0830(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0870",
           "decl": "void FUN_000c0870(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc08b0",
           "decl": "void FUN_000c08b0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc08f0",
           "decl": "void FUN_000c08f0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0930",
           "decl": "void FUN_000c0930(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0970",
