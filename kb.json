@@ -7041,7 +7041,7 @@
         {
           "addr": "0x86310",
           "decl": "void director_set_mode(int16_t a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x86360",
@@ -17291,7 +17291,7 @@
         },
         {
           "addr": "0x8aa30",
-          "decl": "void observer_obsolete_position(void);",
+          "decl": "void observer_obsolete_position(int16_t a0);",
           "ported": false
         },
         {
