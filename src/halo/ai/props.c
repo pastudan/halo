@@ -407,64 +407,24 @@ void FUN_00064ee0(int tif_)
 }
 /* --- props.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00063e30 (0x63e30) — XBE naked draft (batch 235). */
-#if defined(__clang__)
-static char (*const b63e30_c639e0)(int scenario, unsigned char bsp_idx, float *origin, int start_surface, float *target, int end_surface, char *result_buf) = FUN_000639e0;
-
-__attribute__((naked, noinline))
-int FUN_00063e30(int scenario __attribute__((unused)), unsigned char bsp_idx __attribute__((unused)), float *origin __attribute__((unused)), int surface_index __attribute__((unused)), float *out_point __attribute__((unused)))
+/* FUN_00063e30 (0x63e30) — readable C lift. */
+int FUN_00063e30(int scenario, unsigned char bsp_idx, float *origin, int surface_index, float *out_point)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_00063e30_1\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c639e0]\n\t"
-      "movl -0x18(%%ebp), %%ecx\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "movl %%edx, 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "jne .LFUN_00063e30_2\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00063e30_1:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      ".LFUN_00063e30_2:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c639e0] "m"(b63e30_c639e0)
-      : "memory");
-}
-#else
-#error "FUN_00063e30: clang naked draft required"
-#endif
+  char result[0x1c];
+  int rc;
 
+  if (surface_index == -1) {
+    return -1;
+  }
+  FUN_000639e0(scenario, bsp_idx, origin, surface_index, out_point, -1, result);
+  out_point[0] = *(float *)(result + 4);
+  out_point[1] = *(float *)(result + 8);
+  rc = *(int *)(result + 0x10);
+  if (rc == -1) {
+    return surface_index;
+  }
+  return rc;
+}
 
 /* FUN_00063e90 (0x63e90) — XBE naked draft (batch 230). */
 #if defined(__clang__)

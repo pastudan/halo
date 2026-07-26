@@ -36108,7 +36108,7 @@
         {
           "addr": "0x63e30",
           "decl": "int FUN_00063e30(int scenario, unsigned char bsp_idx, float *origin, int surface_index, float *out_point);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x63e90",
