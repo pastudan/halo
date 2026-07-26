@@ -20394,7 +20394,7 @@
         {
           "addr": "0xe2880",
           "decl": "void FUN_000e2880(float *color@<ecx>, float progress);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e2880"
         },
         {
