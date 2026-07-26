@@ -6915,12 +6915,12 @@
         {
           "addr": "0x17cc80",
           "decl": "void FUN_0017cc80(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cc90",
           "decl": "void FUN_0017cc90(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cca0",
@@ -6945,7 +6945,7 @@
         {
           "addr": "0x17cce0",
           "decl": "void FUN_0017cce0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ccf0",
@@ -6975,7 +6975,7 @@
         {
           "addr": "0x17cd40",
           "decl": "void FUN_0017cd40(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cd50",
@@ -21545,7 +21545,7 @@
         {
           "addr": "0x1559d0",
           "decl": "void _rasterizer_windows_begin(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x155a00",
@@ -21555,7 +21555,7 @@
         {
           "addr": "0x155a40",
           "decl": "void _rasterizer_windows_end(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x155a70",
@@ -27923,7 +27923,7 @@
         {
           "addr": "0x19dd00",
           "decl": "wchar_t *ustrpbrk(const wchar_t *s, const wchar_t *accept);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19ddb0",
@@ -27938,7 +27938,7 @@
         {
           "addr": "0x19ded0",
           "decl": "wchar_t *ustrstr(const wchar_t *haystack, const wchar_t *needle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19df80",
@@ -28123,7 +28123,7 @@
         {
           "addr": "0x19ee40",
           "decl": "void *ufopen(const wchar_t *path, const wchar_t *mode);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19eee0",
@@ -28133,7 +28133,7 @@
         {
           "addr": "0x19ef20",
           "decl": "void *ufreopen(const wchar_t *path, const wchar_t *mode, void *stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19efd0",
