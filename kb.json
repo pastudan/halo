@@ -10303,7 +10303,7 @@
         },
         {
           "addr": "0x1c0d50",
-          "decl": "void FUN_001c0d50(void);",
+          "decl": "void FUN_001c0d50(int a0, int a1, int a2, int a3);",
           "ported": false
         },
         {
@@ -10333,7 +10333,7 @@
         },
         {
           "addr": "0x1c1280",
-          "decl": "void FUN_001c1280(void);",
+          "decl": "char FUN_001c1280(int handle, void *out_path);",
           "ported": false
         },
         {
@@ -18239,7 +18239,7 @@
         },
         {
           "addr": "0xe0740",
-          "decl": "void player_ui_set_single_player_local_player_controller(void);",
+          "decl": "void player_ui_set_single_player_local_player_controller(int a0, int16_t a1);",
           "ported": false
         },
         {
@@ -23458,7 +23458,7 @@
         },
         {
           "addr": "0x1c1bc0",
-          "decl": "void player_profile_get_from_path(void);",
+          "decl": "void player_profile_get_from_path(int handle, void *out);",
           "ported": false
         },
         {
@@ -23593,7 +23593,7 @@
         },
         {
           "addr": "0x1c2d20",
-          "decl": "void saved_game_file_retrieve_player1_last_used_profile_directory(void);",
+          "decl": "char saved_game_file_retrieve_player1_last_used_profile_directory(void *out);",
           "ported": false
         },
         {
@@ -23673,7 +23673,7 @@
         },
         {
           "addr": "0x1c38d0",
-          "decl": "void saved_game_file_find_profile_index_for_directory_path(void);",
+          "decl": "int saved_game_file_find_profile_index_for_directory_path(void *path, int a1);",
           "ported": false
         },
         {

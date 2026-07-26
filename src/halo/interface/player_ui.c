@@ -324,48 +324,16 @@ int16_t player_ui_get_last_single_player_level_played(int16_t local_player_index
   return *(int16_t *)(0x46bf06 + (int16_t)local_player_index * 0x38);
 }
 
-/* player_ui_set_game_variant (0xe0a60) — XBE naked draft (batch 173). */
-#if defined(__clang__)
-static void (*const be0a60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be0a60_exitfn)(int) = system_exit;
-static void * (*const be0a60_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
+/* player_ui_set_game_variant (0xe0a60) — readable C lift. */
 void player_ui_set_game_variant(void *variant)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lplayer_ui_set_game_variant_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x111\n\t"
-      "pushl $0x282724\n\t"
-      "pushl $0x282808\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_ui_set_game_variant_1:\n\t"
-      "pushl $0x68\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x46bfcc\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, 0x46c034\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be0a60_assert), [exitfn] "m"(be0a60_exitfn), [c8e0b0] "m"(be0a60_c8e0b0)
-      : "memory");
+  if (!variant) {
+    display_assert((const char *)0x282808, (const char *)0x282724, 0x111, 1);
+    system_exit(-1);
+  }
+  csmemcpy((void *)0x46bfcc, variant, 0x68);
+  *(unsigned char *)0x46c034 = 1;
 }
-#else
-#error "player_ui_set_game_variant: clang naked draft required"
-#endif
-
 
 /* player_ui_game_variant_specified (0xe0ab0) — readable C lift. */
 char player_ui_game_variant_specified(void *out_variant)

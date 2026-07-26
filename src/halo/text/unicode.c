@@ -1089,60 +1089,19 @@ wchar_t *ugets(wchar_t *buffer)
   return __getws(buffer);
 }
 
-/* uputs (0x19e870) — XBE naked draft (batch 272). */
-#if defined(__clang__)
-static void (*const b19e870_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19e870_exitfn)(int) = system_exit;
-static size_t (*const b19e870_c1db11e)(const wchar_t *str) = _wcslen;
-static int (*const b19e870_c1dc914)(const wchar_t *s) = __putws;
-
-__attribute__((naked, noinline))
-int uputs(const wchar_t *s __attribute__((unused)))
+/* uputs (0x19e870) — readable C lift (assert wrapper). */
+int uputs(const wchar_t *s)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Luputs_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x299\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x27b838\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Luputs_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1db11e]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $0x8000, %%eax\n\t"
-      "jb .Luputs_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x29a\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b4858\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Luputs_2:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1dc914]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b19e870_assert), [exitfn] "m"(b19e870_exitfn), [c1db11e] "m"(b19e870_c1db11e), [c1dc914] "m"(b19e870_c1dc914)
-      : "memory");
+  if (s == NULL) {
+    display_assert((const char *)0x27b838, (const char *)0x2b45b4, 0x299, 1);
+    system_exit(-1);
+  }
+  if ((unsigned)_wcslen(s) >= 0x8000) {
+    display_assert((const char *)0x2b4858, (const char *)0x2b45b4, 0x29a, 1);
+    system_exit(-1);
+  }
+  return __putws(s);
 }
-#else
-#error "uputs: clang naked draft required"
-#endif
-
 
 /* ufprintf (0x19e8e0) — XBE naked draft (batch 275). */
 #if defined(__clang__)
