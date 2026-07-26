@@ -5200,7 +5200,7 @@
         {
           "addr": "0xa5590",
           "decl": "float FUN_000a5590(float x, float y);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a5590"
         },
         {
