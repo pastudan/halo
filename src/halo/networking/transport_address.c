@@ -1,112 +1,41 @@
 /* --- transport_address.obj batch drafts (2026-07-26) --- */
 
-/* transport_address_equivalent (0x81a90) — XBE naked draft (batch 133). */
-#if defined(__clang__)
-static void (*const b81a90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b81a90_exitfn)(int) = system_exit;
-static int (*const b81a90_c8da40)(const void *a, const void *b, int size) = csmemcmp;
-
-__attribute__((naked, noinline))
+/* transport_address_equivalent (0x81a90) — readable C lift. */
 bool transport_address_equivalent(const void *a, const void *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Ltransport_address_equivalent_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3b\n\t"
-      "pushl $0x265ffc\n\t"
-      "pushl $0x266090\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltransport_address_equivalent_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Ltransport_address_equivalent_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3c\n\t"
-      "pushl $0x265ffc\n\t"
-      "pushl $0x26608c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltransport_address_equivalent_2:\n\t"
-      "movb 0x335090, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Ltransport_address_equivalent_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3d\n\t"
-      "pushl $0x265ffc\n\t"
-      "pushl $0x265fe4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltransport_address_equivalent_3:\n\t"
-      "cmpw $4, 0x10(%%esi)\n\t"
-      "je .Ltransport_address_equivalent_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3f\n\t"
-      "pushl $0x265ffc\n\t"
-      "pushl $0x266060\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltransport_address_equivalent_4:\n\t"
-      "cmpw $4, 0x10(%%edi)\n\t"
-      "je .Ltransport_address_equivalent_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x40\n\t"
-      "pushl $0x265ffc\n\t"
-      "pushl $0x266034\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltransport_address_equivalent_5:\n\t"
-      "movw 0x10(%%esi), %%ax\n\t"
-      "movw 0x10(%%edi), %%cx\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "movzwl %%ax, %%eax\n\t"
-      "ja .Ltransport_address_equivalent_6\n\t"
-      "movzwl %%cx, %%eax\n\t"
-      ".Ltransport_address_equivalent_6:\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8da40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Ltransport_address_equivalent_7\n\t"
-      "movw 0x12(%%esi), %%ax\n\t"
-      "cmpw 0x12(%%edi), %%ax\n\t"
-      "jne .Ltransport_address_equivalent_7\n\t"
-      "popl %%edi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ltransport_address_equivalent_7:\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b81a90_assert), [exitfn] "m"(b81a90_exitfn), [c8da40] "m"(b81a90_c8da40)
-      : "memory");
+  const unsigned char *pa = (const unsigned char *)a;
+  const unsigned char *pb = (const unsigned char *)b;
+  unsigned short na, nb, n;
+  if (!pa) {
+    display_assert((const char *)0x266090, (const char *)0x265ffc, 0x3b, 1);
+    system_exit(-1);
+  }
+  if (!pb) {
+    display_assert((const char *)0x26608c, (const char *)0x265ffc, 0x3c, 1);
+    system_exit(-1);
+  }
+  if (!*(unsigned char *)0x335090) {
+    display_assert((const char *)0x265fe4, (const char *)0x265ffc, 0x3d, 1);
+    system_exit(-1);
+  }
+  if (*(short *)(pa + 0x10) != 4) {
+    display_assert((const char *)0x266060, (const char *)0x265ffc, 0x3f, 1);
+    system_exit(-1);
+  }
+  if (*(short *)(pb + 0x10) != 4) {
+    display_assert((const char *)0x266034, (const char *)0x265ffc, 0x40, 1);
+    system_exit(-1);
+  }
+  na = *(unsigned short *)(pa + 0x10);
+  nb = *(unsigned short *)(pb + 0x10);
+  n = (na > nb) ? na : nb;
+  if (csmemcmp(pa, pb, (int)n) != 0)
+    return 0;
+  if (*(unsigned short *)(pa + 0x12) != *(unsigned short *)(pb + 0x12))
+    return 0;
+  return 1;
 }
-#else
-#error "transport_address_equivalent: clang naked draft required"
-#endif
+
 
 
 /* 0x81b90 */

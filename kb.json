@@ -39727,7 +39727,7 @@
         {
           "addr": "0x81a90",
           "decl": "bool transport_address_equivalent(const void *a, const void *b);",
-          "ported": false,
+          "ported": true,
           "name": "transport_address_equivalent"
         },
         {
