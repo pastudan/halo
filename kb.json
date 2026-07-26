@@ -20085,12 +20085,14 @@
         },
         {
           "addr": "0x10c3c0",
-          "decl": "void FUN_0010c3c0(void);"
+          "decl": "void FUN_0010c3c0(void);",
+          "ported": false
         },
         {
           "addr": "0x10c440",
           "decl": "float FUN_0010c440(float *param_1, float *param_2);",
-          "name": "FUN_0010c440"
+          "name": "FUN_0010c440",
+          "ported": false
         },
         {
           "addr": "0x10c780",

@@ -17239,5 +17239,19 @@
     "object": "ai_script.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x10c3c0",
+    "name": "FUN_0010c3c0",
+    "object": "random_math.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x10c440",
+    "name": "FUN_0010c440",
+    "object": "random_math.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
