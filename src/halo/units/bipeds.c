@@ -6320,52 +6320,16 @@ void FUN_001a2f40(void *physics __attribute__((unused)))
 
 /* --- bipeds.obj orphan shells (2026-07-26) --- */
 
-/* FUN_001a0db0 (0x1a0db0) — XBE naked draft (batch 238). */
-#if defined(__clang__)
-static void *(*const b1a0db0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1a0db0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-char FUN_001a0db0(int biped_handle __attribute__((unused)))
+/* FUN_001a0db0 (0x1a0db0) — readable C lift. */
+char FUN_001a0db0(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x62697064\n\t"
-      "call *%[tag]\n\t"
-      "movb 0x459(%%esi), %%cl\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpb $3, %%cl\n\t"
-      "jle .LFUN_001a0db0_2\n\t"
-      "movb 0x2f4(%%eax), %%dl\n\t"
-      "movb $4, %%cl\n\t"
-      "testb %%dl, %%cl\n\t"
-      "je .LFUN_001a0db0_1\n\t"
-      "testb %%cl, 0xb6(%%esi)\n\t"
-      "je .LFUN_001a0db0_2\n\t"
-      ".LFUN_001a0db0_1:\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001a0db0_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1a0db0_get), [tag] "m"(b1a0db0_tag)
-      : "memory");
+  char *unit_obj; char *biped_tag;
+  unit_obj = (char *)object_get_and_verify_type(unit_handle, 1);
+  biped_tag = (char *)tag_get(0x62697064, *(int *)unit_obj);
+  if (*(unsigned char *)(unit_obj + 0x459) > 3) {
+    if ((*(unsigned char *)(biped_tag + 0x2f4) & 4) == 0 ||
+        (*(unsigned char *)(unit_obj + 0xb6) & 4) != 0)
+      return 1;
+  }
+  return 0;
 }
-#else
-#error "FUN_001a0db0: clang naked draft required"
-#endif
-

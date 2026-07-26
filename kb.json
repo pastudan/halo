@@ -28318,7 +28318,7 @@
         {
           "addr": "0x1a0db0",
           "decl": "int FUN_001a0db0(int unit_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001a0db0"
         },
         {
