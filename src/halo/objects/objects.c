@@ -12811,10 +12811,10 @@ void FUN_00134070(int glow_widget_ptr, int particle_ptr, int object_handle,
   }
 
   *(float *)(particle + 0x1c) =
+      *(float *)(glow_def + 0x84) +
       (*(float *)(glow_def + 0x88) - *(float *)(glow_def + 0x84)) *
           ((*(float *)(glow_def + 0x90) - *(float *)(glow_def + 0x8c)) * fn_value +
-           *(float *)(glow_def + 0x8c)) +
-      *(float *)(glow_def + 0x84);
+           *(float *)(glow_def + 0x8c));
 
   particle_type = *(int16_t *)(glow_def + 0x22);
   path_pos = *(float *)(particle + 0x28);
@@ -13004,6 +13004,9 @@ int glow_trailing_particle_new(int glow_widget_ptr)
 }
 
 
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(2)))
+#endif
 void FUN_00133300(int glow_widget, int particle_ptr, int object_handle)
 {
   char *widget = (char *)glow_widget;
@@ -13133,17 +13136,21 @@ void FUN_001331d0(int glow_widget, int particle_ptr)
   *(float *)(particle + 0x4c) = *(float *)(particle + 0x40);
 }
 
-/* 0x1345b0 */
+/* 0x1345b0 — Tick glow widget particles and spawn trailing particles. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(1)))
+#endif
 void FUN_001345b0(int glow_widget, int object_handle)
 {
   char *widget = (char *)glow_widget;
   char *glow_def;
   int16_t marker_count;
   float spawn_rate;
+  float spawn_base;
   float secondary_rate;
+  float secondary_base;
   int particle;
   int16_t tick;
-  float trail_budget;
   float trail_step;
 
   glow_def = (char *)tag_get('!wlg', *(int *)(widget + 0x224));
@@ -13211,33 +13218,36 @@ void FUN_001345b0(int glow_widget, int object_handle)
     }
   }
 
-  spawn_rate = *(float *)(glow_def + 0x64);
-  secondary_rate = 1.0f;
-  if (*(int16_t *)(glow_def + 0x60) != (int16_t)-1) {
-    float fn_value = 0.0f;
-    if (object_get_function_value(object_handle, *(int16_t *)(glow_def + 0x60),
-                                  &fn_value))
-      spawn_rate = (*(float *)(glow_def + 0x6c) - *(float *)(glow_def + 0x68)) *
-                       fn_value +
-                   *(float *)(glow_def + 0x68);
-    else
-      spawn_rate = 0.0f;
-    spawn_rate *= *(float *)(glow_def + 0x64);
-  }
-  if (*(int16_t *)(glow_def + 0x70) != (int16_t)-1) {
-    float fn_value = 0.0f;
-    if (object_get_function_value(object_handle, *(int16_t *)(glow_def + 0x70),
-                                  &fn_value))
+  spawn_base = *(float *)(glow_def + 0x64);
+  spawn_rate = spawn_base;
+  if (marker_count > 1) {
+    if (*(int16_t *)(glow_def + 0x60) != (int16_t)-1) {
+      float fn_value = 0.0f;
+      if (!object_get_function_value(object_handle, *(int16_t *)(glow_def + 0x60),
+                                    &fn_value))
+        fn_value = 0.0f;
+      spawn_rate =
+          ((*(float *)(glow_def + 0x6c) - *(float *)(glow_def + 0x68)) * fn_value +
+           *(float *)(glow_def + 0x68)) *
+          spawn_base;
+    }
+
+    secondary_base = *(float *)(glow_def + 0x74);
+    secondary_rate = secondary_base;
+    if (*(int16_t *)(glow_def + 0x70) != (int16_t)-1) {
+      float fn_value = 0.0f;
+      if (!object_get_function_value(object_handle, *(int16_t *)(glow_def + 0x70),
+                                    &fn_value))
+        fn_value = 0.0f;
       secondary_rate =
-          (*(float *)(glow_def + 0x7c) - *(float *)(glow_def + 0x78)) *
-              fn_value +
-          *(float *)(glow_def + 0x78);
-    else
-      secondary_rate = 0.0f;
-    secondary_rate *= *(float *)(glow_def + 0x74);
+          ((*(float *)(glow_def + 0x7c) - *(float *)(glow_def + 0x78)) * fn_value +
+           *(float *)(glow_def + 0x78)) *
+          secondary_base;
+    }
+    spawn_rate = spawn_rate / secondary_rate;
+  } else {
+    secondary_rate = *(float *)(glow_def + 0x74);
   }
-  if (secondary_rate > 0.0f)
-    spawn_rate /= secondary_rate;
 
   tick = (int16_t)game_time_get();
   *(int16_t *)(widget + 0x258) += tick;
@@ -13315,9 +13325,8 @@ void FUN_001345b0(int glow_widget, int object_handle)
   trail_step = *(float *)0x253394 / *(float *)(glow_def + 0xfc);
   if (trail_step > 1.0f)
     trail_step = 1.0f;
-  trail_budget = (float)*(int16_t *)(widget + 0x258);
 
-  while (trail_budget >= trail_step) {
+  while ((float)*(int16_t *)(widget + 0x258) >= trail_step) {
     particle = glow_trailing_particle_new(glow_widget);
     if (particle == 0) {
       display_assert((char *)0x0029ac28, (char *)0x0029ab60, 0x209, 1);
@@ -13333,11 +13342,8 @@ void FUN_001345b0(int glow_widget, int object_handle)
       *(int *)(particle + 0x60) = prev;
       *(int *)(widget + 0x254) = particle;
     }
-    FUN_001d9068();
-    *(int16_t *)(widget + 0x258) -= (int16_t)trail_step;
-    trail_budget = (float)*(int16_t *)(widget + 0x258);
+    *(int16_t *)(widget + 0x258) -= (int16_t)(int)trail_step;
   }
-
 }
 
 /* 0x134c40 — Resolve light-volume marker state, optionally blending nested states. */

@@ -324,9 +324,10 @@ void FUN_001b4dc0(int handle, void *damage_data, unsigned int flags,
       roll = 1.0f;
     dialog_idx = (int16_t)(int)roll;
     if (dialog_idx <= 0) {
-      display_assert((char *)0x002b68c0, (char *)0x002b7ac8, 4740, 1);
+      display_assert((char *)0x002b68c0, (char *)0x002b7ac8, 0x1284, 1);
       system_exit(-1);
     }
+    *(unsigned char *)(unit + 0xb6) |= 4;
     *(int16_t *)(unit + 0x3d0) = dialog_idx;
     feign_death = 1;
   }

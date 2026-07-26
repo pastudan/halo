@@ -1055,6 +1055,9 @@ int actor_aim_projectile(int unit_handle, float *direction_in, float *direction_
   }
 
   *(char *)(firing + 0x60) = *(char *)(actor + 0x688);
+  *(float *)(firing + 0x64) = direction_in[0];
+  *(float *)(firing + 0x68) = direction_in[1];
+  *(float *)(firing + 0x6c) = direction_in[2];
   direction_out[0] = direction_in[0];
   direction_out[1] = direction_in[1];
   direction_out[2] = direction_in[2];
@@ -1098,14 +1101,14 @@ int actor_aim_projectile(int unit_handle, float *direction_in, float *direction_
     axis[2] = weapon_vec[0] * direction_out[1] -
               weapon_vec[1] * direction_out[0];
     normalize3d(axis);
-    if (axis[0] == *(float *)0x2533c0 && axis[1] == *(float *)0x2533c0 &&
-        axis[2] == *(float *)0x2533c0)
+    if (*(float *)0x2533c0 == axis[0] && *(float *)0x2533c0 == axis[1] &&
+        *(float *)0x2533c0 == axis[2])
       do_rotate = 0;
     else {
       perpendicular3d(weapon_vec, perp);
       normalize3d(perp);
-      if (perp[0] == *(float *)0x2533c0 && perp[1] == *(float *)0x2533c0 &&
-          perp[2] == *(float *)0x2533c0)
+      if (*(float *)0x2533c0 == perp[0] && *(float *)0x2533c0 == perp[1] &&
+          *(float *)0x2533c0 == perp[2])
         do_rotate = 0;
     }
 
