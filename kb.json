@@ -860,7 +860,7 @@
         {
           "addr": "0x1dbf75",
           "decl": "int _wcscmp(const wchar_t *s1, const wchar_t *s2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dbfa7",
@@ -870,7 +870,7 @@
         {
           "addr": "0x1dbfac",
           "decl": "size_t _wcscspn(const wchar_t *s, const wchar_t *reject);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dbfef",
@@ -880,7 +880,7 @@
         {
           "addr": "0x1dc02c",
           "decl": "int _wcsncmp(const wchar_t *s1, const wchar_t *s2, size_t count);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dc09e",
@@ -1162,7 +1162,7 @@
         {
           "addr": "0x1dcf08",
           "decl": "void FUN_001dcf08(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dcf51",
@@ -1324,7 +1324,7 @@
         {
           "addr": "0x1da059",
           "decl": "void FUN_001da059(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1da081",
@@ -1339,7 +1339,7 @@
         {
           "addr": "0x1da0cc",
           "decl": "void FUN_001da0cc(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1da0e9",
@@ -1436,7 +1436,7 @@
           "addr": "0x1d9068",
           "decl": "void FUN_001d9068(void);",
           "note": "MSVC C runtime intrinsic _ftol2 (float->int truncation, ST0 to EAX); compiler-emitted, not a game function. Grouped under LIBCMT:sprintf.obj only by delinker COMDAT adjacency to crt_sprintf. LIBCMT compiler-runtime; never call from C (see src/xdk_rt.c). Attribution corrected per ghidra-groom Next-2 2026-07-10.",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d90e0",
@@ -1468,7 +1468,7 @@
         {
           "addr": "0x1d9e72",
           "decl": "void FUN_001d9e72(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9e94",
@@ -1525,7 +1525,7 @@
         {
           "addr": "0x1ded83",
           "decl": "void __startOneArgErrorHandling(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dedc0",
@@ -1540,7 +1540,7 @@
         {
           "addr": "0x1dedec",
           "decl": "void FUN_001dedec(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dee05",
@@ -1625,7 +1625,7 @@
         {
           "addr": "0x1df4a0",
           "decl": "void FUN_001df4a0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1df4c4",
@@ -1635,7 +1635,7 @@
         {
           "addr": "0x1df562",
           "decl": "void FUN_001df562(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1df57e",
@@ -1655,7 +1655,7 @@
         {
           "addr": "0x1dfa55",
           "decl": "void __errcode(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dfa82",
@@ -1665,12 +1665,12 @@
         {
           "addr": "0x1dfb20",
           "decl": "void __handle_qnan1(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dfb73",
           "decl": "void __handle_qnan2(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dfbd2",
@@ -1760,7 +1760,7 @@
         {
           "addr": "0x1e028f",
           "decl": "void FUN_001e028f(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e02b3",
@@ -1795,12 +1795,12 @@
         {
           "addr": "0x1e0912",
           "decl": "void __hextodec(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e0944",
           "decl": "void __inc(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e0984",
@@ -1835,7 +1835,7 @@
         {
           "addr": "0x1e1997",
           "decl": "void FUN_001e1997(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e19b7",
@@ -1850,17 +1850,17 @@
         {
           "addr": "0x1e1ba0",
           "decl": "void __cintrindisp2(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e1bde",
           "decl": "void __cintrindisp1(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e1c1b",
           "decl": "void __ctrandisp2(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e1c63",
@@ -1875,7 +1875,7 @@
         {
           "addr": "0x1e1db1",
           "decl": "void __ctrandisp1(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e1de4",
@@ -1890,7 +1890,7 @@
         {
           "addr": "0x1e1ea5",
           "decl": "void FUN_001e1ea5(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e1ed5",
@@ -1920,7 +1920,7 @@
         {
           "addr": "0x1e2559",
           "decl": "void FUN_001e2559(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e257d",
@@ -1955,27 +1955,27 @@
         {
           "addr": "0x1e2879",
           "decl": "void FUN_001e2879(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e28a4",
           "decl": "void __getbuf(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e28e8",
           "decl": "void _write_char(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e290d",
           "decl": "void _write_multi_char(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e2932",
           "decl": "void _write_string(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e2984",
@@ -1990,17 +1990,17 @@
         {
           "addr": "0x1e327f",
           "decl": "void FUN_001e327f(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e32c5",
           "decl": "void FUN_001e32c5(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e330e",
           "decl": "void __get_osfhandle(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e334f",
@@ -2030,7 +2030,7 @@
         {
           "addr": "0x1e3776",
           "decl": "void FUN_001e3776(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e37af",
@@ -2045,17 +2045,17 @@
         {
           "addr": "0x1e3805",
           "decl": "void FUN_001e3805(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e3830",
           "decl": "void FUN_001e3830(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e385e",
           "decl": "void FUN_001e385e(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e388c",
@@ -2095,12 +2095,12 @@
         {
           "addr": "0x1e3cce",
           "decl": "void __IncMan(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e3d1b",
           "decl": "void __RoundMan(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e3d8d",
@@ -2140,22 +2140,22 @@
         {
           "addr": "0x1e3fcc",
           "decl": "void __ld12told(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e4048",
           "decl": "void FUN_001e4048(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e4075",
           "decl": "void FUN_001e4075(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e40a3",
           "decl": "void FUN_001e40a3(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e40d0",
@@ -2170,7 +2170,7 @@
         {
           "addr": "0x1e4209",
           "decl": "void FUN_001e4209(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e426f",
@@ -2180,7 +2180,7 @@
         {
           "addr": "0x1e4278",
           "decl": "void __isatty(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e42b0",
@@ -2210,7 +2210,7 @@
         {
           "addr": "0x1e45d2",
           "decl": "void FUN_001e45d2(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e4601",
@@ -2260,7 +2260,7 @@
         {
           "addr": "0x1e53d3",
           "decl": "void FUN_001e53d3(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e540f",
@@ -2290,7 +2290,7 @@
         {
           "addr": "0x1e57d2",
           "decl": "void __itoa(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e57fc",
@@ -2320,7 +2320,7 @@
         {
           "addr": "0x1e58f6",
           "decl": "void FUN_001e58f6(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e592f",
@@ -2335,7 +2335,7 @@
         {
           "addr": "0x1e59c1",
           "decl": "void FUN_001e59c1(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e59e3",
@@ -2345,7 +2345,7 @@
         {
           "addr": "0x1e5a04",
           "decl": "void ___add_12(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e5a62",
@@ -2385,7 +2385,7 @@
         {
           "addr": "0x1e6254",
           "decl": "void FUN_001e6254(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e629f",
@@ -2405,7 +2405,7 @@
         {
           "addr": "0x1e6520",
           "decl": "void FUN_001e6520(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e6584",
@@ -5214,8 +5214,8 @@
         },
         {
           "addr": "0xa57a0",
-          "decl": "float FUN_000a57a0(float x);",
-          "ported": true
+          "decl": "void FUN_000a57a0(void);",
+          "ported": false
         },
         {
           "addr": "0xa57b0",
@@ -5224,8 +5224,8 @@
         },
         {
           "addr": "0xa5810",
-          "decl": "void FUN_000a5810(int *out, float value, int field0);",
-          "ported": true
+          "decl": "void FUN_000a5810(void);",
+          "ported": false
         },
         {
           "addr": "0xa5830",
@@ -8299,8 +8299,8 @@
         },
         {
           "addr": "0xa7470",
-          "decl": "int FUN_000A7470(void);",
-          "ported": true
+          "decl": "void FUN_000A7470(void);",
+          "ported": false
         },
         {
           "addr": "0xa7490",
@@ -12198,7 +12198,7 @@
         {
           "addr": "0xc95c0",
           "decl": "char FUN_000c95c0(char value);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xc95d0",
@@ -12468,12 +12468,12 @@
         {
           "addr": "0xcae80",
           "decl": "char FUN_000cae80(int value);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xcaea0",
           "decl": "char FUN_000caea0(int16_t value);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xcaec0",
@@ -12482,18 +12482,18 @@
         },
         {
           "addr": "0xcaef0",
-          "decl": "int FUN_000caef0(int16_t value);",
-          "ported": true
+          "decl": "float FUN_000caef0(int16_t value);",
+          "ported": false
         },
         {
           "addr": "0xcaf10",
-          "decl": "int FUN_000caf10(int value);",
-          "ported": true
+          "decl": "float FUN_000caf10(int value);",
+          "ported": false
         },
         {
           "addr": "0xcaf20",
-          "decl": "int FUN_000caf20(int16_t value);",
-          "ported": true
+          "decl": "float FUN_000caf20(int16_t value);",
+          "ported": false
         },
         {
           "addr": "0xcaf40",
@@ -12508,7 +12508,7 @@
         {
           "addr": "0xcaf70",
           "decl": "int16_t FUN_000caf70(int16_t value);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xcaf80",
@@ -13952,12 +13952,12 @@
         {
           "addr": "0xf5640",
           "decl": "char FUN_000f5640(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xf5650",
           "decl": "char FUN_000f5650(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xf5660",
@@ -14246,7 +14246,7 @@
         {
           "addr": "0x100060",
           "decl": "void main_set_difficulty(int16_t difficulty);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x100080",
@@ -14266,22 +14266,22 @@
         {
           "addr": "0x1002a0",
           "decl": "void main_reset_map(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1002c0",
           "decl": "void main_revert_map(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1002e0",
           "decl": "void main_skip_cinematic(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x100300",
           "decl": "void main_save_map_nonsafe(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x100310",
@@ -14301,17 +14301,17 @@
         {
           "addr": "0x100370",
           "decl": "void main_won_map(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x100380",
           "decl": "void FUN_00100380(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x100390",
           "decl": "void main_respawn(char flag);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1003b0",
@@ -17184,8 +17184,8 @@
         },
         {
           "addr": "0x89330",
-          "decl": "void FUN_00089330(int *out);",
-          "ported": true
+          "decl": "void FUN_00089330(void);",
+          "ported": false
         },
         {
           "addr": "0x89350",
@@ -17696,7 +17696,7 @@
         {
           "addr": "0xb6430",
           "decl": "void scripted_player_control_set_camera_control(char enable);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb64c0",
@@ -17752,72 +17752,72 @@
         {
           "addr": "0xb6a90",
           "decl": "void player_control_action_test_reset(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6ab0",
           "decl": "char player_control_action_test_accept(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6ad0",
           "decl": "char player_control_action_test_back(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6af0",
           "decl": "char player_control_action_test_action(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6b10",
           "decl": "char player_control_action_test_jump(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6b20",
           "decl": "char player_control_action_test_primary_trigger(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6b30",
           "decl": "char player_control_action_test_grenade_trigger(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6b40",
           "decl": "char player_control_action_test_zoom(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6b50",
           "decl": "char player_control_action_test_move_relative_all_directions(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6b70",
           "decl": "char player_control_action_test_look_relative_all_directions(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6b90",
           "decl": "char player_control_action_test_look_relative_left(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6ba0",
           "decl": "char player_control_action_test_look_relative_right(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6bb0",
           "decl": "char player_control_action_test_look_relative_up(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6bc0",
           "decl": "char player_control_action_test_look_relative_down(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xb6bd0",
@@ -17967,8 +17967,8 @@
         },
         {
           "addr": "0xa2a90",
-          "decl": "float FUN_000a2a90(float a, float t);",
-          "ported": true
+          "decl": "void FUN_000a2a90(void);",
+          "ported": false
         },
         {
           "addr": "0xa2ab0",
@@ -17988,7 +17988,7 @@
         {
           "addr": "0xa2dc0",
           "decl": "void scripted_player_effect_set_translation(int a0, float a1, float a2);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xa2df0",
@@ -20301,8 +20301,8 @@
         },
         {
           "addr": "0xe21e0",
-          "decl": "void D3DXMatrixIdentity(float *m);",
-          "ported": true
+          "decl": "void D3DXMatrixIdentity(void);",
+          "ported": false
         },
         {
           "addr": "0xe2220",
@@ -23094,7 +23094,7 @@
         {
           "addr": "0x184b60",
           "decl": "void render_effects(int a0);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x184de0",
@@ -26172,7 +26172,7 @@
         {
           "addr": "0x1939d0",
           "decl": "void structure_detail_objects_dispose(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1939f0",
@@ -26291,7 +26291,7 @@
         {
           "addr": "0x130f10",
           "decl": "void FUN_00130f10(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x130f30",
@@ -26356,7 +26356,7 @@
         {
           "addr": "0x131a00",
           "decl": "void FUN_00131a00(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x131a20",
@@ -26851,12 +26851,12 @@
         {
           "addr": "0xe3b80",
           "decl": "bool event_controller_index_compatible_with_widget(void *widget, void *event_data);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xe3bb0",
           "decl": "void set_ui_plasma_effect_color(float r, float g, float b, float a);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xe3be0",
@@ -26871,7 +26871,7 @@
         {
           "addr": "0xe3c90",
           "decl": "void ui_widgets_set_fade_value(float fade);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xe3ca0",
@@ -27321,7 +27321,7 @@
         {
           "addr": "0xe9fd0",
           "decl": "char FUN_000e9fd0(void *widget);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xea010",
@@ -27336,7 +27336,7 @@
         {
           "addr": "0xea1f0",
           "decl": "char FUN_000ea1f0(void *widget);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xea210",
@@ -29477,12 +29477,12 @@
         {
           "addr": "0x1a8770",
           "decl": "char FUN_001a8770(void *anim_state@<ecx>);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1a8890",
           "decl": "char FUN_001a8890(void *anim_state@<ecx>);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1a8910",
@@ -29543,7 +29543,7 @@
         {
           "addr": "0x1b5750",
           "decl": "void set_real_quaternion(float *quat, float w, int x, int y, int z);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1b5770",
@@ -31211,33 +31211,33 @@
         },
         {
           "addr": "0x1089a0",
-          "decl": "void FUN_001089a0(int *bounds, int y0, int x0, int y1, int x1);",
-          "ported": true
+          "decl": "void FUN_001089a0(int *bounds, int y0, int x0, int h, int w);",
+          "ported": false
         },
         {
           "addr": "0x1089d0",
-          "decl": "void FUN_001089d0(int *point, int x, int y);",
-          "ported": true
+          "decl": "void FUN_001089d0(void);",
+          "ported": false
         },
         {
           "addr": "0x1089f0",
-          "decl": "void FUN_001089f0(int *point, int dx, int dy);",
-          "ported": true
+          "decl": "void FUN_001089f0(void);",
+          "ported": false
         },
         {
           "addr": "0x108a10",
-          "decl": "int FUN_00108a10(int *rect);",
-          "ported": true
+          "decl": "void FUN_00108a10(void);",
+          "ported": false
         },
         {
           "addr": "0x108a30",
-          "decl": "int FUN_00108a30(int *rect);",
-          "ported": true
+          "decl": "void FUN_00108a30(void);",
+          "ported": false
         },
         {
           "addr": "0x108a50",
-          "decl": "void FUN_00108a50(int *rect, int dy, int dx);",
-          "ported": true
+          "decl": "void FUN_00108a50(void);",
+          "ported": false
         },
         {
           "addr": "0x108a70",
@@ -31261,23 +31261,23 @@
         },
         {
           "addr": "0x108cd0",
-          "decl": "char FUN_00108cd0(int *rect, int *point);",
-          "ported": true
+          "decl": "void FUN_00108cd0(void);",
+          "ported": false
         },
         {
           "addr": "0x108d00",
-          "decl": "int FUN_00108d00(int *outer, int *inner);",
-          "ported": true
+          "decl": "void FUN_00108d00(void);",
+          "ported": false
         },
         {
           "addr": "0x108d40",
-          "decl": "int FUN_00108d40(int *a, int *b);",
-          "ported": true
+          "decl": "void FUN_00108d40(void);",
+          "ported": false
         },
         {
           "addr": "0x108d80",
-          "decl": "int FUN_00108d80(int *a, int *b);",
-          "ported": true
+          "decl": "void FUN_00108d80(void);",
+          "ported": false
         },
         {
           "addr": "0x108db0",
@@ -31286,18 +31286,18 @@
         },
         {
           "addr": "0x108dd0",
-          "decl": "int FUN_00108dd0(unsigned int value);",
+          "decl": "void FUN_00108dd0(void);",
           "ported": false
         },
         {
           "addr": "0x108df0",
-          "decl": "int FUN_00108df0(unsigned int value);",
+          "decl": "void FUN_00108df0(void);",
           "ported": false
         },
         {
           "addr": "0x108e20",
-          "decl": "int FUN_00108e20(unsigned int value);",
-          "ported": true
+          "decl": "void FUN_00108e20(void);",
+          "ported": false
         },
         {
           "addr": "0x108e40",
@@ -31355,7 +31355,7 @@
         {
           "addr": "0x1d94f0",
           "decl": "void FUN_001d94f0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d950d",
@@ -31371,7 +31371,7 @@
         {
           "addr": "0x1dab81",
           "decl": "int crt_isspace(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1daaaa",
@@ -31387,7 +31387,7 @@
           "addr": "0x1dabaa",
           "decl": "int _ispunct(int c);",
           "name": "_ispunct",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dabd3",
@@ -31420,7 +31420,7 @@
         {
           "addr": "0x1d9d60",
           "decl": "void __fclose_lk(void);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "LIBCMT:time.obj",
@@ -31472,7 +31472,7 @@
         {
           "addr": "0x1d99ba",
           "decl": "void FUN_001d99ba(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d99ce",
@@ -31482,7 +31482,7 @@
         {
           "addr": "0x1d99fd",
           "decl": "void __lock_file2(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9a20",
@@ -31503,17 +31503,17 @@
         {
           "addr": "0x1d9a4f",
           "decl": "void __unlock_file2(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9a72",
           "decl": "void __flush(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9acf",
           "decl": "void __fflush_lk(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9afd",
@@ -31523,7 +31523,7 @@
         {
           "addr": "0x1d9b9d",
           "decl": "void FUN_001d9b9d(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9bc9",
@@ -34176,7 +34176,7 @@
         {
           "addr": "0x2fb60",
           "decl": "float arctangent(float y, float x);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x2fb70",
@@ -34689,7 +34689,7 @@
         {
           "addr": "0x493b0",
           "decl": "void FUN_000493B0(float *out, float value, int field_4, int field_8);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x493d0",
@@ -34794,7 +34794,7 @@
         {
           "addr": "0x4a6e0",
           "decl": "void ai_debug_idle_look_clear(int actor_handle);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x4a710",
@@ -34973,7 +34973,7 @@
         {
           "addr": "0x538d0",
           "decl": "int16_t FUN_000538d0(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x538f0",
@@ -38872,7 +38872,7 @@
         {
           "addr": "0x994d0",
           "decl": "void plane_negate(float *plane_in, float *plane_out);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x106390",
@@ -39372,7 +39372,7 @@
         {
           "addr": "0x1e9380",
           "decl": "void D3DDevice_SetRenderState_Deferred(uint32_t reg_index@<ecx>, uint32_t value@<edx>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e9410",
@@ -41264,12 +41264,12 @@
         {
           "addr": "0x001e6a10",
           "decl": "void D3DDevice_GetCreationParameters(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e6a50",
           "decl": "void D3DDevice_SetGammaRamp(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e6ab0",
@@ -41349,7 +41349,7 @@
         {
           "addr": "0x001e6f50",
           "decl": "void D3DDevice_Release(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e6fa0",
@@ -41369,7 +41369,7 @@
         {
           "addr": "0x001e70e0",
           "decl": "void D3DDevice_SetVerticalBlankCallback(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e7140",
@@ -41434,7 +41434,7 @@
         {
           "addr": "0x001e8250",
           "decl": "void D3DDevice_GetRenderTarget(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e82a0",
@@ -41454,7 +41454,7 @@
         {
           "addr": "0x001e86c0",
           "decl": "void D3DDevice_GetTexture2(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e88a0",
@@ -41469,7 +41469,7 @@
         {
           "addr": "0x001e8a00",
           "decl": "void D3DDevice_IsBusy(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e8a40",
@@ -41484,7 +41484,7 @@
         {
           "addr": "0x001e8ad0",
           "decl": "void D3DDevice_GetDisplayFieldStatus(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e8b10",
@@ -41514,7 +41514,7 @@
         {
           "addr": "0x001e9320",
           "decl": "void D3DDevice_SetRenderState_PSTextureModes(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e93a0",
@@ -41869,7 +41869,7 @@
         {
           "addr": "0x001eeac0",
           "decl": "void D3D_GetAdapterIdentifier(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001eeaf0",
@@ -42039,7 +42039,7 @@
         {
           "addr": "0x001f9165",
           "decl": "void D3D_ClearStateBlockFlags(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001f91a1",
