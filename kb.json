@@ -5198,13 +5198,15 @@
         },
         {
           "addr": "0xa5590",
-          "decl": "void FUN_000a5590(void);",
-          "ported": false
+          "decl": "float FUN_000a5590(float x, float y);",
+          "ported": false,
+          "name": "FUN_000a5590"
         },
         {
           "addr": "0xa55e0",
-          "decl": "void FUN_000a55e0(void);",
-          "ported": false
+          "decl": "float FUN_000a55e0(float a, float b, float c, float d);",
+          "ported": false,
+          "name": "FUN_000a55e0"
         },
         {
           "addr": "0xa5610",
@@ -5223,8 +5225,9 @@
         },
         {
           "addr": "0xa57b0",
-          "decl": "void FUN_000a57b0(int *out, float value, int field0);",
-          "ported": false
+          "decl": "char FUN_000a57b0(float *vec, float max_len);",
+          "ported": false,
+          "name": "FUN_000a57b0"
         },
         {
           "addr": "0xa5810",
@@ -17728,13 +17731,14 @@
         {
           "addr": "0xb65c0",
           "decl": "int player_control_get_aiming_unit_index(int16_t local_player_index);",
-          "ported": false,
+          "ported": true,
           "name": "player_control_get_aiming_unit_index"
         },
         {
           "addr": "0xb6620",
           "decl": "int player_control_get_target_object_index(int16_t local_player_index);",
-          "ported": false
+          "ported": true,
+          "name": "player_control_get_target_object_index"
         },
         {
           "addr": "0xb6690",
@@ -17760,7 +17764,7 @@
         {
           "addr": "0xb6940",
           "decl": "float player_control_get_autoaim_level(int16_t local_player_index);",
-          "ported": false,
+          "ported": true,
           "name": "player_control_get_autoaim_level"
         },
         {
@@ -28363,7 +28367,8 @@
         {
           "addr": "0x1a1b90",
           "decl": "int biped_approximate_surface_index(int unit_handle, float *out_point);",
-          "ported": false
+          "ported": true,
+          "name": "biped_approximate_surface_index"
         },
         {
           "addr": "0x1a1bc0",
@@ -29578,7 +29583,8 @@
         {
           "addr": "0x1b5680",
           "decl": "char vehicle_is_flipped(int vehicle_handle);",
-          "ported": false
+          "ported": false,
+          "name": "vehicle_is_flipped"
         },
         {
           "addr": "0x1b56b0",
@@ -33726,7 +33732,8 @@
         {
           "addr": "0xfc710",
           "decl": "int16_t weapon_rotate_zoom_level(int weapon_handle, int16_t zoom_level);",
-          "ported": false
+          "ported": true,
+          "name": "weapon_rotate_zoom_level"
         },
         {
           "addr": "0xfc780",
@@ -36191,7 +36198,7 @@
         {
           "addr": "0x64970",
           "decl": "int prop_orphan_from_friend(int actor_handle, int parent_prop, int source_prop);",
-          "ported": false,
+          "ported": true,
           "name": "prop_orphan_from_friend"
         },
         {
