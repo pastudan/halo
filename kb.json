@@ -3828,7 +3828,8 @@
         },
         {
           "addr": "0x416e0",
-          "decl": "int ai_test_line_of_sight(float *origin, int bsp, float *target, int param_4, short param_5, char param_6, int param_7, char param_8);"
+          "decl": "int ai_test_line_of_sight(float *origin, int bsp, float *target, int param_4, short param_5, char param_6, int param_7, char param_8);",
+          "ported": false
         },
         {
           "addr": "0x413c0",
@@ -3842,11 +3843,13 @@
         },
         {
           "addr": "0x3f900",
-          "decl": "void ai_adjust_damage(int player_index, void *damage_params, float *scale);"
+          "decl": "void ai_adjust_damage(int player_index, void *damage_params, float *scale);",
+          "ported": false
         },
         {
           "addr": "0x3f350",
-          "decl": "int FUN_0003f350(int unit_handle, int spawn_tag, int16_t count, float radius);"
+          "decl": "int FUN_0003f350(int unit_handle, int spawn_tag, int16_t count, float radius);",
+          "ported": false
         },
         {
           "addr": "0x3f770",
@@ -3885,11 +3888,13 @@
         },
         {
           "addr": "0x3fb40",
-          "decl": "void ai_find_inactive_encounters(void);"
+          "decl": "void ai_find_inactive_encounters(void);",
+          "ported": false
         },
         {
           "addr": "0x3fc90",
-          "decl": "void ai_release_inactive_encounters(void);"
+          "decl": "void ai_release_inactive_encounters(void);",
+          "ported": false
         },
         {
           "addr": "0x3fe30",
@@ -3908,7 +3913,8 @@
         },
         {
           "addr": "0x40150",
-          "decl": "void ai_handle_allegiance_broken_notification(void);"
+          "decl": "void ai_handle_allegiance_broken_notification(void);",
+          "ported": false
         },
         {
           "addr": "0x40360",
@@ -3917,7 +3923,8 @@
         },
         {
           "addr": "0x40460",
-          "decl": "void ai_handle_damage(void);"
+          "decl": "void ai_handle_damage(void);",
+          "ported": false
         },
         {
           "addr": "0x40690",
@@ -3926,11 +3933,13 @@
         },
         {
           "addr": "0x40700",
-          "decl": "void ai_handle_deleted_object(void);"
+          "decl": "void ai_handle_deleted_object(void);",
+          "ported": false
         },
         {
           "addr": "0x40860",
-          "decl": "void ai_handle_unit_effect(int unit_handle, int effect_type, int priority);"
+          "decl": "void ai_handle_unit_effect(int unit_handle, int effect_type, int priority);",
+          "ported": false
         },
         {
           "addr": "0x409e0",
@@ -3944,7 +3953,8 @@
         },
         {
           "addr": "0x40a80",
-          "decl": "void ai_disconnect_from_structure_bsp(void);"
+          "decl": "void ai_disconnect_from_structure_bsp(void);",
+          "ported": false
         },
         {
           "addr": "0x40f80",
@@ -3958,15 +3968,18 @@
         },
         {
           "addr": "0x41250",
-          "decl": "void ai_consider_major_upgrade(void);"
+          "decl": "void ai_consider_major_upgrade(void);",
+          "ported": false
         },
         {
           "addr": "0x41ad0",
-          "decl": "char ai_test_ballistic_line_of_fire(int actor_handle, int param_2, int target, float *impact_point, float accel, int param_6, char param_7);"
+          "decl": "char ai_test_ballistic_line_of_fire(int actor_handle, int param_2, int target, float *impact_point, float accel, int param_6, char param_7);",
+          "ported": false
         },
         {
           "addr": "0x41e80",
-          "decl": "void ai_handle_editing(void);"
+          "decl": "void ai_handle_editing(void);",
+          "ported": false
         }
       ],
       "name": "ai.obj",

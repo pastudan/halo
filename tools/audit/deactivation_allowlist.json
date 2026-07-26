@@ -15720,5 +15720,96 @@
     "object": "first_person_weapons.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x416e0",
+    "name": "ai_test_line_of_sight",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x3f900",
+    "name": "ai_adjust_damage",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x3f350",
+    "name": "FUN_0003f350",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x3fb40",
+    "name": "ai_find_inactive_encounters",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x3fc90",
+    "name": "ai_release_inactive_encounters",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x40150",
+    "name": "ai_handle_allegiance_broken_notification",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x40460",
+    "name": "ai_handle_damage",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x40700",
+    "name": "ai_handle_deleted_object",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x40860",
+    "name": "ai_handle_unit_effect",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x40a80",
+    "name": "ai_disconnect_from_structure_bsp",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x41250",
+    "name": "ai_consider_major_upgrade",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x41ad0",
+    "name": "ai_test_ballistic_line_of_fire",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x41e80",
+    "name": "ai_handle_editing",
+    "object": "ai.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
