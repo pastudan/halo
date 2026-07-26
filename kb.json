@@ -2772,7 +2772,7 @@
         },
         {
           "addr": "0x1ef90",
-          "decl": "char actor_action_handle_lost_contact(int actor_handle);",
+          "decl": "int actor_action_handle_lost_contact(void);",
           "ported": false
         },
         {
@@ -12285,7 +12285,7 @@
         },
         {
           "addr": "0xc9c10",
-          "decl": "void FUN_000c9c10(int object_handle, float value);",
+          "decl": "float FUN_000c9c10(int object_handle, float value);",
           "ported": false
         },
         {
@@ -20295,7 +20295,7 @@
         },
         {
           "addr": "0xe1f20",
-          "decl": "void FUN_000e1f20(void);",
+          "decl": "void FUN_000e1f20(int a0, int a1, int a2, int a3, int a4, int a5);",
           "ported": false
         },
         {
@@ -26646,7 +26646,7 @@
         },
         {
           "addr": "0x83930",
-          "decl": "int FUN_00083930(int af @<ecx>, int type @<edx>, int protocol @<eax>);",
+          "decl": "* via FUN_00083930 (regarg: ECX=af, EDX=type, EAX=protocol) and binds to * any address/port via FUN_00083ce0. Then calls xnet_recvfrom (0x225cd1, * stdcall 6 args). On success, converts the sender's sockaddr_in to the * custom address format: addr[0]=ntohl(ip), addr+0x10=4, addr+0x12=ntohs(port). * On failure, classifies the Winsock error: * WSAEWOULDBLOCK (0x2733) -> return -4 * Disconnect family (0x2744-0x274c) -> clear bits 0,2 of flags, return -3 * Other -> clear bit 2 of flags, return -2 * * Confirmed: FUN_00083930 (0x83930, regarg ECX/EDX/EAX, creates socket);",
           "ported": false
         },
         {
@@ -33920,7 +33920,7 @@
         },
         {
           "addr": "0x22b40",
-          "decl": "void FUN_00022b40(int actor_handle @<ebx>, float *aim_vector @<esi>);",
+          "decl": "* FUN_00022b40 (actor_handle in EBX, &aim point in ESI). * * It then runs the ballistic firing solution (actor_combat_compute_ballistic_ * solution), and if the actor currently has no live grenade target * (actor+0x158 == -1), derives the throw direction from the cached aim * (actor+0x6bc/0x6c0/0x6c4): it normalizes the planar (x,y) part, and when * that planar direction points far enough off the actor facing * (actor+0x174/0x178), it rotates the actor-facing normal by a fixed cos * (0x3f5db3d7) and a +/- sin (*0x253398, sign from the planar cross sign), * rescales by the original planar magnitude, asserts the result is a valid * real normal, and adopts it as the new aim vector. * * Finally the chosen vector is scaled by the throw speed (actor+0x6c8) and * written to out_aim_vector. Returns the prop datum (or -1). * * VC71 75.0% (168/176 insns) is a STRUCTURAL ceiling: x87 op scheduling * (faddp/fsqrt order), register allocation (ebx vs edi for the arg, reg-vs-stack * -1 init), and byte/dword compare idioms (jle/jl, testl/testb). The * display_assert(...,0x749,1);",
           "ported": false
         },
         {

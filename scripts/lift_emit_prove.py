@@ -37,9 +37,59 @@ import lift_assert_wrappers as law  # noqa: E402
 import lift_thin_wrappers as ltw  # noqa: E402
 import lifter_j as lj  # noqa: E402
 import lifter_interface as li  # noqa: E402
+import lift_jmp_thunks as ljt  # noqa: E402
 
 SKIP = ("xdk/", "d3d", "dsound", "libcmt", "bink", "xnet", "xapilib", "kb_common")
 COMMIT_EVERY = 8
+KW = frozenset(
+    {
+        "if",
+        "for",
+        "while",
+        "switch",
+        "return",
+        "sizeof",
+        "void",
+        "int",
+        "char",
+        "short",
+        "float",
+        "double",
+        "const",
+        "unsigned",
+        "signed",
+        "bool",
+        "uint8_t",
+        "uint16_t",
+        "uint32_t",
+        "int8_t",
+        "int16_t",
+        "int32_t",
+    }
+)
+
+
+def same_tu_unproven(
+    body: str,
+    src: str,
+    name: str,
+    name_by: dict,
+    src_by: dict,
+    ported: dict,
+) -> str | None:
+    """Return callee name if body calls a same-TU still-unproven function."""
+    addr_by_name = {v: k for k, v in name_by.items()}
+    src_n = (src or "").replace("\\", "/")
+    for c in re.findall(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(", body):
+        if c == name or c in KW:
+            continue
+        ca = addr_by_name.get(c)
+        if ca is None:
+            continue
+        cal_src = (src_by.get(ca) or "").replace("\\", "/")
+        if cal_src == src_n and ported.get(ca) is not True:
+            return c
+    return None
 
 
 
@@ -134,13 +184,18 @@ def merge_remote() -> None:
         print(f"merged {n} remote ported:true", flush=True)
 
 
-def commit_chunk(n: int, touched: set[Path]) -> str | None:
+def commit_chunk(n: int, touched: set[Path], label: str = "emit") -> str | None:
     merge_remote()
-    files = ["kb.json", "scripts/lift_emit_prove.py", "scripts/tu_compile.py"]
+    files = [
+        "kb.json",
+        "scripts/lift_emit_prove.py",
+        "scripts/lift_thin_wrappers.py",
+        "scripts/tu_compile.py",
+    ]
     for p in touched:
         files.append(str(p.relative_to(ROOT)))
     subprocess.run(["git", "add"] + files, cwd=ROOT, check=False)
-    msg = f"lift(track-a): emit+Docker Unicorn-prove {n} (ported:true)."
+    msg = f"lift(track-a): {label} Unicorn-prove {n} (ported:true)."
     r = subprocess.run(["git", "commit", "-m", msg], cwd=ROOT, capture_output=True, text=True)
     if r.returncode != 0:
         print("commit failed", r.stdout, r.stderr, flush=True)
@@ -164,6 +219,12 @@ def main() -> int:
     ap.add_argument("--commit-every", type=int, default=COMMIT_EVERY)
     ap.add_argument("--max-size", type=int, default=200)
     ap.add_argument("--prefer", action="append", default=[])
+    ap.add_argument(
+        "--skip-same-tu-unproven",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Skip lifts that call same-TU naked/unproven callees (default: on)",
+    )
     args = ap.parse_args()
 
     merge_remote()
@@ -174,6 +235,7 @@ def main() -> int:
     true0, false0 = count_ported(kb)
 
     jobs = []
+    skipped_same = 0
     for i, ai in enumerate(starts):
         if ported.get(ai) is not False:
             continue
@@ -192,13 +254,20 @@ def main() -> int:
         if not is_naked_near_def(sp.read_text(errors="replace").splitlines(), name, hex(ai)):
             continue
         try:
-            raw = xbe_bytes(xbe, ai, min(end, ai + args.max_size) - ai)
+            # Prefer end address (library also accepts length if end<=va).
+            raw = xbe_bytes(xbe, ai, min(end, ai + args.max_size))
         except Exception:
-            continue
+            try:
+                raw = xbe_bytes(xbe, ai, min(end, ai + args.max_size) - ai)
+            except Exception:
+                continue
         ops = []
         for insn in md.disasm(raw, ai):
             ops.append((insn.mnemonic, insn.op_str))
             if insn.mnemonic in ("ret", "retn"):
+                break
+            if insn.mnemonic == "jmp" and len(ops) <= 4:
+                # pure / frame-tail jmp thunk
                 break
         else:
             continue
@@ -211,6 +280,11 @@ def main() -> int:
         if not body and ai in lj.HAND:
             body = lj.HAND[ai][2]
             kind = "hand"
+        if not body:
+            thunk = ljt.try_emit_thunk(ops, decl, name, name_by)
+            if thunk:
+                body, _tgt = thunk
+                kind = "jmp"
         if not body:
             body = law.try_emit(ops, decl, name, name_by)
             kind = "assert" if body else None
@@ -227,17 +301,27 @@ def main() -> int:
             continue
         if re.search(r"\(\s*(void|int|char|[^*)]+)\s*\(\s*\*", body):
             continue
+        if args.skip_same_tu_unproven:
+            bad = same_tu_unproven(body, src, name, name_by, src_by, ported)
+            if bad:
+                skipped_same += 1
+                continue
         jobs.append((ai, name, src, sp, body, kind))
 
-    jobs.sort(key=lambda j: (0 if j[5] == "hand" else 1, j[0]))
+    jobs.sort(key=lambda j: (0 if j[5] in ("hand", "iface_hand") else 1, j[0]))
     if args.limit:
         jobs = jobs[: args.limit]
-    print(f"emit-prove jobs={len(jobs)} true={true0} false={false0}", flush=True)
+    print(
+        f"emit-prove jobs={len(jobs)} skip_same_tu={skipped_same} "
+        f"true={true0} false={false0}",
+        flush=True,
+    )
 
     flips: list[str] = []
     shas: list[str] = []
     touched: set[Path] = set()
     since = 0
+    kind_counts: dict[str, int] = {}
 
     for ai, name, src, sp, body, kind in jobs:
         print(f"\n== {hex(ai)} {name} [{kind}] ({src}) ==", flush=True)
@@ -322,16 +406,20 @@ def main() -> int:
             since += 1
             touched.add(sp)
             ported[ai] = True
+            kind_counts[kind or "unk"] = kind_counts.get(kind or "unk", 0) + 1
             print(f"  FLIP total={len(flips)}", flush=True)
         if args.commit_every and since >= args.commit_every:
-            sha = commit_chunk(since, touched)
+            label = "+".join(sorted(kind_counts)) or "emit"
+            sha = commit_chunk(since, touched, label=label)
             if sha:
                 shas.append(sha)
             since = 0
             touched.clear()
+            kind_counts.clear()
 
     if since:
-        sha = commit_chunk(since, touched)
+        label = "+".join(sorted(kind_counts)) or "emit"
+        sha = commit_chunk(since, touched, label=label)
         if sha:
             shas.append(sha)
 
@@ -343,7 +431,8 @@ def main() -> int:
         "true0": true0,
         "true1": true1,
         "false1": false1,
-        "delta": true1 - 4699,
+        "delta": true1 - true0,
+        "skip_same_tu": skipped_same,
     }
     Path("/tmp/lift_emit_prove.json").write_text(json.dumps(summary, indent=2))
     print("DONE", summary, flush=True)

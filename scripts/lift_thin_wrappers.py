@@ -137,6 +137,98 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
                 f"}}\n"
             )
 
+    # texture_cache_delete: mov eax,[g1]; push; call F; mov ecx,[g2]; push; call G; add esp,8
+    if (
+        len(body) == 7
+        and body[0][0] == "mov"
+        and "dword ptr [0x" in body[0][1]
+        and body[1] == ("push", "eax")
+        and body[2][0] == "call"
+        and body[3][0] == "mov"
+        and "dword ptr [0x" in body[3][1]
+        and body[4] == ("push", "ecx")
+        and body[5][0] == "call"
+        and body[6][0] == "add"
+    ):
+        f1, f2 = callee(body[2][1]), callee(body[5][1])
+        g1 = re.search(r"\[0x([0-9a-fA-F]+)\]", body[0][1])
+        g2 = re.search(r"\[0x([0-9a-fA-F]+)\]", body[3][1])
+        if f1 and f2 and g1 and g2:
+            return (
+                f"{sig}\n{{\n"
+                f"  {f1}(*(void **)0x{g1.group(1)});\n"
+                f"  {f2}(*(void **)0x{g2.group(1)});\n"
+                f"}}\n"
+            )
+
+    # texture_cache_flush: call F; call G; mov eax,[g]; push eax; call H; pop ecx
+    if (
+        len(body) == 6
+        and body[0][0] == "call"
+        and body[1][0] == "call"
+        and body[2][0] == "mov"
+        and "dword ptr [0x" in body[2][1]
+        and body[3] == ("push", "eax")
+        and body[4][0] == "call"
+        and body[5][0] in ("pop", "add")
+    ):
+        f1, f2, f3 = callee(body[0][1]), callee(body[1][1]), callee(body[4][1])
+        g = re.search(r"\[0x([0-9a-fA-F]+)\]", body[2][1])
+        if f1 and f2 and f3 and g:
+            return (
+                f"{sig}\n{{\n"
+                f"  {f1}();\n"
+                f"  {f2}();\n"
+                f"  {f3}(*(void **)0x{g.group(1)});\n"
+                f"}}\n"
+            )
+
+    # conditional CloseHandle-style: mov eax,[g]; test eax,eax; je L; push eax; call F; ret
+    if (
+        len(body) == 5
+        and body[0][0] == "mov"
+        and "dword ptr [0x" in body[0][1]
+        and body[1] == ("test", "eax, eax")
+        and body[2][0] == "je"
+        and body[3] == ("push", "eax")
+        and body[4][0] == "call"
+    ):
+        fn = callee(body[4][1])
+        g = re.search(r"\[0x([0-9a-fA-F]+)\]", body[0][1])
+        if fn and g:
+            return (
+                f"{sig}\n{{\n"
+                f"  void *h = *(void **)0x{g.group(1)};\n"
+                f"  if (h)\n"
+                f"    {fn}(h);\n"
+                f"}}\n"
+            )
+
+    # dual esi-imm register-arg calls: push esi; mov esi,imm; call F; mov esi,imm; call F; pop esi
+    if (
+        len(body) == 6
+        and body[0] == ("push", "esi")
+        and body[1][0] == "mov"
+        and body[1][1].startswith("esi,")
+        and body[2][0] == "call"
+        and body[3][0] == "mov"
+        and body[3][1].startswith("esi,")
+        and body[4][0] == "call"
+        and body[5] == ("pop", "esi")
+    ):
+        f1, f2 = callee(body[2][1]), callee(body[4][1])
+        a1 = body[1][1].split(",", 1)[1].strip()
+        a2 = body[3][1].split(",", 1)[1].strip()
+        if f1 and f2 and f1 == f2 and re.match(r"0x[0-9a-fA-F]+$", a1) and re.match(
+            r"0x[0-9a-fA-F]+$", a2
+        ):
+            return (
+                f"{sig}\n{{\n"
+                f"  {f1}((const char *){a1});\n"
+                f"  {f1}((const char *){a2});\n"
+                f"}}\n"
+            )
+
     if not (
         len(body) >= 3
         and body[0] == ("push", "ebp")
@@ -328,6 +420,215 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
         )
 
 
+    # store imm pointer through arg0: mov eax,[ebp+8]; mov dword ptr [eax], imm
+    if (
+        len(mid) == 2
+        and mid[0] == ("mov", "eax, dword ptr [ebp + 8]")
+        and mid[1][0] == "mov"
+        and mid[1][1].startswith("dword ptr [eax],")
+    ):
+        imm = mid[1][1].split(",", 1)[1].strip()
+        if not ps:
+            sig = f"void {name}(void **out)"
+            ps = ["out"]
+        return f"{sig}\n{{\n  *(uint32_t *){ps[0]} = (uint32_t){imm};\n}}\n"
+
+    # if (flag) tail-jmp F; else return — pop ebp; jmp F / pop ebp
+    if (
+        len(mid) == 5
+        and mid[0] == ("mov", "al, byte ptr [ebp + 8]")
+        and mid[1] == ("test", "al, al")
+        and mid[2][0] == "je"
+        and mid[3] == ("pop", "ebp")
+        and mid[4][0] == "jmp"
+    ):
+        # ops include trailing pop ebp; ret after je target — handled by frame mid
+        fn = callee(mid[4][1])
+        if fn:
+            if not ps:
+                sig = f"void {name}(char flag)"
+                ps = ["flag"]
+            return f"{sig}\n{{\n  if ({ps[0]})\n    {fn}();\n}}\n"
+
+    # random_seed_get_direction3d(get_global_random_seed_address(), out)
+    # push out; call get_seed; push eax; call direction3d; add esp,8
+    if (
+        len(mid) == 6
+        and mid[0] == ("mov", "eax, dword ptr [ebp + 8]")
+        and mid[1] == ("push", "eax")
+        and mid[2][0] == "call"
+        and mid[3] == ("push", "eax")
+        and mid[4][0] == "call"
+        and mid[5][0] == "add"
+    ):
+        f1, f2 = callee(mid[2][1]), callee(mid[4][1])
+        if f1 and f2:
+            if not ps:
+                sig = f"void {name}(float *out_direction)"
+                ps = ["out_direction"]
+            return f"{sig}\n{{\n  {f2}({f1}(), {ps[0]});\n}}\n"
+
+    # endpoint init: [p+8]=0; t=system_milliseconds(); [p]=t; [p+4]=0
+    if (
+        len(mid) == 7
+        and mid[0] == ("push", "esi")
+        and mid[1] == ("mov", "esi, dword ptr [ebp + 8]")
+        and mid[2] == ("mov", "dword ptr [esi + 8], 0")
+        and mid[3][0] == "call"
+        and mid[4] == ("mov", "dword ptr [esi], eax")
+        and mid[5] == ("mov", "dword ptr [esi + 4], 0")
+        and mid[6] == ("pop", "esi")
+    ):
+        fn = callee(mid[3][1])
+        if fn:
+            sig = f"void {name}(unsigned int *ep)"
+            return (
+                f"{sig}\n{{\n"
+                f"  ep[2] = 0;\n"
+                f"  ep[0] = {fn}();\n"
+                f"  ep[1] = 0;\n"
+                f"}}\n"
+            )
+
+    # store float at arg0+8 then vector_to_angles(arg0, arg2)
+    if (
+        len(mid) == 8
+        and mid[0] == ("mov", "ecx, dword ptr [ebp + 0x10]")
+        and mid[1] == ("fld", "dword ptr [ebp + 0xc]")
+        and mid[2] == ("mov", "eax, dword ptr [ebp + 8]")
+        and mid[3] == ("push", "ecx")
+        and mid[4] == ("fstp", "dword ptr [eax + 8]")
+        and mid[5] == ("push", "eax")
+        and mid[6][0] == "call"
+        and mid[7][0] == "add"
+    ):
+        fn = callee(mid[6][1])
+        if fn:
+            sig = f"void {name}(float *angles, float pitch, float *vec)"
+            return (
+                f"{sig}\n{{\n"
+                f"  angles[2] = pitch;\n"
+                f"  {fn}(angles, vec);\n"
+                f"}}\n"
+            )
+
+    # tag_get(group, idx); store idx to global
+    if (
+        len(mid) == 7
+        and mid[0] == ("push", "esi")
+        and mid[1] == ("mov", "esi, dword ptr [ebp + 8]")
+        and mid[2] == ("push", "esi")
+        and mid[3][0] == "push"
+        and re.match(r"0x[0-9a-fA-F]+$", mid[3][1])
+        and mid[4][0] == "call"
+        and mid[5][0] == "add"
+        and mid[6][0] == "mov"
+        and "dword ptr [0x" in mid[6][1]
+        and mid[6][1].endswith(", esi")
+    ):
+        fn = callee(mid[4][1])
+        g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[6][1])
+        if fn and g:
+            sig = f"void {name}(int tag_index)"
+            return (
+                f"{sig}\n{{\n"
+                f"  {fn}({mid[3][1]}, tag_index);\n"
+                f"  *(int *)0x{g.group(1)} = tag_index;\n"
+                f"}}\n"
+            )
+
+    # cinematic letterbox: store flag at [g]+8; if flag: [g]+4 = game_time_get()
+    if (
+        len(mid) >= 6
+        and mid[0] == ("mov", "al, byte ptr [ebp + 8]")
+        and mid[1] == ("test", "al, al")
+        and mid[2][0] == "mov"
+        and "dword ptr [0x" in mid[2][1]
+        and mid[3][0] == "mov"
+        and "byte ptr [" in mid[3][1]
+        and "+ 8]" in mid[3][1]
+        and mid[4][0] == "je"
+    ):
+        g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[2][1])
+        rest = mid[5:]
+        if (
+            g
+            and len(rest) >= 3
+            and rest[0][0] == "call"
+            and rest[1][0] == "mov"
+            and "dword ptr [0x" in rest[1][1]
+            and rest[2][0] == "mov"
+            and "dword ptr [" in rest[2][1]
+            and "+ 4]" in rest[2][1]
+        ):
+            fn = callee(rest[0][1])
+            if fn:
+                if not ps:
+                    sig = f"void {name}(char show)"
+                    ps = ["show"]
+                return (
+                    f"{sig}\n{{\n"
+                    f"  void *p = *(void **)0x{g.group(1)};\n"
+                    f"  *((char *)p + 8) = (char){ps[0]};\n"
+                    f"  if ({ps[0]})\n"
+                    f"    *(int *)((char *)p + 4) = {fn}();\n"
+                    f"}}\n"
+                )
+
+    # player_effect_screen_fade_{in,out}: DAT_ loads + game_time_get
+    if (
+        len(mid) >= 12
+        and mid[0][0] == "mov"
+        and "dword ptr [0x" in mid[0][1]
+        and mid[1] == ("fld", "dword ptr [ebp + 8]")
+        and mid[2] == ("mov", "ecx, dword ptr [ebp + 0xc]")
+        and mid[3][0] == "fstp"
+        and "0x3b0]" in mid[3][1]
+        and any(m == "call" for m, _ in mid)
+    ):
+        g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[0][1])
+        call_i = next(i for i, (m, _) in enumerate(mid) if m == "call")
+        fn = callee(mid[call_i][1])
+        flag_m = None
+        for mnem, op in mid:
+            mm = re.match(r"byte ptr \[eax \+ 0x3c2\], (0x[0-9a-f]+|\d+)$", op)
+            if mnem == "mov" and mm:
+                flag_m = mm.group(1)
+        if g and fn and flag_m is not None:
+            sig = f"void {name}(float a0, int a1, int a2, short a3)"
+            return (
+                f"{sig}\n{{\n"
+                f"  char *p = *(char **)0x{g.group(1)};\n"
+                f"  *(float *)(p + 0x3b0) = a0;\n"
+                f"  *(int *)(p + 0x3b4) = a1;\n"
+                f"  *(int *)(p + 0x3b8) = a2;\n"
+                f"  *(short *)(p + 0x3c0) = a3;\n"
+                f"  p[0x3c2] = (char){flag_m};\n"
+                f"  *(int *)(p + 0x3bc) = {fn}();\n"
+                f"}}\n"
+            )
+
+    # HS ebx-reg wrapper: mov eax,arg1; push ebx; mov ebx,arg0; push imm; push imm; push eax; call F
+    if (
+        len(mid) == 8
+        and mid[0] == ("mov", "eax, dword ptr [ebp + 0xc]")
+        and mid[1] == ("push", "ebx")
+        and mid[2] == ("mov", "ebx, dword ptr [ebp + 8]")
+        and mid[3][0] == "push"
+        and mid[4][0] == "push"
+        and mid[5] == ("push", "eax")
+        and mid[6][0] == "call"
+        and mid[7][0] == "add"
+    ):
+        fn = callee(mid[6][1])
+        if fn:
+            sig = f"void {name}(int object_handle, int scenario_index)"
+            return (
+                f"{sig}\n{{\n"
+                f"  {fn}(scenario_index, {mid[4][1]}, {mid[3][1]}, object_handle);\n"
+                f"}}\n"
+            )
+
     # object_get + tag_get → return 1
     if (
         len(mid) == 10
@@ -500,6 +801,18 @@ def _emit_general_forward(mid, ret_op, sig, ps, is_void, name_by, callee):
                     stack.append(op)
                 continue
             return None
+        return None
+
+    # Reject register-arg ABIs (eax/ecx/edx loaded from args but never pushed).
+    dangling = set()
+    for mnem, op in pre:
+        if mnem in ("mov", "movsx", "lea"):
+            m = re.match(r"(eax|ecx|edx),", op)
+            if m:
+                dangling.add(m.group(1))
+        elif mnem == "push" and op in dangling:
+            dangling.discard(op)
+    if dangling:
         return None
 
     # cdecl stack: last push is first arg
