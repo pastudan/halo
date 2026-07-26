@@ -1,5 +1,6 @@
 /* 0x1544d0 - accumulate float by delta and clamp/wrap within bounds. */
-void FUN_001544d0(float *param_1, float *param_2, char param_3, float param_4)
+__declspec(noinline) void FUN_001544d0(float *param_1, float *param_2, char param_3,
+                                       float param_4)
 {
   param_4 = param_4 + *param_1;
   *param_1 = param_4;
@@ -113,7 +114,7 @@ void FUN_00154270(int object_handle, void *buffer_a, void *buffer_b,
 }
 
 /* 0x154540 — integrate a scalar channel with asymmetric accel limits. */
-void FUN_00154540(float *accum, float *coeffs, float scale)
+__declspec(noinline) void FUN_00154540(float *accum, float *coeffs, float scale)
 {
   float abs_scale;
   float accel_pos;
@@ -147,71 +148,94 @@ void FUN_00154540(float *accum, float *coeffs, float scale)
   }
 }
 
-/* 0x154630 */
-void FUN_00154630(void)
+/* 0x154630 — integrate a scalar toward target; return 1 if reached/clamped. */
+char FUN_00154630(float *accum, float *coeffs, float target, float scale)
 {
-  int eax = 0;
-
-  /* test (char)eax, 0x41 -> jne 0x154673 */
-  FUN_00154540(0, 0, 0.0f);
-  FUN_00154540(0, 0, 0.0f);
-  /* test (char)eax, 1 -> je 0x154668 */
-
-  (void)eax;
+  if (*accum > target) {
+    FUN_00154540(accum, coeffs, -scale);
+    if (*accum <= target) {
+      *accum = target;
+      return 1;
+    }
+    return 0;
+  }
+  if (*accum >= target)
+    return 0;
+  FUN_00154540(accum, coeffs, scale);
+  if (*accum >= target) {
+    *accum = target;
+    return 1;
+  }
+  return 0;
 }
 
-/* 0x1546b0 */
-void FUN_001546b0(void)
+/* 0x1546b0 — integrate rate then accumulate/wrap position. */
+void FUN_001546b0(float *accum, float *rate, float *coeffs, char wrap_flag,
+                  float scale)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  FUN_00154540(0, 0, 0.0f);
-  FUN_001544d0((float *)(uintptr_t)ecx, (float *)(uintptr_t)esi, eax, 0.0f);
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  FUN_00154540(rate, coeffs + 2, scale);
+  FUN_001544d0(accum, coeffs, wrap_flag, *rate);
 }
 
-/* 0x1546f0 */
-void FUN_001546f0(void)
+/* 0x1546f0 — signed unit step from `from` toward `to` (optional wrap). */
+__declspec(noinline) float FUN_001546f0(float *bounds, float from, char wrap_flag,
+                                        float to)
 {
-  /* relift: no calls detected — manual review */
+  float delta;
+
+  delta = to - from;
+  if (delta == *(float *)0x2533c0)
+    return delta;
+  if (wrap_flag != '\0') {
+    if (fabsf(delta) > (*(float *)0x253398) * (bounds[0] - bounds[1]))
+      delta = -delta;
+  }
+  if (delta > *(float *)0x2533c0)
+    return *(float *)0x2533c8;
+  return *(float *)0x255e94;
 }
 
-/* 0x154750 */
-void FUN_00154750(void)
+/* 0x154750 — step accum toward target by signed scale; clamp on cross/zero. */
+char FUN_00154750(float *accum, float *bounds, char wrap_flag, float target,
+                  float scale)
 {
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
+  float sign;
+  float sign2;
 
-  FUN_001546f0();
-  FUN_001544d0((float *)(uintptr_t)esi, (float *)(uintptr_t)ebx, edi, 0.0f);
-  FUN_001546f0();
-
-  (void)ebx;
-  (void)esi;
-  (void)edi;
+  sign = FUN_001546f0(bounds, *accum, wrap_flag, target);
+  if (sign == *(float *)0x2533c0) {
+    *accum = target;
+    return 1;
+  }
+  FUN_001544d0(accum, bounds, wrap_flag, sign * scale);
+  sign2 = FUN_001546f0(bounds, *accum, wrap_flag, target);
+  if (sign2 == sign)
+    return 0;
+  *accum = target;
+  return 1;
 }
 
-/* 0x1547d0 */
-void FUN_001547d0(void)
+/* 0x1547d0 — integrate rate toward target, accumulate, clamp on cross/zero. */
+char FUN_001547d0(float *accum, float *rate, float *bounds, char wrap_flag,
+                  float target, float scale)
 {
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
+  float sign;
+  float sign2;
 
-  FUN_001546f0();
-  FUN_00154540(0, 0, 0.0f);
-  FUN_001544d0((float *)(uintptr_t)edi, (float *)(uintptr_t)esi, ebx, 0.0f);
-  FUN_001546f0();
-
-  (void)ebx;
-  (void)esi;
-  (void)edi;
+  sign = FUN_001546f0(bounds, *accum, wrap_flag, target);
+  if (sign == *(float *)0x2533c0) {
+    *accum = target;
+    *rate = *(float *)0x2533c0;
+    return 1;
+  }
+  FUN_00154540(rate, bounds + 2, sign * scale);
+  FUN_001544d0(accum, bounds, wrap_flag, *rate);
+  sign2 = FUN_001546f0(bounds, *accum, wrap_flag, target);
+  if (sign2 == sign)
+    return 0;
+  *accum = target;
+  *rate = *(float *)0x2533c0;
+  return 1;
 }
 
 /* 0x1548c0 — lerp point_physics_definition fields by t in [0,1]. */

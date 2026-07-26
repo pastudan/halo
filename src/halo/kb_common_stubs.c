@@ -8551,13 +8551,13 @@ void FUN_00152e40(int object_handle, void *buffer_a, void *buffer_b, float *forc
   FUN_001544d0((float *)(uintptr_t)ecx, (float *)(uintptr_t)esi, eax, 0.0f);
   /* test (char)eax, (char)eax -> je 0x154727 */
   /* test (char)eax, 0x41 -> jne 0x15473c */
-  FUN_001546f0();
+  FUN_001546f0((float *)0, 0.0f, 0, 0.0f);
   FUN_001544d0((float *)(uintptr_t)esi, (float *)(uintptr_t)ebx, edi, 0.0f);
-  FUN_001546f0();
-  FUN_001546f0();
+  FUN_001546f0((float *)0, 0.0f, 0, 0.0f);
+  FUN_001546f0((float *)0, 0.0f, 0, 0.0f);
   FUN_00154540(0, 0, 0.0f);
   FUN_001544d0((float *)(uintptr_t)edi, (float *)(uintptr_t)esi, ebx, 0.0f);
-  FUN_001546f0();
+  FUN_001546f0((float *)0, 0.0f, 0, 0.0f);
   display_assert((char *)0x0029d978, (char *)0x0029d984, 332, 0);
   system_exit(0);
   /* test ebx, ebx -> jne 0x154921 */
@@ -14125,13 +14125,13 @@ void FUN_001b8f80(void)
   /* test (char)eax, 0x41 -> jne 0x1b923c */
   FUN_00013070((float *)(uintptr_t)edi, (float *)(uintptr_t)eax);
   FUN_00012fb0((float *)(uintptr_t)edi, 0.0f, (float *)0);
-  FUN_00154630();
-  FUN_00154630();
-  FUN_00154630();
+  FUN_00154630((float *)0, (float *)0, 0.0f, 0.0f);
+  FUN_00154630((float *)0, (float *)0, 0.0f, 0.0f);
+  FUN_00154630((float *)0, (float *)0, 0.0f, 0.0f);
   /* test (char)eax, 0x41 -> jne 0x1b935e */
-  FUN_00154750();
+  FUN_00154750((float *)0, (float *)0, 0, 0.0f, 0.0f);
   /* test (char)eax, 0x41 -> jne 0x1b93da */
-  FUN_00154630();
+  FUN_00154630((float *)0, (float *)0, 0.0f, 0.0f);
   /* relift: cmp dword ptr [edi + 0x8c], -1 -> je 0x1b947f */
   /* test (char)ecx, 1 -> je 0x1b941f */
   /* test (char)ecx, 2 -> je 0x1b9433 */

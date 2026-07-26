@@ -14084,7 +14084,7 @@
         },
         {
           "addr": "0xf6a60",
-          "decl": "void item_get_position_even_if_in_inventory(void);",
+          "decl": "void item_get_position_even_if_in_inventory(int item_handle, float *out);",
           "ported": false
         },
         {
@@ -19675,27 +19675,27 @@
         },
         {
           "addr": "0x154630",
-          "decl": "void FUN_00154630(void);",
+          "decl": "char FUN_00154630(float *accum, float *coeffs, float target, float scale);",
           "ported": false
         },
         {
           "addr": "0x1546b0",
-          "decl": "void FUN_001546b0(void);",
+          "decl": "void FUN_001546b0(float *accum, float *rate, float *coeffs, char wrap_flag, float scale);",
           "ported": false
         },
         {
           "addr": "0x1546f0",
-          "decl": "void FUN_001546f0(void);",
+          "decl": "float FUN_001546f0(float *bounds /* @<ecx> */, float from, char wrap_flag, float to);",
           "ported": false
         },
         {
           "addr": "0x154750",
-          "decl": "void FUN_00154750(void);",
+          "decl": "char FUN_00154750(float *accum, float *bounds, char wrap_flag, float target, float scale);",
           "ported": false
         },
         {
           "addr": "0x1547d0",
-          "decl": "void FUN_001547d0(void);",
+          "decl": "char FUN_001547d0(float *accum, float *rate, float *bounds, char wrap_flag, float target, float scale);",
           "ported": false
         },
         {

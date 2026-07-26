@@ -2011,21 +2011,43 @@ char FUN_000f5fb0(void)
   return 1;
 }
 
-/* 0xf6a60 */
-void item_get_position_even_if_in_inventory(void)
+/* 0xf6a60 — world position for an item, or its inventory parent's object. */
+void item_get_position_even_if_in_inventory(int item_handle, float *out)
 {
-  int eax = 0;
-  int ecx = 0;
+  char *item;
+  int parent_handle;
+  char *parent_datum;
+  int object_handle;
+  char *obj;
+  float *pos;
 
-  object_try_and_get_and_verify_type(0, 28);
-  /* relift: test byte ptr [eax + 0x1a4], 1 -> je 0xf6acd */
-  /* cmp eax, -1 -> je 0xf6ae0 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp eax, -1 -> je 0xf6ae0 */
-  object_get_and_verify_type(0, 0);
+  item = (char *)object_try_and_get_and_verify_type(item_handle, 0x1c);
+  out[0] = 0.0f;
+  out[1] = 0.0f;
+  out[2] = 0.0f;
+  if (item == 0)
+    return;
 
-  (void)eax;
-  (void)ecx;
+  if ((item[0x1a4] & 1) != 0) {
+    parent_handle = *(int *)(item + 0x70);
+    if (parent_handle == -1)
+      return;
+    parent_datum = (char *)datum_get(*(data_t **)0x5aa6d4, parent_handle);
+    object_handle = *(int *)(parent_datum + 0x34);
+    if (object_handle == -1)
+      return;
+    obj = (char *)object_get_and_verify_type(object_handle, 3);
+    pos = (float *)(obj + 0x50);
+    out[0] = pos[0];
+    out[1] = pos[1];
+    out[2] = pos[2];
+    return;
+  }
+
+  pos = (float *)(item + 0x50);
+  out[0] = pos[0];
+  out[1] = pos[1];
+  out[2] = pos[2];
 }
 
 /* 0xf7110 — snap item orientation to a ground hit normal via marker basis. */

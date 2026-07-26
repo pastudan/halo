@@ -7712,7 +7712,7 @@ void FUN_000b32e0(int weapon_handle, int weapon_obj)
                    "c:\\halo\\SOURCE\\game\\game_engine_oddball.c", 0x252, 1);
     system_exit(-1);
   }
-  ((void (*)(int, float *))item_get_position_even_if_in_inventory)(weapon_handle, local_10);
+  item_get_position_even_if_in_inventory(weapon_handle, local_10);
   game_engine_set_goal_position(
       (int)*(int16_t *)(weapon_obj + 0x68), (int *)local_10, 0,
       "ball_blue", -1, -1,
@@ -8363,7 +8363,7 @@ void FUN_000b0c10(int weapon_handle, int weapon_obj)
   team_idx = team_idx & 0x80000001;
   if ((int)team_idx < 0)
     team_idx = (team_idx - 1 | 0xfffffffe) + 1;
-  ((void (*)(int, float *))item_get_position_even_if_in_inventory)(weapon_handle, position);
+  item_get_position_even_if_in_inventory(weapon_handle, position);
   game_engine_set_goal_position((int)flag_team, (int *)position, 0, "flag_blue", -1, (int16_t)team_idx, flag_carrier);
   if (flag_carrier != -1) {
     float *flag_pos = (float *)*(int *)(0x456b74 + team_idx * 4);
