@@ -683,41 +683,54 @@ int FUN_000246b0(int unused, void *actor, void *fp)
 
 
 /* FUN_00024770 (0x24770) — readable C lift. */
-int FUN_00024770(void *unused, void *ctx, void *cand)
+int FUN_00024770(int unused, void *actor, void *fp)
 {
   float score;
   int kind;
-  unsigned char flag;
+  unsigned char flag628;
+
   (void)unused;
-  if (*(unsigned char *)((char *)ctx + 0x5fc) == 0)
-    goto done;
-  if (cand == 0) {
-    if (*(unsigned char *)((char *)ctx + 0x628) != 0)
-      *(float *)((char *)ctx + 0x660) =
-          *(float *)((char *)ctx + 0x660) + *(float *)0x254640;
+  if (*((unsigned char *)actor + 0x5fc) == 0) {
+    if (fp == 0)
+      return 1;
+    return (int)(unsigned char)*((unsigned char *)fp + 0x30);
+  }
+  if (fp == 0) {
+    flag628 = *((unsigned char *)actor + 0x628);
+    if (flag628)
+      *(float *)((char *)actor + 0x660) += *(float *)0x254640; /* 6.0 */
     else
-      *(float *)((char *)ctx + 0x660) =
-          *(float *)((char *)ctx + 0x660) + *(float *)0x254cc0;
+      *(float *)((char *)actor + 0x660) += *(float *)0x254cc0; /* 15.0 */
     return 1;
   }
-  kind = *(short *)((char *)cand + 6);
-  flag = *(unsigned char *)((char *)ctx + 0x628);
   score = 0.0f;
+  kind = (int)*(short *)((char *)fp + 6);
+  flag628 = *((unsigned char *)actor + 0x628);
   if (kind == 0) {
-    score = flag ? 6.0f : 15.0f;
+    score = flag628 ? 6.0f : 15.0f;
+    /* asm: 0x40c00000=6.0 when flag628, else 0x41700000=15.0 */
+    if (flag628)
+      score = 6.0f;
+    else
+      score = 15.0f;
   } else if (kind == 1) {
-    score = flag ? 2.5f : 5.0f;
-  } else if (flag == 0) {
-    *((unsigned char *)cand + 0x31) = 1;
-    if (*(unsigned char *)((char *)ctx + 0x14) == 0)
-      *((unsigned char *)cand + 0x30) = 0;
+    if (flag628)
+      score = 2.5f; /* 0x40200000 */
+    else
+      score = 5.0f; /* 0x40a00000 */
+  } else {
+    if (!flag628) {
+      *((unsigned char *)fp + 0x31) = 1;
+      if (*((unsigned char *)actor + 0x14) == 0)
+        *((unsigned char *)fp + 0x30) = 0;
+    }
   }
-  FUN_00024000(ctx, score, 0xe, 0, ctx);
-done:
-  if (cand == 0)
+  FUN_00024000(actor, score, 0xe, (void *)0, (void *)0);
+  if (fp == 0)
     return 1;
-  return *(unsigned char *)((char *)cand + 0x30);
+  return (int)(unsigned char)*((unsigned char *)fp + 0x30);
 }
+
 
 /* FUN_00024850 (0x24850) — readable C lift.
  * actor@edi state@ebx. */

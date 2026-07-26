@@ -38983,7 +38983,7 @@
         },
         {
           "addr": "0x24770",
-          "decl": "int FUN_00024770(void *unused, void *ctx, void *cand);",
+          "decl": "int FUN_00024770(int unused, void *actor, void *fp);",
           "ported": true,
           "name": "FUN_00024770"
         },
