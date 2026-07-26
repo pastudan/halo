@@ -26737,7 +26737,7 @@
         {
           "addr": "0x82940",
           "decl": "void rewind_endpoint_set(int endpoint_set);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x829b0",
