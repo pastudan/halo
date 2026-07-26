@@ -5179,55 +5179,24 @@ void FUN_0005dfb0(void)
 {
 }
 
-/* FUN_00057330 (0x57330) — XBE naked draft (batch 233). */
-#if defined(__clang__)
-static scenario_t * (*const b57330_c18e380)(void) = global_scenario_get;
-static void *(*const b57330_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-int FUN_00057330(int16_t command_index __attribute__((unused)), char *state __attribute__((unused)))
+/* FUN_00057330 (0x57330) — readable C lift.
+ * command_index@ax state@esi. */
+int FUN_00057330(int16_t command_index, char *state)
 {
-  __asm__ volatile(
-      "movswl %%ax, %%eax\n\t"
-      "pushl $0x60\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x438, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movzbl (%%esi), %%ecx\n\t"
-      "movl 0x30(%%eax), %%edx\n\t"
-      "addl $0x30, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jge .LFUN_00057330_1\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00057330_2\n\t"
-      ".LFUN_00057330_1:\n\t"
-      "movl $1, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_00057330_2:\n\t"
-      "movb 0x4(%%esi), %%cl\n\t"
-      "notb %%cl\n\t"
-      "movzbl %%cl, %%eax\n\t"
-      "andl $0x10, %%eax\n\t"
-      "orl $0x20, %%eax\n\t"
-      "shrl $4, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b57330_c18e380), [elem] "m"(b57330_elem)
-      : "memory");
+  void *block;
+  void *elem;
+  unsigned idx;
+
+  block = tag_block_get_element((char *)global_scenario_get() + 0x438,
+                                (int)command_index, 0x60);
+  idx = *(unsigned char *)state;
+  if ((int)idx >= *(int *)((char *)block + 0x30))
+    return 1;
+  elem = tag_block_get_element((char *)block + 0x30, (int)idx, 0x20);
+  if (!elem)
+    return 1;
+  return (int)(((((unsigned char)~state[4]) & 0x10) | 0x20) >> 4);
 }
-#else
-#error "FUN_00057330: clang naked draft required"
-#endif
-
-
 /* encounter_set_respawn (0x5c630) — readable C lift (ai campaign). */
 void encounter_set_respawn(int encounter_handle, char flag)
 {

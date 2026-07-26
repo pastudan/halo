@@ -35503,8 +35503,8 @@
         },
         {
           "addr": "0x57330",
-          "decl": "int FUN_00057330(int16_t command_index, char *state);",
-          "ported": false
+          "decl": "int FUN_00057330(int16_t command_index @<ax>, char *state @<esi>);",
+          "ported": true
         },
         {
           "addr": "0x57380",
