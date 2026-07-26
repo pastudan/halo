@@ -214,27 +214,32 @@ void __local_unwind2(void)
 #endif
 
 
-/* 0x1dbdca */
+/* FUN_001dbdca (0x1dbdca) — XBE naked draft (batch 369). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_001dbdca(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* relift: test dword ptr [eax + 4], 6 -> jne 0x1dbe8c */
-  /* cmp esi, -1 -> je 0x1dbe85 */
-  /* relift: cmp dword ptr [edi + ecx*4 + 4], 0 -> je 0x1dbe73 */
-  __global_unwind2();
-  __local_unwind2();
-  /* relift: tail-call FUN_001dbdca(); */
-  __local_unwind2();
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0x33148c, %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%ebx)\n\t"
+      "movl %%eax, 0x4(%%ebx)\n\t"
+      "movl %%ebp, 0xc(%%ebx)\n\t"
+      "popl %%ecx\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001dbdca: clang naked draft required"
+#endif
+
 
 /* 0x1dbea9 */
 void __seh_longjmp_unwind(void)

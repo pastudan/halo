@@ -569,22 +569,35 @@ void FUN_001d8aef(void)
   (void)eax;
 }
 
-/* 0x1d8b10 */
+/* FUN_001d8b10 (0x1d8b10) — XBE naked draft (batch 372). */
+#if defined(__clang__)
+static void __stdcall (*const b1d8b10_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void FUN_001d8b10(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jge 0x1d8b28 */
-  XapiSetLastNTError(0);
-  FUN_001d8a88();
-  /* cmp eax, -1 -> je 0x1d8b44 */
-  FUN_001d8aef();
-  FUN_001d8a88();
-  /* cmp eax, -1 -> je 0x1d8b5f */
-  /* relift: tail-call FUN_001d8b10(); */
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl 0x4(%%esp)\n\t"
+      "call *0x253298\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_001d8b10_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .LFUN_001d8b10_2\n\t"
+      ".LFUN_001d8b10_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      ".LFUN_001d8b10_2:\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1d8b10_c1d2296)
+      : "memory");
 }
+#else
+#error "FUN_001d8b10: clang naked draft required"
+#endif
+
 
 /* 0x1d8b64 */
 void XGetSectionSize(void)

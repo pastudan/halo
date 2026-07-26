@@ -1250,11 +1250,32 @@ void FUN_0017d2b0(void)
 #endif
 
 
-/* 0x17d8f0 */
+/* FUN_0017d8f0 (0x17d8f0) — XBE naked draft (batch 370). */
+#if defined(__clang__)
+static int (*const b17d8f0_gtime)(void) = game_time_get;
+
+__attribute__((naked, noinline))
 void FUN_0017d8f0(void)
 {
-  game_time_get();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fmuls 0x2546a4\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [gtime] "m"(b17d8f0_gtime)
+      : "memory");
 }
+#else
+#error "FUN_0017d8f0: clang naked draft required"
+#endif
+
 
 /* 0x17d910 */
 void rasterizer_screen_effects_initialize(void)
@@ -1294,12 +1315,38 @@ void FUN_0017d990(void)
   (void)0;
 }
 
-/* 0x17d9a0 */
-void FUN_0017d9a0(int a0, float a1)
+/* FUN_0017d9a0 (0x17d9a0) — XBE naked draft (batch 369). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void FUN_0017d9a0(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x47e4d4, %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LFUN_0017d9a0_1\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .LFUN_0017d9a0_1\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jge .LFUN_0017d9a0_1\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "fstps 0x64(%%ecx,%%eax,4)\n\t"
+      ".LFUN_0017d9a0_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0017d9a0: clang naked draft required"
+#endif
+
 
 /* FUN_0017d9d0 (0x17d9d0) — XBE naked draft (batch 365). */
 #if defined(__clang__)
@@ -1458,12 +1505,36 @@ void FUN_0017dab0(int a0 __attribute__((unused)), float a1 __attribute__((unused
 #endif
 
 
-/* 0x17db20 */
-void FUN_0017db20(int a0, float a1, float a2)
+/* FUN_0017db20 (0x17db20) — XBE naked draft (batch 375). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void FUN_0017db20(int a0 __attribute__((unused)), float a1 __attribute__((unused)), float a2 __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x47e4d4, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0017db20_1\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl %%ecx, 0x14(%%eax)\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x18(%%eax)\n\t"
+      "movl %%ecx, 0x1c(%%eax)\n\t"
+      ".LFUN_0017db20_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0017db20: clang naked draft required"
+#endif
+
 
 /* rasterizer_screen_effect_set_video (0x17db40) — XBE naked draft (batch 332). */
 #if defined(__clang__)
@@ -1574,12 +1645,28 @@ void rasterizer_screen_effect_set_video(int a0 __attribute__((unused)), float a1
 #endif
 
 
-/* 0x17dc60 */
+/* FUN_0017dc60 (0x17dc60) — XBE naked draft (batch 373). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_0017dc60(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x47e4d4, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0017dc60_1\n\t"
+      "movb $0, 0x38(%%eax)\n\t"
+      ".LFUN_0017dc60_1:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0017dc60: clang naked draft required"
+#endif
+
 
 /* 0x17dc70 */
 void *rasterizer_screen_effect_get_cinematic_parameters(void *effect)

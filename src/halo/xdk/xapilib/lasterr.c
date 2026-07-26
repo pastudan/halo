@@ -757,21 +757,55 @@ void FUN_001d2ae7(void)
 #endif
 
 
-/* 0x1d2b79 */
+/* FUN_001d2b79 (0x1d2b79) — XBE naked draft (batch 374). */
+#if defined(__clang__)
+static unsigned int __stdcall (*const b1d2b79_c1d1610)(int handle, int distance, int *distance_high, unsigned int method) = (void *)SetFilePointer;
+static int __stdcall (*const b1d2b79_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = (void *)ReadFile;
+
+__attribute__((naked, noinline))
 void FUN_001d2b79(void)
 {
-  int eax = 0;
-  int ebp = 0;
-
-  SetFilePointer(0, 0, (void *)0, 0);
-  ReadFile(0, (void *)(uintptr_t)eax, 0, (void *)(uintptr_t)eax, (void *)0);
-  /* test eax, eax -> je 0x1d2baa */
-  /* relift: cmp dword ptr [ebp - 8], 2 -> je 0x1d2bb6 */
-  /* relift: cmp word ptr [ebp - 4], 0xfeff -> je 0x1d2bb6 */
-
-  (void)eax;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *%[c1d1610]\n\t"
+      "pushl $0\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $2\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *%[c1d13c9]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001d2b79_1\n\t"
+      "cmpl $2, -0x8(%%ebp)\n\t"
+      "je .LFUN_001d2b79_2\n\t"
+      ".LFUN_001d2b79_1:\n\t"
+      "cmpw $0xfeff, -0x4(%%ebp)\n\t"
+      "je .LFUN_001d2b79_2\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .LFUN_001d2b79_3\n\t"
+      ".LFUN_001d2b79_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      ".LFUN_001d2b79_3:\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d1610] "m"(b1d2b79_c1d1610), [c1d13c9] "m"(b1d2b79_c1d13c9)
+      : "memory");
 }
+#else
+#error "FUN_001d2b79: clang naked draft required"
+#endif
+
 
 /* FUN_001d2bbd (0x1d2bbd) — XBE naked draft (batch 345). */
 #if defined(__clang__)

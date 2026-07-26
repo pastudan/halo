@@ -920,16 +920,43 @@ void FUN_001d0c65(void)
 #endif
 
 
-/* 0x1d0c91 */
+/* FUN_001d0c91 (0x1d0c91) — XBE naked draft (batch 376). */
+#if defined(__clang__)
+static void __stdcall (*const b1d0c91_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void FUN_001d0c91(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jl 0x1d0cb3 */
-  XapiSetLastNTError(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl 0x14(%%ebp)\n\t"
+      "leal 0xc(%%ebp), %%eax\n\t"
+      "pushl 0x10(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "leal 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x253148\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_001d0c91_1\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "jmp .LFUN_001d0c91_2\n\t"
+      ".LFUN_001d0c91_1:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_001d0c91_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1d0c91_c1d2296)
+      : "memory");
 }
+#else
+#error "FUN_001d0c91: clang naked draft required"
+#endif
+
 
 /* FUN_001d0cbf (0x1d0cbf) — XBE naked draft (batch 365). */
 #if defined(__clang__)
@@ -976,22 +1003,40 @@ void FUN_001d0cbf(void)
 #endif
 
 
-/* 0x1d0cfb */
+/* FUN_001d0cfb (0x1d0cfb) — XBE naked draft (batch 370). */
+#if defined(__clang__)
+static void __stdcall (*const b1d0cfb_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void FUN_001d0cfb(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jl 0x1d0d1c */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1d0d3e */
-  XapiSetLastNTError(0);
-  FUN_001d0c91();
-  FUN_001d0cbf();
-  /* relift: tail-call FUN_001d0cfb(); */
-  /* relift: FUN_001d0d27(0, 0, 0); */
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl 0x10(%%esp)\n\t"
+      "leal 0xc(%%esp), %%eax\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x10(%%esp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x253150\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_001d0cfb_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "jmp .LFUN_001d0cfb_2\n\t"
+      ".LFUN_001d0cfb_1:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_001d0cfb_2:\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1d0cfb_c1d2296)
+      : "memory");
 }
+#else
+#error "FUN_001d0cfb: clang naked draft required"
+#endif
+
 
 /* 0x1d0da1 */
 void xbox_query_global_memory_status(void *status)

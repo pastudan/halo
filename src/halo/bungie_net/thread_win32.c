@@ -964,61 +964,56 @@ void FUN_00081980(void)
 #endif
 
 
-/* 0x81a20 */
+/* FUN_00081a20 (0x81a20) — XBE naked draft (batch 370). */
+#if defined(__clang__)
+static void (*const b81a20_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b81a20_exitfn)(int) = system_exit;
+static void (*const b81a20_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
+
+__attribute__((naked, noinline))
 void FUN_00081a20(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (char)eax, (char)eax -> jne 0x81a49 */
-  display_assert((char *)0x00265fe4, (char *)0x00265ffc, 47, 0);
-  system_exit(0);
-  /* test esi, esi -> jne 0x81a6e */
-  display_assert((char *)0x00265fdc, (char *)0x00265ffc, 48, 0);
-  system_exit(0);
-  debug_free((void *)(uintptr_t)esi, (char *)0x00265ffc, 50);
-  display_assert((char *)0x00266090, (char *)0x00265ffc, 59, 0);
-  system_exit(0);
-  /* test edi, edi -> jne 0x81add */
-  display_assert((char *)0x0026608c, (char *)0x00265ffc, 60, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0x81b03 */
-  display_assert((char *)0x00265fe4, (char *)0x00265ffc, 61, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0x10], 4 -> je 0x81b27 */
-  display_assert((char *)0x00266060, (char *)0x00265ffc, 63, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [edi + 0x10], 4 -> je 0x81b4b */
-  display_assert((char *)0x00266034, (char *)0x00265ffc, 64, 0);
-  system_exit(0);
-  csmemcmp((void *)(uintptr_t)esi, (void *)(uintptr_t)edi, 0);
-  /* test eax, eax -> jne 0x81b80 */
-  /* relift: cmp (int16_t)eax, word ptr [edi + 0x12] -> jne 0x81b80 */
-  /* test esi, esi -> jne 0x81bb8 */
-  display_assert((char *)0x002660f8, (char *)0x00265ffc, 74, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0x10], 4 -> je 0x81bdc */
-  display_assert((char *)0x002660cc, (char *)0x00265ffc, 75, 0);
-  system_exit(0);
-  /* cmp (int16_t)eax, 4 -> jne 0x81c24 */
-  snprintf((char *)0x00334f90, 256, (char *)0x002660b8);
-  /* cmp (int16_t)eax, 0x10 -> jne 0x81c6d */
-  snprintf((char *)0x00334f90, 256, (char *)0x00266094);
-  /* cmp eax, 0x17 -> ja 0x81d42 */
-  /* test esi, esi -> jne 0x81de1 */
-  display_assert((char *)0x00266450, (char *)0x00266458, 57, 0);
-  system_exit(0);
-  /* cmp eax, ecx -> jle 0x81df6 */
-  /* mem[0x005ab210] = ecx */
-  /* mem[0x005ab214] = edx */
-  /* mem[0x005ab218] = ecx */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x335090, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00081a20_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2f\n\t"
+      "pushl $0x265ffc\n\t"
+      "pushl $0x265fe4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00081a20_1:\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00081a20_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x30\n\t"
+      "pushl $0x265ffc\n\t"
+      "pushl $0x265fdc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00081a20_2:\n\t"
+      "pushl $0x32\n\t"
+      "pushl $0x265ffc\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b81a20_assert), [exitfn] "m"(b81a20_exitfn), [c8ef70] "m"(b81a20_c8ef70)
+      : "memory");
 }
+#else
+#error "FUN_00081a20: clang naked draft required"
+#endif
+

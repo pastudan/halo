@@ -552,43 +552,125 @@ void FUN_00065af0(void)
 #endif
 
 
-/* 0x65e90 */
+/* TIFFGetField (0x65e90) — XBE naked draft (batch 374). */
+#if defined(__clang__)
+static void (*const b65e90_c66320)(void) = (void *)FUN_00066320;
+static void (*const b65e90_c65af0)(void) = (void *)FUN_00065af0;
+static void (*const b65e90_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
+
+__attribute__((naked, noinline))
 void TIFFGetField(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  FUN_00066320();
-  /* test eax, eax -> je 0x65ee0 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x65ef3 */
-  /* relift: test dword ptr [ecx + eax*4 + 0x14], edx -> je 0x65ef3 */
-  FUN_00065af0();
-  FUN_00068a30(0x0025f704, (char *)0x0025f714);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c66320]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LTIFFGetField_1\n\t"
+      "movw 0xc(%%eax), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LTIFFGetField_2\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "shrl $5, %%eax\n\t"
+      "testl %%edx, 0x14(%%ecx,%%eax,4)\n\t"
+      "je .LTIFFGetField_2\n\t"
+      "addl $0x14, %%ecx\n\t"
+      "leal 0x10(%%ebp), %%eax\n\t"
+      "movl %%esi, %%edx\n\t"
+      "call *%[c65af0]\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LTIFFGetField_1:\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x25f714\n\t"
+      "pushl $0x25f704\n\t"
+      "call *%[c68a30]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LTIFFGetField_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c66320] "m"(b65e90_c66320), [c65af0] "m"(b65e90_c65af0), [c68a30] "m"(b65e90_c68a30)
+      : "memory");
 }
+#else
+#error "TIFFGetField: clang naked draft required"
+#endif
 
-/* 0x65f00 */
+
+/* TIFFVGetField (0x65f00) — XBE naked draft (batch 374). */
+#if defined(__clang__)
+static void (*const b65f00_c66320)(void) = (void *)FUN_00066320;
+static void (*const b65f00_c65af0)(void) = (void *)FUN_00065af0;
+static void (*const b65f00_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
+
+__attribute__((naked, noinline))
 void TIFFVGetField(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  FUN_00066320();
-  /* test eax, eax -> je 0x65f50 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x65f63 */
-  /* relift: test dword ptr [ecx + eax*4 + 0x14], edx -> je 0x65f63 */
-  FUN_00065af0();
-  FUN_00068a30(0x0025f704, (char *)0x0025f714);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c66320]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LTIFFVGetField_1\n\t"
+      "movw 0xc(%%eax), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LTIFFVGetField_2\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "shrl $5, %%eax\n\t"
+      "testl %%edx, 0x14(%%ecx,%%eax,4)\n\t"
+      "je .LTIFFVGetField_2\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "addl $0x14, %%ecx\n\t"
+      "movl %%esi, %%edx\n\t"
+      "call *%[c65af0]\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LTIFFVGetField_1:\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x25f714\n\t"
+      "pushl $0x25f704\n\t"
+      "call *%[c68a30]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LTIFFVGetField_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c66320] "m"(b65f00_c66320), [c65af0] "m"(b65f00_c65af0), [c68a30] "m"(b65f00_c68a30)
+      : "memory");
 }
+#else
+#error "TIFFVGetField: clang naked draft required"
+#endif
+
 
 /* 0x65f70 */
 void _TIFFgetfield(void)
@@ -636,16 +718,61 @@ void TIFFFreeDirectory(int file)
   (void)edi;
 }
 
-/* 0x66190 */
+/* FUN_00066190 (0x66190) — XBE naked draft (batch 370). */
+#if defined(__clang__)
+static void *(*const b66190_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b66190_c659f0)(int file, int field, int value) = (void *)TIFFSetField;
+
+__attribute__((naked, noinline))
 void FUN_00066190(void)
 {
-  int esi = 0;
-
-  csmemset((void *)(uintptr_t)esi, 0, 176);
-  TIFFSetField(0, 259, 0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $0xb0\n\t"
+      "leal 0x14(%%edi), %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movl $1, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "pushl $0x103\n\t"
+      "pushl %%edi\n\t"
+      "movw %%bx, 0x2c(%%esi)\n\t"
+      "movw %%bx, 0x22(%%esi)\n\t"
+      "movw %%bx, 0x2a(%%esi)\n\t"
+      "movw %%bx, 0x2e(%%esi)\n\t"
+      "movw %%bx, 0x30(%%esi)\n\t"
+      "movw %%bx, 0x32(%%esi)\n\t"
+      "movl %%eax, 0x34(%%esi)\n\t"
+      "movl %%eax, 0x14(%%esi)\n\t"
+      "movl %%eax, 0x18(%%esi)\n\t"
+      "movl %%ebx, 0x1c(%%esi)\n\t"
+      "movw $2, 0x48(%%esi)\n\t"
+      "movw $4, 0x24(%%esi)\n\t"
+      "movl %%ebx, 0x10(%%esi)\n\t"
+      "call *%[c659f0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "andb $0xfd, 0xa(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b66190_memset), [c659f0] "m"(b66190_c659f0)
+      : "memory");
 }
+#else
+#error "FUN_00066190: clang naked draft required"
+#endif
+
 
 /* FUN_00066200 (0x66200) — XBE naked draft (batch 331). */
 #if defined(__clang__)
@@ -839,25 +966,62 @@ void FUN_00066320(void)
 #endif
 
 
-/* 0x66380 */
+/* TIFFDefaultDirectory (0x66380) — XBE naked draft (batch 374). */
+#if defined(__clang__)
+static void (*const b66380_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
+static void (*const b66380_c1d980b)(int param_1) = (void *)FUN_001d980b;
+
+__attribute__((naked, noinline))
 void TIFFDefaultDirectory(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* relift: cmp word ptr [eax], (int16_t)edx -> je 0x663bf */
-  /* cmp (int16_t)eax, (int16_t)edx -> je 0x663b7 */
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x663a4 */
-  /* mem[0x003340ac] = ecx */
-  /* test eax, eax -> jne 0x663e0 */
-  FUN_00068a30(0x0025faa8, (char *)0x0025fabc);
-  FUN_001d980b(0);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x3340ac, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movw 0x8(%%ebp), %%dx\n\t"
+      "je .LTIFFDefaultDirectory_1\n\t"
+      "cmpw %%dx, (%%eax)\n\t"
+      "je .LTIFFDefaultDirectory_4\n\t"
+      ".LTIFFDefaultDirectory_1:\n\t"
+      "movl 0x2c9a98, %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movl $0x2c9a98, %%ecx\n\t"
+      "je .LTIFFDefaultDirectory_5\n\t"
+      ".LTIFFDefaultDirectory_2:\n\t"
+      "cmpw %%dx, %%ax\n\t"
+      "je .LTIFFDefaultDirectory_3\n\t"
+      "movw 0x14(%%ecx), %%ax\n\t"
+      "addl $0x14, %%ecx\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .LTIFFDefaultDirectory_2\n\t"
+      "jmp .LTIFFDefaultDirectory_5\n\t"
+      ".LTIFFDefaultDirectory_3:\n\t"
+      "movl %%ecx, 0x3340ac\n\t"
+      "movl %%ecx, %%eax\n\t"
+      ".LTIFFDefaultDirectory_4:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LTIFFDefaultDirectory_6\n\t"
+      ".LTIFFDefaultDirectory_5:\n\t"
+      "movzwl %%dx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x25fabc\n\t"
+      "pushl $0x25faa8\n\t"
+      "call *%[c68a30]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $-1\n\t"
+      "call *%[c1d980b]\n\t"
+      ".LTIFFDefaultDirectory_6:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c68a30] "m"(b66380_c68a30), [c1d980b] "m"(b66380_c1d980b)
+      : "memory");
 }
+#else
+#error "TIFFDefaultDirectory: clang naked draft required"
+#endif
+
 
 /* 0x663f0 */
 void FUN_000663f0(void)
@@ -1151,17 +1315,73 @@ void FUN_00066640(void)
 #endif
 
 
-/* 0x666a0 */
+/* FUN_000666a0 (0x666a0) — XBE naked draft (batch 370). */
+#if defined(__clang__)
+static void (*const b666a0_c66380)(void) = (void *)TIFFDefaultDirectory;
+static void (*const b666a0_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
+
+__attribute__((naked, noinline))
 void FUN_000666a0(void)
 {
-  int edx = 0;
-
-  TIFFDefaultDirectory();
-  FUN_00068a30(0, (char *)0x0025fb90);
-  /* relift: cmp word ptr [edx + 2], 5 -> jne 0x66709 */
-
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "jne .LFUN_000666a0_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%edx), %%ax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c66380]\n\t"
+      "movl 0x10(%%eax), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x25fb90\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c68a30]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000666a0_1:\n\t"
+      "cmpw $5, 0x2(%%edx)\n\t"
+      "jne .LFUN_000666a0_4\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%ecx, 0x10(%%ebp)\n\t"
+      "fildl 0x10(%%ebp)\n\t"
+      "jge .LFUN_000666a0_2\n\t"
+      "fadds 0x25fb8c\n\t"
+      ".LFUN_000666a0_2:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x10(%%ebp)\n\t"
+      "fildl 0x10(%%ebp)\n\t"
+      "jge .LFUN_000666a0_3\n\t"
+      "fadds 0x25fb8c\n\t"
+      ".LFUN_000666a0_3:\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "movl $1, %%eax\n\t"
+      "fstps (%%esi)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000666a0_4:\n\t"
+      "fildl 0xc(%%ebp)\n\t"
+      "movl $1, %%eax\n\t"
+      "fidivl 0x10(%%ebp)\n\t"
+      "fstps (%%esi)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c66380] "m"(b666a0_c66380), [c68a30] "m"(b666a0_c68a30)
+      : "memory");
 }
+#else
+#error "FUN_000666a0: clang naked draft required"
+#endif
+
 
 /* FUN_00066720 (0x66720) — XBE naked draft (batch 342). */
 #if defined(__clang__)

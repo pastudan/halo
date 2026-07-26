@@ -2464,18 +2464,52 @@ void FUN_001d44dc(void)
   (void)eax;
 }
 
-/* 0x1d4507 */
+/* FUN_001d4507 (0x1d4507) — XBE naked draft (batch 372). */
+#if defined(__clang__)
+static void (*const b1d4507_c1d8e0a)(void) = (void *)ExQueryNonVolatileSetting;
+
+__attribute__((naked, noinline))
 void FUN_001d4507(void)
 {
-  int eax = 0;
-
-  ExQueryNonVolatileSetting(0, 0, 0, 0);
-  /* test eax, eax -> jge 0x1d4527 */
-  /* cmp eax, 3 -> je 0x1d453f */
-  /* cmp eax, 6 -> jne 0x1d4546 */
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $4\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $9\n\t"
+      "call *%[c1d8e0a]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_001d4507_1\n\t"
+      "andl $0, -0x4(%%ebp)\n\t"
+      ".LFUN_001d4507_1:\n\t"
+      "movl 0x253240, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "cmpl $3, %%eax\n\t"
+      "je .LFUN_001d4507_2\n\t"
+      "cmpl $6, %%eax\n\t"
+      "jne .LFUN_001d4507_3\n\t"
+      "andw $0, -0x2(%%ebp)\n\t"
+      "jmp .LFUN_001d4507_3\n\t"
+      ".LFUN_001d4507_2:\n\t"
+      "movl $1, -0x4(%%ebp)\n\t"
+      ".LFUN_001d4507_3:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d8e0a] "m"(b1d4507_c1d8e0a)
+      : "memory");
 }
+#else
+#error "FUN_001d4507: clang naked draft required"
+#endif
+
 
 /* 0x1d454b */
 void FUN_001d454b(void)
@@ -2488,35 +2522,43 @@ void FUN_001d454b(void)
   (void)eax;
 }
 
-/* 0x1d4570 */
+/* FUN_001d4570 (0x1d4570) — XBE naked draft (batch 374). */
+#if defined(__clang__)
+static void (*const b1d4570_c1d8e0a)(void) = (void *)ExQueryNonVolatileSetting;
+
+__attribute__((naked, noinline))
 void FUN_001d4570(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  ExQueryNonVolatileSetting(260, 0, 0, 0);
-  /* test eax, eax -> jl 0x1d4594 */
-  FUN_001dd5c8();
-  /* test (char)eax, 1 -> jne 0x1d45d0 */
-  /* relift: cmp dword ptr [ebp - 0x28], 0x40 -> jae 0x1d4675 */
-  /* test edi, edi -> je 0x1d4656 */
-  /* relift: cmp esi, dword ptr [edi + 0x2c] -> jae 0x1d4656 */
-  /* relift: test byte ptr [esi + 5], 1 -> jne 0x1d4628 */
-  /* relift: test byte ptr [esi + 5], 0x10 -> je 0x1d4652 */
-  /* test ebx, ebx -> jne 0x1d4642 */
-  /* relift: FUN_001d468d(0, 0); */
-  __SEH_epilog();
-  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d46a2 */
-
-  (void)eax;
-  (void)ebx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $4\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x104\n\t"
+      "call *%[c1d8e0a]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_001d4570_1\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      ".LFUN_001d4570_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d8e0a] "m"(b1d4570_c1d8e0a)
+      : "memory");
 }
+#else
+#error "FUN_001d4570: clang naked draft required"
+#endif
+
 
 /* FUN_001d46a3 (0x1d46a3) — XBE naked draft (batch 304). */
 #if defined(__clang__)

@@ -5321,70 +5321,57 @@ void FUN_0016f880(void)
   *(short *)0x325180 = -1;
 }
 
-/* 0x16f8a0 */
+/* FUN_0016f8a0 (0x16f8a0) — XBE naked draft (batch 372). */
+#if defined(__clang__)
+static void (*const b16f8a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b16f8a0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_0016f8a0(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (char)eax, (char)eax -> je 0x16f8dd */
-  /* relift: cmp word ptr [0x47e458], 0 -> jg 0x16f8d4 */
-  display_assert((char *)0x002a3d48, (char *)0x002a3ca4, 244, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [0x47e458], 0x64 -> jl 0x16f907 */
-  display_assert((char *)0x002a3d2c, (char *)0x002a3ca4, 249, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x16f93c */
-  display_assert((char *)0x0029dc40, (char *)0x002a3ca4, 259, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [0x3256ba], 3 -> je 0x16f953 */
-  /* relift: relift: mov (char)eax, byte ptr [0x325704] */
-  /* test (char)eax, (char)eax -> je 0x16fa35 */
-  /* relift: cmp word ptr [0x325184], 0 -> jne 0x16fa35 */
-  /* relift: cmp word ptr [0x47e458], 0 -> jne 0x16fa35 */
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x16f980 */
-  /* cmp (int16_t)edi, 0x1d -> jl 0x16f9a0 */
-  display_assert((char *)0x002a3db8, (char *)0x002a3ca4, 265, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x16f9c9 */
-  display_assert((char *)0x0029dc40, (char *)0x002a3ca4, 266, 0);
-  system_exit(0);
-  FUN_0016f480((char *)(uintptr_t)eax, 0, 0);
-  FUN_0016f480((char *)(uintptr_t)ecx, 0, 0);
-  D3DDevice_InsertCallback(esi, (void *)0x0016f500, edx);
-  /* relift: relift: mov word ptr [0x325180], (int16_t)edi */
-  /* test eax, eax -> jne 0x16fa6d */
-  display_assert((char *)0x0029dc40, (char *)0x002a3ca4, 294, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [0x3256ba], 3 -> je 0x16fa84 */
-  /* relift: relift: mov (char)eax, byte ptr [0x325704] */
-  /* test (char)eax, (char)eax -> je 0x16fb72 */
-  /* relift: cmp word ptr [0x325184], 0 -> jne 0x16fb72 */
-  /* relift: cmp word ptr [0x47e458], 0 -> jne 0x16fb72 */
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x16fab1 */
-  /* cmp (int16_t)edi, 0x1d -> jl 0x16fad1 */
-  display_assert((char *)0x002a3db8, (char *)0x002a3ca4, 300, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x16fafa */
-  display_assert((char *)0x0029dc40, (char *)0x002a3ca4, 301, 0);
-  system_exit(0);
-  FUN_0016f480((char *)(uintptr_t)eax, 0, 0);
-  FUN_0016f480((char *)(uintptr_t)eax, 0, 0);
-  D3DDevice_InsertCallback(0, (void *)0x0016f500, ebx);
-  /* relift: relift: mov word ptr [0x325180], 0xffff */
-  /* mem[0x0047e45c] = eax */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0016f8a0_2\n\t"
+      "cmpw $0, 0x47e458\n\t"
+      "jg .LFUN_0016f8a0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf4\n\t"
+      "pushl $0x2a3ca4\n\t"
+      "pushl $0x2a3d48\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0016f8a0_1:\n\t"
+      "decw 0x47e458\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0016f8a0_2:\n\t"
+      "cmpw $0x64, 0x47e458\n\t"
+      "jl .LFUN_0016f8a0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf9\n\t"
+      "pushl $0x2a3ca4\n\t"
+      "pushl $0x2a3d2c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0016f8a0_3:\n\t"
+      "incw 0x47e458\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b16f8a0_assert), [exitfn] "m"(b16f8a0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_0016f8a0: clang naked draft required"
+#endif
+
 
 /* 0x16fb80 */
 void rasterizer_initialize(void)
@@ -12428,21 +12415,38 @@ void FUN_0017ad20(void)
   (void)edx;
 }
 
-/* 0x17ad40 */
+/* FUN_0017ad40 (0x17ad40) — XBE naked draft (batch 376). */
+#if defined(__clang__)
+static void __stdcall (*const b17ad40_c1ed2c0)(uint32_t reg, float a, float b, float c, float d) = (void *)D3DDevice_SetVertexData4f;
+
+__attribute__((naked, noinline))
 void FUN_0017ad40(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  D3DDevice_SetVertexData4f(ecx, 0.0f, 0.0f, 0.0f, 0.0f);
-  D3DDevice_SetVertexData2s(edx, 0, 0);
-  D3DDevice_SetVertexDataColor(ecx, eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ed2c0]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1ed2c0] "m"(b17ad40_c1ed2c0)
+      : "memory");
 }
+#else
+#error "FUN_0017ad40: clang naked draft required"
+#endif
+
 
 /* 0x17ad90 */
 void FUN_0017ad90(void)

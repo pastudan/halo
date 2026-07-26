@@ -704,6 +704,9 @@ def sig_from_decl(name: str, decl: str) -> str:
         arg = arg.strip()
         if not arg or arg == "void":
             continue
+        if arg == "...":
+            parts.append("...")
+            continue
         toks = arg.split()
         if len(toks) >= 2:
             parts.append(

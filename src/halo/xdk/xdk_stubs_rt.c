@@ -1044,20 +1044,54 @@ void FUN_001d0274(void)
 #endif
 
 
-/* 0x1d02d0 */
+/* FUN_001d02d0 (0x1d02d0) — XBE naked draft (batch 376). */
+#if defined(__clang__)
+static void __stdcall (*const b1d02d0_c1d2296)(int status) = (void *)XapiSetLastNTError;
+static void __stdcall (*const b1d02d0_c1d2268)(unsigned int error) = (void *)SetLastError;
+
+__attribute__((naked, noinline))
 void FUN_001d02d0(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jge 0x1d02fd */
-  XapiSetLastNTError(0);
-  /* cmp eax, 0x40000025 -> jne 0x1d0308 */
-  SetLastError(0);
-  /* test eax, eax -> jge 0x1d0330 */
-  XapiSetLastNTError(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl $0\n\t"
+      "pushl 0x10(%%ebp)\n\t"
+      "pushl 0x1c(%%ebp)\n\t"
+      "pushl 0x18(%%ebp)\n\t"
+      "pushl $1\n\t"
+      "pushl 0x14(%%ebp)\n\t"
+      "pushl 0xc(%%ebp)\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *0x253124\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_001d02d0_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .LFUN_001d02d0_4\n\t"
+      ".LFUN_001d02d0_1:\n\t"
+      "cmpl $0x40000025, %%eax\n\t"
+      "jne .LFUN_001d02d0_2\n\t"
+      "pushl $0x32\n\t"
+      "jmp .LFUN_001d02d0_3\n\t"
+      ".LFUN_001d02d0_2:\n\t"
+      "pushl $0\n\t"
+      ".LFUN_001d02d0_3:\n\t"
+      "call *%[c1d2268]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      ".LFUN_001d02d0_4:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1d02d0_c1d2296), [c1d2268] "m"(b1d02d0_c1d2268)
+      : "memory");
 }
+#else
+#error "FUN_001d02d0: clang naked draft required"
+#endif
+
 
 /* 0x1d0336 */
 int WaitForSingleObject(int handle, int timeout_ms)
@@ -1642,17 +1676,39 @@ void D3DDevice_SetTexture(uint32_t stage, void *texture)
   (void)ebp;
 }
 
-/* 0x1e9350 */
-void D3DDevice_SetRenderState_Simple(uint32_t reg, uint32_t value)
+/* D3DDevice_SetRenderState_Simple (0x1e9350) — XBE naked draft (batch 370). */
+#if defined(__clang__)
+static void (*const b1e9350_c1efb70)(void) = (void *)CDevice_MakeSpace;
+
+__attribute__((naked, noinline))
+void D3DDevice_SetRenderState_Simple(uint32_t reg __attribute__((unused)), uint32_t value __attribute__((unused)))
 {
-  int eax = 0;
-
-  /* relift: cmp eax, dword ptr [0x1fbb14] -> jae 0x1e936c */
-  /* mem[0x001fbb10] = eax */
-  CDevice_MakeSpace();
-
-  (void)eax;
+  __asm__ volatile(
+      ".LD3DDevice_SetRenderState_Simple_1:\n\t"
+      "movl 0x1fbb10, %%eax\n\t"
+      "addl $8, %%eax\n\t"
+      "cmpl 0x1fbb14, %%eax\n\t"
+      "jae .LD3DDevice_SetRenderState_Simple_2\n\t"
+      "movl %%eax, 0x1fbb10\n\t"
+      "movl %%ecx, -0x8(%%eax)\n\t"
+      "movl %%edx, -0x4(%%eax)\n\t"
+      "ret\n\t"
+      ".LD3DDevice_SetRenderState_Simple_2:\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x1fe6a0, %%ecx\n\t"
+      "call *%[c1efb70]\n\t"
+      "popl %%ecx\n\t"
+      "popl %%edx\n\t"
+      "jmp .LD3DDevice_SetRenderState_Simple_1\n\t"
+      :
+      : [c1efb70] "m"(b1e9350_c1efb70)
+      : "memory");
 }
+#else
+#error "D3DDevice_SetRenderState_Simple: clang naked draft required"
+#endif
+
 
 /* 0x1e9380 */
 void D3DDevice_SetRenderState_Deferred(uint32_t reg_index, uint32_t value)

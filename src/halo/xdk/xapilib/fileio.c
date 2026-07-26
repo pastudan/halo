@@ -916,16 +916,42 @@ bool SetFileTime(int handle, void *creation_time, void *last_access_time, void *
   (void)eax;
 }
 
-/* 0x1d1982 */
+/* FUN_001d1982 (0x1d1982) — XBE naked draft (batch 369). */
+#if defined(__clang__)
+static void __stdcall (*const b1d1982_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void FUN_001d1982(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jl 0x1d199d */
-  XapiSetLastNTError(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *0x253188\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_001d1982_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "jmp .LFUN_001d1982_2\n\t"
+      ".LFUN_001d1982_1:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_001d1982_2:\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1d1982_c1d2296)
+      : "memory");
 }
+#else
+#error "FUN_001d1982: clang naked draft required"
+#endif
+
 
 /* FUN_001d19a9 (0x1d19a9) — XBE naked draft (batch 351). */
 #if defined(__clang__)
