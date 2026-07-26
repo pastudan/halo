@@ -3527,64 +3527,22 @@ void ai_debug_lineofsight(float *pos_a, int16_t key_a, float *pos_b, int16_t key
   FUN_000498d0(idx_a, idx_b);
 }
 
-/* FUN_0004b7a0 (0x4b7a0) — XBE naked draft (batch 157). */
-#if defined(__clang__)
-static void (*const b4b7a0_c49c70)(void) = FUN_00049c70;
-static void *(*const b4b7a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char * (*const b4b7a0_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
-static void (*const b4b7a0_cff4d0)(int channel, const char *format, ...) = console_printf;
-static void (*const b4b7a0_c4b1b0)(int encounter_idx, int param_2) = ai_debug_select_actor;
-
-__attribute__((naked, noinline))
+/* FUN_0004b7a0 (0x4b7a0) — readable C lift. */
 void FUN_0004b7a0(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "call *%[c49c70]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_0004b7a0_1\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "pushl $0x100\n\t"
-      "pushl $0x5ab100\n\t"
-      "pushl $1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c49ac0]\n\t"
-      "pushl $0x5ab100\n\t"
-      "pushl $0x25afd0\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "movl 0x34(%%edi), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c4b1b0]\n\t"
-      "addl $0x30, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $0, 0x5ac9c1\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_0004b7a0_1:\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "call *%[c4b1b0]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $0, 0x5ac9c1\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c49c70] "m"(b4b7a0_c49c70), [dget] "m"(b4b7a0_dget), [c49ac0] "m"(b4b7a0_c49ac0), [cff4d0] "m"(b4b7a0_cff4d0), [c4b1b0] "m"(b4b7a0_c4b1b0)
-      : "memory");
-}
-#else
-#error "FUN_0004b7a0: clang naked draft required"
-#endif
+  int actor_handle;
+  char *actor;
 
+  actor_handle = ((int (*)(void))(void *)&FUN_00049c70)();
+  if (actor_handle == -1) {
+    return;
+  }
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  ai_debug_describe_actor(actor_handle, -1, 1, (char *)0x5ab100, 0x100);
+  console_printf(0, (const char *)0x25afd0, (char *)0x5ab100);
+  ai_debug_select_actor(*(int *)(actor + 0x34), actor_handle);
+  *(char *)0x5ac9c1 = 0;
+}
 
 /* FUN_0004b810 (0x4b810) — XBE naked draft (batch 108). */
 #if defined(__clang__)

@@ -12293,7 +12293,7 @@
         {
           "addr": "0xc9bd0",
           "decl": "int FUN_000c9bd0(int list_handle, int16_t skip_count);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9c10",
