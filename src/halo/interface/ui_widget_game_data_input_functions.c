@@ -1,3 +1,4 @@
+#include <stdint.h>
 void ui_widget_game_data_function_invoke(
   void *widget, unsigned __int16 game_data_input_reference_function)
 {
@@ -3627,49 +3628,17 @@ char FUN_000f0070(void *widget)
   return 1;
 }
 
-/* FUN_000f00b0 (0xf00b0) — XBE naked draft (batch 173). */
-#if defined(__clang__)
-static void (*const bf00b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf00b0_exitfn)(int) = system_exit;
-static void (*const bf00b0_ce0740)(void) = player_ui_set_single_player_local_player_controller;
-
-__attribute__((naked, noinline))
+/* FUN_000f00b0 (0xf00b0) — readable C lift. */
 char FUN_000f00b0(void *widget, void *event)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000f00b0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x11b9\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x288670\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f00b0_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x2(%%esi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "call *%[ce0740]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf00b0_assert), [exitfn] "m"(bf00b0_exitfn), [ce0740] "m"(bf00b0_ce0740)
-      : "memory");
+  (void)widget;
+  if (!event) {
+    display_assert((const char *)0x288670, (const char *)0x2859a4, 0x11b9, 1);
+    system_exit(-1);
+  }
+  player_ui_set_single_player_local_player_controller(0, *(int16_t *)((char *)event + 2));
+  return 1;
 }
-#else
-#error "FUN_000f00b0: clang naked draft required"
-#endif
-
 
 /* FUN_000f0100 (0xf0100) — XBE naked draft (batch 155). */
 #if defined(__clang__)

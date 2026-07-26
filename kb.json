@@ -7021,7 +7021,7 @@
         {
           "addr": "0x861d0",
           "decl": "void director_inhibit_facing(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x86220",
@@ -18250,17 +18250,17 @@
         {
           "addr": "0xe0840",
           "decl": "void player_ui_local_player_joined_multiplayer_game(int16_t local_player_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0890",
           "decl": "uint8_t player_ui_local_player_wants_to_play_multiplayer(int16_t local_player_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe08e0",
           "decl": "void player_ui_clear_multiplayer_autojoin_for_local_player(int16_t local_player_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0930",
@@ -18285,7 +18285,7 @@
         {
           "addr": "0xe0a10",
           "decl": "int16_t player_ui_get_last_single_player_level_played(int16_t local_player_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0a60",
@@ -27303,7 +27303,7 @@
         {
           "addr": "0xe9a60",
           "decl": "char FUN_000e9a60(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe9a90",
@@ -27595,7 +27595,7 @@
         {
           "addr": "0xf00b0",
           "decl": "char FUN_000f00b0(void *widget, void *event);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf0100",
@@ -36156,19 +36156,19 @@
         {
           "addr": "0x64fe0",
           "decl": "int FUN_00064fe0(void *prop);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00064fe0"
         },
         {
           "addr": "0x65020",
           "decl": "int FUN_00065020(void *prop);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00065020"
         },
         {
           "addr": "0x65060",
           "decl": "int FUN_00065060(void *prop);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00065060"
         },
         {
@@ -36179,7 +36179,7 @@
         {
           "addr": "0x650e0",
           "decl": "int FUN_000650e0(void *prop);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000650e0"
         },
         {
