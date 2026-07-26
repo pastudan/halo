@@ -38974,8 +38974,9 @@
         },
         {
           "addr": "0x246b0",
-          "decl": "void FUN_000246b0(void);",
-          "ported": false
+          "decl": "int FUN_000246b0(void *unused, void *ctx, void *cand);",
+          "ported": true,
+          "name": "FUN_000246b0"
         },
         {
           "addr": "0x24770",
