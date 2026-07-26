@@ -7602,7 +7602,8 @@
         },
         {
           "addr": "0xdcaf0",
-          "decl": "void FUN_000dcaf0(void);"
+          "decl": "void FUN_000dcaf0(void);",
+          "ported": false
         },
         {
           "addr": "0xdcbd0",
@@ -7611,11 +7612,13 @@
         },
         {
           "addr": "0xdcdc0",
-          "decl": "void FUN_000dcdc0(void);"
+          "decl": "void FUN_000dcdc0(void);",
+          "ported": false
         },
         {
           "addr": "0xdce80",
-          "decl": "void first_person_weapon_draw(void);"
+          "decl": "void first_person_weapon_draw(void);",
+          "ported": false
         },
         {
           "addr": "0xdd110",
@@ -7626,43 +7629,53 @@
         },
         {
           "addr": "0xdd190",
-          "decl": "void first_person_weapon_get_marker_by_name(void);"
+          "decl": "void first_person_weapon_get_marker_by_name(void);",
+          "ported": false
         },
         {
           "addr": "0xdd260",
-          "decl": "void first_person_weapon_center_flashlight(int object_handle, float *out_position, float *out_forward, void *out_up);"
+          "decl": "void first_person_weapon_center_flashlight(int object_handle, float *out_position, float *out_forward, void *out_up);",
+          "ported": false
         },
         {
           "addr": "0xdd340",
-          "decl": "char first_person_weapon_adjust_light(int object_handle, int marker_result, void *out_position, void *out_forward, void *out_up);"
+          "decl": "char first_person_weapon_adjust_light(int object_handle, int marker_result, void *out_position, void *out_forward, void *out_up);",
+          "ported": false
         },
         {
           "addr": "0xdd580",
-          "decl": "void first_person_weapon_update(void);"
+          "decl": "void first_person_weapon_update(void);",
+          "ported": false
         },
         {
           "addr": "0xddae0",
-          "decl": "void first_person_weapon_render_update(void);"
+          "decl": "void first_person_weapon_render_update(void);",
+          "ported": false
         },
         {
           "addr": "0xddb90",
-          "decl": "void first_person_weapon_get_marker_by_name_render(void);"
+          "decl": "void first_person_weapon_get_marker_by_name_render(void);",
+          "ported": false
         },
         {
           "addr": "0xde0e0",
-          "decl": "void FUN_000de0e0(void);"
+          "decl": "void FUN_000de0e0(void);",
+          "ported": false
         },
         {
           "addr": "0xde360",
-          "decl": "void first_person_weapon_message_from_unit(int unit_handle, int message_type);"
+          "decl": "void first_person_weapon_message_from_unit(int unit_handle, int message_type);",
+          "ported": false
         },
         {
           "addr": "0xde3f0",
-          "decl": "void FUN_000de3f0(void);"
+          "decl": "void FUN_000de3f0(void);",
+          "ported": false
         },
         {
           "addr": "0xde560",
-          "decl": "void FUN_000de560(void);"
+          "decl": "void FUN_000de560(void);",
+          "ported": false
         }
       ],
       "name": "first_person_weapons.obj",

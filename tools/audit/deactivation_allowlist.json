@@ -15629,5 +15629,96 @@
     "object": "render.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdcaf0",
+    "name": "FUN_000dcaf0",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdcdc0",
+    "name": "FUN_000dcdc0",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdce80",
+    "name": "first_person_weapon_draw",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdd190",
+    "name": "first_person_weapon_get_marker_by_name",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdd260",
+    "name": "first_person_weapon_center_flashlight",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdd340",
+    "name": "first_person_weapon_adjust_light",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xdd580",
+    "name": "first_person_weapon_update",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xddae0",
+    "name": "first_person_weapon_render_update",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xddb90",
+    "name": "first_person_weapon_get_marker_by_name_render",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xde0e0",
+    "name": "FUN_000de0e0",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xde360",
+    "name": "first_person_weapon_message_from_unit",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xde3f0",
+    "name": "FUN_000de3f0",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xde560",
+    "name": "FUN_000de560",
+    "object": "first_person_weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
