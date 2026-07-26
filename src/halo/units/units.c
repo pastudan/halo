@@ -4409,30 +4409,69 @@ int16_t FUN_001ab870(void *animation_state, int animation_graph_tag_index,
   return result;
 }
 
-/* FUN_001ab8c0 (0x1ab8c0)
- * Computes or copies lighting data for a unit.
- * If the unit has a parent unit (at +0xcc), copies the parent's lighting
- * values from +0x290 and +0x294. Otherwise, computes an ambient RGB color
- * brightness and self-illumination value from the unit's position and
- * orientation. */
-void FUN_001ab8c0(int unit_handle)
-{
-  char *unit;
-  void *parent;
-  float color[3];
+/* FUN_001ab8c0 (0x1ab8c0) — XBE naked draft (batch 67). */
+#if defined(__clang__)
+static void *(*const b1ab8c0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1ab8c0_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void (*const b1ab8c0_c13a740)(int param_1, int param_2, float *param_3) = FUN_0013a740;
+static float (*const b1ab8c0_c7a750)(float *color) = real_rgb_color_brightness;
+static float (*const b1ab8c0_c1393b0)(int object_handle) = object_get_self_illumination;
 
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  parent = object_try_and_get_and_verify_type(
-      *(int *)(unit + 0xcc), 3);
-  if (parent == NULL) {
-    FUN_0013a740((int)(unit + 0xc), (int)(unit + 0x48), color);
-    *(float *)(unit + 0x290) = real_rgb_color_brightness(color);
-    *(float *)(unit + 0x294) = object_get_self_illumination(unit_handle);
-    return;
-  }
-  *(float *)(unit + 0x290) = *(float *)((char *)parent + 0x290);
-  *(float *)(unit + 0x294) = *(float *)((char *)parent + 0x294);
+__attribute__((naked, noinline))
+void FUN_001ab8c0(int unit_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0xcc(%%esi), %%eax\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_001ab8c0_1\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x48(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0xc(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c13a740]\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c7a750]\n\t"
+      "fstps 0x290(%%esi)\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1393b0]\n\t"
+      "fstps 0x294(%%esi)\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001ab8c0_1:\n\t"
+      "movl 0x290(%%eax), %%edx\n\t"
+      "movl %%edx, 0x290(%%esi)\n\t"
+      "movl 0x294(%%eax), %%eax\n\t"
+      "movl %%eax, 0x294(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1ab8c0_get), [tryget] "m"(b1ab8c0_tryget), [c13a740] "m"(b1ab8c0_c13a740), [c7a750] "m"(b1ab8c0_c7a750), [c1393b0] "m"(b1ab8c0_c1393b0)
+      : "memory");
 }
+#else
+#error "FUN_001ab8c0: clang naked draft required"
+#endif
+
 
 /* FUN_001ab940 (0x1ab940)
  * Returns the weapon handle at the given weapon slot index for a unit.
@@ -8317,29 +8356,69 @@ int FUN_001a7d40(int datum_handle)
   return sum;
 }
 
-/* FUN_001a7d80 (0x1a7d80)
- * Sets or clears bit 23 (0x800000) in unit flags for all child units. */
-void FUN_001a7d80(int datum_handle, char flag)
-{
-  int iter_state;
-  int child;
-  char *unit;
-  uint32_t flags;
+/* FUN_001a7d80 (0x1a7d80) — XBE naked draft (batch 67). */
+#if defined(__clang__)
+static int (*const b1a7d80_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
+static void *(*const b1a7d80_tryget)(int, int) = object_try_and_get_and_verify_type;
+static int (*const b1a7d80_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
 
-  child = FUN_000ce450(datum_handle, &iter_state);
-  while (child != -1) {
-    unit = (char *)object_try_and_get_and_verify_type(child, 3);
-    if (unit != NULL) {
-      if (flag == '\0') {
-        flags = *(uint32_t *)(unit + 0x1b4) & 0xff7fffff;
-      } else {
-        flags = *(uint32_t *)(unit + 0x1b4) | 0x800000;
-      }
-      *(uint32_t *)(unit + 0x1b4) = flags;
-    }
-    child = FUN_000ce320(datum_handle, &iter_state);
-  }
+__attribute__((naked, noinline))
+void FUN_001a7d80(int datum_handle __attribute__((unused)), char flag __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cce450]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001a7d80_5\n\t"
+      "pushl %%ebx\n\t"
+      "movb 0xc(%%ebp), %%bl\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".LFUN_001a7d80_1:\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001a7d80_4\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movl 0x1b4(%%eax), %%ecx\n\t"
+      "je .LFUN_001a7d80_2\n\t"
+      "orl $0x800000, %%ecx\n\t"
+      "jmp .LFUN_001a7d80_3\n\t"
+      ".LFUN_001a7d80_2:\n\t"
+      "andl $0xff7fffff, %%ecx\n\t"
+      ".LFUN_001a7d80_3:\n\t"
+      "movl %%ecx, 0x1b4(%%eax)\n\t"
+      ".LFUN_001a7d80_4:\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cce320]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_001a7d80_1\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_001a7d80_5:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cce450] "m"(b1a7d80_cce450), [tryget] "m"(b1a7d80_tryget), [cce320] "m"(b1a7d80_cce320)
+      : "memory");
 }
+#else
+#error "FUN_001a7d80: clang naked draft required"
+#endif
+
 
 /* FUN_001a7df0 (0x1a7df0) — XBE naked draft (batch 65). */
 #if defined(__clang__)
@@ -12997,47 +13076,75 @@ int16_t vehicle_scripting_find_available_seats(int unit_handle __attribute__((un
 #endif
 
 
-/* unit_leap_begin (0x1b1c70) — start a leap animation.
- *
- * Checks the unit's animation state via a switch; if the state is not one
- * of the dying/dead/special states, and either the unit has a vehicle
- * or melee is not active, requests animation state 0x27 (leap). If the
- * forward vector is non-NULL, applies it as the unit's alignment vector.
- *
- * Returns 1 on success, 0 if the state blocks leaping.
- *
- * Source: units.c
- */
-char unit_leap_begin(int unit_handle, float *forward)
+/* unit_leap_begin (0x1b1c70) — XBE naked draft (batch 67). */
+#if defined(__clang__)
+static void *(*const b1b1c70_get)(int, int) = object_get_and_verify_type;
+static char (*const b1b1c70_c1ad260)(int unit_handle, int16_t anim_state) = FUN_001ad260;
+static void (*const b1b1c70_c1af180)(int unit_handle, float *alignment_vector) = unit_apply_alignment_vector;
+
+__attribute__((naked, noinline))
+char unit_leap_begin(int unit_handle __attribute__((unused)), float *forward __attribute__((unused)))
 {
-  char *unit;
-  char result;
-  char anim_ok;
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  result = 0;
-
-  switch (*(uint8_t *)(unit + 0x253)) {
-  case 0x17: case 0x18: case 0x19: case 0x1a: case 0x1b:
-  case 0x1d: case 0x1e: case 0x1f: case 0x20: case 0x21:
-  case 0x22: case 0x23: case 0x27: case 0x29:
-    /* These states block leaping */
-    break;
-  default:
-    if (*(short *)(unit + 0x64) != 0 ||
-        (*(uint8_t *)(unit + 0x424) & 1) == 0) {
-      anim_ok = FUN_001ad260(unit_handle, 0x27);
-      if (anim_ok != '\0') {
-        if (forward != 0) {
-          unit_apply_alignment_vector(unit_handle, forward);
-        }
-        result = 1;
-      }
-    }
-    break;
-  }
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movsbl 0x253(%%eax), %%ecx\n\t"
+      "addl $-0x17, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "cmpl $0x12, %%ecx\n\t"
+      "ja .Lunit_leap_begin_1\n\t"
+      "movzbl 0x1b1ce8(%%ecx), %%ecx\n\t"
+      "jmp *.Lunit_leap_begin_jt(,%%ecx,4)\n\t"
+      ".Lunit_leap_begin_1:\n\t"
+      "cmpw $0, 0x64(%%eax)\n\t"
+      "jne .Lunit_leap_begin_2\n\t"
+      "movb 0x424(%%eax), %%dl\n\t"
+      "andb $1, %%dl\n\t"
+      "movb %%dl, -0x1(%%ebp)\n\t"
+      "jne .Lunit_leap_begin_4\n\t"
+      ".Lunit_leap_begin_2:\n\t"
+      "pushl $0x27\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1ad260]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lunit_leap_begin_4\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lunit_leap_begin_3\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[c1af180]\n\t"
+      ".Lunit_leap_begin_3:\n\t"
+      "movb $1, %%bl\n\t"
+      ".Lunit_leap_begin_4:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lunit_leap_begin_jt:\n\t"
+      ".long .Lunit_leap_begin_4\n\t"
+      ".long .Lunit_leap_begin_1\n\t"
+      ".text\n\t"
+      :
+      : [get] "m"(b1b1c70_get), [c1ad260] "m"(b1b1c70_c1ad260), [c1af180] "m"(b1b1c70_c1af180)
+      : "memory");
 }
+#else
+#error "unit_leap_begin: clang naked draft required"
+#endif
+
 
 /* unit_throw_grenade_begin (0x1b2090) — XBE naked draft (batch 51). */
 #if defined(__clang__)
