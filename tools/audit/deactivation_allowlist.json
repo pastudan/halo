@@ -17519,5 +17519,117 @@
     "object": "D3D8:d3dresource.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x180770",
+    "name": "FUN_00180770",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x180820",
+    "name": "compress_real_to_int16",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x180890",
+    "name": "FUN_00180890",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x181060",
+    "name": "FUN_00181060",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x181180",
+    "name": "FUN_00181180",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1812c0",
+    "name": "FUN_001812c0",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x181420",
+    "name": "FUN_00181420",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x182610",
+    "name": "FUN_00182610",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x182840",
+    "name": "rasterizer_xbox_bitmap_swizzle2d_byte",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x182910",
+    "name": "rasterizer_xbox_bitmap_swizzle2d_word",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1829f0",
+    "name": "rasterizer_xbox_bitmap_swizzle2d_long",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x182ac0",
+    "name": "rasterizer_xbox_bitmap_swizzle3d_byte",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x182bd0",
+    "name": "rasterizer_xbox_bitmap_swizzle3d_word",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x182cf0",
+    "name": "rasterizer_xbox_bitmap_swizzle3d_long",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x182e00",
+    "name": "FUN_00182e00",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x183120",
+    "name": "FUN_00183120",
+    "object": "rasterizer_text.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
