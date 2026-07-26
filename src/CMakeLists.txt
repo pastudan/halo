@@ -172,6 +172,13 @@
 	halo/bitmaps/libtiff/tif_open.c
 	halo/bitmaps/libtiff/tif_write.c
 	halo/kb_common_stubs.c
+	halo/xdk/xapilib/fileio.c
+	halo/xdk/xapilib/lasterr.c
+	halo/xdk/xapilib/physmem.c
+	halo/xdk/xapilib/xvutil.c
+	halo/xdk/xnet/xnet.c
+	halo/xdk/xnet/wsock.c
+	halo/xdk/xapilib/xinput.c
 	halo/shell.c
 	halo/shell_xbox.c
 		halo/cache/xbox_texture_cache.c

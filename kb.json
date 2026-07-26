@@ -32507,639 +32507,796 @@
       "functions": [
         {
           "addr": "0x1d0e96",
-          "decl": "int __stdcall file_get_full_attributes(const char *path);"
+          "decl": "int __stdcall file_get_full_attributes(const char *path);",
+          "ported": false
         },
         {
           "addr": "0x1d1d85",
-          "decl": "int __stdcall CreateFileA(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);"
+          "decl": "int __stdcall CreateFileA(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);",
+          "ported": false
         },
         {
           "addr": "0x1d0ee1",
-          "decl": "void FUN_001d0ee1(void);"
+          "decl": "void FUN_001d0ee1(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0f63",
-          "decl": "void MoveFileA(void);"
+          "decl": "void MoveFileA(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0ff9",
-          "decl": "bool __stdcall DeleteFileA(const char *path);"
+          "decl": "bool __stdcall DeleteFileA(const char *path);",
+          "ported": false
         },
         {
           "addr": "0x1d10bd",
-          "decl": "void FUN_001d10bd(void);"
+          "decl": "void FUN_001d10bd(void);",
+          "ported": false
         },
         {
           "addr": "0x1d11e9",
-          "decl": "void FUN_001d11e9(void);"
+          "decl": "void FUN_001d11e9(void);",
+          "ported": false
         },
         {
           "addr": "0x1d12c1",
-          "decl": "void FUN_001d12c1(void);"
+          "decl": "void FUN_001d12c1(void);",
+          "ported": false
         },
         {
           "addr": "0x1d13c9",
-          "decl": "int __stdcall ReadFile(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped);"
+          "decl": "int __stdcall ReadFile(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped);",
+          "ported": false
         },
         {
           "addr": "0x1d14b6",
           "decl": "int __stdcall WriteFile(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped);",
-          "name": "WriteFile"
+          "name": "WriteFile",
+          "ported": false
         },
         {
           "addr": "0x1d158c",
           "decl": "bool __stdcall SetEndOfFile(int handle);",
-          "name": "SetEndOfFile"
+          "name": "SetEndOfFile",
+          "ported": false
         },
         {
           "addr": "0x1d1610",
           "decl": "unsigned int __stdcall SetFilePointer(int handle, int distance, int *distance_high, unsigned int method);",
-          "name": "SetFilePointer"
+          "name": "SetFilePointer",
+          "ported": false
         },
         {
           "addr": "0x1d170a",
-          "decl": "void FUN_001d170a(void);"
+          "decl": "void FUN_001d170a(void);",
+          "ported": false
         },
         {
           "addr": "0x1d17d2",
-          "decl": "void FUN_001d17d2(void);"
+          "decl": "void FUN_001d17d2(void);",
+          "ported": false
         },
         {
           "addr": "0x1d18aa",
-          "decl": "void FUN_001d18aa(void);"
+          "decl": "void FUN_001d18aa(void);",
+          "ported": false
         },
         {
           "addr": "0x1d1910",
-          "decl": "bool __stdcall SetFileTime(int handle, void *creation_time, void *last_access_time, void *last_write_time);"
+          "decl": "bool __stdcall SetFileTime(int handle, void *creation_time, void *last_access_time, void *last_write_time);",
+          "ported": false
         },
         {
           "addr": "0x1d1982",
-          "decl": "void FUN_001d1982(void);"
+          "decl": "void FUN_001d1982(void);",
+          "ported": false
         },
         {
           "addr": "0x1d19a9",
-          "decl": "void FUN_001d19a9(void);"
+          "decl": "void FUN_001d19a9(void);",
+          "ported": false
         },
         {
           "addr": "0x1d19e7",
-          "decl": "void FUN_001d19e7(void);"
+          "decl": "void FUN_001d19e7(void);",
+          "ported": false
         },
         {
           "addr": "0x1d1a38",
-          "decl": "void FUN_001d1a38(void);"
+          "decl": "void FUN_001d1a38(void);",
+          "ported": false
         },
         {
           "addr": "0x1d1a89",
-          "decl": "void FUN_001d1a89(void);"
+          "decl": "void FUN_001d1a89(void);",
+          "ported": false
         },
         {
           "addr": "0x1d1b87",
-          "decl": "void FUN_001d1b87(void);"
+          "decl": "void FUN_001d1b87(void);",
+          "ported": false
         },
         {
           "addr": "0x1d1c74",
-          "decl": "void FUN_001d1c74(void);"
+          "decl": "void FUN_001d1c74(void);",
+          "ported": false
         },
         {
           "addr": "0x1d1d4a",
           "decl": "unsigned int __stdcall GetFileSize(int handle, unsigned int *high_size);",
-          "name": "GetFileSize"
+          "name": "GetFileSize",
+          "ported": false
         },
         {
           "addr": "0x1d1f10",
-          "decl": "void FUN_001d1f10(void);"
+          "decl": "void FUN_001d1f10(void);",
+          "ported": false
         }
       ],
-      "name": "XAPILIB:fileio.obj"
+      "name": "XAPILIB:fileio.obj",
+      "source": "xdk/xapilib/fileio.c"
     },
     {
       "functions": [
         {
           "addr": "0x1d21f2",
-          "decl": "void FUN_001d21f2(void);"
+          "decl": "void FUN_001d21f2(void);",
+          "ported": false
         },
         {
           "addr": "0x1d2240",
-          "decl": "int xapi_GetLastError(void);"
+          "decl": "int xapi_GetLastError(void);",
+          "ported": false
         },
         {
           "addr": "0x1d2268",
-          "decl": "void __stdcall SetLastError(unsigned int error);"
+          "decl": "void __stdcall SetLastError(unsigned int error);",
+          "ported": false
         },
         {
           "addr": "0x1d2296",
-          "decl": "void __stdcall XapiSetLastNTError(int status);"
+          "decl": "void __stdcall XapiSetLastNTError(int status);",
+          "ported": false
         },
         {
           "addr": "0x1d22ad",
-          "decl": "void FUN_001d22ad(void);"
+          "decl": "void FUN_001d22ad(void);",
+          "ported": false
         },
         {
           "addr": "0x1d2367",
-          "decl": "void FUN_001d2367(void);"
+          "decl": "void FUN_001d2367(void);",
+          "ported": false
         },
         {
           "addr": "0x1d23d9",
-          "decl": "void GetOverlappedResult(void);"
+          "decl": "void GetOverlappedResult(void);",
+          "ported": false
         },
         {
           "addr": "0x1d243e",
-          "decl": "void FUN_001d243e(void);"
+          "decl": "void FUN_001d243e(void);",
+          "ported": false
         },
         {
           "addr": "0x1d2518",
-          "decl": "void XGetLaunchInfo(void);"
+          "decl": "void XGetLaunchInfo(void);",
+          "ported": false
         },
         {
           "addr": "0x1d259b",
-          "decl": "void FUN_001d259b(void);"
+          "decl": "void FUN_001d259b(void);",
+          "ported": false
         },
         {
           "addr": "0x1d25e0",
-          "decl": "int __stdcall XLaunchNewImageA(const char *image_path, void *launch_data);"
+          "decl": "int __stdcall XLaunchNewImageA(const char *image_path, void *launch_data);",
+          "ported": false
         },
         {
           "addr": "0x1d26f3",
-          "decl": "int __stdcall XSetNicknameW(void *param_1, int param_2);"
+          "decl": "int __stdcall XSetNicknameW(void *param_1, int param_2);",
+          "ported": false
         },
         {
           "addr": "0x1d292e",
-          "decl": "void FUN_001d292e(void);"
+          "decl": "void FUN_001d292e(void);",
+          "ported": false
         },
         {
           "addr": "0x1d29eb",
-          "decl": "int __stdcall FUN_001d29eb(int param_1, void *param_2, int param_3);"
+          "decl": "int __stdcall FUN_001d29eb(int param_1, void *param_2, int param_3);",
+          "ported": false
         },
         {
           "addr": "0x1d2ad3",
-          "decl": "void FUN_001d2ad3(void);"
+          "decl": "void FUN_001d2ad3(void);",
+          "ported": false
         },
         {
           "addr": "0x1d2ae7",
-          "decl": "void FUN_001d2ae7(void);"
+          "decl": "void FUN_001d2ae7(void);",
+          "ported": false
         },
         {
           "addr": "0x1d2b79",
-          "decl": "void FUN_001d2b79(void);"
+          "decl": "void FUN_001d2b79(void);",
+          "ported": false
         },
         {
           "addr": "0x1d2bbd",
-          "decl": "void FUN_001d2bbd(void);"
+          "decl": "void FUN_001d2bbd(void);",
+          "ported": false
         }
       ],
-      "name": "XAPILIB:lasterr.obj"
+      "name": "XAPILIB:lasterr.obj",
+      "source": "xdk/xapilib/lasterr.c"
     },
     {
       "functions": [
         {
           "addr": "0x1d2d48",
-          "decl": "void FUN_001d2d48(void);"
+          "decl": "void FUN_001d2d48(void);",
+          "ported": false
         },
         {
           "addr": "0x1d2e48",
-          "decl": "void FUN_001d2e48(void);"
+          "decl": "void FUN_001d2e48(void);",
+          "ported": false
         },
         {
           "addr": "0x1d2ec6",
-          "decl": "void FUN_001d2ec6(void);"
+          "decl": "void FUN_001d2ec6(void);",
+          "ported": false
         },
         {
           "addr": "0x1d2f22",
-          "decl": "void FUN_001d2f22(void);"
+          "decl": "void FUN_001d2f22(void);",
+          "ported": false
         },
         {
           "addr": "0x1d3185",
-          "decl": "void FUN_001d3185(void);"
+          "decl": "void FUN_001d3185(void);",
+          "ported": false
         },
         {
           "addr": "0x1d3254",
-          "decl": "void FUN_001d3254(void);"
+          "decl": "void FUN_001d3254(void);",
+          "ported": false
         },
         {
           "addr": "0x1d335b",
-          "decl": "void FUN_001d335b(void);"
+          "decl": "void FUN_001d335b(void);",
+          "ported": false
         },
         {
           "addr": "0x1d33a2",
-          "decl": "void __stdcall FUN_001d33a2(int param_1);"
+          "decl": "void __stdcall FUN_001d33a2(int param_1);",
+          "ported": false
         },
         {
           "addr": "0x1d33e6",
-          "decl": "bool __stdcall QueryPerformanceCounter(void *counter);"
+          "decl": "bool __stdcall QueryPerformanceCounter(void *counter);",
+          "ported": false
         },
         {
           "addr": "0x1d33fb",
-          "decl": "bool __stdcall QueryPerformanceFrequency(void *freq);"
+          "decl": "bool __stdcall QueryPerformanceFrequency(void *freq);",
+          "ported": false
         },
         {
           "addr": "0x1d3410",
-          "decl": "int CreateDirectoryA(const char *path, int access);"
+          "decl": "int CreateDirectoryA(const char *path, int access);",
+          "ported": false
         },
         {
           "addr": "0x1d347c",
-          "decl": "bool FUN_001d347c(const char *path);"
+          "decl": "bool FUN_001d347c(const char *path);",
+          "ported": false
         },
         {
           "addr": "0x1d350a",
-          "decl": "void FUN_001d350a(void);"
+          "decl": "void FUN_001d350a(void);",
+          "ported": false
         },
         {
           "addr": "0x1d3576",
-          "decl": "void FUN_001d3576(void);"
+          "decl": "void FUN_001d3576(void);",
+          "ported": false
         },
         {
           "addr": "0x1d3683",
-          "decl": "void FUN_001d3683(void);"
+          "decl": "void FUN_001d3683(void);",
+          "ported": false
         },
         {
           "addr": "0x1d36d4",
-          "decl": "void *__stdcall XPhysicalAlloc(size_t size, unsigned int addr, unsigned int alignment, unsigned int protect);"
+          "decl": "void *__stdcall XPhysicalAlloc(size_t size, unsigned int addr, unsigned int alignment, unsigned int protect);",
+          "ported": false
         },
         {
           "addr": "0x1d371d",
-          "decl": "void __stdcall physical_memory_protect(void *addr, unsigned int size, unsigned int protect);"
+          "decl": "void __stdcall physical_memory_protect(void *addr, unsigned int size, unsigned int protect);",
+          "ported": false
         },
         {
           "addr": "0x1d372d",
-          "decl": "void __stdcall MmFreeContiguousMemory(void *base_address);"
+          "decl": "void __stdcall MmFreeContiguousMemory(void *base_address);",
+          "ported": false
         },
         {
           "addr": "0x1d3733",
-          "decl": "unsigned long __stdcall MmQueryAddressProtect(void *virtual_address);"
+          "decl": "unsigned long __stdcall MmQueryAddressProtect(void *virtual_address);",
+          "ported": false
         },
         {
           "addr": "0x1d3739",
-          "decl": "void FUN_001d3739(void);"
+          "decl": "void FUN_001d3739(void);",
+          "ported": false
         },
         {
           "addr": "0x1d3a91",
-          "decl": "void XapiSelectCachePartition(void);"
+          "decl": "void XapiSelectCachePartition(void);",
+          "ported": false
         },
         {
           "addr": "0x1d3c95",
-          "decl": "void XMountUtilityDrive(void);"
+          "decl": "void XMountUtilityDrive(void);",
+          "ported": false
         },
         {
           "addr": "0x1d3d80",
-          "decl": "void XMountAlternateTitleA(void);"
+          "decl": "void XMountAlternateTitleA(void);",
+          "ported": false
         },
         {
           "addr": "0x1d3ee5",
-          "decl": "void XUnmountAlternateTitleA(void);"
+          "decl": "void XUnmountAlternateTitleA(void);",
+          "ported": false
         },
         {
           "addr": "0x1d3f42",
-          "decl": "void FUN_001d3f42(void);"
+          "decl": "void FUN_001d3f42(void);",
+          "ported": false
         },
         {
           "addr": "0x1d3fe1",
-          "decl": "void FUN_001d3fe1(void);"
+          "decl": "void FUN_001d3fe1(void);",
+          "ported": false
         },
         {
           "addr": "0x1d407c",
-          "decl": "void XMUNameFromDriveLetter(void);"
+          "decl": "void XMUNameFromDriveLetter(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4157",
-          "decl": "void FUN_001d4157(void);"
+          "decl": "void FUN_001d4157(void);",
+          "ported": false
         },
         {
           "addr": "0x1d41be",
-          "decl": "void FUN_001d41be(void);"
+          "decl": "void FUN_001d41be(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4230",
-          "decl": "void FUN_001d4230(void);"
+          "decl": "void FUN_001d4230(void);",
+          "ported": false
         },
         {
           "addr": "0x1d426b",
-          "decl": "void XCalculateSignatureBegin(void);"
+          "decl": "void XCalculateSignatureBegin(void);",
+          "ported": false
         },
         {
           "addr": "0x1d42a9",
-          "decl": "void FUN_001d42a9(void);"
+          "decl": "void FUN_001d42a9(void);",
+          "ported": false
         },
         {
           "addr": "0x1d42c3",
-          "decl": "void FUN_001d42c3(void);"
+          "decl": "void FUN_001d42c3(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4345",
-          "decl": "void xbe_main_thread(void);"
+          "decl": "void xbe_main_thread(void);",
+          "ported": false
         },
         {
           "addr": "0x1d43b4",
-          "decl": "void entry(void);"
+          "decl": "void entry(void);",
+          "ported": false
         },
         {
           "addr": "0x1d440e",
-          "decl": "void XapiFormatObjectAttributes(void);"
+          "decl": "void XapiFormatObjectAttributes(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4436",
-          "decl": "void FUN_001d4436(void);"
+          "decl": "void FUN_001d4436(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4464",
-          "decl": "void FUN_001d4464(void);"
+          "decl": "void FUN_001d4464(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4486",
-          "decl": "void FUN_001d4486(void);"
+          "decl": "void FUN_001d4486(void);",
+          "ported": false
         },
         {
           "addr": "0x1d44b3",
-          "decl": "void FUN_001d44b3(void);"
+          "decl": "void FUN_001d44b3(void);",
+          "ported": false
         },
         {
           "addr": "0x1d44dc",
-          "decl": "void FUN_001d44dc(void);"
+          "decl": "void FUN_001d44dc(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4507",
-          "decl": "void FUN_001d4507(void);"
+          "decl": "void FUN_001d4507(void);",
+          "ported": false
         },
         {
           "addr": "0x1d454b",
-          "decl": "void FUN_001d454b(void);"
+          "decl": "void FUN_001d454b(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4570",
-          "decl": "void FUN_001d4570(void);"
+          "decl": "void FUN_001d4570(void);",
+          "ported": false
         },
         {
           "addr": "0x1d46a3",
-          "decl": "void FUN_001d46a3(void);"
+          "decl": "void FUN_001d46a3(void);",
+          "ported": false
         },
         {
           "addr": "0x1d47c3",
-          "decl": "void FUN_001d47c3(void);"
+          "decl": "void FUN_001d47c3(void);",
+          "ported": false
         },
         {
           "addr": "0x1d47e4",
-          "decl": "void FUN_001d47e4(void);"
+          "decl": "void FUN_001d47e4(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4877",
-          "decl": "void FUN_001d4877(void);"
+          "decl": "void FUN_001d4877(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4a02",
-          "decl": "void FUN_001d4a02(void);"
+          "decl": "void FUN_001d4a02(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4a34",
-          "decl": "void FUN_001d4a34(void);"
+          "decl": "void FUN_001d4a34(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4cd9",
-          "decl": "void FUN_001d4cd9(void);"
+          "decl": "void FUN_001d4cd9(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4dd3",
-          "decl": "void FUN_001d4dd3(void);"
+          "decl": "void FUN_001d4dd3(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4e37",
-          "decl": "void FUN_001d4e37(void);"
+          "decl": "void FUN_001d4e37(void);",
+          "ported": false
         },
         {
           "addr": "0x1d4ec6",
-          "decl": "void FUN_001d4ec6(void);"
+          "decl": "void FUN_001d4ec6(void);",
+          "ported": false
         },
         {
           "addr": "0x1d52c4",
-          "decl": "void FUN_001d52c4(void);"
+          "decl": "void FUN_001d52c4(void);",
+          "ported": false
         },
         {
           "addr": "0x1d52f3",
-          "decl": "void FUN_001d52f3(void);"
+          "decl": "void FUN_001d52f3(void);",
+          "ported": false
         },
         {
           "addr": "0x1d5411",
-          "decl": "void FUN_001d5411(void);"
+          "decl": "void FUN_001d5411(void);",
+          "ported": false
         },
         {
           "addr": "0x1d5598",
-          "decl": "void FUN_001d5598(void);"
+          "decl": "void FUN_001d5598(void);",
+          "ported": false
         },
         {
           "addr": "0x1d5842",
-          "decl": "void FUN_001d5842(void);"
+          "decl": "void FUN_001d5842(void);",
+          "ported": false
         }
       ],
-      "name": "XAPILIB:physmem.obj"
+      "name": "XAPILIB:physmem.obj",
+      "source": "xdk/xapilib/physmem.c"
     },
     {
       "functions": [
         {
           "addr": "0x1d04f1",
-          "decl": "void FUN_001d04f1(void);"
+          "decl": "void FUN_001d04f1(void);",
+          "ported": false
         },
         {
           "addr": "0x1d051d",
-          "decl": "void __stdcall GetLocalTime(void *system_time);"
+          "decl": "void __stdcall GetLocalTime(void *system_time);",
+          "ported": false
         },
         {
           "addr": "0x1d0581",
-          "decl": "int FUN_001d0581(void);"
+          "decl": "int FUN_001d0581(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0589",
-          "decl": "void FUN_001d0589(void);"
+          "decl": "void FUN_001d0589(void);",
+          "ported": false
         },
         {
           "addr": "0x1d05f4",
-          "decl": "bool __stdcall SystemTimeToFileTime(void *system_time, void *file_time);"
+          "decl": "bool __stdcall SystemTimeToFileTime(void *system_time, void *file_time);",
+          "ported": false
         },
         {
           "addr": "0x1d0669",
-          "decl": "void FUN_001d0669(void);"
+          "decl": "void FUN_001d0669(void);",
+          "ported": false
         },
         {
           "addr": "0x1d06a0",
-          "decl": "void FUN_001d06a0(void);"
+          "decl": "void FUN_001d06a0(void);",
+          "ported": false
         },
         {
           "addr": "0x1d08aa",
-          "decl": "void GetTimeZoneInformation(void);"
+          "decl": "void GetTimeZoneInformation(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0a06",
-          "decl": "void FUN_001d0a06(void);"
+          "decl": "void FUN_001d0a06(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0a5c",
-          "decl": "void FUN_001d0a5c(void);"
+          "decl": "void FUN_001d0a5c(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0adb",
-          "decl": "void FUN_001d0adb(void);"
+          "decl": "void FUN_001d0adb(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0b06",
-          "decl": "void FUN_001d0b06(void);"
+          "decl": "void FUN_001d0b06(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0b31",
-          "decl": "void FUN_001d0b31(void);"
+          "decl": "void FUN_001d0b31(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0b9c",
-          "decl": "void FUN_001d0b9c(void);"
+          "decl": "void FUN_001d0b9c(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0bb3",
-          "decl": "void FUN_001d0bb3(void);"
+          "decl": "void FUN_001d0bb3(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0bb9",
-          "decl": "void *__stdcall FUN_001d0bb9(unsigned int flags, unsigned int size);"
+          "decl": "void *__stdcall FUN_001d0bb9(unsigned int flags, unsigned int size);",
+          "ported": false
         },
         {
           "addr": "0x1d0c02",
-          "decl": "void FUN_001d0c02(void);"
+          "decl": "void FUN_001d0c02(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0c16",
-          "decl": "void *__stdcall LocalFree(void *ptr);"
+          "decl": "void *__stdcall LocalFree(void *ptr);",
+          "ported": false
         },
         {
           "addr": "0x1d0c48",
-          "decl": "void FUN_001d0c48(void);"
+          "decl": "void FUN_001d0c48(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0c65",
-          "decl": "void FUN_001d0c65(void);"
+          "decl": "void FUN_001d0c65(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0c91",
-          "decl": "void FUN_001d0c91(void);"
+          "decl": "void FUN_001d0c91(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0cbf",
-          "decl": "void FUN_001d0cbf(void);"
+          "decl": "void FUN_001d0cbf(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0cfb",
-          "decl": "void FUN_001d0cfb(void);"
+          "decl": "void FUN_001d0cfb(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0da1",
-          "decl": "void __stdcall xbox_query_global_memory_status(void *status);"
+          "decl": "void __stdcall xbox_query_global_memory_status(void *status);",
+          "ported": false
         },
         {
           "addr": "0x1d0df0",
-          "decl": "bool FUN_001d0df0(const char *path, unsigned int attributes);"
+          "decl": "bool FUN_001d0df0(const char *path, unsigned int attributes);",
+          "ported": false
         }
       ],
-      "name": "XAPILIB:xvutil.obj"
+      "name": "XAPILIB:xvutil.obj",
+      "source": "xdk/xapilib/xvutil.c"
     },
     {
       "functions": [
         {
           "addr": "0x1d8259",
-          "decl": "void XapiInitProcess(void);"
+          "decl": "void XapiInitProcess(void);",
+          "ported": false
         },
         {
           "addr": "0x1d8368",
-          "decl": "int __stdcall XapiFormatFATVolume(void *device_path);"
+          "decl": "int __stdcall XapiFormatFATVolume(void *device_path);",
+          "ported": false
         },
         {
           "addr": "0x1d86c3",
-          "decl": "void _cinit(void);"
+          "decl": "void _cinit(void);",
+          "ported": false
         },
         {
           "addr": "0x1d871b",
-          "decl": "void _rtinit(void);"
+          "decl": "void _rtinit(void);",
+          "ported": false
         },
         {
           "addr": "0x1d8750",
-          "decl": "unsigned int FUN_001d8750(unsigned int val@<ecx>);"
+          "decl": "unsigned int FUN_001d8750(unsigned int val@<ecx>);",
+          "ported": false
         },
         {
           "addr": "0x1d8766",
-          "decl": "int __stdcall xCompareStringA(int flags, const char *a, int a_len, const char *b, int b_len);"
+          "decl": "int __stdcall xCompareStringA(int flags, const char *a, int a_len, const char *b, int b_len);",
+          "ported": false
         },
         {
           "addr": "0x1d88ef",
-          "decl": "void FUN_001d88ef(void);"
+          "decl": "void FUN_001d88ef(void);",
+          "ported": false
         },
         {
           "addr": "0x1d8a88",
-          "decl": "void FUN_001d8a88(void);"
+          "decl": "void FUN_001d8a88(void);",
+          "ported": false
         },
         {
           "addr": "0x1d8aef",
-          "decl": "void FUN_001d8aef(void);"
+          "decl": "void FUN_001d8aef(void);",
+          "ported": false
         },
         {
           "addr": "0x1d8b10",
-          "decl": "void FUN_001d8b10(void);"
+          "decl": "void FUN_001d8b10(void);",
+          "ported": false
         },
         {
           "addr": "0x1d8b64",
-          "decl": "void XGetSectionSize(void);"
+          "decl": "void XGetSectionSize(void);",
+          "ported": false
         },
         {
           "addr": "0x1d8b76",
-          "decl": "uint32_t XNetGetEthernetLinkStatus(void);"
+          "decl": "uint32_t XNetGetEthernetLinkStatus(void);",
+          "ported": false
         },
         {
           "addr": "0x1d8df8",
-          "decl": "void XcSHAUpdate(void);"
+          "decl": "void XcSHAUpdate(void);",
+          "ported": false
         },
         {
           "addr": "0x1d8dfe",
-          "decl": "void XcSHAInit(void);"
+          "decl": "void XcSHAInit(void);",
+          "ported": false
         },
         {
           "addr": "0x1d8e04",
-          "decl": "void XcSHAFinal(void);"
+          "decl": "void XcSHAFinal(void);",
+          "ported": false
         },
         {
           "addr": "0x1d8e0a",
-          "decl": "void ExQueryNonVolatileSetting(void);"
+          "decl": "void ExQueryNonVolatileSetting(void);",
+          "ported": false
         }
       ],
-      "name": "XNET:xnet.obj"
+      "name": "XNET:xnet.obj",
+      "source": "xdk/xnet/xnet.c"
     },
     {
       "functions": [
         {
           "addr": "0x222df7",
-          "decl": "int __stdcall FUN_00222df7(void *key);"
+          "decl": "int __stdcall FUN_00222df7(void *key);",
+          "ported": false
         },
         {
           "addr": "0x224876",
-          "decl": "int __stdcall xnet_getsockname(int socket, void *name, int *namelen);"
+          "decl": "int __stdcall xnet_getsockname(int socket, void *name, int *namelen);",
+          "ported": false
         },
         {
           "addr": "0x22486b",
-          "decl": "int __stdcall xnet_getpeername(int socket, void *name, int *namelen);"
+          "decl": "int __stdcall xnet_getpeername(int socket, void *name, int *namelen);",
+          "ported": false
         },
         {
           "addr": "0x225197",
-          "decl": "int __stdcall xnet_bind(int socket, void *name, int namelen);"
+          "decl": "int __stdcall xnet_bind(int socket, void *name, int namelen);",
+          "ported": false
         },
         {
           "addr": "0x225bb6",
-          "decl": "int __stdcall xnet_recv(int socket, void *buf, int len, int flags);"
+          "decl": "int __stdcall xnet_recv(int socket, void *buf, int len, int flags);",
+          "ported": false
         },
         {
           "addr": "0x225c20",
-          "decl": "int __stdcall xnet_send(int socket, const char *buf, int len, int flags);"
+          "decl": "int __stdcall xnet_send(int socket, const char *buf, int len, int flags);",
+          "ported": false
         },
         {
           "addr": "0x225cc6",
-          "decl": "int __stdcall xnet_closesocket(int socket);"
+          "decl": "int __stdcall xnet_closesocket(int socket);",
+          "ported": false
         },
         {
           "addr": "0x225cd1",
-          "decl": "int __stdcall xnet_recvfrom(int socket, void *buf, int len, int flags, void *from, int *fromlen);"
+          "decl": "int __stdcall xnet_recvfrom(int socket, void *buf, int len, int flags, void *from, int *fromlen);",
+          "ported": false
         }
       ],
-      "name": "XNET:wsock.obj"
+      "name": "XNET:wsock.obj",
+      "source": "xdk/xnet/wsock.c"
     },
     {
       "functions": [
@@ -33648,10 +33805,12 @@
       "functions": [
         {
           "addr": "0x24c427",
-          "decl": "int __stdcall XInputSetState(int, void *);"
+          "decl": "int __stdcall XInputSetState(int, void *);",
+          "ported": false
         }
       ],
-      "name": "XAPILIB:xinput.obj"
+      "name": "XAPILIB:xinput.obj",
+      "source": "xdk/xapilib/xinput.c"
     },
     {
       "data": [],
@@ -40195,35 +40354,43 @@
       "functions": [
         {
           "addr": "0x1d63d5",
-          "decl": "void FUN_001d63d5(void);"
+          "decl": "void FUN_001d63d5(void);",
+          "ported": false
         },
         {
           "addr": "0x1d6ca8",
-          "decl": "void FUN_001d6ca8(void);"
+          "decl": "void FUN_001d6ca8(void);",
+          "ported": false
         },
         {
           "addr": "0x1d6e65",
-          "decl": "void FUN_001d6e65(void);"
+          "decl": "void FUN_001d6e65(void);",
+          "ported": false
         },
         {
           "addr": "0x1d703b",
-          "decl": "void FUN_001d703b(void);"
+          "decl": "void FUN_001d703b(void);",
+          "ported": false
         },
         {
           "addr": "0x1d76fc",
-          "decl": "void FUN_001d76fc(void);"
+          "decl": "void FUN_001d76fc(void);",
+          "ported": false
         },
         {
           "addr": "0x1d771c",
-          "decl": "void XAutoPowerDownResetTimer(void);"
+          "decl": "void XAutoPowerDownResetTimer(void);",
+          "ported": false
         },
         {
           "addr": "0x1d7749",
-          "decl": "void FUN_001d7749(void);"
+          "decl": "void FUN_001d7749(void);",
+          "ported": false
         },
         {
           "addr": "0x1d77b3",
-          "decl": "void FUN_001d77b3(void);"
+          "decl": "void FUN_001d77b3(void);",
+          "ported": false
         },
         {
           "addr": "0x1d7817",
@@ -40237,11 +40404,13 @@
         },
         {
           "addr": "0x1d7a59",
-          "decl": "void FUN_001d7a59(void);"
+          "decl": "void FUN_001d7a59(void);",
+          "ported": false
         },
         {
           "addr": "0x1d7b37",
-          "decl": "int __stdcall FUN_001d7b37(void *handle, void *buf);"
+          "decl": "int __stdcall FUN_001d7b37(void *handle, void *buf);",
+          "ported": false
         },
         {
           "addr": "0x1d7cb4",
@@ -40255,19 +40424,23 @@
         },
         {
           "addr": "0x1d7d84",
-          "decl": "void FUN_001d7d84(void);"
+          "decl": "void FUN_001d7d84(void);",
+          "ported": false
         },
         {
           "addr": "0x1d7e6b",
-          "decl": "void XapiMapLetterToDirectory(void);"
+          "decl": "void XapiMapLetterToDirectory(void);",
+          "ported": false
         },
         {
           "addr": "0x1d819f",
-          "decl": "void FUN_001d819f(void);"
+          "decl": "void FUN_001d819f(void);",
+          "ported": false
         },
         {
           "addr": "0x1d81f4",
-          "decl": "void XapiBootToDash(void);"
+          "decl": "void XapiBootToDash(void);",
+          "ported": false
         }
       ],
       "name": "XAPILIB:xbox_crt.obj",
