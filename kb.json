@@ -5227,7 +5227,7 @@
         {
           "addr": "0xa57b0",
           "decl": "char FUN_000a57b0(float *vec, float max_len);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000a57b0"
         },
         {
@@ -11863,7 +11863,7 @@
         {
           "addr": "0xc4f90",
           "decl": "void FUN_000c4f90(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4ff0",
@@ -29593,7 +29593,7 @@
         {
           "addr": "0x1b5680",
           "decl": "char vehicle_is_flipped(int vehicle_handle);",
-          "ported": true,
+          "ported": false,
           "name": "vehicle_is_flipped"
         },
         {
@@ -30705,8 +30705,9 @@
         },
         {
           "addr": "0x19b510",
-          "decl": "void draw_string_get_string(void);",
-          "ported": false
+          "decl": "const wchar_t *draw_string_get_string(short index);",
+          "ported": false,
+          "name": "draw_string_get_string"
         },
         {
           "addr": "0x19b560",
@@ -30725,8 +30726,9 @@
         },
         {
           "addr": "0x19b790",
-          "decl": "void draw_string_get_color(void);",
-          "ported": false
+          "decl": "void draw_string_get_color(float *out);",
+          "ported": false,
+          "name": "draw_string_get_color"
         },
         {
           "addr": "0x19b7e0",
@@ -33782,8 +33784,9 @@
         },
         {
           "addr": "0xfcc90",
-          "decl": "void FUN_000fcc90(int16_t magazine_index, int weapon_handle);",
-          "ported": false
+          "decl": "void FUN_000fcc90(int16_t magazine_index@<eax>, int weapon_handle);",
+          "ported": true,
+          "name": "FUN_000fcc90"
         },
         {
           "addr": "0xfcd10",
@@ -40515,7 +40518,7 @@
         },
         {
           "addr": "0x62b20",
-          "decl": "char FUN_00062b20(unsigned char *flag_base @<eax>, int index @<edx>, char skip_check @<bl>, void *block, void *bitvec);",
+          "decl": "char FUN_00062b20(unsigned char *flag_base, int index, char skip_check, void *block, void *bitvec);",
           "ported": true,
           "name": "FUN_00062b20"
         },
