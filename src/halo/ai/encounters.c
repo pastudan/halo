@@ -5512,104 +5512,56 @@ void encounters_initialize(int16_t team_a, int16_t team_b)
 }
 
 
-/* encounter_pursuit_position_already_examined (0x5b6e0) — XBE naked draft (batch 224). */
-#if defined(__clang__)
-static int (*const b5b6e0_c59c40)(int encounter_handle, int16_t pursuit_index, int min_time, char create) = FUN_00059c40;
-static void *(*const b5b6e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b5b6e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5b6e0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-char encounter_pursuit_position_already_examined(int encounter_handle __attribute__((unused)), int position_hash __attribute__((unused)), int16_t pursuit_index __attribute__((unused)), int min_time __attribute__((unused)), int16_t *out_count __attribute__((unused)), int *out_time __attribute__((unused)))
+/* encounter_pursuit_position_already_examined (0x5b6e0) — readable C lift. */
+char encounter_pursuit_position_already_examined(
+    int encounter_handle,
+    int position_hash,
+    int16_t pursuit_index,
+    int min_time,
+    int16_t *out_count,
+    int *out_time)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%edi, %%ebx\n\t"
-      "call *%[c59c40]\n\t"
-      "addl $8, %%esp\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "je .Lencounter_pursuit_position_already_examined_5\n\t"
-      "movl 0x5ab26c, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%di, 0x2(%%esi)\n\t"
-      "je .Lencounter_pursuit_position_already_examined_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x434\n\t"
-      "pushl $0x25d27c\n\t"
-      "pushl $0x25da84\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencounter_pursuit_position_already_examined_1:\n\t"
-      "movw 0x8(%%esi), %%cx\n\t"
-      "cmpw $7, %%cx\n\t"
-      "movl 0x4(%%esi), %%ebx\n\t"
-      "jge .Lencounter_pursuit_position_already_examined_3\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lencounter_pursuit_position_already_examined_2:\n\t"
-      "movswl %%ax, %%edi\n\t"
-      "cmpl %%edx, 0xc(%%esi,%%edi,4)\n\t"
-      "je .Lencounter_pursuit_position_already_examined_3\n\t"
-      "incl %%eax\n\t"
-      "cmpw $6, %%ax\n\t"
-      "jl .Lencounter_pursuit_position_already_examined_2\n\t"
-      "jmp .Lencounter_pursuit_position_already_examined_4\n\t"
-      ".Lencounter_pursuit_position_already_examined_3:\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".Lencounter_pursuit_position_already_examined_4:\n\t"
-      "popl %%esi\n\t"
-      ".Lencounter_pursuit_position_already_examined_5:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lencounter_pursuit_position_already_examined_6\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      ".Lencounter_pursuit_position_already_examined_6:\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lencounter_pursuit_position_already_examined_7\n\t"
-      "movl %%ebx, (%%eax)\n\t"
-      ".Lencounter_pursuit_position_already_examined_7:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c59c40] "m"(b5b6e0_c59c40), [dget] "m"(b5b6e0_dget), [assert] "m"(b5b6e0_assert), [exitfn] "m"(b5b6e0_exitfn)
-      : "memory");
-}
-#else
-#error "encounter_pursuit_position_already_examined: clang naked draft required"
-#endif
+  extern char DAT_0025da84[];
+  extern char DAT_0025d27c[];
+  int pursuit_handle;
+  char *pursuit;
+  char found;
+  int16_t count;
+  int stamp;
+  int i;
 
+  found = 0;
+  count = 0;
+  stamp = -1;
+  pursuit_handle = FUN_00059c40(encounter_handle, pursuit_index, min_time, 0);
+  if (pursuit_handle != -1) {
+    pursuit = (char *)datum_get(*(data_t **)0x5ab26c, pursuit_handle);
+    if (*(int16_t *)(pursuit + 2) != pursuit_index) {
+      display_assert(DAT_0025da84, DAT_0025d27c, 0x434, 1);
+      system_exit(-1);
+    }
+    count = *(int16_t *)(pursuit + 8);
+    stamp = *(int *)(pursuit + 4);
+    if (count < 7) {
+      found = 0;
+      for (i = 0; i < 6; i++) {
+        if (*(int *)(pursuit + 0xc + i * 4) == position_hash) {
+          found = 1;
+          break;
+        }
+      }
+    } else {
+      found = 1;
+    }
+  }
+  if (out_count) {
+    *out_count = count;
+  }
+  if (out_time) {
+    *out_time = stamp;
+  }
+  return found;
+}
 
 /* encounter_mark_examined_pursuit_position (0x5b5e0) — XBE naked draft (batch 226). */
 #if defined(__clang__)

@@ -17880,7 +17880,7 @@
         {
           "addr": "0xb7e30",
           "decl": "float *player_control_get_facing_angles(int16_t local_player_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb7f10",
@@ -34866,7 +34866,7 @@
         },
         {
           "addr": "0x4a460",
-          "decl": "void FUN_0004a460(int count, const char **names, unsigned int *bitvec, int vector_size, int16_t (*lookup)(const char *));",
+          "decl": "void FUN_0004a460(int a0, int a1, void *buf, int buf_size, int max_entries);",
           "ported": false,
           "name": "FUN_0004a460"
         },
@@ -35985,7 +35985,7 @@
         {
           "addr": "0x5b6e0",
           "decl": "char encounter_pursuit_position_already_examined(int encounter_handle, int position_hash, int16_t pursuit_index, int min_time, int16_t *out_count, int *out_time);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x5b790",
