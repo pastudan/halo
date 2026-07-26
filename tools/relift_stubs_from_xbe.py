@@ -38,6 +38,10 @@ JCC_MNEM = {
     "jle": "<=",
 }
 
+_EBP_OFF = r"(0x[0-9a-f]+|\d+)"
+_EBP_PARAM_RE = re.compile(rf"\[ebp \+ {_EBP_OFF}\]", re.I)
+_EBP_LOCAL_RE = re.compile(rf"\[ebp - {_EBP_OFF}\]", re.I)
+
 
 def load_gen_utils():
     spec_path = ROOT / "tools" / "gen_module_draft_batch.py"
@@ -223,15 +227,56 @@ def _span_from_sig_start(src: str, sig_start: int, name: str) -> tuple[int, int,
     return sig_start, body_start, body_end
 
 
+ARG_REGS = frozenset({"eax", "ebx", "ecx", "edx", "esi", "edi", "ebp"})
+
+
+def normalize_reg(name: str) -> str:
+    name = name.strip()
+    if len(name) == 2 and name[1] in "xlh":
+        return name[0] + "x"
+    return name
+
+
+def parse_reg_params(decl: str) -> dict[str, str]:
+    """Map register name -> C parameter name from @<reg> kb decl annotations."""
+    out: dict[str, str] = {}
+    for p in GEN.split_param_strings(decl):
+        m = re.search(r"@<(\w+)>", p)
+        if not m:
+            continue
+        reg = normalize_reg(m.group(1).lower())
+        tok = re.split(r"\s+", strip_c_comments(re.sub(r"\[[^\]]*\]", "", p)).strip())
+        cand = tok[-1] if tok else ""
+        if cand and cand not in ("...",) and re.match(r"^[A-Za-z_]", cand):
+            out[reg] = GEN.clean_param_name(cand)
+    return out
+
+
+def ebp_param_expr(off: int, caller_params: list[str]) -> str:
+    if off >= 8:
+        idx = (off - 8) // 4
+        if idx < len(caller_params):
+            return caller_params[idx]
+        return f"lift_a{idx}"
+    return f"stack_{off:x}"
+
+
+def _parse_ebp_offset(text: str, sign: str = "+") -> int | None:
+    m = re.search(rf"\[ebp\s*{re.escape(sign)}\s*(0x[0-9a-f]+|\d+)\]", text, re.I)
+    if not m:
+        return None
+    val = m.group(1)
+    return int(val, 16) if val.lower().startswith("0x") else int(val)
+
+
 def infer_stack_params(insns) -> list[tuple[int, str]]:
     """Return [(offset, type_hint), ...] for dword [ebp+N] reads, N>=8."""
     seen: list[int] = []
     for ins in insns:
         if ins.mnemonic in ("ret", "call"):
             break
-        m = re.search(r"\[ebp \+ (0x[0-9a-f]+)\]", ins.op_str)
-        if m and ins.mnemonic in ("mov", "cmp", "push", "lea", "test", "xor"):
-            off = int(m.group(1), 16)
+        off = _parse_ebp_offset(ins.op_str, "+")
+        if off is not None and ins.mnemonic in ("mov", "cmp", "push", "lea", "test", "xor"):
             if off >= 8 and off not in seen:
                 seen.append(off)
     seen.sort()
@@ -346,27 +391,128 @@ def mem_write_lhs(base: str, off: int, size: str | None) -> str:
     return f"*({cast} *){base}"
 
 
-def collect_call_args(insns, idx: int) -> tuple[list[str], int]:
+def expr_from_operand(op: str, reg_state: dict[str, str], caller_params: list[str]) -> str:
+    op = op.strip()
+    if op.startswith("0x"):
+        val = int(op, 16)
+        if 0x2000000 < val < 0x7FFFFFFF and val.to_bytes(4, "little").isascii():
+            return tag_fourcc(val)
+        return fmt_imm(val)
+    m = re.match(rf"(?:byte|word|dword|float) ptr \[ebp \+ {_EBP_OFF}\]", op, re.I)
+    if m:
+        val = m.group(1)
+        off = int(val, 16) if val.lower().startswith("0x") else int(val)
+        return ebp_param_expr(off, caller_params)
+    m = re.match(rf"(?:byte|word|dword|float) ptr \[ebp - {_EBP_OFF}\]", op, re.I)
+    if m:
+        val = m.group(1)
+        off = int(val, 16) if val.lower().startswith("0x") else int(val)
+        return f"local_{off:x}"
+    m = re.match(r"(?:byte|word|dword|float) ptr \[(\w+) \+ (0x[0-9a-f]+)\]", op)
+    if m:
+        base = reg_state.get(m.group(1), m.group(1))
+        return mem_read_expr(base, int(m.group(2), 16), "dword")
+    m = re.match(r"(?:byte|word|dword|float) ptr \[(\w+)\]", op)
+    if m:
+        base = reg_state.get(m.group(1), m.group(1))
+        return f"*({cast_for_size('dword')} *)({base})"
+    if re.fullmatch(r"-?\d+", op):
+        return op
+    reg = normalize_reg(op)
+    if reg in reg_state:
+        return reg_state[reg]
+    if reg in ARG_REGS:
+        return reg
+    return f"/* {op} */"
+
+
+def build_reg_state(insns, end_idx: int, caller_params: list[str]) -> dict[str, str]:
+    """Track register expressions from prologue through instruction before end_idx."""
+    state: dict[str, str] = {}
+    for i in range(min(end_idx, len(insns))):
+        ins = insns[i]
+        if ins.mnemonic == "mov":
+            parts = [p.strip() for p in ins.op_str.split(",", 1)]
+            if len(parts) != 2:
+                continue
+            dst_raw, src = parts
+            dst = normalize_reg(dst_raw.split()[-1] if "ptr" in dst_raw else dst_raw)
+            if dst not in ARG_REGS:
+                continue
+            state[dst] = expr_from_operand(src, state, caller_params)
+        elif ins.mnemonic == "lea":
+            parts = [p.strip() for p in ins.op_str.split(",", 1)]
+            if len(parts) != 2:
+                continue
+            dst = normalize_reg(parts[0])
+            if dst not in ARG_REGS:
+                continue
+            src = parts[1]
+            m = re.match(
+                rf"(?:(?:byte|word|dword|float)\s+)?(?:ptr\s+)?\[(\w+)\s*\+\s*(0x[0-9a-f]+|\d+)\]",
+                src,
+                re.I,
+            )
+            if m:
+                base = state.get(m.group(1), m.group(1))
+                off_val = m.group(2)
+                off = int(off_val, 16) if off_val.lower().startswith("0x") else int(off_val)
+                state[dst] = f"(char *){base} + 0x{off:x}"
+            elif re.match(
+                rf"(?:(?:byte|word|dword|float)\s+)?(?:ptr\s+)?\[(\w+)\s*-\s*(0x[0-9a-f]+|\d+)\]",
+                src,
+                re.I,
+            ):
+                m2 = re.match(
+                    rf"(?:(?:byte|word|dword|float)\s+)?(?:ptr\s+)?\[(\w+)\s*-\s*(0x[0-9a-f]+|\d+)\]",
+                    src,
+                    re.I,
+                )
+                base = state.get(m2.group(1), m2.group(1))
+                off_val = m2.group(2)
+                off = int(off_val, 16) if off_val.lower().startswith("0x") else int(off_val)
+                state[dst] = f"(char *){base} - 0x{off:x}"
+            else:
+                state[dst] = expr_from_operand(src, state, caller_params)
+        elif ins.mnemonic == "xor":
+            parts = [normalize_reg(p.strip()) for p in ins.op_str.split(",")]
+            if len(parts) == 2 and parts[0] == parts[1]:
+                state[parts[0]] = "0"
+        elif ins.mnemonic == "call" and i < end_idx - 1:
+            state["eax"] = "eax"
+    return state
+
+
+def collect_call_args(
+    insns,
+    idx: int,
+    caller_params: list[str] | None = None,
+    reg_state: dict[str, str] | None = None,
+) -> tuple[list[str], int]:
     """Walk backward from call at idx collecting push args (cdecl order)."""
+    caller_params = caller_params or []
+    reg_state = reg_state or build_reg_state(insns, idx, caller_params)
     args: list[str] = []
     j = idx - 1
-    while j >= 0 and len(args) < 8:
+    while j >= 0 and len(args) < 12:
         ins = insns[j]
         if ins.mnemonic == "push":
             op = ins.op_str.strip()
+            push_state = build_reg_state(insns, j, caller_params)
             if op.startswith("0x"):
-                args.append(fmt_imm(int(op, 16)))
-            elif re.match(r"dword ptr \[ebp \+ (0x[0-9a-f]+)\]", op):
-                off = int(re.search(r"0x[0-9a-f]+", op).group(0), 16)
-                idx_p = (off - 8) // 4
-                args.append(f"lift_a{idx_p}" if idx_p >= 0 else f"stack_{off:x}")
+                args.append(expr_from_operand(op, push_state, caller_params))
+            elif re.match(rf"dword ptr \[ebp \+ {_EBP_OFF}\]", op, re.I):
+                off = _parse_ebp_offset(op, "+") or 0
+                args.append(ebp_param_expr(off, caller_params))
             elif re.match(r"dword ptr \[(\w+) \+ (0x[0-9a-f]+)\]", op):
                 m = re.match(r"dword ptr \[(\w+) \+ (0x[0-9a-f]+)\]", op)
-                args.append(mem_read_expr(m.group(1), int(m.group(2), 16), "dword"))
+                base = push_state.get(m.group(1), m.group(1))
+                args.append(mem_read_expr(base, int(m.group(2), 16), "dword"))
             elif re.fullmatch(r"[a-z]+", op):
-                args.append(op)
+                reg = normalize_reg(op)
+                args.append(push_state.get(reg, reg))
             else:
-                args.append(f"/* {op} */")
+                args.append(expr_from_operand(op, push_state, caller_params))
             j -= 1
             continue
         if ins.mnemonic in ("mov", "lea", "xor", "fld", "fcomp", "fnstsw", "test", "cmp"):
@@ -378,13 +524,6 @@ def collect_call_args(insns, idx: int) -> tuple[list[str], int]:
             break
         break
     return args, j
-
-
-def normalize_reg(name: str) -> str:
-    name = name.strip()
-    if len(name) == 2 and name[1] in "xlh":
-        return name[0] + "x"
-    return name
 
 
 def reg_store_lhs(reg: str) -> str:
@@ -575,13 +714,53 @@ def load_decl_arity() -> dict[str, int]:
     return load_decl_sigs()[0]
 
 
+def _type_only(param_type: str) -> str:
+    pt = re.sub(r"/\*.*?\*/", "", param_type).strip()
+    pt = re.sub(r"\*\s*[A-Za-z_][A-Za-z0-9_]*\s*$", "*", pt)
+    pt = re.sub(r"\s+[A-Za-z_][A-Za-z0-9_]*\s*$", "", pt)
+    return pt.strip()
+
+
+def _coerce_pointer_arg(arg: str, param_type: str) -> str:
+    pt = _type_only(param_type)
+    if "*" not in pt:
+        if "(char *)" in arg or arg.startswith("("):
+            return "0"
+        return arg
+    if "/* esp" in arg or "esp */" in arg:
+        if "**" in pt.replace(" ", ""):
+            return "(void **)0"
+        return "(void *)0"
+    if re.match(r"\*\(int", arg):
+        if pt != "int" and pt != "int16_t" and pt != "char" and pt != "short":
+            return f"({pt})(uintptr_t){arg}"
+    if re.match(r"\*\(\w+ \*\)", arg) and "data_t" in pt:
+        return f"({pt})(uintptr_t){arg}"
+    if "(char *)" in arg or arg.startswith("(char *)"):
+        if re.fullmatch(r"char \*", pt.replace("const ", "").strip()) or pt.strip() == "const char *":
+            return arg
+        return f"({pt})({arg})"
+    if arg.startswith("*(float *)") and "float" in pt and "*" not in pt.replace("float", ""):
+        return f"*({arg})"
+    if arg.startswith("(void *)(uintptr_t)"):
+        inner = arg[len("(void *)(uintptr_t)") :]
+        if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", inner):
+            return f"({_type_only(param_type)})(uintptr_t){inner}"
+    return arg
+
+
 def cast_arg_for_param(arg: str, param_type: str, cname: str) -> str:
     pt = re.sub(r"/\*.*?\*/", "", param_type).replace("const ", "").strip()
+    if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", arg):
+        if arg.startswith(("local_", "stack_", "lift_a", "param_")):
+            if "*" in pt:
+                return f"({_type_only(param_type)})(uintptr_t){arg}"
+            return arg
     reg_m = re.fullmatch(r"(eax|ebx|ecx|edx|esi|edi|ebp)", arg)
     if reg_m:
         reg = reg_m.group(1)
         if "*" not in pt and ("short" in pt or pt == "int" or pt.startswith("int ")):
-            return "0"
+            return reg
         if "*" in pt or pt == "void" or pt.startswith("void "):
             if "**" in pt.replace(" ", ""):
                 if "char" in pt:
@@ -670,7 +849,7 @@ def cast_arg_for_param(arg: str, param_type: str, cname: str) -> str:
         return arg.replace("(char *)", "(unsigned char *)", 1)
     if arg == "(char *)0" and "unsigned char" in pt:
         return "(unsigned char *)0"
-    return arg
+    return _coerce_pointer_arg(arg, param_type)
 
 
 def resolve_caller_arg(arg: str, caller_params: list[str]) -> str:
@@ -703,14 +882,14 @@ def fmt_call_line(
     if caller_name and cname == caller_name:
         return f"  /* relift: tail-call {cname}(); */"
     casted: list[str] = []
-    for a in args[:8]:
+    for a in args[:12]:
         a = a.strip()
         if a.startswith("/*"):
             casted.append("0")
         elif re.fullmatch(r"lift_a\d+|stack_[0-9a-f]+", a):
             casted.append(resolve_caller_arg(a, caller_params))
         elif re.fullmatch(r"local_[0-9a-f]+", a):
-            casted.append("0")
+            casted.append(a)
         elif re.fullmatch(r"(eax|ebx|ecx|edx|esi|edi|ebp|esp)", a):
             casted.append("0" if a == "esp" else a)
         elif re.match(r"0x00[23][0-9a-f]{5}", a):
@@ -792,8 +971,11 @@ def lift_large(ctx: LiftCtx) -> list[str]:
         if ins.mnemonic == "call" and ins.op_str.startswith("0x"):
             target = int(ins.op_str, 16)
             cname = ctx.addr_name.get(target, f"FUN_{target:08x}")
-            args, _ = collect_call_args(insns, i)
-            if len(args) >= 2 and args[-2].startswith("0x") and len(args[-2]) == 10:
+            reg_state = build_reg_state(insns, i, caller_params)
+            args, _ = collect_call_args(insns, i, caller_params, reg_state)
+            if len(args) >= 2 and args[-2].startswith("'"):
+                pass
+            elif len(args) >= 2 and args[-2].startswith("0x") and len(args[-2]) == 10:
                 v = int(args[-2], 16)
                 if 0x2000000 < v < 0x7FFFFFFF:
                     args[-2] = tag_fourcc(v)
@@ -866,7 +1048,8 @@ def lift_function(
                 if ins.mnemonic == "call" and ins.op_str.startswith("0x"):
                     t = int(ins.op_str, 16)
                     cname = ctx.addr_name.get(t, f"FUN_{t:08x}")
-                    args, _ = collect_call_args(insns, i)
+                    reg_state = build_reg_state(insns, i, params)
+                    args, _ = collect_call_args(insns, i, params, reg_state)
                     cast_calls.append(fmt_call_line(t, cname, args, params, ctx.caller_name))
             lines = cast_calls[:24] if cast_calls else [
                 f"  /* relift calls: {', '.join(calls[:8])} */"
@@ -1029,9 +1212,15 @@ def relift_object(
         insns = disasm_function(md, get_bytes, va, end)
 
         stack_params = infer_stack_params(insns)
-        params = [param_name(i, off) for i, (off, _) in enumerate(stack_params)]
-        if not params:
-            params = GEN.parse_params(GEN.sanitize_decl_for_c(decl))
+        decl_san = GEN.sanitize_decl_for_c(decl)
+        params = GEN.parse_params(decl_san)
+        if not params or params[0].startswith("unused_arg"):
+            params = [param_name(i, off) for i, (off, _) in enumerate(stack_params)]
+        if stack_params:
+            for i, (off, _) in enumerate(stack_params):
+                if i < len(params):
+                    continue
+                params.append(param_name(i, off))
 
         sig = signature_from_source(src, name) or build_signature(decl, params, addr)
         params = GEN.parse_params(GEN.sanitize_decl_for_c(sig + ";")) or params
