@@ -10554,5 +10554,236 @@
     "object": "transport_endpoint_set_winsock.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x2f470",
+    "name": "actor_get_vision_distances",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x2f5f0",
+    "name": "FUN_0002f5f0",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x2f6e0",
+    "name": "actor_perception_desire_prop",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x2fb60",
+    "name": "arctangent",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x300b0",
+    "name": "actor_situation_update_target_status",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x302b0",
+    "name": "actor_situation_combat_status_update",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x303f0",
+    "name": "actor_situation_update",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x308e0",
+    "name": "actor_situation_try_new_target",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x309d0",
+    "name": "actor_perception_friend_prop_is_attacking",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x30b80",
+    "name": "actor_perception_aiming_vector_test_blockage",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x30d10",
+    "name": "FUN_00030d10",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x30e60",
+    "name": "FUN_00030e60",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x30f50",
+    "name": "FUN_00030f50",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x31440",
+    "name": "actor_berserk",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x314f0",
+    "name": "actor_visibility_at_point",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x31850",
+    "name": "actor_audibility_at_point",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x31a90",
+    "name": "actor_perception_find_sense_position",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x31c00",
+    "name": "actor_perception_unit_from_swarm",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x31df0",
+    "name": "prop_position_refresh",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x32170",
+    "name": "FUN_00032170",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x32380",
+    "name": "actor_perception_refresh_danger_zone",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x32940",
+    "name": "actor_expected_acknowledgement",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x32ac0",
+    "name": "actor_perception_unreachable",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x32b50",
+    "name": "actor_perception_tried_to_uncover",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x32bb0",
+    "name": "actor_perception_tried_to_search",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x32c10",
+    "name": "actor_perception_abandoned_search",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x32cb0",
+    "name": "actor_emotion_update",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x33330",
+    "name": "actor_perception_become_acknowledged",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x33440",
+    "name": "prop_status_refresh",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x342a0",
+    "name": "actor_perception_refresh_test_object",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x34970",
+    "name": "actor_perception_create_orphan_from_friend",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x34c80",
+    "name": "actor_perception_refresh",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x355f0",
+    "name": "FUN_000355f0",
+    "object": "actor_perception.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

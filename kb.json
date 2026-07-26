@@ -32432,7 +32432,8 @@
         },
         {
           "addr": "0x2f470",
-          "decl": "void actor_get_vision_distances(void);"
+          "decl": "void actor_get_vision_distances(void);",
+          "ported": false
         },
         {
           "addr": "0x2f5b0",
@@ -32443,11 +32444,13 @@
         },
         {
           "addr": "0x2f5f0",
-          "decl": "void FUN_0002f5f0(void);"
+          "decl": "void FUN_0002f5f0(void);",
+          "ported": false
         },
         {
           "addr": "0x2f6e0",
-          "decl": "void actor_perception_desire_prop(void);"
+          "decl": "void actor_perception_desire_prop(void);",
+          "ported": false
         },
         {
           "addr": "0x2f910",
@@ -32470,7 +32473,8 @@
         },
         {
           "addr": "0x2fb60",
-          "decl": "void arctangent(void);"
+          "decl": "void arctangent(void);",
+          "ported": false
         },
         {
           "addr": "0x2fb70",
@@ -32498,119 +32502,148 @@
         },
         {
           "addr": "0x300b0",
-          "decl": "void actor_situation_update_target_status(int actor_handle);"
+          "decl": "void actor_situation_update_target_status(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x302b0",
-          "decl": "void actor_situation_combat_status_update(int actor_handle);"
+          "decl": "void actor_situation_combat_status_update(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x303f0",
-          "decl": "void actor_situation_update(int actor_handle);"
+          "decl": "void actor_situation_update(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x308e0",
-          "decl": "void actor_situation_try_new_target(int actor_handle, int target);"
+          "decl": "void actor_situation_try_new_target(int actor_handle, int target);",
+          "ported": false
         },
         {
           "addr": "0x309d0",
-          "decl": "char actor_perception_friend_prop_is_attacking(int actor_handle, int iter_handle, float *out_pos);"
+          "decl": "char actor_perception_friend_prop_is_attacking(int actor_handle, int iter_handle, float *out_pos);",
+          "ported": false
         },
         {
           "addr": "0x30b80",
-          "decl": "void actor_perception_aiming_vector_test_blockage(void);"
+          "decl": "void actor_perception_aiming_vector_test_blockage(void);",
+          "ported": false
         },
         {
           "addr": "0x30d10",
-          "decl": "unsigned int FUN_00030d10(int actor_handle, float *chance_inout);"
+          "decl": "unsigned int FUN_00030d10(int actor_handle, float *chance_inout);",
+          "ported": false
         },
         {
           "addr": "0x30e60",
-          "decl": "void FUN_00030e60(void);"
+          "decl": "void FUN_00030e60(void);",
+          "ported": false
         },
         {
           "addr": "0x30f50",
-          "decl": "void FUN_00030f50(void);"
+          "decl": "void FUN_00030f50(void);",
+          "ported": false
         },
         {
           "addr": "0x31440",
-          "decl": "void actor_berserk(int actor_handle, int berserk_flag);"
+          "decl": "void actor_berserk(int actor_handle, int berserk_flag);",
+          "ported": false
         },
         {
           "addr": "0x314f0",
-          "decl": "void actor_visibility_at_point(void);"
+          "decl": "void actor_visibility_at_point(void);",
+          "ported": false
         },
         {
           "addr": "0x31850",
-          "decl": "int actor_audibility_at_point(int actor_handle, void *input_block, float *position, void *location, short volume, int range_scale, short flags);"
+          "decl": "int actor_audibility_at_point(int actor_handle, void *input_block, float *position, void *location, short volume, int range_scale, short flags);",
+          "ported": false
         },
         {
           "addr": "0x31a90",
-          "decl": "void actor_perception_find_sense_position(int actor_handle, float *position, int param_3, void *input_block_out);"
+          "decl": "void actor_perception_find_sense_position(int actor_handle, float *position, int param_3, void *input_block_out);",
+          "ported": false
         },
         {
           "addr": "0x31c00",
-          "decl": "void actor_perception_unit_from_swarm(void);"
+          "decl": "void actor_perception_unit_from_swarm(void);",
+          "ported": false
         },
         {
           "addr": "0x31df0",
-          "decl": "void prop_position_refresh(void);"
+          "decl": "void prop_position_refresh(void);",
+          "ported": false
         },
         {
           "addr": "0x32170",
-          "decl": "void FUN_00032170(void);"
+          "decl": "void FUN_00032170(void);",
+          "ported": false
         },
         {
           "addr": "0x32380",
-          "decl": "void actor_perception_refresh_danger_zone(void);"
+          "decl": "void actor_perception_refresh_danger_zone(void);",
+          "ported": false
         },
         {
           "addr": "0x32940",
-          "decl": "void actor_expected_acknowledgement(void);"
+          "decl": "void actor_expected_acknowledgement(void);",
+          "ported": false
         },
         {
           "addr": "0x32ac0",
-          "decl": "void actor_perception_unreachable(int actor_handle, int leader_handle, char flag);"
+          "decl": "void actor_perception_unreachable(int actor_handle, int leader_handle, char flag);",
+          "ported": false
         },
         {
           "addr": "0x32b50",
-          "decl": "void actor_perception_tried_to_uncover(int actor_handle, int prop_handle);"
+          "decl": "void actor_perception_tried_to_uncover(int actor_handle, int prop_handle);",
+          "ported": false
         },
         {
           "addr": "0x32bb0",
-          "decl": "void actor_perception_tried_to_search(int actor_handle, int prop_handle);"
+          "decl": "void actor_perception_tried_to_search(int actor_handle, int prop_handle);",
+          "ported": false
         },
         {
           "addr": "0x32c10",
-          "decl": "void actor_perception_abandoned_search(int actor_handle, int prop_handle);"
+          "decl": "void actor_perception_abandoned_search(int actor_handle, int prop_handle);",
+          "ported": false
         },
         {
           "addr": "0x32cb0",
-          "decl": "void actor_emotion_update(int actor_handle);"
+          "decl": "void actor_emotion_update(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x33330",
-          "decl": "void actor_perception_become_acknowledged(int actor_handle, int prop_handle, int param_3);"
+          "decl": "void actor_perception_become_acknowledged(int actor_handle, int prop_handle, int param_3);",
+          "ported": false
         },
         {
           "addr": "0x33440",
-          "decl": "void prop_status_refresh(void);"
+          "decl": "void prop_status_refresh(void);",
+          "ported": false
         },
         {
           "addr": "0x342a0",
-          "decl": "void actor_perception_refresh_test_object(void);"
+          "decl": "void actor_perception_refresh_test_object(void);",
+          "ported": false
         },
         {
           "addr": "0x34970",
-          "decl": "void actor_perception_create_orphan_from_friend(int param_1, int encounter_team, int actor_handle, int encounter_handle);"
+          "decl": "void actor_perception_create_orphan_from_friend(int param_1, int encounter_team, int actor_handle, int encounter_handle);",
+          "ported": false
         },
         {
           "addr": "0x34c80",
-          "decl": "void actor_perception_refresh(void);"
+          "decl": "void actor_perception_refresh(void);",
+          "ported": false
         },
         {
           "addr": "0x355f0",
-          "decl": "void FUN_000355f0(int actor_handle);"
+          "decl": "void FUN_000355f0(int actor_handle);",
+          "ported": false
         }
       ],
       "name": "actor_perception.obj",
