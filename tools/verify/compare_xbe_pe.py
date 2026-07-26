@@ -1304,6 +1304,32 @@ def main() -> int:
         ("FUN_00085c80", 0x85c80, 0x86153),
         ("network_pregame_status_screen_update", 0xf1ed0, 0xf2388),
         ("player_effect_get_camera_effect_matrix", 0xa3370, 0xa3887),
+        # gameplay wave 107 (2026-07-26) — Capstone weaks
+        ("FUN_00131fc0", 0x131fc0, 0x132452),
+        ("FUN_00030f50", 0x30f50, 0x3143f),
+        ("actor_situation_update", 0x303f0, 0x308de),
+        ("slayer_engine_display_score", 0xb5210, 0xb5392),
+        ("render_frustum_cube_view_fraction", 0x185ad0, 0x185f72),
+        ("ai_debug_update", 0x4ab10, 0x4af96),
+        ("flying_camera_update", 0x893a0, 0x89847),
+        ("FUN_000e6450", 0xe6450, 0xe688e),
+        ("motion_sensor_update", 0xdb4c0, 0xdb93e),
+        ("FUN_0012f990", 0x12f990, 0x12fd75),
+        ("FUN_000460e0", 0x460e0, 0x46522),
+        ("render_debug_trigger_volumes", 0xcbb40, 0xcbf78),
+        # gameplay wave 108 (2026-07-26) — Capstone weaks
+        ("ai_test_line_of_sight", 0x416e0, 0x41ac4),
+        ("FUN_0008cf30", 0x8cf30, 0x8d395),
+        ("FUN_00105160", 0x105160, 0x105550),
+        ("draw_bitmap_in_rect", 0xe3e80, 0xe4304),
+        ("render_camera_mirror", 0x186ef0, 0x18724d),
+        ("FUN_0004b810", 0x4b810, 0x4bc51),
+        ("FUN_0008d410", 0x8d410, 0x8d82b),
+        ("actor_action_find_escape_from_danger", 0x1e360, 0x1e6fa),
+        ("FUN_000454a0", 0x454a0, 0x45828),
+        ("leaf_map_build_portal_from_leaves", 0x192050, 0x192382),
+        ("FUN_00192390", 0x192390, 0x192699),
+        ("FUN_000eceb0", 0xeceb0, 0xed20b),
     ]
 
     xbe = Xbe.from_file(args.xbe)
