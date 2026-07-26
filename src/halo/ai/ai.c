@@ -1735,10 +1735,10 @@ void ai_find_inactive_encounters(void *out_list, int buf_size)
       continue;
     if (*(int *)(actor_rec + 0xc) == -1)
       continue;
-    entry_off = count * 0xc;
-    *(char *)((char *)out_list + entry_off + 4) = 1;
+    entry_off = 4 + count * 0xc;
+    *(char *)((char *)out_list + entry_off + 0) = 1;
+    *(int *)((char *)out_list + entry_off + 4) = *(int *)(actor_rec + 0xc);
     *(int *)((char *)out_list + entry_off + 8) = actor_iter[1];
-    *(int *)((char *)out_list + entry_off) = *(int *)(actor_rec + 0xc);
     *(int16_t *)out_list = count + 1;
   }
 
@@ -1754,10 +1754,10 @@ void ai_find_inactive_encounters(void *out_list, int buf_size)
       continue;
     if (*(int *)(enc_rec + 0x10) == -1)
       continue;
-    entry_off = count * 0xc;
-    *(char *)((char *)out_list + entry_off + 4) = 0;
+    entry_off = 4 + count * 0xc;
+    *(char *)((char *)out_list + entry_off + 0) = 0;
+    *(int *)((char *)out_list + entry_off + 4) = *(int *)(enc_rec + 0x10);
     *(int *)((char *)out_list + entry_off + 8) = *(int *)((char *)enc_iter + 0x10);
-    *(int *)((char *)out_list + entry_off) = *(int *)(enc_rec + 0x10);
     *(int16_t *)out_list = count + 1;
   }
 
@@ -1767,37 +1767,70 @@ void ai_find_inactive_encounters(void *out_list, int buf_size)
   }
 }
 
-/* 0x3fc90 */
-void ai_release_inactive_encounters(void)
+/* 0x3fc90 — erase inactive encounters/actors collected for recycling. */
+char ai_release_inactive_encounters(char *result_description,
+                                    char *more_to_release, void *list,
+                                    int16_t working_memory_size)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  int16_t cursor;
+  int16_t count;
+  char released;
+  char *entry;
+  void *scenario;
+  char *enc_elem;
+  char *enc_rec;
+  int handle;
+  int enc_index;
+  const char *name;
 
-  /* test eax, eax -> jne 0x3fcc5 */
-  display_assert((char *)0x00257620, (char *)0x002575c0, 624, 1);
-  system_exit(-1);
-  /* relift: cmp word ptr [ebp + 0x14], 0xc04 -> jae 0x3fced */
-  display_assert((char *)0x00257648, (char *)0x002575c0, 625, 1);
-  system_exit(-1);
-  /* relift: cmp (int16_t)eax, word ptr [edi] -> jge 0x3fda8 */
-  /* relift: cmp byte ptr [esi], 0 -> je 0x3fd4b */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  tag_get_name(0);
-  tag_name_strip_path((const char *)(uintptr_t)*(int *)((char *)eax + 0x5c));
-  crt_sprintf((char *)(uintptr_t)0, (char *)0x002576a8);
-  actor_erase(0, 1);
-  global_scenario_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), 0);
-  crt_sprintf((char *)(uintptr_t)0, (char *)0x00257690);
-  ai_erase(0, -1, -1, 1);
+  released = 0;
 
-  (void)eax;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  if ((result_description == NULL) || (more_to_release == NULL)) {
+    display_assert("result_description && more_to_release",
+                   "c:\\halo\\SOURCE\\ai\\ai.c", 0x270, 1);
+    system_exit(-1);
+  }
+  if (working_memory_size >= 0xc04) {
+    display_assert("working_memory_size >= "
+                     "sizeof(struct potentially_releasable_storage)",
+                   "c:\\halo\\SOURCE\\ai\\ai.c", 0x271, 1);
+    system_exit(-1);
+  }
+
+  scenario = global_scenario_get();
+  cursor = *(int16_t *)((char *)list + 2);
+  count = *(int16_t *)list;
+
+  while (cursor < count) {
+    entry = (char *)list + 4 + cursor * 0xc;
+    handle = *(int *)(entry + 4);
+
+    if (*(char *)(entry + 0) != 0) {
+      char *actor;
+
+      actor = (char *)datum_get(*(void **)0x6325a4, handle);
+      name = tag_name_strip_path(tag_get_name(*(int *)(actor + 0x5c)));
+      crt_sprintf(result_description, "encounterless-actor %s", name);
+      actor_erase(handle, 1);
+    } else {
+      enc_index = handle & 0xffff;
+      enc_elem = (char *)tag_block_get_element((char *)scenario + 0x42c,
+                                               enc_index, 0xb0);
+      enc_rec = (char *)datum_get(*(void **)0x5ab270, handle);
+      name = tag_get_name(enc_index);
+      crt_sprintf(result_description, "encounter %s (%d units)", name,
+                  (int)*(int16_t *)(enc_rec + 0x2a));
+      ai_erase(handle, -1, -1, 1);
+      (void)enc_elem;
+    }
+
+    *(int16_t *)((char *)list + 2) = cursor + 1;
+    released = 1;
+    cursor++;
+  }
+
+  *more_to_release = cursor < *(int16_t *)list;
+  return released;
 }
 
 /* 0x40150 */

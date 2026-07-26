@@ -130,7 +130,12 @@ def main() -> int:
         ("FUN_00063e30", 0x63e30, 0x63e90),
         ("FUN_00063e90", 0x63e90, 0x640df),
         ("path_heap_bubble_up", 0x5e150, 0x5e330),
+        ("path_heap_bubble_down", 0x5e330, 0x5e560),
+        ("path_heap_pop_cheapest_node", 0x5e560, 0x5e680),
+        ("path_heap_insert", 0x5e680, 0x5e700),
+        ("path_state_approach_point", 0x5e9b0, 0x5eae0),
         ("ai_find_inactive_encounters", 0x3fb40, 0x3fc90),
+        ("ai_release_inactive_encounters", 0x3fc90, 0x3fdbd),
         ("actor_berserk", 0x31440, 0x314f0),
     ]
 

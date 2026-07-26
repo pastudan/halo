@@ -4352,7 +4352,7 @@
         },
         {
           "addr": "0x3fc90",
-          "decl": "void ai_release_inactive_encounters(void);",
+          "decl": "char ai_release_inactive_encounters(char *result_description, char *more_to_release, void *list, int16_t working_memory_size);",
           "ported": false
         },
         {
@@ -40146,17 +40146,17 @@
         },
         {
           "addr": "0x5e330",
-          "decl": "void path_heap_bubble_down(void);",
+          "decl": "void path_heap_bubble_down(void *path, int16_t heap_index);",
           "ported": false
         },
         {
           "addr": "0x5e560",
-          "decl": "void path_heap_pop_cheapest_node(void);",
+          "decl": "int16_t path_heap_pop_cheapest_node(void *path);",
           "ported": false
         },
         {
           "addr": "0x5e680",
-          "decl": "void path_heap_insert(void);",
+          "decl": "void path_heap_insert(void *path, int16_t heap_node, int16_t heap_cost);",
           "ported": false
         },
         {

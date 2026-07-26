@@ -739,87 +739,177 @@ void path_heap_bubble_up(void *path, int16_t heap_index)
   *(int16_t *)(cur_entry + 0xb4) = cur_index;
 }
 
-/* 0x5e330 */
-void path_heap_bubble_down(void)
+/* 0x5e330 — sink a path-heap node toward the leaves. */
+void path_heap_bubble_down(void *path, int16_t heap_index)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  int16_t heap_size;
+  int16_t orig_node;
+  int16_t orig_cost;
+  int16_t cur_index;
+  char *orig_entry;
 
-  /* cmp (int16_t)edi, 1 -> jl 0x5e348 */
-  /* cmp (int16_t)edi, 0x400 -> jle 0x5e368 */
-  display_assert((char *)0x0025e06c, (char *)0x0025e0ac, 1316, 1);
-  system_exit(-1);
-  /* cmp (int16_t)esi, 0x400 -> jl 0x5e3b0 */
-  display_assert((char *)0x0025e034, (char *)0x0025e0ac, 1321, 1);
-  system_exit(-1);
-  display_assert((char *)0x0025dff0, (char *)0x0025e0ac, 1322, 1);
-  system_exit(-1);
-  /* relift: cmp (int16_t)esi, word ptr [ebx + 0x11084] -> jge 0x5e4ed */
-  /* cmp (int16_t)edi, 0x400 -> jl 0x5e460 */
-  display_assert((char *)0x0025e160, (char *)0x0025e0ac, 1342, 1);
-  system_exit(-1);
-  display_assert((char *)0x0025e118, (char *)0x0025e0ac, 1343, 1);
-  system_exit(-1);
-  /* relift: cmp word ptr [eax + 0xb0], (int16_t)ecx -> je 0x5e4c6 */
-  display_assert((char *)0x0025e0c8, (char *)0x0025e0ac, 1344, 1);
-  system_exit(-1);
-  /* relift: cmp (int16_t)eax, word ptr [ebp - 4] -> jge 0x5e4d8 */
+  if (heap_index < 1 || heap_index > 0x400) {
+    display_assert("heap_index>=1 && heap_index<=MAXIMUM_PATH_HEAP_SIZE",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x524, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  orig_node = *(int16_t *)((char *)path + heap_index * 4 + 0x11086);
+  orig_cost = *(int16_t *)((char *)path + heap_index * 4 + 0x11088);
+  if (orig_node < 0 || orig_node >= 0x400) {
+    display_assert("heap_node>=0 && heap_node<MAXIMUM_PATH_NODE_COUNT",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x529, 1);
+    system_exit(-1);
+  }
+
+  orig_entry = (char *)path + orig_node * 0x44 + 0xb0;
+  if (*(int16_t *)(orig_entry + 0) != orig_cost) {
+    display_assert("path->nodes[heap_node].estimated_distance==heap_cost",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x52a, 1);
+    system_exit(-1);
+  }
+
+  heap_size = *(int16_t *)((char *)path + 0x11084);
+  cur_index = heap_index;
+
+  for (;;) {
+    int16_t best_index;
+    int16_t best_cost;
+    int16_t child_idx;
+    int pass;
+
+    best_index = cur_index;
+    best_cost = orig_cost;
+    child_idx = (int16_t)(cur_index + cur_index);
+
+    for (pass = 0; pass < 2; pass++, child_idx++) {
+      int16_t child_node;
+      int16_t child_cost;
+      char *child_entry;
+
+      if (child_idx >= heap_size)
+        break;
+
+      child_node = *(int16_t *)((char *)path + child_idx * 4 + 0x11086);
+      child_cost = *(int16_t *)((char *)path + child_idx * 4 + 0x11088);
+      if (child_node < 0 || child_node >= 0x400) {
+        display_assert("child_node>=0 && child_node<MAXIMUM_PATH_NODE_COUNT",
+                       "c:\\halo\\SOURCE\\ai\\path.c", 0x53e, 1);
+        system_exit(-1);
+      }
+
+      child_entry = (char *)path + child_node * 0x44 + 0xb0;
+      if (*(int16_t *)(child_entry + 0xb4) != child_idx) {
+        display_assert("path->nodes[child_node].heap_index==child_index",
+                       "c:\\halo\\SOURCE\\ai\\path.c", 0x53f, 1);
+        system_exit(-1);
+      }
+      if (*(int16_t *)(child_entry + 0) != child_cost) {
+        display_assert("path->nodes[child_node].estimated_distance==child_cost",
+                       "c:\\halo\\SOURCE\\ai\\path.c", 0x540, 1);
+        system_exit(-1);
+      }
+
+      if (child_cost < best_cost) {
+        best_cost = child_cost;
+        best_index = child_idx;
+      }
+    }
+
+    if (best_index == cur_index) {
+      *(int16_t *)((char *)path + cur_index * 4 + 0x11086) = orig_node;
+      *(int16_t *)((char *)path + cur_index * 4 + 0x11088) = orig_cost;
+      *(int16_t *)(orig_entry + 0xb4) = cur_index;
+      return;
+    }
+
+    {
+      int16_t moved_node;
+      char *moved_entry;
+
+      moved_node =
+          *(int16_t *)((char *)path + best_index * 4 + 0x11086);
+      *(int16_t *)((char *)path + cur_index * 4 + 0x11086) = moved_node;
+      *(int16_t *)((char *)path + cur_index * 4 + 0x11088) =
+          *(int16_t *)((char *)path + best_index * 4 + 0x11088);
+      moved_entry = (char *)path + moved_node * 0x44 + 0xb0;
+      *(int16_t *)(moved_entry + 0xb4) = cur_index;
+    }
+    cur_index = best_index;
+  }
 }
 
-/* 0x5e560 */
-void path_heap_pop_cheapest_node(void)
+/* 0x5e560 — remove and return the cheapest open path node. */
+int16_t path_heap_pop_cheapest_node(void *path)
 {
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  int16_t heap_size;
+  int16_t node_index;
+  int16_t node_cost;
+  char *node_entry;
 
-  /* relift: cmp word ptr [ebx + 0x11084], (int16_t)esi -> jge 0x5e59c */
-  display_assert((char *)0x0025e238, (char *)0x0025e0ac, 1394, 1);
-  system_exit(-1);
-  /* relift: cmp word ptr [ebx + 0x11084], (int16_t)esi -> jle 0x5e66f */
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x5e5b5 */
-  /* cmp (int16_t)edi, 0x400 -> jl 0x5e5d4 */
-  display_assert((char *)0x0025e034, (char *)0x0025e0ac, 1399, 1);
-  system_exit(-1);
-  display_assert((char *)0x0025e208, (char *)0x0025e0ac, 1401, 1);
-  system_exit(-1);
-  /* relift: cmp (int16_t)ecx, word ptr [ebx + 0x1108c] -> je 0x5e638 */
-  display_assert((char *)0x0025e1a8, (char *)0x0025e0ac, 1402, 1);
-  system_exit(-1);
-  /* cmp (int16_t)eax, 1 -> jle 0x5e66f */
-  path_heap_bubble_down();
+  heap_size = *(int16_t *)((char *)path + 0x11084);
+  if (heap_size < 1) {
+    display_assert("path->heap_size>=1", "c:\\halo\\SOURCE\\ai\\path.c", 0x572,
+                   1);
+    system_exit(-1);
+  }
 
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  node_index = *(int16_t *)((char *)path + 0x1108a);
+  if (node_index < 0 || node_index >= 0x400) {
+    display_assert("heap_node>=0 && heap_node<MAXIMUM_PATH_NODE_COUNT",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x577, 1);
+    system_exit(-1);
+  }
+
+  node_entry = (char *)path + node_index * 0x44 + 0xb0;
+  if (*(int16_t *)(node_entry + 0xb4) != 1) {
+    display_assert("path->nodes[heap_node].heap_index==1",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x579, 1);
+    system_exit(-1);
+  }
+  node_cost = *(int16_t *)(node_entry + 0);
+  if (node_cost != *(int16_t *)((char *)path + 0x1108c)) {
+    display_assert("path->nodes[heap_node].estimated_distance==heap_cost",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x57a, 1);
+    system_exit(-1);
+  }
+
+  *(int16_t *)(node_entry + 0xb4) = -1;
+  *(int16_t *)((char *)path + 0x11084) = heap_size - 1;
+  heap_size = *(int16_t *)((char *)path + 0x11084);
+
+  if (heap_size > 1) {
+    *(int32_t *)((char *)path + 0x1108a) =
+        *(int32_t *)((char *)path + heap_size * 4 + 0x11086);
+    path_heap_bubble_down(path, 1);
+  }
+
+  return node_index;
 }
 
-/* 0x5e680 */
-void path_heap_insert(void)
+/* 0x5e680 — insert a node into the path heap and bubble it up. */
+void path_heap_insert(void *path, int16_t heap_node, int16_t heap_cost)
 {
-  int edi = 0;
+  int16_t heap_size;
+  int16_t heap_index;
 
-  /* relift: cmp word ptr [edi + 0x11084], 1 -> jge 0x5e6b0 */
-  display_assert((char *)0x0025e238, (char *)0x0025e0ac, 1428, 1);
-  system_exit(-1);
-  /* cmp (int16_t)eax, 0x400 -> jge 0x5e6ec */
-  path_heap_bubble_up((void *)0, 0);
-  error(2, (char *)0x0025e250);
+  heap_size = *(int16_t *)((char *)path + 0x11084);
+  if (heap_size < 1) {
+    display_assert("path->heap_size>=1", "c:\\halo\\SOURCE\\ai\\path.c", 0x594,
+                   1);
+    system_exit(-1);
+  }
 
-  (void)edi;
+  if (heap_size >= 0x400) {
+    error(2, (char *)0x0025e250);
+    return;
+  }
+
+  heap_index = heap_size;
+  *(int16_t *)((char *)path + 0x11084) = heap_size + 1;
+  *(int16_t *)((char *)path + heap_index * 4 + 0x11086) = heap_node;
+  *(int16_t *)((char *)path + heap_index * 4 + 0x11088) = heap_cost;
+  path_heap_bubble_up(path, heap_index);
 }
 
 /* 0x5e700 */
@@ -837,34 +927,63 @@ void FUN_0005e700(void)
   (void)ecx;
 }
 
-/* 0x5e9b0 */
-char path_state_approach_point(void *path_state, float *fp_results, int fp_count, char *out_byte, char *out_dest)
+/* 0x5e9b0 — test whether a path can approach a firing-position point. */
+char path_state_approach_point(void *path_state, float *fp_results, int fp_count,
+                               char *out_byte, char *out_dest)
 {
-  int eax = 0;
-  int ebx = 0;
-  int edi = 0;
+  char *path;
+  short node_index;
+  char *node;
+  short parent_index;
+  char march_result[0x1c];
 
-  path_node_from_hash_table((char *)(uintptr_t)path_state, fp_count);
-  /* cmp (int16_t)eax, 0xffff -> je 0x5eace */
-  path_get_node((char *)(uintptr_t)path_state, eax);
-  /* cmp (int16_t)eax, 0xffff -> je 0x5ea38 */
-  path_get_node((char *)(uintptr_t)path_state, 0);
-  FUN_000639e0(0, 0, (float *)(uintptr_t)fp_results, fp_count, (float *)(uintptr_t)eax, 0, (char *)0);
-  /* test (char)eax, (char)eax -> jne 0x5ea38 */
-  path_get_node((char *)(uintptr_t)path_state, eax);
-  /* cmp (int16_t)eax, 0xffff -> jne 0x5e9f0 */
-  /* test ebx, ebx -> jne 0x5ea5f */
-  display_assert((char *)0x0025e2e4, (char *)0x0025e0ac, 301, 1);
-  system_exit(-1);
-  /* test eax, eax -> jne 0x5ea89 */
-  display_assert((char *)0x0025e2cc, (char *)0x0025e0ac, 302, 1);
-  system_exit(-1);
-  /* relift: cmp word ptr [edi + 2], -1 -> jne 0x5eaaf */
-  return 0;
+  path = (char *)path_state;
+  node_index = path_node_from_hash_table(path, (unsigned int)fp_count);
+  if (node_index == -1)
+    return 0;
 
-  (void)eax;
-  (void)ebx;
-  (void)edi;
+  node = path_get_node(path, node_index);
+  if (*(int16_t *)(node + 2) == -1)
+    goto write_result;
+
+  for (;;) {
+    char *parent;
+
+    parent_index = *(int16_t *)(node + 2);
+    parent = path_get_node(path, parent_index);
+    if (FUN_000639e0((int)*(void **)(path + 0x64),
+                     *(unsigned char *)(path + 4), fp_results, fp_count,
+                     (float *)(parent + 0xc), *(int *)(parent + 8),
+                     march_result))
+      goto write_result;
+
+    node = parent;
+    if (*(int16_t *)(node + 2) == -1)
+      break;
+  }
+
+write_result:
+  if (out_dest == NULL) {
+    display_assert("destination", "c:\\halo\\SOURCE\\ai\\path.c", 0x12d, 1);
+    system_exit(-1);
+  }
+  if (out_byte == NULL) {
+    display_assert("approach_point", "c:\\halo\\SOURCE\\ai\\path.c", 0x12e, 1);
+    system_exit(-1);
+  }
+
+  if (*(int16_t *)(node + 2) == -1) {
+    *out_byte = 1;
+    *(int *)out_dest = *(int *)(path + 0x14);
+    *(int *)((char *)out_dest + 4) = *(int *)(path + 0x18);
+    *(int *)((char *)out_dest + 8) = *(int *)(path + 0x1c);
+  } else {
+    *out_byte = 0;
+    *(int *)out_dest = *(int *)(node + 0xc);
+    *(int *)((char *)out_dest + 4) = *(int *)(node + 0x10);
+    *(int *)((char *)out_dest + 8) = *(int *)(node + 0x14);
+  }
+  return 1;
 }
 
 /* 0x5ef80 */
@@ -894,7 +1013,7 @@ char FUN_0005ef80(unsigned int *path_buf)
   display_assert((char *)0x0025e3d0, (char *)0x0025e0ac, 739, 1);
   system_exit(-1);
   /* test (char)eax, (char)eax -> je 0x5f1a1 */
-  path_heap_insert();
+  path_heap_insert((void *)0, 0, 0);
   return 0;
 
   (void)eax;
@@ -1018,7 +1137,7 @@ char FUN_0005f740(unsigned int *path_buf)
 
   /* relift: relift: fld dword ptr [0x2549d4] */
   /* test (char)eax, 0x41 -> jne 0x5f765 */
-  path_heap_pop_cheapest_node();
+  path_heap_pop_cheapest_node((void *)0);
   path_get_node((char *)(uintptr_t)path_buf, 0);
   tag_block_get_element((void *)(uintptr_t)*(int *)((char *)path_buf + 0x64), 0, 0);
   /* test ecx, ecx -> jl 0x5f7be */
@@ -1069,7 +1188,7 @@ char FUN_0005f740(unsigned int *path_buf)
   display_assert((char *)0x0025e780, (char *)0x0025e0ac, 1126, 1);
   system_exit(-1);
   /* cmp (int16_t)eax, 0xffff -> jne 0x5fdb7 */
-  path_heap_insert();
+  path_heap_insert((void *)0, 0, 0);
   /* relift: cmp dword ptr [ebp - 0x1c], ecx -> jge 0x5febd */
   /* cmp (int16_t)ebx, -1 -> jne 0x5fcfd */
   error(2, (char *)0x0025e744);
@@ -1095,7 +1214,7 @@ char FUN_0005f740(unsigned int *path_buf)
   /* test (char)eax, (char)eax -> je 0x5febd */
   /* relift: relift: fcomp dword ptr [0x2533d8] */
   FUN_0005f1d0();
-  path_heap_pop_cheapest_node();
+  path_heap_pop_cheapest_node((void *)0);
   /* test eax, eax -> je 0x5ff36 */
   /* relift: cmp word ptr [eax + 0x10], 0 -> jne 0x5ff36 */
   /* test eax, eax -> je 0x5ff36 */
