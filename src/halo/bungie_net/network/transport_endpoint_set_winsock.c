@@ -1197,12 +1197,14 @@ void FUN_00081fa0(void)
 #endif
 
 
-/* 0x82060 */
+/* transport_get_xnaddr (0x82060) — readable C lift. */
 void *transport_get_xnaddr(void *dst)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return NULL;
+  int *out = (int *)dst;
+  out[0] = *(int *)0x5ab230;
+  out[1] = *(int *)0x5ab234;
+  out[2] = *(int *)0x5ab238;
+  return dst;
 }
 
 /* transport_get_key_id (0x82090) — XBE naked draft (batch 286). */
