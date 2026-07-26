@@ -348,58 +348,251 @@ void FUN_001c2120(void)
   (void)esi;
 }
 
-/* 0x1c22e0 */
+/* playlist_profile_create_default_profiles_on_disk (0x1c22e0) — XBE naked draft (batch 244). */
+#if defined(__clang__)
+static void (*const b1c22e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1c22e0_exitfn)(int) = system_exit;
+static void (*const b1c22e0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static bool (*const b1c22e0_c81720)(void *thread_reference) = thread_is_done;
+static void (*const b1c22e0_c81770)(void *thread_reference) = thread_close;
+static void (*const b1c22e0_c1c2af0)(void) = saved_game_files_take_mutex;
+static void (*const b1c22e0_c1c4850)(void) = FUN_001c4850;
+static bool (*const b1c22e0_c19ab50)(file_ref_t *info, int size, void *buffer) = file_read;
+static void (*const b1c22e0_c1c3160)(void) = saved_game_file_generate_checksum;
+static int (*const b1c22e0_c8da40)(const void *a, const void *b, int size) = csmemcmp;
+static void * (*const b1c22e0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void (*const b1c22e0_c1c2890)(void) = saved_game_file_close;
+static void (*const b1c22e0_c1c2b10)(void) = saved_game_files_release_mutex;
+static game_variant_t * (*const b1c22e0_caa190)(game_variant_t *out) = game_engine_slayer_default;
+static void (*const b1c22e0_c1c4600)(void) = saved_game_file_get_display_name;
+static wchar_t * (*const b1c22e0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
+
+__attribute__((naked, noinline))
 void playlist_profile_create_default_profiles_on_disk(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  display_assert((char *)0x00282808, (char *)0x002ba59c, 396, 0);
-  system_exit(0);
-  /* test eax, eax -> je 0x1c235b */
-  error(0, (char *)0x002ba728);
-  thread_is_done((void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0x1c2330 */
-  thread_close((void *)(uintptr_t)ecx);
-  /* mem[0x004eaaa4] = 0 */
-  saved_game_files_take_mutex();
-  /* test (char)eax, (char)eax -> je 0x1c24d6 */
-  FUN_001c4850();
-  /* test (char)eax, (char)eax -> je 0x1c24b9 */
-  file_read((void *)(uintptr_t)ecx, 512, (void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0x1c248c */
-  saved_game_file_generate_checksum();
-  csmemcmp((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, 20);
-  /* test eax, eax -> jne 0x1c240f */
-  csmemcpy((void *)(uintptr_t)ebx, (void *)(uintptr_t)eax, 104);
-  saved_game_file_close();
-  saved_game_files_release_mutex();
-  game_engine_slayer_default((void *)(uintptr_t)ecx);
-  error(0, (char *)0);
-  saved_game_file_get_display_name();
-  ustrncpy((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)eax, 0);
-  csmemcpy((void *)(uintptr_t)ebx, (void *)(uintptr_t)ecx, 104);
-  saved_game_file_close();
-  saved_game_files_release_mutex();
-  error(0, (char *)0x002ba6a8);
-  saved_game_file_close();
-  saved_game_files_release_mutex();
-  error(0, (char *)0x002ba510);
-  saved_game_files_release_mutex();
-  error(0, (char *)0x002ba030);
-  game_engine_slayer_default((void *)(uintptr_t)eax);
-  error(0, (char *)0);
-  saved_game_file_get_display_name();
-  ustrncpy((wchar_t *)(uintptr_t)edx, (wchar_t *)(uintptr_t)eax, 0);
-  csmemcpy((void *)(uintptr_t)ebx, (void *)(uintptr_t)eax, 104);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x3f4, %%esp\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "jne .Lplaylist_profile_create_default_profiles_on_disk_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18c\n\t"
+      "pushl $0x2ba59c\n\t"
+      "pushl $0x282808\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplaylist_profile_create_default_profiles_on_disk_1:\n\t"
+      "movl 0x4eaaa4, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lplaylist_profile_create_default_profiles_on_disk_3\n\t"
+      "pushl $0x2ba728\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lplaylist_profile_create_default_profiles_on_disk_2:\n\t"
+      "movl 0x4eaaa4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c81720]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplaylist_profile_create_default_profiles_on_disk_2\n\t"
+      "movl 0x4eaaa4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c81770]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl $0, 0x4eaaa4\n\t"
+      ".Lplaylist_profile_create_default_profiles_on_disk_3:\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jns .Lplaylist_profile_create_default_profiles_on_disk_8\n\t"
+      "call *%[c1c2af0]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplaylist_profile_create_default_profiles_on_disk_7\n\t"
+      "leal -0x1f4(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1c4850]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplaylist_profile_create_default_profiles_on_disk_6\n\t"
+      "leal -0x3f4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x1f4(%%ebp), %%ecx\n\t"
+      "pushl $0x200\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c19ab50]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplaylist_profile_create_default_profiles_on_disk_5\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x3f4(%%ebp), %%eax\n\t"
+      "pushl $0x68\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1c3160]\n\t"
+      "pushl $0x14\n\t"
+      "leal -0x38c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8da40]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lplaylist_profile_create_default_profiles_on_disk_4\n\t"
+      "pushl $0x68\n\t"
+      "leal -0x3f4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "leal -0x1f4(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "call *%[c1c2890]\n\t"
+      "addl $8, %%esp\n\t"
+      "call *%[c1c2b10]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplaylist_profile_create_default_profiles_on_disk_4:\n\t"
+      "leal -0xe8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[caa190]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl $0x2ba6d8\n\t"
+      "movl $0x1a, %%ecx\n\t"
+      "leal -0x80(%%ebp), %%edi\n\t"
+      "pushl $2\n\t"
+      "rep movsl\n\t"
+      "call *%[c8f390]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0xb\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "pushl %%edx\n\t"
+      "movw %%si, -0x1c(%%ebp)\n\t"
+      "call *%[c1c4600]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x80(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19dc90]\n\t"
+      "pushl $0x68\n\t"
+      "leal -0x80(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "movw %%si, -0x6a(%%ebp)\n\t"
+      "call *%[c8e0b0]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "addl $0x18, %%esp\n\t"
+      "leal -0x1f4(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "call *%[c1c2890]\n\t"
+      "addl $8, %%esp\n\t"
+      "call *%[c1c2b10]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplaylist_profile_create_default_profiles_on_disk_5:\n\t"
+      "pushl $0x2ba6a8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "leal -0x1f4(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1c2890]\n\t"
+      "addl $8, %%esp\n\t"
+      "call *%[c1c2b10]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplaylist_profile_create_default_profiles_on_disk_6:\n\t"
+      "pushl $0x2ba510\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "call *%[c1c2b10]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplaylist_profile_create_default_profiles_on_disk_7:\n\t"
+      "pushl $0x2ba030\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplaylist_profile_create_default_profiles_on_disk_8:\n\t"
+      "leal -0xe8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[caa190]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl $0x2ba6d8\n\t"
+      "movl $0x1a, %%ecx\n\t"
+      "leal -0x80(%%ebp), %%edi\n\t"
+      "pushl $2\n\t"
+      "rep movsl\n\t"
+      "call *%[c8f390]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0xb\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "movw %%si, -0x1c(%%ebp)\n\t"
+      "call *%[c1c4600]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x80(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c19dc90]\n\t"
+      "pushl $0x68\n\t"
+      "leal -0x80(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movw %%si, -0x6a(%%ebp)\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1c22e0_assert), [exitfn] "m"(b1c22e0_exitfn), [c8f390] "m"(b1c22e0_c8f390), [c81720] "m"(b1c22e0_c81720), [c81770] "m"(b1c22e0_c81770), [c1c2af0] "m"(b1c22e0_c1c2af0), [c1c4850] "m"(b1c22e0_c1c4850), [c19ab50] "m"(b1c22e0_c19ab50), [c1c3160] "m"(b1c22e0_c1c3160), [c8da40] "m"(b1c22e0_c8da40), [c8e0b0] "m"(b1c22e0_c8e0b0), [c1c2890] "m"(b1c22e0_c1c2890), [c1c2b10] "m"(b1c22e0_c1c2b10), [caa190] "m"(b1c22e0_caa190), [c1c4600] "m"(b1c22e0_c1c4600), [c19dc90] "m"(b1c22e0_c19dc90)
+      : "memory");
 }
+#else
+#error "playlist_profile_create_default_profiles_on_disk: clang naked draft required"
+#endif
+
 
 /* 0x1c2550 */
 void playlist_profile_write(void)

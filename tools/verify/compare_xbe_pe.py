@@ -85,25 +85,58 @@ def pe_fn_bytes(pe: pefile.PE, name: str) -> tuple[bytes, int]:
     insns = list(md.disasm(data, addr))
     ret_idxs = [i for i, ins in enumerate(insns) if ins.mnemonic == "ret"]
     if ret_idxs:
-        ri = ret_idxs[-1]
-        end_off = insns[ri].address + insns[ri].size - addr
-        if (
-            ri + 1 < len(insns)
-            and insns[ri + 1].mnemonic == "nop"
-            and insns[ri + 1].size == 1
-            and insns[ri + 1].address == addr + end_off
-        ):
-            end_off += 1
-        post = data[end_off:]
-        post_insns = list(md.disasm(post, addr + end_off))
-        real = [
-            i
-            for i in post_insns
-            if i.mnemonic not in ("nop", "int3")
-        ]
-        # Jump-table dwords rarely decode into a long run of real ops.
-        if len(real) < 8:
-            data = data[:end_off]
+        # Prefer a RET whose follower looks like end-of-function residue
+        # (int3/nop pad, or an absolute/indirect jmp trampoline into the
+        # next linker blob). Without this, a lonely export followed by
+        # 0x8000 bytes of unrelated code (next export hundreds of KB away)
+        # scores as a Capstone mismatch despite a correct naked body.
+        chosen = None
+        for ri in ret_idxs:
+            end_off = insns[ri].address + insns[ri].size - addr
+            if ri + 1 >= len(insns):
+                chosen = end_off
+                break
+            nxt = insns[ri + 1]
+            if nxt.mnemonic == "nop" and nxt.size == 1:
+                end_off += 1
+                if ri + 2 >= len(insns):
+                    chosen = end_off
+                    break
+                nxt = insns[ri + 2]
+            if nxt.mnemonic == "int3":
+                chosen = end_off
+                break
+            if nxt.mnemonic == "jmp" and (
+                "dword ptr" in nxt.op_str or nxt.op_str in ("eax", "ecx", "edx", "ebx", "esi", "edi")
+            ):
+                chosen = end_off
+                break
+            if nxt.mnemonic == "jmp":
+                try:
+                    tgt = int(nxt.op_str, 16)
+                except ValueError:
+                    tgt = None
+                if tgt is not None and not (addr <= tgt < addr + end_off):
+                    chosen = end_off
+                    break
+        if chosen is None:
+            ri = ret_idxs[-1]
+            end_off = insns[ri].address + insns[ri].size - addr
+            if (
+                ri + 1 < len(insns)
+                and insns[ri + 1].mnemonic == "nop"
+                and insns[ri + 1].size == 1
+                and insns[ri + 1].address == addr + end_off
+            ):
+                end_off += 1
+            post = data[end_off:]
+            post_insns = list(md.disasm(post, addr + end_off))
+            real = [i for i in post_insns if i.mnemonic not in ("nop", "int3")]
+            # Jump-table dwords rarely decode into a long run of real ops.
+            if len(real) < 8:
+                chosen = end_off
+        if chosen is not None:
+            data = data[:chosen]
     return data, addr
 
 
@@ -2736,6 +2769,58 @@ def main() -> int:
             0x1a97c0,
             [(0x1a969c, 0x1a96dc), (0x1a96d4, 0x1a96dc), (0x1a97a0, 0x1a97a8)],
         ),
+        # gameplay wave 241 (2026-07-26) — Capstone weaks
+        ("FUN_0019c3c0", 0x19c3c0, 0x19c5ca),
+        ("FUN_001d6ca8", 0x1d6ca8, 0x1d6e62),
+        ("overlay_animation_apply_scaled", 0x122450, 0x122688),
+        ("overlay_animation_apply", 0x122240, 0x122446),
+        ("profile_find_frame_value", 0x908a0, 0x90cc7),
+        ("bitmap_2d_get_pixel", 0x7dad0, 0x7dfd7),
+        ("replacement_animation_apply", 0x122060, 0x122231),
+        ("FUN_001d703b", 0x1d703b, 0x1d76fc),
+        ("FUN_0007fa00", 0x7fa00, 0x7ff28),
+        ("FUN_00123ed0", 0x123ed0, 0x124725),
+        ("FUN_00075e70", 0x75e70, 0x762f2),
+        ("FUN_001bbb60", 0x1bbb60, 0x1bbe98),
+        # gameplay wave 242 (2026-07-26) — Capstone weaks
+        ("convex_polygon3d_clip_to_plane", 0x106960, 0x106db8),
+        ("FUN_001bb2d0", 0x1bb2d0, 0x1bb409),
+        ("profile_frame_get_value", 0x90d10, 0x9103d),
+        ("FUN_001c19e0", 0x1c19e0, 0x1c1af3),
+        ("FUN_0019c5d0", 0x19c5d0, 0x19c939),
+        ("FUN_0019c960", 0x19c960, 0x19ccd1),
+        ("game_state_write_to_persistent_storage", 0x1c0ac0, 0x1c0c1e),
+        ("subdivide_triangle", 0x108400, 0x1087ab),
+        ("FUN_00091da0", 0x91da0, 0x91eeb),
+        ("FUN_00091ef0", 0x91ef0, 0x9202b),
+        ("cache_file_open", 0x1bd4d0, 0x1bd5e5),
+        ("action_charge_perform", 0x13120, 0x13dce),
+        # gameplay wave 243 (2026-07-26) — Capstone weaks
+        ("FUN_00079e70", 0x79e70, 0x7a1d2),
+        ("bitmap_2d_sharpen", 0x78c30, 0x790af),
+        ("FUN_0007b510", 0x7b510, 0x7b939),
+        ("FUN_001caab0", 0x1caab0, 0x1cadcf),
+        ("FUN_00113230", 0x113230, 0x113475),
+        ("numeric_countdown_timer_get", 0x190c00, 0x190d67),
+        ("FUN_00107db0", 0x107db0, 0x107ebe),
+        ("player_profile_save_last_level_played", 0x1c0f70, 0x1c1275),
+        ("profile_dump", 0x902f0, 0x90650),
+        ("FUN_00190e10", 0x190e10, 0x1910e4),
+        ("FUN_001c85a0", 0x1c85a0, 0x1c86fa),
+        ("bitmap_draw_character", 0x19b910, 0x19bca1),
+        # gameplay wave 244 (2026-07-26) — Capstone weaks
+        ("FUN_0019c1b0", 0x19c1b0, 0x19c3bb),
+        ("player_profile_setup_default_gamespy_settings", 0x1c1340, 0x1c15ba),
+        ("playlist_profile_create_default_profiles_on_disk", 0x1c22e0, 0x1c254e),
+        ("FUN_001cadd0", 0x1cadd0, 0x1cb0b2),
+        ("FUN_00076410", 0x76410, 0x766e0),
+        ("FUN_00076790", 0x76790, 0x76a50),
+        ("FUN_00199d40", 0x199d40, 0x19a010),
+        ("FUN_00121330", 0x121330, 0x12163b),
+        ("texture_cache_debug_render", 0x1bf260, 0x1bf563),
+        ("poll_endpoint_set", 0x824d0, 0x826f7),
+        ("bitmap_format_to_a8r8g8b8", 0x7d0d0, 0x7d2ad),
+        ("action_alert_next_position", 0x12350, 0x12652),
     ]
 
     xbe = Xbe.from_file(args.xbe)

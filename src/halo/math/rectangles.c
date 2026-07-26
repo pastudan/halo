@@ -67,12 +67,136 @@ void FUN_00107d40(void)
   (void)0;
 }
 
-/* 0x107db0 */
+/* FUN_00107db0 (0x107db0) — XBE naked draft (batch 243). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00107db0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movw 0x20(%%ebp), %%bx\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "pushl %%edi\n\t"
+      "movl $0xff7fffff, -0x4(%%ebp)\n\t"
+      "movl $0x7f7fffff, -0x8(%%ebp)\n\t"
+      "jle .LFUN_00107db0_7\n\t"
+      "movl 0x2c(%%ebp), %%edx\n\t"
+      "movl 0x28(%%ebp), %%esi\n\t"
+      "movl 0x24(%%ebp), %%edi\n\t"
+      "nop\n\t"
+      ".LFUN_00107db0_1:\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "imull $0x1c, %%eax, %%eax\n\t"
+      "addl %%edi, %%eax\n\t"
+      "cmpb $0, (%%eax)\n\t"
+      "je .LFUN_00107db0_6\n\t"
+      "flds 0xc(%%eax)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0x10(%%eax)\n\t"
+      "flds 0xc(%%eax)\n\t"
+      "fmuls 0x8(%%edx)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fmuls 0x4(%%edx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fmuls (%%edx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsts 0x20(%%ebp)\n\t"
+      "fabs\n\t"
+      "fcompl 0x2533d0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_00107db0_4\n\t"
+      "fdivs 0x20(%%ebp)\n\t"
+      "fchs\n\t"
+      "flds 0x20(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00107db0_2\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00107db0_3\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "jmp .LFUN_00107db0_5\n\t"
+      ".LFUN_00107db0_2:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00107db0_3\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "jmp .LFUN_00107db0_5\n\t"
+      ".LFUN_00107db0_3:\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "jmp .LFUN_00107db0_5\n\t"
+      ".LFUN_00107db0_4:\n\t"
+      "fcomps 0x31fb40\n\t"
+      ".LFUN_00107db0_5:\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00107db0_10\n\t"
+      ".LFUN_00107db0_6:\n\t"
+      "incl %%ecx\n\t"
+      "cmpw %%bx, %%cx\n\t"
+      "jl .LFUN_00107db0_1\n\t"
+      ".LFUN_00107db0_7:\n\t"
+      "movl 0x30(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00107db0_8\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      ".LFUN_00107db0_8:\n\t"
+      "movl 0x34(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00107db0_9\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      ".LFUN_00107db0_9:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00107db0_10:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00107db0: clang naked draft required"
+#endif
+
 
 /* 0x107ec0 */
 void get_edge_vertex(void)
@@ -203,71 +327,358 @@ void get_face_vertex(void)
   (void)edi;
 }
 
-/* 0x108400 */
+/* subdivide_triangle (0x108400) — XBE naked draft (batch 242). */
+#if defined(__clang__)
+static void (*const b108400_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b108400_exitfn)(int) = system_exit;
+static void * (*const b108400_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
+static void (*const b108400_c108270)(void) = get_face_vertex;
+static void (*const b108400_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+
+__attribute__((naked, noinline))
 void subdivide_triangle(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test eax, eax -> jne 0x10843b */
-  display_assert((char *)0x0028c5d8, (char *)0x0028be44, 146, 0);
-  system_exit(0);
-  /* test ebx, ebx -> jne 0x108462 */
-  display_assert((char *)0x0028c5b4, (char *)0x0028be44, 147, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x108489 */
-  display_assert((char *)0x0028c598, (char *)0x0028be44, 148, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x108497 */
-  /* relift: cmp (int16_t)eax, word ptr [esi + 0xc] -> jl 0x1084b7 */
-  display_assert((char *)0x0028c570, (char *)0x0028be44, 149, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x1084c5 */
-  /* relift: cmp (int16_t)eax, word ptr [esi + 0xc] -> jl 0x1084e5 */
-  display_assert((char *)0x0028c548, (char *)0x0028be44, 150, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x1084f3 */
-  /* relift: cmp (int16_t)eax, word ptr [esi + 0xc] -> jl 0x108513 */
-  display_assert((char *)0x0028c520, (char *)0x0028be44, 151, 0);
-  system_exit(0);
-  /* cmp ecx, eax -> jl 0x108541 */
-  display_assert((char *)0x0028c4b8, (char *)0x0028be44, 152, 0);
-  system_exit(0);
-  debug_malloc(edx, 0, (char *)0, 0);
-  /* test (int16_t)edi, (int16_t)edi -> jle 0x10857e */
-  get_face_vertex();
-  get_face_vertex();
-  get_face_vertex();
-  /* relift: cmp (int16_t)eax, word ptr [esi + 0xc] -> jle 0x10866a */
-  display_assert((char *)0x0028c47c, (char *)0x0028be44, 176, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x108678 */
-  /* relift: cmp (int16_t)eax, word ptr [esi + 0xc] -> jle 0x108698 */
-  display_assert((char *)0x0028c444, (char *)0x0028be44, 177, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x1086a3 */
-  /* relift: cmp (int16_t)edi, word ptr [esi + 0xc] -> jle 0x1086c3 */
-  display_assert((char *)0x0028c408, (char *)0x0028be44, 178, 0);
-  system_exit(0);
-  /* cmp (int16_t)ebx, (int16_t)eax -> jge 0x10876c */
-  get_face_vertex();
-  /* relift: cmp (int16_t)eax, word ptr [esi + 0xc] -> jle 0x10875c */
-  display_assert((char *)0x0028c3c8, (char *)0x0028be44, 194, 0);
-  system_exit(0);
-  /* cmp (int16_t)ebx, (int16_t)eax -> jle 0x1085c0 */
-  debug_free((void *)(uintptr_t)edx, (char *)0x0028be44, 200);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "incw %%ax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "imull %%eax, %%edi\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lsubdivide_triangle_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x92\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28c5d8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lsubdivide_triangle_1:\n\t"
+      "movl 0x18(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lsubdivide_triangle_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x93\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28c5b4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lsubdivide_triangle_2:\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lsubdivide_triangle_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x94\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28c598\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lsubdivide_triangle_3:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lsubdivide_triangle_4\n\t"
+      "cmpw 0xc(%%esi), %%ax\n\t"
+      "jl .Lsubdivide_triangle_5\n\t"
+      ".Lsubdivide_triangle_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x95\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28c570\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lsubdivide_triangle_5:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lsubdivide_triangle_6\n\t"
+      "cmpw 0xc(%%esi), %%ax\n\t"
+      "jl .Lsubdivide_triangle_7\n\t"
+      ".Lsubdivide_triangle_6:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x96\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28c548\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lsubdivide_triangle_7:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lsubdivide_triangle_8\n\t"
+      "cmpw 0xc(%%esi), %%ax\n\t"
+      "jl .Lsubdivide_triangle_9\n\t"
+      ".Lsubdivide_triangle_8:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x97\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28c520\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lsubdivide_triangle_9:\n\t"
+      "movswl 0xe(%%esi), %%eax\n\t"
+      "movswl (%%ebx), %%ecx\n\t"
+      "shll $2, %%eax\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jl .Lsubdivide_triangle_10\n\t"
+      "pushl $1\n\t"
+      "pushl $0x98\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28c4b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lsubdivide_triangle_10:\n\t"
+      "pushl $0x9a\n\t"
+      "movswl %%di, %%edx\n\t"
+      "pushl $0x28be44\n\t"
+      "shll $1, %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8ee60]\n\t"
+      "movl %%eax, %%edx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%edx, %%edx\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "je .Lsubdivide_triangle_27\n\t"
+      "testw %%di, %%di\n\t"
+      "jle .Lsubdivide_triangle_11\n\t"
+      "movzwl %%di, %%ecx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "shrl $1, %%ecx\n\t"
+      "movl %%edx, %%edi\n\t"
+      "rep stosl\n\t"
+      "adcl %%ecx, %%ecx\n\t"
+      "rep stosw\n\t"
+      ".Lsubdivide_triangle_11:\n\t"
+      "cmpw $1, (%%esi)\n\t"
+      "movl $1, -0x4(%%ebp)\n\t"
+      "jl .Lsubdivide_triangle_26\n\t"
+      "movl $3, %%eax\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "jmp .Lsubdivide_triangle_13\n\t"
+      ".Lsubdivide_triangle_12:\n\t"
+      "movl 0x18(%%ebp), %%ebx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lsubdivide_triangle_13:\n\t"
+      "movswl (%%ebx), %%ecx\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "movw %%ax, (%%edx,%%ecx,2)\n\t"
+      "incw (%%ebx)\n\t"
+      "incw 0x10(%%esi)\n\t"
+      "cmpw $3, %%ax\n\t"
+      "movl $1, %%ebx\n\t"
+      "jl .Lsubdivide_triangle_25\n\t"
+      ".Lsubdivide_triangle_14:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl 0x1c(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "leal -0x1(%%ebx), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "decl %%eax\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c108270]\n\t"
+      "movl 0x1c(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "movl -0x4(%%ebp), %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%edi, %%eax\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c108270]\n\t"
+      "movl 0x1c(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%edi, %%eax\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c108270]\n\t"
+      "addl $0x54, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movl %%edi, -0x18(%%ebp)\n\t"
+      "jl .Lsubdivide_triangle_15\n\t"
+      "cmpw 0xc(%%esi), %%ax\n\t"
+      "jle .Lsubdivide_triangle_16\n\t"
+      ".Lsubdivide_triangle_15:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb0\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28c47c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lsubdivide_triangle_16:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lsubdivide_triangle_17\n\t"
+      "cmpw 0xc(%%esi), %%ax\n\t"
+      "jle .Lsubdivide_triangle_18\n\t"
+      ".Lsubdivide_triangle_17:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb1\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28c444\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lsubdivide_triangle_18:\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Lsubdivide_triangle_19\n\t"
+      "cmpw 0xc(%%esi), %%di\n\t"
+      "jle .Lsubdivide_triangle_20\n\t"
+      ".Lsubdivide_triangle_19:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb2\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28c408\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lsubdivide_triangle_20:\n\t"
+      "cmpw $1, %%bx\n\t"
+      "movl 0x18(%%ebp), %%edi\n\t"
+      "jne .Lsubdivide_triangle_21\n\t"
+      "movswl (%%edi), %%eax\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "movw -0xc(%%ebp), %%dx\n\t"
+      "movw %%dx, (%%ecx,%%eax,2)\n\t"
+      "incw (%%edi)\n\t"
+      "movswl (%%edi), %%eax\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "movw -0x10(%%ebp), %%dx\n\t"
+      "movw %%dx, (%%ecx,%%eax,2)\n\t"
+      "incw (%%edi)\n\t"
+      ".Lsubdivide_triangle_21:\n\t"
+      "movswl (%%edi), %%eax\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "movw -0x18(%%ebp), %%dx\n\t"
+      "movw %%dx, (%%ecx,%%eax,2)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "incw (%%edi)\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "jge .Lsubdivide_triangle_24\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl 0x1c(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "decl %%eax\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c108270]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "jl .Lsubdivide_triangle_22\n\t"
+      "cmpw 0xc(%%esi), %%ax\n\t"
+      "jle .Lsubdivide_triangle_23\n\t"
+      ".Lsubdivide_triangle_22:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xc2\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28c3c8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lsubdivide_triangle_23:\n\t"
+      "movswl (%%edi), %%ecx\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "movw %%ax, (%%edx,%%ecx,2)\n\t"
+      "incw (%%edi)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      ".Lsubdivide_triangle_24:\n\t"
+      "incl %%ebx\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "jle .Lsubdivide_triangle_14\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      ".Lsubdivide_triangle_25:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "incl %%ecx\n\t"
+      "addl $2, %%eax\n\t"
+      "cmpw (%%esi), %%cx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "jle .Lsubdivide_triangle_12\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      ".Lsubdivide_triangle_26:\n\t"
+      "pushl $0xc8\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lsubdivide_triangle_27:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b108400_assert), [exitfn] "m"(b108400_exitfn), [c8ee60] "m"(b108400_c8ee60), [c108270] "m"(b108400_c108270), [c8ef70] "m"(b108400_c8ef70)
+      : "memory");
 }
+#else
+#error "subdivide_triangle: clang naked draft required"
+#endif
+
 
 /* 0x1087b0 */
 void *FUN_001087b0(int type)

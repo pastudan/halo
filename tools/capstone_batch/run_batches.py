@@ -210,6 +210,14 @@ def pick(
             and "*4" in insn.op_str.replace(" ", "")
             for insn in md.disasm(raw, w["va"])
         )
+        # Defer huge multi-JT monsters (post-body tables / wrong true_end)
+        # until true_end + find_jts are stronger; they blow up neighboring fns.
+        if multi and len(om) > 800:
+            skipped += 1
+            continue
+        if len(om) > 2500:
+            skipped += 1
+            continue
         domain = w.get("domain", "?")
         picked.append(
             {

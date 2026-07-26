@@ -247,9 +247,9 @@ def find_jts(va: int, end: int) -> list[dict]:
             jt = int(m.group(1), 16)
         else:
             jt = int(m.group(1), 16)
-        # Allow jt at/just past end: true_end often stops at last insn, while the
-        # jump table sits immediately after (classic JT-at-end, possibly misaligned).
-        if not (insn.address < jt <= end + 8):
+        # JT may live well past true_end (shared/post-body tables). Accept any
+        # table after the jmp whose first entries target back into [va, …).
+        if jt <= insn.address:
             continue
         reg = None
         for r in ("eax", "ecx", "edx", "ebx", "esi", "edi"):
@@ -266,11 +266,9 @@ def find_jts(va: int, end: int) -> list[dict]:
     for i, j in enumerate(ordered):
         if i + 1 < len(ordered):
             limit = ordered[i + 1]["jt"]
-        elif j["jt"] >= end:
-            # JT-at-end: table lives at/after end; allow reading past end.
-            limit = j["jt"] + 256
         else:
-            limit = end
+            # Post-body / JT-at-end: read a generous window.
+            limit = j["jt"] + 256
         raw = get_bytes(j["jt"], min(j["jt"] + 256, limit + 4))
         ents = []
         for k in range(64):
@@ -279,6 +277,7 @@ def find_jts(va: int, end: int) -> list[dict]:
             if 4 * k + 4 > len(raw):
                 break
             t = struct.unpack_from("<I", raw, 4 * k)[0]
+            # Accept targets in the function body (may extend past `end`).
             if not (va <= t < j["jt"]):
                 break
             ents.append(t)
@@ -353,12 +352,24 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
             if not m:
                 m = re.search(r"0x([0-9a-f]+)", ops)
             jt = int(m.group(1), 16)
-            idx = jt_by_addr[jt]
-            reg = jts[idx]["reg"]
-            if single:
-                out.append(f"  jmp *.L{name}_jt(,%%{reg},4)")
+            reg = None
+            for r in ("eax", "ecx", "edx", "ebx", "esi", "edi"):
+                if f"{r}*4" in ops.replace(" ", ""):
+                    reg = r
+                    break
+            if jt in jt_by_addr and reg:
+                idx = jt_by_addr[jt]
+                reg = jts[idx]["reg"] or reg
+                if single:
+                    out.append(f"  jmp *.L{name}_jt(,%%{reg},4)")
+                else:
+                    out.append(f"  jmp *.L{name}_jt{idx}(,%%{reg},4)")
+            elif reg:
+                # JT outside find_jts window (mis-sized end / filtered table):
+                # keep absolute XBE table address.
+                out.append(f"  jmp *{jt:#x}(,%%{reg},4)")
             else:
-                out.append(f"  jmp *.L{name}_jt{idx}(,%%{reg},4)")
+                todos.append(f"jmp-table {ops}")
             continue
 
         if mnem in ("jmp", "call") and ops in REGS32:
@@ -372,11 +383,20 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
             if "stosd" in mnem or "stosd" in ops:
                 out.append("  rep stosl")
                 continue
+            if "stosb" in mnem or "stosb" in ops:
+                out.append("  rep stosb")
+                continue
+            if "stosw" in mnem or "stosw" in ops:
+                out.append("  rep stosw")
+                continue
             if "movsd" in mnem or "movsd" in ops:
                 out.append("  rep movsl")
                 continue
             if "movsb" in mnem or "movsb" in ops:
                 out.append("  rep movsb")
+                continue
+            if "movsw" in mnem or "movsw" in ops:
+                out.append("  rep movsw")
                 continue
             todos.append(f"{mnem} {ops}")
             continue
@@ -592,7 +612,20 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
             continue
         if mnem == "imul":
             if len(parts) == 3:
-                out.append(f"  imull ${parts[2]}, %%{parts[1]}, %%{parts[0]}")
+                imm = parts[2]
+                if not imm.startswith("0x") and not imm.isdigit() and not (
+                    imm.startswith("-") and imm[1:].isdigit()
+                ):
+                    # Capstone usually puts imm last as bare int / 0x..
+                    pass
+                if not imm.startswith("$"):
+                    imm_s = f"${imm}"
+                else:
+                    imm_s = imm
+                if parts[0] in REGS16 or parts[1] in REGS16:
+                    out.append(f"  imulw {imm_s}, %%{parts[1]}, %%{parts[0]}")
+                else:
+                    out.append(f"  imull {imm_s}, %%{parts[1]}, %%{parts[0]}")
                 continue
             if len(parts) == 2:
                 if parts[0] in REGS16:
@@ -942,11 +975,35 @@ def inject(name: str, va: int, body: str, path: Path) -> None:
 
 before = {}
 for name, va, end, multi in TARGETS:
+    # Iteratively discover post-body JTs / case targets without scanning
+    # table bytes as code (find_jts only walks insn stream in [va,end)).
+    for _round in range(6):
+        jts = find_jts(va, end)
+        new_end = end
+        for j in jts:
+            new_end = max(new_end, j["tend"])
+            for t in j["ents"]:
+                new_end = max(new_end, t + 1)
+        if new_end <= end:
+            break
+        # Grow only through the next contiguous code/table blob; avoid
+        # leaping across unrelated functions via a single huge table read.
+        if new_end - end > 0x2000:
+            # Cap growth; prefer JT tend of tables referenced from current body.
+            capped = end
+            for j in jts:
+                if j["at"] < end:
+                    capped = max(capped, j["tend"])
+                    for t in j["ents"]:
+                        if t < end + 0x1000:
+                            capped = max(capped, t + 1)
+            new_end = min(new_end, max(capped, end + 0x100))
+        print(f"NOTE {name}: extend end {end:#x} -> {new_end:#x} via JTs")
+        end = new_end
     jts = find_jts(va, end)
     if multi and len(jts) < 2:
         print(f"WARN {name}: expected multi-JT, got {len(jts)}")
     if not multi and len(jts) > 1:
-        # clamp to first JT as end for single mode
         print(f"WARN {name}: unexpected multi, using end={end:#x} jts={len(jts)}")
 
     if jts and not multi and jts[0]["jt"] == end:

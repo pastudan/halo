@@ -1179,53 +1179,228 @@ void FUN_000824a0(void)
   (void)0;
 }
 
-/* 0x824d0 */
-int poll_endpoint_set(int endpoint_set, unsigned short timeout)
+/* poll_endpoint_set (0x824d0) — XBE naked draft (batch 244). */
+#if defined(__clang__)
+static void (*const b824d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b824d0_exitfn)(int) = system_exit;
+static void __cdecl (*const b824d0_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
+static void * (*const b824d0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void b824d0_c2251b8_tgt(void) { return; }
+static void (*const b824d0_c2251b8)(void) = b824d0_c2251b8_tgt;
+static void b824d0_c2235f3_tgt(void) { return; }
+static void (*const b824d0_c2235f3)(void) = b824d0_c2235f3_tgt;
+static void (*const b824d0_c2235c4)(void) = GetLastError;
+static const char * (*const b824d0_c83310)(int error_code) = winsock_error_report;
+
+__attribute__((naked, noinline))
+int poll_endpoint_set(int endpoint_set __attribute__((unused)), unsigned short timeout __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test esi, esi -> jne 0x82504 */
-  display_assert((char *)0x00266450, (char *)0x00266458, 477, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0x8252d */
-  display_assert((char *)0x00265fe4, (char *)0x00266458, 478, 0);
-  system_exit(0);
-  qsort((void *)(uintptr_t)edx, ecx, 0, (void *)0);
-  /* test edx, edx -> jne 0x82599 */
-  /* relift: cmp dword ptr [eax + edx*4], 0 -> je 0x82580 */
-  /* test ebx, ebx -> jbe 0x825d2 */
-  /* relift: cmp dword ptr [ecx], edx -> je 0x825d2 */
-  /* relift: cmp eax, dword ptr [esi] -> jb 0x825c6 */
-  /* cmp eax, ebx -> jne 0x825ec */
-  /* cmp ebx, 0x40 -> jae 0x825ec */
-  /* cmp edi, eax -> jle 0x825b0 */
-  /* test eax, eax -> jl 0x82638 */
-  /* cmp edi, eax -> jle 0x82620 */
-  csmemcpy((void *)(uintptr_t)ecx, (void *)(uintptr_t)esi, 260);
-  /* relift: FUN_002251b8(0); */
-  /* test eax, eax -> jle 0x826cc */
-  /* test eax, eax -> jl 0x826b9 */
-  /* cmp eax, -1 -> je 0x826c1 */
-  /* relift: FUN_002235f3(0, 0); */
-  /* test eax, eax -> je 0x826ae */
-  /* cmp edi, eax -> jle 0x82680 */
-  /* cmp eax, -1 -> jne 0x826ec */
-  GetLastError();
-  winsock_error_report(0);
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10c, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lpoll_endpoint_set_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1dd\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x266450\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lpoll_endpoint_set_1:\n\t"
+      "movb 0x335090, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lpoll_endpoint_set_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1de\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x265fe4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lpoll_endpoint_set_2:\n\t"
+      "movzwl 0xc(%%ebp), %%eax\n\t"
+      "imull $0x3e8, %%eax, %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl 0x114(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      "je .Lpoll_endpoint_set_10\n\t"
+      "movl 0x10c(%%esi), %%ecx\n\t"
+      "movl 0x104(%%esi), %%edx\n\t"
+      "pushl $0x824a0\n\t"
+      "pushl $4\n\t"
+      "incl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9260]\n\t"
+      "movl 0x10c(%%esi), %%eax\n\t"
+      "movl 0x104(%%esi), %%ecx\n\t"
+      "movl (%%ecx,%%eax,4), %%edx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jne .Lpoll_endpoint_set_4\n\t"
+      ".Lpoll_endpoint_set_3:\n\t"
+      "movl 0x10c(%%esi), %%edx\n\t"
+      "decl %%edx\n\t"
+      "movl %%edx, 0x10c(%%esi)\n\t"
+      "movl 0x104(%%esi), %%eax\n\t"
+      "cmpl $0, (%%eax,%%edx,4)\n\t"
+      "je .Lpoll_endpoint_set_3\n\t"
+      ".Lpoll_endpoint_set_4:\n\t"
+      "movl 0x10c(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0, (%%esi)\n\t"
+      "jl .Lpoll_endpoint_set_9\n\t"
+      "pushl %%ebx\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lpoll_endpoint_set_5:\n\t"
+      "movl (%%esi), %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jbe .Lpoll_endpoint_set_7\n\t"
+      "movl 0x104(%%esi), %%ecx\n\t"
+      "movl (%%ecx,%%edi,4), %%edx\n\t"
+      "movl (%%edx), %%edx\n\t"
+      "leal 0x4(%%esi), %%ecx\n\t"
+      ".Lpoll_endpoint_set_6:\n\t"
+      "cmpl %%edx, (%%ecx)\n\t"
+      "je .Lpoll_endpoint_set_7\n\t"
+      "incl %%eax\n\t"
+      "addl $4, %%ecx\n\t"
+      "cmpl (%%esi), %%eax\n\t"
+      "jb .Lpoll_endpoint_set_6\n\t"
+      ".Lpoll_endpoint_set_7:\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "jne .Lpoll_endpoint_set_8\n\t"
+      "cmpl $0x40, %%ebx\n\t"
+      "jae .Lpoll_endpoint_set_8\n\t"
+      "movl 0x104(%%esi), %%ecx\n\t"
+      "movl (%%ecx,%%edi,4), %%edx\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%esi,%%eax,4)\n\t"
+      "incl (%%esi)\n\t"
+      ".Lpoll_endpoint_set_8:\n\t"
+      "movl 0x104(%%esi), %%edx\n\t"
+      "movl (%%edx,%%edi,4), %%eax\n\t"
+      "andb $0xfb, 0x4(%%eax)\n\t"
+      "movl 0x10c(%%esi), %%eax\n\t"
+      "incl %%edi\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "jle .Lpoll_endpoint_set_5\n\t"
+      "popl %%ebx\n\t"
+      ".Lpoll_endpoint_set_9:\n\t"
+      "movl $0, 0x114(%%esi)\n\t"
+      "jmp .Lpoll_endpoint_set_12\n\t"
+      ".Lpoll_endpoint_set_10:\n\t"
+      "movl 0x10c(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .Lpoll_endpoint_set_12\n\t"
+      "jmp .Lpoll_endpoint_set_11\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lpoll_endpoint_set_11:\n\t"
+      "movl 0x104(%%esi), %%eax\n\t"
+      "movl (%%eax,%%edi,4), %%eax\n\t"
+      "andb $0xfb, 0x4(%%eax)\n\t"
+      "movl 0x10c(%%esi), %%eax\n\t"
+      "incl %%edi\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "jle .Lpoll_endpoint_set_11\n\t"
+      ".Lpoll_endpoint_set_12:\n\t"
+      "pushl $0x104\n\t"
+      "leal -0x10c(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8e0b0]\n\t"
+      "movl 0x10c(%%esi), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "leal -0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "leal -0x10c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "incl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c2251b8]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lpoll_endpoint_set_17\n\t"
+      "movl 0x10c(%%esi), %%eax\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .Lpoll_endpoint_set_15\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lpoll_endpoint_set_13:\n\t"
+      "movl 0x104(%%esi), %%edx\n\t"
+      "movl (%%edx,%%edi,4), %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lpoll_endpoint_set_16\n\t"
+      "leal -0x10c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c2235f3]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lpoll_endpoint_set_14\n\t"
+      "movl 0x104(%%esi), %%edx\n\t"
+      "movl (%%edx,%%edi,4), %%eax\n\t"
+      "orb $4, 0x4(%%eax)\n\t"
+      ".Lpoll_endpoint_set_14:\n\t"
+      "movl 0x10c(%%esi), %%eax\n\t"
+      "incl %%edi\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "jle .Lpoll_endpoint_set_13\n\t"
+      ".Lpoll_endpoint_set_15:\n\t"
+      "popl %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lpoll_endpoint_set_16:\n\t"
+      "popl %%edi\n\t"
+      "movl $0xfffffff4, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lpoll_endpoint_set_17:\n\t"
+      "jl .Lpoll_endpoint_set_18\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lpoll_endpoint_set_19\n\t"
+      ".Lpoll_endpoint_set_18:\n\t"
+      "call *%[c2235c4]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c83310]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movl $0xffffffeb, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lpoll_endpoint_set_19:\n\t"
+      "popl %%edi\n\t"
+      "movl $0xfffffff3, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b824d0_assert), [exitfn] "m"(b824d0_exitfn), [c1d9260] "m"(b824d0_c1d9260), [c8e0b0] "m"(b824d0_c8e0b0), [c2251b8] "m"(b824d0_c2251b8), [c2235f3] "m"(b824d0_c2235f3), [c2235c4] "m"(b824d0_c2235c4), [c83310] "m"(b824d0_c83310)
+      : "memory");
 }
+#else
+#error "poll_endpoint_set: clang naked draft required"
+#endif
+
 
 /* 0x82700 */
 int add_endpoint_to_set(int endpoint, void *set)
