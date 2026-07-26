@@ -3189,176 +3189,375 @@ void game_engine_update(void)
 #define HUD_EVENT_QUIT_NOTIFY   0x1c
 #define HUD_EVENT_BETRAYAL      0xd
 
-/* game_engine_player_killed (0xaf660)
- *
- * Called when a player dies in multiplayer. Records time of death, notifies
- * the active game engine vtable, computes the respawn countdown with
- * penalty accumulation, then broadcasts the appropriate kill/medal event.
- */
-void game_engine_player_killed(int killer_handle, int kill_object_handle,
-                               int dead_handle, int betrayal)
+/* game_engine_player_killed (0xaf660) — XBE naked draft (batch 80). */
+#if defined(__clang__)
+static void *(*const baf660_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const baf660_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const baf660_exitfn)(int) = system_exit;
+static int (*const baf660_gtime)(void) = game_time_get;
+static void *(*const baf660_get)(int, int) = object_get_and_verify_type;
+static void *(*const baf660_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void (*const baf660_cad0c0)(int param_1, int param_2, int param_3) = game_engine_player_event;
+static void (*const baf660_cacef0)(int player_handle, int hud_player, int param3) = game_engine_hud_update_player;
+static void (*const baf660_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const baf660_c119810)(data_iter_t *iterator) = data_iterator_next;
+
+__attribute__((naked, noinline))
+void game_engine_player_killed(int killer_handle __attribute__((unused)), int kill_object_handle __attribute__((unused)), int dead_handle __attribute__((unused)), int betrayal __attribute__((unused)))
 {
-  char *dead_player;
-  char *killer_player;
-  void (*vtable_fn)(int, int, int, int);
-  char same_player;
-  char both_valid;
-  char is_pvp;
-  int penalty;
-  int respawn_ticks;
-  int kill_event_type;
-  data_iter_t iter;
-  void *obj_data;
-  short multi_kill;
-  short kill_streak;
-
-  dead_player = (char *)datum_get(player_data, dead_handle);
-
-  if (dead_handle == NONE) {
-    display_assert("dead_player_index != NONE",
-                   "c:\\halo\\SOURCE\\game\\game_engine.c", 0x9b3, 1);
-    system_exit(-1);
-  }
-
-  if (!current_game_engine)
-    return;
-
-  *(int *)(dead_player + PLAYER_LAST_DEATH_TIME) = game_time_get();
-
-  vtable_fn = ((void (**)(int, int, int, int))current_game_engine)[0x60 / 4];
-  if (vtable_fn)
-    vtable_fn(killer_handle, kill_object_handle, dead_handle, betrayal);
-
-  same_player = (killer_handle == dead_handle);
-  if (killer_handle != NONE && dead_handle != NONE)
-    both_valid = 1;
-  else
-    both_valid = 0;
-  is_pvp = (!(char)betrayal && both_valid && !same_player);
-
-  /* Base respawn = accumulated penalty + variant base time */
-  *(int *)(dead_player + PLAYER_RESPAWN_TICKS) =
-    *(int *)(dead_player + PLAYER_DEATH_PENALTY) + VARIANT_BASE_RESPAWN_TIME;
-
-  if (VARIANT_PENALTY_INCREMENT > 0) {
-    /* Increase death penalty, capped at 5x the increment */
-    penalty = *(int *)(dead_player + PLAYER_DEATH_PENALTY) + VARIANT_PENALTY_INCREMENT;
-    *(int *)(dead_player + PLAYER_DEATH_PENALTY) = penalty;
-    if (penalty > VARIANT_PENALTY_INCREMENT * MAX_PENALTY_MULTIPLIER)
-      penalty = VARIANT_PENALTY_INCREMENT * MAX_PENALTY_MULTIPLIER;
-    *(int *)(dead_player + PLAYER_DEATH_PENALTY) = penalty;
-
-    if (is_pvp) {
-      /* Reward killer: reduce their death penalty */
-      if (killer_handle != NONE) {
-        killer_player = (char *)datum_get(player_data, killer_handle);
-        penalty = *(int *)(killer_player + PLAYER_DEATH_PENALTY) - VARIANT_PENALTY_INCREMENT;
-        *(int *)(killer_player + PLAYER_DEATH_PENALTY) = penalty;
-        *(int *)(killer_player + PLAYER_DEATH_PENALTY) = penalty <= 0 ? 0 : penalty;
-      }
-      goto apply_clamp;
-    }
-  } else {
-    if (is_pvp)
-      goto apply_clamp;
-  }
-
-  /* Non-PvP / betrayal: add bonus time to respawn */
-  *(int *)(dead_player + PLAYER_RESPAWN_TICKS) += VARIANT_SUICIDE_BONUS;
-
-apply_clamp:
-  respawn_ticks = *(int *)(dead_player + PLAYER_RESPAWN_TICKS);
-  if (respawn_ticks <= MIN_RESPAWN_TICKS)
-    respawn_ticks = MIN_RESPAWN_TICKS;
-  *(int *)(dead_player + PLAYER_RESPAWN_TICKS) = respawn_ticks;
-
-  dead_player = (char *)datum_get(player_data, dead_handle);
-
-  /* Quitting player: notify all players with quit HUD event */
-  if (*(char *)(dead_player + PLAYER_IS_QUITTING) != 0) {
-    data_iterator_new(&iter, player_data);
-    if (data_iterator_next(&iter) != NULL) {
-      do {
-        game_engine_hud_update_player(iter.datum_handle, dead_handle,
-                                      HUD_EVENT_QUIT_NOTIFY);
-      } while (data_iterator_next(&iter) != NULL);
-    }
-    return;
-  }
-
-  /* Determine kill event type */
-  if (killer_handle == NONE) {
-    if (kill_object_handle == NONE) {
-      kill_event_type = KILL_EVENT_ENVIRONMENT;
-    } else {
-      obj_data = object_get_and_verify_type(kill_object_handle, 0xffffffff);
-      object_try_and_get_and_verify_type(kill_object_handle, 3);
-      switch (*(short *)((char *)obj_data + 0x64)) {
-      case 0:
-        kill_event_type = KILL_EVENT_GUARDIANS;
-        break;
-      case 1:
-        kill_event_type = KILL_EVENT_VEHICLE;
-        break;
-      default:
-        kill_event_type = KILL_EVENT_ENVIRONMENT;
-        break;
-      }
-    }
-  } else if (killer_handle == dead_handle) {
-    kill_event_type = KILL_EVENT_SUICIDE;
-  } else {
-    kill_event_type = KILL_EVENT_NORMAL + ((char)betrayal != 0);
-  }
-
-  game_engine_player_event(dead_handle, kill_event_type, killer_handle);
-
-  /* Betrayal: notify killer or broadcast to all players */
-  if (kill_event_type == KILL_EVENT_BETRAYAL) {
-    if (killer_handle != NONE) {
-      game_engine_hud_update_player(killer_handle, dead_handle,
-                                    HUD_EVENT_BETRAYAL);
-      return;
-    }
-    data_iterator_new(&iter, player_data);
-    if (data_iterator_next(&iter) != NULL) {
-      do {
-        game_engine_hud_update_player(iter.datum_handle, dead_handle,
-                                      HUD_EVENT_BETRAYAL);
-      } while (data_iterator_next(&iter) != NULL);
-    }
-    return;
-  }
-
-  if (kill_event_type != KILL_EVENT_NORMAL)
-    return;
-
-  /* Medal cascade for normal PvP kills */
-  killer_player = (char *)datum_get(player_data, killer_handle);
-  multi_kill = *(short *)(killer_player + PLAYER_MULTI_KILL_COUNT);
-
-  if (multi_kill > 3) {
-    game_engine_player_event(killer_handle, KILL_EVENT_KILLTACULAR, dead_handle);
-    return;
-  }
-  if (multi_kill == 3) {
-    game_engine_player_event(killer_handle, KILL_EVENT_TRIPLE_KILL, dead_handle);
-    return;
-  }
-  if (multi_kill == 2) {
-    game_engine_player_event(killer_handle, KILL_EVENT_DOUBLE_KILL, dead_handle);
-    return;
-  }
-  kill_streak = *(short *)(killer_player + PLAYER_KILL_STREAK);
-  if (kill_streak == 5) {
-    game_engine_player_event(killer_handle, KILL_EVENT_KILLING_SPREE, dead_handle);
-    return;
-  }
-  game_engine_player_event(killer_handle,
-                           (kill_streak % 5 != 0) ? KILL_EVENT_GENERIC
-                                                  : KILL_EVENT_RUNNING_RIOT,
-                           dead_handle);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jne .Lgame_engine_player_killed_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9b3\n\t"
+      "pushl $0x26b6a0\n\t"
+      "pushl $0x26b728\n\t"
+      "call *%[assert]\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lgame_engine_player_killed_1:\n\t"
+      "movl 0x456b60, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lgame_engine_player_killed_30\n\t"
+      "pushl %%edi\n\t"
+      "call *%[gtime]\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl %%eax, 0x84(%%esi)\n\t"
+      "movl 0x456b60, %%ecx\n\t"
+      "movl 0x60(%%ecx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lgame_engine_player_killed_2\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lgame_engine_player_killed_2:\n\t"
+      "cmpl %%ebx, %%edi\n\t"
+      "sete %%cl\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lgame_engine_player_killed_3\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .Lgame_engine_player_killed_3\n\t"
+      "movb $1, %%al\n\t"
+      "jmp .Lgame_engine_player_killed_4\n\t"
+      ".Lgame_engine_player_killed_3:\n\t"
+      "xorb %%al, %%al\n\t"
+      ".Lgame_engine_player_killed_4:\n\t"
+      "movb 0x14(%%ebp), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .Lgame_engine_player_killed_5\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lgame_engine_player_killed_5\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lgame_engine_player_killed_5\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lgame_engine_player_killed_6\n\t"
+      ".Lgame_engine_player_killed_5:\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lgame_engine_player_killed_6:\n\t"
+      "movl 0x456b28, %%eax\n\t"
+      "movl 0x30(%%esi), %%edx\n\t"
+      "addl %%eax, %%edx\n\t"
+      "movl %%edx, 0x2c(%%esi)\n\t"
+      "movl 0x456b24, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lgame_engine_player_killed_8\n\t"
+      "movl 0x30(%%esi), %%ecx\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "movl %%ecx, 0x30(%%esi)\n\t"
+      "movl 0x456b24, %%eax\n\t"
+      "leal (%%eax,%%eax,4), %%eax\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jg .Lgame_engine_player_killed_7\n\t"
+      "movl %%ecx, %%eax\n\t"
+      ".Lgame_engine_player_killed_7:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movl %%eax, 0x30(%%esi)\n\t"
+      "je .Lgame_engine_player_killed_9\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lgame_engine_player_killed_8\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x456b24, %%ecx\n\t"
+      "movl 0x30(%%eax), %%edx\n\t"
+      "subl %%ecx, %%edx\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "movl %%edx, 0x30(%%eax)\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "setle %%dl\n\t"
+      "decl %%edx\n\t"
+      "andl %%edx, %%ecx\n\t"
+      "movl %%ecx, 0x30(%%eax)\n\t"
+      ".Lgame_engine_player_killed_8:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .Lgame_engine_player_killed_10\n\t"
+      ".Lgame_engine_player_killed_9:\n\t"
+      "movl 0x456b2c, %%eax\n\t"
+      "addl %%eax, 0x2c(%%esi)\n\t"
+      ".Lgame_engine_player_killed_10:\n\t"
+      "movl 0x2c(%%esi), %%eax\n\t"
+      "cmpl $0x5a, %%eax\n\t"
+      "jg .Lgame_engine_player_killed_11\n\t"
+      "movl $0x5a, %%eax\n\t"
+      ".Lgame_engine_player_killed_11:\n\t"
+      "movl %%eax, 0x2c(%%esi)\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0xd1(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lgame_engine_player_killed_18\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .Lgame_engine_player_killed_15\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "cmpl %%edi, %%ebx\n\t"
+      "jne .Lgame_engine_player_killed_12\n\t"
+      "movl $1, %%esi\n\t"
+      "jmp .Lgame_engine_player_killed_17\n\t"
+      ".Lgame_engine_player_killed_12:\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "pushl $3\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[tryget]\n\t"
+      "movswl 0x64(%%esi), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "subl $0, %%eax\n\t"
+      "je .Lgame_engine_player_killed_14\n\t"
+      "decl %%eax\n\t"
+      "je .Lgame_engine_player_killed_13\n\t"
+      "movl $1, %%esi\n\t"
+      "jmp .Lgame_engine_player_killed_17\n\t"
+      ".Lgame_engine_player_killed_13:\n\t"
+      "movl $3, %%esi\n\t"
+      "jmp .Lgame_engine_player_killed_17\n\t"
+      ".Lgame_engine_player_killed_14:\n\t"
+      "movl $2, %%esi\n\t"
+      "jmp .Lgame_engine_player_killed_17\n\t"
+      ".Lgame_engine_player_killed_15:\n\t"
+      "cmpl %%esi, %%edi\n\t"
+      "jne .Lgame_engine_player_killed_16\n\t"
+      "movl $6, %%esi\n\t"
+      "jmp .Lgame_engine_player_killed_17\n\t"
+      ".Lgame_engine_player_killed_16:\n\t"
+      "movb 0x14(%%ebp), %%cl\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testb %%cl, %%cl\n\t"
+      "setne %%dl\n\t"
+      "addl $4, %%edx\n\t"
+      "movl %%edx, %%esi\n\t"
+      ".Lgame_engine_player_killed_17:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cad0c0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $5, %%esi\n\t"
+      "jne .Lgame_engine_player_killed_24\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lgame_engine_player_killed_21\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "movl $0xd, %%ebx\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "call *%[cacef0]\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_player_killed_18:\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lgame_engine_player_killed_29\n\t"
+      "jmp .Lgame_engine_player_killed_20\n\t"
+      ".Lgame_engine_player_killed_19:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "nop\n\t"
+      ".Lgame_engine_player_killed_20:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl $0x1c, %%ebx\n\t"
+      "call *%[cacef0]\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lgame_engine_player_killed_19\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_player_killed_21:\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lgame_engine_player_killed_29\n\t"
+      "jmp .Lgame_engine_player_killed_23\n\t"
+      ".Lgame_engine_player_killed_22:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "nop\n\t"
+      ".Lgame_engine_player_killed_23:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "movl $0xd, %%ebx\n\t"
+      "call *%[cacef0]\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lgame_engine_player_killed_22\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_player_killed_24:\n\t"
+      "cmpl $4, %%esi\n\t"
+      "jne .Lgame_engine_player_killed_29\n\t"
+      "movl 0x5aa6d4, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movw 0x94(%%eax), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw %%si, %%cx\n\t"
+      "jl .Lgame_engine_player_killed_25\n\t"
+      "movl $0xa, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cad0c0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_player_killed_25:\n\t"
+      "cmpw $3, %%cx\n\t"
+      "jne .Lgame_engine_player_killed_26\n\t"
+      "movl $9, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cad0c0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_player_killed_26:\n\t"
+      "cmpw $2, %%cx\n\t"
+      "jne .Lgame_engine_player_killed_27\n\t"
+      "movl $7, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cad0c0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_player_killed_27:\n\t"
+      "movw 0x92(%%eax), %%ax\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jne .Lgame_engine_player_killed_28\n\t"
+      "movl $0xb, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cad0c0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_engine_player_killed_28:\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cdq\n\t"
+      "movl $5, %%ecx\n\t"
+      "idivl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "negl %%edx\n\t"
+      "sbbl %%edx, %%edx\n\t"
+      "andl $0xfffffffc, %%edx\n\t"
+      "addl $0xc, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cad0c0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lgame_engine_player_killed_29:\n\t"
+      "popl %%edi\n\t"
+      ".Lgame_engine_player_killed_30:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(baf660_dget), [assert] "m"(baf660_assert), [exitfn] "m"(baf660_exitfn), [gtime] "m"(baf660_gtime), [get] "m"(baf660_get), [tryget] "m"(baf660_tryget), [cad0c0] "m"(baf660_cad0c0), [cacef0] "m"(baf660_cacef0), [c1197b0] "m"(baf660_c1197b0), [c119810] "m"(baf660_c119810)
+      : "memory");
 }
+#else
+#error "game_engine_player_killed: clang naked draft required"
+#endif
+
 
 /* FUN_000af9a0 (0xaf9a0) — game_engine post-rasterize hook
  *

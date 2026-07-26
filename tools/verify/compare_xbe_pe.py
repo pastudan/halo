@@ -953,6 +953,19 @@ def main() -> int:
         ("actor_path_refresh", 0x2cdb0, 0x2d333, [(0x2d334, 0x2d344)]),
         ("path_state_build_path", 0x5eae0, 0x5ef80),
         ("FUN_001800b0", 0x1800b0, 0x1804e9),
+        # gameplay wave 80 (2026-07-26) — game/AI/render/structures Capstone weaks
+        ("game_engine_player_killed", 0xaf660, 0xaf997),
+        ("actor_destination_update", 0x2d350, 0x2d718),
+        ("actor_visibility_at_point", 0x314f0, 0x3183d, [(0x31840, 0x31850)]),
+        ("prop_position_refresh", 0x31df0, 0x3216b),
+        ("render_scene", 0x184ea0, 0x185281),
+        ("FUN_0002b020", 0x2b020, 0x2b307),
+        ("convex_hull2d_reduce", 0x105d20, 0x106022),
+        ("actor_action_handle_evasion", 0x20670, 0x20985),
+        ("bsp3d_clip_line_to_leaves", 0x146e30, 0x1470aa),
+        ("rasterizer_text_cache_character", 0x183880, 0x183bfc),
+        ("actor_action_try_to_dive", 0x1fe70, 0x20120, [(0x20120, 0x20130), (0x20130, 0x20140)]),
+        ("FUN_0002bab0", 0x2bab0, 0x2bd7d),
     ]
 
     xbe = Xbe.from_file(args.xbe)

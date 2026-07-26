@@ -77,117 +77,282 @@ uint32_t bsp3d_find_leaf(void *bsp3d, int root, void *point)
   return 0xffffffff;
 }
 
-/* bsp3d_clip_line_to_leaves (0x146e30): recursively clip the line segment
- * [p0, p1] against the BSP3D node tree rooted at `node_index` and invoke
- * `callback` once per terminal leaf the segment passes through, returning the
- * number of leaves visited (accumulated across the recursion).
- *
- * Node record layout (nodes block, stride 0xc = 3 dwords): [0]=plane index,
- * [1]=back child link, [2]=front child link. Plane record (planes block at
- * base+0xc, stride 0x10 = 4 floats): [0..2]=normal xyz, [3]=plane distance d.
- *
- * Each endpoint is classified against a symmetric epsilon band: below
- * *(float*)0x29ca2c (negative epsilon) => on the back side, above
- * *(float*)0x29ca28 (positive epsilon) => on the front side, otherwise within
- * the band (on the plane). The signed distance dot(n, point) - d is emitted in
- * z,x,y source order to match the original's x87 scheduling.
- *
- * When the segment straddles the plane (one endpoint strictly front, the other
- * strictly back) the split point is computed via
- * t = -((p0.n) - d) / (dir.n) where dir = p1 - p0; the original asserts
- * 0 < t < 1 and bails via system_exit(-1) otherwise. The negation is kept in
- * the FCHS form -(num/den) rather than distributed.
- *
- * The two children are iterated in order back (link[1]) then front (link[2]).
- * A side is descended only when at least one endpoint lies on that side. The
- * sub-segment handed to a child replaces any endpoint lying strictly on the
- * OPPOSITE side (index alt = 1-side) with the split point. A child link that is
- * negative is terminal: 0xffffffff means solid/no-leaf (skipped), any other
- * negative value is a leaf index (high sign bit stripped) reported via the
- * callback; a non-negative link is an interior node index recursed into.
- *
- * DAT_005a8d20 is a global node-visit counter, reset when entering at the root
- * (node_index == 0) and incremented on every call.
- */
-int bsp3d_clip_line_to_leaves(void *nodes, int node_index, float *p0, float *p1,
-                              void (*callback)(float *, float *, unsigned int,
-                                               void *),
-                              void *data)
+/* bsp3d_clip_line_to_leaves (0x146e30) — XBE naked draft (batch 80). */
+#if defined(__clang__)
+static void *(*const b146e30_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b146e30_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b146e30_exitfn)(int) = system_exit;
+static int (*const b146e30_c146e30)(void *nodes, int node_index, float *p0, float *p1, void (*callback)(float *, float *, unsigned int, void *), void *data) = bsp3d_clip_line_to_leaves;
+
+__attribute__((naked, noinline))
+int bsp3d_clip_line_to_leaves(void *nodes __attribute__((unused)), int node_index __attribute__((unused)), float *p0 __attribute__((unused)), float *p1 __attribute__((unused)), void (*callback)(float * __attribute__((unused)), float * __attribute__((unused)), unsigned int __attribute__((unused)), void *) __attribute__((unused)), void *data __attribute__((unused)))
 {
-  int count;
-  uint32_t *node;
-  float *plane;
-  float d0, d1, t;
-  float dir[3];
-  float split[3];
-  char in0[2];
-  char in1[2];
-  uint32_t *link;
-  uint32_t child;
-  int side;
-  int alt;
-  float *sp0;
-  float *sp1;
-
-  count = 0;
-  node = (uint32_t *)tag_block_get_element(nodes, node_index, 0xc);
-  plane =
-    (float *)tag_block_get_element((char *)nodes + 0xc, (int)node[0], 0x10);
-
-  d0 = (plane[2] * p0[2] + plane[0] * p0[0] + plane[1] * p0[1]) - plane[3];
-  d1 = (plane[2] * p1[2] + plane[0] * p1[0] + plane[1] * p1[1]) - plane[3];
-
-  if (node_index == 0) {
-    *(int *)0x005a8d20 = 0;
-  }
-  (*(int *)0x005a8d20)++;
-
-  in0[0] = (char)(d0 < *(float *)0x0029ca2c);
-  in0[1] = (char)(*(float *)0x0029ca28 < d0);
-  in1[0] = (char)(d1 < *(float *)0x0029ca2c);
-  in1[1] = (char)(*(float *)0x0029ca28 < d1);
-
-  if ((in0[0] && in1[1]) || (in0[1] && in1[0])) {
-    dir[0] = p1[0] - p0[0];
-    dir[1] = p1[1] - p0[1];
-    dir[2] = p1[2] - p0[2];
-    t =
-      -(((plane[2] * p0[2] + plane[0] * p0[0] + plane[1] * p0[1]) - plane[3]) /
-        (plane[2] * dir[2] + plane[0] * dir[0] + plane[1] * dir[1]));
-    if (t <= 0.0f || 1.0f <= t) {
-      display_assert("t>0.f && t<1.f", "c:\\halo\\SOURCE\\physics\\bsp3d.c",
-                     0x49, 1);
-      system_exit(-1);
-    }
-    split[0] = dir[0] * t + p0[0];
-    split[1] = dir[1] * t + p0[1];
-    split[2] = dir[2] * t + p0[2];
-  }
-
-  link = node;
-  for (side = 0; side < 2; side++) {
-    link++;
-    alt = (side == 0) ? 1 : 0;
-    if (in0[side] || in1[side]) {
-      sp0 = in0[alt] ? split : p0;
-      sp1 = in1[alt] ? split : p1;
-      child = *link;
-      if ((int)child < 0) {
-        if (child != 0xffffffff) {
-          if (callback != NULL) {
-            callback(sp0, sp1, child & 0x7fffffff, data);
-          }
-          count++;
-        }
-      } else {
-        count += bsp3d_clip_line_to_leaves(nodes, (int)child, sp0, sp1,
-                                           callback, data);
-      }
-    }
-  }
-
-  return count;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x28, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "movl $0, -0xc(%%ebp)\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%eax\n\t"
+      "addl $0xc, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "flds (%%eax)\n\t"
+      "fmuls (%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0xc(%%ecx)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "flds (%%eax)\n\t"
+      "fmuls (%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0xc(%%ecx)\n\t"
+      "jne .Lbsp3d_clip_line_to_leaves_1\n\t"
+      "movl %%esi, 0x5a8d20\n\t"
+      ".Lbsp3d_clip_line_to_leaves_1:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "movl 0x5a8d20, %%eax\n\t"
+      "fcomps 0x29ca2c\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, 0x5a8d20\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lbsp3d_clip_line_to_leaves_2\n\t"
+      "movb $1, %%dl\n\t"
+      "jmp .Lbsp3d_clip_line_to_leaves_3\n\t"
+      ".Lbsp3d_clip_line_to_leaves_2:\n\t"
+      "xorb %%dl, %%dl\n\t"
+      ".Lbsp3d_clip_line_to_leaves_3:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "movb %%dl, 0xe(%%ebp)\n\t"
+      "fcomps 0x29ca28\n\t"
+      "movb $1, 0xf(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lbsp3d_clip_line_to_leaves_4\n\t"
+      "movb $0, 0xf(%%ebp)\n\t"
+      ".Lbsp3d_clip_line_to_leaves_4:\n\t"
+      "fcoms 0x29ca2c\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lbsp3d_clip_line_to_leaves_5\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lbsp3d_clip_line_to_leaves_6\n\t"
+      ".Lbsp3d_clip_line_to_leaves_5:\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lbsp3d_clip_line_to_leaves_6:\n\t"
+      "fcomps 0x29ca28\n\t"
+      "movb %%bl, -0x4(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lbsp3d_clip_line_to_leaves_7\n\t"
+      "movb $1, %%al\n\t"
+      "jmp .Lbsp3d_clip_line_to_leaves_8\n\t"
+      ".Lbsp3d_clip_line_to_leaves_7:\n\t"
+      "xorb %%al, %%al\n\t"
+      ".Lbsp3d_clip_line_to_leaves_8:\n\t"
+      "testb %%dl, %%dl\n\t"
+      "movb %%al, -0x3(%%ebp)\n\t"
+      "je .Lbsp3d_clip_line_to_leaves_9\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lbsp3d_clip_line_to_leaves_10\n\t"
+      ".Lbsp3d_clip_line_to_leaves_9:\n\t"
+      "movb 0xf(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lbsp3d_clip_line_to_leaves_13\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lbsp3d_clip_line_to_leaves_13\n\t"
+      ".Lbsp3d_clip_line_to_leaves_10:\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "flds (%%eax)\n\t"
+      "fsubs (%%ebx)\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs 0x4(%%ebx)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fsubs 0x8(%%ebx)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fmuls 0x8(%%ebx)\n\t"
+      "flds (%%ebx)\n\t"
+      "fmuls (%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x4(%%ebx)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0xc(%%ecx)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls 0x8(%%ecx)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls (%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fchs\n\t"
+      "fsts -0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lbsp3d_clip_line_to_leaves_11\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lbsp3d_clip_line_to_leaves_12\n\t"
+      ".Lbsp3d_clip_line_to_leaves_11:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x49\n\t"
+      "pushl $0x29ca08\n\t"
+      "pushl $0x29c9f8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbsp3d_clip_line_to_leaves_12:\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fadds (%%ebx)\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fadds 0x4(%%ebx)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fadds 0x8(%%ebx)\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "jmp .Lbsp3d_clip_line_to_leaves_14\n\t"
+      ".Lbsp3d_clip_line_to_leaves_13:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      ".Lbsp3d_clip_line_to_leaves_14:\n\t"
+      "addl $4, %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%edi, -0x8(%%ebp)\n\t"
+      "movl 0x18(%%ebp), %%edi\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lbsp3d_clip_line_to_leaves_15:\n\t"
+      "movb 0xe(%%ebp,%%eax,1), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lbsp3d_clip_line_to_leaves_16\n\t"
+      "movb -0x4(%%ebp,%%eax,1), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lbsp3d_clip_line_to_leaves_16\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testw %%si, %%si\n\t"
+      "sete %%al\n\t"
+      "movb 0xe(%%ebp,%%eax,1), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lbsp3d_clip_line_to_leaves_21\n\t"
+      "movb -0x4(%%ebp,%%eax,1), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lbsp3d_clip_line_to_leaves_21\n\t"
+      ".Lbsp3d_clip_line_to_leaves_16:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testw %%si, %%si\n\t"
+      "sete %%al\n\t"
+      "leal -0x28(%%ebp), %%edx\n\t"
+      "movb 0xe(%%ebp,%%eax,1), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lbsp3d_clip_line_to_leaves_17\n\t"
+      "movl %%ebx, %%edx\n\t"
+      ".Lbsp3d_clip_line_to_leaves_17:\n\t"
+      "movb -0x4(%%ebp,%%eax,1), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "jne .Lbsp3d_clip_line_to_leaves_18\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      ".Lbsp3d_clip_line_to_leaves_18:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jns .Lbsp3d_clip_line_to_leaves_20\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lbsp3d_clip_line_to_leaves_21\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Lbsp3d_clip_line_to_leaves_19\n\t"
+      "movl 0x1c(%%ebp), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "andl $0x7fffffff, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%%edi\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lbsp3d_clip_line_to_leaves_19:\n\t"
+      "incl -0xc(%%ebp)\n\t"
+      "jmp .Lbsp3d_clip_line_to_leaves_21\n\t"
+      ".Lbsp3d_clip_line_to_leaves_20:\n\t"
+      "movl 0x1c(%%ebp), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c146e30]\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      ".Lbsp3d_clip_line_to_leaves_21:\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "incl %%esi\n\t"
+      "incl %%eax\n\t"
+      "addl $4, %%edx\n\t"
+      "cmpw $2, %%si\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "jl .Lbsp3d_clip_line_to_leaves_15\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b146e30_elem), [assert] "m"(b146e30_assert), [exitfn] "m"(b146e30_exitfn), [c146e30] "m"(b146e30_c146e30)
+      : "memory");
 }
+#else
+#error "bsp3d_clip_line_to_leaves: clang naked draft required"
+#endif
+
 
 /* FUN_001470b0 (0x1470b0): recursively partition a convex polygon against the
  * BSP3D node tree rooted at `node_index`, invoking `callback` once per terminal

@@ -523,111 +523,355 @@ void *rendered_cluster_get(int rendered_cluster_index)
   (void)esi;
 }
 
-/* 0x184ea0 */
-void render_scene(int16_t player_index, void *render_cam, void *render_frustum, void *rasterizer_cam, void *rasterizer_frustum, int16_t pass_type, char reflected)
+/* render_scene (0x184ea0) — XBE naked draft (batch 80). */
+#if defined(__clang__)
+static void (*const b184ea0_c915b0)(char a1) = profile_render_window_start;
+static void *(*const b184ea0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b184ea0_c198180)(void) = render_structure_visibility;
+static void (*const b184ea0_ca2fc0)(void) = player_effect_get_screen_flash;
+static int (*const b184ea0_c17c8d0)(window_parameters_t *a1) = rasterizer_window_begin;
+static bool (*const b184ea0_c1c5980)(void) = bink_playback_has_video;
+static void (*const b184ea0_c18d0b0)(void) = scenario_fog_region_get_fog_index;
+static void (*const b184ea0_c18ca40)(void) = FUN_0018ca40;
+static void (*const b184ea0_cddae0)(void) = first_person_weapon_render_update;
+static void (*const b184ea0_c13b380)(void) = FUN_0013b380;
+static void (*const b184ea0_c18c3a0)(void) = scenario_test_pvs;
+static void (*const b184ea0_c1959f0)(void) = FUN_001959f0;
+static void (*const b184ea0_c195b10)(void) = FUN_00195b10;
+static void (*const b184ea0_c181a90)(void) = FUN_00181a90;
+static void (*const b184ea0_c18c460)(void) = scenario_test_pas;
+static void (*const b184ea0_c13a420)(void) = FUN_0013a420;
+static void (*const b184ea0_c17cb20)(short pass_index) = FUN_0017cb20;
+static void (*const b184ea0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b184ea0_exitfn)(int) = system_exit;
+static void (*const b184ea0_c17cb30)(int rendered_cluster_data) = FUN_0017cb30;
+static void (*const b184ea0_c17cb40)(void) = FUN_0017cb40;
+static void (*const b184ea0_c195bc0)(void) = FUN_00195bc0;
+static void (*const b184ea0_c13a5f0)(void) = FUN_0013a5f0;
+static void (*const b184ea0_c195c40)(void) = FUN_00195c40;
+static void (*const b184ea0_c195cb0)(void) = FUN_00195cb0;
+static void (*const b184ea0_c195d00)(void) = FUN_00195d00;
+static void (*const b184ea0_c195d40)(void) = FUN_00195d40;
+static void (*const b184ea0_c195dc0)(void) = FUN_00195dc0;
+static void (*const b184ea0_c195e40)(void) = FUN_00195e40;
+static void (*const b184ea0_ca8630)(void) = get_postgame_hilite_colors;
+static void (*const b184ea0_ca54b0)(void) = FUN_000a54b0;
+static void (*const b184ea0_c18c5b0)(void) = FUN_0018c5b0;
+static void (*const b184ea0_ca1170)(void) = particle_system_update;
+static void (*const b184ea0_c188880)(void) = FUN_00188880;
+static void (*const b184ea0_c184980)(char param_1) = FUN_00184980;
+static void (*const b184ea0_c193c00)(void) = FUN_00193c00;
+static void (*const b184ea0_c184710)(void) = FUN_00184710;
+static void (*const b184ea0_c195ec0)(void) = FUN_00195ec0;
+static void (*const b184ea0_c181c20)(void) = FUN_00181c20;
+static void (*const b184ea0_cdefb0)(void) = interface_draw_screen;
+static void (*const b184ea0_c17cba0)(void) = FUN_0017cba0;
+static void (*const b184ea0_ce78e0)(__int16 a1, viewport_bounds_t *window_bounds) = render_ui_widgets;
+static void (*const b184ea0_c1c63e0)(void) = bink_playback_render;
+static void (*const b184ea0_c186d40)(void) = render_camera_debug_frustum;
+static void (*const b184ea0_c18ac50)(void) = FUN_0018ac50;
+static void (*const b184ea0_c977e0)(void) = FUN_000977e0;
+static void (*const b184ea0_c17e190)(void) = FUN_0017e190;
+static void (*const b184ea0_c17c900)(void) = rasterizer_window_end;
+static void (*const b184ea0_c91640)(void) = profile_render_window_end;
+
+__attribute__((naked, noinline))
+void render_scene(int16_t player_index __attribute__((unused)), void *render_cam __attribute__((unused)), void *render_frustum __attribute__((unused)), void *rasterizer_cam __attribute__((unused)), void *rasterizer_frustum __attribute__((unused)), int16_t pass_type __attribute__((unused)), char reflected __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  profile_render_window_start(0);
-  /* mem[0x00506544] = edx */
-  csmemset((void *)(uintptr_t)eax, 0, 0);
-  render_structure_visibility();
-  player_effect_get_screen_flash();
-  rasterizer_window_begin((void *)(uintptr_t)edx);
-  bink_playback_has_video();
-  /* test (char)eax, (char)eax -> jne 0x18524b */
-  scenario_fog_region_get_fog_index();
-  FUN_0018ca40();
-  first_person_weapon_render_update();
-  FUN_0013b380();
-  scenario_test_pvs();
-  FUN_001959f0();
-  FUN_00195b10();
-  FUN_00181a90();
-  scenario_test_pas();
-  FUN_0013a420();
-  FUN_0017cb20(0);
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x185011 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x184fca */
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x184fea */
-  display_assert((char *)0x002b0fa8, (char *)0x002b0f1c, 592, 0);
-  system_exit(0);
-  FUN_0017cb30(0);
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x184fc0 */
-  FUN_0017cb40();
-  FUN_0017cb20(0);
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x185081 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x18503a */
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x18505a */
-  display_assert((char *)0x002b0fa8, (char *)0x002b0f1c, 592, 0);
-  system_exit(0);
-  FUN_0017cb30(0);
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x185030 */
-  FUN_0017cb40();
-  FUN_00195bc0();
-  FUN_0017cb20(0);
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x1850f3 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1850ac */
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x1850cc */
-  display_assert((char *)0x002b0fa8, (char *)0x002b0f1c, 592, 0);
-  system_exit(0);
-  FUN_0017cb30(0);
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x1850a2 */
-  FUN_0017cb40();
-  FUN_0017cb20(0);
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x185161 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x18511a */
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x18513a */
-  display_assert((char *)0x002b0fa8, (char *)0x002b0f1c, 592, 0);
-  system_exit(0);
-  FUN_0017cb30(0);
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x185110 */
-  FUN_0017cb40();
-  FUN_0013a5f0();
-  FUN_00195c40();
-  FUN_00195cb0();
-  FUN_00195d00();
-  FUN_00195d40();
-  FUN_00195dc0();
-  FUN_00195e40();
-  get_postgame_hilite_colors();
-  FUN_000a54b0();
-  FUN_0018c5b0();
-  particle_system_update();
-  FUN_00188880();
-  FUN_00184980(0);
-  FUN_0017cb20(0);
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x185211 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1851ca */
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x1851ea */
-  display_assert((char *)0x002b0fa8, (char *)0x002b0f1c, 592, 0);
-  system_exit(0);
-  FUN_0017cb30(0);
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x1851c0 */
-  FUN_0017cb40();
-  FUN_00193c00();
-  FUN_00184980(0);
-  FUN_00184710();
-  FUN_00195ec0();
-  FUN_00181c20();
-  interface_draw_screen();
-  FUN_0017cba0();
-  render_ui_widgets(ebx, (void *)(uintptr_t)ecx);
-  bink_playback_render();
-  render_camera_debug_frustum();
-  FUN_0018ac50();
-  FUN_000977e0();
-  FUN_0017e190();
-  rasterizer_window_end();
-  profile_render_window_end();
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x258, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "call *%[c915b0]\n\t"
+      "movl 0x506544, %%edx\n\t"
+      "pushl $0x258\n\t"
+      "leal -0x258(%%ebp), %%eax\n\t"
+      "incl %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edx, 0x506544\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movb 0x1c(%%ebp), %%dl\n\t"
+      "movw %%bx, 0x506548\n\t"
+      "movl $0x15, %%ecx\n\t"
+      "movl $0x506550, %%edi\n\t"
+      "rep movsl\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "movl $0x63, %%ecx\n\t"
+      "movl $0x5065a4, %%edi\n\t"
+      "rep movsl\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "movw 0x50654a, %%ax\n\t"
+      "movl $0x15, %%ecx\n\t"
+      "leal -0x250(%%ebp), %%edi\n\t"
+      "rep movsl\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "movl $0x63, %%ecx\n\t"
+      "leal -0x1fc(%%ebp), %%edi\n\t"
+      "rep movsl\n\t"
+      "movw 0x18(%%ebp), %%cx\n\t"
+      "movw %%cx, -0x258(%%ebp)\n\t"
+      "movb %%dl, -0x254(%%ebp)\n\t"
+      "movw %%ax, -0x256(%%ebp)\n\t"
+      "movl $0x14, %%ecx\n\t"
+      "movl $0x506730, %%esi\n\t"
+      "leal -0x70(%%ebp), %%edi\n\t"
+      "rep movsl\n\t"
+      "call *%[c198180]\n\t"
+      "leal -0x20(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[ca2fc0]\n\t"
+      "leal -0x258(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c17c8d0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "call *%[c1c5980]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lrender_scene_21\n\t"
+      "call *%[c18d0b0]\n\t"
+      "call *%[c18ca40]\n\t"
+      "call *%[cddae0]\n\t"
+      "call *%[c13b380]\n\t"
+      "call *%[c18c3a0]\n\t"
+      "call *%[c1959f0]\n\t"
+      "call *%[c195b10]\n\t"
+      "call *%[c181a90]\n\t"
+      "call *%[c18c460]\n\t"
+      "call *%[c13a420]\n\t"
+      "pushl $2\n\t"
+      "call *%[c17cb20]\n\t"
+      "movw 0x5137cc, %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lrender_scene_4\n\t"
+      "jmp .Lrender_scene_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lrender_scene_1:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lrender_scene_2\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .Lrender_scene_3\n\t"
+      ".Lrender_scene_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x250\n\t"
+      "pushl $0x2b0f1c\n\t"
+      "pushl $0x2b0fa8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_scene_3:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0x1a0, %%eax, %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x5067cc(%%eax), %%cx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c17cb30]\n\t"
+      "movw 0x5137cc, %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "incl %%esi\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .Lrender_scene_1\n\t"
+      ".Lrender_scene_4:\n\t"
+      "call *%[c17cb40]\n\t"
+      "pushl $3\n\t"
+      "call *%[c17cb20]\n\t"
+      "movw 0x5137cc, %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lrender_scene_8\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lrender_scene_5:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lrender_scene_6\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .Lrender_scene_7\n\t"
+      ".Lrender_scene_6:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x250\n\t"
+      "pushl $0x2b0f1c\n\t"
+      "pushl $0x2b0fa8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_scene_7:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "imull $0x1a0, %%edx, %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x5067cc(%%edx), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c17cb30]\n\t"
+      "movw 0x5137cc, %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "incl %%esi\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .Lrender_scene_5\n\t"
+      ".Lrender_scene_8:\n\t"
+      "call *%[c17cb40]\n\t"
+      "call *%[c195bc0]\n\t"
+      "pushl $0\n\t"
+      "call *%[c17cb20]\n\t"
+      "movw 0x5137cc, %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lrender_scene_12\n\t"
+      ".Lrender_scene_9:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lrender_scene_10\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .Lrender_scene_11\n\t"
+      ".Lrender_scene_10:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x250\n\t"
+      "pushl $0x2b0f1c\n\t"
+      "pushl $0x2b0fa8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_scene_11:\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "imull $0x1a0, %%ecx, %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x5067cc(%%ecx), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c17cb30]\n\t"
+      "movw 0x5137cc, %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "incl %%esi\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .Lrender_scene_9\n\t"
+      ".Lrender_scene_12:\n\t"
+      "call *%[c17cb40]\n\t"
+      "pushl $1\n\t"
+      "call *%[c17cb20]\n\t"
+      "movw 0x5137cc, %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lrender_scene_16\n\t"
+      "nop\n\t"
+      ".Lrender_scene_13:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lrender_scene_14\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .Lrender_scene_15\n\t"
+      ".Lrender_scene_14:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x250\n\t"
+      "pushl $0x2b0f1c\n\t"
+      "pushl $0x2b0fa8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_scene_15:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0x1a0, %%eax, %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x5067cc(%%eax), %%cx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c17cb30]\n\t"
+      "movw 0x5137cc, %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "incl %%esi\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .Lrender_scene_13\n\t"
+      ".Lrender_scene_16:\n\t"
+      "call *%[c17cb40]\n\t"
+      "call *%[c13a5f0]\n\t"
+      "call *%[c195c40]\n\t"
+      "call *%[c195cb0]\n\t"
+      "call *%[c195d00]\n\t"
+      "call *%[c195d40]\n\t"
+      "call *%[c195dc0]\n\t"
+      "call *%[c195e40]\n\t"
+      "call *%[ca8630]\n\t"
+      "call *%[ca54b0]\n\t"
+      "call *%[c18c5b0]\n\t"
+      "call *%[ca1170]\n\t"
+      "call *%[c188880]\n\t"
+      "pushl $1\n\t"
+      "call *%[c184980]\n\t"
+      "pushl $4\n\t"
+      "call *%[c17cb20]\n\t"
+      "movw 0x5137cc, %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lrender_scene_20\n\t"
+      ".Lrender_scene_17:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lrender_scene_18\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .Lrender_scene_19\n\t"
+      ".Lrender_scene_18:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x250\n\t"
+      "pushl $0x2b0f1c\n\t"
+      "pushl $0x2b0fa8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_scene_19:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "imull $0x1a0, %%edx, %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x5067cc(%%edx), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c17cb30]\n\t"
+      "movw 0x5137cc, %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "incl %%esi\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .Lrender_scene_17\n\t"
+      ".Lrender_scene_20:\n\t"
+      "call *%[c17cb40]\n\t"
+      "call *%[c193c00]\n\t"
+      "pushl $0\n\t"
+      "call *%[c184980]\n\t"
+      "call *%[c184710]\n\t"
+      "call *%[c195ec0]\n\t"
+      "call *%[c181c20]\n\t"
+      "call *%[cdefb0]\n\t"
+      "call *%[c17cba0]\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "addl $0x2c, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[ce78e0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lrender_scene_21:\n\t"
+      "call *%[c1c63e0]\n\t"
+      "pushl $0x5065a4\n\t"
+      "pushl $0x506550\n\t"
+      "call *%[c186d40]\n\t"
+      "addl $8, %%esp\n\t"
+      "call *%[c18ac50]\n\t"
+      "call *%[c977e0]\n\t"
+      "call *%[c17e190]\n\t"
+      "call *%[c17c900]\n\t"
+      "call *%[c91640]\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c915b0] "m"(b184ea0_c915b0), [memset] "m"(b184ea0_memset), [c198180] "m"(b184ea0_c198180), [ca2fc0] "m"(b184ea0_ca2fc0), [c17c8d0] "m"(b184ea0_c17c8d0), [c1c5980] "m"(b184ea0_c1c5980), [c18d0b0] "m"(b184ea0_c18d0b0), [c18ca40] "m"(b184ea0_c18ca40), [cddae0] "m"(b184ea0_cddae0), [c13b380] "m"(b184ea0_c13b380), [c18c3a0] "m"(b184ea0_c18c3a0), [c1959f0] "m"(b184ea0_c1959f0), [c195b10] "m"(b184ea0_c195b10), [c181a90] "m"(b184ea0_c181a90), [c18c460] "m"(b184ea0_c18c460), [c13a420] "m"(b184ea0_c13a420), [c17cb20] "m"(b184ea0_c17cb20), [assert] "m"(b184ea0_assert), [exitfn] "m"(b184ea0_exitfn), [c17cb30] "m"(b184ea0_c17cb30), [c17cb40] "m"(b184ea0_c17cb40), [c195bc0] "m"(b184ea0_c195bc0), [c13a5f0] "m"(b184ea0_c13a5f0), [c195c40] "m"(b184ea0_c195c40), [c195cb0] "m"(b184ea0_c195cb0), [c195d00] "m"(b184ea0_c195d00), [c195d40] "m"(b184ea0_c195d40), [c195dc0] "m"(b184ea0_c195dc0), [c195e40] "m"(b184ea0_c195e40), [ca8630] "m"(b184ea0_ca8630), [ca54b0] "m"(b184ea0_ca54b0), [c18c5b0] "m"(b184ea0_c18c5b0), [ca1170] "m"(b184ea0_ca1170), [c188880] "m"(b184ea0_c188880), [c184980] "m"(b184ea0_c184980), [c193c00] "m"(b184ea0_c193c00), [c184710] "m"(b184ea0_c184710), [c195ec0] "m"(b184ea0_c195ec0), [c181c20] "m"(b184ea0_c181c20), [cdefb0] "m"(b184ea0_cdefb0), [c17cba0] "m"(b184ea0_c17cba0), [ce78e0] "m"(b184ea0_ce78e0), [c1c63e0] "m"(b184ea0_c1c63e0), [c186d40] "m"(b184ea0_c186d40), [c18ac50] "m"(b184ea0_c18ac50), [c977e0] "m"(b184ea0_c977e0), [c17e190] "m"(b184ea0_c17e190), [c17c900] "m"(b184ea0_c17c900), [c91640] "m"(b184ea0_c91640)
+      : "memory");
 }
+#else
+#error "render_scene: clang naked draft required"
+#endif
+
