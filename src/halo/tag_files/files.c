@@ -1418,20 +1418,52 @@ void file_write(void)
 #endif
 
 
-/* 0x19acf0 */
+/* file_write_to_position (0x19acf0) — XBE naked draft (batch 273). */
+#if defined(__clang__)
+static bool (*const b19acf0_c19aa00)(file_ref_t *info, int offset) = file_set_position;
+static void (*const b19acf0_c19ac00)(void) = file_write;
+
+__attribute__((naked, noinline))
 void file_write_to_position(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  file_set_position((void *)(uintptr_t)esi, 0);
-  /* test (char)eax, (char)eax -> je 0x19ad25 */
-  file_write();
-  /* test (char)eax, (char)eax -> je 0x19ad25 */
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c19aa00]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lfile_write_to_position_1\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c19ac00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lfile_write_to_position_1\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lfile_write_to_position_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c19aa00] "m"(b19acf0_c19aa00), [c19ac00] "m"(b19acf0_c19ac00)
+      : "memory");
 }
+#else
+#error "file_write_to_position: clang naked draft required"
+#endif
+
 
 /* file_get_last_modification_date (0x19ad30) — XBE naked draft (batch 257). */
 #if defined(__clang__)
@@ -1765,29 +1797,86 @@ void file_reference_copy(void)
   (void)esi;
 }
 
-/* 0x199a60 */
+/* directory_create_or_delete_contents (0x199a60) — XBE naked draft (batch 272). */
+#if defined(__clang__)
+static void *(*const b199a60_memset)(void *, int, unsigned int) = csmemset;
+static file_ref_t * (*const b199a60_c199700)(file_ref_t *info, const char *directory) = file_reference_add_directory;
+static bool (*const b199a60_c19a640)(file_ref_t *info) = file_exists;
+static void (*const b199a60_c19a040)(int flags, file_ref_t *dir) = find_files_begin;
+static bool (*const b199a60_c19aed0)(file_ref_t *result, int param2) = find_files_next;
+static bool (*const b199a60_c19a560)(file_ref_t *info) = file_delete;
+static bool (*const b199a60_c19a490)(file_ref_t *info) = FUN_0019a490;
+
+__attribute__((naked, noinline))
 void directory_create_or_delete_contents(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  csmemset((void *)(uintptr_t)eax, 0, 268);
-  file_reference_add_directory((void *)(uintptr_t)edx, (char *)(uintptr_t)ecx);
-  file_exists((void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0x199b05 */
-  find_files_begin(0, (void *)(uintptr_t)ecx);
-  find_files_next((void *)(uintptr_t)edx, 0);
-  /* test (char)eax, (char)eax -> je 0x199b14 */
-  file_delete((void *)(uintptr_t)eax);
-  find_files_next((void *)(uintptr_t)ecx, 0);
-  /* test (char)eax, (char)eax -> jne 0x199ae0 */
-  FUN_0019a490((void *)(uintptr_t)edx);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x218, %%esp\n\t"
+      "pushl $0x10c\n\t"
+      "leal -0x10c(%%ebp), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x10c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl $0x66696c6f, -0x10c(%%ebp)\n\t"
+      "movw $0xffff, -0x106(%%ebp)\n\t"
+      "call *%[c199700]\n\t"
+      "leal -0x10c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19a640]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Ldirectory_create_or_delete_contents_2\n\t"
+      "leal -0x10c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "call *%[c19a040]\n\t"
+      "leal -0x218(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c19aed0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Ldirectory_create_or_delete_contents_3\n\t"
+      "jmp .Ldirectory_create_or_delete_contents_1\n\t"
+      "leal (%%esp), %%esp\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Ldirectory_create_or_delete_contents_1:\n\t"
+      "leal -0x218(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19a560]\n\t"
+      "leal -0x218(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c19aed0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Ldirectory_create_or_delete_contents_1\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ldirectory_create_or_delete_contents_2:\n\t"
+      "leal -0x10c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c19a490]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Ldirectory_create_or_delete_contents_3:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b199a60_memset), [c199700] "m"(b199a60_c199700), [c19a640] "m"(b199a60_c19a640), [c19a040] "m"(b199a60_c19a040), [c19aed0] "m"(b199a60_c19aed0), [c19a560] "m"(b199a60_c19a560), [c19a490] "m"(b199a60_c19a490)
+      : "memory");
 }
+#else
+#error "directory_create_or_delete_contents: clang naked draft required"
+#endif
+
 
 /* FUN_00199b20 (0x199b20) — XBE naked draft (batch 246). */
 #if defined(__clang__)

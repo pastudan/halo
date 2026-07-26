@@ -363,20 +363,40 @@ void FUN_001bfb60(void)
   (void)edx;
 }
 
-/* 0x1c0070 */
+/* game_state_lruv_cache_new (0x1c0070) — XBE naked draft (batch 272). */
+#if defined(__clang__)
+static void (*const b1c0070_c1190b0)(uint32_t *checksum) = crc_new;
+static void (*const b1c0070_c1c00c0)(void) = FUN_001c00c0;
+static void (*const b1c0070_c1c0260)(void) = game_state_create_or_open_file;
+static void * (*const b1c0070_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
+
+__attribute__((naked, noinline))
 void game_state_lruv_cache_new(void)
 {
-  int eax = 0;
-
-  crc_new((void *)0x004ea9a0);
-  FUN_001c00c0();
-  /* mem[0x004ea994] = eax */
-  game_state_create_or_open_file();
-  game_state_malloc((char *)0x00265d1c, (char *)0, 332);
-  /* mem[0x004ea9ac] = eax */
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl $0x4ea9a0\n\t"
+      "call *%[c1190b0]\n\t"
+      "pushl $0x40000\n\t"
+      "pushl $0x305000\n\t"
+      "pushl $0x80061000\n\t"
+      "call *%[c1c00c0]\n\t"
+      "movl %%eax, 0x4ea994\n\t"
+      "call *%[c1c0260]\n\t"
+      "pushl $0x14c\n\t"
+      "pushl $0\n\t"
+      "pushl $0x265d1c\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movl %%eax, 0x4ea9ac\n\t"
+      "ret\n\t"
+      :
+      : [c1190b0] "m"(b1c0070_c1190b0), [c1c00c0] "m"(b1c0070_c1c00c0), [c1c0260] "m"(b1c0070_c1c0260), [c1bfbf0] "m"(b1c0070_c1bfbf0)
+      : "memory");
 }
+#else
+#error "game_state_lruv_cache_new: clang naked draft required"
+#endif
+
 
 /* FUN_001c00c0 (0x1c00c0) — XBE naked draft (batch 250). */
 #if defined(__clang__)

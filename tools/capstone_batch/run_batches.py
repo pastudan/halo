@@ -115,12 +115,28 @@ def true_end(xbe: Xbe, md: Cs, va: int, scan: int = 0x4000) -> int | None:
             if insn.mnemonic != "ret":
                 continue
             rest = insns2[i + 1 :]
-            # Shared epilogue residue after RET: nops/movs, or push-imm +
-            # jmp trampolines (common assert paths laid out after the ret).
+            # Shared epilogue residue after RET (nops/movs/jmps), but keep
+            # post-RET push/jmp islands that are still live via earlier
+            # branches (FUN_001cb4c0 / FUN_000129f0).
+            if rest and all(r.mnemonic in ("mov", "jmp", "nop") for r in rest):
+                return insn.address + insn.size
             if rest and all(
                 r.mnemonic in ("mov", "jmp", "nop", "push") for r in rest
             ):
-                return insn.address + insn.size
+                post_start = insn.address + insn.size
+                live = False
+                for prev in insns2[: i + 1]:
+                    if not prev.mnemonic.startswith("j"):
+                        continue
+                    try:
+                        tgt = int(prev.op_str, 16)
+                    except ValueError:
+                        continue
+                    if tgt >= post_start:
+                        live = True
+                        break
+                if not live:
+                    return insn.address + insn.size
     return last
 
 

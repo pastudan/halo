@@ -54,34 +54,158 @@ void cinematic_skip_stop(void)
   (void)0;
 }
 
-/* 0x92e90 */
-void cinematic_show_letterbox(int a0)
+/* cinematic_show_letterbox (0x92e90) — XBE naked draft (batch 269). */
+#if defined(__clang__)
+static int (*const b92e90_gtime)(void) = game_time_get;
+
+__attribute__((naked, noinline))
+void cinematic_show_letterbox(int a0 __attribute__((unused)))
 {
-  game_time_get();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movl 0x44df00, %%ecx\n\t"
+      "movb %%al, 0x8(%%ecx)\n\t"
+      "je .Lcinematic_show_letterbox_1\n\t"
+      "call *%[gtime]\n\t"
+      "movl 0x44df00, %%edx\n\t"
+      "movl %%eax, 0x4(%%edx)\n\t"
+      ".Lcinematic_show_letterbox_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [gtime] "m"(b92e90_gtime)
+      : "memory");
 }
+#else
+#error "cinematic_show_letterbox: clang naked draft required"
+#endif
 
-/* 0x92ec0 */
-void draw_quad(int16_t *rect, int color)
+
+/* draw_quad (0x92ec0) — XBE naked draft (batch 271). */
+#if defined(__clang__)
+static scenario_t * (*const b92ec0_c18e380)(void) = global_scenario_get;
+static void * (*const b92ec0_c18e450)(void) = game_globals_get;
+static void *(*const b92ec0_elem)(void *, int, int) = tag_block_get_element;
+static void *(*const b92ec0_tag)(int, int) = tag_get;
+static void *(*const b92ec0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b92ec0_c17cfa0)(void *render_data, void *vertices) = rasterizer_sprites_render;
+
+__attribute__((naked, noinline))
+void draw_quad(int16_t *rect __attribute__((unused)), int color __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  global_scenario_get();
-  game_globals_get();
-  /* cmp ecx, ebx -> je 0x92ef8 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 428);
-  tag_get(0x6269746d, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  csmemset((void *)(uintptr_t)eax, 0, 140);
-  rasterizer_sprites_render((void *)(uintptr_t)eax, (void *)(uintptr_t)edx);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x100, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e380]\n\t"
+      "call *%[c18e450]\n\t"
+      "movl 0x134(%%eax), %%ecx\n\t"
+      "addl $0x134, %%eax\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "je .Ldraw_quad_1\n\t"
+      "pushl $0x1ac\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .Ldraw_quad_2\n\t"
+      ".Ldraw_quad_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Ldraw_quad_2:\n\t"
+      "movl 0xb8(%%eax), %%eax\n\t"
+      "pushl $0x30\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6269746d\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x60, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movw $8, 0x325652\n\t"
+      "movswl 0x2(%%eax), %%ecx\n\t"
+      "movswl (%%eax), %%edx\n\t"
+      "movl %%ecx, 0x8(%%ebp)\n\t"
+      "movswl 0x6(%%eax), %%ecx\n\t"
+      "fildl 0x8(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "movl %%edx, 0x8(%%ebp)\n\t"
+      "movswl 0x4(%%eax), %%edx\n\t"
+      "fsts -0x24(%%ebp)\n\t"
+      "fildl 0x8(%%ebp)\n\t"
+      "movl %%ecx, 0x8(%%ebp)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fsts -0x20(%%ebp)\n\t"
+      "leal -0x24(%%ebp), %%ecx\n\t"
+      "fildl 0x8(%%ebp)\n\t"
+      "movl %%edx, 0x8(%%ebp)\n\t"
+      "leal -0xf8(%%ebp), %%eax\n\t"
+      "movl $4, %%edx\n\t"
+      "fsts -0x1c(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "fildl 0x8(%%ebp)\n\t"
+      "fsts -0x10(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      ".Ldraw_quad_3:\n\t"
+      "movl (%%ecx), %%edi\n\t"
+      "movl %%edi, -0x8(%%eax)\n\t"
+      "movl 0x4(%%ecx), %%edi\n\t"
+      "movl %%esi, 0x8(%%eax)\n\t"
+      "movl %%ebx, (%%eax)\n\t"
+      "movl %%ebx, 0x4(%%eax)\n\t"
+      "movl %%edi, -0x4(%%eax)\n\t"
+      "addl $8, %%ecx\n\t"
+      "addl $0x14, %%eax\n\t"
+      "decl %%edx\n\t"
+      "jne .Ldraw_quad_3\n\t"
+      "pushl $0x8c\n\t"
+      "leal -0xb0(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "leal -0x100(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0xb0(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movw %%bx, -0x28(%%ebp)\n\t"
+      "movl $0x3f800000, -0x6c(%%ebp)\n\t"
+      "movl $0x3f800000, -0x70(%%ebp)\n\t"
+      "movl $0x3f800000, -0x84(%%ebp)\n\t"
+      "movl $0x3f800000, -0x88(%%ebp)\n\t"
+      "movl %%ebx, -0xb0(%%ebp)\n\t"
+      "movb %%bl, -0x26(%%ebp)\n\t"
+      "movl %%ecx, -0xa4(%%ebp)\n\t"
+      "call *%[c17cfa0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%bx, 0x325652\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(b92ec0_c18e380), [c18e450] "m"(b92ec0_c18e450), [elem] "m"(b92ec0_elem), [tag] "m"(b92ec0_tag), [memset] "m"(b92ec0_memset), [c17cfa0] "m"(b92ec0_c17cfa0)
+      : "memory");
 }
+#else
+#error "draw_quad: clang naked draft required"
+#endif
+
 
 /* 0x93010 */
 void cinematic_force_title(void)
@@ -112,26 +236,75 @@ void cinematic_stop(void)
   (void)eax;
 }
 
-/* 0x930b0 */
-void cinematic_set_title_delayed(int a0, float a1)
+/* cinematic_set_title_delayed (0x930b0) — XBE naked draft (batch 273). */
+#if defined(__clang__)
+static scenario_t * (*const b930b0_c18e380)(void) = global_scenario_get;
+static void *(*const b930b0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b930b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+void cinematic_set_title_delayed(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* relift: cmp word ptr [ecx + esi*4 + 0xc], (int16_t)edx -> je 0x93102 */
-  /* cmp (int16_t)eax, 4 -> jl 0x930c2 */
-  global_scenario_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  error(0, (char *)0x00268e9c);
-  /* cmp (int16_t)eax, 4 -> jge 0x930d3 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x44df00, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "orl $0xffffffff, %%edx\n\t"
+      "pushl %%esi\n\t"
+      ".Lcinematic_set_title_delayed_1:\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "cmpw %%dx, 0xc(%%ecx,%%esi,4)\n\t"
+      "je .Lcinematic_set_title_delayed_3\n\t"
+      "incl %%eax\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jl .Lcinematic_set_title_delayed_1\n\t"
+      ".Lcinematic_set_title_delayed_2:\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x60\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x4fc, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x268e9c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcinematic_set_title_delayed_3:\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jge .Lcinematic_set_title_delayed_2\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movw 0x8(%%ebp), %%dx\n\t"
+      "fmuls 0x253394\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movw %%dx, 0xc(%%ecx,%%eax,4)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fistps -0x8(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl 0x44df00, %%edx\n\t"
+      "negl %%ecx\n\t"
+      "movw %%cx, 0xe(%%edx,%%eax,4)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(b930b0_c18e380), [elem] "m"(b930b0_elem), [c8f390] "m"(b930b0_c8f390)
+      : "memory");
 }
+#else
+#error "cinematic_set_title_delayed: clang naked draft required"
+#endif
+
 
 /* cinematic_render (0x93140) — XBE naked draft (batch 249). */
 #if defined(__clang__)
@@ -1711,23 +1884,64 @@ void FUN_00093e20(void)
 
 /* --- cinematics.obj orphan shells (2026-07-26) --- */
 
-/* 0x936b0 */
-short FUN_000936b0(void *scenario, void *entry)
+/* FUN_000936b0 (0x936b0) — XBE naked draft (batch 274). */
+#if defined(__clang__)
+static void *(*const b936b0_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b936b0_c1dd801)(const char *a, const char *b) = crt_stricmp;
+
+__attribute__((naked, noinline))
+short FUN_000936b0(void *scenario __attribute__((unused)), void *entry __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  /* test ecx, ecx -> jle 0x936ff */
-  tag_block_get_element((void *)(uintptr_t)esi, 0, 64);
-  crt_stricmp((char *)(uintptr_t)eax, (char *)(uintptr_t)ebx);
-  /* test eax, eax -> je 0x936fc */
-  /* cmp eax, ecx -> jl 0x936d3 */
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0x36c(%%esi), %%ecx\n\t"
+      "addl $0x36c, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .LFUN_000936b0_3\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_000936b0_1:\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dd801]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000936b0_2\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "incl %%edi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .LFUN_000936b0_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000936b0_2:\n\t"
+      "movw %%di, %%ax\n\t"
+      ".LFUN_000936b0_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b936b0_elem), [c1dd801] "m"(b936b0_c1dd801)
+      : "memory");
 }
+#else
+#error "FUN_000936b0: clang naked draft required"
+#endif
+

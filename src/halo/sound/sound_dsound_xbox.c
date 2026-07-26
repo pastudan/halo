@@ -895,48 +895,138 @@ void FUN_001c9670(void)
 #endif
 
 
-/* 0x1c9bf0 */
+/* FUN_001c9bf0 (0x1c9bf0) — XBE naked draft (batch 270). */
+#if defined(__clang__)
+static void * (*const b1c9bf0_c1c92f0)(short index) = sound_dsound_vchannel_get;
+static void * (*const b1c9bf0_c1c9290)(short index) = sound_dsound_channel_get;
+static void (*const b1c9bf0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1c9bf0_exitfn)(int) = system_exit;
+static void b1c9bf0_c20f081_tgt(void) { return; }
+static void (*const b1c9bf0_c20f081)(void) = b1c9bf0_c20f081_tgt;
+
+__attribute__((naked, noinline))
 void FUN_001c9bf0(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-
-  sound_dsound_vchannel_get(0);
-  /* cmp (int16_t)esi, -1 -> je 0x1c9c74 */
-  sound_dsound_channel_get(0);
-  /* relift: cmp word ptr [eax + 2], (int16_t)ebx -> je 0x1c9c38 */
-  display_assert((char *)0x002c0c50, (char *)0x002c0894, 1501, 0);
-  system_exit(0);
-  sound_dsound_channel_get(0);
-  /* relift: cmp word ptr [esi], (int16_t)ebx -> je 0x1c9c5b */
-  /* relift: FUN_0020f081(0); */
-  sound_dsound_channel_get(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "call *%[c1c92f0]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movw (%%edi), %%si\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .LFUN_001c9bf0_3\n\t"
+      "call *%[c1c9290]\n\t"
+      "cmpw %%bx, 0x2(%%eax)\n\t"
+      "je .LFUN_001c9bf0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5dd\n\t"
+      "pushl $0x2c0894\n\t"
+      "pushl $0x2c0c50\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001c9bf0_1:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movw (%%edi), %%si\n\t"
+      "call *%[c1c9290]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpw %%bx, (%%esi)\n\t"
+      "je .LFUN_001c9bf0_2\n\t"
+      "movl 0x70(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c20f081]\n\t"
+      "movb $1, 0x6(%%esi)\n\t"
+      "movw %%bx, (%%esi)\n\t"
+      ".LFUN_001c9bf0_2:\n\t"
+      "movl %%ebx, 0x68(%%esi)\n\t"
+      "movl %%ebx, 0x6c(%%esi)\n\t"
+      "movw (%%edi), %%si\n\t"
+      "call *%[c1c9290]\n\t"
+      "movw $0xffff, 0x2(%%eax)\n\t"
+      "movw $0xffff, (%%edi)\n\t"
+      ".LFUN_001c9bf0_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1c92f0] "m"(b1c9bf0_c1c92f0), [c1c9290] "m"(b1c9bf0_c1c9290), [assert] "m"(b1c9bf0_assert), [exitfn] "m"(b1c9bf0_exitfn), [c20f081] "m"(b1c9bf0_c20f081)
+      : "memory");
 }
+#else
+#error "FUN_001c9bf0: clang naked draft required"
+#endif
 
-/* 0x1c9c80 */
+
+/* FUN_001c9c80 (0x1c9c80) — XBE naked draft (batch 274). */
+#if defined(__clang__)
+static void * (*const b1c9c80_c1c92f0)(short index) = sound_dsound_vchannel_get;
+static void * (*const b1c9c80_c1c9290)(short index) = sound_dsound_channel_get;
+static void (*const b1c9c80_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1c9c80_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_001c9c80(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-
-  sound_dsound_vchannel_get(0);
-  /* cmp (int16_t)esi, -1 -> je 0x1c9cda */
-  sound_dsound_channel_get(0);
-  /* relift: cmp word ptr [eax + 2], (int16_t)ebx -> je 0x1c9cc8 */
-  display_assert((char *)0x002c0c50, (char *)0x002c0894, 1523, 0);
-  system_exit(0);
-  sound_dsound_channel_get(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "call *%[c1c92f0]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movw (%%edi), %%si\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .LFUN_001c9c80_2\n\t"
+      "call *%[c1c9290]\n\t"
+      "cmpw %%bx, 0x2(%%eax)\n\t"
+      "je .LFUN_001c9c80_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5f3\n\t"
+      "pushl $0x2c0894\n\t"
+      "pushl $0x2c0c50\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001c9c80_1:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movw (%%edi), %%si\n\t"
+      "call *%[c1c9290]\n\t"
+      "movw (%%eax), %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001c9c80_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1c92f0] "m"(b1c9c80_c1c92f0), [c1c9290] "m"(b1c9c80_c1c9290), [assert] "m"(b1c9c80_assert), [exitfn] "m"(b1c9c80_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_001c9c80: clang naked draft required"
+#endif
+
 
 /* 0x1c9cf0 */
 void FUN_001c9cf0(void)

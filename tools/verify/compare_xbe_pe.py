@@ -144,8 +144,25 @@ def pe_fn_bytes(pe: pefile.PE, name: str) -> tuple[bytes, int]:
             post_insns = list(md.disasm(post, addr + end_off))
             real = [i for i in post_insns if i.mnemonic not in ("nop", "int3")]
             # Jump-table dwords rarely decode into a long run of real ops.
+            # But keep short post-RET bodies that are still live via branches
+            # from before the RET (e.g. FUN_000129f0 jl into epilogue case).
             if len(real) < 8:
-                chosen = end_off
+                post_start = addr + end_off
+                live = False
+                for ins in insns[: ri + 1]:
+                    if not (
+                        ins.mnemonic.startswith("j") or ins.mnemonic == "call"
+                    ):
+                        continue
+                    try:
+                        tgt = int(ins.op_str, 16)
+                    except ValueError:
+                        continue
+                    if tgt >= post_start:
+                        live = True
+                        break
+                if not live:
+                    chosen = end_off
         if chosen is not None:
             data = data[:chosen]
     return data, addr
@@ -3060,7 +3077,7 @@ def main() -> int:
         ("FUN_001c1b00", 0x1c1b00, 0x1c1b9c),
         ("playlist_profile_read", 0x1c2750, 0x1c27ec),
         ("bitmap_format_to_d3d_linear_format", 0x1beba0, 0x1bec27),
-        ("FUN_001cb4c0", 0x1cb4c0, 0x1cb777),
+        ("FUN_001cb4c0", 0x1cb4c0, 0x1cb78c),
         ("FUN_0012f430", 0x12f430, 0x12f536),
         ("transport_server_initialize", 0x83100, 0x83197),
         ("FUN_00028250", 0x28250, 0x283af),
@@ -3144,6 +3161,110 @@ def main() -> int:
         ("sound_initialize", 0x1cc710, 0x1cc8b7),
         ("FUN_001cd690", 0x1cd690, 0x1cd8af),
         ("FUN_00123b30", 0x123b30, 0x123c6c),
+        # gameplay wave 269 (2026-07-26) — Capstone weaks
+        ("quaternion_compress_8byte", 0x120950, 0x1209a5),
+        ("FUN_001bac00", 0x1bac00, 0x1bac22),
+        ("FUN_001bdf60", 0x1bdf60, 0x1be08f),
+        ("FUN_001d819f", 0x1d819f, 0x1d81f4),
+        ("sound_cache_close", 0x1be4f0, 0x1be541),
+        ("FUN_001ccca0", 0x1ccca0, 0x1ccd64),
+        ("FUN_00094560", 0x94560, 0x94614),
+        ("FUN_001bc5c0", 0x1bc5c0, 0x1bc61c),
+        ("FUN_00012000", 0x12000, 0x1207e),
+        ("transport_nonce_is_equal", 0x81f30, 0x81f99),
+        ("cinematic_show_letterbox", 0x92e90, 0x92eb3),
+        ("FUN_00094a70", 0x94a70, 0x94a89),
+        # gameplay wave 270 (2026-07-26) — Capstone weaks
+        ("recorded_animation_apply_event_stream_v1", 0x94a90, 0x94b95),
+        ("FUN_001c9bf0", 0x1c9bf0, 0x1c9c79),
+        ("ustrncmp", 0x19dc20, 0x19dc8f),
+        ("FUN_001bd1b0", 0x1bd1b0, 0x1bd20c),
+        ("FUN_001ba8b0", 0x1ba8b0, 0x1ba925),
+        ("FUN_00091350", 0x91350, 0x91371),
+        ("FUN_00091b70", 0x91b70, 0x91b97),
+        ("uvfprintf", 0x19eb50, 0x19ebc5),
+        ("player_profile_new", 0x1c18f0, 0x1c1948),
+        ("playlist_profile_delete", 0x1c26f0, 0x1c2749),
+        ("device_preprocess_node_orientations", 0x96310, 0x9646c),
+        ("ustrtol", 0x19f160, 0x19f1cf),
+        # gameplay wave 271 (2026-07-26) — Capstone weaks
+        ("ustrtoul", 0x19f1d0, 0x19f23f),
+        ("FUN_0019d380", 0x19d380, 0x19d3bc),
+        ("FUN_001c33b0", 0x1c33b0, 0x1c3424),
+        ("umemchr", 0x19d480, 0x19d4e3),
+        ("umemset", 0x19d670, 0x19d6d9),
+        ("draw_quad", 0x92ec0, 0x9300b),
+        ("FUN_00076300", 0x76300, 0x763fa),
+        ("uvprintf", 0x19ebd0, 0x19ec3b),
+        ("ustrtod", 0x19f240, 0x19f2ab),
+        ("FUN_0010c390", 0x10c390, 0x10c3bb),
+        ("FUN_001becc0", 0x1becc0, 0x1bece7),
+        ("FUN_00108d80", 0x108d80, 0x108da6),
+        # gameplay wave 272 (2026-07-26) — Capstone weaks
+        ("FUN_00108dd0", 0x108dd0, 0x108def),
+        ("FUN_001d76fc", 0x1d76fc, 0x1d7712),
+        ("game_sound_clear", 0x1c70b0, 0x1c715b),
+        ("FUN_001cb210", 0x1cb210, 0x1cb4b1),
+        ("game_state_lruv_cache_new", 0x1c0070, 0x1c00b2),
+        ("shader_is_water_decal", 0x190930, 0x190972),
+        ("shader_ignores_effect", 0x190980, 0x1909c2),
+        ("directory_create_or_delete_contents", 0x199a60, 0x199b18),
+        ("recorded_animation_verify", 0x94ee0, 0x94ff0),
+        ("FUN_0019cec0", 0x19cec0, 0x19cfd1),
+        ("XapiBootToDash", 0x1d81f4, 0x1d8368),
+        ("uputs", 0x19e870, 0x19e8d7),
+        # gameplay wave 273 (2026-07-26) — Capstone weaks
+        ("uperror", 0x19efd0, 0x19f037),
+        ("uremove", 0x19f0e0, 0x19f147),
+        ("uatoi", 0x19f2b0, 0x19f317),
+        ("FUN_000967a0", 0x967a0, 0x96842),
+        ("cinematic_set_title_delayed", 0x930b0, 0x9313b),
+        ("align_to_character", 0x19d6e0, 0x19d75c),
+        ("ustrlen", 0x19d8c0, 0x19d923),
+        ("file_write_to_position", 0x19acf0, 0x19ad2a),
+        ("FUN_001bab60", 0x1bab60, 0x1babfd),
+        ("transport_get_nonce", 0x81ec0, 0x81f24),
+        ("draw_string_set_indents", 0x19b5d0, 0x19b639),
+        ("FUN_00082cf0", 0x82cf0, 0x82d2c),
+        # gameplay wave 274 (2026-07-26) — Capstone weaks
+        ("profile_sections_activate", 0x90860, 0x90874),
+        ("profile_sections_deactivate", 0x90880, 0x90894),
+        ("uvsnprintf", 0x19ec40, 0x19ece9),
+        ("FUN_00120400", 0x120400, 0x12046e),
+        ("FUN_000129f0", 0x129f0, 0x12a77),
+        ("FUN_001c35a0", 0x1c35a0, 0x1c3601),
+        ("shader_is_mirror", 0x190830, 0x190876),
+        ("FUN_000936b0", 0x936b0, 0x93704),
+        ("FUN_001c9c80", 0x1c9c80, 0x1c9ce1),
+        ("FUN_00120620", 0x120620, 0x120663),
+        ("FUN_001ba290", 0x1ba290, 0x1ba2c6),
+        ("FUN_001cc200", 0x1cc200, 0x1cc2e7),
+        # gameplay wave 275 (2026-07-26) — Capstone weaks
+        ("FUN_00081fa0", 0x81fa0, 0x82002),
+        ("FUN_001ce9c0", 0x1ce9c0, 0x1ceba4),
+        ("cache_file_header_verify", 0x1b9ce0, 0x1b9dd2),
+        ("FUN_001b9fa0", 0x1b9fa0, 0x1ba0bd),
+        ("game_sound_restore", 0x1c7160, 0x1c722a),
+        ("device_delete", 0x96a00, 0x96a8b),
+        ("tiff_get_bounds", 0x7f570, 0x7f5dd),
+        ("FUN_00012090", 0x12090, 0x120d9),
+        ("ufprintf", 0x19e8e0, 0x19e979),
+        ("FUN_001cf100", 0x1cf100, 0x1cf2e9),
+        ("FUN_00082a30", 0x82a30, 0x82a8e),
+        ("device_new", 0x960c0, 0x96105),
+        # gameplay wave 276 (2026-07-26) — Capstone weaks
+        ("scripted_looping_sound_set_scale", 0x1c7650, 0x1c76c0),
+        ("rewind_endpoint_set", 0x82940, 0x829a1),
+        ("count_endpoints_in_set", 0x82df0, 0x82e4b),
+        ("XAutoPowerDownResetTimer", 0x1d771c, 0x1d7737),
+        ("FUN_001ba0c0", 0x1ba0c0, 0x1ba13e),
+        ("bitmap_get_pixel_count", 0x7dfe0, 0x7e03b),
+        ("shader_type_is_lightmapped", 0x1909f0, 0x190a0c),
+        ("shader_type_is_valid_for_environment", 0x190a30, 0x190a4c),
+        ("FUN_001089a0", 0x1089a0, 0x1089c7),
+        ("FUN_00108df0", 0x108df0, 0x108e11),
+        ("FUN_001cd8b0", 0x1cd8b0, 0x1cda4d),
+        ("recorded_animations_clear_debug_storage", 0x94c70, 0x94caf),
     ]
 
     xbe = Xbe.from_file(args.xbe)

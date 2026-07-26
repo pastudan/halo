@@ -501,22 +501,40 @@ void FUN_001beb70(void)
   (void)ecx;
 }
 
-/* 0x1becc0 */
+/* FUN_001becc0 (0x1becc0) — XBE naked draft (batch 271). */
+#if defined(__clang__)
+static int (*const b1becc0_c183290)(void *bitmap) = FUN_00183290;
+
+__attribute__((naked, noinline))
 void FUN_001becc0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  FUN_00183290((void *)(uintptr_t)eax);
-  FUN_00183290((void *)(uintptr_t)ecx);
-  D3DDevice_IsBusy();
-  D3DDevice_KickPushBuffer();
-  D3DResource_IsBusy((void *)(uintptr_t)eax);
-  D3DResource_Register((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c183290]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c183290]\n\t"
+      "subl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testl %%esi, %%esi\n\t"
+      "setg %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c183290] "m"(b1becc0_c183290)
+      : "memory");
 }
+#else
+#error "FUN_001becc0: clang naked draft required"
+#endif
+
 
 /* 0x1bed30 */
 void texture_cache_flush(void)

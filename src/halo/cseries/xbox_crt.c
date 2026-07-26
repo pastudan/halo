@@ -1146,19 +1146,55 @@ void FUN_001d703b(void)
 #endif
 
 
-/* 0x1d76fc */
+/* FUN_001d76fc (0x1d76fc) — XBE naked draft (batch 272). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_001d76fc(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "cmpb $0, -0x1d(%%ebp)\n\t"
+      "je .LFUN_001d76fc_1\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "pushl 0x580(%%eax)\n\t"
+      "call *0x253098\n\t"
+      ".LFUN_001d76fc_1:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001d76fc: clang naked draft required"
+#endif
 
-/* 0x1d771c */
+
+/* XAutoPowerDownResetTimer (0x1d771c) — XBE naked draft (batch 276). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void XAutoPowerDownResetTimer(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl $-0x33\n\t"
+      "popl %%ecx\n\t"
+      "pushl $0x6329c0\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0xb5659000, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6329e0\n\t"
+      "call *0x2531e0\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "XAutoPowerDownResetTimer: clang naked draft required"
+#endif
+
 
 /* FUN_001d7749 (0x1d7749) — XBE naked draft (batch 251). */
 #if defined(__clang__)
@@ -1797,71 +1833,210 @@ void XapiMapLetterToDirectory(void)
 #endif
 
 
-/* 0x1d819f */
+/* FUN_001d819f (0x1d819f) — XBE naked draft (batch 269). */
+#if defined(__clang__)
+static int (*const b1d819f_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static void (*const b1d819f_c1d7e6b)(void) = XapiMapLetterToDirectory;
+
+__attribute__((naked, noinline))
 void FUN_001d819f(void)
 {
-  int eax = 0;
-
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0x002c1e28);
-  XapiMapLetterToDirectory();
-  /* test eax, eax -> jl 0x1d81f0 */
-  XapiMapLetterToDirectory();
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl $0x2c1e28\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x32fd80\n\t"
+      "pushl $0x32fd78\n\t"
+      "call *%[c1d7e6b]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_001d819f_1\n\t"
+      "pushl $0\n\t"
+      "pushl 0xc(%%ebp)\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x32fd90\n\t"
+      "pushl $0x32fd88\n\t"
+      "call *%[c1d7e6b]\n\t"
+      ".LFUN_001d819f_1:\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d90f0] "m"(b1d819f_c1d90f0), [c1d7e6b] "m"(b1d819f_c1d7e6b)
+      : "memory");
 }
+#else
+#error "FUN_001d819f: clang naked draft required"
+#endif
 
-/* 0x1d81f4 */
+
+/* XapiBootToDash (0x1d81f4) — XBE naked draft (batch 272). */
+#if defined(__clang__)
+static int __stdcall (*const b1d81f4_c1d25e0)(const char *image_path, void *launch_data) = XLaunchNewImageA;
+static void (*const b1d81f4_c1d7749)(void) = FUN_001d7749;
+static void (*const b1d81f4_c1d5842)(void) = FUN_001d5842;
+static int __stdcall (*const b1d81f4_c1d7d21)(void *object_name_field) = FUN_001d7d21;
+static void (*const b1d81f4_c1d819f)(void) = FUN_001d819f;
+static void (*const b1d81f4_c1d3c95)(void) = XMountUtilityDrive;
+static void (*const b1d81f4_c1d81f4)(void) = XapiBootToDash;
+static void (*const b1d81f4_c1d454b)(void) = FUN_001d454b;
+
+__attribute__((naked, noinline))
 void XapiBootToDash(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: cmp dword ptr [eax + 8], 0xfffe0000 -> je 0x1d8250 */
-  XLaunchNewImageA((char *)0, (void *)(uintptr_t)eax);
-  FUN_001d7749();
-  FUN_001d5842();
-  /* mem[0x00632a28] = eax */
-  /* relift: test byte ptr [0x10124], 8 -> jne 0x1d8323 */
-  FUN_001d7d21((void *)0x0032fd70);
-  /* test eax, eax -> jl 0x1d82ff */
-  /* cmp eax, esi -> jge 0x1d82d9 */
-  /* cmp eax, 0xc0000035 -> jne 0x1d829d */
-  FUN_001d819f();
-  /* cmp eax, esi -> jge 0x1d8303 */
-  /* cmp eax, 0xc000007f -> jne 0x1d82ff */
-  /* test (char)eax, 1 -> je 0x1d8342 */
-  XMountUtilityDrive();
-  /* test eax, eax -> jne 0x1d8342 */
-  /* relift: tail-call XapiBootToDash(); */
-  /* cmp eax, esi -> jge 0x1d8342 */
-  /* cmp eax, 0xc0000035 -> jne 0x1d829d */
-  FUN_001d454b();
-  /* cmp esi, eax -> jae 0x1d8364 */
-  /* relift: tail-call XapiBootToDash(); */
-  /* cmp eax, edi -> jge 0x1d83ac */
-  XapiSetLastNTError(0);
-  /* cmp ebx, edi -> jge 0x1d83e2 */
-  FUN_001d8750(0);
-  /* cmp esi, edi -> jge 0x1d841e */
-  /* relift: cmp dword ptr [ebp - 0xc], edi -> jae 0x1d84b1 */
-  __alldiv();
-  /* cmp eax, 0xfff0 -> jae 0x1d8479 */
-  /* cmp eax, edi -> ja 0x1d84b1 */
-  /* cmp eax, esi -> jb 0x1d84c6 */
-  /* relift: cmp dword ptr [ebp - 0x10], edi -> jbe 0x1d84c6 */
-  SetLastError(112);
-  FUN_001d0bb9(ecx, ebx);
-  /* test esi, esi -> jne 0x1d84e6 */
-  LocalFree((void *)(uintptr_t)esi);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc00, %%esp\n\t"
+      "movl 0x10118, %%eax\n\t"
+      "cmpl $0xfffe0000, 0x8(%%eax)\n\t"
+      "je .LXapiBootToDash_1\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $0x300, %%ecx\n\t"
+      "leal -0xc00(%%ebp), %%edi\n\t"
+      "rep stosl\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "andl $0, -0xbfc(%%ebp)\n\t"
+      "movl %%eax, -0xc00(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl %%eax, -0xbf8(%%ebp)\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl %%eax, -0xbf4(%%ebp)\n\t"
+      "leal -0xc00(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "call *%[c1d25e0]\n\t"
+      "popl %%edi\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      ".LXapiBootToDash_1:\n\t"
+      "pushl $4\n\t"
+      "call *0x2531f8\n\t"
+      ".byte 0xcc\n\t"
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x30, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "call *%[c1d7749]\n\t"
+      "pushl $0xc\n\t"
+      "popl %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal -0x30(%%ebp), %%edi\n\t"
+      "rep stosl\n\t"
+      "leal -0x30(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl $0x30, -0x30(%%ebp)\n\t"
+      "pushl 0x10138\n\t"
+      "pushl 0x10134\n\t"
+      "pushl %%esi\n\t"
+      "pushl $2\n\t"
+      "popl %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d5842]\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "movl %%eax, 0x632a28\n\t"
+      "jne .LXapiBootToDash_3\n\t"
+      ".LXapiBootToDash_2:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "incl %%ecx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "jmp .LXapiBootToDash_10\n\t"
+      ".LXapiBootToDash_3:\n\t"
+      "testb $8, 0x10124\n\t"
+      "jne .LXapiBootToDash_7\n\t"
+      "pushl $0x32fd70\n\t"
+      "call *%[c1d7d21]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LXapiBootToDash_5\n\t"
+      "pushl $0x32fd68\n\t"
+      "pushl $0x32fd60\n\t"
+      "call *0x253220\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jge .LXapiBootToDash_4\n\t"
+      "cmpl $0xc0000035, %%eax\n\t"
+      "jne .LXapiBootToDash_2\n\t"
+      ".LXapiBootToDash_4:\n\t"
+      "movl 0x10118, %%eax\n\t"
+      "leal 0xc(%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl 0x8(%%eax)\n\t"
+      "call *%[c1d819f]\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jge .LXapiBootToDash_6\n\t"
+      "cmpl $0xc000007f, %%eax\n\t"
+      "jne .LXapiBootToDash_5\n\t"
+      "pushl $0x54\n\t"
+      "popl %%ecx\n\t"
+      "pushl $0x10\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "jmp .LXapiBootToDash_10\n\t"
+      ".LXapiBootToDash_5:\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "jmp .LXapiBootToDash_9\n\t"
+      ".LXapiBootToDash_6:\n\t"
+      "movl 0x10124, %%eax\n\t"
+      "testb $1, %%al\n\t"
+      "je .LXapiBootToDash_8\n\t"
+      "andl %%edi, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d3c95]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LXapiBootToDash_8\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "call *%[c1d81f4]\n\t"
+      "jmp .LXapiBootToDash_8\n\t"
+      ".LXapiBootToDash_7:\n\t"
+      "pushl $0x32fd68\n\t"
+      "pushl $0x32fd60\n\t"
+      "call *0x253220\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jge .LXapiBootToDash_8\n\t"
+      "cmpl $0xc0000035, %%eax\n\t"
+      "jne .LXapiBootToDash_2\n\t"
+      ".LXapiBootToDash_8:\n\t"
+      "movl 0x10118, %%eax\n\t"
+      "movl 0xa4(%%eax), %%esi\n\t"
+      "call *%[c1d454b]\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jae .LXapiBootToDash_11\n\t"
+      "pushl $4\n\t"
+      "popl %%ecx\n\t"
+      ".LXapiBootToDash_9:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      ".LXapiBootToDash_10:\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d81f4]\n\t"
+      ".LXapiBootToDash_11:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d25e0] "m"(b1d81f4_c1d25e0), [c1d7749] "m"(b1d81f4_c1d7749), [c1d5842] "m"(b1d81f4_c1d5842), [c1d7d21] "m"(b1d81f4_c1d7d21), [c1d819f] "m"(b1d81f4_c1d819f), [c1d3c95] "m"(b1d81f4_c1d3c95), [c1d81f4] "m"(b1d81f4_c1d81f4), [c1d454b] "m"(b1d81f4_c1d454b)
+      : "memory");
 }
+#else
+#error "XapiBootToDash: clang naked draft required"
+#endif
+

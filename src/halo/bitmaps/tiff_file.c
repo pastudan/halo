@@ -335,24 +335,71 @@ void targa_export(void)
 #endif
 
 
-/* 0x7f570 */
+/* tiff_get_bounds (0x7f570) — XBE naked draft (batch 275). */
+#if defined(__clang__)
+static char * (*const b7f570_c199810)(file_ref_t *info, int flags, char *name_out) = file_reference_get_name;
+static int (*const b7f570_c6d8e0)(const char *path, const char *mode) = FUN_0006d8e0;
+static void (*const b7f570_c65e90)(void) = TIFFGetField;
+static void (*const b7f570_c64ee0)(int file) = FUN_00064ee0;
+
+__attribute__((naked, noinline))
 void tiff_get_bounds(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  file_reference_get_name((void *)(uintptr_t)ecx, 13, (char *)(uintptr_t)eax);
-  FUN_0006d8e0((char *)(uintptr_t)eax, (char *)0);
-  /* test esi, esi -> je 0x7f5d5 */
-  TIFFGetField();
-  TIFFGetField();
-  FUN_00064ee0(0);
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x100, %%esp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x2658a4\n\t"
+      "leal -0x100(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0xd\n\t"
+      "pushl %%ecx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c199810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c6d8e0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Ltiff_get_bounds_1\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c65e90]\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x101\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c65e90]\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c64ee0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ltiff_get_bounds_1:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c199810] "m"(b7f570_c199810), [c6d8e0] "m"(b7f570_c6d8e0), [c65e90] "m"(b7f570_c65e90), [c64ee0] "m"(b7f570_c64ee0)
+      : "memory");
 }
+#else
+#error "tiff_get_bounds: clang naked draft required"
+#endif
+
 
 /* FUN_0007fa00 (0x7fa00) — XBE naked draft (batch 241). */
 #if defined(__clang__)

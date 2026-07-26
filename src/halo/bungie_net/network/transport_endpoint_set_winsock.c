@@ -1033,65 +1033,169 @@ void destroy_endpoint(int *ep)
 }
 /* --- transport_endpoint_set_winsock.obj batch drafts (2026-07-26) --- */
 
-/* 0x81ec0 */
-void transport_get_nonce(void *dst, int bytes)
+/* transport_get_nonce (0x81ec0) — XBE naked draft (batch 273). */
+#if defined(__clang__)
+static void (*const b81ec0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b81ec0_exitfn)(int) = system_exit;
+static void * (*const b81ec0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
+void transport_get_nonce(void *dst __attribute__((unused)), int bytes __attribute__((unused)))
 {
-  int esi = 0;
-  int ebp = 0;
-
-  /* test esi, esi -> jne 0x81eeb */
-  display_assert((char *)0x002664e0, (char *)0x00266458, 151, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [ebp + 0xc], 8 -> je 0x81f11 */
-  display_assert((char *)0x002664c0, (char *)0x00266458, 152, 0);
-  system_exit(0);
-  csmemcpy((void *)(uintptr_t)esi, (void *)0x005ab228, 0);
-
-  (void)esi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Ltransport_get_nonce_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x97\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x2664e0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltransport_get_nonce_1:\n\t"
+      "cmpl $8, 0xc(%%ebp)\n\t"
+      "je .Ltransport_get_nonce_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x98\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x2664c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltransport_get_nonce_2:\n\t"
+      "pushl $8\n\t"
+      "pushl $0x5ab228\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b81ec0_assert), [exitfn] "m"(b81ec0_exitfn), [c8e0b0] "m"(b81ec0_c8e0b0)
+      : "memory");
 }
+#else
+#error "transport_get_nonce: clang naked draft required"
+#endif
 
-/* 0x81f30 */
+
+/* transport_nonce_is_equal (0x81f30) — XBE naked draft (batch 269). */
+#if defined(__clang__)
+static void (*const b81f30_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b81f30_exitfn)(int) = system_exit;
+static int (*const b81f30_c8da40)(const void *a, const void *b, int size) = csmemcmp;
+
+__attribute__((naked, noinline))
 void transport_nonce_is_equal(void)
 {
-  int esi = 0;
-  int edi = 0;
-
-  display_assert((char *)0x002664ec, (char *)0x00266458, 163, 0);
-  system_exit(0);
-  /* test edi, edi -> jne 0x81f83 */
-  display_assert((char *)0x002664e0, (char *)0x00266458, 164, 0);
-  system_exit(0);
-  csmemcmp((void *)(uintptr_t)esi, (void *)(uintptr_t)edi, 0);
-
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Ltransport_nonce_is_equal_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa3\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x2664ec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltransport_nonce_is_equal_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Ltransport_nonce_is_equal_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa4\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x2664e0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltransport_nonce_is_equal_2:\n\t"
+      "pushl $8\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8da40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "negl %%eax\n\t"
+      "sbbb %%al, %%al\n\t"
+      "popl %%edi\n\t"
+      "incb %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b81f30_assert), [exitfn] "m"(b81f30_exitfn), [c8da40] "m"(b81f30_c8da40)
+      : "memory");
 }
+#else
+#error "transport_nonce_is_equal: clang naked draft required"
+#endif
 
-/* 0x81fa0 */
+
+/* FUN_00081fa0 (0x81fa0) — XBE naked draft (batch 275). */
+#if defined(__clang__)
+static void (*const b81fa0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b81fa0_exitfn)(int) = system_exit;
+static void (*const b81fa0_c81f30)(void) = transport_nonce_is_equal;
+
+__attribute__((naked, noinline))
 void FUN_00081fa0(void)
 {
-  int eax = 0;
-  int esi = 0;
-  int ebp = 0;
-
-  /* test esi, esi -> jne 0x81fcb */
-  display_assert((char *)0x002664ec, (char *)0x00266458, 175, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [ebp + 0xc], 8 -> je 0x81ff1 */
-  display_assert((char *)0x002664c0, (char *)0x00266458, 176, 0);
-  system_exit(0);
-  transport_nonce_is_equal();
-  /* test (char)eax, (char)eax -> je 0x82058 */
-  /* test eax, eax -> jg 0x8203f */
-  display_assert((char *)0x002664a8, (char *)0x00266458, 102, 0);
-  system_exit(0);
-  FUN_00222df7((void *)0x005ab220);
-
-  (void)eax;
-  (void)esi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00081fa0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xaf\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x2664ec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00081fa0_1:\n\t"
+      "cmpl $8, 0xc(%%ebp)\n\t"
+      "je .LFUN_00081fa0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb0\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x2664c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00081fa0_2:\n\t"
+      "pushl $0x5ab228\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c81f30]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b81fa0_assert), [exitfn] "m"(b81fa0_exitfn), [c81f30] "m"(b81fa0_c81f30)
+      : "memory");
 }
+#else
+#error "FUN_00081fa0: clang naked draft required"
+#endif
+
 
 /* 0x82060 */
 void *transport_get_xnaddr(void *dst)
@@ -1697,22 +1801,54 @@ int add_endpoint_to_set(int endpoint __attribute__((unused)), void *set __attrib
 #endif
 
 
-/* 0x82940 */
-void rewind_endpoint_set(int endpoint_set)
+/* rewind_endpoint_set (0x82940) — XBE naked draft (batch 276). */
+#if defined(__clang__)
+static void (*const b82940_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b82940_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void rewind_endpoint_set(int endpoint_set __attribute__((unused)))
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x8296b */
-  display_assert((char *)0x00266450, (char *)0x00266458, 621, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0x82994 */
-  display_assert((char *)0x00265fe4, (char *)0x00266458, 622, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lrewind_endpoint_set_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x26d\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x266450\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrewind_endpoint_set_1:\n\t"
+      "movb 0x335090, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lrewind_endpoint_set_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x26e\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x265fe4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrewind_endpoint_set_2:\n\t"
+      "movl $0, 0x110(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b82940_assert), [exitfn] "m"(b82940_exitfn)
+      : "memory");
 }
+#else
+#error "rewind_endpoint_set: clang naked draft required"
+#endif
+
 
 /* FUN_000829b0 (0x829b0) — XBE naked draft (batch 266). */
 #if defined(__clang__)
@@ -1778,23 +1914,55 @@ int FUN_000829b0(int endpoint_set __attribute__((unused)))
 #endif
 
 
-/* 0x82a30 */
-int FUN_00082a30(int endpoint_set)
+/* FUN_00082a30 (0x82a30) — XBE naked draft (batch 275). */
+#if defined(__clang__)
+static void (*const b82a30_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b82a30_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int FUN_00082a30(int endpoint_set __attribute__((unused)))
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x82a5b */
-  display_assert((char *)0x00266450, (char *)0x00266458, 649, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0x82a84 */
-  display_assert((char *)0x00265fe4, (char *)0x00266458, 650, 0);
-  system_exit(0);
-  return 0;
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00082a30_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x289\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x266450\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00082a30_1:\n\t"
+      "movb 0x335090, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00082a30_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28a\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x265fe4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00082a30_2:\n\t"
+      "movl 0x10c(%%esi), %%eax\n\t"
+      "incl %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b82a30_assert), [exitfn] "m"(b82a30_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00082a30: clang naked draft required"
+#endif
+
 
 /* FUN_00082a90 (0x82a90) — XBE naked draft (batch 260). */
 #if defined(__clang__)
@@ -2006,21 +2174,45 @@ void FUN_00082c90(void)
 #endif
 
 
-/* 0x82cf0 */
+/* FUN_00082cf0 (0x82cf0) — XBE naked draft (batch 273). */
+#if defined(__clang__)
+static void (*const b82cf0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b82cf0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_00082cf0(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x82d11 */
-  display_assert((char *)0x00266610, (char *)0x00266618, 79, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [eax*8 + 0x3350a0], esi -> je 0x82d23 */
-  /* cmp eax, 0x40 -> jl 0x82d13 */
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00082cf0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4f\n\t"
+      "pushl $0x266618\n\t"
+      "pushl $0x266610\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00082cf0_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_00082cf0_2:\n\t"
+      "cmpl %%esi, 0x3350a0(,%%eax,8)\n\t"
+      "je .LFUN_00082cf0_3\n\t"
+      "incl %%eax\n\t"
+      "cmpl $0x40, %%eax\n\t"
+      "jl .LFUN_00082cf0_2\n\t"
+      "ret\n\t"
+      ".LFUN_00082cf0_3:\n\t"
+      "movb $1, 0x3350a4(,%%eax,8)\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b82cf0_assert), [exitfn] "m"(b82cf0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00082cf0: clang naked draft required"
+#endif
+
 
 /* get_next_endpoint_from_set (0x82d70) — XBE naked draft (batch 263). */
 #if defined(__clang__)
@@ -2089,22 +2281,54 @@ int get_next_endpoint_from_set(int type __attribute__((unused)))
 #endif
 
 
-/* 0x82df0 */
+/* count_endpoints_in_set (0x82df0) — XBE naked draft (batch 276). */
+#if defined(__clang__)
+static void (*const b82df0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b82df0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void count_endpoints_in_set(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x82e1b */
-  display_assert((char *)0x00266658, (char *)0x00266618, 300, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0x82e44 */
-  display_assert((char *)0x00265fe4, (char *)0x00266618, 301, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lcount_endpoints_in_set_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x12c\n\t"
+      "pushl $0x266618\n\t"
+      "pushl $0x266658\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcount_endpoints_in_set_1:\n\t"
+      "movb 0x335090, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lcount_endpoints_in_set_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x12d\n\t"
+      "pushl $0x266618\n\t"
+      "pushl $0x265fe4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcount_endpoints_in_set_2:\n\t"
+      "movsbl 0x5(%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b82df0_assert), [exitfn] "m"(b82df0_exitfn)
+      : "memory");
 }
+#else
+#error "count_endpoints_in_set: clang naked draft required"
+#endif
+
 
 /* FUN_00083040 (0x83040) — XBE naked draft (batch 256). */
 #if defined(__clang__)

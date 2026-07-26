@@ -634,19 +634,57 @@ void draw_string_get_string(void)
   (void)esi;
 }
 
-/* 0x19b5d0 */
-void draw_string_set_indents(int width, int height)
+/* draw_string_set_indents (0x19b5d0) — XBE naked draft (batch 273). */
+#if defined(__clang__)
+static void (*const b19b5d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19b5d0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void draw_string_set_indents(int width __attribute__((unused)), int height __attribute__((unused)))
 {
-  int edi = 0;
-
-  display_assert((char *)0x002b4278, (char *)0x002b4210, 366, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jge 0x19b627 */
-  display_assert((char *)0x002b4264, (char *)0x002b4210, 367, 0);
-  system_exit(0);
-
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "jge .Ldraw_string_set_indents_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x16e\n\t"
+      "pushl $0x2b4210\n\t"
+      "pushl $0x2b4278\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldraw_string_set_indents_1:\n\t"
+      "movw 0xc(%%ebp), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jge .Ldraw_string_set_indents_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x16f\n\t"
+      "pushl $0x2b4210\n\t"
+      "pushl $0x2b4264\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldraw_string_set_indents_2:\n\t"
+      "movw %%di, 0x4d9b50\n\t"
+      "popl %%edi\n\t"
+      "movw %%si, 0x4d9b4e\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19b5d0_assert), [exitfn] "m"(b19b5d0_exitfn)
+      : "memory");
 }
+#else
+#error "draw_string_set_indents: clang naked draft required"
+#endif
+
 
 /* 0x19b790 */
 void draw_string_get_color(void)

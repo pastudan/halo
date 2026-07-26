@@ -3570,29 +3570,125 @@ void FUN_00075e70(void)
 #endif
 
 
-/* 0x76300 */
+/* FUN_00076300 (0x76300) — XBE naked draft (batch 271). */
+#if defined(__clang__)
+static void (*const b76300_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static int16_t (*const b76300_c1b9ad0)(void *tag_block) = tag_block_add_element;
+static void *(*const b76300_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b76300_c75e70)(void) = FUN_00075e70;
+static void (*const b76300_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b76300_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_00076300(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* test (char)eax, (char)eax -> je 0x76336 */
-  error(0, (char *)0x002624b8);
-  /* cmp eax, 4 -> ja 0x763d3 */
-  tag_block_add_element((void *)(uintptr_t)ecx);
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
-  /* mem[0x00334158] = eax */
-  FUN_00075e70();
-  error(0, (char *)0x0026247c);
-  error(0, (char *)0x00262444);
-  display_assert((char *)0x00261ea0, (char *)0x002616f0, 422, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x33414c, %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "cmpw %%dx, 0x2(%%ecx)\n\t"
+      "pushl %%ebx\n\t"
+      "movb $1, %%bl\n\t"
+      "jne .LFUN_00076300_1\n\t"
+      "movb 0x334148, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00076300_1\n\t"
+      "pushl $0x2624b8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00076300_1:\n\t"
+      "movswl (%%ecx), %%eax\n\t"
+      "cmpl $4, %%eax\n\t"
+      "ja .LFUN_00076300_5\n\t"
+      "jmp *.LFUN_00076300_jt(,%%eax,4)\n\t"
+      ".LFUN_00076300_2:\n\t"
+      "movl 0x334150, %%eax\n\t"
+      "movw %%dx, -0x8(%%ebp)\n\t"
+      "movw %%dx, -0x6(%%ebp)\n\t"
+      "movw 0x4(%%eax), %%dx\n\t"
+      "movw 0x6(%%eax), %%ax\n\t"
+      "addl $0x54, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movw %%dx, -0x2(%%ebp)\n\t"
+      "movw %%ax, -0x4(%%ebp)\n\t"
+      "call *%[c1b9ad0]\n\t"
+      "movl 0x33414c, %%edx\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x54, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movw %%ax, 0x33415c\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, 0x334158\n\t"
+      "movw $0xffff, 0x20(%%eax)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "call *%[c75e70]\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00076300_3:\n\t"
+      "pushl $0x26247c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00076300_4:\n\t"
+      "pushl $0x262444\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00076300_5:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a6\n\t"
+      "pushl $0x2616f0\n\t"
+      "pushl $0x261ea0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_00076300_jt:\n\t"
+      ".long .LFUN_00076300_2\n\t"
+      ".long .LFUN_00076300_3\n\t"
+      ".long .LFUN_00076300_2\n\t"
+      ".long .LFUN_00076300_4\n\t"
+      ".long .LFUN_00076300_2\n\t"
+      ".text\n\t"
+      :
+      : [c8f390] "m"(b76300_c8f390), [c1b9ad0] "m"(b76300_c1b9ad0), [elem] "m"(b76300_elem), [c75e70] "m"(b76300_c75e70), [assert] "m"(b76300_assert), [exitfn] "m"(b76300_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00076300: clang naked draft required"
+#endif
+
 
 /* FUN_00076410 (0x76410) — XBE naked draft (batch 244). */
 #if defined(__clang__)

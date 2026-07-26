@@ -1846,17 +1846,59 @@ void FUN_000907c0(void)
 #endif
 
 
-/* 0x90860 */
-void profile_sections_activate(int a0)
-{
-  FUN_000907c0();
-}
+/* profile_sections_activate (0x90860) — XBE naked draft (batch 274). */
+#if defined(__clang__)
+static void (*const b90860_c907c0)(void) = FUN_000907c0;
 
-/* 0x90880 */
-void profile_sections_deactivate(int a0)
+__attribute__((naked, noinline))
+void profile_sections_activate(int a0 __attribute__((unused)))
 {
-  FUN_000907c0();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $1\n\t"
+      "call *%[c907c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c907c0] "m"(b90860_c907c0)
+      : "memory");
 }
+#else
+#error "profile_sections_activate: clang naked draft required"
+#endif
+
+
+/* profile_sections_deactivate (0x90880) — XBE naked draft (batch 274). */
+#if defined(__clang__)
+static void (*const b90880_c907c0)(void) = FUN_000907c0;
+
+__attribute__((naked, noinline))
+void profile_sections_deactivate(int a0 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $0\n\t"
+      "call *%[c907c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c907c0] "m"(b90880_c907c0)
+      : "memory");
+}
+#else
+#error "profile_sections_deactivate: clang naked draft required"
+#endif
+
 
 /* profile_find_frame_value (0x908a0) — XBE naked draft (batch 241). */
 #if defined(__clang__)
@@ -2966,12 +3008,39 @@ void profile_rasterizer_stalls(void)
 #endif
 
 
-/* 0x91350 */
+/* FUN_00091350 (0x91350) — XBE naked draft (batch 270). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00091350(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      ".byte 0x0f, 0x31\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "popl %%edx\n\t"
+      "popl %%eax\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00091350: clang naked draft required"
+#endif
+
 
 /* FUN_00091380 (0x91380) — XBE naked draft (batch 255). */
 #if defined(__clang__)
@@ -3024,12 +3093,39 @@ void FUN_00091380(void)
 #endif
 
 
-/* 0x91b70 */
+/* FUN_00091b70 (0x91b70) — XBE naked draft (batch 270). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00091b70(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      ".byte 0x0f, 0x31\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "popl %%edx\n\t"
+      "popl %%eax\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl %%eax, 0x449cb0\n\t"
+      "movl %%ecx, 0x449cb4\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00091b70: clang naked draft required"
+#endif
+
 
 /* FUN_00091ba0 (0x91ba0) — XBE naked draft (batch 255). */
 #if defined(__clang__)
