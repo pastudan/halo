@@ -620,19 +620,51 @@ char FUN_00130b70(void *client __attribute__((unused)), const char *data __attri
 #endif
 
 
-/* 0x19b510 */
+/* draw_string_get_string (0x19b510) — XBE naked draft (batch 278). */
+#if defined(__clang__)
+static void (*const b19b510_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19b510_exitfn)(int) = system_exit;
+static char * (*const b19b510_c19d3c0)(int index, short param_2) = FUN_0019d3c0;
+
+__attribute__((naked, noinline))
 void draw_string_get_string(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x19b522 */
-  /* cmp (int16_t)esi, 1 -> jl 0x19b542 */
-  display_assert((char *)0x002b41e4, (char *)0x002b4210, 341, 0);
-  system_exit(0);
-  FUN_0019d3c0(0, 0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Ldraw_string_get_string_1\n\t"
+      "cmpw $1, %%si\n\t"
+      "jl .Ldraw_string_get_string_2\n\t"
+      ".Ldraw_string_get_string_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x155\n\t"
+      "pushl $0x2b4210\n\t"
+      "pushl $0x2b41e4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldraw_string_get_string_2:\n\t"
+      "movl 0x4d9b08, %%eax\n\t"
+      "addl $7, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19d3c0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19b510_assert), [exitfn] "m"(b19b510_exitfn), [c19d3c0] "m"(b19b510_c19d3c0)
+      : "memory");
 }
+#else
+#error "draw_string_get_string: clang naked draft required"
+#endif
+
 
 /* draw_string_set_indents (0x19b5d0) — XBE naked draft (batch 273). */
 #if defined(__clang__)
@@ -686,17 +718,49 @@ void draw_string_set_indents(int width __attribute__((unused)), int height __att
 #endif
 
 
-/* 0x19b790 */
+/* draw_string_get_color (0x19b790) — XBE naked draft (batch 279). */
+#if defined(__clang__)
+static void (*const b19b790_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19b790_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void draw_string_get_color(void)
 {
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x19b7bb */
-  display_assert((char *)0x00269fd8, (char *)0x002b4210, 392, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Ldraw_string_get_color_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x188\n\t"
+      "pushl $0x2b4210\n\t"
+      "pushl $0x269fd8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldraw_string_get_color_1:\n\t"
+      "movl 0x4d9b18, %%eax\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "movl 0x4d9b1c, %%ecx\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      "movl 0x4d9b20, %%edx\n\t"
+      "movl %%edx, 0x8(%%esi)\n\t"
+      "movl 0x4d9b24, %%eax\n\t"
+      "movl %%eax, 0xc(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19b790_assert), [exitfn] "m"(b19b790_exitfn)
+      : "memory");
 }
+#else
+#error "draw_string_get_color: clang naked draft required"
+#endif
+
 
 /* 0x19b7e0 */
 void FUN_0019B7E0(void)

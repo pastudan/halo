@@ -583,64 +583,128 @@ void sound_dsound_set_channel_properties(int channel_index, float *properties,
 }
 /* --- sound_dsound_xbox.obj batch drafts (2026-07-26) --- */
 
-/* 0x1c9230 */
+/* dsound_angle_from_angle (0x1c9230) — XBE naked draft (batch 283). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void dsound_angle_from_angle(void)
 {
-  /* relift: no calls detected — manual review */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fmuls 0x2b073c\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x26, 0xfe, 0x00, 0x00\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "dsound_angle_from_angle: clang naked draft required"
+#endif
 
-/* 0x1c9250 */
+
+/* dsound_occlusion_from_occlusion (0x1c9250) — XBE naked draft (batch 280). */
+#if defined(__clang__)
+static int (*const b1c9250_c1c9130)(float gain, int ceiling) = sound_dsound_gain_to_volume;
+
+__attribute__((naked, noinline))
 void dsound_occlusion_from_occlusion(void)
 {
-  sound_dsound_gain_to_volume(0.0f, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x2533c8\n\t"
+      "pushl $0\n\t"
+      "fsubs 0x8(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fstps (%%esp)\n\t"
+      "call *%[c1c9130]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1c9130] "m"(b1c9250_c1c9130)
+      : "memory");
 }
+#else
+#error "dsound_occlusion_from_occlusion: clang naked draft required"
+#endif
 
-/* 0x1c9270 */
+
+/* dsound_obstruction_from_obstruction (0x1c9270) — XBE naked draft (batch 280). */
+#if defined(__clang__)
+static int (*const b1c9270_c1c9130)(float gain, int ceiling) = sound_dsound_gain_to_volume;
+
+__attribute__((naked, noinline))
 void dsound_obstruction_from_obstruction(void)
 {
-  sound_dsound_gain_to_volume(0.0f, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x2533c8\n\t"
+      "pushl $0\n\t"
+      "fsubs 0x8(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fstps (%%esp)\n\t"
+      "call *%[c1c9130]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1c9130] "m"(b1c9270_c1c9130)
+      : "memory");
 }
+#else
+#error "dsound_obstruction_from_obstruction: clang naked draft required"
+#endif
 
-/* 0x1c9350 */
+
+/* FUN_001c9350 (0x1c9350) — XBE naked draft (batch 282). */
+#if defined(__clang__)
+static int (*const b1c9350_c8df60)(const char *s1) = csstrlen;
+static int (*const b1c9350_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+
+__attribute__((naked, noinline))
 void FUN_001c9350(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test eax, eax -> je 0x1c935b */
-  /* mem[0x004fdba8] = eax */
-  csstrlen((char *)0x004eae38);
-  csstrlen((char *)(uintptr_t)esi);
-  csstrlen((char *)0x004eae38);
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0);
-  sound_dsound_vchannel_get(0);
-  /* cmp (int16_t)edi, 4 -> jl 0x1c93d5 */
-  display_assert((char *)0x002c08f8, (char *)0x002c0894, 422, 0);
-  system_exit(0);
-  /* cmp (int16_t)eax, (int16_t)ebx -> jle 0x1c9472 */
-  /* cmp (int16_t)esi, (int16_t)ebx -> jl 0x1c940b */
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x1c9428 */
-  display_assert((char *)0x002c085c, (char *)0x002c0894, 105, 0);
-  system_exit(0);
-  /* cmp (int16_t)esi, 0x100 -> jl 0x1c944c */
-  display_assert((char *)0x002c083c, (char *)0x002c0894, 106, 0);
-  system_exit(0);
-  /* cmp eax, ebx -> je 0x1c9464 */
-  /* cmp esi, edx -> jl 0x1c9401 */
-  /* cmp eax, ebx -> je 0x1c9481 */
-  IDirectSoundBuffer_Release();
-  IDirectSound_Release();
-  /* mem[0x0050545c] = ebx */
-
-  (void)eax;
-  (void)ebx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001c9350_1\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "movl %%eax, 0x4fdba8\n\t"
+      ".LFUN_001c9350_1:\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x4eae38\n\t"
+      "call *%[c8df60]\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[c8df60]\n\t"
+      "addl %%eax, %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $0x100, %%edi\n\t"
+      "popl %%edi\n\t"
+      "jae .LFUN_001c9350_2\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x4eae38\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $0x4eae38, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_001c9350_2:\n\t"
+      "ret\n\t"
+      :
+      : [c8df60] "m"(b1c9350_c8df60), [c1d90f0] "m"(b1c9350_c1d90f0)
+      : "memory");
 }
+#else
+#error "FUN_001c9350: clang naked draft required"
+#endif
+
 
 /* FUN_001c9670 (0x1c9670) — XBE naked draft (batch 256). */
 #if defined(__clang__)
@@ -1028,36 +1092,106 @@ void FUN_001c9c80(void)
 #endif
 
 
-/* 0x1c9cf0 */
+/* FUN_001c9cf0 (0x1c9cf0) — XBE naked draft (batch 277). */
+#if defined(__clang__)
+static void *(*const b1c9cf0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b1c9cf0_c2060d4)(void) = IDirectSound_CreateSoundBuffer;
+static int __stdcall (*const b1c9cf0_c205b7f)(void *buffer, void *data, uint32_t size) = IDirectSoundBuffer_SetBufferData;
+static int __stdcall (*const b1c9cf0_c205b43)(void *buffer, uint32_t reserved, uint32_t priority, uint32_t flags) = IDirectSoundBuffer_Play;
+static void (*const b1c9cf0_c1c98f0)(int hresult, const char *message, ...) = sound_dsound_log_error;
+
+__attribute__((naked, noinline))
 void FUN_001c9cf0(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  csmemset((void *)(uintptr_t)eax, 0, 24);
-  IDirectSound_CreateSoundBuffer();
-  /* cmp eax, ebx -> jl 0x1c9dbc */
-  csmemset((void *)0x00505464, 0, 32);
-  IDirectSoundBuffer_SetBufferData((void *)(uintptr_t)ecx, (void *)0x00505464, 32);
-  IDirectSoundBuffer_Play((void *)(uintptr_t)edx, ebx, ebx, esi);
-  /* cmp eax, ebx -> jl 0x1c9da5 */
-  sound_dsound_log_error(0x002c0ccc, (char *)0);
-  sound_dsound_log_error(0x002c0ca4, (char *)0);
-  DirectSoundDoWork();
-  csstrlen((char *)0x004eae38);
-  /* test eax, eax -> je 0x1c9e0b */
-  sound_dsound_log_error(0x004eae38, (char *)(uintptr_t)esi);
-  /* mem[0x004fdba8] = eax */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x2c, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x18\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "leal -0x2c(%%ebp), %%eax\n\t"
+      "movl $1, %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "movw %%si, -0x14(%%ebp)\n\t"
+      "movw $0x10, -0x6(%%ebp)\n\t"
+      "movw %%si, -0x12(%%ebp)\n\t"
+      "movw $2, -0x8(%%ebp)\n\t"
+      "movl $0x5622, -0x10(%%ebp)\n\t"
+      "movl $0xac44, -0xc(%%ebp)\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x50545c, %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x505460\n\t"
+      "leal -0x2c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "movl $0x18, -0x2c(%%ebp)\n\t"
+      "movl %%ebx, -0x28(%%ebp)\n\t"
+      "movl $0x20, -0x24(%%ebp)\n\t"
+      "movl %%ecx, -0x20(%%ebp)\n\t"
+      "movl $0x1f00, -0x1c(%%ebp)\n\t"
+      "call *%[c2060d4]\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "jl .LFUN_001c9cf0_2\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x505464\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x505460, %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0x20\n\t"
+      "pushl $0x505464\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c205b7f]\n\t"
+      "movl 0x505460, %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c205b43]\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "jl .LFUN_001c9cf0_1\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001c9cf0_1:\n\t"
+      "pushl $0x2c0ccc\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1c98f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001c9cf0_2:\n\t"
+      "pushl $0x2c0ca4\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1c98f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b1c9cf0_memset), [c2060d4] "m"(b1c9cf0_c2060d4), [c205b7f] "m"(b1c9cf0_c205b7f), [c205b43] "m"(b1c9cf0_c205b43), [c1c98f0] "m"(b1c9cf0_c1c98f0)
+      : "memory");
 }
+#else
+#error "FUN_001c9cf0: clang naked draft required"
+#endif
+
 
 /* FUN_001c9e20 (0x1c9e20) — XBE naked draft (batch 247). */
 #if defined(__clang__)

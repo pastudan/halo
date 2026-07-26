@@ -1205,11 +1205,35 @@ void * FUN_0019cff0(void *font_tag __attribute__((unused)), unsigned short chara
 #endif
 
 
-/* 0x19d060 */
-void set_language_code(short code)
+/* set_language_code (0x19d060) — XBE naked draft (batch 280). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void set_language_code(short code __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lset_language_code_1\n\t"
+      "cmpw $6, %%ax\n\t"
+      "jl .Lset_language_code_2\n\t"
+      ".Lset_language_code_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lset_language_code_2:\n\t"
+      "movw %%ax, 0x4d9be0\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "set_language_code: clang naked draft required"
+#endif
+
 
 /* FUN_0019d380 (0x19d380) — XBE naked draft (batch 271). */
 #if defined(__clang__)
@@ -1282,24 +1306,60 @@ char *FUN_0019d3c0(int index, short param_2)
   (void)edx;
 }
 
-/* 0x19d420 */
-int FUN_0019d420(int param_1, int param_2)
+/* FUN_0019d420 (0x19d420) — XBE naked draft (batch 279). */
+#if defined(__clang__)
+static void *(*const b19d420_tag)(int, int) = tag_get;
+static void *(*const b19d420_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+int FUN_0019d420(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  tag_get('rtsu', 0);
-  /* test (int16_t)ecx, (int16_t)ecx -> jl 0x19d472 */
-  /* cmp ecx, edx -> jge 0x19d472 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 20);
-  /* test ecx, ecx -> jle 0x19d472 */
-  return 0;
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl $0x2b4574, %%esi\n\t"
+      "je .LFUN_0019d420_1\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[tag]\n\t"
+      "movw 0xc(%%ebp), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jl .LFUN_0019d420_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jge .LFUN_0019d420_1\n\t"
+      "pushl $0x14\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .LFUN_0019d420_1\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "shrl $1, %%ecx\n\t"
+      "movw $0, -0x2(%%eax,%%ecx,2)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0019d420_1:\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b19d420_tag), [elem] "m"(b19d420_elem)
+      : "memory");
 }
+#else
+#error "FUN_0019d420: clang naked draft required"
+#endif
+
 
 /* umemchr (0x19d480) — XBE naked draft (batch 271). */
 #if defined(__clang__)

@@ -32,13 +32,37 @@ bool cinematic_in_progress(void)
 }
 /* --- cinematics.obj batch drafts (2026-07-26) --- */
 
-/* 0x92e20 */
+/* cinematic_start (0x92e20) — XBE naked draft (batch 279). */
+#if defined(__clang__)
+static void (*const b92e20_cba6d0)(bool) = player_input_enable;
+static void (*const b92e20_c3f7b0)(char param_1) = ai_globals_dialogue_triggers_enabled;
+static int (*const b92e20_gtime)(void) = game_time_get;
+
+__attribute__((naked, noinline))
 void cinematic_start(void)
 {
-  player_input_enable(0);
-  ai_globals_dialogue_triggers_enabled(0);
-  game_time_get();
+  __asm__ volatile(
+      "pushl $0\n\t"
+      "call *%[cba6d0]\n\t"
+      "pushl $0\n\t"
+      "call *%[c3f7b0]\n\t"
+      "movl 0x44df00, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "movb $1, 0x8(%%eax)\n\t"
+      "call *%[gtime]\n\t"
+      "movl 0x44df00, %%ecx\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movl 0x44df00, %%edx\n\t"
+      "movb $1, 0x9(%%edx)\n\t"
+      ".byte 0xe9, 0x89, 0x4e, 0x06, 0x00\n\t"
+      :
+      : [cba6d0] "m"(b92e20_cba6d0), [c3f7b0] "m"(b92e20_c3f7b0), [gtime] "m"(b92e20_gtime)
+      : "memory");
 }
+#else
+#error "cinematic_start: clang naked draft required"
+#endif
+
 
 /* 0x92e70 */
 void cinematic_skip_start(void)
@@ -207,12 +231,31 @@ void draw_quad(int16_t *rect __attribute__((unused)), int color __attribute__((u
 #endif
 
 
-/* 0x93010 */
+/* cinematic_force_title (0x93010) — XBE naked draft (batch 284). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void cinematic_force_title(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x44df00, %%eax\n\t"
+      "movw 0x8(%%ebp), %%cx\n\t"
+      "movw %%cx, 0xc(%%eax)\n\t"
+      "movl 0x44df00, %%edx\n\t"
+      "movw $0, 0xe(%%edx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "cinematic_force_title: clang naked draft required"
+#endif
+
 
 /* 0x93030 */
 void cinematic_suppress_bsp_object_creation(int a0)
@@ -1447,11 +1490,44 @@ void FUN_00093ba0(void)
 #endif
 
 
-/* 0x93be0 */
+/* FUN_00093be0 (0x93be0) — XBE naked draft (batch 280). */
+#if defined(__clang__)
+static void (*const b93be0_c10cc40)(float *out, float *angles) = angles_to_vector;
+
+__attribute__((naked, noinline))
 void FUN_00093be0(void)
 {
-  angles_to_vector((void *)0, (void *)0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movswl (%%eax), %%ecx\n\t"
+      "movswl 0x2(%%eax), %%edx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "fmuls 0x26919c\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fmuls 0x26919c\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "call *%[c10cc40]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c10cc40] "m"(b93be0_c10cc40)
+      : "memory");
 }
+#else
+#error "FUN_00093be0: clang naked draft required"
+#endif
+
 
 /* FUN_00093c20 (0x93c20) — XBE naked draft (batch 245). */
 #if defined(__clang__)

@@ -500,23 +500,71 @@ void profile_seconds_elapsed(void)
   (void)0;
 }
 
-/* 0x8f880 */
+/* profile_lapsed_frames (0x8f880) — XBE naked draft (batch 282). */
+#if defined(__clang__)
+static char * (*const b8f880_c8dff0)(char *destination, const char *source) = csstrcpy;
+
+__attribute__((naked, noinline))
 void profile_lapsed_frames(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> je 0x8f8bc */
-  csstrcpy((char *)0x00449cd5, (char *)(uintptr_t)eax);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movw %%ax, 0x449ccc\n\t"
+      "jg .Lprofile_lapsed_frames_1\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movb $0, 0x449cd4\n\t"
+      "jne .Lprofile_lapsed_frames_2\n\t"
+      ".Lprofile_lapsed_frames_1:\n\t"
+      "movb $1, 0x449cd4\n\t"
+      ".Lprofile_lapsed_frames_2:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lprofile_lapsed_frames_3\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x449cd5\n\t"
+      "call *%[c8dff0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lprofile_lapsed_frames_3:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8dff0] "m"(b8f880_c8dff0)
+      : "memory");
 }
+#else
+#error "profile_lapsed_frames: clang naked draft required"
+#endif
 
-/* 0x8f8c0 */
+
+/* profile_lapsed_msec (0x8f8c0) — XBE naked draft (batch 284). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void profile_lapsed_msec(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x449cd0\n\t"
+      "setg %%al\n\t"
+      "movb %%al, 0x449cd4\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "profile_lapsed_msec: clang naked draft required"
+#endif
+
 
 /* find_profile_section (0x8f8e0) — XBE naked draft (batch 252). */
 #if defined(__clang__)
@@ -1712,53 +1760,132 @@ void profile_dump(void)
 #endif
 
 
-/* 0x90650 */
-void profile_dump_to_file(int a0)
+/* profile_dump_to_file (0x90650) — XBE naked draft (batch 280). */
+#if defined(__clang__)
+static void (*const b90650_chkstk)(void) = FUN_001d90e0;
+static int (*const b90650_c8df60)(const char *s1) = csstrlen;
+static void * (*const b90650_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
+static void (*const b90650_c902f0)(void) = profile_dump;
+static int (*const b90650_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
+static int (*const b90650_c1d9dac)(void *stream) = crt_fclose;
+
+__attribute__((naked, noinline))
+void profile_dump_to_file(int a0 __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-
-  FUN_001d90e0();
-  csstrlen((char *)(uintptr_t)ebx);
-  /* test eax, eax -> je 0x9067b */
-  crt_fopen((char *)0x002686cc, (char *)0x00267f84);
-  /* test esi, esi -> je 0x906bf */
-  profile_dump();
-  crt_fprintf((void *)(uintptr_t)esi, (char *)0x002686c4);
-  crt_fclose((void *)(uintptr_t)esi);
-
-  (void)eax;
-  (void)ebx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl $0x2000, %%eax\n\t"
+      "call *%[chkstk]\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .Lprofile_dump_to_file_1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lprofile_dump_to_file_1\n\t"
+      "movl $1, %%edi\n\t"
+      "jmp .Lprofile_dump_to_file_2\n\t"
+      ".Lprofile_dump_to_file_1:\n\t"
+      "xorl %%edi, %%edi\n\t"
+      ".Lprofile_dump_to_file_2:\n\t"
+      "pushl $0x267f84\n\t"
+      "pushl $0x2686cc\n\t"
+      "call *%[c1d9e59]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lprofile_dump_to_file_3\n\t"
+      "leal -0x2000(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x100\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c902f0]\n\t"
+      "leal -0x2000(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x2686c4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $0x20, %%esp\n\t"
+      ".Lprofile_dump_to_file_3:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d9dac]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [chkstk] "m"(b90650_chkstk), [c8df60] "m"(b90650_c8df60), [c1d9e59] "m"(b90650_c1d9e59), [c902f0] "m"(b90650_c902f0), [c1d98ad] "m"(b90650_c1d98ad), [c1d9dac] "m"(b90650_c1d9dac)
+      : "memory");
 }
+#else
+#error "profile_dump_to_file: clang naked draft required"
+#endif
 
-/* 0x906d0 */
+
+/* FUN_000906d0 (0x906d0) — XBE naked draft (batch 277). */
+#if defined(__clang__)
+static void * (*const b906d0_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
+static void (*const b906d0_c8fb60)(void) = FUN_0008fb60;
+static int (*const b906d0_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
+
+__attribute__((naked, noinline))
 void FUN_000906d0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test eax, eax -> jne 0x906fd */
-  crt_fopen((char *)0x002686dc, (char *)0x002686f0);
-  /* mem[0x003365b4] = eax */
-  /* relift: cmp byte ptr [edi], 0 -> jne 0x90737 */
-  FUN_0008fb60();
-  crt_fprintf((void *)(uintptr_t)ecx, (char *)0x002686c4);
-  /* test (char)eax, (char)eax -> je 0x90782 */
-  /* test eax, eax -> je 0x9077b */
-  crt_fprintf((void *)(uintptr_t)eax, (char *)0x00261f2c);
-  crt_fflush((void *)(uintptr_t)eax);
-  /* relift: cmp (char)ecx, byte ptr [esi] -> jne 0x907af */
-  /* test (char)ecx, (char)ecx -> jne 0x907a0 */
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x200, %%esp\n\t"
+      "movl 0x3365b4, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000906d0_1\n\t"
+      "pushl $0x2686f0\n\t"
+      "pushl $0x2686dc\n\t"
+      "call *%[c1d9e59]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x3365b4\n\t"
+      "je .LFUN_000906d0_2\n\t"
+      ".LFUN_000906d0_1:\n\t"
+      "cmpb $0, (%%edi)\n\t"
+      "jne .LFUN_000906d0_2\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x200\n\t"
+      "leal -0x200(%%ebp), %%esi\n\t"
+      "movl %%edi, %%eax\n\t"
+      "movb $1, (%%edi)\n\t"
+      "call *%[c8fb60]\n\t"
+      "movl 0x3365b4, %%ecx\n\t"
+      "leal -0x200(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2686c4\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movb $1, (%%edi)\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_000906d0_2:\n\t"
+      "movb $1, 0x3365c0\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d9e59] "m"(b906d0_c1d9e59), [c8fb60] "m"(b906d0_c8fb60), [c1d98ad] "m"(b906d0_c1d98ad)
+      : "memory");
 }
+#else
+#error "FUN_000906d0: clang naked draft required"
+#endif
+
 
 /* FUN_000907c0 (0x907c0) — XBE naked draft (batch 255). */
 #if defined(__clang__)
@@ -2361,17 +2488,47 @@ void profile_find_frame_value(void)
 #endif
 
 
-/* 0x90cd0 */
+/* profile_find_game_value (0x90cd0) — XBE naked draft (batch 282). */
+#if defined(__clang__)
+static void (*const b90cd0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b90cd0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void profile_find_game_value(void)
 {
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x90d02 */
-  display_assert((char *)0x002687e4, (char *)0x002683fc, 1224, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "je .Lprofile_find_game_value_1\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lprofile_find_game_value_2\n\t"
+      ".Lprofile_find_game_value_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4c8\n\t"
+      "pushl $0x2683fc\n\t"
+      "pushl $0x2687e4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lprofile_find_game_value_2:\n\t"
+      "movw $0xffff, (%%esi)\n\t"
+      "orw $0xffff, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b90cd0_assert), [exitfn] "m"(b90cd0_exitfn)
+      : "memory");
 }
+#else
+#error "profile_find_game_value: clang naked draft required"
+#endif
+
 
 /* profile_frame_get_value (0x90d10) — XBE naked draft (batch 242). */
 #if defined(__clang__)
@@ -2759,17 +2916,51 @@ void profile_frame_get_value(void)
 #endif
 
 
-/* 0x910b0 */
+/* profile_frame_iterator_new (0x910b0) — XBE naked draft (batch 278). */
+#if defined(__clang__)
+static void (*const b910b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b910b0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void profile_frame_iterator_new(void)
 {
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x910db */
-  display_assert((char *)0x0025c3b4, (char *)0x002683fc, 1419, 0);
-  system_exit(0);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lprofile_frame_iterator_new_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x58b\n\t"
+      "pushl $0x2683fc\n\t"
+      "pushl $0x25c3b4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lprofile_frame_iterator_new_1:\n\t"
+      "movw $0xffff, (%%esi)\n\t"
+      "movswl 0x3365c4, %%eax\n\t"
+      "addl $0xff, %%eax\n\t"
+      "andl $0x800000ff, %%eax\n\t"
+      "jns .Lprofile_frame_iterator_new_2\n\t"
+      "decl %%eax\n\t"
+      "orl $0xffffff00, %%eax\n\t"
+      "incl %%eax\n\t"
+      ".Lprofile_frame_iterator_new_2:\n\t"
+      "movw %%ax, 0x2(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b910b0_assert), [exitfn] "m"(b910b0_exitfn)
+      : "memory");
 }
+#else
+#error "profile_frame_iterator_new: clang naked draft required"
+#endif
+
 
 /* profile_frame_iterator_next (0x91110) — XBE naked draft (batch 254). */
 #if defined(__clang__)
@@ -3178,23 +3369,57 @@ void FUN_00091ba0(void)
 #endif
 
 
-/* 0x91c10 */
+/* FUN_00091c10 (0x91c10) — XBE naked draft (batch 284). */
+#if defined(__clang__)
+static void *(*const b91c10_memset)(void *, int, unsigned int) = csmemset;
+static void * (*const b91c10_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+
+__attribute__((naked, noinline))
 void FUN_00091c10(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  csmemset((void *)(uintptr_t)esi, 0, 272);
-  /* test ecx, ecx -> je 0x91c5e */
-  /* test eax, eax -> je 0x91c5e */
-  /* test eax, eax -> je 0x91c55 */
-  csstrncpy((char *)(uintptr_t)ecx, (char *)(uintptr_t)eax, 255);
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl $0x110\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LFUN_00091c10_2\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00091c10_2\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00091c10_1\n\t"
+      "pushl $0xff\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x8(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8de70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00091c10_1:\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl %%edx, 0x108(%%esi)\n\t"
+      ".LFUN_00091c10_2:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b91c10_memset), [c8de70] "m"(b91c10_c8de70)
+      : "memory");
 }
+#else
+#error "FUN_00091c10: clang naked draft required"
+#endif
+
 
 /* FUN_00091c70 (0x91c70) — XBE naked draft (batch 261). */
 #if defined(__clang__)

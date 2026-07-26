@@ -677,11 +677,13 @@ def sig_from_decl(name: str, decl: str) -> str:
         if not arg or arg == "void":
             continue
         toks = arg.split()
-        parts.append(
-            " ".join(toks[:-1]) + f" {toks[-1]} __attribute__((unused))"
-            if len(toks) >= 2
-            else arg
-        )
+        if len(toks) >= 2:
+            parts.append(
+                " ".join(toks[:-1]) + f" {toks[-1]} __attribute__((unused))"
+            )
+        else:
+            # Type-only param in kb decl (e.g. "bool") — invent a name.
+            parts.append(f"{arg} a{len(parts)} __attribute__((unused))")
     return f"{ret} {name}({', '.join(parts)})"
 
 

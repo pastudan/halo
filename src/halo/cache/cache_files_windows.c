@@ -730,60 +730,130 @@ void FUN_001bdb10(void)
   FUN_001bc280();
 }
 
-/* Begin precaching a map from DVD to the cache partition. Returns true
- * if the copy was already done or was successfully started. */
-bool cache_files_precache_map_begin(char *map_name, bool show_error)
+/* cache_files_precache_map_begin (0x1bd910) — XBE naked draft (batch 277). */
+#if defined(__clang__)
+static const char * (*const b1bd910_c19b0d0)(const char *tag_name) = tag_name_strip_path;
+static void (*const b1bd910_c1bd1b0)(void) = FUN_001bd1b0;
+static bool (*const b1bd910_c1bcb80)(const char *map_name, void *header_buf) = FUN_001bcb80;
+static void (*const b1bd910_c1ba250)(void) = FUN_001ba250;
+static void * (*const b1bd910_c1bea30)(unsigned int size) = xbox_texture_cache_steal_memory;
+static int16_t (*const b1bd910_c1bd210)(int16_t map_type, int header_size) = FUN_001bd210;
+static void * (*const b1bd910_c1bc720)(short map_file_index) = FUN_001bc720;
+static void *(*const b1bd910_memset)(void *, int, unsigned int) = csmemset;
+static void * (*const b1bd910_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+static int (*const b1bd910_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static void (*const b1bd910_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static int (*const b1bd910_c1bc7e0)(short map_file_index) = FUN_001bc7e0;
+static unsigned int (*const b1bd910_c1bc7a0)(short map_file_index) = FUN_001bc7a0;
+static void (*const b1bd910_c1ba2f0)(int buffer, int size, int dest_file, int dest_file_size, const char *source_file_name) = FUN_001ba2f0;
+static void (*const b1bd910_ce8d20)(void) = display_error_damaged_media;
+
+__attribute__((naked, noinline))
+bool cache_files_precache_map_begin(char *map_name __attribute__((unused)), bool a1 __attribute__((unused)))
 {
-  char path[256];
-  char header_buf[0x800];
-  char *canonical;
-  int16_t cache_idx;
-
-  canonical = ((char *(*)(char *))0x19b0d0)(map_name);
-  ((char *(*)(char *))0x19b0d0)(map_name);
-  cache_idx = ((int16_t (*)(void))0x1bd1b0)();
-
-  if (cache_idx == -1) {
-    if (!FUN_001bcb80(canonical, header_buf)) {
-      error(2, "couldn't find map '%s' on the DVD", canonical);
-      if (show_error)
-        ((void (*)(void))0xe8d20)();
-      return 0;
-    }
-
-    {
-      int copy_handle;
-      int buffer;
-      int16_t slot;
-      int block;
-      int file;
-      int mapped;
-
-      copy_handle = ((int (*)(bool))0x1ba250)(show_error);
-      buffer = (int)xbox_texture_cache_steal_memory(copy_handle);
-      slot = FUN_001bd210(
-        *(int16_t *)(header_buf + 0x60), *(int *)(header_buf + 8));
-
-      block = (int)FUN_001bc720(slot);
-      csmemset((void *)(block + 0xc), 0, 0x800);
-
-      *(uint8_t *)0x4e9220 = 1;
-      *(int16_t *)0x4e9222 = slot;
-      csstrncpy((char *)0x4e9224, canonical, 0x1f);
-      *(uint8_t *)0x4e9243 = 0;
-
-      ((int (*)(char *, const char *, ...))0x1d90f0)(
-        path, "d:\\maps\\%s.map", canonical);
-      error(2, "starting precaching of map '%s'", canonical);
-
-      file = FUN_001bc7e0(slot);
-      mapped = (int)FUN_001bc7a0(slot);
-      FUN_001ba2f0(buffer, copy_handle, mapped, file, path);
-    }
-  }
-
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x904, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c19b0d0]\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[c19b0d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[c1bd1b0]\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "jne .Lcache_files_precache_map_begin_1\n\t"
+      "leal -0x904(%%ebp), %%edi\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[c1bcb80]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lcache_files_precache_map_begin_2\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ba250]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1bea30]\n\t"
+      "movl -0x8fc(%%ebp), %%ecx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl -0x8a4(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1bd210]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1bc720]\n\t"
+      "pushl $0x800\n\t"
+      "addl $0xc, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "pushl $0x1f\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x4e9224\n\t"
+      "movb $1, 0x4e9220\n\t"
+      "movw %%si, 0x4e9222\n\t"
+      "call *%[c8de70]\n\t"
+      "pushl %%ebx\n\t"
+      "leal -0x104(%%ebp), %%edx\n\t"
+      "pushl $0x2b8eb8\n\t"
+      "pushl %%edx\n\t"
+      "movb $0, 0x4e9243\n\t"
+      "call *%[c1d90f0]\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x2b9070\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "leal -0x104(%%ebp), %%eax\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1bc7e0]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1bc7a0]\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ba2f0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcache_files_precache_map_begin_1:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcache_files_precache_map_begin_2:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x2b904c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lcache_files_precache_map_begin_3\n\t"
+      "call *%[ce8d20]\n\t"
+      ".Lcache_files_precache_map_begin_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c19b0d0] "m"(b1bd910_c19b0d0), [c1bd1b0] "m"(b1bd910_c1bd1b0), [c1bcb80] "m"(b1bd910_c1bcb80), [c1ba250] "m"(b1bd910_c1ba250), [c1bea30] "m"(b1bd910_c1bea30), [c1bd210] "m"(b1bd910_c1bd210), [c1bc720] "m"(b1bd910_c1bc720), [memset] "m"(b1bd910_memset), [c8de70] "m"(b1bd910_c8de70), [c1d90f0] "m"(b1bd910_c1d90f0), [c8f390] "m"(b1bd910_c8f390), [c1bc7e0] "m"(b1bd910_c1bc7e0), [c1bc7a0] "m"(b1bd910_c1bc7a0), [c1ba2f0] "m"(b1bd910_c1ba2f0), [ce8d20] "m"(b1bd910_ce8d20)
+      : "memory");
 }
+#else
+#error "cache_files_precache_map_begin: clang naked draft required"
+#endif
+
 
 /* cache_files_precache_map_end (0x1bda30) — XBE naked draft (batch 266). */
 #if defined(__clang__)
@@ -1782,18 +1852,42 @@ void simple_cache_copy_thread(void)
 #endif
 
 
-/* 0x1bc360 */
+/* cache_files_dispose (0x1bc360) — XBE naked draft (batch 279). */
+#if defined(__clang__)
+static void (*const b1bc360_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1bc360_exitfn)(int) = system_exit;
+static void (*const b1bc360_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+
+__attribute__((naked, noinline))
 void cache_files_dispose(void)
 {
-  int eax = 0;
-
-  /* relift: cmp word ptr [0x4e9244], -1 -> je 0x1bc38a */
-  display_assert((char *)0x002b8c68, (char *)0x002b8c98, 201, 0);
-  system_exit(0);
-  debug_free((void *)(uintptr_t)eax, (char *)0x002b8c98, 203);
-
-  (void)eax;
+  __asm__ volatile(
+      "cmpw $-1, 0x4e9244\n\t"
+      "je .Lcache_files_dispose_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xc9\n\t"
+      "pushl $0x2b8c98\n\t"
+      "pushl $0x2b8c68\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcache_files_dispose_1:\n\t"
+      "movl 0x4e9250, %%eax\n\t"
+      "pushl $0xcb\n\t"
+      "pushl $0x2b8c98\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1bc360_assert), [exitfn] "m"(b1bc360_exitfn), [c8ef70] "m"(b1bc360_c8ef70)
+      : "memory");
 }
+#else
+#error "cache_files_dispose: clang naked draft required"
+#endif
+
 
 /* FUN_001bc3b0 (0x1bc3b0) — XBE naked draft (batch 248). */
 #if defined(__clang__)

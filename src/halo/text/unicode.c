@@ -980,26 +980,129 @@ int utolower(int c)
   return (int)(unsigned short)ch;
 }
 
-/* 0x19e600 */
-int ufgetc(void *stream)
-{
-  assert_halt(stream);
-  return _fgetwc(stream);
-}
+/* ufgetc (0x19e600) — XBE naked draft (batch 283). */
+#if defined(__clang__)
+static void (*const b19e600_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19e600_exitfn)(int) = system_exit;
+static int (*const b19e600_c1dc512)(void *stream) = _fgetwc;
 
-/* 0x19e640 */
-int ufputc(int c, void *stream)
+__attribute__((naked, noinline))
+int ufgetc(void *stream __attribute__((unused)))
 {
-  assert_halt(stream);
-  return _fputwc(c, stream);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lufgetc_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x24d\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4948\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lufgetc_1:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1dc512]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19e600_assert), [exitfn] "m"(b19e600_exitfn), [c1dc512] "m"(b19e600_c1dc512)
+      : "memory");
 }
+#else
+#error "ufgetc: clang naked draft required"
+#endif
 
-/* 0x19e680 */
-int uungetc(int c, void *stream)
+
+/* ufputc (0x19e640) — XBE naked draft (batch 278). */
+#if defined(__clang__)
+static void (*const b19e640_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19e640_exitfn)(int) = system_exit;
+static int (*const b19e640_c1dc61e)(int c, void *stream) = _fputwc;
+
+__attribute__((naked, noinline))
+int ufputc(int c __attribute__((unused)), void *stream __attribute__((unused)))
 {
-  assert_halt(stream);
-  return _ungetwc(c, stream);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lufputc_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x257\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4948\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lufputc_1:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc61e]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19e640_assert), [exitfn] "m"(b19e640_exitfn), [c1dc61e] "m"(b19e640_c1dc61e)
+      : "memory");
 }
+#else
+#error "ufputc: clang naked draft required"
+#endif
+
+
+/* uungetc (0x19e680) — XBE naked draft (batch 278). */
+#if defined(__clang__)
+static void (*const b19e680_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19e680_exitfn)(int) = system_exit;
+static int (*const b19e680_c1dc766)(int c, void *stream) = _ungetwc;
+
+__attribute__((naked, noinline))
+int uungetc(int c __attribute__((unused)), void *stream __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Luungetc_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x261\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4948\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Luungetc_1:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc766]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19e680_assert), [exitfn] "m"(b19e680_exitfn), [c1dc766] "m"(b19e680_c1dc766)
+      : "memory");
+}
+#else
+#error "uungetc: clang naked draft required"
+#endif
+
 
 /* 0x19e6c0 */
 wchar_t *ufgets(wchar_t *buffer, int count, void *stream)
@@ -1270,20 +1373,83 @@ int uprintf(const wchar_t *format __attribute__((unused)), ...)
 #endif
 
 
-/* 0x19eaa0 */
-int usprintf(wchar_t *buffer, const wchar_t *format, ...)
-{
-  va_list args;
-  int result;
+/* usprintf (0x19eaa0) — XBE naked draft (batch 278). */
+#if defined(__clang__)
+static void (*const b19eaa0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19eaa0_exitfn)(int) = system_exit;
+static size_t (*const b19eaa0_c1db11e)(const wchar_t *str) = _wcslen;
+static int (*const b19eaa0_c1dcace)(wchar_t *buffer, const wchar_t *format, char *args) = FUN_001dcace;
 
-  assert_halt(buffer && format);
-  unicode_assert_string(buffer);
-  unicode_assert_string(format);
-  va_start(args, format);
-  result = FUN_001dcace(buffer, format, (char *)args);
-  va_end(args);
-  return result;
+__attribute__((naked, noinline))
+int usprintf(wchar_t *buffer __attribute__((unused)), const wchar_t *format __attribute__((unused)), ...)
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lusprintf_1\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lusprintf_2\n\t"
+      ".Lusprintf_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2ef\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b49a4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lusprintf_2:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1db11e]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x8000, %%eax\n\t"
+      "jb .Lusprintf_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2f0\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4858\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lusprintf_3:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1db11e]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x8000, %%eax\n\t"
+      "jb .Lusprintf_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2f1\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4950\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lusprintf_4:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "leal 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1dcace]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19eaa0_assert), [exitfn] "m"(b19eaa0_exitfn), [c1db11e] "m"(b19eaa0_c1db11e), [c1dcace] "m"(b19eaa0_c1dcace)
+      : "memory");
 }
+#else
+#error "usprintf: clang naked draft required"
+#endif
+
 
 /* uvfprintf (0x19eb50) — XBE naked draft (batch 270). */
 #if defined(__clang__)
@@ -1579,12 +1745,45 @@ void *ufopen(const wchar_t *path, const wchar_t *mode)
   return FUN_001dccf5(path, mode);
 }
 
-/* 0x19eee0 */
-int ufclose(void *stream)
+/* ufclose (0x19eee0) — XBE naked draft (batch 283). */
+#if defined(__clang__)
+static void (*const b19eee0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19eee0_exitfn)(int) = system_exit;
+static int (*const b19eee0_c1d9dac)(void *stream) = crt_fclose;
+
+__attribute__((naked, noinline))
+int ufclose(void *stream __attribute__((unused)))
 {
-  assert_halt(stream);
-  return crt_fclose(stream);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lufclose_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x384\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4948\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lufclose_1:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d9dac]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19eee0_assert), [exitfn] "m"(b19eee0_exitfn), [c1d9dac] "m"(b19eee0_c1d9dac)
+      : "memory");
 }
+#else
+#error "ufclose: clang naked draft required"
+#endif
+
 
 /* 0x19ef20 */
 void *ufreopen(const wchar_t *path, const wchar_t *mode, void *stream)

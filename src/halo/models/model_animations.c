@@ -2279,38 +2279,112 @@ void interpolate_node_orientations(void)
 #endif
 
 
-/* 0x120cb0 */
-short FUN_00120cb0(int animation_graph_tag_index, const char *name)
+/* FUN_00120cb0 (0x120cb0) — XBE naked draft (batch 277). */
+#if defined(__clang__)
+static void *(*const b120cb0_tag)(int, int) = tag_get;
+static void *(*const b120cb0_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b120cb0_c1dd801)(const char *a, const char *b) = crt_stricmp;
+
+__attribute__((naked, noinline))
+short FUN_00120cb0(int animation_graph_tag_index __attribute__((unused)), const char *name __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  tag_get(0x616e7472, 0);
-  /* test eax, eax -> jle 0x120cfb */
-  tag_block_get_element((void *)(uintptr_t)esi, 0, 180);
-  crt_stricmp((char *)(uintptr_t)ebx, (char *)(uintptr_t)eax);
-  /* test eax, eax -> je 0x120d04 */
-  /* cmp eax, ecx -> jl 0x120cd7 */
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x616e7472\n\t"
+      "call *%[tag]\n\t"
+      "leal 0x74(%%eax), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .LFUN_00120cb0_2\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_00120cb0_1:\n\t"
+      "pushl $0xb4\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1dd801]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00120cb0_3\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "incl %%edi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .LFUN_00120cb0_1\n\t"
+      ".LFUN_00120cb0_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "orw $0xffff, %%ax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00120cb0_3:\n\t"
+      "movw %%di, %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b120cb0_tag), [elem] "m"(b120cb0_elem), [c1dd801] "m"(b120cb0_c1dd801)
+      : "memory");
 }
+#else
+#error "FUN_00120cb0: clang naked draft required"
+#endif
 
-/* 0x120ee0 */
+
+/* animation_frame_get_xy_translation (0x120ee0) — XBE naked draft (batch 277). */
+#if defined(__clang__)
+static void (*const b120ee0_c120590)(void *animation, short frame_index, short frame_size) = FUN_00120590;
+
+__attribute__((naked, noinline))
 void animation_frame_get_xy_translation(void)
 {
-  int eax = 0;
-
-  /* relift: cmp word ptr [eax + 0x26], 1 -> jne 0x120f0b */
-  FUN_00120590((void *)(uintptr_t)eax, 0, 0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpw $1, 0x26(%%eax)\n\t"
+      "jne .Lanimation_frame_get_xy_translation_1\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl $8\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c120590]\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl 0x4(%%eax), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lanimation_frame_get_xy_translation_1:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl $0, (%%eax)\n\t"
+      "movl $0, 0x4(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c120590] "m"(b120ee0_c120590)
+      : "memory");
 }
+#else
+#error "animation_frame_get_xy_translation: clang naked draft required"
+#endif
+
 
 /* inverse_kinematics_adjust_matrices (0x120fd0) — XBE naked draft (batch 246). */
 #if defined(__clang__)
@@ -4637,26 +4711,74 @@ void animation_get_root_matrix(void)
   tag_block_get_element((void *)0, 0, 0);
 }
 
-/* 0x123e50 */
+/* FUN_00123e50 (0x123e50) — XBE naked draft (batch 278). */
+#if defined(__clang__)
+static void *(*const b123e50_tag)(int, int) = tag_get;
+static void *(*const b123e50_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b123e50_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
+
+__attribute__((naked, noinline))
 void FUN_00123e50(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  tag_get('edom', 0);
-  /* test eax, eax -> jle 0x123ea4 */
-  tag_block_get_element((void *)(uintptr_t)esi, 0, 156);
-  csstrcmp((char *)(uintptr_t)eax, (char *)(uintptr_t)ebx);
-  /* test eax, eax -> je 0x123ead */
-  /* cmp eax, ecx -> jl 0x123e80 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .LFUN_00123e50_2\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6d6f6465\n\t"
+      "call *%[tag]\n\t"
+      "leal 0xb8(%%eax), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .LFUN_00123e50_2\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "nop\n\t"
+      ".LFUN_00123e50_1:\n\t"
+      "pushl $0x9c\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8dcb0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00123e50_3\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "incl %%edi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .LFUN_00123e50_1\n\t"
+      ".LFUN_00123e50_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "orw $0xffff, %%ax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00123e50_3:\n\t"
+      "movw %%di, %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b123e50_tag), [elem] "m"(b123e50_elem), [c8dcb0] "m"(b123e50_c8dcb0)
+      : "memory");
 }
+#else
+#error "FUN_00123e50: clang naked draft required"
+#endif
+
 
 /* FUN_00123ed0 (0x123ed0) — XBE naked draft (batch 241). */
 #if defined(__clang__)

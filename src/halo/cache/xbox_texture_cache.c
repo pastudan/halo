@@ -479,16 +479,45 @@ void texture_cache_bitmap_new(int tag_index __attribute__((unused)), void *bitma
 #endif
 
 
-/* 0x1be9f0 */
+/* texture_cache_bitmap_delete (0x1be9f0) — XBE naked draft (batch 281). */
+#if defined(__clang__)
+static void (*const b1be9f0_c11d8f0)(void *cache, int block_index) = lruv_block_delete;
+
+__attribute__((naked, noinline))
 void texture_cache_bitmap_delete(void)
 {
-  int eax = 0;
-
-  /* cmp eax, -1 -> je 0x1bea15 */
-  lruv_block_delete((void *)(uintptr_t)eax, 0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movb 0xe(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jns .Ltexture_cache_bitmap_delete_2\n\t"
+      "movl 0x24(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Ltexture_cache_bitmap_delete_1\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x4ea980, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c11d8f0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Ltexture_cache_bitmap_delete_1:\n\t"
+      "andb $0x7f, 0xe(%%esi)\n\t"
+      "movl $0xffffffff, 0x24(%%esi)\n\t"
+      "movl $0, 0x2c(%%esi)\n\t"
+      ".Ltexture_cache_bitmap_delete_2:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11d8f0] "m"(b1be9f0_c11d8f0)
+      : "memory");
 }
+#else
+#error "texture_cache_bitmap_delete: clang naked draft required"
+#endif
+
 
 /* 0x1beb70 */
 void FUN_001beb70(void)
@@ -793,23 +822,49 @@ void texture_cache_new(void)
 #endif
 
 
-/* 0x1bf130 */
+/* texture_cache_close (0x1bf130) — XBE naked draft (batch 279). */
+#if defined(__clang__)
+static void (*const b1bf130_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1bf130_exitfn)(int) = system_exit;
+static void (*const b1bf130_c1e6fb0)(void) = D3DDevice_KickPushBuffer;
+static void (*const b1bf130_c1e8a00)(void) = D3DDevice_IsBusy;
+static void (*const b1bf130_c11ddc0)(void *cache) = lruv_cache_dispose_all;
+static void (*const b1bf130_c119550)(data_t *data) = data_make_invalid;
+
+__attribute__((naked, noinline))
 void texture_cache_close(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  /* test (char)eax, (char)eax -> je 0x1bf159 */
-  display_assert((char *)0x002b9704, (char *)0x002b96d8, 133, 0);
-  system_exit(0);
-  D3DDevice_KickPushBuffer();
-  D3DDevice_IsBusy();
-  lruv_cache_dispose_all((void *)(uintptr_t)eax);
-  data_make_invalid((void *)(uintptr_t)ecx);
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "movb 0x4ea984, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Ltexture_cache_close_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x85\n\t"
+      "pushl $0x2b96d8\n\t"
+      "pushl $0x2b9704\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltexture_cache_close_1:\n\t"
+      "call *%[c1e6fb0]\n\t"
+      "call *%[c1e8a00]\n\t"
+      "movl 0x4ea980, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c11ddc0]\n\t"
+      "movl 0x4ea978, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119550]\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1bf130_assert), [exitfn] "m"(b1bf130_exitfn), [c1e6fb0] "m"(b1bf130_c1e6fb0), [c1e8a00] "m"(b1bf130_c1e8a00), [c11ddc0] "m"(b1bf130_c11ddc0), [c119550] "m"(b1bf130_c119550)
+      : "memory");
 }
+#else
+#error "texture_cache_close: clang naked draft required"
+#endif
+
 
 /* texture_cache_debug_render (0x1bf260) — XBE naked draft (batch 244). */
 #if defined(__clang__)

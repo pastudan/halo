@@ -1240,22 +1240,55 @@ void file_compare_last_modification_dates(void)
   (void)ecx;
 }
 
-/* 0x19a400 */
+/* file_read_only (0x19a400) — XBE naked draft (batch 278). */
+#if defined(__clang__)
+static file_ref_t * (*const b19a400_c199620)(file_ref_t *info) = file_reference_verify;
+static void (*const b19a400_c19a370)(int16_t location, const char *path, char *out) = path_from_file_reference;
+static int __stdcall (*const b19a400_c1d0e96)(const char *path) = file_get_full_attributes;
+
+__attribute__((naked, noinline))
 void file_read_only(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  file_reference_verify((void *)(uintptr_t)eax);
-  path_from_file_reference(eax, (char *)(uintptr_t)edx, (char *)(uintptr_t)ecx);
-  file_get_full_attributes((char *)(uintptr_t)ecx);
-  /* cmp eax, -1 -> je 0x19a444 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x100, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c199620]\n\t"
+      "leal -0x100(%%ebp), %%ecx\n\t"
+      "leal 0x8(%%eax), %%edx\n\t"
+      "movswl 0x6(%%eax), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c19a370]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "leal -0x100(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d0e96]\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lfile_read_only_1\n\t"
+      "testb $1, %%al\n\t"
+      "movb $1, %%al\n\t"
+      "jne .Lfile_read_only_2\n\t"
+      ".Lfile_read_only_1:\n\t"
+      "movb %%bl, %%al\n\t"
+      ".Lfile_read_only_2:\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c199620] "m"(b19a400_c199620), [c19a370] "m"(b19a400_c19a370), [c1d0e96] "m"(b19a400_c1d0e96)
+      : "memory");
 }
+#else
+#error "file_read_only: clang naked draft required"
+#endif
+
 
 /* file_set_eof (0x19aad0) — XBE naked draft (batch 266). */
 #if defined(__clang__)
@@ -1786,16 +1819,39 @@ void file_printf(void)
 #endif
 
 
-/* 0x1996d0 */
+/* file_reference_copy (0x1996d0) — XBE naked draft (batch 284). */
+#if defined(__clang__)
+static file_ref_t * (*const b1996d0_c199620)(file_ref_t *info) = file_reference_verify;
+static void * (*const b1996d0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
 void file_reference_copy(void)
 {
-  int esi = 0;
-
-  file_reference_verify((void *)(uintptr_t)esi);
-  csmemcpy((void *)(uintptr_t)esi, (void *)(uintptr_t)esi, 264);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c199620]\n\t"
+      "pushl $0x108\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c199620] "m"(b1996d0_c199620), [c8e0b0] "m"(b1996d0_c8e0b0)
+      : "memory");
 }
+#else
+#error "file_reference_copy: clang naked draft required"
+#endif
+
 
 /* directory_create_or_delete_contents (0x199a60) — XBE naked draft (batch 272). */
 #if defined(__clang__)

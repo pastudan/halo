@@ -344,24 +344,60 @@ fail:
 }
 /* --- game_state.obj batch drafts (2026-07-26) --- */
 
-/* 0x1bfb60 */
+/* FUN_001bfb60 (0x1bfb60) — XBE naked draft (batch 281). */
+#if defined(__clang__)
+static void * (*const b1bfb60_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
+static int (*const b1bfb60_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
+static int (*const b1bfb60_c1d9bd2)(void *stream) = crt_fflush;
+
+__attribute__((naked, noinline))
 void FUN_001bfb60(void)
 {
-  int eax = 0;
-  int edx = 0;
-
-  /* test eax, eax -> jne 0x1bfb87 */
-  crt_fopen((char *)0x002b99c8, (char *)0x00265938);
-  /* mem[0x004ea990] = eax */
-  crt_fprintf((void *)(uintptr_t)eax, (char *)0x002b99b4);
-  crt_fflush((void *)(uintptr_t)edx);
-  game_time_get();
-  /* mem[0x004ea9a8] = eax */
-  game_time_set_paused(0);
-
-  (void)eax;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x4ea990, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_001bfb60_1\n\t"
+      "pushl $0x265938\n\t"
+      "pushl $0x2b99c8\n\t"
+      "call *%[c1d9e59]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x4ea990\n\t"
+      "je .LFUN_001bfb60_3\n\t"
+      ".LFUN_001bfb60_1:\n\t"
+      "movb 0x14(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movl $0x2686f4, %%ecx\n\t"
+      "jne .LFUN_001bfb60_2\n\t"
+      "movl $0x25386f, %%ecx\n\t"
+      ".LFUN_001bfb60_2:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x2b99b4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl 0x4ea990, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9bd2]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      ".LFUN_001bfb60_3:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d9e59] "m"(b1bfb60_c1d9e59), [c1d98ad] "m"(b1bfb60_c1d98ad), [c1d9bd2] "m"(b1bfb60_c1d9bd2)
+      : "memory");
 }
+#else
+#error "FUN_001bfb60: clang naked draft required"
+#endif
+
 
 /* game_state_lruv_cache_new (0x1c0070) — XBE naked draft (batch 272). */
 #if defined(__clang__)

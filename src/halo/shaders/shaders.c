@@ -296,19 +296,45 @@ void FUN_00190380(void)
 #endif
 
 
-/* 0x190500 */
+/* wind_initialize_for_new_map (0x190500) — XBE naked draft (batch 280). */
+#if defined(__clang__)
+static void * (*const b190500_c18e3c0)(void) = scenario_get;
+static void (*const b190500_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b190500_exitfn)(int) = system_exit;
+static void *(*const b190500_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void wind_initialize_for_new_map(void)
 {
-  int eax = 0;
-
-  scenario_get();
-  /* test (char)eax, (char)eax -> je 0x19052b */
-  display_assert((char *)0x002b22e0, (char *)0x002b22c0, 65, 0);
-  system_exit(0);
-  csmemset((void *)0x005057c0, 0, 3340);
-
-  (void)eax;
+  __asm__ volatile(
+      "call *%[c18e3c0]\n\t"
+      "movb 0x5057c0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lwind_initialize_for_new_map_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x41\n\t"
+      "pushl $0x2b22c0\n\t"
+      "pushl $0x2b22e0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lwind_initialize_for_new_map_1:\n\t"
+      "pushl $0xd0c\n\t"
+      "pushl $0\n\t"
+      "pushl $0x5057c0\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0x5057c0\n\t"
+      ".byte 0xe9, 0x35, 0xfe, 0xff, 0xff\n\t"
+      :
+      : [c18e3c0] "m"(b190500_c18e3c0), [assert] "m"(b190500_assert), [exitfn] "m"(b190500_exitfn), [memset] "m"(b190500_memset)
+      : "memory");
 }
+#else
+#error "wind_initialize_for_new_map: clang naked draft required"
+#endif
+
 
 /* FUN_00190550 (0x190550) — XBE naked draft (batch 253). */
 #if defined(__clang__)
@@ -812,13 +838,37 @@ char shader_ignores_effect(void *shader __attribute__((unused)))
 #endif
 
 
-/* 0x1909d0 */
-char shader_type_is_transparent(int16_t shader_type)
+/* shader_type_is_transparent (0x1909d0) — XBE naked draft (batch 281). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+char shader_type_is_transparent(int16_t shader_type __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0x8(%%ebp), %%ecx\n\t"
+      "xorb %%al, %%al\n\t"
+      "cmpl $1, %%ecx\n\t"
+      "je .Lshader_type_is_transparent_1\n\t"
+      "cmpl $4, %%ecx\n\t"
+      "jle .Lshader_type_is_transparent_2\n\t"
+      "cmpl $0xa, %%ecx\n\t"
+      "jg .Lshader_type_is_transparent_2\n\t"
+      ".Lshader_type_is_transparent_1:\n\t"
+      "movb $1, %%al\n\t"
+      ".Lshader_type_is_transparent_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "shader_type_is_transparent: clang naked draft required"
+#endif
+
 
 /* shader_type_is_lightmapped (0x1909f0) — XBE naked draft (batch 276). */
 #if defined(__clang__)
@@ -852,12 +902,35 @@ void shader_type_is_lightmapped(void)
 #endif
 
 
-/* 0x190a10 */
+/* shader_type_is_vertex_lit (0x190a10) — XBE naked draft (batch 280). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void shader_type_is_vertex_lit(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0x8(%%ebp), %%ecx\n\t"
+      "xorb %%al, %%al\n\t"
+      "cmpl $4, %%ecx\n\t"
+      "je .Lshader_type_is_vertex_lit_1\n\t"
+      "cmpl $8, %%ecx\n\t"
+      "jne .Lshader_type_is_vertex_lit_2\n\t"
+      ".Lshader_type_is_vertex_lit_1:\n\t"
+      "movb $1, %%al\n\t"
+      ".Lshader_type_is_vertex_lit_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "shader_type_is_vertex_lit: clang naked draft required"
+#endif
+
 
 /* shader_type_is_valid_for_environment (0x190a30) — XBE naked draft (batch 276). */
 #if defined(__clang__)
@@ -891,20 +964,66 @@ void shader_type_is_valid_for_environment(void)
 #endif
 
 
-/* 0x190a50 */
+/* shader_type_is_valid_for_model (0x190a50) — XBE naked draft (batch 280). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void shader_type_is_valid_for_model(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0x8(%%ebp), %%ecx\n\t"
+      "xorb %%al, %%al\n\t"
+      "cmpl $3, %%ecx\n\t"
+      "jl .Lshader_type_is_valid_for_model_1\n\t"
+      "cmpl $0xa, %%ecx\n\t"
+      "jg .Lshader_type_is_valid_for_model_1\n\t"
+      "movb $1, %%al\n\t"
+      ".Lshader_type_is_valid_for_model_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "shader_type_is_valid_for_model: clang naked draft required"
+#endif
 
-/* 0x190a70 */
-char shader_type_is_valid_for_modifier(int16_t shader_type)
+
+/* shader_type_is_valid_for_modifier (0x190a70) — XBE naked draft (batch 281). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+char shader_type_is_valid_for_modifier(int16_t shader_type __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0x8(%%ebp), %%ecx\n\t"
+      "xorb %%al, %%al\n\t"
+      "cmpl $1, %%ecx\n\t"
+      "je .Lshader_type_is_valid_for_modifier_1\n\t"
+      "cmpl $4, %%ecx\n\t"
+      "jle .Lshader_type_is_valid_for_modifier_2\n\t"
+      "cmpl $0xa, %%ecx\n\t"
+      "jg .Lshader_type_is_valid_for_modifier_2\n\t"
+      ".Lshader_type_is_valid_for_modifier_1:\n\t"
+      "movb $1, %%al\n\t"
+      ".Lshader_type_is_valid_for_modifier_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "shader_type_is_valid_for_modifier: clang naked draft required"
+#endif
+
 
 /* shader_environment_texture_animation_evaluate (0x190a90) — XBE naked draft (batch 250). */
 #if defined(__clang__)
