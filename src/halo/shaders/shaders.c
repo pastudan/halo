@@ -467,22 +467,21 @@ void FUN_00190690(int a0, int a1, int a2, int a3)
   FUN_00190550(a0, a1, a2, a3 | 4);
 }
 
-/* 0x1906b0 */
+/* FUN_001906b0 (0x1906b0) — readable C lift. */
 void *FUN_001906b0(void *shader, int shader_type)
 {
-  int esi = 0;
-  int ebp = 0;
-
-  /* test esi, esi -> jne 0x1906db */
-  display_assert((char *)0x002a18b8, (char *)0x002b231c, 2140, 0);
-  system_exit(0);
-  /* relift: cmp (int16_t)eax, word ptr [ebp + 0xc] -> je 0x190705 */
-  display_assert((char *)0x002b22fc, (char *)0x002b231c, 2141, 0);
-  system_exit(0);
-  return NULL;
-
-  (void)esi;
-  (void)ebp;
+  extern char DAT_002a18b8[];
+  extern char DAT_002b231c[];
+  extern char DAT_002b22fc[];
+  if (!shader) {
+    display_assert(DAT_002a18b8, DAT_002b231c, 0x85c, 1);
+    system_exit(-1);
+  }
+  if (*(int16_t *)((char *)shader + 0x24) != (int16_t)shader_type) {
+    display_assert(DAT_002b22fc, DAT_002b231c, 0x85d, 1);
+    system_exit(-1);
+  }
+  return shader;
 }
 
 /* shader_get_vertex_shader_permutation (0x190710) — XBE naked draft (batch 250). */

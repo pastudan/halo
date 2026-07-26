@@ -1293,31 +1293,9 @@ void FUN_001457d0(int a0, int a1, int a2, int a3)
 
 /* --- breakable_surfaces.obj orphan shells (2026-07-26) --- */
 
-/* breakable_surfaces_reset (0x1459d0) — XBE naked draft (batch 221). */
-#if defined(__clang__)
-static void (*const b1459d0_c1458f0)(void) = breakable_surfaces_initialize_for_new_map;
-
-__attribute__((naked, noinline))
+/* breakable_surfaces_reset (0x1459d0) — readable C lift. */
 void breakable_surfaces_reset(void)
 {
-  __asm__ volatile(
-      "jmp *%[c1458f0]\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c1458f0] "m"(b1459d0_c1458f0)
-      : "memory");
+  breakable_surfaces_initialize_for_new_map();
 }
-#else
-#error "breakable_surfaces_reset: clang naked draft required"
-#endif
 

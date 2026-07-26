@@ -4913,7 +4913,7 @@
         {
           "addr": "0x1459d0",
           "decl": "void breakable_surfaces_reset(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x145a60",
@@ -23947,7 +23947,7 @@
         {
           "addr": "0x1906b0",
           "decl": "void *FUN_001906b0(void *shader, int shader_type);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x190710",
