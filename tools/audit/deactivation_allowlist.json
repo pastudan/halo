@@ -16777,5 +16777,54 @@
     "object": "damage.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x145560",
+    "name": "FUN_00145560",
+    "object": "breakable_surfaces.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x145580",
+    "name": "FUN_00145580",
+    "object": "breakable_surfaces.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x145610",
+    "name": "FUN_00145610",
+    "object": "breakable_surfaces.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x145660",
+    "name": "FUN_00145660",
+    "object": "breakable_surfaces.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x145740",
+    "name": "FUN_00145740",
+    "object": "breakable_surfaces.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1457b0",
+    "name": "FUN_001457b0",
+    "object": "breakable_surfaces.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1457d0",
+    "name": "FUN_001457d0",
+    "object": "breakable_surfaces.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

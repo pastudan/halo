@@ -4409,31 +4409,38 @@
         },
         {
           "addr": "0x145560",
-          "decl": "void FUN_00145560(void);"
+          "decl": "void FUN_00145560(void);",
+          "ported": false
         },
         {
           "addr": "0x145580",
-          "decl": "void FUN_00145580(void);"
+          "decl": "void FUN_00145580(void);",
+          "ported": false
         },
         {
           "addr": "0x145610",
-          "decl": "void FUN_00145610(void);"
+          "decl": "void FUN_00145610(void);",
+          "ported": false
         },
         {
           "addr": "0x145660",
-          "decl": "void FUN_00145660(void);"
+          "decl": "void FUN_00145660(void);",
+          "ported": false
         },
         {
           "addr": "0x145740",
-          "decl": "int FUN_00145740(int a0);"
+          "decl": "int FUN_00145740(int a0);",
+          "ported": false
         },
         {
           "addr": "0x1457b0",
-          "decl": "void FUN_001457b0(int a0, int a1, int a2);"
+          "decl": "void FUN_001457b0(int a0, int a1, int a2);",
+          "ported": false
         },
         {
           "addr": "0x1457d0",
-          "decl": "void FUN_001457d0(int a0, int a1, int a2, int a3);"
+          "decl": "void FUN_001457d0(int a0, int a1, int a2, int a3);",
+          "ported": false
         },
         {
           "addr": "0x145990",
