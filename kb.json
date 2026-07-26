@@ -35638,7 +35638,8 @@
         {
           "addr": "0x58710",
           "decl": "int16_t FUN_00058710(int16_t param_1);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00058710"
         },
         {
           "addr": "0x58720",
@@ -36173,8 +36174,9 @@
         },
         {
           "addr": "0x650a0",
-          "decl": "void FUN_000650a0(void);",
-          "ported": false
+          "decl": "int FUN_000650a0(void *prop, int a1);",
+          "ported": true,
+          "name": "FUN_000650a0"
         },
         {
           "addr": "0x650e0",

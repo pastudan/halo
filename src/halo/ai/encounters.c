@@ -1695,42 +1695,16 @@ void FUN_000586a0(int param_1)
   ai_conversation_advance(param_1);
 }
 
-/* FUN_00058700 (0x58700) — XBE naked draft (batch 233). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int FUN_00058700(int param_1 __attribute__((unused)))
+/* FUN_00058700 (0x58700) — readable C lift (ai campaign). */
+int16_t FUN_00058700(int param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xb7, 0xad, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+  return ai_conversation_line(param_1);
 }
-#else
-#error "FUN_00058700: clang naked draft required"
-#endif
 
-
-/* 0x58710 — Frame stub forwarding to ai_conversation_status. */
-#if defined(__i386__) && defined(__GNUC__)
-__attribute__((naked))
-#endif
+/* FUN_00058710 (0x58710) — readable C lift (ai campaign). */
 int16_t FUN_00058710(int16_t param_1)
 {
-#if defined(__i386__) && defined(__GNUC__)
-  __asm__(
-      "push %ebp\n\t"
-      "mov %ebp, %esp\n\t"
-      "pop %ebp\n\t"
-      "jmp ai_conversation_status");
-#else
   return ai_conversation_status(param_1);
-#endif
 }
 
 /* 0x00058720 — FUN_00058720 (ai_link_activation script command).
