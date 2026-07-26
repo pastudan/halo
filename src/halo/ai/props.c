@@ -471,24 +471,64 @@ void FUN_00064ee0(int tif_)
 }
 /* --- props.obj batch drafts (2026-07-26) --- */
 
-/* 0x63e30 — project a probe point onto a structure surface. */
-int FUN_00063e30(int scenario, unsigned char bsp_idx, float *origin,
-                 int surface_index, float *out_point)
+/* FUN_00063e30 (0x63e30) — XBE naked draft (batch 235). */
+#if defined(__clang__)
+static char (*const b63e30_c639e0)(int scenario, unsigned char bsp_idx, float *origin, int start_surface, float *target, int end_surface, char *result_buf) = FUN_000639e0;
+
+__attribute__((naked, noinline))
+int FUN_00063e30(int scenario __attribute__((unused)), unsigned char bsp_idx __attribute__((unused)), float *origin __attribute__((unused)), int surface_index __attribute__((unused)), float *out_point __attribute__((unused)))
 {
-  char result[0x1c];
-  int end_surface;
-
-  if (surface_index == -1)
-    return -1;
-
-  FUN_000639e0(scenario, bsp_idx, origin, surface_index, out_point, -1, result);
-  end_surface = *(int *)(result + 0x10);
-  out_point[0] = *(float *)(result + 4);
-  out_point[1] = *(float *)(result + 8);
-  if (end_surface == -1)
-    return surface_index;
-  return end_surface;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x1c, %%esp\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x14(%%ebp), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_00063e30_1\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x18(%%ebp), %%esi\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c639e0]\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%ecx, (%%esi)\n\t"
+      "movl %%edx, 0x4(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "jne .LFUN_00063e30_2\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00063e30_1:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      ".LFUN_00063e30_2:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c639e0] "m"(b63e30_c639e0)
+      : "memory");
 }
+#else
+#error "FUN_00063e30: clang naked draft required"
+#endif
+
 
 /* FUN_00063e90 (0x63e90) — XBE naked draft (batch 230). */
 #if defined(__clang__)
@@ -1251,47 +1291,90 @@ int prop_new_unacknowledged(int actor_handle __attribute__((unused)), int unit_h
 #endif
 
 
-/* 0x647c0 — copy a prop record and reset orphan transition fields. */
-void FUN_000647c0(int dest_prop, int src_prop)
+/* FUN_000647c0 (0x647c0) — XBE naked draft (batch 237). */
+#if defined(__clang__)
+static void *(*const b647c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void * (*const b647c0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
+void FUN_000647c0(int dest_prop __attribute__((unused)), int src_prop __attribute__((unused)))
 {
-  char *dest;
-  char *src;
-  int16_t type;
-  int link4;
-  int link8;
-  int linkc;
-  float *default_fwd;
-
-  dest = (char *)datum_get(prop_data, dest_prop);
-  src = (char *)datum_get(prop_data, src_prop);
-  type = *(int16_t *)src;
-  link4 = *(int *)(src + 4);
-  link8 = *(int *)(src + 8);
-  linkc = *(int *)(src + 0xc);
-
-  csmemcpy(dest, src, 0x138);
-  *(int16_t *)dest = type;
-  *(int *)(dest + 4) = link4;
-  *(int *)(dest + 8) = link8;
-  *(int *)(dest + 0xc) = linkc;
-  *(int16_t *)(dest + 0x24) = 4;
-  *(int16_t *)(dest + 0x3a) = 0x384;
-  *(int16_t *)(dest + 0x3c) = 0;
-  *(char *)(dest + 0xb9) = 0;
-  *(char *)(dest + 0xba) = 0;
-  *(char *)(dest + 0xbb) = 0;
-  *(float *)(dest + 0x40) =
-      *(float *)(dest + 0xbc) - *(float *)(dest + 0x80);
-  *(float *)(dest + 0x44) =
-      *(float *)(dest + 0xc0) - *(float *)(dest + 0x84);
-  *(float *)(dest + 0x48) =
-      *(float *)(dest + 0xc4) - *(float *)(dest + 0x88);
-  default_fwd = (float *)*(int *)0x31fc38;
-  *(float *)(dest + 0xd4) = default_fwd[0];
-  *(float *)(dest + 0xd8) = default_fwd[1];
-  *(float *)(dest + 0xdc) = default_fwd[2];
-  *(char *)(dest + 0x123) = 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x5ab23c, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "movw (%%esi), %%bx\n\t"
+      "pushl $0x138\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "call *%[c8e0b0]\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl %%eax, 0xc(%%esi)\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      "movw %%bx, (%%esi)\n\t"
+      "movl %%edx, 0x8(%%esi)\n\t"
+      "movw $4, 0x24(%%esi)\n\t"
+      "movw $0x384, 0x3a(%%esi)\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw %%ax, 0x3c(%%esi)\n\t"
+      "movb %%al, 0xb9(%%esi)\n\t"
+      "movb %%al, 0xba(%%esi)\n\t"
+      "movb %%al, 0xbb(%%esi)\n\t"
+      "flds 0xbc(%%esi)\n\t"
+      "fsubs 0x80(%%esi)\n\t"
+      "leal 0xd4(%%esi), %%ecx\n\t"
+      "fstps 0x40(%%esi)\n\t"
+      "flds 0xc0(%%esi)\n\t"
+      "fsubs 0x84(%%esi)\n\t"
+      "fstps 0x44(%%esi)\n\t"
+      "flds 0xc4(%%esi)\n\t"
+      "fsubs 0x88(%%esi)\n\t"
+      "fstps 0x48(%%esi)\n\t"
+      "movl 0x31fc38, %%edx\n\t"
+      "movl (%%edx), %%edi\n\t"
+      "movl %%edi, (%%ecx)\n\t"
+      "movl 0x4(%%edx), %%edi\n\t"
+      "movl %%edi, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "popl %%edi\n\t"
+      "movb %%al, 0x123(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b647c0_dget), [c8e0b0] "m"(b647c0_c8e0b0)
+      : "memory");
 }
+#else
+#error "FUN_000647c0: clang naked draft required"
+#endif
+
 
 /* prop_orphan_transition (0x648a0) — XBE naked draft (batch 226). */
 #if defined(__clang__)

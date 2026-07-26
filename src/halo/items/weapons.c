@@ -1631,28 +1631,76 @@ int weapon_place(int weapon_handle __attribute__((unused)), void *placement __at
 #endif
 
 
-/* 0xfaf50 */
-char weapon_can_be_fired(int weapon_handle)
+/* weapon_can_be_fired (0xfaf50) — XBE naked draft (batch 236). */
+#if defined(__clang__)
+static void *(*const bfaf50_get)(int, int) = object_get_and_verify_type;
+static void *(*const bfaf50_tag)(int, int) = tag_get;
+static bool (*const bfaf50_gerun)(void) = game_engine_running;
+static void *(*const bfaf50_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+char weapon_can_be_fired(int weapon_handle __attribute__((unused)))
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-
-  if (*(float *)(weapon_obj + 0x1f0) < *(float *)0x2533c8)
-    return 0;
-
-  if (game_engine_running()) {
-    if (*(int *)(tag_data + 0x4f0) > 0) {
-      char *mag_def =
-        (char *)tag_block_get_element((void *)(tag_data + 0x4f0), 0, 0x70);
-      if (*(int16_t *)(mag_def + 0xa) > 0 &&
-          *(int16_t *)(weapon_obj + 0x260) == 0 &&
-          *(int16_t *)(weapon_obj + 0x25e) != 0)
-        return 0;
-    }
-  }
-
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x1f0(%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lweapon_can_be_fired_2\n\t"
+      ".Lweapon_can_be_fired_1:\n\t"
+      "popl %%edi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lweapon_can_be_fired_2:\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lweapon_can_be_fired_3\n\t"
+      "movl 0x4f0(%%edi), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "leal 0x4f0(%%edi), %%eax\n\t"
+      "jle .Lweapon_can_be_fired_3\n\t"
+      "pushl $0x70\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $0, 0xa(%%eax)\n\t"
+      "jle .Lweapon_can_be_fired_3\n\t"
+      "cmpw $0, 0x260(%%esi)\n\t"
+      "jne .Lweapon_can_be_fired_3\n\t"
+      "cmpw $0, 0x25e(%%esi)\n\t"
+      "je .Lweapon_can_be_fired_1\n\t"
+      ".Lweapon_can_be_fired_3:\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfaf50_get), [tag] "m"(bfaf50_tag), [gerun] "m"(bfaf50_gerun), [elem] "m"(bfaf50_elem)
+      : "memory");
 }
+#else
+#error "weapon_can_be_fired: clang naked draft required"
+#endif
+
 
 /* 0xfafe0 — true when weapon age/heat is still below 1.0. */
 #if defined(__clang__)
@@ -2255,24 +2303,75 @@ void weapon_trigger_release_charge(int16_t charge_counter, int weapon_handle,
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((regparm(2)))
 #endif
-void FUN_000fb910(int weapon_handle, int16_t trigger_index, char flag)
+/* FUN_000fb910 (0xfb910) — XBE naked draft (batch 235). */
+#if defined(__clang__)
+static void *(*const bfb910_get)(int, int) = object_get_and_verify_type;
+static void *(*const bfb910_tag)(int, int) = tag_get;
+static char *(*const bfb910_fb320)(void *, short) = FUN_000fb320;
+static void *(*const bfb910_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+void FUN_000fb910(int weapon_handle __attribute__((unused)), int16_t trigger_index __attribute__((unused)), char flag __attribute__((unused)))
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-  char *trigger_entry = FUN_000fb320(weapon_obj, trigger_index);
-  char *trig_def = (char *)tag_block_get_element((void *)(tag_data + 0x4fc),
-                                                 (int)trigger_index, 0x114);
-
-  if (*(float *)(trig_def + 0xa4) != 0.0f)
-    return;
-
-  if ((*(int *)trig_def & 0x80) != 0) {
-    if (flag != 0)
-      *(float *)(trigger_entry + 0x14) = 1.0f;
-  } else if (flag == 0) {
-    *(float *)(trigger_entry + 0x14) = 1.0f;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[fb320]\n\t"
+      "movswl %%si, %%edx\n\t"
+      "pushl $0x114\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x4fc, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "flds 0xa4(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_000fb910_3\n\t"
+      "movl (%%ecx), %%ecx\n\t"
+      "andl $0x80, %%ecx\n\t"
+      "je .LFUN_000fb910_1\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000fb910_2\n\t"
+      ".LFUN_000fb910_1:\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jne .LFUN_000fb910_3\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000fb910_3\n\t"
+      ".LFUN_000fb910_2:\n\t"
+      "movl $0x3f800000, 0x14(%%edi)\n\t"
+      ".LFUN_000fb910_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfb910_get), [tag] "m"(bfb910_tag), [fb320] "m"(bfb910_fb320), [elem] "m"(bfb910_elem)
+      : "memory");
 }
+#else
+#error "FUN_000fb910: clang naked draft required"
+#endif
+
 
 /* 0xfb990 — Reset trigger charge from weapon animation state (@edi handle). */
 #if defined(__clang__)
@@ -2604,21 +2703,55 @@ char weapon_new(int weapon_handle)
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((noinline))
 #endif
-void weapon_delete(int weapon_handle)
+/* weapon_delete (0xfbea0) — XBE naked draft (batch 237). */
+#if defined(__clang__)
+static bool (*const bfbea0_gerun)(void) = game_engine_running;
+static void *(*const bfbea0_get)(int, int) = object_get_and_verify_type;
+static void *(*const bfbea0_tag)(int, int) = tag_get;
+static void (*const bfbea0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bfbea0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void weapon_delete(int weapon_handle __attribute__((unused)))
 {
-  char *tag_data;
-
-  if (!game_engine_running())
-    return;
-
-  tag_data = (char *)tag_get(
-      0x77656170,
-      *(int *)object_get_and_verify_type(weapon_handle, 4));
-  if (((*(uint32_t *)(tag_data + 0x308) >> 3) & 1) != 0) {
-    display_assert((char *)0x0028ae98, (char *)0x0028ad48, 0xea, 1);
-    system_exit(-1);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lweapon_delete_1\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x308(%%eax), %%edx\n\t"
+      "shrl $3, %%edx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb $1, %%dl\n\t"
+      "je .Lweapon_delete_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xea\n\t"
+      "pushl $0x28ad48\n\t"
+      "pushl $0x28ae98\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lweapon_delete_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [gerun] "m"(bfbea0_gerun), [get] "m"(bfbea0_get), [tag] "m"(bfbea0_tag), [assert] "m"(bfbea0_assert), [exitfn] "m"(bfbea0_exitfn)
+      : "memory");
 }
+#else
+#error "weapon_delete: clang naked draft required"
+#endif
+
 
 /* Jump-table cases at 0xfc244 — superseded by naked weapon_export_function_values. */
 #if 0

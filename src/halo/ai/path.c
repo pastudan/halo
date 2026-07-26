@@ -3284,16 +3284,44 @@ void * FUN_000600f0(void *path __attribute__((unused)), int16_t step_index __att
 #endif
 
 
-/* 0x601a0 — parent heap index (path_obstacle_avoidance.c:57) */
-int FUN_000601a0(int16_t heap_index)
+/* FUN_000601a0 (0x601a0) — XBE naked draft (batch 234). */
+#if defined(__clang__)
+static void (*const b601a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b601a0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int FUN_000601a0(int16_t heap_index __attribute__((unused)))
 {
-  if (heap_index <= 0) {
-    display_assert("heap_index>0",
-                   "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 57, 1);
-    system_exit(-1);
-  }
-  return ((int)heap_index - 1) / 2;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jg .LFUN_000601a0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x39\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25eaa4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000601a0_1:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "decl %%eax\n\t"
+      "sarl $1, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b601a0_assert), [exitfn] "m"(b601a0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_000601a0: clang naked draft required"
+#endif
+
 
 /* 0x601e0 — binary-heap left child index */
 int FUN_000601e0(int heap_index)
@@ -4189,27 +4217,53 @@ char FUN_00060910(void *path __attribute__((unused)), int16_t step_index __attri
 #endif
 
 
-/* 0x60970 — pop cheapest step index from path heap */
-int16_t FUN_00060970(void *path)
+/* FUN_00060970 (0x60970) — XBE naked draft (batch 236). */
+#if defined(__clang__)
+static char (*const b60970_c60330)(void *path, const char *debug_context) = FUN_00060330;
+static void (*const b60970_c60670)(void *path, int16_t heap_index) = FUN_00060670;
+
+__attribute__((naked, noinline))
+int16_t FUN_00060970(void *path __attribute__((unused)))
 {
-  int16_t heap_count;
-  int16_t root_step;
-  int16_t last_step;
-
-  FUN_00060330(path, "path_pop_step");
-  heap_count = *(int16_t *)((char *)path + 0x1430);
-  if (heap_count <= 0)
-    return -1;
-
-  heap_count--;
-  *(int16_t *)((char *)path + 0x1430) = heap_count;
-  last_step = *(int16_t *)((char *)path + (int)heap_count * 2 + 0x1432);
-  root_step = *(int16_t *)((char *)path + 0x1432);
-  *(int16_t *)((char *)path + 0x1432) = last_step;
-  FUN_00060670(path, 0);
-  FUN_00060330(path, "path_pop_step");
-  return root_step;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl $0x25eb40\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c60330]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x1430(%%esi), %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .LFUN_00060970_1\n\t"
+      "decl %%eax\n\t"
+      "movw %%ax, 0x1430(%%esi)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movw 0x1432(%%esi,%%eax,2), %%cx\n\t"
+      "pushl %%edi\n\t"
+      "movw 0x1432(%%esi), %%di\n\t"
+      "pushl $0\n\t"
+      "movw %%cx, 0x1432(%%esi)\n\t"
+      "call *%[c60670]\n\t"
+      "pushl $0x25eb2c\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[c60330]\n\t"
+      "addl $8, %%esp\n\t"
+      "movw %%di, %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".LFUN_00060970_1:\n\t"
+      "orw $0xffff, %%ax\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c60330] "m"(b60970_c60330), [c60670] "m"(b60970_c60670)
+      : "memory");
 }
+#else
+#error "FUN_00060970: clang naked draft required"
+#endif
+
 
 /* FUN_000609e0 (0x609e0) — XBE naked draft (batch 113). */
 #if defined(__clang__)

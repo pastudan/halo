@@ -1540,54 +1540,125 @@ void set_real_quaternion(float *quat __attribute__((unused)), float w __attribut
 #endif
 
 
-/* 0x1b5770 — clear vehicle control/physics scratch state. */
-__declspec(noinline) void vehicle_reset(int vehicle_handle)
+/* vehicle_reset (0x1b5770) — XBE naked draft (batch 237). */
+#if defined(__clang__)
+static void *(*const b1b5770_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1b5770_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
+void vehicle_reset(int vehicle_handle __attribute__((unused)))
 {
-  char *vehicle;
-
-  vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
-  *(int16_t *)(vehicle + 0x424) = 0;
-  *(int16_t *)(vehicle + 0x426) = 0;
-  vehicle[0x428] = 0;
-  vehicle[0x429] = 0;
-  vehicle[0x42a] = 0;
-  vehicle[0x42b] = 0;
-  *(int *)(vehicle + 0x42c) = 0;
-  *(int *)(vehicle + 0x430) = 0;
-  *(int *)(vehicle + 0x434) = 0;
-  *(int *)(vehicle + 0x438) = 0;
-  *(int *)(vehicle + 0x43c) = 0;
-  *(int *)(vehicle + 0x440) = 0;
-  *(int *)(vehicle + 0x448) = 0;
-  *(int *)(vehicle + 0x444) = 0;
-  csmemset(vehicle + 0x44c, 0, 8);
-  *(int *)(vehicle + 0x460) = 0;
-  *(int *)(vehicle + 0x464) = 0;
-  *(int *)(vehicle + 0x468) = 0;
-  *(int *)(vehicle + 0x46c) = 0;
-  *(int *)(vehicle + 0x470) = 0;
-  *(int *)(vehicle + 0x474) = 0;
-  *(int *)(vehicle + 0x478) = 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "pushl $8\n\t"
+      "leal 0x44c(%%esi), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movw %%bx, 0x424(%%esi)\n\t"
+      "movw %%bx, 0x426(%%esi)\n\t"
+      "movb %%bl, 0x428(%%esi)\n\t"
+      "movb %%bl, 0x429(%%esi)\n\t"
+      "movb %%bl, 0x42a(%%esi)\n\t"
+      "movb %%bl, 0x42b(%%esi)\n\t"
+      "movl %%ebx, 0x42c(%%esi)\n\t"
+      "movl %%ebx, 0x430(%%esi)\n\t"
+      "movl %%ebx, 0x434(%%esi)\n\t"
+      "movl %%ebx, 0x438(%%esi)\n\t"
+      "movl %%ebx, 0x43c(%%esi)\n\t"
+      "movl %%ebx, 0x440(%%esi)\n\t"
+      "movl %%ebx, 0x448(%%esi)\n\t"
+      "movl %%ebx, 0x444(%%esi)\n\t"
+      "call *%[memset]\n\t"
+      "movl %%ebx, 0x460(%%esi)\n\t"
+      "movl %%ebx, 0x464(%%esi)\n\t"
+      "movl %%ebx, 0x468(%%esi)\n\t"
+      "movl %%ebx, 0x46c(%%esi)\n\t"
+      "movl %%ebx, 0x470(%%esi)\n\t"
+      "movl %%ebx, 0x474(%%esi)\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movl %%ebx, 0x478(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1b5770_get), [memset] "m"(b1b5770_memset)
+      : "memory");
 }
+#else
+#error "vehicle_reset: clang naked draft required"
+#endif
 
-/* 0x1b5820 — initialize a newly created vehicle object. */
-char vehicle_new(int vehicle_handle)
+
+/* vehicle_new (0x1b5820) — XBE naked draft (batch 236). */
+#if defined(__clang__)
+static void *(*const b1b5820_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1b5820_tag)(int, int) = tag_get;
+static void (*const b1b5820_c1b5770)(int vehicle_handle) = vehicle_reset;
+
+__attribute__((naked, noinline))
+char vehicle_new(int vehicle_handle __attribute__((unused)))
 {
-  char *vehicle;
-  char *vehicle_tag;
-
-  vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
-  vehicle_tag = (char *)tag_get(0x76656869, *(int *)vehicle); /* 'vehi' */
-  vehicle_reset(vehicle_handle);
-  if (*(int *)(vehicle_tag + 0x8c) == -1)
-    *(int *)(vehicle + 4) |= 0x20;
-  else
-    *(int *)(vehicle + 4) &= ~0x20;
-  if (*(int *)(vehicle_tag + 0x8c) != -1)
-    *(float *)(vehicle + 0x14) +=
-        *(float *)(vehicle_tag + 4) * *(float *)0x253398;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $2\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x76656869\n\t"
+      "call *%[tag]\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[c1b5770]\n\t"
+      "movl 0x8c(%%edi), %%ecx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "jne .Lvehicle_new_1\n\t"
+      "orl $0x20, %%ecx\n\t"
+      "jmp .Lvehicle_new_2\n\t"
+      ".Lvehicle_new_1:\n\t"
+      "andl $0xffffffdf, %%ecx\n\t"
+      ".Lvehicle_new_2:\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      "cmpl %%eax, 0x8c(%%edi)\n\t"
+      "movb $1, %%al\n\t"
+      "je .Lvehicle_new_3\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fmuls 0x253398\n\t"
+      "fadds 0x14(%%esi)\n\t"
+      "fstps 0x14(%%esi)\n\t"
+      ".Lvehicle_new_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1b5820_get), [tag] "m"(b1b5820_tag), [c1b5770] "m"(b1b5820_c1b5770)
+      : "memory");
 }
+#else
+#error "vehicle_new: clang naked draft required"
+#endif
+
 
 /* 0x1b5890 — Preprocess vehicle node orientations from model_animations
  * (antr / 'rtna') tag referenced at vehicle_tag+0x44. */
@@ -2237,31 +2308,57 @@ void vehicle_accelerate(int handle, float *velocity)
 #endif
 
 
-/* 0x1b5d90 — debug-iterate a vehicle's physics wheel/contact slots. */
-void vehicle_render_debug(int vehicle_handle)
+/* vehicle_render_debug (0x1b5d90) — XBE naked draft (batch 237). */
+#if defined(__clang__)
+static void *(*const b1b5d90_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1b5d90_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+void vehicle_render_debug(int vehicle_handle __attribute__((unused)))
 {
-  char *veh;
-  char *vehi_tag;
-  char *phys_tag;
-  int physics_tag_index;
-  int wheel_count;
-  int16_t i;
-
-  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
-  vehi_tag = (char *)tag_get(0x76656869, *(int *)veh); /* 'vehi' */
-  physics_tag_index = *(int *)(vehi_tag + 0x8c);
-  if (physics_tag_index == -1)
-    return;
-
-  phys_tag = (char *)tag_get(0x70687973, physics_tag_index); /* 'phys' */
-  if (*(char *)0x5054f4 == 0)
-    return;
-
-  wheel_count = *(int *)(phys_tag + 0x74);
-  for (i = 0; (int)i < wheel_count; i++) {
-    /* XBE body is an empty debug loop over wheel slots. */
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x76656869\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x8c(%%eax), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lvehicle_render_debug_2\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x70687973\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x5054f4, %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lvehicle_render_debug_2\n\t"
+      "movl 0x74(%%eax), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lvehicle_render_debug_2\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lvehicle_render_debug_1:\n\t"
+      "incl %%ecx\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "jl .Lvehicle_render_debug_1\n\t"
+      ".Lvehicle_render_debug_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1b5d90_get), [tag] "m"(b1b5d90_tag)
+      : "memory");
 }
+#else
+#error "vehicle_render_debug: clang naked draft required"
+#endif
+
 
 /* FUN_001b5f20 (0x1b5f20) — Project a delta vector onto a reference axis and
  * clamp its length. Register args: a@<eax>, b@<ecx>, out@<esi>. */

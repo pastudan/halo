@@ -338,33 +338,75 @@ void FUN_0019cec0(void)
 }
 
 /* 0x19cff0 */
-/* 0x19cff0 — resolve a font character metrics element for `character`. */
-void *FUN_0019cff0(void *font_tag, unsigned short character)
+/* FUN_0019cff0 (0x19cff0) — XBE naked draft (batch 235). */
+#if defined(__clang__)
+static void *(*const b19cff0_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+void * FUN_0019cff0(void *font_tag __attribute__((unused)), unsigned short character __attribute__((unused)))
 {
-  char *font = (char *)font_tag;
-  char *page;
-  int page_count;
-  int16_t glyph_index;
-
-  page = (char *)tag_block_get_element(font + 0x30, (int)(character >> 8), 0xc);
-  page_count = *(int *)page;
-  if (page_count <= 0)
-    return 0;
-
-  if (page_count == 0x100)
-    page = (char *)tag_block_get_element(page, (int)(character & 0xff), 2);
-  else
-    page = 0;
-
-  if (page == 0)
-    return 0;
-
-  glyph_index = *(int16_t *)page;
-  if (glyph_index == (int16_t)0xffff)
-    return 0;
-
-  return tag_block_get_element(font + 0x7c, (int)glyph_index, 0x14);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movzwl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "pushl $0xc\n\t"
+      "shrl $8, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x30(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .LFUN_0019cff0_3\n\t"
+      "cmpl $0x100, %%ecx\n\t"
+      "jne .LFUN_0019cff0_1\n\t"
+      "pushl $2\n\t"
+      "andl $0xff, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_0019cff0_2\n\t"
+      ".LFUN_0019cff0_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_0019cff0_2:\n\t"
+      "movw (%%eax), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_0019cff0_3\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "pushl $0x14\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x7c, %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0019cff0_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b19cff0_elem)
+      : "memory");
 }
+#else
+#error "FUN_0019cff0: clang naked draft required"
+#endif
+
 
 /* 0x19d060 */
 void set_language_code(short code)

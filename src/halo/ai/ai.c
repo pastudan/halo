@@ -2283,71 +2283,138 @@ void ai_find_inactive_encounters(void *out_list __attribute__((unused)), int buf
 #endif
 
 
-/* 0x3fc90 — erase inactive encounters/actors collected for recycling. */
-char ai_release_inactive_encounters(char *result_description,
-                                    char *more_to_release, void *list,
-                                    int16_t working_memory_size)
+/* ai_release_inactive_encounters (0x3fc90) — XBE naked draft (batch 234). */
+#if defined(__clang__)
+static void (*const b3fc90_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b3fc90_exitfn)(int) = system_exit;
+static void *(*const b3fc90_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static const char * (*const b3fc90_c1ba1f0)(int tag_index) = tag_get_name;
+static const char * (*const b3fc90_c19b0d0)(const char *tag_name) = tag_name_strip_path;
+static int (*const b3fc90_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static void (*const b3fc90_c3d950)(int actor_handle, char flag) = actor_erase;
+static scenario_t * (*const b3fc90_c18e380)(void) = global_scenario_get;
+static void *(*const b3fc90_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b3fc90_c3f970)(int param_1, int param_2, int param_3, int param_4) = ai_erase;
+
+__attribute__((naked, noinline))
+char ai_release_inactive_encounters(char *result_description __attribute__((unused)), char *more_to_release __attribute__((unused)), void *list __attribute__((unused)), int16_t working_memory_size __attribute__((unused)))
 {
-  int16_t cursor;
-  int16_t count;
-  char released;
-  char *entry;
-  void *scenario;
-  char *enc_elem;
-  char *enc_rec;
-  int handle;
-  int enc_index;
-  const char *name;
-
-  released = 0;
-
-  if ((result_description == NULL) || (more_to_release == NULL)) {
-    display_assert("result_description && more_to_release",
-                   "c:\\halo\\SOURCE\\ai\\ai.c", 0x270, 1);
-    system_exit(-1);
-  }
-  if (working_memory_size >= 0xc04) {
-    display_assert("working_memory_size >= "
-                     "sizeof(struct potentially_releasable_storage)",
-                   "c:\\halo\\SOURCE\\ai\\ai.c", 0x271, 1);
-    system_exit(-1);
-  }
-
-  scenario = global_scenario_get();
-  cursor = *(int16_t *)((char *)list + 2);
-  count = *(int16_t *)list;
-
-  while (cursor < count) {
-    entry = (char *)list + 4 + cursor * 0xc;
-    handle = *(int *)(entry + 4);
-
-    if (*(char *)(entry + 0) != 0) {
-      char *actor;
-
-      actor = (char *)datum_get(*(void **)0x6325a4, handle);
-      name = tag_name_strip_path(tag_get_name(*(int *)(actor + 0x5c)));
-      crt_sprintf(result_description, "encounterless-actor %s", name);
-      actor_erase(handle, 1);
-    } else {
-      enc_index = handle & 0xffff;
-      enc_elem = (char *)tag_block_get_element((char *)scenario + 0x42c,
-                                               enc_index, 0xb0);
-      enc_rec = (char *)datum_get(*(void **)0x5ab270, handle);
-      name = tag_get_name(enc_index);
-      crt_sprintf(result_description, "encounter %s (%d units)", name,
-                  (int)*(int16_t *)(enc_rec + 0x2a));
-      ai_erase(handle, -1, -1, 1);
-      (void)enc_elem;
-    }
-
-    *(int16_t *)((char *)list + 2) = cursor + 1;
-    released = 1;
-    cursor++;
-  }
-
-  *more_to_release = cursor < *(int16_t *)list;
-  return released;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "je .Lai_release_inactive_encounters_1\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lai_release_inactive_encounters_2\n\t"
+      ".Lai_release_inactive_encounters_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x270\n\t"
+      "pushl $0x2575c0\n\t"
+      "pushl $0x257620\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_release_inactive_encounters_2:\n\t"
+      "cmpw $0xc04, 0x14(%%ebp)\n\t"
+      "jae .Lai_release_inactive_encounters_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x271\n\t"
+      "pushl $0x2575c0\n\t"
+      "pushl $0x257648\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_release_inactive_encounters_3:\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "cmpw (%%edi), %%ax\n\t"
+      "jge .Lai_release_inactive_encounters_6\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "leal 0x4(%%edi,%%eax,4), %%esi\n\t"
+      "cmpb $0, (%%esi)\n\t"
+      "je .Lai_release_inactive_encounters_4\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl 0x6325a4, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x5c(%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19b0d0]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2576a8\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d90f0]\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c3d950]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "jmp .Lai_release_inactive_encounters_5\n\t"
+      ".Lai_release_inactive_encounters_4:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "andl $0xffff, %%eax\n\t"
+      "pushl $0xb0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x42c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl 0x5ab270, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[dget]\n\t"
+      "movswl 0x2a(%%eax), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x257690\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d90f0]\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c3f970]\n\t"
+      "addl $0x34, %%esp\n\t"
+      ".Lai_release_inactive_encounters_5:\n\t"
+      "incw 0x2(%%edi)\n\t"
+      "movb $1, %%bl\n\t"
+      "popl %%esi\n\t"
+      ".Lai_release_inactive_encounters_6:\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "cmpw (%%edi), %%ax\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "setl %%cl\n\t"
+      "popl %%edi\n\t"
+      "movb %%bl, %%al\n\t"
+      "movb %%cl, (%%edx)\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b3fc90_assert), [exitfn] "m"(b3fc90_exitfn), [dget] "m"(b3fc90_dget), [c1ba1f0] "m"(b3fc90_c1ba1f0), [c19b0d0] "m"(b3fc90_c19b0d0), [c1d90f0] "m"(b3fc90_c1d90f0), [c3d950] "m"(b3fc90_c3d950), [c18e380] "m"(b3fc90_c18e380), [elem] "m"(b3fc90_elem), [c3f970] "m"(b3fc90_c3f970)
+      : "memory");
 }
+#else
+#error "ai_release_inactive_encounters: clang naked draft required"
+#endif
+
 
 /* ai_handle_allegiance_broken_notification (0x40150) — XBE naked draft (batch 232). */
 #if defined(__clang__)
@@ -2774,56 +2841,142 @@ void ai_handle_deleted_object(int object_handle __attribute__((unused)))
 #endif
 
 
-/* 0x40860 — apply a timed effect to a unit and its attachments. */
-void ai_handle_unit_effect(int unit_handle, int effect_type, int priority)
+/* ai_handle_unit_effect (0x40860) — XBE naked draft (batch 234). */
+#if defined(__clang__)
+static void (*const b40860_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b40860_exitfn)(int) = system_exit;
+static void *(*const b40860_get)(int, int) = object_get_and_verify_type;
+static int (*const b40860_gtime)(void) = game_time_get;
+static short (*const b40860_cfff80)(void) = game_connection;
+static void (*const b40860_c3e570)(int unit_handle, short unit_effect, int param_3) = actors_handle_unit_effect;
+
+__attribute__((naked, noinline))
+void ai_handle_unit_effect(int unit_handle __attribute__((unused)), int effect_type __attribute__((unused)), int priority __attribute__((unused)))
 {
-  char *unit;
-  char *attachment;
-  int now;
-  int attachment_handle;
-
-  if (*(char *)(*(int *)0x632574 + 1) == 0)
-    return;
-
-  if (priority < 0 || priority >= 5) {
-    display_assert("priority >= 0 && priority < 5",
-                   "c:\\halo\\SOURCE\\ai\\ai.c", 0x729, 1);
-    system_exit(-1);
-  }
-  if (effect_type < 0 || effect_type >= 4) {
-    display_assert("effect >= 0 && effect < 4",
-                   "c:\\halo\\SOURCE\\ai\\ai.c", 0x72a, 1);
-    system_exit(-1);
-  }
-  if (unit_handle == -1 || priority <= 0)
-    return;
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  now = game_time_get();
-  if (game_connection() == 0 && *(char *)0x5ac9c6 != 0 &&
-      *(int *)(unit + 0x1c8) != -1)
-    return;
-  if (priority <= *(int16_t *)(unit + 0x1cc) &&
-      now <= *(int *)(unit + 0x1d0) + 30)
-    return;
-
-  *(int16_t *)(unit + 0x1cc) = (int16_t)effect_type;
-  *(int *)(unit + 0x1d0) = now;
-
-  if (*(int16_t *)(unit + 0x64) == 1) {
-    attachment_handle = *(int *)(unit + 0xc8);
-    while (attachment_handle != -1) {
-      attachment =
-          (char *)object_get_and_verify_type(attachment_handle, -1);
-      if (*(int16_t *)(attachment + 0x64) == 0)
-        actors_handle_unit_effect(attachment_handle, (short)effect_type,
-                                  priority);
-      attachment_handle = *(int *)(attachment + 0xc4);
-    }
-  } else if (*(int16_t *)(unit + 0x64) == 0) {
-    actors_handle_unit_effect(unit_handle, (short)effect_type, priority);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x632574, %%eax\n\t"
+      "movb 0x1(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lai_handle_unit_effect_11\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "jl .Lai_handle_unit_effect_1\n\t"
+      "cmpw $5, %%si\n\t"
+      "jl .Lai_handle_unit_effect_2\n\t"
+      ".Lai_handle_unit_effect_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x729\n\t"
+      "pushl $0x2575c0\n\t"
+      "pushl $0x257800\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_handle_unit_effect_2:\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl .Lai_handle_unit_effect_3\n\t"
+      "cmpw $4, %%bx\n\t"
+      "jl .Lai_handle_unit_effect_4\n\t"
+      ".Lai_handle_unit_effect_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x72a\n\t"
+      "pushl $0x2575c0\n\t"
+      "pushl $0x2577c8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_handle_unit_effect_4:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lai_handle_unit_effect_10\n\t"
+      "testw %%si, %%si\n\t"
+      "jle .Lai_handle_unit_effect_10\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[cfff80]\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lai_handle_unit_effect_5\n\t"
+      "movb 0x5ac9c6, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_handle_unit_effect_5\n\t"
+      "cmpl $-1, 0x1c8(%%esi)\n\t"
+      "jne .Lai_handle_unit_effect_10\n\t"
+      ".Lai_handle_unit_effect_5:\n\t"
+      "cmpw 0x1cc(%%esi), %%bx\n\t"
+      "jg .Lai_handle_unit_effect_6\n\t"
+      "movl 0x1d0(%%esi), %%ecx\n\t"
+      "addl $0x1e, %%ecx\n\t"
+      "cmpl %%ecx, %%edi\n\t"
+      "jle .Lai_handle_unit_effect_10\n\t"
+      ".Lai_handle_unit_effect_6:\n\t"
+      "movw 0x64(%%esi), %%ax\n\t"
+      "cmpw $1, %%ax\n\t"
+      "movw %%bx, 0x1cc(%%esi)\n\t"
+      "movl %%edi, 0x1d0(%%esi)\n\t"
+      "jne .Lai_handle_unit_effect_9\n\t"
+      "movl 0xc8(%%esi), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lai_handle_unit_effect_10\n\t"
+      ".Lai_handle_unit_effect_7:\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, 0x64(%%edi)\n\t"
+      "jne .Lai_handle_unit_effect_8\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c3e570]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lai_handle_unit_effect_8:\n\t"
+      "movl 0xc4(%%edi), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne .Lai_handle_unit_effect_7\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lai_handle_unit_effect_9:\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lai_handle_unit_effect_10\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c3e570]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lai_handle_unit_effect_10:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lai_handle_unit_effect_11:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b40860_assert), [exitfn] "m"(b40860_exitfn), [get] "m"(b40860_get), [gtime] "m"(b40860_gtime), [cfff80] "m"(b40860_cfff80), [c3e570] "m"(b40860_c3e570)
+      : "memory");
 }
+#else
+#error "ai_handle_unit_effect: clang naked draft required"
+#endif
+
 
 /* ai_disconnect_from_structure_bsp (0x40a80) — XBE naked draft (batch 106). */
 #if defined(__clang__)

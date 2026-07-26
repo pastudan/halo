@@ -5268,20 +5268,49 @@ int FUN_00057330(int16_t command_index __attribute__((unused)), char *state __at
 #endif
 
 
-/* 0x5c630 — Set encounter respawn state and force activation. */
-void encounter_set_respawn(int encounter_handle, char flag)
+/* encounter_set_respawn (0x5c630) — XBE naked draft (batch 236). */
+#if defined(__clang__)
+static void *(*const b5c630_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void encounter_set_respawn(int encounter_handle __attribute__((unused)), char flag __attribute__((unused)))
 {
-  char *encounter;
-
-  if (*(char *)(*(char **)0x632574 + 1) == 0)
-    return;
-
-  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
-  *(char *)(encounter + 0x3c) = flag;
-  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
-  *(int16_t *)(encounter + 0xe) = 0x96;
-  FUN_0005a4e0(encounter_handle);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x632574, %%eax\n\t"
+      "movb 0x1(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lencounter_set_respawn_1\n\t"
+      "movl 0x5ab270, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0xc(%%ebp), %%dl\n\t"
+      "movb %%dl, 0x3c(%%eax)\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $0x96, 0xe(%%eax)\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x6c, 0xde, 0xff, 0xff\n\t"
+      ".Lencounter_set_respawn_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b5c630_dget)
+      : "memory");
 }
+#else
+#error "encounter_set_respawn: clang naked draft required"
+#endif
+
 
 /* 0x53bf0 — Debug overlay: write per-team encounter respawn timers. */
 void FUN_00053bf0(void)
@@ -5313,39 +5342,127 @@ void FUN_00053b80(void)
   ((void(__cdecl *)(char *, int, int16_t *))0x53800)((char *)0x5ab280, 3, timer_values);
 }
 
-/* 0x53e80 — Find firing-group index by name within an AI profile element. */
-int FUN_00053e80(void *ai_profile_element, const char *name)
+/* FUN_00053e80 (0x53e80) — XBE naked draft (batch 237). */
+#if defined(__clang__)
+static void *(*const b53e80_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b53e80_c1e6596)(const char *a, const char *b, size_t n) = __strnicmp;
+
+__attribute__((naked, noinline))
+int FUN_00053e80(void *ai_profile_element __attribute__((unused)), const char *name __attribute__((unused)))
 {
-  char *block = (char *)ai_profile_element + 0x80;
-  int i;
-
-  if (*(int *)block <= 0)
-    return -1;
-
-  for (i = 0; i < *(int *)block; i++) {
-    void *elem = tag_block_get_element(block, i, 0xe8);
-    if (__strnicmp((const char *)elem, name, 0x20) == 0)
-      return i;
-  }
-  return -1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl 0x80(%%edi), %%ecx\n\t"
+      "addl $0x80, %%edi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .LFUN_00053e80_3\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      ".LFUN_00053e80_1:\n\t"
+      "pushl $0xe8\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e6596]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00053e80_2\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "incl %%esi\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jl .LFUN_00053e80_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00053e80_2:\n\t"
+      "movl %%esi, %%eax\n\t"
+      ".LFUN_00053e80_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b53e80_elem), [c1e6596] "m"(b53e80_c1e6596)
+      : "memory");
 }
+#else
+#error "FUN_00053e80: clang naked draft required"
+#endif
 
-/* 0x53ee0 — Find platoon definition index by name within an encounter def. */
-int FUN_00053ee0(void *encounter_def, const char *name)
+
+/* FUN_00053ee0 (0x53ee0) — XBE naked draft (batch 237). */
+#if defined(__clang__)
+static void *(*const b53ee0_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b53ee0_c1e6596)(const char *a, const char *b, size_t n) = __strnicmp;
+
+__attribute__((naked, noinline))
+int FUN_00053ee0(void *encounter_def __attribute__((unused)), const char *name __attribute__((unused)))
 {
-  char *block = (char *)encounter_def + 0x8c;
-  int i;
-
-  if (*(int *)block <= 0)
-    return -1;
-
-  for (i = 0; i < *(int *)block; i++) {
-    void *elem = tag_block_get_element(block, i, 0xac);
-    if (__strnicmp((const char *)elem, name, 0x20) == 0)
-      return i;
-  }
-  return -1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl 0x8c(%%edi), %%ecx\n\t"
+      "addl $0x8c, %%edi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .LFUN_00053ee0_3\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      ".LFUN_00053ee0_1:\n\t"
+      "pushl $0xac\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e6596]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00053ee0_2\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "incl %%esi\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jl .LFUN_00053ee0_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00053ee0_2:\n\t"
+      "movl %%esi, %%eax\n\t"
+      ".LFUN_00053ee0_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b53ee0_elem), [c1e6596] "m"(b53ee0_c1e6596)
+      : "memory");
 }
+#else
+#error "FUN_00053ee0: clang naked draft required"
+#endif
+
 
 /* FUN_00057b40 (0x57b40) — XBE naked draft (batch 231). */
 #if defined(__clang__)
@@ -9591,47 +9708,120 @@ char encounter_get_actor_starting_location(int16_t profile_index __attribute__((
 #endif
 
 
-/* 0x5c510 — Spawn one actor for a squad if starting location succeeds. */
-char encounter_spawn_actor(int encounter_handle, int16_t squad_index)
+/* encounter_spawn_actor (0x5c510) — XBE naked draft (batch 234). */
+#if defined(__clang__)
+static char (*const b5c510_c5c3a0)(int16_t profile_index, int delay, int flag, int encounter_handle /* */) = encounter_get_actor_starting_location;
+static void *(*const b5c510_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static scenario_t * (*const b5c510_c18e380)(void) = global_scenario_get;
+static void *(*const b5c510_elem)(void *, int, int) = tag_block_get_element;
+static char * (*const b5c510_c1c270)(char *encounter, int16_t squad_index) = encounter_get_squad;
+static int *(*const b5c510_gseed)(void) = get_global_random_seed_address;
+static float (*const b5c510_rrange)(int *, float, float) = random_real_range;
+static void (*const b5c510_ftol)(void) = FUN_001d9068;
+
+__attribute__((naked, noinline))
+char encounter_spawn_actor(int encounter_handle __attribute__((unused)), int16_t squad_index __attribute__((unused)))
 {
-  char *encounter;
-  char *enc_def;
-  char *squad;
-  char *profile;
-  float t0;
-  float t1;
-
-  if (*(char *)(*(char **)0x632574 + 1) == 0)
-    return 0;
-  if (!encounter_get_actor_starting_location(squad_index, 0, 1,
-                                             encounter_handle))
-    return 0;
-
-  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
-  enc_def = (char *)tag_block_get_element((char *)global_scenario_get() + 0x42c,
-                                          encounter_handle & 0xffff, 0xb0);
-  squad = encounter_get_squad(encounter, squad_index);
-  profile = (char *)tag_block_get_element(enc_def + 0x80, (int)squad_index,
-                                          0xe8);
-
-  *(int16_t *)(encounter + 0x2a) = *(int16_t *)(encounter + 0x2a) + 1;
-  *(int16_t *)(squad + 0x18) = *(int16_t *)(squad + 0x18) + 1;
-  if (*(int16_t *)(profile + 0x88) > 0)
-    *(int16_t *)(squad + 0xc) = *(int16_t *)(squad + 0xc) - 1;
-
-  t0 = random_real_range(get_global_random_seed_address(),
-                         (float)*(int *)(enc_def + 0x2c),
-                         (float)*(int *)(enc_def + 0x30));
-  t0 *= *(float *)0x253394;
-  *(int16_t *)(encounter + 0x3e) = (int16_t)(int)t0;
-
-  t1 = random_real_range(get_global_random_seed_address(),
-                         (float)*(int *)(profile + 0x8c),
-                         (float)*(int *)(profile + 0x90));
-  t1 *= *(float *)0x253394;
-  *(int16_t *)(squad + 0xe) = (int16_t)(int)t1;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x632574, %%eax\n\t"
+      "movb 0x1(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "pushl %%ebx\n\t"
+      "je .Lencounter_spawn_actor_2\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl $1\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c5c3a0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lencounter_spawn_actor_2\n\t"
+      "movl 0x5ab270, %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl $0xb0\n\t"
+      "andl $0xffff, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x42c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1c270]\n\t"
+      "movswl 0xc(%%ebp), %%ecx\n\t"
+      "pushl $0xe8\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x80(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "incw 0x2a(%%esi)\n\t"
+      "incw 0x18(%%ebx)\n\t"
+      "cmpw $0, 0x88(%%eax)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "jle .Lencounter_spawn_actor_1\n\t"
+      "decw 0xc(%%ebx)\n\t"
+      ".Lencounter_spawn_actor_1:\n\t"
+      "movl 0x30(%%edi), %%eax\n\t"
+      "movl 0x2c(%%edi), %%ecx\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rrange]\n\t"
+      "fmuls 0x253394\n\t"
+      "addl $0xc, %%esp\n\t"
+      "call *%[ftol]\n\t"
+      "movw %%ax, 0x3e(%%esi)\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl 0x90(%%eax), %%ecx\n\t"
+      "movl 0x8c(%%eax), %%edx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rrange]\n\t"
+      "fmuls 0x253394\n\t"
+      "addl $0xc, %%esp\n\t"
+      "call *%[ftol]\n\t"
+      "popl %%edi\n\t"
+      "movw %%ax, 0xe(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      ".Lencounter_spawn_actor_2:\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c5c3a0] "m"(b5c510_c5c3a0), [dget] "m"(b5c510_dget), [c18e380] "m"(b5c510_c18e380), [elem] "m"(b5c510_elem), [c1c270] "m"(b5c510_c1c270), [gseed] "m"(b5c510_gseed), [rrange] "m"(b5c510_rrange), [ftol] "m"(b5c510_ftol)
+      : "memory");
 }
+#else
+#error "encounter_spawn_actor: clang naked draft required"
+#endif
+
 
 /* FUN_0005c680 (0x5c680) — XBE naked draft (batch 224). */
 #if defined(__clang__)

@@ -977,33 +977,70 @@ void FUN_00145560(int object_handle, char *placement)
 }
 #endif
 
-/* 0x145580 — pick a default animation for a newly placed device object. */
-char FUN_00145580(int object_handle)
-{
-  char *obj;
-  char *obje;
-  char *antr;
-  int16_t anim_index;
-  int antr_tag;
+/* FUN_00145580 (0x145580) — XBE naked draft (batch 237). */
+#if defined(__clang__)
+static void *(*const b145580_get)(int, int) = object_get_and_verify_type;
+static void *(*const b145580_tag)(int, int) = tag_get;
+static int (*const b145580_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = model_animation_choose_random;
 
-  obj = (char *)object_get_and_verify_type(object_handle, 0x40);
-  obje = (char *)tag_get(0x6f626a65, *(int *)obj); /* 'obje' */
-  antr_tag = *(int *)(obje + 0x44);
-  if (antr_tag != -1) {
-    antr = (char *)tag_get(0x616e7472, antr_tag); /* 'antr' */
-    if (*(int *)(antr + 0x74) > 0) {
-      anim_index =
-          (int16_t)model_animation_choose_random(1, antr_tag, 0);
-      if (anim_index != -1) {
-        *(int16_t *)(obj + 0x80) = anim_index;
-        *(int *)(obj + 4) |= 0x80;
-        *(int *)(obj + 0x7c) = antr_tag;
-      }
-    }
-  }
-  *(int *)(obj + 4) |= 0x40000;
-  return 1;
+__attribute__((naked, noinline))
+char FUN_00145580(int object_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x44(%%edi), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00145580_1\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x616e7472\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x74(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .LFUN_00145580_1\n\t"
+      "movl 0x44(%%edi), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "pushl $1\n\t"
+      "call *%[c120f20]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_00145580_1\n\t"
+      "movw %%ax, 0x80(%%esi)\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "movl 0x44(%%edi), %%edx\n\t"
+      "orl $0x80, %%eax\n\t"
+      "movl %%edx, 0x7c(%%esi)\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      ".LFUN_00145580_1:\n\t"
+      "orl $0x40000, 0x4(%%esi)\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b145580_get), [tag] "m"(b145580_tag), [c120f20] "m"(b145580_c120f20)
+      : "memory");
 }
+#else
+#error "FUN_00145580: clang naked draft required"
+#endif
+
 
 /* 0x145610 — tick a device object's bound animation; rewind on wrap. */
 char FUN_00145610(int object_handle)
@@ -1174,25 +1211,64 @@ void FUN_00145660(int object_handle /* @<eax> */, int animation_graph_tag,
 }
 #endif
 
-/* 0x145740 — remaining frames on a device object's bound animation. */
-int FUN_00145740(int object_handle)
+/* FUN_00145740 (0x145740) — XBE naked draft (batch 236). */
+#if defined(__clang__)
+static void *(*const b145740_get)(int, int) = object_get_and_verify_type;
+static void *(*const b145740_tag)(int, int) = tag_get;
+static void *(*const b145740_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+int FUN_00145740(int object_handle __attribute__((unused)))
 {
-  char *obj;
-  char *anim;
-  int remaining;
-  int mask;
-
-  obj = (char *)object_get_and_verify_type(object_handle, 0x40);
-  if ((obj[0x1a4] & 1) == 0)
-    return 0;
-
-  anim = (char *)tag_block_get_element(
-      (char *)tag_get(0x616e7472, *(int *)(obj + 0x7c)) + 0x74,
-      (int)*(int16_t *)(obj + 0x80), 0xb4);
-  remaining = (int)*(int16_t *)(anim + 0x22) - (int)*(int16_t *)(obj + 0x82) - 2;
-  mask = remaining <= 0 ? 0 : -1;
-  return remaining & mask;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x1a4(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $1, %%al\n\t"
+      "je .LFUN_00145740_1\n\t"
+      "movl 0x7c(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x616e7472\n\t"
+      "call *%[tag]\n\t"
+      "movswl 0x80(%%esi), %%edx\n\t"
+      "pushl $0xb4\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x74, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movswl 0x22(%%eax), %%eax\n\t"
+      "movswl 0x82(%%esi), %%ecx\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "addl $-2, %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "setle %%dl\n\t"
+      "popl %%esi\n\t"
+      "decl %%edx\n\t"
+      "andl %%edx, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00145740_1:\n\t"
+      "xorw %%ax, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b145740_get), [tag] "m"(b145740_tag), [elem] "m"(b145740_elem)
+      : "memory");
 }
+#else
+#error "FUN_00145740: clang naked draft required"
+#endif
+
 
 /* FUN_001457b0 (0x1457b0) — XBE naked draft (batch 190). */
 #if defined(__clang__)

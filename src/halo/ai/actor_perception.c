@@ -900,42 +900,100 @@ void actor_get_vision_distances(void)
 #endif
 
 
-/* 0x2f5f0 — register a unit danger zone on an actor (vehicle proximity). */
-char FUN_0002f5f0(int actor_handle, float scale, float visibility,
-                  int unit_handle, char field_60, char dz_flag)
+/* FUN_0002f5f0 (0x2f5f0) — XBE naked draft (batch 235). */
+#if defined(__clang__)
+static void *(*const b2f5f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b2f5f0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b2f5f0_memset)(void *, int, unsigned int) = csmemset;
+static vector3_t * (*const b2f5f0_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+
+__attribute__((naked, noinline))
+char FUN_0002f5f0(int actor_handle __attribute__((unused)), float scale __attribute__((unused)), float visibility __attribute__((unused)), int unit_handle __attribute__((unused)), char field_60 __attribute__((unused)), char dz_flag __attribute__((unused)))
 {
-  char *actor;
-  char *unit;
-  char *danger;
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (scale + *(float *)0x253f34 > visibility)
-    return 0;
-
-  danger = actor + 0x280;
-  if (*(int16_t *)(actor + 0x280) >= 1) {
-    if (*(int16_t *)(actor + 0x280) != 1)
-      return 0;
-    if (*(int *)(actor + 0x28c) == unit_handle)
-      return 0;
-    if (visibility > *(float *)(actor + 0x2d4))
-      return 0;
-  }
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  csmemset(danger, 0, 0x6c);
-  *(int *)(actor + 0x28c) = unit_handle;
-  *(int16_t *)(actor + 0x280) = 1;
-  *(int *)(actor + 0x294) = *(int *)&scale;
-  object_get_world_position(unit_handle, (vector3_t *)(actor + 0x298));
-  *(int *)(actor + 0x2a4) = *(int *)(unit + 0x18);
-  *(int *)(actor + 0x2a8) = *(int *)(unit + 0x1c);
-  *(int *)(actor + 0x2ac) = *(int *)(unit + 0x20);
-  *(int16_t *)(actor + 0x284) = 6;
-  *(char *)(actor + 0x286) = dz_flag;
-  *(int16_t *)(actor + 0x282) = (int16_t)(field_60 == 0);
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fadds 0x253f34\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%cl, %%cl\n\t"
+      "fcomps 0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_0002f5f0_2\n\t"
+      "movw 0x280(%%esi), %%ax\n\t"
+      "cmpw $1, %%ax\n\t"
+      "leal 0x280(%%esi), %%ebx\n\t"
+      "jl .LFUN_0002f5f0_1\n\t"
+      "jne .LFUN_0002f5f0_2\n\t"
+      "cmpl %%edi, 0x28c(%%esi)\n\t"
+      "je .LFUN_0002f5f0_2\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x2d4(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_0002f5f0_2\n\t"
+      ".LFUN_0002f5f0_1:\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "pushl $0x6c\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, 0xc(%%ebp)\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "leal 0x298(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movw $1, (%%ebx)\n\t"
+      "movl %%edi, 0x28c(%%esi)\n\t"
+      "movl %%edx, 0x294(%%esi)\n\t"
+      "call *%[c1412f0]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "addl $0x18, %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "leal 0x2a4(%%esi), %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl %%eax, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "movb 0x10(%%ebp), %%cl\n\t"
+      "movb 0x14(%%ebp), %%dl\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "sete %%al\n\t"
+      "movw $6, 0x284(%%esi)\n\t"
+      "movb %%dl, 0x286(%%esi)\n\t"
+      "movw %%ax, 0x282(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0002f5f0_2:\n\t"
+      "popl %%esi\n\t"
+      "movb %%cl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2f5f0_dget), [get] "m"(b2f5f0_get), [memset] "m"(b2f5f0_memset), [c1412f0] "m"(b2f5f0_c1412f0)
+      : "memory");
 }
+#else
+#error "FUN_0002f5f0: clang naked draft required"
+#endif
+
 
 /* actor_perception_desire_prop (0x2f6e0) — XBE naked draft (batch 81). */
 #if defined(__clang__)
@@ -3051,42 +3109,83 @@ void FUN_00030f50(void)
 #endif
 
 
-/* 0x31440 — Toggle berserk state on an actor and propagate to attached objects. */
-void actor_berserk(int actor_handle, int berserk_flag)
+/* actor_berserk (0x31440) — XBE naked draft (batch 237). */
+#if defined(__clang__)
+static void *(*const b31440_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b31440_get)(int, int) = object_get_and_verify_type;
+
+__attribute__((naked, noinline))
+void actor_berserk(int actor_handle __attribute__((unused)), int berserk_flag __attribute__((unused)))
 {
-  char *actor;
-  char old_berserk;
-  int object_handle;
-  char *object;
-
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  old_berserk = *(char *)(actor + 0x378);
-  if ((char)berserk_flag == old_berserk)
-    return;
-
-  *(char *)(actor + 0x378) = (char)berserk_flag;
-  *(char *)(actor + 0x379) = 0;
-
-  if (*(char *)(actor + 6) != 0) {
-    object_handle = *(int *)(actor + 0x24);
-    if (object_handle != -1) {
-      do {
-        object = (char *)object_get_and_verify_type(object_handle, 3);
-        *(char *)(object + 0xb6) |= 0x80;
-        object_handle = *(int *)(object + 0x1ac);
-      } while (object_handle != -1);
-    }
-  } else {
-    object = (char *)object_get_and_verify_type(*(int *)(actor + 0x18), 3);
-    if (berserk_flag != 0)
-      *(int *)(object + 0x1b4) |= 0x80;
-    else
-      *(int *)(object + 0x1b4) &= ~0x80;
-  }
-
-  if (berserk_flag != 0)
-    *(char *)(actor + 0x375) = 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0xc(%%ebp), %%bl\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x378(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpb %%al, %%bl\n\t"
+      "je .Lactor_berserk_3\n\t"
+      "movb 0x6(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movb %%bl, 0x378(%%esi)\n\t"
+      "movb $0, 0x379(%%esi)\n\t"
+      "je .Lactor_berserk_4\n\t"
+      "movl 0x24(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_berserk_2\n\t"
+      ".Lactor_berserk_1:\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "orb $0x80, 0xb6(%%eax)\n\t"
+      "movl 0x1ac(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lactor_berserk_1\n\t"
+      ".Lactor_berserk_2:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lactor_berserk_3\n\t"
+      "movb $1, 0x375(%%esi)\n\t"
+      ".Lactor_berserk_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_berserk_4:\n\t"
+      "movl 0x18(%%esi), %%edx\n\t"
+      "pushl $3\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movl 0x1b4(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lactor_berserk_5\n\t"
+      "orl $0x80, %%ecx\n\t"
+      "movl %%ecx, 0x1b4(%%eax)\n\t"
+      "jmp .Lactor_berserk_2\n\t"
+      ".Lactor_berserk_5:\n\t"
+      "andl $0xffffff7f, %%ecx\n\t"
+      "popl %%esi\n\t"
+      "movl %%ecx, 0x1b4(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b31440_dget), [get] "m"(b31440_get)
+      : "memory");
 }
+#else
+#error "actor_berserk: clang naked draft required"
+#endif
+
 
 extern char *actor_combat_get_firing_variant_definition(int actor_handle);
 extern bool actor_has_ranged_weapon(int actor_handle);

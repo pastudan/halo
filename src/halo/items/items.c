@@ -3324,17 +3324,43 @@ void FUN_000f4cf0(void *widget)
 #endif
 
 
-/* 0xf5640 — virtual-keyboard edit-session active flag. */
+/* FUN_000f5640 (0xf5640) — XBE naked draft (batch 235). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char FUN_000f5640(void)
 {
-  return *(char *)0x46cef0;
+  __asm__ volatile(
+      "movb 0x46cef0, %%al\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000f5640: clang naked draft required"
+#endif
 
-/* 0xf5650 — virtual-keyboard caps/shift-related UI flag. */
+
+/* FUN_000f5650 (0xf5650) — XBE naked draft (batch 235). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char FUN_000f5650(void)
 {
-  return *(char *)0x46cf06;
+  __asm__ volatile(
+      "movb 0x46cf06, %%al\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000f5650: clang naked draft required"
+#endif
+
 
 /* 0xf5660 — virtual-keyboard cursor left (skip duplicate keymap glyphs). */
 #if defined(__clang__)
@@ -4200,12 +4226,28 @@ void items_initialize(void)
 #endif
 
 
-/* 0xf5fa0 — flush the item-name keyboard if an edit session is active. */
+/* items_initialize_for_new_map (0xf5fa0) — XBE naked draft (batch 236). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void items_initialize_for_new_map(void)
 {
-  if (*(char *)0x46cef0 != 0)
-    FUN_000f5900();
+  __asm__ volatile(
+      "movb 0x46cef0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Litems_initialize_for_new_map_1\n\t"
+      ".byte 0xe9, 0x52, 0xf9, 0xff, 0xff\n\t"
+      ".Litems_initialize_for_new_map_1:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "items_initialize_for_new_map: clang naked draft required"
+#endif
+
 
 /* FUN_000f5fb0 (0xf5fb0) — XBE naked draft (batch 222). */
 #if defined(__clang__)
@@ -4547,121 +4589,297 @@ char FUN_000f5fb0(void)
 #endif
 
 
-/* 0xf6a60 — world position for an item, or its inventory parent's object. */
-void item_get_position_even_if_in_inventory(int item_handle, float *out)
+/* item_get_position_even_if_in_inventory (0xf6a60) — XBE naked draft (batch 236). */
+#if defined(__clang__)
+static void *(*const bf6a60_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void *(*const bf6a60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const bf6a60_get)(int, int) = object_get_and_verify_type;
+
+__attribute__((naked, noinline))
+void item_get_position_even_if_in_inventory(int item_handle __attribute__((unused)), float *out __attribute__((unused)))
 {
-  char *item;
-  int parent_handle;
-  char *parent_datum;
-  int object_handle;
-  char *obj;
-  float *pos;
-
-  item = (char *)object_try_and_get_and_verify_type(item_handle, 0x1c);
-  out[0] = 0.0f;
-  out[1] = 0.0f;
-  out[2] = 0.0f;
-  if (item == 0)
-    return;
-
-  if ((item[0x1a4] & 1) != 0) {
-    parent_handle = *(int *)(item + 0x70);
-    if (parent_handle == -1)
-      return;
-    parent_datum = (char *)datum_get(*(data_t **)0x5aa6d4, parent_handle);
-    object_handle = *(int *)(parent_datum + 0x34);
-    if (object_handle == -1)
-      return;
-    obj = (char *)object_get_and_verify_type(object_handle, 3);
-    pos = (float *)(obj + 0x50);
-    out[0] = pos[0];
-    out[1] = pos[1];
-    out[2] = pos[2];
-    return;
-  }
-
-  pos = (float *)(item + 0x50);
-  out[0] = pos[0];
-  out[1] = pos[1];
-  out[2] = pos[2];
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x1c\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "movl %%ecx, (%%esi)\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      "movl %%ecx, 0x8(%%esi)\n\t"
+      "je .Litem_get_position_even_if_in_inventory_2\n\t"
+      "testb $1, 0x1a4(%%eax)\n\t"
+      "je .Litem_get_position_even_if_in_inventory_1\n\t"
+      "movl 0x70(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Litem_get_position_even_if_in_inventory_2\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Litem_get_position_even_if_in_inventory_2\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "addl $0x50, %%eax\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl %%edx, (%%esi)\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      "movl 0x8(%%eax), %%edx\n\t"
+      "movl %%edx, 0x8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Litem_get_position_even_if_in_inventory_1:\n\t"
+      "addl $0x50, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, (%%esi)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x4(%%esi)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      ".Litem_get_position_even_if_in_inventory_2:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tryget] "m"(bf6a60_tryget), [dget] "m"(bf6a60_dget), [get] "m"(bf6a60_get)
+      : "memory");
 }
+#else
+#error "item_get_position_even_if_in_inventory: clang naked draft required"
+#endif
 
-/* 0xf7110 — snap item orientation to a ground hit normal via marker basis. */
-void FUN_000f7110(float *opt_position, int item_handle, float *hit_normal,
-                  float *out_position)
+
+/* FUN_000f7110 (0xf7110) — XBE naked draft (batch 234). */
+#if defined(__clang__)
+static void *(*const bf7110_get)(int, int) = object_get_and_verify_type;
+static void (*const bf7110_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bf7110_exitfn)(int) = system_exit;
+static short (*const bf7110_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
+static void (*const bf7110_c10bb20)(float *q, float *v, float *out) = quaternion_transform_point;
+static float (*const bf7110_norm)(float *) = normalize3d;
+static void (*const bf7110_m4x3)(void *, float *, float *, float *) = matrix4x3_from_forward_up_position;
+static char (*const bf7110_cf6d00)(float *mat) = valid_real_matrix4x3;
+static void (*const bf7110_ochild)(void *, void *, void *) = object_compute_child_marker_position;
+
+__attribute__((naked, noinline))
+void FUN_000f7110(float *opt_position __attribute__((unused)), int item_handle __attribute__((unused)), float *hit_normal __attribute__((unused)), float *out_position __attribute__((unused)))
 {
-  char *item;
-  char marker[0x6c];
-  float matrix[12];
-  float local_pos[3];
-  float basis[3];
-  float quat[4];
-  float *right;
-  float *forward;
-  float *position;
-  float dot;
-  float len;
-  float inv;
-
-  item = (char *)object_get_and_verify_type(item_handle, 0x1c);
-  if (hit_normal == 0) {
-    display_assert((char *)0x0026b188, (char *)0x0028aaa0, 0x2c9, 1);
-    system_exit(-1);
-  }
-
-  if (object_get_markers_by_string_id(item_handle, (void *)0x0028aa90, marker,
-                                      1) == 0)
-    return;
-
-  right = (float *)(marker + 0x54);
-  forward = (float *)(marker + 0x3c);
-  position = (float *)(marker + 0x60);
-
-  if (opt_position == 0)
-    opt_position = position;
-  if (out_position == 0)
-    out_position = local_pos;
-
-  dot = right[0] * hit_normal[0] + right[1] * hit_normal[1] +
-        right[2] * hit_normal[2];
-  len = sqrtf((dot + 1.0f) + (dot + 1.0f));
-  if (len > *(double *)0x26aed0) {
-    if (!(len > 0.0f)) {
-      display_assert((char *)0x0028aaec, (char *)0x0028aaa0, 0x2dc, 1);
-      system_exit(-1);
-    }
-    /* Build rotation quaternion taking marker-right toward hit normal. */
-    quat[0] = right[1] * hit_normal[2] - right[2] * hit_normal[1];
-    quat[1] = right[2] * hit_normal[0] - right[0] * hit_normal[2];
-    quat[2] = right[0] * hit_normal[1] - right[1] * hit_normal[0];
-    inv = 1.0f / len;
-    quat[0] *= inv;
-    quat[1] *= inv;
-    quat[2] *= inv;
-    quat[3] = len * 0.5f;
-    quaternion_transform_point(quat, forward, basis);
-  } else {
-    float cx = forward[1] * hit_normal[2] - forward[2] * hit_normal[1];
-    float cy = forward[2] * hit_normal[0] - forward[0] * hit_normal[2];
-    float cz = forward[0] * hit_normal[1] - forward[1] * hit_normal[0];
-    basis[0] = cy * hit_normal[2] - cz * hit_normal[1];
-    basis[1] = cz * hit_normal[0] - cx * hit_normal[2];
-    basis[2] = cx * hit_normal[1] - cy * hit_normal[0];
-  }
-
-  normalize3d(basis);
-  matrix4x3_from_forward_up_position(matrix, opt_position, basis, hit_normal);
-  if (!valid_real_matrix4x3(matrix)) {
-    display_assert((char *)0x0028aac0, (char *)0x0028aaa0, 0x2f3, 1);
-    system_exit(-1);
-  }
-
-  object_compute_child_marker_position(
-      object_get_and_verify_type(item_handle, -1), marker, matrix);
-  out_position[0] = *(float *)(item + 0xc);
-  out_position[1] = *(float *)(item + 0x10);
-  out_position[2] = *(float *)(item + 0x14);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc8, %%esp\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x1c\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "jne .LFUN_000f7110_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2c9\n\t"
+      "pushl $0x28aaa0\n\t"
+      "pushl $0x26b188\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000f7110_1:\n\t"
+      "pushl $1\n\t"
+      "leal -0x94(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x28aa90\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[markers]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .LFUN_000f7110_8\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000f7110_2\n\t"
+      "leal -0x34(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%ebp)\n\t"
+      ".LFUN_000f7110_2:\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_000f7110_3\n\t"
+      "leal -0x34(%%ebp), %%edi\n\t"
+      ".LFUN_000f7110_3:\n\t"
+      "flds -0x40(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x38(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fadds 0x2533c8\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "fsqrt\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "fcompl 0x26aed0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_000f7110_5\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_000f7110_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2dc\n\t"
+      "pushl $0x28aaa0\n\t"
+      "pushl $0x28aaec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000f7110_4:\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "pushl %%edx\n\t"
+      "flds -0x38(%%ebp)\n\t"
+      "leal -0x58(%%ebp), %%eax\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x38(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "flds -0x40(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x40(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "flds 0x2533c8\n\t"
+      "fdivs -0x4(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x253398\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "call *%[c10bb20]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_000f7110_6\n\t"
+      ".LFUN_000f7110_5:\n\t"
+      "flds -0x50(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "flds -0x54(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x58(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "flds -0x50(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x54(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "flds -0x58(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fld %%st(1)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "fld %%st(1)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "fld %%st(2)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      ".LFUN_000f7110_6:\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x14(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0xc8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[m4x3]\n\t"
+      "leal -0xc8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cf6d00]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000f7110_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2f3\n\t"
+      "pushl $0x28aaa0\n\t"
+      "pushl $0x28aac0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000f7110_7:\n\t"
+      "leal -0xc8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x94(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ochild]\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl $0xc, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, (%%edi)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x4(%%edi)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, 0x8(%%edi)\n\t"
+      ".LFUN_000f7110_8:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bf7110_get), [assert] "m"(bf7110_assert), [exitfn] "m"(bf7110_exitfn), [markers] "m"(bf7110_markers), [c10bb20] "m"(bf7110_c10bb20), [norm] "m"(bf7110_norm), [m4x3] "m"(bf7110_m4x3), [cf6d00] "m"(bf7110_cf6d00), [ochild] "m"(bf7110_ochild)
+      : "memory");
 }
+#else
+#error "FUN_000f7110: clang naked draft required"
+#endif
+
 
 /* 0xf7340 — per-tick update for a free (unheld) item. */
 #if defined(__clang__)

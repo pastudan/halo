@@ -1521,66 +1521,142 @@ int actor_aim_grenade(int actor_handle, void *aim_params, float *out_aim_vector)
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((regparm(2)))
 #endif
-char actor_combat_build_grenade_trajectory(int origin, float *direction,
-                                           int16_t grenade_index,
-                                           float *target_pos, float *param_14,
-                                           float *aim_vector, float *param_20,
-                                           float *launch_velocity,
-                                           float *out_speed)
+/* actor_combat_build_grenade_trajectory (0x218d0) — XBE naked draft (batch 236). */
+#if defined(__clang__)
+static void (*const b218d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b218d0_exitfn)(int) = system_exit;
+static void * (*const b218d0_c18e450)(void) = game_globals_get;
+static void *(*const b218d0_elem)(void *, int, int) = tag_block_get_element;
+static void *(*const b218d0_tag)(int, int) = tag_get;
+static char (*const b218d0_cf84d0)(int projectile_tag, int param_2, int param_3, void *param_4, int param_5, int param_6, int param_7, int param_8, int param_9, int param_10, int param_11, int param_12, void *param_13) = projectile_aim;
+static float (*const b218d0_cf7d80)(int projectile_tag) = projectile_get_ballistic_acceleration;
+
+__attribute__((naked, noinline))
+char actor_combat_build_grenade_trajectory(int origin __attribute__((unused)), float *direction __attribute__((unused)), int16_t grenade_index __attribute__((unused)), float *target_pos __attribute__((unused)), float *param_14 __attribute__((unused)), float *aim_vector __attribute__((unused)), float *param_20 __attribute__((unused)), float *launch_velocity __attribute__((unused)), float *out_speed __attribute__((unused)))
 {
-  void *scenario;
-  char *grenade_block;
-  char *projectile_def;
-  int projectile_tag;
-  char drop_flag;
-  float local_speed;
-  char result;
-
-  if (origin == 0 || target_pos == 0 || direction == 0 || aim_vector == 0)
-    goto fail;
-
-  scenario = game_globals_get();
-  grenade_block = (char *)tag_block_get_element(
-      (char *)scenario + 0x128, grenade_index, 0x44);
-  if (grenade_block == 0)
-    goto fail;
-  projectile_tag = *(int *)(grenade_block + 0x40);
-  if (projectile_tag == -1)
-    goto fail;
-
-  projectile_def = (char *)tag_get('jorp', projectile_tag);
-  if (projectile_def == 0)
-    goto fail;
-
-  drop_flag = 0;
-  result = projectile_aim((int)(uintptr_t)projectile_def, origin,
-                          (int)(uintptr_t)target_pos, &local_speed, 0,
-                          (int)(uintptr_t)param_14, 0, 0,
-                          (int)(uintptr_t)direction, (int)(uintptr_t)aim_vector,
-                          (int)(uintptr_t)param_20, 0, &drop_flag);
-  if (result == 0)
-    goto fail;
-
-  if (launch_velocity != 0) {
-    float speed_scalar = aim_vector[0];
-
-    launch_velocity[0] = speed_scalar * direction[0];
-    launch_velocity[1] = speed_scalar * direction[1];
-    launch_velocity[2] = speed_scalar * direction[2];
-  }
-
-  if (out_speed != 0) {
-    if (drop_flag != 0)
-      *out_speed = *(float *)0x2533c0;
-    else
-      *out_speed = projectile_get_ballistic_acceleration(
-          (int)(uintptr_t)projectile_def);
-  }
-  return 1;
-
-fail:
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .Lactor_combat_build_grenade_trajectory_1\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lactor_combat_build_grenade_trajectory_1\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "je .Lactor_combat_build_grenade_trajectory_1\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lactor_combat_build_grenade_trajectory_2\n\t"
+      ".Lactor_combat_build_grenade_trajectory_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6f4\n\t"
+      "pushl $0x254910\n\t"
+      "pushl $0x254990\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_combat_build_grenade_trajectory_2:\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x44\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e450]\n\t"
+      "addl $0x128, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lactor_combat_build_grenade_trajectory_5\n\t"
+      "movl 0x40(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_combat_build_grenade_trajectory_5\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x70726f6a\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Lactor_combat_build_grenade_trajectory_5\n\t"
+      "movl 0x20(%%ebp), %%edx\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "leal 0xb(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "leal 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movb $0, 0xb(%%ebp)\n\t"
+      "call *%[cf84d0]\n\t"
+      "addl $0x34, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_combat_build_grenade_trajectory_5\n\t"
+      "movl 0x24(%%ebp), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movb $1, %%al\n\t"
+      "je .Lactor_combat_build_grenade_trajectory_3\n\t"
+      "movl 0x1c(%%ebp), %%edx\n\t"
+      "flds (%%edx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls (%%ebx)\n\t"
+      "fstps (%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x4(%%ebx)\n\t"
+      "fstps 0x4(%%ecx)\n\t"
+      "fmuls 0x8(%%ebx)\n\t"
+      "fstps 0x8(%%ecx)\n\t"
+      ".Lactor_combat_build_grenade_trajectory_3:\n\t"
+      "movl 0x28(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lactor_combat_build_grenade_trajectory_6\n\t"
+      "movb 0xb(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_combat_build_grenade_trajectory_4\n\t"
+      "flds 0x2533c0\n\t"
+      "popl %%edi\n\t"
+      "fstps (%%esi)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_combat_build_grenade_trajectory_4:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cf7d80]\n\t"
+      "fstps (%%esi)\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_combat_build_grenade_trajectory_5:\n\t"
+      "xorb %%al, %%al\n\t"
+      ".Lactor_combat_build_grenade_trajectory_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b218d0_assert), [exitfn] "m"(b218d0_exitfn), [c18e450] "m"(b218d0_c18e450), [elem] "m"(b218d0_elem), [tag] "m"(b218d0_tag), [cf84d0] "m"(b218d0_cf84d0), [cf7d80] "m"(b218d0_cf7d80)
+      : "memory");
 }
+#else
+#error "actor_combat_build_grenade_trajectory: clang naked draft required"
+#endif
+
 
 /* actor_aim_projectile (0x220c0) — XBE naked draft (batch 223). */
 #if defined(__clang__)

@@ -79,13 +79,32 @@ void lights_dispose(void)
   cluster_partition_null_references((void *)0x005a90b0);
 }
 
-/* 0x1392b0 */
+/* lights_initialize_for_new_map (0x1392b0) — XBE naked draft (batch 237). */
+#if defined(__clang__)
+static void (*const b1392b0_c119b20)(data_t *data) = data_delete_all;
+static void (*const b1392b0_c1915d0)(void *partition) = cluster_partition_clear;
+
+__attribute__((naked, noinline))
 void lights_initialize_for_new_map(void)
 {
-  data_delete_all(*(void **)0x5a90bc);
-  **(char **)0x46f074 = 1;
-  cluster_partition_clear((void *)0x005a90b0);
+  __asm__ volatile(
+      "movl 0x5a90bc, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119b20]\n\t"
+      "movl 0x46f074, %%ecx\n\t"
+      "pushl $0x5a90b0\n\t"
+      "movb $1, (%%ecx)\n\t"
+      "call *%[c1915d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c119b20] "m"(b1392b0_c119b20), [c1915d0] "m"(b1392b0_c1915d0)
+      : "memory");
 }
+#else
+#error "lights_initialize_for_new_map: clang naked draft required"
+#endif
+
 
 /* 0x1392e0 */
 void lights_dispose_from_old_map(void)
@@ -112,29 +131,62 @@ void light_delete(int light_handle)
   datum_delete(*(void **)0x5a90bc, light_handle);
 }
 
-/* 0x139350 — collect gel/cluster indices overlapping a light's partition. */
-int16_t FUN_00139350(int light_handle, int16_t *out_buffer, int16_t max_count)
-{
-  char *light;
-  int16_t cluster;
-  int16_t count;
-  int iter_state;
+/* FUN_00139350 (0x139350) — XBE naked draft (batch 236). */
+#if defined(__clang__)
+static void *(*const b139350_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const b139350_c191690)(void *cluster_list, int *out_cluster, int cluster_handle) = FUN_00191690;
+static int (*const b139350_c1916d0)(int partition, int *state) = FUN_001916d0;
 
-  light = (char *)datum_get(*(void **)0x5a90bc, light_handle);
-  cluster = (int16_t)FUN_00191690((void *)0x005a90b0, &iter_state,
-                                  *(int *)(light + 0x10));
-  count = 0;
-  if (max_count > 0) {
-    while (cluster != (int16_t)0xffff) {
-      out_buffer[count] = cluster;
-      count++;
-      cluster = (int16_t)FUN_001916d0((int)0x005a90b0, &iter_state);
-      if (count >= max_count)
-        break;
-    }
-  }
-  return count;
+__attribute__((naked, noinline))
+int16_t FUN_00139350(int light_handle __attribute__((unused)), int16_t *out_buffer __attribute__((unused)), int16_t max_count __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x5a90bc, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x5a90b0\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "call *%[c191690]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testw %%di, %%di\n\t"
+      "jle .LFUN_00139350_2\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".LFUN_00139350_1:\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_00139350_2\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "leal -0x4(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x5a90b0\n\t"
+      "movw %%ax, (%%ebx,%%ecx,2)\n\t"
+      "incl %%esi\n\t"
+      "call *%[c1916d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw %%di, %%si\n\t"
+      "jl .LFUN_00139350_1\n\t"
+      ".LFUN_00139350_2:\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b139350_dget), [c191690] "m"(b139350_c191690), [c1916d0] "m"(b139350_c1916d0)
+      : "memory");
 }
+#else
+#error "FUN_00139350: clang naked draft required"
+#endif
+
 
 /* object_get_self_illumination (0x1393b0) — XBE naked draft (batch 232). */
 #if defined(__clang__)
@@ -236,6 +288,7 @@ float object_get_self_illumination(int object_handle __attribute__((unused)))
 #endif
 
 
+__attribute__((unused)) __attribute__((unused))
 static void light_sample_clamp_rgb(float *rgb)
 {
   int i;
@@ -248,90 +301,249 @@ static void light_sample_clamp_rgb(float *rgb)
   }
 }
 
-/* 0x139480 — Sample structure lightmap/tint colors at a world-space point. */
-void FUN_00139480(void *position, void *tint_color, void *out_color, char use_lightmap)
+/* FUN_00139480 (0x139480) — XBE naked draft (batch 235). */
+#if defined(__clang__)
+static char (*const b139480_c198cb0)(float *point, float *direction, float *out_point, int16_t *out_collection_index, int16_t *out_bsp_index) = (char (*)(float *, float *, float *, int16_t *, int16_t *))(void *)structure_test_vector;
+static void * (*const b139480_c18e3c0)(void) = scenario_get;
+static void *(*const b139480_elem)(void *, int, int) = tag_block_get_element;
+static void *(*const b139480_tag)(int, int) = tag_get;
+static void * (*const b139480_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
+static void * (*const b139480_c76ff0)(int tag_index, short bitmap_index) = FUN_00076ff0;
+static int (*const b139480_c138ee0)(int hardware_format) = FUN_00138ee0;
+static void *(*const b139480_xtex)(void *, bool, bool) = xbox_texture_cache_get_hardware_format;
+static void (*const b139480_c138fd0)(int material, int lightmap, unsigned short *vertex_indices, float u, float v, float *out_rgb) = FUN_00138fd0;
+static void (*const b139480_c1390d0)(int material, int bitmap_ref, uint16_t *indices, float bary_u, float bary_v, float *out_rgb) = FUN_001390d0;
+
+__attribute__((naked, noinline))
+void FUN_00139480(void *position __attribute__((unused)), void *tint_color __attribute__((unused)), void *out_color __attribute__((unused)), char use_lightmap __attribute__((unused)))
 {
-  float *pos;
-  float *tint;
-  float *out;
-  float hit_point[3];
-  int16_t collection_index;
-  int16_t material_index;
-  int32_t surface_index;
-  float hit_u;
-  float hit_v;
-  char *scenario;
-  char *collection_elem;
-  char *material_elem;
-  char *shader;
-  char *shader_ext;
-  char *bitmap_tag;
-  void *lightmap_bitmap;
-  void *detail_bitmap;
-  char *lightmap_elem;
-  int sampled_tint;
-
-  pos = (float *)position;
-  tint = (float *)tint_color;
-  out = (float *)out_color;
-
-  tint[0] = out[0] = ((float *)0x2ee70c)[0];
-  tint[1] = out[1] = ((float *)0x2ee70c)[1];
-  tint[2] = out[2] = ((float *)0x2ee70c)[2];
-
-  if (!structure_test_vector(pos, (float *)0x0029b204, hit_point,
-                             &collection_index, &material_index,
-                             &surface_index, &hit_u, &hit_v))
-    return;
-
-  scenario = (char *)scenario_get();
-  collection_elem =
-      (char *)tag_block_get_element(scenario + 0x104, collection_index, 0x20);
-  material_elem =
-      (char *)tag_block_get_element(collection_elem + 0x14, material_index, 0x100);
-  shader = (char *)tag_get('rdhs', *(int *)(material_elem + 0xc));
-  if (*(int16_t *)(shader + 0x24) != 3)
-    return;
-
-  shader_ext = (char *)FUN_001906b0(shader, 3);
-  if (*(int *)(scenario + 0xc) == -1)
-    return;
-  if (*(int *)(shader_ext + 0x94) == -1)
-    return;
-  if (*(int16_t *)material_elem == -1)
-    return;
-
-  lightmap_bitmap =
-      FUN_00076ff0(*(int *)(scenario + 0xc), *(short *)(shader_ext + 0x94));
-  bitmap_tag = (char *)tag_get('mtib', *(int *)(shader_ext + 0x94));
-  detail_bitmap = FUN_00076ff0(*(int *)(shader_ext + 0x94),
-                               (short)(*(int16_t *)(material_elem + 0x10) /
-                                       *(int *)(bitmap_tag + 0x60)));
-
-  lightmap_elem = 0;
-  sampled_tint = 0;
-  if (lightmap_bitmap != 0) {
-    if ((use_lightmap && FUN_00138ee0((int)(uintptr_t)lightmap_bitmap) != 0) ||
-        xbox_texture_cache_get_hardware_format(lightmap_bitmap, 0, 0) != 0) {
-      lightmap_elem =
-          (char *)tag_block_get_element(scenario + 0xf8, surface_index, 6);
-      FUN_00138fd0((int)(uintptr_t)material_elem, (int)(uintptr_t)lightmap_elem,
-                   (unsigned short *)lightmap_elem, hit_u, hit_v, tint);
-      light_sample_clamp_rgb(tint);
-      sampled_tint = 1;
-    }
-  }
-
-  if (detail_bitmap == 0)
-    return;
-
-  if ((use_lightmap && FUN_00138ee0((int)(uintptr_t)detail_bitmap) != 0) ||
-      xbox_texture_cache_get_hardware_format(detail_bitmap, 0, 0) != 0) {
-    if (!sampled_tint)
-      lightmap_elem =
-          (char *)tag_block_get_element(scenario + 0xf8, surface_index, 6);
-    FUN_001390d0((int)(uintptr_t)material_elem, (int)(uintptr_t)detail_bitmap,
-                 (uint16_t *)lightmap_elem, hit_u, hit_v, out);
-    light_sample_clamp_rgb(out);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x28, %%esp\n\t"
+      "movl 0x2ee70c, %%eax\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl %%eax, 0x8(%%ecx)\n\t"
+      "movl 0x2ee70c, %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl %%eax, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x29b204\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c198cb0]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00139480_11\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movswl -0x4(%%ebp), %%eax\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x104(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%esi, -0x14(%%ebp)\n\t"
+      "call *%[elem]\n\t"
+      "movswl -0x8(%%ebp), %%edx\n\t"
+      "pushl $0x100\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x14, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0xc(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x73686472\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "cmpw $3, 0x24(%%eax)\n\t"
+      "jne .LFUN_00139480_10\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1906b0]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00139480_10\n\t"
+      "cmpl $-1, 0x94(%%edi)\n\t"
+      "je .LFUN_00139480_10\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movswl (%%ecx), %%ecx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .LFUN_00139480_10\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c76ff0]\n\t"
+      "movl 0x94(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x6269746d\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movswl 0x10(%%ebx), %%eax\n\t"
+      "cdq\n\t"
+      "idivl 0x60(%%ecx)\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x94(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c76ff0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "je .LFUN_00139480_6\n\t"
+      "movb 0x14(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00139480_1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c138ee0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00139480_2\n\t"
+      ".LFUN_00139480_1:\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[xtex]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00139480_6\n\t"
+      ".LFUN_00139480_2:\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "pushl $6\n\t"
+      "pushl %%eax\n\t"
+      "addl $0xf8, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl -0x1c(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c138fd0]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "flds (%%ecx)\n\t"
+      "addl $0x24, %%esp\n\t"
+      "fadds 0x25496c\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00139480_3\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c8\n\t"
+      ".LFUN_00139480_3:\n\t"
+      "fstps (%%ecx)\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "fadds 0x25496c\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00139480_4\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c8\n\t"
+      ".LFUN_00139480_4:\n\t"
+      "fstps 0x4(%%ecx)\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fadds 0x25496c\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00139480_5\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c8\n\t"
+      ".LFUN_00139480_5:\n\t"
+      "fstps 0x8(%%ecx)\n\t"
+      ".LFUN_00139480_6:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00139480_10\n\t"
+      "movb 0x14(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_00139480_7\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c138ee0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00139480_8\n\t"
+      ".LFUN_00139480_7:\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[xtex]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00139480_10\n\t"
+      ".LFUN_00139480_8:\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_00139480_9\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "pushl $6\n\t"
+      "pushl %%eax\n\t"
+      "addl $0xf8, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      ".LFUN_00139480_9:\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "movl -0x1c(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1390d0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".LFUN_00139480_10:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_00139480_11:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c198cb0] "m"(b139480_c198cb0), [c18e3c0] "m"(b139480_c18e3c0), [elem] "m"(b139480_elem), [tag] "m"(b139480_tag), [c1906b0] "m"(b139480_c1906b0), [c76ff0] "m"(b139480_c76ff0), [c138ee0] "m"(b139480_c138ee0), [xtex] "m"(b139480_xtex), [c138fd0] "m"(b139480_c138fd0), [c1390d0] "m"(b139480_c1390d0)
+      : "memory");
 }
+#else
+#error "FUN_00139480: clang naked draft required"
+#endif
+

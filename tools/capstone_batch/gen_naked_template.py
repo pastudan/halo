@@ -777,27 +777,100 @@ def inject(name: str, va: int, body: str, path: Path) -> None:
         )
         print(f"  replaced {name} ({len(matches)} prior) -> {path}")
         return
-    pat = re.compile(
+    # Real definitions only: name(...) { … } — never prototypes ending in ';',
+    # and never a '{' that appears inside a comment (e.g. "({size, offset})").
+    def_pat = re.compile(
         rf"^(?:(?:__attribute__\s*\(\([^;]*?\)\)\s*)|(?:static\s+)|(?:inline\s+)|(?:[\w\*]+\s+))+{re.escape(name)}\s*\(",
         re.M,
     )
-    m = pat.search(text)
-    if not m:
-        m = re.search(
-            rf"^(?:[^\n]*\b{re.escape(name)}\s*\([^;{{}}]*\)\s*\{{)",
-            text,
-            re.M,
+    candidates = list(def_pat.finditer(text))
+    if not candidates:
+        candidates = list(
+            re.finditer(
+                rf"^[^\n]*\b{re.escape(name)}\s*\(",
+                text,
+                re.M,
+            )
         )
-        if not m:
-            raise SystemExit(f"no def {name} in {path}")
-    # Prefer a definition that is not already inside a naked draft attribute line.
+    m = None
+    brace = None
+    for cand in candidates:
+        line_start = text.rfind("\n", 0, cand.start()) + 1
+        before_txt = text[:line_start]
+        last_open = before_txt.rfind("/*")
+        last_close = before_txt.rfind("*/")
+        if last_open != -1 and last_open > last_close:
+            continue  # inside block comment
+        # Scan from '(' of the declarator to the function-body '{',
+        # skipping comments/strings; reject if ';' comes first.
+        i = text.find("(", cand.start())
+        if i < 0:
+            continue
+        depth_p = 0
+        j = i
+        in_line = in_block = in_str = False
+        str_ch = ""
+        body_brace = None
+        while j < len(text):
+            ch = text[j]
+            nxt = text[j + 1] if j + 1 < len(text) else ""
+            if in_line:
+                if ch == "\n":
+                    in_line = False
+                j += 1
+                continue
+            if in_block:
+                if ch == "*" and nxt == "/":
+                    in_block = False
+                    j += 2
+                    continue
+                j += 1
+                continue
+            if in_str:
+                if ch == "\\":
+                    j += 2
+                    continue
+                if ch == str_ch:
+                    in_str = False
+                j += 1
+                continue
+            if ch == "/" and nxt == "/":
+                in_line = True
+                j += 2
+                continue
+            if ch == "/" and nxt == "*":
+                in_block = True
+                j += 2
+                continue
+            if ch in ('"', "'"):
+                in_str = True
+                str_ch = ch
+                j += 1
+                continue
+            if ch == "(":
+                depth_p += 1
+            elif ch == ")":
+                depth_p -= 1
+            elif depth_p == 0:
+                if ch == ";":
+                    body_brace = None
+                    break  # forward declaration
+                if ch == "{":
+                    body_brace = j
+                    break
+            j += 1
+        if body_brace is None:
+            continue
+        attr_lookback = text[max(0, cand.start() - 80) : cand.start()]
+        if "__attribute__" in attr_lookback and "naked" in attr_lookback:
+            continue
+        m = cand
+        brace = body_brace
+        break
+    if m is None or brace is None:
+        raise SystemExit(f"no def {name} in {path}")
     line_start = text.rfind("\n", 0, m.start()) + 1
     before_txt = text[:line_start]
-    # Refuse injection into an open block comment.
-    last_open = before_txt.rfind("/*")
-    last_close = before_txt.rfind("*/")
-    if last_open != -1 and last_open > last_close:
-        raise SystemExit(f"refusing to inject inside block comment: {name} in {path}")
     start = line_start
     end_c = before_txt.rfind("*/")
     if (
@@ -808,18 +881,50 @@ def inject(name: str, va: int, body: str, path: Path) -> None:
         start_c = before_txt.rfind("/*", 0, end_c)
         if start_c != -1:
             start = start_c
-    # Skip __attribute__((naked...)) wrappers if find_src hit the naked sig.
-    attr_lookback = text[max(0, m.start() - 80) : m.start()]
-    if "__attribute__" in attr_lookback and "naked" in attr_lookback:
-        raise SystemExit(f"refusing to inject over naked sig without marker: {name}")
-    brace = text.find("{", m.start())
     depth = 0
     i = brace
     endpos = None
+    in_line = in_block = in_str = False
+    str_ch = ""
     while i < len(text):
-        if text[i] == "{":
+        ch = text[i]
+        nxt = text[i + 1] if i + 1 < len(text) else ""
+        if in_line:
+            if ch == "\n":
+                in_line = False
+            i += 1
+            continue
+        if in_block:
+            if ch == "*" and nxt == "/":
+                in_block = False
+                i += 2
+                continue
+            i += 1
+            continue
+        if in_str:
+            if ch == "\\":
+                i += 2
+                continue
+            if ch == str_ch:
+                in_str = False
+            i += 1
+            continue
+        if ch == "/" and nxt == "/":
+            in_line = True
+            i += 2
+            continue
+        if ch == "/" and nxt == "*":
+            in_block = True
+            i += 2
+            continue
+        if ch in ('"', "'"):
+            in_str = True
+            str_ch = ch
+            i += 1
+            continue
+        if ch == "{":
             depth += 1
-        elif text[i] == "}":
+        elif ch == "}":
             depth -= 1
             if depth == 0:
                 endpos = i + 1

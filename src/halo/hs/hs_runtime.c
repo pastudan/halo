@@ -9051,28 +9051,67 @@ void FUN_000ce4a0(void)
 
 /* --- hs_runtime.obj orphan shells (2026-07-26) --- */
 
-/* 0xc9f90 */
-float *FUN_000c9f90(void)
+/* FUN_000c9f90 (0xc9f90) — XBE naked draft (batch 237). */
+#if defined(__clang__)
+static int (*const bc9f90_c1b9930)(int group_tag, const char *name, ...) = tag_loaded;
+static void *(*const bc9f90_tag)(int, int) = tag_get;
+static void *(*const bc9f90_elem)(void *, int, int) = tag_block_get_element;
+static void (*const bc9f90_cff4d0)(int channel, const char *format, ...) = console_printf;
+
+__attribute__((naked, noinline))
+float * FUN_000c9f90(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  tag_loaded('!dns', (char *)(uintptr_t)esi);
-  /* cmp eax, -1 -> je 0xc9fb5 */
-  tag_get('!dns', eax);
-  tag_loaded('dnsl', (char *)(uintptr_t)esi);
-  /* cmp eax, -1 -> je 0xc9ff4 */
-  tag_get('dnsl', eax);
-  /* test ecx, ecx -> jle 0xc9ff4 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 160);
-  console_printf(0, (char *)0x00280430);
-  return NULL;
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl $0x736e6421\n\t"
+      "call *%[c1b9930]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000c9f90_1\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x736e6421\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "addl $0x28, %%eax\n\t"
+      "ret\n\t"
+      ".LFUN_000c9f90_1:\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x6c736e64\n\t"
+      "call *%[c1b9930]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000c9f90_2\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6c736e64\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x3c(%%eax), %%ecx\n\t"
+      "addl $0x3c, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .LFUN_000c9f90_2\n\t"
+      "pushl $0xa0\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl $4, %%eax\n\t"
+      "ret\n\t"
+      ".LFUN_000c9f90_2:\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x280430\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c1b9930] "m"(bc9f90_c1b9930), [tag] "m"(bc9f90_tag), [elem] "m"(bc9f90_elem), [cff4d0] "m"(bc9f90_cff4d0)
+      : "memory");
 }
+#else
+#error "FUN_000c9f90: clang naked draft required"
+#endif
+
 
 /* hs_wake_by_name (0xcb9a0) — XBE naked draft (batch 226). */
 #if defined(__clang__)
