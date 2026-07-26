@@ -373,6 +373,8 @@ __attribute__((naked)) { decl.replace(name, 'THUNK('+name+')') }
 						decl_str = filter_reg_assignments(s.decl)
 						if s.requires_reg_thunk:
 							decl_str = strip_stdcall(decl_str)
+						# kb sometimes captures TU-local "static" from C bodies
+						decl_str = re.sub(r'\bstatic\b\s*', '', decl_str)
 						# Skip decls whose function name is not a valid C identifier:
 						# mangled C++ runtime (??2@YAPAXI@Z), Ghidra FID_conflict:
 						# markers, or stdcall @N decoration. These library/CRT symbols
