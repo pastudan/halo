@@ -90,17 +90,60 @@ void system_exit(int code)
   __builtin_unreachable();
 }
 
-int system_unique_identifiers_equal(const void *id1, const void *id2)
-{
-  uint8_t zeros[16];
+/* system_unique_identifiers_equal (0x8e320) — XBE naked draft (batch 93). */
+#if defined(__clang__)
+static void *(*const b8e320_memset)(void *, int, unsigned int) = csmemset;
+static int (*const b8e320_c8da40)(const void *a, const void *b, int size) = csmemcmp;
 
-  csmemset(zeros, 0, 16);
-  if (csmemcmp(id1, zeros, 16) != 0) {
-    if (csmemcmp(id1, id2, 16) == 0)
-      return 1;
-  }
-  return 0;
+__attribute__((naked, noinline))
+int system_unique_identifiers_equal(const void *id1 __attribute__((unused)), const void *id2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x10\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl $0x10\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8da40]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lsystem_unique_identifiers_equal_1\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8da40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lsystem_unique_identifiers_equal_1\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lsystem_unique_identifiers_equal_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b8e320_memset), [c8da40] "m"(b8e320_c8da40)
+      : "memory");
 }
+#else
+#error "system_unique_identifiers_equal: clang naked draft required"
+#endif
+
 
 uint32_t system_milliseconds(void)
 {

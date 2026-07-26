@@ -453,25 +453,61 @@ void FUN_001800b0(short param_1 __attribute__((unused)), int param_2 __attribute
 #endif
 
 
-/* rasterizer_geometry_vertex_get_position: copy 3-float position from vertex
- * to output (0x180500) */
-void FUN_00180500(float *param_1, float *param_2)
+/* FUN_00180500 (0x180500) — XBE naked draft (batch 93). */
+#if defined(__clang__)
+static void (*const b180500_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b180500_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void FUN_00180500(float *param_1 __attribute__((unused)), float *param_2 __attribute__((unused)))
 {
-  if (param_1 == 0) {
-    display_assert("vertex",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x1b6,
-                   1);
-    system_exit(-1);
-  }
-  if (param_2 == 0) {
-    display_assert(
-      "point", "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x1b7, 1);
-    system_exit(-1);
-  }
-  param_2[0] = param_1[0];
-  param_2[1] = param_1[1];
-  param_2[2] = param_1[2];
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_00180500_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1b6\n\t"
+      "pushl $0x2afe38\n\t"
+      "pushl $0x29cb70\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00180500_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_00180500_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1b7\n\t"
+      "pushl $0x2afe38\n\t"
+      "pushl $0x25bb20\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00180500_2:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%edi)\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "movl %%edx, 0x8(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b180500_assert), [exitfn] "m"(b180500_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00180500: clang naked draft required"
+#endif
+
 
 /* rasterizer_geometry_vertex_get_normal: unpack normal from compressed vertex
  * +0xc (0x180570) */
@@ -3090,33 +3126,67 @@ void rasterizer_draw_string(void *screen_pos, short *bounds, const void *color,
 
 /* rasterizer_transparent_geometry.c */
 
-/* rasterizer_transparent_geometry_new: allocate transparent geometry buffers
- * and init vertex cache (0x184260) */
+/* rasterizer_transparent_geometry_new (0x184260) — XBE naked draft (batch 93). */
+#if defined(__clang__)
+static void * (*const b184260_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
+static void (*const b184260_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static int (*const b184260_c174bd0)(void) = FUN_00174bd0;
+
+__attribute__((naked, noinline))
 int rasterizer_transparent_geometry_new(void)
 {
-  int success;
-
-  *(void **)0x4d0cec = debug_malloc(
-    0xf000, 0,
-    "c:\\halo\\SOURCE\\rasterizer\\rasterizer_transparent_geometry.c", 0x29);
-  *(void **)0x4d0cfc = debug_malloc(
-    0x300, 0, "c:\\halo\\SOURCE\\rasterizer\\rasterizer_transparent_geometry.c",
-    0x2b);
-  *(void **)0x4d0cf0 = debug_malloc(
-    0x1400, 0,
-    "c:\\halo\\SOURCE\\rasterizer\\rasterizer_transparent_geometry.c", 0x2e);
-  *(int *)0x4d0cf8 = 0;
-  *(int *)0x4d0cf4 = 0;
-  if (*(int *)0x4d0cec == 0 || *(int *)0x4d0cfc == 0 || *(int *)0x4d0cf0 == 0) {
-    error(2, "### ERROR failed to allocate transparent geometry buffer");
-  } else {
-    success = FUN_00174bd0();
-    if (success != 0) {
-      return 1;
-    }
-  }
-  return 0;
+  __asm__ volatile(
+      "pushl $0x29\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl $0\n\t"
+      "pushl $0xf000\n\t"
+      "call *%[c8ee60]\n\t"
+      "pushl $0x2b\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl $0\n\t"
+      "pushl $0x300\n\t"
+      "movl %%eax, 0x4d0cec\n\t"
+      "call *%[c8ee60]\n\t"
+      "pushl $0x2e\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl $0\n\t"
+      "pushl $0x1400\n\t"
+      "movl %%eax, 0x4d0cfc\n\t"
+      "call *%[c8ee60]\n\t"
+      "movl 0x4d0cec, %%ecx\n\t"
+      "addl $0x30, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%eax, 0x4d0cf0\n\t"
+      "movl $0, 0x4d0cf8\n\t"
+      "movl $0, 0x4d0cf4\n\t"
+      "je .Lrasterizer_transparent_geometry_new_1\n\t"
+      "movl 0x4d0cfc, %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lrasterizer_transparent_geometry_new_1\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lrasterizer_transparent_geometry_new_3\n\t"
+      ".Lrasterizer_transparent_geometry_new_1:\n\t"
+      "pushl $0x2b0c6c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lrasterizer_transparent_geometry_new_2:\n\t"
+      "xorb %%al, %%al\n\t"
+      "ret\n\t"
+      ".Lrasterizer_transparent_geometry_new_3:\n\t"
+      "call *%[c174bd0]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lrasterizer_transparent_geometry_new_2\n\t"
+      "movb $1, %%al\n\t"
+      "ret\n\t"
+      :
+      : [c8ee60] "m"(b184260_c8ee60), [c8f390] "m"(b184260_c8f390), [c174bd0] "m"(b184260_c174bd0)
+      : "memory");
 }
+#else
+#error "rasterizer_transparent_geometry_new: clang naked draft required"
+#endif
+
 
 /* rasterizer_transparent_geometry_begin: reset group counts and stats for new
  * frame (0x184300) */

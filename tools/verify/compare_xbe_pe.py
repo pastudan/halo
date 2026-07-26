@@ -1133,6 +1133,19 @@ def main() -> int:
         ("ai_debug_initialize", 0x48e90, 0x48f45),
         ("input_state_process_packet", 0xce620, 0xce688),
         ("cluster_partition_iter_first", 0x191a50, 0x191ac2),
+        # gameplay wave 93 (2026-07-26) — physics/net/rasterizer Capstone weaks
+        ("FUN_00146d40", 0x146d40, 0x146da3),
+        ("FUN_0011c290", 0x11c290, 0x11c30e),
+        ("FUN_0011a700", 0x11a700, 0x11a76e),
+        ("collision_surface_edge_count", 0x1473b0, 0x14740b),
+        ("FUN_0011a2d0", 0x11a2d0, 0x11a33e),
+        ("rasterizer_transparent_geometry_new", 0x184260, 0x1842f5),
+        ("FUN_0011a8e0", 0x11a8e0, 0x11a92e),
+        ("ui_widget_display_deferred_errors", 0xe8db0, 0xe8e18),
+        ("FUN_0011c480", 0x11c480, 0x11c4d0),
+        ("convex_polygon2d_verify", 0x106900, 0x106956),
+        ("FUN_00180500", 0x180500, 0x180567),
+        ("system_unique_identifiers_equal", 0x8e320, 0x8e36e),
     ]
 
     xbe = Xbe.from_file(args.xbe)

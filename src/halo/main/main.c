@@ -2885,38 +2885,66 @@ void FUN_00103de0(char *source)
   }
 }
 
-/* ui_widget_display_deferred_errors — flushes the deferred-for-cinematic error
- * queue (4 records at 0x46cc6c, one per local-player slot, 4 bytes each:
- * int16 error_handle @+0, uint8 is_modal @+2, uint8 pause_game @+3). Must run
- * only outside a cinematic; asserts otherwise ("Noooooooooooooooooo!!!",
- * ui_widget.c line 0x93f, system_exit(-1) flavor). For each valid record
- * (0 <= handle < 0x28) it re-issues ui_widget_display_error(handle, slot,
- * is_modal, pause_game), then clears the slot to -1. Ref 0xe8db0. */
+/* ui_widget_display_deferred_errors (0xe8db0) — XBE naked draft (batch 93). */
+#if defined(__clang__)
+static bool (*const be8db0_c930a0)(void) = cinematic_in_progress;
+static void (*const be8db0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be8db0_exitfn)(int) = system_exit;
+static void (*const be8db0_ce8910)(int16_t error_handle, int local_player_index, char is_modal, char pause_game) = ui_widget_display_error;
+
+__attribute__((naked, noinline))
 void ui_widget_display_deferred_errors(void)
 {
-  int16_t error_handle;
-  int local_player_index;
-  int16_t *record;
-
-  if (cinematic_in_progress()) {
-    display_assert("Noooooooooooooooooo!!!",
-                   "c:\\halo\\SOURCE\\interface\\ui_widget.c", 0x93f, true);
-    system_exit(-1);
-  }
-
-  local_player_index = 0;
-  record = (int16_t *)0x46cc6c;
-  do {
-    error_handle = *record;
-    if (error_handle >= 0 && error_handle < 0x28) {
-      ui_widget_display_error(error_handle, local_player_index, (char)record[1],
-                              *(char *)((int)record + 3));
-    }
-    *record = -1;
-    local_player_index = local_player_index + 1;
-    record = record + 2;
-  } while ((int16_t)local_player_index < 4);
+  __asm__ volatile(
+      "call *%[c930a0]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lui_widget_display_deferred_errors_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x93f\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x284750\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lui_widget_display_deferred_errors_1:\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movl $0x46cc6c, %%esi\n\t"
+      ".Lui_widget_display_deferred_errors_2:\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lui_widget_display_deferred_errors_3\n\t"
+      "cmpw $0x28, %%ax\n\t"
+      "jge .Lui_widget_display_deferred_errors_3\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movb 0x3(%%esi), %%cl\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movb 0x2(%%esi), %%dl\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ce8910]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lui_widget_display_deferred_errors_3:\n\t"
+      "movw $0xffff, (%%esi)\n\t"
+      "incl %%edi\n\t"
+      "addl $4, %%esi\n\t"
+      "cmpw $4, %%di\n\t"
+      "jl .Lui_widget_display_deferred_errors_2\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c930a0] "m"(be8db0_c930a0), [assert] "m"(be8db0_assert), [exitfn] "m"(be8db0_exitfn), [ce8910] "m"(be8db0_ce8910)
+      : "memory");
 }
+#else
+#error "ui_widget_display_deferred_errors: clang naked draft required"
+#endif
+
 /* --- main.obj batch1 drafts (2026-07-26) --- */
 
 bool cache_files_give_time_to_precache(const char *name);

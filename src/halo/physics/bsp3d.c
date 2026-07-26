@@ -1,43 +1,66 @@
-/* FUN_00146d40 (0x146d40): descend a 2D BSP node tree from `node_index` to the
- * leaf containing the 2D `point2d` (x, y).
- *
- * Unlike the 3D variant, the plane lives inline in the node record: a single
- * tag_block with stride 0x14 (5 dwords) holds [0]=plane.x, [1]=plane.y,
- * [2]=plane.d and the two child links at [3] (back / dist<0 side) and [4]
- * (front / dist>=0 side). The plane fields are read as floats and the child
- * links as integers off the same element pointer (matching the fld/fmul then
- * `mov [ecx+eax*4+0xc]` in the disassembly).
- *
- * At each interior node compute the signed 2D plane distance
- * plane.y*y + plane.x*x - plane.d (the y term is emitted first to match the
- * original's x87 scheduling); take child [4] when it is >= 0.0f, else child
- * [3]. Keep descending while the child link is a non-negative interior index;
- * when it goes negative we stop. A link of 0xffffffff means solid/no-leaf and
- * is returned unchanged; any other negative link is a leaf index returned with
- * its high sign bit stripped. The result is the integer leaf index in EAX (the
- * original does `and ecx,0x7fffffff; mov eax,ecx; ret`), not a float.
- */
-uint32_t FUN_00146d40(void *bsp2d_nodes, float *point2d, int node_index)
+/* FUN_00146d40 (0x146d40) — XBE naked draft (batch 93). */
+#if defined(__clang__)
+static void *(*const b146d40_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+uint32_t FUN_00146d40(void *bsp2d_nodes __attribute__((unused)), float *point2d __attribute__((unused)), int node_index __attribute__((unused)))
 {
-  uint32_t *node;
-  float *plane;
-  float *p = point2d;
-  uint32_t node_index_u = (uint32_t)node_index;
-  float dist;
-
-  while ((int)node_index_u >= 0) {
-    node =
-      (uint32_t *)tag_block_get_element(bsp2d_nodes, (int)node_index_u, 0x14);
-    plane = (float *)node;
-    dist = (plane[1] * p[1] + plane[0] * p[0]) - plane[2];
-    node_index_u = node[3 + (0.0f <= dist ? 1 : 0)];
-  }
-
-  if (node_index_u != 0xffffffff) {
-    return node_index_u & 0x7fffffff;
-  }
-  return 0xffffffff;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "js .LFUN_00146d40_4\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      ".LFUN_00146d40_1:\n\t"
+      "pushl $0x14\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "flds (%%ecx)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0x8(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_00146d40_2\n\t"
+      "movl $1, %%eax\n\t"
+      "jmp .LFUN_00146d40_3\n\t"
+      ".LFUN_00146d40_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_00146d40_3:\n\t"
+      "movl 0xc(%%ecx,%%eax,4), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jns .LFUN_00146d40_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_00146d40_4:\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_00146d40_5\n\t"
+      "andl $0x7fffffff, %%ecx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00146d40_5:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b146d40_elem)
+      : "memory");
 }
+#else
+#error "FUN_00146d40: clang naked draft required"
+#endif
+
 
 /* bsp3d_find_leaf (0x146db0) — XBE naked draft (batch 91). */
 #if defined(__clang__)

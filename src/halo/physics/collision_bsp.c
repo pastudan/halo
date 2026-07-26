@@ -4,44 +4,64 @@
  * from the generated decl.h via kb.json.
  */
 
-/* 0x1473b0 - collision_surface_edge_count
- *
- * Counts the edges around one collision-BSP surface by walking its circular
- * edge loop. Same winged-edge traversal as collision_surface_polygon but
- * without gathering geometry.
- *
- * bsp base holds tag_block headers at fixed offsets:
- *   +0x3c surfaces (stride 0xc): surface[+4] = first-edge index
- *   +0x48 edges    (stride 0x18): edge[+0x14] = owning-surface index,
- *                                 edge[+8]/edge[+0xc] = the two half-edge
- *                                 next-edge links
- *
- * `side` = (edge[+0x14] == surface_index) selects this surface's half-edge
- * slot: next-edge index at edge[+8 | +0xc]. The do-while increments the count
- * once per edge and terminates when the next-edge index returns to the
- * surface's first-edge index. The original returns the count in AX only (high
- * half of EAX is leftover garbage from the terminator index), so the faithful
- * return type is short.
- */
-short collision_surface_edge_count(int bsp, int surface_index)
-{
-  short edge_count;
-  int first_edge;
-  int edge_index;
-  int *edge;
+/* collision_surface_edge_count (0x1473b0) — XBE naked draft (batch 93). */
+#if defined(__clang__)
+static void *(*const b1473b0_elem)(void *, int, int) = tag_block_get_element;
 
-  edge_count = 0;
-  first_edge = *(int *)((char *)tag_block_get_element((void *)(bsp + 0x3c),
-                                                      surface_index, 0xc) +
-                        4);
-  edge_index = first_edge;
-  do {
-    edge = (int *)tag_block_get_element((void *)(bsp + 0x48), edge_index, 0x18);
-    edge_count = (short)(edge_count + 1);
-    edge_index = edge[2 + (edge[5] == surface_index)];
-  } while (edge_index != first_edge);
-  return edge_count;
+__attribute__((naked, noinline))
+short collision_surface_edge_count(int bsp __attribute__((unused)), int surface_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0xc\n\t"
+      "addl $0x3c, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0x4(%%eax), %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl $0x48, %%ecx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl %%ecx, 0x8(%%ebp)\n\t"
+      "jmp .Lcollision_surface_edge_count_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lcollision_surface_edge_count_1:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl $0x18\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x14(%%eax), %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "incl %%edi\n\t"
+      "cmpl %%ebx, %%edx\n\t"
+      "sete %%cl\n\t"
+      "movzbl %%cl, %%edx\n\t"
+      "movl 0x8(%%eax,%%edx,4), %%eax\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jne .Lcollision_surface_edge_count_1\n\t"
+      "movw %%di, %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b1473b0_elem)
+      : "memory");
 }
+#else
+#error "collision_surface_edge_count: clang naked draft required"
+#endif
+
 
 /* 0x147410 - collision_surface_polygon
  *

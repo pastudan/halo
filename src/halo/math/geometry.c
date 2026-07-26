@@ -381,29 +381,62 @@ done:
   return out_count;
 }
 
-/* 0x106900 — Reject a 2D polygon whose vertex coordinates are not finite.
- * Walks vertex_count (x,y) pairs (8 bytes each) and returns 0 as soon as any
- * x or y float has all exponent bits set (IEEE 754 infinity or NaN); returns
- * 1 when every coordinate is finite. Returns a byte (bool): the original sets
- * AL only for the true path, leaving the loop's last-read dword in the upper
- * bytes of EAX. Loop counter stays 16-bit to match the original codegen.
- * Source: c:\halo\SOURCE\math\geometry.c */
-bool convex_polygon2d_verify(int16_t vertex_count, uint32_t *vertices)
-{
-  int16_t i;
+/* convex_polygon2d_verify (0x106900) — XBE naked draft (batch 93). */
+#if defined(__clang__)
 
-  i = 0;
-  if (0 < vertex_count) {
-    do {
-      if ((vertices[i * 2] & 0x7f800000) == 0x7f800000 ||
-          (vertices[i * 2 + 1] & 0x7f800000) == 0x7f800000) {
-        return 0;
-      }
-      i = i + 1;
-    } while (i < vertex_count);
-  }
-  return 1;
+
+__attribute__((naked, noinline))
+bool convex_polygon2d_verify(int16_t vertex_count __attribute__((unused)), uint32_t *vertices __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "jle .Lconvex_polygon2d_verify_2\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      ".Lconvex_polygon2d_verify_1:\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "movl (%%edx,%%eax,8), %%edi\n\t"
+      "leal (%%edx,%%eax,8), %%eax\n\t"
+      "movl %%edi, 0x8(%%ebp)\n\t"
+      "andl $0x7f800000, %%edi\n\t"
+      "cmpl $0x7f800000, %%edi\n\t"
+      "je .Lconvex_polygon2d_verify_3\n\t"
+      "movl 0x4(%%eax), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "je .Lconvex_polygon2d_verify_3\n\t"
+      "incl %%ecx\n\t"
+      "cmpw %%si, %%cx\n\t"
+      "jl .Lconvex_polygon2d_verify_1\n\t"
+      ".Lconvex_polygon2d_verify_2:\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lconvex_polygon2d_verify_3:\n\t"
+      "popl %%edi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "convex_polygon2d_verify: clang naked draft required"
+#endif
+
 
 /* convex_polygon3d_verify (0x106dc0) — XBE naked draft (batch 83). */
 #if defined(__clang__)
