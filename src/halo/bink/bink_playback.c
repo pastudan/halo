@@ -863,7 +863,7 @@ static char * (*const b1c4da0_c1d9690)(const char *haystack, const char *needle)
 static void (*const b1c4da0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_001c4da0(void)
+char FUN_001c4da0(int profile_handle __attribute__((unused)), void *out_path __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1483,7 +1483,7 @@ static void (*const b1c53f0_c818d0)(int *mutex_reference) = release_mutex;
 static void (*const b1c53f0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_001c53f0(void)
+void FUN_001c53f0(int a0 __attribute__((unused)), int a1 __attribute__((unused)), int a2 __attribute__((unused)), int a3 __attribute__((unused)), int a4 __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

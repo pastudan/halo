@@ -52,9 +52,9 @@ clang -Wall -Wno-unused-function -Wno-unused-variable -Wno-unused-parameter \
   -fno-builtin -fno-exceptions -mstack-probe-size=65536 \
   -I/work/src -I/work/third_party/xbox -I/work/build/generated \
   -include /work/src/common.h \
-  -c /work/src/halo/{src} -o /work/build/equivalence/{base}.obj
-mkdir -p $(dirname /work/build/CMakeFiles/halo.dir/src/halo/{src}.obj)
-cp /work/build/equivalence/{base}.obj /work/build/CMakeFiles/halo.dir/src/halo/{src}.obj
+  -c "/work/src/halo/{src}" -o "/work/build/equivalence/{base}.obj"
+mkdir -p "$(dirname "/work/build/CMakeFiles/halo.dir/src/halo/{src}.obj")"
+cp "/work/build/equivalence/{base}.obj" "/work/build/CMakeFiles/halo.dir/src/halo/{src}.obj"
 """
     r = subprocess.run(
         [

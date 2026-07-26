@@ -4452,7 +4452,7 @@
       "functions": [
         {
           "addr": "0x1c4da0",
-          "decl": "void FUN_001c4da0(void);",
+          "decl": "char FUN_001c4da0(int profile_handle, void *out_path);",
           "ported": false
         },
         {
@@ -4467,8 +4467,9 @@
         },
         {
           "addr": "0x1c53f0",
-          "decl": "void FUN_001c53f0(void);",
-          "ported": false
+          "decl": "void FUN_001c53f0(int a0, int a1, int a2, int a3, int a4);",
+          "ported": false,
+          "name": "FUN_001c53f0"
         },
         {
           "addr": "0x1c5560",
@@ -10347,7 +10348,8 @@
         {
           "addr": "0x1c1280",
           "decl": "char FUN_001c1280(int profile_handle, void *out_path);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001c1280"
         },
         {
           "addr": "0x1c1290",
@@ -13893,7 +13895,7 @@
         {
           "addr": "0xdff70",
           "decl": "void interface_draw_fullscreen_overlays(void);",
-          "ported": false,
+          "ported": true,
           "name": "interface_draw_fullscreen_overlays"
         },
         {

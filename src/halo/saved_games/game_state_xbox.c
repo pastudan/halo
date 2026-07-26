@@ -1579,9 +1579,9 @@ void player_profile_save_last_level_played(void *profile __attribute__((unused))
 
 
 /* FUN_001c1280 (0x1c1280) — readable C lift (tail jump). */
-void FUN_001c1280(void)
+char FUN_001c1280(int profile_handle, void *out_path)
 {
-  FUN_001c4da0();
+  return FUN_001c4da0(profile_handle, out_path);
 }
 
 /* game_state_read_from_persistent_storage (0x1c1290) — XBE naked draft (batch 260). */
