@@ -13340,43 +13340,49 @@ void FUN_001345b0(int glow_widget, int object_handle)
 
 }
 
-/* 0x134c40 */
-void *FUN_00134c40(int definition_ptr, int object_handle)
+/* 0x134c40 — Resolve light-volume marker state, optionally blending nested states. */
+void *FUN_00134c40(int light_tag, int object_handle)
 {
-  int eax = 0;
-  int ebx = 0;
+  static const int k_lerp_offsets[] = {
+      0x10, 0x14, 0x18, 0x3c, 0x40, 0x44, 0x68, 0x6c,
+      0x70, 0x74, 0x78, 0x7c, 0x80, 0x84, 0x88, 0x8c,
+  };
+  char *tag;
+  void *marker_block;
+  void *fallback_state;
+  void *outer_state;
+  void *inner_state;
+  float fn_value;
+  float *blend_base;
+  int i;
 
-  /* test ebx, ebx -> jne 0x134c67 */
-  display_assert((char *)0x00269eb4, (char *)0x0029ac98, 110, 1);
-  system_exit(-1);
-  tag_block_get_element((void *)((char *)ebx + 0x120), 0, 176);
-  /* cmp eax, 1 -> jle 0x134e29 */
-  tag_block_get_element((void *)((char *)ebx + 0x120), 0, 176);
-  tag_block_get_element((void *)((char *)ebx + 0x120), 0, 176);
-  object_get_function_value(definition_ptr, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x134e3e */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: relift: fstp dword ptr [0x46ef80] */
-  /* relift: relift: fstp dword ptr [0x46ef84] */
-  /* relift: relift: fstp dword ptr [0x46ef88] */
-  /* relift: relift: fstp dword ptr [0x46efac] */
-  /* relift: relift: fstp dword ptr [0x46efb0] */
-  /* relift: relift: fstp dword ptr [0x46efb4] */
-  /* relift: relift: fstp dword ptr [0x46efd8] */
-  /* relift: relift: fstp dword ptr [0x46efdc] */
-  /* relift: relift: fstp dword ptr [0x46efe0] */
-  /* relift: relift: fstp dword ptr [0x46efe4] */
-  /* relift: relift: fstp dword ptr [0x46efe8] */
-  /* relift: relift: fstp dword ptr [0x46efec] */
-  /* relift: relift: fstp dword ptr [0x46eff0] */
-  /* relift: relift: fstp dword ptr [0x46eff4] */
-  /* relift: relift: fstp dword ptr [0x46eff8] */
-  /* relift: relift: fstp dword ptr [0x46effc] */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 176);
-  return NULL;
+  if (light_tag == 0) {
+    display_assert((char *)0x00269eb4, (char *)0x0029ac98, 110, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
+  tag = (char *)light_tag;
+  marker_block = tag + 0x120;
+  fallback_state = tag_block_get_element(marker_block, 0, 0xb0);
+  if (*(int *)marker_block <= 1)
+    return tag_block_get_element(marker_block, 0, 0xb0);
+
+  outer_state = tag_block_get_element(marker_block, 0, 0xb0);
+  inner_state = tag_block_get_element(outer_state, 0, 0xb0);
+  fn_value = 0.0f;
+  if (!object_get_function_value(object_handle,
+                                 (short)(*(int16_t *)(tag + 0xb8) - 1),
+                                 &fn_value))
+    return fallback_state;
+
+  blend_base = (float *)0x46ef70;
+  for (i = 0; i < (int)(sizeof(k_lerp_offsets) / sizeof(k_lerp_offsets[0])); i++) {
+    int off = k_lerp_offsets[i];
+    *(float *)((char *)blend_base + off) =
+        (1.0f - fn_value) * *(float *)((char *)outer_state + off) +
+        fn_value * *(float *)((char *)inner_state + off);
+  }
+  return blend_base;
 }
 
 /* 0x135420 */

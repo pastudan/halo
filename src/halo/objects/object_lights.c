@@ -121,77 +121,102 @@ float object_get_self_illumination(int object_handle)
   (void)esi;
 }
 
-/* 0x139480 */
+static void light_sample_clamp_rgb(float *rgb)
+{
+  int i;
+
+  for (i = 0; i < 3; i++) {
+    float v = rgb[i] + *(float *)0x25496c;
+    if (v > 1.0f)
+      v = 1.0f;
+    rgb[i] = v;
+  }
+}
+
+/* 0x139480 — Sample structure lightmap/tint colors at a world-space point. */
 void FUN_00139480(void *position, void *tint_color, void *out_color, char use_lightmap)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  float *pos;
+  float *tint;
+  float *out;
+  float hit_point[3];
+  int16_t collection_index;
+  int16_t material_index;
+  int32_t surface_index;
+  float hit_u;
+  float hit_v;
+  char *scenario;
+  char *collection_elem;
+  char *material_elem;
+  char *shader;
+  char *shader_ext;
+  char *bitmap_tag;
+  void *lightmap_bitmap;
+  void *detail_bitmap;
+  char *lightmap_elem;
+  int sampled_tint;
 
-  structure_test_vector((float *)(uintptr_t)edx, (void *)0x0029b204, (float *)(uintptr_t)ecx, (void *)(uintptr_t)eax, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
-  /* test (char)eax, (char)eax -> je 0x1396d8 */
-  scenario_get();
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 32);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  tag_get('rdhs', 0);
-  /* relift: cmp word ptr [eax + 0x24], 3 -> jne 0x1396d5 */
-  FUN_001906b0((void *)(uintptr_t)eax, 0);
-  /* cmp eax, -1 -> je 0x1396d5 */
-  /* relift: cmp dword ptr [edi + 0x94], -1 -> je 0x1396d5 */
-  /* cmp (int16_t)ecx, -1 -> je 0x1396d5 */
-  FUN_00076ff0(0, 0);
-  tag_get('mtib', 0);
-  FUN_00076ff0(0, 0);
-  /* test (char)eax, (char)eax -> je 0x1395c7 */
-  FUN_00138ee0(0);
-  /* test eax, eax -> jne 0x1395dc */
-  xbox_texture_cache_get_hardware_format((void *)(uintptr_t)esi, 0, 0);
-  /* test eax, eax -> je 0x13966e */
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
-  FUN_00138fd0(0, 0, (void *)(uintptr_t)edi, 0.0f, 0.0f, 0);
-  /* test (char)eax, 0x41 -> jne 0x13962a */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x13964a */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x13966b */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* test eax, eax -> je 0x1396d5 */
-  /* test (char)ecx, (char)ecx -> je 0x139689 */
-  FUN_00138ee0(0);
-  /* test eax, eax -> jne 0x13969d */
-  xbox_texture_cache_get_hardware_format((void *)(uintptr_t)edx, 0, 0);
-  /* test eax, eax -> je 0x1396d5 */
-  /* test edi, edi -> jne 0x1396bb */
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
-  FUN_001390d0(0, 0, (void *)(uintptr_t)edi, 0.0f, 0.0f, (float *)(uintptr_t)edx);
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* test (char)eax, 2 -> je 0x13973b */
-  /* test (char)eax, 4 -> jne 0x139725 */
-  display_assert((char *)0x0029b44c, (char *)0x0029b324, 1232, 0);
-  system_exit(0);
-  cluster_partition_remove_object((void *)0x005a90b0, 0, (void *)(uintptr_t)ecx);
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* cmp edi, -1 -> je 0x1397ee */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* test (char)eax, 4 -> je 0x1397d1 */
-  datum_get((void *)(uintptr_t)edx, 0);
-  /* test (char)eax, 2 -> je 0x1397cd */
-  /* test (char)eax, 4 -> jne 0x1397b7 */
-  display_assert((char *)0x0029b44c, (char *)0x0029b324, 1232, 0);
-  system_exit(0);
-  cluster_partition_remove_object((void *)0x005a90b0, 0, (void *)(uintptr_t)eax);
-  data_next_index((void *)(uintptr_t)ecx, 0);
-  /* cmp edi, -1 -> jne 0x139760 */
-  /* test (char)eax, 0x41 -> jne 0x139826 */
-  /* test (char)eax, 0x41 -> jne 0x139848 */
-  /* test (char)eax, 0x41 -> jne 0x139870 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
+  pos = (float *)position;
+  tint = (float *)tint_color;
+  out = (float *)out_color;
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  tint[0] = out[0] = ((float *)0x2ee70c)[0];
+  tint[1] = out[1] = ((float *)0x2ee70c)[1];
+  tint[2] = out[2] = ((float *)0x2ee70c)[2];
+
+  if (!structure_test_vector(pos, (float *)0x0029b204, hit_point,
+                             &collection_index, &material_index,
+                             &surface_index, &hit_u, &hit_v))
+    return;
+
+  scenario = (char *)scenario_get();
+  collection_elem =
+      (char *)tag_block_get_element(scenario + 0x104, collection_index, 0x20);
+  material_elem =
+      (char *)tag_block_get_element(collection_elem + 0x14, material_index, 0x100);
+  shader = (char *)tag_get('rdhs', *(int *)(material_elem + 0xc));
+  if (*(int16_t *)(shader + 0x24) != 3)
+    return;
+
+  shader_ext = (char *)FUN_001906b0(shader, 3);
+  if (*(int *)(scenario + 0xc) == -1)
+    return;
+  if (*(int *)(shader_ext + 0x94) == -1)
+    return;
+  if (*(int16_t *)material_elem == -1)
+    return;
+
+  lightmap_bitmap =
+      FUN_00076ff0(*(int *)(scenario + 0xc), *(short *)(shader_ext + 0x94));
+  bitmap_tag = (char *)tag_get('mtib', *(int *)(shader_ext + 0x94));
+  detail_bitmap = FUN_00076ff0(*(int *)(shader_ext + 0x94),
+                               (short)(*(int16_t *)(material_elem + 0x10) /
+                                       *(int *)(bitmap_tag + 0x60)));
+
+  lightmap_elem = 0;
+  sampled_tint = 0;
+  if (lightmap_bitmap != 0) {
+    if ((use_lightmap && FUN_00138ee0((int)(uintptr_t)lightmap_bitmap) != 0) ||
+        xbox_texture_cache_get_hardware_format(lightmap_bitmap, 0, 0) != 0) {
+      lightmap_elem =
+          (char *)tag_block_get_element(scenario + 0xf8, surface_index, 6);
+      FUN_00138fd0((int)(uintptr_t)material_elem, (int)(uintptr_t)lightmap_elem,
+                   (unsigned short *)lightmap_elem, hit_u, hit_v, tint);
+      light_sample_clamp_rgb(tint);
+      sampled_tint = 1;
+    }
+  }
+
+  if (detail_bitmap == 0)
+    return;
+
+  if ((use_lightmap && FUN_00138ee0((int)(uintptr_t)detail_bitmap) != 0) ||
+      xbox_texture_cache_get_hardware_format(detail_bitmap, 0, 0) != 0) {
+    if (!sampled_tint)
+      lightmap_elem =
+          (char *)tag_block_get_element(scenario + 0xf8, surface_index, 6);
+    FUN_001390d0((int)(uintptr_t)material_elem, (int)(uintptr_t)detail_bitmap,
+                 (uint16_t *)lightmap_elem, hit_u, hit_v, out);
+    light_sample_clamp_rgb(out);
+  }
 }

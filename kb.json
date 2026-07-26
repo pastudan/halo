@@ -8178,7 +8178,7 @@
         },
         {
           "addr": "0xde3f0",
-          "decl": "void FUN_000de3f0(void);",
+          "decl": "void FUN_000de3f0(int local_player_index@<ebx>);",
           "ported": false
         },
         {
@@ -29625,12 +29625,12 @@
         },
         {
           "addr": "0x1b72b0",
-          "decl": "void FUN_001b72b0(void);",
+          "decl": "void FUN_001b72b0(int vehicle_handle, void *contact_point, void *wheel_state);",
           "ported": false
         },
         {
           "addr": "0x1b74d0",
-          "decl": "void FUN_001b74d0(void);",
+          "decl": "char FUN_001b74d0(int vehicle_handle);",
           "ported": false
         },
         {

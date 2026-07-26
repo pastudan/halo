@@ -14232,9 +14232,9 @@ void FUN_001b8f80(void)
   FUN_001b6140();
   FUN_001b6250(0, 0, 0);
   FUN_001b77f0();
-  FUN_001b74d0();
+  FUN_001b74d0(0);
   /* test (char)eax, (char)eax -> jne 0x1b958a */
-  FUN_001b72b0();
+  FUN_001b72b0(0, 0, 0);
   FUN_001b56b0(0, 0);
   /* test (char)eax, 0x20 -> je 0x1b95b1 */
   /* test eax, 0x1000000 -> jne 0x1b966b */
@@ -14265,7 +14265,7 @@ void FUN_001b8f80(void)
   FUN_00154270(0, 0, 0, 0, 0);
   /* relift: cmp word ptr [ebx + 0x426], 0 -> jle 0x1b966e */
   FUN_001b6ca0();
-  FUN_001b74d0();
+  FUN_001b74d0(0);
   /* test (char)eax, (char)eax -> je 0x1b9867 */
   profile_exit_private((void *)0x0032e4a0);
   sound_cache_close();

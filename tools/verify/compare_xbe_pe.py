@@ -260,6 +260,12 @@ def main() -> int:
         ("vehicle_export_function_values", 0x1b79c0, 0x1b7ee0),
         ("FUN_001b6560", 0x1b6560, 0x1b69a0),
         ("FUN_001b6250", 0x1b6250, 0x1b6560),
+        # gameplay wave 10 (2026-07-26)
+        ("FUN_00134c40", 0x134c40, 0x134e50),
+        ("FUN_00139480", 0x139480, 0x1396dc),
+        ("FUN_001b72b0", 0x1b72b0, 0x1b74d0),
+        ("FUN_001b74d0", 0x1b74d0, 0x1b77f0),
+        ("FUN_000de3f0", 0xde3f0, 0xde560),
     ]
 
     xbe = Xbe.from_file(args.xbe)

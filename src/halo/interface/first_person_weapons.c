@@ -1181,39 +1181,78 @@ void first_person_weapon_message_from_unit(int unit_handle, int message_type)
   (void)esi;
 }
 
-/* 0xde3f0 */
-void FUN_000de3f0(void)
+/* 0xde3f0 — Advance first-person weapon state for one local player. */
+void FUN_000de3f0(int local_player_index)
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
+  static const unsigned char state_to_case[0x18] = {
+      0, 1, 1, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+      2, 2, 3, 0, 0, 4, 0, 0, 1, 0, 1,
+  };
+  char *fp;
+  int16_t weapon_state;
+  int case_index;
+  char *unit;
+  char *paew;
+  int16_t dual_state;
+  int next_state;
 
-  /* test (int16_t)ebx, (int16_t)ebx -> jl 0xde3fb */
-  /* cmp (int16_t)ebx, 4 -> jl 0xde41b */
-  display_assert((char *)0x00266fc0, (char *)0x00282294, 1433, 0);
-  system_exit(0);
-  /* cmp eax, 0x17 -> ja 0xde52c */
-  FUN_000ddbd0(0, 0, 0);
-  FUN_000ddbd0(0, 0, 0);
-  object_get_and_verify_type(0, 0);
-  tag_get('paew', 0);
-  /* relift: cmp word ptr [eax + 0x4e2], 1 -> jne 0xde449 */
-  /* relift: cmp word ptr [esi + 0x1e94], 2 -> jne 0xde449 */
-  object_get_and_verify_type(0, 0);
-  tag_get('paew', 0);
-  /* relift: cmp word ptr [eax + 0x4e2], 1 -> jne 0xde449 */
-  /* test (int16_t)eax, (int16_t)eax -> je 0xde449 */
-  /* cmp (int16_t)eax, 0xffff -> je 0xde449 */
-  /* cmp (int16_t)eax, 2 -> je 0xde50d */
-  /* cmp (int16_t)eax, 1 -> je 0xde50d */
-  display_assert((char *)0x002823e8, (char *)0x00282294, 799, 0);
-  system_exit(0);
-  /* cmp (int16_t)eax, 0xffff -> je 0xde52c */
-  FUN_000ddbd0(0, 0, 0);
+  if ((int16_t)local_player_index < 0 || (int16_t)local_player_index >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 1433, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)esi;
+  fp = (char *)(*(int *)0x46bea8 +
+                (int)(int16_t)local_player_index * 0x1ea0);
+  weapon_state = *(int16_t *)(fp + 0xc);
+  if ((unsigned int)(unsigned short)weapon_state > 0x17u)
+    return;
+
+  case_index = state_to_case[(unsigned short)weapon_state];
+  switch (case_index) {
+  case 0:
+    FUN_000ddbd0(local_player_index, 0, 0);
+    return;
+  case 1:
+    FUN_000ddbd0(local_player_index, 3, 0);
+    return;
+  case 4:
+    *(int16_t *)(fp + 0x18) -= 1;
+    return;
+  case 3:
+    unit = (char *)object_get_and_verify_type(*(int *)(fp + 8), 4);
+    paew = (char *)tag_get(0x77656170, *(int *)unit);
+    if (*(int16_t *)(paew + 0x4e2) != 1 ||
+        *(int16_t *)(fp + 0x1e94) != 2) {
+      FUN_000ddbd0(local_player_index, 0, 0);
+      return;
+    }
+    break;
+  case 2:
+    unit = (char *)object_get_and_verify_type(*(int *)(fp + 8), 4);
+    paew = (char *)tag_get(0x77656170, *(int *)unit);
+    if (*(int16_t *)(paew + 0x4e2) != 1) {
+      FUN_000ddbd0(local_player_index, 0, 0);
+      return;
+    }
+    dual_state = *(int16_t *)(fp + 0x1e94);
+    if (dual_state == 0 || dual_state == -1 || dual_state == 2) {
+      FUN_000ddbd0(local_player_index, 0, 0);
+      return;
+    }
+    if (dual_state == 1)
+      break;
+    display_assert((char *)0x002823e8, (char *)0x00282294, 799, 1);
+    system_exit(-1);
+  case 5:
+    return;
+  default:
+    return;
+  }
+
+  next_state = *(unsigned char *)(fp + 0x1e90) ? 16 : 17;
+  if (next_state == -1)
+    return;
+  FUN_000ddbd0(local_player_index, next_state, 0);
 }
 
 /* 0xde560 */
@@ -1250,7 +1289,7 @@ void FUN_000de560(void)
   animation_update_internal(0, 0, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
   /* cmp (int16_t)eax, 1 -> je 0xde6b0 */
   /* cmp (int16_t)eax, 2 -> jne 0xde6b0 */
-  FUN_000de3f0();
+  FUN_000de3f0(esi);
   /* relift: cmp dword ptr [ebp - 8], -1 -> je 0xde6fd */
   director_get_perspective(eax);
   /* test (int16_t)eax, (int16_t)eax -> jne 0xde6fd */
