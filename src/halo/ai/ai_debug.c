@@ -1591,7 +1591,7 @@ static void (*const b49430_assert)(const char *, const char *, int, bool) = disp
 static void (*const b49430_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void ai_debug_lineoffire_addpill(float *vec_a __attribute__((unused)), float *vec_b __attribute__((unused)), int param_3 __attribute__((unused)), char param_4 __attribute__((unused)))
+void ai_debug_lineoffire_addpill(float *vec_a __attribute__((unused)), float *vec_b __attribute__((unused)), float param_3 __attribute__((unused)), char param_4 __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2392,104 +2392,42 @@ void FUN_00049d60(void)
 #endif
 
 
-/* ai_debug_vocalize (0x49f60) — XBE naked draft (batch 136). */
-#if defined(__clang__)
-static void *(*const b49f60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static short (*const b49f60_c1a6cd0)(const char *param_1) = FUN_001a6cd0;
-static short (*const b49f60_c1a67e0)(const char *param_1) = FUN_001a67e0;
-static short (*const b49f60_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = FUN_001a68d0;
-static void *(*const b49f60_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b49f60_c42d20)(void *packet) = ai_communication_packet_new;
-static void (*const b49f60_c1a6ef0)(int actor, short count, void *comm_buf) = FUN_001a6ef0;
-
-__attribute__((naked, noinline))
-void ai_debug_vocalize(int a0 __attribute__((unused)), int a1 __attribute__((unused)))
+/* ai_debug_vocalize (0x49f60) — readable C lift. */
+void ai_debug_vocalize(int a0, int a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x38, %%esp\n\t"
-      "movl 0x5ac9f8, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "je .Lai_debug_vocalize_2\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movb $1, 0x5aca89\n\t"
-      "movl 0x18(%%edi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "je .Lai_debug_vocalize_1\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1a6cd0]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[c1a67e0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jle .Lai_debug_vocalize_1\n\t"
-      "cmpw %%si, %%ax\n\t"
-      "je .Lai_debug_vocalize_1\n\t"
-      "movl 0x18(%%edi), %%edx\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $1\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%esi, -0x8(%%ebp)\n\t"
-      "call *%[c1a68d0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "je .Lai_debug_vocalize_1\n\t"
-      "pushl $0x30\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movw -0x4(%%ebp), %%cx\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "leal -0x28(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movw %%bx, -0x38(%%ebp)\n\t"
-      "movw %%cx, -0x36(%%ebp)\n\t"
-      "movl %%edx, -0x34(%%ebp)\n\t"
-      "call *%[c42d20]\n\t"
-      "movl 0x18(%%edi), %%edx\n\t"
-      "leal -0x38(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1a6ef0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      ".Lai_debug_vocalize_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Lai_debug_vocalize_2:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b49f60_dget), [c1a6cd0] "m"(b49f60_c1a6cd0), [c1a67e0] "m"(b49f60_c1a67e0), [c1a68d0] "m"(b49f60_c1a68d0), [memset] "m"(b49f60_memset), [c42d20] "m"(b49f60_c42d20), [c1a6ef0] "m"(b49f60_c1a6ef0)
-      : "memory");
+  char *actor;
+  short voc_id;
+  short sound_id;
+  short count;
+  int sound_def;
+  short voc_type;
+  char packet[0x30];
+  int actor_handle;
+
+  actor_handle = *(int *)0x5ac9f8;
+  if (actor_handle == -1)
+    return;
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  *(char *)0x5aca89 = 1;
+  if (*(int *)(actor + 0x18) == -1)
+    return;
+  voc_id = FUN_001a6cd0((const char *)a0);
+  sound_id = FUN_001a67e0((const char *)a1);
+  if (voc_id <= 0 || sound_id == (short)-1)
+    return;
+  voc_type = sound_id;
+  sound_def = -1;
+  count = FUN_001a68d0(*(int *)(actor + 0x18), voc_id, 1, 1, 0, &voc_type, &sound_def);
+  if (count == 0)
+    return;
+  csmemset(packet, 0, 0x30);
+  *(short *)(packet + 0) = voc_id;
+  *(short *)(packet + 2) = voc_type;
+  *(int *)(packet + 4) = sound_def;
+  ai_communication_packet_new(packet + 0x10);
+  FUN_001a6ef0(*(int *)(actor + 0x18), count, packet);
 }
-#else
-#error "ai_debug_vocalize: clang naked draft required"
-#endif
+
 
 
 /* FUN_0004a030 (0x4a030) — XBE naked draft (batch 119). */
@@ -3225,101 +3163,44 @@ void FUN_0004a9f0(void)
 #endif
 
 
-/* ai_debug_teleport_to (0x4b0f0) — XBE naked draft (batch 137). */
-#if defined(__clang__)
-static scenario_t * (*const b4b0f0_c18e380)(void) = global_scenario_get;
-static void *(*const b4b0f0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b4b0f0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b4b0f0_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void (*const b4b0f0_c143ae0)(int object_handle, float *position, float *forward, float *up) = object_set_position;
+#include "../../x87_math.h"
 
-__attribute__((naked, noinline))
-void ai_debug_teleport_to(int actor_index __attribute__((unused)))
+/* ai_debug_teleport_to (0x4b0f0) — readable C lift. */
+void ai_debug_teleport_to(int actor_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lai_debug_teleport_to_4\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "andl $0xffff, %%eax\n\t"
-      "pushl $0xb0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "leal 0xa4(%%eax), %%edi\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lai_debug_teleport_to_3\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lai_debug_teleport_to_3\n\t"
-      ".Lai_debug_teleport_to_1:\n\t"
-      "cmpl $-1, 0x34(%%esi)\n\t"
-      "je .Lai_debug_teleport_to_2\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "cdq\n\t"
-      "idivl (%%edi)\n\t"
-      "pushl $0x34\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[elem]\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fcos\n\t"
-      "movl 0x34(%%esi), %%edx\n\t"
-      "pushl $0\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fsin\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "call *%[c143ae0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "incl %%ebx\n\t"
-      ".Lai_debug_teleport_to_2:\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119810]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lai_debug_teleport_to_1\n\t"
-      ".Lai_debug_teleport_to_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lai_debug_teleport_to_4:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b4b0f0_c18e380), [elem] "m"(b4b0f0_elem), [c1197b0] "m"(b4b0f0_c1197b0), [c119810] "m"(b4b0f0_c119810), [c143ae0] "m"(b4b0f0_c143ae0)
-      : "memory");
+  data_iter_t iter;
+  char *squad;
+  char *starting;
+  char *player;
+  int16_t n;
+  float forward[3];
+
+  if (actor_index == -1)
+    return;
+  squad = (char *)tag_block_get_element(
+      (char *)global_scenario_get() + 0x42c, actor_index & 0xffff, 0xb0);
+  starting = squad + 0xa4;
+  if (*(int *)starting <= 0)
+    return;
+  data_iterator_new(&iter, *(data_t **)0x5aa6d4);
+  n = 0;
+  for (player = (char *)data_iterator_next(&iter); player;
+       player = (char *)data_iterator_next(&iter)) {
+    int obj = *(int *)(player + 0x34);
+    char *pos;
+    float yaw;
+    if (obj == -1)
+      continue;
+    pos = (char *)tag_block_get_element(starting, (int)n % *(int *)starting, 0x34);
+    yaw = *(float *)(pos + 0xc);
+    forward[0] = x87_fcos(yaw);
+    forward[1] = x87_fsin(yaw);
+    forward[2] = 0.0f;
+    object_set_position(obj, (float *)pos, forward, 0);
+    n = (int16_t)(n + 1);
+  }
 }
-#else
-#error "ai_debug_teleport_to: clang naked draft required"
-#endif
+
 
 
 /* FUN_0004b220 (0x4b220) — readable C lift.
