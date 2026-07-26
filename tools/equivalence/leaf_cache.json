@@ -3705,8 +3705,8 @@
   },
   "0xea540": {
     "class": "non_leaf",
-    "confidence": "weak",
-    "coverage_pct": 61.0
+    "confidence": "high",
+    "coverage_pct": 100.0
   },
   "0xeebe0": {
     "class": "non_leaf",

@@ -27363,7 +27363,7 @@
         {
           "addr": "0xea540",
           "decl": "char FUN_000ea540(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xea570",
