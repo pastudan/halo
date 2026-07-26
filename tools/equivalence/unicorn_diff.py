@@ -1472,23 +1472,43 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
         build_path = _find_build_obj_for_source(entry["_obj_source"])
 
     if not delinked_path:
+        # Prefer address-named per-function exports (xbe_to_coff / Ghidra).
+        per_func_early = _per_function_ref(func_name)
+        if per_func_early:
+            delinked_path = per_func_early
+
+    if not delinked_path:
         # Try matching address to a FUN_XXXXXXXX name in delinked/
         addr_int_for_search = int(addr, 16) if addr.startswith("0x") else None
         if addr_int_for_search is not None:
             addr_sym_upper = f"FUN_{addr_int_for_search:08X}"
             addr_sym_lower = f"FUN_{addr_int_for_search:08x}"
-            for d in list(DELINKED_DIR.glob("*.obj")) + \
-                     sorted(DELINKED_DIR.glob("functions/*.obj")):
-                try:
-                    result = subprocess.run(
-                        ["llvm-objdump", "-t", str(d)],
-                        capture_output=True, text=True
-                    )
-                    if addr_sym_upper in result.stdout or addr_sym_lower in result.stdout:
-                        delinked_path = d
-                        break
-                except Exception:
-                    pass
+            addr_file = DELINKED_DIR / "functions" / f"{addr_int_for_search:08x}.obj"
+            if addr_file.exists():
+                delinked_path = addr_file
+            else:
+                for d in list(DELINKED_DIR.glob("*.obj")) + \
+                         sorted(DELINKED_DIR.glob("functions/*.obj")):
+                    try:
+                        # Prefer coff_loader (no llvm-objdump dependency).
+                        from coff_loader import load_coff
+                        _secs, syms, _st = load_coff(str(d))
+                        names = {s.name for s in syms}
+                        if addr_sym_upper in names or addr_sym_lower in names:
+                            delinked_path = d
+                            break
+                    except Exception:
+                        pass
+                    try:
+                        result = subprocess.run(
+                            ["llvm-objdump", "-t", str(d)],
+                            capture_output=True, text=True
+                        )
+                        if addr_sym_upper in result.stdout or addr_sym_lower in result.stdout:
+                            delinked_path = d
+                            break
+                    except Exception:
+                        pass
 
     if not delinked_path:
         log(f"ERROR: cannot find delinked .obj for '{obj_name}'")
