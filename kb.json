@@ -809,7 +809,7 @@
         {
           "addr": "0x1d980b",
           "decl": "void FUN_001d980b(int param_1);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "LIBCMT:strrchr.obj",
@@ -1017,7 +1017,7 @@
         {
           "addr": "0x1dc65c",
           "decl": "void FUN_001dc65c(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dc66b",
@@ -1062,7 +1062,7 @@
         {
           "addr": "0x1dc909",
           "decl": "void FUN_001dc909(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dc914",
@@ -1072,7 +1072,7 @@
         {
           "addr": "0x1dc998",
           "decl": "void FUN_001dc998(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dc9a3",
@@ -1127,7 +1127,7 @@
         {
           "addr": "0x1dccf5",
           "decl": "void *FUN_001dccf5(const wchar_t *path, const wchar_t *mode);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dcd08",
@@ -1147,7 +1147,7 @@
         {
           "addr": "0x1dce64",
           "decl": "void FUN_001dce64(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dce6e",
@@ -1208,7 +1208,7 @@
         {
           "addr": "0x1db49e",
           "decl": "void FUN_001db49e(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1db4a9",
@@ -1228,7 +1228,7 @@
         {
           "addr": "0x1db6b1",
           "decl": "void __controlfp(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1db6c7",
@@ -1334,7 +1334,7 @@
         {
           "addr": "0x1da0c1",
           "decl": "void FUN_001da0c1(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1da0cc",
@@ -1415,7 +1415,7 @@
         {
           "addr": "0x1d8ff0",
           "decl": "void FUN_001d8ff0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9010",
@@ -1499,7 +1499,7 @@
         {
           "addr": "0x1d9e4f",
           "decl": "void FUN_001d9e4f(void);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "LIBCMT:fclose.obj",
@@ -1740,7 +1740,7 @@
         {
           "addr": "0x1e011f",
           "decl": "void FUN_001e011f(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e0131",
@@ -1945,7 +1945,7 @@
         {
           "addr": "0x1e2747",
           "decl": "void FUN_001e2747(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e2751",
@@ -2300,7 +2300,7 @@
         {
           "addr": "0x1e5823",
           "decl": "void FUN_001e5823(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e583d",
@@ -2436,7 +2436,7 @@
         {
           "addr": "0x1daed5",
           "decl": "void FUN_001daed5(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1daf6a",
@@ -31457,7 +31457,7 @@
         {
           "addr": "0x1d98a3",
           "decl": "void FUN_001d98a3(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9901",
@@ -31533,7 +31533,7 @@
         {
           "addr": "0x1d9c18",
           "decl": "void FUN_001d9c18(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9c22",
@@ -32478,7 +32478,7 @@
         {
           "addr": "0x1d9cf9",
           "decl": "void FUN_001d9cf9(void);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "LIBCMT:rand.obj",
@@ -41304,17 +41304,17 @@
         {
           "addr": "0x001e6d60",
           "decl": "void D3DDevice_GetViewport(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e6d80",
           "decl": "void D3DDevice_SetMaterial(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e6db0",
           "decl": "void D3DDevice_GetMaterial(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e6dd0",
@@ -41344,7 +41344,7 @@
         {
           "addr": "0x001e6f30",
           "decl": "void D3DDevice_AddRef(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e6f50",
@@ -41384,7 +41384,7 @@
         {
           "addr": "0x001e7200",
           "decl": "void D3DDevice_GetTile(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e7230",
@@ -41684,7 +41684,7 @@
         {
           "addr": "0x001eb0b0",
           "decl": "void D3DDevice_GetVertexShader(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001eb0d0",
@@ -41944,7 +41944,7 @@
         {
           "addr": "0x001ef890",
           "decl": "void D3DDevice_IsFencePending(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001ef8c0",
