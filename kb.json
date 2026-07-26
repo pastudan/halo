@@ -35000,7 +35000,7 @@
         {
           "addr": "0x4c890",
           "decl": "void FUN_0004c890(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x4c920",
