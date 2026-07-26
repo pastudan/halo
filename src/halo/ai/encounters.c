@@ -4992,6 +4992,232 @@ char FUN_0005ac60(int *samples, int score, float y, float x, float z)
   return inserted;
 }
 
+/* 0x59c40 — Find or allocate a pursuit record for an encounter/pursuit pair. */
+int FUN_00059c40(int encounter_handle, int16_t pursuit_index, int min_time,
+                 char create)
+{
+  char *encounter;
+  int link;
+  char *pursuit;
+  char stale;
+
+  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
+  link = *(int *)(encounter + 0x38);
+  stale = 0;
+  if (link != -1) {
+    do {
+      pursuit = (char *)datum_get(*(data_t **)0x5ab26c, link);
+      if (*(int16_t *)(pursuit + 0x2) == pursuit_index) {
+        if (*(int *)(pursuit + 0x4) < min_time)
+          stale = 1;
+        break;
+      }
+      link = *(int *)(pursuit + 0x24);
+    } while (link != -1);
+  }
+
+  if (link == -1 && create) {
+    link = data_new_at_index(*(data_t **)0x5ab26c);
+    if (link == -1) {
+      error(2, (const char *)0x25d540, *(data_t **)0x5ab26c, 0x100);
+      return -1;
+    }
+    pursuit = (char *)datum_get(*(data_t **)0x5ab26c, link);
+    *(int16_t *)(pursuit + 0x2) = pursuit_index;
+    *(int *)(pursuit + 0x24) = *(int *)(encounter + 0x38);
+    *(int *)(encounter + 0x38) = link;
+  }
+
+  if (!stale)
+    return link;
+
+  pursuit = (char *)datum_get(*(data_t **)0x5ab26c, link);
+  *(int *)(pursuit + 0x4) = -1;
+  *(int16_t *)(pursuit + 0x8) = 0;
+  *(int16_t *)(pursuit + 0xa) = 0;
+  csmemset(pursuit + 0xc, 0xff, 0x18);
+  return create ? link : -1;
+}
+
+/* 0x59d30 — Adjust pursuit desire flags from encounter AI profile settings. */
+void encounter_modify_pursuit_desires(int encounter_handle,
+                                      int16_t profile_index, char *flag,
+                                      int16_t *a, int16_t *b, int16_t *c,
+                                      int16_t *d, char *e)
+{
+  char *enc_def;
+  char *profile;
+  int16_t mode;
+  char profile_flags;
+
+  enc_def = (char *)tag_block_get_element((char *)global_scenario_get() + 0x42c,
+                                          encounter_handle & 0xffff, 0xb0);
+  profile = (char *)tag_block_get_element(enc_def + 0x80, (int)profile_index,
+                                          0xe8);
+  profile_flags = *(char *)(profile + 0x28);
+  mode = *(int16_t *)(enc_def + 0x28);
+  if ((profile_flags & 2) != 0)
+    mode = 1;
+
+  if (mode == 1) {
+    if (flag)
+      *flag = 1;
+    if (a)
+      *a = 0;
+    if (b)
+      *b = 0;
+    if (c)
+      *c = 0;
+    if (d)
+      *d = 0;
+    if (e)
+      *e = 0;
+    return;
+  }
+
+  if (mode == 2) {
+    if (a)
+      *a = 1;
+    if (c)
+      *c = 2;
+    if (d)
+      *d = 2;
+  }
+}
+
+/* 0x566a0 — Create team allegiance links when encounters initialize teams. */
+void encounters_initialize(int16_t team_a, int16_t team_b)
+{
+  int16_t timers[4];
+  int16_t allegiance_team;
+  char use_timers;
+  char propagate;
+
+  if (*(char *)0x5aca59 != 0) {
+    error(2, (const char *)0x25c994, hs_runtime_get_executing_thread_name(), 2);
+  }
+
+  if (team_a == -1 || team_b == -1)
+    return;
+
+  allegiance_team = team_a;
+  propagate = 0;
+  use_timers = 0;
+
+  if (team_a == 1) {
+    allegiance_team = team_b;
+  } else if (team_b == 1) {
+    allegiance_team = team_a;
+  }
+
+  if (allegiance_team == 2 || allegiance_team == 5) {
+    timers[0] = 0x12c;
+    timers[1] = 0x1c2;
+    timers[2] = 0x4b0;
+    timers[3] = 0xa8c;
+    use_timers = 1;
+    propagate = (char)(team_b == allegiance_team);
+  }
+
+  if (use_timers) {
+    char is_player = (char)(team_a == allegiance_team ? 1 : 0);
+    game_allegiance_create(team_a, is_player, team_b, use_timers, 5,
+                           timers[(int)game_difficulty_level_get()],
+                           propagate);
+  }
+}
+
+/* 0x5b6e0 — Test whether a pursuit position hash was already examined. */
+char encounter_pursuit_position_already_examined(int encounter_handle,
+                                                 int position_hash,
+                                                 int16_t pursuit_index,
+                                                 int min_time,
+                                                 int16_t *out_count,
+                                                 int *out_time)
+{
+  int pursuit_handle;
+  char *pursuit;
+  int16_t count;
+  int i;
+  char found;
+
+  pursuit_handle =
+      FUN_00059c40(encounter_handle, pursuit_index, min_time, 0);
+  found = 0;
+  count = 0;
+  if (pursuit_handle != -1) {
+    pursuit = (char *)datum_get(*(data_t **)0x5ab26c, pursuit_handle);
+    if (*(int16_t *)(pursuit + 0x2) != pursuit_index) {
+      display_assert("pursuit->encounter_index==encounter_index",
+                     "c:\\halo\\source\\ai\\encounters.c", 0x434, 1);
+      system_exit(-1);
+    }
+    count = *(int16_t *)(pursuit + 0x8);
+    for (i = 0; i < 6; i++) {
+      if (*(int *)(pursuit + 0xc + i * 4) == position_hash) {
+        found = 1;
+        break;
+      }
+    }
+  }
+
+  if (out_count)
+    *out_count = count;
+  if (out_time && pursuit_handle != -1) {
+    pursuit = (char *)datum_get(*(data_t **)0x5ab26c, pursuit_handle);
+    *out_time = *(int *)(pursuit + 0x4);
+  }
+  return found;
+}
+
+/* 0x5b5e0 — Record a pursuit firing-position hash as examined. */
+char encounter_mark_examined_pursuit_position(int encounter_handle,
+                                              int position_hash,
+                                              int16_t pursuit_index,
+                                              int min_time)
+{
+  int pursuit_handle;
+  char *pursuit;
+  int i;
+  char marked;
+
+  marked = 0;
+  pursuit_handle =
+      FUN_00059c40(encounter_handle, pursuit_index, min_time, 1);
+  if (pursuit_handle == -1)
+    return marked;
+
+  pursuit = (char *)datum_get(*(data_t **)0x5ab26c, pursuit_handle);
+  if (*(int16_t *)(pursuit + 0x2) != pursuit_index) {
+    display_assert("pursuit->encounter_index==encounter_index",
+                   "c:\\halo\\source\\ai\\encounters.c", 0x407, 1);
+    system_exit(-1);
+  }
+
+  for (i = 0; i < 6; i++) {
+    if (*(int *)(pursuit + 0xc + i * 4) == position_hash)
+      break;
+  }
+
+  if (i >= 6) {
+    int16_t slot = *(int16_t *)(pursuit + 0xa);
+    if (slot < 0 || slot >= 6) {
+      display_assert("pursuit->next_unexamined_firing_position_index>=0 && "
+                     "pursuit->next_unexamined_firing_position_index<6",
+                     "c:\\halo\\source\\ai\\encounters.c", 0x414, 1);
+      system_exit(-1);
+    }
+    *(int *)(pursuit + 0xc + (int)slot * 4) = position_hash;
+    slot = (int16_t)((*(int16_t *)(pursuit + 0xa) + 1) % 6);
+    *(int16_t *)(pursuit + 0x8) = *(int16_t *)(pursuit + 0x8) + 1;
+    *(int16_t *)(pursuit + 0xa) = slot;
+    marked = 1;
+  }
+
+  *(int *)(pursuit + 0x4) = game_time_get();
+  return marked;
+}
+
 /* Deferred functions (not yet ported — thunked from XBE):
  *   FUN_0005de80  — encounter_update (needs FUN_0005acf0 @<eax> audit)
  *   encounters_create_for_new_map  — encounter_tally_reset_pass (shared loop

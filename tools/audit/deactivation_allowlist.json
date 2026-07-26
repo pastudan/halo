@@ -5458,5 +5458,40 @@
     "object": "encounters.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"
+  },
+  {
+    "addr": "0x59c40",
+    "name": "FUN_00059c40",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x59d30",
+    "name": "encounter_modify_pursuit_desires",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x566a0",
+    "name": "encounters_initialize",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x5b6e0",
+    "name": "encounter_pursuit_position_already_examined",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x5b5e0",
+    "name": "encounter_mark_examined_pursuit_position",
+    "object": "encounters.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]

@@ -32888,7 +32888,8 @@
         },
         {
           "addr": "0x566a0",
-          "decl": "void encounters_initialize(int a0, int a1);"
+          "decl": "void encounters_initialize(int16_t team_a, int16_t team_b);",
+          "ported": false
         },
         {
           "addr": "0x56790",
@@ -33278,11 +33279,13 @@
         },
         {
           "addr": "0x59c40",
-          "decl": "void FUN_00059c40(void);"
+          "decl": "int FUN_00059c40(int encounter_handle, int16_t pursuit_index, int min_time, char create);",
+          "ported": false
         },
         {
           "addr": "0x59d30",
-          "decl": "void encounter_modify_pursuit_desires(void);"
+          "decl": "void encounter_modify_pursuit_desires(int encounter_handle, int16_t profile_index, char *flag, int16_t *a, int16_t *b, int16_t *c, int16_t *d, char *e);",
+          "ported": false
         },
         {
           "addr": "0x59dd0",
@@ -33390,11 +33393,13 @@
         },
         {
           "addr": "0x5b5e0",
-          "decl": "void encounter_mark_examined_pursuit_position(int enc_idx, int actor_handle, int16_t firing_pos, int threat_enc);"
+          "decl": "char encounter_mark_examined_pursuit_position(int encounter_handle, int position_hash, int16_t pursuit_index, int min_time);",
+          "ported": false
         },
         {
           "addr": "0x5b6e0",
-          "decl": "void encounter_pursuit_position_already_examined(void);"
+          "decl": "char encounter_pursuit_position_already_examined(int encounter_handle, int position_hash, int16_t pursuit_index, int min_time, int16_t *out_count, int *out_time);",
+          "ported": false
         },
         {
           "addr": "0x5b790",
