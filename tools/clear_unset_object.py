@@ -138,7 +138,7 @@ def main() -> None:
     marker = f"/* --- {args.object} batch drafts"
     impl_parts = [f"/* --- {args.object} batch drafts (2026-07-26) --- */\n"]
     for addr in sorted(decls.keys(), key=lambda x: int(x, 16)):
-        impl_parts.append(f"/* {addr} */\n{gen.gen_stub_body(decls[addr])}")
+        impl_parts.append(f"/* {addr} */\n{gen.gen_stub_body(decls[addr], addr)}")
     impl_text = "\n".join(impl_parts)
     impl_out = ROOT / "tools" / f"{s}_batch_impl.c"
     frag_out = ROOT / "tools" / f"{s}_batch_fragment.c"

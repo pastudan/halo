@@ -22118,5 +22118,2910 @@
     "object": "<common>",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9260",
+    "name": "qsort",
+    "object": "LIBCMT:qsort.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da740",
+    "name": "strncpy",
+    "object": "LIBCMT:strncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da700",
+    "name": "_strncmp",
+    "object": "LIBCMT:strncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9710",
+    "name": "strrchr",
+    "object": "LIBCMT:strrchr.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9761",
+    "name": "FUN_001d9761",
+    "object": "LIBCMT:strrchr.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d980b",
+    "name": "FUN_001d980b",
+    "object": "LIBCMT:strrchr.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc061",
+    "name": "_wcsncpy",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbc1e",
+    "name": "FUN_001dbc1e",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbc26",
+    "name": "FUN_001dbc26",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbcf4",
+    "name": "__global_unwind2",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbd36",
+    "name": "__local_unwind2",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbdca",
+    "name": "FUN_001dbdca",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbea9",
+    "name": "FUN_001dbea9",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbed0",
+    "name": "_memchr",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbf75",
+    "name": "_wcscmp",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbfa7",
+    "name": "FUN_001dbfa7",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbfac",
+    "name": "_wcscspn",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbfef",
+    "name": "_wcsncat",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc02c",
+    "name": "_wcsncmp",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc09e",
+    "name": "_wcspbrk",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc0de",
+    "name": "_wcsrchr",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc10e",
+    "name": "_wcsspn",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc154",
+    "name": "_wcsstr",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc1b2",
+    "name": "_wcstok",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc257",
+    "name": "FUN_001dc257",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc27c",
+    "name": "FUN_001dc27c",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc2c3",
+    "name": "__wcsicmp",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc34b",
+    "name": "__wcsnicmp",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc3e9",
+    "name": "FUN_001dc3e9",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc41e",
+    "name": "__getwc_lk",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc512",
+    "name": "_fgetwc",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc54a",
+    "name": "FUN_001dc54a",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc559",
+    "name": "FUN_001dc559",
+    "object": "LIBCMT:wcsncpy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db11e",
+    "name": "_wcslen",
+    "object": "LIBCMT:wcslen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db134",
+    "name": "_wcschr",
+    "object": "LIBCMT:wcslen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db156",
+    "name": "_wcscat",
+    "object": "LIBCMT:wcslen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db180",
+    "name": "_wcscpy",
+    "object": "LIBCMT:wcslen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db19c",
+    "name": "FUN_001db19c",
+    "object": "LIBCMT:wcslen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db2b3",
+    "name": "_fread",
+    "object": "LIBCMT:wcslen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db2f5",
+    "name": "FUN_001db2f5",
+    "object": "LIBCMT:wcslen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db2ff",
+    "name": "FUN_001db2ff",
+    "object": "LIBCMT:wcslen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dca5f",
+    "name": "_vsnwprintf",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc61e",
+    "name": "_fputwc",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc65c",
+    "name": "FUN_001dc65c",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc66b",
+    "name": "FUN_001dc66b",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc766",
+    "name": "_ungetwc",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc7a2",
+    "name": "FUN_001dc7a2",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc7ac",
+    "name": "_fgetws",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc822",
+    "name": "FUN_001dc822",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc82c",
+    "name": "_fputws",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc890",
+    "name": "FUN_001dc890",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc89a",
+    "name": "__getws",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc909",
+    "name": "FUN_001dc909",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc914",
+    "name": "__putws",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc998",
+    "name": "FUN_001dc998",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc9a3",
+    "name": "_vfwprintf",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dc9f6",
+    "name": "FUN_001dc9f6",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dca00",
+    "name": "_vprintf",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dca55",
+    "name": "FUN_001dca55",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dcace",
+    "name": "FUN_001dcace",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dcb3c",
+    "name": "FUN_001dcb3c",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dcb6c",
+    "name": "FUN_001dcb6c",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dcc91",
+    "name": "FUN_001dcc91",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dcc99",
+    "name": "__wfsopen",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dcceb",
+    "name": "FUN_001dcceb",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dccf5",
+    "name": "FUN_001dccf5",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dcd08",
+    "name": "__wfreopen",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dcd64",
+    "name": "FUN_001dcd64",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dcd6e",
+    "name": "FUN_001dcd6e",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dce64",
+    "name": "FUN_001dce64",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dce6e",
+    "name": "FUN_001dce6e",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dce9c",
+    "name": "_winit_namebuf",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dcf08",
+    "name": "FUN_001dcf08",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dcf51",
+    "name": "FUN_001dcf51",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd003",
+    "name": "FUN_001dd003",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd00c",
+    "name": "FUN_001dd00c",
+    "object": "LIBCMT:vsnwprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db67f",
+    "name": "__control87",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db3f7",
+    "name": "FUN_001db3f7",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db439",
+    "name": "FUN_001db439",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db443",
+    "name": "_wprintf",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db49e",
+    "name": "FUN_001db49e",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db4a9",
+    "name": "FUN_001db4a9",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db501",
+    "name": "__abstract_cw",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db593",
+    "name": "__hw_cw",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db6b1",
+    "name": "__controlfp",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db6c7",
+    "name": "_fputc",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db717",
+    "name": "FUN_001db717",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db71f",
+    "name": "FUN_001db71f",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db76f",
+    "name": "FUN_001db76f",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db777",
+    "name": "FUN_001db777",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db780",
+    "name": "FUN_001db780",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db789",
+    "name": "__dosmaperr",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db7fc",
+    "name": "__fseek_lk",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db88b",
+    "name": "_fseek",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db8ca",
+    "name": "FUN_001db8ca",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db8d4",
+    "name": "_rewind",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db953",
+    "name": "FUN_001db953",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db95d",
+    "name": "__ftell_lk",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbabf",
+    "name": "_ftell",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbaf6",
+    "name": "FUN_001dbaf6",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dbb00",
+    "name": "FUN_001dbb00",
+    "object": "LIBCMT:_control87.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da209",
+    "name": "vsprintf",
+    "object": "LIBCMT:vsprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da059",
+    "name": "FUN_001da059",
+    "object": "LIBCMT:vsprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da081",
+    "name": "_fscanf",
+    "object": "LIBCMT:vsprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da0c1",
+    "name": "FUN_001da0c1",
+    "object": "LIBCMT:vsprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da0cc",
+    "name": "FUN_001da0cc",
+    "object": "LIBCMT:vsprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da0e9",
+    "name": "FUN_001da0e9",
+    "object": "LIBCMT:vsprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da19f",
+    "name": "crt_toupper",
+    "object": "LIBCMT:vsprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da1d8",
+    "name": "crt_tolower",
+    "object": "LIBCMT:vsprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da260",
+    "name": "FUN_001da260",
+    "object": "LIBCMT:vsprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d90f0",
+    "name": "crt_sprintf",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d8ebe",
+    "name": "DbgPrint",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d8f06",
+    "name": "XcRC4Crypt",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d8f0c",
+    "name": "XcRC4Key",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d8f18",
+    "name": "XcBlockCryptCBC",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d8f1e",
+    "name": "XcKeyTable",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d8f24",
+    "name": "XcDESKeyParity",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d8f2a",
+    "name": "XcHMAC",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d8f30",
+    "name": "XcModExp",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d8ff0",
+    "name": "FUN_001d8ff0",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9010",
+    "name": "FUN_001d9010",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9011",
+    "name": "FUN_001d9011",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9059",
+    "name": "FUN_001d9059",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9068",
+    "name": "FUN_001d9068",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d90e0",
+    "name": "FUN_001d90e0",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9148",
+    "name": "FUN_001d9148",
+    "object": "LIBCMT:sprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9e59",
+    "name": "crt_fopen",
+    "object": "LIBCMT:fopen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9e70",
+    "name": "FUN_001d9e70",
+    "object": "LIBCMT:fopen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9e72",
+    "name": "FUN_001d9e72",
+    "object": "LIBCMT:fopen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9e94",
+    "name": "FUN_001d9e94",
+    "object": "LIBCMT:fopen.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9dac",
+    "name": "crt_fclose",
+    "object": "LIBCMT:fclose.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9df5",
+    "name": "FUN_001d9df5",
+    "object": "LIBCMT:fclose.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9dfd",
+    "name": "__fsopen",
+    "object": "LIBCMT:fclose.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9e4f",
+    "name": "FUN_001d9e4f",
+    "object": "LIBCMT:fclose.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1deba0",
+    "name": "__trandisp1",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dec07",
+    "name": "__trandisp2",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ded6c",
+    "name": "FUN_001ded6c",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ded83",
+    "name": "__startOneArgErrorHandling",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dedc0",
+    "name": "FUN_001dedc0",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dedd5",
+    "name": "FUN_001dedd5",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dedec",
+    "name": "FUN_001dedec",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dee05",
+    "name": "__fload_withFB",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dee48",
+    "name": "FUN_001dee48",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dee5e",
+    "name": "FUN_001dee5e",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dee6b",
+    "name": "__math_exit",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1deea9",
+    "name": "FUN_001deea9",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1def4c",
+    "name": "FUN_001def4c",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1defb3",
+    "name": "FUN_001defb3",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1defd9",
+    "name": "FUN_001defd9",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df055",
+    "name": "FUN_001df055",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df083",
+    "name": "__stbuf",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df10b",
+    "name": "__ftbuf",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df1bd",
+    "name": "FUN_001df1bd",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df20a",
+    "name": "FUN_001df20a",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df285",
+    "name": "FUN_001df285",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df28e",
+    "name": "FUN_001df28e",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df419",
+    "name": "__write",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df4a0",
+    "name": "FUN_001df4a0",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df4c4",
+    "name": "FUN_001df4c4",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df562",
+    "name": "FUN_001df562",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df57e",
+    "name": "FUN_001df57e",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1df822",
+    "name": "FUN_001df822",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfa0d",
+    "name": "__set_errno_from_matherr",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfa55",
+    "name": "__errcode",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfa82",
+    "name": "__umatherr",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfb20",
+    "name": "__handle_qnan1",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfb73",
+    "name": "__handle_qnan2",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfbd2",
+    "name": "FUN_001dfbd2",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfc72",
+    "name": "FUN_001dfc72",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfd23",
+    "name": "FUN_001dfd23",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfd36",
+    "name": "__set_exp",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfd9f",
+    "name": "__set_bexp",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfdc4",
+    "name": "__sptype",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfe1f",
+    "name": "FUN_001dfe1f",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfed1",
+    "name": "FUN_001dfed1",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfede",
+    "name": "FUN_001dfede",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfeec",
+    "name": "__ctrlfp",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dff10",
+    "name": "FUN_001dff10",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dff91",
+    "name": "FUN_001dff91",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e0013",
+    "name": "FUN_001e0013",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e011f",
+    "name": "FUN_001e011f",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e0131",
+    "name": "FUN_001e0131",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e0197",
+    "name": "FUN_001e0197",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e0218",
+    "name": "__close",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e028f",
+    "name": "FUN_001e028f",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e02b3",
+    "name": "__freebuf",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e02de",
+    "name": "__openfile",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e0446",
+    "name": "__getstream",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e055f",
+    "name": "FUN_001e055f",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e075f",
+    "name": "FUN_001e075f",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e07c0",
+    "name": "FUN_001e07c0",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e0912",
+    "name": "__hextodec",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e0944",
+    "name": "__inc",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e0984",
+    "name": "FUN_001e0984",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e153d",
+    "name": "FUN_001e153d",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e155e",
+    "name": "FUN_001e155e",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1610",
+    "name": "_cvtdate",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e17c8",
+    "name": "FUN_001e17c8",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1953",
+    "name": "FUN_001e1953",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1997",
+    "name": "FUN_001e1997",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e19b7",
+    "name": "_gmtime",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1abe",
+    "name": "__filbuf",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1ba0",
+    "name": "__cintrindisp2",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1bde",
+    "name": "__cintrindisp1",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1c1b",
+    "name": "__ctrandisp2",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1c63",
+    "name": "FUN_001e1c63",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1c6a",
+    "name": "FUN_001e1c6a",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1db1",
+    "name": "__ctrandisp1",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1de4",
+    "name": "__fload",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1e20",
+    "name": "FUN_001e1e20",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1ea5",
+    "name": "FUN_001e1ea5",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e1ed5",
+    "name": "FUN_001e1ed5",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e209e",
+    "name": "__read",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e2125",
+    "name": "FUN_001e2125",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e2460",
+    "name": "FUN_001e2460",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e24d2",
+    "name": "__lseek",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e2559",
+    "name": "FUN_001e2559",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e257d",
+    "name": "__filwbuf",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e2669",
+    "name": "FUN_001e2669",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e26a0",
+    "name": "__ungetc_lk",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e270c",
+    "name": "_ungetc",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e2747",
+    "name": "FUN_001e2747",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e2751",
+    "name": "__flswbuf",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e2879",
+    "name": "FUN_001e2879",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e28a4",
+    "name": "__getbuf",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e28e8",
+    "name": "_write_char",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e290d",
+    "name": "_write_multi_char",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e2932",
+    "name": "_write_string",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e2984",
+    "name": "FUN_001e2984",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3110",
+    "name": "__wopenfile",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e327f",
+    "name": "FUN_001e327f",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e32c5",
+    "name": "FUN_001e32c5",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e330e",
+    "name": "__get_osfhandle",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e334f",
+    "name": "FUN_001e334f",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e33c2",
+    "name": "__unlock_fhandle",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e33e4",
+    "name": "FUN_001e33e4",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e35a9",
+    "name": "FUN_001e35a9",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e35d8",
+    "name": "FUN_001e35d8",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3776",
+    "name": "FUN_001e3776",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e37af",
+    "name": "FUN_001e37af",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e37da",
+    "name": "FUN_001e37da",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3805",
+    "name": "FUN_001e3805",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3830",
+    "name": "FUN_001e3830",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e385e",
+    "name": "FUN_001e385e",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e388c",
+    "name": "FUN_001e388c",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e38d1",
+    "name": "__wchartodigit",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3a50",
+    "name": "FUN_001e3a50",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3a9a",
+    "name": "FUN_001e3a9a",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3c37",
+    "name": "FUN_001e3c37",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3c81",
+    "name": "__callnewh",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3c9c",
+    "name": "__ZeroTail",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3cce",
+    "name": "__IncMan",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3d1b",
+    "name": "__RoundMan",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3d8d",
+    "name": "__CopyMan",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3da8",
+    "name": "FUN_001e3da8",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3db4",
+    "name": "__IsZeroMan",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3dcd",
+    "name": "__ShrMan",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3e48",
+    "name": "__ld12cvt",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3fa0",
+    "name": "__ld12tod",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3fb6",
+    "name": "FUN_001e3fb6",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e3fcc",
+    "name": "__ld12told",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4048",
+    "name": "FUN_001e4048",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4075",
+    "name": "FUN_001e4075",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e40a3",
+    "name": "FUN_001e40a3",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e40d0",
+    "name": "FUN_001e40d0",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e414f",
+    "name": "___dtold",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4209",
+    "name": "FUN_001e4209",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e426f",
+    "name": "FUN_001e426f",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4278",
+    "name": "__isatty",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e42b0",
+    "name": "__aulldvrm",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4345",
+    "name": "FUN_001e4345",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4422",
+    "name": "FUN_001e4422",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4432",
+    "name": "FUN_001e4432",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4493",
+    "name": "FUN_001e4493",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e45d2",
+    "name": "FUN_001e45d2",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4601",
+    "name": "FUN_001e4601",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e47af",
+    "name": "FUN_001e47af",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e484a",
+    "name": "FUN_001e484a",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4c1c",
+    "name": "FUN_001e4c1c",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4eb2",
+    "name": "__open",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4ef7",
+    "name": "FUN_001e4ef7",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4f07",
+    "name": "__sopen",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4f4c",
+    "name": "FUN_001e4f4c",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e4f5c",
+    "name": "FUN_001e4f5c",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e53d3",
+    "name": "FUN_001e53d3",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e540f",
+    "name": "FUN_001e540f",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e56fe",
+    "name": "__wsopen",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e5743",
+    "name": "FUN_001e5743",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e5753",
+    "name": "FUN_001e5753",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e5794",
+    "name": "FUN_001e5794",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e57d2",
+    "name": "__itoa",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e57fc",
+    "name": "__ltoa",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e5823",
+    "name": "FUN_001e5823",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e583d",
+    "name": "FUN_001e583d",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e58aa",
+    "name": "FUN_001e58aa",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e58db",
+    "name": "FUN_001e58db",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e58f6",
+    "name": "FUN_001e58f6",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e592f",
+    "name": "FUN_001e592f",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e596b",
+    "name": "FUN_001e596b",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e59c1",
+    "name": "FUN_001e59c1",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e59e3",
+    "name": "___addl",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e5a04",
+    "name": "___add_12",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e5a62",
+    "name": "___shl_12",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e5a90",
+    "name": "___shr_12",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e5abd",
+    "name": "FUN_001e5abd",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e5b8b",
+    "name": "FUN_001e5b8b",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e5e02",
+    "name": "FUN_001e5e02",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e5fbc",
+    "name": "FUN_001e5fbc",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e61de",
+    "name": "FUN_001e61de",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e6254",
+    "name": "FUN_001e6254",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e629f",
+    "name": "FUN_001e629f",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e63a0",
+    "name": "FUN_001e63a0",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e643e",
+    "name": "FUN_001e643e",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e6520",
+    "name": "FUN_001e6520",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e6584",
+    "name": "RtlUnwind",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e6596",
+    "name": "__strnicmp",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e65eb",
+    "name": "FUN_001e65eb",
+    "object": "LIBCMT:close.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1daeec",
+    "name": "crt_fgets",
+    "object": "LIBCMT:fgets.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1daed5",
+    "name": "FUN_001daed5",
+    "object": "LIBCMT:fgets.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1daf6a",
+    "name": "FUN_001daf6a",
+    "object": "LIBCMT:fgets.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1daf7e",
+    "name": "FUN_001daf7e",
+    "object": "LIBCMT:fgets.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1daf96",
+    "name": "atof",
+    "object": "LIBCMT:fgets.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da290",
+    "name": "memmove",
+    "object": "LIBCMT:memmove.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d95d0",
+    "name": "crt_strchr",
+    "object": "LIBCMT:strchr.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d94f0",
+    "name": "FUN_001d94f0",
+    "object": "LIBCMT:strchr.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d950d",
+    "name": "FUN_001d950d",
+    "object": "LIBCMT:strchr.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dab81",
+    "name": "crt_isspace",
+    "object": "LIBCMT:isctype.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1daaaa",
+    "name": "_isalpha",
+    "object": "LIBCMT:isctype.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dab2a",
+    "name": "isdigit",
+    "object": "LIBCMT:isctype.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dabaa",
+    "name": "_ispunct",
+    "object": "LIBCMT:isctype.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dabd3",
+    "name": "_isalnum",
+    "object": "LIBCMT:isctype.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dac2f",
+    "name": "crt_isgraph",
+    "object": "LIBCMT:isctype.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dad15",
+    "name": "FUN_001dad15",
+    "object": "LIBCMT:isctype.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9d28",
+    "name": "crt_time",
+    "object": "LIBCMT:time.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9d60",
+    "name": "__fclose_lk",
+    "object": "LIBCMT:time.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da92a",
+    "name": "crt_localtime",
+    "object": "LIBCMT:localtim.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d98ad",
+    "name": "crt_fprintf",
+    "object": "LIBCMT:fprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d981d",
+    "name": "FUN_001d981d",
+    "object": "LIBCMT:fprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9850",
+    "name": "FUN_001d9850",
+    "object": "LIBCMT:fprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d98a3",
+    "name": "FUN_001d98a3",
+    "object": "LIBCMT:fprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9901",
+    "name": "FUN_001d9901",
+    "object": "LIBCMT:fprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9911",
+    "name": "___initstdio",
+    "object": "LIBCMT:fprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d99ba",
+    "name": "FUN_001d99ba",
+    "object": "LIBCMT:fprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d99ce",
+    "name": "__lock_file",
+    "object": "LIBCMT:fprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d99fd",
+    "name": "__lock_file2",
+    "object": "LIBCMT:fprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9a20",
+    "name": "__unlock_file",
+    "object": "LIBCMT:fprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9bd2",
+    "name": "crt_fflush",
+    "object": "LIBCMT:fflush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9a4f",
+    "name": "__unlock_file2",
+    "object": "LIBCMT:fflush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9a72",
+    "name": "__flush",
+    "object": "LIBCMT:fflush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9acf",
+    "name": "__fflush_lk",
+    "object": "LIBCMT:fflush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9afd",
+    "name": "_flsall",
+    "object": "LIBCMT:fflush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9b9d",
+    "name": "FUN_001d9b9d",
+    "object": "LIBCMT:fflush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9bc9",
+    "name": "FUN_001d9bc9",
+    "object": "LIBCMT:fflush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9c18",
+    "name": "FUN_001d9c18",
+    "object": "LIBCMT:fflush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9c22",
+    "name": "__flushall",
+    "object": "LIBCMT:fflush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9c2b",
+    "name": "floor",
+    "object": "LIBCMT:fflush.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da5d0",
+    "name": "crt_strncat",
+    "object": "LIBCMT:strncat.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da83e",
+    "name": "crt_strtok",
+    "object": "LIBCMT:strtok.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1da8e3",
+    "name": "FUN_001da8e3",
+    "object": "LIBCMT:strtok.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9690",
+    "name": "crt_strstr",
+    "object": "LIBCMT:strstr.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db0c8",
+    "name": "crt_vsnprintf",
+    "object": "LIBCMT:vsnprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1daff2",
+    "name": "_atol",
+    "object": "LIBCMT:vsnprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1db04a",
+    "name": "atol",
+    "object": "LIBCMT:vsnprint.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd1d1",
+    "name": "FUN_001dd1d1",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd1e8",
+    "name": "FUN_001dd1e8",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd1ff",
+    "name": "FUN_001dd1ff",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd375",
+    "name": "__wtol",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd3d4",
+    "name": "FUN_001dd3d4",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd3d9",
+    "name": "__wtoi64",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd467",
+    "name": "__wctime",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd480",
+    "name": "_store_dt",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd49a",
+    "name": "__wasctime",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd576",
+    "name": "FUN_001dd576",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd5c8",
+    "name": "FUN_001dd5c8",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd601",
+    "name": "__SEH_epilog",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd620",
+    "name": "__allmul",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd660",
+    "name": "__aullshr",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd680",
+    "name": "__aullrem",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd6f5",
+    "name": "FUN_001dd6f5",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd770",
+    "name": "__aulldiv",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd7e0",
+    "name": "__allshr",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd801",
+    "name": "crt_stricmp",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd850",
+    "name": "__alldiv",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd8fa",
+    "name": "__copysign",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd91b",
+    "name": "__chgsign",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dd957",
+    "name": "FUN_001dd957",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dda3d",
+    "name": "FUN_001dda3d",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ddcc6",
+    "name": "FUN_001ddcc6",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ddd09",
+    "name": "FUN_001ddd09",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ddda3",
+    "name": "FUN_001ddda3",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ddda8",
+    "name": "Z",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dddbf",
+    "name": "FUN_001dddbf",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ddde6",
+    "name": "__nh_malloc",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dde12",
+    "name": "_malloc",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dde24",
+    "name": "FUN_001dde24",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dde73",
+    "name": "FUN_001dde73",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dde7c",
+    "name": "__forcdecpt",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ddf39",
+    "name": "__fassign",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ddf77",
+    "name": "FUN_001ddf77",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ddf9a",
+    "name": "FUN_001ddf9a",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1de043",
+    "name": "FUN_001de043",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1de0a3",
+    "name": "FUN_001de0a3",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1de14a",
+    "name": "FUN_001de14a",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1de19c",
+    "name": "FUN_001de19c",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1de229",
+    "name": "__cfltcvt",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1de27a",
+    "name": "FUN_001de27a",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1de28c",
+    "name": "__flsbuf",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1de3a5",
+    "name": "FUN_001de3a5",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1de3d8",
+    "name": "FUN_001de3d8",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1de3fc",
+    "name": "FUN_001de3fc",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1de452",
+    "name": "FUN_001de452",
+    "object": "LIBCMT:stricmp.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9d06",
+    "name": "rand",
+    "object": "LIBCMT:rand.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9cf9",
+    "name": "FUN_001d9cf9",
+    "object": "LIBCMT:rand.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d9179",
+    "name": "snprintf",
+    "object": "LIBCMT:snprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d91f0",
+    "name": "_shortsort",
+    "object": "LIBCMT:snprintf.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

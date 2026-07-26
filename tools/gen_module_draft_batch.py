@@ -23,7 +23,13 @@ def strip_c_comments(s: str) -> str:
 
 def sanitize_decl_for_c(decl: str) -> str:
     decl = strip_c_comments(decl)
-    return re.sub(r"\s*@<[^>]+>", "", decl)
+    decl = re.sub(r"\s*@<[^>]+>", "", decl)
+    decl = re.sub(r"@\d+", "", decl)
+    decl = re.sub(r"FID_conflict:", "", decl)
+    decl = re.sub(r"\b__stdcall\b", "", decl)
+    decl = re.sub(r"\b__cdecl\b", "", decl)
+    decl = re.sub(r"\s+", " ", decl).strip()
+    return decl
 
 
 def clean_param_name(name: str) -> str:
@@ -100,15 +106,35 @@ TYPE_KEYWORDS = {
     "int64_t",
     "int32_t",
     "int16_t",
+    "uint32_t",
+    "uint16_t",
+    "uint8_t",
     "wchar_t",
 }
 
 
+def param_list_span(decl: str) -> tuple[int, int] | None:
+    start = decl.find("(")
+    if start < 0:
+        return None
+    depth = 0
+    for i in range(start, len(decl)):
+        ch = decl[i]
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            if depth == 0:
+                return start, i
+    return None
+
+
 def split_param_strings(decl: str) -> list[str]:
-    m = re.search(r"\(([^)]*)\)", decl)
-    if not m:
+    span = param_list_span(decl)
+    if span is None:
         return []
-    params = m.group(1).strip()
+    start, end = span
+    params = decl[start + 1 : end].strip()
     if not params or params == "void":
         return []
     out: list[str] = []
@@ -135,6 +161,10 @@ def parse_params(decl: str) -> list[str]:
         p = strip_c_comments(re.sub(r"\[[^\]]*\]", "", p)).strip()
         if "..." in p:
             break
+        m_ptr = re.search(r"\*\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)", p)
+        if m_ptr:
+            names.append(clean_param_name(m_ptr.group(1)))
+            continue
         tok = re.split(r"\s+", p.replace("*", " ").strip())
         cand = tok[-1] if tok else ""
         if (
@@ -159,6 +189,9 @@ def format_fn_signature(decl: str, param_names: list[str]) -> str:
         if "..." in raw:
             sig_params.append("...")
             break
+        if re.search(rf"\*\s*{re.escape(name)}\s*\)", raw):
+            sig_params.append(raw)
+            continue
         if re.search(rf"\b{re.escape(name)}\s*$", raw):
             sig_params.append(raw)
         else:
@@ -177,13 +210,24 @@ def ret_kind(decl: str) -> str:
         return "ptr"
     if re.search(r"\bchar\b", head):
         return "char"
-    if re.search(r"\b(int|short|long|bool|float|double|wchar_t|size_t|uint|int64_t|int32_t|int16_t)\b", head):
+    if re.search(r"\b(int|short|long|bool|float|double|wchar_t|size_t|uint|int64_t|int32_t|int16_t|uint32_t|uint16_t|uint8_t)\b", head):
         return "scalar"
     return "void"
 
 
-def gen_stub_body(decl: str) -> str:
+def gen_stub_body(decl: str, addr: str | None = None) -> str:
     c_decl = sanitize_decl_for_c(decl)
+    use_addr = addr.lower() if addr else None
+    head_part = c_decl.split("(", 1)[0]
+    if "??" in c_decl or "@" in head_part:
+        if not use_addr:
+            use_addr = "0x0"
+        c_decl = f"void FUN_{int(use_addr, 16):08x}(void);"
+    name = fn_name(c_decl, use_addr or "0x0")
+    if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", name):
+        if not use_addr:
+            use_addr = "0x0"
+        c_decl = f"void FUN_{int(use_addr, 16):08x}(void);"
     params = parse_params(c_decl)
     lines = [f"  (void){p};" for p in params]
     kind = ret_kind(c_decl)
@@ -249,7 +293,7 @@ def main() -> None:
     write_disasm(object_name, decls, disasm_out)
     parts = [f"/* --- {object_name} batch drafts (2026-07-26) --- */\n"]
     for addr in sorted(decls.keys(), key=lambda x: int(x, 16)):
-        parts.append(f"/* {addr} */\n{gen_stub_body(decls[addr])}")
+        parts.append(f"/* {addr} */\n{gen_stub_body(decls[addr], addr)}")
     text = "\n".join(parts)
     impl_out.write_text(text)
     frag_out.write_text(text)
