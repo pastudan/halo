@@ -40500,7 +40500,7 @@
         {
           "addr": "0x60260",
           "decl": "void FUN_00060260(unsigned short channel, void *path @<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00060260"
         },
         {
