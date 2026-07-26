@@ -34179,7 +34179,7 @@
         },
         {
           "addr": "0x2f5f0",
-          "decl": "char FUN_0002f5f0(int actor_handle, float scale, float visibility, int unit_handle, char field_60, char dz_flag);",
+          "decl": "char FUN_0002f5f0(float scale, float visibility, char field_60, char dz_flag, int actor_handle @<eax>, int unit_handle @<edi>);",
           "ported": true
         },
         {
@@ -34511,8 +34511,9 @@
         },
         {
           "addr": "0x432b0",
-          "decl": "void FUN_000432b0(int unit /* @<ebx> */, int actor /* @<eax> */, int target /* @<edi> */, int stack_a, short priority);",
-          "ported": false
+          "decl": "void FUN_000432b0(int look_arg, short priority, int unit @<ebx>, int actor @<eax>, int target @<edi>);",
+          "ported": false,
+          "name": "FUN_000432b0"
         },
         {
           "addr": "0x43360",
@@ -34566,12 +34567,14 @@
         {
           "addr": "0x43db0",
           "decl": "void actor_communication_update(int actor_handle);",
-          "ported": false
+          "ported": false,
+          "name": "actor_communication_update"
         },
         {
           "addr": "0x43ea0",
-          "decl": "void FUN_00043ea0(void *comm /* @<ecx> */, int actor /* @<eax> */, int stack_a);",
-          "ported": false
+          "decl": "void FUN_00043ea0(int unit, void *comm @<ecx>, int prop_handle @<eax>);",
+          "ported": false,
+          "name": "FUN_00043ea0"
         },
         {
           "addr": "0x43f20",
@@ -34586,12 +34589,14 @@
         {
           "addr": "0x44500",
           "decl": "void ai_conversation_stop(int conversation_index);",
-          "ported": false
+          "ported": false,
+          "name": "ai_conversation_stop"
         },
         {
           "addr": "0x44590",
           "decl": "void ai_conversation_actor_deleted(int actor_handle);",
-          "ported": false
+          "ported": false,
+          "name": "ai_conversation_actor_deleted"
         },
         {
           "addr": "0x44660",
@@ -34748,7 +34753,7 @@
         },
         {
           "addr": "0x49430",
-          "decl": "void ai_debug_lineoffire_addpill(float *vec_a, float *vec_b, float radius, char color);",
+          "decl": "void ai_debug_lineoffire_addpill(float *vec_a, float *vec_b, int param_3, char param_4);",
           "ported": false
         },
         {
@@ -34894,7 +34899,7 @@
         },
         {
           "addr": "0x4b220",
-          "decl": "void FUN_0004b220(float *point @<eax>);",
+          "decl": "void FUN_0004b220(float *out);",
           "ported": true,
           "name": "FUN_0004b220"
         },

@@ -6034,7 +6034,7 @@ static uint16_t (*const b33440_c2f380)(int actor_handle, int prop_handle) = FUN_
 static int (*const b33440_c31850)(int actor_handle, void *input_block, float *position, void *location, short volume, int range_scale, short flags) = actor_audibility_at_point;
 static int (*const b33440_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
 static char (*const b33440_c32170)(float *sense_pos_out, int actor_handle, int unit_handle, char flag) = FUN_00032170;
-static char (*const b33440_c2f5f0)(int actor_handle, float scale, float visibility, int unit_handle, char field_60, char dz_flag) = FUN_0002f5f0;
+static char (*const b33440_c2f5f0)(float scale, float visibility, char field_60, char dz_flag, int actor_handle, int unit_handle) = FUN_0002f5f0;
 static bool (*const b33440_c3b320)(int actor_handle) = actor_has_ranged_weapon;
 static void (*const b33440_c32ac0)(int actor_handle, int prop_handle, char flag) = actor_perception_unreachable;
 static int16_t (*const b33440_c1d6d0)(int actor_handle) = actor_action_try_to_panic;
@@ -7311,7 +7311,7 @@ static int (*const b342a0_c31c00)(int owner_handle, int unit_handle, char verify
 static void *(*const b342a0_tag)(int, int) = tag_get;
 static bool (*const b342a0_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
 static int (*const b342a0_gtime)(void) = game_time_get;
-static char (*const b342a0_c2f5f0)(int actor_handle, float scale, float visibility, int unit_handle, char field_60, char dz_flag) = FUN_0002f5f0;
+static char (*const b342a0_c2f5f0)(float scale, float visibility, char field_60, char dz_flag, int actor_handle, int unit_handle) = FUN_0002f5f0;
 static void (*const b342a0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b342a0_exitfn)(int) = system_exit;
 static int16_t (*const b342a0_c1d6d0)(int actor_handle) = actor_action_try_to_panic;

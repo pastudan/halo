@@ -3902,7 +3902,7 @@ void FUN_0004b7a0(void)
 static void (*const b4b810_c13d6f0)(void *iter, int type_mask, int flags) = object_iterator_new;
 static void * (*const b4b810_c13d730)(void *iter) = object_iterator_next;
 static void (*const b4b810_c1a9200)(int object_handle, float *out_position) = unit_get_head_position;
-static void (*const b4b810_c4b220)(void) = FUN_0004b220;
+static void (*const b4b810_c4b220)(float *point) = FUN_0004b220;
 static void *(*const b4b810_tag)(int, int) = tag_get;
 static void *(*const b4b810_elem)(void *, int, int) = tag_block_get_element;
 static const char * (*const b4b810_c1ba1f0)(int tag_index) = tag_get_name;
@@ -4255,7 +4255,7 @@ void FUN_0004b810(void)
 #if defined(__clang__)
 static void *(*const b4bc70_tryget)(int, int) = object_try_and_get_and_verify_type;
 static vector3_t * (*const b4bc70_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static void (*const b4bc70_c4b220)(void) = FUN_0004b220;
+static void (*const b4bc70_c4b220)(float *point) = FUN_0004b220;
 static char * (*const b4bc70_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 static void (*const b4bc70_c4b2b0)(void) = (void *)FUN_0004b2b0;
 static void (*const b4bc70_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
@@ -5125,7 +5125,7 @@ void FUN_0004c560(void)
 /* FUN_0004c890 (0x4c890) — XBE naked draft (batch 153). */
 #if defined(__clang__)
 static void (*const b4c890_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
-static void (*const b4c890_c4b220)(void) = FUN_0004b220;
+static void (*const b4c890_c4b220)(float *point) = FUN_0004b220;
 static void (*const b4c890_c4c560)(void) = FUN_0004c560;
 
 __attribute__((naked, noinline))
@@ -5192,9 +5192,9 @@ void FUN_0004c890(void)
 #if defined(__clang__)
 static void *(*const b4c920_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void *(*const b4c920_tag)(int, int) = tag_get;
-static void (*const b4c920_c490c0)(void) = FUN_000490C0;
+static void *(*const b4c920_c490c0)(int) = FUN_000490C0;
 static void *(*const b4c920_get)(int, int) = object_get_and_verify_type;
-static void (*const b4c920_c4b220)(void) = FUN_0004b220;
+static void (*const b4c920_c4b220)(float *point) = FUN_0004b220;
 static void * (*const b4c920_c1d620)(int actor_handle) = actor_action_debug_color;
 static void (*const b4c920_c4b670)(void) = FUN_0004b670;
 static char * (*const b4c920_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
@@ -12469,7 +12469,7 @@ void FUN_0004c920(int actor_handle __attribute__((unused)), char debug_selected 
 
 /* FUN_00052ab0 (0x52ab0) — XBE naked draft (batch 145). */
 #if defined(__clang__)
-static void (*const b52ab0_c4b220)(void) = FUN_0004b220;
+static void (*const b52ab0_c4b220)(float *point) = FUN_0004b220;
 static char * (*const b52ab0_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
 static void (*const b52ab0_c4b2b0)(void) = (void *)FUN_0004b2b0;
 static void (*const b52ab0_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
@@ -12578,7 +12578,7 @@ static void * (*const b52bb0_c1d620)(int actor_handle) = actor_action_debug_colo
 static void (*const b52bb0_c188a90)(float *points, short count, void *color) = FUN_00188a90;
 static void (*const b52bb0_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
 static void (*const b52bb0_c189ba0)(float *points, short count, void *color) = FUN_00189ba0;
-static void (*const b52bb0_c4b220)(void) = FUN_0004b220;
+static void (*const b52bb0_c4b220)(float *point) = FUN_0004b220;
 static char * (*const b52bb0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 static void (*const b52bb0_c4b2b0)(void) = (void *)FUN_0004b2b0;
 static void (*const b52bb0_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
