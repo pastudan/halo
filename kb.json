@@ -40482,8 +40482,9 @@
         },
         {
           "addr": "0x60970",
-          "decl": "int16_t FUN_00060970(void *path);",
-          "ported": false
+          "decl": "int16_t FUN_00060970(void *path @<eax>);",
+          "ported": true,
+          "name": "FUN_00060970"
         },
         {
           "addr": "0x609e0",

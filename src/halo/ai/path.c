@@ -3586,53 +3586,27 @@ char FUN_00060910(void *path __attribute__((unused)), int16_t step_index __attri
 #endif
 
 
-/* FUN_00060970 (0x60970) — XBE naked draft (batch 236). */
-#if defined(__clang__)
-static char (*const b60970_c60330)(void *path, const char *debug_context) = FUN_00060330;
-static void (*const b60970_c60670)(void *path, int16_t heap_index) = FUN_00060670;
-
-__attribute__((naked, noinline))
-int16_t FUN_00060970(void *path __attribute__((unused)))
+/* FUN_00060970 (0x60970) — readable C lift. */
+int16_t FUN_00060970(void *path)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl $0x25eb40\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c60330]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x1430(%%esi), %%ax\n\t"
-      "addl $4, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_00060970_1\n\t"
-      "decl %%eax\n\t"
-      "movw %%ax, 0x1430(%%esi)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movw 0x1432(%%esi,%%eax,2), %%cx\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x1432(%%esi), %%di\n\t"
-      "pushl $0\n\t"
-      "movw %%cx, 0x1432(%%esi)\n\t"
-      "call *%[c60670]\n\t"
-      "pushl $0x25eb2c\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c60330]\n\t"
-      "addl $8, %%esp\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_00060970_1:\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c60330] "m"(b60970_c60330), [c60670] "m"(b60970_c60670)
-      : "memory");
-}
-#else
-#error "FUN_00060970: clang naked draft required"
-#endif
+  int16_t count;
+  int16_t old_head;
+  int16_t new_head;
 
+  FUN_00060330(path, (const char *)0x25eb40);
+  count = *(int16_t *)((char *)path + 0x1430);
+  if (count <= 0) {
+    return (int16_t)-1;
+  }
+  count = (int16_t)(count - 1);
+  *(int16_t *)((char *)path + 0x1430) = count;
+  new_head = *(int16_t *)((char *)path + 0x1432 + (int)count * 2);
+  old_head = *(int16_t *)((char *)path + 0x1432);
+  *(int16_t *)((char *)path + 0x1432) = new_head;
+  FUN_00060670(path, 0);
+  FUN_00060330(path, (const char *)0x25eb2c);
+  return old_head;
+}
 
 /* FUN_000609e0 (0x609e0) — XBE naked draft (batch 113). */
 #if defined(__clang__)
