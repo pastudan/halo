@@ -61,11 +61,11 @@ void path_add_step(void)
   /* cmp (int16_t)eax, (int16_t)ecx -> jne 0x60dd6 */
   /* cmp (int16_t)ecx, -1 -> je 0x60dd6 */
   /* cmp (int16_t)eax, 0xffff -> je 0x60db7 */
-  FUN_000600f0();
-  FUN_000600f0();
+  FUN_000600f0((void *)(uintptr_t)edi, (int16_t)esi);
+  FUN_000600f0((void *)(uintptr_t)edi, (int16_t)esi);
   /* test (char)eax, 0x41 -> jne 0x60db4 */
   /* cmp (int16_t)eax, 0xffff -> jne 0x60dd6 */
-  FUN_000600f0();
+  FUN_000600f0((void *)(uintptr_t)edi, (int16_t)esi);
   magnitude3d((float *)(uintptr_t)eax);
   csmemset((void *)(uintptr_t)eax, 0, 0);
   /* test (char)eax, (char)eax -> je 0x60e60 */
@@ -97,7 +97,7 @@ void FUN_00060ea0(void *avoidance_record, float *end_point, void *param_2, void 
   system_exit(0);
   FUN_00062410((void *)(uintptr_t)eax, 0, (float *)0, 0.0f);
   /* cmp (int16_t)eax, (int16_t)esi -> je 0x61030 */
-  FUN_00060070();
+  FUN_00060070(avoidance_record, 0);
   path_add_step();
 
   (void)eax;
@@ -203,7 +203,7 @@ int FUN_000615b0(void *avoidance_record)
   int esi = 0;
 
   FUN_00060970();
-  FUN_000600f0();
+  FUN_000600f0(avoidance_record, 0);
   FUN_00061080();
   /* cmp eax, -1 -> jne 0x616bc */
   /* cmp (int16_t)ecx, -1 -> jne 0x61689 */

@@ -3792,23 +3792,8 @@ LAB_001a4062_done:
 }
 /* --- bipeds.obj orphan shells (2026-07-26) --- */
 
-/* 0x1a0db0 */
+/* kb export alias @ 0x1a0db0 */
 char FUN_001a0db0(int biped_handle)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  object_get_and_verify_type(biped_handle, 1);
-  tag_get('dpib', *(int *)(eax));
-  /* cmp (char)ecx, 3 -> jle 0x1a0df8 */
-  /* test (char)ecx, dl -> je 0x1a0df0 */
-  /* relift: test byte ptr [esi + 0xb6], (char)ecx -> je 0x1a0df8 */
-  return 0;
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  return (char)biped_flying_through_air(biped_handle);
 }

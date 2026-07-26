@@ -480,11 +480,13 @@ void FUN_001b56b0(void)
   (void)ecx;
 }
 
-/* 0x1b5750 */
-void set_real_quaternion(void)
+/* 0x1b5750 — pack float w + three int components into quaternion storage */
+void set_real_quaternion(float *quat, float w, int x, int y, int z)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  *quat = w;
+  *(int *)((char *)quat + 4) = x;
+  *(int *)((char *)quat + 8) = y;
+  *(int *)((char *)quat + 0xc) = z;
 }
 
 /* 0x1b5770 */

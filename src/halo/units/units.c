@@ -14108,34 +14108,59 @@ char FUN_001a6350(int unit_handle)
 }
 /* --- units.obj orphan shells (2026-07-26) --- */
 
-/* 0x1a8770 */
+/* 0x1a8770 — anim_state byte at +0xb in {3,4}? */
 char FUN_001a8770(void *anim_state)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  char state;
+
+  state = *(char *)((char *)anim_state + 0xb);
+  if (state >= 3 && state <= 4)
+    return 1;
   return 0;
 }
 
-/* 0x1a8890 */
+/* 0x1a8890 — gate on anim_state[0xc]==0 and motion band at [0xb] */
 char FUN_001a8890(void *anim_state)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  char result;
+  char band;
+
+  result = (*(char *)((char *)anim_state + 0xc) == 0);
+  band = *(char *)((char *)anim_state + 0xb);
+  if (band < 0x17)
+    return result;
+  if (band <= 0x23)
+    return 0;
+  if (band == 0x29)
+    return 0;
+  return result;
 }
 
-/* 0x1a8910 */
+/* 0x1a8910 — switch on anim_state for states 0x1e..0x29 */
 char FUN_001a8910(int16_t anim_state)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  static const unsigned char k_slot[] = {
+      0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0,
+  };
+  int idx;
+
+  idx = (int)anim_state - 0x1e;
+  if (idx < 0 || idx > 0xb)
+    return 1;
+  return k_slot[idx] ? 1 : 0;
 }
 
-/* 0x1a8950 */
+/* 0x1a8950 — map (anim_state,target_state) pair to action id */
 int FUN_001a8950(int16_t anim_state, int16_t target_state)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  int result;
+
+  result = 6;
+  if (anim_state == 0 || anim_state == 2 || anim_state == 3) {
+    if (target_state == 0 || target_state == 2 || target_state == 3)
+      result = 1;
+  }
+  if (anim_state == 0x16 || anim_state == 0x15)
+    result = 2;
+  return result;
 }

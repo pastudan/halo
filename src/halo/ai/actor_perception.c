@@ -657,10 +657,17 @@ void actor_perception_desire_prop(void)
   (void)ebp;
 }
 
-/* 0x2fb60 */
-void arctangent(void)
+/* 0x2fb60 — fpatan(y, x) */
+float arctangent(float y, float x)
 {
-  /* relift: no calls detected — manual review */
+  double dy;
+  double dx;
+  double r;
+
+  dy = (double)y;
+  dx = (double)x;
+  __asm__ volatile("fpatan" : "=t"(r) : "0"(dy), "u"(dx));
+  return (float)r;
 }
 
 /* 0x300b0 */

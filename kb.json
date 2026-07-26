@@ -2664,7 +2664,7 @@
         },
         {
           "addr": "0x1d4f0",
-          "decl": "void actor_get_pursuit_location(void);",
+          "decl": "void *actor_get_pursuit_location(int actor_handle);",
           "ported": false
         },
         {
@@ -29545,7 +29545,7 @@
         },
         {
           "addr": "0x1b5750",
-          "decl": "void set_real_quaternion(void);",
+          "decl": "void set_real_quaternion(float *quat, float w, int x, int y, int z);",
           "ported": false
         },
         {
@@ -34176,7 +34176,7 @@
         },
         {
           "addr": "0x2fb60",
-          "decl": "void arctangent(void);",
+          "decl": "float arctangent(float y, float x);",
           "ported": false
         },
         {
@@ -34673,7 +34673,7 @@
         },
         {
           "addr": "0x493b0",
-          "decl": "void FUN_000493B0(void);",
+          "decl": "void FUN_000493B0(float *out, float value, int field_4, int field_8);",
           "ported": false
         },
         {
@@ -34957,7 +34957,7 @@
         },
         {
           "addr": "0x538d0",
-          "decl": "void FUN_000538d0(void);",
+          "decl": "int16_t FUN_000538d0(void);",
           "ported": false
         },
         {
@@ -40236,17 +40236,17 @@
         },
         {
           "addr": "0x60070",
-          "decl": "void FUN_00060070(void);",
+          "decl": "void *FUN_00060070(void *obstacles, int16_t disc_index);",
           "ported": false
         },
         {
           "addr": "0x600c0",
-          "decl": "void FUN_000600c0(void);",
+          "decl": "int16_t FUN_000600c0(void *obstacles, int16_t disc_index);",
           "ported": false
         },
         {
           "addr": "0x600f0",
-          "decl": "void FUN_000600f0(void);",
+          "decl": "void *FUN_000600f0(void *path, int16_t step_index);",
           "ported": false
         },
         {
@@ -40256,17 +40256,17 @@
         },
         {
           "addr": "0x601a0",
-          "decl": "void FUN_000601a0(void);",
+          "decl": "int FUN_000601a0(int16_t heap_index);",
           "ported": false
         },
         {
           "addr": "0x601e0",
-          "decl": "void FUN_000601e0(void);",
+          "decl": "int FUN_000601e0(int heap_index);",
           "ported": false
         },
         {
           "addr": "0x601f0",
-          "decl": "void FUN_000601f0(void);",
+          "decl": "int FUN_000601f0(int heap_index);",
           "ported": false
         },
         {

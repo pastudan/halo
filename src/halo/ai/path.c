@@ -1059,37 +1059,70 @@ char FUN_0005f740(unsigned int *path_buf)
   (void)ebp;
 }
 
-/* 0x60070 */
-void FUN_00060070(void)
+/* 0x60070 — obstacle disc node accessor (path.h:396) */
+void *FUN_00060070(void *obstacles, int16_t disc_index)
 {
-  int esi = 0;
+  int16_t disc_count;
 
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x60090 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x600b0 */
-  display_assert((char *)0x0025e930, (char *)0x0025e990, 396, 0);
-  system_exit(0);
-
-  (void)esi;
+  disc_count = *(int16_t *)((char *)obstacles + 2);
+  if (disc_index < 0 || disc_index >= disc_count || disc_count > 0x80) {
+    display_assert(
+        "disc_index>=0 && disc_index<obstacles->disc_count && "
+        "obstacles->disc_count<=MAXIMUM_OBSTACLE_DISCS",
+        "c:\\halo\\source\\ai\\path.h", 396, 1);
+    system_exit(-1);
+  }
+  return (char *)obstacles + (int)disc_index * 24 + 8;
 }
 
-/* 0x600c0 */
-void FUN_000600c0(void)
+/* 0x600c0 — disc field at node+2, or -1 for invalid index */
+int16_t FUN_000600c0(void *obstacles, int16_t disc_index)
 {
-  /* cmp (int16_t)eax, 0xffff -> je 0x600df */
-  FUN_00060070();
+  void *node;
+
+  if (disc_index == -1)
+    return -1;
+  node = FUN_00060070(obstacles, disc_index);
+  return *(int16_t *)((char *)node + 2);
 }
 
-/* 0x600f0 */
-void FUN_000600f0(void)
+/* 0x600f0 — path step node accessor (path_obstacle_avoidance.c:40) */
+void *FUN_000600f0(void *path, int16_t step_index)
 {
-  int esi = 0;
+  int16_t step_count;
 
-  /* cmp (int16_t)esi, (int16_t)eax -> jge 0x60110 */
-  /* cmp (int16_t)eax, 0x80 -> jle 0x6012d */
-  display_assert((char *)0x0025e9b0, (char *)0x0025ea14, 40, 0);
-  system_exit(0);
+  step_count = *(int16_t *)((char *)path + 0x2c);
+  if (step_index < 0 || step_index >= step_count || step_count > 0x80) {
+    display_assert(
+        "step_index>=0 && step_index<path->step_count && "
+        "path->step_count<=MAXIMUM_PATH_STEPS",
+        "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 40, 1);
+    system_exit(-1);
+  }
+  return (char *)path + (int)step_index * 40 + 0x30;
+}
 
-  (void)esi;
+/* 0x601a0 — parent heap index (path_obstacle_avoidance.c:57) */
+int FUN_000601a0(int16_t heap_index)
+{
+  if (heap_index <= 0) {
+    display_assert("heap_index>0",
+                   "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 57, 1);
+    system_exit(-1);
+  }
+  return ((int)heap_index - 1) / 2;
+}
+
+/* 0x601e0 — binary-heap left child index */
+int FUN_000601e0(int heap_index)
+{
+  return heap_index * 2 + 1;
+}
+
+/* 0x601f0 — binary-heap right child index */
+int FUN_000601f0(int heap_index)
+{
+  return heap_index * 2 + 2;
 }
 
 /* 0x60140 */
@@ -1103,32 +1136,6 @@ void FUN_00060140(void)
   system_exit(0);
 
   (void)esi;
-}
-
-/* 0x601a0 */
-void FUN_000601a0(void)
-{
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jg 0x601ca */
-  display_assert((char *)0x0025eaa4, (char *)0x0025ea14, 57, 0);
-  system_exit(0);
-
-  (void)esi;
-}
-
-/* 0x601e0 */
-void FUN_000601e0(void)
-{
-  /* relift: no calls detected — manual review */
-  (void)0;
-}
-
-/* 0x601f0 */
-void FUN_000601f0(void)
-{
-  /* relift: no calls detected — manual review */
-  (void)0;
 }
 
 /* 0x60200 */
@@ -1306,7 +1313,7 @@ void FUN_00060910(void)
 
   FUN_00060330();
   /* cmp (int16_t)edi, 0x80 -> jge 0x60967 */
-  FUN_000600f0();
+  FUN_000600f0((void *)0, (int16_t)edi);
   FUN_000604e0();
   FUN_00060330();
 
@@ -1374,8 +1381,8 @@ void FUN_000609e0(void *path)
   /* cmp (int16_t)eax, (int16_t)ecx -> jne 0x60dd6 */
   /* cmp (int16_t)ecx, -1 -> je 0x60dd6 */
   /* cmp (int16_t)eax, 0xffff -> je 0x60db7 */
-  FUN_000600f0();
-  FUN_000600f0();
+  FUN_000600f0(path, (int16_t)esi);
+  FUN_000600f0(path, (int16_t)esi);
   /* test (char)eax, 0x41 -> jne 0x60db4 */
   /* cmp (int16_t)eax, 0xffff -> jne 0x60dd6 */
 

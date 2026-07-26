@@ -633,11 +633,12 @@ void FUN_00049300(void)
   (void)edi;
 }
 
-/* 0x493b0 */
-void FUN_000493B0(void)
+/* 0x493b0 — store float + two dwords into a 12-byte record */
+void FUN_000493B0(float *out, float value, int field_4, int field_8)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  *out = value;
+  *(int *)((char *)out + 4) = field_4;
+  *(int *)((char *)out + 8) = field_8;
 }
 
 /* 0x49430 */
@@ -1892,7 +1893,7 @@ void FUN_0004c920(void)
   datum_get((void *)(uintptr_t)eax, 0);
   FUN_00189270(0, (float *)(uintptr_t)ebx, (float *)0, (void *)0);
   /* test (char)eax, (char)eax -> je 0x4f145 */
-  actor_get_pursuit_location();
+  actor_get_pursuit_location(0);
   /* test edi, edi -> je 0x4f145 */
   /* test (int16_t)ecx, (int16_t)ecx -> jne 0x4f126 */
   /* cmp eax, -1 -> je 0x4f126 */
@@ -1989,7 +1990,7 @@ void FUN_0004c920(void)
   /* test (char)eax, (char)eax -> je 0x5020b */
   actor_action_debug_color(0);
   FUN_00189320(0, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0.0f, (void *)(uintptr_t)eax);
-  actor_get_pursuit_location();
+  actor_get_pursuit_location(0);
   display_assert((char *)0x0025ba88, (char *)0x0025ab74, 2773, 0);
   system_exit(0);
   actor_action_debug_color(0);
@@ -2259,7 +2260,7 @@ void FUN_00052bb0(void)
   FUN_0004b2b0();
   FUN_00189cb0(0, (void *)(uintptr_t)eax, (void *)0, 0);
   /* cmp eax, -1 -> je 0x53233 */
-  actor_get_pursuit_location();
+  actor_get_pursuit_location(0);
   /* test eax, eax -> je 0x53231 */
   /* relift: cmp word ptr [eax], 1 -> jne 0x53231 */
   /* relift: cmp (int16_t)ecx, word ptr [ebp - 0x28] -> jne 0x53231 */
@@ -2416,11 +2417,10 @@ void FUN_00053890(void)
   console_printf(0, (void *)0x0025c120);
 }
 
-/* 0x538d0 */
-void FUN_000538d0(void)
+/* 0x538d0 — read debug widget field at +0x30 */
+int16_t FUN_000538d0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  return *(int16_t *)(*(int *)0x5ab270 + 0x30);
 }
 
 /* 0x538f0 */

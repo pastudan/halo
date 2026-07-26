@@ -2863,16 +2863,17 @@ char actor_action_test_grenade(int actor_handle)
   (void)edi;
 }
 
-/* 0x1d4f0 */
-void actor_get_pursuit_location(void)
+/* 0x1d4f0 — pursuit location offset for vehicle/biped actors */
+void *actor_get_pursuit_location(int actor_handle)
 {
-  int ecx = 0;
+  char *actor;
+  int16_t unit_type;
 
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp (int16_t)ecx, 7 -> je 0x1d518 */
-  /* cmp (int16_t)ecx, 5 -> jne 0x1d51f */
-
-  (void)ecx;
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  unit_type = *(int16_t *)(actor + 0x6c);
+  if (unit_type == 7 || unit_type == 5)
+    return actor + 0xa4;
+  return 0;
 }
 
 /* 0x1dfa0 */
