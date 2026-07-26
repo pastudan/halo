@@ -550,12 +550,29 @@ void FUN_000a5700(void)
 #endif
 
 
-/* 0xa57a0 */
+/* FUN_000a57a0 (0xa57a0) — XBE naked draft (batch 180). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_000a57a0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fsqrt\n\t"
+      "fdivrs 0x2533c8\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000a57a0: clang naked draft required"
+#endif
+
 
 /* FUN_000a57b0 (0xa57b0) — XBE naked draft (batch 153). */
 #if defined(__clang__)

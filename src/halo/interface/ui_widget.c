@@ -2492,19 +2492,34 @@ void ui_widget_link_child(void *parent __attribute__((unused)), void *child __at
 #endif
 
 
-float widget_instance_get_opacity_product(void *widget)
-{
-  float opacity;
-  void *node;
+/* widget_instance_get_opacity_product (0xe4960) — XBE naked draft (batch 184). */
+#if defined(__clang__)
 
-  opacity = *(float *)((char *)widget + 0x24);
-  node = *(void **)((char *)widget + 0x30);
-  while (node != NULL) {
-    opacity = opacity * *(float *)((char *)node + 0x24);
-    node = *(void **)((char *)node + 0x30);
-  }
-  return opacity;
+
+__attribute__((naked, noinline))
+float widget_instance_get_opacity_product(void *widget __attribute__((unused)))
+{
+  __asm__ volatile(
+      "flds 0x24(%%eax)\n\t"
+      "movl 0x30(%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lwidget_instance_get_opacity_product_2\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lwidget_instance_get_opacity_product_1:\n\t"
+      "fmuls 0x24(%%eax)\n\t"
+      "movl 0x30(%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lwidget_instance_get_opacity_product_1\n\t"
+      ".Lwidget_instance_get_opacity_product_2:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "widget_instance_get_opacity_product: clang naked draft required"
+#endif
+
 
 /* widget_instance_is_visible_in_parent_chain (0xe4980) — XBE naked draft (batch 131). */
 #if defined(__clang__)
@@ -2959,22 +2974,43 @@ void __stdcall ui_widget_filesystem_check_thread_proc(int unused)
   }
 }
 
-unsigned int modulate_pixel32_by_real_alpha(unsigned int pixel, float alpha)
-{
-  int alpha_int;
-  unsigned int rgb;
-  float scaled;
+/* modulate_pixel32_by_real_alpha (0xe55e0) — XBE naked draft (batch 179). */
+#if defined(__clang__)
 
-  alpha_int = (int)(pixel >> 24);
-  if (alpha_int < 0)
-    scaled = (float)alpha_int + *(float *)0x25fb8c;
-  else
-    scaled = (float)alpha_int;
-  scaled = scaled * alpha;
-  alpha_int = (int)scaled;
-  rgb = pixel & 0xffffff;
-  return rgb | ((unsigned int)alpha_int << 24);
+
+__attribute__((naked, noinline))
+unsigned int modulate_pixel32_by_real_alpha(unsigned int pixel __attribute__((unused)), float alpha __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "shrl $0x18, %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%ecx, 0x8(%%ebp)\n\t"
+      "fildl 0x8(%%ebp)\n\t"
+      "jge .Lmodulate_pixel32_by_real_alpha_1\n\t"
+      "fadds 0x25fb8c\n\t"
+      ".Lmodulate_pixel32_by_real_alpha_1:\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fistps 0xc(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "andl $0xffffff, %%eax\n\t"
+      "shll $0x18, %%edx\n\t"
+      "orl %%edx, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "modulate_pixel32_by_real_alpha: clang naked draft required"
+#endif
+
 
 /* ui_widgets_close_stack_for_player (0xe5910) — XBE naked draft (batch 135). */
 #if defined(__clang__)
@@ -3418,13 +3454,35 @@ void network_game_reset_to_pregame_ui(void)
 #endif
 
 
-char FUN_000e9a60(void *widget)
+/* FUN_000e9a60 (0xe9a60) — XBE naked draft (batch 186). */
+#if defined(__clang__)
+static void *(*const be9a60_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
+char FUN_000e9a60(void *widget __attribute__((unused)))
 {
-  csmemset((void *)0x46cce8, 0, 0x50);
-  *(int *)((char *)widget + 0x40) = 0;
-  *(int16_t *)((char *)widget + 0x44) = 0;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl $0x50\n\t"
+      "pushl $0\n\t"
+      "pushl $0x46cce8\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl $0, 0x40(%%eax)\n\t"
+      "movw $0, 0x44(%%eax)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(be9a60_memset)
+      : "memory");
 }
+#else
+#error "FUN_000e9a60: clang naked draft required"
+#endif
+
 
 /* ui_widget_event_handler_set_difficulty (0xe9bd0) — XBE naked draft (batch 128). */
 #if defined(__clang__)

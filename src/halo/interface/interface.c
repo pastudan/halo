@@ -1666,15 +1666,33 @@ void interface_get_rgb_color(void)
 #endif
 
 
-/* 0xdff70 */
+/* interface_draw_fullscreen_overlays (0xdff70) — XBE naked draft (batch 179). */
+#if defined(__clang__)
+static void (*const bdff70_c93140)(void) = cinematic_render;
+static void (*const bdff70_cdfdc0)(void) = interface_draw_splitscreen_dividers;
+static void (*const bdff70_cd4ab0)(void) = hud_render_timer;
+static void (*const bdff70_ce3690)(void) = terminal_draw;
+static void (*const bdff70_c102700)(void) = main_framerate_render;
+static void (*const bdff70_cdf4e0)(void) = FUN_000df4e0;
+
+__attribute__((naked, noinline))
 void interface_draw_fullscreen_overlays(void)
 {
-  cinematic_render();
-  interface_draw_splitscreen_dividers();
-  hud_render_timer();
-  terminal_draw();
-  main_framerate_render();
+  __asm__ volatile(
+      "call *%[c93140]\n\t"
+      "call *%[cdfdc0]\n\t"
+      "call *%[cd4ab0]\n\t"
+      "call *%[ce3690]\n\t"
+      "call *%[c102700]\n\t"
+      "jmp *%[cdf4e0]\n\t"
+      :
+      : [c93140] "m"(bdff70_c93140), [cdfdc0] "m"(bdff70_cdfdc0), [cd4ab0] "m"(bdff70_cd4ab0), [ce3690] "m"(bdff70_ce3690), [c102700] "m"(bdff70_c102700), [cdf4e0] "m"(bdff70_cdf4e0)
+      : "memory");
 }
+#else
+#error "interface_draw_fullscreen_overlays: clang naked draft required"
+#endif
+
 
 /* interface_draw_bitmap (0xdff90) — XBE naked draft (batch 123). */
 #if defined(__clang__)

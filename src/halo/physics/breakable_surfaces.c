@@ -1200,11 +1200,35 @@ void FUN_001457b0(int a0, int a1, int a2)
   FUN_00145660(a0, a1, (const char *)(uintptr_t)a2, 0);
 }
 
-/* 0x1457d0 */
-void FUN_001457d0(int a0, int a1, int a2, int a3)
+/* FUN_001457d0 (0x1457d0) — XBE naked draft (batch 181). */
+#if defined(__clang__)
+static void (*const b1457d0_c145660)(int object_handle /* */, int animation_graph_tag, const char *anim_name, int16_t frame) = FUN_00145660;
+
+__attribute__((naked, noinline))
+void FUN_001457d0(int a0 __attribute__((unused)), int a1 __attribute__((unused)), int a2 __attribute__((unused)), int a3 __attribute__((unused)))
 {
-  FUN_00145660(a0, a1, (const char *)(uintptr_t)a2, (int16_t)a3);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c145660]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c145660] "m"(b1457d0_c145660)
+      : "memory");
 }
+#else
+#error "FUN_001457d0: clang naked draft required"
+#endif
+
 /* --- breakable_surfaces.obj orphan shells (2026-07-26) --- */
 
 /* 0x1459d0 — XBE thunk to breakable_surfaces_initialize_for_new_map. */

@@ -1000,11 +1000,35 @@ void FUN_000a2ba0(int unit_index __attribute__((unused)), float damage_amount __
 #endif
 
 
-/* 0xa2c70 */
+/* FUN_000a2c70 (0xa2c70) — XBE naked draft (batch 180). */
+#if defined(__clang__)
+static float (*const ba2c70_c10a710)(short function_type, float t) = transition_function_evaluate;
+
+__attribute__((naked, noinline))
 void FUN_000a2c70(void)
 {
-  transition_function_evaluate(0, 0.0f);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fdivs 0x10(%%ebp)\n\t"
+      "fsubrs 0x2533c8\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10a710]\n\t"
+      "fmuls 0x8(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c10a710] "m"(ba2c70_c10a710)
+      : "memory");
 }
+#else
+#error "FUN_000a2c70: clang naked draft required"
+#endif
+
 
 /* player_effect_continuous_refresh (0xa2d30) — XBE naked draft (batch 142). */
 #if defined(__clang__)

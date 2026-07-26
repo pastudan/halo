@@ -7,11 +7,29 @@ void *player_control_get_data(int16_t local_player_index)
   return (char *)player_control_globals + local_player_index * 0x40 + 0x10;
 }
 
+/* player_control_initialize (0xb63d0) — XBE naked draft (batch 184). */
+#if defined(__clang__)
+static void * (*const bb63d0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
+
+__attribute__((naked, noinline))
 void player_control_initialize(void)
 {
-  player_control_globals = (player_control_globals_t *)game_state_malloc(
-      "player control globals", 0, sizeof(player_control_globals_t));
+  __asm__ volatile(
+      "pushl $0x110\n\t"
+      "pushl $0\n\t"
+      "pushl $0x26e210\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, 0x457090\n\t"
+      "ret\n\t"
+      :
+      : [c1bfbf0] "m"(bb63d0_c1bfbf0)
+      : "memory");
 }
+#else
+#error "player_control_initialize: clang naked draft required"
+#endif
+
 
 void player_control_dispose(void)
 {
@@ -205,25 +223,93 @@ char player_control_action_test_action(void)
   return (char)(g[0] & 1);
 }
 
+/* player_control_action_test_jump (0xb6b10) — XBE naked draft (batch 179). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_jump(void)
 {
-  return (char)((*(int *)player_control_globals >> 1) & 1);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "shrl $1, %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_jump: clang naked draft required"
+#endif
 
+
+/* player_control_action_test_primary_trigger (0xb6b20) — XBE naked draft (batch 179). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_primary_trigger(void)
 {
-  return (char)((*(int *)player_control_globals >> 4) & 1);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "shrl $4, %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_primary_trigger: clang naked draft required"
+#endif
 
+
+/* player_control_action_test_grenade_trigger (0xb6b30) — XBE naked draft (batch 179). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_grenade_trigger(void)
 {
-  return (char)((*(int *)player_control_globals >> 5) & 1);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "shrl $5, %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_grenade_trigger: clang naked draft required"
+#endif
 
+
+/* player_control_action_test_zoom (0xb6b40) — XBE naked draft (batch 180). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_zoom(void)
 {
-  return (char)((*(int *)player_control_globals >> 6) & 1);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "shrl $6, %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_zoom: clang naked draft required"
+#endif
+
 
 /* player_control_action_test_move_relative_all_directions (0xb6b50) — XBE naked draft (batch 168). */
 #if defined(__clang__)
@@ -275,15 +361,49 @@ char player_control_action_test_look_relative_all_directions(void)
 #endif
 
 
+/* player_control_action_test_look_relative_left (0xb6b90) — XBE naked draft (batch 180). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_look_relative_left(void)
 {
-  return (char)((*(int *)player_control_globals >> 9) & 1);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "shrl $9, %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_look_relative_left: clang naked draft required"
+#endif
 
+
+/* player_control_action_test_look_relative_right (0xb6ba0) — XBE naked draft (batch 180). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_look_relative_right(void)
 {
-  return (char)((*(int *)player_control_globals >> 10) & 1);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "shrl $0xa, %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_look_relative_right: clang naked draft required"
+#endif
+
 
 /* player_control_action_test_look_relative_up (0xb6bb0) — XBE naked draft (batch 176). */
 #if defined(__clang__)
@@ -1875,17 +1995,45 @@ void FUN_000b8cf0(int a __attribute__((unused)), float *delta __attribute__((unu
 #endif
 
 
-void FUN_000b8d30(int handle)
-{
-  int queue_index;
+/* FUN_000b8d30 (0xb8d30) — XBE naked draft (batch 181). */
+#if defined(__clang__)
+static int (*const bb8d30_c119570)(data_t *data, int handle) = data_new_datum;
+static void (*const bb8d30_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb8d30_exitfn)(int) = system_exit;
 
-  queue_index = data_new_datum(*(data_t **)0x4570c8, handle);
-  if (queue_index == NONE) {
-    display_assert("queue_index!=NONE", "c:\\halo\\SOURCE\\game\\player_control.c",
-                   0xeb, 1);
-    system_exit(NONE);
-  }
+__attribute__((naked, noinline))
+void FUN_000b8d30(int handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x4570c8, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119570]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000b8d30_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xeb\n\t"
+      "pushl $0x26e440\n\t"
+      "pushl $0x26e42c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000b8d30_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c119570] "m"(bb8d30_c119570), [assert] "m"(bb8d30_assert), [exitfn] "m"(bb8d30_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_000b8d30: clang naked draft required"
+#endif
+
 
 /* Set action flags on a local player's control slot.
  * ORs the given flags into the player's action_flags field, and

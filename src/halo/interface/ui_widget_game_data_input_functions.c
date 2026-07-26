@@ -4343,11 +4343,33 @@ void FUN_000f04c0(void *widget __attribute__((unused)))
 #endif
 
 
-/* 0xf0620 */
-void FUN_000f0620(void *widget)
+/* FUN_000f0620 (0xf0620) — XBE naked draft (batch 184). */
+#if defined(__clang__)
+static void (*const bf0620_ce59e0)(int16_t player_index) = ui_widgets_pop_stack;
+
+__attribute__((naked, noinline))
+void FUN_000f0620(void *widget __attribute__((unused)))
 {
-  ui_widgets_pop_stack(0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x8(%%eax), %%cx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ce59e0]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ce59e0] "m"(bf0620_ce59e0)
+      : "memory");
 }
+#else
+#error "FUN_000f0620: clang naked draft required"
+#endif
+
 
 /* FUN_000f0640 (0xf0640) — XBE naked draft (batch 133). */
 #if defined(__clang__)

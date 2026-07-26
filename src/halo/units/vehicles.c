@@ -1510,14 +1510,35 @@ void FUN_001b56b0(int vehicle_handle, void *physics_state)
 }
 #endif
 
-/* 0x1b5750 — pack float w + three int components into quaternion storage */
-void set_real_quaternion(float *quat, float w, int x, int y, int z)
+/* set_real_quaternion (0x1b5750) — XBE naked draft (batch 186). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void set_real_quaternion(float *quat __attribute__((unused)), float w __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused)), int z __attribute__((unused)))
 {
-  *quat = w;
-  *(int *)((char *)quat + 4) = x;
-  *(int *)((char *)quat + 8) = y;
-  *(int *)((char *)quat + 0xc) = z;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "fstps (%%eax)\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "movl %%ecx, 0xc(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "set_real_quaternion: clang naked draft required"
+#endif
+
 
 /* 0x1b5770 — clear vehicle control/physics scratch state. */
 __declspec(noinline) void vehicle_reset(int vehicle_handle)
