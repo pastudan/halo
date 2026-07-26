@@ -171,6 +171,7 @@
 	halo/bitmaps/libtiff/tif_flush.c
 	halo/bitmaps/libtiff/tif_open.c
 	halo/bitmaps/libtiff/tif_write.c
+	halo/kb_common_stubs.c
 	halo/shell.c
 	halo/shell_xbox.c
 		halo/cache/xbox_texture_cache.c
