@@ -20298,7 +20298,7 @@
         },
         {
           "addr": "0xe2170",
-          "decl": "void FUN_000e2170(void);",
+          "decl": "void FUN_000e2170(char v);",
           "ported": true
         },
         {
@@ -27116,12 +27116,12 @@
         {
           "addr": "0xe54e0",
           "decl": "void get_ui_rgb_white(float *out);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe5530",
           "decl": "void get_ui_argb_white(float *out);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe5590",
