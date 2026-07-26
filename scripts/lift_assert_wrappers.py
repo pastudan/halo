@@ -527,11 +527,16 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
         and body[3] == ("mov", "si, word ptr [ebp + 8]")
         and body[4] == ("test", "si, si")
         and body[5][0] == "jl"
-        and body[6] == ("cmp", "si, 4")
+        and body[6][0] == "cmp"
+        and body[6][1].startswith("si,")
         and body[7][0] == "jl"
     ):
-        ab = parse_assert(body, 8)
+        bound_m = re.match(r"si, (0x[0-9a-f]+|\d+)$", body[6][1])
+        if not bound_m:
+            bound_m = None
+        ab = parse_assert(body, 8) if bound_m else None
         if ab:
+            bound = int(bound_m.group(1), 0)
             sigi, psi = ensure_params(sig, ps, 1, ["int16_t"])
             mid = body[ab["next"] :]
             while mid and mid[-1][0] == "pop" and mid[-1][1] in ("ebp", "esi"):
@@ -556,7 +561,7 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                     stride, base, val = im.group(1), ms.group(1), ms.group(2)
                     return (
                         f"{sigi}\n{{\n"
-                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= 4) {{\n"
+                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= {bound}) {{\n"
                         f"{assert_c(ab, '    ')}"
                         f"  }}\n"
                         f"  *(uint8_t *)(0x{int(base, 16):x} + (int)(int16_t){psi[0]} * {stride}) = "
@@ -569,10 +574,65 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                         sigi = sigi.replace("void ", "uint8_t ", 1)
                     return (
                         f"{sigi}\n{{\n"
-                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= 4) {{\n"
+                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= {bound}) {{\n"
                         f"{assert_c(ab, '    ')}"
                         f"  }}\n"
                         f"  return *(uint8_t *)(0x{int(base, 16):x} + (int)(int16_t){psi[0]} * {stride});\n"
+                        f"}}\n"
+                    )
+            # director_set_mode-style: cmp global, store index + dirty flag
+            if (
+                len(mid) >= 3
+                and mid[0][0] == "cmp"
+                and "word ptr [0x" in mid[0][1]
+                and mid[0][1].endswith(", si")
+                and mid[1][0] == "je"
+                and mid[2][0] == "mov"
+                and mid[2][1].startswith("word ptr [0x")
+                and mid[2][1].endswith(", si")
+            ):
+                g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[0][1])
+                rest = mid[3:]
+                flag = None
+                if (
+                    rest
+                    and rest[0][0] == "mov"
+                    and rest[0][1].startswith("byte ptr [0x")
+                    and ", 1" in rest[0][1]
+                ):
+                    flag = re.search(r"\[0x([0-9a-fA-F]+)\]", rest[0][1])
+                if g:
+                    body_c = (
+                        f"{sigi}\n{{\n"
+                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= {bound}) {{\n"
+                        f"{assert_c(ab, '    ')}"
+                        f"  }}\n"
+                        f"  if (*(int16_t *)0x{g.group(1)} != (int16_t){psi[0]}) {{\n"
+                        f"    *(int16_t *)0x{g.group(1)} = (int16_t){psi[0]};\n"
+                    )
+                    if flag:
+                        body_c += f"    *(uint8_t *)0x{flag.group(1)} = 1;\n"
+                    body_c += "  }\n}\n"
+                    return body_c
+            # observer-style: base = table + idx*stride; call F(base via esi)
+            if (
+                len(mid) >= 4
+                and mid[0] == ("movsx", "esi, si")
+                and mid[1][0] == "imul"
+                and mid[2][0] == "add"
+                and mid[2][1].startswith("esi,")
+                and mid[3][0] == "call"
+            ):
+                im = re.match(r"esi, esi, (0x[0-9a-f]+|\d+)$", mid[1][1])
+                base = re.match(r"esi, (0x[0-9a-f]+)$", mid[2][1])
+                fn = callee(mid[3][1], name_by)
+                if im and base and fn:
+                    return (
+                        f"{sigi}\n{{\n"
+                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= {bound}) {{\n"
+                        f"{assert_c(ab, '    ')}"
+                        f"  }}\n"
+                        f"  {fn}((void *)(0x{int(base.group(1),16):x} + (int)(int16_t){psi[0]} * {im.group(1)}));\n"
                         f"}}\n"
                     )
 
@@ -726,6 +786,197 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                         f"}}\n"
                     )
 
+    # --- Pattern: null-check + field byte assert + tail ---
+    if (
+        len(body) >= 20
+        and body[0] == ("push", "ebp")
+        and body[1] == ("mov", "ebp, esp")
+        and body[2] == ("push", "esi")
+        and body[3] == ("mov", "esi, dword ptr [ebp + 8]")
+        and body[4] == ("test", "esi, esi")
+        and body[5][0] == "jne"
+    ):
+        ab = parse_assert(body, 6)
+        if ab:
+            mid = body[ab["next"] :]
+            while mid and mid[-1][0] == "pop" and mid[-1][1] in ("ebp", "esi"):
+                mid = mid[:-1]
+            mid = [x for x in mid if not (x[0] == "add" and "esp" in x[1])]
+            if (
+                len(mid) >= 5
+                and mid[0][0] == "mov"
+                and mid[0][1].startswith("al, byte ptr [esi")
+                and mid[1] == ("test", "al, al")
+                and mid[2][0] == "jne"
+            ):
+                fo = re.match(
+                    r"al, byte ptr \[esi(?: \+ (0x[0-9a-f]+|\d+))?\]$", mid[0][1]
+                )
+                ab2 = parse_assert(mid, 3)
+                if fo and ab2:
+                    o = int(fo.group(1), 0) if fo.group(1) else 0
+                    sig1, ps1 = ensure_params(sig, ps, 1, ["void *"])
+                    mid2 = mid[ab2["next"] :]
+                    mid2 = [
+                        x
+                        for x in mid2
+                        if not (x[0] == "pop" and x[1] in ("esi", "ebp"))
+                        and not (x[0] == "add" and "esp" in x[1])
+                    ]
+                    # return field byte
+                    if len(mid2) == 1 and mid2[0][0] == "mov" and mid2[0][1].startswith("al,"):
+                        m = re.match(
+                            r"al, byte ptr \[esi(?: \+ (0x[0-9a-f]+|\d+))?\]$",
+                            mid2[0][1],
+                        )
+                        if m:
+                            o2 = int(m.group(1), 0) if m.group(1) else 0
+                            if is_void(sig1):
+                                sig1 = sig1.replace("void ", "uint8_t ", 1)
+                            return (
+                                f"{sig1}\n{{\n"
+                                f"  if ({ps1[0]} == NULL) {{\n"
+                                f"{assert_c(ab, '    ')}"
+                                f"  }}\n"
+                                f"  if (*(uint8_t *)((char *){ps1[0]} + 0x{o:x}) == 0) {{\n"
+                                f"{assert_c(ab2, '    ')}"
+                                f"  }}\n"
+                                f"  return *(uint8_t *)((char *){ps1[0]} + 0x{o2:x});\n"
+                                f"}}\n"
+                            )
+                    # void: just the two asserts (field must be nonzero)
+                    if not mid2:
+                        return (
+                            f"{sig1}\n{{\n"
+                            f"  if ({ps1[0]} == NULL) {{\n"
+                            f"{assert_c(ab, '    ')}"
+                            f"  }}\n"
+                            f"  if (*(uint8_t *)((char *){ps1[0]} + 0x{o:x}) == 0) {{\n"
+                            f"{assert_c(ab2, '    ')}"
+                            f"  }}\n"
+                            f"}}\n"
+                        )
+                    # forward call push esi; call F
+                    if len(mid2) == 2 and mid2[0] == ("push", "esi") and mid2[1][0] == "call":
+                        fn = callee(mid2[1][1], name_by)
+                        if fn:
+                            r = "" if is_void(sig1) else "return "
+                            return (
+                                f"{sig1}\n{{\n"
+                                f"  if ({ps1[0]} == NULL) {{\n"
+                                f"{assert_c(ab, '    ')}"
+                                f"  }}\n"
+                                f"  if (*(uint8_t *)((char *){ps1[0]} + 0x{o:x}) == 0) {{\n"
+                                f"{assert_c(ab2, '    ')}"
+                                f"  }}\n"
+                                f"  {r}{fn}({ps1[0]});\n"
+                                f"}}\n"
+                            )
+                    # close/release: call F(*(void**)esi); clear fields
+                    if (
+                        len(mid2) >= 3
+                        and mid2[0] == ("mov", "eax, dword ptr [esi]")
+                        and mid2[1] == ("push", "eax")
+                        and mid2[2][0] == "call"
+                    ):
+                        fn = callee(mid2[2][1], name_by)
+                        stores = mid2[3:]
+                        ok_stores = True
+                        store_c = []
+                        for mnem, op in stores:
+                            if mnem != "mov":
+                                ok_stores = False
+                                break
+                            bm = re.match(
+                                r"(byte|word|dword) ptr \[esi(?: \+ (0x[0-9a-f]+|\d+))?\]"
+                                r", (0x[0-9a-f]+|\d+)$",
+                                op,
+                            )
+                            if not bm:
+                                ok_stores = False
+                                break
+                            width, off, val = bm.group(1), bm.group(2), bm.group(3)
+                            o2 = int(off, 0) if off else 0
+                            ctype = {
+                                "byte": "uint8_t",
+                                "word": "uint16_t",
+                                "dword": "uint32_t",
+                            }[width]
+                            store_c.append(
+                                f"  *({ctype} *)((char *){ps1[0]} + 0x{o2:x}) = ({ctype}){val};"
+                            )
+                        if fn and ok_stores:
+                            return (
+                                f"{sig1}\n{{\n"
+                                f"  if ({ps1[0]} == NULL) {{\n"
+                                f"{assert_c(ab, '    ')}"
+                                f"  }}\n"
+                                f"  if (*(uint8_t *)((char *){ps1[0]} + 0x{o:x}) == 0) {{\n"
+                                f"{assert_c(ab2, '    ')}"
+                                f"  }}\n"
+                                f"  {fn}(*(void **){ps1[0]});\n"
+                                + ("\n".join(store_c) + ("\n" if store_c else ""))
+                                + "}\n"
+                            )
+
+    # --- Pattern: null-check + size==N assert + memcpy from global ---
+    if (
+        len(body) >= 20
+        and body[0] == ("push", "ebp")
+        and body[1] == ("mov", "ebp, esp")
+        and body[2] == ("push", "esi")
+        and body[3] == ("mov", "esi, dword ptr [ebp + 8]")
+        and body[4] == ("test", "esi, esi")
+        and body[5][0] == "jne"
+    ):
+        ab = parse_assert(body, 6)
+        if ab:
+            mid = body[ab["next"] :]
+            while mid and mid[-1][0] == "pop" and mid[-1][1] in ("ebp", "esi"):
+                mid = mid[:-1]
+            if (
+                len(mid) >= 8
+                and mid[0][0] == "cmp"
+                and mid[0][1].startswith("dword ptr [ebp + 0xc],")
+                and mid[1][0] == "je"
+            ):
+                size_m = re.match(
+                    r"dword ptr \[ebp \+ 0xc\], (0x[0-9a-f]+|\d+)$", mid[0][1]
+                )
+                ab2 = parse_assert(mid, 2)
+                if size_m and ab2:
+                    size = int(size_m.group(1), 0)
+                    mid2 = mid[ab2["next"] :]
+                    mid2 = [
+                        x
+                        for x in mid2
+                        if not (x[0] == "pop" and x[1] in ("esi", "ebp"))
+                        and not (x[0] == "add" and "esp" in x[1])
+                    ]
+                    # push size; push global; push esi; call memcpy
+                    if (
+                        len(mid2) >= 4
+                        and mid2[0][0] == "push"
+                        and mid2[1][0] == "push"
+                        and re.match(r"0x[0-9a-f]+$", mid2[1][1])
+                        and mid2[2] == ("push", "esi")
+                        and mid2[3][0] == "call"
+                    ):
+                        fn = callee(mid2[3][1], name_by)
+                        sig2, ps2 = ensure_params(sig, ps, 2, ["void *", "int"])
+                        if fn and len(ps2) >= 2:
+                            return (
+                                f"{sig2}\n{{\n"
+                                f"  if ({ps2[0]} == NULL) {{\n"
+                                f"{assert_c(ab, '    ')}"
+                                f"  }}\n"
+                                f"  if ({ps2[1]} != {size}) {{\n"
+                                f"{assert_c(ab2, '    ')}"
+                                f"  }}\n"
+                                f"  {fn}({ps2[0]}, (void *){mid2[1][1]}, {mid2[0][1]});\n"
+                                f"}}\n"
+                            )
+
     # --- Pattern: null-check + memset init (csmemset) ---
     if (
         len(body) >= 14
@@ -787,11 +1038,16 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
         and body[3] == ("mov", "si, word ptr [ebp + 8]")
         and body[4] == ("test", "si, si")
         and body[5][0] == "jl"
-        and body[6] == ("cmp", "si, 4")
+        and body[6][0] == "cmp"
+        and body[6][1].startswith("si,")
         and body[7][0] == "jl"
     ):
-        ab = parse_assert(body, 8)
+        bound_m = re.match(r"si, (0x[0-9a-f]+|\d+)$", body[6][1])
+        if not bound_m:
+            bound_m = None
+        ab = parse_assert(body, 8) if bound_m else None
         if ab:
+            bound = int(bound_m.group(1), 0)
             sigi, psi = ensure_params(sig, ps, 1, ["int16_t"])
             mid = body[ab["next"] :]
             while mid and mid[-1][0] == "pop" and mid[-1][1] in ("ebp", "esi"):
@@ -810,7 +1066,7 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                         sigi = sigi.replace("void ", "void *", 1)
                     return (
                         f"{sigi}\n{{\n"
-                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= 4) {{\n"
+                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= {bound}) {{\n"
                         f"{assert_c(ab, '    ')}"
                         f"  }}\n"
                         f"  return (void *)(0x{int(am.group(1), 16):x} + (int)(int16_t){psi[0]} * {im.group(1)});\n"
@@ -831,7 +1087,7 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                         sigi = sigi.replace("void ", "void *", 1)
                     return (
                         f"{sigi}\n{{\n"
-                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= 4) {{\n"
+                        f"  if ((int16_t){psi[0]} < 0 || (int16_t){psi[0]} >= {bound}) {{\n"
                         f"{assert_c(ab, '    ')}"
                         f"  }}\n"
                         f"  return (void *)((char *)*(void **)0x{g.group(1)} + "

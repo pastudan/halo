@@ -232,16 +232,52 @@ def commit_chunk(n: int, touched: set[Path], label: str = "emit") -> str | None:
     sha = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
     ).stdout.strip()
-    subprocess.run(
-        ["git", "pull", "--rebase", "pastudan", "track-a-collision-bsp"],
+    subprocess.run(["git", "fetch", "pastudan"], cwd=ROOT, capture_output=True)
+    rb = subprocess.run(
+        ["git", "rebase", "pastudan/track-a-collision-bsp"],
         cwd=ROOT, capture_output=True, text=True,
     )
+    if rb.returncode != 0:
+        # union kb on conflict then continue once
+        merge_remote()
+        subprocess.run(["git", "add", "kb.json"], cwd=ROOT, capture_output=True)
+        subprocess.run(
+            ["git", "-c", "core.editor=true", "rebase", "--continue"],
+            cwd=ROOT, capture_output=True, text=True,
+        )
+    merge_remote()
+    if subprocess.run(["git", "diff", "--quiet", "kb.json"], cwd=ROOT).returncode != 0:
+        subprocess.run(["git", "add", "kb.json"], cwd=ROOT, capture_output=True)
+        subprocess.run(
+            ["git", "commit", "-m", "fix(track-a): union ported:true after emit-prove rebase."],
+            cwd=ROOT, capture_output=True, text=True,
+        )
+        sha = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
+        ).stdout.strip()
     r = subprocess.run(
         ["git", "push", "pastudan", "HEAD:track-a-collision-bsp"],
         cwd=ROOT, capture_output=True, text=True,
     )
     if r.returncode != 0:
         print("push failed", r.stdout, r.stderr, flush=True)
+        # one more fetch/rebase/union/push
+        subprocess.run(["git", "fetch", "pastudan"], cwd=ROOT, capture_output=True)
+        subprocess.run(["git", "rebase", "pastudan/track-a-collision-bsp"], cwd=ROOT, capture_output=True)
+        merge_remote()
+        subprocess.run(["git", "add", "kb.json"], cwd=ROOT, capture_output=True)
+        subprocess.run(
+            ["git", "commit", "-m", "fix(track-a): union ported:true before retry push."],
+            cwd=ROOT, capture_output=True, text=True,
+        )
+        r = subprocess.run(
+            ["git", "push", "pastudan", "HEAD:track-a-collision-bsp"],
+            cwd=ROOT, capture_output=True, text=True,
+        )
+        if r.returncode != 0:
+            print("push retry failed", r.stdout, r.stderr, flush=True)
+        else:
+            print(f"COMMIT+PUSH {sha}", flush=True)
     else:
         print(f"COMMIT+PUSH {sha}", flush=True)
     return sha
