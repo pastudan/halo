@@ -11624,7 +11624,7 @@
         },
         {
           "addr": "0xc3db0",
-          "decl": "int16_t hs_find_tag_reference_by_index(int tag_index);",
+          "decl": "int hs_find_tag_reference_by_index(int tag_index);",
           "ported": false
         },
         {
@@ -20320,7 +20320,7 @@
         },
         {
           "addr": "0xe1f20",
-          "decl": "void FUN_000e1f20(int a0, int a1, int a2, int a3, int a4, int a5);",
+          "decl": "int __stdcall FUN_000e1f20(int unused, unsigned int reg, float a, float b, float c, float d);",
           "ported": true
         },
         {
