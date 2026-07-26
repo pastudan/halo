@@ -18300,7 +18300,7 @@
         {
           "addr": "0xe0b00",
           "decl": "bool player_ui_rumble_disabled(int controller_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0b50",
