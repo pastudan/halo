@@ -2941,54 +2941,17 @@ void FUN_000c2a40(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, 0);
 }
 
-/* FUN_000c2a80 (0xc2a80) — XBE naked draft (batch 198). */
-#if defined(__clang__)
-static int (*const bc2a80_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc2a80_c1c8a90)(char *pattern, float dist1, float dist2) = debug_sound_classes_set_distances;
-static void (*const bc2a80_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c2a80(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c2a80 (0xc2a80) — readable C lift: sound class distance macro. */
+void FUN_000c2a80(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c2a80_1\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "subl $8, %%esp\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1c8a90]\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000c2a80_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bc2a80_ccc560), [c1c8a90] "m"(bc2a80_c1c8a90), [ccbf80] "m"(bc2a80_ccbf80)
-      : "memory");
+  int *args;
+  args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (!args)
+    return;
+  debug_sound_classes_set_distances(
+      (char *)args[0], *(float *)&args[1], *(float *)&args[2]);
+  hs_return(thread_datum, 0);
 }
-#else
-#error "FUN_000c2a80: clang naked draft required"
-#endif
-
-
 /* FUN_000c2ad0 (0xc2ad0) — readable C lift (HS macro-eval wrapper). */
 void FUN_000c2ad0(int16_t function_index, int thread_datum, char init)
 {
