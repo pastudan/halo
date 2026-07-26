@@ -2880,126 +2880,48 @@ void FUN_0004a8c0(void)
 #endif
 
 
-/* FUN_0004a9f0 (0x4a9f0) — XBE naked draft (batch 128). */
-#if defined(__clang__)
-static float (*const b4a9f0_c121a0)(const float *a, const float *b) = distance_squared3d;
-
-__attribute__((naked, noinline))
+/* FUN_0004a9f0 (0x4a9f0) — readable C lift. */
 void FUN_0004a9f0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $1, %%ebx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl %%ebx, -0x8(%%ebp)\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "movl $0x20, -0xc(%%ebp)\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_0004a9f0_1:\n\t"
-      "movl 0x331f5c, %%eax\n\t"
-      "addl %%eax, %%edi\n\t"
-      "movb 0xc(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0004a9f0_6\n\t"
-      "movb 0xd(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0004a9f0_6\n\t"
-      "cmpw $0x20, %%bx\n\t"
-      "jge .LFUN_0004a9f0_6\n\t"
-      "jmp .LFUN_0004a9f0_2\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_0004a9f0_2:\n\t"
-      "movl 0x331f5c, %%ecx\n\t"
-      "movswl %%bx, %%esi\n\t"
-      "imull $0x1ca7c, %%esi, %%esi\n\t"
-      "movb 0xc(%%esi,%%ecx,1), %%al\n\t"
-      "addl %%ecx, %%esi\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0004a9f0_4\n\t"
-      "movb 0xd(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0004a9f0_4\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "cmpl (%%edi), %%ecx\n\t"
-      "jne .LFUN_0004a9f0_4\n\t"
-      "flds 0x28(%%esi)\n\t"
-      "fsubs 0x28(%%edi)\n\t"
-      "flds 0x2c(%%esi)\n\t"
-      "fsubs 0x2c(%%edi)\n\t"
-      "flds 0x30(%%esi)\n\t"
-      "fsubs 0x30(%%edi)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcomps 0x25337c\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $5, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jp .LFUN_0004a9f0_4\n\t"
-      "movb 0x60(%%edi), %%al\n\t"
-      "cmpb 0x60(%%esi), %%al\n\t"
-      "jne .LFUN_0004a9f0_4\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0004a9f0_3\n\t"
-      "leal 0x64(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x64(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c121a0]\n\t"
-      "fcomps 0x25337c\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0004a9f0_4\n\t"
-      ".LFUN_0004a9f0_3:\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "cmpl 0x4(%%esi), %%ecx\n\t"
-      "jl .LFUN_0004a9f0_5\n\t"
-      "movb $0, 0xc(%%esi)\n\t"
-      ".LFUN_0004a9f0_4:\n\t"
-      "incl %%ebx\n\t"
-      "cmpw $0x20, %%bx\n\t"
-      "jl .LFUN_0004a9f0_2\n\t"
-      "jmp .LFUN_0004a9f0_6\n\t"
-      ".LFUN_0004a9f0_5:\n\t"
-      "movb $0, 0xc(%%edi)\n\t"
-      ".LFUN_0004a9f0_6:\n\t"
-      "movl -0x4(%%ebp), %%edi\n\t"
-      "movl -0x8(%%ebp), %%ebx\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "addl $0x1ca7c, %%edi\n\t"
-      "incl %%ebx\n\t"
-      "decl %%eax\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "movl %%ebx, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "jne .LFUN_0004a9f0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c121a0] "m"(b4a9f0_c121a0)
-      : "memory");
-}
-#else
-#error "FUN_0004a9f0: clang naked draft required"
-#endif
+  char *base;
+  char *a;
+  char *b;
+  int i;
+  int j;
+  float dx, dy, dz, dist_sq;
 
+  base = *(char **)0x331f5c;
+  for (i = 0; i < 0x20; i++) {
+    a = base + i * 0x1ca7c;
+    if (a[0xc] == 0 || a[0xd] == 0)
+      continue;
+    for (j = i + 1; j < 0x20; j++) {
+      b = base + j * 0x1ca7c;
+      if (b[0xc] == 0 || b[0xd] == 0)
+        continue;
+      if (*(int *)b != *(int *)a)
+        continue;
+      dx = *(float *)(b + 0x28) - *(float *)(a + 0x28);
+      dy = *(float *)(b + 0x2c) - *(float *)(a + 0x2c);
+      dz = *(float *)(b + 0x30) - *(float *)(a + 0x30);
+      dist_sq = dx * dx + dy * dy + dz * dz;
+      if (!(dist_sq < *(float *)0x25337c))
+        continue;
+      if (a[0x60] != b[0x60])
+        continue;
+      if (a[0x60] != 0) {
+        dist_sq = distance_squared3d((float *)(a + 0x64), (float *)(b + 0x64));
+        if (!(dist_sq < *(float *)0x25337c))
+          continue;
+      }
+      if (*(int *)(a + 4) < *(int *)(b + 4)) {
+        a[0xc] = 0;
+        break;
+      }
+      b[0xc] = 0;
+    }
+  }
+}
 
 #include "../../x87_math.h"
 

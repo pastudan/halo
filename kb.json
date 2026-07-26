@@ -34940,7 +34940,8 @@
         {
           "addr": "0x4a9f0",
           "decl": "void FUN_0004a9f0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0004a9f0"
         },
         {
           "addr": "0x4ab10",
