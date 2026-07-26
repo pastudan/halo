@@ -263,10 +263,8 @@ def main() -> int:
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c8a),
         # gameplay wave 9 (2026-07-26)
         ("FUN_001b4dc0", 0x1b4dc0, 0x1b53f3),
-        ("FUN_00138900", 0x138900, 0x138e15),
         ("vehicle_export_function_values", 0x1b79c0, 0x1b7e48),
         ("FUN_001b6560", 0x1b6560, 0x1b69a0),
-        ("FUN_001b6250", 0x1b6250, 0x1b6560),
         # gameplay wave 10 (2026-07-26)
         ("FUN_00134c40", 0x134c40, 0x134e50),
         ("FUN_00139480", 0x139480, 0x1396dc),
@@ -281,14 +279,12 @@ def main() -> int:
         ("FUN_000de560", 0xde560, 0xdeb4f),
         ("FUN_001b5f20", 0x1b5f20, 0x1b5fed),
         ("FUN_001b6560", 0x1b6560, 0x1b69a0),
-        ("FUN_001b69a0", 0x1b69a0, 0x1b6ca0),
         ("FUN_001b6e20", 0x1b6e20, 0x1b7016),
         # gameplay wave 13 (2026-07-26)
         ("FUN_00136bc0", 0x136bc0, 0x136f3e),
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c8a),
         ("vehicle_export_function_values", 0x1b79c0, 0x1b7e48),
         ("FUN_001345b0", 0x1345b0, 0x134adb),
-        ("FUN_00138900", 0x138900, 0x138e15),
         ("FUN_001b5400", 0x1b5400, 0x1b54fb),
         ("FUN_000de3f0", 0xde3f0, 0xde560),
         # gameplay wave 14 (2026-07-26)
@@ -303,8 +299,6 @@ def main() -> int:
         ("FUN_001377d0", 0x1377d0, 0x137d12),
         ("FUN_001491d0", 0x1491d0, 0x1493a0),
         # gameplay wave 16 (2026-07-26)
-        ("FUN_001b6250", 0x1b6250, 0x1b6560),
-        ("weapon_export_function_values", 0xfbf00, 0xfc290),
         ("glow_trailing_particle_new", 0x134350, 0x1345b0),
         ("FUN_001b81d0", 0x1b81d0, 0x1b856c),
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c8a),
@@ -313,12 +307,10 @@ def main() -> int:
         ("FUN_001b8570", 0x1b8570, 0x1b8f08),
         ("item_update", 0xf7340, 0xf7ca1),
         ("FUN_000fd570", 0xfd570, 0xfdc8e),
-        ("FUN_00138900", 0x138900, 0x138e15),
         ("FUN_001377d0", 0x1377d0, 0x137d12),
         # gameplay wave 18 (2026-07-26)
         ("FUN_001b8570", 0x1b8570, 0x1b8f08),
         ("item_update", 0xf7340, 0xf7ca1),
-        ("FUN_000f5900", 0xf5900, 0xf5f10),
         ("FUN_000f5fb0", 0xf5fb0, 0xf63c4),
         ("FUN_000f4cf0", 0xf4cf0, 0xf4e92),
         # gameplay wave 19 (2026-07-26)
@@ -329,7 +321,6 @@ def main() -> int:
         ("FUN_001b6e20", 0x1b6e20, 0x1b7016),
         # gameplay wave 20 (2026-07-26)
         ("first_person_weapon_update", 0xdd580, 0xddad8),
-        ("FUN_000f1710", 0xf1710, 0xf1ed0),
         ("FUN_0001b280", 0x1b280, 0x1b750),
         ("get_local_player_input_blob", 0xb70b0, 0xb7e30),
         ("FUN_00136bc0", 0x136bc0, 0x136f3e),
@@ -338,11 +329,9 @@ def main() -> int:
         ("FUN_0001aeb0", 0x1aeb0, 0x1b280),
         ("vehicle_stuck", 0x1b8060, 0x1b81c7),
         ("object_compute_function_values", 0x13e7b0, 0x13eb30),
-        ("weapon_export_function_values", 0xfbf00, 0xfc290),
         ("glow_trailing_particle_new", 0x134350, 0x1345b0),
         # gameplay wave 22 (2026-07-26)
         ("FUN_000f4b60", 0xf4b60, 0xf4cec),
-        ("FUN_000f5900", 0xf5900, 0xf5f10),
         ("FUN_000f5800", 0xf5800, 0xf58c6),
         ("FUN_000f3690", 0xf3690, 0xf3740),
         ("FUN_0019cff0", 0x19cff0, 0x19d070),
@@ -540,6 +529,13 @@ def main() -> int:
         ("FUN_001b6250", 0x1b6250, 0x1b6555),
         ("FUN_001b69a0", 0x1b69a0, 0x1b6c9a),
         ("weapon_export_function_values", 0xfbf00, 0xfc243),
+        # gameplay wave 48 (2026-07-26)
+        ("FUN_0013b380", 0x13b380, 0x13bcd4),
+        ("FUN_001b0630", 0x1b0630, 0x1b0cf7),
+        ("FUN_00122e50", 0x122e50, 0x123463),
+        ("FUN_001afd30", 0x1afd30, 0x1b04af),
+        ("FUN_00143550", 0x143550, 0x1439fb),
+        ("FUN_001b1400", 0x1b1400, 0x1b1a10),
     ]
 
     xbe = Xbe.from_file(args.xbe)
