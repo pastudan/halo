@@ -14306,7 +14306,7 @@
         {
           "addr": "0x100370",
           "decl": "void main_won_map(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x100380",
@@ -17763,17 +17763,17 @@
         {
           "addr": "0xb6ab0",
           "decl": "char player_control_action_test_accept(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6ad0",
           "decl": "char player_control_action_test_back(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6af0",
           "decl": "char player_control_action_test_action(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6b10",
@@ -17818,12 +17818,12 @@
         {
           "addr": "0xb6bb0",
           "decl": "char player_control_action_test_look_relative_up(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6bc0",
           "decl": "char player_control_action_test_look_relative_down(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6bd0",
@@ -26719,7 +26719,7 @@
         {
           "addr": "0x824a0",
           "decl": "void FUN_000824a0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x824d0",
@@ -27980,62 +27980,62 @@
         {
           "addr": "0x19e460",
           "decl": "int uisalpha(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e480",
           "decl": "int uisupper(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e4a0",
           "decl": "int uislower(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e4c0",
           "decl": "int uisdigit(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e4e0",
           "decl": "int uisxdigit(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e500",
           "decl": "int uisspace(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e520",
           "decl": "int uispunct(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e540",
           "decl": "int uisalnum(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e560",
           "decl": "int uisprint(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e580",
           "decl": "int uisgraph(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e5a0",
           "decl": "int uiscntrl(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e5c0",
           "decl": "int utoupper(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e5e0",
@@ -31272,7 +31272,7 @@
         {
           "addr": "0x108cd0",
           "decl": "void FUN_00108cd0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x108d00",
@@ -34804,12 +34804,12 @@
         {
           "addr": "0x4a6e0",
           "decl": "void ai_debug_idle_look_clear(int actor_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x4a710",
           "decl": "void FUN_000493B0(float *out, float value, int field_4, int field_8);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x4a770",
@@ -36991,7 +36991,7 @@
         {
           "addr": "0x6f890",
           "decl": "void FUN_0006f890(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x6f8d0",
@@ -42144,7 +42144,7 @@
         {
           "addr": "0x002038df",
           "decl": "void DirectSoundUseFullHRTF(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x002038fe",
@@ -42579,17 +42579,17 @@
         {
           "addr": "0x00204c5d",
           "decl": "void IDirectSound_GetCaps(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x00204c79",
           "decl": "void IDirectSound_GetSpeakerConfig(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x00204c95",
           "decl": "void IDirectSound_DownloadEffectsImage(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x00204cbc",
@@ -42614,7 +42614,7 @@
         {
           "addr": "0x00204d41",
           "decl": "void IDirectSound_SetMixBinHeadroom(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x00204d61",
@@ -42624,7 +42624,7 @@
         {
           "addr": "0x00204d81",
           "decl": "void IDirectSound_SetDistanceFactor(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x00204da5",
@@ -42644,7 +42644,7 @@
         {
           "addr": "0x00204e48",
           "decl": "void IDirectSound_SetRolloffFactor(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x00204e6c",
@@ -42794,7 +42794,7 @@
         {
           "addr": "0x002052de",
           "decl": "void IDirectSoundStream_SetMixBinVolumes_12(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x002052ed",
@@ -42939,7 +42939,7 @@
         {
           "addr": "0x00205bd8",
           "decl": "void IDirectSoundStream_SetMixBins(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x00205e69",
@@ -42964,12 +42964,12 @@
         {
           "addr": "0x002060f8",
           "decl": "void IDirectSound_CreateSoundStream(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x00206232",
           "decl": "void DirectSoundCreate(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x0020630e",
