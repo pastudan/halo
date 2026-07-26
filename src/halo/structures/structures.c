@@ -1356,72 +1356,134 @@ float FUN_001057f0(float *param_1, float *param_2, float *param_3)
              param_2[2] * param_3[2])));
 }
 
-/* 0x105830 - interpolate a subdivision vertex between two parent vertices.
- * (TU: c:\halo\SOURCE\math\geometry.c)
- *
- * Register ABI (prologue at 0x105830): MOV SI,DX and direct use of AX/CX/BX/EDI
- * with only ESI preserved. Register args (all low-16 values):
- *   subdivision_index@<eax>, subdivision_count@<ecx>, parent2@<edx> (copied to
- *   SI), parent1@<ebx>, sphere@<edi>.  Stack arg: new_vertex ([EBP+0x8]).
- *
- * frac = subdivision_index / subdivision_count (FILD/FIDIV); the new vertex is
- * inv_frac*parent1 + frac*parent2 component-wise (inv_frac = 1.0 - frac; 1.0 at
- * 0x2533c8), written into sphere->vertices[new_vertex] (vertices at sphere+0x4,
- * stride 3 floats), then normalized in place via normalize3d (return discarded).
- * Asserts subdivision_index in (0,count) and each vertex index in
- * [0,vertex_count] (vertex_count is a short at sphere+0xc). */
-void calculate_vertex(short subdivision_index /* @<eax> */,
-                      short subdivision_count /* @<ecx> */,
-                      short parent2 /* @<edx> */, short parent1 /* @<ebx> */,
-                      void *sphere /* @<edi> */, short new_vertex)
+/* calculate_vertex (0x105830) — XBE naked draft (batch 85). */
+#if defined(__clang__)
+static void (*const b105830_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b105830_exitfn)(int) = system_exit;
+static float (*const b105830_norm)(float *) = normalize3d;
+
+__attribute__((naked, noinline))
+void calculate_vertex(short subdivision_index __attribute__((unused)), short subdivision_count __attribute__((unused)), short parent2 __attribute__((unused)), short parent1 __attribute__((unused)), void *sphere __attribute__((unused)), short new_vertex __attribute__((unused)))
 {
-  float frac;
-  float inv_frac;
-  int itmp;
-  float *verts;
-  float *vp1;
-  float *vp2;
-  float *vout;
-  short vertex_count;
-
-  itmp = subdivision_index;
-  frac = (float)itmp;
-  itmp = subdivision_count;
-  frac = frac / itmp;
-  inv_frac = *(float *)0x002533c8 - frac;
-
-  if (subdivision_index <= 0 || subdivision_index >= subdivision_count) {
-    display_assert(
-        "subdivision_index > 0 && subdivision_index < subdivision_count",
-        "c:\\halo\\SOURCE\\math\\geometry.c", 0x13b, true);
-    system_exit(-1);
-  }
-  vertex_count = *(short *)((char *)sphere + 0xc);
-  if (parent1 < 0 || parent1 > vertex_count) {
-    display_assert("parent1 >=0 && parent1 <= sphere->vertex_count",
-                   "c:\\halo\\SOURCE\\math\\geometry.c", 0x13c, true);
-    system_exit(-1);
-  }
-  if (parent2 < 0 || parent2 > vertex_count) {
-    display_assert("parent2 >=0 && parent2 <= sphere->vertex_count",
-                   "c:\\halo\\SOURCE\\math\\geometry.c", 0x13d, true);
-    system_exit(-1);
-  }
-  if (new_vertex < 0 || new_vertex > vertex_count) {
-    display_assert("new_vertex >=0 && new_vertex <= sphere->vertex_count",
-                   "c:\\halo\\SOURCE\\math\\geometry.c", 0x13e, true);
-    system_exit(-1);
-  }
-
-  verts = *(float **)((char *)sphere + 4);
-  vp1 = verts + (int)parent1 * 3;
-  vp2 = verts + (int)parent2 * 3;
-  vout = verts + (int)new_vertex * 3;
-  vout[0] = inv_frac * vp1[0] + frac * vp2[0];
-  vout[1] = frac * vp2[1] + inv_frac * vp1[1];
-  vout[2] = frac * vp2[2] + inv_frac * vp1[2];
-  normalize3d(vout);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "pushl %%esi\n\t"
+      "movw %%dx, %%si\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "fildl -0x8(%%ebp)\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "fidivl -0x8(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs -0x4(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jle .Lcalculate_vertex_1\n\t"
+      "cmpw %%cx, %%ax\n\t"
+      "jl .Lcalculate_vertex_2\n\t"
+      ".Lcalculate_vertex_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x13b\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28befc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcalculate_vertex_2:\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl .Lcalculate_vertex_3\n\t"
+      "cmpw 0xc(%%edi), %%bx\n\t"
+      "jle .Lcalculate_vertex_4\n\t"
+      ".Lcalculate_vertex_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x13c\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28becc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcalculate_vertex_4:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lcalculate_vertex_5\n\t"
+      "cmpw 0xc(%%edi), %%si\n\t"
+      "jle .Lcalculate_vertex_6\n\t"
+      ".Lcalculate_vertex_5:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x13d\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28be9c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcalculate_vertex_6:\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lcalculate_vertex_7\n\t"
+      "cmpw 0xc(%%edi), %%ax\n\t"
+      "jle .Lcalculate_vertex_8\n\t"
+      ".Lcalculate_vertex_7:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x13e\n\t"
+      "pushl $0x28be44\n\t"
+      "pushl $0x28be64\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcalculate_vertex_8:\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal (%%ecx,%%eax,4), %%edx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal (%%ecx,%%eax,4), %%esi\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "fmuls 0x8(%%edx)\n\t"
+      "shll $2, %%eax\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x4(%%edx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls (%%edx)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps (%%eax,%%ecx,1)\n\t"
+      "fstps 0x4(%%eax,%%ecx,1)\n\t"
+      "fstps 0x8(%%eax,%%ecx,1)\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b105830_assert), [exitfn] "m"(b105830_exitfn), [norm] "m"(b105830_norm)
+      : "memory");
 }
+#else
+#error "calculate_vertex: clang naked draft required"
+#endif
+
 
 /* 0x105980 — Build a ring/cylinder (torus-like) mesh.
  * Sweeps ring_segment_count rings around a cross-section of
@@ -1912,78 +1974,123 @@ int16_t convex_hull2d_reduce(int16_t vertex_count __attribute__((unused)), float
 #endif
 
 
-/* FUN_00106030 (0x106030)
- *
- * Validate a 2D polygon (given as an index list into a shared vertex array)
- * for convexity and a closed interior-angle sum.  Vertices are 2D (x, y
- * pairs, stride 8 bytes); param_4 is a short[] index array, param_2 the
- * vertex-array base, param_3 the vertex count.  For each vertex it forms the
- * two incident edge vectors (cur-prev, next-cur), rejects the polygon
- * (return 0) if the signed 2D cross product is below a threshold (reflex /
- * wrong-winding vertex), and otherwise accumulates the angle between the
- * edges (via FUN_0010c440).  Succeeds (return 1) only if the accumulated
- * angle matches the expected total within a tolerance.
- *
- * Confirmed from disassembly at 0x106030:
- *   - cdecl; param_1 (EBP+0x8) is unused but preserved for stack ABI.
- *   - Returns int 0/1 in EAX (the Ghidra CONCAT22 early-return is XOR AL,AL).
- *   - prev index uses a real branch (wrap to count-1); next index uses a
- *     branchless SETcc/SBB/AND wrap to 0 (asymmetry preserved).
- *   - cross = edge1.y*edge0.x - edge1.x*edge0.y (FSUBP ST1-ST0, verified).
- *   - FUN_0010c440(&edge0, &edge1): 2 float* args, angle returned in ST0;
- *     kept in the x87 stack across the counter increment (no round-trip).
- *   - 0x2533c0 threshold (float, '<'); 0x255a54 expected sum (float FSUB);
- *     0x2549d8 tolerance (loaded as DOUBLE via FCOMP m64).
- */
-int FUN_00106030(void *param_1, int param_2, short param_3, int param_4)
+/* FUN_00106030 (0x106030) — XBE naked draft (batch 85). */
+#if defined(__clang__)
+static float (*const b106030_c10c440)(float *param_1, float *param_2) = FUN_0010c440;
+
+__attribute__((naked, noinline))
+int FUN_00106030(void *param_1 __attribute__((unused)), int param_2 __attribute__((unused)), short param_3 __attribute__((unused)), int param_4 __attribute__((unused)))
 {
-  float edge0[2]; /* local_1c=x, local_18=y : cur - prev  (contiguous) */
-  float edge1[2]; /* local_14=x, local_10=y : next - cur  (contiguous) */
-  float cross; /* fVar3 */
-  float sum; /* local_8 : accumulated interior angle */
-  int i; /* local_c : loop counter (16-bit compared) */
-  int cur16; /* iVar5 = (short)i */
-  int prev_idx; /* iVar4 (prev), reused for next */
-  int cur_idx;
-  int next_idx;
-  float *prev; /* pfVar1 */
-  float *cur; /* pfVar2 */
-  float *next; /* pfVar1 reused */
-
-  (void)param_1;
-
-  sum = 0.0f;
-  i = 0;
-  if (param_3 > 0) {
-    do {
-      cur16 = (int)(short)i;
-      prev_idx = cur16 - 1;
-      if (prev_idx < 0)
-        prev_idx = param_3 - 1;
-      prev = (float *)(param_2 + (int)*(short *)(param_4 + prev_idx * 2) * 8);
-      cur_idx = (int)*(short *)(param_4 + cur16 * 2);
-      cur = (float *)(param_2 + cur_idx * 8);
-      edge0[0] = cur[0] - prev[0];
-      edge0[1] = cur[1] - prev[1];
-      next_idx = ((param_3 <= cur16 + 1) - 1) & (cur16 + 1);
-      next = (float *)(param_2 + (int)*(short *)(param_4 + next_idx * 2) * 8);
-      edge1[0] = next[0] - cur[0];
-      edge1[1] = next[1] - cur[1];
-      cross = edge1[1] * edge0[0] - edge1[0] * edge0[1];
-      /* redundant recompute (same value): the original stores edge0[1] again
-       * here — VC71 keeps the extra FSUB/FSTP (permuter-found, byte-verified)
-       */
-      edge0[1] = cur[1] - prev[1];
-      if (cross < *(float *)0x2533c0)
-        return 0;
-      sum = FUN_0010c440(edge0, edge1) + sum;
-      i = i + 1;
-    } while ((short)i < param_3);
-  }
-  if (fabsf(sum - *(float *)0x255a54) < *(double *)0x2549d8)
-    return 1;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "movw 0x10(%%ebp), %%cx\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testw %%cx, %%cx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jle .LFUN_00106030_3\n\t"
+      "movl 0x14(%%ebp), %%edi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "movswl %%cx, %%ebx\n\t"
+      "jmp .LFUN_00106030_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_00106030_1:\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "leal -0x1(%%edx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_00106030_2\n\t"
+      "leal -0x1(%%ebx), %%eax\n\t"
+      ".LFUN_00106030_2:\n\t"
+      "movswl (%%edi,%%eax,2), %%eax\n\t"
+      "leal (%%esi,%%eax,8), %%ecx\n\t"
+      "movswl (%%edi,%%edx,2), %%eax\n\t"
+      "flds (%%esi,%%eax,8)\n\t"
+      "leal (%%esi,%%eax,8), %%eax\n\t"
+      "fsubs (%%ecx)\n\t"
+      "leal 0x1(%%edx), %%esi\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "cmpl %%ebx, %%esi\n\t"
+      "setge %%dl\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs 0x4(%%ecx)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "decl %%edx\n\t"
+      "andl %%esi, %%edx\n\t"
+      "movswl (%%edi,%%edx,2), %%edx\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "leal (%%esi,%%edx,8), %%edx\n\t"
+      "flds (%%edx)\n\t"
+      "fsubs (%%eax)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds 0x4(%%edx)\n\t"
+      "fsubs 0x4(%%eax)\n\t"
+      "fsts -0xc(%%ebp)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls -0x14(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_00106030_4\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c10c440]\n\t"
+      "fadds -0x4(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "incl %%eax\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "cmpw 0x10(%%ebp), %%ax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jl .LFUN_00106030_1\n\t"
+      ".LFUN_00106030_3:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fsubs 0x255a54\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00106030_5\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00106030_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00106030_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c10c440] "m"(b106030_c10c440)
+      : "memory");
 }
+#else
+#error "FUN_00106030: clang naked draft required"
+#endif
+
 
 /* FUN_00106130 (0x106130)
  *

@@ -1338,76 +1338,122 @@ short FUN_0002b020(float *avoidance_ray __attribute__((unused)), float *ray_orig
 #endif
 
 
-/* 0x2b310 — actor_move_find_avoidance_sector: locate the angular sector of the
- * query direction within a fan of direction records and linearly interpolate a
- * fractional index plus an associated value.
- *
- * Register args (confirmed from caller FUN_0002bd80 @ 0x2c4c7-0x2c4cf and
- * 0x2c765-0x2c76d):
- *   direction @<ecx> : query direction vector (direction[0..2])
- *   count     @<ebx> : number of records (always 8 at both call sites; used as
- *                      a signed short — TEST BX,BX / CMP DX,BX / MOVSX)
- * Stack args (cdecl, ADD ESP,0x10 cleanup):
- *   records   : base of count direction records, 12-byte (float[3]) stride
- *               (= global table 0x632780)
- *   values    : parallel array of count floats, 4-byte stride
- *   out_index : fractional sector index output
- *   out_value : interpolated value output
- * Returns 1 (AL) when a bracketing sector is found, else 0.
- *
- * The function walks the fan, computing for each record the 2D cross-product
- * component (rec.y*dir.z - rec.z*dir.y) against the query direction.  When the
- * sign of consecutive cross-products differs (product <= 0) and the dot product
- * with the record is positive (forward hemisphere), the query lies between the
- * previous record (prev) and the current record (i); the fractional index and
- * value are interpolated from the two cross magnitudes.  prev starts at the
- * wrap-around predecessor count-1.
- *
- * Confirmed: cross/dot loads at 0x2b32c-0x2b338 (seed), 0x2b34c-0x2b358
- * (cross), 0x2b36c-0x2b37e (dot).  Confirmed: opposite-sign test FCOMP
- * [0x2533c0]=0.0; TEST AH,0x41; JP at 0x2b35f-0x2b36a (enters body for product
- * <= 0). Confirmed: dot test FCOMP [0x2533c0]; TEST AH,0x41; JZ at
- * 0x2b380-0x2b38b (enters success for dot > 0).  Confirmed: success-block
- * index/value interpolation FILD/FMUL/FSUBP/FDIV at 0x2b3b3-0x2b3ec. */
-char FUN_0002b310(float *direction, short count, int records, float *values,
-                  float *out_index, float *out_value)
-{
-  float prev_cross;
-  float cross;
-  float *rec;
-  short prev;
-  short i;
-  short denom_idx;
+/* FUN_0002b310 (0x2b310) — XBE naked draft (batch 85). */
+#if defined(__clang__)
 
-  prev = count - 1;
-  i = 0;
-  prev_cross = *(float *)(records + prev * 0xc + 4) * direction[2] -
-               *(float *)(records + prev * 0xc + 8) * direction[1];
-  if (count > 0) {
-    do {
-      rec = (float *)(records + i * 0xc);
-      cross = rec[1] * direction[2] - rec[2] * direction[1];
-      if (prev_cross * cross <= 0.0f && 0.0f < direction[0] * rec[0] +
-                                                 rec[1] * direction[1] +
-                                                 rec[2] * direction[2]) {
-        denom_idx = i;
-        if (i == 0) {
-          denom_idx = count;
-        }
-        *out_index =
-          ((float)(int)prev * cross - (float)(int)denom_idx * prev_cross) /
-          (cross - prev_cross);
-        *out_value = (cross * values[prev] - prev_cross * values[i]) /
-                     (cross - prev_cross);
-        return 1;
-      }
-      prev = i;
-      i = i + 1;
-      prev_cross = cross;
-    } while (i < count);
-  }
-  return 0;
+
+__attribute__((naked, noinline))
+char FUN_0002b310(float *direction __attribute__((unused)), short count __attribute__((unused)), int records __attribute__((unused)), float *values __attribute__((unused)), float *out_index __attribute__((unused)), float *out_value __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x1(%%ebx), %%edi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal (%%edx,%%eax,4), %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fmuls 0x8(%%ecx)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "jle .LFUN_0002b310_3\n\t"
+      "nop\n\t"
+      ".LFUN_0002b310_1:\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movswl %%dx, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal (%%esi,%%eax,4), %%esi\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fmuls 0x8(%%ecx)\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_0002b310_2\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fmuls 0x8(%%ecx)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%ecx)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_0002b310_4\n\t"
+      ".LFUN_0002b310_2:\n\t"
+      "movl %%edx, %%edi\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "incl %%edx\n\t"
+      "cmpw %%bx, %%dx\n\t"
+      "jl .LFUN_0002b310_1\n\t"
+      ".LFUN_0002b310_3:\n\t"
+      "popl %%edi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0002b310_4:\n\t"
+      "testw %%dx, %%dx\n\t"
+      "jne .LFUN_0002b310_5\n\t"
+      "movswl %%bx, %%ecx\n\t"
+      "movl %%ecx, 0x8(%%ebp)\n\t"
+      "jmp .LFUN_0002b310_6\n\t"
+      ".LFUN_0002b310_5:\n\t"
+      "movswl %%dx, %%eax\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      ".LFUN_0002b310_6:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "movswl %%di, %%eax\n\t"
+      ".byte 0xd8, 0xe9\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movswl %%dx, %%edx\n\t"
+      "fildl -0x8(%%ebp)\n\t"
+      "popl %%edi\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      "popl %%esi\n\t"
+      "fildl 0x8(%%ebp)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      ".byte 0xd8, 0xf1\n\t"
+      "fstps (%%ecx)\n\t"
+      "fxch %%st(1)\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "fmuls (%%ecx,%%eax,4)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls (%%ecx,%%edx,4)\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      ".byte 0xd8, 0xf1\n\t"
+      "fstps (%%eax)\n\t"
+      "movb $1, %%al\n\t"
+      "fstp %%st(0)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0002b310: clang naked draft required"
+#endif
+
 
 /* 0x2b400 — actor_move_transform_avoidance_vector: transform a local-space
  * direction vector (in_vec) by the avoidance_data's per-instance 3x3 rotation
@@ -1452,80 +1498,132 @@ void actor_move_transform_avoidance_vector(int matrix, float *in_vec,
   out_vec[2] = component * *(float *)(matrix + 0x38) + out_vec[2];
 }
 
-/* 0x2b490 — actor_move_get_avoidance_vector: map an avoidance "direction index"
- * (a fractional sector index in [0,8)) into a world-space direction vector.
- *
- * The index is clamped to [0,8); a per-sector angle is linearly interpolated
- * between adjacent entries of the angle table at 0x2557f4 (the wrap entry for
- * sector 7 uses table[0]).  cos/sin of the interpolated angle form a local
- * {0, cos, sin} vector that is transformed by
- * actor_move_transform_avoidance_vector.
- *
- * cdecl, all stack args (confirmed: PUSH EBP / RET, no RET N; caller
- * FUN_0004c920 @ 0x4d26a-0x4d26b and 0x4d2d7-0x4d2d8).
- *   matrix      : per-instance struct (passed through to the transform)
- *   dir_index   : float fractional sector index in [0,8)
- *   out_vec     : float[3] world-space output
- *
- * Confirmed constants: 0.0f @0x2533c0, 1.0f @0x2533c8, 8.0f @0x253f78,
- * FLT_MAX sentinel @0x2548fc, 2*pi (_full_circle) @0x255a54.  Assert text and
- * warning text both at actor_moving.c line 0xab7.  The warning passes the
- * (possibly clamped) index as a double (FLD float; FSTP double [ESP]). */
-void actor_move_get_avoidance_vector(int matrix, float dir_index,
-                                     float *out_vec)
+/* actor_move_get_avoidance_vector (0x2b490) — XBE naked draft (batch 85). */
+#if defined(__clang__)
+static void (*const b2b490_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b2b490_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b2b490_exitfn)(int) = system_exit;
+static void (*const b2b490_c2b400)(int matrix, float *in_vec, float *out_vec) = actor_move_transform_avoidance_vector;
+
+__attribute__((naked, noinline))
+void actor_move_get_avoidance_vector(int matrix __attribute__((unused)), float dir_index __attribute__((unused)), float *out_vec __attribute__((unused)))
 {
-  const float *angles = (const float *)0x2557f4;
-  short sector;
-  int idx;
-  float next_angle;
-  float frac;
-  float angle;
-  float vec[3];
-
-  /* Clamp the index into the valid [0, 8) range. */
-  if (dir_index < *(const float *)0x2533c0 ||
-      *(const float *)0x253f78 <= dir_index) {
-    dir_index = 0.0f;
-  }
-
-  angle = 0.0f;
-  sector = 0;
-  do {
-    if (dir_index < (float)(int)sector + *(const float *)0x2533c8) {
-      idx = (int)sector;
-      next_angle = *(const float *)0x2557f4;
-      if (sector != 7) {
-        next_angle = ((const float *)0x2557f8)[idx];
-      }
-      frac = dir_index - (float)idx;
-      angle =
-        next_angle * frac + (*(const float *)0x2533c8 - frac) * angles[idx];
-      if (angle != *(const float *)0x2548fc) {
-        if (angle < *(const float *)0x2533c0 ||
-            *(const float *)0x255a54 <= angle) {
-          display_assert("(angle >= 0.0f) && (angle < _full_circle)",
-                         "c:\\halo\\SOURCE\\ai\\actor_moving.c", 0xab7, 1);
-          system_exit(-1);
-        }
-        goto build_vector;
-      }
-      break;
-    }
-    sector = sector + 1;
-  } while (sector < 8);
-
-  angle = 0.0f;
-  error(2,
-        "warning: actor_move_get_avoidance_vector couldn't find out-of-bounds "
-        "direction %.4f",
-        (double)dir_index);
-
-build_vector:
-  vec[0] = 0.0f;
-  vec[1] = x87_fcos(angle);
-  vec[2] = x87_fsin(angle);
-  actor_move_transform_avoidance_vector(matrix, vec, out_vec);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lactor_move_get_avoidance_vector_1\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x253f78\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lactor_move_get_avoidance_vector_2\n\t"
+      ".Lactor_move_get_avoidance_vector_1:\n\t"
+      "movl $0, 0xc(%%ebp)\n\t"
+      ".Lactor_move_get_avoidance_vector_2:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "nop\n\t"
+      ".Lactor_move_get_avoidance_vector_3:\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fadds 0x2533c8\n\t"
+      "fcomps 0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lactor_move_get_avoidance_vector_4\n\t"
+      "incl %%ecx\n\t"
+      "cmpw $8, %%cx\n\t"
+      "jl .Lactor_move_get_avoidance_vector_3\n\t"
+      "jmp .Lactor_move_get_avoidance_vector_7\n\t"
+      ".Lactor_move_get_avoidance_vector_4:\n\t"
+      "cmpw $7, %%cx\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fsubrs 0xc(%%ebp)\n\t"
+      "flds 0x2557f4(,%%eax,4)\n\t"
+      "jne .Lactor_move_get_avoidance_vector_5\n\t"
+      "flds 0x2557f4\n\t"
+      "jmp .Lactor_move_get_avoidance_vector_6\n\t"
+      ".Lactor_move_get_avoidance_vector_5:\n\t"
+      "flds 0x2557f8(,%%eax,4)\n\t"
+      ".Lactor_move_get_avoidance_vector_6:\n\t"
+      "flds 0x2533c8\n\t"
+      ".byte 0xd8, 0xe3\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      "fxch %%st(1)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2548fc\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lactor_move_get_avoidance_vector_8\n\t"
+      ".Lactor_move_get_avoidance_vector_7:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255a58\n\t"
+      "pushl $2\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "jmp .Lactor_move_get_avoidance_vector_10\n\t"
+      ".Lactor_move_get_avoidance_vector_8:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lactor_move_get_avoidance_vector_9\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x255a54\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lactor_move_get_avoidance_vector_10\n\t"
+      ".Lactor_move_get_avoidance_vector_9:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xab7\n\t"
+      "pushl $0x255984\n\t"
+      "pushl $0x255a28\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_move_get_avoidance_vector_10:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "fcos\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl $0, -0x10(%%ebp)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fsin\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "call *%[c2b400]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8f390] "m"(b2b490_c8f390), [assert] "m"(b2b490_assert), [exitfn] "m"(b2b490_exitfn), [c2b400] "m"(b2b490_c2b400)
+      : "memory");
 }
+#else
+#error "actor_move_get_avoidance_vector: clang naked draft required"
+#endif
+
 
 /* actor_move_get_avoidance_direction (0x2b5d0) — XBE naked draft (batch 84). */
 #if defined(__clang__)

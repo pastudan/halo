@@ -1013,99 +1013,249 @@ void FUN_0011b2a0(int definition __attribute__((unused)), int *decode_state __at
 #endif
 
 
-/* encode_packet — encode a data struct into a packet buffer (0x11b650).
- * Source: data_packets.c lines 0x3d-0x3f. */
-bool FUN_0011b650(int definition, short version, void *data,
-                  char *buffer, short *buffer_size_out,
-                  short maximum_buffer_size)
+/* FUN_0011b650 (0x11b650) — XBE naked draft (batch 85). */
+#if defined(__clang__)
+static void (*const b11b650_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11b650_exitfn)(int) = system_exit;
+static void (*const b11b650_c11b540)(packet_definition *def) = verify_packet_definition;
+static void (*const b11b650_c119c50)(int *state, int buf, int buf_size) = FUN_00119c50;
+static int (*const b11b650_c119cc0)(int *param_1, int param_2, short param_3, int param_4) = FUN_00119cc0;
+static void (*const b11b650_c11afa0)(int param_1, int *param_2, short param_3, void *param_4, short param_5, int param_6, short *param_7) = _data_packet_encode;
+
+__attribute__((naked, noinline))
+bool FUN_0011b650(int definition __attribute__((unused)), short version __attribute__((unused)), void *data __attribute__((unused)), char *buffer __attribute__((unused)), short *buffer_size_out __attribute__((unused)), short maximum_buffer_size __attribute__((unused)))
 {
-  int encode_state[4];
-  char version_byte;
-
-  if (definition == 0) {
-    display_assert("packet_definition",
-                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x3d, 1);
-    system_exit(-1);
-  }
-  if (buffer == 0 || buffer_size_out == NULL) {
-    display_assert("buffer && buffer_size",
-                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x3e, 1);
-    system_exit(-1);
-  }
-  if (maximum_buffer_size < 0) {
-    display_assert("maximum_buffer_size>=0",
-                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x3f, 1);
-    system_exit(-1);
-  }
-  verify_packet_definition((packet_definition *)definition);
-  encode_state_new(encode_state, (int)buffer, (int)maximum_buffer_size);
-  if (version == -1) {
-    version = *(short *)(definition + 10);
-  }
-  if (0 < *(short *)(definition + 10)) {
-    version_byte = (char)version;
-    encode_raw_data(encode_state, (int)&version_byte, 1, 1);
-  }
-  encode_packet_fields(definition, encode_state, version, data, 0,
-                       *(int *)(definition + 0xc), 0);
-  *buffer_size_out = (short)encode_state[1];
-  return (char)encode_state[3] == '\0';
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_0011b650_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3d\n\t"
+      "pushl $0x28f498\n\t"
+      "pushl $0x28f5d8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011b650_1:\n\t"
+      "movl 0x14(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LFUN_0011b650_2\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0011b650_3\n\t"
+      ".LFUN_0011b650_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3e\n\t"
+      "pushl $0x28f498\n\t"
+      "pushl $0x28f604\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011b650_3:\n\t"
+      "movw 0x1c(%%ebp), %%bx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jge .LFUN_0011b650_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3f\n\t"
+      "pushl $0x28f498\n\t"
+      "pushl $0x28f5ec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011b650_4:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c11b540]\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119c50]\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $-1, %%bx\n\t"
+      "jne .LFUN_0011b650_5\n\t"
+      "movw 0xa(%%esi), %%bx\n\t"
+      ".LFUN_0011b650_5:\n\t"
+      "cmpw $0, 0xa(%%esi)\n\t"
+      "jle .LFUN_0011b650_6\n\t"
+      "pushl $1\n\t"
+      "pushl $1\n\t"
+      "leal 0x1f(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movb %%bl, 0x1f(%%ebp)\n\t"
+      "call *%[c119cc0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_0011b650_6:\n\t"
+      "movl 0xc(%%esi), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c11afa0]\n\t"
+      "movw -0xc(%%ebp), %%cx\n\t"
+      "movl 0x18(%%ebp), %%edx\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movw %%cx, (%%edx)\n\t"
+      "movb -0x4(%%ebp), %%cl\n\t"
+      "popl %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testb %%cl, %%cl\n\t"
+      "popl %%esi\n\t"
+      "sete %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11b650_assert), [exitfn] "m"(b11b650_exitfn), [c11b540] "m"(b11b650_c11b540), [c119c50] "m"(b11b650_c119c50), [c119cc0] "m"(b11b650_c119cc0), [c11afa0] "m"(b11b650_c11afa0)
+      : "memory");
 }
+#else
+#error "FUN_0011b650: clang naked draft required"
+#endif
 
-/* decode_packet — decode an encoded packet into a data struct (0x11b750).
- * Source: data_packets.c lines 0x5f-0x61. */
-bool FUN_0011b750(int definition, int encoded_packet, short encoded_packet_size,
-                  int decoded_packet, unsigned short *version_out,
-                  short *bytes_consumed_out)
+
+/* FUN_0011b750 (0x11b750) — XBE naked draft (batch 85). */
+#if defined(__clang__)
+static void (*const b11b750_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11b750_exitfn)(int) = system_exit;
+static void (*const b11b750_c11b540)(packet_definition *def) = verify_packet_definition;
+static void (*const b11b750_c11a2d0)(int *state, void *buffer, int buffer_size) = FUN_0011a2d0;
+static unsigned char (*const b11b750_c11a560)(int *state) = FUN_0011a560;
+static void (*const b11b750_c11b2a0)(int definition, int *decode_state, unsigned short version, unsigned short *output, short *decoded_size_out, short *field_defs, short *field_count_out) = FUN_0011b2a0;
+
+__attribute__((naked, noinline))
+bool FUN_0011b750(int definition __attribute__((unused)), int encoded_packet __attribute__((unused)), short encoded_packet_size __attribute__((unused)), int decoded_packet __attribute__((unused)), unsigned short *version_out __attribute__((unused)), short *bytes_consumed_out __attribute__((unused)))
 {
-  unsigned char version_byte;
-  unsigned short version;
-  bool result;
-  int decode_state[4];
-
-  result = 0;
-  if (encoded_packet == 0) {
-    display_assert("encoded_packet",
-                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x5f, 1);
-    system_exit(-1);
-  }
-  if (decoded_packet == 0) {
-    display_assert("decoded_packet",
-                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x60, 1);
-    system_exit(-1);
-  }
-  if (encoded_packet_size < 0) {
-    display_assert("encoded_packet_size>=0",
-                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x61, 1);
-    system_exit(-1);
-  }
-  verify_packet_definition((packet_definition *)definition);
-  FUN_0011a2d0(decode_state, (void *)encoded_packet,
-               (int)encoded_packet_size);
-  if (*(short *)(definition + 10) == 0) {
-    version = 0;
-  }
-  else {
-    version_byte = FUN_0011a560(decode_state);
-    version = (unsigned short)version_byte;
-  }
-  if ((short)version <= *(short *)(definition + 10)) {
-    FUN_0011b2a0(definition, decode_state, version,
-                 (unsigned short *)decoded_packet, 0,
-                 *(short **)(definition + 0xc), 0);
-    result = 1;
-    if ((char)decode_state[3] == '\0') goto done;
-  }
-  result = 0;
-done:
-  if (version_out != NULL) {
-    *version_out = version;
-  }
-  if (bytes_consumed_out != NULL) {
-    *bytes_consumed_out = (short)decode_state[1];
-  }
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x14, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "jne .LFUN_0011b750_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5f\n\t"
+      "pushl $0x28f498\n\t"
+      "pushl $0x28f634\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011b750_1:\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0011b750_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x60\n\t"
+      "pushl $0x28f498\n\t"
+      "pushl $0x28f340\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011b750_2:\n\t"
+      "movw 0x10(%%ebp), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jge .LFUN_0011b750_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x61\n\t"
+      "pushl $0x28f498\n\t"
+      "pushl $0x28f61c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011b750_3:\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c11b540]\n\t"
+      "movswl %%di, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c11a2d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $0, 0xa(%%esi)\n\t"
+      "jne .LFUN_0011b750_4\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "jmp .LFUN_0011b750_5\n\t"
+      ".LFUN_0011b750_4:\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c11a560]\n\t"
+      "addl $4, %%esp\n\t"
+      "movzbw %%al, %%di\n\t"
+      ".LFUN_0011b750_5:\n\t"
+      "cmpw 0xa(%%esi), %%di\n\t"
+      "jg .LFUN_0011b750_6\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c11b2a0]\n\t"
+      "movb -0x8(%%ebp), %%al\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movb $1, %%cl\n\t"
+      "je .LFUN_0011b750_7\n\t"
+      ".LFUN_0011b750_6:\n\t"
+      "movb -0x1(%%ebp), %%cl\n\t"
+      ".LFUN_0011b750_7:\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0011b750_8\n\t"
+      "movw %%di, (%%eax)\n\t"
+      ".LFUN_0011b750_8:\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "je .LFUN_0011b750_9\n\t"
+      "movw -0x10(%%ebp), %%dx\n\t"
+      "movw %%dx, (%%eax)\n\t"
+      ".LFUN_0011b750_9:\n\t"
+      "movb %%cl, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11b750_assert), [exitfn] "m"(b11b750_exitfn), [c11b540] "m"(b11b750_c11b540), [c11a2d0] "m"(b11b750_c11a2d0), [c11a560] "m"(b11b750_c11a560), [c11b2a0] "m"(b11b750_c11b2a0)
+      : "memory");
 }
+#else
+#error "FUN_0011b750: clang naked draft required"
+#endif
+
 
 /* ========================================================================
  * hashtable.c — Hash table implementation
@@ -2027,56 +2177,132 @@ void FUN_0011c290(int cache)
   }
 }
 
-/* lra_cache_new — allocate and initialize a cache (0x11c310).
- * Source: lra_cache.c lines 0x56-0x7e. */
-int FUN_0011c310(const char *name, int size, void (*lock_proc)(void *, int),
-                 void (*unlock_proc)(void *), void *base_address)
-{
-  int cache;
-  char owns_buffer;
+/* FUN_0011c310 (0x11c310) — XBE naked draft (batch 85). */
+#if defined(__clang__)
+static void * (*const b11c310_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
+static void (*const b11c310_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11c310_exitfn)(int) = system_exit;
+static void *(*const b11c310_memset)(void *, int, unsigned int) = csmemset;
+static void * (*const b11c310_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+static void (*const b11c310_c11c290)(int cache) = FUN_0011c290;
+static void (*const b11c310_c8ef70)(void *ptr, const char *file, int line) = debug_free;
 
-  cache = (int)debug_malloc(0x3c, 0,
-    "c:\\halo\\SOURCE\\memory\\lra_cache.c", 0x56);
-  if (size < 0) {
-    display_assert("size>=0",
-                   "c:\\halo\\SOURCE\\memory\\lra_cache.c", 0x58, 1);
-    system_exit(-1);
-  }
-  if (lock_proc == NULL || unlock_proc == NULL) {
-    lock_proc = (void (*)(void *, int))FUN_0011c1d0;
-    unlock_proc = (void (*)(void *))FUN_0011c1e0;
-  }
-  if (cache != 0) {
-    owns_buffer = 0;
-    if (base_address == NULL) {
-      base_address = debug_malloc(size, 0,
-        "c:\\halo\\SOURCE\\memory\\lra_cache.c", 0x66);
-      owns_buffer = 1;
-      if (base_address == NULL) {
-        debug_free((void *)cache,
-                   "c:\\halo\\SOURCE\\memory\\lra_cache.c", 0x7e);
-        return 0;
-      }
-    }
-    if (((unsigned int)base_address & 3) != 0) {
-      display_assert("!((long)base_address&3)",
-                     "c:\\halo\\SOURCE\\memory\\lra_cache.c", 0x6b, 1);
-      system_exit(-1);
-    }
-    csmemset((void *)cache, 0, 0x3c);
-    csstrncpy((char *)cache, name, 0x1f);
-    *(char *)(cache + 0x1f) = 0;
-    *(int *)(cache + 0x20) = size;
-    *(void **)(cache + 0x24) = base_address;
-    *(int *)(cache + 0x2c) = 0;
-    *(int *)(cache + 0x38) = 0x6c726163;
-    *(char *)(cache + 0x28) = owns_buffer;
-    *(void (**)(void *, int))(cache + 0x30) = lock_proc;
-    *(void (**)(void *))(cache + 0x34) = unlock_proc;
-    FUN_0011c290(cache);
-  }
-  return cache;
+__attribute__((naked, noinline))
+int FUN_0011c310(const char *name __attribute__((unused)), int size __attribute__((unused)), void (*lock_proc)(void * __attribute__((unused)), int), void (*unlock_proc)(void *) __attribute__((unused)), void *base_address __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x56\n\t"
+      "pushl $0x28f768\n\t"
+      "pushl $0\n\t"
+      "pushl $0x3c\n\t"
+      "call *%[c8ee60]\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jge .LFUN_0011c310_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x58\n\t"
+      "pushl $0x28f768\n\t"
+      "pushl $0x267a80\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011c310_1:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0011c310_2\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0011c310_3\n\t"
+      ".LFUN_0011c310_2:\n\t"
+      "movl $0x11c1d0, 0x10(%%ebp)\n\t"
+      "movl $0x11c1e0, 0x14(%%ebp)\n\t"
+      ".LFUN_0011c310_3:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_0011c310_6\n\t"
+      "movl 0x18(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "movb $0, 0xf(%%ebp)\n\t"
+      "jne .LFUN_0011c310_4\n\t"
+      "pushl $0x66\n\t"
+      "pushl $0x28f768\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c8ee60]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "movb $1, 0xf(%%ebp)\n\t"
+      "je .LFUN_0011c310_7\n\t"
+      ".LFUN_0011c310_4:\n\t"
+      "testb $3, %%bl\n\t"
+      "je .LFUN_0011c310_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6b\n\t"
+      "pushl $0x28f768\n\t"
+      "pushl $0x28f7bc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011c310_5:\n\t"
+      "pushl $0x3c\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x1f\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8de70]\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movb 0xf(%%ebp), %%cl\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl %%eax, 0x30(%%esi)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movb $0, 0x1f(%%esi)\n\t"
+      "movl %%edi, 0x20(%%esi)\n\t"
+      "movl %%ebx, 0x24(%%esi)\n\t"
+      "movl $0, 0x2c(%%esi)\n\t"
+      "movl $0x6c726163, 0x38(%%esi)\n\t"
+      "movb %%cl, 0x28(%%esi)\n\t"
+      "movl %%edx, 0x34(%%esi)\n\t"
+      "call *%[c11c290]\n\t"
+      ".LFUN_0011c310_6:\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011c310_7:\n\t"
+      "pushl $0x7e\n\t"
+      "pushl $0x28f768\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8ee60] "m"(b11c310_c8ee60), [assert] "m"(b11c310_assert), [exitfn] "m"(b11c310_exitfn), [memset] "m"(b11c310_memset), [c8de70] "m"(b11c310_c8de70), [c11c290] "m"(b11c310_c11c290), [c8ef70] "m"(b11c310_c8ef70)
+      : "memory");
 }
+#else
+#error "FUN_0011c310: clang naked draft required"
+#endif
+
 
 /* lra_cache_dispose — free a cache and its buffer (0x11c430).
  * Source: lra_cache.c lines 0x8c-0x8d. */

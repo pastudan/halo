@@ -416,76 +416,141 @@ void FUN_0011c580(int cache, void *pointer)
   *(unsigned int *)(block + 4) &= 0xfffffffe;
 }
 
-/* 0x11cab0: Dispose of every live block in an lrar_cache. Refreshes the
- * function-pointer table (lruv_update_function_pointers, cache passed in EAX),
- * then walks the ring buffer from head(+0x34) to tail(+0x36), wrapping at
- * block_count(+0x38). For each block it validates the cache header ('lrar'
- * magic @+0x44, base<end, size>=1, count>=1; line 0x199), the block index
- * (line 0x16e) and the block record ('klbR' magic @block+4, size in range,
- * offset inside the data region; line 0x186) -- each failure formats the
- * "appears to be corrupt" message into the shared scratch buffer at 0x5ab100
- * and hits display_assert + system_exit(-1). When a block holds a non-NULL
- * user pointer (block[0]) it is passed to the free callback at cache+0x40 and
- * the slot is cleared. Finally head/tail are reset to -1 (0xffff). The
- * file/line/halt assert args are pushed before csprintf's args (Ghidra cdecl
- * arg mis-grouping). Source: c:\halo\SOURCE\memory\lrar_cache.c */
-void lrar_cache_dispose(int cache)
-{
-  short block_index;
-  int *block;
-  int block_size;
+/* lrar_cache_dispose (0x11cab0) — XBE naked draft (batch 85). */
+#if defined(__clang__)
+static void (*const b11cab0_c11c820)(int cache) = lruv_update_function_pointers;
+static char * (*const b11cab0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b11cab0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11cab0_exitfn)(int) = system_exit;
 
-  lruv_update_function_pointers(cache);
-  block_index = *(short *)(cache + 0x34);
-  while (block_index != -1) {
-    while (1) {
-      if ((*(int *)(cache + 0x44) != 0x6c726172) ||
-          (*(unsigned int *)(cache + 0x28) <= *(unsigned int *)(cache + 0x24)) ||
-          (*(int *)(cache + 0x2c) < 1) ||
-          (*(short *)(cache + 0x38) <= 0)) {
-        display_assert(csprintf((char *)0x5ab100,
-                                "lrar cache %s @%p appears to be corrupt",
-                                cache, cache),
-                       "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x199, 1);
-        system_exit(-1);
-      }
-      if ((block_index < 0) || (*(short *)(cache + 0x38) <= block_index)) {
-        display_assert("block_index>=0 && block_index<cache->block_count",
-                       "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x16e, 1);
-        system_exit(-1);
-      }
-      block = (int *)(block_index * 0x10 + *(int *)(cache + 0x30));
-      block_size = block[3];
-      if ((block[1] != 0x52626c6b) ||
-          (block_size < 0) ||
-          (*(int *)(cache + 0x2c) <= block_size) ||
-          ((unsigned int)block[2] < *(unsigned int *)(cache + 0x24)) ||
-          (*(unsigned int *)(cache + 0x28) <
-           (unsigned int)(block[2] + block_size))) {
-        display_assert(csprintf((char *)0x5ab100,
-                                "lrar cache %s @%p block @%p appears to be corrupt",
-                                cache, cache, block),
-                       "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x186, 1);
-        system_exit(-1);
-      }
-      if (*block != 0) {
-        (*(void (**)(int))(cache + 0x40))(*block);
-        *block = 0;
-      }
-      if (block_index == *(short *)(cache + 0x36)) {
-        goto done;
-      }
-      block_index = block_index + 1;
-      if (block_index != *(short *)(cache + 0x38)) {
-        break;
-      }
-      block_index = 0;
-    }
-  }
-done:
-  *(short *)(cache + 0x34) = (short)0xffff;
-  *(short *)(cache + 0x36) = (short)0xffff;
+__attribute__((naked, noinline))
+void lrar_cache_dispose(int cache __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[c11c820]\n\t"
+      "movw 0x34(%%esi), %%bx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "je .Llrar_cache_dispose_11\n\t"
+      ".Llrar_cache_dispose_1:\n\t"
+      "cmpl $0x6c726172, 0x44(%%esi)\n\t"
+      "jne .Llrar_cache_dispose_2\n\t"
+      "movl 0x24(%%esi), %%eax\n\t"
+      "cmpl 0x28(%%esi), %%eax\n\t"
+      "jae .Llrar_cache_dispose_2\n\t"
+      "movl 0x2c(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Llrar_cache_dispose_2\n\t"
+      "cmpw $0, 0x38(%%esi)\n\t"
+      "jg .Llrar_cache_dispose_3\n\t"
+      ".Llrar_cache_dispose_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x199\n\t"
+      "pushl $0x28f808\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28f82c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Llrar_cache_dispose_3:\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl .Llrar_cache_dispose_4\n\t"
+      "cmpw 0x38(%%esi), %%bx\n\t"
+      "jl .Llrar_cache_dispose_5\n\t"
+      ".Llrar_cache_dispose_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x16e\n\t"
+      "pushl $0x28f808\n\t"
+      "pushl $0x28f8c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Llrar_cache_dispose_5:\n\t"
+      "movl 0x30(%%esi), %%ecx\n\t"
+      "movswl %%bx, %%edi\n\t"
+      "shll $4, %%edi\n\t"
+      "movl 0x4(%%edi,%%ecx,1), %%eax\n\t"
+      "addl %%ecx, %%edi\n\t"
+      "cmpl $0x52626c6b, %%eax\n\t"
+      "jne .Llrar_cache_dispose_6\n\t"
+      "movl 0xc(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .Llrar_cache_dispose_6\n\t"
+      "cmpl 0x2c(%%esi), %%eax\n\t"
+      "jge .Llrar_cache_dispose_6\n\t"
+      "movl 0x8(%%edi), %%ecx\n\t"
+      "cmpl 0x24(%%esi), %%ecx\n\t"
+      "jb .Llrar_cache_dispose_6\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "cmpl 0x28(%%esi), %%ecx\n\t"
+      "jbe .Llrar_cache_dispose_7\n\t"
+      ".Llrar_cache_dispose_6:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x186\n\t"
+      "pushl $0x28f808\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28f7d4\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Llrar_cache_dispose_7:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Llrar_cache_dispose_8\n\t"
+      "pushl %%eax\n\t"
+      "call *0x40(%%esi)\n\t"
+      "addl $4, %%esp\n\t"
+      "movl $0, (%%edi)\n\t"
+      ".Llrar_cache_dispose_8:\n\t"
+      "cmpw 0x36(%%esi), %%bx\n\t"
+      "je .Llrar_cache_dispose_10\n\t"
+      "incl %%ebx\n\t"
+      "cmpw 0x38(%%esi), %%bx\n\t"
+      "jne .Llrar_cache_dispose_9\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "jmp .Llrar_cache_dispose_1\n\t"
+      ".Llrar_cache_dispose_9:\n\t"
+      "cmpw $-1, %%bx\n\t"
+      "jne .Llrar_cache_dispose_1\n\t"
+      ".Llrar_cache_dispose_10:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      ".Llrar_cache_dispose_11:\n\t"
+      "popl %%edi\n\t"
+      "movw %%ax, 0x34(%%esi)\n\t"
+      "movw %%ax, 0x36(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11c820] "m"(b11cab0_c11c820), [c8d9d0] "m"(b11cab0_c8d9d0), [assert] "m"(b11cab0_assert), [exitfn] "m"(b11cab0_exitfn)
+      : "memory");
 }
+#else
+#error "lrar_cache_dispose: clang naked draft required"
+#endif
+
 
 /* 0x11cbf0: lrar_cache block allocator. Refreshes the cache's function-pointer
  * table (lruv_update_function_pointers, cache in @eax), rounds the request up

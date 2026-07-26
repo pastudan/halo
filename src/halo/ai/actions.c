@@ -1844,61 +1844,122 @@ char actor_action_handle_exit_pursuit(int actor_handle)
   }
 }
 
-/* actor_action_try_to_throw_grenade (0x1fa60) — Attempts to commit the actor
- * to a grenade throw this tick. Returns 1 if the throw was committed, 0
- * otherwise.
- *
- * Resolves the actor and its unit object (actor+0x18, type 3). Bails
- * (returns 0) if the unit is busy (unit_is_busy) or the object's throw
- * cooldown timer (object+0x9c) has not expired (i.e. is > 0.0). When flag==0,
- * re-tests grenade viability via actor_action_test_grenade and clears the
- * pending flag (actor+0x6a0) if that test fails. If the pending flag is set,
- * computes the horizontal offset from self position (0x12c/0x130) to the
- * grenade target (0x6a8/0x6ac), normalizes it in place (magnitude3d, 2 floats),
- * and requires a nonzero magnitude. Then checks the target lies within the
- * throw arc: the normalized direction dotted with the actor facing
- * (0x174/0x178) must be >= *(float*)0x2533dc (cos(30 deg) = 0.866025388;
- * referenced as the exact global constant, NOT a rounded literal). On success
- * sets the throw-commit flag (actor+0x45c), clears the pending flag, and — if
- * the actor has a valid encounter handle (actor+0x34 != NONE) — stamps that
- * encounter record (encounter+0x5c) with the current game time. */
-char actor_action_try_to_throw_grenade(int actor_handle, char flag)
-{
-  char *actor;
-  char *object;
-  char *encounter;
-  float delta[2];
+/* actor_action_try_to_throw_grenade (0x1fa60) — XBE naked draft (batch 85). */
+#if defined(__clang__)
+static void *(*const b1fa60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b1fa60_get)(int, int) = object_get_and_verify_type;
+static bool (*const b1fa60_c1a9ad0)(int unit_handle) = unit_is_busy;
+static char (*const b1fa60_c1d180)(int actor_handle) = actor_action_test_grenade;
+static float (*const b1fa60_mag)(float *) = magnitude3d;
+static int (*const b1fa60_gtime)(void) = game_time_get;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  object = (char *)object_get_and_verify_type(*(int *)(actor + 0x18), 3);
-  if (unit_is_busy(*(int *)(actor + 0x18)) == 0) {
-    if (*(float *)(object + 0x9c) <= *(float *)0x2533c0) {
-      if (flag == '\0') {
-        if (actor_action_test_grenade(actor_handle) == '\0') {
-          *(char *)(actor + 0x6a0) = 0;
-        }
-      }
-      if (*(char *)(actor + 0x6a0) != '\0') {
-        delta[0] = *(float *)(actor + 0x6a8) - *(float *)(actor + 0x12c);
-        delta[1] = *(float *)(actor + 0x6ac) - *(float *)(actor + 0x130);
-        if (*(float *)0x2533c0 < magnitude3d(delta)) {
-          if (*(float *)0x2533dc <= delta[0] * *(float *)(actor + 0x174) +
-                                      delta[1] * *(float *)(actor + 0x178)) {
-            *(char *)(actor + 0x45c) = 1;
-            *(char *)(actor + 0x6a0) = 0;
-            if (*(int *)(actor + 0x34) != -1) {
-              encounter =
-                (char *)datum_get(*(data_t **)0x5ab270, *(int *)(actor + 0x34));
-              *(int *)(encounter + 0x5c) = game_time_get();
-            }
-            return 1;
-          }
-        }
-      }
-    }
-  }
-  return 0;
+__attribute__((naked, noinline))
+char actor_action_try_to_throw_grenade(int actor_handle __attribute__((unused)), char flag __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x18(%%esi), %%edx\n\t"
+      "pushl $3\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x18(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c1a9ad0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_action_try_to_throw_grenade_3\n\t"
+      "flds 0x9c(%%edi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lactor_action_try_to_throw_grenade_3\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_action_try_to_throw_grenade_1\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d180]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_action_try_to_throw_grenade_1\n\t"
+      "movb %%al, 0x6a0(%%esi)\n\t"
+      ".Lactor_action_try_to_throw_grenade_1:\n\t"
+      "movb 0x6a0(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_try_to_throw_grenade_3\n\t"
+      "flds 0x6a8(%%esi)\n\t"
+      "leal -0x8(%%ebp), %%edx\n\t"
+      "fsubs 0x12c(%%esi)\n\t"
+      "pushl %%edx\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x6ac(%%esi)\n\t"
+      "fsubs 0x130(%%esi)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "call *%[mag]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_action_try_to_throw_grenade_3\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x178(%%esi)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x174(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps 0x2533dc\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lactor_action_try_to_throw_grenade_3\n\t"
+      "movb $1, 0x45c(%%esi)\n\t"
+      "movb $0, 0x6a0(%%esi)\n\t"
+      "movl 0x34(%%esi), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lactor_action_try_to_throw_grenade_2\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, 0x5c(%%esi)\n\t"
+      ".Lactor_action_try_to_throw_grenade_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_try_to_throw_grenade_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1fa60_dget), [get] "m"(b1fa60_get), [c1a9ad0] "m"(b1fa60_c1a9ad0), [c1d180] "m"(b1fa60_c1d180), [mag] "m"(b1fa60_mag), [gtime] "m"(b1fa60_gtime)
+      : "memory");
 }
+#else
+#error "actor_action_try_to_throw_grenade: clang naked draft required"
+#endif
+
 
 /* actors_searching_same_position (0x20140) — Returns true when two actors are
  * searching/investigating the same position. Each actor's search record is the

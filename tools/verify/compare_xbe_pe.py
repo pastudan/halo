@@ -1029,6 +1029,19 @@ def main() -> int:
         ("convex_hull2d_test_vector", 0x1063f0, 0x106503),
         ("memory_pool_block_resize", 0x11e8a0, 0x11e9b6),
         ("actor_move_to_point", 0x2d720, 0x2d84d),
+        # gameplay wave 85 (2026-07-26) — memory/AI/net/rasterizer Capstone weaks
+        ("lrar_cache_dispose", 0x11cab0, 0x11cbed),
+        ("ai_communication_initialize", 0x42a30, 0x42b7f),
+        ("calculate_vertex", 0x105830, 0x105971),
+        ("rasterizer_swizzle_compute_masks", 0x182690, 0x1827b1),
+        ("actor_move_get_avoidance_vector", 0x2b490, 0x2b5c1),
+        ("FUN_0011c310", 0x11c310, 0x11c423),
+        ("FUN_00106030", 0x106030, 0x106128),
+        ("FUN_00119df0", 0x119df0, 0x119eea),
+        ("FUN_0002b310", 0x2b310, 0x2b3f6),
+        ("FUN_0011b750", 0x11b750, 0x11b84d),
+        ("FUN_0011b650", 0x11b650, 0x11b745),
+        ("actor_action_try_to_throw_grenade", 0x1fa60, 0x1fb79),
     ]
 
     xbe = Xbe.from_file(args.xbe)
