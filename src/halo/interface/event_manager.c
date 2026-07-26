@@ -2813,51 +2813,24 @@ char *FUN_000db0b0(int16_t local_player_index)
   return (char *)(*(int *)0x46bd2c) + (int)local_player_index * 0x568;
 }
 
-/* FUN_000db1e0 (0xdb1e0) — XBE naked draft (batch 172). */
-#if defined(__clang__)
-static void (*const bdb1e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bdb1e0_exitfn)(int) = system_exit;
-static void (*const bdb1e0_c17d050)(void) = FUN_0017d050;
-
-__attribute__((naked, noinline))
-void FUN_000db1e0(void)
+/* FUN_000db1e0 (0xdb1e0) — readable C lift. */
+void FUN_000db1e0(float *xy, char flag, int16_t value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000db1e0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x349\n\t"
-      "pushl $0x282094\n\t"
-      "pushl $0x28210c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000db1e0_1:\n\t"
-      "movw 0x10(%%ebp), %%ax\n\t"
-      "movw %%ax, 0x5aa676\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $0x3f400000, 0x2f66f4\n\t"
-      "jne .LFUN_000db1e0_2\n\t"
-      "movl $0x3f800000, 0x2f66f4\n\t"
-      ".LFUN_000db1e0_2:\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x5aa680\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl %%edx, 0x5aa684\n\t"
-      "popl %%ebp\n\t"
-      "jmp *%[c17d050]\n\t"
-      :
-      : [assert] "m"(bdb1e0_assert), [exitfn] "m"(bdb1e0_exitfn), [c17d050] "m"(bdb1e0_c17d050)
-      : "memory");
+  extern char DAT_00282094[];
+  extern char DAT_0028210c[];
+  if (!xy) {
+    display_assert(DAT_0028210c, DAT_00282094, 0x349, 1);
+    system_exit(-1);
+  }
+  *(int16_t *)0x5aa676 = value;
+  if (flag)
+    *(unsigned *)0x2f66f4 = 0x3f400000;
+  else
+    *(unsigned *)0x2f66f4 = 0x3f800000;
+  *(int *)0x5aa680 = *(int *)xy;
+  *(int *)0x5aa684 = *((int *)xy + 1);
+  FUN_0017d050();
 }
-#else
-#error "FUN_000db1e0: clang naked draft required"
-#endif
-
 
 /* FUN_000db250 (0xdb250) — XBE naked draft (batch 132). */
 #if defined(__clang__)

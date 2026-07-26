@@ -7714,8 +7714,8 @@
         },
         {
           "addr": "0xdb1e0",
-          "decl": "void FUN_000db1e0(void);",
-          "ported": false
+          "decl": "void FUN_000db1e0(float *xy@<esi>, char flag, int16_t value);",
+          "ported": true
         },
         {
           "addr": "0xdb250",
