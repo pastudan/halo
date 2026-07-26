@@ -577,92 +577,259 @@ uint8_t FUN_0019f530(int unit_handle)
   return 0x14;
 }
 
-/* 0x19f540 — biped_limp_noodle_valid_joint_rotation (large; stub draft) */
+/* 0x19f540 — validate/snap a limp-noodle joint against parent bone limits. */
 char biped_limp_noodle_valid_joint_rotation(int unit_handle, int16_t node_index,
-                                            void *node_block)
+                                            void *node_block, float *out_pos,
+                                            unsigned int *visited_bits,
+                                            float *candidate_pos)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
+  char *unit;
+  char *bipd;
+  char *antr;
+  char *node_def;
+  char *parent_def;
+  char *parent_node;
+  char *node;
+  float frame_scale;
+  float *node_pos;
+  float *parent_pos;
+  int16_t parent_index;
+  float bone[3];
+  float cand[3];
+  float axis[3];
+  float dot;
+  float angle;
+  float inv_parent[12];
+  float inv_node[12];
+  float local_axis[3];
+  float local_dir[3];
+  float plane[4];
+  float snapped[3];
+  float delta[3];
+  float rotated[3];
+  char changed;
+  unsigned int tiny = 0x3cf5c28fu;
 
-  object_get_and_verify_type(0, 0);
-  tag_get('dpib', 0);
-  tag_get('rtna', 0);
-  tag_block_get_element((void *)(uintptr_t)ebx, 0, 64);
-  tag_block_get_element((void *)(uintptr_t)ebx, 0, 64);
-  /* test (char)eax, 0x41 -> jne 0x19f5dd */
-  /* test (int16_t)ecx, (int16_t)ecx -> je 0x19f9a4 */
-  /* relift: test byte ptr [edx + 0x28], 4 -> jne 0x19f9a4 */
-  normalize3d((float *)0);
-  normalize3d((float *)(uintptr_t)eax);
-  normalize3d((float *)0);
-  FUN_001d94f0();
-  matrix_inverse((float *)(uintptr_t)edi, (float *)(uintptr_t)edx);
-  matrix_inverse((float *)(uintptr_t)ecx, (float *)0);
-  matrix_scale_transform_vector((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
-  matrix_scale_transform_vector((float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
-  /* test (char)eax, 2 -> je 0x19f8fb */
-  FUN_00099490();
-  display_assert((char *)0x002b4b00, (char *)0x002b4b48, 231, 0);
-  system_exit(0);
-  normalize3d((float *)0);
-  matrix_scale_transform_vector((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
-  /* test (char)eax, 1 -> jne 0x19f8f2 */
-  FUN_0014dab0(0, 0);
-  /* test (char)eax, (char)eax -> jne 0x19f8f2 */
-  rotate_vector3d_by_sincos((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, 0.0f, 0.0f);
-  FUN_001d94f0();
-  /* test (char)eax, 0x41 -> jne 0x19f9a7 */
-  /* test (char)eax, 0x41 -> jne 0x19f9a7 */
-  /* relift: test byte ptr [ecx + 0x28], 4 -> jne 0x19f9ba */
-  /* test (char)eax, (char)eax -> jne 0x19fa16 */
-  /* relift: test dword ptr [ecx + eax*4], edx -> je 0x19fa13 */
-  /* test (char)eax, 0x41 -> jne 0x19fa13 */
-  return 0;
+  changed = 0;
+  unit = (char *)object_get_and_verify_type(unit_handle, 1);
+  bipd = (char *)tag_get(0x62697064, *(int *)unit);
+  antr = (char *)tag_get(0x616e7472, *(int *)(bipd + 0x44));
+  node_def = (char *)tag_block_get_element((void *)(antr + 0x68), node_index, 0x40);
+  parent_index = *(int16_t *)(node_def + 0x24);
+  parent_def =
+      (char *)tag_block_get_element((void *)(antr + 0x68), parent_index, 0x40);
+  frame_scale = *(float *)(antr + 0x60);
+  if (fabsf(frame_scale) > *(double *)0x2533d0 || frame_scale < 0.0f ||
+      !(frame_scale <= *(float *)0x2b4b74))
+    frame_scale = *(float *)&tiny;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
+  if (parent_index == 0 || (*(unsigned char *)(parent_def + 0x28) & 4) != 0)
+    goto inherit_check;
+
+  node = (char *)node_block + (int)node_index * 0x34;
+  parent_node = (char *)node_block + (int)parent_index * 0x34;
+  node_pos = (float *)(node + 0x28);
+  parent_pos = (float *)(parent_node + 0x28);
+
+  bone[0] = node_pos[0] - parent_pos[0];
+  bone[1] = node_pos[1] - parent_pos[1];
+  bone[2] = node_pos[2] - parent_pos[2];
+  cand[0] = candidate_pos[0] - parent_pos[0];
+  cand[1] = candidate_pos[1] - parent_pos[1];
+  cand[2] = candidate_pos[2] - parent_pos[2];
+  normalize3d(bone);
+  normalize3d(cand);
+  axis[0] = cand[2] * bone[1] - cand[1] * bone[2];
+  axis[1] = bone[2] * cand[0] - cand[2] * bone[0];
+  axis[2] = cand[1] * bone[0] - bone[1] * cand[0];
+  normalize3d(axis);
+  dot = cand[0] * bone[0] + cand[1] * bone[1] + cand[2] * bone[2];
+  if (fabsf(dot - *(float *)0x2533c8) > *(double *)0x2533d0)
+    goto inherit_check;
+  angle = acosf(dot);
+
+  matrix_inverse((float *)parent_node, inv_parent);
+  matrix_inverse((float *)((char *)node_block +
+                           (int)*(int16_t *)(parent_def + 0x24) * 0x34),
+                 inv_node);
+  matrix_scale_transform_vector(inv_parent, axis, local_axis);
+  local_dir[0] = *(float *)(node + 4);
+  local_dir[1] = *(float *)(node + 8);
+  local_dir[2] = *(float *)(node + 0xc);
+  matrix_scale_transform_vector(inv_node, local_dir, local_dir);
+
+  if ((*(unsigned char *)(parent_def + 0x28) & 2) != 0) {
+    float dist;
+    FUN_00099490(plane, (float *)(parent_node + 0x28),
+                 (float *)(parent_node + 0x1c));
+    dist = (plane[0] * candidate_pos[0] + plane[1] * candidate_pos[1] +
+            plane[2] * candidate_pos[2] - plane[3]) *
+           *(float *)0x255e94;
+    snapped[0] = candidate_pos[0] + plane[0] * dist;
+    snapped[1] = candidate_pos[1] + plane[1] * dist;
+    snapped[2] = candidate_pos[2] + plane[2] * dist;
+    if (fabsf(plane[0] * snapped[0] + plane[1] * snapped[1] +
+              plane[2] * snapped[2] - plane[3]) > *(double *)0x2533d0) {
+      display_assert((char *)0x2b4b00, (char *)0x2b4b48, 0xe7, 1);
+      system_exit(-1);
+    }
+    delta[0] = snapped[0] - parent_pos[0];
+    delta[1] = snapped[1] - parent_pos[1];
+    delta[2] = snapped[2] - parent_pos[2];
+    normalize3d(delta);
+    matrix_scale_transform_vector(inv_parent, delta, rotated);
+    if (fabsf(rotated[0] * local_dir[0] + rotated[1] * local_dir[1] +
+              rotated[2] * local_dir[2] - *(float *)0x2533c8) >
+        *(double *)0x2533d0)
+      goto inherit_check;
+    visited_bits[node_index >> 5] |= 1u << (node_index & 31);
+    if (!(out_pos[2] < snapped[2]) &&
+        !FUN_0014dab0((int)(uintptr_t)snapped, *(int *)&frame_scale)) {
+      out_pos[0] = snapped[0];
+      out_pos[1] = snapped[1];
+      out_pos[2] = snapped[2];
+    }
+    changed = 1;
+  } else {
+    rotate_vector3d_by_sincos(local_dir, local_axis, sinf(angle), cosf(angle));
+    dot = local_dir[0] * *(float *)(parent_def + 0x2c) +
+          local_dir[1] * *(float *)(parent_def + 0x30) +
+          local_dir[2] * *(float *)(parent_def + 0x34);
+    if (fabsf(dot - *(float *)0x2533c8) > *(double *)0x2533d0)
+      goto inherit_check;
+    if (!(fabsf(acosf(dot)) < *(float *)(parent_def + 0x38)))
+      goto inherit_check;
+    if (!(out_pos[2] > candidate_pos[2]))
+      goto inherit_check;
+    visited_bits[node_index >> 5] |= 1u << (node_index & 31);
+    out_pos[0] = candidate_pos[0];
+    out_pos[1] = candidate_pos[1];
+    out_pos[2] = candidate_pos[2];
+    changed = 1;
+  }
+
+inherit_check:
+  if ((*(unsigned char *)(parent_def + 0x28) & 4) == 0 && changed)
+    return 1;
+  {
+    int16_t p = *(int16_t *)(node_def + 0x24);
+    if ((visited_bits[p >> 5] & (1u << (p & 31))) != 0 &&
+        out_pos[2] > candidate_pos[2]) {
+      visited_bits[node_index >> 5] |= 1u << (node_index & 31);
+      out_pos[0] = candidate_pos[0];
+      out_pos[1] = candidate_pos[1];
+      out_pos[2] = candidate_pos[2];
+      return 1;
+    }
+  }
+  return changed;
 }
 
-/* 0x19fa20 — unit animation node setup (large; stub draft) */
+/* 0x19fa20 — limp-noodle iteration: constrain child nodes toward parents. */
 void FUN_0019fa20(int unit_handle, void *node_block)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *unit;
+  char *bipd;
+  char *antr;
+  float frame_scale;
+  unsigned char steps;
+  unsigned char max_steps;
+  float step_frac;
+  unsigned int tiny = 0x3cf5c28fu;
+  unsigned int visited[8];
+  char collision_scratch[0x300];
+  int16_t queue[0xa4];
+  int queue_len;
+  int i;
+  char *node_def;
+  int16_t node_index;
+  int16_t parent_index;
+  float *node_pos;
+  float *parent_pos;
+  float zero_vel[3];
+  float new_pos[3];
+  float new_vel[3];
 
-  object_get_and_verify_type(0, 0);
-  tag_get('dpib', 0);
-  tag_get('rtna', 0);
-  display_assert((char *)0x00253440, (char *)0x002b4b48, 319, 0);
-  system_exit(0);
-  /* test (char)eax, 0x41 -> jne 0x19fae0 */
-  /* test (char)ecx, (char)ecx -> jbe 0x1a01bc */
-  /* cmp (char)ecx, 0x1e -> jae 0x1a01bc */
-  /* cmp dl, (char)ecx -> jae 0x1a018b */
-  FUN_0014ec30(49320, (float *)(uintptr_t)esi, 0.0f, 0.0f, 0.0f, 0, (void *)0);
-  csmemset((void *)(uintptr_t)edx, 0, 0);
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
-  FUN_0014dab0(0, 0);
-  /* test (char)eax, (char)eax -> jne 0x19fca0 */
-  FUN_0014f2c0((float *)(uintptr_t)edi, (float *)(uintptr_t)eax, (void *)0x004d9de8, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0, 0);
-  biped_limp_noodle_valid_joint_rotation(0, edx, (void *)(uintptr_t)esi);
-  FUN_0014df70(0, (float *)0, (float *)0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x19fef8 */
-  FUN_0014dab0(0, 0x3cf5c28f);
-  FUN_0014dab0(0, 0x3cf5c28f);
-  /* cmp eax, 2 -> jne 0x19fe2f */
+  unit = (char *)object_get_and_verify_type(unit_handle, 1);
+  bipd = (char *)tag_get(0x62697064, *(int *)unit);
+  antr = (char *)tag_get(0x616e7472, *(int *)(bipd + 0x44));
+  frame_scale = *(float *)(antr + 0x60);
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  if (*(int16_t *)0x4761d8 >= 0x20) {
+    display_assert((char *)0x253440, (char *)0x2b4b48, 0x13f, 1);
+    system_exit(-1);
+  }
+  {
+    int16_t depth = *(int16_t *)0x4761d8;
+    *(int16_t *)(0x5a8c80 + (int)depth * 2) = 0x12;
+    *(int16_t *)0x4761d8 = (int16_t)(depth + 1);
+  }
+  if (fabsf(frame_scale) > *(double *)0x2533d0 || frame_scale < 0.0f ||
+      !(frame_scale <= *(float *)0x2b4b74))
+    frame_scale = *(float *)&tiny;
+
+  max_steps = *(unsigned char *)(unit + 0x47d);
+  steps = *(unsigned char *)(unit + 0x47c);
+  if (max_steps == 0 || max_steps >= 0x1e)
+    return;
+  step_frac = (float)(steps + 1) / (float)max_steps;
+  if (fabsf(step_frac) > *(double *)0x2533d0)
+    return;
+  if (steps >= max_steps)
+    return;
+
+  FUN_0014ec30(0xc0a8, (float *)(unit + 0xc),
+               *(float *)(unit + 0x5c) + *(float *)0x255d90, frame_scale,
+               frame_scale, unit_handle, (void *)0x4d9de8);
+  csmemset(visited, 0, sizeof(visited));
+
+  queue_len = 1;
+  queue[0] = 0;
+  for (i = 0; i < queue_len && i < 0xa0; i++) {
+    node_index = queue[i];
+    node_def =
+        (char *)tag_block_get_element((void *)(antr + 0x68), node_index, 0x40);
+    if (node_index == 0) {
+      if (queue_len < 0xa0 && queue_len < *(int *)(antr + 0x68)) {
+        queue[queue_len] = (int16_t)queue_len;
+        queue_len++;
+      }
+      continue;
+    }
+    parent_index = *(int16_t *)(node_def + 0x24);
+    node_pos = (float *)((char *)node_block + (int)node_index * 0x34 + 0x28);
+    parent_pos =
+        (float *)((char *)node_block + (int)parent_index * 0x34 + 0x28);
+    zero_vel[0] = 0.0f;
+    zero_vel[1] = 0.0f;
+    zero_vel[2] = 0.0f;
+
+    if (!FUN_0014dab0((int)(uintptr_t)node_pos, *(int *)&frame_scale)) {
+      FUN_0014f2c0(node_pos, zero_vel, (short *)0x4d9de8, new_pos, new_vel, 3,
+                   (int)(uintptr_t)collision_scratch);
+      if (fabsf(new_pos[0]) <= *(double *)0x2533d0 &&
+          fabsf(new_pos[1]) <= *(double *)0x2533d0) {
+        biped_limp_noodle_valid_joint_rotation(unit_handle, node_index,
+                                               node_block, new_pos, visited,
+                                               node_pos);
+      }
+    }
+
+    /* Pull child toward parent by the step fraction (structural constraint). */
+    {
+      float scale = step_frac * *(float *)0x2b4b7c;
+      float dx = node_pos[0] - parent_pos[0];
+      float dy = node_pos[1] - parent_pos[1];
+      float dz = node_pos[2] - parent_pos[2];
+      node_pos[0] = parent_pos[0] + dx * (1.0f - scale);
+      node_pos[1] = parent_pos[1] + dy * (1.0f - scale);
+      node_pos[2] = parent_pos[2] + dz * (1.0f - scale);
+    }
+
+    if (queue_len < 0xa0 && queue_len < *(int *)(antr + 0x68)) {
+      queue[queue_len] = (int16_t)queue_len;
+      queue_len++;
+    }
+  }
+  (void)bipd;
 }

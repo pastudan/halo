@@ -8100,58 +8100,148 @@ void FUN_00150ed0(void)
   (void)edi;
 }
 
-/* 0x151a50 */
-void physics_compute_biped_collision(void)
+/* 0x151a50 — resolve biped/vehicle contact: impulse, translate, optional damage. */
+char physics_compute_biped_collision(void *physics_ctx, int biped_handle)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
+  char features[0xac98];
+  float cam_pos[3];
+  float height_offset;
+  float camera_height;
+  float xy_point[3];
+  float z_combined;
+  float probe_extent;
+  unsigned int tiny_extent = 0x3c800000u;
+  float los_hit[16];
+  char *vehicle;
+  char *biped;
+  float *veh_vel;
+  float *biped_vel;
+  float *biped_pos;
+  float *veh_pos;
+  float delta[3];
+  float speed;
+  float scale;
+  float impulse[3];
+  float hit_point[16];
+  char *globals_elem;
+  char damage[0x84];
+  int damager_handle;
+  char *damager_obj;
+  char *unit_tag;
+  int16_t material;
+  float tmp;
 
-  FUN_001d90e0();
-  biped_get_camera_height_and_offset(0, (void *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
-  FUN_0014c950(0, (void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> jne 0x151b21 */
-  collision_features_init((void *)(uintptr_t)ecx);
-  /* test (char)eax, 0x41 -> jne 0x151adc */
-  FUN_0014cde0(0, 0, 0.0f, 0, 0, 0);
-  collision_features_test_los((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0x151eb4 */
-  object_get_and_verify_type(0, 0);
-  object_get_and_verify_type(0, 0);
-  normalize3d((float *)0);
-  normalize3d((float *)0);
-  /* test (char)eax, 0x41 -> jne 0x151bba */
-  FUN_001a4a70(0, (float *)0);
-  FUN_0014f020(0x0020c3a0, (float *)(uintptr_t)eax, 0.0f, 0.0f, 0.0f, 0, (float *)0);
-  /* test (char)eax, (char)eax -> je 0x151cf4 */
-  object_translate(0, (float *)0, (void *)0);
-  /* cmp ecx, eax -> jne 0x151cc3 */
-  game_time_get();
-  /* cmp eax, edx -> jle 0x151eab */
-  /* test (char)eax, 0x41 -> je 0x151cf4 */
-  distance_squared3d((float *)(uintptr_t)esi, (float *)(uintptr_t)eax);
-  /* test (char)eax, 0x41 -> jne 0x151eab */
-  game_globals_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  object_get_and_verify_type(0, 0);
-  damage_data_new((void *)(uintptr_t)ecx, 0);
-  /* cmp eax, -1 -> jne 0x151d7a */
-  normalize3d((float *)(uintptr_t)eax);
-  object_cause_damage((void *)(uintptr_t)edx, 0, 0, 0, 0, 0);
-  /* relift: cmp dword ptr [eax + 0x58], -1 -> je 0x151eab */
-  tag_get('tinu', 0);
-  damage_data_new((void *)(uintptr_t)ecx, 0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x151e28 */
-  /* cmp (int16_t)eax, 3 -> jb 0x151e48 */
-  display_assert((char *)0x0029d7a8, (char *)0x0029d780, 830, 0);
-  system_exit(0);
-  object_cause_damage((void *)0, 0, 0, 0, 0, 0);
+  biped_get_camera_height_and_offset(biped_handle, (vector3_t *)cam_pos,
+                                    &height_offset, &camera_height);
+  if (!FUN_0014c950((int)(uintptr_t)physics_ctx, cam_pos)) {
+    collision_features_init(features);
+    /* mid-height point: (cam.x, cam.y, cam.z + height*0.5); z span from camera */
+    xy_point[0] = cam_pos[0];
+    xy_point[1] = cam_pos[1];
+    xy_point[2] = cam_pos[2];
+    z_combined = cam_pos[2] + height_offset * *(float *)0x253398 + camera_height;
+    tmp = camera_height - *(float *)0x282124;
+    if (tmp > *(float *)0x282124)
+      probe_extent = tmp;
+    else
+      probe_extent = *(float *)&tiny_extent;
+    FUN_0014cde0((int)(uintptr_t)physics_ctx, (int)(uintptr_t)xy_point,
+                 z_combined, *(int *)&height_offset, *(int *)&probe_extent,
+                 (int)(uintptr_t)features);
+    if (!collision_features_test_los(features, cam_pos, los_hit))
+      return 0;
+  }
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  vehicle = (char *)object_get_and_verify_type(*(int *)physics_ctx, 2);
+  biped = (char *)object_get_and_verify_type(biped_handle, 1);
+  veh_vel = (float *)(vehicle + 0x18);
+  veh_pos = (float *)(vehicle + 0x50);
+  biped_pos = (float *)(biped + 0x50);
+  biped_vel = (float *)(biped + 0x18);
+
+  speed = sqrtf(veh_vel[0] * veh_vel[0] + veh_vel[1] * veh_vel[1] +
+                veh_vel[2] * veh_vel[2]);
+  delta[0] = biped_pos[0] - veh_pos[0];
+  delta[1] = biped_pos[1] - veh_pos[1];
+  delta[2] = biped_pos[2] - veh_pos[2];
+  normalize3d(delta);
+  delta[2] += *(float *)0x2533f0;
+  normalize3d(delta);
+
+  scale = (speed > *(float *)0x25496c) ? speed : *(float *)0x25496c;
+  impulse[0] = (delta[0] * scale + veh_vel[0]) * *(float *)0x253398;
+  impulse[1] = (delta[1] * scale + veh_vel[1]) * *(float *)0x253398;
+  impulse[2] = (delta[2] * scale + veh_vel[2]) * *(float *)0x253398;
+  /* XBE folds scale*delta into the same slots then half-adds veh_vel via the
+   * pre-add before FUN_001a4a70 — structural equivalent impulse. */
+  FUN_001a4a70(biped_handle, impulse);
+
+  cam_pos[0] += impulse[0] + impulse[0];
+  cam_pos[1] += impulse[1] + impulse[1];
+  cam_pos[2] += impulse[2] + impulse[2];
+  if (FUN_0014f020(0x20c3a0, cam_pos, height_offset, height_offset,
+                   camera_height + camera_height, biped_handle, hit_point)) {
+    hit_point[2] -= height_offset;
+    object_translate(biped_handle, hit_point, (void *)0);
+    if (*(int *)physics_ctx == *(int *)(biped + 0x2dc) &&
+        game_time_get() <= *(int *)(biped + 0x2e0) + 0x5a)
+      return 1;
+    if (!(speed > *(float *)0x253d48))
+      goto damage_path;
+    if (!(distance_squared3d(veh_vel, biped_vel) > *(float *)0x25620c))
+      return 1;
+  }
+
+damage_path:
+  globals_elem = (char *)tag_block_get_element(
+      (char *)game_globals_get() + 0x188, 0, 0x98);
+  if (*(int *)(globals_elem + 0x68) != -1) {
+    damager_handle = *(int *)physics_ctx;
+    damager_obj = vehicle;
+    if (*(int *)(vehicle + 0x2d4) != -1) {
+      damager_handle = *(int *)(vehicle + 0x2d4);
+      damager_obj = (char *)object_get_and_verify_type(damager_handle, -1);
+    }
+    damage_data_new(damage, *(int *)(globals_elem + 0x68));
+    *(unsigned int *)(damage + 4) |= 1;
+    *(float *)(damage + 0x40) = 1.0f;
+    *(int *)(damage + 8) = *(int *)(damager_obj + 0x70);
+    *(int *)(damage + 0xc) = (*(int *)(damager_obj + 0x74) != -1)
+                                 ? *(int *)(damager_obj + 0x74)
+                                 : damager_handle;
+    *(int16_t *)(damage + 0x10) = *(int16_t *)(damager_obj + 0x68);
+    *(float *)(damage + 0x1c) = biped_pos[0];
+    *(float *)(damage + 0x20) = biped_pos[1];
+    *(float *)(damage + 0x24) = biped_pos[2];
+    *(float *)(damage + 0x28) = veh_pos[0];
+    *(float *)(damage + 0x2c) = veh_pos[1];
+    *(float *)(damage + 0x30) = veh_pos[2];
+    *(float *)(damage + 0x34) = delta[0];
+    *(float *)(damage + 0x38) = delta[1];
+    *(float *)(damage + 0x3c) = delta[2];
+    normalize3d((float *)(damage + 0x34));
+    object_cause_damage(damage, biped_handle, -1, -1, -1, 0);
+  }
+
+  if (*(int *)(globals_elem + 0x58) == -1)
+    return 1;
+
+  unit_tag = (char *)tag_get(0x756e6974, *(int *)biped); /* 'unit' */
+  damage_data_new(damage, *(int *)(globals_elem + 0x58));
+  material = *(int16_t *)(unit_tag + 0x298);
+  if (material < 0 || (unsigned short)material >= 3) {
+    display_assert((char *)0x29d7a8, (char *)0x29d780, 0x33e, 1);
+    system_exit(-1);
+  }
+  *(float *)(damage + 0x40) = *(float *)(0x32514c + (int)material * 4);
+  *(float *)(damage + 0x1c) = biped_pos[0];
+  *(float *)(damage + 0x20) = biped_pos[1];
+  *(float *)(damage + 0x24) = biped_pos[2];
+  *(float *)(damage + 0x34) = delta[0] * *(float *)0x255e94;
+  *(float *)(damage + 0x38) = delta[1] * *(float *)0x255e94;
+  *(float *)(damage + 0x3c) = delta[2] * *(float *)0x255e94;
+  object_cause_damage(damage, *(int *)physics_ctx, -1, -1, -1, 0);
+  return 1;
 }
 
 /* 0x151ec0 */
@@ -8209,7 +8299,7 @@ void physics_compute_unit_collisions(void)
   display_assert((char *)0x0029d800, (char *)0x0029d780, 669, 0);
   system_exit(0);
   /* relift: test byte ptr [edi + 0xb6], 4 -> jne 0x1524a7 */
-  physics_compute_biped_collision();
+  physics_compute_biped_collision((void *)(uintptr_t)esi, edi);
 
   (void)eax;
   (void)ebx;
@@ -9049,7 +9139,7 @@ void FUN_001579d0(void)
   display_assert((char *)0x0029f0f8, (char *)0x0029dc0c, 1498, 0);
   system_exit(0);
   /* mem[0x005a5dec] = 0x3f800000 */
-  FUN_00099490();
+  FUN_00099490((float *)0, (float *)0, (float *)0);
   /* mem[0x005a5de4] = 0 */
   /* mem[0x005a5de8] = 0x3f800000 */
   /* mem[0x005a5dec] = 0x3f800000 */
@@ -13473,94 +13563,288 @@ void FUN_001a4a50(void)
   (void)ebp;
 }
 
-/* 0x1a4a70 */
+/* 0x1a4a70 — apply an impulse to a biped; optionally randomize lateral kick. */
 void FUN_001a4a70(int handle, float *velocity)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *unit;
+  char *biped_tag;
+  float *global_up;
+  float lateral[3];
+  float speed;
+  float kick;
+  float tmp[3];
 
-  object_get_and_verify_type(0, 0);
-  tag_get('dpib', 0);
-  FUN_001a2800(0x002b5180, (char *)(uintptr_t)edi);
-  /* test (char)eax, 4 -> jne 0x1a4af3 */
-  /* test (char)eax, 4 -> je 0x1a4afc */
-  biped_stop_limp_body_physics(0);
-  /* relift: test byte ptr [ecx + 0x2f4], 0x44 -> je 0x1a4be4 */
-  normalize3d((float *)0);
-  get_global_random_seed_address();
-  random_math_real((void *)(uintptr_t)eax);
-  /* relift: cmp dword ptr [esi + 0xcc], -1 -> jne 0x1a4c40 */
-  normalize3d((float *)(uintptr_t)eax);
-  /* test (char)eax, 0x41 -> jne 0x1a4c40 */
-  FUN_001a4440(0);
-  FUN_001a2800(0x002b5174, (char *)0);
+  unit = (char *)object_get_and_verify_type(handle, 1);
+  biped_tag = (char *)tag_get(0x62697064, *(int *)unit); /* 'bipd' */
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  /* Skip entirely when the biped is already in a special recovery state. */
+  if ((*(unsigned int *)(biped_tag + 0x17c) & 0x100000) != 0)
+    return;
+
+  FUN_001a2800(handle, (const char *)0x2b5180);
+
+  if ((*(unsigned char *)(unit + 0xb6) & 4) == 0) {
+    velocity[0] *= *(float *)0x253398;
+    velocity[1] *= *(float *)0x253398;
+    velocity[2] *= *(float *)0x253398;
+  }
+  if ((*(unsigned char *)(unit + 0xb6) & 4) != 0)
+    biped_stop_limp_body_physics(handle);
+
+  *(float *)(unit + 0x18) += velocity[0];
+  *(float *)(unit + 0x1c) += velocity[1];
+  *(float *)(unit + 0x20) += velocity[2];
+  *(int *)(unit + 4) &= ~0x20;
+  *(unsigned int *)(unit + 0x424) |= 3;
+
+  if ((*(unsigned char *)(unit + 0xb6) & 4) != 0 ||
+      (*(unsigned char *)(biped_tag + 0x2f4) & 0x44) != 0) {
+    global_up = *(float **)0x31fc44;
+    /* lateral = velocity × up  (same FPU order as XBE) */
+    lateral[0] = velocity[2] * global_up[1] - velocity[1] * global_up[2];
+    lateral[1] = global_up[2] * velocity[0] - velocity[2] * global_up[0];
+    lateral[2] = velocity[1] * global_up[0] - global_up[1] * velocity[0];
+    normalize3d(lateral);
+    speed = sqrtf(velocity[0] * velocity[0] + velocity[1] * velocity[1] +
+                  velocity[2] * velocity[2]);
+    kick = random_math_real((unsigned int *)get_global_random_seed_address()) *
+           speed * *(float *)0x2568bc;
+    *(float *)(unit + 0x3c) += lateral[0] * kick;
+    *(float *)(unit + 0x40) += lateral[1] * kick;
+    *(float *)(unit + 0x44) += lateral[2] * kick;
+  }
+
+  if (*(int *)(unit + 0xcc) == -1) {
+    tmp[0] = velocity[0];
+    tmp[1] = velocity[1];
+    tmp[2] = velocity[2];
+    if (normalize3d(tmp) > 0.0f) {
+      *(float *)(unit + 0x24) = tmp[0];
+      *(float *)(unit + 0x28) = tmp[1];
+      *(float *)(unit + 0x2c) = tmp[2];
+      FUN_001a4440(handle);
+      FUN_001a2800(handle, (const char *)0x2b5174);
+    }
+  }
 }
 
-/* 0x1a4c50 */
+/* 0x1a4c50 — biped facing / aim-turn update from movement state. */
 void FUN_001a4c50(int unit_handle, unsigned char *state)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *unit;
+  char *biped_tag;
+  unsigned int tag_flags;
+  float *forward;
+  float *up;
+  float *aim;
+  float desired[3];
+  float yaw_bounds[4];
+  float pitch_scale;
+  float yaw_scale;
+  float turn;
+  float blend;
+  float speed_sq;
+  float aim_dot;
+  float thresh;
+  char special;
+  char facing_ok;
+  float s;
+  float c;
+  float *global_up;
+  float tmp[3];
 
-  object_get_and_verify_type(0, 0);
-  tag_get('dpib', 0);
-  /* relift: test byte ptr [esi + 0xb6], 4 -> jne 0x1a4f59 */
-  FUN_00012170((float *)(uintptr_t)edx);
-  /* relift: test byte ptr [esi + 0x1b8], 0x20 -> je 0x1a4d21 */
-  FUN_00013070((float *)(uintptr_t)edi, (float *)(uintptr_t)ebx);
-  /* test (char)eax, 0x41 -> jne 0x1a4d60 */
-  normalize3d((float *)0);
-  /* test (char)eax, 0x41 -> jne 0x1a4e34 */
-  /* test (char)eax, 0x41 -> jne 0x1a4e74 */
-  /* test (char)eax, 0x41 -> jne 0x1a4eb9 */
-  FUN_001b0630(0, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)esi, (float *)0, 0.0f, 0.0f);
-  FUN_001a4440(0);
-  FUN_001a2800(0x002b51b4, (char *)0);
-  /* cmp (char)eax, 5 -> jne 0x1a4f73 */
-  normalize3d((float *)0);
-  magnitude3d((float *)(uintptr_t)ecx);
-  /* test (char)eax, 0x41 -> je 0x1a50e1 */
-  /* cmp (char)eax, 3 -> jne 0x1a5101 */
-  /* cmp (char)eax, 2 -> jne 0x1a5109 */
-  /* cmp (char)eax, 1 -> je 0x1a51aa */
-  /* test (char)ebx, 1 -> jne 0x1a51aa */
-  /* test (char)eax, (char)eax -> jne 0x1a52f9 */
-  /* test (char)eax, (char)eax -> jne 0x1a52f9 */
-  /* test (char)eax, 0x40 -> jne 0x1a52f9 */
-  /* test (char)eax, 1 -> jne 0x1a52f9 */
-  /* test (char)eax, 0x20 -> je 0x1a515d */
-  /* relift: test dword ptr [ecx + 0x17c], 0x100000 -> jne 0x1a5193 */
-  FUN_001a2800(0x002b51a0, (char *)0);
-  /* test (char)eax, 1 -> jne 0x1a52f9 */
-  /* test eax, eax -> je 0x1a5224 */
-  rotate_vector3d_by_sincos((float *)(uintptr_t)edi, (float *)(uintptr_t)ebx, 0.0f, 0.0f);
-  cross_product3d((float *)(uintptr_t)edx, (float *)(uintptr_t)edi, (float *)(uintptr_t)ecx);
-  /* test (char)eax, 0x41 -> jne 0x1a52e9 */
-  /* test (char)ecx, 0x40 -> je 0x1a52b6 */
-  cross_product3d((float *)(uintptr_t)esi, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
-  normalize3d((float *)(uintptr_t)eax);
-  /* test (char)eax, 0x41 -> jne 0x1a52de */
-  cross_product3d((float *)(uintptr_t)ecx, (float *)(uintptr_t)esi, (float *)(uintptr_t)edi);
-  normalize3d((float *)(uintptr_t)edi);
-  FUN_001a2800(0x002b518c, (char *)0);
+  unit = (char *)object_get_and_verify_type(unit_handle, 1);
+  biped_tag = (char *)tag_get(0x62697064, *(int *)unit); /* 'bipd' */
+  tag_flags = *(unsigned int *)(biped_tag + 0x2f4);
+  forward = (float *)(unit + 0x24);
+  up = (float *)(unit + 0x30);
+  aim = (float *)(unit + 0x1d4);
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  /* Fast path: biped uses simple pathfinding facing and is alive. */
+  if ((tag_flags & 4) != 0 && (*(unsigned char *)(unit + 0xb6) & 4) == 0) {
+    speed_sq = *(float *)(unit + 0x18) * *(float *)(unit + 0x18) +
+               *(float *)(unit + 0x1c) * *(float *)(unit + 0x1c) +
+               *(float *)(unit + 0x20) * *(float *)(unit + 0x20);
+    if (!(speed_sq > *(float *)0x253f2c)) {
+      speed_sq = *(float *)(unit + 0x3c) * *(float *)(unit + 0x3c) +
+                 *(float *)(unit + 0x40) * *(float *)(unit + 0x40) +
+                 *(float *)(unit + 0x44) * *(float *)(unit + 0x44);
+      if (!(speed_sq > *(float *)0x2b51c4) &&
+          !(FUN_00012170((float *)(unit + 0x228)) > *(float *)0x255d1c)) {
+        if ((*(unsigned char *)(unit + 0x1b8) & 0x20) != 0) {
+          unsigned int bits = 0x3f7d70a4u;
+          thresh = *(float *)&bits;
+        } else {
+          thresh = *(float *)(biped_tag + 0x4c8);
+        }
+        if (FUN_00013070(aim, forward) > thresh) {
+          desired[0] = forward[0];
+          desired[1] = forward[1];
+          desired[2] = forward[2];
+          goto aim_blend;
+        }
+      }
+    }
+
+    desired[0] = aim[0];
+    desired[1] = aim[1];
+    desired[2] = aim[2];
+    turn = *(float *)(biped_tag + 0x330) * *(float *)(unit + 0x230);
+    if (turn != 0.0f) {
+      desired[2] += turn;
+      if (normalize3d(desired) == 0.0f) {
+        desired[0] = aim[0];
+        desired[1] = aim[1];
+        desired[2] = aim[2];
+      }
+    }
+
+  aim_blend:
+    /* Lateral aim error vs unit up, scaled into unit+0x468 throttle. */
+    turn = (up[1] * forward[2] - up[2] * forward[1]) * aim[2] +
+           (up[2] * forward[0] - up[0] * forward[2]) * aim[1] +
+           (up[0] * forward[1] - up[1] * forward[0]) * aim[0];
+    turn = turn * *(float *)0x254e6c * *(float *)(unit + 0x228) -
+           *(float *)(unit + 0x22c);
+    if (turn > *(float *)0x2533ec)
+      turn = *(float *)0x2533ec;
+    turn *= *(float *)(biped_tag + 0x324);
+    if (!(turn * *(float *)(unit + 0x468) > 0.0f)) {
+      blend = 1.0f;
+    } else {
+      blend = *(float *)(unit + 0x468) / turn;
+      if (blend > 1.0f)
+        blend = 1.0f;
+      blend = 1.0f - blend;
+    }
+    blend = (1.0f - blend) * *(float *)(biped_tag + 0x32c) +
+            blend * *(float *)(biped_tag + 0x328);
+    if (blend > 0.0f)
+      *(float *)(unit + 0x468) =
+          *(float *)(unit + 0x468) +
+          (turn - *(float *)(unit + 0x468)) * blend * *(float *)0x253394;
+    else
+      *(float *)(unit + 0x468) = turn;
+
+    {
+      unsigned int pi = 0x40490fdbu;
+      unsigned int hpi = 0x3fc90fdbu;
+      yaw_bounds[0] = -*(float *)&pi;
+      yaw_bounds[1] = *(float *)&pi;
+      yaw_bounds[2] = -*(float *)&hpi;
+      yaw_bounds[3] = *(float *)&hpi;
+    }
+    pitch_scale = *(float *)(biped_tag + 0x344) * *(float *)0x2546a4;
+    yaw_scale = *(float *)(biped_tag + 0x348) * *(float *)0x25620c;
+    if (yaw_scale == 0.0f) {
+      forward[0] = desired[0];
+      forward[1] = desired[1];
+      forward[2] = desired[2];
+    } else {
+      FUN_001b0630(0, forward, desired, (float *)(unit + 0x3c), yaw_bounds,
+                   pitch_scale, yaw_scale);
+    }
+    FUN_001a4440(unit_handle);
+    FUN_001a2800(unit_handle, (const char *)0x2b51b4);
+    return;
+  }
+
+  /* Slow path: seated / special movement facing. */
+  if (unit[0x257] == 0)
+    return;
+  special = (char)(unit[0x257] == 5);
+
+  if ((tag_flags & 0x40) != 0) {
+    tmp[0] = *(float *)(unit + 0x1dc) * up[1] - *(float *)(unit + 0x1d8) * up[2];
+    tmp[1] = *(float *)(unit + 0x1d4) * up[2] - *(float *)(unit + 0x1dc) * up[0];
+    tmp[2] = *(float *)(unit + 0x1d8) * up[0] - *(float *)(unit + 0x1d4) * up[1];
+    /* reconstruct facing from aim × up style cross (matches XBE FPU order) */
+    desired[0] = tmp[1] * up[2] - tmp[2] * up[1];
+    desired[1] = tmp[2] * up[0] - tmp[0] * up[2];
+    desired[2] = tmp[0] * up[1] - tmp[1] * up[0];
+    if (normalize3d(desired) == 0.0f) {
+      desired[0] = forward[0];
+      desired[1] = forward[1];
+      desired[2] = forward[2];
+    }
+    aim_dot = desired[0] * forward[0] + desired[1] * forward[1];
+  } else {
+    desired[0] = aim[0];
+    desired[1] = aim[1];
+    desired[2] = 0.0f;
+    if (magnitude3d(desired) == 0.0f) {
+      desired[0] = forward[0];
+      desired[1] = forward[1];
+      desired[2] = forward[2];
+    }
+    aim_dot = desired[0] * forward[1] - desired[1] * forward[0];
+  }
+
+  facing_ok = 1;
+  if (!(aim_dot > 0.0f))
+    facing_ok = 0;
+  if (aim_dot > *(float *)0x2568c0) {
+    if (unit[0x253] == 3)
+      facing_ok = 1;
+    else if (unit[0x253] == 2)
+      facing_ok = 0;
+  }
+
+  if (unit[0x42a] == 1 || (tag_flags & 1) != 0) {
+    if ((*(unsigned int *)(unit + 0x1b8) & 0x100) != 0)
+      return;
+    c = cosf(*(float *)(biped_tag + 0x2f0) * *(float *)0x2546a4);
+    s = sinf(*(float *)(biped_tag + 0x2f0) * *(float *)0x2546a4);
+    if (facing_ok)
+      s = -s;
+    if ((tag_flags & 0x40) != 0) {
+      rotate_vector3d_by_sincos(forward, up, s, c);
+      cross_product3d(desired, forward, tmp);
+      aim_dot = tmp[0] * up[0] + tmp[1] * up[1] + tmp[2] * up[2];
+    } else {
+      float nx = s * forward[0] + c * forward[1];
+      float ny = c * forward[0] - s * forward[1];
+      forward[0] = ny;
+      forward[1] = nx;
+      aim_dot = desired[0] * forward[1] - desired[1] * forward[0];
+    }
+    /* XBE: if facing_ok, require aim_dot > 0; else require aim_dot < 0. */
+    if (facing_ok ? !(aim_dot > 0.0f) : !(aim_dot < 0.0f))
+      goto done_rotate;
+
+    if ((*(unsigned char *)(biped_tag + 0x2f4) & 0x40) != 0) {
+      cross_product3d(up, desired, tmp);
+      if (normalize3d(tmp) > 0.0f)
+        cross_product3d(tmp, up, forward);
+    } else {
+      forward[0] = desired[0];
+      forward[1] = desired[1];
+      forward[2] = 0.0f;
+      global_up = *(float **)0x31fc44;
+      up[0] = global_up[0];
+      up[1] = global_up[1];
+      up[2] = global_up[2];
+    }
+    normalize3d(forward);
+  done_rotate:
+    FUN_001a2800(unit_handle, (const char *)0x2b518c);
+    return;
+  }
+
+  if (unit[0x42a] != 0 || special ||
+      (*(unsigned int *)(unit + 0x1b4) & 0x4000) != 0 ||
+      (*(unsigned int *)(unit + 0x1b8) & 0x100) != 0)
+    return;
+
+  if ((*(unsigned char *)(unit + 0x1b8) & 0x20) != 0)
+    thresh = *(float *)0x28ace8;
+  else
+    thresh = *(float *)(biped_tag + 0x4c8);
+  if (aim_dot > thresh &&
+      (*(unsigned int *)(biped_tag + 0x17c) & 0x100000) == 0 && state) {
+    *state = (unsigned char)((facing_ok ? 1 : 0) + 2);
+  }
+  FUN_001a2800(unit_handle, (const char *)0x2b51a0);
 }
 
 /* 0x1a5300 */

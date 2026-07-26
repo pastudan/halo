@@ -2219,10 +2219,13 @@ void FUN_0017cd30(void)
 }/* --- decals.obj batch drafts (2026-07-26) --- */
 
 /* 0x99490 */
-void FUN_00099490(void)
+/* 0x99490 — plane3d from point + normal: plane.xyz = normal, plane.w = dot(n,p). */
+void FUN_00099490(float *plane, float *point, float *normal)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  plane[0] = normal[0];
+  plane[1] = normal[1];
+  plane[2] = normal[2];
+  plane[3] = plane[0] * point[0] + plane[1] * point[1] + plane[2] * point[2];
 }
 
 /* 0x996b0 */

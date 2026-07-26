@@ -590,7 +590,7 @@
         },
         {
           "addr": "0x151a50",
-          "decl": "void physics_compute_biped_collision(void);",
+          "decl": "char physics_compute_biped_collision(void *physics_ctx, int biped_handle);",
           "ported": false
         },
         {
@@ -6667,7 +6667,7 @@
         },
         {
           "addr": "0x99490",
-          "decl": "void FUN_00099490(void);",
+          "decl": "void FUN_00099490(float *plane, float *point, float *normal);",
           "ported": false
         },
         {
@@ -28188,7 +28188,7 @@
         },
         {
           "addr": "0x19f540",
-          "decl": "char biped_limp_noodle_valid_joint_rotation(int unit_handle, int16_t node_index, void *node_block);",
+          "decl": "char biped_limp_noodle_valid_joint_rotation(int unit_handle, int16_t node_index, void *node_block, float *out_pos, unsigned int *visited_bits, float *candidate_pos);",
           "ported": false
         },
         {

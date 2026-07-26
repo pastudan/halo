@@ -347,6 +347,12 @@ def main() -> int:
         ("get_particle_world_position", 0x1339a0, 0x134070),
         ("FUN_001336a0", 0x1336a0, 0x133750),
         ("FUN_001335e0", 0x1335e0, 0x1336a0),
+        # gameplay wave 24 (2026-07-26)
+        ("FUN_001a4a70", 0x1a4a70, 0x1a4c50),
+        ("physics_compute_biped_collision", 0x151a50, 0x151ec0),
+        ("biped_limp_noodle_valid_joint_rotation", 0x19f540, 0x19fa20),
+        ("FUN_0019fa20", 0x19fa20, 0x1a01d0),
+        ("FUN_001a4c50", 0x1a4c50, 0x1a5300),
     ]
 
     xbe = Xbe.from_file(args.xbe)
