@@ -4329,61 +4329,23 @@ void FUN_000c4bb0(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, bits);
 }
 
-/* hs_help (0xc4e20) — XBE naked draft (batch 158). */
-#if defined(__clang__)
-static int16_t (*const bc4e20_cc3fc0)(const char *name) = hs_find_function_by_name;
-static void (*const bc4e20_cc4a40)(int16_t function_index, char *buffer) = FUN_000c4a40;
-static void (*const bc4e20_cff4d0)(int channel, const char *format, ...) = console_printf;
-static void * (*const bc4e20_cc3d00)(int16_t function_index) = hs_function_table_get;
-static char * (*const bc4e20_c8dff0)(char *destination, const char *source) = csstrcpy;
-
-__attribute__((naked, noinline))
-void hs_help(const char *name __attribute__((unused)))
+/* hs_help (0xc4e20) — readable C lift. */
+void hs_help(const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x800, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cc3fc0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .Lhs_help_1\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x800(%%ebp), %%esi\n\t"
-      "call *%[cc4a40]\n\t"
-      "leal -0x800(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cc3d00]\n\t"
-      "movl 0x10(%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x800(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8dff0]\n\t"
-      "leal -0x800(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%esi\n\t"
-      ".Lhs_help_1:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc3fc0] "m"(bc4e20_cc3fc0), [cc4a40] "m"(bc4e20_cc4a40), [cff4d0] "m"(bc4e20_cff4d0), [cc3d00] "m"(bc4e20_cc3d00), [c8dff0] "m"(bc4e20_c8dff0)
-      : "memory");
+  int16_t idx;
+  char buf[0x800];
+  void *fn;
+
+  idx = hs_find_function_by_name(name);
+  if (idx == (int16_t)-1)
+    return;
+  FUN_000c4a40(idx, buf);
+  console_printf(0, buf);
+  fn = hs_function_table_get(idx);
+  csstrcpy(buf, *(const char **)((char *)fn + 0x10));
+  console_printf(0, buf);
 }
-#else
-#error "hs_help: clang naked draft required"
-#endif
+
 
 
 /* hs_doc (0xc4e90) — XBE naked draft (batch 136). */
