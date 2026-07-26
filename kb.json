@@ -24901,12 +24901,12 @@
         {
           "addr": "0x1c88a0",
           "decl": "void sound_is_active(int sound_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c8ee0",
           "decl": "void FUN_001c8ee0(void *pitch_range);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1cb1a0",
@@ -24941,7 +24941,7 @@
         {
           "addr": "0x1cb960",
           "decl": "char sound_try_and_get(int sound_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1cb980",
@@ -24961,7 +24961,7 @@
         {
           "addr": "0x1cb9d0",
           "decl": "void FUN_001cb9d0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1cba00",

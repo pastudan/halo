@@ -2757,35 +2757,11 @@ char FUN_001be170(int cache_handle)
   return 0;
 }
 
-/* sound_try_and_get (0x1cb960) — XBE naked draft (batch 287). */
-#if defined(__clang__)
-static int (*const b1cb960_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
-
-__attribute__((naked, noinline))
-char sound_try_and_get(int sound_index __attribute__((unused)))
+/* sound_try_and_get (0x1cb960) — readable C lift. */
+char sound_try_and_get(int sound_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x4fdba4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119270]\n\t"
-      "addl $8, %%esp\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "negl %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c119270] "m"(b1cb960_c119270)
-      : "memory");
+  return datum_absolute_index_to_index(*(void **)0x4fdba4, sound_index) != 0;
 }
-#else
-#error "sound_try_and_get: clang naked draft required"
-#endif
-
 
 void sound_enable(char enabled)
 {
@@ -2807,35 +2783,14 @@ void sound_manager_set_sound_environment(void *environment)
   for (i = 0; i < 0x12; i++) dst[i] = src[i];
 }
 
-/* FUN_001cb9d0 (0x1cb9d0) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-static unsigned int (*const b1cb9d0_c8e370)(void) = system_milliseconds;
-
-__attribute__((naked, noinline))
+/* FUN_001cb9d0 (0x1cb9d0) — readable C lift. */
 void FUN_001cb9d0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8e370]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fisubl 0x4eaf4c\n\t"
-      "movl %%eax, 0x4eaf4c\n\t"
-      "fmuls 0x25bc08\n\t"
-      "fstps 0x4eaf50\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8e370] "m"(b1cb9d0_c8e370)
-      : "memory");
+  int now = (int)system_milliseconds();
+  float dt = (float)(now - *(int *)0x4eaf4c) * *(float *)0x25bc08;
+  *(int *)0x4eaf4c = now;
+  *(float *)0x4eaf50 = dt;
 }
-#else
-#error "FUN_001cb9d0: clang naked draft required"
-#endif
-
 
 /* FUN_001cba00 (0x1cba00) — readable C lift: scale * lerp(a,b,t). */
 float FUN_001cba00(float scale, float a, float b, float t)
@@ -3376,73 +3331,25 @@ int FUN_001c8700(void *state __attribute__((unused)), int sample_count __attribu
 #endif
 
 
-/* sound_is_active (0x1c88a0) — XBE naked draft (batch 292). */
-#if defined(__clang__)
-static void (*const b1c88a0_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
-
-__attribute__((naked, noinline))
-void sound_is_active(int sound_index __attribute__((unused)))
+/* sound_is_active (0x1c88a0) — readable C lift. */
+void sound_is_active(int sound_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x32ecf4\n\t"
-      "call *%[c118be0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c118be0] "m"(b1c88a0_c118be0)
-      : "memory");
+  FUN_00118be0((void *)0x32ecf4, (void *)(intptr_t)sound_index, 1);
 }
-#else
-#error "sound_is_active: clang naked draft required"
-#endif
 
-
-/* FUN_001c8ee0 (0x1c8ee0) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001c8ee0(void *pitch_range __attribute__((unused)))
+/* FUN_001c8ee0 (0x1c8ee0) — readable C lift. */
+void FUN_001c8ee0(void *pitch_range)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw 0x2c(%%eax), %%dx\n\t"
-      "pushl %%esi\n\t"
-      "movb %%dl, %%cl\n\t"
-      "movl $1, %%esi\n\t"
-      "shll %%cl, %%esi\n\t"
-      "movl 0x34(%%eax), %%ecx\n\t"
-      "notl %%ecx\n\t"
-      "decl %%esi\n\t"
-      "testl %%esi, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "jne .LFUN_001c8ee0_1\n\t"
-      "cmpw $1, %%dx\n\t"
-      "movl $0, 0x34(%%eax)\n\t"
-      "jle .LFUN_001c8ee0_1\n\t"
-      "movb 0x38(%%eax), %%cl\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl %%edx, 0x34(%%eax)\n\t"
-      ".LFUN_001c8ee0_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char *p = (unsigned char *)pitch_range;
+  unsigned short dx = *(unsigned short *)(p + 0x2c);
+  unsigned int mask = (1u << (dx & 0xff)) - 1u;
+  unsigned int bits = ~*(unsigned int *)(p + 0x34);
+  if (bits & mask)
+    return;
+  *(unsigned int *)(p + 0x34) = 0;
+  if ((short)dx > 1)
+    *(unsigned int *)(p + 0x34) = 1u << p[0x38];
 }
-#else
-#error "FUN_001c8ee0: clang naked draft required"
-#endif
-
 
 /* FUN_001cb1a0 (0x1cb1a0) — XBE naked draft (batch 277). */
 #if defined(__clang__)
