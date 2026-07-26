@@ -1278,6 +1278,19 @@ def main() -> int:
         ("ai_conversation_find_participant", 0x447d0, 0x44fae),
         ("FUN_000df4e0", 0xdf4e0, 0xdfdba),
         ("render_contrail", 0x188010, 0x188790),
+        # gameplay wave 105 (2026-07-26) — next ported:false Capstone weaks
+        ("actor_action_handle_lost_contact", 0x1ef90, 0x1f6d2),
+        ("FUN_000f0f30", 0xf0f30, 0xf16d3),
+        ("FUN_000652f0", 0x652f0, 0x658bb),
+        ("ai_conversation_begin", 0x45a10, 0x460d7),
+        ("actor_action_handle_combat_selection", 0x1e8a0, 0x1ef88),
+        ("FUN_000b7f90", 0xb7f90, 0xb85b9),
+        ("following_camera_update", 0x89cd0, 0x8a2ff),
+        ("FUN_00046530", 0x46530, 0x46b5f),
+        ("FUN_00020990", 0x20990, 0x20f50),
+        ("particle_new", 0xa1fd0, 0xa2564),
+        ("actor_emotion_update", 0x32cb0, 0x3330e),
+        ("object_new", 0x143c80, 0x144238),
     ]
 
     xbe = Xbe.from_file(args.xbe)
