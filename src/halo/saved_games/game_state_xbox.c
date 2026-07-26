@@ -1196,66 +1196,23 @@ unsigned short FUN_001c0ed0(void)
   return 0x12;
 }
 
-/* FUN_001c0ee0 (0x1c0ee0) — XBE naked draft (batch 251). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001c0ee0(void)
+/* FUN_001c0ee0 (0x1c0ee0) — readable C lift. */
+float *FUN_001c0ee0(float *out, int index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "cmpl $0x11, %%eax\n\t"
-      "jl .LFUN_001c0ee0_1\n\t"
-      "movl $0x11, %%eax\n\t"
-      ".LFUN_001c0ee0_1:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "setl %%cl\n\t"
-      "decl %%ecx\n\t"
-      "andl %%eax, %%ecx\n\t"
-      "movl 0x32eae0(,%%ecx,4), %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarl $0x10, %%edx\n\t"
-      "andl $0xff, %%edx\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "sarl $8, %%ecx\n\t"
-      "andl $0xff, %%ecx\n\t"
-      "fmuls 0x261518\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "andl $0xff, %%eax\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "fmuls 0x261518\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "fmuls 0x261518\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%edx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int packed;
+  int i = index;
+  if (i >= 0x11) {
+    i = 0x11;
+  }
+  if (i < 0) {
+    i = 0;
+  }
+  packed = *(unsigned int *)(0x32eae0 + i * 4);
+  out[0] = (float)((packed >> 16) & 0xff) * *(float *)0x261518;
+  out[1] = (float)((packed >> 8) & 0xff) * *(float *)0x261518;
+  out[2] = (float)(packed & 0xff) * *(float *)0x261518;
+  return out;
 }
-#else
-#error "FUN_001c0ee0: clang naked draft required"
-#endif
-
 
 /* player_profile_save_last_level_played (0x1c0f70) — XBE naked draft (batch 243). */
 #if defined(__clang__)
@@ -2302,52 +2259,17 @@ void player_profile_new(void)
 #endif
 
 
-/* FUN_001c1950 (0x1c1950) — XBE naked draft (batch 253). */
-#if defined(__clang__)
-static void (*const b1c1950_c1c0ee0)(void) = FUN_001c0ee0;
-
-__attribute__((naked, noinline))
-void FUN_001c1950(void)
+/* FUN_001c1950 (0x1c1950) — readable C lift. */
+float *FUN_001c1950(float *out, int index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c0ee0]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl $0x3f800000, -0x10(%%ebp)\n\t"
-      "movl -0x10(%%ebp), %%ebx\n\t"
-      "movl %%esi, %%edi\n\t"
-      "movl %%ebx, (%%edi)\n\t"
-      "movl %%ecx, 0x4(%%edi)\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edx, 0x8(%%edi)\n\t"
-      "movl %%eax, 0xc(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c0ee0] "m"(b1c1950_c1c0ee0)
-      : "memory");
+  float tmp[3];
+  FUN_001c0ee0(tmp, index);
+  out[0] = 1.0f;
+  out[1] = tmp[0];
+  out[2] = tmp[1];
+  out[3] = tmp[2];
+  return out;
 }
-#else
-#error "FUN_001c1950: clang naked draft required"
-#endif
-
 
 /* FUN_001c19a0 (0x1c19a0) — readable C lift. */
 int FUN_001c19a0(void)

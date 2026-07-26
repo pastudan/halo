@@ -3093,26 +3093,11 @@ void FUN_0017cc50(void)
   (void)esi;
 }
 
-/* FUN_0017cc60 (0x17cc60) — XBE naked draft (batch 397). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017cc60(int object_handle __attribute__((unused)))
+/* FUN_0017cc60 (0x17cc60) — readable C lift. */
+void FUN_0017cc60(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x57, 0x55, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_001621c0(object_handle);
 }
-#else
-#error "FUN_0017cc60: clang naked draft required"
-#endif
-
 
 /* 0x17cc80 */
 void FUN_0017cc80(void)
