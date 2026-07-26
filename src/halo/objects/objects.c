@@ -23734,45 +23734,79 @@ void FUN_00085000(int tag_index, const char *name)
   }
 }
 
-/* 0x85280 — Publish antenna/camera observer globals and refresh director. */
-void FUN_00085280(float *position, float *forward, float *up, float param_4,
-                  short param_5, int param_6)
+/* FUN_00085280 (0x85280) — XBE naked draft (batch 231). */
+#if defined(__clang__)
+static void (*const b85280_c875f0)(float) = director_update;
+static void (*const b85280_c8cde0)(float) = observer_update;
+
+__attribute__((naked, noinline))
+void FUN_00085280(float *position __attribute__((unused)), float *forward __attribute__((unused)), float *up __attribute__((unused)), float param_4 __attribute__((unused)), short param_5 __attribute__((unused)), int param_6 __attribute__((unused)))
 {
-  static const float k_observer_tick = 9.999999747378752e-05f;
-  int n;
-  int q;
-
-  *(int16_t *)0x2ee5a2 = 0;
-  *(int16_t *)0x2ee5a4 = -1;
-
-  *(float *)0x2ee5ac = position[0];
-  *(float *)0x2ee5b0 = position[1];
-  *(float *)0x2ee5b4 = position[2];
-
-  *(float *)0x2ee5b8 = forward[0];
-  *(float *)0x2ee5bc = forward[1];
-  *(float *)0x2ee5c0 = forward[2];
-
-  *(float *)0x2ee5c4 = up[0];
-  *(float *)0x2ee5c8 = up[1];
-  *(float *)0x2ee5cc = up[2];
-
-  if (param_4 != *(float *)0x2533c0)
-    *(float *)0x2ee5d0 = param_4;
-  else
-    *(float *)0x2ee5d0 = 1.22173047f;
-
-  /* MSVC signed divide by 15 via magic 0x88888889, sar 4, sign fix. */
-  n = (int)param_5;
-  q = (int)(((long long)(int)0x88888889 * (long long)n) >> 32);
-  q = (q + n) >> 4;
-  q += (unsigned int)q >> 31;
-  *(float *)0x2ee5a8 = (float)q;
-  *(int *)0x2ee5d4 = param_6;
-
-  director_update(0.0f);
-  observer_update(k_observer_tick);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "movw $0, 0x2ee5a2\n\t"
+      "movw $0xffff, 0x2ee5a4\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x2ee5ac\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x2ee5b0\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, 0x2ee5b4\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, 0x2ee5b8\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl %%eax, 0x2ee5bc\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x2ee5c0\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "movl %%eax, 0x2ee5c4\n\t"
+      "fnstsw %%ax\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "testb $0x44, %%ah\n\t"
+      "movl %%ecx, 0x2ee5c8\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x2ee5cc\n\t"
+      "jnp .LFUN_00085280_1\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x2ee5d0\n\t"
+      "jmp .LFUN_00085280_2\n\t"
+      ".LFUN_00085280_1:\n\t"
+      "movl $0x3f9c61aa, 0x2ee5d0\n\t"
+      ".LFUN_00085280_2:\n\t"
+      "movswl 0x18(%%ebp), %%ecx\n\t"
+      "movl $0x88888889, %%eax\n\t"
+      "imull %%ecx\n\t"
+      "addl %%ecx, %%edx\n\t"
+      "sarl $4, %%edx\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "shrl $0x1f, %%ecx\n\t"
+      "addl %%ecx, %%edx\n\t"
+      "movl %%edx, 0x18(%%ebp)\n\t"
+      "movl 0x1c(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "fildl 0x18(%%ebp)\n\t"
+      "movl %%edx, 0x2ee5d4\n\t"
+      "fstps 0x2ee5a8\n\t"
+      "call *%[c875f0]\n\t"
+      "pushl $0x38d1b717\n\t"
+      "call *%[c8cde0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c875f0] "m"(b85280_c875f0), [c8cde0] "m"(b85280_c8cde0)
+      : "memory");
 }
+#else
+#error "FUN_00085280: clang naked draft required"
+#endif
+
 
 /* FUN_00085350 (0x85350) — XBE naked draft (batch 225). */
 #if defined(__clang__)
@@ -24126,43 +24160,91 @@ finish:
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((regparm(1)))
 #endif
-void FUN_001342a0(int glow_widget_ptr)
+/* FUN_001342a0 (0x1342a0) — XBE naked draft (batch 231). */
+#if defined(__clang__)
+static void *(*const b1342a0_tag)(int, int) = tag_get;
+static int (*const b1342a0_c1337c0)(int glow_widget_ptr, short index, short count) = glow_normal_particle_new;
+
+__attribute__((naked, noinline))
+void FUN_001342a0(int glow_widget_ptr __attribute__((unused)))
 {
-  char *widget = (char *)glow_widget_ptr;
-  char *glow_def;
-  int16_t count;
-  int index;
-  char alternate = 1;
-  int previous_particle = 0;
-  int particle;
-
-  glow_def = (char *)tag_get('!wlg', *(int *)(widget + 0x224));
-  count = *(int16_t *)(widget + 0x24c);
-  for (index = 0; index < count; index++) {
-    particle = glow_normal_particle_new(glow_widget_ptr, (short)index, count);
-    if (particle == 0)
-      break;
-
-    if ((glow_def[0x28] & 2) != 0)
-      *(int *)(particle + 0x54) |= 1;
-
-    if ((glow_def[0x28] & 4) != 0) {
-      if (alternate)
-        *(int *)(particle + 0x54) &= ~1;
-      else
-        *(int *)(particle + 0x54) |= 1;
-      alternate = !alternate;
-    }
-
-    if (*(int *)(widget + 0x250) == 0)
-      *(int *)(widget + 0x250) = particle;
-    if (previous_particle != 0)
-      *(int *)(previous_particle + 0x5c) = particle;
-    *(int *)(particle + 0x60) = previous_particle;
-    previous_particle = particle;
-    *(int *)(widget + 0x254) = particle;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x224(%%esi), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x676c7721\n\t"
+      "call *%[tag]\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "cmpw %%bx, 0x24c(%%esi)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "jle .LFUN_001342a0_8\n\t"
+      ".LFUN_001342a0_1:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x24c(%%esi), %%cx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1337c0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001342a0_8\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "testb $2, 0x28(%%ecx)\n\t"
+      "je .LFUN_001342a0_2\n\t"
+      "orl $1, 0x54(%%eax)\n\t"
+      ".LFUN_001342a0_2:\n\t"
+      "testb $4, 0x28(%%ecx)\n\t"
+      "je .LFUN_001342a0_5\n\t"
+      "movb -0x1(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movl 0x54(%%eax), %%edx\n\t"
+      "jne .LFUN_001342a0_3\n\t"
+      "orl $1, %%edx\n\t"
+      "jmp .LFUN_001342a0_4\n\t"
+      ".LFUN_001342a0_3:\n\t"
+      "andl $0xfffffffe, %%edx\n\t"
+      ".LFUN_001342a0_4:\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movl %%edx, 0x54(%%eax)\n\t"
+      "sete %%dl\n\t"
+      "movb %%dl, -0x1(%%ebp)\n\t"
+      ".LFUN_001342a0_5:\n\t"
+      "movl 0x250(%%esi), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jne .LFUN_001342a0_6\n\t"
+      "movl %%eax, 0x250(%%esi)\n\t"
+      ".LFUN_001342a0_6:\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LFUN_001342a0_7\n\t"
+      "movl %%eax, 0x5c(%%edi)\n\t"
+      ".LFUN_001342a0_7:\n\t"
+      "movl %%edi, 0x60(%%eax)\n\t"
+      "incl %%ebx\n\t"
+      "movl %%eax, 0x254(%%esi)\n\t"
+      "cmpw 0x24c(%%esi), %%bx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "jl .LFUN_001342a0_1\n\t"
+      ".LFUN_001342a0_8:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b1342a0_tag), [c1337c0] "m"(b1342a0_c1337c0)
+      : "memory");
 }
+#else
+#error "FUN_001342a0: clang naked draft required"
+#endif
+
 
 /* 0x134350 — Allocate one trailing glow particle for a widget path.
  * XBE: glow_widget_ptr arrives in EBX (@<ebx>); C export is cdecl. */
@@ -25505,41 +25587,106 @@ void *FUN_00134c40(int light_tag, int object_handle)
   return blend_base;
 }
 
-/* 0x135420 — jitter a marker position in local marker space. */
-void lightning_offset_marker_position(int matrix_ptr, float *position_out,
-                                      float *random_bounds)
+/* lightning_offset_marker_position (0x135420) — XBE naked draft (batch 233). */
+#if defined(__clang__)
+static void (*const b135420_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b135420_exitfn)(int) = system_exit;
+static unsigned int *(*const b135420_lseed)(void) = random_math_get_local_seed_address;
+static float (*const b135420_rmreal)(unsigned int *) = random_math_real;
+static void (*const b135420_mscale)(float *, float *, float *) = matrix_scale_transform_vector;
+
+__attribute__((naked, noinline))
+void lightning_offset_marker_position(int matrix_ptr __attribute__((unused)), float *position_out __attribute__((unused)), float *random_bounds __attribute__((unused)))
 {
-  float *matrix = (float *)(uintptr_t)matrix_ptr;
-  float rnd_z;
-  float rnd_y;
-  float rnd_x;
-  float offset[3];
-  float one = *(float *)0x2533c8;
-
-  if (!position_out) {
-    display_assert((char *)0x00267114, (char *)0x0029acfc, 0x74, 1);
-    system_exit(-1);
-  }
-  if (!matrix) {
-    display_assert((char *)0x0026af40, (char *)0x0029acfc, 0x75, 1);
-    system_exit(-1);
-  }
-  if (!random_bounds) {
-    display_assert((char *)0x0029ad34, (char *)0x0029acfc, 0x76, 1);
-    system_exit(-1);
-  }
-
-  rnd_z = random_math_real(random_math_get_local_seed_address());
-  rnd_y = random_math_real(random_math_get_local_seed_address());
-  rnd_x = random_math_real(random_math_get_local_seed_address());
-  offset[0] = (rnd_x + rnd_x - one) * random_bounds[0];
-  offset[1] = (rnd_y + rnd_y - one) * random_bounds[1];
-  offset[2] = (rnd_z + rnd_z - one) * random_bounds[2];
-  matrix_scale_transform_vector(matrix, offset, offset);
-  position_out[0] += offset[0];
-  position_out[1] += offset[1];
-  position_out[2] += offset[2];
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x14, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Llightning_offset_marker_position_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x74\n\t"
+      "pushl $0x29acfc\n\t"
+      "pushl $0x267114\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Llightning_offset_marker_position_1:\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Llightning_offset_marker_position_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x75\n\t"
+      "pushl $0x29acfc\n\t"
+      "pushl $0x26af40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Llightning_offset_marker_position_2:\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Llightning_offset_marker_position_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x76\n\t"
+      "pushl $0x29acfc\n\t"
+      "pushl $0x29ad34\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Llightning_offset_marker_position_3:\n\t"
+      "call *%[lseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "call *%[lseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "call *%[lseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "leal -0x14(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "fsubs 0x2533c8\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "fmuls (%%edi)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "call *%[mscale]\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fadds (%%esi)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "fstps (%%esi)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fadds 0x4(%%esi)\n\t"
+      "fstps 0x4(%%esi)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fadds 0x8(%%esi)\n\t"
+      "fstps 0x8(%%esi)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b135420_assert), [exitfn] "m"(b135420_exitfn), [lseed] "m"(b135420_lseed), [rmreal] "m"(b135420_rmreal), [mscale] "m"(b135420_mscale)
+      : "memory");
 }
+#else
+#error "lightning_offset_marker_position: clang naked draft required"
+#endif
+
 
 /* 0x13df70 — free an object header's node-matrix pool block and delete it. */
 void object_postprocess_node_matrices(data_t *data, int object_handle)

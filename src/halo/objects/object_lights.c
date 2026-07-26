@@ -1,29 +1,77 @@
 /* --- object_lights.obj batch drafts (2026-07-26) --- */
 
-/* 0x1391e0 — allocate light datums and cluster-partition globals. */
+/* lights_initialize (0x1391e0) — XBE naked draft (batch 230). */
+#if defined(__clang__)
+static data_t * (*const b1391e0_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
+static void * (*const b1391e0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
+static void (*const b1391e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1391e0_exitfn)(int) = system_exit;
+static void (*const b1391e0_c191500)(void **out, const char *name) = cluster_partition_globals_new;
+static void (*const b1391e0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
 void lights_initialize(void)
 {
-  void *lights_data;
-  void *active_flag;
-
-  lights_data = game_state_data_new((char *)0x0029b444, 0x380, 0x7c);
-  *(void **)0x5a90bc = lights_data;
-  active_flag = game_state_malloc((char *)0x0029b434, 0, 4);
-  *(void **)0x46f074 = active_flag;
-
-  if (lights_data == 0) {
-    display_assert((char *)0x0029b428, (char *)0x0029b324, 0xc2, 1);
-    system_exit(-1);
-  }
-  if (active_flag == 0) {
-    display_assert((char *)0x0029b414, (char *)0x0029b324, 0xc3, 1);
-    system_exit(-1);
-  }
-
-  *(char *)active_flag = 1;
-  if (*(void **)0x5a90bc != 0)
-    cluster_partition_globals_new((void **)0x005a90b0, (char *)0x0025b590);
+  __asm__ volatile(
+      "pushl $0x7c\n\t"
+      "pushl $0x380\n\t"
+      "pushl $0x29b444\n\t"
+      "call *%[c1bfe10]\n\t"
+      "pushl $4\n\t"
+      "pushl $0\n\t"
+      "pushl $0x29b434\n\t"
+      "movl %%eax, 0x5a90bc\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "movl %%eax, 0x46f074\n\t"
+      "movl 0x5a90bc, %%eax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Llights_initialize_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xc2\n\t"
+      "pushl $0x29b324\n\t"
+      "pushl $0x29b428\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Llights_initialize_1:\n\t"
+      "movl 0x46f074, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Llights_initialize_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xc3\n\t"
+      "pushl $0x29b324\n\t"
+      "pushl $0x29b414\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Llights_initialize_2:\n\t"
+      "movl 0x46f074, %%eax\n\t"
+      "movb $1, (%%eax)\n\t"
+      "movl 0x5a90bc, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Llights_initialize_3\n\t"
+      "pushl $0x25b590\n\t"
+      "pushl $0x5a90b0\n\t"
+      "call *%[c191500]\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      ".Llights_initialize_3:\n\t"
+      "pushl $0x29b3e8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c1bfe10] "m"(b1391e0_c1bfe10), [c1bfbf0] "m"(b1391e0_c1bfbf0), [assert] "m"(b1391e0_assert), [exitfn] "m"(b1391e0_exitfn), [c191500] "m"(b1391e0_c191500), [c8f390] "m"(b1391e0_c8f390)
+      : "memory");
 }
+#else
+#error "lights_initialize: clang naked draft required"
+#endif
+
 
 /* 0x1392a0 */
 void lights_dispose(void)
@@ -88,39 +136,105 @@ int16_t FUN_00139350(int light_handle, int16_t *out_buffer, int16_t max_count)
   return count;
 }
 
-/* 0x1393b0 — sum self-illumination from attached lights (+ parent/child). */
-float object_get_self_illumination(int object_handle)
+/* object_get_self_illumination (0x1393b0) — XBE naked draft (batch 232). */
+#if defined(__clang__)
+static void *(*const b1393b0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1393b0_tag)(int, int) = tag_get;
+static void *(*const b1393b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static float (*const b1393b0_c7a750)(float *color) = real_rgb_color_brightness;
+static float (*const b1393b0_c1393b0)(int object_handle) = object_get_self_illumination;
+
+__attribute__((naked, noinline))
+float object_get_self_illumination(int object_handle __attribute__((unused)))
 {
-  char *obj;
-  char *obj_tag;
-  float total = 0.0f;
-  int16_t i;
-  int light_count;
-  int parent;
-  int child;
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  obj_tag = (char *)tag_get(0x6f626a65, *(int *)obj); /* 'obje' */
-  light_count = *(int *)(obj_tag + 0x140);
-  for (i = 0; i < light_count; i++) {
-    int light_handle;
-    if (obj[0xf4 + (int)i] != 0)
-      continue;
-    light_handle = *(int *)(obj + 0xfc + (int)i * 4);
-    if (light_handle == -1)
-      continue;
-    total += real_rgb_color_brightness(
-        (float *)((char *)datum_get(*(void **)0x5a90bc, light_handle) + 0x14));
-  }
-
-  parent = *(int *)(obj + 0xc8);
-  if (parent != -1)
-    total += object_get_self_illumination(parent);
-  child = *(int *)(obj + 0xc4);
-  if (child != -1)
-    return total + object_get_self_illumination(child);
-  return total;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x140(%%ebx), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "jle .Lobject_get_self_illumination_3\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .Lobject_get_self_illumination_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lobject_get_self_illumination_1:\n\t"
+      "movb 0xf4(%%eax,%%esi,1), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lobject_get_self_illumination_2\n\t"
+      "movl 0xfc(%%esi,%%eax,4), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_get_self_illumination_2\n\t"
+      "movl 0x5a90bc, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "addl $0x14, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c7a750]\n\t"
+      "fadds -0x4(%%ebp)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lobject_get_self_illumination_2:\n\t"
+      "movl 0x140(%%ebx), %%ecx\n\t"
+      "incl %%edi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lobject_get_self_illumination_1\n\t"
+      ".Lobject_get_self_illumination_3:\n\t"
+      "movl 0xc8(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_get_self_illumination_4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1393b0]\n\t"
+      "fadds -0x4(%%ebp)\n\t"
+      "addl $4, %%esp\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lobject_get_self_illumination_4:\n\t"
+      "movl 0xc4(%%esi), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lobject_get_self_illumination_5\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1393b0]\n\t"
+      "fadds -0x4(%%ebp)\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lobject_get_self_illumination_5:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1393b0_get), [tag] "m"(b1393b0_tag), [dget] "m"(b1393b0_dget), [c7a750] "m"(b1393b0_c7a750), [c1393b0] "m"(b1393b0_c1393b0)
+      : "memory");
 }
+#else
+#error "object_get_self_illumination: clang naked draft required"
+#endif
+
 
 static void light_sample_clamp_rgb(float *rgb)
 {

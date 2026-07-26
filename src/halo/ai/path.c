@@ -1293,30 +1293,63 @@ int16_t path_heap_pop_cheapest_node(void *path __attribute__((unused)))
 #endif
 
 
-/* 0x5e680 — insert a node into the path heap and bubble it up. */
-void path_heap_insert(void *path, int16_t heap_node, int16_t heap_cost)
+/* path_heap_insert (0x5e680) — XBE naked draft (batch 233). */
+#if defined(__clang__)
+static void (*const b5e680_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b5e680_exitfn)(int) = system_exit;
+static void (*const b5e680_c5e150)(void *path, int16_t heap_index) = path_heap_bubble_up;
+static void (*const b5e680_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+void path_heap_insert(void *path __attribute__((unused)), int16_t heap_node __attribute__((unused)), int16_t heap_cost __attribute__((unused)))
 {
-  int16_t heap_size;
-  int16_t heap_index;
-
-  heap_size = *(int16_t *)((char *)path + 0x11084);
-  if (heap_size < 1) {
-    display_assert("path->heap_size>=1", "c:\\halo\\SOURCE\\ai\\path.c", 0x594,
-                   1);
-    system_exit(-1);
-  }
-
-  if (heap_size >= 0x400) {
-    error(2, (char *)0x0025e250);
-    return;
-  }
-
-  heap_index = heap_size;
-  *(int16_t *)((char *)path + 0x11084) = heap_size + 1;
-  *(int16_t *)((char *)path + heap_index * 4 + 0x11086) = heap_node;
-  *(int16_t *)((char *)path + heap_index * 4 + 0x11088) = heap_cost;
-  path_heap_bubble_up(path, heap_index);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "cmpw $1, 0x11084(%%edi)\n\t"
+      "jge .Lpath_heap_insert_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x594\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e238\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lpath_heap_insert_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x11084(%%edi), %%ax\n\t"
+      "cmpw $0x400, %%ax\n\t"
+      "jge .Lpath_heap_insert_2\n\t"
+      "movw 0x8(%%ebp), %%dx\n\t"
+      "leal 0x1(%%eax), %%ecx\n\t"
+      "movw %%cx, 0x11084(%%edi)\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "movw %%dx, 0x11086(%%edi,%%ecx,4)\n\t"
+      "movw 0xc(%%ebp), %%dx\n\t"
+      "movw %%dx, 0x11088(%%edi,%%ecx,4)\n\t"
+      "call *%[c5e150]\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lpath_heap_insert_2:\n\t"
+      "pushl $0x25e250\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b5e680_assert), [exitfn] "m"(b5e680_exitfn), [c5e150] "m"(b5e680_c5e150), [c8f390] "m"(b5e680_c8f390)
+      : "memory");
 }
+#else
+#error "path_heap_insert: clang naked draft required"
+#endif
+
 
 /* FUN_0005e700 (0x5e700) — XBE naked draft (batch 156). */
 #if defined(__clang__)
@@ -3109,21 +3142,53 @@ char FUN_0005f740(unsigned int *path_buf __attribute__((unused)))
 #endif
 
 
-/* 0x60070 — obstacle disc node accessor (path.h:396) */
-void *FUN_00060070(void *obstacles, int16_t disc_index)
-{
-  int16_t disc_count;
+/* FUN_00060070 (0x60070) — XBE naked draft (batch 230). */
+#if defined(__clang__)
+static void (*const b60070_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b60070_exitfn)(int) = system_exit;
 
-  disc_count = *(int16_t *)((char *)obstacles + 2);
-  if (disc_index < 0 || disc_index >= disc_count || disc_count > 0x80) {
-    display_assert(
-        "disc_index>=0 && disc_index<obstacles->disc_count && "
-        "obstacles->disc_count<=MAXIMUM_OBSTACLE_DISCS",
-        "c:\\halo\\source\\ai\\path.h", 396, 1);
-    system_exit(-1);
-  }
-  return (char *)obstacles + (int)disc_index * 24 + 8;
+__attribute__((naked, noinline))
+void * FUN_00060070(void *obstacles __attribute__((unused)), int16_t disc_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0xc(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "jl .LFUN_00060070_1\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jge .LFUN_00060070_1\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00060070_2\n\t"
+      ".LFUN_00060070_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18c\n\t"
+      "pushl $0x25e990\n\t"
+      "pushl $0x25e930\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00060070_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal 0x8(%%edi,%%eax,8), %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b60070_assert), [exitfn] "m"(b60070_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00060070: clang naked draft required"
+#endif
+
 
 /* FUN_000600c0 (0x600c0) — XBE naked draft (batch 226). */
 #if defined(__clang__)
@@ -3171,21 +3236,53 @@ int16_t FUN_000600c0(void *obstacles __attribute__((unused)), int16_t disc_index
 #endif
 
 
-/* 0x600f0 — path step node accessor (path_obstacle_avoidance.c:40) */
-void *FUN_000600f0(void *path, int16_t step_index)
-{
-  int16_t step_count;
+/* FUN_000600f0 (0x600f0) — XBE naked draft (batch 231). */
+#if defined(__clang__)
+static void (*const b600f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b600f0_exitfn)(int) = system_exit;
 
-  step_count = *(int16_t *)((char *)path + 0x2c);
-  if (step_index < 0 || step_index >= step_count || step_count > 0x80) {
-    display_assert(
-        "step_index>=0 && step_index<path->step_count && "
-        "path->step_count<=MAXIMUM_PATH_STEPS",
-        "c:\\halo\\SOURCE\\ai\\path_obstacle_avoidance.c", 40, 1);
-    system_exit(-1);
-  }
-  return (char *)path + (int)step_index * 40 + 0x30;
+__attribute__((naked, noinline))
+void * FUN_000600f0(void *path __attribute__((unused)), int16_t step_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0xc(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "jl .LFUN_000600f0_1\n\t"
+      "movw 0x2c(%%edi), %%ax\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jge .LFUN_000600f0_1\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_000600f0_2\n\t"
+      ".LFUN_000600f0_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25e9b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000600f0_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,4), %%eax\n\t"
+      "leal 0x30(%%edi,%%eax,8), %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b600f0_assert), [exitfn] "m"(b600f0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_000600f0: clang naked draft required"
+#endif
+
 
 /* 0x601a0 — parent heap index (path_obstacle_avoidance.c:57) */
 int FUN_000601a0(int16_t heap_index)

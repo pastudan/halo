@@ -3427,118 +3427,223 @@ extern uint8_t structure_bsp_cluster_sound_encoding(void *bsp,
                                                     int16_t from_cluster,
                                                     int16_t to_cluster);
 
-/* 0x31850 — audibility level from volume, distance, and cluster encoding. */
-int actor_audibility_at_point(int actor_handle, void *input_block,
-                              float *position, void *location, short volume,
-                              int range_scale, short flags)
+/* actor_audibility_at_point (0x31850) — XBE naked draft (batch 230). */
+#if defined(__clang__)
+static void *(*const b31850_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b31850_tag)(int, int) = tag_get;
+static char (*const b31850_c18e5c0)(int location) = FUN_0018e5c0;
+static void * (*const b31850_c18e3c0)(void) = scenario_get;
+static uint8_t (*const b31850_c193870)(void *bsp, int16_t from_cluster, int16_t to_cluster) = structure_bsp_cluster_sound_encoding;
+
+__attribute__((naked, noinline))
+int actor_audibility_at_point(int actor_handle __attribute__((unused)), void *input_block __attribute__((unused)), float *position __attribute__((unused)), void *location __attribute__((unused)), short volume __attribute__((unused)), int range_scale __attribute__((unused)), short flags __attribute__((unused)))
 {
-  char *actor;
-  char *encounter;
-  char *in;
-  char *loc;
-  float range;
-  float delta[3];
-  float rel_dot;
-  float dist_sq;
-  float attenuation;
-  float sqrt_dist;
-  int16_t result;
-  int profile;
-  void *scenario;
-  uint8_t encoding;
-
-  (void)range_scale;
-
-  attenuation = 0.0f;
-  result = 0;
-  if (volume == 0)
-    return 0;
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  encounter = (char *)tag_get('rtca', *(int *)(actor + 0x58));
-  in = (char *)input_block;
-  loc = (char *)location;
-
-  if (*(int16_t *)(in + 0x28) == -1)
-    return 0;
-  if (*(int16_t *)(loc + 4) == -1)
-    return 0;
-
-  range = *(float *)(encounter + 0x4c);
-  delta[0] = position[0] - *(float *)in;
-  delta[1] = position[1] - *(float *)(in + 4);
-  delta[2] = position[2] - *(float *)(in + 8);
-  dist_sq = delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2];
-
-  rel_dot = delta[0] * *(float *)(in + 0x18) +
-            delta[1] * *(float *)(in + 0x1c) +
-            delta[2] * *(float *)(in + 0x20);
-  if (rel_dot <= *(float *)0x2533c0)
-    range *= *(float *)0x2533f0;
-
-  switch (*(int16_t *)(actor + 0x6a)) {
-  case 2:
-    range *= *(float *)0x2533c4;
-    break;
-  case 1:
-    range *= *(float *)0x253524;
-    break;
-  default:
-    break;
-  }
-
-  switch (volume) {
-  case 4:
-    range *= *(float *)0x2549d4;
-    break;
-  case 1:
-    range *= *(float *)0x25614c;
-    break;
-  case 3:
-    range *= *(float *)0x2533c4;
-    break;
-  default:
-    break;
-  }
-
-  if (FUN_0018e5c0((int)(uintptr_t)(in + 0x24)) ||
-      FUN_0018e5c0((int)(uintptr_t)loc))
-    range *= *(float *)0x25337c;
-
-  if (flags != 0 && flags != 1)
-    range *= *(float *)0x2533c4;
-
-  if (range * range <= dist_sq)
-    goto profile;
-
-  scenario = scenario_get();
-  encoding = structure_bsp_cluster_sound_encoding(
-      scenario, *(int16_t *)(in + 0x28), *(int16_t *)(loc + 4));
-  if ((char)encoding < 0)
-    goto profile;
-
-  attenuation = (float)(encoding & 0x7f) * *(float *)0x256148;
-  sqrt_dist = sqrtf(dist_sq);
-  if (attenuation + attenuation < sqrt_dist)
-    sqrt_dist = attenuation + attenuation;
-  if (sqrt_dist <= range) {
-    result = (int16_t)(volume >= 3 ? 3 : 2);
-    goto finish;
-  }
-
-profile:
-  sqrt_dist = sqrtf(dist_sq);
-
-finish:
-  profile = (actor_handle & 0xffff) * 0x657c + *(int *)0x331f58;
-  *(float *)(profile + 0xa8) = range;
-  *(float *)(profile + 0xb0) = attenuation;
-  *(char *)(profile + 0xa4) = 1;
-  *(int16_t *)(profile + 0xa6) = result;
-  *(float *)(profile + 0xac) = sqrt_dist;
-  *(float *)(profile + 0xb4) = dist_sq;
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x14, %%esp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x58(%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw %%ax, 0x18(%%ebp)\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "je .Lactor_audibility_at_point_16\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "cmpw $-1, 0x28(%%edi)\n\t"
+      "je .Lactor_audibility_at_point_15\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "cmpw $-1, 0x4(%%edx)\n\t"
+      "je .Lactor_audibility_at_point_15\n\t"
+      "movl 0x4c(%%ecx), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "flds (%%eax)\n\t"
+      "movl $0xbf800000, -0x8(%%ebp)\n\t"
+      "fsubs (%%edi)\n\t"
+      "movl $0xbf800000, -0x10(%%ebp)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs 0x4(%%edi)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fsubs 0x8(%%edi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "fmuls 0x20(%%edi)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls 0x1c(%%edi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls 0x18(%%edi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_audibility_at_point_1\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x2533f0\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lactor_audibility_at_point_1:\n\t"
+      "movw 0x6a(%%ebx), %%bx\n\t"
+      "cmpw $2, %%bx\n\t"
+      "jne .Lactor_audibility_at_point_2\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x2533c4\n\t"
+      "jmp .Lactor_audibility_at_point_3\n\t"
+      ".Lactor_audibility_at_point_2:\n\t"
+      "cmpw $1, %%bx\n\t"
+      "jne .Lactor_audibility_at_point_4\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x253524\n\t"
+      ".Lactor_audibility_at_point_3:\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lactor_audibility_at_point_4:\n\t"
+      "movw 0x18(%%ebp), %%ax\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jne .Lactor_audibility_at_point_5\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x2549d4\n\t"
+      "jmp .Lactor_audibility_at_point_7\n\t"
+      ".Lactor_audibility_at_point_5:\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .Lactor_audibility_at_point_6\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x25614c\n\t"
+      "jmp .Lactor_audibility_at_point_7\n\t"
+      ".Lactor_audibility_at_point_6:\n\t"
+      "cmpw $3, %%ax\n\t"
+      "jne .Lactor_audibility_at_point_8\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x2533c4\n\t"
+      ".Lactor_audibility_at_point_7:\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lactor_audibility_at_point_8:\n\t"
+      "leal 0x24(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c18e5c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_audibility_at_point_9\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c18e5c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_audibility_at_point_10\n\t"
+      ".Lactor_audibility_at_point_9:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x25337c\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lactor_audibility_at_point_10:\n\t"
+      "movw 0x20(%%ebp), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lactor_audibility_at_point_11\n\t"
+      "cmpw $1, %%ax\n\t"
+      "je .Lactor_audibility_at_point_11\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x2533c4\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lactor_audibility_at_point_11:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "fcomps -0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_audibility_at_point_13\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x28(%%edi), %%ax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x4(%%ecx), %%dx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c18e3c0]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c193870]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "js .Lactor_audibility_at_point_13\n\t"
+      "movzbl %%al, %%eax\n\t"
+      "andl $0xffffff7f, %%eax\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "fildl -0x10(%%ebp)\n\t"
+      "fmuls 0x256148\n\t"
+      "fsts -0x8(%%ebp)\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fsqrt\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "fcoms -0x10(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lactor_audibility_at_point_12\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      ".Lactor_audibility_at_point_12:\n\t"
+      "fcoms -0x4(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_audibility_at_point_14\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpw $3, 0x18(%%ebp)\n\t"
+      "setge %%cl\n\t"
+      "addl $2, %%ecx\n\t"
+      "movl %%ecx, -0x14(%%ebp)\n\t"
+      "jmp .Lactor_audibility_at_point_14\n\t"
+      ".Lactor_audibility_at_point_13:\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      ".Lactor_audibility_at_point_14:\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "movl 0x331f58, %%eax\n\t"
+      "fsqrt\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "andl $0xffff, %%esi\n\t"
+      "imull $0x657c, %%esi, %%esi\n\t"
+      "addl %%eax, %%esi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl %%edx, 0xa8(%%eax)\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "fstps 0xac(%%eax)\n\t"
+      "movb $1, 0xa4(%%eax)\n\t"
+      "movw %%cx, 0xa6(%%eax)\n\t"
+      "fstps 0xb4(%%eax)\n\t"
+      "movl %%edx, 0xb0(%%eax)\n\t"
+      "movw %%cx, %%ax\n\t"
+      ".Lactor_audibility_at_point_15:\n\t"
+      "popl %%edi\n\t"
+      ".Lactor_audibility_at_point_16:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b31850_dget), [tag] "m"(b31850_tag), [c18e5c0] "m"(b31850_c18e5c0), [c18e3c0] "m"(b31850_c18e3c0), [c193870] "m"(b31850_c193870)
+      : "memory");
 }
+#else
+#error "actor_audibility_at_point: clang naked draft required"
+#endif
+
 
 /* actor_perception_find_sense_position (0x31a90) — XBE naked draft (batch 84). */
 #if defined(__clang__)

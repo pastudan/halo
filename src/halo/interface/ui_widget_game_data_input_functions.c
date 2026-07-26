@@ -9373,50 +9373,98 @@ void get_editable_playlist_profile_display_name(void *widget __attribute__((unus
 
 
 /* 0xf3690 — collect up to 3 child widget text handles for item UI sync. */
-/* 0xf3690 — resolve three neighboring list indices for a widget spinner. */
-void FUN_000f3690(int *out_handles /* @<eax> */, void *widget /* @<ecx> */)
+/* FUN_000f3690 (0xf3690) — XBE naked draft (batch 231). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void FUN_000f3690(int *out_handles /* */ __attribute__((unused)), void *widget /* */ __attribute__((unused)))
 {
-  char *w = (char *)widget;
-  char *related;
-  int count;
-  int a;
-  int b;
-  int c;
-
-  related = *(char **)(w + 0x34);
-  if (*(int *)(w + 0x38) == (int)related) {
-    a = (int)*(int16_t *)(w + 0x3c);
-    b = a + 1;
-    count = (int)*(uint16_t *)(w + 0x44);
-    if (b == count)
-      b = 0;
-    c = b + 1;
-    if (c == count)
-      c = 0;
-  } else if (*(int *)(w + 0x38) == *(int *)(related + 0x2c)) {
-    b = (int)*(int16_t *)(w + 0x3c);
-    a = b - 1;
-    if (a < 0)
-      a = (int)*(uint16_t *)(w + 0x44) - 1;
-    c = b + 1;
-    count = (int)*(uint16_t *)(w + 0x44);
-    if (c == count)
-      c = 0;
-  } else {
-    c = (int)*(int16_t *)(w + 0x3c);
-    b = c - 1;
-    if (b < 0)
-      b = (int)*(uint16_t *)(w + 0x44) - 1;
-    a = b - 1;
-    if (a < 0)
-      a = (int)*(uint16_t *)(w + 0x44) - 1;
-  }
-
-  count = (int)*(uint16_t *)(w + 0x44);
-  out_handles[0] = (a < count) ? a : -1;
-  out_handles[1] = (b < count) ? b : -1;
-  out_handles[2] = (c < count) ? c : -1;
+  __asm__ volatile(
+      "movl 0x38(%%ecx), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x34(%%ecx), %%esi\n\t"
+      "cmpl %%esi, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_000f3690_2\n\t"
+      "movswl 0x3c(%%ecx), %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "incl %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movzwl 0x44(%%ecx), %%esi\n\t"
+      "cmpl %%esi, %%edx\n\t"
+      "jne .LFUN_000f3690_1\n\t"
+      "movl $0, 0x4(%%eax)\n\t"
+      ".LFUN_000f3690_1:\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "incl %%edx\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "movzwl 0x44(%%ecx), %%esi\n\t"
+      "cmpl %%esi, %%edx\n\t"
+      "jne .LFUN_000f3690_5\n\t"
+      "movl $0, 0x8(%%eax)\n\t"
+      "jmp .LFUN_000f3690_5\n\t"
+      ".LFUN_000f3690_2:\n\t"
+      "cmpl 0x2c(%%esi), %%edx\n\t"
+      "movswl 0x3c(%%ecx), %%edx\n\t"
+      "jne .LFUN_000f3690_3\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "decl %%edx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "jge .LFUN_000f3690_1\n\t"
+      "movzwl 0x44(%%ecx), %%edx\n\t"
+      "decl %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "jmp .LFUN_000f3690_1\n\t"
+      ".LFUN_000f3690_3:\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "decl %%edx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "jge .LFUN_000f3690_4\n\t"
+      "movzwl 0x44(%%ecx), %%edx\n\t"
+      "decl %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      ".LFUN_000f3690_4:\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "decl %%edx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "jge .LFUN_000f3690_5\n\t"
+      "movzwl 0x44(%%ecx), %%edx\n\t"
+      "decl %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      ".LFUN_000f3690_5:\n\t"
+      "movzwl 0x44(%%ecx), %%esi\n\t"
+      "movl (%%eax), %%edi\n\t"
+      "orl $0xffffffff, %%edx\n\t"
+      "cmpl %%esi, %%edi\n\t"
+      "jl .LFUN_000f3690_6\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      ".LFUN_000f3690_6:\n\t"
+      "movzwl 0x44(%%ecx), %%esi\n\t"
+      "cmpl %%esi, 0x4(%%eax)\n\t"
+      "jl .LFUN_000f3690_7\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      ".LFUN_000f3690_7:\n\t"
+      "movzwl 0x44(%%ecx), %%ecx\n\t"
+      "movl 0x8(%%eax), %%esi\n\t"
+      "popl %%edi\n\t"
+      "cmpl %%ecx, %%esi\n\t"
+      "popl %%esi\n\t"
+      "jl .LFUN_000f3690_8\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      ".LFUN_000f3690_8:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000f3690: clang naked draft required"
+#endif
+
 
 /* multiplayer_game_set_text_box_for_game_ruleset (0xf3740) — XBE naked draft (batch 129). */
 #if defined(__clang__)

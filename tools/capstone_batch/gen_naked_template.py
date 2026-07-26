@@ -688,27 +688,59 @@ __attribute__((naked, noinline))
 """
 
 
+def _is_defn_site(text: str, name: str, pos: int) -> bool:
+    """True if text[pos:] looks like a definition `name(...) {`, not a call."""
+    m = re.match(rf"{re.escape(name)}\s*\(", text[pos:])
+    if not m:
+        return False
+    i = pos + m.end()
+    depth = 1
+    while i < len(text) and depth:
+        c = text[i]
+        if c == ";" and depth == 1:
+            return False  # prototype / call
+        if c == "(":
+            depth += 1
+        elif c == ")":
+            depth -= 1
+        i += 1
+        if i - pos > 800:
+            return False
+    # skip whitespace/comments to '{'
+    while i < len(text) and text[i] in " \t\r\n":
+        i += 1
+    return i < len(text) and text[i] == "{"
+
+
 def find_src(name: str) -> Path:
-    # Allow optional leading __attribute__/storage/type tokens on the sig line.
-    pat = re.compile(
-        rf"^(?:(?:__attribute__\s*\(\([^;]*?\)\)\s*)|(?:static\s+)|(?:inline\s+)|(?:[\w\*]+\s+))+{re.escape(name)}\s*\(",
-        re.M,
-    )
-    loose = re.compile(rf"\b{re.escape(name)}\s*\(", re.M)
+    # Find files containing a real definition site for name.
+    name_re = re.compile(rf"\b{re.escape(name)}\s*\(")
     fallback = None
+    hits: list[Path] = []
     for p in Path("src/halo").rglob("*.c"):
         text = p.read_text(errors="ignore")
-        if not (pat.search(text) or loose.search(text)):
-            continue
-        # Prefer a real definition (has '{{' soon) over call sites.
-        if not re.search(
-            rf"\b{re.escape(name)}\s*\([^;]*\)\s*\{{", text, re.S
-        ):
+        ok = False
+        for m in name_re.finditer(text):
+            # Skip occurrences inside line/block comments roughly.
+            line_start = text.rfind("\n", 0, m.start()) + 1
+            line = text[line_start : m.start()]
+            if "//" in line:
+                continue
+            before = text[: m.start()]
+            if before.rfind("/*") > before.rfind("*/"):
+                continue
+            if _is_defn_site(text, name, m.start()):
+                ok = True
+                break
+        if not ok:
             continue
         if p.name == "kb_common_stubs.c":
             fallback = p
             continue
-        return p
+        hits.append(p)
+    if hits:
+        hits.sort(key=lambda q: str(q))
+        return hits[0]
     if fallback is not None:
         return fallback
     raise SystemExit(f"no file for {name}")
@@ -751,21 +783,21 @@ def inject(name: str, va: int, body: str, path: Path) -> None:
     )
     m = pat.search(text)
     if not m:
-        # Fallback: first definition-looking occurrence.
-        m = re.search(rf"\b{re.escape(name)}\s*\([^;]*\)\s*\{{", text, re.S)
-        if m:
-            # Walk back to start of statement/attribute line.
-            line_start = text.rfind("\n", 0, m.start()) + 1
-            # Create a fake match-like span at line_start for downstream logic.
-            class _M:
-                def start(self_inner):
-                    return line_start
-            m = _M()
-        else:
+        m = re.search(
+            rf"^(?:[^\n]*\b{re.escape(name)}\s*\([^;{{}}]*\)\s*\{{)",
+            text,
+            re.M,
+        )
+        if not m:
             raise SystemExit(f"no def {name} in {path}")
     # Prefer a definition that is not already inside a naked draft attribute line.
     line_start = text.rfind("\n", 0, m.start()) + 1
     before_txt = text[:line_start]
+    # Refuse injection into an open block comment.
+    last_open = before_txt.rfind("/*")
+    last_close = before_txt.rfind("*/")
+    if last_open != -1 and last_open > last_close:
+        raise SystemExit(f"refusing to inject inside block comment: {name} in {path}")
     start = line_start
     end_c = before_txt.rfind("*/")
     if (
