@@ -208,58 +208,17 @@ void player_ui_clear_multiplayer_variant(void)
   game_set_game_variant(0);
 }
 
-/* player_ui_get_active_player_profile (0xe0980) — XBE naked draft (batch 162). */
-#if defined(__clang__)
-static void (*const be0980_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be0980_exitfn)(int) = system_exit;
-static void * (*const be0980_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-void player_ui_get_active_player_profile(void)
+/* player_ui_get_active_player_profile (0xe0980) — readable C lift. */
+void player_ui_get_active_player_profile(int16_t local_player_index, void *out_profile)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "jl .Lplayer_ui_get_active_player_profile_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jge .Lplayer_ui_get_active_player_profile_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lplayer_ui_get_active_player_profile_2\n\t"
-      ".Lplayer_ui_get_active_player_profile_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xee\n\t"
-      "pushl $0x282724\n\t"
-      "pushl $0x2827a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_ui_get_active_player_profile_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0x38, %%eax, %%eax\n\t"
-      "pushl $0x30\n\t"
-      "addl $0x46bee0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be0980_assert), [exitfn] "m"(be0980_exitfn), [c8e0b0] "m"(be0980_c8e0b0)
-      : "memory");
+  extern char DAT_002827a0[];
+  extern char DAT_00282724[];
+  if ((int16_t)local_player_index < 0 || (int16_t)local_player_index >= 4 || !out_profile) {
+    display_assert(DAT_002827a0, DAT_00282724, 0xee, 1);
+    system_exit(-1);
+  }
+  csmemcpy(out_profile, (void *)(0x46bee0 + (int16_t)local_player_index * 0x38), 0x30);
 }
-#else
-#error "player_ui_get_active_player_profile: clang naked draft required"
-#endif
-
 
 /* player_ui_get_active_player_profile_index (0xe09e0) — readable C lift. */
 int player_ui_get_active_player_profile_index(short local_player_index)

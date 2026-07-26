@@ -18303,7 +18303,7 @@
         {
           "addr": "0xe0980",
           "decl": "void player_ui_get_active_player_profile(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe09e0",
