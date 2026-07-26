@@ -185,7 +185,8 @@ def pick(
                 om.pop()
             while cm and cm[-1] == "nop":
                 cm.pop()
-            if len(om) < 5:
+            min_ins = 1 if use_cand_end else 5
+            if len(om) < min_ins:
                 continue
             pct = SequenceMatcher(None, om, cm, autojunk=False).ratio() * 100
         except Exception:
@@ -404,7 +405,7 @@ def main() -> int:
     if args.build:
         docker_build()
     if args.register:
-        register_waves(batches)
+        register_waves(batches, update_existing=args.wave_weaks)
     if args.score:
         fail = score_batches(batches)
         if fail:

@@ -2097,66 +2097,155 @@ char ai_adjust_damage(int player_index, void *damage_params, float *scale)
   return adjusted;
 }
 
-/* 0x3fb40 — collect inactive encounter/actor records for recycling. */
-void ai_find_inactive_encounters(void *out_list, int buf_size)
+/* ai_find_inactive_encounters (0x3fb40) — XBE naked draft (batch 221). */
+#if defined(__clang__)
+static void (*const b3fb40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b3fb40_exitfn)(int) = system_exit;
+static void (*const b3fb40_c59a00)(int *iter, int clump_handle) = encounter_actor_iterator_new;
+static int (*const b3fb40_c59a50)(int *iter) = encounter_actor_iterator_next;
+static void (*const b3fb40_c59990)(int iter, char param_2) = encounter_iterator_new;
+static void * (*const b3fb40_c599c0)(int iter) = FUN_000599c0;
+static void __cdecl (*const b3fb40_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
+
+__attribute__((naked, noinline))
+void ai_find_inactive_encounters(void *out_list __attribute__((unused)), int buf_size __attribute__((unused)))
 {
-  int actor_iter[3];
-  int enc_iter[6];
-  int actor_rec;
-  int enc_rec;
-  int16_t count;
-  int entry_off;
-
-  if (buf_size >= 0xc04) {
-    display_assert("buffer_size<MAXIMUM_INACTIVE_ENCOUNTER_BUFFER_SIZE",
-                   "c:\\halo\\SOURCE\\ai\\ai.c", 0x22e, 1);
-    system_exit(-1);
-  }
-
-  *(int16_t *)out_list = 0;
-  *(int16_t *)((char *)out_list + 2) = 0;
-
-  encounter_actor_iterator_new(actor_iter, -1);
-  for (actor_rec = encounter_actor_iterator_next(actor_iter); actor_rec != 0;
-       actor_rec = encounter_actor_iterator_next(actor_iter)) {
-    count = *(int16_t *)out_list;
-    if (count >= 0x100)
-      break;
-    if (*(char *)(actor_rec + 8) != 0)
-      continue;
-    if (*(int *)(actor_rec + 0xc) == -1)
-      continue;
-    entry_off = 4 + count * 0xc;
-    *(char *)((char *)out_list + entry_off + 0) = 1;
-    *(int *)((char *)out_list + entry_off + 4) = actor_iter[1];
-    *(int *)((char *)out_list + entry_off + 8) = *(int *)(actor_rec + 0xc);
-    *(int16_t *)out_list = count + 1;
-  }
-
-  encounter_iterator_new((int)enc_iter, 0);
-  for (enc_rec = (int)FUN_000599c0((int)enc_iter); enc_rec != 0;
-       enc_rec = (int)FUN_000599c0((int)enc_iter)) {
-    count = *(int16_t *)out_list;
-    if (count >= 0x100)
-      break;
-    if (*(char *)(enc_rec + 0xd) != 0)
-      continue;
-    if (*(int16_t *)(enc_rec + 0x2a) <= 0)
-      continue;
-    if (*(int *)(enc_rec + 0x10) == -1)
-      continue;
-    entry_off = 4 + count * 0xc;
-    *(char *)((char *)out_list + entry_off + 0) = 0;
-    *(int *)((char *)out_list + entry_off + 4) = *(int *)((char *)enc_iter + 0x10);
-    *(int *)((char *)out_list + entry_off + 8) = *(int *)(enc_rec + 0x10);
-    *(int16_t *)out_list = count + 1;
-  }
-
-  count = *(int16_t *)out_list;
-  if (count > 0) {
-    qsort((char *)out_list + 4, count, 0xc, (void *)FUN_0003fb00);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "cmpw $0xc04, 0xc(%%ebp)\n\t"
+      "jae .Lai_find_inactive_encounters_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x22e\n\t"
+      "pushl $0x2575c0\n\t"
+      "pushl $0x257648\n\t"
+      "call *%[assert]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_find_inactive_encounters_1:\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "movw $0, (%%esi)\n\t"
+      "movw $0, 0x2(%%esi)\n\t"
+      "call *%[c59a00]\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c59a50]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lai_find_inactive_encounters_4\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lai_find_inactive_encounters_2:\n\t"
+      "movw (%%esi), %%cx\n\t"
+      "cmpw $0x100, %%cx\n\t"
+      "jge .Lai_find_inactive_encounters_4\n\t"
+      "movb 0x8(%%eax), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .Lai_find_inactive_encounters_3\n\t"
+      "cmpl %%edi, 0xc(%%eax)\n\t"
+      "je .Lai_find_inactive_encounters_3\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "leal (%%ecx,%%ecx,2), %%edx\n\t"
+      "movb $1, 0x4(%%esi,%%edx,4)\n\t"
+      "movswl (%%esi), %%ecx\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "leal (%%ecx,%%ecx,2), %%ecx\n\t"
+      "movl %%edx, 0x8(%%esi,%%ecx,4)\n\t"
+      "movswl (%%esi), %%ecx\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "incl %%ecx\n\t"
+      "leal (%%ecx,%%ecx,2), %%ecx\n\t"
+      "movl %%edx, (%%esi,%%ecx,4)\n\t"
+      "incw (%%esi)\n\t"
+      ".Lai_find_inactive_encounters_3:\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c59a50]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lai_find_inactive_encounters_2\n\t"
+      ".Lai_find_inactive_encounters_4:\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c59990]\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c599c0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lai_find_inactive_encounters_7\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lai_find_inactive_encounters_5:\n\t"
+      "movw (%%esi), %%cx\n\t"
+      "cmpw $0x100, %%cx\n\t"
+      "jge .Lai_find_inactive_encounters_7\n\t"
+      "movb 0xd(%%eax), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .Lai_find_inactive_encounters_6\n\t"
+      "cmpw $0, 0x2a(%%eax)\n\t"
+      "jle .Lai_find_inactive_encounters_6\n\t"
+      "cmpl %%edi, 0x10(%%eax)\n\t"
+      "je .Lai_find_inactive_encounters_6\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "leal (%%ecx,%%ecx,2), %%ecx\n\t"
+      "movb $0, 0x4(%%esi,%%ecx,4)\n\t"
+      "movswl (%%esi), %%ecx\n\t"
+      "leal (%%ecx,%%ecx,2), %%edx\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%esi,%%edx,4)\n\t"
+      "movswl (%%esi), %%ecx\n\t"
+      "movl 0x10(%%eax), %%eax\n\t"
+      "incl %%ecx\n\t"
+      "leal (%%ecx,%%ecx,2), %%edx\n\t"
+      "movl %%eax, (%%esi,%%edx,4)\n\t"
+      "incw (%%esi)\n\t"
+      ".Lai_find_inactive_encounters_6:\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c599c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lai_find_inactive_encounters_5\n\t"
+      ".Lai_find_inactive_encounters_7:\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lai_find_inactive_encounters_8\n\t"
+      "pushl $0x3fb00\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%edx\n\t"
+      "addl $4, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d9260]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lai_find_inactive_encounters_8:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [assert] "m"(b3fb40_assert), [exitfn] "m"(b3fb40_exitfn), [c59a00] "m"(b3fb40_c59a00), [c59a50] "m"(b3fb40_c59a50), [c59990] "m"(b3fb40_c59990), [c599c0] "m"(b3fb40_c599c0), [c1d9260] "m"(b3fb40_c1d9260)
+      : "memory");
 }
+#else
+#error "ai_find_inactive_encounters: clang naked draft required"
+#endif
+
 
 /* 0x3fc90 — erase inactive encounters/actors collected for recycling. */
 char ai_release_inactive_encounters(char *result_description,

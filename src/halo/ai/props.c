@@ -69,113 +69,178 @@ void FUN_00064160(void)
   data_make_invalid(prop_data);
 }
 
-/* 0x64400 — prop_unlink_from_actor (@eax=actor_handle, @edi=prop_handle).
- *
- * Splices prop_handle out of the actor's singly-linked prop chain.  The chain
- * is rooted at actor+0x50 and linked through prop+0x8 (the next-handle field
- * confirmed by prop_iterator_next / FUN_00064570).
- *
- * Before unlinking, four NDEBUG assertions verify the prop is not still
- * referenced by any actor look-direction or idle-direction slot:
- *   - actor+0x270        : target prop index
- *   - actor+0x544/54c/550: secondary look direction (type==1 means prop)
- *   - actor+0x55c/56c/570: idle major direction
- *   - actor+0x55f/57c/580: idle minor direction
- *
- * Calling convention: register args loaded by the thunk —
- *   @<eax> = actor_handle, @<edi> = prop_handle.
- * In C this is a normal 2-argument function; the thunk handles register setup.
- *
- * Call-site verification table (from disassembly):
- *   Caller 0x64789 (prop_new_unacknowledged):
- *     MOV EAX,EBX   (EBX = actor_handle from [EBP+0x8]) -> @eax  YES
- *     CALL 0x64400  (EDI = prop_handle held in EDI)       -> @edi  YES
- *   Caller 0x64a80 (prop_detach):
- *     MOV EAX,[EBP+0x8]  actor_handle -> @eax             YES
- *     MOV EDI,[EBP+0xc]  prop_handle  -> @edi             YES
- *
- * Store-offset table (no struct is filled; fields are read for assertions
- * and a singly-linked pointer is updated):
- *   actor+0x50        : prop chain head handle (read & conditionally written)
- *   prop+0x8          : next-handle link (read and used as splice target) */
-void FUN_00064400(int actor_handle, int prop_handle) /* @<eax>, @<edi> */
+/* FUN_00064400 (0x64400) — XBE naked draft (batch 220). */
+#if defined(__clang__)
+static void *(*const b64400_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b64400_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b64400_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void FUN_00064400(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)))
 {
-  char *actor;
-  char *head_prop;
-  char *cur_prop;
-  int head_handle;
-  int next_handle;
-  int cur_handle;
-  char *prev_next_field; /* pointer to the &prev->next field, for splice */
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-
-  /* Assertion: prop must be the actor's current target prop. */
-  if (*(int *)(actor + 0x270) == prop_handle) {
-    display_assert("actor->target.target_prop_index != prop_index",
-                   "c:\\halo\\SOURCE\\ai\\props.c", 0x19b, 1);
-    system_exit(-1);
-  }
-
-  /* Assertion: prop must not be the secondary look direction. */
-  if ((*(short *)(actor + 0x544) != 0) && (*(short *)(actor + 0x54c) == 1) &&
-      (*(int *)(actor + 0x550) == prop_handle)) {
-    display_assert(
-      "!((actor->control.secondary_look_type != _secondary_look_none) && "
-      "(actor->control.secondary_look_direction.type == "
-      "_direction_specification_prop) && "
-      "(actor->control.secondary_look_direction.prop_index == prop_index))",
-      "c:\\halo\\SOURCE\\ai\\props.c", 0x19e, 1);
-    system_exit(-1);
-  }
-
-  /* Assertion: prop must not be the idle major direction. */
-  if ((*(char *)(actor + 0x55c) != 0) && (*(short *)(actor + 0x56c) == 1) &&
-      (*(int *)(actor + 0x570) == prop_handle)) {
-    display_assert(
-      "!((actor->control.idle_major_active) && "
-      "(actor->control.idle_major_direction.type == "
-      "_direction_specification_prop) && "
-      "(actor->control.idle_major_direction.prop_index == prop_index))",
-      "c:\\halo\\SOURCE\\ai\\props.c", 0x1a1, 1);
-    system_exit(-1);
-  }
-
-  /* Assertion: prop must not be the idle minor direction. */
-  if ((*(char *)(actor + 0x55f) != 0) && (*(short *)(actor + 0x57c) == 1) &&
-      (*(int *)(actor + 0x580) == prop_handle)) {
-    display_assert(
-      "!((actor->control.idle_minor_active) && "
-      "(actor->control.idle_minor_direction.type == "
-      "_direction_specification_prop) && "
-      "(actor->control.idle_minor_direction.prop_index == prop_index))",
-      "c:\\halo\\SOURCE\\ai\\props.c", 0x1a4, 1);
-    system_exit(-1);
-  }
-
-  /* Splice prop_handle out of the singly-linked chain rooted at actor+0x50.
-   * Chain links through prop+0x8 (confirmed from prop_iterator_next). */
-  head_handle = *(int *)(actor + 0x50);
-  head_prop = (char *)datum_get(prop_data, head_handle);
-
-  if (*(int *)(actor + 0x50) == prop_handle) {
-    /* Removing the head: advance head to head->next. */
-    *(int *)(actor + 0x50) = *(int *)(head_prop + 8);
-    return;
-  }
-
-  /* Walk the chain until we find the node whose next == prop_handle. */
-  cur_prop = head_prop;
-  do {
-    prev_next_field = cur_prop + 8; /* &cur_prop->next_handle */
-    next_handle = *(int *)(cur_prop + 8);
-    cur_prop = (char *)datum_get(prop_data, next_handle);
-    cur_handle = *(int *)prev_next_field; /* re-read from the pointer */
-  } while (cur_handle != prop_handle);
-
-  /* prev->next = removed->next */
-  *(int *)prev_next_field = *(int *)(cur_prop + 8);
+  __asm__ volatile(
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x270(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "jne .LFUN_00064400_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19b\n\t"
+      "pushl $0x25f134\n\t"
+      "pushl $0x25f43c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00064400_1:\n\t"
+      "cmpw $0, 0x544(%%esi)\n\t"
+      "je .LFUN_00064400_2\n\t"
+      "cmpw $1, 0x54c(%%esi)\n\t"
+      "jne .LFUN_00064400_2\n\t"
+      "cmpl %%edi, 0x550(%%esi)\n\t"
+      "jne .LFUN_00064400_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19e\n\t"
+      "pushl $0x25f134\n\t"
+      "pushl $0x25f360\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00064400_2:\n\t"
+      "movb 0x55c(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00064400_3\n\t"
+      "cmpw $1, 0x56c(%%esi)\n\t"
+      "jne .LFUN_00064400_3\n\t"
+      "cmpl %%edi, 0x570(%%esi)\n\t"
+      "jne .LFUN_00064400_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a1\n\t"
+      "pushl $0x25f134\n\t"
+      "pushl $0x25f2a8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00064400_3:\n\t"
+      "movb 0x55f(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00064400_4\n\t"
+      "cmpw $1, 0x57c(%%esi)\n\t"
+      "jne .LFUN_00064400_4\n\t"
+      "cmpl %%edi, 0x580(%%esi)\n\t"
+      "jne .LFUN_00064400_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a4\n\t"
+      "pushl $0x25f134\n\t"
+      "pushl $0x25f1f0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00064400_4:\n\t"
+      "movl 0x50(%%esi), %%edx\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x50(%%esi), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%edi, %%ecx\n\t"
+      "je .LFUN_00064400_6\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LFUN_00064400_5:\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl 0x5ab23c, %%edx\n\t"
+      "leal 0x8(%%eax), %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%edi, %%ecx\n\t"
+      "jne .LFUN_00064400_5\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".LFUN_00064400_6:\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x50(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x50(%%eax), %%edx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "movl %%ecx, (%%esi)\n\t"
+      "je .LFUN_00064400_7\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      ".LFUN_00064400_7:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [dget] "m"(b64400_dget), [assert] "m"(b64400_assert), [exitfn] "m"(b64400_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00064400: clang naked draft required"
+#endif
+
 
 /* 0x64540 — prop_iterator_new.
  * Initialises a prop iterator for the props associated with a given actor.

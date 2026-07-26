@@ -1056,177 +1056,517 @@ char collision_cylinder_test_vector(void *cylinder, float *origin,
   return 1;
 }
 
-/* 0x14c220 — ray vs prism feature. */
-char collision_prism_test_vector(void *prism, float *origin, float *direction,
-                                 float *out_t, float *out_plane)
+/* collision_prism_test_vector (0x14c220) — XBE naked draft (batch 2200). */
+#if defined(__clang__)
+static void (*const b14c220_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
+
+__attribute__((naked, noinline))
+char collision_prism_test_vector(void *prism __attribute__((unused)), float *origin __attribute__((unused)), float *direction __attribute__((unused)), float *out_t __attribute__((unused)), float *out_plane __attribute__((unused)))
 {
-  char *p = (char *)prism;
-  float *plane_n = (float *)(p + 0xc);
-  float plane_d = *(float *)(p + 0x18);
-  float height = *(float *)(p + 0x1c);
-  float t_enter = 0.0f;
-  float t_exit = 1.0f;
-  float denom;
-  float dist0;
-  float origin_2d[2];
-  float dir_2d[2];
-  float p0[3];
-  float p1[3];
-  int edge_count;
-  int i;
-
-  dist0 = plane_n[0] * origin[0] + plane_n[1] * origin[1] +
-          plane_n[2] * origin[2] - plane_d;
-  denom = plane_n[0] * direction[0] + plane_n[1] * direction[1] +
-          plane_n[2] * direction[2];
-
-  if (denom != *(float *)0x2533c0) {
-    float inv = *(float *)0x2533c8 / denom;
-    float a = -dist0 * inv;
-    float b = -(dist0 - height) * inv;
-    float lo = a < b ? a : b;
-    float hi = a < b ? b : a;
-    if (t_enter < lo)
-      t_enter = lo;
-    if (t_exit > hi)
-      t_exit = hi;
-    if (!(t_enter <= t_exit))
-      return 0;
-  } else {
-    if (!(dist0 >= *(float *)0x2533c0) || !(dist0 < height))
-      return 0;
-  }
-
-  /* Project ray endpoints onto prism plane then to 2D for edge clipping. */
-  {
-    float nd = -dist0;
-    p0[0] = nd * plane_n[0] + origin[0];
-    p0[1] = nd * plane_n[1] + origin[1];
-    p0[2] = nd * plane_n[2] + origin[2];
-    nd = -denom;
-    p1[0] = nd * plane_n[0] + direction[0];
-    p1[1] = nd * plane_n[1] + direction[1];
-    p1[2] = nd * plane_n[2] + direction[2];
-  }
-  FUN_00061df0(p0, *(uint16_t *)(p + 0x20), *(uint8_t *)(p + 0x22), origin_2d);
-  FUN_00061df0(p1, *(uint16_t *)(p + 0x20), *(uint8_t *)(p + 0x22), dir_2d);
-
-  edge_count = *(int *)(p + 0x24);
-  for (i = 0; i < edge_count; i++) {
-    int j = ((i + 1 >= edge_count) - 1) & (i + 1);
-    float *edge = (float *)(p + 0x28 + i * 8);
-    float *edge_n = (float *)(p + 0x28 + j * 8);
-    float ex = edge_n[0] - edge[0];
-    float ey = edge_n[1] - edge[1];
-    float rx = origin_2d[0] - edge[0];
-    float ry = origin_2d[1] - edge[1];
-    float cross_r = ex * dir_2d[1] - ey * dir_2d[0];
-    float cross_o = ex * ry - ey * rx;
-    float u;
-
-    if (cross_r == *(float *)0x2533c0) {
-      if (cross_o < *(float *)0x2533c0)
-        return 0;
-      continue;
-    }
-    u = cross_o / cross_r;
-    if (cross_r < *(float *)0x2533c0) {
-      if (t_enter < u)
-        t_enter = u;
-    } else {
-      if (t_exit > u)
-        t_exit = u;
-    }
-    if (!(t_enter <= t_exit))
-      return 0;
-  }
-
-  *out_t = t_enter;
-  out_plane[0] = plane_n[0];
-  out_plane[1] = plane_n[1];
-  out_plane[2] = plane_n[2];
-  out_plane[3] = plane_d + height;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x28, %%esp\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "flds 0x10(%%esi)\n\t"
+      "pushl %%edi\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "flds 0x14(%%esi)\n\t"
+      "movl $0x3f800000, -0x8(%%ebp)\n\t"
+      "fmuls 0x8(%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%ecx)\n\t"
+      "fmuls 0xc(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0x18(%%esi)\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      "flds 0x14(%%esi)\n\t"
+      "fmuls 0x8(%%edx)\n\t"
+      "flds 0x10(%%esi)\n\t"
+      "fmuls 0x4(%%edx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%edx)\n\t"
+      "fmuls 0xc(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsts 0x10(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Lcollision_prism_test_vector_8\n\t"
+      "flds 0x2533c8\n\t"
+      "fdivs 0x10(%%ebp)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fchs\n\t"
+      "fstps 0xc(%%ebp)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fsubs 0x1c(%%esi)\n\t"
+      ".byte 0xde, 0xc9\n\t"
+      "fchs\n\t"
+      "flds 0x2533c0\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lcollision_prism_test_vector_2\n\t"
+      "fcomps 0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lcollision_prism_test_vector_1\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      ".Lcollision_prism_test_vector_1:\n\t"
+      "flds 0x2533c8\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lcollision_prism_test_vector_5\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jmp .Lcollision_prism_test_vector_6\n\t"
+      ".Lcollision_prism_test_vector_2:\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lcollision_prism_test_vector_3\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "jmp .Lcollision_prism_test_vector_4\n\t"
+      ".Lcollision_prism_test_vector_3:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lcollision_prism_test_vector_4:\n\t"
+      "flds 0x2533c8\n\t"
+      "fcomps 0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lcollision_prism_test_vector_6\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jmp .Lcollision_prism_test_vector_6\n\t"
+      ".Lcollision_prism_test_vector_5:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lcollision_prism_test_vector_6:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lcollision_prism_test_vector_9\n\t"
+      ".Lcollision_prism_test_vector_7:\n\t"
+      "popl %%edi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcollision_prism_test_vector_8:\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lcollision_prism_test_vector_7\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x1c(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "je .Lcollision_prism_test_vector_7\n\t"
+      ".Lcollision_prism_test_vector_9:\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "fchs\n\t"
+      "movw 0x20(%%esi), %%ax\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0xc(%%esi)\n\t"
+      "fadds (%%ecx)\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x10(%%esi)\n\t"
+      "fadds 0x4(%%ecx)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "fmuls 0x14(%%esi)\n\t"
+      "fadds 0x8(%%ecx)\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x1c(%%ebp), %%ecx\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fchs\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0xc(%%esi)\n\t"
+      "fadds (%%edx)\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x10(%%esi)\n\t"
+      "fadds 0x4(%%edx)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "fmuls 0x14(%%esi)\n\t"
+      "fadds 0x8(%%edx)\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movb 0x22(%%esi), %%dl\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c61df0]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movb 0x22(%%esi), %%al\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x20(%%esi), %%cx\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x28(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c61df0]\n\t"
+      "movl 0x24(%%esi), %%edi\n\t"
+      "addl $0x20, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jle .Lcollision_prism_test_vector_16\n\t"
+      "movl $1, %%edx\n\t"
+      "leal 0x28(%%esi), %%ecx\n\t"
+      ".Lcollision_prism_test_vector_10:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl %%edi, %%edx\n\t"
+      "setge %%al\n\t"
+      "decl %%eax\n\t"
+      "andl %%edx, %%eax\n\t"
+      "flds 0x28(%%esi,%%eax,8)\n\t"
+      "fsubs (%%ecx)\n\t"
+      "flds 0x2c(%%esi,%%eax,8)\n\t"
+      "fsubs 0x4(%%ecx)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fsubs (%%ecx)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fsubs 0x4(%%ecx)\n\t"
+      "fld %%st(2)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmul %%st(5), %%st(0)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      ".byte 0xde, 0xcb\n\t"
+      "fxch %%st(1)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      ".byte 0xde, 0xea\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Lcollision_prism_test_vector_14\n\t"
+      "fdivs 0x8(%%ebp)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lcollision_prism_test_vector_11\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lcollision_prism_test_vector_12\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "jmp .Lcollision_prism_test_vector_13\n\t"
+      ".Lcollision_prism_test_vector_11:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lcollision_prism_test_vector_12\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jmp .Lcollision_prism_test_vector_13\n\t"
+      ".Lcollision_prism_test_vector_12:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lcollision_prism_test_vector_13:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lcollision_prism_test_vector_7\n\t"
+      "jmp .Lcollision_prism_test_vector_15\n\t"
+      ".Lcollision_prism_test_vector_14:\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lcollision_prism_test_vector_7\n\t"
+      ".Lcollision_prism_test_vector_15:\n\t"
+      "addl $8, %%ecx\n\t"
+      "incl %%edx\n\t"
+      "leal -0x1(%%edx), %%eax\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "jl .Lcollision_prism_test_vector_10\n\t"
+      ".Lcollision_prism_test_vector_16:\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "fstps (%%ecx)\n\t"
+      "movl 0xc(%%esi), %%ecx\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%ecx, (%%edx)\n\t"
+      "movl 0x10(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl 0x14(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "flds 0x18(%%esi)\n\t"
+      "fadds 0x1c(%%esi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "fstps 0xc(%%eax)\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [c61df0] "m"(b14c220_c61df0)
+      : "memory");
 }
+#else
+#error "collision_prism_test_vector: clang naked draft required"
+#endif
 
-/* 0x14c4b0 — ray vs all features in a collision_features buffer. */
-char FUN_0014c4b0(void *features, float *position, float *velocity,
-                  void *out_result)
+
+/* FUN_0014c4b0 (0x14c4b0) — XBE naked draft (batch 220). */
+#if defined(__clang__)
+static char (*const b14c4b0_c14bdb0)(void *sphere, float *origin, float *direction, float *out_t, float *out_plane) = collision_sphere_test_vector;
+static char (*const b14c4b0_c14bf30)(void *cylinder, float *origin, float *direction, float *out_t, float *out_plane) = collision_cylinder_test_vector;
+static char (*const b14c4b0_c14c220)(void *prism, float *origin, float *direction, float *out_t, float *out_plane) = collision_prism_test_vector;
+
+__attribute__((naked, noinline))
+char FUN_0014c4b0(void *features __attribute__((unused)), float *position __attribute__((unused)), float *velocity __attribute__((unused)), void *out_result __attribute__((unused)))
 {
-  char *base = (char *)features;
-  float *out = (float *)out_result;
-  short best_type = -1;
-  short best_index = -1;
-  float best_t = 3.4028235e+38f;
-  float best_plane[4];
-  short type;
-  short i;
-
-  for (type = 0; type < 3; type++) {
-    short count = *(short *)(base + type * 2);
-    for (i = 0; i < count; i++) {
-      float t;
-      float plane[4];
-      char hit = 0;
-
-      if (type == 0)
-        hit = collision_sphere_test_vector(base + 8 + i * 0x1c, position,
-                                           velocity, &t, plane);
-      else if (type == 1)
-        hit = collision_cylinder_test_vector(base + 0x1c08 + i * 0x28, position,
-                                             velocity, &t, plane);
-      else
-        hit = collision_prism_test_vector(base + 0x4408 + i * 0x68, position,
-                                          velocity, &t, plane);
-
-      if (!hit)
-        continue;
-      if (!(best_t > t))
-        continue;
-      if (!(plane[0] * velocity[0] + plane[1] * velocity[1] +
-                plane[2] * velocity[2] <
-            *(float *)0x26a810))
-        continue;
-
-      best_t = t;
-      best_type = type;
-      best_index = i;
-      best_plane[0] = plane[0];
-      best_plane[1] = plane[1];
-      best_plane[2] = plane[2];
-      best_plane[3] = plane[3];
-    }
-  }
-
-  if (best_type == -1) {
-    out[0] = *(float *)0x2533c8;
-    out[1] = position[0] + velocity[0];
-    out[2] = position[1] + velocity[1];
-    out[3] = position[2] + velocity[2];
-    return 0;
-  }
-
-  out[0] = best_t;
-  out[1] = position[0] + best_t * velocity[0];
-  out[2] = position[1] + best_t * velocity[1];
-  out[3] = position[2] + best_t * velocity[2];
-  out[4] = best_plane[0];
-  out[5] = best_plane[1];
-  out[6] = best_plane[2];
-  out[7] = best_plane[3];
-  {
-    char *feature_data;
-    if (best_type == 0)
-      feature_data = base + 8 + best_index * 0x1c;
-    else if (best_type == 1)
-      feature_data = base + 0x1c08 + best_index * 0x28;
-    else
-      feature_data = base + 0x4408 + best_index * 0x68;
-    *(int *)((char *)out_result + 0x20) = *(int *)feature_data;
-    *(int *)((char *)out_result + 0x24) = *(int *)(feature_data + 4);
-    *((char *)out_result + 0x28) = feature_data[8];
-    *((char *)out_result + 0x29) = feature_data[9];
-    *(short *)((char *)out_result + 0x2a) = *(short *)(feature_data + 0xa);
-  }
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x38, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "movl $0x7f7fffff, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      ".LFUN_0014c4b0_1:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "leal (%%edx,%%ecx,2), %%ecx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpw %%si, (%%ecx)\n\t"
+      "movl %%ecx, -0x18(%%ebp)\n\t"
+      "jle .LFUN_0014c4b0_7\n\t"
+      "jmp .LFUN_0014c4b0_2\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_0014c4b0_2:\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .LFUN_0014c4b0_3\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0x1c, %%eax, %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x8(%%eax,%%edx,1), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c14bdb0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0014c4b0_5\n\t"
+      "jmp .LFUN_0014c4b0_6\n\t"
+      ".LFUN_0014c4b0_3:\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .LFUN_0014c4b0_4\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "leal (%%eax,%%eax,4), %%eax\n\t"
+      "leal 0x1c08(%%edx,%%eax,8), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c14bf30]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0014c4b0_5\n\t"
+      "jmp .LFUN_0014c4b0_6\n\t"
+      ".LFUN_0014c4b0_4:\n\t"
+      "cmpw $2, %%ax\n\t"
+      "jne .LFUN_0014c4b0_6\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0x68, %%eax, %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x4408(%%eax,%%edx,1), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c14c220]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0014c4b0_6\n\t"
+      ".LFUN_0014c4b0_5:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_0014c4b0_6\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fmuls (%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fcomps 0x26a810\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_0014c4b0_6\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl -0x28(%%ebp), %%ecx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "movl -0x24(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0x38(%%ebp)\n\t"
+      "movl -0x1c(%%ebp), %%ecx\n\t"
+      "movl %%esi, -0x10(%%ebp)\n\t"
+      "movl %%edx, -0x34(%%ebp)\n\t"
+      "movl %%eax, -0x30(%%ebp)\n\t"
+      "movl %%ecx, -0x2c(%%ebp)\n\t"
+      ".LFUN_0014c4b0_6:\n\t"
+      "movl -0x18(%%ebp), %%edx\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "incl %%esi\n\t"
+      "cmpw (%%edx), %%si\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "jl .LFUN_0014c4b0_2\n\t"
+      ".LFUN_0014c4b0_7:\n\t"
+      "incl %%eax\n\t"
+      "cmpw $3, %%ax\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "jl .LFUN_0014c4b0_1\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "je .LFUN_0014c4b0_12\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "leal 0x10(%%eax), %%esi\n\t"
+      "fstps (%%eax)\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "subl $0, %%ecx\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls (%%edi)\n\t"
+      "fadds (%%ebx)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "fadds 0x4(%%ebx)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "movl -0x38(%%ebp), %%edi\n\t"
+      "fadds 0x8(%%ebx)\n\t"
+      "fstps 0xc(%%eax)\n\t"
+      "movl %%edi, (%%esi)\n\t"
+      "movl -0x34(%%ebp), %%edi\n\t"
+      "movl %%edi, 0x4(%%esi)\n\t"
+      "movl -0x30(%%ebp), %%edi\n\t"
+      "movl %%edi, 0x8(%%esi)\n\t"
+      "movl -0x2c(%%ebp), %%edi\n\t"
+      "movl %%edi, 0xc(%%esi)\n\t"
+      "je .LFUN_0014c4b0_9\n\t"
+      "decl %%ecx\n\t"
+      "je .LFUN_0014c4b0_8\n\t"
+      "decl %%ecx\n\t"
+      "jne .LFUN_0014c4b0_11\n\t"
+      "movswl -0x10(%%ebp), %%ecx\n\t"
+      "imull $0x68, %%ecx, %%ecx\n\t"
+      "leal 0x4408(%%ecx,%%edx,1), %%ecx\n\t"
+      "jmp .LFUN_0014c4b0_10\n\t"
+      ".LFUN_0014c4b0_8:\n\t"
+      "movswl -0x10(%%ebp), %%ecx\n\t"
+      "leal (%%ecx,%%ecx,4), %%ecx\n\t"
+      "leal 0x1c08(%%edx,%%ecx,8), %%ecx\n\t"
+      "jmp .LFUN_0014c4b0_10\n\t"
+      ".LFUN_0014c4b0_9:\n\t"
+      "movswl -0x10(%%ebp), %%ecx\n\t"
+      "imull $0x1c, %%ecx, %%ecx\n\t"
+      "leal 0x8(%%ecx,%%edx,1), %%ecx\n\t"
+      ".LFUN_0014c4b0_10:\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, 0x20(%%eax)\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl %%edx, 0x24(%%eax)\n\t"
+      "movb 0x8(%%ecx), %%dl\n\t"
+      "movb %%dl, 0x28(%%eax)\n\t"
+      "movb 0x9(%%ecx), %%dl\n\t"
+      "movb %%dl, 0x29(%%eax)\n\t"
+      "movw 0xa(%%ecx), %%cx\n\t"
+      "movw %%cx, 0x2a(%%eax)\n\t"
+      ".LFUN_0014c4b0_11:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0014c4b0_12:\n\t"
+      "movl $0x3f800000, (%%eax)\n\t"
+      "flds (%%ebx)\n\t"
+      "fadds (%%edi)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "flds 0x4(%%ebx)\n\t"
+      "fadds 0x4(%%edi)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "fadds 0x8(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "fstps 0xc(%%eax)\n\t"
+      "xorb %%al, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [c14bdb0] "m"(b14c4b0_c14bdb0), [c14bf30] "m"(b14c4b0_c14bf30), [c14c220] "m"(b14c4b0_c14c220)
+      : "memory");
 }
+#else
+#error "FUN_0014c4b0: clang naked draft required"
+#endif
+

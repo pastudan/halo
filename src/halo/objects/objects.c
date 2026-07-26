@@ -9210,161 +9210,339 @@ void object_choose_random_region_permutations(int object_handle __attribute__((u
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((regparm(1)))
 #endif
-void object_compute_function_values(int object_handle /* @<eax> */)
+/* object_compute_function_values (0x13e7b0) — XBE naked draft (batch 220). */
+#if defined(__clang__)
+static void *(*const b13e7b0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b13e7b0_tag)(int, int) = tag_get;
+static int (*const b13e7b0_gtime)(void) = game_time_get;
+static void *(*const b13e7b0_elem)(void *, int, int) = tag_block_get_element;
+static float (*const b13e7b0_c10a5e0)(int16_t function_type, float input) = FUN_0010a5e0;
+static double (*const b13e7b0_c1d9c2b)(double x) = floor;
+static void (*const b13e7b0_c1daf7e)(void) = FUN_001daf7e;
+static float (*const b13e7b0_c10a710)(short function_type, float t) = transition_function_evaluate;
+
+__attribute__((naked, noinline))
+void object_compute_function_values(int object_handle __attribute__((unused)))
 {
-  char *obj;
-  int obj_tag;
-  float time_base;
-  int func_count;
-  int16_t i;
-  int16_t counter;
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  obj_tag = (int)tag_get(0x6f626a65, *(int *)obj);
-
-  /* per-object time input, scaled to seconds */
-  time_base = (float)(game_time_get() + (object_handle & 0xffff) * 0x39) *
-              *(float *)0x2546a4;
-
-  func_count = *(int *)(obj_tag + 0x158);
-  i = 0;
-  counter = 0;
-  if (func_count <= 0) {
-    return;
-  }
-  do {
-    char *elem = (char *)tag_block_get_element(
-        (void *)(obj_tag + 0x158), (int)i, 0x168);
-    unsigned char active;
-    float value;
-    float t;
-    int16_t fn;
-    int16_t mode;
-
-    active = 1;
-
-    /* --- primary periodic waveform --- */
-    t = *(float *)(elem + 0x144);
-    fn = *(int16_t *)(elem + 0x8);
-    if (fn != 0) {
-      float fv = *(float *)(obj + 0xd0 + (int)fn * 4);
-      if (fv > *(float *)0x2533c0) {
-        t = t / fv;
-      }
-    }
-    t = t * time_base;
-    value = FUN_0010a5e0(*(int16_t *)(elem + 0xa), t);
-
-    /* --- optional amplitude function --- */
-    fn = *(int16_t *)(elem + 0xc);
-    if (fn != 0) {
-      value = *(float *)(obj + 0xd0 + (int)fn * 4) * value;
-    }
-
-    /* --- inversion (flag bit 0) --- */
-    if ((*(unsigned char *)elem & 1) != 0) {
-      value = *(float *)0x2533c8 - value;
-    }
-
-    /* --- secondary sinusoidal offset term (when elem+0x14 != 0) --- */
-    if (*(float *)(elem + 0x14) != *(float *)0x2533c0) {
-      float w = FUN_0010a5e0(*(int16_t *)(elem + 0xe),
-                             time_base * *(float *)(elem + 0x10));
-      w = (w - *(float *)0x253398) * *(float *)(elem + 0x14);
-      value = w + w + value;
-    }
-
-    /* --- step threshold (when elem+0x18 != 0): 1.0 if value>thr else 0.0 --- */
-    if (*(float *)(elem + 0x18) != *(float *)0x2533c0) {
-      float prev = value;
-      value = 1.0f;
-      if (prev <= *(float *)(elem + 0x18)) {
-        value = 0.0f;
-      }
-    }
-
-    /* --- exponent/floor stage (when elem+0x1c > 1) --- */
-    if (*(int16_t *)(elem + 0x1c) > 1) {
-      value = (float)floor((double)((float)*(int16_t *)(elem + 0x1c) * value)) *
-              *(float *)(elem + 0x140);
-    }
-
-    /* --- modulo wrap (when elem+0x13c > 0) --- */
-    if (*(float *)(elem + 0x13c) > *(float *)0x2533c0) {
-      value = x87_fmod(value, (double)*(float *)(elem + 0x13c));
-    }
-
-    /* --- additive function with clamp-to-1 --- */
-    fn = *(int16_t *)(elem + 0x22);
-    if (fn != 0) {
-      value = *(float *)(obj + 0xd0 + (int)fn * 4) + value;
-      if (value > *(float *)0x2533c8) {
-        value = *(float *)0x2533c8;
-      }
-    }
-
-    /* --- final multiplier function --- */
-    fn = *(int16_t *)(elem + 0x24);
-    if (fn != 0) {
-      value = *(float *)(obj + 0xd0 + (int)fn * 4) * value;
-    }
-
-    /* --- transition remap --- */
-    value = transition_function_evaluate(*(int16_t *)(elem + 0x1e), value);
-
-    /* --- scale (when elem+0x38 > 0) --- */
-    if (*(float *)(elem + 0x38) > *(float *)0x2533c0) {
-      value = value * *(float *)(elem + 0x38);
-    }
-
-    /* --- range remap (modes 1/2) --- */
-    mode = *(int16_t *)(elem + 0x26);
-    if (mode == 2) {
-      value = (*(float *)(elem + 0x2c) - *(float *)(elem + 0x28)) * value +
-              *(float *)(elem + 0x28);
-      if (*(float *)(elem + 0x28) + *(float *)0x253f44 >= value) {
-        active = (unsigned char)(*(unsigned int *)elem >> 2) & 1;
-      }
-    } else {
-      if (*(float *)(elem + 0x28) + *(float *)0x253f44 >= value) {
-        value = *(float *)(elem + 0x28);
-        active = (unsigned char)(*(unsigned int *)elem >> 2) & 1;
-      }
-      if (value > *(float *)(elem + 0x2c)) {
-        value = *(float *)(elem + 0x2c);
-      }
-      if (mode == 1) {
-        value = (value - *(float *)(elem + 0x28)) * *(float *)(elem + 0x138);
-      }
-    }
-
-    /* --- dependency on another function's active bit --- */
-    if (*(int16_t *)(elem + 0x36) != -1 &&
-        (*(unsigned char *)(obj + 0xd3) &
-         (unsigned char)(1 << (*(int16_t *)(elem + 0x36) & 0x1f))) == 0) {
-      active = 0;
-    }
-
-    /* --- accumulator wrap (flag bit 1), using prior slot value --- */
-    if ((*(unsigned char *)elem & 2) != 0) {
-      value = x87_fmod(value + *(float *)(obj + 0xe4 + (int)i * 4),
-                       *(double *)0x2573d8);
-    }
-
-    /* --- store result and update active bitmask --- */
-    *(float *)(obj + 0xe4 + (int)i * 4) = value;
-    if (active != 0) {
-      *(unsigned char *)(obj + 0xd3) =
-          *(unsigned char *)(obj + 0xd3) | (unsigned char)(1 << ((int)i & 0x1f));
-    } else {
-      *(unsigned char *)(obj + 0xd3) =
-          *(unsigned char *)(obj + 0xd3) & ~(unsigned char)(1 << ((int)i & 0x1f));
-    }
-
-    counter = counter + 1;
-    i = counter;
-  } while ((int)i < *(int *)(obj_tag + 0x158));
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[gtime]\n\t"
+      "movl 0x158(%%ebx), %%ecx\n\t"
+      "andl $0xffff, %%esi\n\t"
+      "imull $0x39, %%esi, %%esi\n\t"
+      "addl %%esi, %%eax\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "addl $0x158, %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "fildl -0x14(%%ebp)\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "movl %%ebx, -0x14(%%ebp)\n\t"
+      "fmuls 0x2546a4\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "jle .Lobject_compute_function_values_30\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jmp .Lobject_compute_function_values_2\n\t"
+      ".Lobject_compute_function_values_1:\n\t"
+      "movl -0x14(%%ebp), %%ebx\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lobject_compute_function_values_2:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "pushl $0x168\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movw 0x8(%%esi), %%ax\n\t"
+      "flds 0x144(%%esi)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movb $1, %%bl\n\t"
+      "je .Lobject_compute_function_values_6\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jl .Lobject_compute_function_values_3\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "flds 0xd0(%%edi,%%edx,4)\n\t"
+      "jmp .Lobject_compute_function_values_4\n\t"
+      ".Lobject_compute_function_values_3:\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "flds 0xd0(%%edi,%%eax,4)\n\t"
+      ".Lobject_compute_function_values_4:\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_compute_function_values_5\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "jmp .Lobject_compute_function_values_6\n\t"
+      ".Lobject_compute_function_values_5:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_function_values_6:\n\t"
+      "fmuls -0xc(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0xa(%%esi), %%cx\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c10a5e0]\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "movw 0xc(%%esi), %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lobject_compute_function_values_9\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jl .Lobject_compute_function_values_7\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "flds 0xd0(%%edi,%%edx,4)\n\t"
+      "jmp .Lobject_compute_function_values_8\n\t"
+      ".Lobject_compute_function_values_7:\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "flds 0xd0(%%edi,%%eax,4)\n\t"
+      ".Lobject_compute_function_values_8:\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_9:\n\t"
+      "testb $1, (%%esi)\n\t"
+      "je .Lobject_compute_function_values_10\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs -0x4(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_10:\n\t"
+      "flds 0x14(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Lobject_compute_function_values_11\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fmuls 0x10(%%esi)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0xe(%%esi), %%cx\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c10a5e0]\n\t"
+      "fsubs 0x253398\n\t"
+      "addl $8, %%esp\n\t"
+      "fmuls 0x14(%%esi)\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "fadds -0x4(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_11:\n\t"
+      "flds 0x18(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Lobject_compute_function_values_12\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "movl $0x3f800000, -0x4(%%ebp)\n\t"
+      "fcomps 0x18(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lobject_compute_function_values_12\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_12:\n\t"
+      "movw 0x1c(%%esi), %%ax\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jle .Lobject_compute_function_values_13\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movl %%edx, -0x18(%%ebp)\n\t"
+      "subl $8, %%esp\n\t"
+      "fildl -0x18(%%ebp)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "fstpl (%%esp)\n\t"
+      "call *%[c1d9c2b]\n\t"
+      "fmuls 0x140(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_13:\n\t"
+      "flds 0x13c(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_compute_function_values_14\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "flds 0x13c(%%esi)\n\t"
+      "call *%[c1daf7e]\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_14:\n\t"
+      "movw 0x22(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lobject_compute_function_values_17\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jl .Lobject_compute_function_values_15\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "flds 0xd0(%%edi,%%eax,4)\n\t"
+      "jmp .Lobject_compute_function_values_16\n\t"
+      ".Lobject_compute_function_values_15:\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "flds 0xd0(%%edi,%%ecx,4)\n\t"
+      ".Lobject_compute_function_values_16:\n\t"
+      "fadds -0x4(%%ebp)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_compute_function_values_17\n\t"
+      "movl $0x3f800000, -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_17:\n\t"
+      "movw 0x24(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lobject_compute_function_values_20\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jl .Lobject_compute_function_values_18\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "flds 0xd0(%%edi,%%edx,4)\n\t"
+      "jmp .Lobject_compute_function_values_19\n\t"
+      ".Lobject_compute_function_values_18:\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "flds 0xd0(%%edi,%%eax,4)\n\t"
+      ".Lobject_compute_function_values_19:\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_20:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x1e(%%esi), %%dx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c10a710]\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds 0x38(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_compute_function_values_21\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x38(%%esi)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_21:\n\t"
+      "movw 0x26(%%esi), %%cx\n\t"
+      "cmpw $2, %%cx\n\t"
+      "jne .Lobject_compute_function_values_22\n\t"
+      "flds 0x2c(%%esi)\n\t"
+      "fsubs 0x28(%%esi)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "fadds 0x28(%%esi)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds 0x28(%%esi)\n\t"
+      "fadds 0x253f44\n\t"
+      "fcomps -0x4(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lobject_compute_function_values_25\n\t"
+      "movl (%%esi), %%ebx\n\t"
+      "shrl $2, %%ebx\n\t"
+      "andb $1, %%bl\n\t"
+      "jmp .Lobject_compute_function_values_25\n\t"
+      ".Lobject_compute_function_values_22:\n\t"
+      "flds 0x28(%%esi)\n\t"
+      "fadds 0x253f44\n\t"
+      "fcomps -0x4(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lobject_compute_function_values_23\n\t"
+      "movl (%%esi), %%ebx\n\t"
+      "movl 0x28(%%esi), %%eax\n\t"
+      "shrl $2, %%ebx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "andb $1, %%bl\n\t"
+      ".Lobject_compute_function_values_23:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2c(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_compute_function_values_24\n\t"
+      "movl 0x2c(%%esi), %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_24:\n\t"
+      "cmpw $1, %%cx\n\t"
+      "jne .Lobject_compute_function_values_25\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fsubs 0x28(%%esi)\n\t"
+      "fmuls 0x138(%%esi)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_25:\n\t"
+      "movw 0x36(%%esi), %%cx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .Lobject_compute_function_values_26\n\t"
+      "movl $1, %%eax\n\t"
+      "shll %%cl, %%eax\n\t"
+      "movb 0xd3(%%edi), %%cl\n\t"
+      "testb %%al, %%cl\n\t"
+      "jne .Lobject_compute_function_values_26\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lobject_compute_function_values_26:\n\t"
+      "testb $2, (%%esi)\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      "je .Lobject_compute_function_values_27\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fadds 0xe4(%%edi,%%esi,4)\n\t"
+      "fldl 0x2573d8\n\t"
+      "call *%[c1daf7e]\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lobject_compute_function_values_27:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fstps 0xe4(%%edi,%%esi,4)\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "je .Lobject_compute_function_values_28\n\t"
+      "movb 0xd3(%%edi), %%al\n\t"
+      "movb $1, %%dl\n\t"
+      "shlb %%cl, %%dl\n\t"
+      "orb %%dl, %%al\n\t"
+      "movb %%al, 0xd3(%%edi)\n\t"
+      "jmp .Lobject_compute_function_values_29\n\t"
+      ".Lobject_compute_function_values_28:\n\t"
+      "movb $1, %%al\n\t"
+      "shlb %%cl, %%al\n\t"
+      "movb 0xd3(%%edi), %%cl\n\t"
+      "notb %%al\n\t"
+      "andb %%al, %%cl\n\t"
+      "movb %%cl, 0xd3(%%edi)\n\t"
+      ".Lobject_compute_function_values_29:\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jl .Lobject_compute_function_values_1\n\t"
+      ".Lobject_compute_function_values_30:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [get] "m"(b13e7b0_get), [tag] "m"(b13e7b0_tag), [gtime] "m"(b13e7b0_gtime), [elem] "m"(b13e7b0_elem), [c10a5e0] "m"(b13e7b0_c10a5e0), [c1d9c2b] "m"(b13e7b0_c1d9c2b), [c1daf7e] "m"(b13e7b0_c1daf7e), [c10a710] "m"(b13e7b0_c10a710)
+      : "memory");
 }
+#else
+#error "object_compute_function_values: clang naked draft required"
+#endif
+
 
 /*
  * objects_initialize — one-time initialisation of the object subsystem.

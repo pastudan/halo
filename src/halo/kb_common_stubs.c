@@ -7055,33 +7055,103 @@ void FUN_00133520(int object_handle, int widget_datum)
   (void)esi;
 }
 
-/* 0x1335e0 — 1D cubic Neville interpolate of (ta,a)..(td,d) at time t. */
-__attribute__((noinline)) float FUN_001335e0(float a, float b, float c, float d,
-                                             float ta, float tb, float tc,
-                                             float td, float t)
+/* FUN_001335e0 (0x1335e0) — XBE naked draft (batch 220). */
+#if defined(__clang__)
+static void (*const b1335e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1335e0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+float FUN_001335e0(float a __attribute__((unused)), float b __attribute__((unused)), float c __attribute__((unused)), float d __attribute__((unused)), float ta __attribute__((unused)), float tb __attribute__((unused)), float tc __attribute__((unused)), float td __attribute__((unused)), float t __attribute__((unused)))
 {
-  float slope_ab;
-  float slope_bc;
-  float slope_cd;
-  float u;
-  float v;
-  float w;
-
-  if (t < ta || t > td) {
-    display_assert((char *)0x29aae4, (char *)0x25ed80, 0x5fa, 1);
-    system_exit(-1);
-  }
-
-  slope_cd = (d - c) / (td - tc);
-  slope_bc = (c - b) / (tc - tb);
-  slope_ab = (b - a) / (tb - ta);
-
-  u = (slope_cd - slope_bc) / (td - tb);
-  v = (slope_bc - slope_ab) / (tc - ta);
-  w = (u - v) / (td - ta);
-
-  return ((w * (t - tc) + v) * (t - tb) + slope_ab) * (t - ta) + a;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x28(%%ebp)\n\t"
+      "fcomps 0x18(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001335e0_1\n\t"
+      "flds 0x28(%%ebp)\n\t"
+      "fcomps 0x24(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jnp .LFUN_001335e0_2\n\t"
+      ".LFUN_001335e0_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5fa\n\t"
+      "pushl $0x25ed80\n\t"
+      "pushl $0x29aae4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001335e0_2:\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "fsubs 0x10(%%ebp)\n\t"
+      "flds 0x24(%%ebp)\n\t"
+      "fsubs 0x20(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fsubs 0xc(%%ebp)\n\t"
+      "flds 0x20(%%ebp)\n\t"
+      "fsubs 0x1c(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fsubs 0x8(%%ebp)\n\t"
+      "flds 0x1c(%%ebp)\n\t"
+      "fsubs 0x18(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fstps 0xc(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fsub %%st(1), %%st(0)\n\t"
+      "flds 0x24(%%ebp)\n\t"
+      "fsubs 0x1c(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fstps 0x14(%%ebp)\n\t"
+      "fsubs 0xc(%%ebp)\n\t"
+      "flds 0x20(%%ebp)\n\t"
+      "fsubs 0x18(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "fsub %%st(1), %%st(0)\n\t"
+      "flds 0x24(%%ebp)\n\t"
+      "fsubs 0x18(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "flds 0x28(%%ebp)\n\t"
+      "fsubs 0x20(%%ebp)\n\t"
+      "fmulp %%st(1)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x28(%%ebp)\n\t"
+      "fsubs 0x1c(%%ebp)\n\t"
+      "fmulp %%st(1)\n\t"
+      "fadds 0xc(%%ebp)\n\t"
+      "flds 0x28(%%ebp)\n\t"
+      "fsubs 0x18(%%ebp)\n\t"
+      "fmulp %%st(1)\n\t"
+      "fadds 0x8(%%ebp)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [assert] "m"(b1335e0_assert), [exitfn] "m"(b1335e0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_001335e0: clang naked draft required"
+#endif
+
 
 /* 0x1336a0 — evaluate a 4-point time curve for each XYZ channel via FUN_001335e0. */
 void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3, float t0,

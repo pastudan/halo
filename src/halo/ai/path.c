@@ -910,105 +910,194 @@ void path_heap_bubble_up(void *path, int16_t heap_index)
   *(int16_t *)(cur_entry + 0xb4) = cur_index;
 }
 
-/* 0x5e330 — sink a path-heap node toward the leaves. */
-void path_heap_bubble_down(void *path, int16_t heap_index)
+/* path_heap_bubble_down (0x5e330) — XBE naked draft (batch 221). */
+#if defined(__clang__)
+static void (*const b5e330_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b5e330_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void path_heap_bubble_down(void *path __attribute__((unused)), int16_t heap_index __attribute__((unused)))
 {
-  int16_t heap_size;
-  int16_t orig_node;
-  int16_t orig_cost;
-  int16_t cur_index;
-  char *orig_entry;
-
-  if (heap_index < 1 || heap_index > 0x400) {
-    display_assert("heap_index>=1 && heap_index<=MAXIMUM_PATH_HEAP_SIZE",
-                   "c:\\halo\\SOURCE\\ai\\path.c", 0x524, 1);
-    system_exit(-1);
-  }
-
-  orig_node = *(int16_t *)((char *)path + heap_index * 4 + 0x11086);
-  orig_cost = *(int16_t *)((char *)path + heap_index * 4 + 0x11088);
-  if (orig_node < 0 || orig_node >= 0x400) {
-    display_assert("heap_node>=0 && heap_node<MAXIMUM_PATH_NODE_COUNT",
-                   "c:\\halo\\SOURCE\\ai\\path.c", 0x529, 1);
-    system_exit(-1);
-  }
-
-  orig_entry = (char *)path + orig_node * 0x44 + 0xb0;
-  if (*(int16_t *)(orig_entry + 0) != orig_cost) {
-    display_assert("path->nodes[heap_node].estimated_distance==heap_cost",
-                   "c:\\halo\\SOURCE\\ai\\path.c", 0x52a, 1);
-    system_exit(-1);
-  }
-
-  heap_size = *(int16_t *)((char *)path + 0x11084);
-  cur_index = heap_index;
-
-  for (;;) {
-    int16_t best_index;
-    int16_t best_cost;
-    int16_t child_idx;
-    int pass;
-
-    best_index = cur_index;
-    best_cost = orig_cost;
-    child_idx = (int16_t)(cur_index + cur_index);
-
-    for (pass = 0; pass < 2; pass++, child_idx++) {
-      int16_t child_node;
-      int16_t child_cost;
-      char *child_entry;
-
-      if (child_idx >= heap_size)
-        break;
-
-      child_node = *(int16_t *)((char *)path + child_idx * 4 + 0x11086);
-      child_cost = *(int16_t *)((char *)path + child_idx * 4 + 0x11088);
-      if (child_node < 0 || child_node >= 0x400) {
-        display_assert("child_node>=0 && child_node<MAXIMUM_PATH_NODE_COUNT",
-                       "c:\\halo\\SOURCE\\ai\\path.c", 0x53e, 1);
-        system_exit(-1);
-      }
-
-      child_entry = (char *)path + child_node * 0x44 + 0xb0;
-      if (*(int16_t *)(child_entry + 0xb4) != child_idx) {
-        display_assert("path->nodes[child_node].heap_index==child_index",
-                       "c:\\halo\\SOURCE\\ai\\path.c", 0x53f, 1);
-        system_exit(-1);
-      }
-      if (*(int16_t *)(child_entry + 0) != child_cost) {
-        display_assert("path->nodes[child_node].estimated_distance==child_cost",
-                       "c:\\halo\\SOURCE\\ai\\path.c", 0x540, 1);
-        system_exit(-1);
-      }
-
-      if (child_cost < best_cost) {
-        best_cost = child_cost;
-        best_index = child_idx;
-      }
-    }
-
-    if (best_index == cur_index) {
-      *(int16_t *)((char *)path + cur_index * 4 + 0x11086) = orig_node;
-      *(int16_t *)((char *)path + cur_index * 4 + 0x11088) = orig_cost;
-      *(int16_t *)(orig_entry + 0xb4) = cur_index;
-      return;
-    }
-
-    {
-      int16_t moved_node;
-      char *moved_entry;
-
-      moved_node =
-          *(int16_t *)((char *)path + best_index * 4 + 0x11086);
-      *(int16_t *)((char *)path + cur_index * 4 + 0x11086) = moved_node;
-      *(int16_t *)((char *)path + cur_index * 4 + 0x11088) =
-          *(int16_t *)((char *)path + best_index * 4 + 0x11088);
-      moved_entry = (char *)path + moved_node * 0x44 + 0xb0;
-      *(int16_t *)(moved_entry + 0xb4) = cur_index;
-    }
-    cur_index = best_index;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x24, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "cmpw $1, %%di\n\t"
+      "jl .Lpath_heap_bubble_down_1\n\t"
+      "cmpw $0x400, %%di\n\t"
+      "jle .Lpath_heap_bubble_down_2\n\t"
+      ".Lpath_heap_bubble_down_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x524\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e06c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lpath_heap_bubble_down_2:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movw 0x11086(%%ebx,%%eax,4), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "movw 0x11088(%%ebx,%%eax,4), %%ax\n\t"
+      "movw %%ax, -0x8(%%ebp)\n\t"
+      "movl %%esi, -0x1c(%%ebp)\n\t"
+      "jl .Lpath_heap_bubble_down_3\n\t"
+      "cmpw $0x400, %%si\n\t"
+      "jl .Lpath_heap_bubble_down_4\n\t"
+      ".Lpath_heap_bubble_down_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x529\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e034\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lpath_heap_bubble_down_4:\n\t"
+      "movw -0x8(%%ebp), %%dx\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "imull $0x44, %%ecx, %%ecx\n\t"
+      "cmpw %%dx, 0xb0(%%ecx,%%ebx,1)\n\t"
+      "leal (%%ecx,%%ebx,1), %%eax\n\t"
+      "movl %%eax, -0x24(%%ebp)\n\t"
+      "je .Lpath_heap_bubble_down_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x52a\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25dff0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lpath_heap_bubble_down_5:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl %%esi, -0x18(%%ebp)\n\t"
+      "movl %%edi, -0x14(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl $0, -0x10(%%ebp)\n\t"
+      "leal (%%edi,%%edi,1), %%esi\n\t"
+      "jmp .Lpath_heap_bubble_down_6\n\t"
+      "leal (%%esp), %%esp\n\t"
+      "nop\n\t"
+      ".Lpath_heap_bubble_down_6:\n\t"
+      "cmpw 0x11084(%%ebx), %%si\n\t"
+      "jge .Lpath_heap_bubble_down_12\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movw 0x11086(%%ebx,%%eax,4), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "movw 0x11088(%%ebx,%%eax,4), %%cx\n\t"
+      "movw %%cx, -0xc(%%ebp)\n\t"
+      "jl .Lpath_heap_bubble_down_7\n\t"
+      "cmpw $0x400, %%di\n\t"
+      "jl .Lpath_heap_bubble_down_8\n\t"
+      ".Lpath_heap_bubble_down_7:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x53e\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e160\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lpath_heap_bubble_down_8:\n\t"
+      "movswl %%di, %%edx\n\t"
+      "imull $0x44, %%edx, %%edx\n\t"
+      "cmpw %%si, 0xb4(%%edx,%%ebx,1)\n\t"
+      "leal (%%edx,%%ebx,1), %%eax\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "je .Lpath_heap_bubble_down_9\n\t"
+      "pushl $1\n\t"
+      "pushl $0x53f\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e118\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lpath_heap_bubble_down_9:\n\t"
+      "movw -0xc(%%ebp), %%cx\n\t"
+      "cmpw %%cx, 0xb0(%%eax)\n\t"
+      "je .Lpath_heap_bubble_down_10\n\t"
+      "pushl $1\n\t"
+      "pushl $0x540\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e0c8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lpath_heap_bubble_down_10:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "cmpw -0x4(%%ebp), %%ax\n\t"
+      "jge .Lpath_heap_bubble_down_11\n\t"
+      "movl %%esi, -0x14(%%ebp)\n\t"
+      "movl %%edi, -0x18(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      ".Lpath_heap_bubble_down_11:\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "incl %%eax\n\t"
+      "incl %%esi\n\t"
+      "cmpw $2, %%ax\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "jl .Lpath_heap_bubble_down_6\n\t"
+      ".Lpath_heap_bubble_down_12:\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "cmpw %%di, %%dx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "je .Lpath_heap_bubble_down_13\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "movw -0x4(%%ebp), %%si\n\t"
+      "movw %%si, 0x11088(%%ebx,%%eax,4)\n\t"
+      "movl -0x1c(%%ebp), %%esi\n\t"
+      "movw %%cx, 0x11086(%%ebx,%%eax,4)\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "imull $0x44, %%eax, %%eax\n\t"
+      "movw %%di, 0xb4(%%eax,%%ebx,1)\n\t"
+      "movl %%edx, 0x8(%%ebp)\n\t"
+      "movl %%edx, %%edi\n\t"
+      "jmp .Lpath_heap_bubble_down_5\n\t"
+      ".Lpath_heap_bubble_down_13:\n\t"
+      "movw -0x1c(%%ebp), %%cx\n\t"
+      "movw -0x8(%%ebp), %%dx\n\t"
+      "movw %%cx, 0x11086(%%ebx,%%eax,4)\n\t"
+      "movw %%dx, 0x11088(%%ebx,%%eax,4)\n\t"
+      "movl -0x24(%%ebp), %%eax\n\t"
+      "movw %%di, 0xb4(%%eax)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [assert] "m"(b5e330_assert), [exitfn] "m"(b5e330_exitfn)
+      : "memory");
 }
+#else
+#error "path_heap_bubble_down: clang naked draft required"
+#endif
+
 
 /* 0x5e560 — remove and return the cheapest open path node. */
 int16_t path_heap_pop_cheapest_node(void *path)
@@ -3047,105 +3136,398 @@ char FUN_00060330(void *path, const char *debug_context)
   return 1;
 }
 
-/* 0x604e0 — sift heap entry up at heap_index */
-void FUN_000604e0(void *path, int16_t heap_index)
+/* FUN_000604e0 (0x604e0) — XBE naked draft (batch 220). */
+#if defined(__clang__)
+static void (*const b604e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b604e0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void FUN_000604e0(void *path __attribute__((unused)), int16_t heap_index __attribute__((unused)))
 {
-  int16_t parent_index;
-  int16_t child_step;
-  int16_t parent_step;
-  float child_cost;
-  float parent_cost;
-  int16_t *heap_entry;
-  int16_t *parent_entry;
-
-  if (heap_index <= 0)
-    return;
-
-  while (heap_index > 0) {
-    parent_index = (int16_t)((heap_index - 1) / 2);
-    path_assert_heap_index(path, heap_index, 0);
-    path_assert_heap_index(path, parent_index, 0);
-    child_step =
-        *(int16_t *)((char *)path + (int)heap_index * 2 + 0x1432);
-    parent_step =
-        *(int16_t *)((char *)path + (int)parent_index * 2 + 0x1432);
-    child_cost = path_step_heap_cost(path, child_step);
-    parent_cost = path_step_heap_cost(path, parent_step);
-    if (child_cost >= parent_cost)
-      break;
-
-    heap_entry = (int16_t *)((char *)path + (int)heap_index * 2 + 0x1432);
-    parent_entry =
-        (int16_t *)((char *)path + (int)parent_index * 2 + 0x1432);
-    *heap_entry = parent_step;
-    *parent_entry = child_step;
-    heap_index = parent_index;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "testw %%di, %%di\n\t"
+      "jle .LFUN_000604e0_13\n\t"
+      "pushl %%ebx\n\t"
+      "jmp .LFUN_000604e0_2\n\t"
+      ".LFUN_000604e0_1:\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_000604e0_2:\n\t"
+      "testw %%di, %%di\n\t"
+      "jg .LFUN_000604e0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x39\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25eaa4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000604e0_3:\n\t"
+      "movswl %%di, %%ebx\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "decl %%ebx\n\t"
+      "sarl $1, %%ebx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl .LFUN_000604e0_4\n\t"
+      "movw 0x1430(%%esi), %%ax\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "jge .LFUN_000604e0_4\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_000604e0_5\n\t"
+      ".LFUN_000604e0_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x31\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25ea40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000604e0_5:\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "movw 0x1432(%%esi,%%eax,2), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "leal 0x1432(%%esi,%%eax,2), %%eax\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "jl .LFUN_000604e0_6\n\t"
+      "movw 0x2c(%%esi), %%ax\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jge .LFUN_000604e0_6\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_000604e0_7\n\t"
+      ".LFUN_000604e0_6:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25e9b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000604e0_7:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "addl $2, %%eax\n\t"
+      "leal (%%eax,%%eax,4), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "flds (%%esi,%%ecx,8)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jl .LFUN_000604e0_8\n\t"
+      "movw 0x1430(%%esi), %%cx\n\t"
+      "cmpw %%cx, %%ax\n\t"
+      "jge .LFUN_000604e0_8\n\t"
+      "cmpw $0x80, %%cx\n\t"
+      "jle .LFUN_000604e0_9\n\t"
+      ".LFUN_000604e0_8:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x31\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25ea40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000604e0_9:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movw 0x1432(%%esi,%%ecx,2), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .LFUN_000604e0_10\n\t"
+      "movw 0x2c(%%esi), %%ax\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jge .LFUN_000604e0_10\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_000604e0_11\n\t"
+      ".LFUN_000604e0_10:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25e9b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000604e0_11:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "addl $2, %%eax\n\t"
+      "leal (%%eax,%%eax,4), %%edx\n\t"
+      "flds (%%esi,%%edx,8)\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_000604e0_12\n\t"
+      "testw %%bx, %%bx\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movw 0x1432(%%esi,%%ecx,2), %%di\n\t"
+      "movw (%%edx), %%ax\n\t"
+      "movw %%di, (%%edx)\n\t"
+      "movw %%ax, 0x1432(%%esi,%%ecx,2)\n\t"
+      "movl %%ebx, 0x8(%%ebp)\n\t"
+      "jg .LFUN_000604e0_1\n\t"
+      ".LFUN_000604e0_12:\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_000604e0_13:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [assert] "m"(b604e0_assert), [exitfn] "m"(b604e0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_000604e0: clang naked draft required"
+#endif
 
-/* 0x60670 — sift heap entry down from heap_index */
-void FUN_00060670(void *path, int16_t heap_index)
+
+/* FUN_00060670 (0x60670) — XBE naked draft (batch 220). */
+#if defined(__clang__)
+static void (*const b60670_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b60670_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void FUN_00060670(void *path __attribute__((unused)), int16_t heap_index __attribute__((unused)))
 {
-  int16_t heap_count;
-  int16_t best_index;
-  int16_t left_index;
-  int16_t right_index;
-  int16_t step_index;
-  int16_t swap_step;
-  float best_cost;
-  float left_cost;
-  float right_cost;
-  int16_t *best_entry;
-  int16_t *swap_entry;
-
-  heap_count = *(int16_t *)((char *)path + 0x1430);
-  while (heap_index < heap_count) {
-    left_index = (int16_t)(heap_index * 2 + 1);
-    right_index = (int16_t)(heap_index * 2 + 2);
-    best_index = heap_index;
-
-    path_assert_heap_index(path, heap_index, 0);
-    step_index =
-        *(int16_t *)((char *)path + (int)heap_index * 2 + 0x1432);
-    best_cost = path_step_heap_cost(path, step_index);
-
-    if (left_index < heap_count) {
-      int16_t left_step;
-
-      path_assert_heap_index(path, left_index, 0);
-      left_step =
-          *(int16_t *)((char *)path + (int)left_index * 2 + 0x1432);
-      left_cost = path_step_heap_cost(path, left_step);
-      if (left_cost < best_cost) {
-        best_index = left_index;
-        best_cost = left_cost;
-      }
-    }
-
-    if (right_index < heap_count) {
-      int16_t right_step;
-
-      path_assert_heap_index(path, right_index, 0);
-      right_step =
-          *(int16_t *)((char *)path + (int)right_index * 2 + 0x1432);
-      right_cost = path_step_heap_cost(path, right_step);
-      if (right_cost < best_cost)
-        best_index = right_index;
-    }
-
-    if (best_index == heap_index)
-      break;
-
-    best_entry =
-        (int16_t *)((char *)path + (int)heap_index * 2 + 0x1432);
-    swap_entry =
-        (int16_t *)((char *)path + (int)best_index * 2 + 0x1432);
-    swap_step = *swap_entry;
-    *swap_entry = *best_entry;
-    *best_entry = swap_step;
-    heap_index = best_index;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "cmpw 0x1430(%%esi), %%di\n\t"
+      "jge .LFUN_00060670_21\n\t"
+      "pushl %%ebx\n\t"
+      "jmp .LFUN_00060670_1\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LFUN_00060670_1:\n\t"
+      "movw 0x1430(%%esi), %%ax\n\t"
+      "leal 0x1(%%edi,%%edi,1), %%ebx\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "movl %%edi, -0x4(%%ebp)\n\t"
+      "jge .LFUN_00060670_10\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .LFUN_00060670_2\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jge .LFUN_00060670_2\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00060670_3\n\t"
+      ".LFUN_00060670_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x31\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25ea40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00060670_3:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "movw 0x1432(%%esi,%%eax,2), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .LFUN_00060670_4\n\t"
+      "movw 0x2c(%%esi), %%ax\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jge .LFUN_00060670_4\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00060670_5\n\t"
+      ".LFUN_00060670_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25e9b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00060670_5:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "addl $2, %%eax\n\t"
+      "testw %%bx, %%bx\n\t"
+      "leal (%%eax,%%eax,4), %%ecx\n\t"
+      "flds (%%esi,%%ecx,8)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jl .LFUN_00060670_6\n\t"
+      "movw 0x1430(%%esi), %%ax\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "jge .LFUN_00060670_6\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00060670_7\n\t"
+      ".LFUN_00060670_6:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x31\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25ea40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00060670_7:\n\t"
+      "movswl %%bx, %%edx\n\t"
+      "movw 0x1432(%%esi,%%edx,2), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .LFUN_00060670_8\n\t"
+      "movw 0x2c(%%esi), %%ax\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jge .LFUN_00060670_8\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00060670_9\n\t"
+      ".LFUN_00060670_8:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25e9b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00060670_9:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "addl $2, %%eax\n\t"
+      "leal (%%eax,%%eax,4), %%eax\n\t"
+      "flds (%%esi,%%eax,8)\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00060670_10\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      ".LFUN_00060670_10:\n\t"
+      "movw 0x1430(%%esi), %%ax\n\t"
+      "leal 0x2(%%edi,%%edi,1), %%ecx\n\t"
+      "cmpw %%ax, %%cx\n\t"
+      "jge .LFUN_00060670_19\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jl .LFUN_00060670_11\n\t"
+      "cmpw %%ax, %%cx\n\t"
+      "jge .LFUN_00060670_11\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00060670_12\n\t"
+      ".LFUN_00060670_11:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x31\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25ea40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00060670_12:\n\t"
+      "movswl -0x4(%%ebp), %%ecx\n\t"
+      "movw 0x1432(%%esi,%%ecx,2), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .LFUN_00060670_13\n\t"
+      "movw 0x2c(%%esi), %%ax\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jge .LFUN_00060670_13\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00060670_14\n\t"
+      ".LFUN_00060670_13:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25e9b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00060670_14:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "addl $2, %%eax\n\t"
+      "leal (%%eax,%%eax,4), %%edx\n\t"
+      "leal 0x2(%%ebx,%%ebx,1), %%ebx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "flds (%%esi,%%edx,8)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jl .LFUN_00060670_15\n\t"
+      "movw 0x1430(%%esi), %%ax\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "jge .LFUN_00060670_15\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00060670_16\n\t"
+      ".LFUN_00060670_15:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x31\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25ea40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00060670_16:\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "movw 0x1432(%%esi,%%eax,2), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .LFUN_00060670_17\n\t"
+      "movw 0x2c(%%esi), %%ax\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jge .LFUN_00060670_17\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00060670_18\n\t"
+      ".LFUN_00060670_17:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25e9b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00060670_18:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "addl $2, %%eax\n\t"
+      "leal (%%eax,%%eax,4), %%ecx\n\t"
+      "flds (%%esi,%%ecx,8)\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00060670_19\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      ".LFUN_00060670_19:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "cmpw %%di, %%ax\n\t"
+      "je .LFUN_00060670_20\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "movw 0x1432(%%esi,%%ecx,2), %%di\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "leal 0x1432(%%esi,%%edx,2), %%eax\n\t"
+      "movw (%%eax), %%dx\n\t"
+      "leal 0x1432(%%esi,%%ecx,2), %%ecx\n\t"
+      "movw %%di, (%%eax)\n\t"
+      "movw %%dx, (%%ecx)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl %%edx, 0x8(%%ebp)\n\t"
+      "movl %%edx, %%edi\n\t"
+      "jmp .LFUN_00060670_1\n\t"
+      ".LFUN_00060670_20:\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_00060670_21:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [assert] "m"(b60670_assert), [exitfn] "m"(b60670_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00060670: clang naked draft required"
+#endif
+
 
 /* 0x60910 — push step_index onto path cost heap */
 char FUN_00060910(void *path, int16_t step_index)

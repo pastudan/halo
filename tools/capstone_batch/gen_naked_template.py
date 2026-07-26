@@ -233,7 +233,8 @@ def find_jts(va: int, end: int) -> list[dict]:
             jt = int(m.group(1), 16)
         else:
             jt = int(m.group(1), 16)
-        if not (insn.address < jt < end):
+        # Allow jt == end for classic single JT-at-end (table sits at true_end).
+        if not (insn.address < jt <= end):
             continue
         reg = None
         for r in ("eax", "ecx", "edx", "ebx", "esi", "edi"):
@@ -248,7 +249,13 @@ def find_jts(va: int, end: int) -> list[dict]:
     ordered = sorted(by.values(), key=lambda x: x["jt"])
     out = []
     for i, j in enumerate(ordered):
-        limit = ordered[i + 1]["jt"] if i + 1 < len(ordered) else end
+        if i + 1 < len(ordered):
+            limit = ordered[i + 1]["jt"]
+        elif j["jt"] == end:
+            # JT-at-end: table lives at/after end; allow reading past end.
+            limit = end + 256
+        else:
+            limit = end
         raw = get_bytes(j["jt"], min(j["jt"] + 256, limit + 4))
         ents = []
         for k in range(64):
@@ -483,19 +490,21 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
             out.append(f"  fstp %%{parts[0]}")
             continue
         if mnem in ("faddp", "fsubp", "fmulp", "fdivp", "fsubrp", "fdivrp"):
-            if mnem == "fsubp" and (not parts or parts[0] == "st(1)"):
-                out.append("  .byte 0xde, 0xe9")
-                continue
-            if mnem == "fdivp" and (not parts or parts[0] == "st(1)"):
-                out.append("  .byte 0xde, 0xf9")
-                continue
-            if mnem == "fdivrp" and (not parts or parts[0] == "st(1)"):
-                out.append("  .byte 0xde, 0xf1")
-                continue
-            if mnem == "fsubrp" and (not parts or parts[0] == "st(1)"):
-                out.append("  .byte 0xde, 0xe1")
-                continue
-            out.append(f"  {mnem} %%{parts[0]}" if parts else f"  {mnem} %%st(1)")
+            # Clang AT&T often swaps fsubp/fsubrp; emit exact MSVC bytes.
+            st = parts[0] if parts else "st(1)"
+            if st == "st":
+                st = "st(0)"
+            m = re.fullmatch(r"st\((\d)\)", st)
+            idx = int(m.group(1)) if m else 1
+            base = {
+                "faddp": 0xC0,
+                "fmulp": 0xC8,
+                "fsubrp": 0xE0,
+                "fsubp": 0xE8,
+                "fdivrp": 0xF0,
+                "fdivp": 0xF8,
+            }[mnem]
+            out.append(f"  .byte 0xde, {hex(base + idx)}")
             continue
         if mnem in (
             "fmul",
@@ -651,12 +660,28 @@ __attribute__((naked, noinline))
 
 
 def find_src(name: str) -> Path:
-    pat = re.compile(rf"^(?:[a-zA-Z_][\w\s\*]+)\s+{re.escape(name)}\s*\(", re.M)
+    # Allow optional leading __attribute__/storage/type tokens on the sig line.
+    pat = re.compile(
+        rf"^(?:(?:__attribute__\s*\(\([^;]*?\)\)\s*)|(?:static\s+)|(?:inline\s+)|(?:[\w\*]+\s+))+{re.escape(name)}\s*\(",
+        re.M,
+    )
+    loose = re.compile(rf"\b{re.escape(name)}\s*\(", re.M)
+    fallback = None
     for p in Path("src/halo").rglob("*.c"):
-        if p.name == "kb_common_stubs.c":
+        text = p.read_text(errors="ignore")
+        if not (pat.search(text) or loose.search(text)):
             continue
-        if pat.search(p.read_text(errors="ignore")):
-            return p
+        # Prefer a real definition (has '{{' soon) over call sites.
+        if not re.search(
+            rf"\b{re.escape(name)}\s*\([^;]*\)\s*\{{", text, re.S
+        ):
+            continue
+        if p.name == "kb_common_stubs.c":
+            fallback = p
+            continue
+        return p
+    if fallback is not None:
+        return fallback
     raise SystemExit(f"no file for {name}")
 
 
@@ -691,10 +716,24 @@ def inject(name: str, va: int, body: str, path: Path) -> None:
         )
         print(f"  replaced {name} ({len(matches)} prior) -> {path}")
         return
-    pat = re.compile(rf"^(?:[a-zA-Z_][\w\s\*]+)\s+{re.escape(name)}\s*\(", re.M)
+    pat = re.compile(
+        rf"^(?:(?:__attribute__\s*\(\([^;]*?\)\)\s*)|(?:static\s+)|(?:inline\s+)|(?:[\w\*]+\s+))+{re.escape(name)}\s*\(",
+        re.M,
+    )
     m = pat.search(text)
     if not m:
-        raise SystemExit(f"no def {name} in {path}")
+        # Fallback: first definition-looking occurrence.
+        m = re.search(rf"\b{re.escape(name)}\s*\([^;]*\)\s*\{{", text, re.S)
+        if m:
+            # Walk back to start of statement/attribute line.
+            line_start = text.rfind("\n", 0, m.start()) + 1
+            # Create a fake match-like span at line_start for downstream logic.
+            class _M:
+                def start(self_inner):
+                    return line_start
+            m = _M()
+        else:
+            raise SystemExit(f"no def {name} in {path}")
     # Prefer a definition that is not already inside a naked draft attribute line.
     line_start = text.rfind("\n", 0, m.start()) + 1
     before_txt = text[:line_start]
