@@ -14163,7 +14163,7 @@
         },
         {
           "addr": "0xe8db0",
-          "decl": "void main_set_difficulty(int16_t difficulty);",
+          "decl": "void ui_widget_display_deferred_errors(void);",
           "name": "ui_widget_display_deferred_errors",
           "ported": true
         },
@@ -14251,7 +14251,8 @@
         {
           "addr": "0x100060",
           "decl": "void main_set_difficulty(int16_t difficulty);",
-          "ported": false
+          "ported": true,
+          "name": "main_set_difficulty"
         },
         {
           "addr": "0x100080",
@@ -14308,7 +14309,8 @@
         {
           "addr": "0x100370",
           "decl": "void main_won_map(void);",
-          "ported": false
+          "ported": true,
+          "name": "main_won_map"
         },
         {
           "addr": "0x100380",
@@ -19813,7 +19815,7 @@
         {
           "addr": "0x8f8c0",
           "decl": "void profile_lapsed_msec(int value);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8f8e0",
@@ -19838,7 +19840,7 @@
         {
           "addr": "0x90170",
           "decl": "void FUN_00090170(int *out@<eax>, int a, int b);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x90180",
