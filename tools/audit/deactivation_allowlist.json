@@ -16203,5 +16203,75 @@
     "object": "point_physics.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x9f570",
+    "name": "FUN_0009f570",
+    "object": "particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x9f7e0",
+    "name": "particle_systems_reconnect_to_structure_bsp",
+    "object": "particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x9fa60",
+    "name": "FUN_0009fa60",
+    "object": "particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x9fad0",
+    "name": "FUN_0009fad0",
+    "object": "particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x9fb10",
+    "name": "FUN_0009fb10",
+    "object": "particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x9fca0",
+    "name": "FUN_0009fca0",
+    "object": "particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa0800",
+    "name": "FUN_000a0800",
+    "object": "particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa0d50",
+    "name": "FUN_000a0d50",
+    "object": "particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa0e60",
+    "name": "FUN_000a0e60",
+    "object": "particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa1170",
+    "name": "particle_system_update",
+    "object": "particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

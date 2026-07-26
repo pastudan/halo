@@ -16949,43 +16949,53 @@
         },
         {
           "addr": "0x9f570",
-          "decl": "void FUN_0009f570(int effect_tag_index, int param_2, void *position, int param_4);"
+          "decl": "void FUN_0009f570(int effect_tag_index, int param_2, void *position, int param_4);",
+          "ported": false
         },
         {
           "addr": "0x9f7e0",
-          "decl": "void particle_systems_reconnect_to_structure_bsp(void);"
+          "decl": "void particle_systems_reconnect_to_structure_bsp(void);",
+          "ported": false
         },
         {
           "addr": "0x9fa60",
-          "decl": "void FUN_0009fa60(void);"
+          "decl": "void FUN_0009fa60(void);",
+          "ported": false
         },
         {
           "addr": "0x9fad0",
-          "decl": "void FUN_0009fad0(void);"
+          "decl": "void FUN_0009fad0(void);",
+          "ported": false
         },
         {
           "addr": "0x9fb10",
-          "decl": "void FUN_0009fb10(void);"
+          "decl": "void FUN_0009fb10(void);",
+          "ported": false
         },
         {
           "addr": "0x9fca0",
-          "decl": "void FUN_0009fca0(void);"
+          "decl": "void FUN_0009fca0(void);",
+          "ported": false
         },
         {
           "addr": "0xa0800",
-          "decl": "void FUN_000a0800(void);"
+          "decl": "void FUN_000a0800(void);",
+          "ported": false
         },
         {
           "addr": "0xa0d50",
-          "decl": "void FUN_000a0d50(void);"
+          "decl": "void FUN_000a0d50(void);",
+          "ported": false
         },
         {
           "addr": "0xa0e60",
-          "decl": "void FUN_000a0e60(void);"
+          "decl": "void FUN_000a0e60(void);",
+          "ported": false
         },
         {
           "addr": "0xa1170",
-          "decl": "void particle_system_update(void);"
+          "decl": "void particle_system_update(void);",
+          "ported": false
         }
       ],
       "name": "particle_systems.obj",
