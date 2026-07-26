@@ -17092,5 +17092,33 @@
     "object": "transport_address.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x12aaf0",
+    "name": "network_game_generate_local_machine_name",
+    "object": "network_game_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x12a9f0",
+    "name": "network_game_update_machine",
+    "object": "network_game_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x12b0c0",
+    "name": "network_game_player_is_valid",
+    "object": "network_game_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x12b6b0",
+    "name": "network_game_message_encode",
+    "object": "network_game_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
