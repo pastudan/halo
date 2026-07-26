@@ -34944,7 +34944,7 @@
         {
           "addr": "0x4b770",
           "decl": "void ai_debug_lineofsight(float *pos_a, int16_t key_a, float *pos_b, int16_t key_b);",
-          "ported": false,
+          "ported": true,
           "name": "ai_debug_lineofsight"
         },
         {
