@@ -12759,7 +12759,7 @@
         {
           "addr": "0xce2b0",
           "decl": "void FUN_000ce2b0(int list_handle, int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce320",

@@ -3770,72 +3770,22 @@ int FUN_000ce200(void)
   return handle;
 }
 
-/* FUN_000ce2b0 (0xce2b0) — XBE naked draft (batch 150). */
-#if defined(__clang__)
-static void *(*const bce2b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const bce2b0_c119610)(data_t *data) = data_new_at_index;
-static void (*const bce2b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_000ce2b0(int list_handle __attribute__((unused)), int object_handle __attribute__((unused)))
+/* FUN_000ce2b0 (0xce2b0) — readable C lift: append object to list. */
+void FUN_000ce2b0(int list_handle, int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5aa698, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x5aa694, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_000ce2b0_1\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl %%edi, 0x8(%%esi)\n\t"
-      "incw 0x6(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ce2b0_1:\n\t"
-      "movswl 0x20(%%ebx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x280ea4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "incw 0x6(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bce2b0_dget), [c119610] "m"(bce2b0_c119610), [c8f390] "m"(bce2b0_c8f390)
-      : "memory");
+  char *list;
+  char *node;
+  int neu;
+  list = (char *)datum_get(*(data_t **)0x5aa698, list_handle);
+  neu = data_new_at_index(*(data_t **)0x5aa694);
+  if (neu == -1)
+    return;
+  node = (char *)datum_get(*(data_t **)0x5aa694, neu);
+  *(int *)(node + 4) = object_handle;
+  *(int *)(node + 8) = *(int *)(list + 8);
+  *(int *)(list + 8) = neu;
+  *(unsigned short *)(list + 6) += 1;
 }
-#else
-#error "FUN_000ce2b0: clang naked draft required"
-#endif
-
-
 /* FUN_000cafc0 (0xcafc0) — readable C lift. */
 int FUN_000cafc0(int object_handle)
 {
