@@ -3979,87 +3979,38 @@ void FUN_000c4240(void)
   }
 }
 
-/* FUN_000c4270 (0xc4270) — XBE naked draft (batch 145). */
-#if defined(__clang__)
-static void (*const bc4270_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc4270_exitfn)(int) = system_exit;
-static void (*const bc4270_cc4030)(const char *token) = FUN_000c4030;
-static scenario_t * (*const bc4270_c18e380)(void) = global_scenario_get;
-static void *(*const bc4270_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
+/* FUN_000c4270 (0xc4270) — readable C lift: intern HS globals/script names. */
 void FUN_000c4270(void)
 {
-  __asm__ volatile(
-      "movw 0x27d504, %%ax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_000c4270_4\n\t"
-      "nop\n\t"
-      ".LFUN_000c4270_1:\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_000c4270_2\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "jl .LFUN_000c4270_3\n\t"
-      ".LFUN_000c4270_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x240\n\t"
-      "pushl $0x27b8c8\n\t"
-      "pushl $0x27b928\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000c4270_3:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "movl 0x2f3708(,%%eax,4), %%ecx\n\t"
-      "movl (%%ecx), %%esi\n\t"
-      "call *%[cc4030]\n\t"
-      "movw 0x27d504, %%ax\n\t"
-      "incl %%edi\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "jl .LFUN_000c4270_1\n\t"
-      ".LFUN_000c4270_4:\n\t"
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c4270_7\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x4a8(%%edi), %%eax\n\t"
-      "addl $0x4a8, %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_000c4270_6\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000c4270_5:\n\t"
-      "pushl $0x5c\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[cc4030]\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "incl %%ebx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_000c4270_5\n\t"
-      ".LFUN_000c4270_6:\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c4270_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bc4270_assert), [exitfn] "m"(bc4270_exitfn), [cc4030] "m"(bc4270_cc4030), [c18e380] "m"(bc4270_c18e380), [elem] "m"(bc4270_elem)
-      : "memory");
+  int16_t n;
+  int16_t i;
+  void *entry;
+  void *scenario;
+  void *block;
+  int count;
+  int16_t j;
+  char *elem;
+
+  n = *(int16_t *)0x27d504;
+  for (i = 0; i < n; i++) {
+    if (i < 0 || i >= n) {
+      display_assert((const char *)0x27b928, (const char *)0x27b8c8, 0x240, true);
+      system_exit(-1);
+    }
+    entry = *(void **)(0x2f3708 + (int)i * 4);
+    FUN_000c4030(*(const char **)entry);
+  }
+  if (*(int *)0x326a08 != -1) {
+    scenario = global_scenario_get();
+    block = (char *)scenario + 0x4a8;
+    count = *(int *)block;
+    for (j = 0; j < count; j++) {
+      elem = (char *)tag_block_get_element(block, (int)j, 0x5c);
+      FUN_000c4030(elem);
+    }
+  }
 }
-#else
-#error "FUN_000c4270: clang naked draft required"
-#endif
+
 
 
 /* FUN_000c4320 (0xc4320) — readable C lift (HS scenario-block wrapper). */
