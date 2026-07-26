@@ -11664,7 +11664,7 @@
         {
           "addr": "0xc4030",
           "decl": "void FUN_000c4030(const char *token@<esi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc40b0",

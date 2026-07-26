@@ -3913,59 +3913,31 @@ int FUN_000c4010(const char **a, const char **b)
   return crt_stricmp(*a, *b);
 }
 
-/* FUN_000c4030 (0xc4030) — XBE naked draft (batch 162). */
-#if defined(__clang__)
-static void (*const bc4030_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc4030_exitfn)(int) = system_exit;
-static int (*const bc4030_c8df60)(const char *s1) = csstrlen;
-static int (*const bc4030_c1e6596)(const char *a, const char *b, size_t n) = __strnicmp;
-
-__attribute__((naked, noinline))
-void FUN_000c4030(const char *token __attribute__((unused)))
+/* FUN_000c4030 (0xc4030) — readable C lift: append HS token if filter matches. */
+void FUN_000c4030(const char *token /*@<esi>*/)
 {
-  __asm__ volatile(
-      "movl 0x46b6d0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000c4030_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x29a\n\t"
-      "pushl $0x27b8c8\n\t"
-      "pushl $0x27b964\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000c4030_1:\n\t"
-      "movw 0x46b6c8, %%ax\n\t"
-      "cmpw 0x46b6cc, %%ax\n\t"
-      "jge .LFUN_000c4030_2\n\t"
-      "movl 0x46b6d4, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8df60]\n\t"
-      "movl 0x46b6d4, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1e6596]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000c4030_2\n\t"
-      "movw 0x46b6c8, %%ax\n\t"
-      "movl 0x46b6d0, %%edx\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "incw %%ax\n\t"
-      "movl %%esi, (%%edx,%%ecx,4)\n\t"
-      "movw %%ax, 0x46b6c8\n\t"
-      ".LFUN_000c4030_2:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bc4030_assert), [exitfn] "m"(bc4030_exitfn), [c8df60] "m"(bc4030_c8df60), [c1e6596] "m"(bc4030_c1e6596)
-      : "memory");
-}
-#else
-#error "FUN_000c4030: clang naked draft required"
-#endif
+  extern char DAT_0027b8c8[];
+  extern char DAT_0027b964[];
+  int16_t count;
+  int16_t cap;
+  char **table;
+  int n;
 
+  if (*(void **)0x46b6d0 == 0) {
+    display_assert(DAT_0027b964, DAT_0027b8c8, 0x29a, 1);
+    system_exit(-1);
+  }
+  count = *(int16_t *)0x46b6c8;
+  cap = *(int16_t *)0x46b6cc;
+  if (count >= cap)
+    return;
+  n = csstrlen(*(const char **)0x46b6d4);
+  if (__strnicmp(token, *(const char **)0x46b6d4, (unsigned)n) != 0)
+    return;
+  table = *(char ***)0x46b6d0;
+  table[(int)count] = (char *)token;
+  *(int16_t *)0x46b6c8 = (int16_t)(count + 1);
+}
 
 /* FUN_000c40b0 (0xc40b0) — readable C lift. */
 void FUN_000c40b0(const char **tokens, int16_t start, int16_t end)
