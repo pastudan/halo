@@ -609,7 +609,7 @@ void FUN_000956e0(int object __attribute__((unused)), void *ctrl __attribute__((
 char FUN_00095750(int object)
 {
   void *obj = object_get_and_verify_type(object, 0x100);
-  tag_get(*(void **)obj, 0x6374726c);
+  tag_get(0x6374726c, *(int *)obj);
   return 1;
 }
 
@@ -617,85 +617,27 @@ char FUN_00095750(int object)
 char FUN_00095790(int object)
 {
   void *obj = object_get_and_verify_type(object, 0x100);
-  tag_get(*(void **)obj, 0x6374726c);
+  tag_get(0x6374726c, *(int *)obj);
   return 1;
 }
 
-/* FUN_000958f0 (0x958f0) — XBE naked draft (batch 287). */
-#if defined(__clang__)
-static void *(*const b958f0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b958f0_tag)(int, int) = tag_get;
-static void (*const b958f0_c957c0)(int object) = control_toggle;
-
-__attribute__((naked, noinline))
-void FUN_000958f0(int object __attribute__((unused)))
+/* FUN_000958f0 (0x958f0) — readable C lift. */
+void FUN_000958f0(int object)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6374726c\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $0, 0x292(%%eax)\n\t"
-      "jne .LFUN_000958f0_1\n\t"
-      "call *%[c957c0]\n\t"
-      ".LFUN_000958f0_1:\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b958f0_get), [tag] "m"(b958f0_tag), [c957c0] "m"(b958f0_c957c0)
-      : "memory");
+  void *obj = object_get_and_verify_type(object, 0x100);
+  void *tag = tag_get(0x6374726c, *(int *)obj);
+  if (*(uint16_t *)((char *)tag + 0x292) == (uint16_t)0)
+    control_toggle(object);
 }
-#else
-#error "FUN_000958f0: clang naked draft required"
-#endif
 
-
-/* FUN_00095930 (0x95930) — XBE naked draft (batch 290). */
-#if defined(__clang__)
-static void *(*const b95930_get)(int, int) = object_get_and_verify_type;
-static void *(*const b95930_tag)(int, int) = tag_get;
-static void (*const b95930_c957c0)(int object) = control_toggle;
-
-__attribute__((naked, noinline))
-void FUN_00095930(int object __attribute__((unused)))
+/* FUN_00095930 (0x95930) — readable C lift. */
+void FUN_00095930(int object)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6374726c\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $1, 0x292(%%eax)\n\t"
-      "jne .LFUN_00095930_1\n\t"
-      "call *%[c957c0]\n\t"
-      ".LFUN_00095930_1:\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b95930_get), [tag] "m"(b95930_tag), [c957c0] "m"(b95930_c957c0)
-      : "memory");
+  void *obj = object_get_and_verify_type(object, 0x100);
+  void *tag = tag_get(0x6374726c, *(int *)obj);
+  if (*(uint16_t *)((char *)tag + 0x292) == (uint16_t)1)
+    control_toggle(object);
 }
-#else
-#error "FUN_00095930: clang naked draft required"
-#endif
-
 
 /* FUN_000959b0 (0x959b0) — XBE naked draft (batch 288). */
 #if defined(__clang__)
@@ -759,7 +701,7 @@ void FUN_000959b0(int object __attribute__((unused)), void *ctrl __attribute__((
 char FUN_00095a20(int object)
 {
   void *obj = object_get_and_verify_type(object, 0x200);
-  tag_get(*(void **)obj, 0x6c696669);
+  tag_get(0x6c696669, *(int *)obj);
   return 1;
 }
 
@@ -767,7 +709,7 @@ char FUN_00095a20(int object)
 char FUN_00095a60(int object)
 {
   void *obj = object_get_and_verify_type(object, 0x200);
-  tag_get(*(void **)obj, 0x6c696669);
+  tag_get(0x6c696669, *(int *)obj);
   return 1;
 }
 

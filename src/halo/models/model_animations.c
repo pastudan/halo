@@ -4732,35 +4732,11 @@ void FUN_00123d80(void)
 #endif
 
 
-/* animation_get_root_matrix (0x123e20) — XBE naked draft (batch 290). */
-#if defined(__clang__)
-static void *(*const b123e20_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void animation_get_root_matrix(void)
+/* animation_get_root_matrix (0x123e20) — readable C lift. */
+void *animation_get_root_matrix(void *a0, short a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $0x9c\n\t"
-      "pushl %%eax\n\t"
-      "addl $0xb8, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $0x68, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b123e20_elem)
-      : "memory");
+  return (char *)tag_block_get_element((char *)a0 + 0xb8, a1, 0x9c) + 0x68;
 }
-#else
-#error "animation_get_root_matrix: clang naked draft required"
-#endif
-
 
 /* FUN_00123e50 (0x123e50) — XBE naked draft (batch 278). */
 #if defined(__clang__)

@@ -278,6 +278,8 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
         return f"{sig}\n{{\n  (void){ps[0]};\n  {fn}({mid[2][1]});\n}}\n"
 
     # push ebx; mov ebx,[ebp+8]; push imm/addr; call F; add esp,4; pop ebx
+    # HS iterate wrappers: substr in EBX + 1 stack arg — emit naked direct call
+    # so BIPED_SIBLING_RESOLVE can stub the call (indirect/fptr calls won't).
     if (
         len(mid) == 6
         and mid[0] == ("push", "ebx")
@@ -289,17 +291,34 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
     ):
         fn = callee(mid[3][1])
         imm = mid[2][1]
-        # if imm is a code pointer with a name, use the name (function ptr)
-        m = re.match(r"0x([0-9a-fA-F]+)$", imm)
-        arg = imm
-        if m:
-            nm = name_by.get(int(m.group(1), 16))
-            if nm:
-                arg = nm
         if not fn or not ps:
             return None
-        # ebx holds ps[0] (register arg); stack push is first cdecl arg.
-        return f"{sig}\n{{\n  {fn}({arg}, {ps[0]});\n}}\n"
+        m = re.match(r"0x([0-9a-fA-F]+)$", imm)
+        # Code-pointer imm → naked + direct call (sibling-resolve); keep XBE stack shape.
+        if m and name_by.get(int(m.group(1), 16)):
+            lines = [
+                "__attribute__((naked, noinline))",
+                f"{sig}",
+                "{",
+                "  __asm__ volatile(",
+                '      "pushl %%ebp\\n\\t"',
+                '      "movl %%esp, %%ebp\\n\\t"',
+                '      "pushl %%ebx\\n\\t"',
+                '      "movl 0x8(%%ebp), %%ebx\\n\\t"',
+                f'      "pushl ${imm}\\n\\t"',
+                f'      "call {fn}\\n\\t"',
+                '      "addl $4, %%esp\\n\\t"',
+                '      "popl %%ebx\\n\\t"',
+                '      "popl %%ebp\\n\\t"',
+                '      "ret\\n\\t"',
+                "      :",
+                "      :",
+                '      : "memory");',
+                "}",
+                "",
+            ]
+            return "\n".join(lines)
+        return f"{sig}\n{{\n  (void){ps[0]};\n  {fn}({imm});\n}}\n"
 
     # F(arg0, 0)
     if (
@@ -872,7 +891,7 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
                 f"  void *obj = {f1}({ps[0]}, {mid[2][1]});\n"
                 f"  void *tag = {f2}({mid[7][1]}, *(int *)obj);\n"
                 f"  if (*(uint16_t *)((char *)tag + 0x{o:x}) == (uint16_t){cm.group(2)})\n"
-                f"    {f3}();\n"
+                f"    {f3}({ps[0]});\n"
                 f"}}\n"
             )
 

@@ -20302,7 +20302,7 @@
         {
           "addr": "0xe1f20",
           "decl": "void FUN_000e1f20(int a0, int a1, int a2, int a3, int a4, int a5);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe2170",
@@ -22965,12 +22965,12 @@
         {
           "addr": "0x958f0",
           "decl": "void FUN_000958f0(int object);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x95930",
           "decl": "void FUN_00095930(int object);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x959b0",
@@ -30284,7 +30284,7 @@
         {
           "addr": "0x17ffc0",
           "decl": "float *FUN_0017ffc0(float *param_1, unsigned int param_2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x180050",
@@ -37857,7 +37857,7 @@
         {
           "addr": "0x123e20",
           "decl": "void *animation_get_root_matrix(void *a0, short a1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x123e50",
