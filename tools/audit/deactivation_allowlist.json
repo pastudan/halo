@@ -17064,5 +17064,33 @@
     "object": "actor_combat.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x81b90",
+    "name": "transport_address_to_string",
+    "object": "transport_address.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x81a90",
+    "name": "transport_address_equivalent",
+    "object": "transport_address.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x81c80",
+    "name": "FUN_00081c80",
+    "object": "transport_address.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x81e00",
+    "name": "FUN_00081e00",
+    "object": "transport_address.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

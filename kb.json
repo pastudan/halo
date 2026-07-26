@@ -38167,19 +38167,23 @@
       "functions": [
         {
           "addr": "0x81b90",
-          "decl": "const char *transport_address_to_string(void *addr);"
+          "decl": "const char *transport_address_to_string(void *addr);",
+          "ported": false
         },
         {
           "addr": "0x81a90",
-          "decl": "void transport_address_equivalent(void);"
+          "decl": "void transport_address_equivalent(void);",
+          "ported": false
         },
         {
           "addr": "0x81c80",
-          "decl": "const char *FUN_00081c80(int error_code);"
+          "decl": "const char *FUN_00081c80(int error_code);",
+          "ported": false
         },
         {
           "addr": "0x81e00",
-          "decl": "void FUN_00081e00(void);"
+          "decl": "void FUN_00081e00(void);",
+          "ported": false
         }
       ],
       "name": "transport_address.obj",
