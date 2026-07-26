@@ -1,8 +1,3 @@
-/* Render sprites by forwarding to the dynavob geometry renderer (0x17cfa0). */
-void rasterizer_sprites_render(void *render_data, void *vertices)
-{
-  FUN_0015f8e0(render_data, vertices);
-}
 /* --- rasterizer_sprites.obj batch drafts (2026-07-26) --- */
 
 /* 0x17cd60 */
