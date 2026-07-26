@@ -4676,7 +4676,7 @@
         },
         {
           "addr": "0x7c8f0",
-          "decl": "*    bitmap_delete (0x7c8f0).\n *  - Clears global_screenshot_count to 0 at exit.\n */\nvoid screenshot_render(void *a1);",
+          "decl": "void screenshot_render(void *a1);",
           "ported": true
         },
         {
@@ -4980,7 +4980,7 @@
         },
         {
           "addr": "0x1bc6b0",
-          "decl": "*    if cache_files_precache_in_progress (0x1bc6b0) returns true, the\n *    loop calls 0x1d0362(1) (stdcall sleep/yield) each iteration.\n *  - After the wait (or if throttle was skipped), stores a \"frame end\"\n *    snapshot (qword_325678 + 1) into unk_time_globals.unk_32\n *    (0x46da00/0x46da04).\n *  - Computes frames elapsed since last vblank target as a signed int64\n *    (frame_end - unk_8), clamped to [0, 0x7fff] \u2192 int16_t frames_delta.\n *    Captures synced = (0x46dd96 == 0x46dd98) at frame-end snapshot time.\n *  - Appends a debug timing string to the buffer at 0x46ddfc using\n *    csstrlen (0x8df60, called twice due to MSVC pre-push interleaving)\n *    and snprintf (0x1d9179). Format: \"%6I64d(targ%6I64d %s%2d)\" with\n *    entry flip count, target (unk_8), label, and elapsed ticks.\n *    Label is \"THROTTLE\" if we waited, \"SYNCED  \" if on-time, else\n *    \"LAPSED  \".\n *  - Writes 0x46dd9a (frame-pacing active flag): 1 iff 0x46dd96 > 0 &&\n *    frames_delta == 0, else 0.\n *  - Calls 0x8f880(frames_delta, synced, debug_buf) to store per-frame\n *    profile counters.\n */\nvoid main_rasterizer_throttle(void);",
+          "decl": "void main_rasterizer_throttle(void);",
           "ported": true
         },
         {
@@ -8346,7 +8346,7 @@
         },
         {
           "addr": "0xa7780",
-          "decl": "* game_initialize_for_new_map (0xa7780), error_occurred (0x8f600),\n * create_local_players (0x1000d0), game_time_start (0xb5f40),\n * game_initial_pulse (0xa73c0).\n *  - On game_load failure: error(0, \"game_load() failed.\").\n *  - On error_occurred: error(0, \"main_new_map() failed.\").\n *  - Clears many main_globals flags after game_initial_pulse.\n *  - Copies 0x46da3f to 0x46da3e before clearing 0x46da3f.\n *  - Sets word at 0x46da40 to 0xffff (-1).\n *  - If byte at 0x46da54 is set, calls 0x1bfee0 (cache file precache).\n *  - Calls ui_widgets_disable_pause_game(0x1e) at exit.\n */\nvoid main_new_map(game_options_t *game_options);",
+          "decl": "void main_new_map(game_options_t *game_options);",
           "ported": true
         },
         {
@@ -10490,7 +10490,7 @@
         },
         {
           "addr": "0xb5d00",
-          "decl": "*    the saved speed via game_time_set_speed(saved_speed), then zeroes both\n *    globals.\n *  - Float constant 0x3d088889 = ~0.0333f (1/30 sec, one game tick at 30 Hz).\n *  - Float constant 0x3f800000 = 1.0f.\n *  - FSTP/PUSH round-trip: saved speed is stored as float (4 bytes) on the\n *    stack [EBP-4] and reloaded into EAX before being pushed as a raw dword.\n */\nvoid main_skip_private(void);",
+          "decl": "void main_skip_private(void);",
           "ported": true
         },
         {
@@ -11841,7 +11841,7 @@
         },
         {
           "addr": "0xc4e90",
-          "decl": "* Calls hs_doc() to dump HaloScript documentation to the console,\n * then returns void to the HS thread. */\nvoid FUN_000c4ff0(int16_t function_index, int thread_datum, char init);",
+          "decl": "void FUN_000c4ff0(int16_t function_index, int thread_datum, char init);",
           "ported": false
         },
         {
@@ -12460,7 +12460,7 @@
         },
         {
           "addr": "0xcada0",
-          "decl": "*            via FUN_000cada0(@EDI). Negative ticks \u2192 sleep_until = -2\n * (forever). Positive ticks \u2192 sleep_until = game_time + ticks. Backs up the\n *            target's old sleep_until if sleeping a different thread.\n *\n * Stack allocations:\n *   4 bytes \u2014 sleep_ticks (int16_t value from evaluation)\n *   4 bytes \u2014 target_ref (int16_t script index of target thread, or -1)\n *   2 bytes \u2014 phase counter\n *\n * Assert: function_index == 0x13 (_hs_function_sleep).\n *\n * Globals:\n *   0x5aa6c4 = hs_thread_data (data_t*)\n *   0x5aa6c8 = hs_syntax_data (data_t*)\n */\nvoid hs_evaluate_sleep(int16_t function_index, int thread_datum, char init);",
+          "decl": "void hs_evaluate_sleep(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -12576,7 +12576,7 @@
         },
         {
           "addr": "0xcbf80",
-          "decl": "* Result is committed via hs_return(thread_datum, (int)(uint8_t)result).\n */\nvoid hs_evaluate_inequality(int16_t function_index, int thread_datum, char init);",
+          "decl": "void hs_evaluate_inequality(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -14577,7 +14577,7 @@
         },
         {
           "addr": "0x1029a0",
-          "decl": "* halt_and_catch_fire (0x1029a0) \u2014 fatal-error \"bluescreen\" renderer.\n * Entered after an unrecoverable engine fault. Guards against re-entrant\n * invocation with an INT3 breakpoint, then silences rumble on every\n * connected gamepad and resolves the interface (or fallback system) font.\n * Loops forever: rebuilds a throwaway camera/frustum from the default\n * camera globals, mirrors it into the shared render camera, begins the\n * rasterizer window, draws the build version string and the last\n * recorded error message, then presents the frame. Never returns.\n */\nvoid halt_and_catch_fire(void);",
+          "decl": "void halt_and_catch_fire(void);",
           "ported": true
         },
         {
@@ -17346,7 +17346,7 @@
         },
         {
           "addr": "0x8c440",
-          "decl": "* Dispatches to FUN_0008c440 (linear+angular delta) with pointers into the\n * observer struct: velocities at +0xc, result at +0x260, state at +0xb0. */\nvoid observer_compute_velocities(int16_t local_player_index);",
+          "decl": "void observer_compute_velocities(int16_t local_player_index);",
           "ported": true
         },
         {
@@ -35099,7 +35099,7 @@
         },
         {
           "addr": "0x547c0",
-          "decl": "* dword of the result and passes it through FUN_000547c0 (encounter-handle\n * accessor), delivering the full-dword result via hs_return(thread_datum,\n * value). The one difference from the 0xc1420 twin: the accessor result is the\n * full dword (no 16-bit partial store / wide read here) and the callee is\n * 0x547c0 rather than 0x55640. thread_datum is reused as both the evaluate arg\n * and the hs_return thread handle.\n *\n * Callees:\n *   0xcc560 = hs_macro_function_evaluate -> result pointer (in EAX)\n *   0x547c0 = FUN_000547c0(encounter_handle) -> int\n *   0xcbf80 = hs_return(thread_handle, value)\n */\nvoid FUN_000c1470(int16_t function_index, int thread_datum, char init);",
+          "decl": "void FUN_000c1470(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35225,7 +35225,7 @@
         },
         {
           "addr": "0x55660",
-          "decl": "* it through FUN_00055660 (count_type 0 \"start\"/min accessor), and commits\n * the resulting 16-bit value to the thread via hs_return.\n *\n * The thread_datum argument is reused for both the evaluate call (arg 2) and\n * the hs_return call (arg 1) \u2014 a single value flows to both.\n *\n * Callees (all cdecl, in kb.json):\n *   0xcc560 = hs_macro_function_evaluate(int16 fn_index, int thread_datum,\n *             char init) -> int* (result record, NULL on failure)\n *   0x55660 = FUN_00055660(unsigned int ai_ref) -> int (16-bit count/index)\n *   0xcbf80 = hs_return(int thread_handle, int value)\n *\n * The committed value is a 16-bit quantity zero-extended into a dword: the\n * disassembly zero-inits the full dword slot ([EBP-4] = 0), stores only the\n * low word (MOV [EBP-4],AX) from FUN_00055660's return, then reloads the full\n * dword \u2014 so the high 16 bits stay 0. Modeled here with a int/uint16 union.\n */\nvoid FUN_000c1300(int16_t function_index, int thread_datum, char init);",
+          "decl": "void FUN_000c1300(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35240,7 +35240,7 @@
         },
         {
           "addr": "0x556f0",
-          "decl": "* FUN_000556f0 (ai_ref-valid predicate, returns bool in AL), and returns the\n * boolean (zero-extended to int) to the thread via hs_return.\n *\n * thread_datum is forwarded unchanged as both the thread argument to\n * hs_macro_function_evaluate and the thread handle to hs_return (the original\n * reuses the same value for both \u2014 consistent).\n *\n * Callees:\n *   0xcc560 = hs_macro_function_evaluate(int16_t, int, char) -> result ptr\n *   0x556f0 = FUN_000556f0(unsigned int ai_ref) -> bool\n *   0xcbf80 = hs_return(int thread_handle, int value)\n */\nvoid FUN_000c1210(int16_t function_index, int thread_datum, char init);",
+          "decl": "void FUN_000c1210(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35517,7 +35517,7 @@
         },
         {
           "addr": "0x57aa0",
-          "decl": "* FUN_00057aa0(encounter_handle, state) then returns void to the HS thread\n * via hs_return(thread_datum, 0). The +0x4 read is a narrow int16 load. */\nvoid FUN_000c0c30(int16_t function_index, int thread_datum, char init);",
+          "decl": "void FUN_000c0c30(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35527,7 +35527,7 @@
         },
         {
           "addr": "0x57bc0",
-          "decl": "* dword of the result and passes it through FUN_00057bc0 (ai_status accessor,\n * returns a short in AX), delivering the value via hs_return(thread_datum,\n * value). Like the 0xc1420 twin (and unlike 0xc1470), the accessor result is a\n * 16-bit value: the result slot is a 4-byte stack local zero-initialized up\n * front (`mov DWORD PTR [ebp-4],0`), only its low 16 bits are overwritten from\n * AX (`mov WORD PTR [ebp-4],ax`), then the full dword is read back\n * (`mov eax,[ebp-4]`) \u2014 the high word stays 0. A union reproduces this\n * partial-store / wide-read exactly. The one difference from the 0xc1420 twin\n * is the accessor callee: 0x57bc0 rather than 0x55640. thread_datum is reused\n * as both the evaluate arg and the hs_return thread handle.\n *\n * Callees:\n *   0xcc560 = hs_macro_function_evaluate -> result pointer (in EAX)\n *   0x57bc0 = FUN_00057bc0(encounter_handle) -> short (low 16 bits consumed)\n *   0xcbf80 = hs_return(thread_handle, value)\n */\nvoid FUN_000c14b0(int16_t function_index, int thread_datum, char init);",
+          "decl": "void FUN_000c14b0(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35537,7 +35537,7 @@
         },
         {
           "addr": "0x57c70",
-          "decl": "* FUN_00057c70(encounter_handle, value) then returns void to the HS thread\n * via hs_return(thread_datum, 0). The +0x4 read is a narrow byte (char) load\n * \u2014 result is int*, so (result + 1) = +4 bytes, cast to char*. */\nvoid FUN_000c0c70(int16_t function_index, int thread_datum, char init);",
+          "decl": "void FUN_000c0c70(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35557,7 +35557,7 @@
         },
         {
           "addr": "0x57fd0",
-          "decl": "* FUN_00057fd0(handle, state) then returns void to the HS thread via\n * hs_return(thread_datum, 0). */\nvoid FUN_000c0d50(int16_t function_index, int thread_datum, char init);",
+          "decl": "void FUN_000c0d50(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35572,7 +35572,7 @@
         },
         {
           "addr": "0x58110",
-          "decl": "* success calls FUN_00058110(*result) then returns void to the HS thread via\n * hs_return(thread_datum, 0). */\nvoid FUN_000c0e10(int16_t function_index, int thread_datum, char init);",
+          "decl": "void FUN_000c0e10(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35582,7 +35582,7 @@
         },
         {
           "addr": "0x58220",
-          "decl": "* the result block and passes that value to FUN_00058220 (a dispose/release\n * helper). On success calls FUN_00058220(result[0]) then returns void to the\n * HS thread via hs_return(thread_datum, 0). */\nvoid FUN_000c0e90(int16_t function_index, int thread_datum, char init);",
+          "decl": "void FUN_000c0e90(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -36045,7 +36045,7 @@
         },
         {
           "addr": "0x64400",
-          "decl": "*\n * Calls FUN_00064400 (@eax=actor_handle, @edi=prop_handle) to splice the\n * prop out of the actor's singly-linked chain, then datum_delete to free\n * the slot.\n *\n * Call-site verification (disasm 0x64a80):\n *   MOV EAX,[EBP+0x8]  \u2192 actor_handle \u2192 @eax for FUN_00064400  YES\n *   MOV EDI,[EBP+0xc]  \u2192 prop_handle  \u2192 @edi for FUN_00064400  YES\n *   CALL 0x64400                                                 YES\n *   MOV EAX,[0x5ab23c] \u2192 prop_data    \u2192 datum_delete arg1       YES\n *   PUSH EDI            \u2192 prop_handle  \u2192 datum_delete arg2       YES\n *   PUSH EAX            \u2192 datum_delete arg1                      YES\n *   CALL 0x1196d0                                                YES\n *   ADD ESP,0x8         \u2192 2-arg cdecl cleanup                   YES */\nvoid prop_iterator_next(int actor_handle, int prop_handle);",
+          "decl": "void prop_iterator_next(int actor_handle, int prop_handle);",
           "ported": true
         },
         {
@@ -37674,7 +37674,7 @@
         },
         {
           "addr": "0x120470",
-          "decl": "void FUN_00120470(void *ctrl, int datum_handle);",
+          "decl": "void FUN_00120470(void);",
           "ported": false
         },
         {
@@ -37729,7 +37729,7 @@
         },
         {
           "addr": "0x120930",
-          "decl": "void quaternion_decompress_6byte_renormalized(void *compressed, float *out);",
+          "decl": "void quaternion_decompress_6byte_renormalized(void);",
           "ported": false
         },
         {
@@ -37764,7 +37764,7 @@
         },
         {
           "addr": "0x120ee0",
-          "decl": "void animation_frame_get_xy_translation(void *animation, short frame_index, float *out_xy);",
+          "decl": "void animation_frame_get_xy_translation(void);",
           "ported": false
         },
         {
@@ -37849,7 +37849,7 @@
         },
         {
           "addr": "0x123e20",
-          "decl": "void *animation_get_root_matrix(void *anim_graph, int index);",
+          "decl": "void animation_get_root_matrix(void);",
           "ported": false
         },
         {
