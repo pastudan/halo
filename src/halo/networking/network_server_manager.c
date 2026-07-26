@@ -1809,35 +1809,13 @@ void FUN_0012da90(int endpoint __attribute__((unused)), unsigned short reason __
 #endif
 
 
-/* FUN_0012db30 (0x12db30) — XBE naked draft (batch 176). */
-#if defined(__clang__)
-static void (*const b12db30_c12b650)(const char *fmt, ...) = network_game_log;
-static void (*const b12db30_c12da90)(int endpoint, unsigned short reason) = FUN_0012da90;
-
-__attribute__((naked, noinline))
-void FUN_0012db30(int endpoint __attribute__((unused)), unsigned short reason __attribute__((unused)))
+/* FUN_0012db30 (0x12db30) — readable C lift. */
+void FUN_0012db30(int endpoint)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x297c04\n\t"
-      "call *%[c12b650]\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $4, %%eax\n\t"
-      "call *%[c12da90]\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c12b650] "m"(b12db30_c12b650), [c12da90] "m"(b12db30_c12da90)
-      : "memory");
+  extern char DAT_00297c04[];
+  network_game_log(DAT_00297c04);
+  FUN_0012da90(endpoint, 4);
 }
-#else
-#error "FUN_0012db30: clang naked draft required"
-#endif
-
 
 /* Postgame state handler (0x12db60).
  * Every 5 seconds sends a heartbeat message (type 0xb) to all clients. */

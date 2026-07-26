@@ -15871,8 +15871,8 @@
         },
         {
           "addr": "0x12db30",
-          "decl": "void FUN_0012db30(int endpoint @<ebx>, unsigned short reason @<ax>);",
-          "ported": false
+          "decl": "void FUN_0012db30(int endpoint);",
+          "ported": true
         },
         {
           "addr": "0x12e1d0",
