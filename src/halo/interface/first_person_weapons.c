@@ -391,7 +391,7 @@ static void (*const bdd110_assert)(const char *, const char *, int, bool) = disp
 static void (*const bdd110_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-int first_person_weapon_get_local_index(int object_handle __attribute__((unused)))
+int first_person_weapon_get_local_index(int object_handle)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -961,7 +961,7 @@ static int (*const bdcdc0_cba3c0)(int16_t local_player_index) = local_player_get
 static void *(*const bdcdc0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 
 __attribute__((naked, noinline))
-int16_t FUN_000dcdc0(int object_handle /* */ __attribute__((unused)))
+int16_t FUN_000dcdc0(int object_handle /* @<edi> */)
 {
   __asm__ volatile(
       "pushl %%esi\n\t"
@@ -1239,7 +1239,7 @@ static void *(*const bdd190_tag)(int, int) = tag_get;
 static int16_t (*const bdd190_c124730)(int model_ref, const char *marker_name, char *magic_table, int node_remap, int16_t node_count, void *node_matrices, char mirrored, void *out_markers, int16_t max_markers) = FUN_00124730;
 
 __attribute__((naked, noinline))
-int16_t first_person_weapon_get_marker_by_name(int object_handle __attribute__((unused)), const char *marker_name __attribute__((unused)), void *out_markers __attribute__((unused)), int16_t max_markers __attribute__((unused)))
+int16_t first_person_weapon_get_marker_by_name(int object_handle, const char *marker_name, void *out_markers, int16_t max_markers)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1340,7 +1340,7 @@ static void (*const bdd260_exitfn)(int) = system_exit;
 static int16_t (*const bdd260_cdd190)(int object_handle, const char *marker_name, void *out_markers, int16_t max_markers) = first_person_weapon_get_marker_by_name;
 
 __attribute__((naked, noinline))
-void first_person_weapon_center_flashlight(int object_handle __attribute__((unused)), float *out_position __attribute__((unused)), float *out_forward __attribute__((unused)), float *out_up __attribute__((unused)))
+void first_person_weapon_center_flashlight(int object_handle, float *out_position, float *out_forward, float *out_up)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1434,7 +1434,7 @@ static char * (*const bdd340_cdcaf0)(int16_t local_player_index) = FUN_000dcaf0;
 static int16_t (*const bdd340_cdd190)(int object_handle, const char *marker_name, void *out_markers, int16_t max_markers) = first_person_weapon_get_marker_by_name;
 
 __attribute__((naked, noinline))
-char first_person_weapon_adjust_light(int object_handle __attribute__((unused)), int marker_result __attribute__((unused)), void *out_position __attribute__((unused)), void *out_forward __attribute__((unused)), void *out_up __attribute__((unused)))
+char first_person_weapon_adjust_light(int object_handle, int marker_result, void *out_position, void *out_forward, void *out_up)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1545,7 +1545,7 @@ static void *(*const fpwu_tag)(int, int) = tag_get;
 static void (*const fpwu_ftol)(void) = FUN_001d9068;
 
 __attribute__((naked, noinline))
-void first_person_weapon_update(short local_player_index __attribute__((unused)))
+void first_person_weapon_update(int16_t local_player_index@<ax>)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2310,7 +2310,7 @@ static int16_t (*const bddb90_cdcd60)(int object_handle) = FUN_000dcd60;
 static int16_t (*const bddb90_cdd190)(int object_handle, const char *marker_name, void *out_markers, int16_t max_markers) = first_person_weapon_get_marker_by_name;
 
 __attribute__((naked, noinline))
-int16_t first_person_weapon_get_marker_by_name_render(int object_handle __attribute__((unused)), const char *marker_name __attribute__((unused)), void *out_markers __attribute__((unused)), int16_t max_markers __attribute__((unused)))
+int16_t first_person_weapon_get_marker_by_name_render(int object_handle, const char *marker_name, void *out_markers, int16_t max_markers)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2369,7 +2369,7 @@ static void (*const bde0e0_exitfn)(int) = system_exit;
 static void (*const bde0e0_cdde80)(int local_player_index) = FUN_000dde80;
 
 __attribute__((naked, noinline))
-void FUN_000de0e0(int object_handle __attribute__((unused)), int16_t local_player_index __attribute__((unused)))
+void FUN_000de0e0(int object_handle, int16_t local_player_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2417,7 +2417,7 @@ static void *(*const bde360_get)(int, int) = object_get_and_verify_type;
 static void (*const bde360_cdc9d0)(int param_2, int object_handle) = FUN_000dc9d0;
 
 __attribute__((naked, noinline))
-void first_person_weapon_message_from_unit(int unit_handle __attribute__((unused)), int message_type __attribute__((unused)))
+void first_person_weapon_message_from_unit(int unit_handle, int message_type)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2474,7 +2474,7 @@ static void *(*const bde3f0_get)(int, int) = object_get_and_verify_type;
 static void *(*const bde3f0_tag)(int, int) = tag_get;
 
 __attribute__((naked, noinline))
-void FUN_000de3f0(int local_player_index __attribute__((unused)))
+void FUN_000de3f0(int local_player_index@<ebx>)
 {
   __asm__ volatile(
       "testw %%bx, %%bx\n\t"
@@ -2628,7 +2628,7 @@ static void (*const de560_ftol)(void) = FUN_001d9068;
 static void (*const de560_chkstk2)(void) = FUN_001daf7e;
 
 __attribute__((naked, noinline))
-void FUN_000de560(int local_player_index __attribute__((unused)))
+void FUN_000de560(int local_player_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

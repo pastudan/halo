@@ -729,7 +729,7 @@ void interface_draw_screen(void)
 static int (*const bdf350_c1dd801)(const char *a, const char *b) = crt_stricmp;
 
 __attribute__((naked, noinline))
-void profile_graph_toggle(int a0 __attribute__((unused)))
+void profile_graph_toggle(int a0)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1701,7 +1701,7 @@ static void *(*const bdff90_memset)(void *, int, unsigned int) = csmemset;
 static void (*const bdff90_c17cfa0)(void *render_data, void *vertices) = rasterizer_sprites_render;
 
 __attribute__((naked, noinline))
-void interface_draw_bitmap(int sprite_handle __attribute__((unused)), short *offset_xy __attribute__((unused)), void *color __attribute__((unused)), float scale_a __attribute__((unused)), int flag __attribute__((unused)), float scale_b __attribute__((unused)))
+void interface_draw_bitmap(int sprite_handle, short *offset_xy, void *color, float scale_a, int flag, float scale_b)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

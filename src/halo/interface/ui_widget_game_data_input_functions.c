@@ -51,7 +51,7 @@ static void (*const bedcd0_exitfn)(int) = system_exit;
 static void (*const bedcd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000edcd0(void *widget __attribute__((unused)))
+void FUN_000edcd0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -329,7 +329,7 @@ static void (*const bedfb0_ftol)(void) = FUN_001d9068;
 static void (*const bedfb0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000edfb0(void *widget __attribute__((unused)))
+void FUN_000edfb0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -823,7 +823,7 @@ static void (*const bee500_exitfn)(int) = system_exit;
 static void (*const bee500_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000ee500(void *widget __attribute__((unused)))
+void FUN_000ee500(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1125,7 +1125,7 @@ static void (*const bee810_exitfn)(int) = system_exit;
 static void (*const bee810_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000ee810(void *widget __attribute__((unused)))
+void FUN_000ee810(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1338,7 +1338,7 @@ static void * (*const beea10_ce4310)(void *widget) = ui_widget_get_last_child;
 static void (*const beea10_ce5620)(void *widget) = ui_widget_close;
 
 __attribute__((naked, noinline))
-void playlist_profile_initialize_name(void *widget __attribute__((unused)))
+void playlist_profile_initialize_name(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1428,7 +1428,7 @@ static void * (*const beead0_ce3d20)(int a1, unsigned short a2, const char *a3, 
 static void (*const beead0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void playlist_profile_initialize_ctf_rules(void *widget __attribute__((unused)))
+void playlist_profile_initialize_ctf_rules(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1552,7 +1552,7 @@ void playlist_profile_initialize_ctf_rules(void *widget __attribute__((unused)))
 static void (*const beebe0_ce3d50)(void *block) = (void *)widget_free;
 
 __attribute__((naked, noinline))
-void FUN_000eebe0(void *widget __attribute__((unused)))
+void FUN_000eebe0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1590,7 +1590,7 @@ static unsigned short (*const beec10_c1c0ed0)(void) = FUN_001c0ed0;
 static void (*const beec10_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000eec10(void *widget __attribute__((unused)))
+void FUN_000eec10(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1700,7 +1700,7 @@ static void (*const beed10_ce4500)(int16_t error_handle, int16_t local_player_in
 static void (*const beed10_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
 
 __attribute__((naked, noinline))
-void FUN_000eed10(void *widget __attribute__((unused)))
+void FUN_000eed10(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1829,7 +1829,7 @@ static void * (*const beeeb0_ce4310)(void *widget) = ui_widget_get_last_child;
 static void (*const beeeb0_ce5620)(void *widget) = ui_widget_close;
 
 __attribute__((naked, noinline))
-void FUN_000eeeb0(void *widget __attribute__((unused)))
+void FUN_000eeeb0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1894,7 +1894,7 @@ static void (*const beef30_exitfn)(int) = system_exit;
 static void (*const beef30_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000eef30(void *widget __attribute__((unused)))
+void FUN_000eef30(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2099,7 +2099,7 @@ static void (*const bef110_exitfn)(int) = system_exit;
 static void (*const bef110_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000ef110(void *widget __attribute__((unused)))
+void FUN_000ef110(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2382,7 +2382,7 @@ static void (*const bef3f0_exitfn)(int) = system_exit;
 static void (*const bef3f0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000ef3f0(void *widget __attribute__((unused)))
+void FUN_000ef3f0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2585,7 +2585,7 @@ static void (*const bef5c0_exitfn)(int) = system_exit;
 static void (*const bef5c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void playlist_profile_initialize_racing_rules(void *widget __attribute__((unused)))
+void playlist_profile_initialize_racing_rules(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2911,7 +2911,7 @@ static void (*const bef900_exitfn)(int) = system_exit;
 static void (*const bef900_c12a6c0)(short player) = network_game_client_local_player_quit;
 
 __attribute__((naked, noinline))
-void FUN_000ef900(void *widget __attribute__((unused)))
+void FUN_000ef900(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2961,7 +2961,7 @@ static void (*const bef970_exitfn)(int) = system_exit;
 static void (*const bef970_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
 
 __attribute__((naked, noinline))
-void FUN_000ef970(void *widget __attribute__((unused)))
+void FUN_000ef970(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3071,7 +3071,7 @@ static void (*const befa80_ce4500)(int16_t error_handle, int16_t local_player_in
 static void (*const befa80_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
 
 __attribute__((naked, noinline))
-void FUN_000efa80(void *widget __attribute__((unused)))
+void FUN_000efa80(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3213,7 +3213,7 @@ static void (*const befc60_ce4500)(int16_t error_handle, int16_t local_player_in
 static void (*const befc60_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
 
 __attribute__((naked, noinline))
-void FUN_000efc60(void *widget __attribute__((unused)))
+void FUN_000efc60(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3372,7 +3372,7 @@ static void (*const befde0_c8f390)(unsigned __int16 a1, const char *a2, ...) = e
 static void (*const befde0_ce1760)(void) = player_ui_end_editing_profile;
 
 __attribute__((naked, noinline))
-void FUN_000efde0(void *widget __attribute__((unused)))
+void FUN_000efde0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3475,7 +3475,7 @@ static char (*const befed0_c125b90)(void *client, short request_type) = FUN_0012
 static void (*const befed0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000efed0(void *widget __attribute__((unused)))
+void FUN_000efed0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3562,7 +3562,7 @@ static char (*const beff70_c125b90)(void *client, short request_type) = FUN_0012
 static void (*const beff70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000eff70(void *widget __attribute__((unused)))
+void FUN_000eff70(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3644,7 +3644,7 @@ void FUN_000eff70(void *widget __attribute__((unused)))
 static unsigned char (*const bf0070_ce0430)(void) = xbox_demos_available;
 
 __attribute__((naked, noinline))
-void FUN_000f0070(void *widget __attribute__((unused)))
+void FUN_000f0070(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3675,7 +3675,7 @@ static void (*const bf00b0_exitfn)(int) = system_exit;
 static void (*const bf00b0_ce0740)(void) = player_ui_set_single_player_local_player_controller;
 
 __attribute__((naked, noinline))
-void FUN_000f00b0(void *widget __attribute__((unused)))
+void FUN_000f00b0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3721,7 +3721,7 @@ static void (*const bf0100_ce8910)(int16_t error_handle, int local_player_index,
 static void (*const bf0100_ce0740)(void) = player_ui_set_single_player_local_player_controller;
 
 __attribute__((naked, noinline))
-void FUN_000f0100(void *widget __attribute__((unused)))
+void FUN_000f0100(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3783,7 +3783,7 @@ static void (*const bf0170_exitfn)(int) = system_exit;
 static void (*const bf0170_ce8910)(int16_t error_handle, int local_player_index, char is_modal, char pause_game) = ui_widget_display_error;
 
 __attribute__((naked, noinline))
-void FUN_000f0170(void *widget __attribute__((unused)))
+void FUN_000f0170(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3839,7 +3839,7 @@ static char (*const bf01d0_ce9d40)(void) = FUN_000E9D40;
 static void (*const bf01d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void player_profile_end_editing(void *widget __attribute__((unused)))
+void player_profile_end_editing(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3922,7 +3922,7 @@ static void (*const bf0250_c12a2a0)(void) = dispose_global_network_game_server;
 static void (*const bf0250_c12a1e0)(void) = dispose_global_network_game_client;
 
 __attribute__((naked, noinline))
-void player_profile_save_changes(void *widget __attribute__((unused)))
+void player_profile_save_changes(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4094,7 +4094,7 @@ static void * (*const bf03d0_ce4310)(void *widget) = ui_widget_get_last_child;
 static void (*const bf03d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000F03D0(void *widget __attribute__((unused)))
+void FUN_000F03D0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4145,7 +4145,7 @@ static bool (*const bf0430_cf5500)(wchar_t *text_buffer, unsigned short buffer_s
 static void (*const bf0430_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void player_profile_initialize_advanced_controller_settings(void *widget __attribute__((unused)))
+void player_profile_initialize_advanced_controller_settings(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4218,7 +4218,7 @@ static void (*const bf04c0_ce4500)(int16_t error_handle, int16_t local_player_in
 static void (*const bf04c0_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
 
 __attribute__((naked, noinline))
-void FUN_000f04c0(void *widget __attribute__((unused)))
+void FUN_000f04c0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4348,7 +4348,7 @@ void FUN_000f04c0(void *widget __attribute__((unused)))
 static void (*const bf0620_ce59e0)(int16_t player_index) = ui_widgets_pop_stack;
 
 __attribute__((naked, noinline))
-void FUN_000f0620(void *widget __attribute__((unused)))
+void FUN_000f0620(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4380,7 +4380,7 @@ static int (*const bf0640_c1dd801)(const char *a, const char *b) = crt_stricmp;
 static void * (*const bf0640_ce3cd0)(void *widget, int index) = widget_instance_get_nth_child;
 
 __attribute__((naked, noinline))
-void FUN_000f0640(void *widget __attribute__((unused)))
+void FUN_000f0640(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4472,7 +4472,7 @@ static void (*const bf0740_c1c0d50)(void) = FUN_001c0d50;
 static void (*const bf0740_cf0430)(void *widget) = player_profile_initialize_advanced_controller_settings;
 
 __attribute__((naked, noinline))
-void FUN_000f0740(void *widget __attribute__((unused)))
+void FUN_000f0740(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4534,7 +4534,7 @@ static int (*const bf0790_c1dd801)(const char *a, const char *b) = crt_stricmp;
 static void (*const bf0790_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = display_error_deferred;
 
 __attribute__((naked, noinline))
-void FUN_000f0790(void *widget __attribute__((unused)))
+void FUN_000f0790(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4773,7 +4773,7 @@ static void (*const bf0aa0_assert)(const char *, const char *, int, bool) = disp
 static void (*const bf0aa0_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void FUN_000f0aa0(void *widget __attribute__((unused)))
+void FUN_000f0aa0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4885,7 +4885,7 @@ static void (*const bf0bb0_exitfn)(int) = system_exit;
 static void *(*const bf0bb0_tag)(int, int) = tag_get;
 
 __attribute__((naked, noinline))
-void FUN_000f0bb0(void *widget __attribute__((unused)))
+void FUN_000f0bb0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4971,7 +4971,7 @@ static void (*const bf0c60_exitfn)(int) = system_exit;
 static void *(*const bf0c60_tag)(int, int) = tag_get;
 
 __attribute__((naked, noinline))
-void FUN_000f0c60(void *widget __attribute__((unused)))
+void FUN_000f0c60(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -5056,7 +5056,7 @@ static void (*const bf0d10_assert)(const char *, const char *, int, bool) = disp
 static void (*const bf0d10_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void playlist_settings_menu_update_extended_description(void *widget __attribute__((unused)))
+void playlist_settings_menu_update_extended_description(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -5130,7 +5130,7 @@ static void (*const bf0d90_assert)(const char *, const char *, int, bool) = disp
 static void (*const bf0d90_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void FUN_000f0d90(void *widget __attribute__((unused)))
+void FUN_000f0d90(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -5253,7 +5253,7 @@ static unsigned int (*const bf0f30_c8e370)(void) = system_milliseconds;
 static char * (*const bf0f30_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
 
 __attribute__((naked, noinline))
-void FUN_000f0f30(void *widget __attribute__((unused)))
+void FUN_000f0f30(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -5950,7 +5950,7 @@ static int (*const f1710_xulen)(const unsigned short *) = ustrlen;
 static void (*const f1710_wvis)(void *, char) = widget_instance_set_visibility_recursive;
 
 __attribute__((naked, noinline))
-void FUN_000f1710(void *widget __attribute__((unused)))
+void FUN_000f1710(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -6655,7 +6655,7 @@ static int (*const bf1ed0_c19d8c0)(const unsigned short *s) = ustrlen;
 static void (*const bf1ed0_ce4370)(void *widget, char visible) = widget_instance_set_visibility_recursive;
 
 __attribute__((naked, noinline))
-void network_pregame_status_screen_update(void *widget __attribute__((unused)))
+void network_pregame_status_screen_update(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -7093,7 +7093,7 @@ static char (*const bf2390_c1258a0)(void *client, int16_t local_player_index) = 
 static void (*const bf2390_c12b650)(const char *fmt, ...) = network_game_log;
 
 __attribute__((naked, noinline))
-void FUN_000f2390(void *widget __attribute__((unused)))
+void FUN_000f2390(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -7216,7 +7216,7 @@ static void (*const bf24b0_exitfn)(int) = system_exit;
 static void *(*const bf24b0_tag)(int, int) = tag_get;
 
 __attribute__((naked, noinline))
-void mutliplayer_settings_select_list_update_displayed_items(void *widget __attribute__((unused)))
+void mutliplayer_settings_select_list_update_displayed_items(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -7302,7 +7302,7 @@ static void (*const bf2560_exitfn)(int) = system_exit;
 static void *(*const bf2560_tag)(int, int) = tag_get;
 
 __attribute__((naked, noinline))
-void FUN_000f2560(void *widget __attribute__((unused)))
+void FUN_000f2560(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -7440,7 +7440,7 @@ static void * (*const bf2690_ce3d20)(int a1, unsigned short a2, const char *a3, 
 static wchar_t * (*const bf2690_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 
 __attribute__((naked, noinline))
-void FUN_000f2690(void *widget __attribute__((unused)))
+void FUN_000f2690(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -7516,7 +7516,7 @@ static void (*const bf2720_exitfn)(int) = system_exit;
 static void *(*const bf2720_tag)(int, int) = tag_get;
 
 __attribute__((naked, noinline))
-void FUN_000f2720(void *widget __attribute__((unused)))
+void FUN_000f2720(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -7650,7 +7650,7 @@ static void (*const bf2850_assert)(const char *, const char *, int, bool) = disp
 static void (*const bf2850_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void FUN_000f2850(void *widget __attribute__((unused)))
+void FUN_000f2850(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -7719,7 +7719,7 @@ static void * (*const bf28e0_ce3d20)(int a1, unsigned short a2, const char *a3, 
 static wchar_t * (*const bf28e0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 
 __attribute__((naked, noinline))
-void FUN_000f28e0(void *widget __attribute__((unused)))
+void FUN_000f28e0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -7800,7 +7800,7 @@ static void * (*const bf2990_ce3d20)(int a1, unsigned short a2, const char *a3, 
 static wchar_t * (*const bf2990_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 
 __attribute__((naked, noinline))
-void FUN_000f2990(void *widget __attribute__((unused)))
+void FUN_000f2990(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -7879,7 +7879,7 @@ static wchar_t * (*const bf2a40_c19dc90)(wchar_t *dest, wchar_t *src, size_t cou
 static void (*const bf2a40_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000f2a40(void *widget __attribute__((unused)))
+void FUN_000f2a40(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -7965,7 +7965,7 @@ static void (*const bf2b00_ce0980)(void) = player_ui_get_active_player_profile;
 static unsigned short (*const bf2b00_c1c0ed0)(void) = FUN_001c0ed0;
 
 __attribute__((naked, noinline))
-void FUN_000f2b00(void *widget __attribute__((unused)))
+void FUN_000f2b00(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -8046,7 +8046,7 @@ static char * (*const bf2b90_c1d9690)(const char *haystack, const char *needle) 
 static void (*const bf2b90_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000f2b90(void *widget __attribute__((unused)))
+void FUN_000f2b90(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -8251,7 +8251,7 @@ static int (*const bf2d50_c12a0a0)(void) = FUN_0012a0a0;
 static void (*const bf2d50_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000f2d50(void *widget __attribute__((unused)))
+void FUN_000f2d50(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -8379,7 +8379,7 @@ static int (*const bf2e60_c12a0a0)(void) = FUN_0012a0a0;
 static void (*const bf2e60_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000f2e60(void *widget __attribute__((unused)))
+void FUN_000f2e60(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -8436,7 +8436,7 @@ static void (*const bf2ed0_c19e9f0)(wchar_t *buffer, int buffer_size, const wcha
 static void (*const bf2ed0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000f2ed0(void *widget __attribute__((unused)))
+void FUN_000f2ed0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -8509,7 +8509,7 @@ static int (*const bf2f60_c12a0a0)(void) = FUN_0012a0a0;
 static void (*const bf2f60_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000f2f60(void *widget __attribute__((unused)))
+void FUN_000f2f60(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -8599,7 +8599,7 @@ static char * (*const bf3010_c1d9690)(const char *haystack, const char *needle) 
 static void (*const bf3010_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void solo_game_objective_text(void *widget __attribute__((unused)))
+void solo_game_objective_text(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -8804,7 +8804,7 @@ static int (*const bf31d0_c12a0a0)(void) = FUN_0012a0a0;
 static void (*const bf31d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void color_picker_get_string(void *widget __attribute__((unused)))
+void color_picker_get_string(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -8895,7 +8895,7 @@ static void (*const bf3280_c19e9f0)(wchar_t *buffer, int buffer_size, const wcha
 static void (*const bf3280_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000f3280(void *widget __attribute__((unused)))
+void FUN_000f3280(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -8968,7 +8968,7 @@ static void (*const bf3320_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const bf3320_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000f3320(void *widget __attribute__((unused)))
+void FUN_000f3320(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -9061,7 +9061,7 @@ static int16_t (*const bf3400_c124d00)(void *client) = FUN_00124d00;
 static bool (*const bf3400_c12ac80)(void *client) = network_player_is_valid;
 
 __attribute__((naked, noinline))
-void game_options_menu_update_pic_desc(void *widget __attribute__((unused)))
+void game_options_menu_update_pic_desc(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -9206,7 +9206,7 @@ static void (*const bf3540_assert)(const char *, const char *, int, bool) = disp
 static void (*const bf3540_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void mp_level_select_list_update_displayed_items(void *widget __attribute__((unused)))
+void mp_level_select_list_update_displayed_items(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -9256,7 +9256,7 @@ static const char * (*const bf3590_c100040)(void) = main_get_map_name;
 static int (*const bf3590_c1dd801)(const char *a, const char *b) = crt_stricmp;
 
 __attribute__((naked, noinline))
-void get_editable_player_profile_display_name(void *widget __attribute__((unused)))
+void get_editable_player_profile_display_name(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -9333,7 +9333,7 @@ static void (*const bf3640_exitfn)(int) = system_exit;
 static bool (*const bf3640_c82300)(void) = transport_network_available;
 
 __attribute__((naked, noinline))
-void get_editable_playlist_profile_display_name(void *widget __attribute__((unused)))
+void get_editable_playlist_profile_display_name(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -9378,7 +9378,7 @@ void get_editable_playlist_profile_display_name(void *widget __attribute__((unus
 
 
 __attribute__((naked, noinline))
-void FUN_000f3690(int *out_handles /* */ __attribute__((unused)), void *widget /* */ __attribute__((unused)))
+void FUN_000f3690(int *out_handles /* @<eax> */, void *widget /* @<ecx> */)
 {
   __asm__ volatile(
       "movl 0x38(%%ecx), %%edx\n\t"
@@ -9474,7 +9474,7 @@ static void (*const bf3740_c1c18f0)(void) = player_profile_new;
 static void (*const bf3740_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void multiplayer_game_set_text_box_for_game_ruleset(int *handles __attribute__((unused)), int count __attribute__((unused)))
+void multiplayer_game_set_text_box_for_game_ruleset(int *handles, int count)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -9601,7 +9601,7 @@ static void (*const bf3850_c1c26f0)(void) = playlist_profile_delete;
 static void (*const bf3850_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void multiplayer_game_set_text_box_for_teams_noteams(void *widget __attribute__((unused)))
+void multiplayer_game_set_text_box_for_teams_noteams(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -9725,7 +9725,7 @@ void multiplayer_game_set_text_box_for_teams_noteams(void *widget __attribute__(
 
 
 __attribute__((naked, noinline))
-void FUN_000f3960(void *widget __attribute__((unused)))
+void FUN_000f3960(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -9771,7 +9771,7 @@ static void (*const bf39c0_cf3690)(int *out_handles /* */, void *widget /* */) =
 static void * (*const bf39c0_ce3cd0)(void *widget, int index) = widget_instance_get_nth_child;
 
 __attribute__((naked, noinline))
-void FUN_000f39c0(void *widget __attribute__((unused)))
+void FUN_000f39c0(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

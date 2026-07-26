@@ -5395,8 +5395,9 @@
         },
         {
           "addr": "0x93010",
-          "decl": "void cinematic_force_title(void);",
-          "ported": true
+          "decl": "void cinematic_force_title(short title);",
+          "ported": true,
+          "name": "cinematic_force_title"
         },
         {
           "addr": "0x93030",

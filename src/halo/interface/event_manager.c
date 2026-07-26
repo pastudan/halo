@@ -2370,7 +2370,7 @@ static void (*const bdabf0_cd8cf0)(int param_1, int param_2) = FUN_000d8cf0;
 static void * (*const bdabf0_cd8bc0)(int16_t local_player_index) = FUN_000d8bc0;
 
 __attribute__((naked, noinline))
-void FUN_000dabf0(int param_1 __attribute__((unused)))
+void FUN_000dabf0(int param_1)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4172,7 +4172,7 @@ static void (*const bdbfb0_cdb950)(void) = update_motion_sensor;
 static void (*const bdbfb0_cdbcb0)(void) = FUN_000dbcb0;
 
 __attribute__((naked, noinline))
-void FUN_000dbfb0(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
+void FUN_000dbfb0(int param_1, int param_2, int param_3)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

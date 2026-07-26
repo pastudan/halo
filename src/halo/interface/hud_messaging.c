@@ -347,7 +347,7 @@ static void *(*const bd4d90_tag)(int, int) = tag_get;
 static void *(*const bd4d90_elem)(void *, int, int) = tag_block_get_element;
 
 __attribute__((naked, noinline))
-void hud_set_state_message(short param_1 __attribute__((unused)), short param_2 __attribute__((unused)))
+void hud_set_state_message(short param_1, short param_2)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -577,7 +577,7 @@ short scripted_hud_get_timer_ticks(void)
 static int (*const bd4a20_gtime)(void) = game_time_get;
 
 __attribute__((naked, noinline))
-void scripted_hud_time_code_show(char param_1 __attribute__((unused)))
+void scripted_hud_time_code_show(char param_1)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -608,7 +608,7 @@ void scripted_hud_time_code_show(char param_1 __attribute__((unused)))
 static int (*const bd4a50_gtime)(void) = game_time_get;
 
 __attribute__((naked, noinline))
-void scripted_hud_time_code_start(char param_1 __attribute__((unused)))
+void scripted_hud_time_code_start(char param_1)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -805,7 +805,7 @@ void hud_render_timer(void)
 static wchar_t * (*const bd4f00_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 
 __attribute__((naked, noinline))
-void hud_enable_custom_state_message(short param_1 __attribute__((unused)), char param_2 __attribute__((unused)))
+void hud_enable_custom_state_message(short param_1, char param_2)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -855,7 +855,7 @@ void hud_enable_custom_state_message(short param_1 __attribute__((unused)), char
 static wchar_t * (*const bd4f70_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 
 __attribute__((naked, noinline))
-void hud_set_state_text(short param_1 __attribute__((unused)), wchar_t *param_2 __attribute__((unused)))
+void hud_set_state_text(short param_1, wchar_t *param_2)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -973,7 +973,7 @@ int hud_messaging_get_objective(void)
 
 
 __attribute__((naked, noinline))
-void hud_set_state_message_icon(short param_1 __attribute__((unused)), short param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
+void hud_set_state_message_icon(short param_1, short param_2, int param_3)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1021,7 +1021,7 @@ void hud_set_state_message_icon(short param_1 __attribute__((unused)), short par
 
 
 __attribute__((naked, noinline))
-void hud_set_state_message_text(short param_1 __attribute__((unused)), short param_2 __attribute__((unused)), short param_3 __attribute__((unused)), unsigned char param_4 __attribute__((unused)))
+void hud_set_state_message_text(short param_1, short param_2, short param_3, unsigned char param_4)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1112,7 +1112,7 @@ void *hud_find_message_slot(int base, int param2, int tag_handle /* @<esi> */)
 
 
 __attribute__((naked, noinline))
-int hud_messaging_slot_compare(int *param_1 __attribute__((unused)), int *param_2 __attribute__((unused)))
+int hud_messaging_slot_compare(int *param_1, int *param_2)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1190,7 +1190,7 @@ int hud_get_font_index(void)
 
 
 __attribute__((naked, noinline))
-int * hud_get_text_color(int *param_1 __attribute__((unused)))
+int *hud_get_text_color(int *param_1)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1351,7 +1351,7 @@ static wchar_t * (*const bd5350_cd0ba0)(int a1) = hud_get_item_string;
 static int (*const bd5350_c19eaa0)(wchar_t *buffer, const wchar_t *format, ...) = usprintf;
 
 __attribute__((naked, noinline))
-void FUN_000d5350(int param_1 __attribute__((unused)))
+void FUN_000d5350(int param_1)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2318,7 +2318,7 @@ static int (*const bd5ec0_c1dd801)(const char *a, const char *b) = crt_stricmp;
 static void (*const bd5ec0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-short hud_find_nav_point_by_name(const char *param_1 __attribute__((unused)))
+short hud_find_nav_point_by_name(const char *param_1)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2387,7 +2387,7 @@ static void (*const bd5f40_assert)(const char *, const char *, int, bool) = disp
 static void (*const bd5f40_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-int hud_get_nav_point_data(short param_1 __attribute__((unused)))
+int hud_get_nav_point_data(short param_1)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

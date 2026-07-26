@@ -1459,7 +1459,7 @@ static void (*const be2220_c1ea520)(void) = D3DDevice_SetRenderState_DoNotCullUn
 static void (*const be2220_c1e9380)(uint32_t reg_index, uint32_t value) = D3DDevice_SetRenderState_Deferred;
 
 __attribute__((naked, noinline))
-void SetRenderStateSmart(int state __attribute__((unused)), int value __attribute__((unused)))
+void SetRenderStateSmart(int state, int value)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1758,7 +1758,7 @@ static void (*const be2470_c1e9c60)(void) = D3DDevice_SetTextureState_ColorKeyCo
 static void (*const be2470_c1e9bc0)(void) = D3DDevice_SetTextureState_BumpEnv;
 
 __attribute__((naked, noinline))
-void SetTextureStageStateSmart(int stage __attribute__((unused)), int state __attribute__((unused)), int value __attribute__((unused)))
+void SetTextureStageStateSmart(int stage, int state, int value)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

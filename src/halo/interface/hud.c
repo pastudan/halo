@@ -464,7 +464,7 @@ static void (*const bd0c80_xfrmpt)(float *, float *, float *) = matrix_transform
 static void (*const bd0c80_c17eb10)(float *vert_a, float *vert_b, int param_3) = FUN_0017eb10;
 
 __attribute__((naked, noinline))
-void hud_set_element_digital(float value __attribute__((unused)), const void *draw_ptr __attribute__((unused)))
+void hud_set_element_digital(float value, const void *draw_ptr)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

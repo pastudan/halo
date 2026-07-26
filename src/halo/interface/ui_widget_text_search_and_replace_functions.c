@@ -4,7 +4,7 @@ static void (*const bf5290_assert)(const char *, const char *, int, bool) = disp
 static void (*const bf5290_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-wchar_t * ui_widget_text_search_and_replace_function_invoke(void *widget __attribute__((unused)), unsigned short function_index __attribute__((unused)))
+wchar_t *ui_widget_text_search_and_replace_function_invoke(void *widget, unsigned short function_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

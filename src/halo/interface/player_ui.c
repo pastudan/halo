@@ -568,7 +568,7 @@ static void (*const be0b00_assert)(const char *, const char *, int, bool) = disp
 static void (*const be0b00_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-bool player_ui_rumble_disabled(int controller_index __attribute__((unused)))
+bool player_ui_rumble_disabled(int controller_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1874,7 +1874,7 @@ static void (*const be1770_c1c1bc0)(void) = player_profile_get_from_path;
 static void (*const be1770_ce10c0)(void) = FUN_000e10c0;
 
 __attribute__((naked, noinline))
-void FUN_000e1770(int a0 __attribute__((unused)))
+void FUN_000e1770(int a0)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
