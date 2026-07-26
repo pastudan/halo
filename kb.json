@@ -35108,7 +35108,7 @@
         {
           "addr": "0x53af0",
           "decl": "void FUN_00053af0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00053af0"
         }
       ],
