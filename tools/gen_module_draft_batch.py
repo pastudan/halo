@@ -17,6 +17,15 @@ def slug(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", name.replace(".obj", "").lower()).strip("_")
 
 
+def sanitize_decl_for_c(decl: str) -> str:
+    return re.sub(r"(\w+)@<[^>]+>", r"\1", decl)
+
+
+def clean_param_name(name: str) -> str:
+    name = re.sub(r"@<[^>]+>", "", name).strip()
+    return name if name else "unused_arg"
+
+
 def fn_name(decl: str, addr: str) -> str:
     m = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*\(", decl or "")
     if m:
@@ -66,7 +75,7 @@ def parse_params(decl: str) -> list[str]:
         p = re.sub(r"\[[^\]]*\]", "", p).strip()
         tok = re.split(r"\s+", p.replace("*", " ").strip())
         if tok:
-            names.append(tok[-1])
+            names.append(clean_param_name(tok[-1]))
     return names
 
 
@@ -84,9 +93,10 @@ def ret_kind(decl: str) -> str:
 
 
 def gen_stub_body(decl: str) -> str:
-    params = parse_params(decl)
+    c_decl = sanitize_decl_for_c(decl)
+    params = parse_params(c_decl)
     lines = [f"  (void){p};" for p in params]
-    kind = ret_kind(decl)
+    kind = ret_kind(c_decl)
     if kind == "ptr":
         lines.append("  return NULL;")
     elif kind == "char":
@@ -94,7 +104,7 @@ def gen_stub_body(decl: str) -> str:
     elif kind == "scalar":
         lines.append("  return 0;")
     inner = "\n".join(lines)
-    return f"{decl.split(';')[0]}\n{{\n{inner}\n}}\n"
+    return f"{c_decl.split(';')[0]}\n{{\n{inner}\n}}\n"
 
 
 def write_disasm(object_name: str, decls: dict[str, str], out: Path) -> None:

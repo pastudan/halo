@@ -35715,23 +35715,28 @@
       "functions": [
         {
           "addr": "0x120250",
-          "decl": "void FUN_00120250(void);"
+          "decl": "void FUN_00120250(void);",
+          "ported": false
         },
         {
           "addr": "0x120340",
-          "decl": "void FUN_00120340(void);"
+          "decl": "void FUN_00120340(void);",
+          "ported": false
         },
         {
           "addr": "0x120400",
-          "decl": "void FUN_00120400(void);"
+          "decl": "void FUN_00120400(void);",
+          "ported": false
         },
         {
           "addr": "0x120470",
-          "decl": "void FUN_00120470(void);"
+          "decl": "void FUN_00120470(void);",
+          "ported": false
         },
         {
           "addr": "0x1204a0",
-          "decl": "void FUN_001204a0(void);"
+          "decl": "void FUN_001204a0(void);",
+          "ported": false
         },
         {
           "addr": "0x120500",
@@ -35750,19 +35755,23 @@
         },
         {
           "addr": "0x120620",
-          "decl": "char FUN_00120620(int animation@<esi>);"
+          "decl": "char FUN_00120620(int animation@<esi>);",
+          "ported": false
         },
         {
           "addr": "0x120670",
-          "decl": "void build_damage_animation_index(void);"
+          "decl": "void build_damage_animation_index(void);",
+          "ported": false
         },
         {
           "addr": "0x120710",
-          "decl": "void FUN_00120710(int anim_entry, int tick_out, int damage_time_out);"
+          "decl": "void FUN_00120710(int anim_entry, int tick_out, int damage_time_out);",
+          "ported": false
         },
         {
           "addr": "0x120790",
-          "decl": "void animation_set_frame_size(void);"
+          "decl": "void animation_set_frame_size(void);",
+          "ported": false
         },
         {
           "addr": "0x120810",
@@ -35776,27 +35785,33 @@
         },
         {
           "addr": "0x120930",
-          "decl": "void quaternion_decompress_6byte_renormalized(void);"
+          "decl": "void quaternion_decompress_6byte_renormalized(void);",
+          "ported": false
         },
         {
           "addr": "0x120950",
-          "decl": "void quaternion_compress_8byte(void);"
+          "decl": "void quaternion_compress_8byte(void);",
+          "ported": false
         },
         {
           "addr": "0x1209b0",
-          "decl": "void quaternion_compress_6byte(void);"
+          "decl": "void quaternion_compress_6byte(void);",
+          "ported": false
         },
         {
           "addr": "0x120a40",
-          "decl": "void animation_graph_node_matrices_from_orientations(void);"
+          "decl": "void animation_graph_node_matrices_from_orientations(void);",
+          "ported": false
         },
         {
           "addr": "0x120ba0",
-          "decl": "void interpolate_node_orientations(void);"
+          "decl": "void interpolate_node_orientations(void);",
+          "ported": false
         },
         {
           "addr": "0x120cb0",
-          "decl": "short FUN_00120cb0(int animation_graph_tag_index, const char *name);"
+          "decl": "short FUN_00120cb0(int animation_graph_tag_index, const char *name);",
+          "ported": false
         },
         {
           "addr": "0x120d10",
@@ -35805,7 +35820,8 @@
         },
         {
           "addr": "0x120ee0",
-          "decl": "void animation_frame_get_xy_translation(void);"
+          "decl": "void animation_frame_get_xy_translation(void);",
+          "ported": false
         },
         {
           "addr": "0x120f20",
@@ -35814,11 +35830,13 @@
         },
         {
           "addr": "0x120fd0",
-          "decl": "void inverse_kinematics_adjust_matrices(float *composed_matrix, int node_matrix_b, int node_matrix_c, int node_matrix_d);"
+          "decl": "void inverse_kinematics_adjust_matrices(float *composed_matrix, int node_matrix_b, int node_matrix_c, int node_matrix_d);",
+          "ported": false
         },
         {
           "addr": "0x121330",
-          "decl": "void FUN_00121330(void *animation, float frame, unsigned short rotation_count, short node_index, void *out_rotation);"
+          "decl": "void FUN_00121330(void *animation, float frame, unsigned short rotation_count, short node_index, void *out_rotation);",
+          "ported": false
         },
         {
           "addr": "0x121640",
@@ -35832,7 +35850,8 @@
         },
         {
           "addr": "0x121c30",
-          "decl": "int animation_update_internal(int update_kind, int animation_graph_tag_index, short *state, int *out_sound);"
+          "decl": "int animation_update_internal(int update_kind, int animation_graph_tag_index, short *state, int *out_sound);",
+          "ported": false
         },
         {
           "addr": "0x121d60",
@@ -35841,23 +35860,28 @@
         },
         {
           "addr": "0x122060",
-          "decl": "void replacement_animation_apply(void);"
+          "decl": "void replacement_animation_apply(void);",
+          "ported": false
         },
         {
           "addr": "0x122240",
-          "decl": "void overlay_animation_apply(void);"
+          "decl": "void overlay_animation_apply(void);",
+          "ported": false
         },
         {
           "addr": "0x122450",
-          "decl": "void overlay_animation_apply_scaled(void);"
+          "decl": "void overlay_animation_apply_scaled(void);",
+          "ported": false
         },
         {
           "addr": "0x122690",
-          "decl": "void FUN_00122690(void *animation, float frame, void *node_data);"
+          "decl": "void FUN_00122690(void *animation, float frame, void *node_data);",
+          "ported": false
         },
         {
           "addr": "0x123990",
-          "decl": "void FUN_00123990(void);"
+          "decl": "void FUN_00123990(void);",
+          "ported": false
         },
         {
           "addr": "0x123aa0",
@@ -35866,27 +35890,33 @@
         },
         {
           "addr": "0x123b30",
-          "decl": "void FUN_00123b30(void);"
+          "decl": "void FUN_00123b30(void);",
+          "ported": false
         },
         {
           "addr": "0x123c70",
-          "decl": "void FUN_00123c70(void *mode_tag, void *out_matrices, void *node_data, float *position, float *forward, float *up);"
+          "decl": "void FUN_00123c70(void *mode_tag, void *out_matrices, void *node_data, float *position, float *forward, float *up);",
+          "ported": false
         },
         {
           "addr": "0x123d80",
-          "decl": "void FUN_00123d80(void);"
+          "decl": "void FUN_00123d80(void);",
+          "ported": false
         },
         {
           "addr": "0x123e20",
-          "decl": "void animation_get_root_matrix(void);"
+          "decl": "void animation_get_root_matrix(void);",
+          "ported": false
         },
         {
           "addr": "0x123e50",
-          "decl": "void FUN_00123e50(void);"
+          "decl": "void FUN_00123e50(void);",
+          "ported": false
         },
         {
           "addr": "0x123ed0",
-          "decl": "void FUN_00123ed0(int model_ref, float distance, void *node_matrices, void *arg4, void *node_transforms, void *node_matrices2, int lighting, void *position, int arg9, void *effect_record, int object_handle, int arg12, int render_flag);"
+          "decl": "void FUN_00123ed0(int model_ref, float distance, void *node_matrices, void *arg4, void *node_transforms, void *node_matrices2, int lighting, void *position, int arg9, void *effect_record, int object_handle, int arg12, int render_flag);",
+          "ported": false
         }
       ],
       "name": "model_animations.obj",
