@@ -1692,18 +1692,27 @@ int FUN_0003f350(int unit_handle, int spawn_tag, int16_t count, float radius)
 }
 
 /* 0x3f900 */
-void ai_adjust_damage(int player_index, void *damage_params, float *scale)
+char ai_adjust_damage(int player_index, void *damage_params, float *scale)
 {
-  int eax = 0;
+  char *actor;
+  char adjusted;
 
-  /* cmp eax, -1 -> je 0x3f964 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), player_index);
-  /* test (char)eax, 8 -> je 0x3f94b */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x3f94b */
-  /* test (char)eax, (char)eax -> je 0x3f964 */
+  adjusted = 0;
+  if (player_index == -1)
+    return 0;
 
-  (void)eax;
+  actor = (char *)datum_get(*(void **)0x6325a4, player_index);
+  if ((*(char *)((char *)damage_params + 4) & 8) != 0) {
+    if (*(float *)(actor + 0x69c) <= *(float *)0x2533c0) {
+      *scale *= *(float *)(actor + 0x69c);
+      adjusted = 1;
+    }
+  }
+  if (*(char *)(actor + 0x1ca) != 0) {
+    *scale *= *(float *)0x2533e4;
+    return 1;
+  }
+  return adjusted;
 }
 
 /* 0x3fb40 — collect inactive encounter/actor records for recycling. */
@@ -1833,163 +1842,218 @@ char ai_release_inactive_encounters(char *result_description,
   return released;
 }
 
-/* 0x40150 */
-void ai_handle_allegiance_broken_notification(void)
+/* 0x40150 — refresh prop knowledge after teams become hostile. */
+void ai_handle_allegiance_broken_notification(int16_t team_a, int16_t team_b,
+                                              char print_message)
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-  int local_10 = 0;
-  int local_8 = 0;
+  char *actor;
+  char *prop;
+  char iter[0x24];
+  int actor_handle;
+  int16_t other_team;
 
-  /* relift: relift: mov (char)eax, byte ptr [0x5aca55] */
-  /* cmp (char)eax, (char)ebx -> je 0x40198 */
-  console_printf(0, (char *)0x00257730);
-  encounter_iterator_next((void *)0, 1);
-  FUN_00059b50((void *)0);
-  /* cmp eax, ebx -> je 0x40261 */
-  /* cmp (int16_t)eax, (int16_t)edi -> jne 0x401d1 */
-  /* relift: cmp (int16_t)eax, word ptr [ebp + 0xc] -> jne 0x4024b */
-  /* cmp (int16_t)edi, -1 -> je 0x4024b */
-  FUN_00064540((void *)0, local_10);
-  FUN_00064570((void *)0);
-  /* cmp esi, ebx -> je 0x4024b */
-  /* relift: cmp word ptr [esi + 0x12], (int16_t)edi -> jne 0x40239 */
-  actor_get_perception_knowledge(local_10, local_8);
-  actor_compute_prop_target_weight(local_10, local_8);
-  FUN_00064570((void *)0);
-  /* cmp esi, ebx -> jne 0x40200 */
-  FUN_00059b50((void *)0);
-  /* cmp eax, ebx -> jne 0x401c0 */
-  game_allegiance_notify_change(0, 0);
+  if (*(char *)0x5aca55 != 0) {
+    const char *subfmt;
+    if (print_message != 0)
+      subfmt = (const char *)0x257718;
+    else
+      subfmt = (const char *)0x25770c;
+    console_printf(0, (const char *)0x257730,
+                   *(const char **)(team_a * 4 + 0x2efdf8),
+                   *(const char **)(team_b * 4 + 0x2efdf8), subfmt);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
-  (void)local_10;
-  (void)local_8;
+  encounter_iterator_next(iter, 1);
+  actor = (char *)FUN_00059b50(iter);
+  while (actor != 0) {
+    other_team = *(int16_t *)(actor + 0x3e);
+    if (other_team == team_a)
+      other_team = team_b;
+    else if (other_team != team_b)
+      goto next_actor;
+    if (other_team == -1)
+      goto next_actor;
+
+    actor_handle = *(int *)(iter + 0x14);
+    {
+      int prop_iter[2];
+      FUN_00064540(prop_iter, actor_handle);
+      prop = (char *)FUN_00064570(prop_iter);
+      while (prop != 0) {
+        if (*(int16_t *)(prop + 0x12) == other_team) {
+          *(char *)(prop + 0x61) = 1;
+          *(char *)(prop + 0x62) = 0;
+          *(char *)(prop + 0x60) = print_message;
+          *(char *)(prop + 0xa4) = (char)actor_get_perception_knowledge(
+              actor_handle, prop_iter[0]);
+          *(float *)(prop + 0x50) =
+              actor_compute_prop_target_weight(actor_handle, prop_iter[0]);
+        }
+        prop = (char *)FUN_00064570(prop_iter);
+      }
+    }
+
+next_actor:
+    actor = (char *)FUN_00059b50(iter);
+  }
+
+  game_allegiance_notify_change(team_b, team_a);
 }
 
-/* 0x40460 */
-void ai_handle_damage(void)
+/* 0x40460 — route unit damage to actors and team provocation. */
+void ai_handle_damage(int victim_handle, int source_handle, int16_t damage_type,
+                      float damage_amount, int param_4, char skip_provoke)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *victim;
+  char *responsible_unit;
+  int responsible_handle;
+  int16_t provoke_type;
 
-  object_get_and_verify_type(0, 3);
-  ai_get_responsible_unit(0, eax);
-  /* cmp esi, -1 -> jne 0x4049c */
-  object_get_and_verify_type(eax, 3);
-  /* test (char)eax, (char)eax -> jne 0x404d7 */
-  /* cmp (int16_t)ebx, 1 -> je 0x404d7 */
-  /* cmp eax, -1 -> je 0x404d7 */
-  actor_handle_damage(0, eax, 0, 0);
-  /* cmp edi, esi -> jne 0x404e4 */
-  /* test eax, eax -> je 0x4050d */
-  game_allegiance_get_team_is_friendly(0, 0);
-  /* test (char)eax, (char)eax -> jne 0x40527 */
-  /* cmp (int16_t)ecx, 2 -> jne 0x40527 */
-  /* relift: relift: fcomp dword ptr [0x2533e4] */
-  /* test (char)eax, 1 -> jne 0x40549 */
-  FUN_00046f10(2, 0, eax, eax, 0, -1, 0);
-  game_allegiance_provoke(0, 0);
+  victim = (char *)object_get_and_verify_type(victim_handle, 3);
+  responsible_handle =
+      ai_get_responsible_unit(source_handle, (char)(damage_type != 9));
+  if (responsible_handle == -1)
+    responsible_unit = 0;
+  else
+    responsible_unit =
+        (char *)object_get_and_verify_type(responsible_handle, 3);
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  if (skip_provoke == 0 && damage_type != 1) {
+    if (*(int *)(victim + 0x1a4) != -1)
+      actor_handle_damage(*(int *)(victim + 0x1a4), responsible_handle,
+                          damage_amount, param_4);
+  }
+
+  provoke_type = 0;
+  if (victim_handle == responsible_handle) {
+    provoke_type = 1;
+  } else if (responsible_unit != 0) {
+    char friendly = game_allegiance_get_team_is_friendly(
+        *(int16_t *)(responsible_unit + 0x68),
+        *(int16_t *)(victim + 0x68));
+
+    provoke_type = (int16_t)(2 + (friendly != 0));
+  }
+
+  if (skip_provoke == 0 && provoke_type == 2)
+    FUN_00046f10(3, victim_handle, responsible_handle, 2, damage_type, -1, 0);
+  else if (skip_provoke == 0 && damage_amount > *(float *)0x2533e4)
+    FUN_00046f10(2, victim_handle, responsible_handle, provoke_type, damage_type,
+                 -1, 0);
+
+  if (responsible_unit != 0)
+    game_allegiance_provoke(*(int16_t *)(responsible_unit + 0x68),
+                            *(int16_t *)(victim + 0x68));
 }
 
-/* 0x40700 */
-void ai_handle_deleted_object(void)
+/* 0x40700 — detach deleted units from actors, props, and AI globals. */
+void ai_handle_deleted_object(int object_handle)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int local_8 = 0;
+  char *ai_globals;
+  char *unit;
+  char *prop;
+  data_iter_t iter;
+  int owner;
+  int index;
 
-  /* test (char)ecx, (char)ecx -> je 0x40859 */
-  object_get_and_verify_type(0, -1);
-  /* test dl, 3 -> je 0x40857 */
-  object_get_and_verify_type(0, 3);
-  /* cmp ecx, -1 -> je 0x40759 */
-  actor_delete(0, 0);
-  /* cmp eax, -1 -> je 0x4076e */
-  actor_swarm_unit_died(0, 0);
-  data_iterator_new((void *)0, (data_t *)(uintptr_t)*(int *)(0x5ab23c));
-  data_iterator_next((void *)0);
-  /* test esi, esi -> je 0x407e8 */
-  /* relift: cmp dword ptr [esi + 0x18], edi -> jne 0x407b6 */
-  FUN_0003b410(0, local_8, -1);
-  prop_iterator_next(0, local_8);
-  /* relift: cmp dword ptr [esi + 0x110], edi -> jne 0x407d6 */
-  data_iterator_next((void *)0);
-  /* test esi, esi -> jne 0x40790 */
-  ai_conversation_unit_died(0, 1);
-  /* test (int16_t)ecx, (int16_t)ecx -> jle 0x40857 */
-  /* relift: cmp dword ptr [esi + eax], edi -> jne 0x4084a */
-  /* test (int16_t)ecx, (int16_t)ecx -> jle 0x4084a */
-  /* cmp (int16_t)edx, (int16_t)ecx -> jl 0x40810 */
+  ai_globals = *(char **)0x632574;
+  if (*(char *)(ai_globals + 1) == 0)
+    return;
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)local_8;
+  unit = (char *)object_get_and_verify_type(object_handle, -1);
+  if (((1 << *(uint8_t *)(unit + 0x64)) & 3) == 0)
+    return;
+
+  unit = (char *)object_get_and_verify_type(object_handle, 3);
+  owner = *(int *)(unit + 0x1a4);
+  if (owner != -1)
+    actor_delete(owner, 0);
+  else {
+    owner = *(int *)(unit + 0x1a8);
+    if (owner != -1)
+      actor_swarm_unit_died(owner, object_handle);
+  }
+
+  data_iterator_new(&iter, prop_data);
+  for (prop = (char *)data_iterator_next(&iter); prop != 0;
+       prop = (char *)data_iterator_next(&iter)) {
+    if (*(int *)(prop + 0x18) == object_handle) {
+      FUN_0003b410(*(int *)(prop + 4), iter.datum_handle, -1);
+      prop_iterator_next(*(int *)(prop + 4), iter.datum_handle);
+    } else if (*(int *)(prop + 0x110) == object_handle) {
+      *(int *)(prop + 0x110) = -1;
+      *(char *)(prop + 0x136) = 0;
+      *(char *)(prop + 0x135) = 0;
+    }
+  }
+
+  ai_conversation_unit_died(object_handle, 1);
+
+  index = 0;
+  while (index < *(int16_t *)(ai_globals + 0x8b8)) {
+    if (*(int *)(ai_globals + index * 4 + 0x8bc) == object_handle) {
+      *(int16_t *)(ai_globals + 0x8b8) -= 1;
+      ai_globals = *(char **)0x632574;
+      if (*(int16_t *)(ai_globals + 0x8b8) > 0) {
+        *(int *)(ai_globals + index * 4 + 0x8bc) =
+            *(int *)(ai_globals +
+                     *(int16_t *)(ai_globals + 0x8b8) * 4 + 0x8bc);
+      }
+      continue;
+    }
+    index++;
+  }
 }
 
-/* 0x40860 */
+/* 0x40860 — apply a timed effect to a unit and its attachments. */
 void ai_handle_unit_effect(int unit_handle, int effect_type, int priority)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *unit;
+  char *attachment;
+  int now;
+  int attachment_handle;
 
-  /* test (char)ecx, (char)ecx -> je 0x4099e */
-  /* cmp (int16_t)esi, 5 -> jl 0x408a4 */
-  display_assert((char *)0x00257800, (char *)0x002575c0, 1833, 1);
-  system_exit(-1);
-  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x408b2 */
-  /* cmp (int16_t)ebx, 4 -> jl 0x408d2 */
-  display_assert((char *)0x002577c8, (char *)0x002575c0, 1834, 1);
-  system_exit(-1);
-  /* cmp eax, -1 -> je 0x4099b */
-  /* test (int16_t)esi, (int16_t)esi -> jle 0x4099b */
-  object_get_and_verify_type(unit_handle, 3);
-  game_time_get();
-  game_connection();
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x4091b */
-  /* relift: relift: mov (char)eax, byte ptr [0x5ac9c6] */
-  /* test (char)eax, (char)eax -> je 0x4091b */
-  /* relift: cmp dword ptr [esi + 0x1c8], -1 -> jne 0x4099b */
-  /* relift: cmp (int16_t)ebx, word ptr [esi + 0x1cc] -> jg 0x40931 */
-  /* cmp edi, ecx -> jle 0x4099b */
-  /* cmp esi, -1 -> je 0x4099b */
-  object_get_and_verify_type(0, -1);
-  /* relift: cmp word ptr [edi + 0x64], 0 -> jne 0x40975 */
-  actors_handle_unit_effect(0, effect_type, priority);
-  /* cmp esi, -1 -> jne 0x40953 */
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x4099b */
-  actors_handle_unit_effect(unit_handle, effect_type, priority);
+  if (*(char *)(*(int *)0x632574 + 1) == 0)
+    return;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  if (priority < 0 || priority >= 5) {
+    display_assert("priority >= 0 && priority < 5",
+                   "c:\\halo\\SOURCE\\ai\\ai.c", 0x729, 1);
+    system_exit(-1);
+  }
+  if (effect_type < 0 || effect_type >= 4) {
+    display_assert("effect >= 0 && effect < 4",
+                   "c:\\halo\\SOURCE\\ai\\ai.c", 0x72a, 1);
+    system_exit(-1);
+  }
+  if (unit_handle == -1 || priority <= 0)
+    return;
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  now = game_time_get();
+  if (game_connection() == 0 && *(char *)0x5ac9c6 != 0 &&
+      *(int *)(unit + 0x1c8) != -1)
+    return;
+  if (priority <= *(int16_t *)(unit + 0x1cc) &&
+      now <= *(int *)(unit + 0x1d0) + 30)
+    return;
+
+  *(int16_t *)(unit + 0x1cc) = (int16_t)effect_type;
+  *(int *)(unit + 0x1d0) = now;
+
+  if (*(int16_t *)(unit + 0x64) == 1) {
+    attachment_handle = *(int *)(unit + 0xc8);
+    while (attachment_handle != -1) {
+      attachment =
+          (char *)object_get_and_verify_type(attachment_handle, -1);
+      if (*(int16_t *)(attachment + 0x64) == 0)
+        actors_handle_unit_effect(attachment_handle, (short)effect_type,
+                                  priority);
+      attachment_handle = *(int *)(attachment + 0xc4);
+    }
+  } else if (*(int16_t *)(unit + 0x64) == 0) {
+    actors_handle_unit_effect(unit_handle, (short)effect_type, priority);
+  }
 }
 
 /* 0x40a80 */
@@ -2094,27 +2158,56 @@ void ai_disconnect_from_structure_bsp(void)
   (void)local_1c;
 }
 
-/* 0x41250 */
-void ai_consider_major_upgrade(void)
+/* 0x41250 — maybe promote a squad when its spawn budget is exhausted. */
+char ai_consider_major_upgrade(int encounter_handle, int16_t squad_index,
+                               float spawn_cost)
 {
-  int eax = 0;
-  int local_c = 0;
+  char *encounter;
+  char *squad;
+  char *ai_globals;
+  float globals_cost;
+  float squad_rate;
+  float random_draw;
+  float threshold;
+  char upgrade;
+  void *scenario;
+  char *enc_block;
+  char *squad_block;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), 0);
-  encounter_get_squad((char *)(uintptr_t)eax, 0);
-  get_global_random_seed_address();
-  random_math_real((unsigned int *)(uintptr_t)local_c);
-  /* relift: relift: mov (char)eax, byte ptr [0x5aca49] */
-  /* test (char)eax, (char)eax -> je 0x413b3 */
-  global_scenario_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  tag_block_get_element((void *)((char *)eax + 0x80), 0x002579e0, 232);
-  csprintf((char *)0x005ab100, (char *)0x00257988);
-  console_printf(0, (char *)(uintptr_t)eax);
-  error(2, (char *)0x00257984);
+  encounter =
+      (char *)datum_get(*(void **)0x5ab270, encounter_handle);
+  squad = encounter_get_squad(encounter, squad_index);
+  ai_globals = *(char **)0x632574;
+  globals_cost = *(float *)(ai_globals + 0xc) * *(float *)0x2579e8;
+  squad_rate = *(float *)(squad + 8);
 
-  (void)eax;
-  (void)local_c;
+  if (fabsf(globals_cost) >= fabsf(-squad_rate))
+    threshold = globals_cost;
+  else
+    threshold = -squad_rate;
+
+  random_draw = random_math_real((unsigned int *)get_global_random_seed_address());
+  threshold += spawn_cost;
+  upgrade = (char)(random_draw >= threshold);
+
+  *(float *)(squad + 8) =
+      *(float *)(squad + 8) + spawn_cost - (float)upgrade;
+  *(float *)(ai_globals + 0xc) =
+      *(float *)(ai_globals + 0xc) + spawn_cost - (float)upgrade;
+
+  if (*(char *)0x5aca49 == 0)
+    return upgrade;
+
+  scenario = global_scenario_get();
+  enc_block = (char *)tag_block_get_element((char *)scenario + 0x42c,
+                                            encounter_handle & 0xffff, 0xb0);
+  squad_block = (char *)tag_block_get_element(enc_block + 0x80, squad_index,
+                                              0xe8);
+  csprintf((char *)0x5ab100, (const char *)(upgrade ? 0x2579e4 : 0x2579e0),
+           squad_block);
+  console_printf(0, (char *)0x5ab100);
+  error(2, (const char *)0x257984);
+  return upgrade;
 }
 
 /* 0x416e0 */

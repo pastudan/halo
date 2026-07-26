@@ -4302,7 +4302,7 @@
         },
         {
           "addr": "0x3f900",
-          "decl": "void ai_adjust_damage(int player_index, void *damage_params, float *scale);",
+          "decl": "char ai_adjust_damage(int player_index, void *damage_params, float *scale);",
           "ported": false
         },
         {
@@ -4372,7 +4372,7 @@
         },
         {
           "addr": "0x40150",
-          "decl": "void ai_handle_allegiance_broken_notification(void);",
+          "decl": "void ai_handle_allegiance_broken_notification(int16_t team_a, int16_t team_b, char print_message);",
           "ported": false
         },
         {
@@ -4382,7 +4382,7 @@
         },
         {
           "addr": "0x40460",
-          "decl": "void ai_handle_damage(void);",
+          "decl": "void ai_handle_damage(int victim_handle, int source_handle, int16_t damage_type, float damage_amount, int param_4, char skip_provoke);",
           "ported": false
         },
         {
@@ -4392,7 +4392,7 @@
         },
         {
           "addr": "0x40700",
-          "decl": "void ai_handle_deleted_object(void);",
+          "decl": "void ai_handle_deleted_object(int object_handle);",
           "ported": false
         },
         {
@@ -4427,7 +4427,7 @@
         },
         {
           "addr": "0x41250",
-          "decl": "void ai_consider_major_upgrade(void);",
+          "decl": "char ai_consider_major_upgrade(int encounter_handle, int16_t squad_index, float spawn_cost);",
           "ported": false
         },
         {
@@ -33894,7 +33894,7 @@
         },
         {
           "addr": "0x218d0",
-          "decl": "void actor_combat_build_grenade_trajectory(void);",
+          "decl": "char actor_combat_build_grenade_trajectory(int origin@<eax>, float *direction@<ebx>, int16_t grenade_index, float *target_pos, float *param_14, float *aim_vector, float *param_20, float *launch_velocity, float *out_speed);",
           "ported": false
         },
         {

@@ -1295,7 +1295,7 @@ char FUN_00021e50(int actor_handle, short param_2, float *param_3, int param_4, 
 
   datum_get((void *)(uintptr_t)ecx, 0);
   tag_get('vtca', 0);
-  actor_combat_build_grenade_trajectory();
+  actor_combat_build_grenade_trajectory(0, 0, 0, 0, 0, 0, 0, 0, 0);
   /* test (char)eax, (char)eax -> je 0x21f57 */
   ai_test_ballistic_line_of_fire(0, 0, 0, (float *)(uintptr_t)eax, 0.0f, 0, ecx);
   /* test (char)eax, (char)eax -> je 0x21f57 */

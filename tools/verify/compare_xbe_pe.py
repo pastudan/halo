@@ -169,6 +169,14 @@ def main() -> int:
         ("FUN_000647c0", 0x647c0, 0x648a0),
         ("prop_orphan_update_information", 0x64a60, 0x64a80),
         ("FUN_00064400", 0x64400, 0x645a0),
+        # ai damage / allegiance / lifecycle wave (2026-07-26)
+        ("ai_adjust_damage", 0x3f900, 0x3f970),
+        ("ai_handle_allegiance_broken_notification", 0x40150, 0x40280),
+        ("ai_handle_damage", 0x40460, 0x40570),
+        ("ai_handle_deleted_object", 0x40700, 0x40860),
+        ("ai_handle_unit_effect", 0x40860, 0x409a0),
+        ("ai_consider_major_upgrade", 0x41250, 0x413c0),
+        ("actor_combat_build_grenade_trajectory", 0x218d0, 0x219e0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

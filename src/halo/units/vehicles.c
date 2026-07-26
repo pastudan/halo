@@ -331,7 +331,7 @@ void FUN_001b4dc0(int handle, void *damage_data, unsigned int flags, float body_
   /* test (char)eax, (char)eax -> je 0x1b526a */
   ai_handle_death(handle, 0, 0);
   /* relift: test byte ptr [esi + 0xb6], 4 -> jne 0x1b5294 */
-  ai_handle_damage();
+  ai_handle_damage(0, 0, 0, 0.0f, 0, 0);
   /* relift: cmp dword ptr [esi + 0x1c8], -1 -> je 0x1b53d1 */
   /* relift: relift: fcomp dword ptr [0x2533c0] */
   /* test (char)eax, 0x41 -> jne 0x1b53d1 */

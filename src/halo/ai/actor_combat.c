@@ -955,37 +955,69 @@ int actor_aim_grenade(int actor_handle, void *aim_params, float *out_aim_vector)
 }
 /* --- actor_combat.obj batch drafts (2026-07-26) --- */
 
-/* 0x218d0 */
-void actor_combat_build_grenade_trajectory(void)
+/* 0x218d0 — compute grenade launch velocity for a ballistic arc. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(2)))
+#endif
+char actor_combat_build_grenade_trajectory(int origin, float *direction,
+                                           int16_t grenade_index,
+                                           float *target_pos, float *param_14,
+                                           float *aim_vector, float *param_20,
+                                           float *launch_velocity,
+                                           float *out_speed)
 {
-  int eax = 0;
-  int ebx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  void *scenario;
+  char *grenade_block;
+  char *projectile_def;
+  int projectile_tag;
+  char drop_flag;
+  float local_speed;
+  char result;
 
-  /* test eax, eax -> je 0x218ed */
-  /* test ebx, ebx -> je 0x218ed */
-  /* test eax, eax -> jne 0x2190d */
-  display_assert((char *)0x00254990, (char *)0x00254910, 1780, 0);
-  system_exit(0);
-  game_globals_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* test eax, eax -> je 0x219d5 */
-  /* cmp eax, -1 -> je 0x219d5 */
-  tag_get('jorp', 0);
-  /* test edi, edi -> je 0x219d5 */
-  projectile_aim(0, 0, 0, (void *)(uintptr_t)edx, 0, 0, 0, 0, 0, 0, 0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x219d5 */
-  /* test esi, esi -> je 0x219d7 */
-  /* test (char)eax, (char)eax -> je 0x219c4 */
-  projectile_get_ballistic_acceleration(0);
+  if (origin == 0 || target_pos == 0 || direction == 0 || aim_vector == 0)
+    goto fail;
 
-  (void)eax;
-  (void)ebx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  scenario = game_globals_get();
+  grenade_block = (char *)tag_block_get_element(
+      (char *)scenario + 0x128, grenade_index, 0x44);
+  if (grenade_block == 0)
+    goto fail;
+  projectile_tag = *(int *)(grenade_block + 0x40);
+  if (projectile_tag == -1)
+    goto fail;
+
+  projectile_def = (char *)tag_get('jorp', projectile_tag);
+  if (projectile_def == 0)
+    goto fail;
+
+  drop_flag = 0;
+  result = projectile_aim((int)(uintptr_t)projectile_def, origin,
+                          (int)(uintptr_t)target_pos, &local_speed, 0,
+                          (int)(uintptr_t)param_14, 0, 0,
+                          (int)(uintptr_t)direction, (int)(uintptr_t)aim_vector,
+                          (int)(uintptr_t)param_20, 0, &drop_flag);
+  if (result == 0)
+    goto fail;
+
+  if (launch_velocity != 0) {
+    float speed_scalar = aim_vector[0];
+
+    launch_velocity[0] = speed_scalar * direction[0];
+    launch_velocity[1] = speed_scalar * direction[1];
+    launch_velocity[2] = speed_scalar * direction[2];
+  }
+
+  if (out_speed != 0) {
+    if (drop_flag != 0)
+      *out_speed = *(float *)0x2533c0;
+    else
+      *out_speed = projectile_get_ballistic_acceleration(
+          (int)(uintptr_t)projectile_def);
+  }
+  return 1;
+
+fail:
+  return 0;
 }
 
 /* 0x220c0 */
