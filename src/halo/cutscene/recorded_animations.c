@@ -797,69 +797,21 @@ void FUN_000959b0(int object __attribute__((unused)), void *ctrl __attribute__((
 #endif
 
 
-/* FUN_00095a20 (0x95a20) — XBE naked draft (batch 291). */
-#if defined(__clang__)
-static void *(*const b95a20_get)(int, int) = object_get_and_verify_type;
-static void *(*const b95a20_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-char FUN_00095a20(int object __attribute__((unused)))
+/* FUN_00095a20 (0x95a20) — readable C lift. */
+char FUN_00095a20(int object)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x200\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6c696669\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b95a20_get), [tag] "m"(b95a20_tag)
-      : "memory");
+  void *obj = object_get_and_verify_type(object, 0x200);
+  tag_get(*(void **)obj, 0x6c696669);
+  return 1;
 }
-#else
-#error "FUN_00095a20: clang naked draft required"
-#endif
 
-
-/* FUN_00095a60 (0x95a60) — XBE naked draft (batch 291). */
-#if defined(__clang__)
-static void *(*const b95a60_get)(int, int) = object_get_and_verify_type;
-static void *(*const b95a60_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-char FUN_00095a60(int object __attribute__((unused)))
+/* FUN_00095a60 (0x95a60) — readable C lift. */
+char FUN_00095a60(int object)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x200\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6c696669\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b95a60_get), [tag] "m"(b95a60_tag)
-      : "memory");
+  void *obj = object_get_and_verify_type(object, 0x200);
+  tag_get(*(void **)obj, 0x6c696669);
+  return 1;
 }
-#else
-#error "FUN_00095a60: clang naked draft required"
-#endif
-
 
 /* FUN_00095ad0 (0x95ad0) — XBE naked draft (batch 282). */
 #if defined(__clang__)

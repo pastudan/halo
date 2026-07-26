@@ -5428,7 +5428,7 @@
         {
           "addr": "0x93640",
           "decl": "void FUN_00093640(int title);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x93660",
@@ -22924,7 +22924,7 @@
         {
           "addr": "0x95640",
           "decl": "char recorded_animation_play(int actor, short anim_idx);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x95660",
@@ -22974,7 +22974,7 @@
         {
           "addr": "0x95a20",
           "decl": "char FUN_00095a20(int object);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x95a60",
