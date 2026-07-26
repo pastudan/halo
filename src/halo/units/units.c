@@ -3617,63 +3617,85 @@ char FUN_001aa360(int unit_handle, int param_2, int16_t index)
   return 0;
 }
 
-/* FUN_001aa430 (0x1aa430) — unit_can_see_point
- *
- * Returns true if the given point is within the unit's field of view.
- * Computes a direction vector from the unit's head marker to the target
- * point, normalizes it, then takes the dot product with the unit's
- * facing/aiming vector at +0x210. Compares against cos(param_3) where
- * param_3 is the half-angle of the vision cone.
- *
- * Returns false if unit_handle is NONE (-1).
- *
- * Confirmed: cdecl, 3 stack params (unit_handle, point, half_angle).
- * Confirmed: "head" marker name at 0x2909e4.
- * Confirmed: marker buffer 0x78 bytes, position at buffer+0x60.
- * Confirmed: FPU dot product order: z*fz + y*fy + x*fx.
- * Confirmed: FCOS + FCOMPP comparison: dot > cos(angle) → return 1.
- * Confirmed: normalize3d return (magnitude) discarded via FSTP ST0.
- */
-char FUN_001aa430(int unit_handle, float *point, float half_angle)
+/* FUN_001aa430 (0x1aa430) — XBE naked draft (batch 64). */
+#if defined(__clang__)
+static void *(*const b1aa430_get)(int, int) = object_get_and_verify_type;
+static short (*const b1aa430_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
+static float (*const b1aa430_norm)(float *) = normalize3d;
+
+__attribute__((naked, noinline))
+char FUN_001aa430(int unit_handle __attribute__((unused)), float *point __attribute__((unused)), float half_angle __attribute__((unused)))
 {
-  char *unit;
-  char marker_buf[0x78];
-  float *marker_pos;
-  float dir[3];
-  float dot;
-
-  if (unit_handle == -1) {
-    return 0;
-  }
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  object_get_markers_by_string_id(unit_handle, (void *)0x2909e4,
-                                  marker_buf, 1);
-
-  /* dir = point - head_marker_position. The original keeps dir as a single
-   * contiguous 3-float vector ([ebp-0xc/-0x8/-0x4]) and passes its base to
-   * normalize3d, which reads all three components in place. dir MUST be an
-   * array, not three separate float locals: clang scatters separate locals
-   * across non-adjacent (and reordered) stack slots, so normalize3d(&dir_x)
-   * would read uninitialized stack for components [1] and [2] -> huge garbage
-   * -> normalize collapse -> assert_valid_real_normal3d crash (PoA marines). */
-  marker_pos = (float *)(marker_buf + 0x60);
-  dir[0] = point[0] - marker_pos[0];
-  dir[1] = point[1] - marker_pos[1];
-  dir[2] = point[2] - marker_pos[2];
-
-  normalize3d(dir);
-
-  dot = dir[0] * *(float *)(unit + 0x210) +
-        dir[1] * *(float *)(unit + 0x214) +
-        dir[2] * *(float *)(unit + 0x218);
-
-  if (dot > x87_fcos(half_angle)) {
-    return 1;
-  }
-
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x78, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_001aa430_1\n\t"
+      "pushl %%esi\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl $1\n\t"
+      "leal -0x78(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2909e4\n\t"
+      "pushl %%edi\n\t"
+      "call *%[markers]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "flds (%%eax)\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "fsubs -0x18(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs -0x14(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fsubs -0x10(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x218(%%esi)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x214(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x210(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fcos\n\t"
+      "fxch %%st(1)\n\t"
+      "fxch %%st(1)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "movb $1, %%al\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_001aa430_2\n\t"
+      ".LFUN_001aa430_1:\n\t"
+      "movb %%bl, %%al\n\t"
+      ".LFUN_001aa430_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1aa430_get), [markers] "m"(b1aa430_markers), [norm] "m"(b1aa430_norm)
+      : "memory");
 }
+#else
+#error "FUN_001aa430: clang naked draft required"
+#endif
+
 
 /* any_unit_is_dangerous (0x1aa3c0)
  *
@@ -9941,45 +9963,98 @@ void FUN_001a7790(int param_1 __attribute__((unused)))
 #endif
 
 
-/* FUN_001a6bf0 (0x1a6bf0)
- * Selects dialogue variant for the unit if none is set. */
-void FUN_001a6bf0(int unit_handle)
-{
-  uint32_t *unit;
-  char *unit_tag;
-  int *dialogue_block;
-  int16_t *variant;
-  uint16_t count;
-  int16_t i;
-  int16_t variants[16];
+/* FUN_001a6bf0 (0x1a6bf0) — XBE naked draft (batch 64). */
+#if defined(__clang__)
+static void *(*const b1a6bf0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a6bf0_tag)(int, int) = tag_get;
+static void *(*const b1a6bf0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b1a6bf0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
-  unit = (uint32_t *)object_get_and_verify_type(unit_handle, 3);
-  unit_tag = (char *)tag_get(0x756e6974, *unit);
-  if (*(int16_t *)((char *)unit + 0x6e) == 0) {
-    dialogue_block = (int *)(unit_tag + 0x2b4);
-    count = 0;
-    i = 0;
-    if (0 < *dialogue_block) {
-      do {
-        variant = (int16_t *)tag_block_get_element(dialogue_block, (int)i, 0x18);
-        if (*variant < 100) {
-          if (count >= 0xf) {
-            error(2, "unit_dialogue_determine_variant overflowed variant array");
-            break;
-          }
-          variants[(int16_t)count] = *variant;
-          count++;
-        }
-        i++;
-      } while ((int)i < *dialogue_block);
-      if ((int16_t)count > 0) {
-        *(int16_t *)((char *)unit + 0x6e) =
-            variants[*(int *)0x4e4cf4 % (int)(int16_t)count];
-        *(int *)0x4e4cf4 = *(int *)0x4e4cf4 + 1;
-      }
-    }
-  }
+__attribute__((naked, noinline))
+void FUN_001a6bf0(int unit_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x24, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x756e6974\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $0, 0x6e(%%esi)\n\t"
+      "jne .LFUN_001a6bf0_6\n\t"
+      "pushl %%ebx\n\t"
+      "leal 0x2b4(%%eax), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .LFUN_001a6bf0_5\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_001a6bf0_1:\n\t"
+      "pushl $0x18\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "movw (%%eax), %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $0x64, %%ax\n\t"
+      "jge .LFUN_001a6bf0_2\n\t"
+      "cmpw $0x10, %%di\n\t"
+      "jae .LFUN_001a6bf0_3\n\t"
+      "movswl %%di, %%edx\n\t"
+      "movw %%ax, -0x24(%%ebp,%%edx,2)\n\t"
+      "incl %%edi\n\t"
+      ".LFUN_001a6bf0_2:\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "incl %%ebx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .LFUN_001a6bf0_1\n\t"
+      "jmp .LFUN_001a6bf0_4\n\t"
+      ".LFUN_001a6bf0_3:\n\t"
+      "pushl $0x2b6714\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_001a6bf0_4:\n\t"
+      "testw %%di, %%di\n\t"
+      "jle .LFUN_001a6bf0_5\n\t"
+      "movl 0x4e4cf4, %%ecx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "movswl %%di, %%esi\n\t"
+      "cdq\n\t"
+      "idivl %%esi\n\t"
+      "incl %%ecx\n\t"
+      "movl %%ecx, 0x4e4cf4\n\t"
+      "movw -0x24(%%ebp,%%edx,2), %%ax\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movw %%ax, 0x6e(%%edx)\n\t"
+      ".LFUN_001a6bf0_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_001a6bf0_6:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a6bf0_get), [tag] "m"(b1a6bf0_tag), [elem] "m"(b1a6bf0_elem), [c8f390] "m"(b1a6bf0_c8f390)
+      : "memory");
 }
+#else
+#error "FUN_001a6bf0: clang naked draft required"
+#endif
+
 
 /* FUN_001a70d0 (0x1a70d0) — XBE naked draft (batch 63). */
 #if defined(__clang__)
@@ -11209,53 +11284,92 @@ void FUN_001ab110(int unit_handle __attribute__((unused)), char flag __attribute
 #endif
 
 
-/* FUN_001a6280 (0x1a6280)
- * Biped death state handler. After a biped is killed, decides which
- * post-death sub-state to enter: limp-noodle (ragdoll-like), dying-airborne
- * (fell while dying), or normal dying. Checks limp-noodle counter, airborne
- * ticks, and animation state.
- * Register args: @edi = unit_handle, @ebx = pointer to state byte pair.
- * Confirmed from caller 0x1a6350 @001a65ed. */
-void FUN_001a6280(int unit_handle, char *state_out)
+/* FUN_001a6280 (0x1a6280) — XBE naked draft (batch 64). */
+#if defined(__clang__)
+static void *(*const b1a6280_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a6280_tag)(int, int) = tag_get;
+static char (*const b1a6280_c1a0680)(int unit_handle) = FUN_001a0680;
+static void (*const b1a6280_c1a2800)(int unit_handle, const char *failure_kind) = FUN_001a2800;
+static void (*const b1a6280_c1a2160)(int unit_handle) = FUN_001a2160;
+static void (*const b1a6280_c1a4440)(int unit_handle) = FUN_001a4440;
+
+__attribute__((naked, noinline))
+void FUN_001a6280(int unit_handle __attribute__((unused)), char *state_out __attribute__((unused)))
 {
-  char *biped;
-  char *biped_tag;
-
-  biped = (char *)object_get_and_verify_type(unit_handle, 1);
-  biped_tag = (char *)tag_get(0x62697064, *(int *)biped);
-
-  /* Check limp-noodle state */
-  if ((*(uint8_t *)(biped + 0x424) & 0x20) != 0 &&
-      *(uint8_t *)(biped + 0x47c) < *(uint8_t *)(biped + 0x47d)) {
-    if (*(char *)0x4e4cf3 == 0) {
-      FUN_001a0680(unit_handle);
-    }
-    FUN_001a2800(unit_handle, "post-limp-noodle");
-    state_out[1] = 0;
-    return;
-  }
-
-  /* Check dying-airborne state */
-  if (*(int8_t *)(biped + 0x459) > 2 &&
-      (*(uint32_t *)(biped_tag + 0x2f4) & 0x400) == 0) {
-    if (*(uint8_t *)(biped + 0x253) == 0x18) {
-      FUN_001a2160(unit_handle);
-    }
-    *state_out = 0x18;
-    FUN_001a2800(unit_handle, "post-dying-airborne");
-    state_out[1] = 0;
-    return;
-  }
-
-  /* Normal dying state */
-  if (*(uint8_t *)(biped + 0x253) == 0x18) {
-    *(int *)(biped + 0x468) = 0;
-    FUN_001a4440(unit_handle);
-  }
-  *state_out = 0x19;
-  FUN_001a2800(unit_handle, "post-dying");
-  state_out[1] = 0;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x424(%%esi), %%cl\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb $0x20, %%cl\n\t"
+      "je .LFUN_001a6280_2\n\t"
+      "movb 0x47c(%%esi), %%cl\n\t"
+      "cmpb 0x47d(%%esi), %%cl\n\t"
+      "jae .LFUN_001a6280_2\n\t"
+      "movb 0x4e4cf3, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a6280_1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1a0680]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001a6280_1:\n\t"
+      "pushl $0x2b51ec\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c1a2800]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $0, 0x1(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".LFUN_001a6280_2:\n\t"
+      "cmpb $3, 0x459(%%esi)\n\t"
+      "jl .LFUN_001a6280_4\n\t"
+      "movl 0x2f4(%%eax), %%ecx\n\t"
+      "testb $4, %%ch\n\t"
+      "jne .LFUN_001a6280_4\n\t"
+      "cmpb $0x18, 0x253(%%esi)\n\t"
+      "jne .LFUN_001a6280_3\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c1a2160]\n\t"
+      ".LFUN_001a6280_3:\n\t"
+      "pushl $0x2b51d8\n\t"
+      "movl %%edi, %%eax\n\t"
+      "movb $0x18, (%%ebx)\n\t"
+      "call *%[c1a2800]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $0, 0x1(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".LFUN_001a6280_4:\n\t"
+      "cmpb $0x18, 0x253(%%esi)\n\t"
+      "jne .LFUN_001a6280_5\n\t"
+      "pushl %%edi\n\t"
+      "movl $0, 0x468(%%esi)\n\t"
+      "call *%[c1a4440]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001a6280_5:\n\t"
+      "pushl $0x2b51cc\n\t"
+      "movl %%edi, %%eax\n\t"
+      "movb $0x19, (%%ebx)\n\t"
+      "call *%[c1a2800]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $0, 0x1(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a6280_get), [tag] "m"(b1a6280_tag), [c1a0680] "m"(b1a6280_c1a0680), [c1a2800] "m"(b1a6280_c1a2800), [c1a2160] "m"(b1a6280_c1a2160), [c1a4440] "m"(b1a6280_c1a4440)
+      : "memory");
 }
+#else
+#error "FUN_001a6280: clang naked draft required"
+#endif
+
 
 /* FUN_001a68d0 (0x1a68d0) — XBE naked draft (batch 52). */
 #if defined(__clang__)

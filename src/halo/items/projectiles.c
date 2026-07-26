@@ -660,62 +660,82 @@ void FUN_000f8590(int projectile_handle)
   }
 }
 
-/* Initialise the projectile's parabolic detonation-radius cache fields
- * (proj+0x20c, proj+0x210, proj+0x208, proj+0x204).
- *
- * Fetches the 'proj' tag definition for the object, then selects between two
- * sets of tag range fields based on bit 4 of the object flags byte at proj+4:
- *
- *   bit4 SET   (detonating state):
- *     range_begin = tag+0x1dc, range_end = tag+0x1e0
- *     compare field for threshold: tag+0x1dc
- *   bit4 CLEAR (non-detonating state):
- *     range_begin = tag+0x1d0, range_end = tag+0x1d4
- *     compare field for threshold: tag+0x1d0
- *
- * For both branches:
- *   proj+0x20c = FUN_000f7fa0(tag, range_begin, range_end)  [parabolic apex]
- *   proj+0x210 = tag+0x1e0  [raw end-range copy]
- *   If range_begin > 0.0:
- *     proj+0x208 = range_begin / tag+0x1e4
- *   Else (range_begin <= 0.0 or zero threshold):
- *     proj+0x204 = 1.0f
- *     proj+0x208 = 0.0f
- *
- * Called with projectile_handle in EAX (register arg). */
-void FUN_000f8640(int projectile_handle)
+/* FUN_000f8640 (0xf8640) — XBE naked draft (batch 64). */
+#if defined(__clang__)
+static void *(*const bf8640_get)(int, int) = object_get_and_verify_type;
+static void *(*const bf8640_tag)(int, int) = tag_get;
+static float (*const bf8640_cf7fa0)(void *tag, float range_begin, float range_end) = FUN_000f7fa0;
+
+__attribute__((naked, noinline))
+void FUN_000f8640(int projectile_handle __attribute__((unused)))
 {
-  char *proj;
-  char *tag_def;
-  float range_begin;
-  float ratio;
-
-  proj = (char *)object_get_and_verify_type(projectile_handle, 0x20);
-  tag_def = (char *)tag_get(0x70726f6a, *(int *)proj);
-
-  if (*(uint8_t *)(proj + 0x4) & 0x10) {
-    /* detonating branch: use tag offsets 0x1dc/0x1e0 */
-    *(float *)(proj + 0x20c) = FUN_000f7fa0(
-      tag_def, *(float *)(tag_def + 0x1dc), *(float *)(tag_def + 0x1e0));
-    *(int *)(proj + 0x210) = *(int *)(tag_def + 0x1e0);
-    range_begin = *(float *)(tag_def + 0x1dc);
-  } else {
-    /* non-detonating branch: use tag offsets 0x1d0/0x1d4 */
-    *(float *)(proj + 0x20c) = FUN_000f7fa0(
-      tag_def, *(float *)(tag_def + 0x1d0), *(float *)(tag_def + 0x1d4));
-    *(int *)(proj + 0x210) = *(int *)(tag_def + 0x1e0);
-    range_begin = *(float *)(tag_def + 0x1d0);
-  }
-
-  if (range_begin > *(float *)0x2533c0) {
-    ratio = range_begin / *(float *)(tag_def + 0x1e4);
-    *(float *)(proj + 0x208) = ratio;
-    return;
-  }
-
-  *(float *)(proj + 0x204) = 1.0f;
-  *(float *)(proj + 0x208) = 0.0f;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x70726f6a\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movb 0x4(%%esi), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb $0x10, %%al\n\t"
+      "je .LFUN_000f8640_1\n\t"
+      "movl 0x1e0(%%ecx), %%edx\n\t"
+      "movl 0x1dc(%%ecx), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cf7fa0]\n\t"
+      "fstps 0x20c(%%esi)\n\t"
+      "movl 0x1e0(%%ecx), %%edx\n\t"
+      "movl %%edx, 0x210(%%esi)\n\t"
+      "flds 0x1dc(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_000f8640_2\n\t"
+      "flds 0x1dc(%%ecx)\n\t"
+      "fdivs 0x1e4(%%ecx)\n\t"
+      "fstps 0x208(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".LFUN_000f8640_1:\n\t"
+      "movl 0x1d4(%%ecx), %%eax\n\t"
+      "movl 0x1d0(%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[cf7fa0]\n\t"
+      "fstps 0x20c(%%esi)\n\t"
+      "movl 0x1e0(%%ecx), %%eax\n\t"
+      "movl %%eax, 0x210(%%esi)\n\t"
+      "flds 0x1d0(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_000f8640_2\n\t"
+      "flds 0x1d0(%%ecx)\n\t"
+      "fdivs 0x1e4(%%ecx)\n\t"
+      "fstps 0x208(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".LFUN_000f8640_2:\n\t"
+      "movl $0x3f800000, 0x204(%%esi)\n\t"
+      "movl $0, 0x208(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bf8640_get), [tag] "m"(bf8640_tag), [cf7fa0] "m"(bf8640_cf7fa0)
+      : "memory");
 }
+#else
+#error "FUN_000f8640: clang naked draft required"
+#endif
+
 
 /* FUN_000f8720 (0xf8720) — XBE naked draft (batch 58). */
 #if defined(__clang__)
@@ -3806,57 +3826,85 @@ int FUN_000f9c40(int projectile_handle __attribute__((unused)))
 #endif
 
 
-/*
- * Compute the average damage value for the given weapon tag's projectile.
- *
- * Looks up the weapon tag (group 'weap') and retrieves the first element of
- * the trigger block at offset 0x4fc (element size 0x114).  If out_field8 is
- * non-NULL, writes the float at element+8 there (a trigger parameter such as
- * rounds-per-shot or charge time).
- *
- * Then follows the projectile-type reference at element+0xa0 to a 'proj' tag,
- * and from there the impact-damage-effect reference at proj+0x230 ('jpt!').
- * The midpoint of the damage range (min+max)*0.5f is accumulated.  If a
- * second damage-effect reference exists at proj+0x220, its midpoint is added
- * as well.  Returns the total accumulated average damage as a float.
- */
-float FUN_000fac20(int weapon_tag_index, float *out_field8)
-{
-  char *weap_tag;
-  char *trigger_elem;
-  char *proj_tag;
-  char *jpt_tag;
-  int proj_ref;
-  int jpt_ref;
-  float local_float;
+/* FUN_000fac20 (0xfac20) — XBE naked draft (batch 64). */
+#if defined(__clang__)
+static void *(*const bfac20_tag)(int, int) = tag_get;
+static void *(*const bfac20_elem)(void *, int, int) = tag_block_get_element;
 
-  weap_tag = (char *)tag_get(0x77656170, weapon_tag_index);
-  trigger_elem =
-    (char *)tag_block_get_element((void *)(weap_tag + 0x4fc), 0, 0x114);
-  local_float = 0.0f;
-  if (out_field8 != (float *)0) {
-    *out_field8 = *(float *)(trigger_elem + 0x8);
-  }
-  proj_ref = *(int *)(trigger_elem + 0xa0);
-  if (proj_ref == -1) {
-    return local_float;
-  }
-  proj_tag = (char *)tag_get(0x70726f6a, proj_ref);
-  jpt_ref = *(int *)(proj_tag + 0x230);
-  if (jpt_ref != -1) {
-    jpt_tag = (char *)tag_get(0x6a707421, jpt_ref);
-    local_float = (*(float *)(jpt_tag + 0x1d8) + *(float *)(jpt_tag + 0x1d4)) *
-                  *(float *)0x253398;
-  }
-  jpt_ref = *(int *)(proj_tag + 0x220);
-  if (jpt_ref == -1) {
-    return local_float;
-  }
-  jpt_tag = (char *)tag_get(0x6a707421, jpt_ref);
-  return (*(float *)(jpt_tag + 0x1d8) + *(float *)(jpt_tag + 0x1d4)) *
-           *(float *)0x253398 +
-         local_float;
+__attribute__((naked, noinline))
+float FUN_000fac20(int weapon_tag_index __attribute__((unused)), float *out_field8 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "pushl $0x114\n\t"
+      "addl $0x4fc, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "je .LFUN_000fac20_1\n\t"
+      "movl 0x8(%%eax), %%edx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      ".LFUN_000fac20_1:\n\t"
+      "movl 0xa0(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "je .LFUN_000fac20_3\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x70726f6a\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x230(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000fac20_2\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6a707421\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x1d8(%%eax)\n\t"
+      "fadds 0x1d4(%%eax)\n\t"
+      "addl $8, %%esp\n\t"
+      "fmuls 0x253398\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".LFUN_000fac20_2:\n\t"
+      "movl 0x220(%%esi), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_000fac20_3\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x6a707421\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x1d8(%%eax)\n\t"
+      "fadds 0x1d4(%%eax)\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "fmuls 0x253398\n\t"
+      "fadds -0x4(%%ebp)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000fac20_3:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(bfac20_tag), [elem] "m"(bfac20_elem)
+      : "memory");
 }
+#else
+#error "FUN_000fac20: clang naked draft required"
+#endif
+
 
 /*
  * Wrapper: advance animation state by one frame (update_kind=1) for the

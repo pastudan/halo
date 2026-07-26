@@ -4257,49 +4257,84 @@ void FUN_001a2900(int unit_handle __attribute__((unused)), char *state __attribu
 #endif
 
 
-/* FUN_001a2a60 (0x1a2a60) — post-landing update step
- *
- * Step in the biped update dispatcher (FUN_001a6350), reached when the biped
- * has a landing-animation index (object+0x460 != NONE). Increments the
- * landing-frame counter (object+0x428); once it reaches the landing frame
- * count (object+0x429) the landing animation index (object+0x460) is cleared
- * to NONE (0xffff). When no cinematic is running and the landing has just
- * begun (counter == 2) or is effectively a one-frame landing (index already
- * cleared and frame count < 2), fires two collision-user events via
- * FUN_001a0f10 with selector indices 0 then 1 (param_2 = 5). Writes the
- * resulting landing-sound id into *state (0x16 if index == 1, else 0x15) and
- * emits the "post-landing" timing marker via FUN_001a2800.
- *
- * unit_handle arrives in EDI (register parameter); state is the only stack
- * argument (caller pushes &update_state byte).
- *
- * Confirmed: object_get_and_verify_type(unit_handle, 1); tag_get('bipd',...);
- * cinematic_in_progress (0x930a0); FUN_001a0f10(unit, 5, idx) idx->BX (0,1).
- */
-void FUN_001a2a60(int unit_handle /* @edi */, char *state)
+/* FUN_001a2a60 (0x1a2a60) — XBE naked draft (batch 64). */
+#if defined(__clang__)
+static void *(*const b1a2a60_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a2a60_tag)(int, int) = tag_get;
+static bool (*const b1a2a60_c930a0)(void) = cinematic_in_progress;
+static void (*const b1a2a60_c1a0f10)(int unit_handle, int param_2, short index) = FUN_001a0f10;
+static void (*const b1a2a60_c1a2800)(int unit_handle, const char *failure_kind) = FUN_001a2800;
+
+__attribute__((naked, noinline))
+void FUN_001a2a60(int unit_handle __attribute__((unused)), char *state __attribute__((unused)))
 {
-  unsigned char *object;
-  char counter;
-
-  object = (unsigned char *)object_get_and_verify_type(unit_handle, 1);
-  tag_get(0x62697064, *(int *)object); /* 'bipd' */
-
-  counter = (char)(object[0x428] + 1);
-  object[0x428] = (unsigned char)counter;
-  if (counter >= (char)object[0x429]) {
-    *(short *)(object + 0x460) = -1;
-  }
-
-  if ((cinematic_in_progress() == 0) &&
-      (((char)object[0x428] == 2) ||
-       ((*(short *)(object + 0x460) == -1) && ((char)object[0x429] < 2)))) {
-    FUN_001a0f10(unit_handle, 5, 0);
-    FUN_001a0f10(unit_handle, 5, 1);
-  }
-
-  *state = (char)((*(short *)(object + 0x460) == 1) + 0x15);
-  FUN_001a2800(unit_handle, "post-landing");
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x428(%%esi), %%dl\n\t"
+      "movb 0x429(%%esi), %%cl\n\t"
+      "addl $0x10, %%esp\n\t"
+      "incb %%dl\n\t"
+      "movb %%dl, %%al\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      "cmpb %%cl, %%al\n\t"
+      "movb %%dl, 0x428(%%esi)\n\t"
+      "jl .LFUN_001a2a60_1\n\t"
+      "movw %%bx, 0x460(%%esi)\n\t"
+      ".LFUN_001a2a60_1:\n\t"
+      "call *%[c930a0]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a2a60_3\n\t"
+      "movb 0x428(%%esi), %%cl\n\t"
+      "movb $2, %%al\n\t"
+      "cmpb %%al, %%cl\n\t"
+      "je .LFUN_001a2a60_2\n\t"
+      "cmpw %%bx, 0x460(%%esi)\n\t"
+      "jne .LFUN_001a2a60_3\n\t"
+      "cmpb %%al, 0x429(%%esi)\n\t"
+      "jge .LFUN_001a2a60_3\n\t"
+      ".LFUN_001a2a60_2:\n\t"
+      "pushl $5\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "call *%[c1a0f10]\n\t"
+      "pushl $5\n\t"
+      "pushl %%edi\n\t"
+      "movl $1, %%ebx\n\t"
+      "call *%[c1a0f10]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_001a2a60_3:\n\t"
+      "cmpw $1, 0x460(%%esi)\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "sete %%cl\n\t"
+      "addb $0x15, %%cl\n\t"
+      "pushl $0x2b4f9c\n\t"
+      "movl %%edi, %%eax\n\t"
+      "movb %%cl, (%%edx)\n\t"
+      "call *%[c1a2800]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a2a60_get), [tag] "m"(b1a2a60_tag), [c930a0] "m"(b1a2a60_c930a0), [c1a0f10] "m"(b1a2a60_c1a0f10), [c1a2800] "m"(b1a2a60_c1a2800)
+      : "memory");
 }
+#else
+#error "FUN_001a2a60: clang naked draft required"
+#endif
+
 
 /* FUN_001a2b10 (0x1a2b10) — post-slipping update step
  *

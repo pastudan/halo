@@ -916,14 +916,85 @@ bool item_begin_garbage_collection(int item_handle)
   return 1;
 }
 
-/* Read the type byte (offset +3) from an item datum entry (0xf68b0).
- * Returns as short (zero-extended from byte). */
-short FUN_000f68b0(int item_handle)
+/* FUN_000f68b0 (0xf68b0) — XBE naked draft (batch 64). */
+#if defined(__clang__)
+static void *(*const bf68b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+short FUN_000f68b0(int item_handle __attribute__((unused)))
 {
-  char *datum;
-  datum = (char *)datum_get(*(data_t **)0x5a8d50, item_handle);
-  return (unsigned char)datum[3];
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x5a8d50, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movzbw 0x3(%%eax), %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bf68b0_dget)
+      : "memory");
 }
+#else
+#error "FUN_000f68b0: clang naked draft required"
+#endif
+
 
 /* Activate an item: set flags 0x6000, record game time, reset timer (0xf6910).
  */
