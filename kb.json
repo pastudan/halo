@@ -27978,7 +27978,7 @@
         {
           "addr": "0x19e300",
           "decl": "int ustrcasecmp(const wchar_t *s1, const wchar_t *s2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e3b0",
@@ -34333,12 +34333,12 @@
         {
           "addr": "0x32b50",
           "decl": "void actor_perception_tried_to_uncover(int actor_handle, int prop_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x32bb0",
           "decl": "void actor_perception_tried_to_search(int actor_handle, int prop_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x32c10",
