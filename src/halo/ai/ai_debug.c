@@ -13057,74 +13057,26 @@ void FUN_00053790(char *buffer)
 
 
 
-/* FUN_00053800 (0x53800) — XBE naked draft (batch 149). */
-#if defined(__clang__)
-static void (*const b53800_cdeda0)(int font_index, int style, int justify, int flags, int color_tag_index, short color_index) = interface_draw_text;
-static void (*const b53800_c19b640)(const void *color) = draw_string_set_color;
-static void (*const b53800_c19b560)(void *stops, short count) = draw_string_set_tab_stops;
-static void (*const b53800_c183e60)(void *screen_pos, short *bounds, const void *color, int flags, const char *text) = rasterizer_text_draw;
-
-__attribute__((naked, noinline))
-void FUN_00053800(void *buffer __attribute__((unused)), int nstops __attribute__((unused)), int16_t *stops __attribute__((unused)), void *color __attribute__((unused)))
+/* FUN_00053800 (0x53800) — readable C lift. */
+void FUN_00053800(void *buffer, int nstops, int16_t *stops, void *color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movw 0x5aba80, %%ax\n\t"
-      "movw %%ax, -0x10(%%ebp)\n\t"
-      "movl $0x7fff, %%eax\n\t"
-      "movw $0, -0xe(%%ebp)\n\t"
-      "movw %%ax, -0xa(%%ebp)\n\t"
-      "movw %%ax, -0xc(%%ebp)\n\t"
-      "jne .LFUN_00053800_1\n\t"
-      "movl 0x2ee6c4, %%esi\n\t"
-      ".LFUN_00053800_1:\n\t"
-      "pushl $0\n\t"
-      "pushl $5\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $1\n\t"
-      "call *%[cdeda0]\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19b640]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19b560]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c183e60]\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c19b560]\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl -0x6(%%ebp), %%edx\n\t"
-      "addl $0x40, %%esp\n\t"
-      "subl %%edx, %%eax\n\t"
-      "addw %%ax, 0x5aba80\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cdeda0] "m"(b53800_cdeda0), [c19b640] "m"(b53800_c19b640), [c19b560] "m"(b53800_c19b560), [c183e60] "m"(b53800_c183e60)
-      : "memory");
+  int16_t bounds[4];
+  int16_t tmp[4];
+
+  bounds[0] = *(int16_t *)0x5aba80;
+  bounds[1] = 0;
+  bounds[2] = (int16_t)0x7fff;
+  bounds[3] = (int16_t)0x7fff;
+  if (color == 0)
+    color = *(void **)0x2ee6c4;
+  interface_draw_text(1, -1, 0, 0, 5, 0);
+  draw_string_set_color(color);
+  draw_string_set_tab_stops(stops, (short)nstops);
+  rasterizer_text_draw(bounds, 0, tmp, 0, (const char *)buffer);
+  draw_string_set_tab_stops(0, 0);
+  *(int16_t *)0x5aba80 = (int16_t)(*(int16_t *)0x5aba80 + (bounds[0] - tmp[1]));
 }
-#else
-#error "FUN_00053800: clang naked draft required"
-#endif
+
 
 
 /* FUN_00053890 (0x53890) — readable C lift (ai campaign). */

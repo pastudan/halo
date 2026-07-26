@@ -8152,17 +8152,17 @@
         {
           "addr": "0xdd190",
           "decl": "int16_t first_person_weapon_get_marker_by_name(int object_handle, const char *marker_name, void *out_markers, int16_t max_markers);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xdd260",
           "decl": "void first_person_weapon_center_flashlight(int object_handle, float *out_position, float *out_forward, float *out_up);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xdd340",
-          "decl": "char first_person_weapon_adjust_light(int object_handle, int marker_result, void *out_position, void *out_forward, void *out_up);",
-          "ported": false
+          "decl": "char first_person_weapon_adjust_light(int object_handle, const char *marker_name, void *out_position, void *out_forward, void *out_up);",
+          "ported": true
         },
         {
           "addr": "0xdd580",
@@ -35096,7 +35096,7 @@
         {
           "addr": "0x53800",
           "decl": "void FUN_00053800(void *buffer, int nstops, int16_t *stops, void *color @<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00053800"
         },
         {
