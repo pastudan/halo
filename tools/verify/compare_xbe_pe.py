@@ -1042,6 +1042,19 @@ def main() -> int:
         ("FUN_0011b750", 0x11b750, 0x11b84d),
         ("FUN_0011b650", 0x11b650, 0x11b745),
         ("actor_action_try_to_throw_grenade", 0x1fa60, 0x1fb79),
+        # gameplay wave 86 (2026-07-26) — priority Capstone weaks
+        ("FUN_0011a430", 0x11a430, 0x11a534, [(0x11a534, 0x11a548)]),
+        ("ai_debug_get_path_storage", 0x49120, 0x4921b),
+        ("actor_aim_jump", 0x2ace0, 0x2add4),
+        ("actor_action_consider_grenade", 0x1fb80, 0x1fc91),
+        ("actor_get_best_damaging_prop", 0x2fa70, 0x2fb5b),
+        ("FUN_00077040", 0x77040, 0x7711c),
+        ("FUN_0011a340", 0x11a340, 0x11a422),
+        ("FUN_00195550", 0x195550, 0x195644),
+        ("FUN_0011d320", 0x11d320, 0x11d3e5),
+        ("FUN_0002f380", 0x2f380, 0x2f46b),
+        ("collision_surface_perimeter", 0x147710, 0x1477e1),
+        ("rasterizer_text_draw_cached_char", 0x183c00, 0x183ce4),
     ]
 
     xbe = Xbe.from_file(args.xbe)

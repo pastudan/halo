@@ -114,44 +114,113 @@ void actor_perception_acknowledge(int actor_handle, int prop_handle,
   FUN_00036f20(actor_handle, prop_handle, param_3, param_4);
 }
 
-/* FUN_0002f380 (0x2f380)
- * Returns the engagement level (0-3) for a prop relative to actor.
- * 3 = actively targeting/seen; 2/3 = based on orphan state; 0/1/2 = based
- * on actor awareness level when no prop or no orphan.
- */
-uint16_t FUN_0002f380(int actor_handle, int prop_handle)
-{
-  char *actor;
-  char *prop;
-  char *orphan;
-  uint16_t r;
+/* FUN_0002f380 (0x2f380) — XBE naked draft (batch 86). */
+#if defined(__clang__)
+static void *(*const b2f380_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b2f380_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b2f380_exitfn)(int) = system_exit;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (prop_handle != -1) {
-    prop = (char *)datum_get(*(data_t **)0x5ab23c, prop_handle);
-    if (*(int *)(prop + 4) != actor_handle) {
-      display_assert("prop->owner_actor_index == actor_index",
-                     "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x572, 1);
-      system_exit(-1);
-    }
-    if ((*(short *)(prop + 0x24) >= 2 && *(short *)(prop + 0x24) <= 3) ||
-        *(short *)(prop + 0x66) == 1 || *(short *)(prop + 0x66) == 2 ||
-        (*(char *)(prop + 0x60) == 0 &&
-         (*(char *)(prop + 0x127) == 0 || *(short *)(actor + 0x6a) >= 3))) {
-      return 3;
-    }
-    if (*(int *)(prop + 0xc) != -1) {
-      orphan = (char *)datum_get(*(data_t **)0x5ab23c, *(int *)(prop + 0xc));
-      r = (uint16_t)((*(char *)(orphan + 0xb8) != 0) + 2);
-      if (r != 0xffff) {
-        return r;
-      }
-    }
-  }
-  if (*(short *)(actor + 0x6e) >= 2)
-    return 2;
-  return (uint16_t)(*(short *)(actor + 0x6a) >= 3);
+__attribute__((naked, noinline))
+uint16_t FUN_0002f380(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_0002f380_5\n\t"
+      "movl 0x5ab23c, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "je .LFUN_0002f380_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x572\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x255f88\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0002f380_1:\n\t"
+      "movw 0x24(%%esi), %%ax\n\t"
+      "cmpw $2, %%ax\n\t"
+      "jl .LFUN_0002f380_2\n\t"
+      "cmpw $3, %%ax\n\t"
+      "jle .LFUN_0002f380_3\n\t"
+      ".LFUN_0002f380_2:\n\t"
+      "movw 0x66(%%esi), %%ax\n\t"
+      "cmpw $1, %%ax\n\t"
+      "je .LFUN_0002f380_3\n\t"
+      "cmpw $2, %%ax\n\t"
+      "je .LFUN_0002f380_3\n\t"
+      "movb 0x60(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0002f380_4\n\t"
+      "movb 0x127(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0002f380_3\n\t"
+      "cmpw $3, 0x6a(%%ebx)\n\t"
+      "jl .LFUN_0002f380_4\n\t"
+      ".LFUN_0002f380_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $3, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0002f380_4:\n\t"
+      "movl 0xc(%%esi), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_0002f380_5\n\t"
+      "movl 0x5ab23c, %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0xb8(%%eax), %%dl\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%dl, %%dl\n\t"
+      "setne %%cl\n\t"
+      "addl $2, %%ecx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "jne .LFUN_0002f380_6\n\t"
+      ".LFUN_0002f380_5:\n\t"
+      "movl $2, %%eax\n\t"
+      "cmpw %%ax, 0x6e(%%ebx)\n\t"
+      "jge .LFUN_0002f380_6\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpw $3, 0x6a(%%ebx)\n\t"
+      "setge %%al\n\t"
+      ".LFUN_0002f380_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2f380_dget), [assert] "m"(b2f380_assert), [exitfn] "m"(b2f380_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_0002f380: clang naked draft required"
+#endif
+
 
 /* FUN_0002f5b0 (0x2f5b0)
  * Compare two prop-like structs by their float[2] field (offset +8).
@@ -254,69 +323,120 @@ int actor_perception_find_killer_prop_index(int actor_handle, int prop_handle,
   return best_handle;
 }
 
-/* actor_get_best_damaging_prop (0x2fa70)
- * Find the highest-scoring active damaging prop visible to the actor's unit.
- *
- * Iterates up to 4 weapon slots on the actor's unit object (+0x3e0),
- * calling ai_get_responsible_unit and prop_get_active_by_unit_index for
- * each slot. Selects the prop whose slot score (*slot) is greatest among
- * those with type in [2,3] and either a visibility flag or no-filter mode.
- *
- * param_2 (prefer_visible): when 0, accept props regardless of visibility
- * flag; when non-zero, require prop visibility byte (+0x60) != 0.
- *
- * Returns the best damaging prop handle, or -1 if none found.
- * Asserts damaging_prop_index != 0 (handle 0 is reserved/invalid). */
-int actor_get_best_damaging_prop(int actor_handle, char prefer_visible)
+/* actor_get_best_damaging_prop (0x2fa70) — XBE naked draft (batch 86). */
+#if defined(__clang__)
+static void *(*const b2fa70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b2fa70_get)(int, int) = object_get_and_verify_type;
+static int (*const b2fa70_c3fe30)(int unit_handle, char prefer_passenger) = ai_get_responsible_unit;
+static int (*const b2fa70_c64ab0)(int actor_handle, int object_handle) = prop_get_active_by_unit_index;
+static void (*const b2fa70_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b2fa70_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int actor_get_best_damaging_prop(int actor_handle __attribute__((unused)), char prefer_visible __attribute__((unused)))
 {
-  char *unit;
-  char *prop_rec;
-  unsigned int *slot;
-  int unit_handle;
-  int unit_result;
-  int prop_handle;
-  unsigned int best_score;
-  int damaging_prop_index;
-  short prop_type;
-  int iter;
-
-  unit_handle = *(int *)((char *)datum_get(actor_data, actor_handle) + 0x18);
-  damaging_prop_index = -1;
-  if (unit_handle != -1) {
-    unit = (char *)object_get_and_verify_type(unit_handle, 3);
-    best_score = 0;
-    slot = (unsigned int *)(unit + 0x3e0);
-    iter = 4;
-    do {
-      unit_result = ai_get_responsible_unit(slot[2], 1);
-      if (unit_result != -1) {
-        prop_handle = prop_get_active_by_unit_index(actor_handle, unit_result);
-        if (prop_handle != -1) {
-          prop_rec = (char *)datum_get(*(data_t **)0x5ab23c, prop_handle);
-          prop_type = *(short *)(prop_rec + 0x24);
-          if (prop_type >= 2 && prop_type <= 3) {
-            if (*(char *)(prop_rec + 0x60) != '\0' || prefer_visible == '\0') {
-              if (*slot > best_score) {
-                best_score = *slot;
-                damaging_prop_index = prop_handle;
-              }
-            }
-          }
-        }
-      }
-      slot += 4;
-      iter--;
-    } while (iter != 0);
-
-    if (damaging_prop_index == 0) {
-      display_assert("damaging_prop_index != 0x00000000",
-                     "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xe8e, 1);
-      system_exit(-1);
-    }
-    return damaging_prop_index;
-  }
-  return damaging_prop_index;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x18(%%eax), %%eax\n\t"
+      "orl $0xffffffff, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "je .Lactor_get_best_damaging_prop_5\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "leal 0x3e0(%%eax), %%edi\n\t"
+      "movl $4, -0x4(%%ebp)\n\t"
+      ".Lactor_get_best_damaging_prop_1:\n\t"
+      "movl 0x8(%%edi), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c3fe30]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_get_best_damaging_prop_3\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c64ab0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lactor_get_best_damaging_prop_3\n\t"
+      "movl 0x5ab23c, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movw 0x24(%%eax), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, %%cx\n\t"
+      "jl .Lactor_get_best_damaging_prop_3\n\t"
+      "cmpw $3, %%cx\n\t"
+      "jg .Lactor_get_best_damaging_prop_3\n\t"
+      "movb 0x60(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lactor_get_best_damaging_prop_2\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_get_best_damaging_prop_3\n\t"
+      ".Lactor_get_best_damaging_prop_2:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "jbe .Lactor_get_best_damaging_prop_3\n\t"
+      "movl %%esi, -0x8(%%ebp)\n\t"
+      "movl %%eax, %%ebx\n\t"
+      ".Lactor_get_best_damaging_prop_3:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "addl $0x10, %%edi\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jne .Lactor_get_best_damaging_prop_1\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "jne .Lactor_get_best_damaging_prop_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe8e\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x255fe4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_get_best_damaging_prop_4:\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_get_best_damaging_prop_5:\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2fa70_dget), [get] "m"(b2fa70_get), [c3fe30] "m"(b2fa70_c3fe30), [c64ab0] "m"(b2fa70_c64ab0), [assert] "m"(b2fa70_assert), [exitfn] "m"(b2fa70_exitfn)
+      : "memory");
 }
+#else
+#error "actor_get_best_damaging_prop: clang naked draft required"
+#endif
+
 
 /* actor_perception_forget_recent_damage (0x2fb70) — Clear the recent-damage
  * tracking for all props visible to this actor. Resets field +0x74 to 0 and

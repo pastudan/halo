@@ -2240,57 +2240,122 @@ int actor_pursuit_find_nearby_actors(int actor_handle __attribute__((unused)), c
 #endif
 
 
-/* actor_action_consider_grenade (0x1fb80) — Probabilistically decides whether
- * the actor should begin a grenade throw this tick. Gated by: the "already
- * considering" flag (actor+0x6a0), the global AI grenade-enable flag
- * (*(char**)0x632574 + 0x3b4), and the actv tag having both grenade type
- * fields present (tag+0x180 and tag+0x182 != -1). Enforces a cooldown: if the
- * last-throw timestamp (actor+0x6a4) is valid (!= -1) and the cooldown window
- * (tag+0x1a4 * 30.0f + stamp) has not yet elapsed relative to game_time, bail.
- * Otherwise re-stamps the cooldown, rolls a random value against
- * (team-scaled multiplier * tag throw-chance at 0x1a0), and if the roll
- * succeeds and actor_action_test_grenade passes, sets the consider flag and
- * kicks off the throw. Returns 1 while inside the consider window, else 0. */
-char actor_action_consider_grenade(int actor_handle)
-{
-  char *actor;
-  char *actv_tag;
-  int current_time;
-  int *seed;
-  float expiry;
-  float throw_chance;
-  float team_mult;
-  float roll;
+/* actor_action_consider_grenade (0x1fb80) — XBE naked draft (batch 86). */
+#if defined(__clang__)
+static void *(*const b1fb80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b1fb80_tag)(int, int) = tag_get;
+static int (*const b1fb80_gtime)(void) = game_time_get;
+static float (*const b1fb80_cb55b0)(short value_type, int team) = FUN_000b55b0;
+static int *(*const b1fb80_gseed)(void) = get_global_random_seed_address;
+static float (*const b1fb80_rmreal)(unsigned int *) = random_math_real;
+static char (*const b1fb80_c1d180)(int actor_handle) = actor_action_test_grenade;
+static char (*const b1fb80_c1fa60)(int actor_handle, char flag) = actor_action_try_to_throw_grenade;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  actv_tag = (char *)tag_get(0x61637476, *(int *)(actor + 0x5c));
-  if (*(char *)(actor + 0x6a0) == '\0') {
-    if (*(char *)(*(char **)0x632574 + 0x3b4) == '\0')
-      return 0;
-    if (*(short *)(actv_tag + 0x180) == -1)
-      return 0;
-    if (*(short *)(actv_tag + 0x182) == -1)
-      return 0;
-    current_time = game_time_get();
-    if (*(int *)(actor + 0x6a4) != -1) {
-      expiry = *(float *)(actv_tag + 0x1a4) * *(float *)0x253394 +
-               (float)*(int *)(actor + 0x6a4);
-      if (expiry > (float)current_time)
-        return 0;
-    }
-    throw_chance = *(float *)(actv_tag + 0x1a0);
-    team_mult = FUN_000b55b0(0x17, *(short *)(actor + 0x3e));
-    *(int *)(actor + 0x6a4) = current_time;
-    seed = get_global_random_seed_address();
-    roll = random_math_real((unsigned int *)seed);
-    if (team_mult * throw_chance <= roll ||
-        actor_action_test_grenade(actor_handle) == '\0')
-      return 0;
-    *(char *)(actor + 0x6a0) = 1;
-    actor_action_try_to_throw_grenade(actor_handle, 1);
-  }
-  return 1;
+__attribute__((naked, noinline))
+char actor_action_consider_grenade(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x5c(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x61637476\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x6a0(%%esi), %%cl\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lactor_action_consider_grenade_2\n\t"
+      "movl 0x632574, %%ecx\n\t"
+      "movb 0x3b4(%%ecx), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "je .Lactor_action_consider_grenade_4\n\t"
+      "orl $0xffffffff, %%ecx\n\t"
+      "cmpw %%cx, 0x180(%%edi)\n\t"
+      "je .Lactor_action_consider_grenade_4\n\t"
+      "cmpw %%cx, 0x182(%%edi)\n\t"
+      "je .Lactor_action_consider_grenade_4\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x6a4(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "je .Lactor_action_consider_grenade_1\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "flds 0x1a4(%%edi)\n\t"
+      "fmuls 0x253394\n\t"
+      "fiaddl -0x8(%%ebp)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .Lactor_action_consider_grenade_3\n\t"
+      ".Lactor_action_consider_grenade_1:\n\t"
+      "movl 0x1a0(%%edi), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x3e(%%esi), %%ax\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x17\n\t"
+      "call *%[cb55b0]\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "movl %%ebx, 0x6a4(%%esi)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "fcomps -0x4(%%ebp)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_action_consider_grenade_3\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d180]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_consider_grenade_3\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "movb $1, 0x6a0(%%esi)\n\t"
+      "call *%[c1fa60]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lactor_action_consider_grenade_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_consider_grenade_3:\n\t"
+      "xorb %%al, %%al\n\t"
+      ".Lactor_action_consider_grenade_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1fb80_dget), [tag] "m"(b1fb80_tag), [gtime] "m"(b1fb80_gtime), [cb55b0] "m"(b1fb80_cb55b0), [gseed] "m"(b1fb80_gseed), [rmreal] "m"(b1fb80_rmreal), [c1d180] "m"(b1fb80_c1d180), [c1fa60] "m"(b1fb80_c1fa60)
+      : "memory");
 }
+#else
+#error "actor_action_consider_grenade: clang naked draft required"
+#endif
+
 
 /* actor_action_try_to_evade (0x1fca0) — XBE naked draft (batch 83). */
 #if defined(__clang__)

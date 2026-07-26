@@ -738,74 +738,117 @@ char actor_move_try_evasion_direction(int actor_handle __attribute__((unused)), 
 #endif
 
 
-/* actor_aim_jump (0x2ace0) — Compute and clamp the jump aim velocity vector.
- *
- * Checks actor->swarm_element (-1 at actor[0x158]) and mounted state
- * (actor[0x6] != 0). If mounted, delegates to the actor-type vtable via
- * FUN_0003a920 and clears actor[0x530]. If not mounted but jump-aim is
- * active (actor[0x530] != 0), reads the stored jump velocity:
- *   param_5[0] = actor[0x534] * actor[0x53c]
- *   param_5[1] = actor[0x538] * actor[0x53c]
- *   param_5[2] = actor[0x540]
- * Computes the magnitude. If the actor is in swarm mode (actor[0x6c]==10
- * && actor[0xa0]==3), forces clamping on (overrides param_3=0). Otherwise
- * uses param_3 to control clamping. If clamping is off and
- * param_4 < magnitude, scales the output vector to length param_4.
- * Always clears actor[0x530] and returns 1.
- *
- * Confirmed: datum_get(actor_data, actor_handle) at 0x2acf0.
- * Confirmed: CMP [ESI+0x158],-1 at 0x2acf7-0x2ad03.
- * Confirmed: TEST [ESI+0x6],AL / JZ at 0x2ad09-0x2ad0e.
- * Confirmed: FUN_0003a920(actor_handle, a2, param_4, param_5) at 0x2ad1d.
- * Confirmed: TEST [ESI+0x530] at 0x2ad34-0x2ad3c.
- * Confirmed: CMP [ESI+0x6c],10 && CMP [ESI+0xa0],3 condition at
- * 0x2ad42-0x2ad55.
- * Confirmed: param_5[0]=actor[0x534]*actor[0x53c] (FSTP [ECX]) at 0x2ad7b.
- * Confirmed: param_5[1]=actor[0x538]*actor[0x53c] (FST [ECX+4]) at 0x2ad7d.
- * Confirmed: param_5[2]=actor[0x540] (FLD ST1; FSTP [ECX+8]) at
- * 0x2ad80-0x2ad82. Confirmed: sqrtf via FSQRT; FSTP [EBP-4] at 0x2ad97-0x2ad99.
- * Confirmed: FCOMP [EBP+0x14] (magnitude vs param_4) at 0x2ada7.
- * Confirmed: TEST AH,0x41; JNZ skip (param_4 >= magnitude → skip) at 0x2adac.
- * Confirmed: FUN_00012fb0(param_5, param_4/magnitude, param_5) at 0x2adbd.
- * Confirmed: actor[0x530]=0; return 1 at 0x2adc6-0x2adcf.
- */
-int actor_aim_jump(int actor_handle, int a2, char param_3, float param_4,
-                   float *param_5)
-{
-  char *actor;
-  char cVar3;
-  float magnitude;
+/* actor_aim_jump (0x2ace0) — XBE naked draft (batch 86). */
+#if defined(__clang__)
+static void *(*const b2ace0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b2ace0_c3a920)(int actor_handle, int a2, float a3, float *a4) = FUN_0003a920;
+static void (*const b2ace0_v2fb0)(float *, float, float *) = FUN_00012fb0;
 
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  if (*(int *)(actor + 0x158) == -1) {
-    if (*(char *)(actor + 0x6) != 0) {
-      FUN_0003a920(actor_handle, a2, param_4, param_5);
-      *(char *)(actor + 0x530) = 0;
-      return 1;
-    }
-    if (*(char *)(actor + 0x530) != 0) {
-      if (*(int16_t *)(actor + 0x6c) == 10 && *(int16_t *)(actor + 0xa0) == 3) {
-        cVar3 = 1;
-      } else {
-        cVar3 = param_3;
-      }
-      param_5[0] = *(float *)(actor + 0x534) * *(float *)(actor + 0x53c);
-      param_5[1] = *(float *)(actor + 0x538) * *(float *)(actor + 0x53c);
-      param_5[2] = *(float *)(actor + 0x540);
-      magnitude = sqrtf(param_5[0] * param_5[0] + param_5[1] * param_5[1] +
-                        param_5[2] * param_5[2]);
-      if (cVar3 == 0) {
-        if (param_4 < magnitude) {
-          FUN_00012fb0(param_5, param_4 / magnitude,
-                       param_5); /* dup-args-ok: in-place scale matches
-                                    confirmed call above. */
-        }
-      }
-    }
-  }
-  *(char *)(actor + 0x530) = 0;
-  return 1;
+__attribute__((naked, noinline))
+int actor_aim_jump(int actor_handle __attribute__((unused)), int a2 __attribute__((unused)), char param_3 __attribute__((unused)), float param_4 __attribute__((unused)), float *param_5 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x158(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lactor_aim_jump_4\n\t"
+      "movb 0x6(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_aim_jump_1\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c3a920]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $0, 0x530(%%esi)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_aim_jump_1:\n\t"
+      "movb 0x530(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_aim_jump_4\n\t"
+      "cmpw $0xa, 0x6c(%%esi)\n\t"
+      "jne .Lactor_aim_jump_2\n\t"
+      "cmpw $3, 0xa0(%%esi)\n\t"
+      "movb $1, %%al\n\t"
+      "je .Lactor_aim_jump_3\n\t"
+      ".Lactor_aim_jump_2:\n\t"
+      "movb 0x10(%%ebp), %%al\n\t"
+      ".Lactor_aim_jump_3:\n\t"
+      "testb %%al, %%al\n\t"
+      "flds 0x540(%%esi)\n\t"
+      "flds 0x538(%%esi)\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "fmuls 0x53c(%%esi)\n\t"
+      "flds 0x534(%%esi)\n\t"
+      "fmuls 0x53c(%%esi)\n\t"
+      "fstps (%%ecx)\n\t"
+      "fsts 0x4(%%ecx)\n\t"
+      "fld %%st(1)\n\t"
+      "fstps 0x8(%%ecx)\n\t"
+      "flds (%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .Lactor_aim_jump_4\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x14(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_aim_jump_4\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fdivs -0x4(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[v2fb0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lactor_aim_jump_4:\n\t"
+      "popl %%edi\n\t"
+      "movb $0, 0x530(%%esi)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2ace0_dget), [c3a920] "m"(b2ace0_c3a920), [v2fb0] "m"(b2ace0_v2fb0)
+      : "memory");
 }
+#else
+#error "actor_aim_jump: clang naked draft required"
+#endif
+
 
 /* FUN_0002ade0 (0x2ade0) — XBE naked draft (batch 81). */
 #if defined(__clang__)

@@ -582,60 +582,120 @@ void *FUN_00076ff0(int tag_index, short bitmap_index)
   return uVar2;
 }
 
-/*
- * FUN_00077040 -- bitmap_group_get_bitmap: resolve sequence/frame index pair
- * to a bitmap data element in a 'bitm' tag.
- *
- * Walks the tag's sequence block to find the correct bitmap index, handling
- * direct-bitmap sequences (frame_count >= 1) and sprite sequences. Falls back
- * to frame_index if the resolved bitmap index is -1.
- *
- * Source TU: bitmap_group.c (assert strings confirm)
- */
-void *FUN_00077040(int tag_index, short sequence_index, short frame_index)
-{
-  int tag;
-  int sequence;
-  short bitmap_idx;
+/* FUN_00077040 (0x77040) — XBE naked draft (batch 86). */
+#if defined(__clang__)
+static void (*const b77040_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b77040_exitfn)(int) = system_exit;
+static void *(*const b77040_tag)(int, int) = tag_get;
+static void *(*const b77040_elem)(void *, int, int) = tag_block_get_element;
 
-  if (tag_index == -1)
-    goto cleanup_null;
-  if (sequence_index < 0 || frame_index < 0) {
-    display_assert("sequence_index>=0 && frame_index>=0",
-                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c", 0x2a6, 1);
-    system_exit(-1);
-  }
-  tag = (int)tag_get(0x6269746d, tag_index);
-  if (tag == 0)
-    goto cleanup_null;
-  if (*(int *)(tag + 0x54) > 0) {
-    sequence = (int)tag_block_get_element(
-      (int *)(tag + 0x54), (int)sequence_index % *(int *)(tag + 0x54), 0x40);
-    if (*(short *)(sequence + 0x22) > 0) {
-      bitmap_idx =
-        (short)((int)frame_index % (int)*(short *)(sequence + 0x22)) +
-        *(short *)(sequence + 0x20);
-      goto done;
-    }
-    if (*(int *)(sequence + 0x34) == 0)
-      goto fallback;
-    bitmap_idx = *(short *)tag_block_get_element((int *)(sequence + 0x34),
-                                                 (int)frame_index, 0x20);
-  done:
-    if (bitmap_idx != -1)
-      goto ret_check;
-  }
-fallback:
-  bitmap_idx = frame_index;
-ret_check:
-  if (bitmap_idx < 0)
-    goto cleanup_null;
-  if ((int)bitmap_idx >= *(int *)(tag + 0x60))
-    goto cleanup_null;
-  return tag_block_get_element((int *)(tag + 0x60), (int)bitmap_idx, 0x30);
-cleanup_null:
-  return NULL;
+__attribute__((naked, noinline))
+void * FUN_00077040(int tag_index __attribute__((unused)), short sequence_index __attribute__((unused)), short frame_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .LFUN_00077040_8\n\t"
+      "movw 0xc(%%ebp), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .LFUN_00077040_1\n\t"
+      "cmpw %%ax, 0x10(%%ebp)\n\t"
+      "jge .LFUN_00077040_2\n\t"
+      ".LFUN_00077040_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2a6\n\t"
+      "pushl $0x263f08\n\t"
+      "pushl $0x263ee4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00077040_2:\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x6269746d\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "je .LFUN_00077040_7\n\t"
+      "movl 0x54(%%ebx), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "leal 0x54(%%ebx), %%ecx\n\t"
+      "jle .LFUN_00077040_5\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cdq\n\t"
+      "idivl %%esi\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movw 0x22(%%ecx), %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .LFUN_00077040_3\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "movswl 0x10(%%ebp), %%eax\n\t"
+      "cdq\n\t"
+      "idivl %%esi\n\t"
+      "addw 0x20(%%ecx), %%dx\n\t"
+      "jmp .LFUN_00077040_4\n\t"
+      ".LFUN_00077040_3:\n\t"
+      "leal 0x34(%%ecx), %%eax\n\t"
+      "cmpl $0, (%%eax)\n\t"
+      "je .LFUN_00077040_5\n\t"
+      "movswl 0x10(%%ebp), %%ecx\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movw (%%eax), %%dx\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00077040_4:\n\t"
+      "cmpw $-1, %%dx\n\t"
+      "jne .LFUN_00077040_6\n\t"
+      ".LFUN_00077040_5:\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      ".LFUN_00077040_6:\n\t"
+      "testw %%dx, %%dx\n\t"
+      "jl .LFUN_00077040_7\n\t"
+      "movswl %%dx, %%ecx\n\t"
+      "movl 0x60(%%ebx), %%edx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "leal 0x60(%%ebx), %%eax\n\t"
+      "jge .LFUN_00077040_7\n\t"
+      "pushl $0x30\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00077040_7:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_00077040_8:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b77040_assert), [exitfn] "m"(b77040_exitfn), [tag] "m"(b77040_tag), [elem] "m"(b77040_elem)
+      : "memory");
 }
+#else
+#error "FUN_00077040: clang naked draft required"
+#endif
+
 
 /*
  * FUN_00077120 -- bitmap_group_add_bitmap: validate and add a new bitmap entry

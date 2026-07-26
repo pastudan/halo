@@ -121,78 +121,112 @@ int FUN_0011d300(int cache)
   return *(int *)(cache + 0x20) - *(int *)(cache + 0x40);
 }
 
-/* 0x11d320: lru_cache new-block allocator ('jblU' variant, magic 0x55626c6a).
- * cdecl(cache, value) -> payload pointer (Ghidra's __thiscall/ECX guess is
- * wrong: prologue does MOV ESI,[EBP+8] (cache) and MOV EAX,[EBP+0xc] (value),
- * the epilog is a plain RET, and PUSH ECX at 0x11d323 only reserves the local
- * LRU-serial slot).
- *
- * Validates the 'curl' header (FUN_0011d090, cache in EAX). If the live count
- * (cache+0x40) is below capacity (cache+0x20), it appends a fresh record at
- * cache+0x34 + count*stride(cache+0x24) and bumps the count. Once full it walks
- * all `count` records, validating each (FUN_0011d010), and picks the unlocked
- * block (block+4 bit0 == 0) with the smallest LRU serial (block+8, unsigned) as
- * the eviction victim; if every block is locked it returns NULL. The victim's
- * user pointer (block[0]) is passed to the evict callback (cache+0x30) before
- * reuse.
- *
- * The selected/new block is then initialised: +0x00 = value, +0x04 = magic
- * (bit0 clear/unlocked), +0x08 = next LRU serial (cache+0x3c, post-increment),
- * +0x0c = 0. The init callback (cache+0x2c) is invoked with (value, payload)
- * and the payload pointer (block+0x10) is returned (NULL on failure).
- * Source: c:\halo\SOURCE\memory\lru_cache.c */
-void *FUN_0011d320(int cache, int value)
+/* FUN_0011d320 (0x11d320) — XBE naked draft (batch 86). */
+#if defined(__clang__)
+static void (*const b11d320_c11d090)(int cache) = FUN_0011d090;
+static void (*const b11d320_c11d010)(int cache, void *entry) = FUN_0011d010;
+
+__attribute__((naked, noinline))
+void * FUN_0011d320(int cache __attribute__((unused)), int value __attribute__((unused)))
 {
-  int count;
-  int block;
-  int victim;
-  unsigned int victim_serial;
-  int i;
-
-  victim = 0;
-  FUN_0011d090(cache);                     /* validate 'curl' header (cache@eax) */
-  count = *(int *)(cache + 0x40);          /* +0x40 live block count */
-  if (count == *(int *)(cache + 0x20)) {   /* +0x20 capacity: cache full -> evict LRU */
-    block = *(int *)(cache + 0x34);        /* +0x34 first block record */
-    victim_serial = 0;                     /* dead init; only read once victim != 0 */
-    if (count < 1) {
-      return (void *)0;
-    }
-    i = 0;
-    do {
-      FUN_0011d010(cache, (void *)block);  /* validate block header */
-      if (((*(unsigned char *)(block + 4) & 1) == 0) &&   /* +0x04 bit0 == unlocked */
-          ((victim == 0) ||
-           (*(unsigned int *)(block + 8) < victim_serial))) {  /* +0x08 older serial */
-        victim_serial = *(unsigned int *)(block + 8);
-        victim = block;
-      }
-      i = i + 1;
-      block = block + *(int *)(cache + 0x24);   /* +0x24 stride advance */
-    } while (i < *(int *)(cache + 0x40));        /* re-read count each iter (faithful) */
-    if (victim == 0) {
-      return (void *)0;                          /* all blocks locked */
-    }
-    (*(void (**)(int))(cache + 0x30))(*(int *)victim);  /* +0x30 evict callback(user_ptr) */
-    block = victim;
-  }
-  else {                                   /* room to append */
-    block = *(int *)(cache + 0x24) * count + *(int *)(cache + 0x34);
-    *(int *)(cache + 0x40) = count + 1;
-  }
-
-  if (block == 0) {
-    return (void *)0;
-  }
-  *(int *)block = value;                    /* +0x00 user value */
-  *(int *)(block + 4) = 0x55626c6a;         /* +0x04 'jblU' magic, unlocked */
-  *(int *)(block + 8) = *(int *)(cache + 0x3c);           /* +0x08 LRU serial */
-  *(int *)(cache + 0x3c) = *(int *)(cache + 0x3c) + 1;    /* +0x3c serial clock++ */
-  *(int *)(block + 0xc) = 0;                /* +0x0c link */
-  (*(void (**)(int, void *))(cache + 0x2c))(*(int *)block,
-                                            (void *)(block + 0x10));  /* +0x2c init cb(value,payload) */
-  return (void *)(block + 0x10);            /* +0x10 payload */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "call *%[c11d090]\n\t"
+      "movl 0x40(%%esi), %%eax\n\t"
+      "cmpl 0x20(%%esi), %%eax\n\t"
+      "jne .LFUN_0011d320_4\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl 0x34(%%esi), %%ebx\n\t"
+      "movl %%edi, 0x8(%%ebp)\n\t"
+      "jle .LFUN_0011d320_6\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_0011d320_1:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c11d010]\n\t"
+      "movb 0x4(%%ebx), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $1, %%al\n\t"
+      "jne .LFUN_0011d320_3\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LFUN_0011d320_2\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "cmpl 0x8(%%ebx), %%eax\n\t"
+      "jbe .LFUN_0011d320_3\n\t"
+      ".LFUN_0011d320_2:\n\t"
+      "movl 0x8(%%ebx), %%ecx\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      ".LFUN_0011d320_3:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x24(%%esi), %%edx\n\t"
+      "movl 0x40(%%esi), %%ecx\n\t"
+      "incl %%eax\n\t"
+      "addl %%edx, %%ebx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "jl .LFUN_0011d320_1\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LFUN_0011d320_6\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *0x30(%%esi)\n\t"
+      "addl $4, %%esp\n\t"
+      "jmp .LFUN_0011d320_5\n\t"
+      ".LFUN_0011d320_4:\n\t"
+      "movl 0x24(%%esi), %%edi\n\t"
+      "movl 0x34(%%esi), %%ecx\n\t"
+      "imull %%eax, %%edi\n\t"
+      "addl %%ecx, %%edi\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, 0x40(%%esi)\n\t"
+      ".LFUN_0011d320_5:\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LFUN_0011d320_6\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "movl $0x55626c6a, 0x4(%%edi)\n\t"
+      "movl 0x3c(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edi)\n\t"
+      "incl 0x3c(%%esi)\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "leal 0x10(%%edi), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "movl $0, 0xc(%%edi)\n\t"
+      "call *0x2c(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011d320_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11d090] "m"(b11d320_c11d090), [c11d010] "m"(b11d320_c11d010)
+      : "memory");
 }
+#else
+#error "FUN_0011d320: clang naked draft required"
+#endif
+
 
 /* FUN_0011c5f0 (0x11c5f0) — XBE naked draft (batch 83). */
 #if defined(__clang__)

@@ -89,93 +89,246 @@ void FUN_0011a2d0(int *state, void *buffer, int buffer_size)
   state[2] = buffer_size;
 }
 
-/* decode_structures — byte-swap structures in-place in the buffer (0x11a340).
- * Source: data_encoding.c line 0xde. */
-int FUN_0011a340(int *state, short count, void *bs_definition)
+/* FUN_0011a340 (0x11a340) — XBE naked draft (batch 86). */
+#if defined(__clang__)
+static void (*const b11a340_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11a340_exitfn)(int) = system_exit;
+static void (*const b11a340_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
+
+__attribute__((naked, noinline))
+int FUN_0011a340(int *state __attribute__((unused)), short count __attribute__((unused)), void *bs_definition __attribute__((unused)))
 {
-  short total_size;
-  int result;
-
-  if (((state == NULL) || (*state == 0) || (state[1] < 0)) ||
-      (state[2] < state[1])) {
-    display_assert("state && state->buffer && state->offset>=0 && "
-                   "state->offset<=state->buffer_size",
-                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0xde, 1);
-    system_exit(-1);
-  }
-  if (count < 0) {
-    display_assert("structure_count>=0",
-                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0xdf, 1);
-    system_exit(-1);
-  }
-  if (bs_definition == NULL) {
-    display_assert("bs_definition",
-                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0xe0, 1);
-    system_exit(-1);
-  }
-  total_size = *(short *)((char *)bs_definition + 4) * count;
-  if (((int)total_size + state[1] <= state[2]) && ((char)state[3] == '\0')) {
-    result = *state + state[1];
-    if (total_size != 0) {
-      byte_swap_structures(bs_definition, (void *)result, (int)count);
-      state[1] = state[1] + (int)total_size;
-    }
-    return result;
-  }
-  *(char *)(state + 3) = 1;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .LFUN_0011a340_1\n\t"
+      "cmpl $0, (%%esi)\n\t"
+      "je .LFUN_0011a340_1\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_0011a340_1\n\t"
+      "cmpl 0x8(%%esi), %%eax\n\t"
+      "jle .LFUN_0011a340_2\n\t"
+      ".LFUN_0011a340_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xde\n\t"
+      "pushl $0x28eef8\n\t"
+      "pushl $0x28f058\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011a340_2:\n\t"
+      "movw 0xc(%%ebp), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jge .LFUN_0011a340_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0xdf\n\t"
+      "pushl $0x28eef8\n\t"
+      "pushl $0x28f044\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011a340_3:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .LFUN_0011a340_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe0\n\t"
+      "pushl $0x28eef8\n\t"
+      "pushl $0x28ef80\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011a340_4:\n\t"
+      "movw 0x4(%%ebx), %%ax\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "imulw %%di, %%ax\n\t"
+      "movl 0x8(%%esi), %%edi\n\t"
+      "movswl %%ax, %%ebx\n\t"
+      "leal (%%ebx,%%ecx,1), %%edx\n\t"
+      "cmpl %%edi, %%edx\n\t"
+      "jg .LFUN_0011a340_6\n\t"
+      "movb 0xc(%%esi), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .LFUN_0011a340_6\n\t"
+      "movl (%%esi), %%edi\n\t"
+      "addl %%ecx, %%edi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .LFUN_0011a340_5\n\t"
+      "movswl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c118be0]\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl %%ebx, %%eax\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      ".LFUN_0011a340_5:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011a340_6:\n\t"
+      "popl %%edi\n\t"
+      "movb $1, 0xc(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11a340_assert), [exitfn] "m"(b11a340_exitfn), [c118be0] "m"(b11a340_c118be0)
+      : "memory");
 }
+#else
+#error "FUN_0011a340: clang naked draft required"
+#endif
 
-/* decode_raw_data — byte-swap raw elements in the buffer (0x11a430).
- * Source: data_encoding.c line 0x100. */
-__declspec(noinline) int FUN_0011a430(int *state, short count, int element_size)
+
+/* FUN_0011a430 (0x11a430) — XBE naked draft (batch 86). */
+#if defined(__clang__)
+static void (*const b11a430_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11a430_exitfn)(int) = system_exit;
+static void (*const b11a430_c118620)(void *data, int count, int element_size) = FUN_00118620;
+
+__attribute__((naked, noinline))
+int FUN_0011a430(int *state __attribute__((unused)), short count __attribute__((unused)), int element_size __attribute__((unused)))
 {
-  int byte_count;
-  int result;
-
-  if (((state == NULL) || (*state == 0) || (state[1] < 0)) ||
-      (state[2] < state[1])) {
-    display_assert("state && state->buffer && state->offset>=0 && "
-                   "state->offset<=state->buffer_size",
-                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0x100, 1);
-    system_exit(-1);
-  }
-  if (count < 0) {
-    display_assert("count>=0",
-                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0x101, 1);
-    system_exit(-1);
-  }
-  switch (element_size) {
-  case 1:
-    byte_count = (int)count;
-    break;
-  case -8:
-    byte_count = (int)count << 3;
-    break;
-  case -4:
-    byte_count = (int)count << 2;
-    break;
-  case -2:
-    byte_count = (int)count << 1;
-    break;
-  default:
-    display_assert(NULL,
-                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0x109, 1);
-    system_exit(-1);
-    byte_count = (int)count;
-    break;
-  }
-  if ((state[1] + byte_count <= state[2]) && ((char)state[3] == '\0')) {
-    result = *state + state[1];
-    if (element_size != 1) {
-      byte_swap_raw((void *)result, (int)count, element_size);
-    }
-    state[1] = state[1] + byte_count;
-    return result;
-  }
-  *(char *)(state + 3) = 1;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_0011a430_1\n\t"
+      "cmpl $0, (%%esi)\n\t"
+      "je .LFUN_0011a430_1\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_0011a430_1\n\t"
+      "cmpl 0x8(%%esi), %%eax\n\t"
+      "jle .LFUN_0011a430_2\n\t"
+      ".LFUN_0011a430_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x100\n\t"
+      "pushl $0x28eef8\n\t"
+      "pushl $0x28f058\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011a430_2:\n\t"
+      "movw 0xc(%%ebp), %%bx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jge .LFUN_0011a430_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x101\n\t"
+      "pushl $0x28eef8\n\t"
+      "pushl $0x28eb58\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011a430_3:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "addl $8, %%eax\n\t"
+      "cmpl $9, %%eax\n\t"
+      "ja .LFUN_0011a430_8\n\t"
+      "movzbl 0x11a548(%%eax), %%eax\n\t"
+      "jmp *.LFUN_0011a430_jt(,%%eax,4)\n\t"
+      ".LFUN_0011a430_4:\n\t"
+      "movswl %%bx, %%ebx\n\t"
+      "jmp .LFUN_0011a430_9\n\t"
+      ".LFUN_0011a430_5:\n\t"
+      "movswl %%bx, %%ebx\n\t"
+      "shll $1, %%ebx\n\t"
+      "jmp .LFUN_0011a430_9\n\t"
+      ".LFUN_0011a430_6:\n\t"
+      "movswl %%bx, %%ebx\n\t"
+      "shll $2, %%ebx\n\t"
+      "jmp .LFUN_0011a430_9\n\t"
+      ".LFUN_0011a430_7:\n\t"
+      "movswl %%bx, %%ebx\n\t"
+      "shll $3, %%ebx\n\t"
+      "jmp .LFUN_0011a430_9\n\t"
+      ".LFUN_0011a430_8:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x109\n\t"
+      "pushl $0x28eef8\n\t"
+      "pushl $0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011a430_9:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "leal (%%eax,%%ebx,1), %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jg .LFUN_0011a430_11\n\t"
+      "movb 0xc(%%esi), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_0011a430_11\n\t"
+      "movl (%%esi), %%edi\n\t"
+      "addl %%eax, %%edi\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "cmpl $1, %%eax\n\t"
+      "je .LFUN_0011a430_10\n\t"
+      "movswl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c118620]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_0011a430_10:\n\t"
+      "addl %%ebx, 0x4(%%esi)\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011a430_11:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movb $1, 0xc(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_0011a430_jt:\n\t"
+      ".long .LFUN_0011a430_7\n\t"
+      ".long .LFUN_0011a430_6\n\t"
+      ".long .LFUN_0011a430_5\n\t"
+      ".long .LFUN_0011a430_4\n\t"
+      ".long .LFUN_0011a430_8\n\t"
+      ".text\n\t"
+      :
+      : [assert] "m"(b11a430_assert), [exitfn] "m"(b11a430_exitfn), [c118620] "m"(b11a430_c118620)
+      : "memory");
 }
+#else
+#error "FUN_0011a430: clang naked draft required"
+#endif
+
 
 /* decode_byte — read a single byte from the decode buffer (0x11a560).
  * Source: data_encoding.c. */

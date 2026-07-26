@@ -2603,59 +2603,107 @@ void rasterizer_text_cache_character(void *font_character __attribute__((unused)
 #endif
 
 
-/* rasterizer_text_draw_cached_char: draw a single cached character quad.
- * Vertex format is 5 floats each (screen x, screen y, texel u, texel v,
- * packed color) — 4 verts = 20 floats — in winding order TL, TR, BR, BL.
- * cache_offset_x/y (param 7/8) are added to the TEXEL coords (the atlas
- * position), not the screen position. */
-void rasterizer_text_draw_cached_char(void *arg0, void *font,
-                                      void *font_character, unsigned int color,
-                                      short x, short y, int cache_offset_x,
-                                      int cache_offset_y, short width,
-                                      short height)
+/* rasterizer_text_draw_cached_char (0x183c00) — XBE naked draft (batch 86). */
+#if defined(__clang__)
+static void (*const b183c00_c183880)(void *font_character, void *font) = rasterizer_text_cache_character;
+static void (*const b183c00_c183770)(short index, short *out_y, short *out_x) = rasterizer_text_get_character_position;
+static void (*const b183c00_c1741d0)(float *quad) = FUN_001741d0;
+
+__attribute__((naked, noinline))
+void rasterizer_text_draw_cached_char(void *arg0 __attribute__((unused)), void *font __attribute__((unused)), void *font_character __attribute__((unused)), unsigned int color __attribute__((unused)), short x __attribute__((unused)), short y __attribute__((unused)), int screen_x __attribute__((unused)), int screen_y __attribute__((unused)), short width __attribute__((unused)), short height __attribute__((unused)))
 {
-  float quad_verts[20];
-  short cache_x;
-  short cache_y;
-  short tx;
-  short ty;
-
-  rasterizer_text_cache_character(font_character, font);
-
-  if (*(short *)((int)font_character + 0xc) != -1) {
-    rasterizer_text_get_character_position(
-      *(short *)((int)font_character + 0xc), &cache_y, &cache_x);
-    tx = (short)(cache_x + (short)cache_offset_x);
-    ty = (short)(cache_y + (short)cache_offset_y);
-
-    /* vert0 TL */
-    quad_verts[0] = (float)x;
-    quad_verts[1] = (float)y;
-    quad_verts[2] = (float)tx;
-    quad_verts[3] = (float)ty;
-    *(unsigned int *)&quad_verts[4] = color;
-    /* vert1 TR */
-    quad_verts[5] = (float)(x + width);
-    quad_verts[6] = (float)y;
-    quad_verts[7] = (float)(tx + width);
-    quad_verts[8] = (float)ty;
-    *(unsigned int *)&quad_verts[9] = color;
-    /* vert2 BR */
-    quad_verts[10] = (float)(x + width);
-    quad_verts[11] = (float)(y + height);
-    quad_verts[12] = (float)(tx + width);
-    quad_verts[13] = (float)(ty + height);
-    *(unsigned int *)&quad_verts[14] = color;
-    /* vert3 BL */
-    quad_verts[15] = (float)x;
-    quad_verts[16] = (float)(y + height);
-    quad_verts[17] = (float)tx;
-    quad_verts[18] = (float)(ty + height);
-    *(unsigned int *)&quad_verts[19] = color;
-
-    FUN_001741d0(quad_verts);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x54, %%esp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c183880]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0xc(%%edi), %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lrasterizer_text_draw_cached_char_1\n\t"
+      "pushl %%ebx\n\t"
+      "leal 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x4(%%ebp), %%ebx\n\t"
+      "call *%[c183770]\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0x24(%%ebp), %%esi\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x20(%%ebp), %%edi\n\t"
+      "addl %%esi, %%edx\n\t"
+      "movswl 0x18(%%ebp), %%esi\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "movl %%eax, -0x30(%%ebp)\n\t"
+      "movl %%eax, -0x44(%%ebp)\n\t"
+      "movswl 0x28(%%ebp), %%eax\n\t"
+      "movl %%esi, 0x10(%%ebp)\n\t"
+      "addl %%eax, %%esi\n\t"
+      "fildl 0x10(%%ebp)\n\t"
+      "addl %%edi, %%ecx\n\t"
+      "movswl 0x1c(%%ebp), %%edi\n\t"
+      "fsts -0x18(%%ebp)\n\t"
+      "fstps -0x54(%%ebp)\n\t"
+      "movl %%esi, 0x10(%%ebp)\n\t"
+      "movswl 0x2c(%%ebp), %%esi\n\t"
+      "fildl 0x10(%%ebp)\n\t"
+      "movl %%edi, 0x10(%%ebp)\n\t"
+      "fsts -0x2c(%%ebp)\n\t"
+      "addl %%esi, %%edi\n\t"
+      "fstps -0x40(%%ebp)\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "fildl 0x10(%%ebp)\n\t"
+      "movl %%edi, 0x10(%%ebp)\n\t"
+      "fsts -0x3c(%%ebp)\n\t"
+      "fstps -0x50(%%ebp)\n\t"
+      "fildl 0x10(%%ebp)\n\t"
+      "movl %%ecx, 0x10(%%ebp)\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "movswl %%dx, %%eax\n\t"
+      "fsts -0x14(%%ebp)\n\t"
+      "leal -0x54(%%ebp), %%edx\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "fildl 0x10(%%ebp)\n\t"
+      "movl %%ecx, 0x10(%%ebp)\n\t"
+      "fsts -0x10(%%ebp)\n\t"
+      "fstps -0x4c(%%ebp)\n\t"
+      "fildl 0x10(%%ebp)\n\t"
+      "movl %%eax, 0x10(%%ebp)\n\t"
+      "addl %%esi, %%eax\n\t"
+      "fsts -0x24(%%ebp)\n\t"
+      "fstps -0x38(%%ebp)\n\t"
+      "fildl 0x10(%%ebp)\n\t"
+      "movl %%eax, 0x10(%%ebp)\n\t"
+      "fsts -0x34(%%ebp)\n\t"
+      "fstps -0x48(%%ebp)\n\t"
+      "fildl 0x10(%%ebp)\n\t"
+      "fsts -0xc(%%ebp)\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "call *%[c1741d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lrasterizer_text_draw_cached_char_1:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c183880] "m"(b183c00_c183880), [c183770] "m"(b183c00_c183770), [c1741d0] "m"(b183c00_c1741d0)
+      : "memory");
 }
+#else
+#error "rasterizer_text_draw_cached_char: clang naked draft required"
+#endif
+
 
 /* rasterizer_text_draw_cached_chars (0x183cf0) — XBE naked draft (batch 84). */
 #if defined(__clang__)

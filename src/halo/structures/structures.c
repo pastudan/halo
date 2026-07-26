@@ -3425,69 +3425,116 @@ void FUN_001954d0(void)
   build_structure_lens_flares(scenario_get());
 }
 
-/* 0x195550 - gather structure surfaces selected by a per-32-surface bitmask.
- *
- * Walks the scenario structure-BSP surfaces tag_block at scenario+0xf8 (first
- * int = surface element count). mask is an array of uint bitmask words, one
- * word per 32 surfaces; for each set bit the matching surface index is appended
- * to out_indices and its 6-byte (short[3]) tag element is copied into
- * out_surfaces (stride 6 bytes). surface_count bounds the output write index
- * (asserted).
- *
- * A zero mask word skips an entire block of 0x20 surfaces (surface_index +=
- * 0x20 without touching the tag_block). The loop bound (*count) is re-read
- * every outer iteration - preserved from the original, not cached. The element
- * copy is exactly three 16-bit moves (element_size 6); widths are kept at
- * uint16. */
-void FUN_00195550(short surface_count, int *out_indices, uint32_t *mask,
-                  int out_surfaces)
-{
-  int *block;
-  int scenario;
-  short bit;
-  short write_index;
-  int surface_index;
-  uint16_t *dst;
-  uint16_t *elem;
+/* FUN_00195550 (0x195550) — XBE naked draft (batch 86). */
+#if defined(__clang__)
+static void * (*const b195550_c18e3c0)(void) = scenario_get;
+static void *(*const b195550_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b195550_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b195550_exitfn)(int) = system_exit;
 
-  scenario = (int)scenario_get();
-  block = (int *)(scenario + 0xf8);
-  write_index = 0;
-  surface_index = 0;
-  if (0 < *(int *)(scenario + 0xf8)) {
-    do {
-      if (*mask == 0) {
-        surface_index = surface_index + 0x20;
-      } else {
-        bit = 0;
-        do {
-          if (*block <= surface_index)
-            break;
-          if ((*mask & 1 << ((uint8_t)bit & 0x1f)) != 0) {
-            elem = (uint16_t *)tag_block_get_element(block, surface_index, 6);
-            if ((write_index < 0) || (surface_count <= write_index)) {
-              display_assert(
-                "surface_index_index>=0 && surface_index_index<surface_count",
-                "c:\\halo\\SOURCE\\structures\\structure_render.c", 0x1a5,
-                true);
-              system_exit(-1);
-            }
-            *out_indices = surface_index;
-            out_indices = out_indices + 1;
-            dst = (uint16_t *)(out_surfaces + write_index * 6);
-            dst[0] = elem[0];
-            dst[1] = elem[1];
-            dst[2] = elem[2];
-            write_index = write_index + 1;
-          }
-          bit = bit + 1;
-          surface_index = surface_index + 1;
-        } while (bit < 0x20);
-      }
-      mask = mask + 1;
-    } while (surface_index < *block);
-  }
+__attribute__((naked, noinline))
+void FUN_00195550(short surface_count __attribute__((unused)), int *out_indices __attribute__((unused)), unsigned int *mask __attribute__((unused)), int out_surfaces __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl 0xf8(%%eax), %%ecx\n\t"
+      "addl $0xf8, %%eax\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jle .LFUN_00195550_8\n\t"
+      "pushl %%esi\n\t"
+      "jmp .LFUN_00195550_1\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LFUN_00195550_1:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "cmpl $0, (%%ecx)\n\t"
+      "je .LFUN_00195550_6\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      ".LFUN_00195550_2:\n\t"
+      "cmpl (%%eax), %%edi\n\t"
+      "jge .LFUN_00195550_7\n\t"
+      "movb %%dl, %%cl\n\t"
+      "movl $1, %%esi\n\t"
+      "shll %%cl, %%esi\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "testl %%esi, (%%ecx)\n\t"
+      "je .LFUN_00195550_5\n\t"
+      "pushl $6\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testw %%bx, %%bx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jl .LFUN_00195550_3\n\t"
+      "cmpw 0x8(%%ebp), %%bx\n\t"
+      "jl .LFUN_00195550_4\n\t"
+      ".LFUN_00195550_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a5\n\t"
+      "pushl $0x2b347c\n\t"
+      "pushl $0x2b34ac\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00195550_4:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl %%edi, (%%eax)\n\t"
+      "movw (%%esi), %%cx\n\t"
+      "addl $4, %%eax\n\t"
+      "movl %%eax, 0xc(%%ebp)\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%edx\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "leal (%%eax,%%edx,2), %%eax\n\t"
+      "movw %%cx, (%%eax)\n\t"
+      "movw 0x2(%%esi), %%dx\n\t"
+      "movw %%dx, 0x2(%%eax)\n\t"
+      "movw 0x4(%%esi), %%cx\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movw %%cx, 0x4(%%eax)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "incl %%ebx\n\t"
+      ".LFUN_00195550_5:\n\t"
+      "incl %%edx\n\t"
+      "incl %%edi\n\t"
+      "cmpw $0x20, %%dx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "jl .LFUN_00195550_2\n\t"
+      "jmp .LFUN_00195550_7\n\t"
+      ".LFUN_00195550_6:\n\t"
+      "addl $0x20, %%edi\n\t"
+      ".LFUN_00195550_7:\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "addl $4, %%edx\n\t"
+      "cmpl %%ecx, %%edi\n\t"
+      "movl %%edx, 0x10(%%ebp)\n\t"
+      "jl .LFUN_00195550_1\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_00195550_8:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e3c0] "m"(b195550_c18e3c0), [elem] "m"(b195550_elem), [assert] "m"(b195550_assert), [exitfn] "m"(b195550_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00195550: clang naked draft required"
+#endif
+
 
 /* 0x195650 - copy a sorted set of structure-surface tag elements to a buffer.
  *
