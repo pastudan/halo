@@ -3531,60 +3531,23 @@ void FUN_00060670(void *path __attribute__((unused)), int16_t heap_index __attri
 #endif
 
 
-/* FUN_00060910 (0x60910) — XBE naked draft (batch 227). */
-#if defined(__clang__)
-static char (*const b60910_c60330)(void *path, const char *debug_context) = FUN_00060330;
-static void * (*const b60910_c600f0)(void *path, int16_t step_index) = FUN_000600f0;
-static void (*const b60910_c604e0)(void *path, int16_t heap_index) = FUN_000604e0;
-
-__attribute__((naked, noinline))
-char FUN_00060910(void *path __attribute__((unused)), int16_t step_index __attribute__((unused)))
+/* FUN_00060910 (0x60910) — readable C lift. */
+char FUN_00060910(void *path, int16_t step_index)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x25eb18\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c60330]\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movw 0x1430(%%esi), %%di\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $0x80, %%di\n\t"
-      "jge .LFUN_00060910_1\n\t"
-      "leal 0x1(%%edi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw %%ax, 0x1430(%%esi)\n\t"
-      "call *%[c600f0]\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movw %%bx, 0x1432(%%esi,%%ecx,2)\n\t"
-      "call *%[c604e0]\n\t"
-      "pushl $0x25eb04\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c60330]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_00060910_1:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c60330] "m"(b60910_c60330), [c600f0] "m"(b60910_c600f0), [c604e0] "m"(b60910_c604e0)
-      : "memory");
-}
-#else
-#error "FUN_00060910: clang naked draft required"
-#endif
+  int16_t count;
 
+  FUN_00060330(path, (const char *)0x25eb18);
+  count = *(int16_t *)((char *)path + 0x1430);
+  if (count >= 0x80) {
+    return 0;
+  }
+  *(int16_t *)((char *)path + 0x1430) = (int16_t)(count + 1);
+  FUN_000600f0(path, step_index);
+  *(int16_t *)((char *)path + 0x1432 + (int)count * 2) = step_index;
+  FUN_000604e0(path, count);
+  FUN_00060330(path, (const char *)0x25eb04);
+  return 1;
+}
 
 /* FUN_00060970 (0x60970) — readable C lift. */
 int16_t FUN_00060970(void *path)

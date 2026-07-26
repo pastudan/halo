@@ -40477,8 +40477,9 @@
         },
         {
           "addr": "0x60910",
-          "decl": "char FUN_00060910(void *path, int16_t step_index);",
-          "ported": false
+          "decl": "char FUN_00060910(void *path @<eax>, int16_t step_index @<ebx>);",
+          "ported": true,
+          "name": "FUN_00060910"
         },
         {
           "addr": "0x60970",
