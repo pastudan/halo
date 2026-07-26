@@ -4965,12 +4965,12 @@
         {
           "addr": "0x1bc5c0",
           "decl": "short FUN_001bc5c0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bc620",
           "decl": "void FUN_001bc620(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bc6a0",
@@ -14281,7 +14281,7 @@
         {
           "addr": "0x100300",
           "decl": "void main_save_map_nonsafe(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x100310",
@@ -17772,42 +17772,42 @@
         {
           "addr": "0xb6b10",
           "decl": "char player_control_action_test_jump(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6b20",
           "decl": "char player_control_action_test_primary_trigger(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6b30",
           "decl": "char player_control_action_test_grenade_trigger(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6b40",
           "decl": "char player_control_action_test_zoom(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6b50",
           "decl": "char player_control_action_test_move_relative_all_directions(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6b70",
           "decl": "char player_control_action_test_look_relative_all_directions(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6b90",
           "decl": "char player_control_action_test_look_relative_left(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6ba0",
           "decl": "char player_control_action_test_look_relative_right(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6bb0",
@@ -26167,12 +26167,12 @@
         {
           "addr": "0x1939c0",
           "decl": "void structure_detail_objects_dispose_from_old_map(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1939d0",
           "decl": "void structure_detail_objects_dispose(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1939f0",
@@ -26851,12 +26851,12 @@
         {
           "addr": "0xe3b80",
           "decl": "bool event_controller_index_compatible_with_widget(void *widget, void *event_data);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe3bb0",
           "decl": "void set_ui_plasma_effect_color(float r, float g, float b, float a);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe3be0",
@@ -26871,7 +26871,7 @@
         {
           "addr": "0xe3c90",
           "decl": "void ui_widgets_set_fade_value(float fade);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe3ca0",
@@ -31212,7 +31212,7 @@
         {
           "addr": "0x1089a0",
           "decl": "void FUN_001089a0(int *bounds, int y0, int x0, int h, int w);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1089d0",
@@ -31287,12 +31287,12 @@
         {
           "addr": "0x108dd0",
           "decl": "void FUN_00108dd0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x108df0",
           "decl": "void FUN_00108df0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x108e20",
@@ -38872,7 +38872,7 @@
         {
           "addr": "0x994d0",
           "decl": "void plane_negate(float *plane_in, float *plane_out);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x106390",
