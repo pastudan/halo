@@ -36395,7 +36395,8 @@
         },
         {
           "addr": "0x149680",
-          "decl": "void FUN_00149680(void);"
+          "decl": "char FUN_00149680(void *state, int node_index);",
+          "ported": false
         },
         {
           "addr": "0x14dc30",

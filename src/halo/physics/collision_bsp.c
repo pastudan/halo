@@ -2018,3 +2018,231 @@ char FUN_00149570(void *state_v, int node_index)
   }
   return 0;
 }
+
+
+/* -------------------------------------------------------------------------
+ * FUN_00149680 (0x149680) — pill BSP recursive walker (vector+radius).
+ *
+ * Sibling of FUN_00148eb0 for the pill path. State:
+ *   +0 bsp, +4 origin*, +8 dir*, +0xc radius, +0x10 result*,
+ *   +0x14 plane_stack_count, +0x18 plane_stack[], +0x218 projection,
+ *   +0x21a sign, +0x21c… point2d working area.
+ * Leaf: project hit → bsp2d surface → FUN_00148240 → fill result; also
+ * tries FUN_00149570 on projected origin for edge hits.
+ * ported:false — large interim draft; tighten against ASM under VC71.
+ * ------------------------------------------------------------------------- */
+typedef struct collision_bsp_pill_walk_state {
+  int bsp;
+  float *origin;
+  float *direction;
+  float radius;
+  float *result;
+  int plane_stack_count;
+  int plane_stack[0x80];     /* +0x18 .. +0x217 */
+  short projection;          /* +0x218 */
+  unsigned char sign;        /* +0x21a */
+  unsigned char pad2;
+  float point2d[2];          /* +0x21c */
+  float dir2d[2];            /* +0x224 */
+} collision_bsp_pill_walk_state;
+
+char FUN_00149680(void *state_v, int node_index)
+{
+  collision_bsp_pill_walk_state *state;
+  int *bsp3d_node;
+  float *plane;
+  float *origin;
+  float *direction;
+  float d0, d_dir, d1;
+  float eps, neg;
+  char front_open;
+  char back_open;
+  char hit;
+  char dir_pos;
+  int child;
+  short *leaf;
+  int ref_i, ref_end;
+  int *ref;
+  int i;
+  float t;
+  float ax, ay, az;
+  int axis;
+  int high, pos;
+  float point[3];
+  float point2d[2];
+  uint32_t surface_index;
+  char *surface;
+  float *result;
+  float adj;
+  float dist;
+  float op[3];
+
+  state = (collision_bsp_pill_walk_state *)state_v;
+  hit = 0;
+  eps = *(float *)0x29ca28;
+
+  if (node_index < 0) {
+    goto leaf_path;
+  }
+
+  bsp3d_node =
+    (int *)tag_block_get_element((char *)state->bsp, node_index, 0xc);
+  plane = (float *)tag_block_get_element((char *)state->bsp + 0xc,
+                                         bsp3d_node[0], 0x10);
+  origin = state->origin;
+  direction = state->direction;
+  d0 = origin[2] * plane[2] + origin[1] * plane[1] + origin[0] * plane[0] -
+       plane[3];
+  d_dir = direction[2] * plane[2] + direction[1] * plane[1] +
+          direction[0] * plane[0];
+  d1 = d_dir + d0;
+
+  front_open = 0;
+  if (d0 < state->radius + eps || d1 < state->radius + eps) {
+    front_open = 1;
+  }
+  neg = -state->radius - eps;
+  back_open = 1;
+  if (d0 <= neg && d1 <= neg) {
+    back_open = 0;
+  }
+
+  if (front_open && back_open) {
+    if (state->plane_stack_count < 0 || state->plane_stack_count >= 0x80) {
+      display_assert((const char *)0x29cb24, (const char *)0x29cafc, 0x498, 1);
+      system_exit(-1);
+    }
+    dir_pos = (d_dir > *(float *)0x2533c0) ? 1 : 0;
+    state->plane_stack[state->plane_stack_count] =
+      dir_pos ? (bsp3d_node[0] | (int)0x80000000)
+              : (bsp3d_node[0] & 0x7fffffff);
+    state->plane_stack_count++;
+    child = bsp3d_node[(!dir_pos) + 1];
+    if (FUN_00149680(state, child)) {
+      hit = 1;
+    }
+    state->plane_stack_count--;
+    child = bsp3d_node[dir_pos + 1];
+    if (FUN_00149680(state, child)) {
+      return 1;
+    }
+    return hit;
+  }
+
+  child = bsp3d_node[(back_open ? 1 : 0) + 1];
+  if (FUN_00149680(state, child)) {
+    return 1;
+  }
+  return 0;
+
+leaf_path:
+  if (node_index == -1) {
+    return 0;
+  }
+  node_index &= 0x7fffffff;
+  leaf = (short *)tag_block_get_element((char *)state->bsp + 0x18, node_index,
+                                        8);
+  ref_i = *(int *)(leaf + 2);
+  ref_end = ref_i + leaf[1];
+  for (; ref_i < ref_end; ref_i++) {
+    ref = (int *)tag_block_get_element((char *)state->bsp + 0x24, ref_i, 8);
+    if (state->plane_stack_count <= 0) {
+      continue;
+    }
+    for (i = 0; i < state->plane_stack_count; i++) {
+      if (state->plane_stack[i] == ref[0]) {
+        break;
+      }
+    }
+    if (i >= state->plane_stack_count) {
+      continue;
+    }
+
+    plane = (float *)tag_block_get_element((char *)state->bsp + 0xc,
+                                           ref[0] & 0x7fffffff, 0x10);
+    origin = state->origin;
+    direction = state->direction;
+    d0 = origin[2] * plane[2] + origin[1] * plane[1] + origin[0] * plane[0] -
+         plane[3];
+    d_dir = direction[2] * plane[2] + direction[1] * plane[1] +
+            direction[0] * plane[0];
+    t = *(float *)0x2533c0;
+    if (d_dir != *(float *)0x2533c0) {
+      t = -(d0) / d_dir;
+      /* shrink by radius/|d_dir| */
+      adj = xbox_fabsf(d_dir);
+      adj = state->radius / adj;
+      t = t - adj;
+      if (t < *(float *)0x2533c0) {
+        t = *(float *)0x2533c0;
+      } else if (t > *(float *)0x2533c8) {
+        t = *(float *)0x2533c8;
+      }
+    }
+    if (!(state->result[0] > t)) {
+      continue;
+    }
+
+    ax = xbox_fabsf(plane[0]);
+    ay = xbox_fabsf(plane[1]);
+    az = xbox_fabsf(plane[2]);
+    if (az >= ay && az >= ax) {
+      axis = 2;
+    } else if (ay >= ax) {
+      axis = 1;
+    } else {
+      axis = 0;
+    }
+    pos = (plane[axis] > *(float *)0x2533c0) ? 1 : 0;
+    high = (ref[0] & (int)0x80000000) ? 1 : 0;
+    state->projection = (short)axis;
+    state->sign = (unsigned char)(pos != high);
+
+    point[0] = direction[0] * t + origin[0];
+    point[1] = direction[1] * t + origin[1];
+    point[2] = direction[2] * t + origin[2];
+    /* project onto plane then to 2d — simplified: project point */
+    dist = -(point[0] * plane[0] + point[1] * plane[1] + point[2] * plane[2] -
+             plane[3]);
+    point[0] = dist * plane[0] + point[0];
+    point[1] = dist * plane[1] + point[1];
+    point[2] = dist * plane[2] + point[2];
+    FUN_00061df0(point, state->projection, state->sign, point2d);
+    surface_index =
+      FUN_00146d40((char *)state->bsp + 0x30, point2d, ref[1]);
+    if (!FUN_00148240(state->bsp, 0, 0, (int)surface_index, axis,
+                      (int)state->sign, point2d)) {
+      /* still try edge path below */
+    } else {
+      surface = (char *)tag_block_get_element((char *)state->bsp + 0x3c,
+                                              (int)surface_index, 0xc);
+      result = state->result;
+      result[0] = t;
+      if (ref[0] < 0) {
+        result[1] = -plane[0];
+        result[2] = -plane[1];
+        result[3] = -plane[2];
+      } else {
+        result[1] = plane[0];
+        result[2] = plane[1];
+        result[3] = plane[2];
+      }
+      *(int *)((char *)result + 0x14) = (int)surface_index;
+      *(short *)((char *)result + 0x1a) = *(short *)(surface + 0xa);
+      hit = 1;
+    }
+
+    /* edge test via 2D BSP at projected origin */
+    dist = -d0;
+    op[0] = dist * plane[0] + origin[0];
+    op[1] = dist * plane[1] + origin[1];
+    op[2] = dist * plane[2] + origin[2];
+    FUN_00061df0(op, state->projection, state->sign, state->point2d);
+    state->dir2d[0] = *(float *)0x2533c0;
+    state->dir2d[1] = *(float *)0x2533c0;
+    if (FUN_00149570(state, ref[1])) {
+      hit = 1;
+    }
+  }
+  return hit;
+}
