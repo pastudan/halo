@@ -3511,32 +3511,13 @@ int FUN_00084940(int listening_endpoint __attribute__((unused)))
 #endif
 
 
-/* FUN_00084970 (0x84970) — XBE naked draft (batch 256). */
-#if defined(__clang__)
-static unsigned int (*const b84970_c8e370)(void) = system_milliseconds;
-
-__attribute__((naked, noinline))
-void FUN_00084970(void)
+/* FUN_00084970 (0x84970) — readable C lift. */
+void FUN_00084970(unsigned int *ep)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl $0, 0x8(%%esi)\n\t"
-      "call *%[c8e370]\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "movl $0, 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8e370] "m"(b84970_c8e370)
-      : "memory");
+  ep[2] = 0;
+  ep[0] = system_milliseconds();
+  ep[1] = 0;
 }
-#else
-#error "FUN_00084970: clang naked draft required"
-#endif
 
 /* --- transport_endpoint_set_winsock.obj orphan shells (2026-07-26) --- */
 

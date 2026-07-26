@@ -26852,7 +26852,7 @@
         {
           "addr": "0x84970",
           "decl": "void FUN_00084970(unsigned int *ep);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "transport_endpoint_set_winsock.obj",
