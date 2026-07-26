@@ -483,8 +483,8 @@ def main() -> int:
         src = src_by.get(ai) or ""
         if "hs/" not in src and "game/players" not in src:
             continue
-        end = starts[i + 1] if i + 1 < len(starts) else ai + 96
-        if end - ai > 120:
+        end = starts[i + 1] if i + 1 < len(starts) else ai + 200
+        if end - ai > 200:
             continue
         sp = resolve_src(src)
         if not sp:
