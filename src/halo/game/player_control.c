@@ -193,35 +193,85 @@ void player_control_action_test_reset(void)
   *((int *)player_control_globals + 1) = 0;
 }
 
+/* player_control_action_test_accept (0xb6ab0) — XBE naked draft (batch 206). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_accept(void)
 {
-  int *g;
-
-  g = (int *)player_control_globals;
-  g[1] |= 4;
-  g[2] |= 4;
-  return (char)((g[0] >> 2) & 1);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl $4, %%ecx\n\t"
+      "orl %%ecx, %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "orl %%ecx, 0x8(%%eax)\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "shrl $2, %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_accept: clang naked draft required"
+#endif
 
+
+/* player_control_action_test_back (0xb6ad0) — XBE naked draft (batch 206). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_back(void)
 {
-  int *g;
-
-  g = (int *)player_control_globals;
-  g[1] |= 8;
-  g[2] |= 8;
-  return (char)((g[0] >> 3) & 1);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl $8, %%ecx\n\t"
+      "orl %%ecx, %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "orl %%ecx, 0x8(%%eax)\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "shrl $3, %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_back: clang naked draft required"
+#endif
 
+
+/* player_control_action_test_action (0xb6af0) — XBE naked draft (batch 203). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 char player_control_action_test_action(void)
 {
-  int *g;
-
-  g = (int *)player_control_globals;
-  g[1] |= 1;
-  g[2] |= 1;
-  return (char)(g[0] & 1);
+  __asm__ volatile(
+      "movl 0x457090, %%eax\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl $1, %%ecx\n\t"
+      "orl %%ecx, %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "orl %%ecx, 0x8(%%eax)\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "andl %%ecx, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "player_control_action_test_action: clang naked draft required"
+#endif
+
 
 /* player_control_action_test_jump (0xb6b10) — XBE naked draft (batch 179). */
 #if defined(__clang__)

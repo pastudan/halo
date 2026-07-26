@@ -1494,15 +1494,27 @@ void FUN_001319e0(void)
 #endif
 
 
-/* 0x1319f0 */
+/* FUN_001319f0 (0x1319f0) — XBE naked draft (batch 203). */
+#if defined(__clang__)
+static void (*const b1319f0_c119550)(data_t *data) = data_make_invalid;
+
+__attribute__((naked, noinline))
 void FUN_001319f0(void)
 {
-  int eax = 0;
-
-  data_make_invalid((void *)(uintptr_t)eax);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x5a90d0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119550]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c119550] "m"(b1319f0_c119550)
+      : "memory");
 }
+#else
+#error "FUN_001319f0: clang naked draft required"
+#endif
+
 
 /* FUN_00131a00 (0x131a00) — XBE naked draft (batch 168). */
 #if defined(__clang__)

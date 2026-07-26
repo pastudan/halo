@@ -2032,21 +2032,39 @@ void ui_widget_debug_show_path(char show)
   *(char *)0x46cc84 = show;
 }
 
-int widget_instance_count_children(void *widget)
-{
-  void *child;
-  int count;
+/* widget_instance_count_children (0xe3cb0) — XBE naked draft (batch 204). */
+#if defined(__clang__)
 
-  count = 0;
-  if (widget == NULL)
-    return 0;
-  child = *(void **)((char *)widget + 0x34);
-  while (child != NULL) {
-    count++;
-    child = *(void **)((char *)child + 0x2c);
-  }
-  return count;
+
+__attribute__((naked, noinline))
+int widget_instance_count_children(void *widget __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lwidget_instance_count_children_2\n\t"
+      "movl 0x34(%%ecx), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lwidget_instance_count_children_2\n\t"
+      ".Lwidget_instance_count_children_1:\n\t"
+      "movl 0x2c(%%ecx), %%ecx\n\t"
+      "incl %%eax\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jne .Lwidget_instance_count_children_1\n\t"
+      ".Lwidget_instance_count_children_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "widget_instance_count_children: clang naked draft required"
+#endif
+
 
 void *widget_instance_get_nth_child(void *widget, int index)
 {

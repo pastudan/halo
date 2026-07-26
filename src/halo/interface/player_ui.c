@@ -403,13 +403,32 @@ void player_ui_autojoin_players_to_next_multiplayer_game(void)
 #endif
 
 
-/* 0xe0960 */
+/* player_ui_clear_multiplayer_variant (0xe0960) — XBE naked draft (batch 203). */
+#if defined(__clang__)
+static void (*const be0960_cfff70)(short param) = set_game_connection;
+static void (*const be0960_ca81c0)(void) = game_engine_dispose;
+static void (*const be0960_ca7490)(game_variant_t *variant) = game_set_game_variant;
+
+__attribute__((naked, noinline))
 void player_ui_clear_multiplayer_variant(void)
 {
-  set_game_connection(0);
-  game_engine_dispose();
-  game_set_game_variant((void *)0);
+  __asm__ volatile(
+      "pushl $0\n\t"
+      "movb $0, 0x46c034\n\t"
+      "call *%[cfff70]\n\t"
+      "call *%[ca81c0]\n\t"
+      "pushl $0\n\t"
+      "call *%[ca7490]\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [cfff70] "m"(be0960_cfff70), [ca81c0] "m"(be0960_ca81c0), [ca7490] "m"(be0960_ca7490)
+      : "memory");
 }
+#else
+#error "player_ui_clear_multiplayer_variant: clang naked draft required"
+#endif
+
 
 /* player_ui_get_active_player_profile (0xe0980) — XBE naked draft (batch 162). */
 #if defined(__clang__)

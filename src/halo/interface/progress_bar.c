@@ -1344,15 +1344,33 @@ void FUN_000e1d00(void)
 #endif
 
 
-/* 0xe1f00 */
+/* FUN_000e1f00 (0xe1f00) — XBE naked draft (batch 203). */
+#if defined(__clang__)
+static void __stdcall (*const be1f00_c1ed280)(uint32_t reg, float a, float b) = D3DDevice_SetVertexData2f;
+
+__attribute__((naked, noinline))
 void FUN_000e1f00(void)
 {
-  int edx = 0;
-
-  D3DDevice_SetVertexData2f(edx, 0.0f, 0.0f);
-
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1ed280]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1ed280] "m"(be1f00_c1ed280)
+      : "memory");
 }
+#else
+#error "FUN_000e1f00: clang naked draft required"
+#endif
+
 
 /* FUN_000e1f20 (0xe1f20) — XBE naked draft (batch 145). */
 #if defined(__clang__)

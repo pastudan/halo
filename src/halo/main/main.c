@@ -3044,24 +3044,79 @@ void main_disallow_persistent_storage(void)
   *(char *)0x46da54 = 0;
 }
 
-void main_set_map_name(const char *name)
-{
-  csstrncpy((char *)0x46da55, name, 0xff);
-  *(char *)0x46da43 = 0;
-  *(char *)0x46db54 = 0;
-  *(char *)0x46da54 = 1;
-  if (game_in_editor() || game_in_progress()) {
-    if (*(int16_t *)0x46da0c == 0)
-      *(char *)0x46da25 = 1;
-  }
-}
+/* main_set_map_name (0xfffa0) — XBE naked draft (batch 203). */
+#if defined(__clang__)
+static void * (*const bfffa0_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+static bool (*const bfffa0_c977f0)(void) = game_in_editor;
+static bool (*const bfffa0_cb5be0)(void) = game_in_progress;
 
-void main_set_multiplayer_map_name(const char *name)
+__attribute__((naked, noinline))
+void main_set_map_name(const char *name __attribute__((unused)))
 {
-  csstrncpy((char *)0x46db55, name, 0xff);
-  *(char *)0x46dc54 = 0;
-  cache_files_give_time_to_precache((char *)0x46db55);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0xff\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x46da55\n\t"
+      "movb $0, 0x46da43\n\t"
+      "call *%[c8de70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $0, 0x46db54\n\t"
+      "movb $1, 0x46da54\n\t"
+      "call *%[c977f0]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lmain_set_map_name_1\n\t"
+      "call *%[cb5be0]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lmain_set_map_name_2\n\t"
+      ".Lmain_set_map_name_1:\n\t"
+      "cmpw $0, 0x46da0c\n\t"
+      "jne .Lmain_set_map_name_2\n\t"
+      "movb $1, 0x46da25\n\t"
+      ".Lmain_set_map_name_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8de70] "m"(bfffa0_c8de70), [c977f0] "m"(bfffa0_c977f0), [cb5be0] "m"(bfffa0_cb5be0)
+      : "memory");
 }
+#else
+#error "main_set_map_name: clang naked draft required"
+#endif
+
+
+/* main_set_multiplayer_map_name (0x100010) — XBE naked draft (batch 204). */
+#if defined(__clang__)
+static void * (*const b100010_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+static bool (*const b100010_c1b9de0)(const char *name) = cache_files_give_time_to_precache;
+
+__attribute__((naked, noinline))
+void main_set_multiplayer_map_name(const char *name __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0xff\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x46db55\n\t"
+      "call *%[c8de70]\n\t"
+      "pushl $0x46db55\n\t"
+      "movb $0, 0x46dc54\n\t"
+      "call *%[c1b9de0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8de70] "m"(b100010_c8de70), [c1b9de0] "m"(b100010_c1b9de0)
+      : "memory");
+}
+#else
+#error "main_set_multiplayer_map_name: clang naked draft required"
+#endif
+
 
 const char *main_get_map_name(void)
 {
@@ -3700,17 +3755,38 @@ void main_print_version(void)
 #endif
 
 
+/* main_save_map_no_timeout (0x101ec0) — XBE naked draft (batch 206). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void main_save_map_no_timeout(void)
 {
-  if (*(char *)0x46da28 != 0 && *(char *)0x46da2a == 0)
-    return;
-  *(char *)0x46da28 = 1;
-  *(char *)0x46da29 = 1;
-  *(int *)0x46da2c = 0;
-  *(int *)0x46da30 = 0;
-  *(int16_t *)0x46da38 = 0;
-  *(char *)0x46da2a = 0;
+  __asm__ volatile(
+      "movb 0x46da28, %%cl\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpb %%al, %%cl\n\t"
+      "je .Lmain_save_map_no_timeout_1\n\t"
+      "cmpb %%al, 0x46da2a\n\t"
+      "je .Lmain_save_map_no_timeout_2\n\t"
+      ".Lmain_save_map_no_timeout_1:\n\t"
+      "movb $1, %%cl\n\t"
+      "movb %%cl, 0x46da28\n\t"
+      "movb %%cl, 0x46da29\n\t"
+      "movl %%eax, 0x46da2c\n\t"
+      "movl %%eax, 0x46da30\n\t"
+      "movw %%ax, 0x46da38\n\t"
+      ".Lmain_save_map_no_timeout_2:\n\t"
+      "movb %%al, 0x46da2a\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "main_save_map_no_timeout: clang naked draft required"
+#endif
+
 
 /* main_roll_credits (0x102070) — XBE naked draft (batch 188). */
 #if defined(__clang__)
