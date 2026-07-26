@@ -158,6 +158,8 @@ def main() -> int:
         ("actor_expected_acknowledgement", 0x32940, 0x32ac0),
         ("actor_perception_refresh_danger_zone", 0x32380, 0x32940),
         ("actor_visibility_at_point", 0x314f0, 0x31850),
+        ("actor_perception_unreachable", 0x32ac0, 0x32b50),
+        ("FUN_0002f5f0", 0x2f5f0, 0x2f6e0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

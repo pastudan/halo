@@ -34147,7 +34147,7 @@
         },
         {
           "addr": "0x2f5f0",
-          "decl": "void FUN_0002f5f0(void);",
+          "decl": "char FUN_0002f5f0(int actor_handle, float scale, float visibility, int unit_handle, char field_60, char dz_flag);",
           "ported": false
         },
         {
@@ -34276,7 +34276,7 @@
         },
         {
           "addr": "0x31c00",
-          "decl": "int actor_perception_unit_from_swarm(int owner_handle, int actor_handle, int unit_handle, char verify_flag, float *swarm_origin);",
+          "decl": "int actor_perception_unit_from_swarm(int owner_handle, int unit_handle, char verify_flag, float *swarm_origin);",
           "name": "actor_perception_unit_from_swarm",
           "source_path": "src/halo/ai/actor_perception.c",
           "ported": false
@@ -34311,7 +34311,7 @@
         },
         {
           "addr": "0x32ac0",
-          "decl": "void actor_perception_unreachable(int actor_handle, int leader_handle, char flag);",
+          "decl": "void actor_perception_unreachable(int actor_handle, int prop_handle, char flag);",
           "ported": false
         },
         {

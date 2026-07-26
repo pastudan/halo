@@ -584,23 +584,41 @@ void actor_get_vision_distances(void)
   (void)eax;
 }
 
-/* 0x2f5f0 */
-void FUN_0002f5f0(void)
+/* 0x2f5f0 — register a unit danger zone on an actor (vehicle proximity). */
+char FUN_0002f5f0(int actor_handle, float scale, float visibility,
+                  int unit_handle, char field_60, char dz_flag)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
+  char *actor;
+  char *unit;
+  char *danger;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), eax);
-  /* test (char)eax, 0x41 -> jne 0x2f6d3 */
-  /* relift: cmp dword ptr [esi + 0x28c], edi -> je 0x2f6d3 */
-  object_get_and_verify_type(edi, 3);
-  csmemset((void *)((char *)eax + 0x280), 0, 108);
-  object_get_world_position(edi, (vector3_t *)((char *)eax + 0x298));
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (scale + *(float *)0x253f34 > visibility)
+    return 0;
 
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  danger = actor + 0x280;
+  if (*(int16_t *)(actor + 0x280) >= 1) {
+    if (*(int16_t *)(actor + 0x280) != 1)
+      return 0;
+    if (*(int *)(actor + 0x28c) == unit_handle)
+      return 0;
+    if (visibility > *(float *)(actor + 0x2d4))
+      return 0;
+  }
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  csmemset(danger, 0, 0x6c);
+  *(int *)(actor + 0x28c) = unit_handle;
+  *(int16_t *)(actor + 0x280) = 1;
+  *(int *)(actor + 0x294) = *(int *)&scale;
+  object_get_world_position(unit_handle, (vector3_t *)(actor + 0x298));
+  *(int *)(actor + 0x2a4) = *(int *)(unit + 0x18);
+  *(int *)(actor + 0x2a8) = *(int *)(unit + 0x1c);
+  *(int *)(actor + 0x2ac) = *(int *)(unit + 0x20);
+  *(int16_t *)(actor + 0x284) = 6;
+  *(char *)(actor + 0x286) = dz_flag;
+  *(int16_t *)(actor + 0x282) = (int16_t)(field_60 == 0);
+  return 1;
 }
 
 /* 0x2f6e0 — decide whether an actor wants a prop acknowledgement. */
@@ -1158,41 +1176,129 @@ void actor_berserk(int actor_handle, int berserk_flag)
     *(char *)(actor + 0x375) = 1;
 }
 
+extern char *actor_combat_get_firing_variant_definition(int actor_handle);
+extern bool actor_has_ranged_weapon(int actor_handle);
+extern float FUN_000278e0(int actor_handle, int prop_handle);
+
 /* 0x314f0 — visibility level from LOS + engagement at a probe point. */
 int16_t actor_visibility_at_point(int actor_handle, float *out_pos, float *head_pos,
                                   char vis_type, int16_t los_result, char flag,
                                   int param_7, int16_t engagement)
 {
   char *actor;
+  char *encounter;
+  char *variant;
+  float range;
+  float scale;
   float dist_sq;
-  float limit;
+  float dot;
+  float modifier;
+  float delta[3];
 
-  (void)out_pos;
-  (void)head_pos;
-  (void)vis_type;
-  (void)flag;
-  (void)param_7;
-
-  if (los_result >= 2)
+  if (los_result != 0 && los_result != 1)
     return los_result;
-  if (engagement >= 3)
-    return 3;
 
   actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(int *)(actor + 0x158) != -1)
+  encounter = (char *)tag_get('rtca', *(int *)(actor + 0x58));
+  variant = actor_combat_get_firing_variant_definition(actor_handle);
+
+  range = *(float *)(encounter + 0x18);
+  if (*(float *)(variant + 0x150) <= *(float *)0x2533c0)
+    range = *(float *)(variant + 0x150);
+
+  switch (engagement) {
+  case 0:
+    scale = *(float *)0x253524;
+    break;
+  case 1:
+    scale = *(float *)0x253f3c;
+    break;
+  case 2:
+    scale = *(float *)0x2533f0;
+    break;
+  case 3:
+    scale = *(float *)0x2533c8;
+    break;
+  default:
+    display_assert("engagement >= 0 && engagement <= 3",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x4f4, 1);
+    system_exit(-1);
+    scale = 1.0f;
+    break;
+  }
+  range *= scale;
+
+  delta[0] = head_pos[0] - out_pos[0];
+  delta[1] = head_pos[1] - out_pos[1];
+  delta[2] = head_pos[2] - out_pos[2];
+  dist_sq = delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2];
+  if (dist_sq > range * range)
     return 0;
 
-  dist_sq = (head_pos[0] - out_pos[0]) * (head_pos[0] - out_pos[0]) +
-            (head_pos[1] - out_pos[1]) * (head_pos[1] - out_pos[1]) +
-            (head_pos[2] - out_pos[2]) * (head_pos[2] - out_pos[2]);
+  modifier = 1.0f;
+  if ((*(uint8_t *)encounter & 1) == 0) {
+    if (vis_type == 0)
+      modifier = 0.3f;
+    else if (vis_type == 1)
+      modifier = 0.7f;
+  }
 
-  limit = *(float *)0x2533c0;
-  if (*(int16_t *)(actor + 0x6a) >= 3)
-    limit = *(float *)0x255fd8;
+  dot = FUN_0018e690();
+  if (dot <= *(float *)0x2533f0) {
+    if (dot <= *(float *)0x2549d4)
+      modifier = (*(float *)0x2533f0 - dot) * modifier * *(float *)0x256144;
+    if (modifier <= *(float *)0x256140)
+      modifier = 0.15f;
+  } else {
+    modifier = 0.15f;
+  }
 
-  if (dist_sq <= limit * limit)
-    return 2;
-  if (dist_sq <= *(float *)0x2533f0 * *(float *)0x2533f0)
+  range = modifier * range;
+
+  if (flag != 0) {
+    int profile = (actor_handle & 0xffff) * 0x657c + *(int *)0x331f58;
+    *(int *)(profile + 0x656c) = game_time_get();
+    *(float *)(profile + 0x6570) = range;
+    *(float *)(profile + 0x6574) = modifier;
+  }
+
+  if (*(char *)(actor + 6) == 0 && param_7 != 0) {
+    float facing;
+    float lateral;
+    float vertical;
+    float angle;
+
+    facing = delta[0] * *(float *)(actor + 0x18c) +
+             delta[1] * *(float *)(actor + 0x190) +
+             delta[2] * *(float *)(actor + 0x194);
+    lateral = delta[0] * *(float *)(actor + 0x198) +
+              delta[1] * *(float *)(actor + 0x19c) +
+              delta[2] * *(float *)(actor + 0x1a0);
+    vertical = delta[0] * *(float *)(actor + 0x1a4) +
+               delta[1] * *(float *)(actor + 0x1a8) +
+               delta[2] * *(float *)(actor + 0x1ac);
+    angle = arctangent(sqrtf(lateral * lateral + vertical * vertical), facing);
+    if (angle > *(float *)0x25613c) {
+      if (angle <= *(float *)0x256138)
+        range = arctangent(vertical, lateral);
+      else
+        range = 0.0f;
+    } else {
+      range = *(float *)0x2533c0;
+    }
+  } else {
+    range = *(float *)0x2533c4 * range;
+  }
+
+  if (los_result == 0) {
+    if (range * range >= dist_sq)
+      return 3;
+    if (dist_sq <= *(float *)0x255fd8 * *(float *)0x255fd8)
+      return 2;
+    return 0;
+  }
+
+  if (range * range >= dist_sq)
     return 1;
   return 0;
 }
@@ -1299,10 +1405,13 @@ void actor_perception_find_sense_position(int actor_handle, float *position,
   FUN_0003bde0(actor_handle, best_unit, (char *)input_block_out);
 }
 
-/* 0x31c00 — pick the closest swarm member unit to a reference point. */
-int actor_perception_unit_from_swarm(int owner_handle, int actor_handle,
-                                     int unit_handle, char verify_flag,
-                                     float *swarm_origin)
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(1)))
+#endif
+/* 0x31c00 — pick the closest swarm member unit to a reference point.
+ * Owner handle arrives in EAX; swarm_origin pointer in EDI at the XBE call site. */
+int actor_perception_unit_from_swarm(int owner_handle, int unit_handle,
+                                     char verify_flag, float *swarm_origin)
 {
   char *owner_actor;
   char *swarm;
@@ -1313,8 +1422,6 @@ int actor_perception_unit_from_swarm(int owner_handle, int actor_handle,
   int member_index;
   float delta[3];
   float dist_sq;
-
-  (void)actor_handle;
 
   owner_actor = (char *)datum_get(actor_data, owner_handle);
   if (*(char *)(owner_actor + 6) == 0) {
@@ -1431,8 +1538,7 @@ void prop_position_refresh(int actor_handle, int prop_handle, float *out_pos,
     if (*(int *)(prop + 0x28) + 90 <= now) {
       *(int *)(prop + 0x28) = now;
       swarm_unit = actor_perception_unit_from_swarm(
-          *(int *)(prop + 0x1c), actor_handle, unit_handle, 0,
-          (float *)(actor + 0x120));
+          *(int *)(prop + 0x1c), unit_handle, 0, (float *)(actor + 0x120));
       if (swarm_unit != unit_handle) {
         *(int *)(prop + 0x18) = swarm_unit;
         unit = (char *)object_get_and_verify_type(swarm_unit, 3);
@@ -1895,21 +2001,26 @@ char actor_expected_acknowledgement(int actor_handle, int prop_handle)
 }
 
 /* 0x32ac0 */
-void actor_perception_unreachable(int actor_handle, int leader_handle, char flag)
+void actor_perception_unreachable(int actor_handle, int prop_handle, char flag)
 {
-  int eax = 0;
-  int esi = 0;
+  char *prop;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), actor_handle);
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), leader_handle);
-  /* test (char)eax, (char)eax -> je 0x32b11 */
-  /* relift: cmp word ptr [esi + 0x9c], 0 -> jne 0x32b04 */
-  game_time_get();
-  actor_get_perception_knowledge(actor_handle, leader_handle);
-  actor_compute_prop_target_weight(actor_handle, leader_handle);
+  datum_get(actor_data, actor_handle);
+  prop = (char *)datum_get(prop_data, prop_handle);
 
-  (void)eax;
-  (void)esi;
+  if (flag != 0) {
+    if (*(int16_t *)(prop + 0x9c) == 0)
+      *(int16_t *)(prop + 0x9c) = 1;
+    *(int *)(prop + 0xa0) = game_time_get();
+  } else {
+    *(int16_t *)(prop + 0x9c) = 0;
+    *(int *)(prop + 0xa0) = -1;
+  }
+
+  *(char *)(prop + 0xa4) =
+      (char)actor_get_perception_knowledge(actor_handle, prop_handle);
+  *(float *)(prop + 0x50) =
+      actor_compute_prop_target_weight(actor_handle, prop_handle);
 }
 
 /* 0x32b50 */
@@ -2510,11 +2621,13 @@ void prop_status_refresh(int actor_handle, int prop_handle, float *out_pos)
       *(int *)(prop + 0xb4) != -1) {
     char *killer = (char *)datum_get(actor_data, *(int *)(prop + 0xb4));
     if (*(char *)(killer + 8) != 0 && *(int16_t *)(killer + 0x268) >= 0xa &&
-        *(int *)(killer + 0x270) != -1) {
+        *(int *)(killer + 0x270) != -1 && *(char *)(killer + 0x454) != 0) {
       char *killer_prop =
           (char *)datum_get(prop_data, *(int *)(killer + 0x270));
-      if (*(int *)(killer_prop + 0x18) == *(int *)(prop + 0x18))
+      if (*(int *)(killer_prop + 0x18) == *(int *)(prop + 0x18)) {
         *(char *)(prop + 0xb8) = 1;
+        *(int16_t *)(prop + 0xb0) = 0;
+      }
     }
   }
   if (*(int16_t *)(prop + 0x24) >= 2 && *(int16_t *)(prop + 0x24) <= 3 &&
@@ -2522,27 +2635,117 @@ void prop_status_refresh(int actor_handle, int prop_handle, float *out_pos)
     *(char *)(prop + 0xb8) = 1;
 
   if (*(char *)(prop + 0x136) != 0) {
-    char dz_flag = 0;
-    if (*(int16_t *)(prop + 0x30) >= 2)
-      dz_flag = 1;
-    FUN_00032170(0, actor_handle, *(int *)(prop + 0x18), dz_flag);
+    char dz_flag = (char)(*(int16_t *)(prop + 0x30) >= 2);
+    FUN_00032170(out_pos, actor_handle, *(int *)(prop + 0x110), dz_flag);
   }
 
-  if (*(float *)(prop + 0x20) < *(float *)0x2533c0) {
+  if (*(float *)(prop + 0x20) <= *(float *)0x2533c0) {
     if (*(char *)(prop + 0x127) != 0 ||
-        *(char *)((char *)unit + 0x253) == 0x1e)
-      FUN_0002f5f0();
+        *(char *)((char *)unit + 0x253) == 0x1e) {
+      if (*(int16_t *)(prop + 0x30) >= 2) {
+        FUN_0002f5f0(actor_handle, *(float *)(prop + 0x20),
+                     *(float *)(prop + 0x11c), *(int *)(prop + 0x18),
+                     *(char *)(prop + 0x60),
+                     (char)(*(int16_t *)(prop + 0x30) >= 2));
+      }
+    }
   }
 
-  if (*(char *)(prop + 0x126) != 0)
-    *(int16_t *)(prop + 0x6a) = 0;
-  *(char *)(prop + 0x126) = 0;
+  if (*(char *)(prop + 0x60) != 0 && *(int16_t *)(prop + 0x24) >= 2 &&
+      *(int16_t *)(prop + 0x24) <= 3) {
+    char call_unreachable = 0;
+    if (actor_has_ranged_weapon(actor_handle)) {
+      if (*(float *)(prop + 0x11c) > *(float *)(actor + 0x608))
+        call_unreachable = 1;
+    } else if ((*(uint32_t *)encounter & 0x8000000) != 0) {
+      if (*(float *)(prop + 0x11c) > *(float *)(encounter + 0x37c))
+        call_unreachable = 1;
+    } else {
+      call_unreachable = 1;
+    }
+    if (call_unreachable != 0)
+      actor_perception_unreachable(0, prop_handle, actor_handle);
+  }
 
-  *(char *)(prop + 0xa4) = actor_get_perception_knowledge(actor_handle, prop_handle);
-  actor_compute_prop_target_weight(actor_handle, prop_handle);
-  *(float *)(prop + 0x50) = FUN_000278e0(actor_handle, prop_handle);
+  if (*(int *)(prop + 0xa0) != -1 &&
+      *(int *)(prop + 0xa0) + 0x96 < now)
+    actor_perception_unreachable(0, prop_handle, actor_handle);
+
+  if (*(char *)(prop + 0x126) != 0) {
+    char clear_status = 0;
+
+    if (*(char *)(prop + 0x12e) == 0) {
+      char *prop_owner;
+      char *enc;
+      char desire;
+      char hidden;
+      float scaled_vis;
+      int max_teams;
+      int actor_teams;
+      int unit_teams;
+
+      scaled_vis = *(float *)(prop + 0x11c) * *(float *)(prop + 0x20);
+      desire = *(char *)(prop + 0x127);
+
+      if (*(int *)(prop + 0x1c) != -1) {
+        prop_owner = (char *)datum_get(actor_data, *(int *)(prop + 0x1c));
+        if (prop_owner != 0 && *(char *)(prop_owner + 8) != 0 &&
+            *(char *)(prop_owner + 0x13) == 0)
+          clear_status = 1;
+      }
+      if (clear_status == 0 && *(char *)(prop + 0x63) == 0) {
+        if (scaled_vis < *(float *)0x255fe0)
+          clear_status = 1;
+        else if (desire != 0) {
+          if (*(int *)(actor + 0x34) != -1) {
+            enc = (char *)datum_get(*(void **)0x5ab270, *(int *)(actor + 0x34));
+            max_teams = *(int *)(enc + 0x58);
+            actor_teams = *(int *)(actor + 0x3a0);
+            unit_teams = *(int *)(unit + 0x3cc);
+            if (max_teams < actor_teams)
+              max_teams = actor_teams;
+            if (max_teams != -1 && unit_teams != -1 && unit_teams < max_teams)
+              desire = 0;
+            if (desire != 0) {
+              hidden = (char)(*(char *)(enc + 0x45) == 0 &&
+                              *(char *)(enc + 0x44) == 0 &&
+                              *(char *)(enc + 0x42) == 0);
+              if (hidden != 0) {
+                if (scaled_vis > *(float *)0x255fdc)
+                  clear_status = 1;
+              } else if (scaled_vis > *(float *)0x2533c0) {
+                if (*(char *)(prop + 0x127) == 0 ||
+                    *(int16_t *)(prop + 0x76) <= 0x96)
+                  clear_status = 1;
+              }
+            }
+          }
+          if (desire != 0 && actor_action_try_to_panic(actor_handle) > 1)
+            clear_status = 1;
+          if (desire != 0 && *(char *)(prop + 0x127) != 0) {
+            float threshold = *(float *)0x254e74;
+            if (*(int16_t *)(actor + 0x6a) < 3)
+              threshold = *(float *)0x254df8;
+            if (scaled_vis > threshold)
+              clear_status = 1;
+          }
+        } else if (scaled_vis > *(float *)0x255fdc) {
+          clear_status = 1;
+        }
+      }
+
+      if (clear_status != 0)
+        *(int16_t *)(prop + 0x6a) = 0;
+    }
+    *(char *)(prop + 0x126) = 0;
+  }
+
+  *(char *)(prop + 0xa4) =
+      (char)actor_get_perception_knowledge(actor_handle, prop_handle);
+  *(float *)(prop + 0x50) =
+      actor_compute_prop_target_weight(actor_handle, prop_handle);
+  *(float *)(prop + 0x54) = FUN_000278e0(actor_handle, prop_handle);
   *(char *)(prop + 0x64) = 1;
-  (void)encounter;
   (void)player_present;
 }
 
@@ -2565,7 +2768,7 @@ void actor_perception_refresh_test_object(void)
   object_get_world_position(0, (void *)(uintptr_t)edx);
   actor_perception_find_sense_position(0, (float *)(uintptr_t)ecx, 0, (void *)(uintptr_t)eax);
   /* cmp eax, -1 -> je 0x34363 */
-  actor_perception_unit_from_swarm(0, 0, 0, 0, 0);
+  actor_perception_unit_from_swarm(0, 0, 0, 0);
   object_get_and_verify_type(0, 0);
   object_get_world_position(0, (void *)(uintptr_t)edx);
   /* cmp edi, -1 -> je 0x34930 */
@@ -2578,7 +2781,7 @@ void actor_perception_refresh_test_object(void)
   /* test (char)eax, 0x41 -> jne 0x34471 */
   /* test (char)eax, (char)eax -> jne 0x34450 */
   /* relift: cmp byte ptr [esi + 0x253], 0x1e -> jne 0x34471 */
-  FUN_0002f5f0();
+  FUN_0002f5f0(0, 0.0f, 0.0f, 0, 0, 0);
   datum_get((void *)(uintptr_t)edx, 0);
   datum_get((void *)(uintptr_t)eax, 0);
   /* test eax, eax -> je 0x344c7 */

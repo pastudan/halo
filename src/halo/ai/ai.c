@@ -1737,8 +1737,8 @@ void ai_find_inactive_encounters(void *out_list, int buf_size)
       continue;
     entry_off = 4 + count * 0xc;
     *(char *)((char *)out_list + entry_off + 0) = 1;
-    *(int *)((char *)out_list + entry_off + 4) = *(int *)(actor_rec + 0xc);
-    *(int *)((char *)out_list + entry_off + 8) = actor_iter[1];
+    *(int *)((char *)out_list + entry_off + 4) = actor_iter[1];
+    *(int *)((char *)out_list + entry_off + 8) = *(int *)(actor_rec + 0xc);
     *(int16_t *)out_list = count + 1;
   }
 
@@ -1756,8 +1756,8 @@ void ai_find_inactive_encounters(void *out_list, int buf_size)
       continue;
     entry_off = 4 + count * 0xc;
     *(char *)((char *)out_list + entry_off + 0) = 0;
-    *(int *)((char *)out_list + entry_off + 4) = *(int *)(enc_rec + 0x10);
-    *(int *)((char *)out_list + entry_off + 8) = *(int *)((char *)enc_iter + 0x10);
+    *(int *)((char *)out_list + entry_off + 4) = *(int *)((char *)enc_iter + 0x10);
+    *(int *)((char *)out_list + entry_off + 8) = *(int *)(enc_rec + 0x10);
     *(int16_t *)out_list = count + 1;
   }
 
