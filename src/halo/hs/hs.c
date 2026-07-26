@@ -4016,7 +4016,7 @@ void FUN_000c2440(int16_t function_index __attribute__((unused)), int thread_dat
 /* FUN_000c2480 (0xc2480) — XBE naked draft (batch 200). */
 #if defined(__clang__)
 static int (*const bc2480_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc2480_c93030)(int a0) = cinematic_suppress_bsp_object_creation;
+static void (*const bc2480_c93030)(char a0) = cinematic_suppress_bsp_object_creation;
 static void (*const bc2480_ccbf80)(int thread_handle, int value) = hs_return;
 
 __attribute__((naked, noinline))
@@ -5772,7 +5772,7 @@ void FUN_000c2f70(int16_t function_index, int thread_datum, char init)
 /* FUN_000c2f90 (0xc2f90) — XBE naked draft (batch 198). */
 #if defined(__clang__)
 static int (*const bc2f90_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc2f90_ca2dc0)(int a0, float a1, float a2) = scripted_player_effect_set_translation;
+static void (*const bc2f90_ca2dc0)(int a0, int a1, int a2) = scripted_player_effect_set_translation;
 static void (*const bc2f90_ccbf80)(int thread_handle, int value) = hs_return;
 
 __attribute__((naked, noinline))
