@@ -9609,7 +9609,7 @@ void unit_died(int unit_handle, char param_2)
     temp_unit = (int)object_get_and_verify_type(unit_handle, 3);
     weapon_handle =
         unit_get_weapon(unit_handle, *(int16_t *)(temp_unit + 0x2a2));
-    weapon_owner_update(weapon_handle);
+    weapon_owner_update(weapon_handle, 0, 0.0f);
   }
 
   /* Clear integrated light bit */

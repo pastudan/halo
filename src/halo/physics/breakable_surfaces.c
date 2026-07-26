@@ -956,36 +956,48 @@ void FUN_00145560(void)
   (void)eax;
 }
 
-/* 0x145580 */
-void FUN_00145580(void)
+/* 0x145580 — pick a default animation for a newly placed device object. */
+char FUN_00145580(int object_handle)
 {
-  int eax = 0;
-  int ecx = 0;
+  char *obj;
+  char *obje;
+  char *antr;
+  int16_t anim_index;
+  int antr_tag;
 
-  object_get_and_verify_type(0, 64);
-  tag_get('ejbo', 0);
-  /* cmp eax, -1 -> je 0x1455ef */
-  tag_get('rtna', 0);
-  /* test ecx, ecx -> jle 0x1455ef */
-  model_animation_choose_random(0, 0, 0);
-  /* cmp (int16_t)eax, 0xffff -> je 0x1455ef */
-
-  (void)eax;
-  (void)ecx;
+  obj = (char *)object_get_and_verify_type(object_handle, 0x40);
+  obje = (char *)tag_get(0x6f626a65, *(int *)obj); /* 'obje' */
+  antr_tag = *(int *)(obje + 0x44);
+  if (antr_tag != -1) {
+    antr = (char *)tag_get(0x616e7472, antr_tag); /* 'antr' */
+    if (*(int *)(antr + 0x74) > 0) {
+      anim_index =
+          (int16_t)model_animation_choose_random(1, antr_tag, 0);
+      if (anim_index != -1) {
+        *(int16_t *)(obj + 0x80) = anim_index;
+        *(int *)(obj + 4) |= 0x80;
+        *(int *)(obj + 0x7c) = antr_tag;
+      }
+    }
+  }
+  *(int *)(obj + 4) |= 0x40000;
+  return 1;
 }
 
-/* 0x145610 */
-void FUN_00145610(void)
+/* 0x145610 — tick a device object's bound animation; rewind on wrap. */
+char FUN_00145610(int object_handle)
 {
-  int eax = 0;
-  int ecx = 0;
+  char *obj;
+  int16_t anim_result;
 
-  object_get_and_verify_type(0, 64);
-  /* test (char)eax, 1 -> je 0x145659 */
-  animation_update_internal(0, 0, (void *)(uintptr_t)ecx, (void *)0);
-
-  (void)eax;
-  (void)ecx;
+  obj = (char *)object_get_and_verify_type(object_handle, 0x40);
+  if ((obj[0x1a4] & 1) == 0)
+    return 1;
+  anim_result = (int16_t)animation_update_internal(
+      1, *(int *)(obj + 0x7c), (short *)(obj + 0x80), 0);
+  if (anim_result == 2)
+    *(int16_t *)(obj + 0x82) -= 1;
+  return 1;
 }
 
 /* 0x145660 — bind an animation permutation onto a device/machine object. */

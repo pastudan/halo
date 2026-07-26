@@ -4871,12 +4871,12 @@
         },
         {
           "addr": "0x145580",
-          "decl": "void FUN_00145580(void);",
+          "decl": "char FUN_00145580(int object_handle);",
           "ported": false
         },
         {
           "addr": "0x145610",
-          "decl": "void FUN_00145610(void);",
+          "decl": "char FUN_00145610(int object_handle);",
           "ported": false
         },
         {
@@ -8163,7 +8163,7 @@
         },
         {
           "addr": "0xddb90",
-          "decl": "void first_person_weapon_get_marker_by_name_render(void);",
+          "decl": "int16_t first_person_weapon_get_marker_by_name_render(int object_handle, const char *marker_name, void *out_markers, int16_t max_markers);",
           "ported": false
         },
         {
@@ -16034,7 +16034,7 @@
         },
         {
           "addr": "0x85280",
-          "decl": "void FUN_00085280(float *param_1, float *param_2, float *param_3, float param_4, short param_5, int param_6);",
+          "decl": "void FUN_00085280(float *position, float *forward, float *up, float param_4, short param_5, int param_6);",
           "ported": false,
           "source_path": "objects/objects.c"
         },
@@ -33664,7 +33664,7 @@
         },
         {
           "addr": "0xfc4b0",
-          "decl": "void weapon_owner_update(int weapon_handle);",
+          "decl": "void weapon_owner_update(int weapon_handle, int16_t owner_state, float t);",
           "ported": false
         },
         {

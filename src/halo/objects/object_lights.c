@@ -1,25 +1,28 @@
 /* --- object_lights.obj batch drafts (2026-07-26) --- */
 
-/* 0x1391e0 */
+/* 0x1391e0 — allocate light datums and cluster-partition globals. */
 void lights_initialize(void)
 {
-  int eax = 0;
+  void *lights_data;
+  void *active_flag;
 
-  game_state_data_new((char *)0x0029b444, 896, 124);
-  /* mem[0x005a90bc] = eax */
-  game_state_malloc((char *)0x0029b434, (char *)0, 0);
-  /* mem[0x0046f074] = eax */
-  /* test eax, eax -> jne 0x139235 */
-  display_assert((char *)0x0029b428, (char *)0x0029b324, 194, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x13925e */
-  display_assert((char *)0x0029b414, (char *)0x0029b324, 195, 0);
-  system_exit(0);
-  /* test eax, eax -> je 0x139282 */
-  cluster_partition_globals_new((void *)0x005a90b0, (char *)0x0025b590);
-  error(0, (char *)0x0029b3e8);
+  lights_data = game_state_data_new((char *)0x0029b444, 0x380, 0x7c);
+  *(void **)0x5a90bc = lights_data;
+  active_flag = game_state_malloc((char *)0x0029b434, 0, 4);
+  *(void **)0x46f074 = active_flag;
 
-  (void)eax;
+  if (lights_data == 0) {
+    display_assert((char *)0x0029b428, (char *)0x0029b324, 0xc2, 1);
+    system_exit(-1);
+  }
+  if (active_flag == 0) {
+    display_assert((char *)0x0029b414, (char *)0x0029b324, 0xc3, 1);
+    system_exit(-1);
+  }
+
+  *(char *)active_flag = 1;
+  if (*(void **)0x5a90bc != 0)
+    cluster_partition_globals_new((void **)0x005a90b0, (char *)0x0025b590);
 }
 
 /* 0x1392a0 */
@@ -31,23 +34,16 @@ void lights_dispose(void)
 /* 0x1392b0 */
 void lights_initialize_for_new_map(void)
 {
-  int eax = 0;
-
-  data_delete_all((void *)(uintptr_t)eax);
+  data_delete_all(*(void **)0x5a90bc);
+  **(char **)0x46f074 = 1;
   cluster_partition_clear((void *)0x005a90b0);
-
-  (void)eax;
 }
 
 /* 0x1392e0 */
 void lights_dispose_from_old_map(void)
 {
-  int eax = 0;
-
-  data_make_invalid((void *)(uintptr_t)eax);
+  data_make_invalid(*(void **)0x5a90bc);
   cluster_partition_dispose((void *)0x005a90b0);
-
-  (void)eax;
 }
 
 /* 0x139300 */

@@ -1326,38 +1326,48 @@ void first_person_weapon_update(int16_t local_player_index)
       (float *)0x50655c, (float *)0x506568);
 }
 
-/* 0xddae0 */
+/* 0xddae0 — enable/pose the rendered local player's first-person weapon. */
 void first_person_weapon_render_update(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  int16_t local_index;
+  char *fp;
+  uint8_t activate;
 
-  /* cmp (int16_t)eax, (int16_t)edi -> je 0xddb8b */
-  /* cmp (int16_t)eax, 4 -> jl 0xddb24 */
-  display_assert((char *)0x00266fc0, (char *)0x00282294, 1433, 0);
-  system_exit(0);
-  /* cmp ecx, edi -> je 0xddb8a */
-  /* relift: cmp dword ptr [esi + 8], edi -> je 0xddb8a */
-  director_get_perspective(eax);
-  /* test (int16_t)eax, (int16_t)eax -> jne 0xddb6b */
-  player_control_get_zoom_level(eax);
-  /* cmp (int16_t)eax, (int16_t)edi -> jne 0xddb6b */
-  FUN_000dcb30(0, 0);
+  local_index = *(int16_t *)0x506548;
+  if (local_index == -1)
+    return;
+  if (local_index < 0 || local_index >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 0x599, 1);
+    system_exit(-1);
+    local_index = *(int16_t *)0x506548;
+  }
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  fp = (char *)(*(int *)0x46bea8) + (int)local_index * 0x1ea0;
+  if (*(int *)(fp + 4) == -1 || *(int *)(fp + 8) == -1)
+    return;
+
+  if (director_get_perspective(local_index) == 0 &&
+      player_control_get_zoom_level(local_index) == -1)
+    activate = 1;
+  else
+    activate = 0;
+
+  FUN_000dcb30(local_index, activate);
+  if (fp[0] == 0)
+    return;
+  first_person_weapon_update(local_index);
 }
 
-/* 0xddb90 */
-void first_person_weapon_get_marker_by_name_render(void)
+/* 0xddb90 — resolve a marker only for the currently rendered local player. */
+int16_t first_person_weapon_get_marker_by_name_render(int object_handle,
+                                                     const char *marker_name,
+                                                     void *out_markers,
+                                                     int16_t max_markers)
 {
-  FUN_000dcd60(0);
-  /* relift: cmp word ptr [0x506548], (int16_t)eax -> jne 0xddbbd */
-  first_person_weapon_get_marker_by_name(0, (const char *)0, (void *)0, 0);
+  if (FUN_000dcd60(object_handle) != *(int16_t *)0x506548)
+    return 0;
+  return first_person_weapon_get_marker_by_name(object_handle, marker_name,
+                                                out_markers, max_markers);
 }
 
 /* 0xde0e0 */

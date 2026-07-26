@@ -12856,6 +12856,8 @@ void FUN_00085280(float *position, float *forward, float *up, float param_4,
                   short param_5, int param_6)
 {
   static const float k_observer_tick = 9.999999747378752e-05f;
+  int n;
+  int q;
 
   *(int16_t *)0x2ee5a2 = 0;
   *(int16_t *)0x2ee5a4 = -1;
@@ -12877,7 +12879,12 @@ void FUN_00085280(float *position, float *forward, float *up, float param_4,
   else
     *(float *)0x2ee5d0 = 1.22173047f;
 
-  *(float *)0x2ee5a8 = (float)(param_5 / 16);
+  /* MSVC signed divide by 15 via magic 0x88888889, sar 4, sign fix. */
+  n = (int)param_5;
+  q = (int)(((long long)(int)0x88888889 * (long long)n) >> 32);
+  q = (q + n) >> 4;
+  q += (unsigned int)q >> 31;
+  *(float *)0x2ee5a8 = (float)q;
   *(int *)0x2ee5d4 = param_6;
 
   director_update(0.0f);

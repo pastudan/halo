@@ -1385,7 +1385,7 @@ float FUN_000fbcf0(float base, float exponent)
   return FUN_001d9e70(base, exponent);
 }
 
-/* 0xfbd10 */
+/* 0xfbd10 — initialize magazines/triggers for a newly created weapon. */
 char weapon_new(int weapon_handle)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
@@ -1409,13 +1409,12 @@ char weapon_new(int weapon_handle)
       loaded = max_loaded;
 
     *(int16_t *)(mag_entry + 8) = loaded;
-    *(int16_t *)(mag_entry + 6) = initial_total - loaded;
+    *(int16_t *)(mag_entry + 6) = (int16_t)(initial_total - loaded);
   }
 
   for (trigger_index = 0; (int)trigger_index < *(int *)(tag_data + 0x4fc);
        trigger_index++) {
-    char *trigger_entry =
-      weapon_get_trigger_entry(weapon_obj, trigger_index);
+    char *trigger_entry = weapon_get_trigger_entry(weapon_obj, trigger_index);
     tag_block_get_element((void *)(tag_data + 0x4fc), (int)trigger_index,
                           0x114);
     trigger_entry[0] = 0x7f;
@@ -1595,22 +1594,22 @@ void weapon_export_function_values(int weapon_handle)
   } while (remaining != 0);
 }
 
-/* 0xfc4b0 */
-void weapon_owner_update(int weapon_handle)
+/* 0xfc4b0 — store owner transition state and evaluate owned-weapon curve. */
+void weapon_owner_update(int weapon_handle, int16_t owner_state, float t)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  int16_t param_2 = 0;
-  int function_type = 0;
   float value;
 
-  *(int16_t *)(weapon_obj + 0x1e0) = param_2;
-  value = transition_function_evaluate((int16_t)function_type, (float)param_2);
+  tag_get(0x77656170, *(int *)weapon_obj); /* 'weap' */
+  *(int16_t *)(weapon_obj + 0x1e0) = owner_state;
+  value = transition_function_evaluate(4, t);
   *(float *)(weapon_obj + 0x1e4) = value;
 
   if ((*(uint32_t *)&value & 0x7f800000u) == 0x7f800000u) {
-    display_assert(csprintf((char *)0x5ab100, "%s: %f",
-                            "weapon_owner_update", (double)value),
-                   "c:\\halo\\SOURCE\\items\\weapons.c", 0x4af, 1);
+    display_assert(
+        csprintf((char *)0x5ab100, (char *)0x0025eb8c, (char *)0x0028aeb8,
+                 *(unsigned int *)(weapon_obj + 0x1e4), (double)value),
+        (char *)0x0028ad48, 0x4af, 1);
     system_exit(-1);
   }
 }
