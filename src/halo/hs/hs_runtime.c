@@ -3571,32 +3571,13 @@ char FUN_000c95c0(char value)
   return value == 0;
 }
 
-/* FUN_000c95d0 (0xc95d0) — XBE naked draft (batch 203). */
-#if defined(__clang__)
-static void (*const bc95d0_ce3a10)(void *color, const char *format, const char *text) = terminal_output;
-
-__attribute__((naked, noinline))
-char FUN_000c95d0(int value __attribute__((unused)))
+/* FUN_000c95d0 (0xc95d0) — readable C lift: terminal_output with global color. */
+void FUN_000c95d0(const char *text)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x2ee6d4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ce3a10]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce3a10] "m"(bc95d0_ce3a10)
-      : "memory");
+  void (*out)(void *color, const char *msg) =
+      (void (*)(void *, const char *))terminal_output;
+  out(*(void **)0x2ee6d4, text);
 }
-#else
-#error "FUN_000c95d0: clang naked draft required"
-#endif
-
 
 /* FUN_000c9990 (0xc9990) — XBE naked draft (batch 162). */
 #if defined(__clang__)
@@ -3824,6 +3805,10 @@ int FUN_000caf60(float value __attribute__((unused)))
 #endif
 
 
+
+
+
+
 /* FUN_000caf70 (0xcaf70) — readable C lift from XBE leaf (int16 identity). */
 int16_t FUN_000caf70(int16_t value)
 {
@@ -3947,45 +3932,17 @@ int FUN_000cafc0(int object_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_000ce090 (0xce090) — XBE naked draft (batch 212). */
-#if defined(__clang__)
-static void *(*const bce090_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-int FUN_000ce090(data_t *data __attribute__((unused)), int *cursor __attribute__((unused)))
+/* FUN_000ce090 (0xce090) — readable C lift: advance linked datum cursor. */
+int FUN_000ce090(data_t *data, int *cursor)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000ce090_1\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ce090_1:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bce090_dget)
-      : "memory");
+  int handle = *cursor;
+  char *node;
+  if (handle == -1)
+    return -1;
+  node = (char *)datum_get(data, handle);
+  *cursor = *(int *)(node + 8);
+  return *(int *)(node + 4);
 }
-#else
-#error "FUN_000ce090: clang naked draft required"
-#endif
-
 
 /* FUN_000ce420 (0xce420) — readable C lift. */
 int16_t FUN_000ce420(int list_handle)
