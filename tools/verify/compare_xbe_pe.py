@@ -1237,6 +1237,19 @@ def main() -> int:
         ("hud_messaging_slot_compare", 0xd50f0, 0xd511f),
         ("FUN_0011c1b0", 0x11c1b0, 0x11c1cf),
         ("FUN_0002a3a0", 0x2a3a0, 0x2a3cd),
+        # gameplay wave 101 (2026-07-26) — final AI/rasterizer Capstone weaks
+        ("actor_clear_flee_target", 0x15f30, 0x15f5b),
+        ("rasterizer_memory_pool_delete", 0x1825e0, 0x18260a),
+        ("point_to_line_distance3d", 0x1d7a0, 0x1d7bb),
+        ("scripted_hud_time_code_show", 0xd4a20, 0xd4a47),
+        ("rasterizer_transparent_geometry_group_new", 0x184330, 0x18435c),
+        ("rasterizer_secondary_geometry_group_new", 0x184360, 0x184389),
+        ("FUN_00064ec0", 0x64ec0, 0x64ed9),
+        ("scripting_magic_melee_attack", 0x1b2260, 0x1b2281),
+        ("FUN_00181150", 0x181150, 0x181180),
+        ("system_get_user_name", 0x8e390, 0x8e3ab),
+        ("rasterizer_text_cache_dispose", 0x183720, 0x183744),
+        ("FUN_001397f0", 0x1397f0, 0x139809),
     ]
 
     xbe = Xbe.from_file(args.xbe)

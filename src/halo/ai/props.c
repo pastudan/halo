@@ -1545,11 +1545,34 @@ int FUN_00064cd0(char *prop __attribute__((unused)), int tag __attribute__((unus
 #endif
 
 
-/* 0x64ec0 — wrapper around FUN_00064cd0. */
-int FUN_00064ec0(char *prop, int tag, void *out)
+/* FUN_00064ec0 (0x64ec0) — XBE naked draft (batch 101). */
+#if defined(__clang__)
+static int (*const b64ec0_c64cd0)(char *prop, int tag, void *out) = FUN_00064cd0;
+
+__attribute__((naked, noinline))
+int FUN_00064ec0(char *prop __attribute__((unused)), int tag __attribute__((unused)), void *out __attribute__((unused)))
 {
-  return FUN_00064cd0(prop, tag, out);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "leal 0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c64cd0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c64cd0] "m"(b64ec0_c64cd0)
+      : "memory");
 }
+#else
+#error "FUN_00064ec0: clang naked draft required"
+#endif
+
 
 /* 0x64f50 */
 void FUN_00064f50(void)

@@ -891,13 +891,33 @@ void FUN_00180d10(short param_1, int param_2, int param_3, int param_4,
 
 /* rasterizer_lights.c */
 
-/* rasterizer_lights_initialize: clear lights buffers and counter (0x181150) */
+/* FUN_00181150 (0x181150) — XBE naked draft (batch 101). */
+#if defined(__clang__)
+static void *(*const b181150_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void FUN_00181150(void)
 {
-  csmemset((void *)0x4bed80, 0, 0x7722);
-  csmemset((void *)0x47ed60, 0, 0x40020);
-  *(int *)0x4d0480 = 0;
+  __asm__ volatile(
+      "pushl $0x7722\n\t"
+      "pushl $0\n\t"
+      "pushl $0x4bed80\n\t"
+      "call *%[memset]\n\t"
+      "pushl $0x40020\n\t"
+      "pushl $0\n\t"
+      "pushl $0x47ed60\n\t"
+      "call *%[memset]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movl $0, 0x4d0480\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b181150_memset)
+      : "memory");
 }
+#else
+#error "FUN_00181150: clang naked draft required"
+#endif
+
 
 /* rasterizer_lights_reset_stat: zero stat counter at 0x5a37e0 (0x1812b0) */
 void FUN_001812b0(void)
@@ -1999,17 +2019,37 @@ void FUN_001825d0(void)
 {
 }
 
-/* rasterizer_memory_pool_delete: free the global rasterizer memory pool
- * (0x1825e0) */
+/* rasterizer_memory_pool_delete (0x1825e0) — XBE naked draft (batch 101). */
+#if defined(__clang__)
+static void (*const b1825e0_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+
+__attribute__((naked, noinline))
 void rasterizer_memory_pool_delete(void)
 {
-  if (*(void **)0x4d0488 != 0) {
-    debug_free(*(void **)0x4d0488,
-               "c:\\halo\\SOURCE\\rasterizer\\rasterizer_memory_pool.c", 0x50);
-  }
-  *(void **)0x4d0488 = 0;
-  *(int *)0x4d048c = 0;
+  __asm__ volatile(
+      "movl 0x4d0488, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "je .Lrasterizer_memory_pool_delete_1\n\t"
+      "pushl $0x50\n\t"
+      "pushl $0x2b077c\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lrasterizer_memory_pool_delete_1:\n\t"
+      "movl %%esi, 0x4d0488\n\t"
+      "movl %%esi, 0x4d048c\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c8ef70] "m"(b1825e0_c8ef70)
+      : "memory");
 }
+#else
+#error "rasterizer_memory_pool_delete: clang naked draft required"
+#endif
+
 
 /* rasterizer_swizzle.c */
 
@@ -2440,15 +2480,34 @@ void rasterizer_text_cache_flush(void)
   }
 }
 
-/* rasterizer_text_cache_dispose: dispose hardware character cache (0x183720) */
+/* rasterizer_text_cache_dispose (0x183720) — XBE naked draft (batch 101). */
+#if defined(__clang__)
+static void (*const b183720_c1836f0)(void) = rasterizer_text_cache_flush;
+static void (*const b183720_c7c8f0)(void *) = bitmap_delete;
+
+__attribute__((naked, noinline))
 void rasterizer_text_cache_dispose(void)
 {
-  if (*(char *)0x4d04a0 != 0) {
-    rasterizer_text_cache_flush();
-    bitmap_delete(*(void **)0x4d04ac);
-    *(char *)0x4d04a0 = 0;
-  }
+  __asm__ volatile(
+      "movb 0x4d04a0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lrasterizer_text_cache_dispose_1\n\t"
+      "call *%[c1836f0]\n\t"
+      "movl 0x4d04ac, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c7c8f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $0, 0x4d04a0\n\t"
+      ".Lrasterizer_text_cache_dispose_1:\n\t"
+      "ret\n\t"
+      :
+      : [c1836f0] "m"(b183720_c1836f0), [c7c8f0] "m"(b183720_c7c8f0)
+      : "memory");
 }
+#else
+#error "rasterizer_text_cache_dispose: clang naked draft required"
+#endif
+
 
 /* rasterizer_text.c — hardware character cache and text rendering.
  *
@@ -3365,35 +3424,65 @@ void rasterizer_transparent_geometry_begin(void)
   *(int *)0x4d0cf8 = 0;
 }
 
-/* rasterizer_transparent_geometry_group_new: allocate next transparent geometry
- * group slot (0x184330) */
-void *rasterizer_transparent_geometry_group_new(void)
+/* rasterizer_transparent_geometry_group_new (0x184330) — XBE naked draft (batch 101). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void * rasterizer_transparent_geometry_group_new(void)
 {
-  void *group;
-
-  group = (void *)0;
-  if (*(int *)0x4d0cf4 < 0x180) {
-    group = (void *)(*(int *)0x4d0cf4 * 0xa0 + *(int *)0x4d0cec);
-    *(int *)((char *)group + 0x90) = *(int *)0x4d0cf4;
-    *(int *)0x4d0cf4 = *(int *)0x4d0cf4 + 1;
-  }
-  return group;
+  __asm__ volatile(
+      "movl 0x4d0cf4, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl $0x180, %%ecx\n\t"
+      "jge .Lrasterizer_transparent_geometry_group_new_1\n\t"
+      "movl 0x4d0cec, %%edx\n\t"
+      "leal (%%ecx,%%ecx,4), %%eax\n\t"
+      "shll $5, %%eax\n\t"
+      "addl %%edx, %%eax\n\t"
+      "movl %%ecx, 0x90(%%eax)\n\t"
+      "incl %%ecx\n\t"
+      "movl %%ecx, 0x4d0cf4\n\t"
+      ".Lrasterizer_transparent_geometry_group_new_1:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "rasterizer_transparent_geometry_group_new: clang naked draft required"
+#endif
 
-/* rasterizer_secondary_geometry_group_new: allocate next secondary geometry
- * group slot (0x184360) */
-void *rasterizer_secondary_geometry_group_new(void)
+
+/* rasterizer_secondary_geometry_group_new (0x184360) — XBE naked draft (batch 101). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void * rasterizer_secondary_geometry_group_new(void)
 {
-  void *group;
-
-  group = (void *)0;
-  if (*(int *)0x4d0cf8 < 0x20) {
-    group = (void *)(*(int *)0x4d0cf8 * 0xa0 + *(int *)0x4d0cf0);
-    *(int *)((char *)group + 0x90) = *(int *)0x4d0cf8;
-    *(int *)0x4d0cf8 = *(int *)0x4d0cf8 + 1;
-  }
-  return group;
+  __asm__ volatile(
+      "movl 0x4d0cf8, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl $0x20, %%ecx\n\t"
+      "jge .Lrasterizer_secondary_geometry_group_new_1\n\t"
+      "movl 0x4d0cf0, %%edx\n\t"
+      "leal (%%ecx,%%ecx,4), %%eax\n\t"
+      "shll $5, %%eax\n\t"
+      "addl %%edx, %%eax\n\t"
+      "movl %%ecx, 0x90(%%eax)\n\t"
+      "incl %%ecx\n\t"
+      "movl %%ecx, 0x4d0cf8\n\t"
+      ".Lrasterizer_secondary_geometry_group_new_1:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "rasterizer_secondary_geometry_group_new: clang naked draft required"
+#endif
+
 
 /* rasterizer_secondary_geometry_groups_get: return secondary groups buffer;
  * optionally write count (0x184390) */

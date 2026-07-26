@@ -3102,22 +3102,37 @@ void actor_reset_action_state(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* actor_clear_flee_target (0x15f30)
- * If the actor is in flee state (action state 2 at actor+0xc0), clears the
- * flee target handle at actor+0xd0 to -1 (invalid datum).
- *
- * Confirmed: datum_get(actor_data, actor_handle) at 0x15f3e.
- * Confirmed: cmp word ptr [eax+0xc0], 2 and mov dword ptr [eax+0xd0], -1 from
- * disassembly. Inferred: actor+0xc0 = action state enum; actor+0xd0 =
- * flee-target datum handle. */
-void actor_clear_flee_target(int actor_handle)
+/* actor_clear_flee_target (0x15f30) — XBE naked draft (batch 101). */
+#if defined(__clang__)
+static void *(*const b15f30_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void actor_clear_flee_target(int actor_handle __attribute__((unused)))
 {
-  char *actor;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(int16_t *)(actor + 0xc0) == 2) {
-    *(int *)(actor + 0xd0) = -1;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $0x9c, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, 0x24(%%eax)\n\t"
+      "jne .Lactor_clear_flee_target_1\n\t"
+      "movl $0xffffffff, 0x34(%%eax)\n\t"
+      ".Lactor_clear_flee_target_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b15f30_dget)
+      : "memory");
 }
+#else
+#error "actor_clear_flee_target: clang naked draft required"
+#endif
+
 
 /* FUN_00015f60 (0x15f60) — XBE naked draft (batch 76). */
 #if defined(__clang__)

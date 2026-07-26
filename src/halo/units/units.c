@@ -11365,18 +11365,35 @@ char unit_solo_player_integrated_night_vision_is_active(void)
   return unit_has_night_vision_weapon(unit_handle);
 }
 
-/* scripting_magic_melee_attack (0x1b2260)
- * Triggers a melee attack on the first player's unit. Gets player 0's
- * unit handle from player_data, then calls unit_melee_attack_begin. */
+/* scripting_magic_melee_attack (0x1b2260) — XBE naked draft (batch 101). */
+#if defined(__clang__)
+static void *(*const b1b2260_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char (*const b1b2260_c1b1b60)(int unit_handle, char param_2, int param_3) = unit_melee_attack_begin;
+
+__attribute__((naked, noinline))
 void scripting_magic_melee_attack(void)
 {
-  char *player;
-  int unit_handle;
-
-  player = (char *)datum_get(player_data, 0);
-  unit_handle = *(int *)(player + 0x34);
-  unit_melee_attack_begin(unit_handle, 0, 0);
+  __asm__ volatile(
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1b1b60]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1b2260_dget), [c1b1b60] "m"(b1b2260_c1b1b60)
+      : "memory");
 }
+#else
+#error "scripting_magic_melee_attack: clang naked draft required"
+#endif
+
 
 /* unit_select_weapon_after_vehicle_exit (0x1b2740) — XBE naked draft (batch 98). */
 #if defined(__clang__)
