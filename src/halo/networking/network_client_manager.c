@@ -3491,18 +3491,52 @@ char network_game_client_remove_player(void *client __attribute__((unused)), voi
 #endif
 
 
-/* network_game_client_new_advertised_game (0x126700) — readable C lift. */
-void network_game_client_new_advertised_game(void *client, void *message)
+/* network_game_client_new_advertised_game (0x126700) — XBE naked draft (batch 173). */
+#if defined(__clang__)
+static void (*const b126700_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b126700_exitfn)(int) = system_exit;
+static char (*const b126700_c125ce0)(void *slot_array /* */, void *advertised_game) = FUN_00125ce0;
+
+__attribute__((naked, noinline))
+void network_game_client_new_advertised_game(void *client __attribute__((unused)), void *message __attribute__((unused)))
 {
-  typedef char (*fn1_t)(void *);
-  if (client == NULL || message == NULL) {
-    display_assert((const char *)0x291cd8, (const char *)0x291774, 0x2fc, 1);
-    system_exit(-1);
-  }
-  /* XBE: edi=message (unused by stub under --no-stub-arg-trace), stack=client+4 */
-  (void)message;
-  ((fn1_t)(void *)FUN_00125ce0)((char *)client + 4);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "je .Lnetwork_game_client_new_advertised_game_1\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lnetwork_game_client_new_advertised_game_2\n\t"
+      ".Lnetwork_game_client_new_advertised_game_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2fc\n\t"
+      "pushl $0x291774\n\t"
+      "pushl $0x291cd8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lnetwork_game_client_new_advertised_game_2:\n\t"
+      "addl $4, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c125ce0]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b126700_assert), [exitfn] "m"(b126700_exitfn), [c125ce0] "m"(b126700_c125ce0)
+      : "memory");
 }
+#else
+#error "network_game_client_new_advertised_game: clang naked draft required"
+#endif
+
 
 /* network_game_client_game_shutdown (0x126750) — XBE naked draft (batch 170). */
 #if defined(__clang__)

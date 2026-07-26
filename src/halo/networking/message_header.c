@@ -1172,17 +1172,69 @@ void FUN_00080210(void)
 #endif
 
 
-/* FUN_00080380 (0x80380) — readable C lift. */
-void FUN_00080380(void *decoded_packet, char *encoded_packet, short *encoded_packet_size)
-{
-  FUN_0011aa40((int)0x2ee588, decoded_packet, encoded_packet, encoded_packet_size, (short *)0, (short *)0, 0);
-}
+/* FUN_00080380 (0x80380) — XBE naked draft (batch 213). */
+#if defined(__clang__)
+static bool (*const b80380_c11aa40)(int group, void *decoded_packet, char *encoded_packet, short *encoded_packet_size, short *packet_type, short *packet_version, short expected_packet_class) = FUN_0011aa40;
 
-/* FUN_000803b0 (0x803b0) — readable C lift. */
-void FUN_000803b0(void *a0, void *a1)
+__attribute__((naked, noinline))
+void FUN_00080380(void)
 {
-  encode_packet_group((int)0x2ee588, a0, a1, (short *)0, (short *)0, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x2ee588\n\t"
+      "call *%[c11aa40]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11aa40] "m"(b80380_c11aa40)
+      : "memory");
 }
+#else
+#error "FUN_00080380: clang naked draft required"
+#endif
+
+
+/* FUN_000803b0 (0x803b0) — XBE naked draft (batch 214). */
+#if defined(__clang__)
+static bool (*const b803b0_c11aca0)(group_definition *group, void *data, char *encoded_buf, int32_t *encoded_size, int16_t type, int one) = encode_packet_group;
+
+__attribute__((naked, noinline))
+void FUN_000803b0(void)
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x2ee588\n\t"
+      "call *%[c11aca0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11aca0] "m"(b803b0_c11aca0)
+      : "memory");
+}
+#else
+#error "FUN_000803b0: clang naked draft required"
+#endif
+
 
 /* FUN_00080470 (0x80470) — XBE naked draft (batch 153). */
 #if defined(__clang__)

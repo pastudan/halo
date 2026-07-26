@@ -4080,11 +4080,34 @@ int object_get_type(void)
 }
 
 
-/* items_initialize (0xf5f90) — readable C lift. */
+/* items_initialize (0xf5f90) — XBE naked draft (batch 220). */
+#if defined(__clang__)
+static char (*const bf5f90_cf57a0)(void) = FUN_000f57a0;
+
+__attribute__((naked, noinline))
 void items_initialize(void)
 {
-  FUN_000f57a0();
+  __asm__ volatile(
+      "jmp *%[cf57a0]\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [cf57a0] "m"(bf5f90_cf57a0)
+      : "memory");
 }
+#else
+#error "items_initialize: clang naked draft required"
+#endif
+
 
 /* items_initialize_for_new_map (0xf5fa0) — readable C lift. */
 void items_initialize_for_new_map(void)

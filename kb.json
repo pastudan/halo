@@ -26973,7 +26973,7 @@
         {
           "addr": "0xe4420",
           "decl": "void ui_set_next_level(int16_t level_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe4470",
