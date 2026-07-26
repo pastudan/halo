@@ -2569,74 +2569,193 @@ void players_handle_deleted_object(int object_handle)
   }
 }
 
-void players_set_local_player_unit(int16_t local_player_index, int unit_handle)
+/* players_set_local_player_unit (0xba5f0) — XBE naked draft (batch 142). */
+#if defined(__clang__)
+static int (*const bba5f0_cb6870)(int16_t local_player_index) = player_control_get_unit_index;
+static short (*const bba5f0_cfff80)(void) = game_connection;
+static void (*const bba5f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bba5f0_exitfn)(int) = system_exit;
+static void *(*const bba5f0_get)(int, int) = object_get_and_verify_type;
+static void (*const bba5f0_c1adf10)(int unit_handle, char param_2) = unit_set_actively_controlled;
+static int (*const bba5f0_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
+static void *(*const bba5f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bba5f0_cb6fc0)(uint16_t local_player_index, int player_index) = player_control_new_unit;
+
+__attribute__((naked, noinline))
+void players_set_local_player_unit(int16_t local_player_index __attribute__((unused)), int unit_handle __attribute__((unused)))
 {
-  int old_unit;
-  char *unit_obj;
-  int player_handle;
-  char *player;
-
-  old_unit = player_control_get_unit_index(local_player_index);
-  if (game_connection() != 0) {
-    display_assert("game_connection()==_game_connection_local",
-                   "c:\\halo\\SOURCE\\game\\players.c", 0x420, 1);
-    system_exit(NONE);
-  }
-  if (old_unit != NONE) {
-    unit_obj = (char *)object_get_and_verify_type(old_unit, 3);
-    *(int *)(unit_obj + 0x1c8) = NONE;
-    unit_set_actively_controlled(old_unit, 0);
-  }
-  if (unit_handle != NONE) {
-    unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
-    unit_set_actively_controlled(unit_handle, 1);
-    *(int *)(unit_obj + 0x1c8) =
-        local_player_get_player_index(local_player_index);
-  }
-  player_handle = local_player_get_player_index(local_player_index);
-  player = (char *)datum_get(player_data, player_handle);
-  *(int *)(player + 0x34) = unit_handle;
-  *(int *)(player + 0x38) = NONE;
-  player_control_new_unit((uint16_t)local_player_index, unit_handle);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cb6870]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[cfff80]\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lplayers_set_local_player_unit_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x420\n\t"
+      "pushl $0x26eb68\n\t"
+      "pushl $0x26ea18\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayers_set_local_player_unit_1:\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lplayers_set_local_player_unit_2\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "movl $0xffffffff, 0x1c8(%%eax)\n\t"
+      "call *%[c1adf10]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lplayers_set_local_player_unit_2:\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lplayers_set_local_player_unit_3\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "pushl $1\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[c1adf10]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cba3c0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movl %%eax, 0x1c8(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      ".Lplayers_set_local_player_unit_3:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cba3c0]\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%esi, 0x34(%%eax)\n\t"
+      "movl $0xffffffff, 0x38(%%eax)\n\t"
+      "call *%[cb6fc0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cb6870] "m"(bba5f0_cb6870), [cfff80] "m"(bba5f0_cfff80), [assert] "m"(bba5f0_assert), [exitfn] "m"(bba5f0_exitfn), [get] "m"(bba5f0_get), [c1adf10] "m"(bba5f0_c1adf10), [cba3c0] "m"(bba5f0_cba3c0), [dget] "m"(bba5f0_dget), [cb6fc0] "m"(bba5f0_cb6fc0)
+      : "memory");
 }
+#else
+#error "players_set_local_player_unit: clang naked draft required"
+#endif
 
-/* Weighted random pick among starting locations (rating * 0.5 * U[0,1]). */
-int16_t find_best_starting_location_index(int team_or_player)
+
+/* find_best_starting_location_index (0xbbbe0) — XBE naked draft (batch 138). */
+#if defined(__clang__)
+static scenario_t * (*const bbbbe0_c18e380)(void) = global_scenario_get;
+static void *(*const bbbbe0_elem)(void *, int, int) = tag_block_get_element;
+static void * (*const bbbbe0_cbaae0)(int16_t index) = player_get_starting_location;
+static float (*const bbbbe0_cadcf0)(int param_1, int param_2) = game_engine_get_starting_location_rating;
+static int *(*const bbbbe0_gseed)(void) = get_global_random_seed_address;
+static float (*const bbbbe0_rrange)(int *, float, float) = random_real_range;
+static float (*const bbbbe0_c1d9e70)(float base, float exponent) = FUN_001d9e70;
+
+__attribute__((naked, noinline))
+int16_t find_best_starting_location_index(int team_or_player __attribute__((unused)))
 {
-  void *scenario;
-  int netgame_index;
-  void *netgame;
-  int16_t count;
-  int16_t best;
-  float best_score;
-  int16_t i;
-  void *loc;
-  float rating;
-  float score;
-
-  scenario = global_scenario_get();
-  netgame_index = *(int *)0x5ac9f4;
-  count = *(int16_t *)((char *)scenario + 0x354);
-  if (netgame_index != NONE) {
-    netgame = tag_block_get_element((char *)scenario + 0x42c,
-                                    netgame_index & 0xffff, 0xb0);
-    if (*(int *)((char *)netgame + 0xa4) > 0)
-      count = (int16_t)*(int *)((char *)netgame + 0xa4);
-  }
-  best = (int16_t)NONE;
-  best_score = 0.0f;
-  for (i = 0; i < count; i++) {
-    loc = player_get_starting_location(i);
-    rating = game_engine_get_starting_location_rating(team_or_player, (int)loc);
-    score = random_real_range(get_global_random_seed_address(), 0.0f, 1.0f) *
-            0.5f * rating;
-    if (score > best_score) {
-      best_score = score;
-      best = i;
-    }
-  }
-  return best;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c18e380]\n\t"
+      "movl 0x5ac9f4, %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "movw 0x354(%%eax), %%bx\n\t"
+      "je .Lfind_best_starting_location_index_1\n\t"
+      "pushl $0xb0\n\t"
+      "andl $0xffff, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x42c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xa4(%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .Lfind_best_starting_location_index_1\n\t"
+      "movw %%cx, %%bx\n\t"
+      ".Lfind_best_starting_location_index_1:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testw %%bx, %%bx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "jle .Lfind_best_starting_location_index_5\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lfind_best_starting_location_index_2:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cbaae0]\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cadcf0]\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl $0\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rrange]\n\t"
+      "fldl 0x25fea8\n\t"
+      "addl $0xc, %%esp\n\t"
+      "call *%[c1d9e70]\n\t"
+      "fmuls -0xc(%%ebp)\n\t"
+      "fcoms -0x4(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lfind_best_starting_location_index_3\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "movl %%esi, -0x8(%%ebp)\n\t"
+      "jmp .Lfind_best_starting_location_index_4\n\t"
+      ".Lfind_best_starting_location_index_3:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lfind_best_starting_location_index_4:\n\t"
+      "incl %%esi\n\t"
+      "cmpw %%bx, %%si\n\t"
+      "jl .Lfind_best_starting_location_index_2\n\t"
+      "movswl -0x8(%%ebp), %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lfind_best_starting_location_index_5:\n\t"
+      "popl %%esi\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(bbbbe0_c18e380), [elem] "m"(bbbbe0_elem), [cbaae0] "m"(bbbbe0_cbaae0), [cadcf0] "m"(bbbbe0_cadcf0), [gseed] "m"(bbbbe0_gseed), [rrange] "m"(bbbbe0_rrange), [c1d9e70] "m"(bbbbe0_c1d9e70)
+      : "memory");
 }
+#else
+#error "find_best_starting_location_index: clang naked draft required"
+#endif
+
 
 /* FUN_000bb670 (0xbb670) — XBE naked draft (batch 106). */
 #if defined(__clang__)
@@ -3133,33 +3252,88 @@ char player_teleport(int player_handle, void *a, void *b)
   return FUN_000bb670(player_handle, a, b);
 }
 
-/* Debug teleport local player A onto local player B's unit. */
-void debug_player_teleport(int16_t local_a, int16_t local_b)
+/* debug_player_teleport (0xbc6c0) — XBE naked draft (batch 145). */
+#if defined(__clang__)
+static int (*const bbc6c0_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
+static void *(*const bbc6c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const bbc6c0_get)(int, int) = object_get_and_verify_type;
+static int (*const bbc6c0_cba500)(int) = player_index_from_unit_index;
+static char (*const bbc6c0_cbb670)(int player_handle, void *a, void *b) = FUN_000bb670;
+
+__attribute__((naked, noinline))
+void debug_player_teleport(int16_t local_a __attribute__((unused)), int16_t local_b __attribute__((unused)))
 {
-  int unit_a;
-  int unit_b;
-  int player_a;
-  char *unit_obj;
-
-  player_a = local_player_get_player_index(local_a);
-  if (player_a == NONE)
-    unit_a = NONE;
-  else
-    unit_a = *(int *)((char *)datum_get(player_data, player_a) + 0x34);
-
-  if (local_player_get_player_index(local_b) == NONE)
-    unit_b = NONE;
-  else
-    unit_b = *(int *)((char *)datum_get(
-                          player_data, local_player_get_player_index(local_b)) +
-                      0x34);
-
-  if (unit_a == NONE || unit_b == NONE)
-    return;
-  unit_obj = (char *)object_get_and_verify_type(unit_b, 3);
-  FUN_000bb670(player_index_from_unit_index(unit_a), (void *)unit_b,
-               unit_obj + 0x50);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cba3c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Ldebug_player_teleport_1\n\t"
+      "orl %%eax, %%edi\n\t"
+      "jmp .Ldebug_player_teleport_2\n\t"
+      ".Ldebug_player_teleport_1:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cba3c0]\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%eax), %%edi\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Ldebug_player_teleport_2:\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cba3c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Ldebug_player_teleport_3\n\t"
+      "orl %%eax, %%esi\n\t"
+      "jmp .Ldebug_player_teleport_4\n\t"
+      ".Ldebug_player_teleport_3:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cba3c0]\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%eax), %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Ldebug_player_teleport_4:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Ldebug_player_teleport_5\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Ldebug_player_teleport_5\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "addl $0x50, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cba500]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cbb670]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Ldebug_player_teleport_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cba3c0] "m"(bbc6c0_cba3c0), [dget] "m"(bbc6c0_dget), [get] "m"(bbc6c0_get), [cba500] "m"(bbc6c0_cba500), [cbb670] "m"(bbc6c0_cbb670)
+      : "memory");
 }
+#else
+#error "debug_player_teleport: clang naked draft required"
+#endif
+
 
 /* Spawn an object at a starting-location record (EDI). */
 int FUN_000bac10(int tag_index, void *start_loc)
@@ -6004,30 +6178,87 @@ void FUN_000c08b0(int16_t function_index, int thread_datum, char init)
 }
 /* --- players.obj orphan shells (2026-07-26) --- */
 
-/* 0xbae20 */
-bool FUN_000bae20(int player_unit_handle, int nearby_unit_handle)
+/* FUN_000bae20 (0xbae20) — XBE naked draft (batch 143). */
+#if defined(__clang__)
+static void *(*const bbae20_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void *(*const bbae20_tag)(int, int) = tag_get;
+static int16_t (*const bbae20_c1aad90)(int unit_handle) = unit_count_weapons;
+static bool (*const bbae20_c1aae00)(int unit_handle, int weapon_unit_handle) = unit_weapon_is_new;
+static bool (*const bbae20_gerun)(void) = game_engine_running;
+static bool (*const bbae20_caba00)(int player_unit_handle, int weapon_unit_handle) = game_engine_can_pick_up_weapon;
+
+__attribute__((naked, noinline))
+bool FUN_000bae20(int player_unit_handle __attribute__((unused)), int nearby_unit_handle __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-
-  object_try_and_get_and_verify_type(nearby_unit_handle, 4);
-  tag_get('paew', *(int *)(eax));
-  unit_count_weapons(player_unit_handle);
-  unit_weapon_is_new(0, 0);
-  /* test (char)eax, (char)eax -> je 0xbae68 */
-  /* relift: test byte ptr [ecx + 0x308], 0x10 -> jne 0xbae9d */
-  /* test ebx, ebx -> je 0xbae9d */
-  game_engine_running();
-  /* test (char)eax, (char)eax -> jne 0xbae88 */
-  unit_weapon_is_new(player_unit_handle, nearby_unit_handle);
-  /* test (char)eax, (char)eax -> je 0xbae88 */
-  /* cmp ebx, 2 -> jl 0xbae9d */
-  game_engine_can_pick_up_weapon(player_unit_handle, nearby_unit_handle);
-  /* test (char)eax, (char)eax -> jne 0xbae9d */
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[tryget]\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "call *%[c1aad90]\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movswl %%ax, %%ebx\n\t"
+      "call *%[c1aae00]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000bae20_1\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "testb $0x10, 0x308(%%ecx)\n\t"
+      "jne .LFUN_000bae20_3\n\t"
+      ".LFUN_000bae20_1:\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "je .LFUN_000bae20_3\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000bae20_2\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1aae00]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000bae20_2\n\t"
+      "cmpl $2, %%ebx\n\t"
+      "jl .LFUN_000bae20_3\n\t"
+      ".LFUN_000bae20_2:\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[caba00]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000bae20_3\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000bae20_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tryget] "m"(bbae20_tryget), [tag] "m"(bbae20_tag), [c1aad90] "m"(bbae20_c1aad90), [c1aae00] "m"(bbae20_c1aae00), [gerun] "m"(bbae20_gerun), [caba00] "m"(bbae20_caba00)
+      : "memory");
 }
+#else
+#error "FUN_000bae20: clang naked draft required"
+#endif
+

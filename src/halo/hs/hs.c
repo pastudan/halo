@@ -3797,29 +3797,88 @@ void FUN_000c4240(void)
   FUN_000c40f0(0, 0x5c, (char *)global_scenario_get() + 0x49c);
 }
 
+/* FUN_000c4270 (0xc4270) — XBE naked draft (batch 145). */
+#if defined(__clang__)
+static void (*const bc4270_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bc4270_exitfn)(int) = system_exit;
+static void (*const bc4270_cc4030)(const char *token) = FUN_000c4030;
+static scenario_t * (*const bc4270_c18e380)(void) = global_scenario_get;
+static void *(*const bc4270_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
 void FUN_000c4270(void)
 {
-  int16_t i;
-  int16_t count;
-  void **table;
-  count = *(int16_t *)0x27d504;
-  for (i = 0; i < count; i++) {
-    if (i < 0 || i >= count) {
-      display_assert((const char *)0x27b928, (const char *)0x27b8c8, 0x240, 1);
-      system_exit(-1);
-    }
-    table = *(void ***)(0x2f3708 + i * 4);
-    FUN_000c4030((const char *)table[0]);
-  }
-  if (*(int *)0x326a08 == -1)
-    return;
-  {
-    void *block = (char *)global_scenario_get() + 0x4a8;
-    int j;
-    for (j = 0; j < *(int *)block; j++)
-      FUN_000c4030((const char *)tag_block_get_element(block, j, 0x5c));
-  }
+  __asm__ volatile(
+      "movw 0x27d504, %%ax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .LFUN_000c4270_4\n\t"
+      "nop\n\t"
+      ".LFUN_000c4270_1:\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .LFUN_000c4270_2\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jl .LFUN_000c4270_3\n\t"
+      ".LFUN_000c4270_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x240\n\t"
+      "pushl $0x27b8c8\n\t"
+      "pushl $0x27b928\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000c4270_3:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "movl 0x2f3708(,%%eax,4), %%ecx\n\t"
+      "movl (%%ecx), %%esi\n\t"
+      "call *%[cc4030]\n\t"
+      "movw 0x27d504, %%ax\n\t"
+      "incl %%edi\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jl .LFUN_000c4270_1\n\t"
+      ".LFUN_000c4270_4:\n\t"
+      "cmpl $-1, 0x326a08\n\t"
+      "je .LFUN_000c4270_7\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c18e380]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x4a8(%%edi), %%eax\n\t"
+      "addl $0x4a8, %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .LFUN_000c4270_6\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_000c4270_5:\n\t"
+      "pushl $0x5c\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[cc4030]\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "incl %%ebx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .LFUN_000c4270_5\n\t"
+      ".LFUN_000c4270_6:\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_000c4270_7:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bc4270_assert), [exitfn] "m"(bc4270_exitfn), [cc4030] "m"(bc4270_cc4030), [c18e380] "m"(bc4270_c18e380), [elem] "m"(bc4270_elem)
+      : "memory");
 }
+#else
+#error "FUN_000c4270: clang naked draft required"
+#endif
+
 
 void FUN_000c4320(void)
 {
@@ -3915,35 +3974,96 @@ void FUN_000c4540(void)
   FUN_000c40f0(0, 0x40, (char *)tag + 0x20);
 }
 
-/* 0xc4580 */
+/* hs_tokens_enumerate (0xc4580) — XBE naked draft (batch 140). */
+#if defined(__clang__)
+static void (*const bc4580_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bc4580_exitfn)(int) = system_exit;
+static void __cdecl (*const bc4580_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
 
-int16_t hs_tokens_enumerate(const char *prefix, uint32_t type_mask, char **tokens,
-                            int16_t max_tokens)
+__attribute__((naked, noinline))
+int16_t hs_tokens_enumerate(const char *prefix __attribute__((unused)), uint32_t type_mask __attribute__((unused)), char **tokens __attribute__((unused)), int16_t max_tokens __attribute__((unused)))
 {
-  int i;
-  void (**table)(void);
-
-  if (*(void **)0x46b6d0 != 0) {
-    display_assert((const char *)0x27b9a4, (const char *)0x27b8c8, 0x398, 1);
-    system_exit(-1);
-  }
-  *(int16_t *)0x46b6cc = max_tokens;
-  *(int16_t *)0x46b6c8 = 0;
-  *(void **)0x46b6d0 = tokens;
-  *(const char **)0x46b6d4 = prefix ? prefix : (const char *)0x25386f;
-  table = (void (**)(void))0x2f2208;
-  for (i = 0; i < 0x12; i++) {
-    if (table[i] == 0) {
-      display_assert((const char *)0x27b980, (const char *)0x27b8c8, 0x3a1, 1);
-      system_exit(-1);
-    }
-    if (type_mask & (1u << i))
-      table[i]();
-  }
-  qsort(tokens, (size_t)*(int16_t *)0x46b6c8, 4, (int (*)(const void *, const void *))FUN_000c4010);
-  *(void **)0x46b6d0 = 0;
-  return *(int16_t *)0x46b6c8;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x46b6d0, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "je .Lhs_tokens_enumerate_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x398\n\t"
+      "pushl $0x27b8c8\n\t"
+      "pushl $0x27b9a4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhs_tokens_enumerate_1:\n\t"
+      "movw 0x14(%%ebp), %%ax\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movw %%ax, 0x46b6cc\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "movw %%di, 0x46b6c8\n\t"
+      "movl %%ecx, 0x46b6d0\n\t"
+      "movl %%eax, 0x46b6d4\n\t"
+      "jne .Lhs_tokens_enumerate_2\n\t"
+      "movl $0x25386f, 0x46b6d4\n\t"
+      ".Lhs_tokens_enumerate_2:\n\t"
+      "movl $0x2f2208, %%esi\n\t"
+      "movl $0x12, %%ebx\n\t"
+      "jmp .Lhs_tokens_enumerate_3\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lhs_tokens_enumerate_3:\n\t"
+      "cmpl $0, (%%esi)\n\t"
+      "jne .Lhs_tokens_enumerate_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3a1\n\t"
+      "pushl $0x27b8c8\n\t"
+      "pushl $0x27b980\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhs_tokens_enumerate_4:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl $1, %%edx\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "testl %%edx, %%eax\n\t"
+      "je .Lhs_tokens_enumerate_5\n\t"
+      "call *(%%esi)\n\t"
+      ".Lhs_tokens_enumerate_5:\n\t"
+      "incl %%edi\n\t"
+      "addl $4, %%esi\n\t"
+      "decl %%ebx\n\t"
+      "jne .Lhs_tokens_enumerate_3\n\t"
+      "movswl 0x46b6c8, %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl $0xc4010\n\t"
+      "pushl $4\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9260]\n\t"
+      "movw 0x46b6c8, %%ax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $0, 0x46b6d0\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bc4580_assert), [exitfn] "m"(bc4580_exitfn), [c1d9260] "m"(bc4580_c1d9260)
+      : "memory");
 }
+#else
+#error "hs_tokens_enumerate: clang naked draft required"
+#endif
+
 
 /* 0xc4770 — compare two file_reference names */
 
@@ -4398,32 +4518,83 @@ int FUN_000c5310(int parent_handle __attribute__((unused)), int sibling_handle _
 #endif
 
 
-/* 0xc55d0 — collect linked syntax-node handles into an array */
+/* FUN_000c55d0 (0xc55d0) — XBE naked draft (batch 144). */
+#if defined(__clang__)
+static void *(*const bc55d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const bc55d0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
 
-char FUN_000c55d0(const char *name, int *out_handles, int16_t max_count,
-                  int root_handle)
+__attribute__((naked, noinline))
+char FUN_000c55d0(const char *name __attribute__((unused)), int *out_handles __attribute__((unused)), int16_t max_count __attribute__((unused)), int root_handle __attribute__((unused)))
 {
-  char *root;
-  char *child;
-  int handle;
-  int16_t count;
-
-  root = (char *)datum_get(*(data_t **)0x5aa6c8, root_handle);
-  child = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(root + 0x10));
-  handle = *(int *)(child + 8);
-  count = 0;
-  while (handle != -1) {
-    if (count >= max_count)
-      break;
-    out_handles[count] = handle;
-    handle = *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, handle) + 8);
-    count++;
-  }
-  if (count == max_count && handle == -1)
-    return 1;
-  crt_sprintf((char *)0x46b704, (const char *)0x27bcc8, name, (int)max_count);
-  *(char **)0x46b6fc = (char *)0x46b704;
-  *(int *)0x46b700 =
-    *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, root_handle) + 0xc);
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%eax), %%ecx\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000c55d0_2\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_000c55d0_1:\n\t"
+      "cmpw %%bx, %%si\n\t"
+      "jge .LFUN_000c55d0_3\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "movl %%eax, (%%edx,%%ecx,4)\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "incl %%esi\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_000c55d0_1\n\t"
+      ".LFUN_000c55d0_2:\n\t"
+      "cmpw %%bx, %%si\n\t"
+      ".LFUN_000c55d0_3:\n\t"
+      "popl %%esi\n\t"
+      "jne .LFUN_000c55d0_4\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000c55d0_5\n\t"
+      ".LFUN_000c55d0_4:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movswl %%bx, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x27bcc8\n\t"
+      "pushl $0x46b704\n\t"
+      "call *%[c1d90f0]\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "movl $0x46b704, 0x46b6fc\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%ecx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movl %%ecx, 0x46b700\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c55d0_5:\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bc55d0_dget), [c1d90f0] "m"(bc55d0_c1d90f0)
+      : "memory");
 }
+#else
+#error "FUN_000c55d0: clang naked draft required"
+#endif
+

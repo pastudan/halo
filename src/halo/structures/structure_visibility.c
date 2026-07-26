@@ -621,13 +621,90 @@ void FUN_00196850(int param_1 __attribute__((unused)))
 #endif
 
 
-/* 0x196a60 */
-int FUN_00196a60(float *cull_bounds, float *bounds)
+/* FUN_00196a60 (0x196a60) — XBE naked draft (batch 140). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+int FUN_00196a60(float *cull_bounds __attribute__((unused)), float *bounds __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "flds 0x4(%%ecx)\n\t"
+      "fcomps (%%edx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_00196a60_2\n\t"
+      "flds (%%ecx)\n\t"
+      "fcomps 0x4(%%edx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00196a60_2\n\t"
+      "flds 0xc(%%ecx)\n\t"
+      "fcomps 0x8(%%edx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_00196a60_2\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fcomps 0xc(%%edx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00196a60_2\n\t"
+      "flds 0x14(%%ecx)\n\t"
+      "fcomps 0x10(%%edx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_00196a60_2\n\t"
+      "flds 0x10(%%ecx)\n\t"
+      "fcomps 0x14(%%edx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00196a60_2\n\t"
+      "flds (%%edx)\n\t"
+      "fcomps (%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_00196a60_1\n\t"
+      "flds 0x4(%%edx)\n\t"
+      "fcomps 0x4(%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00196a60_1\n\t"
+      "flds 0x8(%%edx)\n\t"
+      "fcomps 0x8(%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_00196a60_1\n\t"
+      "flds 0xc(%%edx)\n\t"
+      "fcomps 0xc(%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00196a60_1\n\t"
+      "flds 0x10(%%edx)\n\t"
+      "fcomps 0x10(%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_00196a60_1\n\t"
+      "flds 0x14(%%edx)\n\t"
+      "fcomps 0x14(%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00196a60_1\n\t"
+      "movl $2, %%eax\n\t"
+      "ret\n\t"
+      ".LFUN_00196a60_1:\n\t"
+      "movl $1, %%eax\n\t"
+      "ret\n\t"
+      ".LFUN_00196a60_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00196a60: clang naked draft required"
+#endif
+
 
 /* FUN_00196b10 (0x196b10) — XBE naked draft (batch 121). */
 #if defined(__clang__)

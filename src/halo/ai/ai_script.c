@@ -169,88 +169,91 @@ void FUN_00058d40(int a0 __attribute__((unused)))
 #endif
 
 
-/* 0x58eb0 */
+/* FUN_00058eb0 (0x58eb0) — XBE naked draft (batch 140). */
+#if defined(__clang__)
+static data_t * (*const b58eb0_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
+static void (*const b58eb0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b58eb0_exitfn)(int) = system_exit;
+static void * (*const b58eb0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
+
+__attribute__((naked, noinline))
 void FUN_00058eb0(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  game_state_data_new((char *)0x00254868, 128, 108);
-  /* mem[0x005ab270] = eax */
-  display_assert((char *)0x0025d26c, (char *)0x0025d27c, 110, 0);
-  system_exit(0);
-  game_state_malloc((char *)0x0025d264, (char *)0x0025d264, 32768);
-  /* mem[0x005ab278] = eax */
-  display_assert((char *)0x0025d258, (char *)0x0025d27c, 113, 0);
-  system_exit(0);
-  game_state_malloc((char *)0x0025d250, (char *)0x0025d250, 4096);
-  /* mem[0x005ab274] = eax */
-  display_assert((char *)0x0025d240, (char *)0x0025d27c, 116, 0);
-  system_exit(0);
-  game_state_data_new((char *)0x0025d234, 256, 40);
-  /* mem[0x005ab26c] = eax */
-  display_assert((char *)0x0025d224, (char *)0x0025d27c, 119, 0);
-  system_exit(0);
-  data_make_invalid((void *)(uintptr_t)eax);
-  data_make_invalid((void *)(uintptr_t)ecx);
-  scenario_get();
-  datum_get((void *)(uintptr_t)eax, 0);
-  global_scenario_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  display_assert((char *)0x0025d390, (char *)0x0025d27c, 355, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)ebx, 0, edx);
-  /* cmp edi, -1 -> je 0x59477 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp esi, -1 -> je 0x592b8 */
-  object_get_and_verify_type(0, 0);
-  object_get_root_parent(0);
-  object_get_and_verify_type(0, 0);
-  /* cmp (int16_t)esi, -1 -> je 0x59122 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x590da */
-  /* cmp edx, eax -> jl 0x590fa */
-  display_assert((char *)0x0025d354, (char *)0x0025d27c, 382, 0);
-  system_exit(0);
-  /* test ecx, ecx -> je 0x59122 */
-  /* relift: test dword ptr [eax + ecx], edx -> je 0x59122 */
-  /* cmp esi, -1 -> jne 0x590a6 */
-  object_get_and_verify_type(0, 0);
-  object_get_root_parent(0);
-  object_get_and_verify_type(0, 0);
-  /* cmp (int16_t)esi, -1 -> je 0x591b9 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x59171 */
-  /* cmp eax, ecx -> jl 0x59191 */
-  display_assert((char *)0x0025d354, (char *)0x0025d27c, 408, 0);
-  system_exit(0);
-  /* test ecx, ecx -> je 0x591b9 */
-  /* relift: test dword ptr [eax + ecx], edx -> je 0x591b9 */
-  /* test (char)eax, (char)eax -> je 0x592b8 */
-  /* cmp (int16_t)eax, 3 -> jne 0x59229 */
-  /* relift: cmp word ptr [esi + 0x6e], 2 -> jl 0x591f0 */
-  actor_get_firing_position_group(0, 0, 0);
-  /* cmp (int16_t)eax, 6 -> je 0x59223 */
-  /* cmp (int16_t)eax, 4 -> je 0x59223 */
-  /* cmp (int16_t)eax, 3 -> je 0x5920c */
-  /* cmp (int16_t)eax, 5 -> jne 0x5924b */
-  actor_get_firing_position_group(0, 0, 0);
-  /* cmp (int16_t)eax, 2 -> jne 0x5924b */
-  /* relift: cmp word ptr [esi + 0x9c], 0 -> je 0x5924b */
-  /* cmp eax, -1 -> je 0x592b8 */
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* cmp (int16_t)esi, -1 -> je 0x592b8 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x59281 */
-  /* cmp ecx, eax -> jl 0x592a1 */
-  display_assert((char *)0x0025d354, (char *)0x0025d27c, 448, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl $0x6c\n\t"
+      "pushl $0x80\n\t"
+      "pushl $0x254868\n\t"
+      "call *%[c1bfe10]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x5ab270\n\t"
+      "jne .LFUN_00058eb0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6e\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x25d26c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00058eb0_1:\n\t"
+      "pushl $0x8000\n\t"
+      "pushl $0x25d264\n\t"
+      "pushl $0x25d264\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x5ab278\n\t"
+      "jne .LFUN_00058eb0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x71\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x25d258\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00058eb0_2:\n\t"
+      "pushl $0x1000\n\t"
+      "pushl $0x25d250\n\t"
+      "pushl $0x25d250\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x5ab274\n\t"
+      "jne .LFUN_00058eb0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x74\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x25d240\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00058eb0_3:\n\t"
+      "pushl $0x28\n\t"
+      "pushl $0x100\n\t"
+      "pushl $0x25d234\n\t"
+      "call *%[c1bfe10]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x5ab26c\n\t"
+      "jne .LFUN_00058eb0_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x77\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x25d224\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00058eb0_4:\n\t"
+      "ret\n\t"
+      :
+      : [c1bfe10] "m"(b58eb0_c1bfe10), [assert] "m"(b58eb0_assert), [exitfn] "m"(b58eb0_exitfn), [c1bfbf0] "m"(b58eb0_c1bfbf0)
+      : "memory");
 }
+#else
+#error "FUN_00058eb0: clang naked draft required"
+#endif
+

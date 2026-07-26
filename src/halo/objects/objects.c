@@ -7128,46 +7128,96 @@ void object_beautify(int param_1, char param_2)
   }
 }
 
-/*
- * object_header_new — allocate a new datum in an object data table and reserve
- * pool memory for it from the global objects memory pool at 0x46f080.
- *
- * If type_hint == -1, allocates at the next free index (data_new_at_index).
- * Otherwise allocates at the specified handle (data_new_datum).
- * On success, allocates datum_size bytes from the pool into datum+8,
- * records the size at datum+6, and zeros the allocated block.
- * Returns the datum handle, or -1 on failure.
- *
- * Confirmed: CMP EAX,-1 branches to data_new_at_index vs data_new_datum.
- * Confirmed: CALL 0x11e6c0 (memory_pool_block_new) with pool from [0x46f080].
- * Confirmed: MOV [EDI+6],CX stores datum_size as int16_t.
- * Confirmed: CALL 0x8db80 (csmemset) zeros *(void**)(datum+8).
- * Confirmed: datum_delete on pool allocation failure, returns -1.
- */
-int object_header_new(data_t *data, int16_t datum_size, int type_hint)
+/* object_header_new (0x13ded0) — XBE naked draft (batch 141). */
+#if defined(__clang__)
+static int (*const b13ded0_c119610)(data_t *data) = data_new_at_index;
+static int (*const b13ded0_c119570)(data_t *data, int handle) = data_new_datum;
+static void *(*const b13ded0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static bool (*const b13ded0_c11e6c0)(void *pool, void **block_reference, int size) = memory_pool_block_new;
+static void *(*const b13ded0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b13ded0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
+
+__attribute__((naked, noinline))
+int object_header_new(data_t *data __attribute__((unused)), int16_t datum_size __attribute__((unused)), int type_hint __attribute__((unused)))
 {
-  int handle;
-
-  if (type_hint == -1)
-    handle = data_new_at_index(data);
-  else
-    handle = data_new_datum(data, type_hint);
-
-  if (handle != -1) {
-    char *datum = (char *)datum_get(data, handle);
-
-    if (!memory_pool_block_new(*(void **)0x46f080, (void **)(datum + 8),
-                               (int)datum_size)) {
-      datum_delete(data, handle);
-      return -1;
-    }
-
-    *(int16_t *)(datum + 6) = datum_size;
-    csmemset(*(void **)(datum + 8), 0, (int)datum_size);
-  }
-
-  return handle;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lobject_header_new_1\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119610]\n\t"
+      "addl $4, %%esp\n\t"
+      "jmp .Lobject_header_new_2\n\t"
+      ".Lobject_header_new_1:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119570]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_header_new_2:\n\t"
+      "movl %%eax, %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lobject_header_new_3\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movswl 0xc(%%ebp), %%ebx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "leal 0x8(%%edi), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl 0x46f080, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c11e6c0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_header_new_4\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "movw 0xc(%%ebp), %%cx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "movw %%cx, 0x6(%%edi)\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lobject_header_new_3:\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lobject_header_new_4:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1196d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c119610] "m"(b13ded0_c119610), [c119570] "m"(b13ded0_c119570), [dget] "m"(b13ded0_dget), [c11e6c0] "m"(b13ded0_c11e6c0), [memset] "m"(b13ded0_memset), [c1196d0] "m"(b13ded0_c1196d0)
+      : "memory");
 }
+#else
+#error "object_header_new: clang naked draft required"
+#endif
+
 
 void object_postprocess_node_matrices(data_t *data, int object_handle /* @<ebx> */);
 
@@ -7290,96 +7340,164 @@ int16_t object_find_region_permutations_available_with_variant(
   return out_count;
 }
 
-/* 0x13e460 / objects.obj — Determine the variant number for an object by
- * iterating through model regions. For each region, reads the permutation
- * index from the object data at offset 0x130+region_idx, looks up the
- * permutation in the region's tag block, and returns the variant number.
- * Returns 0 if no variant found (all regions have count 0).
- * object_handle in EAX (register arg).
- * Confirmed: PUSH -1; PUSH EAX; CALL object_get_and_verify_type.
- * Confirmed: tag_block at model_tag+0xc4, element size 0x4c.
- * Confirmed: permutation index from object_data[0x130+region_idx].
- * Confirmed: inner tag_block at region+0x40, element size 0x58.
- * Confirmed: returns variant at perm+0x24 (int16_t). */
-int16_t object_determine_variant_number(int object_handle /* @<eax> */,
-                                        void *model_tag)
+/* object_determine_variant_number (0x13e460) — XBE naked draft (batch 138). */
+#if defined(__clang__)
+static void *(*const b13e460_get)(int, int) = object_get_and_verify_type;
+static void *(*const b13e460_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+int16_t object_determine_variant_number(int object_handle __attribute__((unused)), void *model_tag __attribute__((unused)))
 {
-  char *obj;
-  int16_t result;
-  int16_t region_idx;
-  char *model = (char *)model_tag;
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  result = 0;
-  region_idx = 0;
-  if (*(int *)(model + 0xc4) > 0) {
-    do {
-      char *region;
-      unsigned int perm_index;
-
-      if ((int16_t)result != 0) {
-        return result;
-      }
-      region = (char *)tag_block_get_element(
-          (void *)(model + 0xc4), (int)region_idx, 0x4c);
-      perm_index = (unsigned int)*(unsigned char *)(obj + 0x130 + (int)region_idx);
-      if ((int)perm_index < *(int *)(region + 0x40)) {
-        char *perm = (char *)tag_block_get_element(
-            (void *)(region + 0x40), (int)perm_index, 0x58);
-        result = *(int16_t *)(perm + 0x24);
-      }
-      region_idx = region_idx + 1;
-    } while ((int)region_idx < *(int *)(model + 0xc4));
-  }
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl 0xc4(%%edi), %%ecx\n\t"
+      "addl $0xc4, %%edi\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jle .Lobject_determine_variant_number_5\n\t"
+      "pushl %%esi\n\t"
+      "jmp .Lobject_determine_variant_number_2\n\t"
+      ".Lobject_determine_variant_number_1:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      ".Lobject_determine_variant_number_2:\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lobject_determine_variant_number_4\n\t"
+      "movswl %%bx, %%esi\n\t"
+      "pushl $0x4c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movzbl 0x130(%%esi,%%ecx,1), %%ecx\n\t"
+      "movl 0x40(%%eax), %%edx\n\t"
+      "addl $0x40, %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jge .Lobject_determine_variant_number_3\n\t"
+      "pushl $0x58\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movw 0x24(%%eax), %%dx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw %%dx, -0x4(%%ebp)\n\t"
+      ".Lobject_determine_variant_number_3:\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "incl %%ebx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lobject_determine_variant_number_1\n\t"
+      "movw -0x4(%%ebp), %%ax\n\t"
+      ".Lobject_determine_variant_number_4:\n\t"
+      "popl %%esi\n\t"
+      ".Lobject_determine_variant_number_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b13e460_get), [elem] "m"(b13e460_elem)
+      : "memory");
 }
+#else
+#error "object_determine_variant_number: clang naked draft required"
+#endif
 
-/* Remove object_handle from a sibling linked list rooted at list_head.
- * Walks the chain at offset 0xc4 (next_sibling) until it finds the entry
- * matching object_handle, then unlinks it.
- * list_head in EAX, object_handle in EBX (register args). */
-void object_child_list_remove(void *list_head /* @<eax> */,
-                              int object_handle /* @<ebx> */)
+
+/* object_child_list_remove (0x13e510) — XBE naked draft (batch 144). */
+#if defined(__clang__)
+static void *(*const b13e510_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const b13e510_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b13e510_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b13e510_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void object_child_list_remove(void *list_head __attribute__((unused)), int object_handle __attribute__((unused)))
 {
-  int *head = (int *)list_head;
-  int *obj_data;
-
-  if (*head == -1)
-    return;
-
-  while (1) {
-    obj_data = (int *)datum_get(*(data_t **)0x5a8d50, *head);
-    obj_data = (int *)*(int *)((char *)obj_data + 8);
-
-    {
-      int type = (int)*(int16_t *)((char *)obj_data + 0x64);
-      if ((1 << (type & 0x1f)) == 0) {
-        char *msg =
-          csprintf((char *)0x5ab100,
-                   "got an object type we didn't expect (expected one of "
-                   "0x%08x but got #%d).",
-                   -1, type);
-        display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0x69a, 1);
-        system_exit(-1);
-      }
-    }
-
-    if (*head == object_handle) {
-      *head = *(int *)((char *)obj_data + 0xc4);
-      *(int *)((char *)obj_data + 0xc4) = -1;
-      return;
-    }
-
-    head = (int *)((char *)obj_data + 0xc4);
-    if (*head == -1) {
-      display_assert("*first_object_reference!=NONE",
-                     "c:\\halo\\SOURCE\\objects\\objects.c", 0xc6b, 1);
-      system_exit(-1);
-      if (*head == -1)
-        return;
-    }
-  }
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "cmpl $-1, (%%esi)\n\t"
+      "je .Lobject_child_list_remove_4\n\t"
+      "pushl %%edi\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lobject_child_list_remove_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%edi\n\t"
+      "movswl 0x64(%%edi), %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jne .Lobject_child_list_remove_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x69a\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $-1\n\t"
+      "pushl $0x29b940\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_child_list_remove_2:\n\t"
+      "cmpl %%ebx, (%%esi)\n\t"
+      "je .Lobject_child_list_remove_3\n\t"
+      "movl 0xc4(%%edi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "leal 0xc4(%%edi), %%esi\n\t"
+      "jne .Lobject_child_list_remove_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xc6b\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29bbe4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lobject_child_list_remove_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".Lobject_child_list_remove_3:\n\t"
+      "movl 0xc4(%%edi), %%eax\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "movl $0xffffffff, 0xc4(%%edi)\n\t"
+      "popl %%edi\n\t"
+      ".Lobject_child_list_remove_4:\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b13e510_dget), [c8d9d0] "m"(b13e510_c8d9d0), [assert] "m"(b13e510_assert), [exitfn] "m"(b13e510_exitfn)
+      : "memory");
 }
+#else
+#error "object_child_list_remove: clang naked draft required"
+#endif
+
 
 void object_scripting_set_collideable(int param_1, char param_2)
 {
@@ -8822,50 +8940,77 @@ void object_compute_change_colors(int object_handle __attribute__((unused)))
 #endif
 
 
-/* 0x140ad0 / objects.obj — Choose random region permutations for an object's
- * model during spawn, honoring the object's requested variant (obj+0x6e).
- * Resolves the model tag (group 'mode') from the object tag (group 'obje'),
- * then asks object_select_random_region_permutations_by_variant to populate
- * the per-region permutation indices at obj+0x130. If the requested variant
- * is not positive, or selection by that variant fails for any region, falls
- * back to variant -1 (any), then determines an actual variant number via
- * object_determine_variant_number, records it in obj+0x6e, and (if positive)
- * re-selects permutations for that resolved variant.
- * Role: part of the object spawn-appearance setup chain in object_new.
- * object_handle in EDI (register arg).
- * Confirmed: PUSH -1; PUSH EDI; CALL object_get_and_verify_type.
- * Confirmed: tag_get('obje', obj->tag_index) then tag_get('mode', tag+0x34).
- * Confirmed: variant read as int16_t from obj+0x6e (sign-extended; <=0 path).
- * Confirmed: callees receive object_handle in EAX (MOV EAX,EDI before CALL). */
-void object_choose_random_region_permutations(int object_handle /* @<edi> */)
+/* object_choose_random_region_permutations (0x140ad0) — XBE naked draft (batch 140). */
+#if defined(__clang__)
+static void *(*const b140ad0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b140ad0_tag)(int, int) = tag_get;
+static char (*const b140ad0_c140a00)(int object_handle, void *model_tag, int16_t variant) = object_select_random_region_permutations_by_variant;
+static int16_t (*const b140ad0_c13e460)(int object_handle, void *model_tag) = object_determine_variant_number;
+
+__attribute__((naked, noinline))
+void object_choose_random_region_permutations(int object_handle __attribute__((unused)))
 {
-  char *obj;
-  int obj_tag;
-  void *model_tag;
-  int16_t variant;
-  int16_t resolved;
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  obj_tag = (int)tag_get(0x6f626a65, *(int *)obj);
-  if (*(int *)(obj_tag + 0x34) == -1) {
-    return;
-  }
-
-  model_tag = tag_get(0x6d6f6465, *(int *)(obj_tag + 0x34));
-  variant = *(int16_t *)(obj + 0x6e);
-  if (variant < 1 ||
-      object_select_random_region_permutations_by_variant(
-          object_handle, model_tag, variant) == 0) {
-    object_select_random_region_permutations_by_variant(
-        object_handle, model_tag, -1);
-    resolved = object_determine_variant_number(object_handle, model_tag);
-    *(int16_t *)(obj + 0x6e) = resolved;
-    if (resolved > 0) {
-      object_select_random_region_permutations_by_variant(
-          object_handle, model_tag, resolved);
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x34(%%eax), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_choose_random_region_permutations_3\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6d6f6465\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x6e(%%ebx), %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lobject_choose_random_region_permutations_1\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c140a00]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_choose_random_region_permutations_2\n\t"
+      ".Lobject_choose_random_region_permutations_1:\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c140a00]\n\t"
+      "pushl %%esi\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c13e460]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movw %%ax, 0x6e(%%ebx)\n\t"
+      "jle .Lobject_choose_random_region_permutations_2\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c140a00]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_choose_random_region_permutations_2:\n\t"
+      "popl %%esi\n\t"
+      ".Lobject_choose_random_region_permutations_3:\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b140ad0_get), [tag] "m"(b140ad0_tag), [c140a00] "m"(b140ad0_c140a00), [c13e460] "m"(b140ad0_c13e460)
+      : "memory");
 }
+#else
+#error "object_choose_random_region_permutations: clang naked draft required"
+#endif
+
 
 /* 0x13e7b0 / objects.obj — Evaluate all of the object tag's animation
  * functions for the current frame and store the results into the object's
@@ -9683,100 +9828,101 @@ void object_set_automatic_deactivation(int object_handle, char param_2)
   }
 }
 
-/*
- * object_set_garbage — set or clear the "garbage" activation state for
- * an object and its attached children.
- *
- * param flag: 0 = mark object as garbage (deactivate); non-zero = unmark.
- *
- * Reads the object's tag definition via tag_get to check whether the tag
- * has a children block (tag[0x34] != -1). If it does, and the object's
- * bit 0 of obj->flags (active/inactive state) is out of sync with the
- * requested flag, calls object_propagate_flag_to_children (via EAX register arg) to propagate
- * the state change to child objects before committing the datum update.
- *
- * object_propagate_flag_to_children (0x13ee60) takes (int object_handle @EAX, char param_1,
- *   char param_2) — 2 stack args, object_handle in EAX register. Uses
- *   args-array inline asm pattern to avoid EAX aliasing.
- *
- * Final datum update:
- *   flag==0: set obj->flags bit 0; clear datum byte[2] bit 1 (0x02).
- *   flag!=0: clear obj->flags bit 0; set datum byte[2] bit 1 (0x02).
- *
- * Confirmed: MOV EAX,EDI before CALL 0x13ee60 — EAX = object_handle.
- * Confirmed: ADD ESP,0x8 after CALL 0x13ee60 — 2 stack args.
- * Confirmed: ADD ESP,0x10 after tag_get (cleans 4 args: 2 for tag_get +
- *   2 pre-pushed for object_get_and_verify_type).
- * Confirmed: OR dword [ESI+4],1 — obj->flags |= 1 for flag==0 path.
- * Confirmed: AND byte [EAX+2],0xfd — hdr->unk_2 &= ~2 for flag==0 path.
- * Confirmed: AND dword [ESI+4],~1 — obj->flags &= ~1 for flag!=0 path.
- * Confirmed: OR byte [EAX+2],2 — hdr->unk_2 |= 2 for flag!=0 path.
- * Confirmed: DAT_005a8d50 as datum_get first arg.
- * Confirmed: CMP dword ptr [EBX+0x34],-1 — children block presence check.
- */
-void object_set_garbage(int object_handle, int flag)
+/* object_set_garbage (0x13ffc0) — XBE naked draft (batch 138). */
+#if defined(__clang__)
+static void *(*const b13ffc0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b13ffc0_tag)(int, int) = tag_get;
+static void (*const b13ffc0_c13ee60)(int object_handle, char do_wake, char do_limbo) = object_propagate_flag_to_children;
+static void *(*const b13ffc0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void object_set_garbage(int object_handle __attribute__((unused)), int flag __attribute__((unused)))
 {
-  /* ESI = object_data_t*, EDI = object_handle (saved for register-arg calls)
-   */
-  object_data_t *obj =
-    (object_data_t *)object_get_and_verify_type(object_handle, -1);
-
-  /* Get object tag definition; check if it has an attachments/children block
-   * (non-null block at tag+0x34 == not -1). */
-  void *tag_def = tag_get(0x6f626a65, (int)obj->tag_index);
-  int has_children = (*(int *)((char *)tag_def + 0x34) != -1);
-  int bit0 = (int)(obj->flags & 1);
-
-  if (has_children) {
-    if (bit0 != 0) {
-      /* bit0 is set */
-      if ((char)flag != 0) {
-        /* Already inactive but being asked to unmark: propagate to children
-         * with (param_1=0, param_2=1). */
-        object_propagate_flag_to_children(object_handle, 0, 1);
-        goto lab_0014000a;
-      }
-      /* bit0 set, flag==0: no child propagation needed */
-      goto lab_0014000a;
-    } else {
-      /* bit0 is clear */
-      if ((char)flag == 0) {
-        /* Becoming inactive: propagate to children with (param_1=1,
-         * param_2=0). */
-        object_propagate_flag_to_children(object_handle, 1, 0);
-        goto lab_00140017;
-      } else {
-        /* bit0 clear, flag!=0: re-check children block presence */
-        if (!has_children)
-          return;
-        goto lab_00140017;
-      }
-    }
-  }
-
-lab_0014000a:
-  if ((char)flag == 0)
-    goto lab_00140017;
-  /* flag != 0 and came from "has_children + bit0 set" path: skip datum
-   * update if children block is absent. */
-  if (!has_children)
-    return;
-
-lab_00140017: {
-  /* Commit the datum-level flags. */
-  object_header_data_t *hdr =
-    (object_header_data_t *)datum_get(*(data_t **)0x5a8d50, object_handle);
-  if ((char)flag == 0) {
-    /* Mark as garbage: set bit 0 of obj->flags, clear hdr->unk_2 bit 1. */
-    obj->flags |= 1;
-    hdr->unk_2 &= (uint8_t)~0x02;
-  } else {
-    /* Unmark garbage: clear bit 0 of obj->flags, set hdr->unk_2 bit 1. */
-    obj->flags &= ~(uint32_t)1;
-    hdr->unk_2 |= 0x02;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x34(%%ebx), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_set_garbage_1\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "andl $1, %%eax\n\t"
+      "je .Lobject_set_garbage_5\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lobject_set_garbage_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c13ee60]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_set_garbage_1:\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_set_garbage_3\n\t"
+      ".Lobject_set_garbage_2:\n\t"
+      "cmpl $-1, 0x34(%%ebx)\n\t"
+      "je .Lobject_set_garbage_4\n\t"
+      ".Lobject_set_garbage_3:\n\t"
+      "movl 0x5a8d50, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lobject_set_garbage_6\n\t"
+      "orl $1, 0x4(%%esi)\n\t"
+      "andb $0xfd, 0x2(%%eax)\n\t"
+      ".Lobject_set_garbage_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lobject_set_garbage_5:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lobject_set_garbage_1\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_set_garbage_2\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c13ee60]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lobject_set_garbage_3\n\t"
+      ".Lobject_set_garbage_6:\n\t"
+      "andl $0xfffffffe, 0x4(%%esi)\n\t"
+      "movb 0x2(%%eax), %%cl\n\t"
+      "popl %%edi\n\t"
+      "orb $2, %%cl\n\t"
+      "popl %%esi\n\t"
+      "movb %%cl, 0x2(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b13ffc0_get), [tag] "m"(b13ffc0_tag), [c13ee60] "m"(b13ffc0_c13ee60), [dget] "m"(b13ffc0_dget)
+      : "memory");
 }
-}
+#else
+#error "object_set_garbage: clang naked draft required"
+#endif
+
 
 /* Walk the parent chain to the root object and copy its position and
  * forward vector to the output buffers (0x140070). Either output may
@@ -9843,69 +9989,93 @@ void object_get_location(int object_handle, void *location_out)
   out[1] = (uint32_t)obj->unk_76.value;
 }
 
-/*
- * object_set_region_count — update an object's interpolation region count.
- *
- * Copies the object's region node data from the "new" interpolation buffer
- * (at object+0x19c) into the "current" buffer (at object+0x198) via
- * object_header_block_reference_get, using csmemcpy with a size of
- * model_region_count * 32.
- *
- * If the requested region_count is >= (unk_134 - unk_132), it resets
- * unk_132 to 0 and sets unk_134 to the new region_count.
- *
- * Asserts that the object's type is NOT in the "cannot interpolate" mask
- * (types with bits 5-11 set: 0xFE0).
- *
- * Confirmed: 2 cdecl args (PUSH EDI + PUSH [EBP+0xc], ADD ESP via
- *            interleaved cleanup).
- * Confirmed: CALL 0x13d680 (object_get_and_verify_type, type_mask=-1).
- * Confirmed: CALL 0x1ba140 (tag_get) twice — 'obje' then 'mode'.
- * Confirmed: CALL 0x13dfc0 twice with pre-pushed args for csmemcpy.
- * Confirmed: assert string at 0x29bf80:
- *   "!TEST_FLAG(_object_mask_cannot_interpolate, object->object.type)"
- * Inferred: unk_408 / unk_412 at offsets 0x198/0x19c are interpolation
- *           buffer references (4 bytes each: {int16_t size, int16_t offset}).
- * Inferred: model tag + 0xb8 is the region count (int16_t).
- */
-void object_set_region_count(int object_handle, int16_t region_count)
+/* object_set_region_count (0x140160) — XBE naked draft (batch 141). */
+#if defined(__clang__)
+static void *(*const b140160_get)(int, int) = object_get_and_verify_type;
+static void *(*const b140160_tag)(int, int) = tag_get;
+static void (*const b140160_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b140160_exitfn)(int) = system_exit;
+static void * (*const b140160_c13dfc0)(int object_handle, void *reference) = object_header_block_reference_get;
+static void * (*const b140160_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
+void object_set_region_count(int object_handle __attribute__((unused)), int16_t region_count __attribute__((unused)))
 {
-  object_data_t *obj =
-    (object_data_t *)object_get_and_verify_type(object_handle, -1);
-
-  /* Look up the object definition tag ('obje'), then the model tag ('mode')
-   * to get the number of model regions. */
-  void *obje_tag = tag_get(0x6f626a65, *(int *)obj);
-  void *mode_tag = tag_get(0x6d6f6465, *(int *)((char *)obje_tag + 0x34));
-  int16_t model_region_count = *(int16_t *)((char *)mode_tag + 0xb8);
-
-  /* Assert that this object type can be interpolated.
-   * _object_mask_cannot_interpolate = 0xFE0 (bits 5 through 11). */
-  if ((1 << (*(uint8_t *)((char *)obj + 0x64) & 0x1f)) & 0xfe0u) {
-    display_assert(
-      "!TEST_FLAG(_object_mask_cannot_interpolate, object->object.type)",
-      "c:\\halo\\SOURCE\\objects\\objects.c", 0x5f3, 1);
-    system_exit(-1);
-  }
-
-  /* Copy region node data from the "new" buffer to the "current" buffer.
-   * The two references at obj+0x19c and obj+0x198 each describe a
-   * {size, offset} pair into the object's dynamic data region. */
-  {
-    int copy_size = (int)model_region_count << 5;
-    void *src =
-      object_header_block_reference_get(object_handle, (char *)obj + 0x19c);
-    void *dst =
-      object_header_block_reference_get(object_handle, (char *)obj + 0x198);
-    csmemcpy(dst, src, copy_size);
-  }
-
-  /* If the new region_count is large enough, reset unk_132 and store it. */
-  if ((int)region_count >= (int)obj->unk_134 - (int)obj->unk_132) {
-    obj->unk_132 = 0;
-    obj->unk_134 = region_count;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x34(%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6d6f6465\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x64(%%esi), %%cl\n\t"
+      "movw 0xb8(%%eax), %%bx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl $0xfe0, %%edx\n\t"
+      "je .Lobject_set_region_count_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5f3\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29bf80\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_set_region_count_1:\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "shll $5, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x19c(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c13dfc0]\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x198(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c13dfc0]\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8e0b0]\n\t"
+      "movswl 0x84(%%esi), %%edx\n\t"
+      "movswl 0x86(%%esi), %%ecx\n\t"
+      "movw 0xc(%%ebp), %%ax\n\t"
+      "subl %%edx, %%ecx\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "jl .Lobject_set_region_count_2\n\t"
+      "movw $0, 0x84(%%esi)\n\t"
+      "movw %%ax, 0x86(%%esi)\n\t"
+      ".Lobject_set_region_count_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b140160_get), [tag] "m"(b140160_tag), [assert] "m"(b140160_assert), [exitfn] "m"(b140160_exitfn), [c13dfc0] "m"(b140160_c13dfc0), [c8e0b0] "m"(b140160_c8e0b0)
+      : "memory");
 }
+#else
+#error "object_set_region_count: clang naked draft required"
+#endif
+
 
 /*
  * object_adjust_interpolation_position — adds a delta vector to an object's

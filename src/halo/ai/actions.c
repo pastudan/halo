@@ -113,29 +113,90 @@ void FUN_0001c030(int actor_handle)
   *(char *)(actor + 0x425) = 0;
 }
 
-/* FUN_0001c0e0 (0x1c0e0) — Initialize a wait action state buffer.
- * Clears 0x18 bytes at state_data, fills timing/mode fields, and returns 1
- * unless the actor is in a vehicle (actor+0x160 != 0). */
-char FUN_0001c0e0(int actor_handle, char param_2, int state_data)
-{
-  char *actor;
+/* FUN_0001c0e0 (0x1c0e0) — XBE naked draft (batch 143). */
+#if defined(__clang__)
+static void *(*const b1c0e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b1c0e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1c0e0_exitfn)(int) = system_exit;
+static void *(*const b1c0e0_memset)(void *, int, unsigned int) = csmemset;
+static int (*const b1c0e0_gtime)(void) = game_time_get;
+static int *(*const b1c0e0_gseed)(void) = get_global_random_seed_address;
+static int16_t (*const b1c0e0_c10b2d0)(unsigned int *seed, int16_t min, int16_t max) = random_range;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  assert_halt(state_data != 0);
-  csmemset((void *)state_data, 0, 0x18);
-  if (*(char *)(actor + 0x160) != '\0') {
-    return 0;
-  }
-  *(char *)(state_data + 1) = *(char *)(actor + 0x1cc);
-  *(char *)(state_data + 2) = param_2;
-  *(int *)(state_data + 8) = game_time_get();
-  *(int16_t *)(state_data + 0xe) = 0;
-  *(int16_t *)(state_data + 0xc) = 0x78;
-  *(char *)(state_data + 3) = 1;
-  *(int16_t *)(state_data + 0x10) =
-    random_range((unsigned int *)get_global_random_seed_address(), 300, 600);
-  return 1;
+__attribute__((naked, noinline))
+char FUN_0001c0e0(int actor_handle __attribute__((unused)), char param_2 __attribute__((unused)), int state_data __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "jne .LFUN_0001c0e0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x21\n\t"
+      "pushl $0x253f7c\n\t"
+      "pushl $0x25334c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0001c0e0_1:\n\t"
+      "pushl $0x18\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movb 0x160(%%edi), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0001c0e0_2\n\t"
+      "movb 0x1cc(%%edi), %%dl\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "movb %%dl, 0x1(%%esi)\n\t"
+      "movb %%al, 0x2(%%esi)\n\t"
+      "call *%[gtime]\n\t"
+      "pushl $0x258\n\t"
+      "pushl $0x12c\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "movw $0, 0xe(%%esi)\n\t"
+      "movw $0x78, 0xc(%%esi)\n\t"
+      "movb $1, 0x3(%%esi)\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10b2d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movw %%ax, 0x10(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0001c0e0_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1c0e0_dget), [assert] "m"(b1c0e0_assert), [exitfn] "m"(b1c0e0_exitfn), [memset] "m"(b1c0e0_memset), [gtime] "m"(b1c0e0_gtime), [gseed] "m"(b1c0e0_gseed), [c10b2d0] "m"(b1c0e0_c10b2d0)
+      : "memory");
 }
+#else
+#error "FUN_0001c0e0: clang naked draft required"
+#endif
+
 
 /* FUN_0001c190 (0x1c190) — Tick down actor wait/guard timers.
  * Decrements actor+0xac, 0xaa, and 0xa8 counters, triggering sound events and

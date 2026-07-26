@@ -48,27 +48,83 @@ void player_ui_initialize(void)
 }
 /* --- player_ui.obj batch drafts (2026-07-26) --- */
 
-/* 0xe0620 */
+/* FUN_000e0620 (0xe0620) — XBE naked draft (batch 144). */
+#if defined(__clang__)
+static void (*const be0620_ftol)(void) = FUN_001d9068;
+static int (*const be0620_cb5b20)(void) = local_time_get;
+
+__attribute__((naked, noinline))
 void FUN_000e0620(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  /* test (char)eax, (char)eax -> je 0xe06f1 */
-  /* mem[0x0046bec4] = eax */
-  /* mem[0x0046bec8] = ecx */
-  FUN_001d9068();
-  FUN_001d9068();
-  local_time_get();
-  /* cmp eax, 7 -> jle 0xe06f1 */
-  /* mem[0x0046bebc] = eax */
-  /* mem[0x0046bec0] = ecx */
-  local_time_get();
-  /* mem[0x0046bed0] = eax */
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movb 0x46beb0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000e0620_2\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "movl %%eax, 0x46bec4\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "movl %%ecx, 0x46bec8\n\t"
+      "flds (%%edi)\n\t"
+      "call *%[ftol]\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "movl 0x46bed8, %%ebx\n\t"
+      "movw %%ax, %%si\n\t"
+      "sarw $1, %%si\n\t"
+      "subw 0x10(%%ebx), %%si\n\t"
+      "movw %%si, -0x6(%%ebp)\n\t"
+      "call *%[ftol]\n\t"
+      "movl -0x6(%%ebp), %%edx\n\t"
+      "movl 0x46beb8, %%ecx\n\t"
+      "sarw $1, %%ax\n\t"
+      "subw 0x12(%%ebx), %%ax\n\t"
+      "addl %%edx, %%ecx\n\t"
+      "movw 0x46beb6, %%dx\n\t"
+      "addw %%ax, %%dx\n\t"
+      "movw %%ax, 0x46bece\n\t"
+      "addw 0x46beb2, %%ax\n\t"
+      "movw %%si, 0x46becc\n\t"
+      "addw 0x46beb4, %%si\n\t"
+      "popl %%edi\n\t"
+      "movw %%ax, -0x8(%%ebp)\n\t"
+      "movb 0x46beba, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movw %%si, -0x6(%%ebp)\n\t"
+      "popl %%esi\n\t"
+      "movw %%cx, -0x2(%%ebp)\n\t"
+      "movw %%dx, -0x4(%%ebp)\n\t"
+      "popl %%ebx\n\t"
+      "je .LFUN_000e0620_1\n\t"
+      "call *%[cb5b20]\n\t"
+      "subl 0x46bed0, %%eax\n\t"
+      "cmpl $7, %%eax\n\t"
+      "jle .LFUN_000e0620_2\n\t"
+      ".LFUN_000e0620_1:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl %%eax, 0x46bebc\n\t"
+      "movl %%ecx, 0x46bec0\n\t"
+      "call *%[cb5b20]\n\t"
+      "movl %%eax, 0x46bed0\n\t"
+      "movb $0, 0x46bebb\n\t"
+      ".LFUN_000e0620_2:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ftol] "m"(be0620_ftol), [cb5b20] "m"(be0620_cb5b20)
+      : "memory");
 }
+#else
+#error "FUN_000e0620: clang naked draft required"
+#endif
+
 
 /* 0xe0720 */
 void player_ui_reset_single_player_local_player_controllers(void)
@@ -744,27 +800,91 @@ void player_ui_set_active_player_profile(void)
   (void)edi;
 }
 
-/* 0xe1500 */
+/* player_ui_begin_editing_profile (0xe1500) — XBE naked draft (batch 143). */
+#if defined(__clang__)
+static void (*const be1500_c1c29a0)(void) = saved_game_file_get_type;
+static void (*const be1500_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const be1500_c1c26f0)(void) = playlist_profile_delete;
+static void (*const be1500_c1c18f0)(void) = player_profile_new;
+static void * (*const be1500_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
 void player_ui_begin_editing_profile(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* mem[0x0046c038] = 0xffffffff */
-  saved_game_file_get_type();
-  error(0, (char *)0x00282a28);
-  playlist_profile_delete();
-  /* test (char)eax, (char)eax -> je 0xe154e */
-  error(0, (char *)0x002829f0);
-  player_profile_new();
-  /* test (char)eax, (char)eax -> je 0xe1590 */
-  csmemcpy((void *)0x0046c03c, (void *)0x0046c0a4, 48);
-  /* mem[0x0046c038] = esi */
-  error(0, (char *)0x002829b8);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "movl $0xffffffff, 0x46c038\n\t"
+      "call *%[c1c29a0]\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "subl $0, %%eax\n\t"
+      "je .Lplayer_ui_begin_editing_profile_3\n\t"
+      "decl %%eax\n\t"
+      "je .Lplayer_ui_begin_editing_profile_1\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x282a28\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_begin_editing_profile_1:\n\t"
+      "pushl $0x46c0a4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1c26f0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayer_ui_begin_editing_profile_2\n\t"
+      "pushl $0x68\n\t"
+      "jmp .Lplayer_ui_begin_editing_profile_4\n\t"
+      ".Lplayer_ui_begin_editing_profile_2:\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x2829f0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_begin_editing_profile_3:\n\t"
+      "pushl $0x46c0a4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1c18f0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayer_ui_begin_editing_profile_5\n\t"
+      "pushl $0x30\n\t"
+      ".Lplayer_ui_begin_editing_profile_4:\n\t"
+      "pushl $0x46c0a4\n\t"
+      "pushl $0x46c03c\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%esi, 0x46c038\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_begin_editing_profile_5:\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x2829b8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1c29a0] "m"(be1500_c1c29a0), [c8f390] "m"(be1500_c8f390), [c1c26f0] "m"(be1500_c1c26f0), [c1c18f0] "m"(be1500_c1c18f0), [c8e0b0] "m"(be1500_c8e0b0)
+      : "memory");
 }
+#else
+#error "player_ui_begin_editing_profile: clang naked draft required"
+#endif
+
 
 /* player_ui_save_profile (0xe15b0) — XBE naked draft (batch 123). */
 #if defined(__clang__)

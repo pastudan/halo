@@ -730,18 +730,91 @@ void FUN_000a2ab0(void)
 #endif
 
 
-/* 0xa2ba0 */
-void FUN_000a2ba0(int unit_index, float damage_amount, float scale, float *effect_data, void *effect)
+/* FUN_000a2ba0 (0xa2ba0) — XBE naked draft (batch 140). */
+#if defined(__clang__)
+static int (*const ba2ba0_gtime)(void) = game_time_get;
+static void (*const ba2ba0_ftol)(void) = FUN_001d9068;
+
+__attribute__((naked, noinline))
+void FUN_000a2ba0(int unit_index __attribute__((unused)), float damage_amount __attribute__((unused)), float scale __attribute__((unused)), float *effect_data __attribute__((unused)), void *effect __attribute__((unused)))
 {
-  int eax = 0;
-
-  game_time_get();
-  /* test (char)eax, 0x41 -> je 0xa2c14 */
-  /* test (char)eax, 1 -> jne 0xa2c60 */
-  FUN_001d9068();
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[gtime]\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fmuls 0x253394\n\t"
+      "movswl 0xe2(%%ebx), %%eax\n\t"
+      "fstps 0x10(%%ebp)\n\t"
+      "flds 0x28(%%esi)\n\t"
+      "flds 0x2533c8\n\t"
+      ".byte 0xd8, 0xe1\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "movl %%eax, 0xc(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fildl 0xc(%%ebp)\n\t"
+      "fstps 0xc(%%ebp)\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps -0x4(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_000a2ba0_1\n\t"
+      "fcoms 0xac(%%ebx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_000a2ba0_1\n\t"
+      "fcoms 0xac(%%ebx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_000a2ba0_2\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps -0x4(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_000a2ba0_2\n\t"
+      ".LFUN_000a2ba0_1:\n\t"
+      "leal 0x84(%%ebx), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl $0x12, %%ecx\n\t"
+      "rep movsl\n\t"
+      "fstps 0xac(%%ebx)\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fmuls (%%eax)\n\t"
+      "fsts (%%eax)\n\t"
+      "call *%[ftol]\n\t"
+      "movw %%ax, 0xe2(%%ebx)\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "movb 0xe8(%%ebx), %%al\n\t"
+      "fmuls 0xa4(%%ebx)\n\t"
+      "orb $4, %%al\n\t"
+      "popl %%edi\n\t"
+      "movb %%al, 0xe8(%%ebx)\n\t"
+      "fstps 0xa4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000a2ba0_2:\n\t"
+      "fstp %%st(0)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [gtime] "m"(ba2ba0_gtime), [ftol] "m"(ba2ba0_ftol)
+      : "memory");
 }
+#else
+#error "FUN_000a2ba0: clang naked draft required"
+#endif
+
 
 /* 0xa2c70 */
 void FUN_000a2c70(void)
@@ -749,26 +822,88 @@ void FUN_000a2c70(void)
   transition_function_evaluate(0, 0.0f);
 }
 
-/* 0xa2d30 */
+/* player_effect_continuous_refresh (0xa2d30) — XBE naked draft (batch 142). */
+#if defined(__clang__)
+static int (*const ba2d30_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
+static void *(*const ba2d30_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static vector3_t * (*const ba2d30_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+static void (*const ba2d30_ca27a0)(void) = player_effect_add_continuous_effect;
+
+__attribute__((naked, noinline))
 void player_effect_continuous_refresh(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  local_player_get_player_index(esi);
-  /* cmp eax, -1 -> je 0xa2daf */
-  local_player_get_player_index(esi);
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* cmp eax, -1 -> je 0xa2daf */
-  object_get_world_position(0, (void *)(uintptr_t)ecx);
-  player_effect_add_continuous_effect();
-  /* cmp (int16_t)esi, 4 -> jl 0xa2d41 */
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      ".Lplayer_effect_continuous_refresh_1:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cba3c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayer_effect_continuous_refresh_2\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cba3c0]\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%eax), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayer_effect_continuous_refresh_2\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1412f0]\n\t"
+      "flds (%%edi)\n\t"
+      "fsubs -0xc(%%ebp)\n\t"
+      "addl $4, %%esp\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fsubs -0x8(%%ebp)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fsubs -0x4(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ca27a0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lplayer_effect_continuous_refresh_2:\n\t"
+      "incl %%esi\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_effect_continuous_refresh_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cba3c0] "m"(ba2d30_cba3c0), [dget] "m"(ba2d30_dget), [c1412f0] "m"(ba2d30_c1412f0), [ca27a0] "m"(ba2d30_ca27a0)
+      : "memory");
 }
+#else
+#error "player_effect_continuous_refresh: clang naked draft required"
+#endif
+
 
 /* 0xa2dc0 */
 void scripted_player_effect_set_translation(int a0, float a1, float a2)

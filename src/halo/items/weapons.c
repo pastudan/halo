@@ -1538,48 +1538,98 @@ static char *weapon_get_trigger_entry(void *weapon_obj, int16_t trigger_index)
   return (char *)weapon_obj + (int)trigger_index * 36 + 0x210;
 }
 
-/* 0xfad60 */
-int weapon_place(int weapon_handle, void *placement)
+/* weapon_place (0xfad60) — XBE naked draft (batch 141). */
+#if defined(__clang__)
+static void *(*const bfad60_get)(int, int) = object_get_and_verify_type;
+static void *(*const bfad60_tag)(int, int) = tag_get;
+static void *(*const bfad60_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+int weapon_place(int weapon_handle __attribute__((unused)), void *placement __attribute__((unused)))
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-  char *place = (char *)placement;
-  int magazine_count = *(int *)(tag_data + 0x4f0);
-
-  if (magazine_count > 0) {
-    char *mag_def =
-      (char *)tag_block_get_element((void *)(tag_data + 0x4f0), 0, 0x70);
-    int16_t total = *(int16_t *)(place + 0x48);
-    int16_t max_total = *(int16_t *)(mag_def + 8);
-    int16_t loaded = *(int16_t *)(place + 0x4a);
-    int16_t max_loaded = *(int16_t *)(mag_def + 0xa);
-
-    if (total > max_total)
-      total = max_total;
-    if (loaded > max_loaded)
-      loaded = max_loaded;
-
-    *(int16_t *)(weapon_obj + 0x25e) = total;
-    *(int16_t *)(weapon_obj + 0x260) = loaded;
-  }
-
-  if ((place[0x4c] & 1) != 0)
-    *(uint32_t *)(weapon_obj + 4) |= 0x20u;
-  else
-    *(uint32_t *)(weapon_obj + 4) &= ~0x20u;
-
-  weapon_obj[6] |= 2;
-
-  if ((place[0x4c] & 4) != 0)
-    *(uint32_t *)(weapon_obj + 0x1a4) &= ~0x20u;
-  else
-    *(uint32_t *)(weapon_obj + 0x1a4) |= 0x20u;
-
-  if ((place[0x4c] & 1) == 0)
-    *(float *)(weapon_obj + 0x14) += *(float *)0x2533e8;
-
-  return weapon_handle;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $4\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x4f0(%%eax), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "addl $0x4f0, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .Lweapon_place_4\n\t"
+      "pushl $0x70\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movw 0x48(%%edi), %%cx\n\t"
+      "movw 0x8(%%eax), %%dx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw %%dx, %%cx\n\t"
+      "jle .Lweapon_place_1\n\t"
+      "movswl %%dx, %%ecx\n\t"
+      "jmp .Lweapon_place_2\n\t"
+      ".Lweapon_place_1:\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      ".Lweapon_place_2:\n\t"
+      "movw %%cx, 0x25e(%%esi)\n\t"
+      "movw 0xa(%%eax), %%ax\n\t"
+      "movw 0x4a(%%edi), %%cx\n\t"
+      "cmpw %%ax, %%cx\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "jg .Lweapon_place_3\n\t"
+      "movswl %%cx, %%eax\n\t"
+      ".Lweapon_place_3:\n\t"
+      "movw %%ax, 0x260(%%esi)\n\t"
+      ".Lweapon_place_4:\n\t"
+      "movb $1, %%dl\n\t"
+      "testb %%dl, 0x4c(%%edi)\n\t"
+      "movl $0xffffffdf, %%eax\n\t"
+      "movl $0x20, %%ecx\n\t"
+      "je .Lweapon_place_5\n\t"
+      "orl %%ecx, 0x4(%%esi)\n\t"
+      "jmp .Lweapon_place_6\n\t"
+      ".Lweapon_place_5:\n\t"
+      "andl %%eax, 0x4(%%esi)\n\t"
+      ".Lweapon_place_6:\n\t"
+      "orb $2, 0x6(%%esi)\n\t"
+      "testb $4, 0x4c(%%edi)\n\t"
+      "jne .Lweapon_place_7\n\t"
+      "orl %%ecx, 0x1a4(%%esi)\n\t"
+      "jmp .Lweapon_place_8\n\t"
+      ".Lweapon_place_7:\n\t"
+      "andl %%eax, 0x1a4(%%esi)\n\t"
+      ".Lweapon_place_8:\n\t"
+      "testb %%dl, 0x4c(%%edi)\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "jne .Lweapon_place_9\n\t"
+      "flds 0x14(%%esi)\n\t"
+      "fadds 0x2533e8\n\t"
+      "fstps 0x14(%%esi)\n\t"
+      ".Lweapon_place_9:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfad60_get), [tag] "m"(bfad60_tag), [elem] "m"(bfad60_elem)
+      : "memory");
 }
+#else
+#error "weapon_place: clang naked draft required"
+#endif
+
 
 /* 0xfaf50 */
 char weapon_can_be_fired(int weapon_handle)
@@ -2050,33 +2100,69 @@ void FUN_000fb690(int weapon_handle, int16_t magazine_index)
 }
 #endif
 
-/* 0xfb7d0 — start attached effect on parent object */
-int FUN_000fb7d0(int effect_tag, int weapon_handle)
+/* FUN_000fb7d0 (0xfb7d0) — XBE naked draft (batch 140). */
+#if defined(__clang__)
+static void *(*const bfb7d0_get)(int, int) = object_get_and_verify_type;
+static void *(*const bfb7d0_tryget)(int, int) = object_try_and_get_and_verify_type;
+static int (*const bfb7d0_c9eb40)(int param_1, int param_2, short param_3, short param_4, short param_5) = FUN_0009eb40;
+
+__attribute__((naked, noinline))
+int FUN_000fb7d0(int effect_tag __attribute__((unused)), int weapon_handle __attribute__((unused)))
 {
-  char *weapon_obj;
-  int parent_handle = weapon_handle;
-  int object_handle;
-
-  if (effect_tag == -1)
-    return -1;
-
-  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  if ((weapon_obj[4] & 1) != 0 && *(int *)(weapon_obj + 0xcc) != -1)
-    parent_handle = *(int *)(weapon_obj + 0xcc);
-
-  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  object_handle = -1;
-  if (*(int *)(weapon_obj + 0xcc) != -1 &&
-      object_try_and_get_and_verify_type(*(int *)(weapon_obj + 0xcc), 3) != 0)
-    object_handle = *(int *)(weapon_obj + 0xcc);
-  (void)object_handle;
-
-  if (parent_handle == -1)
-    return -1;
-
-  return FUN_0009eb40(effect_tag, parent_handle, (int16_t)-1, (int16_t)-1,
-                      (int16_t)-1);
+  __asm__ volatile(
+      "orl $0xffffffff, %%eax\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "je .LFUN_000fb7d0_4\n\t"
+      "pushl $4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movb 0x4(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $1, %%cl\n\t"
+      "movl %%esi, %%edi\n\t"
+      "je .LFUN_000fb7d0_1\n\t"
+      "movl 0xcc(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000fb7d0_1\n\t"
+      "movl %%eax, %%edi\n\t"
+      ".LFUN_000fb7d0_1:\n\t"
+      "pushl $4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl 0xcc(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000fb7d0_2\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000fb7d0_2:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_000fb7d0_3\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c9eb40]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      ".LFUN_000fb7d0_3:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      ".LFUN_000fb7d0_4:\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfb7d0_get), [tryget] "m"(bfb7d0_tryget), [c9eb40] "m"(bfb7d0_c9eb40)
+      : "memory");
 }
+#else
+#error "FUN_000fb7d0: clang naked draft required"
+#endif
+
 
 /* 0xfb880 — set trigger state/frame (handle@eax, state@bx, trigger@si,
  * charge_counter cdecl @ebp+8). */
@@ -3236,34 +3322,97 @@ char weapon_prevents_melee_attack(int weapon_handle)
   return (char)((*(uint32_t *)(tag_data + 0x308) >> 9) & 1);
 }
 
-/* 0xfcbd0 */
-void FUN_000fcbd0(int16_t magazine_index, int weapon_handle)
+/* FUN_000fcbd0 (0xfcbd0) — XBE naked draft (batch 140). */
+#if defined(__clang__)
+static void *(*const bfcbd0_get)(int, int) = object_get_and_verify_type;
+static void * (*const bfcbd0_cfb370)(void *weapon_obj, int16_t magazine_index) = FUN_000fb370;
+static void *(*const bfcbd0_tag)(int, int) = tag_get;
+static void *(*const bfcbd0_elem)(void *, int, int) = tag_block_get_element;
+static int (*const bfcbd0_cfba20)(int weapon_handle, char param_2, int16_t state) = weapon_set_animation_state;
+static int (*const bfcbd0_cfb6e0)(int trigger_effect, float scale, float param_3, int weapon_handle) = weapon_start_effect;
+static void (*const bfcbd0_ftol)(void) = FUN_001d9068;
+
+__attribute__((naked, noinline))
+void FUN_000fcbd0(int16_t magazine_index __attribute__((unused)), int weapon_handle __attribute__((unused)))
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  int16_t *magazine =
-    (int16_t *)FUN_000fb370((void *)weapon_obj, magazine_index);
-  int16_t state = magazine[0];
-
-  if (state != 0 && state != 2)
-    return;
-
-  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  if (*(char *)(weapon_obj + 0x211) != 0 || *(char *)(weapon_obj + 0x235) != 0 ||
-      *(char *)(weapon_obj + 0x1e8) != 0)
-    return;
-
-  {
-    char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-    char *mag_def = (char *)tag_block_get_element(
-      (void *)(tag_data + 0x4f0), (int)magazine_index, 0x70);
-
-    weapon_set_animation_state(weapon_handle, 0, (int16_t)(magazine_index + 3));
-    weapon_start_effect(*(int *)(mag_def + 0x54), 0.0f, 0.0f, weapon_handle);
-    magazine[0] = 3;
-    magazine[1] =
-      (int16_t)(int)(*(float *)(mag_def + 0x1c) * *(float *)0x253394);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "call *%[cfb370]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "subl $0, %%eax\n\t"
+      "je .LFUN_000fcbd0_1\n\t"
+      "subl $2, %%eax\n\t"
+      "jne .LFUN_000fcbd0_2\n\t"
+      ".LFUN_000fcbd0_1:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $4\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[get]\n\t"
+      "movb 0x211(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_000fcbd0_2\n\t"
+      "movb 0x235(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_000fcbd0_2\n\t"
+      "movb 0x1e8(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_000fcbd0_2\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movswl %%bx, %%ecx\n\t"
+      "pushl $0x70\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x4f0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "addl $3, %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[cfba20]\n\t"
+      "movl 0x54(%%edi), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "call *%[cfb6e0]\n\t"
+      "movw $3, (%%esi)\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "fmuls 0x253394\n\t"
+      "addl $0x28, %%esp\n\t"
+      "call *%[ftol]\n\t"
+      "movw %%ax, 0x2(%%esi)\n\t"
+      ".LFUN_000fcbd0_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfcbd0_get), [cfb370] "m"(bfcbd0_cfb370), [tag] "m"(bfcbd0_tag), [elem] "m"(bfcbd0_elem), [cfba20] "m"(bfcbd0_cfba20), [cfb6e0] "m"(bfcbd0_cfb6e0), [ftol] "m"(bfcbd0_ftol)
+      : "memory");
 }
+#else
+#error "FUN_000fcbd0: clang naked draft required"
+#endif
+
 
 /* 0xfcc90 — zero magazine reload state (magazine@eax, weapon cdecl). */
 #if defined(__clang__)

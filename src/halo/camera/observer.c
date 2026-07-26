@@ -1431,29 +1431,100 @@ void FUN_00089240(void)
   first_person_camera_for_unit_and_vector();
 }
 
-/* 0x89270 */
+/* first_person_camera_update (0x89270) — XBE naked draft (batch 138). */
+#if defined(__clang__)
+static int (*const b89270_cb6870)(int16_t local_player_index) = player_control_get_unit_index;
+static void (*const b89270_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b89270_exitfn)(int) = system_exit;
+static float * (*const b89270_cb7f10)(int16_t local_player_index, float *out_direction) = player_control_get_facing_direction;
+static void (*const b89270_c88d50)(void) = first_person_camera_for_unit_and_vector;
+static float (*const b89270_cb6690)(int16_t local_player_index) = player_control_get_field_of_view;
+
+__attribute__((naked, noinline))
 void first_person_camera_update(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  player_control_get_unit_index(eax);
-  display_assert((char *)0x00266e9c, (char *)0x0026720c, 157, 0);
-  system_exit(0);
-  /* test esi, esi -> jne 0x892db */
-  display_assert((char *)0x0025f120, (char *)0x0026720c, 158, 0);
-  system_exit(0);
-  player_control_get_facing_direction(edx, (float *)(uintptr_t)ecx);
-  first_person_camera_for_unit_and_vector();
-  player_control_get_field_of_view(eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%edi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cb6870]\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jne .Lfirst_person_camera_update_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9d\n\t"
+      "pushl $0x26720c\n\t"
+      "pushl $0x266e9c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lfirst_person_camera_update_1:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lfirst_person_camera_update_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9e\n\t"
+      "pushl $0x26720c\n\t"
+      "pushl $0x25f120\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lfirst_person_camera_update_2:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw (%%edi), %%dx\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[cb7f10]\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "call *%[c88d50]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%edi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cb6690]\n\t"
+      "fsts 0x20(%%esi)\n\t"
+      "fcoms (%%ebx)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Lfirst_person_camera_update_3\n\t"
+      "popl %%edi\n\t"
+      "movl $0x3e3851ec, 0x60(%%esi)\n\t"
+      "movb $1, 0x4f(%%esi)\n\t"
+      "fstps (%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lfirst_person_camera_update_3:\n\t"
+      "popl %%edi\n\t"
+      "fstp %%st(0)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cb6870] "m"(b89270_cb6870), [assert] "m"(b89270_assert), [exitfn] "m"(b89270_exitfn), [cb7f10] "m"(b89270_cb7f10), [c88d50] "m"(b89270_c88d50), [cb6690] "m"(b89270_cb6690)
+      : "memory");
 }
+#else
+#error "first_person_camera_update: clang naked draft required"
+#endif
+
 
 /* 0x89330 */
 void FUN_00089330(void)
@@ -1994,13 +2065,90 @@ void FUN_00089940(void)
 #endif
 
 
-/* 0x89a20 */
+/* FUN_00089a20 (0x89a20) — XBE naked draft (batch 139). */
+#if defined(__clang__)
+static void (*const b89a20_c89940)(void) = FUN_00089940;
+
+__attribute__((naked, noinline))
 void FUN_00089a20(void)
 {
-  FUN_00089940();
-  FUN_00089940();
-  FUN_00089940();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x1c(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x24(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x20(%%ebp), %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c89940]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "fstps (%%edx)\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl 0x4(%%edx), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c89940]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "fstps 0x4(%%edx)\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl 0x8(%%edx), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c89940]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "addl $0x54, %%esp\n\t"
+      "fstps 0x8(%%edx)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c89940] "m"(b89a20_c89940)
+      : "memory");
 }
+#else
+#error "FUN_00089a20: clang naked draft required"
+#endif
+
 
 /* camera_track_splut (0x89ab0) — XBE naked draft (batch 122). */
 #if defined(__clang__)

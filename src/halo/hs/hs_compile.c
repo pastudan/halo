@@ -2927,33 +2927,88 @@ char hs_parse_if(int16_t function_index __attribute__((unused)), int root_datum 
 #endif
 
 
-/* 0xc82e0 — Parse (cond ...) by cloning a branch node via FUN_000c5310. */
-char hs_parse_cond(int16_t function_index, int root_datum)
+/* hs_parse_cond (0xc82e0) — XBE naked draft (batch 141). */
+#if defined(__clang__)
+static void *(*const bc82e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const bc82e0_cc5310)(int parent_handle, int sibling_handle) = FUN_000c5310;
+static bool (*const bc82e0_cc7d80)(int datum_index, int16_t check_type) = hs_type_check;
+
+__attribute__((naked, noinline))
+char hs_parse_cond(int16_t function_index __attribute__((unused)), int root_datum __attribute__((unused)))
 {
-  char *expr;
-  char *pred;
-  char *src;
-  char *dst;
-  int branch;
-  int16_t saved_type;
-  int16_t saved_word;
-
-  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
-  pred = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(expr + 0x10));
-  branch = FUN_000c5310(*(int *)(pred + 0x8), root_datum);
-  if (branch == -1)
-    return 0;
-
-  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
-  dst = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
-  src = (char *)datum_get(*(data_t **)0x5aa6c8, branch);
-  saved_type = *(int16_t *)(dst + 0x4);
-  saved_word = *(int16_t *)dst;
-  *(int *)(dst + 0x8) = *(int *)(src + 0x8);
-  csmemcpy(dst, src, 0x14);
-  *(int16_t *)dst = saved_word;
-  return hs_type_check(root_datum, saved_type);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%eax), %%ecx\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cc5310]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lhs_parse_cond_1\n\t"
+      "movl 0x5aa6c8, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[dget]\n\t"
+      "movw 0x4(%%ebx), %%cx\n\t"
+      "movw (%%ebx), %%dx\n\t"
+      "movw %%cx, -0x4(%%ebp)\n\t"
+      "movl 0x8(%%ebx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl $5, %%ecx\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "rep movsl\n\t"
+      "movw %%dx, (%%ebx)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cc7d80]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lhs_parse_cond_1:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bc82e0_dget), [cc5310] "m"(bc82e0_cc5310), [cc7d80] "m"(bc82e0_cc7d80)
+      : "memory");
 }
+#else
+#error "hs_parse_cond: clang naked draft required"
+#endif
+
 
 /* hs_parse_set (0xc8380) — XBE naked draft (batch 114). */
 #if defined(__clang__)
