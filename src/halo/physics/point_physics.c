@@ -112,10 +112,39 @@ void FUN_00154270(int object_handle, void *buffer_a, void *buffer_b,
   physics_compute_unit_collisions();
 }
 
-/* 0x154540 */
-void FUN_00154540(void)
+/* 0x154540 — integrate a scalar channel with asymmetric accel limits. */
+void FUN_00154540(float *accum, float *coeffs, float scale)
 {
-  /* relift: no calls detected — manual review */
+  float abs_scale;
+  float accel_pos;
+  float accel_neg;
+  float limit;
+
+  abs_scale = fabsf(scale);
+  accel_pos = abs_scale * coeffs[2];
+  accel_neg = abs_scale * coeffs[3];
+
+  if (scale > *(float *)0x2533c0) {
+    if (!(-accel_neg < *accum))
+      *accum = *accum + accel_neg;
+    else if (!(*accum < *(float *)0x2533c0))
+      *accum = *accum + accel_pos;
+    else
+      *accum = (*accum / accel_neg + *(float *)0x2533c8) * accel_pos;
+    limit = abs_scale * coeffs[0];
+    if (!(limit > *accum))
+      *accum = limit;
+  } else if (scale < *(float *)0x2533c0) {
+    if (!(*accum < accel_neg))
+      *accum = *accum - accel_neg;
+    else if (!(*accum > *(float *)0x2533c0))
+      *accum = *accum - accel_pos;
+    else
+      *accum = (*accum / accel_neg - *(float *)0x2533c8) * accel_pos;
+    limit = -(abs_scale * coeffs[1]);
+    if (!(limit < *accum))
+      *accum = limit;
+  }
 }
 
 /* 0x154630 */
@@ -124,8 +153,8 @@ void FUN_00154630(void)
   int eax = 0;
 
   /* test (char)eax, 0x41 -> jne 0x154673 */
-  FUN_00154540();
-  FUN_00154540();
+  FUN_00154540(0, 0, 0.0f);
+  FUN_00154540(0, 0, 0.0f);
   /* test (char)eax, 1 -> je 0x154668 */
 
   (void)eax;
@@ -138,7 +167,7 @@ void FUN_001546b0(void)
   int ecx = 0;
   int esi = 0;
 
-  FUN_00154540();
+  FUN_00154540(0, 0, 0.0f);
   FUN_001544d0((float *)(uintptr_t)ecx, (float *)(uintptr_t)esi, eax, 0.0f);
 
   (void)eax;
@@ -176,7 +205,7 @@ void FUN_001547d0(void)
   int edi = 0;
 
   FUN_001546f0();
-  FUN_00154540();
+  FUN_00154540(0, 0, 0.0f);
   FUN_001544d0((float *)(uintptr_t)edi, (float *)(uintptr_t)esi, ebx, 0.0f);
   FUN_001546f0();
 

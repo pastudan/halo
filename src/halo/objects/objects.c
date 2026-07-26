@@ -13512,35 +13512,40 @@ void *FUN_00134c40(int light_tag, int object_handle)
   return blend_base;
 }
 
-/* 0x135420 */
-void lightning_offset_marker_position(int matrix_ptr, float *position_out, float *random_bounds)
+/* 0x135420 — jitter a marker position in local marker space. */
+void lightning_offset_marker_position(int matrix_ptr, float *position_out,
+                                      float *random_bounds)
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
+  float *matrix = (float *)(uintptr_t)matrix_ptr;
+  float rnd_z;
+  float rnd_y;
+  float rnd_x;
+  float offset[3];
+  float one = *(float *)0x2533c8;
 
-  /* test esi, esi -> jne 0x135447 */
-  display_assert((char *)0x00267114, (char *)0x0029acfc, 116, 1);
-  system_exit(-1);
-  /* test ebx, ebx -> jne 0x135468 */
-  display_assert((char *)0x0026af40, (char *)0x0029acfc, 117, 1);
-  system_exit(-1);
-  /* test edi, edi -> jne 0x135489 */
-  display_assert((char *)0x0029ad34, (char *)0x0029acfc, 118, 1);
-  system_exit(-1);
-  random_math_get_local_seed_address();
-  random_math_real((void *)(uintptr_t)eax);
-  random_math_get_local_seed_address();
-  random_math_real((void *)(uintptr_t)eax);
-  random_math_get_local_seed_address();
-  random_math_real((void *)(uintptr_t)eax);
-  matrix_scale_transform_vector((float *)0, (float *)0, (float *)0);
+  if (!position_out) {
+    display_assert((char *)0x00267114, (char *)0x0029acfc, 0x74, 1);
+    system_exit(-1);
+  }
+  if (!matrix) {
+    display_assert((char *)0x0026af40, (char *)0x0029acfc, 0x75, 1);
+    system_exit(-1);
+  }
+  if (!random_bounds) {
+    display_assert((char *)0x0029ad34, (char *)0x0029acfc, 0x76, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)esi;
-  (void)edi;
+  rnd_z = random_math_real(random_math_get_local_seed_address());
+  rnd_y = random_math_real(random_math_get_local_seed_address());
+  rnd_x = random_math_real(random_math_get_local_seed_address());
+  offset[0] = (rnd_x + rnd_x - one) * random_bounds[0];
+  offset[1] = (rnd_y + rnd_y - one) * random_bounds[1];
+  offset[2] = (rnd_z + rnd_z - one) * random_bounds[2];
+  matrix_scale_transform_vector(matrix, offset, offset);
+  position_out[0] += offset[0];
+  position_out[1] += offset[1];
+  position_out[2] += offset[2];
 }
 
 /* 0x13df70 */

@@ -365,6 +365,12 @@ def main() -> int:
         ("collision_prism_test_vector", 0x14c220, 0x14c4b0),
         ("FUN_0014c4b0", 0x14c4b0, 0x14c6d0),
         ("FUN_00154270", 0x154270, 0x1544d0),
+        # gameplay wave 27 (2026-07-26)
+        ("lightning_offset_marker_position", 0x135420, 0x135510),
+        ("object_get_self_illumination", 0x1393b0, 0x139480),
+        ("FUN_00154540", 0x154540, 0x154630),
+        ("FUN_00135510", 0x135510, 0x135f20),
+        ("first_person_weapon_adjust_light", 0xdd340, 0xdd410),
     ]
 
     xbe = Xbe.from_file(args.xbe)

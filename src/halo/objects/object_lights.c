@@ -94,31 +94,38 @@ int16_t FUN_00139350(int light_handle, int16_t *out_buffer, int16_t max_count)
   (void)edi;
 }
 
-/* 0x1393b0 */
+/* 0x1393b0 — sum self-illumination from attached lights (+ parent/child). */
 float object_get_self_illumination(int object_handle)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
+  char *obj;
+  char *obj_tag;
+  float total = 0.0f;
+  int16_t i;
+  int light_count;
+  int parent;
+  int child;
 
-  object_get_and_verify_type(0, 0);
-  tag_get('ejbo', 0);
-  /* test (char)ecx, (char)ecx -> jne 0x139426 */
-  /* cmp eax, -1 -> je 0x139426 */
-  datum_get((void *)(uintptr_t)edx, 0);
-  real_rgb_color_brightness((float *)(uintptr_t)eax);
-  /* cmp eax, ecx -> jl 0x1393f0 */
-  /* cmp eax, -1 -> je 0x13944e */
-  /* relift: tail-call object_get_self_illumination(); */
-  /* cmp esi, -1 -> je 0x13946c */
-  /* relift: tail-call object_get_self_illumination(); */
-  return 0;
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  obj_tag = (char *)tag_get(0x6f626a65, *(int *)obj); /* 'obje' */
+  light_count = *(int *)(obj_tag + 0x140);
+  for (i = 0; i < light_count; i++) {
+    int light_handle;
+    if (obj[0xf4 + (int)i] != 0)
+      continue;
+    light_handle = *(int *)(obj + 0xfc + (int)i * 4);
+    if (light_handle == -1)
+      continue;
+    total += real_rgb_color_brightness(
+        (float *)((char *)datum_get(*(void **)0x5a90bc, light_handle) + 0x14));
+  }
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  parent = *(int *)(obj + 0xc8);
+  if (parent != -1)
+    total += object_get_self_illumination(parent);
+  child = *(int *)(obj + 0xc4);
+  if (child != -1)
+    return total + object_get_self_illumination(child);
+  return total;
 }
 
 static void light_sample_clamp_rgb(float *rgb)

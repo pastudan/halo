@@ -1,3 +1,5 @@
+#include "../../x87_math.h"
+
 /*
  * vehicle_get_estimated_position (0x1b5df0) — predict vehicle contact point.
  *
@@ -823,26 +825,103 @@ float *FUN_001b5f20(float *a, float *b, float *out, float scale_a, float scale_b
 }
 
 /* 0x1b5ff0 */
-void FUN_001b5ff0(void)
+/* 0x1b5ff0 — accumulate throttle/steer into antipodal wheel channels. */
+void FUN_001b5ff0(int vehicle_handle, void *physics_buffer, void *wheel_state)
 {
-  object_get_and_verify_type(0, 0);
-  tag_get('ihev', 0);
-  tag_get('syhp', 0);
-  FUN_001daf7e();
-  FUN_001daf7e();
-  FUN_00154270(0, 0, 0, 0, 0);
-  FUN_00154270(0, 0, 0, 0, 0);
+  char *veh;
+  char *vehi;
+  char *phys;
+  char *ws;
+  float left;
+  float right;
+  float wrap;
+  float max_v;
+
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh); /* 'vehi' */
+  phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c)); /* 'phys' */
+  ws = (char *)wheel_state;
+  max_v = *(float *)(vehi + 0x310);
+
+  left = *(float *)(veh + 0x42c) - *(float *)(veh + 0x434);
+  right = *(float *)(veh + 0x434) + *(float *)(veh + 0x42c);
+
+  wrap = left + *(float *)(veh + 0x43c);
+  *(float *)(veh + 0x43c) = wrap;
+  wrap = (float)x87_fmod(wrap, (double)max_v);
+  *(float *)(veh + 0x43c) = wrap;
+  if (wrap < *(float *)0x2533c0)
+    *(float *)(veh + 0x43c) = wrap + max_v;
+
+  wrap = right + *(float *)(veh + 0x440);
+  *(float *)(veh + 0x440) = wrap;
+  wrap = (float)x87_fmod(wrap, (double)max_v);
+  *(float *)(veh + 0x440) = wrap;
+  if (wrap < *(float *)0x2533c0)
+    *(float *)(veh + 0x440) = wrap + max_v;
+
+  if (*(int *)(phys + 0x68) == 2) {
+    *(float *)(ws + 0) = left;
+    *(int *)(ws + 0x1c) = 0;
+    *(int *)(ws + 0x20) = 0;
+    *(int *)(ws + 0x24) = 0;
+    *(int *)(ws + 0x28) = 0x3f800000;
+    *(float *)(ws + 0x60) = right;
+    *(int *)(ws + 0x7c) = 0;
+    *(int *)(ws + 0x80) = 0;
+    *(int *)(ws + 0x84) = 0;
+    *(int *)(ws + 0x88) = 0x3f800000;
+    FUN_00154270(vehicle_handle, ws, physics_buffer, 0, 0);
+  } else {
+    FUN_00154270(vehicle_handle, 0, physics_buffer, 0, 0);
+  }
 }
 
-/* 0x1b6140 */
-void FUN_001b6140(void)
+/* 0x1b6140 — accumulate throttle into a steering wheel channel. */
+void FUN_001b6140(int vehicle_handle, void *physics_buffer, void *wheel_state)
 {
-  object_get_and_verify_type(0, 0);
-  tag_get('ihev', 0);
-  tag_get('syhp', 0);
-  FUN_001daf7e();
-  FUN_00154270(0, 0, 0, 0, 0);
-  FUN_00154270(0, 0, 0, 0, 0);
+  char *veh;
+  char *vehi;
+  char *phys;
+  char *ws;
+  float throttle;
+  float wrap;
+  float max_v;
+  float angle;
+
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh);
+  phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c));
+  ws = (char *)wheel_state;
+  max_v = *(float *)(vehi + 0x310);
+
+  throttle = *(float *)(veh + 0x42c) + *(float *)(veh + 0x438);
+  *(float *)(veh + 0x438) = throttle;
+  wrap = (float)x87_fmod(throttle, (double)max_v);
+  *(float *)(veh + 0x438) = wrap;
+  if (wrap < *(float *)0x2533c0)
+    *(float *)(veh + 0x438) = wrap + max_v;
+
+  if (*(int *)(phys + 0x68) == 2) {
+    float s;
+    float c;
+    angle = *(float *)(veh + 0x434) * *(float *)0x253398;
+    s = sinf(angle);
+    c = cosf(angle);
+    *(float *)(ws + 0) = *(float *)(veh + 0x42c);
+    *(int *)(ws + 0x1c) = 0;
+    *(int *)(ws + 0x20) = 0;
+    *(float *)(ws + 0x24) = s;
+    *(float *)(ws + 0x28) = c;
+    *(float *)(ws + 0x60) = *(float *)(veh + 0x42c);
+    *(int *)(ws + 0x7c) = 0;
+    *(int *)(ws + 0x80) = 0;
+    *(float *)(ws + 0x84) = -s;
+    *(float *)(ws + 0x88) = c;
+    FUN_00154270(vehicle_handle, ws, physics_buffer, 0, 0);
+  } else {
+    FUN_00154270(vehicle_handle, 0, physics_buffer, 0, 0);
+  }
 }
 
 /* FUN_001b6250 (0x1b6250) — flying-vehicle wheel/contact setup (physics type 3).

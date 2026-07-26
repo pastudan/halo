@@ -8544,10 +8544,10 @@ void FUN_00152e40(int object_handle, void *buffer_a, void *buffer_b, float *forc
   /* test (char)eax, 1 -> jne 0x1545e5 */
   /* test (char)eax, 0x41 -> je 0x154619 */
   /* test (char)eax, 0x41 -> jne 0x154673 */
-  FUN_00154540();
-  FUN_00154540();
+  FUN_00154540(0, 0, 0.0f);
+  FUN_00154540(0, 0, 0.0f);
   /* test (char)eax, 1 -> je 0x154668 */
-  FUN_00154540();
+  FUN_00154540(0, 0, 0.0f);
   FUN_001544d0((float *)(uintptr_t)ecx, (float *)(uintptr_t)esi, eax, 0.0f);
   /* test (char)eax, (char)eax -> je 0x154727 */
   /* test (char)eax, 0x41 -> jne 0x15473c */
@@ -8555,7 +8555,7 @@ void FUN_00152e40(int object_handle, void *buffer_a, void *buffer_b, float *forc
   FUN_001544d0((float *)(uintptr_t)esi, (float *)(uintptr_t)ebx, edi, 0.0f);
   FUN_001546f0();
   FUN_001546f0();
-  FUN_00154540();
+  FUN_00154540(0, 0, 0.0f);
   FUN_001544d0((float *)(uintptr_t)edi, (float *)(uintptr_t)esi, ebx, 0.0f);
   FUN_001546f0();
   display_assert((char *)0x0029d978, (char *)0x0029d984, 332, 0);
@@ -14143,8 +14143,8 @@ void FUN_001b8f80(void)
   system_exit(0);
   /* relift: cmp dword ptr [edi + 0x8c], -1 -> je 0x1b9819 */
   /* relift: test byte ptr [ebx + 4], 0x20 -> jne 0x1b9819 */
-  FUN_001b5ff0();
-  FUN_001b6140();
+  FUN_001b5ff0(0, 0, 0);
+  FUN_001b6140(0, 0, 0);
   FUN_001b6250(0, 0, 0);
   FUN_001b77f0(0, 0, 0);
   FUN_001b74d0(0);

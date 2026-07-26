@@ -888,17 +888,14 @@ void first_person_weapons_update(void)
 }
 /* --- first_person_weapons.obj batch drafts (2026-07-26) --- */
 
-/* 0xdcaf0 */
-void FUN_000dcaf0(void)
+/* 0xdcaf0 — FP weapon state blob for a local player index. */
+char *FUN_000dcaf0(int16_t local_player_index)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xdcafb */
-  /* cmp (int16_t)esi, 4 -> jl 0xdcb1b */
-  display_assert((char *)0x00266fc0, (char *)0x00282294, 1433, 0);
-  system_exit(0);
-
-  (void)esi;
+  if (local_player_index < 0 || local_player_index >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 0x599, 1);
+    system_exit(-1);
+  }
+  return (char *)(*(int *)0x46bea8) + (int)local_player_index * 0x1ea0;
 }
 
 /* 0xdcdc0 */
@@ -1075,28 +1072,54 @@ void first_person_weapon_center_flashlight(int object_handle, float *out_positio
   (void)esi;
 }
 
-/* 0xdd340 */
-char first_person_weapon_adjust_light(int object_handle, int marker_result, void *out_position, void *out_forward, void *out_up)
+/* 0xdd340 — resolve FP weapon light marker into world basis vectors. */
+char first_person_weapon_adjust_light(int object_handle, int marker_result,
+                                      void *out_position, void *out_forward,
+                                      void *out_up)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
+  char *weapon;
+  char *unit;
+  int player_handle;
+  char *player;
+  int16_t local_index;
+  char marker[0x6c];
+  float *pos = (float *)out_position;
+  float *forward = (float *)out_forward;
+  float *up = (float *)out_up;
+  char *fp_flag;
 
-  object_get_and_verify_type(0, 0);
-  object_get_and_verify_type(0, 0);
-  /* cmp eax, -1 -> je 0xdd402 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp (int16_t)esi, -1 -> je 0xdd402 */
-  /* relift: cmp (int16_t)esi, word ptr [0x506548] -> jne 0xdd402 */
-  FUN_000dcaf0();
-  /* relift: cmp byte ptr [eax], 0 -> je 0xdd402 */
-  first_person_weapon_get_marker_by_name(0, (const char *)0, (void *)0, 0);
-  /* test (int16_t)eax, (int16_t)eax -> jle 0xdd402 */
-  return 0;
+  weapon = (char *)object_get_and_verify_type(object_handle, 4);
+  unit = (char *)object_get_and_verify_type(*(int *)(weapon + 0xcc), 3);
+  player_handle = *(int *)(unit + 0x1c8);
+  if (player_handle == -1)
+    return 0;
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  player = (char *)datum_get(*(void **)0x5aa6d4, player_handle);
+  local_index = *(int16_t *)(player + 2);
+  if (local_index == (int16_t)-1)
+    return 0;
+  if (local_index != *(int16_t *)0x506548)
+    return 0;
+
+  fp_flag = FUN_000dcaf0(local_index);
+  if (fp_flag[0] == 0)
+    return 0;
+
+  if (first_person_weapon_get_marker_by_name(
+          object_handle, (const char *)(uintptr_t)marker_result, marker, 1) <=
+      0)
+    return 0;
+
+  pos[0] = *(float *)(marker + 0x60);
+  pos[1] = *(float *)(marker + 0x64);
+  pos[2] = *(float *)(marker + 0x68);
+  forward[0] = *(float *)(marker + 0x3c);
+  forward[1] = *(float *)(marker + 0x40);
+  forward[2] = *(float *)(marker + 0x44);
+  up[0] = *(float *)(marker + 0x54);
+  up[1] = *(float *)(marker + 0x58);
+  up[2] = *(float *)(marker + 0x5c);
+  return 1;
 }
 
 /* 0xdd580 — per-tick update for a local player's first-person weapon pose. */
