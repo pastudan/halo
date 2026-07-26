@@ -7054,7 +7054,7 @@ static vector3_t * (*const b58af0_c1412f0)(int object_handle, vector3_t *out_pos
 static int16_t (*const b58af0_c1adfc0)(int unit_handle, int seat_substring, int16_t seat_desire_type, int16_t *seat_indices, int16_t max_seats) = vehicle_scripting_find_available_seats;
 static void (*const b58af0_c54680)(unsigned int combined_index, void *iter) = FUN_00054680;
 static int (*const b58af0_c54750)(void *iter) = FUN_00054750;
-static void __cdecl (*const b58af0_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
+static void __cdecl (*const b58af0_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = (void __cdecl (*)(void *, size_t, size_t, int (__cdecl *)(const void *, const void *)))qsort;
 static char (*const b58af0_c1d420)(int actor_handle, int param_2, int param_3, int param_4, int16_t param_5, int16_t *param_6) = actor_action_try_to_enter_vehicle;
 
 __attribute__((naked, noinline))
