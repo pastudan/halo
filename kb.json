@@ -28364,59 +28364,73 @@
       "functions": [
         {
           "addr": "0x1b4dc0",
-          "decl": "void FUN_001b4dc0(int handle, void *damage_data, unsigned int flags, float body_vitality, float shield_vitality, int param_6, int param_7);"
+          "decl": "void FUN_001b4dc0(int handle, void *damage_data, unsigned int flags, float body_vitality, float shield_vitality, int param_6, int param_7);",
+          "ported": false
         },
         {
           "addr": "0x1b5400",
-          "decl": "int FUN_001b5400(int a0, int a1);"
+          "decl": "int FUN_001b5400(int a0, int a1);",
+          "ported": false
         },
         {
           "addr": "0x1b5500",
-          "decl": "void FUN_001b5500(int a0);"
+          "decl": "void FUN_001b5500(int a0);",
+          "ported": false
         },
         {
           "addr": "0x1b5580",
-          "decl": "void vehicle_causes_collision_damage(void);"
+          "decl": "void vehicle_causes_collision_damage(void);",
+          "ported": false
         },
         {
           "addr": "0x1b55c0",
-          "decl": "void vehicle_hover(void);"
+          "decl": "void vehicle_hover(void);",
+          "ported": false
         },
         {
           "addr": "0x1b5610",
-          "decl": "void FUN_001b5610(int a0, int a1);"
+          "decl": "void FUN_001b5610(int a0, int a1);",
+          "ported": false
         },
         {
           "addr": "0x1b5680",
-          "decl": "void vehicle_is_flipped(void);"
+          "decl": "void vehicle_is_flipped(void);",
+          "ported": false
         },
         {
           "addr": "0x1b56b0",
-          "decl": "void FUN_001b56b0(void);"
+          "decl": "void FUN_001b56b0(void);",
+          "ported": false
         },
         {
           "addr": "0x1b5750",
-          "decl": "void set_real_quaternion(void);"
+          "decl": "void set_real_quaternion(void);",
+          "ported": false
         },
         {
           "addr": "0x1b5770",
-          "decl": "void vehicle_reset(void);"
+          "decl": "void vehicle_reset(void);",
+          "ported": false
         },
         {
           "addr": "0x1b5820",
-          "decl": "void vehicle_new(void);"
+          "decl": "void vehicle_new(void);",
+          "ported": false
         },
         {
           "addr": "0x1b5890",
-          "decl": "void vehicle_preprocess_node_orientations(void);"
+          "decl": "void vehicle_preprocess_node_orientations(void);",
+          "ported": false
         },
         {
           "addr": "0x1b5c90",
-          "decl": "void vehicle_accelerate(int handle, float *velocity);"
+          "decl": "void vehicle_accelerate(int handle, float *velocity);",
+          "ported": false
         },
         {
           "addr": "0x1b5d90",
-          "decl": "void vehicle_render_debug(void);"
+          "decl": "void vehicle_render_debug(void);",
+          "ported": false
         },
         {
           "addr": "0x1b5df0",
@@ -28425,55 +28439,68 @@
         },
         {
           "addr": "0x1b5f20",
-          "decl": "void FUN_001b5f20(void);"
+          "decl": "void FUN_001b5f20(void);",
+          "ported": false
         },
         {
           "addr": "0x1b5ff0",
-          "decl": "void FUN_001b5ff0(void);"
+          "decl": "void FUN_001b5ff0(void);",
+          "ported": false
         },
         {
           "addr": "0x1b6140",
-          "decl": "void FUN_001b6140(void);"
+          "decl": "void FUN_001b6140(void);",
+          "ported": false
         },
         {
           "addr": "0x1b6250",
-          "decl": "void FUN_001b6250(void);"
+          "decl": "void FUN_001b6250(void);",
+          "ported": false
         },
         {
           "addr": "0x1b6560",
-          "decl": "void FUN_001b6560(void);"
+          "decl": "void FUN_001b6560(void);",
+          "ported": false
         },
         {
           "addr": "0x1b69a0",
-          "decl": "void FUN_001b69a0(void);"
+          "decl": "void FUN_001b69a0(void);",
+          "ported": false
         },
         {
           "addr": "0x1b6ca0",
-          "decl": "void FUN_001b6ca0(void);"
+          "decl": "void FUN_001b6ca0(void);",
+          "ported": false
         },
         {
           "addr": "0x1b6e20",
-          "decl": "void FUN_001b6e20(void);"
+          "decl": "void FUN_001b6e20(void);",
+          "ported": false
         },
         {
           "addr": "0x1b7020",
-          "decl": "void FUN_001b7020(void);"
+          "decl": "void FUN_001b7020(void);",
+          "ported": false
         },
         {
           "addr": "0x1b72b0",
-          "decl": "void FUN_001b72b0(void);"
+          "decl": "void FUN_001b72b0(void);",
+          "ported": false
         },
         {
           "addr": "0x1b74d0",
-          "decl": "void FUN_001b74d0(void);"
+          "decl": "void FUN_001b74d0(void);",
+          "ported": false
         },
         {
           "addr": "0x1b77f0",
-          "decl": "void FUN_001b77f0(void);"
+          "decl": "void FUN_001b77f0(void);",
+          "ported": false
         },
         {
           "addr": "0x1b79c0",
-          "decl": "void vehicle_export_function_values(void);"
+          "decl": "void vehicle_export_function_values(void);",
+          "ported": false
         },
         {
           "addr": "0x1b7ee0",
@@ -28482,15 +28509,18 @@
         },
         {
           "addr": "0x1b8060",
-          "decl": "char vehicle_stuck(int unit_handle, float *vec);"
+          "decl": "char vehicle_stuck(int unit_handle, float *vec);",
+          "ported": false
         },
         {
           "addr": "0x1b81d0",
-          "decl": "void FUN_001b81d0(void);"
+          "decl": "void FUN_001b81d0(void);",
+          "ported": false
         },
         {
           "addr": "0x1b8570",
-          "decl": "void FUN_001b8570(void);"
+          "decl": "void FUN_001b8570(void);",
+          "ported": false
         }
       ],
       "name": "vehicles.obj",

@@ -11002,5 +11002,215 @@
     "object": "director.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b4dc0",
+    "name": "FUN_001b4dc0",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5400",
+    "name": "FUN_001b5400",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5500",
+    "name": "FUN_001b5500",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5580",
+    "name": "vehicle_causes_collision_damage",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b55c0",
+    "name": "vehicle_hover",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5610",
+    "name": "FUN_001b5610",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5680",
+    "name": "vehicle_is_flipped",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b56b0",
+    "name": "FUN_001b56b0",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5750",
+    "name": "set_real_quaternion",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5770",
+    "name": "vehicle_reset",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5820",
+    "name": "vehicle_new",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5890",
+    "name": "vehicle_preprocess_node_orientations",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5c90",
+    "name": "vehicle_accelerate",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5d90",
+    "name": "vehicle_render_debug",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5f20",
+    "name": "FUN_001b5f20",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b5ff0",
+    "name": "FUN_001b5ff0",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b6140",
+    "name": "FUN_001b6140",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b6250",
+    "name": "FUN_001b6250",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b6560",
+    "name": "FUN_001b6560",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b69a0",
+    "name": "FUN_001b69a0",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b6ca0",
+    "name": "FUN_001b6ca0",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b6e20",
+    "name": "FUN_001b6e20",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b7020",
+    "name": "FUN_001b7020",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b72b0",
+    "name": "FUN_001b72b0",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b74d0",
+    "name": "FUN_001b74d0",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b77f0",
+    "name": "FUN_001b77f0",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b79c0",
+    "name": "vehicle_export_function_values",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b8060",
+    "name": "vehicle_stuck",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b81d0",
+    "name": "FUN_001b81d0",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b8570",
+    "name": "FUN_001b8570",
+    "object": "vehicles.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
