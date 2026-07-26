@@ -7031,7 +7031,7 @@
         {
           "addr": "0x86270",
           "decl": "uint8_t director_inhibited_facing(int16_t a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x862c0",
@@ -14343,12 +14343,12 @@
         {
           "addr": "0x100460",
           "decl": "void main_load_core_name(const char *name);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1004b0",
           "decl": "void main_load_core_name_at_startup(const char *name);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x100500",
@@ -26288,7 +26288,7 @@
         {
           "addr": "0x130ec0",
           "decl": "void FUN_00130ec0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x130ef0",
