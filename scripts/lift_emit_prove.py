@@ -260,6 +260,29 @@ def sync_tu_decls(sp: Path, name_by: dict) -> int:
     return n
 
 
+def _load_kb_atomic() -> dict:
+    """Read kb.json; on corruption restore from pastudan tip."""
+    try:
+        return json.loads(KB_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        print(f"kb.json corrupt ({exc}); restoring from pastudan", flush=True)
+        subprocess.run(
+            ["git", "fetch", "pastudan", "track-a-collision-bsp"],
+            cwd=ROOT,
+            capture_output=True,
+        )
+        r = subprocess.run(
+            ["git", "show", "pastudan/track-a-collision-bsp:kb.json"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        if r.returncode != 0 or not r.stdout:
+            raise
+        KB_PATH.write_text(r.stdout if r.stdout.endswith("\n") else r.stdout + "\n")
+        return json.loads(r.stdout)
+
+
 def merge_remote() -> None:
     subprocess.run(
         ["git", "fetch", "pastudan", "track-a-collision-bsp"],
@@ -274,8 +297,12 @@ def merge_remote() -> None:
     )
     if r.returncode != 0 or not r.stdout:
         return
-    theirs = json.loads(r.stdout)
-    ours = json.loads(KB_PATH.read_text(encoding="utf-8"))
+    try:
+        theirs = json.loads(r.stdout)
+    except json.JSONDecodeError:
+        print("remote kb.json unreadable; skip merge", flush=True)
+        return
+    ours = _load_kb_atomic()
     tmap = {
         int(fn["addr"], 16)
         for o in theirs.get("objects", [])
@@ -529,8 +556,8 @@ def main() -> int:
         )
         if sig_m:
             update_decl(ai, sig_m.group(0).strip(), name=name)
-            # Best-effort cmake regen; direct HFUNC patch above is authoritative.
-            regen_decl_h()
+            # Patch only this HFUNC — full cmake regen_decl_h / sync_tu_decls can
+            # cascade bad decls (e.g. game_initial_pulse) and break every TU.
             sync_decl_h(name, sig_m.group(0).strip())
         new_text = text[: span[0]] + c_src + "\n" + text[span[1] :]
         if any(t in c_src for t in ("uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t")):
@@ -541,7 +568,6 @@ def main() -> int:
         src_rel = src.replace("\\", "/")
         if "src/halo/" in src_rel:
             src_rel = src_rel.split("src/halo/", 1)[1]
-        sync_tu_decls(sp, name_by)
         if not docker_compile(src_rel):
             sp.write_text(text, encoding="utf-8")
             print("  compile FAIL", flush=True)

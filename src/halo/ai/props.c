@@ -1528,41 +1528,11 @@ int prop_orphan_from_friend(int actor_handle __attribute__((unused)), int parent
 #endif
 
 
-/* prop_orphan_update_information (0x64a60) — XBE naked draft (batch 224). */
-#if defined(__clang__)
-static void (*const b64a60_c647c0)(int dest_prop, int src_prop) = FUN_000647c0;
-
-__attribute__((naked, noinline))
-void prop_orphan_update_information(int actor_handle __attribute__((unused)), int parent_prop __attribute__((unused)), int unused __attribute__((unused)))
+/* prop_orphan_update_information (0x64a60) — readable C lift. */
+void prop_orphan_update_information(int actor_handle, int parent_prop, int unused)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c647c0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c647c0] "m"(b64a60_c647c0)
-      : "memory");
+  FUN_000647c0(actor_handle, parent_prop);
 }
-#else
-#error "prop_orphan_update_information: clang naked draft required"
-#endif
-
 
 /* FUN_00064b40 (0x64b40) — XBE naked draft (batch 83). */
 #if defined(__clang__)
@@ -1972,34 +1942,11 @@ int FUN_00064cd0(char *prop __attribute__((unused)), int tag __attribute__((unus
 #endif
 
 
-/* FUN_00064ec0 (0x64ec0) — XBE naked draft (batch 101). */
-#if defined(__clang__)
-static int (*const b64ec0_c64cd0)(char *prop, int tag, void *out) = FUN_00064cd0;
-
-__attribute__((naked, noinline))
-int FUN_00064ec0(char *prop __attribute__((unused)), int tag __attribute__((unused)), void *out __attribute__((unused)))
+/* FUN_00064ec0 (0x64ec0) — readable C lift. */
+int FUN_00064ec0(char *prop, int tag, void *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "leal 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c64cd0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c64cd0] "m"(b64ec0_c64cd0)
-      : "memory");
+  return FUN_00064cd0(prop, tag, &out);
 }
-#else
-#error "FUN_00064ec0: clang naked draft required"
-#endif
-
 
 /* FUN_00064f50 (0x64f50) — readable C lift (ai campaign). */
 int FUN_00064f50(int a0)

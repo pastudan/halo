@@ -1029,6 +1029,41 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                         )
 
 
+    # --- Pattern: SI register-arg 0..N → return table pointer (no ebp frame) ---
+    # effects/weather_particle_systems FUN_000a3e60 style
+    if (
+        len(body) >= 12
+        and body[0] == ("test", "si, si")
+        and body[1][0] == "jl"
+        and body[2][0] == "cmp"
+        and body[2][1].startswith("si,")
+        and body[3][0] == "jl"
+    ):
+        bound_m = re.match(r"si, (0x[0-9a-f]+|\d+)$", body[2][1])
+        ab = parse_assert(body, 4) if bound_m else None
+        if ab and bound_m:
+            bound = int(bound_m.group(1), 0)
+            mid = body[ab["next"] :]
+            if (
+                len(mid) == 3
+                and mid[0] == ("movsx", "eax, si")
+                and mid[1][0] == "imul"
+                and mid[2][0] == "add"
+                and mid[2][1].startswith("eax,")
+            ):
+                im = re.match(r"eax, eax, (0x[0-9a-f]+|\d+)$", mid[1][1])
+                am = re.match(r"eax, (0x[0-9a-f]+)$", mid[2][1])
+                if im and am:
+                    sigi = f"void *{name}(int16_t index)"
+                    return (
+                        f"{sigi}\n{{\n"
+                        f"  if (index < 0 || index >= {bound}) {{\n"
+                        f"{assert_c(ab, '    ')}"
+                        f"  }}\n"
+                        f"  return (void *)(0x{int(am.group(1), 16):x} + (int)index * {im.group(1)});\n"
+                        f"}}\n"
+                    )
+
     # --- Pattern: index 0..4 → return table pointer (movsx/imul/add) ---
     if (
         len(body) >= 14

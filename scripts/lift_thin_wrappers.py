@@ -444,6 +444,58 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
                 f"}}\n"
             )
 
+    # networking message_header: save eax/ecx/edx; F(global, a0, a1, a2)
+    if (
+        len(mid) == 12
+        and mid[0] == ("push", "eax")
+        and mid[1] == ("mov", "eax, dword ptr [ebp + 0x10]")
+        and mid[2] == ("push", "ecx")
+        and mid[3] == ("mov", "ecx, dword ptr [ebp + 0xc]")
+        and mid[4] == ("push", "edx")
+        and mid[5] == ("mov", "edx, dword ptr [ebp + 8]")
+        and mid[6] == ("push", "eax")
+        and mid[7] == ("push", "ecx")
+        and mid[8] == ("push", "edx")
+        and mid[9][0] == "push"
+        and re.match(r"0x[0-9a-fA-F]+$", mid[9][1])
+        and mid[10][0] == "call"
+        and mid[11][0] == "add"
+    ):
+        fn = callee(mid[10][1])
+        if fn:
+            if len(ps) < 3:
+                sig, ps = f"void {name}(void *a0, void *a1, void *a2)", ["a0", "a1", "a2"]
+            return (
+                f"{sig}\n{{\n"
+                f"  {fn}((void *){mid[9][1]}, {ps[0]}, {ps[1]}, {ps[2]});\n"
+                f"}}\n"
+            )
+
+    # networking message_header 2-arg: F(global, a0, a1)
+    if (
+        len(mid) == 10
+        and mid[0] == ("push", "eax")
+        and mid[1] == ("mov", "eax, dword ptr [ebp + 0xc]")
+        and mid[2] == ("push", "ecx")
+        and mid[3] == ("mov", "ecx, dword ptr [ebp + 8]")
+        and mid[4] == ("push", "edx")
+        and mid[5] == ("push", "eax")
+        and mid[6] == ("push", "ecx")
+        and mid[7][0] == "push"
+        and re.match(r"0x[0-9a-fA-F]+$", mid[7][1])
+        and mid[8][0] == "call"
+        and mid[9][0] == "add"
+    ):
+        fn = callee(mid[8][1])
+        if fn:
+            if len(ps) < 2:
+                sig, ps = f"void {name}(void *a0, void *a1)", ["a0", "a1"]
+            return (
+                f"{sig}\n{{\n"
+                f"  {fn}((void *){mid[7][1]}, {ps[0]}, {ps[1]});\n"
+                f"}}\n"
+            )
+
     # 3-arg forward: mov eax,[ebp+0x14]; mov ecx,[ebp+0x10]; mov edx,[ebp+0xc]; push*3; call; add
     if (
         len(mid) == 8

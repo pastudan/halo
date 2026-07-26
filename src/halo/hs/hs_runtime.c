@@ -6004,33 +6004,11 @@ char FUN_000ca050(int16_t game_flag __attribute__((unused)), int list_handle __a
 #endif
 
 
-/* FUN_000ca0f0 (0xca0f0) — XBE naked draft (batch 206). */
-#if defined(__clang__)
-static char (*const bca0f0_cc9650)(int16_t game_flag, int list_handle, char set_flag) = FUN_000c9650;
-
-__attribute__((naked, noinline))
-char FUN_000ca0f0(int16_t game_flag __attribute__((unused)), int list_handle __attribute__((unused)))
+/* FUN_000ca0f0 (0xca0f0) — readable C lift. */
+char FUN_000ca0f0(int16_t game_flag, int list_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cc9650]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc9650] "m"(bca0f0_cc9650)
-      : "memory");
+  return FUN_000c9650(game_flag, list_handle, 0);
 }
-#else
-#error "FUN_000ca0f0: clang naked draft required"
-#endif
-
 
 /* FUN_000ca160 (0xca160) — XBE naked draft (batch 112). */
 #if defined(__clang__)
@@ -6309,35 +6287,11 @@ void FUN_000ca160(int16_t scenario_index __attribute__((unused)), char teleport_
 #endif
 
 
-/* FUN_000ca3f0 (0xca3f0) — XBE naked draft (batch 202). */
-#if defined(__clang__)
-static void (*const bca3f0_cca160)(int16_t scenario_index, char teleport_flag, char facing_flag, int object_handle) = FUN_000ca160;
-
-__attribute__((naked, noinline))
-void FUN_000ca3f0(int object_handle __attribute__((unused)), int16_t scenario_index __attribute__((unused)))
+/* FUN_000ca3f0 (0xca3f0) — readable C lift. */
+void FUN_000ca3f0(int object_handle, int scenario_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl $1\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cca160]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cca160] "m"(bca3f0_cca160)
-      : "memory");
+  FUN_000ca160(scenario_index, 1, 1, object_handle);
 }
-#else
-#error "FUN_000ca3f0: clang naked draft required"
-#endif
-
 
 /* FUN_000ca410 (0xca410) — XBE naked draft (batch 202). */
 #if defined(__clang__)
