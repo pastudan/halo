@@ -6516,29 +6516,40 @@ void FUN_0013d870(int unit_handle, void *data)
     (void)data;
 }
 
-/*
- * object_name_list_set_handle — store an object handle at a name-table index.
- *
- * Validates that param_1 is non-negative (TEST AX,AX / JL) and less than the
- * scenario's object-name count (at scenario+0x204), then writes param_2 into
- * the object_name_list array (pointer at 0x46f07c) at the given index.
- *
- * Confirmed: MOVSX ESI,AX — sign-extends param_1 before use.
- * Confirmed: MOV ECX,[0x46f07c] — dereferences pointer, not direct array.
- * Confirmed: MOV [ECX + ESI*4],EAX — stores param_2 at name_table[param_1].
- * Confirmed: cdecl, caller at 0x45ffb does ADD ESP,0x8 after call.
- */
-void object_name_list_set_handle(short param_1, int param_2)
-{
-  int iVar1;
+/* object_name_list_set_handle (0x13d880) — XBE naked draft (batch 100). */
+#if defined(__clang__)
+static scenario_t * (*const b13d880_c18e380)(void) = global_scenario_get;
 
-  if (param_1 < 0)
-    return;
-  iVar1 = (int)global_scenario_get();
-  if (param_1 < *(int *)(iVar1 + 0x204)) {
-    (*(int **)0x46f07c)[param_1] = param_2;
-  }
+__attribute__((naked, noinline))
+void object_name_list_set_handle(int16_t param_1 __attribute__((unused)), int param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lobject_name_list_set_handle_2\n\t"
+      "pushl %%esi\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "call *%[c18e380]\n\t"
+      "cmpl 0x204(%%eax), %%esi\n\t"
+      "jge .Lobject_name_list_set_handle_1\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x46f07c, %%ecx\n\t"
+      "movl %%eax, (%%ecx,%%esi,4)\n\t"
+      ".Lobject_name_list_set_handle_1:\n\t"
+      "popl %%esi\n\t"
+      ".Lobject_name_list_set_handle_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(b13d880_c18e380)
+      : "memory");
 }
+#else
+#error "object_name_list_set_handle: clang naked draft required"
+#endif
+
 
 void object_set_garbage_flag(int object_handle, int is_garbage)
 {

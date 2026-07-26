@@ -1224,6 +1224,19 @@ def main() -> int:
         ("motion_sensor_initialize", 0xdb0f0, 0xdb131),
         ("hud_nav_points_initialize", 0xd5fb0, 0xd5feb),
         ("actor_set_prop_if_match", 0x14510, 0x14540),
+        # gameplay wave 100 (2026-07-26) — AI/units/net/objects Capstone weaks
+        ("FUN_000643d0", 0x643d0, 0x643f6),
+        ("unit_get_weapon_name", 0x1ae700, 0x1ae72e),
+        ("network_game_client_get_local_machine_index", 0x12a690, 0x12a6b6),
+        ("network_game_client_get_machine", 0x124c10, 0x124c36),
+        ("cluster_partition_null_references", 0x191630, 0x191652),
+        ("object_name_list_set_handle", 0x13d880, 0x13d8ac),
+        ("weapon_must_be_readied", 0xfb090, 0xfb0bc),
+        ("input_recording_write_packet", 0xce590, 0xce5b7),
+        ("actor_clear_guard_state", 0x15b70, 0x15ba5),
+        ("hud_messaging_slot_compare", 0xd50f0, 0xd511f),
+        ("FUN_0011c1b0", 0x11c1b0, 0x11c1cf),
+        ("FUN_0002a3a0", 0x2a3a0, 0x2a3cd),
     ]
 
     xbe = Xbe.from_file(args.xbe)

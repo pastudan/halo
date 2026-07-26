@@ -11244,24 +11244,41 @@ void unit_drop_weapons_on_death(int unit_handle __attribute__((unused)))
 #endif
 
 
-/* unit_get_weapon_name (0x1ae700)
- * Returns the name string of the unit's currently selected weapon.
- * If no weapon is equipped, returns "unarmed".
- * Register arg: unit_handle in ESI.
- * Stack arg: 1 cdecl param (unused in function body, always 1 from callers). */
-char *unit_get_weapon_name(int unit_handle, int unused)
-{
-  char *unit;
-  int weapon_handle;
+/* unit_get_weapon_name (0x1ae700) — XBE naked draft (batch 100). */
+#if defined(__clang__)
+static void *(*const b1ae700_get)(int, int) = object_get_and_verify_type;
+static int (*const b1ae700_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
+static char * (*const b1ae700_cfae80)(int weapon_handle) = weapon_get_label;
 
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  weapon_handle = unit_get_weapon(unit_handle,
-      *(int16_t *)(unit + 0x2a2));
-  if (weapon_handle == -1) {
-    return "unarmed";
-  }
-  return weapon_get_label(weapon_handle);
+__attribute__((naked, noinline))
+char * unit_get_weapon_name(int unit_handle __attribute__((unused)), int unused __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movswl 0x2a2(%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1adeb0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lunit_get_weapon_name_1\n\t"
+      "movl $0x2b6e68, %%eax\n\t"
+      "ret\n\t"
+      ".Lunit_get_weapon_name_1:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cfae80]\n\t"
+      "addl $4, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1ae700_get), [c1adeb0] "m"(b1ae700_c1adeb0), [cfae80] "m"(b1ae700_cfae80)
+      : "memory");
 }
+#else
+#error "unit_get_weapon_name: clang naked draft required"
+#endif
+
 
 /* unit_has_night_vision_weapon (0x1b13a0) — XBE naked draft (batch 69). */
 #if defined(__clang__)

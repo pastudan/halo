@@ -2864,26 +2864,38 @@ void FUN_00015b30(int actor_handle)
   }
 }
 
-/* actor_clear_guard_state (0x15b70)
- * Clears the actor's prop/guard encounter state when the prop-ready flag is
- * set.
- *
- * Confirmed: datum_get(actor_data, actor_handle) from decompile.
- * Confirmed: branch on *(char *)(actor+0xa1) != 0 from decompile.
- * Confirmed: *(int16_t *)(actor+0x1e4) = 0; *(int *)(actor+0x1e8) = -1 from
- * decompile. Inferred: actor+0xa1 = prop-ready flag (set by
- * actor_update_prop_desire at 0x14360). Inferred: actor+0x1e4 = guard/prop
- * state index (int16_t). Inferred: actor+0x1e8 = guard/prop encounter handle,
- * reset to invalid (-1). */
-void actor_clear_guard_state(int actor_handle)
+/* actor_clear_guard_state (0x15b70) — XBE naked draft (batch 100). */
+#if defined(__clang__)
+static void *(*const b15b70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void actor_clear_guard_state(int actor_handle __attribute__((unused)))
 {
-  char *actor;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(char *)(actor + 0xa1) != '\0') {
-    *(int16_t *)(actor + 0x1e4) = 0;
-    *(int *)(actor + 0x1e8) = -1;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0xa1(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_clear_guard_state_1\n\t"
+      "movw $0, 0x1e4(%%eax)\n\t"
+      "movl $0xffffffff, 0x1e8(%%eax)\n\t"
+      ".Lactor_clear_guard_state_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b15b70_dget)
+      : "memory");
 }
+#else
+#error "actor_clear_guard_state: clang naked draft required"
+#endif
+
 
 /* FUN_00015cf0 (0x15cf0) — XBE naked draft (batch 78). */
 #if defined(__clang__)

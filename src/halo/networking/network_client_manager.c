@@ -727,15 +727,39 @@ char network_game_client_set_machine(void *client, void *machine)
   return 1;
 }
 
-/* 0x124c10 */
-void *network_game_client_get_machine(void *client)
-{
-  uint16_t index;
+/* network_game_client_get_machine (0x124c10) — XBE naked draft (batch 100). */
+#if defined(__clang__)
 
-  if (client == NULL || (index = *(uint16_t *)client) >= 4)
-    return NULL;
-  return (void *)((char *)client + index * 0x44 + 0x970);
+
+__attribute__((naked, noinline))
+void * network_game_client_get_machine(void *client __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lnetwork_game_client_get_machine_1\n\t"
+      "movw (%%ecx), %%ax\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jae .Lnetwork_game_client_get_machine_1\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "imull $0x44, %%eax, %%eax\n\t"
+      "leal 0x970(%%eax,%%ecx,1), %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lnetwork_game_client_get_machine_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "network_game_client_get_machine: clang naked draft required"
+#endif
+
 
 /* 0x124c80 */
 void *FUN_00124c80(void *client)

@@ -114,22 +114,39 @@ float weapon_estimate_time_to_target(int weapon_handle, int16_t trigger_index,
   return result;
 }
 
-/* 0xfb090 — weapon_must_be_readied
- *
- * Returns non-zero if the weapon's 'must be readied' flag is set
- * (bit 3 of the weapon definition flags at tag+0x308).
- *
- * Confirmed: cdecl, 1 stack arg (weapon_handle).
- * Confirmed: CALL object_get_and_verify_type(weapon_handle, 4).
- * Confirmed: CALL tag_get(0x77656170, *obj).
- * Confirmed: SHR EAX,3; AND EAX,1 on *(uint *)(tag+0x308).
- */
-int weapon_must_be_readied(int weapon_handle)
+/* weapon_must_be_readied (0xfb090) — XBE naked draft (batch 100). */
+#if defined(__clang__)
+static void *(*const bfb090_get)(int, int) = object_get_and_verify_type;
+static void *(*const bfb090_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+int weapon_must_be_readied(int weapon_handle __attribute__((unused)))
 {
-  int *obj = (int *)object_get_and_verify_type(weapon_handle, 4);
-  int tag = (int)tag_get(0x77656170, *obj);
-  return (*(uint32_t *)(tag + 0x308) >> 3) & 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x308(%%eax), %%eax\n\t"
+      "shrl $3, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "andl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfb090_get), [tag] "m"(bfb090_tag)
+      : "memory");
 }
+#else
+#error "weapon_must_be_readied: clang naked draft required"
+#endif
+
 
 /* 0xfb0c0 — weapon_is_flag */
 bool weapon_is_flag(int object_index)

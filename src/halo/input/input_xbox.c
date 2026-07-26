@@ -437,17 +437,38 @@ void FUN_000ce530(void *state)
   }
 }
 
-/* input_recording_write_packet (0xce590)
- * Write one input_gamepad_state packet (0x28 bytes) to the input state
- * recording file.  Called unconditionally — the caller is responsible for
- * checking the recording mode before invoking this. */
-void input_recording_write_packet(void *state)
+/* input_recording_write_packet (0xce590) — XBE naked draft (batch 100). */
+#if defined(__clang__)
+static int __stdcall (*const bce590_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = WriteFile;
+
+__attribute__((naked, noinline))
+void input_recording_write_packet(void *state __attribute__((unused)))
 {
-  uint32_t bytes_written;
-  bytes_written = 0;
-  WriteFile(*input_state_file_handle(), state, sizeof(input_gamepad_state),
-            &bytes_written, NULL);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0x46b814, %%edx\n\t"
+      "pushl $0\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x28\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "call *%[c1d14b6]\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d14b6] "m"(bce590_c1d14b6)
+      : "memory");
 }
+#else
+#error "input_recording_write_packet: clang naked draft required"
+#endif
+
 
 /* input_open_state_file (0xce5c0)
  * Check for sentinel files to select input state recording/playback mode,

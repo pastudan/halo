@@ -2855,25 +2855,41 @@ void cluster_partition_dispose(void *partition __attribute__((unused)))
 #endif
 
 
-/* Null a cluster partition's three references (0x191630).
- * Zeroes the head-array pointer (partition[0]), the per-object cluster
- * references pool (partition[2]), then the per-cluster object references pool
- * (partition[1]) -- same [2]-before-[1] pool order as the clear/dispose
- * helpers. Each store is guarded by a test against 0 (if (f != 0) f = 0);
- * this conditional-store shape is preserved verbatim from the original.
- */
-void cluster_partition_null_references(int *partition)
+/* cluster_partition_null_references (0x191630) — XBE naked draft (batch 100). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void cluster_partition_null_references(int *partition __attribute__((unused)))
 {
-  if (partition[0] != 0) {
-    partition[0] = 0;
-  }
-  if (partition[2] != 0) {
-    partition[2] = 0;
-  }
-  if (partition[1] != 0) {
-    partition[1] = 0;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "je .Lcluster_partition_null_references_1\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      ".Lcluster_partition_null_references_1:\n\t"
+      "cmpl %%ecx, 0x8(%%eax)\n\t"
+      "je .Lcluster_partition_null_references_2\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      ".Lcluster_partition_null_references_2:\n\t"
+      "cmpl %%ecx, 0x4(%%eax)\n\t"
+      "je .Lcluster_partition_null_references_3\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      ".Lcluster_partition_null_references_3:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "cluster_partition_null_references: clang naked draft required"
+#endif
+
 
 /* cluster_partition_iter_next (0x191660) — XBE naked draft (batch 97). */
 #if defined(__clang__)

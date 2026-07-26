@@ -2880,15 +2880,38 @@ int FUN_0011c0f0(short *table __attribute__((unused)), void *key __attribute__((
  *   +0x0c void*       next_block
  * ======================================================================== */
 
-/* lra_cache_is_active — check if cache has active blocks (0x11c1b0). */
-int FUN_0011c1b0(int cache)
+/* FUN_0011c1b0 (0x11c1b0) — XBE naked draft (batch 100). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+int FUN_0011c1b0(int cache __attribute__((unused)))
 {
-  if (*(int *)(cache + 0x2c) != 0 &&
-      *(int *)(*(int *)(cache + 0x2c) + 0xc) != 0) {
-    return 1;
-  }
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x2c(%%eax), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0011c1b0_1\n\t"
+      "movl 0xc(%%eax), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LFUN_0011c1b0_1\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011c1b0_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0011c1b0: clang naked draft required"
+#endif
+
 
 /* lra_cache_default_lock — default lock callback (0x11c1d0). */
 void FUN_0011c1d0(int *ptr, int user_data)

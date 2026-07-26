@@ -1060,26 +1060,38 @@ void *hud_find_message_slot(int base, int param2, int tag_handle /* @<esi> */)
   return result;
 }
 
-/* hud_messaging_slot_compare (0xd50f0)
- * qsort comparator for hud message slots. Sort order:
- * primary: display timer (int at +0), ascending (oldest first);
- * secondary: int field at +0x84;
- * tertiary: byte priority field at +0x83.
- * Confirmed: three-level comparison via Ghidra decompile. */
-int hud_messaging_slot_compare(int *param_1, int *param_2)
-{
-  int diff;
+/* hud_messaging_slot_compare (0xd50f0) — XBE naked draft (batch 100). */
+#if defined(__clang__)
 
-  diff = *param_2 - *param_1;
-  if (diff == 0) {
-    diff = param_2[0x21] - param_1[0x21];
-    if (diff == 0) {
-      diff = (int)(unsigned char)((char *)param_2 + 0x83)[0] -
-             (int)(unsigned char)((char *)param_1 + 0x83)[0];
-    }
-  }
-  return diff;
+
+__attribute__((naked, noinline))
+int hud_messaging_slot_compare(int *param_1 __attribute__((unused)), int *param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "subl (%%edx), %%eax\n\t"
+      "jne .Lhud_messaging_slot_compare_1\n\t"
+      "movl 0x84(%%ecx), %%eax\n\t"
+      "subl 0x84(%%edx), %%eax\n\t"
+      "jne .Lhud_messaging_slot_compare_1\n\t"
+      "movzbl 0x83(%%edx), %%edx\n\t"
+      "movzbl 0x83(%%ecx), %%eax\n\t"
+      "subl %%edx, %%eax\n\t"
+      ".Lhud_messaging_slot_compare_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "hud_messaging_slot_compare: clang naked draft required"
+#endif
+
 
 /* Clear all scripted HUD message slots across all 4 players x 4 slots. */
 _BYTE *scripted_hud_messages_clear(void)

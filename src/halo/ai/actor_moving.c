@@ -1,16 +1,35 @@
 #include "x87_math.h"
 
-/* 0x2a3a0 — Reset actor path/movement state. Clears the path-active flag,
- * sets is_moving to 1, and zeroes the path step counter. */
-void FUN_0002a3a0(int actor_handle)
-{
-  char *actor;
+/* FUN_0002a3a0 (0x2a3a0) — XBE naked draft (batch 100). */
+#if defined(__clang__)
+static void *(*const b2a3a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  *(char *)(actor + 0x4a8) = 0;
-  *(char *)(actor + 0x484) = 1;
-  *(int *)(actor + 0x4a0) = 0;
+__attribute__((naked, noinline))
+void FUN_0002a3a0(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movb %%cl, 0x4a8(%%eax)\n\t"
+      "movb $1, 0x484(%%eax)\n\t"
+      "movl %%ecx, 0x4a0(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2a3a0_dget)
+      : "memory");
 }
+#else
+#error "FUN_0002a3a0: clang naked draft required"
+#endif
+
 
 /* actor_path_input_new (0x2a470) — XBE naked draft (batch 89). */
 #if defined(__clang__)
