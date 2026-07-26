@@ -17891,7 +17891,7 @@
         {
           "addr": "0xb6e10",
           "decl": "char limit2d(float *vec, float max_len);",
-          "ported": false,
+          "ported": true,
           "name": "limit2d"
         },
         {

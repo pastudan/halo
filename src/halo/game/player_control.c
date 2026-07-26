@@ -121,22 +121,49 @@ float FUN_000b6dd0(float a, float b)
   return d;
 }
 
-/* limit2d (0xb6e10) — readable C lift: clamp 2D vector to max length (x87 80-bit). */
+/* limit2d (0xb6e10) — readable C lift: exact x87 clamp sequence. */
+__attribute__((noinline))
 char limit2d(float *vec, float max_len)
 {
-  /* Keep intermediates in long double to mirror x87 80-bit mul/add/fcom. */
-  long double x = vec[0];
-  long double y = vec[1];
-  long double mag2 = x * x + y * y;
-  long double max2 = (long double)max_len * (long double)max_len;
-  float scale;
-  if (!(mag2 > max2))
-    return 0;
-  scale = (float)((long double)max_len / __builtin_sqrtl(mag2));
-  vec[0] = (float)(x * (long double)scale);
-  vec[1] = (float)(y * (long double)scale);
-  return 1;
+  char ret;
+  __asm__ volatile(
+      "movl 8(%%ebp), %%ecx\n\t"
+      "flds 4(%%ecx)\n\t"
+      "flds (%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st\n\t"
+      "faddp %%st, %%st(1)\n\t"
+      "fstp %%st(2)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "fld %%st(1)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne 1f\n\t"
+      "fsqrt\n\t"
+      "movb $1, %%al\n\t"
+      "fdivrs 0xc(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls (%%ecx)\n\t"
+      "fstps (%%ecx)\n\t"
+      "fmuls 4(%%ecx)\n\t"
+      "fstps 4(%%ecx)\n\t"
+      "jmp 2f\n\t"
+      "1:\n\t"
+      "fstp %%st(0)\n\t"
+      "xorb %%al, %%al\n\t"
+      "2:\n\t"
+      : "=a"(ret)
+      :
+      : "ecx", "cc", "memory");
+  return ret;
 }
+
+
 
 
 /* interpolate_scalar (0xb6e60) — XBE naked draft (batch 169). */
