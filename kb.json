@@ -34963,7 +34963,7 @@
         {
           "addr": "0x4b7a0",
           "decl": "void FUN_0004b7a0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x4b810",
