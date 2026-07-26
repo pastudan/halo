@@ -1442,7 +1442,7 @@
           "addr": "0x1d90e0",
           "decl": "void FUN_001d90e0(void);",
           "note": "MSVC C runtime intrinsic _chkstk (stack probe for large frames); compiler-emitted, not a game function. Grouped under LIBCMT:sprintf.obj only by delinker COMDAT adjacency to crt_sprintf. LIBCMT compiler-runtime; never call from C (see src/xdk_rt.c). Attribution corrected per ghidra-groom Next-2 2026-07-10.",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9148",
