@@ -5205,8 +5205,8 @@
         },
         {
           "addr": "0xa55e0",
-          "decl": "void FUN_000a55e0(void);",
-          "ported": false,
+          "decl": "float FUN_000a55e0(float a, float b, float c, float d);",
+          "ported": true,
           "name": "FUN_000a55e0"
         },
         {
