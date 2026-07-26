@@ -18345,7 +18345,7 @@
         {
           "addr": "0xe0b50",
           "decl": "char player_ui_autolevel_enabled(int16_t controller_index);",
-          "ported": false,
+          "ported": true,
           "name": "player_ui_autolevel_enabled"
         },
         {
