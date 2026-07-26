@@ -34268,8 +34268,8 @@
         },
         {
           "addr": "0x31440",
-          "decl": "void actor_berserk(int actor_handle, int berserk_flag);",
-          "ported": false
+          "decl": "void actor_berserk(int actor_handle, char enable);",
+          "ported": true
         },
         {
           "addr": "0x314f0",

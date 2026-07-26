@@ -3092,83 +3092,45 @@ void FUN_00030f50(void)
 #endif
 
 
-/* actor_berserk (0x31440) — XBE naked draft (batch 237). */
-#if defined(__clang__)
-static void *(*const b31440_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b31440_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void actor_berserk(int actor_handle __attribute__((unused)), int berserk_flag __attribute__((unused)))
+/* actor_berserk (0x31440) — readable C lift. */
+void actor_berserk(int actor_handle, char enable)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xc(%%ebp), %%bl\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x378(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpb %%al, %%bl\n\t"
-      "je .Lactor_berserk_3\n\t"
-      "movb 0x6(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb %%bl, 0x378(%%esi)\n\t"
-      "movb $0, 0x379(%%esi)\n\t"
-      "je .Lactor_berserk_4\n\t"
-      "movl 0x24(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_berserk_2\n\t"
-      ".Lactor_berserk_1:\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "orb $0x80, 0xb6(%%eax)\n\t"
-      "movl 0x1ac(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lactor_berserk_1\n\t"
-      ".Lactor_berserk_2:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lactor_berserk_3\n\t"
-      "movb $1, 0x375(%%esi)\n\t"
-      ".Lactor_berserk_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_berserk_4:\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "pushl $3\n\t"
-      "pushl %%edx\n\t"
-      "call *%[get]\n\t"
-      "movl 0x1b4(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lactor_berserk_5\n\t"
-      "orl $0x80, %%ecx\n\t"
-      "movl %%ecx, 0x1b4(%%eax)\n\t"
-      "jmp .Lactor_berserk_2\n\t"
-      ".Lactor_berserk_5:\n\t"
-      "andl $0xffffff7f, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0x1b4(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b31440_dget), [get] "m"(b31440_get)
-      : "memory");
-}
-#else
-#error "actor_berserk: clang naked draft required"
-#endif
+  char *actor;
+  char *obj;
+  char *child;
+  int next;
+  unsigned int flags;
 
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (enable == actor[0x378]) {
+    return;
+  }
+
+  actor[0x378] = enable;
+  actor[0x379] = 0;
+
+  if (actor[6] == 0) {
+    obj = (char *)object_get_and_verify_type(*(int *)(actor + 0x18), 3);
+    flags = *(unsigned int *)(obj + 0x1b4);
+    if (enable) {
+      *(unsigned int *)(obj + 0x1b4) = flags | 0x80u;
+    } else {
+      *(unsigned int *)(obj + 0x1b4) = flags & ~0x80u;
+      return;
+    }
+  } else {
+    next = *(int *)(actor + 0x24);
+    while (next != -1) {
+      child = (char *)object_get_and_verify_type(next, 3);
+      child[0xb6] |= (char)0x80;
+      next = *(int *)(child + 0x1ac);
+    }
+  }
+
+  if (enable) {
+    actor[0x375] = 1;
+  }
+}
 
 extern char *actor_combat_get_firing_variant_definition(int actor_handle);
 extern bool actor_has_ranged_weapon(int actor_handle);
