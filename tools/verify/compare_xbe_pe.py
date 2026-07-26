@@ -695,6 +695,17 @@ def main() -> int:
         ("unit_scripting_enter_vehicle", 0x1b32d0, 0x1b33f8),
         ("FUN_001a2160", 0x1a2160, 0x1a228a),
         ("objects_reconnect_to_structure_bsp", 0x1417c0, 0x1418fa),
+        # gameplay wave 60 (2026-07-26)
+        ("find_objects_from_point_vector", 0x13f120, 0x13f378),
+        ("FUN_00135210", 0x135210, 0x1353a1),
+        ("FUN_001a0680", 0x1a0680, 0x1a07b1),
+        ("FUN_001a2290", 0x1a2290, 0x1a243d),
+        ("FUN_001b04b0", 0x1b04b0, 0x1b0629),
+        ("FUN_000ae110", 0xae110, 0xae247),
+        ("FUN_001a8b20", 0x1a8b20, 0x1a8ca0),
+        ("FUN_001a9f20", 0x1a9f20, 0x1aa071),
+        ("FUN_00136150", 0x136150, 0x1362c4),
+        ("FUN_001a1a10", 0x1a1a10, 0x1a1b8b),
     ]
 
     xbe = Xbe.from_file(args.xbe)
