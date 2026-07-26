@@ -15146,5 +15146,110 @@
     "object": "message_header.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24000",
+    "name": "FUN_00024000",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24060",
+    "name": "FUN_00024060",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24130",
+    "name": "FUN_00024130",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24370",
+    "name": "FUN_00024370",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24450",
+    "name": "FUN_00024450",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x245d0",
+    "name": "post_evaluator_hide",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x246b0",
+    "name": "FUN_000246b0",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24770",
+    "name": "FUN_00024770",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24850",
+    "name": "FUN_00024850",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24890",
+    "name": "FUN_00024890",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24900",
+    "name": "FUN_00024900",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24950",
+    "name": "FUN_00024950",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24a60",
+    "name": "actor_get_firing_position_group",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24b80",
+    "name": "actor_clear_discarded_firing_positions",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x24be0",
+    "name": "FUN_00024be0",
+    "object": "actor_firing_position.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
