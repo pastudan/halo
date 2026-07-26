@@ -3,7 +3,7 @@
 void FUN_00093780(int a, int *cursor, int c);
 void FUN_00097080(int object, void *ctrl_block);
 void FUN_00097040(int object, float value);
-void control_toggle(void);
+void control_toggle(int object);
 
 void FUN_00094020(int *out, int *cursor_ptr, int a, int c)
 {
@@ -175,7 +175,7 @@ void FUN_000958f0(int object)
   char *tag = (char *)tag_get(*(int *)dev, 0x6374726c);
 
   if (*(int16_t *)(tag + 0x292) == 0)
-    control_toggle();
+    control_toggle(object);
 }
 
 void FUN_00095930(int object)
@@ -184,7 +184,7 @@ void FUN_00095930(int object)
   char *tag = (char *)tag_get(*(int *)dev, 0x6374726c);
 
   if (*(int16_t *)(tag + 0x292) == 1)
-    control_toggle();
+    control_toggle(object);
 }
 
 void FUN_000959b0(int object, void *ctrl)
