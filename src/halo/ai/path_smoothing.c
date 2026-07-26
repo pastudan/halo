@@ -314,7 +314,488 @@ int FUN_00063970(float *a, float *b, float lo, float hi)
     *b = t_lo;
   return (*a > *b) ? 1 : 0;
 }
-/* --- path_smoothing.obj batch drafts (2026-07-26) --- */
+/* --- path_smoothing.obj hand ports (2026-07-26) --- */
+
+static float path_dot2d(const float *a, const float *b)
+{
+  return a[0] * b[0] + a[1] * b[1];
+}
+
+static void path_normalize2d(float *v)
+{
+  float len_sq;
+
+  len_sq = v[0] * v[0] + v[1] * v[1];
+  if (fabs(len_sq) >= *(double *)0x2533d0) {
+    float inv = 1.0f / sqrtf(len_sq);
+    v[0] *= inv;
+    v[1] *= inv;
+  }
+}
+
+static char path_surface_breakable_is_blocking(void *bsp_block, int surf_index,
+                                               unsigned int *breakable_bitmap,
+                                               char path_surface_flag)
+{
+  char *coll_surface;
+  unsigned int word;
+
+  if (path_surface_flag != 0)
+    return 0;
+  coll_surface = (char *)tag_block_get_element((char *)bsp_block + 0x3c,
+                                               surf_index, 0xc);
+  if ((coll_surface[8] & 8) == 0) {
+    display_assert("TEST_FLAG(collision_surface->flags, "
+                   "_collision_surface_breakable_bit)",
+                   "c:\\halo\\SOURCE\\ai\\path_smoothing.c", 0x1e2, 1);
+    system_exit(-1);
+  }
+  word = (unsigned char)coll_surface[9];
+  return (breakable_bitmap[word >> 5] & (1u << (word & 0x1f))) != 0;
+}
+
+/* 0x62ba0 — offset a 2D point along a segment by scale, pick the best side. */
+void FUN_00062ba0(float *point, float *anchor, float scale, char pick_alt,
+                  float *out_point)
+{
+  float delta[2];
+  float len_sq;
+  float inv_len;
+  float along;
+  float perp[2];
+  float cand_a[2];
+  float cand_b[2];
+  int use_alt;
+
+  delta[0] = point[0] - anchor[0];
+  delta[1] = point[1] - anchor[1];
+  len_sq = delta[0] * delta[0] + delta[1] * delta[1];
+  if (*(float *)0x2533c0 < len_sq) {
+    inv_len = scale / sqrtf(len_sq);
+    along = scale * scale - inv_len * inv_len;
+    if (*(float *)0x2533c0 < along) {
+      inv_len = scale / sqrtf(len_sq);
+      cand_a[0] = delta[0] * inv_len + anchor[0];
+      cand_a[1] = delta[1] * inv_len + anchor[1];
+      cand_b[0] = anchor[0] - delta[0] * inv_len;
+      cand_b[1] = anchor[1] - delta[1] * inv_len;
+      use_alt = pick_alt;
+      if (path_dot2d(cand_a, point) < path_dot2d(cand_b, point))
+        use_alt = !use_alt;
+      out_point[0] = use_alt ? cand_b[0] : cand_a[0];
+      out_point[1] = use_alt ? cand_b[1] : cand_a[1];
+      return;
+    }
+  }
+  perp[0] = -delta[1];
+  perp[1] = delta[0];
+  if (path_dot2d(perp, perp) < *(float *)0x2533c0) {
+    out_point[0] = *(float *)0x31fc10;
+    out_point[1] = *(((float *)0x31fc10) + 1);
+    return;
+  }
+  inv_len = scale / sqrtf(perp[0] * perp[0] + perp[1] * perp[1]);
+  out_point[0] = perp[0] * inv_len + anchor[0];
+  out_point[1] = perp[1] * inv_len + anchor[1];
+}
+
+/* 0x62cf0 — blend two offset points toward a corner. */
+void FUN_00062cf0(float *corner, float *packed_b, float *a, float scale,
+                  float *out)
+{
+  float cross;
+  float da0;
+  float da1;
+  float db0;
+  float db1;
+  float len_a;
+  float inv;
+
+  da0 = packed_b[0] - corner[0];
+  da1 = packed_b[1] - corner[1];
+  db0 = packed_b[2] - corner[0];
+  db1 = packed_b[3] - corner[1];
+  cross = da0 * db1 - da1 * db0;
+  if (fabs(cross) >= *(double *)0x2533d0) {
+    inv = (scale * scale) / cross;
+    out[0] = corner[0] + (da0 - db0) * inv;
+    out[1] = corner[1] + (da1 - db1) * inv;
+    da0 = out[0] - corner[0];
+    da1 = out[1] - corner[1];
+    if (da0 * da0 + da1 * da1 > *(float *)0x2533d8 * scale * scale)
+      return;
+  }
+  da0 = a[0] - corner[0];
+  da1 = a[1] - corner[1];
+  len_a = sqrtf(da0 * da0 + da1 * da1);
+  if (fabs(len_a) >= *(double *)0x2533d0) {
+    inv = scale / len_a;
+    out[0] = da0 * inv + corner[0];
+    out[1] = da1 * inv + corner[1];
+    if (*(float *)0x2533c0 < len_a)
+      return;
+  }
+  out[0] = *(float *)0x31fc10;
+  out[1] = *(((float *)0x31fc10) + 1);
+}
+
+/* 0x62e10 — pick the better turning point between two candidates. */
+char FUN_00062e10(float *work, float *prev_step, float *next_step,
+                  float *turn_a, float *turn_b, float *out)
+{
+  float v_wp[2];
+  float v_np[2];
+  float v_nx[2];
+  float v_wa[2];
+  float v_na[2];
+  float v_nb[2];
+  float sum_a;
+  float sum_b;
+
+  v_wp[0] = work[0] - prev_step[0];
+  v_wp[1] = work[1] - prev_step[1];
+  path_normalize2d(v_wp);
+  v_np[0] = next_step[0] - prev_step[0];
+  v_np[1] = next_step[1] - prev_step[1];
+  path_normalize2d(v_np);
+  v_nx[0] = next_step[0] - prev_step[0];
+  v_nx[1] = next_step[1] - prev_step[1];
+  path_normalize2d(v_nx);
+  v_wa[0] = work[0] - turn_a[0];
+  v_wa[1] = work[1] - turn_a[1];
+  path_normalize2d(v_wa);
+  v_na[0] = next_step[0] - turn_a[0];
+  v_na[1] = next_step[1] - turn_a[1];
+  path_normalize2d(v_na);
+  v_nb[0] = next_step[0] - turn_b[0];
+  v_nb[1] = next_step[1] - turn_b[1];
+  path_normalize2d(v_nb);
+
+  sum_a = path_dot2d(v_nx, v_np) + path_dot2d(v_wp, v_np);
+  sum_b = path_dot2d(v_nb, v_na) + path_dot2d(v_wa, v_na);
+  if (-sum_b > sum_a) {
+    out[0] = turn_a[0];
+    out[1] = turn_a[1];
+    return 1;
+  }
+  out[0] = turn_b[0];
+  out[1] = turn_b[1];
+  return 0;
+}
+
+/* 0x63030 — walk adjacent structure surfaces to find a turning point. */
+char find_turning_point(void *scenario, float *point, float scale,
+                        int *surface_index, unsigned char expected_side,
+                        unsigned char path_surface_flag, float *out_point)
+{
+  void *bsp_block;
+  unsigned int *breakable_bitmap;
+  char *skip_flags;
+  float neg_scale;
+  float dir[2];
+  float edge0[2];
+  float edge1[2];
+  int start_surf;
+  int cur_surf;
+  int prev_surf;
+  int next_surf;
+  int *surf_def;
+  char *edges_base;
+  int edge_slot;
+  char surf_side;
+  char blocked;
+  char cl;
+  int coll_idx;
+  char *coll;
+
+  bsp_block = tag_block_get_element((char *)scenario + 0xb0, 0, 0x60);
+  skip_flags = *(char **)((char *)scenario + 0x1e8);
+  breakable_bitmap = (unsigned int *)breakable_surfaces_get_bsp_surface_data();
+  edges_base = (char *)bsp_block + 0x54;
+
+  if (expected_side != 0 && expected_side != 1) {
+    display_assert("expected_side==0 || expected_side==1",
+                   "c:\\halo\\SOURCE\\ai\\path_smoothing.c", 0x1ff, 1);
+    system_exit(-1);
+  }
+
+  neg_scale = -scale;
+  start_surf = *surface_index;
+  cur_surf = start_surf;
+  prev_surf = -1;
+
+  for (;;) {
+    float *edge_a;
+    float *edge_b;
+    float test_back[2];
+
+    surf_def = (int *)tag_block_get_element((char *)bsp_block + 0x48, cur_surf,
+                                            0x18);
+    edge_a = (float *)tag_block_get_element(edges_base, surf_def[4], 0x10);
+    edge_b = (float *)tag_block_get_element(edges_base, surf_def[5], 0x10);
+    dir[0] = edge_b[0] - edge_a[0];
+    dir[1] = edge_b[1] - edge_a[1];
+    path_normalize2d(dir);
+    test_back[0] = neg_scale * dir[0] + point[0];
+    test_back[1] = neg_scale * dir[1] + point[1];
+
+    next_surf = -1;
+    cl = 0;
+
+    for (;;) {
+      if (next_surf == start_surf)
+        goto turning_success;
+      if (next_surf == prev_surf)
+        return 0;
+      if (next_surf != -1) {
+        prev_surf = cur_surf;
+        cur_surf = next_surf;
+        break;
+      }
+
+      edge_slot = (cur_surf == surf_def[1]) ? 1 : 0;
+      coll_idx = surf_def[4 + edge_slot];
+      coll = (char *)tag_block_get_element((char *)bsp_block + 0x3c, coll_idx,
+                                           0xc);
+      surf_side = (char)((coll[0] >> 6) & 1);
+      blocked = 0;
+      if (path_surface_flag == 0 && surf_side != 0 && skip_flags[coll_idx] < 0)
+        blocked = path_surface_breakable_is_blocking(bsp_block, coll_idx,
+                                                     breakable_bitmap,
+                                                     path_surface_flag);
+      if (blocked == 0 && surf_side == (char)expected_side) {
+        next_surf = surf_def[edge_slot];
+        if (next_surf == start_surf)
+          goto turning_success;
+        prev_surf = cur_surf;
+        cur_surf = next_surf;
+        break;
+      }
+
+      edge0[0] = edge_a[0] - test_back[0];
+      edge0[1] = edge_a[1] - test_back[1];
+      if (*(float *)0x2533c0 <= edge0[0] * dir[1] - edge0[1] * dir[0])
+        cl = 1;
+      edge1[0] = edge_a[0] - (dir[0] * scale + point[0]);
+      edge1[1] = edge_a[1] - (dir[1] * scale + point[1]);
+      if (*(float *)0x2533c0 <= edge1[0] * (-dir[1]) - edge1[1] * (-dir[0]))
+        cl = 1;
+      if (prev_surf == -1)
+        cl = 1;
+
+      next_surf = surf_def[1 + ((cl != (char)expected_side) ? 0 : -1)];
+      if (cl == (char)expected_side) {
+        *surface_index = next_surf;
+        prev_surf = cur_surf;
+        cur_surf = next_surf;
+        break;
+      }
+
+      surf_def = (int *)tag_block_get_element((char *)bsp_block + 0x48,
+                                              next_surf, 0x18);
+      if (surf_def[0] != cur_surf && surf_def[1] != cur_surf) {
+        display_assert("adjacent_surface->surface_index==current_surface || "
+                       "adjacent_surface->surface_index==next_surface",
+                       "c:\\halo\\SOURCE\\ai\\path_smoothing.c", 0x277, 1);
+        system_exit(-1);
+      }
+      cur_surf = next_surf;
+    }
+  }
+
+turning_success:
+  {
+    float *vert = (float *)tag_block_get_element(edges_base, cur_surf, 0x10);
+    out_point[0] = vert[0];
+    out_point[1] = vert[1];
+    *surface_index = cur_surf;
+    return 1;
+  }
+}
+
+/* 0x633b0 — smooth path steps around structure corners. */
+char FUN_000633b0(unsigned int param_1, int param_2, void *param_3,
+                  int *param_4, void *param_5, char *param_6)
+{
+  char *path;
+  int16_t input_count;
+  char *input_steps;
+  int16_t *out_count;
+  char *out_steps;
+  char *all_nodes_flag;
+  void *scenario;
+  int16_t segment_index;
+  int16_t out_index;
+  int16_t scan_index;
+  char success;
+  char visible_run;
+  int16_t visible_start;
+  float ref_point[3];
+  float turn_a[2];
+  float turn_b[2];
+  float work[2];
+  float corner[2];
+  float offset_a[2];
+  float offset_b[2];
+  float packed_b[4];
+  float smooth[2];
+  float step_point[3];
+  float proj_in[3];
+  int surface_index;
+  char pick_alt;
+  char turn_ok_a;
+  char turn_ok_b;
+  char geom_ok;
+  void *bsp_elem;
+  unsigned int vis_scratch[0x78 / 4];
+  char *out_slot;
+
+  path = (char *)(uintptr_t)param_1;
+  input_count = (int16_t)param_2;
+  input_steps = (char *)param_3;
+  out_count = (int16_t *)param_4;
+  out_steps = (char *)param_5;
+  all_nodes_flag = param_6;
+
+  if (input_count <= 0) {
+    display_assert("input_step_count>0", "c:\\halo\\SOURCE\\ai\\path_smoothing.c",
+                   0x21, 1);
+    system_exit(-1);
+  }
+  if (input_steps == NULL) {
+    display_assert("input_steps", "c:\\halo\\SOURCE\\ai\\path_smoothing.c", 0x22,
+                   1);
+    system_exit(-1);
+  }
+  if (out_count == NULL) {
+    display_assert("output_step_count",
+                   "c:\\halo\\SOURCE\\ai\\path_smoothing.c", 0x23, 1);
+    system_exit(-1);
+  }
+  if (out_steps == NULL) {
+    display_assert("output_steps", "c:\\halo\\SOURCE\\ai\\path_smoothing.c",
+                   0x24, 1);
+    system_exit(-1);
+  }
+  if (all_nodes_flag == NULL) {
+    display_assert("all_nodes", "c:\\halo\\SOURCE\\ai\\path_smoothing.c", 0x25,
+                   1);
+    system_exit(-1);
+  }
+
+  if (input_count == 1) {
+    *out_count = 1;
+    csmemcpy(out_steps, input_steps, 0x10);
+    return 1;
+  }
+
+  scenario = *(void **)(path + 0x64);
+  ref_point[0] = *(float *)(path + 0x14);
+  ref_point[1] = *(float *)(path + 0x18);
+  ref_point[2] = *(float *)(path + 0x20);
+  segment_index = 0;
+  out_index = 0;
+  success = 0;
+
+  while (segment_index < input_count) {
+    visible_run = 0;
+    visible_start = -1;
+    scan_index = segment_index;
+
+    while (scan_index < input_count) {
+      char *step = input_steps + scan_index * 0x10;
+      char vis;
+
+      vis = FUN_00063e90((int)scenario, *(unsigned char *)(path + 4), ref_point,
+                         -1, (float *)(step + 4), 1, 0.2f, 0, vis_scratch);
+      if (vis) {
+        if (!visible_run) {
+          visible_start = scan_index;
+          visible_run = 1;
+        }
+      } else if (visible_run) {
+        visible_run = 0;
+        visible_start = -1;
+      }
+      scan_index++;
+    }
+
+    if (!visible_run || visible_start == -1) {
+      segment_index = input_count;
+      break;
+    }
+
+    surface_index = *(int *)(input_steps + visible_start * 0x10);
+    turn_ok_a =
+        find_turning_point(scenario, ref_point, 0.2f, &surface_index, 1,
+                           *(unsigned char *)(path + 4), turn_a);
+    turn_ok_b =
+        find_turning_point(scenario, ref_point, 0.2f, &surface_index, 0,
+                           *(unsigned char *)(path + 4), turn_b);
+    if (!turn_ok_a || !turn_ok_b)
+      break;
+
+    work[0] = ref_point[0];
+    work[1] = ref_point[1];
+    geom_ok = FUN_00062e10(
+        work, (float *)(input_steps + visible_start * 0x10 + 4),
+        (float *)(input_steps + visible_start * 0x10 - 0xc), turn_a, turn_b,
+        corner);
+    pick_alt = geom_ok ? 0 : 1;
+    FUN_00062ba0((float *)(input_steps + visible_start * 0x10 + 4), turn_a,
+                 0.35f, pick_alt, offset_a);
+    FUN_00062ba0((float *)(input_steps + visible_start * 0x10 + 4), turn_b,
+                 0.35f, pick_alt, offset_b);
+    packed_b[0] = offset_a[0];
+    packed_b[1] = offset_a[1];
+    packed_b[2] = offset_b[0];
+    packed_b[3] = offset_b[1];
+    FUN_00062cf0(corner, packed_b, offset_a, 0.35f, smooth);
+
+    ref_point[0] = smooth[0];
+    ref_point[1] = smooth[1];
+    proj_in[0] = smooth[0];
+    proj_in[1] = smooth[1];
+    proj_in[2] = ref_point[2];
+    FUN_00063e30();
+
+    if (out_index >= 4)
+      break;
+
+    out_slot = out_steps + out_index * 0x10;
+    step_point[0] = smooth[0];
+    step_point[1] = smooth[1];
+    step_point[2] = ref_point[2];
+    bsp_elem = tag_block_get_element((char *)scenario + 0xb0, 0, 0x60);
+    collision_surface_project_point2d((int)bsp_elem, surface_index, 2, 1,
+                                      step_point, (float *)(out_slot + 4));
+    *(int *)out_slot = surface_index;
+    out_index++;
+    segment_index = visible_start;
+  }
+
+  if (out_index < input_count) {
+    int16_t copy_index;
+    char *tail_in;
+    char *tail_out;
+
+    tail_in = input_steps + (input_count - 1) * 0x10;
+    copy_index = out_index;
+    while (copy_index < input_count) {
+      tail_out = out_steps + copy_index * 0x10;
+      csmemcpy(tail_out, tail_in - (input_count - 1 - copy_index) * 0x10,
+               0x10);
+      copy_index++;
+    }
+    out_index = input_count;
+    success = 1;
+  }
+
+  *out_count = out_index;
+  if (!success)
+    *all_nodes_flag = 0;
+  return success;
+}
 
 /* 0x62b20 */
 void FUN_00062b20(void)
@@ -331,150 +812,6 @@ void FUN_00062b20(void)
 
   (void)eax;
   (void)ebx;
-}
-
-/* 0x62ba0 */
-void FUN_00062ba0(void)
-{
-  int eax = 0;
-
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x62c9a */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  magnitude3d((void *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-
-  (void)eax;
-}
-
-/* 0x62cf0 */
-void FUN_00062cf0(void)
-{
-  /* relift: no calls detected — manual review */
-  (void)0;
-}
-
-/* 0x62e10 */
-void FUN_00062e10(void)
-{
-  FUN_0010c3c0();
-  FUN_0010c3c0();
-  FUN_0010c3c0();
-  FUN_0010c3c0();
-}
-
-/* 0x63030 */
-void find_turning_point(void)
-{
-  int eax = 0;
-  int ebx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-  int local_4 = 0;
-  int local_8 = 0;
-
-  tag_block_get_element((void *)((char *)eax + 0xb0), 0, 96);
-  breakable_surfaces_get_bsp_surface_data();
-  /* test (char)ebx, (char)ebx -> je 0x63098 */
-  display_assert((char *)0x0025efe0, (char *)0x0025ef48, 511, 1);
-  system_exit(eax);
-  tag_block_get_element((void *)((char *)eax + 0x48), 0, 24);
-  /* test dl, dl -> jne 0x6313a */
-  /* test (char)ebx, (char)ebx -> je 0x6313a */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* test (char)eax, 8 -> jne 0x6311e */
-  display_assert((char *)0x0025ef00, (char *)0x0025ef48, 482, 1);
-  system_exit(-1);
-  tag_block_get_element((void *)(uintptr_t)local_8, 0, 16);
-  tag_block_get_element((void *)(uintptr_t)local_8, 0, 16);
-  /* relift: relift: fcomp qword ptr [0x2533d0] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* cmp eax, edi -> jne 0x63237 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* cmp eax, -1 -> jne 0x6325e */
-  /* cmp edi, eax -> je 0x633a7 */
-  /* cmp eax, -1 -> jne 0x6328e */
-  /* relift: cmp byte ptr [ebp + 0x18], 0 -> jne 0x6331a */
-  /* test (char)eax, (char)eax -> je 0x6331a */
-  tag_block_get_element((void *)(uintptr_t)local_4, 0, 0);
-  /* test (char)eax, 8 -> jne 0x632fb */
-  display_assert((char *)0x0025ef00, (char *)0x0025ef48, 482, 1);
-  system_exit(-1);
-  /* relift: cmp (char)eax, byte ptr [ebp + 0x14] -> je 0x63377 */
-  tag_block_get_element((void *)(uintptr_t)local_4, 0, 0);
-  /* cmp ebx, eax -> je 0x633a7 */
-  /* relift: cmp dword ptr [esi], edi -> je 0x63294 */
-  /* relift: cmp dword ptr [esi + 4], edi -> je 0x63294 */
-  display_assert((char *)0x0025ef70, (char *)0x0025ef48, 631, 1);
-  system_exit(-1);
-  tag_block_get_element((void *)(uintptr_t)local_8, local_4, 16);
-
-  (void)eax;
-  (void)ebx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
-  (void)local_4;
-  (void)local_8;
-}
-
-/* 0x633b0 */
-void FUN_000633b0(unsigned int param_1, int param_2, void *param_3, int *param_4, void *param_5, char *param_6)
-{
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-  int local_14 = 0;
-  int local_18 = 0;
-
-  /* relift: cmp word ptr [ebp + 0xc], 0 -> jg 0x633da */
-  display_assert((char *)0x0025f048, (char *)0x0025ef48, 33, 1);
-  system_exit(-1);
-  /* test edi, edi -> jne 0x63401 */
-  display_assert((char *)0x0025f03c, (char *)0x0025ef48, 34, 1);
-  system_exit(-1);
-  /* test ebx, ebx -> jne 0x63425 */
-  display_assert((char *)0x0025f028, (char *)0x0025ef48, 35, 1);
-  system_exit(-1);
-  /* test esi, esi -> jne 0x63449 */
-  display_assert((char *)0x0025f018, (char *)0x0025ef48, 36, 1);
-  system_exit(-1);
-  /* test eax, eax -> jne 0x6346d */
-  display_assert((char *)0x0025f004, (char *)0x0025ef48, 37, 1);
-  system_exit(-1);
-  /* relift: cmp word ptr [ebp + 0xc], (int16_t)eax -> jle 0x636e7 */
-  FUN_00063e90(0, 0, (void *)0, local_18, (float *)(uintptr_t)local_14, 0, 0.0f, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x63509 */
-  /* test (char)ebx, (char)ebx -> jne 0x63515 */
-  /* test (char)ebx, (char)ebx -> je 0x63515 */
-  /* test (char)ebx, (char)ebx -> je 0x6368f */
-  /* cmp edi, -1 -> je 0x6368f */
-  find_turning_point();
-  find_turning_point();
-  /* test (char)eax, (char)eax -> je 0x636c9 */
-  /* test (char)ebx, (char)ebx -> je 0x636c9 */
-  FUN_00062e10();
-  FUN_00062ba0();
-  FUN_00062ba0();
-  FUN_00062cf0();
-  FUN_00063e30();
-  tag_block_get_element((void *)(uintptr_t)*(int *)((char *)param_1 + 0x64), 0, 0);
-  collision_surface_project_point2d(eax, 0, 0, 0, (float *)0, (float *)0);
-  /* test (char)eax, (char)eax -> jne 0x63700 */
-
-  (void)eax;
-  (void)ebx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
-  (void)local_14;
-  (void)local_18;
 }
 
 /* 0x639e0 */

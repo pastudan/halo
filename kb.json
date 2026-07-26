@@ -40328,27 +40328,27 @@
         },
         {
           "addr": "0x62ba0",
-          "decl": "void FUN_00062ba0(void);",
+          "decl": "void FUN_00062ba0(float *point, float *anchor, float scale, char pick_alt, float *out_point);",
           "ported": false
         },
         {
           "addr": "0x62cf0",
-          "decl": "void FUN_00062cf0(void);",
+          "decl": "void FUN_00062cf0(float *corner, float *packed_b, float *a, float scale, float *out);",
           "ported": false
         },
         {
           "addr": "0x62e10",
-          "decl": "void FUN_00062e10(void);",
+          "decl": "char FUN_00062e10(float *work, float *prev_step, float *next_step, float *turn_a, float *turn_b, float *out);",
           "ported": false
         },
         {
           "addr": "0x63030",
-          "decl": "void find_turning_point(void);",
+          "decl": "char find_turning_point(void *scenario, float *point, float scale, int *surface_index, unsigned char expected_side, unsigned char path_surface_flag, float *out_point);",
           "ported": false
         },
         {
           "addr": "0x633b0",
-          "decl": "void FUN_000633b0(unsigned int param_1, int param_2, void *param_3, int *param_4, void *param_5, char *param_6);",
+          "decl": "char FUN_000633b0(unsigned int param_1, int param_2, void *param_3, int *param_4, void *param_5, char *param_6);",
           "ported": false
         },
         {
@@ -40395,7 +40395,7 @@
         },
         {
           "addr": "0x61080",
-          "decl": "void FUN_00061080(void *structure_bsp, unsigned char path_surface_flag, float *step_data, int surface_hint, float *direction, void *obstacles, int16_t disc_index, unsigned char use_cost_delta, float max_cost, unsigned char skip_ray_march, float ray_t, void *out_result);",
+          "decl": "void FUN_00061080(void *structure_bsp, unsigned char path_surface_flag, void *obstacles, int16_t disc_index, int surface_hint, float max_cost, float ray_t, unsigned char skip_ray_march, unsigned char use_cost_delta, char check_extant, void *out_result, float *step_data, float *direction);",
           "ported": false
         },
         {

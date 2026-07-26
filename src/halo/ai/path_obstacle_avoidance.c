@@ -141,25 +141,115 @@ void FUN_00060ea0(void *avoidance_record, float *end_point, void *param_2, void 
   path_add_step(avoidance_record, end_point, link_index, 0, 0.0f, -1);
 }
 
-/* 0x61080 — cast a ray against structure BSP for one obstacle-disc direction. */
+/* 0x61080 — march structure rays and obstacle discs for one cone direction.
+ *
+ * Stack (cdecl): structure_bsp, path_surface_flag, obstacles, disc_index,
+ * surface_hint, max_cost, ray_t, skip_ray_march, use_cost_delta,
+ * check_extant, out_result.  step_data@EDI and direction@EBX are register
+ * args preserved from the path_add_steps call site.
+ *
+ * out_result: float cost @+0, int surface_index @+4, int disc_index @+8,
+ * int16_t @+0xc, int16_t @+0xe (disc hit writes -1 disc_index). */
 void FUN_00061080(void *structure_bsp, unsigned char path_surface_flag,
-                  float *step_data, int surface_hint, float *direction,
-                  void *obstacles, int16_t disc_index,
-                  unsigned char use_cost_delta, float max_cost,
-                  unsigned char skip_ray_march, float ray_t, void *out_result)
+                  void *obstacles, int16_t disc_index, int surface_hint,
+                  float max_cost, float ray_t, unsigned char skip_ray_march,
+                  unsigned char use_cost_delta, char check_extant,
+                  void *out_result, float *step_data, float *direction)
 {
-  (void)structure_bsp;
-  (void)path_surface_flag;
-  (void)step_data;
-  (void)surface_hint;
-  (void)direction;
-  (void)obstacles;
-  (void)disc_index;
-  (void)use_cost_delta;
-  (void)max_cost;
-  (void)skip_ray_march;
-  (void)ray_t;
-  (void)out_result;
+  int ray_hit[3];
+  float perp[2];
+  float pt_off[2];
+  float pt_neg[2];
+  char disc_buf[8];
+  char kept_hit;
+  int hit_surface;
+
+  *(float *)out_result = ray_t;
+  *(int *)((char *)out_result + 4) = -1;
+  *(int *)((char *)out_result + 8) = -1;
+  *(int16_t *)((char *)out_result + 0xc) = -1;
+  *(int16_t *)((char *)out_result + 0xe) = -1;
+
+  if (use_cost_delta)
+    *(float *)out_result = ray_t - max_cost;
+
+  if (!skip_ray_march) {
+    if (structure_test_ray2d(structure_bsp, path_surface_flag, step_data,
+                             surface_hint, direction, *(float *)out_result,
+                             ray_hit) &&
+        *(float *)out_result >= *(float *)ray_hit) {
+      *(float *)out_result = *(float *)ray_hit;
+      *(int *)((char *)out_result + 8) = ray_hit[2];
+    }
+
+    perpendicular2d(direction, perp);
+
+    pt_off[0] = perp[0] * max_cost + step_data[0];
+    pt_off[1] = perp[1] * max_cost + step_data[1];
+    if (structure_test_ray2d(structure_bsp, path_surface_flag, step_data,
+                             surface_hint, perp, *(float *)out_result,
+                             ray_hit) &&
+        *(float *)out_result >= *(float *)ray_hit) {
+      *(float *)out_result = *(float *)ray_hit;
+      *(int *)((char *)out_result + 8) = ray_hit[2];
+    }
+
+    hit_surface = ray_hit[1];
+    if (structure_test_ray2d(structure_bsp, path_surface_flag, pt_off,
+                             hit_surface, direction, *(float *)out_result,
+                             ray_hit) &&
+        *(float *)out_result >= *(float *)ray_hit) {
+      *(float *)out_result = *(float *)ray_hit;
+      *(int *)((char *)out_result + 8) = ray_hit[2];
+    }
+
+    pt_neg[0] = -perp[0] * max_cost + step_data[0];
+    pt_neg[1] = -perp[1] * max_cost + step_data[1];
+    if (structure_test_ray2d(structure_bsp, path_surface_flag, step_data,
+                             surface_hint, perp, *(float *)out_result,
+                             ray_hit) &&
+        *(float *)out_result >= *(float *)ray_hit) {
+      *(float *)out_result = *(float *)ray_hit;
+      *(int *)((char *)out_result + 8) = ray_hit[2];
+    }
+
+    hit_surface = ray_hit[1];
+    if (structure_test_ray2d(structure_bsp, path_surface_flag, pt_neg,
+                             hit_surface, direction, *(float *)out_result,
+                             ray_hit) &&
+        *(float *)out_result >= *(float *)ray_hit) {
+      *(float *)out_result = *(float *)ray_hit;
+      *(int *)((char *)out_result + 8) = ray_hit[2];
+    }
+  }
+
+  if (FUN_000624b0(obstacles, disc_index, step_data, direction, max_cost,
+                   *(float *)out_result, check_extant, disc_buf)) {
+    if (*(float *)out_result >= *(float *)disc_buf) {
+      *(float *)out_result = *(float *)disc_buf;
+      *(int *)((char *)out_result + 8) = -1;
+      *(int16_t *)((char *)out_result + 0xc) =
+          *(int16_t *)((char *)disc_buf + 4);
+      *(int16_t *)((char *)out_result + 0xe) =
+          *(int16_t *)((char *)disc_buf + 6);
+      kept_hit = 1;
+    } else {
+      kept_hit = 0;
+    }
+  } else {
+    kept_hit = 0;
+  }
+
+  if (*(int *)((char *)out_result + 8) == -1 &&
+      *(int16_t *)((char *)out_result + 0xc) == -1) {
+    *(float *)out_result = ray_t;
+    kept_hit = 0;
+  }
+
+  structure_test_ray2d(structure_bsp, path_surface_flag, step_data,
+                       surface_hint, direction, *(float *)out_result, ray_hit);
+  *(int *)((char *)out_result + 4) = ray_hit[1];
+  (void)kept_hit;
 }
 
 /* 0x61280 — flood obstacle discs from a seed and append avoidance steps. */
@@ -246,9 +336,10 @@ void path_add_steps(void *path, int16_t seed_disc_index, int16_t step_index)
     direction[1] = cone_b[1];
     for (direction_pass = 0; direction_pass < 2; direction_pass++) {
       FUN_00061080(*(void **)(path_rec + 0xc), *(unsigned char *)(path_rec + 4),
-                   (float *)step, 0, direction, obstacles, disc_index,
-                   *(unsigned char *)(path_rec + 0x2a), *(float *)path_rec * 2.0f,
-                   0, scalar + *(float *)path_rec, ray_result);
+                   obstacles, disc_index, *(int *)(step + 8), *(float *)path_rec,
+                   *(float *)path_rec * 2.0f + scalar, 0,
+                   *(unsigned char *)(path_rec + 0x2a), 0, ray_result,
+                   (float *)step, direction);
 
       disc_index = (int16_t)*(int32_t *)(ray_result + 2);
       result_surface = *(int16_t *)((char *)ray_result + 0xc);
