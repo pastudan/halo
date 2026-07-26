@@ -5626,5 +5626,250 @@
     "object": "encounters.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfad60",
+    "name": "weapon_place",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfaf50",
+    "name": "weapon_can_be_fired",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfafe0",
+    "name": "weapon_useful",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfb010",
+    "name": "weapon_compute_movement_penalty",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfb320",
+    "name": "FUN_000fb320",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfb510",
+    "name": "FUN_000fb510",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfb5a0",
+    "name": "FUN_000fb5a0",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfb690",
+    "name": "FUN_000fb690",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfb7d0",
+    "name": "FUN_000fb7d0",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfb880",
+    "name": "weapon_trigger_release_charge",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfb910",
+    "name": "FUN_000fb910",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfb990",
+    "name": "FUN_000fb990",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfba00",
+    "name": "FUN_000fba00",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfbcf0",
+    "name": "FUN_000fbcf0",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfbd10",
+    "name": "weapon_new",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfbea0",
+    "name": "weapon_delete",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfbf00",
+    "name": "weapon_export_function_values",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfc4b0",
+    "name": "weapon_owner_update",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfc550",
+    "name": "weapon_build_weapon_interface_state",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfc690",
+    "name": "weapon_reloading",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfc710",
+    "name": "weapon_rotate_zoom_level",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfc780",
+    "name": "weapon_get_zoom_magnification",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfc8e0",
+    "name": "weapon_get_field_of_view",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfc930",
+    "name": "weapon_prevents_melee_attack",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfcbd0",
+    "name": "FUN_000fcbd0",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfcc90",
+    "name": "FUN_000fcc90",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfcd10",
+    "name": "FUN_000fcd10",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfcdd0",
+    "name": "FUN_000fcdd0",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfce60",
+    "name": "FUN_000fce60",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfcec0",
+    "name": "FUN_000fcec0",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfd0b0",
+    "name": "FUN_000fd0b0",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfd150",
+    "name": "FUN_000fd150",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfd510",
+    "name": "weapon_stop_reload",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfd520",
+    "name": "FUN_000fd520",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xfd570",
+    "name": "FUN_000fd570",
+    "object": "weapons.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]
