@@ -15294,132 +15294,481 @@ LAB_0013d51f:
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-but-set-variable"
 #pragma clang diagnostic ignored "-Wunused-variable"
-/* 0x13f4b0 */
+/* objects_dump_memory (0x13f4b0) — XBE naked draft (batch 52). */
+#if defined(__clang__)
+static void (*const b13f4b0_chkstk)(void) = FUN_001d90e0;
+static void *(*const b13f4b0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b13f4b0_c1193f0)(data_t *data) = data_verify;
+static void * (*const b13f4b0_c13d730)(void *iter) = object_iterator_next;
+static void *(*const b13f4b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b13f4b0_c13f3b0)(int object_handle, void *stats) = object_add_to_dump;
+static void (*const b13f4b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b13f4b0_exitfn)(int) = system_exit;
+static void __cdecl (*const b13f4b0_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
+static void * (*const b13f4b0_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
+static void (*const b13f4b0_c13db60)(short *param_1) = FUN_0013db60;
+static int (*const b13f4b0_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
+static const char * (*const b13f4b0_c1ba1f0)(int tag_index) = tag_get_name;
+static void * (*const b13f4b0_c13c250)(int16_t param_1) = FUN_0013c250;
+static int (*const b13f4b0_c1d9dac)(void *stream) = crt_fclose;
+static void (*const b13f4b0_c136580)(void) = widgets_initialize_for_new_map;
+static void (*const b13f4b0_c135f90)(void) = FUN_00135f90;
+static void (*const b13f4b0_c13c2e0)(void) = FUN_0013c2e0;
+static void (*const b13f4b0_c1391e0)(void) = lights_initialize;
+static bool (*const b13f4b0_c977f0)(void) = game_in_editor;
+static data_t * (*const b13f4b0_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
+static void * (*const b13f4b0_c1bfe50)(const char *name, int pool_config) = game_state_memory_pool_new;
+static data_t * (*const b13f4b0_c1194d0)(char *name, int16_t maximum_count, int16_t size) = data_new;
+static void * (*const b13f4b0_c11e650)(const char *name, int pool_config) = memory_pool_new;
+static void * (*const b13f4b0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
+static void (*const b13f4b0_c191500)(void **out, const char *name) = cluster_partition_globals_new;
+static void (*const b13f4b0_c1365a0)(void) = widgets_dispose;
+static void (*const b13f4b0_c136040)(void) = FUN_00136040;
+static void (*const b13f4b0_c13c3d0)(void) = FUN_0013c3d0;
+static void (*const b13f4b0_c1392b0)(void) = lights_initialize_for_new_map;
+static void (*const b13f4b0_c119b20)(data_t *data) = data_delete_all;
+static void (*const b13f4b0_c1915d0)(void *partition) = cluster_partition_clear;
+
+__attribute__((naked, noinline))
 void objects_dump_memory(void)
 {
-  unsigned short uVar1;
-  short sVar2;
-  int *piVar3;
-  int iVar4;
-  void *stream;
-  int *puVar5;
-  unsigned short uVar6;
-  short *psVar7;
-  unsigned int uVar8;
-  int dump_by_def[6144]; /* 1024 * 6 */
-  int local_6140;
-  short local_613c[12288]; /* 1024 * 12 */
-  int local_140;
-  short local_13c[128]; /* 12 entries * (4+8 shorts) + pad */
-  short sVar9;
-  unsigned short uVar10;
-  object_iter_t dump_iter;
-
-  uVar10 = 0;
-  sVar9 = 0;
-  csmemset(dump_by_def, 0, sizeof(dump_by_def));
-  csmemset(local_613c, 0, sizeof(local_613c));
-  sVar2 = 0;
-  puVar5 = &local_140;
-  do {
-    *(short *)((char *)puVar5 + 4) = sVar2;
-    *puVar5 = -1;
-    sVar2 = sVar2 + 1;
-    puVar5 = puVar5 + 6;
-  } while (sVar2 < 0xc);
-  object_iterator_new(&dump_iter, -1, 0);
-  piVar3 = (int *)object_iterator_next(&dump_iter);
-  do {
-    if (piVar3 == (int *)0) {
-      /* Done iterating — output report */
-      stream = (void *)CALL_FUN_001d9e59("objects.txt", "wt");
-      if (stream != (void *)0) {
-        FUN_0013db60((short *)stream);
-        CALL_FUN_001d9260(stream, "#%d objects (#%d active) using %3.2f%% of available memory\n\n");
-        CALL_FUN_001d9260(stream, "OBJECTS BY TYPE\n");
-        CALL_FUN_001d9260(stream,
-                     "number (active) [garbage/   dead/outside/at-rest] maxsize totsize\n");
-        psVar7 = local_13c;
-        iVar4 = 0xc;
-        do {
-          if (*(int *)(psVar7 - 2) == -1) {
-            if (*psVar7 != -1) {
-              FUN_0013c250(*psVar7);
-            }
-          } else {
-            CALL_FUN_001ba1f0(*(int *)(psVar7 - 2));
-          }
-          CALL_FUN_001d9260(stream,
-                       "% 6d (% 6d) [% 7d/% 7d/% 7d/% 7d] % 7d % 7d %s\r\n");
-          psVar7 = psVar7 + 0xc;
-          iVar4 = iVar4 - 1;
-        } while (iVar4 != 0);
-        CALL_FUN_001d9260(stream, "\n");
-        CALL_FUN_001d9260(stream, "OBJECTS BY DEFINITION\n");
-        CALL_FUN_001d9260(stream,
-                     "number (active) [garbage/   dead/outside/at-rest] maxsize totsize\n");
-        if (0 < (short)uVar10) {
-          psVar7 = local_613c;
-          uVar8 = (unsigned int)uVar10;
-          do {
-            if (*(int *)(psVar7 - 2) == -1) {
-              if (*psVar7 != -1) {
-                FUN_0013c250(*psVar7);
-              }
-            } else {
-              CALL_FUN_001ba1f0(*(int *)(psVar7 - 2));
-            }
-            CALL_FUN_001d9260(stream,
-                         "% 6d (% 6d) [% 7d/% 7d/% 7d/% 7d] % 7d % 7d %s\r\n");
-            psVar7 = psVar7 + 0xc;
-            uVar8 = uVar8 - 1;
-          } while (uVar8 != 0);
-        }
-        CALL_FUN_001d9260(stream, "\n");
-        if (0 < sVar9) {
-          CALL_FUN_001d9260(stream,
-                       "WARNING: overflowed MAXIMUM_DUMPS (%d), this dump does not include %d objects that would not fit!\n");
-        }
-        CALL_FUN_001d9260(stream, "\n");
-        CALL_FUN_001d9260(stream, 0); /* _fclose */
-      }
-      return;
-    }
-    uVar6 = 0;
-    uVar1 = 0xffff;
-    if (0 < (short)uVar10) {
-      do {
-        if (dump_by_def[(short)uVar6 * 6] == *piVar3) {
-          uVar1 = uVar6;
-          if (uVar6 != 0xffff) goto LAB_0013f5ad;
-          break;
-        }
-        uVar6 = uVar6 + 1;
-      } while ((short)uVar6 < (short)uVar10);
-    }
-    uVar6 = uVar1;
-    if ((short)uVar10 < 0x400) {
-      local_613c[(short)uVar10 * 0xc] = -1;
-      dump_by_def[(short)uVar10 * 6] = *piVar3;
-      uVar6 = uVar10;
-      uVar10 = uVar10 + 1;
-    } else {
-      sVar9 = sVar9 + 1;
-    }
-LAB_0013f5ad:
-    iVar4 = (int)datum_get(*(void **)0x5a8d50, 0);
-    if (uVar6 != 0xffff) {
-      CALL_FUN_0013f3b0((int *)((char *)dump_by_def + (short)uVar6 * 24), iVar4);
-    }
-    if (0xb < *(unsigned char *)(iVar4 + 3)) {
-      display_assert("object->type < NUMBER_OF_OBJECT_TYPES",
-                     "c:\\halo\\SOURCE\\objects\\objects.c", 0, 1);
-      CALL_thunk_FUN_001029a0(-1);
-    }
-    CALL_FUN_0013f3b0((int *)((char *)&local_140 + *(unsigned char *)(iVar4 + 3) * 24), iVar4);
-    piVar3 = (int *)object_iterator_next(&dump_iter);
-  } while (1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl $0x613c, %%eax\n\t"
+      "call *%[chkstk]\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "pushl $0x6000\n\t"
+      "leal -0x613c(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edi, -0x4(%%ebp)\n\t"
+      "movl %%edi, -0xc(%%ebp)\n\t"
+      "call *%[memset]\n\t"
+      "pushl $0x120\n\t"
+      "leal -0x13c(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[memset]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal -0x13c(%%ebp), %%ecx\n\t"
+      "jmp .Lobjects_dump_memory_1\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lobjects_dump_memory_1:\n\t"
+      "movw %%ax, 0x4(%%ecx)\n\t"
+      "movl $0xffffffff, (%%ecx)\n\t"
+      "incl %%eax\n\t"
+      "addl $0x18, %%ecx\n\t"
+      "cmpw $0xc, %%ax\n\t"
+      "jl .Lobjects_dump_memory_1\n\t"
+      "movl 0x5a8d50, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1193f0]\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl $0x86868686, -0x10(%%ebp)\n\t"
+      "movb $0, -0x18(%%ebp)\n\t"
+      "movw %%di, -0x16(%%ebp)\n\t"
+      "call *%[c13d730]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "je .Lobjects_dump_memory_10\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lobjects_dump_memory_2:\n\t"
+      "orl $0xffffffff, %%esi\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testw %%di, %%di\n\t"
+      "jle .Lobjects_dump_memory_5\n\t"
+      "movl (%%eax), %%ebx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lobjects_dump_memory_3:\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "leal (%%edx,%%edx,2), %%edx\n\t"
+      "cmpl %%ebx, -0x613c(%%ebp,%%edx,8)\n\t"
+      "je .Lobjects_dump_memory_4\n\t"
+      "incl %%ecx\n\t"
+      "cmpw %%di, %%cx\n\t"
+      "jl .Lobjects_dump_memory_3\n\t"
+      "jmp .Lobjects_dump_memory_5\n\t"
+      ".Lobjects_dump_memory_4:\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "jne .Lobjects_dump_memory_7\n\t"
+      ".Lobjects_dump_memory_5:\n\t"
+      "cmpw $0x400, %%di\n\t"
+      "jge .Lobjects_dump_memory_6\n\t"
+      "movl %%edi, %%esi\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "incl %%edi\n\t"
+      "leal (%%ecx,%%ecx,2), %%ecx\n\t"
+      "shll $3, %%ecx\n\t"
+      "movw $0xffff, -0x6138(%%ebp,%%ecx,1)\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "movl %%edi, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x613c(%%ebp,%%ecx,1)\n\t"
+      "jmp .Lobjects_dump_memory_7\n\t"
+      ".Lobjects_dump_memory_6:\n\t"
+      "incl -0xc(%%ebp)\n\t"
+      ".Lobjects_dump_memory_7:\n\t"
+      "movl -0x14(%%ebp), %%ebx\n\t"
+      "movl 0x5a8d50, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $-1, %%si\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .Lobjects_dump_memory_8\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%esi\n\t"
+      "leal -0x613c(%%ebp,%%esi,8), %%esi\n\t"
+      "call *%[c13f3b0]\n\t"
+      ".Lobjects_dump_memory_8:\n\t"
+      "cmpb $0xc, 0x3(%%edi)\n\t"
+      "jb .Lobjects_dump_memory_9\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1329\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29be58\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobjects_dump_memory_9:\n\t"
+      "movzbl 0x3(%%edi), %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%esi\n\t"
+      "leal -0x13c(%%ebp,%%esi,8), %%esi\n\t"
+      "call *%[c13f3b0]\n\t"
+      "leal -0x1c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c13d730]\n\t"
+      "movl -0x4(%%ebp), %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lobjects_dump_memory_2\n\t"
+      ".Lobjects_dump_memory_10:\n\t"
+      "pushl $0x13f380\n\t"
+      "movswl %%di, %%eax\n\t"
+      "pushl $0x18\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x613c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d9260]\n\t"
+      "pushl $0x13f380\n\t"
+      "pushl $0x18\n\t"
+      "leal -0x13c(%%ebp), %%edx\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9260]\n\t"
+      "pushl $0x267f84\n\t"
+      "pushl $0x29be40\n\t"
+      "call *%[c1d9e59]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $0x28, %%esp\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "je .Lobjects_dump_memory_21\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c13db60]\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "movswl -0x8(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movswl -0x6(%%ebp), %%ecx\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x29be00\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "pushl $0x29bdec\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "pushl $0x29bda8\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $0x28, %%esp\n\t"
+      "leal -0x138(%%ebp), %%esi\n\t"
+      "movl $0xc, -0x4(%%ebp)\n\t"
+      ".Lobjects_dump_memory_11:\n\t"
+      "movl -0x4(%%esi), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "movl $0x254608, %%eax\n\t"
+      "je .Lobjects_dump_memory_12\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "jmp .Lobjects_dump_memory_13\n\t"
+      ".Lobjects_dump_memory_12:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw (%%esi), %%cx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .Lobjects_dump_memory_14\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13c250]\n\t"
+      ".Lobjects_dump_memory_13:\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lobjects_dump_memory_14:\n\t"
+      "movswl 0x2(%%esi), %%ecx\n\t"
+      "movswl 0x12(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movswl 0x10(%%esi), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movswl 0xe(%%esi), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movswl 0xc(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movswl 0xa(%%esi), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movswl 0x8(%%esi), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x29bcf4\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "addl $0x18, %%esi\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jne .Lobjects_dump_memory_11\n\t"
+      "pushl $0x260ee4\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "pushl $0x29bd8c\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "pushl $0x29bda8\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testw %%di, %%di\n\t"
+      "jle .Lobjects_dump_memory_19\n\t"
+      "leal -0x6138(%%ebp), %%esi\n\t"
+      "movzwl %%di, %%edi\n\t"
+      ".Lobjects_dump_memory_15:\n\t"
+      "movl -0x4(%%esi), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "movl $0x254608, %%eax\n\t"
+      "je .Lobjects_dump_memory_16\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "jmp .Lobjects_dump_memory_17\n\t"
+      ".Lobjects_dump_memory_16:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw (%%esi), %%cx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .Lobjects_dump_memory_18\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13c250]\n\t"
+      ".Lobjects_dump_memory_17:\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lobjects_dump_memory_18:\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "movswl 0x12(%%esi), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "movswl 0x2(%%esi), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "movswl 0x10(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movswl 0xe(%%esi), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movswl 0xc(%%esi), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movswl 0xa(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movswl 0x8(%%esi), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x29bcf4\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "addl $0x18, %%esi\n\t"
+      "decl %%edi\n\t"
+      "jne .Lobjects_dump_memory_15\n\t"
+      ".Lobjects_dump_memory_19:\n\t"
+      "pushl $0x260ee4\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lobjects_dump_memory_20\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x400\n\t"
+      "pushl $0x29bd28\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lobjects_dump_memory_20:\n\t"
+      "pushl $0x260ee4\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1d9dac]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lobjects_dump_memory_21:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "call *%[c136580]\n\t"
+      "call *%[c135f90]\n\t"
+      "call *%[c13c2e0]\n\t"
+      "call *%[c1391e0]\n\t"
+      "call *%[c977f0]\n\t"
+      "testb %%al, %%al\n\t"
+      "pushl $0xc\n\t"
+      "jne .Lobjects_dump_memory_22\n\t"
+      "pushl $0x800\n\t"
+      "pushl $0x26b758\n\t"
+      "call *%[c1bfe10]\n\t"
+      "pushl $0x100000\n\t"
+      "pushl $0x29bf10\n\t"
+      "movl %%eax, 0x5a8d50\n\t"
+      "call *%[c1bfe50]\n\t"
+      "jmp .Lobjects_dump_memory_23\n\t"
+      ".Lobjects_dump_memory_22:\n\t"
+      "pushl $0x2800\n\t"
+      "pushl $0x26b758\n\t"
+      "call *%[c1194d0]\n\t"
+      "pushl $0x500000\n\t"
+      "pushl $0x29bf10\n\t"
+      "movl %%eax, 0x5a8d50\n\t"
+      "call *%[c11e650]\n\t"
+      ".Lobjects_dump_memory_23:\n\t"
+      "movl 0x5a8d50, %%ecx\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%eax, 0x46f080\n\t"
+      "je .Lobjects_dump_memory_24\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lobjects_dump_memory_25\n\t"
+      ".Lobjects_dump_memory_24:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd8\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29bee4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobjects_dump_memory_25:\n\t"
+      "pushl $0x98\n\t"
+      "pushl $0\n\t"
+      "pushl $0x29bed4\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x46f084\n\t"
+      "jne .Lobjects_dump_memory_26\n\t"
+      "pushl $1\n\t"
+      "pushl $0xdb\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29bec4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobjects_dump_memory_26:\n\t"
+      "pushl $0x800\n\t"
+      "pushl $0\n\t"
+      "pushl $0x29bc70\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x46f07c\n\t"
+      "jne .Lobjects_dump_memory_27\n\t"
+      "pushl $1\n\t"
+      "pushl $0xfe8\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29bc5c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobjects_dump_memory_27:\n\t"
+      "pushl $0x29beb0\n\t"
+      "pushl $0x5a8d40\n\t"
+      "call *%[c191500]\n\t"
+      "pushl $0x29be98\n\t"
+      "pushl $0x5a8d30\n\t"
+      "call *%[c191500]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1365a0]\n\t"
+      "call *%[c136040]\n\t"
+      "call *%[c13c3d0]\n\t"
+      "call *%[c1392b0]\n\t"
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119b20]\n\t"
+      "movl 0x46f07c, %%ecx\n\t"
+      "pushl $0x800\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[memset]\n\t"
+      "pushl $0x5a8d40\n\t"
+      "call *%[c1915d0]\n\t"
+      "pushl $0x5a8d30\n\t"
+      "call *%[c1915d0]\n\t"
+      "movl 0x46f084, %%edx\n\t"
+      "pushl $0x40\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "addl $0xc, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x46f084, %%eax\n\t"
+      "pushl $0x40\n\t"
+      "addl $0x4c, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x46f084, %%eax\n\t"
+      "movw %%bx, 0x90(%%eax)\n\t"
+      "movb %%bl, 0x1(%%eax)\n\t"
+      "movl %%ebx, 0x5a8d28\n\t"
+      "movl $0xffffffff, 0x8(%%eax)\n\t"
+      "movw %%bx, 0x4(%%eax)\n\t"
+      "addl $0x30, %%esp\n\t"
+      "movl %%ebx, 0x8c(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      :
+      : [chkstk] "m"(b13f4b0_chkstk), [memset] "m"(b13f4b0_memset), [c1193f0] "m"(b13f4b0_c1193f0), [c13d730] "m"(b13f4b0_c13d730), [dget] "m"(b13f4b0_dget), [c13f3b0] "m"(b13f4b0_c13f3b0), [assert] "m"(b13f4b0_assert), [exitfn] "m"(b13f4b0_exitfn), [c1d9260] "m"(b13f4b0_c1d9260), [c1d9e59] "m"(b13f4b0_c1d9e59), [c13db60] "m"(b13f4b0_c13db60), [c1d98ad] "m"(b13f4b0_c1d98ad), [c1ba1f0] "m"(b13f4b0_c1ba1f0), [c13c250] "m"(b13f4b0_c13c250), [c1d9dac] "m"(b13f4b0_c1d9dac), [c136580] "m"(b13f4b0_c136580), [c135f90] "m"(b13f4b0_c135f90), [c13c2e0] "m"(b13f4b0_c13c2e0), [c1391e0] "m"(b13f4b0_c1391e0), [c977f0] "m"(b13f4b0_c977f0), [c1bfe10] "m"(b13f4b0_c1bfe10), [c1bfe50] "m"(b13f4b0_c1bfe50), [c1194d0] "m"(b13f4b0_c1194d0), [c11e650] "m"(b13f4b0_c11e650), [c1bfbf0] "m"(b13f4b0_c1bfbf0), [c191500] "m"(b13f4b0_c191500), [c1365a0] "m"(b13f4b0_c1365a0), [c136040] "m"(b13f4b0_c136040), [c13c3d0] "m"(b13f4b0_c13c3d0), [c1392b0] "m"(b13f4b0_c1392b0), [c119b20] "m"(b13f4b0_c119b20), [c1915d0] "m"(b13f4b0_c1915d0)
+      : "memory");
 }
+#else
+#error "objects_dump_memory: clang naked draft required"
+#endif
+
 #pragma clang diagnostic pop
 
 /* 0x1417c0 — objects_reconnect_to_structure_bsp: reconnects objects to

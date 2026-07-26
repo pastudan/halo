@@ -569,6 +569,15 @@ def main() -> int:
         ("FUN_00136f40", 0x136f40, 0x137158),
         ("weapon_overcharged", 0xfb2f0, 0xfb508),
         ("object_damage_update", 0x1384e0, 0x1388f3),
+        # gameplay wave 52 (2026-07-26)
+        ("objects_dump_memory", 0x13f4b0, 0x13f9e8),
+        ("unit_clip_to_aiming_bounds", 0x1ada90, 0x1adea5),
+        ("FUN_001a68d0", 0x1a68d0, 0x1a6c9e),
+        ("unit_set_control", 0x1af990, 0x1afd2a),
+        ("unit_update_running_blind", 0x1af340, 0x1af6a7),
+        ("FUN_001a71c0", 0x1a71c0, 0x1a74c9),
+        ("unit_find_best_enter_seat", 0x1ad800, 0x1ada86),
+        ("unit_exit_seat_end", 0x1b2dd0, 0x1b3055),
     ]
 
     xbe = Xbe.from_file(args.xbe)
