@@ -900,70 +900,34 @@ void FUN_00024850(int actor_handle, int flag, char *actor, void *state)
     ((void (*)(int, char *, void *, void *))*entry)(actor_handle, actor, flag, state);
   }
 }
-/* FUN_00024890 (0x24890) — XBE naked draft (batch 152). */
-#if defined(__clang__)
-static void (*const b24890_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b24890_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-char FUN_00024890(int actor_handle __attribute__((unused)), void *state __attribute__((unused)), char *actor __attribute__((unused)))
+/* FUN_00024890 (0x24890) — readable C lift. */
+char FUN_00024890(int actor_handle, void *state, char *actor)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movb $1, %%bl\n\t"
-      "movl $0x254c30, %%esi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00024890_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00024890_3\n\t"
-      "movb 0x4(%%edi), %%cl\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movswl -0x4(%%esi), %%ecx\n\t"
-      "testl %%edx, %%ecx\n\t"
-      "je .LFUN_00024890_2\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb %%al, %%bl\n\t"
-      ".LFUN_00024890_2:\n\t"
-      "addl $8, %%esi\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_00024890_1\n\t"
-      ".LFUN_00024890_3:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "cmpb %%bl, 0x30(%%edx)\n\t"
-      "je .LFUN_00024890_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4ee\n\t"
-      "pushl $0x254c8c\n\t"
-      "pushl $0x254cd4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00024890_4:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b24890_assert), [exitfn] "m"(b24890_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_00024890: clang naked draft required"
-#endif
+  extern char DAT_00254cd4[];
+  extern char DAT_00254c8c[];
+  char valid;
+  int16_t *entry;
+  char (*fn)(int, char *, void *);
 
+  valid = 1;
+  entry = (int16_t *)0x254c2c;
+  while (*(int *)((char *)entry + 4) != 0) {
+    int bit = 1 << (int)(unsigned char)actor[4];
+    if ((int)entry[0] & bit) {
+      fn = *(char (**)(int, char *, void *))((char *)entry + 4);
+      valid = fn(actor_handle, actor, state);
+    }
+    entry += 4;
+    if (!valid) {
+      break;
+    }
+  }
+  if (*(char *)((char *)state + 0x30) != valid) {
+    display_assert(DAT_00254cd4, DAT_00254c8c, 0x4ee, 1);
+    system_exit(-1);
+  }
+  return valid;
+}
 
 /* FUN_00024900 (0x24900) — readable C lift.
  * query_buf@edi. */
