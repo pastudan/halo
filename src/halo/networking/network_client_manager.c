@@ -1511,63 +1511,24 @@ char network_game_client_game_settings_updated(void *client __attribute__((unuse
 #endif
 
 
-/* unstrip_player_index (0x125180) — XBE naked draft (batch 158). */
-#if defined(__clang__)
-static void (*const b125180_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b125180_c119810)(data_iter_t *iterator) = data_iterator_next;
-
-__attribute__((naked, noinline))
-int unstrip_player_index(int stripped_index __attribute__((unused)))
+/* unstrip_player_index (0x125180) — readable C lift. */
+int unstrip_player_index(int stripped_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lunstrip_player_index_2\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "andl $0xffff, %%esi\n\t"
-      ".Lunstrip_player_index_1:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0xffff, %%ecx\n\t"
-      "cmpl %%esi, %%ecx\n\t"
-      "je .Lunstrip_player_index_3\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lunstrip_player_index_1\n\t"
-      ".Lunstrip_player_index_2:\n\t"
-      "movl %%edi, %%eax\n\t"
-      ".Lunstrip_player_index_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1197b0] "m"(b125180_c1197b0), [c119810] "m"(b125180_c119810)
-      : "memory");
+  data_iter_t iter;
+  int found = -1;
+  int cur;
+  data_iterator_new(&iter, *(data_t **)0x5aa6d4);
+  cur = data_iterator_next(&iter);
+  while (cur) {
+    int h = *(int *)((char *)&iter + 8); /* datum handle at iter+8 from asm [ebp-8] */
+    if ((h & 0xffff) == (stripped_index & 0xffff)) {
+      found = h;
+      break;
+    }
+    cur = data_iterator_next(&iter);
+  }
+  return found;
 }
-#else
-#error "unstrip_player_index: clang naked draft required"
-#endif
-
-
 /* network_game_client_game_has_started (0x1251e0) — XBE naked draft (batch 124). */
 #if defined(__clang__)
 static void (*const b1251e0_assert)(const char *, const char *, int, bool) = display_assert;
