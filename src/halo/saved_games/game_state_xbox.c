@@ -577,11 +577,10 @@ void player_profile_delete(void)
   (void)edi;
 }
 
-/* 0x1c0ed0 */
-void FUN_001c0ed0(void)
+/* 0x1c0ed0 — campaign level count constant (returns 18). */
+unsigned short FUN_001c0ed0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  return 0x12;
 }
 
 /* 0x1c0ee0 */
@@ -591,71 +590,34 @@ void FUN_001c0ee0(void)
   (void)0;
 }
 
-/* 0x1c0f70 */
-void player_profile_save_last_level_played(void)
+/* 0x1c0f70 — decode last campaign level/difficulty from profile flags. */
+void player_profile_save_last_level_played(void *profile, short *out_level,
+                                           short *out_difficulty)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
+  int level;
+  unsigned char flags;
 
-  /* test edi, edi -> je 0x1c0f8b */
-  /* test esi, esi -> jne 0x1c0fab */
-  display_assert((char *)0x002b9f9c, (char *)0x002b9f70, 440, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> je 0x1c0ffa */
-  /* test (char)eax, 8 -> je 0x1c0fcc */
-  /* test (char)eax, 4 -> je 0x1c0fdc */
-  /* test (char)eax, 2 -> je 0x1c0fec */
-  /* test (char)eax, 1 -> je 0x1c0ffa */
-  /* test (char)eax, (char)eax -> je 0x1c103f */
-  /* test (char)eax, 8 -> je 0x1c1011 */
-  /* test (char)eax, 4 -> je 0x1c1021 */
-  /* test (char)eax, 2 -> je 0x1c1031 */
-  /* test (char)eax, 1 -> je 0x1c103f */
-  /* test (char)eax, (char)eax -> je 0x1c1084 */
-  /* test (char)eax, 8 -> je 0x1c1056 */
-  /* test (char)eax, 4 -> je 0x1c1066 */
-  /* test (char)eax, 2 -> je 0x1c1076 */
-  /* test (char)eax, 1 -> je 0x1c1084 */
-  /* test (char)eax, (char)eax -> je 0x1c10c9 */
-  /* test (char)eax, 8 -> je 0x1c109b */
-  /* test (char)eax, 4 -> je 0x1c10ab */
-  /* test (char)eax, 2 -> je 0x1c10bb */
-  /* test (char)eax, 1 -> je 0x1c10c9 */
-  /* test (char)eax, (char)eax -> je 0x1c110e */
-  /* test (char)eax, 8 -> je 0x1c10e0 */
-  /* test (char)eax, 4 -> je 0x1c10f0 */
-  /* test (char)eax, 2 -> je 0x1c1100 */
-  /* test (char)eax, 1 -> je 0x1c110e */
-  /* test (char)eax, (char)eax -> je 0x1c1153 */
-  /* test (char)eax, 8 -> je 0x1c1125 */
-  /* test (char)eax, 4 -> je 0x1c1135 */
-  /* test (char)eax, 2 -> je 0x1c1145 */
-  /* test (char)eax, 1 -> je 0x1c1153 */
-  /* test (char)eax, (char)eax -> je 0x1c1198 */
-  /* test (char)eax, 8 -> je 0x1c116a */
-  /* test (char)eax, 4 -> je 0x1c117a */
-  /* test (char)eax, 2 -> je 0x1c118a */
-  /* test (char)eax, 1 -> je 0x1c1198 */
-  /* test (char)eax, (char)eax -> je 0x1c11dd */
-  /* test (char)eax, 8 -> je 0x1c11af */
-  /* test (char)eax, 4 -> je 0x1c11bf */
-  /* test (char)eax, 2 -> je 0x1c11cf */
-  /* test (char)eax, 1 -> je 0x1c11dd */
-  /* test (char)eax, (char)eax -> je 0x1c1222 */
-  /* test (char)eax, 8 -> je 0x1c11f4 */
-  /* test (char)eax, 4 -> je 0x1c1204 */
-  /* test (char)eax, 2 -> je 0x1c1214 */
-  /* test (char)eax, 1 -> je 0x1c1222 */
-  /* test (char)eax, (char)eax -> je 0x1c1270 */
-  /* test (char)eax, 8 -> je 0x1c123c */
-  /* test (char)eax, 4 -> je 0x1c124f */
-  /* test (char)eax, 2 -> je 0x1c1262 */
-  /* test (char)eax, 1 -> je 0x1c1270 */
+  if (profile == 0 || out_level == 0 || out_difficulty == 0) {
+    display_assert((char *)0x002b9f9c, (char *)0x002b9f70, 0x1b8, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  *out_level = -1;
+  *out_difficulty = 1;
+  for (level = 0; level < 10; level++) {
+    flags = *((unsigned char *)profile + 0x1c + level);
+    if (flags == 0)
+      continue;
+    *out_level = (short)level;
+    if (flags & 8)
+      *out_difficulty = 3;
+    else if (flags & 4)
+      *out_difficulty = 2;
+    else if (flags & 2)
+      *out_difficulty = 1;
+    else if (flags & 1)
+      *out_difficulty = 0;
+  }
 }
 
 /* 0x1c1280 */

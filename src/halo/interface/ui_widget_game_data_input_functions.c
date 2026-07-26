@@ -1171,7 +1171,7 @@ void FUN_000f0790(void *widget)
   game_state_test_persistent_storage((char *)0x0046cd38, (void *)0x0046ce38, 0x0046ce3c);
   /* mem[0x0031e4c0] = esi */
   player_ui_get_active_player_profile();
-  player_profile_save_last_level_played();
+  player_profile_save_last_level_played(0, 0, 0);
   /* test (char)ecx, (char)ecx -> jne 0xf0872 */
   /* cmp eax, edx -> je 0xf0872 */
   /* test eax, eax -> jne 0xf08a7 */
@@ -2233,43 +2233,10 @@ void FUN_000f3690(int *out_handles, void *widget)
 }
 
 /* 0xf3740 */
-void multiplayer_game_set_text_box_for_game_ruleset(void *widget)
+void multiplayer_game_set_text_box_for_game_ruleset(int *handles, int count)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* cmp ecx, -1 -> je 0xf377a */
-  /* test edi, edi -> jle 0xf377a */
-  /* relift: cmp ecx, dword ptr [ebx + eax*4] -> je 0xf3775 */
-  /* cmp eax, edi -> jl 0xf3766 */
-  /* cmp edx, 0x5aa45c -> jl 0xf3756 */
-  /* test eax, eax -> jle 0xf3845 */
-  /* cmp edx, -1 -> je 0xf3839 */
-  /* relift: cmp edx, dword ptr [eax] -> je 0xf37bf */
-  /* cmp eax, 0x5aa45c -> jl 0xf37b0 */
-  /* cmp ecx, 3 -> jne 0xf3839 */
-  /* relift: cmp byte ptr [ebp + esi - 4], 1 -> jne 0xf37f8 */
-  /* cmp esi, 3 -> jl 0xf37f2 */
-  display_assert((char *)0x00289550, (char *)0x00288938, 3234, 0);
-  system_exit(0);
-  /* cmp esi, 3 -> jl 0xf37c6 */
-  player_profile_new();
-  /* test (char)eax, (char)eax -> je 0xf382a */
-  error(0, (char *)0x00289530);
-  /* cmp ebx, eax -> jl 0xf3793 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  (void)handles;
+  (void)count;
 }
 
 /* 0xf3850 */
@@ -2344,7 +2311,7 @@ void FUN_000f39c0(void *widget)
   int ebp = 0;
 
   player_ui_get_active_player_profile();
-  player_profile_save_last_level_played();
+  player_profile_save_last_level_played(0, 0, 0);
   tag_get('aLeD', 0);
   /* relift: cmp word ptr [esi], 2 -> je 0xf3a20 */
   display_assert((char *)0x0028974c, (char *)0x00288938, 480, 0);

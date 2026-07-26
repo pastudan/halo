@@ -3485,9 +3485,9 @@ void FUN_000e8e20(int a0)
   /* mem[0x0031e4c0] = 0xffffffff */
   csmemset((void *)0x0046cce8, 0, 80);
   player_ui_get_active_player_profile();
-  player_profile_save_last_level_played();
+  player_profile_save_last_level_played(0, 0, 0);
   player_ui_get_active_player_profile();
-  player_profile_save_last_level_played();
+  player_profile_save_last_level_played(0, 0, 0);
   /* test dl, dl -> jne 0xe9952 */
   /* cmp eax, ecx -> je 0xe9952 */
   /* test (char)ecx, (char)ecx -> jne 0xe9952 */
@@ -3515,13 +3515,13 @@ void FUN_000e8e20(int a0)
   error(2, (char *)0x00285a54);
   ui_play_audio_feedback_sound(4);
   player_ui_get_active_player_profile();
-  player_profile_save_last_level_played();
+  player_profile_save_last_level_played(0, 0, 0);
   /* test dl, dl -> jne 0xe9b44 */
   /* cmp ecx, edx -> je 0xe9b44 */
   /* test (int16_t)eax, (int16_t)eax -> jne 0xe9b46 */
   player_ui_remember_player1_profile(0);
   player_ui_get_active_player_profile();
-  player_profile_save_last_level_played();
+  player_profile_save_last_level_played(0, 0, 0);
   /* test dl, dl -> jne 0xe9bbf */
   /* cmp ecx, edx -> je 0xe9bbf */
   /* test (int16_t)eax, (int16_t)eax -> je 0xe9bbf */

@@ -3545,10 +3545,10 @@ char FUN_000e98c0(void *widget)
 
   csmemset((void *)0x46cce8, 0, 0x50);
   ((void (*)(void *, int))player_ui_get_active_player_profile)(profile_buf, 0);
-  ((void (*)(void *, int16_t *, int16_t *))player_profile_save_last_level_played)(
+  player_profile_save_last_level_played(
       profile_buf, &level_index, &difficulty);
   ((void (*)(void *, int))player_ui_get_active_player_profile)(profile2, 1);
-  ((void (*)(void *, int16_t *, int16_t *))player_profile_save_last_level_played)(
+  player_profile_save_last_level_played(
       profile2, &level_index, &difficulty);
 
   for (index = 0; index < 0xa; index++) {
@@ -3606,7 +3606,7 @@ char FUN_000e9a90(void *widget)
 
   if (*(int16_t *)0x31fa94 == 1) {
     ((void (*)(void *, int))player_ui_get_active_player_profile)(profile, 0);
-    ((void (*)(void *, int16_t *, int16_t *))player_profile_save_last_level_played)(
+    player_profile_save_last_level_played(
         profile, &level, &difficulty);
     changed = 0;
     if (profile[*(int16_t *)((char *)widget + 0x3c) + 0x14] == 0 &&
@@ -3617,7 +3617,7 @@ char FUN_000e9a90(void *widget)
     pass = 0;
     while (pass <= 1) {
       ((void (*)(void *, int))player_ui_get_active_player_profile)(profile, pass);
-      ((void (*)(void *, int16_t *, int16_t *))player_profile_save_last_level_played)(
+      player_profile_save_last_level_played(
           profile, &level, &difficulty);
       if (profile[*(int16_t *)((char *)widget + 0x3c) + 0x14] == 0 &&
           *(int16_t *)((char *)widget + 0x3c) != level + 1 &&

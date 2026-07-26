@@ -349,6 +349,7 @@
     "0xe7b10": "void ui_widget_load_from_tag_internal(void *tag_data@<eax>, void *widget@<edx>, void *parent@<ecx>, int tag_index, int widget_stack, int widget_stack_base);",
     "0xf3690": "void FUN_000f3690(int *out_handles /* @<eax> */, void *widget /* @<ecx> */);",
     "0xf6b80": "void FUN_000f6b80(int item_handle@<eax>);",
+    "0xf7110": "void FUN_000f7110(float *opt_position, int item_handle@<ebx>, float *hit_normal@<esi>, float *out_position@<eax>);",
     "0xf7e40": "void FUN_000f7e40(int projectile_handle@<eax>, int16_t state@<si>);",
     "0xf7fa0": "float FUN_000f7fa0(void *tag @<ecx>, float range_begin, float range_end);",
     "0xf8590": "void FUN_000f8590(int projectile_handle@<eax>);",

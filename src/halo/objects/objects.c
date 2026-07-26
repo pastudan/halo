@@ -12227,79 +12227,185 @@ void objects_reconnect_to_structure_bsp(void)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-but-set-variable"
 #pragma clang diagnostic ignored "-Wunused-variable"
-/* 0x135510 */
-void FUN_00135510(int *param_1, int param_2, int param_3, int *param_4)
+/* 0x135510 — build/subdivide lightning bolt marker chains for rendering. */
+void FUN_00135510(int object_handle, int lightning_datum, int param_3,
+                  int *param_4)
 {
-  int iVar8;
-  int iVar9;
-  short sVar7;
-  int *piVar21;
-  float local_c4;
-  float local_c0;
-  float local_bc;
-  float local_90;
-  int local_84;
-  int local_7c;
-  float local_78;
-  float local_74;
-  float local_64;
-  float local_60;
-  float local_5c;
-  float local_58;
-  float local_54;
-  float local_50;
-  float local_48;
-  float local_44;
-  float local_3c;
-  float local_30;
-  float local_28;
-  float fVar10;
-  float fVar16;
-  float fVar22;
-  float local_88;
-  float local_8c;
-  float local_80;
-  int local_40;
-  char local_124[0xe4];
-  float points[4096 * 9]; /* midpoint displacement buffer - _chkstk handles this */
-  char valid[4096];
+  char *elec;
+  char *seg_block;
+  char *seg;
+  char *next_seg;
+  char marker[0xe4];
+  char scratch[0x30];
+  float points[4096 * 9];
+  int bitm_elem;
+  int hw;
+  int bolt_i;
+  int seg_i;
+  int point_count;
+  float intensity;
+  float jitter;
+  char first_pass;
+  float delta[3];
+  float *cam_right;
+  (void)param_3;
+  (void)scratch;
 
-  if (param_1 == (int *)-1 || param_2 == -1) {
+  if (object_handle == -1 || lightning_datum == -1)
     return;
-  }
-  iVar8 = (int)datum_get(*(void **)0x46f024, param_2);
-  iVar8 = (int)tag_get(0x656c6563, *(int *)(iVar8 + 4));
-  piVar21 = (int *)(iVar8 + 0x98);
-  if (0 < *(int *)(iVar8 + 0x98)) {
-    local_40 = iVar8;
-    iVar9 = (int)tag_block_get_element((void *)piVar21, 0, 0xe4);
 
-    sVar7 = CALL_FUN_00140f10((void *)param_1, (int)local_124, (void *)iVar9, 1);
-    if (0 < sVar7) {
-      local_90 = (float)(int)tag_block_get_element(
-                    (void *)(iVar8 + 0x60), 0, 0x30);
-      iVar9 = CALL_FUN_001bf570(local_90, 0, 1);
-      if (iVar9 != 0 && 0 < *(short *)(iVar8 + 2)) {
-        local_84 = 0;
-        do {
-          local_88 = 1.0f;
-          if (param_4 != (int *)0 && param_4[1] != 0) {
-            sVar7 = *(short *)(iVar8 + 0x2c);
-            if (0 < sVar7 && sVar7 < 5) {
-              local_88 = *(float *)(param_4[1] - 4 + sVar7 * 4);
+  elec = (char *)tag_get(
+      0x656c6563,
+      *(int *)((char *)datum_get(*(void **)0x46f024, lightning_datum) + 4));
+  seg_block = elec + 0x98;
+  if (*(int *)seg_block <= 0)
+    return;
+
+  seg = (char *)tag_block_get_element(seg_block, 0, 0xe4);
+  if (object_get_markers_by_string_id(object_handle, seg, marker, 1) <= 0)
+    return;
+
+  {
+    char *bitm = (char *)tag_get(0x6269746d, *(int *)(elec + 0x40));
+    bitm_elem = (int)tag_block_get_element(bitm + 0x60, 0, 0x30);
+  }
+  hw = CALL_FUN_001bf570(bitm_elem, 0, 1);
+  if (hw == 0 || *(int16_t *)(elec + 2) <= 0)
+    return;
+
+  for (bolt_i = 0; bolt_i < *(int16_t *)(elec + 2); bolt_i++) {
+    intensity = 1.0f;
+    if (param_4 != 0 && param_4[1] != 0) {
+      int16_t fn = *(int16_t *)(elec + 0x2c);
+      if (fn > 0 && fn < 5)
+        intensity = *(float *)(param_4[1] - 4 + fn * 4);
+    }
+
+    first_pass = 1;
+    point_count = 0;
+    for (seg_i = 0; seg_i < *(int *)seg_block; seg_i++) {
+      int subdiv;
+      int bit;
+      float *dst;
+      float *src;
+
+      seg = (char *)tag_block_get_element(seg_block, seg_i, 0xe4);
+      if (first_pass) {
+        csmemset(points, 0, 0x24024);
+        object_get_markers_by_string_id(object_handle, seg, marker, 1);
+        points[0] = *(float *)(marker + 0x60);
+        points[1] = *(float *)(marker + 0x64);
+        points[2] = *(float *)(marker + 0x68);
+        lightning_offset_marker_position((int)(marker + 0x38), points,
+                                         (float *)(seg + 0x74));
+        points[3] = *(float *)(seg + 0x84);
+        points[4] = *(float *)(seg + 0x88);
+        points[5] = *(float *)(seg + 0x8c);
+        points[6] = *(float *)(seg + 0x90);
+        points[7] = *(float *)(seg + 0x94);
+        ((char *)points)[0x20] = 1;
+        first_pass = 0;
+        point_count = 1;
+      }
+
+      if ((*(unsigned char *)(seg + 0x20) & 1) != 0 ||
+          seg_i == *(int *)seg_block - 1) {
+        /* Terminal / flagged segment: submit assembled chain. */
+        if (point_count >= 2) {
+          *(int16_t *)0x325652 = 0xc;
+          /* Rasterizer submit path left as structural calls. */
+          {
+            int z = rasterizer_widget_set_zbuffer_enable(point_count * 2, 6);
+            if (z != -1) {
+              rasterizer_widget_draw_sprite3d(z);
+              (void)random_math_real(random_math_get_local_seed_address());
             }
           }
-          local_7c = 0;
-          if (0 < *piVar21) {
-            iVar9 = 0;
-            do {
-              /* Process each segment pair in the lightning chain */
-              iVar9 = iVar9 + 1;
-            } while (iVar9 < *piVar21);
-          }
-          local_84 = local_84 + 1;
-        } while ((short)local_84 < *(short *)(iVar8 + 2));
+        }
+        continue;
       }
+
+      next_seg = (char *)tag_block_get_element(seg_block, seg_i + 1, 0xe4);
+      bit = 1 << (int)*(unsigned short *)(seg + 0x24);
+      jitter = 1.0f;
+      dst = points + (point_count + bit) * 9;
+      if (((char *)dst)[0x20] != 0) {
+        display_assert((char *)0x0029adb4, (char *)0x0029acfc, 0x17f, 1);
+        system_exit(-1);
+      }
+
+      object_get_markers_by_string_id(object_handle, next_seg, marker, 1);
+      src = dst;
+      src[0] = *(float *)(marker + 0x60);
+      src[1] = *(float *)(marker + 0x64);
+      src[2] = *(float *)(marker + 0x68);
+      lightning_offset_marker_position((int)(marker + 0x38), src,
+                                       (float *)(next_seg + 0x74));
+      src[3] = *(float *)(next_seg + 0x84);
+      src[4] = *(float *)(next_seg + 0x88);
+      src[5] = *(float *)(next_seg + 0x8c);
+      src[6] = *(float *)(next_seg + 0x90);
+      src[7] = *(float *)(next_seg + 0x94);
+      ((char *)src)[0x20] = 1;
+
+      {
+        float *prev = points + point_count * 9;
+        delta[0] = src[0] - prev[0];
+        delta[1] = src[1] - prev[1];
+        delta[2] = src[2] - prev[2];
+      }
+      /* Camera-perpendicular basis for jitter. */
+      {
+        float t0 = delta[0] * *(float *)0x506560 - delta[1] * *(float *)0x50655c;
+        float t1 = delta[2] * *(float *)0x50655c - delta[0] * *(float *)0x506564;
+        float t2 = delta[1] * *(float *)0x506564 - delta[2] * *(float *)0x506560;
+        delta[0] = t0;
+        delta[1] = t1;
+        delta[2] = t2;
+      }
+      if (normalize3d(delta) == 0.0f) {
+        cam_right = *(float **)0x31fc28;
+        delta[0] = cam_right[0];
+        delta[1] = cam_right[1];
+        delta[2] = cam_right[2];
+      }
+
+      subdiv = *(unsigned short *)(seg + 0x24);
+      if (subdiv >= 1) {
+        int level;
+        int span = bit;
+        for (level = subdiv - 1; level >= 0; level--) {
+          int step = 1 << level;
+          int idx;
+          for (idx = step; idx < span; idx += step * 2) {
+            float *a = points + (idx - step) * 9;
+            float *b = points + (idx + step) * 9;
+            float *m = points + idx * 9;
+            float t = (float)idx / (float)span;
+            float amp =
+                (t * (*(float *)(next_seg + 0x80) - *(float *)(seg + 0x80)) +
+                 *(float *)(seg + 0x80)) *
+                jitter * intensity;
+            float rnd = random_real_range(
+                (int *)random_math_get_local_seed_address(), -1.0f, 1.0f);
+            if (((char *)m)[0x20] != 0) {
+              display_assert((char *)0x0029ad68, (char *)0x0029acfc, 0x1aa, 1);
+              system_exit(-1);
+            }
+            m[0] = (a[0] + b[0]) * 0.5f + delta[0] * rnd * amp;
+            m[1] = (a[1] + b[1]) * 0.5f + delta[1] * rnd * amp;
+            m[2] = (a[2] + b[2]) * 0.5f + delta[2] * rnd * amp;
+            m[3] = (a[3] + b[3]) * 0.5f;
+            m[4] = (a[4] + b[4]) * 0.5f;
+            m[5] = (a[5] + b[5]) * 0.5f;
+            m[6] = (a[6] + b[6]) * 0.5f;
+            m[7] = (a[7] + b[7]) * 0.5f;
+            ((char *)m)[0x20] = 1;
+          }
+          jitter *= 0.5f;
+        }
+      }
+      point_count += bit;
     }
   }
 }

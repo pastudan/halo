@@ -10316,7 +10316,7 @@
         },
         {
           "addr": "0x1c0ed0",
-          "decl": "void FUN_001c0ed0(void);",
+          "decl": "unsigned short FUN_001c0ed0(void);",
           "ported": false
         },
         {
@@ -10326,7 +10326,7 @@
         },
         {
           "addr": "0x1c0f70",
-          "decl": "void player_profile_save_last_level_played(void);",
+          "decl": "void player_profile_save_last_level_played(void *profile, short *out_level, short *out_difficulty);",
           "ported": false
         },
         {
@@ -13911,12 +13911,12 @@
       "functions": [
         {
           "addr": "0xf4210",
-          "decl": "void multiplayer_settings_select_list_update_item(void);",
+          "decl": "void multiplayer_settings_select_list_update_item(void *widget);",
           "ported": false
         },
         {
           "addr": "0xf46e0",
-          "decl": "void FUN_000f46e0(void);",
+          "decl": "void FUN_000f46e0(void *widget);",
           "ported": false
         },
         {
@@ -14115,7 +14115,7 @@
         },
         {
           "addr": "0xf7110",
-          "decl": "void FUN_000f7110(void);",
+          "decl": "void FUN_000f7110(float *opt_position, int item_handle@<ebx>, float *hit_normal@<esi>, float *out_position@<eax>);",
           "ported": false
         },
         {
@@ -16167,7 +16167,7 @@
         },
         {
           "addr": "0x135510",
-          "decl": "void FUN_00135510(int *param_1, int param_2, int param_3, int *param_4);",
+          "decl": "void FUN_00135510(int object_handle, int lightning_datum, int param_3, int *param_4);",
           "ported": false,
           "source": "src/halo/objects/objects.c"
         },
@@ -27815,7 +27815,7 @@
         },
         {
           "addr": "0xf3740",
-          "decl": "void multiplayer_game_set_text_box_for_game_ruleset(void *widget);",
+          "decl": "void multiplayer_game_set_text_box_for_game_ruleset(int *handles, int count);",
           "ported": false
         },
         {

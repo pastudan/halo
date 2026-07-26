@@ -1267,12 +1267,13 @@ void FUN_001b6e20(int vehicle_handle)
   int marker_index;
   float scale_base;
   float dir[3];
-  float ray_origin[3];
+  float ray_dir[3];
   float collision[0x40];
   float marker_points[9];
   float marker_forwards[9];
   float rgb[3];
   float effect_scale;
+  void *marker_names[3];
 
   veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
   vehi = (char *)tag_get(0x76656869, *(int *)veh);
@@ -1290,14 +1291,11 @@ void FUN_001b6e20(int vehicle_handle)
 
   for (marker_index = 0; marker_index < marker_total; marker_index++) {
     char *marker;
-    int copy_index;
 
     marker = marker_buf + marker_index * 0x6c;
+    /* Cone angle 0x3e860a92 ~= 0.2618 rad (15 deg). */
     random_direction3d((int *)random_math_get_local_seed_address(),
-                       (float *)(marker + 0x3c), 0.0f, 0.0f, dir);
-    ray_origin[0] = *(float *)(marker + 0x60);
-    ray_origin[1] = *(float *)(marker + 0x64);
-    ray_origin[2] = *(float *)(marker + 0x68);
+                       (float *)(marker + 0x3c), 0.0f, 0.2617994f, dir);
 
     if (marker_index >= marker_count_a)
       scale_base = *(float *)(veh + 0x448);
@@ -1306,24 +1304,26 @@ void FUN_001b6e20(int vehicle_handle)
     scale_base *= *(float *)0x254640;
     scale_base += *(float *)0x253f40;
 
-    if (!FUN_0014df70(0x61, ray_origin, dir, vehicle_handle,
+    /* Collision ray direction is the scaled random direction. */
+    ray_dir[0] = dir[0] * scale_base;
+    ray_dir[1] = dir[1] * scale_base;
+    ray_dir[2] = dir[2] * scale_base;
+
+    if (!FUN_0014df70(0x61, (float *)(marker + 0x60), ray_dir, vehicle_handle,
                       (int16_t *)collision))
       continue;
 
-    ray_origin[0] = dir[0] * scale_base + *(float *)(marker + 0x60);
-    ray_origin[1] = dir[1] * scale_base + *(float *)(marker + 0x64);
-    ray_origin[2] = dir[2] * scale_base + *(float *)(marker + 0x68);
+    /* Hit point from collision+0x18, replicated across 3 markers. */
+    marker_points[0] = *(float *)((char *)collision + 0x18);
+    marker_points[1] = *(float *)((char *)collision + 0x1c);
+    marker_points[2] = *(float *)((char *)collision + 0x20);
+    marker_points[3] = marker_points[0];
+    marker_points[4] = marker_points[1];
+    marker_points[5] = marker_points[2];
+    marker_points[6] = marker_points[0];
+    marker_points[7] = marker_points[1];
+    marker_points[8] = marker_points[2];
 
-    marker_points[0] = *(float *)(collision + 0x24) + *(float *)(marker + 0x60);
-    marker_points[1] = *(float *)(collision + 0x28) + *(float *)(marker + 0x64);
-    marker_points[2] = *(float *)(collision + 0x2c) + *(float *)(marker + 0x68);
-    for (copy_index = 1; copy_index < 3; copy_index++) {
-      marker_points[copy_index * 3 + 0] = marker_points[0];
-      marker_points[copy_index * 3 + 1] = marker_points[1];
-      marker_points[copy_index * 3 + 2] = marker_points[2];
-    }
-
-    FUN_0010c8e0((float *)(collision + 0x30), dir, rgb);
     marker_forwards[0] = -dir[0];
     marker_forwards[1] = -dir[1];
     marker_forwards[2] = -dir[2];
@@ -1334,11 +1334,16 @@ void FUN_001b6e20(int vehicle_handle)
     marker_forwards[7] = marker_forwards[1];
     marker_forwards[8] = marker_forwards[2];
 
-    effect_scale = *(float *)0x2533c8 - *(float *)(collision + 0x20);
+    FUN_0010c8e0(dir, (float *)((char *)collision + 0x24), rgb);
+
+    marker_names[0] = (void *)0x0028ab18;
+    marker_names[1] = (void *)0x0026b188;
+    marker_names[2] = (void *)0x002b7cfc;
+
+    effect_scale = *(float *)0x2533c8 - *(float *)((char *)collision + 0x14);
     effect_new_unattached_from_markers(
-        *(int *)(vehi + 0x3ec), -1, NULL, 3, (void *)0x002b7cfc,
-        marker_points, marker_forwards, effect_scale, effect_scale, 0.0f,
-        0.0f, 0.0f);
+        *(int *)(vehi + 0x3ec), -1, NULL, 3, marker_names, marker_points,
+        marker_forwards, effect_scale, effect_scale, 0.0f, 0.0f, 1.0f);
   }
 }
 

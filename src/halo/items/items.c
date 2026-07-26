@@ -1143,171 +1143,351 @@ void FUN_000f4ea0(int scenario_tag_index)
 }
 /* --- items.obj batch drafts (2026-07-26) --- */
 
-/* 0xf4210 */
-void multiplayer_settings_select_list_update_item(void)
+/* 0xf4210 — refresh multiplayer settings select-list item widgets. */
+void multiplayer_settings_select_list_update_item(void *widget)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *tag;
+  int handles[3];
+  int resolved[3];
+  int index;
+  int i;
 
-  tag_get(0x44654c61, 0);
-  display_assert((char *)0x00289bd0, (char *)0x00288938, 1930, ebx);
-  system_exit(0);
-  /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xf428c */
-  display_assert((char *)0x00289b88, (char *)0x00288938, 1931, ebx);
-  system_exit(0);
-  FUN_000f3690(0, 0);
-  /* cmp ecx, edx -> je 0xf42b4 */
-  /* cmp eax, 0xc -> jl 0xf42a0 */
-  multiplayer_game_set_text_box_for_game_ruleset((void *)(uintptr_t)edx);
-  /* relift: cmp dword ptr [ebp + eax*4 - 0x34], -1 -> je 0xf46cf */
-  widget_instance_get_nth_child((void *)(uintptr_t)edi, 0);
-  /* test esi, esi -> je 0xf4302 */
-  /* relift: cmp word ptr [esi + 0xe], 0 -> je 0xf4321 */
-  display_assert((char *)0x00289b54, (char *)0x00288938, 1967, ebx);
-  system_exit(0);
-  /* test edi, edi -> je 0xf432e */
-  /* relift: cmp word ptr [edi + 0xe], (int16_t)ebx -> je 0xf434d */
-  display_assert((char *)0x00289b28, (char *)0x00288938, 1970, ebx);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0xe], 0 -> je 0xf437d */
-  display_assert((char *)0x00289aec, (char *)0x00288938, 1973, ebx);
-  system_exit(0);
-  /* test esi, esi -> je 0xf438b */
-  /* relift: cmp word ptr [esi + 0xe], 0 -> je 0xf43aa */
-  display_assert((char *)0x00289aac, (char *)0x00288938, 1976, ebx);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)ebx -> je 0xf43d9 */
-  display_assert((char *)0x00289a70, (char *)0x00288938, 1979, ebx);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)ebx -> je 0xf4408 */
-  display_assert((char *)0x00289a38, (char *)0x00288938, 1982, ebx);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)ebx -> je 0xf4437 */
-  display_assert((char *)0x002899fc, (char *)0x00288938, 1985, ebx);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)ebx -> je 0xf4466 */
-  display_assert((char *)0x002899bc, (char *)0x00288938, 1988, ebx);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)ebx -> je 0xf4495 */
-  display_assert((char *)0x00289970, (char *)0x00288938, 1991, ebx);
-  system_exit(0);
-  /* test esi, esi -> je 0xf44a2 */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)ebx -> je 0xf44c1 */
-  display_assert((char *)0x00289938, (char *)0x00288938, 1994, ebx);
-  system_exit(0);
-  /* relift: cmp word ptr [ebx + 0xe], 1 -> je 0xf44f2 */
-  display_assert((char *)0x00289900, (char *)0x00288938, 1997, 0);
-  system_exit(0);
-  /* cmp edx, -1 -> je 0xf4684 */
-  /* relift: cmp dword ptr [eax], edx -> je 0xf4526 */
-  /* cmp eax, 0x5aa45c -> jl 0xf4512 */
-  ui_widget_realloc(0, 24, (char *)0x00288938, 2023);
-  /* test (char)ecx, 1 -> je 0xf45d6 */
-  tag_loaded(0, (char *)0);
-  /* cmp eax, -1 -> je 0xf45ba */
-  FUN_0019d420(0, 0);
-  ustrncpy((wchar_t *)(uintptr_t)ecx, (wchar_t *)(uintptr_t)eax, 11);
-  ustrncpy((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)ebx, 11);
-  /* relift: cmp word ptr [ebx + 0x18], 0 -> jge 0xf45f6 */
-  FUN_001c0ed0();
-  /* cmp esi, ecx -> jle 0xf4612 */
-  FUN_001c0ed0();
-  /* relift: test byte ptr [ebx + 0x1a], 1 -> je 0xf4634 */
-  player_profile_save_last_level_played();
-  /* cmp ecx, 9 -> jle 0xf4658 */
-  FUN_001c0ed0();
+  tag = (char *)tag_get(0x44654c61, *(int *)widget); /* 'aLeD' */
+  if (*(int16_t *)tag != 2) {
+    display_assert((char *)0x00289bd0, (char *)0x00288938, 0x78a, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(tag + 0x3e0) != 3) {
+    display_assert((char *)0x00289b88, (char *)0x00288938, 0x78b, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  handles[0] = handles[1] = handles[2] = -1;
+  FUN_000f3690(handles, widget);
+  for (i = 0; i < 3; i++) {
+    if (handles[i] == -1)
+      resolved[i] = -1;
+    else
+      resolved[i] = (*(int **)((char *)widget + 0x40))[handles[i]];
+  }
+  multiplayer_game_set_text_box_for_game_ruleset(resolved, 3);
+
+  for (index = 0; index < 3; index++) {
+    char *child;
+    char *def;
+    char *n0, *n1, *n2, *n3, *n4, *n5, *n6, *n7;
+    int entry_handle;
+    char *entry;
+    int scan;
+    short level_cap;
+    short level_out;
+    short diff_out;
+
+    if (handles[index] == -1)
+      break;
+
+    child = (char *)widget_instance_get_nth_child(widget, index);
+    if (child == 0 || *(int16_t *)(child + 0xe) != 0) {
+      display_assert((char *)0x00289b54, (char *)0x00288938, 0x7af, 1);
+      system_exit(-1);
+    }
+    def = *(char **)(child + 0x34);
+    if (def == 0 || *(int16_t *)(def + 0xe) != 1) {
+      display_assert((char *)0x00289b28, (char *)0x00288938, 0x7b2, 1);
+      system_exit(-1);
+    }
+    n0 = *(char **)(def + 0x2c);
+    if (n0 == 0 || *(int16_t *)(n0 + 0xe) != 0) {
+      display_assert((char *)0x00289aec, (char *)0x00288938, 0x7b5, 1);
+      system_exit(-1);
+    }
+    n1 = *(char **)(n0 + 0x2c);
+    if (n1 == 0 || *(int16_t *)(n1 + 0xe) != 0) {
+      display_assert((char *)0x00289aac, (char *)0x00288938, 0x7b8, 1);
+      system_exit(-1);
+    }
+    n2 = *(char **)(n1 + 0x34);
+    if (n2 == 0 || *(int16_t *)(n2 + 0xe) != 1) {
+      display_assert((char *)0x00289a70, (char *)0x00288938, 0x7bb, 1);
+      system_exit(-1);
+    }
+    n3 = *(char **)(n2 + 0x2c);
+    if (n3 == 0 || *(int16_t *)(n3 + 0xe) != 1) {
+      display_assert((char *)0x00289a38, (char *)0x00288938, 0x7be, 1);
+      system_exit(-1);
+    }
+    n4 = *(char **)(n3 + 0x2c);
+    if (n4 == 0 || *(int16_t *)(n4 + 0xe) != 1) {
+      display_assert((char *)0x002899fc, (char *)0x00288938, 0x7c1, 1);
+      system_exit(-1);
+    }
+    n5 = *(char **)(n4 + 0x2c);
+    if (n5 == 0 || *(int16_t *)(n5 + 0xe) != 1) {
+      display_assert((char *)0x002899bc, (char *)0x00288938, 0x7c4, 1);
+      system_exit(-1);
+    }
+    n6 = *(char **)(n5 + 0x2c);
+    if (n6 == 0 || *(int16_t *)(n6 + 0xe) != 1) {
+      display_assert((char *)0x00289970, (char *)0x00288938, 0x7c7, 1);
+      system_exit(-1);
+    }
+    n7 = *(char **)(n6 + 0x2c);
+    if (n7 == 0 || *(int16_t *)(n7 + 0xe) != 1) {
+      display_assert((char *)0x00289938, (char *)0x00288938, 0x7ca, 1);
+      system_exit(-1);
+    }
+    {
+      char *leaf = *(char **)(n7 + 0x2c);
+      if (leaf == 0 || *(int16_t *)(leaf + 0xe) != 1) {
+        display_assert((char *)0x00289900, (char *)0x00288938, 0x7cd, 1);
+        system_exit(-1);
+      }
+
+      entry_handle = (*(int **)((char *)widget + 0x40))[handles[index]];
+      if (entry_handle == -1)
+        goto hide_row;
+
+      entry = 0;
+      for (scan = 0; scan < 3; scan++) {
+        if (*(int *)(0x5aa3c0 + scan * 0x34) == entry_handle) {
+          entry = (char *)(0x5aa3c4 + scan * 0x34);
+          break;
+        }
+      }
+      if (entry == 0)
+        goto hide_row;
+
+      def[0x10] = 1;
+      n2[0x10] = 0;
+      n3[0x10] = 1;
+      n4[0x10] = 1;
+      n5[0x10] = 1;
+      n6[0x10] = 1;
+      n7[0x10] = 1;
+      leaf[0x10] = 1;
+
+      *(void **)(def + 0x3c) =
+          ui_widget_realloc(*(int *)(def + 0x3c), 0x18, (char *)0x00288938, 0x7e7);
+      if (*(void **)(def + 0x3c) != 0) {
+        if ((*(unsigned short *)(entry + 0x1a) & 1) != 0) {
+          int ustr = tag_loaded(0x75737472, (char *)0x002898d0);
+          wchar_t *src;
+          if (ustr != -1)
+            src = (wchar_t *)(uintptr_t)FUN_0019d420(ustr, (*(unsigned short *)(entry + 0x1a)) >> 8);
+          else
+            src = (wchar_t *)0x00281c38;
+          ustrncpy(*(wchar_t **)(def + 0x3c), src, 0xb);
+          *(int16_t *)(*(char **)(def + 0x3c) + 0x16) = 0;
+        } else {
+          ustrncpy(*(wchar_t **)(def + 0x3c), (wchar_t *)entry, 0xb);
+          *(int16_t *)(*(char **)(def + 0x3c) + 0x16) = 0;
+        }
+      }
+
+      if (*(int16_t *)(entry + 0x18) < 0)
+        level_cap = 0;
+      else {
+        level_cap = *(int16_t *)(entry + 0x18);
+        if (level_cap > (short)(FUN_001c0ed0() - 1))
+          level_cap = (short)(FUN_001c0ed0() - 1);
+      }
+      *(int16_t *)(n0 + 0x50) = level_cap;
+
+      if ((*(unsigned char *)(entry + 0x1a) & 1) != 0) {
+        n4[0x10] = 0;
+        n6[0x10] = 0;
+      } else {
+        player_profile_save_last_level_played(entry, &level_out, &diff_out);
+        level_out = (short)(level_out + 1);
+        if (level_out > 9)
+          level_out = 9;
+        *(int16_t *)(n4 + 0x40) = level_out;
+        *(int16_t *)(n6 + 0x40) = diff_out;
+        *(int16_t *)(leaf + 0x40) =
+            (short)(*(unsigned char *)(entry + 0x2b) == 1);
+      }
+      continue;
+
+    hide_row:
+      def[0x10] = 0;
+      *(int16_t *)(n0 + 0x50) = (int16_t)FUN_001c0ed0();
+      n2[0x10] = 1;
+      n3[0x10] = 0;
+      n4[0x10] = 0;
+      n5[0x10] = 0;
+      n6[0x10] = 0;
+      n7[0x10] = 0;
+      leaf[0x10] = 0;
+    }
+  }
 }
 
-/* 0xf46e0 */
-void FUN_000f46e0(void)
+/* 0xf46e0 — update playlist/settings item widget text from selected entry. */
+void FUN_000f46e0(void *widget)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *tag;
+  char *parent_tag;
+  char *parent_def;
+  char *row_def;
+  int handle;
+  int scan;
+  char *entry;
+  unsigned short count;
+  int valid_count;
+  short sel;
+  short level_cap;
 
-  /* test eax, eax -> jne 0xf4717 */
-  display_assert((char *)0x00289ea8, (char *)0x00288938, 2142, 0);
-  system_exit(0);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [esi], 2 -> je 0xf474f */
-  display_assert((char *)0x00289e64, (char *)0x00288938, 2148, 0);
-  system_exit(0);
-  /* test eax, eax -> je 0xf4779 */
-  display_assert((char *)0x00289e18, (char *)0x00288938, 2149, 0);
-  system_exit(0);
-  tag_get('aLeD', 0);
-  /* cmp ecx, 3 -> je 0xf47b7 */
-  display_assert((char *)0x00289da0, (char *)0x00288938, 2151, 0);
-  system_exit(0);
-  display_assert((char *)0x00289da0, (char *)0x00288938, 2157, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0xf47ff */
-  /* cmp edx, ecx -> jl 0xf481f */
-  display_assert((char *)0x00289d68, (char *)0x00288938, 2159, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0xf4833 */
-  /* cmp edx, ecx -> jl 0xf4853 */
-  display_assert((char *)0x00289d50, (char *)0x00288938, 2162, 0);
-  system_exit(0);
-  multiplayer_game_set_text_box_for_game_ruleset((void *)(uintptr_t)edx);
-  /* cmp esi, -1 -> je 0xf489e */
-  /* relift: cmp dword ptr [eax], esi -> je 0xf4891 */
-  /* cmp eax, 0x5aa45c -> jl 0xf4880 */
-  /* test (int16_t)eax, (int16_t)eax -> jbe 0xf4afe */
-  qsort((void *)(uintptr_t)ebx, esi, 0, (void *)0);
-  /* test esi, esi -> jle 0xf48d3 */
-  /* relift: cmp dword ptr [ebx + eax*4], -1 -> je 0xf48d3 */
-  /* cmp eax, esi -> jl 0xf48c8 */
-  /* cmp ecx, eax -> jg 0xf48f8 */
-  ui_widget_realloc(0, 24, (char *)0x00288938, 2182);
-  /* test (char)ecx, 1 -> je 0xf4975 */
-  tag_loaded(0, (char *)0);
-  FUN_0019d420(0, 0);
-  ustrncpy((wchar_t *)(uintptr_t)ecx, (wchar_t *)(uintptr_t)ecx, 11);
-  ustrncpy((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)esi, 11);
-  /* relift: cmp word ptr [esi + 0x18], 0 -> jge 0xf4995 */
-  FUN_001c0ed0();
-  /* cmp edi, ecx -> jle 0xf49b1 */
-  FUN_001c0ed0();
-  ui_widget_realloc(0, 512, (char *)0x00288938, 2204);
-  /* relift: test byte ptr [esi + 0x1a], 1 -> je 0xf4a7f */
-  tag_loaded('rtsu', (char *)0x00289d00);
-  tag_loaded('rtsu', (char *)0x00289cb8);
-  /* cmp ebx, -1 -> je 0xf4a61 */
-  FUN_0019d420(0, 0);
-  FUN_0019d420(0, 0);
-  unicode_sprintf((wchar_t *)(uintptr_t)eax, 255, (wchar_t *)0x00289ca4);
-  tag_loaded('rtsu', (char *)0x00289c58);
-  tag_loaded('rtsu', (char *)0x00289c10);
-  /* cmp ebx, -1 -> je 0xf4ae8 */
-  FUN_0019d420(0, 0);
-  FUN_0019d420(0, 0);
-  unicode_sprintf((wchar_t *)(uintptr_t)ecx, 255, (wchar_t *)0x00289ca4);
-  ui_widget_realloc(0, 0, (char *)0x00288938, 2258);
-  ui_widget_realloc(0, 0, (char *)0x00288938, 2263);
+  for (;;) {
+    if (*(void **)((char *)widget + 0x30) == 0) {
+      display_assert((char *)0x00289ea8, (char *)0x00288938, 0x85e, 1);
+      system_exit(-1);
+    }
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+    tag = (char *)tag_get(0x44654c61, *(int *)widget);
+    if (*(int16_t *)tag != 2) {
+      display_assert((char *)0x00289e64, (char *)0x00288938, 0x864, 1);
+      system_exit(-1);
+    }
+    if (*(int *)(tag + 0x3e0) != 0) {
+      display_assert((char *)0x00289e18, (char *)0x00288938, 0x865, 1);
+      system_exit(-1);
+    }
+
+    parent_tag = (char *)tag_get(0x44654c61, **(int **)((char *)widget + 0x30));
+    if (*(int *)(parent_tag + 0x3e0) != 3) {
+      display_assert((char *)0x00289da0, (char *)0x00288938, 0x867, 1);
+      system_exit(-1);
+    }
+
+    parent_def = *(char **)(*(char **)((char *)widget + 0x30) + 0x34);
+    row_def = *(char **)(parent_def + 0x2c);
+    if (widget != *(void **)(row_def + 0x2c)) {
+      display_assert((char *)0x00289da0, (char *)0x00288938, 0x86d, 1);
+      system_exit(-1);
+    }
+
+    sel = *(int16_t *)((char *)widget + 0x3c);
+    count = *(unsigned short *)((char *)widget + 0x44);
+    if (sel < 0 || (int)sel >= (int)count) {
+      display_assert((char *)0x00289d68, (char *)0x00288938, 0x86f, 1);
+      system_exit(-1);
+    }
+    if (sel < 0 || (int)sel >= (int)count) {
+      display_assert((char *)0x00289d50, (char *)0x00288938, 0x872, 1);
+      system_exit(-1);
+    }
+
+    handle = (*(int **)((char *)widget + 0x40))[sel];
+    {
+      int handles[1];
+      handles[0] = handle;
+      multiplayer_game_set_text_box_for_game_ruleset(handles, 1);
+    }
+
+    entry = 0;
+    if (handle != -1) {
+      for (scan = 0; scan < 3; scan++) {
+        if (*(int *)(0x5aa3c0 + scan * 0x34) == handle) {
+          entry = (char *)(0x5aa3c4 + scan * 0x34);
+          break;
+        }
+      }
+    }
+
+    if (entry != 0) {
+      *(void **)((char *)widget + 0x4c) = ui_widget_realloc(
+          *(int *)((char *)widget + 0x4c), 0x18, (char *)0x00288938, 0x886);
+      if (*(void **)((char *)widget + 0x4c) == 0)
+        return;
+
+      if ((*(unsigned short *)(entry + 0x1a) & 1) != 0) {
+        int ustr = tag_loaded(0x75737472, (char *)0x002898d0);
+        wchar_t *src = (wchar_t *)0x0026cdf0;
+        if (ustr != -1)
+          src = (wchar_t *)(uintptr_t)FUN_0019d420(
+              ustr, (*(unsigned short *)(entry + 0x1a)) >> 8);
+        ustrncpy(*(wchar_t **)((char *)widget + 0x4c), src, 0xb);
+        *(int16_t *)(*(char **)((char *)widget + 0x4c) + 0x16) = 0;
+      } else {
+        ustrncpy(*(wchar_t **)((char *)widget + 0x4c), (wchar_t *)entry, 0xb);
+        *(int16_t *)(*(char **)((char *)widget + 0x4c) + 0x16) = 0;
+      }
+
+      if (*(int16_t *)(entry + 0x18) < 0)
+        level_cap = 0;
+      else {
+        level_cap = *(int16_t *)(entry + 0x18);
+        if (level_cap > (short)(FUN_001c0ed0() - 1))
+          level_cap = (short)(FUN_001c0ed0() - 1);
+      }
+      *(int16_t *)(parent_def + 0x50) = level_cap;
+
+      *(void **)(row_def + 0x3c) = ui_widget_realloc(
+          *(int *)(row_def + 0x3c), 0x200, (char *)0x00288938, 0x89c);
+      if (*(void **)(row_def + 0x3c) == 0)
+        return;
+
+      if ((*(unsigned char *)(entry + 0x1a) & 1) != 0) {
+        int a = tag_loaded(0x75737472, (char *)0x00289d00);
+        int b = tag_loaded(0x75737472, (char *)0x00289cb8);
+        if (a != -1 && b != -1) {
+          wchar_t *sa = (wchar_t *)(uintptr_t)FUN_0019d420(
+              a, *(unsigned char *)(entry + 0x29));
+          wchar_t *sb = (wchar_t *)(uintptr_t)FUN_0019d420(
+              b, *(unsigned char *)(entry + 0x28));
+          unicode_sprintf(*(wchar_t **)(row_def + 0x3c), 0xff,
+                          (wchar_t *)0x00289ca4, sa, (wchar_t *)0x00261f2c, sb);
+          *(int16_t *)(*(char **)(row_def + 0x3c) + 0x1fe) = 0;
+        } else {
+          **(int16_t **)(row_def + 0x3c) = 0;
+          *(int16_t *)(*(char **)(row_def + 0x3c) + 0x1fe) = 0;
+        }
+      } else {
+        int a = tag_loaded(0x75737472, (char *)0x00289c58);
+        int b = tag_loaded(0x75737472, (char *)0x00289c10);
+        if (a != -1 && b != -1) {
+          wchar_t *sa = (wchar_t *)(uintptr_t)FUN_0019d420(
+              a, *(unsigned char *)(entry + 0x29));
+          wchar_t *sb = (wchar_t *)(uintptr_t)FUN_0019d420(
+              b, *(unsigned char *)(entry + 0x28));
+          unicode_sprintf(*(wchar_t **)(row_def + 0x3c), 0xff,
+                          (wchar_t *)0x00289ca4, sa, (wchar_t *)0x00261f2c, sb);
+        }
+        *(int16_t *)(*(char **)(row_def + 0x3c) + 0x1fe) = 0;
+      }
+      return;
+    }
+
+    count = *(unsigned short *)((char *)widget + 0x44);
+    if (count == 0) {
+      *(void **)((char *)widget + 0x4c) = ui_widget_realloc(
+          *(int *)((char *)widget + 0x4c), 4, (char *)0x00288938, 0x8d2);
+      if (*(void **)((char *)widget + 0x4c) != 0)
+        **(int16_t **)((char *)widget + 0x4c) = 0;
+      *(int16_t *)(parent_def + 0x50) = 0;
+      *(void **)(row_def + 0x3c) = ui_widget_realloc(
+          *(int *)(row_def + 0x3c), 4, (char *)0x00288938, 0x8d7);
+      if (*(void **)(row_def + 0x3c) != 0)
+        **(int16_t **)(row_def + 0x3c) = 0;
+      return;
+    }
+
+    qsort(*(void **)((char *)widget + 0x40), count, 4, (void *)FUN_000f3960);
+    valid_count = 0;
+    while (valid_count < (int)count &&
+           (*(int **)((char *)widget + 0x40))[valid_count] != -1)
+      valid_count++;
+    *(unsigned short *)((char *)widget + 0x44) = (unsigned short)valid_count;
+    sel = *(int16_t *)((char *)widget + 0x3c);
+    if (sel < 0) {
+      *(int16_t *)((char *)widget + 0x3c) = 0;
+    } else {
+      short max_sel = (short)(valid_count - 1);
+      if (sel > max_sel)
+        sel = max_sel;
+      *(int16_t *)((char *)widget + 0x3c) = sel;
+    }
+  }
 }
 
 /* 0xf4b60 */
@@ -1722,41 +1902,81 @@ void item_get_position_even_if_in_inventory(void)
   (void)ecx;
 }
 
-/* 0xf7110 */
-void FUN_000f7110(void)
+/* 0xf7110 — snap item orientation to a ground hit normal via marker basis. */
+void FUN_000f7110(float *opt_position, int item_handle, float *hit_normal,
+                  float *out_position)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *item;
+  char marker[0x6c];
+  float matrix[12];
+  float local_pos[3];
+  float basis[3];
+  float quat[4];
+  float *right;
+  float *forward;
+  float *position;
+  float dot;
+  float len;
+  float inv;
 
-  object_get_and_verify_type(0, 28);
-  display_assert((char *)0x0026b188, (char *)0x0028aaa0, 713, 0);
-  system_exit(0);
-  object_get_markers_by_string_id(0, (void *)0x0028aa90, (void *)(uintptr_t)eax, 0);
-  /* test (int16_t)eax, (int16_t)eax -> je 0xf7331 */
-  /* test eax, eax -> jne 0xf717b */
-  /* test edi, edi -> jne 0xf7182 */
-  /* test (char)eax, 0x41 -> jne 0xf7255 */
-  /* test (char)eax, 0x41 -> je 0xf71e5 */
-  display_assert((char *)0x0028aaec, (char *)0x0028aaa0, 732, 0);
-  system_exit(0);
-  quaternion_transform_point((float *)0, (float *)0, (float *)0);
-  normalize3d((float *)(uintptr_t)edx);
-  matrix4x3_from_forward_up_position((void *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)esi);
-  valid_real_matrix4x3((float *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> jne 0xf72f9 */
-  display_assert((char *)0x0028aac0, (char *)0x0028aaa0, 755, 0);
-  system_exit(0);
-  object_get_and_verify_type(0, 0);
-  object_compute_child_marker_position((void *)(uintptr_t)eax, (void *)0, (void *)0);
+  item = (char *)object_get_and_verify_type(item_handle, 0x1c);
+  if (hit_normal == 0) {
+    display_assert((char *)0x0026b188, (char *)0x0028aaa0, 0x2c9, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  if (object_get_markers_by_string_id(item_handle, (void *)0x0028aa90, marker,
+                                      1) == 0)
+    return;
+
+  right = (float *)(marker + 0x54);
+  forward = (float *)(marker + 0x3c);
+  position = (float *)(marker + 0x60);
+
+  if (opt_position == 0)
+    opt_position = position;
+  if (out_position == 0)
+    out_position = local_pos;
+
+  dot = right[0] * hit_normal[0] + right[1] * hit_normal[1] +
+        right[2] * hit_normal[2];
+  len = sqrtf((dot + 1.0f) + (dot + 1.0f));
+  if (len > *(double *)0x26aed0) {
+    if (!(len > 0.0f)) {
+      display_assert((char *)0x0028aaec, (char *)0x0028aaa0, 0x2dc, 1);
+      system_exit(-1);
+    }
+    /* Build rotation quaternion taking marker-right toward hit normal. */
+    quat[0] = right[1] * hit_normal[2] - right[2] * hit_normal[1];
+    quat[1] = right[2] * hit_normal[0] - right[0] * hit_normal[2];
+    quat[2] = right[0] * hit_normal[1] - right[1] * hit_normal[0];
+    inv = 1.0f / len;
+    quat[0] *= inv;
+    quat[1] *= inv;
+    quat[2] *= inv;
+    quat[3] = len * 0.5f;
+    quaternion_transform_point(quat, forward, basis);
+  } else {
+    float cx = forward[1] * hit_normal[2] - forward[2] * hit_normal[1];
+    float cy = forward[2] * hit_normal[0] - forward[0] * hit_normal[2];
+    float cz = forward[0] * hit_normal[1] - forward[1] * hit_normal[0];
+    basis[0] = cy * hit_normal[2] - cz * hit_normal[1];
+    basis[1] = cz * hit_normal[0] - cx * hit_normal[2];
+    basis[2] = cx * hit_normal[1] - cy * hit_normal[0];
+  }
+
+  normalize3d(basis);
+  matrix4x3_from_forward_up_position(matrix, opt_position, basis, hit_normal);
+  if (!valid_real_matrix4x3(matrix)) {
+    display_assert((char *)0x0028aac0, (char *)0x0028aaa0, 0x2f3, 1);
+    system_exit(-1);
+  }
+
+  object_compute_child_marker_position(
+      object_get_and_verify_type(item_handle, -1), marker, matrix);
+  out_position[0] = *(float *)(item + 0xc);
+  out_position[1] = *(float *)(item + 0x10);
+  out_position[2] = *(float *)(item + 0x14);
 }
 
 /* 0xf7340 — per-tick update for a free (unheld) item. */
@@ -1881,7 +2101,7 @@ void item_update(int item_handle)
             float into = -(hit_normal[0] * vel[0] + hit_normal[1] * vel[1] +
                            hit_normal[2] * vel[2]);
             if (into > *(float *)0x2533e8) {
-              FUN_000f7110();
+              FUN_000f7110(0, item_handle, hit_normal, 0);
               FUN_00012fb0(hit_normal, into, vel);
               if (!game_engine_running() && *(int *)(item_tag + 0x70) == -1)
                 object_set_garbage_flag(item_handle, 1);
