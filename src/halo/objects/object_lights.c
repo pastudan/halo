@@ -1,77 +1,33 @@
 #include <stdint.h>
 /* --- object_lights.obj batch drafts (2026-07-26) --- */
 
-/* lights_initialize (0x1391e0) — XBE naked draft (batch 230). */
-#if defined(__clang__)
-static data_t * (*const b1391e0_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
-static void * (*const b1391e0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
-static void (*const b1391e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1391e0_exitfn)(int) = system_exit;
-static void (*const b1391e0_c191500)(void **out, const char *name) = cluster_partition_globals_new;
-static void (*const b1391e0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* lights_initialize (0x1391e0) — readable C lift. */
 void lights_initialize(void)
 {
-  __asm__ volatile(
-      "pushl $0x7c\n\t"
-      "pushl $0x380\n\t"
-      "pushl $0x29b444\n\t"
-      "call *%[c1bfe10]\n\t"
-      "pushl $4\n\t"
-      "pushl $0\n\t"
-      "pushl $0x29b434\n\t"
-      "movl %%eax, 0x5a90bc\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "movl %%eax, 0x46f074\n\t"
-      "movl 0x5a90bc, %%eax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Llights_initialize_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc2\n\t"
-      "pushl $0x29b324\n\t"
-      "pushl $0x29b428\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Llights_initialize_1:\n\t"
-      "movl 0x46f074, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Llights_initialize_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc3\n\t"
-      "pushl $0x29b324\n\t"
-      "pushl $0x29b414\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Llights_initialize_2:\n\t"
-      "movl 0x46f074, %%eax\n\t"
-      "movb $1, (%%eax)\n\t"
-      "movl 0x5a90bc, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Llights_initialize_3\n\t"
-      "pushl $0x25b590\n\t"
-      "pushl $0x5a90b0\n\t"
-      "call *%[c191500]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      ".Llights_initialize_3:\n\t"
-      "pushl $0x29b3e8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c1bfe10] "m"(b1391e0_c1bfe10), [c1bfbf0] "m"(b1391e0_c1bfbf0), [assert] "m"(b1391e0_assert), [exitfn] "m"(b1391e0_exitfn), [c191500] "m"(b1391e0_c191500), [c8f390] "m"(b1391e0_c8f390)
-      : "memory");
+  extern char DAT_0029b444[];
+  extern char DAT_0029b434[];
+  extern char DAT_0029b428[];
+  extern char DAT_0029b414[];
+  extern char DAT_0029b324[];
+  extern char DAT_0029b3e8[];
+  extern char DAT_0025b590[];
+
+  *(data_t **)0x5a90bc = game_state_data_new(DAT_0029b444, 0x380, 0x7c);
+  *(void **)0x46f074 = game_state_malloc(DAT_0029b434, (const char *)0, 4);
+  if (!*(void **)0x5a90bc) {
+    display_assert(DAT_0029b428, DAT_0029b324, 0xc2, true);
+    system_exit(-1);
+  }
+  if (!*(void **)0x46f074) {
+    display_assert(DAT_0029b414, DAT_0029b324, 0xc3, true);
+    system_exit(-1);
+  }
+  **(unsigned char **)0x46f074 = 1;
+  if (*(void **)0x5a90bc)
+    cluster_partition_globals_new((void **)0x5a90b0, DAT_0025b590);
+  else
+    error(2, DAT_0029b3e8);
 }
-#else
-#error "lights_initialize: clang naked draft required"
-#endif
 
 
 /* lights_dispose (0x1392a0) — readable C lift. */
