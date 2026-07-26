@@ -98,6 +98,9 @@ def op_to_att(op: str):
     m = re.match(r"(?:[cdefgs]s:)?\[(.+)\]$", op)
     if m:
         return mem_to_att(m.group(1)), None
+    # Bare segment regs (push es / pop fs) — not in REGS32/16/8 maps.
+    if op in ("es", "cs", "ss", "ds", "fs", "gs"):
+        return f"%{op}", None
     return _op_to_att_base(op)
 
 
@@ -465,6 +468,19 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
             out.append(f"  leal {mem_to_att(mm.group(1))}, %%{parts[0]}")
             continue
         if mnem in ("push", "pop"):
+            # Segment-reg push/pop from misdecoded post-body tables: emit raw
+            # XBE bytes so Capstone still matches without AT&T segment syntax.
+            if parts[0] in ("es", "cs", "ss", "ds", "fs", "gs"):
+                raw = get_bytes(addr, n=16)
+                insn = next(md.disasm(raw, addr), None)
+                if insn is None:
+                    todos.append(f"{mnem} {ops}")
+                    out.append(f"  /* TODO {mnem} {ops} */")
+                else:
+                    out.append(
+                        "  .byte " + ", ".join(f"0x{x:02x}" for x in insn.bytes)
+                    )
+                continue
             a, sz = op_to_att(parts[0])
             if parts[0] in REGS32:
                 suf = "l"
@@ -678,6 +694,10 @@ def sig_from_decl(name: str, decl: str) -> str:
     decl = decl.rstrip(";")
     m = re.match(r"^(.*?)\b" + re.escape(name) + r"\s*\((.*)\)\s*$", decl)
     ret, args = m.group(1).strip(), m.group(2)
+    # Match existing C decls (often cdecl) — do not redeclare with kb's
+    # __stdcall/__fastcall attribute on the definition.
+    ret = re.sub(r"\b__(?:stdcall|fastcall)\b", "", ret)
+    ret = re.sub(r"\s+", " ", ret).strip()
     args = re.sub(r"\s*@<[a-z]+>", "", args)
     if args.strip() in ("", "void"):
         return f"{ret} {name}(void)"

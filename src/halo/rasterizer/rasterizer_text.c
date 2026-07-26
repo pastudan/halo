@@ -695,68 +695,205 @@ unsigned char FUN_001807d0(float param_1)
   return (unsigned char)(int)(clamped * *(float *)0x2602c8);
 }
 
-/* rasterizer_geometry_pack_normal_11_11_10_validated: pack float[3] normal
- * into 11-11-10 uint, asserting components in [-1.0, 1.0]. Encodes via
- * floor(component * scale) + FISTP. Verifies round-trip via FUN_0017ffc0.
- * Structural cap: FUCOMPP-based range asserts cannot be matched exactly.
- * layout: bits[10:0]=i, bits[21:11]=j, bits[31:22]=k (10-bit). (0x1808f0) */
-unsigned int FUN_001808f0(float *param_1)
+/* FUN_001808f0 (0x1808f0) — XBE naked draft (batch 317). */
+#if defined(__clang__)
+static void (*const b1808f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1808f0_exitfn)(int) = system_exit;
+static char * (*const b1808f0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static double (*const b1808f0_c1d9c2b)(double x) = floor;
+static float * (*const b1808f0_c17ffc0)(float *param_1, unsigned int param_2) = FUN_0017ffc0;
+
+__attribute__((naked, noinline))
+unsigned int FUN_001808f0(float *param_1 __attribute__((unused)))
 {
-  float decoded_i;
-  float decoded_j;
-  float decoded_k;
-  float *decoded;
-  unsigned int i_11;
-  unsigned int j_11;
-  unsigned int packed;
-  int tmp;
-  float local_buf[3];
-
-  if (param_1 == 0) {
-    display_assert("parameters",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x45,
-                   1);
-    system_exit(-1);
-  }
-  if (*param_1 < -1.0f || *param_1 > 1.0f || param_1[1] < -1.0f ||
-      param_1[1] > 1.0f || param_1[2] < -1.0f || param_1[2] > 1.0f) {
-    display_assert("invalid vector",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x4e,
-                   1);
-    system_exit(-1);
-  }
-  tmp = (int)floor((double)(*param_1 * *(float *)0x2b0118));
-  i_11 = (unsigned int)tmp & 0x7ff;
-  tmp = (int)floor((double)(param_1[1] * *(float *)0x2b0118));
-  j_11 = (unsigned int)tmp & 0x7ff;
-  tmp = (int)floor((double)(param_1[2] * *(float *)0x2b0114));
-  packed = (((unsigned int)tmp & 0x3ff) << 11 | j_11) << 11 | i_11;
-
-  decoded = FUN_0017ffc0(local_buf, packed);
-  decoded_i = decoded[0];
-  decoded_j = decoded[1];
-  decoded_k = decoded[2];
-
-  if ((float)*(double *)0x28b800 <= fabsf(decoded_i - *param_1)) {
-    display_assert("fabs(v2.i - v->i)<0.01f",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x5c,
-                   1);
-    system_exit(-1);
-  }
-  if ((float)*(double *)0x28b800 <= fabsf(decoded_j - param_1[1])) {
-    display_assert("fabs(v2.j - v->j)<0.01f",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x5d,
-                   1);
-    system_exit(-1);
-  }
-  if ((float)*(double *)0x28b800 <= fabsf(decoded_k - param_1[2])) {
-    display_assert("fabs(v2.k - v->k)<0.01f",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x5e,
-                   1);
-    system_exit(-1);
-  }
-  return packed;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_001808f0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x45\n\t"
+      "pushl $0x2afe38\n\t"
+      "pushl $0x2a3e7c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001808f0_1:\n\t"
+      "flds (%%esi)\n\t"
+      "fcomps 0x255e94\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001808f0_2\n\t"
+      "flds (%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_001808f0_2\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fcomps 0x255e94\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001808f0_2\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_001808f0_2\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fcomps 0x255e94\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001808f0_2\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jnp .LFUN_001808f0_3\n\t"
+      ".LFUN_001808f0_2:\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4e\n\t"
+      "pushl $0x2afe38\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x2b011c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001808f0_3:\n\t"
+      "flds (%%esi)\n\t"
+      "subl $8, %%esp\n\t"
+      "fmuls 0x2b0118\n\t"
+      "fstpl (%%esp)\n\t"
+      "call *%[c1d9c2b]\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fistps -0x4(%%ebp)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fmuls 0x2b0118\n\t"
+      "movl -0x4(%%ebp), %%edi\n\t"
+      "subl $8, %%esp\n\t"
+      "andl $0x7ff, %%edi\n\t"
+      "fstpl (%%esp)\n\t"
+      "call *%[c1d9c2b]\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fistps -0x4(%%ebp)\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fmuls 0x2b0114\n\t"
+      "movl -0x4(%%ebp), %%ebx\n\t"
+      "subl $8, %%esp\n\t"
+      "andl $0x7ff, %%ebx\n\t"
+      "fstpl (%%esp)\n\t"
+      "call *%[c1d9c2b]\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fistps -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "andl $0x3ff, %%eax\n\t"
+      "shll $0xb, %%eax\n\t"
+      "orl %%ebx, %%eax\n\t"
+      "shll $0xb, %%eax\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c17ffc0]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fsubs (%%esi)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "fabs\n\t"
+      "fcompl 0x28b800\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_001808f0_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5c\n\t"
+      "pushl $0x2afe38\n\t"
+      "pushl $0x2b00fc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001808f0_4:\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fsubs 0x4(%%esi)\n\t"
+      "fabs\n\t"
+      "fcompl 0x28b800\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_001808f0_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5d\n\t"
+      "pushl $0x2afe38\n\t"
+      "pushl $0x2b00e4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001808f0_5:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fsubs 0x8(%%esi)\n\t"
+      "fabs\n\t"
+      "fcompl 0x28b800\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_001808f0_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5e\n\t"
+      "pushl $0x2afe38\n\t"
+      "pushl $0x2b00cc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001808f0_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1808f0_assert), [exitfn] "m"(b1808f0_exitfn), [c8d9d0] "m"(b1808f0_c8d9d0), [c1d9c2b] "m"(b1808f0_c1d9c2b), [c17ffc0] "m"(b1808f0_c17ffc0)
+      : "memory");
 }
+#else
+#error "FUN_001808f0: clang naked draft required"
+#endif
+
 
 /* FUN_00180b10 (0x180b10) — XBE naked draft (batch 305). */
 #if defined(__clang__)
@@ -2653,121 +2790,274 @@ int FUN_00183290(void *param_1)
   return iVar4;
 }
 
-/* rasterizer_swizzle_bitmap_all: rebuild hardware format for a bitmap by
- * allocating a swizzle buffer and copying/padding all face mipmaps
- * (0x183390). Returns 1 on success, 0 on out-of-memory. */
-int FUN_00183390(int param_1)
-{
-  int total_size;
-  int iVar8;
-  unsigned short face_count;
-  short sVar2;
-  short sVar3;
-  int local_c;
-  short face_index;
-  int swizzle_buf;
-  int mip_src;
-  int mip_size;
-  int row_pitch;
-  short adjusted_face_index;
-  short local_1c;
-  int local_20;
+/* FUN_00183390 (0x183390) — XBE naked draft (batch 314). */
+#if defined(__clang__)
+static int (*const b183390_c183290)(void *bitmap) = FUN_00183290;
+static void (*const b183390_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b183390_exitfn)(int) = system_exit;
+static void * (*const b183390_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
+static void (*const b183390_c182e00)(int param_1) = FUN_00182e00;
+static int16_t (*const b183390_c183120)(void *bitmap) = FUN_00183120;
+static void * (*const b183390_c7d000)(void *bitmap, short mipmap_index) = bitmap_mipmap_address;
+static int (*const b183390_c7d960)(void *bitmap, int mipmap_index) = bitmap_mipmap_get_pixel_data_size;
+static int (*const b183390_c7d9f0)(void *bitmap, int mipmap_index) = bitmap_mipmap_get_row_pitch;
+static void * (*const b183390_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void *(*const b183390_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b183390_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+static void (*const b183390_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
-  total_size = FUN_00183290((void *)param_1);
-  iVar8 = 0;
-  /* face_count: 1 for 2D textures, 6 for cubemaps */
-  face_count = (unsigned short)(*(short *)(param_1 + 10) != 2) - 1 & 5;
-  local_1c = (short)(face_count + 1);
-  if (*(int *)(param_1 + 0x2c) == 0) {
-    display_assert("bitmap->base_address",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_swizzle.c", 0x225,
-                   1);
-    system_exit(-1);
-  }
-  swizzle_buf = (int)debug_malloc(
-    total_size, 0, "c:\\halo\\SOURCE\\rasterizer\\rasterizer_swizzle.c", 0x228);
-  if (swizzle_buf == 0) {
-    error(2, "### ERROR rasterizer_xbox_bitmap_rebuild_hardware_format "
-             "failed (out of memory)");
-    return 0;
-  }
-  FUN_00182e00(param_1);
-  face_index = 0;
-  if (local_1c > 0) {
-    do {
-      sVar2 = FUN_00183120((void *)param_1);
-      if (-1 < (int)sVar2) {
-        local_c = 0;
-        local_20 = (int)sVar2;
-        do {
-          mip_src = (int)bitmap_mipmap_address((void *)param_1, local_c);
-          mip_size =
-            bitmap_mipmap_get_pixel_data_size((void *)param_1, local_c);
-          if (*(short *)(param_1 + 10) == 2) {
-            mip_size = mip_size / 6;
-          }
-          adjusted_face_index = *(short *)((int)0x2b0860 + (int)face_index * 2);
-          if ((*(unsigned char *)(param_1 + 0xe) & 0x10) == 0) {
-            /* non-swizzled: copy face mipmap data */
-            csmemcpy((void *)(swizzle_buf + iVar8),
-                     (void *)((int)adjusted_face_index * mip_size + mip_src),
-                     (unsigned int)mip_size);
-            iVar8 = iVar8 + mip_size;
-          } else {
-            /* swizzled/tiled: must be face 0, mip 0 */
-            if ((face_index != 0) || (adjusted_face_index != 0)) {
-              display_assert(
-                "face_index==0 && adjusted_face_index==0",
-                "c:\\halo\\SOURCE\\rasterizer\\rasterizer_swizzle.c", 0x24c, 1);
-              system_exit(-1);
-            }
-            if ((short)local_c != 0) {
-              display_assert(
-                "mipmap_index==0",
-                "c:\\halo\\SOURCE\\rasterizer\\rasterizer_swizzle.c", 0x24d, 1);
-              system_exit(-1);
-            }
-            if ((*(unsigned char *)(param_1 + 0xe) & 2) != 0) {
-              display_assert(
-                "!TEST_FLAG(bitmap->flags, _bitmap_compressed_bit)",
-                "c:\\halo\\SOURCE\\rasterizer\\rasterizer_swizzle.c", 0x24e, 1);
-              system_exit(-1);
-            }
-            row_pitch = bitmap_mipmap_get_row_pitch((void *)param_1, local_c);
-            sVar3 = 0;
-            if (0 < *(short *)(param_1 + 6)) {
-              do {
-                csmemcpy((void *)(swizzle_buf + iVar8), (void *)mip_src,
-                         (unsigned int)row_pitch);
-                csmemset((void *)(swizzle_buf + iVar8 + row_pitch), 0,
-                         (unsigned int)(-row_pitch & 0x3f));
-                mip_src = mip_src + row_pitch;
-                iVar8 = iVar8 + row_pitch + (-row_pitch & 0x3f);
-                sVar3 = sVar3 + 1;
-              } while (sVar3 < *(short *)(param_1 + 6));
-            }
-          }
-          local_c = local_c + 1;
-        } while ((short)local_c <= (short)local_20);
-      }
-      /* align offset to 128 bytes at end of each face */
-      csmemset((void *)(swizzle_buf + iVar8), 0, (unsigned int)(-iVar8 & 0x7f));
-      iVar8 = iVar8 + (-iVar8 & 0x7f);
-      face_index = face_index + 1;
-    } while (face_index < local_1c);
-  }
-  if (iVar8 != total_size) {
-    display_assert("offset==size",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_swizzle.c", 0x271,
-                   1);
-    system_exit(-1);
-  }
-  csmemcpy(*(void **)(param_1 + 0x2c), (void *)swizzle_buf,
-           (unsigned int)total_size);
-  debug_free((void *)swizzle_buf,
-             "c:\\halo\\SOURCE\\rasterizer\\rasterizer_swizzle.c", 0x275);
-  return 1;
+__attribute__((naked, noinline))
+int FUN_00183390(int bitmap __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x20, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c183290]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "cmpw $2, 0xa(%%ebx)\n\t"
+      "movl %%esi, -0x1c(%%ebp)\n\t"
+      "setne %%al\n\t"
+      "decl %%eax\n\t"
+      "andl $5, %%eax\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "movl 0x2c(%%ebx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00183390_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x225\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0x264c30\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00183390_1:\n\t"
+      "pushl $0x228\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8ee60]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "je .LFUN_00183390_17\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c182e00]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $0, -0x18(%%ebp)\n\t"
+      "movl $0, -0x10(%%ebp)\n\t"
+      "jle .LFUN_00183390_14\n\t"
+      ".LFUN_00183390_2:\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c183120]\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movl %%esi, -0xc(%%ebp)\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "jl .LFUN_00183390_13\n\t"
+      "jmp .LFUN_00183390_4\n\t"
+      ".LFUN_00183390_3:\n\t"
+      "movl -0xc(%%ebp), %%esi\n\t"
+      ".LFUN_00183390_4:\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c7d000]\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "call *%[c7d960]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movswl -0x10(%%ebp), %%eax\n\t"
+      "movw 0x2b0860(,%%eax,2), %%cx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $2, 0xa(%%ebx)\n\t"
+      "jne .LFUN_00183390_5\n\t"
+      "movl $0x2aaaaaab, %%eax\n\t"
+      "imull %%esi\n\t"
+      "movl %%edx, %%eax\n\t"
+      "shrl $0x1f, %%eax\n\t"
+      "addl %%eax, %%edx\n\t"
+      "movl %%edx, %%esi\n\t"
+      ".LFUN_00183390_5:\n\t"
+      "testb $0x10, 0xe(%%ebx)\n\t"
+      "je .LFUN_00183390_16\n\t"
+      "cmpw $0, -0x10(%%ebp)\n\t"
+      "jne .LFUN_00183390_6\n\t"
+      "testw %%cx, %%cx\n\t"
+      "je .LFUN_00183390_7\n\t"
+      ".LFUN_00183390_6:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x24c\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0x2b0988\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00183390_7:\n\t"
+      "movl -0xc(%%ebp), %%esi\n\t"
+      "testw %%si, %%si\n\t"
+      "je .LFUN_00183390_8\n\t"
+      "pushl $1\n\t"
+      "pushl $0x24d\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0x29dfec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00183390_8:\n\t"
+      "testb $2, 0xe(%%ebx)\n\t"
+      "je .LFUN_00183390_9\n\t"
+      "pushl $1\n\t"
+      "pushl $0x24e\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0x264df0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00183390_9:\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c7d9f0]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl %%esi, %%ebx\n\t"
+      "negl %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "andl $0x3f, %%ebx\n\t"
+      "cmpw $0, 0x6(%%ecx)\n\t"
+      "movl $0, -0x14(%%ebp)\n\t"
+      "jle .LFUN_00183390_11\n\t"
+      ".LFUN_00183390_10:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "addl %%edi, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8e0b0]\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "addl %%esi, %%edi\n\t"
+      "addl %%edi, %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[memset]\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "addl %%esi, %%ecx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "addl %%ebx, %%edi\n\t"
+      "incl %%eax\n\t"
+      "cmpw 0x6(%%edx), %%ax\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "jl .LFUN_00183390_10\n\t"
+      ".LFUN_00183390_11:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      ".LFUN_00183390_12:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "incl %%eax\n\t"
+      "cmpw -0x20(%%ebp), %%ax\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "jle .LFUN_00183390_3\n\t"
+      ".LFUN_00183390_13:\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl %%edi, %%esi\n\t"
+      "negl %%esi\n\t"
+      "andl $0x7f, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "addl %%edi, %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[memset]\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl %%esi, %%edi\n\t"
+      "incl %%eax\n\t"
+      "cmpw -0x18(%%ebp), %%ax\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "jl .LFUN_00183390_2\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      ".LFUN_00183390_14:\n\t"
+      "cmpl -0x1c(%%ebp), %%edi\n\t"
+      "je .LFUN_00183390_15\n\t"
+      "pushl $1\n\t"
+      "pushl $0x271\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0x2b0978\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00183390_15:\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "movl 0x2c(%%ebx), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8e0b0]\n\t"
+      "pushl $0x275\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00183390_16:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "imull %%esi, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "addl %%edx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "addl %%edi, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl %%esi, %%edi\n\t"
+      "jmp .LFUN_00183390_12\n\t"
+      ".LFUN_00183390_17:\n\t"
+      "pushl $0x2b0928\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c183290] "m"(b183390_c183290), [assert] "m"(b183390_assert), [exitfn] "m"(b183390_exitfn), [c8ee60] "m"(b183390_c8ee60), [c182e00] "m"(b183390_c182e00), [c183120] "m"(b183390_c183120), [c7d000] "m"(b183390_c7d000), [c7d960] "m"(b183390_c7d960), [c7d9f0] "m"(b183390_c7d9f0), [c8e0b0] "m"(b183390_c8e0b0), [memset] "m"(b183390_memset), [c8ef70] "m"(b183390_c8ef70), [c8f390] "m"(b183390_c8f390)
+      : "memory");
 }
+#else
+#error "FUN_00183390: clang naked draft required"
+#endif
+
 
 /* rasterizer_text_cache_initialize: init hardware text cache (0x183650) */
 int rasterizer_text_cache_initialize(void)

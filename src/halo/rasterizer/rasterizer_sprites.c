@@ -1188,18 +1188,62 @@ void FUN_0017da40(int a0, int a1, float a2, float a3, float a4)
   (void)ecx;
 }
 
-/* 0x17dab0 */
-void FUN_0017dab0(int a0, float a1, float a2, float a3, int a4, float a5)
+/* FUN_0017dab0 (0x17dab0) — XBE naked draft (batch 318). */
+#if defined(__clang__)
+static int (*const b17dab0_gtime)(void) = game_time_get;
+
+__attribute__((naked, noinline))
+void FUN_0017dab0(int a0 __attribute__((unused)), float a1 __attribute__((unused)), float a2 __attribute__((unused)), float a3 __attribute__((unused)), int a4 __attribute__((unused)), float a5 __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-
-  /* cmp eax, ebx -> je 0x17db18 */
-  game_time_get();
-
-  (void)eax;
-  (void)ebx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x47e4d4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "je .LFUN_0017dab0_1\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movb %%bl, 0x23(%%eax)\n\t"
+      "movw %%bx, 0x24(%%eax)\n\t"
+      "movl %%ebx, 0x28(%%eax)\n\t"
+      "movl %%ebx, 0x2c(%%eax)\n\t"
+      "movl %%ebx, 0x30(%%eax)\n\t"
+      "movl %%ebx, 0x34(%%eax)\n\t"
+      "movl %%ecx, 0x4c(%%eax)\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x50(%%eax)\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl %%ecx, 0x54(%%eax)\n\t"
+      "movl %%edx, 0x58(%%eax)\n\t"
+      "call *%[gtime]\n\t"
+      "movb 0x18(%%ebp), %%cl\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "movl 0x47e4d4, %%eax\n\t"
+      "fmuls 0x2546a4\n\t"
+      "fld %%st(0)\n\t"
+      "fstps 0x5c(%%eax)\n\t"
+      "fadds 0x1c(%%ebp)\n\t"
+      "fstps 0x60(%%eax)\n\t"
+      "movb %%cl, 0x20(%%eax)\n\t"
+      "movb %%bl, 0x21(%%eax)\n\t"
+      "movb %%bl, 0x22(%%eax)\n\t"
+      ".LFUN_0017dab0_1:\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [gtime] "m"(b17dab0_gtime)
+      : "memory");
 }
+#else
+#error "FUN_0017dab0: clang naked draft required"
+#endif
+
 
 /* 0x17db20 */
 void FUN_0017db20(int a0, float a1, float a2)

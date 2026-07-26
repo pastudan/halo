@@ -315,11 +315,61 @@ void FUN_001d0a06(void)
   __allmul();
 }
 
-/* 0x1d0a5c */
+/* FUN_001d0a5c (0x1d0a5c) — XBE naked draft (batch 314). */
+#if defined(__clang__)
+static void (*const b1d0a5c_c1d0a06)(void) = FUN_001d0a06;
+
+__attribute__((naked, noinline))
 void FUN_001d0a5c(void)
 {
-  FUN_001d0a06();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x28, %%esp\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x25313c\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d0a06]\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "subl -0x10(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "sbbl -0xc(%%ebp), %%ecx\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, -0x14(%%ebp)\n\t"
+      "call *0x253138\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movw -0x28(%%ebp), %%cx\n\t"
+      "movw %%cx, (%%eax)\n\t"
+      "movw -0x26(%%ebp), %%cx\n\t"
+      "movw %%cx, 0x2(%%eax)\n\t"
+      "movw -0x1a(%%ebp), %%cx\n\t"
+      "movw %%cx, 0x4(%%eax)\n\t"
+      "movw -0x24(%%ebp), %%cx\n\t"
+      "movw %%cx, 0x6(%%eax)\n\t"
+      "movw -0x22(%%ebp), %%cx\n\t"
+      "movw %%cx, 0x8(%%eax)\n\t"
+      "movw -0x20(%%ebp), %%cx\n\t"
+      "movw %%cx, 0xa(%%eax)\n\t"
+      "movw -0x1e(%%ebp), %%cx\n\t"
+      "movw %%cx, 0xc(%%eax)\n\t"
+      "movw -0x1c(%%ebp), %%cx\n\t"
+      "movw %%cx, 0xe(%%eax)\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d0a06] "m"(b1d0a5c_c1d0a06)
+      : "memory");
 }
+#else
+#error "FUN_001d0a5c: clang naked draft required"
+#endif
+
 
 /* 0x1d0adb */
 void FUN_001d0adb(void)
