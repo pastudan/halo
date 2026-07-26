@@ -2356,3 +2356,173 @@ void players_update_after_game(void)
   if (*(char *)0x449ef1 != 0 && *(char *)0x2f0e90 != 0)
     profile_exit_private((void *)0x2f0e88);
 }
+
+char valid_real_vector2d(float *v)
+{
+  uint32_t bits;
+
+  bits = *(uint32_t *)v;
+  if ((bits & 0x7f800000) == 0x7f800000)
+    return 0;
+  bits = *(uint32_t *)(v + 1);
+  if ((bits & 0x7f800000) == 0x7f800000)
+    return 0;
+  return 1;
+}
+
+void FUN_000BB290(float *out_direction)
+{
+  random_seed_get_direction3d((unsigned int *)get_global_random_seed_address(),
+                              out_direction);
+}
+
+char FUN_000ba850(int16_t cluster_index, int object_handle)
+{
+  void *elem;
+
+  if (cluster_index == (int16_t)NONE)
+    return 0;
+  elem = tag_block_get_element((char *)global_scenario_get() + 0x39c,
+                               cluster_index, 8);
+  if (FUN_0018ef00(*(uint16_t *)elem, object_handle))
+    return 1;
+  return 0;
+}
+
+void FUN_000bb180(int player_handle, int16_t flag)
+{
+  char *player;
+  char *unit;
+
+  player = (char *)datum_get(player_data, player_handle);
+  unit = (char *)object_get_and_verify_type(*(int *)(player + 0x34), 3);
+  if (flag == 0) {
+    *(int *)(unit + 0x1b4) |= 0x10;
+    *(int16_t *)(unit + 0x3d2) = 0;
+  }
+}
+
+void FUN_000bb1c0(int player_handle, int16_t flag)
+{
+  char *player;
+  char *unit;
+
+  player = (char *)datum_get(player_data, player_handle);
+  unit = (char *)object_get_and_verify_type(*(int *)(player + 0x34), 3);
+  if (flag == 0)
+    *(int *)(unit + 0x1b4) |= 0x20;
+}
+
+void FUN_000bb1f0(int player_handle, int16_t flag)
+{
+  char *player;
+  char *unit;
+
+  player = (char *)datum_get(player_data, player_handle);
+  unit = (char *)object_get_and_verify_type(*(int *)(player + 0x34), 3);
+  if (flag == 0)
+    *(int *)(unit + 0x1b4) &= ~0x10;
+}
+
+void FUN_000bdf80(int16_t function_index, int thread_datum, char init)
+{
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, FUN_000c95f0());
+}
+
+void FUN_000be250(int16_t function_index, int thread_datum, char init)
+{
+  (void)function_index;
+  (void)init;
+  FUN_000c9a50();
+  hs_return(thread_datum, 0);
+}
+
+void FUN_000bdf40(int16_t function_index, int thread_datum, char init)
+{
+  int *args;
+
+  args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_000c95d0(args[0]);
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000bdfa0(int16_t function_index, int thread_datum, char init)
+{
+  int16_t *args;
+
+  args = (int16_t *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_000ca430((int)args[0], (int)(uint16_t)args[2]);
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be0d0(int16_t function_index, int thread_datum, char init)
+{
+  uint16_t *args;
+
+  args = (uint16_t *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_000c9990(args[0]);
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be110(int16_t function_index, int thread_datum, char init)
+{
+  int *args;
+
+  args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_000c99e0(args[0]);
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be150(int16_t function_index, int thread_datum, char init)
+{
+  uint16_t *args;
+
+  args = (uint16_t *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_000ca110(args[0]);
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be190(int16_t function_index, int thread_datum, char init)
+{
+  int *args;
+
+  args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_000c9b90(args[0]);
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be1d0(int16_t function_index, int thread_datum, char init)
+{
+  int *args;
+
+  args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_000ca140(args[0]);
+    hs_return(thread_datum, 0);
+  }
+}
+
+void FUN_000be210(int16_t function_index, int thread_datum, char init)
+{
+  int *args;
+
+  args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    FUN_000c9bb0(args[0]);
+    hs_return(thread_datum, 0);
+  }
+}
