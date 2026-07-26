@@ -1539,71 +1539,27 @@ void FUN_000493B0(float *out, float value, int field_4, int field_8)
   *(int *)(out + 2) = field_8;
 }
 
-/* ai_debug_lineoffire_addpill (0x49430) — XBE naked draft (batch 150). */
-#if defined(__clang__)
-static void (*const b49430_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b49430_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void ai_debug_lineoffire_addpill(float *vec_a __attribute__((unused)), float *vec_b __attribute__((unused)), float param_3 __attribute__((unused)), char param_4 __attribute__((unused)))
+/* ai_debug_lineoffire_addpill (0x49430) — readable C lift. */
+void ai_debug_lineoffire_addpill(float *vec_a, float *vec_b, float param_3, char param_4)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x5acab8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lai_debug_lineoffire_addpill_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xfc4\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl $0x25abd0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_debug_lineoffire_addpill_1:\n\t"
-      "movl 0x5acad4, %%eax\n\t"
-      "cmpl $0x10, %%eax\n\t"
-      "jge .Lai_debug_lineoffire_addpill_2\n\t"
-      "movb 0x14(%%ebp), %%cl\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "movb %%cl, 0x5acad8(%%eax)\n\t"
-      "movl 0x5acad4, %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal (%%eax,%%eax,2), %%edx\n\t"
-      "leal 0x5acae8(,%%edx,4), %%eax\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl 0x5acad4, %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "leal (%%eax,%%eax,2), %%edx\n\t"
-      "leal 0x5acba8(,%%edx,4), %%eax\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl 0x5acad4, %%edx\n\t"
-      "fstps 0x5acc68(,%%edx,4)\n\t"
-      "movl 0x5acad4, %%eax\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0x5acad4\n\t"
-      ".Lai_debug_lineoffire_addpill_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b49430_assert), [exitfn] "m"(b49430_exitfn)
-      : "memory");
+  int slot; float *dst;
+  if (*(char *)0x5acab8 == 0) {
+    display_assert((const char *)0x25abd0, (const char *)0x25ab74, 0xfc4, true);
+    system_exit(-1);
+  }
+  slot = *(int *)0x5acad4;
+  if (slot >= 0x10) return;
+  *((char *)0x5acad8 + slot) = param_4;
+  slot = *(int *)0x5acad4;
+  dst = (float *)(0x5acae8 + ((slot + slot * 2) << 2));
+  dst[0]=vec_a[0]; dst[1]=vec_a[1]; dst[2]=vec_a[2];
+  slot = *(int *)0x5acad4;
+  dst = (float *)(0x5acba8 + ((slot + slot * 2) << 2));
+  dst[0]=vec_b[0]; dst[1]=vec_b[1]; dst[2]=vec_b[2];
+  slot = *(int *)0x5acad4;
+  *(float *)(0x5acc68 + (slot << 2)) = param_3;
+  *(int *)0x5acad4 = slot + 1;
 }
-#else
-#error "ai_debug_lineoffire_addpill: clang naked draft required"
-#endif
-
 
 /* FUN_000494e0 (0x494e0) — XBE naked draft (batch 143). */
 #if defined(__clang__)

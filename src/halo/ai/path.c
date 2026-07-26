@@ -2964,68 +2964,22 @@ do_assert:
   return *(int16_t *)((char *)path + 0x1432 + (int)heap_index * 2);
 }
 
-/* FUN_00060200 (0x60200) — XBE naked draft (batch 226). */
-#if defined(__clang__)
-static int16_t (*const b60200_c60140)(void *path, int16_t heap_index) = FUN_00060140;
-static void (*const b60200_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b60200_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-float FUN_00060200(void *path __attribute__((unused)), int16_t heap_index __attribute__((unused)))
+/* FUN_00060200 (0x60200) — readable C lift. */
+float FUN_00060200(void *path, int16_t heap_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c60140]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00060200_1\n\t"
-      "movw 0x2c(%%edi), %%ax\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .LFUN_00060200_1\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00060200_2\n\t"
-      ".LFUN_00060200_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x28\n\t"
-      "pushl $0x25ea14\n\t"
-      "pushl $0x25e9b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00060200_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "addl $2, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%ecx\n\t"
-      "flds (%%edi,%%ecx,8)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c60140] "m"(b60200_c60140), [assert] "m"(b60200_assert), [exitfn] "m"(b60200_exitfn)
-      : "memory");
+  int16_t node;
+  int16_t count;
+  int idx;
+  node = FUN_00060140(path, heap_index);
+  count = *(int16_t *)((char *)path + 0x2c);
+  if (node < 0 || node >= count || count > 0x80) {
+    display_assert((const char *)0x25e9b0, (const char *)0x25ea14, 0x28, true);
+    system_exit(-1);
+  }
+  idx = (int)node + 2;
+  idx = idx + idx * 4;
+  return *(float *)((char *)path + idx * 8);
 }
-#else
-#error "FUN_00060200: clang naked draft required"
-#endif
-
 
 /* FUN_00060260 (0x60260) — XBE naked draft (batch 140). */
 #if defined(__clang__)
