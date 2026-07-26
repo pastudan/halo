@@ -642,51 +642,258 @@ void FUN_001c9350(void)
   (void)edi;
 }
 
-/* 0x1c9670 */
+/* FUN_001c9670 (0x1c9670) — XBE naked draft (batch 256). */
+#if defined(__clang__)
+static void * (*const b1c9670_c1c9290)(short index) = sound_dsound_channel_get;
+static int (*const b1c9670_c1bdd70)(void) = FUN_001bdd70;
+static void (*const b1c9670_ftol)(void) = FUN_001d9068;
+static void (*const b1c9670_c1be100)(void *cache_entry) = FUN_001be100;
+static void (*const b1c9670_c1c9350)(void) = FUN_001c9350;
+static int (*const b1c9670_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static int (*const b1c9670_c8df60)(const char *s1) = csstrlen;
+
+__attribute__((naked, noinline))
 void FUN_001c9670(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  sound_dsound_channel_get(0);
-  /* test ecx, ecx -> je 0x1c986f */
-  FUN_001bdd70();
-  /* cmp edi, eax -> jb 0x1c9834 */
-  FUN_001bdd70();
-  /* cmp ecx, eax -> ja 0x1c9834 */
-  /* test (int16_t)ecx, (int16_t)ecx -> je 0x1c9723 */
-  /* test edi, edi -> je 0x1c977d */
-  /* cmp eax, 1 -> jg 0x1c97a0 */
-  /* relift: cmp word ptr [ebp - 0x10], 0 -> je 0x1c97b7 */
-  /* test (int16_t)ecx, (int16_t)ecx -> je 0x1c97ca */
-  FUN_001d9068();
-  /* test eax, eax -> je 0x1c98dc */
-  FUN_001be100((void *)(uintptr_t)ebx);
-  FUN_001c9350();
-  crt_sprintf((char *)0x005ab100, (char *)0x002c09a0);
-  csstrlen((char *)0x004eae38);
-  csstrlen((char *)0x005ab100);
-  /* cmp esi, 0x100 -> jae 0x1c98dc */
-  csstrlen((char *)0x004eae38);
-  csstrlen((char *)0x002c0974);
-  /* cmp esi, 0x100 -> jae 0x1c98dc */
-  csstrlen((char *)0x004eae38);
-  csstrlen((char *)0x002c0948);
-  /* cmp esi, 0x100 -> jae 0x1c98dc */
-  csstrlen((char *)0x004eae38);
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x28, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1c9290]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x68(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "je .LFUN_001c9670_17\n\t"
+      "movl 0x30(%%eax), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LFUN_001c9670_16\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x30(%%ebx), %%edi\n\t"
+      "call *%[c1bdd70]\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "jb .LFUN_001c9670_15\n\t"
+      "movl 0x68(%%esi), %%ebx\n\t"
+      "movl 0x30(%%ebx), %%edi\n\t"
+      "call *%[c1bdd70]\n\t"
+      "movl 0x40(%%ebx), %%ecx\n\t"
+      "addl $0x400000, %%eax\n\t"
+      "addl %%edi, %%ecx\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "ja .LFUN_001c9670_15\n\t"
+      "movl 0x40(%%ebx), %%edx\n\t"
+      "movl 0x64(%%esi), %%edi\n\t"
+      "subl %%edi, %%edx\n\t"
+      "incw 0x8(%%esi)\n\t"
+      "movl 0x30(%%ebx), %%eax\n\t"
+      "addl %%edi, %%eax\n\t"
+      "movl %%eax, -0x28(%%ebp)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x38(%%esi), %%ax\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl %%ebx, -0x18(%%ebp)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $4, %%ecx\n\t"
+      "testw %%cx, %%cx\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "je .LFUN_001c9670_1\n\t"
+      "flds 0x253f40\n\t"
+      "jmp .LFUN_001c9670_2\n\t"
+      ".LFUN_001c9670_1:\n\t"
+      "flds 0x2533c8\n\t"
+      ".LFUN_001c9670_2:\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $2, %%ecx\n\t"
+      "testw %%cx, %%cx\n\t"
+      "je .LFUN_001c9670_3\n\t"
+      "flds 0x253f40\n\t"
+      "jmp .LFUN_001c9670_4\n\t"
+      ".LFUN_001c9670_3:\n\t"
+      "flds 0x2533c8\n\t"
+      ".LFUN_001c9670_4:\n\t"
+      "andb $8, %%al\n\t"
+      "negb %%al\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "andl $0xffffe900, %%eax\n\t"
+      "addl $0x2000, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "fildl -0x8(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "fildl -0xc(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $1, %%ah\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .LFUN_001c9670_7\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LFUN_001c9670_5\n\t"
+      "movl 0x6c(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x68(%%esi)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpw $2, (%%esi)\n\t"
+      "movl %%edx, %%eax\n\t"
+      "movl %%eax, -0x24(%%ebp)\n\t"
+      "movl %%ecx, 0x6c(%%esi)\n\t"
+      "movl %%ecx, 0x64(%%esi)\n\t"
+      "jne .LFUN_001c9670_13\n\t"
+      "movw $1, (%%esi)\n\t"
+      "jmp .LFUN_001c9670_13\n\t"
+      ".LFUN_001c9670_5:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testw %%cx, %%cx\n\t"
+      "setne %%al\n\t"
+      "incl %%eax\n\t"
+      "leal (%%eax,%%eax,8), %%ecx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "cdq\n\t"
+      "shll $2, %%ecx\n\t"
+      "idivl %%ecx\n\t"
+      "cdq\n\t"
+      "subl %%edx, %%eax\n\t"
+      "sarl $1, %%eax\n\t"
+      "cmpl $1, %%eax\n\t"
+      "jg .LFUN_001c9670_6\n\t"
+      "movl $1, %%eax\n\t"
+      ".LFUN_001c9670_6:\n\t"
+      "imull %%ecx, %%eax\n\t"
+      "movl %%eax, 0x64(%%esi)\n\t"
+      "jmp .LFUN_001c9670_12\n\t"
+      ".LFUN_001c9670_7:\n\t"
+      "cmpw $0, -0x10(%%ebp)\n\t"
+      "je .LFUN_001c9670_8\n\t"
+      "flds 0x253f40\n\t"
+      "jmp .LFUN_001c9670_9\n\t"
+      ".LFUN_001c9670_8:\n\t"
+      "flds 0x2533c8\n\t"
+      ".LFUN_001c9670_9:\n\t"
+      "testw %%cx, %%cx\n\t"
+      "je .LFUN_001c9670_10\n\t"
+      "flds 0x253f40\n\t"
+      "jmp .LFUN_001c9670_11\n\t"
+      ".LFUN_001c9670_10:\n\t"
+      "flds 0x2533c8\n\t"
+      ".LFUN_001c9670_11:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "call *%[ftol]\n\t"
+      "fstp %%st(0)\n\t"
+      "addl %%eax, %%edi\n\t"
+      "fstp %%st(0)\n\t"
+      "movl %%edi, 0x64(%%esi)\n\t"
+      ".LFUN_001c9670_12:\n\t"
+      "movl %%eax, -0x24(%%ebp)\n\t"
+      ".LFUN_001c9670_13:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001c9670_19\n\t"
+      "movl 0x70(%%esi), %%esi\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl $0\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *0x10(%%edx)\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "jl .LFUN_001c9670_14\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1be100]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001c9670_14:\n\t"
+      "movl $0x2c09e4, %%esi\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "call *%[c1c9350]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001c9670_15:\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x2c09a0\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c1d90f0]\n\t"
+      "pushl $0x4eae38\n\t"
+      "call *%[c8df60]\n\t"
+      "pushl $0x5ab100\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c8df60]\n\t"
+      "addl %%eax, %%esi\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpl $0x100, %%esi\n\t"
+      "jae .LFUN_001c9670_19\n\t"
+      "pushl $0x5ab100\n\t"
+      "jmp .LFUN_001c9670_18\n\t"
+      ".LFUN_001c9670_16:\n\t"
+      "pushl $0x4eae38\n\t"
+      "call *%[c8df60]\n\t"
+      "pushl $0x2c0974\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c8df60]\n\t"
+      "addl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $0x100, %%esi\n\t"
+      "jae .LFUN_001c9670_19\n\t"
+      "pushl $0x2c0974\n\t"
+      "jmp .LFUN_001c9670_18\n\t"
+      ".LFUN_001c9670_17:\n\t"
+      "pushl $0x4eae38\n\t"
+      "call *%[c8df60]\n\t"
+      "pushl $0x2c0948\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c8df60]\n\t"
+      "addl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $0x100, %%esi\n\t"
+      "jae .LFUN_001c9670_19\n\t"
+      "pushl $0x2c0948\n\t"
+      ".LFUN_001c9670_18:\n\t"
+      "pushl $0x4eae38\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $0x4eae38, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_001c9670_19:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1c9290] "m"(b1c9670_c1c9290), [c1bdd70] "m"(b1c9670_c1bdd70), [ftol] "m"(b1c9670_ftol), [c1be100] "m"(b1c9670_c1be100), [c1c9350] "m"(b1c9670_c1c9350), [c1d90f0] "m"(b1c9670_c1d90f0), [c8df60] "m"(b1c9670_c8df60)
+      : "memory");
 }
+#else
+#error "FUN_001c9670: clang naked draft required"
+#endif
+
 
 /* 0x1c9bf0 */
 void FUN_001c9bf0(void)
@@ -1182,50 +1389,289 @@ void FUN_001ca130(void)
 #endif
 
 
-/* 0x1ca2b0 */
-void FUN_001ca2b0(void *buf)
+/* FUN_001ca2b0 (0x1ca2b0) — XBE naked draft (batch 254). */
+#if defined(__clang__)
+static void (*const b1ca2b0_c204e13)(void) = IDirectSound_SetPosition;
+static void (*const b1ca2b0_c1c98f0)(int hresult, const char *message, ...) = sound_dsound_log_error;
+static void (*const b1ca2b0_c204dc9)(void) = IDirectSound_SetOrientation;
+static void (*const b1ca2b0_c204e6c)(void) = IDirectSound_SetVelocity;
+static int (*const b1ca2b0_c8da40)(const void *a, const void *b, int size) = csmemcmp;
+static int (*const b1ca2b0_c1c9130)(float gain, int ceiling) = sound_dsound_gain_to_volume;
+static void (*const b1ca2b0_c204ed5)(void) = IDirectSound_SetI3DL2Listener;
+
+__attribute__((naked, noinline))
+void FUN_001ca2b0(void *buf __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* test (char)eax, (char)eax -> jne 0x1ca35a */
-  IDirectSound_SetPosition();
-  /* test eax, eax -> jge 0x1ca33f */
-  sound_dsound_log_error(0x002c0e48, (char *)0);
-  /* mem[0x005053d0] = eax */
-  /* mem[0x005053d4] = ecx */
-  /* mem[0x005053d8] = edx */
-  /* test (char)eax, (char)eax -> jne 0x1ca474 */
-  IDirectSound_SetOrientation();
-  /* test eax, eax -> jge 0x1ca440 */
-  sound_dsound_log_error(0x002c0e24, (char *)0);
-  /* mem[0x005053dc] = eax */
-  /* mem[0x005053e0] = ecx */
-  /* mem[0x005053e4] = edx */
-  /* mem[0x005053e8] = eax */
-  /* mem[0x005053ec] = ecx */
-  /* mem[0x005053f0] = edx */
-  /* test (char)eax, (char)eax -> jne 0x1ca514 */
-  IDirectSound_SetVelocity();
-  /* test eax, eax -> jge 0x1ca4fa */
-  sound_dsound_log_error(0x002c0e04, (char *)0);
-  /* mem[0x005053f4] = edx */
-  /* mem[0x005053f8] = eax */
-  /* mem[0x005053fc] = ecx */
-  csmemcmp((void *)(uintptr_t)edx, (void *)0x00505404, 72);
-  /* test eax, eax -> jne 0x1ca538 */
-  /* test (char)eax, (char)eax -> jne 0x1ca5da */
-  sound_dsound_gain_to_volume(0.0f, 0);
-  sound_dsound_gain_to_volume(0.0f, 0);
-  sound_dsound_gain_to_volume(0.0f, 1000);
-  sound_dsound_gain_to_volume(0.0f, 2000);
-  IDirectSound_SetI3DL2Listener();
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x30, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "flds (%%edi)\n\t"
+      "fsubs 0x5053d0\n\t"
+      "fabs\n\t"
+      "fcompl 0x25f0c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_1\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fsubs 0x5053d4\n\t"
+      "fabs\n\t"
+      "fcompl 0x25f0c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_1\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fsubs 0x5053d8\n\t"
+      "fabs\n\t"
+      "fcompl 0x25f0c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_1\n\t"
+      "movb 0x4fdbc0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001ca2b0_3\n\t"
+      ".LFUN_001ca2b0_1:\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "movl 0x50545c, %%ecx\n\t"
+      "pushl $1\n\t"
+      "subl $8, %%esp\n\t"
+      "fstps 0x4(%%esp)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c204e13]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_001ca2b0_2\n\t"
+      "pushl $0x2c0e48\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1c98f0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001ca2b0_2:\n\t"
+      "movl %%edi, %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "movl %%eax, 0x5053d0\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x5053d4\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x5053d8\n\t"
+      ".LFUN_001ca2b0_3:\n\t"
+      "flds 0xc(%%edi)\n\t"
+      "fsubs 0x5053dc\n\t"
+      "fabs\n\t"
+      "fcompl 0x25f0c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_4\n\t"
+      "flds 0x10(%%edi)\n\t"
+      "fsubs 0x5053e0\n\t"
+      "fabs\n\t"
+      "fcompl 0x25f0c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_4\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fsubs 0x5053e4\n\t"
+      "fabs\n\t"
+      "fcompl 0x25f0c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_4\n\t"
+      "flds 0x18(%%edi)\n\t"
+      "fsubs 0x5053e8\n\t"
+      "fabs\n\t"
+      "fcompl 0x25f0c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_4\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "fsubs 0x5053ec\n\t"
+      "fabs\n\t"
+      "fcompl 0x25f0c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_4\n\t"
+      "flds 0x20(%%edi)\n\t"
+      "fsubs 0x5053f0\n\t"
+      "fabs\n\t"
+      "fcompl 0x25f0c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_4\n\t"
+      "movb 0x4fdbc0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001ca2b0_6\n\t"
+      ".LFUN_001ca2b0_4:\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "movl 0x18(%%edi), %%eax\n\t"
+      "movl 0xc(%%edi), %%ecx\n\t"
+      "movl 0x50545c, %%edx\n\t"
+      "pushl $1\n\t"
+      "subl $8, %%esp\n\t"
+      "fstps 0x4(%%esp)\n\t"
+      "flds 0x20(%%edi)\n\t"
+      "fstps (%%esp)\n\t"
+      "flds 0x10(%%edi)\n\t"
+      "pushl %%eax\n\t"
+      "subl $8, %%esp\n\t"
+      "fstps 0x4(%%esp)\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c204dc9]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_001ca2b0_5\n\t"
+      "pushl $0x2c0e24\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1c98f0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001ca2b0_5:\n\t"
+      "movl 0xc(%%edi), %%eax\n\t"
+      "movl %%eax, 0x5053dc\n\t"
+      "movl 0x10(%%edi), %%ecx\n\t"
+      "movl %%ecx, 0x5053e0\n\t"
+      "movl 0x14(%%edi), %%edx\n\t"
+      "movl %%edx, 0x5053e4\n\t"
+      "movl 0x18(%%edi), %%eax\n\t"
+      "movl %%eax, 0x5053e8\n\t"
+      "movl 0x1c(%%edi), %%ecx\n\t"
+      "movl %%ecx, 0x5053ec\n\t"
+      "movl 0x20(%%edi), %%edx\n\t"
+      "movl %%edx, 0x5053f0\n\t"
+      ".LFUN_001ca2b0_6:\n\t"
+      "flds 0x24(%%edi)\n\t"
+      "fsubs 0x5053f4\n\t"
+      "fabs\n\t"
+      "fcompl 0x28b800\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_7\n\t"
+      "flds 0x28(%%edi)\n\t"
+      "fsubs 0x5053f8\n\t"
+      "fabs\n\t"
+      "fcompl 0x28b800\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_7\n\t"
+      "flds 0x2c(%%edi)\n\t"
+      "fsubs 0x5053fc\n\t"
+      "fabs\n\t"
+      "fcompl 0x28b800\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001ca2b0_7\n\t"
+      "movb 0x4fdbc0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001ca2b0_9\n\t"
+      ".LFUN_001ca2b0_7:\n\t"
+      "flds 0x28(%%edi)\n\t"
+      "movl 0x24(%%edi), %%eax\n\t"
+      "movl 0x50545c, %%ecx\n\t"
+      "pushl $1\n\t"
+      "subl $8, %%esp\n\t"
+      "fstps 0x4(%%esp)\n\t"
+      "flds 0x2c(%%edi)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c204e6c]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_001ca2b0_8\n\t"
+      "pushl $0x2c0e04\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1c98f0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001ca2b0_8:\n\t"
+      "movl 0x24(%%edi), %%edx\n\t"
+      "movl %%edx, 0x5053f4\n\t"
+      "movl 0x28(%%edi), %%eax\n\t"
+      "movl %%eax, 0x5053f8\n\t"
+      "movl 0x2c(%%edi), %%ecx\n\t"
+      "movl %%ecx, 0x5053fc\n\t"
+      ".LFUN_001ca2b0_9:\n\t"
+      "movl 0x30(%%edi), %%edx\n\t"
+      "pushl $0x48\n\t"
+      "pushl $0x505404\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8da40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_001ca2b0_10\n\t"
+      "movb 0x4fdbc0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001ca2b0_11\n\t"
+      ".LFUN_001ca2b0_10:\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x30(%%edi), %%ebx\n\t"
+      "movl $0x12, %%ecx\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "movl $0x505404, %%edi\n\t"
+      "rep movsl\n\t"
+      "movl 0x8(%%ebx), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1c9130]\n\t"
+      "movl %%eax, -0x30(%%ebp)\n\t"
+      "movl 0xc(%%ebx), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1c9130]\n\t"
+      "movl %%eax, -0x2c(%%ebp)\n\t"
+      "movl 0x10(%%ebx), %%edx\n\t"
+      "movl %%edx, -0x28(%%ebp)\n\t"
+      "movl 0x14(%%ebx), %%eax\n\t"
+      "movl %%eax, -0x24(%%ebp)\n\t"
+      "movl 0x18(%%ebx), %%ecx\n\t"
+      "movl %%ecx, -0x20(%%ebp)\n\t"
+      "movl 0x1c(%%ebx), %%edx\n\t"
+      "pushl $0x3e8\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1c9130]\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "movl 0x20(%%ebx), %%eax\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "movl 0x24(%%ebx), %%ecx\n\t"
+      "pushl $0x7d0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1c9130]\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "movl 0x28(%%ebx), %%edx\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "flds 0x2c(%%ebx)\n\t"
+      "fmuls 0x253f00\n\t"
+      "movl 0x50545c, %%edx\n\t"
+      "addl $0x20, %%esp\n\t"
+      "pushl $1\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "leal -0x30(%%ebp), %%ecx\n\t"
+      "flds 0x30(%%ebx)\n\t"
+      "pushl %%ecx\n\t"
+      "fmuls 0x253f00\n\t"
+      "pushl %%edx\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "movl 0x34(%%ebx), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "call *%[c204ed5]\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_001ca2b0_11:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c204e13] "m"(b1ca2b0_c204e13), [c1c98f0] "m"(b1ca2b0_c1c98f0), [c204dc9] "m"(b1ca2b0_c204dc9), [c204e6c] "m"(b1ca2b0_c204e6c), [c8da40] "m"(b1ca2b0_c8da40), [c1c9130] "m"(b1ca2b0_c1c9130), [c204ed5] "m"(b1ca2b0_c204ed5)
+      : "memory");
 }
+#else
+#error "FUN_001ca2b0: clang naked draft required"
+#endif
+
 
 /* 0x1ca900 */
 void FUN_001ca900(void)
@@ -1865,825 +2311,99 @@ void FUN_001cadd0(int a __attribute__((unused)), int b __attribute__((unused)), 
 #endif
 
 
-/* 0x1cb0c0 */
-void FUN_001cb0c0(int channel)
+/* FUN_001cb0c0 (0x1cb0c0) — XBE naked draft (batch 260). */
+#if defined(__clang__)
+static void * (*const b1cb0c0_c1c9290)(short index) = sound_dsound_channel_get;
+static void (*const b1cb0c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1cb0c0_exitfn)(int) = system_exit;
+static void (*const b1cb0c0_c204ea1)(void) = IDirectSound_CommitDeferredSettings;
+static void (*const b1cb0c0_c1c98f0)(int hresult, const char *message, ...) = sound_dsound_log_error;
+
+__attribute__((naked, noinline))
+void FUN_001cb0c0(int channel __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  sound_dsound_channel_get(0);
-  /* test (char)eax, (char)eax -> je 0x1cb0f7 */
-  display_assert((char *)0x002c1134, (char *)0x002c0894, 1111, 0);
-  system_exit(0);
-  /* test edi, edi -> jne 0x1cb11b */
-  display_assert((char *)0x0027b768, (char *)0x002c0894, 1112, 0);
-  system_exit(0);
-  display_assert((char *)0x002c1114, (char *)0x002c0894, 1144, 0);
-  system_exit(0);
-  IDirectSound_CommitDeferredSettings();
-  /* test eax, eax -> jge 0x1cb18a */
-  sound_dsound_log_error(0x002c0d58, (char *)0);
-  sound_dsound_channel_resolve(0);
-  /* relift: tail-call FUN_001cb0c0(); */
-  sound_dsound_channel_resolve(0);
-  /* cmp (int16_t)eax, 0xffff -> je 0x1cb1fe */
-  FUN_001cadd0(0, 0, 0, 0, 0, 0);
-  sound_dsound_channel_get(0);
-  sound_dsound_get_sample_rate(0);
-  csmemset((void *)(uintptr_t)edx, 0, 24);
-  IDirectSound_CreateSoundStream();
-  /* test eax, eax -> jl 0x1cb499 */
-  /* test (int16_t)esi, (int16_t)esi -> je 0x1cb360 */
-  csmemset((void *)(uintptr_t)ecx, 0, 44);
-  FUN_001cadd0(0, 0, 0, 0, 0, 0);
-  IDirectSound_GetSpeakerConfig();
-  /* relift: test dword ptr [ebp - 8], 0x10000 -> je 0x1cb41e */
-  sound_dsound_gain_to_volume(0.0f, 0);
-  sound_dsound_gain_to_volume(0.0f, 0);
-  sound_dsound_gain_to_volume(0.0f, 0);
-  sound_dsound_gain_to_volume(0.0f, 0);
-  sound_dsound_gain_to_volume(0.0f, 0);
-  sound_dsound_gain_to_volume(0.0f, 0);
-  sound_dsound_gain_to_volume(0.0f, 0);
-  sound_dsound_gain_to_volume(0.0f, 0);
-  sound_dsound_gain_to_volume(0.0f, 0);
-  /* test (char)ebx, 2 -> jne 0x1cb45f */
-  sound_dsound_gain_to_volume(0.0f, 0);
-  sound_dsound_gain_to_volume(0.0f, 0);
-  IDirectSoundStream_SetMixBins();
-  IDirectSoundStream_SetMixBinVolumes_12();
-  csmemset((void *)(uintptr_t)eax, 0, 32);
-  sound_dsound_update_channel_properties((float *)(uintptr_t)ecx, 0, 0);
-  sound_dsound_log_error(0x002c114c, (char *)0);
-  /* mem[0x00505488] = 0x3f800000 */
-  /* mem[0x00505460] = esi */
-  display_assert((char *)0x00280f94, (char *)0x002c0894, 234, 0);
-  system_exit(0);
-  DirectSoundCreate();
-  /* cmp eax, esi -> jl 0x1cb785 */
-  IDirectSound_GetCaps();
-  /* cmp eax, esi -> jl 0x1cb77e */
-  /* mem[0x00505450] = eax */
-  /* mem[0x0050544c] = edx */
-  /* mem[0x00505454] = ecx */
-  /* mem[0x00505458] = edx */
-  IDirectSound_SetDistanceFactor();
-  /* cmp eax, esi -> jl 0x1cb777 */
-  IDirectSound_SetRolloffFactor();
-  /* cmp eax, esi -> jl 0x1cb75a */
-  csmemset((void *)(uintptr_t)edx, 0, 52);
-  IDirectSound_DownloadEffectsImage();
-  /* cmp eax, esi -> jge 0x1cb610 */
-  sound_dsound_log_error(0x002c11fc, (char *)0);
-  IDirectSound_SetMixBinHeadroom();
-  DirectSoundUseFullHRTF();
-  FUN_001ca2b0((void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0x1cb69e */
-  sound_dsound_vchannel_get(0);
-  /* cmp (int16_t)ebx, 4 -> jl 0x1cb68d */
-  display_assert((char *)0x002c08f8, (char *)0x002c0894, 422, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi], (int16_t)ebx -> jle 0x1cb723 */
-  /* test (char)eax, (char)eax -> je 0x1cb718 */
-  FUN_001cb210(0, 0);
-  /* test (char)eax, (char)eax -> je 0x1cb718 */
-  /* relift: cmp (int16_t)ebx, word ptr [esi] -> jl 0x1cb6f0 */
-  /* test (char)eax, (char)eax -> je 0x1cb74a */
-  FUN_001c9cf0();
-  /* test (char)eax, (char)eax -> je 0x1cb74a */
-  FUN_001c93f0();
-  sound_dsound_log_error(0x002c11dc, (char *)0);
-  FUN_001c93f0();
-  /* cmp esi, ebx -> je 0x1cb7b7 */
-  /* cmp esi, ebx -> je 0x1cb7cf */
-  /* test dl, 2 -> jne 0x1cb7fa */
-  /* cmp ecx, edx -> je 0x1cb7fa */
-  /* test (char)eax, (char)eax -> je 0x1cb853 */
-  data_make_invalid((void *)(uintptr_t)ecx);
-  data_make_invalid((void *)(uintptr_t)edx);
-  /* test eax, eax -> je 0x1cb865 */
-  data_dispose((void *)(uintptr_t)eax);
-  /* test eax, eax -> je 0x1cb877 */
-  data_dispose((void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0x1cb898 */
-  /* test (char)eax, (char)eax -> je 0x1cb898 */
-  /* cmp (char)ebx, (char)eax -> je 0x1cb8d0 */
-  /* test (char)ebx, (char)ebx -> jne 0x1cb8d0 */
-  system_milliseconds();
-  /* mem[0x004eaf4c] = eax */
-  /* test (char)eax, (char)eax -> je 0x1cb95e */
-  /* test (char)eax, (char)eax -> je 0x1cb95e */
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* cmp esi, -1 -> je 0x1cb95d */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* relift: cmp word ptr [eax + 0x14], 1 -> jne 0x1cb947 */
-  scenario_location_from_point((void *)(uintptr_t)eax, (void *)0);
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* cmp esi, -1 -> jne 0x1cb920 */
-  datum_absolute_index_to_index((void *)(uintptr_t)ecx, 0);
-  game_time_get();
-  system_milliseconds();
-  /* mem[0x004eaf4c] = eax */
-  tag_get(0x736e6421, 0);
-  /* test ecx, ecx -> je 0x1cba72 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 72);
-  /* test ecx, ecx -> je 0x1cba72 */
-  sound_class_get_definition(0);
-  /* test (char)ecx, (char)ecx -> jne 0x1cba72 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1cba8e */
-  /* relift: cmp (int16_t)esi, word ptr [0x4eb0b4] -> jl 0x1cbaae */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1cbacb */
-  /* cmp (int16_t)esi, 4 -> jl 0x1cbaeb */
-  display_assert((char *)0x002c12f4, (char *)0x002c12cc, 1072, 0);
-  system_exit(0);
-  tag_get(0x736e6421, 0);
-  /* cmp (int16_t)esi, (int16_t)edi -> je 0x1cbb98 */
-  /* relift: cmp dword ptr [eax + 0x7c], -1 -> je 0x1cbb88 */
-  sound_class_get_gain(0);
-  /* cmp (int16_t)esi, 0x2c -> je 0x1cbbc1 */
-  /* cmp (int16_t)esi, 0x2e -> je 0x1cbbc1 */
-  /* cmp (int16_t)esi, 0x2f -> je 0x1cbbc1 */
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* relift: cmp word ptr [eax + 0x8c], -1 -> je 0x1cbc09 */
-  display_assert((char *)0x002c1328, (char *)0x002c12cc, 1231, 0);
-  system_exit(0);
-  datum_delete((void *)(uintptr_t)ecx, 0);
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* cmp (int16_t)edi, -1 -> je 0x1cbcbd */
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x1cbc6e */
-  /* relift: cmp (int16_t)edi, word ptr [0x4eb0b4] -> jl 0x1cbc8e */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [ecx*8 + 0x4fc3a0], ebx -> je 0x1cbcbd */
-  display_assert((char *)0x002c1360, (char *)0x002c12cc, 1439, 0);
-  system_exit(0);
-  /* relift: test byte ptr [esi + 4], 1 -> jne 0x1cbd1d */
-  /* test eax, eax -> je 0x1cbd1d */
-  /* relift: cmp edx, dword ptr [0x4eaf4c] -> jge 0x1cbd1d */
-  /* test (char)eax, (char)eax -> jne 0x1cbd1d */
-  /* relift: cmp word ptr [esi + 2], 0 -> jne 0x1cbd22 */
-  tag_get('!dns', 0);
-  sound_class_get_definition(0);
-  /* test (char)ecx, (char)ecx -> jne 0x1cbd22 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('!dns', 0);
-  sound_class_get_definition(0);
-  sound_class_get_definition(0);
-  display_assert((char *)0x002c14b0, (char *)0x002c12cc, 1700, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0x22], 0x10 -> jle 0x1cbdde */
-  display_assert((char *)0x002c1458, (char *)0x002c12cc, 1701, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x1cbf1b */
-  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x1cbdfa */
-  /* cmp (int16_t)ebx, (int16_t)eax -> jl 0x1cbe1a */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  /* relift: cmp eax, dword ptr [ebp + 8] -> je 0x1cbf0c */
-  datum_get((void *)(uintptr_t)eax, 0);
-  sound_valid_for_channel(0, 0, 0, 0, 0);
-  /* test (char)eax, (char)eax -> je 0x1cbf0c */
-  /* relift: cmp ecx, dword ptr [edx + 8] -> jne 0x1cbf0c */
-  /* relift: cmp (int16_t)eax, word ptr [esi + 0x22] -> jl 0x1cbeba */
-  display_assert((char *)0x002c1414, (char *)0x002c12cc, 1717, 0);
-  system_exit(0);
-  /* cmp eax, -1 -> je 0x1cbf0c */
-  /* relift: cmp eax, dword ptr [edx + 0xc] -> jne 0x1cbf0c */
-  /* relift: cmp (int16_t)eax, word ptr [esi + 0x46] -> jl 0x1cbeff */
-  display_assert((char *)0x002c13d0, (char *)0x002c12cc, 1723, 0);
-  system_exit(0);
-  /* cmp (int16_t)ebx, (int16_t)eax -> jl 0x1cbdf0 */
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x1cbf3e */
-  /* relift: cmp (int16_t)edi, word ptr [0x4eb0b4] -> jl 0x1cbf5e */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  sound_cache_sound_finished(0);
-  /* test eax, eax -> je 0x1cbf99 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1cbfc1 */
-  /* relift: cmp (int16_t)esi, word ptr [0x4eb0b4] -> jl 0x1cbfe1 */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  /* test (char)eax, 0x41 -> je 0x1cc026 */
-  display_assert((char *)0x002c1500, (char *)0x002c12cc, 2120, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x1cc062 */
-  /* relift: cmp (int16_t)edi, word ptr [0x4eb0b4] -> jl 0x1cc082 */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  /* test eax, eax -> je 0x1cc0de */
-  /* cmp (int16_t)edi, 2 -> jge 0x1cc0de */
-  sound_cache_sound_finished(0);
-  sound_cache_request_sound((void *)(uintptr_t)eax, 0, 0, 0);
-  /* test (char)eax, (char)eax -> jne 0x1cc0de */
-  /* test eax, eax -> je 0x1cc125 */
-  /* cmp (int16_t)edi, 1 -> jge 0x1cc125 */
-  /* test eax, eax -> je 0x1cc112 */
-  display_assert((char *)0x002c1518, (char *)0x002c12cc, 2152, 0);
-  system_exit(0);
-  sound_cache_sound_finished(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x1cc14e */
-  /* relift: cmp (int16_t)edi, word ptr [0x4eb0b4] -> jl 0x1cc16e */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  sound_cache_sound_finished(0);
-  /* test eax, eax -> je 0x1cc1ae */
-  sound_cache_sound_finished(0);
-  datum_absolute_index_to_index((void *)(uintptr_t)ecx, 0);
-  /* test eax, eax -> je 0x1cc1ef */
-  datum_absolute_index_to_index((void *)(uintptr_t)ecx, 0);
-  /* test eax, eax -> je 0x1cc2e3 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp ecx, esi -> je 0x1cc30d */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* test (char)eax, 0x41 -> jne 0x1cc387 */
-  display_assert((char *)0, (char *)0x002c12cc, 2678, 0);
-  system_exit(0);
-  /* test (char)eax, 0x41 -> jne 0x1cc3de */
-  FUN_001d9e70(0.0f, 0.0f);
-  FUN_001d9e70(0.0f, 0.0f);
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* cmp esi, -1 -> je 0x1cc486 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp ecx, edi -> je 0x1cc48b */
-  data_next_index((void *)(uintptr_t)edx, 0);
-  /* cmp esi, -1 -> jne 0x1cc458 */
-  /* test (char)eax, 0x41 -> jne 0x1cc4d6 */
-  /* test (char)eax, 0x41 -> je 0x1cc4ea */
-  /* test (char)eax, 0x41 -> jne 0x1cc4ea */
-  /* test (char)eax, (char)eax -> je 0x1cc5ab */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('!dns', 0);
-  sound_get_default_priority(0);
-  FUN_00189540(0, (void *)(uintptr_t)edi, 0.0f, (void *)0);
-  sound_class_get_min_distance(0);
-  FUN_00189540(0, (void *)(uintptr_t)edi, 0.0f, (void *)0);
-  tag_get_name(0);
-  crt_sprintf((char *)(uintptr_t)edx, (char *)0x002c1538);
-  FUN_00189cb0(0, (void *)(uintptr_t)edi, (void *)(uintptr_t)ecx, 0);
-  /* test (char)eax, (char)eax -> je 0x1cc709 */
-  /* relift: cmp word ptr [eax], 1 -> jne 0x1cc709 */
-  tag_get(0x6c736e64, 0);
-  tag_block_get_element((void *)(uintptr_t)esi, 0, 160);
-  /* cmp eax, -1 -> jne 0x1cc626 */
-  /* cmp edx, eax -> jl 0x1cc600 */
-  tag_get('!dns', 0);
-  sound_class_get_min_distance(0);
-  sound_get_default_priority(0);
-  /* test eax, eax -> jle 0x1cc6bc */
-  tag_block_get_element((void *)(uintptr_t)edi, 0, 104);
-  /* cmp eax, -1 -> jne 0x1cc693 */
-  /* cmp eax, ecx -> jl 0x1cc670 */
-  tag_get('!dns', 0);
-  sound_class_get_min_distance(0);
-  sound_get_default_priority(0);
-  tag_get_name(0);
-  FUN_00189cb0(0, (void *)(uintptr_t)esi, (void *)(uintptr_t)eax, 0);
-  FUN_00189540(0, (void *)(uintptr_t)esi, 0.0f, (void *)(uintptr_t)eax);
-  FUN_00189540(0, (void *)(uintptr_t)esi, 0.0f, (void *)(uintptr_t)edx);
-  FUN_001cf820((void *)(uintptr_t)eax);
-  sound_cache_new();
-  /* mem[0x004eb0b0] = 0x3f800000 */
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x1cc8b1 */
-  /* cmp (int16_t)eax, 2 -> jge 0x1cc8b1 */
-  /* test ecx, ecx -> je 0x1cc8b1 */
-  /* relift: cmp word ptr [ecx], (int16_t)eax -> jne 0x1cc8b1 */
-  /* mem[0x004eaf48] = ecx */
-  data_new((char *)0x002c1590, 512, 172);
-  /* mem[0x004fdba4] = eax */
-  data_new((char *)0x002c1580, 128, 228);
-  /* mem[0x004fdba0] = eax */
-  /* test (char)eax, (char)eax -> je 0x1cc8b1 */
-  data_delete_all((void *)(uintptr_t)edx);
-  data_delete_all((void *)(uintptr_t)eax);
-  display_assert((char *)0x002c1544, (char *)0x002c12cc, 360, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [edi + eax], (int16_t)ebx -> jle 0x1cc89d */
-  sound_channel_get(0);
-  /* relift: cmp (int16_t)ebx, word ptr [edi + eax] -> jl 0x1cc874 */
-  random_math_get_local_seed_address();
-  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
-  /* test (int16_t)eax, (int16_t)eax -> je 0x1cc923 */
-  /* cmp (int16_t)eax, 1 -> je 0x1cc923 */
-  display_assert((char *)0x002c15e0, (char *)0x002c12cc, 1087, 0);
-  system_exit(0);
-  /* test (char)eax, 1 -> je 0x1cc953 */
-  display_assert((char *)0x002c15d0, (char *)0x002c12cc, 1088, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [ebp + 0x14], esi -> jne 0x1cc984 */
-  display_assert((char *)0x002c1598, (char *)0x002c12cc, 1089, 0);
-  system_exit(0);
-  FUN_001d9068();
-  /* cmp edi, esi -> jg 0x1cc9a9 */
-  /* cmp eax, -1 -> je 0x1cca0d */
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* cmp ecx, eax -> je 0x1cc9e2 */
-  sound_update_channel_attenuation(0);
-  /* cmp eax, -1 -> je 0x1cca55 */
-  datum_get((void *)(uintptr_t)eax, 0);
-  sound_update_channel_attenuation(0);
-  datum_get((void *)(uintptr_t)eax, 0);
-  tag_get('!dns', 0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x1ccaa3 */
-  /* relift: cmp (int16_t)edi, word ptr [0x4eb0b4] -> jl 0x1ccac3 */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  sound_channel_stop(0);
-  /* relift: test byte ptr [esi + 4], 2 -> je 0x1ccb36 */
-  tag_get(0x736e6421, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  sound_cache_sound_finished(0);
-  /* relift: cmp word ptr [esi + 2], 0 -> je 0x1ccb77 */
-  datum_absolute_index_to_index((void *)(uintptr_t)ecx, 0);
-  /* test eax, eax -> je 0x1ccb77 */
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* relift: cmp word ptr [eax + 0x8c], -1 -> je 0x1ccbc7 */
-  display_assert((char *)0x002c1328, (char *)0x002c12cc, 1231, 0);
-  system_exit(0);
-  datum_delete((void *)(uintptr_t)ecx, 0);
-  display_assert((char *)0, (char *)0x002c12cc, 1402, 0);
-  system_exit(0);
-  sound_listener_get(0);
-  sound_listener_get(0);
-  /* relift: cmp byte ptr [eax], 0 -> jne 0x1ccc16 */
-  display_assert((char *)0, (char *)0x002c12cc, 1427, 0);
-  system_exit(0);
-  sound_listener_get(0);
-  sound_listener_get(0);
-  /* relift: cmp byte ptr [eax], 0 -> jne 0x1cccd6 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('!dns', 0);
-  FUN_001ccbe0(0, (void *)0);
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1ccdd8 */
-  /* relift: cmp (int16_t)esi, word ptr [0x4eb0b4] -> jl 0x1ccdf8 */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  sound_class_get_definition(0);
-  /* cmp ecx, edx -> jl 0x1cce5a */
-  FUN_001ccbe0(0, (void *)0);
-  datum_get((void *)(uintptr_t)eax, 0);
-  tag_get('!dns', 0);
-  datum_get((void *)(uintptr_t)edx, 0);
-  tag_get('!dns', 0);
-  display_assert((char *)0x002c1648, (char *)0x002c12cc, 1891, 0);
-  system_exit(0);
-  sound_class_get_definition(0);
-  sound_class_get_definition(0);
-  /* relift: cmp (int16_t)ecx, word ptr [eax + 0xa] -> jg 0x1ccf67 */
-  sound_class_get_definition(0);
-  sound_class_get_definition(0);
-  /* relift: cmp (int16_t)edx, word ptr [eax + 0xa] -> jne 0x1ccf5e */
-  FUN_001ccbe0(0, (void *)0);
-  /* test (char)eax, 0x41 -> je 0x1ccf67 */
-  /* relift: cmp (int16_t)esi, word ptr [0x4eb0b4] -> jl 0x1ccfba */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('!dns', 0);
-  sound_class_get_gain(0);
-  /* cmp (int16_t)edi, 0x2c -> je 0x1cd01b */
-  /* cmp (int16_t)edi, 0x2e -> je 0x1cd01b */
-  /* cmp (int16_t)edi, 0x2f -> je 0x1cd01b */
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 72);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  sound_class_get_min_distance(0);
-  sound_class_get_definition(0);
-  sound_cache_request_sound((void *)(uintptr_t)edi, 0, 0, 0);
-  /* test (char)eax, (char)eax -> jne 0x1cd0f8 */
-  display_assert((char *)0x002c1678, (char *)0x002c12cc, 1946, 0);
-  system_exit(0);
-  sound_channel_set_properties(0, 0, (void *)0);
-  sound_channel_start_new(0, 0);
-  /* relift: cmp (int16_t)esi, word ptr [0x4eb0b4] -> jl 0x1cd164 */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  /* test (char)ecx, (char)ecx -> je 0x1cd209 */
-  data_new_at_index((void *)(uintptr_t)eax);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('dnsl', 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  tag_get('!dns', 0);
-  random_math_get_local_seed_address();
-  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
-  FUN_001d9068();
-  /* cmp esi, ecx -> jl 0x1cd210 */
-  datum_get((void *)(uintptr_t)eax, 0);
-  tag_get('!dns', 0);
-  sound_select_pitch_range((void *)(uintptr_t)edi, 0.0f, 0);
-  sound_select_permutation((void *)(uintptr_t)edi, 0, 0);
-  sound_collect_like_sounds(0, (void *)0);
-  /* relift: cmp (int16_t)eax, word ptr [ebp - 2] -> jl 0x1cd35a */
-  /* relift: cmp (int16_t)eax, word ptr [ebp - 0x26] -> jl 0x1cd386 */
-  sound_find_oldest_channel(0, (void *)(uintptr_t)eax, 0);
-  /* cmp (int16_t)eax, 0xffff -> je 0x1cd381 */
-  sound_channel_get(0);
-  sound_stop_channel(0);
-  random_math_get_local_seed_address();
-  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
-  random_math_get_local_seed_address();
-  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
-  random_math_get_local_seed_address();
-  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
-  angles_to_vector((float *)(uintptr_t)esi, (float *)(uintptr_t)eax);
-  datum_absolute_index_to_index((void *)(uintptr_t)eax, 0);
-  /* test eax, eax -> je 0x1cd4ca */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* relift: cmp word ptr [eax + 2], 0 -> je 0x1cd4a1 */
-  display_assert((char *)0x002c16a0, (char *)0x002c12cc, 705, 0);
-  system_exit(0);
-  datum_get((void *)(uintptr_t)edx, 0);
-  /* relift: cmp word ptr [eax + 2], 0 -> jne 0x1cd4ca */
-  sound_start_fade(0, 0.0f, 0, 0);
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* cmp esi, -1 -> je 0x1cd53b */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* relift: cmp word ptr [eax + 2], 0 -> jne 0x1cd514 */
-  /* relift: cmp dword ptr [eax + 0xc], ebx -> jne 0x1cd514 */
-  /* relift: cmp dword ptr [eax + 8], edi -> je 0x1cd530 */
-  data_next_index((void *)(uintptr_t)edx, 0);
-  /* cmp esi, -1 -> jne 0x1cd4f3 */
-  sound_stop_impulse(0);
-  /* test (char)eax, (char)eax -> je 0x1cd595 */
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* cmp ebx, -1 -> je 0x1cd57d */
-  sound_stop_channel(0);
-  data_next_index((void *)(uintptr_t)ecx, 0);
-  /* cmp ebx, -1 -> jne 0x1cd561 */
-  data_make_valid((void *)(uintptr_t)edx);
-  /* mem[0x004eaf44] = 0 */
-  /* cmp (int16_t)eax, 2 -> jne 0x1cd5dc */
-  FUN_001ccbe0(0, (void *)0);
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1cd5fb */
-  /* cmp (int16_t)esi, 4 -> jl 0x1cd61b */
-  display_assert((char *)0x002c12f4, (char *)0x002c12cc, 1072, 0);
-  system_exit(0);
-  /* relift: cmp byte ptr [ebx], 0 -> je 0x1cd63b */
-  FUN_001ccbe0(0, (void *)0);
-  /* cmp (int16_t)esi, 4 -> jl 0x1cd5f0 */
-  sound_compute_source_obstruction(0, (void *)(uintptr_t)edi, 0.0f);
-  /* relift: cmp dword ptr [edi + 0x3c], 0x3f800000 -> jne 0x1cd684 */
-  players_are_all_dead();
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* cmp ebx, -1 -> je 0x1cd85d */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('!dns', 0);
-  /* cmp (int16_t)eax, 0xffff -> je 0x1cd710 */
-  sound_channel_update_status(0);
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x1cd710 */
-  /* cmp (int16_t)eax, 2 -> je 0x1cd710 */
-  /* cmp (int16_t)eax, 3 -> jne 0x1cd7e3 */
-  FUN_001cbc40(0);
-  /* test (char)eax, (char)eax -> je 0x1cd7e3 */
-  sound_get_default_priority(0);
-  sound_allocate_channel((void *)0, 0.0f);
-  FUN_001cc4f0(0);
-  /* cmp (int16_t)eax, 0x2c -> je 0x1cd755 */
-  /* cmp (int16_t)eax, 0x2e -> je 0x1cd755 */
-  /* cmp (int16_t)eax, 0x2f -> jne 0x1cd759 */
-  /* test (char)eax, 4 -> jne 0x1cd79f */
-  sound_start_fade(0, 0.0f, 0, 0);
-  sound_start_fade(0, 0.0f, 0, 0);
-  /* test (char)eax, (char)eax -> je 0x1cd7e8 */
-  /* cmp (int16_t)eax, 0x2c -> jne 0x1cd7d3 */
-  /* relift: cmp word ptr [esi + 0x8c], -1 -> je 0x1cd7e3 */
-  sound_start_fade(0, 0.0f, 0, 0);
-  /* cmp (int16_t)eax, 0x2e -> jne 0x1cd7e8 */
-  /* relift: cmp word ptr [esi + 0x8c], -1 -> jne 0x1cd7e8 */
-  sound_stop_channel(0);
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* cmp ebx, -1 -> jne 0x1cd6c0 */
-  /* test (char)eax, 0x41 -> je 0x1cd89b */
-  /* test (char)eax, 0x41 -> je 0x1cd849 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('!dns', 0);
-  FUN_001ccbe0(0, (void *)0);
-  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x1cd91a */
-  /* cmp (int16_t)ebx, (int16_t)eax -> jl 0x1cd93a */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  /* cmp edx, ebx -> je 0x1cd974 */
-  /* cmp edx, ebx -> je 0x1cd98e */
-  /* relift: cmp (int16_t)ebx, word ptr [edi + 6] -> je 0x1cd9a1 */
-  /* test (char)ecx, 2 -> jne 0x1cd9ba */
-  /* cmp eax, ecx -> jne 0x1cda22 */
-  /* test dl, dl -> je 0x1cda22 */
-  /* cmp eax, -1 -> je 0x1cda42 */
-  sound_update_time(0, 0, 0.0f);
-  /* test (char)eax, (char)eax -> je 0x1cda22 */
-  /* relift: cmp word ptr [ebp - 0xc], -1 -> je 0x1cd9f4 */
-  sound_update_time(0, 0, 0.0f);
-  /* test (char)eax, (char)eax -> je 0x1cda22 */
-  datum_get((void *)(uintptr_t)edx, 0);
-  FUN_001ccbe0(0, (void *)0);
-  datum_get((void *)0, 0);
-  sound_can_play(0);
-  /* test (char)eax, (char)eax -> je 0x1cdc1f */
-  tag_get('!dns', 0);
-  sound_get_default_priority(0);
-  sound_allocate_channel((void *)(uintptr_t)ecx, 0.0f);
-  data_new_at_index((void *)(uintptr_t)edx);
-  datum_get((void *)(uintptr_t)eax, 0);
-  random_math_get_local_seed_address();
-  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
-  sound_select_pitch_range((void *)0, 0.0f, 0);
-  sound_select_permutation((void *)(uintptr_t)esi, 0, 0);
-  tag_get(0x736e6421, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  sound_cache_request_sound((void *)(uintptr_t)eax, 0, 0, 0);
-  /* relift: cmp (int16_t)esi, word ptr [0x4eb0b4] -> jl 0x1cdc6a */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('!dns', 0);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('dnsl', 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  display_assert((char *)0x002c1720, (char *)0x002c12cc, 2500, 0);
-  system_exit(0);
-  sound_class_get_min_distance(0);
-  sound_class_get_definition(0);
-  sound_class_get_gain(0);
-  /* cmp (int16_t)esi, 0x2c -> je 0x1cdd92 */
-  /* cmp (int16_t)esi, 0x2e -> je 0x1cdd92 */
-  /* cmp (int16_t)esi, 0x2f -> je 0x1cdd92 */
-  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 124);
-  sound_cache_request_sound((void *)0, 0, 0, 0);
-  /* test (char)eax, (char)eax -> jne 0x1cde37 */
-  display_assert((char *)0x002c1678, (char *)0x002c12cc, 2522, 0);
-  system_exit(0);
-  sound_channel_set_properties(0, 0, (void *)0);
-  sound_channel_start_new(0, 0);
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
-  /* relift: cmp (int16_t)esi, word ptr [0x4eb0b4] -> jl 0x1cdebe */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  sound_volume_crossfade(0.0f, 0.0f, 0.0f);
-  /* relift: cmp word ptr [edi + 2], 2 -> jne 0x1cdf8e */
-  /* relift: cmp eax, dword ptr [edi + 0xa8] -> je 0x1cdf1a */
-  sound_select_pitch_range((void *)(uintptr_t)ebx, 0.0f, 0);
-  /* relift: cmp (int16_t)eax, word ptr [edi + 0x8e] -> je 0x1cdf8e */
-  /* relift: cmp ecx, dword ptr [edx] -> jne 0x1cdf8e */
-  /* test (char)eax, (char)eax -> jne 0x1cdf8e */
-  sound_create_looping_entry(0, 0, 0, 0);
-  /* cmp esi, -1 -> je 0x1cdf8e */
-  sound_start_fade(0, 0.0f, 0, 0);
-  /* cmp (int16_t)eax, 4 -> je 0x1ce139 */
-  /* cmp (int16_t)eax, 1 -> jne 0x1cdfae */
-  /* relift: test byte ptr [eax], 1 -> jne 0x1ce139 */
-  sound_channel_update_status(0);
-  /* cmp (int16_t)eax, 2 -> jne 0x1cdfe9 */
-  /* relift: test byte ptr [edi + 4], 8 -> jne 0x1cdfe9 */
-  /* relift: cmp word ptr [edx + 0x2a], (int16_t)esi -> jne 0x1ce139 */
-  /* relift: cmp dword ptr [edi + 0x98], esi -> je 0x1ce139 */
-  /* relift: cmp dword ptr [edi + 0x98], esi -> je 0x1ce036 */
-  /* test eax, eax -> je 0x1ce004 */
-  /* relift: cmp word ptr [eax + 0x2a], (int16_t)esi -> jne 0x1ce036 */
-  sound_start_next_looping_permutation(0);
-  tag_get('!dns', 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* relift: test byte ptr [edi + 4], 8 -> jne 0x1ce0b2 */
-  sound_select_permutation((void *)(uintptr_t)ebx, 0, 0);
-  /* cmp (int16_t)eax, (int16_t)esi -> jne 0x1ce0a7 */
-  /* relift: test byte ptr [ebx], 2 -> jne 0x1ce082 */
-  display_assert((char *)0x002c16d8, (char *)0x002c12cc, 2588, 0);
-  system_exit(0);
-  /* relift: test byte ptr [ecx], 2 -> jne 0x1ce118 */
-  sound_select_permutation((void *)(uintptr_t)ebx, 0, 0);
-  /* cmp (int16_t)eax, (int16_t)esi -> je 0x1ce0b2 */
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
-  sound_cache_request_sound((void *)(uintptr_t)ebx, 0, 0, 0);
-  /* test (char)eax, (char)eax -> je 0x1ce139 */
-  sound_channel_start_new(0, 0);
-  /* relift: cmp dword ptr [eax + 0x98], esi -> jne 0x1ce136 */
-  /* relift: cmp word ptr [ebx + 0x2a], (int16_t)esi -> jne 0x1ce136 */
-  /* cmp (int16_t)eax, 1 -> jne 0x1ce127 */
-  /* cmp (int16_t)eax, 3 -> jne 0x1ce136 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  sound_channel_set_properties(0, 0, (void *)0);
-  tag_get(0x736e6421, 0);
-  display_assert((char *)0x002c1830, (char *)0x002c12cc, 576, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [edi], 0 -> je 0x1ce20c */
-  valid_real_normal3d((float *)(uintptr_t)ecx);
-  /* test (char)eax, (char)eax -> jne 0x1ce20c */
-  display_assert((char *)0x002c17c0, (char *)0x002c12cc, 578, 0);
-  system_exit(0);
-  /* cmp (int16_t)eax, 0x2c -> je 0x1ce222 */
-  /* cmp (int16_t)eax, 0x2e -> je 0x1ce222 */
-  /* cmp (int16_t)eax, 0x2f -> jne 0x1ce268 */
-  game_time_get();
-  /* cmp eax, ecx -> jle 0x1ce25a */
-  /* mem[0x004eaf44] = eax */
-  /* test (char)eax, (char)eax -> je 0x1ce268 */
-  /* relift: cmp word ptr [esi + 4], 0x2f -> jne 0x1ce274 */
-  /* test (char)eax, (char)eax -> je 0x1ce540 */
-  /* test (char)eax, (char)eax -> je 0x1ce540 */
-  /* relift: cmp word ptr [esi + 0x6e], 1 -> jne 0x1ce531 */
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x1ce2a8 */
-  /* relift: cmp word ptr [esi + 6], (int16_t)eax -> je 0x1ce2b2 */
-  /* cmp (int16_t)eax, 1 -> jne 0x1ce531 */
-  random_math_get_local_seed_address();
-  random_math_real((void *)(uintptr_t)eax);
-  /* test (char)eax, 0x41 -> jne 0x1ce540 */
-  sound_get_default_priority(0);
-  sound_can_play(0);
-  /* test (char)eax, (char)eax -> je 0x1ce540 */
-  sound_allocate_channel((void *)(uintptr_t)ecx, 0.0f);
-  sound_check_promotion(0);
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x1ce4f3 */
-  data_new_at_index((void *)(uintptr_t)edx);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  FUN_001ccca0(0, (void *)0);
-  FUN_001d9068();
-  sound_compute_random_scale(0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-  /* cmp esi, edi -> jne 0x1ce41d */
-  display_assert((char *)0x002c17ac, (char *)0x002c12cc, 654, 0);
-  system_exit(0);
-  csmemcpy((void *)(uintptr_t)esi, (void *)(uintptr_t)eax, edx);
-  sound_select_pitch_range((void *)(uintptr_t)esi, 0.0f, 0);
-  sound_select_permutation((void *)(uintptr_t)esi, 0, 0);
-  tag_get(0x736e6421, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  sound_cache_request_sound((void *)(uintptr_t)eax, 0, 0, 0);
-  /* cmp eax, 0xfa -> jle 0x1ce4de */
-  /* cmp (int16_t)eax, 1 -> jne 0x1ce520 */
-  sound_start(0, (void *)(uintptr_t)edi, 0, 0, (void *)(uintptr_t)edx, 0);
-  error(0, (char *)0x002c1740);
-  valid_real_normal3d((float *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> jne 0x1ce59b */
-  display_assert((char *)0x002c17c0, (char *)0x002c12cc, 756, 0);
-  system_exit(0);
-  FUN_001cc5b0(0, (void *)(uintptr_t)ebx);
-  /* test (char)eax, (char)eax -> je 0x1ce9aa */
-  /* test (char)eax, (char)eax -> je 0x1ce9aa */
-  FUN_001cc440(0);
-  /* relift: cmp word ptr [ebp + 0x14], 2 -> je 0x1ce9a1 */
-  FUN_001cd190(0, (void *)(uintptr_t)ebx, (void *)0);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('dnsl', 0);
-  /* cmp eax, esi -> je 0x1ce646 */
-  display_assert((char *)0x002c1860, (char *)0x002c12cc, 782, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> je 0x1ce68d */
-  /* relift: cmp word ptr [ebx + 0x50], 0 -> jne 0x1ce68d */
-  datum_delete((void *)(uintptr_t)ecx, 0);
-  /* cmp eax, -1 -> je 0x1ce6a8 */
-  player_effect_continuous_refresh();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 160);
-  /* test (char)eax, (char)eax -> je 0x1ce6ea */
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x1ce716 */
-  /* cmp eax, -1 -> je 0x1ce720 */
-  sound_create_looping_entry(0, 0, 0, 0);
-  /* cmp (int16_t)eax, 2 -> je 0x1ce85a */
-  /* test (char)eax, (char)eax -> jne 0x1ce85a */
-  /* cmp eax, -1 -> je 0x1ce742 */
-  /* cmp esi, -1 -> je 0x1ce93b */
-  /* cmp eax, -1 -> je 0x1ce7f4 */
-  /* relift: cmp word ptr [ebp + 0x14], 0 -> jne 0x1ce76e */
-  /* relift: test byte ptr [edi], 1 -> jne 0x1ce7f4 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp dl, (char)eax -> je 0x1ce7d5 */
-  /* relift: test byte ptr [edi], 4 -> je 0x1ce7d5 */
-  sound_create_looping_entry(0, 0, 0, 0);
-  /* cmp esi, -1 -> je 0x1ce93b */
-  sound_start_fade(0, 0.0f, 0, 0);
-  /* test (char)eax, (char)eax -> jne 0x1ce93b */
-  FUN_001cc2f0(0, 0);
-  sound_create_looping_entry(0, 0, 0, 0);
-  /* cmp esi, -1 -> je 0x1ce93b */
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* relift: cmp word ptr [ebp + 0x14], 0 -> jne 0x1ce837 */
-  /* relift: test byte ptr [edi], 1 -> je 0x1ce84b */
-  sound_start_fade(0, 0.0f, 0, 0);
-  /* relift: cmp word ptr [ebx + 0x52], 2 -> je 0x1ce93b */
-  sound_start_fade(0, 0.0f, 0, 0);
-  /* cmp esi, -1 -> je 0x1ce8c2 */
-  /* relift: test byte ptr [edi], 2 -> jne 0x1ce8b1 */
-  /* relift: cmp dword ptr [edi + 0x5c], -1 -> jne 0x1ce8c2 */
-  /* relift: test byte ptr [eax], 2 -> jne 0x1ce8c2 */
-  sound_start_fade(0, 0.0f, 0, 0);
-  /* cmp eax, -1 -> je 0x1ce93b */
-  /* test (char)eax, (char)eax -> je 0x1ce8e0 */
-  /* cmp eax, -1 -> je 0x1ce8e0 */
-  /* relift: test byte ptr [edi], 2 -> je 0x1ce8fb */
-  sound_create_looping_entry(0, 0, 0, 0);
-  /* cmp eax, -1 -> je 0x1ce93b */
-  datum_get((void *)(uintptr_t)edx, 0);
-  /* relift: cmp word ptr [edi + 0x8c], -1 -> je 0x1ce93b */
-  FUN_001cc2f0(0, 0);
-  /* relift: cmp word ptr [ebx + 0x50], 0 -> jne 0x1ce98a */
-  sound_allocate_channel((void *)(uintptr_t)ecx, 0.0f);
-  /* cmp (int16_t)eax, 0xffff -> jne 0x1ce98a */
-  datum_delete((void *)(uintptr_t)eax, 0);
-  game_in_progress();
-  /* test (char)eax, (char)eax -> je 0x1ceba0 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1ce9ee */
-  /* cmp (int16_t)esi, 4 -> jl 0x1cea0e */
-  display_assert((char *)0x002c12f4, (char *)0x002c12cc, 1072, 0);
-  system_exit(0);
-  local_player_get_player_index(esi);
-  /* cmp eax, -1 -> je 0x1ceb14 */
-  observer_get_camera(esi);
-  /* test esi, esi -> jne 0x1cea4f */
-  display_assert((char *)0x00266e9c, (char *)0x002c12cc, 1263, 0);
-  system_exit(0);
-  FUN_0018f3e0((void *)(uintptr_t)eax, (void *)(uintptr_t)esi, (void *)0);
-  /* cmp (char)eax, (char)ebx -> je 0x1ceae4 */
-  game_globals_get();
-  /* test ecx, ecx -> jle 0x1ceae4 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 16);
-  /* cmp eax, -1 -> je 0x1ceae4 */
-  /* cmp ecx, 1 -> jle 0x1ceae4 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 16);
-  /* cmp eax, -1 -> je 0x1ceae4 */
-  sound_start(0, (void *)(uintptr_t)edx, 0, 0, (void *)0, 0);
-  matrix4x3_from_forward_up_position((void *)(uintptr_t)edi, (float *)(uintptr_t)esi, (float *)0, (float *)0);
-  real_matrix3x3_transform_vector((void *)(uintptr_t)edi, (void *)(uintptr_t)esi, (void *)0);
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* cmp (int16_t)esi, -1 -> je 0x1cec45 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1cebe8 */
-  /* relift: cmp (int16_t)esi, word ptr [0x4eb0b4] -> jl 0x1cec08 */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [ecx*8 + 0x4fc3a0], edi -> je 0x1cec37 */
-  display_assert((char *)0x002c1890, (char *)0x002c12cc, 1744, 0);
-  system_exit(0);
-  tag_get('!dns', 0);
-  sound_class_get_definition(0);
-  /* test (char)ecx, (char)ecx -> je 0x1ced37 */
-  /* relift: cmp dword ptr [ebx + 0xc], -1 -> je 0x1ced37 */
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x1ced12 */
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x1cec8f */
-  /* cmp (int16_t)edi, (int16_t)eax -> jl 0x1cecaf */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  /* cmp eax, -1 -> je 0x1ced03 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp edx, eax -> jne 0x1ced03 */
-  tag_get('!dns', 0);
-  sound_class_get_definition(0);
-  /* test (char)ecx, (char)ecx -> jne 0x1ced25 */
-  /* cmp (int16_t)edi, (int16_t)eax -> jl 0x1cec85 */
-  FUN_001cd8b0(0);
-  sound_collect_like_sounds(0, (void *)0);
-  /* relift: cmp (int16_t)eax, word ptr [ebp - 2] -> jl 0x1ced62 */
-  sound_find_oldest_channel(0, (void *)(uintptr_t)eax, 0);
-  /* relift: cmp (int16_t)eax, word ptr [ebp - 0x26] -> jl 0x1ced81 */
-  sound_find_oldest_channel(0, (void *)(uintptr_t)eax, 0);
-  FUN_001cd8b0(0);
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1cedca */
-  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x1cedea */
-  display_assert((char *)0x002c1294, (char *)0x002c12cc, 1064, 0);
-  system_exit(0);
-  datum_get((void *)(uintptr_t)eax, 0);
-  tag_get('!dns', 0);
-  sound_update_channel_attenuation(0);
-  sound_stop_channel(0);
-  /* relift: test byte ptr [edi + 4], 1 -> je 0x1cef88 */
-  display_assert((char *)0, (char *)0x002c12cc, 2028, 0);
-  system_exit(0);
-  sound_listener_get(0);
-  /* relift: cmp byte ptr [esi], 0 -> jne 0x1ceef4 */
-  display_assert((char *)0x002c18d4, (char *)0x002c12cc, 2011, 0);
-  system_exit(0);
-  real_matrix3x3_transform_point((void *)(uintptr_t)edi, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
-  real_matrix4x3_transform_point((void *)(uintptr_t)edi, (void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
-  real_matrix3x3_transform_vector((void *)(uintptr_t)edi, (void *)(uintptr_t)eax, (void *)(uintptr_t)edx);
-  sound_listener_get(0);
-  /* relift: cmp byte ptr [esi], 0 -> jne 0x1cefeb */
-  display_assert((char *)0x002c18d4, (char *)0x002c12cc, 2042, 0);
-  system_exit(0);
-  real_matrix3x3_transform_point((void *)(uintptr_t)esi, (float *)0, (float *)0);
-  sound_class_get_min_distance(0);
-  sound_get_default_priority(0);
-  /* test (char)eax, 0x41 -> jne 0x1cf06e */
-  /* relift: cmp word ptr [ebx + 2], 0 -> jne 0x1cf087 */
-  sound_update_channel(0, 0.0f);
-  sound_update_music_channel(0, 0.0f);
-  sound_class_get_definition(0);
-  /* test (char)ecx, (char)ecx -> je 0x1cf0db */
-  /* relift: cmp dword ptr [ebx + 0x10], 0x1c7a10 -> jne 0x1cf0db */
-  FUN_001d9068();
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "call *%[c1c9290]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x505484, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001cb0c0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x457\n\t"
+      "pushl $0x2c0894\n\t"
+      "pushl $0x2c1134\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001cb0c0_1:\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_001cb0c0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x458\n\t"
+      "pushl $0x2c0894\n\t"
+      "pushl $0x27b768\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001cb0c0_2:\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "subl $0, %%eax\n\t"
+      "je .LFUN_001cb0c0_5\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_001cb0c0_3\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_001cb0c0_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x478\n\t"
+      "pushl $0x2c0894\n\t"
+      "pushl $0x2c1114\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001cb0c0_3:\n\t"
+      "movw $2, (%%esi)\n\t"
+      ".LFUN_001cb0c0_4:\n\t"
+      "movl %%edi, 0x6c(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001cb0c0_5:\n\t"
+      "movw $1, (%%esi)\n\t"
+      "movl %%edi, 0x68(%%esi)\n\t"
+      "movl $0, 0x64(%%esi)\n\t"
+      "movw $0, 0x8(%%esi)\n\t"
+      "movl 0x50545c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c204ea1]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .LFUN_001cb0c0_6\n\t"
+      "pushl $0x2c0d58\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1c98f0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001cb0c0_6:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x6c, 0xf7, 0xff, 0xff\n\t"
+      :
+      : [c1c9290] "m"(b1cb0c0_c1c9290), [assert] "m"(b1cb0c0_assert), [exitfn] "m"(b1cb0c0_exitfn), [c204ea1] "m"(b1cb0c0_c204ea1), [c1c98f0] "m"(b1cb0c0_c1c98f0)
+      : "memory");
 }
+#else
+#error "FUN_001cb0c0: clang naked draft required"
+#endif
+
 /* --- sound_dsound_xbox.obj orphan shells (2026-07-26) --- */
 
 /* 0x20f069 */

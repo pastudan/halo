@@ -1319,32 +1319,104 @@ void file_write_to_position(void)
   (void)esi;
 }
 
-/* 0x19ad30 */
+/* file_get_last_modification_date (0x19ad30) — XBE naked draft (batch 257). */
+#if defined(__clang__)
+static file_ref_t * (*const b19ad30_c199620)(file_ref_t *info) = file_reference_verify;
+static void *(*const b19ad30_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b19ad30_c19a370)(int16_t location, const char *path, char *out) = path_from_file_reference;
+static void (*const b19ad30_c1d0ee1)(void) = FUN_001d0ee1;
+static void * (*const b19ad30_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static int (*const b19ad30_c1d2240)(void) = xapi_GetLastError;
+static void (*const b19ad30_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void __stdcall (*const b19ad30_c1d2268)(unsigned int error) = SetLastError;
+
+__attribute__((naked, noinline))
 void file_get_last_modification_date(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
-
-  file_reference_verify((void *)(uintptr_t)ebx);
-  csmemset((void *)(uintptr_t)edi, 0, 0);
-  path_from_file_reference(edx, (char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
-  FUN_001d0ee1();
-  /* test eax, eax -> je 0x19adb5 */
-  csmemcpy((void *)(uintptr_t)edi, (void *)(uintptr_t)edx, 0);
-  file_reference_verify((void *)(uintptr_t)ebx);
-  xapi_GetLastError();
-  error(0, (char *)0x002b3ea4);
-  SetLastError(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x124, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c199620]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb $0, -0x124(%%ebp)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $0x3f, %%ecx\n\t"
+      "leal -0x123(%%ebp), %%edi\n\t"
+      "rep stosl\n\t"
+      "stosw\n\t"
+      "pushl $8\n\t"
+      ".byte 0xaa\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "call *%[memset]\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x6(%%esi), %%dx\n\t"
+      "leal -0x124(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x8(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c19a370]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "leal -0x24(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "leal -0x124(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d0ee1]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lfile_get_last_modification_date_1\n\t"
+      "pushl $8\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lfile_get_last_modification_date_1:\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c199620]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1d2240]\n\t"
+      "pushl %%eax\n\t"
+      "addl $8, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x2b4028\n\t"
+      "pushl $0x2b3ea4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl $0\n\t"
+      "call *%[c1d2268]\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c199620] "m"(b19ad30_c199620), [memset] "m"(b19ad30_memset), [c19a370] "m"(b19ad30_c19a370), [c1d0ee1] "m"(b19ad30_c1d0ee1), [c8e0b0] "m"(b19ad30_c8e0b0), [c1d2240] "m"(b19ad30_c1d2240), [c8f390] "m"(b19ad30_c8f390), [c1d2268] "m"(b19ad30_c1d2268)
+      : "memory");
 }
+#else
+#error "file_get_last_modification_date: clang naked draft required"
+#endif
+
 
 /* 0x19adf0 */
 void file_get_size(void)
@@ -1393,26 +1465,61 @@ void file_reference_create(void)
   (void)edi;
 }
 
-/* 0x1995c0 */
+/* file_printf (0x1995c0) — XBE naked draft (batch 258). */
+#if defined(__clang__)
+static int (*const b1995c0_c1da209)(char *buffer, const char *format, char *arglist) = vsprintf;
+static int (*const b1995c0_c8df60)(const char *s1) = csstrlen;
+static void (*const b1995c0_c19ac00)(void) = file_write;
+static int (*const b1995c0_c19a9a0)(file_ref_t *info) = file_get_position;
+static void (*const b1995c0_c19aad0)(void) = file_set_eof;
+
+__attribute__((naked, noinline))
 void file_printf(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* test eax, eax -> je 0x199616 */
-  vsprintf((char *)(uintptr_t)edx, (char *)(uintptr_t)eax, (char *)(uintptr_t)ecx);
-  csstrlen((char *)(uintptr_t)ecx);
-  file_write();
-  file_get_position((void *)(uintptr_t)esi);
-  file_set_eof();
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x400, %%esp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lfile_printf_1\n\t"
+      "pushl %%esi\n\t"
+      "leal 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x400(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1da209]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "leal -0x400(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x400(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8df60]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c19ac00]\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c19a9a0]\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c19aad0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%esi\n\t"
+      ".Lfile_printf_1:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1da209] "m"(b1995c0_c1da209), [c8df60] "m"(b1995c0_c8df60), [c19ac00] "m"(b1995c0_c19ac00), [c19a9a0] "m"(b1995c0_c19a9a0), [c19aad0] "m"(b1995c0_c19aad0)
+      : "memory");
 }
+#else
+#error "file_printf: clang naked draft required"
+#endif
+
 
 /* 0x1996d0 */
 void file_reference_copy(void)

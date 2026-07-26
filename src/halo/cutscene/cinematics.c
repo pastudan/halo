@@ -572,19 +572,57 @@ void FUN_00093640(int a0)
   cinematic_set_title_delayed(0, 0.0f);
 }
 
-/* 0x93660 */
+/* FUN_00093660 (0x93660) — XBE naked draft (batch 255). */
+#if defined(__clang__)
+static void (*const b93660_c94290)(void) = FUN_00094290;
+static void (*const b93660_c94ba0)(void) = FUN_00094ba0;
+
+__attribute__((naked, noinline))
 void FUN_00093660(void)
 {
-  int eax = 0;
-
-  /* test (char)eax, (char)eax -> jbe 0x936a3 */
-  /* cmp (char)eax, 3 -> jbe 0x9368d */
-  /* cmp (char)eax, 4 -> jne 0x936a3 */
-  FUN_00094290();
-  FUN_00094ba0();
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movb 0x20(%%ecx), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jbe .LFUN_00093660_2\n\t"
+      "cmpb $3, %%al\n\t"
+      "jbe .LFUN_00093660_1\n\t"
+      "cmpb $4, %%al\n\t"
+      "jne .LFUN_00093660_2\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movb 0x22(%%ecx), %%al\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c94290]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00093660_1:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movb 0x22(%%ecx), %%al\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c94ba0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00093660_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c94290] "m"(b93660_c94290), [c94ba0] "m"(b93660_c94ba0)
+      : "memory");
 }
+#else
+#error "FUN_00093660: clang naked draft required"
+#endif
+
 
 /* 0x93710 */
 void FUN_00093710(void)

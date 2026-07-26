@@ -447,49 +447,325 @@ static void ra_check_ptr(void *p, int line, void *msg)
     RA_EVENT_ASSERT(line, msg);
 }
 
-void FUN_000942a0(char *out, void *event, int **stream)
-{
-  ra_check_ptr(out, 0x19, (void *)0x2690a0);
-  ra_check_ptr(event, 0x19, (void *)0x269480);
-  if (*(int16_t *)event != 2)
-    RA_EVENT_ASSERT(0x19, (void *)0x269448);
-  ra_check_ptr(stream, 0x19, (void *)0x269358);
-  *out = *(char *)((char *)event + 4);
-  **stream += 6;
-}
+/* FUN_000942a0 (0x942a0) — XBE naked draft (batch 259). */
+#if defined(__clang__)
+static void (*const b942a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b942a0_exitfn)(int) = system_exit;
 
-void FUN_00094350(char *out, void *event, int **stream)
+__attribute__((naked, noinline))
+void FUN_000942a0(char *out __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
 {
-  ra_check_ptr(out, 0x1a, (void *)0x2690a0);
-  ra_check_ptr(event, 0x1a, (void *)0x269480);
-  if (*(int16_t *)event != 3)
-    RA_EVENT_ASSERT(0x1a, (void *)0x2694cc);
-  ra_check_ptr(stream, 0x1a, (void *)0x269358);
-  out[1] = *(char *)((char *)event + 4);
-  **stream += 6;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_000942a0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000942a0_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_000942a0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000942a0_2:\n\t"
+      "cmpw $2, (%%edi)\n\t"
+      "je .LFUN_000942a0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269448\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000942a0_3:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_000942a0_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000942a0_4:\n\t"
+      "movb 0x4(%%edi), %%al\n\t"
+      "movb %%al, (%%ebx)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $6, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b942a0_assert), [exitfn] "m"(b942a0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_000942a0: clang naked draft required"
+#endif
 
-void FUN_00094400(char *out, void *event, int **stream)
-{
-  ra_check_ptr(out, 0x1b, (void *)0x2690a0);
-  ra_check_ptr(event, 0x1b, (void *)0x269480);
-  if (*(int16_t *)event != 4)
-    RA_EVENT_ASSERT(0x1b, (void *)0x269500);
-  ra_check_ptr(stream, 0x1b, (void *)0x269358);
-  *(int16_t *)(out + 2) = *(int16_t *)((char *)event + 4);
-  **stream += 6;
-}
 
-void FUN_000944b0(char *out, void *event, int **stream)
+/* FUN_00094350 (0x94350) — XBE naked draft (batch 259). */
+#if defined(__clang__)
+static void (*const b94350_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b94350_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void FUN_00094350(char *out __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
 {
-  ra_check_ptr(out, 0x1c, (void *)0x2690a0);
-  ra_check_ptr(event, 0x1c, (void *)0x269480);
-  if (*(int16_t *)event != 5)
-    RA_EVENT_ASSERT(0x1c, (void *)0x269534);
-  ra_check_ptr(stream, 0x1c, (void *)0x269358);
-  *(int16_t *)(out + 4) = *(int16_t *)((char *)event + 4);
-  **stream += 6;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_00094350_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094350_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_00094350_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094350_2:\n\t"
+      "cmpw $3, (%%edi)\n\t"
+      "je .LFUN_00094350_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2694cc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094350_3:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00094350_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094350_4:\n\t"
+      "movb 0x4(%%edi), %%al\n\t"
+      "movb %%al, 0x1(%%ebx)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $6, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b94350_assert), [exitfn] "m"(b94350_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00094350: clang naked draft required"
+#endif
+
+
+/* FUN_00094400 (0x94400) — XBE naked draft (batch 259). */
+#if defined(__clang__)
+static void (*const b94400_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b94400_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void FUN_00094400(char *out __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_00094400_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1b\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094400_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_00094400_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1b\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094400_2:\n\t"
+      "cmpw $4, (%%edi)\n\t"
+      "je .LFUN_00094400_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1b\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269500\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094400_3:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00094400_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1b\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094400_4:\n\t"
+      "movw 0x4(%%edi), %%ax\n\t"
+      "movw %%ax, 0x2(%%ebx)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $6, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b94400_assert), [exitfn] "m"(b94400_exitfn)
+      : "memory");
+}
+#else
+#error "FUN_00094400: clang naked draft required"
+#endif
+
+
+/* FUN_000944b0 (0x944b0) — XBE naked draft (batch 259). */
+#if defined(__clang__)
+static void (*const b944b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b944b0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void FUN_000944b0(char *out __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_000944b0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000944b0_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_000944b0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000944b0_2:\n\t"
+      "cmpw $5, (%%edi)\n\t"
+      "je .LFUN_000944b0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269534\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000944b0_3:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_000944b0_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000944b0_4:\n\t"
+      "movw 0x4(%%edi), %%ax\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $6, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b944b0_assert), [exitfn] "m"(b944b0_exitfn)
+      : "memory");
+}
+#else
+#error "FUN_000944b0: clang naked draft required"
+#endif
+
 
 void FUN_00094560(char *out, void *event, int **stream)
 {
@@ -504,56 +780,263 @@ void FUN_00094560(char *out, void *event, int **stream)
   **stream += 0xc;
 }
 
-void apply_facing_vector(char *thread, void *event, int **stream)
-{
-  ra_check_ptr(thread, 0x2c, (void *)0x2690a0);
-  ra_check_ptr(event, 0x2c, (void *)0x269480);
-  if (*(int16_t *)event != 9)
-    RA_EVENT_ASSERT(0x2c, (void *)0x269598);
-  ra_check_ptr(stream, 0x2c, (void *)0x269358);
-  {
-    float *src = (float *)((char *)event + 4);
-    float *dst = (float *)(thread + 0x1c);
-    dst[0] = src[0];
-    dst[1] = src[1];
-    dst[2] = src[2];
-  }
-  **stream += 0x10;
-}
+/* apply_facing_vector (0x94620) — XBE naked draft (batch 257). */
+#if defined(__clang__)
+static void (*const b94620_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b94620_exitfn)(int) = system_exit;
 
-void apply_aiming_vector(char *thread, void *event, int **stream)
+__attribute__((naked, noinline))
+void apply_facing_vector(char *thread __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
 {
-  ra_check_ptr(thread, 0x2d, (void *)0x2690a0);
-  ra_check_ptr(event, 0x2d, (void *)0x269480);
-  if (*(int16_t *)event != 0xa)
-    RA_EVENT_ASSERT(0x2d, (void *)0x2695cc);
-  ra_check_ptr(stream, 0x2d, (void *)0x269358);
-  {
-    float *src = (float *)((char *)event + 4);
-    float *dst = (float *)(thread + 0x28);
-    dst[0] = src[0];
-    dst[1] = src[1];
-    dst[2] = src[2];
-  }
-  **stream += 0x10;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lapply_facing_vector_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_facing_vector_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lapply_facing_vector_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_facing_vector_2:\n\t"
+      "cmpw $9, (%%edi)\n\t"
+      "je .Lapply_facing_vector_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269598\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_facing_vector_3:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lapply_facing_vector_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_facing_vector_4:\n\t"
+      "addl $4, %%edi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "addl $0x1c, %%ebx\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%ebx)\n\t"
+      "movl 0x8(%%edi), %%edx\n\t"
+      "movl %%edx, 0x8(%%ebx)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $0x10, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b94620_assert), [exitfn] "m"(b94620_exitfn)
+      : "memory");
 }
+#else
+#error "apply_facing_vector: clang naked draft required"
+#endif
 
-void apply_looking_vector(char *thread, void *event, int **stream)
+
+/* apply_aiming_vector (0x946e0) — XBE naked draft (batch 257). */
+#if defined(__clang__)
+static void (*const b946e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b946e0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void apply_aiming_vector(char *thread __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
 {
-  ra_check_ptr(thread, 0x2e, (void *)0x2690a0);
-  ra_check_ptr(event, 0x2e, (void *)0x269480);
-  if (*(int16_t *)event != 0xb)
-    RA_EVENT_ASSERT(0x2e, (void *)0x269600);
-  ra_check_ptr(stream, 0x2e, (void *)0x269358);
-  {
-    float *src = (float *)((char *)event + 4);
-    float *dst = (float *)(thread + 0x34);
-    dst[0] = src[0];
-    dst[1] = src[1];
-    dst[2] = src[2];
-  }
-  **stream += 0x10;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lapply_aiming_vector_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2d\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_aiming_vector_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lapply_aiming_vector_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2d\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_aiming_vector_2:\n\t"
+      "cmpw $0xa, (%%edi)\n\t"
+      "je .Lapply_aiming_vector_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2d\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2695cc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_aiming_vector_3:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lapply_aiming_vector_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2d\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_aiming_vector_4:\n\t"
+      "addl $4, %%edi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "addl $0x28, %%ebx\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%ebx)\n\t"
+      "movl 0x8(%%edi), %%edx\n\t"
+      "movl %%edx, 0x8(%%ebx)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $0x10, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b946e0_assert), [exitfn] "m"(b946e0_exitfn)
+      : "memory");
 }
+#else
+#error "apply_aiming_vector: clang naked draft required"
+#endif
+
+
+/* apply_looking_vector (0x947a0) — XBE naked draft (batch 257). */
+#if defined(__clang__)
+static void (*const b947a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b947a0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void apply_looking_vector(char *thread __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lapply_looking_vector_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2e\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_looking_vector_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lapply_looking_vector_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2e\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_looking_vector_2:\n\t"
+      "cmpw $0xb, (%%edi)\n\t"
+      "je .Lapply_looking_vector_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2e\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269600\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_looking_vector_3:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lapply_looking_vector_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2e\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lapply_looking_vector_4:\n\t"
+      "addl $4, %%edi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "addl $0x34, %%ebx\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%ebx)\n\t"
+      "movl 0x8(%%edi), %%edx\n\t"
+      "movl %%edx, 0x8(%%ebx)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $0x10, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b947a0_assert), [exitfn] "m"(b947a0_exitfn)
+      : "memory");
+}
+#else
+#error "apply_looking_vector: clang naked draft required"
+#endif
+
 
 /* apply_angle_vector (0x94860) — XBE naked draft (batch 249). */
 #if defined(__clang__)
@@ -1009,108 +1492,274 @@ void render_debug_recording(void)
   draw_string_set_tab_stops(tab_stops, 0);
 }
 
-char recorded_animation_play_internal(int unit, int anim, int flags)
+/* recorded_animation_play_internal (0x95330) — XBE naked draft (batch 259). */
+#if defined(__clang__)
+static scenario_t * (*const b95330_c18e380)(void) = global_scenario_get;
+static void *(*const b95330_get)(int, int) = object_get_and_verify_type;
+static int (*const b95330_cba500)(int) = player_index_from_unit_index;
+static void (*const b95330_c95050)(int unit, int *out) = FUN_00095050;
+static void *(*const b95330_elem)(void *, int, int) = tag_block_get_element;
+static char (*const b95330_c94ff0)(int unit_handle) = recorded_animation_controlling_unit;
+static int (*const b95330_c119610)(data_t *data) = data_new_at_index;
+static void *(*const b95330_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b95330_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b95330_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b95330_exitfn)(int) = system_exit;
+static void * (*const b95330_c19b1a0)(void *tag_data, int offset, int size) = tag_data_get_pointer;
+static void (*const b95330_c1adf10)(int unit_handle, char param_2) = unit_set_actively_controlled;
+static bool (*const b95330_c1a9a30)(int unit_handle) = unit_is_alive;
+static void (*const b95330_c1a9a50)(int unit_handle, char controllable) = unit_set_controllable;
+static void (*const b95330_c1a9a90)(int unit_handle, char possessed) = unit_set_possessed;
+static void (*const b95330_c13ff50)(int object_handle, char param_2) = object_set_automatic_deactivation;
+
+__attribute__((naked, noinline))
+char recorded_animation_play_internal(int unit __attribute__((unused)), int anim __attribute__((unused)), int flags __attribute__((unused)))
 {
-  scenario_t *scenario;
-  char *anim_def;
-  char *thread;
-  int thread_handle;
-  void **vtable;
-  int anim_type;
-  char *dbg_slot;
-  char result;
-  uint16_t extra_flags;
-
-  result = 0;
-  if (unit == -1) {
-    error(2, (char *)0x269940);
-    return result;
-  }
-  if ((int16_t)anim == -1) {
-    error(2, (char *)0x269954);
-    return result;
-  }
-
-  scenario = global_scenario_get();
-  if ((int)anim >= *(int *)((char *)scenario + 0x36c)) {
-    error(2, (char *)0x269954);
-    return result;
-  }
-
-  object_get_and_verify_type(unit, 3);
-  player_index_from_unit_index(unit);
-  FUN_00095050(unit, &thread_handle);
-
-  anim_def = (char *)tag_block_get_element((char *)scenario + 0x36c, anim, 0x40);
-  if (recorded_animation_controlling_unit(unit) != 0) {
-    if (thread_handle != -1) {
-      dbg_slot = (char *)((thread_handle & 0xffff) * 0x10 + *(int *)0x44df0c);
-      error(2, (char *)0x269994,
-            (char *)tag_block_get_element((char *)scenario + 0x36c,
-                                          *(int16_t *)(dbg_slot + 0xc), 0x40));
-    } else {
-      error(2, (char *)0x269974);
-    }
-    return result;
-  }
-
-  thread = NULL;
-  if (thread_handle == -1) {
-    thread_handle = data_new_at_index(*(data_t **)0x44df04);
-    if (thread_handle == -1) {
-      error(2, (char *)0x269a2c);
-      return result;
-    }
-    thread = (char *)datum_get(*(data_t **)0x44df04, thread_handle);
-    if (thread == NULL) {
-      error(2, (char *)0x269a2c);
-      return result;
-    }
-  } else {
-    thread = (char *)datum_get(*(data_t **)0x44df04, thread_handle);
-  }
-
-  anim_type = *(uint8_t *)(anim_def + 0x20);
-  if (anim_type == 0 || anim_type > 4 ||
-      *(void **)((char *)0x2eebac + anim_type * 4) == NULL) {
-    display_assert((char *)0x2699c0,
-                   "c:\\halo\\SOURCE\\cutscene\\recorded_animations.c", 0xe9,
-                   1);
-    system_exit(-1);
-  }
-
-  *(int *)(thread + 4) = unit;
-  *(int *)(thread + 0xc) = 0;
-  *(int16_t *)(thread + 8) = *(int16_t *)(anim_def + 0x24);
-  *(void **)(thread + 0x10) =
-      tag_data_get_pointer(anim_def + 0x2c, 0, *(int *)(anim_def + 0x2c));
-
-  dbg_slot = (char *)((thread_handle & 0xffff) * 0x10 + *(int *)0x44df0c);
-  *dbg_slot = 1;
-  *(void **)(dbg_slot + 4) = *(void **)(thread + 0x10);
-  *(int16_t *)(dbg_slot + 0xc) = (int16_t)anim;
-  *(int *)(dbg_slot + 8) = *(int *)(anim_def + 0x2c);
-
-  *(uint8_t *)(thread + 0xa) &= 0xfe;
-  *(int16_t *)(thread + 0x60) = (int16_t)(anim_type - 1);
-  vtable = *(void ***)((char *)0x2eebb0 + (anim_type - 1) * 4);
-  ((void (*)(char *, char *, int *, char *))vtable[0])(
-      thread + 0x54, thread + 0x14, (int *)(thread + 0x10),
-      anim_def + 0x18);
-
-  unit_set_actively_controlled(unit, 1);
-  if (unit_is_alive(unit) != 0)
-    *(uint8_t *)(thread + 0xa) |= 4;
-  else
-    *(uint8_t *)(thread + 0xa) &= 0xfb;
-
-  unit_set_controllable(unit, 0);
-  unit_set_possessed(unit, 1);
-  object_set_automatic_deactivation(unit, 0);
-  extra_flags = (uint16_t)flags;
-  *(uint16_t *)(thread + 0xa) |= extra_flags;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movb %%bl, -0x1(%%ebp)\n\t"
+      "je .Lrecorded_animation_play_internal_12\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lrecorded_animation_play_internal_11\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "call *%[c18e380]\n\t"
+      "cmpl 0x36c(%%eax), %%esi\n\t"
+      "jge .Lrecorded_animation_play_internal_11\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cba500]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "leal -0xc(%%ebp), %%ebx\n\t"
+      "call *%[c95050]\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x36c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%esi, -0x8(%%ebp)\n\t"
+      "call *%[c94ff0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lrecorded_animation_play_internal_8\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lrecorded_animation_play_internal_2\n\t"
+      "movl 0x44df04, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119610]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lrecorded_animation_play_internal_1\n\t"
+      "movl 0x44df04, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lrecorded_animation_play_internal_3\n\t"
+      ".Lrecorded_animation_play_internal_1:\n\t"
+      "pushl $0x269a2c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrecorded_animation_play_internal_2:\n\t"
+      "movl -0xc(%%ebp), %%esi\n\t"
+      ".Lrecorded_animation_play_internal_3:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movb 0x20(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jbe .Lrecorded_animation_play_internal_4\n\t"
+      "cmpb $4, %%cl\n\t"
+      "ja .Lrecorded_animation_play_internal_4\n\t"
+      "movzbl %%cl, %%edx\n\t"
+      "movl 0x2eebac(,%%edx,4), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jne .Lrecorded_animation_play_internal_5\n\t"
+      ".Lrecorded_animation_play_internal_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe9\n\t"
+      "pushl $0x269764\n\t"
+      "pushl $0x2699c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrecorded_animation_play_internal_5:\n\t"
+      "movl %%edi, 0x4(%%ebx)\n\t"
+      "movl $0, 0xc(%%ebx)\n\t"
+      "movw 0x24(%%eax), %%cx\n\t"
+      "addl $0x2c, %%eax\n\t"
+      "movw %%cx, 0x8(%%ebx)\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19b1a0]\n\t"
+      "movl 0x44df0c, %%edx\n\t"
+      "movl %%eax, 0x10(%%ebx)\n\t"
+      "andl $0xffff, %%esi\n\t"
+      "leal 0x10(%%ebx), %%ecx\n\t"
+      "shll $4, %%esi\n\t"
+      "addl %%edx, %%esi\n\t"
+      "movb $1, (%%esi)\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl 0x2c(%%eax), %%edx\n\t"
+      "addl $0x2c, %%eax\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "movw %%ax, 0xc(%%esi)\n\t"
+      "movl %%edx, 0x8(%%esi)\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      "movzbw 0x20(%%esi), %%dx\n\t"
+      "andb $0xfe, 0xa(%%ebx)\n\t"
+      "decl %%edx\n\t"
+      "movswl %%dx, %%eax\n\t"
+      "movw %%dx, 0x60(%%ebx)\n\t"
+      "movl 0x2eebb0(,%%eax,4), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movb 0x22(%%esi), %%al\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x14(%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x54(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *(%%edx)\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1adf10]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1a9a30]\n\t"
+      "addl $0x28, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lrecorded_animation_play_internal_6\n\t"
+      "orb $4, 0xa(%%ebx)\n\t"
+      "jmp .Lrecorded_animation_play_internal_7\n\t"
+      ".Lrecorded_animation_play_internal_6:\n\t"
+      "andb $0xfb, 0xa(%%ebx)\n\t"
+      ".Lrecorded_animation_play_internal_7:\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1a9a50]\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1a9a90]\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c13ff50]\n\t"
+      "movw 0xc(%%ebp), %%cx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "orw %%cx, 0xa(%%ebx)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrecorded_animation_play_internal_8:\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "je .Lrecorded_animation_play_internal_10\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movl 0x44df0c, %%edi\n\t"
+      "andl $0xffff, %%ecx\n\t"
+      "shll $4, %%ecx\n\t"
+      "movb (%%ecx,%%edi,1), %%dl\n\t"
+      "addl %%edi, %%ecx\n\t"
+      "testb %%dl, %%dl\n\t"
+      "movl $0x25b724, %%eax\n\t"
+      "je .Lrecorded_animation_play_internal_9\n\t"
+      "movswl 0xc(%%ecx), %%edx\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x36c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lrecorded_animation_play_internal_9:\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x269994\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrecorded_animation_play_internal_10:\n\t"
+      "pushl $0x269974\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrecorded_animation_play_internal_11:\n\t"
+      "pushl $0x269954\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrecorded_animation_play_internal_12:\n\t"
+      "pushl $0x269940\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(b95330_c18e380), [get] "m"(b95330_get), [cba500] "m"(b95330_cba500), [c95050] "m"(b95330_c95050), [elem] "m"(b95330_elem), [c94ff0] "m"(b95330_c94ff0), [c119610] "m"(b95330_c119610), [dget] "m"(b95330_dget), [c8f390] "m"(b95330_c8f390), [assert] "m"(b95330_assert), [exitfn] "m"(b95330_exitfn), [c19b1a0] "m"(b95330_c19b1a0), [c1adf10] "m"(b95330_c1adf10), [c1a9a30] "m"(b95330_c1a9a30), [c1a9a50] "m"(b95330_c1a9a50), [c1a9a90] "m"(b95330_c1a9a90), [c13ff50] "m"(b95330_c13ff50)
+      : "memory");
 }
+#else
+#error "recorded_animation_play_internal: clang naked draft required"
+#endif
+
 
 void control_toggle(int object)
 {

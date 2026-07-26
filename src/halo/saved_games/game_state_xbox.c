@@ -306,62 +306,207 @@ void FUN_001c0d70(int param_1)
 }
 /* --- game_state_xbox.obj batch drafts (2026-07-26) --- */
 
-/* 0x1c0260 */
+/* game_state_create_or_open_file (0x1c0260) — XBE naked draft (batch 260). */
+#if defined(__clang__)
+static void (*const b1c0260_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1c0260_exitfn)(int) = system_exit;
+static int __stdcall (*const b1c0260_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = CreateFileA;
+static unsigned int __stdcall (*const b1c0260_c1d1610)(int handle, int distance, int *distance_high, unsigned int method) = SetFilePointer;
+static bool __stdcall (*const b1c0260_c1d158c)(int handle) = SetEndOfFile;
+static int (*const b1c0260_c1d2240)(void) = xapi_GetLastError;
+static char * (*const b1c0260_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+
+__attribute__((naked, noinline))
 void game_state_create_or_open_file(void)
 {
-  int eax = 0;
-
-  /* test (char)eax, (char)eax -> jne 0x1c0286 */
-  display_assert((char *)0x002b9ba0, (char *)0x002b9b70, 86, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> je 0x1c02ac */
-  display_assert((char *)0x002b9c0c, (char *)0x002b9b70, 87, 0);
-  system_exit(0);
-  CreateFileA((char *)0x002b9bfc, 0xc0000000, 0, 0, 0, 0x28000000, 0);
-  /* mem[0x004ea9c0] = eax */
-  SetFilePointer(0, 0x00380000, (void *)0, 0);
-  /* cmp eax, -1 -> je 0x1c02fd */
-  SetEndOfFile(0);
-  /* test eax, eax -> je 0x1c02fd */
-  xapi_GetLastError();
-  csprintf((char *)0x005ab100, (char *)0x002b9bcc);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "movb 0x4ea9b0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lgame_state_create_or_open_file_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x56\n\t"
+      "pushl $0x2b9b70\n\t"
+      "pushl $0x2b9ba0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lgame_state_create_or_open_file_1:\n\t"
+      "movb 0x4ea9bc, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lgame_state_create_or_open_file_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x57\n\t"
+      "pushl $0x2b9b70\n\t"
+      "pushl $0x2b9c0c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lgame_state_create_or_open_file_2:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x28000000\n\t"
+      "pushl $4\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0xc0000000\n\t"
+      "pushl $0x2b9bfc\n\t"
+      "call *%[c1d1d85]\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, 0x4ea9c0\n\t"
+      "je .Lgame_state_create_or_open_file_3\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0x380000\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d1610]\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lgame_state_create_or_open_file_3\n\t"
+      "movl 0x4ea9c0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d158c]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lgame_state_create_or_open_file_3\n\t"
+      "movb $1, 0x4ea9bc\n\t"
+      "ret\n\t"
+      ".Lgame_state_create_or_open_file_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x61\n\t"
+      "pushl $0x2b9b70\n\t"
+      "call *%[c1d2240]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2b9bcc\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1c0260_assert), [exitfn] "m"(b1c0260_exitfn), [c1d1d85] "m"(b1c0260_c1d1d85), [c1d1610] "m"(b1c0260_c1d1610), [c1d158c] "m"(b1c0260_c1d158c), [c1d2240] "m"(b1c0260_c1d2240), [c8d9d0] "m"(b1c0260_c8d9d0)
+      : "memory");
 }
+#else
+#error "game_state_create_or_open_file: clang naked draft required"
+#endif
 
-/* 0x1c0450 */
+
+/* game_state_read_from_file (0x1c0450) — XBE naked draft (batch 254). */
+#if defined(__clang__)
+static void (*const b1c0450_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1c0450_exitfn)(int) = system_exit;
+static unsigned int __stdcall (*const b1c0450_c1d1610)(int handle, int distance, int *distance_high, unsigned int method) = SetFilePointer;
+static int __stdcall (*const b1c0450_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = ReadFile;
+static int (*const b1c0450_c1d2240)(void) = xapi_GetLastError;
+static char * (*const b1c0450_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+
+__attribute__((naked, noinline))
 void game_state_read_from_file(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* test (char)eax, (char)eax -> jne 0x1c0480 */
-  display_assert((char *)0x002b9ba0, (char *)0x002b9b70, 144, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0x1c04a9 */
-  display_assert((char *)0x002b9c30, (char *)0x002b9b70, 145, 0);
-  system_exit(0);
-  /* test (char)eax, (char)eax -> jne 0x1c04db */
-  /* test (char)eax, (char)eax -> jne 0x1c04db */
-  display_assert((char *)0x002b9ca0, (char *)0x002b9b70, 146, 0);
-  system_exit(0);
-  SetFilePointer(0, 0, (void *)0, 0);
-  /* cmp eax, -1 -> je 0x1c0526 */
-  ReadFile(0, (void *)(uintptr_t)eax, edx, (void *)(uintptr_t)ecx, (void *)0);
-  /* test eax, eax -> je 0x1c0526 */
-  /* relift: cmp edx, dword ptr [0x4ea9b8] -> jne 0x1c0526 */
-  xapi_GetLastError();
-  csprintf((char *)0x005ab100, (char *)0x002b9c7c);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movb 0x4ea9b0, %%al\n\t"
+      "pushl %%ebx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lgame_state_read_from_file_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x90\n\t"
+      "pushl $0x2b9b70\n\t"
+      "pushl $0x2b9ba0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lgame_state_read_from_file_1:\n\t"
+      "movb 0x4ea9bc, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lgame_state_read_from_file_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x91\n\t"
+      "pushl $0x2b9b70\n\t"
+      "pushl $0x2b9c30\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lgame_state_read_from_file_2:\n\t"
+      "movb 0x4ea9bd, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lgame_state_read_from_file_3\n\t"
+      "movb 0x5054e8, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lgame_state_read_from_file_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x92\n\t"
+      "pushl $0x2b9b70\n\t"
+      "pushl $0x2b9ca0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lgame_state_read_from_file_3:\n\t"
+      "movl 0x4ea9c0, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d1610]\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lgame_state_read_from_file_4\n\t"
+      "movl 0x4ea9b8, %%edx\n\t"
+      "movl 0x4ea9b4, %%eax\n\t"
+      "pushl $0\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x4ea9c0, %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d13c9]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lgame_state_read_from_file_4\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "cmpl 0x4ea9b8, %%edx\n\t"
+      "jne .Lgame_state_read_from_file_4\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_state_read_from_file_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9c\n\t"
+      "pushl $0x2b9b70\n\t"
+      "call *%[c1d2240]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2b9c7c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1c0450_assert), [exitfn] "m"(b1c0450_exitfn), [c1d1610] "m"(b1c0450_c1d1610), [c1d13c9] "m"(b1c0450_c1d13c9), [c1d2240] "m"(b1c0450_c1d2240), [c8d9d0] "m"(b1c0450_c8d9d0)
+      : "memory");
 }
+#else
+#error "game_state_read_from_file: clang naked draft required"
+#endif
+
 
 /* 0x1c0570 */
 void game_state_write_core(void)
@@ -1184,26 +1329,85 @@ void FUN_001c1280(void)
   (void)0;
 }
 
-/* 0x1c1290 */
+/* game_state_read_from_persistent_storage (0x1c1290) — XBE naked draft (batch 260). */
+#if defined(__clang__)
+static void (*const b1c1290_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1c1290_exitfn)(int) = system_exit;
+static void *(*const b1c1290_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void game_state_read_from_persistent_storage(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-
-  /* cmp esi, ebx -> je 0x1c12a6 */
-  /* cmp eax, ebx -> jl 0x1c12a6 */
-  /* cmp eax, 2 -> jl 0x1c12c6 */
-  display_assert((char *)0x002b9fec, (char *)0x002b9f70, 567, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)esi, 0, 48);
-  display_assert((char *)0x002b9fbc, (char *)0x002b9f70, 594, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpl %%ebx, %%esi\n\t"
+      "je .Lgame_state_read_from_persistent_storage_1\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "jl .Lgame_state_read_from_persistent_storage_1\n\t"
+      "cmpl $2, %%eax\n\t"
+      "jl .Lgame_state_read_from_persistent_storage_2\n\t"
+      ".Lgame_state_read_from_persistent_storage_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x237\n\t"
+      "pushl $0x2b9f70\n\t"
+      "pushl $0x2b9fec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lgame_state_read_from_persistent_storage_2:\n\t"
+      "pushl $0x30\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movb %%al, %%ch\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw $0xffff, 0x18(%%esi)\n\t"
+      "movb $3, 0x2a(%%esi)\n\t"
+      "movb %%bl, 0x2b(%%esi)\n\t"
+      "movb %%bl, 0x2d(%%esi)\n\t"
+      "movb %%bl, 0x2f(%%esi)\n\t"
+      "orl $1, %%ecx\n\t"
+      "orw %%cx, 0x1a(%%esi)\n\t"
+      "subl %%ebx, %%eax\n\t"
+      "movb %%bl, 0x2c(%%esi)\n\t"
+      "movw %%bx, 0x26(%%esi)\n\t"
+      "je .Lgame_state_read_from_persistent_storage_4\n\t"
+      "decl %%eax\n\t"
+      "je .Lgame_state_read_from_persistent_storage_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x252\n\t"
+      "pushl $0x2b9f70\n\t"
+      "pushl $0x2b9fbc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgame_state_read_from_persistent_storage_3:\n\t"
+      "movb $1, 0x2b(%%esi)\n\t"
+      ".Lgame_state_read_from_persistent_storage_4:\n\t"
+      "movb %%bl, 0x28(%%esi)\n\t"
+      "movb %%bl, 0x29(%%esi)\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1c1290_assert), [exitfn] "m"(b1c1290_exitfn), [memset] "m"(b1c1290_memset)
+      : "memory");
 }
+#else
+#error "game_state_read_from_persistent_storage: clang naked draft required"
+#endif
+
 
 /* player_profile_setup_default_gamespy_settings (0x1c1340) — XBE naked draft (batch 244). */
 #if defined(__clang__)
@@ -1653,11 +1857,52 @@ void player_profile_new(void)
   (void)edi;
 }
 
-/* 0x1c1950 */
+/* FUN_001c1950 (0x1c1950) — XBE naked draft (batch 253). */
+#if defined(__clang__)
+static void (*const b1c1950_c1c0ee0)(void) = FUN_001c0ee0;
+
+__attribute__((naked, noinline))
 void FUN_001c1950(void)
 {
-  FUN_001c0ee0();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1c0ee0]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl $0x3f800000, -0x10(%%ebp)\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      "movl %%esi, %%edi\n\t"
+      "movl %%ebx, (%%edi)\n\t"
+      "movl %%ecx, 0x4(%%edi)\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edx, 0x8(%%edi)\n\t"
+      "movl %%eax, 0xc(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1c0ee0] "m"(b1c1950_c1c0ee0)
+      : "memory");
 }
+#else
+#error "FUN_001c1950: clang naked draft required"
+#endif
+
 
 /* 0x1c19a0 */
 int FUN_001c19a0(void)
