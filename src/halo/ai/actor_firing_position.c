@@ -914,54 +914,21 @@ void FUN_00024770(void)
 #endif
 
 
-/* FUN_00024850 (0x24850) — XBE naked draft (batch 163). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00024850(int actor_handle __attribute__((unused)), int flag __attribute__((unused)), char *actor __attribute__((unused)), void *state __attribute__((unused)))
+/* FUN_00024850 (0x24850) — readable C lift.
+ * actor@edi state@ebx. */
+void FUN_00024850(int actor_handle, int flag, char *actor, void *state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x254bf8, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00024850_3\n\t"
-      "pushl %%esi\n\t"
-      "movl $0x254bf8, %%esi\n\t"
-      ".LFUN_00024850_1:\n\t"
-      "movb 0x4(%%edi), %%cl\n\t"
-      "movswl -0x4(%%esi), %%eax\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "testl %%eax, %%edx\n\t"
-      "je .LFUN_00024850_2\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *(%%esi)\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_00024850_2:\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "addl $8, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00024850_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00024850_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  void **entry = (void **)0x254bf8;
+
+  if (!*entry)
+    return;
+  for (; *entry; entry = (void **)((char *)entry + 8)) {
+    unsigned bit = 1u << (unsigned char)actor[4];
+    if ((bit & (unsigned)(int)*(short *)((char *)entry - 4)) == 0)
+      continue;
+    ((void (*)(int, char *, void *, void *))*entry)(actor_handle, actor, flag, state);
+  }
 }
-#else
-#error "FUN_00024850: clang naked draft required"
-#endif
-
-
 /* FUN_00024890 (0x24890) — XBE naked draft (batch 152). */
 #if defined(__clang__)
 static void (*const b24890_assert)(const char *, const char *, int, bool) = display_assert;

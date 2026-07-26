@@ -38899,7 +38899,8 @@
         {
           "addr": "0x24850",
           "decl": "void FUN_00024850(int actor_handle, int flag, char *actor @<edi>, void *state @<ebx>);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00024850"
         },
         {
           "addr": "0x24890",
