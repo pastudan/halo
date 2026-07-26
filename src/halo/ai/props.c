@@ -2001,59 +2001,16 @@ int FUN_00064ec0(char *prop __attribute__((unused)), int tag __attribute__((unus
 #endif
 
 
-/* FUN_00064f50 (0x64f50) — XBE naked draft (batch 158). */
-#if defined(__clang__)
-static void (*const b64f50_c1e65eb)(void) = FUN_001e65eb;
-
-__attribute__((naked, noinline))
-void FUN_00064f50(void)
+/* FUN_00064f50 (0x64f50) — readable C lift (ai campaign). */
+int FUN_00064f50(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x24, %%esp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal -0x24(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1e65eb]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "setl %%dl\n\t"
-      "decl %%edx\n\t"
-      "andl %%edx, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "movl $0x2c9994, %%eax\n\t"
-      ".LFUN_00064f50_1:\n\t"
-      "cmpl %%ecx, 0x4(%%eax)\n\t"
-      "je .LFUN_00064f50_2\n\t"
-      "addl $0xc, %%eax\n\t"
-      "cmpl $0x2c99c4, %%eax\n\t"
-      "jb .LFUN_00064f50_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_00064f50_2:\n\t"
-      "ret\n\t"
-      :
-      : [c1e65eb] "m"(b64f50_c1e65eb)
-      : "memory");
+  unsigned char tmp[0x24];
+  int rc;
+  int field;
+  rc = FUN_001e65eb(a0, tmp);
+  field = *(int *)(tmp + 0x14); /* [ebp-0x10] with tmp at [ebp-0x24] → offset 0x14 */
+  return (rc < 0) ? field : 0;
 }
-#else
-#error "FUN_00064f50: clang naked draft required"
-#endif
-
 
 /* FUN_00064fa0 (0x64fa0) — readable C lift. */
 int FUN_00064fa0(void *prop, int a1)

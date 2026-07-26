@@ -228,6 +228,17 @@ def synthesize_relocs(
             out[off + 1 : off + 5] = b"\x00\x00\x00\x00"
             continue
 
+        # Near jmp: E9 rel32 to *external* target (tail-call thunks).
+        # Local jmps stay as LAB_* (handled above); without REL32 the oracle
+        # keeps a VA-relative displacement and Unicorn FETCH_UNMAPPED-crashes.
+        if insn.mnemonic == "jmp" and len(raw) == 5 and raw[0] == 0xE9:
+            tgt = insn.operands[0].imm & 0xFFFFFFFF
+            if not (addr <= tgt < end):
+                sym = resolve_symbol_name(tgt, by_addr, code_hi)
+                relocs.append(RelocSite(off + 1, 0x14, sym))  # IMAGE_REL_I386_REL32
+                out[off + 1 : off + 5] = b"\x00\x00\x00\x00"
+                continue
+
         # Absolute 32-bit immediates / displacements encoded in the insn.
         candidates: list[tuple[int, int]] = []  # (byte_offset_in_insn, value)
         if insn.disp_offset and insn.disp_offset + 4 <= len(raw):

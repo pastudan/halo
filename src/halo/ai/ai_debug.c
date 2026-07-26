@@ -1396,66 +1396,28 @@ void ai_debug_change_selected_actor(int actor_index __attribute__((unused)))
 #endif
 
 
-/* FUN_000490C0 (0x490c0) — XBE naked draft (batch 153). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000490C0(void)
+/* FUN_000490C0 (0x490c0) — readable C lift (ai campaign). */
+void *FUN_000490C0(int key)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x331f5c, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "leal 0x4(%%ebx), %%eax\n\t"
-      ".LFUN_000490C0_1:\n\t"
-      "movb 0x8(%%eax), %%dl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "je .LFUN_000490C0_2\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "cmpl %%edx, -0x4(%%eax)\n\t"
-      "jne .LFUN_000490C0_2\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "jle .LFUN_000490C0_2\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "movl %%edx, %%esi\n\t"
-      ".LFUN_000490C0_2:\n\t"
-      "incl %%ecx\n\t"
-      "addl $0x1ca7c, %%eax\n\t"
-      "cmpw $0x20, %%cx\n\t"
-      "jl .LFUN_000490C0_1\n\t"
-      "cmpw $-1, %%di\n\t"
-      "jne .LFUN_000490C0_3\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000490C0_3:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "imull $0x1ca7c, %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  char *base = *(char **)0x331f5c;
+  int best_idx = -1;
+  int best_val = -1;
+  int i;
+  for (i = 0; i < 0x20; i++) {
+    char *rec = base + i * 0x1ca7c;
+    if (!rec[0xc])
+      continue;
+    if (*(int *)rec != key)
+      continue;
+    if (*(int *)(rec + 4) > best_val) {
+      best_idx = i;
+      best_val = *(int *)(rec + 4);
+    }
+  }
+  if (best_idx == -1)
+    return (void *)0;
+  return base + best_idx * 0x1ca7c;
 }
-#else
-#error "FUN_000490C0: clang naked draft required"
-#endif
-
 
 /* FUN_00049280 (0x49280) — XBE naked draft (batch 149). */
 #if defined(__clang__)

@@ -34674,8 +34674,9 @@
         },
         {
           "addr": "0x490c0",
-          "decl": "void FUN_000490C0(void);",
-          "ported": false
+          "decl": "void *FUN_000490C0(int key);",
+          "ported": true,
+          "name": "FUN_000490C0"
         },
         {
           "addr": "0x49120",
@@ -34759,7 +34760,7 @@
         {
           "addr": "0x49ac0",
           "decl": "char *ai_debug_describe_actor(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x49c70",
@@ -35632,13 +35633,13 @@
         {
           "addr": "0x58700",
           "decl": "int16_t FUN_00058700(int param_1);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00058700"
         },
         {
           "addr": "0x58710",
           "decl": "int16_t FUN_00058710(int16_t param_1);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00058710"
         },
         {
@@ -35675,7 +35676,7 @@
         {
           "addr": "0x58ae0",
           "decl": "void FUN_00058ae0(unsigned int combined_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00058ae0"
         },
         {
@@ -35903,13 +35904,13 @@
         {
           "addr": "0x5ba70",
           "decl": "void encounter_force_activate(int encounter_handle);",
-          "ported": false,
+          "ported": true,
           "name": "encounter_force_activate"
         },
         {
           "addr": "0x5baa0",
           "decl": "void encounter_force_deactivate(int encounter_handle);",
-          "ported": false,
+          "ported": true,
           "name": "encounter_force_deactivate"
         },
         {
@@ -36146,8 +36147,9 @@
         },
         {
           "addr": "0x64f50",
-          "decl": "void FUN_00064f50(void);",
-          "ported": false
+          "decl": "int FUN_00064f50(int a0);",
+          "ported": true,
+          "name": "FUN_00064f50"
         },
         {
           "addr": "0x64fa0",
@@ -40283,7 +40285,7 @@
           "decl": "void closest_point_to_attractor(float *segment_start, float *segment_end, float *reference, float *out_point);",
           "name": "closest_point_to_attractor",
           "source_path": "src/halo/ai/path.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x5f490",
@@ -40318,7 +40320,7 @@
         {
           "addr": "0x600c0",
           "decl": "int16_t FUN_000600c0(void *obstacles, int16_t disc_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000600c0"
         },
         {

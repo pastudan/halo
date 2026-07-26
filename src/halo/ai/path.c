@@ -1830,97 +1830,32 @@ int16_t build_path_edges_for_surface(void *scenario __attribute__((unused)), int
 #endif
 
 
-/* closest_point_to_attractor (0x5f3c0) — XBE naked draft (batch 87). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void closest_point_to_attractor(float *segment_start __attribute__((unused)), float *segment_end __attribute__((unused)), float *reference __attribute__((unused)), float *out_point __attribute__((unused)))
+/* closest_point_to_attractor (0x5f3c0) — readable C lift (ai campaign). */
+void closest_point_to_attractor(float *segment_start, float *segment_end, float *reference, float *out_point)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds (%%edx)\n\t"
-      "fsubs (%%ecx)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x8(%%edx)\n\t"
-      "fsubs 0x8(%%ecx)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds (%%ecx)\n\t"
-      "fsubs (%%eax)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fsts 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lclosest_point_to_attractor_1\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lclosest_point_to_attractor_1\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fadds (%%ecx)\n\t"
-      "fstps (%%eax)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fadds 0x4(%%ecx)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fadds 0x8(%%ecx)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lclosest_point_to_attractor_1:\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float dx = segment_end[0] - segment_start[0];
+  float dy = segment_end[1] - segment_start[1];
+  float dz = segment_end[2] - segment_start[2];
+  float denom = dx * dx + dy * dy + dz * dz;
+  float t = ((segment_start[0] - reference[0]) * dx +
+             (segment_start[1] - reference[1]) * dy +
+             (segment_start[2] - reference[2]) * dz) / denom;
+  if (t < 0.0f) {
+    out_point[0] = segment_end[0];
+    out_point[1] = segment_end[1];
+    out_point[2] = segment_end[2];
+    return;
+  }
+  if (t > 1.0f) {
+    out_point[0] = segment_end[0];
+    out_point[1] = segment_end[1];
+    out_point[2] = segment_end[2];
+    return;
+  }
+  out_point[0] = segment_start[0] + t * dx;
+  out_point[1] = segment_start[1] + t * dy;
+  out_point[2] = segment_start[2] + t * dz;
 }
-#else
-#error "closest_point_to_attractor: clang naked draft required"
-#endif
-
 
 /* path_attractor_weight (0x5f490) — XBE naked draft (batch 88). */
 #if defined(__clang__)
@@ -2987,51 +2922,14 @@ do_assert:
   return (char *)obstacles + 8 + (int)disc_index * 24;
 }
 
-/* FUN_000600c0 (0x600c0) — XBE naked draft (batch 226). */
-#if defined(__clang__)
-static void * (*const b600c0_c60070)(void *obstacles, int16_t disc_index) = FUN_00060070;
-
-__attribute__((naked, noinline))
-int16_t FUN_000600c0(void *obstacles __attribute__((unused)), int16_t disc_index __attribute__((unused)))
+/* FUN_000600c0 (0x600c0) — readable C lift (ai campaign). */
+int16_t FUN_000600c0(void *obstacles, int16_t disc_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_000600c0_1\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c60070]\n\t"
-      "movswl 0x2(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000600c0_1:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c60070] "m"(b600c0_c60070)
-      : "memory");
+  if (disc_index == (int16_t)0xffff)
+    return (int16_t)-1;
+  void *p = FUN_00060070(obstacles, disc_index);
+  return *(int16_t *)((char *)p + 2);
 }
-#else
-#error "FUN_000600c0: clang naked draft required"
-#endif
-
 
 /* FUN_000600f0 (0x600f0) — readable C lift (ai campaign). */
 void *FUN_000600f0(void *path, int16_t step_index)
