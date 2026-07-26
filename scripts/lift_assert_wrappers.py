@@ -117,38 +117,37 @@ def is_void(sig: str) -> bool:
 
 
 def parse_assert(ops: list[tuple[str, str]], i: int) -> dict | None:
-    """Parse display_assert+system_exit; add esp may be delayed after other ops."""
-    if i + 6 >= len(ops):
+    """Parse display_assert[+system_exit]; soft (push 0) or fatal (push 1)."""
+    if i + 4 >= len(ops):
         return None
     if not (
-        ops[i] == ("push", "1")
-        and ops[i + 1][0] == "push"
-        and ops[i + 2][0] == "push"
-        and ops[i + 3][0] == "push"
-        and ops[i + 4][0] == "call"
-        and f"{DISPLAY_ASSERT:x}" in ops[i + 4][1]
-        and ops[i + 5] == ("push", "-1")
-        and ops[i + 6][0] == "call"
-        and f"{SYSTEM_EXIT:x}" in ops[i + 6][1]
+        ops[i][0] == "push" and ops[i][1] in ("0", "1")
+        and ops[i + 1][0] == "push" and ops[i + 2][0] == "push" and ops[i + 3][0] == "push"
+        and ops[i + 4][0] == "call" and f"{DISPLAY_ASSERT:x}" in ops[i + 4][1]
     ):
         return None
-    j = i + 7
+    fatal = ops[i][1] == "1"
+    j = i + 5
+    if (
+        j + 1 < len(ops) and ops[j] == ("push", "-1") and ops[j + 1][0] == "call"
+        and f"{SYSTEM_EXIT:x}" in ops[j + 1][1]
+    ):
+        j += 2
+        fatal = True
     if j < len(ops) and ops[j][0] == "add" and "esp" in ops[j][1]:
         j += 1
-    return {
-        "line": ops[i + 1][1],
-        "file": ops[i + 2][1],
-        "msg": ops[i + 3][1],
-        "next": j,
-    }
+    return {"line": ops[i + 1][1], "file": ops[i + 2][1], "msg": ops[i + 3][1], "next": j, "fatal": fatal}
 
 
 def assert_c(ab: dict, indent: str = "  ") -> str:
-    return (
+    flag = 1 if ab.get("fatal", True) else 0
+    lines = (
         f"{indent}display_assert((const char *){ab['msg']}, "
-        f"(const char *){ab['file']}, {ab['line']}, 1);\n"
-        f"{indent}system_exit(-1);\n"
+        f"(const char *){ab['file']}, {ab['line']}, {flag});\n"
     )
+    if ab.get("fatal", True):
+        lines += f"{indent}system_exit(-1);\n"
+    return lines
 
 
 def callee(op: str, name_by: dict) -> str | None:
@@ -1192,6 +1191,73 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                         f"  return (char *){a0} + {base_off} + (int)(int16_t){a1} * {elem_size};\n"
                         f"}}\n"
                     )
+
+
+    # --- Pattern: null-check esi + strlen bound + forward (uputs/uvprintf) ---
+    if (
+        len(body) >= 20 and body[0] == ("push", "ebp") and body[1] == ("mov", "ebp, esp")
+        and body[2] == ("push", "esi") and body[3] == ("mov", "esi, dword ptr [ebp + 8]")
+        and body[4] == ("test", "esi, esi") and body[5][0] == "jne"
+    ):
+        ab = parse_assert(body, 6)
+        if ab:
+            mid = body[ab["next"] :]
+            while mid and mid[-1][0] == "pop" and mid[-1][1] in ("ebp", "esi"):
+                mid = mid[:-1]
+            if (
+                len(mid) >= 10 and mid[0] == ("push", "esi") and mid[1][0] == "call"
+                and mid[2][0] == "add" and mid[3][0] == "cmp" and mid[3][1].startswith("eax,")
+                and mid[4][0] == "jb"
+            ):
+                ab2 = parse_assert(mid, 5)
+                if ab2:
+                    mid2 = mid[ab2["next"] :]
+                    while mid2 and mid2[-1][0] == "pop":
+                        mid2 = mid2[:-1]
+                    if len(mid2) >= 3 and mid2[0] == ("push", "esi") and mid2[1][0] == "call" and mid2[2][0] == "add":
+                        bound = mid[3][1].split(",", 1)[1].strip()
+                        strlen_fn = callee(mid[1][1], name_by) or "strlen"
+                        end_fn = callee(mid2[1][1], name_by)
+                        sig1, ps1 = ensure_params(sig, ps, 1, ["const char *"])
+                        if end_fn:
+                            r = "" if is_void(sig1) else "return "
+                            return (
+                                f"{sig1}\n{{\n"
+                                f"  if ({ps1[0]} == NULL) {{\n{assert_c(ab, '    ')}  }}\n"
+                                f"  if ((unsigned){strlen_fn}({ps1[0]}) >= {bound}) {{\n{assert_c(ab2, '    ')}  }}\n"
+                                f"  {r}{end_fn}({ps1[0]});\n}}\n"
+                            )
+
+    # --- Pattern: strlen bound soft-assert then copy (main_save_core_name) ---
+    if (
+        len(body) >= 18 and body[0] == ("push", "ebp") and body[1] == ("mov", "ebp, esp")
+        and body[2] == ("push", "esi") and body[3] == ("mov", "esi, dword ptr [ebp + 8]")
+        and body[4] == ("push", "esi") and body[5][0] == "call" and body[6][0] == "add"
+        and body[7][0] == "cmp" and body[7][1].startswith("eax,") and body[8][0] == "jb"
+    ):
+        ab = parse_assert(body, 9)
+        if ab:
+            mid = body[ab["next"] :]
+            while mid and mid[-1][0] == "pop" and mid[-1][1] in ("ebp", "esi"):
+                mid = mid[:-1]
+            if (
+                len(mid) >= 6 and mid[0][0] == "push" and mid[1] == ("push", "esi")
+                and mid[2][0] == "push" and mid[3][0] == "call" and mid[4][0] == "add"
+                and mid[5][0] == "mov" and "byte ptr [0x" in mid[5][1]
+            ):
+                bound = body[7][1].split(",", 1)[1].strip()
+                strlen_fn = callee(body[5][1], name_by) or "strlen"
+                cpy = callee(mid[3][1], name_by)
+                g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[5][1])
+                sig1, ps1 = ensure_params(sig, ps, 1, ["const char *"])
+                if cpy and g:
+                    return (
+                        f"{sig1}\n{{\n"
+                        f"  if ((unsigned){strlen_fn}({ps1[0]}) >= {bound}) {{\n{assert_c(ab, '    ')}  }}\n"
+                        f"  {cpy}({mid[2][1]}, {ps1[0]}, {mid[0][1]});\n"
+                        f"  *(uint8_t *)0x{g.group(1)} = 1;\n}}\n"
+                    )
+
 
     return None
 

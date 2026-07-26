@@ -229,6 +229,29 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
                 f"}}\n"
             )
 
+
+    # game_malloc-style init
+    if (
+        len(body) >= 12
+        and body[0][0] == "push" and body[1][0] == "push" and body[2][0] == "push"
+        and body[3][0] == "call" and body[4][0] == "add"
+        and body[5] == ("test", "eax, eax")
+        and body[6][0] == "mov" and body[6][1].startswith("dword ptr [0x") and ", eax" in body[6][1]
+        and body[7][0] == "jne" and body[8][0] == "push" and body[9] == ("push", "eax")
+        and body[10][0] == "call" and body[11][0] == "add"
+    ):
+        f1, f2 = callee(body[3][1]), callee(body[10][1])
+        g = re.search(r"\[0x([0-9a-fA-F]+)\]", body[6][1])
+        if f1 and f2 and g:
+            return (
+                f"{sig}\n{{\n"
+                f"  void *p = {f1}({body[2][1]}, {body[1][1]}, {body[0][1]});\n"
+                f"  *(void **)0x{g.group(1)} = p;\n"
+                f"  if (p == NULL)\n"
+                f"    {f2}(p, {body[8][1]});\n"
+                f"}}\n"
+            )
+
     if not (
         len(body) >= 3
         and body[0] == ("push", "ebp")
@@ -654,6 +677,119 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
                 f"  {ret}1;\n"
                 f"}}\n"
             )
+
+
+    # HS-style: mov eax,arg1; push ebx; mov ebx,arg0; push imm*; push eax; call; add; pop ebx
+    if (
+        len(mid) >= 8
+        and mid[0][0] == "mov" and "eax, dword ptr [ebp +" in mid[0][1]
+        and mid[1] == ("push", "ebx")
+        and mid[2] == ("mov", "ebx, dword ptr [ebp + 8]")
+        and mid[-1] == ("pop", "ebx")
+        and mid[-2][0] == "add" and "esp" in mid[-2][1]
+        and mid[-3][0] == "call"
+    ):
+        pushes = mid[3:-3]
+        if pushes and all(p[0] == "push" for p in pushes):
+            fn = callee(mid[-3][1])
+            stack, ok, ps_local = [], True, list(ps)
+            for _, op in pushes:
+                if op == "eax":
+                    m = re.search(r"ebp \+ (0x[0-9a-f]+|8|0xc|0x10|0x14)", mid[0][1])
+                    if not m:
+                        ok = False; break
+                    idx = (int(m.group(1), 0) - 8) // 4
+                    while len(ps_local) <= idx:
+                        ps_local.append(f"a{len(ps_local)}")
+                    stack.append(ps_local[idx])
+                elif re.match(r"-?0x[0-9a-fA-F]+|-?\d+$", op):
+                    stack.append(op)
+                else:
+                    ok = False; break
+            if ok and fn:
+                if len(ps_local) != len(ps):
+                    plist = ", ".join(f"int {p}" for p in ps_local)
+                    ret_t = sig.split("(")[0].strip()
+                    mm = re.match(r"^(.*\b)(\w+)\s*$", ret_t)
+                    if mm:
+                        sig = f"{mm.group(1)}{mm.group(2)}({plist})"
+                        is_void = "void" in sig.split("(")[0]
+                        ps = ps_local
+                args = list(reversed(stack))
+                keep = f"  (void){ps[0]};\n" if ps else ""
+                if is_void:
+                    return f"{sig}\n{{\n{keep}  {fn}({', '.join(args)});\n}}\n"
+                return f"{sig}\n{{\n{keep}  return {fn}({', '.join(args)});\n}}\n"
+
+    # object_get + tag_get + cmp word; jne; call G
+    if (
+        len(mid) >= 14
+        and mid[0] == ("push", "ebx")
+        and mid[1] == ("mov", "ebx, dword ptr [ebp + 8]")
+        and mid[2][0] == "push" and mid[3] == ("push", "ebx") and mid[4][0] == "call"
+        and mid[5] == ("mov", "eax, dword ptr [eax]")
+        and mid[6] == ("push", "eax") and mid[7][0] == "push" and mid[8][0] == "call"
+        and mid[9][0] == "add" and mid[10][0] == "cmp" and "word ptr [eax" in mid[10][1]
+        and mid[11][0] == "jne" and mid[12][0] == "call" and mid[13] == ("pop", "ebx")
+    ):
+        f1, f2, f3 = callee(mid[4][1]), callee(mid[8][1]), callee(mid[12][1])
+        cm = re.match(
+            r"word ptr \[eax(?: \+ (0x[0-9a-f]+|\d+))?\], (-?0x[0-9a-f]+|-?\d+)$",
+            mid[10][1],
+        )
+        if f1 and f2 and f3 and cm and ps:
+            o = int(cm.group(1), 0) if cm.group(1) else 0
+            return (
+                f"{sig}\n{{\n"
+                f"  void *obj = {f1}({ps[0]}, {mid[2][1]});\n"
+                f"  void *tag = {f2}(*(void **)obj, {mid[7][1]});\n"
+                f"  if (*(uint16_t *)((char *)tag + 0x{o:x}) == (uint16_t){cm.group(2)})\n"
+                f"    {f3}();\n"
+                f"}}\n"
+            )
+
+    # player_effect_* stores into global + game_time_get
+    if (
+        len(mid) >= 13
+        and mid[0][0] == "mov" and mid[0][1].startswith("eax, dword ptr [0x")
+        and mid[1][0] == "fld" and "ebp + 8" in mid[1][1]
+        and mid[9][0] == "mov" and "byte ptr" in mid[9][1]
+        and mid[10][0] == "call"
+        and mid[11][0] == "mov" and mid[11][1].startswith("edx, dword ptr [0x")
+        and mid[12][0] == "mov" and "dword ptr [edx" in mid[12][1]
+        and len(ps) >= 4
+    ):
+        g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[0][1])
+        stores = {}
+        for mnem, op in mid[1:10]:
+            if mnem == "fstp":
+                m = re.search(r"\[eax \+ (0x[0-9a-f]+)\]", op)
+                if m: stores["float0"] = m.group(1)
+            elif mnem == "mov" and op.startswith("dword ptr [eax +"):
+                m = re.match(r"dword ptr \[eax \+ (0x[0-9a-f]+)\], (ecx|edx)$", op)
+                if m: stores[m.group(2)] = m.group(1)
+            elif mnem == "mov" and op.startswith("word ptr [eax +"):
+                m = re.match(r"word ptr \[eax \+ (0x[0-9a-f]+)\], cx$", op)
+                if m: stores["word"] = m.group(1)
+            elif mnem == "mov" and op.startswith("byte ptr [eax +"):
+                m = re.match(r"byte ptr \[eax \+ (0x[0-9a-f]+)\], (-?0x[0-9a-f]+|-?\d+)$", op)
+                if m: stores["byte"] = (m.group(1), m.group(2))
+        fn = callee(mid[10][1])
+        off_ret = re.search(r"\[edx \+ (0x[0-9a-f]+)\]", mid[12][1])
+        if g and fn and stores.get("float0") and stores.get("ecx") and stores.get("edx") and stores.get("word") and stores.get("byte") and off_ret:
+            b_off, b_imm = stores["byte"]
+            return (
+                f"{sig}\n{{\n"
+                f"  void *pe = *(void **)0x{g.group(1)};\n"
+                f"  *(float *)((char *)pe + {stores['float0']}) = (float){ps[0]};\n"
+                f"  *(uint32_t *)((char *)pe + {stores['ecx']}) = (uint32_t){ps[1]};\n"
+                f"  *(uint32_t *)((char *)pe + {stores['edx']}) = (uint32_t){ps[2]};\n"
+                f"  *(uint16_t *)((char *)pe + {stores['word']}) = (uint16_t){ps[3]};\n"
+                f"  *(uint8_t *)((char *)pe + {b_off}) = (uint8_t){b_imm};\n"
+                f"  *(uint32_t *)((char *)pe + 0x{off_ret.group(1)}) = (uint32_t){fn}();\n"
+                f"}}\n"
+            )
+
 
     # datum_get from global + fld float field
     if (
