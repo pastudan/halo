@@ -5318,66 +5318,24 @@ int FUN_00053e80(void *ai_profile_element, const char *name)
   return -1;
 }
 
-/* FUN_00053ee0 (0x53ee0) — XBE naked draft (batch 237). */
-#if defined(__clang__)
-static void *(*const b53ee0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b53ee0_c1e6596)(const char *a, const char *b, size_t n) = __strnicmp;
-
-__attribute__((naked, noinline))
-int FUN_00053ee0(void *encounter_def __attribute__((unused)), const char *name __attribute__((unused)))
+/* FUN_00053ee0 (0x53ee0) — readable C lift. */
+int FUN_00053ee0(void *encounter_def, const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl 0x8c(%%edi), %%ecx\n\t"
-      "addl $0x8c, %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_00053ee0_3\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      ".LFUN_00053ee0_1:\n\t"
-      "pushl $0xac\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[elem]\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e6596]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00053ee0_2\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "incl %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jl .LFUN_00053ee0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00053ee0_2:\n\t"
-      "movl %%esi, %%eax\n\t"
-      ".LFUN_00053ee0_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b53ee0_elem), [c1e6596] "m"(b53ee0_c1e6596)
-      : "memory");
-}
-#else
-#error "FUN_00053ee0: clang naked draft required"
-#endif
+  void *block;
+  int count;
+  int i;
+  void *el;
 
+  block = (char *)encounter_def + 0x8c;
+  count = *(int *)block;
+  for (i = 0; i < count; i++) {
+    el = tag_block_get_element(block, i, 0xac);
+    if (__strnicmp(el, name, 0x20) == 0) {
+      return i;
+    }
+  }
+  return -1;
+}
 
 /* FUN_00057b40 (0x57b40) — XBE naked draft (batch 231). */
 #if defined(__clang__)

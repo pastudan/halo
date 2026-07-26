@@ -35366,7 +35366,7 @@
         {
           "addr": "0x53ee0",
           "decl": "int FUN_00053ee0(void *encounter_def, const char *name);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x53f40",
