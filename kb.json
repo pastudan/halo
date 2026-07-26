@@ -9738,7 +9738,8 @@
         },
         {
           "addr": "0x1bfb60",
-          "decl": "void FUN_001bfb60(void);"
+          "decl": "void FUN_001bfb60(void);",
+          "ported": false
         },
         {
           "addr": "0x1bfe50",
@@ -9747,11 +9748,13 @@
         },
         {
           "addr": "0x1c0070",
-          "decl": "void game_state_lruv_cache_new(void);"
+          "decl": "void game_state_lruv_cache_new(void);",
+          "ported": false
         },
         {
           "addr": "0x1c00c0",
-          "decl": "void FUN_001c00c0(void);"
+          "decl": "void FUN_001c00c0(void);",
+          "ported": false
         }
       ],
       "name": "game_state.obj",

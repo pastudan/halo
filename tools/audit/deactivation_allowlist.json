@@ -17197,5 +17197,26 @@
     "object": "structure_visibility.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bfb60",
+    "name": "FUN_001bfb60",
+    "object": "game_state.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c0070",
+    "name": "game_state_lruv_cache_new",
+    "object": "game_state.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c00c0",
+    "name": "FUN_001c00c0",
+    "object": "game_state.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
