@@ -34343,7 +34343,7 @@
         {
           "addr": "0x32c10",
           "decl": "void actor_perception_abandoned_search(int actor_handle, int prop_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x32cb0",
