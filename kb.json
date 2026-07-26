@@ -4434,43 +4434,53 @@
       "functions": [
         {
           "addr": "0x1bb7d0",
-          "decl": "void cache_copy_initialize_read_data(void);"
+          "decl": "void cache_copy_initialize_read_data(void);",
+          "ported": false
         },
         {
           "addr": "0x1bb8a0",
-          "decl": "void FUN_001bb8a0(void);"
+          "decl": "void FUN_001bb8a0(void);",
+          "ported": false
         },
         {
           "addr": "0x1bb970",
-          "decl": "void FUN_001bb970(void);"
+          "decl": "void FUN_001bb970(void);",
+          "ported": false
         },
         {
           "addr": "0x1bbb60",
-          "decl": "void FUN_001bbb60(void);"
+          "decl": "void FUN_001bbb60(void);",
+          "ported": false
         },
         {
           "addr": "0x1bbea0",
-          "decl": "void simple_cache_copy_thread(void);"
+          "decl": "void simple_cache_copy_thread(void);",
+          "ported": false
         },
         {
           "addr": "0x1bc280",
-          "decl": "void FUN_001bc280(void);"
+          "decl": "void FUN_001bc280(void);",
+          "ported": false
         },
         {
           "addr": "0x1bc360",
-          "decl": "void cache_files_dispose(void);"
+          "decl": "void cache_files_dispose(void);",
+          "ported": false
         },
         {
           "addr": "0x1bc3b0",
-          "decl": "void FUN_001bc3b0(void);"
+          "decl": "void FUN_001bc3b0(void);",
+          "ported": false
         },
         {
           "addr": "0x1bc5c0",
-          "decl": "short FUN_001bc5c0(void);"
+          "decl": "short FUN_001bc5c0(void);",
+          "ported": false
         },
         {
           "addr": "0x1bc620",
-          "decl": "void FUN_001bc620(void);"
+          "decl": "void FUN_001bc620(void);",
+          "ported": false
         },
         {
           "addr": "0x1bc6a0",
@@ -4562,11 +4572,13 @@
         },
         {
           "addr": "0x1bcc10",
-          "decl": "void FUN_001bcc10(void);"
+          "decl": "void FUN_001bcc10(void);",
+          "ported": false
         },
         {
           "addr": "0x1bcc30",
-          "decl": "void FUN_001bcc30(void);"
+          "decl": "void FUN_001bcc30(void);",
+          "ported": false
         },
         {
           "addr": "0x1bcc50",
@@ -4618,23 +4630,28 @@
         {
           "addr": "0x1bd020",
           "decl": "void cache_file_read_header_into_slot(short map_file_index);",
-          "name": "cache_file_read_header_into_slot"
+          "name": "cache_file_read_header_into_slot",
+          "ported": false
         },
         {
           "addr": "0x1bd1b0",
-          "decl": "void FUN_001bd1b0(void);"
+          "decl": "void FUN_001bd1b0(void);",
+          "ported": false
         },
         {
           "addr": "0x1bd210",
-          "decl": "int16_t FUN_001bd210(int16_t map_type@<ax>, int header_size);"
+          "decl": "int16_t FUN_001bd210(int16_t map_type@<ax>, int header_size);",
+          "ported": false
         },
         {
           "addr": "0x1bd3a0",
-          "decl": "void FUN_001bd3a0(void);"
+          "decl": "void FUN_001bd3a0(void);",
+          "ported": false
         },
         {
           "addr": "0x1bd4d0",
-          "decl": "void cache_file_open(void);"
+          "decl": "void cache_file_open(void);",
+          "ported": false
         },
         {
           "addr": "0x1bd5f0",
