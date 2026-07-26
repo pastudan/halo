@@ -1705,28 +1705,79 @@ void SetRenderStateSmart(int state __attribute__((unused)), int value __attribut
 #endif
 
 
-/* 0xe2470 */
-void SetTextureStageStateSmart(int stage, int state, int value)
+/* SetTextureStageStateSmart (0xe2470) — XBE naked draft (batch 149). */
+#if defined(__clang__)
+static void (*const be2470_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = D3DDevice_SetTextureStageState;
+static void (*const be2470_c1e9ae0)(void) = D3DDevice_SetTextureState_TexCoordIndex;
+static void __stdcall (*const be2470_c1e9c20)(uint32_t stage, uint32_t color) = D3DDevice_SetTextureState_BorderColor;
+static void (*const be2470_c1e9c60)(void) = D3DDevice_SetTextureState_ColorKeyColor;
+static void (*const be2470_c1e9bc0)(void) = D3DDevice_SetTextureState_BumpEnv;
+
+__attribute__((naked, noinline))
+void SetTextureStageStateSmart(int stage __attribute__((unused)), int state __attribute__((unused)), int value __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* cmp edx, 0x16 -> jge 0xe2489 */
-  D3DDevice_SetTextureStageState(eax, 0, 0);
-  /* cmp edx, 0x1c -> jne 0xe249d */
-  D3DDevice_SetTextureState_TexCoordIndex();
-  /* cmp edx, 0x1d -> jne 0xe24b1 */
-  D3DDevice_SetTextureState_BorderColor(ecx, eax);
-  /* cmp edx, 0x1e -> jne 0xe24c5 */
-  D3DDevice_SetTextureState_ColorKeyColor();
-  /* cmp edx, 0x1b -> jg 0xe24d8 */
-  D3DDevice_SetTextureState_BumpEnv();
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "cmpl $0x16, %%edx\n\t"
+      "jge .LSetTextureStageStateSmart_1\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e9410]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetTextureStageStateSmart_1:\n\t"
+      "cmpl $0x1c, %%edx\n\t"
+      "jne .LSetTextureStageStateSmart_2\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1e9ae0]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetTextureStageStateSmart_2:\n\t"
+      "cmpl $0x1d, %%edx\n\t"
+      "jne .LSetTextureStageStateSmart_3\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1e9c20]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetTextureStageStateSmart_3:\n\t"
+      "cmpl $0x1e, %%edx\n\t"
+      "jne .LSetTextureStageStateSmart_4\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e9c60]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LSetTextureStageStateSmart_4:\n\t"
+      "cmpl $0x1b, %%edx\n\t"
+      "jg .LSetTextureStageStateSmart_5\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1e9bc0]\n\t"
+      ".LSetTextureStageStateSmart_5:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1e9410] "m"(be2470_c1e9410), [c1e9ae0] "m"(be2470_c1e9ae0), [c1e9c20] "m"(be2470_c1e9c20), [c1e9c60] "m"(be2470_c1e9c60), [c1e9bc0] "m"(be2470_c1e9bc0)
+      : "memory");
 }
+#else
+#error "SetTextureStageStateSmart: clang naked draft required"
+#endif
+
 
 /* 0xe2650 */
 void FUN_000e2650(void)
@@ -1756,37 +1807,80 @@ void FUN_000e2880(void)
   progress_bar_draw_loading_bar((float *)0, (float *)0, 0.0f, 0.0f);
 }
 
-/* 0xe28e0 */
+/* progress_bar_eachframe (0xe28e0) — XBE naked draft (batch 149). */
+#if defined(__clang__)
+static int (*const be28e0_c1d0581)(void) = FUN_001d0581;
+static uint32_t __stdcall (*const be28e0_c1ed930)(void *resource) = D3DResource_Release;
+static void (*const be28e0_c205b67)(void) = IDirectSoundBuffer_Stop;
+static void (*const be28e0_c203897)(void) = IDirectSoundBuffer_Release;
+
+__attribute__((naked, noinline))
 void progress_bar_eachframe(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  FUN_001d0581();
-  /* test (char)eax, (char)eax -> je 0xe290c */
-  FUN_001d0581();
-  /* mem[0x0046c210] = eax */
-  /* mem[0x0046c3e8] = 1 */
-  /* cmp esi, 0x3e8 -> jbe 0xe2997 */
-  /* mem[0x0046c3fc] = 0 */
-  D3DResource_Release((void *)(uintptr_t)eax);
-  /* mem[0x0046c3f0] = eax */
-  /* test ecx, ecx -> je 0xe2959 */
-  D3DResource_Release((void *)(uintptr_t)ecx);
-  /* mem[0x0046c3f4] = 0 */
-  /* test eax, eax -> je 0xe296d */
-  D3DResource_Release((void *)(uintptr_t)eax);
-  /* mem[0x0046c3f0] = 0 */
-  /* test eax, eax -> je 0xe298c */
-  IDirectSoundBuffer_Stop();
-  IDirectSoundBuffer_Release();
-  /* cmp esi, 0x46c3e8 -> jl 0xe2972 */
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "call *%[c1d0581]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x31a010, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lprogress_bar_eachframe_1\n\t"
+      "call *%[c1d0581]\n\t"
+      "movl %%eax, 0x46c210\n\t"
+      "movb $0, 0x31a010\n\t"
+      "movl $1, 0x46c3e8\n\t"
+      ".Lprogress_bar_eachframe_1:\n\t"
+      "subl 0x46c210, %%esi\n\t"
+      "cmpl $0x3e8, %%esi\n\t"
+      "jbe .Lprogress_bar_eachframe_7\n\t"
+      "movl 0x46c3f0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0, 0x46c3fc\n\t"
+      "je .Lprogress_bar_eachframe_2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ed930]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%eax, 0x46c3f0\n\t"
+      ".Lprogress_bar_eachframe_2:\n\t"
+      "movl 0x46c3f4, %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lprogress_bar_eachframe_3\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ed930]\n\t"
+      "movl 0x46c3f0, %%eax\n\t"
+      "movl $0, 0x46c3f4\n\t"
+      ".Lprogress_bar_eachframe_3:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lprogress_bar_eachframe_4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ed930]\n\t"
+      "movl $0, 0x46c3f0\n\t"
+      ".Lprogress_bar_eachframe_4:\n\t"
+      "movl $0x46c3d8, %%esi\n\t"
+      ".Lprogress_bar_eachframe_5:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lprogress_bar_eachframe_6\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c205b67]\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c203897]\n\t"
+      "movl $0, (%%esi)\n\t"
+      ".Lprogress_bar_eachframe_6:\n\t"
+      "addl $4, %%esi\n\t"
+      "cmpl $0x46c3e8, %%esi\n\t"
+      "jl .Lprogress_bar_eachframe_5\n\t"
+      ".Lprogress_bar_eachframe_7:\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c1d0581] "m"(be28e0_c1d0581), [c1ed930] "m"(be28e0_c1ed930), [c205b67] "m"(be28e0_c205b67), [c203897] "m"(be28e0_c203897)
+      : "memory");
 }
+#else
+#error "progress_bar_eachframe: clang naked draft required"
+#endif
+
 
 /* 0xe33a0 */
 void FUN_000e33a0(void)

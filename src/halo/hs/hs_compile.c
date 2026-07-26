@@ -2412,28 +2412,75 @@ bool FUN_000c66d0(int datum_index __attribute__((unused)))
 #endif
 
 
-/* 0xc6940 — Compile a material literal (type 0x16) from the scenario's
- * material tag block. Returns false when no material tag is assigned. */
-bool FUN_000c6940(int datum_index)
+/* FUN_000c6940 (0xc6940) — XBE naked draft (batch 150). */
+#if defined(__clang__)
+static void *(*const bc6940_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bc6940_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bc6940_exitfn)(int) = system_exit;
+static scenario_t * (*const bc6940_c18e380)(void) = global_scenario_get;
+static void *(*const bc6940_tag)(int, int) = tag_get;
+static bool (*const bc6940_cc6130)(int datum_index, void *tag_block, int element_size, short offset) = FUN_000c6130;
+
+__attribute__((naked, noinline))
+bool FUN_000c6940(int datum_index __attribute__((unused)))
 {
-  char *node;
-  scenario_t *scenario;
-  void *mat_block;
-
-  node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
-  if (*(int16_t *)(node + 0x4) != 0x16) {
-    display_assert("hs_syntax_get(expression_index)->type==_hs_type_material",
-                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x7bf, 1);
-    system_exit(-1);
-  }
-
-  scenario = global_scenario_get();
-  if (*(int *)((char *)scenario + 0x5a0) == -1)
-    return false;
-
-  mat_block = tag_get(0x686d7420, *(int *)((char *)scenario + 0x5a0));
-  return FUN_000c6130(datum_index, (char *)mat_block + 0x20, 0x40, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0x16, 0x4(%%eax)\n\t"
+      "je .LFUN_000c6940_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x7bf\n\t"
+      "pushl $0x27bd0c\n\t"
+      "pushl $0x27c480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000c6940_1:\n\t"
+      "call *%[c18e380]\n\t"
+      "cmpl $-1, 0x5a0(%%eax)\n\t"
+      "je .LFUN_000c6940_2\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e380]\n\t"
+      "movl 0x5a0(%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x686d7420\n\t"
+      "call *%[tag]\n\t"
+      "leal 0x20(%%eax), %%ebx\n\t"
+      "pushl $0\n\t"
+      "movl $0x40, %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[cc6130]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c6940_2:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bc6940_dget), [assert] "m"(bc6940_assert), [exitfn] "m"(bc6940_exitfn), [c18e380] "m"(bc6940_c18e380), [tag] "m"(bc6940_tag), [cc6130] "m"(bc6940_cc6130)
+      : "memory");
 }
+#else
+#error "FUN_000c6940: clang naked draft required"
+#endif
+
 
 /* hs_macro_function_parse (0xc7e50) — XBE naked draft (batch 127). */
 #if defined(__clang__)

@@ -7303,42 +7303,70 @@ void FUN_0013e1a0(int object_handle /* @<edi> */)
   }
 }
 
-/* 0x13e3f0 / objects.obj — Scan a model region's permutation block for
- * permutations matching a given variant number. Returns count of matching
- * permutation indices written to output[].
- * region_element pointer in EAX (register arg).
- * Confirmed: loop iterates tag_block at region+0x40, element size 0x58.
- * Confirmed: skips permutations with flags byte [+0x20] bit 0 set.
- * Confirmed: matches on [+0x24]==variant, or variant==-1 && [+0x24]<100.
- * Confirmed: returns count in AX (int16_t). */
-int16_t object_find_region_permutations_available_with_variant(
-    void *region_element /* @<eax> */, int16_t variant, int16_t *output)
-{
-  int region_count;
-  int16_t out_count;
-  int16_t perm_idx;
-  char *region = (char *)region_element;
+/* object_find_region_permutations_available_with_variant (0x13e3f0) — XBE naked draft (batch 152). */
+#if defined(__clang__)
+static void *(*const b13e3f0_elem)(void *, int, int) = tag_block_get_element;
 
-  region_count = *(int *)(region + 0x40);
-  out_count = 0;
-  perm_idx = 0;
-  if (region_count > 0) {
-    do {
-      char *perm = (char *)tag_block_get_element(
-          (void *)(region + 0x40), (int)perm_idx, 0x58);
-      if ((*(unsigned char *)(perm + 0x20) & 1) == 0) {
-        int16_t perm_variant = *(int16_t *)(perm + 0x24);
-        if (perm_variant == variant ||
-            (variant == -1 && perm_variant < 100)) {
-          output[(int)out_count] = perm_idx;
-          out_count = out_count + 1;
-        }
-      }
-      perm_idx = perm_idx + 1;
-    } while ((int)perm_idx < *(int *)(region + 0x40));
-  }
-  return out_count;
+__attribute__((naked, noinline))
+int16_t object_find_region_permutations_available_with_variant(void *region_element __attribute__((unused)), int16_t variant __attribute__((unused)), int16_t *output __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x40(%%esi), %%eax\n\t"
+      "addl $0x40, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lobject_find_region_permutations_available_with_variant_4\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lobject_find_region_permutations_available_with_variant_1:\n\t"
+      "pushl $0x58\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "movb 0x20(%%eax), %%cl\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb $1, %%cl\n\t"
+      "jne .Lobject_find_region_permutations_available_with_variant_3\n\t"
+      "movw 0x24(%%eax), %%ax\n\t"
+      "movw 0x8(%%ebp), %%cx\n\t"
+      "cmpw %%cx, %%ax\n\t"
+      "je .Lobject_find_region_permutations_available_with_variant_2\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "jne .Lobject_find_region_permutations_available_with_variant_3\n\t"
+      "cmpw $0x64, %%ax\n\t"
+      "jge .Lobject_find_region_permutations_available_with_variant_3\n\t"
+      ".Lobject_find_region_permutations_available_with_variant_2:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "movw %%di, (%%ecx,%%eax,2)\n\t"
+      "incl %%ebx\n\t"
+      ".Lobject_find_region_permutations_available_with_variant_3:\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "incl %%edi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lobject_find_region_permutations_available_with_variant_1\n\t"
+      ".Lobject_find_region_permutations_available_with_variant_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%bx, %%ax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b13e3f0_elem)
+      : "memory");
 }
+#else
+#error "object_find_region_permutations_available_with_variant: clang naked draft required"
+#endif
+
 
 /* object_determine_variant_number (0x13e460) — XBE naked draft (batch 138). */
 #if defined(__clang__)
@@ -8368,56 +8396,76 @@ int sort_dumps(int param_1, int param_2)
   return (*(int *)(param_1 + 8) <= *(int *)(param_2 + 8)) - 1;
 }
 
-/* 0x13f3b0 / objects.obj — Accumulate statistics about one object into a
- * dump record. Reads the object header (via datum_get on 0x5a8d50) and
- * object data (via object_get_and_verify_type), and updates various
- * counters in the stats structure.
- * object_handle in EBX, stats pointer in ESI (register args).
- * Confirmed: PUSH EBX to datum_get and object_get_and_verify_type.
- * Confirmed: ESI+0x6 = max_size, ESI+0x8 = total_size, ESI+0xc = count,
- *   ESI+0xe = header_flag_count, ESI+0x10 = obj_flag_10000,
- *   ESI+0x12 = obj_flag_b6_4, ESI+0x14 = orphaned_count,
- *   ESI+0x16 = obj_flag_20. */
-void object_add_to_dump(int object_handle /* @<ebx> */,
-                        void *stats /* @<esi> */)
+/* object_add_to_dump (0x13f3b0) — XBE naked draft (batch 151). */
+#if defined(__clang__)
+static void *(*const b13f3b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b13f3b0_get)(int, int) = object_get_and_verify_type;
+static int (*const b13f3b0_c13d7f0)(int object_handle) = object_get_root_parent;
+
+__attribute__((naked, noinline))
+void object_add_to_dump(int object_handle __attribute__((unused)), void *stats __attribute__((unused)))
 {
-  char *hdr;
-  char *obj;
-  int parent_handle;
-  char *parent_obj;
-  int16_t hdr_size;
-  char *st = (char *)stats;
-
-  hdr = (char *)datum_get(*(data_t **)0x5a8d50, object_handle);
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-
-  hdr_size = *(int16_t *)(hdr + 0x6);
-  if (hdr_size > *(int16_t *)(st + 0x6)) {
-    *(int16_t *)(st + 0x6) = hdr_size;
-  }
-  *(int16_t *)(st + 0xc) = *(int16_t *)(st + 0xc) + 1;
-  *(int *)(st + 0x8) = *(int *)(st + 0x8) + (int)hdr_size;
-
-  if ((*(unsigned char *)(hdr + 0x2) & 1) != 0) {
-    *(int16_t *)(st + 0xe) = *(int16_t *)(st + 0xe) + 1;
-  }
-  if ((*(unsigned int *)(obj + 0x4) & 0x10000) != 0) {
-    *(int16_t *)(st + 0x10) = *(int16_t *)(st + 0x10) + 1;
-  }
-  if ((*(unsigned char *)(obj + 0xb6) & 4) != 0) {
-    *(int16_t *)(st + 0x12) = *(int16_t *)(st + 0x12) + 1;
-  }
-  if ((*(unsigned char *)(obj + 0x4) & 0x20) != 0) {
-    *(int16_t *)(st + 0x16) = *(int16_t *)(st + 0x16) + 1;
-  }
-
-  parent_handle = object_get_root_parent(object_handle);
-  parent_obj = (char *)object_get_and_verify_type(parent_handle, -1);
-  if ((*(unsigned int *)(parent_obj + 0x4) & 0x200000) != 0 ||
-      *(int16_t *)(parent_obj + 0x4c) == -1) {
-    *(int16_t *)(st + 0x14) = *(int16_t *)(st + 0x14) + 1;
-  }
+  __asm__ volatile(
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[get]\n\t"
+      "movw 0x6(%%edi), %%cx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw 0x6(%%esi), %%cx\n\t"
+      "jle .Lobject_add_to_dump_1\n\t"
+      "movw %%cx, 0x6(%%esi)\n\t"
+      ".Lobject_add_to_dump_1:\n\t"
+      "movswl 0x6(%%edi), %%ecx\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "addl %%ecx, %%edx\n\t"
+      "incw 0xc(%%esi)\n\t"
+      "movl %%edx, 0x8(%%esi)\n\t"
+      "testb $1, 0x2(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "je .Lobject_add_to_dump_2\n\t"
+      "incw 0xe(%%esi)\n\t"
+      ".Lobject_add_to_dump_2:\n\t"
+      "testl $0x10000, 0x4(%%eax)\n\t"
+      "je .Lobject_add_to_dump_3\n\t"
+      "incw 0x10(%%esi)\n\t"
+      ".Lobject_add_to_dump_3:\n\t"
+      "testb $4, 0xb6(%%eax)\n\t"
+      "je .Lobject_add_to_dump_4\n\t"
+      "incw 0x12(%%esi)\n\t"
+      ".Lobject_add_to_dump_4:\n\t"
+      "testb $0x20, 0x4(%%eax)\n\t"
+      "je .Lobject_add_to_dump_5\n\t"
+      "incw 0x16(%%esi)\n\t"
+      ".Lobject_add_to_dump_5:\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c13d7f0]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl $0x200000, %%ecx\n\t"
+      "jne .Lobject_add_to_dump_6\n\t"
+      "cmpw $-1, 0x4c(%%eax)\n\t"
+      "jne .Lobject_add_to_dump_7\n\t"
+      ".Lobject_add_to_dump_6:\n\t"
+      "incw 0x14(%%esi)\n\t"
+      ".Lobject_add_to_dump_7:\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b13f3b0_dget), [get] "m"(b13f3b0_get), [c13d7f0] "m"(b13f3b0_c13d7f0)
+      : "memory");
 }
+#else
+#error "object_add_to_dump: clang naked draft required"
+#endif
+
 
 /* 0x13f440 / objects.obj — Write one dump stats record to a file.
  * Formats the stats structure into a single line with counts/sizes.
@@ -24161,67 +24209,140 @@ void FUN_00133300(int glow_widget, int particle_ptr, int object_handle)
 
 #if defined(__i386__) && defined(__GNUC__)
 #endif
-void FUN_001330f0(int glow_widget, int particle_ptr)
+/* FUN_001330f0 (0x1330f0) — XBE naked draft (batch 152). */
+#if defined(__clang__)
+static void *(*const b1330f0_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+void FUN_001330f0(int glow_widget __attribute__((unused)), int particle_ptr __attribute__((unused)))
 {
-  char *glow_def;
-  float ratio;
-  int16_t age;
-  int16_t lifetime;
-
-  glow_def = (char *)tag_get('!wlg', *(int *)(glow_widget + 0x224));
-  if ((glow_def[0x28] & 8) == 0) {
-    *(float *)(particle_ptr + 0x58) = 1.0f;
-    return;
-  }
-
-  age = *(int16_t *)(particle_ptr + 0x50);
-  lifetime = *(int16_t *)(particle_ptr + 0x52);
-  if (lifetime <= 0) {
-    *(float *)(particle_ptr + 0x58) = 0.0f;
-    return;
-  }
-
-  ratio = 1.0f - (float)age / (float)lifetime;
-  if (ratio < 0.0f)
-    ratio = 0.0f;
-  else if (ratio > 1.0f)
-    ratio = 1.0f;
-  *(float *)(particle_ptr + 0x58) = ratio;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x224(%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x676c7721\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x28(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $8, %%cl\n\t"
+      "je .LFUN_001330f0_3\n\t"
+      "movswl 0x50(%%esi), %%edx\n\t"
+      "movswl 0x52(%%esi), %%eax\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "fidivl -0x4(%%ebp)\n\t"
+      "fsubrs 0x2533c8\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fsts 0x58(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001330f0_1\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c0\n\t"
+      "fstps 0x58(%%esi)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001330f0_1:\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001330f0_2\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c8\n\t"
+      ".LFUN_001330f0_2:\n\t"
+      "fstps 0x58(%%esi)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001330f0_3:\n\t"
+      "movl $0x3f800000, 0x58(%%esi)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b1330f0_tag)
+      : "memory");
 }
+#else
+#error "FUN_001330f0: clang naked draft required"
+#endif
+
 
 #if defined(__i386__) && defined(__GNUC__)
 #endif
-void FUN_001331d0(int glow_widget, int particle_ptr)
+/* FUN_001331d0 (0x1331d0) — XBE naked draft (batch 148). */
+#if defined(__clang__)
+static void *(*const b1331d0_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+void FUN_001331d0(int glow_widget __attribute__((unused)), int particle_ptr __attribute__((unused)))
 {
-  char *particle = (char *)particle_ptr;
-  char *glow_def;
-  float ratio;
-  int16_t age;
-  int16_t lifetime;
-
-  glow_def = (char *)tag_get('!wlg', *(int *)(glow_widget + 0x224));
-  if ((glow_def[0x28] & 0x20) != 0) {
-    age = *(int16_t *)(particle + 0x50);
-    lifetime = *(int16_t *)(particle + 0x52);
-    if (lifetime <= 0) {
-      ratio = 0.0f;
-    } else {
-      ratio = 1.0f - (float)age / (float)lifetime;
-      if (ratio < 0.0f)
-        ratio = 0.0f;
-      else if (ratio > 1.0f)
-        ratio = 1.0f;
-    }
-    *(float *)(particle + 0x44) = ratio * *(float *)(particle + 0x38);
-    *(float *)(particle + 0x48) = ratio * *(float *)(particle + 0x3c);
-    *(float *)(particle + 0x4c) = ratio * *(float *)(particle + 0x40);
-    return;
-  }
-
-  *(float *)(particle + 0x44) = *(float *)(particle + 0x38);
-  *(float *)(particle + 0x48) = *(float *)(particle + 0x3c);
-  *(float *)(particle + 0x4c) = *(float *)(particle + 0x40);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "movl 0x224(%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x676c7721\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x28(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $0x20, %%cl\n\t"
+      "je .LFUN_001331d0_2\n\t"
+      "movswl 0x50(%%esi), %%edx\n\t"
+      "movswl 0x52(%%esi), %%eax\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "fidivl -0x4(%%ebp)\n\t"
+      "fsubrs 0x2533c8\n\t"
+      "flds 0x2533c0\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001331d0_1\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c0\n\t"
+      ".LFUN_001331d0_1:\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x38(%%esi)\n\t"
+      "fstps 0x44(%%esi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x3c(%%esi)\n\t"
+      "fstps 0x48(%%esi)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      "fstps 0x4c(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001331d0_2:\n\t"
+      "leal 0x38(%%esi), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "addl $0x44, %%esi\n\t"
+      "movl %%edx, (%%esi)\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      "movl %%ecx, 0x8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b1331d0_tag)
+      : "memory");
 }
+#else
+#error "FUN_001331d0: clang naked draft required"
+#endif
+
 
 /* 0x1345b0 — Tick glow widget particles and spawn trailing particles. */
 #if defined(__i386__) && defined(__GNUC__)

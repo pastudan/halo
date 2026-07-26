@@ -515,23 +515,76 @@ int16_t FUN_000dc800(int event)
 }
 /* --- event_manager.obj batch drafts (2026-07-26) --- */
 
-/* 0xd98c0 */
+/* FUN_000d98c0 (0xd98c0) — XBE naked draft (batch 149). */
+#if defined(__clang__)
+static void (*const bd98c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bd98c0_exitfn)(int) = system_exit;
+static void * (*const bd98c0_cd8bc0)(int16_t local_player_index) = FUN_000d8bc0;
+static void * (*const bd98c0_cd8c30)(int16_t local_player_index) = FUN_000d8c30;
+
+__attribute__((naked, noinline))
 void FUN_000d98c0(void)
 {
-  int ebx = 0;
-
-  display_assert((char *)0x00281eb8, (char *)0x00281eec, 137, 0);
-  system_exit(0);
-  /* cmp (int16_t)ebx, -1 -> jne 0xd9918 */
-  display_assert((char *)0x00281e98, (char *)0x00281eec, 138, 0);
-  system_exit(0);
-  FUN_000d8bc0(0);
-  FUN_000d8bc0(0);
-  FUN_000d8c30(0);
-  FUN_000d8c30(0);
-
-  (void)ebx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpw $-1, %%si\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_000d98c0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x89\n\t"
+      "pushl $0x281eec\n\t"
+      "pushl $0x281eb8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000d98c0_1:\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "cmpw $-1, %%bx\n\t"
+      "jne .LFUN_000d98c0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x8a\n\t"
+      "pushl $0x281eec\n\t"
+      "pushl $0x281e98\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000d98c0_2:\n\t"
+      "call *%[cd8bc0]\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[cd8bc0]\n\t"
+      "movl %%edi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl $0xa, %%ecx\n\t"
+      "rep movsl\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "call *%[cd8c30]\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[cd8c30]\n\t"
+      "movl %%edi, %%esi\n\t"
+      "movl $0x14, %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "rep movsl\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bd98c0_assert), [exitfn] "m"(bd98c0_exitfn), [cd8bc0] "m"(bd98c0_cd8bc0), [cd8c30] "m"(bd98c0_cd8c30)
+      : "memory");
 }
+#else
+#error "FUN_000d98c0: clang naked draft required"
+#endif
+
 
 /* FUN_000d9960 (0xd9960) — XBE naked draft (batch 106). */
 #if defined(__clang__)
@@ -2500,22 +2553,71 @@ void FUN_000dabf0(int param_1 __attribute__((unused)))
 #endif
 
 
-/* 0xdade0 */
+/* tiny_point2d_set (0xdade0) — XBE naked draft (batch 151). */
+#if defined(__clang__)
+static void (*const bdade0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bdade0_exitfn)(int) = system_exit;
+static void (*const bdade0_ftol)(void) = FUN_001d9068;
+
+__attribute__((naked, noinline))
 void tiny_point2d_set(void)
 {
-  int eax = 0;
-
-  /* test (char)eax, 0x41 -> je 0xdae15 */
-  display_assert((char *)0x00282054, (char *)0x00282094, 105, 0);
-  system_exit(0);
-  /* test (char)eax, 0x41 -> je 0xdae4c */
-  display_assert((char *)0x00282014, (char *)0x00282094, 106, 0);
-  system_exit(0);
-  FUN_001d9068();
-  FUN_001d9068();
-
-  (void)eax;
+  __asm__ volatile(
+      "flds (%%esi)\n\t"
+      "movl 0x46bd0c, %%eax\n\t"
+      "fabs\n\t"
+      "flds 0x2d0(%%eax)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Ltiny_point2d_set_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x69\n\t"
+      "pushl $0x282094\n\t"
+      "pushl $0x282054\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltiny_point2d_set_1:\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "movl 0x46bd0c, %%ecx\n\t"
+      "fabs\n\t"
+      "flds 0x2d0(%%ecx)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Ltiny_point2d_set_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6a\n\t"
+      "pushl $0x282094\n\t"
+      "pushl $0x282014\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltiny_point2d_set_2:\n\t"
+      "movl 0x46bd0c, %%edx\n\t"
+      "flds (%%esi)\n\t"
+      "fdivs 0x2d0(%%edx)\n\t"
+      "fmuls 0x2602cc\n\t"
+      "call *%[ftol]\n\t"
+      "movb %%al, (%%edi)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "movl 0x46bd0c, %%eax\n\t"
+      "fdivs 0x2d0(%%eax)\n\t"
+      "fmuls 0x2602cc\n\t"
+      "call *%[ftol]\n\t"
+      "movb %%al, 0x1(%%edi)\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bdade0_assert), [exitfn] "m"(bdade0_exitfn), [ftol] "m"(bdade0_ftol)
+      : "memory");
 }
+#else
+#error "tiny_point2d_set: clang naked draft required"
+#endif
+
 
 /* 0xdae90 */
 void FUN_000dae90(void)

@@ -887,27 +887,70 @@ void FUN_00024850(int actor_handle, int flag, char *actor, void *state)
   (void)0;
 }
 
-/* 0x24890 */
-char FUN_00024890(int actor_handle, void *state, char *actor)
+/* FUN_00024890 (0x24890) — XBE naked draft (batch 152). */
+#if defined(__clang__)
+static void (*const b24890_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b24890_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+char FUN_00024890(int actor_handle __attribute__((unused)), void *state __attribute__((unused)), char *actor __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* test eax, eax -> je 0x248cf */
-  /* test ecx, edx -> je 0x248c8 */
-  /* test (char)ebx, (char)ebx -> jne 0x248a0 */
-  /* relift: cmp byte ptr [edx + 0x30], (char)ebx -> je 0x248f7 */
-  display_assert((char *)0x00254cd4, (char *)0x00254c8c, 1262, 0);
-  system_exit(0);
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movb $1, %%bl\n\t"
+      "movl $0x254c30, %%esi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00024890_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00024890_3\n\t"
+      "movb 0x4(%%edi), %%cl\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movswl -0x4(%%esi), %%ecx\n\t"
+      "testl %%edx, %%ecx\n\t"
+      "je .LFUN_00024890_2\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb %%al, %%bl\n\t"
+      ".LFUN_00024890_2:\n\t"
+      "addl $8, %%esi\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .LFUN_00024890_1\n\t"
+      ".LFUN_00024890_3:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "cmpb %%bl, 0x30(%%edx)\n\t"
+      "je .LFUN_00024890_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4ee\n\t"
+      "pushl $0x254c8c\n\t"
+      "pushl $0x254cd4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00024890_4:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b24890_assert), [exitfn] "m"(b24890_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00024890: clang naked draft required"
+#endif
+
 
 /* 0x24900 */
 char FUN_00024900(int actor_handle, void *query_buf)

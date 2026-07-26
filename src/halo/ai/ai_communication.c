@@ -692,26 +692,81 @@ int16_t ai_conversation_line(int conversation_index)
   return 999;
 }
 
-void ai_conversation_stop(int conversation_index)
-{
-  data_iter_t iter;
-  char *conversation;
+/* ai_conversation_stop (0x44500) — XBE naked draft (batch 148). */
+#if defined(__clang__)
+static void (*const b44500_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b44500_c119810)(data_iter_t *iterator) = data_iterator_next;
+static scenario_t * (*const b44500_c18e380)(void) = global_scenario_get;
+static void *(*const b44500_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b44500_cff4d0)(int channel, const char *format, ...) = console_printf;
+static void (*const b44500_c435b0)(int handle, char param_b, char param_c) = ai_conversation_finish;
 
-  data_iterator_new(&iter, *(data_t **)0x6324ec);
-  conversation = (char *)data_iterator_next(&iter);
-  while (conversation != NULL) {
-    if (*(int16_t *)(conversation + 2) == (int16_t)conversation_index) {
-      if (*(char *)0x5aca5f != 0) {
-        console_printf(
-            0, (char *)0x259cd4,
-            tag_block_get_element((char *)global_scenario_get() + 0x468, 0x74,
-                                  conversation_index));
-      }
-      ai_conversation_finish(iter.datum_handle, 0, 0);
-    }
-    conversation = (char *)data_iterator_next(&iter);
-  }
+__attribute__((naked, noinline))
+void ai_conversation_stop(int conversation_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x6324ec, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lai_conversation_stop_4\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lai_conversation_stop_1:\n\t"
+      "cmpw %%si, 0x2(%%eax)\n\t"
+      "jne .Lai_conversation_stop_3\n\t"
+      "movb 0x5aca5f, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_conversation_stop_2\n\t"
+      "movswl %%si, %%eax\n\t"
+      "pushl $0x74\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x468, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x259cd4\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".Lai_conversation_stop_2:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c435b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lai_conversation_stop_3:\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lai_conversation_stop_1\n\t"
+      "popl %%esi\n\t"
+      ".Lai_conversation_stop_4:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1197b0] "m"(b44500_c1197b0), [c119810] "m"(b44500_c119810), [c18e380] "m"(b44500_c18e380), [elem] "m"(b44500_elem), [cff4d0] "m"(b44500_cff4d0), [c435b0] "m"(b44500_c435b0)
+      : "memory");
 }
+#else
+#error "ai_conversation_stop: clang naked draft required"
+#endif
+
 
 /* ai_conversation_actor_deleted (0x44590) — XBE naked draft (batch 137). */
 #if defined(__clang__)
@@ -2209,24 +2264,79 @@ void actor_communication_update(int actor_handle __attribute__((unused)))
 #endif
 
 
-void FUN_00043ea0(void *comm, int actor, int stack_a)
+/* FUN_00043ea0 (0x43ea0) — XBE naked draft (batch 148). */
+#if defined(__clang__)
+static void *(*const b43ea0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b43ea0_c43360)(int unit /* */, short priority /* */, int actor /* */, int stack_a) = FUN_00043360;
+static void (*const b43ea0_c432b0)(int unit /* */, int actor /* */, int target /* */, int stack_a, short priority) = FUN_000432b0;
+
+__attribute__((naked, noinline))
+void FUN_00043ea0(void *comm /* */ __attribute__((unused)), int actor /* */ __attribute__((unused)), int stack_a __attribute__((unused)))
 {
-  if (*(int16_t *)((char *)comm + 0xe) <= 0)
-    return;
-  {
-    char *prop = (char *)datum_get(*(data_t **)0x5ab23c, actor);
-    int mode = (*(int16_t *)((char *)comm + 0xe) == 1 &&
-                *(int *)((char *)comm + 0x10) == *(int *)(prop + 0x18))
-                   ? 8
-                   : 9;
-    if (*(int16_t *)((char *)comm + 0xe) == 1)
-      FUN_000432b0(-1, *(int *)((char *)comm + 0x10), stack_a, mode,
-                   *(int16_t *)((char *)comm + 0xc));
-    else if (*(int16_t *)((char *)comm + 0xe) == 2)
-      FUN_00043360(*(int *)((char *)comm + 0x10),
-                   *(int16_t *)((char *)comm + 0xc), stack_a, mode);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ecx, %%edi\n\t"
+      "cmpw $0, 0xe(%%edi)\n\t"
+      "jle .LFUN_00043ea0_4\n\t"
+      "movl 0x5ab23c, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movw 0xe(%%edi), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $1, %%cx\n\t"
+      "movl $9, %%edx\n\t"
+      "jne .LFUN_00043ea0_1\n\t"
+      "movl 0x10(%%edi), %%esi\n\t"
+      "cmpl 0x18(%%eax), %%esi\n\t"
+      "jne .LFUN_00043ea0_1\n\t"
+      "movl $8, %%edx\n\t"
+      ".LFUN_00043ea0_1:\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_00043ea0_2\n\t"
+      "decl %%eax\n\t"
+      "jne .LFUN_00043ea0_3\n\t"
+      "movl 0x10(%%edi), %%esi\n\t"
+      "movw 0xc(%%edi), %%bx\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c43360]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00043ea0_2:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0xc(%%edi), %%ax\n\t"
+      "movl 0x10(%%edi), %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "movl $0xffffffff, %%eax\n\t"
+      "call *%[c432b0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00043ea0_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_00043ea0_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b43ea0_dget), [c43360] "m"(b43ea0_c43360), [c432b0] "m"(b43ea0_c432b0)
+      : "memory");
 }
+#else
+#error "FUN_00043ea0: clang naked draft required"
+#endif
+
 
 
 /* ai_communication_update_speech_timers (0x43f20) — XBE naked draft (batch 114). */

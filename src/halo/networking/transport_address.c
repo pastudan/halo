@@ -148,68 +148,57 @@ const char *FUN_00081c80(int error_code)
   (void)esi;
 }
 
-/* 0x81e00 */
+/* FUN_00081e00 (0x81e00) — XBE naked draft (batch 147). */
+#if defined(__clang__)
+static void (*const b81e00_c222de0)(void) = (void (*)(void))FUN_00222df7;
+static void (*const b81e00_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b81e00_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_00081e00(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* mem[0x005ab210] = ecx */
-  /* mem[0x005ab214] = edx */
-  /* mem[0x005ab218] = ecx */
-  /* mem[0x005ab21c] = edx */
-  /* mem[0x005ab220] = ecx */
-  /* mem[0x005ab224] = edx */
-  /* relift: FUN_00222de0(0x005ab220, 0x005ab210); */
-  /* test eax, eax -> je 0x81e76 */
-  display_assert((char *)0x0026649c, (char *)0x00266458, 92, 0);
-  system_exit(0);
-  /* test eax, eax -> jg 0x81ea6 */
-  display_assert((char *)0x002664a8, (char *)0x00266458, 102, 0);
-  system_exit(0);
-  FUN_00222df7((void *)0x005ab220);
-  /* test esi, esi -> jne 0x81eeb */
-  display_assert((char *)0x002664e0, (char *)0x00266458, 151, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [ebp + 0xc], 8 -> je 0x81f11 */
-  display_assert((char *)0x002664c0, (char *)0x00266458, 152, 0);
-  system_exit(0);
-  csmemcpy((void *)(uintptr_t)esi, (void *)0x005ab228, 0);
-  display_assert((char *)0x002664ec, (char *)0x00266458, 163, 0);
-  system_exit(0);
-  /* test edi, edi -> jne 0x81f83 */
-  display_assert((char *)0x002664e0, (char *)0x00266458, 164, 0);
-  system_exit(0);
-  csmemcmp((void *)(uintptr_t)esi, (void *)(uintptr_t)edi, 0);
-  /* test esi, esi -> jne 0x81fcb */
-  display_assert((char *)0x002664ec, (char *)0x00266458, 175, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [ebp + 0xc], 8 -> je 0x81ff1 */
-  display_assert((char *)0x002664c0, (char *)0x00266458, 176, 0);
-  system_exit(0);
-  transport_nonce_is_equal();
-  /* test (char)eax, (char)eax -> je 0x82058 */
-  /* test eax, eax -> jg 0x8203f */
-  display_assert((char *)0x002664a8, (char *)0x00266458, 102, 0);
-  system_exit(0);
-  FUN_00222df7((void *)0x005ab220);
-  /* test eax, eax -> jg 0x820b9 */
-  display_assert((char *)0x002664a8, (char *)0x00266458, 224, 0);
-  system_exit(0);
-  /* test eax, eax -> jg 0x820fc */
-  display_assert((char *)0x002664a8, (char *)0x00266458, 231, 0);
-  system_exit(0);
-  XNetGetEthernetLinkStatus();
-  error(0, (char *)0x00266534);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x5ab210\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x5ab214\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x5ab218\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl %%edx, 0x5ab21c\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x5ab220\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl 0x335094, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%edx, 0x5ab224\n\t"
+      "jne .LFUN_00081e00_1\n\t"
+      "pushl $0x5ab210\n\t"
+      "pushl $0x5ab220\n\t"
+      "call *%[c222de0]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00081e00_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5c\n\t"
+      "pushl $0x266458\n\t"
+      "pushl $0x26649c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00081e00_1:\n\t"
+      "incl 0x335094\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c222de0] "m"(b81e00_c222de0), [assert] "m"(b81e00_assert), [exitfn] "m"(b81e00_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00081e00: clang naked draft required"
+#endif
+

@@ -484,13 +484,64 @@ void FUN_000a57a0(void)
   (void)0;
 }
 
-/* 0xa57b0 */
-short FUN_000a57b0(float *vec, float max_length)
+/* FUN_000a57b0 (0xa57b0) — XBE naked draft (batch 153). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+short FUN_000a57b0(float *vec __attribute__((unused)), float max_length __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "flds (%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "fld %%st(1)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_000a57b0_1\n\t"
+      "fsqrt\n\t"
+      "movb $1, %%al\n\t"
+      "fdivrs 0xc(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls (%%ecx)\n\t"
+      "fstps (%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      "fstps 0x4(%%ecx)\n\t"
+      "fmuls 0x8(%%ecx)\n\t"
+      "fstps 0x8(%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000a57b0_1:\n\t"
+      "fstp %%st(0)\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000a57b0: clang naked draft required"
+#endif
+
 
 /* 0xa5810 */
 void FUN_000a5810(void)

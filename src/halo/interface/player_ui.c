@@ -132,23 +132,69 @@ void player_ui_reset_single_player_local_player_controllers(void)
   csmemset((void *)0x0046bfc4, 0, 0);
 }
 
-/* 0xe0740 */
+/* player_ui_set_single_player_local_player_controller (0xe0740) — XBE naked draft (batch 153). */
+#if defined(__clang__)
+static void (*const be0740_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be0740_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void player_ui_set_single_player_local_player_controller(void)
 {
-  int esi = 0;
-  int edi = 0;
-
-  /* cmp (int16_t)esi, 4 -> jl 0xe0771 */
-  display_assert((char *)0x00282708, (char *)0x00282724, 119, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0xe0780 */
-  /* cmp (int16_t)edi, 4 -> jl 0xe07ac */
-  display_assert((char *)0x002826ec, (char *)0x00282724, 121, 0);
-  system_exit(0);
-
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "jl .Lplayer_ui_set_single_player_local_player_controller_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_ui_set_single_player_local_player_controller_2\n\t"
+      ".Lplayer_ui_set_single_player_local_player_controller_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x77\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x282708\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_set_single_player_local_player_controller_2:\n\t"
+      "movw 0xc(%%ebp), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Lplayer_ui_set_single_player_local_player_controller_3\n\t"
+      "cmpw $4, %%di\n\t"
+      "jl .Lplayer_ui_set_single_player_local_player_controller_4\n\t"
+      ".Lplayer_ui_set_single_player_local_player_controller_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x79\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x2826ec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movswl %%si, %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movw %%di, 0x46bfc4(,%%eax,2)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_set_single_player_local_player_controller_4:\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "movw %%di, 0x46bfc4(,%%ecx,2)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be0740_assert), [exitfn] "m"(be0740_exitfn)
+      : "memory");
 }
+#else
+#error "player_ui_set_single_player_local_player_controller: clang naked draft required"
+#endif
+
 
 /* 0xe0810 */
 int player_ui_get_single_player_local_player_from_controller(short local_player_index)
@@ -294,31 +340,87 @@ bool player_ui_rumble_disabled(int controller_index)
   (void)esi;
 }
 
-/* 0xe0b50 */
+/* player_ui_autolevel_enabled (0xe0b50) — XBE naked draft (batch 147). */
+#if defined(__clang__)
+static void (*const be0b50_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be0b50_exitfn)(int) = system_exit;
+static bool (*const be0b50_c12a000)(void) = network_game_in_progress;
+
+__attribute__((naked, noinline))
 void player_ui_autolevel_enabled(void)
 {
-  int eax = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xe0b62 */
-  /* cmp (int16_t)esi, 4 -> jl 0xe0b82 */
-  display_assert((char *)0x00281054, (char *)0x00282724, 320, 0);
-  system_exit(0);
-  network_game_in_progress();
-  /* test (char)eax, (char)eax -> jne 0xe0baa */
-  /* relift: cmp word ptr [edx*2 + 0x46bfc4], (int16_t)esi -> je 0xe0ba6 */
-  /* cmp (int16_t)eax, 4 -> jl 0xe0b90 */
-  /* cmp (int16_t)esi, -1 -> jne 0xe0bb5 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xe0bc0 */
-  /* cmp (int16_t)esi, 4 -> jl 0xe0be0 */
-  display_assert((char *)0x00282750, (char *)0x00282724, 340, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_ui_autolevel_enabled_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_ui_autolevel_enabled_2\n\t"
+      ".Lplayer_ui_autolevel_enabled_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x140\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x281054\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_autolevel_enabled_2:\n\t"
+      "call *%[c12a000]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lplayer_ui_autolevel_enabled_6\n\t"
+      "orl $0xffffffff, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lplayer_ui_autolevel_enabled_3:\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "cmpw %%si, 0x46bfc4(,%%edx,2)\n\t"
+      "je .Lplayer_ui_autolevel_enabled_4\n\t"
+      "incl %%eax\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jl .Lplayer_ui_autolevel_enabled_3\n\t"
+      "jmp .Lplayer_ui_autolevel_enabled_5\n\t"
+      ".Lplayer_ui_autolevel_enabled_4:\n\t"
+      "movl %%eax, %%ecx\n\t"
+      ".Lplayer_ui_autolevel_enabled_5:\n\t"
+      "movl %%ecx, %%esi\n\t"
+      ".Lplayer_ui_autolevel_enabled_6:\n\t"
+      "cmpw $-1, %%si\n\t"
+      "jne .Lplayer_ui_autolevel_enabled_7\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_autolevel_enabled_7:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_ui_autolevel_enabled_8\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_ui_autolevel_enabled_9\n\t"
+      ".Lplayer_ui_autolevel_enabled_8:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x154\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x282750\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_autolevel_enabled_9:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0x38, %%eax, %%eax\n\t"
+      "movb 0x46bf0e(%%eax), %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be0b50_assert), [exitfn] "m"(be0b50_exitfn), [c12a000] "m"(be0b50_c12a000)
+      : "memory");
 }
+#else
+#error "player_ui_autolevel_enabled: clang naked draft required"
+#endif
+
 
 /* 0xe0bf0 */
 void player_ui_get_path_to_local_player_profile_directory(void)
@@ -342,34 +444,86 @@ void player_ui_get_player1_last_used_profile_index(void)
   (void)eax;
 }
 
-/* 0xe0cd0 */
+/* player_ui_fast_setup_network_server (0xe0cd0) — XBE naked draft (batch 149). */
+#if defined(__clang__)
+static void (*const be0cd0_ce58c0)(void) = ui_widgets_close_all;
+static void (*const be0cd0_c12a1e0)(void) = dispose_global_network_game_client;
+static void (*const be0cd0_c12a2a0)(void) = dispose_global_network_game_server;
+static void (*const be0cd0_cfff70)(short param) = set_game_connection;
+static void (*const be0cd0_c100010)(const char *name) = main_set_multiplayer_map_name;
+static void * (*const be0cd0_ce84e0)(const char *name, int tag_index, int is_child, int widget_stack, int parent_tag_index, int a6, int a7) = ui_widget_load_by_name_or_tag;
+static void (*const be0cd0_cae750)(void) = game_engine_playlist_initialize;
+static void (*const be0cd0_c12a150)(char accept) = network_game_set_accept_remote_connections;
+static bool (*const be0cd0_c12a890)(void) = FUN_0012a890;
+static bool (*const be0cd0_c12a250)(void) = FUN_0012a250;
+static void (*const be0cd0_ca8a70)(void) = game_engine_playlist_begin;
+static void (*const be0cd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const be0cd0_c100620)(void) = main_goto_main_menu;
+
+__attribute__((naked, noinline))
 void player_ui_fast_setup_network_server(void)
 {
-  int eax = 0;
-
-  ui_widgets_close_all();
-  dispose_global_network_game_client();
-  dispose_global_network_game_server();
-  set_game_connection(0);
-  main_set_multiplayer_map_name((char *)0x0025386f);
-  ui_widget_load_by_name_or_tag((char *)0x002828e0, 0, 0, 0, 0, 0, 0);
-  /* test eax, eax -> je 0xe0d6a */
-  game_engine_playlist_initialize();
-  network_game_set_accept_remote_connections(0);
-  FUN_0012a890();
-  /* test (char)eax, (char)eax -> je 0xe0d45 */
-  FUN_0012a250();
-  /* test (char)eax, (char)eax -> je 0xe0d45 */
-  game_engine_playlist_begin();
-  set_game_connection(0);
-  dispose_global_network_game_client();
-  dispose_global_network_game_server();
-  network_game_set_accept_remote_connections(0);
-  error(0, (char *)0x002828ac);
-  error(0, (char *)0x00282840);
-
-  (void)eax;
+  __asm__ volatile(
+      "call *%[ce58c0]\n\t"
+      "call *%[c12a1e0]\n\t"
+      "call *%[c12a2a0]\n\t"
+      "pushl $0\n\t"
+      "call *%[cfff70]\n\t"
+      "pushl $0x25386f\n\t"
+      "call *%[c100010]\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl $0x2828e0\n\t"
+      "movb $0, 0x46c034\n\t"
+      "call *%[ce84e0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lplayer_ui_fast_setup_network_server_2\n\t"
+      "call *%[cae750]\n\t"
+      "pushl $1\n\t"
+      "call *%[c12a150]\n\t"
+      "addl $4, %%esp\n\t"
+      "call *%[c12a890]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayer_ui_fast_setup_network_server_1\n\t"
+      "call *%[c12a250]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayer_ui_fast_setup_network_server_1\n\t"
+      "call *%[ca8a70]\n\t"
+      "pushl $2\n\t"
+      "call *%[cfff70]\n\t"
+      "addl $4, %%esp\n\t"
+      "ret\n\t"
+      ".Lplayer_ui_fast_setup_network_server_1:\n\t"
+      "call *%[c12a1e0]\n\t"
+      "call *%[c12a2a0]\n\t"
+      "pushl $0\n\t"
+      "call *%[c12a150]\n\t"
+      "pushl $0x2828ac\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .Lplayer_ui_fast_setup_network_server_10000\n\t"
+      ".Lplayer_ui_fast_setup_network_server_2:\n\t"
+      "pushl $0x282840\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lplayer_ui_fast_setup_network_server_10000\n\t"
+      ".Lplayer_ui_fast_setup_network_server_10000:\n\t"
+      "jmp *%[c100620]\n\t"
+      :
+      : [ce58c0] "m"(be0cd0_ce58c0), [c12a1e0] "m"(be0cd0_c12a1e0), [c12a2a0] "m"(be0cd0_c12a2a0), [cfff70] "m"(be0cd0_cfff70), [c100010] "m"(be0cd0_c100010), [ce84e0] "m"(be0cd0_ce84e0), [cae750] "m"(be0cd0_cae750), [c12a150] "m"(be0cd0_c12a150), [c12a890] "m"(be0cd0_c12a890), [c12a250] "m"(be0cd0_c12a250), [ca8a70] "m"(be0cd0_ca8a70), [c8f390] "m"(be0cd0_c8f390), [c100620] "m"(be0cd0_c100620)
+      : "memory");
 }
+#else
+#error "player_ui_fast_setup_network_server: clang naked draft required"
+#endif
+
 
 /* 0xe0d80 */
 void player_ui_edit_profile_is_default_profile(void)
@@ -767,18 +921,73 @@ void FUN_000e10c0(void)
 #endif
 
 
-/* 0xe13f0 */
+/* player_ui_clear_multiplayer_joins (0xe13f0) — XBE naked draft (batch 150). */
+#if defined(__clang__)
+static void (*const be13f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be13f0_exitfn)(int) = system_exit;
+static void *(*const be13f0_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void player_ui_clear_multiplayer_joins(void)
 {
-  int esi = 0;
-
-  /* test esi, esi -> jne 0xe1434 */
-  display_assert((char *)0x002829b0, (char *)0x00282724, 869, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)esi, 0, 48);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "movl $0x46bf14, %%ebx\n\t"
+      ".Lplayer_ui_clear_multiplayer_joins_1:\n\t"
+      "movswl -0x4(%%ebp), %%edi\n\t"
+      "imull $0x38, %%edi, %%edi\n\t"
+      "leal 0x46bee0(%%edi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lplayer_ui_clear_multiplayer_joins_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x365\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x2829b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_clear_multiplayer_joins_2:\n\t"
+      "pushl $0x30\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movswl -0x4(%%ebp), %%eax\n\t"
+      "orl $0xffffffff, %%ecx\n\t"
+      "movw %%cx, 0x18(%%esi)\n\t"
+      "movb $0, 0x28(%%esi)\n\t"
+      "movb $0, 0x29(%%esi)\n\t"
+      "movw %%cx, 0x46bfc4(,%%eax,2)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl %%ecx, 0x46bf10(%%edi)\n\t"
+      "movb $0, (%%ebx)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $0, 0x46bfc0(%%eax)\n\t"
+      "incl %%eax\n\t"
+      "addl $0x38, %%ebx\n\t"
+      "cmpl $0x46bff4, %%ebx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jl .Lplayer_ui_clear_multiplayer_joins_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be13f0_assert), [exitfn] "m"(be13f0_exitfn), [memset] "m"(be13f0_memset)
+      : "memory");
 }
+#else
+#error "player_ui_clear_multiplayer_joins: clang naked draft required"
+#endif
+
 
 /* 0xe1490 */
 void player_ui_set_active_player_profile(void)

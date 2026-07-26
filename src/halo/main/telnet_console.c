@@ -1050,24 +1050,78 @@ void FUN_001313f0(void)
 #endif
 
 
-/* 0x131700 */
+/* FUN_00131700 (0x131700) — XBE naked draft (batch 148). */
+#if defined(__clang__)
+static void *(*const b131700_get)(int, int) = object_get_and_verify_type;
+static void *(*const b131700_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b131700_tag)(int, int) = tag_get;
+static void (*const b131700_c1313f0)(void) = FUN_001313f0;
+static void (*const b131700_c131280)(void) = FUN_00131280;
+
+__attribute__((naked, noinline))
 void FUN_00131700(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  object_get_and_verify_type(0, 0);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('!tna', 0);
-  /* test (char)eax, (char)eax -> jne 0x13177f */
-  FUN_001313f0();
-  FUN_001313f0();
-  FUN_001313f0();
-  FUN_00131280();
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x5a90d4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x616e7421\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movb 0x5(%%esi), %%al\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00131700_2\n\t"
+      "cmpw $5, 0x6(%%esi)\n\t"
+      "movl %%ebx, 0xc(%%esi)\n\t"
+      "jle .LFUN_00131700_1\n\t"
+      "pushl $0x3d4ccccd\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1313f0]\n\t"
+      "pushl $0x3d4ccccd\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1313f0]\n\t"
+      "pushl $0x3d4ccccd\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1313f0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      ".LFUN_00131700_1:\n\t"
+      "pushl %%esi\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "movw $0, 0x6(%%esi)\n\t"
+      "call *%[c131280]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_00131700_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b131700_get), [dget] "m"(b131700_dget), [tag] "m"(b131700_tag), [c1313f0] "m"(b131700_c1313f0), [c131280] "m"(b131700_c131280)
+      : "memory");
 }
+#else
+#error "FUN_00131700: clang naked draft required"
+#endif
+
 
 /* FUN_00131790 (0x131790) — XBE naked draft (batch 142). */
 #if defined(__clang__)

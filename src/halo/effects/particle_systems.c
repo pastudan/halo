@@ -1735,69 +1735,81 @@ void FUN_000a0e60(void)
 #endif
 
 
-/* 0xa1170 */
+/* particle_system_update (0xa1170) — XBE naked draft (batch 148). */
+#if defined(__clang__)
+static void (*const ba1170_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const ba1170_exitfn)(int) = system_exit;
+static int (*const ba1170_c1198f0)(data_t *data, int prev_index) = data_next_index;
+static void *(*const ba1170_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static bool (*const ba1170_c18e910)(void *location) = scenario_location_potentially_visible_local;
+static void (*const ba1170_ca0800)(int particle_system_handle) = FUN_000a0800;
+
+__attribute__((naked, noinline))
 void particle_system_update(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (char)eax, (char)eax -> je 0xa120a */
-  /* test eax, eax -> je 0xa118d */
-  /* test (char)ecx, (char)ecx -> jne 0xa11b2 */
-  display_assert((char *)0x0026ad14, (char *)0x0026abcc, 976, 0);
-  system_exit(0);
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* cmp esi, -1 -> je 0xa1209 */
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* relift: cmp word ptr [eax + 0x1c], -1 -> je 0xa11f2 */
-  scenario_location_potentially_visible_local((void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0xa11f2 */
-  FUN_000a0800(0);
-  data_next_index((void *)(uintptr_t)ecx, 0);
-  /* cmp esi, -1 -> jne 0xa11c5 */
-  data_new_at_index((void *)(uintptr_t)eax);
-  /* cmp esi, -1 -> je 0xa12d6 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  FUN_00139480((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, (void *)0, 0);
-  FUN_000a0fd0(0);
-  datum_delete((void *)(uintptr_t)eax, 0);
-  data_new_at_index((void *)(uintptr_t)eax);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  object_get_and_verify_type(0, 0);
-  tag_get(0x6f626a65, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* test (int16_t)ecx, (int16_t)ecx -> je 0xa1393 */
-  object_get_markers_by_string_id(0, (void *)(uintptr_t)eax, (void *)0, 0);
-  object_get_root_location(0, (float *)(uintptr_t)ebx, (float *)0);
-  object_get_function_value(0, 0, (void *)(uintptr_t)ecx);
-  FUN_000a0fd0(0);
-  /* test (char)eax, (char)eax -> jne 0xa146b */
-  datum_delete((void *)(uintptr_t)eax, 0);
-  game_state_data_new((char *)0x0026abc0, 1024, 112);
-  /* mem[0x005aa8a0] = eax */
-  error(eax, (char *)0x0026ad64);
-  data_delete_all((void *)(uintptr_t)eax);
-  data_make_invalid((void *)(uintptr_t)eax);
-  /* test eax, eax -> je 0xa14e3 */
-  /* mem[0x005aa8a0] = 0 */
-  datum_delete((void *)(uintptr_t)ecx, 0);
-  data_next_index((void *)(uintptr_t)eax, 0);
-  /* cmp esi, -1 -> je 0xa157b */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp edx, edi -> jne 0xa1563 */
-  /* relift: test byte ptr [eax + 2], 0x40 -> je 0xa1563 */
-  /* relift: cmp dword ptr [eax + 8], -1 -> je 0xa1563 */
-  datum_delete((void *)(uintptr_t)eax, 0);
-  data_next_index((void *)(uintptr_t)ecx, 0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "movb 0x32574c, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lparticle_system_update_6\n\t"
+      "movl 0x5aa8a8, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lparticle_system_update_1\n\t"
+      "movb 0x24(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lparticle_system_update_2\n\t"
+      ".Lparticle_system_update_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3d0\n\t"
+      "pushl $0x26abcc\n\t"
+      "pushl $0x26ad14\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl 0x5aa8a8, %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lparticle_system_update_2:\n\t"
+      "pushl %%esi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1198f0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lparticle_system_update_5\n\t"
+      ".Lparticle_system_update_3:\n\t"
+      "movl 0x5aa8a8, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $-1, 0x1c(%%eax)\n\t"
+      "je .Lparticle_system_update_4\n\t"
+      "addl $0x18, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e910]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lparticle_system_update_4\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[ca0800]\n\t"
+      ".Lparticle_system_update_4:\n\t"
+      "movl 0x5aa8a8, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1198f0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne .Lparticle_system_update_3\n\t"
+      ".Lparticle_system_update_5:\n\t"
+      "popl %%esi\n\t"
+      ".Lparticle_system_update_6:\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(ba1170_assert), [exitfn] "m"(ba1170_exitfn), [c1198f0] "m"(ba1170_c1198f0), [dget] "m"(ba1170_dget), [c18e910] "m"(ba1170_c18e910), [ca0800] "m"(ba1170_ca0800)
+      : "memory");
 }
+#else
+#error "particle_system_update: clang naked draft required"
+#endif
+

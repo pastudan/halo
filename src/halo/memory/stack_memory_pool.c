@@ -1073,48 +1073,137 @@ void FUN_0011ee50(void)
   (void)eax;
 }
 
-/* 0x11f140 */
+/* FUN_0011f140 (0x11f140) — XBE naked draft (batch 153). */
+#if defined(__clang__)
+static int (*const b11f140_c11ef50)(void *block_hdr, void *pool) = stack_memory_pool_valid_block;
+static int (*const b11f140_c11ecf0)(void *block_hdr) = memory_block_valid;
+static void (*const b11f140_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11f140_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_0011f140(void)
 {
-  int eax = 0;
-
-  stack_memory_pool_valid_block((void *)0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x11f17f */
-  memory_block_valid((void *)0);
-  /* test (char)eax, (char)eax -> jne 0x11f176 */
-  display_assert((char *)0x00290254, (char *)0x0029018c, 533, 0);
-  system_exit(0);
-  /* test (char)eax, 1 -> jne 0x11f19f */
-  display_assert((char *)0x00290328, (char *)0x0029018c, 752, 0);
-  system_exit(0);
-  memory_block_valid((void *)0);
-  /* test (char)eax, (char)eax -> jne 0x11f1ca */
-  display_assert((char *)0x00290254, (char *)0x0029018c, 524, 0);
-  system_exit(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl %%esi, %%eax\n\t"
+      "call *%[c11ef50]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0011f140_2\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c11ecf0]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0011f140_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x215\n\t"
+      "pushl $0x29018c\n\t"
+      "pushl $0x290254\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011f140_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "shrl $0x1f, %%eax\n\t"
+      "testb $1, %%al\n\t"
+      "jne .LFUN_0011f140_3\n\t"
+      ".LFUN_0011f140_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2f0\n\t"
+      "pushl $0x29018c\n\t"
+      "pushl $0x290328\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011f140_3:\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[c11ecf0]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0011f140_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x20c\n\t"
+      "pushl $0x29018c\n\t"
+      "pushl $0x290254\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011f140_4:\n\t"
+      "andl $0x7fffffff, (%%esi)\n\t"
+      "ret\n\t"
+      :
+      : [c11ef50] "m"(b11f140_c11ef50), [c11ecf0] "m"(b11f140_c11ecf0), [assert] "m"(b11f140_assert), [exitfn] "m"(b11f140_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_0011f140: clang naked draft required"
+#endif
 
-/* 0x11f460 */
+
+/* dispose_handle (0x11f460) — XBE naked draft (batch 152). */
+#if defined(__clang__)
+static int (*const b11f460_c11ef50)(void *block_hdr, void *pool) = stack_memory_pool_valid_block;
+static void (*const b11f460_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11f460_exitfn)(int) = system_exit;
+static void (*const b11f460_c11efd0)(void *block_hdr, void *pool) = stack_memory_pool_unlink_block;
+
+__attribute__((naked, noinline))
 void dispose_handle(void)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-
-  stack_memory_pool_valid_block((void *)(uintptr_t)edi, (void *)(uintptr_t)esi);
-  /* test (char)eax, (char)eax -> jne 0x11f499 */
-  display_assert((char *)0x002904a0, (char *)0x0029018c, 232, 0);
-  system_exit(0);
-  /* test esi, esi -> jne 0x11f4bd */
-  display_assert((char *)0x002901b8, (char *)0x0029018c, 559, 0);
-  system_exit(0);
-  stack_memory_pool_unlink_block((void *)0, (void *)0);
-
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "call *%[c11ef50]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Ldispose_handle_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe8\n\t"
+      "pushl $0x29018c\n\t"
+      "pushl $0x2904a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldispose_handle_1:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Ldispose_handle_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x22f\n\t"
+      "pushl $0x29018c\n\t"
+      "pushl $0x2901b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldispose_handle_2:\n\t"
+      "movl (%%esi), %%ebx\n\t"
+      "andl $0x7fffffff, %%ebx\n\t"
+      "call *%[c11efd0]\n\t"
+      "movl 0x14(%%edi), %%ecx\n\t"
+      "movl 0x1c(%%edi), %%eax\n\t"
+      "subl %%ebx, %%ecx\n\t"
+      "decl %%eax\n\t"
+      "movl %%ecx, 0x14(%%edi)\n\t"
+      "movl %%eax, 0x1c(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11ef50] "m"(b11f460_c11ef50), [assert] "m"(b11f460_assert), [exitfn] "m"(b11f460_exitfn), [c11efd0] "m"(b11f460_c11efd0)
+      : "memory");
 }
+#else
+#error "dispose_handle: clang naked draft required"
+#endif
+
 
 /* 0x11f4e0 */
 void lock_handle(void)
@@ -1234,49 +1323,98 @@ void unlock_handle(void)
 #endif
 
 
-/* 0x11f6d0 */
+/* FUN_0011f6d0 (0x11f6d0) — XBE naked draft (batch 146). */
+#if defined(__clang__)
+static void * (*const b11f6d0_c11f1e0)(int alloc_size, void *pool, const char *file, unsigned int line) = stack_memory_pool_alloc_internal;
+
+__attribute__((naked, noinline))
 void FUN_0011f6d0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  stack_memory_pool_alloc_internal(0, (void *)(uintptr_t)ecx, (char *)(uintptr_t)eax, ebp);
-  stack_memory_pool_alloc_internal(0, (void *)(uintptr_t)ecx, (char *)(uintptr_t)eax, esi);
-  /* test esi, esi -> je 0x11f73e */
-  memory_block_valid((void *)0);
-  /* test (char)eax, (char)eax -> jne 0x11f72f */
-  display_assert((char *)0x00290254, (char *)0x0029018c, 575, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)eax, 0, edi);
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c11f1e0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11f1e0] "m"(b11f6d0_c11f1e0)
+      : "memory");
 }
+#else
+#error "FUN_0011f6d0: clang naked draft required"
+#endif
 
-/* 0x11f810 */
+
+/* pool_new_handle (0x11f810) — XBE naked draft (batch 151). */
+#if defined(__clang__)
+static void * (*const b11f810_c11f1e0)(int alloc_size, void *pool, const char *file, unsigned int line) = stack_memory_pool_alloc_internal;
+
+__attribute__((naked, noinline))
 void pool_new_handle(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  stack_memory_pool_alloc_internal(0, (void *)(uintptr_t)ecx, (char *)(uintptr_t)eax, esi);
-  /* test eax, eax -> je 0x11f871 */
-  /* relift: cmp edx, dword ptr [esi + 0x20] -> jbe 0x11f85c */
-  /* cmp ecx, edx -> jbe 0x11f873 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c11f1e0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lpool_new_handle_3\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl 0x1c(%%esi), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x14(%%esi), %%edi\n\t"
+      "andl $0x7fffffff, %%edx\n\t"
+      "addl %%edx, %%edi\n\t"
+      "incl %%ecx\n\t"
+      "movl %%edi, 0x14(%%esi)\n\t"
+      "movl %%ecx, 0x1c(%%esi)\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "cmpl 0x18(%%esi), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "jle .Lpool_new_handle_1\n\t"
+      "movl %%ecx, 0x18(%%esi)\n\t"
+      ".Lpool_new_handle_1:\n\t"
+      "cmpl 0x20(%%esi), %%edx\n\t"
+      "jbe .Lpool_new_handle_2\n\t"
+      "movl %%edx, 0x20(%%esi)\n\t"
+      ".Lpool_new_handle_2:\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x24(%%esi), %%edx\n\t"
+      "andl $0x7fffffff, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jbe .Lpool_new_handle_4\n\t"
+      "movl %%ecx, 0x24(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lpool_new_handle_3:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lpool_new_handle_4:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11f1e0] "m"(b11f810_c11f1e0)
+      : "memory");
 }
+#else
+#error "pool_new_handle: clang naked draft required"
+#endif
+
 
 /* pool_new_handle_clear (0x11f880) — XBE naked draft (batch 137). */
 #if defined(__clang__)

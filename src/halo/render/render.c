@@ -329,24 +329,71 @@ void FUN_001845b0(void *group, int a2)
   (void)eax;
 }
 
-/* 0x184610 */
-int FUN_00184610(void *group)
+/* FUN_00184610 (0x184610) — XBE naked draft (batch 152). */
+#if defined(__clang__)
+static void (*const b184610_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b184610_exitfn)(int) = system_exit;
+static short (*const b184610_c17c9c0)(int dynamic_vertex_buffer_index) = rasterizer_widget_draw_sprite2d;
+static void (*const b184610_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+int FUN_00184610(void *group __attribute__((unused)))
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x18463f */
-  display_assert((char *)0x0026276c, (char *)0x002b0ca8, 244, 0);
-  system_exit(0);
-  /* test eax, eax -> je 0x18464d */
-  /* cmp esi, -1 -> je 0x184662 */
-  rasterizer_widget_draw_sprite2d(0);
-  error(0, (char *)0x002b0e18);
-  return 0;
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00184610_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf4\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl $0x26276c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00184610_1:\n\t"
+      "movl 0x58(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00184610_2\n\t"
+      "movw (%%eax), %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00184610_2:\n\t"
+      "movl 0x54(%%esi), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_00184610_3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c17c9c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00184610_3:\n\t"
+      "pushl $0x2b0e18\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "movw %%di, %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b184610_assert), [exitfn] "m"(b184610_exitfn), [c17c9c0] "m"(b184610_c17c9c0), [c8f390] "m"(b184610_c8f390)
+      : "memory");
 }
+#else
+#error "FUN_00184610: clang naked draft required"
+#endif
+
 
 /* 0x184680 */
 void FUN_00184680(void)

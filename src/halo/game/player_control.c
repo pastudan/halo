@@ -374,30 +374,95 @@ int player_control_get_target_object_index(int16_t local_player_index)
   return NONE;
 }
 
-float player_control_get_field_of_view(int16_t local_player_index)
-{
-  char *slot;
-  int unit_handle;
-  void *unit_obj;
-  void *unit_tag;
-  int weapon_handle;
-  int16_t zoom;
+/* player_control_get_field_of_view (0xb6690) — XBE naked draft (batch 146). */
+#if defined(__clang__)
+static void (*const bb6690_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb6690_exitfn)(int) = system_exit;
+static void *(*const bb6690_get)(int, int) = object_get_and_verify_type;
+static void *(*const bb6690_tag)(int, int) = tag_get;
+static int (*const bb6690_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
+static float (*const bb6690_cfc8e0)(int weapon_handle, float base_fov, int16_t zoom_level) = weapon_get_field_of_view;
 
-  assert_halt(local_player_index >= 0 &&
-              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
-  slot = (char *)player_control_globals + (int)local_player_index * 0x40 + 0x10;
-  unit_handle = *(int *)slot;
-  if (unit_handle == NONE)
-    return *(float *)0x26e270;
-  unit_obj = object_get_and_verify_type(unit_handle, 3);
-  unit_tag = tag_get(0x756e6974 /* 'unit' */, *(int *)unit_obj);
-  zoom = *(int16_t *)(slot + 0x24);
-  weapon_handle = unit_get_weapon(unit_handle, *(int16_t *)((char *)unit_obj + 0x2a2));
-  if (weapon_handle != NONE)
-    return weapon_get_field_of_view(
-        weapon_handle, *(float *)((char *)unit_tag + 0x1a0), zoom);
-  return *(float *)((char *)unit_tag + 0x1a0);
+__attribute__((naked, noinline))
+float player_control_get_field_of_view(int16_t local_player_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_control_get_field_of_view_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_control_get_field_of_view_2\n\t"
+      ".Lplayer_control_get_field_of_view_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb1\n\t"
+      "pushl $0x26e1e8\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_control_get_field_of_view_2:\n\t"
+      "movl 0x457090, %%ecx\n\t"
+      "flds 0x26e270\n\t"
+      "movswl %%si, %%eax\n\t"
+      "shll $6, %%eax\n\t"
+      "leal 0x10(%%eax,%%ecx,1), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayer_control_get_field_of_view_4\n\t"
+      "pushl %%ebx\n\t"
+      "fstp %%st(0)\n\t"
+      "pushl %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x2a2(%%edi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1adeb0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayer_control_get_field_of_view_3\n\t"
+      "movl 0x1a0(%%ebx), %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x24(%%esi), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cfc8e0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayer_control_get_field_of_view_3:\n\t"
+      "flds 0x1a0(%%ebx)\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".Lplayer_control_get_field_of_view_4:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bb6690_assert), [exitfn] "m"(bb6690_exitfn), [get] "m"(bb6690_get), [tag] "m"(bb6690_tag), [c1adeb0] "m"(bb6690_c1adeb0), [cfc8e0] "m"(bb6690_cfc8e0)
+      : "memory");
 }
+#else
+#error "player_control_get_field_of_view: clang naked draft required"
+#endif
+
 
 /* player_control_get_unit_camera_info (0xb6740) — XBE naked draft (batch 130). */
 #if defined(__clang__)
@@ -1082,23 +1147,71 @@ void FUN_000b7f90(int16_t local_player_index __attribute__((unused)), float dx _
 #endif
 
 
-int player_control_get_desired_weapon(int16_t local_player_index, int unit_handle)
-{
-  char *slot;
-  int weapon_handle;
+/* player_control_get_desired_weapon (0xb68c0) — XBE naked draft (batch 153). */
+#if defined(__clang__)
+static void (*const bb68c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb68c0_exitfn)(int) = system_exit;
+static int (*const bb68c0_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
+static void *(*const bb68c0_get)(int, int) = object_get_and_verify_type;
 
-  assert_halt(local_player_index >= 0 &&
-              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
-  slot = (char *)player_control_globals + (int)local_player_index * 0x40 + 0x10;
-  if (*(int *)slot == unit_handle) {
-    weapon_handle = unit_get_weapon(unit_handle, *(int16_t *)(slot + 0x20));
-    if (weapon_handle != NONE)
-      return weapon_handle;
-  }
-  return unit_get_weapon(
-      unit_handle,
-      *(int16_t *)((char *)object_get_and_verify_type(unit_handle, 3) + 0x2a2));
+__attribute__((naked, noinline))
+int player_control_get_desired_weapon(int16_t local_player_index __attribute__((unused)), int unit_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_control_get_desired_weapon_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_control_get_desired_weapon_2\n\t"
+      ".Lplayer_control_get_desired_weapon_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb1\n\t"
+      "pushl $0x26e1e8\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_control_get_desired_weapon_2:\n\t"
+      "movl 0x457090, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "shll $6, %%eax\n\t"
+      "leal 0x10(%%eax,%%ecx,1), %%eax\n\t"
+      "cmpl %%esi, (%%eax)\n\t"
+      "jne .Lplayer_control_get_desired_weapon_3\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x20(%%eax), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1adeb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lplayer_control_get_desired_weapon_4\n\t"
+      ".Lplayer_control_get_desired_weapon_3:\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movswl 0x2a2(%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1adeb0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lplayer_control_get_desired_weapon_4:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bb68c0_assert), [exitfn] "m"(bb68c0_exitfn), [c1adeb0] "m"(bb68c0_c1adeb0), [get] "m"(bb68c0_get)
+      : "memory");
 }
+#else
+#error "player_control_get_desired_weapon: clang naked draft required"
+#endif
+
 
 float *player_control_get_facing_angles(int16_t local_player_index)
 {

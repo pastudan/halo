@@ -1200,26 +1200,67 @@ void FUN_000803b0(void)
   (void)edx;
 }
 
-/* 0x80470 */
+/* FUN_00080470 (0x80470) — XBE naked draft (batch 153). */
+#if defined(__clang__)
+static void (*const b80470_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b80470_exitfn)(int) = system_exit;
+static unsigned short * (*const b80470_c803d0)(short type, void *data, int buffer, unsigned short buffer_size) = key_agreement_build_message;
+
+__attribute__((naked, noinline))
 void FUN_00080470(void)
 {
-  int ebx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test esi, esi -> je 0x80482 */
-  /* test ebx, ebx -> je 0x80482 */
-  /* test edi, edi -> jne 0x804a2 */
-  display_assert((char *)0x00265b90, (char *)0x00265b5c, 162, 0);
-  system_exit(0);
-  key_agreement_build_message(0, (void *)(uintptr_t)edx, 0, 0);
-
-  (void)ebx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_00080470_1\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "je .LFUN_00080470_1\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_00080470_2\n\t"
+      ".LFUN_00080470_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa2\n\t"
+      "pushl $0x265b5c\n\t"
+      "pushl $0x265b90\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00080470_2:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "movl 0x4(%%ebx), %%eax\n\t"
+      "movl %%ecx, -0x14(%%ebp)\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "movl 0x4(%%edi), %%edx\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      "call *%[c803d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b80470_assert), [exitfn] "m"(b80470_exitfn), [c803d0] "m"(b80470_c803d0)
+      : "memory");
 }
+#else
+#error "FUN_00080470: clang naked draft required"
+#endif
+
 
 /* 0x804e0 */
 void FUN_000804e0(void)

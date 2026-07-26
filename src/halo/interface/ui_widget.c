@@ -2128,33 +2128,74 @@ void ui_set_next_level(int16_t level_index)
   main_menu_switch_to_single_player();
 }
 
-void display_error_deferred(int16_t error_handle, int16_t local_player_index,
-                            char a3, char a4)
-{
-  ui_widget_deferred_error_t *slots;
-  ui_widget_deferred_error_t *slot;
-  int index;
+/* display_error_deferred (0xe4500) — XBE naked draft (batch 150). */
+#if defined(__clang__)
+static void (*const be4500_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be4500_exitfn)(int) = system_exit;
+static void (*const be4500_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
-  if (local_player_index != -1) {
-    if (local_player_index < 0 || local_player_index >= 4) {
-      display_assert((char *)0x283424, (char *)0x283280, 0x8f0, 1);
-      system_exit(-1);
-    }
-  }
-  index = (int)local_player_index;
-  if (local_player_index == -1)
-    index = 0;
-  slots = (ui_widget_deferred_error_t *)0x46cc50;
-  slot = &slots[index];
-  if (slot->error_handle != -1) {
-    error(2, (char *)0x2833d0, index);
-    return;
-  }
-  slot->error_handle = error_handle;
-  slot->local_player_index = local_player_index;
-  slot->a3 = a3;
-  slot->a4 = a4;
+__attribute__((naked, noinline))
+void display_error_deferred(int16_t error_handle __attribute__((unused)), int16_t local_player_index __attribute__((unused)), char a3 __attribute__((unused)), char a4 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movw 0xc(%%ebp), %%di\n\t"
+      "cmpw $-1, %%di\n\t"
+      "jne .Ldisplay_error_deferred_1\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "jmp .Ldisplay_error_deferred_3\n\t"
+      ".Ldisplay_error_deferred_1:\n\t"
+      "movswl %%di, %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jl .Ldisplay_error_deferred_2\n\t"
+      "cmpl $4, %%esi\n\t"
+      "jl .Ldisplay_error_deferred_3\n\t"
+      ".Ldisplay_error_deferred_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x8f0\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x283424\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldisplay_error_deferred_3:\n\t"
+      "leal (%%esi,%%esi,2), %%eax\n\t"
+      "shll $1, %%eax\n\t"
+      "cmpw $-1, 0x46cc50(%%eax)\n\t"
+      "jne .Ldisplay_error_deferred_4\n\t"
+      "movw 0x8(%%ebp), %%cx\n\t"
+      "movb 0x10(%%ebp), %%dl\n\t"
+      "movw %%cx, 0x46cc50(%%eax)\n\t"
+      "movb 0x14(%%ebp), %%cl\n\t"
+      "movw %%di, 0x46cc52(%%eax)\n\t"
+      "popl %%edi\n\t"
+      "movb %%dl, 0x46cc54(%%eax)\n\t"
+      "movb %%cl, 0x46cc55(%%eax)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ldisplay_error_deferred_4:\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x2833d0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be4500_assert), [exitfn] "m"(be4500_exitfn), [c8f390] "m"(be4500_c8f390)
+      : "memory");
 }
+#else
+#error "display_error_deferred: clang naked draft required"
+#endif
+
 
 void display_error_abort_to_dashboard_deferred(int16_t error_handle, char flag)
 {
@@ -2166,31 +2207,80 @@ void display_error_abort_to_dashboard_deferred(int16_t error_handle, char flag)
   *(char *)0x46cc6a = flag;
 }
 
-void ui_widget_link_child(void *parent, void *child)
-{
-  void *first;
-  void *last;
+/* ui_widget_link_child (0xe4800) — XBE naked draft (batch 147). */
+#if defined(__clang__)
+static void (*const be4800_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be4800_exitfn)(int) = system_exit;
 
-  first = *(void **)((char *)parent + 0x34);
-  if (*(void **)((char *)parent + 0x28) != NULL ||
-      *(void **)((char *)parent + 0x2c) != NULL) {
-    display_assert((char *)0x283588, (char *)0x283280, 0xa9f, 1);
-    system_exit(-1);
-  }
-  if (first != NULL) {
-    last = first;
-    while (*(void **)((char *)last + 0x2c) != NULL)
-      last = *(void **)((char *)last + 0x2c);
-    if (*(void **)((char *)last + 0x2c) != NULL) {
-      display_assert((char *)0x28356c, (char *)0x283280, 0xaa9, 1);
-      system_exit(-1);
-    }
-    *(void **)((char *)last + 0x2c) = child;
-    *(void **)((char *)child + 0x28) = last;
-  } else {
-    *(void **)((char *)parent + 0x34) = child;
-  }
+__attribute__((naked, noinline))
+void ui_widget_link_child(void *parent __attribute__((unused)), void *child __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x34(%%eax), %%esi\n\t"
+      "movl 0x28(%%ebx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lui_widget_link_child_1\n\t"
+      "movl 0x2c(%%ebx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lui_widget_link_child_2\n\t"
+      ".Lui_widget_link_child_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa9f\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x283588\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lui_widget_link_child_2:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lui_widget_link_child_5\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lui_widget_link_child_3:\n\t"
+      "movl %%esi, %%edi\n\t"
+      "movl 0x2c(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lui_widget_link_child_3\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Lui_widget_link_child_5\n\t"
+      "movl 0x2c(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lui_widget_link_child_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0xaa9\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x28356c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lui_widget_link_child_4:\n\t"
+      "movl %%ebx, 0x2c(%%edi)\n\t"
+      "movl %%edi, 0x28(%%ebx)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lui_widget_link_child_5:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebx, 0x34(%%ecx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be4800_assert), [exitfn] "m"(be4800_exitfn)
+      : "memory");
 }
+#else
+#error "ui_widget_link_child: clang naked draft required"
+#endif
+
 
 float widget_instance_get_opacity_product(void *widget)
 {
@@ -2340,24 +2430,68 @@ int16_t ui_widget_find_localized_string_index(wchar_t *needle)
   return (int16_t)-1;
 }
 
-void FUN_000e4c70(void *draw_state, void *cursor, int string_index)
-{
-  int16_t indent_delta;
+/* FUN_000e4c70 (0xe4c70) — XBE naked draft (batch 153). */
+#if defined(__clang__)
+static void (*const be4c70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const be4c70_c19b5d0)(int width, int height) = draw_string_set_indents;
+static void (*const be4c70_c19cdb0)(short *out_rect, void *text, short *out_bounds, short *in_rect) = FUN_0019cdb0;
+static void (*const be4c70_c184060)(void *screen_pos, short *bounds, const void *color, int flags, unsigned short *text) = rasterizer_draw_string;
 
-  indent_delta = *(int16_t *)((char *)draw_state + 2) -
-                 *(int16_t *)((char *)cursor + 2);
-  if (indent_delta < 0) {
-    error(2, (char *)0x2835f0);
-    indent_delta = 0;
-  }
-  draw_string_set_indents(0, indent_delta);
-  FUN_0019cdb0((short *)draw_state, cursor, (short *)draw_state,
-               (short *)draw_state);
-  *(int16_t *)((char *)draw_state + 2) -= 3;
-  rasterizer_draw_string(cursor, (short *)draw_state, 0, 0,
-                         (unsigned short *)string_index);
-  *(int16_t *)cursor = *(int16_t *)draw_state;
+__attribute__((naked, noinline))
+void FUN_000e4c70(void *draw_state __attribute__((unused)), void *cursor __attribute__((unused)), int string_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x2(%%edi), %%si\n\t"
+      "subw 0x2(%%ebx), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jge .LFUN_000e4c70_1\n\t"
+      "pushl $0x2835f0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%si, %%si\n\t"
+      "jge .LFUN_000e4c70_1\n\t"
+      "xorl %%esi, %%esi\n\t"
+      ".LFUN_000e4c70_1:\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c19b5d0]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c19cdb0]\n\t"
+      "addw $-3, 0x2(%%edi)\n\t"
+      "movw 0x2(%%ebx), %%cx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "leal -0x8(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "movw %%cx, -0x6(%%ebp)\n\t"
+      "call *%[c184060]\n\t"
+      "movw (%%edi), %%ax\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "movw %%ax, (%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8f390] "m"(be4c70_c8f390), [c19b5d0] "m"(be4c70_c19b5d0), [c19cdb0] "m"(be4c70_c19cdb0), [c184060] "m"(be4c70_c184060)
+      : "memory");
 }
+#else
+#error "FUN_000e4c70: clang naked draft required"
+#endif
+
 
 char ui_widget_match_localized_substring(wchar_t *text)
 {
@@ -2544,32 +2678,69 @@ void ui_widgets_pop_stack(int16_t player_index)
     ui_widget_pending_load_pop(head, &pending);
 }
 
-void main_screen_shell_begin_fade(int fade_duration)
-{
-  int *slot;
-  void *widget;
-  void *pool;
-  int tick_now;
+/* main_screen_shell_begin_fade (0xe5a40) — XBE naked draft (batch 152). */
+#if defined(__clang__)
+static void (*const be5a40_ce4640)(void) = ui_widget_stop_attract_mode;
+static void (*const be5a40_c11f620)(void *pool, void *block) = stack_memory_pool_deallocate;
 
-  ui_widget_stop_attract_mode();
-  slot = (int *)0x46cc20;
-  tick_now = *(int *)0x46cc40;
-  while ((int)slot < 0x46cc30) {
-    widget = (void *)*slot;
-    if (widget != NULL && *((char *)widget + 0x15) == 0) {
-      *(int *)((char *)widget + 0x20) = fade_duration;
-      *(int *)((char *)widget + 0x1c) =
-        tick_now - *(int *)((char *)widget + 0x18) + 0x64;
-      while (slot[4] != 0) {
-        pool = *(void **)0x31e04c;
-        widget = (void *)slot[4];
-        slot[4] = *(int *)(widget + 0xc);
-        stack_memory_pool_deallocate(pool, widget);
-      }
-    }
-    slot++;
-  }
+__attribute__((naked, noinline))
+void main_screen_shell_begin_fade(int fade_duration __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[ce4640]\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl $0x46cc20, %%esi\n\t"
+      ".Lmain_screen_shell_begin_fade_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lmain_screen_shell_begin_fade_3\n\t"
+      "movb 0x15(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lmain_screen_shell_begin_fade_3\n\t"
+      "movl %%edi, 0x20(%%eax)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "movl 0x18(%%eax), %%edx\n\t"
+      "movl 0x46cc40, %%ecx\n\t"
+      "subl %%edx, %%ecx\n\t"
+      "addl $0x64, %%ecx\n\t"
+      "movl %%ecx, 0x1c(%%eax)\n\t"
+      "movl 0x10(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lmain_screen_shell_begin_fade_3\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lmain_screen_shell_begin_fade_3\n\t"
+      ".Lmain_screen_shell_begin_fade_2:\n\t"
+      "movl 0x10(%%esi), %%eax\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x31e04c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edx, 0x10(%%esi)\n\t"
+      "call *%[c11f620]\n\t"
+      "movl 0x10(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lmain_screen_shell_begin_fade_2\n\t"
+      ".Lmain_screen_shell_begin_fade_3:\n\t"
+      "addl $4, %%esi\n\t"
+      "cmpl $0x46cc30, %%esi\n\t"
+      "jl .Lmain_screen_shell_begin_fade_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ce4640] "m"(be5a40_ce4640), [c11f620] "m"(be5a40_c11f620)
+      : "memory");
 }
+#else
+#error "main_screen_shell_begin_fade: clang naked draft required"
+#endif
+
 
 void ui_play_audio_feedback_sound(int16_t sound_selector)
 {
@@ -2888,36 +3059,83 @@ char display_error_abort_to_dashboard(void *widget __attribute__((unused)), void
 #endif
 
 
+/* FUN_000E9D40 (0xe9d40) — XBE naked draft (batch 151). */
+#if defined(__clang__)
+static void (*const be9d40_c12a2a0)(void) = dispose_global_network_game_server;
+static void (*const be9d40_ce0960)(void) = player_ui_clear_multiplayer_variant;
+static void (*const be9d40_c12a150)(char accept) = network_game_set_accept_remote_connections;
+static void * (*const be9d40_c12a1d0)(void) = network_game_server_get;
+static void (*const be9d40_cae750)(void) = game_engine_playlist_initialize;
+static bool (*const be9d40_c12a890)(void) = FUN_0012a890;
+static void (*const be9d40_c12d690)(void *server, char flag) = network_game_server_pause_countdown;
+static void (*const be9d40_ca8a70)(void) = game_engine_playlist_begin;
+static void (*const be9d40_cfff70)(short param) = set_game_connection;
+static void * (*const be9d40_c12a240)(void) = network_game_client_get;
+static bool (*const be9d40_c12a250)(void) = FUN_0012a250;
+static void (*const be9d40_c12a1e0)(void) = dispose_global_network_game_client;
+static void (*const be9d40_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
 char FUN_000E9D40(void)
 {
-  char ok;
-
-  ok = 1;
-  dispose_global_network_game_server();
-  player_ui_clear_multiplayer_variant();
-  network_game_set_accept_remote_connections(1);
-  if (network_game_server_get() == NULL) {
-    game_engine_playlist_initialize();
-    ok = FUN_0012a890();
-    if (ok == 1) {
-      network_game_server_pause_countdown(network_game_server_get(), 1);
-      game_engine_playlist_begin();
-      set_game_connection(2);
-    }
-  }
-  if (ok != 0) {
-    if (network_game_client_get() == NULL)
-      ok = FUN_0012a250();
-  }
-  if (ok == 0) {
-    dispose_global_network_game_client();
-    dispose_global_network_game_server();
-    network_game_set_accept_remote_connections(0);
-    player_ui_clear_multiplayer_variant();
-    error(2, (char *)0x2828ac);
-  }
-  return ok;
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "movb $1, %%bl\n\t"
+      "call *%[c12a2a0]\n\t"
+      "call *%[ce0960]\n\t"
+      "pushl $1\n\t"
+      "call *%[c12a150]\n\t"
+      "addl $4, %%esp\n\t"
+      "call *%[c12a1d0]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000E9D40_2\n\t"
+      "call *%[cae750]\n\t"
+      "call *%[c12a890]\n\t"
+      "movb %%al, %%bl\n\t"
+      "cmpb $1, %%bl\n\t"
+      "jne .LFUN_000E9D40_1\n\t"
+      "pushl $1\n\t"
+      "call *%[c12a1d0]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c12d690]\n\t"
+      "call *%[ca8a70]\n\t"
+      "pushl $2\n\t"
+      "call *%[cfff70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000E9D40_1:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_000E9D40_4\n\t"
+      ".LFUN_000E9D40_2:\n\t"
+      "call *%[c12a240]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000E9D40_3\n\t"
+      "call *%[c12a250]\n\t"
+      "movb %%al, %%bl\n\t"
+      ".LFUN_000E9D40_3:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .LFUN_000E9D40_5\n\t"
+      ".LFUN_000E9D40_4:\n\t"
+      "call *%[c12a1e0]\n\t"
+      "call *%[c12a2a0]\n\t"
+      "pushl $0\n\t"
+      "call *%[c12a150]\n\t"
+      "call *%[ce0960]\n\t"
+      "pushl $0x2828ac\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000E9D40_5:\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c12a2a0] "m"(be9d40_c12a2a0), [ce0960] "m"(be9d40_ce0960), [c12a150] "m"(be9d40_c12a150), [c12a1d0] "m"(be9d40_c12a1d0), [cae750] "m"(be9d40_cae750), [c12a890] "m"(be9d40_c12a890), [c12d690] "m"(be9d40_c12d690), [ca8a70] "m"(be9d40_ca8a70), [cfff70] "m"(be9d40_cfff70), [c12a240] "m"(be9d40_c12a240), [c12a250] "m"(be9d40_c12a250), [c12a1e0] "m"(be9d40_c12a1e0), [c8f390] "m"(be9d40_c8f390)
+      : "memory");
 }
+#else
+#error "FUN_000E9D40: clang naked draft required"
+#endif
+
 
 char FUN_000e9fd0(void *widget)
 {
@@ -3153,29 +3371,84 @@ char FUN_000ecd50(void *widget __attribute__((unused)))
 #endif
 
 
-char playlist_profile_change_koth_rules(void *widget)
-{
-  void *buffer;
-  void *profile;
+/* playlist_profile_change_koth_rules (0xece10) — XBE naked draft (batch 147). */
+#if defined(__clang__)
+static void (*const bece10_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void (*const bece10_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bece10_exitfn)(int) = system_exit;
+static void * (*const bece10_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
+static wchar_t * (*const bece10_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
+static void (*const bece10_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
-  profile = *(void **)0x31e494;
-  if (*(int16_t *)((char *)widget + 0xe) != 1) {
-    display_assert((char *)0x287af0, (char *)0x2859a4, 0xad2, 1);
-    system_exit(-1);
-  }
-  if (profile == NULL) {
-    error(2, (char *)0x286550);
-    return 0;
-  }
-  buffer = ui_widget_realloc(*(int *)((char *)widget + 0x3c), 0x100,
-                             (char *)0x2859a4, 0xad6);
-  *(void **)((char *)widget + 0x3c) = buffer;
-  if (buffer == NULL)
-    return 1;
-  ustrncpy((wchar_t *)buffer, (wchar_t *)profile, 0x7f);
-  *(int16_t *)((char *)buffer + 0xfe) = 0;
-  return 1;
+__attribute__((naked, noinline))
+char playlist_profile_change_koth_rules(void *widget __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[ce0ec0]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl $1, %%ebx\n\t"
+      "cmpw %%bx, 0xe(%%esi)\n\t"
+      "movl %%eax, %%edi\n\t"
+      "je .Lplaylist_profile_change_koth_rules_1\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0xad2\n\t"
+      "pushl $0x2859a4\n\t"
+      "pushl $0x287af0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplaylist_profile_change_koth_rules_1:\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Lplaylist_profile_change_koth_rules_3\n\t"
+      "movl 0x3c(%%esi), %%eax\n\t"
+      "pushl $0xad6\n\t"
+      "pushl $0x2859a4\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ce3d20]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x3c(%%esi)\n\t"
+      "je .Lplaylist_profile_change_koth_rules_2\n\t"
+      "pushl $0x7f\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19dc90]\n\t"
+      "movl 0x3c(%%esi), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw $0, 0xfe(%%ecx)\n\t"
+      ".Lplaylist_profile_change_koth_rules_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplaylist_profile_change_koth_rules_3:\n\t"
+      "pushl $0x286550\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ce0ec0] "m"(bece10_ce0ec0), [assert] "m"(bece10_assert), [exitfn] "m"(bece10_exitfn), [ce3d20] "m"(bece10_ce3d20), [c19dc90] "m"(bece10_c19dc90), [c8f390] "m"(bece10_c8f390)
+      : "memory");
 }
+#else
+#error "playlist_profile_change_koth_rules: clang naked draft required"
+#endif
+
 
 /* FUN_000ea010 (0xea010) — XBE naked draft (batch 135). */
 #if defined(__clang__)
@@ -11092,24 +11365,70 @@ void *ui_widget_get_last_child(void *widget)
   return NULL;
 }
 
-/* 0xe46f0 */
-void ui_widget_pending_load_push_internal(int *head, void *record)
+/* ui_widget_pending_load_push_internal (0xe46f0) — XBE naked draft (batch 153). */
+#if defined(__clang__)
+static void * (*const be46f0_c11fa40)(void *pool, int size, const char *file, unsigned int line) = stack_memory_pool_allocate;
+static void (*const be46f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be46f0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void ui_widget_pending_load_push_internal(int *head __attribute__((unused)), void *record __attribute__((unused)))
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-
-  stack_memory_pool_allocate((void *)(uintptr_t)eax, 16, (char *)0x00283280, 2532);
-  /* test edi, edi -> jne 0xe4735 */
-  display_assert((char *)0x00283560, (char *)0x00283280, 2534, 0);
-  system_exit(0);
-  /* test esi, esi -> je 0xe4754 */
-  display_assert((char *)0x0028352c, (char *)0x00283280, 2544, 0);
-
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "movl 0x31e04c, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x9e4\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c11fa40]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "je .Lui_widget_pending_load_push_internal_1\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lui_widget_pending_load_push_internal_2\n\t"
+      ".Lui_widget_pending_load_push_internal_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9e6\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x283560\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lui_widget_pending_load_push_internal_2:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lui_widget_pending_load_push_internal_3\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl 0x4(%%edi), %%eax\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%edi), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl %%eax, 0xc(%%esi)\n\t"
+      "movl %%esi, (%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".Lui_widget_pending_load_push_internal_3:\n\t"
+      "pushl $0\n\t"
+      "pushl $0x9f0\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x28352c\n\t"
+      "call *%[assert]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c11fa40] "m"(be46f0_c11fa40), [assert] "m"(be46f0_assert), [exitfn] "m"(be46f0_exitfn)
+      : "memory");
 }
+#else
+#error "ui_widget_pending_load_push_internal: clang naked draft required"
+#endif
+
 
 /* ui_widget_pending_load_pop (0xe4770) — XBE naked draft (batch 145). */
 #if defined(__clang__)

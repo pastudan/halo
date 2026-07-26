@@ -998,37 +998,78 @@ char actor_action_can_stop_guarding(int actor_handle, short min_state,
   return 1;
 }
 
-/* actor_action_can_stop_conversing (0x1cfa0) — Check whether an actor may stop
- * its current conversation. Returns 1 if not in a conversation, or if the
- * conversation's flags permit stopping based on the actor's state. */
-int actor_action_can_stop_conversing(int actor_handle, int flag)
+/* actor_action_can_stop_conversing (0x1cfa0) — XBE naked draft (batch 149). */
+#if defined(__clang__)
+static void *(*const b1cfa0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static scenario_t * (*const b1cfa0_c18e380)(void) = global_scenario_get;
+static void *(*const b1cfa0_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+int actor_action_can_stop_conversing(int actor_handle __attribute__((unused)), int flag __attribute__((unused)))
 {
-  char *actor;
-  char *conv;
-  char *elem;
-  int16_t flags;
-
-  (void)flag;
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(int *)(actor + 0x1dc) == -1) {
-    return 1;
-  }
-  conv = (char *)datum_get(*(data_t **)0x6324ec, *(int *)(actor + 0x1dc));
-  elem = (char *)tag_block_get_element((char *)global_scenario_get() + 0x468,
-                                       (int)*(int16_t *)(conv + 2), 0x74);
-  flags = *(int16_t *)(elem + 0x20);
-  if ((flags & 2) != 0 && *(char *)(actor + 0x1f6) != '\0') {
-    return 1;
-  }
-  if ((flags & 4) != 0 && *(int16_t *)(actor + 0x268) > 8) {
-    return 1;
-  }
-  if ((flags & 8) != 0 && *(int16_t *)(actor + 0x268) > 5) {
-    return 1;
-  }
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x1dc(%%esi), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "movb $1, %%al\n\t"
+      "je .Lactor_action_can_stop_conversing_5\n\t"
+      "movl 0x6324ec, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movswl 0x2(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl $0x74\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x468, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movw 0x20(%%eax), %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb $2, %%al\n\t"
+      "je .Lactor_action_can_stop_conversing_2\n\t"
+      "movb 0x1f6(%%esi), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_action_can_stop_conversing_2\n\t"
+      ".Lactor_action_can_stop_conversing_1:\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_can_stop_conversing_2:\n\t"
+      "testb $4, %%al\n\t"
+      "je .Lactor_action_can_stop_conversing_3\n\t"
+      "cmpw $9, 0x268(%%esi)\n\t"
+      "jge .Lactor_action_can_stop_conversing_1\n\t"
+      ".Lactor_action_can_stop_conversing_3:\n\t"
+      "testb $8, %%al\n\t"
+      "je .Lactor_action_can_stop_conversing_4\n\t"
+      "cmpw $6, 0x268(%%esi)\n\t"
+      "jge .Lactor_action_can_stop_conversing_1\n\t"
+      ".Lactor_action_can_stop_conversing_4:\n\t"
+      "xorb %%al, %%al\n\t"
+      ".Lactor_action_can_stop_conversing_5:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1cfa0_dget), [c18e380] "m"(b1cfa0_c18e380), [elem] "m"(b1cfa0_elem)
+      : "memory");
 }
+#else
+#error "actor_action_can_stop_conversing: clang naked draft required"
+#endif
+
 
 /* actor_action_change (0x1d030) — actor_set_action
  *
@@ -2107,33 +2148,73 @@ char actor_action_handle_active_cover_seeking(int actor_handle, char param2,
   return result;
 }
 
-/* actor_action_handle_done_fleeing (0x1f6e0)
- * Handles the transition when an actor finishes fleeing (action type 4).
- * If the actor's current action is type 4 and the flag at actor+0xab is set,
- * calls FUN_00016210 to build a new action buffer from actor+0x9c, then
- * changes to action type 6. Asserts on FUN_00016210 failure. Returns 1 if
- * the transition was performed, 0 otherwise. */
-char actor_action_handle_done_fleeing(int actor_handle)
-{
-  char *actor;
-  char cVar1;
-  short action_buf[66];
+/* actor_action_handle_done_fleeing (0x1f6e0) — XBE naked draft (batch 151). */
+#if defined(__clang__)
+static void *(*const b1f6e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char (*const b1f6e0_c16210)(int actor_handle, int param_2, short *param_3) = FUN_00016210;
+static void (*const b1f6e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1f6e0_exitfn)(int) = system_exit;
+static void (*const b1f6e0_c1d030)(int actor_handle, int new_action_type, int param_3) = actor_action_change;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(short *)(actor + 0x6c) != 4) {
-    return 0;
-  }
-  if (*(char *)(actor + 0xab) == '\0') {
-    return 0;
-  }
-  cVar1 = FUN_00016210(actor_handle, (int)(actor + 0x9c), action_buf);
-  if (cVar1 == '\0') {
-    display_assert("success", "c:\\halo\\SOURCE\\ai\\actions.c", 0xa79, 1);
-    system_exit(-1);
-  }
-  actor_action_change(actor_handle, 6, (int)action_buf);
-  return 1;
+__attribute__((naked, noinline))
+char actor_action_handle_done_fleeing(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x84, %%esp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "cmpw $4, 0x6c(%%ecx)\n\t"
+      "jne .Lactor_action_handle_done_fleeing_2\n\t"
+      "movb 0xab(%%ecx), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "je .Lactor_action_handle_done_fleeing_2\n\t"
+      "leal -0x84(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x9c, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c16210]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_action_handle_done_fleeing_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa79\n\t"
+      "pushl $0x2544b0\n\t"
+      "pushl $0x254818\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_action_handle_done_fleeing_1:\n\t"
+      "leal -0x84(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $6\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d030]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      ".Lactor_action_handle_done_fleeing_2:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1f6e0_dget), [c16210] "m"(b1f6e0_c16210), [assert] "m"(b1f6e0_assert), [exitfn] "m"(b1f6e0_exitfn), [c1d030] "m"(b1f6e0_c1d030)
+      : "memory");
 }
+#else
+#error "actor_action_handle_done_fleeing: clang naked draft required"
+#endif
+
 
 /* actor_action_handle_combat_failure (0x1f920) — XBE naked draft (batch 94). */
 #if defined(__clang__)

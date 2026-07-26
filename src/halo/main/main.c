@@ -2965,24 +2965,79 @@ void ui_widget_display_deferred_errors(void)
 bool cache_files_give_time_to_precache(const char *name);
 void main_menu_active(char active);
 
-char gamepad_button_is_down(int16_t button)
+/* gamepad_button_is_down (0xffef0) — XBE naked draft (batch 149). */
+#if defined(__clang__)
+static void (*const bffef0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bffef0_exitfn)(int) = system_exit;
+static bool (*const bffef0_ccf6c0)(int16_t gamepad_index) = input_has_gamepad;
+static void * (*const bffef0_ccf710)(int gamepad_index) = input_get_gamepad_state;
+
+__attribute__((naked, noinline))
+char gamepad_button_is_down(int16_t button __attribute__((unused)))
 {
-  if (button < 0 || button >= 0x10) {
-    display_assert((char *)0x28b078, "c:\\halo\\SOURCE\\main\\main.c", 0xf5, 1);
-    system_exit(-1);
-  }
-  {
-    int i;
-    for (i = 0; i < 4; i++) {
-      if (input_has_gamepad((int16_t)i)) {
-        void *state = input_get_gamepad_state(i);
-        if ((char)*((char *)state + 0x10 + button) > 0)
-          return 1;
-      }
-    }
-  }
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movw 0x8(%%ebp), %%di\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Lgamepad_button_is_down_1\n\t"
+      "cmpw $0x10, %%di\n\t"
+      "jl .Lgamepad_button_is_down_2\n\t"
+      ".Lgamepad_button_is_down_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf5\n\t"
+      "pushl $0x28b0b4\n\t"
+      "pushl $0x28b078\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lgamepad_button_is_down_2:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lgamepad_button_is_down_3:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccf6c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lgamepad_button_is_down_5\n\t"
+      "incl %%esi\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lgamepad_button_is_down_3\n\t"
+      ".Lgamepad_button_is_down_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgamepad_button_is_down_5:\n\t"
+      "cmpw $4, %%si\n\t"
+      "jge .Lgamepad_button_is_down_4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccf710]\n\t"
+      "addl $4, %%esp\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "movb 0x10(%%ecx,%%eax,1), %%dl\n\t"
+      "popl %%edi\n\t"
+      "testb %%dl, %%dl\n\t"
+      "popl %%esi\n\t"
+      "seta %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bffef0_assert), [exitfn] "m"(bffef0_exitfn), [ccf6c0] "m"(bffef0_ccf6c0), [ccf710] "m"(bffef0_ccf710)
+      : "memory");
 }
+#else
+#error "gamepad_button_is_down: clang naked draft required"
+#endif
+
 
 void main_disallow_persistent_storage(void)
 {
@@ -3394,29 +3449,74 @@ void main_roll_credits(void)
   FUN_000dc110();
 }
 
-void FUN_001008a0(int num_players /* @<ebx> */, int *horizontal_out,
-                  int *vertical_out)
-{
-  int horizontal = 1;
-  int vertical = 1;
+/* FUN_001008a0 (0x1008a0) — XBE naked draft (batch 150). */
+#if defined(__clang__)
+static void (*const b1008a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1008a0_exitfn)(int) = system_exit;
 
-  if (num_players <= 0) {
-    display_assert((char *)0x28b294, "c:\\halo\\SOURCE\\main\\main.c", 0x51c, 1);
-    system_exit(-1);
-  }
-  if (num_players > 1) {
-    while (vertical * horizontal < num_players) {
-      if (horizontal < vertical)
-        horizontal++;
-      else {
-        horizontal = 1;
-        vertical++;
-      }
-    }
-  }
-  *horizontal_out = horizontal;
-  *vertical_out = vertical;
+__attribute__((naked, noinline))
+void FUN_001008a0(int num_players __attribute__((unused)), int *horizontal_out __attribute__((unused)), int *vertical_out __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl $1, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%esi, %%edi\n\t"
+      "jg .LFUN_001008a0_1\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x51c\n\t"
+      "pushl $0x28b0b4\n\t"
+      "pushl $0x28b294\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001008a0_1:\n\t"
+      "cmpl $1, %%ebx\n\t"
+      "jle .LFUN_001008a0_5\n\t"
+      ".LFUN_001008a0_2:\n\t"
+      "cmpl %%edi, %%esi\n\t"
+      "setl %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001008a0_3\n\t"
+      "incl %%esi\n\t"
+      "jmp .LFUN_001008a0_4\n\t"
+      ".LFUN_001008a0_3:\n\t"
+      "movl $1, %%esi\n\t"
+      "incl %%edi\n\t"
+      ".LFUN_001008a0_4:\n\t"
+      "movl %%edi, %%eax\n\t"
+      "imull %%esi, %%eax\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "jl .LFUN_001008a0_2\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl %%esi, (%%ecx)\n\t"
+      "movl %%edi, (%%edx)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001008a0_5:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl %%esi, (%%eax)\n\t"
+      "movl %%edi, (%%ecx)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1008a0_assert), [exitfn] "m"(b1008a0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_001008a0: clang naked draft required"
+#endif
+
 
 /* main_movie_start (0x101bc0) — XBE naked draft (batch 143). */
 #if defined(__clang__)

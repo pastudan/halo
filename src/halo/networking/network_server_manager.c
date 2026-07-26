@@ -3400,181 +3400,470 @@ void *FUN_0012eef0(void)
   return (void *)server;
 }
 
-/* Handle game-start request from client (0x12f040).
- * Checks pregame state, decodes, then triggers countdown update. */
-bool FUN_0012f040(int server, int machine, void *message_data, int message_size)
+/* FUN_0012f040 (0x12f040) — XBE naked draft (batch 148). */
+#if defined(__clang__)
+static short (*const b12f040_c12c020)(int param_1, short *param_2) = network_game_server_get_state;
+static bool (*const b12f040_c12bce0)(int param_1, int param_2, short *param_3, short *param_4, short *param_5, int param_6) = FUN_0012bce0;
+static void (*const b12f040_c12e3a0)(void *server, short param_2) = network_game_server_update_countdown;
+static void (*const b12f040_c12b650)(const char *fmt, ...) = network_game_log;
+
+__attribute__((naked, noinline))
+bool FUN_0012f040(int server __attribute__((unused)), int machine __attribute__((unused)), void *message_data __attribute__((unused)), int message_size __attribute__((unused)))
 {
-  int s = server;
-  char decoded_buf[4];
-  short packet_type;
-  short packet_version;
-
-  if (network_game_server_get_state(s, (short *)0) != 0) {
-    network_game_log(
-      "failed to handle a message_client_game_start_request because the "
-      "server is not in pregame");
-    return true;
-  }
-  message_size -= 2;
-  packet_type = 0x10;
-  packet_version = 1;
-  if (FUN_0012bce0((int)decoded_buf, (int)((char *)message_data + 2),
-                   (short *)&message_size, &packet_type, &packet_version, 3)) {
-    network_game_server_update_countdown((void *)s, *(short *)decoded_buf);
-    return true;
-  }
-  network_game_log(
-    "server failed to decode a message_client_game_start_request packet");
-  return true;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c12c020]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .LFUN_0012f040_2\n\t"
+      "subl $2, 0x10(%%ebp)\n\t"
+      "pushl $3\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl $2, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0x10, -0x8(%%ebp)\n\t"
+      "movl $1, -0x4(%%ebp)\n\t"
+      "call *%[c12bce0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0012f040_1\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c12e3a0]\n\t"
+      "addl $8, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f040_1:\n\t"
+      "pushl $0x298a30\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f040_2:\n\t"
+      "pushl $0x2989d0\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c12c020] "m"(b12f040_c12c020), [c12bce0] "m"(b12f040_c12bce0), [c12e3a0] "m"(b12f040_c12e3a0), [c12b650] "m"(b12f040_c12b650)
+      : "memory");
 }
+#else
+#error "FUN_0012f040: clang naked draft required"
+#endif
 
-/* Handle map-precached notification from client (0x12f0d0). */
-bool FUN_0012f0d0(int server, int machine, void *message_data, int message_size)
+
+/* FUN_0012f0d0 (0x12f0d0) — XBE naked draft (batch 147). */
+#if defined(__clang__)
+static short (*const b12f0d0_c12c020)(int param_1, short *param_2) = network_game_server_get_state;
+static bool (*const b12f0d0_c12bce0)(int param_1, int param_2, short *param_3, short *param_4, short *param_5, int param_6) = FUN_0012bce0;
+static void (*const b12f0d0_c12cbe0)(int param_1, int param_2, int param_3) = network_game_server_client_machine_is_precached;
+static void (*const b12f0d0_c12b650)(const char *fmt, ...) = network_game_log;
+
+__attribute__((naked, noinline))
+bool FUN_0012f0d0(int server __attribute__((unused)), int machine __attribute__((unused)), void *message_data __attribute__((unused)), int message_size __attribute__((unused)))
 {
-  char decoded_buf[256];
-  short packet_type;
-  short packet_version;
-
-  if (network_game_server_get_state(server, (short *)0) != 0) {
-    network_game_log(
-      "failed to handle a message_type_client_map_is_precached_pregame "
-      "because the server is not in pregame");
-    return true;
-  }
-  message_size -= 2;
-  packet_type = 0x13;
-  packet_version = 1;
-  if (FUN_0012bce0((int)decoded_buf, (int)((char *)message_data + 2),
-                   (short *)&message_size, &packet_type, &packet_version, 3)) {
-    network_game_server_client_machine_is_precached((int)server, machine,
-                                                    (int)decoded_buf);
-    return true;
-  }
-  network_game_log(
-    "server failed to decode a message_type_client_map_is_precached_pregame "
-    "packet");
-  return true;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x108, %%esp\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c12c020]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .LFUN_0012f0d0_2\n\t"
+      "subl $2, 0x10(%%ebp)\n\t"
+      "pushl $3\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl $2, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x108(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0x13, -0x4(%%ebp)\n\t"
+      "movl $1, -0x8(%%ebp)\n\t"
+      "call *%[c12bce0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0012f0d0_1\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "leal -0x108(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c12cbe0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f0d0_1:\n\t"
+      "pushl $0x298ae0\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f0d0_2:\n\t"
+      "pushl $0x298a78\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c12c020] "m"(b12f0d0_c12c020), [c12bce0] "m"(b12f0d0_c12bce0), [c12cbe0] "m"(b12f0d0_c12cbe0), [c12b650] "m"(b12f0d0_c12b650)
+      : "memory");
 }
+#else
+#error "FUN_0012f0d0: clang naked draft required"
+#endif
 
-/* Handle client-loaded notification from client (0x12f170). */
-bool FUN_0012f170(int server, int machine, void *message_data, int message_size)
+
+/* FUN_0012f170 (0x12f170) — XBE naked draft (batch 146). */
+#if defined(__clang__)
+static short (*const b12f170_c12c020)(int param_1, short *param_2) = network_game_server_get_state;
+static bool (*const b12f170_c12bce0)(int param_1, int param_2, short *param_3, short *param_4, short *param_5, int param_6) = FUN_0012bce0;
+static void (*const b12f170_c12cb20)(void *server, void *machine) = network_game_server_client_machine_game_loading_completed;
+static void (*const b12f170_c12b650)(const char *fmt, ...) = network_game_log;
+
+__attribute__((naked, noinline))
+bool FUN_0012f170(int server __attribute__((unused)), int machine __attribute__((unused)), void *message_data __attribute__((unused)), int message_size __attribute__((unused)))
 {
-  char decoded_buf[4];
-  short packet_type;
-  short packet_version;
-
-  if (network_game_server_get_state(server, (short *)0) != 0) {
-    network_game_log(
-      "failed to handle a message_client_loaded message because the server is "
-      "not in pregame");
-    return false;
-  }
-  message_size -= 2;
-  packet_type = 0x18;
-  packet_version = 1;
-  if (FUN_0012bce0((int)decoded_buf, (int)((char *)message_data + 2),
-                   (short *)&message_size, &packet_type, &packet_version, 5)) {
-    network_game_server_client_machine_game_loading_completed((void *)server,
-                                                              (void *)machine);
-    return true;
-  }
-  network_game_log("server failed to decode a message_client_loaded packet");
-  return false;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "movl $1, %%ebx\n\t"
+      "call *%[c12c020]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .LFUN_0012f170_2\n\t"
+      "subl $2, 0x10(%%ebp)\n\t"
+      "pushl $5\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl $2, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0x18, -0x8(%%ebp)\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "call *%[c12bce0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0012f170_1\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c12cb20]\n\t"
+      "addl $8, %%esp\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f170_1:\n\t"
+      "pushl $0x298b88\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f170_2:\n\t"
+      "pushl $0x298b30\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c12c020] "m"(b12f170_c12c020), [c12bce0] "m"(b12f170_c12bce0), [c12cb20] "m"(b12f170_c12cb20), [c12b650] "m"(b12f170_c12b650)
+      : "memory");
 }
+#else
+#error "FUN_0012f170: clang naked draft required"
+#endif
 
-/* Handle add-player request ingame (0x12f200). */
-bool FUN_0012f200(int server, int machine, void *message_data, int message_size)
+
+/* FUN_0012f200 (0x12f200) — XBE naked draft (batch 148). */
+#if defined(__clang__)
+static short (*const b12f200_c12c020)(int param_1, short *param_2) = network_game_server_get_state;
+static bool (*const b12f200_c12bce0)(int param_1, int param_2, short *param_3, short *param_4, short *param_5, int param_6) = FUN_0012bce0;
+static void (*const b12f200_c12cf60)(int param_1, int param_2) = network_game_server_queue_player_for_addition;
+static void (*const b12f200_c12b650)(const char *fmt, ...) = network_game_log;
+
+__attribute__((naked, noinline))
+bool FUN_0012f200(int server __attribute__((unused)), int machine __attribute__((unused)), void *message_data __attribute__((unused)), int message_size __attribute__((unused)))
 {
-  char decoded_buf[32];
-  short packet_type;
-  short packet_version;
-
-  if (network_game_server_get_state(server, (short *)0) != 1) {
-    network_game_log(
-      "failed to handle a message_client_add_player_request_ingame because "
-      "the server is not in game");
-    return true;
-  }
-  message_size -= 2;
-  packet_type = 0x1a;
-  packet_version = 1;
-  if (FUN_0012bce0((int)decoded_buf, (int)((char *)message_data + 2),
-                   (short *)&message_size, &packet_type, &packet_version, 5)) {
-    network_game_server_queue_player_for_addition(server, (int)decoded_buf);
-    return true;
-  }
-  network_game_log(
-    "server failed to decode a message_client_add_player_request_ingame "
-    "packet");
-  return true;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x28, %%esp\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c12c020]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .LFUN_0012f200_2\n\t"
+      "subl $2, 0x10(%%ebp)\n\t"
+      "pushl $5\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl $2, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0x1a, -0x8(%%ebp)\n\t"
+      "movl $1, -0x4(%%ebp)\n\t"
+      "call *%[c12bce0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0012f200_1\n\t"
+      "leal -0x28(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c12cf60]\n\t"
+      "addl $8, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f200_1:\n\t"
+      "pushl $0x298c20\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f200_2:\n\t"
+      "pushl $0x298bc0\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c12c020] "m"(b12f200_c12c020), [c12bce0] "m"(b12f200_c12bce0), [c12cf60] "m"(b12f200_c12cf60), [c12b650] "m"(b12f200_c12b650)
+      : "memory");
 }
+#else
+#error "FUN_0012f200: clang naked draft required"
+#endif
 
-/* Handle remove-player request postgame (0x12f290). */
-bool FUN_0012f290(int server, int machine, void *message_data, int message_size)
+
+/* FUN_0012f290 (0x12f290) — XBE naked draft (batch 146). */
+#if defined(__clang__)
+static short (*const b12f290_c12c020)(int param_1, short *param_2) = network_game_server_get_state;
+static bool (*const b12f290_c12bce0)(int param_1, int param_2, short *param_3, short *param_4, short *param_5, int param_6) = FUN_0012bce0;
+static char (*const b12f290_c12c920)(int param_1, int param_2, int param_3) = network_game_server_remove_player_from_game;
+static void (*const b12f290_c12b650)(const char *fmt, ...) = network_game_log;
+
+__attribute__((naked, noinline))
+bool FUN_0012f290(int server __attribute__((unused)), int machine __attribute__((unused)), void *message_data __attribute__((unused)), int message_size __attribute__((unused)))
 {
-  char decoded_buf[32];
-  short packet_type;
-  short packet_version;
-
-  if (network_game_server_get_state(server, (short *)0) != 2) {
-    network_game_log(
-      "failed to handle a message_client_remove_player_request_postgame "
-      "because the server is not in post-game");
-    return true;
-  }
-  message_size -= 2;
-  packet_type = 0x20;
-  packet_version = 1;
-  if (FUN_0012bce0((int)decoded_buf, (int)((char *)message_data + 2),
-                   (short *)&message_size, &packet_type, &packet_version, 7)) {
-    if (!network_game_server_remove_player_from_game(server, machine,
-                                                     (int)decoded_buf))
-      network_game_log("server failed to remove a network player post-game");
-    return true;
-  }
-  network_game_log(
-    "server failed to decode a message_client_remove_player_request_postgame "
-    "packet");
-  return true;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x28, %%esp\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c12c020]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, %%ax\n\t"
+      "jne .LFUN_0012f290_2\n\t"
+      "subl $2, 0x10(%%ebp)\n\t"
+      "pushl $7\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl $2, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0x20, -0x8(%%ebp)\n\t"
+      "movl $1, -0x4(%%ebp)\n\t"
+      "call *%[c12bce0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0012f290_1\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "leal -0x28(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c12c920]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0012f290_3\n\t"
+      "pushl $0x298d28\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f290_1:\n\t"
+      "pushl $0x298cd8\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f290_2:\n\t"
+      "pushl $0x298c70\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_0012f290_3:\n\t"
+      "movb $1, %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c12c020] "m"(b12f290_c12c020), [c12bce0] "m"(b12f290_c12bce0), [c12c920] "m"(b12f290_c12c920), [c12b650] "m"(b12f290_c12b650)
+      : "memory");
 }
+#else
+#error "FUN_0012f290: clang naked draft required"
+#endif
 
-/* Handle client switch-to-pregame request (0x12f330). */
-char FUN_0012f330(int server, int machine, void *message_data, int message_size)
+
+/* FUN_0012f330 (0x12f330) — XBE naked draft (batch 146). */
+#if defined(__clang__)
+static short (*const b12f330_c12c020)(int param_1, short *param_2) = network_game_server_get_state;
+static bool (*const b12f330_c12bce0)(int param_1, int param_2, short *param_3, short *param_4, short *param_5, int param_6) = FUN_0012bce0;
+static int (*const b12f330_c12cd60)(int param_1, int param_2) = network_game_server_switch_machine_from_postgame_to_pregame;
+static void (*const b12f330_c12b650)(const char *fmt, ...) = network_game_log;
+
+__attribute__((naked, noinline))
+char FUN_0012f330(int server __attribute__((unused)), int machine __attribute__((unused)), void *message_data __attribute__((unused)), int message_size __attribute__((unused)))
 {
-  char decoded_buf[4];
-  short packet_type;
-  short packet_version;
-  char result;
-
-  result = 1;
-  if (network_game_server_get_state(server, (short *)0) == 2) {
-    message_size -= 2;
-    packet_type = 0x21;
-    packet_version = 1;
-    if (FUN_0012bce0((int)decoded_buf, (int)((char *)message_data + 2),
-                     (short *)&message_size, &packet_type, &packet_version,
-                     7)) {
-      result =
-        (char)network_game_server_switch_machine_from_postgame_to_pregame(
-          server, machine);
-      if (!result) {
-        network_game_log(
-          "network_game_server_switch_machine_from_postgame_to_pregame() "
-          "failed");
-        return result;
-      }
-    } else {
-      network_game_log(
-        "server failed to decode a message_client_remove_player_request_"
-        "postgame packet");
-    }
-  } else {
-    network_game_log(
-      "failed to handle a message_client_switch_to_pregame because the server "
-      "is not in post-game");
-  }
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "movl $1, %%ebx\n\t"
+      "call *%[c12c020]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, %%ax\n\t"
+      "jne .LFUN_0012f330_2\n\t"
+      "subl $2, 0x10(%%ebp)\n\t"
+      "pushl $7\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl $2, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0x21, -0x8(%%ebp)\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "call *%[c12bce0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0012f330_1\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c12cd60]\n\t"
+      "movb %%al, %%bl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .LFUN_0012f330_3\n\t"
+      "pushl $0x298dc0\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f330_1:\n\t"
+      "pushl $0x298cd8\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012f330_2:\n\t"
+      "pushl $0x298d60\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_0012f330_3:\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c12c020] "m"(b12f330_c12c020), [c12bce0] "m"(b12f330_c12bce0), [c12cd60] "m"(b12f330_c12cd60), [c12b650] "m"(b12f330_c12b650)
+      : "memory");
 }
+#else
+#error "FUN_0012f330: clang naked draft required"
+#endif
+
 
 /* Fastcall wrapper: write message via network_connection_write (0x12f3d0).
  * dest_address @<ecx>, size @<edx>, reliable @<eax>, stack: connection,

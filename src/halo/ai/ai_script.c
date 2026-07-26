@@ -1,20 +1,69 @@
 /* --- ai_script.obj batch drafts (2026-07-26) --- */
 
-/* 0x58cc0 */
-void ai_scripting_follow_distance(int a0, int a1, int a2)
+/* ai_scripting_follow_distance (0x58cc0) — XBE naked draft (batch 152). */
+#if defined(__clang__)
+static scenario_t * (*const b58cc0_c18e380)(void) = global_scenario_get;
+static void (*const b58cc0_c54220)(unsigned int combined_index, void *scenario, char *buffer, int buffer_size) = FUN_00054220;
+static const char * (*const b58cc0_ccb980)(void) = hs_runtime_get_executing_thread_name;
+static void (*const b58cc0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b58cc0_c58af0)(int actor_handle, int vehicle_handle, void *seat_list, char require_pilot) = FUN_00058af0;
+
+__attribute__((naked, noinline))
+void ai_scripting_follow_distance(int a0 __attribute__((unused)), int a1 __attribute__((unused)), int a2 __attribute__((unused)))
 {
-  int eax = 0;
-  int edi = 0;
-
-  global_scenario_get();
-  FUN_00054220(edi, (void *)(uintptr_t)eax, (char *)0, 0);
-  hs_runtime_get_executing_thread_name();
-  error(0, (char *)0x0025d1d0);
-  FUN_00058af0(0, 0, (void *)0, 0);
-
-  (void)eax;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x100, %%esp\n\t"
+      "movb 0x5aca59, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "je .Lai_scripting_follow_distance_1\n\t"
+      "leal -0x100(%%ebp), %%eax\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c54220]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "andl $0xffff, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x100(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[ccb980]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x25d1d0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".Lai_scripting_follow_distance_1:\n\t"
+      "pushl $1\n\t"
+      "pushl %%esi\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c58af0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(b58cc0_c18e380), [c54220] "m"(b58cc0_c54220), [ccb980] "m"(b58cc0_ccb980), [c8f390] "m"(b58cc0_c8f390), [c58af0] "m"(b58cc0_c58af0)
+      : "memory");
 }
+#else
+#error "ai_scripting_follow_distance: clang naked draft required"
+#endif
+
 
 /* FUN_00058d40 (0x58d40) — XBE naked draft (batch 124). */
 #if defined(__clang__)

@@ -1370,21 +1370,75 @@ char FUN_0005ef80(unsigned int *path_buf __attribute__((unused)))
 #endif
 
 
-/* 0x5f1d0 */
+/* FUN_0005f1d0 (0x5f1d0) — XBE naked draft (batch 148). */
+#if defined(__clang__)
+static void *(*const b5f1d0_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b5f1d0_c147ae0)(int bsp, int surface_index, int projection, int sign, float *point, float *out_point) = collision_surface_find_closest_point2d;
+static int (*const b5f1d0_c147990)(int bsp, int surface_index, int projection, int sign, float *point, float *out_point) = collision_surface_project_point2d;
+
+__attribute__((naked, noinline))
 void FUN_0005f1d0(void)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  collision_surface_find_closest_point2d(eax, 0, 2, 1, (float *)(uintptr_t)edi, (void *)0);
-  collision_surface_project_point2d(eax, 0, 2, 1, (void *)0, (float *)(uintptr_t)esi);
-
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x60\n\t"
+      "addl $0xb0, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "pushl $2\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c147ae0]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl $2\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c147990]\n\t"
+      "flds (%%esi)\n\t"
+      "fsubs (%%edi)\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "popl %%ebx\n\t"
+      "fsubs 0x4(%%edi)\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fsubs 0x8(%%edi)\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xde, 0xcb\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      ".byte 0xde, 0xc3\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      ".byte 0xde, 0xc3\n\t"
+      "fxch %%st(2)\n\t"
+      "fsqrt\n\t"
+      "fstp %%st(2)\n\t"
+      "fstp %%st(0)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b5f1d0_elem), [c147ae0] "m"(b5f1d0_c147ae0), [c147990] "m"(b5f1d0_c147990)
+      : "memory");
 }
+#else
+#error "FUN_0005f1d0: clang naked draft required"
+#endif
+
 
 /* build_path_edges_for_surface (0x5f240) — XBE naked draft (batch 83). */
 #if defined(__clang__)

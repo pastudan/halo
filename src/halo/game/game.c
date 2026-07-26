@@ -1162,26 +1162,64 @@ float FUN_000b55b0(short value_type, int team)
 }
 /* --- game.obj batch drafts (2026-07-26) --- */
 
-/* 0xb40f0 */
+/* race_team_can_win_game (0xb40f0) — XBE naked draft (batch 148). */
+#if defined(__clang__)
+static void *(*const bb40f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bb40f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb40f0_exitfn)(int) = system_exit;
+static char (*const bb40f0_cb3b30)(int flag_index, int param_1) = FUN_000b3b30;
+
+__attribute__((naked, noinline))
 void race_team_can_win_game(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* test edx, ecx -> jne 0xb4145 */
-  display_assert((char *)0x0026db24, (char *)0x0026d8f4, 1062, 0);
-  system_exit(0);
-  /* test edx, esi -> je 0xb4161 */
-  /* cmp ecx, 0x20 -> jl 0xb4155 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movl 0x456f10, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testl %%ecx, %%edx\n\t"
+      "jne .Lrace_team_can_win_game_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x426\n\t"
+      "pushl $0x26d8f4\n\t"
+      "pushl $0x26db24\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrace_team_can_win_game_1:\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "jmp .Lrace_team_can_win_game_10000\n\t"
+      ".Lrace_team_can_win_game_10000:\n\t"
+      "jmp *%[cb3b30]\n\t"
+      :
+      : [dget] "m"(bb40f0_dget), [assert] "m"(bb40f0_assert), [exitfn] "m"(bb40f0_exitfn), [cb3b30] "m"(bb40f0_cb3b30)
+      : "memory");
 }
+#else
+#error "race_team_can_win_game: clang naked draft required"
+#endif
+
 
 /* race_engine_update (0xb4300) — XBE naked draft (batch 137). */
 #if defined(__clang__)
@@ -2304,34 +2342,84 @@ void find_next_target(void)
 #endif
 
 
-/* 0xb4fb0 */
+/* FUN_000b4fb0 (0xb4fb0) — XBE naked draft (batch 146). */
+#if defined(__clang__)
+static void *(*const bb4fb0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bb4fb0_cb4bf0)(void) = FUN_000b4bf0;
+static void * (*const bb4fb0_ca9350)(void) = game_engine_get_variant;
+static void (*const bb4fb0_cb4e20)(void) = find_next_target;
+static void (*const bb4fb0_cb4d00)(void) = FUN_000b4d00;
+
+__attribute__((naked, noinline))
 void FUN_000b4fb0(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* test (char)ecx, (char)ecx -> jne 0xb5035 */
-  /* cmp esi, -1 -> je 0xb5033 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* test (char)eax, (char)eax -> jne 0xb5029 */
-  FUN_000b4bf0();
-  game_engine_get_variant();
-  /* test (char)ecx, (char)ecx -> je 0xb5018 */
-  /* relift: cmp dword ptr [ebx + 0x88], edi -> jne 0xb5033 */
-  find_next_target();
-  FUN_000b4d00();
-  FUN_000b4d00();
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movb 0xd1(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_000b4fb0_4\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_000b4fb0_3\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movb 0x14(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000b4fb0_2\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cb4bf0]\n\t"
+      "addl $8, %%esp\n\t"
+      "call *%[ca9350]\n\t"
+      "movb 0x4e(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_000b4fb0_1\n\t"
+      "cmpl %%edi, 0x88(%%ebx)\n\t"
+      "jne .LFUN_000b4fb0_3\n\t"
+      "movl %%esi, %%edi\n\t"
+      "call *%[cb4e20]\n\t"
+      ".LFUN_000b4fb0_1:\n\t"
+      "movl $1, %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[cb4d00]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000b4fb0_2:\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[cb4d00]\n\t"
+      ".LFUN_000b4fb0_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_000b4fb0_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bb4fb0_dget), [cb4bf0] "m"(bb4fb0_cb4bf0), [ca9350] "m"(bb4fb0_ca9350), [cb4e20] "m"(bb4fb0_cb4e20), [cb4d00] "m"(bb4fb0_cb4d00)
+      : "memory");
 }
+#else
+#error "FUN_000b4fb0: clang naked draft required"
+#endif
+
 
 /* FUN_000b5040 (0xb5040) — XBE naked draft (batch 117). */
 #if defined(__clang__)

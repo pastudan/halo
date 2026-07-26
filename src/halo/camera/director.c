@@ -661,32 +661,73 @@ void director_update(float delta_time)
 }
 /* --- director.obj batch drafts (2026-07-26) --- */
 
-/* 0x85a40 */
+/* FUN_00085a40 (0x85a40) — XBE naked draft (batch 151). */
+#if defined(__clang__)
+static void *(*const b85a40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b85a40_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b85a40_c119810)(data_iter_t *iterator) = data_iterator_next;
+
+__attribute__((naked, noinline))
 void FUN_00085a40(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  datum_get((void *)(uintptr_t)eax, 0);
-  data_iterator_new((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
-  data_iterator_next((void *)(uintptr_t)eax);
-  /* test eax, eax -> je 0x85a9a */
-  /* relift: cmp dword ptr [ebp - 8], edi -> je 0x85a8a */
-  /* relift: cmp dword ptr [eax + 0x20], esi -> je 0x85aa2 */
-  data_iterator_next((void *)(uintptr_t)ecx);
-  /* test eax, eax -> jne 0x85a80 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "movl 0x20(%%eax), %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00085a40_3\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00085a40_1:\n\t"
+      "cmpl %%edi, -0x8(%%ebp)\n\t"
+      "je .LFUN_00085a40_2\n\t"
+      "cmpl %%esi, 0x20(%%eax)\n\t"
+      "je .LFUN_00085a40_4\n\t"
+      ".LFUN_00085a40_2:\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00085a40_1\n\t"
+      ".LFUN_00085a40_3:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00085a40_4:\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b85a40_dget), [c1197b0] "m"(b85a40_c1197b0), [c119810] "m"(b85a40_c119810)
+      : "memory");
 }
+#else
+#error "FUN_00085a40: clang naked draft required"
+#endif
+
 
 /* FUN_00085ab0 (0x85ab0) — XBE naked draft (batch 138). */
 #if defined(__clang__)
@@ -1366,39 +1407,149 @@ void director_set_mode(void)
   (void)esi;
 }
 
-/* 0x86360 */
+/* director_save_camera (0x86360) — XBE naked draft (batch 146). */
+#if defined(__clang__)
+static void * (*const b86360_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
+static void * (*const b86360_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;
+static int (*const b86360_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
+static int (*const b86360_c1d9dac)(void *stream) = crt_fclose;
+
+__attribute__((naked, noinline))
 void director_save_camera(void)
 {
-  int edi = 0;
-
-  crt_fopen((char *)0x00267084, (char *)0x00265938);
-  /* test edi, edi -> je 0x8640a */
-  observer_get_camera(0);
-  crt_fprintf((void *)(uintptr_t)edi, (char *)0x00267078);
-  crt_fprintf((void *)(uintptr_t)edi, (char *)0x00267078);
-  crt_fprintf((void *)(uintptr_t)edi, (char *)0x00267078);
-  crt_fprintf((void *)(uintptr_t)edi, (char *)0x00267074);
-  crt_fclose((void *)(uintptr_t)edi);
-
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%edi\n\t"
+      "pushl $0x265938\n\t"
+      "pushl $0x267084\n\t"
+      "call *%[c1d9e59]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Ldirector_save_camera_1\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0\n\t"
+      "call *%[c8a4e0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "subl $0x14, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x267078\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d98ad]\n\t"
+      "flds 0x28(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x24(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x20(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x267078\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d98ad]\n\t"
+      "flds 0x34(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x30(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x2c(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x267078\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d98ad]\n\t"
+      "flds 0x38(%%esi)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x267074\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d98ad]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d9dac]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      ".Ldirector_save_camera_1:\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      :
+      : [c1d9e59] "m"(b86360_c1d9e59), [c8a4e0] "m"(b86360_c8a4e0), [c1d98ad] "m"(b86360_c1d98ad), [c1d9dac] "m"(b86360_c1d9dac)
+      : "memory");
 }
+#else
+#error "director_save_camera: clang naked draft required"
+#endif
 
-/* 0x86410 */
-int16_t director_get_perspective(int16_t local_player_index)
+
+/* director_get_perspective (0x86410) — XBE naked draft (batch 150). */
+#if defined(__clang__)
+static void (*const b86410_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b86410_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int16_t director_get_perspective(int16_t local_player_index __attribute__((unused)))
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x86423 */
-  /* cmp (int16_t)esi, 4 -> jl 0x86443 */
-  display_assert((char *)0x00266fc0, (char *)0x0026700c, 179, 0);
-  system_exit(0);
-  /* cmp eax, 0x89cd0 -> jne 0x8648c */
-  return 0;
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Ldirector_get_perspective_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Ldirector_get_perspective_2\n\t"
+      ".Ldirector_get_perspective_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb3\n\t"
+      "pushl $0x26700c\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldirector_get_perspective_2:\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "imull $0xf8, %%ecx, %%ecx\n\t"
+      "addl $0x3352b0, %%ecx\n\t"
+      "movl 0x8(%%ecx), %%eax\n\t"
+      "cmpl $0x89270, %%eax\n\t"
+      "popl %%esi\n\t"
+      "jne .Ldirector_get_perspective_3\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Ldirector_get_perspective_5\n\t"
+      "movw $0, 0x56(%%ecx)\n\t"
+      "movw 0x56(%%ecx), %%ax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ldirector_get_perspective_3:\n\t"
+      "cmpl $0x89cd0, %%eax\n\t"
+      "jne .Ldirector_get_perspective_4\n\t"
+      "movw $1, 0x56(%%ecx)\n\t"
+      "movw 0x56(%%ecx), %%ax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ldirector_get_perspective_4:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "cmpl $0x853c0, %%eax\n\t"
+      "setne %%dl\n\t"
+      "addl $2, %%edx\n\t"
+      "movw %%dx, 0x56(%%ecx)\n\t"
+      ".Ldirector_get_perspective_5:\n\t"
+      "movw 0x56(%%ecx), %%ax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b86410_assert), [exitfn] "m"(b86410_exitfn)
+      : "memory");
 }
+#else
+#error "director_get_perspective: clang naked draft required"
+#endif
+
 
 /* director_desired_perspective (0x864b0) — XBE naked draft (batch 131). */
 #if defined(__clang__)
@@ -2513,18 +2664,58 @@ void editor_camera_set_mode(void)
 #endif
 
 
-/* 0x87c00 */
+/* FUN_00087c00 (0x87c00) — XBE naked draft (batch 147). */
+#if defined(__clang__)
+static void (*const b87c00_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
+
+__attribute__((naked, noinline))
 void FUN_00087c00(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  /* test (char)ecx, (char)ecx -> je 0x87c32 */
-  vector_to_angles((float *)(uintptr_t)eax, (float *)0);
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl $7, %%ecx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl $0x3356d0, %%edi\n\t"
+      "rep movsl\n\t"
+      "movb 0x33570c, %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_00087c00_1\n\t"
+      "movl $7, %%ecx\n\t"
+      "movl $0x3356f0, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "rep movsl\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00087c00_1:\n\t"
+      "movl 0x2670d8, %%ecx\n\t"
+      "movl $0, (%%eax)\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl $0, 0x8(%%eax)\n\t"
+      "movl 0x2ee670, %%edx\n\t"
+      "addl $0x1c, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl $0xc, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10cc00]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c10cc00] "m"(b87c00_c10cc00)
+      : "memory");
 }
+#else
+#error "FUN_00087c00: clang naked draft required"
+#endif
+
 
 /* 0x87c80 */
 void editor_camera_move_to_point(void)

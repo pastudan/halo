@@ -798,22 +798,70 @@ char FUN_000633b0(unsigned int param_1, int param_2, void *param_3,
   return success;
 }
 
-/* 0x62b20 */
+/* FUN_00062b20 (0x62b20) — XBE naked draft (batch 151). */
+#if defined(__clang__)
+static void *(*const b62b20_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b62b20_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b62b20_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_00062b20(void)
 {
-  int eax = 0;
-  int ebx = 0;
-
-  /* test (char)ebx, (char)ebx -> jne 0x62b92 */
-  /* test (char)eax, (char)eax -> je 0x62b92 */
-  tag_block_get_element((void *)(uintptr_t)0, 0, 0);
-  /* test (char)eax, 8 -> jne 0x62b75 */
-  display_assert((char *)0x0025ef00, (char *)0x0025ef48, 482, 1);
-  system_exit(-1);
-
-  (void)eax;
-  (void)ebx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb (%%eax,%%edx,1), %%cl\n\t"
+      "movb %%cl, %%al\n\t"
+      "shrb $6, %%al\n\t"
+      "andb $1, %%al\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .LFUN_00062b20_2\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00062b20_2\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jns .LFUN_00062b20_2\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x3c, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x8(%%esi), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb $8, %%al\n\t"
+      "jne .LFUN_00062b20_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1e2\n\t"
+      "pushl $0x25ef48\n\t"
+      "pushl $0x25ef00\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00062b20_1:\n\t"
+      "movzbl 0x9(%%esi), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "shrl $5, %%eax\n\t"
+      "testl %%edx, (%%ecx,%%eax,4)\n\t"
+      "setne %%al\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_00062b20_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b62b20_elem), [assert] "m"(b62b20_assert), [exitfn] "m"(b62b20_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00062b20: clang naked draft required"
+#endif
+
 
 /* 0x639e0 — march structure BSP surfaces between two points. */
 char FUN_000639e0(int scenario, unsigned char bsp_idx, float *origin,

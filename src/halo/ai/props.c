@@ -1700,19 +1700,67 @@ void FUN_00065160(void)
   (void)ecx;
 }
 
-/* 0x651a0 */
+/* FUN_000651a0 (0x651a0) — XBE naked draft (batch 152). */
+#if defined(__clang__)
+static void (*const b651a0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+
+__attribute__((naked, noinline))
 void FUN_000651a0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  /* relift: cmp dword ptr [ecx + 4], eax -> je 0x651d9 */
-  /* cmp ecx, 0x2c99c4 -> jb 0x651b0 */
-  FUN_00068a30(0, (void *)0x0025f594);
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl $0x2c9994, %%ecx\n\t"
+      "jmp .LFUN_000651a0_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_000651a0_1:\n\t"
+      "cmpl %%eax, 0x4(%%ecx)\n\t"
+      "je .LFUN_000651a0_2\n\t"
+      "addl $0xc, %%ecx\n\t"
+      "cmpl $0x2c99c4, %%ecx\n\t"
+      "jb .LFUN_000651a0_1\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl $0x25f594\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c68a30]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000651a0_2:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "andb $0xdf, 0xa(%%eax)\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edx, 0xf0(%%eax)\n\t"
+      "movl $0x650e0, 0xfc(%%eax)\n\t"
+      "movl $0x65120, 0x104(%%eax)\n\t"
+      "movl $0x65160, 0x10c(%%eax)\n\t"
+      "movl %%edx, 0xf4(%%eax)\n\t"
+      "movl %%edx, 0xf8(%%eax)\n\t"
+      "movl $0x64fe0, 0x100(%%eax)\n\t"
+      "movl $0x65020, 0x108(%%eax)\n\t"
+      "movl $0x65060, 0x110(%%eax)\n\t"
+      "movl %%edx, 0x114(%%eax)\n\t"
+      "movl %%edx, 0x118(%%eax)\n\t"
+      "movl %%edx, 0x11c(%%eax)\n\t"
+      "movb %%dl, 0x9(%%eax)\n\t"
+      "call *0x8(%%ecx)\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c68a30] "m"(b651a0_c68a30)
+      : "memory");
 }
+#else
+#error "FUN_000651a0: clang naked draft required"
+#endif
+
 
 /* 0x65250 */
 void FUN_00065250(void)

@@ -2016,16 +2016,71 @@ void render_frustum_build_point_flags(void)
 #endif
 
 
-/* 0x186790 */
+/* render_frustum_triangle_visible (0x186790) — XBE naked draft (batch 150). */
+#if defined(__clang__)
+static void (*const b186790_c186690)(void) = render_frustum_build_point_flags;
+
+__attribute__((naked, noinline))
 void render_frustum_triangle_visible(void)
 {
-  render_frustum_build_point_flags();
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x1867ae */
-  render_frustum_build_point_flags();
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x1867cc */
-  render_frustum_build_point_flags();
-  /* test (int16_t)eax, (int16_t)eax -> je 0x1867c6 */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c186690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lrender_frustum_triangle_visible_1\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrender_frustum_triangle_visible_1:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "andl $0x3f, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[c186690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lrender_frustum_triangle_visible_3\n\t"
+      ".Lrender_frustum_triangle_visible_2:\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrender_frustum_triangle_visible_3:\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "andl %%eax, %%edi\n\t"
+      "call *%[c186690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lrender_frustum_triangle_visible_2\n\t"
+      "andl %%edi, %%eax\n\t"
+      "negw %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c186690] "m"(b186790_c186690)
+      : "memory");
 }
+#else
+#error "render_frustum_triangle_visible: clang naked draft required"
+#endif
+
 
 /* render_frustum_cube_visible (0x1867f0) — XBE naked draft (batch 111). */
 #if defined(__clang__)
@@ -3069,17 +3124,79 @@ void render_camera_mirror(void)
 #endif
 
 
-/* 0x187f80 */
+/* FUN_00187f80 (0x187f80) — XBE naked draft (batch 146). */
+#if defined(__clang__)
+static float (*const b187f80_c10a710)(short function_type, float t) = transition_function_evaluate;
+
+__attribute__((naked, noinline))
 void FUN_00187f80(void)
 {
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> je 0x18800c */
-  transition_function_evaluate(0, 0.0f);
-  /* cmp (int16_t)esi, 2 -> jne 0x18800c */
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x2533c8\n\t"
+      "pushl %%esi\n\t"
+      "movw 0xc(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "je .LFUN_00187f80_2\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x506550\n\t"
+      "fsubs (%%eax)\n\t"
+      "flds 0x506554\n\t"
+      "fsubs 0x4(%%eax)\n\t"
+      "flds 0x506558\n\t"
+      "fsubs 0x8(%%eax)\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "fld %%st(2)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      "fmuls (%%eax)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testb $0x40, (%%eax)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      "fld %%st(4)\n\t"
+      ".byte 0xd8, 0xcd\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fstp %%st(4)\n\t"
+      ".byte 0xde, 0xf3\n\t"
+      "fxch %%st(2)\n\t"
+      "fabs\n\t"
+      "fsts 0xc(%%ebp)\n\t"
+      "fstp %%st(2)\n\t"
+      "fstp %%st(0)\n\t"
+      "je .LFUN_00187f80_1\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "fstp %%st(0)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $2\n\t"
+      "call *%[c10a710]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00187f80_1:\n\t"
+      "cmpw $2, %%si\n\t"
+      "jne .LFUN_00187f80_2\n\t"
+      "fsubrs 0x2533c8\n\t"
+      ".LFUN_00187f80_2:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c10a710] "m"(b187f80_c10a710)
+      : "memory");
 }
+#else
+#error "FUN_00187f80: clang naked draft required"
+#endif
+
 
 /* render_contrail (0x188010) — XBE naked draft (batch 104). */
 #if defined(__clang__)

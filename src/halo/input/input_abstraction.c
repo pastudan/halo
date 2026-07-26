@@ -372,30 +372,81 @@ void input_abstraction_get_local_player_preferences(short local_player_index, vo
   (void)edi;
 }
 
-/* 0xce740 */
+/* input_abstraction_update_local_player_preferences (0xce740) — XBE naked draft (batch 147). */
+#if defined(__clang__)
+static void (*const bce740_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bce740_exitfn)(int) = system_exit;
+static void * (*const bce740_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
 void input_abstraction_update_local_player_preferences(void)
 {
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (int16_t)edi, (int16_t)edi -> jl 0xce754 */
-  /* cmp (int16_t)edi, 4 -> jl 0xce774 */
-  display_assert((char *)0x00281054, (char *)0x00280fe4, 507, 0);
-  system_exit(0);
-  /* test esi, esi -> jne 0xce79b */
-  display_assert((char *)0x00280f94, (char *)0x00280fe4, 508, 0);
-  system_exit(0);
-  /* relift: cmp byte ptr [esi + 0x10], 0xc -> jne 0xce7a7 */
-  /* relift: cmp byte ptr [esi + 0x11], 0xd -> je 0xce7c7 */
-  display_assert((char *)0x00281010, (char *)0x00280fe4, 511, 0);
-  system_exit(0);
-  csmemcpy((void *)(uintptr_t)ecx, (void *)(uintptr_t)esi, 24);
-
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movw 0x8(%%ebp), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Linput_abstraction_update_local_player_preferences_1\n\t"
+      "cmpw $4, %%di\n\t"
+      "jl .Linput_abstraction_update_local_player_preferences_2\n\t"
+      ".Linput_abstraction_update_local_player_preferences_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1fb\n\t"
+      "pushl $0x280fe4\n\t"
+      "pushl $0x281054\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Linput_abstraction_update_local_player_preferences_2:\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Linput_abstraction_update_local_player_preferences_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1fc\n\t"
+      "pushl $0x280fe4\n\t"
+      "pushl $0x280f94\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Linput_abstraction_update_local_player_preferences_3:\n\t"
+      "cmpb $0xc, 0x10(%%esi)\n\t"
+      "jne .Linput_abstraction_update_local_player_preferences_4\n\t"
+      "cmpb $0xd, 0x11(%%esi)\n\t"
+      "je .Linput_abstraction_update_local_player_preferences_5\n\t"
+      ".Linput_abstraction_update_local_player_preferences_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1ff\n\t"
+      "pushl $0x280fe4\n\t"
+      "pushl $0x281010\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Linput_abstraction_update_local_player_preferences_5:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "pushl $0x18\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal 0x46b820(,%%eax,8), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bce740_assert), [exitfn] "m"(bce740_exitfn), [c8e0b0] "m"(bce740_c8e0b0)
+      : "memory");
 }
+#else
+#error "input_abstraction_update_local_player_preferences: clang naked draft required"
+#endif
+
 
 /* 0xce840 */
 void input_abstraction_update_device_changes(void)

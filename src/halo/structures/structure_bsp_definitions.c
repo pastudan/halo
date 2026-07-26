@@ -347,19 +347,72 @@ void render_debug_leaf_faces(void)
 #endif
 
 
-/* 0x192bb0 */
+/* FUN_00192bb0 (0x192bb0) — XBE naked draft (batch 149). */
+#if defined(__clang__)
+static bool (*const b192bb0_c21fb0)(float *v) = valid_real_normal3d;
+
+__attribute__((naked, noinline))
 void FUN_00192bb0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  /* cmp ecx, 0x7f800000 -> je 0x192c1e */
-  valid_real_normal3d((float *)0);
-  /* test (char)eax, (char)eax -> je 0x192c20 */
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "flds (%%eax)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c8\n\t"
+      "fdivs -0x4(%%ebp)\n\t"
+      "fsts -0x8(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "je .LFUN_00192bb0_1\n\t"
+      "fld %%st(0)\n\t"
+      "pushl %%eax\n\t"
+      "fmuls (%%eax)\n\t"
+      "fstps (%%eax)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00192bb0_2\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00192bb0_1:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_00192bb0_2:\n\t"
+      "flds 0x2533c0\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c21fb0] "m"(b192bb0_c21fb0)
+      : "memory");
 }
+#else
+#error "FUN_00192bb0: clang naked draft required"
+#endif
+
 
 /* intersect_planes3d (0x192c30) — XBE naked draft (batch 121). */
 #if defined(__clang__)

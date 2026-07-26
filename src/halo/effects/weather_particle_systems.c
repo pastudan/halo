@@ -68,15 +68,76 @@ void FUN_000a3ea0(void)
   (void)esi;
 }
 
-/* 0xa4000 */
-void FUN_000a4000(float *dst, float *src, float scale)
+/* FUN_000a4000 (0xa4000) — XBE naked draft (batch 149). */
+#if defined(__clang__)
+static void (*const ba4000_c1daf7e)(void) = FUN_001daf7e;
+
+__attribute__((naked, noinline))
+void FUN_000a4000(float *dst __attribute__((unused)), float *src __attribute__((unused)), float scale __attribute__((unused)))
 {
-  int i;
-  for (i = 0; i < 3; i++) {
-    float base = (src[i] < 0.0f) ? scale : 0.0f;
-    dst[i] = base + (src[i] < 0.0f ? 0.0f : src[i]);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "flds (%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_000a4000_1\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_000a4000_2\n\t"
+      ".LFUN_000a4000_1:\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      ".LFUN_000a4000_2:\n\t"
+      "flds (%%esi)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "call *%[c1daf7e]\n\t"
+      "fadds -0x4(%%ebp)\n\t"
+      "fstps (%%edi)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_000a4000_3\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_000a4000_4\n\t"
+      ".LFUN_000a4000_3:\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      ".LFUN_000a4000_4:\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "call *%[c1daf7e]\n\t"
+      "fadds -0x4(%%ebp)\n\t"
+      "fstps 0x4(%%edi)\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_000a4000_5\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_000a4000_6\n\t"
+      ".LFUN_000a4000_5:\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      ".LFUN_000a4000_6:\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "call *%[c1daf7e]\n\t"
+      "fadds -0x4(%%ebp)\n\t"
+      "fstps 0x8(%%edi)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1daf7e] "m"(ba4000_c1daf7e)
+      : "memory");
 }
+#else
+#error "FUN_000a4000: clang naked draft required"
+#endif
+
 
 /* weather_particle_system_new (0xa40a0) — XBE naked draft (batch 125). */
 #if defined(__clang__)

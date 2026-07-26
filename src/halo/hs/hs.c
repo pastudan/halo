@@ -4076,34 +4076,83 @@ int FUN_000c4770(void *file_a, void *file_b)
   return crt_stricmp(name_a, name_b);
 }
 
-/* 0xc4a40 — format function signature into buffer */
+/* FUN_000c4a40 (0xc4a40) — XBE naked draft (batch 146). */
+#if defined(__clang__)
+static void * (*const bc4a40_cc3d00)(int16_t function_index) = hs_function_table_get;
+static int (*const bc4a40_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static int (*const bc4a40_c8df60)(const char *s1) = csstrlen;
+static char * (*const bc4a40_c8dc30)(char *destination, const char *source) = FUN_0008dc30;
 
-void FUN_000c4a40(int16_t function_index, char *buffer)
+__attribute__((naked, noinline))
+void FUN_000c4a40(int16_t function_index __attribute__((unused)), char *buffer __attribute__((unused)))
 {
-  void *desc;
-  int16_t argc;
-  int16_t i;
-  int16_t type;
-
-  desc = hs_function_table_get(function_index);
-  crt_sprintf(buffer, (const char *)0x27ba9c, *(const char **)((char *)desc + 4));
-  if (*(const char **)((char *)desc + 0x14) != 0) {
-    crt_sprintf(buffer + csstrlen(buffer), (const char *)0x27ba98,
-                *(const char **)((char *)desc + 0x14));
-    FUN_0008dc30(buffer, (const char *)0x268580);
-    return;
-  }
-  argc = *(int16_t *)((char *)desc + 0x18);
-  if (argc > 0) {
-    for (i = 0; i < argc; i++) {
-      FUN_0008dc30(buffer, (const char *)0x27ba94);
-      type = *(int16_t *)((char *)desc + 0x1a + i * 2);
-      FUN_0008dc30(buffer, *(const char **)(0x2f14a8 + type * 4));
-      FUN_0008dc30(buffer, (const char *)0x27b1f4);
-    }
-  }
-  FUN_0008dc30(buffer, (const char *)0x268580);
+  __asm__ volatile(
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cc3d00]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x27ba9c\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d90f0]\n\t"
+      "movl 0x14(%%edi), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c4a40_1\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x27ba98\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8df60]\n\t"
+      "addl %%esi, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0x268580\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8dc30]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      ".LFUN_000c4a40_1:\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpw %%bx, 0x18(%%edi)\n\t"
+      "jle .LFUN_000c4a40_3\n\t"
+      ".LFUN_000c4a40_2:\n\t"
+      "pushl $0x27ba94\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8dc30]\n\t"
+      "movswl %%bx, %%edx\n\t"
+      "movswl 0x1a(%%edi,%%edx,2), %%eax\n\t"
+      "movl 0x2f14a8(,%%eax,4), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8dc30]\n\t"
+      "pushl $0x27b1f4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8dc30]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "incl %%ebx\n\t"
+      "cmpw 0x18(%%edi), %%bx\n\t"
+      "jl .LFUN_000c4a40_2\n\t"
+      ".LFUN_000c4a40_3:\n\t"
+      "popl %%ebx\n\t"
+      "pushl $0x268580\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8dc30]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      :
+      : [cc3d00] "m"(bc4a40_cc3d00), [c1d90f0] "m"(bc4a40_c1d90f0), [c8df60] "m"(bc4a40_c8df60), [c8dc30] "m"(bc4a40_c8dc30)
+      : "memory");
 }
+#else
+#error "FUN_000c4a40: clang naked draft required"
+#endif
+
 
 /* 0xc4ae0 — copy function help string */
 
