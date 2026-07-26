@@ -18058,8 +18058,9 @@
         },
         {
           "addr": "0xa2df0",
-          "decl": "void FUN_000a2df0(float seconds);",
-          "ported": false
+          "decl": "void scripted_player_effect_start(float intensity, float seconds);",
+          "name": "scripted_player_effect_start",
+          "ported": true
         },
         {
           "addr": "0xa2e40",
@@ -23267,18 +23268,18 @@
         },
         {
           "addr": "0x1865e0",
-          "decl": "void render_camera_triangle_frontfacing(void);",
-          "ported": false
+          "decl": "char render_camera_triangle_frontfacing(float *p0, float *p1, float *p2, float *p3);",
+          "ported": true
         },
         {
           "addr": "0x186690",
-          "decl": "void render_frustum_build_point_flags(void);",
+          "decl": "unsigned short render_frustum_build_point_flags(void *frustum, float *point);",
           "ported": false
         },
         {
           "addr": "0x186790",
-          "decl": "void render_frustum_triangle_visible(void);",
-          "ported": false
+          "decl": "char render_frustum_triangle_visible(void *frustum, float *p0, float *p1, float *p2);",
+          "ported": true
         },
         {
           "addr": "0x1867f0",
@@ -29779,8 +29780,8 @@
         },
         {
           "addr": "0xa3ea0",
-          "decl": "void FUN_000a3ea0(void);",
-          "ported": false
+          "decl": "void *FUN_000a3ea0(void *particle @<edi>, int16_t type_index @<si>);",
+          "ported": true
         },
         {
           "addr": "0xa3ef0",
@@ -29824,8 +29825,8 @@
         },
         {
           "addr": "0xa45d0",
-          "decl": "void FUN_000a45d0(void);",
-          "ported": false
+          "decl": "void FUN_000a45d0(float *dst @<eax>, float *src @<ecx>, float scale);",
+          "ported": true
         },
         {
           "addr": "0xa4610",
@@ -39321,7 +39322,7 @@
         {
           "addr": "0x1391e0",
           "decl": "void lights_initialize(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1392a0",

@@ -918,40 +918,22 @@ void scripted_player_effect_set_translation(int a0, int a1, int a2)
   *(int *)(g + 0x3cc) = a2;
 }
 
-/* scripted_player_effect_start (0xa2df0) — XBE naked draft (batch 165). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void scripted_player_effect_start(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
+/* scripted_player_effect_start (0xa2df0) — readable C lift. */
+void scripted_player_effect_start(float intensity, float seconds)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "fstps 0x3dc(%%eax)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0x253394\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fistps 0xc(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movw %%cx, 0x3e0(%%eax)\n\t"
-      "movw %%cx, 0x3e2(%%eax)\n\t"
-      "movl 0x3e4(%%eax), %%ecx\n\t"
-      "andl $0xfffffffd, %%ecx\n\t"
-      "orl $1, %%ecx\n\t"
-      "movl %%ecx, 0x3e4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  char *fx;
+  int ticks;
+  int flags;
+
+  fx = *(char **)0x4557ec;
+  *(float *)(fx + 0x3dc) = intensity;
+  ticks = (int)(seconds * *(float *)0x253394);
+  *(short *)(fx + 0x3e0) = (short)ticks;
+  *(short *)(fx + 0x3e2) = (short)ticks;
+  flags = *(int *)(fx + 0x3e4);
+  flags = (flags & ~2) | 1;
+  *(int *)(fx + 0x3e4) = flags;
 }
-#else
-#error "scripted_player_effect_start: clang naked draft required"
-#endif
 
 
 /* scripted_player_effect_stop (0xa2e40) — readable C lift. */

@@ -48,48 +48,22 @@ void *FUN_000a3e60(int16_t index)
   return (void *)(0x4557f4 + (int)index * 0x9c);
 }
 
-/* FUN_000a3ea0 (0xa3ea0) — XBE naked draft (batch 177). */
-#if defined(__clang__)
-static void *(*const ba3ea0_tag)(int, int) = tag_get;
-static void (*const ba3ea0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba3ea0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_000a3ea0(void)
+/* FUN_000a3ea0 (0xa3ea0) — readable C lift: particle type entry from rain tag. */
+void *FUN_000a3ea0(void *particle, int16_t type_index)
 {
-  __asm__ volatile(
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x7261696e\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_000a3ea0_1\n\t"
-      "movl 0x24(%%eax), %%edx\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jl .LFUN_000a3ea0_2\n\t"
-      ".LFUN_000a3ea0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x66\n\t"
-      "pushl $0x26af50\n\t"
-      "pushl $0x26af84\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000a3ea0_2:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "shll $4, %%edx\n\t"
-      "leal 0x1c(%%edx,%%edi,1), %%eax\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(ba3ea0_tag), [assert] "m"(ba3ea0_assert), [exitfn] "m"(ba3ea0_exitfn)
-      : "memory");
+  extern char DAT_0026af50[];
+  extern char DAT_0026af84[];
+  void *tag;
+  int count;
+
+  tag = tag_get(0x7261696e, *(int *)particle);
+  count = *(int *)((char *)tag + 0x24);
+  if (type_index < 0 || (int)type_index >= count) {
+    display_assert(DAT_0026af84, DAT_0026af50, 0x66, true);
+    system_exit(-1);
+  }
+  return (char *)particle + 0x1c + ((int)type_index << 4);
 }
-#else
-#error "FUN_000a3ea0: clang naked draft required"
-#endif
 
 
 /* FUN_000a4000 (0xa4000) — XBE naked draft (batch 149). */
@@ -691,44 +665,14 @@ void FUN_000a4310(void)
 #endif
 
 
-/* FUN_000a45d0 (0xa45d0) — XBE naked draft (batch 174). */
-#if defined(__clang__)
-static void (*const ba45d0_ca4000)(float *dst, float *src, float scale) = FUN_000a4000;
-
-__attribute__((naked, noinline))
-void FUN_000a45d0(void)
+/* FUN_000a45d0 (0xa45d0) — readable C lift. */
+void FUN_000a45d0(float *dst, float *src, float scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca4000]\n\t"
-      "flds (%%esi)\n\t"
-      "fsubs (%%edi)\n\t"
-      "addl $4, %%esp\n\t"
-      "fstps (%%edi)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fsubs 0x4(%%edi)\n\t"
-      "fstps 0x4(%%edi)\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fsubs 0x8(%%edi)\n\t"
-      "fstps 0x8(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ca4000] "m"(ba45d0_ca4000)
-      : "memory");
+  FUN_000a4000(dst, src, scale);
+  dst[0] = src[0] - dst[0];
+  dst[1] = src[1] - dst[1];
+  dst[2] = src[2] - dst[2];
 }
-#else
-#error "FUN_000a45d0: clang naked draft required"
-#endif
 
 
 /* FUN_000a4610 (0xa4610) — XBE naked draft (batch 112). */

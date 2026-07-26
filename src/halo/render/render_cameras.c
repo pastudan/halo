@@ -1832,88 +1832,24 @@ int render_camera_build_clipped_frustum_bounds(camera_t *camera __attribute__((u
 #endif
 
 
-/* render_camera_triangle_frontfacing (0x1865e0) — XBE naked draft (batch 140). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void render_camera_triangle_frontfacing(void)
+/* render_camera_triangle_frontfacing (0x1865e0) — readable C lift. */
+char render_camera_triangle_frontfacing(float *p0, float *p1, float *p2, float *p3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds (%%eax)\n\t"
-      "fsubs (%%ecx)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs 0x8(%%ecx)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "flds (%%ecx)\n\t"
-      "fsubs (%%eax)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "fsubs (%%ecx)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs 0x8(%%ecx)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xca\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xea\n\t"
-      "fstp %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcomps 0x26a810\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .Lrender_camera_triangle_frontfacing_1\n\t"
-      "movl $1, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrender_camera_triangle_frontfacing_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float e0x = p1[0] - p0[0];
+  float e0y = p1[1] - p0[1];
+  float e0z = p1[2] - p0[2];
+  float e1x = p2[0] - p1[0];
+  float e1y = p2[1] - p1[1];
+  float e1z = p2[2] - p1[2];
+  float e2x = p3[0] - p2[0];
+  float e2y = p3[1] - p2[1];
+  float e2z = p3[2] - p2[2];
+  float cx = e1y * e2z - e1z * e2y;
+  float cy = e1z * e2x - e1x * e2z;
+  float cz = e1x * e2y - e1y * e2x;
+  float d = e0x * cx + e0y * cy + e0z * cz;
+  return (char)(d > *(float *)0x26a810);
 }
-#else
-#error "render_camera_triangle_frontfacing: clang naked draft required"
-#endif
 
 
 /* render_frustum_build_point_flags (0x186690) — XBE naked draft (batch 135). */
@@ -1921,7 +1857,7 @@ void render_camera_triangle_frontfacing(void)
 
 
 __attribute__((naked, noinline))
-void render_frustum_build_point_flags(void)
+unsigned short render_frustum_build_point_flags(void *frustum __attribute__((unused)), float *point __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2018,70 +1954,27 @@ void render_frustum_build_point_flags(void)
 #endif
 
 
-/* render_frustum_triangle_visible (0x186790) — XBE naked draft (batch 150). */
-#if defined(__clang__)
-static void (*const b186790_c186690)(void) = render_frustum_build_point_flags;
-
-__attribute__((naked, noinline))
-void render_frustum_triangle_visible(void)
+/* render_frustum_triangle_visible (0x186790) — readable C lift. */
+char render_frustum_triangle_visible(void *frustum, float *p0, float *p1, float *p2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c186690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lrender_frustum_triangle_visible_1\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrender_frustum_triangle_visible_1:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "andl $0x3f, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c186690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lrender_frustum_triangle_visible_3\n\t"
-      ".Lrender_frustum_triangle_visible_2:\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrender_frustum_triangle_visible_3:\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "andl %%eax, %%edi\n\t"
-      "call *%[c186690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lrender_frustum_triangle_visible_2\n\t"
-      "andl %%edi, %%eax\n\t"
-      "negw %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c186690] "m"(b186790_c186690)
-      : "memory");
+  unsigned int f0;
+  unsigned int f1;
+  unsigned int f2;
+  unsigned int mask;
+
+  f0 = (unsigned int)(unsigned short)render_frustum_build_point_flags(frustum, p0);
+  if (f0 == 0)
+    return 1;
+  mask = f0 & 0x3f;
+  f1 = (unsigned int)(unsigned short)render_frustum_build_point_flags(frustum, p1);
+  if (f1 == 0)
+    return 1;
+  mask &= f1;
+  f2 = (unsigned int)(unsigned short)render_frustum_build_point_flags(frustum, p2);
+  if (f2 == 0)
+    return 1;
+  return (char)((mask & f2) == 0);
 }
-#else
-#error "render_frustum_triangle_visible: clang naked draft required"
-#endif
 
 
 /* render_frustum_cube_visible (0x1867f0) — XBE naked draft (batch 111). */
