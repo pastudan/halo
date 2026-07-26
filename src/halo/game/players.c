@@ -4867,53 +4867,16 @@ void FUN_000be860(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, 0);
 }
 
-/* FUN_000be8a0 (0xbe8a0) — XBE naked draft (batch 184). */
-#if defined(__clang__)
-static int (*const bbe8a0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static int (*const bbe8a0_c955b0)(int unit_handle) = recorded_animation_get_time_left;
-static void (*const bbe8a0_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000be8a0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000be8a0 (0xbe8a0) — readable C lift (HS eval value wrapper). */
+void FUN_000be8a0(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000be8a0_1\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c955b0]\n\t"
-      "movw %%ax, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000be8a0_1:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bbe8a0_ccc560), [c955b0] "m"(bbe8a0_c955b0), [ccbf80] "m"(bbe8a0_ccbf80)
-      : "memory");
+  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum, (int)(unsigned short)recorded_animation_get_time_left(args[0]));
+  } else {
+    hs_return(thread_datum, 0);
+  }
 }
-#else
-#error "FUN_000be8a0: clang naked draft required"
-#endif
-
 
 /* FUN_000beab0 @ 0x000beab0
  *
