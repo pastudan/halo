@@ -4995,69 +4995,31 @@ void FUN_000c9de0(int effect_tag, int16_t scenario_index)
       1.0f);
 }
 
-/* FUN_000c9e50 (0xc9e50) — XBE naked draft (batch 152). */
-#if defined(__clang__)
-static short (*const bc9e50_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
-static int (*const bc9e50_c9ee40)(int effect_tag_index, int object_index, int attached_object, uint16_t marker_index, short marker_count, void *effect_definition, float *marker_points, float *marker_forwards, float scale_a, float scale_b, float unknown1, float unknown2) = effect_new_attached_from_markers;
-
-__attribute__((naked, noinline))
-void FUN_000c9e50(int object_handle __attribute__((unused)), int attach_object __attribute__((unused)), int marker_id __attribute__((unused)))
+/* FUN_000c9e50 (0xc9e50) — readable C lift: attach effect at marker. */
+void FUN_000c9e50(int object_handle, int attach_object, int marker_id)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x6c, %%esp\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_000c9e50_2\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000c9e50_1\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "leal -0x6c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[markers]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_000c9e50_1\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl $0x3f800000\n\t"
-      "leal -0x30(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl -0x6c(%%ebp), %%edx\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c9ee40]\n\t"
-      "addl $0x30, %%esp\n\t"
-      ".LFUN_000c9e50_1:\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000c9e50_2:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [markers] "m"(bc9e50_markers), [c9ee40] "m"(bc9e50_c9ee40)
-      : "memory");
-}
-#else
-#error "FUN_000c9e50: clang naked draft required"
-#endif
+  char markers[0x6c];
+  int16_t n;
 
+  if (object_handle == -1 || attach_object == -1)
+    return;
+  n = object_get_markers_by_string_id(attach_object, (void *)marker_id, markers, 1);
+  if (n == 0)
+    return;
+  effect_new_attached_from_markers(
+      -1,
+      object_handle,
+      attach_object,
+      (uint16_t)*(int *)markers,
+      1,
+      &marker_id,
+      (float *)(markers + 0x60),
+      (float *)(markers + 0x3c),
+      1.0f,
+      1.0f,
+      0.0f,
+      0.0f);
+}
 
 /* FUN_000c9ec0 (0xc9ec0) — XBE naked draft (batch 153). */
 #if defined(__clang__)
