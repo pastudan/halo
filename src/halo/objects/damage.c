@@ -2201,6 +2201,68 @@ void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices,
 /* --- damage.obj orphan shells (2026-07-26) --- */
 
 /* 0x136b40 — Attach collision damage effect to an object once. */
+#if defined(__clang__)
+static void *(*const d36b40_get)(int, int) = object_get_and_verify_type;
+static void *(*const d36b40_tag)(int, int) = tag_get;
+static int (*const d36b40_eff)(int, int, int, short, float, float, int, int) = FUN_0009ec30;
+static void (*const d36b40_regflag)(int, char) = FUN_00136a00;
+
+__attribute__((naked, noinline))
+void FUN_00136b40(int object_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 8(%%ebp), %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 182(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $8, %%al\n\t"
+      "jne .LFUN_00136b40_2\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 124(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00136b40_1\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x636f6c6c\n\t"
+      "call *%[tag]\n\t"
+      "movl 420(%%eax), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[eff]\n\t"
+      "addl $0x28, %%esp\n\t"
+      ".LFUN_00136b40_1:\n\t"
+      "orb $8, 182(%%esi)\n\t"
+      "pushl $0\n\t"
+      "movl %%edi, %%eax\n\t"
+      "movl $0, 152(%%esi)\n\t"
+      "call *%[regflag]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_00136b40_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(d36b40_get), [tag] "m"(d36b40_tag), [eff] "m"(d36b40_eff), [regflag] "m"(d36b40_regflag)
+      : "memory");
+}
+#else
 void FUN_00136b40(int object_handle)
 {
   char *obj = (char *)object_get_and_verify_type(object_handle, -1);
@@ -2223,6 +2285,8 @@ void FUN_00136b40(int object_handle)
   *(int *)(obj + 0x98) = 0;
   FUN_00136a00(object_handle, 0);
 }
+#endif
+
 
 /* 0x136bc0 — Apply shield damage from a collision hit. */
 void FUN_00136bc0(int current_object_handle, void *collision_model, void *material,

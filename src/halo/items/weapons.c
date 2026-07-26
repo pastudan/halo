@@ -1833,6 +1833,151 @@ float FUN_000fbcf0(float base, float exponent)
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((noinline))
 #endif
+#if defined(__clang__)
+static void *(*const wnew_get)(int, int) = object_get_and_verify_type;
+static void *(*const wnew_tag)(int, int) = tag_get;
+static void *(*const wnew_elem)(void *, int, int) = tag_block_get_element;
+static void (*const wnew_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const wnew_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+char weapon_new(int weapon_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movb $0, 488(%%edi)\n\t"
+      "movl $0xffffffff, 628(%%edi)\n\t"
+      "movl 1264(%%eax), %%ecx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "movl %%eax, -8(%%ebp)\n\t"
+      "movl %%esi, -4(%%ebp)\n\t"
+      "jle .Lweapon_new_6\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lweapon_new_1:\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, -4(%%ebp)\n\t"
+      "jl .Lweapon_new_2\n\t"
+      "cmpl 1264(%%eax), %%esi\n\t"
+      "jl .Lweapon_new_3\n\t"
+      ".Lweapon_new_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x672\n\t"
+      "pushl $0x28ad48\n\t"
+      "pushl $0x28adb8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lweapon_new_3:\n\t"
+      "leal 150(%%esi,%%esi,2), %%eax\n\t"
+      "leal (%%edi,%%eax,4), %%ebx\n\t"
+      "movl -8(%%ebp), %%eax\n\t"
+      "pushl $0x70\n\t"
+      "addl $0x4f0, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movw 6(%%eax), %%cx\n\t"
+      "movw 10(%%eax), %%dx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw %%dx, %%cx\n\t"
+      "jle .Lweapon_new_4\n\t"
+      "movswl %%dx, %%ecx\n\t"
+      "jmp .Lweapon_new_5\n\t"
+      ".Lweapon_new_4:\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      ".Lweapon_new_5:\n\t"
+      "movw %%cx, 8(%%ebx)\n\t"
+      "movw 6(%%eax), %%dx\n\t"
+      "movl -4(%%ebp), %%eax\n\t"
+      "subw %%cx, %%dx\n\t"
+      "incl %%eax\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "movl %%eax, -4(%%ebp)\n\t"
+      "movl -8(%%ebp), %%eax\n\t"
+      "addl $0x4f0, %%eax\n\t"
+      "movw %%dx, 6(%%ebx)\n\t"
+      "cmpl (%%eax), %%esi\n\t"
+      "jl .Lweapon_new_1\n\t"
+      "movl -8(%%ebp), %%eax\n\t"
+      ".Lweapon_new_6:\n\t"
+      "movl 1276(%%eax), %%ecx\n\t"
+      "addl $0x4fc, %%eax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "movl %%esi, -8(%%ebp)\n\t"
+      "movl %%eax, -4(%%ebp)\n\t"
+      "jle .Lweapon_new_10\n\t"
+      ".Lweapon_new_7:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, -8(%%ebp)\n\t"
+      "jl .Lweapon_new_8\n\t"
+      "cmpl 1276(%%eax), %%esi\n\t"
+      "jl .Lweapon_new_9\n\t"
+      ".Lweapon_new_8:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x667\n\t"
+      "pushl $0x28ad48\n\t"
+      "pushl $0x28ad68\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lweapon_new_9:\n\t"
+      "movl -4(%%ebp), %%edx\n\t"
+      "pushl $0x114\n\t"
+      "leal (%%esi,%%esi,8), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "leal 528(%%edi,%%ecx,4), %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "movl -8(%%ebp), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "incl %%eax\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "movl %%eax, -8(%%ebp)\n\t"
+      "movl -4(%%ebp), %%eax\n\t"
+      "movl $0xffffffff, 32(%%ebx)\n\t"
+      "movb $0x7f, (%%ebx)\n\t"
+      "cmpl (%%eax), %%esi\n\t"
+      "jl .Lweapon_new_7\n\t"
+      ".Lweapon_new_10:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(wnew_get), [tag] "m"(wnew_tag), [elem] "m"(wnew_elem), [assert] "m"(wnew_assert), [exitfn] "m"(wnew_exitfn)
+      : "memory");
+}
+#else
 char weapon_new(int weapon_handle)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
@@ -1888,6 +2033,8 @@ char weapon_new(int weapon_handle)
 
   return 1;
 }
+#endif
+
 
 /* 0xfbea0 — assert non-deletable network weapons are not deleted in MP. */
 #if defined(__i386__) && defined(__GNUC__)

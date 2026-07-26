@@ -231,7 +231,7 @@ def main() -> int:
         ("FUN_0005ca80", 0x5ca80, 0x5d200),
         # damage + objects + vehicles + weapons wave (2026-07-26)
         ("object_get_maximum_shield_vitality", 0x136700, 0x136741),
-        ("FUN_00136b40", 0x136b40, 0x136bc0),
+        ("FUN_00136b40", 0x136b40, 0x136bbe),
         ("FUN_00138f30", 0x138f30, 0x138f69),
         ("FUN_00138f70", 0x138f70, 0x138fc5),
         ("FUN_00085280", 0x85280, 0x85350),
@@ -270,11 +270,11 @@ def main() -> int:
         # gameplay wave 10 (2026-07-26)
         ("FUN_00134c40", 0x134c40, 0x134e50),
         ("FUN_00139480", 0x139480, 0x1396dc),
-        ("FUN_001b72b0", 0x1b72b0, 0x1b74d0),
+        ("FUN_001b72b0", 0x1b72b0, 0x1b74c6),
         ("FUN_001b74d0", 0x1b74d0, 0x1b77f0),
         ("FUN_000de3f0", 0xde3f0, 0xde560),
         # gameplay wave 11 (2026-07-26)
-        ("FUN_001b7020", 0x1b7020, 0x1b72b0),
+        ("FUN_001b7020", 0x1b7020, 0x1b72a5),
         ("FUN_001b77f0", 0x1b77f0, 0x1b79c0),
         ("FUN_001b6ca0", 0x1b6ca0, 0x1b6e11),
         # gameplay wave 12 (2026-07-26)
