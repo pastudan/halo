@@ -30708,7 +30708,7 @@
         },
         {
           "addr": "0x19b510",
-          "decl": "const wchar_t *draw_string_get_string(short index);",
+          "decl": "char *draw_string_get_string(short index);",
           "ported": false,
           "name": "draw_string_get_string"
         },
@@ -30730,7 +30730,7 @@
         {
           "addr": "0x19b790",
           "decl": "void draw_string_get_color(float *out);",
-          "ported": false,
+          "ported": true,
           "name": "draw_string_get_color"
         },
         {
