@@ -38004,75 +38004,93 @@
       "functions": [
         {
           "addr": "0x960c0",
-          "decl": "void device_new(void);"
+          "decl": "void device_new(void);",
+          "ported": false
         },
         {
           "addr": "0x96110",
-          "decl": "void device_export_function_values(void);"
+          "decl": "void device_export_function_values(void);",
+          "ported": false
         },
         {
           "addr": "0x96310",
-          "decl": "void device_preprocess_node_orientations(void);"
+          "decl": "void device_preprocess_node_orientations(void);",
+          "ported": false
         },
         {
           "addr": "0x96470",
-          "decl": "int device_get_position(int a0);"
+          "decl": "int device_get_position(int a0);",
+          "ported": false
         },
         {
           "addr": "0x964a0",
-          "decl": "int device_get_power(int a0);"
+          "decl": "int device_get_power(int a0);",
+          "ported": false
         },
         {
           "addr": "0x964d0",
-          "decl": "void device_set_never_appears_locked(int a0, int a1);"
+          "decl": "void device_set_never_appears_locked(int a0, int a1);",
+          "ported": false
         },
         {
           "addr": "0x96510",
-          "decl": "void device_group_set_actual_value(int a0, float a1);"
+          "decl": "void device_group_set_actual_value(int a0, float a1);",
+          "ported": false
         },
         {
           "addr": "0x965f0",
-          "decl": "void device_one_sided_set(int a0, int a1);"
+          "decl": "void device_one_sided_set(int a0, int a1);",
+          "ported": false
         },
         {
           "addr": "0x96630",
-          "decl": "void device_operates_automatically_set(int a0, int a1);"
+          "decl": "void device_operates_automatically_set(int a0, int a1);",
+          "ported": false
         },
         {
           "addr": "0x96670",
-          "decl": "void device_group_change_only_once_more_set(int a0, int a1);"
+          "decl": "void device_group_change_only_once_more_set(int a0, int a1);",
+          "ported": false
         },
         {
           "addr": "0x966b0",
-          "decl": "int device_group_get_value(int a0);"
+          "decl": "int device_group_get_value(int a0);",
+          "ported": false
         },
         {
           "addr": "0x966d0",
-          "decl": "void device_group_set_real(int device_group_handle, int unit_handle);"
+          "decl": "void device_group_set_real(int device_group_handle, int unit_handle);",
+          "ported": false
         },
         {
           "addr": "0x96720",
-          "decl": "bool device_can_change_position(int object_handle);"
+          "decl": "bool device_can_change_position(int object_handle);",
+          "ported": false
         },
         {
           "addr": "0x967a0",
-          "decl": "void FUN_000967a0(void *rec, int object);"
+          "decl": "void FUN_000967a0(void *rec, int object);",
+          "ported": false
         },
         {
           "addr": "0x96850",
-          "decl": "void device_effect_new(void);"
+          "decl": "void device_effect_new(void);",
+          "ported": false
         },
         {
           "addr": "0x96900",
-          "decl": "void create_initial_device_groups(void);"
+          "decl": "void create_initial_device_groups(void);",
+          "ported": false
         },
         {
           "addr": "0x96a00",
-          "decl": "void device_delete(void);"
+          "decl": "void device_delete(void);",
+          "ported": false
         },
         {
           "addr": "0x96a90",
-          "decl": "void FUN_00096a90(void);"
+          "decl": "void FUN_00096a90(void);",
+          "ported": false
         }
       ],
       "name": "devices.obj",

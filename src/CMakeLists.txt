@@ -41,6 +41,7 @@
 	halo/dialogs/edit_text.c
 	halo/cutscene/cinematics.c
 	halo/cutscene/recorded_animations.c
+	halo/devices/devices.c
 	halo/effects/contrails.c
 	halo/effects/decals.c
 	halo/effects/effects.c

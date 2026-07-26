@@ -14089,5 +14089,131 @@
     "object": "international_strings.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x960c0",
+    "name": "device_new",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x96110",
+    "name": "device_export_function_values",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x96310",
+    "name": "device_preprocess_node_orientations",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x96470",
+    "name": "device_get_position",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x964a0",
+    "name": "device_get_power",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x964d0",
+    "name": "device_set_never_appears_locked",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x96510",
+    "name": "device_group_set_actual_value",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x965f0",
+    "name": "device_one_sided_set",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x96630",
+    "name": "device_operates_automatically_set",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x96670",
+    "name": "device_group_change_only_once_more_set",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x966b0",
+    "name": "device_group_get_value",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x966d0",
+    "name": "device_group_set_real",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x96720",
+    "name": "device_can_change_position",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x967a0",
+    "name": "FUN_000967a0",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x96850",
+    "name": "device_effect_new",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x96900",
+    "name": "create_initial_device_groups",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x96a00",
+    "name": "device_delete",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x96a90",
+    "name": "FUN_00096a90",
+    "object": "devices.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
