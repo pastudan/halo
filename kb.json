@@ -14323,7 +14323,7 @@
         {
           "addr": "0x1003b0",
           "decl": "void main_save_core(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1003d0",
@@ -14333,12 +14333,12 @@
         {
           "addr": "0x100420",
           "decl": "void main_load_core(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x100440",
           "decl": "void main_load_core_at_startup(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x100460",
@@ -14358,7 +14358,7 @@
         {
           "addr": "0x100560",
           "decl": "void main_skip(short level);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x100590",
