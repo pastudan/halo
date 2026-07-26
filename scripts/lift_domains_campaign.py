@@ -204,7 +204,7 @@ def main() -> int:
     ap.add_argument("--commit-every", type=int, default=COMMIT_EVERY)
     ap.add_argument("--seeds", type=int, default=100)
     ap.add_argument("--timeout", type=float, default=55.0)
-    ap.add_argument("--max-size", type=int, default=200)
+    ap.add_argument("--max-size", type=int, default=256)
     ap.add_argument("--no-push", action="store_true")
     ap.add_argument("--no-prove-readable", action="store_true")
     ap.add_argument("--prefer-ported-jmp", action="store_true", default=True)

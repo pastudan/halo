@@ -2429,33 +2429,11 @@ char valid_real_vector2d(float *v)
   return 1;
 }
 
-/* FUN_000BB290 (0xbb290) — XBE naked draft (batch 194). */
-#if defined(__clang__)
-static int *(*const bbb290_gseed)(void) = get_global_random_seed_address;
-static void (*const bbb290_c10b380)(unsigned int *seed, float *out) = random_seed_get_direction3d;
-
-__attribute__((naked, noinline))
-void FUN_000BB290(float *out_direction __attribute__((unused)))
+/* FUN_000BB290 (0xbb290) — readable C lift. */
+void FUN_000BB290(float *out_direction)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10b380]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gseed] "m"(bbb290_gseed), [c10b380] "m"(bbb290_c10b380)
-      : "memory");
+  random_seed_get_direction3d(get_global_random_seed_address(), out_direction);
 }
-#else
-#error "FUN_000BB290: clang naked draft required"
-#endif
-
 
 /* Look up an 8-byte record by `index` in the scenario tag_block at offset 0x39C
  * and test it against `object_handle` via FUN_0018ef00.

@@ -17372,7 +17372,7 @@
         {
           "addr": "0x8cf10",
           "decl": "void FUN_0008cf10(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8cf30",
@@ -18636,7 +18636,7 @@
         {
           "addr": "0xbb290",
           "decl": "void FUN_000BB290(float *out_direction);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbb2b0",
@@ -20311,7 +20311,7 @@
         {
           "addr": "0xe21e0",
           "decl": "void D3DXMatrixIdentity(float *m);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe2220",
@@ -22874,7 +22874,7 @@
         {
           "addr": "0x94c70",
           "decl": "void recorded_animations_clear_debug_storage(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x94cb0",
@@ -28078,7 +28078,7 @@
         {
           "addr": "0x19e870",
           "decl": "int uputs(const wchar_t *s);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e8e0",
@@ -28138,7 +28138,7 @@
         {
           "addr": "0x19efd0",
           "decl": "void uperror(const wchar_t *prefix);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f040",
@@ -28148,7 +28148,7 @@
         {
           "addr": "0x19f0e0",
           "decl": "int uremove(const wchar_t *path);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f150",
@@ -28173,7 +28173,7 @@
         {
           "addr": "0x19f2b0",
           "decl": "int uatoi(const wchar_t *s);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f320",
@@ -30145,7 +30145,7 @@
         {
           "addr": "0x1be920",
           "decl": "void texture_cache_delete(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1be940",
@@ -30180,7 +30180,7 @@
         {
           "addr": "0x1bed30",
           "decl": "void texture_cache_flush(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bed50",
@@ -34804,7 +34804,7 @@
         {
           "addr": "0x4a680",
           "decl": "void ai_debug_communication_ignore(int a0, int a1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x4a6b0",
@@ -36151,7 +36151,7 @@
         {
           "addr": "0x64fa0",
           "decl": "void FUN_00064fa0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x64fe0",
@@ -36174,7 +36174,7 @@
         {
           "addr": "0x650a0",
           "decl": "void FUN_000650a0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x650e0",
