@@ -4777,6 +4777,12 @@ def main() -> int:
         ("FUN_0017d040", 0x17d040, 0x17d049),
         ("FUN_0017d060", 0x17d060, 0x17d069),
         ("FUN_0017d070", 0x17d070, 0x17d079),
+        # gameplay wave 401 (2026-07-26) — Capstone weaks
+        ("CMcpxAPU_ServiceDeferredCommandsLow", 0x20380b, 0x207417),
+        ("FUN_00157940", 0x157940, 0x15b451, [(0x1584c4, 0x1584e4), (0x1587d8, 0x1587f8), (0x158dd8, 0x158df0)]),
+        ("FUN_00160f50", 0x160f50, 0x161ed3),
+        ("FUN_00072490", 0x72490, 0x72f39),
+        ("FUN_000fe910", 0xfe910, 0xff3cd),
     ]
 
     xbe = Xbe.from_file(args.xbe)
