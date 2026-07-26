@@ -1942,11 +1942,12 @@ straddle:
   }
 }
 
-void collision_bsp_test_pill_new(int bsp, short flags, int breakable_surfaces,
+char collision_bsp_test_pill_new(int bsp, short flags, int breakable_surfaces,
                                  int origin, int direction, float radius,
                                  float *result, float *normal_out)
 {
   collision_bsp_pill_state state;
+  char hit;
 
   state.bsp = bsp;
   state.flags = (unsigned short)flags;
@@ -1962,7 +1963,8 @@ void collision_bsp_test_pill_new(int bsp, short flags, int breakable_surfaces,
   state.plane_index = -1;
   *(unsigned int *)result = 0x7f7fffff;
 
-  FUN_00148440(&state, 0, *(float *)0x2533c0, *(float *)0x2533c8);
+  hit = FUN_00148440(&state, 0, *(float *)0x2533c0, *(float *)0x2533c8);
+  return hit;
 }
 
 /* FUN_00149570 — 2D BSP node walk for pill; leaf → FUN_001491d0.
@@ -2244,5 +2246,194 @@ leaf_path:
       hit = 1;
     }
   }
+  return hit;
+}
+
+
+/* -------------------------------------------------------------------------
+ * Object / structure query wrappers (collision_bsp.obj high addresses).
+ * ported:false until verified.
+ * ------------------------------------------------------------------------- */
+
+/* 0x14dc30 — point in structure leaf → iterate cluster objects. */
+char FUN_0014dc30(int flags, float *pos, int param_3)
+{
+  void *bsp;
+  uint32_t leaf;
+  char solid_bit;
+  void *scenario;
+  void *cluster;
+  int obj;
+  int iter_state;
+
+  if ((flags & 0xe0) == 0) {
+    return 0;
+  }
+
+  bsp = FUN_0018e420();
+  leaf = bsp3d_find_leaf(bsp, 0, pos);
+  solid_bit = (char)((flags >> 7) & 1);
+  if (*(unsigned char *)0x4761f8) {
+    solid_bit = 0;
+  }
+  if (leaf == (uint32_t)-1) {
+    return 1;
+  }
+  if (!solid_bit) {
+    return 0;
+  }
+
+  scenario = scenario_get();
+  cluster = tag_block_get_element((char *)scenario + 0xe0, (int)(leaf & 0x7fffffff),
+                                  0x10);
+  iter_state = 0;
+  obj = cluster_partition_object_iter_first(
+    &iter_state, *(short *)((char *)cluster + 8));
+  while (obj != -1) {
+    if (FUN_0014db10(obj, flags, (int)pos, param_3)) {
+      return 1;
+    }
+    obj = cluster_partition_object_iter_next(&iter_state);
+  }
+  return 0;
+}
+
+/* 0x14e7d0 — structure BSP test via FUN_00149c60; fill collision result. */
+char FUN_0014e7d0(uint32_t collision_flags, float *point, float *offset_vec,
+                  float p4, int unit_handle, void *result_v)
+{
+  char *result;
+  char hit;
+  char buf[0x420];
+  void *bsp;
+  int count;
+  int leaf0;
+  int leaf1;
+  short mat;
+  float t;
+  float *plane_or;
+  unsigned int inf_bits;
+  void *scenario;
+  void *cluster;
+
+  (void)unit_handle;
+  result = (char *)result_v;
+  hit = 0;
+  *(short *)result = (short)0xffff;
+  *(unsigned int *)(result + 0x14) = 0x7f7fffff;
+  inf_bits = 0x7f7fffff;
+
+  bsp = global_collision_bsp_get();
+  if (FUN_00149c60((int *)bsp, point, offset_vec, p4, *(float *)&inf_bits,
+                   (float *)buf)) {
+    t = *(float *)buf;
+    *(float *)(result + 0x14) = t;
+    if ((collision_flags & 0x20) != 0) {
+      plane_or = (float *)(buf + 4);
+      *(float *)(result + 0x24) = plane_or[0];
+      *(float *)(result + 0x28) = plane_or[1];
+      *(float *)(result + 0x2c) = plane_or[2];
+      *(float *)(result + 0x30) = plane_or[3];
+      mat = *(short *)(buf + 0x1a);
+      result[0x4c] = 0;
+      result[0x4d] = 0;
+      *(short *)result = 2;
+      *(short *)(result + 0x34) = mat;
+      *(int *)(result + 0x44) = *(int *)(buf + 0x14);
+      *(int *)(result + 0x48) = -1;
+      *(short *)(result + 0x4e) = mat;
+      hit = 1;
+    }
+  }
+
+  count = *(int *)(buf + 0x1c);
+  if (count > 0) {
+    leaf0 = *(int *)(buf + 0x20);
+    *(int *)(result + 4) = leaf0;
+    scenario = scenario_get();
+    if (leaf0 == -1) {
+      mat = 0;
+    } else {
+      cluster = tag_block_get_element((char *)scenario + 0xe0, leaf0 & 0x7fffffff,
+                                      0x10);
+      mat = *(short *)((char *)cluster + 8);
+    }
+    *(short *)(result + 8) = mat;
+
+    leaf1 = *((int *)(buf + 0x1c) + count);
+    *(int *)(result + 0xc) = leaf1;
+    if (leaf1 == -1) {
+      mat = 0;
+    } else {
+      cluster = tag_block_get_element((char *)scenario + 0xe0, leaf1 & 0x7fffffff,
+                                      0x10);
+      mat = *(short *)((char *)cluster + 8);
+    }
+    *(short *)(result + 0x10) = mat;
+  }
+
+  if (!hit) {
+    *(float *)(result + 0x14) = *(float *)0x2533c8;
+  }
+  t = *(float *)(result + 0x14);
+  *(float *)(result + 0x18) = offset_vec[0] * t + point[0];
+  *(float *)(result + 0x1c) = offset_vec[1] * t + point[1];
+  *(float *)(result + 0x20) = offset_vec[2] * t + point[2];
+  scenario_location_from_point(result + 0x18, result + 0xc);
+  return hit;
+}
+
+/* 0x14e940 — global structure pill test → fill result. */
+char FUN_0014e940(int unused, float *origin, float *direction, float radius,
+                  int pad0, int pad1, void *result_v)
+{
+  char *result;
+  float t_slot;
+  float normal[3];
+  char hit;
+  float t;
+  void *bsp;
+
+  (void)unused;
+  (void)pad0;
+  (void)pad1;
+  result = (char *)result_v;
+  hit = 0;
+  *(short *)result = (short)0xffff;
+  *(int *)(result + 4) = -1;
+  *(short *)(result + 8) = (short)0xffff;
+  *(int *)(result + 0xc) = -1;
+  *(short *)(result + 0x10) = (short)0xffff;
+  *(float *)(result + 0x14) = *(float *)0x2533c8;
+
+  /* pill_new writes t into the stack slot we pass; keep result ptr in `result` */
+  t_slot = 0; /* placeholder; address of t_slot passed as float* */
+  bsp = global_collision_bsp_get();
+  /* Match XBE: pass &stack_slot_for_t — use local t_slot */
+  hit = collision_bsp_test_pill_new((int)bsp, 0, 0, (int)origin, (int)direction,
+                                    radius, &t_slot, normal);
+  if (hit) {
+    *(float *)(result + 0x24) = normal[0];
+    *(float *)(result + 0x28) = normal[1];
+    *(float *)(result + 0x2c) = normal[2];
+    *(float *)(result + 0x14) = t_slot;
+    *(short *)result = 2;
+    *(unsigned int *)(result + 0x30) = 0x7f7fffff;
+    *(short *)(result + 0x34) = (short)0xffff;
+    *(int *)(result + 0x44) = -1;
+    *(int *)(result + 0x48) = -1;
+    result[0x4c] = 0;
+    result[0x4d] = 0;
+    *(short *)(result + 0x4e) = (short)0xffff;
+  }
+
+  t = *(float *)(result + 0x14);
+  *(float *)(result + 0x18) = direction[0] * t + origin[0];
+  *(float *)(result + 0x1c) = direction[1] * t + origin[1];
+  *(float *)(result + 0x20) = direction[2] * t + origin[2];
+  /* XBE clears normal at +0x24 after computing point — odd but match */
+  *(int *)(result + 0x24) = 0;
+  *(int *)(result + 0x28) = 0;
+  *(int *)(result + 0x2c) = 0;
   return hit;
 }
