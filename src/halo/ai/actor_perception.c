@@ -1991,114 +1991,46 @@ void actor_situation_update(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* actor_situation_try_new_target (0x308e0) — XBE naked draft (batch 133). */
-#if defined(__clang__)
-static void *(*const b308e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static float (*const b308e0_c2fd10)(int actor_handle, int clump_item_handle) = actor_compute_prop_target_weight;
-static void (*const b308e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b308e0_exitfn)(int) = system_exit;
-static void (*const b308e0_c300b0)(int actor_handle) = actor_situation_update_target_status;
-static void (*const b308e0_c302b0)(int actor_handle) = actor_situation_combat_status_update;
-
-__attribute__((naked, noinline))
-void actor_situation_try_new_target(int actor_handle __attribute__((unused)), int target __attribute__((unused)))
+/* actor_situation_try_new_target (0x308e0) — readable C lift. */
+char actor_situation_try_new_target(int actor_handle, int target)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x270(%%esi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lactor_situation_try_new_target_1\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "jmp .Lactor_situation_try_new_target_2\n\t"
-      ".Lactor_situation_try_new_target_1:\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".Lactor_situation_try_new_target_2:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c2fd10]\n\t"
-      "fsts 0x50(%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_situation_try_new_target_5\n\t"
-      "movb 0x60(%%ebx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_situation_try_new_target_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x124d\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x2560cc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_situation_try_new_target_3:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lactor_situation_try_new_target_4\n\t"
-      "flds 0x50(%%ebx)\n\t"
-      "fcomps 0x50(%%eax)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lactor_situation_try_new_target_5\n\t"
-      ".Lactor_situation_try_new_target_4:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%edi\n\t"
-      "movw $0, 0x268(%%esi)\n\t"
-      "movl %%edx, 0x270(%%esi)\n\t"
-      "movl $0xffffffff, 0x26c(%%esi)\n\t"
-      "call *%[c300b0]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c302b0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_situation_try_new_target_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b308e0_dget), [c2fd10] "m"(b308e0_c2fd10), [assert] "m"(b308e0_assert), [exitfn] "m"(b308e0_exitfn), [c300b0] "m"(b308e0_c300b0), [c302b0] "m"(b308e0_c302b0)
-      : "memory");
-}
-#else
-#error "actor_situation_try_new_target: clang naked draft required"
-#endif
+  char *actor;
+  char *prop;
+  char *other;
+  float weight;
 
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  prop = (char *)datum_get(*(data_t **)0x5ab23c, target);
+
+  if (*(int *)(actor + 0x270) == -1) {
+    other = 0;
+  } else {
+    other = (char *)datum_get(*(data_t **)0x5ab23c, *(int *)(actor + 0x270));
+  }
+
+  weight = actor_compute_prop_target_weight(actor_handle, target);
+  *(float *)(prop + 0x50) = weight;
+
+  if (!(weight > *(float *)0x2533c0)) {
+    return 0;
+  }
+
+  if (prop[0x60] == 0) {
+    display_assert((const char *)0x2560cc, (const char *)0x255fb0, 0x124d, 1);
+    system_exit(-1);
+  }
+
+  if (other != 0 && !(weight >= *(float *)(other + 0x50))) {
+    return 0;
+  }
+
+  *(short *)(actor + 0x268) = 0;
+  *(int *)(actor + 0x270) = target;
+  *(int *)(actor + 0x26c) = -1;
+  actor_situation_update_target_status(actor_handle);
+  actor_situation_combat_status_update(actor_handle);
+  return 1;
+}
 
 /* actor_perception_friend_prop_is_attacking (0x309d0) — XBE naked draft (batch 118). */
 #if defined(__clang__)
@@ -2600,71 +2532,35 @@ unsigned int FUN_00030d10(int actor_handle __attribute__((unused)), float *chanc
 #endif
 
 
-/* FUN_00030e60 (0x30e60) — XBE naked draft (batch 132). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00030e60(void)
+/* FUN_00030e60 (0x30e60) — readable C lift. */
+int16_t FUN_00030e60(int unused, int16_t *count, int16_t max_count, void *array, int key)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movw (%%ecx), %%dx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testw %%dx, %%dx\n\t"
-      "jle .LFUN_00030e60_3\n\t"
-      "jmp .LFUN_00030e60_1\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00030e60_1:\n\t"
-      "movswl %%cx, %%ebx\n\t"
-      "imull $0x1c, %%ebx, %%ebx\n\t"
-      "cmpl %%edi, 0x8(%%ebx,%%esi,1)\n\t"
-      "je .LFUN_00030e60_2\n\t"
-      "incl %%ecx\n\t"
-      "cmpw %%dx, %%cx\n\t"
-      "jl .LFUN_00030e60_1\n\t"
-      "jmp .LFUN_00030e60_3\n\t"
-      ".LFUN_00030e60_2:\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "jne .LFUN_00030e60_4\n\t"
-      ".LFUN_00030e60_3:\n\t"
-      "cmpw 0x10(%%ebp), %%dx\n\t"
-      "jge .LFUN_00030e60_4\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "leal 0x1(%%edx), %%eax\n\t"
-      "movw %%ax, (%%ecx)\n\t"
-      "movswl %%dx, %%eax\n\t"
-      "imull $0x1c, %%eax, %%eax\n\t"
-      "leal (%%eax,%%esi,1), %%ecx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movl %%eax, 0x18(%%ecx)\n\t"
-      "movw %%si, (%%ecx)\n\t"
-      "movl %%esi, 0xc(%%ecx)\n\t"
-      "movw %%si, 0x10(%%ecx)\n\t"
-      "movl $0x7f7fffff, 0x14(%%ecx)\n\t"
-      "movw %%dx, %%ax\n\t"
-      ".LFUN_00030e60_4:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t n;
+  int16_t i;
+  char *slot;
+
+  (void)unused;
+  n = *count;
+  for (i = 0; i < n; i++) {
+    slot = (char *)array + (int)i * 0x1c;
+    if (*(int *)(slot + 8) == key)
+      return i;
+  }
+
+  if (n >= max_count)
+    return -1;
+
+  *count = (int16_t)(n + 1);
+  slot = (char *)array + (int)n * 0x1c;
+  *(int *)(slot + 4) = -1;
+  *(int *)(slot + 8) = -1;
+  *(int *)(slot + 0x18) = -1;
+  *(short *)slot = 0;
+  *(int *)(slot + 0xc) = 0;
+  *(short *)(slot + 0x10) = 0;
+  *(unsigned int *)(slot + 0x14) = 0x7f7fffffu;
+  return n;
 }
-#else
-#error "FUN_00030e60: clang naked draft required"
-#endif
 
 
 /* FUN_00030f50 (0x30f50) — XBE naked draft (batch 107). */
@@ -2673,7 +2569,7 @@ static void *(*const b30f50_dget)(void *, int) = (void *(*)(void *, int))datum_g
 static void *(*const b30f50_tag)(int, int) = tag_get;
 static void (*const b30f50_c64540)(int *out, int actor_handle) = FUN_00064540;
 static int (*const b30f50_c64570)(int *iter) = FUN_00064570;
-static void (*const b30f50_c30e60)(void) = FUN_00030e60;
+static int16_t (*const b30f50_c30e60)(int unused, int16_t *count, int16_t max_count, void *array, int key) = FUN_00030e60;
 static int (*const b30f50_c64ab0)(int actor_handle, int object_handle) = prop_get_active_by_unit_index;
 static int *(*const b30f50_gseed)(void) = get_global_random_seed_address;
 static float (*const b30f50_rrange)(int *, float, float) = random_real_range;
