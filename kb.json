@@ -34257,7 +34257,9 @@
         },
         {
           "addr": "0x314f0",
-          "decl": "void actor_visibility_at_point(void);",
+          "decl": "int16_t actor_visibility_at_point(int actor_handle, float *out_pos, float *head_pos, char vis_type, int16_t los_result, char flag, int param_7, int16_t engagement);",
+          "name": "actor_visibility_at_point",
+          "source_path": "src/halo/ai/actor_perception.c",
           "ported": false
         },
         {
@@ -34295,7 +34297,9 @@
         },
         {
           "addr": "0x32380",
-          "decl": "void actor_perception_refresh_danger_zone(void);",
+          "decl": "void actor_perception_refresh_danger_zone(int actor_handle);",
+          "name": "actor_perception_refresh_danger_zone",
+          "source_path": "src/halo/ai/actor_perception.c",
           "ported": false
         },
         {

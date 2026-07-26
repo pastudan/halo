@@ -156,6 +156,8 @@ def main() -> int:
         ("actor_perception_find_sense_position", 0x31a90, 0x31c00),
         ("FUN_00032170", 0x32170, 0x32380),
         ("actor_expected_acknowledgement", 0x32940, 0x32ac0),
+        ("actor_perception_refresh_danger_zone", 0x32380, 0x32940),
+        ("actor_visibility_at_point", 0x314f0, 0x31850),
     ]
 
     xbe = Xbe.from_file(args.xbe)
