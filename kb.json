@@ -29607,7 +29607,7 @@
         {
           "addr": "0x1b6560",
           "decl": "void FUN_001b6560(int vehicle_handle, void *wheel_buffer, void *scratch_buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b69a0",
@@ -29617,17 +29617,17 @@
         {
           "addr": "0x1b6ca0",
           "decl": "void FUN_001b6ca0(int vehicle_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b6e20",
           "decl": "void FUN_001b6e20(int vehicle_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b7020",
           "decl": "void FUN_001b7020(int vehicle_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b72b0",
@@ -39007,7 +39007,7 @@
         {
           "addr": "0x136bc0",
           "decl": "void FUN_00136bc0(int current_object_handle@<edi>, void *collision_model, void *material, void *damage_effect, void *damage_params, unsigned int *flags, float *shield_damage, float *body_damage);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x136f40",
