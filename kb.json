@@ -33735,7 +33735,7 @@
         {
           "addr": "0xfc710",
           "decl": "int16_t weapon_rotate_zoom_level(int weapon_handle, int16_t zoom_level);",
-          "ported": false,
+          "ported": true,
           "name": "weapon_rotate_zoom_level"
         },
         {

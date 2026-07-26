@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* 0xfae80 — weapon_get_label */
 char *weapon_get_label(int weapon_handle)
 {
@@ -3180,74 +3181,21 @@ char weapon_reloading(int weapon_handle)
 }
 
 
-/* weapon_rotate_zoom_level (0xfc710) — XBE naked draft (batch 150). */
-#if defined(__clang__)
-static void *(*const bfc710_get)(int, int) = object_get_and_verify_type;
-static void *(*const bfc710_tag)(int, int) = tag_get;
-static char (*const bfc710_cfc690)(int weapon_handle) = weapon_reloading;
-
-__attribute__((naked, noinline))
-int16_t weapon_rotate_zoom_level(int weapon_handle __attribute__((unused)), int16_t zoom_level __attribute__((unused)))
+/* weapon_rotate_zoom_level (0xfc710) — readable C lift. */
+int16_t weapon_rotate_zoom_level(int weapon_handle, int16_t zoom_level)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[cfc690]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lweapon_rotate_zoom_level_2\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lweapon_rotate_zoom_level_1\n\t"
-      "movswl 0x3da(%%esi), %%ecx\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "decl %%ecx\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "jge .Lweapon_rotate_zoom_level_1\n\t"
-      "popl %%edi\n\t"
-      "incl %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lweapon_rotate_zoom_level_1:\n\t"
-      "movswl 0x3da(%%esi), %%ecx\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "decl %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "setne %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "decl %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lweapon_rotate_zoom_level_2:\n\t"
-      "movw 0xc(%%ebp), %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bfc710_get), [tag] "m"(bfc710_tag), [cfc690] "m"(bfc710_cfc690)
-      : "memory");
+  char *weapon_obj; char *weapon_tag; int16_t levels;
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  weapon_tag = (char *)tag_get(0x77656170, *(int *)weapon_obj);
+  if (weapon_reloading(weapon_handle)) return zoom_level;
+  if (zoom_level >= 0) {
+    levels = *(int16_t *)(weapon_tag + 0x3da);
+    if ((int)zoom_level < (int)levels - 1) return (int16_t)(zoom_level + 1);
+  }
+  levels = *(int16_t *)(weapon_tag + 0x3da);
+  if ((int)zoom_level == (int)levels - 1) return -1;
+  return 0;
 }
-#else
-#error "weapon_rotate_zoom_level: clang naked draft required"
-#endif
-
-
 /* 0xfc780 — interpolate weapon zoom magnification for a zoom level. */
 /* weapon_get_zoom_magnification (0xfc780) — XBE naked draft (batch 227). */
 #if defined(__clang__)
