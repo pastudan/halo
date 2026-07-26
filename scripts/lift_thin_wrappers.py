@@ -444,7 +444,8 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
                 f"}}\n"
             )
 
-    # networking message_header: save eax/ecx/edx; F(global, a0, a1, a2)
+    # networking message_header: push scratch eax/ecx/edx then F(global,a0,a1,a2,?,?,?)
+    # add esp,0x1c ⇒ 7 stack args (3 undefined scratch + global + 3 formals).
     if (
         len(mid) == 12
         and mid[0] == ("push", "eax")
@@ -463,15 +464,18 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
     ):
         fn = callee(mid[10][1])
         if fn:
-            if len(ps) < 3:
-                sig, ps = f"void {name}(void *a0, void *a1, void *a2)", ["a0", "a1", "a2"]
+            sig = (
+                f"void {name}(void *decoded_packet, char *encoded_packet, "
+                f"short *encoded_packet_size)"
+            )
             return (
                 f"{sig}\n{{\n"
-                f"  {fn}((void *){mid[9][1]}, {ps[0]}, {ps[1]}, {ps[2]});\n"
+                f"  {fn}((int){mid[9][1]}, decoded_packet, encoded_packet, "
+                f"encoded_packet_size, (short *)0, (short *)0, 0);\n"
                 f"}}\n"
             )
 
-    # networking message_header 2-arg: F(global, a0, a1)
+    # networking message_header: add esp,0x18 ⇒ 6 stack args
     if (
         len(mid) == 10
         and mid[0] == ("push", "eax")
@@ -488,11 +492,10 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
     ):
         fn = callee(mid[8][1])
         if fn:
-            if len(ps) < 2:
-                sig, ps = f"void {name}(void *a0, void *a1)", ["a0", "a1"]
+            sig = f"void {name}(void *a0, void *a1)"
             return (
                 f"{sig}\n{{\n"
-                f"  {fn}((void *){mid[7][1]}, {ps[0]}, {ps[1]});\n"
+                f"  {fn}((int){mid[7][1]}, a0, a1, (short *)0, (short *)0, 0);\n"
                 f"}}\n"
             )
 
