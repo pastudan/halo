@@ -17505,5 +17505,19 @@
     "object": "D3D8:d3dsurface.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ed7d0",
+    "name": "D3D_DestroyResource",
+    "object": "D3D8:d3dresource.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1efa80",
+    "name": "D3D_BlockOnTime",
+    "object": "D3D8:d3dresource.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

@@ -31645,11 +31645,13 @@
       "functions": [
         {
           "addr": "0x1ed7d0",
-          "decl": "void __stdcall D3D_DestroyResource(void *resource);"
+          "decl": "void __stdcall D3D_DestroyResource(void *resource);",
+          "ported": false
         },
         {
           "addr": "0x1efa80",
-          "decl": "void __stdcall D3D_BlockOnTime(uint32_t time, int param2);"
+          "decl": "void __stdcall D3D_BlockOnTime(uint32_t time, int param2);",
+          "ported": false
         }
       ],
       "name": "D3D8:d3dresource.obj",
