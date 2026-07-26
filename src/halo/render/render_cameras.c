@@ -4037,7 +4037,7 @@ void FUN_001887b0(void)
 
 
 void FUN_00188880(void) {
-  ((void (*)(int))0x1887b0)(-0xd);
+  FUN_001887b0(-0xd);
 }
 
 

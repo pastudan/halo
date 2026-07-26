@@ -7158,7 +7158,7 @@
         },
         {
           "addr": "0x87ac0",
-          "decl": "void FUN_00087ac0(void);",
+          "decl": "char FUN_00087ac0(char enable);",
           "ported": true
         },
         {
@@ -17179,7 +17179,7 @@
       "functions": [
         {
           "addr": "0x89240",
-          "decl": "void FUN_00089240(int *out);",
+          "decl": "void FUN_00089240(void);",
           "ported": false
         },
         {
@@ -17189,7 +17189,7 @@
         },
         {
           "addr": "0x89330",
-          "decl": "void FUN_00089330(int *out);",
+          "decl": "void FUN_00089330(float *out);",
           "ported": true
         },
         {
@@ -19797,7 +19797,7 @@
       "functions": [
         {
           "addr": "0x8f870",
-          "decl": "void profile_seconds_elapsed(void);",
+          "decl": "void profile_seconds_elapsed(int v);",
           "ported": true
         },
         {
@@ -23243,7 +23243,7 @@
         },
         {
           "addr": "0x1887b0",
-          "decl": "void FUN_001887b0(void);",
+          "decl": "void FUN_001887b0(int a0);",
           "ported": false
         },
         {
@@ -24501,17 +24501,17 @@
         },
         {
           "addr": "0x1c9230",
-          "decl": "void dsound_angle_from_angle(void);",
+          "decl": "int dsound_angle_from_angle(float angle);",
           "ported": false
         },
         {
           "addr": "0x1c9250",
-          "decl": "void dsound_occlusion_from_occlusion(void);",
+          "decl": "int dsound_occlusion_from_occlusion(float occlusion);",
           "ported": false
         },
         {
           "addr": "0x1c9270",
-          "decl": "void dsound_obstruction_from_obstruction(void);",
+          "decl": "int dsound_obstruction_from_obstruction(float obstruction);",
           "ported": false
         },
         {
@@ -24970,7 +24970,7 @@
         },
         {
           "addr": "0x1cbc20",
-          "decl": "float FUN_001cbc20(float t);",
+          "decl": "int FUN_001cbc20(float t);",
           "ported": false
         },
         {
@@ -26718,7 +26718,7 @@
         },
         {
           "addr": "0x824a0",
-          "decl": "void FUN_000824a0(void);",
+          "decl": "int FUN_000824a0(int *a, int *b);",
           "ported": true
         },
         {
@@ -28050,12 +28050,12 @@
         {
           "addr": "0x19e640",
           "decl": "int ufputc(int c, void *stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e680",
           "decl": "int uungetc(int c, void *stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e6c0",
@@ -36367,7 +36367,7 @@
         },
         {
           "addr": "0x68a30",
-          "decl": "void FUN_00068a30(void *tif, int enable);",
+          "decl": "void FUN_00068a30(int param_1, const char *format, ...);",
           "ported": false
         },
         {
@@ -36800,7 +36800,7 @@
         },
         {
           "addr": "0x6d8e0",
-          "decl": "int FUN_0006d8e0(void *tif);",
+          "decl": "int FUN_0006d8e0(const char *path, const char *mode);",
           "ported": false
         },
         {
@@ -37015,7 +37015,7 @@
         },
         {
           "addr": "0x6f9d0",
-          "decl": "void FUN_0006f9d0(unsigned char *rgb, unsigned short *out);",
+          "decl": "void FUN_0006f9d0(void);",
           "ported": false
         },
         {
@@ -39830,8 +39830,8 @@
       "functions": [
         {
           "addr": "0x960c0",
-          "decl": "void device_new(void);",
-          "ported": false
+          "decl": "char device_new(int object_handle);",
+          "ported": true
         },
         {
           "addr": "0x96110",
@@ -39850,8 +39850,8 @@
         },
         {
           "addr": "0x964a0",
-          "decl": "int device_get_power(int a0);",
-          "ported": false
+          "decl": "float device_get_power(int a0);",
+          "ported": true
         },
         {
           "addr": "0x964d0",
@@ -39880,7 +39880,7 @@
         },
         {
           "addr": "0x966b0",
-          "decl": "int device_group_get_value(int a0);",
+          "decl": "float device_group_get_value(int a0);",
           "ported": false
         },
         {

@@ -984,89 +984,25 @@ int ufgetc(void *stream)
   return _fgetwc(stream);
 }
 
-/* ufputc (0x19e640) — XBE naked draft (batch 278). */
-#if defined(__clang__)
-static void (*const b19e640_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19e640_exitfn)(int) = system_exit;
-static int (*const b19e640_c1dc61e)(int c, void *stream) = _fputwc;
-
-__attribute__((naked, noinline))
-int ufputc(int c __attribute__((unused)), void *stream __attribute__((unused)))
+/* ufputc (0x19e640) — readable C lift (assert wrapper). */
+int ufputc(int c, void *stream)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lufputc_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x257\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b4948\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lufputc_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc61e]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b19e640_assert), [exitfn] "m"(b19e640_exitfn), [c1dc61e] "m"(b19e640_c1dc61e)
-      : "memory");
+  if (stream == NULL) {
+    display_assert((const char *)0x2b4948, (const char *)0x2b45b4, 0x257, 1);
+    system_exit(-1);
+  }
+  return _fputwc(c, stream);
 }
-#else
-#error "ufputc: clang naked draft required"
-#endif
 
-
-/* uungetc (0x19e680) — XBE naked draft (batch 278). */
-#if defined(__clang__)
-static void (*const b19e680_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19e680_exitfn)(int) = system_exit;
-static int (*const b19e680_c1dc766)(int c, void *stream) = _ungetwc;
-
-__attribute__((naked, noinline))
-int uungetc(int c __attribute__((unused)), void *stream __attribute__((unused)))
+/* uungetc (0x19e680) — readable C lift (assert wrapper). */
+int uungetc(int c, void *stream)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Luungetc_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x261\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b4948\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Luungetc_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc766]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b19e680_assert), [exitfn] "m"(b19e680_exitfn), [c1dc766] "m"(b19e680_c1dc766)
-      : "memory");
+  if (stream == NULL) {
+    display_assert((const char *)0x2b4948, (const char *)0x2b45b4, 0x261, 1);
+    system_exit(-1);
+  }
+  return _ungetwc(c, stream);
 }
-#else
-#error "uungetc: clang naked draft required"
-#endif
-
 
 /* 0x19e6c0 */
 wchar_t *ufgets(wchar_t *buffer, int count, void *stream)

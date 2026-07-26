@@ -1,46 +1,16 @@
 #include <stdint.h>
 /* --- devices.obj batch drafts (2026-07-26) --- */
 
-/* device_new (0x960c0) — XBE naked draft (batch 275). */
-#if defined(__clang__)
-static void *(*const b960c0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b960c0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-void device_new(void)
+/* device_new (0x960c0) — readable C lift. */
+char device_new(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x64657669\n\t"
-      "call *%[tag]\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "movw %%ax, 0x1b4(%%esi)\n\t"
-      "movw %%ax, 0x1a8(%%esi)\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "orl $0x40000, %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b960c0_get), [tag] "m"(b960c0_tag)
-      : "memory");
+  char *obj = (char *)object_get_and_verify_type(object_handle, 0x380);
+  tag_get(0x64657669, *(int *)obj);
+  *(unsigned short *)(obj + 0x1b4) = 0xffff;
+  *(unsigned short *)(obj + 0x1a8) = 0xffff;
+  *(unsigned int *)(obj + 4) |= 0x40000u;
+  return 1;
 }
-#else
-#error "device_new: clang naked draft required"
-#endif
-
 
 /* device_export_function_values (0x96110) — XBE naked draft (batch 255). */
 #if defined(__clang__)
@@ -372,71 +342,23 @@ void device_preprocess_node_orientations(void)
 #endif
 
 
-/* device_get_position (0x96470) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-static void *(*const b96470_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-int device_get_position(int a0 __attribute__((unused)))
+/* device_get_position (0x96470) — readable C lift. */
+float device_get_position(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Ldevice_get_position_1\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "flds 0x1b8(%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldevice_get_position_1:\n\t"
-      "flds 0x2533c0\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b96470_get)
-      : "memory");
+  if (a0 == -1)
+    return 0.0f;
+  void *obj = object_get_and_verify_type(a0, 0x380);
+  return *(float *)((char *)obj + 0x1b8);
 }
-#else
-#error "device_get_position: clang naked draft required"
-#endif
 
-
-/* device_get_power (0x964a0) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-static void *(*const b964a0_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-int device_get_power(int a0 __attribute__((unused)))
+/* device_get_power (0x964a0) — readable C lift. */
+float device_get_power(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Ldevice_get_power_1\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "flds 0x1ac(%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldevice_get_power_1:\n\t"
-      "flds 0x2533c0\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b964a0_get)
-      : "memory");
+  if (a0 == -1)
+    return 0.0f;
+  void *obj = object_get_and_verify_type(a0, 0x380);
+  return *(float *)((char *)obj + 0x1ac);
 }
-#else
-#error "device_get_power: clang naked draft required"
-#endif
-
 
 /* device_set_never_appears_locked (0x964d0) — readable C lift (assert wrapper). */
 void device_set_never_appears_locked(int a0, int a1)
@@ -596,33 +518,12 @@ void device_group_change_only_once_more_set(int a0, int a1)
   }
 }
 
-/* device_group_get_value (0x966b0) — XBE naked draft (batch 289). */
-#if defined(__clang__)
-static void *(*const b966b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-int device_group_get_value(int a0 __attribute__((unused)))
+/* device_group_get_value (0x966b0) — readable C lift. */
+float device_group_get_value(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5aa8c8, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b966b0_dget)
-      : "memory");
+  void *d = datum_get(*(void **)0x5aa8c8, a0);
+  return *(float *)((char *)d + 4);
 }
-#else
-#error "device_group_get_value: clang naked draft required"
-#endif
-
 
 /* device_group_set_real (0x966d0) — XBE naked draft (batch 282). */
 #if defined(__clang__)
