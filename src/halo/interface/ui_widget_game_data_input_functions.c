@@ -3706,19 +3706,59 @@ void FUN_000f0100(void *widget __attribute__((unused)))
 #endif
 
 
-/* 0xf0170 */
-void FUN_000f0170(void *widget)
+/* FUN_000f0170 (0xf0170) — XBE naked draft (batch 162). */
+#if defined(__clang__)
+static bool (*const bf0170_c82300)(void) = transport_network_available;
+static void (*const bf0170_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bf0170_exitfn)(int) = system_exit;
+static void (*const bf0170_ce8910)(int16_t error_handle, int local_player_index, char is_modal, char pause_game) = ui_widget_display_error;
+
+__attribute__((naked, noinline))
+void FUN_000f0170(void *widget __attribute__((unused)))
 {
-  int ebx = 0;
-
-  transport_network_available();
-  display_assert((char *)0x00286184, (char *)0x002859a4, 4575, 0);
-  system_exit(0);
-  /* test (char)ebx, (char)ebx -> jne 0xf01bc */
-  ui_widget_display_error(0, 0, 0, 0);
-
-  (void)ebx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c82300]\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movb %%al, %%bl\n\t"
+      "jne .LFUN_000f0170_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x11df\n\t"
+      "pushl $0x2859a4\n\t"
+      "pushl $0x286184\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000f0170_1:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .LFUN_000f0170_2\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x2(%%esi), %%ax\n\t"
+      "pushl $1\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "pushl $5\n\t"
+      "call *%[ce8910]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_000f0170_2:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c82300] "m"(bf0170_c82300), [assert] "m"(bf0170_assert), [exitfn] "m"(bf0170_exitfn), [ce8910] "m"(bf0170_ce8910)
+      : "memory");
 }
+#else
+#error "FUN_000f0170: clang naked draft required"
+#endif
+
 
 /* player_profile_end_editing (0xf01d0) — XBE naked draft (batch 149). */
 #if defined(__clang__)

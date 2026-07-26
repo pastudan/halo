@@ -2126,21 +2126,59 @@ int widget_instance_get_child_index_from_parent(void *widget)
   return -1;
 }
 
-void widget_instance_set_visibility_recursive(void *widget, char visible)
-{
-  void *child;
+/* widget_instance_set_visibility_recursive (0xe4370) — XBE naked draft (batch 162). */
+#if defined(__clang__)
+static void (*const be4370_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be4370_exitfn)(int) = system_exit;
+static void (*const be4370_ce4370)(void *widget, char visible) = widget_instance_set_visibility_recursive;
 
-  if (widget == NULL) {
-    display_assert((char *)0x2832a8, (char *)0x283280, 0x743, 1);
-    system_exit(-1);
-  }
-  *(char *)((char *)widget + 0x10) = visible;
-  child = *(void **)((char *)widget + 0x34);
-  while (child != NULL) {
-    widget_instance_set_visibility_recursive(child, visible);
-    child = *(void **)((char *)child + 0x2c);
-  }
+__attribute__((naked, noinline))
+void widget_instance_set_visibility_recursive(void *widget __attribute__((unused)), char visible __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lwidget_instance_set_visibility_recursive_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x743\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x2832a8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lwidget_instance_set_visibility_recursive_1:\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "movb %%bl, 0x10(%%esi)\n\t"
+      "movl 0x34(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lwidget_instance_set_visibility_recursive_3\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lwidget_instance_set_visibility_recursive_2:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ce4370]\n\t"
+      "movl 0x2c(%%esi), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lwidget_instance_set_visibility_recursive_2\n\t"
+      ".Lwidget_instance_set_visibility_recursive_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be4370_assert), [exitfn] "m"(be4370_exitfn), [ce4370] "m"(be4370_ce4370)
+      : "memory");
 }
+#else
+#error "widget_instance_set_visibility_recursive: clang naked draft required"
+#endif
+
 
 void main_menu_active(char active)
 {

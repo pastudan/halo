@@ -2019,6 +2019,19 @@ def main() -> int:
         ("FUN_00080eb0", 0x80eb0, 0x80ef7),
         ("FUN_000a5590", 0xa5590, 0xa55e0),
         ("FUN_000bf260", 0xbf260, 0xbf2a9),
+        # gameplay wave 162 (2026-07-26) — Capstone weaks
+        ("FUN_000dc7a0", 0xdc7a0, 0xdc7e9),
+        ("FUN_000f0170", 0xf0170, 0xf01c2),
+        ("ai_debug_speak", 0x4a220, 0x4a285),
+        ("player_ui_get_active_player_profile", 0xe0980, 0xe09d6),
+        ("FUN_000c4030", 0xc4030, 0xc40a4),
+        ("widget_instance_set_visibility_recursive", 0xe4370, 0xe43c5),
+        ("FUN_000c2cd0", 0xc2cd0, 0xc2d17),
+        ("FUN_000c2dc0", 0xc2dc0, 0xc2e07),
+        ("FUN_000bfbc0", 0xbfbc0, 0xbfc0b),
+        ("FUN_000bf2b0", 0xbf2b0, 0xbf2f9),
+        ("FUN_000bf4c0", 0xbf4c0, 0xbf50a),
+        ("FUN_000c9990", 0xc9990, 0xc99e0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

@@ -2746,24 +2746,57 @@ void FUN_0004a030(void)
 #endif
 
 
-/* 0x4a220 */
-void ai_debug_speak(int a0)
+/* ai_debug_speak (0x4a220) — XBE naked draft (batch 162). */
+#if defined(__clang__)
+static void *(*const b4a220_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static short (*const b4a220_c1a67e0)(const char *param_1) = FUN_001a67e0;
+
+__attribute__((naked, noinline))
+void ai_debug_speak(int a0 __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* cmp eax, -1 -> je 0x4a283 */
-  datum_get((void *)(uintptr_t)eax, 0);
-  FUN_001a67e0((char *)(uintptr_t)ecx);
-  /* cmp ecx, -1 -> je 0x4a282 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x4a282 */
-  /* mem[0x006324e4] = edx */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5ac9f8, %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lai_debug_speak_2\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1a67e0]\n\t"
+      "movl 0x18(%%esi), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .Lai_debug_speak_1\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lai_debug_speak_1\n\t"
+      "movb $1, %%cl\n\t"
+      "movb %%cl, 0x5aca89\n\t"
+      "movb %%cl, 0x6324e0\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw %%cx, 0x6324e8\n\t"
+      "movb %%cl, 0x6324e1\n\t"
+      "movl 0x18(%%esi), %%edx\n\t"
+      "movl %%edx, 0x6324e4\n\t"
+      "movw %%ax, 0x6324ea\n\t"
+      ".Lai_debug_speak_1:\n\t"
+      "popl %%esi\n\t"
+      ".Lai_debug_speak_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b4a220_dget), [c1a67e0] "m"(b4a220_c1a67e0)
+      : "memory");
 }
+#else
+#error "ai_debug_speak: clang naked draft required"
+#endif
+
 
 /* ai_debug_speak_list (0x4a290) — XBE naked draft (batch 122). */
 #if defined(__clang__)

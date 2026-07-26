@@ -258,23 +258,58 @@ void player_ui_clear_multiplayer_variant(void)
   game_set_game_variant((void *)0);
 }
 
-/* 0xe0980 */
+/* player_ui_get_active_player_profile (0xe0980) — XBE naked draft (batch 162). */
+#if defined(__clang__)
+static void (*const be0980_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be0980_exitfn)(int) = system_exit;
+static void * (*const be0980_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
 void player_ui_get_active_player_profile(void)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* cmp (int16_t)esi, 4 -> jge 0xe099b */
-  /* test edi, edi -> jne 0xe09bb */
-  display_assert((char *)0x002827a0, (char *)0x00282724, 238, 0);
-  system_exit(0);
-  csmemcpy((void *)(uintptr_t)edi, (void *)(uintptr_t)eax, 0);
-
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "jl .Lplayer_ui_get_active_player_profile_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jge .Lplayer_ui_get_active_player_profile_1\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lplayer_ui_get_active_player_profile_2\n\t"
+      ".Lplayer_ui_get_active_player_profile_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xee\n\t"
+      "pushl $0x282724\n\t"
+      "pushl $0x2827a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_ui_get_active_player_profile_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "imull $0x38, %%eax, %%eax\n\t"
+      "pushl $0x30\n\t"
+      "addl $0x46bee0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be0980_assert), [exitfn] "m"(be0980_exitfn), [c8e0b0] "m"(be0980_c8e0b0)
+      : "memory");
 }
+#else
+#error "player_ui_get_active_player_profile: clang naked draft required"
+#endif
+
 
 /* 0xe09e0 */
 void player_ui_get_active_player_profile_index(void)
