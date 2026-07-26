@@ -34152,7 +34152,9 @@
         },
         {
           "addr": "0x2f6e0",
-          "decl": "void actor_perception_desire_prop(void);",
+          "decl": "char actor_perception_desire_prop(int actor_handle, int existing_prop, int unit_handle, int owner_handle, char friendly, char field_63, char field_12e, int16_t field_76, float vis_metric, int16_t scale, int sense, char field_127, char *out_flag);",
+          "name": "actor_perception_desire_prop",
+          "source_path": "src/halo/ai/actor_perception.c",
           "ported": false
         },
         {
@@ -34270,12 +34272,16 @@
         },
         {
           "addr": "0x31c00",
-          "decl": "void actor_perception_unit_from_swarm(void);",
+          "decl": "int actor_perception_unit_from_swarm(int owner_handle, int actor_handle, int unit_handle, char verify_flag, float *swarm_origin);",
+          "name": "actor_perception_unit_from_swarm",
+          "source_path": "src/halo/ai/actor_perception.c",
           "ported": false
         },
         {
           "addr": "0x31df0",
-          "decl": "void prop_position_refresh(void);",
+          "decl": "void prop_position_refresh(int actor_handle, int prop_handle, float *out_pos, char refresh_flag, char swarm_refresh);",
+          "name": "prop_position_refresh",
+          "source_path": "src/halo/ai/actor_perception.c",
           "ported": false
         },
         {
@@ -34325,7 +34331,9 @@
         },
         {
           "addr": "0x33440",
-          "decl": "void prop_status_refresh(void);",
+          "decl": "void prop_status_refresh(int actor_handle, int prop_handle, float *out_pos);",
+          "name": "prop_status_refresh",
+          "source_path": "src/halo/ai/actor_perception.c",
           "ported": false
         },
         {
@@ -40243,6 +40251,8 @@
         {
           "addr": "0x5f740",
           "decl": "char FUN_0005f740(unsigned int *path_buf);",
+          "name": "FUN_0005f740",
+          "source_path": "src/halo/ai/path.c",
           "ported": false
         },
         {

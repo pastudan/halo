@@ -649,52 +649,100 @@ void FUN_000643d0(int actor_handle)
   prop_add(actor_handle, prop_index, -1);
 }
 
-/* 0x645a0 */
+/* 0x645a0 — find or allocate an unacknowledged prop for a unit. */
 int prop_new_unacknowledged(int actor_handle, int unit_handle, char friendly)
 {
-  int eax = 0;
-  int ebx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *actor;
+  char *prop;
+  int prop_handle;
+  int best_handle;
+  int alt_handle;
+  float best_vis;
+  float alt_vis;
+  int match_count;
+  char out_flag;
+  int16_t threshold;
+  float vis;
+  int16_t status;
 
-  (void)actor_handle;
-  (void)unit_handle;
-  (void)friendly;
+  best_handle = -1;
+  alt_handle = -1;
+  best_vis = 3.4028235e38f;
+  alt_vis = 3.4028235e38f;
+  match_count = 0;
 
-  datum_get((void *)0, 0);
-  datum_get((void *)0, 0);
-  /* cmp (int16_t)eax, 4 -> jl 0x64610 */
-  /* cmp (int16_t)eax, 5 -> jle 0x645e0 */
-  /* relift: cmp dword ptr [esi + 0xc], -1 -> jne 0x645e0 */
-  actor_perception_desire_prop();
-  /* test (char)eax, (char)eax -> jne 0x6469d */
-  /* relift: cmp byte ptr [esi + 0x60], (char)eax -> jne 0x645e0 */
-  /* cmp edi, -1 -> jne 0x6471e */
-  /* cmp edi, -1 -> je 0x64709 */
-  /* relift: cmp word ptr [ebp - 8], (int16_t)edx -> jl 0x64709 */
-  /* cmp edi, -1 -> jne 0x6471e */
-  data_new_at_index((void *)0);
-  datum_get((void *)0, 0);
-  /* cmp eax, ebx -> je 0x6477f */
-  display_assert((void *)0x00255f50, (void *)0x0025f134, 158, 0);
-  system_exit(0);
-  /* cmp eax, ebx -> je 0x6477f */
-  display_assert((void *)0x0025f46c, (void *)0x0025f134, 159, 0);
-  system_exit(0);
-  FUN_0003b410(0, 0, 0);
-  FUN_00064400(0, 0);
-  csmemset((void *)0, 0, 312);
-  prop_add(0, 0, -1);
+  actor = (char *)datum_get(actor_data, actor_handle);
+  prop_handle = *(int *)(actor + 0x50);
+  while (prop_handle != -1) {
+    prop = (char *)datum_get(prop_data, prop_handle);
+    status = *(int16_t *)(prop + 0x24);
+    if (status >= 4 && status <= 5 && *(int *)(prop + 0xc) == -1) {
+      vis = *(float *)(prop + 0x11c);
+      out_flag = 0;
+      if (actor_perception_desire_prop(
+              actor_handle, -1, *(int *)(prop + 0x18), *(int *)(prop + 0x1c),
+              *(char *)(prop + 0x60), *(char *)(prop + 0x63),
+              *(char *)(prop + 0x12e), *(int16_t *)(prop + 0x76), vis * vis,
+              *(int16_t *)(prop + 0x6a), *(int *)(prop + 0x20),
+              *(char *)(prop + 0x127), &out_flag)) {
+        if (*(char *)(prop + 0x60) != friendly) {
+          prop_handle = *(int *)(prop + 8);
+          continue;
+        }
+        match_count++;
+        if (out_flag == 0) {
+          prop_handle = *(int *)(prop + 8);
+          continue;
+        }
+        if (*(float *)(prop + 0x11c) <= alt_vis) {
+          alt_handle = prop_handle;
+          alt_vis = *(float *)(prop + 0x11c);
+        }
+      } else if (*(float *)(prop + 0x11c) <= best_vis) {
+        best_handle = prop_handle;
+        best_vis = *(float *)(prop + 0x11c);
+      }
+    }
+    prop_handle = *(int *)(prop + 8);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
-  return -1;
+  prop_handle = best_handle;
+  if (prop_handle == -1) {
+    prop_handle = alt_handle;
+    if (prop_handle == -1)
+      goto allocate_new;
+    threshold = (int16_t)(friendly ? 6 : 4);
+    if (match_count < threshold)
+      goto allocate_new;
+    if (prop_handle == -1)
+      goto allocate_new;
+  }
+
+  prop = (char *)datum_get(prop_data, prop_handle);
+  if (*(int *)(prop + 0xc) != -1) {
+    display_assert("prop->parent_prop_index == NONE",
+                   "c:\\halo\\SOURCE\\ai\\props.c", 0x9e, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(prop + 0xc) != -1) {
+    display_assert("prop->parent_prop_index == NONE",
+                   "c:\\halo\\SOURCE\\ai\\props.c", 0x9f, 1);
+    system_exit(-1);
+  }
+  FUN_0003b410(actor_handle, prop_handle, -1);
+  FUN_00064400(actor_handle, prop_handle);
+  {
+    int16_t saved_type = *(int16_t *)prop;
+    csmemset(prop, 0, 0x138);
+    *(int16_t *)prop = saved_type;
+  }
+  prop_add(actor_handle, prop_handle, unit_handle);
+  return prop_handle;
+
+allocate_new:
+  prop_handle = data_new_at_index(prop_data);
+  prop_add(actor_handle, prop_handle, unit_handle);
+  return prop_handle;
 }
 
 /* 0x647c0 */
@@ -776,6 +824,7 @@ int FUN_00064b40(int actor_handle, int unit_handle, char create_if_needed,
   char *prop;
   int owner_handle;
   int prop_handle;
+  char local_4c[0x4c];
   char friendly;
   char ack;
 
@@ -833,13 +882,14 @@ int FUN_00064b40(int actor_handle, int unit_handle, char create_if_needed,
     return -1;
 
   prop = (char *)datum_get(prop_data, prop_handle);
-  prop_position_refresh();
+  prop_position_refresh(actor_handle, prop_handle, (float *)local_4c, 0,
+                        refresh_flag);
   *(int16_t *)(prop + 0x6a) = 0x1e;
   *(char *)(prop + 0x126) = 1;
   if (refresh_flag == 0)
     return prop_handle;
 
-  prop_status_refresh();
+  prop_status_refresh(actor_handle, prop_handle, (float *)local_4c);
   if (*(int16_t *)(prop + 0x30) < 2)
     return prop_handle;
 

@@ -1181,113 +1181,183 @@ char path_state_estimated_distance(void *path_state, void *fp_element, int surfa
   (void)local_4;
 }
 
-/* 0x5f740 */
+/* 0x5f740 — expand the path search frontier from the cost heap. */
 char FUN_0005f740(unsigned int *path_buf)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-  int local_10 = 0;
+  char *path;
+  char success;
+  float cost_scale;
+  int16_t node_index;
+  char *node;
+  char edges[0x860];
+  int16_t edge_count;
+  char *edge;
+  int edge_remaining;
+  char *scenario;
+  int surface_index;
+  void *tag_block;
+  void *surface_table;
+  char process_edge;
+  float step_cost;
+  float dist_sq;
+  float new_cost;
+  float focus_dist_sq;
+  float step_pos[3];
+  float heap_key;
 
-  /* relift: relift: fld dword ptr [0x2549d4] */
-  /* test (char)eax, 0x41 -> jne 0x5f765 */
-  path_heap_pop_cheapest_node((void *)0);
-  path_get_node((char *)(uintptr_t)path_buf, 0);
-  tag_block_get_element((void *)(uintptr_t)*(int *)((char *)path_buf + 0x64), 0, 0);
-  /* test ecx, ecx -> jl 0x5f7be */
-  /* relift: cmp ecx, dword ptr [eax + 0x3c] -> jl 0x5f7de */
-  display_assert((char *)0x0025e888, (char *)0x0025e0ac, 861, 1);
-  system_exit(-1);
-  /* test (char)eax, (char)eax -> je 0x5f829 */
-  /* relift: cmp edx, dword ptr [edi + 0x5c] -> je 0x5feff */
-  /* relift: relift: fld dword ptr [0x254cc4] */
-  /* test (char)eax, 0x41 -> jne 0x5f809 */
-  /* relift: relift: fld dword ptr [0x254cc4] */
-  /* relift: relift: fld dword ptr [0x253f34] */
-  /* test (char)eax, 0x41 -> je 0x5ff22 */
-  build_path_edges_for_surface();
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x5fed3 */
-  /* test (char)eax, 0x40 -> jne 0x5f87b */
-  /* test (char)ecx, (char)ecx -> jne 0x5f8da */
-  tag_block_get_element((void *)(uintptr_t)*(int *)((char *)path_buf + 0x64), 0, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* test (char)eax, 8 -> je 0x5f8da */
-  breakable_surfaces_get_bsp_surface_data();
-  /* test (char)eax, (char)eax -> je 0x5febd */
-  /* relift: relift: fcomp dword ptr [0x254e74] */
-  /* test (char)eax, 0x41 -> jne 0x5f9ef */
-  /* test (char)eax, 0x41 -> jne 0x5f9ef */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x5f9d1 */
-  path_attractor_weight();
-  /* test (char)eax, 0x41 -> je 0x5fa6c */
-  /* relift: relift: fcomp dword ptr [0x25e884] */
-  /* test (char)eax, 1 -> je 0x5fae8 */
-  display_assert((char *)0x0025e828, (char *)0x0025e0ac, 1005, 1);
-  system_exit(-1);
-  FUN_001d9068();
-  /* test (char)eax, (char)eax -> jne 0x5febd */
-  error(3, (char *)0x0025e7d8);
-  /* test (char)eax, (char)eax -> je 0x5fb4e */
-  /* test (char)eax, 0x41 -> je 0x5febd */
-  /* cmp (int16_t)esi, -1 -> je 0x5fba6 */
-  path_get_node((char *)(uintptr_t)path_buf, 0);
-  /* cmp (int16_t)esi, -1 -> jne 0x5fb73 */
-  /* cmp (int16_t)eax, 0x400 -> jge 0x5fd96 */
-  /* relift: cmp word ptr [ebp - 0x10], -1 -> je 0x5febd */
-  path_get_node((char *)(uintptr_t)path_buf, local_10);
-  tag_block_get_element((void *)(uintptr_t)*(int *)((char *)path_buf + 0x64), 0, 0);
-  /* test ecx, ecx -> jl 0x5fc8a */
-  /* relift: cmp ecx, dword ptr [eax + 0x3c] -> jl 0x5fcaa */
-  display_assert((char *)0x0025e780, (char *)0x0025e0ac, 1126, 1);
-  system_exit(-1);
-  /* cmp (int16_t)eax, 0xffff -> jne 0x5fdb7 */
-  path_heap_insert((void *)0, 0, 0);
-  /* relift: cmp dword ptr [ebp - 0x1c], ecx -> jge 0x5febd */
-  /* cmp (int16_t)ebx, -1 -> jne 0x5fcfd */
-  error(2, (char *)0x0025e744);
-  /* relift: cmp (int16_t)ebx, word ptr [edi + 0x11084] -> jl 0x5fd2f */
-  display_assert((char *)0x0025e708, (char *)0x0025e0ac, 1059, 1);
-  system_exit(-1);
-  /* relift: cmp word ptr [edi + ebx*4 + 0x11086], (int16_t)esi -> je 0x5fd5c */
-  display_assert((char *)0x0025e6d4, (char *)0x0025e0ac, 1060, 1);
-  system_exit(-1);
-  /* relift: cmp (int16_t)edx, word ptr [eax + 0x2c] -> je 0x5fbe1 */
-  display_assert((char *)0x0025e680, (char *)0x0025e0ac, 1061, 1);
-  system_exit(-1);
-  /* test eax, eax -> je 0x5febd */
-  /* relift: cmp word ptr [eax + 0x10], 0 -> jne 0x5febd */
-  /* cmp (int16_t)eax, 1 -> jl 0x5fdc6 */
-  /* relift: cmp (int16_t)eax, word ptr [edi + 0x11084] -> jl 0x5fde6 */
-  display_assert((char *)0x0025e630, (char *)0x0025e0ac, 1137, 1);
-  system_exit(-1);
-  /* relift: cmp dword ptr [ebp - 0x1c], edx -> jle 0x5fe17 */
-  display_assert((char *)0x0025e5d8, (char *)0x0025e0ac, 1138, 1);
-  system_exit(-1);
-  path_heap_bubble_up((void *)0, 0);
-  /* test (char)eax, (char)eax -> je 0x5febd */
-  /* relift: relift: fcomp dword ptr [0x2533d8] */
-  FUN_0005f1d0();
-  path_heap_pop_cheapest_node((void *)0);
-  /* test eax, eax -> je 0x5ff36 */
-  /* relift: cmp word ptr [eax + 0x10], 0 -> jne 0x5ff36 */
-  /* test eax, eax -> je 0x5ff36 */
-  /* relift: cmp word ptr [eax + 0x10], 0 -> jne 0x5ff36 */
-  /* test (char)eax, (char)eax -> je 0x5ff68 */
-  return 0;
+  path = (char *)path_buf;
+  success = 1;
+  if (*(float *)0x2549d4 >= *(float *)path)
+    cost_scale = 0.2f;
+  else
+    cost_scale = *(float *)path;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
-  (void)local_10;
+  while (1) {
+    node_index = path_heap_pop_cheapest_node(path);
+    if (node_index == -1)
+      break;
+
+    node = path_get_node(path, node_index);
+    scenario = (char *)path + *(int *)(path + 0x64);
+    tag_block = tag_block_get_element(scenario + 0xb0, 0, 0x60);
+    surface_index = *(int *)(node + 8);
+    if (surface_index < 0 ||
+        surface_index >= *(int *)((char *)tag_block + 0x3c)) {
+      display_assert("surface_index>=0 && surface_index<bsp->surfaces.count",
+                     "c:\\halo\\SOURCE\\ai\\path.c", 0x35d, 1);
+      system_exit(-1);
+    }
+
+    if (*(char *)(path + 0x4c) != 0) {
+      if (surface_index == *(int *)(path + 0x5c))
+        goto copy_goal_state;
+      if (*(float *)(path + 0x6c) < *(float *)0x254cc4)
+        step_cost = *(float *)0x254cc4;
+      else
+        step_cost = *(float *)(path + 0x6c);
+      step_cost = step_cost * *(float *)0x253f34 + *(float *)(path + 0x70);
+      if (*(float *)(node + 0x28) <= step_cost)
+        goto mark_unreachable;
+    }
+
+    build_path_edges_for_surface();
+    edge_count = 0;
+    if (edge_count <= 0)
+      continue;
+
+    edge = edges + 0x28;
+    edge_remaining = edge_count;
+    while (edge_remaining-- > 0) {
+      process_edge = 1;
+      if (*(char *)(path + 4) == 0 && *(char *)(edge - 0x14) < 0) {
+        surface_table = tag_block_get_element(scenario + 0xb0, 0, 0x60);
+        tag_block = tag_block_get_element((char *)surface_table + 0x3c, 0, 0xc);
+        tag_block = tag_block_get_element(tag_block, *(int *)(edge - 0x18), 0x10);
+        if ((*(char *)((char *)tag_block + 8) & 8) != 0) {
+          if (breakable_surfaces_get_bsp_surface_data() == 0)
+            process_edge = 0;
+        }
+      }
+      if (!process_edge)
+        goto next_edge;
+
+      step_cost = cost_scale / *(float *)(edge - 0x34);
+      if (step_cost > *(float *)0x2533c8)
+        step_cost = *(float *)0x2533c8;
+      else if (*(float *)0x2533c8 - step_cost > 0.0f)
+        step_cost = *(float *)0x2533c8 - step_cost;
+
+      step_pos[0] =
+          step_cost * *(float *)(edge - 4) + *(float *)(edge - 0x10);
+      step_pos[1] = step_cost * *(float *)edge + *(float *)(edge - 0xc);
+      step_pos[2] =
+          step_cost * *(float *)(edge + 4) + *(float *)(edge - 8);
+
+      dist_sq = (step_pos[0] - *(float *)(node + 0xc)) *
+                    (step_pos[0] - *(float *)(node + 0xc)) +
+                (step_pos[1] - *(float *)(node + 0x10)) *
+                    (step_pos[1] - *(float *)(node + 0x10)) +
+                (step_pos[2] - *(float *)(node + 0x14)) *
+                    (step_pos[2] - *(float *)(node + 0x14));
+      new_cost = sqrtf(dist_sq) + *(float *)(node + 0x20);
+      heap_key = new_cost + *(float *)(node + 0x24);
+
+      if (*(char *)(path + 0x24) != 0) {
+        path_attractor_weight();
+        if (new_cost + *(float *)0x2533c8 < *(float *)(node + 0x1c))
+          step_pos[0] = *(float *)(node + 0x1c);
+      }
+
+      if (*(char *)(path + 0x4c) != 0) {
+        focus_dist_sq =
+            (step_pos[0] - *(float *)(path + 0x50)) *
+                (step_pos[0] - *(float *)(path + 0x50)) +
+            (step_pos[1] - *(float *)(path + 0x54)) *
+                (step_pos[1] - *(float *)(path + 0x54)) +
+            (step_pos[2] - *(float *)(path + 0x58)) *
+                (step_pos[2] - *(float *)(path + 0x58));
+        new_cost = sqrtf(focus_dist_sq) + heap_key;
+      }
+
+      if (new_cost - *(float *)(node + 0x28) >= *(float *)0x25e884) {
+        display_assert("new_cost-node->cost < MAXIMUM_PATH_COST",
+                       "c:\\halo\\SOURCE\\ai\\path.c", 0x3ed, 1);
+        system_exit(-1);
+      }
+
+      if (*(int16_t *)(edge - 0x10) == -1) {
+        path_heap_insert(path, node_index, *(int16_t *)(edge - 0x10));
+        continue;
+      }
+
+      if (*(int16_t *)(path + (int)*(int16_t *)(edge - 0x10) * 4 + 0x11088) <
+          (int16_t)new_cost)
+        path_heap_bubble_up(path, *(int16_t *)(edge - 0x10));
+
+      if (*(char *)(path + 0x4c) != 0 &&
+          focus_dist_sq <= *(float *)0x2533d8) {
+        FUN_0005f1d0();
+        *(float *)(path + (int)*(int16_t *)(edge - 0x10) * 4 + 0x11088) =
+            new_cost;
+        *(int *)(path + 0x50) = *(int *)edge;
+        *(int *)(path + 0x54) = *(int *)(edge + 4);
+        *(int *)(path + 0x58) = *(int *)(edge + 8);
+        *(float *)(path + 0x6c) = new_cost;
+        *(int16_t *)(path + 0x68) = *(int16_t *)(edge - 0x10);
+        *(float *)(path + 0x70) = heap_key;
+      }
+
+    next_edge:
+      edge += 0x20;
+    }
+  }
+
+  if (*(char **)(path + 0x48) != 0 &&
+      *(int16_t *)(*(char **)(path + 0x48) + 0x10) == 0)
+    *(int16_t *)(*(char **)(path + 0x48) + 0x10) = 3;
+  goto finish;
+
+copy_goal_state:
+  *(float *)(path + 0x74) = *(float *)(path + 0x50);
+  *(float *)(path + 0x78) = *(float *)(path + 0x54);
+  *(float *)(path + 0x7c) = *(float *)(path + 0x58);
+  *(int16_t *)(path + 0x68) = node_index;
+  *(float *)(path + 0x6c) = 0.0f;
+  goto finish;
+
+mark_unreachable:
+  if (*(char **)(path + 0x48) != 0 &&
+      *(int16_t *)(*(char **)(path + 0x48) + 0x10) == 0)
+    *(int16_t *)(*(char **)(path + 0x48) + 0x10) = 2;
+
+finish:
+  if (*(char *)(path + 0x4c) != 0 &&
+      *(float *)(path + 0x6c) > *(float *)(path + 0x60))
+    success = 0;
+  if (*(char **)(path + 0x48) != 0 &&
+      *(int16_t *)(*(char **)(path + 0x48) + 0x10) == 0)
+    success = 0;
+  return success;
 }
 
 /* 0x60070 — obstacle disc node accessor (path.h:396) */

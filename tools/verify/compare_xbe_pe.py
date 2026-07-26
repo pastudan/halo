@@ -143,6 +143,11 @@ def main() -> int:
         ("prop_add", 0x64170, 0x643d0),
         ("FUN_00064b40", 0x64b40, 0x64cd0),
         ("FUN_00064cd0", 0x64cd0, 0x64f50),
+        ("prop_new_unacknowledged", 0x645a0, 0x647c0),
+        ("prop_position_refresh", 0x31df0, 0x32170),
+        ("prop_status_refresh", 0x33440, 0x342a0),
+        ("FUN_0005f740", 0x5f740, 0x5ff70),
+        ("actor_perception_unit_from_swarm", 0x31c00, 0x31df0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

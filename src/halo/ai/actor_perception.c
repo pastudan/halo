@@ -604,66 +604,26 @@ void FUN_0002f5f0(void)
 }
 
 /* 0x2f6e0 */
-void actor_perception_desire_prop(void)
+char actor_perception_desire_prop(
+    int actor_handle, int existing_prop, int unit_handle, int owner_handle,
+    char friendly, char field_63, char field_12e, int16_t field_76,
+    float vis_metric, int16_t scale, int sense, char field_127, char *out_flag)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  /* cmp eax, -1 -> jne 0x2f706 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  /* test (char)ebx, (char)ebx -> je 0x2f73f */
-  /* cmp (int16_t)ecx, 4 -> jl 0x2f73f */
-  /* cmp (int16_t)ecx, 5 -> jg 0x2f73f */
-  /* relift: cmp byte ptr [ebp + 0x1c], 0 -> je 0x2f74c */
-  /* test eax, eax -> je 0x2f763 */
-  /* relift: cmp byte ptr [eax + 8], 0 -> je 0x2f75c */
-  /* relift: cmp byte ptr [eax + 0x13], 0 -> je 0x2f763 */
-  /* cmp (int16_t)ecx, -1 -> jne 0x2f77e */
-  /* test (char)eax, (char)eax -> jne 0x2f777 */
-  /* relift: cmp word ptr [ebp + 0x34], 0 -> jle 0x2f77e */
-  /* relift: relift: fcomp dword ptr [0x255fe0] */
-  /* test (char)eax, 0x41 -> jne 0x2f795 */
-  /* test (char)ebx, (char)ebx -> je 0x2f8a0 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), 0);
-  object_get_and_verify_type(0, 3);
-  /* cmp ecx, edx -> jg 0x2f7d7 */
-  /* cmp ecx, -1 -> je 0x2f7ed */
-  /* cmp eax, -1 -> je 0x2f7eb */
-  /* cmp eax, ecx -> jge 0x2f7ed */
-  /* test (char)eax, (char)eax -> jne 0x2f806 */
-  /* test (char)eax, (char)eax -> jne 0x2f806 */
-  /* test (char)eax, (char)eax -> jne 0x2f806 */
-  /* test (char)eax, (char)eax -> je 0x2f82c */
-  /* relift: relift: fcomp dword ptr [0x255fdc] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x2f846 */
-  /* test dl, dl -> je 0x2f859 */
-  /* relift: cmp word ptr [ebp + 0x28], 0x96 -> jle 0x2f859 */
-  actor_action_try_to_panic(0);
-  /* cmp (int16_t)eax, 1 -> jle 0x2f872 */
-  /* relift: relift: fld dword ptr [0x254e74] */
-  /* test (char)eax, (char)eax -> jne 0x2f88e */
-  /* relift: cmp word ptr [edi + 0x6a], 3 -> jge 0x2f88e */
-  /* relift: relift: fld dword ptr [0x254df8] */
-  /* relift: relift: fcomp dword ptr [0x255fd8] */
-  /* relift: relift: fcomp dword ptr [0x255fdc] */
-  /* relift: cmp word ptr [edi + 0x6e], 4 -> jl 0x2f8d1 */
-  /* test (char)eax, (char)eax -> jne 0x2f8ef */
-  /* relift: relift: fcomp dword ptr [0x254e74] */
-  /* test (char)eax, 0x41 -> je 0x2f8f3 */
-  /* test eax, eax -> je 0x2f8ff */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
-  (void)ebp;
+  (void)actor_handle;
+  (void)existing_prop;
+  (void)unit_handle;
+  (void)owner_handle;
+  (void)friendly;
+  (void)field_63;
+  (void)field_12e;
+  (void)field_76;
+  (void)vis_metric;
+  (void)scale;
+  (void)sense;
+  (void)field_127;
+  if (out_flag != 0)
+    *out_flag = 0;
+  return 0;
 }
 
 /* 0x2fb60 — fpatan(y, x) */
@@ -1196,109 +1156,243 @@ void actor_perception_find_sense_position(int actor_handle, float *position, int
   (void)local_8;
 }
 
-/* 0x31c00 */
-void actor_perception_unit_from_swarm(void)
+/* 0x31c00 — pick the closest swarm member unit to a reference point. */
+int actor_perception_unit_from_swarm(int owner_handle, int actor_handle,
+                                     int unit_handle, char verify_flag,
+                                     float *swarm_origin)
 {
-  int eax = 0;
-  int ebx = 0;
-  int edx = 0;
-  int esi = 0;
-  int ebp = 0;
-  int local_4 = 0;
+  char *owner_actor;
+  char *swarm;
+  char *unit;
+  int best_unit;
+  float best_dist_sq;
+  int16_t member_count;
+  int member_index;
+  float delta[3];
+  float dist_sq;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), eax);
-  display_assert((char *)0x002561f4, (char *)0x00255fb0, 1677, 1);
-  system_exit(-1);
-  /* cmp eax, -1 -> je 0x31d21 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a0), 0);
-  datum_get((data_t *)(uintptr_t)*(int *)(0x63259c), 0);
-  /* relift: cmp dword ptr [ebx + esi*4 + 0x18], edx -> jne 0x31cdf */
-  /* test (char)eax, (char)eax -> je 0x31d0b */
-  object_mark(0);
-  object_get_and_verify_type(0, 3);
-  object_get_world_position(0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x31da4 */
-  object_mark(0);
-  /* cmp esi, -1 -> jne 0x31d34 */
-  /* relift: cmp dword ptr [ebp + 0xc], -1 -> je 0x31ddc */
-  /* cmp esi, -1 -> jne 0x31ddc */
-  display_assert((char *)0x002561b4, (char *)0x00255fb0, 1753, 1);
-  system_exit(local_4);
+  (void)actor_handle;
 
-  (void)eax;
-  (void)ebx;
-  (void)edx;
-  (void)esi;
-  (void)ebp;
-  (void)local_4;
+  owner_actor = (char *)datum_get(actor_data, owner_handle);
+  if (*(char *)(owner_actor + 6) == 0) {
+    display_assert("actor->meta.active",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x68d, 1);
+    system_exit(-1);
+  }
+
+  best_unit = -1;
+  best_dist_sq = 3.4028235e38f;
+
+  if (*(int *)(owner_actor + 0x28) != -1) {
+    swarm = (char *)datum_get(*(void **)0x6325a0, *(int *)(owner_actor + 0x28));
+    member_count = *(int16_t *)(swarm + 2);
+    for (member_index = 0; member_index < member_count; member_index++) {
+      char *member =
+          (char *)datum_get(*(void **)0x63259c,
+                            *(int *)(swarm + member_index * 4 + 0x58));
+      if ((*(char *)(member + 2) & 2) != 0) {
+        delta[0] = swarm_origin[0] - *(float *)(member + 4);
+        delta[1] = swarm_origin[1] - *(float *)(member + 8);
+        delta[2] = swarm_origin[2] - *(float *)(member + 0xc);
+        dist_sq = delta[0] * delta[0] + delta[1] * delta[1] +
+                  delta[2] * delta[2];
+        dist_sq *= *(float *)0x2561f0;
+      } else if (*(int *)(swarm + member_index * 4 + 0x18) == unit_handle) {
+        delta[0] = swarm_origin[0] - *(float *)(member + 4);
+        delta[1] = swarm_origin[1] - *(float *)(member + 8);
+        delta[2] = swarm_origin[2] - *(float *)(member + 0xc);
+        dist_sq = delta[0] * delta[0] + delta[1] * delta[1] +
+                  delta[2] * delta[2];
+        dist_sq *= *(float *)0x256134;
+      } else {
+        continue;
+      }
+      if (dist_sq <= best_dist_sq) {
+        best_dist_sq = dist_sq;
+        best_unit = *(int *)(swarm + member_index * 4 + 0x18);
+      }
+      if (verify_flag)
+        object_mark(*(int *)(swarm + member_index * 4 + 0x18));
+    }
+  } else {
+    int chain_unit = *(int *)(owner_actor + 0x24);
+    while (chain_unit != -1) {
+      float unit_pos[3];
+      unit = (char *)object_get_and_verify_type(chain_unit, 3);
+      object_get_world_position(chain_unit, (vector3_t *)unit_pos);
+      delta[0] = swarm_origin[0] - unit_pos[0];
+      delta[1] = swarm_origin[1] - unit_pos[1];
+      delta[2] = swarm_origin[2] - unit_pos[2];
+      dist_sq = delta[0] * delta[0] + delta[1] * delta[1] +
+                delta[2] * delta[2];
+      if (chain_unit == unit_handle)
+        dist_sq *= *(float *)0x256134;
+      if (dist_sq <= best_dist_sq) {
+        best_dist_sq = dist_sq;
+        best_unit = chain_unit;
+      }
+      if (verify_flag)
+        object_mark(chain_unit);
+      chain_unit = *(int *)(unit + 0x1ac);
+    }
+  }
+
+  if (unit_handle != -1 && best_unit == -1) {
+    display_assert("result != NONE",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x6d9, 1);
+    system_exit(-1);
+  }
+  return best_unit;
 }
 
-/* 0x31df0 */
-void prop_position_refresh(void)
+/* 0x31df0 — refresh prop position / visibility from its tracked unit. */
+void prop_position_refresh(int actor_handle, int prop_handle, float *out_pos,
+                           char refresh_flag, char swarm_refresh)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *actor;
+  char *prop;
+  char *unit;
+  char *parent_prop;
+  char *vehicle;
+  char in_fov;
+  int now;
+  int swarm_unit;
+  int unit_handle;
+  float delta[3];
+  float dir[3];
+  float *default_fwd;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
-  object_get_and_verify_type(0, 3);
-  /* cmp (int16_t)eax, 4 -> jl 0x31edc */
-  /* cmp (int16_t)eax, 5 -> jg 0x31edc */
-  /* test (char)eax, (char)eax -> jne 0x320f9 */
-  /* relift: test byte ptr [edi + 0xb6], 4 -> je 0x31ea0 */
-  /* relift: cmp word ptr [edi + 0x3d0], 0 -> jne 0x31ea0 */
-  /* relift: cmp word ptr [esi + 0x30], 0 -> jne 0x31ea0 */
-  FUN_00012170((float *)((char *)eax + 0x18));
-  /* relift: relift: fcomp dword ptr [0x255d1c] */
-  /* relift: cmp dword ptr [edx + 0x270], ebx -> jne 0x31ec9 */
-  /* test (char)ecx, (char)ecx -> je 0x320f9 */
-  /* test (char)ecx, (char)ecx -> je 0x320f9 */
-  /* test (char)eax, (char)eax -> je 0x320f9 */
-  /* test (char)eax, (char)eax -> je 0x31f77 */
-  /* relift: cmp dword ptr [esi + 0x1c], -1 -> je 0x31f77 */
-  /* test (char)eax, (char)eax -> je 0x31f77 */
-  game_time_get();
-  /* cmp ecx, eax -> jg 0x31f77 */
-  actor_perception_unit_from_swarm();
-  /* cmp eax, ecx -> je 0x31f74 */
-  object_get_and_verify_type(eax, 3);
-  /* cmp (int16_t)eax, 4 -> jl 0x31f56 */
-  /* cmp (int16_t)eax, 5 -> jg 0x31f56 */
-  /* cmp eax, -1 -> je 0x31f74 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
-  unit_get_head_position(0, (float *)((char *)eax + 0x104));
-  object_get_world_position(0, (vector3_t *)((char *)eax + 0xbc));
-  FUN_001a9520(0, (float *)((char *)eax + 0xc8));
-  object_get_root_parent(0);
-  object_get_and_verify_type(eax, 0);
-  FUN_0018f3e0((void *)((char *)eax + 0xfc), (void *)((char *)eax + 0xc8), (void *)0);
-  /* cmp eax, ebx -> je 0x320bc */
-  object_get_and_verify_type(0, 0);
-  /* cmp (int16_t)ecx, 1 -> jne 0x320a5 */
-  /* relift: cmp dword ptr [eax + 0x2d8], ecx -> je 0x32068 */
-  /* relift: cmp word ptr [esi + 0x10], 0xf -> je 0x32068 */
-  /* relift: cmp dword ptr [eax + 0x2d4], ecx -> jne 0x3209b */
-  vehicle_hover();
-  /* test (char)eax, (char)eax -> je 0x3209b */
-  /* test (char)eax, 3 -> je 0x320bc */
-  /* cmp eax, ebx -> je 0x320f9 */
-  object_get_and_verify_type(0, 0);
-  /* test dl, 3 -> je 0x320ef */
-  /* cmp eax, ebx -> jne 0x320d0 */
-  actor_perception_find_sense_position(0, (float *)((char *)eax + 0xbc), 0, (void *)(uintptr_t)0);
-  normalize3d((float *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (*(char *)(actor + 8) == 0)
+    return;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  prop = (char *)datum_get(prop_data, prop_handle);
+  unit_handle = *(int *)(prop + 0x18);
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+
+  if (refresh_flag == 0) {
+    int16_t status = *(int16_t *)(prop + 0x24);
+    if (status >= 4 && status <= 5 && *(char *)(prop + 0x4e) == 0) {
+      in_fov = 0;
+      if ((*(uint8_t *)(unit + 0xb6) & 4) != 0 &&
+          *(int16_t *)(unit + 0x3d0) == 0 && *(int16_t *)(prop + 0x30) == 0) {
+        if (FUN_00012170((float *)(unit + 0x18)) <= *(float *)0x255d1c)
+          in_fov = 1;
+      }
+      if (*(int *)(actor + 0x270) == prop_handle && *(char *)(prop + 0xb9) != 0 &&
+          *(char *)(prop + 0xba) != 0 && in_fov) {
+        *(char *)(prop + 0x4e) = 1;
+        *(char *)(prop + 0x127) = 1;
+      }
+    }
+  }
+
+  if (*(char *)(prop + 0x14) != 0 && *(int *)(prop + 0x1c) != -1 &&
+      swarm_refresh != 0) {
+    now = game_time_get();
+    if (*(int *)(prop + 0x28) + 90 <= now) {
+      *(int *)(prop + 0x28) = now;
+      swarm_unit = actor_perception_unit_from_swarm(
+          *(int *)(prop + 0x1c), actor_handle, unit_handle, 0,
+          (float *)(actor + 0x120));
+      if (swarm_unit != unit_handle) {
+        *(int *)(prop + 0x18) = swarm_unit;
+        unit = (char *)object_get_and_verify_type(swarm_unit, 3);
+        if (*(int16_t *)(prop + 0x24) >= 4 &&
+            *(int16_t *)(prop + 0x24) <= 5) {
+          parent_prop = (char *)datum_get(prop_data, *(int *)(prop + 0xc));
+          *(int *)(parent_prop + 0x18) = swarm_unit;
+        } else if (*(int *)(prop + 0xc) != -1) {
+          parent_prop = (char *)datum_get(prop_data, *(int *)(prop + 0xc));
+          *(int *)(parent_prop + 0x18) = swarm_unit;
+        }
+      }
+    }
+  }
+
+  unit_handle = *(int *)(prop + 0x18);
+  unit_get_head_position(unit_handle, (float *)(prop + 0x104));
+  object_get_world_position(unit_handle, (vector3_t *)(prop + 0xbc));
+  FUN_001a9520(unit_handle, (float *)(prop + 0xc8));
+  {
+    float *actor_pos = (float *)(actor + 0x18);
+    *(float *)(prop + 0xd4) = actor_pos[0];
+    *(float *)(prop + 0xd8) = actor_pos[1];
+    *(float *)(prop + 0xdc) = actor_pos[2];
+  }
+  *(int *)(prop + 0xec) = -1;
+  {
+    int placement_handle = object_get_root_parent(unit_handle);
+    char *placement =
+        (char *)object_get_and_verify_type(placement_handle, 0);
+    *(int *)(prop + 0xfc) = *(int *)(placement + 0x48);
+    *(int *)(prop + 0x100) = *(int *)(placement + 0x4c);
+  }
+  {
+    int16_t sky_index;
+    *(char *)(prop + 0x118) = (char)FUN_0018f3e0((void *)(prop + 0xfc),
+                                                  (void *)(prop + 0xc8),
+                                                  &sky_index);
+  }
+  *(int *)(prop + 0x110) = -1;
+  *(char *)(prop + 0x135) = 0;
+  *(char *)(prop + 0x136) = 0;
+  *(int *)(prop + 0x114) = -1;
+
+  if (*(int *)(unit + 0xcc) != -1) {
+    vehicle = (char *)object_get_and_verify_type(*(int *)(unit + 0xcc), 0);
+    if (*(int16_t *)(vehicle + 0x64) == 1) {
+      *(int *)(prop + 0x110) = *(int *)(unit + 0xcc);
+      if (*(int *)(vehicle + 0x2d8) == unit_handle ||
+          *(int16_t *)(prop + 0x10) == 0xf)
+        *(char *)(prop + 0x135) = 1;
+      else
+        *(char *)(prop + 0x135) = 0;
+      if (*(int *)(vehicle + 0x2d4) == unit_handle) {
+        char hover = 0;
+        vehicle_hover();
+        (void)hover;
+        *(char *)(prop + 0x136) = hover;
+      } else {
+        *(char *)(prop + 0x136) = 0;
+      }
+    } else if ((1 << *(int16_t *)(vehicle + 0x64)) & 3) {
+      *(int *)(prop + 0x114) = *(int *)(unit + 0xcc);
+    }
+  }
+
+  *(char *)(prop + 0x125) = 0;
+  if (*(int *)(unit + 0xc8) != -1) {
+    int chain = *(int *)(unit + 0xc8);
+    while (chain != -1) {
+      char *chain_obj = (char *)object_get_and_verify_type(chain, 0);
+      if ((1 << *(char *)(chain_obj + 0x64)) & 3)
+        (*(char *)(prop + 0x125))++;
+      chain = *(int *)(chain_obj + 0xc4);
+    }
+  }
+
+  actor_perception_find_sense_position(actor_handle, (float *)(prop + 0xbc),
+                                       prop_handle, out_pos);
+  delta[0] = *(float *)(prop + 0xbc) - out_pos[0];
+  delta[1] = *(float *)(prop + 0xbc + 4) - out_pos[1];
+  delta[2] = *(float *)(prop + 0xbc + 8) - out_pos[2];
+  dir[0] = delta[0];
+  dir[1] = delta[1];
+  dir[2] = delta[2];
+  normalize3d(dir);
+  *(float *)(prop + 0x11c) = sqrtf(delta[0] * delta[0] + delta[1] * delta[1] +
+                                     delta[2] * delta[2]);
+  if (*(float *)(prop + 0x11c) >= *(float *)0x2533c0) {
+    default_fwd = *(float **)0x31fc3c;
+    *(float *)(prop + 0xe0) = default_fwd[0];
+    *(float *)(prop + 0xe4) = default_fwd[1];
+    *(float *)(prop + 0xe8) = default_fwd[2];
+  } else {
+    *(float *)(prop + 0xe0) = dir[0];
+    *(float *)(prop + 0xe4) = dir[1];
+    *(float *)(prop + 0xe8) = dir[2];
+  }
 }
 
 /* 0x32170 */
@@ -1662,228 +1756,169 @@ void actor_perception_become_acknowledged(int actor_handle, int prop_handle, int
   (void)local_8;
 }
 
-/* 0x33440 */
-void prop_status_refresh(void)
+/* 0x33440 — refresh prop status flags from actor + unit state. */
+void prop_status_refresh(int actor_handle, int prop_handle, float *out_pos)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-  int local_1c = 0;
-  int local_28 = 0;
+  char *actor;
+  char *prop;
+  char *unit;
+  char *encounter;
+  char *owner_actor;
+  char player_present;
+  char team_flag;
+  float velocity[3];
+  float rel_vel;
+  float speed_sq;
+  float speed;
+  int16_t threat_dir;
+  int now;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  tag_get('rtca', 0);
-  /* cmp eax, -1 -> jne 0x3348f */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), 0);
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
-  object_get_and_verify_type(0, 3);
-  game_time_get();
-  /* test eax, eax -> je 0x334e0 */
-  /* test (char)eax, (char)eax -> jne 0x334eb */
-  game_connection();
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x33525 */
-  /* relift: relift: mov (char)eax, byte ptr [0x5ac9c6] */
-  /* test (char)eax, (char)eax -> je 0x33525 */
-  /* test (char)eax, (char)eax -> je 0x335bd */
-  /* test (char)eax, (char)eax -> je 0x335bd */
-  /* cmp eax, -1 -> je 0x335bd */
-  /* relift: cmp dword ptr [ebx + 0x1d8], -1 -> je 0x335bd */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  /* test edx, 0xffff -> jne 0x335bd */
-  /* relift: cmp (int16_t)edx, word ptr [eax + 0x3a] -> jne 0x335bd */
-  object_get_root_location(0, (void *)0, (float *)0);
-  /* relift: relift: fcomp dword ptr [0x2546a4] */
-  /* relift: relift: fcomp dword ptr [0x256348] */
-  /* relift: relift: fcomp dword ptr [0x256344] */
-  /* relift: relift: fcomp dword ptr [0x256340] */
-  /* relift: relift: fcomp dword ptr [0x256350] */
-  /* relift: relift: fcomp dword ptr [0x25634c] */
-  /* relift: relift: fcomp dword ptr [0x2546a4] */
-  /* cmp (int16_t)eax, 2 -> jl 0x3374c */
-  /* cmp (int16_t)eax, 3 -> jg 0x3374c */
-  /* cmp (int16_t)edi, 1 -> jg 0x3374c */
-  /* relift: cmp byte ptr [esi + 0x123], 1 -> jle 0x3374c */
-  FUN_00027a60(0, 2, 1, (void *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-  /* relift: relift: fcomp dword ptr [0x254640] */
-  /* relift: relift: fcomp dword ptr [0x253f34] */
-  /* relift: relift: fcomp dword ptr [0x253394] */
-  unit_scripting_unit_driver(0, (void *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fld dword ptr [0x2548fc] */
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-  /* test (char)eax, 1 -> jne 0x33824 */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* relift: relift: fcomp dword ptr [0x25633c] */
-  /* test (char)eax, 0x41 -> je 0x338b8 */
-  /* relift: relift: fcomp dword ptr [0x256338] */
-  /* test (char)eax, 0x41 -> je 0x338ad */
-  /* relift: relift: fcomp dword ptr [0x2533ec] */
-  /* relift: relift: fcomp dword ptr [0x253398] */
-  /* test (char)eax, 0x41 -> jne 0x3388b */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x338a4 */
-  /* cmp (int16_t)eax, 5 -> jg 0x3399d */
-  /* test (char)eax, (char)eax -> je 0x338ff */
-  /* test (char)eax, (char)eax -> je 0x338ff */
-  ai_test_line_of_sight((float *)(uintptr_t)0, 0, (float *)((char *)eax + 0x104), 0, 0, 0, 0, 0);
-  /* test (char)ecx, (char)ecx -> jne 0x33986 */
-  actor_visibility_at_point();
-  /* test (char)eax, (char)eax -> je 0x339b9 */
-  ai_test_line_of_sight((float *)(uintptr_t)0, 0, (float *)((char *)eax + 0x104), 0, 0, 0, 0, 0);
-  tag_get('dpib', *(int *)(local_1c));
-  /* relift: relift: fcomp dword ptr [0x253398] */
-  /* test (char)eax, 0x41 -> jne 0x33a51 */
-  /* relift: cmp word ptr [edi + 0x3d0], 0 -> jne 0x33a86 */
-  /* test (char)eax, (char)eax -> je 0x33a9d */
-  /* test (char)ecx, (char)ecx -> jne 0x33a9d */
-  /* test (char)ecx, (char)ecx -> jne 0x33aca */
-  /* relift: cmp word ptr [edx + 0x6a], 3 -> jge 0x33aca */
-  /* test (char)eax, (char)eax -> je 0x33ad4 */
-  /* cmp ebx, -1 -> je 0x33ae3 */
-  /* relift: cmp ebx, dword ptr [esi + 0x1c] -> je 0x33b19 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
-  /* cmp ebx, -1 -> jne 0x33b6f */
-  /* test (char)ecx, (char)ecx -> jne 0x33bfa */
-  /* test (char)eax, (char)eax -> je 0x33bba */
-  actor_is_noncombat(0);
-  FUN_0003b120(0);
-  actor_is_fighting(0);
-  /* test (char)ebx, (char)ebx -> je 0x33b2f */
-  /* test (char)ecx, (char)ecx -> jne 0x33b2f */
-  /* test (char)ecx, (char)ecx -> jne 0x33b2f */
-  /* relift: cmp word ptr [edi + 0x6a], 3 -> jge 0x33b32 */
-  FUN_0002f380(0, 0);
-  actor_visibility_at_point();
-  /* cmp (int16_t)eax, 2 -> jge 0x33c08 */
-  /* test (char)eax, (char)eax -> je 0x33c29 */
-  game_connection();
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x33c3f */
-  /* relift: relift: mov (char)eax, byte ptr [0x5ac9cb] */
-  /* test (char)eax, (char)eax -> jne 0x33c5c */
-  game_connection();
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x33c5e */
-  /* relift: relift: mov (char)eax, byte ptr [0x5ac9c7] */
-  /* test (char)eax, (char)eax -> je 0x33c5e */
-  /* test (char)eax, (char)eax -> je 0x33c5e */
-  /* test (char)eax, (char)eax -> je 0x33ccd */
-  /* test (char)eax, (char)eax -> jne 0x33cd1 */
-  /* test (char)eax, (char)eax -> je 0x33c8c */
-  /* relift: relift: fcomp dword ptr [0x2533d8] */
-  /* test (char)eax, 0x41 -> je 0x33cd1 */
-  /* relift: cmp word ptr [edi + 4], 0xf -> je 0x33cf6 */
-  /* test (char)eax, (char)eax -> jne 0x33ce6 */
-  /* test (char)eax, (char)eax -> jne 0x33cc7 */
-  /* test (char)eax, (char)eax -> je 0x33cfa */
-  /* test (char)ebx, (char)ebx -> je 0x33c8c */
-  /* cmp (int16_t)eax, 2 -> jl 0x33cfa */
-  /* cmp (int16_t)eax, 3 -> jg 0x33cfa */
-  /* test (char)eax, (char)eax -> je 0x33d0a */
-  FUN_0002f380(0, 0);
-  actor_visibility_at_point();
-  /* relift: cmp word ptr [esi + 0x32], 0 -> jne 0x33d60 */
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x33d60 */
-  game_connection();
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x33da3 */
-  /* relift: relift: mov (char)eax, byte ptr [0x5ac9cc] */
-  /* test (char)eax, (char)eax -> jne 0x33db1 */
-  /* test eax, eax -> je 0x33db9 */
-  /* test (char)ecx, (char)ecx -> je 0x33db9 */
-  /* cmp (int16_t)eax, 1 -> je 0x33e23 */
-  /* cmp (int16_t)eax, 2 -> je 0x33e23 */
-  /* cmp eax, -1 -> jne 0x33dd7 */
-  object_get_and_verify_type(0, 3);
-  tag_get('tinu', *(int *)(eax));
-  actor_audibility_at_point(0, (void *)(uintptr_t)0, (float *)((char *)eax + 0xbc), (void *)((char *)eax + 0xfc), 0, 0x3f800000, 0);
-  /* test (char)eax, (char)eax -> je 0x33e7d */
-  /* relift: cmp byte ptr [esi + 0x122], 2 -> jg 0x33e7d */
-  /* relift: cmp byte ptr [esi + 0x121], 2 -> jg 0x33e7d */
-  /* test (int16_t)eax, (int16_t)eax -> je 0x33e67 */
-  /* cmp (int16_t)eax, 1 -> jne 0x33e7d */
-  /* cmp eax, edi -> jg 0x33ea3 */
-  /* cmp (int16_t)eax, 2 -> jl 0x33ec3 */
-  /* cmp (int16_t)eax, 3 -> jg 0x33ec3 */
-  /* relift: cmp word ptr [esi + 0x30], 0 -> je 0x33eec */
-  /* cmp (int16_t)eax, 2 -> jl 0x33f74 */
-  /* cmp (int16_t)eax, 3 -> jg 0x33f74 */
-  /* relift: cmp word ptr [esi + 0x32], 2 -> jge 0x33f64 */
-  /* test (char)eax, (char)eax -> je 0x33f74 */
-  /* cmp eax, -1 -> je 0x33f74 */
-  datum_absolute_index_to_index((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  /* test eax, eax -> je 0x33f74 */
-  /* relift: cmp word ptr [eax + 0x268], 0xa -> jl 0x33f74 */
-  /* cmp ecx, -1 -> je 0x33f74 */
-  /* test dl, dl -> je 0x33f74 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
-  /* cmp ecx, eax -> jne 0x33f74 */
-  FUN_00032170();
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x33fee */
-  /* test (char)eax, (char)eax -> jne 0x33fc3 */
-  /* relift: cmp byte ptr [ecx + 0x253], 0x1e -> jne 0x33fee */
-  FUN_0002f5f0();
-  /* cmp (int16_t)eax, 2 -> jl 0x34055 */
-  /* cmp (int16_t)eax, 3 -> jg 0x34055 */
-  actor_has_ranged_weapon(0);
-  /* test (char)eax, (char)eax -> je 0x3402b */
-  /* relift: test dword ptr [eax], 0x8000000 -> je 0x34055 */
-  actor_perception_unreachable(0, 0, 0);
-  /* cmp eax, -1 -> je 0x34078 */
-  /* cmp eax, ecx -> jge 0x34078 */
-  actor_perception_unreachable(0, 0, 0);
-  /* test (char)eax, (char)eax -> je 0x3426b */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  /* test (char)ebx, (char)ebx -> jne 0x3425e */
-  /* test eax, eax -> je 0x34117 */
-  /* test (char)ecx, (char)ecx -> je 0x34258 */
-  /* test (char)ecx, (char)ecx -> jne 0x34258 */
-  /* test (char)eax, (char)eax -> jne 0x3425e */
-  /* relift: relift: fcomp dword ptr [0x255fe0] */
-  /* test (char)eax, 0x41 -> je 0x34258 */
-  /* test (char)eax, (char)eax -> je 0x34237 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), 0);
-  object_get_and_verify_type(local_28, 3);
-  /* cmp ecx, edx -> jg 0x34181 */
-  /* cmp ecx, -1 -> je 0x34197 */
-  /* cmp eax, -1 -> je 0x34195 */
-  /* cmp eax, ecx -> jge 0x34197 */
-  /* test (char)eax, (char)eax -> jne 0x341b0 */
-  /* test (char)eax, (char)eax -> jne 0x341b0 */
-  /* test (char)eax, (char)eax -> jne 0x341b0 */
-  /* test (char)ebx, (char)ebx -> je 0x34258 */
-  /* test (char)eax, (char)eax -> je 0x341d7 */
-  /* relift: relift: fcomp dword ptr [0x255fdc] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> je 0x3425e */
-  /* test (char)eax, (char)eax -> je 0x341f6 */
-  /* relift: cmp word ptr [ebp - 0x18], 0x96 -> jg 0x34258 */
-  actor_action_try_to_panic(0);
-  /* cmp (int16_t)eax, 1 -> jg 0x34258 */
-  /* relift: relift: fld dword ptr [0x254e74] */
-  /* test (char)eax, (char)eax -> jne 0x34227 */
-  /* relift: cmp word ptr [ecx + 0x6a], 3 -> jge 0x34227 */
-  /* relift: relift: fld dword ptr [0x254df8] */
-  /* test (char)eax, (char)eax -> jne 0x3425e */
-  /* relift: relift: fcomp dword ptr [0x255fdc] */
-  /* test (char)eax, (char)eax -> jne 0x3425e */
-  actor_get_perception_knowledge(0, 0);
-  actor_compute_prop_target_weight(0, 0);
-  FUN_000278e0(0, 0);
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (*(char *)(actor + 8) == 0)
+    return;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
-  (void)local_1c;
-  (void)local_28;
+  encounter = (char *)tag_get('rtca', *(int *)(actor + 0x58));
+  if (*(int *)(actor + 0x34) != -1)
+    owner_actor = (char *)datum_get(*(void **)0x5ab270, *(int *)(actor + 0x34));
+  else
+    owner_actor = 0;
+
+  prop = (char *)datum_get(prop_data, prop_handle);
+  unit = (char *)object_get_and_verify_type(*(int *)(prop + 0x18), 3);
+  now = game_time_get();
+  (void)now;
+
+  if (owner_actor == 0 || *(char *)(owner_actor + 0x40) != 0 ||
+      *(int16_t *)(actor + 0x6a) == 1)
+    player_present = 1;
+  else
+    player_present = 0;
+
+  team_flag = (char)((*(uint32_t *)(unit + 0x1b4) >> 10) & 1);
+  *(char *)(prop + 0x133) = team_flag;
+  if (*(char *)(prop + 0x12e) != 0 && game_connection() == 0 &&
+      *(char *)0x5ac9c6 != 0)
+    *(char *)(prop + 0x133) = 1;
+
+  if (*(char *)(prop + 0x60) != 0) {
+    *(char *)(prop + 0x134) = (char)((*(uint32_t *)(unit + 0x1b4) >> 11) & 1);
+    switch (*(int16_t *)(actor + 0x1d4)) {
+    case 1:
+    case 2:
+      if (*(char *)(prop + 0x12e) != 0)
+        *(char *)(prop + 0x134) = 1;
+      break;
+    default:
+      if (*(int *)(prop + 0x1c) != -1 && *(int *)(actor + 0x1d8) != -1) {
+        char *owner =
+            (char *)datum_get(actor_data, *(int *)(prop + 0x1c));
+        if (((*(int *)(owner + 0x34) ^ *(int *)(actor + 0x1d8)) & 0xffff) == 0) {
+          int role = *(int *)(actor + 0x1d8) >> 30;
+          if (role == 0 || role == 1 || role == 2) {
+            if ((role == 0 &&
+                 *(uint16_t *)(actor + 0x1da) == *(uint16_t *)(owner + 0x3c)) ||
+                (role == 1 &&
+                 *(uint16_t *)(actor + 0x1da) == *(uint16_t *)(owner + 0x3a)))
+              *(char *)(prop + 0x134) = 1;
+          }
+        }
+      }
+      break;
+    }
+  }
+
+  object_get_root_location(*(int *)(prop + 0x18), velocity, 0);
+  speed_sq =
+      velocity[0] * velocity[0] + velocity[1] * velocity[1] + velocity[2] * velocity[2];
+  speed = sqrtf(speed_sq);
+  if (speed < *(float *)0x256350)
+    *(char *)(prop + 0x123) = 0;
+  else if (speed < *(float *)0x25634c)
+    *(char *)(prop + 0x123) = 1;
+  else if (speed < *(float *)0x2546a4)
+    *(char *)(prop + 0x123) = 2;
+  else
+    *(char *)(prop + 0x123) = 3;
+
+  rel_vel = (out_pos[0] - *(float *)(prop + 0xbc)) * *(float *)(prop + 0xe0) +
+            (out_pos[1] - *(float *)(prop + 0xbc + 4)) *
+                *(float *)(prop + 0xe4) +
+            (out_pos[2] - *(float *)(prop + 0xbc + 8)) *
+                *(float *)(prop + 0xe8);
+  if (rel_vel >= *(float *)0x256348)
+    *(char *)(prop + 0x124) = 0;
+  else if (rel_vel >= *(float *)0x256344)
+    *(char *)(prop + 0x124) = 1;
+  else if (rel_vel >= *(float *)0x256340)
+    *(char *)(prop + 0x124) = 2;
+  else if (rel_vel >= *(float *)0x256350)
+    *(char *)(prop + 0x124) = 3;
+  else if (rel_vel >= *(float *)0x25634c)
+    *(char *)(prop + 0x124) = 4;
+  else if (rel_vel >= *(float *)0x2546a4)
+    *(char *)(prop + 0x124) = 5;
+  else
+    *(char *)(prop + 0x124) = 6;
+
+  threat_dir = (int16_t)*(char *)(prop + 0x123);
+  if (*(int16_t *)(prop + 0x24) >= 2 && *(int16_t *)(prop + 0x24) <= 3 &&
+      threat_dir <= 1 && *(char *)(prop + 0x123) > 1) {
+    int16_t local[2];
+    local[0] = 1;
+    local[1] = (int16_t)prop_handle;
+    FUN_00027a60(actor_handle, 2, 1, local);
+  }
+
+  if (*(float *)(prop + 0x11c) < *(float *)0x2533c8)
+    *(char *)(prop + 0x121) = 0;
+  else if (*(float *)(prop + 0x11c) < *(float *)0x254640)
+    *(char *)(prop + 0x121) = 1;
+  else if (*(float *)(prop + 0x11c) < *(float *)0x253f34)
+    *(char *)(prop + 0x121) = 2;
+  else if (*(float *)(prop + 0x11c) < *(float *)0x253394)
+    *(char *)(prop + 0x121) = 3;
+  else
+    *(char *)(prop + 0x121) = 4;
+
+  unit_scripting_unit_driver(*(int *)(prop + 0x18), velocity);
+  rel_vel = -(velocity[0] * *(float *)(prop + 0xe0) +
+              velocity[1] * *(float *)(prop + 0xe4) +
+              velocity[2] * *(float *)(prop + 0xe8));
+  if (rel_vel < *(float *)0x2533c0)
+    speed = *(float *)0x2548fc;
+  else if ((rel_vel >= *(float *)0x2533c8) == 0)
+    speed = *(float *)0x2533c0;
+  else
+    speed = sqrtf(*(float *)0x2533c8 - rel_vel * rel_vel) *
+              *(float *)(prop + 0x11c);
+
+  if (rel_vel < *(float *)0x25633c) {
+    if (speed > *(float *)0x253398 && rel_vel < *(float *)0x256338) {
+      if (speed <= *(float *)0x2533ec)
+        *(char *)(prop + 0x122) = 1;
+      else if (rel_vel <= *(float *)0x253398)
+        *(char *)(prop + 0x122) = 2;
+      else if (rel_vel <= *(float *)0x2533c0)
+        *(char *)(prop + 0x122) = 3;
+      else
+        *(char *)(prop + 0x122) = 4;
+    } else
+      *(char *)(prop + 0x122) = 0;
+  } else
+    *(char *)(prop + 0x122) = 0;
+
+  *(char *)(prop + 0x12f) = (char)(*(int16_t *)(prop + 0x66) == 1);
+
+  if (*(char *)(prop + 0x126) != 0)
+    *(int16_t *)(prop + 0x6a) = 0;
+  *(char *)(prop + 0x126) = 0;
+
+  *(char *)(prop + 0xa4) = actor_get_perception_knowledge(actor_handle, prop_handle);
+  actor_compute_prop_target_weight(actor_handle, prop_handle);
+  *(float *)(prop + 0x50) = FUN_000278e0(actor_handle, prop_handle);
+  *(char *)(prop + 0x64) = 1;
+  (void)encounter;
+  (void)player_present;
 }
 
 /* 0x342a0 */
@@ -1905,7 +1940,7 @@ void actor_perception_refresh_test_object(void)
   object_get_world_position(0, (void *)(uintptr_t)edx);
   actor_perception_find_sense_position(0, (float *)(uintptr_t)ecx, 0, (void *)(uintptr_t)eax);
   /* cmp eax, -1 -> je 0x34363 */
-  actor_perception_unit_from_swarm();
+  actor_perception_unit_from_swarm(0, 0, 0, 0, 0);
   object_get_and_verify_type(0, 0);
   object_get_world_position(0, (void *)(uintptr_t)edx);
   /* cmp edi, -1 -> je 0x34930 */
@@ -1956,7 +1991,7 @@ void actor_perception_refresh_test_object(void)
   /* test (char)ecx, (char)ecx -> je 0x34930 */
   prop_new_unacknowledged(0, 0, 0);
   /* cmp eax, -1 -> je 0x34930 */
-  prop_position_refresh();
+  prop_position_refresh(0, 0, 0, 0, 0);
   /* test (char)eax, (char)eax -> jne 0x34930 */
   /* cmp (int16_t)eax, 1 -> jne 0x34748 */
   /* relift: cmp dword ptr [esi + 0x2d4], -1 -> jne 0x34930 */
@@ -2030,8 +2065,8 @@ void actor_perception_create_orphan_from_friend(int param_1, int encounter_team,
   system_exit(-1);
   /* cmp eax, -1 -> je 0x34b0d */
   prop_orphan_update_information();
-  prop_position_refresh();
-  prop_status_refresh();
+  prop_position_refresh(0, 0, 0, 0, 0);
+  prop_status_refresh(0, 0, 0);
   datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
   /* test (int16_t)eax, (int16_t)eax -> jl 0x34b64 */
   /* cmp (int16_t)eax, 1 -> jle 0x34b84 */
@@ -2041,7 +2076,7 @@ void actor_perception_create_orphan_from_friend(int param_1, int encounter_team,
   prop_orphan_from_friend();
   /* cmp edi, -1 -> je 0x34be8 */
   datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), eax);
-  prop_position_refresh();
+  prop_position_refresh(0, 0, 0, 0, 0);
   prop_orphan_transition();
   /* cmp edi, -1 -> jne 0x34bf1 */
   datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), eax);
@@ -2191,7 +2226,7 @@ void actor_perception_refresh(void)
   /* relift: cmp dword ptr [ebp + eax - 0x6b8], ebx -> jne 0x353ae */
   prop_new_unacknowledged(0, 0, 0);
   /* cmp eax, ebx -> je 0x353c4 */
-  prop_position_refresh();
+  prop_position_refresh(0, 0, 0, 0, 0);
   /* relift: cmp (int16_t)edi, word ptr [ebp - 0x6be] -> jl 0x35370 */
   /* cmp (int16_t)edi, (int16_t)eax -> jge 0x3546f */
   datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
@@ -2208,7 +2243,7 @@ void actor_perception_refresh(void)
   /* relift: cmp dword ptr [ebp + eax - 0xcbc], -1 -> jne 0x35517 */
   prop_new_unacknowledged(0, 0, 0);
   /* cmp eax, -1 -> je 0x35525 */
-  prop_position_refresh();
+  prop_position_refresh(0, 0, 0, 0, 0);
   /* relift: cmp (int16_t)ebx, word ptr [ebp - 0x1c] -> jge 0x3553e */
   /* relift: cmp (int16_t)edi, word ptr [ebp - 0xcc2] -> jl 0x354d7 */
   object_marker_end();
