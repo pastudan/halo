@@ -20339,8 +20339,8 @@
         },
         {
           "addr": "0xe1f00",
-          "decl": "int FUN_000e1f00(uint32_t reg@<edx>, float unused, float a, float b);",
-          "ported": false,
+          "decl": "void FUN_000e1f00(void);",
+          "ported": true,
           "name": "FUN_000e1f00"
         },
         {
