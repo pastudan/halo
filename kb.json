@@ -34327,7 +34327,7 @@
         },
         {
           "addr": "0x32ac0",
-          "decl": "void actor_perception_unreachable(int actor_handle, int prop_handle, char flag);",
+          "decl": "void actor_perception_unreachable(int actor_handle, int prop_handle, char mark);",
           "ported": false
         },
         {
