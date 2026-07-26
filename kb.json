@@ -41352,11 +41352,13 @@
         },
         {
           "addr": "0x1aeb0",
-          "decl": "char FUN_0001aeb0(int actor_handle, int vehicle_handle, short seat_index, int param_4, float *out_attach0, float *out_attach1, float *out_attach2, int param_8, int param_9, int param_10, int param_11);"
+          "decl": "char FUN_0001aeb0(int actor_handle, int vehicle_handle, short seat_index, int param_4, float *out_attach0, float *out_attach1, float *out_attach2, int param_8, int param_9, int param_10, int param_11);",
+          "ported": false
         },
         {
           "addr": "0x1b280",
-          "decl": "char FUN_0001b280(int actor_handle@<ecx>, int object_handle@<eax>, float *in_attach0, float *in_attach1, float *in_attach2, int param_6, float *out_position, int *out_handle);"
+          "decl": "char FUN_0001b280(int actor_handle@<ecx>, int object_handle@<eax>, float *in_attach0, float *in_attach1, float *in_attach2, int param_6, float *out_position, int *out_handle);",
+          "ported": false
         }
       ]
     }

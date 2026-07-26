@@ -17344,5 +17344,19 @@
     "object": "bink_playback.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1aeb0",
+    "name": "FUN_0001aeb0",
+    "object": "action_vehicle.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b280",
+    "name": "FUN_0001b280",
+    "object": "action_vehicle.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
