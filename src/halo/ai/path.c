@@ -1176,61 +1176,30 @@ void path_heap_insert(void *path __attribute__((unused)), int16_t heap_node __at
 #endif
 
 
-/* FUN_0005e700 (0x5e700) — XBE naked draft (batch 156). */
-#if defined(__clang__)
-static void *(*const b5e700_elem)(void *, int, int) = tag_block_get_element;
-static char * (*const b5e700_c1459e0)(void) = breakable_surfaces_get_bsp_surface_data;
 
-__attribute__((naked, noinline))
-void FUN_0005e700(void)
+/* FUN_0005e700 (0x5e700) — readable C lift.
+ * block_base @eax; stack: surface_index. */
+char FUN_0005e700(int surface_index, void *block_base)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x60\n\t"
-      "addl $0xb0, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x3c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x8(%%esi), %%cl\n\t"
-      "addl $0x18, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "testb $8, %%cl\n\t"
-      "je .LFUN_0005e700_1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1459e0]\n\t"
-      "movzbl 0x9(%%esi), %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "shrl $5, %%edx\n\t"
-      "movl (%%edi,%%edx,4), %%esi\n\t"
-      "popl %%edi\n\t"
-      "andl %%esi, %%eax\n\t"
-      "negl %%eax\n\t"
-      "sbbb %%al, %%al\n\t"
-      "incb %%al\n\t"
-      ".LFUN_0005e700_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b5e700_elem), [c1459e0] "m"(b5e700_c1459e0)
-      : "memory");
+  char *chunk;
+  char *surf;
+  char *bits;
+  unsigned idx;
+  unsigned mask;
+  unsigned word;
+
+  chunk = (char *)tag_block_get_element((char *)block_base + 0xb0, 0, 0x60);
+  surf = (char *)tag_block_get_element(chunk + 0x3c, surface_index, 0xc);
+  if (!(surf[8] & 8))
+    return 0;
+  bits = breakable_surfaces_get_bsp_surface_data();
+  idx = (unsigned char)surf[9];
+  mask = 1u << (idx & 0x1f);
+  word = *(unsigned *)(bits + (idx >> 5) * 4);
+  return (char)((mask & word) ? 0 : 1);
 }
-#else
-#error "FUN_0005e700: clang naked draft required"
-#endif
+
+
 
 
 /* path_state_approach_point (0x5e9b0) — XBE naked draft (batch 225). */

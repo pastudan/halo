@@ -1284,80 +1284,38 @@ void actor_clear_discarded_firing_positions(int actor_handle, int param2)
   }
 }
 
-/* FUN_00024be0 (0x24be0) — XBE naked draft (batch 144). */
-#if defined(__clang__)
-static void *(*const b24be0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static scenario_t * (*const b24be0_c18e380)(void) = global_scenario_get;
-static void *(*const b24be0_elem)(void *, int, int) = tag_block_get_element;
 
-__attribute__((naked, noinline))
-void FUN_00024be0(int actor_handle __attribute__((unused)), short param_2 __attribute__((unused)), char param_3 __attribute__((unused)))
+/* FUN_00024be0 (0x24be0) — readable C lift. */
+void FUN_00024be0(int actor_handle, short param_2, char param_3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "movw 0xc(%%ebp), %%di\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .LFUN_00024be0_2\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x10(%%ebp), %%bl\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movswl 0x3c6(%%esi), %%edx\n\t"
-      "movb %%bl, 0x3c8(%%esi,%%edx,4)\n\t"
-      "movswl 0x3c6(%%esi), %%eax\n\t"
-      "movw %%di, 0x3ca(%%esi,%%eax,4)\n\t"
-      "movswl 0x3c6(%%esi), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "incl %%ecx\n\t"
-      "andl $0x80000003, %%ecx\n\t"
-      "jns .LFUN_00024be0_1\n\t"
-      "decl %%ecx\n\t"
-      "orl $0xfffffffc, %%ecx\n\t"
-      "incl %%ecx\n\t"
-      ".LFUN_00024be0_1:\n\t"
-      "movl 0x34(%%esi), %%edx\n\t"
-      "andl $0xffff, %%edx\n\t"
-      "pushl $0xb0\n\t"
-      "pushl %%edx\n\t"
-      "movw %%cx, 0x3c6(%%esi)\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "pushl $0x18\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x98, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movb %%bl, 0x3d9(%%esi)\n\t"
-      "movb $1, 0x3d8(%%esi)\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "addl $0x3dc, %%esi\n\t"
-      "movl %%edx, (%%esi)\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "movl %%edx, 0x8(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00024be0_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b24be0_dget), [c18e380] "m"(b24be0_c18e380), [elem] "m"(b24be0_elem)
-      : "memory");
+  char *actor;
+  int idx;
+  int next;
+  void *block;
+  float *pos;
+
+  if (param_2 == (short)-1)
+    return;
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  idx = *(int16_t *)(actor + 0x3c6);
+  actor[0x3c8 + idx * 4] = param_3;
+  *(int16_t *)(actor + 0x3ca + idx * 4) = param_2;
+  next = idx + 1;
+  next &= 0x80000003;
+  if (next < 0)
+    next = ((next - 1) | -4) + 1;
+  *(int16_t *)(actor + 0x3c6) = (int16_t)next;
+  block = tag_block_get_element(
+      (char *)global_scenario_get() + 0x42c,
+      *(unsigned short *)(actor + 0x34),
+      0xb0);
+  pos = (float *)tag_block_get_element((char *)block + 0x98, param_2, 0x18);
+  actor[0x3d9] = param_3;
+  actor[0x3d8] = 1;
+  *(float *)(actor + 0x3dc) = pos[0];
+  *(float *)(actor + 0x3e0) = pos[1];
+  *(float *)(actor + 0x3e4) = pos[2];
 }
-#else
-#error "FUN_00024be0: clang naked draft required"
-#endif
+
+
 
