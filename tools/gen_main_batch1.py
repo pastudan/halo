@@ -18,7 +18,7 @@ IMPL = r'''
 /* --- main.obj batch1 drafts (2026-07-26) --- */
 
 bool cache_files_give_time_to_precache(const char *name);
-void main_menu_active(int flag);
+void main_menu_active(char active);
 
 char gamepad_button_is_down(int16_t button)
 {
