@@ -3851,42 +3851,18 @@ int16_t FUN_000caf70(int16_t value)
   return value;
 }
 
-/* FUN_000ce200 (0xce200) — XBE naked draft (batch 206). */
-#if defined(__clang__)
-static int (*const bce200_c119610)(data_t *data) = data_new_at_index;
-static void *(*const bce200_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
+/* FUN_000ce200 (0xce200) — readable C lift. */
 int FUN_000ce200(void)
 {
-  __asm__ volatile(
-      "movl 0x5aa698, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000ce200_1\n\t"
-      "movl 0x5aa698, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "movw $0, 0x6(%%eax)\n\t"
-      "movl $0xffffffff, 0x8(%%eax)\n\t"
-      ".LFUN_000ce200_1:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c119610] "m"(bce200_c119610), [dget] "m"(bce200_dget)
-      : "memory");
+  int handle = data_new_at_index(*(data_t **)0x5aa698);
+  void *node;
+  if (handle == -1)
+    return handle;
+  node = datum_get(*(data_t **)0x5aa698, handle);
+  *(unsigned short *)((char *)node + 6) = 0;
+  *(int *)((char *)node + 8) = -1;
+  return handle;
 }
-#else
-#error "FUN_000ce200: clang naked draft required"
-#endif
-
 
 /* FUN_000ce2b0 (0xce2b0) — XBE naked draft (batch 150). */
 #if defined(__clang__)

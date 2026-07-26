@@ -12285,7 +12285,7 @@
         },
         {
           "addr": "0xc9c10",
-          "decl": "float FUN_000c9c10(int object_handle, float value);",
+          "decl": "void FUN_000c9c10(int object_handle, float value);",
           "ported": true
         },
         {
@@ -12421,7 +12421,7 @@
         {
           "addr": "0xca890",
           "decl": "const char *FUN_000ca890(int datum_index@<eax>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca940",
@@ -12737,7 +12737,7 @@
         {
           "addr": "0xce200",
           "decl": "int FUN_000ce200(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce240",
