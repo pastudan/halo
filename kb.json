@@ -19613,47 +19613,47 @@
         {
           "addr": "0xc0970",
           "decl": "void FUN_000c0970(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc09b0",
           "decl": "void FUN_000c09b0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc09f0",
           "decl": "void FUN_000c09f0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0a30",
           "decl": "void FUN_000c0a30(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0a70",
           "decl": "void FUN_000c0a70(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0ab0",
           "decl": "void FUN_000c0ab0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0af0",
           "decl": "void FUN_000c0af0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0b30",
           "decl": "void FUN_000c0b30(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc0b70",
           "decl": "void FUN_000c0b70(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "players.obj",
