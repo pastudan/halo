@@ -1265,6 +1265,19 @@ def main() -> int:
         ("ai_communication_dispose_from_old_map", 0x42ca0, 0x42cad),
         # gameplay wave 103 (2026-07-26) — final Capstone weak
         ("FUN_001954d0", 0x1954d0, 0x1954dd),
+        # gameplay wave 104 (2026-07-26) — largest ported:false Capstone weaks
+        ("FUN_000355f0", 0x355f0, 0x3681c),
+        ("FUN_00022dc0", 0x22dc0, 0x23fd6),
+        ("build_structure_lens_flares", 0x1943e0, 0x1954cb),
+        ("get_local_player_input_blob", 0xb70b0, 0xb7e24),
+        ("FUN_000d5350", 0xd5350, 0xd5ebb),
+        ("render_weapon_hud", 0xd9f20, 0xda971),
+        ("actor_perception_refresh", 0x34c80, 0x355ec),
+        ("flag_render_proper", 0x132460, 0x132c80),
+        ("FUN_00052bb0", 0x52bb0, 0x534b7),
+        ("ai_conversation_find_participant", 0x447d0, 0x44fae),
+        ("FUN_000df4e0", 0xdf4e0, 0xdfdba),
+        ("render_contrail", 0x188010, 0x188790),
     ]
 
     xbe = Xbe.from_file(args.xbe)
