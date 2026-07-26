@@ -79,35 +79,14 @@ void cinematic_skip_stop(void) {
 
 
 
-/* cinematic_show_letterbox (0x92e90) — XBE naked draft (batch 269). */
-#if defined(__clang__)
-static int (*const b92e90_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-void cinematic_show_letterbox(int a0 __attribute__((unused)))
+/* cinematic_show_letterbox (0x92e90) — readable C lift. */
+void cinematic_show_letterbox(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x44df00, %%ecx\n\t"
-      "movb %%al, 0x8(%%ecx)\n\t"
-      "je .Lcinematic_show_letterbox_1\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x44df00, %%edx\n\t"
-      "movl %%eax, 0x4(%%edx)\n\t"
-      ".Lcinematic_show_letterbox_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(b92e90_gtime)
-      : "memory");
+  void *p = *(void **)0x44df00;
+  *((char *)p + 8) = (char)a0;
+  if (a0)
+    *(int *)((char *)p + 4) = game_time_get();
 }
-#else
-#error "cinematic_show_letterbox: clang naked draft required"
-#endif
-
 
 /* draw_quad (0x92ec0) — XBE naked draft (batch 271). */
 #if defined(__clang__)

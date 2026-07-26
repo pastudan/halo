@@ -266,43 +266,15 @@ void FUN_00094ba0(void)
   /* relift: no calls detected — manual review */
 }
 
-/* recorded_animations_clear_debug_storage (0x94c70) — XBE naked draft (batch 276). */
-#if defined(__clang__)
-static void (*const b94c70_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b94c70_exitfn)(int) = system_exit;
-static void *(*const b94c70_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* recorded_animations_clear_debug_storage (0x94c70) — readable C lift. */
 void recorded_animations_clear_debug_storage(void)
 {
-  __asm__ volatile(
-      "movl 0x44df0c, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lrecorded_animations_clear_debug_storage_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x99\n\t"
-      "pushl $0x269764\n\t"
-      "pushl $0x269738\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrecorded_animations_clear_debug_storage_1:\n\t"
-      "movl 0x44df0c, %%eax\n\t"
-      "pushl $0x400\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b94c70_assert), [exitfn] "m"(b94c70_exitfn), [memset] "m"(b94c70_memset)
-      : "memory");
+  if (!*(void **)0x44df0c) {
+    display_assert((const char *)0x269738, (const char *)0x269764, 0x99, 1);
+    system_exit(-1);
+  }
+  csmemset(*(void **)0x44df0c, 0, 0x400);
 }
-#else
-#error "recorded_animations_clear_debug_storage: clang naked draft required"
-#endif
-
 
 /* recorded_animation_controlling_unit (0x94ff0) — XBE naked draft (batch 283). */
 #if defined(__clang__)
@@ -675,69 +647,21 @@ void FUN_000956e0(int object __attribute__((unused)), void *ctrl __attribute__((
 #endif
 
 
-/* FUN_00095750 (0x95750) — XBE naked draft (batch 290). */
-#if defined(__clang__)
-static void *(*const b95750_get)(int, int) = object_get_and_verify_type;
-static void *(*const b95750_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-char FUN_00095750(int object __attribute__((unused)))
+/* FUN_00095750 (0x95750) — readable C lift. */
+char FUN_00095750(int object)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6374726c\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b95750_get), [tag] "m"(b95750_tag)
-      : "memory");
+  void *obj = object_get_and_verify_type(object, 0x100);
+  tag_get(*(void **)obj, 0x6374726c);
+  return 1;
 }
-#else
-#error "FUN_00095750: clang naked draft required"
-#endif
 
-
-/* FUN_00095790 (0x95790) — XBE naked draft (batch 291). */
-#if defined(__clang__)
-static void *(*const b95790_get)(int, int) = object_get_and_verify_type;
-static void *(*const b95790_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-char FUN_00095790(int object __attribute__((unused)))
+/* FUN_00095790 (0x95790) — readable C lift. */
+char FUN_00095790(int object)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6374726c\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b95790_get), [tag] "m"(b95790_tag)
-      : "memory");
+  void *obj = object_get_and_verify_type(object, 0x100);
+  tag_get(*(void **)obj, 0x6374726c);
+  return 1;
 }
-#else
-#error "FUN_00095790: clang naked draft required"
-#endif
-
 
 /* FUN_000958f0 (0x958f0) — XBE naked draft (batch 287). */
 #if defined(__clang__)

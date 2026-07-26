@@ -5387,7 +5387,7 @@
         {
           "addr": "0x92e90",
           "decl": "void cinematic_show_letterbox(int a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x92ec0",
@@ -18239,7 +18239,7 @@
         },
         {
           "addr": "0xe0740",
-          "decl": "void player_ui_set_single_player_local_player_controller(int a0, int16_t a1);",
+          "decl": "void player_ui_set_single_player_local_player_controller(void);",
           "ported": false
         },
         {
@@ -22944,12 +22944,12 @@
         {
           "addr": "0x95750",
           "decl": "char FUN_00095750(int object);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x95790",
           "decl": "char FUN_00095790(int object);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x957c0",
