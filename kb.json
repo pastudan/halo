@@ -6896,7 +6896,7 @@
         {
           "addr": "0x17cc40",
           "decl": "void FUN_0017cc40(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cc50",
@@ -38797,7 +38797,7 @@
         {
           "addr": "0x1b98c0",
           "decl": "void tag_files_close(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b98d0",
