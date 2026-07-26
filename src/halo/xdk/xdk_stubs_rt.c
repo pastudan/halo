@@ -506,690 +506,79 @@ void FUN_001d040f(void)
   (void)0;
 }
 
-/* 0x1d0447 */
+/* FUN_001d0447 (0x1d0447) — XBE naked draft (batch 301). */
+#if defined(__clang__)
+static void (*const b1d0447_c1d4464)(void) = FUN_001d4464;
+static void (*const b1d0447_c1d03ee)(void) = FUN_001d03ee;
+static void (*const b1d0447_c1d040f)(void) = FUN_001d040f;
+
+__attribute__((naked, noinline))
 void FUN_001d0447(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  FUN_001d4464();
-  /* test eax, eax -> jne 0x1d04ed */
-  FUN_001d03ee();
-  FUN_001d03ee();
-  FUN_001d040f();
-  FUN_001d040f();
-  FUN_001d4464();
-  /* test eax, eax -> jne 0x1d0518 */
-  /* relift: test byte ptr [ebp - 4], 2 -> je 0x1d0518 */
-  /* test (char)eax, (char)eax -> jne 0x1d0654 */
-  XapiSetLastNTError(0xc000000d);
-  /* cmp eax, ecx -> ja 0x1d0695 */
-  /* cmp edx, esi -> jae 0x1d068b */
-  /* cmp eax, ecx -> jb 0x1d069a */
-  /* cmp edx, esi -> jbe 0x1d069a */
-  FUN_001d0589();
-  /* relift: cmp word ptr [esi], 0 -> je 0x1d06f0 */
-  SystemTimeToFileTime((void *)(uintptr_t)esi, (void *)(uintptr_t)edi);
-  /* test eax, eax -> je 0x1d0795 */
-  /* relift: cmp eax, dword ptr [ebx + 4] -> jg 0x1d06e9 */
-  /* relift: cmp eax, dword ptr [ebx] -> jb 0x1d0795 */
-  /* test (int16_t)eax, (int16_t)eax -> je 0x1d0795 */
-  /* test (char)eax, (char)eax -> jne 0x1d07a1 */
-  /* cmp (int16_t)eax, (int16_t)edi -> jle 0x1d07be */
-  /* test (char)eax, (char)eax -> je 0x1d0806 */
-  /* test (char)eax, (char)eax -> je 0x1d0795 */
-  /* cmp ecx, eax -> jl 0x1d0844 */
-  /* relift: cmp edx, dword ptr [eax + 4] -> jg 0x1d089d */
-  /* relift: cmp edi, dword ptr [eax] -> jae 0x1d089d */
-  /* test (char)eax, (char)eax -> jne 0x1d079e */
-  /* relift: tail-call FUN_001d0447(); */
-  /* cmp eax, ebx -> je 0x1d08d3 */
-  SetLastError(eax);
-  /* relift: cmp word ptr [esi + 0x46], (int16_t)ebx -> je 0x1d09fd */
-  /* relift: cmp word ptr [esi + 0x9a], (int16_t)ebx -> je 0x1d09fd */
-  FUN_001d06a0();
-  /* test (char)eax, (char)eax -> je 0x1d09fd */
-  FUN_001d06a0();
-  /* test (char)eax, (char)eax -> je 0x1d09fd */
-  __allmul();
-  __allmul();
-  __allmul();
-  /* cmp ebx, edx -> jg 0x1d09e0 */
-  /* relift: cmp dword ptr [ebp - 0x18], eax -> jae 0x1d09e0 */
-  /* relift: cmp dword ptr [ebp - 4], ebx -> jl 0x1d09db */
-  /* relift: cmp ecx, dword ptr [ebp - 0x18] -> jb 0x1d09db */
-  /* relift: cmp dword ptr [ebp - 4], edx -> jg 0x1d09db */
-  /* cmp ecx, eax -> jb 0x1d09fa */
-  /* relift: cmp dword ptr [ebp - 4], edx -> jl 0x1d09fa */
-  /* cmp ecx, eax -> jb 0x1d09fa */
-  /* relift: cmp dword ptr [ebp - 4], ebx -> jg 0x1d09fa */
-  /* relift: cmp ecx, dword ptr [ebp - 0x18] -> jb 0x1d09db */
-  GetTimeZoneInformation();
-  __allmul();
-  FUN_001d0a06();
-  FUN_001d0a06();
-  FUN_001d0a06();
-  /* cmp edx, ecx -> jae 0x1d0b53 */
-  /* test edx, edx -> jne 0x1d0b51 */
-  /* relift: cmp dword ptr [ebp + 0xc], edx -> jbe 0x1d0b5b */
-  FUN_001d5842();
-  /* test esi, esi -> jne 0x1d0b79 */
-  SetLastError(0);
-  FUN_001d4e37();
-  /* test eax, eax -> jne 0x1d0b90 */
-  SetLastError(0);
-  FUN_001d6ca8();
-  FUN_001d5c66();
-  /* test (char)eax, 0x40 -> je 0x1d0be3 */
-  FUN_001d703b();
-  FUN_001d52c4();
-  FUN_001d6ca8();
-  FUN_001d5c66();
-  /* test (char)eax, 0x40 -> je 0x1d0c72 */
-  FUN_001d703b();
-  /* test eax, eax -> jl 0x1d0cb3 */
-  XapiSetLastNTError(0);
-  /* relift: test byte ptr [ebp + 0x11], 0x80 -> je 0x1d0cd5 */
-  /* relift: cmp dword ptr [ebp + 0xc], 0 -> je 0x1d0cd5 */
-  /* test eax, eax -> jl 0x1d0cef */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1d0d1c */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1d0d3e */
-  XapiSetLastNTError(0);
-  FUN_001d0c91();
-  FUN_001d0cbf();
-  FUN_001d0cfb();
-  /* relift: FUN_001d0d27(0, 0, 0); */
-  /* test eax, eax -> jge 0x1d0e43 */
-  XapiSetLastNTError(0);
-  /* test esi, esi -> jl 0x1d0e88 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1d0ed4 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1d0f57 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jge 0x1d0fb2 */
-  /* test esi, esi -> jl 0x1d0feb */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jge 0x1d104c */
-  XapiSetLastNTError(0);
-  /* test esi, esi -> jl 0x1d107a */
-  XapiSetLastNTError(0);
-  /* relift: test word ptr [esp + 4], 0xfff -> je 0x1d1098 */
-  /* test eax, eax -> jl 0x1d10a8 */
-  XapiSetLastNTError(0);
-  /* relift: test byte ptr [esi + 0x38], 0x10 -> je 0x1d1174 */
-  FUN_001d10bd();
-  /* relift: cmp dword ptr [esi + 0x2c], 0 -> jne 0x1d11a6 */
-  /* cmp eax, ebx -> jae 0x1d1195 */
-  /* relift: cmp dword ptr [edi], ebx -> jae 0x1d11a6 */
-  /* relift: cmp dword ptr [ebp + 0x10], 0 -> jl 0x1d11a8 */
-  /* relift: cmp dword ptr [edi], ebx -> jb 0x1d11c9 */
-  /* relift: cmp dword ptr [ebp + 0x10], 0xc000000f -> jne 0x1d11e2 */
-  /* test esi, esi -> jl 0x1d12b4 */
-  /* relift: test byte ptr [ebp - 0x28], 0x10 -> je 0x1d127d */
-  /* test esi, esi -> jl 0x1d12b4 */
-  FUN_001d10bd();
-  /* relift: cmp dword ptr [ebp - 0x2c], 0 -> je 0x1d128a */
-  /* test esi, esi -> jge 0x1d12bc */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jge 0x1d1315 */
-  /* test esi, esi -> jl 0x1d1352 */
-  /* cmp esi, 0xc00000d4 -> jne 0x1d13a2 */
-  /* relift: test byte ptr [ebp + 0x18], 2 -> je 0x1d13a2 */
-  FUN_001d1f10();
-  /* test esi, esi -> je 0x1d139e */
-  DeleteFileA((char *)(uintptr_t)ebx);
-  /* test eax, eax -> jne 0x1d139e */
-  FUN_001d0df0((char *)(uintptr_t)ebx, 128);
-  DeleteFileA((char *)(uintptr_t)ebx);
-  XapiSetLastNTError(0);
-  FUN_001d12c1();
-  /* cmp edi, ebx -> je 0x1d13dd */
-  /* cmp esi, ebx -> je 0x1d144c */
-  /* cmp eax, ebx -> jl 0x1d1437 */
-  /* cmp eax, edi -> je 0x1d1437 */
-  /* cmp eax, ebx -> je 0x1d1432 */
-  /* cmp eax, ecx -> jne 0x1d14a7 */
-  /* cmp eax, ebx -> je 0x1d1449 */
-  /* cmp eax, 0x103 -> jne 0x1d147c */
-  /* cmp eax, ebx -> jl 0x1d1487 */
-  /* cmp eax, ebx -> jl 0x1d1487 */
-  /* cmp eax, 0xc0000011 -> jne 0x1d1492 */
-  /* cmp ecx, 0x80000000 -> jne 0x1d14a7 */
-  XapiSetLastNTError(0);
-  /* cmp edi, ebx -> je 0x1d14ca */
-  /* cmp esi, ebx -> je 0x1d152d */
-  /* cmp edx, ecx -> je 0x1d157d */
-  /* cmp eax, edi -> je 0x1d157d */
-  /* cmp eax, ebx -> je 0x1d1528 */
-  /* cmp eax, 0x103 -> jne 0x1d155d */
-  /* cmp eax, ebx -> jl 0x1d1568 */
-  /* cmp eax, ebx -> jl 0x1d1568 */
-  /* cmp ecx, 0x80000000 -> jne 0x1d157d */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jge 0x1d15b5 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1d1603 */
-  /* test eax, eax -> jl 0x1d1603 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1d167c */
-  /* test eax, eax -> jge 0x1d1687 */
-  XapiSetLastNTError(0);
-  /* relift: cmp dword ptr [ebp - 8], 0 -> jae 0x1d16ac */
-  /* test ebx, ebx -> jne 0x1d16c0 */
-  /* test eax, 0x7fffffff -> je 0x1d16c0 */
-  SetLastError(87);
-  /* test eax, eax -> jl 0x1d16f4 */
-  /* test ebx, ebx -> je 0x1d16e2 */
-  /* relift: cmp dword ptr [ebp - 8], -1 -> jne 0x1d16ef */
-  SetLastError(0);
-  XapiSetLastNTError(0);
-  /* test ebx, ebx -> je 0x1d1703 */
-  /* test eax, eax -> jl 0x1d17c6 */
-  /* test eax, eax -> jl 0x1d17c6 */
-  /* test ecx, ecx -> jae 0x1d1796 */
-  SetLastError(131);
-  /* test eax, eax -> jl 0x1d17c6 */
-  /* test eax, eax -> je 0x1d17c1 */
-  XapiSetLastNTError(0);
-  /* cmp ecx, esi -> je 0x1d1899 */
-  /* cmp ecx, esi -> je 0x1d1899 */
-  /* cmp ecx, esi -> je 0x1d1899 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1d1904 */
-  /* test eax, eax -> je 0x1d18db */
-  /* test eax, eax -> je 0x1d18ed */
-  /* test eax, eax -> je 0x1d18ff */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> je 0x1d1946 */
-  /* test eax, eax -> je 0x1d1958 */
-  /* test eax, eax -> jl 0x1d1976 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1d199d */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jge 0x1d19d2 */
-  XapiSetLastNTError(0);
-  /* cmp edx, ecx -> jne 0x1d1a31 */
-  XapiSetLastNTError(0);
-  /* cmp edx, ecx -> jne 0x1d1a82 */
-  XapiSetLastNTError(0);
-  /* cmp edx, ecx -> je 0x1d1b11 */
-  /* cmp ecx, ebx -> je 0x1d1b11 */
-  /* cmp eax, ebx -> jl 0x1d1b79 */
-  /* cmp eax, 0x103 -> je 0x1d1b79 */
-  /* cmp eax, 0x103 -> jne 0x1d1b56 */
-  /* cmp eax, ebx -> jl 0x1d1b64 */
-  /* cmp eax, ebx -> jl 0x1d1b64 */
-  /* cmp edx, ecx -> je 0x1d1b79 */
-  XapiSetLastNTError(0);
-  /* cmp edi, ebx -> je 0x1d1b9b */
-  /* cmp esi, ebx -> je 0x1d1c0a */
-  /* cmp eax, ebx -> jl 0x1d1bf5 */
-  /* cmp eax, edi -> je 0x1d1bf5 */
-  /* cmp eax, ebx -> je 0x1d1bf0 */
-  /* cmp eax, ecx -> jne 0x1d1c65 */
-  /* cmp eax, ebx -> je 0x1d1c07 */
-  /* cmp eax, 0x103 -> jne 0x1d1c3a */
-  /* cmp eax, ebx -> jl 0x1d1c45 */
-  /* cmp eax, ebx -> jl 0x1d1c45 */
-  /* cmp eax, 0xc0000011 -> jne 0x1d1c50 */
-  /* cmp ecx, 0x80000000 -> jne 0x1d1c65 */
-  XapiSetLastNTError(0);
-  /* cmp edi, ebx -> je 0x1d1c88 */
-  /* cmp esi, ebx -> je 0x1d1ceb */
-  /* cmp edx, ecx -> je 0x1d1d3b */
-  /* cmp eax, edi -> je 0x1d1d3b */
-  /* cmp eax, ebx -> je 0x1d1ce6 */
-  /* cmp eax, 0x103 -> jne 0x1d1d1b */
-  /* cmp eax, ebx -> jl 0x1d1d26 */
-  /* cmp eax, ebx -> jl 0x1d1d26 */
-  /* cmp ecx, 0x80000000 -> jne 0x1d1d3b */
-  XapiSetLastNTError(0);
-  FUN_001d19a9();
-  /* test eax, eax -> je 0x1d1d7a */
-  /* test eax, eax -> je 0x1d1d6b */
-  /* relift: cmp dword ptr [ebp - 8], -1 -> jne 0x1d1d7e */
-  SetLastError(0);
-  XapiSetLastNTError(0xc000000d);
-  /* relift: cmp word ptr [ebp - 0xc], (int16_t)ebx -> jbe 0x1d1e06 */
-  /* relift: cmp byte ptr [eax + edi - 1], 0x5c -> jne 0x1d1e06 */
-  /* cmp esi, ebx -> jge 0x1d1ee2 */
-  XapiSetLastNTError(0);
-  /* cmp esi, 0xc0000035 -> jne 0x1d1ec5 */
-  /* cmp esi, 0xc00000ba -> jne 0x1d1edd */
-  /* relift: cmp dword ptr [ebp + 8], ebx -> je 0x1d1ed6 */
-  SetLastError(0);
-  /* relift: cmp dword ptr [ebp + 0x18], 2 -> jne 0x1d1eee */
-  /* relift: cmp dword ptr [ebp - 0x10], 3 -> je 0x1d1efa */
-  /* relift: cmp dword ptr [ebp + 0x18], 4 -> jne 0x1d1f01 */
-  /* relift: cmp dword ptr [ebp - 0x10], 1 -> jne 0x1d1f01 */
-  SetLastError(ebx);
-  SetLastError(0);
-  XapiSetLastNTError(0);
-  /* cmp esi, edi -> jge 0x1d2023 */
-  /* cmp eax, 3 -> jne 0x1d211f */
-  /* cmp esi, edi -> jl 0x1d21a4 */
-  /* relift: cmp eax, dword ptr [ebp + 0x34] -> jg 0x1d2153 */
-  /* cmp esi, edi -> jl 0x1d21a4 */
-  /* cmp esi, edi -> jl 0x1d21a4 */
-  /* cmp eax, 3 -> jne 0x1d212e */
-  /* cmp eax, edi -> je 0x1d205a */
-  /* cmp eax, edi -> jne 0x1d214e */
-  /* relift: cmp eax, dword ptr [ebp + 0x34] -> jl 0x1d2097 */
-  /* relift: cmp eax, dword ptr [ebp + 0x30] -> jb 0x1d2097 */
-  /* cmp esi, edi -> jl 0x1d21a4 */
-  /* cmp esi, edi -> jge 0x1d21de */
-  XapiSetLastNTError(0);
-  FUN_001d1f10();
-  /* cmp (char)eax, 2 -> jae 0x1d223d */
-  /* relift: cmp dword ptr [eax + 0x28], 0 -> je 0x1d223d */
-  /* cmp (char)eax, 2 -> jae 0x1d2252 */
-  /* cmp (char)eax, 2 -> jae 0x1d227a */
-  SetLastError(edx);
-  /* test eax, eax -> jge 0x1d22dd */
-  XapiSetLastNTError(0);
-  /* relift: cmp dword ptr [ebp + 8], -1 -> je 0x1d231f */
-  /* test eax, eax -> jge 0x1d2331 */
-  XapiSetLastNTError(0);
-  /* test esi, esi -> jne 0x1d231b */
-  /* test esi, esi -> je 0x1d2331 */
-  XapiSetLastNTError(0xc000000d);
-  /* test eax, eax -> jge 0x1d2361 */
-  XapiSetLastNTError(0);
-  FUN_001d4436();
-  /* cmp eax, ecx -> je 0x1d23bb */
-  /* cmp eax, ecx -> jne 0x1d23cd */
-  SetLastError(ecx);
-  XapiSetLastNTError(0);
-  /* relift: cmp dword ptr [esi], 0x103 -> jne 0x1d241e */
-  /* relift: cmp dword ptr [esp + 0x14], 0 -> je 0x1d2402 */
-  /* test eax, eax -> jne 0x1d23f8 */
-  WaitForSingleObject(0, 0);
-  /* cmp eax, 0x102 -> jne 0x1d241a */
-  SetLastError(996);
-  /* test eax, eax -> jne 0x1d2438 */
-  /* test esi, esi -> jl 0x1d2432 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jne 0x1d2475 */
-  /* relift: cmp dword ptr [ebp + 0xc], 0 -> jne 0x1d248c */
-  /* relift: cmp dword ptr [ebp + 8], 0 -> je 0x1d250f */
-  FUN_001d789a((char *)(uintptr_t)ebx, (char *)(uintptr_t)0, 519);
-  /* test (char)ecx, (char)ecx -> jne 0x1d24ee */
-  FUN_001d789a((char *)(uintptr_t)eax, (char *)0, 0);
-  /* test ecx, ecx -> je 0x1d2574 */
-  /* cmp eax, 2 -> je 0x1d253d */
-  /* cmp eax, 3 -> je 0x1d253d */
-  /* relift: cmp ecx, dword ptr [edx + 8] -> jne 0x1d2574 */
-  /* test eax, eax -> je 0x1d2596 */
-  FUN_001d243e();
-  /* test eax, eax -> jl 0x1d25d5 */
-  /* test eax, eax -> je 0x1d25cd */
-  /* cmp esi, ebx -> je 0x1d2612 */
-  /* cmp (char)eax, 0x44 -> je 0x1d25fe */
-  /* cmp (char)eax, 0x64 -> jne 0x1d260a */
-  /* relift: cmp byte ptr [esi + 1], 0x3a -> jne 0x1d260a */
-  /* relift: cmp byte ptr [esi + 2], 0x5c -> je 0x1d2631 */
-  /* cmp eax, ebx -> jl 0x1d26b4 */
-  /* cmp ecx, eax -> ja 0x1d269e */
-  FUN_001d789a((char *)(uintptr_t)eax, (char *)(uintptr_t)eax, 0);
-  /* cmp (char)ecx, (char)ebx -> jne 0x1d26b6 */
-  FUN_001d259b();
-  /* relift: cmp word ptr [edi], (int16_t)esi -> jne 0x1d270f */
-  /* relift: cmp dword ptr [ebp - 0x1c], 0xd48 -> je 0x1d2791 */
-  /* relift: cmp dword ptr [ebp - 0xc], esi -> jl 0x1d2911 */
-  FUN_001d7a59();
-  /* relift: cmp eax, dword ptr [edi - 4] -> jne 0x1d27d5 */
-  __wcsicmp((wchar_t *)0, (wchar_t *)(uintptr_t)edi);
-  /* relift: cmp dword ptr [ebp - 8], 0x32 -> jb 0x1d27af */
-  /* relift: cmp dword ptr [ebp + 0xc], esi -> jne 0x1d2801 */
-  FUN_001d7a59();
-  /* cmp ecx, 0x32 -> jne 0x1d2810 */
-  /* relift: cmp dword ptr [ebp - 0x10], esi -> jne 0x1d2840 */
-  /* cmp ecx, esi -> jne 0x1d2844 */
-  _wcscmp((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)eax);
-  /* cmp ecx, esi -> je 0x1d2867 */
-  /* cmp ecx, eax -> jae 0x1d284d */
-  memmove((void *)(uintptr_t)eax, (void *)(uintptr_t)eax, eax);
-  FUN_001d7a59();
-  /* relift: cmp dword ptr [ebp - 0xc], esi -> jge 0x1d28d2 */
-  /* cmp edi, esi -> jl 0x1d2903 */
-  FUN_001d7a59();
-  /* cmp eax, 0xc0000034 -> je 0x1d2882 */
-  /* relift: cmp word ptr [eax], (int16_t)edi -> je 0x1d29bc */
-  _wcslen((wchar_t *)(uintptr_t)eax);
-  /* cmp eax, edi -> je 0x1d2978 */
-  /* relift: cmp edx, dword ptr [ecx + esi + 0xc] -> jne 0x1d29bc */
-  /* relift: cmp dword ptr [esi + 4], edi -> jbe 0x1d29b0 */
-  __wcsicmp((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)ebx);
-  /* relift: cmp edi, dword ptr [esi + 4] -> jb 0x1d2987 */
-  /* relift: cmp dword ptr [esi + 8], 0 -> jne 0x1d29ce */
-  /* relift: cmp dword ptr [ebp + 8], 0 -> je 0x1d29ce */
-  /* relift: cmp dword ptr [esi + 4], 0x32 -> jb 0x1d2945 */
-  _wcscpy();
-  /* cmp eax, edi -> jl 0x1d2ac5 */
-  FUN_001d0bb9(edi, 3412);
-  /* cmp esi, edi -> je 0x1d2a7f */
-  /* relift: cmp dword ptr [ebp - 8], ebx -> je 0x1d2a86 */
-  FUN_001d292e();
-  /* test eax, eax -> jne 0x1d2aac */
-  /* relift: cmp dword ptr [ebp + 8], edi -> jge 0x1d2abd */
-  /* cmp esi, edi -> je 0x1d2ac5 */
-  LocalFree((void *)(uintptr_t)esi);
-  /* cmp esi, edi -> je 0x1d2ac5 */
-  /* cmp eax, 9 -> jg 0x1d2ae1 */
-  __allmul();
-  __aullrem();
-  __aullshr();
-  FUN_001d2ad3();
-  /* cmp ebx, 0x2c -> jle 0x1d2b4c */
-  SetFilePointer(0, 0, (void *)0, 0);
-  ReadFile(0, (void *)(uintptr_t)eax, 0, (void *)(uintptr_t)eax, (void *)0);
-  /* test eax, eax -> je 0x1d2baa */
-  /* relift: cmp dword ptr [ebp - 8], 2 -> je 0x1d2bb6 */
-  /* relift: cmp word ptr [ebp - 4], 0xfeff -> je 0x1d2bb6 */
-  _wcslen((wchar_t *)(uintptr_t)0);
-  /* relift: cmp dword ptr [ebp - 8], ebx -> jne 0x1d2c1a */
-  ReadFile(0, (void *)(uintptr_t)edi, eax, (void *)0, (void *)0);
-  /* test eax, eax -> je 0x1d2d3e */
-  /* relift: cmp dword ptr [ebp - 0xc], ebx -> je 0x1d2d3e */
-  _wcsstr((wchar_t *)(uintptr_t)eax, (wchar_t *)0x002c1cb8);
-  /* cmp eax, ebx -> jae 0x1d2c96 */
-  memmove((void *)(uintptr_t)eax, (void *)(uintptr_t)eax, esi);
-  _wcsstr((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)0);
-  /* relift: cmp word ptr [ecx + eax], 0x3d -> jne 0x1d2ce5 */
-  _wcsstr((wchar_t *)(uintptr_t)edi, (wchar_t *)0x002c1cb8);
-  /* cmp edi, eax -> jl 0x1d2d02 */
-  _wcsncpy((wchar_t *)(uintptr_t)0, (wchar_t *)0, edi);
-  /* cmp esi, ebx -> jae 0x1d2d37 */
-  SetFilePointer(0, 0, (void *)0, 0);
-  /* test (char)eax, (char)eax -> jne 0x1d2d64 */
-  /* test dl, dl -> jne 0x1d2d6e */
-  /* test (char)ebx, (char)ebx -> jne 0x1d2d82 */
-  /* test (char)ebx, (char)ebx -> jne 0x1d2d98 */
-  /* cmp edi, 0x103 -> jae 0x1d2dbf */
-  /* cmp edi, 0xf7 -> jge 0x1d2e3e */
-  /* test dl, dl -> jne 0x1d2dd9 */
-  CreateFileA((char *)(uintptr_t)eax, 0x80000000, 0, 0, 0, ebx, 0);
-  FUN_001d2b79();
-  FUN_001d2bbd();
-  CloseHandle(0);
-  CreateFileA((char *)0, 0x80100000, esi, esi, 0, 0, esi);
-  /* cmp edi, -1 -> je 0x1d2eb7 */
-  FUN_001d2b79();
-  /* test eax, eax -> je 0x1d2eaa */
-  FUN_001d2bbd();
-  /* test eax, eax -> je 0x1d2eaa */
-  _wcscmp((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)0);
-  CloseHandle(0);
-  xapi_GetLastError();
-  CreateFileA((char *)0, 0xc0000000, 0, 0, 0, 0x02000000, 0);
-  /* cmp esi, -1 -> je 0x1d2f1d */
-  CloseHandle(0);
-  /* test (char)ecx, (char)ecx -> jne 0x1d2f36 */
-  /* test (char)ecx, (char)ecx -> jne 0x1d2f49 */
-  FUN_001d2ae7();
-  /* test dl, dl -> jne 0x1d2f73 */
-  /* test (char)ecx, (char)ecx -> jne 0x1d2f97 */
-  FUN_001d2e48();
-  /* test eax, eax -> je 0x1d3135 */
-  CreateDirectoryA((char *)(uintptr_t)eax, 0);
-  /* test eax, eax -> jne 0x1d303e */
-  xapi_GetLastError();
-  /* test (char)ecx, (char)ecx -> jne 0x1d2ff3 */
-  FUN_001d2e48();
-  /* test ebx, ebx -> jne 0x1d3039 */
-  FUN_001d2ec6();
-  /* relift: cmp dword ptr [ebp + 0x10], 1 -> je 0x1d302f */
-  /* test ebx, ebx -> je 0x1d3135 */
-  /* test (char)ecx, (char)ecx -> jne 0x1d304e */
-  /* test eax, eax -> jge 0x1d30bf */
-  FUN_001dd6f5();
-  _wcslen((wchar_t *)(uintptr_t)eax);
-  WriteFile(0, (void *)(uintptr_t)eax, esi, (void *)(uintptr_t)eax, (void *)0);
-  /* test eax, eax -> je 0x1d3163 */
-  CloseHandle(0);
-  /* test esi, esi -> je 0x1d315c */
-  FUN_001d789a((char *)(uintptr_t)esi, (char *)(uintptr_t)eax, 0);
-  /* cmp edi, ebx -> jae 0x1d315c */
-  xapi_GetLastError();
-  CloseHandle(0);
-  FUN_001d347c((char *)(uintptr_t)eax);
-  /* test (char)ecx, (char)ecx -> jne 0x1d31a6 */
-  /* test (char)eax, (char)eax -> jne 0x1d31be */
-  /* test (char)ecx, (char)ecx -> jne 0x1d31d1 */
-  FUN_001d2ae7();
-  /* test dl, dl -> jne 0x1d31fb */
-  /* test (char)ecx, (char)ecx -> jne 0x1d3216 */
-  FUN_001d2e48();
-  FUN_001d7cb4((void *)(uintptr_t)eax);
-  /* test (char)ecx, (char)ecx -> jne 0x1d3268 */
-  /* test (char)ecx, (char)ecx -> jne 0x1d327b */
-  /* test dl, dl -> jne 0x1d3297 */
-  FUN_001d3576();
-  /* cmp edi, -1 -> je 0x1d3352 */
-  FUN_001d2d48();
-  /* test eax, eax -> jne 0x1d330a */
-  FUN_001d3683();
-  FUN_001d2d48();
-  /* test eax, eax -> jne 0x1d32f4 */
-  FUN_001d3683();
-  /* relift: cmp dword ptr [ebp + 0xc], 0 -> jne 0x1d330a */
-  CloseHandle(0);
-  SetLastError(0);
-  /* cmp edi, -1 -> je 0x1d3352 */
-  FUN_001d0bb9(0, 272);
-  /* test esi, esi -> je 0x1d3342 */
-  FUN_001d789a((char *)(uintptr_t)eax, (char *)0, 260);
-  CloseHandle(0);
-  SetLastError(0);
-  FUN_001d3683();
-  /* test edi, edi -> je 0x1d339b */
-  FUN_001d2d48();
-  /* test eax, eax -> jne 0x1d339a */
-  FUN_001d3683();
-  /* test edi, edi -> jne 0x1d3377 */
-  /* cmp edx, 0x53425645 -> je 0x1d33d4 */
-  /* cmp edx, 0xbe4bea00 -> jne 0x1d33e2 */
-  LocalFree((void *)(uintptr_t)ecx);
-  CloseHandle(0);
-  LocalFree((void *)(uintptr_t)ecx);
-  /* test eax, eax -> jl 0x1d3470 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jge 0x1d34cf */
-  XapiSetLastNTError(0);
-  /* test esi, esi -> jl 0x1d34fd */
-  XapiSetLastNTError(0);
-  /* relift: cmp byte ptr [edx + eax - 1], 0x5c -> je 0x1d35b9 */
-  /* cmp (int16_t)ecx, (int16_t)edi -> je 0x1d3673 */
-  /* cmp (int16_t)ecx, 3 -> jne 0x1d3600 */
-  /* relift: cmp byte ptr [edx], 0x2a -> jne 0x1d3600 */
-  /* relift: cmp byte ptr [edx + 1], 0x2e -> jne 0x1d3600 */
-  /* relift: cmp byte ptr [edx + 2], 0x2a -> jne 0x1d3600 */
-  /* cmp eax, edi -> jge 0x1d3625 */
-  /* cmp esi, edi -> jge 0x1d365f */
-  XapiSetLastNTError(0);
-  FUN_001d350a();
-  SetLastError(87);
-  XapiSetLastNTError(0);
-  FUN_001d350a();
-  /* test esi, esi -> jne 0x1d3710 */
-  SetLastError(0);
-  /* relift: cmp dword ptr [esp + 8], 0 -> je 0x1d372a */
-  /* test eax, eax -> jge 0x1d37a0 */
-  XapiSetLastNTError(0);
-  xapi_GetLastError();
-  /* cmp eax, 2 -> jne 0x1d3799 */
-  SetLastError(0);
-  /* test esi, esi -> jge 0x1d37cf */
-  XapiSetLastNTError(0);
-  __allmul();
-  __allmul();
-  /* test ecx, ecx -> je 0x1d3808 */
-  /* test ecx, ecx -> je 0x1d3814 */
-  /* test eax, eax -> je 0x1d3823 */
-  FUN_001dd5c8();
-  /* cmp eax, ebx -> jge 0x1d38a4 */
-  XapiSetLastNTError(0);
-  /* relift: cmp dword ptr [ebp + 0xc], ebx -> jne 0x1d38b3 */
-  /* relift: cmp dword ptr [ebp + 0x14], ebx -> je 0x1d38e3 */
-  /* relift: cmp dword ptr [ebp + 0xc], ebx -> je 0x1d38bb */
-  FUN_001d5c66();
-  /* cmp eax, ebx -> jne 0x1d38e3 */
-  /* relift: cmp dword ptr [ebp + 0x20], ebx -> jne 0x1d38f7 */
-  /* relift: cmp dword ptr [ebp + 0x18], ebx -> jne 0x1d38f2 */
-  /* relift: cmp dword ptr [ebp + 0x1c], ebx -> je 0x1d3941 */
-  /* relift: cmp dword ptr [ebp + 0x20], ebx -> je 0x1d38ff */
-  FUN_001d5c66();
-  /* cmp edi, ebx -> jne 0x1d3944 */
-  /* relift: cmp dword ptr [ebp - 0x38], ebx -> je 0x1d3937 */
-  FUN_001d6ca8();
-  /* relift: cmp dword ptr [ebp - 0x38], ebx -> je 0x1d3968 */
-  /* cmp eax, ebx -> jl 0x1d3984 */
-  /* cmp edi, ebx -> je 0x1d3992 */
-  /* cmp eax, ebx -> jge 0x1d3992 */
-  XapiSetLastNTError(0);
-  /* cmp esi, ebx -> je 0x1d39c2 */
-  /* relift: cmp eax, dword ptr [ebp + 0x10] -> jae 0x1d39de */
-  memmove((void *)(uintptr_t)esi, (void *)(uintptr_t)ecx, 0);
-  /* cmp eax, ebx -> je 0x1d39d1 */
-  /* relift: cmp dword ptr [ebp + 0x20], ebx -> je 0x1d3a06 */
-  /* relift: cmp eax, dword ptr [ebp + 0x24] -> jb 0x1d39ed */
-  SetLastError(24);
-  memmove((void *)(uintptr_t)0, (void *)(uintptr_t)eax, eax);
-  /* cmp eax, ebx -> je 0x1d3a12 */
-  /* cmp eax, ebx -> je 0x1d3a1d */
-  /* relift: FUN_001d3a62(0, 0); */
-  __SEH_epilog();
-  XapiSetLastNTError(0xc0000005);
-  __local_unwind2();
-  /* relift: cmp dword ptr [ebp - 0x38], ebx -> je 0x1d3a7f */
-  FUN_001d6ca8();
-  /* cmp edi, ebx -> je 0x1d3a90 */
-  FUN_001d6ca8();
-  /* relift: cmp dword ptr [ebp - 0x34], esi -> jne 0x1d3b43 */
-  /* relift: cmp dword ptr [ebp - 0x228], ebx -> je 0x1d3b63 */
-  /* cmp eax, 0x29 -> jbe 0x1d3b7b */
-  /* test eax, eax -> jbe 0x1d3ba0 */
-  /* relift: cmp ebx, dword ptr [edx] -> jne 0x1d3b98 */
-  /* relift: cmp dword ptr [edx + 8], 0 -> jne 0x1d3c75 */
-  /* cmp ecx, eax -> jb 0x1d3b87 */
-  /* test eax, eax -> jbe 0x1d3bd3 */
-  /* relift: cmp dword ptr [ecx + 4], 0 -> je 0x1d3bbb */
-  /* relift: cmp dword ptr [ecx], esi -> je 0x1d3bc3 */
-  /* cmp edx, eax -> jb 0x1d3bb1 */
-  /* cmp edx, eax -> jne 0x1d3bca */
-  /* cmp esi, eax -> jb 0x1d3ba9 */
-  /* test edi, edi -> jne 0x1d3be0 */
-  /* cmp edi, ecx -> jb 0x1d3bea */
-  /* test ebx, ebx -> je 0x1d3c20 */
-  memmove((void *)(uintptr_t)eax, (void *)(uintptr_t)eax, eax);
-  XapiSelectCachePartition();
-  /* test eax, eax -> jl 0x1d3d6f */
-  /* relift: cmp dword ptr [ebp + 8], 0 -> jne 0x1d3cc9 */
-  /* relift: cmp dword ptr [ebp - 0xc], 0 -> jne 0x1d3cc9 */
-  snprintf((char *)(uintptr_t)eax, 260, (char *)0x002c1de8);
-  /* test ebx, ebx -> je 0x1d3d1f */
-  XapiFormatFATVolume(0);
-  /* test esi, esi -> je 0x1d3d77 */
-  FUN_001d7d21((void *)(uintptr_t)eax);
-  /* test edi, edi -> jge 0x1d3d4e */
-  /* test ebx, ebx -> jne 0x1d3d4a */
-  XapiFormatFATVolume(0);
-  /* test eax, eax -> je 0x1d3d4a */
-  FUN_001d7d21((void *)(uintptr_t)eax);
-  /* test edi, edi -> jl 0x1d3d5f */
-  /* test esi, esi -> jne 0x1d3d77 */
-  XapiSetLastNTError(0);
-  /* test edx, edx -> je 0x1d3dcd */
-  /* relift: cmp dword ptr [ebp + 0xc], edx -> je 0x1d3dbe */
-  /* cmp edi, 0x10 -> jb 0x1d3daa */
-  /* cmp edi, esi -> jb 0x1d3dd5 */
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0x002c1e30);
-  /* cmp eax, edi -> jge 0x1d3e2a */
-  /* cmp esi, edi -> jge 0x1d3e5c */
-  /* cmp eax, 9 -> jb 0x1d3edb */
-  /* relift: cmp byte ptr [ebp + eax - 0x241], 0x5c -> jne 0x1d3edb */
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0x002c1e28);
-  XapiMapLetterToDirectory();
-  /* cmp eax, edi -> jl 0x1d3e1e */
-  /* cmp (char)ebx, 0x55 -> je 0x1d3e1e */
-  /* relift: relift: mov byte ptr [0x4ee168], (char)ebx */
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0x002c1e30);
-  /* relift: cmp byte ptr [ebp + 8], 0x58 -> jne 0x1d3f37 */
-  /* test eax, eax -> jl 0x1d3f37 */
-  /* test eax, eax -> jge 0x1d3fa6 */
-  XapiSetLastNTError(0);
-  xapi_GetLastError();
-  /* cmp eax, 2 -> jne 0x1d3fa2 */
-  SetLastError(0);
-  /* test esi, esi -> jge 0x1d3fd5 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jge 0x1d4045 */
-  XapiSetLastNTError(0);
-  xapi_GetLastError();
-  /* cmp eax, 2 -> jne 0x1d4041 */
-  SetLastError(0);
-  /* test esi, esi -> jge 0x1d4074 */
-  XapiSetLastNTError(0);
-  /* relift: test dword ptr [0x4ee16c], edx -> jne 0x1d409e */
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0x002c1e30);
-  /* cmp eax, 0x20 -> jb 0x1d4132 */
-  FUN_001d7a59();
-  /* relift: cmp dword ptr [ebp + 0xc], 0x40 -> jbe 0x1d416a */
-  /* cmp eax, 0x10 -> jb 0x1d4191 */
-  XcSHAInit(0);
-  XcSHAUpdate(0, 0, 64);
-  /* relift: cmp dword ptr [ebp + 0x10], eax -> jbe 0x1d41cf */
-  /* cmp eax, 0x10 -> jb 0x1d41f4 */
-  XcSHAFinal(0, 0);
-  XcSHAInit(0);
-  XcSHAUpdate(0, 0, 84);
-  XcSHAFinal(0, 0);
-  FUN_001d4157();
-  XcSHAUpdate(0, 0, 20);
-  FUN_001d41be();
-  FUN_001d0bb9(0, 124);
-  /* test esi, esi -> jne 0x1d4287 */
-  SetLastError(0);
-  FUN_001d4157();
-  XcSHAUpdate(0, 0, 0);
-  /* test eax, eax -> je 0x1d4306 */
-  /* test esi, esi -> je 0x1d42e4 */
-  FUN_001d41be();
-  /* test esi, esi -> je 0x1d4306 */
-  FUN_001d4230();
-  LocalFree((void *)(uintptr_t)edi);
-  xapi_GetLastError();
-  /* test eax, eax -> je 0x1d4342 */
-  XapiInitProcess();
-  /* test eax, eax -> je 0x1d435f */
-  /* test ecx, ecx -> je 0x1d438c */
-  _rtinit();
-  _cinit();
-  main(0, (const char **)(uintptr_t)0, (const char **)(uintptr_t)0);
-  XapiBootToDash();
-  /* mem[0x00632a30] = eax */
-  CreateThread((void *)(uintptr_t)esi, 0, (void *)0x001d4345, (void *)(uintptr_t)esi, 0, (void *)(uintptr_t)esi);
-  /* cmp edi, esi -> jne 0x1d4405 */
-  XapiBootToDash();
-  CloseHandle(0);
-  /* cmp eax, -1 -> jne 0x1d4443 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x104, %%esp\n\t"
+      "pushl $0\n\t"
+      "pushl $0x100\n\t"
+      "leal -0x104(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0xff\n\t"
+      "call *%[c1d4464]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_001d0447_2\n\t"
+      "movl -0x100(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "leal 0x4(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xfc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d03ee]\n\t"
+      "leal 0x58(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xf8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d03ee]\n\t"
+      "leal 0x44(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xec(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d040f]\n\t"
+      "leal 0x98(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xe8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d040f]\n\t"
+      "movl -0xdc(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x54(%%esi)\n\t"
+      "movl -0xd8(%%ebp), %%eax\n\t"
+      "movl %%eax, 0xa8(%%esi)\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "je .LFUN_001d0447_1\n\t"
+      "movl -0xac(%%ebp), %%ecx\n\t"
+      "shrl $1, %%ecx\n\t"
+      "notl %%ecx\n\t"
+      "andl $1, %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      ".LFUN_001d0447_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_001d0447_2:\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d4464] "m"(b1d0447_c1d4464), [c1d03ee] "m"(b1d0447_c1d03ee), [c1d040f] "m"(b1d0447_c1d040f)
+      : "memory");
 }
+#else
+#error "FUN_001d0447: clang naked draft required"
+#endif
+
 
 /* 0x1e6ae0 */
 void D3DDevice_CreateTexture(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture)
@@ -2148,360 +1537,41 @@ void D3DDevice_Begin(uint32_t primitive_type)
   (void)edi;
 }
 
-/* 0x1ed490 */
+/* D3DDevice_End (0x1ed490) — XBE naked draft (batch 302). */
+#if defined(__clang__)
+static void (*const b1ed490_c1efe10)(void) = XMETAL_StartPush;
+static void (*const b1ed490_c1ef9e0)(void) = D3D_SetFence;
+
+__attribute__((naked, noinline))
 void D3DDevice_End(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* mem[0x001fbb04] = 0 */
-  XMETAL_StartPush();
-  /* test (char)eax, 0x10 -> je 0x1ed4c8 */
-  D3D_SetFence();
-  /* relift: cmp dword ptr [esi + 4], ebp -> jne 0x1ed518 */
-  /* relift: test byte ptr [esi + 0x1c], 1 -> je 0x1ed50e */
-  LocalFree((void *)(uintptr_t)esi);
-  /* test esi, esi -> jne 0x1ed4f6 */
-  /* cmp eax, 0x30000 -> ja 0x1ed5b6 */
-  /* test eax, eax -> je 0x1ed5a6 */
-  /* cmp eax, 0x10000 -> je 0x1ed59e */
-  /* cmp eax, 0x20000 -> jne 0x1ed5cb */
-  /* cmp eax, 0x40000 -> je 0x1ed5ee */
-  /* cmp eax, 0x50000 -> je 0x1ed5d8 */
-  /* cmp eax, 0x60000 -> je 0x1ed5d0 */
-  /* test (char)eax, 4 -> je 0x1ed5fd */
-  /* relift: cmp ecx, dword ptr [esp + 0x14] -> jne 0x1ed660 */
-  /* test ebx, ebx -> jne 0x1ed647 */
-  /* relift: test byte ptr [ebx + 0x1c], 1 -> je 0x1ed682 */
-  LocalFree((void *)(uintptr_t)ebx);
-  /* cmp ecx, 0x50000 -> jne 0x1ed73a */
-  /* test eax, eax -> je 0x1ed7b1 */
-  /* relift: cmp ebx, dword ptr [esp + 0x14] -> jne 0x1ed794 */
-  /* cmp esi, 0x50000 -> jne 0x1ed7ec */
-  D3D_BlockOnResource();
-  /* relift: FUN_001ed4e0(0); */
-  /* cmp esi, 0x50000 -> jne 0x1ed81f */
-  LocalFree((void *)(uintptr_t)edi);
-  /* cmp esi, 0x20000 -> jne 0x1ed841 */
-  LocalFree((void *)(uintptr_t)edi);
-  /* cmp esi, 0x10000 -> je 0x1ed861 */
-  /* cmp esi, 0x60000 -> je 0x1ed861 */
-  LocalFree((void *)(uintptr_t)edi);
-  /* test eax, 0x780000 -> jne 0x1ed898 */
-  /* cmp eax, 0x50000 -> jne 0x1ed8a0 */
-  /* test eax, eax -> je 0x1ed8a0 */
-  /* relift: test dword ptr [eax], 0x780000 -> je 0x1ed8a0 */
-  /* cmp ecx, 0x50000 -> jne 0x1ed8db */
-  /* test eax, 0x780000 -> jne 0x1ed8db */
-  /* test eax, eax -> je 0x1ed8db */
-  /* relift: FUN_001ed8b0(0); */
-  /* test eax, 0xffff -> jne 0x1ed917 */
-  /* cmp eax, 0x50000 -> jne 0x1ed917 */
-  /* test eax, eax -> je 0x1ed917 */
-  /* relift: FUN_001ed8f0(0); */
-  /* cmp ecx, 1 -> jne 0x1ed972 */
-  /* cmp eax, 0x50000 -> jne 0x1ed95d */
-  /* test eax, eax -> je 0x1ed95d */
-  D3DResource_Release((void *)(uintptr_t)eax);
-  /* test eax, 0x780000 -> jne 0x1ed972 */
-  D3D_DestroyResource((void *)(uintptr_t)esi);
-  /* test edx, edx -> je 0x1ed9b9 */
-  /* test eax, 0x780000 -> jne 0x1ed9fb */
-  /* test edx, edx -> je 0x1ed9b7 */
-  /* relift: test dword ptr [edx], 0x780000 -> jne 0x1ed9fb */
-  /* test eax, 0x780000 -> jne 0x1ed9fb */
-  /* cmp eax, 0x50000 -> jne 0x1ed9dd */
-  /* test eax, eax -> je 0x1ed9dd */
-  /* relift: test dword ptr [eax], 0x780000 -> jne 0x1ed9fb */
-  /* test edx, edx -> je 0x1eda04 */
-  D3DDevice_AddRef();
-  /* cmp edx, 0x20000 -> je 0x1eda52 */
-  /* relift: FUN_001ed780(0, 0, 0, 0); */
-  /* test eax, eax -> je 0x1eda7e */
-  /* relift: FUN_001ed630(0, 0); */
-  FUN_001d0bb9(64, eax);
-  /* test ebx, ebx -> jne 0x1eda9f */
-  /* mem[0x001fbb08] = ebx */
-  /* relift: FUN_001ed780(0, 0); */
-  /* test eax, eax -> jne 0x1edb2b */
-  /* test edi, edi -> jne 0x1edb45 */
-  /* relift: test byte ptr [eax + 0x1c], 1 -> je 0x1edb77 */
-  /* cmp ecx, 0x80000 -> jne 0x1edbf7 */
-  /* cmp eax, 0x50000 -> jne 0x1edbe4 */
-  /* test eax, eax -> je 0x1edbe4 */
-  D3D_DestroyResource((void *)(uintptr_t)eax);
-  /* test eax, 0xffff -> jne 0x1edbf7 */
-  D3D_DestroyResource((void *)(uintptr_t)esi);
-  /* relift: FUN_001f4270(0, 0, 0, 0); */
-  /* relift: FUN_001ef2a0(0, 0, 0, 0); */
-  Lock2DSurface((void *)(uintptr_t)ecx, 0, eax, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, eax);
-  /* relift: FUN_001f4270(0, 0, 0, 0); */
-  /* relift: FUN_001ef2a0(0, 0, 0, 0); */
-  /* relift: FUN_001f4270(0, 0, 0, 0); */
-  /* relift: FUN_001ef490(0, 0, 0, 0); */
-  /* relift: FUN_001f4630(0, 0, 0, 0); */
-  /* relift: test dword ptr [esp + 0x20], 0x10000 -> je 0x1ede24 */
-  FUN_001d0bb9(64, 20);
-  /* test esi, esi -> je 0x1ede55 */
-  /* test eax, eax -> jne 0x1ede60 */
-  LocalFree((void *)(uintptr_t)esi);
-  /* mem[0x001fe6b0] = eax */
-  /* mem[0x001fe6ac] = ecx */
-  /* test eax, eax -> jne 0x1eded3 */
-  /* mem[0x001fe6b0] = 0x80000 */
-  /* test eax, eax -> jne 0x1edee6 */
-  /* mem[0x001fe6ac] = 0x8000 */
-  /* mem[0x001fe6a0] = 0x1fbb10 */
-  /* mem[0x001fe6a4] = 0x1fbb10 */
-  /* mem[0x001fbf18] = 1 */
-  /* mem[0x001fbb1c] = esi */
-  /* relift: FUN_001f3580(0); */
-  /* test esi, esi -> jge 0x1edf3f */
-  /* relift: FUN_001f3a90(0, 0); */
-  /* test eax, eax -> je 0x1edf4d */
-  D3DDevice_SetRenderStateNotInline();
-  D3DDevice_SetTextureStageStateNotInline();
-  D3DDevice_SetTexture(ecx, (void *)(uintptr_t)eax);
-  D3DDevice_SetTextureStageStateNotInline();
-  D3DDevice_SetVertexShader(eax);
-  D3DDevice_SetPixelShader();
-  D3DDevice_SetRenderStateNotInline();
-  /* cmp esi, 0x80 -> jb 0x1ee040 */
-  D3DDevice_SetTextureStageStateNotInline();
-  /* cmp esi, 0x58 -> jb 0x1ee060 */
-  D3DDevice_SetPixelShader();
-  D3DDevice_SetVertexShader(260);
-  D3DDevice_SetRenderTarget((void *)(uintptr_t)ecx, (void *)0);
-  D3DDevice_SetTextureStageStateNotInline();
-  D3DDevice_SetTextureStageStateNotInline();
-  D3DDevice_SetTextureStageStateNotInline();
-  D3DDevice_SetTexture(0, (void *)0);
-  /* relift: FUN_001f1b50(0, 0); */
-  /* relift: FUN_001ed8f0(0, 0, 0, 0); */
-  /* relift: FUN_001ed8f0(0); */
-  /* relift: FUN_001ed8f0(0); */
-  /* cmp eax, 0x80 -> jb 0x1ee180 */
-  /* cmp eax, 0x58 -> jb 0x1ee220 */
-  /* test eax, eax -> je 0x1ee26d */
-  /* cmp eax, 0xe4 -> jb 0x1ee250 */
-  D3DDevice_SetRenderTarget((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
-  D3DResource_Release((void *)(uintptr_t)edx);
-  /* test eax, eax -> je 0x1ee2bf */
-  D3DResource_Release((void *)(uintptr_t)eax);
-  D3DDevice_SetTexture(0, (void *)(uintptr_t)eax);
-  /* test eax, eax -> je 0x1ee2d7 */
-  D3DResource_Release((void *)(uintptr_t)eax);
-  D3DDevice_SetPixelShader();
-  D3DDevice_SetVertexShader(edx);
-  D3DDevice_SetViewport((void *)(uintptr_t)eax);
-  D3DDevice_SetTextureStageStateNotInline();
-  /* test ebp, ebp -> jne 0x1ee31d */
-  /* relift: cmp dword ptr [edi + 0x1fa270], 0x52 -> jb 0x1ee32c */
-  D3DDevice_SetRenderStateNotInline();
-  /* cmp edi, 0x80 -> jb 0x1ee310 */
-  D3DDevice_SetTextureStageStateNotInline();
-  /* cmp edi, 0x58 -> jb 0x1ee340 */
-  /* test ebp, ebp -> je 0x1ee39b */
-  /* test eax, eax -> je 0x1ee38d */
-  D3DDevice_SetRenderStateNotInline();
-  /* cmp edi, 0x39 -> jb 0x1ee370 */
-  D3DDevice_SetRenderStateNotInline();
-  /* relift: FUN_001eb690(0); */
-  /* cmp esi, ebp -> jne 0x1ee403 */
-  /* cmp eax, ebp -> je 0x1ee43a */
-  /* cmp ecx, ebp -> jl 0x1ee41f */
-  /* cmp ebx, ecx -> jl 0x1ee428 */
-  /* cmp ecx, ebp -> jl 0x1ee431 */
-  /* cmp esi, eax -> jl 0x1ee43a */
-  /* relift: cmp dword ptr [esp + 0xc], ebx -> jae 0x1ee63e */
-  /* cmp ebp, esi -> jae 0x1ee63e */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* cmp eax, 5 -> jne 0x1ee4d7 */
-  /* cmp edi, 2 -> jne 0x1ee4ca */
-  /* cmp ecx, 2 -> jne 0x1ee4d7 */
-  /* relift: relift: fld dword ptr [0x253398] */
-  /* test eax, eax -> jge 0x1ee4e9 */
-  /* relift: relift: fld dword ptr [0x1fa210] */
-  /* relift: relift: fld dword ptr [0x1fa210] */
-  /* relift: cmp dword ptr [esi + 0x2b64], 0x80000000 -> je 0x1ee6a5 */
-  /* relift: FUN_001ee100(0); */
-  /* test (char)eax, 2 -> je 0x1ee6e8 */
-  /* mem[0x001fe6a8] = eax */
-  /* relift: FUN_001ee030(0, 0, 0, 0); */
-  XMETAL_StartPush();
-  /* relift: cmp dword ptr [esi + 0x2b64], 0x80000000 -> jne 0x1ee75f */
-  /* relift: FUN_001ee3b0(0, 0, 0, 0); */
-  /* relift: cmp dword ptr [esi + 0x2b60], 1 -> jne 0x1ee73c */
-  /* relift: FUN_001ee3b0(0); */
-  /* relift: FUN_001ee3b0(0); */
-  /* relift: FUN_001ee290(0); */
-  XMETAL_StartPush();
-  /* mem[0x001fe6a8] = ecx */
-  /* cmp edi, ecx -> jne 0x1ee903 */
-  D3D_SetFence();
-  /* cmp ecx, 2 -> jb 0x1ee95c */
-  /* relift: FUN_001ef520(0, 0); */
-  /* cmp eax, 2 -> jae 0x1ee944 */
-  /* test (char)eax, 0x30 -> je 0x1ee978 */
-  /* relift: FUN_001ee650(0); */
-  /* relift: FUN_001ee830(0, 0); */
-  CDevice_KickOff();
-  /* test eax, eax -> je 0x1eea9a */
-  D3D_KickOffAndWaitForIdle();
-  /* relift: test dword ptr [esi + 0x2510], 0x1000000 -> je 0x1ee9e0 */
-  D3DDevice_BlockUntilVerticalBlank();
-  /* test edi, edi -> jne 0x1ee9e2 */
-  /* test dl, 1 -> jne 0x1eea54 */
-  /* test edi, edi -> je 0x1eea80 */
-  /* test eax, eax -> je 0x1eead0 */
-  /* relift: FUN_001f489f(0, 0, 0, 0); */
-  CMiniport_GetDisplayCapabilities();
-  /* cmp edi, 4 -> jne 0x1eeb44 */
-  /* test ecx, 0x60000 -> jne 0x1eeb53 */
-  /* test ecx, 0x10000 -> je 0x1eeb53 */
-  /* test eax, 0x10000 -> je 0x1eeb6c */
-  /* test ebx, ecx -> je 0x1eeb6c */
-  /* cmp edi, 4 -> jne 0x1eeb68 */
-  /* test ebp, ecx -> jne 0x1eeb68 */
-  /* test ecx, 0xe0000 -> jne 0x1eeb6c */
-  /* cmp ebp, edx -> je 0x1eeb33 */
-  /* relift: FUN_001f489f(0); */
-  CMiniport_GetDisplayCapabilities();
-  /* cmp edi, 4 -> jne 0x1eebf0 */
-  /* test ecx, 0x60000 -> jne 0x1eebff */
-  /* test ecx, 0x10000 -> je 0x1eebff */
-  /* test eax, 0x10000 -> je 0x1eec23 */
-  /* test ebx, ecx -> je 0x1eec23 */
-  /* cmp edi, 4 -> jne 0x1eec14 */
-  /* test ebp, ecx -> jne 0x1eec14 */
-  /* test ecx, 0xe0000 -> jne 0x1eec23 */
-  /* cmp ebp, edx -> je 0x1eebdf */
-  /* relift: FUN_001f4840(0); */
-  /* cmp eax, 3 -> ja 0x1eecc5 */
-  /* test eax, eax -> je 0x1eed00 */
-  /* relift: cmp dword ptr [esp + 8], 1 -> je 0x1eed0f */
-  D3DDevice_GetDeviceCaps((void *)(uintptr_t)eax);
-  /* test eax, eax -> je 0x1eed50 */
-  /* test ecx, ecx -> jne 0x1eed71 */
-  /* relift: FUN_001f4840(0); */
-  /* test eax, eax -> je 0x1eedd0 */
-  /* cmp ecx, eax -> je 0x1eede5 */
-  /* relift: cmp dword ptr [esp + 0x14], eax -> jne 0x1eedf3 */
-  /* test eax, eax -> je 0x1eee30 */
-  /* relift: cmp dword ptr [esp + 8], 1 -> je 0x1eee3f */
-  /* test (char)ecx, dl -> je 0x1eee91 */
-  /* test (char)eax, 2 -> je 0x1eee6c */
-  /* relift: test byte ptr [ecx + 0x1f9d58], 0x40 -> jne 0x1eee99 */
-  /* test (char)eax, 1 -> je 0x1eee84 */
-  /* relift: test byte ptr [edx + 0x1f9d58], (char)ecx -> jne 0x1eee99 */
-  /* relift: test byte ptr [eax + 0x1f9d58], 0x3c -> jne 0x1eee99 */
-  /* test eax, eax -> jne 0x1eeeec */
-  /* cmp eax, edx -> je 0x1eeebd */
-  /* relift: cmp dword ptr [esp + 0x10], edx -> je 0x1eef11 */
-  /* cmp ecx, 0x11 -> je 0x1eef19 */
-  /* test ecx, ecx -> je 0x1eef19 */
-  /* cmp eax, 0x40000 -> jbe 0x1eeef4 */
-  /* cmp eax, edx -> jb 0x1eef11 */
-  /* cmp ecx, edx -> jb 0x1eef11 */
-  /* cmp eax, 3 -> ja 0x1eef11 */
-  /* cmp ecx, 3 -> jbe 0x1eef19 */
-  /* test eax, eax -> je 0x1eef30 */
-  /* relift: cmp dword ptr [esp + 8], 1 -> je 0x1eef3f */
-  FUN_001d0bb9(0, eax);
-  /* test eax, eax -> jne 0x1eef9b */
-  D3D_BlockOnResource();
-  /* relift: FUN_001ed7c0(0); */
-  FUN_001d0bb9(64, 12);
-  /* test esi, esi -> je 0x1ef0d3 */
-  /* test eax, eax -> jne 0x1ef0dc */
-  LocalFree((void *)(uintptr_t)esi);
-  XMETAL_StartPush();
-  D3D_BlockOnResource();
-  /* relift: FUN_001ed7c0(0); */
-  D3DResource_GetType();
-  FUN_001d0bb9(64, 12);
-  /* test edi, edi -> jne 0x1ef189 */
-  /* test eax, eax -> jne 0x1ef1be */
-  LocalFree((void *)(uintptr_t)edi);
-  Get2DSurfaceDesc((void *)(uintptr_t)ecx, 0, (void *)(uintptr_t)eax);
-  Lock2DSurface((void *)(uintptr_t)eax, 0, 0, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, eax);
-  /* relift: FUN_001f4200(0, 0, 0); */
-  Lock3DSurface();
-  FUN_001d0bb9(64, 24);
-  /* test esi, esi -> jne 0x1ef2b9 */
-  /* relift: FUN_001ed8f0(0); */
-  /* relift: FUN_001f4630(0, 0, 0, 0); */
-  FUN_001d0bb9(64, 24);
-  /* test esi, esi -> je 0x1ef38f */
-  /* test eax, eax -> jne 0x1ef399 */
-  LocalFree((void *)(uintptr_t)esi);
-  /* relift: FUN_001f4630(0, 0, 0, 0); */
-  /* test eax, eax -> jne 0x1ef41e */
-  /* relift: FUN_001ed8f0(0); */
-  FUN_001d0bb9(64, 24);
-  /* cmp esi, ecx -> jne 0x1ef4ab */
-  /* relift: FUN_001ed8f0(0); */
-  /* relift: FUN_001ed8f0(0); */
-  /* mem[0x001fe6ac] = eax */
-  /* cmp eax, edx -> jb 0x1ef75a */
-  /* relift: cmp eax, dword ptr [ecx + 0x14] -> jb 0x1ef76e */
-  /* cmp eax, esi -> jb 0x1ef78b */
-  /* relift: cmp eax, dword ptr [ecx + 0x14] -> jb 0x1ef79f */
-  /* cmp esi, 0x80 -> ja 0x1ef80c */
-  /* cmp ebx, esi -> jbe 0x1ef836 */
-  /* cmp ebx, esi -> ja 0x1ef836 */
-  /* relift: test dword ptr [eax + 0x100410], 0x10000 -> jne 0x1ef880 */
-  XMETAL_StartPush();
-  /* relift: test byte ptr [ecx + 0xc], 4 -> je 0x1ef94c */
-  /* relift: test dword ptr [eax + 0x100410], 0x10000 -> jne 0x1ef970 */
-  XMETAL_StartPush();
-  /* test (char)ebx, 2 -> jne 0x1efa6d */
-  CDevice_KickOff();
-  /* cmp ecx, edx -> jae 0x1efb3f */
-  /* cmp esi, eax -> jne 0x1efabc */
-  D3D_SetFence();
-  /* relift: FUN_001ef7e0(0, 0); */
-  /* relift: FUN_001ef770(0, 0); */
-  /* cmp eax, 0x8000 -> jb 0x1efb27 */
-  /* relift: FUN_001ef860(0, 0); */
-  /* relift: FUN_001ef770(0, 0); */
-  /* cmp eax, 0x8000 -> jae 0x1efb45 */
-  /* relift: FUN_001ef860(0, 0); */
-  /* cmp eax, esi -> jb 0x1efb34 */
-  /* test eax, eax -> jne 0x1efb51 */
-  /* cmp eax, edx -> ja 0x1efbca */
-  /* cmp eax, ecx -> je 0x1efbf0 */
-  /* cmp eax, edx -> jb 0x1efc2f */
-  /* relift: cmp eax, dword ptr [esi + 0x14] -> jb 0x1efc43 */
-  /* cmp ecx, eax -> jae 0x1efd12 */
-  /* relift: cmp eax, dword ptr [esp + 8] -> ja 0x1efd12 */
-  /* relift: cmp edi, dword ptr [esp + 0x14] -> jae 0x1efc8c */
-  /* cmp edi, ebp -> jb 0x1efd3e */
-  /* cmp eax, ecx -> je 0x1efcb6 */
-  /* cmp ecx, edx -> jb 0x1efc80 */
-  /* cmp eax, edx -> jb 0x1efce9 */
-  /* relift: cmp eax, dword ptr [esi + 0x14] -> jb 0x1efcfd */
-  /* relift: cmp dword ptr [esp + 0x14], eax -> jae 0x1efd09 */
-  /* relift: cmp eax, dword ptr [esp + 0x10] -> jbe 0x1efcc0 */
-  /* relift: FUN_001ef740(0, 0); */
-  CDevice_KickOff();
-  D3D_BlockOnTime(ebx, 0);
-  D3D_SetFence();
-  CDevice_KickOff();
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0x1fe6a0, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "movl $0, 0x1fbb04\n\t"
+      "call *%[c1efe10]\n\t"
+      "movl $0x417fc, (%%eax)\n\t"
+      "movl $0, 0x4(%%eax)\n\t"
+      "addl $8, %%eax\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "testb $0x10, %%ah\n\t"
+      "je .LD3DDevice_End_1\n\t"
+      "pushl $1\n\t"
+      "call *%[c1ef9e0]\n\t"
+      ".LD3DDevice_End_1:\n\t"
+      "andl $0xffffe7ff, 0xc(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c1efe10] "m"(b1ed490_c1efe10), [c1ef9e0] "m"(b1ed490_c1ef9e0)
+      : "memory");
 }
+#else
+#error "D3DDevice_End: clang naked draft required"
+#endif
+
 
 /* 0x1efd60 */
 void D3D_KickOffAndWaitForIdle(void)

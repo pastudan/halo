@@ -206,10 +206,15 @@ def ensure(addr: int) -> str:
             + key
             + ")(void *, int) = (void *(*)(void *, int))datum_get;"
         )
-    elif args in ("", "void"):
-        PTR[key] = f"static {ret} (*const {{p}}_{key})(void) = {name};"
     else:
-        PTR[key] = f"static {ret} (*const {{p}}_{key})({args}) = {name};"
+        # kb decls often carry __stdcall/__fastcall on the return side; our C
+        # stubs are frequently plain cdecl. Cast through void* so -Werror
+        # incompatible-function-pointer-types does not fail the build.
+        rhs = f"(void *){name}" if re.search(r"\b__(?:stdcall|fastcall)\b", ret) else name
+        if args in ("", "void"):
+            PTR[key] = f"static {ret} (*const {{p}}_{key})(void) = {rhs};"
+        else:
+            PTR[key] = f"static {ret} (*const {{p}}_{key})({args}) = {rhs};"
     return key
 
 
@@ -636,7 +641,12 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
                 out.append(f"  imull {s}, %%{parts[0]}")
                 continue
             a, _ = op_to_att(parts[0])
-            out.append(f"  imull {a}")
+            if parts[0] in REGS8 or a in {f"%%{r}" for r in REGS8}:
+                out.append(f"  imulb {a}")
+            elif parts[0] in REGS16 or a in {f"%%{r}" for r in REGS16}:
+                out.append(f"  imulw {a}")
+            else:
+                out.append(f"  imull {a}")
             continue
         if mnem in ("clc", "stc", "cld", "std", "cmc", "sahf", "lahf"):
             out.append(f"  {mnem}")
@@ -697,6 +707,14 @@ def make_body(name: str, va: int, sig: str, att: list[str], order: list[str], pr
         )
         for p in ptrs
     ]
+    # kb often marks XDK/D3D callees __stdcall while C decls are cdecl —
+    # silence -Wincompatible-function-pointer-types via void*.
+    fixed = []
+    for p in ptrs:
+        if "__stdcall" in p and " = (void *)" not in p and " = (void*)" not in p:
+            p = re.sub(r"=\s*([A-Za-z_][A-Za-z0-9_]*)\s*;", r"= (void *)\1;", p, count=1)
+        fixed.append(p)
+    ptrs = fixed
     asm_lines = []
     for l in att:
         if not l.strip():
