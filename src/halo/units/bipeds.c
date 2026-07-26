@@ -3071,72 +3071,141 @@ void FUN_001a1fb0(int unit_handle /* @eax */)
 #endif
 
 
-/* FUN_001a2160 (0x1a2160)
- *
- * Rotates a biped's forward/up axes (unit+0x24 fwd, unit+0x30 up) about the
- * axis stored at unit+0x3c by the angle equal to that axis vector's length.
- * Normalizes the axis (angle = |axis|), rotates the forward vector by
- * (sin,cos) of the angle and renormalizes it, then rebuilds an orthogonal up
- * vector via two cross products (cross(up_rot, fwd) then cross(temp, fwd)) and
- * renormalizes; on degenerate result, resets to world forward/up.
- *
- * Register arg: unit_handle in EAX. Confirmed: normalize3d (0x13010);
- * rotate_vector3d_by_sincos (0x10b6e0); x87 FCOS/FSIN; globals 0x31fc3c fwd,
- * 0x31fc44 up. Cross operand order transcribed from disassembly.
- */
-void FUN_001a2160(int unit_handle)
+/* FUN_001a2160 (0x1a2160) — XBE naked draft (batch 59). */
+#if defined(__clang__)
+static void *(*const b1a2160_get)(int, int) = object_get_and_verify_type;
+static float (*const b1a2160_norm)(float *) = normalize3d;
+static void (*const b1a2160_rots)(float *, float *, float, float) = rotate_vector3d_by_sincos;
+
+__attribute__((naked, noinline))
+void FUN_001a2160(int unit_handle __attribute__((unused)))
 {
-  char *unit_obj;
-  float axis[3];
-  float up_rot[3];
-  float t0;
-  float t1;
-  float t2;
-  float angle;
-  float cos_a;
-  float sin_a;
-  float *fwd;
-  float *up_ptr;
-
-  unit_obj = (char *)object_get_and_verify_type(unit_handle, 1);
-
-  axis[0] = *(float *)(unit_obj + 0x3c);
-  axis[1] = *(float *)(unit_obj + 0x40);
-  axis[2] = *(float *)(unit_obj + 0x44);
-  angle = normalize3d(axis);
-  fwd = (float *)(unit_obj + 0x24);
-#if defined(_MSC_VER) && !defined(__clang__)
-  cos_a = (float)cos((double)angle);
-  sin_a = (float)sin((double)angle);
-#else
-  cos_a = x87_fcos(angle);
-  sin_a = x87_fsin(angle);
-#endif
-  rotate_vector3d_by_sincos(fwd, axis, sin_a, cos_a);
-  normalize3d(fwd);
-
-  up_ptr = (float *)(unit_obj + 0x30);
-  up_rot[0] = up_ptr[0];
-  up_rot[1] = up_ptr[1];
-  up_rot[2] = up_ptr[2];
-  rotate_vector3d_by_sincos(up_rot, axis, sin_a, cos_a);
-
-  t0 = up_rot[2] * fwd[1] - up_rot[1] * fwd[2];
-  t1 = up_rot[0] * fwd[2] - up_rot[2] * fwd[0];
-  t2 = up_rot[1] * fwd[0] - up_rot[0] * fwd[1];
-  /* up = cross(temp, fwd) — FPU LIFO: computed z,y,x, stored x,y,z */
-  up_ptr[0] = t1 * fwd[2] - t2 * fwd[1];
-  up_ptr[1] = t2 * fwd[0] - t0 * fwd[2];
-  up_ptr[2] = t0 * fwd[1] - t1 * fwd[0];
-  if (normalize3d(up_ptr) == 0.0f) {
-    fwd[0] = global_forward_vector_ptr[0];
-    fwd[1] = global_forward_vector_ptr[1];
-    fwd[2] = global_forward_vector_ptr[2];
-    up_ptr[0] = global_up_vector_ptr[0];
-    up_ptr[1] = global_up_vector_ptr[1];
-    up_ptr[2] = global_up_vector_ptr[2];
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x2c, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "leal 0x3c(%%edi), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0x2c(%%ebp)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl %%eax, -0x28(%%ebp)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "leal -0x2c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%ecx, -0x24(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fld %%st(0)\n\t"
+      "fcos\n\t"
+      "leal -0x2c(%%ebp), %%ecx\n\t"
+      "leal 0x24(%%edi), %%esi\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%ebx\n\t"
+      "fsin\n\t"
+      "pushl %%ebx\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[rots]\n\t"
+      "pushl %%esi\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "addl $0x30, %%edi\n\t"
+      "movl %%edi, %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x2c(%%ebp), %%ecx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[rots]\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "pushl %%edi\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps (%%edi)\n\t"
+      "fstps 0x4(%%edi)\n\t"
+      "fstps 0x8(%%edi)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $0x34, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .LFUN_001a2160_1\n\t"
+      "movl 0x31fc3c, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, (%%esi)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x4(%%esi)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "movl 0x31fc44, %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, (%%edi)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl %%eax, 0x4(%%edi)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edi)\n\t"
+      ".LFUN_001a2160_1:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a2160_get), [norm] "m"(b1a2160_norm), [rots] "m"(b1a2160_rots)
+      : "memory");
 }
+#else
+#error "FUN_001a2160: clang naked draft required"
+#endif
+
 
 /* FUN_001a2290 (0x1a2290)
  *

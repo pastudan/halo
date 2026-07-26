@@ -684,6 +684,17 @@ def main() -> int:
         ("FUN_000fc990", 0xfc990, 0xfcaef),
         ("FUN_001a2900", 0x1a2900, 0x1a2a59),
         ("vehicle_scripting_find_available_seats", 0x1adfc0, 0x1ae14c),
+        # gameplay wave 59 (2026-07-26)
+        ("FUN_00139c20", 0x139c20, 0x139e47),
+        ("FUN_0013a420", 0x13a420, 0x13a5e8),
+        ("FUN_0009ec30", 0x9ec30, 0x9ee33),
+        ("FUN_001aaf40", 0x1aaf40, 0x1ab108),
+        ("unit_set_seat_state", 0x1a9240, 0x1a93de),
+        ("FUN_001ae490", 0x1ae490, 0x1ae5f8),
+        ("FUN_001a74d0", 0x1a74d0, 0x1a7638),
+        ("unit_scripting_enter_vehicle", 0x1b32d0, 0x1b33f8),
+        ("FUN_001a2160", 0x1a2160, 0x1a228a),
+        ("objects_reconnect_to_structure_bsp", 0x1417c0, 0x1418fa),
     ]
 
     xbe = Xbe.from_file(args.xbe)
