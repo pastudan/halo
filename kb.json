@@ -16596,7 +16596,8 @@
         },
         {
           "addr": "0xb7f90",
-          "decl": "void FUN_000b7f90(int16_t local_player_index@<eax>, float dx, float dy);"
+          "decl": "void FUN_000b7f90(int16_t local_player_index@<eax>, float dx, float dy);",
+          "ported": false
         },
         {
           "addr": "0xb8cf0",
@@ -17172,7 +17173,8 @@
         },
         {
           "addr": "0xba5f0",
-          "decl": "void players_set_local_player_unit(int player_index, int unit_handle);"
+          "decl": "void players_set_local_player_unit(int16_t local_player_index, int unit_handle);",
+          "ported": false
         },
         {
           "addr": "0xba6b0",
@@ -17327,11 +17329,12 @@
         },
         {
           "addr": "0xbb670",
-          "decl": "void FUN_000bb670(void);"
+          "decl": "char FUN_000bb670(int player_handle, void *a, void *b);"
         },
         {
           "addr": "0xbbb80",
-          "decl": "void player_teleport(void);"
+          "decl": "char player_teleport(int player_handle, void *a, void *b);",
+          "ported": false
         },
         {
           "addr": "0xbbbe0",

@@ -2508,6 +2508,54 @@ void players_handle_deleted_object(int object_handle)
   }
 }
 
+void players_set_local_player_unit(int16_t local_player_index, int unit_handle)
+{
+  int old_unit;
+  char *unit_obj;
+  int player_handle;
+  char *player;
+
+  old_unit = player_control_get_unit_index(local_player_index);
+  if (game_connection() != 0) {
+    display_assert("game_connection()==_game_connection_local",
+                   "c:\\halo\\SOURCE\\game\\players.c", 0x420, 1);
+    system_exit(NONE);
+  }
+  if (old_unit != NONE) {
+    unit_obj = (char *)object_get_and_verify_type(old_unit, 3);
+    *(int *)(unit_obj + 0x1c8) = NONE;
+    unit_set_actively_controlled(old_unit, 0);
+  }
+  if (unit_handle != NONE) {
+    unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
+    unit_set_actively_controlled(unit_handle, 1);
+    *(int *)(unit_obj + 0x1c8) =
+        local_player_get_player_index(local_player_index);
+  }
+  player_handle = local_player_get_player_index(local_player_index);
+  player = (char *)datum_get(player_data, player_handle);
+  *(int *)(player + 0x34) = unit_handle;
+  *(int *)(player + 0x38) = NONE;
+  player_control_new_unit((uint16_t)local_player_index, unit_handle);
+}
+
+/* Teleport wrapper: exit seat if needed, then FUN_000bb670. */
+char player_teleport(int player_handle, void *a, void *b)
+{
+  char *player;
+  int unit_handle;
+  void *unit_obj;
+
+  player = (char *)datum_get(player_data, player_handle);
+  unit_handle = *(int *)(player + 0x34);
+  unit_obj = object_try_and_get_and_verify_type(unit_handle, 1);
+  if (!unit_obj)
+    return 0;
+  if (*(int *)((char *)unit_obj + 0xcc) != NONE)
+    unit_exit_seat_end(unit_handle);
+  return FUN_000bb670(player_handle, a, b);
+}
+
 void FUN_000bdf80(int16_t function_index, int thread_datum, char init)
 {
   (void)function_index;

@@ -331,6 +331,226 @@ void player_control_get_unit_camera_info(int16_t local_player_index,
   }
 }
 
+/* Apply look deltas (dx=yaw, dy=pitch) to a local player's desired facing,
+ * including vehicle-seat yaw limits, camera pitch clamps, and autoaim smoothing. */
+void FUN_000b7f90(int16_t local_player_index, float dx, float dy)
+{
+  char *slot;
+  float *desired_pitch;
+  float *desired_yaw;
+  void *game_tag_elem;
+  char camera_info[0x10];
+  int16_t seat_index;
+  int unit_handle;
+  void *camera_tag;
+  float pitch_min;
+  float pitch_max;
+  float camera_yaw_offset;
+  uint32_t bits;
+
+  assert_halt(local_player_index >= 0 &&
+              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
+
+  slot = (char *)player_control_globals + (int)local_player_index * 0x40 + 0x10;
+  desired_yaw = (float *)(slot + 0xc);
+  desired_pitch = (float *)(slot + 0x10);
+
+  {
+    void *globals = game_globals_get();
+    game_tag_elem = tag_block_get_element((char *)globals + 0x110, 0, 0x80);
+  }
+
+  pitch_min = *(float *)0xbfbf0243;
+  pitch_max = *(float *)0x3fbf0243;
+  camera_yaw_offset = *(float *)0x2533c0;
+
+  bits = *(uint32_t *)desired_pitch;
+  if ((bits & 0x7f800000u) == 0x7f800000u ||
+      *desired_pitch > *(float *)0x26e37c ||
+      *desired_pitch < *(float *)0x26e378) {
+    display_assert("valid_euler_angles2d(&player->desired_angles)",
+                   "c:\\halo\\SOURCE\\game\\player_control.c", 0x494, 1);
+    system_exit(NONE);
+  }
+  bits = *(uint32_t *)desired_yaw;
+  if ((bits & 0x7f800000u) == 0x7f800000u ||
+      *desired_yaw > *(float *)0x255a54 ||
+      *desired_yaw < *(float *)0x2533c0) {
+    display_assert("valid_euler_angles2d(&player->desired_angles)",
+                   "c:\\halo\\SOURCE\\game\\player_control.c", 0x494, 1);
+    system_exit(NONE);
+  }
+
+  player_control_get_unit_camera_info(local_player_index, camera_info);
+  unit_handle = *(int *)camera_info;
+  seat_index = *(int16_t *)(camera_info + 4);
+  camera_tag = *(void **)(camera_info + 8);
+
+  *desired_yaw += dx;
+
+  if (seat_index != (int16_t)NONE) {
+    void *unit_obj;
+    void *unit_tag;
+    void *seat_elem;
+    float marker_angles[2];
+    char marker_buf[0x6c];
+    float min_yaw;
+    float max_yaw;
+    float yaw_range;
+    float delta_to_max;
+    float delta_from_min;
+
+    unit_obj = object_get_and_verify_type(unit_handle, 3);
+    unit_tag = tag_get(0x756e6974 /* 'unit' */, *(int *)unit_obj);
+    seat_elem = tag_block_get_element((char *)unit_tag + 0x2e4, seat_index, 0x11c);
+
+    if (*(float *)((char *)seat_elem + 0xf0) != *(float *)0x2533c0 ||
+        *(float *)((char *)seat_elem + 0xf4) != *(float *)0x2533c0) {
+      object_get_markers_by_string_id(unit_handle, (char *)seat_elem + 0x24,
+                                      marker_buf, 1);
+      vector_to_angles(marker_angles,
+                       (float *)((char *)marker_buf + 0x3c));
+      min_yaw = marker_angles[0] + *(float *)((char *)seat_elem + 0xf0);
+      max_yaw = marker_angles[0] + *(float *)((char *)seat_elem + 0xf4);
+      yaw_range = FUN_000b6dd0(min_yaw, max_yaw);
+      delta_to_max = FUN_000b6dd0(*desired_yaw, max_yaw);
+      delta_from_min = FUN_000b6dd0(min_yaw, *desired_yaw);
+
+      if (yaw_range < *(float *)0x2533c0)
+        yaw_range += *(float *)0x255a54;
+
+      if (!((delta_to_max >= *(float *)0x2533c0 &&
+             delta_to_max <= yaw_range) ||
+            (delta_from_min >= *(float *)0x2533c0 &&
+             delta_from_min <= yaw_range))) {
+        if (fabsf(delta_from_min) < fabsf(delta_to_max))
+          *desired_yaw = min_yaw;
+        else
+          *desired_yaw = max_yaw;
+      }
+    }
+  }
+
+  while (*desired_yaw < *(float *)0x2533c0)
+    *desired_yaw += *(float *)0x255a54;
+  while (*desired_yaw >= *(float *)0x255a54)
+    *desired_yaw -= *(float *)0x255a54;
+
+  if (camera_tag != NULL) {
+    void *unit_obj;
+    float tag_pitch_min;
+    float tag_pitch_max;
+
+    unit_obj = object_get_and_verify_type(unit_handle, 3);
+    tag_get(0x756e6974 /* 'unit' */, *(int *)unit_obj);
+    tag_pitch_min = *(float *)((char *)camera_tag + 0x44);
+    tag_pitch_max = *(float *)((char *)camera_tag + 0x48);
+    camera_yaw_offset = *(float *)((char *)camera_tag + 0x40);
+
+    if (tag_pitch_max != *(float *)0x2533c0 ||
+        tag_pitch_min != *(float *)0x2533c0) {
+      pitch_min = tag_pitch_min;
+      pitch_max = tag_pitch_max;
+
+      if (seat_index != (int16_t)NONE &&
+          *(float *)((char *)unit_obj + 0x38) > *(float *)0x2549d4) {
+        float facing_vec[3];
+        float angles[2];
+        float adjust;
+
+        angles[0] = *desired_yaw;
+        angles[1] = *(float *)0x2533c0;
+        angles_to_vector(facing_vec, angles);
+        adjust = FUN_0010c510((float *)((char *)unit_obj + 0x30), facing_vec) -
+                 *(float *)0x2568bc;
+        pitch_min -= adjust;
+        pitch_max -= adjust;
+        camera_yaw_offset -= adjust;
+      }
+
+      if (pitch_min <= *(float *)0x26e378)
+        pitch_min = *(float *)0xbfbf0243;
+      else if (pitch_min <= *(float *)0x26e37c)
+        pitch_min = *(float *)0x3fbf0243;
+
+      if (pitch_max <= *(float *)0x26e378)
+        pitch_max = *(float *)0xbfbf0243;
+      else if (pitch_max <= *(float *)0x26e37c)
+        pitch_max = *(float *)0x3fbf0243;
+    }
+
+    if (camera_yaw_offset != *(float *)0x2533c0 ||
+        *(char *)(slot + 0x26) != 0) {
+      float pitch_delta;
+      float scaled;
+      float max_delta;
+      uint32_t pitch_bits;
+
+      pitch_delta = *desired_pitch - camera_yaw_offset;
+      scaled = (float)((double)fabsf(pitch_delta) * *(double *)0x26e3b0);
+      pitch_bits = *(uint32_t *)desired_pitch;
+      if ((pitch_bits & 0x7f800000u) == 0x7f800000u) {
+        char *msg =
+          csprintf((char *)0x5ab100, "%s: assert_valid_real(0x%08X %f)",
+                   "player_control->desired_angles.pitch", pitch_bits,
+                   (double)*desired_pitch);
+        display_assert(msg, "c:\\halo\\SOURCE\\game\\player_control.c", 0x4f2,
+                       1);
+        system_exit(NONE);
+      }
+
+      if (camera_yaw_offset != *(float *)0x2533c0) {
+        max_delta =
+          sqrtf(*(float *)(slot + 0x18) * *(float *)(slot + 0x18) +
+                *(float *)(slot + 0x1c) * *(float *)(slot + 0x1c) +
+                *(float *)(slot + 0x20) * *(float *)(slot + 0x20)) *
+          scaled * *(float *)0x26e388;
+      } else {
+        max_delta = *(float *)((char *)game_tag_elem + 0x54) * scaled;
+      }
+
+      interpolate_scalar(desired_pitch, camera_yaw_offset, max_delta);
+
+      pitch_bits = *(uint32_t *)desired_pitch;
+      if ((pitch_bits & 0x7f800000u) == 0x7f800000u) {
+        char *msg =
+          csprintf((char *)0x5ab100, "%s: assert_valid_real(0x%08X %f)",
+                   "player_control->desired_angles.pitch", pitch_bits,
+                   (double)*desired_pitch);
+        display_assert(msg, "c:\\halo\\SOURCE\\game\\player_control.c", 0x4fd,
+                       1);
+        system_exit(NONE);
+      }
+    }
+  }
+
+  {
+    float delta;
+
+    delta = pitch_min - *(float *)(slot + 0x38);
+    if (delta <= *(float *)0x26e384)
+      *(float *)(slot + 0x38) += *(float *)0x26e384;
+    else if (delta >= *(float *)0x26e380)
+      *(float *)(slot + 0x38) += *(float *)0x26e380;
+    else
+      *(float *)(slot + 0x38) = pitch_min;
+
+    delta = pitch_max - *(float *)(slot + 0x3c);
+    if (delta <= *(float *)0x26e384)
+      *(float *)(slot + 0x3c) += *(float *)0x26e384;
+    else if (delta >= *(float *)0x26e380)
+      *(float *)(slot + 0x3c) += *(float *)0x26e380;
+    else
+      *(float *)(slot + 0x3c) = pitch_max;
+  }
+
+  *desired_pitch += dy;
+  if (*desired_pitch < *(float *)(slot + 0x38))
+    *desired_pitch = *(float *)(slot + 0x38);
+  else if (*desired_pitch > *(float *)(slot + 0x3c))
+    *desired_pitch = *(float *)(slot + 0x3c);
+}
+
 int player_control_get_desired_weapon(int16_t local_player_index, int unit_handle)
 {
   char *slot;
@@ -856,17 +1076,8 @@ void player_control_get_facing(int16_t local_player_index, float delta_time)
 
     /* apply turning/look input (unless scripted camera) */
     if (!((bool (*)(int16_t))0x86270)(local_player_index)) {
-      /* player_control_handle_turning reads EAX as local_player_index */
-      int _a0 = *(int *)(action + 0x0c);
-      int _a1 = *(int *)(action + 0x10);
-      int _eax = (int)local_player_index;
-      asm volatile("pushl %[a1]\n\t"
-                   "pushl %[a0]\n\t"
-                   "call *%[fn]\n\t"
-                   "addl $8, %%esp"
-                   : "+a"(_eax)
-                   : [fn] "r"((void *)0xb7f90), [a0] "r"(_a0), [a1] "r"(_a1)
-                   : "ecx", "edx", "memory", "cc");
+      FUN_000b7f90(local_player_index, *(float *)(action + 0x0c),
+                   *(float *)(action + 0x10));
     }
 
     /* autoaim idle detection: if the player is looking at an enemy
