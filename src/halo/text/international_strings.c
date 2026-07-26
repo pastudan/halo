@@ -980,44 +980,16 @@ void FUN_0019cdb0(short *out_rect __attribute__((unused)), void *text __attribut
 #endif
 
 
-/* FUN_0019ce70 (0x19ce70) — XBE naked draft (batch 287). */
-#if defined(__clang__)
-static void (*const b19ce70_c19c5d0)(void *callback, void *screen_pos, const void *color, void *clip_bounds, int flags, char *text) = FUN_0019c5d0;
-
-__attribute__((naked, noinline))
-void FUN_0019ce70(void)
+/* FUN_0019ce70 (0x19ce70) — readable C lift. */
+int16_t FUN_0019ce70(void *screen_pos, char *text, int *color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movw %%ax, 0x4d9af4\n\t"
-      "movw %%ax, 0x4d9af8\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x19b430\n\t"
-      "movl %%ecx, 0x4d9af0\n\t"
-      "movw $0x7fff, 0x4d9af6\n\t"
-      "call *%[c19c5d0]\n\t"
-      "movw 0x4d9af4, %%ax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19c5d0] "m"(b19ce70_c19c5d0)
-      : "memory");
+  *(int *)0x4d9af0 = *color;
+  *(int16_t *)0x4d9af4 = 0;
+  *(int16_t *)0x4d9af8 = 0;
+  *(int16_t *)0x4d9af6 = 0x7fff;
+  FUN_0019c5d0((void *)0x19b430, screen_pos, 0, 0, 0, text);
+  return *(int16_t *)0x4d9af4;
 }
-#else
-#error "FUN_0019ce70: clang naked draft required"
-#endif
-
 
 /* FUN_0019cec0 (0x19cec0) — XBE naked draft (batch 272). */
 #if defined(__clang__)

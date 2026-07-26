@@ -4882,7 +4882,7 @@
         {
           "addr": "0x145610",
           "decl": "char FUN_00145610(int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x145660",
@@ -5504,8 +5504,8 @@
         },
         {
           "addr": "0x93be0",
-          "decl": "void FUN_00093be0(void);",
-          "ported": false
+          "decl": "void FUN_00093be0(float *out_vec, const int16_t *angles@<eax>);",
+          "ported": true
         },
         {
           "addr": "0x93c20",
@@ -7201,8 +7201,8 @@
         },
         {
           "addr": "0x87eb0",
-          "decl": "void FUN_00087eb0(void);",
-          "ported": false
+          "decl": "void FUN_00087eb0(int object_handle);",
+          "ported": true
         },
         {
           "addr": "0x87f20",
@@ -19754,7 +19754,7 @@
         {
           "addr": "0x1546b0",
           "decl": "void FUN_001546b0(float *accum, float *rate, float *coeffs, char wrap_flag, float scale);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1546f0",
@@ -33495,8 +33495,8 @@
         },
         {
           "addr": "0x19ce70",
-          "decl": "void FUN_0019ce70(void);",
-          "ported": false
+          "decl": "int16_t FUN_0019ce70(void *screen_pos, char *text, int *color);",
+          "ported": true
         },
         {
           "addr": "0x19cec0",
@@ -39892,8 +39892,8 @@
         },
         {
           "addr": "0x804e0",
-          "decl": "void FUN_000804e0(void);",
-          "ported": false
+          "decl": "unsigned short *FUN_000804e0(int buffer, unsigned short buffer_size, void *key_pair@<esi>);",
+          "ported": true
         },
         {
           "addr": "0x80530",

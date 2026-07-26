@@ -1335,44 +1335,15 @@ void FUN_00093ba0(int16_t *dst, const int16_t *src)
   dst[1] = (int16_t)(dst[1] + src[1]);
 }
 
-/* FUN_00093be0 (0x93be0) — XBE naked draft (batch 280). */
-#if defined(__clang__)
-static void (*const b93be0_c10cc40)(float *out, float *angles) = angles_to_vector;
-
-__attribute__((naked, noinline))
-void FUN_00093be0(void)
+/* FUN_00093be0 (0x93be0) — readable C lift. */
+void FUN_00093be0(float *out_vec, const int16_t *angles)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movswl (%%eax), %%ecx\n\t"
-      "movswl 0x2(%%eax), %%edx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "fmuls 0x26919c\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fmuls 0x26919c\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "call *%[c10cc40]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c10cc40] "m"(b93be0_c10cc40)
-      : "memory");
+  float tmp[3];
+  tmp[0] = (float)angles[0] * *(float *)0x26919c;
+  tmp[1] = (float)angles[1] * *(float *)0x26919c;
+  tmp[2] = 0.0f;
+  angles_to_vector(out_vec, tmp);
 }
-#else
-#error "FUN_00093be0: clang naked draft required"
-#endif
-
 
 /* FUN_00093c20 (0x93c20) — XBE naked draft (batch 245). */
 #if defined(__clang__)

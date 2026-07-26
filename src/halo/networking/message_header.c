@@ -1298,54 +1298,20 @@ void FUN_00080470(void)
 #endif
 
 
-/* FUN_000804e0 (0x804e0) — XBE naked draft (batch 169). */
-#if defined(__clang__)
-static void (*const b804e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b804e0_exitfn)(int) = system_exit;
-static unsigned short * (*const b804e0_c803d0)(short type, void *data, int buffer, unsigned short buffer_size) = key_agreement_build_message;
-
-__attribute__((naked, noinline))
-void FUN_000804e0(void)
+/* FUN_000804e0 (0x804e0) — readable C lift. */
+unsigned short *FUN_000804e0(int buffer, unsigned short buffer_size, void *key_pair)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000804e0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb3\n\t"
-      "pushl $0x265b5c\n\t"
-      "pushl $0x265ba4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000804e0_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $1\n\t"
-      "call *%[c803d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b804e0_assert), [exitfn] "m"(b804e0_exitfn), [c803d0] "m"(b804e0_c803d0)
-      : "memory");
+  extern char DAT_00265ba4[];
+  extern char DAT_00265b5c[];
+  int local[2];
+  if (!key_pair) {
+    display_assert(DAT_00265ba4, DAT_00265b5c, 0xb3, 1);
+    system_exit(-1);
+  }
+  local[0] = *(int *)key_pair;
+  local[1] = *((int *)key_pair + 1);
+  return key_agreement_build_message(1, local, buffer, buffer_size);
 }
-#else
-#error "FUN_000804e0: clang naked draft required"
-#endif
-
 
 /* FUN_000805a0 (0x805a0) — XBE naked draft (batch 144). */
 #if defined(__clang__)

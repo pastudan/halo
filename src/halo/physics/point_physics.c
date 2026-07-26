@@ -496,48 +496,12 @@ char FUN_00154630(float *accum __attribute__((unused)), float *coeffs __attribut
 #endif
 
 
-/* FUN_001546b0 (0x1546b0) — XBE naked draft (batch 230). */
-#if defined(__clang__)
-static void (*const b1546b0_c154540)(float *accum, float *coeffs, float scale) = FUN_00154540;
-static void (*const b1546b0_c1544d0)(float *param_1, float *param_2, char param_3, float param_4) = FUN_001544d0;
-
-__attribute__((naked, noinline))
-void FUN_001546b0(float *accum __attribute__((unused)), float *rate __attribute__((unused)), float *coeffs __attribute__((unused)), char wrap_flag __attribute__((unused)), float scale __attribute__((unused)))
+/* FUN_001546b0 (0x1546b0) — readable C lift. */
+void FUN_001546b0(float *accum, float *rate, float *coeffs, char wrap_flag, float scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x8(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c154540]\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1544d0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c154540] "m"(b1546b0_c154540), [c1544d0] "m"(b1546b0_c1544d0)
-      : "memory");
+  FUN_00154540(rate, coeffs + 2, scale);
+  FUN_001544d0(accum, coeffs, wrap_flag, rate[0]);
 }
-#else
-#error "FUN_001546b0: clang naked draft required"
-#endif
-
 
 /* FUN_001546f0 (0x1546f0) — readable C lift: wrapped delta sign helper. */
 float FUN_001546f0(float *bounds, float from, char wrap_flag, float to)

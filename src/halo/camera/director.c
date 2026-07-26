@@ -2933,61 +2933,28 @@ void editor_camera_set_position_and_roll(void)
 #endif
 
 
-/* FUN_00087eb0 (0x87eb0) — XBE naked draft (batch 157). */
-#if defined(__clang__)
-static void *(*const b87eb0_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void FUN_00087eb0(void)
+/* FUN_00087eb0 (0x87eb0) — readable C lift. */
+void FUN_00087eb0(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x3356b0, %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%eax, 0x2ee66c\n\t"
-      "je .LFUN_00087eb0_2\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00087eb0_1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "flds (%%esi)\n\t"
-      "fsubs 0x50(%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "addl $0x50, %%eax\n\t"
-      "fstps 0x3356b8\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "fstps 0x3356bc\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "fstps 0x3356c0\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00087eb0_1:\n\t"
-      "movl 0x31fc38, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x3356b8\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x3356bc\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x3356c0\n\t"
-      ".LFUN_00087eb0_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b87eb0_get)
-      : "memory");
+  float *anchor = *(float **)0x3356b0;
+  *(int *)0x2ee66c = object_handle;
+  if (!anchor) {
+    return;
+  }
+  if (object_handle == -1) {
+    float *p = *(float **)0x31fc38;
+    *(float *)0x3356b8 = p[0];
+    *(float *)0x3356bc = p[1];
+    *(float *)0x3356c0 = p[2];
+    return;
+  }
+  {
+    char *obj = (char *)object_get_and_verify_type(object_handle, -1);
+    *(float *)0x3356b8 = anchor[0] - *(float *)(obj + 0x50);
+    *(float *)0x3356bc = anchor[1] - *(float *)(obj + 0x54);
+    *(float *)0x3356c0 = anchor[2] - *(float *)(obj + 0x58);
+  }
 }
-#else
-#error "FUN_00087eb0: clang naked draft required"
-#endif
-
 
 /* editor_camera_update (0x87f20) — XBE naked draft (batch 130). */
 #if defined(__clang__)
