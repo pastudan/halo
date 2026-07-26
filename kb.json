@@ -23777,67 +23777,83 @@
         },
         {
           "addr": "0x1c9230",
-          "decl": "void dsound_angle_from_angle(void);"
+          "decl": "void dsound_angle_from_angle(void);",
+          "ported": false
         },
         {
           "addr": "0x1c9250",
-          "decl": "void dsound_occlusion_from_occlusion(void);"
+          "decl": "void dsound_occlusion_from_occlusion(void);",
+          "ported": false
         },
         {
           "addr": "0x1c9270",
-          "decl": "void dsound_obstruction_from_obstruction(void);"
+          "decl": "void dsound_obstruction_from_obstruction(void);",
+          "ported": false
         },
         {
           "addr": "0x1c9350",
-          "decl": "void FUN_001c9350(void);"
+          "decl": "void FUN_001c9350(void);",
+          "ported": false
         },
         {
           "addr": "0x1c9670",
-          "decl": "void FUN_001c9670(void);"
+          "decl": "void FUN_001c9670(void);",
+          "ported": false
         },
         {
           "addr": "0x1c9bf0",
-          "decl": "void FUN_001c9bf0(void);"
+          "decl": "void FUN_001c9bf0(void);",
+          "ported": false
         },
         {
           "addr": "0x1c9c80",
-          "decl": "void FUN_001c9c80(void);"
+          "decl": "void FUN_001c9c80(void);",
+          "ported": false
         },
         {
           "addr": "0x1c9cf0",
-          "decl": "void FUN_001c9cf0(void);"
+          "decl": "void FUN_001c9cf0(void);",
+          "ported": false
         },
         {
           "addr": "0x1c9e20",
-          "decl": "void FUN_001c9e20(void);"
+          "decl": "void FUN_001c9e20(void);",
+          "ported": false
         },
         {
           "addr": "0x1ca130",
-          "decl": "void FUN_001ca130(void);"
+          "decl": "void FUN_001ca130(void);",
+          "ported": false
         },
         {
           "addr": "0x1ca2b0",
-          "decl": "void FUN_001ca2b0(void *buf);"
+          "decl": "void FUN_001ca2b0(void *buf);",
+          "ported": false
         },
         {
           "addr": "0x1ca900",
-          "decl": "void FUN_001ca900(void);"
+          "decl": "void FUN_001ca900(void);",
+          "ported": false
         },
         {
           "addr": "0x1ca970",
-          "decl": "void FUN_001ca970(void);"
+          "decl": "void FUN_001ca970(void);",
+          "ported": false
         },
         {
           "addr": "0x1caab0",
-          "decl": "void FUN_001caab0(void);"
+          "decl": "void FUN_001caab0(void);",
+          "ported": false
         },
         {
           "addr": "0x1cadd0",
-          "decl": "void FUN_001cadd0(int a, int b, int c, int d, int e, int f);"
+          "decl": "void FUN_001cadd0(int a, int b, int c, int d, int e, int f);",
+          "ported": false
         },
         {
           "addr": "0x1cb0c0",
-          "decl": "void FUN_001cb0c0(int channel);"
+          "decl": "void FUN_001cb0c0(int channel);",
+          "ported": false
         }
       ],
       "name": "sound_dsound_xbox.obj",

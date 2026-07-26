@@ -14922,5 +14922,117 @@
     "object": "vector_math.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c9230",
+    "name": "dsound_angle_from_angle",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c9250",
+    "name": "dsound_occlusion_from_occlusion",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c9270",
+    "name": "dsound_obstruction_from_obstruction",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c9350",
+    "name": "FUN_001c9350",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c9670",
+    "name": "FUN_001c9670",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c9bf0",
+    "name": "FUN_001c9bf0",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c9c80",
+    "name": "FUN_001c9c80",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c9cf0",
+    "name": "FUN_001c9cf0",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c9e20",
+    "name": "FUN_001c9e20",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ca130",
+    "name": "FUN_001ca130",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ca2b0",
+    "name": "FUN_001ca2b0",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ca900",
+    "name": "FUN_001ca900",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ca970",
+    "name": "FUN_001ca970",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1caab0",
+    "name": "FUN_001caab0",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cadd0",
+    "name": "FUN_001cadd0",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cb0c0",
+    "name": "FUN_001cb0c0",
+    "object": "sound_dsound_xbox.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
