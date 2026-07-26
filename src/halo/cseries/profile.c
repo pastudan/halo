@@ -3673,7 +3673,7 @@ void FUN_00091da0(void)
 static void (*const b91ef0_c91d50)(void) = FUN_00091d50;
 
 __attribute__((naked, noinline))
-void FUN_00091ef0(int *keys __attribute__((unused)), int count __attribute__((unused)), int (*cmp)(int __attribute__((unused)), int))
+void FUN_00091ef0(int *keys __attribute__((unused)), int count __attribute__((unused)), void *cmp)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

@@ -1372,11 +1372,38 @@ void FUN_000e1f00(void)
 #endif
 
 
-/* FUN_000e1f20 (0xe1f20) — readable C lift. */
-void FUN_000e1f20(int a0, int a1, int a2, int a3, int a4, int a5)
+/* FUN_000e1f20 (0xe1f20) — XBE naked draft (batch 145). */
+#if defined(__clang__)
+static void __stdcall (*const be1f20_c1ed2c0)(uint32_t reg, float a, float b, float c, float d) = D3DDevice_SetVertexData4f;
+
+__attribute__((naked, noinline))
+int __stdcall FUN_000e1f20(int unused, unsigned int reg, float a, float b, float c, float d)
 {
-  D3DDevice_SetVertexData4f(a1, a2, a3, a4, a5);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ed2c0]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1ed2c0] "m"(be1f20_c1ed2c0)
+      : "memory");
 }
+#else
+#error "FUN_000e1f20: clang naked draft required"
+#endif
+
 
 /* FUN_000e2170 (0xe2170) — readable C lift. */
 void FUN_000e2170(char v)

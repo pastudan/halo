@@ -424,64 +424,27 @@ char FUN_00042d80(int actor, int unit, int prop)
     return 1;
   return 0;
 }
-/* FUN_00042df0 (0x42df0) — XBE naked draft (batch 154). */
-#if defined(__clang__)
-static int (*const b42df0_c64b40)(int actor_handle, int unit_handle, char create_if_needed, char refresh_flag) = FUN_00064b40;
-static void *(*const b42df0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-char FUN_00042df0(int actor __attribute__((unused)), int unit __attribute__((unused)), int prop __attribute__((unused)))
+/* FUN_00042df0 (0x42df0) — readable C lift. */
+char FUN_00042df0(int actor, int unit, int prop)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00042df0_2\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c64b40]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00042df0_2\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "flds 0x11c(%%ecx)\n\t"
-      "addl $8, %%esp\n\t"
-      "fcomps 0x254cc4\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00042df0_1\n\t"
-      "movw 0x38(%%ecx), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_00042df0_2\n\t"
-      "cmpw $1, %%ax\n\t"
-      "je .LFUN_00042df0_2\n\t"
-      ".LFUN_00042df0_1:\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00042df0_2:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c64b40] "m"(b42df0_c64b40), [dget] "m"(b42df0_dget)
-      : "memory");
+  int handle;
+  char *p;
+  short w;
+
+  (void)unit;
+  if (prop == -1)
+    return 0;
+  handle = FUN_00064b40(prop, actor, 1, 1);
+  if (handle == -1)
+    return 0;
+  p = (char *)datum_get(*(data_t **)0x5ab23c, handle);
+  if (!(*(float *)(p + 0x11c) <= *(float *)0x254cc4))
+    return 1;
+  w = *(short *)(p + 0x38);
+  if (w == 0 || w == 1)
+    return 0;
+  return 1;
 }
-#else
-#error "FUN_00042df0: clang naked draft required"
-#endif
 
 
 /* FUN_00042e60 (0x42e60) — readable C lift (ai campaign). */

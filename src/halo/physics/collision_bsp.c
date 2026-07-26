@@ -3561,7 +3561,7 @@ int collision_bsp_test_sphere(int bsp __attribute__((unused)), short flags __att
 static int (*const b147380_c1470b0)(int tag_base, uint32_t node_index, uint32_t flags, float *verts, int counts, float epsilon, void (*callback)(float *, int, unsigned int, unsigned int, void *), void *ctx) = FUN_001470b0;
 
 __attribute__((naked, noinline))
-int FUN_00147380(int tag_base __attribute__((unused)), uint32_t node_index __attribute__((unused)), float *verts __attribute__((unused)), int counts __attribute__((unused)), float epsilon __attribute__((unused)), void (*callback)(float * __attribute__((unused)), int, unsigned int __attribute__((unused)), unsigned int __attribute__((unused)), void *) __attribute__((unused)), void *ctx __attribute__((unused)))
+int FUN_00147380(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
