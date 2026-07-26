@@ -3924,47 +3924,15 @@ void FUN_000ca580(int16_t type, int16_t value, char *buffer)
   }
   crt_sprintf(buffer, (const char *)0x25acb8, (int)value);
 }
-/* FUN_000ca5d0 (0xca5d0) — XBE naked draft (batch 171). */
-#if defined(__clang__)
-static void (*const bca5d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bca5d0_exitfn)(int) = system_exit;
-static int (*const bca5d0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-
-__attribute__((naked, noinline))
-void FUN_000ca5d0(int16_t type __attribute__((unused)), int value __attribute__((unused)), char *buffer __attribute__((unused)))
+/* FUN_000ca5d0 (0xca5d0) — readable C lift: long tostring. */
+void FUN_000ca5d0(int16_t type, int value, char *buffer)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpw $8, 0x8(%%ebp)\n\t"
-      "je .LFUN_000ca5d0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x262\n\t"
-      "pushl $0x280478\n\t"
-      "pushl $0x2804e4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ca5d0_1:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2804e0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bca5d0_assert), [exitfn] "m"(bca5d0_exitfn), [c1d90f0] "m"(bca5d0_c1d90f0)
-      : "memory");
+  if (type != 8) {
+    display_assert((const char *)0x2804e4, (const char *)0x280478, 0x262, 1);
+    system_exit(-1);
+  }
+  crt_sprintf(buffer, (const char *)0x2804e0, value);
 }
-#else
-#error "FUN_000ca5d0: clang naked draft required"
-#endif
-
-
 /* FUN_000ca620 (0xca620) — XBE naked draft (batch 171). */
 #if defined(__clang__)
 static void (*const bca620_assert)(const char *, const char *, int, bool) = display_assert;

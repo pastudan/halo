@@ -12408,7 +12408,7 @@
         {
           "addr": "0xca5d0",
           "decl": "void FUN_000ca5d0(int16_t type, int value, char *buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca620",
