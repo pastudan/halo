@@ -7374,120 +7374,333 @@ void unit_handle_region_destroyed(int unit_handle, int param_2, uint32_t flags)
 }
 
 
-/* unit_aiming_vector (0x1ab410)
- * Computes the unit's aiming vector (offset 0x320, 3 floats) from position
- * deltas transformed by the orientation matrix, scaled by tag sensitivity,
- * offset by 0.5, clamped to [0.0, 0.7]. Updates origin (0x2FC) and delta
- * (0x308). Uses seat marker if in a vehicle; early-exits with 0.5 if marker
- * not found. Register arg: unit_handle in EAX. */
-void unit_aiming_vector(int unit_handle)
+/* unit_aiming_vector (0x1ab410) — XBE naked draft (batch 49). */
+#if defined(__clang__)
+static void *(*const b1ab410_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1ab410_tag)(int, int) = tag_get;
+static void *(*const b1ab410_elem)(void *, int, int) = tag_block_get_element;
+static short (*const b1ab410_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
+static vector3_t * (*const b1ab410_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+static void (*const b1ab410_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1ab410_exitfn)(int) = system_exit;
+static int (*const b1ab410_c1dd801)(const char *a, const char *b) = crt_stricmp;
+
+__attribute__((naked, noinline))
+void unit_aiming_vector(int unit_handle __attribute__((unused)))
 {
-  char *unit;
-  int parent_handle;
-  char *parent_unit;
-  int tag_data;
-  int seat_entry;
-  float *sensitivity;
-  int16_t marker_result;
-  char marker_buf[60];
-  float pos[3];
-  float fwd[3];
-  float up[3];
-  float side[3];
-  float dx, dy, dz;
-  float ddx, ddy, ddz;
-  float val;
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  parent_handle = *(int *)(unit + 0xcc);
-
-  if (parent_handle == -1 || *(int16_t *)(unit + 0x2a0) == -1) {
-    /* No parent or no seat -- use unit's own transform */
-    tag_data = (int)tag_get(0x756e6974, *(int *)unit);
-    pos[0] = *(float *)(unit + 0x0c);
-    pos[1] = *(float *)(unit + 0x10);
-    pos[2] = *(float *)(unit + 0x14);
-    fwd[0] = *(float *)(unit + 0x24);
-    fwd[1] = *(float *)(unit + 0x28);
-    fwd[2] = *(float *)(unit + 0x2c);
-    up[0] = *(float *)(unit + 0x30);
-    up[1] = *(float *)(unit + 0x34);
-    up[2] = *(float *)(unit + 0x38);
-    sensitivity = (float *)(tag_data + 0x200);
-  } else {
-    /* In a vehicle seat -- use parent marker transform */
-    parent_unit = (char *)object_get_and_verify_type(parent_handle, 3);
-    tag_data = (int)tag_get(0x756e6974, *(int *)parent_unit);
-    seat_entry = (int)tag_block_get_element(
-        (void *)(tag_data + 0x2e4),
-        (int)*(int16_t *)(unit + 0x2a0), 0x11c);
-    marker_result = object_get_markers_by_string_id(
-        parent_handle, (void *)(seat_entry + 0x24), marker_buf, 1);
-    if (marker_result == 0) {
-      *(float *)(unit + 0x320) = 0.5f;
-      *(float *)(unit + 0x324) = 0.5f;
-      *(float *)(unit + 0x328) = 0.5f;
-      return;
-    }
-    object_get_world_position(parent_handle, (vector3_t *)pos);
-    sensitivity = (float *)(seat_entry + 0x64);
-  }
-
-  /* Delta from previous aiming origin */
-  dx = pos[0] - *(float *)(unit + 0x2fc);
-  dy = pos[1] - *(float *)(unit + 0x300);
-  dz = pos[2] - *(float *)(unit + 0x304);
-
-  /* Double-delta: subtract previous delta */
-  ddx = dx - *(float *)(unit + 0x308);
-  ddy = dy - *(float *)(unit + 0x30c);
-  ddz = dz - *(float *)(unit + 0x310);
-
-  /* side = up x fwd (verified from FSUBP order in disasm at 0x1ab537-0x1ab55f) */
-  side[0] = fwd[2] * up[1] - fwd[1] * up[2];
-  side[1] = up[2] * fwd[0] - fwd[2] * up[0];
-  side[2] = up[0] * fwd[1] - up[1] * fwd[0];
-
-  /* Project double-delta onto orientation axes, scale by sensitivity, +0.5 */
-  *(float *)(unit + 0x320) =
-      (fwd[0] * ddx + fwd[1] * ddy + fwd[2] * ddz) * sensitivity[0] + 0.5f;
-  *(float *)(unit + 0x324) =
-      (side[0] * ddx + side[1] * ddy + side[2] * ddz) * sensitivity[1] + 0.5f;
-  *(float *)(unit + 0x328) =
-      (up[0] * ddx + up[1] * ddy + up[2] * ddz) * sensitivity[2] + 0.5f;
-
-  /* Clamp each component to [0.0, 0.7] */
-  val = *(float *)(unit + 0x320);
-  if (val < 0.0f)
-    val = 0.0f;
-  else if (val > 0.7f)
-    val = 0.7f;
-  *(float *)(unit + 0x320) = val;
-
-  val = *(float *)(unit + 0x324);
-  if (val < 0.0f)
-    val = 0.0f;
-  else if (val > 0.7f)
-    val = 0.7f;
-  *(float *)(unit + 0x324) = val;
-
-  val = *(float *)(unit + 0x328);
-  if (val < 0.0f)
-    val = 0.0f;
-  else if (val > 0.7f)
-    val = 0.7f;
-  *(float *)(unit + 0x328) = val;
-
-  /* Update aiming origin */
-  *(float *)(unit + 0x2fc) = pos[0];
-  *(float *)(unit + 0x300) = pos[1];
-  *(float *)(unit + 0x304) = pos[2];
-
-  /* Update aiming delta */
-  *(float *)(unit + 0x308) = dx;
-  *(float *)(unit + 0x30c) = dy;
-  *(float *)(unit + 0x310) = dz;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x78, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0xcc(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lunit_aiming_vector_1\n\t"
+      "cmpw $-1, 0x2a0(%%esi)\n\t"
+      "je .Lunit_aiming_vector_1\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movswl 0x2a0(%%esi), %%edx\n\t"
+      "pushl $0x11c\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x2e4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xcc(%%esi), %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "pushl $1\n\t"
+      "leal -0x78(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x24(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[markers]\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lunit_aiming_vector_12\n\t"
+      "movl 0xcc(%%esi), %%ecx\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1412f0]\n\t"
+      "addl $8, %%esp\n\t"
+      "leal 0x64(%%edi), %%eax\n\t"
+      "jmp .Lunit_aiming_vector_2\n\t"
+      ".Lunit_aiming_vector_1:\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "leal 0xc(%%esi), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0x18(%%ebp)\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl %%edx, -0x14(%%ebp)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "leal 0x24(%%esi), %%edx\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "movl %%ecx, -0x3c(%%ebp)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, -0x38(%%ebp)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, -0x34(%%ebp)\n\t"
+      "leal 0x30(%%esi), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0x24(%%ebp)\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl %%edx, -0x20(%%ebp)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ecx, -0x1c(%%ebp)\n\t"
+      "addl $0x200, %%eax\n\t"
+      ".Lunit_aiming_vector_2:\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "leal 0x2fc(%%esi), %%ecx\n\t"
+      "fsubs (%%ecx)\n\t"
+      "leal 0x308(%%esi), %%edx\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fsubs 0x300(%%esi)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fsubs 0x304(%%esi)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fsubs (%%edx)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fsubs 0x30c(%%esi)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fsubs 0x310(%%esi)\n\t"
+      "flds -0x34(%%ebp)\n\t"
+      "fmuls -0x20(%%ebp)\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls -0x38(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls -0x3c(%%ebp)\n\t"
+      "flds -0x34(%%ebp)\n\t"
+      "fmuls -0x24(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "fmuls -0x38(%%ebp)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fmuls -0x3c(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x34(%%ebp)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      "fmul %%st(7), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x38(%%ebp)\n\t"
+      "fmul %%st(6), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fmuls (%%eax)\n\t"
+      "fadds 0x253398\n\t"
+      "fstps 0x320(%%esi)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      "fadds 0x253398\n\t"
+      "fstps 0x324(%%esi)\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "fadds 0x253398\n\t"
+      "fstps 0x328(%%esi)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x320(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lunit_aiming_vector_3\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lunit_aiming_vector_5\n\t"
+      ".Lunit_aiming_vector_3:\n\t"
+      "flds 0x320(%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lunit_aiming_vector_4\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Lunit_aiming_vector_5\n\t"
+      ".Lunit_aiming_vector_4:\n\t"
+      "flds 0x320(%%esi)\n\t"
+      ".Lunit_aiming_vector_5:\n\t"
+      "fstps 0x320(%%esi)\n\t"
+      "flds 0x324(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lunit_aiming_vector_6\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lunit_aiming_vector_8\n\t"
+      ".Lunit_aiming_vector_6:\n\t"
+      "flds 0x324(%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lunit_aiming_vector_7\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Lunit_aiming_vector_8\n\t"
+      ".Lunit_aiming_vector_7:\n\t"
+      "flds 0x324(%%esi)\n\t"
+      ".Lunit_aiming_vector_8:\n\t"
+      "fstps 0x324(%%esi)\n\t"
+      "flds 0x328(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lunit_aiming_vector_9\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lunit_aiming_vector_11\n\t"
+      ".Lunit_aiming_vector_9:\n\t"
+      "flds 0x328(%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lunit_aiming_vector_10\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Lunit_aiming_vector_11\n\t"
+      ".Lunit_aiming_vector_10:\n\t"
+      "flds 0x328(%%esi)\n\t"
+      ".Lunit_aiming_vector_11:\n\t"
+      "fstps 0x328(%%esi)\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x8(%%ecx)\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl %%ecx, (%%edx)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x4(%%edx)\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lunit_aiming_vector_12:\n\t"
+      "movl $0x3f000000, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x328(%%esi)\n\t"
+      "movl %%eax, 0x324(%%esi)\n\t"
+      "movl %%eax, 0x320(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lunit_aiming_vector_13\n\t"
+      "cmpw $6, %%si\n\t"
+      "jl .Lunit_aiming_vector_14\n\t"
+      ".Lunit_aiming_vector_13:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x200f\n\t"
+      "pushl $0x2b68c0\n\t"
+      "pushl $0x2b6de0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl 0x32e484(,%%eax,4), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "ret\n\t"
+      ".Lunit_aiming_vector_14:\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "movl 0x32e484(,%%ecx,4), %%eax\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "jmp .Lunit_aiming_vector_15\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lunit_aiming_vector_15:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl 0x32e484(,%%eax,4), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1dd801]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lunit_aiming_vector_16\n\t"
+      "incl %%esi\n\t"
+      "cmpw $6, %%si\n\t"
+      "jl .Lunit_aiming_vector_15\n\t"
+      "popl %%esi\n\t"
+      "movw %%bx, %%ax\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".Lunit_aiming_vector_16:\n\t"
+      "movw %%si, %%ax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1ab410_get), [tag] "m"(b1ab410_tag), [elem] "m"(b1ab410_elem), [markers] "m"(b1ab410_markers), [c1412f0] "m"(b1ab410_c1412f0), [assert] "m"(b1ab410_assert), [exitfn] "m"(b1ab410_exitfn), [c1dd801] "m"(b1ab410_c1dd801)
+      : "memory");
 }
+#else
+#error "unit_aiming_vector: clang naked draft required"
+#endif
+
 
 /* unit_drop_grenades_on_death (0x1abb20)
  * Creates grenade weapon objects for each grenade the unit carries and drops

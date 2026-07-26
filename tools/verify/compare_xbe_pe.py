@@ -536,6 +536,13 @@ def main() -> int:
         ("FUN_001afd30", 0x1afd30, 0x1b04af),
         ("FUN_00143550", 0x143550, 0x1439fb),
         ("FUN_001b1400", 0x1b1400, 0x1b1a10),
+        # gameplay wave 49 (2026-07-26)
+        ("FUN_000853c0", 0x853c0, 0x85a24),
+        ("objects_garbage_collect_tick", 0x144b50, 0x14516d),
+        ("FUN_00084ae0", 0x84ae0, 0x84fde),
+        ("item_set_position", 0xf6d60, 0xf7103),
+        ("FUN_00139e50", 0x139e50, 0x13a242),
+        ("unit_aiming_vector", 0x1ab410, 0x1ab76b),
     ]
 
     xbe = Xbe.from_file(args.xbe)

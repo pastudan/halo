@@ -840,213 +840,354 @@ char valid_real_matrix4x3(float *mat)
   return '\0';
 }
 
-/* item_set_position (0xf6d60)
- *
- * Apply a velocity/position delta to an item and update its angular velocity.
- * Manages collision user depth, ground clamping, angular tumble, and garbage
- * flag state. Called each tick to move free-floating items (grenades, weapons,
- * equipment on the ground).
- *
- * If the item is grounded (flag bit 3 at +0x1a4) and the delta magnitude is
- * above a small epsilon, the item is repositioned to just above the ground
- * plane via a "ground point" marker lookup and plane projection. Otherwise
- * position is simply accumulated. Angular velocity gets a tumble impulse from
- * cross(global_up, delta) scaled by a random factor and pi/2, or a random
- * angular jolt from the ground normal when velocity is near zero.
- *
- * Confirmed: 3 cdecl args (item_handle, position, flag).
- * Confirmed: CALL 0x13d680 (object_get_and_verify_type) with type_mask 0x1c.
- * Confirmed: CALL 0x1ba140 (tag_get) with 'item' (0x6974656d).
- * Confirmed: CALL 0x8d9f0 (display_assert) for collision depth checks.
- * Confirmed: CALL 0xa8e30 (game_engine_running) for flag-dependent branch.
- * Confirmed: CALL 0xf6af0 (item_detonate) if flag set and engine not running.
- * Confirmed: CALL 0x140f10 (object_get_markers_by_string_id) for "ground
- * point". Confirmed: CALL 0x18e3f0 (global_collision_bsp_get) to get collision
- * BSP. Confirmed: CALL 0x19b210 (tag_block_get_element) at bsp+0x3c. Confirmed:
- * CALL 0x99640 (bsp3d_get_plane_from_designator) for plane extraction.
- * Confirmed: CALL 0x12f80 (vector3d_scale_add) for ground projection.
- * Confirmed: CALL 0x143be0 (object_translate) for repositioning item.
- * Confirmed: CALL 0x12170 (FUN_00012170) for vector magnitude. Confirmed: CALL
- * 0x10b0d0 (get_global_random_seed_address). Confirmed: CALL 0x10b240
- * (random_math_real) for random scale. Confirmed: CALL 0x13010 (normalize3d)
- * for cross product normalization. Confirmed: CALL 0x10b380
- * (random_seed_get_direction3d) for degenerate case. Confirmed: CALL 0x121e0
- * (FUN_000121e0) for random angle
- * [-pi/4, pi/4]. Confirmed: CALL 0x213c0 (vector3d_add) for angular velocity
- * accumulation. Confirmed: CALL 0xf6b80 (FUN_000f6b80) with item_handle in EAX.
- * Confirmed: CALL 0x13d920 (object_set_garbage_flag) with (handle, 0).
- * Confirmed: global collision depth at 0x4761d8 (int16_t).
- * Confirmed: collision user stack at 0x5a8c80.
- * Confirmed: global up vector pointer at 0x31fc44 → {0, 0, 1}.
- * Confirmed: epsilon constant at 0x253f44 = ~0.0001f.
- * Confirmed: offset constant at 0x2533e8 = 0.05f.
- * Confirmed: zero constant at 0x2533c0 = 0.0f.
- * Confirmed: pi/2 constant at 0x2568bc = ~1.5708f.
- */
-void item_set_position(int item_handle, float *position, int flag)
+/* item_set_position (0xf6d60) — XBE naked draft (batch 49). */
+#if defined(__clang__)
+static void *(*const bf6d60_get)(int, int) = object_get_and_verify_type;
+static void *(*const bf6d60_tag)(int, int) = tag_get;
+static void (*const bf6d60_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bf6d60_exitfn)(int) = system_exit;
+static bool (*const bf6d60_gerun)(void) = game_engine_running;
+static void (*const bf6d60_cf6af0)(int item_handle) = item_detonate;
+static short (*const bf6d60_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
+static void *(*const bf6d60_gbsp)(void) = global_collision_bsp_get;
+static void *(*const bf6d60_elem)(void *, int, int) = tag_block_get_element;
+static void (*const bf6d60_c99640)(int structure_bsp, uint32_t plane_reference, float *out_plane) = bsp3d_get_plane_from_designator;
+static float *(*const bf6d60_vsca)(float *, float *, float, float *) = vector3d_scale_add;
+static void (*const bf6d60_otrans)(int, float *, void *) = object_translate;
+static float (*const bf6d60_c12170)(float *vector) = FUN_00012170;
+static float (*const bf6d60_c121e0)(float min, float max) = FUN_000121e0;
+static void (*const bf6d60_c213c0)(float *a, float *b, float *out) = vector3d_add;
+static int *(*const bf6d60_gseed)(void) = get_global_random_seed_address;
+static float (*const bf6d60_rmreal)(unsigned int *) = random_math_real;
+static float (*const bf6d60_norm)(float *) = normalize3d;
+static void (*const bf6d60_c10b380)(unsigned int *seed, float *out) = random_seed_get_direction3d;
+static void (*const bf6d60_f6b80)(int) = FUN_000f6b80;
+static void (*const bf6d60_garb)(int, int) = object_set_garbage_flag;
+
+__attribute__((naked, noinline))
+void item_set_position(int item_handle __attribute__((unused)), float *position __attribute__((unused)), int flag __attribute__((unused)))
 {
-  char *item_obj;
-  char *item_tag;
-  int16_t marker_count;
-  char marker_buf[0x6c];
-  float plane[4];
-  float cross[3];
-  float vel_mag;
-  float new_pos[3];
-  float scaled_dir[3];
-  float *up;
-  float scale;
-  int bsp;
-  int *plane_ref;
-  float dot;
-
-  item_obj = (char *)object_get_and_verify_type(item_handle, 0x1c);
-  item_tag = (char *)tag_get(0x6974656d, *(int *)item_obj);
-
-  /* Early out if item has flag bit 5 set at +0x1a4 */
-  if (*(uint8_t *)(item_obj + 0x1a4) & 0x20)
-    return;
-
-  /* Collision depth guard */
-  if (*(int16_t *)0x4761d8 >= 0x20) {
-    display_assert("global_current_collision_user_depth < "
-                   "MAXIMUM_COLLISION_USER_STACK_DEPTH",
-                   "c:\\halo\\SOURCE\\items\\items.c", 0x218, 1);
-    system_exit(-1);
-  }
-
-  {
-    int16_t depth = *(int16_t *)0x4761d8;
-    *(int16_t *)(0x5a8c80 + (int)depth * 2) = 0xb;
-    *(int16_t *)0x4761d8 = depth + 1;
-  }
-
-  /* Only process if parent object handle (obj+0xCC) is NONE */
-  if (*(int *)(item_obj + 0xcc) == NONE) {
-    /* If flag param is set, game engine not running, and tag flag bit 1 set,
-     * call item_detonate (possibly spawns pickup effect or similar) */
-    if ((char)flag != 0) {
-      if (!game_engine_running()) {
-        if (*(uint8_t *)(item_tag + 0x17c) & 2) {
-          item_detonate(item_handle);
-        }
-      }
-    }
-
-    /* Check ground flag (bit 3 of item_flags at +0x1a4) */
-    if (!(*(uint8_t *)(item_obj + 0x1a4) & 0x8)) {
-      /* Not grounded: just clear the "needs update" flag bit 5 at +0x04 */
-      *(uint32_t *)(item_obj + 0x04) =
-        *(uint32_t *)(item_obj + 0x04) & 0xffffffdf;
-    } else if (*(float *)0x253f44 <= position[0] * position[0] +
-                                       position[1] * position[1] +
-                                       position[2] * position[2]) {
-      /* Grounded and velocity magnitude squared >= epsilon:
-       * Try to reposition item to ground plane */
-      marker_count = object_get_markers_by_string_id(
-        item_handle, (void *)0x28aa90, marker_buf, 1);
-      if (marker_count != 0) {
-        /* Ground point marker found: project position onto ground plane */
-        bsp = (int)global_collision_bsp_get();
-        plane_ref = (int *)tag_block_get_element(
-          (void *)(bsp + 0x3c), (int)*(int16_t *)(item_obj + 0x1aa), 0xc);
-        bsp3d_get_plane_from_designator(bsp, *plane_ref, plane);
-
-        /* Compute offset from plane: 0.05 - (dot(normal, ground_pos) -
-         * distance) */
-        dot = plane[0] * *(float *)(marker_buf + 0x60) +
-              plane[1] * *(float *)(marker_buf + 0x64) +
-              plane[2] * *(float *)(marker_buf + 0x68);
-        scale = *(float *)0x2533e8 - (dot - plane[3]);
-
-        vector3d_scale_add((float *)(marker_buf + 0x60), plane, scale, new_pos);
-        object_translate(item_handle, new_pos, 0);
-      }
-      /* Clear "needs update" bit 5 at +0x04 and ground bit 3 at +0x1a4 */
-      *(uint32_t *)(item_obj + 0x04) =
-        *(uint32_t *)(item_obj + 0x04) & 0xffffffdf;
-      *(uint32_t *)(item_obj + 0x1a4) =
-        *(uint32_t *)(item_obj + 0x1a4) & 0xfffffff7;
-    }
-
-    /* Accumulate position delta onto object position at +0x18 */
-    *(float *)(item_obj + 0x18) += position[0];
-    *(float *)(item_obj + 0x1c) += position[1];
-    *(float *)(item_obj + 0x20) += position[2];
-
-    /* Determine angular velocity update path */
-    if (*(int *)(item_obj + 0x1b0) != NONE ||
-        !(*(uint8_t *)(item_obj + 0x1a4) & 0x8) ||
-        *(float *)0x253f44 <= FUN_00012170(position)) {
-      /* Normal tumble: compute angular velocity from cross product */
-      vel_mag = sqrtf(position[0] * position[0] + position[1] * position[1] +
-                      position[2] * position[2]);
-      if (vel_mag < *(float *)0x253f44) {
-        unsigned int *seed = (unsigned int *)get_global_random_seed_address();
-        vel_mag = random_math_real(seed);
-      }
-
-      /* cross = cross(global_up, position_delta) */
-      up = *(float **)0x31fc44;
-      cross[2] = up[0] * position[1] - up[1] * position[0];
-      cross[1] = position[0] * up[2] - up[0] * position[2];
-      cross[0] = up[1] * position[2] - position[1] * up[2];
-
-      if (normalize3d(cross) <= *(float *)0x2533c0) {
-        /* Degenerate cross product: use random direction */
-        unsigned int *seed = (unsigned int *)get_global_random_seed_address();
-        random_seed_get_direction3d(seed, cross);
-      }
-
-      {
-        unsigned int *seed = (unsigned int *)get_global_random_seed_address();
-        float factor = random_math_real(seed) * vel_mag * *(float *)0x2568bc;
-        *(float *)(item_obj + 0x3c) += cross[0] * factor;
-        *(float *)(item_obj + 0x40) += cross[1] * factor;
-        *(float *)(item_obj + 0x44) += cross[2] * factor;
-      }
-    } else {
-      /* Slow/grounded path: apply random angular jolt from ground normal */
-      marker_count = object_get_markers_by_string_id(
-        item_handle, (void *)0x28aa90, marker_buf, 1);
-      if (marker_count == 0) {
-        /* No marker: use global up vector as normal */
-        up = *(float **)0x31fc44;
-        cross[0] = up[0];
-        cross[1] = up[1];
-        cross[2] = up[2];
-      } else {
-        /* Use ground point marker normal (at marker+0x54) */
-        cross[0] = *(float *)(marker_buf + 0x54);
-        cross[1] = *(float *)(marker_buf + 0x58);
-        cross[2] = *(float *)(marker_buf + 0x5c);
-      }
-
-      /* Random angle in [-pi/4, pi/4] */
-      scale = FUN_000121e0(-1.5707963f, 1.5707963f);
-      scaled_dir[0] = cross[0] * scale;
-      scaled_dir[1] = cross[1] * scale;
-      scaled_dir[2] = cross[2] * scale;
-
-      /* angular_velocity += scaled_dir */
-      vector3d_add(
-        (float *)(item_obj + 0x3c), scaled_dir,
-        (float *)(item_obj + 0x3c)); /* dup-args-ok: in-place accumulation */
-    }
-
-    /* Update item velocity/angular state and clear garbage flag */
-    FUN_000f6b80(item_handle);
-    object_set_garbage_flag(item_handle, 0);
-  }
-
-  /* Collision depth unguard */
-  if (*(int16_t *)0x4761d8 < 2) {
-    display_assert("global_current_collision_user_depth > 1",
-                   "c:\\halo\\SOURCE\\items\\items.c", 0x28b, 1);
-    system_exit(-1);
-  }
-  *(int16_t *)0x4761d8 = *(int16_t *)0x4761d8 - 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x8c, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x1c\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6974656d\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x1a4(%%esi), %%cl\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl $0x20, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%cl, %%al\n\t"
+      "jne .Litem_set_position_14\n\t"
+      "cmpw %%ax, 0x4761d8\n\t"
+      "jl .Litem_set_position_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x218\n\t"
+      "pushl $0x28aaa0\n\t"
+      "pushl $0x253440\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Litem_set_position_1:\n\t"
+      "movw 0x4761d8, %%ax\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "incw %%ax\n\t"
+      "movw $0xb, 0x5a8c80(,%%ecx,2)\n\t"
+      "movw %%ax, 0x4761d8\n\t"
+      "cmpl $-1, 0xcc(%%esi)\n\t"
+      "jne .Litem_set_position_12\n\t"
+      "movb 0x10(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Litem_set_position_2\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Litem_set_position_2\n\t"
+      "testb $2, 0x17c(%%edi)\n\t"
+      "je .Litem_set_position_2\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cf6af0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Litem_set_position_2:\n\t"
+      "testb $8, 0x1a4(%%esi)\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "je .Litem_set_position_4\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "flds (%%edi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fcomps 0x253f44\n\t"
+      "fstp %%st(0)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $5, %%ah\n\t"
+      "fstp %%st(0)\n\t"
+      "jnp .Litem_set_position_5\n\t"
+      "pushl $1\n\t"
+      "leal -0x8c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x28aa90\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[markers]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Litem_set_position_3\n\t"
+      "call *%[gbsp]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movswl 0x1aa(%%esi), %%eax\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x3c(%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c99640]\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "fmuls -0x24(%%ebp)\n\t"
+      "leal -0x20(%%ebp), %%ecx\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fmuls -0x28(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "leal -0x2c(%%ebp), %%eax\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls -0x2c(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsubs -0x4(%%ebp)\n\t"
+      "fsubrs 0x2533e8\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[vsca]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "leal -0x20(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[otrans]\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "addl $0x1c, %%esp\n\t"
+      ".Litem_set_position_3:\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl 0x1a4(%%esi), %%eax\n\t"
+      "andl $0xffffffdf, %%ecx\n\t"
+      "andl $0xfffffff7, %%eax\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      "movl %%eax, 0x1a4(%%esi)\n\t"
+      "jmp .Litem_set_position_5\n\t"
+      ".Litem_set_position_4:\n\t"
+      "andl $0xffffffdf, 0x4(%%esi)\n\t"
+      ".Litem_set_position_5:\n\t"
+      "flds (%%edi)\n\t"
+      "fadds 0x18(%%esi)\n\t"
+      "fstps 0x18(%%esi)\n\t"
+      "flds 0x1c(%%esi)\n\t"
+      "fadds 0x4(%%edi)\n\t"
+      "fstps 0x1c(%%esi)\n\t"
+      "flds 0x20(%%esi)\n\t"
+      "fadds 0x8(%%edi)\n\t"
+      "fstps 0x20(%%esi)\n\t"
+      "movl 0x1b0(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Litem_set_position_8\n\t"
+      "testb $8, 0x1a4(%%esi)\n\t"
+      "je .Litem_set_position_8\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c12170]\n\t"
+      "fcomps 0x253f44\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Litem_set_position_8\n\t"
+      "pushl $1\n\t"
+      "leal -0x8c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x28aa90\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[markers]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Litem_set_position_6\n\t"
+      "movl -0x38(%%ebp), %%ecx\n\t"
+      "movl -0x34(%%ebp), %%edx\n\t"
+      "movl -0x30(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .Litem_set_position_7\n\t"
+      ".Litem_set_position_6:\n\t"
+      "movl 0x31fc44, %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      ".Litem_set_position_7:\n\t"
+      "pushl $0x3fc90fdb\n\t"
+      "pushl $0xbfc90fdb\n\t"
+      "call *%[c121e0]\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "addl $0x3c, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x20(%%ebp), %%edx\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "pushl %%esi\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "call *%[c213c0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .Litem_set_position_11\n\t"
+      ".Litem_set_position_8:\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "flds (%%edi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsqrt\n\t"
+      "fsts -0x14(%%ebp)\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fcomps 0x253f44\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Litem_set_position_9\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "addl $4, %%esp\n\t"
+      ".Litem_set_position_9:\n\t"
+      "movl 0x31fc44, %%eax\n\t"
+      "flds (%%eax)\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fmuls (%%edi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds (%%edi)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "flds (%%eax)\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Litem_set_position_10\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10b380]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Litem_set_position_10:\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "fmuls -0x14(%%ebp)\n\t"
+      "addl $4, %%esp\n\t"
+      "fmuls 0x2568bc\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "fadds 0x3c(%%esi)\n\t"
+      "fstps 0x3c(%%esi)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fadds 0x40(%%esi)\n\t"
+      "fstps 0x40(%%esi)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fadds 0x44(%%esi)\n\t"
+      "fstps 0x44(%%esi)\n\t"
+      ".Litem_set_position_11:\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[f6b80]\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[garb]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Litem_set_position_12:\n\t"
+      "cmpw $1, 0x4761d8\n\t"
+      "jg .Litem_set_position_13\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28b\n\t"
+      "pushl $0x28aaa0\n\t"
+      "pushl $0x253418\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Litem_set_position_13:\n\t"
+      "decw 0x4761d8\n\t"
+      ".Litem_set_position_14:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bf6d60_get), [tag] "m"(bf6d60_tag), [assert] "m"(bf6d60_assert), [exitfn] "m"(bf6d60_exitfn), [gerun] "m"(bf6d60_gerun), [cf6af0] "m"(bf6d60_cf6af0), [markers] "m"(bf6d60_markers), [gbsp] "m"(bf6d60_gbsp), [elem] "m"(bf6d60_elem), [c99640] "m"(bf6d60_c99640), [vsca] "m"(bf6d60_vsca), [otrans] "m"(bf6d60_otrans), [c12170] "m"(bf6d60_c12170), [c121e0] "m"(bf6d60_c121e0), [c213c0] "m"(bf6d60_c213c0), [gseed] "m"(bf6d60_gseed), [rmreal] "m"(bf6d60_rmreal), [norm] "m"(bf6d60_norm), [c10b380] "m"(bf6d60_c10b380), [f6b80] "m"(bf6d60_f6b80), [garb] "m"(bf6d60_garb)
+      : "memory");
 }
+#else
+#error "item_set_position: clang naked draft required"
+#endif
+
 /*
  * ui_widget_group.c
  *
