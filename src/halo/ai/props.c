@@ -2056,60 +2056,26 @@ void FUN_000651a0(void)
 #endif
 
 
-/* FUN_00065250 (0x65250) — XBE naked draft (batch 161). */
-#if defined(__clang__)
-static void (*const b65250_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-static int (*const b65250_c8df60)(const char *s1) = csstrlen;
-static void * (*const b65250_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void * (*const b65250_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-void FUN_00065250(void)
+/* FUN_00065250 (0x65250) — readable C lift. */
+void FUN_00065250(void **out_ptr, const char *src)
 {
-  __asm__ volatile(
-      "movl (%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00065250_1\n\t"
-      "pushl $0x45\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl $0, (%%edi)\n\t"
-      ".LFUN_00065250_1:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_00065250_3\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c8df60]\n\t"
-      "pushl $0x48\n\t"
-      "movl %%eax, %%esi\n\t"
-      "pushl $0x25f5c4\n\t"
-      "incl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      "je .LFUN_00065250_2\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00065250_2:\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00065250_3:\n\t"
-      "ret\n\t"
-      :
-      : [c8ef70] "m"(b65250_c8ef70), [c8df60] "m"(b65250_c8df60), [c8ee60] "m"(b65250_c8ee60), [c8e0b0] "m"(b65250_c8e0b0)
-      : "memory");
-}
-#else
-#error "FUN_00065250: clang naked draft required"
-#endif
+  void *p;
+  int n;
 
+  if (*out_ptr) {
+    debug_free(*out_ptr, (const char *)0x25f5c4, 0x45);
+    *out_ptr = 0;
+  }
+  if (!src) {
+    return;
+  }
+  n = csstrlen(src) + 1;
+  p = debug_malloc((uint32_t)n, 0, (const char *)0x25f5c4, 0x48);
+  *out_ptr = p;
+  if (p) {
+    csmemcpy(p, (void *)src, (size_t)n);
+  }
+}
 
 /* FUN_000652a0 (0x652a0) — readable C lift. */
 void FUN_000652a0(int count, void **out_ptr, void *src)

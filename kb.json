@@ -36235,8 +36235,8 @@
         },
         {
           "addr": "0x65250",
-          "decl": "void FUN_00065250(void);",
-          "ported": false
+          "decl": "void FUN_00065250(void **out_ptr @<edi>, const char *src @<ebx>);",
+          "ported": true
         },
         {
           "addr": "0x652a0",
