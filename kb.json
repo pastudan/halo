@@ -35096,7 +35096,7 @@
         {
           "addr": "0x53800",
           "decl": "void FUN_00053800(void *buffer, int nstops, int16_t *stops, void *color @<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00053800"
         },
         {
