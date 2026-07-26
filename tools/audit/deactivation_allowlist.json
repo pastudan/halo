@@ -16273,5 +16273,68 @@
     "object": "particle_systems.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1be550",
+    "name": "sound_cache_request_sound",
+    "object": "xbox_sound_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bded0",
+    "name": "xbox_sound_cache_idle",
+    "object": "xbox_sound_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bdf10",
+    "name": "sound_cache_sound_new",
+    "object": "xbox_sound_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bdf60",
+    "name": "FUN_001bdf60",
+    "object": "xbox_sound_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1be3e0",
+    "name": "sound_cache_new",
+    "object": "xbox_sound_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1be490",
+    "name": "sound_cache_flush",
+    "object": "xbox_sound_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1be4f0",
+    "name": "sound_cache_close",
+    "object": "xbox_sound_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1be6b0",
+    "name": "FUN_001be6b0",
+    "object": "xbox_sound_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1be7b0",
+    "name": "FUN_001be7b0",
+    "object": "xbox_sound_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

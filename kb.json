@@ -38099,39 +38099,48 @@
       "functions": [
         {
           "addr": "0x1be550",
-          "decl": "int sound_cache_request_sound(void *permutation, int a2, int a3, int a4);"
+          "decl": "int sound_cache_request_sound(void *permutation, int a2, int a3, int a4);",
+          "ported": false
         },
         {
           "addr": "0x1bded0",
-          "decl": "void xbox_sound_cache_idle(void);"
+          "decl": "void xbox_sound_cache_idle(void);",
+          "ported": false
         },
         {
           "addr": "0x1bdf10",
-          "decl": "void sound_cache_sound_new(void);"
+          "decl": "void sound_cache_sound_new(void);",
+          "ported": false
         },
         {
           "addr": "0x1bdf60",
-          "decl": "void FUN_001bdf60(void);"
+          "decl": "void FUN_001bdf60(void);",
+          "ported": false
         },
         {
           "addr": "0x1be3e0",
-          "decl": "void sound_cache_new(void);"
+          "decl": "void sound_cache_new(void);",
+          "ported": false
         },
         {
           "addr": "0x1be490",
-          "decl": "void sound_cache_flush(void);"
+          "decl": "void sound_cache_flush(void);",
+          "ported": false
         },
         {
           "addr": "0x1be4f0",
-          "decl": "void sound_cache_close(void);"
+          "decl": "void sound_cache_close(void);",
+          "ported": false
         },
         {
           "addr": "0x1be6b0",
-          "decl": "void FUN_001be6b0(void);"
+          "decl": "void FUN_001be6b0(void);",
+          "ported": false
         },
         {
           "addr": "0x1be7b0",
-          "decl": "void FUN_001be7b0(void);"
+          "decl": "void FUN_001be7b0(void);",
+          "ported": false
         }
       ],
       "name": "xbox_sound_cache.obj",
