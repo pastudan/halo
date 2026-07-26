@@ -339,7 +339,7 @@ void draw_string_set_font(int tag_index, int style, int justify, int flags,
  * and falls back to font_index if the style entry is -1.
  * Returns the final tag_get("font", resolved_index) pointer.
  *
- * Frameless function: style@<si>, font_index@<edi>.
+ * Frameless function: style, font_index.
  *
  * 0x19bcc0 / draw_string.obj
  */
@@ -378,7 +378,7 @@ void *FUN_0019bcc0(int16_t style, int font_index)
  *   other        → type 6 (printable/other)
  * Returns the token type.
  *
- * state@<eax>: pointer to { ...; int *buffer (+8); short pos (+0xc);
+ * state: pointer to { ...; int *buffer (+8); short pos (+0xc);
  *              short current_char (+0x12); short token_type (+0x14); ... }
  *
  * 0x19c0a0 / draw_string.obj

@@ -1062,7 +1062,7 @@ do_update:
  *  - Exact symbolic names for 0x32568d/0x32568e/0x325690, 0x46dd96/0x46dd98,
  *    0x46dd9e..0x46ddd0, and 0x46dd9a.
  *  - Exact semantics of 0x8f870 and 0x8f8c0 beyond the observed global writes.
- *  - No register-argument (`@<reg>`) ABI edges were found in this function or
+ *  - No register-argument (``) ABI edges were found in this function or
  *    its caller path; the reverse-thunk audit for this lift found only cdecl /
  *    stdcall calls.
  */
@@ -2050,7 +2050,7 @@ void main_initialize_time(void)
  * then deletes the bitmap.
  *
  * Confirmed:
- *  - Register arg: EDI = window pointer (void *a1@<edi>).
+ *  - Register arg: EDI = window pointer (void *a1).
  *  - Clamp logic: if multiplier < 1, set 1; if > 3, set 3; else keep.
  *  - Bitmap created with scaled screen dimensions * multiplier.
  *  - Nested loop: for each of global_screenshot_count x global_screenshot_count

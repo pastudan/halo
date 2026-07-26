@@ -132,7 +132,7 @@ int16_t FUN_00097a50(int contrail_handle, float delta_time)
 /* 0x97ae0 — contrail_verify: validate a contrail datum's integrity.
  * Checks attachment-index range, object back-reference, and per-lobe point
  * counts match the stored counts. Asserts + exits on any violation. */
-void FUN_00097ae0(int contrail_handle /* @<eax> */)
+void FUN_00097ae0(int contrail_handle )
 {
   char *datum;
   void *obj;
@@ -264,7 +264,7 @@ void contrails_initialize(void)
  * complete or invalid, picks a new random sequence index from the bitmap tag
  * and resets the frame counter. Also zeroes the render time accumulator
  * (datum+0x24). ESI = contrail datum pointer. */
-void FUN_00097db0(char *datum /* @<esi> */)
+void FUN_00097db0(char *datum )
 {
   char *tag;
   char *bitmap;
@@ -314,7 +314,7 @@ pick_random:
  *
  * When count > 1, intermediate points are linearly interpolated between
  * the new marker position and the old chain head position. */
-void FUN_00097e40(int contrail_handle /* @<eax> */, int count, int flag)
+void FUN_00097e40(int contrail_handle , int count, int flag)
 {
   char *datum;
   char *ctag;

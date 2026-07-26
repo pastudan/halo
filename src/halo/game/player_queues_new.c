@@ -129,7 +129,7 @@ int player_new_queue(int handle)
  * circular buffer at 0x4570cc (32 entries of 0x208 bytes each), or NULL
  * if the index is outside the valid window [current - 32, current).
  * snapshot_index is passed in EAX (register arg). */
-void *update_get_buffer_entry(int snapshot_index /* @<eax> */)
+void *update_get_buffer_entry(int snapshot_index )
 {
   if (*(uint8_t *)0x4570c0 == 0) {
     display_assert("update_server_globals.initialized",

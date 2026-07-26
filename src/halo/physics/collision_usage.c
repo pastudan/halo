@@ -532,7 +532,7 @@ void collision_log_enable(char enable)
 /* Helper shared by begin/continue_period. Asserts no period is active,
  * validates time_period is in [0,3), zeros the scratch buffer at 0x5a80e0,
  * and sets the current period. time_period passed in ESI. */
-void collision_log_period_helper(int time_period /* @<esi> */, int begin_flag)
+void collision_log_period_helper(int time_period , int begin_flag)
 {
   int16_t period = (int16_t)time_period;
 
@@ -587,7 +587,7 @@ void collision_log_end_period(void)
  * frequency via QueryPerformanceFrequency and formats "count/ms" where ms =
  * (accumulated_ticks * 1000.0f) / frequency. Otherwise formats just "count".
  *
- * Register args: buf @<edi> (output char buffer), stat @<esi> (pointer to
+ * Register args: buf (output char buffer), stat (pointer to
  * accumulator: int count at [+0], int64 ticks at [+8]).
  *
  * Confirmed: PUSH EDI/%d/%.2f pattern; FILD [ESI+8]; FMUL 1000.0f; FDIVP;
@@ -595,7 +595,7 @@ void collision_log_end_period(void)
  * Confirmed: else branch: PUSH [ESI]; PUSH 0x25acb8; PUSH EDI; CALL sprintf.
  * 0x14d1b0 / collision_usage.obj
  */
-void collision_log_format_stat(char *buf /* @<edi> */, void *stat /* @<esi> */)
+void collision_log_format_stat(char *buf , void *stat )
 {
   int64_t freq;
   double ms;
@@ -623,7 +623,7 @@ void collision_log_render(void)
  * active, or -1 if logging is disabled / not applicable.
  * Validates depth > 0, user in [0,22), collision_function in [0,8),
  * game in progress, not in editor, logging enabled, and period set. */
-short FUN_0014d840(short collision_function /* @<edi> */)
+short FUN_0014d840(short collision_function )
 {
   short user;
 
@@ -1335,7 +1335,7 @@ check_result:
 
 /* 0x14eeb0 — Project point onto line: closest point on ray (origin + t*dir)
  * to target. Writes result to output.
- * origin @<ecx>, output @<edx>, dir @<eax>, target = stack. */
+ * origin, output, dir, target = stack. */
 void collision_log_end_time(float *target, float *origin, float *output,
                             float *dir)
 {
@@ -1350,7 +1350,7 @@ void collision_log_end_time(float *target, float *origin, float *output,
 
 /* 0x14ef30 — Project vector onto direction: output = t*dir where
  * t = dot(vec, dir) / |dir|^2. All args in registers.
- * output @<ecx>, vec @<edx>, dir @<eax>. */
+ * output, vec, dir. */
 void collision_log_usage(float *output, float *vec, float *dir)
 {
   float t = (vec[0] * dir[0] + vec[1] * dir[1] + vec[2] * dir[2]) /
@@ -1362,7 +1362,7 @@ void collision_log_usage(float *output, float *vec, float *dir)
 
 /* 0x14ef80 — Walk a distance-parameterised ray until FUN_0014dc30 hits
  * (or distance exhausted), then clamp position to origin if dist<=0.
- * pos @<eax> = float[4]: pos[0]=dist, pos[1..3]=xyz. origin @<ebx>=xyz. */
+ * pos = float[4]: pos[0]=dist, pos[1..3]=xyz. origin=xyz. */
 void FUN_0014ef80(int param_1, float *dir, int param_3, float *pos,
                   float *origin)
 {

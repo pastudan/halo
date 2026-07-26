@@ -15,7 +15,7 @@ void sound_classes_dispose(void)
 /* Return a pointer to the sound class entry at class_index.
  * Each entry is 0xc bytes in the sound_class_data array.
  * class_index passed in SI (register arg). */
-void *sound_class_get(int class_index /* @<si> */)
+void *sound_class_get(int class_index )
 {
   int16_t idx = (int16_t)class_index;
 

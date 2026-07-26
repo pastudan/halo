@@ -1015,7 +1015,7 @@ int network_game_server_switch_machine_from_postgame_to_pregame(int param_1,
 
 /* Main server tick function (0x12cdb0).
  * Sends game state updates, handles pending player additions.
- * tick_count @<ax> implicitly forwarded from esi context. */
+ * tick_count implicitly forwarded from esi context. */
 void network_game_server_update_ticks(int server, unsigned short tick_count)
 {
   char input_buf[516]; /* [count:2][pad:2][data:512] contiguous */
@@ -3967,7 +3967,7 @@ char FUN_0012f330(int server __attribute__((unused)), int machine __attribute__(
 
 
 /* Fastcall wrapper: write message via network_connection_write (0x12f3d0).
- * dest_address @<ecx>, size @<edx>, reliable @<eax>, stack: connection,
+ * dest_address, size, reliable, stack: connection,
  * message. */
 bool FUN_0012f3d0(int dest_address, unsigned short size, int reliable,
                   void *connection, void *message)

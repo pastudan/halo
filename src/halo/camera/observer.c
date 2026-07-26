@@ -1007,7 +1007,7 @@ void FUN_0008c150(float *up, float *focus_distance, float near_plane_dist,
  * delta between the forward/up orientation pair at offset +8 (floats) in
  * velocities and state, storing the result into result+8.
  *
- * Register args: result @<eax>, state @<ecx>. Stack arg: velocities. */
+ * Register args: result, state. Stack arg: velocities. */
 void FUN_0008c440(void *velocities, void *result, void *state)
 {
   float *velocities_f;

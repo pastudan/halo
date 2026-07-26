@@ -466,7 +466,7 @@ void *bitmap_mipmap_address(void *bitmap, short mipmap_index)
  * depth is passed in EAX (register arg); format is received on the stack
  * but is never read by the original implementation.
  */
-bool bitmap_validate_depth(int depth /* @<eax> */, int format, int type)
+bool bitmap_validate_depth(int depth , int format, int type)
 {
   int16_t d = (int16_t)depth;
   int16_t t = (int16_t)type;

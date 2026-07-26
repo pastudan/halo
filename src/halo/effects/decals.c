@@ -489,7 +489,7 @@ void bsp3d_get_plane_from_designator(int structure_bsp,
  * global_decal_data. If the old head exists it back-links its prev to the new
  * decal. Finally calls FUN_00098aa0 to update the list head.
  *
- * cluster_index@<ecx>, layer@<ax> are register args; decal_handle is on the
+ * cluster_index, layer are register args; decal_handle is on the
  * stack. ESI=cluster_index, EDI=layer are preserved throughout for the
  * FUN_00098aa0 call.
  *

@@ -36,7 +36,7 @@ void cache_files_precache_map_queue_end(void)
   ((void (*)(void))0x1ba5d0)();
 }
 
-/* Cache file slot accessor helpers. All take map_file_index in @<si>.
+/* Cache file slot accessor helpers. All take map_file_index in.
  * DAT_004e61d8 is an array of 6 cache file entries, each 0x80c bytes.
  * Source: c:\halo\SOURCE\cache\cache_files_windows.c line 0x485/0x49d. */
 
@@ -93,7 +93,7 @@ int FUN_001bc7e0(short map_file_index)
 }
 
 /* Build cache map filename "z:\\cache%03d.map" into buffer.
- * buffer in @<ecx>, index in @<eax> (caller sign-extends short to int). */
+ * buffer in, index in (caller sign-extends short to int). */
 void FUN_001bc830(char *buffer, int index)
 {
   crt_sprintf(buffer, "z:\\cache%03d.map", index);
@@ -256,8 +256,8 @@ void cache_files_io_request_enable(int16_t request_index)
  * Register args: EAX = map name (for the printf substitution),
  * EDI = 0x800-byte caller buffer that receives the header.
  */
-bool FUN_001bcb80(const char *map_name /* @<eax> */,
-                  void *header_buf /* @<edi> */)
+bool FUN_001bcb80(const char *map_name ,
+                  void *header_buf )
 {
   char path[256];
   int handle;
@@ -460,7 +460,7 @@ void structure_bsp_header_deregister_vertex_buffers(void *block)
 }
 
 /* FUN_001bcea0 — delete cache map files z:\cacheNNN.map starting at
- * map_file_index+1 up to but not including 20 (@<ax> = map_file_index).
+ * map_file_index+1 up to but not including 20 ( = map_file_index).
  * Calls SetLastError(0) at the end to clear any DeleteFile error.
  */
 void FUN_001bcea0(short map_file_index)
@@ -517,7 +517,7 @@ __int16 cache_files_precache_map_status(float *progress)
   }
 }
 
-/* FUN_001bcfb0 — open/map the cache file for the given slot (@<ax> =
+/* FUN_001bcfb0 — open/map the cache file for the given slot ( =
  * map_file_index). Initializes a local OBJECT_ATTRIBUTES-like struct, fills it
  * with the file path pointer at entry+4, and calls SetFileTime to create a
  * file mapping. Cache file entry at DAT_004e61d8 + index*0x80c; file handle at

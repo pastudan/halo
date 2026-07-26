@@ -202,8 +202,8 @@ int FUN_001bec30(int16_t format, uint16_t flags)
  *
  * bitmap  is passed in ESI (hardware_format pointer).
  * texture is passed in EDI (D3D texture header, 5 dwords / 20 bytes). */
-void xbox_texture_cache_setup_d3d_texture(void *bitmap /* @<esi> */,
-                                          void *texture /* @<edi> */)
+void xbox_texture_cache_setup_d3d_texture(void *bitmap ,
+                                          void *texture )
 {
   int *tex = (int *)texture;
   char *bmp = (char *)bitmap;
