@@ -20019,7 +20019,7 @@
         },
         {
           "addr": "0x91ef0",
-          "decl": "void FUN_00091ef0(void);",
+          "decl": "void FUN_00091ef0(int *keys, int count, int (*cmp)(int, int));",
           "ported": false
         },
         {
@@ -31264,7 +31264,7 @@
         },
         {
           "addr": "0x108a90",
-          "decl": "char FUN_00108a90(int *rect, int *point);",
+          "decl": "void FUN_00108a90(void);",
           "ported": false
         },
         {
