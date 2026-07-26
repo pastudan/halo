@@ -28092,7 +28092,7 @@
         {
           "addr": "0x19e980",
           "decl": "int uprintf(const wchar_t *format, ...);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19eaa0",

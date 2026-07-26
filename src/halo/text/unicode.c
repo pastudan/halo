@@ -696,62 +696,21 @@ int ufprintf(void *stream __attribute__((unused)), const wchar_t *format __attri
 #endif
 
 
-/* uprintf (0x19e980) — XBE naked draft (batch 264). */
-#if defined(__clang__)
-static void (*const b19e980_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19e980_exitfn)(int) = system_exit;
-static size_t (*const b19e980_c1db11e)(const wchar_t *str) = _wcslen;
-static int (*const b19e980_c1dca00)(const wchar_t *format, char *args) = _vprintf;
-
-__attribute__((naked, noinline))
-int uprintf(const wchar_t *format __attribute__((unused)), ...)
+/* uprintf (0x19e980) — readable C lift. */
+int uprintf(const wchar_t *format, ...)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Luprintf_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2bb\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x263510\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Luprintf_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1db11e]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $0x8000, %%eax\n\t"
-      "jb .Luprintf_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2bc\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b4950\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Luprintf_2:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "leal 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1dca00]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b19e980_assert), [exitfn] "m"(b19e980_exitfn), [c1db11e] "m"(b19e980_c1db11e), [c1dca00] "m"(b19e980_c1dca00)
-      : "memory");
+  char *args;
+  if (format == NULL) {
+    display_assert((const char *)0x263510, (const char *)0x2b45b4, 0x2bb, 1);
+    system_exit(-1);
+  }
+  if (_wcslen(format) >= 0x8000) {
+    display_assert((const char *)0x2b4950, (const char *)0x2b45b4, 0x2bc, 1);
+    system_exit(-1);
+  }
+  args = (char *)((char *)&format + sizeof(format));
+  return _vprintf(format, args);
 }
-#else
-#error "uprintf: clang naked draft required"
-#endif
-
 
 /* usprintf (0x19eaa0) — XBE naked draft (batch 278). */
 #if defined(__clang__)
