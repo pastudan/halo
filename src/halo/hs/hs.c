@@ -4394,61 +4394,21 @@ char hs_evaluate_by_name(const char *name)
   return 1;
 }
 
-/* FUN_000c4bb0 (0xc4bb0) — XBE naked draft (batch 158). */
-#if defined(__clang__)
-static int (*const bc4bb0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static int *(*const bc4bb0_gseed)(void) = get_global_random_seed_address;
-static float (*const bc4bb0_rrange)(int *, float, float) = random_real_range;
-static void (*const bc4bb0_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c4bb0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c4bb0 (0xc4bb0) — readable C lift: HS macro → random real range. */
+void FUN_000c4bb0(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c4bb0_1\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000c4bb0_1:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bc4bb0_ccc560), [gseed] "m"(bc4bb0_gseed), [rrange] "m"(bc4bb0_rrange), [ccbf80] "m"(bc4bb0_ccbf80)
-      : "memory");
-}
-#else
-#error "FUN_000c4bb0: clang naked draft required"
-#endif
+  char *args;
+  float result;
+  int bits;
 
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (!args)
+    return;
+  result = random_real_range(
+      get_global_random_seed_address(), *(float *)args, *(float *)(args + 4));
+  __builtin_memcpy(&bits, &result, 4);
+  hs_return(thread_datum, bits);
+}
 
 /* hs_help (0xc4e20) — XBE naked draft (batch 158). */
 #if defined(__clang__)
