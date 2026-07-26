@@ -4552,13 +4552,87 @@ void attachments_new(int object_handle)
   }
 }
 
-/* Propagate flags to all children of an object. For each child slot where
- * the "created" flag at obj+0xf4+i is clear and the child handle is valid,
- * optionally calls object_wake (param_1) and/or object_move_to_limbo (param_2).
- * object_handle in EAX (register arg). */
+/* Propagate wake/limbo flags to children (object_handle@eax). */
 #if defined(__clang__)
-__attribute__((optnone, noinline))
-#endif
+static void *(*const opfc_get)(int, int) = object_get_and_verify_type;
+static void *(*const opfc_tag)(int, int) = tag_get;
+static void (*const opfc_wake)(int) = object_wake;
+static void (*const opfc_limbo)(int) = object_move_to_limbo;
+
+__attribute__((naked, noinline))
+void object_propagate_flag_to_children(int object_handle __attribute__((unused)),
+                                       char do_wake __attribute__((unused)),
+                                       char do_limbo __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 4(%%edi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $1, %%ah\n\t"
+      "je 4f\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x140(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%eax, -4(%%ebp)\n\t"
+      "jle 3f\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      "1:\n\t"
+      "movb 0xf4(%%esi,%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne 2f\n\t"
+      "movl 0xfc(%%edi,%%esi,4), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je 2f\n\t"
+      "movb 8(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je 5f\n\t"
+      "pushl %%eax\n\t"
+      "call *%[wake]\n\t"
+      "addl $4, %%esp\n\t"
+      "5:\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je 2f\n\t"
+      "movl 0xfc(%%edi,%%esi,4), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[limbo]\n\t"
+      "addl $4, %%esp\n\t"
+      "2:\n\t"
+      "movl -4(%%ebp), %%eax\n\t"
+      "movl 0x140(%%eax), %%ecx\n\t"
+      "incl %%ebx\n\t"
+      "movswl %%bx, %%esi\n\t"
+      "cmpl %%ecx, %%esi\n\t"
+      "jl 1b\n\t"
+      "popl %%esi\n\t"
+      "3:\n\t"
+      "popl %%ebx\n\t"
+      "4:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(opfc_get), [tag] "m"(opfc_tag), [wake] "m"(opfc_wake),
+        [limbo] "m"(opfc_limbo)
+      : "memory");
+}
+#else
 void object_propagate_flag_to_children(int object_handle /* @<eax> */,
                                        char do_wake, char do_limbo)
 {
@@ -4588,6 +4662,7 @@ void object_propagate_flag_to_children(int object_handle /* @<eax> */,
     i++;
   }
 }
+#endif
 
 /* Remove an object from the scenario object-name lookup table.
  * Clears the name_index field (obj+0x6a) and removes all references

@@ -1904,28 +1904,115 @@ float object_get_maximum_shield_vitality(int object_handle,
   return FUN_000b55b0(2, *(int16_t *)(obj + 0x68)) * maximum;
 }
 
-/* 0x138f30 — Bilinear interpolation of a 2D vector (regparm). */
-#if defined(__i386__) && defined(__GNUC__)
-__attribute__((regparm(4)))
-#endif
-void FUN_00138f30(float *output, float *vertex_d, float *vertex_c, float *base,
+/* 0x138f30 — bilinear 2D (out@eax, c@ecx, d@edx, base@esi; u/v cdecl). */
+#if defined(__clang__)
+__attribute__((naked, noinline))
+void FUN_00138f30(float *output __attribute__((unused)),
+                  float *vertex_c __attribute__((unused)),
+                  float *vertex_d __attribute__((unused)),
+                  float *base __attribute__((unused)), float u,
+                  float v)
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds (%%esi)\n\t"
+      "flds (%%edx)\n\t"
+      "fsub %%st(1)\n\t"
+      "fmuls 8(%%ebp)\n\t"
+      "flds (%%ecx)\n\t"
+      "fsub %%st(2)\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadd %%st(1)\n\t"
+      "fstps (%%eax)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 4(%%esi)\n\t"
+      "flds 4(%%edx)\n\t"
+      "fsub %%st(1)\n\t"
+      "fmuls 8(%%ebp)\n\t"
+      "flds 4(%%ecx)\n\t"
+      "fsub %%st(2)\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadd %%st(1)\n\t"
+      "fstps 4(%%eax)\n\t"
+      "fstp %%st(0)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+void FUN_00138f30(float *output, float *vertex_c, float *vertex_d, float *base,
                   float u, float v)
 {
   output[0] = base[0] + (vertex_d[0] - base[0]) * u + (vertex_c[0] - base[0]) * v;
   output[1] = base[1] + (vertex_d[1] - base[1]) * u + (vertex_c[1] - base[1]) * v;
 }
-
-/* 0x138f70 — Bilinear interpolation of a 3D vector (regparm). */
-#if defined(__i386__) && defined(__GNUC__)
-__attribute__((regparm(4)))
 #endif
-void FUN_00138f70(float *output, float *vertex_d, float *vertex_c, float *base,
+
+/* 0x138f70 — bilinear 3D (out@eax, c@ecx, d@edx, base@esi; u/v cdecl). */
+#if defined(__clang__)
+__attribute__((naked, noinline))
+void FUN_00138f70(float *output __attribute__((unused)),
+                  float *vertex_c __attribute__((unused)),
+                  float *vertex_d __attribute__((unused)),
+                  float *base __attribute__((unused)), float u,
+                  float v)
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds (%%esi)\n\t"
+      "flds (%%edx)\n\t"
+      "fsub %%st(1)\n\t"
+      "fmuls 8(%%ebp)\n\t"
+      "flds (%%ecx)\n\t"
+      "fsub %%st(2)\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadd %%st(1)\n\t"
+      "fstps (%%eax)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 4(%%esi)\n\t"
+      "flds 4(%%edx)\n\t"
+      "fsub %%st(1)\n\t"
+      "fmuls 8(%%ebp)\n\t"
+      "flds 4(%%ecx)\n\t"
+      "fsub %%st(2)\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadd %%st(1)\n\t"
+      "fstps 4(%%eax)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 8(%%esi)\n\t"
+      "flds 8(%%edx)\n\t"
+      "fsub %%st(1)\n\t"
+      "fmuls 8(%%ebp)\n\t"
+      "flds 8(%%ecx)\n\t"
+      "fsub %%st(2)\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadd %%st(1)\n\t"
+      "fstps 8(%%eax)\n\t"
+      "fstp %%st(0)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+void FUN_00138f70(float *output, float *vertex_c, float *vertex_d, float *base,
                   float u, float v)
 {
   output[0] = base[0] + (vertex_d[0] - base[0]) * u + (vertex_c[0] - base[0]) * v;
   output[1] = base[1] + (vertex_d[1] - base[1]) * u + (vertex_c[1] - base[1]) * v;
   output[2] = base[2] + (vertex_d[2] - base[2]) * u + (vertex_c[2] - base[2]) * v;
 }
+#endif
 
 #if defined(__i386__) && defined(__GNUC__)
 static void FUN_00138fd0_bilinear_uv(float *uv, const float *v0, const float *v1,

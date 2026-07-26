@@ -224,8 +224,8 @@ def main() -> int:
         # damage + objects + vehicles + weapons wave (2026-07-26)
         ("object_get_maximum_shield_vitality", 0x136700, 0x136740),
         ("FUN_00136b40", 0x136b40, 0x136bc0),
-        ("FUN_00138f30", 0x138f30, 0x138f70),
-        ("FUN_00138f70", 0x138f70, 0x138fd0),
+        ("FUN_00138f30", 0x138f30, 0x138f69),
+        ("FUN_00138f70", 0x138f70, 0x138fc5),
         ("FUN_00085280", 0x85280, 0x85350),
         ("FUN_001342a0", 0x1342a0, 0x134350),
         ("vehicle_causes_collision_damage", 0x1b5580, 0x1b55c0),
@@ -410,14 +410,14 @@ def main() -> int:
         ("weapon_reloading", 0xfc690, 0xfc70a),
         ("FUN_000fb510", 0xfb510, 0xfb594),
         ("weapon_trigger_release_charge", 0xfb880, 0xfb904),
-        ("FUN_000fcd10", 0xfcd10, 0xfcdd0),
+        ("FUN_000fcd10", 0xfcd10, 0xfcdcd),
         ("weapon_new", 0xfbd10, 0xfbea0),
         # gameplay wave 33 (2026-07-26)
         ("lights_enable", 0x139300, 0x139310),
         ("light_delete", 0x139310, 0x139350),
         ("first_person_weapon_message_from_unit", 0xde360, 0xde3f0),
-        ("FUN_000fcec0", 0xfcec0, 0xfcf20),
-        ("FUN_000fcc90", 0xfcc90, 0xfcd10),
+        ("FUN_000fcec0", 0xfcec0, 0xfcf13),
+        ("FUN_000fcc90", 0xfcc90, 0xfcd0a),
         ("FUN_000f5640", 0xf5640, 0xf5650),
         ("FUN_000f5650", 0xf5650, 0xf5660),
         ("items_initialize", 0xf5f90, 0xf5fa0),
@@ -430,9 +430,9 @@ def main() -> int:
         ("FUN_00154a20", 0x154a20, 0x154a50),
         ("render_debug_collision_sphere", 0x14ad60, 0x14ad80),
         ("render_debug_collision_cylinder", 0x14ad80, 0x14adb0),
-        ("object_propagate_flag_to_children", 0x13ee60, 0x13ef00),
+        ("object_propagate_flag_to_children", 0x13ee60, 0x13eef6),
         ("weapon_build_weapon_interface_state", 0xfc550, 0xfc690),
-        ("FUN_000fb5a0", 0xfb5a0, 0xfb690),
+        ("FUN_000fb5a0", 0xfb5a0, 0xfb68a),
         # gameplay wave 35 (2026-07-26)
         ("FUN_001b5500", 0x1b5500, 0x1b5540),
         ("vehicle_causes_collision_damage", 0x1b5580, 0x1b55b0),
@@ -440,7 +440,7 @@ def main() -> int:
         ("biped_approximate_surface_index", 0x1a1b90, 0x1a1bc0),
         ("first_person_weapon_get_marker_by_name_render", 0xddb90, 0xddbd0),
         ("weapon_get_zoom_magnification", 0xfc780, 0xfc8e0),
-        ("FUN_000fd0b0", 0xfd0b0, 0xfd150),
+        ("FUN_000fd0b0", 0xfd0b0, 0xfd145),
         ("FUN_001a8910", 0x1a8910, 0x1a892e),
         # gameplay wave 36 (2026-07-26)
         ("FUN_000f5800", 0xf5800, 0xf58c6),
@@ -463,6 +463,16 @@ def main() -> int:
         ("weapon_trigger_release_charge", 0xfb880, 0xfb904),
         ("FUN_001b56b0", 0x1b56b0, 0x1b5747),
         ("FUN_001b5ff0", 0x1b5ff0, 0x1b613b),
+        # gameplay wave 38 (2026-07-26)
+        ("FUN_001b6140", 0x1b6140, 0x1b624a),
+        ("FUN_000fb5a0", 0xfb5a0, 0xfb68a),
+        ("FUN_000fcc90", 0xfcc90, 0xfcd0a),
+        ("FUN_000fcd10", 0xfcd10, 0xfcdcd),
+        ("FUN_000fcec0", 0xfcec0, 0xfcf13),
+        ("FUN_000fd0b0", 0xfd0b0, 0xfd145),
+        ("object_propagate_flag_to_children", 0x13ee60, 0x13eef6),
+        ("FUN_00138f30", 0x138f30, 0x138f69),
+        ("FUN_00138f70", 0x138f70, 0x138fc5),
     ]
 
     xbe = Xbe.from_file(args.xbe)

@@ -1298,7 +1298,118 @@ void FUN_001b5ff0(int vehicle_handle, void *physics_buffer, void *wheel_state)
 }
 #endif
 
-/* 0x1b6140 — accumulate throttle into a steering wheel channel. */
+/* 0x1b6140 — accumulate throttle into a steering wheel channel.
+ * wheel_state arrives in EDI; handle/physics_buffer are cdecl. */
+#if defined(__clang__)
+static void *(*const FUN_001b6140_get)(int, int) = object_get_and_verify_type;
+static void *(*const FUN_001b6140_tag)(int, int) = tag_get;
+static void (*const FUN_001b6140_fmod)(void) = FUN_001daf7e;
+static void (*const FUN_001b6140_apply)(int, void *, void *, float *, float *) =
+    FUN_00154270;
+
+__attribute__((naked, noinline))
+void FUN_001b6140(int vehicle_handle __attribute__((unused)),
+                  void *physics_buffer __attribute__((unused)),
+                  void *wheel_state __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x76656869\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x8c(%%ebx), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x70687973\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x42c(%%esi)\n\t"
+      "fadds 0x438(%%esi)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movl %%eax, -8(%%ebp)\n\t"
+      "fsts -4(%%ebp)\n\t"
+      "fstps 0x438(%%esi)\n\t"
+      "flds -4(%%ebp)\n\t"
+      "flds 0x310(%%ebx)\n\t"
+      "call *%[xfmod]\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fsts 0x438(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp 1f\n\t"
+      "fadds 0x310(%%ebx)\n\t"
+      "fstps 0x438(%%esi)\n\t"
+      "jmp 2f\n\t"
+      "1:\n\t"
+      "fstp %%st(0)\n\t"
+      "2:\n\t"
+      "movl -8(%%ebp), %%eax\n\t"
+      "movl 0x68(%%eax), %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl $2, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%eax\n\t"
+      "jne 3f\n\t"
+      "flds 0x434(%%esi)\n\t"
+      "movl 0x42c(%%esi), %%ecx\n\t"
+      "fmuls 0x253398\n\t"
+      "movl %%ecx, (%%edi)\n\t"
+      "movl 8(%%ebp), %%ecx\n\t"
+      "movl %%eax, 0x1c(%%edi)\n\t"
+      "fsts -4(%%ebp)\n\t"
+      "movl %%eax, 0x20(%%edi)\n\t"
+      "fcos\n\t"
+      "flds -4(%%ebp)\n\t"
+      "fsin\n\t"
+      "fsts 0x24(%%edi)\n\t"
+      "fld %%st(1)\n\t"
+      "fstps 0x28(%%edi)\n\t"
+      "movl 0x42c(%%esi), %%edx\n\t"
+      "movl %%edx, 0x60(%%edi)\n\t"
+      "movl %%eax, 0x7c(%%edi)\n\t"
+      "fchs\n\t"
+      "movl %%eax, 0x80(%%edi)\n\t"
+      "fstps 0x84(%%edi)\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "fstps 0x88(%%edi)\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[apply]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "3:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[apply]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(FUN_001b6140_get), [tag] "m"(FUN_001b6140_tag),
+        [xfmod] "m"(FUN_001b6140_fmod), [apply] "m"(FUN_001b6140_apply)
+      : "memory");
+}
+#else
 void FUN_001b6140(int vehicle_handle, void *physics_buffer, void *wheel_state)
 {
   char *veh;
@@ -1344,6 +1455,7 @@ void FUN_001b6140(int vehicle_handle, void *physics_buffer, void *wheel_state)
     FUN_00154270(vehicle_handle, 0, physics_buffer, 0, 0);
   }
 }
+#endif
 
 /* FUN_001b6250 (0x1b6250) — flying-vehicle wheel/contact setup (physics type 3).
  * wheel_state arrives in ESI from the caller. */
