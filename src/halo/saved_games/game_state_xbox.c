@@ -1046,37 +1046,11 @@ void game_state_write_to_persistent_storage(int param_1 __attribute__((unused)),
 #endif
 
 
-/* FUN_001c0d50 (0x1c0d50) — XBE naked draft (batch 264). */
-#if defined(__clang__)
-static void (*const b1c0d50_c1c53f0)(void) = FUN_001c53f0;
-
-__attribute__((naked, noinline))
-void FUN_001c0d50(void)
+/* FUN_001c0d50 (0x1c0d50) — readable C lift. */
+void FUN_001c0d50(int a0, int a1, int a2, int a3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c53f0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c53f0] "m"(b1c0d50_c1c53f0)
-      : "memory");
+  FUN_001c53f0(a0, 0, a1, a2, a3);
 }
-#else
-#error "FUN_001c0d50: clang naked draft required"
-#endif
-
 
 /* player_profile_delete (0x1c0da0) — XBE naked draft (batch 251). */
 #if defined(__clang__)

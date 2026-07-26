@@ -10306,7 +10306,7 @@
         {
           "addr": "0x1c0d50",
           "decl": "void FUN_001c0d50(int a0, int a1, int a2, int a3);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c0d70",
@@ -17297,7 +17297,7 @@
         {
           "addr": "0x8aa30",
           "decl": "void observer_obsolete_position(int16_t a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8aa80",
@@ -17759,8 +17759,8 @@
         },
         {
           "addr": "0xb6a70",
-          "decl": "int16_t player_control_get_zoom_level(int16_t local_player_index);",
-          "ported": false
+          "decl": "short player_control_get_zoom_level(short local_player_index);",
+          "ported": true
         },
         {
           "addr": "0xb6a90",
@@ -20300,7 +20300,7 @@
         },
         {
           "addr": "0xe1f20",
-          "decl": "void FUN_000e1f20(int a0, int a1, int a2, int a3, int a4, int a5);",
+          "decl": "int __stdcall FUN_000e1f20(int unused, unsigned int reg, float a, float b, float c, float d);",
           "ported": false
         },
         {
@@ -37854,7 +37854,7 @@
         },
         {
           "addr": "0x123e20",
-          "decl": "void *animation_get_root_matrix(void *anim_graph, int index);",
+          "decl": "void *animation_get_root_matrix(void *a0, short a1);",
           "ported": false
         },
         {

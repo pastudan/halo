@@ -118,35 +118,13 @@ void players_unzoom_all(void)
 #endif
 
 
-/* player_control_get_zoom_level (0xb6a70) — XBE naked draft (batch 166). */
-#if defined(__clang__)
-static void * (*const bb6a70_cb6380)(int16_t local_player_index) = player_control_get_data;
-
-__attribute__((naked, noinline))
-int16_t player_control_get_zoom_level(int16_t local_player_index __attribute__((unused)))
+/* player_control_get_zoom_level (0xb6a70) — readable C lift. */
+short player_control_get_zoom_level(short local_player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "je .Lplayer_control_get_zoom_level_1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cb6380]\n\t"
-      "movw 0x24(%%eax), %%ax\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lplayer_control_get_zoom_level_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cb6380] "m"(bb6a70_cb6380)
-      : "memory");
+  if ((short)local_player_index == (short)-1)
+    return -1;
+  return *(short *)((char *)player_control_get_data(local_player_index) + 0x24);
 }
-#else
-#error "player_control_get_zoom_level: clang naked draft required"
-#endif
-
 
 void player_control_action_test_reset(void) {
   uint32_t *base = *(uint32_t **)0x457090;

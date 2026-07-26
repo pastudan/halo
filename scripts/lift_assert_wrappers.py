@@ -1191,12 +1191,23 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                             f"  if ({psm[ai]} == NULL) {{\n"
                             f"{assert_c(ab, '    ')}"
                             f"  }}\n"
-                            f"  {fn}({psm[ai]}, 0, {mid[0][1]});\n"
                         )
-                        if stores:
-                            out += "\n".join(stores) + "\n"
                         if ret1:
-                            out += "  return 1;\n"
+                            # Match XBE `mov al,1` after memset (keep EAX high bits).
+                            out += (
+                                f"  {{\n"
+                                f"    uintptr_t _r = (uintptr_t){fn}({psm[ai]}, 0, {mid[0][1]});\n"
+                            )
+                            if stores:
+                                out += "\n".join(stores) + "\n"
+                            out += (
+                                f"    return (char)((_r & ~0xffu) | 1u);\n"
+                                f"  }}\n"
+                            )
+                        else:
+                            out += f"  {fn}({psm[ai]}, 0, {mid[0][1]});\n"
+                            if stores:
+                                out += "\n".join(stores) + "\n"
                         out += "}\n"
                         return out
 

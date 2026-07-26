@@ -916,7 +916,7 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
             )
 
 
-    # HS: ebx=substr (reg), push callback; call F — emit cdecl F(callback, substr)
+    # HS: ebx=substr (reg), push callback; call F — naked direct-call (sibling-resolve)
     if (
         len(mid) == 6
         and mid[0] == ("push", "ebx")
@@ -928,13 +928,30 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
         and mid[5] == ("pop", "ebx")
     ):
         fn = callee(mid[3][1])
-        cb = name_by.get(int(mid[2][1], 16))
-        if fn and cb and ps:
-            return (
-                f"{sig}\n{{\n"
-                f"  {fn}((void *){cb}, {ps[0]});\n"
-                f"}}\n"
-            )
+        cb_imm = mid[2][1]
+        if fn and ps:
+            lines = [
+                "__attribute__((naked, noinline))",
+                f"{sig}",
+                "{",
+                "  __asm__ volatile(",
+                '      "pushl %%ebp\\n\\t"',
+                '      "movl %%esp, %%ebp\\n\\t"',
+                '      "pushl %%ebx\\n\\t"',
+                '      "movl 0x8(%%ebp), %%ebx\\n\\t"',
+                f'      "pushl ${cb_imm}\\n\\t"',
+                f'      "call {fn}\\n\\t"',
+                '      "addl $4, %%esp\\n\\t"',
+                '      "popl %%ebx\\n\\t"',
+                '      "popl %%ebp\\n\\t"',
+                '      "ret\\n\\t"',
+                "      :",
+                "      :",
+                '      : "memory");',
+                "}",
+                "",
+            ]
+            return "\n".join(lines)
 
     # player_control_get_zoom_level
     if (

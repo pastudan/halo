@@ -3173,49 +3173,15 @@ void observer_reconnect_to_structure_bsp(void)
 #endif
 
 
-/* observer_obsolete_position (0x8aa30) — XBE naked draft (batch 171). */
-#if defined(__clang__)
-static void (*const b8aa30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b8aa30_exitfn)(int) = system_exit;
-static void (*const b8aa30_c8a350)(void *observer) = observer_result_initialize;
-
-__attribute__((naked, noinline))
-void observer_obsolete_position(void)
+/* observer_obsolete_position (0x8aa30) — readable C lift. */
+void observer_obsolete_position(int16_t a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lobserver_obsolete_position_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lobserver_obsolete_position_2\n\t"
-      ".Lobserver_obsolete_position_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x72\n\t"
-      "pushl $0x2673a8\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lobserver_obsolete_position_2:\n\t"
-      "movswl %%si, %%esi\n\t"
-      "imull $0x29c, %%esi, %%esi\n\t"
-      "addl $0x33571c, %%esi\n\t"
-      "call *%[c8a350]\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b8aa30_assert), [exitfn] "m"(b8aa30_exitfn), [c8a350] "m"(b8aa30_c8a350)
-      : "memory");
+  if ((int16_t)a0 < 0 || (int16_t)a0 >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x2673a8, 0x72, 1);
+    system_exit(-1);
+  }
+  observer_result_initialize((void *)(0x33571c + (int)(int16_t)a0 * 0x29c));
 }
-#else
-#error "observer_obsolete_position: clang naked draft required"
-#endif
-
 
 /* observer_up_from_forward (0x8aa80) — XBE naked draft (batch 151). */
 #if defined(__clang__)
