@@ -928,50 +928,21 @@ char *FUN_000dcaf0(int16_t local_player_index)
   return (char *)(*(int *)0x46bea8) + (int)local_player_index * 0x1ea0;
 }
 
-/* FUN_000dcdc0 (0xdcdc0) — XBE naked draft (batch 233). */
-#if defined(__clang__)
-static int (*const bdcdc0_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void *(*const bdcdc0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-int16_t FUN_000dcdc0(int object_handle /*  */)
+/* FUN_000dcdc0 (0xdcdc0) — readable C lift. */
+int16_t FUN_000dcdc0(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".LFUN_000dcdc0_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000dcdc0_2\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "je .LFUN_000dcdc0_3\n\t"
-      ".LFUN_000dcdc0_2:\n\t"
-      "incl %%esi\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .LFUN_000dcdc0_1\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000dcdc0_3:\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [cba3c0] "m"(bdcdc0_cba3c0), [dget] "m"(bdcdc0_dget)
-      : "memory");
+  int16_t i;
+  for (i = 0; i < 4; i++) {
+    int player_handle = local_player_get_player_index(i);
+    char *player;
+    if (player_handle == -1)
+      continue;
+    player = (char *)datum_get(*(void **)0x5aa6d4, player_handle);
+    if (*(int *)(player + 0x34) == object_handle)
+      return i;
+  }
+  return (int16_t)-1;
 }
-#else
-#error "FUN_000dcdc0: clang naked draft required"
-#endif
-
 
 /* first_person_weapon_draw (0xdce80) — XBE naked draft (batch 234). */
 #if defined(__clang__)
@@ -1307,7 +1278,7 @@ int16_t first_person_weapon_get_marker_by_name(int object_handle, const char *ma
 
 /* first_person_weapon_center_flashlight (0xdd260) — XBE naked draft (batch 231). */
 #if defined(__clang__)
-static int16_t (*const bdd260_cdcdc0)(int object_handle /* */) = FUN_000dcdc0;
+static int16_t (*const bdd260_cdcdc0)(int object_handle /* */) = (void *)FUN_000dcdc0;
 static void (*const bdd260_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const bdd260_exitfn)(int) = system_exit;
 static int16_t (*const bdd260_cdd190)(int object_handle, const char *marker_name, void *out_markers, int16_t max_markers) = first_person_weapon_get_marker_by_name;
@@ -2353,7 +2324,7 @@ void FUN_000de0e0(int object_handle, int16_t local_player_index)
 
 /* first_person_weapon_message_from_unit (0xde360) — XBE naked draft (batch 231). */
 #if defined(__clang__)
-static int16_t (*const bde360_cdcdc0)(int object_handle /* */) = FUN_000dcdc0;
+static int16_t (*const bde360_cdcdc0)(int object_handle /* */) = (void *)FUN_000dcdc0;
 static void (*const bde360_cde140)(int param_1, int param_2) = FUN_000de140;
 static void *(*const bde360_get)(int, int) = object_get_and_verify_type;
 static void (*const bde360_cdc9d0)(int param_2, int object_handle) = FUN_000dc9d0;

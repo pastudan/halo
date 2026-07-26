@@ -8133,8 +8133,8 @@
         },
         {
           "addr": "0xdcdc0",
-          "decl": "int16_t FUN_000dcdc0(int object_handle /* @<edi> */);",
-          "ported": false
+          "decl": "int16_t FUN_000dcdc0(int object_handle@<edi>);",
+          "ported": true
         },
         {
           "addr": "0xdce80",
@@ -18357,12 +18357,12 @@
         },
         {
           "addr": "0xe0dd0",
-          "decl": "void player_ui_edit_profile_name_is_dirty(void);",
+          "decl": "char player_ui_edit_profile_name_is_dirty(void);",
           "ported": false
         },
         {
           "addr": "0xe0e40",
-          "decl": "void player_ui_prompt_user_to_rename_edit_profile(void);",
+          "decl": "char player_ui_prompt_user_to_rename_edit_profile(void);",
           "ported": false
         },
         {
@@ -18412,7 +18412,7 @@
         },
         {
           "addr": "0xe1490",
-          "decl": "void player_ui_set_active_player_profile(void);",
+          "decl": "void player_ui_set_active_player_profile(int16_t local_player_index, int profile_handle, void *profile);",
           "ported": false
         },
         {
@@ -40312,8 +40312,9 @@
         },
         {
           "addr": "0x5e680",
-          "decl": "void path_heap_insert(void *path, int16_t heap_node, int16_t heap_cost);",
-          "ported": false
+          "decl": "void path_heap_insert(void *path @<eax>, int16_t heap_node, int16_t heap_cost);",
+          "ported": false,
+          "name": "path_heap_insert"
         },
         {
           "addr": "0x5e700",
