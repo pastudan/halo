@@ -3315,14 +3315,49 @@ void main_save_core(void)
 #endif
 
 
-void main_save_core_name(const char *name)
+/* main_save_core_name (0x1003d0) — XBE naked draft (batch 215). */
+#if defined(__clang__)
+static int (*const b1003d0_c8df60)(const char *s1) = csstrlen;
+static void (*const b1003d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void * (*const b1003d0_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+
+__attribute__((naked, noinline))
+void main_save_core_name(const char *name __attribute__((unused)))
 {
-  if (csstrlen(name) >= 0x40) {
-    display_assert((char *)0x28b1a4, "c:\\halo\\SOURCE\\main\\main.c", 0x3a5, 0);
-  }
-  csstrncpy((char *)0x46dd55, name, 0x3f);
-  *(char *)0x46da3d = 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x40, %%eax\n\t"
+      "jb .Lmain_save_core_name_1\n\t"
+      "pushl $0\n\t"
+      "pushl $0x3a5\n\t"
+      "pushl $0x28b0b4\n\t"
+      "pushl $0x28b1a4\n\t"
+      "call *%[assert]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lmain_save_core_name_1:\n\t"
+      "pushl $0x3f\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x46dd55\n\t"
+      "call *%[c8de70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0x46da3d\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8df60] "m"(b1003d0_c8df60), [assert] "m"(b1003d0_assert), [c8de70] "m"(b1003d0_c8de70)
+      : "memory");
 }
+#else
+#error "main_save_core_name: clang naked draft required"
+#endif
+
 
 /* main_load_core (0x100420) — XBE naked draft (batch 178). */
 #if defined(__clang__)
@@ -3370,23 +3405,93 @@ void main_load_core_at_startup(void)
 #endif
 
 
-void main_load_core_name(const char *name)
-{
-  if (csstrlen(name) >= 0x40) {
-    display_assert((char *)0x28b1a4, "c:\\halo\\SOURCE\\main\\main.c", 0x3c9, 0);
-  }
-  csstrncpy((char *)0x46dd55, name, 0x3f);
-  *(char *)0x46da3e = 1;
-}
+/* main_load_core_name (0x100460) — XBE naked draft (batch 215). */
+#if defined(__clang__)
+static int (*const b100460_c8df60)(const char *s1) = csstrlen;
+static void (*const b100460_assert)(const char *, const char *, int, bool) = display_assert;
+static void * (*const b100460_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
 
-void main_load_core_name_at_startup(const char *name)
+__attribute__((naked, noinline))
+void main_load_core_name(const char *name __attribute__((unused)))
 {
-  if (csstrlen(name) >= 0x40) {
-    display_assert((char *)0x28b1a4, "c:\\halo\\SOURCE\\main\\main.c", 0x3d7, 0);
-  }
-  csstrncpy((char *)0x46dd55, name, 0x3f);
-  *(char *)0x46da3f = 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x40, %%eax\n\t"
+      "jb .Lmain_load_core_name_1\n\t"
+      "pushl $0\n\t"
+      "pushl $0x3c9\n\t"
+      "pushl $0x28b0b4\n\t"
+      "pushl $0x28b1a4\n\t"
+      "call *%[assert]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lmain_load_core_name_1:\n\t"
+      "pushl $0x3f\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x46dd55\n\t"
+      "call *%[c8de70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0x46da3e\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8df60] "m"(b100460_c8df60), [assert] "m"(b100460_assert), [c8de70] "m"(b100460_c8de70)
+      : "memory");
 }
+#else
+#error "main_load_core_name: clang naked draft required"
+#endif
+
+
+/* main_load_core_name_at_startup (0x1004b0) — XBE naked draft (batch 215). */
+#if defined(__clang__)
+static int (*const b1004b0_c8df60)(const char *s1) = csstrlen;
+static void (*const b1004b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void * (*const b1004b0_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+
+__attribute__((naked, noinline))
+void main_load_core_name_at_startup(const char *name __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x40, %%eax\n\t"
+      "jb .Lmain_load_core_name_at_startup_1\n\t"
+      "pushl $0\n\t"
+      "pushl $0x3d7\n\t"
+      "pushl $0x28b0b4\n\t"
+      "pushl $0x28b1a4\n\t"
+      "call *%[assert]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lmain_load_core_name_at_startup_1:\n\t"
+      "pushl $0x3f\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x46dd55\n\t"
+      "call *%[c8de70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0x46da3f\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8df60] "m"(b1004b0_c8df60), [assert] "m"(b1004b0_assert), [c8de70] "m"(b1004b0_c8de70)
+      : "memory");
+}
+#else
+#error "main_load_core_name_at_startup: clang naked draft required"
+#endif
+
 
 /* main_switch_structure_bsp (0x100500) — XBE naked draft (batch 161). */
 #if defined(__clang__)
@@ -4476,12 +4581,41 @@ void main_framerate_render(void)
 #endif
 
 
-void FUN_001034b0(int *obj)
+/* FUN_001034b0 (0x1034b0) — XBE naked draft (batch 213). */
+#if defined(__clang__)
+static void (*const b1034b0_c117b20)(int *table, int element_size) = array_new;
+
+__attribute__((naked, noinline))
+void FUN_001034b0(int *obj __attribute__((unused)))
 {
-  array_new(obj, 0xc);
-  array_new(obj + 3, 0x1c);
-  array_new(obj + 6, 0x18);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c117b20]\n\t"
+      "leal 0xc(%%esi), %%eax\n\t"
+      "pushl $0x1c\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c117b20]\n\t"
+      "pushl $0x18\n\t"
+      "addl $0x18, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c117b20]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c117b20] "m"(b1034b0_c117b20)
+      : "memory");
 }
+#else
+#error "FUN_001034b0: clang naked draft required"
+#endif
+
 
 /* FUN_00103600 (0x103600) — XBE naked draft (batch 135). */
 #if defined(__clang__)

@@ -719,10 +719,30 @@ char FUN_00042eb0(int actor __attribute__((unused)), int unit __attribute__((unu
 #endif
 
 
-char FUN_00042f40(int a, int b, int actor)
+/* FUN_00042f40 (0x42f40) — XBE naked draft (batch 214). */
+#if defined(__clang__)
+static char (*const b42f40_c3b150)(int actor_handle) = actor_is_fighting;
+
+__attribute__((naked, noinline))
+char FUN_00042f40(int a __attribute__((unused)), int b __attribute__((unused)), int actor __attribute__((unused)))
 {
-  return actor_is_fighting(actor);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c3b150]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c3b150] "m"(b42f40_c3b150)
+      : "memory");
 }
+#else
+#error "FUN_00042f40: clang naked draft required"
+#endif
+
 
 /* FUN_00042f60 (0x42f60) — XBE naked draft (batch 180). */
 #if defined(__clang__)

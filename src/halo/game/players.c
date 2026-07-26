@@ -7447,225 +7447,951 @@ void FUN_000c0030(int16_t function_index __attribute__((unused)), int thread_dat
 #endif
 
 
-void FUN_000c0070(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00054b20(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
+/* FUN_000c0070 (0xc0070) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc0070_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0070_c54b20)(int parent_handle) = FUN_00054b20;
+static void (*const bc0070_ccbf80)(int thread_handle, int value) = hs_return;
 
-void FUN_000c00b0(int16_t function_index, int thread_datum, char init)
+__attribute__((naked, noinline))
+void FUN_000c0070(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
 {
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00054bb0(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0070_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c54b20]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0070_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0070_ccc560), [c54b20] "m"(bc0070_c54b20), [ccbf80] "m"(bc0070_ccbf80)
+      : "memory");
 }
+#else
+#error "FUN_000c0070: clang naked draft required"
+#endif
 
-void FUN_000c00f0(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00054ca0(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
 
-void FUN_000c0130(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00054d00(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
+/* FUN_000c00b0 (0xc00b0) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc00b0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc00b0_c54bb0)(unsigned int ai_ref) = FUN_00054bb0;
+static void (*const bc00b0_ccbf80)(int thread_handle, int value) = hs_return;
 
-void FUN_000c0170(int16_t function_index, int thread_datum, char init)
+__attribute__((naked, noinline))
+void FUN_000c00b0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
 {
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00054d60(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c00b0_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c54bb0]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c00b0_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc00b0_ccc560), [c54bb0] "m"(bc00b0_c54bb0), [ccbf80] "m"(bc00b0_ccbf80)
+      : "memory");
 }
+#else
+#error "FUN_000c00b0: clang naked draft required"
+#endif
 
-void FUN_000c01d0(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00054e40(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
 
-void FUN_000c0230(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00054e80(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
+/* FUN_000c00f0 (0xc00f0) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc00f0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc00f0_c54ca0)(unsigned int ai_ref) = FUN_00054ca0;
+static void (*const bc00f0_ccbf80)(int thread_handle, int value) = hs_return;
 
-void FUN_000c0370(int16_t function_index, int thread_datum, char init)
+__attribute__((naked, noinline))
+void FUN_000c00f0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
 {
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00058a40(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c00f0_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c54ca0]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c00f0_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc00f0_ccc560), [c54ca0] "m"(bc00f0_c54ca0), [ccbf80] "m"(bc00f0_ccbf80)
+      : "memory");
 }
+#else
+#error "FUN_000c00f0: clang naked draft required"
+#endif
 
-void FUN_000c0430(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00055220(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
 
-void FUN_000c0470(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_000552b0(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
+/* FUN_000c0130 (0xc0130) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc0130_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0130_c54d00)(unsigned int ai_ref) = FUN_00054d00;
+static void (*const bc0130_ccbf80)(int thread_handle, int value) = hs_return;
 
-void FUN_000c04b0(int16_t function_index, int thread_datum, char init)
+__attribute__((naked, noinline))
+void FUN_000c0130(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
 {
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00055750(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0130_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c54d00]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0130_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0130_ccc560), [c54d00] "m"(bc0130_c54d00), [ccbf80] "m"(bc0130_ccbf80)
+      : "memory");
 }
+#else
+#error "FUN_000c0130: clang naked draft required"
+#endif
 
-void FUN_000c04f0(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_000557e0(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
 
-void FUN_000c0530(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00058ae0(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
+/* FUN_000c0170 (0xc0170) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc0170_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0170_c54d60)(unsigned int ai_ref) = FUN_00054d60;
+static void (*const bc0170_ccbf80)(int thread_handle, int value) = hs_return;
 
-void FUN_000c0570(int16_t function_index, int thread_datum, char init)
+__attribute__((naked, noinline))
+void FUN_000c0170(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
 {
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00055870(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0170_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c54d60]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0170_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0170_ccc560), [c54d60] "m"(bc0170_c54d60), [ccbf80] "m"(bc0170_ccbf80)
+      : "memory");
 }
+#else
+#error "FUN_000c0170: clang naked draft required"
+#endif
 
-void FUN_000c07b0(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_000568e0(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
 
-void FUN_000c08f0(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00056de0(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
+/* FUN_000c01d0 (0xc01d0) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc01d0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc01d0_c54e40)(int encounter_ref) = FUN_00054e40;
+static void (*const bc01d0_ccbf80)(int thread_handle, int value) = hs_return;
 
-void FUN_000c0930(int16_t function_index, int thread_datum, char init)
+__attribute__((naked, noinline))
+void FUN_000c01d0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
 {
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00056d80(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c01d0_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c54e40]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c01d0_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc01d0_ccc560), [c54e40] "m"(bc01d0_c54e40), [ccbf80] "m"(bc01d0_ccbf80)
+      : "memory");
 }
+#else
+#error "FUN_000c01d0: clang naked draft required"
+#endif
 
-void FUN_000c0970(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00058d40(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
 
-void FUN_000c09b0(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00056e40(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
+/* FUN_000c0230 (0xc0230) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc0230_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0230_c54e80)(unsigned int ai_ref) = FUN_00054e80;
+static void (*const bc0230_ccbf80)(int thread_handle, int value) = hs_return;
 
-void FUN_000c0a30(int16_t function_index, int thread_datum, char init)
+__attribute__((naked, noinline))
+void FUN_000c0230(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
 {
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00056fa0(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0230_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c54e80]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0230_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0230_ccc560), [c54e80] "m"(bc0230_c54e80), [ccbf80] "m"(bc0230_ccbf80)
+      : "memory");
 }
+#else
+#error "FUN_000c0230: clang naked draft required"
+#endif
 
-void FUN_000c0af0(int16_t function_index, int thread_datum, char init)
-{
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00057230(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
-}
 
-void FUN_000c0b30(int16_t function_index, int thread_datum, char init)
+/* FUN_000c0370 (0xc0370) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc0370_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0370_c58a40)(int combined_handle) = FUN_00058a40;
+static void (*const bc0370_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c0370(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
 {
-  char *args;
-  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_000572c0(*(int *)(args + 0));
-    hs_return(thread_datum, 0);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0370_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c58a40]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0370_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0370_ccc560), [c58a40] "m"(bc0370_c58a40), [ccbf80] "m"(bc0370_ccbf80)
+      : "memory");
 }
+#else
+#error "FUN_000c0370: clang naked draft required"
+#endif
+
+
+/* FUN_000c0430 (0xc0430) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc0430_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0430_c55220)(unsigned int combined_index) = FUN_00055220;
+static void (*const bc0430_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c0430(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0430_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c55220]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0430_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0430_ccc560), [c55220] "m"(bc0430_c55220), [ccbf80] "m"(bc0430_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c0430: clang naked draft required"
+#endif
+
+
+/* FUN_000c0470 (0xc0470) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc0470_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0470_c552b0)(unsigned int combined_index) = FUN_000552b0;
+static void (*const bc0470_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c0470(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0470_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c552b0]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0470_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0470_ccc560), [c552b0] "m"(bc0470_c552b0), [ccbf80] "m"(bc0470_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c0470: clang naked draft required"
+#endif
+
+
+/* FUN_000c04b0 (0xc04b0) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc04b0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc04b0_c55750)(unsigned int combined_index) = FUN_00055750;
+static void (*const bc04b0_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c04b0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c04b0_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c55750]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c04b0_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc04b0_ccc560), [c55750] "m"(bc04b0_c55750), [ccbf80] "m"(bc04b0_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c04b0: clang naked draft required"
+#endif
+
+
+/* FUN_000c04f0 (0xc04f0) — XBE naked draft (batch 211). */
+#if defined(__clang__)
+static int (*const bc04f0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc04f0_c557e0)(unsigned int combined_index) = FUN_000557e0;
+static void (*const bc04f0_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c04f0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c04f0_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c557e0]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c04f0_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc04f0_ccc560), [c557e0] "m"(bc04f0_c557e0), [ccbf80] "m"(bc04f0_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c04f0: clang naked draft required"
+#endif
+
+
+/* FUN_000c0530 (0xc0530) — XBE naked draft (batch 212). */
+#if defined(__clang__)
+static int (*const bc0530_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0530_c58ae0)(unsigned int combined_index) = FUN_00058ae0;
+static void (*const bc0530_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c0530(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0530_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c58ae0]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0530_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0530_ccc560), [c58ae0] "m"(bc0530_c58ae0), [ccbf80] "m"(bc0530_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c0530: clang naked draft required"
+#endif
+
+
+/* FUN_000c0570 (0xc0570) — XBE naked draft (batch 212). */
+#if defined(__clang__)
+static int (*const bc0570_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0570_c55870)(unsigned int combined_index) = FUN_00055870;
+static void (*const bc0570_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c0570(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0570_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c55870]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0570_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0570_ccc560), [c55870] "m"(bc0570_c55870), [ccbf80] "m"(bc0570_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c0570: clang naked draft required"
+#endif
+
+
+/* FUN_000c07b0 (0xc07b0) — XBE naked draft (batch 212). */
+#if defined(__clang__)
+static int (*const bc07b0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc07b0_c568e0)(int param_1) = FUN_000568e0;
+static void (*const bc07b0_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c07b0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c07b0_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c568e0]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c07b0_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc07b0_ccc560), [c568e0] "m"(bc07b0_c568e0), [ccbf80] "m"(bc07b0_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c07b0: clang naked draft required"
+#endif
+
+
+/* FUN_000c08f0 (0xc08f0) — XBE naked draft (batch 212). */
+#if defined(__clang__)
+static int (*const bc08f0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc08f0_c56de0)(int param_1) = FUN_00056de0;
+static void (*const bc08f0_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c08f0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c08f0_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c56de0]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c08f0_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc08f0_ccc560), [c56de0] "m"(bc08f0_c56de0), [ccbf80] "m"(bc08f0_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c08f0: clang naked draft required"
+#endif
+
+
+/* FUN_000c0930 (0xc0930) — XBE naked draft (batch 212). */
+#if defined(__clang__)
+static int (*const bc0930_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0930_c56d80)(int param_1) = FUN_00056d80;
+static void (*const bc0930_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c0930(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0930_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c56d80]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0930_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0930_ccc560), [c56d80] "m"(bc0930_c56d80), [ccbf80] "m"(bc0930_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c0930: clang naked draft required"
+#endif
+
+
+/* FUN_000c0970 (0xc0970) — XBE naked draft (batch 212). */
+#if defined(__clang__)
+static int (*const bc0970_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0970_c58d40)(int a0) = FUN_00058d40;
+static void (*const bc0970_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c0970(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0970_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c58d40]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0970_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0970_ccc560), [c58d40] "m"(bc0970_c58d40), [ccbf80] "m"(bc0970_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c0970: clang naked draft required"
+#endif
+
+
+/* FUN_000c09b0 (0xc09b0) — XBE naked draft (batch 212). */
+#if defined(__clang__)
+static int (*const bc09b0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc09b0_c56e40)(int param_1) = FUN_00056e40;
+static void (*const bc09b0_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c09b0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c09b0_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c56e40]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c09b0_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc09b0_ccc560), [c56e40] "m"(bc09b0_c56e40), [ccbf80] "m"(bc09b0_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c09b0: clang naked draft required"
+#endif
+
+
+/* FUN_000c0a30 (0xc0a30) — XBE naked draft (batch 212). */
+#if defined(__clang__)
+static int (*const bc0a30_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0a30_c56fa0)(int param_1) = FUN_00056fa0;
+static void (*const bc0a30_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c0a30(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0a30_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c56fa0]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0a30_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0a30_ccc560), [c56fa0] "m"(bc0a30_c56fa0), [ccbf80] "m"(bc0a30_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c0a30: clang naked draft required"
+#endif
+
+
+/* FUN_000c0af0 (0xc0af0) — XBE naked draft (batch 212). */
+#if defined(__clang__)
+static int (*const bc0af0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0af0_c57230)(int param_1) = FUN_00057230;
+static void (*const bc0af0_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c0af0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0af0_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c57230]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0af0_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0af0_ccc560), [c57230] "m"(bc0af0_c57230), [ccbf80] "m"(bc0af0_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c0af0: clang naked draft required"
+#endif
+
+
+/* FUN_000c0b30 (0xc0b30) — XBE naked draft (batch 212). */
+#if defined(__clang__)
+static int (*const bc0b30_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
+static void (*const bc0b30_c572c0)(int param_1) = FUN_000572c0;
+static void (*const bc0b30_ccbf80)(int thread_handle, int value) = hs_return;
+
+__attribute__((naked, noinline))
+void FUN_000c0b30(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccc560]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c0b30_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c572c0]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000c0b30_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ccc560] "m"(bc0b30_ccc560), [c572c0] "m"(bc0b30_c572c0), [ccbf80] "m"(bc0b30_ccbf80)
+      : "memory");
+}
+#else
+#error "FUN_000c0b30: clang naked draft required"
+#endif
+
 
 /* FUN_000be6f0 (0xbe6f0) — XBE naked draft (batch 194). */
 #if defined(__clang__)

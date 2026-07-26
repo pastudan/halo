@@ -3741,10 +3741,32 @@ void hs_object_iterate_names_containing(void *callback __attribute__((unused)), 
 #endif
 
 
-void FUN_000c9b90(const char *substr)
+/* FUN_000c9b90 (0xc9b90) — XBE naked draft (batch 213). */
+#if defined(__clang__)
+static void (*const bc9b90_cc9b10)(void *callback, const char *substr) = hs_object_iterate_names_containing;
+
+__attribute__((naked, noinline))
+void FUN_000c9b90(const char *substr __attribute__((unused)))
 {
-  hs_object_iterate_names_containing((void *)FUN_000c9990, substr);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl $0xc9990\n\t"
+      "call *%[cc9b10]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cc9b10] "m"(bc9b90_cc9b10)
+      : "memory");
 }
+#else
+#error "FUN_000c9b90: clang naked draft required"
+#endif
+
 
 /* FUN_000cae80 (0xcae80) — XBE naked draft (batch 177). */
 #if defined(__clang__)
@@ -4118,15 +4140,45 @@ int FUN_000cafc0(int object_handle __attribute__((unused)))
 #endif
 
 
-int FUN_000ce090(data_t *data, int *cursor)
+/* FUN_000ce090 (0xce090) — XBE naked draft (batch 212). */
+#if defined(__clang__)
+static void *(*const bce090_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+int FUN_000ce090(data_t *data __attribute__((unused)), int *cursor __attribute__((unused)))
 {
-  char *datum;
-  if (*cursor == -1)
-    return -1;
-  datum = (char *)datum_get(data, *cursor);
-  *cursor = *(int *)(datum + 8);
-  return *(int *)(datum + 4);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000ce090_1\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ecx, (%%esi)\n\t"
+      "movl 0x4(%%eax), %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000ce090_1:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bce090_dget)
+      : "memory");
 }
+#else
+#error "FUN_000ce090: clang naked draft required"
+#endif
+
 
 /* FUN_000ce420 (0xce420) — XBE naked draft (batch 182). */
 #if defined(__clang__)
@@ -4607,15 +4659,59 @@ void FUN_000ca110(int16_t name_index __attribute__((unused)))
 #endif
 
 
-void FUN_000c9bb0(const char *substr)
-{
-  hs_object_iterate_names_containing((void *)FUN_000c9a20, substr);
-}
+/* FUN_000c9bb0 (0xc9bb0) — XBE naked draft (batch 213). */
+#if defined(__clang__)
+static void (*const bc9bb0_cc9b10)(void *callback, const char *substr) = hs_object_iterate_names_containing;
 
-void FUN_000ca140(const char *substr)
+__attribute__((naked, noinline))
+void FUN_000c9bb0(const char *substr __attribute__((unused)))
 {
-  hs_object_iterate_names_containing((void *)FUN_000ca110, substr);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl $0xc9a20\n\t"
+      "call *%[cc9b10]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cc9b10] "m"(bc9bb0_cc9b10)
+      : "memory");
 }
+#else
+#error "FUN_000c9bb0: clang naked draft required"
+#endif
+
+
+/* FUN_000ca140 (0xca140) — XBE naked draft (batch 213). */
+#if defined(__clang__)
+static void (*const bca140_cc9b10)(void *callback, const char *substr) = hs_object_iterate_names_containing;
+
+__attribute__((naked, noinline))
+void FUN_000ca140(const char *substr __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl $0xca110\n\t"
+      "call *%[cc9b10]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cc9b10] "m"(bca140_cc9b10)
+      : "memory");
+}
+#else
+#error "FUN_000ca140: clang naked draft required"
+#endif
+
 
 static __attribute__((unused)) void hs_runtime_set_game_flag(int16_t game_flag, char set_flag)
 {

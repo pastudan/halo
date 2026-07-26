@@ -2086,10 +2086,32 @@ void *widget_instance_get_nth_child(void *widget, int index)
   return child;
 }
 
-void widget_free(void *block)
+/* widget_free (0xe3d50) — XBE naked draft (batch 213). */
+#if defined(__clang__)
+static void (*const be3d50_c11f620)(void *pool, void *block) = stack_memory_pool_deallocate;
+
+__attribute__((naked, noinline))
+void widget_free(void *block __attribute__((unused)))
 {
-  stack_memory_pool_deallocate(*(void **)0x31e04c, block);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x31e04c, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c11f620]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11f620] "m"(be3d50_c11f620)
+      : "memory");
 }
+#else
+#error "widget_free: clang naked draft required"
+#endif
+
 
 /* ui_widgets_active (0xe3d70) — XBE naked draft (batch 177). */
 #if defined(__clang__)
@@ -2213,27 +2235,51 @@ float FUN_000e3e60(int a __attribute__((unused)), float b __attribute__((unused)
 #endif
 
 
-int widget_instance_get_child_index_from_parent(void *widget)
-{
-  void *parent;
-  void *sibling;
-  int index;
+/* widget_instance_get_child_index_from_parent (0xe4330) — XBE naked draft (batch 213). */
+#if defined(__clang__)
 
-  parent = *(void **)((char *)widget + 0x30);
-  if (parent == NULL)
-    return -1;
-  sibling = *(void **)((char *)parent + 0x34);
-  if (sibling == NULL)
-    return -1;
-  index = 0;
-  while (sibling != NULL) {
-    if (sibling == widget)
-      return index;
-    sibling = *(void **)((char *)sibling + 0x2c);
-    index++;
-  }
-  return -1;
+
+__attribute__((naked, noinline))
+int widget_instance_get_child_index_from_parent(void *widget __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0x30(%%esi), %%ecx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lwidget_instance_get_child_index_from_parent_3\n\t"
+      "movl 0x34(%%ecx), %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lwidget_instance_get_child_index_from_parent_3\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lwidget_instance_get_child_index_from_parent_1:\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "je .Lwidget_instance_get_child_index_from_parent_2\n\t"
+      "movl 0x2c(%%ecx), %%ecx\n\t"
+      "incl %%edx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jne .Lwidget_instance_get_child_index_from_parent_1\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lwidget_instance_get_child_index_from_parent_2:\n\t"
+      "movl %%edx, %%eax\n\t"
+      ".Lwidget_instance_get_child_index_from_parent_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "widget_instance_get_child_index_from_parent: clang naked draft required"
+#endif
+
 
 /* widget_instance_set_visibility_recursive (0xe4370) — XBE naked draft (batch 162). */
 #if defined(__clang__)
@@ -3715,22 +3761,65 @@ char FUN_000e9fd0(void *widget __attribute__((unused)))
 #endif
 
 
-char FUN_000ea1f0(void *widget)
-{
-  *(int *)((char *)widget + 0x40) = 0;
-  *(int16_t *)((char *)widget + 0x44) = 0;
-  return 1;
-}
+/* FUN_000ea1f0 (0xea1f0) — XBE naked draft (batch 214). */
+#if defined(__clang__)
 
-char FUN_000ea540(void *widget)
+
+__attribute__((naked, noinline))
+char FUN_000ea1f0(void *widget __attribute__((unused)))
 {
-  if (*(int *)((char *)widget + 0x40) != 0) {
-    widget_free((void *)*(int *)((char *)widget + 0x40));
-    *(int *)((char *)widget + 0x40) = 0;
-  }
-  *(int16_t *)((char *)widget + 0x44) = 0;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movl %%ecx, 0x40(%%eax)\n\t"
+      "movw %%cx, 0x44(%%eax)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000ea1f0: clang naked draft required"
+#endif
+
+
+/* FUN_000ea540 (0xea540) — XBE naked draft (batch 215). */
+#if defined(__clang__)
+static void (*const bea540_ce3d50)(void *block) = widget_free;
+
+__attribute__((naked, noinline))
+char FUN_000ea540(void *widget __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0x40(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000ea540_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ce3d50]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl $0, 0x40(%%esi)\n\t"
+      ".LFUN_000ea540_1:\n\t"
+      "movw $0, 0x44(%%esi)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ce3d50] "m"(bea540_ce3d50)
+      : "memory");
+}
+#else
+#error "FUN_000ea540: clang naked draft required"
+#endif
+
 
 /* split_screen_game_initialize (0xea810) — XBE naked draft (batch 134). */
 #if defined(__clang__)
@@ -3842,15 +3931,39 @@ char split_screen_game_initialize(void *widget __attribute__((unused)), void *pl
 #endif
 
 
-char FUN_000eab70(void *widget)
+/* FUN_000eab70 (0xeab70) — XBE naked draft (batch 215). */
+#if defined(__clang__)
+static void (*const beab70_ce3d50)(void *block) = widget_free;
+
+__attribute__((naked, noinline))
+char FUN_000eab70(void *widget __attribute__((unused)))
 {
-  if (*(int *)((char *)widget + 0x40) != 0) {
-    widget_free((void *)*(int *)((char *)widget + 0x40));
-    *(int *)((char *)widget + 0x40) = 0;
-  }
-  *(int16_t *)((char *)widget + 0x44) = 0;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0x40(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000eab70_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ce3d50]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl $0, 0x40(%%esi)\n\t"
+      ".LFUN_000eab70_1:\n\t"
+      "movw $0, 0x44(%%esi)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ce3d50] "m"(beab70_ce3d50)
+      : "memory");
 }
+#else
+#error "FUN_000eab70: clang naked draft required"
+#endif
+
 
 /* FUN_000ecd50 (0xecd50) — XBE naked draft (batch 143). */
 #if defined(__clang__)

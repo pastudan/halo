@@ -956,40 +956,161 @@ void set_real_point3d(void)
 #endif
 
 
-void ai_debug_get_last_path(float *vec_a, float *vec_b)
-{
-  *(char *)0x5acab8 = 1;
-  *(char *)0x5acab9 = 0;
-  *(uint32_t *)0x5acabc = *(uint32_t *)vec_a;
-  *(uint32_t *)0x5acac0 = *(uint32_t *)((char *)vec_a + 4);
-  *(uint32_t *)0x5acac4 = *(uint32_t *)((char *)vec_a + 8);
-  *(uint32_t *)0x5acac8 = *(uint32_t *)vec_b;
-  *(uint32_t *)0x5acacc = *(uint32_t *)((char *)vec_b + 4);
-  *(uint32_t *)0x5acad0 = *(uint32_t *)((char *)vec_b + 8);
-  *(uint32_t *)0x5acad4 = 0;
-}
+/* ai_debug_get_last_path (0x493d0) — XBE naked draft (batch 215). */
+#if defined(__clang__)
 
-void ai_debug_communication_suppress(int a0, int a1)
-{
-  FUN_0004a460(a0, a1, (void *)0x5aca14, 0x39, 0x42ce0);
-}
 
-void ai_debug_communication_ignore(int a0, int a1)
+__attribute__((naked, noinline))
+void ai_debug_get_last_path(float *vec_a __attribute__((unused)), float *vec_b __attribute__((unused)))
 {
-  FUN_0004a460(a0, a1, (void *)0x5aca1c, 0x39, 0x42ce0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movb $1, 0x5acab8\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movb %%al, 0x5acab9\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, 0x5acabc\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl %%edx, 0x5acac0\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl %%ecx, 0x5acac4\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x5acac8\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x5acacc\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x5acad0\n\t"
+      "movl %%eax, 0x5acad4\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "ai_debug_get_last_path: clang naked draft required"
+#endif
 
-void ai_debug_communication_focus(int a0, int a1)
-{
-  FUN_0004a460(a0, a1, (void *)0x5aca24, 0xd1, 0x1a67e0);
-}
 
-void ai_debug_idle_look_clear(int actor_handle)
+/* ai_debug_communication_suppress (0x4a650) — XBE naked draft (batch 213). */
+#if defined(__clang__)
+static void (*const b4a650_c4a460)(int a0, int a1, void *buf, int buf_size, int max_entries) = FUN_0004a460;
+
+__attribute__((naked, noinline))
+void ai_debug_communication_suppress(int a0 __attribute__((unused)), int a1 __attribute__((unused)))
 {
-  *(char *)0x6323d4 = (actor_handle != -1);
-  *(int32_t *)0x6323d8 = actor_handle;
-  *(uint16_t *)0x6323dc = 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0x42ce0\n\t"
+      "pushl $0x39\n\t"
+      "pushl $0x5aca14\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c4a460]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c4a460] "m"(b4a650_c4a460)
+      : "memory");
 }
+#else
+#error "ai_debug_communication_suppress: clang naked draft required"
+#endif
+
+
+/* ai_debug_communication_ignore (0x4a680) — XBE naked draft (batch 214). */
+#if defined(__clang__)
+static void (*const b4a680_c4a460)(int a0, int a1, void *buf, int buf_size, int max_entries) = FUN_0004a460;
+
+__attribute__((naked, noinline))
+void ai_debug_communication_ignore(int a0 __attribute__((unused)), int a1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0x42ce0\n\t"
+      "pushl $0x39\n\t"
+      "pushl $0x5aca1c\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c4a460]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c4a460] "m"(b4a680_c4a460)
+      : "memory");
+}
+#else
+#error "ai_debug_communication_ignore: clang naked draft required"
+#endif
+
+
+/* ai_debug_communication_focus (0x4a6b0) — XBE naked draft (batch 214). */
+#if defined(__clang__)
+static void (*const b4a6b0_c4a460)(int a0, int a1, void *buf, int buf_size, int max_entries) = FUN_0004a460;
+
+__attribute__((naked, noinline))
+void ai_debug_communication_focus(int a0 __attribute__((unused)), int a1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0x1a67e0\n\t"
+      "pushl $0xd1\n\t"
+      "pushl $0x5aca24\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c4a460]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c4a460] "m"(b4a6b0_c4a460)
+      : "memory");
+}
+#else
+#error "ai_debug_communication_focus: clang naked draft required"
+#endif
+
+
+/* ai_debug_idle_look_clear (0x4a6e0) — XBE naked draft (batch 214). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void ai_debug_idle_look_clear(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "setne %%cl\n\t"
+      "movb %%cl, 0x6323d4\n\t"
+      "movl %%eax, 0x6323d8\n\t"
+      "movw $0, 0x6323dc\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
+}
+#else
+#error "ai_debug_idle_look_clear: clang naked draft required"
+#endif
+
 
 /* ai_debug_idle_look_addprop (0x4a710) — XBE naked draft (batch 169). */
 #if defined(__clang__)
@@ -1537,13 +1658,33 @@ void FUN_00049300(void)
 #endif
 
 
-/* 0x493b0 — store float + two dwords into a 12-byte record */
-void FUN_000493B0(float *out, float value, int field_4, int field_8)
+/* FUN_000493B0 (0x493b0) — XBE naked draft (batch 213). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void FUN_000493B0(float *out __attribute__((unused)), float value __attribute__((unused)), int field_4 __attribute__((unused)), int field_8 __attribute__((unused)))
 {
-  *out = value;
-  *(int *)((char *)out + 4) = field_4;
-  *(int *)((char *)out + 8) = field_8;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "fstps (%%eax)\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000493B0: clang naked draft required"
+#endif
+
 
 /* ai_debug_lineoffire_addpill (0x49430) — XBE naked draft (batch 150). */
 #if defined(__clang__)

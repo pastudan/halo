@@ -536,15 +536,32 @@ void FUN_00130f30(void)
 #endif
 
 
-/* 0x131130 */
+/* FUN_00131130 (0x131130) — XBE naked draft (batch 213). */
+#if defined(__clang__)
+static void (*const b131130_c1196d0)(data_t *data, int datum_handle) = datum_delete;
+
+__attribute__((naked, noinline))
 void FUN_00131130(void)
 {
-  int ecx = 0;
-
-  datum_delete((void *)(uintptr_t)ecx, 0);
-
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x5a90d4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1196d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1196d0] "m"(b131130_c1196d0)
+      : "memory");
 }
+#else
+#error "FUN_00131130: clang naked draft required"
+#endif
+
 
 /* FUN_00131150 (0x131150) — XBE naked draft (batch 125). */
 #if defined(__clang__)
@@ -1672,15 +1689,32 @@ void FUN_00131a20(void)
 #endif
 
 
-/* 0x131b40 */
+/* FUN_00131b40 (0x131b40) — XBE naked draft (batch 213). */
+#if defined(__clang__)
+static void (*const b131b40_c1196d0)(data_t *data, int datum_handle) = datum_delete;
+
+__attribute__((naked, noinline))
 void FUN_00131b40(void)
 {
-  int ecx = 0;
-
-  datum_delete((void *)(uintptr_t)ecx, 0);
-
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x5a90d0, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1196d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1196d0] "m"(b131b40_c1196d0)
+      : "memory");
 }
+#else
+#error "FUN_00131b40: clang naked draft required"
+#endif
+
 
 /* FUN_00131b60 (0x131b60) — XBE naked draft (batch 111). */
 #if defined(__clang__)
