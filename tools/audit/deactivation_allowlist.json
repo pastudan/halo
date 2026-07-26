@@ -14334,5 +14334,124 @@
     "object": "progress_bar.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf4210",
+    "name": "multiplayer_settings_select_list_update_item",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf46e0",
+    "name": "FUN_000f46e0",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf4b60",
+    "name": "FUN_000f4b60",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf4cf0",
+    "name": "FUN_000f4cf0",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf5640",
+    "name": "FUN_000f5640",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf5650",
+    "name": "FUN_000f5650",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf5660",
+    "name": "FUN_000f5660",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf56b0",
+    "name": "FUN_000f56b0",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf5800",
+    "name": "FUN_000f5800",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf5900",
+    "name": "FUN_000f5900",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf5f10",
+    "name": "object_get_type",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf5f90",
+    "name": "items_initialize",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf5fa0",
+    "name": "items_initialize_for_new_map",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf5fb0",
+    "name": "FUN_000f5fb0",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf6a60",
+    "name": "item_get_position_even_if_in_inventory",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf7110",
+    "name": "FUN_000f7110",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xf7340",
+    "name": "item_update",
+    "object": "items.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
