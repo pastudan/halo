@@ -12734,7 +12734,8 @@
         {
           "addr": "0xce150",
           "decl": "void FUN_000ce150(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000ce150"
         },
         {
           "addr": "0xce1c0",
