@@ -12393,7 +12393,7 @@
         {
           "addr": "0xca4e0",
           "decl": "void FUN_000ca4e0(int16_t type, char flag, char *buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca530",
