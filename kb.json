@@ -11379,15 +11379,18 @@
         },
         {
           "addr": "0xc8720",
-          "decl": "void FUN_000c8720(void);"
+          "decl": "char FUN_000c8720(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc88b0",
-          "decl": "void FUN_000c88b0(void);"
+          "decl": "char FUN_000c88b0(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc89c0",
-          "decl": "void FUN_000c89c0(void);"
+          "decl": "char FUN_000c89c0(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc8b90",
@@ -11396,11 +11399,13 @@
         },
         {
           "addr": "0xc8c50",
-          "decl": "void FUN_000c8c50(void);"
+          "decl": "char FUN_000c8c50(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc8d30",
-          "decl": "void FUN_000c8d30(void);"
+          "decl": "char FUN_000c8d30(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc8e00",
@@ -11414,7 +11419,8 @@
         },
         {
           "addr": "0xc8f40",
-          "decl": "void FUN_000c8f40(void);"
+          "decl": "char FUN_000c8f40(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc9050",
@@ -11798,11 +11804,13 @@
         },
         {
           "addr": "0xcb9c0",
-          "decl": "void render_debug_scripting(void);"
+          "decl": "void render_debug_scripting(void);",
+          "ported": false
         },
         {
           "addr": "0xcbb40",
-          "decl": "void render_debug_trigger_volumes(void);"
+          "decl": "void render_debug_trigger_volumes(void);",
+          "ported": false
         },
         {
           "addr": "0xcbf80",
@@ -11816,7 +11824,8 @@
         },
         {
           "addr": "0xcc0e0",
-          "decl": "void hs_evaluate_wake(void);"
+          "decl": "void hs_evaluate_wake(int16_t function_index, int thread_datum, char init);",
+          "ported": false
         },
         {
           "addr": "0xcc1d0",
@@ -11925,7 +11934,8 @@
         },
         {
           "addr": "0xcdf70",
-          "decl": "void FUN_000cdf70(void);"
+          "decl": "void FUN_000cdf70(void *header, void *src, int size);",
+          "ported": false
         },
         {
           "addr": "0xce050",
@@ -12009,7 +12019,8 @@
         },
         {
           "addr": "0xce4a0",
-          "decl": "void FUN_000ce4a0(void);"
+          "decl": "void FUN_000ce4a0(void);",
+          "ported": false
         }
       ],
       "name": "hs_runtime.obj",

@@ -5255,5 +5255,82 @@
     "object": "hs_runtime.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc8720",
+    "name": "FUN_000c8720",
+    "object": "hs_runtime.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc88b0",
+    "name": "FUN_000c88b0",
+    "object": "hs_runtime.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc89c0",
+    "name": "FUN_000c89c0",
+    "object": "hs_runtime.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc8c50",
+    "name": "FUN_000c8c50",
+    "object": "hs_runtime.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc8d30",
+    "name": "FUN_000c8d30",
+    "object": "hs_runtime.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xc8f40",
+    "name": "FUN_000c8f40",
+    "object": "hs_runtime.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xcb9c0",
+    "name": "render_debug_scripting",
+    "object": "hs_runtime.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xcbb40",
+    "name": "render_debug_trigger_volumes",
+    "object": "hs_runtime.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xcc0e0",
+    "name": "hs_evaluate_wake",
+    "object": "hs_runtime.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xcdf70",
+    "name": "FUN_000cdf70",
+    "object": "hs_runtime.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0xce4a0",
+    "name": "FUN_000ce4a0",
+    "object": "hs_runtime.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]

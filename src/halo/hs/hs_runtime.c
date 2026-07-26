@@ -4191,3 +4191,500 @@ void FUN_000ce3c0(void)
     idx = data_next_index(*(data_t **)0x5aa698, idx);
   }
 }
+
+char FUN_000c8720(int16_t function_index, int root_datum)
+{
+  char *syntax;
+  char *node;
+  char *link_node;
+  int link;
+  int depth;
+  char ok;
+  char error_buf[256];
+  void *entry;
+  const char *name;
+
+  if (function_index < 7 || function_index > 0xc) {
+    display_assert((const char *)0x27cdc0, (const char *)0x27cfe0, 0x17d, 1);
+    system_exit(-1);
+  }
+
+  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(syntax + 0x10));
+  link = *(int *)(node + 8);
+  ok = 1;
+  depth = 0;
+
+  while (link != -1) {
+    if (*(int *)0x46b6fc != 0) {
+      display_assert((const char *)0x27bd0c, (const char *)0x27cbd4, 0x48e, 1);
+      system_exit(-1);
+    }
+
+    link_node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+    if (*(int16_t *)(link_node + 4) == 0) {
+      *(int16_t *)(link_node + 4) = 6;
+      node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+      if ((*(uint8_t *)(node + 6) & 1) != 0) {
+        *(int16_t *)(link_node + 2) = 6;
+        ok = FUN_000c73a0(link);
+      } else {
+        ok = FUN_000c74c0(link);
+      }
+    }
+
+    node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+    link = *(int *)(node + 8);
+    depth++;
+    if (!ok)
+      break;
+  }
+
+  if (ok) {
+    if (function_index != 0xa || depth <= 2)
+      return 1;
+  } else if (function_index == 0xa && depth <= 2) {
+    return 0;
+  }
+
+  if (depth >= 2 && (function_index != 0xa || depth <= 2))
+    return ok;
+
+  entry = hs_function_table_get(function_index);
+  name = *(const char **)((char *)entry + 4);
+  crt_sprintf(error_buf, (const char *)0x27cfac, name);
+  *(int *)0x46b6fc = (int)error_buf;
+  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  *(int *)0x46b700 = *(int *)(syntax + 0xc);
+  return 0;
+}
+
+char FUN_000c88b0(int16_t function_index, int root_datum)
+{
+  void *entry;
+  char result;
+  int handles[2];
+  char *syntax;
+
+  result = 0;
+  if (function_index != 0xd && function_index != 0xe) {
+    display_assert((const char *)0x27cdc0, (const char *)0x27d028, 0x1bc, 1);
+    system_exit(-1);
+  }
+
+  entry = hs_function_table_get(function_index);
+  if (!FUN_000c55d0(*(const char **)((char *)entry + 4),
+                    handles, 2, root_datum))
+    return result;
+
+  if (hs_type_check(handles[0], 0)) {
+    syntax = (char *)datum_get(*(data_t **)0x5aa6c8, handles[0]);
+    if (hs_type_check(handles[1], *(int16_t *)(syntax + 4)))
+      return 1;
+  } else if (*(int *)0x46b6fc == 0) {
+    if (hs_type_check(handles[1], 0)) {
+      syntax = (char *)datum_get(*(data_t **)0x5aa6c8, handles[1]);
+      if (hs_type_check(handles[0], *(int16_t *)(syntax + 4)))
+        return 1;
+    } else if (*(int *)0x46b6fc == 0) {
+      if (hs_type_check(handles[0], 6) && hs_type_check(handles[1], 6))
+        return 1;
+    }
+  }
+
+  return result;
+}
+
+char FUN_000c89c0(int16_t function_index, int root_datum)
+{
+  void *entry;
+  char result;
+  int handles[2];
+  char *syntax;
+  int16_t type;
+
+  result = 0;
+  if (function_index < 0xf || function_index > 0x12) {
+    display_assert((const char *)0x27cdc0, (const char *)0x27d078, 0x1e3, 1);
+    system_exit(-1);
+  }
+
+  entry = hs_function_table_get(function_index);
+  if (!FUN_000c55d0(*(const char **)((char *)entry + 4),
+                    handles, 2, root_datum))
+    return result;
+
+  if (hs_type_check(handles[0], 0)) {
+    syntax = (char *)datum_get(*(data_t **)0x5aa6c8, handles[0]);
+    type = *(int16_t *)(syntax + 4);
+    if ((type >= 0x20 && type <= 0x24) || (type >= 6 && type <= 8)) {
+      if (hs_type_check(handles[1], type))
+        return 1;
+    }
+  }
+
+  if (*(int *)0x46b6fc != 0)
+    return result;
+
+  if (hs_type_check(handles[1], 0)) {
+    syntax = (char *)datum_get(*(data_t **)0x5aa6c8, handles[1]);
+    type = *(int16_t *)(syntax + 4);
+    if ((type >= 0x20 && type <= 0x24) || (type >= 6 && type <= 8)) {
+      if (hs_type_check(handles[0], type))
+        return 1;
+    }
+  }
+
+  if (*(int *)0x46b6fc != 0)
+    return result;
+
+  if (hs_type_check(handles[0], 6) && hs_type_check(handles[1], 6))
+    return 1;
+
+  return result;
+}
+
+char FUN_000c8c50(int16_t function_index, int root_datum)
+{
+  char *syntax;
+  char *node;
+  int link;
+  int link2;
+  int link3;
+
+  if (function_index != 0x14) {
+    display_assert((const char *)0x27cdc0, (const char *)0x27d168, 0x235, 1);
+    system_exit(-1);
+  }
+
+  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(syntax + 0x10));
+  link = *(int *)(node + 8);
+  if (link == -1) {
+    syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+    *(int *)0x46b6fc = (int)0x27d120;
+    *(int *)0x46b700 = *(int *)(syntax + 0xc);
+    return 0;
+  }
+
+  if (!hs_type_check(link, 5))
+    return 0;
+
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+  link2 = *(int *)(node + 8);
+  if (link2 == -1 || !hs_type_check(link2, 7))
+    return 0;
+
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, link2);
+  link3 = *(int *)(node + 8);
+  if (link3 == -1 || !hs_type_check(link3, 8))
+    return 0;
+
+  return 1;
+}
+
+char FUN_000c8d30(int16_t function_index, int root_datum)
+{
+  void *entry;
+  char *node;
+  void *script;
+  int16_t script_type;
+
+  if (function_index != 0x15) {
+    display_assert((const char *)0x27cdc0, (const char *)0x27d1bc, 0x25d, 1);
+    system_exit(-1);
+  }
+
+  entry = hs_function_table_get(function_index);
+  if (!FUN_000c55d0(*(const char **)((char *)entry + 4),
+                    (int *)&function_index, 1, root_datum))
+    return 0;
+
+  if (!hs_type_check(function_index, 0xa))
+    return 0;
+
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, function_index);
+  script = tag_block_get_element((char *)global_scenario_get() + 0x49c,
+                                 *(int16_t *)(node + 0x10), 0x5c);
+  script_type = *(int16_t *)((char *)script + 0x20);
+  if (script_type != 3 && script_type != 4)
+    return 1;
+
+  *(int *)0x46b6fc = (int)0x27d194;
+  *(int *)0x46b700 = *(int *)(node + 0xc);
+  return 0;
+}
+
+char FUN_000c8f40(int16_t function_index, int root_datum)
+{
+  char *syntax;
+  char *node;
+  char *link_node;
+  int link;
+  char ok;
+
+  if (function_index < 0x18 || function_index > 0x1a) {
+    display_assert((const char *)0x27cdc0, (const char *)0x27d2b0, 0x2ae, 1);
+    system_exit(-1);
+  }
+
+  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(syntax + 0x10));
+  link = *(int *)(node + 8);
+  ok = 1;
+
+  while (link != -1) {
+    if (*(int *)0x46b6fc != 0) {
+      display_assert((const char *)0x27bd0c, (const char *)0x27cbd4, 0x48e, 1);
+      system_exit(-1);
+    }
+
+    link_node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+    if (*(int16_t *)(link_node + 4) == 0) {
+      *(int16_t *)(link_node + 4) = 9;
+      node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+      if ((*(uint8_t *)(node + 6) & 1) != 0) {
+        *(int16_t *)(link_node + 2) = 9;
+        ok = FUN_000c73a0(link);
+      } else {
+        ok = FUN_000c74c0(link);
+      }
+    }
+
+    node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+    link = *(int *)(node + 8);
+    if (!ok)
+      break;
+  }
+
+  return ok;
+}
+
+void render_debug_scripting(void)
+{
+  char buffer[0x2804];
+  short tabs[2];
+  int idx;
+  char *thread;
+  char *stack;
+  int sleep_until;
+  int game_time;
+  const char *script_name;
+  const char *expr_name;
+
+  FUN_001d90e0();
+  if (*(uint8_t *)0x5aa69d == 0)
+    return;
+
+  crt_sprintf(buffer, (const char *)0x280950, 0xc8, 0x12c);
+  idx = data_next_index(*(data_t **)0x5aa6c4, -1);
+  while (idx != -1 && *(uint8_t *)0x46b810 != 0) {
+    thread = (char *)datum_get(*(data_t **)0x5aa6c4, idx);
+    sleep_until = *(int *)(thread + 8);
+    if (sleep_until >= 0) {
+      script_name = hs_get_thread_script_name(idx);
+      crt_sprintf(buffer + csstrlen(buffer), (const char *)0x26990c, script_name);
+      if (sleep_until != 0) {
+        game_time = game_time_get();
+        sleep_until -= game_time;
+      } else {
+        sleep_until = 0;
+      }
+      crt_sprintf(buffer + csstrlen(buffer), (const char *)0x25acb8, sleep_until);
+      FUN_0008dc30(buffer + csstrlen(buffer), (const char *)0x28094c);
+
+      stack = *(char **)(thread + 0x10);
+      if (stack != (char *)(thread + 0x18) && *(int *)(thread + 8) != -2) {
+        expr_name = FUN_000ca890(*(int *)(stack + 4));
+        FUN_0008dc30(buffer + csstrlen(buffer), expr_name);
+      }
+    }
+    idx = data_next_index(*(data_t **)0x5aa6c4, idx);
+  }
+
+  tabs[0] = 2;
+  draw_string_set_tab_stops(tabs, 1);
+  *(uint8_t *)(buffer + 0x2000) = 0;
+  FUN_00189c40(1, buffer);
+  draw_string_set_tab_stops(0, 0);
+}
+
+void render_debug_trigger_volumes(void)
+{
+  void *block;
+  int count;
+  int index;
+  char *elem;
+  int16_t shape;
+  float matrix[12];
+  float scale[3];
+  float position[3];
+  float corners[2][3];
+  float draw_pts[6];
+  float color[4];
+  float label_pos[3];
+  float direction[3];
+  int16_t collision[4];
+  int face;
+  int edge;
+  uint32_t *flag_word;
+  int highlight;
+  void *color_ptr;
+
+  if (*(uint8_t *)0x5aa69c == 0)
+    return;
+
+  block = (char *)global_scenario_get() + 0x360;
+  count = *(int *)block;
+  for (index = 0; index < count; index++) {
+    elem = (char *)tag_block_get_element(block, index, 0x60);
+    shape = *(int16_t *)elem;
+    if (shape == 0) {
+      csmemcpy(matrix, *(void **)0x31fc60, 0x30);
+      position[0] = *(float *)(elem + 0x48);
+      position[1] = *(float *)(elem + 0x50);
+      position[2] = *(float *)(elem + 0x58);
+      scale[0] = *(float *)(elem + 0x4c) - position[0];
+      scale[1] = *(float *)(elem + 0x54) - position[1];
+      scale[2] = *(float *)(elem + 0x5c) - position[2];
+    } else if (shape == 1) {
+      matrix4x3_from_forward_up_position(
+          matrix, (float *)(elem + 0x48), (float *)(elem + 0x3c),
+          (float *)(elem + 0x30));
+      matrix_scale_transform_vector(matrix, (float *)(elem + 0x54), scale);
+    } else {
+      display_assert((const char *)0x2805bc, (const char *)0x255ee8, 0x213, 1);
+      system_exit(-1);
+    }
+
+    flag_word = (uint32_t *)(0x5aa6a0 + ((index >> 5) * 4));
+    highlight = (*flag_word & (1U << (index & 0x1f))) != 0;
+
+    for (face = 0; face < 6; face++) {
+      for (edge = 0; edge < 4; edge++) {
+        corners[0][0] = corners[1][0] = 0.0f;
+        corners[0][1] = corners[1][1] = 0.0f;
+        corners[0][2] = corners[1][2] = 0.0f;
+        if ((face & 1) != 0) {
+          corners[0][face / 2] = scale[face / 2];
+          corners[1][face / 2] = scale[face / 2];
+        }
+        matrix_scale_transform_vector(matrix, corners[0], draw_pts);
+        matrix_scale_transform_vector(matrix, corners[1], draw_pts + 3);
+        draw_pts[0] += position[0];
+        draw_pts[1] += position[1];
+        draw_pts[2] += position[2];
+        draw_pts[3] += position[0];
+        draw_pts[4] += position[1];
+        draw_pts[5] += position[2];
+
+        if (!highlight) {
+          color_ptr = *(void **)0x2ee6d8;
+          FUN_00189ba0(draw_pts, 4, color_ptr);
+        } else {
+          color[0] = 0.15f;
+          color[1] = 0.10f;
+          color[2] = 0.05f;
+          color[3] = 1.0f;
+          FUN_00189ba0(draw_pts, 4, color);
+          FUN_00188a90(draw_pts, 4, color);
+        }
+      }
+    }
+
+    label_pos[0] = scale[0] * *(float *)0x253398 + position[0];
+    label_pos[1] = scale[1] * *(float *)0x253398 + position[1];
+    label_pos[2] = scale[2] * *(float *)0x253398 + position[2];
+    direction[0] = label_pos[0] - *(float *)0x506550;
+    direction[1] = label_pos[1] - *(float *)0x506554;
+    direction[2] = label_pos[2] - *(float *)0x506558;
+    direction[0] *= *(float *)0x255ed4;
+    direction[1] *= *(float *)0x255ed4;
+    direction[2] *= *(float *)0x255ed4;
+
+    if (!FUN_0014df70(0xc2ad, (float *)0x506550, direction, -1, collision))
+      continue;
+
+    color_ptr = highlight ? *(void **)0x2ee6e0 : *(void **)0x2ee6c4;
+    FUN_00189cb0(1, label_pos, elem + 4, (int)color_ptr);
+  }
+}
+
+void hs_evaluate_wake(int16_t function_index, int thread_datum, char init)
+{
+  char *thread;
+  char *stack;
+  char *node;
+  char *expr;
+  int16_t script_index;
+  int wake_thread;
+
+  (void)init;
+  if (function_index != 0x15) {
+    display_assert((const char *)0x280478, (const char *)0x27d1bc, 0x22c, 1);
+    system_exit(-1);
+  }
+
+  thread = (char *)datum_get(*(data_t **)0x5aa6c4, thread_datum);
+  stack = *(char **)(thread + 0x10);
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(stack + 4));
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(node + 0x10));
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(node + 8));
+
+  if ((*(uint8_t *)(expr + 6) & 1) == 0) {
+    display_assert((const char *)0x280478, (const char *)0x2809a0, 0x22d, 1);
+    system_exit(-1);
+  }
+  if (*(int16_t *)(expr + 4) != 0xa) {
+    display_assert((const char *)0x280478, (const char *)0x280978, 0x22e, 1);
+    system_exit(-1);
+  }
+
+  script_index = *(int16_t *)(expr + 0x10);
+  wake_thread = FUN_000cada0(script_index);
+  if (wake_thread != -1)
+    FUN_000cacf0(wake_thread);
+  hs_return(thread_datum, 0);
+}
+
+void FUN_000cdf70(void *header, void *src, int size)
+{
+  int rows;
+  char *dst;
+
+  if (size == 0)
+    return;
+  if (size < 0x38) {
+    display_assert((const char *)0x280e48, (const char *)0x280e68, 0x6d, 1);
+    system_exit(-1);
+  }
+
+  if (csmemcmp(header, (const char *)0x280e38, 0xc) == 0) {
+    FUN_00118be0((void *)0x2f664c, header, 1);
+    FUN_00118be0((void *)0x2f6688, header, 0x4000);
+    return;
+  }
+
+  rows = size - 0x38;
+  if (rows < 0 || (rows % 0x14) != 0) {
+    display_assert((const char *)0x280df8, (const char *)0x280e68, 0x79, 1);
+    system_exit(-1);
+  }
+  rows /= 0x14;
+  if (rows < 0)
+    return;
+
+  FUN_00118be0((void *)0x2f664c, header, 1);
+  dst = (char *)header + 0x38;
+  FUN_00118be0((void *)0x2f6688, dst, rows);
+  (void)src;
+}
+
+void FUN_000ce4a0(void)
+{
+  int handle;
+
+  handle = *(int *)0x46b814;
+  if (handle != 0)
+    CloseHandle(handle);
+}
