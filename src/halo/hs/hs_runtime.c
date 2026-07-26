@@ -6306,43 +6306,13 @@ void hs_runtime_update(void)
 #endif
 
 
-/* FUN_000ce050 (0xce050) — XBE naked draft (batch 174). */
-#if defined(__clang__)
-static int (*const bce050_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static data_t * (*const bce050_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
-
-__attribute__((naked, noinline))
-void FUN_000ce050(int save_type __attribute__((unused)), int slot __attribute__((unused)))
+/* FUN_000ce050 (0xce050) — readable C lift. */
+void FUN_000ce050(int save_type, int slot)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x100, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl $0x280e94\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x100(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1bfe10]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d90f0] "m"(bce050_c1d90f0), [c1bfe10] "m"(bce050_c1bfe10)
-      : "memory");
+  char buf[0x100];
+  crt_sprintf(buf, (const char *)0x280e94, save_type);
+  game_state_data_new(buf, (int16_t)slot, 0xc);
 }
-#else
-#error "FUN_000ce050: clang naked draft required"
-#endif
-
-
 /* FUN_000ce0c0 (0xce0c0) — XBE naked draft (batch 158). */
 #if defined(__clang__)
 static int (*const bce0c0_c119610)(data_t *data) = data_new_at_index;

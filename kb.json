@@ -12714,7 +12714,7 @@
         {
           "addr": "0xce050",
           "decl": "void FUN_000ce050(int save_type, int slot);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce090",
