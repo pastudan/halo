@@ -67,7 +67,15 @@ def strip_c_comments(s: str) -> str:
 
 
 def is_stub_body(body: str) -> bool:
-    body = strip_c_comments(body).strip()
+    raw = body
+    stripped = strip_c_comments(body).strip()
+    if re.search(r"relift:", raw) and (
+        not stripped
+        or stripped in ("return 0;", "return NULL;", "(void)0;")
+        or re.fullmatch(r"return 0;\s*", stripped)
+    ):
+        return False
+    body = stripped
     if not body:
         return True
     lines = [ln.strip() for ln in body.splitlines() if ln.strip()]
@@ -97,6 +105,7 @@ def is_relift_draft(body: str) -> bool:
         "/* mem[",
         "relift:",
         "(uintptr_t)",
+        "no calls detected",
     )
     return any(m in body for m in markers)
 
@@ -517,6 +526,8 @@ def cast_arg_for_param(arg: str, param_type: str, cname: str) -> str:
             if "**" in pt.replace(" ", ""):
                 if "char" in pt:
                     return "(char **)0"
+            if "unsigned char" in pt:
+                return "(unsigned char *)0"
             if "char" in pt:
                 return "(char *)0"
             return "(void *)0"
@@ -574,6 +585,8 @@ def cast_arg_for_param(arg: str, param_type: str, cname: str) -> str:
         return arg.replace("(char *)(uintptr_t)", "(unsigned char *)(uintptr_t)", 1)
     if arg.startswith("(char *)") and "unsigned char *" in pt:
         return arg.replace("(char *)", "(unsigned char *)", 1)
+    if arg == "(char *)0" and "unsigned char" in pt:
+        return "(unsigned char *)0"
     return arg
 
 
@@ -711,6 +724,8 @@ def lift_large(ctx: LiftCtx) -> list[str]:
                 if "esp" in src:
                     src = "0"
                 lines.append(f"  /* mem[0x{off:08x}] = {src} */")
+        elif ins.mnemonic in ("mov", "fld", "fcomp", "fstp") and "ptr [0x" in ins.op_str:
+            lines.append(f"  /* relift: {ins.mnemonic} {ins.op_str} */")
         elif ins.mnemonic == "xor" and ins.op_str.strip() in ("eax, eax", "eax,eax"):
             returns_eax = True
             return_expr = "0"
@@ -770,7 +785,10 @@ def lift_function(
                 f"  /* relift calls: {', '.join(calls[:8])} */"
             ]
         else:
-            lines = ["  /* relift: no calls detected — manual review */"]
+            lines = [
+                "  /* relift: no calls detected — manual review */",
+                "  (void)0;",
+            ]
 
     sig_ret = ret_kind_from_sig(sig)
     if sig_ret == "void":
@@ -821,6 +839,27 @@ def build_signature(decl: str, params: list[str], addr: str) -> str:
             base = GEN.format_fn_signature(c_decl.rstrip(";"), parsed)
             return base[:-1] + ", " + typed + ")"
     return GEN.format_fn_signature(c_decl.rstrip(";"), parsed or params)
+
+
+def disasm_function(md, get_bytes, va: int, end: int) -> list:
+    """Disassemble function bytes, following leading jmp thunks."""
+    data = get_bytes(va, min(end, va + 0x4000))
+    insns = [ins for ins in md.disasm(data, va) if ins.address < end]
+    if not insns:
+        return insns
+    lead = insns[0]
+    if lead.mnemonic == "jmp" and lead.op_str.startswith("0x"):
+        target = int(lead.op_str, 16)
+        if target != va:
+            span = min(512, max(end - va, 96))
+            try:
+                tdata = get_bytes(target, target + span)
+            except RuntimeError:
+                return insns
+            tinsns = list(md.disasm(tdata, target))
+            if tinsns and any(ins.mnemonic == "call" for ins in tinsns):
+                return tinsns
+    return insns
 
 
 def relift_object(object_name: str, *, dry_run: bool = False, force: bool = False) -> dict:
@@ -876,8 +915,7 @@ def relift_object(object_name: str, *, dry_run: bool = False, force: bool = Fals
 
         end = addrs[i + 1][0] if i + 1 < len(addrs) else va + 0x400
         size = end - va
-        data = get_bytes(va, min(end, va + 0x4000))
-        insns = [ins for ins in md.disasm(data, va) if ins.address < end]
+        insns = disasm_function(md, get_bytes, va, end)
 
         stack_params = infer_stack_params(insns)
         params = [param_name(i, off) for i, (off, _) in enumerate(stack_params)]

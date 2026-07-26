@@ -958,19 +958,143 @@ int actor_aim_grenade(int actor_handle, void *aim_params, float *out_aim_vector)
 /* 0x218d0 */
 void actor_combat_build_grenade_trajectory(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test eax, eax -> je 0x218ed */
+  /* test ebx, ebx -> je 0x218ed */
+  /* test eax, eax -> jne 0x2190d */
+  display_assert((char *)0x00254990, (char *)0x00254910, 1780, 0);
+  system_exit(0);
+  game_globals_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test eax, eax -> je 0x219d5 */
+  /* cmp eax, -1 -> je 0x219d5 */
+  tag_get('jorp', 0);
+  /* test edi, edi -> je 0x219d5 */
+  projectile_aim(0, 0, 0, (void *)(uintptr_t)edx, 0, 0, 0, 0, 0, 0, 0, 0, (void *)0);
+  /* test (char)eax, (char)eax -> je 0x219d5 */
+  /* test esi, esi -> je 0x219d7 */
+  /* test (char)eax, (char)eax -> je 0x219c4 */
+  projectile_get_ballistic_acceleration(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x220c0 */
 void actor_aim_projectile(float *origin, float *direction, int unit_handle)
 {
-  (void)origin;
-  (void)direction;
-  (void)unit_handle;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  datum_get((void *)(uintptr_t)eax, 0);
+  game_time_get();
+  /* relift: cmp word ptr [ebx + 0x60c], 1 -> jne 0x2214a */
+  /* cmp eax, -1 -> je 0x2214a */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* cmp (int16_t)ecx, 2 -> jl 0x2214a */
+  /* cmp (int16_t)ecx, 3 -> jg 0x2214a */
+  /* test esi, esi -> jne 0x22172 */
+  display_assert((char *)0x00254a50, (char *)0x00254910, 1071, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x221b5 */
+  normalize3d((float *)0);
+  valid_real_normal3d((float *)(uintptr_t)esi);
+  /* test (char)eax, (char)eax -> jne 0x2224c */
+  csprintf((char *)0x005ab100, (char *)0x00254a24);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  actor_combat_get_weapon_vector(0, (float *)0);
+  normalize3d((float *)0);
+  perpendicular3d((float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
+  normalize3d((float *)(uintptr_t)ecx);
+  rotate_vector3d_by_sincos((float *)(uintptr_t)esi, (float *)(uintptr_t)ecx, 0.0f, 0.0f);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0x22dc0 */
 void FUN_00022dc0(int actor_handle)
 {
-  (void)actor_handle;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
+
+  datum_get((void *)(uintptr_t)eax, 0);
+  tag_get('rtca', 0);
+  tag_get('vtca', 0);
+  actor_combat_get_firing_variant_definition(0);
+  actor_attacking_target(0);
+  /* cmp eax, -1 -> je 0x22e37 */
+  object_get_and_verify_type(0, 0);
+  tag_get('paew', 0);
+  object_get_and_verify_type(0, 0);
+  actor_attacking_target(0);
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x22e9d */
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x22eb3 */
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x22ec9 */
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x22edb */
+  /* test (char)ecx, (char)ecx -> je 0x22f15 */
+  /* test (char)ecx, (char)ecx -> je 0x22f07 */
+  /* relift: cmp dword ptr [ebx + 0x270], -1 -> je 0x22f15 */
+  /* cmp (int16_t)edi, (int16_t)eax -> jne 0x22f35 */
+  /* cmp (int16_t)edi, 1 -> jne 0x22f7f */
+  /* test (char)eax, (char)eax -> je 0x22f3f */
+  display_assert((char *)0x00254bbc, (char *)0x00254910, 133, 0);
+  system_exit(0);
+  /* cmp (int16_t)edi, 2 -> jne 0x22f3f */
+  distance_squared3d((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
+  /* test (char)eax, 0x41 -> je 0x22f35 */
+  /* cmp (int16_t)edi, 2 -> jne 0x22fcc */
+  actor_has_ranged_weapon(0);
+  /* test (char)eax, (char)eax -> je 0x22fe8 */
+  /* test (char)eax, (char)eax -> je 0x2305d */
+  /* cmp (int16_t)eax, 0xffff -> je 0x2303a */
+  unit_get_grenade_count(0, eax);
+  /* test (int16_t)eax, (int16_t)eax -> jne 0x2303a */
+  unit_set_grenade_count(0, edx, 0);
+  actor_handle_communication(0);
+  FUN_00046f10(0, 0, 0, 0, 0, 0, 0);
+  actor_has_ranged_weapon(0);
+  /* test (char)eax, (char)eax -> je 0x2372a */
+  /* relift: cmp word ptr [ebx + 0x5f2], 4 -> jne 0x23081 */
+  display_assert((char *)0x00254ba4, (char *)0x00254910, 173, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [edx + 0x154], 0 -> jle 0x23238 */
+  /* cmp (int16_t)eax, 2 -> je 0x23238 */
+  /* cmp (int16_t)eax, 4 -> je 0x23238 */
+  /* relift: cmp word ptr [ebx + 0x5fc], 0 -> jg 0x23238 */
+  /* relift: cmp word ptr [ebx + 0x5fe], 0 -> jg 0x23238 */
+  object_get_and_verify_type(0, 0);
+  tag_get('paew', 0);
+  FUN_000b55b0(18, 0);
+  /* test (char)eax, (char)eax -> je 0x23238 */
+  actor_combat_check_mode(0, 0);
+  /* test (char)eax, (char)eax -> je 0x23238 */
+  FUN_000121e0(0.0f, 0.0f);
+  get_global_random_seed_address();
+  random_math_real((void *)(uintptr_t)eax);
+  FUN_001d9068();
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }

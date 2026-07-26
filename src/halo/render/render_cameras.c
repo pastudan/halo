@@ -628,6 +628,7 @@ void render_camera_build_frustum_bounds(void)
 float render_frustum_sphere_diameter_in_pixels(void *frustum, float *center, float radius)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
   return 0;
 }
 
@@ -830,12 +831,14 @@ int render_camera_build_clipped_frustum_bounds(camera_t *camera, float *in_bound
 void render_camera_triangle_frontfacing(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x186690 */
 void render_frustum_build_point_flags(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x186790 */
@@ -853,6 +856,7 @@ void render_frustum_triangle_visible(void)
 short render_frustum_cube_visible(void *param_1, int param_2, int param_3)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
   return 0;
 }
 

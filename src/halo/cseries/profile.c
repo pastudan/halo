@@ -467,6 +467,7 @@ void symbol_table_dispose(int32_t *symtab)
 void profile_seconds_elapsed(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x8f880 */
@@ -484,6 +485,7 @@ void profile_lapsed_frames(void)
 void profile_lapsed_msec(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x8f8e0 */
@@ -623,12 +625,14 @@ void FUN_0008fb60(void)
 void FUN_00090170(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x90180 */
 void FUN_00090180(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x901d0 */
@@ -944,6 +948,7 @@ void profile_frame_iterator_new(void)
 void profile_frame_iterator_next(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x91190 */
@@ -980,30 +985,35 @@ void profile_frame_get_stalls(void)
 void profile_rasterizer_stalls(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x91350 */
 void FUN_00091350(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x91380 */
 void FUN_00091380(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x91b70 */
 void FUN_00091b70(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x91ba0 */
 void FUN_00091ba0(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x91c10 */
@@ -1047,12 +1057,14 @@ void FUN_00091c70(void)
 void FUN_00091cf0(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x91d50 */
 void FUN_00091d50(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x91da0 */
@@ -1123,12 +1135,14 @@ void FUN_00091ef0(int *keys, int count, int (*cmp)(int, int))
 void FUN_00092050(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x92060 */
 void profile_idle_start(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x92110 */

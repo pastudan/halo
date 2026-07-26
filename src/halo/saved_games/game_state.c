@@ -347,17 +347,128 @@ fail:
 /* 0x1bfb60 */
 void FUN_001bfb60(void)
 {
+  int eax = 0;
+  int edx = 0;
 
+  /* test eax, eax -> jne 0x1bfb87 */
+  crt_fopen((char *)0x002b99c8, (char *)0x00265938);
+  /* mem[0x004ea990] = eax */
+  crt_fprintf((void *)(uintptr_t)eax, (char *)0x002b99b4);
+  crt_fflush((void *)(uintptr_t)edx);
+  game_time_get();
+  /* mem[0x004ea9a8] = eax */
+  game_time_set_paused(0);
+
+  (void)eax;
+  (void)edx;
 }
 
 /* 0x1c0070 */
 void game_state_lruv_cache_new(void)
 {
+  int eax = 0;
 
+  crc_new((void *)0x004ea9a0);
+  FUN_001c00c0();
+  /* mem[0x004ea994] = eax */
+  game_state_create_or_open_file();
+  game_state_malloc((char *)0x00265d1c, (char *)0, 332);
+  /* mem[0x004ea9ac] = eax */
+
+  (void)eax;
 }
 
 /* 0x1c00c0 */
 void FUN_001c00c0(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  /* test (char)eax, (char)eax -> je 0x1c00e9 */
+  display_assert((char *)0x002b9b44, (char *)0x002b9b70, 46, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x1c010d */
+  display_assert((char *)0x00265fdc, (char *)0x002b9b70, 48, 0);
+  system_exit(0);
+  display_assert((char *)0x002b9b38, (char *)0x002b9b70, 49, 0);
+  system_exit(0);
+  /* test edi, edi -> ja 0x1c0158 */
+  display_assert((char *)0x002b9b2c, (char *)0x002b9b70, 50, 0);
+  system_exit(0);
+  /* test ebx, 0xfff -> je 0x1c017d */
+  display_assert((char *)0x002b9b0c, (char *)0x002b9b70, 53, 0);
+  system_exit(0);
+  /* test edi, 0xfff -> je 0x1c01a2 */
+  display_assert((char *)0x002b9aec, (char *)0x002b9b70, 54, 0);
+  system_exit(0);
+  FUN_001bdd40();
+  /* test esi, esi -> jne 0x1c01ca */
+  display_assert((char *)0x0025f120, (char *)0x002b9b70, 58, 0);
+  system_exit(0);
+  /* relift: cmp esi, dword ptr [ebp + 8] -> je 0x1c01ec */
+  display_assert((char *)0x002b9acc, (char *)0x002b9b70, 59, 0);
+  system_exit(0);
+  physical_memory_protect((void *)(uintptr_t)eax, 0, 0);
+  /* mem[0x004ea9b8] = ebx */
+  /* mem[0x004ea9b4] = ecx */
+  /* test (char)eax, (char)eax -> jne 0x1c0246 */
+  display_assert((char *)0x002b9ba0, (char *)0x002b9b70, 75, 0);
+  system_exit(0);
+  /* relift: MmFreeContiguousMemory(); */
+  /* test (char)eax, (char)eax -> jne 0x1c0286 */
+  display_assert((char *)0x002b9ba0, (char *)0x002b9b70, 86, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x1c02ac */
+  display_assert((char *)0x002b9c0c, (char *)0x002b9b70, 87, 0);
+  system_exit(0);
+  CreateFileA((char *)0x002b9bfc, 0xc0000000, 0, 0, 0, 0x28000000, 0);
+  /* mem[0x004ea9c0] = eax */
+  SetFilePointer(0, 0x00380000, (void *)0, 0);
+  /* cmp eax, -1 -> je 0x1c02fd */
+  SetEndOfFile(0);
+  /* test eax, eax -> je 0x1c02fd */
+  xapi_GetLastError();
+  csprintf((char *)0x005ab100, (char *)0x002b9bcc);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x1c0356 */
+  display_assert((char *)0x002b9c30, (char *)0x002b9b70, 106, 0);
+  system_exit(0);
+  CloseHandle(0);
+  /* test (char)eax, (char)eax -> jne 0x1c039d */
+  display_assert((char *)0x002b9ba0, (char *)0x002b9b70, 120, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x1c03c3 */
+  display_assert((char *)0x002b9c30, (char *)0x002b9b70, 121, 0);
+  system_exit(0);
+  SetFilePointer(0, 0, (void *)0, 0);
+  /* cmp eax, -1 -> je 0x1c0415 */
+  WriteFile(0, (void *)(uintptr_t)eax, edx, (void *)(uintptr_t)ecx, (void *)0);
+  /* test eax, eax -> je 0x1c0415 */
+  /* relift: cmp edx, dword ptr [0x4ea9b8] -> jne 0x1c0415 */
+  xapi_GetLastError();
+  csprintf((char *)0x005ab100, (char *)0x002b9c54);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x1c0480 */
+  display_assert((char *)0x002b9ba0, (char *)0x002b9b70, 144, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x1c04a9 */
+  display_assert((char *)0x002b9c30, (char *)0x002b9b70, 145, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x1c04db */
+  /* test (char)eax, (char)eax -> jne 0x1c04db */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }

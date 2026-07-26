@@ -865,62 +865,283 @@ void particle_systems_update(float dt)
 /* 0x9f570 */
 void FUN_0009f570(int effect_tag_index, int param_2, void *position, int param_4)
 {
-  (void)effect_tag_index;
-  (void)param_2;
-  (void)position;
-  (void)param_4;
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  tag_get(0x666f6f74, 0);
+  /* cmp ecx, edx -> jge 0x9f66c */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 28);
+  FUN_0014df70(0, (float *)0, (float *)0, 0, (void *)0);
+  /* test (char)eax, (char)eax -> je 0x9f64c */
+  FUN_0018f3e0((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (void *)0);
+  FUN_0009f430(0, 0, 0, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (void *)(uintptr_t)edx, 0.0f);
+  /* test (char)eax, (char)eax -> je 0x9f66b */
+  FUN_00189540(0, (void *)(uintptr_t)esi, 0.0f, (void *)(uintptr_t)eax);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0x9f7e0 */
 void particle_systems_reconnect_to_structure_bsp(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  data_next_index((void *)(uintptr_t)eax, 0);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  tag_get('ltcp', 0);
+  object_get_location(0, (void *)(uintptr_t)ecx);
+  /* relift: cmp dword ptr [edi], -1 -> je 0x9f8dd */
+  datum_get((void *)(uintptr_t)edx, 0);
+  scenario_location_from_point((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  /* relift: cmp word ptr [esi + 0x18], -1 -> jne 0x9f8d2 */
+  datum_delete((void *)(uintptr_t)eax, 0);
+  scenario_location_from_point((void *)(uintptr_t)eax, (void *)(uintptr_t)edx);
+  /* relift: cmp word ptr [ebx + 0x1c], -1 -> jne 0x9f84a */
+  particle_system_delete(0);
+  /* relift: cmp dword ptr [edi], -1 -> jne 0x9f870 */
+  /* cmp eax, ecx -> jl 0x9f860 */
+  data_next_index((void *)(uintptr_t)edx, 0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x9fa60 */
 void FUN_0009fa60(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  tag_get(0x7063746c, 0);
+  /* cmp ecx, -1 -> jne 0x9fabe */
+  /* cmp eax, -1 -> je 0x9fabe */
+  tag_get(0x70706879, 0);
+  FUN_00154a50(0, 0, (void *)0, 0, (float *)0, (float *)0, (float *)0, (float *)0, (void *)0, 0.0f, 0.0f);
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0x9fad0 */
 void FUN_0009fad0(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x9fb10 */
 void FUN_0009fb10(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
 
+  tag_get(0x7063746c, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 376);
+  /* cmp (int16_t)eax, 0xffff -> jne 0x9fb99 */
+  tag_get(0, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 376);
+  /* test (char)eax, 0x41 -> jne 0x9fbe6 */
+  tag_get(0, 0);
+  tag_get(0x70706879, 0);
+  point_physics_definition_interpolate();
+  FUN_00154a50(0, 0, (void *)(uintptr_t)ecx, 0, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (float *)0, (float *)0, (void *)0, 0.0f, 0.0f);
+  /* test (char)eax, 1 -> je 0x9fc79 */
+  /* relift: test byte ptr [edi + 0x20], 0x20 -> jne 0x9fc8d */
+  /* test (char)eax, 2 -> je 0x9fc83 */
+  /* relift: test byte ptr [edi + 0x20], 0x10 -> jne 0x9fc8d */
+  /* test (char)eax, 4 -> je 0x9fc91 */
+  /* relift: test byte ptr [edi + 0x20], 0x40 -> je 0x9fc91 */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }
 
 /* 0x9fca0 */
 void FUN_0009fca0(void)
 {
-
+  tag_get(0x7063746c, 0);
+  FUN_0009fa60();
 }
 
 /* 0xa0800 */
 void FUN_000a0800(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  datum_get((void *)(uintptr_t)ecx, 0);
+  tag_get('ltcp', 0);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 128);
+  /* test (char)ecx, 1 -> jne 0xa0d29 */
+  /* cmp (int16_t)esi, -1 -> je 0xa0d29 */
+  datum_get((void *)(uintptr_t)edx, 0);
+  /* test (char)eax, (char)eax -> je 0xa0d18 */
+  render_location_visible((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0xa0d18 */
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 0);
+  matrix_transform_point((void *)0x005065b4, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
+  matrix_transform_vector((void *)0x005065b4, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
+  /* cmp (int16_t)eax, 0xffff -> jne 0xa094d */
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 376);
+  /* test (char)eax, 0x41 -> jne 0xa09a3 */
+  /* test ecx, ecx -> je 0xa0a4d */
+  /* relift: cmp (int16_t)edi, word ptr [ecx + 0x2a] -> jne 0xa0a4d */
+  /* relift: cmp (int16_t)eax, word ptr [ecx + 0x2e] -> jne 0xa0a4d */
+  /* relift: cmp (int16_t)ecx, word ptr [edx + 0x40] -> jne 0xa0a4d */
+  tag_get('mtib', 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* cmp eax, 0xbf800000 -> jne 0xa0ab7 */
+  random_math_get_local_seed_address();
+  random_range((void *)(uintptr_t)eax, 0, 0);
+  FUN_001d9068();
+  FUN_001d9068();
+  /* test (char)eax, 0x41 -> jne 0xa0bf3 */
+  FUN_0018d2c0((void *)(uintptr_t)edx, 0, ecx, 0, 0);
+  /* relift: cmp word ptr [eax + 0x28], (int16_t)ecx -> jne 0xa0b9a */
+  FUN_0018dcf0((void *)(uintptr_t)eax, ecx, 0, 0, (void *)(uintptr_t)edx, (void *)(uintptr_t)eax, 0.0f, 0.0f, (void *)0, 0.0f);
+  FUN_0018d6e0((void *)(uintptr_t)ecx, eax, edx, ecx, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0.0f, 0.0f, (float *)0, 0.0f, 0);
+  FUN_0018d360((void *)(uintptr_t)ecx);
+  /* test (char)eax, 0x41 -> jne 0xa0d18 */
+  FUN_0018d2c0((void *)(uintptr_t)ecx, 0, eax, 0, 0);
+  FUN_0018dcf0((void *)(uintptr_t)ecx, ecx, 0, 0, (void *)(uintptr_t)eax, (void *)(uintptr_t)edx, 0.0f, 0.0f, (void *)0, 0.0f);
+  FUN_0018d6e0((void *)(uintptr_t)eax, edx, ecx, edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)edx, 0.0f, 0.0f, (float *)0, 0.0f, 0);
+  FUN_0018d360((void *)(uintptr_t)eax);
+  /* cmp (int16_t)esi, -1 -> jne 0xa0889 */
+  /* relift: cmp esi, dword ptr [ebx] -> jl 0xa0842 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0xa0d50 */
 void FUN_000a0d50(void)
 {
+  int eax = 0;
+  int edx = 0;
+  int esi = 0;
 
+  tag_get(0x7063746c, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 0);
+  random_math_get_local_seed_address();
+  random_seed_get_direction3d((void *)(uintptr_t)eax, (float *)0);
+  /* test (char)eax, (char)eax -> je 0xa0dea */
+  rotate_vector3d_by_sincos((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, 0.0f, 0.0f);
+
+  (void)eax;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0xa0e60 */
 void FUN_000a0e60(void)
 {
+  int eax = 0;
+  int edi = 0;
 
+  tag_get(0x7063746c, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 0);
+  random_math_get_local_seed_address();
+  random_seed_get_direction3d((void *)(uintptr_t)eax, (float *)0);
+
+  (void)eax;
+  (void)edi;
 }
 
 /* 0xa1170 */
 void particle_system_update(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test (char)eax, (char)eax -> je 0xa120a */
+  /* test eax, eax -> je 0xa118d */
+  /* test (char)ecx, (char)ecx -> jne 0xa11b2 */
+  display_assert((char *)0x0026ad14, (char *)0x0026abcc, 976, 0);
+  system_exit(0);
+  data_next_index((void *)(uintptr_t)eax, 0);
+  /* cmp esi, -1 -> je 0xa1209 */
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* relift: cmp word ptr [eax + 0x1c], -1 -> je 0xa11f2 */
+  scenario_location_potentially_visible_local((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0xa11f2 */
+  FUN_000a0800();
+  data_next_index((void *)(uintptr_t)ecx, 0);
+  /* cmp esi, -1 -> jne 0xa11c5 */
+  data_new_at_index((void *)(uintptr_t)eax);
+  /* cmp esi, -1 -> je 0xa12d6 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  FUN_00139480((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, (void *)0, 0);
+  FUN_000a0fd0(0);
+  datum_delete((void *)(uintptr_t)eax, 0);
+  data_new_at_index((void *)(uintptr_t)eax);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  object_get_and_verify_type(0, 0);
+  tag_get(0x6f626a65, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test (int16_t)ecx, (int16_t)ecx -> je 0xa1393 */
+  object_get_markers_by_string_id(0, (void *)(uintptr_t)eax, (void *)0, 0);
+  object_get_root_location(0, (float *)(uintptr_t)ebx, (float *)0);
+  object_get_function_value(0, 0, (void *)(uintptr_t)ecx);
+  FUN_000a0fd0(0);
+  /* test (char)eax, (char)eax -> jne 0xa146b */
+  datum_delete((void *)(uintptr_t)eax, 0);
+  game_state_data_new((char *)0x0026abc0, 1024, 112);
+  /* mem[0x005aa8a0] = eax */
+  error(eax, (char *)0x0026ad64);
+  data_delete_all((void *)(uintptr_t)eax);
+  data_make_invalid((void *)(uintptr_t)eax);
+  /* test eax, eax -> je 0xa14e3 */
+  /* mem[0x005aa8a0] = 0 */
+  datum_delete((void *)(uintptr_t)ecx, 0);
+  data_next_index((void *)(uintptr_t)eax, 0);
+  /* cmp esi, -1 -> je 0xa157b */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* cmp edx, edi -> jne 0xa1563 */
+  /* relift: test byte ptr [eax + 2], 0x40 -> je 0xa1563 */
+  /* relift: cmp dword ptr [eax + 8], -1 -> je 0xa1563 */
+  datum_delete((void *)(uintptr_t)eax, 0);
+  data_next_index((void *)(uintptr_t)ecx, 0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }

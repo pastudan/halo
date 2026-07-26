@@ -297,12 +297,14 @@ void player_effect_add_continuous_effect(void)
 void scripted_player_effect_set_rotation(int a0, float a1, float a2)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0xa2920 */
 void scripted_player_effect_set_rumble(int a0, float a1)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0xa2930 */
@@ -368,6 +370,7 @@ void player_effect_clear_damage_indicators(int player_index)
 void FUN_000a2a90(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0xa2ab0 */
@@ -426,18 +429,21 @@ void player_effect_continuous_refresh(void)
 void scripted_player_effect_set_translation(int a0, float a1, float a2)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0xa2df0 */
 void scripted_player_effect_start(int a0, float a1)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0xa2e40 */
 void scripted_player_effect_stop(int a0)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0xa2ed0 */

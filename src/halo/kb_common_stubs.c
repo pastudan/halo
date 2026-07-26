@@ -6,6 +6,7 @@
 void FUN_00067710(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x67760 */
@@ -2180,6 +2181,7 @@ void bitmap_cube_map_face_insert(void)
 void FUN_0007ef80(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x7f150 */
@@ -7022,6 +7024,7 @@ void FUN_00133300(int particle_ptr, int object_handle)
 void FUN_001334f0(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x133520 */
@@ -8338,6 +8341,7 @@ void FUN_001506d0(void)
 void FUN_00150710(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x150790 */
@@ -17189,6 +17193,7 @@ void FUN_001e67e7(void)
 wchar_t *FUN_001e6805(wchar_t *s)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
   return NULL;
 }
 
@@ -17196,6 +17201,7 @@ wchar_t *FUN_001e6805(wchar_t *s)
 wchar_t *FUN_001e6831(wchar_t *s)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
   return NULL;
 }
 
@@ -17203,6 +17209,7 @@ wchar_t *FUN_001e6831(wchar_t *s)
 void FUN_001e6860(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x1e68bb */

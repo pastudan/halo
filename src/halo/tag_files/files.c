@@ -919,78 +919,377 @@ bool find_files_next(file_ref_t *result, int param2)
 /* 0x199d40 */
 void FUN_00199d40(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  display_assert((char *)0x002b3d7c, (char *)0x002b3aac, 430, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x199da4 */
+  display_assert((char *)0x002b3d68, (char *)0x002b3aac, 431, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [esi], 0 -> jne 0x199dc9 */
+  display_assert((char *)0x002b3d50, (char *)0x002b3aac, 432, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [edi], 0 -> jne 0x199dee */
+  display_assert((char *)0x002b3d38, (char *)0x002b3aac, 433, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [ebp + 0x10], 0xff -> jl 0x199e17 */
+  display_assert((char *)0x002b3d14, (char *)0x002b3aac, 434, 0);
+  system_exit(0);
+  csstrlen((char *)(uintptr_t)edi);
+  /* cmp eax, 0xff -> jb 0x199e47 */
+  display_assert((char *)0x002b3ce0, (char *)0x002b3aac, 435, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)eax, 0, 268);
+  file_reference_set_name((void *)(uintptr_t)ecx, (char *)(uintptr_t)esi);
+  file_exists((void *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> je 0x199ee3 */
+  file_read_into_buffer((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  /* test edi, edi -> jne 0x199eb5 */
+  file_delete((void *)(uintptr_t)edx);
+  /* relift: cmp dword ptr [ebp - 8], 0x18e70 -> je 0x199edf */
+  debug_free((void *)(uintptr_t)edi, (char *)0x002b3aac, 450);
+  file_delete((void *)(uintptr_t)eax);
+  /* test edi, edi -> jne 0x199f16 */
+  debug_malloc(0x00018e70, 0, (char *)0x002b3aac, 461);
+  /* test edi, edi -> je 0x199fe7 */
+  csmemset((void *)(uintptr_t)edi, 0, 0x00018e70);
+  /* relift: cmp byte ptr [ebx], 0 -> je 0x199f47 */
+  csstrcmp((char *)(uintptr_t)ebx, (char *)(uintptr_t)ecx);
+  /* test eax, eax -> je 0x199f47 */
+  /* cmp esi, 0xc8 -> jl 0x199f20 */
+  csstrcpy((char *)(uintptr_t)esi, (char *)0);
+  csmemcpy((void *)(uintptr_t)esi, (void *)0, 0);
+  file_exists((void *)(uintptr_t)edx);
+  FUN_0019a490((void *)(uintptr_t)eax);
+  file_open((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> je 0x199fcd */
+  file_write();
+  file_close((void *)(uintptr_t)eax);
+  debug_free((void *)(uintptr_t)edi, (char *)0x002b3aac, 492);
+  /* test (char)eax, (char)eax -> jne 0x19a007 */
+  display_assert((char *)0x00254818, (char *)0x002b3aac, 495, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x19a020 */
 void file_compare_last_modification_dates(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  csmemcmp((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, 0);
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0x19a400 */
 void file_read_only(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  file_reference_verify((void *)(uintptr_t)eax);
+  path_from_file_reference(eax, (char *)(uintptr_t)edx, (char *)(uintptr_t)ecx);
+  file_get_full_attributes((char *)(uintptr_t)ecx);
+  /* cmp eax, -1 -> je 0x19a444 */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0x19aad0 */
 void file_set_eof(void)
 {
+  int eax = 0;
+  int esi = 0;
 
+  file_reference_verify((void *)(uintptr_t)esi);
+  file_set_position((void *)(uintptr_t)esi, 0);
+  /* test (char)eax, (char)eax -> je 0x19ab07 */
+  SetEndOfFile(0);
+  /* test eax, eax -> je 0x19ab07 */
+  file_reference_verify((void *)(uintptr_t)esi);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+
+  (void)eax;
+  (void)esi;
 }
 
 /* 0x19ac00 */
 void file_write(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  file_reference_verify((void *)(uintptr_t)ebx);
+  display_assert((char *)0x00267900, (char *)0x002b3dec, 451, 0);
+  system_exit(0);
+  WriteFile(0, (void *)(uintptr_t)edi, ecx, (void *)(uintptr_t)eax, (void *)0);
+  /* test eax, eax -> je 0x19ac68 */
+  /* relift: cmp dword ptr [ebp - 4], eax -> jne 0x19ac68 */
+  file_reference_verify((void *)(uintptr_t)ebx);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x19acf0 */
 void file_write_to_position(void)
 {
+  int eax = 0;
+  int esi = 0;
 
+  file_set_position((void *)(uintptr_t)esi, 0);
+  /* test (char)eax, (char)eax -> je 0x19ad25 */
+  file_write();
+  /* test (char)eax, (char)eax -> je 0x19ad25 */
+
+  (void)eax;
+  (void)esi;
 }
 
 /* 0x19ad30 */
 void file_get_last_modification_date(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
 
+  file_reference_verify((void *)(uintptr_t)ebx);
+  csmemset((void *)(uintptr_t)edi, 0, 0);
+  path_from_file_reference(edx, (char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
+  FUN_001d0ee1();
+  /* test eax, eax -> je 0x19adb5 */
+  csmemcpy((void *)(uintptr_t)edi, (void *)(uintptr_t)edx, 0);
+  file_reference_verify((void *)(uintptr_t)ebx);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }
 
 /* 0x19adf0 */
 void file_get_size(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  file_reference_verify((void *)(uintptr_t)esi);
+  /* test edi, edi -> jne 0x19ae4a */
+  display_assert((char *)0x00267f68, (char *)0x002b3dec, 524, 0);
+  system_exit(0);
+  path_from_file_reference(edx, (char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
+  FUN_001d0ee1();
+  /* test eax, eax -> je 0x19ae88 */
+  file_reference_verify((void *)(uintptr_t)esi);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 /* --- files.obj batch drafts (2026-07-26) --- */
 
 /* 0x199420 */
 void file_reference_create(void)
 {
+  int esi = 0;
+  int edi = 0;
 
+  display_assert((char *)0x002b3b10, (char *)0x002b3aac, 91, 0);
+  system_exit(0);
+  /* cmp (int16_t)edi, -1 -> jl 0x199459 */
+  /* cmp (int16_t)edi, 2 -> jl 0x199476 */
+  display_assert((char *)0x002b3ad0, (char *)0x002b3aac, 92, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)esi, 0, 268);
+
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x1995c0 */
 void file_printf(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
 
+  /* test eax, eax -> je 0x199616 */
+  vsprintf((char *)(uintptr_t)edx, (char *)(uintptr_t)eax, (char *)(uintptr_t)ecx);
+  csstrlen((char *)(uintptr_t)ecx);
+  file_write();
+  file_get_position((void *)(uintptr_t)esi);
+  file_set_eof();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0x1996d0 */
 void file_reference_copy(void)
 {
+  int esi = 0;
 
+  file_reference_verify((void *)(uintptr_t)esi);
+  csmemcpy((void *)(uintptr_t)esi, (void *)(uintptr_t)esi, 264);
+
+  (void)esi;
 }
 
 /* 0x199a60 */
 void directory_create_or_delete_contents(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  csmemset((void *)(uintptr_t)eax, 0, 268);
+  file_reference_add_directory((void *)(uintptr_t)edx, (char *)(uintptr_t)ecx);
+  file_exists((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x199b05 */
+  find_files_begin(0, (void *)(uintptr_t)ecx);
+  find_files_next((void *)(uintptr_t)edx, 0);
+  /* test (char)eax, (char)eax -> je 0x199b14 */
+  file_delete((void *)(uintptr_t)eax);
+  find_files_next((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> jne 0x199ae0 */
+  FUN_0019a490((void *)(uintptr_t)edx);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0x199b20 */
 void FUN_00199b20(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  display_assert((char *)0x002b3d7c, (char *)0x002b3aac, 369, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x199b81 */
+  display_assert((char *)0x002b3d68, (char *)0x002b3aac, 370, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [edi], 0 -> jne 0x199ba6 */
+  display_assert((char *)0x002b3d50, (char *)0x002b3aac, 371, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [esi], 0 -> jne 0x199bcb */
+  display_assert((char *)0x002b3d38, (char *)0x002b3aac, 372, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [ebp + 0x10], 0xff -> jl 0x199bf4 */
+  display_assert((char *)0x002b3d14, (char *)0x002b3aac, 373, 0);
+  system_exit(0);
+  csstrlen((char *)(uintptr_t)esi);
+  /* cmp eax, 0xff -> jb 0x199c24 */
+  display_assert((char *)0x002b3ce0, (char *)0x002b3aac, 374, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)eax, 0, 268);
+  file_reference_set_name((void *)(uintptr_t)ecx, (char *)(uintptr_t)edi);
+  file_exists((void *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> je 0x199d2c */
+  file_read_into_buffer((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  /* test ebx, ebx -> jne 0x199c96 */
+  file_delete((void *)(uintptr_t)edx);
+  /* relift: cmp dword ptr [ebp - 4], 0x18e70 -> je 0x199cc8 */
+  debug_free((void *)(uintptr_t)ebx, (char *)0x002b3aac, 389);
+  file_delete((void *)(uintptr_t)eax);
+  /* test ebx, ebx -> je 0x199d2c */
+  csstrcmp((char *)(uintptr_t)edi, (char *)(uintptr_t)ecx);
+  /* test eax, eax -> je 0x199cf7 */
+  /* relift: cmp byte ptr [edi], 0 -> je 0x199d19 */
+  /* cmp esi, 0xc8 -> jl 0x199cd0 */
+  csmemcpy((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, edx);
+  debug_free((void *)(uintptr_t)ebx, (char *)0x002b3aac, 416);
+  display_assert((char *)0x002b3d7c, (char *)0x002b3aac, 430, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x199da4 */
+  display_assert((char *)0x002b3d68, (char *)0x002b3aac, 431, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [esi], 0 -> jne 0x199dc9 */
+  display_assert((char *)0x002b3d50, (char *)0x002b3aac, 432, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [edi], 0 -> jne 0x199dee */
+  display_assert((char *)0x002b3d38, (char *)0x002b3aac, 433, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [ebp + 0x10], 0xff -> jl 0x199e17 */
+  display_assert((char *)0x002b3d14, (char *)0x002b3aac, 434, 0);
+  system_exit(0);
+  csstrlen((char *)(uintptr_t)edi);
+  /* cmp eax, 0xff -> jb 0x199e47 */
+  display_assert((char *)0x002b3ce0, (char *)0x002b3aac, 435, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)eax, 0, 268);
+  file_reference_set_name((void *)(uintptr_t)ecx, (char *)(uintptr_t)esi);
+  file_exists((void *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> je 0x199ee3 */
+  file_read_into_buffer((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  /* test edi, edi -> jne 0x199eb5 */
+  file_delete((void *)(uintptr_t)edx);
+  /* relift: cmp dword ptr [ebp - 8], 0x18e70 -> je 0x199edf */
+  debug_free((void *)(uintptr_t)edi, (char *)0x002b3aac, 450);
+  file_delete((void *)(uintptr_t)eax);
+  /* test edi, edi -> jne 0x199f16 */
+  debug_malloc(0x00018e70, 0, (char *)0x002b3aac, 461);
+  /* test edi, edi -> je 0x199fe7 */
+  csmemset((void *)(uintptr_t)edi, 0, 0x00018e70);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }

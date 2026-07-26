@@ -1069,83 +1069,424 @@ float FUN_000b55b0(short value_type, int team)
 /* 0xb40f0 */
 void race_team_can_win_game(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
 
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* test edx, ecx -> jne 0xb4145 */
+  display_assert((char *)0x0026db24, (char *)0x0026d8f4, 1062, 0);
+  system_exit(0);
+  /* test edx, esi -> je 0xb4161 */
+  /* cmp ecx, 0x20 -> jl 0xb4155 */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0xb4300 */
 void race_engine_update(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
 
+  FUN_000a95a0();
+  /* test (char)eax, (char)eax -> je 0xb439e */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  FUN_000b3c60(0);
+  FUN_000b3c60(0);
+  /* test (char)ebx, (char)ebx -> jne 0xb438c */
+  /* test (char)eax, (char)eax -> je 0xb4383 */
+  display_assert((char *)0x0026db74, (char *)0x0026d8f4, 1165, 0);
+  system_exit(0);
+  FUN_000ae250(0);
+  FUN_000ae250(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
 }
 
 /* 0xb43b0 */
 void FUN_000b43b0(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  global_scenario_get();
+  game_globals_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test eax, eax -> jle 0xb4473 */
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 148);
+  /* relift: cmp word ptr [eax + 0x10], 4 -> jne 0xb446c */
+  /* test ebx, ebx -> jle 0xb442d */
+  /* relift: cmp esi, dword ptr [edx + ecx*4] -> je 0xb446c */
+  /* cmp ecx, ebx -> jl 0xb4420 */
+  /* test ecx, ecx -> je 0xb447c */
+  /* cmp esi, eax -> jl 0xb4400 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0xb4490 */
 void FUN_000b4490(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
 
+  global_scenario_get();
+  data_iterator_new((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  data_iterator_next((void *)(uintptr_t)edx);
+  /* test eax, eax -> je 0xb4529 */
+  /* cmp eax, -1 -> je 0xb44ec */
+  object_get_and_verify_type(0, 0);
+  /* cmp ebx, 8 -> je 0xb4529 */
+  /* test eax, eax -> je 0xb4501 */
+  FUN_000b43b0();
+  /* cmp eax, -1 -> je 0xb4529 */
+  data_iterator_next((void *)0);
+  /* test eax, eax -> jne 0xb44d7 */
+  /* test ebx, ebx -> jle 0xb45b9 */
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 148);
+  FUN_000b3770(0);
+  /* cmp eax, -1 -> je 0xb45b4 */
+  object_placement_data_new((void *)(uintptr_t)eax, 0, 0);
+  vector3d_from_angle((float *)(uintptr_t)eax, 0.0f);
+  object_new((void *)(uintptr_t)ecx);
+  /* cmp edi, ebx -> jl 0xb4540 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }
 
 /* 0xb46b0 */
 void race_update_team_score(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  global_scenario_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  FUN_000b3b30(0, 0);
+  /* test (char)eax, (char)eax -> je 0xb47f5 */
+  game_engine_post_event(0);
+  /* cmp eax, -1 -> jne 0xb4742 */
+  game_engine_get_variant();
+  /* test ecx, ecx -> jne 0xb4737 */
+  display_assert((char *)0x0026dc08, (char *)0x0026d8f4, 723, 0);
+  system_exit(0);
+  game_engine_get_variant();
+  /* relift: cmp dword ptr [eax + 0x4c], 2 -> jne 0xb476e */
+  FUN_000b39a0(0);
+  FUN_000b45c0(0);
+  /* mem[0x00456f94] = eax */
+  FUN_000b39a0(0);
+  /* test eax, esi -> je 0xb47c0 */
+  display_assert((char *)0x0026dbe0, (char *)0x0026d8f4, 745, 0);
+  system_exit(0);
+  /* test edi, ecx -> je 0xb47f4 */
+  display_assert((char *)0x0026dba8, (char *)0x0026d8f4, 749, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0xb4800 */
 void FUN_000B4800(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  datum_get((void *)(uintptr_t)eax, 0);
+  game_engine_state_message(0, 22, 0);
+  /* cmp eax, -1 -> je 0xb4897 */
+  game_engine_can_score();
+  /* test (char)eax, (char)eax -> je 0xb4897 */
+  object_get_and_verify_type(0, 0);
+  /* cmp ecx, -1 -> je 0xb486d */
+  object_get_and_verify_type(0, 0);
+  find_netgame_flag((float *)(uintptr_t)eax, 0.0f, 0.0f, 0, 0);
+  find_netgame_flag((float *)(uintptr_t)eax, 0.0f, 0.0f, 0, 0);
+  /* cmp eax, -1 -> je 0xb4897 */
+  race_update_team_score();
+  game_time_get();
+  /* cmp eax, 2 -> jne 0xb4915 */
+  FUN_000b36f0();
+  FUN_000b4490();
+  FUN_000a95a0();
+  game_engine_post_event(0);
+  /* test (char)eax, (char)eax -> je 0xb4915 */
+  game_engine_get_variant();
+  /* cmp eax, 4 -> ja 0xb4915 */
+  game_engine_post_event(23);
+  game_engine_post_event(24);
+  game_engine_post_event(25);
+  game_engine_post_event(25);
+  FUN_000a95a0();
+  /* test (char)eax, (char)eax -> je 0xb4943 */
+  FUN_000b3c60(0);
+  /* test (char)eax, (char)eax -> jne 0xb492f */
+  game_engine_start_over();
+  FUN_000b3c60(0);
+  game_engine_start_over();
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0xb4a70 */
 void FUN_000b4a70(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  datum_get((void *)(uintptr_t)eax, 0);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* cmp esi, edi -> je 0xb4ab5 */
+  /* relift: cmp esi, dword ptr [ebp + 8] -> je 0xb4ab5 */
+  /* relift: cmp edx, dword ptr [ecx + 0x20] -> je 0xb4ab5 */
+  csmemset((void *)0x00456fe0, 0, 64);
+  csmemset((void *)0x00457020, 0, 64);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0xb4b10 */
 void FUN_000b4b10(void)
 {
+  int ecx = 0;
 
+  datum_get((void *)(uintptr_t)ecx, 0);
+  FUN_000a95a0();
+  game_engine_post_event(0);
+
+  (void)ecx;
 }
 
 /* 0xb4bf0 */
 void FUN_000b4bf0(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  datum_get((void *)(uintptr_t)ecx, 0);
+  datum_get((void *)(uintptr_t)eax, 0);
+  game_engine_get_variant();
+  /* test (char)ecx, (char)ecx -> jne 0xb4c83 */
+  /* test (char)eax, 1 -> jne 0xb4c63 */
+  /* test (char)eax, 0x41 -> je 0xb4c5e */
+  /* test (char)eax, 0x41 -> jne 0xb4c7a */
+  game_engine_get_variant();
+  /* test (char)ecx, (char)ecx -> jne 0xb4cf0 */
+  /* test (char)eax, 0x41 -> jne 0xb4cc6 */
+  /* test (char)eax, 0x41 -> jne 0xb4cea */
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0xb4d00 */
 void FUN_000b4d00(void)
 {
+  int eax = 0;
 
+  datum_get((void *)(uintptr_t)eax, 0);
+
+  (void)eax;
 }
 
 /* 0xb4e20 */
 void find_next_target(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  datum_get((void *)(uintptr_t)eax, 0);
+  data_iterator_new((void *)(uintptr_t)eax, (void *)(uintptr_t)edx);
+  data_iterator_next((void *)(uintptr_t)ecx);
+  /* test eax, eax -> je 0xb4f83 */
+  datum_get((void *)(uintptr_t)edx, 0);
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* cmp esi, edi -> je 0xb4ead */
+  /* relift: cmp esi, dword ptr [ebp - 8] -> je 0xb4ead */
+  /* relift: cmp ecx, dword ptr [ebx + 0x20] -> je 0xb4ead */
+  /* relift: cmp dword ptr [eax + 0x34], -1 -> je 0xb4ead */
+  data_iterator_next((void *)(uintptr_t)edx);
+  /* test eax, eax -> jne 0xb4e72 */
+  /* test eax, eax -> jle 0xb4f81 */
+  get_global_random_seed_address();
+  random_range((void *)(uintptr_t)eax, 0, 0);
+  data_iterator_new((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
+  data_iterator_next((void *)(uintptr_t)eax);
+  /* test eax, eax -> je 0xb4f61 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  datum_get((void *)(uintptr_t)edx, 0);
+  /* cmp esi, edi -> je 0xb4f44 */
+  /* relift: cmp esi, dword ptr [ebp - 8] -> je 0xb4f44 */
+  /* relift: cmp ecx, dword ptr [ebx + 0x20] -> je 0xb4f44 */
+  /* relift: cmp dword ptr [eax + 0x34], -1 -> je 0xb4f44 */
+  /* test eax, eax -> je 0xb4f56 */
+  data_iterator_next((void *)(uintptr_t)edx);
+  /* test eax, eax -> jne 0xb4f00 */
+  display_assert((char *)0x0026dcb0, (char *)0x0026dcc4, 194, 0);
+  system_exit(0);
+  game_engine_player_event(0, 30, 0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0xb4fb0 */
 void FUN_000b4fb0(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* test (char)ecx, (char)ecx -> jne 0xb5035 */
+  /* cmp esi, -1 -> je 0xb5033 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> jne 0xb5029 */
+  FUN_000b4bf0();
+  game_engine_get_variant();
+  /* test (char)ecx, (char)ecx -> je 0xb5018 */
+  /* relift: cmp dword ptr [ebx + 0x88], edi -> jne 0xb5033 */
+  find_next_target();
+  FUN_000b4d00();
+  FUN_000b4d00();
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0xb5040 */
 void FUN_000b5040(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* cmp ecx, 0x1e -> jne 0xb512e */
+  game_engine_get_variant();
+  datum_get((void *)(uintptr_t)ecx, 0);
+  datum_get((void *)(uintptr_t)eax, 0);
+  unicode_sprintf((wchar_t *)(uintptr_t)edx, 128, (wchar_t *)0x0026dd64);
+  datum_get((void *)(uintptr_t)eax, 0);
+  unicode_sprintf((wchar_t *)(uintptr_t)edx, 128, (wchar_t *)0x0026c118);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  unicode_sprintf((wchar_t *)(uintptr_t)eax, 0, (wchar_t *)0x0026dd48);
+  /* cmp ecx, 0x16 -> je 0xb5141 */
+  /* cmp ecx, 0x1e -> je 0xb510c */
+  game_engine_get_variant();
+  game_engine_get_place(0, 0);
+  game_engine_place_to_string(0);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  game_engine_get_variant();
+  unicode_sprintf((wchar_t *)(uintptr_t)edx, 0, (wchar_t *)0x0026dd14);
+  game_engine_get_place(0, 0);
+  game_engine_place_to_string(0);
+  datum_get((void *)(uintptr_t)eax, 0);
+  game_engine_get_variant();
+  unicode_sprintf((wchar_t *)(uintptr_t)ecx, 0, (wchar_t *)0x0026dcf0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0xb5210 */
 void slayer_engine_display_score(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  datum_get((void *)(uintptr_t)eax, 0);
+  game_engine_get_variant();
+  /* test (char)ecx, (char)ecx -> je 0xb5269 */
+  /* test (char)eax, 0x41 -> jne 0xb5269 */
+  /* test (char)eax, 0x41 -> je 0xb5266 */
+  game_engine_get_variant();
+  /* test (char)ecx, (char)ecx -> je 0xb52a9 */
+  /* test (char)eax, 0x41 -> jne 0xb52a6 */
+  game_engine_get_variant();
+  /* test (char)ecx, (char)ecx -> je 0xb5362 */
+  /* test (int16_t)edi, (int16_t)edi -> jl 0xb52c4 */
+  /* cmp (int16_t)edi, 0x10 -> jl 0xb52e4 */
+  display_assert((char *)0x0026dd7c, (char *)0x0026dcc4, 501, 0);
+  system_exit(0);
+  game_engine_clear_goal_position(0);
+  /* cmp eax, -1 -> je 0xb5331 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* cmp eax, -1 -> je 0xb5331 */
+  object_get_and_verify_type(0, 0);
+  game_engine_set_goal_position(0, (void *)(uintptr_t)eax, 0.0f, (char *)0, 0, 0, 0);
+  /* relift: cmp dword ptr [esi + 0x34], -1 -> je 0xb5345 */
+  /* relift: cmp dword ptr [esi + 0x88], -1 -> jne 0xb5345 */
+  find_next_target();
+  /* cmp esi, -1 -> je 0xb5362 */
+  game_engine_man_out(0);
+  /* test (char)eax, (char)eax -> je 0xb5362 */
+  find_next_target();
+  datum_get((void *)(uintptr_t)edx, 0);
+  game_engine_get_variant();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }

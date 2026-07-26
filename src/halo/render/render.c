@@ -310,88 +310,324 @@ void render_frame(void *a2, __int16 a3, _WORD *a4, _WORD *a5, void *a6,
 /* 0x184570 */
 char FUN_00184570(void *group)
 {
-  (void)group;
-  return 0;
+  int eax = 0;
+
+  rasterizer_transparent_geometry_group_to_presorted_index(eax);
+  return 1;
+
+  (void)eax;
 }
 
 /* 0x1845b0 */
 void FUN_001845b0(void *group, int a2)
 {
-  (void)group;
-  (void)a2;
+  int eax = 0;
+
+  rasterizer_transparent_geometry_group_to_presorted_index(eax);
+  /* cmp (int16_t)eax, 0xffff -> je 0x18460c */
+
+  (void)eax;
 }
 
 /* 0x184610 */
 int FUN_00184610(void *group)
 {
-  (void)group;
+  int eax = 0;
+  int esi = 0;
+
+  /* test esi, esi -> jne 0x18463f */
+  display_assert((char *)0x0026276c, (char *)0x002b0ca8, 244, 0);
+  system_exit(0);
+  /* test eax, eax -> je 0x18464d */
+  /* cmp esi, -1 -> je 0x184662 */
+  rasterizer_widget_draw_sprite2d(0);
+  error(0, (char *)0x002b0e18);
   return 0;
+
+  (void)eax;
+  (void)esi;
 }
 
 /* 0x184680 */
 void FUN_00184680(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x184690 */
 void FUN_00184690(void)
 {
+  int eax = 0;
+  int esi = 0;
 
+  FUN_00174cc0();
+  /* cmp eax, esi -> je 0x1846b4 */
+  debug_free((void *)(uintptr_t)eax, (char *)0x002b0ca8, 273);
+  /* mem[0x004d0cec] = esi */
+  debug_free((void *)(uintptr_t)eax, (char *)0x002b0ca8, 276);
+  /* mem[0x004d0cfc] = esi */
+  debug_free((void *)(uintptr_t)eax, (char *)0x002b0ca8, 280);
+  /* mem[0x004d0cf0] = esi */
+  /* mem[0x004d0cf8] = esi */
+  /* mem[0x004d0cf4] = esi */
+
+  (void)eax;
+  (void)esi;
 }
 
 /* 0x184710 */
 void FUN_00184710(void)
 {
+  int eax = 0;
 
+  FUN_00158ae0(0);
+  /* test eax, eax -> jne 0x184744 */
+  display_assert((char *)0x0026276c, (char *)0x002b0ca8, 402, 0);
+  system_exit(0);
+
+  (void)eax;
 }
 
 /* 0x184750 */
 void group_sorted_indices_cmpfn(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edi = 0;
 
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x184774 */
+  /* cmp eax, ecx -> jl 0x184794 */
+  display_assert((char *)0x002b0ea8, (char *)0x002b0ca8, 426, 0);
+  system_exit(0);
+  /* test edi, edi -> je 0x1847ae */
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x1847ae */
+  /* relift: cmp ecx, dword ptr [0x4d0cf4] -> jl 0x1847ce */
+  display_assert((char *)0x002b0e50, (char *)0x002b0ca8, 427, 0);
+  system_exit(0);
+  shader_is_water_decal((void *)0);
+  /* test (char)eax, (char)eax -> jne 0x18488e */
+  shader_is_water_decal((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x184816 */
+  /* relift: cmp word ptr [eax + 0x24], (int16_t)ecx -> je 0x18488e */
+  /* test eax, eax -> je 0x18483c */
+  /* relift: cmp word ptr [eax + 0x24], (int16_t)ecx -> jne 0x18483c */
+  /* test eax, eax -> je 0x18488e */
+  /* test (char)eax, 0x41 -> jne 0x18486e */
+  /* cmp eax, ecx -> jle 0x18488c */
+  /* test (char)ecx, (char)ecx -> jne 0x1848b3 */
+  /* test (char)ecx, (char)ecx -> je 0x1848bf */
+  /* test (char)eax, (char)eax -> jne 0x1848bf */
+
+  (void)eax;
+  (void)ecx;
+  (void)edi;
 }
 
 /* 0x1848d0 */
 void rasterizer_sort_internal(void)
 {
+  int eax = 0;
+  int esi = 0;
 
+  /* test eax, eax -> jle 0x184927 */
+  display_assert((char *)0x0026276c, (char *)0x002b0ca8, 402, 0);
+  system_exit(0);
+  /* cmp esi, eax -> jl 0x1848e0 */
+  qsort((void *)(uintptr_t)eax, eax, 0, (void *)0x00184750);
+  /* test esi, esi -> jle 0x18497a */
+  /* cmp eax, esi -> jl 0x184960 */
+
+  (void)eax;
+  (void)esi;
 }
 
 /* 0x184980 */
 void FUN_00184980(char param_1)
 {
-  (void)param_1;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+
+  FUN_0016f910(esi);
+  /* test eax, eax -> jle 0x184b43 */
+  rasterizer_sort_internal();
+  FUN_00174ce0();
+  /* test (char)ebx, (char)ebx -> je 0x184a3f */
+  /* test eax, eax -> je 0x184b0c */
+  /* relift: cmp word ptr [eax + 0x24], 7 -> je 0x184a3f */
+  shader_is_water_decal((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x184b0c */
+  /* test (char)ebx, (char)ebx -> je 0x184a68 */
+  display_assert((char *)0x002b0f14, (char *)0x002b0ca8, 340, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [0x5a5bc0], 0 -> je 0x184a92 */
+  display_assert((char *)0x0029f520, (char *)0x002b0ca8, 341, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x184ae2 */
+  FUN_00158ae0(0);
+  rasterizer_set_frustum_z(0.0f, 0.0f);
+  /* test (char)eax, (char)eax -> je 0x184ae2 */
+  display_assert((char *)0x002b0f00, (char *)0x002b0ca8, 355, 0);
+  system_exit(0);
+  rasterizer_transparent_geometry_group_draw((void *)(uintptr_t)esi, 0);
+  /* cmp eax, ecx -> jl 0x184a00 */
+  /* test (char)ebx, (char)ebx -> jne 0x184b24 */
+  /* relift: cmp word ptr [0x5a5bc2], -1 -> je 0x184b24 */
+  FUN_001749b0();
+  rasterizer_set_frustum_z(0.0f, 0.0f);
+  FUN_0016fa40(esi);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
 }
 
 /* 0x184b60 */
 void render_effects(int a0)
 {
-  (void)a0;
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x184de0 */
 char render_location_visible(void *location)
 {
-  (void)location;
-  return 0;
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
+
+  /* relift: cmp word ptr [esi + 4], 0 -> jl 0x184dff */
+  scenario_get();
+  /* relift: cmp ecx, dword ptr [eax + 0x134] -> jl 0x184e1f */
+  display_assert((char *)0x002b0f40, (char *)0x002b0f1c, 584, 0);
+  system_exit(0);
+  return 1;
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
 }
 
 /* 0x184e50 */
 void *rendered_cluster_get(int rendered_cluster_index)
 {
-  (void)rendered_cluster_index;
+  int esi = 0;
+
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x184e66 */
+  /* relift: cmp (int16_t)esi, word ptr [0x5137cc] -> jl 0x184e86 */
+  display_assert((char *)0x002b0fa8, (char *)0x002b0f1c, 592, 0);
+  system_exit(0);
   return NULL;
+
+  (void)esi;
 }
 
 /* 0x184ea0 */
 void render_scene(int16_t player_index, void *render_cam, void *render_frustum, void *rasterizer_cam, void *rasterizer_frustum, int16_t pass_type, char reflected)
 {
-  (void)player_index;
-  (void)render_cam;
-  (void)render_frustum;
-  (void)rasterizer_cam;
-  (void)rasterizer_frustum;
-  (void)pass_type;
-  (void)reflected;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  profile_render_window_start(0);
+  /* mem[0x00506544] = edx */
+  csmemset((void *)(uintptr_t)eax, 0, 0);
+  render_structure_visibility();
+  player_effect_get_screen_flash();
+  rasterizer_window_begin((void *)(uintptr_t)edx);
+  bink_playback_has_video();
+  /* test (char)eax, (char)eax -> jne 0x18524b */
+  scenario_fog_region_get_fog_index();
+  FUN_0018ca40();
+  first_person_weapon_render_update();
+  FUN_0013b380();
+  scenario_test_pvs();
+  FUN_001959f0();
+  FUN_00195b10();
+  FUN_00181a90();
+  scenario_test_pas();
+  FUN_0013a420();
+  FUN_0017cb20(0);
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x185011 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x184fca */
+  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x184fea */
+  display_assert((char *)0x002b0fa8, (char *)0x002b0f1c, 592, 0);
+  system_exit(0);
+  FUN_0017cb30(0);
+  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x184fc0 */
+  FUN_0017cb40();
+  FUN_0017cb20(0);
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x185081 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x18503a */
+  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x18505a */
+  display_assert((char *)0x002b0fa8, (char *)0x002b0f1c, 592, 0);
+  system_exit(0);
+  FUN_0017cb30(0);
+  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x185030 */
+  FUN_0017cb40();
+  FUN_00195bc0();
+  FUN_0017cb20(0);
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x1850f3 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x1850ac */
+  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x1850cc */
+  display_assert((char *)0x002b0fa8, (char *)0x002b0f1c, 592, 0);
+  system_exit(0);
+  FUN_0017cb30(0);
+  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x1850a2 */
+  FUN_0017cb40();
+  FUN_0017cb20(0);
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x185161 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x18511a */
+  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x18513a */
+  display_assert((char *)0x002b0fa8, (char *)0x002b0f1c, 592, 0);
+  system_exit(0);
+  FUN_0017cb30(0);
+  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x185110 */
+  FUN_0017cb40();
+  FUN_0013a5f0();
+  FUN_00195c40();
+  FUN_00195cb0();
+  FUN_00195d00();
+  FUN_00195d40();
+  FUN_00195dc0();
+  FUN_00195e40();
+  get_postgame_hilite_colors();
+  FUN_000a54b0();
+  FUN_0018c5b0();
+  particle_system_update();
+  FUN_00188880();
+  FUN_00184980(0);
+  FUN_0017cb20(0);
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x185211 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x1851ca */
+  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x1851ea */
+  display_assert((char *)0x002b0fa8, (char *)0x002b0f1c, 592, 0);
+  system_exit(0);
+  FUN_0017cb30(0);
+  /* cmp (int16_t)esi, (int16_t)eax -> jl 0x1851c0 */
+  FUN_0017cb40();
+  FUN_00193c00();
+  FUN_00184980(0);
+  FUN_00184710();
+  FUN_00195ec0();
+  FUN_00181c20();
+  interface_draw_screen();
+  FUN_0017cba0();
+  render_ui_widgets(ebx, (void *)(uintptr_t)ecx);
+  bink_playback_render();
+  render_camera_debug_frustum();
+  FUN_0018ac50();
+  FUN_000977e0();
+  FUN_0017e190();
+  rasterizer_window_end();
+  profile_render_window_end();
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }

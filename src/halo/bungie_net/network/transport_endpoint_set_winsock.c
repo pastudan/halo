@@ -1097,6 +1097,7 @@ void FUN_00081fa0(void)
 void *transport_get_xnaddr(void *dst)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
   return NULL;
 }
 
@@ -1175,6 +1176,7 @@ void delete_endpoint_set(int set)
 void FUN_000824a0(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x824d0 */
@@ -1361,6 +1363,7 @@ void FUN_00082bd0(void)
 void FUN_00082c90(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x82cf0 */

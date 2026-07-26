@@ -976,17 +976,17 @@ void FUN_00120250(void)
   FUN_0011fd50();
   /* test (char)eax, (char)eax -> jne 0x12028a */
   /* relift: cmp byte ptr [esi], 0 -> jne 0x12028a */
-  display_assert((void *)0x002906c4, (void *)0x002905b0, 96, 0);
+  display_assert((char *)0x002906c4, (char *)0x002905b0, 96, 0);
   system_exit(0);
   /* cmp (int16_t)edi, (int16_t)ecx -> jg 0x120337 */
   /* cmp (int16_t)edx, (int16_t)eax -> jg 0x120337 */
   /* cmp edx, eax -> jge 0x120337 */
-  data_new_at_index((void *)0);
+  data_new_at_index((void *)(uintptr_t)eax);
   /* cmp ebx, -1 -> je 0x120337 */
   FUN_0011fef0();
   FUN_0011ff70();
   /* test (char)eax, (char)eax -> jne 0x120337 */
-  datum_delete((void *)0, 0);
+  datum_delete((void *)(uintptr_t)edx, 0);
 
   (void)eax;
   (void)ebx;
@@ -1007,15 +1007,15 @@ void FUN_00120340(void)
 
   FUN_0011fd50();
   /* relift: cmp byte ptr [esi], 0 -> jne 0x120373 */
-  display_assert((void *)0x00290710, (void *)0x002905b0, 138, 0);
+  display_assert((char *)0x00290710, (char *)0x002905b0, 138, 0);
   system_exit(0);
   /* relift: cmp word ptr [eax + 0x2e], (int16_t)ebx -> jle 0x1203be */
   /* relift: cmp word ptr [edi], 0 -> je 0x1203b1 */
   /* test (char)eax, (char)eax -> jne 0x1203b1 */
-  datum_delete((void *)0, 0);
+  datum_delete((void *)(uintptr_t)eax, 0);
   /* relift: cmp (int16_t)ebx, word ptr [ecx + 0x2e] -> jl 0x120381 */
   FUN_0011ff70();
-  display_assert((void *)0x002906fc, (void *)0x002905b0, 157, 0);
+  display_assert((char *)0x002906fc, (char *)0x002905b0, 157, 0);
   system_exit(0);
 
   (void)eax;
@@ -1036,7 +1036,7 @@ void FUN_00120400(void)
 
   FUN_0011fd50();
   /* relift: cmp byte ptr [esi], 0 -> jne 0x120431 */
-  display_assert((void *)0x00290710, (void *)0x002905b0, 170, 0);
+  display_assert((char *)0x00290710, (char *)0x002905b0, 170, 0);
   system_exit(0);
   FUN_0011ff70();
   /* test (char)eax, (char)eax -> je 0x12046b */
@@ -1079,7 +1079,7 @@ char FUN_00120620(int animation)
   int esi = 0;
 
   /* test esi, esi -> jne 0x120641 */
-  display_assert((void *)0x00290cd8, (void *)0x00290ce4, 38, 0);
+  display_assert((char *)0x00290cd8, (char *)0x00290ce4, 38, 0);
   system_exit(0);
   /* relift: test byte ptr [esi + 0x3a], 1 -> je 0x120660 */
   /* test (char)eax, (char)eax -> jne 0x12065a */
@@ -1099,15 +1099,15 @@ void build_damage_animation_index(void)
 
   /* test (int16_t)edi, (int16_t)edi -> jl 0x120684 */
   /* cmp (int16_t)edi, 4 -> jl 0x1206a1 */
-  display_assert((void *)0x00290d98, (void *)0x00290ce4, 55, 0);
+  display_assert((char *)0x00290d98, (char *)0x00290ce4, 55, 0);
   system_exit(0);
   /* test (int16_t)ebx, (int16_t)ebx -> jl 0x1206af */
   /* cmp (int16_t)ebx, 4 -> jl 0x1206cc */
-  display_assert((void *)0x00290d48, (void *)0x00290ce4, 56, 0);
+  display_assert((char *)0x00290d48, (char *)0x00290ce4, 56, 0);
   system_exit(0);
   /* test (int16_t)esi, (int16_t)esi -> jl 0x1206da */
   /* cmp (int16_t)esi, 0xb -> jl 0x1206f7 */
-  display_assert((void *)0x00290d10, (void *)0x00290ce4, 57, 0);
+  display_assert((char *)0x00290d10, (char *)0x00290ce4, 57, 0);
   system_exit(0);
 
   (void)ebx;
@@ -1129,7 +1129,7 @@ void animation_set_frame_size(void)
   int esi = 0;
 
   /* test esi, esi -> jne 0x1207bb */
-  display_assert((void *)0x00290cd8, (void *)0x00290ce4, 123, 0);
+  display_assert((char *)0x00290cd8, (char *)0x00290ce4, 123, 0);
   system_exit(0);
   /* relift: cmp word ptr [esi + 0x2c], 0 -> jle 0x120801 */
   /* relift: test dword ptr [esi + ecx*4 + 0x6c], eax -> je 0x1207ea */
@@ -1169,27 +1169,33 @@ void quaternion_compress_6byte(void)
 /* 0x120a40 */
 void animation_graph_node_matrices_from_orientations(void)
 {
+  int eax = 0;
   int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
   int esi = 0;
   int edi = 0;
   int ebp = 0;
 
   tag_get(0x616e7472, 0);
-  matrix4x3_from_forward_up_position((void *)0, (void *)0, (void *)0, (void *)0);
-  tag_block_get_element((void *)0, 0, 0);
-  FUN_00109500((void *)0, (void *)0);
-  matrix4x3_multiply((void *)0, (void *)0, (void *)0);
+  matrix4x3_from_forward_up_position((void *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  FUN_00109500((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
+  matrix4x3_multiply((float *)(uintptr_t)edi, (float *)(uintptr_t)edx, (float *)(uintptr_t)esi);
   /* relift: cmp word ptr [ebx + 0x20], (int16_t)edi -> je 0x120b42 */
   /* cmp (int16_t)esi, 0x40 -> jl 0x120b2f */
-  display_assert((void *)0x00290ddc, (void *)0x00290ce4, 1250, 0);
+  display_assert((char *)0x00290ddc, (char *)0x00290ce4, 1250, 0);
   system_exit(0);
   /* relift: cmp word ptr [ebx + 0x22], (int16_t)edi -> je 0x120b80 */
   /* cmp (int16_t)esi, 0x40 -> jl 0x120b6d */
-  display_assert((void *)0x00290ddc, (void *)0x00290ce4, 1256, 0);
+  display_assert((char *)0x00290ddc, (char *)0x00290ce4, 1256, 0);
   system_exit(0);
   /* relift: cmp word ptr [ebp - 8], (int16_t)esi -> jne 0x120a97 */
 
+  (void)eax;
   (void)ebx;
+  (void)ecx;
+  (void)edx;
   (void)esi;
   (void)edi;
   (void)ebp;
@@ -1202,13 +1208,13 @@ void interpolate_node_orientations(void)
   int esi = 0;
   int edi = 0;
 
-  display_assert((void *)0x00290e18, (void *)0x00290ce4, 1277, 0);
+  display_assert((char *)0x00290e18, (char *)0x00290ce4, 1277, 0);
   system_exit(0);
   /* cmp (int16_t)edi, (int16_t)esi -> jl 0x120c19 */
-  display_assert((void *)0x00290e00, (void *)0x00290ce4, 1278, 0);
+  display_assert((char *)0x00290e00, (char *)0x00290ce4, 1278, 0);
   system_exit(0);
   /* test (int16_t)ecx, (int16_t)ecx -> jle 0x120c9e */
-  quaternions_interpolate_and_normalize((void *)0, (void *)0, 0.0f, (void *)0);
+  quaternions_interpolate_and_normalize((float *)0, (float *)0, 0.0f, (float *)0);
 
   (void)ecx;
   (void)esi;
@@ -1219,18 +1225,22 @@ void interpolate_node_orientations(void)
 short FUN_00120cb0(int animation_graph_tag_index, const char *name)
 {
   int eax = 0;
+  int ebx = 0;
   int ecx = 0;
+  int esi = 0;
 
   tag_get(0x616e7472, 0);
   /* test eax, eax -> jle 0x120cfb */
-  tag_block_get_element((void *)0, 0, 180);
-  crt_stricmp((char *)0, (char *)0);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 180);
+  crt_stricmp((char *)(uintptr_t)ebx, (char *)(uintptr_t)eax);
   /* test eax, eax -> je 0x120d04 */
   /* cmp eax, ecx -> jl 0x120cd7 */
   return 0;
 
   (void)eax;
+  (void)ebx;
   (void)ecx;
+  (void)esi;
 }
 
 /* 0x120ee0 */
@@ -1239,7 +1249,7 @@ void animation_frame_get_xy_translation(void)
   int eax = 0;
 
   /* relift: cmp word ptr [eax + 0x26], 1 -> jne 0x120f0b */
-  FUN_00120590((void *)0, 0, 0);
+  FUN_00120590((void *)(uintptr_t)eax, 0, 0);
 
   (void)eax;
 }
@@ -1258,53 +1268,55 @@ void inverse_kinematics_adjust_matrices(float *composed_matrix, int node_matrix_
 void FUN_00121330(void *animation, float frame, unsigned short rotation_count, short node_index, void *out_rotation)
 {
   int eax = 0;
+  int ebx = 0;
   int ecx = 0;
   int edx = 0;
   int esi = 0;
   int edi = 0;
   int ebp = 0;
 
-  tag_data_get_pointer((void *)0, 0, 0);
+  tag_data_get_pointer((void *)(uintptr_t)eax, 0, 0);
   /* test (char)eax, 1 -> je 0x12139f */
-  display_assert((void *)0x002911a4, (void *)0x00290ce4, 1428, 0);
+  display_assert((char *)0x002911a4, (char *)0x00290ce4, 1428, 0);
   system_exit(0);
   /* test (char)eax, 0x41 -> je 0x1213d6 */
-  display_assert((void *)0x00291174, (void *)0x00290ce4, 1430, 0);
+  display_assert((char *)0x00291174, (char *)0x00290ce4, 1430, 0);
   system_exit(0);
   /* relift: cmp word ptr [ebp + 0x10], 0 -> jge 0x121402 */
-  display_assert((void *)0x00291160, (void *)0x00290ce4, 1432, 0);
+  display_assert((char *)0x00291160, (char *)0x00290ce4, 1432, 0);
   system_exit(0);
   /* relift: cmp word ptr [ebp + 0x10], 0 -> jne 0x121428 */
-  quaternion_decompress_6byte((void *)0, (void *)0);
-  sphere_intersects_rectangle3d((void *)0);
+  quaternion_decompress_6byte((void *)(uintptr_t)eax, (float *)(uintptr_t)esi);
+  sphere_intersects_rectangle3d((float *)(uintptr_t)esi);
   floor(0.0f);
   /* test (int16_t)eax, (int16_t)eax -> jl 0x121472 */
   /* cmp edx, ecx -> jle 0x121492 */
-  display_assert((void *)0x00291118, (void *)0x00290ce4, 1451, 0);
+  display_assert((char *)0x00291118, (char *)0x00290ce4, 1451, 0);
   system_exit(0);
   /* cmp edx, ecx -> je 0x1214c7 */
-  display_assert((void *)0x002910d0, (void *)0x00290ce4, 1452, 0);
+  display_assert((char *)0x002910d0, (char *)0x00290ce4, 1452, 0);
   system_exit(0);
   /* cmp eax, ecx -> jge 0x1214e8 */
   /* cmp eax, edx -> jne 0x12150f */
-  FUN_00120d10((void *)0, 0, 0);
+  FUN_00120d10((void *)(uintptr_t)ebx, 0, 0);
   /* test (int16_t)edi, (int16_t)edi -> jl 0x12152e */
   /* cmp edx, esi -> jl 0x12154e */
-  display_assert((void *)0x00290ea4, (void *)0x00290ce4, 1472, 0);
+  display_assert((char *)0x00290ea4, (char *)0x00290ce4, 1472, 0);
   system_exit(0);
-  quaternion_decompress_6byte((void *)0, (void *)0);
-  sphere_intersects_rectangle3d((void *)0);
+  quaternion_decompress_6byte((void *)(uintptr_t)esi, (float *)(uintptr_t)edi);
+  sphere_intersects_rectangle3d((float *)(uintptr_t)edi);
   /* test (char)eax, 1 -> je 0x1215db */
-  display_assert((void *)0x00291098, (void *)0x00290ce4, 1491, 0);
+  display_assert((char *)0x00291098, (char *)0x00290ce4, 1491, 0);
   system_exit(0);
   /* test (char)eax, 0x41 -> je 0x121608 */
-  display_assert((void *)0x00291064, (void *)0x00290ce4, 1492, 0);
+  display_assert((char *)0x00291064, (char *)0x00290ce4, 1492, 0);
   system_exit(0);
-  quaternion_decompress_6byte((void *)0, (void *)0);
-  quaternion_decompress_6byte((void *)0, (void *)0);
-  quaternions_interpolate_and_normalize((void *)0, (void *)0, 0.0f, (void *)0);
+  quaternion_decompress_6byte((void *)(uintptr_t)esi, (float *)(uintptr_t)eax);
+  quaternion_decompress_6byte((void *)(uintptr_t)edi, (float *)(uintptr_t)ecx);
+  quaternions_interpolate_and_normalize((float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0.0f, (float *)(uintptr_t)edx);
 
   (void)eax;
+  (void)ebx;
   (void)ecx;
   (void)edx;
   (void)esi;
@@ -1316,22 +1328,23 @@ void FUN_00121330(void *animation, float frame, unsigned short rotation_count, s
 int animation_update_internal(int update_kind, int animation_graph_tag_index, short *state, int *out_sound)
 {
   int eax = 0;
+  int ebx = 0;
   int ecx = 0;
   int edx = 0;
   int esi = 0;
   int edi = 0;
 
   tag_get(0x616e7472, 0);
-  display_assert((void *)0x00282dc4, (void *)0x00290ce4, 147, 0);
+  display_assert((char *)0x00282dc4, (char *)0x00290ce4, 147, 0);
   system_exit(0);
-  tag_block_get_element((void *)0, 0, 180);
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 180);
   /* cmp (int16_t)eax, 0xffff -> je 0x121cbe */
   /* relift: cmp (int16_t)edx, word ptr [esi + 2] -> jne 0x121cbe */
-  tag_block_get_element((void *)0, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
   /* cmp (int16_t)ecx, (int16_t)eax -> jl 0x121d23 */
   /* test (int16_t)ecx, (int16_t)ecx -> jle 0x121cf9 */
   /* cmp ecx, eax -> jg 0x121ceb */
-  model_animation_choose_random(0, 0, 0);
+  model_animation_choose_random(0, 0, eax);
   /* cmp edx, eax -> jne 0x121d3f */
   /* relift: cmp word ptr [edi + 0x2e], 0 -> jne 0x121d3f */
   /* relift: cmp (int16_t)ecx, word ptr [edi + 0x34] -> je 0x121d4b */
@@ -1339,6 +1352,7 @@ int animation_update_internal(int update_kind, int animation_graph_tag_index, sh
   return 0;
 
   (void)eax;
+  (void)ebx;
   (void)ecx;
   (void)edx;
   (void)esi;
@@ -1359,18 +1373,18 @@ void replacement_animation_apply(void)
   /* cmp (int16_t)edi, (int16_t)ebx -> jl 0x12222a */
   /* relift: cmp (int16_t)edi, word ptr [esi + 0x22] -> jge 0x12222a */
   FUN_00120620(0);
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* test (char)ebx, 0x1f -> jne 0x1220e6 */
   /* relift: test byte ptr [ebp - 0xc], 1 -> je 0x12212e */
-  FUN_00121330((void *)0, 0.0f, 0, 0, (void *)0);
-  quaternion_decompress_8byte((void *)0, (void *)0);
-  animation_get_node_orientations((void *)0, 0.0f, 0, 0, (void *)0);
+  FUN_00121330((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  quaternion_decompress_8byte((void *)(uintptr_t)eax, (float *)0);
+  animation_get_node_orientations((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
   /* test (char)eax, (char)eax -> je 0x1221c8 */
-  overlay_animation_apply_continuous_scaled((void *)0, 0.0f, 0, 0, (void *)0);
+  overlay_animation_apply_continuous_scaled((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
   /* test (char)eax, (char)eax -> jne 0x12222a */
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* cmp ecx, eax -> je 0x12222a */
-  display_assert((void *)0x002912a0, (void *)0x00290ce4, 391, 0);
+  display_assert((char *)0x002912a0, (char *)0x00290ce4, 391, 0);
   system_exit(0);
 
   (void)eax;
@@ -1387,6 +1401,7 @@ void overlay_animation_apply(void)
   int eax = 0;
   int ebx = 0;
   int ecx = 0;
+  int edx = 0;
   int esi = 0;
   int edi = 0;
   int ebp = 0;
@@ -1395,25 +1410,26 @@ void overlay_animation_apply(void)
   /* cmp (int16_t)edi, (int16_t)ebx -> jl 0x12243f */
   /* relift: cmp (int16_t)edi, word ptr [esi + 0x22] -> jge 0x12243f */
   FUN_00120620(0);
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* test (char)ebx, 0x1f -> jne 0x1222c6 */
   /* relift: test byte ptr [ebp - 0xc], 1 -> je 0x12231f */
-  FUN_00121330((void *)0, 0.0f, 0, 0, (void *)0);
-  quaternion_decompress_8byte((void *)0, (void *)0);
-  FUN_0010b9c0((void *)0, (void *)0, (void *)0);
+  FUN_00121330((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  quaternion_decompress_8byte((void *)(uintptr_t)edx, (float *)0);
+  FUN_0010b9c0((float *)(uintptr_t)eax, (float *)(uintptr_t)edi, (float *)(uintptr_t)edi);
   /* test (char)eax, (char)eax -> je 0x12235e */
-  animation_get_node_orientations((void *)0, 0.0f, 0, 0, (void *)0);
+  animation_get_node_orientations((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
   /* test (char)eax, (char)eax -> je 0x1223d4 */
-  overlay_animation_apply_continuous_scaled((void *)0, 0.0f, 0, 0, (void *)0);
+  overlay_animation_apply_continuous_scaled((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
   /* test (char)eax, (char)eax -> jne 0x12243f */
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* cmp ecx, eax -> je 0x12243f */
-  display_assert((void *)0x002912a0, (void *)0x00290ce4, 470, 0);
+  display_assert((char *)0x002912a0, (char *)0x00290ce4, 470, 0);
   system_exit(0);
 
   (void)eax;
   (void)ebx;
   (void)ecx;
+  (void)edx;
   (void)esi;
   (void)edi;
   (void)ebp;
@@ -1433,21 +1449,21 @@ void overlay_animation_apply_scaled(void)
   /* cmp (int16_t)edi, (int16_t)ebx -> jl 0x122681 */
   /* relift: cmp (int16_t)edi, word ptr [esi + 0x22] -> jge 0x122681 */
   FUN_00120620(0);
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* test (char)ebx, 0x1f -> jne 0x1224e2 */
   /* relift: test byte ptr [ebp - 0xc], 1 -> je 0x122552 */
-  FUN_00121330((void *)0, 0.0f, 0, 0, (void *)0);
-  quaternion_decompress_8byte((void *)0, (void *)0);
-  FUN_0010ba90((void *)0, (void *)0, 0.0f, (void *)0);
-  FUN_0010b9c0((void *)0, (void *)0, (void *)0);
+  FUN_00121330((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  quaternion_decompress_8byte((void *)(uintptr_t)edx, (float *)0);
+  FUN_0010ba90((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, 0.0f, (float *)(uintptr_t)eax);
+  FUN_0010b9c0((float *)(uintptr_t)ecx, (float *)(uintptr_t)edi, (float *)(uintptr_t)edi);
   /* test (char)eax, (char)eax -> je 0x122591 */
-  animation_get_node_orientations((void *)0, 0.0f, 0, 0, (void *)0);
+  animation_get_node_orientations((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
   /* test (char)eax, (char)eax -> je 0x122610 */
-  overlay_animation_apply_continuous_scaled((void *)0, 0.0f, 0, 0, (void *)0);
+  overlay_animation_apply_continuous_scaled((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
   /* test (char)eax, (char)eax -> jne 0x122681 */
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* cmp ecx, edx -> je 0x122681 */
-  display_assert((void *)0x002912a0, (void *)0x00290ce4, 554, 0);
+  display_assert((char *)0x002912a0, (char *)0x00290ce4, 554, 0);
   system_exit(0);
 
   (void)eax;
@@ -1472,63 +1488,63 @@ void FUN_00122690(void *animation, float frame, void *node_data)
 
   FUN_001daf7e();
   floor(0.0f);
-  error(0, (void *)0x00291388);
+  error(0, (char *)0x00291388);
   /* cmp (int16_t)edi, (int16_t)ecx -> jl 0x122734 */
   /* relift: cmp word ptr [esi + 0x20], 1 -> jne 0x122a43 */
   /* relift: test byte ptr [esi + 0x3a], 1 -> je 0x12275e */
   /* test (char)eax, (char)eax -> jne 0x122758 */
   /* test eax, eax -> jne 0x12275e */
-  FUN_00120500((void *)0, 0);
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* relift: test byte ptr [ebp - 0x10], 1 -> je 0x1228e0 */
   /* test (char)eax, (char)eax -> je 0x122818 */
-  FUN_00121330((void *)0, 0.0f, 0, 0, (void *)0);
-  quaternions_interpolate_and_normalize((void *)0, (void *)0, 0.0f, (void *)0);
-  FUN_0010b9c0((void *)0, (void *)0, (void *)0);
-  animation_get_node_orientations((void *)0, 0.0f, 0, 0, (void *)0);
-  points_interpolate((void *)0, (void *)0, 0.0f, (void *)0);
+  FUN_00121330((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  quaternions_interpolate_and_normalize((float *)0, (float *)0, 0.0f, (float *)0);
+  FUN_0010b9c0((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)eax);
+  animation_get_node_orientations((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  points_interpolate((float *)0, (float *)0, 0.0f, (float *)0);
   /* test (char)eax, (char)eax -> je 0x122983 */
-  overlay_animation_apply_continuous_scaled((void *)0, 0.0f, 0, 0, (void *)0);
-  scalars_interpolate(0.0f, 0.0f, 0.0f, (void *)0);
+  overlay_animation_apply_continuous_scaled((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)(uintptr_t)eax);
+  scalars_interpolate(0.0f, 0.0f, 0.0f, (float *)0);
   /* test (char)eax, (char)eax -> jne 0x122a42 */
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* cmp edi, ecx -> je 0x122a0b */
-  display_assert((void *)0x002912a0, (void *)0x00290ce4, 693, 0);
+  display_assert((char *)0x002912a0, (char *)0x00290ce4, 693, 0);
   system_exit(0);
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* cmp ebx, eax -> je 0x122a42 */
-  display_assert((void *)0x00291310, (void *)0x00290ce4, 694, 0);
+  display_assert((char *)0x00291310, (char *)0x00290ce4, 694, 0);
   system_exit(0);
   FUN_001daf7e();
   floor(0.0f);
-  error(0, (void *)0x002913d0);
+  error(0, (char *)0x002913d0);
   /* cmp (int16_t)edi, (int16_t)ecx -> jl 0x122b01 */
   /* relift: cmp word ptr [esi + 0x20], 1 -> jne 0x122e3e */
   /* relift: test byte ptr [esi + 0x3a], 1 -> je 0x122b2b */
   /* test (char)eax, (char)eax -> jne 0x122b25 */
   /* test eax, eax -> jne 0x122b2b */
-  FUN_00120500((void *)0, 0);
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* relift: test byte ptr [ebp - 0x10], 1 -> je 0x122cc8 */
   /* test (char)eax, (char)eax -> je 0x122be8 */
-  FUN_00121330((void *)0, 0.0f, 0, 0, (void *)0);
-  quaternions_interpolate_and_normalize((void *)0, (void *)0, 0.0f, (void *)0);
-  quaternions_interpolate_and_normalize((void *)0, (void *)0, 0.0f, (void *)0);
-  FUN_0010b9c0((void *)0, (void *)0, (void *)0);
+  FUN_00121330((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  quaternions_interpolate_and_normalize((float *)0, (float *)0, 0.0f, (float *)0);
+  quaternions_interpolate_and_normalize((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, 0.0f, (float *)(uintptr_t)ecx);
+  FUN_0010b9c0((float *)(uintptr_t)edx, (float *)(uintptr_t)eax, (float *)(uintptr_t)eax);
   /* test (char)eax, (char)eax -> je 0x122cfd */
-  animation_get_node_orientations((void *)0, 0.0f, 0, 0, (void *)0);
-  points_interpolate((void *)0, (void *)0, 0.0f, (void *)0);
+  animation_get_node_orientations((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)(uintptr_t)eax);
+  points_interpolate((float *)0, (float *)0, 0.0f, (float *)0);
   /* test (char)eax, (char)eax -> je 0x122d78 */
-  overlay_animation_apply_continuous_scaled((void *)0, 0.0f, 0, 0, (void *)0);
-  scalars_interpolate(0.0f, 0.0f, 0.0f, (void *)0);
+  overlay_animation_apply_continuous_scaled((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)(uintptr_t)eax);
+  scalars_interpolate(0.0f, 0.0f, 0.0f, (float *)0);
   /* test (char)eax, (char)eax -> jne 0x122e3d */
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* cmp edi, ecx -> je 0x122e06 */
-  display_assert((void *)0x002912a0, (void *)0x00290ce4, 820, 0);
+  display_assert((char *)0x002912a0, (char *)0x00290ce4, 820, 0);
   system_exit(0);
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* cmp ebx, eax -> je 0x122e3d */
-  display_assert((void *)0x00291310, (void *)0x00290ce4, 821, 0);
+  display_assert((char *)0x00291310, (char *)0x00290ce4, 821, 0);
   system_exit(0);
   /* cmp eax, ecx -> jl 0x12345c */
   FUN_00120620(0);
@@ -1537,8 +1553,8 @@ void FUN_00122690(void *animation, float frame, void *node_data)
   /* cmp (int16_t)ebx, (int16_t)eax -> jl 0x122f2a */
   /* cmp edx, ecx -> jge 0x122f47 */
   /* test (char)eax, 1 -> jne 0x122f69 */
-  csprintf((void *)0x005ab100, (void *)0x00291418);
-  display_assert((char *)0, (char *)0, 0, 0);
+  csprintf((char *)0x005ab100, (char *)0x00291418);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
   system_exit(0);
   FUN_001d9068();
   FUN_001daf7e();
@@ -1550,78 +1566,78 @@ void FUN_00122690(void *animation, float frame, void *node_data)
   /* cmp (int16_t)ebx, (int16_t)edi -> jge 0x12345c */
   /* cmp edx, ecx -> jne 0x1230a5 */
   /* relift: cmp ecx, dword ptr [ebp - 0x28] -> jne 0x1230b1 */
-  FUN_00120500((void *)0, 0);
-  FUN_00120500((void *)0, 0);
-  FUN_00120500((void *)0, 0);
-  FUN_00120500((void *)0, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
+  FUN_00120500((void *)(uintptr_t)esi, 0);
   /* relift: test byte ptr [ebp - 0x30], 1 -> je 0x1232af */
-  FUN_00121330((void *)0, 0.0f, 0, 0, (void *)0);
-  FUN_00121330((void *)0, 0.0f, 0, 0, (void *)0);
-  FUN_00121330((void *)0, 0.0f, 0, 0, (void *)0);
-  FUN_00121330((void *)0, 0.0f, 0, 0, (void *)0);
-  quaternion_decompress_8byte((void *)0, (void *)0);
-  quaternion_decompress_8byte((void *)0, (void *)0);
-  quaternion_decompress_8byte((void *)0, (void *)0);
-  quaternion_decompress_8byte((void *)0, (void *)0);
-  quaternions_interpolate_and_normalize((void *)0, (void *)0, 0.0f, (void *)0);
-  quaternions_interpolate_and_normalize((void *)0, (void *)0, 0.0f, (void *)0);
-  quaternions_interpolate_and_normalize((void *)0, (void *)0, 0.0f, (void *)0);
-  FUN_0010b9c0((void *)0, (void *)0, (void *)0);
-  animation_get_node_orientations((void *)0, 0.0f, 0, 0, (void *)0);
-  animation_get_node_orientations((void *)0, 0.0f, 0, 0, (void *)0);
-  animation_get_node_orientations((void *)0, 0.0f, 0, 0, (void *)0);
-  animation_get_node_orientations((void *)0, 0.0f, 0, 0, (void *)0);
-  FUN_00121d60((void *)0, (void *)0, 0, (void *)0);
-  component_vectors_from_normal3d((void *)0, (void *)0, (void *)0);
+  FUN_00121330((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  FUN_00121330((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  FUN_00121330((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  FUN_00121330((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  quaternion_decompress_8byte((void *)(uintptr_t)ecx, (float *)0);
+  quaternion_decompress_8byte((void *)(uintptr_t)eax, (float *)0);
+  quaternion_decompress_8byte((void *)(uintptr_t)edx, (float *)0);
+  quaternion_decompress_8byte((void *)(uintptr_t)ecx, (float *)0);
+  quaternions_interpolate_and_normalize((float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0.0f, (float *)(uintptr_t)edx);
+  quaternions_interpolate_and_normalize((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, 0.0f, (float *)(uintptr_t)eax);
+  quaternions_interpolate_and_normalize((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, 0.0f, (float *)(uintptr_t)ecx);
+  FUN_0010b9c0((float *)(uintptr_t)edx, (float *)(uintptr_t)eax, (float *)(uintptr_t)eax);
+  animation_get_node_orientations((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  animation_get_node_orientations((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  animation_get_node_orientations((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  animation_get_node_orientations((void *)(uintptr_t)esi, 0.0f, 0, 0, (void *)0);
+  FUN_00121d60((void *)(uintptr_t)eax, (void *)(uintptr_t)edx, 0, (void *)(uintptr_t)eax);
+  component_vectors_from_normal3d((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
   FUN_001d90e0();
-  display_assert((void *)0x00291440, (void *)0x00290ce4, 221, 0);
+  display_assert((char *)0x00291440, (char *)0x00290ce4, 221, 0);
   system_exit(0);
   /* test (int16_t)esi, (int16_t)esi -> jne 0x1234f7 */
-  FUN_00121d60((void *)0, (void *)0, 0, (void *)0);
-  FUN_00121d60((void *)0, (void *)0, 0, (void *)0);
-  tag_block_get_element((void *)0, 0, 76);
+  FUN_00121d60((void *)(uintptr_t)edi, (void *)(uintptr_t)ebx, 0, (void *)(uintptr_t)eax);
+  FUN_00121d60((void *)(uintptr_t)edi, (void *)(uintptr_t)ebx, 0, (void *)0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 76);
   /* cmp (char)ecx, 0xff -> je 0x1238f3 */
-  tag_block_get_element((void *)0, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
   /* test (char)ecx, (char)ecx -> jne 0x1238f3 */
   /* cmp (int16_t)eax, 0xffff -> je 0x1238f3 */
-  tag_block_get_element((void *)0, 0, 48);
-  tag_block_get_element((void *)0, 0, 104);
-  tag_block_get_element((void *)0, 0, 32);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 48);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 104);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 32);
   tag_get('rdhs', 0);
   shader_type_is_valid_for_model();
   /* test (char)eax, (char)eax -> je 0x1238d6 */
   /* relift: test byte ptr [esi], 1 -> jne 0x1238d6 */
-  shader_type_is_transparent(0);
+  shader_type_is_transparent(ecx);
   /* test (char)eax, (char)eax -> je 0x1237fa */
   /* relift: cmp word ptr [ebp - 0xc], 2 -> jne 0x1238d6 */
   /* relift: test byte ptr [ebp + 0x20], 2 -> je 0x1236da */
-  display_assert((void *)0x00291538, (void *)0x00291564, 442, 0);
+  display_assert((char *)0x00291538, (char *)0x00291564, 442, 0);
   system_exit(0);
   /* test (int16_t)eax, (int16_t)eax -> jl 0x1236f1 */
   /* relift: cmp edx, dword ptr [eax + 0xb8] -> jl 0x123711 */
-  display_assert((void *)0x002914d8, (void *)0x00291564, 445, 0);
+  display_assert((char *)0x002914d8, (char *)0x00291564, 445, 0);
   system_exit(0);
   /* test (int16_t)eax, (int16_t)eax -> jl 0x123728 */
   /* relift: cmp ecx, dword ptr [edx + 0xb8] -> jl 0x123748 */
-  display_assert((void *)0x00291470, (void *)0x00291564, 446, 0);
+  display_assert((char *)0x00291470, (char *)0x00291564, 446, 0);
   system_exit(0);
-  matrix_transform_point((void *)0, (void *)0, (void *)0);
-  FUN_0017cbd0(0, 0, 0, 0, 0, 0, 0, (void *)0, 0);
+  matrix_transform_point((float *)(uintptr_t)edx, (float *)0, (float *)0);
+  FUN_0017cbd0(0, 0, 0, 0, 0, 0, 0, (float *)(uintptr_t)edx, 0);
   /* relift: cmp word ptr [ebp - 8], 0x20 -> jge 0x1238d6 */
   /* relift: cmp word ptr [ebp + edi - 0x220], -1 -> je 0x1238d6 */
   /* test (char)eax, (char)eax -> jne 0x1238d6 */
   /* test (char)eax, (char)eax -> jg 0x1237d9 */
   /* test (char)eax, (char)eax -> jle 0x1238d6 */
   /* relift: cmp word ptr [ebx + 0x24], 4 -> jne 0x123871 */
-  FUN_001906b0((void *)0, 0);
+  FUN_001906b0((void *)(uintptr_t)ebx, 0);
   /* test (char)ecx, 8 -> je 0x123871 */
   /* relift: cmp word ptr [ebp - 0xc], 1 -> jne 0x1238d6 */
   /* relift: test byte ptr [ebp + 0x20], 2 -> je 0x123845 */
-  display_assert((void *)0x00291538, (void *)0x00291564, 491, 0);
+  display_assert((char *)0x00291538, (char *)0x00291564, 491, 0);
   system_exit(0);
   FUN_0017cbc0(0, 0, 0, 0, 0, 0, 0);
   /* relift: cmp word ptr [ebp - 0xc], 0 -> jne 0x1238d6 */
-  FUN_0017ccd0((void *)0, 0, (void *)0, (void *)0);
+  FUN_0017ccd0((void *)(uintptr_t)ebx, 0, (void *)(uintptr_t)esi, (void *)0);
   FUN_0017cbc0(0, 0, 0, 0, 0, 0, 0);
   FUN_0017d2b0();
   /* cmp eax, ecx -> jl 0x12363f */
@@ -1647,13 +1663,13 @@ void FUN_00123990(void)
   int esi = 0;
   int edi = 0;
 
-  display_assert((void *)0x00290e18, (void *)0x00291564, 579, 0);
+  display_assert((char *)0x00290e18, (char *)0x00291564, 579, 0);
   system_exit(0);
   /* cmp (int16_t)edi, (int16_t)esi -> jl 0x123a0a */
-  display_assert((void *)0x00290e00, (void *)0x00291564, 580, 0);
+  display_assert((char *)0x00290e00, (char *)0x00291564, 580, 0);
   system_exit(0);
   /* test eax, eax -> jle 0x123a94 */
-  quaternions_interpolate_and_normalize((void *)0, (void *)0, 0.0f, (void *)0);
+  quaternions_interpolate_and_normalize((float *)0, (float *)0, 0.0f, (float *)0);
   /* cmp eax, edx -> jl 0x123a20 */
 
   (void)eax;
@@ -1668,26 +1684,30 @@ void FUN_00123b30(void)
   int eax = 0;
   int ebx = 0;
   int ecx = 0;
+  int edx = 0;
+  int esi = 0;
   int edi = 0;
   int ebp = 0;
 
-  tag_block_get_element((void *)0, 0, 156);
-  component_vectors_from_normal3d((void *)0, (void *)0, (void *)0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 156);
+  component_vectors_from_normal3d((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
   /* test (int16_t)edi, (int16_t)edi -> jne 0x123be0 */
   /* test ecx, ecx -> jne 0x123bb8 */
   /* test eax, eax -> jne 0x123bc4 */
-  matrix4x3_from_forward_up_position((void *)0, (void *)0, (void *)0, (void *)0);
-  matrix4x3_multiply((void *)0, (void *)0, (void *)0);
+  matrix4x3_from_forward_up_position((void *)(uintptr_t)esi, (float *)(uintptr_t)eax, (float *)(uintptr_t)ecx, (float *)(uintptr_t)edx);
+  matrix4x3_multiply((float *)(uintptr_t)esi, (float *)(uintptr_t)ecx, (float *)(uintptr_t)esi);
   /* relift: cmp word ptr [ebx + 0x24], -1 -> jne 0x123c07 */
-  display_assert((void *)0x00291584, (void *)0x00291564, 650, 0);
+  display_assert((char *)0x00291584, (char *)0x00291564, 650, 0);
   system_exit(0);
-  matrix4x3_multiply((void *)0, (void *)0, (void *)0);
+  matrix4x3_multiply((float *)(uintptr_t)ecx, (float *)0, (float *)0);
   /* cmp (int16_t)ebx, -1 -> je 0x123c5b */
   /* relift: cmp word ptr [ebp - 8], (int16_t)ecx -> jne 0x123b5a */
 
   (void)eax;
   (void)ebx;
   (void)ecx;
+  (void)edx;
+  (void)esi;
   (void)edi;
   (void)ebp;
 }
@@ -1695,20 +1715,28 @@ void FUN_00123b30(void)
 /* 0x123c70 */
 void FUN_00123c70(void *mode_tag, void *out_matrices, void *node_data, float *position, float *forward, float *up)
 {
+  int eax = 0;
   int ebx = 0;
   int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
   int ebp = 0;
 
-  matrix4x3_from_forward_up_position((void *)0, (void *)0, (void *)0, (void *)0);
-  tag_block_get_element((void *)0, 0, 0);
-  FUN_00109500((void *)0, (void *)0);
-  matrix4x3_multiply((void *)0, (void *)0, (void *)0);
+  matrix4x3_from_forward_up_position((void *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  FUN_00109500((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
+  matrix4x3_multiply((float *)(uintptr_t)edi, (float *)(uintptr_t)edx, (float *)(uintptr_t)esi);
   /* cmp (int16_t)eax, 0xffff -> je 0x123d4d */
   /* cmp (int16_t)ebx, -1 -> je 0x123d66 */
   /* relift: cmp word ptr [ebp - 4], (int16_t)ecx -> jne 0x123cc0 */
 
+  (void)eax;
   (void)ebx;
   (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
   (void)ebp;
 }
 
@@ -1723,8 +1751,8 @@ void FUN_00123d80(void)
   /* test ecx, ecx -> je 0x123dc1 */
   /* relift: cmp byte ptr [ecx], 0 -> je 0x123dc1 */
   tag_get('edom', 0);
-  tag_block_get_element((void *)0, 0, 64);
-  crt_stricmp((char *)0, (char *)0);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 64);
+  crt_stricmp((char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
   /* test eax, eax -> je 0x123e14 */
   /* cmp (int16_t)ebx, (int16_t)edi -> jle 0x123dca */
 
@@ -1744,23 +1772,28 @@ void animation_get_root_matrix(void)
 void FUN_00123e50(void)
 {
   int eax = 0;
+  int ebx = 0;
   int ecx = 0;
+  int esi = 0;
 
   tag_get('edom', 0);
   /* test eax, eax -> jle 0x123ea4 */
-  tag_block_get_element((void *)0, 0, 156);
-  csstrcmp((char *)0, (char *)0);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 156);
+  csstrcmp((char *)(uintptr_t)eax, (char *)(uintptr_t)ebx);
   /* test eax, eax -> je 0x123ead */
   /* cmp eax, ecx -> jl 0x123e80 */
 
   (void)eax;
+  (void)ebx;
   (void)ecx;
+  (void)esi;
 }
 
 /* 0x123ed0 */
 void FUN_00123ed0(int model_ref, float distance, void *node_matrices, void *arg4, void *node_transforms, void *node_matrices2, int lighting, void *position, int arg9, void *effect_record, int object_handle, int arg12, int render_flag)
 {
   int eax = 0;
+  int ebx = 0;
   int ecx = 0;
   int edx = 0;
   int esi = 0;
@@ -1771,7 +1804,7 @@ void FUN_00123ed0(int model_ref, float distance, void *node_matrices, void *arg4
   /* test (char)eax, (char)eax -> je 0x123f0f */
   profile_enter_private((void *)0x00322608);
   /* test eax, eax -> jne 0x123f33 */
-  display_assert((void *)0x00291690, (void *)0x00291564, 82, 0);
+  display_assert((char *)0x00291690, (char *)0x00291564, 82, 0);
   system_exit(0);
   /* relift: cmp dword ptr [esi + 4], 0x769c097 -> jne 0x123f4e */
   global_scenario_get();
@@ -1782,8 +1815,8 @@ void FUN_00123ed0(int model_ref, float distance, void *node_matrices, void *arg4
   /* test eax, eax -> jne 0x123f96 */
   /* test eax, eax -> jne 0x123fa4 */
   /* test eax, eax -> jle 0x12403e */
-  tag_block_get_element((void *)0, 0, 156);
-  matrix4x3_multiply((void *)0, (void *)0, (void *)0);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 156);
+  matrix4x3_multiply((float *)(uintptr_t)ecx, (float *)0, (float *)0);
   /* cmp esi, eax -> jl 0x123fd1 */
   /* test edx, edx -> jle 0x12403e */
   /* test (int16_t)ecx, (int16_t)ecx -> jg 0x124050 */
@@ -1791,30 +1824,31 @@ void FUN_00123ed0(int model_ref, float distance, void *node_matrices, void *arg4
   /* cmp (int16_t)eax, 4 -> jle 0x124092 */
   /* test (int16_t)ecx, (int16_t)ecx -> jl 0x1240a2 */
   /* cmp (int16_t)ecx, 5 -> jl 0x1240c2 */
-  display_assert((void *)0x00291630, (void *)0x00291564, 169, 0);
+  display_assert((char *)0x00291630, (char *)0x00291564, 169, 0);
   system_exit(0);
   /* test (char)eax, (char)eax -> je 0x124162 */
-  tag_block_get_element((void *)0, 0, 156);
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 156);
   /* cmp (int16_t)eax, 0xffff -> je 0x12413f */
-  FUN_00189270(0, (void *)0, (void *)0, (void *)0);
-  FUN_001894d0(0, (void *)0, 0.0f);
+  FUN_00189270(0, (float *)(uintptr_t)edx, (float *)(uintptr_t)eax, (void *)0);
+  FUN_001894d0(0, (float *)(uintptr_t)esi, 0.0f);
   /* relift: cmp esi, dword ptr [edi] -> jl 0x124100 */
   /* test (char)eax, (char)eax -> je 0x124266 */
-  tag_block_get_element((void *)0, 0, 0);
-  tag_block_get_element((void *)0, 0, 32);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 32);
   /* cmp edx, eax -> jne 0x124231 */
-  component_vectors_from_normal3d((void *)0, (void *)0, (void *)0);
-  matrix4x3_multiply((void *)0, (void *)0, (void *)0);
-  FUN_001894d0(0, (void *)0, 0.0f);
-  FUN_00189cb0(0, (void *)0, (void *)0, 0);
+  component_vectors_from_normal3d((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
+  matrix4x3_multiply((float *)(uintptr_t)eax, (float *)0, (float *)0);
+  FUN_001894d0(0, (float *)(uintptr_t)ecx, 0.0f);
+  FUN_00189cb0(0, (void *)(uintptr_t)eax, (void *)(uintptr_t)ebx, 0);
   /* cmp eax, ecx -> jl 0x1241c0 */
   /* cmp eax, edx -> jl 0x124190 */
   /* test (char)eax, (char)eax -> jne 0x12427c */
   /* test (char)eax, (char)eax -> je 0x1245e5 */
-  tag_block_get_element((void *)0, 0, 76);
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 76);
   /* cmp (char)ecx, 0xff -> je 0x124408 */
 
   (void)eax;
+  (void)ebx;
   (void)ecx;
   (void)edx;
   (void)esi;

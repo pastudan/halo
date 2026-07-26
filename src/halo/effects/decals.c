@@ -2222,6 +2222,7 @@ void FUN_0017cd30(void)
 void FUN_00099490(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x996b0 */
@@ -2407,101 +2408,259 @@ void decal_delete(int decal_index)
 /* 0x17cba0 */
 void FUN_0017cba0(void)
 {
-  /* relift: no calls detected — manual review */
+  int eax = 0;
+
+  /* test eax, eax -> jne 0x171bef */
+  display_assert((char *)0x0029dc40, (char *)0x002a3e80, 786, 0);
+  system_exit(0);
+  FUN_0016f910(28);
+  /* test (char)eax, (char)eax -> je 0x1720d3 */
+  /* relift: cmp word ptr [0x5a5df8], 0 -> je 0x1720d3 */
+
+  (void)eax;
 }
 
 /* 0x17cbe0 */
 void FUN_0017cbe0(void)
 {
-  /* relift: no calls detected — manual review */
+  int eax = 0;
+
+  /* test (char)eax, (char)eax -> je 0x16b230 */
+  /* test eax, eax -> jne 0x16b1f2 */
+  display_assert((char *)0x002a33b8, (char *)0x002a3380, 1491, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x16b200 */
+  FUN_00165fc0();
+  /* test (char)eax, (char)eax -> jne 0x16b226 */
+  FUN_00158ae0(0);
+
+  (void)eax;
 }
 
 /* 0x17cbf0 */
 void FUN_0017cbf0(void)
 {
-  /* relift: no calls detected — manual review */
+  int eax = 0;
+
+  /* test (char)eax, (char)eax -> je 0x16b265 */
+  /* test (char)eax, (char)eax -> je 0x16b25d */
+  FUN_0016fa40(0);
+  FUN_0016fa40(0);
+  /* test eax, eax -> je 0x16b2a4 */
+
+  (void)eax;
 }
 
 /* 0x17cc00 */
 void FUN_0017cc00(void)
 {
-  /* relift: no calls detected — manual review */
+  int eax = 0;
+
+  /* test eax, eax -> jne 0x160c56 */
+  display_assert((char *)0x0029dc40, (char *)0x002a18c0, 17, 0);
+  system_exit(0);
+  FUN_0016f910(0);
+  /* test (int16_t)eax, (int16_t)eax -> je 0x160c99 */
+  /* cmp (int16_t)eax, 2 -> je 0x160c99 */
+  /* cmp (int16_t)eax, 6 -> je 0x160c99 */
+  /* cmp (int16_t)eax, 3 -> je 0x160c99 */
+  /* cmp (int16_t)eax, 4 -> je 0x160c99 */
+  /* cmp (int16_t)eax, 7 -> je 0x160c99 */
+  /* cmp (int16_t)eax, 5 -> je 0x160c99 */
+
+  (void)eax;
 }
 
 /* 0x17cc40 */
 void FUN_0017cc40(void)
 {
-  /* relift: no calls detected — manual review */
+  FUN_0016fa40(0);
+  FUN_0016fa40(0);
+  FUN_00158ae0(0);
+  FUN_0016fa40(0);
 }
 
 /* 0x17cc50 */
 void FUN_0017cc50(void)
 {
-  /* relift: no calls detected — manual review */
+  int eax = 0;
+  int esi = 0;
+
+  display_assert((char *)0x0029dc40, (char *)0x002a18c0, 627, esi);
+  system_exit(0);
+  FUN_0016f910(0);
+  /* relift: cmp word ptr [0x3256bc], 0 -> jne 0x1621be */
+  /* test (char)eax, (char)eax -> je 0x1621be */
+
+  (void)eax;
+  (void)esi;
 }
 
 /* 0x17cc60 */
 void FUN_0017cc60(int object_handle)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x17cc80 */
 void FUN_0017cc80(void)
 {
-  /* relift: no calls detected — manual review */
+  FUN_0016fa40(0);
+  FUN_00158ae0(0);
+  FUN_0016fa40(0);
+  FUN_0016fa40(11);
 }
 
 /* 0x17cc90 */
 void FUN_0017cc90(void)
 {
-  /* relift: no calls detected — manual review */
+  FUN_0016fa40(0);
+  FUN_00158ae0(0);
+  FUN_0016fa40(0);
+  FUN_0016fa40(11);
 }
 
 /* 0x17cca0 */
 void FUN_0017cca0(void)
 {
-  /* relift: no calls detected — manual review */
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+
+  FUN_0016f910(0);
+  /* cmp edx, 0x16 -> jge 0x172540 */
+  D3DDevice_SetTextureStageState(eax, 0, 0);
+  /* cmp edx, 0x1c -> jne 0x172551 */
+  D3DDevice_SetTextureState_TexCoordIndex();
+  /* cmp edx, 0x1d -> jne 0x172562 */
+  D3DDevice_SetTextureState_BorderColor(ecx, eax);
+  /* cmp edx, 0x1e -> jne 0x172573 */
+  D3DDevice_SetTextureState_ColorKeyColor();
+  /* cmp edx, 0x1b -> jg 0x172580 */
+  D3DDevice_SetTextureState_BumpEnv();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0x17cce0 */
 void FUN_0017cce0(void)
 {
-  /* relift: no calls detected — manual review */
+  int eax = 0;
+  int edx = 0;
+
+  /* mem[0x0047e4b0] = 0 */
+  D3DDevice_SetVertexData2f(edx, 0.0f, 0.0f);
+  D3DDevice_SetVertexData2s(edx, 0, 0);
+  D3DDevice_Begin(eax);
+  D3DDevice_End();
+
+  (void)eax;
+  (void)edx;
 }
 
 /* 0x17cd00 */
 void FUN_0017cd00(void)
 {
-  /* relift: no calls detected — manual review */
+  int eax = 0;
+
+  /* test eax, eax -> jne 0x1726c9 */
+  display_assert((char *)0x0029dc40, (char *)0x002a44b0, 563, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [0x5a5bc0], 0 -> jne 0x17271d */
+  /* test (char)eax, (char)eax -> je 0x17271d */
+  /* test (char)eax, (char)eax -> jne 0x1726f4 */
+  error(0, (char *)0x002a44ec);
+  /* test (char)eax, (char)eax -> jne 0x17271d */
+
+  (void)eax;
 }
 
 /* 0x17cd10 */
 void FUN_0017cd10(void)
 {
-  /* relift: no calls detected — manual review */
+  int eax = 0;
+
+  FUN_0016fa40(0);
+  /* test eax, eax -> jne 0x17275f */
+  display_assert((char *)0x0029dc40, (char *)0x002a44b0, 31, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x172a1f */
+  /* test (char)eax, (char)eax -> je 0x172a1f */
+
+  (void)eax;
 }
 
 /* 0x17cd20 */
 void FUN_0017cd20(void)
 {
-  /* relift: no calls detected — manual review */
+  int eax = 0;
+
+  /* test eax, eax -> jne 0x1627b9 */
+  display_assert((char *)0x0029dc40, (char *)0x002a18c0, 921, 0);
+  system_exit(0);
+  FUN_0016f910(0);
+  /* test (int16_t)eax, (int16_t)eax -> je 0x1627f6 */
+  /* cmp (int16_t)eax, 1 -> je 0x1627f6 */
+  /* cmp (int16_t)eax, 3 -> je 0x1627f6 */
+  /* cmp (int16_t)eax, 4 -> je 0x1627f6 */
+  /* cmp (int16_t)eax, 7 -> je 0x1627f6 */
+  /* cmp (int16_t)eax, 5 -> je 0x1627f6 */
+
+  (void)eax;
 }
 
 /* 0x17cd40 */
 void FUN_0017cd40(void)
 {
-  /* relift: no calls detected — manual review */
+  FUN_00158ae0(0);
+  FUN_0016fa40(0);
+  FUN_0016fa40(11);
+  FUN_0016fa40(12);
 }
 
 /* 0x17cd50 */
 void FUN_0017cd50(void)
 {
-  int edx = 0;
+  int eax = 0;
 
-  FUN_0015a7f0((float *)(uintptr_t)edx, (float *)0, (float *)0, (float *)0);
-  FUN_0015a7f0((float *)(uintptr_t)edx, (float *)0, (float *)0, (float *)0);
-  FUN_0015a7f0((float *)(uintptr_t)edx, (float *)0, (float *)0, (float *)0);
+  /* test eax, eax -> jne 0x162fb9 */
+  display_assert((char *)0x0029dc40, (char *)0x002a18c0, 1253, 0);
+  system_exit(0);
+  FUN_0016f910(11);
+  /* relift: cmp word ptr [0x3256bc], 0 -> jne 0x1631c8 */
+  /* test (char)eax, (char)eax -> je 0x1631c8 */
+  rasterizer_set_texture_direct(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  rasterizer_set_texture_direct(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetRenderState_CullMode(2305);
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb7a4] = 0x10101 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb784] = 1 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb790] = 0x304 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb794] = 1 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb7c0] = 0x8006 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb788] = 1 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb78c] = 0 */
 
-  (void)edx;
+  (void)eax;
 }

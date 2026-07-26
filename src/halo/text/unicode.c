@@ -581,15 +581,88 @@ uint8_t FUN_0019f530(int unit_handle)
 char biped_limp_noodle_valid_joint_rotation(int unit_handle, int16_t node_index,
                                             void *node_block)
 {
-  (void)unit_handle;
-  (void)node_index;
-  (void)node_block;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
+
+  object_get_and_verify_type(0, 0);
+  tag_get('dpib', 0);
+  tag_get('rtna', 0);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 64);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 64);
+  /* test (char)eax, 0x41 -> jne 0x19f5dd */
+  /* test (int16_t)ecx, (int16_t)ecx -> je 0x19f9a4 */
+  /* relift: test byte ptr [edx + 0x28], 4 -> jne 0x19f9a4 */
+  normalize3d((float *)0);
+  normalize3d((float *)(uintptr_t)eax);
+  normalize3d((float *)0);
+  FUN_001d94f0();
+  matrix_inverse((float *)(uintptr_t)edi, (float *)(uintptr_t)edx);
+  matrix_inverse((float *)(uintptr_t)ecx, (float *)0);
+  matrix_scale_transform_vector((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
+  matrix_scale_transform_vector((float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
+  /* test (char)eax, 2 -> je 0x19f8fb */
+  FUN_00099490();
+  display_assert((char *)0x002b4b00, (char *)0x002b4b48, 231, 0);
+  system_exit(0);
+  normalize3d((float *)0);
+  matrix_scale_transform_vector((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
+  /* test (char)eax, 1 -> jne 0x19f8f2 */
+  FUN_0014dab0(0, 0);
+  /* test (char)eax, (char)eax -> jne 0x19f8f2 */
+  rotate_vector3d_by_sincos((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, 0.0f, 0.0f);
+  FUN_001d94f0();
+  /* test (char)eax, 0x41 -> jne 0x19f9a7 */
+  /* test (char)eax, 0x41 -> jne 0x19f9a7 */
+  /* relift: test byte ptr [ecx + 0x28], 4 -> jne 0x19f9ba */
+  /* test (char)eax, (char)eax -> jne 0x19fa16 */
+  /* relift: test dword ptr [ecx + eax*4], edx -> je 0x19fa13 */
+  /* test (char)eax, 0x41 -> jne 0x19fa13 */
   return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }
 
 /* 0x19fa20 — unit animation node setup (large; stub draft) */
 void FUN_0019fa20(int unit_handle, void *node_block)
 {
-  (void)unit_handle;
-  (void)node_block;
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  object_get_and_verify_type(0, 0);
+  tag_get('dpib', 0);
+  tag_get('rtna', 0);
+  display_assert((char *)0x00253440, (char *)0x002b4b48, 319, 0);
+  system_exit(0);
+  /* test (char)eax, 0x41 -> jne 0x19fae0 */
+  /* test (char)ecx, (char)ecx -> jbe 0x1a01bc */
+  /* cmp (char)ecx, 0x1e -> jae 0x1a01bc */
+  /* cmp dl, (char)ecx -> jae 0x1a018b */
+  FUN_0014ec30(49320, (float *)(uintptr_t)esi, 0.0f, 0.0f, 0.0f, 0, (void *)0);
+  csmemset((void *)(uintptr_t)edx, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
+  FUN_0014dab0(0, 0);
+  /* test (char)eax, (char)eax -> jne 0x19fca0 */
+  FUN_0014f2c0((float *)(uintptr_t)edi, (float *)(uintptr_t)eax, (void *)0x004d9de8, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0, 0);
+  biped_limp_noodle_valid_joint_rotation(0, edx, (void *)(uintptr_t)esi);
+  FUN_0014df70(0, (float *)0, (float *)0, 0, (void *)0);
+  /* test (char)eax, (char)eax -> je 0x19fef8 */
+  FUN_0014dab0(0, 0x3cf5c28f);
+  FUN_0014dab0(0, 0x3cf5c28f);
+  /* cmp eax, 2 -> jne 0x19fe2f */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }

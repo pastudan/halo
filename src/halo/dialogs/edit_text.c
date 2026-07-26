@@ -302,42 +302,124 @@ snap_and_return:
 /* 0x96d70 */
 void FUN_00096d70(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  object_get_and_verify_type(0, 896);
+  /* test (char)eax, (char)eax -> je 0x96f14 */
+  csstrcpy((char *)(uintptr_t)eax, (char *)0x0025386f);
+  csstrlen((char *)(uintptr_t)ecx);
+  crt_sprintf((char *)(uintptr_t)edx, (char *)0);
+  /* cmp (int16_t)eax, 0xffff -> je 0x96e34 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  csstrlen((char *)(uintptr_t)eax);
+  crt_sprintf((char *)(uintptr_t)ecx, (char *)0);
+  csstrlen((char *)(uintptr_t)edx);
+  crt_sprintf((char *)(uintptr_t)eax, (char *)0);
+  /* cmp (int16_t)eax, 0xffff -> je 0x96ebd */
+  datum_get((void *)(uintptr_t)edx, 0);
+  csstrlen((char *)(uintptr_t)ecx);
+  crt_sprintf((char *)(uintptr_t)edx, (char *)0);
+  object_get_world_position(0, (void *)(uintptr_t)eax);
+  FUN_00189cb0(0, (void *)0, (void *)0, 0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0x96f20 */
 int FUN_00096f20(int a0, float a1)
 {
-  (void)a0;
-  (void)a1;
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test (char)eax, 0x41 -> jne 0x96f5b */
+  /* cmp (int16_t)edi, -1 -> je 0x9702a */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, 1 -> je 0x96fa1 */
+  /* test (char)eax, 2 -> jne 0x9702a */
+  object_iterator_new((void *)(uintptr_t)eax, 896, 0);
+  object_iterator_next((void *)(uintptr_t)ecx);
+  /* test esi, esi -> je 0x9702a */
+  tag_get('ived', 0);
+  /* test (char)eax, 0x41 -> jne 0x97005 */
+  FUN_000967a0((void *)(uintptr_t)eax, 0);
+  object_iterator_next((void *)(uintptr_t)ecx);
+  /* test esi, esi -> jne 0x96fd2 */
   return 0;
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x97040 */
 void FUN_00097040(int a0, float a1)
 {
-  (void)a0;
-  (void)a1;
+  int eax = 0;
+
+  /* cmp eax, -1 -> je 0x97073 */
+  object_get_and_verify_type(0, 896);
+  /* cmp (int16_t)eax, 0xffff -> je 0x97073 */
+  device_group_set_actual_value(0, 0.0f);
+
+  (void)eax;
 }
 
 /* 0x97080 */
 void FUN_00097080(int object, void *ctrl_block)
 {
-  (void)object;
-  (void)ctrl_block;
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
+
+  object_get_and_verify_type(0, 896);
+  tag_get('ived', 0);
+  /* cmp (int16_t)eax, 0xffff -> jne 0x970d3 */
+  device_effect_new();
+  /* cmp (int16_t)eax, 0xffff -> jne 0x97112 */
+  device_effect_new();
+  datum_get((void *)(uintptr_t)edx, 0);
+  datum_get((void *)(uintptr_t)edx, 0);
+  datum_get((void *)(uintptr_t)edx, 0);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, 8 -> je 0x9718f */
+  /* relift: test byte ptr [edi + 4], 0x10 -> je 0x9719c */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }
 
 /* 0x97220 */
 int FUN_00097220(int a0, float a1)
 {
-  (void)a0;
-  (void)a1;
+  int eax = 0;
+
+  /* cmp eax, -1 -> je 0x97255 */
+  object_get_and_verify_type(0, 896);
+  /* cmp (int16_t)eax, 0xffff -> je 0x97255 */
+  FUN_00096f20(0, 0.0f);
   return 0;
+
+  (void)eax;
 }
 
 /* 0x97260 */
 void FUN_00097260(int a0, float a1)
 {
-  (void)a0;
-  (void)a1;
+  int eax = 0;
+
+  /* cmp eax, -1 -> je 0x972a1 */
+  object_get_and_verify_type(0, 896);
+  FUN_00096f20(0, 0.0f);
+
+  (void)eax;
 }

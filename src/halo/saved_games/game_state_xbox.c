@@ -581,12 +581,14 @@ void player_profile_delete(void)
 void FUN_001c0ed0(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x1c0ee0 */
 void FUN_001c0ee0(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x1c0f70 */
@@ -660,6 +662,7 @@ void player_profile_save_last_level_played(void)
 void FUN_001c1280(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x1c1290 */

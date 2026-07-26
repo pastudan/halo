@@ -218,59 +218,222 @@ void release_mutex(int *mutex_reference)
 /* 0x81170 */
 void FUN_00081170(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  FUN_00080eb0();
+  FUN_00080eb0();
+  FUN_00081410();
+  FUN_00081410();
+  /* cmp eax, ecx -> jb 0x8120c */
+  display_assert((char *)0x00265e08, (char *)0x00265da0, 162, 0);
+  system_exit(0);
+  /* cmp eax, edx -> jb 0x81236 */
+  display_assert((char *)0x00265de4, (char *)0x00265da0, 163, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0x81250 */
 void FUN_00081250(void)
 {
-
+  FUN_00081090();
+  error(0, (char *)0x00265e2c);
 }
 
 /* 0x81300 */
 void FUN_00081300(void)
 {
+  int ebx = 0;
+  int ecx = 0;
 
+  display_assert((char *)0x00265de0, (char *)0x00265da0, 133, 0);
+  system_exit(0);
+  /* cmp ebx, ecx -> jb 0x8138a */
+  display_assert((char *)0x00265dd8, (char *)0x00265da0, 134, 0);
+  system_exit(0);
+  FUN_00080fc0();
+  error(0, (char *)0x00265e68);
+
+  (void)ebx;
+  (void)ecx;
 }
 
 /* 0x81410 */
 void FUN_00081410(void)
 {
+  int eax = 0;
 
+  /* test (char)eax, (char)eax -> jne 0x81434 */
+  crt_time((void *)0);
+  FUN_001d9cf9();
+  rand();
+  FUN_001d9068();
+
+  (void)eax;
 }
 
 /* 0x81480 */
 void FUN_00081480(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test ebx, ebx -> je 0x8149e */
+  /* test edi, edi -> jne 0x814bb */
+  display_assert((char *)0x00265ef0, (char *)0x00265f08, 46, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x814db */
+  crt_time((void *)0);
+  FUN_001d9cf9();
+  rand();
+  FUN_001d9068();
+  FUN_0007ff40();
+  /* cmp eax, ecx -> ja 0x8158a */
+  /* relift: cmp ecx, dword ptr [esi] -> jae 0x8158a */
+  display_assert((char *)0x00265ed4, (char *)0x00265f08, 58, 0);
+  system_exit(0);
+  /* relift: cmp edx, dword ptr [ebx + 4] -> jb 0x815b7 */
+  /* relift: cmp eax, dword ptr [ebx] -> jbe 0x815b7 */
+  display_assert((char *)0x00265eb8, (char *)0x00265f08, 59, 0);
+  system_exit(0);
+  /* test dl, dl -> je 0x815d6 */
+  /* cmp ecx, 0x20 -> jl 0x815c4 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x815f0 */
 void FUN_000815f0(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x817e0 */
 void create_mutex(void)
 {
+  int eax = 0;
+  int esi = 0;
+  int edi = 0;
 
+  display_assert((char *)0x00265fb4, (char *)0x00265f5c, 184, 0);
+  system_exit(0);
+  FUN_000815f0();
+  /* test esi, esi -> je 0x8185c */
+  /* mem[0x00334988] = eax */
+  snprintf((char *)(uintptr_t)edi, 32, (char *)0);
+  CreateMutexA();
+
+  (void)eax;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x81910 */
 void FUN_00081910(void)
 {
+  int eax = 0;
+  int esi = 0;
 
+  /* test esi, esi -> jne 0x8193b */
+  display_assert((char *)0x00265fb4, (char *)0x00265f5c, 240, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x81962 */
+  display_assert((char *)0x00265fc4, (char *)0x00265f5c, 241, 0);
+  system_exit(0);
+  CloseHandle(0);
+
+  (void)eax;
+  (void)esi;
 }
 
 /* 0x81980 */
 void FUN_00081980(void)
 {
+  int eax = 0;
+  int esi = 0;
 
+  /* test (char)eax, (char)eax -> jne 0x819a9 */
+  display_assert((char *)0x00265fe4, (char *)0x00265ffc, 30, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x819ce */
+  display_assert((char *)0x00265fdc, (char *)0x00265ffc, 31, 0);
+  system_exit(0);
+  debug_malloc(24, 0, (char *)0x00265ffc, 33);
+  /* test eax, eax -> je 0x81a14 */
+
+  (void)eax;
+  (void)esi;
 }
 
 /* 0x81a20 */
 void FUN_00081a20(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test (char)eax, (char)eax -> jne 0x81a49 */
+  display_assert((char *)0x00265fe4, (char *)0x00265ffc, 47, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x81a6e */
+  display_assert((char *)0x00265fdc, (char *)0x00265ffc, 48, 0);
+  system_exit(0);
+  debug_free((void *)(uintptr_t)esi, (char *)0x00265ffc, 50);
+  display_assert((char *)0x00266090, (char *)0x00265ffc, 59, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x81add */
+  display_assert((char *)0x0026608c, (char *)0x00265ffc, 60, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x81b03 */
+  display_assert((char *)0x00265fe4, (char *)0x00265ffc, 61, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi + 0x10], 4 -> je 0x81b27 */
+  display_assert((char *)0x00266060, (char *)0x00265ffc, 63, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [edi + 0x10], 4 -> je 0x81b4b */
+  display_assert((char *)0x00266034, (char *)0x00265ffc, 64, 0);
+  system_exit(0);
+  csmemcmp((void *)(uintptr_t)esi, (void *)(uintptr_t)edi, 0);
+  /* test eax, eax -> jne 0x81b80 */
+  /* relift: cmp (int16_t)eax, word ptr [edi + 0x12] -> jne 0x81b80 */
+  /* test esi, esi -> jne 0x81bb8 */
+  display_assert((char *)0x002660f8, (char *)0x00265ffc, 74, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi + 0x10], 4 -> je 0x81bdc */
+  display_assert((char *)0x002660cc, (char *)0x00265ffc, 75, 0);
+  system_exit(0);
+  /* cmp (int16_t)eax, 4 -> jne 0x81c24 */
+  snprintf((char *)0x00334f90, 256, (char *)0x002660b8);
+  /* cmp (int16_t)eax, 0x10 -> jne 0x81c6d */
+  snprintf((char *)0x00334f90, 256, (char *)0x00266094);
+  /* cmp eax, 0x17 -> ja 0x81d42 */
+  /* test esi, esi -> jne 0x81de1 */
+  display_assert((char *)0x00266450, (char *)0x00266458, 57, 0);
+  system_exit(0);
+  /* cmp eax, ecx -> jle 0x81df6 */
+  /* mem[0x005ab210] = ecx */
+  /* mem[0x005ab214] = edx */
+  /* mem[0x005ab218] = ecx */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }

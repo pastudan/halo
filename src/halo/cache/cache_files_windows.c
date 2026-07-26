@@ -849,85 +849,469 @@ void cache_files_precache(void)
 /* 0x1bb7d0 */
 void cache_copy_initialize_read_data(void)
 {
+  int ebx = 0;
+  int ecx = 0;
 
+  csmemset((void *)(uintptr_t)ebx, 0, 2048);
+  FUN_001bb2d0();
+  FUN_001ba930();
+  /* test ecx, ecx -> je 0x1bb83a */
+  display_assert((char *)0x002b89d4, (char *)0x002b839c, 1003, 0);
+  system_exit(0);
+  FUN_001bb190();
+  FUN_001ba8b0();
+  cache_file_header_verify((void *)(uintptr_t)ebx, (char *)0x002b89cc, 0);
+
+  (void)ebx;
+  (void)ecx;
 }
 
 /* 0x1bb8a0 */
 void FUN_001bb8a0(void)
 {
+  int ebx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* relift: test dword ptr [esi], ebx -> je 0x1bb8fe */
+  display_assert((char *)0x002b8878, (char *)0x002b839c, 1046, 0);
+  system_exit(0);
+  /* test (int16_t)edi, (int16_t)edi -> jl 0x1bb909 */
+  /* cmp (int16_t)edi, 8 -> jl 0x1bb929 */
+  display_assert((char *)0x002b8580, (char *)0x002b839c, 1561, 0);
+  system_exit(0);
+  FUN_001bb430();
+
+  (void)ebx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x1bb970 */
 void FUN_001bb970(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test eax, eax -> jle 0x1bb9d5 */
+  /* test eax, eax -> je 0x1bb9d5 */
+  /* test (char)eax, 2 -> je 0x1bb9d5 */
+  display_assert((char *)0x002b8ad0, (char *)0x002b839c, 1075, 0);
+  system_exit(0);
+  /* test eax, eax -> je 0x1bba55 */
+  /* test eax, eax -> jne 0x1bba55 */
+  /* test eax, eax -> jle 0x1bba55 */
+  /* cmp (int16_t)ecx, (int16_t)edi -> je 0x1bba13 */
+  /* relift: cmp (int16_t)edx, word ptr [esi + 0xabe] -> jle 0x1bba55 */
+  /* cmp (int16_t)ecx, (int16_t)eax -> je 0x1bba2e */
+  /* relift: cmp (int16_t)edx, word ptr [esi + 0xabe] -> je 0x1bba37 */
+  /* cmp (int16_t)eax, 1 -> jl 0x1bba15 */
+  FUN_001bb640();
+  /* relift: cmp word ptr [esi + 0xabc], (int16_t)edi -> jne 0x1bbb52 */
+  /* relift: cmp dword ptr [esi + 0xab4], 1 -> jge 0x1bbb52 */
+  /* relift: cmp word ptr [esi + ecx*2 + 0xa88], (int16_t)edi -> je 0x1bba87 */
+  /* cmp (int16_t)eax, 1 -> jl 0x1bba71 */
+  physical_memory_protect((void *)(uintptr_t)eax, 0x00400000, 0);
+  /* relift: cmp word ptr [esi + 0xabc], (int16_t)edi -> jne 0x1bbaf0 */
+  display_assert((char *)0x002b8aa8, (char *)0x002b839c, 1124, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [esi + 0xab4], 1 -> jle 0x1bbb18 */
+  display_assert((char *)0x002b8a70, (char *)0x002b839c, 1125, 0);
+  system_exit(0);
+  /* cmp edx, eax -> je 0x1bbb52 */
+  display_assert((char *)0x002b8a00, (char *)0x002b839c, 1126, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x1bbb60 */
 void FUN_001bbb60(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  SleepEx(0, 0);
+  FUN_001bb970();
+  /* test eax, eax -> jne 0x1bbc7f */
+  /* test eax, eax -> je 0x1bbbb4 */
+  display_assert((char *)0x002b8b8c, (char *)0x002b839c, 1149, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi + 0xac2], 0 -> je 0x1bbbde */
+  display_assert((char *)0x002b8b68, (char *)0x002b839c, 1150, 0);
+  system_exit(0);
+  FUN_001ba9d0();
+  /* test (int16_t)edi, (int16_t)edi -> jl 0x1bbc21 */
+  /* cmp (int16_t)edi, 8 -> jl 0x1bbc41 */
+  display_assert((char *)0x002b8580, (char *)0x002b839c, 1606, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [ebx + 4], 0x20000 -> je 0x1bbc7f */
+  display_assert((char *)0x002b8b40, (char *)0x002b839c, 1163, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x1bbca9 */
+  display_assert((char *)0x002b8b28, (char *)0x002b839c, 1172, 0);
+  system_exit(0);
+  /* cmp (int16_t)edi, -1 -> je 0x1bbe91 */
+  /* test eax, eax -> jne 0x1bbd32 */
+  /* test (int16_t)edi, (int16_t)edi -> jl 0x1bbccc */
+  /* cmp (int16_t)edi, 1 -> jl 0x1bbcec */
+  display_assert((char *)0x002b85c8, (char *)0x002b839c, 1633, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x1bbd0b */
+  /* cmp (int16_t)eax, 1 -> jl 0x1bbd2b */
+  display_assert((char *)0x002b85c8, (char *)0x002b839c, 1642, 0);
+  system_exit(0);
+  /* test eax, eax -> je 0x1bbb71 */
+  /* test eax, eax -> je 0x1bbb71 */
+  /* test (char)eax, (char)eax -> jne 0x1bbd5d */
+  SwitchToThread();
+  QueryPerformanceCounter((void *)0x004e5650);
+  /* relift: cmp dword ptr [esi + 0xab4], 1 -> jle 0x1bbd7a */
+  QueryPerformanceCounter((void *)0x004e5658);
+  FUN_001155e0(0, 0);
+  QueryPerformanceCounter((void *)(uintptr_t)eax);
+  /* mem[0x004e561c] = edx */
+  /* relift: cmp dword ptr [esi + 0xab4], 1 -> jle 0x1bbdd3 */
+  QueryPerformanceCounter((void *)(uintptr_t)edx);
+  /* mem[0x004e5620] = ecx */
+  /* test edi, edi -> je 0x1bbddc */
+  /* cmp edi, 1 -> jne 0x1bbe29 */
+  /* test eax, eax -> jne 0x1bbe0b */
+  acquire_read_request();
+  /* test eax, eax -> je 0x1bbe1b */
+  /* cmp edi, 1 -> jne 0x1bbb71 */
+  WaitForSingleObject(0, 0);
+  /* test eax, eax -> je 0x1bbe91 */
+  /* test eax, eax -> jne 0x1bbe4d */
+  csprintf((char *)0x004e5510, (char *)0x002b8af0);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x1bbea0 */
 void simple_cache_copy_thread(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  WaitForSingleObject(0, 0);
+  csmemset((void *)0x004e5610, 0, 36);
+  QueryPerformanceCounter((void *)0x004e5678);
+  FUN_001ba710();
+  cache_copy_initialize_and_fill_with_garbage();
+  WaitForSingleObject(0, 0);
+  /* test eax, eax -> je 0x1bc22b */
+  QueryPerformanceCounter((void *)0x004e5638);
+  cache_copy_initialize_read_data();
+  FUN_001155c0(0, (char *)0x0028ce40, 56);
+  QueryPerformanceCounter((void *)(uintptr_t)ecx);
+  /* mem[0x004e5610] = ebx */
+  cache_file_header_verify((void *)(uintptr_t)eax, (char *)0x002b8c40, 0);
+  /* test (char)eax, (char)eax -> je 0x1bc205 */
+  FUN_001bb8a0();
+  WaitForSingleObject(0, 0);
+  /* test eax, eax -> je 0x1bc1db */
+  /* relift: cmp dword ptr [esi + 0xa9c], edi -> jle 0x1bc1e1 */
+  /* test (char)ebx, (char)ebx -> je 0x1bc1db */
+  /* relift: cmp dword ptr [esi + 0x994], edi -> je 0x1bc03b */
+  FUN_001ba9d0();
+  /* relift: cmp word ptr [esi + 0xabc], -1 -> jne 0x1bc031 */
+  /* test (char)eax, (char)eax -> jne 0x1bc086 */
+  /* test (char)ebx, (char)ebx -> jne 0x1bc094 */
+  display_assert((char *)0x00255ee8, (char *)0x002b839c, 875, 0);
+  system_exit(0);
+  QueryPerformanceCounter((void *)0x004e5668);
+  /* test (char)ebx, (char)ebx -> je 0x1bc09e */
+  QueryPerformanceCounter((void *)0x004e5670);
+  QueryPerformanceCounter((void *)0x004e5660);
+  SetEvent((void *)(uintptr_t)eax);
+  FUN_001d00b9();
+  QueryPerformanceCounter((void *)(uintptr_t)edx);
+  /* mem[0x004e5624] = ecx */
+  QueryPerformanceCounter((void *)(uintptr_t)ecx);
+  /* mem[0x004e562c] = eax */
+  /* test (char)eax, (char)eax -> je 0x1bc040 */
+  QueryPerformanceCounter((void *)(uintptr_t)eax);
+  /* mem[0x004e5628] = eax */
+  display_assert((char *)0x002b8c20, (char *)0x002b839c, 866, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x1bc19d */
+  display_assert((char *)0x002b8ba8, (char *)0x002b839c, 849, 0);
+  system_exit(0);
+  FUN_001bb970();
+  FUN_001bbb60();
+  WaitForSingleObject(0, 0);
+  /* test eax, eax -> jne 0x1bbfe0 */
+  /* relift: cmp dword ptr [esi + 0xa9c], edi -> jne 0x1bc205 */
+  FUN_001bab60();
+  FUN_001bb2d0();
+  FUN_00115430(0);
+  FUN_001bab60();
+  CloseHandle(0);
+  QueryPerformanceCounter((void *)(uintptr_t)ecx);
+  /* mem[0x004e5630] = ecx */
+  SetEvent((void *)(uintptr_t)edx);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x1bc360 */
 void cache_files_dispose(void)
 {
+  int eax = 0;
 
+  /* relift: cmp word ptr [0x4e9244], -1 -> je 0x1bc38a */
+  display_assert((char *)0x002b8c68, (char *)0x002b8c98, 201, 0);
+  system_exit(0);
+  debug_free((void *)(uintptr_t)eax, (char *)0x002b8c98, 203);
+
+  (void)eax;
 }
 
 /* 0x1bc3b0 */
 void FUN_001bc3b0(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  /* test edi, edi -> jne 0x1bc3d7 */
+  display_assert((char *)0x002b8d30, (char *)0x002b8c98, 384, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [ebp + 8], -1 -> jne 0x1bc3fd */
+  display_assert((char *)0x002b8d14, (char *)0x002b8c98, 385, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x1bc421 */
+  display_assert((char *)0x002b8d08, (char *)0x002b8c98, 386, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x1bc448 */
+  display_assert((char *)0x00267900, (char *)0x002b8c98, 387, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x1bc46f */
+  display_assert((char *)0x002b8cf8, (char *)0x002b8c98, 388, 0);
+  system_exit(0);
+  /* test ebx, ebx -> jne 0x1bc493 */
+  display_assert((char *)0x002b8ce4, (char *)0x002b8c98, 389, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)esi, 0, 20);
+  SleepEx(0, 0);
+  SetLastError(0);
+  /* test eax, eax -> jne 0x1bc547 */
+  xapi_GetLastError();
+  /* cmp eax, 8 -> je 0x1bc523 */
+  /* cmp eax, 0x5aa -> je 0x1bc523 */
+  /* cmp eax, 0x6f8 -> je 0x1bc523 */
+  xapi_GetLastError();
+  csprintf((char *)0x005ab100, (char *)0x002b8cc4);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  SleepEx(0, 0);
+  SetLastError(0);
+  /* test eax, eax -> je 0x1bc4d7 */
+  /* relift: cmp byte ptr [esi], 0 -> jne 0x1bc578 */
+  SleepEx(5000, 0);
+  /* cmp eax, 0xc0 -> jne 0x1bc578 */
+  /* relift: cmp byte ptr [esi], 0 -> je 0x1bc560 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x1bc58c */
+  /* cmp (int16_t)esi, 0x200 -> jl 0x1bc5ac */
+  display_assert((char *)0x002b8d48, (char *)0x002b8c98, 608, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x1bc5c0 */
 short FUN_001bc5c0(void)
 {
+  int ebx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x1bc5d2 */
+  /* cmp (int16_t)esi, 0x200 -> jl 0x1bc5f2 */
+  display_assert((char *)0x002b8d48, (char *)0x002b8c98, 608, 0);
+  system_exit(0);
+  /* test dl, dl -> je 0x1bc616 */
+  /* cmp (int16_t)esi, 0x200 -> jl 0x1bc5c6 */
+  /* test (char)ebx, (char)ebx -> jne 0x1bc5c4 */
   return 0;
+
+  (void)ebx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0x1bcc10 */
 void FUN_001bcc10(void)
 {
-
+  FUN_001bc3b0();
 }
 
 /* 0x1bcc30 */
 void FUN_001bcc30(void)
 {
-
+  FUN_001bc3b0();
 }
 
 /* 0x1bd1b0 */
 void FUN_001bd1b0(void)
 {
+  int eax = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x1bd1be */
+  /* cmp (int16_t)esi, 6 -> jl 0x1bd1de */
+  display_assert((char *)0x002b8de4, (char *)0x002b8c98, 1157, 0);
+  system_exit(0);
+  crt_stricmp((char *)(uintptr_t)edi, (char *)(uintptr_t)eax);
+  /* test eax, eax -> je 0x1bd207 */
+  /* cmp (int16_t)esi, 6 -> jl 0x1bd1b3 */
+
+  (void)eax;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x1bd210 */
 int16_t FUN_001bd210(int16_t map_type, int header_size)
 {
-  (void)map_type;
-  (void)header_size;
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  display_assert((char *)0, (char *)0x002b8c98, 1121, 0);
+  system_exit(0);
+  /* relift: cmp (int16_t)edi, word ptr [ebp - 8] -> jg 0x1bd367 */
+  /* relift: cmp word ptr [0x4e9244], (int16_t)edi -> je 0x1bd355 */
+  /* test (int16_t)edi, (int16_t)edi -> jl 0x1bd2a8 */
+  /* cmp (int16_t)edi, 6 -> jl 0x1bd2c8 */
+  display_assert((char *)0x002b8de4, (char *)0x002b8c98, 1157, 0);
+  system_exit(0);
+  /* test (int16_t)edi, (int16_t)edi -> jl 0x1bd2d3 */
+  /* cmp (int16_t)edi, 6 -> jl 0x1bd2f3 */
+  display_assert((char *)0x002b8de4, (char *)0x002b8c98, 1181, 0);
+  system_exit(0);
+  /* cmp (int16_t)edi, 1 -> jg 0x1bd300 */
+  /* relift: cmp eax, dword ptr [ebp + 8] -> jle 0x1bd355 */
+  /* cmp (int16_t)esi, -1 -> je 0x1bd34c */
+  FUN_001bc7e0(0);
+  FUN_001bc7e0(0);
+  /* cmp ecx, eax -> jl 0x1bd34c */
+  FUN_001d0669();
+  /* test eax, eax -> jle 0x1bd352 */
+  /* relift: cmp (int16_t)edi, word ptr [ebp - 8] -> jle 0x1bd290 */
+  /* relift: cmp word ptr [0x4e9244], (int16_t)esi -> jne 0x1bd390 */
+  display_assert((char *)0x002b8f78, (char *)0x002b8c98, 1149, 0);
+  system_exit(0);
   return 0;
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x1bd3a0 */
 void FUN_001bd3a0(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  FUN_001d00b9();
+  /* cmp eax, 0xc0 -> je 0x1bd3a3 */
+  /* test (int16_t)edi, (int16_t)edi -> jl 0x1bd3d2 */
+  /* cmp (int16_t)edi, 0x200 -> jl 0x1bd3f2 */
+  display_assert((char *)0x002b8d48, (char *)0x002b8c98, 608, 0);
+  system_exit(0);
+  /* test (char)ecx, (char)ecx -> je 0x1bd41f */
+  /* test (char)ecx, (char)ecx -> jne 0x1bd41f */
+  /* test esi, esi -> je 0x1bd41d */
+  /* relift: cmp dl, byte ptr [eax + 0x1c] -> jbe 0x1bd41f */
+  /* relift: cmp ecx, dword ptr [eax + 8] -> jbe 0x1bd41f */
+  /* cmp (int16_t)edi, 0x200 -> jl 0x1bd3c6 */
+  /* test esi, esi -> je 0x1bd3a3 */
+  /* cmp (int16_t)eax, 6 -> jl 0x1bd464 */
+  display_assert((char *)0x002b8de4, (char *)0x002b8c98, 1157, 0);
+  system_exit(0);
+  display_assert((char *)0x002b8fb4, (char *)0x002b8c98, 1276, 0);
+  system_exit(0);
+  FUN_001bc3b0();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x1bd4d0 */
 void cache_file_open(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  FUN_001bd1b0();
+  display_assert((char *)0x002b8fe4, (char *)0x002b8c98, 214, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x1bd52a */
+  display_assert((char *)0x00265d1c, (char *)0x002b8c98, 215, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [0x4e9244], -1 -> je 0x1bd554 */
+  display_assert((char *)0x002b8c68, (char *)0x002b8c98, 217, 0);
+  system_exit(0);
+  /* cmp (int16_t)esi, -1 -> jne 0x1bd57a */
+  display_assert((char *)0x002b8fcc, (char *)0x002b8c98, 218, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)eax, 0, 16384);
+  /* cmp (int16_t)esi, 6 -> jl 0x1bd5c1 */
+  display_assert((char *)0x002b8de4, (char *)0x002b8c98, 1157, 0);
+  system_exit(0);
+  csmemcpy((void *)(uintptr_t)edi, (void *)(uintptr_t)ecx, 0);
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }

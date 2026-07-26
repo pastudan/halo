@@ -1053,13 +1053,22 @@ void FUN_0010c920(float *v1, float *v2, float t, float *out)
 /* 0x10c3c0 */
 void FUN_0010c3c0(void)
 {
+  int eax = 0;
 
+  /* test (char)eax, 0x41 -> jne 0x10c407 */
+  FUN_001d94f0();
+
+  (void)eax;
 }
 
 /* 0x10c440 */
 float FUN_0010c440(float *param_1, float *param_2)
 {
-  (void)param_1;
-  (void)param_2;
+  int eax = 0;
+
+  /* test (char)eax, 0x41 -> jne 0x10c4d9 */
+  FUN_001d94f0();
   return 0;
+
+  (void)eax;
 }

@@ -949,47 +949,92 @@ void FUN_00146a90(int surface_id, void *damage_params, int unknown)
 /* 0x145560 */
 void FUN_00145560(void)
 {
+  int eax = 0;
 
+  FUN_0013d870(0, (void *)(uintptr_t)eax);
+
+  (void)eax;
 }
 
 /* 0x145580 */
 void FUN_00145580(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  object_get_and_verify_type(0, 64);
+  tag_get('ejbo', 0);
+  /* cmp eax, -1 -> je 0x1455ef */
+  tag_get('rtna', 0);
+  /* test ecx, ecx -> jle 0x1455ef */
+  model_animation_choose_random(0, 0, 0);
+  /* cmp (int16_t)eax, 0xffff -> je 0x1455ef */
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0x145610 */
 void FUN_00145610(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  object_get_and_verify_type(0, 64);
+  /* test (char)eax, 1 -> je 0x145659 */
+  animation_update_internal(0, 0, (void *)(uintptr_t)ecx, (void *)0);
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0x145660 */
 void FUN_00145660(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edi = 0;
 
+  /* cmp eax, -1 -> je 0x145739 */
+  /* cmp edi, -1 -> je 0x145736 */
+  object_get_and_verify_type(0, 64);
+  tag_get('rtna', 0);
+  FUN_00120cb0(0, (char *)(uintptr_t)eax);
+  /* cmp (int16_t)edi, -1 -> je 0x14571b */
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
+  /* cmp ecx, eax -> jg 0x145709 */
+  tag_get_name(0);
+  console_warning((char *)0x0029c71c);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edi;
 }
 
 /* 0x145740 */
 int FUN_00145740(int a0)
 {
-  (void)a0;
+  int eax = 0;
+
+  object_get_and_verify_type(0, 64);
+  /* test (char)eax, 1 -> je 0x1457a2 */
+  tag_get('rtna', 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
   return 0;
+
+  (void)eax;
 }
 
 /* 0x1457b0 */
 void FUN_001457b0(int a0, int a1, int a2)
 {
-  (void)a0;
-  (void)a1;
-  (void)a2;
+  FUN_00145660();
 }
 
 /* 0x1457d0 */
 void FUN_001457d0(int a0, int a1, int a2, int a3)
 {
-  (void)a0;
-  (void)a1;
-  (void)a2;
-  (void)a3;
+  FUN_00145660();
 }

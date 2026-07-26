@@ -319,53 +319,196 @@ int FUN_00063970(float *a, float *b, float lo, float hi)
 /* 0x62b20 */
 void FUN_00062b20(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
 
+  /* test (char)ebx, (char)ebx -> jne 0x62b92 */
+  /* test (char)eax, (char)eax -> je 0x62b92 */
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  /* test (char)eax, 8 -> jne 0x62b75 */
+  display_assert((char *)0x0025ef00, (char *)0x0025ef48, 482, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
 }
 
 /* 0x62ba0 */
 void FUN_00062ba0(void)
 {
+  int eax = 0;
 
+  /* test (char)eax, 0x41 -> jne 0x62c9a */
+  magnitude3d((float *)(uintptr_t)eax);
+
+  (void)eax;
 }
 
 /* 0x62cf0 */
 void FUN_00062cf0(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x62e10 */
 void FUN_00062e10(void)
 {
-
+  FUN_0010c3c0();
+  FUN_0010c3c0();
+  FUN_0010c3c0();
+  FUN_0010c3c0();
 }
 
 /* 0x63030 */
 void find_turning_point(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 96);
+  breakable_surfaces_get_bsp_surface_data();
+  /* test (char)ebx, (char)ebx -> je 0x63098 */
+  display_assert((char *)0x0025efe0, (char *)0x0025ef48, 511, 0);
+  system_exit(0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 24);
+  /* test dl, dl -> jne 0x6313a */
+  /* test (char)ebx, (char)ebx -> je 0x6313a */
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 0);
+  /* test (char)eax, 8 -> jne 0x6311e */
+  display_assert((char *)0x0025ef00, (char *)0x0025ef48, 482, 0);
+  system_exit(0);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 16);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 16);
+  /* cmp eax, edi -> jne 0x63237 */
+  /* cmp eax, -1 -> jne 0x6325e */
+  /* cmp edi, eax -> je 0x633a7 */
+  /* cmp eax, -1 -> jne 0x6328e */
+  /* relift: cmp byte ptr [ebp + 0x18], 0 -> jne 0x6331a */
+  /* test (char)eax, (char)eax -> je 0x6331a */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test (char)eax, 8 -> jne 0x632fb */
+  display_assert((char *)0x0025ef00, (char *)0x0025ef48, 482, 0);
+  system_exit(0);
+  /* relift: cmp (char)eax, byte ptr [ebp + 0x14] -> je 0x63377 */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* cmp ebx, eax -> je 0x633a7 */
+  /* relift: cmp dword ptr [esi], edi -> je 0x63294 */
+  /* relift: cmp dword ptr [esi + 4], edi -> je 0x63294 */
+  display_assert((char *)0x0025ef70, (char *)0x0025ef48, 631, 0);
+  system_exit(0);
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 16);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x633b0 */
 void FUN_000633b0(unsigned int param_1, int param_2, void *param_3, int *param_4, void *param_5, char *param_6)
 {
-  (void)param_1;
-  (void)param_2;
-  (void)param_3;
-  (void)param_4;
-  (void)param_5;
-  (void)param_6;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  /* relift: cmp word ptr [ebp + 0xc], 0 -> jg 0x633da */
+  display_assert((char *)0x0025f048, (char *)0x0025ef48, 33, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x63401 */
+  display_assert((char *)0x0025f03c, (char *)0x0025ef48, 34, 0);
+  system_exit(0);
+  /* test ebx, ebx -> jne 0x63425 */
+  display_assert((char *)0x0025f028, (char *)0x0025ef48, 35, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x63449 */
+  display_assert((char *)0x0025f018, (char *)0x0025ef48, 36, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x6346d */
+  display_assert((char *)0x0025f004, (char *)0x0025ef48, 37, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [ebp + 0xc], (int16_t)eax -> jle 0x636e7 */
+  FUN_00063e90(0, ecx, (float *)(uintptr_t)eax, 0, (float *)(uintptr_t)eax, 0, 0.0f, 0, (void *)0);
+  /* test (char)eax, (char)eax -> je 0x63509 */
+  /* test (char)ebx, (char)ebx -> jne 0x63515 */
+  /* test (char)ebx, (char)ebx -> je 0x63515 */
+  /* test (char)ebx, (char)ebx -> je 0x6368f */
+  /* cmp edi, -1 -> je 0x6368f */
+  find_turning_point();
+  find_turning_point();
+  /* test (char)eax, (char)eax -> je 0x636c9 */
+  /* test (char)ebx, (char)ebx -> je 0x636c9 */
+  FUN_00062e10();
+  FUN_00062ba0();
+  FUN_00062ba0();
+  FUN_00062cf0();
+  FUN_00063e30();
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  collision_surface_project_point2d(0, 0, 0, 0, (float *)0, (float *)0);
+  /* test (char)eax, (char)eax -> jne 0x63700 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x639e0 */
 int FUN_000639e0(int scenario, unsigned char bsp_idx, float *origin, int node_handle, float *target, int flags, char *result_buf)
 {
-  (void)scenario;
-  (void)bsp_idx;
-  (void)origin;
-  (void)node_handle;
-  (void)target;
-  (void)flags;
-  (void)result_buf;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 96);
+  breakable_surfaces_get_bsp_surface_data();
+  display_assert((char *)0x0025f120, (char *)0x0025f09c, 217, 0);
+  system_exit(0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 12);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 24);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 16);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test (char)eax, 0x41 -> jne 0x63bbc */
+  /* test (char)eax, 0x41 -> jne 0x63bbc */
+  /* test (char)eax, 0x41 -> je 0x63bda */
+  /* test dl, dl -> jne 0x63c5f */
+  /* test (char)eax, (char)eax -> je 0x63d1b */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test (char)eax, 8 -> jne 0x63c43 */
+  display_assert((char *)0x0025ef00, (char *)0x0025f09c, 274, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x63d1b */
+  /* test (char)eax, (char)eax -> je 0x63de1 */
+  /* test esi, esi -> jl 0x63c8f */
+  /* relift: cmp esi, dword ptr [edx + 0x1e4] -> jl 0x63caf */
+  display_assert((char *)0x0025f0d8, (char *)0x0025f09c, 316, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [esi + ecx], 0 -> je 0x63da9 */
+  /* relift: tail-call FUN_000639e0(); */
+  /* test (char)eax, (char)eax -> jne 0x63da9 */
+  collision_surface_project_point2d(0, 0, 0, 0, (float *)0, (float *)0);
+  collision_surface_project_point2d(0, 0, 0, 0, (float *)(uintptr_t)ebx, (float *)(uintptr_t)eax);
   return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }

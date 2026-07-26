@@ -501,14 +501,17 @@ void ai_debug_initialize_for_new_map(void)
 void ai_debug_sound_point_set(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 void ai_debug_lineoffire_success(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 void ai_debug_lineofsight_reset(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 void set_real_point3d(void)
@@ -576,6 +579,7 @@ void ai_debug_change_selected_actor(int actor_index)
 void FUN_000490C0(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x49280 */
@@ -633,6 +637,7 @@ void FUN_00049300(void)
 void FUN_000493B0(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x49430 */
@@ -1147,6 +1152,7 @@ void FUN_0004b220(void)
 void FUN_0004b2b0(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x4b320 */
@@ -2396,6 +2402,7 @@ void FUN_00053890(void)
 void FUN_000538d0(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x538f0 */

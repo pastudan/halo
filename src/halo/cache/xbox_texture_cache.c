@@ -313,84 +313,223 @@ void *xbox_texture_cache_get_hardware_format(void *hardware_format, bool block,
 /* 0x1be920 */
 void texture_cache_delete(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  data_dispose((void *)(uintptr_t)eax);
+  lruv_cache_dispose((void *)(uintptr_t)ecx);
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0x1be940 */
 void texture_cache_open(void)
 {
+  int eax = 0;
 
+  data_delete_all((void *)(uintptr_t)eax);
+
+  (void)eax;
 }
 
 /* 0x1be950 */
 void texture_cache_idle(void)
 {
+  int eax = 0;
 
+  lruv_idle((void *)(uintptr_t)eax);
+
+  (void)eax;
 }
 
 /* 0x1be960 */
 void texture_cache_bitmap_new(int tag_index, void *bitmap)
 {
-  (void)tag_index;
-  (void)bitmap;
+  int esi = 0;
+
+  display_assert((char *)0x002b96a8, (char *)0x002b96d8, 157, 0);
+  system_exit(0);
+  tag_get('mtib', 0);
+  bitmap_get_pixel_data_size((void *)(uintptr_t)esi);
+
+  (void)esi;
 }
 
 /* 0x1be9f0 */
 void texture_cache_bitmap_delete(void)
 {
+  int eax = 0;
 
+  /* cmp eax, -1 -> je 0x1bea15 */
+  lruv_block_delete((void *)(uintptr_t)eax, 0);
+
+  (void)eax;
 }
 
 /* 0x1beb70 */
 void FUN_001beb70(void)
 {
+  int ecx = 0;
 
+  datum_get((void *)(uintptr_t)ecx, 0);
+  tag_get_name(0);
+
+  (void)ecx;
 }
 
 /* 0x1becc0 */
 void FUN_001becc0(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  FUN_00183290((void *)(uintptr_t)eax);
+  FUN_00183290((void *)(uintptr_t)ecx);
+  D3DDevice_IsBusy();
+  D3DDevice_KickPushBuffer();
+  D3DResource_IsBusy((void *)(uintptr_t)eax);
+  D3DResource_Register((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0x1bed30 */
 void texture_cache_flush(void)
 {
+  int eax = 0;
 
+  D3DDevice_KickPushBuffer();
+  D3DDevice_IsBusy();
+  lruv_cache_dispose_all((void *)(uintptr_t)eax);
+
+  (void)eax;
 }
 
 /* 0x1bed50 */
 void FUN_001bed50(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* test (char)ecx, (char)ecx -> je 0x1bed7c */
+  D3DResource_IsBusy((void *)(uintptr_t)eax);
+  /* test eax, eax -> jne 0x1bed7c */
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0x1bed90 */
 void FUN_001bed90(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
 
+  datum_get((void *)(uintptr_t)eax, 0);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* test (char)ecx, (char)ecx -> je 0x1bedb0 */
+  D3DResource_IsBusy((void *)(uintptr_t)eax);
+  /* test eax, eax -> jne 0x1bedb0 */
+  /* relift: cmp dword ptr [edx + 0x24], esi -> je 0x1bedfc */
+  display_assert((char *)0x002b9788, (char *)0x002b96d8, 391, 0);
+  system_exit(0);
+  datum_delete((void *)(uintptr_t)edx, 0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0x1bef80 */
 void FUN_001bef80(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x1bf080 */
 void texture_cache_new(void)
 {
+  int eax = 0;
 
+  data_new((char *)0x002b983c, 1408, 32);
+  /* mem[0x004ea978] = eax */
+  display_assert((char *)0x002b9818, (char *)0x002b96d8, 98, 0);
+  system_exit(0);
+  lruv_new(0x002b9804, 1408, 14, 1408, (void *)0x001bed90, (void *)0x001bed50);
+  /* mem[0x004ea980] = eax */
+  display_assert((char *)0x002b97e0, (char *)0x002b96d8, 102, 0);
+  system_exit(0);
+  FUN_001bdd60();
+  /* mem[0x004ea97c] = eax */
+  display_assert((char *)0x002b97b8, (char *)0x002b96d8, 105, 0);
+  system_exit(0);
+
+  (void)eax;
 }
 
 /* 0x1bf130 */
 void texture_cache_close(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  /* test (char)eax, (char)eax -> je 0x1bf159 */
+  display_assert((char *)0x002b9704, (char *)0x002b96d8, 133, 0);
+  system_exit(0);
+  D3DDevice_KickPushBuffer();
+  D3DDevice_IsBusy();
+  lruv_cache_dispose_all((void *)(uintptr_t)eax);
+  data_make_invalid((void *)(uintptr_t)ecx);
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0x1bf260 */
 void texture_cache_debug_render(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  lruv_cache_get_page_usage((void *)(uintptr_t)ecx, (unsigned char *)(uintptr_t)eax);
+  /* test (char)ecx, dl -> je 0x1bf3ef */
+  FUN_001bef80();
+  FUN_00189270(0, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
+  /* cmp ebx, 3 -> jl 0x1bf300 */
+  /* test (char)eax, (char)eax -> je 0x1bf55c */
+  data_iterator_new((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
+  data_iterator_next((void *)(uintptr_t)eax);
+  /* test eax, eax -> je 0x1bf45b */
+  /* relift: cmp dword ptr [eax + 0x20], -1 -> je 0x1bf44b */
+  data_iterator_next((void *)(uintptr_t)edx);
+  /* test eax, eax -> jne 0x1bf437 */
+  FUN_00091ef0((void *)0x004e9378, 0, (void *)0x001becc0);
+  interface_get_tag_index(0);
+  draw_string_set_tab_stops((void *)(uintptr_t)eax, 0);
+  /* cmp edi, -1 -> je 0x1bf4a5 */
+  FUN_0019B7E0();
+  /* test esi, esi -> jl 0x1bf55c */
+  lruv_block_touched((void *)(uintptr_t)eax, 0);
+  tag_get_name(0);
+  FUN_00183290((void *)(uintptr_t)eax);
+  crt_sprintf((char *)(uintptr_t)ecx, (char *)0x002b9874);
+  draw_string_set_color((void *)(uintptr_t)ecx);
+  rasterizer_text_draw((void *)(uintptr_t)eax, (void *)0, (void *)0, 0, (char *)(uintptr_t)edx);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }

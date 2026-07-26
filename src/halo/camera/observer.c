@@ -1459,6 +1459,7 @@ void first_person_camera_update(void)
 void FUN_00089330(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x89350 */
@@ -1560,6 +1561,7 @@ void FUN_000898b0(void)
 void FUN_00089930(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x89940 */

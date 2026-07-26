@@ -355,24 +355,97 @@ void input_abstraction_update(void)
 /* 0xce6c0 */
 void input_abstraction_get_local_player_preferences(short local_player_index, void *preferences_out)
 {
-  (void)local_player_index;
-  (void)preferences_out;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* cmp (int16_t)esi, 4 -> jl 0xce6f4 */
+  display_assert((char *)0x00280fa0, (char *)0x00280fe4, 495, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0xce71b */
+  display_assert((char *)0x00280f94, (char *)0x00280fe4, 496, 0);
+  system_exit(0);
+  csmemcpy((void *)(uintptr_t)edi, (void *)(uintptr_t)ecx, 24);
+
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0xce740 */
 void input_abstraction_update_local_player_preferences(void)
 {
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test (int16_t)edi, (int16_t)edi -> jl 0xce754 */
+  /* cmp (int16_t)edi, 4 -> jl 0xce774 */
+  display_assert((char *)0x00281054, (char *)0x00280fe4, 507, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0xce79b */
+  display_assert((char *)0x00280f94, (char *)0x00280fe4, 508, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [esi + 0x10], 0xc -> jne 0xce7a7 */
+  /* relift: cmp byte ptr [esi + 0x11], 0xd -> je 0xce7c7 */
+  display_assert((char *)0x00281010, (char *)0x00280fe4, 511, 0);
+  system_exit(0);
+  csmemcpy((void *)(uintptr_t)ecx, (void *)(uintptr_t)esi, 24);
+
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0xce840 */
 void input_abstraction_update_device_changes(void)
 {
+  int eax = 0;
+  int esi = 0;
 
+  /* test (char)eax, (char)eax -> je 0xce8b1 */
+  /* test esi, esi -> je 0xce895 */
+  system_milliseconds();
+  /* cmp eax, 0x7d0 -> jae 0xce881 */
+  /* test eax, eax -> je 0xce895 */
+  system_milliseconds();
+  /* cmp eax, 0x7d0 -> jb 0xce895 */
+  error(0, (char *)0x00281094);
+  bink_playback_stop();
+  /* test eax, eax -> jne 0xce8b1 */
+  system_milliseconds();
+  /* mem[0x0046b8fc] = eax */
+
+  (void)eax;
+  (void)esi;
 }
 
 /* 0xce8c0 */
 void input_abstraction_print_config_control(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
 
+  /* test (int16_t)esi, (int16_t)esi -> jl 0xce8d1 */
+  /* cmp (int16_t)esi, 4 -> jl 0xce8f1 */
+  display_assert((char *)0x002810d0, (char *)0x00280fe4, 569, 0);
+  system_exit(0);
+  local_player_get_player_index(esi);
+  /* cmp eax, -1 -> je 0xce98e */
+  datum_absolute_index_to_index((void *)(uintptr_t)eax, 0);
+  /* test eax, eax -> je 0xce98e */
+  object_try_and_get_and_verify_type(0, 0);
+  /* test esi, esi -> je 0xce98e */
+  /* cmp eax, -1 -> je 0xce98e */
+  /* relift: cmp word ptr [esi + 0x2a0], -1 -> je 0xce98e */
+  object_get_and_verify_type(0, 0);
+  tag_get('ihev', 0);
+  /* cmp (int16_t)ecx, 3 -> je 0xce96a */
+  /* cmp (int16_t)ecx, 5 -> jne 0xce98e */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
 }

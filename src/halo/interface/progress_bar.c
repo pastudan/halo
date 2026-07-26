@@ -932,104 +932,415 @@ void progress_bar_display(float progress)
 /* 0xe19c0 */
 void tgaLoad(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  D3DDevice_CreateTexture(eax, edx, ecx, eax, edx, ecx, (void *)(uintptr_t)eax);
+  D3DDevice_SetRenderTarget((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  D3DDevice_GetDepthStencilSurface((void *)(uintptr_t)eax);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0xe1a10 */
 void FUN_000e1a10(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  D3DDevice_Clear(edx, (void *)(uintptr_t)ecx, eax, edx, 0.0f, eax);
+  D3DDevice_SetTransform(ecx, (void *)(uintptr_t)eax);
+  D3DDevice_GetTransform(ecx, (void *)(uintptr_t)eax);
+  /* cmp esi, 0x52 -> jge 0xe1a6f */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* cmp esi, 0x74 -> jge 0xe1a82 */
+  D3DDevice_SetRenderState_Deferred(0, 0);
+  D3DDevice_SetRenderState_PSTextureModes();
+  /* cmp esi, 0x75 -> jne 0xe1a9f */
+  D3DDevice_SetRenderState_VertexBlend();
+  /* cmp esi, 0x76 -> jne 0xe1aaf */
+  D3DDevice_SetRenderState_FogColor();
+  /* cmp esi, 0x77 -> jne 0xe1abf */
+  D3DDevice_SetRenderState_FillMode(edi);
+  /* cmp esi, 0x78 -> jne 0xe1acf */
+  D3DDevice_SetRenderState_BackFillMode();
+  /* cmp esi, 0x79 -> jne 0xe1adf */
+  D3DDevice_SetRenderState_TwoSidedLighting();
+  /* cmp esi, 0x7a -> jne 0xe1aef */
+  D3DDevice_SetRenderState_NormalizeNormals();
+  /* cmp esi, 0x7b -> jne 0xe1aff */
+  D3DDevice_SetRenderState_ZEnable(edi);
+  /* cmp esi, 0x7c -> jne 0xe1b0f */
+  D3DDevice_SetRenderState_StencilEnable(edi);
+  /* cmp esi, 0x7d -> jne 0xe1b1f */
+  D3DDevice_SetRenderState_StencilFail(edi);
+  /* cmp esi, 0x7f -> jne 0xe1b2f */
+  D3DDevice_SetRenderState_CullMode(edi);
+  /* cmp esi, 0x7e -> jne 0xe1b3f */
+  D3DDevice_SetRenderState_FrontFace();
+  /* cmp esi, 0x80 -> jne 0xe1b52 */
+  D3DDevice_SetRenderState_TextureFactor();
+  /* cmp esi, 0x81 -> jne 0xe1b65 */
+  D3DDevice_SetRenderState_ZBias(edi);
+  /* cmp esi, 0x82 -> jne 0xe1b78 */
+  D3DDevice_SetRenderState_LogicOp();
+  /* cmp esi, 0x83 -> jne 0xe1b8b */
+  D3DDevice_SetRenderState_EdgeAntiAlias();
+  /* cmp esi, 0x84 -> jne 0xe1b9e */
+  D3DDevice_SetRenderState_MultiSampleAntiAlias();
+  /* cmp esi, 0x85 -> jne 0xe1bb1 */
+  D3DDevice_SetRenderState_MultiSampleMask();
+  /* cmp esi, 0x86 -> jne 0xe1bc4 */
+  D3DDevice_SetRenderState_MultiSampleType();
+  /* cmp esi, 0x87 -> jne 0xe1bd7 */
+  D3DDevice_SetRenderState_ShadowFunc();
+  /* cmp esi, 0x88 -> jne 0xe1bea */
+  D3DDevice_SetRenderState_LineWidth();
+  /* cmp esi, 0x89 -> jne 0xe1bfd */
+  D3DDevice_SetRenderState_Dxt1NoiseEnable();
+  /* cmp esi, 0x8a -> jne 0xe1c10 */
+  D3DDevice_SetRenderState_YuvEnable();
+  /* cmp esi, 0x8b -> jne 0xe1c23 */
+  D3DDevice_SetRenderState_OcclusionCullEnable();
+  /* cmp esi, 0x8c -> jne 0xe1c36 */
+  D3DDevice_SetRenderState_StencilCullEnable();
+  /* cmp esi, 0x8d -> jne 0xe1c49 */
+  D3DDevice_SetRenderState_RopZCmpAlwaysRead();
+  /* cmp esi, 0x8e -> jne 0xe1c5c */
+  D3DDevice_SetRenderState_RopZRead();
+  /* cmp esi, 0x8f -> jne 0xe1c6a */
+  D3DDevice_SetRenderState_DoNotCullUncompressed();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0xe1d00 */
 void FUN_000e1d00(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  mat4x4_transform_vec4((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (void *)0x0046c2d8);
+  /* cmp edx, 0x16 -> jge 0xe1d60 */
+  D3DDevice_SetTextureStageState(eax, 0, 0);
+  /* cmp edx, 0x1c -> jne 0xe1d71 */
+  D3DDevice_SetTextureState_TexCoordIndex();
+  /* cmp edx, 0x1d -> jne 0xe1d82 */
+  D3DDevice_SetTextureState_BorderColor(ecx, eax);
+  /* cmp edx, 0x1e -> jne 0xe1d93 */
+  D3DDevice_SetTextureState_ColorKeyColor();
+  /* cmp edx, 0x1b -> jg 0xe1da0 */
+  D3DDevice_SetTextureState_BumpEnv();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0xe1f00 */
 void FUN_000e1f00(void)
 {
+  int edx = 0;
 
+  D3DDevice_SetVertexData2f(edx, 0.0f, 0.0f);
+
+  (void)edx;
 }
 
 /* 0xe1f20 */
 void FUN_000e1f20(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  D3DDevice_SetVertexData4f(ecx, 0.0f, 0.0f, 0.0f, 0.0f);
+  D3DDevice_Begin(eax);
+  D3DDevice_End();
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0xe2170 */
 void FUN_000e2170(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  D3DResource_Release((void *)(uintptr_t)eax);
+  D3DTexture_GetLevelDesc((void *)(uintptr_t)edx, ecx, (void *)(uintptr_t)eax);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0xe21b0 */
 void FUN_000e21b0(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  D3DTexture_LockRect((void *)(uintptr_t)ecx, eax, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, eax);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0xe21e0 */
 void D3DXMatrixIdentity(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0xe2220 */
 void SetRenderStateSmart(int state, int value)
 {
-  (void)state;
-  (void)value;
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* cmp esi, 0x52 -> jge 0xe2249 */
+  D3DDevice_SetRenderState_Simple(edi, 0);
+  /* cmp esi, 0x74 -> jge 0xe225a */
+  D3DDevice_SetRenderState_PSTextureModes();
+  /* cmp esi, 0x75 -> jne 0xe2279 */
+  D3DDevice_SetRenderState_VertexBlend();
+  /* cmp esi, 0x76 -> jne 0xe228a */
+  D3DDevice_SetRenderState_FogColor();
+  /* cmp esi, 0x77 -> jne 0xe229b */
+  D3DDevice_SetRenderState_FillMode(eax);
+  /* cmp esi, 0x78 -> jne 0xe22ac */
+  D3DDevice_SetRenderState_BackFillMode();
+  /* cmp esi, 0x79 -> jne 0xe22bd */
+  D3DDevice_SetRenderState_TwoSidedLighting();
+  /* cmp esi, 0x7a -> jne 0xe22ce */
+  D3DDevice_SetRenderState_NormalizeNormals();
+  /* cmp esi, 0x7b -> jne 0xe22df */
+  D3DDevice_SetRenderState_ZEnable(ecx);
+  /* cmp esi, 0x7c -> jne 0xe22f0 */
+  D3DDevice_SetRenderState_StencilEnable(edx);
+  /* cmp esi, 0x7d -> jne 0xe2301 */
+  D3DDevice_SetRenderState_StencilFail(eax);
+  /* cmp esi, 0x7f -> jne 0xe2312 */
+  D3DDevice_SetRenderState_CullMode(ecx);
+  /* cmp esi, 0x7e -> jne 0xe2323 */
+  D3DDevice_SetRenderState_FrontFace();
+  /* cmp esi, 0x80 -> jne 0xe2337 */
+  D3DDevice_SetRenderState_TextureFactor();
+  /* cmp esi, 0x81 -> jne 0xe234b */
+  D3DDevice_SetRenderState_ZBias(ecx);
+  /* cmp esi, 0x82 -> jne 0xe235f */
+  D3DDevice_SetRenderState_LogicOp();
+  /* cmp esi, 0x83 -> jne 0xe2373 */
+  D3DDevice_SetRenderState_EdgeAntiAlias();
+  /* cmp esi, 0x84 -> jne 0xe2387 */
+  D3DDevice_SetRenderState_MultiSampleAntiAlias();
+  /* cmp esi, 0x85 -> jne 0xe239b */
+  D3DDevice_SetRenderState_MultiSampleMask();
+  /* cmp esi, 0x86 -> jne 0xe23af */
+  D3DDevice_SetRenderState_MultiSampleType();
+  /* cmp esi, 0x87 -> jne 0xe23c3 */
+  D3DDevice_SetRenderState_ShadowFunc();
+  /* cmp esi, 0x88 -> jne 0xe23d7 */
+  D3DDevice_SetRenderState_LineWidth();
+  /* cmp esi, 0x89 -> jne 0xe23eb */
+  D3DDevice_SetRenderState_Dxt1NoiseEnable();
+  /* cmp esi, 0x8a -> jne 0xe23ff */
+  D3DDevice_SetRenderState_YuvEnable();
+  /* cmp esi, 0x8b -> jne 0xe2413 */
+  D3DDevice_SetRenderState_OcclusionCullEnable();
+  /* cmp esi, 0x8c -> jne 0xe2427 */
+  D3DDevice_SetRenderState_StencilCullEnable();
+  /* cmp esi, 0x8d -> jne 0xe243b */
+  D3DDevice_SetRenderState_RopZCmpAlwaysRead();
+  /* cmp esi, 0x8e -> jne 0xe244f */
+  D3DDevice_SetRenderState_RopZRead();
+  /* cmp esi, 0x8f -> jne 0xe2460 */
+  D3DDevice_SetRenderState_DoNotCullUncompressed();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0xe2470 */
 void SetTextureStageStateSmart(int stage, int state, int value)
 {
-  (void)stage;
-  (void)state;
-  (void)value;
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+
+  /* cmp edx, 0x16 -> jge 0xe2489 */
+  D3DDevice_SetTextureStageState(eax, 0, 0);
+  /* cmp edx, 0x1c -> jne 0xe249d */
+  D3DDevice_SetTextureState_TexCoordIndex();
+  /* cmp edx, 0x1d -> jne 0xe24b1 */
+  D3DDevice_SetTextureState_BorderColor(ecx, eax);
+  /* cmp edx, 0x1e -> jne 0xe24c5 */
+  D3DDevice_SetTextureState_ColorKeyColor();
+  /* cmp edx, 0x1b -> jg 0xe24d8 */
+  D3DDevice_SetTextureState_BumpEnv();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0xe2650 */
 void FUN_000e2650(void)
 {
-
+  D3DDevice_SetVertexData2f(10, 0.0f, 0.0f);
 }
 
 /* 0xe2680 */
 void FUN_000e2680(void)
 {
-
+  D3DDevice_SetVertexData2f(10, 0.0f, 0.0f);
 }
 
 /* 0xe2820 */
 void FUN_000e2820(void)
 {
+  int edx = 0;
 
+  progress_bar_draw_loading_bar((float *)(uintptr_t)edx, (float *)0, 0.0f, 0.0f);
+
+  (void)edx;
 }
 
 /* 0xe2880 */
 void FUN_000e2880(void)
 {
-
+  progress_bar_draw_loading_bar((float *)0, (float *)0, 0.0f, 0.0f);
 }
 
 /* 0xe28e0 */
 void progress_bar_eachframe(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
 
+  FUN_001d0581();
+  /* test (char)eax, (char)eax -> je 0xe290c */
+  FUN_001d0581();
+  /* mem[0x0046c210] = eax */
+  /* mem[0x0046c3e8] = 1 */
+  /* cmp esi, 0x3e8 -> jbe 0xe2997 */
+  /* mem[0x0046c3fc] = 0 */
+  D3DResource_Release((void *)(uintptr_t)eax);
+  /* mem[0x0046c3f0] = eax */
+  /* test ecx, ecx -> je 0xe2959 */
+  D3DResource_Release((void *)(uintptr_t)ecx);
+  /* mem[0x0046c3f4] = 0 */
+  /* test eax, eax -> je 0xe296d */
+  D3DResource_Release((void *)(uintptr_t)eax);
+  /* mem[0x0046c3f0] = 0 */
+  /* test eax, eax -> je 0xe298c */
+  IDirectSoundBuffer_Stop();
+  IDirectSoundBuffer_Release();
+  /* cmp esi, 0x46c3e8 -> jl 0xe2972 */
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
 }
 
 /* 0xe33a0 */
 void FUN_000e33a0(void)
 {
+  int eax = 0;
 
+  data_new((char *)0x00282db4, 32, 292);
+  /* mem[0x0046c408] = eax */
+  data_delete_all((void *)(uintptr_t)eax);
+  /* mem[0x0046c414] = 0 */
+  /* mem[0x0046c40c] = eax */
+  /* mem[0x0046c410] = eax */
+
+  (void)eax;
 }
 
 /* 0xe33e0 */
 void FUN_000e33e0(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test eax, eax -> je 0xe3407 */
+  /* test (char)ecx, (char)ecx -> je 0xe33fe */
+  data_make_invalid((void *)(uintptr_t)eax);
+  data_dispose((void *)(uintptr_t)eax);
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* cmp eax, -1 -> je 0xe3442 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* mem[0x0046c410] = eax */
+  /* cmp eax, -1 -> je 0xe347a */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  datum_delete((void *)(uintptr_t)ecx, 0);
+  /* mem[0x0046c40c] = eax */
+  datum_delete((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> je 0xe34c4 */
+  /* mem[0x0046c40c] = eax */
+  /* mem[0x0046c410] = eax */
+  data_make_valid((void *)(uintptr_t)eax);
+  /* test esi, esi -> jne 0xe350e */
+  display_assert((char *)0x00282dc4, (char *)0x00282dcc, 195, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0xe3558 */
+  /* mem[0x0046c414] = esi */
+  edit_text_initialize((void *)(uintptr_t)edx);
+  /* relift: cmp eax, dword ptr [0x46c414] -> jne 0xe3578 */
+  /* mem[0x0046c414] = 0 */
+  /* test ecx, ecx -> je 0xe3637 */
+  local_time_get();
+  input_get_buffered_key((void *)(uintptr_t)ecx);
+  /* test (char)eax, (char)eax -> je 0xe3611 */
+  /* cmp (int16_t)ecx, 0x20 -> jge 0xe35e5 */
+  edit_text_process_key((void *)(uintptr_t)eax, (void *)0);
+  /* mem[0x0046c41c] = esi */
+  input_get_buffered_key((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> jne 0xe35c0 */
+  /* cmp esi, ecx -> jle 0xe3634 */
+  /* mem[0x0046c41c] = esi */
+  /* cmp edi, -1 -> je 0xe3686 */
+  datum_get((void *)(uintptr_t)eax, 0);
+  terminal_remove_line(0);
+  interface_get_tag_index(0);
+  tag_get(0x666f6e74, 0);
+  /* test eax, eax -> je 0xe37ee */
+  FUN_0008dc30((char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
+  csstrlen((char *)(uintptr_t)eax);
+  csstrcpy((char *)(uintptr_t)eax, (char *)(uintptr_t)ecx);
+  rect2d_offset((void *)(uintptr_t)ecx, eax, edx);
+  draw_string_set_font(0, 0, 0, 0, (void *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> je 0xe37d5 */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }

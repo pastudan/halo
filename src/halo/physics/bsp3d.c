@@ -345,5 +345,26 @@ int FUN_001470b0(int param_1, uint32_t param_2, uint32_t param_3,
 /* 0x146be0 */
 void FUN_00146be0(void *damage_params)
 {
-  (void)damage_params;
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  scenario_get();
+  tag_get('!tpj', 0);
+  /* test (char)eax, (char)eax -> je 0x146d37 */
+  /* test (char)eax, 0x41 -> jne 0x146c6b */
+  error(0, (char *)0x0029c9b8);
+  breakable_surface_extant(0);
+  /* test (char)eax, (char)eax -> je 0x146d27 */
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 48);
+  breakable_surface_get(0);
+  breakable_surfaces_get_bsp_surface_data();
+  FUN_00145ad0(0, (void *)(uintptr_t)ecx, 0);
+  /* cmp edi, eax -> jl 0x146c88 */
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }

@@ -607,7 +607,29 @@ bool network_game_message_encode(
 /* 0x12b0c0 */
 bool network_game_player_is_valid(void *player, void *game)
 {
-  (void)player;
-  (void)game;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test edi, edi -> jne 0x12b0f6 */
+  display_assert((char *)0x00295a5c, (char *)0x00295874, 583, 0);
+  system_exit(0);
+  /* test esi, esi -> je 0x12b143 */
+  /* cmp (char)eax, 4 -> jge 0x12b143 */
+  /* test dl, dl -> jl 0x12b143 */
+  /* cmp dl, 4 -> jge 0x12b143 */
+  /* relift: cmp byte ptr [eax - 1], dl -> jne 0x12b12c */
+  /* relift: cmp byte ptr [eax], (char)ebx -> je 0x12b13c */
+  /* cmp ecx, 0x10 -> jl 0x12b120 */
   return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }

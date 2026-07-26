@@ -1894,33 +1894,40 @@ void FUN_001390d0(int material, int bitmap_ref, uint16_t *indices, float bary_u,
 /* 0x136700 */
 void object_get_maximum_shield_vitality(void)
 {
+  int ecx = 0;
 
+  object_get_and_verify_type(0, 0);
+  /* test (char)ecx, (char)ecx -> jne 0x13673a */
+  FUN_000b55b0(0, 0);
+
+  (void)ecx;
 }
 
 /* 0x138f30 */
 void FUN_00138f30(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x138f70 */
 void FUN_00138f70(float *output, float *vertex_c, float *vertex_d, float *base, float u, float v)
 {
-  (void)output;
-  (void)vertex_c;
-  (void)vertex_d;
-  (void)base;
-  (void)u;
-  (void)v;
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x138fd0 */
 void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices, float u, float v, int param_6)
 {
-  (void)material;
-  (void)lightmap;
-  (void)vertex_indices;
-  (void)u;
-  (void)v;
-  (void)param_6;
+  int eax = 0;
+
+  /* cmp (int16_t)eax, 3 -> je 0x13900e */
+  display_assert((char *)0x0029b268, (char *)0x0029b324, 143, 0);
+  system_exit(0);
+  FUN_001806e0(0, (float *)(uintptr_t)eax);
+  FUN_001806e0(0, (float *)(uintptr_t)eax);
+  FUN_001806e0(0, (float *)(uintptr_t)eax);
+  bitmap_2d_get_pixel(0, (float *)0, 0.0f, (float *)0);
+  pixel32_to_real_rgb_color(eax, (float *)0);
+
+  (void)eax;
 }

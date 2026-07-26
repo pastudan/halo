@@ -709,13 +709,65 @@ bool FUN_00106f50(int16_t point_count, float *points, int16_t vertices_capacity,
 /* 0x106960 */
 int16_t convex_polygon3d_clip_to_plane(int16_t count, float *verts, float *plane, int16_t max_count, float *out_verts, uint32_t *out_bitmask, float epsilon, void *changed)
 {
-  (void)count;
-  (void)verts;
-  (void)plane;
-  (void)max_count;
-  (void)out_verts;
-  (void)out_bitmask;
-  (void)epsilon;
-  (void)changed;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  FUN_001d90e0();
+  display_assert((char *)0x0028c010, (char *)0x0028be44, 1493, 0);
+  system_exit(0);
+  /* test eax, eax -> je 0x1069ad */
+  /* relift: cmp eax, dword ptr [ebp + 0x18] -> jne 0x106a02 */
+  /* cmp (int16_t)edi, 0x200 -> jle 0x1069dc */
+  display_assert((char *)0x0028bff8, (char *)0x0028be44, 1500, 0);
+  system_exit(0);
+  csmemcpy((void *)(uintptr_t)eax, (void *)(uintptr_t)edx, ecx);
+  /* test (char)eax, 1 -> jne 0x106a40 */
+  /* test (char)eax, 1 -> je 0x106a8d */
+  /* test (char)eax, 0x41 -> jne 0x106a9f */
+  /* relift: cmp byte ptr [ebp + 0x13], (char)ebx -> je 0x106c04 */
+  /* relift: cmp (int16_t)esi, word ptr [ebp + 0x14] -> je 0x106d18 */
+  /* test eax, eax -> je 0x106ad0 */
+  /* test (char)eax, 0x41 -> jne 0x106b3d */
+  /* test (char)eax, 0x41 -> jne 0x106bc0 */
+  /* test (char)eax, 0x41 -> jne 0x106bc0 */
+  /* test (char)eax, 0x41 -> je 0x106c03 */
+  /* test (char)eax, 0x41 -> jne 0x106c04 */
+  /* test (char)eax, 0x41 -> jne 0x106c04 */
+  /* test (char)eax, 0x41 -> jne 0x106c04 */
+  /* test (char)eax, (char)eax -> je 0x106cd3 */
+  /* relift: cmp (int16_t)esi, word ptr [ebp + 0x14] -> jge 0x106d18 */
+  /* test (char)eax, 0x41 -> jne 0x106c8f */
+  /* test (char)eax, 0x41 -> jne 0x106c8f */
+  /* test (char)eax, 0x41 -> je 0x106cd2 */
+  /* test (char)eax, 0x41 -> jne 0x106cd3 */
+  /* test (char)eax, 0x41 -> jne 0x106cd3 */
+  /* test (char)eax, 0x41 -> jne 0x106cd3 */
+  /* cmp (int16_t)esi, -1 -> je 0x106d1b */
+  /* test (char)eax, (char)eax -> jne 0x106d0f */
+  /* test (char)eax, (char)eax -> jne 0x106d6b */
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x106d29 */
+  /* relift: cmp (int16_t)eax, word ptr [ebp + 0x14] -> jle 0x106d49 */
+  display_assert((char *)0x0028bfd4, (char *)0x0028be44, 1591, 0);
+  system_exit(0);
+  csmemcpy((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, eax);
+  /* test (char)eax, (char)eax -> jne 0x106d5d */
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x106d79 */
+  /* relift: cmp (int16_t)eax, word ptr [ebp + 0x14] -> jle 0x106d9c */
+  display_assert((char *)0x0028bfd4, (char *)0x0028be44, 1584, 0);
+  system_exit(0);
+  csmemcpy((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, ecx);
   return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }

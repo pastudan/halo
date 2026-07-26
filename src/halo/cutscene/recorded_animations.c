@@ -193,15 +193,19 @@ void FUN_00094060(int *out, int **stream, int *dest)
     *stream = (int *)((char *)p + 0xc);
   }
 }
-
-void FUN_00094290(void) {}
+void FUN_00094290(void)
+{
+  /* relift: no calls detected — manual review */
+}
 
 void FUN_00094a70(int a, int *cursor, int c)
 {
   FUN_00093780(a, cursor, c);
 }
-
-void FUN_00094ba0(void) {}
+void FUN_00094ba0(void)
+{
+  /* relift: no calls detected — manual review */
+}
 
 void recorded_animations_clear_debug_storage(void)
 {

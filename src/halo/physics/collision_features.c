@@ -824,39 +824,140 @@ bool collision_features_test_los(void *features, void *los_data, void *out_hit)
 /* 0x14ad60 */
 void render_debug_collision_sphere(void)
 {
+  int eax = 0;
 
+  FUN_00189540(0, (void *)(uintptr_t)eax, 0.0f, (void *)0);
+
+  (void)eax;
 }
 
 /* 0x14ad80 */
 void render_debug_collision_cylinder(void)
 {
+  int eax = 0;
 
+  FUN_001896d0(0, (void *)(uintptr_t)eax, (void *)0, 0.0f, (void *)0);
+
+  (void)eax;
 }
 
 /* 0x14bdb0 */
 void collision_sphere_test_vector(void)
 {
+  int eax = 0;
 
+  /* test (char)eax, 0x41 -> jne 0x14bf26 */
+  /* test (char)eax, 1 -> jne 0x14bf24 */
+  normalize3d((float *)0);
+
+  (void)eax;
 }
 
 /* 0x14bf30 */
 void collision_cylinder_test_vector(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test (char)eax, 0x41 -> je 0x14c056 */
+  /* test (char)eax, 0x41 -> jne 0x14c0c5 */
+  /* test (char)eax, 0x41 -> jne 0x14c12d */
+  /* test (char)eax, 0x41 -> jne 0x14c14c */
+  /* test (char)eax, 0x41 -> jne 0x14c14c */
+  /* test (char)eax, 0x41 -> jne 0x14c189 */
+  /* test (char)eax, 0x41 -> je 0x14c058 */
+  vector3d_scale_add((float *)(uintptr_t)ecx, (float *)(uintptr_t)ecx, 0.0f, (float *)(uintptr_t)edx);
+  vector3d_scale_add((float *)(uintptr_t)edx, (float *)(uintptr_t)esi, 0.0f, (float *)0);
+  normalize3d((float *)(uintptr_t)ebx);
+  FUN_00013070((float *)(uintptr_t)edi, (float *)(uintptr_t)ebx);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x14c220 */
 void collision_prism_test_vector(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
 
+  /* test (char)eax, 0x41 -> jne 0x14c2d6 */
+  /* test (char)eax, 0x41 -> jne 0x14c2fe */
+  /* test (char)eax, 0x41 -> jne 0x14c300 */
+  /* test (char)eax, 0x41 -> jne 0x14c332 */
+  /* test (char)eax, 1 -> je 0x14c30d */
+  FUN_00061df0((void *)(uintptr_t)ecx, 0, edx, (void *)0);
+  FUN_00061df0((void *)(uintptr_t)edx, 0, eax, (void *)(uintptr_t)edx);
+  /* test edi, edi -> jle 0x14c477 */
+  /* test (char)eax, 0x41 -> jne 0x14c442 */
+  /* test (char)eax, 0x41 -> je 0x14c30d */
+  /* cmp eax, edi -> jl 0x14c3c2 */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }
 
 /* 0x14c4b0 */
 char FUN_0014c4b0(int arg1, float *arg2, float *arg3, void *out_result)
 {
-  (void)arg1;
-  (void)arg2;
-  (void)arg3;
-  (void)out_result;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test (int16_t)eax, (int16_t)eax -> jne 0x14c51b */
+  collision_sphere_test_vector();
+  /* test (char)eax, (char)eax -> jne 0x14c574 */
+  /* cmp (int16_t)eax, 1 -> jne 0x14c54a */
+  collision_cylinder_test_vector();
+  /* test (char)eax, (char)eax -> jne 0x14c574 */
+  /* cmp (int16_t)eax, 2 -> jne 0x14c5ca */
+  collision_prism_test_vector();
+  /* test (char)eax, (char)eax -> je 0x14c5ca */
+  /* test (char)eax, 0x41 -> jne 0x14c5ca */
+  /* relift: cmp dword ptr [edi + 0x24], 8 -> jle 0x14c702 */
+  display_assert((char *)0x0029d0ec, (char *)0x0029cf34, 1079, 0);
+  system_exit(0);
+  project_point2d((float *)(uintptr_t)eax, (float *)(uintptr_t)ebx, edx, ecx, (float *)(uintptr_t)esi);
+  /* test esi, esi -> jle 0x14c79f */
+  FUN_00189270(0, (float *)(uintptr_t)ecx, (float *)(uintptr_t)edx, (void *)0);
+  /* cmp ecx, esi -> jl 0x14c770 */
+  /* relift: cmp word ptr [esi], (int16_t)edi -> jle 0x14c7e2 */
+  display_assert((char *)0x0029d1d0, (char *)0x0029cf34, 1108, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi + 2], (int16_t)edi -> jle 0x14c808 */
+  display_assert((char *)0x0029d178, (char *)0x0029cf34, 1109, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi + 4], (int16_t)edi -> jle 0x14c82e */
+  display_assert((char *)0x0029d128, (char *)0x0029cf34, 1110, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi + 4], (int16_t)edi -> jle 0x14c863 */
+  FUN_0014c6d0(0, (void *)(uintptr_t)eax);
+  /* relift: cmp (int16_t)edi, word ptr [esi + 4] -> jl 0x14c840 */
+  /* relift: cmp word ptr [esi + 2], (int16_t)edi -> jle 0x14c8a5 */
+  FUN_001896d0(0, (void *)(uintptr_t)eax, (void *)0, 0.0f, (void *)0);
+  /* relift: cmp (int16_t)edi, word ptr [esi + 2] -> jl 0x14c870 */
+  /* relift: cmp word ptr [esi], (int16_t)edi -> jle 0x14c8d9 */
   return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }

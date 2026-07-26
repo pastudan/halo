@@ -219,6 +219,7 @@ char shader_ignores_effect(void *shader)
 char shader_type_is_transparent(int16_t shader_type)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
   return 0;
 }
 
@@ -226,30 +227,35 @@ char shader_type_is_transparent(int16_t shader_type)
 void shader_type_is_lightmapped(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x190a10 */
 void shader_type_is_vertex_lit(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x190a30 */
 void shader_type_is_valid_for_environment(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x190a50 */
 void shader_type_is_valid_for_model(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x190a70 */
 char shader_type_is_valid_for_modifier(int16_t shader_type)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
   return 0;
 }
 
@@ -289,12 +295,14 @@ void shader_environment_texture_animation_evaluate(void)
 void numeric_countdown_timer_set(int a0, int a1)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x190c00 */
 int numeric_countdown_timer_get(int a0)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
   return 0;
 }
 
@@ -302,12 +310,14 @@ int numeric_countdown_timer_get(int a0)
 void numeric_countdown_timer_stop(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x190da0 */
 void numeric_countdown_timer_restart(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x190e10 */

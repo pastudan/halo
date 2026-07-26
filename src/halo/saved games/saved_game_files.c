@@ -305,6 +305,7 @@ void FUN_001c20d0(void)
 void FUN_001c2110(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x1c2120 */
@@ -549,12 +550,14 @@ void saved_game_file_close(void)
 void saved_game_file_get_type(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x1c29b0 */
 void saved_game_files_notify_memory_units_changed(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x1c29c0 */
@@ -1026,6 +1029,7 @@ void FUN_001c3610(void)
 void FUN_001c3710(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x1c38d0 */

@@ -83,11 +83,11 @@ void player_ui_set_single_player_local_player_controller(void)
   int edi = 0;
 
   /* cmp (int16_t)esi, 4 -> jl 0xe0771 */
-  display_assert((void *)0x00282708, (void *)0x00282724, 119, 0);
+  display_assert((char *)0x00282708, (char *)0x00282724, 119, 0);
   system_exit(0);
   /* test (int16_t)edi, (int16_t)edi -> jl 0xe0780 */
   /* cmp (int16_t)edi, 4 -> jl 0xe07ac */
-  display_assert((void *)0x002826ec, (void *)0x00282724, 121, 0);
+  display_assert((char *)0x002826ec, (char *)0x00282724, 121, 0);
   system_exit(0);
 
   (void)esi;
@@ -98,6 +98,7 @@ void player_ui_set_single_player_local_player_controller(void)
 int player_ui_get_single_player_local_player_from_controller(short local_player_index)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
   return 0;
 }
 
@@ -108,7 +109,7 @@ void player_ui_local_player_joined_multiplayer_game(void)
 
   /* test (int16_t)esi, (int16_t)esi -> jl 0xe0853 */
   /* cmp (int16_t)esi, 4 -> jl 0xe0873 */
-  display_assert((void *)0x00282750, (void *)0x00282724, 157, 0);
+  display_assert((char *)0x00282750, (char *)0x00282724, 157, 0);
   system_exit(0);
 
   (void)esi;
@@ -121,7 +122,7 @@ void player_ui_local_player_wants_to_play_multiplayer(void)
 
   /* test (int16_t)esi, (int16_t)esi -> jl 0xe08a3 */
   /* cmp (int16_t)esi, 4 -> jl 0xe08c3 */
-  display_assert((void *)0x00282750, (void *)0x00282724, 167, 0);
+  display_assert((char *)0x00282750, (char *)0x00282724, 167, 0);
   system_exit(0);
 
   (void)esi;
@@ -134,7 +135,7 @@ void player_ui_clear_multiplayer_autojoin_for_local_player(void)
 
   /* test (int16_t)esi, (int16_t)esi -> jl 0xe08f3 */
   /* cmp (int16_t)esi, 4 -> jl 0xe0913 */
-  display_assert((void *)0x00282750, (void *)0x00282724, 175, 0);
+  display_assert((char *)0x00282750, (char *)0x00282724, 175, 0);
   system_exit(0);
 
   (void)esi;
@@ -144,6 +145,7 @@ void player_ui_clear_multiplayer_autojoin_for_local_player(void)
 void player_ui_autojoin_players_to_next_multiplayer_game(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0xe0960 */
@@ -157,15 +159,17 @@ void player_ui_clear_multiplayer_variant(void)
 /* 0xe0980 */
 void player_ui_get_active_player_profile(void)
 {
+  int eax = 0;
   int esi = 0;
   int edi = 0;
 
   /* cmp (int16_t)esi, 4 -> jge 0xe099b */
   /* test edi, edi -> jne 0xe09bb */
-  display_assert((void *)0x002827a0, (void *)0x00282724, 238, 0);
+  display_assert((char *)0x002827a0, (char *)0x00282724, 238, 0);
   system_exit(0);
-  csmemcpy((void *)0, (void *)0, 0);
+  csmemcpy((void *)(uintptr_t)edi, (void *)(uintptr_t)eax, 0);
 
+  (void)eax;
   (void)esi;
   (void)edi;
 }
@@ -174,6 +178,7 @@ void player_ui_get_active_player_profile(void)
 void player_ui_get_active_player_profile_index(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0xe0a10 */
@@ -183,7 +188,7 @@ void player_ui_get_last_single_player_level_played(void)
 
   /* test (int16_t)esi, (int16_t)esi -> jl 0xe0a23 */
   /* cmp (int16_t)esi, 4 -> jl 0xe0a43 */
-  display_assert((void *)0x00282750, (void *)0x00282724, 265, 0);
+  display_assert((char *)0x00282750, (char *)0x00282724, 265, 0);
   system_exit(0);
 
   (void)esi;
@@ -195,9 +200,9 @@ void player_ui_set_game_variant(void)
   int esi = 0;
 
   /* test esi, esi -> jne 0xe0a8b */
-  display_assert((void *)0x00282808, (void *)0x00282724, 273, 0);
+  display_assert((char *)0x00282808, (char *)0x00282724, 273, 0);
   system_exit(0);
-  csmemcpy((void *)0x0046bfcc, (void *)0, 104);
+  csmemcpy((void *)0x0046bfcc, (void *)(uintptr_t)esi, 104);
 
   (void)esi;
 }
@@ -209,10 +214,10 @@ void player_ui_game_variant_specified(void)
   int esi = 0;
 
   /* test esi, esi -> jne 0xe0adb */
-  display_assert((void *)0x00282808, (void *)0x00282724, 284, 0);
+  display_assert((char *)0x00282808, (char *)0x00282724, 284, 0);
   system_exit(0);
   /* test (char)eax, (char)eax -> je 0xe0af9 */
-  csmemcpy((void *)0, (void *)0x0046bfcc, 104);
+  csmemcpy((void *)(uintptr_t)esi, (void *)0x0046bfcc, 104);
 
   (void)eax;
   (void)esi;
@@ -226,7 +231,7 @@ bool player_ui_rumble_disabled(int controller_index)
   /* cmp (int16_t)esi, -1 -> jne 0xe0b13 */
   /* test (int16_t)esi, (int16_t)esi -> jl 0xe0b1e */
   /* cmp (int16_t)esi, 4 -> jl 0xe0b3e */
-  display_assert((void *)0x00282750, (void *)0x00282724, 305, 0);
+  display_assert((char *)0x00282750, (char *)0x00282724, 305, 0);
   system_exit(0);
   return 0;
 
@@ -242,7 +247,7 @@ void player_ui_autolevel_enabled(void)
 
   /* test (int16_t)esi, (int16_t)esi -> jl 0xe0b62 */
   /* cmp (int16_t)esi, 4 -> jl 0xe0b82 */
-  display_assert((void *)0x00281054, (void *)0x00282724, 320, 0);
+  display_assert((char *)0x00281054, (char *)0x00282724, 320, 0);
   system_exit(0);
   network_game_in_progress();
   /* test (char)eax, (char)eax -> jne 0xe0baa */
@@ -251,7 +256,7 @@ void player_ui_autolevel_enabled(void)
   /* cmp (int16_t)esi, -1 -> jne 0xe0bb5 */
   /* test (int16_t)esi, (int16_t)esi -> jl 0xe0bc0 */
   /* cmp (int16_t)esi, 4 -> jl 0xe0be0 */
-  display_assert((void *)0x00282750, (void *)0x00282724, 340, 0);
+  display_assert((char *)0x00282750, (char *)0x00282724, 340, 0);
   system_exit(0);
 
   (void)eax;
@@ -290,8 +295,8 @@ void player_ui_fast_setup_network_server(void)
   dispose_global_network_game_client();
   dispose_global_network_game_server();
   set_game_connection(0);
-  main_set_multiplayer_map_name((void *)0x0025386f);
-  ui_widget_load_by_name_or_tag((void *)0x002828e0, 0, 0, 0, 0, 0, 0);
+  main_set_multiplayer_map_name((char *)0x0025386f);
+  ui_widget_load_by_name_or_tag((char *)0x002828e0, 0, 0, 0, 0, 0, 0);
   /* test eax, eax -> je 0xe0d6a */
   game_engine_playlist_initialize();
   network_game_set_accept_remote_connections(0);
@@ -304,8 +309,8 @@ void player_ui_fast_setup_network_server(void)
   dispose_global_network_game_client();
   dispose_global_network_game_server();
   network_game_set_accept_remote_connections(0);
-  error(0, (void *)0x002828ac);
-  error(0, (void *)0x00282840);
+  error(0, (char *)0x002828ac);
+  error(0, (char *)0x00282840);
 
   (void)eax;
 }
@@ -319,7 +324,7 @@ void player_ui_edit_profile_is_default_profile(void)
   saved_game_file_get_type();
   /* test eax, eax -> jl 0xe0dae */
   /* cmp eax, 1 -> jg 0xe0dae */
-  error(0, (void *)0x00282938);
+  error(0, (char *)0x00282938);
 
   (void)eax;
 }
@@ -331,10 +336,10 @@ void player_ui_edit_profile_name_is_dirty(void)
 
   /* cmp eax, -1 -> je 0xe0e20 */
   saved_game_file_get_type();
-  error(0, (void *)0x00282938);
-  ustrncmp((void *)0x0046c03c, (void *)0x0046c0a4, 12);
+  error(0, (char *)0x00282938);
+  ustrncmp((wchar_t *)0x0046c03c, (wchar_t *)0x0046c0a4, 12);
   /* test eax, eax -> je 0xe0e2f */
-  error(0, (void *)0x00282964);
+  error(0, (char *)0x00282964);
 
   (void)eax;
 }
@@ -346,9 +351,9 @@ void player_ui_prompt_user_to_rename_edit_profile(void)
 
   /* cmp eax, -1 -> je 0xe0e87 */
   saved_game_file_get_type();
-  error(0, (void *)0x00282938);
-  virtual_keyboard_set_validation((void *)0x0046c03c, 24, 10);
-  error(0, (void *)0x00282964);
+  error(0, (char *)0x00282938);
+  virtual_keyboard_set_validation((wchar_t *)0x0046c03c, 24, 10);
+  error(0, (char *)0x00282964);
 
   (void)eax;
 }
@@ -372,7 +377,7 @@ void player_ui_edit_profile_is_dirty(void)
 
   /* cmp eax, -1 -> je 0xe0fbd */
   saved_game_file_get_type();
-  error(0, (void *)0x0028298c);
+  error(0, (char *)0x0028298c);
   csmemcmp((void *)0x0046c0a4, (void *)0x0046c03c, 104);
   /* test eax, eax -> je 0xe0f59 */
   csmemcmp((void *)0x0046c0a4, (void *)0x0046c03c, 48);
@@ -397,22 +402,29 @@ void player_ui_activate_all_solo_levels(void)
 void FUN_000e1000(void)
 {
   int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
 
-  data_iterator_new((void *)0, (void *)0);
-  data_iterator_next((void *)0);
+  data_iterator_new((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  data_iterator_next((void *)(uintptr_t)edx);
   /* test eax, eax -> je 0xe1049 */
   /* cmp (int16_t)eax, 0xffff -> je 0xe1039 */
-  hud_print_message(0, (wchar_t *)0);
-  data_iterator_next((void *)0);
+  hud_print_message(eax, (wchar_t *)(uintptr_t)esi);
+  data_iterator_next((void *)(uintptr_t)eax);
   /* test eax, eax -> jne 0xe1025 */
 
   (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0xe1050 */
 int player0_look_pitch_is_inverted(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
   return 0;
 }
 
@@ -425,9 +437,9 @@ int FUN_000e1060(void)
   /* test (char)eax, (char)eax -> je 0xe1070 */
   /* cmp (char)eax, 1 -> je 0xe1070 */
   /* test esi, esi -> jne 0xe10a4 */
-  display_assert((void *)0x002829b0, (void *)0x00282724, 869, 0);
+  display_assert((char *)0x002829b0, (char *)0x00282724, 869, 0);
   system_exit(0);
-  csmemset((void *)0, 0, 48);
+  csmemset((void *)(uintptr_t)esi, 0, 48);
   return 1;
 
   (void)eax;
@@ -442,7 +454,7 @@ void FUN_000e10c0(void)
   int edi = 0;
 
   /* cmp (int16_t)edi, 4 -> jl 0xe1199 */
-  display_assert((void *)0x00282750, (void *)0x00282724, 914, 0);
+  display_assert((char *)0x00282750, (char *)0x00282724, 914, 0);
   system_exit(0);
   /* cmp ecx, ebx -> jge 0xe11b3 */
   /* cmp ecx, ebx -> jge 0xe11c7 */
@@ -462,9 +474,9 @@ void player_ui_clear_multiplayer_joins(void)
   int esi = 0;
 
   /* test esi, esi -> jne 0xe1434 */
-  display_assert((void *)0x002829b0, (void *)0x00282724, 869, 0);
+  display_assert((char *)0x002829b0, (char *)0x00282724, 869, 0);
   system_exit(0);
-  csmemset((void *)0, 0, 48);
+  csmemset((void *)(uintptr_t)esi, 0, 48);
 
   (void)esi;
 }
@@ -472,17 +484,19 @@ void player_ui_clear_multiplayer_joins(void)
 /* 0xe1490 */
 void player_ui_set_active_player_profile(void)
 {
+  int edx = 0;
   int esi = 0;
   int edi = 0;
 
   /* test (int16_t)edi, (int16_t)edi -> jl 0xe14aa */
   /* cmp (int16_t)edi, 4 -> jge 0xe14aa */
   /* test esi, esi -> jne 0xe14ca */
-  display_assert((void *)0x002827a0, (void *)0x00282724, 226, 0);
+  display_assert((char *)0x002827a0, (char *)0x00282724, 226, 0);
   system_exit(0);
-  csmemcpy((void *)0, (void *)0, 48);
+  csmemcpy((void *)(uintptr_t)edx, (void *)(uintptr_t)esi, 48);
   FUN_000e10c0();
 
+  (void)edx;
   (void)esi;
   (void)edi;
 }
@@ -495,15 +509,15 @@ void player_ui_begin_editing_profile(void)
 
   /* mem[0x0046c038] = 0xffffffff */
   saved_game_file_get_type();
-  error(0, (void *)0x00282a28);
+  error(0, (char *)0x00282a28);
   playlist_profile_delete();
   /* test (char)eax, (char)eax -> je 0xe154e */
-  error(0, (void *)0x002829f0);
+  error(0, (char *)0x002829f0);
   player_profile_new();
   /* test (char)eax, (char)eax -> je 0xe1590 */
   csmemcpy((void *)0x0046c03c, (void *)0x0046c0a4, 48);
   /* mem[0x0046c038] = esi */
-  error(0, (void *)0x002829b8);
+  error(0, (char *)0x002829b8);
 
   (void)eax;
   (void)esi;
@@ -516,12 +530,12 @@ void player_ui_save_profile(void)
   int esi = 0;
 
   saved_game_file_get_type();
-  error(0, (void *)0x00282b40);
+  error(0, (char *)0x00282b40);
   player_ui_edit_profile_is_dirty();
   /* test (char)eax, (char)eax -> jne 0xe1603 */
-  error(0, (void *)0x00282af8);
+  error(0, (char *)0x00282af8);
   /* test eax, 0x40000000 -> je 0xe16b2 */
-  ustrncmp((void *)0x0046c03c, (void *)0x0046c0a4, 12);
+  ustrncmp((wchar_t *)0x0046c03c, (wchar_t *)0x0046c0a4, 12);
   /* test eax, eax -> je 0xe16a1 */
   FUN_001c1e20();
   /* cmp esi, -1 -> je 0xe1690 */
@@ -531,18 +545,18 @@ void player_ui_save_profile(void)
   /* test (char)eax, (char)eax -> je 0xe167c */
   saved_game_file_remember_last_used_multiplayer_variant_directory();
   /* mem[0x0046c038] = 0xffffffff */
-  error(0, (void *)0x00282acc);
-  error(0, (void *)0x00282a80);
+  error(0, (char *)0x00282acc);
+  error(0, (char *)0x00282a80);
   playlist_profile_get_display_name();
   FUN_001c4da0();
   /* test (char)eax, (char)eax -> je 0xe167c */
   saved_game_file_remember_last_used_multiplayer_variant_directory();
   /* mem[0x0046c038] = 0xffffffff */
   /* relift: test dword ptr [0x46c038], 0x40000000 -> je 0xe1715 */
-  error(0, (void *)0x00282a48);
+  error(0, (char *)0x00282a48);
   player_ui_edit_profile_is_dirty();
   /* test (char)eax, (char)eax -> jne 0xe172d */
-  error(0, (void *)0x00282af8);
+  error(0, (char *)0x00282af8);
   player_profile_get_from_path();
   /* mem[0x0046c038] = 0xffffffff */
 
@@ -554,13 +568,17 @@ void player_ui_save_profile(void)
 void player_ui_end_editing_profile(void)
 {
   /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0xe1770 */
 void FUN_000e1770(int a0)
 {
+  int eax = 0;
+  int ecx = 0;
   int edx = 0;
   int esi = 0;
+  int edi = 0;
 
   /* relift: cmp dword ptr [0x46bf10], -1 -> je 0xe17a4 */
   FUN_000e1000();
@@ -575,7 +593,7 @@ void FUN_000e1770(int a0)
   /* cmp esi, 0x76 -> jne 0xe17fa */
   D3DDevice_SetRenderState_FogColor();
   /* cmp esi, 0x77 -> jne 0xe1806 */
-  D3DDevice_SetRenderState_FillMode(0);
+  D3DDevice_SetRenderState_FillMode(edi);
   /* cmp esi, 0x78 -> jne 0xe1812 */
   D3DDevice_SetRenderState_BackFillMode();
   /* cmp esi, 0x79 -> jne 0xe181e */
@@ -583,19 +601,19 @@ void FUN_000e1770(int a0)
   /* cmp esi, 0x7a -> jne 0xe182a */
   D3DDevice_SetRenderState_NormalizeNormals();
   /* cmp esi, 0x7b -> jne 0xe1836 */
-  D3DDevice_SetRenderState_ZEnable(0);
+  D3DDevice_SetRenderState_ZEnable(edi);
   /* cmp esi, 0x7c -> jne 0xe1842 */
-  D3DDevice_SetRenderState_StencilEnable(0);
+  D3DDevice_SetRenderState_StencilEnable(edi);
   /* cmp esi, 0x7d -> jne 0xe184e */
-  D3DDevice_SetRenderState_StencilFail(0);
+  D3DDevice_SetRenderState_StencilFail(edi);
   /* cmp esi, 0x7f -> jne 0xe185a */
-  D3DDevice_SetRenderState_CullMode(0);
+  D3DDevice_SetRenderState_CullMode(edi);
   /* cmp esi, 0x7e -> jne 0xe1866 */
   D3DDevice_SetRenderState_FrontFace();
   /* cmp esi, 0x80 -> jne 0xe1875 */
   D3DDevice_SetRenderState_TextureFactor();
   /* cmp esi, 0x81 -> jne 0xe1884 */
-  D3DDevice_SetRenderState_ZBias(0);
+  D3DDevice_SetRenderState_ZBias(edi);
   /* cmp esi, 0x82 -> jne 0xe1893 */
   D3DDevice_SetRenderState_LogicOp();
   /* cmp esi, 0x83 -> jne 0xe18a2 */
@@ -625,22 +643,22 @@ void FUN_000e1770(int a0)
   /* cmp esi, 0x8f -> jne 0xe1955 */
   D3DDevice_SetRenderState_DoNotCullUncompressed();
   /* cmp edx, 0x16 -> jge 0xe196c */
-  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(eax, 0, 0);
   /* cmp edx, 0x1c -> jne 0xe1979 */
   D3DDevice_SetTextureState_TexCoordIndex();
   /* cmp edx, 0x1d -> jne 0xe1986 */
-  D3DDevice_SetTextureState_BorderColor(0, 0);
+  D3DDevice_SetTextureState_BorderColor(ecx, eax);
   /* cmp edx, 0x1e -> jne 0xe1993 */
   D3DDevice_SetTextureState_ColorKeyColor();
   /* cmp edx, 0x1b -> jg 0xe19a0 */
   D3DDevice_SetTextureState_BumpEnv();
-  D3DDevice_GetBackBuffer(0, 0, (void *)0);
-  D3DDevice_CreateTexture(0, 0, 0, 0, 0, 0, (void *)0);
-  D3DDevice_SetRenderTarget((void *)0, (void *)0);
-  D3DDevice_GetDepthStencilSurface((void *)0);
-  D3DDevice_Clear(0, (void *)0, 0, 0, 0.0f, 0);
-  D3DDevice_SetTransform(0, (void *)0);
-  D3DDevice_GetTransform(0, (void *)0);
+  D3DDevice_GetBackBuffer(0, ecx, (void *)(uintptr_t)eax);
+  D3DDevice_CreateTexture(eax, edx, ecx, eax, edx, ecx, (void *)(uintptr_t)eax);
+  D3DDevice_SetRenderTarget((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  D3DDevice_GetDepthStencilSurface((void *)(uintptr_t)eax);
+  D3DDevice_Clear(edx, (void *)(uintptr_t)ecx, eax, edx, 0.0f, eax);
+  D3DDevice_SetTransform(ecx, (void *)(uintptr_t)eax);
+  D3DDevice_GetTransform(ecx, (void *)(uintptr_t)eax);
   /* cmp esi, 0x52 -> jge 0xe1a6f */
   D3DDevice_SetRenderState_Simple(0, 0);
   /* cmp esi, 0x74 -> jge 0xe1a82 */
@@ -651,7 +669,7 @@ void FUN_000e1770(int a0)
   /* cmp esi, 0x76 -> jne 0xe1aaf */
   D3DDevice_SetRenderState_FogColor();
   /* cmp esi, 0x77 -> jne 0xe1abf */
-  D3DDevice_SetRenderState_FillMode(0);
+  D3DDevice_SetRenderState_FillMode(edi);
   /* cmp esi, 0x78 -> jne 0xe1acf */
   D3DDevice_SetRenderState_BackFillMode();
   /* cmp esi, 0x79 -> jne 0xe1adf */
@@ -659,21 +677,24 @@ void FUN_000e1770(int a0)
   /* cmp esi, 0x7a -> jne 0xe1aef */
   D3DDevice_SetRenderState_NormalizeNormals();
   /* cmp esi, 0x7b -> jne 0xe1aff */
-  D3DDevice_SetRenderState_ZEnable(0);
+  D3DDevice_SetRenderState_ZEnable(edi);
   /* cmp esi, 0x7c -> jne 0xe1b0f */
-  D3DDevice_SetRenderState_StencilEnable(0);
+  D3DDevice_SetRenderState_StencilEnable(edi);
   /* cmp esi, 0x7d -> jne 0xe1b1f */
-  D3DDevice_SetRenderState_StencilFail(0);
+  D3DDevice_SetRenderState_StencilFail(edi);
   /* cmp esi, 0x7f -> jne 0xe1b2f */
-  D3DDevice_SetRenderState_CullMode(0);
+  D3DDevice_SetRenderState_CullMode(edi);
   /* cmp esi, 0x7e -> jne 0xe1b3f */
   D3DDevice_SetRenderState_FrontFace();
   /* cmp esi, 0x80 -> jne 0xe1b52 */
   D3DDevice_SetRenderState_TextureFactor();
   /* cmp esi, 0x81 -> jne 0xe1b65 */
-  D3DDevice_SetRenderState_ZBias(0);
+  D3DDevice_SetRenderState_ZBias(edi);
   /* cmp esi, 0x82 -> jne 0xe1b78 */
 
+  (void)eax;
+  (void)ecx;
   (void)edx;
   (void)esi;
+  (void)edi;
 }
