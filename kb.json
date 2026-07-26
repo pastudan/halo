@@ -24856,22 +24856,22 @@
         {
           "addr": "0x1ac3b0",
           "decl": "char FUN_001ac3b0(int unit_handle, int weapon_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1be100",
           "decl": "void FUN_001be100(void *cache_entry);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1be140",
           "decl": "void FUN_001be140(void *cache_entry);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1be170",
           "decl": "char FUN_001be170(int cache_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1be1b0",
