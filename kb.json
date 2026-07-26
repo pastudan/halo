@@ -10306,7 +10306,7 @@
         {
           "addr": "0x1c0d50",
           "decl": "void FUN_001c0d50(int a0, int a1, int a2, int a3);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c0d70",
@@ -17297,7 +17297,7 @@
         {
           "addr": "0x8aa30",
           "decl": "void observer_obsolete_position(int16_t a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8aa80",
@@ -17760,7 +17760,7 @@
         {
           "addr": "0xb6a70",
           "decl": "int16_t player_control_get_zoom_level(int16_t local_player_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6a90",
@@ -31266,7 +31266,7 @@
         {
           "addr": "0x108a90",
           "decl": "void FUN_00108a90(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x108bc0",
@@ -36100,7 +36100,7 @@
           "decl": "void FUN_000643d0(int actor_handle);",
           "name": "FUN_000643d0",
           "source_path": "src/halo/ai/props.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x645a0",
@@ -36112,7 +36112,7 @@
         {
           "addr": "0x647c0",
           "decl": "void FUN_000647c0(int dest_prop, int src_prop);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x648a0",
