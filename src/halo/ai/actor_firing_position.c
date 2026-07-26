@@ -1,50 +1,18 @@
 #include <stdint.h>
 /* --- actor_firing_position.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00024000 (0x24000) — XBE naked draft (batch 160). */
-#if defined(__clang__)
-static void (*const b24000_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b24000_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00024000(void *ctx __attribute__((unused)), float score __attribute__((unused)), int type __attribute__((unused)), void *position __attribute__((unused)))
+/* FUN_00024000 (0x24000) — readable C lift. */
+void FUN_00024000(void *unused, float score, int type, void *position, void *ctx)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00024000_1\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x254cb8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00024000_2\n\t"
-      ".LFUN_00024000_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x81\n\t"
-      "pushl $0x254c8c\n\t"
-      "pushl $0x254c5c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00024000_2:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadds 0x38(%%esi)\n\t"
-      "fstps 0x38(%%esi)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b24000_assert), [exitfn] "m"(b24000_exitfn)
-      : "memory");
+  (void)unused;
+  (void)type;
+  (void)position;
+  if (score < *(float *)0x2533c0 || !(score < *(float *)0x254cb8)) {
+    display_assert((const char *)0x254c5c, (const char *)0x254c8c, 0x81, 1);
+    system_exit(-1);
+  }
+  *(float *)((char *)ctx + 0x38) = *(float *)((char *)ctx + 0x38) + score;
 }
-#else
-#error "FUN_00024000: clang naked draft required"
-#endif
-
 
 /* FUN_00024060 (0x24060) — XBE naked draft (batch 139). */
 #if defined(__clang__)
