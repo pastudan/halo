@@ -18344,8 +18344,9 @@
         },
         {
           "addr": "0xe0b50",
-          "decl": "void player_ui_autolevel_enabled(void);",
-          "ported": false
+          "decl": "char player_ui_autolevel_enabled(int16_t controller_index);",
+          "ported": false,
+          "name": "player_ui_autolevel_enabled"
         },
         {
           "addr": "0xe0bf0",
@@ -33585,7 +33586,8 @@
         {
           "addr": "0xfaf50",
           "decl": "char weapon_can_be_fired(int weapon_handle);",
-          "ported": false
+          "ported": true,
+          "name": "weapon_can_be_fired"
         },
         {
           "addr": "0xfafe0",

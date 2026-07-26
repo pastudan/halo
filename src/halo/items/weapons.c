@@ -1632,76 +1632,32 @@ int weapon_place(int weapon_handle __attribute__((unused)), void *placement __at
 #endif
 
 
-/* weapon_can_be_fired (0xfaf50) — XBE naked draft (batch 236). */
-#if defined(__clang__)
-static void *(*const bfaf50_get)(int, int) = object_get_and_verify_type;
-static void *(*const bfaf50_tag)(int, int) = tag_get;
-static bool (*const bfaf50_gerun)(void) = game_engine_running;
-static void *(*const bfaf50_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-char weapon_can_be_fired(int weapon_handle __attribute__((unused)))
+/* weapon_can_be_fired (0xfaf50) — readable C lift. */
+char weapon_can_be_fired(int weapon_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "flds 0x1f0(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lweapon_can_be_fired_2\n\t"
-      ".Lweapon_can_be_fired_1:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lweapon_can_be_fired_2:\n\t"
-      "call *%[gerun]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lweapon_can_be_fired_3\n\t"
-      "movl 0x4f0(%%edi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "leal 0x4f0(%%edi), %%eax\n\t"
-      "jle .Lweapon_can_be_fired_3\n\t"
-      "pushl $0x70\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $0, 0xa(%%eax)\n\t"
-      "jle .Lweapon_can_be_fired_3\n\t"
-      "cmpw $0, 0x260(%%esi)\n\t"
-      "jne .Lweapon_can_be_fired_3\n\t"
-      "cmpw $0, 0x25e(%%esi)\n\t"
-      "je .Lweapon_can_be_fired_1\n\t"
-      ".Lweapon_can_be_fired_3:\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bfaf50_get), [tag] "m"(bfaf50_tag), [gerun] "m"(bfaf50_gerun), [elem] "m"(bfaf50_elem)
-      : "memory");
-}
-#else
-#error "weapon_can_be_fired: clang naked draft required"
-#endif
+  char *obj;
+  char *tag;
+  void *block;
+  void *elem;
 
+  obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  tag = (char *)tag_get(0x77656170, *(int *)obj);
+  if (!(*(float *)(obj + 0x1f0) < *(float *)0x2533c8))
+    return 0;
+  if (!game_engine_running())
+    return 1;
+  block = tag + 0x4f0;
+  if (*(int *)block <= 0)
+    return 1;
+  elem = tag_block_get_element(block, 0, 0x70);
+  if (*(short *)((char *)elem + 0xa) <= 0)
+    return 1;
+  if (*(short *)(obj + 0x260) != 0)
+    return 1;
+  if (*(short *)(obj + 0x25e) != 0)
+    return 1;
+  return 0;
+}
 
 /* 0xfafe0 — true when weapon age/heat is still below 1.0. */
 char weapon_useful(int weapon_handle)
