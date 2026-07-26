@@ -20361,7 +20361,7 @@
         },
         {
           "addr": "0xe2680",
-          "decl": "void FUN_000e2680(void);",
+          "decl": "void FUN_000e2680(float x, float y, float z);",
           "ported": true
         },
         {
