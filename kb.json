@@ -29923,7 +29923,8 @@
         },
         {
           "addr": "0x130b70",
-          "decl": "char FUN_00130b70(void *client@<esi>, const char *data, int count);"
+          "decl": "char FUN_00130b70(void *client@<esi>, const char *data, int count);",
+          "ported": false
         },
         {
           "addr": "0x19b3c0",
@@ -29937,7 +29938,8 @@
         },
         {
           "addr": "0x19b510",
-          "decl": "void draw_string_get_string(void);"
+          "decl": "void draw_string_get_string(void);",
+          "ported": false
         },
         {
           "addr": "0x19b560",
@@ -29946,7 +29948,8 @@
         },
         {
           "addr": "0x19b5d0",
-          "decl": "void draw_string_set_indents(int width, int height);"
+          "decl": "void draw_string_set_indents(int width, int height);",
+          "ported": false
         },
         {
           "addr": "0x19b640",
@@ -29955,11 +29958,13 @@
         },
         {
           "addr": "0x19b790",
-          "decl": "void draw_string_get_color(void);"
+          "decl": "void draw_string_get_color(void);",
+          "ported": false
         },
         {
           "addr": "0x19b7e0",
-          "decl": "void FUN_0019B7E0(void);"
+          "decl": "void FUN_0019B7E0(void);",
+          "ported": false
         },
         {
           "addr": "0x19b800",
@@ -29973,11 +29978,13 @@
         },
         {
           "addr": "0x19b8f0",
-          "decl": "void draw_string_set_highlight(void);"
+          "decl": "void draw_string_set_highlight(void);",
+          "ported": false
         },
         {
           "addr": "0x19b910",
-          "decl": "void bitmap_draw_character(void);"
+          "decl": "void bitmap_draw_character(void);",
+          "ported": false
         },
         {
           "addr": "0x19bcc0",
@@ -29986,11 +29993,13 @@
         },
         {
           "addr": "0x19bd30",
-          "decl": "void FUN_0019bd30(void);"
+          "decl": "void FUN_0019bd30(void);",
+          "ported": false
         },
         {
           "addr": "0x19be30",
-          "decl": "void parse_string(void);"
+          "decl": "void parse_string(void);",
+          "ported": false
         },
         {
           "addr": "0x19c0a0",
@@ -29999,11 +30008,13 @@
         },
         {
           "addr": "0x19c1b0",
-          "decl": "void FUN_0019c1b0(void);"
+          "decl": "void FUN_0019c1b0(void);",
+          "ported": false
         },
         {
           "addr": "0x19c3c0",
-          "decl": "void FUN_0019c3c0(void);"
+          "decl": "void FUN_0019c3c0(void);",
+          "ported": false
         }
       ],
       "name": "draw_string.obj",

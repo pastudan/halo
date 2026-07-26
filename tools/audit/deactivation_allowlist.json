@@ -15986,5 +15986,82 @@
     "object": "structure_bsp_definitions.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x130b70",
+    "name": "FUN_00130b70",
+    "object": "draw_string.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19b510",
+    "name": "draw_string_get_string",
+    "object": "draw_string.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19b5d0",
+    "name": "draw_string_set_indents",
+    "object": "draw_string.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19b790",
+    "name": "draw_string_get_color",
+    "object": "draw_string.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19b7e0",
+    "name": "FUN_0019B7E0",
+    "object": "draw_string.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19b8f0",
+    "name": "draw_string_set_highlight",
+    "object": "draw_string.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19b910",
+    "name": "bitmap_draw_character",
+    "object": "draw_string.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19bd30",
+    "name": "FUN_0019bd30",
+    "object": "draw_string.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19be30",
+    "name": "parse_string",
+    "object": "draw_string.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19c1b0",
+    "name": "FUN_0019c1b0",
+    "object": "draw_string.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19c3c0",
+    "name": "FUN_0019c3c0",
+    "object": "draw_string.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
