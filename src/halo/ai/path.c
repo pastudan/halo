@@ -1465,74 +1465,25 @@ char FUN_0005ef80(unsigned int *path_buf __attribute__((unused)))
 #endif
 
 
-/* FUN_0005f1d0 (0x5f1d0) — XBE naked draft (batch 148). */
-#if defined(__clang__)
-static void *(*const b5f1d0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b5f1d0_c147ae0)(int bsp, int surface_index, int projection, int sign, float *point, float *out_point) = collision_surface_find_closest_point2d;
-static int (*const b5f1d0_c147990)(int bsp, int surface_index, int projection, int sign, float *point, float *out_point) = collision_surface_project_point2d;
-
-__attribute__((naked, noinline))
-void FUN_0005f1d0(void)
+/* FUN_0005f1d0 (0x5f1d0) — readable C lift. */
+float FUN_0005f1d0(void *base, float *dst, float *src, int surface_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x60\n\t"
-      "addl $0xb0, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl $1\n\t"
-      "pushl $2\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c147ae0]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl $2\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c147990]\n\t"
-      "flds (%%esi)\n\t"
-      "fsubs (%%edi)\n\t"
-      "addl $0x3c, %%esp\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "popl %%ebx\n\t"
-      "fsubs 0x4(%%edi)\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fsubs 0x8(%%edi)\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xde, 0xcb\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fxch %%st(2)\n\t"
-      "fsqrt\n\t"
-      "fstp %%st(2)\n\t"
-      "fstp %%st(0)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b5f1d0_elem), [c147ae0] "m"(b5f1d0_c147ae0), [c147990] "m"(b5f1d0_c147990)
-      : "memory");
+  void *bsp;
+  float scratch[2];
+  float dx, dy, dz, dist;
+
+  bsp = tag_block_get_element((char *)base + 0xb0, 0, 0x60);
+  collision_surface_find_closest_point2d(
+      (int)bsp, surface_index, 2, 1, dst, scratch);
+  collision_surface_project_point2d(
+      (int)bsp, surface_index, 2, 1, src, scratch);
+  dx = src[0] - dst[0];
+  dy = src[1] - dst[1];
+  dz = src[2] - dst[2];
+  dist = dx * dx + dy * dy + dz * dz;
+  __asm__ volatile("fsqrt" : "+t"(dist));
+  return dist;
 }
-#else
-#error "FUN_0005f1d0: clang naked draft required"
-#endif
 
 
 /* build_path_edges_for_surface (0x5f240) — XBE naked draft (batch 83). */
@@ -2001,7 +1952,7 @@ static void (*const b5f740_ftol)(void) = FUN_001d9068;
 static void (*const b5f740_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 static void (*const b5f740_c5e680)(void *path, int16_t heap_node, int16_t heap_cost) = path_heap_insert;
 static void (*const b5f740_c5e150)(void *path, int16_t heap_index) = path_heap_bubble_up;
-static void (*const b5f740_c5f1d0)(void) = FUN_0005f1d0;
+static float (*const b5f740_c5f1d0)(void *base, float *dst, float *src, int surface_index) = FUN_0005f1d0;
 
 __attribute__((naked, noinline))
 char FUN_0005f740(unsigned int *path_buf __attribute__((unused)))
@@ -2822,34 +2773,96 @@ float FUN_00060200(void *path, int16_t heap_index)
   return *(float *)((char *)path + idx * 8);
 }
 
-/* FUN_00060260 (0x60260) — readable C lift. */
-void FUN_00060260(unsigned short channel, void *path)
-{
-  int16_t count;
-  int16_t i;
-  int16_t node;
-  float val;
-  unsigned bits;
+/* FUN_00060260 (0x60260) — XBE naked draft (batch 140). */
+#if defined(__clang__)
+static void (*const b60260_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b60260_exitfn)(int) = system_exit;
+static void (*const b60260_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
-  count = *(int16_t *)((char *)path + 0x1430);
-  if (count <= 0)
-    return;
-  for (i = 0; i < count; i++) {
-    if (i < 0 || i >= count || count > 0x80) {
-      display_assert((const char *)0x25ea40, (const char *)0x25ea14, 0x31, 1);
-      system_exit(-1);
-    }
-    node = *(int16_t *)((char *)path + 0x1432 + (int)i * 2);
-    if (node < 0 || node >= *(int16_t *)((char *)path + 0x2c) ||
-        *(int16_t *)((char *)path + 0x2c) > 0x80) {
-      display_assert((const char *)0x25e9b0, (const char *)0x25ea14, 0x28, 1);
-      system_exit(-1);
-    }
-    val = *(float *)((char *)path + ((int)node + 2) * 40);
-    bits = *(unsigned *)&val;
-    error(channel, (const char *)0x25eab4, (int)i, (double)val, bits);
-  }
+__attribute__((naked, noinline))
+void FUN_00060260(unsigned short channel __attribute__((unused)), void *path __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movw 0x1430(%%ebx), %%ax\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .LFUN_00060260_6\n\t"
+      "pushl %%edi\n\t"
+      ".LFUN_00060260_1:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_00060260_2\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jge .LFUN_00060260_2\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00060260_3\n\t"
+      ".LFUN_00060260_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x31\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25ea40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00060260_3:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movw 0x1432(%%ebx,%%eax,2), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .LFUN_00060260_4\n\t"
+      "movw 0x2c(%%ebx), %%ax\n\t"
+      "cmpw %%ax, %%di\n\t"
+      "jge .LFUN_00060260_4\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_00060260_5\n\t"
+      ".LFUN_00060260_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28\n\t"
+      "pushl $0x25ea14\n\t"
+      "pushl $0x25e9b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00060260_5:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "addl $2, %%eax\n\t"
+      "leal (%%eax,%%eax,4), %%eax\n\t"
+      "flds (%%ebx,%%eax,8)\n\t"
+      "movswl %%si, %%eax\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x25eab4\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8f390]\n\t"
+      "movw 0x1430(%%ebx), %%ax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "incl %%esi\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jl .LFUN_00060260_1\n\t"
+      "popl %%edi\n\t"
+      ".LFUN_00060260_6:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b60260_assert), [exitfn] "m"(b60260_exitfn), [c8f390] "m"(b60260_c8f390)
+      : "memory");
 }
+#else
+#error "FUN_00060260: clang naked draft required"
+#endif
+
 
 __attribute__((unused))
 static __attribute__((unused)) float path_step_heap_cost(void *path, int16_t step_index)
@@ -2897,7 +2910,7 @@ static __attribute__((unused)) void path_assert_heap_index(void *path, int16_t h
 static void (*const b60330_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b60330_exitfn)(int) = system_exit;
 static void (*const b60330_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b60330_c60260)(unsigned short, void *) = FUN_00060260;
+static void (*const b60330_c60260)(unsigned short channel, void *path) = FUN_00060260;
 
 __attribute__((naked, noinline))
 char FUN_00060330(void *path __attribute__((unused)), const char *debug_context __attribute__((unused)))

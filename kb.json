@@ -20339,7 +20339,7 @@
         },
         {
           "addr": "0xe1f00",
-          "decl": "int FUN_000e1f00(uint32_t reg@<edx>, float unused, float a, float b);",
+          "decl": "void FUN_000e1f00(void);",
           "ported": true,
           "name": "FUN_000e1f00"
         },
@@ -40407,7 +40407,7 @@
         {
           "addr": "0x5f1d0",
           "decl": "float FUN_0005f1d0(void *base @<eax>, float *dst @<edi>, float *src @<esi>, int surface_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0005f1d0"
         },
         {
@@ -40497,7 +40497,7 @@
         {
           "addr": "0x60260",
           "decl": "void FUN_00060260(unsigned short channel, void *path @<ebx>);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00060260"
         },
         {
