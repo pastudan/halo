@@ -4373,57 +4373,18 @@ void FUN_000f0640(void *widget)
 #endif
 
 
-/* FUN_000f0740 (0xf0740) — XBE naked draft (batch 160). */
-#if defined(__clang__)
-static void (*const bf0740_c1c0d50)(void) = FUN_001c0d50;
-static void (*const bf0740_cf0430)(void *widget) = player_profile_initialize_advanced_controller_settings;
-
-__attribute__((naked, noinline))
-void FUN_000f0740(void *widget)
+/* FUN_000f0740 (0xf0740) — readable C lift. */
+char FUN_000f0740(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl $0\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-1\n\t"
-      "movl $1, -0x4(%%ebp)\n\t"
-      "call *%[c1c0d50]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $0, -0x4(%%ebp)\n\t"
-      "jle .LFUN_000f0740_1\n\t"
-      "movb $1, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f0740_1:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[cf0430]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c0d50] "m"(bf0740_c1c0d50), [cf0430] "m"(bf0740_cf0430)
-      : "memory");
+  int count;
+  int unused;
+  (void)widget;
+  count = 1;
+  FUN_001c0d50(-1, (int)&count, (int)&unused, 0);
+  if ((int16_t)count <= 0)
+    return 0;
+  return 1;
 }
-#else
-#error "FUN_000f0740: clang naked draft required"
-#endif
-
 
 /* FUN_000f0790 (0xf0790) — XBE naked draft (batch 113). */
 #if defined(__clang__)

@@ -11624,7 +11624,7 @@
         },
         {
           "addr": "0xc3db0",
-          "decl": "int hs_find_tag_reference_by_index(int tag_index);",
+          "decl": "int16_t hs_find_tag_reference_by_index(int tag_index);",
           "ported": false
         },
         {
@@ -11780,7 +11780,7 @@
         {
           "addr": "0xc4770",
           "decl": "int FUN_000c4770(void *file_a, void *file_b);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc47c0",

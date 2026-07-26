@@ -4127,56 +4127,19 @@ void FUN_000c41b0(void)
   }
 }
 
-/* FUN_000c41e0 (0xc41e0) — XBE naked draft (batch 165). */
-#if defined(__clang__)
-static void (*const bc41e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc41e0_exitfn)(int) = system_exit;
-static void (*const bc41e0_cc4030)(const char *token) = FUN_000c4030;
-
-__attribute__((naked, noinline))
+/* FUN_000c41e0 (0xc41e0) — readable C lift. */
 void FUN_000c41e0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $0x2f1588, %%ebx\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_000c41e0_1:\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_000c41e0_2\n\t"
-      "cmpw $0x1a2, %%di\n\t"
-      "jl .LFUN_000c41e0_3\n\t"
-      ".LFUN_000c41e0_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x20a\n\t"
-      "pushl $0x27b8c8\n\t"
-      "pushl $0x27b8ec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000c41e0_3:\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "movl 0x4(%%eax), %%esi\n\t"
-      "call *%[cc4030]\n\t"
-      "incl %%edi\n\t"
-      "addl $4, %%ebx\n\t"
-      "cmpw $0x1a2, %%di\n\t"
-      "jl .LFUN_000c41e0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bc41e0_assert), [exitfn] "m"(bc41e0_exitfn), [cc4030] "m"(bc41e0_cc4030)
-      : "memory");
+  int16_t i;
+  void **table = (void **)0x2f1588;
+  for (i = 0; i < 0x1a2; i++) {
+    if (i < 0 || i >= 0x1a2) {
+      display_assert((const char *)0x27b8ec, (const char *)0x27b8c8, 0x20a, 1);
+      system_exit(-1);
+    }
+    FUN_000c4030(*(const char **)((char *)table[i] + 4));
+  }
 }
-#else
-#error "FUN_000c41e0: clang naked draft required"
-#endif
-
 
 /* FUN_000c4240 (0xc4240) — readable C lift (HS scenario-block wrapper). */
 void FUN_000c4240(void)
@@ -4460,47 +4423,15 @@ int16_t hs_tokens_enumerate(const char *prefix __attribute__((unused)), uint32_t
 #endif
 
 
-/* FUN_000c4770 (0xc4770) — XBE naked draft (batch 183). */
-#if defined(__clang__)
-static char * (*const bc4770_c199810)(file_ref_t *info, int flags, char *name_out) = file_reference_get_name;
-static int (*const bc4770_c1dd801)(const char *a, const char *b) = crt_stricmp;
-
-__attribute__((naked, noinline))
-int FUN_000c4770(void *file_a __attribute__((unused)), void *file_b __attribute__((unused)))
+/* FUN_000c4770 (0xc4770) — readable C lift. */
+int FUN_000c4770(void *file_a, void *file_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x200, %%esp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal -0x200(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c199810]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "leal -0x100(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c199810]\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x200(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c199810] "m"(bc4770_c199810), [c1dd801] "m"(bc4770_c1dd801)
-      : "memory");
+  char name_a[0x100];
+  char name_b[0x100];
+  file_reference_get_name(file_a, 4, name_a);
+  file_reference_get_name(file_b, 4, name_b);
+  return crt_stricmp(name_a, name_b);
 }
-#else
-#error "FUN_000c4770: clang naked draft required"
-#endif
-
 
 /* FUN_000c4a40 (0xc4a40) — XBE naked draft (batch 146). */
 #if defined(__clang__)
