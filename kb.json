@@ -17183,91 +17183,113 @@
         },
         {
           "addr": "0xa3b80",
-          "decl": "void FUN_000a3b80(int player_index, void *damage_params, void *position, float damage_amount, float scale);"
+          "decl": "void FUN_000a3b80(int player_index, void *damage_params, void *position, float damage_amount, float scale);",
+          "ported": false
         },
         {
           "addr": "0xa3890",
-          "decl": "void FUN_000a3890(int unit_index, float *rumble_def, void *direction, float damage_amount, float scale, float *effect@<eax>);"
+          "decl": "void FUN_000a3890(int unit_index, float *rumble_def, void *direction, float damage_amount, float scale, float *effect@<eax>);",
+          "ported": false
         },
         {
           "addr": "0xa2ba0",
-          "decl": "void FUN_000a2ba0(int unit_index, float damage_amount, float scale, float *effect_data@<eax>, void *effect@<ebx>);"
+          "decl": "void FUN_000a2ba0(int unit_index, float damage_amount, float scale, float *effect_data@<eax>, void *effect@<ebx>);",
+          "ported": false
         },
         {
           "addr": "0xa27a0",
-          "decl": "void player_effect_add_continuous_effect(void);"
+          "decl": "void player_effect_add_continuous_effect(void);",
+          "ported": false
         },
         {
           "addr": "0xa28e0",
-          "decl": "void scripted_player_effect_set_rotation(int a0, float a1, float a2);"
+          "decl": "void scripted_player_effect_set_rotation(int a0, float a1, float a2);",
+          "ported": false
         },
         {
           "addr": "0xa2920",
-          "decl": "void scripted_player_effect_set_rumble(int a0, float a1);"
+          "decl": "void scripted_player_effect_set_rumble(int a0, float a1);",
+          "ported": false
         },
         {
           "addr": "0xa2930",
-          "decl": "void player_telefrag_effect_stop(void);"
+          "decl": "void player_telefrag_effect_stop(void);",
+          "ported": false
         },
         {
           "addr": "0xa2970",
-          "decl": "void player_effect_screen_fade_in(int a0, float a1, float a2, int a3);"
+          "decl": "void player_effect_screen_fade_in(int a0, float a1, float a2, int a3);",
+          "ported": false
         },
         {
           "addr": "0xa29c0",
-          "decl": "void player_effect_screen_fade_out(int a0, float a1, float a2, int a3);"
+          "decl": "void player_effect_screen_fade_out(int a0, float a1, float a2, int a3);",
+          "ported": false
         },
         {
           "addr": "0xa2a10",
-          "decl": "void player_effect_get_damage_indicators(int player_index, void *out);"
+          "decl": "void player_effect_get_damage_indicators(int player_index, void *out);",
+          "ported": false
         },
         {
           "addr": "0xa2a70",
-          "decl": "void player_effect_clear_damage_indicators(int player_index);"
+          "decl": "void player_effect_clear_damage_indicators(int player_index);",
+          "ported": false
         },
         {
           "addr": "0xa2a90",
-          "decl": "void FUN_000a2a90(void);"
+          "decl": "void FUN_000a2a90(void);",
+          "ported": false
         },
         {
           "addr": "0xa2ab0",
-          "decl": "void FUN_000a2ab0(void);"
+          "decl": "void FUN_000a2ab0(void);",
+          "ported": false
         },
         {
           "addr": "0xa2c70",
-          "decl": "void FUN_000a2c70(void);"
+          "decl": "void FUN_000a2c70(void);",
+          "ported": false
         },
         {
           "addr": "0xa2d30",
-          "decl": "void player_effect_continuous_refresh(void);"
+          "decl": "void player_effect_continuous_refresh(void);",
+          "ported": false
         },
         {
           "addr": "0xa2dc0",
-          "decl": "void scripted_player_effect_set_translation(int a0, float a1, float a2);"
+          "decl": "void scripted_player_effect_set_translation(int a0, float a1, float a2);",
+          "ported": false
         },
         {
           "addr": "0xa2df0",
-          "decl": "void scripted_player_effect_start(int a0, float a1);"
+          "decl": "void scripted_player_effect_start(int a0, float a1);",
+          "ported": false
         },
         {
           "addr": "0xa2e40",
-          "decl": "void scripted_player_effect_stop(int a0);"
+          "decl": "void scripted_player_effect_stop(int a0);",
+          "ported": false
         },
         {
           "addr": "0xa2ed0",
-          "decl": "void player_telefrag_effect_start(void);"
+          "decl": "void player_telefrag_effect_start(void);",
+          "ported": false
         },
         {
           "addr": "0xa2fc0",
-          "decl": "void player_effect_get_screen_flash(void);"
+          "decl": "void player_effect_get_screen_flash(void);",
+          "ported": false
         },
         {
           "addr": "0xa32e0",
-          "decl": "void FUN_000a32e0(void);"
+          "decl": "void FUN_000a32e0(void);",
+          "ported": false
         },
         {
           "addr": "0xa3370",
-          "decl": "void player_effect_get_camera_effect_matrix(void);"
+          "decl": "void player_effect_get_camera_effect_matrix(void);",
+          "ported": false
         }
       ],
       "name": "player_effects.obj",

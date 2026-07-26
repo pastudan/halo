@@ -12955,5 +12955,159 @@
     "object": "render_cameras.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa3b80",
+    "name": "FUN_000a3b80",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa3890",
+    "name": "FUN_000a3890",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2ba0",
+    "name": "FUN_000a2ba0",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa27a0",
+    "name": "player_effect_add_continuous_effect",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa28e0",
+    "name": "scripted_player_effect_set_rotation",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2920",
+    "name": "scripted_player_effect_set_rumble",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2930",
+    "name": "player_telefrag_effect_stop",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2970",
+    "name": "player_effect_screen_fade_in",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa29c0",
+    "name": "player_effect_screen_fade_out",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2a10",
+    "name": "player_effect_get_damage_indicators",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2a70",
+    "name": "player_effect_clear_damage_indicators",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2a90",
+    "name": "FUN_000a2a90",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2ab0",
+    "name": "FUN_000a2ab0",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2c70",
+    "name": "FUN_000a2c70",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2d30",
+    "name": "player_effect_continuous_refresh",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2dc0",
+    "name": "scripted_player_effect_set_translation",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2df0",
+    "name": "scripted_player_effect_start",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2e40",
+    "name": "scripted_player_effect_stop",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2ed0",
+    "name": "player_telefrag_effect_start",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa2fc0",
+    "name": "player_effect_get_screen_flash",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa32e0",
+    "name": "FUN_000a32e0",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa3370",
+    "name": "player_effect_get_camera_effect_matrix",
+    "object": "player_effects.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

@@ -33,9 +33,26 @@ def fn_name(decl: str, addr: str) -> str:
     return f"FUN_{int(addr, 16):08x}"
 
 
-def load_decls(object_name: str) -> dict[str, str]:
+def existing_fn_names(src_text: str) -> set[str]:
+    return set(
+        re.findall(
+            r"^(?:static\s+)?(?:inline\s+)?(?:[\w\s*]+?\s+)([A-Za-z_][A-Za-z0-9_]*)\s*\(",
+            src_text,
+            re.M,
+        )
+    )
+
+
+def load_decls(object_name: str, *, skip_existing: bool = True) -> dict[str, str]:
     kb = json.loads((ROOT / "kb.json").read_text())
     obj = next(o for o in kb["objects"] if o["name"] == object_name)
+    existing: set[str] = set()
+    if skip_existing:
+        src_rel = obj.get("source")
+        if src_rel:
+            src_path = ROOT / "src" / "halo" / src_rel
+            if src_path.is_file():
+                existing = existing_fn_names(src_path.read_text())
     decls: dict[str, str] = {}
     for f in obj["functions"]:
         if f.get("ported") is not None:
@@ -44,6 +61,9 @@ def load_decls(object_name: str) -> dict[str, str]:
         decl = (f.get("decl") or f"void {fn_name('', addr)}(void);").strip()
         if not decl.endswith(";"):
             decl += ";"
+        name = fn_name(decl, addr)
+        if name in existing:
+            continue
         decls[addr] = decl
     return decls
 
