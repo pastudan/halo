@@ -23052,7 +23052,7 @@
         },
         {
           "addr": "0x95be0",
-          "decl": "void FUN_00095be0(int object, int arg);",
+          "decl": "void FUN_00095be0(int object_handle, int unused);",
           "ported": false,
           "name": "FUN_00095be0"
         },
@@ -40051,7 +40051,7 @@
         {
           "addr": "0x966b0",
           "decl": "float device_group_get_value(int a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x966d0",

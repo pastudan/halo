@@ -521,84 +521,10 @@ void device_group_change_only_once_more_set(int a0, int a1)
 /* device_group_get_value (0x966b0) — readable C lift. */
 float device_group_get_value(int a0)
 {
-  void *d = datum_get(*(void **)0x5aa8c8, a0);
-  return *(float *)((char *)d + 4);
+  extern data_t *DAT_005aa8c8;
+  char *g = (char *)datum_get(DAT_005aa8c8, (int)(int16_t)a0);
+  return *(float *)(g + 4);
 }
-
-/* device_group_set_real (0x966d0) — readable C lift. */
-void device_group_set_real(int object_handle, int arg)
-{
-  void *obj = object_get_and_verify_type(object_handle, 0x380);
-  int t = *(short *)((char *)obj + 0x64) - 7;
-  if (t == 0)
-    FUN_00095be0(object_handle, arg);
-  else if (t == 1)
-    FUN_000958f0(object_handle, arg);
-}
-/* device_can_change_position (0x96720) — XBE naked draft (batch 279). */
-#if defined(__clang__)
-static void *(*const b96720_get)(int, int) = object_get_and_verify_type;
-static void *(*const b96720_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-bool device_can_change_position(int object_handle __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movw 0x1b4(%%edi), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "je .Ldevice_can_change_position_3\n\t"
-      "movl 0x5aa8c8, %%edx\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x5aa8c8, %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movswl 0x1a8(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movw 0x2(%%esi), %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "testb %%cl, %%al\n\t"
-      "popl %%esi\n\t"
-      "je .Ldevice_can_change_position_1\n\t"
-      "testb $2, %%cl\n\t"
-      "je .Ldevice_can_change_position_1\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Ldevice_can_change_position_1:\n\t"
-      "testb $2, 0x1a4(%%edi)\n\t"
-      "je .Ldevice_can_change_position_2\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Ldevice_can_change_position_2:\n\t"
-      "cmpl $0x3f800000, 0x4(%%edx)\n\t"
-      "je .Ldevice_can_change_position_3\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Ldevice_can_change_position_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b96720_get), [dget] "m"(b96720_dget)
-      : "memory");
-}
-#else
-#error "device_can_change_position: clang naked draft required"
-#endif
-
 
 /* FUN_000967a0 (0x967a0) — XBE naked draft (batch 273). */
 #if defined(__clang__)
