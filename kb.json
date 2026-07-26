@@ -20295,7 +20295,7 @@
         },
         {
           "addr": "0xe1f20",
-          "decl": "void FUN_000e1f20(void);",
+          "decl": "void FUN_000e1f20(int a0, int a1, int a2, int a3, int a4, int a5);",
           "ported": false
         },
         {
@@ -36185,13 +36185,13 @@
         {
           "addr": "0x65120",
           "decl": "int FUN_00065120(void *prop);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00065120"
         },
         {
           "addr": "0x65160",
           "decl": "int FUN_00065160(void *prop);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00065160"
         },
         {
