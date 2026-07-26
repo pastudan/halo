@@ -12214,7 +12214,7 @@
         {
           "addr": "0xc95d0",
           "decl": "void FUN_000c95d0(const char *text);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc95f0",
@@ -12509,7 +12509,7 @@
         },
         {
           "addr": "0xcaf40",
-          "decl": "int16_t FUN_000caf40(float value);",
+          "decl": "int16_t FUN_000caf40(float x);",
           "ported": false
         },
         {
