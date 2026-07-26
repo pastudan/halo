@@ -12580,7 +12580,7 @@
         {
           "addr": "0xcbb40",
           "decl": "void render_debug_trigger_volumes(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcbf80",
