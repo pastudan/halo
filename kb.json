@@ -18636,7 +18636,7 @@
         {
           "addr": "0xbb290",
           "decl": "void FUN_000BB290(float *out_direction);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbb2b0",
