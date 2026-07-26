@@ -928,6 +928,18 @@ def main() -> int:
         ("key_agreement_peek_packet_type", 0x80530, 0x8059d),
         ("key_message_xor_keystream", 0x807d0, 0x80817),
         ("FUN_00027a10", 0x27a10, 0x27a57),
+        # gameplay wave 78 (2026-07-26) — full-extent AI/networking leftovers
+        ("actor_look_update", 0x29040, 0x2a288),
+        ("FUN_00015cf0", 0x15cf0, 0x15ea9),
+        ("FUN_0001a670", 0x1a670, 0x1a7df),
+        ("actor_look_compute_prop_interest", 0x16d40, 0x16e62),
+        ("FUN_000197d0", 0x197d0, 0x198c6),
+        ("build_message_header", 0x80b40, 0x80c20),
+        ("FUN_00015900", 0x15900, 0x159c4),
+        ("byte_swap_message_header", 0x80c20, 0x80c92),
+        ("FUN_00014620", 0x14620, 0x1465a),
+        ("actor_clear_aim_target", 0x17060, 0x1708e),
+        ("prime_compare", 0x80d30, 0x80d4c),
     ]
 
     xbe = Xbe.from_file(args.xbe)

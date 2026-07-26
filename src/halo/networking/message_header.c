@@ -279,59 +279,169 @@ void tea_decrypt(unsigned int *v __attribute__((unused)), unsigned int *w __attr
 #endif
 
 
-/* 0x80b40 - Build (encode) a 2-byte message header in-place.
- * Packs length (bits 15..4), type (bits 3..2), and flags (bits 1..0)
- * into *header. Asserts on NULL header, oversized length, invalid type,
- * and out-of-range flags. */
-void build_message_header(unsigned short *header, unsigned short length,
-                          unsigned char type, unsigned char flags)
+/* build_message_header (0x80b40) — XBE naked draft (batch 78). */
+#if defined(__clang__)
+static void (*const b80b40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b80b40_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void build_message_header(unsigned short *header __attribute__((unused)), unsigned short length __attribute__((unused)), unsigned char type __attribute__((unused)), unsigned char flags __attribute__((unused)))
 {
-  assert_halt_msg(header != (unsigned short *)0, "header != NULL");
-  assert_halt_msg((0 <= (int)length) && ((int)length <= 0xfff),
-                  "(0<=(length)) && ((length)<=MAXIMUM_MESSAGE_SIZE)");
-
-  *header = ((unsigned char)*header & 0xf) | (length << 4);
-
-  if (type == 0) {
-    goto bad_type;
-  }
-  if (type < 4) {
-    goto good_type;
-  }
-bad_type:
-  /* assert_halt_msg(0,...) is noreturn (system_exit); control never falls
-   * through into good_type. Layout matches the original's forward branches. */
-  assert_halt_msg(0, "(0<(type)) && ((type)<NUMBER_OF_MESSAGE_TYPES)");
-
-good_type:
-  *header = ((unsigned short)(type & 3) << 2) | (*header & 0xfff3);
-  assert_halt_msg((0 <= (int)flags) && ((int)flags <= 3),
-                  "(0<=flags) && ((flags)<=MESSAGE_FLAG_BITS_MASK)");
-  *header = (*header & 0xfffc) | (unsigned short)flags;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lbuild_message_header_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x43\n\t"
+      "pushl $0x265ccc\n\t"
+      "pushl $0x265cc8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbuild_message_header_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "cmpw $0xfff, %%di\n\t"
+      "jbe .Lbuild_message_header_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x45\n\t"
+      "pushl $0x265ccc\n\t"
+      "pushl $0x265c94\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbuild_message_header_2:\n\t"
+      "movb 0x10(%%ebp), %%bl\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movb (%%esi), %%al\n\t"
+      "shll $4, %%edi\n\t"
+      "andl $0xf, %%eax\n\t"
+      "orl %%edi, %%eax\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movw %%ax, (%%esi)\n\t"
+      "jbe .Lbuild_message_header_3\n\t"
+      "cmpb $4, %%bl\n\t"
+      "jb .Lbuild_message_header_4\n\t"
+      ".Lbuild_message_header_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x46\n\t"
+      "pushl $0x265ccc\n\t"
+      "pushl $0x265c64\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbuild_message_header_4:\n\t"
+      "andb $3, %%bl\n\t"
+      "movzbw %%bl, %%cx\n\t"
+      "movb 0x14(%%ebp), %%bl\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw (%%esi), %%dx\n\t"
+      "shll $2, %%ecx\n\t"
+      "andl $0xfff3, %%edx\n\t"
+      "orl %%edx, %%ecx\n\t"
+      "cmpb $3, %%bl\n\t"
+      "movw %%cx, (%%esi)\n\t"
+      "jbe .Lbuild_message_header_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x47\n\t"
+      "pushl $0x265ccc\n\t"
+      "pushl $0x265bec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbuild_message_header_5:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "movzbw %%bl, %%cx\n\t"
+      "popl %%edi\n\t"
+      "andl $0xfffc, %%eax\n\t"
+      "orl %%ecx, %%eax\n\t"
+      "movw %%ax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b80b40_assert), [exitfn] "m"(b80b40_exitfn)
+      : "memory");
 }
+#else
+#error "build_message_header: clang naked draft required"
+#endif
 
-/* 0x80c20 - Byte-swap a 2-byte message header for network byte order.
- * param_2 == 0: host->network; param_2 == 1: network->host.
- * Both directions are identical (swap both bytes). */
-void byte_swap_message_header(unsigned short *header, int byte_order)
+
+/* byte_swap_message_header (0x80c20) — XBE naked draft (batch 78). */
+#if defined(__clang__)
+static void (*const b80c20_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b80c20_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void byte_swap_message_header(unsigned short *header __attribute__((unused)), int byte_order __attribute__((unused)))
 {
-  unsigned short v;
-
-  assert_halt_msg(header != (unsigned short *)0, "header");
-
-  if (byte_order == 1) {
-    v = *header;
-    *header = (unsigned short)((v << 8) | (v >> 8));
-    return;
-  }
-  if (byte_order == 0) {
-    v = *header;
-    *header = (unsigned short)((v << 8) | (v >> 8));
-    return;
-  }
-
-  assert_halt_msg(0, "!\"bad value for byte order\"");
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lbyte_swap_message_header_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x50\n\t"
+      "pushl $0x265ccc\n\t"
+      "pushl $0x265d1c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbyte_swap_message_header_1:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "cmpl $1, %%eax\n\t"
+      "jne .Lbyte_swap_message_header_2\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "movzbw %%ah, %%cx\n\t"
+      "movb %%al, %%ch\n\t"
+      "movw %%cx, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lbyte_swap_message_header_2:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lbyte_swap_message_header_3\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "movzbw %%ah, %%dx\n\t"
+      "movb %%al, %%dh\n\t"
+      "movw %%dx, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lbyte_swap_message_header_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5e\n\t"
+      "pushl $0x265ccc\n\t"
+      "pushl $0x265d00\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b80c20_assert), [exitfn] "m"(b80c20_exitfn)
+      : "memory");
 }
+#else
+#error "byte_swap_message_header: clang naked draft required"
+#endif
+
 
 /* create_message (0x80ca0) — XBE naked draft (batch 77). */
 #if defined(__clang__)
@@ -413,15 +523,37 @@ int create_message(int type __attribute__((unused)), int payload __attribute__((
 #endif
 
 
-/* 0x80d30 - Comparator for qsort over unsigned int arrays (ascending).
- * Returns 1 if *a < *b, -1 if *a > *b, 0 if equal. */
-int prime_compare(unsigned int *a, unsigned int *b)
+/* prime_compare (0x80d30) — XBE naked draft (batch 78). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+int prime_compare(unsigned int *a __attribute__((unused)), unsigned int *b __attribute__((unused)))
 {
-  if (*a < *b) {
-    return 1;
-  }
-  return -(int)(*b < *a);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "movl (%%ecx), %%ecx\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jbe .Lprime_compare_1\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lprime_compare_1:\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "prime_compare: clang naked draft required"
+#endif
+
 
 /* Global: pointer to key_agreement_packets group definition at 0x2ee588. */
 #define key_agreement_group ((void *)0x2ee588)

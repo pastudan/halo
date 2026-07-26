@@ -781,24 +781,48 @@ void FUN_000145f0(int actor_handle)
   }
 }
 
-/* FUN_00014620 (0x14620)
- * Initialize action fight state: asserts non-null state pointer, zeroes 4
- * bytes, returns true.
- *
- * Confirmed: cdecl, two args: [EBP+0x8]=actor_handle (unused),
- * [EBP+0xc]=state_data. Confirmed: TEST ESI,ESI at 0x14627;
- * csmemset(state_data,0,4) at 0x1464d. Confirmed: MOV AL,0x1 at 0x14655 (byte
- * return). */
-char FUN_00014620(int actor_handle, void *state_data)
+/* FUN_00014620 (0x14620) — XBE naked draft (batch 78). */
+#if defined(__clang__)
+static void (*const b14620_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b14620_exitfn)(int) = system_exit;
+static void *(*const b14620_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
+char FUN_00014620(int actor_handle __attribute__((unused)), void *state_data __attribute__((unused)))
 {
-  if (state_data == NULL) {
-    display_assert("state_data", "c:\\halo\\SOURCE\\ai\\action_fight.c", 0x1e,
-                   1);
-    system_exit(-1);
-  }
-  csmemset(state_data, 0, 4);
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00014620_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1e\n\t"
+      "pushl $0x2534e0\n\t"
+      "pushl $0x25334c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00014620_1:\n\t"
+      "pushl $4\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b14620_assert), [exitfn] "m"(b14620_exitfn), [memset] "m"(b14620_memset)
+      : "memory");
 }
+#else
+#error "FUN_00014620: clang naked draft required"
+#endif
+
 
 /* FUN_00014680 (0x14680)
  * Countdown timer for actor action state: decrements actor+0x9c when flag
@@ -2494,53 +2518,101 @@ int FUN_00015880(int actor_handle __attribute__((unused)), char *state_data __at
 #endif
 
 
-/* FUN_00015900 (0x15900)
- * Initializes a guard state block (0x44 bytes) for the given actor,
- * conditionally populating fields based on actor flags and param_2.
- *
- * If actor+0x160 != 0 OR actor+6 != 0 (actor already has guard/prop state):
- *   sets state_data+0x24 = 1, state_data+0x3c = -1 and returns 1.
- * Otherwise writes param_2 to *state_data (short), then:
- *   - if param_2 == 0: sets state_data+0xe = 1, state_data+0x24 = 0, +0x3c =
- * -1.
- *   - if param_2 != 0: sets state_data+0x24 = 1, state_data+0x14 = 1, copies
- *     actor+0x174..0x17c into state_data+0x18..0x20, state_data+0x3c = -1.
- *
- * Confirmed: datum_get(actor_data, actor_handle) call at 0x15911.
- * Confirmed: assert on state_data != NULL (line 0x86 in action_guard.c).
- * Confirmed: csmemset(state_data, 0, 0x44) at 0x1594b.
- * Confirmed: all branch conditions and field offsets from raw disassembly.
- */
-int FUN_00015900(int actor_handle, short param_2, char *state_data)
+/* FUN_00015900 (0x15900) — XBE naked draft (batch 78). */
+#if defined(__clang__)
+static void *(*const b15900_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b15900_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b15900_exitfn)(int) = system_exit;
+static void *(*const b15900_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
+int FUN_00015900(int actor_handle __attribute__((unused)), short param_2 __attribute__((unused)), char *state_data __attribute__((unused)))
 {
-  char *actor;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (state_data == NULL) {
-    display_assert("state_data", "c:\\halo\\SOURCE\\ai\\action_guard.c", 0x86,
-                   1);
-    system_exit(-1);
-  }
-  csmemset(state_data, 0, 0x44);
-  if ((*(char *)(actor + 0x160) == '\0') && (*(char *)(actor + 6) == '\0')) {
-    *(short *)state_data = param_2;
-    if (param_2 == 0) {
-      *(char *)(state_data + 0xe) = 1;
-      *(short *)(state_data + 0x24) = 0;
-      *(int *)(state_data + 0x3c) = -1;
-      return 1;
-    }
-    *(short *)(state_data + 0x24) = 1;
-    *(char *)(state_data + 0x14) = 1;
-    *(int *)(state_data + 0x18) = *(int *)(actor + 0x174);
-    *(int *)(state_data + 0x1c) = *(int *)(actor + 0x178);
-    *(int *)(state_data + 0x20) = *(int *)(actor + 0x17c);
-    *(int *)(state_data + 0x3c) = -1;
-    return 1;
-  }
-  *(short *)(state_data + 0x24) = 1;
-  *(int *)(state_data + 0x3c) = -1;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl $1, %%ebx\n\t"
+      "jne .LFUN_00015900_1\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x86\n\t"
+      "pushl $0x253638\n\t"
+      "pushl $0x25334c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00015900_1:\n\t"
+      "pushl $0x44\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movb 0x160(%%edi), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00015900_3\n\t"
+      "movb 0x6(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00015900_3\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movw %%ax, (%%esi)\n\t"
+      "jne .LFUN_00015900_2\n\t"
+      "popl %%edi\n\t"
+      "movb %%bl, 0xe(%%esi)\n\t"
+      "movw %%ax, 0x24(%%esi)\n\t"
+      "movl $0xffffffff, 0x3c(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00015900_2:\n\t"
+      "movw %%bx, 0x24(%%esi)\n\t"
+      "movb %%bl, 0x14(%%esi)\n\t"
+      "addl $0x174, %%edi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "leal 0x18(%%esi), %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl 0x8(%%edi), %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl $0xffffffff, 0x3c(%%esi)\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00015900_3:\n\t"
+      "popl %%edi\n\t"
+      "movw %%bx, 0x24(%%esi)\n\t"
+      "movl $0xffffffff, 0x3c(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b15900_dget), [assert] "m"(b15900_assert), [exitfn] "m"(b15900_exitfn), [memset] "m"(b15900_memset)
+      : "memory");
 }
+#else
+#error "FUN_00015900: clang naked draft required"
+#endif
+
 
 /* FUN_000159d0 (0x159d0) — XBE naked draft (batch 75). */
 #if defined(__clang__)
@@ -2707,84 +2779,161 @@ void actor_clear_guard_state(int actor_handle)
   }
 }
 
-/* FUN_00015cf0 (0x15cf0)
- * Per-tick guard-state look countdown: decrements guard state counters and
- * calls FUN_00015bb0 (actor handle in EAX) when the main counter expires.
- * Also handles fleet-vehicle leave and target-following logic.
- *
- * Confirmed: datum_get at 0x15cfd. MOV EAX,EDI / CALL FUN_00015bb0 at 0x15d4b.
- * Confirmed: CMP/DEC word [ESI+0x9c/0x9e] at 0x15d1d/0x15d7b.
- * Confirmed: actor_set_dormant at 0x15e0c. actor_target_unit_index+FUN_00046f10 at 0x15e3a. */
-void FUN_00015cf0(int actor_handle)
-{
-  char *actor;
-  short decval;
-  int uVar3;
+/* FUN_00015cf0 (0x15cf0) — XBE naked draft (batch 78). */
+#if defined(__clang__)
+static void *(*const b15cf0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b15cf0_c15bb0)(int actor_handle /* */) = FUN_00015bb0;
+static void (*const b15cf0_c3ca40)(int actor_handle, char flag) = actor_set_dormant;
+static int (*const b15cf0_c3b380)(int actor_handle) = actor_target_unit_index;
+static void (*const b15cf0_c46f10)(int16_t type, int unit_handle, int param3, int param4, int16_t param5, int16_t param6, int16_t param7) = FUN_00046f10;
+static void (*const b15cf0_c24be0)(int actor_handle, short param_2, char param_3) = FUN_00024be0;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if ((*(char *)(actor + 0x13) == '\0') && (*(char *)(actor + 0x484) != '\0') &&
-      (*(short *)(actor + 0x9c) > 0)) {
-    decval = *(short *)(actor + 0x9c) - 1;
-    *(short *)(actor + 0x9c) = decval;
-    if ((decval == 0) && (*(char *)(actor + 0x160) == '\0') &&
-        (*(char *)(actor + 6) == '\0')) {
-      if (*(char *)(actor + 0xa1) != '\0') {
-        FUN_00015bb0(actor_handle);
-        *(short *)(actor + 0x1e4) = 0;
-        *(int *)(actor + 0x1e8) = -1;
-        *(char *)(actor + 0xa1) = 0;
-        *(char *)(actor + 0xa3) = 0;
-        *(int *)(actor + 0xd8) = -1;
-      }
-      *(char *)(actor + 0xaa) = 1;
-    }
-  }
-  if ((*(short *)(actor + 0x9e) > 0) && ((*(char *)(actor + 0xdc) == '\0') ||
-                                         (*(char *)(actor + 0x484) != '\0'))) {
-    decval = *(short *)(actor + 0x9e) - 1;
-    *(short *)(actor + 0x9e) = decval;
-    if (decval == 0) {
-      *(int *)(actor + 0xd8) = -1;
-    }
-  }
-  if ((*(char *)(actor + 0xa0) == '\0') || (*(char *)(actor + 0x484) == '\0')) {
-    return;
-  }
-  if (*(char *)(actor + 0xa6) != '\0') {
-    *(char *)(actor + 0xa6) = (char)(*(short *)(actor + 0x3a8) > 0);
-    if (*(char *)(actor + 0xa6) != '\0') {
-      return;
-    }
-    goto wake;
-  }
-  if (*(short *)(actor + 0xa8) < 1) {
-    return;
-  }
-  decval = *(short *)(actor + 0xa8) - 1;
-  *(short *)(actor + 0xa8) = decval;
-  if (decval != 0) {
-    return;
-  }
-wake:
-  actor_set_dormant(actor_handle, 0);
-  *(char *)(actor + 0xa4) = 0;
-  *(char *)(actor + 0xa5) = 0;
-  *(char *)(actor + 0xa6) = 0;
-  *(short *)(actor + 0xa8) = 0;
-  if (*(short *)(actor + 0x6e) >= 2 && *(int *)(actor + 0x18) != -1) {
-    uVar3 = actor_target_unit_index(actor_handle);
-    FUN_00046f10(0x23, *(int *)(actor + 0x18), uVar3, -1, -1, -1, 0);
-  }
-  FUN_00024be0(actor_handle, *(short *)(actor + 0xc4), 0);
-  *(short *)(actor + 0x3b8) = -1;
-  *(short *)(actor + 0xc4) = -1;
-  if (*(char *)(actor + 0x160) != '\0') {
-    *(short *)(actor + 0xc0) = 1;
-    return;
-  }
-  *(short *)(actor + 0xc0) = 0;
-  *(char *)(actor + 0xaa) = 1;
+__attribute__((naked, noinline))
+void FUN_00015cf0(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x13(%%esi), %%al\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpb %%bl, %%al\n\t"
+      "jne .LFUN_00015cf0_2\n\t"
+      "cmpb %%bl, 0x484(%%esi)\n\t"
+      "je .LFUN_00015cf0_2\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x9c(%%esi), %%ax\n\t"
+      "cmpw %%bx, %%ax\n\t"
+      "jle .LFUN_00015cf0_2\n\t"
+      "decl %%eax\n\t"
+      "cmpw %%bx, %%ax\n\t"
+      "movw %%ax, 0x9c(%%esi)\n\t"
+      "jne .LFUN_00015cf0_2\n\t"
+      "cmpb %%bl, 0x160(%%esi)\n\t"
+      "jne .LFUN_00015cf0_2\n\t"
+      "cmpb %%bl, 0x6(%%esi)\n\t"
+      "jne .LFUN_00015cf0_2\n\t"
+      "cmpb %%bl, 0xa1(%%esi)\n\t"
+      "je .LFUN_00015cf0_1\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c15bb0]\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "movw %%bx, 0x1e4(%%esi)\n\t"
+      "movl %%eax, 0x1e8(%%esi)\n\t"
+      "movb %%bl, 0xa1(%%esi)\n\t"
+      "movb %%bl, 0xa3(%%esi)\n\t"
+      "movl %%eax, 0xd8(%%esi)\n\t"
+      ".LFUN_00015cf0_1:\n\t"
+      "movb $1, 0xaa(%%esi)\n\t"
+      ".LFUN_00015cf0_2:\n\t"
+      "movw 0x9e(%%esi), %%ax\n\t"
+      "cmpw %%bx, %%ax\n\t"
+      "jle .LFUN_00015cf0_4\n\t"
+      "cmpb %%bl, 0xdc(%%esi)\n\t"
+      "je .LFUN_00015cf0_3\n\t"
+      "cmpb %%bl, 0x484(%%esi)\n\t"
+      "je .LFUN_00015cf0_4\n\t"
+      ".LFUN_00015cf0_3:\n\t"
+      "decl %%eax\n\t"
+      "cmpw %%bx, %%ax\n\t"
+      "movw %%ax, 0x9e(%%esi)\n\t"
+      "jne .LFUN_00015cf0_4\n\t"
+      "movl $0xffffffff, 0xd8(%%esi)\n\t"
+      ".LFUN_00015cf0_4:\n\t"
+      "cmpb %%bl, 0xa0(%%esi)\n\t"
+      "je .LFUN_00015cf0_9\n\t"
+      "cmpb %%bl, 0x484(%%esi)\n\t"
+      "je .LFUN_00015cf0_9\n\t"
+      "cmpb %%bl, 0xa6(%%esi)\n\t"
+      "je .LFUN_00015cf0_5\n\t"
+      "cmpw %%bx, 0x3a8(%%esi)\n\t"
+      "setg %%al\n\t"
+      "movb %%al, 0xa6(%%esi)\n\t"
+      "cmpb %%bl, %%al\n\t"
+      "jmp .LFUN_00015cf0_6\n\t"
+      ".LFUN_00015cf0_5:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0xa8(%%esi), %%ax\n\t"
+      "cmpw %%bx, %%ax\n\t"
+      "jle .LFUN_00015cf0_9\n\t"
+      "decl %%eax\n\t"
+      "movw %%ax, 0xa8(%%esi)\n\t"
+      "cmpw %%bx, %%ax\n\t"
+      ".LFUN_00015cf0_6:\n\t"
+      "sete %%al\n\t"
+      "cmpb %%bl, %%al\n\t"
+      "je .LFUN_00015cf0_9\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c3ca40]\n\t"
+      "addl $8, %%esp\n\t"
+      "movb %%bl, 0xa4(%%esi)\n\t"
+      "movb %%bl, 0xa5(%%esi)\n\t"
+      "movb %%bl, 0xa6(%%esi)\n\t"
+      "movw %%bx, 0xa8(%%esi)\n\t"
+      "cmpw $2, 0x6e(%%esi)\n\t"
+      "jl .LFUN_00015cf0_7\n\t"
+      "cmpl $-1, 0x18(%%esi)\n\t"
+      "je .LFUN_00015cf0_7\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c3b380]\n\t"
+      "movl 0x18(%%esi), %%ecx\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x23\n\t"
+      "call *%[c46f10]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      ".LFUN_00015cf0_7:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0xc4(%%esi), %%dx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c24be0]\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "movw %%ax, 0x3b8(%%esi)\n\t"
+      "movw %%ax, 0xc4(%%esi)\n\t"
+      "movb 0x160(%%esi), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpb %%bl, %%al\n\t"
+      "je .LFUN_00015cf0_8\n\t"
+      "popl %%edi\n\t"
+      "movw $1, 0xc0(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00015cf0_8:\n\t"
+      "movw %%bx, 0xc0(%%esi)\n\t"
+      "movb $1, 0xaa(%%esi)\n\t"
+      ".LFUN_00015cf0_9:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b15cf0_dget), [c15bb0] "m"(b15cf0_c15bb0), [c3ca40] "m"(b15cf0_c3ca40), [c3b380] "m"(b15cf0_c3b380), [c46f10] "m"(b15cf0_c46f10), [c24be0] "m"(b15cf0_c24be0)
+      : "memory");
 }
+#else
+#error "FUN_00015cf0: clang naked draft required"
+#endif
+
 
 /* actor_reset_action_state (0x15eb0)
  * If actor is active (actor+0xa4 != 0) and in state 3, clears the prop flags
@@ -4094,60 +4243,141 @@ void FUN_00016cf0(int param_1 __attribute__((unused)), int param_2 __attribute__
 #endif
 
 
-/* actor_look_compute_prop_interest (0x16d40)
- * Iterate an actor's prop list (or each swarm unit's list for swarm actors)
- * and invoke the callback for each active entry.
- *
- * For swarm actors (actor+6 != 0): iterates swarm units via swarm_data and
- * swarm_component_data. For each unit with the "active" bit set, calls
- * callback(actor_handle, unit_handle, *prop_state, component+0x1c, 0, param_5).
- * For non-swarm: calls callback once with the actor's own unit handle.
- * If param_2 != 0: resets each component's state (csmemset + set bit 3).
- *
- * Confirmed: datum_get(actor_data, actor_handle) at 0x16d4e.
- * Confirmed: CALL 0x16d40 from FUN_00017090 at 0x170b2.
- * Confirmed: swarm_data=DAT_006325a0, swarm_component_data=DAT_0063259c. */
-void actor_look_compute_prop_interest(int actor_handle, int param_2,
-                                      short *param_3, void (*callback)(void),
-                                      int param_5)
-{
-  char *actor;
-  char *swarm;
-  char *component;
-  short i;
+/* actor_look_compute_prop_interest (0x16d40) — XBE naked draft (batch 78). */
+#if defined(__clang__)
+static void *(*const b16d40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b16d40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b16d40_exitfn)(int) = system_exit;
+static void *(*const b16d40_memset)(void *, int, unsigned int) = csmemset;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(char *)(actor + 6) != '\0') {
-    if (*(int *)(actor + 0x28) == -1) {
-      display_assert(
-        "!actor->meta.swarm || (actor->meta.swarm_cache_index != NONE)",
-        "c:\\halo\\SOURCE\\ai\\action_obey.c", 0x611, 1);
-      system_exit(-1);
-    }
-    swarm = (char *)datum_get(swarm_data, *(int *)(actor + 0x28));
-    if (*(short *)(swarm + 2) < 1) {
-      return;
-    }
-    for (i = 0; i < *(short *)(swarm + 2); i++) {
-      component =
-        (char *)datum_get(swarm_component_data, *(int *)(swarm + 0x58 + i * 4));
-      if (param_2 != 0) {
-        csmemset(component + 0x1c, 0, 0x24);
-        *(unsigned short *)(component + 2) =
-          (*(unsigned short *)(component + 2) & ~4u) | 8;
-      }
-      if ((*(unsigned char *)(component + 2) & 8) != 0) {
-        ((void (*)(int, int, int, char *, int, int))callback)(
-          actor_handle, *(int *)(swarm + 0x18 + i * 4), (int)*param_3,
-          component + 0x1c, 0, param_5);
-      }
-    }
-    return;
-  }
-  ((void (*)(int, int, int, short *, short *, int))callback)(
-    actor_handle, *(int *)(actor + 0x18), (int)*param_3, param_3 + 4,
-    param_3 + 0x16, param_5);
+__attribute__((naked, noinline))
+void actor_look_compute_prop_interest(int actor_handle __attribute__((unused)), int param_2 __attribute__((unused)), short *param_3 __attribute__((unused)), void (*callback)(void) __attribute__((unused)), int param_5 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x6(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_compute_prop_interest_5\n\t"
+      "cmpl $-1, 0x28(%%esi)\n\t"
+      "jne .Lactor_look_compute_prop_interest_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x611\n\t"
+      "pushl $0x253758\n\t"
+      "pushl $0x253778\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_compute_prop_interest_1:\n\t"
+      "movb 0x6(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_compute_prop_interest_5\n\t"
+      "movl 0x28(%%esi), %%ecx\n\t"
+      "movl 0x6325a0, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, 0x2(%%ebx)\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "jle .Lactor_look_compute_prop_interest_6\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lactor_look_compute_prop_interest_2:\n\t"
+      "movswl -0x4(%%ebp), %%edi\n\t"
+      "movl 0x58(%%ebx,%%edi,4), %%eax\n\t"
+      "movl 0x63259c, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_compute_prop_interest_3\n\t"
+      "pushl $0x24\n\t"
+      "leal 0x1c(%%esi), %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[memset]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x2(%%esi), %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "andl $0xfffffffb, %%eax\n\t"
+      "orl $8, %%eax\n\t"
+      "movw %%ax, 0x2(%%esi)\n\t"
+      ".Lactor_look_compute_prop_interest_3:\n\t"
+      "testb $8, 0x2(%%esi)\n\t"
+      "je .Lactor_look_compute_prop_interest_4\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x18(%%ebx,%%edi,4), %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%edx), %%ax\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "addl $0x1c, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *0x14(%%ebp)\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".Lactor_look_compute_prop_interest_4:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "incl %%eax\n\t"
+      "cmpw 0x2(%%ebx), %%ax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jl .Lactor_look_compute_prop_interest_2\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_look_compute_prop_interest_5:\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "leal 0x2c(%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x18(%%esi), %%ecx\n\t"
+      "leal 0x8(%%eax), %%edx\n\t"
+      "movswl (%%eax), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *0x14(%%ebp)\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".Lactor_look_compute_prop_interest_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b16d40_dget), [assert] "m"(b16d40_assert), [exitfn] "m"(b16d40_exitfn), [memset] "m"(b16d40_memset)
+      : "memory");
 }
+#else
+#error "actor_look_compute_prop_interest: clang naked draft required"
+#endif
+
 
 /* FUN_00016e70 (0x16e70)
  * Initialize a command-list execution state for an actor.
@@ -4286,20 +4516,38 @@ void FUN_00016ff0(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* actor_clear_aim_target (0x17060)
- * If the actor's aiming-active flag (actor+0xcc) is set, resets the aim
- * target handle (actor+0xdc) to the -1 sentinel.
- *
- * Confirmed: datum_get(DAT_006325a4, param_1) from decompile.
- * Confirmed: actor+0xcc flag check (char), actor+0xdc reset to 0xffffffff. */
-void actor_clear_aim_target(int actor_handle)
+/* actor_clear_aim_target (0x17060) — XBE naked draft (batch 78). */
+#if defined(__clang__)
+static void *(*const b17060_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void actor_clear_aim_target(int actor_handle __attribute__((unused)))
 {
-  char *actor;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(char *)(actor + 0xcc) != '\0') {
-    *(int *)(actor + 0xdc) = -1;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0xcc(%%eax), %%cl\n\t"
+      "addl $0x9c, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_clear_aim_target_1\n\t"
+      "movl $0xffffffff, 0x40(%%eax)\n\t"
+      ".Lactor_clear_aim_target_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b17060_dget)
+      : "memory");
 }
+#else
+#error "actor_clear_aim_target: clang naked draft required"
+#endif
+
 
 /* FUN_00017090 (0x17090)
  * Compute actor prop-interest for the prop list at actor+0x9c.
@@ -7050,54 +7298,120 @@ int FUN_00019750(int actor_handle, char param_2, char *state_data)
   return 0;
 }
 
-/* FUN_000197d0 (0x197d0)
- * Initialize search action state from a firing-position record (type 1).
- *
- * Similar to FUN_0001a100 (uncover variant) but uses a 0x2c-byte buffer
- * and stores param_3 (byte flag) to state_data+4 instead of state_data+3.
- * Validates actor conditions, looks up the firing position, fills state.
- *
- * Confirmed: 4-arg cdecl: actor_handle, param_2 (short), param_3 (byte),
- *   state_data (ptr). datum_get at 0x197e1. assert line 0x38.
- * Confirmed: [EBP+0x10] → MOV [ESI+4],CL (state_data[4] = param_3). */
-int FUN_000197d0(int actor_handle, short param_2, char param_3,
-                 char *state_data)
-{
-  char *actor;
-  char *enc;
-  int *pos;
-  volatile int pos5_idx;
+/* FUN_000197d0 (0x197d0) — XBE naked draft (batch 78). */
+#if defined(__clang__)
+static void *(*const b197d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b197d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b197d0_exitfn)(int) = system_exit;
+static void *(*const b197d0_memset)(void *, int, unsigned int) = csmemset;
+static scenario_t * (*const b197d0_c18e380)(void) = global_scenario_get;
+static void *(*const b197d0_elem)(void *, int, int) = tag_block_get_element;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (state_data == NULL) {
-    display_assert("state_data", "c:\\halo\\SOURCE\\ai\\action_search.c", 0x38,
-                   1);
-    system_exit(-1);
-  }
-  csmemset(state_data, 0, 0x2c);
-  if ((*(char *)(actor + 0x160) == '\0') && (*(char *)(actor + 6) == '\0') &&
-      (*(int *)(actor + 0x34) != -1)) {
-    if (param_2 != -1) {
-      enc = (char *)tag_block_get_element(
-        (char *)global_scenario_get() + 0x42c,
-        *(unsigned int *)(actor + 0x34) & 0xffff, 0xb0);
-      pos = (int *)tag_block_get_element(enc + 0x98, (int)param_2, 0x18);
-      *(char *)(state_data + 4) = param_3;
-      *(short *)(state_data + 10) = param_2;
-      *(short *)(state_data + 8) = 1;
-      *(int *)(state_data + 0x14) = pos[0];
-      *(int *)(state_data + 0x18) = pos[1];
-      *(int *)(state_data + 0x1c) = pos[2];
-      pos5_idx = 5;
-      *(int *)(state_data + 0x10) = pos[pos5_idx];
-      *(short *)(state_data + 0xc) = *(short *)((char *)pos + 0xe);
-      *(char *)(actor + 0x98) = 1;
-      return 1;
-    }
-    return 0;
-  }
-  return 0;
+__attribute__((naked, noinline))
+int FUN_000197d0(int actor_handle __attribute__((unused)), short param_2 __attribute__((unused)), char param_3 __attribute__((unused)), char *state_data __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "jne .LFUN_000197d0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x38\n\t"
+      "pushl $0x253da4\n\t"
+      "pushl $0x25334c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000197d0_1:\n\t"
+      "pushl $0x2c\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movb 0x160(%%edi), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000197d0_2\n\t"
+      "movb 0x6(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000197d0_2\n\t"
+      "movl 0x34(%%edi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000197d0_2\n\t"
+      "movw 0xc(%%ebp), %%bx\n\t"
+      "cmpw $-1, %%bx\n\t"
+      "je .LFUN_000197d0_3\n\t"
+      "andl $0xffff, %%eax\n\t"
+      "pushl $0xb0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x42c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movswl %%bx, %%edx\n\t"
+      "pushl $0x18\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x98, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movb 0x10(%%ebp), %%cl\n\t"
+      "movb %%cl, 0x4(%%esi)\n\t"
+      "movw %%bx, 0xa(%%esi)\n\t"
+      "movw $1, 0x8(%%esi)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl (%%ecx), %%ebx\n\t"
+      "leal 0x14(%%esi), %%edx\n\t"
+      "movl %%ebx, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%ebx\n\t"
+      "movl %%ebx, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "movl 0x14(%%eax), %%edx\n\t"
+      "movl %%edx, 0x10(%%esi)\n\t"
+      "movw 0xe(%%eax), %%ax\n\t"
+      "movw %%ax, 0xc(%%esi)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movb $1, %%al\n\t"
+      "movb %%al, 0x98(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000197d0_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000197d0_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b197d0_dget), [assert] "m"(b197d0_assert), [exitfn] "m"(b197d0_exitfn), [memset] "m"(b197d0_memset), [c18e380] "m"(b197d0_c18e380), [elem] "m"(b197d0_elem)
+      : "memory");
 }
+#else
+#error "FUN_000197d0: clang naked draft required"
+#endif
+
 
 /* FUN_000198d0 (0x198d0)
  * Initialize action_search state for a berserk actor (type 2).
@@ -8099,59 +8413,148 @@ void FUN_0001a600(int actor_handle __attribute__((unused)), int *param_2 __attri
 #endif
 
 
-/* FUN_0001a670 (0x1a670)
- * Initialize uncover timer and optionally emit a communication vocalization.
- *
- * Selects min/max ranges from actor tag based on actor+0x9f (search-able flag).
- * Generates a random timer, multiplied by 30 ticks/sec, stores in actor+0xc4
- * and actor+0xc8. If AI debug is enabled, logs the timer params. If the actor's
- * look-type is 0 (target) and has a prop with combat_status < 3, emits a
- * vocalization (type 0x15).
- *
- * Confirmed: standard cdecl, SUB ESP,0x10c for locals.
- * Confirmed: FMUL [0x253394] = multiply by 30.0f, then _ftol2 cast. */
-void FUN_0001a670(int actor_handle)
-{
-  char *actor;
-  char *tag;
-  char *prop;
-  float lo;
-  float hi;
-  float random_val;
-  int ticks;
-  char local_110[256];
+/* FUN_0001a670 (0x1a670) — XBE naked draft (batch 78). */
+#if defined(__clang__)
+static void *(*const b1a670_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b1a670_tag)(int, int) = tag_get;
+static int *(*const b1a670_gseed)(void) = get_global_random_seed_address;
+static float (*const b1a670_rrange)(int *, float, float) = random_real_range;
+static void (*const b1a670_ftol)(void) = FUN_001d9068;
+static char * (*const b1a670_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
+static void (*const b1a670_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b1a670_c46f10)(int16_t type, int unit_handle, int param3, int param4, int16_t param5, int16_t param6, int16_t param7) = FUN_00046f10;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  tag = (char *)tag_get(0x61637472, *(int *)(actor + 0x58));
-  hi = *(float *)(tag + 0x340);
-  lo = *(float *)(tag + 0x33c);
-  if (*(char *)(actor + 0x9f) == '\0') {
-    if (lo <= *(float *)(tag + 0x344)) {
-      lo = *(float *)(tag + 0x344);
-    }
-    if (hi <= *(float *)(tag + 0x348)) {
-      hi = *(float *)(tag + 0x348);
-    }
-  }
-  random_val = random_real_range(get_global_random_seed_address(), lo, hi);
-  ticks = (int)(random_val * TICKS_PER_SECOND);
-  *(int *)(actor + 0xc4) = ticks;
-  *(int *)(actor + 0xc8) = ticks;
-  if (*(char *)0x5aca64 != '\0') {
-    ai_debug_describe_actor(actor_handle, -1, 1, local_110, 0x100);
-    error(2, "%s: begin %s uncover for [%.1f-%.1f] = %.1f (%sable to search)",
-          (int)local_110,
-          *(short *)(actor + 0xa4) != 0 ? (int)"pursuit" : (int)"target",
-          (double)lo, (double)hi, (double)random_val,
-          *(char *)(actor + 0x9f) == '\0' ? (int)"un" : (int)"");
-  }
-  if (*(short *)(actor + 0xa4) == 0 && *(int *)(actor + 0x270) != -1 &&
-      *(short *)(actor + 0x6e) < 3) {
-    prop = (char *)datum_get(*(data_t **)0x5ab23c, *(int *)(actor + 0x270));
-    FUN_00046f10(0x15, *(int *)(actor + 0x18), *(int *)(prop + 0x18), -1, -1,
-                 -1, 0);
-  }
+__attribute__((naked, noinline))
+void FUN_0001a670(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10c, %%esp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x58(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl 0x340(%%ecx), %%eax\n\t"
+      "movl 0x33c(%%ecx), %%edx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movb 0x9f(%%esi), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "jne .LFUN_0001a670_2\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x344(%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_0001a670_1\n\t"
+      "movl 0x344(%%ecx), %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      ".LFUN_0001a670_1:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomps 0x348(%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_0001a670_2\n\t"
+      "movl 0x348(%%ecx), %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      ".LFUN_0001a670_2:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rrange]\n\t"
+      "fsts -0xc(%%ebp)\n\t"
+      "fmuls 0x253394\n\t"
+      "addl $0xc, %%esp\n\t"
+      "call *%[ftol]\n\t"
+      "movl %%eax, 0xc4(%%esi)\n\t"
+      "movl %%eax, 0xc8(%%esi)\n\t"
+      "movb 0x5aca64, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0001a670_5\n\t"
+      "pushl $0x100\n\t"
+      "leal -0x10c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c49ac0]\n\t"
+      "movb 0x9f(%%esi), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movl $0x25386f, %%ecx\n\t"
+      "jne .LFUN_0001a670_3\n\t"
+      "movl $0x253e94, %%ecx\n\t"
+      ".LFUN_0001a670_3:\n\t"
+      "cmpw $0, 0xa4(%%esi)\n\t"
+      "movl $0x253e8c, %%eax\n\t"
+      "je .LFUN_0001a670_4\n\t"
+      "movl $0x253e84, %%eax\n\t"
+      ".LFUN_0001a670_4:\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "leal -0x10c(%%ebp), %%ecx\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x253e44\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x2c, %%esp\n\t"
+      ".LFUN_0001a670_5:\n\t"
+      "cmpw $0, 0xa4(%%esi)\n\t"
+      "jne .LFUN_0001a670_6\n\t"
+      "movl 0x270(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_0001a670_6\n\t"
+      "cmpw $3, 0x6e(%%esi)\n\t"
+      "jge .LFUN_0001a670_6\n\t"
+      "movl 0x5ab23c, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x18(%%eax), %%eax\n\t"
+      "movl 0x18(%%esi), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x15\n\t"
+      "call *%[c46f10]\n\t"
+      "addl $0x24, %%esp\n\t"
+      ".LFUN_0001a670_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1a670_dget), [tag] "m"(b1a670_tag), [gseed] "m"(b1a670_gseed), [rrange] "m"(b1a670_rrange), [ftol] "m"(b1a670_ftol), [c49ac0] "m"(b1a670_c49ac0), [c8f390] "m"(b1a670_c8f390), [c46f10] "m"(b1a670_c46f10)
+      : "memory");
 }
+#else
+#error "FUN_0001a670: clang naked draft required"
+#endif
+
 
 /* FUN_0001a7e0 (0x1a7e0) — XBE naked draft (batch 69). */
 #if defined(__clang__)
@@ -13188,7 +13591,8 @@ void FUN_00028ed0(float *look_vectors, float *idle_direction, int actor_handle)
    at activation and returning 0 without writing +0x570, leaving its prior /
    uninitialized contents; that raycast lift should be re-validated
    separately. */
-static char look_spec_28660_safe(int actor_handle, char *actor,
+/* Kept after actor_look_update naked draft (batch 78). */
+__attribute__((unused)) static char look_spec_28660_safe(int actor_handle, char *actor,
                                  short *look_spec, float *out_vec)
 {
   int cs;
@@ -13221,719 +13625,1580 @@ static char look_spec_28660_safe(int actor_handle, char *actor,
   return FUN_00028660(actor_handle, look_spec, out_vec);
 }
 
-/* actor_look_update (0x29040)
- * Per-tick update of an actor's look/aim/facing output vectors.
- * Resolves primary/secondary look modes from the look-spec tables,
- * manages idle-major and idle-minor timers, applies snapping constraints,
- * and writes the final facing/aiming/looking vectors to actor output fields.
- *
- * Confirmed: all 13 FUN_00027dd0 call sites traced from disasm
- *   (EAX=dir, EDX=vec2 at each CALL); FUN_00027e50 takes 2 extra cdecl args
- *   (constrain_range, cos_limits); FUN_00028250/28cc0/28ed0 all take
- *   actor_handle via register (@<esi>, @<eax>, @<eax> respectively).
- *   primary_vec/secondary_vec/cos_angles are contiguous stack buffers
- *   passed by address to callees — lift-learnings #2 applies. */
-void actor_look_update(int actor_handle)
+/* actor_look_update (0x29040) — XBE naked draft (batch 78). */
+#if defined(__clang__)
+static void *(*const b29040_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b29040_tag)(int, int) = tag_get;
+static bool (*const b29040_c21fb0)(float *v) = valid_real_normal3d;
+static char * (*const b29040_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b29040_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b29040_exitfn)(int) = system_exit;
+static int (*const b29040_c3b270)(int actor_handle) = actor_attacking_target;
+static bool (*const b29040_c210b0)(int actor_handle) = FUN_000210b0;
+static char (*const b29040_c28660)(int actor_handle, short *look_spec, float *direction) = FUN_00028660;
+static int16_t (*const b29040_c1d6d0)(int actor_handle) = actor_action_try_to_panic;
+static char * (*const b29040_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
+static void (*const b29040_cff4d0)(int channel, const char *format, ...) = console_printf;
+static bool (*const b29040_c27dd0)(float *dir, float *vec2, float threshold) = FUN_00027dd0;
+static int (*const b29040_c2a860)(int actor_handle) = actor_move_force_stop;
+static bool (*const b29040_c27e50)(float *dir, float *vec2, float *limit, float threshold, float *output) = FUN_00027e50;
+static int (*const b29040_c27a10)(int actor_handle /* */) = FUN_00027a10;
+static int (*const b29040_c28250)(float *look_vectors, char is_secondary, int actor_handle, int look_type) = FUN_00028250;
+static char (*const b29040_c28cc0)(float *look_vectors, float *dir_vec, char look_mode, char param4, char is_secondary, int actor_handle) = FUN_00028cc0;
+static void (*const b29040_c28ed0)(float *look_vectors, float *idle_direction, int actor_handle) = FUN_00028ed0;
+static bool (*const b29040_c1a9ad0)(int unit_handle) = unit_is_busy;
+static float (*const b29040_mag)(float *) = magnitude3d;
+static int (*const b29040_c28610)(float *v) = valid_real_normal2d;
+static float (*const b29040_c13070)(float *a, float *b) = FUN_00013070;
+static void (*const b29040_c36e50)(int actor_handle) = FUN_00036e50;
+static void (*const b29040_c3c3a0)(int actor_handle, char flag) = actor_unit_control_exact_facing;
+
+__attribute__((naked, noinline))
+void actor_look_update(int actor_handle __attribute__((unused)))
 {
-  char *actor;
-  int tag_data;
-  float *desired_facing;
-  float *desired_aiming;
-  float *desired_looking;
-  float primary_vec[3];
-  float secondary_vec[3];
-  float cos_angles[2];
-  short look_spec_type;
-  float constrain_range;
-  int aim_threshold;
-  int look_data_mode;
-  int look_mode;
-  int secondary_mode;
-  char *actor_save;
-  char is_attacking;
-  char snap_flag;
-  char use_aim;
-  char has_primary;
-  char want_secondary;
-  char transient_aim;
-  char in_range;
-  char no_timing_window;
-  char strict_look;
-  char idle_major_active;
-  short look_type;
-  int look_data = 0;
-  char *pfVar14;
-  char cVar5;
-  short sVar8;
-  int iVar10;
-  int iVar13;
-  char cVar7;
-  char bVar15;
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  actor_save = actor;
-  tag_data = (int)tag_get(0x61637472, *(int *)(actor + 0x58));
-
-  desired_facing = (float *)(actor + 0x5a4);
-  desired_aiming = (float *)(actor + 0x5b0);
-  desired_looking = (float *)(actor + 0x5bc);
-  strict_look = 0;
-
-  if (!valid_real_normal3d(desired_facing)) {
-    display_assert("&actor->control.desired_facing_vector",
-                   "c:\\halo\\SOURCE\\ai\\actor_looking.c", 0x44f, 1);
-    system_exit(-1);
-  }
-  if (!valid_real_normal3d(desired_aiming)) {
-    display_assert("&actor->control.desired_aiming_vector",
-                   "c:\\halo\\SOURCE\\ai\\actor_looking.c", 0x450, 1);
-    system_exit(-1);
-  }
-  if (!valid_real_normal3d(desired_looking)) {
-    display_assert("&actor->control.desired_looking_vector",
-                   "c:\\halo\\SOURCE\\ai\\actor_looking.c", 0x451, 1);
-    system_exit(-1);
-  }
-
-  look_type = *(short *)(actor + 0x6dc);
-
-  if (look_type == 1) {
-    desired_aiming[0] = desired_facing[0];
-    desired_aiming[1] = desired_facing[1];
-    desired_aiming[2] = desired_facing[2];
-    desired_looking[0] = desired_facing[0];
-    desired_looking[1] = desired_facing[1];
-    desired_looking[2] = desired_facing[2];
-    pfVar14 = (char *)desired_aiming;
-    goto LAB_00029e6d;
-  }
-
-  /* Determine is_attacking */
-  if (*(char *)(actor + 0x161)) {
-    is_attacking = 1;
-  } else if (look_type == 0 || look_type == 2) {
-    iVar10 = actor_attacking_target(actor_handle);
-    is_attacking = (char)(iVar10 != -1);
-  } else {
-    is_attacking = 0;
-  }
-
-  snap_flag = *(char *)(actor + 0x58d);
-  transient_aim = *(char *)(actor + 0x58e);
-  use_aim = is_attacking;
-  aim_threshold = *(int *)(tag_data + 0x12c);
-  constrain_range = *(float *)(tag_data + 0x134);
-  has_primary = 1;
-  no_timing_window = 0;
-  want_secondary = 0;
-
-  /* Compute cos of aim angles */
-  if (*(short *)(actor + 0x6a) == 3) {
-    cos_angles[0] = x87_fcos(*(float *)(tag_data + 0xbc));
-    cos_angles[1] = x87_fcos(*(float *)(tag_data + 0xc0));
-  } else {
-    cos_angles[0] = x87_fcos(*(float *)(tag_data + 0xb4));
-    cos_angles[1] = x87_fcos(*(float *)(tag_data + 0xb8));
-  }
-
-  /* Determine primary look mode */
-  if (FUN_000210b0(actor_handle) && !*(char *)(actor + 0x456)) {
-    look_spec_type = 2;
-    if (look_spec_28660_safe(actor_handle, actor, &look_spec_type, primary_vec)) {
-      look_mode = 7;
-      strict_look = 1;
-    } else {
-      goto LAB_look_mode_from_actor;
-    }
-  } else {
-  LAB_look_mode_from_actor:
-    look_mode = (int)(unsigned short)(*(unsigned short *)(actor + 0x3e8));
-    if (look_mode != 0 && look_mode != 1) {
-      if (look_spec_28660_safe(actor_handle, actor, (short *)(actor + 0x3ec), primary_vec)) {
-        strict_look = (char)(*(short *)(actor + 0x3ec) == 2);
-      } else {
-        look_mode = 0;
-      }
-    }
-  }
-
-  /* Secondary look mode */
-  secondary_mode = 0;
-  if (*(short *)(actor + 0x544) >= 0 && *(short *)(actor + 0x548) > 0) {
-    if (look_spec_28660_safe(actor_handle, actor, (short *)(actor + 0x54c), secondary_vec)) {
-      secondary_mode = (int)(*(short *)(actor + 0x546));
-    }
-  }
-
-  /* Panic overrides secondary_mode up to 5 */
-  if (*(char *)(actor + 0x504)) {
-    sVar8 = actor_action_try_to_panic(actor_handle);
-    if (sVar8 == 2) {
-      iVar10 = secondary_mode;
-      secondary_mode = 5;
-      if ((short)iVar10 < 6)
-        secondary_mode = iVar10;
-    }
-  }
-
-  /* Validate primary_vec and secondary_vec */
-  if ((short)look_mode > 1 && !valid_real_normal3d(primary_vec)) {
-    display_assert("&primary_vector", "c:\\halo\\SOURCE\\ai\\actor_looking.c",
-                   0x4ca, 1);
-    system_exit(-1);
-  }
-  if ((short)secondary_mode != 0 && !valid_real_normal3d(secondary_vec)) {
-    display_assert("&secondary_vector", "c:\\halo\\SOURCE\\ai\\actor_looking.c",
-                   0x4ce, 1);
-    system_exit(-1);
-  }
-
-  /* Decrement look timer */
-  if (*(short *)(actor + 0x548) > 0) {
-    sVar8 = *(short *)(actor + 0x548) - 1;
-    *(short *)(actor + 0x548) = sVar8;
-    if (sVar8 == 0) {
-      if (*(char *)0x5aca5d) {
-        console_printf(0, "%s: look timer expire",
-                       ai_debug_describe_actor(actor_handle, -1, 0,
-                                               (char *)0x5ab100, 0x100));
-      }
-      *(short *)(actor + 0x544) = 0;
-      *(short *)(actor + 0x546) = 0;
-    }
-  }
-
-  *(char *)(actor + 0x58c) = 0;
-
-  /* Apply primary_vec if look_mode >= 2 */
-  if ((short)look_mode >= 2) {
-    if ((short)look_mode < 5 ||
-        (snap_flag == 0 &&
-         !FUN_00027dd0(primary_vec, desired_facing, aim_threshold))) {
-      if ((short)look_mode > 2 && transient_aim) {
-        transient_aim = 0;
-        snap_flag = 1;
-        goto LAB_000294dc;
-      }
-    } else {
-    LAB_000294dc:
-      desired_aiming[0] = primary_vec[0];
-      desired_aiming[1] = primary_vec[1];
-      desired_aiming[2] = primary_vec[2];
-      has_primary = 0;
-      use_aim = is_attacking;
-      if ((short)look_mode > 6 && !want_secondary && is_attacking) {
-        want_secondary = 1;
-        desired_looking[0] = primary_vec[0];
-        desired_looking[1] = primary_vec[1];
-        desired_looking[2] = primary_vec[2];
-      }
-    }
-    if ((short)look_mode == 2)
-      look_mode = (int)(-(char)(snap_flag != 0) & 5);
-    if (snap_flag) {
-      desired_facing[0] = primary_vec[0];
-      desired_facing[1] = primary_vec[1];
-      desired_facing[2] = primary_vec[2];
-      snap_flag = 0;
-      transient_aim = 0;
-      *(char *)(actor + 0x591) |= (char)((short)look_mode == 4);
-    }
-    if ((*(char *)(actor + 0x58d) == 0 && *(char *)(actor + 0x58e) == 0) ||
-        (no_timing_window = 0, (short)look_mode > 5)) {
-      no_timing_window = 1;
-    }
-  }
-
-  pfVar14 = (char *)desired_facing;
-
-  /* Secondary mode switch */
-  switch ((short)secondary_mode) {
-  case 2:
-  case 3:
-  case 4:
-  case 5:
-  case 6:
-    in_range = FUN_00027dd0(secondary_vec, desired_facing, aim_threshold);
-    if (!no_timing_window) {
-      if (want_secondary)
-        goto LAB_000296af;
-      if ((short)secondary_mode >= 6 && !actor_move_force_stop(actor_handle))
-        goto LAB_0002961a;
-      if ((short)secondary_mode >= 5 &&
-          (transient_aim != 0 || *(char *)(actor + 0x58d) != 0))
-        goto LAB_0002961a;
-      if ((short)secondary_mode < 4)
-        goto LAB_0002966b;
-      if (in_range != 0)
-        goto LAB_00029672;
-      if (!snap_flag || !has_primary)
-        goto LAB_000296af;
-    LAB_0002961a:
-      if (!*(char *)(actor + 0x591) || !in_range) {
-        desired_facing[0] = secondary_vec[0];
-        desired_facing[1] = secondary_vec[1];
-        desired_facing[2] = secondary_vec[2];
-        *(char *)(actor + 0x591) = 0;
-      }
-      desired_aiming[0] = secondary_vec[0];
-      desired_aiming[1] = secondary_vec[1];
-      desired_aiming[2] = secondary_vec[2];
-      desired_looking[0] = secondary_vec[0];
-      desired_looking[1] = secondary_vec[1];
-      desired_looking[2] = secondary_vec[2];
-      goto LAB_000297b4;
-    }
-    if (!want_secondary) {
-    LAB_0002966b:
-      if (!in_range)
-        goto LAB_000296af;
-    LAB_00029672:
-      if ((short)secondary_mode < 5 &&
-          ((short)secondary_mode < 3 || !has_primary))
-        goto LAB_000296af;
-      desired_aiming[0] = secondary_vec[0];
-      desired_aiming[1] = secondary_vec[1];
-      desired_aiming[2] = secondary_vec[2];
-      desired_looking[0] = secondary_vec[0];
-      desired_looking[1] = secondary_vec[1];
-      desired_looking[2] = secondary_vec[2];
-      use_aim = is_attacking;
-      goto LAB_000297b8;
-    }
-  LAB_000296af:
-    if (use_aim && FUN_00027e50(secondary_vec, desired_aiming, desired_facing,
-                                constrain_range, cos_angles)) {
-      desired_looking[0] = secondary_vec[0];
-      desired_looking[1] = secondary_vec[1];
-      desired_looking[2] = secondary_vec[2];
-      use_aim = 0;
-      goto LAB_000297c7;
-    }
-    if (has_primary && in_range) {
-      desired_aiming[0] = secondary_vec[0];
-      desired_aiming[1] = secondary_vec[1];
-      desired_aiming[2] = secondary_vec[2];
-      desired_looking[0] = secondary_vec[0];
-      desired_looking[1] = secondary_vec[1];
-      desired_looking[2] = secondary_vec[2];
-      use_aim = 1;
-      goto LAB_000297c3;
-    }
-    break;
-  case 7:
-  case 8:
-    idle_major_active = (char)((short)secondary_mode == 8);
-    no_timing_window = idle_major_active;
-    if (!*(char *)(actor + 0x58d)) {
-      if (!FUN_00027dd0(secondary_vec, desired_facing, aim_threshold)) {
-        if (!actor_move_force_stop(actor_handle))
-          goto LAB_000297c7;
-        no_timing_window = 1;
-        goto LAB_0002977e;
-      }
-      if (!idle_major_active)
-        goto LAB_0002977e;
-    }
-  LAB_0002977e:
-    desired_facing[0] = secondary_vec[0];
-    desired_facing[1] = secondary_vec[1];
-    desired_facing[2] = secondary_vec[2];
-    *(char *)(actor + 0x591) = no_timing_window;
-    desired_aiming[0] = secondary_vec[0];
-    desired_aiming[1] = secondary_vec[1];
-    desired_aiming[2] = secondary_vec[2];
-    desired_looking[0] = secondary_vec[0];
-    desired_looking[1] = secondary_vec[1];
-    desired_looking[2] = secondary_vec[2];
-  LAB_000297b4:
-    snap_flag = 0;
-    use_aim = is_attacking;
-  LAB_000297b8:
-    *(char *)(actor + 0x58c) = 1;
-    want_secondary = 0;
-    is_attacking = use_aim;
-  LAB_000297c3:
-    has_primary = 0;
-    break;
-  default:
-    break;
-  }
-LAB_000297c7:
-
-  /* look_mode==2 snap check */
-  if ((short)look_mode == 2 && has_primary &&
-      FUN_00027dd0(primary_vec, desired_facing, aim_threshold)) {
-    desired_aiming[0] = primary_vec[0];
-    desired_aiming[1] = primary_vec[1];
-    desired_aiming[2] = primary_vec[2];
-    if (use_aim) {
-      desired_looking[0] = primary_vec[0];
-      desired_looking[1] = primary_vec[1];
-      desired_looking[2] = primary_vec[2];
-    }
-    *(char *)(actor + 0x58c) = 0;
-    has_primary = 0;
-  }
-
-  /* Get look timing data */
-  iVar13 = FUN_00027a10(actor_handle);
-  bVar15 = (char)(*(float *)(iVar13 + 4) <= *(float *)0x2533c0);
-  no_timing_window = !bVar15;
-  in_range = (char)(*(float *)0x2533c0 < *(float *)(iVar13 + 0xc));
-  transient_aim = (char)(*(float *)0x2533c0 < *(float *)(iVar13 + 0x14));
-  look_data_mode = iVar13;
-
-  /* Gate on look_timer */
-  if (*(short *)(actor + 0x3fc) < 1 || want_secondary ||
-      (!has_primary && !use_aim) || (bVar15 && !in_range && !transient_aim)) {
-    *(char *)(actor + 0x55c) = 0;
-    *(char *)(actor + 0x55e) = 0;
-    goto LAB_00029da2;
-  }
-
-  idle_major_active = 0;
-  want_secondary = 0;
-
-  /* Force-snap flag for look_mode==1 */
-  if (!bVar15 && snap_flag && (short)look_mode == 1 && *(int *)(actor + 0x560))
-    look_mode = (look_mode & 0xffffff00) | 1;
-  else
-    look_mode = look_mode & 0xffffff00;
-
-  if (*(int *)(actor + 0x560) > 0)
-    *(int *)(actor + 0x560) -= 1;
-
-  /* Idle major timer branch */
-  if (!*(char *)(actor + 0x55c)) {
-  LAB_00029971: {
-    float *pfv;
-    char uVar11;
-    bVar15 = 1;
-    look_data = (look_data & 0xffffff00) | 1;
-    if (!has_primary || !in_range) {
-      bVar15 = 0;
-      look_data = look_data & 0xffffff00;
-      if (!use_aim || !transient_aim)
-        goto LAB_00029a12;
-    } else if (!use_aim || !transient_aim) {
-    LAB_00029998:
-      pfv = bVar15 ? desired_facing : (float *)desired_aiming;
-      uVar11 = (char)(use_aim && transient_aim ? 1 : 0);
-      *(char *)(actor + 0x55e) =
-        FUN_00028cc0((float *)iVar13, pfv, (char)look_mode,
-                     (char)(int)look_data, uVar11, actor_handle);
-      if (*(char *)(actor + 0x55c) && *(int *)(actor + 0x564) < 1) {
-        display_assert("!actor->control.idle_major_active || "
-                       "(actor->control.idle_major_timer > 0)",
-                       "c:\\halo\\SOURCE\\ai\\actor_looking.c", 0x5dd, 1);
-        system_exit(-1);
-      }
-      idle_major_active = 1;
-      goto LAB_00029a12;
-    } else {
-      goto LAB_00029998;
-    }
-    if (use_aim && transient_aim)
-      goto LAB_00029998;
-  LAB_00029a12:;
-  }
-  } else {
-    if (*(char *)(actor + 0x55d) && !has_primary) {
-      *(char *)(actor + 0x55c) = 1;
-      *(int *)(actor + 0x564) =
-        FUN_00028250((float *)iVar13, 1, actor_handle, 2);
-      *(short *)(actor + 0x56c) = 4;
-      *(float *)(actor + 0x570) = desired_aiming[0];
-      *(float *)(actor + 0x574) = desired_aiming[1];
-      *(float *)(actor + 0x578) = desired_aiming[2];
-      actor = actor_save;
-    }
-    if (!*(char *)(actor + 0x55c) || !*(int *)(actor + 0x564))
-      goto LAB_00029971;
-  }
-
-  /* Idle major countdown */
-  if (!*(char *)(actor + 0x55c))
-    goto LAB_00029ccc;
-
-  *(int *)(actor + 0x564) -= 1;
-
-  if (!look_spec_28660_safe(actor_handle, actor, (short *)(actor + 0x56c), primary_vec))
-    goto LAB_00029ccc;
-
-  if (!valid_real_normal3d(primary_vec)) {
-    display_assert("&idle_major_vector",
-                   "c:\\halo\\SOURCE\\ai\\actor_looking.c", 0x5e8, 1);
-    system_exit(-1);
-  }
-
-  if (!has_primary) {
-    if (!FUN_00027e50(primary_vec, desired_aiming, desired_facing,
-                      constrain_range, cos_angles))
-      goto LAB_00029ccc;
-    desired_looking[0] = primary_vec[0];
-    desired_looking[1] = primary_vec[1];
-    desired_looking[2] = primary_vec[2];
-  } else {
-    if (snap_flag && no_timing_window && *(char *)(actor + 0x99)) {
-      look_mode = (look_mode & 0xffffff00) | 1;
-      want_secondary = 1;
-    }
-    if ((char)look_mode ||
-        (snap_flag && no_timing_window && *(char *)(actor + 0x99))) {
-      desired_facing[0] = primary_vec[0];
-      desired_facing[1] = primary_vec[1];
-      desired_facing[2] = primary_vec[2];
-      desired_aiming[0] = primary_vec[0];
-      desired_aiming[1] = primary_vec[1];
-      desired_aiming[2] = primary_vec[2];
-      *(char *)(actor + 0x58c) = 1;
-    } else {
-      if (!FUN_00027dd0(primary_vec, desired_facing, aim_threshold))
-        goto LAB_00029ccc;
-      desired_aiming[0] = primary_vec[0];
-      desired_aiming[1] = primary_vec[1];
-      desired_aiming[2] = primary_vec[2];
-      *(char *)(actor + 0x58c) = 1;
-    }
-  }
-  goto LAB_00029b75;
-
-LAB_00029ccc:
-  primary_vec[0] = desired_aiming[0];
-  primary_vec[1] = desired_aiming[1];
-  primary_vec[2] = desired_aiming[2];
-  *(char *)(actor + 0x55c) = 0;
-
-LAB_00029b75:
-  /* Idle minor timer */
-  if (idle_major_active && transient_aim) {
-    *(char *)(actor + 0x55f) = 1;
-    *(int *)(actor + 0x568) = FUN_00028250(
-      (float *)look_data_mode, *(char *)(actor + 0x55e), actor_handle, 2);
-    *(int *)(actor + 0x57c) = *(int *)(actor + 0x56c);
-    *(int *)(actor + 0x580) = *(int *)(actor + 0x570);
-    *(int *)(actor + 0x584) = *(int *)(actor + 0x574);
-    *(int *)(actor + 0x588) = *(int *)(actor + 0x578);
-    if ((char)look_mode) {
-      *(int *)(actor + 0x560) = FUN_00028250(
-        (float *)look_data_mode, *(char *)(actor + 0x55e), actor_handle, 0);
-    }
-  }
-
-  /* Idle minor active */
-  if (!has_primary ||
-      ((!use_aim || !transient_aim) && (!want_secondary || !in_range))) {
-    *(char *)(actor + 0x55f) = 0;
-  } else {
-    if (!*(int *)(actor + 0x568)) {
-      FUN_00028ed0((float *)look_data_mode, primary_vec, actor_handle);
-      if (*(int *)(actor + 0x568) < 1) {
-        display_assert("actor->control.idle_minor_timer > 0",
-                       "c:\\halo\\SOURCE\\ai\\actor_looking.c", 0x62d, 1);
-        system_exit(-1);
-      }
-    }
-    *(int *)(actor + 0x568) -= 1;
-    if (*(char *)(actor + 0x55f)) {
-      cVar7 = look_spec_28660_safe(actor_handle, actor, (short *)(actor + 0x57c), primary_vec);
-      cVar5 = want_secondary;
-      if (cVar7) {
-        if (!want_secondary)
-          cVar7 = FUN_00027e50(primary_vec, desired_aiming, desired_facing,
-                               constrain_range, cos_angles);
-        else
-          cVar7 = FUN_00027dd0(primary_vec, desired_facing, aim_threshold);
-        if (cVar7) {
-          if (!valid_real_normal3d(primary_vec)) {
-            display_assert("&idle_minor_vector",
-                           "c:\\halo\\SOURCE\\ai\\actor_looking.c", 0x645, 1);
-            system_exit(-1);
-          }
-          if (cVar5) {
-            desired_aiming[0] = primary_vec[0];
-            desired_aiming[1] = primary_vec[1];
-            desired_aiming[2] = primary_vec[2];
-          }
-          desired_looking[0] = primary_vec[0];
-          desired_looking[1] = primary_vec[1];
-          desired_looking[2] = primary_vec[2];
-          pfVar14 = (char *)desired_aiming;
-          goto LAB_00029dac;
-        }
-      }
-    LAB_00029da2:
-      *(char *)(actor + 0x55f) = 0;
-      pfVar14 = (char *)desired_aiming;
-    } else {
-      goto LAB_00029dac;
-    }
-  }
-  goto LAB_00029dac;
-
-LAB_00029dac:
-  /* Snap-to-original */
-  if (!*(char *)(actor + 0x504) && !*(char *)(actor + 0x505) &&
-      !unit_is_busy(*(int *)(actor + 0x18)) && *(int *)(actor + 0x158) == -1) {
-    if (!FUN_00027dd0(desired_aiming, (float *)(actor + 0x174),
-                      aim_threshold) ||
-        !FUN_00027dd0(desired_aiming, desired_facing, aim_threshold)) {
-      if (is_attacking) {
-        if (FUN_00027e50(desired_looking, desired_aiming, desired_facing,
-                         constrain_range, cos_angles) &&
-            !FUN_00027e50(desired_looking, desired_aiming,
-                          (float *)(actor + 0x174), constrain_range,
-                          cos_angles))
-          goto LAB_00029e51;
-      }
-      goto LAB_00029e58;
-    }
-  LAB_00029e51:
-    *(char *)(actor + 0x591) = 1;
-  }
-  if (!is_attacking) {
-  LAB_00029e58:
-    desired_looking[0] = ((float *)pfVar14)[0];
-    desired_looking[1] = ((float *)pfVar14)[1];
-    desired_looking[2] = ((float *)pfVar14)[2];
-  }
-
-LAB_00029e6d:
-  /* Zero pitch if needed */
-  if (!*(char *)(actor + 0x99)) {
-    float pitch_abs = *(float *)(actor + 0x5ac);
-    if (pitch_abs < 0.0f)
-      pitch_abs = -pitch_abs;
-    if (*(double *)0x2533d0 <= (double)pitch_abs) {
-      *(float *)(actor + 0x5ac) = 0.0f;
-      if (magnitude3d(desired_facing) == *(float *)0x2533c0) {
-        desired_facing[0] = *(float *)(actor + 0x174);
-        desired_facing[1] = *(float *)(actor + 0x178);
-        desired_facing[2] = *(float *)(actor + 0x17c);
-      }
-    }
-    if (!valid_real_normal2d((float *)(actor + 0x6fc))) {
-      display_assert("(real_vector2d *) &actor->output.facing_vector",
-                     "c:\\halo\\SOURCE\\ai\\actor_looking.c", 0x689, 1);
-      system_exit(-1);
-    }
-  }
-
-  /* Snap-to-look-target */
-  if (!*(char *)(actor + 0x58f)) {
-    *(char *)(actor + 0x590) = 0;
-    goto LAB_0002a0c3;
-  }
-  if (!*(char *)(actor + 0x590)) {
-    if (!*(char *)(actor + 0x504)) {
-      float dot = *(float *)(actor + 0x180) * ((float *)pfVar14)[0] +
-                  *(float *)(actor + 0x184) * ((float *)pfVar14)[1] +
-                  *(float *)(actor + 0x188) * ((float *)pfVar14)[2];
-      if (dot > *(float *)0x2555d0) {
-        *(float *)(actor + 0x598) = ((float *)pfVar14)[0];
-        *(float *)(actor + 0x59c) = ((float *)pfVar14)[1];
-        *(float *)(actor + 0x5a0) = ((float *)pfVar14)[2];
-        *(char *)(actor + 0x590) = 1;
-      }
-    }
-    goto LAB_0002a0c3;
-  }
-  {
-    float snap_cos;
-    float *snap_stored;
-    float *pfv;
-    snap_stored = (float *)(actor + 0x598);
-    pfv = (float *)pfVar14;
-    if (*(float *)(tag_data + 0x330) <= *(float *)0x2533c0)
-      goto LAB_0002a0c3;
-    snap_cos = x87_fcos(*(float *)(tag_data + 0x330));
-    if (!*(char *)(actor + 0x99)) {
-      float sv[2];
-      float dv[2];
-      float ss[2];
-      sv[0] = pfv[0];
-      sv[1] = pfv[1];
-      dv[0] = desired_facing[0];
-      dv[1] = desired_facing[1];
-      ss[0] = snap_stored[0];
-      ss[1] = snap_stored[1];
-      if (magnitude3d(sv) == *(float *)0x2533c0)
-        goto LAB_0002a0a7;
-      if (magnitude3d(dv) == *(float *)0x2533c0)
-        goto LAB_0002a0a7;
-      if (magnitude3d(ss) == *(float *)0x2533c0)
-        goto LAB_0002a0a7;
-      if (ss[1] * sv[1] + ss[0] * sv[0] > snap_cos) {
-        if (dv[1] * ss[1] + dv[0] * ss[0] <= snap_cos)
-          goto LAB_0002a0c3;
-      }
-    } else {
-      float dot3 = pfv[0] * snap_stored[0] + pfv[1] * snap_stored[1] +
-                   pfv[2] * snap_stored[2];
-      if (dot3 > snap_cos) {
-        float dot4 = FUN_00013070(desired_facing, snap_stored);
-        if (dot4 <= snap_cos)
-          goto LAB_0002a0c3;
-      }
-    }
-  LAB_0002a0a7:
-    *(char *)(actor + 0x590) = 0;
-    FUN_00036e50(actor_handle);
-  }
-
-LAB_0002a0c3:
-  /* Output facing is always desired_facing (the vector the on-foot z-flatten
-   * above normalizes in place), NOT pfVar14. Original stores [EBP-0x14] =
-   * actor+0x5a4 unconditionally at 0x2a0c3 (all paths converge here). pfVar14
-   * aliases desired_aiming on the look_type==1 and snap paths, which is never
-   * flattened — storing it here left a raw 3D vector in the 2D facing slot and
-   * tripped assert_valid_real_normal2d in actor_apply_control_data on campaign
-   * load. */
-  *(float *)(actor + 0x6fc) = desired_facing[0];
-  *(float *)(actor + 0x700) = desired_facing[1];
-  *(float *)(actor + 0x704) = desired_facing[2];
-  *(float *)(actor + 0x708) = desired_aiming[0];
-  *(float *)(actor + 0x70c) = desired_aiming[1];
-  *(float *)(actor + 0x710) = desired_aiming[2];
-  *(float *)(actor + 0x714) = desired_looking[0];
-  *(float *)(actor + 0x718) = desired_looking[1];
-  *(float *)(actor + 0x71c) = desired_looking[2];
-
-  actor_unit_control_exact_facing(actor_handle, *(char *)(actor + 0x591));
-
-  if (!valid_real_normal3d((float *)(actor + 0x6fc))) {
-    display_assert("&actor->output.facing_vector",
-                   "c:\\halo\\SOURCE\\ai\\actor_looking.c", 0x6c8, 1);
-    system_exit(-1);
-  }
-  if (!valid_real_normal3d((float *)(actor + 0x708))) {
-    display_assert("&actor->output.aiming_vector",
-                   "c:\\halo\\SOURCE\\ai\\actor_looking.c", 0x6c9, 1);
-    system_exit(-1);
-  }
-  if (!valid_real_normal3d((float *)(actor + 0x714))) {
-    display_assert("&actor->output.looking_vector",
-                   "c:\\halo\\SOURCE\\ai\\actor_looking.c", 0x6ca, 1);
-    system_exit(-1);
-  }
-
-  /* Output flag */
-  if (!strict_look && *(short *)(actor + 0x3fc) != 4) {
-    switch (*(short *)(actor + 0x544)) {
-    case 3:
-    case 6:
-    case 10:
-    case 11:
-    case 12:
-      break;
-    default:
-      *(short *)(actor + 0x6f8) = 1;
-      return;
-    }
-  }
-  *(short *)(actor + 0x6f8) = 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x58, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x58(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x61637472\n\t"
+      "movl %%esi, -0x28(%%ebp)\n\t"
+      "call *%[tag]\n\t"
+      "leal 0x5a4(%%esi), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, -0x40(%%ebp)\n\t"
+      "movb $0, -0x9(%%ebp)\n\t"
+      "movl %%edi, -0x14(%%ebp)\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_1\n\t"
+      "flds 0x5ac(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x44f\n\t"
+      "pushl $0x255284\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x5a8(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255750\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_1:\n\t"
+      "pushl %%ebx\n\t"
+      "leal 0x5b0(%%esi), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%ebx, -0x10(%%ebp)\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_2\n\t"
+      "flds 0x5b8(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x450\n\t"
+      "pushl $0x255284\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x5b4(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255728\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_2:\n\t"
+      "leal 0x5bc(%%esi), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%ebx, -0x18(%%ebp)\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_3\n\t"
+      "flds 0x5c4(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x451\n\t"
+      "pushl $0x255284\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x5c0(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255700\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_3:\n\t"
+      "movw 0x6dc(%%esi), %%ax\n\t"
+      "cmpw $1, %%ax\n\t"
+      "je .Lactor_look_update_7\n\t"
+      "movb 0x161(%%esi), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_look_update_5\n\t"
+      "movb $1, -0x4(%%ebp)\n\t"
+      ".Lactor_look_update_4:\n\t"
+      "cmpw $3, 0x6a(%%esi)\n\t"
+      "movb -0x4(%%ebp), %%al\n\t"
+      "movb 0x58d(%%esi), %%dl\n\t"
+      "movb 0x58e(%%esi), %%cl\n\t"
+      "movb %%al, -0x2(%%ebp)\n\t"
+      "movl -0x40(%%ebp), %%eax\n\t"
+      "movb %%dl, -0x3(%%ebp)\n\t"
+      "movl 0x12c(%%eax), %%edx\n\t"
+      "movb %%cl, -0x6(%%ebp)\n\t"
+      "movl 0x134(%%eax), %%ecx\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "movb $0, -0x8(%%ebp)\n\t"
+      "movb $0, -0x5(%%ebp)\n\t"
+      "movl %%edx, -0x20(%%ebp)\n\t"
+      "movl %%ecx, -0x2c(%%ebp)\n\t"
+      "jne .Lactor_look_update_8\n\t"
+      "flds 0xbc(%%eax)\n\t"
+      "fcos\n\t"
+      "fstps -0x4c(%%ebp)\n\t"
+      "flds 0xc0(%%eax)\n\t"
+      "jmp .Lactor_look_update_9\n\t"
+      ".Lactor_look_update_5:\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lactor_look_update_6\n\t"
+      "cmpw $2, %%ax\n\t"
+      "je .Lactor_look_update_6\n\t"
+      "movb $0, -0x4(%%ebp)\n\t"
+      "jmp .Lactor_look_update_4\n\t"
+      ".Lactor_look_update_6:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c3b270]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "setne -0x4(%%ebp)\n\t"
+      "jmp .Lactor_look_update_4\n\t"
+      ".Lactor_look_update_7:\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%eax, 0x4(%%edx)\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movl 0x4(%%edi), %%eax\n\t"
+      "movl 0x8(%%edi), %%ecx\n\t"
+      "movl %%edx, (%%ebx)\n\t"
+      "movl %%eax, 0x4(%%ebx)\n\t"
+      "movl %%ecx, 0x8(%%ebx)\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      "jmp .Lactor_look_update_93\n\t"
+      ".Lactor_look_update_8:\n\t"
+      "flds 0xb4(%%eax)\n\t"
+      "fcos\n\t"
+      "fstps -0x4c(%%ebp)\n\t"
+      "flds 0xb8(%%eax)\n\t"
+      ".Lactor_look_update_9:\n\t"
+      "fcos\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "fstps -0x48(%%ebp)\n\t"
+      "call *%[c210b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_10\n\t"
+      "movb 0x456(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_10\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x58(%%ebp), %%edi\n\t"
+      "leal -0x3c(%%ebp), %%ebx\n\t"
+      "movw $2, -0x3c(%%ebp)\n\t"
+      "call *%[c28660]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_10\n\t"
+      "movl $7, -0x24(%%ebp)\n\t"
+      "movb $1, -0x9(%%ebp)\n\t"
+      "jmp .Lactor_look_update_12\n\t"
+      ".Lactor_look_update_10:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x3e8(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movl %%eax, -0x24(%%ebp)\n\t"
+      "je .Lactor_look_update_12\n\t"
+      "cmpw $1, %%ax\n\t"
+      "je .Lactor_look_update_12\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "leal 0x3ec(%%esi), %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x58(%%ebp), %%edi\n\t"
+      "call *%[c28660]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_11\n\t"
+      "cmpw $2, (%%ebx)\n\t"
+      "sete -0x9(%%ebp)\n\t"
+      "jmp .Lactor_look_update_12\n\t"
+      ".Lactor_look_update_11:\n\t"
+      "movl $0, -0x24(%%ebp)\n\t"
+      ".Lactor_look_update_12:\n\t"
+      "cmpw $0, 0x544(%%esi)\n\t"
+      "movl $0, -0x1c(%%ebp)\n\t"
+      "jl .Lactor_look_update_13\n\t"
+      "cmpw $0, 0x548(%%esi)\n\t"
+      "jle .Lactor_look_update_13\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "leal 0x54c(%%esi), %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x38(%%ebp), %%edi\n\t"
+      "call *%[c28660]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_13\n\t"
+      "movw 0x546(%%esi), %%ax\n\t"
+      "movw %%ax, -0x1c(%%ebp)\n\t"
+      ".Lactor_look_update_13:\n\t"
+      "movb 0x504(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_14\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d6d0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $2, %%ax\n\t"
+      "jne .Lactor_look_update_14\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "cmpw $5, %%ax\n\t"
+      "movl $5, -0x1c(%%ebp)\n\t"
+      "jg .Lactor_look_update_14\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      ".Lactor_look_update_14:\n\t"
+      "movl -0x24(%%ebp), %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpw %%bx, %%di\n\t"
+      "je .Lactor_look_update_15\n\t"
+      "cmpw $1, %%di\n\t"
+      "je .Lactor_look_update_15\n\t"
+      "leal -0x58(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_15\n\t"
+      "flds -0x50(%%ebp)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4ca\n\t"
+      "pushl $0x255284\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds -0x54(%%ebp)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds -0x58(%%ebp)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x2556f0\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_15:\n\t"
+      "cmpw %%bx, -0x1c(%%ebp)\n\t"
+      "je .Lactor_look_update_16\n\t"
+      "leal -0x38(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_16\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4ce\n\t"
+      "pushl $0x255284\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds -0x34(%%ebp)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds -0x38(%%ebp)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x2556dc\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_16:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x548(%%esi), %%ax\n\t"
+      "cmpw %%bx, %%ax\n\t"
+      "jle .Lactor_look_update_18\n\t"
+      "decl %%eax\n\t"
+      "cmpw %%bx, %%ax\n\t"
+      "movw %%ax, 0x548(%%esi)\n\t"
+      "jne .Lactor_look_update_18\n\t"
+      "movb 0x5aca5d, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_17\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0x100\n\t"
+      "pushl $0x5ab100\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c49ac0]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2556c4\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x20, %%esp\n\t"
+      ".Lactor_look_update_17:\n\t"
+      "movw %%bx, 0x544(%%esi)\n\t"
+      "movw %%bx, 0x546(%%esi)\n\t"
+      ".Lactor_look_update_18:\n\t"
+      "cmpw $2, %%di\n\t"
+      "movl -0x54(%%ebp), %%ebx\n\t"
+      "movb $0, 0x58c(%%esi)\n\t"
+      "jl .Lactor_look_update_26\n\t"
+      "cmpw $5, %%di\n\t"
+      "jl .Lactor_look_update_19\n\t"
+      "movb -0x3(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_20\n\t"
+      "movl -0x20(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "leal -0x58(%%ebp), %%eax\n\t"
+      "call *%[c27dd0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_20\n\t"
+      ".Lactor_look_update_19:\n\t"
+      "cmpw $3, %%di\n\t"
+      "jl .Lactor_look_update_21\n\t"
+      "movb -0x6(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_21\n\t"
+      "movb $0, -0x6(%%ebp)\n\t"
+      "movb $1, -0x3(%%ebp)\n\t"
+      ".Lactor_look_update_20:\n\t"
+      "cmpw $7, %%di\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "movl -0x58(%%ebp), %%eax\n\t"
+      "movl -0x50(%%ebp), %%ecx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl %%ebx, 0x4(%%edx)\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "movb -0x4(%%ebp), %%dl\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "movb %%dl, -0x2(%%ebp)\n\t"
+      "jl .Lactor_look_update_21\n\t"
+      "testb %%dl, %%dl\n\t"
+      "movb $1, -0x5(%%ebp)\n\t"
+      "je .Lactor_look_update_21\n\t"
+      "movl -0x18(%%ebp), %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl %%ebx, 0x4(%%edx)\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      ".Lactor_look_update_21:\n\t"
+      "cmpw $2, %%di\n\t"
+      "jne .Lactor_look_update_22\n\t"
+      "movb -0x3(%%ebp), %%al\n\t"
+      "negb %%al\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "andl $5, %%eax\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl %%edi, -0x24(%%ebp)\n\t"
+      ".Lactor_look_update_22:\n\t"
+      "movb -0x3(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_23\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl -0x58(%%ebp), %%edx\n\t"
+      "movl -0x50(%%ebp), %%eax\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl %%ebx, 0x4(%%ecx)\n\t"
+      "movl %%eax, 0x8(%%ecx)\n\t"
+      "movb 0x591(%%esi), %%al\n\t"
+      "cmpw $4, %%di\n\t"
+      "sete %%cl\n\t"
+      "orb %%cl, %%al\n\t"
+      "movb $0, -0x3(%%ebp)\n\t"
+      "movb $0, -0x6(%%ebp)\n\t"
+      "movb %%al, 0x591(%%esi)\n\t"
+      ".Lactor_look_update_23:\n\t"
+      "movb 0x58d(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_24\n\t"
+      "movb 0x58e(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_25\n\t"
+      ".Lactor_look_update_24:\n\t"
+      "cmpw $6, %%di\n\t"
+      "movb $0, -0x8(%%ebp)\n\t"
+      "jl .Lactor_look_update_26\n\t"
+      ".Lactor_look_update_25:\n\t"
+      "movb $1, -0x8(%%ebp)\n\t"
+      ".Lactor_look_update_26:\n\t"
+      "movswl -0x1c(%%ebp), %%eax\n\t"
+      "addl $-2, %%eax\n\t"
+      "cmpl $6, %%eax\n\t"
+      "ja .Lactor_look_update_46\n\t"
+      "movzbl 0x2a290(%%eax), %%edx\n\t"
+      "jmp *.Lactor_look_update_jt0(,%%edx,4)\n\t"
+      ".Lactor_look_update_27:\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "movl -0x14(%%ebp), %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x38(%%ebp), %%eax\n\t"
+      "movl %%ebx, %%edx\n\t"
+      "call *%[c27dd0]\n\t"
+      "movb %%al, -0x7(%%ebp)\n\t"
+      "movb -0x8(%%ebp), %%al\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movb -0x5(%%ebp), %%al\n\t"
+      "jne .Lactor_look_update_33\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_37\n\t"
+      "movl -0x1c(%%ebp), %%edi\n\t"
+      "cmpw $6, %%di\n\t"
+      "jl .Lactor_look_update_28\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c2a860]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_30\n\t"
+      ".Lactor_look_update_28:\n\t"
+      "cmpw $5, %%di\n\t"
+      "jl .Lactor_look_update_29\n\t"
+      "movb -0x6(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_30\n\t"
+      "movb 0x58d(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_30\n\t"
+      ".Lactor_look_update_29:\n\t"
+      "cmpw $4, %%di\n\t"
+      "jl .Lactor_look_update_34\n\t"
+      "movb -0x7(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_35\n\t"
+      "movb -0x3(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_37\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_37\n\t"
+      ".Lactor_look_update_30:\n\t"
+      "movb 0x591(%%esi), %%al\n\t"
+      "movl -0x38(%%ebp), %%ecx\n\t"
+      "movl -0x30(%%ebp), %%edi\n\t"
+      "testb %%al, %%al\n\t"
+      "movl -0x34(%%ebp), %%eax\n\t"
+      "je .Lactor_look_update_31\n\t"
+      "movb -0x7(%%ebp), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .Lactor_look_update_32\n\t"
+      ".Lactor_look_update_31:\n\t"
+      "movl %%ecx, (%%ebx)\n\t"
+      "movl %%eax, 0x4(%%ebx)\n\t"
+      "movl %%edi, 0x8(%%ebx)\n\t"
+      "movb $0, 0x591(%%esi)\n\t"
+      ".Lactor_look_update_32:\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "movl %%ecx, (%%edx)\n\t"
+      "movl %%eax, 0x4(%%edx)\n\t"
+      "movl %%edi, 0x8(%%edx)\n\t"
+      "movl -0x18(%%ebp), %%edx\n\t"
+      "movl %%ecx, (%%edx)\n\t"
+      "movl %%eax, 0x4(%%edx)\n\t"
+      "movb -0x4(%%ebp), %%al\n\t"
+      "movl %%edi, 0x8(%%edx)\n\t"
+      "movb %%al, -0x2(%%ebp)\n\t"
+      "jmp .Lactor_look_update_43\n\t"
+      ".Lactor_look_update_33:\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_37\n\t"
+      "movl -0x1c(%%ebp), %%edi\n\t"
+      ".Lactor_look_update_34:\n\t"
+      "movb -0x7(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_37\n\t"
+      ".Lactor_look_update_35:\n\t"
+      "cmpw $5, %%di\n\t"
+      "jge .Lactor_look_update_36\n\t"
+      "cmpw $3, %%di\n\t"
+      "jl .Lactor_look_update_37\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_37\n\t"
+      ".Lactor_look_update_36:\n\t"
+      "movl -0x38(%%ebp), %%eax\n\t"
+      "movl -0x10(%%ebp), %%edi\n\t"
+      "movl -0x34(%%ebp), %%ecx\n\t"
+      "movl -0x30(%%ebp), %%edx\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "movl %%ecx, 0x4(%%edi)\n\t"
+      "movl %%edx, 0x8(%%edi)\n\t"
+      "movl -0x18(%%ebp), %%edi\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "movl %%ecx, 0x4(%%edi)\n\t"
+      "movb -0x4(%%ebp), %%cl\n\t"
+      "movl %%edx, 0x8(%%edi)\n\t"
+      "movb %%cl, -0x2(%%ebp)\n\t"
+      "jmp .Lactor_look_update_44\n\t"
+      ".Lactor_look_update_37:\n\t"
+      "movb -0x4(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_38\n\t"
+      "movl -0x2c(%%ebp), %%eax\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "leal -0x4c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x38(%%ebp), %%eax\n\t"
+      "movl %%ebx, %%edx\n\t"
+      "call *%[c27e50]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_38\n\t"
+      "movl -0x38(%%ebp), %%edx\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "movl -0x34(%%ebp), %%eax\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl -0x30(%%ebp), %%edx\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movb $0, -0x2(%%ebp)\n\t"
+      "jmp .Lactor_look_update_46\n\t"
+      ".Lactor_look_update_38:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_46\n\t"
+      "movb -0x7(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_46\n\t"
+      "movl -0x38(%%ebp), %%eax\n\t"
+      "movl -0x10(%%ebp), %%edi\n\t"
+      "movl -0x34(%%ebp), %%ecx\n\t"
+      "movl -0x30(%%ebp), %%edx\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "movl %%ecx, 0x4(%%edi)\n\t"
+      "movl %%edx, 0x8(%%edi)\n\t"
+      "movl -0x18(%%ebp), %%edi\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "movl %%ecx, 0x4(%%edi)\n\t"
+      "movl %%edx, 0x8(%%edi)\n\t"
+      "movb $1, -0x2(%%ebp)\n\t"
+      "jmp .Lactor_look_update_45\n\t"
+      ".Lactor_look_update_39:\n\t"
+      "cmpw $8, -0x1c(%%ebp)\n\t"
+      "movl -0x34(%%ebp), %%edi\n\t"
+      "movl -0x38(%%ebp), %%ebx\n\t"
+      "sete %%al\n\t"
+      "movb %%al, -0xa(%%ebp)\n\t"
+      "movb %%al, -0x8(%%ebp)\n\t"
+      "movb 0x58d(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_41\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x38(%%ebp), %%eax\n\t"
+      "call *%[c27dd0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_40\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c2a860]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_46\n\t"
+      "movb $1, -0x8(%%ebp)\n\t"
+      "jmp .Lactor_look_update_41\n\t"
+      ".Lactor_look_update_40:\n\t"
+      "movb -0xa(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_42\n\t"
+      ".Lactor_look_update_41:\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "movl -0x30(%%ebp), %%eax\n\t"
+      "movb -0x8(%%ebp), %%cl\n\t"
+      "movl %%ebx, (%%edx)\n\t"
+      "movl %%edi, 0x4(%%edx)\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movb %%cl, 0x591(%%esi)\n\t"
+      ".Lactor_look_update_42:\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "movl -0x30(%%ebp), %%eax\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "movl %%ebx, (%%edx)\n\t"
+      "movl %%edi, 0x4(%%edx)\n\t"
+      "movl %%ebx, (%%ecx)\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movb -0x4(%%ebp), %%dl\n\t"
+      "movl %%edi, 0x4(%%ecx)\n\t"
+      "movl %%eax, 0x8(%%ecx)\n\t"
+      "movb %%dl, -0x2(%%ebp)\n\t"
+      ".Lactor_look_update_43:\n\t"
+      "movb $0, -0x3(%%ebp)\n\t"
+      ".Lactor_look_update_44:\n\t"
+      "movb $1, 0x58c(%%esi)\n\t"
+      "movb $0, -0x5(%%ebp)\n\t"
+      ".Lactor_look_update_45:\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      ".Lactor_look_update_46:\n\t"
+      "movl -0x24(%%ebp), %%edi\n\t"
+      "cmpw $2, %%di\n\t"
+      "jne .Lactor_look_update_48\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_48\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x58(%%ebp), %%eax\n\t"
+      "call *%[c27dd0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_48\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      "movl -0x58(%%ebp), %%ecx\n\t"
+      "movl -0x54(%%ebp), %%eax\n\t"
+      "movl -0x50(%%ebp), %%edx\n\t"
+      "movl %%ecx, (%%ebx)\n\t"
+      "movl %%eax, 0x4(%%ebx)\n\t"
+      "movl %%edx, 0x8(%%ebx)\n\t"
+      "movb -0x2(%%ebp), %%bl\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lactor_look_update_47\n\t"
+      "movl -0x18(%%ebp), %%ebx\n\t"
+      "movl %%ecx, (%%ebx)\n\t"
+      "movl %%eax, 0x4(%%ebx)\n\t"
+      "movl %%edx, 0x8(%%ebx)\n\t"
+      ".Lactor_look_update_47:\n\t"
+      "movb $0, 0x58c(%%esi)\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      ".Lactor_look_update_48:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "call *%[c27a10]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "flds 0x4(%%ebx)\n\t"
+      "movl %%ebx, -0x1c(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_look_update_49\n\t"
+      "movb $1, %%cl\n\t"
+      "movb %%cl, -0x8(%%ebp)\n\t"
+      "jmp .Lactor_look_update_50\n\t"
+      ".Lactor_look_update_49:\n\t"
+      "movb $0, -0x8(%%ebp)\n\t"
+      "movb -0x8(%%ebp), %%cl\n\t"
+      ".Lactor_look_update_50:\n\t"
+      "flds 0xc(%%ebx)\n\t"
+      "movb $1, -0x7(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lactor_look_update_51\n\t"
+      "movb $0, -0x7(%%ebp)\n\t"
+      ".Lactor_look_update_51:\n\t"
+      "flds 0x14(%%ebx)\n\t"
+      "movb $1, -0x6(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lactor_look_update_52\n\t"
+      "movb $0, -0x6(%%ebp)\n\t"
+      ".Lactor_look_update_52:\n\t"
+      "cmpw $0, 0x3fc(%%esi)\n\t"
+      "jle .Lactor_look_update_85\n\t"
+      "movb -0x5(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_85\n\t"
+      "movb -0x1(%%ebp), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .Lactor_look_update_53\n\t"
+      "movb -0x2(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_85\n\t"
+      ".Lactor_look_update_53:\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lactor_look_update_54\n\t"
+      "movb -0x7(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_54\n\t"
+      "movb -0x6(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_85\n\t"
+      ".Lactor_look_update_54:\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movb $0, -0xa(%%ebp)\n\t"
+      "movb $0, -0x5(%%ebp)\n\t"
+      "je .Lactor_look_update_55\n\t"
+      "movb -0x3(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_55\n\t"
+      "cmpw $1, %%di\n\t"
+      "jne .Lactor_look_update_55\n\t"
+      "movl 0x560(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movb $1, -0x24(%%ebp)\n\t"
+      "je .Lactor_look_update_56\n\t"
+      ".Lactor_look_update_55:\n\t"
+      "movb $0, -0x24(%%ebp)\n\t"
+      ".Lactor_look_update_56:\n\t"
+      "movl 0x560(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lactor_look_update_57\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, 0x560(%%esi)\n\t"
+      ".Lactor_look_update_57:\n\t"
+      "movb 0x55c(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_59\n\t"
+      "movb 0x55d(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_58\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .Lactor_look_update_58\n\t"
+      "movb $1, 0x55c(%%esi)\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%ebx\n\t"
+      "movl $2, %%edi\n\t"
+      "call *%[c28250]\n\t"
+      "movl -0x28(%%ebp), %%ecx\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "movl -0x28(%%ebp), %%esi\n\t"
+      "movl %%eax, 0x564(%%ecx)\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "movw $4, 0x56c(%%ecx)\n\t"
+      "addl $8, %%esp\n\t"
+      "addl $0x570, %%ecx\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "movl 0x4(%%edx), %%eax\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movb -0x1(%%ebp), %%dl\n\t"
+      ".Lactor_look_update_58:\n\t"
+      "movb 0x55c(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_59\n\t"
+      "movl 0x564(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lactor_look_update_66\n\t"
+      ".Lactor_look_update_59:\n\t"
+      "testb %%dl, %%dl\n\t"
+      "movb $1, %%al\n\t"
+      "movb %%al, -0x30(%%ebp)\n\t"
+      "je .Lactor_look_update_60\n\t"
+      "movb -0x7(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lactor_look_update_62\n\t"
+      ".Lactor_look_update_60:\n\t"
+      "movb -0x2(%%ebp), %%cl\n\t"
+      "xorb %%al, %%al\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movb %%al, -0x30(%%ebp)\n\t"
+      "je .Lactor_look_update_66\n\t"
+      "movb -0x6(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_look_update_66\n\t"
+      ".Lactor_look_update_61:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_63\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "jmp .Lactor_look_update_64\n\t"
+      ".Lactor_look_update_62:\n\t"
+      "movb -0x2(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_look_update_61\n\t"
+      "movb -0x6(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_look_update_61\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl $1, %%ecx\n\t"
+      "jmp .Lactor_look_update_64\n\t"
+      ".Lactor_look_update_63:\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      ".Lactor_look_update_64:\n\t"
+      "movl -0x24(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movl -0x30(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c28cc0]\n\t"
+      "movb %%al, 0x55e(%%esi)\n\t"
+      "movb 0x55c(%%esi), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_65\n\t"
+      "movl 0x564(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jg .Lactor_look_update_65\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5dd\n\t"
+      "pushl $0x255284\n\t"
+      "pushl $0x255678\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_65:\n\t"
+      "movb $1, -0xa(%%ebp)\n\t"
+      ".Lactor_look_update_66:\n\t"
+      "movb 0x55c(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_78\n\t"
+      "movl 0x564(%%esi), %%ebx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "decl %%ebx\n\t"
+      "movl %%ebx, 0x564(%%esi)\n\t"
+      "leal 0x56c(%%esi), %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x58(%%ebp), %%edi\n\t"
+      "movl %%ebx, -0x30(%%ebp)\n\t"
+      "call *%[c28660]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_78\n\t"
+      "leal -0x58(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_67\n\t"
+      "flds -0x50(%%ebp)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5e8\n\t"
+      "pushl $0x255284\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds -0x54(%%ebp)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds -0x58(%%ebp)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255664\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_67:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_71\n\t"
+      "movb -0x3(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_68\n\t"
+      "movb -0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_68\n\t"
+      "movb 0x99(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_68\n\t"
+      "movb $1, -0x24(%%ebp)\n\t"
+      "movb $1, -0x5(%%ebp)\n\t"
+      "jmp .Lactor_look_update_69\n\t"
+      ".Lactor_look_update_68:\n\t"
+      "movb -0x24(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_70\n\t"
+      ".Lactor_look_update_69:\n\t"
+      "movl -0x58(%%ebp), %%eax\n\t"
+      "movl -0x14(%%ebp), %%edi\n\t"
+      "movl -0x54(%%ebp), %%ecx\n\t"
+      "movl -0x50(%%ebp), %%edx\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "movl %%ecx, 0x4(%%edi)\n\t"
+      "movl %%edx, 0x8(%%edi)\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "movl %%ecx, 0x4(%%edi)\n\t"
+      "movl %%edx, 0x8(%%edi)\n\t"
+      "movb $1, 0x58c(%%esi)\n\t"
+      "jmp .Lactor_look_update_72\n\t"
+      ".Lactor_look_update_70:\n\t"
+      "movl -0x20(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "leal -0x58(%%ebp), %%eax\n\t"
+      "call *%[c27dd0]\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_79\n\t"
+      "movl -0x58(%%ebp), %%ecx\n\t"
+      "movl -0x54(%%ebp), %%edx\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl -0x50(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movb $1, 0x58c(%%esi)\n\t"
+      "jmp .Lactor_look_update_72\n\t"
+      ".Lactor_look_update_71:\n\t"
+      "movl -0x2c(%%ebp), %%eax\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      "leal -0x4c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x58(%%ebp), %%eax\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "call *%[c27e50]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_79\n\t"
+      "movl -0x58(%%ebp), %%edx\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "movl -0x54(%%ebp), %%eax\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl -0x50(%%ebp), %%edx\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      ".Lactor_look_update_72:\n\t"
+      "movb -0xa(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_74\n\t"
+      "movb -0x6(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_74\n\t"
+      "movl -0x1c(%%ebp), %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movb 0x55e(%%esi), %%al\n\t"
+      "movb $1, 0x55f(%%esi)\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl $2, %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c28250]\n\t"
+      "movl -0x28(%%ebp), %%ecx\n\t"
+      "movl %%eax, 0x568(%%ecx)\n\t"
+      "movl -0x30(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "addl $0x57c, %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%eax), %%edx\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movl %%eax, 0xc(%%ecx)\n\t"
+      "movb -0x24(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_73\n\t"
+      "movl -0x28(%%ebp), %%ebx\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movb 0x55e(%%ebx), %%cl\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c28250]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, 0x560(%%ebx)\n\t"
+      ".Lactor_look_update_73:\n\t"
+      "movl -0x28(%%ebp), %%esi\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      ".Lactor_look_update_74:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_84\n\t"
+      "movb -0x2(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_75\n\t"
+      "movb -0x6(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_76\n\t"
+      ".Lactor_look_update_75:\n\t"
+      "movb -0x5(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_84\n\t"
+      "movb -0x7(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_84\n\t"
+      ".Lactor_look_update_76:\n\t"
+      "movl 0x568(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lactor_look_update_77\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "leal -0x58(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c28ed0]\n\t"
+      "movl 0x568(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jg .Lactor_look_update_77\n\t"
+      "pushl $1\n\t"
+      "pushl $0x62d\n\t"
+      "pushl $0x255284\n\t"
+      "pushl $0x255640\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_77:\n\t"
+      "movl 0x568(%%esi), %%ecx\n\t"
+      "movb 0x55f(%%esi), %%al\n\t"
+      "decl %%ecx\n\t"
+      "testb %%al, %%al\n\t"
+      "movl %%ecx, 0x568(%%esi)\n\t"
+      "je .Lactor_look_update_88\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "leal 0x57c(%%esi), %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x58(%%ebp), %%edi\n\t"
+      "call *%[c28660]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_86\n\t"
+      "movb -0x5(%%ebp), %%bl\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lactor_look_update_80\n\t"
+      "movl -0x20(%%ebp), %%ecx\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x58(%%ebp), %%eax\n\t"
+      "call *%[c27dd0]\n\t"
+      "addl $4, %%esp\n\t"
+      "jmp .Lactor_look_update_81\n\t"
+      ".Lactor_look_update_78:\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      ".Lactor_look_update_79:\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movb $0, 0x55c(%%esi)\n\t"
+      "movl %%ecx, -0x58(%%ebp)\n\t"
+      "movl %%edx, -0x54(%%ebp)\n\t"
+      "movl %%eax, -0x50(%%ebp)\n\t"
+      "jmp .Lactor_look_update_74\n\t"
+      ".Lactor_look_update_80:\n\t"
+      "movl -0x2c(%%ebp), %%eax\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "leal -0x4c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x58(%%ebp), %%eax\n\t"
+      "call *%[c27e50]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lactor_look_update_81:\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_86\n\t"
+      "leal -0x58(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_82\n\t"
+      "flds -0x50(%%ebp)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x645\n\t"
+      "pushl $0x255284\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds -0x54(%%ebp)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds -0x58(%%ebp)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x25562c\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_82:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movl -0x54(%%ebp), %%eax\n\t"
+      "movl -0x58(%%ebp), %%ecx\n\t"
+      "movl -0x50(%%ebp), %%edx\n\t"
+      "je .Lactor_look_update_83\n\t"
+      "movl -0x10(%%ebp), %%edi\n\t"
+      "movl %%ecx, (%%edi)\n\t"
+      "movl %%eax, 0x4(%%edi)\n\t"
+      "movl %%edx, 0x8(%%edi)\n\t"
+      ".Lactor_look_update_83:\n\t"
+      "movl -0x18(%%ebp), %%edi\n\t"
+      "movl %%ecx, (%%edi)\n\t"
+      "movl %%eax, 0x4(%%edi)\n\t"
+      "movl %%edx, 0x8(%%edi)\n\t"
+      "jmp .Lactor_look_update_87\n\t"
+      ".Lactor_look_update_84:\n\t"
+      "movb $0, 0x55f(%%esi)\n\t"
+      "jmp .Lactor_look_update_88\n\t"
+      ".Lactor_look_update_85:\n\t"
+      "movb $0, 0x55c(%%esi)\n\t"
+      "movb $0, 0x55e(%%esi)\n\t"
+      ".Lactor_look_update_86:\n\t"
+      "movb $0, 0x55f(%%esi)\n\t"
+      ".Lactor_look_update_87:\n\t"
+      "movl -0x10(%%ebp), %%ebx\n\t"
+      ".Lactor_look_update_88:\n\t"
+      "movb 0x504(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_91\n\t"
+      "movb 0x505(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_91\n\t"
+      "movl 0x18(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1a9ad0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_91\n\t"
+      "cmpl $-1, 0x158(%%esi)\n\t"
+      "jne .Lactor_look_update_91\n\t"
+      "movl -0x20(%%ebp), %%edi\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[c27dd0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_89\n\t"
+      "leal 0x174(%%esi), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[c27dd0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_90\n\t"
+      ".Lactor_look_update_89:\n\t"
+      "movb -0x4(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_92\n\t"
+      "movl -0x2c(%%ebp), %%edi\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "leal -0x4c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "call *%[c27e50]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_91\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "leal -0x4c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x174(%%esi), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "call *%[c27e50]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_91\n\t"
+      ".Lactor_look_update_90:\n\t"
+      "movb $1, 0x591(%%esi)\n\t"
+      ".Lactor_look_update_91:\n\t"
+      "movb -0x4(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_93\n\t"
+      ".Lactor_look_update_92:\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "movl %%ebx, %%edx\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      ".Lactor_look_update_93:\n\t"
+      "movb 0x99(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_95\n\t"
+      "flds 0x5ac(%%esi)\n\t"
+      "fabs\n\t"
+      "fcompl 0x2533d0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lactor_look_update_94\n\t"
+      "movl -0x14(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "movl $0, 0x5ac(%%esi)\n\t"
+      "call *%[mag]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lactor_look_update_94\n\t"
+      "leal 0x174(%%esi), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%ecx, (%%edi)\n\t"
+      "movl %%edx, 0x4(%%edi)\n\t"
+      "movl %%eax, 0x8(%%edi)\n\t"
+      ".Lactor_look_update_94:\n\t"
+      "leal 0x6fc(%%esi), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c28610]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_95\n\t"
+      "flds 0x700(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x689\n\t"
+      "pushl $0x255284\n\t"
+      "subl $0x10, %%esp\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x2555fc\n\t"
+      "pushl $0x2555d4\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_95:\n\t"
+      "movb 0x58f(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_look_update_100\n\t"
+      "movb 0x590(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_96\n\t"
+      "movb 0x504(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_101\n\t"
+      "flds 0x188(%%esi)\n\t"
+      "fmuls 0x8(%%ebx)\n\t"
+      "flds 0x184(%%esi)\n\t"
+      "fmuls 0x4(%%ebx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x180(%%esi)\n\t"
+      "fmuls (%%ebx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps 0x2555d0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_look_update_101\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "leal 0x598(%%esi), %%ecx\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "movl 0x4(%%edx), %%eax\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movb $1, 0x590(%%esi)\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "jmp .Lactor_look_update_101\n\t"
+      ".Lactor_look_update_96:\n\t"
+      "movl -0x40(%%ebp), %%ecx\n\t"
+      "flds 0x330(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_look_update_101\n\t"
+      "flds 0x330(%%ecx)\n\t"
+      "movb 0x99(%%esi), %%al\n\t"
+      "fcos\n\t"
+      "testb %%al, %%al\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "fstps -0x2c(%%ebp)\n\t"
+      "je .Lactor_look_update_97\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "leal 0x598(%%esi), %%ecx\n\t"
+      "fmuls 0x8(%%ecx)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%eax)\n\t"
+      "fmuls (%%ecx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps -0x2c(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_look_update_99\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c13070]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lactor_look_update_98\n\t"
+      ".Lactor_look_update_97:\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl %%ecx, -0x44(%%ebp)\n\t"
+      "movl 0x4(%%ebx), %%ecx\n\t"
+      "movl %%ecx, -0x30(%%ebp)\n\t"
+      "movl %%edx, -0x40(%%ebp)\n\t"
+      "movl 0x598(%%esi), %%edx\n\t"
+      "movl %%eax, -0x34(%%ebp)\n\t"
+      "movl 0x59c(%%esi), %%eax\n\t"
+      "leal -0x44(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%edx, -0x4c(%%ebp)\n\t"
+      "movl %%eax, -0x48(%%ebp)\n\t"
+      "call *%[mag]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Lactor_look_update_99\n\t"
+      "leal -0x34(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[mag]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Lactor_look_update_99\n\t"
+      "leal -0x4c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[mag]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Lactor_look_update_99\n\t"
+      "flds -0x48(%%ebp)\n\t"
+      "fmuls -0x40(%%ebp)\n\t"
+      "flds -0x4c(%%ebp)\n\t"
+      "fmuls -0x44(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps -0x2c(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_look_update_99\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "fmuls -0x48(%%ebp)\n\t"
+      "flds -0x34(%%ebp)\n\t"
+      "fmuls -0x4c(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      ".Lactor_look_update_98:\n\t"
+      "fcomps -0x2c(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lactor_look_update_101\n\t"
+      ".Lactor_look_update_99:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movb $0, 0x590(%%esi)\n\t"
+      "call *%[c36e50]\n\t"
+      "addl $4, %%esp\n\t"
+      "jmp .Lactor_look_update_101\n\t"
+      ".Lactor_look_update_100:\n\t"
+      "movb $0, 0x590(%%esi)\n\t"
+      ".Lactor_look_update_101:\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "leal 0x6fc(%%esi), %%edi\n\t"
+      "movl %%edi, %%edx\n\t"
+      "movl %%ecx, (%%edx)\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movl 0x4(%%ebx), %%edx\n\t"
+      "leal 0x708(%%esi), %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x8(%%ebx), %%ecx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "leal 0x714(%%esi), %%ebx\n\t"
+      "movl %%ebx, %%edx\n\t"
+      "movl %%ecx, (%%edx)\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movb 0x591(%%esi), %%cl\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c3c3a0]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_102\n\t"
+      "flds 0x704(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6c8\n\t"
+      "pushl $0x255284\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x700(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x2555b0\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_102:\n\t"
+      "leal 0x708(%%esi), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_103\n\t"
+      "flds 0x710(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6c9\n\t"
+      "pushl $0x255284\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x70c(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255590\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_103:\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_look_update_104\n\t"
+      "flds 0x71c(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6ca\n\t"
+      "pushl $0x255284\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x718(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255570\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_look_update_104:\n\t"
+      "movb -0x9(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "jne .Lactor_look_update_105\n\t"
+      "cmpw $4, 0x3fc(%%esi)\n\t"
+      "je .Lactor_look_update_105\n\t"
+      "movswl 0x544(%%esi), %%eax\n\t"
+      "addl $-3, %%eax\n\t"
+      "cmpl $9, %%eax\n\t"
+      "ja .Lactor_look_update_106\n\t"
+      "movzbl 0x2a2a0(%%eax), %%eax\n\t"
+      "jmp *.Lactor_look_update_jt1(,%%eax,4)\n\t"
+      ".Lactor_look_update_105:\n\t"
+      "popl %%edi\n\t"
+      "movw $0, 0x6f8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_look_update_106:\n\t"
+      "popl %%edi\n\t"
+      "movw $1, 0x6f8(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lactor_look_update_jt0:\n\t"
+      ".long .Lactor_look_update_27\n\t"
+      ".long .Lactor_look_update_39\n\t"
+      ".text\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lactor_look_update_jt1:\n\t"
+      ".long .Lactor_look_update_105\n\t"
+      ".long .Lactor_look_update_106\n\t"
+      ".text\n\t"
+      :
+      : [dget] "m"(b29040_dget), [tag] "m"(b29040_tag), [c21fb0] "m"(b29040_c21fb0), [c8d9d0] "m"(b29040_c8d9d0), [assert] "m"(b29040_assert), [exitfn] "m"(b29040_exitfn), [c3b270] "m"(b29040_c3b270), [c210b0] "m"(b29040_c210b0), [c28660] "m"(b29040_c28660), [c1d6d0] "m"(b29040_c1d6d0), [c49ac0] "m"(b29040_c49ac0), [cff4d0] "m"(b29040_cff4d0), [c27dd0] "m"(b29040_c27dd0), [c2a860] "m"(b29040_c2a860), [c27e50] "m"(b29040_c27e50), [c27a10] "m"(b29040_c27a10), [c28250] "m"(b29040_c28250), [c28cc0] "m"(b29040_c28cc0), [c28ed0] "m"(b29040_c28ed0), [c1a9ad0] "m"(b29040_c1a9ad0), [mag] "m"(b29040_mag), [c28610] "m"(b29040_c28610), [c13070] "m"(b29040_c13070), [c36e50] "m"(b29040_c36e50), [c3c3a0] "m"(b29040_c3c3a0)
+      : "memory");
 }
+#else
+#error "actor_look_update: clang naked draft required"
+#endif
+
 
 /* FUN_0002a2b0 (0x2a2b0) — XBE naked draft (batch 69). */
 #if defined(__clang__)
