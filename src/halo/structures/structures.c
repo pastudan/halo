@@ -2487,30 +2487,83 @@ void *FUN_0018e420(void)
   return *(void **)0x5064d8;
 }
 
-/* Remove a value from a reference list linked through a datum array (0x1913c0).
- * Walks the list starting at *head, finds the datum whose +4 field matches
- * value, calls datum_delete to free it, and unlinks it. */
-void reference_list_remove(data_t *data, int *head, int value)
+/* reference_list_remove (0x1913c0) — XBE naked draft (batch 90). */
+#if defined(__clang__)
+static void *(*const b1913c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const b1913c0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b1913c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1913c0_exitfn)(int) = system_exit;
+static void (*const b1913c0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
+
+__attribute__((naked, noinline))
+void reference_list_remove(data_t *data __attribute__((unused)), int *head __attribute__((unused)), int value __attribute__((unused)))
 {
-  int *current_ptr = head;
-
-  while (*current_ptr != -1) {
-    char *datum = (char *)datum_get(data, *current_ptr);
-    if (*(int *)(datum + 4) == value) {
-      datum_delete(data, *current_ptr);
-      *current_ptr = *(int *)(datum + 8);
-      return;
-    }
-    current_ptr = (int *)(datum + 8);
-  }
-
-  display_assert(
-    csprintf((char *)0x5ab100,
-             "attempt to remove invalid element %ld from reference list",
-             value),
-    "..\\objects\\reference_lists.h", 0x6d, 1);
-  system_exit(-1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "cmpl $-1, (%%esi)\n\t"
+      "pushl %%edi\n\t"
+      "je .Lreference_list_remove_2\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      ".Lreference_list_remove_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "je .Lreference_list_remove_3\n\t"
+      "movl 0x8(%%edi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "leal 0x8(%%edi), %%esi\n\t"
+      "jne .Lreference_list_remove_1\n\t"
+      ".Lreference_list_remove_2:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6d\n\t"
+      "pushl $0x2b25a0\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x2b2564\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lreference_list_remove_3:\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1196d0]\n\t"
+      "movl 0x8(%%edi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1913c0_dget), [c8d9d0] "m"(b1913c0_c8d9d0), [assert] "m"(b1913c0_assert), [exitfn] "m"(b1913c0_exitfn), [c1196d0] "m"(b1913c0_c1196d0)
+      : "memory");
 }
+#else
+#error "reference_list_remove: clang naked draft required"
+#endif
+
 
 /* reference_list_copy (0x191440) — XBE naked draft (batch 89). */
 #if defined(__clang__)
@@ -3039,45 +3092,90 @@ void cluster_partition_add_object(void *partition __attribute__((unused)), int o
 #endif
 
 
-/* Remove an object from a cluster partition (0x1919a0).
- * Walks the per-object cluster reference chain (*first_cluster_ref),
- * and for each entry: reads the cluster index, removes the matching
- * per-cluster object reference via reference_list_remove, frees
- * the per-object datum, then follows the next link. Clears
- * *first_cluster_ref to -1 when done. */
-void cluster_partition_remove_object(void *partition, int object_handle,
-                                     void *first_cluster_ref)
+/* cluster_partition_remove_object (0x1919a0) — XBE naked draft (batch 90). */
+#if defined(__clang__)
+static void *(*const b1919a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b1919a0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
+static void * (*const b1919a0_c18e3c0)(void) = scenario_get;
+static void (*const b1919a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1919a0_exitfn)(int) = system_exit;
+static void (*const b1919a0_c1913c0)(data_t *data, int *head, int value) = reference_list_remove;
+
+__attribute__((naked, noinline))
+void cluster_partition_remove_object(void *partition __attribute__((unused)), int object_handle __attribute__((unused)), void *first_cluster_ref __attribute__((unused)))
 {
-  int **part = (int **)partition;
-  int *first_ref = (int *)first_cluster_ref;
-  int cursor = *first_ref;
-
-  while (cursor != -1) {
-    data_t *obj_ref_data = (data_t *)part[2];
-    int *obj_ref = (int *)datum_get(obj_ref_data, cursor);
-    short cluster_index = *(short *)((char *)obj_ref + 4);
-
-    datum_delete(obj_ref_data, cursor);
-
-    if (cluster_index < 0 ||
-        (int)cluster_index >= *(int *)((char *)scenario_get() + 0x134)) {
-      display_assert("cluster_index>=0 && "
-                     "cluster_index<global_structure_bsp_get()->clusters.count",
-                     "c:\\halo\\SOURCE\\structures\\cluster_partitions.c", 0xd5,
-                     true);
-      system_exit(-1);
-    }
-
-    {
-      int *cluster_head = &part[0][(int)cluster_index];
-      reference_list_remove((data_t *)part[1], cluster_head, object_handle);
-    }
-
-    cursor = obj_ref[2];
-  }
-
-  *first_ref = -1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl (%%eax), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lcluster_partition_remove_object_4\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      ".Lcluster_partition_remove_object_1:\n\t"
+      "movl 0x8(%%edi), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%edi), %%ecx\n\t"
+      "movw 0x4(%%eax), %%bx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "call *%[c1196d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl .Lcluster_partition_remove_object_2\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl 0x134(%%eax), %%ecx\n\t"
+      "movswl %%bx, %%edx\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "jl .Lcluster_partition_remove_object_3\n\t"
+      ".Lcluster_partition_remove_object_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd5\n\t"
+      "pushl $0x2b26b8\n\t"
+      "pushl $0x2b2668\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcluster_partition_remove_object_3:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movswl %%bx, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "leal (%%edx,%%ecx,4), %%eax\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1913c0]\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl 0x8(%%edx), %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne .Lcluster_partition_remove_object_1\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".Lcluster_partition_remove_object_4:\n\t"
+      "movl $0xffffffff, (%%eax)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1919a0_dget), [c1196d0] "m"(b1919a0_c1196d0), [c18e3c0] "m"(b1919a0_c18e3c0), [assert] "m"(b1919a0_assert), [exitfn] "m"(b1919a0_exitfn), [c1913c0] "m"(b1919a0_c1913c0)
+      : "memory");
 }
+#else
+#error "cluster_partition_remove_object: clang naked draft required"
+#endif
+
 
 int cluster_partition_iter_first(void *partition, int *state,
                                  int16_t cluster_idx)
@@ -6983,35 +7081,88 @@ int16_t structure_find_in_cluster(uint16_t cluster_count, float *position,
  */
 #define file_location_volume_names ((char *)0x505500)
 
-/*
- * set_file_location_volume_name (0x199360) - record the volume/device name for
- * a file-reference location.
- *
- * The original asserts require: location is in (0, NUMBER_OF_FILE_REFERENCE_
- * LOCATIONS) i.e. exactly 1; the target row is currently empty; and volume_name
- * fits in MAXIMUM_FILENAME_LENGTH (255) characters. Copies at most 0xff bytes
- * with csstrncpy and explicitly null-terminates byte 255 of the row.
- */
-void set_file_location_volume_name(int16_t location, const char *volume_name)
+/* set_file_location_volume_name (0x199360) — XBE naked draft (batch 90). */
+#if defined(__clang__)
+static void (*const b199360_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b199360_exitfn)(int) = system_exit;
+static int (*const b199360_c8df60)(const char *s1) = csstrlen;
+static void * (*const b199360_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+
+__attribute__((naked, noinline))
+void set_file_location_volume_name(int16_t location __attribute__((unused)), const char *volume_name __attribute__((unused)))
 {
-  if (location < 1 || location > 1) {
-    display_assert("location>0 && location<NUMBER_OF_FILE_REFERENCE_LOCATIONS",
-                   "c:\\halo\\SOURCE\\tag_files\\files.c", 0x4b, true);
-    system_exit(-1);
-  }
-  if (csstrlen(file_location_volume_names + location * 0x100) != 0) {
-    display_assert("strlen(file_location_volume_names[location])==0",
-                   "c:\\halo\\SOURCE\\tag_files\\files.c", 0x4c, true);
-    system_exit(-1);
-  }
-  if ((unsigned int)csstrlen(volume_name) > 0xff) {
-    display_assert("strlen(volume_name)<=MAXIMUM_FILENAME_LENGTH",
-                   "c:\\halo\\SOURCE\\tag_files\\files.c", 0x4d, true);
-    system_exit(-1);
-  }
-  csstrncpy(file_location_volume_names + location * 0x100, volume_name, 0xff);
-  file_location_volume_names[location * 0x100 + 0xff] = '\0';
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "jle .Lset_file_location_volume_name_1\n\t"
+      "cmpw $2, %%si\n\t"
+      "jl .Lset_file_location_volume_name_2\n\t"
+      ".Lset_file_location_volume_name_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4b\n\t"
+      "pushl $0x2b3aac\n\t"
+      "pushl $0x2b3a70\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lset_file_location_volume_name_2:\n\t"
+      "movswl %%si, %%esi\n\t"
+      "shll $8, %%esi\n\t"
+      "leal 0x505500(%%esi), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lset_file_location_volume_name_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4c\n\t"
+      "pushl $0x2b3aac\n\t"
+      "pushl $0x2b3a40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lset_file_location_volume_name_3:\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0xff, %%eax\n\t"
+      "jbe .Lset_file_location_volume_name_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4d\n\t"
+      "pushl $0x2b3aac\n\t"
+      "pushl $0x2b3a10\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lset_file_location_volume_name_4:\n\t"
+      "pushl $0xff\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c8de70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb $0, 0x5055ff(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b199360_assert), [exitfn] "m"(b199360_exitfn), [c8df60] "m"(b199360_c8df60), [c8de70] "m"(b199360_c8de70)
+      : "memory");
 }
+#else
+#error "set_file_location_volume_name: clang naked draft required"
+#endif
+
 /* --- structures.obj batch drafts (2026-07-26) --- */
 
 /* 0x620f0 */

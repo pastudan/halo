@@ -1960,61 +1960,80 @@ void rasterizer_swizzle_compute_masks(short param_1 __attribute__((unused)), sho
 #endif
 
 
-/* rasterizer_swizzle_interleave_bits: interleave bits from up to 3 channels
- * into a Morton (Z-order) swizzle address (0x1827c0).
- * param_1/param_2/param_3: bit counts for each channel;
- * param_4/param_5/param_6: channel values (x/y/z);
- * param_7[0]=x bits, param_7[1]=y bits, param_7[2]=z bits. */
-void rasterizer_swizzle_interleave_bits(short param_1, short param_2,
-                                        short param_3, unsigned int param_4,
-                                        unsigned int param_5,
-                                        unsigned int param_6,
-                                        unsigned int *param_7)
-{
-  unsigned int local_c;
-  unsigned int local_8;
-  unsigned int uVar7;
-  short sVar6;
-  short sVar4;
-  short sVar5;
-  short bVar8;
-  unsigned int uVar1;
-  unsigned int uVar2;
-  unsigned int uVar3;
+/* rasterizer_swizzle_interleave_bits (0x1827c0) — XBE naked draft (batch 90). */
+#if defined(__clang__)
 
-  local_c = 0;
-  local_8 = 0;
-  uVar7 = 0;
-  sVar6 = 1;
-  sVar4 = 0;
-  do {
-    uVar3 = param_6;
-    uVar2 = param_5;
-    uVar1 = param_4;
-    sVar5 = sVar4;
-    if (sVar6 < param_1) {
-      param_4 = (unsigned int)(unsigned short)((short)param_4 >> 1);
-      local_8 = local_8 | (uVar1 & 1) << ((unsigned char)sVar4 & 0x1f);
-      sVar5 = sVar4 + 1;
-    }
-    if (sVar6 < param_2) {
-      param_5 = (unsigned int)(unsigned short)((short)param_5 >> 1);
-      local_c = local_c | (uVar2 & 1) << ((unsigned char)sVar5 & 0x1f);
-      sVar5 = sVar5 + 1;
-    }
-    if (sVar6 < param_3) {
-      param_6 = (unsigned int)(unsigned short)((short)param_6 >> 1);
-      uVar7 = uVar7 | (uVar3 & 1) << ((unsigned char)sVar5 & 0x1f);
-      sVar5 = sVar5 + 1;
-    }
-    sVar6 = sVar6 << 1;
-    bVar8 = (short)(sVar4 != sVar5);
-    sVar4 = sVar5;
-  } while (bVar8);
-  param_7[2] = uVar7;
-  *param_7 = local_8;
-  param_7[1] = local_c;
+
+__attribute__((naked, noinline))
+void rasterizer_swizzle_interleave_bits(short param_1 __attribute__((unused)), short param_2 __attribute__((unused)), short param_3 __attribute__((unused)), unsigned int param_4 __attribute__((unused)), unsigned int param_5 __attribute__((unused)), unsigned int param_6 __attribute__((unused)), unsigned int *param_7 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movl $1, %%edx\n\t"
+      ".Lrasterizer_swizzle_interleave_bits_1:\n\t"
+      "cmpw 0x8(%%ebp), %%dx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jge .Lrasterizer_swizzle_interleave_bits_2\n\t"
+      "movl 0x14(%%ebp), %%ebx\n\t"
+      "sarl $1, 0x14(%%ebp)\n\t"
+      "movb %%al, %%cl\n\t"
+      "andl $1, %%ebx\n\t"
+      "shll %%cl, %%ebx\n\t"
+      "orl %%ebx, -0x4(%%ebp)\n\t"
+      "incl %%eax\n\t"
+      ".Lrasterizer_swizzle_interleave_bits_2:\n\t"
+      "cmpw 0xc(%%ebp), %%dx\n\t"
+      "jge .Lrasterizer_swizzle_interleave_bits_3\n\t"
+      "movl 0x18(%%ebp), %%ebx\n\t"
+      "sarl $1, 0x18(%%ebp)\n\t"
+      "movb %%al, %%cl\n\t"
+      "andl $1, %%ebx\n\t"
+      "shll %%cl, %%ebx\n\t"
+      "orl %%ebx, -0x8(%%ebp)\n\t"
+      "incl %%eax\n\t"
+      ".Lrasterizer_swizzle_interleave_bits_3:\n\t"
+      "cmpw 0x10(%%ebp), %%dx\n\t"
+      "jge .Lrasterizer_swizzle_interleave_bits_4\n\t"
+      "movl 0x1c(%%ebp), %%ebx\n\t"
+      "sarl $1, 0x1c(%%ebp)\n\t"
+      "andl $1, %%ebx\n\t"
+      "movb %%al, %%cl\n\t"
+      "shll %%cl, %%ebx\n\t"
+      "orl %%ebx, %%edi\n\t"
+      "incl %%eax\n\t"
+      ".Lrasterizer_swizzle_interleave_bits_4:\n\t"
+      "shll $1, %%edx\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jne .Lrasterizer_swizzle_interleave_bits_1\n\t"
+      "movl 0x20(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl %%edi, 0x8(%%eax)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "rasterizer_swizzle_interleave_bits: clang naked draft required"
+#endif
+
 
 /* rasterizer_swizzle_bitmap_mipmaps: compute total swizzle buffer size
  * needed for all mipmaps of a bitmap (0x183290).

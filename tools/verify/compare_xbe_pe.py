@@ -1094,6 +1094,19 @@ def main() -> int:
         ("rasterizer_transparent_geometry_group_to_presorted_index", 0x1844b0, 0x184567),
         ("FUN_00191bd0", 0x191bd0, 0x191c6f),
         ("shell_update", 0x105c80, 0x105d18),
+        # gameplay wave 90 (2026-07-26) — interface/AI/net/scenario Capstone weaks
+        ("interface_draw_splitscreen_dividers", 0xdfdc0, 0xdfe97),
+        ("set_file_location_volume_name", 0x199360, 0x199413),
+        ("cluster_partition_remove_object", 0x1919a0, 0x191a41),
+        ("system_exception_name", 0x8e500, 0x8e5ca, [(0x8e5cc, 0x8e5e8)]),
+        ("hud_messaging_get_objective", 0xd4fb0, 0xd5068),
+        ("FUN_0018e500", 0x18e500, 0x18e5b7),
+        ("encounter_link_activation", 0x5a5a0, 0x5a634),
+        ("actor_move_force_stop", 0x2a860, 0x2a8ee),
+        ("rasterizer_swizzle_interleave_bits", 0x1827c0, 0x182840),
+        ("reference_list_remove", 0x1913c0, 0x19143e),
+        ("FUN_0011a5d0", 0x11a5d0, 0x11a650),
+        ("FUN_0011a650", 0x11a650, 0x11a6cf),
     ]
 
     xbe = Xbe.from_file(args.xbe)

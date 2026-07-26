@@ -99,65 +99,91 @@ void interface_draw_text(int font_index, int style, int justify, int flags,
   draw_string_set_font(tag_index, style, justify, flags, color);
 }
 
-/* Draw black divider bars between split-screen viewports.
- * Called every frame when 2-4 local players are active.
- * rect layout: {top, left, bottom, right} as int16_t[4].
- * 2 players: horizontal bar at y=239-241 across full width (640px).
- * 3 players: horizontal bar at y=239-241 top half; vertical bar at x=319-321
- *            bottom half (y=319-480).
- * 4 players: same as 3-player plus vertical bar top half (y=0-480). */
+/* interface_draw_splitscreen_dividers (0xdfdc0) — XBE naked draft (batch 90). */
+#if defined(__clang__)
+static bool (*const bdfdc0_ca8e60)(void) = game_engine_force_single_screen;
+static bool (*const bdfdc0_c930a0)(void) = cinematic_in_progress;
+static __int16 (*const bdfdc0_cba4b0)(void) = local_player_count;
+static void (*const bdfdc0_c92ec0)(int16_t *rect, int color) = draw_quad;
+static void (*const bdfdc0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bdfdc0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void interface_draw_splitscreen_dividers(void)
 {
-  bool forced_single;
-  bool cinematic;
-  __int16 player_count;
-  int16_t rect[4]; /* {top, left, bottom, right} */
-
-  forced_single = game_engine_force_single_screen();
-  if (forced_single) {
-    return;
-  }
-  cinematic = cinematic_in_progress();
-  if (cinematic) {
-    return;
-  }
-  player_count = local_player_count();
-  if (player_count <= 1) {
-    return;
-  }
-
-  /* 2-player: thin horizontal bar at y=239-241 across full width */
-  rect[0] = 0xef; /* top    = 239 */
-  rect[1] = 0; /* left   = 0   */
-  rect[2] = 0xf1; /* bottom = 241 */
-  rect[3] = 0x280; /* right  = 640 */
-  draw_quad(rect, (int)0xff000000);
-
-  if (player_count <= 2) {
-    return;
-  }
-
-  /* 3/4-player: vertical right side of divider (bottom half) */
-  rect[3] = 0x141; /* right  = 321 */
-  rect[2] = 0x1e0; /* bottom = 480 */
-  rect[1] = 0x13f; /* left   = 319 */
-
-  if (player_count == 3) {
-    /* 3-player: vertical bar at x=319-321, y=240-480 */
-    rect[0] = 0xf0; /* top = 240 */
-    draw_quad(rect, (int)0xff000000);
-    return;
-  }
-
-  /* 4-player: vertical bar at x=319-321, y=0-480 */
-  rect[0] = 0; /* top = 0 */
-  if (player_count != 4) {
-    display_assert("window_count==4",
-                   "c:\\halo\\SOURCE\\interface\\interface.c", 0x374, 1);
-    system_exit(-1);
-  }
-  draw_quad(rect, (int)0xff000000);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "call *%[ca8e60]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Linterface_draw_splitscreen_dividers_4\n\t"
+      "call *%[c930a0]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Linterface_draw_splitscreen_dividers_4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cba4b0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "cmpw $1, %%si\n\t"
+      "jle .Linterface_draw_splitscreen_dividers_3\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl $0xff000000\n\t"
+      "pushl %%eax\n\t"
+      "movw $0xef, -0x8(%%ebp)\n\t"
+      "movw $0, -0x6(%%ebp)\n\t"
+      "movw $0xf1, -0x4(%%ebp)\n\t"
+      "movw $0x280, -0x2(%%ebp)\n\t"
+      "call *%[c92ec0]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, %%si\n\t"
+      "jle .Linterface_draw_splitscreen_dividers_3\n\t"
+      "cmpw $3, %%si\n\t"
+      "movw $0x141, -0x2(%%ebp)\n\t"
+      "movw $0x1e0, -0x4(%%ebp)\n\t"
+      "movw $0x13f, -0x6(%%ebp)\n\t"
+      "jne .Linterface_draw_splitscreen_dividers_1\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl $0xff000000\n\t"
+      "pushl %%ecx\n\t"
+      "movw $0xf0, -0x8(%%ebp)\n\t"
+      "call *%[c92ec0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Linterface_draw_splitscreen_dividers_1:\n\t"
+      "cmpw $4, %%si\n\t"
+      "movw $0, -0x8(%%ebp)\n\t"
+      "je .Linterface_draw_splitscreen_dividers_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x374\n\t"
+      "pushl $0x2824e0\n\t"
+      "pushl $0x2825d0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Linterface_draw_splitscreen_dividers_2:\n\t"
+      "leal -0x8(%%ebp), %%edx\n\t"
+      "pushl $0xff000000\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c92ec0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Linterface_draw_splitscreen_dividers_3:\n\t"
+      "popl %%esi\n\t"
+      ".Linterface_draw_splitscreen_dividers_4:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ca8e60] "m"(bdfdc0_ca8e60), [c930a0] "m"(bdfdc0_c930a0), [cba4b0] "m"(bdfdc0_cba4b0), [c92ec0] "m"(bdfdc0_c92ec0), [assert] "m"(bdfdc0_assert), [exitfn] "m"(bdfdc0_exitfn)
+      : "memory");
 }
+#else
+#error "interface_draw_splitscreen_dividers: clang naked draft required"
+#endif
+
 
 /* Initialize interface for a new map: set up HUD elements and load the
  * first interface globals tag block entry for widget rendering. */

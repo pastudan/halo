@@ -706,39 +706,88 @@ void hud_set_state_text(short param_1, wchar_t *param_2)
   *(short *)(iVar1 + 0x42e) = 0;
 }
 
-/* hud_messaging_get_objective (0xd4fb0)
- * Get the objective text string from the HMT tag. */
+/* hud_messaging_get_objective (0xd4fb0) — XBE naked draft (batch 90). */
+#if defined(__clang__)
+static scenario_t * (*const bd4fb0_c18e380)(void) = global_scenario_get;
+static void *(*const bd4fb0_tag)(int, int) = tag_get;
+static void *(*const bd4fb0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const bd4fb0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bd4fb0_exitfn)(int) = system_exit;
+static void * (*const bd4fb0_c19b1a0)(void *tag_data, int offset, int size) = tag_data_get_pointer;
+
+__attribute__((naked, noinline))
 int hud_messaging_get_objective(void)
 {
-  int result;
-  int scenario;
-  int hmt;
-  int msg;
-  char *element;
-
-  result = 0;
-  if (*(int *)(*(int *)0x46bd18 + 0x1190) != 0) {
-    scenario = (int)global_scenario_get();
-    hmt = (int)tag_get(0x686d7420, *(int *)(scenario + 0x5a0));
-    msg = *(int *)(*(int *)0x46bd18 + 0x1190);
-    element = (char *)tag_block_get_element((void *)(hmt + 0x14),
-                                            *(unsigned short *)(msg + 0x22), 2);
-    if (*(char *)(msg + 0x24) != 1) {
-      display_assert("message->element_count==1",
-                     "c:\\halo\\SOURCE\\interface\\hud_messaging.c", 0x2a1, 1);
-      system_exit(-1);
-    }
-    if (*element != '\0') {
-      display_assert("element->type==_hud_message_type_text",
-                     "c:\\halo\\SOURCE\\interface\\hud_messaging.c", 0x2a2, 1);
-      system_exit(-1);
-    }
-    result = (int)tag_data_get_pointer(
-      (void *)hmt, (int)((unsigned int)*(unsigned short *)(msg + 0x20) << 1),
-      (int)((unsigned int)(unsigned char)element[1] << 1));
-  }
-  return result;
+  __asm__ volatile(
+      "movl 0x46bd18, %%ecx\n\t"
+      "movl 0x1190(%%ecx), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testl %%edx, %%edx\n\t"
+      "je .Lhud_messaging_get_objective_3\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e380]\n\t"
+      "movl 0x5a0(%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x686d7420\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x46bd18, %%eax\n\t"
+      "movl 0x1190(%%eax), %%esi\n\t"
+      "movzwl 0x22(%%esi), %%ecx\n\t"
+      "pushl $2\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x14(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movb 0x24(%%esi), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpb $1, %%al\n\t"
+      "je .Lhud_messaging_get_objective_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2a1\n\t"
+      "pushl $0x281b48\n\t"
+      "pushl $0x281b9c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhud_messaging_get_objective_1:\n\t"
+      "cmpb $0, (%%ebx)\n\t"
+      "je .Lhud_messaging_get_objective_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2a2\n\t"
+      "pushl $0x281b48\n\t"
+      "pushl $0x281b74\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhud_messaging_get_objective_2:\n\t"
+      "movzbl 0x1(%%ebx), %%eax\n\t"
+      "movzwl 0x20(%%esi), %%ecx\n\t"
+      "shll $1, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "shll $1, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c19b1a0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lhud_messaging_get_objective_3:\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(bd4fb0_c18e380), [tag] "m"(bd4fb0_tag), [elem] "m"(bd4fb0_elem), [assert] "m"(bd4fb0_assert), [exitfn] "m"(bd4fb0_exitfn), [c19b1a0] "m"(bd4fb0_c19b1a0)
+      : "memory");
 }
+#else
+#error "hud_messaging_get_objective: clang naked draft required"
+#endif
+
 
 /* hud_set_state_message (0xd4d90)
  * Set a HUD message element reference for a player. */

@@ -125,50 +125,105 @@ void FUN_0008e480(uint32_t *output)
   output[1] = status[2];
 }
 
-const char *system_exception_name(uint32_t code /* @<ecx> */)
+/* system_exception_name (0x8e500) — XBE naked draft (batch 90). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+const char * system_exception_name(uint32_t code __attribute__((unused)))
 {
-  if (code < 0xc0000090) {
-    if (code == 0xc000008f)
-      return "EXCEPTION_FLT_INEXACT_RESULT";
-    if (code < 0xc0000026) {
-      if (code == 0xc0000025)
-        return "EXCEPTION_NONCONTINUABLE_EXCEPTION";
-      if (code < 0x80000005) {
-        if (code == 0x80000004)
-          return "EXCEPTION_SINGLE_STEP";
-        if (code == 0x80000002)
-          return "EXCEPTION_DATATYPE_MISALIGNMENT";
-        if (code == 0x80000003)
-          return "EXCEPTION_BREAKPOINT";
-      } else {
-        if (code == 0xc0000005)
-          return "EXCEPTION_ACCESS_VIOLATION";
-      }
-    } else {
-      if (code == 0xc000008c)
-        return "EXCEPTION_ARRAY_BOUNDS_EXCEEDED";
-      if (code == 0xc000008d)
-        return "EXCEPTION_FLT_DENORMAL_OPERAND";
-      if (code == 0xc000008e)
-        return "EXCEPTION_FLT_DIVIDE_BY_ZERO";
-    }
-  } else {
-    switch (code) {
-    case 0xc0000090:
-      return "EXCEPTION_FLT_INVALID_OPERATION";
-    case 0xc0000091:
-      return "EXCEPTION_FLT_OVERFLOW";
-    case 0xc0000092:
-      return "EXCEPTION_FLT_STACK_CHECK";
-    case 0xc0000093:
-      return "EXCEPTION_FLT_UNDERFLOW";
-    case 0xc0000094:
-      return "EXCEPTION_INT_DIVIDE_BY_ZERO";
-    case 0xc0000095:
-      return "EXCEPTION_INT_OVERFLOW";
-    case 0xc0000096:
-      return "EXCEPTION_PRIV_INSTRUCTION";
-    }
-  }
-  return NULL;
+  __asm__ volatile(
+      "xorl %%eax, %%eax\n\t"
+      "cmpl $0xc000008f, %%ecx\n\t"
+      "ja .Lsystem_exception_name_9\n\t"
+      "je .Lsystem_exception_name_8\n\t"
+      "cmpl $0xc0000025, %%ecx\n\t"
+      "ja .Lsystem_exception_name_5\n\t"
+      "je .Lsystem_exception_name_4\n\t"
+      "cmpl $0x80000004, %%ecx\n\t"
+      "ja .Lsystem_exception_name_3\n\t"
+      "je .Lsystem_exception_name_2\n\t"
+      "cmpl $0x80000002, %%ecx\n\t"
+      "je .Lsystem_exception_name_1\n\t"
+      "cmpl $0x80000003, %%ecx\n\t"
+      "jne .Lsystem_exception_name_17\n\t"
+      "movl $0x267c40, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_1:\n\t"
+      "movl $0x267c20, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_2:\n\t"
+      "movl $0x267c08, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_3:\n\t"
+      "cmpl $0xc0000005, %%ecx\n\t"
+      "jne .Lsystem_exception_name_17\n\t"
+      "movl $0x267bec, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_4:\n\t"
+      "movl $0x267bc8, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_5:\n\t"
+      "cmpl $0xc000008c, %%ecx\n\t"
+      "je .Lsystem_exception_name_7\n\t"
+      "cmpl $0xc000008d, %%ecx\n\t"
+      "je .Lsystem_exception_name_6\n\t"
+      "cmpl $0xc000008e, %%ecx\n\t"
+      "jne .Lsystem_exception_name_17\n\t"
+      "movl $0x267ba8, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_6:\n\t"
+      "movl $0x267b88, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_7:\n\t"
+      "movl $0x267b68, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_8:\n\t"
+      "movl $0x267b48, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_9:\n\t"
+      "addl $0x3fffff70, %%ecx\n\t"
+      "cmpl $6, %%ecx\n\t"
+      "ja .Lsystem_exception_name_17\n\t"
+      "jmp *.Lsystem_exception_name_jt(,%%ecx,4)\n\t"
+      ".Lsystem_exception_name_10:\n\t"
+      "movl $0x267b28, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_11:\n\t"
+      "movl $0x267b10, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_12:\n\t"
+      "movl $0x267af4, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_13:\n\t"
+      "movl $0x267adc, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_14:\n\t"
+      "movl $0x267abc, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_15:\n\t"
+      "movl $0x267aa4, %%eax\n\t"
+      "ret\n\t"
+      ".Lsystem_exception_name_16:\n\t"
+      "movl $0x267a88, %%eax\n\t"
+      ".Lsystem_exception_name_17:\n\t"
+      "ret\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lsystem_exception_name_jt:\n\t"
+      ".long .Lsystem_exception_name_10\n\t"
+      ".long .Lsystem_exception_name_11\n\t"
+      ".long .Lsystem_exception_name_12\n\t"
+      ".long .Lsystem_exception_name_13\n\t"
+      ".long .Lsystem_exception_name_14\n\t"
+      ".long .Lsystem_exception_name_15\n\t"
+      ".long .Lsystem_exception_name_16\n\t"
+      ".text\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "system_exception_name: clang naked draft required"
+#endif
+

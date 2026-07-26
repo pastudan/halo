@@ -3003,52 +3003,87 @@ char FUN_0005a4e0(int encounter_index /* @<eax> */)
   return *(char *)(encounter + 0xd);
 }
 
-/* 0x5a5a0 — encounter_link_activation.
- * Links two encounters by adding link_encounter_index to the encounter's
- * link array (up to 3 entries at encounter+0x22, count at encounter+0x20).
- * Returns 1 if the link already exists or was successfully added.
- * Returns 0 if the link array is full (3 entries).
- *
- * Confirmed: datum_get(encounter_data, encounter_handle) at 0x5a5b1.
- * Confirmed: global_scenario_get()->ai_encounters.count at +0x42c.
- * Confirmed: display_assert + system_exit(-1) at 0x5a5e9/0x5a5f0.
- * Confirmed: link count at encounter+0x20, link array at encounter+0x22.
- * Confirmed: max 3 links (CMP CX,3 at 0x5a614).
- * Confirmed: return AL=1 at 0x5a628, AL=BL(0) at 0x5a62f.
- */
-char encounter_link_activation(int encounter_handle, short link_encounter_index)
+/* encounter_link_activation (0x5a5a0) — XBE naked draft (batch 90). */
+#if defined(__clang__)
+static void *(*const b5a5a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static scenario_t * (*const b5a5a0_c18e380)(void) = global_scenario_get;
+static void (*const b5a5a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b5a5a0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+char encounter_link_activation(int encounter_handle __attribute__((unused)), short link_encounter_index __attribute__((unused)))
 {
-  char *encounter;
-  short count;
-  short i;
-
-  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
-
-  if (link_encounter_index < 0 ||
-      link_encounter_index >= *(int *)((char *)global_scenario_get() + 0x42c)) {
-    display_assert("(link_encounter_index >= 0) && (link_encounter_index < "
-                   "global_scenario_get()->ai_encounters.count)",
-                   "c:\\halo\\SOURCE\\ai\\encounters.c", 0x77c, 1);
-    system_exit(-1);
-  }
-
-  count = *(short *)(encounter + 0x20);
-  i = 0;
-  if (i < count) {
-    do {
-      if (*(short *)(encounter + 0x22 + i * 2) == link_encounter_index)
-        return 1;
-      i++;
-    } while (i < *(short *)(encounter + 0x20));
-  }
-
-  if (count >= 3)
-    return 0;
-
-  *(short *)(encounter + 0x22 + count * 2) = link_encounter_index;
-  *(short *)(encounter + 0x20) = *(short *)(encounter + 0x20) + 1;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x5ab270, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movw 0xc(%%ebp), %%di\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testw %%di, %%di\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jl .Lencounter_link_activation_1\n\t"
+      "call *%[c18e380]\n\t"
+      "movl 0x42c(%%eax), %%ecx\n\t"
+      "movswl %%di, %%edx\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "jl .Lencounter_link_activation_2\n\t"
+      ".Lencounter_link_activation_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x77c\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x25d6c8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lencounter_link_activation_2:\n\t"
+      "movw 0x20(%%esi), %%cx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jle .Lencounter_link_activation_4\n\t"
+      ".Lencounter_link_activation_3:\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "cmpw %%di, 0x22(%%esi,%%edx,2)\n\t"
+      "je .Lencounter_link_activation_5\n\t"
+      "incl %%eax\n\t"
+      "cmpw 0x20(%%esi), %%ax\n\t"
+      "jl .Lencounter_link_activation_3\n\t"
+      ".Lencounter_link_activation_4:\n\t"
+      "cmpw $3, %%cx\n\t"
+      "jge .Lencounter_link_activation_6\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "movw %%di, 0x22(%%esi,%%eax,2)\n\t"
+      "incw 0x20(%%esi)\n\t"
+      ".Lencounter_link_activation_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lencounter_link_activation_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b5a5a0_dget), [c18e380] "m"(b5a5a0_c18e380), [assert] "m"(b5a5a0_assert), [exitfn] "m"(b5a5a0_exitfn)
+      : "memory");
 }
+#else
+#error "encounter_link_activation: clang naked draft required"
+#endif
+
 
 /* 0x5a640 — encounter_deactivate.
  * Deactivates an encounter (encounter_handle via @<eax>).

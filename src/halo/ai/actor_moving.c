@@ -340,34 +340,83 @@ int actor_move_animation_impulse(int actor_handle, int16_t param_2,
   return (int)result;
 }
 
-/* 0x2a860 — Clear actor destination and trigger flee movement.
- * Returns 0 if actor has a goal slot, is in a flying vehicle, or
- * actor_action_deny_transition returns true. Otherwise zeroes the swarm flag,
- * copies 12 bytes from the global pointer at 0x31fc38, calls
- * actor_unit_control_stop_animation_impulse, and returns 1. */
-int actor_move_force_stop(int actor_handle)
-{
-  char *actor;
-  char *ptr;
-  char result;
+/* actor_move_force_stop (0x2a860) — XBE naked draft (batch 90). */
+#if defined(__clang__)
+static void *(*const b2a860_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static bool (*const b2a860_c1a9ad0)(int unit_handle) = unit_is_busy;
+static char (*const b2a860_c1ca90)(int actor_handle) = actor_action_deny_transition;
+static void (*const b2a860_c3c3e0)(int actor_handle) = actor_unit_control_stop_animation_impulse;
 
-  result = 0;
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  if (*(int16_t *)(actor + 0x418) == -1) {
-    if (*(int *)(actor + 0x18) == -1 || !unit_is_busy(*(int *)(actor + 0x18))) {
-      if (!actor_action_deny_transition(actor_handle)) {
-        *(char *)(actor + 0x504) = 0;
-        ptr = (char *)*(int *)0x31fc38;
-        *(int *)(actor + 0x6e0) = *(int *)ptr;
-        *(int *)(actor + 0x6e4) = *(int *)(ptr + 4);
-        *(int *)(actor + 0x6e8) = *(int *)(ptr + 8);
-        actor_unit_control_stop_animation_impulse(actor_handle);
-        result = 1;
-      }
-    }
-  }
-  return (int)result;
+__attribute__((naked, noinline))
+int actor_move_force_stop(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[dget]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $-1, 0x418(%%eax)\n\t"
+      "jne .Lactor_move_force_stop_2\n\t"
+      "movl 0x18(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_move_force_stop_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1a9ad0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_move_force_stop_2\n\t"
+      ".Lactor_move_force_stop_1:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1ca90]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_move_force_stop_2\n\t"
+      "movb %%al, 0x504(%%edi)\n\t"
+      "movl 0x31fc38, %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "addl $0x6e0, %%edi\n\t"
+      "movl %%eax, (%%edi)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%edi)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%edx, 0x8(%%edi)\n\t"
+      "call *%[c3c3e0]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_move_force_stop_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2a860_dget), [c1a9ad0] "m"(b2a860_c1a9ad0), [c1ca90] "m"(b2a860_c1ca90), [c3c3e0] "m"(b2a860_c3c3e0)
+      : "memory");
 }
+#else
+#error "actor_move_force_stop: clang naked draft required"
+#endif
+
 
 /* actor_move_try_evasion_vector (0x2a8f0) — XBE naked draft (batch 81). */
 #if defined(__clang__)

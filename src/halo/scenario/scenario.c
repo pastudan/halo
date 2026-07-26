@@ -2530,57 +2530,86 @@ void scenario_location_reset(int *location)
   *(int16_t *)((char *)location + 6) = NONE;
 }
 
-/* FUN_0018e500 (0x18e500) — look up a material type entry from game globals.
- *
- * Given a material_type index (int16_t), validate it and return a pointer to
- * the corresponding element from the game_globals material_types tag block at
- * offset 0x194. Each element is 0x374 bytes.
- *
- * If game_globals is not loaded, asserts. If material_type is out of range
- * (not NONE and not in [0, NUMBER_OF_MATERIAL_TYPES-1] where
- * NUMBER_OF_MATERIAL_TYPES==33), asserts. If material_type is NONE (-1) or the
- * index is >= the block count, returns a pointer to a static fallback buffer at
- * 0x4d8700, initialising it with a -1 sentinel on the first call.
- *
- * Confirmed: assert "global_game_globals" at line 0xdd (221).
- * Confirmed: assert string "material_type==NONE || ..." at line 0x11e (286).
- * Confirmed: block at game_globals+0x194, element size 0x374.
- * Confirmed: fallback initialises dword at 0x4d8a70 to -1, byte 0x4d8a74 to 1.
- * Confirmed: returns &DAT_004d8700 when index is NONE or out of range.
- */
-void *FUN_0018e500(int16_t material_type)
+/* FUN_0018e500 (0x18e500) — XBE naked draft (batch 90). */
+#if defined(__clang__)
+static void (*const b18e500_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b18e500_exitfn)(int) = system_exit;
+static void *(*const b18e500_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+void * FUN_0018e500(int16_t material_type __attribute__((unused)))
 {
-  char *game_globals;
-  int index;
-
-  if (!*(void **)0x5064d4) {
-    display_assert("global_game_globals",
-                   "c:\\halo\\SOURCE\\scenario\\scenario.c", 0xdd, 1);
-    system_exit(-1);
-  }
-  game_globals = *(char **)0x5064d4;
-
-  if (material_type != (int16_t)NONE &&
-      (material_type < 0 || material_type >= 33)) {
-    display_assert("material_type==NONE || (material_type>=0 && "
-                   "material_type<NUMBER_OF_MATERIAL_TYPES)",
-                   "c:\\halo\\SOURCE\\scenario\\scenario.c", 0x11e, 1);
-    system_exit(-1);
-  }
-
-  if (material_type >= 0) {
-    index = (int)material_type;
-    if (index < *(int *)(game_globals + 0x194)) {
-      return tag_block_get_element(game_globals + 0x194, index, 0x374);
-    }
-  }
-
-  if (!*(uint8_t *)0x4d8a74) {
-    *(int *)0x4d8a70 = NONE;
-    *(uint8_t *)0x4d8a74 = 1;
-  }
-  return (void *)0x4d8700;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5064d4, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0018e500_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xdd\n\t"
+      "pushl $0x2b2038\n\t"
+      "pushl $0x2b20ac\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0018e500_1:\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "cmpw $-1, %%si\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x5064d4, %%edi\n\t"
+      "je .LFUN_0018e500_3\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_0018e500_2\n\t"
+      "cmpw $0x21, %%si\n\t"
+      "jl .LFUN_0018e500_3\n\t"
+      ".LFUN_0018e500_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x11e\n\t"
+      "pushl $0x2b2038\n\t"
+      "pushl $0x2b20c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0018e500_3:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_0018e500_4\n\t"
+      "movl 0x194(%%edi), %%edx\n\t"
+      "leal 0x194(%%edi), %%eax\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jge .LFUN_0018e500_4\n\t"
+      "pushl $0x374\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0018e500_4:\n\t"
+      "movb 0x4d8a74, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0018e500_5\n\t"
+      "movl $0xffffffff, 0x4d8a70\n\t"
+      "movb $1, 0x4d8a74\n\t"
+      ".LFUN_0018e500_5:\n\t"
+      "popl %%edi\n\t"
+      "movl $0x4d8700, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b18e500_assert), [exitfn] "m"(b18e500_exitfn), [elem] "m"(b18e500_elem)
+      : "memory");
 }
+#else
+#error "FUN_0018e500: clang naked draft required"
+#endif
+
 
 /* 0x18e5c0 — does the BSP location's cluster have a "stop" background-sound
  * (sound environment) flag set? Looks up the cluster element
