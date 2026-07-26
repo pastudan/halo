@@ -152,13 +152,13 @@ void player_ui_set_single_player_local_player_controller(
 }
 
 /* player_ui_get_single_player_local_player_from_controller (0xe0810) — readable C lift. */
-int player_ui_get_single_player_local_player_from_controller(short local_player_index)
+short player_ui_get_single_player_local_player_from_controller(short controller)
 {
   short i;
   for (i = 0; i < 4; i++) {
-    if (*(short *)(0x46bfc4 + (int)i * 2) == local_player_index) return i;
+    if (*(short *)(0x46bfc4 + (int)i * 2) == controller) return i;
   }
-  return -1;
+  return (short)-1;
 }
 
 /* player_ui_local_player_joined_multiplayer_game (0xe0840) — readable C lift. */
