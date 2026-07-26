@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* motion_sensor_initialize (0xdb0f0) — XBE naked draft (batch 99). */
 #if defined(__clang__)
 static void * (*const bdb0f0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
@@ -4137,57 +4138,20 @@ void FUN_000dbcb0(void)
 #endif
 
 
-/* FUN_000dbfb0 (0xdbfb0) — XBE naked draft (batch 168). */
-#if defined(__clang__)
-static void (*const bdbfb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bdbfb0_exitfn)(int) = system_exit;
-static void (*const bdbfb0_cdb950)(void) = update_motion_sensor;
-static void (*const bdbfb0_cdbcb0)(void) = FUN_000dbcb0;
-
-__attribute__((naked, noinline))
-void FUN_000dbfb0(int param_1, int param_2, int param_3)
+/* FUN_000dbfb0 (0xdbfb0) — readable C lift. */
+void FUN_000dbfb0(int16_t local_player_index, int param_2, void *pt)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_000dbfb0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1dc\n\t"
-      "pushl $0x282094\n\t"
-      "pushl $0x282178\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000dbfb0_1:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .LFUN_000dbfb0_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cdb950]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edi, %%eax\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[cdbcb0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000dbfb0_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bdbfb0_assert), [exitfn] "m"(bdbfb0_exitfn), [cdb950] "m"(bdbfb0_cdb950), [cdbcb0] "m"(bdbfb0_cdbcb0)
-      : "memory");
+  extern char DAT_00282094[];
+  extern char DAT_00282178[];
+  if (!pt) {
+    display_assert(DAT_00282178, DAT_00282094, 0x1dc, 1);
+    system_exit(-1);
+  }
+  if ((int16_t)local_player_index != (int16_t)-1) {
+    ((void (*)(int))update_motion_sensor)(local_player_index);
+    ((void (*)(int, int, void *))FUN_000dbcb0)(local_player_index, param_2, pt);
+  }
 }
-#else
-#error "FUN_000dbfb0: clang naked draft required"
-#endif
-
 
 /* FUN_000dc000 (0xdc000) — XBE naked draft (batch 165). */
 #if defined(__clang__)
