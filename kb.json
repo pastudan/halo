@@ -18258,7 +18258,7 @@
         {
           "addr": "0xe0720",
           "decl": "void player_ui_reset_single_player_local_player_controllers(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0740",
