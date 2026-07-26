@@ -69,11 +69,13 @@ void FUN_000a3ea0(void)
 }
 
 /* 0xa4000 */
-void FUN_000a4000(void)
+void FUN_000a4000(float *dst, float *src, float scale)
 {
-  FUN_001daf7e();
-  FUN_001daf7e();
-  FUN_001daf7e();
+  int i;
+  for (i = 0; i < 3; i++) {
+    float base = (src[i] < 0.0f) ? scale : 0.0f;
+    dst[i] = base + (src[i] < 0.0f ? 0.0f : src[i]);
+  }
 }
 
 /* 0xa40a0 */
@@ -192,7 +194,7 @@ void FUN_000a4310(void)
 /* 0xa45d0 */
 void FUN_000a45d0(void)
 {
-  FUN_000a4000();
+  FUN_000a4000((float *)0, (float *)0, 0.0f);
 }
 
 /* 0xa4610 */
@@ -224,7 +226,7 @@ void FUN_000a4610(void)
   tag_get(0x70706879, 0);
   FUN_00154a50(0, 0, (void *)0, 0, (float *)0, (float *)0, (float *)0, (float *)0, (void *)0, 0.0f, 0.0f);
   random_seed_get_direction3d((void *)(uintptr_t)eax, (float *)(uintptr_t)edx);
-  FUN_000a4000();
+  FUN_000a4000((float *)0, (float *)0, 0.0f);
 
   (void)eax;
   (void)ecx;
@@ -234,19 +236,26 @@ void FUN_000a4610(void)
 }
 
 /* 0xa48c0 */
-void FUN_000a48c0(void)
+void FUN_000a48c0(float *out, float scale)
 {
-  /* relift: no calls detected — manual review */
+  float *cam = (float *)0x50655c;
+  float *eye = (float *)0x506550;
+  *(unsigned int *)((char *)out + 0x40) = *(unsigned int *)0x50655c;
+  out[0] = cam[0] * scale + eye[0];
+  out[1] = cam[1] * scale + eye[1];
+  out[2] = cam[2] * scale + eye[2];
 }
 
 /* 0xa4a00 */
-void FUN_000a4a00(void)
+int FUN_000a4a00(void *out_buf, int particle_handle)
 {
   int eax = 0;
   int ebx = 0;
   int ecx = 0;
   int esi = 0;
 
+  (void)out_buf;
+  (void)particle_handle;
   scenario_get();
   /* test eax, eax -> jle 0xa4a9e */
   tag_block_get_element((void *)(uintptr_t)esi, 0, 32);
@@ -258,6 +267,7 @@ void FUN_000a4a00(void)
   (void)ebx;
   (void)ecx;
   (void)esi;
+  return 0;
 }
 
 /* 0xa4ab0 */
@@ -297,86 +307,106 @@ void FUN_000a4ab0(void)
   (void)edi;
 }
 
-/* 0xa4be0 */
-void FUN_000a4be0(void)
+/* 0xa4be0 — validate weather particle particles for a weather slot. */
+void FUN_000a4be0(int16_t weather_index)
 {
-  int eax = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *weather;
+  char *rain;
+  int type_i;
+  int type_count;
+  char *type_state;
+  char *type_def;
 
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xa4bf6 */
-  /* cmp (int16_t)esi, 4 -> jl 0xa4c13 */
-  display_assert((char *)0x00266fc0, (char *)0x0026af50, 91, 0);
-  system_exit(0);
-  tag_get('niar', 0);
-  tag_get(0x7261696e, 0);
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xa4c7a */
-  /* relift: cmp edi, dword ptr [eax + 0x24] -> jl 0xa4c97 */
-  display_assert((char *)0x0026af84, (char *)0x0026af50, 102, 0);
-  system_exit(0);
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
-  tag_get('mtib', 0);
-  /* test (char)eax, 0x41 -> jne 0xa4d11 */
-  /* test (char)eax, 0x41 -> jne 0xa4d4d */
-  FUN_000a4ab0();
-  /* cmp edi, -1 -> je 0xa4dfa */
-  datum_get((void *)(uintptr_t)edx, 0);
-  tag_block_get_element((void *)0, 0, 0);
-  FUN_001daf7e();
-  FUN_000a4610();
-  /* cmp edi, -1 -> jne 0xa4d85 */
-
-  (void)eax;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  if (weather_index < 0 || weather_index >= 4) {
+    display_assert((char *)0x266fc0, (char *)0x26af50, 91, 1);
+    system_exit(-1);
+  }
+  weather = (char *)(0x4557f4 + (int)weather_index * 0x9c);
+  rain = (char *)tag_get(0x7261696e, *(int *)weather);
+  type_count = *(int *)(rain + 0x24);
+  for (type_i = 0; type_i < type_count; type_i++) {
+    type_state = weather + 0x1c + type_i * 0x10;
+    type_def = (char *)tag_block_get_element(rain + 0x24, type_i, 0x25c);
+    if (*(int *)(type_def + 0x54) != -1)
+      (void)tag_get(0x6269746d, *(int *)(type_def + 0x54));
+    if (*(int16_t *)(type_state + 8) != 0)
+      FUN_000a4ab0();
+  }
 }
 
 /* 0xa4e20 */
-void weather_particle_system_render(void)
+void weather_particle_system_render(int16_t weather_index)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *weather;
+  char *rain;
+  int type_i;
+  int type_count;
+  char *type_state;
+  char *type_def;
+  int particle_handle;
+  int nearest;
+  float local_offset[3];
+  float extents[16];
+  float cube[6];
+  char build[0x100];
+  int i;
 
-  /* cmp (int16_t)esi, 4 -> jl 0xa4e56 */
-  display_assert((char *)0x00266fc0, (char *)0x0026af50, 91, 0);
-  system_exit(0);
-  tag_get('niar', 0);
-  scenario_get();
-  FUN_000a4be0();
-  tag_block_get_element((void *)(uintptr_t)edi, 0, 0);
-  FUN_000a4a00();
-  FUN_000a48c0();
-  FUN_000a4000();
-  /* cmp (int16_t)eax, 1 -> jne 0xa5004 */
-  /* cmp (int16_t)esi, (int16_t)eax -> jne 0xa5004 */
-  /* cmp (int16_t)ecx, (int16_t)eax -> je 0xa50ef */
-  render_frustum_cube_visible((void *)0, 0, 0);
-  /* test (int16_t)eax, (int16_t)eax -> je 0xa50ec */
-  /* cmp (int16_t)ebx, 0x1a -> jl 0xa5089 */
-  display_assert((char *)0x0026b050, (char *)0x0026af50, 673, 0);
-  system_exit(0);
-  FUN_0018d2c0((void *)(uintptr_t)edx, ecx, edx, 0, 0);
-  /* cmp eax, -1 -> je 0xa5471 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* relift: cmp word ptr [ebp - 0xc], (int16_t)esi -> jle 0xa5465 */
-  /* test (char)eax, (char)eax -> je 0xa51f3 */
-  /* cmp (int16_t)edx, 5 -> jl 0xa51b8 */
-  /* test (char)eax, (char)eax -> jne 0xa51ff */
-  /* relift: cmp (int16_t)esi, word ptr [ebp - 0xc] -> jl 0xa51b4 */
-  /* test ecx, ecx -> je 0xa5465 */
+  if (weather_index < 0 || weather_index >= 4) {
+    display_assert((char *)0x266fc0, (char *)0x26af50, 0x5b, 1);
+    system_exit(-1);
+  }
+  weather = (char *)(0x4557f4 + (int)weather_index * 0x9c);
+  rain = (char *)tag_get(0x7261696e, *(int *)weather); /* 'rain' */
+  (void)scenario_get();
+  FUN_000a4be0(weather_index);
+  type_count = *(int *)(rain + 0x24);
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  for (type_i = 0; type_i < type_count; type_i++) {
+    type_def = (char *)tag_block_get_element(rain + 0x24, type_i, 0x25c);
+    type_state = weather + 0x1c + type_i * 0x10;
+    if (*(int16_t *)(type_state + 8) == 0)
+      continue;
+
+    particle_handle = *(int *)(type_state + 4);
+    nearest = FUN_000a4a00(extents, particle_handle);
+    FUN_000a48c0(extents, *(float *)(type_state + 4));
+    FUN_000a4000(local_offset, (float *)0x506550, *(float *)(type_state + 4));
+    local_offset[0] = *(float *)0x506550 - local_offset[0];
+    local_offset[1] = *(float *)0x506554 - local_offset[1];
+    local_offset[2] = *(float *)0x506558 - local_offset[2];
+
+    for (i = 0; i < 5; i++) {
+      float *row = (float *)(extents + 0x10 + i * 0x10);
+      cube[i] = local_offset[2] * row[2] + local_offset[0] * row[0] +
+                local_offset[1] * row[1];
+    }
+    cube[0] = local_offset[0];
+    cube[1] = local_offset[1] + *(float *)(type_state + 4);
+    cube[2] = local_offset[2];
+    cube[3] = local_offset[0] + *(float *)(type_state + 4);
+    cube[4] = local_offset[1];
+    cube[5] = local_offset[2] + *(float *)(type_state + 4);
+
+    if (render_frustum_cube_visible((void *)0x5065a4, (int)(uintptr_t)cube, 1) ==
+        0)
+      continue;
+    if (nearest >= 0x1a) {
+      display_assert((char *)0x26b050, (char *)0x26af50, 0x2a1, 1);
+      system_exit(-1);
+    }
+
+    FUN_0018d2c0((uint32_t *)build, 2, *(unsigned int *)(type_def + 0x54),
+                 (int)(uintptr_t)type_def, 0);
+    if (*(int *)type_def != -1) {
+      datum_get(*(data_t **)0x5aa8a4, particle_handle);
+      (void)tag_block_get_element(type_def + 0x68, 0, 0x40);
+      (void)tag_block_get_element(type_def + 0x68, 0, 0x40);
+      FUN_001d9068();
+      FUN_0018d6e0(build, 1, 0, 0, local_offset, cube, 0.0f, 1.0f, local_offset,
+                   1.0f, 0);
+      FUN_0018d360(build);
+    }
+  }
 }
+
+

@@ -2489,7 +2489,7 @@
         },
         {
           "addr": "0x1bcd0",
-          "decl": "void action_vehicle_setup_impromptu(void);",
+          "decl": "char action_vehicle_setup_impromptu(int actor_handle, int vehicle_handle, float param_3, float param_4, void *out_state);",
           "ported": false
         },
         {
@@ -2752,7 +2752,7 @@
         },
         {
           "addr": "0x1dfa0",
-          "decl": "void actor_action_handle_vehicle_entry(int actor_handle);",
+          "decl": "char actor_action_handle_vehicle_entry(int actor_handle);",
           "ported": false
         },
         {
@@ -17478,7 +17478,7 @@
         },
         {
           "addr": "0xa0800",
-          "decl": "void FUN_000a0800(void);",
+          "decl": "void FUN_000a0800(int particle_system_handle);",
           "ported": false
         },
         {
@@ -19715,7 +19715,7 @@
         },
         {
           "addr": "0x1548c0",
-          "decl": "void point_physics_definition_interpolate(void);",
+          "decl": "void point_physics_definition_interpolate(float *definition_a, float *definition_b, float t, float *definition_out);",
           "ported": false
         },
         {
@@ -23835,7 +23835,7 @@
       "functions": [
         {
           "addr": "0x190240",
-          "decl": "void FUN_00190240(void);",
+          "decl": "char FUN_00190240(float *position, float *wind_out, int wind_flags, int object_handle);",
           "ported": false
         },
         {
@@ -23850,7 +23850,7 @@
         },
         {
           "addr": "0x190550",
-          "decl": "void FUN_00190550(void);",
+          "decl": "char FUN_00190550(int *collision_location, float *position, float *wind_out, int flags);",
           "ported": false
         },
         {
@@ -29701,7 +29701,7 @@
         },
         {
           "addr": "0xa4000",
-          "decl": "void FUN_000a4000(void);",
+          "decl": "void FUN_000a4000(float *dst, float *src, float scale);",
           "ported": false
         },
         {
@@ -29731,12 +29731,12 @@
         },
         {
           "addr": "0xa48c0",
-          "decl": "void FUN_000a48c0(void);",
+          "decl": "void FUN_000a48c0(float *out, float scale);",
           "ported": false
         },
         {
           "addr": "0xa4a00",
-          "decl": "void FUN_000a4a00(void);",
+          "decl": "int FUN_000a4a00(void *out_buf, int particle_handle);",
           "ported": false
         },
         {
@@ -29746,12 +29746,12 @@
         },
         {
           "addr": "0xa4be0",
-          "decl": "void FUN_000a4be0(void);",
+          "decl": "void FUN_000a4be0(int16_t weather_index);",
           "ported": false
         },
         {
           "addr": "0xa4e20",
-          "decl": "void weather_particle_system_render(void);",
+          "decl": "void weather_particle_system_render(int16_t weather_index);",
           "ported": false
         }
       ],

@@ -16,12 +16,16 @@ void numeric_countdown_timer_update(void)
 /* --- shaders.obj batch drafts (2026-07-26) --- */
 
 /* 0x190240 */
-void FUN_00190240(void)
+char FUN_00190240(float *position, float *wind_out, int wind_flags, int object_handle)
 {
   int eax = 0;
   int edx = 0;
   int esi = 0;
 
+  (void)position;
+  (void)wind_out;
+  (void)wind_flags;
+  (void)object_handle;
   /* relift: cmp (int16_t)eax, word ptr [0x5060c4] -> jge 0x190358 */
   /* relift: cmp byte ptr [esi], 0 -> je 0x19033a */
   scenario_get();
@@ -32,6 +36,8 @@ void FUN_00190240(void)
   (void)eax;
   (void)edx;
   (void)esi;
+  return 0;
+
 }
 
 /* 0x190380 */
@@ -61,7 +67,7 @@ void wind_initialize_for_new_map(void)
 }
 
 /* 0x190550 */
-void FUN_00190550(void)
+char FUN_00190550(int *collision_location, float *position, float *wind_out, int flags)
 {
   int eax = 0;
   int ecx = 0;
@@ -70,6 +76,10 @@ void FUN_00190550(void)
   int edi = 0;
   int ebp = 0;
 
+  (void)collision_location;
+  (void)position;
+  (void)wind_out;
+  (void)flags;
   scenario_get();
   FUN_0018f2d0((void *)(uintptr_t)edi, (void *)(uintptr_t)eax);
   tag_block_get_element((void *)(uintptr_t)edx, 0, 104);
@@ -82,7 +92,7 @@ void FUN_00190550(void)
   /* test (char)ecx, 1 -> je 0x190630 */
   /* relift: test byte ptr [ebp + 0x14], 8 -> jne 0x19063f */
   /* test eax, eax -> jne 0x19063f */
-  FUN_00190240();
+  FUN_00190240((float *)0, (float *)0, 0, 0);
 
   (void)eax;
   (void)ecx;
@@ -90,18 +100,19 @@ void FUN_00190550(void)
   (void)esi;
   (void)edi;
   (void)ebp;
+  return 0;
 }
 
 /* 0x190670 */
 void FUN_00190670(void)
 {
-  FUN_00190550();
+  FUN_00190550((int *)0, (float *)0, (float *)0, 0);
 }
 
 /* 0x190690 */
 void FUN_00190690(void)
 {
-  FUN_00190550();
+  FUN_00190550((int *)0, (float *)0, (float *)0, 0);
 }
 
 /* 0x1906b0 */

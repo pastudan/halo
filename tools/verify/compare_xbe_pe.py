@@ -353,6 +353,12 @@ def main() -> int:
         ("biped_limp_noodle_valid_joint_rotation", 0x19f540, 0x19fa20),
         ("FUN_0019fa20", 0x19fa20, 0x1a01d0),
         ("FUN_001a4c50", 0x1a4c50, 0x1a5300),
+        # gameplay wave 25 (2026-07-26)
+        ("FUN_00154a50", 0x154a50, 0x154fc0),
+        ("weather_particle_system_render", 0xa4e20, 0xa54b0),
+        ("FUN_000a0800", 0xa0800, 0xa0d50),
+        ("actor_action_handle_vehicle_entry", 0x1dfa0, 0x1e360),
+        ("point_physics_definition_interpolate", 0x1548c0, 0x154a20),
     ]
 
     xbe = Xbe.from_file(args.xbe)

@@ -2716,8 +2716,10 @@ void action_vehicle_perform(void)
 }
 
 /* 0x1bcd0 */
-void action_vehicle_setup_impromptu(void)
+char action_vehicle_setup_impromptu(int actor_handle, int vehicle_handle, float param_3, float param_4, void *out_state)
 {
+  (void)actor_handle; (void)vehicle_handle; (void)param_3; (void)param_4; (void)out_state;
+
   int eax = 0;
   int ebx = 0;
   int edi = 0;
@@ -2748,6 +2750,7 @@ void action_vehicle_setup_impromptu(void)
   (void)eax;
   (void)ebx;
   (void)edi;
+  return 0;
 }
 
 /* 0x1beb0 */
@@ -2875,74 +2878,161 @@ void *actor_get_pursuit_location(int actor_handle)
 }
 
 /* 0x1dfa0 */
-void actor_action_handle_vehicle_entry(int actor_handle)
+char actor_action_handle_vehicle_entry(int actor_handle)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *actor;
+  char *actor_tag;
+  int now;
+  int16_t unit_type;
+  float best_dist_sq;
+  float best_near;
+  float best_far;
+  int best_vehicle;
+  int iter_buf[4];
+  char *prop;
+  char *veh;
+  vector3_t veh_pos;
+  float dist_sq;
+  int i;
+  int count;
+  char *entries;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), actor_handle);
-  tag_get('rtca', 0);
-  game_time_get();
-  /* cmp (int16_t)ecx, 4 -> jne 0x1dfef */
-  /* relift: cmp word ptr [edi + 0xa8], 0 -> jg 0x1e351 */
-  /* cmp (int16_t)ecx, 0xb -> je 0x1e351 */
-  /* cmp ecx, -1 -> je 0x1e00f */
-  /* cmp ecx, eax -> jge 0x1e351 */
-  FUN_00064540((void *)0, actor_handle);
-  FUN_00064570((void *)0);
-  /* test esi, esi -> je 0x1e153 */
-  /* cmp (int16_t)eax, 2 -> jl 0x1e133 */
-  /* cmp (int16_t)eax, 3 -> jg 0x1e133 */
-  /* test (char)eax, (char)eax -> je 0x1e133 */
-  /* test (char)eax, (char)eax -> jne 0x1e133 */
-  /* cmp eax, -1 -> je 0x1e133 */
-  FUN_0001cb30(0, 0);
-  /* test (char)eax, (char)eax -> je 0x1e133 */
-  object_try_and_get_and_verify_type(0, 2);
-  /* test eax, eax -> je 0x1e133 */
-  /* relift: cmp edx, dword ptr [esi + 0x18] -> jne 0x1e133 */
-  object_get_world_position(0, (void *)0);
-  distance_squared3d((const float *)((char *)eax + 0x12c), (void *)0);
-  FUN_00064570((void *)0);
-  /* test esi, esi -> jne 0x1e060 */
-  /* relift: cmp dword ptr [ebp - 4], -1 -> jne 0x1e30d */
-  /* relift: cmp dword ptr [edi + 0x84], 0x3c -> jl 0x1e348 */
-  object_try_and_get_and_verify_type(0, 2);
-  /* test eax, eax -> je 0x1e2ed */
-  FUN_0001cb30(0, 0);
-  /* test (char)eax, (char)eax -> je 0x1e2ed */
-  object_get_world_position(0, (void *)0);
-  distance_squared3d((void *)0, (const float *)((char *)eax + 0x12c));
-  /* relift: cmp dword ptr [esi + 4], 0x7f7fffff -> je 0x1e20a */
-  /* test (char)eax, 0x41 -> je 0x1e2ed */
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x1e233 */
-  /* cmp (int16_t)ecx, -1 -> je 0x1e2ed */
-  /* test eax, edx -> je 0x1e2ed */
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x1e251 */
-  /* test eax, edx -> je 0x1e2ed */
-  /* test (int16_t)ebx, (int16_t)ebx -> jle 0x1e2c7 */
-  /* test (int16_t)ebx, (int16_t)ebx -> jle 0x1e2ea */
-  /* test (char)eax, (char)eax -> jne 0x1e2c7 */
-  /* cmp (int16_t)edx, (int16_t)ebx -> jl 0x1e270 */
-  /* test (char)eax, (char)eax -> je 0x1e2ea */
-  /* relift: cmp dword ptr [ebp - 4], -1 -> je 0x1e348 */
-  action_vehicle_setup_impromptu();
-  /* test (char)eax, (char)eax -> je 0x1e348 */
-  actor_action_change(actor_handle, 9, 0);
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  actor_tag = (char *)tag_get(0x61637472, *(int *)(actor + 0x58)); /* 'actr' */
+  now = game_time_get();
+  unit_type = *(int16_t *)(actor + 0x6c);
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  if (unit_type == 4 && *(int16_t *)(actor + 0xa8) > 0)
+    return 0;
+  if (unit_type == 0xb)
+    return 0;
+  if (*(int *)(actor + 0x384) != -1 &&
+      *(int *)(actor + 0x384) + 0x2d >= now)
+    return 0;
+
+  *(int *)(actor + 0x384) = now;
+  best_dist_sq = *(float *)0x7f7fffff;
+  best_near = *(float *)0x7f7fffff;
+  best_far = *(float *)0x7f7fffff;
+  best_vehicle = -1;
+
+  if ((*(unsigned int *)actor_tag & 0x1000) != 0) {
+    FUN_00064540(iter_buf, actor_handle);
+    prop = (char *)FUN_00064570(iter_buf);
+    while (prop) {
+      int16_t kind = *(int16_t *)(prop + 0x24);
+      if (kind >= 2 && kind <= 3 && prop[0x12e] != 0 && prop[0x60] == 0 &&
+          *(int *)(prop + 0x110) != -1 &&
+          FUN_0001cb30(*(int *)(prop + 0x110), actor_handle)) {
+        veh = (char *)object_try_and_get_and_verify_type(*(int *)(prop + 0x110),
+                                                        2);
+        if (veh && *(int *)(veh + 0x2d4) == *(int *)(prop + 0x18)) {
+          object_get_world_position(*(int *)(prop + 0x110), &veh_pos);
+          dist_sq = distance_squared3d((float *)(actor + 0x12c),
+                                       (float *)&veh_pos);
+          if (dist_sq < *(float *)0x253f00 && dist_sq < best_dist_sq) {
+            float r = *(float *)(prop + 0x11c);
+            best_vehicle = *(int *)(prop + 0x110);
+            best_near = 8.0f;
+            best_far = 10.0f;
+            best_dist_sq = r * r;
+          }
+        }
+      }
+      prop = (char *)FUN_00064570(iter_buf);
+    }
+    if (best_vehicle != -1)
+      goto try_enter;
+  }
+
+  if (*(int *)(actor + 0x84) < 0x3c)
+    return 0;
+
+  {
+    char *ai_globals = *(char **)0x632574;
+    count = *(int16_t *)(ai_globals + 0x3b6);
+    entries = ai_globals + 0x3b8;
+    for (i = 0; i < count; i++) {
+      char *entry = entries + i * 0x28;
+      int vehicle_handle = *(int *)entry;
+      veh = (char *)object_try_and_get_and_verify_type(vehicle_handle, 2);
+      if (!veh || !FUN_0001cb30(vehicle_handle, actor_handle))
+        continue;
+      object_get_world_position(vehicle_handle, &veh_pos);
+      dist_sq = distance_squared3d((float *)&veh_pos, (float *)(actor + 0x12c));
+      if (!(dist_sq < best_dist_sq))
+        continue;
+      if (*(unsigned int *)(entry + 4) != 0x7f7fffff) {
+        float r = *(float *)(entry + 4);
+        if (!(dist_sq <= r * r))
+          continue;
+      }
+      {
+        int16_t team_mask = *(int16_t *)(entry + 8);
+        if (team_mask > 0) {
+          int16_t team = *(int16_t *)(actor + 0x3e);
+          if (team == -1 || ((1 << team) & team_mask) == 0)
+            continue;
+        }
+      }
+      {
+        int16_t class_mask = *(int16_t *)(entry + 0xa);
+        if (class_mask > 0) {
+          unsigned char cls = (unsigned char)actor[4];
+          if (((1 << cls) & class_mask) == 0)
+            continue;
+        }
+      }
+      {
+        int16_t n = *(int16_t *)(entry + 0xc);
+        char match = 1;
+        if (n > 0) {
+          int j;
+          match = 0;
+          for (j = 0; j < n; j++) {
+            unsigned int token = *(unsigned int *)(entry + 0x10 + j * 4);
+            unsigned int actor_tok = *(unsigned int *)(actor + 0x34);
+            if (token == (unsigned int)-1)
+              continue;
+            if (((actor_tok ^ token) & 0xffff) == 0) {
+              unsigned int kind = token >> 30;
+              if (kind == 1) {
+                match = (*(int16_t *)(actor + 0x3c) ==
+                         (int16_t)((token >> 16) & 0xff));
+              } else if (kind == 2) {
+                match = (*(int16_t *)(actor + 0x3a) ==
+                         (int16_t)((token >> 16) & 0xff));
+              } else {
+                match = 1;
+              }
+              if (match)
+                break;
+            }
+          }
+        }
+        if (!match)
+          continue;
+      }
+      best_vehicle = vehicle_handle;
+      best_dist_sq = dist_sq;
+      best_near = *(float *)(entry + 4) + *(float *)0x254644;
+      best_far = *(float *)(entry + 4) + *(float *)0x254640;
+    }
+  }
+
+try_enter:
+  if (best_vehicle == -1)
+    return 0;
+  {
+    char state[0xb0];
+    if (!action_vehicle_setup_impromptu(actor_handle, best_vehicle, best_near,
+                                        best_far, state))
+      return 0;
+    actor_action_change(actor_handle, 9, (int)(uintptr_t)state);
+  }
+  return 1;
 }
+
 
 /* 0x1e360 */
 void actor_action_find_escape_from_danger(void)

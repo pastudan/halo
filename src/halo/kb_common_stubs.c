@@ -8574,8 +8574,8 @@ void FUN_00152e40(void)
   display_assert((char *)0x0029d9b0, (char *)0x0029d984, 188, 0);
   system_exit(0);
   /* test (char)ecx, 1 -> je 0x154be0 */
-  FUN_00190240();
-  FUN_00190550();
+  FUN_00190240((float *)0, (float *)0, 0, 0);
+  FUN_00190550((int *)0, (float *)0, (float *)0, 0);
   /* test (char)ebx, (char)ebx -> je 0x154c16 */
   /* test ecx, ecx -> je 0x154c92 */
   /* test (char)eax, 0x41 -> jne 0x154d0b */

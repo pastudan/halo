@@ -959,7 +959,8 @@ void FUN_0009fb10(void)
   /* test (char)eax, 0x41 -> jne 0x9fbe6 */
   tag_get(0, 0);
   tag_get(0x70706879, 0);
-  point_physics_definition_interpolate();
+  point_physics_definition_interpolate((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, 0.0f,
+                                       (float *)(uintptr_t)ecx);
   FUN_00154a50(0, 0, (void *)(uintptr_t)ecx, 0, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (float *)0, (float *)0, (void *)0, 0.0f, 0.0f);
   /* test (char)eax, 1 -> je 0x9fc79 */
   /* relift: test byte ptr [edi + 0x20], 0x20 -> jne 0x9fc8d */
@@ -982,62 +983,142 @@ void FUN_0009fca0(void)
 }
 
 /* 0xa0800 */
-void FUN_000a0800(void)
+void FUN_000a0800(int particle_system_handle)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *system;
+  char *pctl;
+  char *types_block;
+  int type_i;
+  int type_count;
+  char *type_def;
+  char *type_state;
+  int16_t particle_index;
+  char *particle;
+  char *sprite_def;
+  float world_pos[3];
+  float world_vel[3];
+  float scale;
+  float alpha;
+  float color[4];
+  float color2[4];
+  char build[0x118];
+  char *bitmap;
+  char *bitmap_frame;
+  int16_t frame;
+  float *camera = (float *)0x5065b4;
 
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('ltcp', 0);
-  tag_block_get_element((void *)(uintptr_t)ebx, 0, 128);
-  /* test (char)ecx, 1 -> jne 0xa0d29 */
-  /* cmp (int16_t)esi, -1 -> je 0xa0d29 */
-  datum_get((void *)(uintptr_t)edx, 0);
-  /* test (char)eax, (char)eax -> je 0xa0d18 */
-  render_location_visible((void *)(uintptr_t)eax);
-  /* test (char)eax, (char)eax -> je 0xa0d18 */
-  tag_block_get_element((void *)(uintptr_t)edi, 0, 0);
-  matrix_transform_point((void *)0x005065b4, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
-  matrix_transform_vector((void *)0x005065b4, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
-  /* cmp (int16_t)eax, 0xffff -> jne 0xa094d */
-  tag_block_get_element((void *)(uintptr_t)edi, 0, 376);
-  /* test (char)eax, 0x41 -> jne 0xa09a3 */
-  /* test ecx, ecx -> je 0xa0a4d */
-  /* relift: cmp (int16_t)edi, word ptr [ecx + 0x2a] -> jne 0xa0a4d */
-  /* relift: cmp (int16_t)eax, word ptr [ecx + 0x2e] -> jne 0xa0a4d */
-  /* relift: cmp (int16_t)ecx, word ptr [edx + 0x40] -> jne 0xa0a4d */
-  tag_get('mtib', 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* cmp eax, 0xbf800000 -> jne 0xa0ab7 */
-  random_math_get_local_seed_address();
-  random_range((void *)(uintptr_t)eax, 0, 0);
-  FUN_001d9068();
-  FUN_001d9068();
-  /* test (char)eax, 0x41 -> jne 0xa0bf3 */
-  FUN_0018d2c0((void *)(uintptr_t)edx, 0, ecx, 0, 0);
-  /* relift: cmp word ptr [eax + 0x28], (int16_t)ecx -> jne 0xa0b9a */
-  FUN_0018dcf0((void *)(uintptr_t)eax, ecx, 0, 0, (void *)(uintptr_t)edx, (void *)(uintptr_t)eax, 0.0f, 0.0f, (void *)0, 0.0f);
-  FUN_0018d6e0((void *)(uintptr_t)ecx, eax, edx, ecx, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0.0f, 0.0f, (float *)0, 0.0f, 0);
-  FUN_0018d360((void *)(uintptr_t)ecx);
-  /* test (char)eax, 0x41 -> jne 0xa0d18 */
-  FUN_0018d2c0((void *)(uintptr_t)ecx, 0, eax, 0, 0);
-  FUN_0018dcf0((void *)(uintptr_t)ecx, ecx, 0, 0, (void *)(uintptr_t)eax, (void *)(uintptr_t)edx, 0.0f, 0.0f, (void *)0, 0.0f);
-  FUN_0018d6e0((void *)(uintptr_t)eax, edx, ecx, edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)edx, 0.0f, 0.0f, (float *)0, 0.0f, 0);
-  FUN_0018d360((void *)(uintptr_t)eax);
-  /* cmp (int16_t)esi, -1 -> jne 0xa0889 */
-  /* relift: cmp esi, dword ptr [ebx] -> jl 0xa0842 */
+  system = (char *)datum_get(*(data_t **)0x5aa8a8, particle_system_handle);
+  pctl = (char *)tag_get(0x7063746c, *(int *)(system + 8)); /* 'pctl' */
+  types_block = pctl + 0x5c;
+  type_count = *(int *)types_block;
+  for (type_i = 0; type_i < type_count; type_i++) {
+    type_def = (char *)tag_block_get_element(types_block, type_i, 0x80);
+    type_state = system + 0x58 + type_i * 0x40;
+    if (*(int16_t *)type_state == -1)
+      continue;
+    if ((*(unsigned int *)(type_def + 0x20) & 0x100) != 0)
+      continue;
+    particle_index = *(int16_t *)(type_state + 0x3c);
+    if (particle_index == -1)
+      continue;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+    while (particle_index != -1) {
+      particle = (char *)datum_get(*(data_t **)0x5aa8a4, particle_index);
+      if (particle[3] == 0 || !render_location_visible(particle + 0x14)) {
+        particle_index = *(int16_t *)(particle + 4);
+        continue;
+      }
+      sprite_def = (char *)tag_block_get_element(type_def + 0x74,
+                                                 *(int16_t *)(particle + 8),
+                                                 0x178);
+      matrix_transform_point(camera, (float *)(particle + 0x1c), world_pos);
+      matrix_transform_vector(camera, (float *)(particle + 0x34), world_vel);
+
+      if (*(int16_t *)(particle + 0xa) == -1) {
+        scale = *(float *)(particle + 0x48) * *(float *)(type_state + 0xc);
+        color[0] = *(float *)(particle + 0x54) * *(float *)(type_state + 0x18);
+        color[1] = *(float *)(particle + 0x58) * *(float *)(type_state + 0x1c);
+        color[2] = *(float *)(particle + 0x5c) * *(float *)(type_state + 0x20);
+        color[3] = *(float *)(particle + 0x60) * *(float *)(type_state + 0x24);
+        alpha = 1.0f;
+      } else {
+        char *next_sprite = (char *)tag_block_get_element(
+            type_def + 0x74, *(int16_t *)(particle + 0xa), 0x178);
+        float t = *(float *)(particle + 0xc) / *(float *)(particle + 0x10);
+        float u;
+        if (t < 0.0f)
+          t = 0.0f;
+        else if (t > 1.0f)
+          t = 1.0f;
+        u = 1.0f - t;
+        scale = (u * *(float *)(particle + 0x64) + t * *(float *)(particle + 0x48)) *
+                *(float *)(type_state + 0xc);
+        color[0] = (u * *(float *)(particle + 0x70) + t * *(float *)(particle + 0x54)) *
+                   *(float *)(type_state + 0x18);
+        color[1] = (u * *(float *)(particle + 0x74) + t * *(float *)(particle + 0x58)) *
+                   *(float *)(type_state + 0x1c);
+        color[2] = (u * *(float *)(particle + 0x78) + t * *(float *)(particle + 0x5c)) *
+                   *(float *)(type_state + 0x20);
+        color[3] = (u * *(float *)(particle + 0x7c) + t * *(float *)(particle + 0x60)) *
+                   *(float *)(type_state + 0x24);
+        alpha = t;
+        (void)next_sprite;
+      }
+
+      bitmap = (char *)tag_get(0x6269746d, *(int *)(sprite_def + 0x3c)); /* 'bitm' */
+      {
+        int16_t seq = *(int16_t *)(sprite_def + 0x40);
+        if (*(int16_t *)(type_def + 0x28) == 1)
+          seq = (int16_t)(seq + 1);
+        bitmap_frame =
+            (char *)tag_block_get_element(bitmap + 0x54, seq, 0x40);
+      }
+      if (*(unsigned int *)(particle + 0x44) == 0xbf800000) {
+        frame = random_range(random_math_get_local_seed_address(), 0,
+                             *(int16_t *)(bitmap_frame + 0x34));
+        *(float *)(particle + 0x44) = (float)frame;
+      } else {
+        frame = (int16_t)((int)*(float *)(particle + 0x44) %
+                          (int)*(int16_t *)(bitmap_frame + 0x34));
+        if (frame < 0)
+          frame = (int16_t)(frame + *(int16_t *)(bitmap_frame + 0x34));
+      }
+
+      if (alpha > *(float *)0x25bb10) {
+        color2[0] = color[0];
+        color2[1] = color[1];
+        color2[2] = color[2];
+        color2[3] = color[3];
+        if (*(int16_t *)(sprite_def + 0xe2) == 0) {
+          color2[1] *= *(float *)(system + 0x48);
+          color2[2] *= *(float *)(system + 0x4c);
+          color2[3] *= *(float *)(system + 0x50);
+        }
+        FUN_0018d2c0((uint32_t *)build, 2, *(unsigned int *)(sprite_def + 0x3c),
+                     (int)(uintptr_t)(sprite_def + 0xb8), 0);
+        if (*(int16_t *)(type_def + 0x28) == 1) {
+          int mode = 1;
+          if ((*(unsigned char *)(type_def + 0x20) & 0x80) != 0)
+            mode = 3;
+          FUN_0018dcf0(build, (unsigned int)mode, (int)frame,
+                       (int)*(int16_t *)(sprite_def + 0x40), world_pos, world_vel,
+                       *(float *)(particle + 0x40), scale, color2, alpha);
+        } else {
+          FUN_0018d6e0(build, *(int16_t *)(type_def + 0x2a),
+                       *(int16_t *)(sprite_def + 0x40), frame, world_pos,
+                       world_vel, *(float *)(particle + 0x40), scale, color2,
+                       alpha, 1);
+        }
+        *(int *)(*(int *)((char *)build + 8) + 0x98) =
+            *(int *)(sprite_def + 0x80);
+        FUN_0018d360(build);
+      }
+      (void)alpha;
+      particle_index = *(int16_t *)(particle + 4);
+    }
+  }
 }
+
 
 /* 0xa0d50 */
 void FUN_000a0d50(void)
@@ -1100,7 +1181,7 @@ void particle_system_update(void)
   /* relift: cmp word ptr [eax + 0x1c], -1 -> je 0xa11f2 */
   scenario_location_potentially_visible_local((void *)(uintptr_t)eax);
   /* test (char)eax, (char)eax -> je 0xa11f2 */
-  FUN_000a0800();
+  FUN_000a0800(0);
   data_next_index((void *)(uintptr_t)ecx, 0);
   /* cmp esi, -1 -> jne 0xa11c5 */
   data_new_at_index((void *)(uintptr_t)eax);

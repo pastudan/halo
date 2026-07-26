@@ -7105,7 +7105,7 @@ void FUN_0001ada0(void)
   /* cmp (int16_t)edx, (int16_t)ebx -> jl 0x1e270 */
   /* test (char)eax, (char)eax -> je 0x1e2ea */
   /* relift: cmp dword ptr [ebp - 4], -1 -> je 0x1e348 */
-  action_vehicle_setup_impromptu();
+  action_vehicle_setup_impromptu(0, 0, 0.0f, 0.0f, (void *)0);
   /* test (char)eax, (char)eax -> je 0x1e348 */
   actor_action_change(0, 0, 0);
   datum_get((void *)(uintptr_t)ecx, 0);
