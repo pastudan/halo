@@ -13893,7 +13893,8 @@
         {
           "addr": "0xdff70",
           "decl": "void interface_draw_fullscreen_overlays(void);",
-          "ported": true
+          "ported": true,
+          "name": "interface_draw_fullscreen_overlays"
         },
         {
           "addr": "0xdff90",
@@ -23515,7 +23516,7 @@
         {
           "addr": "0x1c1bc0",
           "decl": "void player_profile_get_from_path(int profile_handle, void *out);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c1c00",

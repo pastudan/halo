@@ -1840,88 +1840,22 @@ void FUN_000e2680(float x, float y, float z)
   D3DDevice_SetVertexData2f(0xa, b, a);
 }
 
-/* FUN_000e2820 (0xe2820) — XBE naked draft (batch 168). */
-#if defined(__clang__)
-static void (*const be2820_ce26c0)(float *rect, float *color, float alpha, float progress) = progress_bar_draw_loading_bar;
-
-__attribute__((naked, noinline))
-void FUN_000e2820(void)
+/* FUN_000e2820 (0xe2820) — readable C lift. */
+void FUN_000e2820(float *unused, float alpha, float *color, float progress)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "fldl 0x282d50\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fabs\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "fldl 0x282d48\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "fabs\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "movl $0x44200000, -0x1c(%%ebp)\n\t"
-      "movl $0x43f00000, -0x18(%%ebp)\n\t"
-      "movl $0, -0x14(%%ebp)\n\t"
-      "movl $0, -0x10(%%ebp)\n\t"
-      "call *%[ce26c0]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce26c0] "m"(be2820_ce26c0)
-      : "memory");
+  float rect[4];
+  (void)unused;
+  rect[0] = 640.0f; rect[1] = 480.0f; rect[2] = 0.0f; rect[3] = 0.0f;
+  progress_bar_draw_loading_bar(rect, color, alpha, progress);
 }
-#else
-#error "FUN_000e2820: clang naked draft required"
-#endif
 
-
-/* FUN_000e2880 (0xe2880) — XBE naked draft (batch 170). */
-#if defined(__clang__)
-static void (*const be2880_ce26c0)(float *rect, float *color, float alpha, float progress) = progress_bar_draw_loading_bar;
-
-__attribute__((naked, noinline))
-void FUN_000e2880(void)
+/* FUN_000e2880 (0xe2880) — readable C lift. */
+void FUN_000e2880(float *color /*@<ecx>*/, float progress)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "fldl 0x282d50\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fabs\n\t"
-      "pushl %%eax\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "pushl $0x3f800000\n\t"
-      "fldl 0x282d48\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "fabs\n\t"
-      "movl $0x44200000, -0x1c(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "movl $0x43f00000, -0x18(%%ebp)\n\t"
-      "movl $0, -0x14(%%ebp)\n\t"
-      "movl $0, -0x10(%%ebp)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[ce26c0]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce26c0] "m"(be2880_ce26c0)
-      : "memory");
+  float rect[4];
+  rect[0] = 640.0f; rect[1] = 480.0f; rect[2] = 0.0f; rect[3] = 0.0f;
+  progress_bar_draw_loading_bar(rect, color, 1.0f, progress);
 }
-#else
-#error "FUN_000e2880: clang naked draft required"
-#endif
-
 
 /* progress_bar_eachframe (0xe28e0) — XBE naked draft (batch 149). */
 #if defined(__clang__)
