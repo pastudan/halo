@@ -12418,7 +12418,7 @@
         {
           "addr": "0xca670",
           "decl": "void FUN_000ca670(int16_t type, int16_t enum_index, char *buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca700",

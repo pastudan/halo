@@ -5776,74 +5776,22 @@ void FUN_000ca430(int16_t game_flag __attribute__((unused)), int16_t scenario_in
 #endif
 
 
-/* FUN_000ca670 (0xca670) — XBE naked draft (batch 151). */
-#if defined(__clang__)
-static void (*const bca670_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bca670_exitfn)(int) = system_exit;
-static int (*const bca670_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-
-__attribute__((naked, noinline))
-void FUN_000ca670(int16_t type __attribute__((unused)), int16_t enum_index __attribute__((unused)), char *buffer __attribute__((unused)))
+/* FUN_000ca670 (0xca670) — readable C lift: enum tostring. */
+void FUN_000ca670(int16_t type, int16_t enum_index, char *buffer)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "cmpw $0x20, %%ax\n\t"
-      "pushl %%esi\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x2726b4(,%%esi,8), %%esi\n\t"
-      "jl .LFUN_000ca670_1\n\t"
-      "cmpw $0x24, %%ax\n\t"
-      "jle .LFUN_000ca670_2\n\t"
-      ".LFUN_000ca670_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x27b\n\t"
-      "pushl $0x280478\n\t"
-      "pushl $0x28054c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ca670_2:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_000ca670_3\n\t"
-      "cmpw (%%esi), %%di\n\t"
-      "jl .LFUN_000ca670_4\n\t"
-      ".LFUN_000ca670_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x27c\n\t"
-      "pushl $0x280478\n\t"
-      "pushl $0x280518\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ca670_4:\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movswl %%di, %%eax\n\t"
-      "movl (%%ecx,%%eax,4), %%edx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x257984\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bca670_assert), [exitfn] "m"(bca670_exitfn), [c1d90f0] "m"(bca670_c1d90f0)
-      : "memory");
+  int16_t *table;
+  if (type < 0x20 || type > 0x24) {
+    display_assert((const char *)0x28054c, (const char *)0x280478, 0x27b, 1);
+    system_exit(-1);
+  }
+  table = (int16_t *)(0x2726b4 + ((int)type) * 8);
+  if (enum_index < 0 || enum_index >= table[0]) {
+    display_assert((const char *)0x280518, (const char *)0x280478, 0x27c, 1);
+    system_exit(-1);
+  }
+  crt_sprintf(buffer, (const char *)0x257984,
+              *(const char **)(*(int *)((char *)table + 4) + (int)enum_index * 4));
 }
-#else
-#error "FUN_000ca670: clang naked draft required"
-#endif
-
-
 /* FUN_000ca700 (0xca700) — XBE naked draft (batch 139). */
 #if defined(__clang__)
 static data_t * (*const bca700_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
