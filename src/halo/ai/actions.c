@@ -3283,105 +3283,42 @@ char actor_action_handle_combat_transition(int actor_handle __attribute__((unuse
 #endif
 
 
-/* actor_action_handle_grenade_throwing (0x205a0) — XBE naked draft (batch 88). */
-#if defined(__clang__)
-static void *(*const b205a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b205a0_tag)(int, int) = tag_get;
-static char (*const b205a0_c1fb80)(int actor_handle) = actor_action_consider_grenade;
-static char (*const b205a0_c1fa60)(int actor_handle, char flag) = actor_action_try_to_throw_grenade;
-
-__attribute__((naked, noinline))
-char actor_action_handle_grenade_throwing(int actor_handle __attribute__((unused)))
+/* actor_action_handle_grenade_throwing (0x205a0) — readable C lift. */
+char actor_action_handle_grenade_throwing(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x5c(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x61637476\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpw $5, 0x268(%%esi)\n\t"
-      "movl %%eax, %%edi\n\t"
-      "jl .Lactor_action_handle_grenade_throwing_6\n\t"
-      "cmpw $4, 0x6c(%%esi)\n\t"
-      "jne .Lactor_action_handle_grenade_throwing_1\n\t"
-      "cmpw $0, 0xa8(%%esi)\n\t"
-      "jg .Lactor_action_handle_grenade_throwing_6\n\t"
-      ".Lactor_action_handle_grenade_throwing_1:\n\t"
-      "movl 0x270(%%esi), %%eax\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0x184(%%edi), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "decl %%ecx\n\t"
-      "je .Lactor_action_handle_grenade_throwing_3\n\t"
-      "decl %%ecx\n\t"
-      "jne .Lactor_action_handle_grenade_throwing_5\n\t"
-      "movb 0x14(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lactor_action_handle_grenade_throwing_2\n\t"
-      "cmpw $4, 0x6c(%%esi)\n\t"
-      "jne .Lactor_action_handle_grenade_throwing_5\n\t"
-      "cmpw $0, 0xa8(%%esi)\n\t"
-      "jne .Lactor_action_handle_grenade_throwing_5\n\t"
-      ".Lactor_action_handle_grenade_throwing_2:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "jmp .Lactor_action_handle_grenade_throwing_4\n\t"
-      ".Lactor_action_handle_grenade_throwing_3:\n\t"
-      "cmpw $5, 0x6e(%%esi)\n\t"
-      "jl .Lactor_action_handle_grenade_throwing_5\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      ".Lactor_action_handle_grenade_throwing_4:\n\t"
-      "call *%[c1fb80]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb %%al, %%bl\n\t"
-      ".Lactor_action_handle_grenade_throwing_5:\n\t"
-      "movb 0x6a0(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_grenade_throwing_7\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1fa60]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_handle_grenade_throwing_6:\n\t"
-      "movb $0, 0x6a0(%%esi)\n\t"
-      ".Lactor_action_handle_grenade_throwing_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b205a0_dget), [tag] "m"(b205a0_tag), [c1fb80] "m"(b205a0_c1fb80), [c1fa60] "m"(b205a0_c1fa60)
-      : "memory");
-}
-#else
-#error "actor_action_handle_grenade_throwing: clang naked draft required"
-#endif
+  char *actor;
+  char *unit;
+  char *prop;
+  char result;
+  int kind;
 
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  unit = (char *)tag_get(0x61637476, *(int *)(actor + 0x5c)); /* 'actv' */
+  result = 0;
+  if (*(short *)(actor + 0x268) < 5) {
+    actor[0x6a0] = 0;
+    return 0;
+  }
+  if (*(short *)(actor + 0x6c) == 4 && *(short *)(actor + 0xa8) > 0) {
+    actor[0x6a0] = 0;
+    return 0;
+  }
+  prop = (char *)datum_get(*(data_t **)0x5ab23c, *(int *)(actor + 0x270));
+  kind = (int)*(short *)(unit + 0x184);
+  if (kind == 1) {
+    if (*(short *)(actor + 0x6e) >= 5) {
+      result = actor_action_consider_grenade(actor_handle);
+    }
+  } else if (kind == 2) {
+    if (prop[0x14] != 0 || (*(short *)(actor + 0x6c) == 4 && *(short *)(actor + 0xa8) == 0)) {
+      result = actor_action_consider_grenade(actor_handle);
+    }
+  }
+  if (actor[0x6a0] != 0) {
+    actor_action_try_to_throw_grenade(actor_handle, 0);
+  }
+  return result;
+}
 
 /* actor_action_handle_evasion (0x20670) — XBE naked draft (batch 80). */
 #if defined(__clang__)
