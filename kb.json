@@ -25649,15 +25649,18 @@
         },
         {
           "addr": "0x196850",
-          "decl": "void FUN_00196850(int param_1);"
+          "decl": "void FUN_00196850(int param_1);",
+          "ported": false
         },
         {
           "addr": "0x196a60",
-          "decl": "int FUN_00196a60(float *cull_bounds @<ecx>, float *bounds @<edx>);"
+          "decl": "int FUN_00196a60(float *cull_bounds @<ecx>, float *bounds @<edx>);",
+          "ported": false
         },
         {
           "addr": "0x196b10",
-          "decl": "int FUN_00196b10(float *bounds @<eax>, int param_2, int param_3);"
+          "decl": "int FUN_00196b10(float *bounds @<eax>, int param_2, int param_3);",
+          "ported": false
         },
         {
           "addr": "0x197b00",

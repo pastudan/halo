@@ -17176,5 +17176,26 @@
     "object": "data_packet_groups.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x196850",
+    "name": "FUN_00196850",
+    "object": "structure_visibility.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x196a60",
+    "name": "FUN_00196a60",
+    "object": "structure_visibility.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x196b10",
+    "name": "FUN_00196b10",
+    "object": "structure_visibility.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
