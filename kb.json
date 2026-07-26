@@ -18414,7 +18414,7 @@
         {
           "addr": "0xe1490",
           "decl": "void player_ui_set_active_player_profile(int16_t local_player_index, int profile_handle, void *profile);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe1500",

@@ -711,7 +711,7 @@ void player_ui_activate_all_solo_levels(void)
 #if defined(__clang__)
 static void (*const be1000_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
 static void * (*const be1000_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void (*const be1000_cd51c0)(__int16 player, wchar_t *message) = hud_print_message;
+static void (*const be1000_cd51c0)(__int16 player, wchar_t *message) = (void *)0xd51c0;
 
 __attribute__((naked, noinline))
 void FUN_000e1000(void)
@@ -780,7 +780,7 @@ int FUN_000e1060(void)
 #if defined(__clang__)
 static void (*const be10c0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const be10c0_exitfn)(int) = system_exit;
-static void (*const be10c0_cce740)(void) = input_abstraction_update_local_player_preferences;
+static void (*const be10c0_cce740)(void) = (void *)0xce740;
 
 __attribute__((naked, noinline))
 void FUN_000e10c0(void)
@@ -1030,62 +1030,19 @@ void player_ui_clear_multiplayer_joins(void)
 #endif
 
 
-/* player_ui_set_active_player_profile (0xe1490) — XBE naked draft (batch 159). */
-#if defined(__clang__)
-static void (*const be1490_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be1490_exitfn)(int) = system_exit;
-static void * (*const be1490_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const be1490_ce10c0)(void) = FUN_000e10c0;
-
-__attribute__((naked, noinline))
-void player_ui_set_active_player_profile(void)
+/* player_ui_set_active_player_profile (0xe1490) — readable C lift. */
+void player_ui_set_active_player_profile(int16_t local_player_index, int profile_handle, void *profile)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .Lplayer_ui_set_active_player_profile_1\n\t"
-      "cmpw $4, %%di\n\t"
-      "jge .Lplayer_ui_set_active_player_profile_1\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lplayer_ui_set_active_player_profile_2\n\t"
-      ".Lplayer_ui_set_active_player_profile_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe2\n\t"
-      "pushl $0x282724\n\t"
-      "pushl $0x2827a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_ui_set_active_player_profile_2:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movswl %%di, %%eax\n\t"
-      "imull $0x38, %%eax, %%eax\n\t"
-      "pushl $0x30\n\t"
-      "leal 0x46bee0(%%eax), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "movl %%ecx, 0x46bf10(%%eax)\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "call *%[ce10c0]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be1490_assert), [exitfn] "m"(be1490_exitfn), [c8e0b0] "m"(be1490_c8e0b0), [ce10c0] "m"(be1490_ce10c0)
-      : "memory");
+  extern char DAT_002827a0[];
+  extern char DAT_00282724[];
+  if ((int16_t)local_player_index < 0 || (int16_t)local_player_index >= 4 || !profile) {
+    display_assert(DAT_002827a0, DAT_00282724, 0xe2, 1);
+    system_exit(-1);
+  }
+  *(int *)(0x46bf10 + (int16_t)local_player_index * 0x38) = profile_handle;
+  csmemcpy((void *)(0x46bee0 + (int16_t)local_player_index * 0x38), profile, 0x30);
+  FUN_000e10c0();
 }
-#else
-#error "player_ui_set_active_player_profile: clang naked draft required"
-#endif
-
 
 /* player_ui_begin_editing_profile (0xe1500) — XBE naked draft (batch 143). */
 #if defined(__clang__)
