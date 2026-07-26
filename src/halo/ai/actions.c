@@ -2113,11 +2113,11 @@ char actor_action_handle_done_fleeing(int actor_handle)
   if (actor[0xab] == 0) {
     return 0;
   }
-  if (!FUN_00016210(actor_handle, actor + 0x9c, buf)) {
+  if (!FUN_00016210(actor_handle, (int)(actor + 0x9c), (short *)buf)) {
     display_assert((const char *)0x254818, (const char *)0x2544b0, 0xa79, 1);
     system_exit(-1);
   }
-  actor_action_change(actor_handle, 6, buf);
+  actor_action_change(actor_handle, 6, (int)buf);
   return 1;
 }
 
@@ -2134,13 +2134,13 @@ char actor_action_handle_combat_failure(int actor_handle)
   mode = *(short *)(actor + 0xa0);
   if (mode == 2 || mode == 3) {
     if (actor[0xa3] != 0 || actor[0xa4] != 0 || actor[0xc5] != 0) {
-      FUN_0001e8a0(actor_handle); /* 0x1e8a0 placeholder name */
+      actor_action_handle_combat_selection(actor_handle);
     }
     return 0;
   }
   if (mode == 4 || mode == 5) {
     if (actor[0xc5] != 0) {
-      FUN_0001e8a0(actor_handle);
+      actor_action_handle_combat_selection(actor_handle);
     }
   }
   return 0;
@@ -5999,7 +5999,7 @@ static int16_t (*const b1ef90_c3a790)(int16_t actor_type) = FUN_0003a790;
 static int16_t (*const b1ef90_c3a7b0)(int16_t actor_type) = FUN_0003a7b0;
 static int16_t (*const b1ef90_c3a7d0)(int16_t actor_type) = FUN_0003a7d0;
 static unsigned char (*const b1ef90_c3a7f0)(int16_t actor_type) = FUN_0003a7f0;
-static void (*const b1ef90_c59d30)(int encounter_handle, int16_t profile_index, char *flag, int16_t *a, int16_t *b, int16_t *c, int16_t *d, char *e) = encounter_modify_pursuit_desires;
+static void (*const b1ef90_c59d30)(int encounter_handle, int16_t profile_index, char *flag, int16_t *a, char *e, int16_t *b, int16_t *c, int16_t *d) = encounter_modify_pursuit_desires;
 static void (*const b1ef90_c59dd0)(int encounter_handle, int actor_handle, int16_t *mode, char flag, char *out_guard, char *out_active, char *out_limit_a, char *out_limit_b, char *out_nearby, char *out_has_target, char *out_summary) = encounter_determine_pursuit_availability;
 static void (*const b1ef90_c1cda0)(void) = FUN_0001cda0;
 static int (*const b1ef90_c1a080)(int actor_handle, char param_2, char *state_data) = FUN_0001a080;
@@ -6871,7 +6871,7 @@ static void *(*const b20990_tag)(int, int) = tag_get;
 static char (*const b20990_c1fe70)(int actor_handle, short direction_ref, float param_3, float *direction, float param_5) = actor_action_try_to_dive;
 static int (*const b20990_c2a3f0)(int actor_handle) = FUN_0002a3f0;
 static int16_t (*const b20990_c1d6d0)(int actor_handle) = actor_action_try_to_panic;
-static void (*const b20990_c128c0)(void) = action_avoid_setup;
+static int (*const b20990_c128c0)(int *a0, int *a1) = action_avoid_setup;
 static void (*const b20990_c1d030)(int actor_handle, int new_action_type, int param_3) = actor_action_change;
 static void (*const b20990_c20f67)(void) = (void (*)(void))actor_combat_check_mode;
 static void (*const b20990_c20f50)(void) = (void (*)(void))actor_combat_check_mode;
