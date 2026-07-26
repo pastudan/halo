@@ -40317,8 +40317,8 @@
         },
         {
           "addr": "0x5e680",
-          "decl": "void path_heap_insert(void *path, int16_t heap_node, int16_t heap_cost);",
-          "ported": false,
+          "decl": "void path_heap_insert(void *path @<eax>, int16_t heap_node, int16_t heap_cost);",
+          "ported": true,
           "name": "path_heap_insert"
         },
         {

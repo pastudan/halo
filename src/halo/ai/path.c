@@ -1052,64 +1052,27 @@ int16_t path_heap_pop_cheapest_node(void *path /* @<eax> */)
   return result;
 }
 
-/* path_heap_insert (0x5e680) — XBE naked draft (batch 233). */
-#if defined(__clang__)
-static void (*const b5e680_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5e680_exitfn)(int) = system_exit;
-static void (*const b5e680_c5e150)(void *path, int16_t heap_index) = path_heap_bubble_up;
-static void (*const b5e680_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void path_heap_insert(void *path __attribute__((unused)), int16_t heap_node __attribute__((unused)), int16_t heap_cost __attribute__((unused)))
+/* path_heap_insert (0x5e680) — readable C lift. */
+void path_heap_insert(void *path /* @<eax> */, int16_t heap_node, int16_t heap_cost)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "cmpw $1, 0x11084(%%edi)\n\t"
-      "jge .Lpath_heap_insert_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x594\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e238\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_heap_insert_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x11084(%%edi), %%ax\n\t"
-      "cmpw $0x400, %%ax\n\t"
-      "jge .Lpath_heap_insert_2\n\t"
-      "movw 0x8(%%ebp), %%dx\n\t"
-      "leal 0x1(%%eax), %%ecx\n\t"
-      "movw %%cx, 0x11084(%%edi)\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movw %%dx, 0x11086(%%edi,%%ecx,4)\n\t"
-      "movw 0xc(%%ebp), %%dx\n\t"
-      "movw %%dx, 0x11088(%%edi,%%ecx,4)\n\t"
-      "call *%[c5e150]\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpath_heap_insert_2:\n\t"
-      "pushl $0x25e250\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b5e680_assert), [exitfn] "m"(b5e680_exitfn), [c5e150] "m"(b5e680_c5e150), [c8f390] "m"(b5e680_c8f390)
-      : "memory");
+  int16_t count;
+  int16_t idx;
+
+  if (*(int16_t *)((char *)path + 0x11084) < 1) {
+    display_assert((const char *)0x25e238, (const char *)0x25e0ac, 0x594, 1);
+    system_exit(-1);
+  }
+  count = *(int16_t *)((char *)path + 0x11084);
+  if (count >= 0x400) {
+    error(2, (const char *)0x25e250);
+    return;
+  }
+  idx = count;
+  *(int16_t *)((char *)path + 0x11084) = (int16_t)(count + 1);
+  *(int16_t *)((char *)path + 0x11086 + (int)idx * 4) = heap_node;
+  *(int16_t *)((char *)path + 0x11088 + (int)idx * 4) = heap_cost;
+  path_heap_bubble_up(path, idx);
 }
-#else
-#error "path_heap_insert: clang naked draft required"
-#endif
-
-
 
 /* FUN_0005e700 (0x5e700) — readable C lift.
  * block_base @eax; stack: surface_index. */
