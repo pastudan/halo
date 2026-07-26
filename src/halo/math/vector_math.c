@@ -564,34 +564,118 @@ void FUN_000129f0(void)
   (void)ecx;
 }
 
-/* 0x12ad0 */
-float FUN_00012ad0(int actor_handle, int action_type, void *charge_state)
+/* FUN_00012ad0 (0x12ad0) — XBE naked draft (batch 77). */
+#if defined(__clang__)
+static void *(*const b12ad0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static bool (*const b12ad0_c3b320)(int actor_handle) = actor_has_ranged_weapon;
+static void *(*const b12ad0_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+float FUN_00012ad0(int actor_handle __attribute__((unused)), int action_type __attribute__((unused)), void *charge_state __attribute__((unused)))
 {
-  int eax = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* cmp (int16_t)esi, 3 -> je 0x12b4f */
-  /* cmp (int16_t)esi, 4 -> je 0x12b08 */
-  /* test (int16_t)esi, (int16_t)esi -> jne 0x12bd1 */
-  actor_has_ranged_weapon(0);
-  /* test (char)eax, (char)eax -> je 0x12bd1 */
-  /* relift: cmp word ptr [edi + 0x268], 7 -> jl 0x12bd1 */
-  /* test (char)eax, 0x41 -> je 0x12bd1 */
-  tag_get('rtca', 0);
-  /* test (char)eax, 0x41 -> je 0x12b84 */
-  /* test dl, dl -> je 0x12baf */
-  /* test (char)eax, 0x41 -> je 0x12bd1 */
-  /* test (char)eax, 0x41 -> je 0x12bcf */
-  return 0;
-
-  (void)eax;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, %%si\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "je .LFUN_00012ad0_2\n\t"
+      "cmpw $3, %%si\n\t"
+      "je .LFUN_00012ad0_2\n\t"
+      "cmpw $4, %%si\n\t"
+      "je .LFUN_00012ad0_1\n\t"
+      "testw %%si, %%si\n\t"
+      "jne .LFUN_00012ad0_6\n\t"
+      ".LFUN_00012ad0_1:\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c3b320]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00012ad0_6\n\t"
+      "cmpw $7, 0x268(%%edi)\n\t"
+      "jl .LFUN_00012ad0_6\n\t"
+      "flds 0x2533c0\n\t"
+      "fcomps 0x608(%%edi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00012ad0_6\n\t"
+      "movl 0x608(%%edi), %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00012ad0_2:\n\t"
+      "movl 0x58(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $3, %%si\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "jne .LFUN_00012ad0_3\n\t"
+      "flds 0x2533c0\n\t"
+      "fcomps 0x388(%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00012ad0_3\n\t"
+      "movl 0x388(%%ecx), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      ".LFUN_00012ad0_3:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movb 0x30(%%eax), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "je .LFUN_00012ad0_4\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x37c(%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00012ad0_6\n\t"
+      "movl 0x37c(%%ecx), %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00012ad0_4:\n\t"
+      "flds 0x37c(%%ecx)\n\t"
+      "fadds 0x34(%%eax)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00012ad0_5\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "popl %%edi\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00012ad0_5:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_00012ad0_6:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b12ad0_dget), [c3b320] "m"(b12ad0_c3b320), [tag] "m"(b12ad0_tag)
+      : "memory");
 }
+#else
+#error "FUN_00012ad0: clang naked draft required"
+#endif
+
 
 /* 0x12be0 */
 void FUN_00012be0(void)

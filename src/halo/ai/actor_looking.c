@@ -12272,33 +12272,49 @@ float FUN_000278e0(int actor_handle __attribute__((unused)), int prop_handle __a
 #endif
 
 
-/* FUN_00027a10 (0x27a10)
- * Select the actor tag's look-angle pair based on actor look-type.
- *
- * Returns a pointer to the look yaw/pitch pair in the actor tag:
- *   look_type == 2 → tag+0xf4
- *   look_type == 3 or 4 → tag+0x10c
- *   otherwise → tag+0xdc
- *
- * Confirmed: @eax register arg (no prologue; MOV ECX,[0x6325a4] first).
- * Confirmed: MOVSX ECX,[ESI+0x3fc]; CMP ECX,2; JZ/JLE/CMP 4/JG. */
-int FUN_00027a10(int actor_handle)
-{
-  char *actor;
-  char *tag;
-  int look_type;
+/* FUN_00027a10 (0x27a10) — XBE naked draft (batch 77). */
+#if defined(__clang__)
+static void *(*const b27a10_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b27a10_tag)(int, int) = tag_get;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  tag = (char *)tag_get(0x61637472, *(int *)(actor + 0x58));
-  look_type = (int)*(short *)(actor + 0x3fc);
-  if (look_type == 2) {
-    return (int)(tag + 0xf4);
-  }
-  if (look_type <= 2 || look_type > 4) {
-    return (int)(tag + 0xdc);
-  }
-  return (int)(tag + 0x10c);
+__attribute__((naked, noinline))
+int FUN_00027a10(int actor_handle /* */ __attribute__((unused)))
+{
+  __asm__ volatile(
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x58(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "movswl 0x3fc(%%esi), %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $2, %%ecx\n\t"
+      "popl %%esi\n\t"
+      "je .LFUN_00027a10_2\n\t"
+      "jle .LFUN_00027a10_1\n\t"
+      "cmpl $4, %%ecx\n\t"
+      "jg .LFUN_00027a10_1\n\t"
+      "addl $0x10c, %%eax\n\t"
+      "ret\n\t"
+      ".LFUN_00027a10_1:\n\t"
+      "addl $0xdc, %%eax\n\t"
+      "ret\n\t"
+      ".LFUN_00027a10_2:\n\t"
+      "addl $0xf4, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b27a10_dget), [tag] "m"(b27a10_tag)
+      : "memory");
 }
+#else
+#error "FUN_00027a10: clang naked draft required"
+#endif
+
 
 /* FUN_00027a60 (0x27a60) — XBE naked draft (batch 75). */
 #if defined(__clang__)

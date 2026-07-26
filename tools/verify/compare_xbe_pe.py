@@ -914,6 +914,20 @@ def main() -> int:
         ("FUN_00014ba0", 0x14ba0, 0x14c03),
         ("FUN_00024ca0", 0x24ca0, 0x24cee),
         ("FUN_00016cf0", 0x16cf0, 0x16d38),
+        # gameplay wave 77 (2026-07-26) — math/networking + leftover looking
+        ("sieve_of_eratosthenes", 0x80d50, 0x80ea4),
+        ("message_encrypt", 0x80940, 0x80a32),
+        ("message_decrypt", 0x80a40, 0x80b38),
+        ("FUN_00012ad0", 0x12ad0, 0x12bd9),
+        ("FUN_001139d0", 0x1139d0, 0x113a89),
+        ("tea_decrypt", 0x808b0, 0x8093f),
+        ("key_agreement_build_message", 0x803d0, 0x80463),
+        ("FUN_00113930", 0x113930, 0x1139c7),
+        ("tea_encrypt", 0x80820, 0x808a8),
+        ("create_message", 0x80ca0, 0x80d27),
+        ("key_agreement_peek_packet_type", 0x80530, 0x8059d),
+        ("key_message_xor_keystream", 0x807d0, 0x80817),
+        ("FUN_00027a10", 0x27a10, 0x27a57),
     ]
 
     xbe = Xbe.from_file(args.xbe)

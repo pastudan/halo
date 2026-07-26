@@ -6311,82 +6311,190 @@ int FUN_00113910(void *file)
 typedef void *(*zlib_zalloc_fn)(void *, int, int);
 typedef void  (*zlib_zfree_fn)(void *, void *);
 
-/* 0x113930 — zlib inflate_blocks_reset: reset the inflate_blocks_state param_1
- * for a fresh block stream. Optionally writes the pending byte count to the OUT
- * param param_3, releases the current decoder mode (codes/codes-with-tree),
- * then clears window pointers, mode/bytes counters, and re-seeds the running
- * check value via the stream's check function (z_stream at param_2). */
-void FUN_00113930(int s, int param_2, int last)
+/* FUN_00113930 (0x113930) — XBE naked draft (batch 77). */
+#if defined(__clang__)
+static void (*const b113930_c114f60)(int c, int z) = FUN_00114f60;
+static int (*const b113930_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
+
+__attribute__((naked, noinline))
+void FUN_00113930(int s __attribute__((unused)), int param_2 __attribute__((unused)), int last __attribute__((unused)))
 {
-  int *param_1 = (int *)s;
-  int *param_3 = (int *)last;
-  int iVar1;
-
-  if (param_3 != 0) {
-    *param_3 = param_1[0xf];
-  }
-  if (param_1[0] == 4 || param_1[0] == 5) {
-    (*(void (**)(int, int))(param_2 + 0x24))(*(int *)(param_2 + 0x28),
-                                             param_1[3]);
-  }
-  if (param_1[0] == 6) {
-    FUN_00114f60(param_1[1], param_2);
-  }
-  param_1[0xd] = param_1[10];
-  param_1[0xc] = param_1[10];
-  param_1[0] = 0;
-  param_1[7] = 0;
-  param_1[8] = 0;
-  if (param_1[0xe] != 0) {
-    iVar1 = ((int (*)(int, int, int))param_1[0xe])(0, 0, 0);
-    param_1[0xf] = iVar1;
-    *(int *)(param_2 + 0x30) = iVar1;
-  }
-  if (*(int *)0x320e30 > 0) {
-    crt_fprintf((void *)0x331070, "inflate:   blocks reset\n");
-  }
-  return;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .LFUN_00113930_1\n\t"
+      "movl 0x3c(%%esi), %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      ".LFUN_00113930_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "cmpl $4, %%eax\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "je .LFUN_00113930_2\n\t"
+      "cmpl $5, %%eax\n\t"
+      "jne .LFUN_00113930_3\n\t"
+      ".LFUN_00113930_2:\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "movl 0x28(%%edi), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *0x24(%%edi)\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00113930_3:\n\t"
+      "cmpl $6, (%%esi)\n\t"
+      "jne .LFUN_00113930_4\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c114f60]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00113930_4:\n\t"
+      "movl 0x28(%%esi), %%eax\n\t"
+      "movl %%eax, 0x34(%%esi)\n\t"
+      "movl %%eax, 0x30(%%esi)\n\t"
+      "movl 0x38(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0, (%%esi)\n\t"
+      "movl $0, 0x1c(%%esi)\n\t"
+      "movl $0, 0x20(%%esi)\n\t"
+      "je .LFUN_00113930_5\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "call *%%eax\n\t"
+      "movl %%eax, 0x3c(%%esi)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, 0x30(%%edi)\n\t"
+      ".LFUN_00113930_5:\n\t"
+      "movl 0x320e30, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "jle .LFUN_00113930_6\n\t"
+      "pushl $0x28d45c\n\t"
+      "pushl $0x331070\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00113930_6:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c114f60] "m"(b113930_c114f60), [c1d98ad] "m"(b113930_c1d98ad)
+      : "memory");
 }
+#else
+#error "FUN_00113930: clang naked draft required"
+#endif
 
-/* 0x1139d0 — zlib inflate_blocks_new: allocate and initialise a new
- * inflate_blocks_state for decompression. Allocates the state struct (0x40
- * bytes), the sliding window (wsize bytes), and the codes workspace (0x5a0
- * bytes) via z_stream's zalloc. On any allocation failure, frees already-
- * allocated buffers and returns NULL. On success, stores function pointers,
- * initialises mode=0, then calls inflate_blocks_reset to seed the checksum. */
-void *FUN_001139d0(int z, int adler_fn, int wsize)
+
+/* FUN_001139d0 (0x1139d0) — XBE naked draft (batch 77). */
+#if defined(__clang__)
+static int (*const b1139d0_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
+static void (*const b1139d0_c113930)(int s, int param_2, int last) = FUN_00113930;
+
+__attribute__((naked, noinline))
+void * FUN_001139d0(int z __attribute__((unused)), int adler_fn __attribute__((unused)), int wsize __attribute__((unused)))
 {
-    int *s;
-
-    s = (int *)((zlib_zalloc_fn)(*(int *)(z + 0x20)))(*(void **)(z + 0x28), 1, 0x40);
-    if (s == 0) {
-        return 0;
-    }
-
-    s[9] = (int)((zlib_zalloc_fn)(*(int *)(z + 0x20)))(*(void **)(z + 0x28), 8, 0x5a0);
-    if (s[9] == 0) {
-        ((zlib_zfree_fn)(*(int *)(z + 0x24)))(*(void **)(z + 0x28), s);
-        return 0;
-    }
-
-    s[10] = (int)((zlib_zalloc_fn)(*(int *)(z + 0x20)))(*(void **)(z + 0x28), 1, wsize);
-    if (s[10] == 0) {
-        ((zlib_zfree_fn)(*(int *)(z + 0x24)))(*(void **)(z + 0x28), (void *)s[9]);
-        ((zlib_zfree_fn)(*(int *)(z + 0x24)))(*(void **)(z + 0x28), s);
-        return 0;
-    }
-
-    s[0xb] = s[10] + wsize;
-    s[0xe] = adler_fn;
-    s[0]   = 0;
-
-    if (*(int *)0x320e30 > 0) {
-        crt_fprintf((void *)0x331070, "inflate:   blocks allocated\n");
-    }
-
-    FUN_00113930((int)s, z, 0);
-    return s;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl 0x28(%%edi), %%eax\n\t"
+      "pushl $0x40\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *0x20(%%edi)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_001139d0_1\n\t"
+      "movl 0x28(%%edi), %%ecx\n\t"
+      "pushl $0x5a0\n\t"
+      "pushl $8\n\t"
+      "pushl %%ecx\n\t"
+      "call *0x20(%%edi)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x24(%%esi)\n\t"
+      "jne .LFUN_001139d0_2\n\t"
+      "movl 0x28(%%edi), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "call *0x24(%%edi)\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_001139d0_1:\n\t"
+      "popl %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001139d0_2:\n\t"
+      "movl 0x28(%%edi), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *0x20(%%edi)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x28(%%esi)\n\t"
+      "jne .LFUN_001139d0_3\n\t"
+      "movl 0x24(%%esi), %%ecx\n\t"
+      "movl 0x28(%%edi), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *0x24(%%edi)\n\t"
+      "movl 0x28(%%edi), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *0x24(%%edi)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "popl %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001139d0_3:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "addl %%ebx, %%eax\n\t"
+      "movl %%eax, 0x2c(%%esi)\n\t"
+      "movl %%ecx, 0x38(%%esi)\n\t"
+      "movl $0, (%%esi)\n\t"
+      "movl 0x320e30, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .LFUN_001139d0_4\n\t"
+      "pushl $0x28d478\n\t"
+      "pushl $0x331070\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_001139d0_4:\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c113930]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d98ad] "m"(b1139d0_c1d98ad), [c113930] "m"(b1139d0_c113930)
+      : "memory");
 }
+#else
+#error "FUN_001139d0: clang naked draft required"
+#endif
+
 
 /* 0x111220 — zlib deflateCopy: create an independent copy of a deflate stream.
  * Copies the z_stream header (14 dwords = 0x38 bytes) from source to dest, then
