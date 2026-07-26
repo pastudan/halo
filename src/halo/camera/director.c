@@ -3237,56 +3237,23 @@ void editor_camera_set_scripted(void)
 #endif
 
 
-/* FUN_00088200 (0x88200) — XBE naked draft (batch 160). */
-#if defined(__clang__)
-static void (*const b88200_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-static void (*const b88200_c87eb0)(void) = FUN_00087eb0;
-
-__attribute__((naked, noinline))
-void FUN_00088200(void)
+/* FUN_00088200 (0x88200) — readable C lift. */
+void FUN_00088200(float *camera)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl $7, %%ecx\n\t"
-      "movl $0x3356f0, %%edi\n\t"
-      "rep movsl\n\t"
-      "movl 0x2ee670, %%ecx\n\t"
-      "movb $1, 0x33570c\n\t"
-      "addl $0x10, %%ecx\n\t"
-      "movl (%%ecx), %%esi\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl %%esi, (%%edx)\n\t"
-      "movl 0x4(%%ecx), %%esi\n\t"
-      "movl %%esi, 0x4(%%edx)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%edx)\n\t"
-      "movl 0x2ee670, %%edx\n\t"
-      "addl $0x1c, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10cc00]\n\t"
-      "movl 0x2ee66c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c87eb0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c10cc00] "m"(b88200_c10cc00), [c87eb0] "m"(b88200_c87eb0)
-      : "memory");
+  float *src;
+  int i;
+  float *dst = (float *)0x3356f0;
+  for (i = 0; i < 7; i++) {
+    dst[i] = camera[i];
+  }
+  *(unsigned char *)0x33570c = 1;
+  src = (float *)(*(char **)0x2ee670 + 0x10);
+  camera[0] = src[0];
+  camera[1] = src[1];
+  camera[2] = src[2];
+  vector_to_angles(camera + 3, (float *)(*(char **)0x2ee670 + 0x1c));
+  FUN_00087eb0(*(int *)0x2ee66c);
 }
-#else
-#error "FUN_00088200: clang naked draft required"
-#endif
-
 
 /* editor_camera_flying_update (0x88260) — XBE naked draft (batch 106). */
 #if defined(__clang__)

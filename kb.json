@@ -6391,8 +6391,8 @@
         },
         {
           "addr": "0x11ff10",
-          "decl": "void FUN_0011ff10(void);",
-          "ported": false
+          "decl": "int FUN_0011ff10(int16_t a, int16_t b);",
+          "ported": true
         },
         {
           "addr": "0x11ff70",
@@ -7216,8 +7216,8 @@
         },
         {
           "addr": "0x88200",
-          "decl": "void FUN_00088200(void);",
-          "ported": false
+          "decl": "void FUN_00088200(float *camera);",
+          "ported": true
         },
         {
           "addr": "0x88260",

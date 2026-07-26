@@ -1960,57 +1960,18 @@ void FUN_0011fef0(void)
 #endif
 
 
-/* FUN_0011ff10 (0x11ff10) — XBE naked draft (batch 159). */
-#if defined(__clang__)
-static void (*const b11ff10_c11fd50)(void) = FUN_0011fd50;
-static void *(*const b11ff10_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_0011ff10(void)
+/* FUN_0011ff10 (0x11ff10) — readable C lift. */
+int FUN_0011ff10(int16_t a, int16_t b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x46e808, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%esi, %%edi\n\t"
-      "call *%[c11fd50]\n\t"
-      "movl 0x46e808, %%esi\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "call *%[c11fd50]\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x18(%%ebx), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0xc(%%ebp), %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x18(%%edi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0xa(%%eax), %%ecx\n\t"
-      "movswl 0xa(%%esi), %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%edi\n\t"
-      "subl %%edx, %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "setg %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11fd50] "m"(b11ff10_c11fd50), [dget] "m"(b11ff10_dget)
-      : "memory");
+  void *pool = *(void **)0x46e808;
+  void *da;
+  void *db;
+  FUN_0011fd50(pool);
+  FUN_0011fd50(pool);
+  da = datum_get(*(void **)((char *)pool + 0x18), a);
+  db = datum_get(*(void **)((char *)pool + 0x18), b);
+  return (*(int16_t *)((char *)db + 0xa) - *(int16_t *)((char *)da + 0xa)) > 0;
 }
-#else
-#error "FUN_0011ff10: clang naked draft required"
-#endif
-
 
 /* FUN_0011ff70 (0x11ff70) — XBE naked draft (batch 112). */
 #if defined(__clang__)
