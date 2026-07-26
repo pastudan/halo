@@ -12334,7 +12334,7 @@
         {
           "addr": "0xc9f90",
           "decl": "float *FUN_000c9f90(int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca010",
