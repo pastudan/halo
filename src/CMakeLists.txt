@@ -20,6 +20,7 @@
 	halo/ai/path_smoothing.c
 	halo/ai/props.c
 	halo/bitmaps/bitmap_utilities.c
+	halo/bink/bink.c
 	halo/bitmaps/bitmaps.c
 	halo/bitmaps/tiff_file.c
 	halo/bungie_net/network/transport_endpoint_set_winsock.c

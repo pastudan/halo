@@ -29461,47 +29461,58 @@
       "functions": [
         {
           "addr": "0x22df80",
-          "decl": "int __stdcall BinkSoundUseDirectSound(void *dsound_proc, void *dsound_handle);"
+          "decl": "int __stdcall BinkSoundUseDirectSound(void *dsound_proc, void *dsound_handle);",
+          "ported": false
         },
         {
           "addr": "0x22e320",
-          "decl": "void __stdcall BinkSetMemory(unsigned int size);"
+          "decl": "void __stdcall BinkSetMemory(unsigned int size);",
+          "ported": false
         },
         {
           "addr": "0x230390",
-          "decl": "void *__stdcall BinkOpen(const char *filename, unsigned int flags);"
+          "decl": "void *__stdcall BinkOpen(const char *filename, unsigned int flags);",
+          "ported": false
         },
         {
           "addr": "0x231220",
-          "decl": "void __stdcall BinkClose(void *bink_handle);"
+          "decl": "void __stdcall BinkClose(void *bink_handle);",
+          "ported": false
         },
         {
           "addr": "0x22e530",
-          "decl": "int __stdcall BinkCopyToBuffer(void *bink_handle, void *dest, int pitch, int height, int x, int y, unsigned int flags);"
+          "decl": "int __stdcall BinkCopyToBuffer(void *bink_handle, void *dest, int pitch, int height, int x, int y, unsigned int flags);",
+          "ported": false
         },
         {
           "addr": "0x22eb40",
-          "decl": "int __stdcall BinkDoFrame(void *bink_handle);"
+          "decl": "int __stdcall BinkDoFrame(void *bink_handle);",
+          "ported": false
         },
         {
           "addr": "0x22f1e0",
-          "decl": "int __stdcall BinkWait(void *bink_handle);"
+          "decl": "int __stdcall BinkWait(void *bink_handle);",
+          "ported": false
         },
         {
           "addr": "0x22f480",
-          "decl": "void __stdcall BinkGetSummary(void *bink_handle, void *summary);"
+          "decl": "void __stdcall BinkGetSummary(void *bink_handle, void *summary);",
+          "ported": false
         },
         {
           "addr": "0x22f650",
-          "decl": "void __stdcall BinkGetFrameBuffersInfo(void *bink_handle, void *frame_info, unsigned int frame_count);"
+          "decl": "void __stdcall BinkGetFrameBuffersInfo(void *bink_handle, void *frame_info, unsigned int frame_count);",
+          "ported": false
         },
         {
           "addr": "0x230ff0",
-          "decl": "int __stdcall BinkNextFrame(void *bink_handle);"
+          "decl": "int __stdcall BinkNextFrame(void *bink_handle);",
+          "ported": false
         },
         {
           "addr": "0x231490",
-          "decl": "void __stdcall BinkSetSoundSystem(void *open_proc, void *close_proc);"
+          "decl": "void __stdcall BinkSetSoundSystem(void *open_proc, void *close_proc);",
+          "ported": false
         }
       ],
       "name": "bink.obj",
