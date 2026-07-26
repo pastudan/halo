@@ -5376,12 +5376,12 @@
         {
           "addr": "0x92e70",
           "decl": "void cinematic_skip_start(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x92e80",
           "decl": "void cinematic_skip_stop(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x92e90",
@@ -17752,7 +17752,7 @@
         {
           "addr": "0xb6a90",
           "decl": "void player_control_action_test_reset(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6ab0",
@@ -34973,7 +34973,7 @@
         {
           "addr": "0x538d0",
           "decl": "int16_t FUN_000538d0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x538f0",

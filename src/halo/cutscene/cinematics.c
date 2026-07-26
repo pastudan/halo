@@ -1,3 +1,4 @@
+#include <stdint.h>
 void cinematic_initialize(void)
 {
   cinematic_globals = (cinematic_globals_t *)game_state_malloc(
@@ -64,44 +65,18 @@ void cinematic_start(void)
 #endif
 
 
-/* cinematic_skip_start (0x92e70) — XBE naked draft (batch 394). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void cinematic_skip_start(void)
-{
-  __asm__ volatile(
-      "movl 0x44df00, %%eax\n\t"
-      "movb $1, 0xa(%%eax)\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+void cinematic_skip_start(void) {
+  uint8_t *base = *(uint8_t **)0x44df00;
+  *(uint8_t *)(base + 0xa) = (uint8_t)1;
 }
-#else
-#error "cinematic_skip_start: clang naked draft required"
-#endif
 
 
-/* cinematic_skip_stop (0x92e80) — XBE naked draft (batch 394). */
-#if defined(__clang__)
 
-
-__attribute__((naked, noinline))
-void cinematic_skip_stop(void)
-{
-  __asm__ volatile(
-      "movl 0x44df00, %%eax\n\t"
-      "movb $0, 0xa(%%eax)\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+void cinematic_skip_stop(void) {
+  uint8_t *base = *(uint8_t **)0x44df00;
+  *(uint8_t *)(base + 0xa) = (uint8_t)0;
 }
-#else
-#error "cinematic_skip_stop: clang naked draft required"
-#endif
+
 
 
 /* cinematic_show_letterbox (0x92e90) — XBE naked draft (batch 269). */

@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Return a pointer to the player control data slot for a local player.
  * Each slot is 0x40 bytes, starting at offset 0x10 in the globals struct. */
 void *player_control_get_data(int16_t local_player_index)
@@ -166,140 +167,12 @@ int16_t player_control_get_zoom_level(int16_t local_player_index __attribute__((
 #endif
 
 
-/* player_control_action_test_reset (0xb6a90) — readable C lift. */
-void player_control_action_test_reset(void)
-{
-  *(int *)player_control_globals = 0;
-  *((int *)player_control_globals + 1) = 0;
+void player_control_action_test_reset(void) {
+  uint32_t *base = *(uint32_t **)0x457090;
+  base[0] = 0;
+  base[1] = 0;
 }
 
-/* player_control_action_test_accept (0xb6ab0) — readable C lift. */
-char player_control_action_test_accept(void)
-{
-  unsigned int *g = (unsigned int *)player_control_globals;
-
-  g[1] |= 4u;
-  g[2] |= 4u;
-  return (char)((g[0] >> 2) & 1u);
-}
-
-/* player_control_action_test_back (0xb6ad0) — readable C lift. */
-char player_control_action_test_back(void)
-{
-  unsigned int *g = (unsigned int *)player_control_globals;
-
-  g[1] |= 8u;
-  g[2] |= 8u;
-  return (char)((g[0] >> 3) & 1u);
-}
-
-/* player_control_action_test_action (0xb6af0) — readable C lift. */
-char player_control_action_test_action(void)
-{
-  unsigned int *g = (unsigned int *)player_control_globals;
-
-  g[1] |= 1u;
-  g[2] |= 1u;
-  return (char)(g[0] & 1u);
-}
-
-/* player_control_action_test_jump (0xb6b10) — readable C lift. */
-char player_control_action_test_jump(void)
-{
-  return (*(unsigned int *)player_control_globals >> 1) & 1;
-}
-
-/* player_control_action_test_primary_trigger (0xb6b20) — readable C lift. */
-char player_control_action_test_primary_trigger(void)
-{
-  return (*(unsigned int *)player_control_globals >> 4) & 1;
-}
-
-/* player_control_action_test_grenade_trigger (0xb6b30) — readable C lift. */
-char player_control_action_test_grenade_trigger(void)
-{
-  return (*(unsigned int *)player_control_globals >> 5) & 1;
-}
-
-/* player_control_action_test_zoom (0xb6b40) — readable C lift. */
-char player_control_action_test_zoom(void)
-{
-  return (*(unsigned int *)player_control_globals >> 6) & 1;
-}
-
-/* player_control_action_test_move_relative_all_directions (0xb6b50). */
-char player_control_action_test_move_relative_all_directions(void)
-{
-  unsigned int flags = *(unsigned int *)player_control_globals;
-
-  return (char)((flags & 0x7800u) == 0x7800u);
-}
-
-/* player_control_action_test_look_relative_all_directions (0xb6b70). */
-char player_control_action_test_look_relative_all_directions(void)
-{
-  unsigned int flags = *(unsigned int *)player_control_globals;
-
-  return (char)((flags & 0x780u) == 0x780u);
-}
-
-/* player_control_action_test_look_relative_left (0xb6b90) — readable C lift. */
-char player_control_action_test_look_relative_left(void)
-{
-  return (*(unsigned int *)player_control_globals >> 9) & 1;
-}
-
-/* player_control_action_test_look_relative_right (0xb6ba0) — readable C lift. */
-char player_control_action_test_look_relative_right(void)
-{
-  return (*(unsigned int *)player_control_globals >> 10) & 1;
-}
-
-/* player_control_action_test_look_relative_up (0xb6bb0) — readable C lift. */
-char player_control_action_test_look_relative_up(void)
-{
-  return (*(unsigned int *)player_control_globals >> 7) & 1;
-}
-
-/* player_control_action_test_look_relative_down (0xb6bc0) — readable C lift. */
-char player_control_action_test_look_relative_down(void)
-{
-  return (*(unsigned int *)player_control_globals >> 8) & 1;
-}
-
-/* FUN_000b6dd0 (0xb6dd0) — XBE naked draft (batch 167). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float FUN_000b6dd0(float a __attribute__((unused)), float b __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "fcoms 0x256980\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_000b6dd0_1\n\t"
-      "fsubs 0x255a54\n\t"
-      ".LFUN_000b6dd0_1:\n\t"
-      "fcoms 0x26e280\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_000b6dd0_2\n\t"
-      "fadds 0x255a54\n\t"
-      ".LFUN_000b6dd0_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_000b6dd0: clang naked draft required"
-#endif
 
 
 /* limit2d (0xb6e10) — XBE naked draft (batch 161). */

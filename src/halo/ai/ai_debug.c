@@ -1,3 +1,4 @@
+#include <stdint.h>
 
 /* ai_debug_dispose (0x48f50) — XBE naked draft (batch 99). */
 #if defined(__clang__)
@@ -14052,65 +14053,11 @@ void FUN_00053890(void)
 #endif
 
 
-/* FUN_000538d0 (0x538d0) — readable C lift. */
-int16_t FUN_000538d0(void)
-{
-  return *(int16_t *)(*(char **)0x5ab270 + 0x30);
+int16_t FUN_000538d0(void) {
+  uint8_t *base = *(uint8_t **)0x5ab270;
+  return *(uint16_t *)(base + 0x30);
 }
 
-/* FUN_000538f0 (0x538f0) — XBE naked draft (batch 150). */
-#if defined(__clang__)
-static void (*const b538f0_c59b10)(void *iter, char flag) = encounter_iterator_next;
-static int (*const b538f0_c59b50)(void *iter) = FUN_00059b50;
-
-__attribute__((naked, noinline))
-void FUN_000538f0(void)
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c59b10]\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c59b50]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000538f0_4\n\t"
-      ".LFUN_000538f0_1:\n\t"
-      "movb 0x6(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_000538f0_2\n\t"
-      "movswl 0x1e(%%eax), %%eax\n\t"
-      "jmp .LFUN_000538f0_3\n\t"
-      ".LFUN_000538f0_2:\n\t"
-      "movl $1, %%eax\n\t"
-      ".LFUN_000538f0_3:\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl %%eax, %%esi\n\t"
-      "call *%[c59b50]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000538f0_1\n\t"
-      ".LFUN_000538f0_4:\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c59b10] "m"(b538f0_c59b10), [c59b50] "m"(b538f0_c59b50)
-      : "memory");
-}
-#else
-#error "FUN_000538f0: clang naked draft required"
-#endif
 
 
 /* FUN_00053960 (0x53960) — XBE naked draft (batch 151). */
