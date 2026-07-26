@@ -2275,52 +2275,21 @@ int16_t first_person_weapon_get_marker_by_name_render(int object_handle,
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((noinline))
 #endif
-/* FUN_000de0e0 (0xde0e0) — XBE naked draft (batch 234). */
-#if defined(__clang__)
-static void (*const bde0e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bde0e0_exitfn)(int) = system_exit;
-static void (*const bde0e0_cdde80)(int local_player_index) = FUN_000dde80;
-
-__attribute__((naked, noinline))
+/* FUN_000de0e0 (0xde0e0) — readable C lift. */
 void FUN_000de0e0(int object_handle, int16_t local_player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_000de0e0_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .LFUN_000de0e0_2\n\t"
-      ".LFUN_000de0e0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x599\n\t"
-      "pushl $0x282294\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000de0e0_2:\n\t"
-      "movl 0x46bea8, %%edx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0x1ea0, %%eax, %%eax\n\t"
-      "addl %%edx, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movb $0, 0x50(%%eax)\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "call *%[cdde80]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bde0e0_assert), [exitfn] "m"(bde0e0_exitfn), [cdde80] "m"(bde0e0_cdde80)
-      : "memory");
+  extern char DAT_00266fc0[];
+  extern char DAT_00282294[];
+  char *slot;
+  if ((int16_t)local_player_index < 0 || (int16_t)local_player_index >= 4) {
+    display_assert(DAT_00266fc0, DAT_00282294, 0x599, 1);
+    system_exit(-1);
+  }
+  slot = *(char **)0x46bea8 + (int16_t)local_player_index * 0x1ea0;
+  slot[0x50] = 0;
+  *(int *)(slot + 4) = object_handle;
+  FUN_000dde80(local_player_index);
 }
-#else
-#error "FUN_000de0e0: clang naked draft required"
-#endif
-
 
 /* first_person_weapon_message_from_unit (0xde360) — XBE naked draft (batch 231). */
 #if defined(__clang__)
