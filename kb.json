@@ -2033,7 +2033,8 @@
       "functions": [
         {
           "addr": "0x1b8a0",
-          "decl": "void action_vehicle_perform(void);"
+          "decl": "void action_vehicle_perform(void);",
+          "ported": false
         },
         {
           "addr": "0x1bba0",
@@ -2042,11 +2043,13 @@
         },
         {
           "addr": "0x1bcd0",
-          "decl": "void action_vehicle_setup_impromptu(void);"
+          "decl": "void action_vehicle_setup_impromptu(void);",
+          "ported": false
         },
         {
           "addr": "0x1beb0",
-          "decl": "void FUN_0001beb0(void);"
+          "decl": "void FUN_0001beb0(void);",
+          "ported": false
         },
         {
           "addr": "0x1c030",
@@ -2174,7 +2177,8 @@
         },
         {
           "addr": "0x1cda0",
-          "decl": "void FUN_0001cda0(void);"
+          "decl": "void FUN_0001cda0(void);",
+          "ported": false
         },
         {
           "addr": "0x1cf10",
@@ -2194,7 +2198,8 @@
         },
         {
           "addr": "0x1d180",
-          "decl": "char actor_action_test_grenade(int actor_handle);"
+          "decl": "char actor_action_test_grenade(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x1d350",
@@ -2213,7 +2218,8 @@
         },
         {
           "addr": "0x1d4f0",
-          "decl": "void actor_get_pursuit_location(void);"
+          "decl": "void actor_get_pursuit_location(void);",
+          "ported": false
         },
         {
           "addr": "0x1d530",
@@ -2300,11 +2306,13 @@
         },
         {
           "addr": "0x1dfa0",
-          "decl": "void actor_action_handle_vehicle_entry(int actor_handle);"
+          "decl": "void actor_action_handle_vehicle_entry(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x1e360",
-          "decl": "void actor_action_find_escape_from_danger(void);"
+          "decl": "void actor_action_find_escape_from_danger(void);",
+          "ported": false
         },
         {
           "addr": "0x1e700",
@@ -2313,19 +2321,23 @@
         },
         {
           "addr": "0x1e8a0",
-          "decl": "char actor_action_handle_combat_selection(int actor_handle);"
+          "decl": "char actor_action_handle_combat_selection(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x1ef90",
-          "decl": "char actor_action_handle_lost_contact(int actor_handle);"
+          "decl": "char actor_action_handle_lost_contact(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x1f6e0",
-          "decl": "char actor_action_handle_done_fleeing(int actor_handle);"
+          "decl": "char actor_action_handle_done_fleeing(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x1f770",
-          "decl": "char actor_action_handle_combat_status(int actor_handle, int param2, int param3);"
+          "decl": "char actor_action_handle_combat_status(int actor_handle, int param2, int param3);",
+          "ported": false
         },
         {
           "addr": "0x1f920",
@@ -2399,7 +2411,8 @@
         },
         {
           "addr": "0x20990",
-          "decl": "void FUN_00020990(int actor_handle);"
+          "decl": "void FUN_00020990(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x21080",
@@ -24684,43 +24697,53 @@
       "functions": [
         {
           "addr": "0x1929a0",
-          "decl": "void FUN_001929a0(void);"
+          "decl": "void FUN_001929a0(void);",
+          "ported": false
         },
         {
           "addr": "0x192a50",
-          "decl": "void render_debug_leaf_faces(void);"
+          "decl": "void render_debug_leaf_faces(void);",
+          "ported": false
         },
         {
           "addr": "0x192bb0",
-          "decl": "void FUN_00192bb0(void);"
+          "decl": "void FUN_00192bb0(void);",
+          "ported": false
         },
         {
           "addr": "0x192c30",
-          "decl": "void intersect_planes3d(void);"
+          "decl": "void intersect_planes3d(void);",
+          "ported": false
         },
         {
           "addr": "0x192da0",
-          "decl": "void leaf_map_build_portals_from_leaf(void);"
+          "decl": "void leaf_map_build_portals_from_leaf(void);",
+          "ported": false
         },
         {
           "addr": "0x192f80",
-          "decl": "void leaf_map_build_leaf_face_for_leaf_on_node(void);"
+          "decl": "void leaf_map_build_leaf_face_for_leaf_on_node(void);",
+          "ported": false
         },
         {
           "addr": "0x1931e0",
-          "decl": "void FUN_001931e0(void);"
+          "decl": "void FUN_001931e0(void);",
+          "ported": false
         },
         {
           "addr": "0x1932d0",
-          "decl": "void FUN_001932d0(void);"
+          "decl": "void FUN_001932d0(void);",
+          "ported": false
         },
         {
           "addr": "0x193340",
-          "decl": "void FUN_00193340(void);"
+          "decl": "void FUN_00193340(void);",
+          "ported": false
         },
         {
           "addr": "0x193420",
-          "decl": "void leaf_map_initialize_from_bsp(void);"
+          "decl": "void leaf_map_initialize_from_bsp(void);",
+          "ported": false
         },
         {
           "addr": "0x193550",
@@ -24729,11 +24752,13 @@
         },
         {
           "addr": "0x1935f0",
-          "decl": "void structure_bsp_find_material_for_surface(void *scenario, int surface_index, int16_t *out_collection_index, int16_t *out_geometry_index);"
+          "decl": "void structure_bsp_find_material_for_surface(void *scenario, int surface_index, int16_t *out_collection_index, int16_t *out_geometry_index);",
+          "ported": false
         },
         {
           "addr": "0x1937a0",
-          "decl": "void vertex_type_from_shader_tag(void);"
+          "decl": "void vertex_type_from_shader_tag(void);",
+          "ported": false
         },
         {
           "addr": "0x1937d0",

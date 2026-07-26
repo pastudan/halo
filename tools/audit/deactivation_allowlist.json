@@ -15811,5 +15811,180 @@
     "object": "ai.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b8a0",
+    "name": "action_vehicle_perform",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bcd0",
+    "name": "action_vehicle_setup_impromptu",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1beb0",
+    "name": "FUN_0001beb0",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cda0",
+    "name": "FUN_0001cda0",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d180",
+    "name": "actor_action_test_grenade",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d4f0",
+    "name": "actor_get_pursuit_location",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1dfa0",
+    "name": "actor_action_handle_vehicle_entry",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e360",
+    "name": "actor_action_find_escape_from_danger",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e8a0",
+    "name": "actor_action_handle_combat_selection",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ef90",
+    "name": "actor_action_handle_lost_contact",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1f6e0",
+    "name": "actor_action_handle_done_fleeing",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1f770",
+    "name": "actor_action_handle_combat_status",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x20990",
+    "name": "FUN_00020990",
+    "object": "actions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1929a0",
+    "name": "FUN_001929a0",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x192a50",
+    "name": "render_debug_leaf_faces",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x192bb0",
+    "name": "FUN_00192bb0",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x192c30",
+    "name": "intersect_planes3d",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x192da0",
+    "name": "leaf_map_build_portals_from_leaf",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x192f80",
+    "name": "leaf_map_build_leaf_face_for_leaf_on_node",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1931e0",
+    "name": "FUN_001931e0",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1932d0",
+    "name": "FUN_001932d0",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x193340",
+    "name": "FUN_00193340",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x193420",
+    "name": "leaf_map_initialize_from_bsp",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1935f0",
+    "name": "structure_bsp_find_material_for_surface",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1937a0",
+    "name": "vertex_type_from_shader_tag",
+    "object": "structure_bsp_definitions.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
