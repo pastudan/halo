@@ -6011,105 +6011,28 @@ void FUN_000564b0(int encounter_handle __attribute__((unused)), int team_index _
 #endif
 
 
-/* FUN_000565c0 (0x565c0) — XBE naked draft (batch 238). */
-#if defined(__clang__)
-static scenario_t * (*const b565c0_c18e380)(void) = global_scenario_get;
-static void (*const b565c0_c54220)(unsigned int combined_index, void *scenario, char *buffer, int buffer_size) = FUN_00054220;
-static const char * (*const b565c0_ccb980)(void) = hs_runtime_get_executing_thread_name;
-static void (*const b565c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static int (*const b565c0_c1dd801)(const char *a, const char *b) = crt_stricmp;
-static void (*const b565c0_c55dd0)(int encounter_handle, int dest_encounter, int param_3, int param_4) = FUN_00055dd0;
-
-__attribute__((naked, noinline))
-void FUN_000565c0(int encounter_handle __attribute__((unused)), int team_index __attribute__((unused)), int side_name __attribute__((unused)))
+/* FUN_000565c0 (0x565c0) — readable C lift. */
+void FUN_000565c0(int encounter_handle, int team_index, const char *side_name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x404, %%esp\n\t"
-      "movb 0x5aca57, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "jne .LFUN_000565c0_1\n\t"
-      "movb 0x5aca59, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000565c0_2\n\t"
-      ".LFUN_000565c0_1:\n\t"
-      "leal -0x404(%%ebp), %%eax\n\t"
-      "pushl $0x200\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c54220]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "leal -0x204(%%ebp), %%ecx\n\t"
-      "pushl $0x200\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c18e380]\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c54220]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "leal -0x204(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x404(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ccb980]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25c970\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000565c0_2:\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl $0x259738\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000565c0_3\n\t"
-      "movb $1, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_000565c0_5\n\t"
-      ".LFUN_000565c0_3:\n\t"
-      "pushl $0x259730\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000565c0_4\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x25c920\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000565c0_4:\n\t"
-      "movb $0, -0x4(%%ebp)\n\t"
-      ".LFUN_000565c0_5:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c55dd0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b565c0_c18e380), [c54220] "m"(b565c0_c54220), [ccb980] "m"(b565c0_ccb980), [c8f390] "m"(b565c0_c8f390), [c1dd801] "m"(b565c0_c1dd801), [c55dd0] "m"(b565c0_c55dd0)
-      : "memory");
+  char buf1[0x200];
+  char buf2[0x200];
+  char is_left;
+
+  if (*(unsigned char *)0x5aca57 != 0 || *(unsigned char *)0x5aca59 != 0) {
+    FUN_00054220((unsigned)encounter_handle, global_scenario_get(), buf1, 0x200);
+    FUN_00054220((unsigned)team_index, global_scenario_get(), buf2, 0x200);
+    error(2, (const char *)0x25c970, hs_runtime_get_executing_thread_name(), buf1, buf2);
+  }
+  if (crt_stricmp(side_name, (const char *)0x259738) == 0) {
+    is_left = 1;
+  } else {
+    if (crt_stricmp(side_name, (const char *)0x259730) != 0)
+      error(2, (const char *)0x25c920, side_name);
+    is_left = 0;
+  }
+  FUN_00055dd0(encounter_handle, team_index, 1, is_left);
 }
-#else
-#error "FUN_000565c0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00057380 (0x57380) — XBE naked draft (batch 227). */

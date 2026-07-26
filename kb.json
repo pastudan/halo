@@ -35485,8 +35485,9 @@
         },
         {
           "addr": "0x565c0",
-          "decl": "void FUN_000565c0(int encounter_handle, int team_index, int side_name);",
-          "ported": false
+          "decl": "void FUN_000565c0(int encounter_handle, int team_index, const char *side_name);",
+          "ported": true,
+          "name": "FUN_000565c0"
         },
         {
           "addr": "0x566a0",
