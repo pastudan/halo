@@ -12047,7 +12047,7 @@
         {
           "addr": "0xc6940",
           "decl": "bool FUN_000c6940(int datum_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc69d0",
