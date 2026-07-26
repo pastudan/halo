@@ -8354,8 +8354,8 @@
         },
         {
           "addr": "0xb40f0",
-          "decl": "int FUN_000A7470(void);",
-          "ported": true
+          "decl": "void race_team_can_win_game(void);",
+          "ported": false
         },
         {
           "addr": "0xb4170",
@@ -17943,8 +17943,8 @@
         },
         {
           "addr": "0xa2920",
-          "decl": "float FUN_000a2a90(float a, float t);",
-          "ported": true
+          "decl": "void FUN_000a2920(void);",
+          "ported": false
         },
         {
           "addr": "0xa2930",
