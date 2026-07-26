@@ -981,133 +981,43 @@ char FUN_00024900(int actor_handle, void *query_buf)
   }
   return ok;
 }
-/* FUN_00024950 (0x24950) — XBE naked draft (batch 127). */
-#if defined(__clang__)
-static void (*const b24950_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b24950_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int FUN_00024950(int index1 __attribute__((unused)), int index2 __attribute__((unused)))
+/* FUN_00024950 (0x24950) — readable C lift. */
+int FUN_00024950(int index1, int index2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x331f04, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "imull $0x3c, %%edi, %%edi\n\t"
-      "imull $0x3c, %%esi, %%esi\n\t"
-      "addl %%eax, %%esi\n\t"
-      "addl %%eax, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00024950_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x50f\n\t"
-      "pushl $0x254c8c\n\t"
-      "pushl $0x254d88\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00024950_1:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jl .LFUN_00024950_2\n\t"
-      "movswl 0x331f00, %%eax\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jl .LFUN_00024950_3\n\t"
-      ".LFUN_00024950_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x510\n\t"
-      "pushl $0x254c8c\n\t"
-      "pushl $0x254d40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00024950_3:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_00024950_4\n\t"
-      "movswl 0x331f00, %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_00024950_5\n\t"
-      ".LFUN_00024950_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x511\n\t"
-      "pushl $0x254c8c\n\t"
-      "pushl $0x254cf8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00024950_5:\n\t"
-      "movb 0x30(%%esi), %%al\n\t"
-      "cmpb 0x30(%%edi), %%al\n\t"
-      "je .LFUN_00024950_6\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testb %%al, %%al\n\t"
-      "sete %%dl\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "leal -0x1(%%edx,%%edx,1), %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "setg %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00024950_6:\n\t"
-      "movb 0x31(%%esi), %%al\n\t"
-      "cmpb 0x31(%%edi), %%al\n\t"
-      "je .LFUN_00024950_7\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testb %%al, %%al\n\t"
-      "setne %%cl\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "leal -0x1(%%ecx,%%ecx,1), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "setg %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00024950_7:\n\t"
-      "flds 0x38(%%esi)\n\t"
-      "fcomps 0x38(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00024950_8\n\t"
-      "flds 0x38(%%esi)\n\t"
-      "fcomps 0x38(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00024950_8\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00024950_8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b24950_assert), [exitfn] "m"(b24950_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_00024950: clang naked draft required"
-#endif
+  char *base;
+  char *a;
+  char *b;
+  float fa;
+  float fb;
 
+  base = *(char **)0x331f04;
+  a = base + index1 * 0x3c;
+  b = base + index2 * 0x3c;
+  if (base == 0) {
+    display_assert((const char *)0x254d88, (const char *)0x254c8c, 0x50f, 1);
+    system_exit(-1);
+  }
+  if (index1 < 0 || index1 >= (int)*(int16_t *)0x331f00) {
+    display_assert((const char *)0x254d40, (const char *)0x254c8c, 0x510, 1);
+    system_exit(-1);
+  }
+  if (index2 < 0 || index2 >= (int)*(int16_t *)0x331f00) {
+    display_assert((const char *)0x254cf8, (const char *)0x254c8c, 0x511, 1);
+    system_exit(-1);
+  }
+  if (a[0x30] != b[0x30]) {
+    return a[0x30] == 0;
+  }
+  if (a[0x31] != b[0x31]) {
+    return a[0x31] != 0;
+  }
+  fa = *(float *)(a + 0x38);
+  fb = *(float *)(b + 0x38);
+  if (fa < fb) {
+    return 1;
+  }
+  return 0;
+}
 
 /* actor_get_firing_position_group (0x24a60) — XBE naked draft (batch 128). */
 #if defined(__clang__)

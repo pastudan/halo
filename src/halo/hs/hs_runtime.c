@@ -5165,55 +5165,20 @@ void FUN_000c9a50(void)
 #endif
 
 
-/* FUN_000c9bd0 (0xc9bd0) — XBE naked draft (batch 167). */
-#if defined(__clang__)
-static int (*const bc9bd0_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
-static int (*const bc9bd0_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
-
-__attribute__((naked, noinline))
-int FUN_000c9bd0(int list_handle __attribute__((unused)), int16_t skip_count __attribute__((unused)))
+/* FUN_000c9bd0 (0xc9bd0) — readable C lift. */
+int FUN_000c9bd0(int list_handle, int16_t skip_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cce450]\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "jle .LFUN_000c9bd0_2\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_000c9bd0_1:\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c9bd0_2\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cce320]\n\t"
-      "addl $8, %%esp\n\t"
-      "decl %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jg .LFUN_000c9bd0_1\n\t"
-      ".LFUN_000c9bd0_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cce450] "m"(bc9bd0_cce450), [cce320] "m"(bc9bd0_cce320)
-      : "memory");
+  int iter;
+  int cur;
+  cur = FUN_000ce450(list_handle, &iter);
+  while (skip_count > 0) {
+    if (cur == -1)
+      break;
+    cur = FUN_000ce320(list_handle, &iter);
+    skip_count -= 1;
+  }
+  return cur;
 }
-#else
-#error "FUN_000c9bd0: clang naked draft required"
-#endif
-
 
 /* FUN_000c9c10 (0xc9c10) — readable C lift. */
 void FUN_000c9c10(int object_handle, float value)
