@@ -968,47 +968,111 @@ void input_update_keyboard_devices(void)
   }
 }
 
-/* input_get_raw_data_string (0xd0030) — format raw gamepad stick state into buf
- */
-void input_get_raw_data_string(char *buffer, int16_t size)
-{
-  short written;
-  short delta;
-  int i;
-  short *sticks;
-  int *connected;
-  int count;
+/* input_get_raw_data_string (0xd0030) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+static void (*const bd0030_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bd0030_exitfn)(int) = system_exit;
+static int (*const bd0030_c1d9179)(char *str, size_t size, const char *format, ...) = snprintf;
 
-  if (buffer == NULL) {
-    display_assert("buffer", "c:\\halo\\SOURCE\\input\\input_xbox.c", 0x32b, 1);
-    system_exit(-1);
-  }
-  if (size < 1) {
-    display_assert("size>0", "c:\\halo\\SOURCE\\input\\input_xbox.c", 0x32c, 1);
-    system_exit(-1);
-  }
-  if (buffer != NULL && (int)size > 0) {
-    written = (short)snprintf(buffer, (int)size,
-                              "|n|n|n|ngamepad|tleft stick|tright stick|t|n");
-    i = 0;
-    sticks = (short *)0x46ba1c;
-    connected = (int *)0x46ba3c;
-    count = 4;
-    do {
-      if (*connected != 0) {
-        delta = (short)snprintf(buffer + written, (int)size - (int)written,
-                                "gamepad %d|t(%d, %d)|t(%d, %d)|n", i,
-                                (int)sticks[-2], (int)sticks[-1], (int)*sticks,
-                                (int)sticks[1]);
-        written += delta;
-      }
-      connected++;
-      i++;
-      sticks += 4;
-      count--;
-    } while (count != 0);
-  }
+__attribute__((naked, noinline))
+void input_get_raw_data_string(char *buffer __attribute__((unused)), int16_t size __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Linput_get_raw_data_string_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x32b\n\t"
+      "pushl $0x281488\n\t"
+      "pushl $0x267900\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Linput_get_raw_data_string_1:\n\t"
+      "movw 0xc(%%ebp), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jg .Linput_get_raw_data_string_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x32c\n\t"
+      "pushl $0x281488\n\t"
+      "pushl $0x2817b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Linput_get_raw_data_string_2:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Linput_get_raw_data_string_5\n\t"
+      "testw %%di, %%di\n\t"
+      "jle .Linput_get_raw_data_string_5\n\t"
+      "pushl %%ebx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "pushl $0x281780\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "call *%[c1d9179]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movl $0x46ba1c, %%esi\n\t"
+      "movl $0x46ba3c, 0xc(%%ebp)\n\t"
+      "movl $4, -0x4(%%ebp)\n\t"
+      ".Linput_get_raw_data_string_3:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "cmpl $0, (%%eax)\n\t"
+      "je .Linput_get_raw_data_string_4\n\t"
+      "movswl 0x2(%%esi), %%ecx\n\t"
+      "movswl (%%esi), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movswl -0x2(%%esi), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movswl -0x4(%%esi), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "subl %%eax, %%ecx\n\t"
+      "pushl $0x28175c\n\t"
+      "pushl %%ecx\n\t"
+      "addl %%edx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9179]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "addl %%eax, %%ebx\n\t"
+      ".Linput_get_raw_data_string_4:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "addl $4, %%edx\n\t"
+      "incl %%edi\n\t"
+      "addl $8, %%esi\n\t"
+      "decl %%eax\n\t"
+      "movl %%edx, 0xc(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jne .Linput_get_raw_data_string_3\n\t"
+      "popl %%ebx\n\t"
+      ".Linput_get_raw_data_string_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bd0030_assert), [exitfn] "m"(bd0030_exitfn), [c1d9179] "m"(bd0030_c1d9179)
+      : "memory");
 }
+#else
+#error "input_get_raw_data_string: clang naked draft required"
+#endif
+
 
 void input_update(void)
 {

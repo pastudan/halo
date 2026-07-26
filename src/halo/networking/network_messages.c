@@ -1414,55 +1414,109 @@ bool FUN_0011b750(int definition __attribute__((unused)), int encoded_packet __a
  * hashtable.c — Hash table implementation
  * ======================================================================== */
 
-/* Initialize a hashtable header.
- * Source: c:\halo\SOURCE\memory\hashtable.c lines 0x29-0x2c (41-44).
- * Asserts: table non-NULL, key_size>0, element_size>0, 0<load_factor<=1.
- * Byte layout of *table (all offsets confirmed from disassembly):
- *   +0x00 int16  key_size
- *   +0x02 int16  element_size
- *   +0x04 int16  count = 0
- *   +0x06 int16  sentinel = -1 (0xffff)
- *   +0x08 float  load_factor
- *   +0x10 dword  param_5
- *   +0x14 dword  param_6
- *   +0x18 dword  0
- *   +0x1c       array header (passed to array_new with key_size+element_size)
- */
-void hashtable_new(void *table, short key_size, short element_size,
-                   float load_factor, int param_5, int param_6)
-{
-  char *t;
+/* hashtable_new (0x11b850) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+static void (*const b11b850_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11b850_exitfn)(int) = system_exit;
+static void (*const b11b850_c117b20)(int *table, int element_size) = array_new;
 
-  if (table == NULL) {
-    display_assert("table", "c:\\halo\\SOURCE\\memory\\hashtable.c", 0x29, 1);
-    system_exit(-1);
-  }
-  if (key_size < 1) {
-    display_assert("key_size>0", "c:\\halo\\SOURCE\\memory\\hashtable.c", 0x2a,
-                   1);
-    system_exit(-1);
-  }
-  if (element_size < 1) {
-    display_assert("element_size>0", "c:\\halo\\SOURCE\\memory\\hashtable.c",
-                   0x2b, 1);
-    system_exit(-1);
-  }
-  if (!(load_factor > 0.0f && load_factor <= 1.0f)) {
-    display_assert("load_factor>0 && load_factor<=1",
-                   "c:\\halo\\SOURCE\\memory\\hashtable.c", 0x2c, 1);
-    system_exit(-1);
-  }
-  t = (char *)table;
-  *(float *)(t + 0x08) = load_factor;
-  *(int *)(t + 0x10) = param_5;
-  *(int *)(t + 0x14) = param_6;
-  *(short *)(t + 0x00) = key_size;
-  *(short *)(t + 0x02) = element_size;
-  *(short *)(t + 0x04) = 0;
-  *(short *)(t + 0x06) = (short)-1;
-  array_new((int *)(t + 0x1c), (int)key_size + (int)element_size);
-  *(int *)(t + 0x18) = 0;
+__attribute__((naked, noinline))
+void hashtable_new(void *table __attribute__((unused)), short key_size __attribute__((unused)), short element_size __attribute__((unused)), float load_factor __attribute__((unused)), int param_5 __attribute__((unused)), int param_6 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lhashtable_new_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x29\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl $0x28f670\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhashtable_new_1:\n\t"
+      "movw 0xc(%%ebp), %%bx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jg .Lhashtable_new_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2a\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl $0x28f664\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhashtable_new_2:\n\t"
+      "movw 0x10(%%ebp), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jg .Lhashtable_new_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2b\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl $0x28e9ac\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhashtable_new_3:\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lhashtable_new_4\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jnp .Lhashtable_new_5\n\t"
+      ".Lhashtable_new_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2c\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl $0x28f644\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhashtable_new_5:\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "movl 0x1c(%%ebp), %%edx\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "movl %%ecx, 0x10(%%esi)\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "movl %%edx, 0x14(%%esi)\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x1c(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movw %%bx, (%%esi)\n\t"
+      "movw %%di, 0x2(%%esi)\n\t"
+      "movw $0, 0x4(%%esi)\n\t"
+      "movw $0xffff, 0x6(%%esi)\n\t"
+      "call *%[c117b20]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movl $0, 0x18(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11b850_assert), [exitfn] "m"(b11b850_exitfn), [c117b20] "m"(b11b850_c117b20)
+      : "memory");
 }
+#else
+#error "hashtable_new: clang naked draft required"
+#endif
+
 
 /* hashtable_set_user_data — store a user-data/callback value at offset 0x0c
  * of the hashtable header (0x11b950).

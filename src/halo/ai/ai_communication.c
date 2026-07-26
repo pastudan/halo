@@ -168,65 +168,102 @@ void ai_communication_dispose(void)
 {
 }
 
-/* ai_communication_initialize_for_new_map: reset communication state for a
- * new map load.
- *
- * Confirmed via caller: ai_initialize_for_new_map (0x41090).
- * Sets the communication-active flag at AI globals +0x10, zeroes the three
- * 8-byte slots at +0x14/+0x1c/+0x24, clears both dialogue and reply status
- * tables (each entry is 8 bytes: two uint32_t fields both set to 0xffffffff),
- * clears the conversation counter shorts at +0x2c/+0x2e, zeroes the 256-byte
- * conversation scratch buffer at +0x30, and calls data_delete_all on the
- * conversation data table.
- *
- * Store-offset table (offsets into AI globals block via DAT_00632574):
- *   +0x10  <- 1 (byte, communication-active flag)
- *   +0x14  <- csmemset 0, 8 bytes
- *   +0x1c  <- csmemset 0, 8 bytes
- *   +0x24  <- csmemset 0, 8 bytes
- *   dialogue table[i*8+0] <- 0xffffffff (uint32_t)
- *   dialogue table[i*8+4] <- 0xffffffff (uint32_t)
- *   reply table[i*8+0]    <- 0xffffffff (uint32_t)
- *   reply table[i*8+4]    <- 0xffffffff (uint32_t)
- *   +0x2c  <- 0 (int16_t)
- *   +0x2e  <- 0 (int16_t)
- *   +0x30  <- csmemset 0, 0x100 bytes */
+/* ai_communication_initialize_for_new_map (0x42b90) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+static void *(*const b42b90_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b42b90_c119b20)(data_t *data) = data_delete_all;
+
+__attribute__((naked, noinline))
 void ai_communication_initialize_for_new_map(void)
 {
-  int n;
-  int i;
-
-  *(uint8_t *)(*(uintptr_t *)0x632574 + 0x10) = 1;
-  csmemset((void *)(*(uintptr_t *)0x632574 + 0x14), 0, 8);
-  csmemset((void *)(*(uintptr_t *)0x632574 + 0x1c), 0, 8);
-  csmemset((void *)(*(uintptr_t *)0x632574 + 0x24), 0, 8);
-
-  n = (int)(*(int16_t *)0x331f08) << 1;
-  i = 0;
-  if (n > 0) {
-    do {
-      *(unsigned int *)(*(char **)0x331f0c + i * 8 + 4) = ~0u;
-      *(unsigned int *)(*(char **)0x331f0c + i * 8) = ~0u;
-      i = (int16_t)(i + 1);
-    } while (i < (int)(*(int16_t *)0x331f08) << 1);
-  }
-
-  n = (int)(*(int16_t *)0x331f10) << 1;
-  i = 0;
-  if (n > 0) {
-    do {
-      *(unsigned int *)(*(char **)0x331f14 + i * 8 + 4) = ~0u;
-      *(unsigned int *)(*(char **)0x331f14 + i * 8) = ~0u;
-      i = (int16_t)(i + 1);
-    } while (i < (int)(*(int16_t *)0x331f10) << 1);
-  }
-
-  *(int16_t *)(*(char **)0x632574 + 0x2c) = 0;
-  *(int16_t *)(*(char **)0x632574 + 0x2e) = 0;
-  csmemset((void *)(*(char **)0x632574 + 0x30), 0, 0x100);
-
-  data_delete_all(*(void **)0x6324ec);
+  __asm__ volatile(
+      "movl 0x632574, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movb $1, 0x10(%%eax)\n\t"
+      "movl 0x632574, %%ecx\n\t"
+      "pushl $8\n\t"
+      "addl $0x14, %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x632574, %%edx\n\t"
+      "pushl $8\n\t"
+      "addl $0x1c, %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x632574, %%eax\n\t"
+      "pushl $8\n\t"
+      "addl $0x24, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movswl 0x331f08, %%eax\n\t"
+      "shll $1, %%eax\n\t"
+      "addl $0x24, %%esp\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "orl $0xffffffff, %%edx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lai_communication_initialize_for_new_map_2\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lai_communication_initialize_for_new_map_1:\n\t"
+      "movl 0x331f0c, %%edi\n\t"
+      "movl %%edx, 0x4(%%edi,%%eax,8)\n\t"
+      "movl 0x331f0c, %%edi\n\t"
+      "movl %%edx, (%%edi,%%eax,8)\n\t"
+      "movswl 0x331f08, %%edi\n\t"
+      "incl %%ecx\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "shll $1, %%edi\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "jl .Lai_communication_initialize_for_new_map_1\n\t"
+      ".Lai_communication_initialize_for_new_map_2:\n\t"
+      "movswl 0x331f10, %%eax\n\t"
+      "shll $1, %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lai_communication_initialize_for_new_map_4\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .Lai_communication_initialize_for_new_map_3\n\t"
+      "leal (%%esp), %%esp\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lai_communication_initialize_for_new_map_3:\n\t"
+      "movl 0x331f14, %%edi\n\t"
+      "movl %%edx, 0x4(%%edi,%%eax,8)\n\t"
+      "movl 0x331f14, %%edi\n\t"
+      "movl %%edx, (%%edi,%%eax,8)\n\t"
+      "movswl 0x331f10, %%edi\n\t"
+      "incl %%ecx\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "shll $1, %%edi\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "jl .Lai_communication_initialize_for_new_map_3\n\t"
+      ".Lai_communication_initialize_for_new_map_4:\n\t"
+      "movl 0x632574, %%ecx\n\t"
+      "movw $0, 0x2c(%%ecx)\n\t"
+      "movl 0x632574, %%edx\n\t"
+      "movw $0, 0x2e(%%edx)\n\t"
+      "movl 0x632574, %%eax\n\t"
+      "pushl $0x100\n\t"
+      "addl $0x30, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x6324ec, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119b20]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b42b90_memset), [c119b20] "m"(b42b90_c119b20)
+      : "memory");
 }
+#else
+#error "ai_communication_initialize_for_new_map: clang naked draft required"
+#endif
+
 
 /* ai_communication_dispose_from_old_map: invalidate the conversation data
  * table when leaving a map.

@@ -348,43 +348,104 @@ void *csmemcpy(void *destination, void *source, size_t size)
   return destination;
 }
 
-/* Case-insensitive string comparison with assertion on non-null pointers.
- * Returns -1 if s1 < s2, 0 if equal, 1 if s1 > s2 (case-insensitive). */
-int csstricmp(const char *s1, const char *s2)
+/* csstricmp (0x8e190) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+static char (*const b8e190_c92d60)(int16_t a1) = stack_walk;
+static void (*const b8e190_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b8e190_exitfn)(int) = system_exit;
+static wchar_t * (*const b8e190_c1da8e3)(wchar_t *s, size_t count) = FUN_001da8e3;
+
+__attribute__((naked, noinline))
+int csstricmp(const char *s1 __attribute__((unused)), const char *s2 __attribute__((unused)))
 {
-  int c1;
-  int c2;
-  int offset;
-
-  assert_halt(s1 && s2);
-
-  c1 = crt_tolower((unsigned char)*s1);
-  c2 = crt_tolower((unsigned char)*s2);
-
-  if (c1 == 0)
-    goto check_end;
-
-  offset = (int)(s1 - s2);
-
-  for (;;) {
-    if (c2 == 0)
-      return 1;
-    if (c2 != c1)
-      goto not_equal;
-    s2++;
-    c1 = crt_tolower((unsigned char)s2[offset]);
-    c2 = crt_tolower((unsigned char)*s2);
-    if (c1 == 0)
-      break;
-  }
-
-check_end:
-  if (c2 != 0)
-    return -1;
-  return 0;
-
-not_equal:
-  if (c1 > c2)
-    return 1;
-  return -1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "je .Lcsstricmp_1\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lcsstricmp_2\n\t"
+      ".Lcsstricmp_1:\n\t"
+      "pushl $0\n\t"
+      "call *%[c92d60]\n\t"
+      "pushl $0x267908\n\t"
+      "pushl $0x18d\n\t"
+      "pushl $0x267878\n\t"
+      "pushl $0x267834\n\t"
+      "pushl $0x267810\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x20, %%esp\n\t"
+      ".Lcsstricmp_2:\n\t"
+      "movsbw (%%ebx), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1da8e3]\n\t"
+      "movsbw (%%edi), %%cx\n\t"
+      "movzwl %%ax, %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1da8e3]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "je .Lcsstricmp_4\n\t"
+      "subl %%edi, %%ebx\n\t"
+      ".Lcsstricmp_3:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lcsstricmp_5\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jne .Lcsstricmp_6\n\t"
+      "movsbw 0x1(%%ebx,%%edi,1), %%dx\n\t"
+      "incl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1da8e3]\n\t"
+      "movzwl %%ax, %%esi\n\t"
+      "movsbw (%%edi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1da8e3]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "jne .Lcsstricmp_3\n\t"
+      ".Lcsstricmp_4:\n\t"
+      "popl %%edi\n\t"
+      "negl %%eax\n\t"
+      "popl %%esi\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcsstricmp_5:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%edi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "popl %%esi\n\t"
+      "setne %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcsstricmp_6:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "setg %%cl\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "leal -0x1(%%ecx,%%ecx,1), %%ecx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c92d60] "m"(b8e190_c92d60), [c8f390] "m"(b8e190_c8f390), [exitfn] "m"(b8e190_exitfn), [c1da8e3] "m"(b8e190_c1da8e3)
+      : "memory");
 }
+#else
+#error "csstricmp: clang naked draft required"
+#endif
+

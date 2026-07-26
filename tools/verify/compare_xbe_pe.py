@@ -1055,6 +1055,19 @@ def main() -> int:
         ("FUN_0002f380", 0x2f380, 0x2f46b),
         ("collision_surface_perimeter", 0x147710, 0x1477e1),
         ("rasterizer_text_draw_cached_char", 0x183c00, 0x183ce4),
+        # gameplay wave 87 (2026-07-26) — AI/structures/input Capstone weaks
+        ("input_get_raw_data_string", 0xd0030, 0xd011d),
+        ("actor_move_to_prop", 0x2d9b0, 0x2da99),
+        ("actor_update_prop_desire", 0x14360, 0x14458),
+        ("hashtable_new", 0x11b850, 0x11b949),
+        ("FUN_000624b0", 0x624b0, 0x62595),
+        ("actor_path_3d_available", 0x2b720, 0x2b823),
+        ("csstricmp", 0x8e190, 0x8e24b),
+        ("leaf_map_mark_portal_designators", 0x191cb0, 0x191d78),
+        ("ai_communication_initialize_for_new_map", 0x42b90, 0x42c92),
+        ("closest_point_to_attractor", 0x5f3c0, 0x5f483),
+        ("FUN_000625a0", 0x625a0, 0x62673),
+        ("actor_action_allow_cover_seeking", 0x1ccc0, 0x1cd96),
     ]
 
     xbe = Xbe.from_file(args.xbe)

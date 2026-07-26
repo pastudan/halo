@@ -1547,38 +1547,97 @@ int16_t build_path_edges_for_surface(void *scenario __attribute__((unused)), int
 #endif
 
 
-/* 0x5f3c0 — closest point on a segment to a reference point. */
-void closest_point_to_attractor(float *segment_start, float *segment_end,
-                                float *reference, float *out_point)
+/* closest_point_to_attractor (0x5f3c0) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void closest_point_to_attractor(float *segment_start __attribute__((unused)), float *segment_end __attribute__((unused)), float *reference __attribute__((unused)), float *out_point __attribute__((unused)))
 {
-  float delta[3];
-  float to_ref[3];
-  float denom;
-  float t;
-
-  delta[0] = segment_end[0] - segment_start[0];
-  delta[1] = segment_end[1] - segment_start[1];
-  delta[2] = segment_end[2] - segment_start[2];
-
-  to_ref[0] = reference[0] - segment_start[0];
-  to_ref[1] = reference[1] - segment_start[1];
-  to_ref[2] = reference[2] - segment_start[2];
-
-  denom = delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2];
-  t = (to_ref[0] * delta[0] + to_ref[1] * delta[1] + to_ref[2] * delta[2]) /
-      denom;
-
-  if (t >= *(float *)0x2533c0 && t <= *(float *)0x2533c8) {
-    out_point[0] = segment_start[0] + t * delta[0];
-    out_point[1] = segment_start[1] + t * delta[1];
-    out_point[2] = segment_start[2] + t * delta[2];
-    return;
-  }
-
-  out_point[0] = segment_end[0];
-  out_point[1] = segment_end[1];
-  out_point[2] = segment_end[2];
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "flds (%%edx)\n\t"
+      "fsubs (%%ecx)\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x4(%%edx)\n\t"
+      "fsubs 0x4(%%ecx)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x8(%%edx)\n\t"
+      "fsubs 0x8(%%ecx)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds (%%ecx)\n\t"
+      "fsubs (%%eax)\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "fsubs 0x4(%%eax)\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fsubs 0x8(%%eax)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls -0xc(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls -0xc(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fsts 0xc(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lclosest_point_to_attractor_1\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lclosest_point_to_attractor_1\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "fadds (%%ecx)\n\t"
+      "fstps (%%eax)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "fadds 0x4(%%ecx)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "fadds 0x8(%%ecx)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lclosest_point_to_attractor_1:\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "closest_point_to_attractor: clang naked draft required"
+#endif
+
 
 /* 0x5f490 — compute path attractor weight from a step position. */
 float path_attractor_weight(void *path_state, float *node_pos, float *step_pos,

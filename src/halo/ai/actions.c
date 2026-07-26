@@ -818,59 +818,103 @@ done_clear:
   return result;
 }
 
-/* actor_action_allow_cover_seeking (0x1ccc0)
- * Gating predicate: may the actor begin seeking cover this frame? Result starts
- * true. Only when param_2 == 0 AND the actor+0x1ca suppress byte is clear, two
- * actr-tag cooldown/threshold checks may clear it. Two unconditional overrides
- * follow: actor+0x378 forces deny; actor+0x160 hard-denies (returns 0) ignoring
- * everything above.
- * Confirmed: datum_get(actor_data, actor_handle) at 0x1ccd6.
- * Confirmed: tag_get(0x61637472, actor+0x58) loads the actr tag.
- *   actr_tag+0x2d8 = cover cooldown in seconds (*30 -> ticks @30Hz).
- *   actr_tag+0x324 = threat threshold (float).
- *   actor+0x6e     = short state counter; >= 7 denies.
- *   actor+0x26c    = last cover-seek game time (-1 = none).
- *   actor+0x1c0    = current threat scalar (float).
- * Note: the ftol2 result is spilled and reloaded via MOVSX word (0x1cd9a), so
- * the cooldown tick count is truncated to int16 before being added to
- * actor+0x26c. The (short) cast preserves that. */
-char actor_action_allow_cover_seeking(int actor_handle, char param_2)
-{
-  char *actor;
-  int actr_tag;
-  short cooldown_ticks;
-  char result;
+/* actor_action_allow_cover_seeking (0x1ccc0) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+static void *(*const b1ccc0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b1ccc0_tag)(int, int) = tag_get;
+static void (*const b1ccc0_ftol)(void) = FUN_001d9068;
+static int (*const b1ccc0_gtime)(void) = game_time_get;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  actr_tag = (int)tag_get(0x61637472, *(int *)(actor + 0x58));
-  result = 1;
-  if ((param_2 == '\0') && (*(char *)(actor + 0x1ca) == '\0')) {
-    if (*(float *)(actr_tag + 0x2d8) > 0.0f) {
-      if (*(short *)(actor + 0x6e) >= 7) {
-        result = 0;
-      } else {
-        cooldown_ticks = (short)(int)(*(float *)(actr_tag + 0x2d8) * 30.0f);
-        if (*(int *)(actor + 0x26c) != -1) {
-          if (game_time_get() < (int)cooldown_ticks + *(int *)(actor + 0x26c)) {
-            result = 0;
-          }
-        }
-      }
-    }
-    if (*(float *)(actr_tag + 0x324) > 0.0f) {
-      if (*(float *)(actor + 0x1c0) < *(float *)(actr_tag + 0x324)) {
-        result = 0;
-      }
-    }
-  }
-  if (*(char *)(actor + 0x378) != '\0') {
-    result = 0;
-  }
-  if (*(char *)(actor + 0x160) != '\0') {
-    return 0;
-  }
-  return result;
+__attribute__((naked, noinline))
+char actor_action_allow_cover_seeking(int actor_handle __attribute__((unused)), char param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x58(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x61637472\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movb $1, %%bl\n\t"
+      "jne .Lactor_action_allow_cover_seeking_3\n\t"
+      "movb 0x1ca(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_action_allow_cover_seeking_3\n\t"
+      "flds 0x2d8(%%edi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_action_allow_cover_seeking_2\n\t"
+      "cmpw $7, 0x6e(%%esi)\n\t"
+      "jge .Lactor_action_allow_cover_seeking_1\n\t"
+      "flds 0x2d8(%%edi)\n\t"
+      "fmuls 0x253394\n\t"
+      "call *%[ftol]\n\t"
+      "movl %%eax, 0xc(%%ebp)\n\t"
+      "cmpl $-1, 0x26c(%%esi)\n\t"
+      "je .Lactor_action_allow_cover_seeking_2\n\t"
+      "call *%[gtime]\n\t"
+      "movswl 0xc(%%ebp), %%ecx\n\t"
+      "addl 0x26c(%%esi), %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jge .Lactor_action_allow_cover_seeking_2\n\t"
+      ".Lactor_action_allow_cover_seeking_1:\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lactor_action_allow_cover_seeking_2:\n\t"
+      "flds 0x324(%%edi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_action_allow_cover_seeking_3\n\t"
+      "flds 0x1c0(%%esi)\n\t"
+      "fcomps 0x324(%%edi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_action_allow_cover_seeking_3\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lactor_action_allow_cover_seeking_3:\n\t"
+      "movb 0x378(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_allow_cover_seeking_4\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lactor_action_allow_cover_seeking_4:\n\t"
+      "movb 0x160(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_action_allow_cover_seeking_5\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_allow_cover_seeking_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1ccc0_dget), [tag] "m"(b1ccc0_tag), [ftol] "m"(b1ccc0_ftol), [gtime] "m"(b1ccc0_gtime)
+      : "memory");
 }
+#else
+#error "actor_action_allow_cover_seeking: clang naked draft required"
+#endif
+
 
 /* actor_action_can_stop_guarding (0x1cf10)
  * Returns 1 if the actor can stop the guard action, based on state counters and

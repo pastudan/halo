@@ -518,63 +518,113 @@ char FUN_000142a0(int actor_handle, int action_handle, int *state_data)
   return 1;
 }
 
-/* actor_update_prop_desire (0x14360)
- * Update actor's desire to reach its prop target.
- *
- * If the actor has no current prop (field_ac == -1) but has a follow-prop
- * handle (field_a8 != -1), acquires a prop near the follow target via
- * FUN_00064b40.  Then, if a prop is held, checks whether the prop's type
- * qualifies (field_32 >= 2) and its distance (field_11c) is within the
- * actor's tolerance (field_a4), or the prop distance is less than 0.7f; if
- * so, marks the actor as ready (field_a1 = 1).  When ready, calls
- * FUN_0002f1a0 (perception acknowledge) and returns the current state byte
- * (field_a0).  Otherwise tries to move toward the prop via
- * actor_move_to_prop; sets field_a0 = 1 if no prop at all, or if
- * actor_move_to_prop returns 0.
- *
- * Confirmed: EBX = 1 set at 0x1438c; used as literal arg to FUN_00064b40
- *   and as byte written to field_a1 at 0x14408 and field_a0 at 0x14447.
- * Confirmed: actor_move_to_prop pushes [ESI+0xa4] raw (float bits) as 3rd arg.
- * Confirmed: field_32 comparison is signed short CMP vs 2 (JL 0x143f5).
- * Confirmed: float threshold at 0x2533c4 = 0.7f (0x3f333333).
- * Confirmed: early return at 0x1441e returns field_a0 without setting it. */
-char actor_update_prop_desire(int actor_handle)
-{
-  char *actor;
-  char *prop;
-  char a1_flag;
+/* actor_update_prop_desire (0x14360) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+static void *(*const b14360_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const b14360_c64b40)(int actor_handle, int unit_handle, char create_if_needed, char refresh_flag) = FUN_00064b40;
+static void (*const b14360_c2f1a0)(int actor_handle) = FUN_0002f1a0;
+static char (*const b14360_c2d9b0)(int actor_handle, int encounter_handle, float distance) = actor_move_to_prop;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(char *)(actor + 0x4c) == '\0') {
-    return *(char *)(actor + 0xa0);
-  }
-  if ((*(int *)(actor + 0xac) == -1) && (*(int *)(actor + 0xa8) != -1)) {
-    *(int *)(actor + 0xac) =
-      FUN_00064b40(actor_handle, *(int *)(actor + 0xa8), 1, 1);
-  }
-  if (*(int *)(actor + 0xac) == -1) {
-    *(char *)(actor + 0xa0) = 1;
-    return *(char *)(actor + 0xa0);
-  }
-  a1_flag = *(char *)(actor + 0xa1);
-  if (a1_flag == '\0') {
-    prop = (char *)datum_get(prop_data, *(int *)(actor + 0xac));
-    if ((*(short *)(prop + 0x32) >= 2 &&
-         *(float *)(prop + 0x11c) < *(float *)(actor + 0xa4)) ||
-        (*(float *)(prop + 0x11c) < *(float *)0x2533c4)) {
-      *(char *)(actor + 0xa1) = 1;
-    }
-  }
-  if (*(char *)(actor + 0xa1) != '\0') {
-    FUN_0002f1a0(actor_handle);
-    return *(char *)(actor + 0xa0);
-  }
-  if (actor_move_to_prop(actor_handle, *(int *)(actor + 0xac),
-                         *(float *)(actor + 0xa4)) == '\0') {
-    *(char *)(actor + 0xa0) = 1;
-  }
-  return *(char *)(actor + 0xa0);
+__attribute__((naked, noinline))
+char actor_update_prop_desire(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x4c(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_update_prop_desire_7\n\t"
+      "cmpl $-1, 0xac(%%esi)\n\t"
+      "movl $1, %%ebx\n\t"
+      "jne .Lactor_update_prop_desire_1\n\t"
+      "movl 0xa8(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_update_prop_desire_1\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c64b40]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%eax, 0xac(%%esi)\n\t"
+      ".Lactor_update_prop_desire_1:\n\t"
+      "movl 0xac(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_update_prop_desire_6\n\t"
+      "movb 0xa1(%%esi), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lactor_update_prop_desire_4\n\t"
+      "movl 0x5ab23c, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, 0x32(%%ecx)\n\t"
+      "jl .Lactor_update_prop_desire_2\n\t"
+      "flds 0x11c(%%ecx)\n\t"
+      "fcomps 0xa4(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lactor_update_prop_desire_3\n\t"
+      ".Lactor_update_prop_desire_2:\n\t"
+      "flds 0x11c(%%ecx)\n\t"
+      "fcomps 0x2533c4\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_update_prop_desire_4\n\t"
+      ".Lactor_update_prop_desire_3:\n\t"
+      "movb %%bl, 0xa1(%%esi)\n\t"
+      ".Lactor_update_prop_desire_4:\n\t"
+      "movb 0xa1(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_update_prop_desire_5\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c2f1a0]\n\t"
+      "movb 0xa0(%%esi), %%al\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_update_prop_desire_5:\n\t"
+      "movl 0xa4(%%esi), %%edx\n\t"
+      "movl 0xac(%%esi), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c2d9b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_update_prop_desire_7\n\t"
+      ".Lactor_update_prop_desire_6:\n\t"
+      "movb %%bl, 0xa0(%%esi)\n\t"
+      ".Lactor_update_prop_desire_7:\n\t"
+      "movb 0xa0(%%esi), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b14360_dget), [c64b40] "m"(b14360_c64b40), [c2f1a0] "m"(b14360_c2f1a0), [c2d9b0] "m"(b14360_c2d9b0)
+      : "memory");
 }
+#else
+#error "actor_update_prop_desire: clang naked draft required"
+#endif
+
 
 /* FUN_00014460 (0x14460)
  * Validate actor handle by performing a datum lookup (result discarded). */

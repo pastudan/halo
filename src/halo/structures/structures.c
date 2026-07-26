@@ -623,109 +623,205 @@ void FUN_00062680(int16_t *partition __attribute__((unused)), uint32_t arg2 __at
 #endif
 
 
-/* 0x624b0 - find the nearest obstacle disc a ray/segment intersects.
- * (TU: c:\halo\source\ai\path.h, inlined into path_obstacles.c)
- *
- * Pure cdecl min-find over obstacle discs. obstacles (disc_count at +2, discs
- * at +8 stride 0x18), skip_index (short, disc to ignore), pt0/vec_a (float*
- * ray endpoints passed to the intersection predicate), radius_base (float),
- * max_distance (float, seeds result.distance and is the in/out scratch the
- * predicate writes its computed distance through), check_extant (byte: when
- * set, skip discs whose flag bit0 is set), result (out struct: float distance
- * at +0, short disc_index at +4, short at +6).
- *
- * For each disc (except skip_index) the register-arg predicate
- * FUN_00061f10(vec_a@eax, pt0@ecx, &disc[8]@edx, &max_distance@esi,
- * radius_base+disc[4]) tests the ray against the disc and WRITES the hit
- * distance back through &max_distance; when it hits and the new distance is
- * closer than the best so far, result is updated.  Returns true if any disc
- * was selected (result.disc_index != -1). */
-char FUN_000624b0(void *obstacles, short skip_index, float *pt0, float *vec_a,
-                  float radius_base, float max_distance, char check_extant,
-                  void *result)
+/* FUN_000624b0 (0x624b0) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+static void (*const b624b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b624b0_exitfn)(int) = system_exit;
+static char (*const b624b0_c61f10)(float *vec_a, float *pt0, float *pt1, float *out, float radius) = FUN_00061f10;
+
+__attribute__((naked, noinline))
+char FUN_000624b0(void *obstacles __attribute__((unused)), short skip_index __attribute__((unused)), float *pt0 __attribute__((unused)), float *vec_a __attribute__((unused)), float radius_base __attribute__((unused)), float max_distance __attribute__((unused)), char check_extant __attribute__((unused)), void *result __attribute__((unused)))
 {
-  short i;
-  short disc_count;
-  float *disc;
-
-  *(float *)result = max_distance;
-  *(short *)((char *)result + 4) = -1;
-  *(short *)((char *)result + 6) = -1;
-  disc_count = *(short *)((char *)obstacles + 2);
-  i = 0;
-  if (disc_count > 0) {
-    do {
-      if (i != skip_index) {
-        if (i < 0 || i >= disc_count || disc_count > 0x80) {
-          display_assert(
-              "disc_index>=0 && disc_index<obstacles->disc_count && "
-              "obstacles->disc_count<=MAXIMUM_DISC_COUNT",
-              "c:\\halo\\source\\ai\\path.h", 0x18c, true);
-          system_exit(-1);
-        }
-        disc = (float *)((char *)obstacles + (int)i * 0x18 + 8);
-        if (check_extant == 0 || (*(char *)disc & 1) == 0) {
-          if (FUN_00061f10(vec_a, pt0, (float *)((char *)disc + 8),
-                           &max_distance, radius_base + disc[4]) != 0) {
-            if (*(float *)result > max_distance) {
-              *(float *)result = max_distance;
-              *(short *)((char *)result + 4) = i;
-              *(short *)((char *)result + 6) = *(short *)((char *)disc + 2);
-            }
-          }
-        }
-      }
-      disc_count = *(short *)((char *)obstacles + 2);
-      i = (short)(i + 1);
-    } while (i < disc_count);
-  }
-  return (char)(*(short *)((char *)result + 4) != -1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x24(%%ebp), %%ecx\n\t"
+      "flds 0x1c(%%ebp)\n\t"
+      "pushl %%ebx\n\t"
+      "fstps (%%ecx)\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movw %%ax, 0x4(%%ecx)\n\t"
+      "movw %%ax, 0x6(%%ecx)\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .LFUN_000624b0_6\n\t"
+      "pushl %%esi\n\t"
+      "jmp .LFUN_000624b0_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_000624b0_1:\n\t"
+      "cmpw 0xc(%%ebp), %%bx\n\t"
+      "je .LFUN_000624b0_5\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl .LFUN_000624b0_2\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "jge .LFUN_000624b0_2\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_000624b0_3\n\t"
+      ".LFUN_000624b0_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18c\n\t"
+      "pushl $0x25e990\n\t"
+      "pushl $0x25e930\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000624b0_3:\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal 0x8(%%edi,%%eax,8), %%edi\n\t"
+      "movb 0x20(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000624b0_4\n\t"
+      "testb $1, (%%edi)\n\t"
+      "jne .LFUN_000624b0_5\n\t"
+      ".LFUN_000624b0_4:\n\t"
+      "flds 0x18(%%ebp)\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "fadds 0x10(%%edi)\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "leal 0x8(%%edi), %%edx\n\t"
+      "leal 0x1c(%%ebp), %%esi\n\t"
+      "fstps (%%esp)\n\t"
+      "call *%[c61f10]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000624b0_5\n\t"
+      "movl 0x24(%%ebp), %%ecx\n\t"
+      "flds (%%ecx)\n\t"
+      "fcomps 0x1c(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_000624b0_5\n\t"
+      "movl 0x1c(%%ebp), %%edx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movw %%bx, 0x4(%%ecx)\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "movw %%ax, 0x6(%%ecx)\n\t"
+      ".LFUN_000624b0_5:\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "incl %%ebx\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "jl .LFUN_000624b0_1\n\t"
+      "movl 0x24(%%ebp), %%ecx\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_000624b0_6:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpw $-1, 0x4(%%ecx)\n\t"
+      "popl %%edi\n\t"
+      "setne %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b624b0_assert), [exitfn] "m"(b624b0_exitfn), [c61f10] "m"(b624b0_c61f10)
+      : "memory");
 }
+#else
+#error "FUN_000624b0: clang naked draft required"
+#endif
 
-/* 0x625a0 - build a 2D cone toward an obstacle disc for path planning.
- * (TU: c:\halo\source\ai\path.h, inlined into path_obstacles.c)
- *
- * Pure cdecl. obstacles (param_1, disc_count at +2, discs at +8 stride 0x18),
- * disc_index (short), point (float* 2D reference). Bounds-checks disc_index
- * against disc_count (and disc_count <= MAXIMUM_DISC_COUNT=0x80).  Computes the
- * 2D direction from the disc center (disc[2],disc[3]) to point, normalizes it
- * (dividing by the distance unless the distance is below the 0x2533d0 epsilon,
- * in which case the distance is forced to 0), then hands the direction, the
- * distance, and (base_value + disc_radius(disc[4]) + 0x25ee6c) to
- * FUN_00061fa0 to build the two cone boundary rays into out_a/out_b/out_scalar.
- * 0x2533c8 == 1.0f. */
-void FUN_000625a0(void *obstacles, short disc_index, float *point,
-                  float base_value, float *out_b, float *out_a,
-                  float *out_scalar)
+
+/* FUN_000625a0 (0x625a0) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+static void (*const b625a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b625a0_exitfn)(int) = system_exit;
+static void (*const b625a0_c61fa0)(float *vec, float *out_a, float *out_b, float denom, float num, float *out_scalar) = FUN_00061fa0;
+
+__attribute__((naked, noinline))
+void FUN_000625a0(void *obstacles __attribute__((unused)), short disc_index __attribute__((unused)), float *point __attribute__((unused)), float base_value __attribute__((unused)), float *out_b __attribute__((unused)), float *out_a __attribute__((unused)), float *out_scalar __attribute__((unused)))
 {
-  float dir[2];
-  float dist;
-  float num;
-  float *disc;
-  short disc_count;
-
-  disc_count = *(short *)((char *)obstacles + 2);
-  if (disc_index < 0 || disc_index >= disc_count || disc_count > 0x80) {
-    display_assert(
-        "disc_index>=0 && disc_index<obstacles->disc_count && "
-        "obstacles->disc_count<=MAXIMUM_DISC_COUNT",
-        "c:\\halo\\source\\ai\\path.h", 0x18c, true);
-    system_exit(-1);
-  }
-  disc = (float *)((char *)obstacles + (int)disc_index * 0x18 + 8);
-  dir[0] = disc[2] - point[0];
-  dir[1] = disc[3] - point[1];
-  dist = sqrtf(dir[1] * dir[1] + dir[0] * dir[0]);
-  if (fabs(dist) < *(double *)0x002533d0) {
-    dist = 0.0f;
-  } else {
-    float inv = *(float *)0x002533c8 / dist;
-    dir[0] = dir[0] * inv;
-    dir[1] = dir[1] * inv;
-  }
-  num = base_value + disc[4] + *(float *)0x0025ee6c;
-  FUN_00061fa0(dir, out_a, out_b, dist, num, out_scalar);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0xc(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "jl .LFUN_000625a0_1\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "cmpw %%ax, %%si\n\t"
+      "jge .LFUN_000625a0_1\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jle .LFUN_000625a0_2\n\t"
+      ".LFUN_000625a0_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18c\n\t"
+      "pushl $0x25e990\n\t"
+      "pushl $0x25e930\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000625a0_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal 0x8(%%edi,%%eax,8), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fsubs (%%eax)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0xc(%%ecx)\n\t"
+      "fsubs 0x4(%%eax)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fsts 0xc(%%ebp)\n\t"
+      "fabs\n\t"
+      "fcompl 0x2533d0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_000625a0_3\n\t"
+      "flds 0x2533c8\n\t"
+      "fdivs 0xc(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "jmp .LFUN_000625a0_4\n\t"
+      ".LFUN_000625a0_3:\n\t"
+      "movl $0, 0xc(%%ebp)\n\t"
+      ".LFUN_000625a0_4:\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "movl 0x20(%%ebp), %%edx\n\t"
+      "fadds 0x10(%%ecx)\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x18(%%ebp), %%esi\n\t"
+      "pushl %%edx\n\t"
+      "fadds 0x25ee6c\n\t"
+      "movl 0x1c(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c61fa0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b625a0_assert), [exitfn] "m"(b625a0_exitfn), [c61fa0] "m"(b625a0_c61fa0)
+      : "memory");
 }
+#else
+#error "FUN_000625a0: clang naked draft required"
+#endif
+
 
 /* FUN_000628b0 (0x628b0)  --  cluster_partition_assign_groups
  * (cluster_partitions.c)
@@ -2996,76 +3092,104 @@ short FUN_00191c70(void *block /* @<esi> */, int search_value /* @<ebx> */)
   return -1;
 }
 
-/* leaf_map_mark_portal_designators (FUN_00191cb0, 0x191cb0)
- *
- * structures.obj / c:\halo\SOURCE\structures\leaf_map.c
- *
- * Given a portal index, mark the matching portal-designator entry as visited
- * in each of the portal's two adjacent leaves.
- *
- * The portal record (block at structure+0x10, stride 0x18, index = portal
- * index) carries the two adjacent leaf indices at record offsets +4 and +8
- * (masked with 0x7fffffff to drop the sign/plane bit).  For each of those two
- * leaves (block at structure+0x4, stride 0x18) the leaf's portal_designators
- * block header lives at leaf+0xc (count at [0], stride 4).  That sub-block is
- * scanned for the designator whose (value & 0x7fffffff) equals this portal
- * index; when found, the high bit (0x80000000) is set to mark it.  If no
- * designator references the portal the original asserts
- *   portal_designator_index != leaf->portal_designators.count
- * at leaf_map.c:0x2a1 and halt_and_catch_fire()s.
- *
- * Confirmed from disassembly at 0x191cb0:
- *   - tag_block_get_element is cdecl (block, index, element_size); the two
- *     leaf-block fetches use element_size 0x18, the designator fetch uses 4.
- *   - the inner designator counter is a 16-bit short (sVar5); the (int)cast
- *     truncation is deliberate and preserved for VC71 fidelity.
- *   - the assert-halt path calls halt_and_catch_fire (thunk 0x1029a0); its
- *     0xffffffff argument in the decompile is dead (callee is void(void)).
- * Inferred: field semantics (front/back leaf, "visited" meaning of the high
- * bit) from the leaf_map.c source string; the two-iteration loop and offsets
- * are Confirmed from the disassembly.
- */
-void leaf_map_mark_portal_designators(void *structure, uint32_t portal_index)
-{
-  int *designator_count;
-  uint32_t *designator;
-  int block_index;
-  short designator_index;
-  int remaining;
-  uint32_t *portal;
-  int leaves_block;
+/* leaf_map_mark_portal_designators (0x191cb0) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+static void *(*const b191cb0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b191cb0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b191cb0_exitfn)(int) = system_exit;
 
-  portal = (uint32_t *)tag_block_get_element((char *)structure + 0x10,
-                                             portal_index, 0x18);
-  leaves_block = (int)structure + 4;
-  remaining = 2;
-  do {
-    portal = portal + 1;
-    block_index = (int)tag_block_get_element((void *)leaves_block,
-                                             *portal & 0x7fffffff, 0x18);
-    designator_count = (int *)(block_index + 0xc);
-    designator_index = 0;
-    if (0 < *designator_count) {
-      block_index = 0;
-      do {
-        designator =
-          (uint32_t *)tag_block_get_element(designator_count, block_index, 4);
-        if ((*designator & 0x7fffffff) == portal_index) {
-          *designator = *designator | 0x80000000;
-          break;
-        }
-        designator_index = designator_index + 1;
-        block_index = (int)designator_index;
-      } while (block_index < *designator_count);
-    }
-    if ((int)designator_index == *designator_count) {
-      display_assert("portal_designator_index!=leaf->portal_designators.count",
-                     "c:\\halo\\SOURCE\\structures\\leaf_map.c", 0x2a1, 1);
-      system_exit(-1);
-    }
-    remaining = remaining - 1;
-  } while (remaining != 0);
+__attribute__((naked, noinline))
+void leaf_map_mark_portal_designators(void *structure __attribute__((unused)), uint32_t portal_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x18\n\t"
+      "leal 0x10(%%esi), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $4, %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl $4, %%eax\n\t"
+      "movl %%esi, -0x8(%%ebp)\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "movl $2, -0x4(%%ebp)\n\t"
+      ".Lleaf_map_mark_portal_designators_1:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "pushl $0x18\n\t"
+      "andl $0x7fffffff, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "leal 0xc(%%eax), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lleaf_map_mark_portal_designators_4\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lleaf_map_mark_portal_designators_2:\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "andl $0x7fffffff, %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "je .Lleaf_map_mark_portal_designators_3\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "incl %%edi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lleaf_map_mark_portal_designators_2\n\t"
+      "jmp .Lleaf_map_mark_portal_designators_4\n\t"
+      ".Lleaf_map_mark_portal_designators_3:\n\t"
+      "orl $0x80000000, (%%eax)\n\t"
+      ".Lleaf_map_mark_portal_designators_4:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "movswl %%di, %%edx\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "jne .Lleaf_map_mark_portal_designators_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2a1\n\t"
+      "pushl $0x2b28b4\n\t"
+      "pushl $0x2b293c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lleaf_map_mark_portal_designators_5:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "addl $4, %%ecx\n\t"
+      "decl %%eax\n\t"
+      "movl %%ecx, 0x8(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jne .Lleaf_map_mark_portal_designators_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b191cb0_elem), [assert] "m"(b191cb0_assert), [exitfn] "m"(b191cb0_exitfn)
+      : "memory");
 }
+#else
+#error "leaf_map_mark_portal_designators: clang naked draft required"
+#endif
+
 
 /* FUN_00191d80 (0x191d80)
  *

@@ -1797,65 +1797,106 @@ void actor_move_get_avoidance_direction(void)
 #endif
 
 
-/* actor_path_3d_available (0x2b720) — Check if vehicle actor should brake.
- *
- * If actor is in a type-4 vehicle state (actor[0x15e] == 4):
- *   - Reads vehicle tag stopping distance (vehi_tag[0x388])
- *   - If stopping distance > 0 and actor's speed factor (actor[0x5ec]) >
- * threshold:
- *     - Computes delta vector from actor position to dest_pos
- *     - Normalizes delta (getting distance)
- *     - If distance > 0 and dot(normalized_delta, facing) > threshold:
- *       returns 0 (should brake)
- * Writes stopping distance to *dist_out if non-NULL.
- * Returns 1 (don't brake) by default.
- *
- * Confirmed: datum_get at 0x2b733. BL=1 default at 0x2b74c.
- * Confirmed: CMP word [ESI+0x15e],4 at 0x2b73d.
- * Confirmed: object_get_and_verify_type(actor[0x158], 2) at 0x2b75d.
- * Confirmed: tag_get('vehi', vehicle[0]) at 0x2b76a.
- * Confirmed: vehi[0x388] → local_8 at 0x2b76f.
- * Confirmed: FCOMP [0x2533c0] checks at 0x2b77e, 0x2b7d1.
- * Confirmed: FCOMP [0x2555d0] speed check at 0x2b795.
- * Confirmed: normalize3d(&delta) at 0x2b7cc.
- * Confirmed: dot product z*fz + y*fy + x*fx at 0x2b7e1-0x2b7fe.
- * Confirmed: FCOMP [0x253d54] dot threshold at 0x2b800.
- * Confirmed: dist_out write if non-NULL at 0x2b80f-0x2b819.
- */
-char actor_path_3d_available(int actor_handle, float *dest_pos, float *dist_out)
-{
-  char *actor;
-  char *vehi;
-  float local_8;
-  float delta[3];
-  char result;
+/* actor_path_3d_available (0x2b720) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+static void *(*const b2b720_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b2b720_get)(int, int) = object_get_and_verify_type;
+static void *(*const b2b720_tag)(int, int) = tag_get;
+static float (*const b2b720_norm)(float *) = normalize3d;
 
-  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
-  local_8 = 0.0f;
-  result = 1;
-  if (*(int16_t *)(actor + 0x15e) == 4) {
-    vehi = (char *)object_get_and_verify_type(*(int *)(actor + 0x158), 2);
-    vehi = (char *)tag_get(0x76656869, *(int *)vehi);
-    local_8 = *(float *)(vehi + 0x388);
-    if (local_8 > *(float *)0x2533c0 &&
-        *(float *)(actor + 0x5ec) > *(float *)0x2555d0) {
-      delta[0] = dest_pos[0] - *(float *)(actor + 0x12c);
-      delta[1] = dest_pos[1] - *(float *)(actor + 0x130);
-      delta[2] = dest_pos[2] - *(float *)(actor + 0x134);
-      if (normalize3d(delta) > *(float *)0x2533c0 &&
-          delta[0] * *(float *)(actor + 0x174) +
-              delta[1] * *(float *)(actor + 0x178) +
-              delta[2] * *(float *)(actor + 0x17c) >
-            *(float *)0x253d54) {
-        result = 0;
-      }
-    }
-  }
-  if (dist_out != (float *)0) {
-    *dist_out = local_8;
-  }
-  return result;
+__attribute__((naked, noinline))
+char actor_path_3d_available(int actor_handle __attribute__((unused)), float *dest_pos __attribute__((unused)), float *dist_out __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $4, 0x15e(%%esi)\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "movb $1, %%bl\n\t"
+      "jne .Lactor_path_3d_available_1\n\t"
+      "movl 0x158(%%esi), %%edx\n\t"
+      "pushl $2\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x76656869\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x388(%%eax), %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_path_3d_available_1\n\t"
+      "flds 0x5ec(%%esi)\n\t"
+      "fcomps 0x2555d0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_path_3d_available_1\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "flds (%%eax)\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "fsubs 0x12c(%%esi)\n\t"
+      "pushl %%edx\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs 0x130(%%esi)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fsubs 0x134(%%esi)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_path_3d_available_1\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x17c(%%esi)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x178(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls 0x174(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps 0x253d54\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_path_3d_available_1\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lactor_path_3d_available_1:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lactor_path_3d_available_2\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      ".Lactor_path_3d_available_2:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2b720_dget), [get] "m"(b2b720_get), [tag] "m"(b2b720_tag), [norm] "m"(b2b720_norm)
+      : "memory");
 }
+#else
+#error "actor_path_3d_available: clang naked draft required"
+#endif
+
 
 /* FUN_0002b830 (0x2b830) — XBE naked draft (batch 81). */
 #if defined(__clang__)
@@ -4727,64 +4768,110 @@ char actor_move_to_firing_position(int actor_handle, int16_t param_2,
   return actor_path_refresh(actor_handle, 1, param_3);
 }
 
-/* 0x2d9b0 — Set actor movement to encounter-path mode (move_type=5,
- * dest=encounter_handle, dist=distance).
- *
- * Clears actor+0x3b8, wakes the actor, then checks if it is already in mode 5
- * with the same encounter handle and distance. If so, either refreshes the path
- * (store_distance=0, if actor is active/not-sleeping) or returns 1. Otherwise
- * sets up the movement block at +0x400: mode=5, encounter_handle at +0x404,
- * distance at +0x408, path node from encounter+0x110 (fallback +0x18) at
- * +0x414, copies the 24-byte block to the active slot at +0x46c, then calls
- * actor_path_refresh(store_distance=1).
- *
- * Confirmed: datum_get(0x6325a4, actor_handle) at 0x2d9c0.
- * Confirmed: actor_set_dormant(actor_handle, 0) at 0x2d9c7.
- * Confirmed: CMP [EDI],5 / CMP [ESI+0x470],ECX / FCOMP [EBP+0x10] at
- * 0x2d9e1-0x2d9f8. Confirmed: datum_get(0x5ab23c, encounter_handle) at 0x2da2c.
- * Confirmed: encounter+0x110 fallback to encounter+0x18 at 0x2da5c-0x2da6d.
- * Confirmed: REP MOVSD ECX=6 from actor+0x400 to actor+0x46c at 0x2da83.
- * Confirmed: actor_path_refresh(actor_handle,1,0) at 0x2da85.
- * Confirmed: actor_path_refresh(actor_handle,0,0) at 0x2da1c.
- * Confirmed: return 1 via MOV AL,1 at 0x2da94.
- */
-char actor_move_to_prop(int actor_handle, int encounter_handle, float distance)
-{
-  char *actor;
-  char *encounter;
-  int node_handle;
-  int *active_state;
-  int *pending_state;
+/* actor_move_to_prop (0x2d9b0) — XBE naked draft (batch 87). */
+#if defined(__clang__)
+static void *(*const b2d9b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b2d9b0_c3ca40)(int actor_handle, char flag) = actor_set_dormant;
+static char (*const b2d9b0_c2cdb0)(int actor_handle, char store_distance, void *override_path) = actor_path_refresh;
 
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  *(int16_t *)(actor + 0x3b8) = -1;
-  actor_set_dormant(actor_handle, 0);
-  active_state = (int *)(actor + 0x46c);
-  if (*(int16_t *)active_state == 5 &&
-      *(int *)(actor + 0x470) == encounter_handle &&
-      *(float *)(actor + 0x474) == distance) {
-    if (*(char *)(actor + 0x4c) == 0) {
-      return 1;
-    }
-    if (*(char *)(actor + 0x4a4) != 0) {
-      return 1;
-    }
-    return actor_path_refresh(actor_handle, 0, 0);
-  }
-  encounter = (char *)datum_get(*(data_t **)0x5ab23c, encounter_handle);
-  *(int *)(actor + 0x404) = encounter_handle;
-  *(int16_t *)(actor + 0x400) = 5;
-  *(char *)(actor + 0x402) = 0;
-  *(float *)(actor + 0x408) = distance;
-  node_handle = *(int *)(encounter + 0x110) == -1 ? *(int *)(encounter + 0x18) :
-                                                    *(int *)(encounter + 0x110);
-  *(int *)(actor + 0x414) = node_handle;
-  pending_state = (int *)(actor + 0x400);
-  for (node_handle = 6; node_handle != 0; node_handle--) {
-    *active_state++ = *pending_state++;
-  }
-  return actor_path_refresh(actor_handle, 1, 0);
+__attribute__((naked, noinline))
+char actor_move_to_prop(int actor_handle __attribute__((unused)), int encounter_handle __attribute__((unused)), float distance __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "movw $0xffff, 0x3b8(%%esi)\n\t"
+      "call *%[c3ca40]\n\t"
+      "leal 0x46c(%%esi), %%edi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $5, (%%edi)\n\t"
+      "jne .Lactor_move_to_prop_1\n\t"
+      "movl 0x470(%%esi), %%ecx\n\t"
+      "cmpl 0xc(%%ebp), %%ecx\n\t"
+      "jne .Lactor_move_to_prop_1\n\t"
+      "flds 0x474(%%esi)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lactor_move_to_prop_1\n\t"
+      "movb 0x4c(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_move_to_prop_4\n\t"
+      "movb 0x4a4(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_move_to_prop_4\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c2cdb0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_move_to_prop_1:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x404(%%esi)\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "leal 0x400(%%esi), %%edx\n\t"
+      "movw $5, (%%edx)\n\t"
+      "movb $0, 0x402(%%esi)\n\t"
+      "movl %%ecx, 0x408(%%esi)\n\t"
+      "movl 0x110(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "jne .Lactor_move_to_prop_2\n\t"
+      "movl 0x18(%%eax), %%eax\n\t"
+      "jmp .Lactor_move_to_prop_3\n\t"
+      ".Lactor_move_to_prop_2:\n\t"
+      "movl %%ecx, %%eax\n\t"
+      ".Lactor_move_to_prop_3:\n\t"
+      "pushl $0\n\t"
+      "movl %%eax, 0x414(%%esi)\n\t"
+      "movl %%edx, %%esi\n\t"
+      "pushl $1\n\t"
+      "movl $6, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "rep movsl\n\t"
+      "call *%[c2cdb0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_move_to_prop_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2d9b0_dget), [c3ca40] "m"(b2d9b0_c3ca40), [c2cdb0] "m"(b2d9b0_c2cdb0)
+      : "memory");
 }
+#else
+#error "actor_move_to_prop: clang naked draft required"
+#endif
+
 
 
 /* actor_move_compute_facing (0x2daa0) — XBE naked draft (batch 79). */
