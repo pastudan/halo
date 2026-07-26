@@ -13271,6 +13271,22 @@ int16_t FUN_000538d0(void) {
 
 
 
+/* FUN_000538f0 (0x538f0) — readable C lift. */
+int16_t FUN_000538f0(void)
+{
+  unsigned char iter[0x1c];
+  void *enc;
+  int16_t sum = 0;
+  encounter_iterator_next(iter, 0);
+  for (enc = (void *)FUN_00059b50(iter); enc != 0; enc = (void *)FUN_00059b50(iter)) {
+    if (*((char *)enc + 6) != 0)
+      sum = (int16_t)(sum + *(int16_t *)((char *)enc + 0x1e));
+    else
+      sum = (int16_t)(sum + 1);
+  }
+  return sum;
+}
+
 /* FUN_00053960 (0x53960) — readable C lift. */
 unsigned short FUN_00053960(void)
 {

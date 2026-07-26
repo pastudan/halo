@@ -12044,8 +12044,9 @@
         },
         {
           "addr": "0xc6a30",
-          "decl": "int16_t FUN_000c6a30(const char *str, const char **names, int16_t count);",
-          "ported": false
+          "decl": "int16_t FUN_000c6a30(const char *str, const char **names@<ebx>, int16_t count@<di>);",
+          "ported": true,
+          "name": "FUN_000c6a30"
         },
         {
           "addr": "0xc6a70",
@@ -18359,12 +18360,14 @@
         {
           "addr": "0xe0dd0",
           "decl": "char player_ui_edit_profile_name_is_dirty(void);",
-          "ported": false
+          "ported": false,
+          "name": "player_ui_edit_profile_name_is_dirty"
         },
         {
           "addr": "0xe0e40",
           "decl": "char player_ui_prompt_user_to_rename_edit_profile(void);",
-          "ported": false
+          "ported": false,
+          "name": "player_ui_prompt_user_to_rename_edit_profile"
         },
         {
           "addr": "0xe0ea0",
@@ -35079,8 +35082,9 @@
         },
         {
           "addr": "0x538f0",
-          "decl": "void FUN_000538f0(void);",
-          "ported": false
+          "decl": "int16_t FUN_000538f0(void);",
+          "ported": false,
+          "name": "FUN_000538f0"
         },
         {
           "addr": "0x53960",

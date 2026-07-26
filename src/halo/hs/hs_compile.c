@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* 0xc5730 — Append a source file's contents to the HS source buffer.
  * Reallocates the buffer at 0x46b6e8 to hold source_size + file_size + 1,
  * copies the file data, updates source_size at 0x46b6e4, and null-terminates.
@@ -2093,53 +2094,17 @@ bool hs_type_check(int datum_index, int16_t check_type)
 int FUN_000c5310(int parent_handle, int sibling_handle);
 int16_t FUN_0018ea50(void *param_1, const char *name);
 
-/* FUN_000c6a30 (0xc6a30) — XBE naked draft (batch 175). */
-#if defined(__clang__)
-static int (*const bc6a30_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
-
-__attribute__((naked, noinline))
-int16_t FUN_000c6a30(const char *str __attribute__((unused)), const char **names __attribute__((unused)), int16_t count __attribute__((unused)))
+/* FUN_000c6a30 (0xc6a30) — readable C lift: find string index in name table. */
+int16_t FUN_000c6a30(const char *str, const char **names /*@<ebx>*/, int16_t count /*@<di>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testw %%di, %%di\n\t"
-      "jle .LFUN_000c6a30_2\n\t"
-      "jmp .LFUN_000c6a30_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_000c6a30_1:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movl (%%ebx,%%eax,4), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8dcb0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c6a30_3\n\t"
-      "incl %%esi\n\t"
-      "cmpw %%di, %%si\n\t"
-      "jl .LFUN_000c6a30_1\n\t"
-      ".LFUN_000c6a30_2:\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c6a30_3:\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8dcb0] "m"(bc6a30_c8dcb0)
-      : "memory");
-}
-#else
-#error "FUN_000c6a30: clang naked draft required"
-#endif
+  int16_t i;
 
+  for (i = 0; i < count; i++) {
+    if (csstrcmp(str, names[i]) == 0)
+      return i;
+  }
+  return -1;
+}
 
 /* hs_parse_enum (0xc5f60) — XBE naked draft (batch 120). */
 #if defined(__clang__)
