@@ -12727,13 +12727,13 @@
         {
           "addr": "0xce090",
           "decl": "int FUN_000ce090(data_t *data, int *cursor);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ce090"
         },
         {
           "addr": "0xce0c0",
           "decl": "void FUN_000ce0c0(data_t *data, int *head, int object_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ce0c0"
         },
         {
