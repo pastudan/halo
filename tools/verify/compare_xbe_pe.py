@@ -403,6 +403,15 @@ def main() -> int:
         ("FUN_000fb990", 0xfb990, 0xfba00),
         ("FUN_000fce60", 0xfce60, 0xfcec0),
         ("FUN_000fcdd0", 0xfcdd0, 0xfce60),
+        # gameplay wave 32 (2026-07-26)
+        ("FUN_000f5660", 0xf5660, 0xf56b0),
+        ("FUN_000f56b0", 0xf56b0, 0xf5700),
+        ("object_postprocess_node_matrices", 0x13df70, 0x13dfc0),
+        ("weapon_reloading", 0xfc690, 0xfc710),
+        ("FUN_000fb510", 0xfb510, 0xfb5a0),
+        ("weapon_trigger_release_charge", 0xfb880, 0xfb910),
+        ("FUN_000fcd10", 0xfcd10, 0xfcdd0),
+        ("weapon_new", 0xfbd10, 0xfbea0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

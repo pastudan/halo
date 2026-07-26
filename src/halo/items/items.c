@@ -1622,37 +1622,58 @@ void FUN_000f5650(void)
   (void)0;
 }
 
-/* 0xf5660 */
+/* 0xf5660 — virtual-keyboard cursor left (skip duplicate keymap glyphs). */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
 char FUN_000f5660(void)
 {
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
+  int16_t row;
+  int16_t col;
+  int base;
+  char original_key;
 
-  /* relift: cmp byte ptr [esi + ecx + 0x28a790], dl -> je 0xf5680 */
-  ui_play_audio_feedback_sound(0);
-  return 0;
-
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  row = *(int16_t *)0x46cef8;
+  col = *(int16_t *)0x46cefa;
+  base = (int)row * 0xb;
+  original_key = ((char *)0x28a790)[base + (int)col];
+  for (;;) {
+    col = (int16_t)(col - 1);
+    if ((int16_t)col < 0)
+      col = 10;
+    if (((char *)0x28a790)[base + (int)col] != original_key)
+      break;
+  }
+  *(int16_t *)0x46cefa = col;
+  ui_play_audio_feedback_sound(1);
+  return 1;
 }
 
-/* 0xf56b0 */
+/* 0xf56b0 — virtual-keyboard cursor right (skip duplicate keymap glyphs). */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
 char FUN_000f56b0(void)
 {
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
+  int16_t row;
+  int16_t col;
+  int base;
+  char original_key;
 
-  /* cmp (int16_t)eax, 0xb -> jne 0xf56db */
-  /* relift: cmp byte ptr [esi + ecx + 0x28a790], dl -> je 0xf56d0 */
-  ui_play_audio_feedback_sound(0);
-  return 0;
-
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  row = *(int16_t *)0x46cef8;
+  col = *(int16_t *)0x46cefa;
+  base = (int)row * 0xb;
+  original_key = ((char *)0x28a790)[base + (int)col];
+  for (;;) {
+    col = (int16_t)(col + 1);
+    if ((int16_t)col == 11)
+      col = 0;
+    if (((char *)0x28a790)[base + (int)col] != original_key)
+      break;
+  }
+  *(int16_t *)0x46cefa = col;
+  ui_play_audio_feedback_sound(1);
+  return 1;
 }
 
 /* 0xf5800 — look up a soft-keyboard glyph for slot_index (@<si>). */

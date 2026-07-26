@@ -16668,11 +16668,8 @@
         },
         {
           "addr": "0x13df70",
-          "decl": "void object_postprocess_node_matrices(data_t *data, int object_handle@<ebx>);",
-          "ported": false,
-          "reg_args": {
-            "object_handle": "ebx"
-          }
+          "decl": "void object_postprocess_node_matrices(data_t *data, int object_handle);",
+          "ported": false
         },
         {
           "addr": "0x13dfc0",
@@ -33721,7 +33718,7 @@
         },
         {
           "addr": "0xfcd10",
-          "decl": "void FUN_000fcd10(int trigger_index, int weapon_handle);",
+          "decl": "void FUN_000fcd10(int16_t trigger_index, int weapon_handle);",
           "ported": false
         },
         {

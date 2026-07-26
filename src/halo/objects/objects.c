@@ -13555,19 +13555,19 @@ void lightning_offset_marker_position(int matrix_ptr, float *position_out,
   position_out[2] += offset[2];
 }
 
-/* 0x13df70 */
+/* 0x13df70 — free an object header's node-matrix pool block and delete it. */
 void object_postprocess_node_matrices(data_t *data, int object_handle)
 {
-  int eax = 0;
-  int ebx = 0;
+  char *header;
+  void **block_ref;
 
-  datum_get((data_t *)(uintptr_t)data, ebx);
-  /* test eax, eax -> je 0x13df9e */
-  memory_pool_block_free((void *)(uintptr_t)*(int *)(0x46f080), (void **)((char *)eax + 0x8));
-  datum_delete((data_t *)(uintptr_t)data, ebx);
-
-  (void)eax;
-  (void)ebx;
+  header = (char *)datum_get(data, object_handle);
+  block_ref = (void **)(header + 8);
+  if (*block_ref != 0)
+    memory_pool_block_free(*(void **)0x46f080, block_ref);
+  datum_delete(data, object_handle);
+  header[2] = 0;
+  *block_ref = 0;
 }
 
 /* 0x1444f0 — Per-tick object update (extensions, attachments, animation). */

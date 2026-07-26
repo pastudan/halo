@@ -1206,26 +1206,33 @@ char *FUN_000fb320(void *weapon_obj, int16_t trigger_index)
   return weapon_get_trigger_entry(weapon_obj, trigger_index);
 }
 
-/* 0xfb510 — trigger charge fraction remaining */
+/* 0xfb510 — trigger charge fraction remaining (state 2 = charging). */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
 float FUN_000fb510(int weapon_handle, int16_t trigger_index)
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *trigger_entry = weapon_get_trigger_entry(weapon_obj, trigger_index);
-  char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-  char *trig_def = (char *)tag_block_get_element((void *)(tag_data + 0x4fc),
-                                                 (int)trigger_index, 0x114);
-  char state = trigger_entry[1];
+  char *weapon_obj;
+  char *trigger_entry;
+  char *trig_def;
+  int state;
 
-  if (state == 2)
-    return 1.0f;
-  if (state == 3) {
-    float period = *(float *)(trig_def + 0x48);
-    if (period == 0.0f)
-      return 0.0f;
-    return 1.0f - (float)*(int16_t *)(trigger_entry + 2) *
-                        *(float *)0x2546a4 / period;
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  trigger_entry = FUN_000fb320(weapon_obj, trigger_index);
+  trig_def = (char *)tag_block_get_element(
+      (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4fc,
+      (int)trigger_index, 0x114);
+
+  state = (int)(signed char)trigger_entry[1] - 2;
+  if (state == 0) {
+    /* charging: 1.0 - frame * tick / period */
+    return *(float *)0x2533c8 -
+           (float)*(int16_t *)(trigger_entry + 2) * *(float *)0x2546a4 /
+               *(float *)(trig_def + 0x48);
   }
-  return 0.0f;
+  if (state == 1)
+    return *(float *)0x2533c8; /* charged */
+  return *(float *)0x2533c0;
 }
 
 /* 0xfb5a0 — trigger ready to fire */
@@ -1310,25 +1317,29 @@ int FUN_000fb7d0(int effect_tag, int weapon_handle)
                       (int16_t)-1);
 }
 
-/* 0xfb880 */
+/* 0xfb880 — set a weapon trigger's state/frame (charge release path). */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
 void weapon_trigger_release_charge(int16_t charge_counter, int weapon_handle,
                                    char state, int16_t trigger_index)
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *trigger_entry;
+  char *weapon_obj;
+  int idx;
 
-  if (trigger_index < 0 || trigger_index >= 2) {
-    display_assert(0, "c:\\halo\\SOURCE\\items\\weapons.c", 0xa11, 1);
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  if ((int16_t)trigger_index < 0 || (int16_t)trigger_index >= 2) {
+    display_assert((char *)0x0028ae40, (char *)0x0028ad48, 0xa11, 1);
     system_exit(-1);
   }
   if ((int16_t)state < 0 || (int16_t)state >= 9) {
-    display_assert(0, "c:\\halo\\SOURCE\\items\\weapons.c", 0xa12, 1);
+    display_assert((char *)0x0028ae08, (char *)0x0028ad48, 0xa12, 1);
     system_exit(-1);
   }
 
-  trigger_entry = weapon_get_trigger_entry(weapon_obj, trigger_index);
-  trigger_entry[1] = state;
-  *(int16_t *)(trigger_entry + 2) = charge_counter;
+  idx = (int)(int16_t)trigger_index;
+  weapon_obj[idx * 36 + 0x211] = state;
+  *(int16_t *)(weapon_obj + idx * 36 + 0x212) = charge_counter;
 }
 
 /* 0xfb910 — Reset trigger charge when definition charge time is zero. */
@@ -1389,6 +1400,9 @@ float FUN_000fbcf0(float base, float exponent)
 }
 
 /* 0xfbd10 — initialize magazines/triggers for a newly created weapon. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
 char weapon_new(int weapon_handle)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
@@ -1401,27 +1415,45 @@ char weapon_new(int weapon_handle)
 
   for (magazine_index = 0; (int)magazine_index < *(int *)(tag_data + 0x4f0);
        magazine_index++) {
-    char *mag_def = (char *)tag_block_get_element((void *)(tag_data + 0x4f0),
-                                                  (int)magazine_index, 0x70);
-    char *mag_entry = (char *)weapon_obj + ((int)magazine_index * 3 + 0x96) * 4;
-    int16_t initial_total = *(int16_t *)(mag_def + 6);
-    int16_t max_loaded = *(int16_t *)(mag_def + 0xa);
-    int16_t loaded = initial_total;
+    char *mag_def;
+    char *mag_entry;
+    int16_t initial_total;
+    int16_t max_loaded;
+    int16_t loaded;
 
-    if (loaded > max_loaded)
-      loaded = max_loaded;
-
+    tag_get(0x77656170, *(int *)weapon_obj);
+    if ((int16_t)magazine_index < 0 ||
+        (int)magazine_index >= *(int *)(tag_data + 0x4f0)) {
+      display_assert((char *)0x0028adb8, (char *)0x0028ad48, 0x672, 1);
+      system_exit(-1);
+    }
+    mag_entry =
+        (char *)weapon_obj + ((int)magazine_index * 3 + 0x96) * 4;
+    mag_def = (char *)tag_block_get_element((void *)(tag_data + 0x4f0),
+                                            (int)magazine_index, 0x70);
+    initial_total = *(int16_t *)(mag_def + 6);
+    max_loaded = *(int16_t *)(mag_def + 0xa);
+    loaded = (initial_total <= max_loaded) ? initial_total : max_loaded;
     *(int16_t *)(mag_entry + 8) = loaded;
     *(int16_t *)(mag_entry + 6) = (int16_t)(initial_total - loaded);
   }
 
   for (trigger_index = 0; (int)trigger_index < *(int *)(tag_data + 0x4fc);
        trigger_index++) {
-    char *trigger_entry = weapon_get_trigger_entry(weapon_obj, trigger_index);
+    char *trigger_entry;
+
+    tag_get(0x77656170, *(int *)weapon_obj);
+    if ((int16_t)trigger_index < 0 ||
+        (int)trigger_index >= *(int *)(tag_data + 0x4fc)) {
+      display_assert((char *)0x0028ad68, (char *)0x0028ad48, 0x667, 1);
+      system_exit(-1);
+    }
+    trigger_entry =
+        (char *)weapon_obj + (int)trigger_index * 36 + 0x210;
     tag_block_get_element((void *)(tag_data + 0x4fc), (int)trigger_index,
                           0x114);
-    trigger_entry[0] = 0x7f;
     *(int *)(trigger_entry + 0x20) = -1;
+    trigger_entry[0] = (char)0x7f;
   }
 
   return 1;
@@ -1654,21 +1686,29 @@ void weapon_build_weapon_interface_state(int weapon_handle, int out_state)
   }
 }
 
-/* 0xfc690 */
+/* 0xfc690 — true if magazine 0 is currently in the reloading state. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
 char weapon_reloading(int weapon_handle)
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
+  char *weapon_obj;
+  char *tag_data;
+  char result;
 
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
+  result = 0;
   if (*(int *)(tag_data + 0x4f0) > 0) {
+    tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
     if (*(int *)(tag_data + 0x4f0) <= 0) {
-      display_assert(0, "c:\\halo\\SOURCE\\items\\weapons.c", 0x672, 1);
+      display_assert((char *)0x0028adb8, (char *)0x0028ad48, 0x672, 1);
       system_exit(-1);
     }
     if (*(int16_t *)(weapon_obj + 0x258) == 1)
       return 1;
   }
-  return 0;
+  return result;
 }
 
 /* 0xfc710 */
@@ -1809,25 +1849,34 @@ void FUN_000fcc90(int weapon_handle, int16_t magazine_index)
   magazine[1] = 0;
 }
 
-/* 0xfcd10 */
-void FUN_000fcd10(int trigger_index, int weapon_handle)
+/* 0xfcd10 — begin a charged-trigger fire (state 3) and notify FP weapons. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
+void FUN_000fcd10(int16_t trigger_index, int weapon_handle)
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-  char *trig_def = (char *)tag_block_get_element((void *)(tag_data + 0x4fc),
-                                                 trigger_index, 0x114);
-  char *trigger_entry = weapon_get_trigger_entry(weapon_obj, (int16_t)trigger_index);
+  char *weapon_obj;
+  char *trig_def;
   int16_t frame;
+  int idx;
 
-  if (trigger_index < 0 || trigger_index >= 2) {
-    display_assert(0, "c:\\halo\\SOURCE\\items\\weapons.c", 0xa11, 1);
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  FUN_000fb320(weapon_obj, trigger_index);
+  trig_def = (char *)tag_block_get_element(
+      (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4fc,
+      (int)trigger_index, 0x114);
+  frame = (int16_t)(int)(*(float *)(trig_def + 0x4c) * *(float *)0x253394);
+
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  if ((int16_t)trigger_index < 0 || (int16_t)trigger_index >= 2) {
+    display_assert((char *)0x0028ae40, (char *)0x0028ad48, 0xa11, 1);
     system_exit(-1);
   }
 
-  frame = (int16_t)(int)(*(float *)(trig_def + 0x4c) * *(float *)0x253394);
-  trigger_entry[1] = 3;
-  *(int16_t *)(trigger_entry + 2) = frame;
-  weapon_set_animation_state(weapon_handle, 1, (int16_t)(trigger_index + 7));
+  idx = (int)(int16_t)trigger_index;
+  weapon_obj[idx * 36 + 0x211] = 3;
+  *(int16_t *)(weapon_obj + idx * 36 + 0x212) = frame;
+  weapon_set_animation_state(weapon_handle, 1, (int16_t)(idx + 7));
   first_person_weapon_message_from_weapon(weapon_handle, 0xe);
 }
 
