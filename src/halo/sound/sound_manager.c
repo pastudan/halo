@@ -3360,47 +3360,14 @@ void FUN_001cb1a0(int channel_index, int param)
   if (ch != (short)0xffff)
     FUN_001cb0c0((int)ch);
 }
-/* FUN_001cb1d0 (0x1cb1d0) — XBE naked draft (batch 288). */
-#if defined(__clang__)
-static short (*const b1cb1d0_c1c9b40)(int channel_index) = sound_dsound_channel_resolve;
-static void (*const b1cb1d0_c1cadd0)(int a, int b, int c, int d, int e, int f) = FUN_001cadd0;
-
-__attribute__((naked, noinline))
-void FUN_001cb1d0(int channel_index __attribute__((unused)), int a __attribute__((unused)), int b __attribute__((unused)), int c __attribute__((unused)), int d __attribute__((unused)), int e __attribute__((unused)))
+/* FUN_001cb1d0 (0x1cb1d0) — readable C lift. */
+void FUN_001cb1d0(int channel_index, int a, int b, int c, int d, int e)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "call *%[c1c9b40]\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_001cb1d0_1\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1cadd0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001cb1d0_1:\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c9b40] "m"(b1cb1d0_c1c9b40), [c1cadd0] "m"(b1cb1d0_c1cadd0)
-      : "memory");
+  short ch = sound_dsound_channel_resolve(channel_index);
+  if (ch == (short)0xffff)
+    return;
+  FUN_001cadd0((int)ch, a, b, c, d, e);
 }
-#else
-#error "FUN_001cb1d0: clang naked draft required"
-#endif
-
-
 /* FUN_001cb210 (0x1cb210) — XBE naked draft (batch 272). */
 #if defined(__clang__)
 static void * (*const b1cb210_c1c9290)(short index) = sound_dsound_channel_get;
@@ -4141,48 +4108,23 @@ char FUN_001cbc40(int sound_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_001cc1c0 (0x1cc1c0) — XBE naked draft (batch 287). */
-#if defined(__clang__)
-static int (*const b1cc1c0_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
-
-__attribute__((naked, noinline))
-char FUN_001cc1c0(int looping_handle __attribute__((unused)), void *out __attribute__((unused)))
+/* FUN_001cc1c0 (0x1cc1c0) — readable C lift. */
+char FUN_001cc1c0(int looping_handle, int unused, void *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x4fdba0, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119270]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001cc1c0_1\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "leal 0xc(%%eax), %%esi\n\t"
-      "movl $0x10, %%ecx\n\t"
-      "rep movsl\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001cc1c0_1:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c119270] "m"(b1cc1c0_c119270)
-      : "memory");
+  void *d;
+  (void)unused;
+  d = datum_absolute_index_to_index(*(data_t **)0x4fdba0, looping_handle);
+  if (d == NULL)
+    return 0;
+  {
+    unsigned int *src = (unsigned int *)((char *)d + 0xc);
+    unsigned int *dst = (unsigned int *)out;
+    int i;
+    for (i = 0; i < 0x10; i++)
+      dst[i] = src[i];
+  }
+  return 1;
 }
-#else
-#error "FUN_001cc1c0: clang naked draft required"
-#endif
-
-
 /* FUN_001cc200 (0x1cc200) — XBE naked draft (batch 274). */
 #if defined(__clang__)
 static int (*const b1cc200_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;

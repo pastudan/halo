@@ -24927,7 +24927,8 @@
         {
           "addr": "0x1cb1d0",
           "decl": "void FUN_001cb1d0(int channel_index, int a, int b, int c, int d, int e);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001cb1d0"
         },
         {
           "addr": "0x1cb210",
@@ -24991,8 +24992,9 @@
         },
         {
           "addr": "0x1cc1c0",
-          "decl": "char FUN_001cc1c0(int looping_handle, void *out);",
-          "ported": false
+          "decl": "char FUN_001cc1c0(int looping_handle, int unused, void *out);",
+          "ported": true,
+          "name": "FUN_001cc1c0"
         },
         {
           "addr": "0x1cc200",
@@ -33671,7 +33673,8 @@
         {
           "addr": "0xfbea0",
           "decl": "void weapon_delete(int weapon_handle);",
-          "ported": false
+          "ported": true,
+          "name": "weapon_delete"
         },
         {
           "addr": "0xfbf00",
@@ -33717,7 +33720,8 @@
         {
           "addr": "0xfc930",
           "decl": "char weapon_prevents_melee_attack(int weapon_handle);",
-          "ported": false
+          "ported": true,
+          "name": "weapon_prevents_melee_attack"
         },
         {
           "addr": "0xfc990",

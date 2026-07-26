@@ -2571,56 +2571,20 @@ char weapon_new(int weapon_handle)
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((noinline))
 #endif
-/* weapon_delete (0xfbea0) — XBE naked draft (batch 237). */
-#if defined(__clang__)
-static bool (*const bfbea0_gerun)(void) = game_engine_running;
-static void *(*const bfbea0_get)(int, int) = object_get_and_verify_type;
-static void *(*const bfbea0_tag)(int, int) = tag_get;
-static void (*const bfbea0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bfbea0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void weapon_delete(int weapon_handle __attribute__((unused)))
+/* weapon_delete (0xfbea0) — readable C lift. */
+void weapon_delete(int weapon_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "call *%[gerun]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lweapon_delete_1\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x308(%%eax), %%edx\n\t"
-      "shrl $3, %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb $1, %%dl\n\t"
-      "je .Lweapon_delete_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xea\n\t"
-      "pushl $0x28ad48\n\t"
-      "pushl $0x28ae98\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweapon_delete_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gerun] "m"(bfbea0_gerun), [get] "m"(bfbea0_get), [tag] "m"(bfbea0_tag), [assert] "m"(bfbea0_assert), [exitfn] "m"(bfbea0_exitfn)
-      : "memory");
+  void *obj;
+  void *def;
+  if (!game_engine_running())
+    return;
+  obj = object_get_and_verify_type(weapon_handle, 4);
+  def = tag_get(0x77656170, *(int *)obj);
+  if (((*(unsigned int *)((char *)def + 0x308)) >> 3) & 1) {
+    display_assert((const char *)0x28ae98, (const char *)0x28ad48, 0xea, 1);
+    system_exit(-1);
+  }
 }
-#else
-#error "weapon_delete: clang naked draft required"
-#endif
-
-
 /* Jump-table cases at 0xfc244 — superseded by naked weapon_export_function_values. */
 #if 0
 static float weapon_export_eval_function(int weapon_handle, char *weapon_obj,
@@ -3470,64 +3434,26 @@ float weapon_get_field_of_view(int weapon_handle __attribute__((unused)), float 
 #endif
 
 
-/* weapon_prevents_melee_attack (0xfc930) — XBE naked draft (batch 158). */
-#if defined(__clang__)
-static void *(*const bfc930_get)(int, int) = object_get_and_verify_type;
-static void *(*const bfc930_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-char weapon_prevents_melee_attack(int weapon_handle __attribute__((unused)))
+/* weapon_prevents_melee_attack (0xfc930) — readable C lift. */
+char weapon_prevents_melee_attack(int weapon_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "je .Lweapon_prevents_melee_attack_3\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x308(%%eax), %%ebx\n\t"
-      "pushl $4\n\t"
-      "shrl $9, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "andb $1, %%bl\n\t"
-      "call *%[get]\n\t"
-      "movb 0x211(%%eax), %%al\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpb $2, %%al\n\t"
-      "je .Lweapon_prevents_melee_attack_1\n\t"
-      "cmpb $3, %%al\n\t"
-      "jne .Lweapon_prevents_melee_attack_2\n\t"
-      ".Lweapon_prevents_melee_attack_1:\n\t"
-      "popl %%ebx\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lweapon_prevents_melee_attack_2:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      ".Lweapon_prevents_melee_attack_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bfc930_get), [tag] "m"(bfc930_tag)
-      : "memory");
+  void *obj;
+  void *def;
+  unsigned char state;
+  unsigned char flag;
+  if (weapon_handle == -1)
+    return 1;
+  obj = object_get_and_verify_type(weapon_handle, 4);
+  def = tag_get(0x77656170, *(int *)obj);
+  flag = (unsigned char)(((*(unsigned int *)((char *)def + 0x308)) >> 9) & 1);
+  obj = object_get_and_verify_type(weapon_handle, 4);
+  state = *(unsigned char *)((char *)obj + 0x211);
+  if (state == 2)
+    return flag;
+  if (state != 3)
+    return 0;
+  return 1;
 }
-#else
-#error "weapon_prevents_melee_attack: clang naked draft required"
-#endif
-
-
 /* FUN_000fcbd0 (0xfcbd0) — XBE naked draft (batch 140). */
 #if defined(__clang__)
 static void *(*const bfcbd0_get)(int, int) = object_get_and_verify_type;
