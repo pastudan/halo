@@ -6372,19 +6372,23 @@
       "functions": [
         {
           "addr": "0x85a40",
-          "decl": "void FUN_00085a40(void);"
+          "decl": "void FUN_00085a40(void);",
+          "ported": false
         },
         {
           "addr": "0x85ab0",
-          "decl": "void FUN_00085ab0(void);"
+          "decl": "void FUN_00085ab0(void);",
+          "ported": false
         },
         {
           "addr": "0x85b60",
-          "decl": "void FUN_00085b60(void);"
+          "decl": "void FUN_00085b60(void);",
+          "ported": false
         },
         {
           "addr": "0x85c80",
-          "decl": "void FUN_00085c80(void);"
+          "decl": "void FUN_00085c80(void);",
+          "ported": false
         },
         {
           "addr": "0x861a0",
@@ -6398,7 +6402,8 @@
         },
         {
           "addr": "0x861d0",
-          "decl": "void director_inhibit_facing(void);"
+          "decl": "void director_inhibit_facing(void);",
+          "ported": false
         },
         {
           "addr": "0x86220",
@@ -6407,27 +6412,33 @@
         },
         {
           "addr": "0x86270",
-          "decl": "void director_inhibited_facing(void);"
+          "decl": "void director_inhibited_facing(void);",
+          "ported": false
         },
         {
           "addr": "0x862c0",
-          "decl": "void director_inhibited_input(void);"
+          "decl": "void director_inhibited_input(void);",
+          "ported": false
         },
         {
           "addr": "0x86310",
-          "decl": "void director_set_mode(void);"
+          "decl": "void director_set_mode(void);",
+          "ported": false
         },
         {
           "addr": "0x86360",
-          "decl": "void director_save_camera(void);"
+          "decl": "void director_save_camera(void);",
+          "ported": false
         },
         {
           "addr": "0x86410",
-          "decl": "int16_t director_get_perspective(int16_t local_player_index);"
+          "decl": "int16_t director_get_perspective(int16_t local_player_index);",
+          "ported": false
         },
         {
           "addr": "0x864b0",
-          "decl": "void director_desired_perspective(void);"
+          "decl": "void director_desired_perspective(void);",
+          "ported": false
         },
         {
           "addr": "0x865a0",
@@ -6441,7 +6452,8 @@
         },
         {
           "addr": "0x86670",
-          "decl": "void FUN_00086670(void);"
+          "decl": "void FUN_00086670(void);",
+          "ported": false
         },
         {
           "addr": "0x86890",
@@ -6450,23 +6462,28 @@
         },
         {
           "addr": "0x86900",
-          "decl": "void director_load_camera(void);"
+          "decl": "void director_load_camera(void);",
+          "ported": false
         },
         {
           "addr": "0x86a50",
-          "decl": "void FUN_00086a50(void);"
+          "decl": "void FUN_00086a50(void);",
+          "ported": false
         },
         {
           "addr": "0x86b80",
-          "decl": "void director_camera_deterministic(void);"
+          "decl": "void director_camera_deterministic(void);",
+          "ported": false
         },
         {
           "addr": "0x86be0",
-          "decl": "void FUN_00086be0(void);"
+          "decl": "void FUN_00086be0(void);",
+          "ported": false
         },
         {
           "addr": "0x86cb0",
-          "decl": "void director_script_camera(int value);"
+          "decl": "void director_script_camera(int value);",
+          "ported": false
         },
         {
           "addr": "0x86de0",
@@ -6505,59 +6522,73 @@
         },
         {
           "addr": "0x87800",
-          "decl": "void FUN_00087800(void);"
+          "decl": "void FUN_00087800(void);",
+          "ported": false
         },
         {
           "addr": "0x878d0",
-          "decl": "void editor_camera_get_focus(void);"
+          "decl": "void editor_camera_get_focus(void);",
+          "ported": false
         },
         {
           "addr": "0x87950",
-          "decl": "void editor_camera_set_focus(void);"
+          "decl": "void editor_camera_set_focus(void);",
+          "ported": false
         },
         {
           "addr": "0x879d0",
-          "decl": "void editor_camera_set_position(void);"
+          "decl": "void editor_camera_set_position(void);",
+          "ported": false
         },
         {
           "addr": "0x87ac0",
-          "decl": "void FUN_00087ac0(void);"
+          "decl": "void FUN_00087ac0(void);",
+          "ported": false
         },
         {
           "addr": "0x87b00",
-          "decl": "void editor_camera_set_mode(void);"
+          "decl": "void editor_camera_set_mode(void);",
+          "ported": false
         },
         {
           "addr": "0x87c00",
-          "decl": "void FUN_00087c00(void);"
+          "decl": "void FUN_00087c00(void);",
+          "ported": false
         },
         {
           "addr": "0x87c80",
-          "decl": "void editor_camera_move_to_point(void);"
+          "decl": "void editor_camera_move_to_point(void);",
+          "ported": false
         },
         {
           "addr": "0x87d00",
-          "decl": "void editor_camera_set_position_and_roll(void);"
+          "decl": "void editor_camera_set_position_and_roll(void);",
+          "ported": false
         },
         {
           "addr": "0x87eb0",
-          "decl": "void FUN_00087eb0(void);"
+          "decl": "void FUN_00087eb0(void);",
+          "ported": false
         },
         {
           "addr": "0x87f20",
-          "decl": "void editor_camera_update(void);"
+          "decl": "void editor_camera_update(void);",
+          "ported": false
         },
         {
           "addr": "0x88050",
-          "decl": "void editor_camera_set_scripted(void);"
+          "decl": "void editor_camera_set_scripted(void);",
+          "ported": false
         },
         {
           "addr": "0x88200",
-          "decl": "void FUN_00088200(void);"
+          "decl": "void FUN_00088200(void);",
+          "ported": false
         },
         {
           "addr": "0x88260",
-          "decl": "void editor_camera_flying_update(void);"
+          "decl": "void editor_camera_flying_update(void);",
+          "ported": false
         }
       ],
       "name": "director.obj",
