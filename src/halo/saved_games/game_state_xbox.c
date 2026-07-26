@@ -309,135 +309,645 @@ void FUN_001c0d70(int param_1)
 /* 0x1c0260 */
 void game_state_create_or_open_file(void)
 {
+  int eax = 0;
 
+  /* test (char)eax, (char)eax -> jne 0x1c0286 */
+  display_assert((char *)0x002b9ba0, (char *)0x002b9b70, 86, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x1c02ac */
+  display_assert((char *)0x002b9c0c, (char *)0x002b9b70, 87, 0);
+  system_exit(0);
+  CreateFileA((char *)0x002b9bfc, 0xc0000000, 0, 0, 0, 0x28000000, 0);
+  /* mem[0x004ea9c0] = eax */
+  SetFilePointer(0, 0x00380000, (void *)0, 0);
+  /* cmp eax, -1 -> je 0x1c02fd */
+  SetEndOfFile(0);
+  /* test eax, eax -> je 0x1c02fd */
+  xapi_GetLastError();
+  csprintf((char *)0x005ab100, (char *)0x002b9bcc);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+
+  (void)eax;
 }
 
 /* 0x1c0450 */
 void game_state_read_from_file(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  /* test (char)eax, (char)eax -> jne 0x1c0480 */
+  display_assert((char *)0x002b9ba0, (char *)0x002b9b70, 144, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x1c04a9 */
+  display_assert((char *)0x002b9c30, (char *)0x002b9b70, 145, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x1c04db */
+  /* test (char)eax, (char)eax -> jne 0x1c04db */
+  display_assert((char *)0x002b9ca0, (char *)0x002b9b70, 146, 0);
+  system_exit(0);
+  SetFilePointer(0, 0, (void *)0, 0);
+  /* cmp eax, -1 -> je 0x1c0526 */
+  ReadFile(0, (void *)(uintptr_t)eax, edx, (void *)(uintptr_t)ecx, (void *)0);
+  /* test eax, eax -> je 0x1c0526 */
+  /* relift: cmp edx, dword ptr [0x4ea9b8] -> jne 0x1c0526 */
+  xapi_GetLastError();
+  csprintf((char *)0x005ab100, (char *)0x002b9c7c);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0x1c0570 */
 void game_state_write_core(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  CreateDirectoryA((char *)0x002b9cf4, 0);
+  crt_sprintf((char *)(uintptr_t)ecx, (char *)0x002b9ce8);
+  CreateFileA((char *)(uintptr_t)edx, 0x40000000, 0, 0, 0, 128, 0);
+  /* cmp esi, -1 -> je 0x1c05e7 */
+  WriteFile(0, (void *)(uintptr_t)ecx, edi, (void *)(uintptr_t)eax, (void *)0);
+  /* test eax, eax -> je 0x1c05e6 */
+  /* relift: cmp dword ptr [ebp - 4], edi -> jne 0x1c05e6 */
+  CloseHandle(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x1c0600 */
 void game_state_read_core_header(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  crt_sprintf((char *)(uintptr_t)ecx, (char *)0x002b9ce8);
+  CreateFileA((char *)(uintptr_t)edx, 0x80000000, 0, 0, 0, 128, 0);
+  /* cmp esi, -1 -> je 0x1c066b */
+  ReadFile(0, (void *)(uintptr_t)ecx, edi, (void *)(uintptr_t)eax, (void *)0);
+  /* test eax, eax -> je 0x1c066a */
+  /* relift: cmp dword ptr [ebp - 4], edi -> jne 0x1c066a */
+  CloseHandle(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x1c0680 */
 void game_state_read_core(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  crt_sprintf((char *)(uintptr_t)ecx, (char *)0x002b9ce8);
+  CreateFileA((char *)(uintptr_t)edx, 0x80000000, 0, 0, 0, 128, 0);
+  /* cmp esi, -1 -> je 0x1c06e5 */
+  ReadFile(0, (void *)(uintptr_t)ecx, edi, (void *)(uintptr_t)eax, (void *)0);
+  /* test eax, eax -> je 0x1c06e5 */
+  /* relift: cmp dword ptr [ebp - 4], edi -> je 0x1c0705 */
+  display_assert((char *)0x002b9cfc, (char *)0x002b9b70, 226, 0);
+  system_exit(0);
+  CloseHandle(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x1c0780 */
 int FUN_001c0780(int param_1)
 {
-  (void)param_1;
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int ebp = 0;
+
+  FUN_001d90e0();
+  player_ui_get_path_to_local_player_profile_directory();
+  /* test (char)eax, (char)eax -> je 0x1c08ad */
+  player_ui_get_path_to_local_player_profile_directory();
+  FUN_0008dc30((char *)(uintptr_t)eax, (char *)0x002b9d34);
+  CreateFileA((char *)(uintptr_t)ecx, 0xc0000000, 0, 0, 0, 0, 0);
+  /* cmp esi, -1 -> je 0x1c08c7 */
+  GetFileSize(0, (void *)0);
+  /* cmp eax, 0x380000 -> je 0x1c0904 */
+  csmemset((void *)(uintptr_t)edx, 0, 16384);
+  WriteFile(0, (void *)(uintptr_t)ecx, 16384, (void *)(uintptr_t)eax, (void *)0);
+  /* test eax, eax -> je 0x1c086d */
+  /* relift: cmp dword ptr [ebp + 8], 0x4000 -> jne 0x1c086d */
+  SetFilePointer(0, 0x00380000, (void *)0, 0);
+  /* cmp eax, -1 -> je 0x1c086d */
+  SetEndOfFile(0);
+  /* test eax, eax -> jne 0x1c0904 */
+  csprintf((char *)0x005ab100, (char *)0x002b9d74);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  FUN_001c0750();
+  CloseHandle(0);
+  csstrcpy((char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
+  csprintf((char *)0x005ab100, (char *)0x002b9d44);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
   return 0;
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)ebp;
 }
 
 /* 0x1c0ac0 */
 void game_state_write_to_persistent_storage(int param_1, void *param_2, int param_3, int param_4)
 {
-  (void)param_1;
-  (void)param_2;
-  (void)param_3;
-  (void)param_4;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  FUN_001c0780(0);
+  /* cmp esi, -1 -> je 0x1c0c19 */
+  crc_new((void *)(uintptr_t)eax);
+  crc_checksum_buffer((void *)(uintptr_t)ecx, (void *)(uintptr_t)edi, 0x00345000);
+  /* cmp ebx, 0x800 -> jb 0x1c0b38 */
+  display_assert((char *)0x002b9e24, (char *)0x002b9b70, 333, 0);
+  system_exit(0);
+  csmemcpy((void *)(uintptr_t)eax, (void *)(uintptr_t)edi, ebx);
+  csmemset((void *)(uintptr_t)edi, 0, ebx);
+  SetFilePointer(0, 0, (void *)0, 0);
+  /* cmp eax, -1 -> je 0x1c0bae */
+  WriteFile(0, (void *)(uintptr_t)edi, edx, (void *)(uintptr_t)ecx, (void *)0);
+  /* test eax, eax -> je 0x1c0bae */
+  /* relift: cmp dword ptr [ebp - 4], eax -> jne 0x1c0bae */
+  SetFilePointer(0, 0, (void *)0, 0);
+  /* cmp eax, -1 -> je 0x1c0bae */
+  WriteFile(0, (void *)(uintptr_t)edx, ebx, (void *)(uintptr_t)ecx, (void *)0);
+  /* test eax, eax -> je 0x1c0bae */
+  /* relift: cmp dword ptr [ebp - 4], ebx -> je 0x1c0c00 */
+  xapi_GetLastError();
+  csprintf((char *)0x005ab100, (char *)0x002b9df8);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  player_ui_get_path_to_local_player_profile_directory();
+  /* test (char)eax, (char)eax -> je 0x1c0c00 */
+  DeleteFileA((char *)(uintptr_t)ecx);
+  csmemcpy((void *)(uintptr_t)edi, (void *)(uintptr_t)edx, ebx);
+  CloseHandle(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x1c0d50 */
 void FUN_001c0d50(void)
 {
-
+  FUN_001c53f0();
 }
 
 /* 0x1c0da0 */
 void player_profile_delete(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test edi, edi -> jne 0x1c0ddc */
+  display_assert((char *)0x002b9f58, (char *)0x002b9f70, 216, 0);
+  system_exit(0);
+  file_reference_create_from_path((void *)(uintptr_t)eax, (char *)(uintptr_t)esi, 0);
+  /* test eax, eax -> je 0x1c0eb3 */
+  file_open((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> je 0x1c0eb3 */
+  file_read((void *)(uintptr_t)eax, 512, (void *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> je 0x1c0e8c */
+  saved_game_file_generate_checksum();
+  csmemcmp((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, 20);
+  /* test eax, eax -> jne 0x1c0e85 */
+  csmemcpy((void *)(uintptr_t)edi, (void *)(uintptr_t)edx, 48);
+  file_close((void *)(uintptr_t)eax);
+  error(0, (char *)0x002b9f10);
+  file_close((void *)(uintptr_t)eax);
+  error(0, (char *)0x002b9eec);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x1c0ed0 */
 void FUN_001c0ed0(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x1c0ee0 */
 void FUN_001c0ee0(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x1c0f70 */
 void player_profile_save_last_level_played(void)
 {
+  int eax = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test edi, edi -> je 0x1c0f8b */
+  /* test esi, esi -> jne 0x1c0fab */
+  display_assert((char *)0x002b9f9c, (char *)0x002b9f70, 440, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x1c0ffa */
+  /* test (char)eax, 8 -> je 0x1c0fcc */
+  /* test (char)eax, 4 -> je 0x1c0fdc */
+  /* test (char)eax, 2 -> je 0x1c0fec */
+  /* test (char)eax, 1 -> je 0x1c0ffa */
+  /* test (char)eax, (char)eax -> je 0x1c103f */
+  /* test (char)eax, 8 -> je 0x1c1011 */
+  /* test (char)eax, 4 -> je 0x1c1021 */
+  /* test (char)eax, 2 -> je 0x1c1031 */
+  /* test (char)eax, 1 -> je 0x1c103f */
+  /* test (char)eax, (char)eax -> je 0x1c1084 */
+  /* test (char)eax, 8 -> je 0x1c1056 */
+  /* test (char)eax, 4 -> je 0x1c1066 */
+  /* test (char)eax, 2 -> je 0x1c1076 */
+  /* test (char)eax, 1 -> je 0x1c1084 */
+  /* test (char)eax, (char)eax -> je 0x1c10c9 */
+  /* test (char)eax, 8 -> je 0x1c109b */
+  /* test (char)eax, 4 -> je 0x1c10ab */
+  /* test (char)eax, 2 -> je 0x1c10bb */
+  /* test (char)eax, 1 -> je 0x1c10c9 */
+  /* test (char)eax, (char)eax -> je 0x1c110e */
+  /* test (char)eax, 8 -> je 0x1c10e0 */
+  /* test (char)eax, 4 -> je 0x1c10f0 */
+  /* test (char)eax, 2 -> je 0x1c1100 */
+  /* test (char)eax, 1 -> je 0x1c110e */
+  /* test (char)eax, (char)eax -> je 0x1c1153 */
+  /* test (char)eax, 8 -> je 0x1c1125 */
+  /* test (char)eax, 4 -> je 0x1c1135 */
+  /* test (char)eax, 2 -> je 0x1c1145 */
+  /* test (char)eax, 1 -> je 0x1c1153 */
+  /* test (char)eax, (char)eax -> je 0x1c1198 */
+  /* test (char)eax, 8 -> je 0x1c116a */
+  /* test (char)eax, 4 -> je 0x1c117a */
+  /* test (char)eax, 2 -> je 0x1c118a */
+  /* test (char)eax, 1 -> je 0x1c1198 */
+  /* test (char)eax, (char)eax -> je 0x1c11dd */
+  /* test (char)eax, 8 -> je 0x1c11af */
+  /* test (char)eax, 4 -> je 0x1c11bf */
+  /* test (char)eax, 2 -> je 0x1c11cf */
+  /* test (char)eax, 1 -> je 0x1c11dd */
+  /* test (char)eax, (char)eax -> je 0x1c1222 */
+  /* test (char)eax, 8 -> je 0x1c11f4 */
+  /* test (char)eax, 4 -> je 0x1c1204 */
+  /* test (char)eax, 2 -> je 0x1c1214 */
+  /* test (char)eax, 1 -> je 0x1c1222 */
+  /* test (char)eax, (char)eax -> je 0x1c1270 */
+  /* test (char)eax, 8 -> je 0x1c123c */
+  /* test (char)eax, 4 -> je 0x1c124f */
+  /* test (char)eax, 2 -> je 0x1c1262 */
+  /* test (char)eax, 1 -> je 0x1c1270 */
+
+  (void)eax;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x1c1280 */
 void FUN_001c1280(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x1c1290 */
 void game_state_read_from_persistent_storage(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int esi = 0;
 
+  /* cmp esi, ebx -> je 0x1c12a6 */
+  /* cmp eax, ebx -> jl 0x1c12a6 */
+  /* cmp eax, 2 -> jl 0x1c12c6 */
+  display_assert((char *)0x002b9fec, (char *)0x002b9f70, 567, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)esi, 0, 48);
+  display_assert((char *)0x002b9fbc, (char *)0x002b9f70, 594, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)esi;
 }
 
 /* 0x1c1340 */
 void player_profile_setup_default_gamespy_settings(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
 
+  display_assert((char *)0x002829b0, (char *)0x002b9f70, 609, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [0x4eaa2c], ebx -> je 0x1c13b7 */
+  error(0, (char *)0x002ba0f8);
+  thread_is_done((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x1c1390 */
+  thread_close((void *)(uintptr_t)ecx);
+  /* mem[0x004eaa2c] = ebx */
+  saved_game_files_take_mutex();
+  /* test (char)eax, (char)eax -> je 0x1c1535 */
+  FUN_001c4850();
+  /* test (char)eax, (char)eax -> je 0x1c1519 */
+  file_read((void *)(uintptr_t)ecx, 512, (void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x1c14ed */
+  saved_game_file_generate_checksum();
+  csmemcmp((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, 20);
+  /* test eax, eax -> jne 0x1c1465 */
+  csmemcpy((void *)(uintptr_t)esi, (void *)(uintptr_t)eax, 48);
+  saved_game_file_close();
+  saved_game_files_release_mutex();
+  error(0, (char *)0x002ba0a8);
+  csmemset((void *)(uintptr_t)ecx, 0, 48);
+  saved_game_file_get_display_name();
+  ustrncpy((wchar_t *)(uintptr_t)edx, (wchar_t *)(uintptr_t)eax, 0);
+  csmemcpy((void *)(uintptr_t)esi, (void *)(uintptr_t)eax, 48);
+  saved_game_file_close();
+  saved_game_files_release_mutex();
+  error(0, (char *)0x002ba080);
+  saved_game_file_close();
+  saved_game_files_release_mutex();
+  error(0, (char *)0x002b9eec);
+  saved_game_files_release_mutex();
+  error(0, (char *)0x002ba030);
+  error(0, (char *)0x002ba0a8);
+  csmemset((void *)(uintptr_t)edx, 0, 48);
+  saved_game_file_get_display_name();
+  ustrncpy((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)eax, 0);
+  csmemcpy((void *)(uintptr_t)esi, (void *)(uintptr_t)ecx, 48);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0x1c15c0 */
 void FUN_001c15c0(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
 
+  /* test esi, esi -> jne 0x1c15f1 */
+  display_assert((char *)0x00266c9c, (char *)0x002b9f70, 727, 0);
+  system_exit(0);
+  error(0, (char *)0x002ba1a4);
+  saved_game_files_take_mutex();
+  /* test (char)eax, (char)eax -> je 0x1c16f6 */
+  FUN_001c4850();
+  /* test (char)eax, (char)eax -> je 0x1c16de */
+  csmemcpy((void *)(uintptr_t)ecx, (void *)(uintptr_t)esi, 48);
+  saved_game_file_generate_checksum();
+  file_set_position((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> je 0x1c1686 */
+  file_write();
+  /* test (char)eax, (char)eax -> jne 0x1c1697 */
+  error(0, (char *)0x002ba17c);
+  saved_game_file_close();
+  /* test (char)eax, (char)eax -> je 0x1c16c8 */
+  FUN_001c4990();
+  /* test (char)eax, (char)eax -> jne 0x1c16c8 */
+  error(0, (char *)0x002ba14c);
+  /* test (char)ebx, (char)ebx -> je 0x1c16d5 */
+  delete_enumerated_saved_game_file(0);
+  saved_game_files_release_mutex();
+  error(0, (char *)0x002b9eec);
+  saved_game_files_release_mutex();
+  error(0, (char *)0x002ba030);
+  error(0, (char *)0x002ba130);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
 }
 
 /* 0x1c1720 */
 void FUN_001c1720(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
 
+  FUN_001c5560();
+  FUN_001c4850();
+  /* test (char)eax, (char)eax -> je 0x1c18b1 */
+  csmemset((void *)0, 0, 0);
+  ustrncpy((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)esi, 11);
+  error(0, (char *)0x002ba220);
+  /* cmp ecx, 4 -> jl 0x1c1800 */
+  /* cmp esi, 0xa -> jl 0x1c17f5 */
+  saved_game_file_generate_checksum();
+  file_set_position((void *)(uintptr_t)edx, 0);
+  /* test (char)eax, (char)eax -> je 0x1c1861 */
+  file_write();
+  /* test (char)eax, (char)eax -> jne 0x1c1895 */
+  error(0, (char *)0x002ba1ec);
+  delete_enumerated_saved_game_file(0);
+  saved_game_file_close();
+  saved_game_file_close();
+  error(0, (char *)0x002ba1c0);
+  delete_enumerated_saved_game_file(0);
+  error(0, (char *)0x00288848);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0x1c18f0 */
 void player_profile_new(void)
 {
+  int esi = 0;
+  int edi = 0;
 
+  display_assert((char *)0x002829b0, (char *)0x002b9f70, 194, 0);
+  system_exit(0);
+  /* cmp edi, -1 -> jne 0x1c193e */
+  csmemcpy((void *)(uintptr_t)esi, (void *)0x004ea9c8, 48);
+  player_profile_setup_default_gamespy_settings();
+
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x1c1950 */
 void FUN_001c1950(void)
 {
-
+  FUN_001c0ee0();
 }
 
 /* 0x1c19a0 */
 int FUN_001c19a0(void)
 {
+  int eax = 0;
+
+  random_math_get_local_seed_address();
+  random_range((void *)(uintptr_t)eax, 0, 0);
   return 0;
+
+  (void)eax;
 }
 
 /* 0x1c19c0 */
 int FUN_001c19c0(void)
 {
+  int eax = 0;
+
+  random_math_get_local_seed_address();
+  random_range((void *)(uintptr_t)eax, 0, 0);
   return 0;
+
+  (void)eax;
 }
 
 /* 0x1c19e0 */
 void FUN_001c19e0(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  game_state_read_from_persistent_storage();
+  snprintf((char *)(uintptr_t)eax, 255, (char *)0x002ba2d8);
+  file_reference_create_from_path((void *)(uintptr_t)edx, (char *)(uintptr_t)ecx, 0);
+  /* test eax, eax -> je 0x1c1acc */
+  saved_game_file_generate_checksum();
+  FUN_0019a490((void *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> je 0x1c1acc */
+  file_open((void *)(uintptr_t)eax, 0);
+  /* test (char)eax, (char)eax -> je 0x1c1acc */
+  file_set_position((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> je 0x1c1acc */
+  file_write();
+  file_close((void *)(uintptr_t)ecx);
+  /* test (char)eax, (char)eax -> jne 0x1c1ac8 */
+  error(0, (char *)0x002ba2a4);
+  /* test (char)ebx, (char)ebx -> jne 0x1c1ae2 */
+  error(0, (char *)0x002ba260);
+  /* cmp edi, 2 -> jl 0x1c19f0 */
+  /* test esi, esi -> jne 0x1c1b27 */
+  display_assert((char *)0x002829b0, (char *)0x002b9f70, 704, 0);
+  system_exit(0);
+  /* test eax, eax -> je 0x1c1b6b */
+  error(0, (char *)0x002ba0f8);
+  thread_is_done((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x1c1b40 */
+  thread_close((void *)(uintptr_t)ecx);
+  /* mem[0x004eaa2c] = 0 */
+  /* mem[0x004ea9f8] = edx */
+  csmemcpy((void *)0x004ea9fc, (void *)(uintptr_t)esi, 48);
+  thread_new(0, (void *)0x001c15c0, 0x004ea9f8, (void *)0x004eaa2c);
+  csmemset((void *)0x004ea9c8, 0, 108);
+  /* test esi, esi -> jne 0x1c1beb */
+  display_assert((char *)0x002829b0, (char *)0x002b9f70, 256, 0);
+  system_exit(0);
+  /* cmp eax, -1 -> je 0x1c1bfc */
+  FUN_001c1b00();
+  main_get_current_solo_level();
+  /* cmp (int16_t)ebx, 4 -> jl 0x1c1c3d */
+  display_assert((char *)0x00282750, (char *)0x002b9f70, 378, 0);
+  system_exit(0);
+  /* cmp (int16_t)esi, -1 -> je 0x1c1cb2 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x1c1c4e */
+  /* cmp (int16_t)esi, 0xa -> jl 0x1c1c6e */
+  display_assert((char *)0x002ba30c, (char *)0x002b9f70, 381, 0);
+  system_exit(0);
+  player_ui_get_active_player_profile_index();
+  /* cmp edi, -1 -> je 0x1c1cb1 */
+  player_ui_get_active_player_profile();
+  /* relift: cmp word ptr [ebp - 0xa], (int16_t)esi -> je 0x1c1ca3 */
+  player_profile_get_from_path();
+  player_ui_set_active_player_profile();
+  /* cmp (int16_t)ebx, 4 -> jl 0x1c1cf7 */
+  display_assert((char *)0x00282750, (char *)0x002b9f70, 407, 0);
+  system_exit(0);
+  main_get_current_solo_level();
+  game_difficulty_level_get();
+  /* cmp (int16_t)esi, 0xa -> jge 0x1c1d1c */
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x1c1d1c */
+  /* cmp (int16_t)eax, 4 -> jl 0x1c1d3c */
+  display_assert((char *)0x002ba3b0, (char *)0x002b9f70, 413, 0);
+  system_exit(0);
+  player_ui_get_active_player_profile_index();
+  /* cmp edi, -1 -> je 0x1c1d8a */
+  player_ui_get_active_player_profile();
+  FUN_001c1b00();
+  player_ui_set_active_player_profile();
+  error(0, (char *)0x002ba348);
+  csmemset((void *)0x004eaa38, 0, 116);
+  /* test eax, eax -> je 0x1c1e0b */
+  error(0, (char *)0x002ba430);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }

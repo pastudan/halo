@@ -2221,131 +2221,287 @@ void FUN_0017cd30(void)
 /* 0x99490 */
 void FUN_00099490(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x996b0 */
 void decal_update(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  datum_get((void *)(uintptr_t)eax, 0);
+  game_time_get();
+  display_assert((char *)0x0026a030, (char *)0x00269e0c, 307, 0);
+  system_exit(0);
+  tag_get('aced', 0);
+  /* test (char)ecx, 1 -> je 0x9978a */
+  /* test (char)ecx, (char)ecx -> jne 0x9978a */
+  error(0, (char *)0x00269f48);
+  FUN_0017cb10(0);
+  /* test (char)eax, 0x41 -> jne 0x9982e */
+  /* test (char)eax, 0x41 -> jne 0x9982e */
+  /* test (char)eax, 1 -> jne 0x997ef */
+  display_assert((char *)0x0026a01c, (char *)0x00269e0c, 322, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0x99b70 */
 void decals_reconnect_to_structure_bsp(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  /* test eax, eax -> jne 0x99b9f */
+  display_assert((char *)0x00269ee0, (char *)0x00269e0c, 633, 0);
+  system_exit(0);
+  /* test (char)ecx, (char)ecx -> je 0x99d55 */
+  display_assert((char *)0x00269ec0, (char *)0x00269e0c, 641, 0);
+  system_exit(0);
+  /* cmp edi, -1 -> je 0x99d52 */
+  datum_get((void *)(uintptr_t)edx, 0);
+  /* relift: cmp word ptr [esi + 4], -1 -> je 0x99c48 */
+  display_assert((char *)0x0026a18c, (char *)0x00269e0c, 660, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x99c57 */
+  /* cmp (int16_t)eax, 5 -> jl 0x99c77 */
+  display_assert((char *)0x0026a154, (char *)0x00269e0c, 661, 0);
+  system_exit(0);
+  FUN_00098970(0, 0);
+  scenario_location_from_point((void *)(uintptr_t)eax, (void *)(uintptr_t)edx);
+  /* relift: cmp word ptr [ebp - 8], -1 -> je 0x99d25 */
+  /* cmp eax, -1 -> je 0x99cb9 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* cmp eax, -1 -> je 0x99cd8 */
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* relift: cmp dword ptr [edx + 0x2800], edi -> je 0x99d06 */
+  display_assert((char *)0x0026a118, (char *)0x00269e0c, 682, 0);
+  system_exit(0);
+  FUN_00099840(edi, 0, 0);
+  FUN_00098970(0, 0);
+  error(0, (char *)0x0026a0e4);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x99d60 */
 void decals_disconnect_from_structure_bsp(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  /* cmp eax, esi -> jne 0x99d92 */
+  display_assert((char *)0x00269ee0, (char *)0x00269e0c, 713, 0);
+  system_exit(0);
+  /* test (char)ecx, (char)ecx -> je 0x99f72 */
+  /* relift: cmp dword ptr [0x44dfd0], esi -> jne 0x99dca */
+  display_assert((char *)0x00269ec0, (char *)0x00269e0c, 719, 0);
+  system_exit(0);
+  FUN_00098fe0(ecx, eax);
+  datum_get((void *)(uintptr_t)edx, 0);
+  /* relift: cmp (int16_t)edx, word ptr [ebp - 4] -> je 0x99e67 */
+  display_assert((char *)0x0026a1a8, (char *)0x00269e0c, 746, 0);
+  system_exit(0);
+  /* cmp eax, -1 -> je 0x99ea3 */
+  datum_get((void *)(uintptr_t)edx, 0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x99ebc */
+  /* cmp (int16_t)eax, 0x200 -> jl 0x99edc */
+  display_assert((char *)0x00269e58, (char *)0x00269e0c, 216, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x99eea */
+  /* cmp (int16_t)eax, 5 -> jl 0x99f0a */
+  display_assert((char *)0x00269e2c, (char *)0x00269e0c, 217, 0);
+  system_exit(0);
+  /* cmp edi, -1 -> jne 0x99e10 */
+  error(0, (char *)0x0026a0e4);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x99f80 */
 void decals_update(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  /* test (char)ecx, (char)ecx -> je 0x99fc9 */
+  data_iterator_new((void *)(uintptr_t)eax, (void *)(uintptr_t)eax);
+  data_iterator_next((void *)(uintptr_t)ecx);
+  /* test eax, eax -> je 0x99fc9 */
+  decal_update();
+  data_iterator_next((void *)(uintptr_t)edx);
+  /* test eax, eax -> jne 0x99fb0 */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0x9a160 */
 void decal_delete(int decal_index)
 {
-  (void)decal_index;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* test esi, esi -> jne 0x9a19d */
+  display_assert((char *)0x0026a2f4, (char *)0x00269e0c, 947, 0);
+  system_exit(0);
+  /* relift: test byte ptr [esi + 2], 1 -> je 0x9a1c3 */
+  /* test (char)eax, (char)eax -> jne 0x9a1c3 */
+  error(0, (char *)0x0026a2b4);
+  /* relift: test byte ptr [esi + 2], 2 -> je 0x9a1e9 */
+  /* test (char)eax, (char)eax -> jne 0x9a1e9 */
+  error(0, (char *)0x0026a270);
+  /* cmp eax, -1 -> je 0x9a207 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* cmp eax, -1 -> je 0x9a238 */
+  datum_get((void *)(uintptr_t)eax, 0);
+  datum_delete((void *)(uintptr_t)ecx, 0);
+  /* cmp (int16_t)eax, 0xffff -> jne 0x9a293 */
+  /* relift: cmp dword ptr [edx + 0x2800], ebx -> je 0x9a270 */
+  display_assert((char *)0x0026a118, (char *)0x00269e0c, 987, 0);
+  system_exit(0);
+  datum_delete((void *)(uintptr_t)ecx, 0);
+  FUN_00098fe0(eax, edx);
+  /* cmp eax, ebx -> je 0x9a2c7 */
+  display_assert((char *)0x0026a220, (char *)0x00269e0c, 992, 0);
+  system_exit(0);
+  FUN_00098aa0(eax, edi, 0);
+  datum_delete((void *)(uintptr_t)ecx, 0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x17cba0 */
 void FUN_0017cba0(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cbe0 */
 void FUN_0017cbe0(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cbf0 */
 void FUN_0017cbf0(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cc00 */
 void FUN_0017cc00(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cc40 */
 void FUN_0017cc40(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cc50 */
 void FUN_0017cc50(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cc60 */
 void FUN_0017cc60(int object_handle)
 {
-  (void)object_handle;
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cc80 */
 void FUN_0017cc80(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cc90 */
 void FUN_0017cc90(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cca0 */
 void FUN_0017cca0(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cce0 */
 void FUN_0017cce0(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cd00 */
 void FUN_0017cd00(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cd10 */
 void FUN_0017cd10(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cd20 */
 void FUN_0017cd20(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cd40 */
 void FUN_0017cd40(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x17cd50 */
 void FUN_0017cd50(void)
 {
+  int edx = 0;
 
+  FUN_0015a7f0((float *)(uintptr_t)edx, (float *)0, (float *)0, (float *)0);
+  FUN_0015a7f0((float *)(uintptr_t)edx, (float *)0, (float *)0, (float *)0);
+  FUN_0015a7f0((float *)(uintptr_t)edx, (float *)0, (float *)0, (float *)0);
+
+  (void)edx;
 }

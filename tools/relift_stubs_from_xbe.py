@@ -86,6 +86,21 @@ def is_stub_body(body: str) -> bool:
     return True
 
 
+def is_relift_draft(body: str) -> bool:
+    if is_stub_body(body):
+        return True
+    if re.search(r"\(void\)(eax|ebx|ecx|edx|esi|edi|ebp)\s*;", body):
+        return True
+    markers = (
+        "/* cmp",
+        "/* test",
+        "/* mem[",
+        "relift:",
+        "(uintptr_t)",
+    )
+    return any(m in body for m in markers)
+
+
 def fn_name_from_decl(decl: str, addr: str) -> str:
     return GEN.fn_name(decl, addr)
 
@@ -153,6 +168,7 @@ class LiftCtx:
     insns: list
     addr_name: dict[int, str]
     params: list[str]
+    caller_name: str = ""
     lines: list[str] = field(default_factory=list)
     locals: dict[str, str] = field(default_factory=dict)  # reg/off -> c expr
     ebp_locals: dict[int, str] = field(default_factory=dict)
@@ -286,6 +302,14 @@ def reg_store_lhs(reg: str) -> str:
     return reg
 
 
+def _fmt_string_arg(arg: str, cname: str) -> str:
+    if re.match(r"0x00[23][0-9a-f]{5}", arg):
+        if cname in ("csstrcpy", "csstrncpy"):
+            return f"(char *){arg}"
+        return f"(const char *){arg}"
+    return arg
+
+
 def finalize_body(lines: list[str], decl_params: list[str], sig: str = "") -> list[str]:
     """Prepend C89 declarations and sanitize relifted body lines."""
     decl_set = set(decl_params)
@@ -335,6 +359,10 @@ def finalize_body(lines: list[str], decl_params: list[str], sig: str = "") -> li
     for ln in lines:
         if invalid.search(ln):
             ln = "  /* relift: " + ln.strip().lstrip("/").strip("* ").strip() + " */"
+        ln = re.sub(r"\*\([^)]+\)\(\(char \*\)esp \+ [^)]+\)", "0", ln)
+        ln = re.sub(r"\(\(char \*\)esp \+ [^)]+\)", "0", ln)
+        if "/* relift:" in ln and ln.strip().startswith("/* relift:") and ln.count("/*") > 1:
+            ln = "  /* relift: esp/stack op — manual review */"
         ln = re.sub(r"/\*\s*(-?\d+|0x[0-9a-f]+)\s*\*/", lambda m: m.group(1), ln)
         ln = re.sub(r"/\*\s*(-?\d+|0x[0-9a-f]+)\s*\*/", lambda m: m.group(1), ln)
         ln = re.sub(r"\*/\s*\*/", "*/", ln)
@@ -381,7 +409,7 @@ def finalize_body(lines: list[str], decl_params: list[str], sig: str = "") -> li
         ln = re.sub(
             r"(display_assert|console_printf|console_warning|csstrcpy|csstrncpy|csstrlen)\(([^)]*)\)",
             lambda m: m.group(1) + "(" + ", ".join(
-                f"(const char *){a.strip()}" if re.match(r"0x00[23][0-9a-f]{5}", a.strip()) else a.strip()
+                _fmt_string_arg(a.strip(), m.group(1))
                 for a in m.group(2).split(",") if a.strip()
             ) + ")",
             ln,
@@ -456,39 +484,141 @@ def load_decl_arity() -> dict[str, int]:
 
 
 def cast_arg_for_param(arg: str, param_type: str, cname: str) -> str:
-    pt = param_type.replace("const ", "")
+    pt = re.sub(r"/\*.*?\*/", "", param_type).replace("const ", "").strip()
+    reg_m = re.fullmatch(r"(eax|ebx|ecx|edx|esi|edi|ebp)", arg)
+    if reg_m:
+        reg = reg_m.group(1)
+        if "*" not in pt and ("short" in pt or pt == "int" or pt.startswith("int ")):
+            return "0"
+        if "*" in pt or pt == "void" or pt.startswith("void "):
+            if "**" in pt.replace(" ", ""):
+                if "char" in pt:
+                    return f"(char **)(uintptr_t){reg}"
+            if "unsigned char" in pt:
+                return f"(unsigned char *)(uintptr_t){reg}"
+            if "wchar" in pt:
+                return f"(wchar_t *)(uintptr_t){reg}"
+            if "float" in pt:
+                return f"(float *)(uintptr_t){reg}"
+            if "char" in pt:
+                if "const" not in pt:
+                    return f"(char *)(uintptr_t){reg}"
+                return f"(const char *)(uintptr_t){reg}"
+            return f"(void *)(uintptr_t){reg}"
+        if "float" in pt or "double" in pt:
+            return "0.0f"
+        return reg
     if arg == "0":
-        if "*" in param_type or "void" in pt:
-            if "wchar" in param_type:
+        if "*" in pt or pt == "void" or pt.startswith("void "):
+            if "wchar" in pt:
                 return "(wchar_t *)0"
-            if "char" in param_type:
+            if "float" in pt:
+                return "(float *)0"
+            if "**" in pt.replace(" ", ""):
+                if "char" in pt:
+                    return "(char **)0"
+            if "char" in pt:
                 return "(char *)0"
             return "(void *)0"
-        if "float" in param_type or "double" in param_type:
+        if "float" in pt or "double" in pt:
             return "0.0f"
         return "0"
-    if arg.startswith("(const char *)") and "*" in param_type:
-        return arg.replace("(const char *)", "(void *)", 1)
     if re.match(r"0x[0-9a-f]+", arg):
-        if "float" in param_type:
+        if "float" in pt and "*" not in pt.replace(" ", ""):
             return "0.0f"
-        if "*" in param_type:
+        if "wchar" in pt:
+            return f"(wchar_t *){arg}"
+        if "*" in pt:
+            if "**" in pt.replace(" ", ""):
+                if "char" in pt:
+                    return f"(char **){arg}"
+            if "char" in pt:
+                cast = "(char *)" if "const" not in pt else "(const char *)"
+                return f"{cast}{arg}"
             return f"(void *){arg}"
-        if "char" in param_type:
-            return f"(const char *){arg}"
+        return arg
+    if "**" in pt.replace(" ", ""):
+        if "char" in pt:
+            if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", arg):
+                return f"(char **)(uintptr_t){arg}"
+            if arg in ("0", "(char *)0", "(void *)0"):
+                return "(char **)0"
+            return f"(char **){arg}" if arg.startswith("(") else f"(char **)(uintptr_t){arg}"
+    if "unsigned char *" in pt:
+        if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", arg):
+            return f"(unsigned char *)(uintptr_t){arg}"
+        if arg.startswith("(char *)"):
+            return arg.replace("(char *)", "(unsigned char *)", 1)
+    if "*" in pt and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", arg):
+        if "wchar" in pt:
+            return f"(wchar_t *)(uintptr_t){arg}"
+        if "float" in pt:
+            return f"(float *)(uintptr_t){arg}"
+        if "char" in pt:
+            cast = "(char *)(uintptr_t)" if "const" not in pt else "(const char *)(uintptr_t)"
+            return f"{cast}{arg}"
+        if "data_t" in pt:
+            return f"(data_t *)(uintptr_t){arg}"
+        return f"(void *)(uintptr_t){arg}"
+    if re.fullmatch(r"0\.0f|[0-9]+\.[0-9]+f", arg):
+        if "float *" in pt.replace(" ", ""):
+            return "(float *)0"
+        return arg
+    if arg.startswith("(const char *)") and "*" in pt:
+        if "wchar" in pt:
+            return arg.replace("(const char *)", "(wchar_t *)", 1)
+        if "**" in pt.replace(" ", ""):
+            return arg.replace("(const char *)", "(char **)", 1)
+        return arg.replace("(const char *)", "(void *)", 1)
+    if arg.startswith("(char *)(uintptr_t)") and "unsigned char *" in pt:
+        return arg.replace("(char *)(uintptr_t)", "(unsigned char *)(uintptr_t)", 1)
+    if arg.startswith("(char *)") and "unsigned char *" in pt:
+        return arg.replace("(char *)", "(unsigned char *)", 1)
     return arg
 
 
-def fmt_call_line(target: int, cname: str, args: list[str]) -> str:
+def resolve_caller_arg(arg: str, caller_params: list[str]) -> str:
+    """Map lift_aN / stack args to declared C parameter names when possible."""
+    arg = arg.strip()
+    m = re.fullmatch(r"lift_a(\d+)", arg)
+    if m:
+        idx = int(m.group(1))
+        if idx < len(caller_params):
+            return caller_params[idx]
+        return arg
+    m = re.fullmatch(r"stack_([0-9a-f]+)", arg)
+    if m:
+        off = int(m.group(1), 16)
+        if off >= 8:
+            idx = (off - 8) // 4
+            if idx < len(caller_params):
+                return caller_params[idx]
+    return arg
+
+
+def fmt_call_line(
+    target: int,
+    cname: str,
+    args: list[str],
+    caller_params: list[str] | None = None,
+    caller_name: str = "",
+) -> str:
+    caller_params = caller_params or []
+    if caller_name and cname == caller_name:
+        return f"  /* relift: tail-call {cname}(); */"
     casted: list[str] = []
     for a in args[:8]:
         a = a.strip()
         if a.startswith("/*"):
             casted.append("0")
-        elif re.fullmatch(r"(eax|ebx|ecx|edx|esi|edi|ebp|lift_a\d+|local_[0-9a-f]+|stack_[0-9a-f]+)", a):
+        elif re.fullmatch(r"lift_a\d+|stack_[0-9a-f]+", a):
+            casted.append(resolve_caller_arg(a, caller_params))
+        elif re.fullmatch(r"local_[0-9a-f]+", a):
             casted.append("0")
+        elif re.fullmatch(r"(eax|ebx|ecx|edx|esi|edi|ebp|esp)", a):
+            casted.append("0" if a == "esp" else a)
         elif re.match(r"0x00[23][0-9a-f]{5}", a):
-            casted.append(f"(const char *){a}")
+            casted.append(a)
         elif re.match(r"0x[0-9a-f]+", a):
             casted.append(a)
         elif a.startswith("'") or a.startswith('"'):
@@ -501,6 +631,8 @@ def fmt_call_line(target: int, cname: str, args: list[str]) -> str:
         arity = min(len(casted), 4) if casted else (2 if cname.startswith("FUN_") else 0)
     if cname == "qsort":
         arity = 4
+    if cname == "FUN_00091ef0":
+        arity = 3
     casted = casted[:arity]
     while len(casted) < arity:
         casted.append("0")
@@ -509,6 +641,10 @@ def fmt_call_line(target: int, cname: str, args: list[str]) -> str:
         cast_arg_for_param(a, ptypes[i] if i < len(ptypes) else "int", cname)
         for i, a in enumerate(casted)
     ]
+    if cname.startswith("FUN_") and cname not in arity_map:
+        return f"  /* relift: {cname}({', '.join(casted)}); */"
+    if cname in ("MmQueryAddressProtect", "MmFreeContiguousMemory", "MmAllocateContiguousMemory"):
+        return f"  /* relift: {cname}(); */"
     if cname in ("csmemset", "csmemcpy", "csmemmove"):
         casted = [a.replace("(const char *)", "(void *)") for a in casted]
     if arity == 0:
@@ -548,6 +684,7 @@ def lift_large(ctx: LiftCtx) -> list[str]:
     lines: list[str] = []
     returns_eax = False
     return_expr = "0"
+    caller_params = ctx.params
 
     i = 0
     while i < len(insns):
@@ -560,7 +697,7 @@ def lift_large(ctx: LiftCtx) -> list[str]:
                 v = int(args[-2], 16)
                 if 0x2000000 < v < 0x7FFFFFFF:
                     args[-2] = tag_fourcc(v)
-            lines.append(fmt_call_line(target, cname, args))
+            lines.append(fmt_call_line(target, cname, args, caller_params, ctx.caller_name))
             ctx.emitted_calls.add(target)
         elif ins.mnemonic in ("cmp", "test") and i + 1 < len(insns) and insns[i + 1].mnemonic in JCC_MNEM:
             lines.append(
@@ -571,6 +708,8 @@ def lift_large(ctx: LiftCtx) -> list[str]:
             dst, src = [p.strip() for p in ins.op_str.split(",", 1)]
             _, off, _ = parse_mem(dst)
             if off is not None:
+                if "esp" in src:
+                    src = "0"
                 lines.append(f"  /* mem[0x{off:08x}] = {src} */")
         elif ins.mnemonic == "xor" and ins.op_str.strip() in ("eax, eax", "eax,eax"):
             returns_eax = True
@@ -599,8 +738,9 @@ def lift_function(
     params: list[str],
     ret_kind: str,
     sig: str,
+    caller_name: str = "",
 ) -> list[str]:
-    ctx = LiftCtx(insns=insns, addr_name=addr_name, params=params)
+    ctx = LiftCtx(insns=insns, addr_name=addr_name, params=params, caller_name=caller_name)
     if size <= SMALL_MAX:
         lines = lift_small(ctx)
     elif size <= MEDIUM_MAX:
@@ -625,7 +765,7 @@ def lift_function(
                     t = int(ins.op_str, 16)
                     cname = ctx.addr_name.get(t, f"FUN_{t:08x}")
                     args, _ = collect_call_args(insns, i)
-                    cast_calls.append(fmt_call_line(t, cname, args))
+                    cast_calls.append(fmt_call_line(t, cname, args, params, ctx.caller_name))
             lines = cast_calls[:24] if cast_calls else [
                 f"  /* relift calls: {', '.join(calls[:8])} */"
             ]
@@ -635,8 +775,18 @@ def lift_function(
     sig_ret = ret_kind_from_sig(sig)
     if sig_ret == "void":
         lines = [ln for ln in lines if not re.match(r"\s*return\b", ln)]
-    elif sig_ret == "ptr" and not any("return" in ln for ln in lines):
-        lines.append("  return NULL;")
+    elif sig_ret == "ptr":
+        fixed: list[str] = []
+        for ln in lines:
+            if re.match(r"\s*return 0;\s*$", ln):
+                fixed.append("  return NULL;")
+            elif re.match(r"\s*return 1;\s*$", ln):
+                fixed.append("  return (char *)(uintptr_t)1;")
+            else:
+                fixed.append(ln)
+        lines = fixed
+        if not any("return" in ln for ln in lines):
+            lines.append("  return NULL;")
     elif sig_ret in ("scalar", "char") and not any("return" in ln for ln in lines):
         lines.append("  return 0;")
 
@@ -673,7 +823,7 @@ def build_signature(decl: str, params: list[str], addr: str) -> str:
     return GEN.format_fn_signature(c_decl.rstrip(";"), parsed or params)
 
 
-def relift_object(object_name: str, *, dry_run: bool = False) -> dict:
+def relift_object(object_name: str, *, dry_run: bool = False, force: bool = False) -> dict:
     kb = json.loads((ROOT / "kb.json").read_text())
     obj = next(o for o in kb["objects"] if o["name"] == object_name)
     src_rel = obj.get("source")
@@ -716,7 +866,10 @@ def relift_object(object_name: str, *, dry_run: bool = False) -> dict:
             continue
         sig_start, body_start, body_end = span
         body = src[body_start:body_end]
-        if not is_stub_body(body):
+        if not is_stub_body(body) and not force:
+            skipped += 1
+            continue
+        if force and not is_relift_draft(body):
             skipped += 1
             continue
         stub_before += 1
@@ -741,6 +894,7 @@ def relift_object(object_name: str, *, dry_run: bool = False) -> dict:
             params=params,
             ret_kind=ret_kind,
             sig=sig,
+            caller_name=name,
         )
         new_fn = f"{sig}\n{{\n" + "\n".join(body_lines) + "\n}"
         work.append((sig_start, body_end, new_fn))
@@ -768,12 +922,13 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Relift stub bodies from XBE")
     ap.add_argument("--object", action="append", required=True)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--force", action="store_true", help="Re-relift prior relift drafts")
     args = ap.parse_args()
 
     total = 0
     results = []
     for obj in args.object:
-        r = relift_object(obj, dry_run=args.dry_run)
+        r = relift_object(obj, dry_run=args.dry_run, force=args.force)
         results.append(r)
         total += r["relifted"]
         print(

@@ -1427,138 +1427,483 @@ void observer_update(float delta_time)
 /* 0x89240 */
 void FUN_00089240(void)
 {
-
+  object_get_and_verify_type(0, 0);
+  first_person_camera_for_unit_and_vector();
 }
 
 /* 0x89270 */
 void first_person_camera_update(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
 
+  player_control_get_unit_index(eax);
+  display_assert((char *)0x00266e9c, (char *)0x0026720c, 157, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x892db */
+  display_assert((char *)0x0025f120, (char *)0x0026720c, 158, 0);
+  system_exit(0);
+  player_control_get_facing_direction(edx, (float *)(uintptr_t)ecx);
+  first_person_camera_for_unit_and_vector();
+  player_control_get_field_of_view(eax);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0x89330 */
 void FUN_00089330(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x89350 */
 void FUN_00089350(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  vector_to_angles((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0x893a0 */
 void flying_camera_update(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test edi, edi -> jne 0x893cd */
+  display_assert((char *)0x00266e9c, (char *)0x00267284, 41, 0);
+  system_exit(0);
+  /* test ebx, ebx -> jne 0x893f1 */
+  display_assert((char *)0x002671f8, (char *)0x00267284, 42, 0);
+  system_exit(0);
+  /* cmp esi, ecx -> jne 0x89419 */
+  display_assert((char *)0x0025f120, (char *)0x00267284, 43, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x89467 */
+  /* test (char)eax, 0x41 -> jne 0x8945b */
+  /* relift: cmp word ptr [0x325716], (int16_t)ecx -> jle 0x89480 */
+  angles_to_vector((float *)(uintptr_t)ebx, (float *)(uintptr_t)eax);
+  observer_up_from_forward((float *)(uintptr_t)ebx, (float *)(uintptr_t)eax);
+  rotate_vector3d_by_sincos((float *)(uintptr_t)eax, (float *)(uintptr_t)ebx, 0.0f, 0.0f);
+  /* test (char)ecx, (char)ecx -> je 0x89518 */
+  valid_real_normal3d_perpendicular((float *)(uintptr_t)ebx, (float *)(uintptr_t)edi);
+  /* test (char)eax, (char)eax -> je 0x89790 */
+  /* test (char)eax, 1 -> jne 0x89790 */
+  /* test (char)eax, 1 -> jne 0x89790 */
+  /* test (char)eax, 1 -> jne 0x89790 */
+  /* test (char)eax, 1 -> jne 0x89790 */
+  /* test (char)eax, 1 -> jne 0x89790 */
+  /* test (char)eax, 1 -> jne 0x89790 */
+  real_vector3d_valid((float *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x89790 */
+  /* cmp ecx, 0x7f800000 -> je 0x89790 */
+  /* test (char)eax, 1 -> jne 0x89790 */
+  /* test (char)eax, 1 -> jne 0x89790 */
+  csprintf((char *)0x005ab100, (char *)0x00266e08);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x89850 */
 void following_camera_new(void)
 {
+  int ebx = 0;
+  int esi = 0;
 
+  /* cmp esi, ebx -> jne 0x8987b */
+  display_assert((char *)0x00266e9c, (char *)0x002672ac, 19, 0);
+  system_exit(0);
+
+  (void)ebx;
+  (void)esi;
 }
 
 /* 0x898b0 */
 void FUN_000898b0(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  object_get_and_verify_type(0, 0);
+  /* cmp eax, -1 -> je 0x89910 */
+  object_try_and_get_and_verify_type(0, 0);
+  /* test eax, eax -> je 0x89910 */
+  tag_get('ihev', 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test (char)ecx, 0x15 -> je 0x89910 */
+  /* test eax, eax -> jne 0x89925 */
+  tag_get('tinu', 0);
+
+  (void)eax;
+  (void)ecx;
 }
 
 /* 0x89930 */
 void FUN_00089930(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0x89940 */
 void FUN_00089940(void)
 {
+  int eax = 0;
 
+  /* test (char)eax, 0x41 -> je 0x89973 */
+  display_assert((char *)0x002672f4, (char *)0x0025ed80, 1508, 0);
+  system_exit(0);
+  /* test (char)eax, 1 -> jne 0x89996 */
+  /* test (char)eax, 1 -> je 0x899b6 */
+  display_assert((char *)0x002672d8, (char *)0x0025ed80, 1509, 0);
+  system_exit(0);
+
+  (void)eax;
 }
 
 /* 0x89a20 */
 void FUN_00089a20(void)
 {
-
+  FUN_00089940();
+  FUN_00089940();
+  FUN_00089940();
 }
 
 /* 0x89ab0 */
 void camera_track_splut(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test eax, eax -> je 0x89ae3 */
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  /* test eax, eax -> je 0x89ae3 */
+  /* cmp eax, -1 -> jne 0x89afd */
+  game_globals_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  tag_get(0x7472616b, 0);
+  FUN_001d9068();
+  display_assert((char *)0x00267300, (char *)0x002672ac, 86, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x89b8e */
+  /* cmp ebx, edx -> jg 0x89b88 */
+  /* cmp ecx, ebx -> jle 0x89b8e */
+  /* test (int16_t)edi, (int16_t)edi -> jg 0x89b76 */
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 60);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 60);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 60);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 60);
+  FUN_00089a20();
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x89c00 */
 void FUN_00089c00(void)
 {
+  int edi = 0;
 
+  object_get_and_verify_type(0, 0);
+  FUN_000898b0();
+  unit_set_seat_state(0, (float *)(uintptr_t)edi);
+  FUN_001da0cc();
+  camera_track_splut();
+
+  (void)edi;
 }
 
 /* 0x89cd0 */
 void following_camera_update(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test edi, edi -> jne 0x89d00 */
+  display_assert((char *)0x00266e9c, (char *)0x002672ac, 138, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x89d27 */
+  display_assert((char *)0x0025f120, (char *)0x002672ac, 139, 0);
+  system_exit(0);
+  player_control_get_unit_camera_info(ecx, (void *)(uintptr_t)eax);
+  /* relift: cmp eax, dword ptr [edi + 8] -> jne 0x89d7c */
+  /* relift: cmp (int16_t)ecx, word ptr [edi + 0xc] -> je 0x89d83 */
+  object_get_and_verify_type(0, 0);
+  /* test (char)ecx, 3 -> jne 0x89daf */
+  /* relift: cmp (char)ecx, byte ptr [edi + 2] -> je 0x89ddb */
+  /* test (char)eax, 0x41 -> jne 0x89dd2 */
+  /* test (char)eax, (char)eax -> je 0x89e1b */
+  /* test (char)eax, 0x41 -> jne 0x89e13 */
+  player_control_get_facing_angles(eax);
+  /* test (char)eax, 0x41 -> jne 0x89e9b */
+  angles_to_vector((float *)(uintptr_t)ebx, (float *)(uintptr_t)eax);
+  /* test (char)eax, 0x41 -> jne 0x89f08 */
+  display_assert((char *)0x00267330, (char *)0x002672ac, 212, 0);
+  system_exit(0);
+  camera_track_splut();
+  /* test (char)eax, 0x41 -> je 0x89fa5 */
+  object_get_root_location(0, (float *)(uintptr_t)eax, (float *)0);
+  observer_up_from_forward((float *)(uintptr_t)eax, (float *)(uintptr_t)ebx);
+  /* test (char)eax, 1 -> je 0x8a2f5 */
+  valid_real_normal3d_perpendicular((float *)(uintptr_t)edx, (float *)(uintptr_t)ebx);
+  /* test (char)eax, (char)eax -> je 0x8a237 */
+  /* test (char)eax, 1 -> jne 0x8a237 */
+  /* test (char)eax, 1 -> jne 0x8a237 */
+  /* test (char)eax, 1 -> jne 0x8a237 */
+  /* test (char)eax, 1 -> jne 0x8a237 */
+  /* test (char)eax, 1 -> jne 0x8a237 */
+  /* test (char)eax, 1 -> jne 0x8a237 */
+  real_vector3d_valid((float *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x8a237 */
+  /* test (char)eax, 1 -> jne 0x8a237 */
+  /* test (char)eax, 1 -> jne 0x8a237 */
+  /* test (char)eax, 1 -> jne 0x8a237 */
+  csprintf((char *)0x005ab100, (char *)0x00266e08);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x8a30b */
+  /* cmp (int16_t)esi, 4 -> jl 0x8a328 */
+  display_assert((char *)0x00266fc0, (char *)0x002673a8, 114, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x8a570 */
 void observer_command_has_finished(void)
 {
+  int ecx = 0;
+  int esi = 0;
 
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x8a583 */
+  /* cmp (int16_t)esi, 4 -> jl 0x8a5a0 */
+  display_assert((char *)0x00266fc0, (char *)0x002673a8, 114, 0);
+  system_exit(0);
+  /* cmp (int16_t)ecx, 5 -> jl 0x8a5c2 */
+
+  (void)ecx;
+  (void)esi;
 }
 
 /* 0x8a5f0 */
 void observer_reconnect_to_structure_bsp(void)
 {
+  int eax = 0;
+  int esi = 0;
+  int edi = 0;
 
+  local_player_get_player_index(esi);
+  /* cmp eax, -1 -> je 0x8a643 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x8a619 */
+  /* cmp (int16_t)esi, 4 -> jl 0x8a636 */
+  display_assert((char *)0x00266fc0, (char *)0x002673a8, 114, 0);
+  system_exit(0);
+  scenario_location_from_point((void *)(uintptr_t)edi, (void *)(uintptr_t)eax);
+  /* cmp (int16_t)esi, 4 -> jl 0x8a600 */
+
+  (void)eax;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x8aa30 */
 void observer_obsolete_position(void)
 {
+  int esi = 0;
 
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x8aa43 */
+  /* cmp (int16_t)esi, 4 -> jl 0x8aa60 */
+  display_assert((char *)0x00266fc0, (char *)0x002673a8, 114, 0);
+  system_exit(0);
+  observer_result_initialize((void *)0);
+
+  (void)esi;
 }
 
 /* 0x8aa80 */
 void observer_up_from_forward(float *forward, float *up)
 {
-  (void)forward;
-  (void)up;
+  normalize3d((void *)0);
 }
 
 /* 0x8ab10 */
 void FUN_0008ab10(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  normalize3d((float *)(uintptr_t)ecx);
+  rotate_vector3d_by_sincos((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, 0.0f, 0.0f);
+  rotate_vector3d_by_sincos((float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, 0.0f, 0.0f);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
 
 /* 0x8ac70 */
 void FUN_0008ac70(void)
 {
-
+  FUN_0008ab90((void *)0, 0, (void *)0, (void *)0);
 }
 
 /* 0x8acb0 */
 void observer_set_camera(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
 
+  /* cmp (int16_t)esi, 4 -> jl 0x8ace1 */
+  display_assert((char *)0x00266fc0, (char *)0x002673a8, 114, 0);
+  system_exit(0);
+  /* test esi, esi -> je 0x8af60 */
+  /* relift: test byte ptr [esi], 1 -> je 0x8b01d */
+  valid_real_normal3d_perpendicular((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x8af60 */
+  /* test (char)eax, 1 -> jne 0x8af60 */
+  /* test (char)eax, 1 -> jne 0x8af60 */
+  /* test (char)eax, 1 -> jne 0x8af60 */
+  /* test (char)eax, 1 -> jne 0x8af60 */
+  /* test (char)eax, 1 -> jne 0x8af60 */
+  /* test (char)eax, 1 -> jne 0x8af60 */
+  real_vector3d_valid((float *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> je 0x8af60 */
+  /* test (char)eax, 1 -> jne 0x8af60 */
+  /* test (char)eax, 1 -> jne 0x8af60 */
+  /* test (char)eax, 1 -> jne 0x8af60 */
+  csprintf((char *)0x005ab100, (char *)0x00266e08);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)ecx, 0, 0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0x8cf10 */
 void FUN_0008cf10(void)
 {
+  int eax = 0;
 
+  vector_to_angles((float *)(uintptr_t)eax, (float *)0);
+
+  (void)eax;
 }
 
 /* 0x8cf30 */
 void FUN_0008cf30(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
 
+  player_control_get_unit_camera_info(ecx, (void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x8cfb9 */
+  /* test (char)eax, 0x41 -> jne 0x8cfa8 */
+  director_set_local_player_context(eax);
+  /* test (char)eax, 0x41 -> je 0x8cfda */
+  /* cmp eax, -1 -> je 0x8d01d */
+  angles_to_vector((float *)(uintptr_t)ebx, (float *)(uintptr_t)edi);
+  observer_up_from_forward((float *)(uintptr_t)ebx, (float *)(uintptr_t)ecx);
+  object_get_root_location(0, (float *)(uintptr_t)edx, (float *)0);
+  valid_real_normal3d_perpendicular((float *)(uintptr_t)eax, (float *)(uintptr_t)edi);
+  /* test (char)eax, (char)eax -> je 0x8d2ce */
+  /* test (char)eax, 1 -> jne 0x8d2ce */
+  /* test (char)eax, 1 -> jne 0x8d2ce */
+  /* test (char)eax, 1 -> jne 0x8d2ce */
+  /* test (char)eax, 1 -> jne 0x8d2ce */
+  /* test (char)eax, 1 -> jne 0x8d2ce */
+  /* test (char)eax, 1 -> jne 0x8d2ce */
+  real_vector3d_valid((float *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> je 0x8d2ce */
+  /* test (char)eax, 1 -> jne 0x8d2ce */
+  /* test (char)eax, 1 -> jne 0x8d2ce */
+  /* test (char)eax, 1 -> jne 0x8d2ce */
+  csprintf((char *)0x005ab100, (char *)0x00266e08);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }
 
 /* 0x8d3a0 */
 void FUN_0008d3a0(void)
 {
+  int eax = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test edi, edi -> jne 0x8d439 */
+  display_assert((char *)0x00266e9c, (char *)0x002676d8, 36, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x8d45d */
+  display_assert((char *)0x0025b57c, (char *)0x002676d8, 37, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x8d481 */
+  display_assert((char *)0x0025f120, (char *)0x002676d8, 38, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x8d827 */
+  /* relift: test byte ptr [esi], 1 -> je 0x8d826 */
+  valid_real_normal3d_perpendicular((float *)(uintptr_t)edi, (float *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x8d76e */
+  /* test (char)eax, 1 -> jne 0x8d76e */
+  /* test (char)eax, 1 -> jne 0x8d76e */
+  /* test (char)eax, 1 -> jne 0x8d76e */
+  /* test (char)eax, 1 -> jne 0x8d76e */
+  /* test (char)eax, 1 -> jne 0x8d76e */
+  /* test (char)eax, 1 -> jne 0x8d76e */
+  real_vector3d_valid((float *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x8d76e */
+  /* test (char)eax, 1 -> jne 0x8d76e */
+  /* test (char)eax, 1 -> jne 0x8d76e */
+  /* test (char)eax, 1 -> jne 0x8d76e */
+
+  (void)eax;
+  (void)esi;
+  (void)edi;
 }

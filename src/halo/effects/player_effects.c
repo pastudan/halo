@@ -273,147 +273,352 @@ void FUN_000a3b80(int player_handle, void *damage_params, void *direction,
 /* 0xa27a0 */
 void player_effect_add_continuous_effect(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
 
+  tag_get(0x63646d67, 0);
+  player_effect_get(ecx);
+  /* test (char)eax, 0x41 -> jne 0xa2821 */
+  game_time_get();
+  FUN_0010a5e0(edx, 0.0f);
+  csmemset((void *)(uintptr_t)edi, 0, 16);
+  /* test (char)eax, 0x41 -> je 0xa2896 */
+  /* test (char)eax, 0x41 -> je 0xa28b7 */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }
 
 /* 0xa28e0 */
 void scripted_player_effect_set_rotation(int a0, float a1, float a2)
 {
-  (void)a0;
-  (void)a1;
-  (void)a2;
+  /* relift: no calls detected — manual review */
 }
 
 /* 0xa2920 */
 void scripted_player_effect_set_rumble(int a0, float a1)
 {
-  (void)a0;
-  (void)a1;
+  /* relift: no calls detected — manual review */
 }
 
 /* 0xa2930 */
 void player_telefrag_effect_stop(void)
 {
+  int ecx = 0;
+  int esi = 0;
 
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* cmp esi, -1 -> je 0xa2963 */
+  player_effect_get(esi);
+  rumble_set_direct_motors(0, 0, 0);
+
+  (void)ecx;
+  (void)esi;
 }
 
 /* 0xa2970 */
 void player_effect_screen_fade_in(int a0, float a1, float a2, int a3)
 {
-  (void)a0;
-  (void)a1;
-  (void)a2;
-  (void)a3;
+  game_time_get();
 }
 
 /* 0xa29c0 */
 void player_effect_screen_fade_out(int a0, float a1, float a2, int a3)
 {
-  (void)a0;
-  (void)a1;
-  (void)a2;
-  (void)a3;
+  game_time_get();
 }
 
 /* 0xa2a10 */
 void player_effect_get_damage_indicators(int player_index, void *out)
 {
-  (void)player_index;
-  (void)out;
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  player_effect_get(eax);
+  csmemcpy((void *)(uintptr_t)ecx, (void *)(uintptr_t)esi, 0);
+  /* relift: cmp byte ptr [esi], 0 -> je 0xa2a68 */
+  game_time_get_elapsed();
+  /* cmp edx, 0xff -> jge 0xa2a61 */
+  game_time_get_elapsed();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0xa2a70 */
 void player_effect_clear_damage_indicators(int player_index)
 {
-  (void)player_index;
+  int eax = 0;
+
+  player_effect_get(eax);
+  csmemset((void *)(uintptr_t)eax, 0, 0);
+
+  (void)eax;
 }
 
 /* 0xa2a90 */
 void FUN_000a2a90(void)
 {
-
+  /* relift: no calls detected — manual review */
 }
 
 /* 0xa2ab0 */
 void FUN_000a2ab0(void)
 {
+  int eax = 0;
 
+  /* relift: cmp word ptr [eax*2 + 0x2ef7e0], 0 -> je 0xa2b90 */
+  FUN_001d9068();
+  /* test (char)eax, 0x41 -> jne 0xa2b6f */
+
+  (void)eax;
 }
 
 /* 0xa2ba0 */
 void FUN_000a2ba0(int unit_index, float damage_amount, float scale, float *effect_data, void *effect)
 {
-  (void)unit_index;
-  (void)damage_amount;
-  (void)scale;
-  (void)effect_data;
-  (void)effect;
+  int eax = 0;
+
+  game_time_get();
+  /* test (char)eax, 0x41 -> je 0xa2c14 */
+  /* test (char)eax, 1 -> jne 0xa2c60 */
+  FUN_001d9068();
+
+  (void)eax;
 }
 
 /* 0xa2c70 */
 void FUN_000a2c70(void)
 {
-
+  transition_function_evaluate(0, 0.0f);
 }
 
 /* 0xa2d30 */
 void player_effect_continuous_refresh(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
 
+  local_player_get_player_index(esi);
+  /* cmp eax, -1 -> je 0xa2daf */
+  local_player_get_player_index(esi);
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* cmp eax, -1 -> je 0xa2daf */
+  object_get_world_position(0, (void *)(uintptr_t)ecx);
+  player_effect_add_continuous_effect();
+  /* cmp (int16_t)esi, 4 -> jl 0xa2d41 */
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
 }
 
 /* 0xa2dc0 */
 void scripted_player_effect_set_translation(int a0, float a1, float a2)
 {
-  (void)a0;
-  (void)a1;
-  (void)a2;
+  /* relift: no calls detected — manual review */
 }
 
 /* 0xa2df0 */
 void scripted_player_effect_start(int a0, float a1)
 {
-  (void)a0;
-  (void)a1;
+  /* relift: no calls detected — manual review */
 }
 
 /* 0xa2e40 */
 void scripted_player_effect_stop(int a0)
 {
-  (void)a0;
+  /* relift: no calls detected — manual review */
 }
 
 /* 0xa2ed0 */
 void player_telefrag_effect_start(void)
 {
+  int ecx = 0;
+  int esi = 0;
 
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* cmp esi, -1 -> je 0xa2fb7 */
+  player_effect_get(esi);
+  rumble_set_direct_motors(0, 0, 0);
+  FUN_000a2ab0();
+  FUN_000a2ba0(0, 0.0f, 0.0f, (float *)0, (void *)0);
+
+  (void)ecx;
+  (void)esi;
 }
 
 /* 0xa2fc0 */
 void player_effect_get_screen_flash(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test esi, esi -> jne 0xa2feb */
+  display_assert((char *)0x0026af30, (char *)0x0026ae94, 484, 0);
+  system_exit(0);
+  console_is_active();
+  /* test (char)eax, (char)eax -> jne 0xa328a */
+  /* test (char)ecx, (char)ecx -> jne 0xa303f */
+  game_time_get();
+  /* cmp ecx, edx -> jg 0xa318c */
+  game_time_get();
+  game_time_get();
+  /* test (char)eax, 0x41 -> jne 0xa30e8 */
+  game_time_get();
+  transition_function_evaluate(0, 0.0f);
+  /* test (char)ecx, (char)ecx -> jne 0xa3143 */
+  /* test (char)eax, 0x41 -> jne 0xa3181 */
+  /* cmp (int16_t)eax, 0xffff -> je 0xa3289 */
+  player_effect_get(eax);
+  /* relift: cmp word ptr [edi + 0xde], 0 -> jg 0xa31ca */
+  /* relift: test byte ptr [edi + 0xe8], 1 -> je 0xa3289 */
+  /* test (char)eax, 0x41 -> jne 0xa3237 */
+  transition_function_evaluate(0, 0.0f);
+  game_time_get_elapsed();
+  /* test (char)eax, 1 -> jne 0xa3269 */
+  display_assert((char *)0x0026aef0, (char *)0x0026ae94, 530, 0);
+  system_exit(0);
+  csprintf((char *)0x005ab100, (char *)0x0025eb8c);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0xa32e0 */
 void FUN_000a32e0(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
 
+  random_math_get_local_seed_address();
+  random_seed_get_direction3d((void *)(uintptr_t)eax, (float *)0);
+  FUN_001092d0((float *)(uintptr_t)esi, (float *)(uintptr_t)ecx, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_seed_get_direction3d((void *)(uintptr_t)eax, (float *)0);
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
 }
 
 /* 0xa3370 */
 void player_effect_get_camera_effect_matrix(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* test edi, edi -> jne 0xa339f */
+  display_assert((char *)0x0026af40, (char *)0x0026ae94, 601, 0);
+  system_exit(0);
+  /* cmp (int16_t)esi, -1 -> je 0xa3881 */
+  game_time_get();
+  /* relift: test byte ptr [eax + 0x3e4], 1 -> je 0xa35a1 */
+  /* test (int16_t)ecx, (int16_t)ecx -> jle 0xa3440 */
+  /* relift: test byte ptr [eax + 0x3e4], 2 -> je 0xa3416 */
+  game_time_get_elapsed();
+  game_time_get_elapsed();
+  /* test (char)ecx, 2 -> je 0xa3463 */
+  rumble_player_set_scale(0.0f);
+  /* relift: test byte ptr [eax + 0x3e4], 1 -> je 0xa3880 */
+  /* test (char)eax, 0x41 -> jne 0xa34a0 */
+  rumble_player_set_scale(0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  FUN_00109e90((float *)(uintptr_t)esi, 0.0f, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  player_effect_get(esi);
+  /* test (char)ecx, dl -> jne 0xa35d3 */
+  /* test (char)ecx, dl -> je 0xa35dc */
+  transition_function_evaluate(0, 0.0f);
+  FUN_001092d0((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, 0.0f, 0.0f);
+  game_time_get_elapsed();
+  /* relift: test byte ptr [ebx + 0xe8], dl -> je 0xa3880 */
+  /* relift: test byte ptr [ebx + 0xe8], dl -> je 0xa3710 */
+  transition_function_evaluate(0, 0.0f);
+  FUN_0010a5e0(edx, 0.0f);
+  /* test (char)eax, 0x41 -> jne 0xa37b4 */
+  /* test (char)eax, 0x41 -> jne 0xa37d5 */
+  FUN_000a32e0();
+  rumble_set_direct_motors(0, 0, 0);
+  game_time_get_elapsed();
+  /* relift: cmp word ptr [ebx + 0xdc], 0 -> jle 0xa3853 */
+  csmemset((void *)(uintptr_t)edi, 0, 16);
+  FUN_000a32e0();
+  game_time_get_elapsed();
+  matrix4x3_multiply((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)eax);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0xa3890 */
 void FUN_000a3890(int unit_index, float *rumble_def, void *direction, float damage_amount, float scale, float *effect)
 {
-  (void)unit_index;
-  (void)rumble_def;
-  (void)direction;
-  (void)damage_amount;
-  (void)scale;
-  (void)effect;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  game_time_get();
+  /* test (char)eax, 0x41 -> je 0xa3912 */
+  /* test (char)eax, 0x41 -> je 0xa3912 */
+  /* test (char)eax, 1 -> jne 0xa3ad5 */
+  /* test (char)eax, 0x41 -> jne 0xa3ad5 */
+  normalize3d((float *)(uintptr_t)edx);
+  player_control_get_facing_angles(eax);
+  angles_to_vector((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
+  normalize3d((float *)(uintptr_t)edx);
+  FUN_0010c3c0();
+  FUN_001d9068();
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  normalize3d((float *)0);
+  rotate_vector3d_by_sincos((float *)(uintptr_t)esi, (float *)(uintptr_t)ebx, 0.0f, 0.0f);
+  player_control_get_facing_direction(0, (float *)0);
+  FUN_000b8cf0(0, (float *)0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
