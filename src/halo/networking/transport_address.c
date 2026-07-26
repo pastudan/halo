@@ -7,7 +7,7 @@ static void (*const b81a90_exitfn)(int) = system_exit;
 static int (*const b81a90_c8da40)(const void *a, const void *b, int size) = csmemcmp;
 
 __attribute__((naked, noinline))
-void transport_address_equivalent(void)
+bool transport_address_equivalent(const void *a, const void *b)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

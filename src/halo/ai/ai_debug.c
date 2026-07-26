@@ -4811,71 +4811,29 @@ void FUN_0004c560(void)
 #endif
 
 
-/* FUN_0004c890 (0x4c890) — XBE naked draft (batch 153). */
-#if defined(__clang__)
-static void (*const b4c890_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
-static void (*const b4c890_c4b220)(float *point) = FUN_0004b220;
-static void (*const b4c890_c4c560)(void) = FUN_0004c560;
-
-__attribute__((naked, noinline))
+/* FUN_0004c890 (0x4c890) — readable C lift. */
 void FUN_0004c890(void)
 {
-  __asm__ volatile(
-      "movb 0x5f91a8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0004c890_4\n\t"
-      "movb 0x5f91c0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0004c890_4\n\t"
-      "movb 0x60d268, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0004c890_4\n\t"
-      "movb 0x5ac9ff, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0004c890_1\n\t"
-      "movb 0x5f9228, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0004c890_1\n\t"
-      "movl 0x2ee6d8, %%eax\n\t"
-      "jmp .LFUN_0004c890_3\n\t"
-      ".LFUN_0004c890_1:\n\t"
-      "movw 0x5f925c, %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .LFUN_0004c890_2\n\t"
-      "movl 0x2ee6d4, %%eax\n\t"
-      "jmp .LFUN_0004c890_3\n\t"
-      ".LFUN_0004c890_2:\n\t"
-      "cmpw $0x400, %%ax\n\t"
-      "movl 0x2ee6e0, %%eax\n\t"
-      "jge .LFUN_0004c890_3\n\t"
-      "movl 0x2ee6e8, %%eax\n\t"
-      ".LFUN_0004c890_3:\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x5f91c4\n\t"
-      "pushl $0x5f91ac\n\t"
-      "pushl $1\n\t"
-      "call *%[c189270]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_0004c890_4:\n\t"
-      "movb 0x60d2d0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0004c890_5\n\t"
-      "pushl %%esi\n\t"
-      "movl $0x60d2ec, %%eax\n\t"
-      "call *%[c4b220]\n\t"
-      "movl $0x60d2c4, %%esi\n\t"
-      "call *%[c4c560]\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_0004c890_5:\n\t"
-      "ret\n\t"
-      :
-      : [c189270] "m"(b4c890_c189270), [c4b220] "m"(b4c890_c4b220), [c4c560] "m"(b4c890_c4c560)
-      : "memory");
-}
-#else
-#error "FUN_0004c890: clang naked draft required"
-#endif
+  void *color;
 
+  if (*(char *)0x5f91a8 != 0 && *(char *)0x5f91c0 != 0 && *(char *)0x60d268 == 0) {
+    if (*(char *)0x5ac9ff == 0 && *(char *)0x5f9228 == 0) {
+      color = *(void **)0x2ee6d8;
+    } else if (*(short *)0x5f925c == 0) {
+      color = *(void **)0x2ee6d4;
+    } else if (*(short *)0x5f925c >= 0x400) {
+      color = *(void **)0x2ee6e0;
+    } else {
+      color = *(void **)0x2ee6e8;
+    }
+    FUN_00189270(1, (float *)0x5f91ac, (float *)0x5f91c4, color);
+  }
+  if (*(char *)0x60d2d0 != 0) {
+    FUN_0004b220((float *)0x60d2ec);
+    __asm__ volatile("movl %0, %%esi" : : "r"((void *)0x60d2c4) : "esi");
+    FUN_0004c560();
+  }
+}
 
 /* FUN_0004c920 (0x4c920) — XBE naked draft (batch 296). */
 #if defined(__clang__)
@@ -13275,7 +13233,7 @@ static void (*const b53800_c19b560)(void *stops, short count) = draw_string_set_
 static void (*const b53800_c183e60)(void *screen_pos, short *bounds, const void *color, int flags, const char *text) = rasterizer_text_draw;
 
 __attribute__((naked, noinline))
-void FUN_00053800(void)
+void FUN_00053800(void *buffer __attribute__((unused)), int nstops __attribute__((unused)), int16_t *stops __attribute__((unused)), void *color __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
