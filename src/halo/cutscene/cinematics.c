@@ -232,55 +232,20 @@ void draw_quad(int16_t *rect __attribute__((unused)), int color __attribute__((u
 #endif
 
 
-/* cinematic_force_title (0x93010) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void cinematic_force_title(void)
+/* cinematic_force_title (0x93010) — readable C lift. */
+void cinematic_force_title(short title)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x44df00, %%eax\n\t"
-      "movw 0x8(%%ebp), %%cx\n\t"
-      "movw %%cx, 0xc(%%eax)\n\t"
-      "movl 0x44df00, %%edx\n\t"
-      "movw $0, 0xe(%%edx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  uint8_t *base = *(uint8_t **)0x44df00;
+  *(uint16_t *)(base + 0xc) = (uint16_t)title;
+  *(uint16_t *)(*(uint8_t **)0x44df00 + 0xe) = 0;
 }
-#else
-#error "cinematic_force_title: clang naked draft required"
-#endif
 
-
-/* cinematic_suppress_bsp_object_creation (0x93030) — XBE naked draft (batch 287). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void cinematic_suppress_bsp_object_creation(int a0 __attribute__((unused)))
+/* cinematic_suppress_bsp_object_creation (0x93030) — readable C lift. */
+void cinematic_suppress_bsp_object_creation(char suppress)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "movl 0x44df00, %%ecx\n\t"
-      "movb %%al, 0xb(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  uint8_t *base = *(uint8_t **)0x44df00;
+  base[0xb] = (uint8_t)suppress;
 }
-#else
-#error "cinematic_suppress_bsp_object_creation: clang naked draft required"
-#endif
-
 
 /* cinematic_stop (0x93050) — XBE naked draft (batch 287). */
 #if defined(__clang__)

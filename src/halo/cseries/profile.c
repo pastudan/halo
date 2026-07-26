@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Profile timing infrastructure. Uses RDTSC to measure CPU cycles and
  * converts to milliseconds using the stored CPU frequency at 0x3361a0.
  * All timing data is accumulated into global profiling structures. */
@@ -493,28 +494,11 @@ void symbol_table_dispose(int32_t *symtab __attribute__((unused)))
 
 /* --- profile.obj batch drafts (2026-07-26) --- */
 
-/* profile_seconds_elapsed (0x8f870) — XBE naked draft (batch 289). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void profile_seconds_elapsed(void)
+/* profile_seconds_elapsed (0x8f870) — readable C lift. */
+void profile_seconds_elapsed(int seconds)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x449cc8\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(int *)0x449cc8 = seconds;
 }
-#else
-#error "profile_seconds_elapsed: clang naked draft required"
-#endif
-
 
 /* profile_lapsed_frames (0x8f880) — XBE naked draft (batch 282). */
 #if defined(__clang__)
@@ -3949,28 +3933,11 @@ void FUN_00091ef0(int *keys __attribute__((unused)), int count __attribute__((un
 #endif
 
 
-/* FUN_00092050 (0x92050) — XBE naked draft (batch 289). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00092050(void)
+/* FUN_00092050 (0x92050) — readable C lift. */
+void FUN_00092050(char value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "movb %%al, 0x2ee784\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(uint8_t *)0x2ee784 = (uint8_t)value;
 }
-#else
-#error "FUN_00092050: clang naked draft required"
-#endif
-
 
 /* profile_idle_start (0x92060) — XBE naked draft (batch 262). */
 #if defined(__clang__)

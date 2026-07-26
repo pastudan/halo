@@ -1554,60 +1554,16 @@ void first_person_camera_update(void)
 #endif
 
 
-/* FUN_00089330 (0x89330) — readable C lift from XBE leaf. */
-void FUN_00089330(int *out)
+/* FUN_00089330 (0x89330) — readable C lift. */
+void FUN_00089330(float *out)
 {
-  out[1] = 0;
-  out[0] = 0;
-  out[3] = 0;
-  out[4] = 0;
-  out[5] = 0;
-  out[6] = 0x3f9c61aa; /* ~1.222f */
+  out[1] = 0.0f;
+  out[0] = 0.0f;
+  out[3] = 0.0f;
+  out[4] = 0.0f;
+  out[5] = 0.0f;
+  out[6] = 1.2222222f; /* 0x3f9c61aa */
 }
-
-/* FUN_00089350 (0x89350) — XBE naked draft (batch 169). */
-#if defined(__clang__)
-static void (*const b89350_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-
-__attribute__((naked, noinline))
-void FUN_00089350(void)
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "leal 0xc(%%eax), %%ecx\n\t"
-      "movl %%edx, 0x10(%%eax)\n\t"
-      "movl %%edx, 0x14(%%eax)\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl $0x3f9c61aa, 0x18(%%eax)\n\t"
-      "pushl %%esi\n\t"
-      "movl (%%edx), %%esi\n\t"
-      "movl %%esi, (%%eax)\n\t"
-      "movl 0x4(%%edx), %%esi\n\t"
-      "movl %%esi, 0x4(%%eax)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c10cc00]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c10cc00] "m"(b89350_c10cc00)
-      : "memory");
-}
-#else
-#error "FUN_00089350: clang naked draft required"
-#endif
-
 
 /* flying_camera_update (0x893a0) — XBE naked draft (batch 107). */
 #if defined(__clang__)
