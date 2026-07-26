@@ -620,6 +620,53 @@ char vehicle_hover(int vehicle_handle)
 #endif
 
 /* 0x1b5610 — Toggle vehicle world-position refresh flag (+0x424 bit 1). */
+#if defined(__clang__)
+static void *(*const FUN_001b5610_get)(int, int) = object_get_and_verify_type;
+static vector3_t *(*const FUN_001b5610_pos)(int, vector3_t *) =
+    object_get_world_position;
+
+__attribute__((naked, noinline))
+void FUN_001b5610(int vehicle_handle __attribute__((unused)),
+                  char flag __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "movl 8(%%ebp), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je 2f\n\t"
+      "pushl %%esi\n\t"
+      "pushl $2\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je 1f\n\t"
+      "leal 0x454(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[pos]\n\t"
+      "addl $8, %%esp\n\t"
+      "orb $2, 0x424(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "1:\n\t"
+      "andb $0xfd, 0x424(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(FUN_001b5610_get), [pos] "m"(FUN_001b5610_pos)
+      : "memory");
+}
+#else
 void FUN_001b5610(int vehicle_handle, char flag)
 {
   char *vehicle;
@@ -635,16 +682,51 @@ void FUN_001b5610(int vehicle_handle, char flag)
     vehicle[0x424] &= 0xfd;
   }
 }
+#endif
 
-/* 0x1b5680 — True when the vehicle up-axis dot threshold is exceeded. */
+/* 0x1b5680 — True when the vehicle up-axis Z exceeds the flip threshold. */
+#if defined(__clang__)
+static void *(*const vehicle_is_flipped_get)(int, int) =
+    object_get_and_verify_type;
+
+__attribute__((naked, noinline))
+char vehicle_is_flipped(int vehicle_handle __attribute__((unused)))
+{
+  /* XBE: fcomp threshold; test ah,5 / jp -> 0; else 1 (value > threshold). */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "flds 0x38(%%eax)\n\t"
+      "fcomps 0x2549d4\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp 1f\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(vehicle_is_flipped_get)
+      : "memory");
+}
+#else
 char vehicle_is_flipped(int vehicle_handle)
 {
   char *vehicle_obj = (char *)object_get_and_verify_type(vehicle_handle, 2);
 
-  if (*(float *)(vehicle_obj + 0x38) <= *(float *)0x2549d4)
-    return 0;
-  return 1;
+  if (*(float *)(vehicle_obj + 0x38) > *(float *)0x2549d4)
+    return 1;
+  return 0;
 }
+#endif
 
 /* 0x1b56b0 — Update vehicle wheel-compression counters from physics state. */
 void FUN_001b56b0(int vehicle_handle, void *physics_state)

@@ -996,6 +996,36 @@ void FUN_001360a0(void)
  * Confirmed: loop bound CMP AX,0x5 (int16_t counter).
  * Confirmed: miss path MOV AX,SI where SI was OR'd to -1 -> returns (short)-1.
  */
+#if defined(__clang__)
+__attribute__((naked, noinline))
+short FUN_00135f20(int group_tag __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 8(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "orl $-1, %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal (%%esp), %%esp\n\t"
+      "1:\n\t"
+      "movsx %%ax, %%ecx\n\t"
+      "leal (%%ecx,%%ecx,4), %%ecx\n\t"
+      "cmpl %%edx, 0x323528(,%%ecx,8)\n\t"
+      "je 2f\n\t"
+      "incl %%eax\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jl 1b\n\t"
+      "movw %%si, %%ax\n\t"
+      "2:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
+}
+#else
 short FUN_00135f20(int group_tag)
 {
   short result;
@@ -1012,6 +1042,7 @@ short FUN_00135f20(int group_tag)
 
   return result;
 }
+#endif
 
 /* Call each widget type's dispose function.
  * 0x136100 / objects.obj
@@ -9598,37 +9629,113 @@ done:
  * Confirmed: MOV ESI,[EDI+0xC4] — next sibling from child object data.
  * Confirmed: recursive self-call at 0x144719.
  */
+#if defined(__clang__)
+void object_update_children_recursive(int object_handle);
+
+static void *(*const oucr_get)(int, int) = object_get_and_verify_type;
+static void (*const oucr_compute)(int) = object_compute_node_matrices;
+static void *(*const oucr_datum)(data_t *, int) = datum_get;
+static char *(*const oucr_csprintf)(char *, const char *, ...) = csprintf;
+static void (*const oucr_assert)(const char *, const char *, int, bool) =
+    display_assert;
+static void (*const oucr_exit)(int) = system_exit;
+static void (*const oucr_self)(int) = object_update_children_recursive;
+
+__attribute__((naked, noinline))
+void object_update_children_recursive(int object_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[compute]\n\t"
+      "movl 0xc8(%%edi), %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je 3f\n\t"
+      "1:\n\t"
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[datum]\n\t"
+      "movl 8(%%eax), %%edi\n\t"
+      "movswl 0x64(%%edi), %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jne 2f\n\t"
+      "pushl $1\n\t"
+      "pushl $0x69a\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $-1\n\t"
+      "pushl $0x29b940\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[csprintf]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exit]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "2:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[self]\n\t"
+      "movl 0xc4(%%edi), %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne 1b\n\t"
+      "3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(oucr_get), [compute] "m"(oucr_compute),
+        [datum] "m"(oucr_datum), [csprintf] "m"(oucr_csprintf),
+        [assert] "m"(oucr_assert), [exit] "m"(oucr_exit), [self] "m"(oucr_self)
+      : "memory");
+}
+#else
 void object_update_children_recursive(int object_handle)
 {
-  object_data_t *obj =
-    (object_data_t *)object_get_and_verify_type(object_handle, -1);
+  char *obj;
   int child_handle;
+  char *child_header;
+  char *child_obj;
+  int16_t child_type;
+  int type_bit;
 
-  /* compute node matrices for this object */
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
   object_compute_node_matrices(object_handle);
 
-  /* walk the child object chain */
-  child_handle = obj->unk_200.value;
+  child_handle = *(int *)(obj + 0xc8);
   while (child_handle != -1) {
-    object_header_data_t *child_header =
-      (object_header_data_t *)datum_get(*(data_t **)0x5a8d50, child_handle);
-    object_data_t *child_obj = child_header->object;
-    int16_t child_type = child_obj->type;
-
-    if ((1 << ((uint8_t)child_type & 0x1f)) == 0) {
-      char *msg =
-        csprintf((char *)0x5ab100,
-                 "got an object type we didn't expect (expected one of "
-                 "0x%08x but got #%d).",
-                 -1, (int)child_type);
-      display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0x69a, 1);
+    child_header =
+        (char *)datum_get(*(data_t **)0x5a8d50, child_handle);
+    child_obj = *(char **)(child_header + 8);
+    child_type = *(int16_t *)(child_obj + 0x64);
+    type_bit = 1 << (int)child_type;
+    if (type_bit == 0) {
+      char *msg = csprintf((char *)0x5ab100, (char *)0x0029b940, -1,
+                           (int)child_type);
+      display_assert(msg, (char *)0x0029b91c, 0x69a, 1);
       system_exit(-1);
     }
 
     object_update_children_recursive(child_handle);
-    child_handle = child_obj->next_object_index.value;
+    child_handle = *(int *)(child_obj + 0xc4);
   }
 }
+#endif
 
 /*
  * object_attach_to_marker — attach a child object to a parent at a named
