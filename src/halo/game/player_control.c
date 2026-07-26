@@ -29,49 +29,15 @@ void scripted_player_control_set_camera_control(char enable)
   }
 }
 
-/* player_control_get_autoaim_level (0xb6940) — XBE naked draft (batch 169). */
-#if defined(__clang__)
-static void (*const bb6940_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb6940_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-float player_control_get_autoaim_level(int16_t local_player_index __attribute__((unused)))
+/* player_control_get_autoaim_level (0xb6940) — readable C lift. */
+float player_control_get_autoaim_level(int16_t local_player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lplayer_control_get_autoaim_level_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lplayer_control_get_autoaim_level_2\n\t"
-      ".Lplayer_control_get_autoaim_level_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb1\n\t"
-      "pushl $0x26e1e8\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_control_get_autoaim_level_2:\n\t"
-      "movl 0x457090, %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $6, %%eax\n\t"
-      "popl %%esi\n\t"
-      "flds 0x3c(%%eax,%%ecx,1)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bb6940_assert), [exitfn] "m"(bb6940_exitfn)
-      : "memory");
+  if (local_player_index < 0 || local_player_index >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x26e1e8, 0xb1, 1);
+    system_exit(-1);
+  }
+  return *(float *)(*(unsigned char **)0x457090 + ((int)local_player_index * 0x40) + 0x3c);
 }
-#else
-#error "player_control_get_autoaim_level: clang naked draft required"
-#endif
-
-
 /* players_unzoom_all (0xb69d0) — readable C lift. */
 void players_unzoom_all(void)
 {
