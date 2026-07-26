@@ -4458,78 +4458,36 @@ char FUN_000f5fb0(void)
 #endif
 
 
-/* item_get_position_even_if_in_inventory (0xf6a60) — XBE naked draft (batch 236). */
-#if defined(__clang__)
-static void *(*const bf6a60_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void *(*const bf6a60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const bf6a60_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void item_get_position_even_if_in_inventory(int item_handle __attribute__((unused)), float *out __attribute__((unused)))
+/* item_get_position_even_if_in_inventory (0xf6a60) — readable C lift. */
+void item_get_position_even_if_in_inventory(int item_handle, float *out_pos)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x1c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      "movl %%ecx, 0x8(%%esi)\n\t"
-      "je .Litem_get_position_even_if_in_inventory_2\n\t"
-      "testb $1, 0x1a4(%%eax)\n\t"
-      "je .Litem_get_position_even_if_in_inventory_1\n\t"
-      "movl 0x70(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Litem_get_position_even_if_in_inventory_2\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Litem_get_position_even_if_in_inventory_2\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "addl $8, %%esp\n\t"
-      "addl $0x50, %%eax\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl %%edx, (%%esi)\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "movl %%edx, 0x8(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Litem_get_position_even_if_in_inventory_1:\n\t"
-      "addl $0x50, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%esi)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%esi)\n\t"
-      ".Litem_get_position_even_if_in_inventory_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tryget] "m"(bf6a60_tryget), [dget] "m"(bf6a60_dget), [get] "m"(bf6a60_get)
-      : "memory");
-}
-#else
-#error "item_get_position_even_if_in_inventory: clang naked draft required"
-#endif
+  char *item_obj;
+  int owner;
+  char *unit_obj;
 
+  item_obj = (char *)object_try_and_get_and_verify_type(item_handle, 0x1c);
+  out_pos[0] = 0;
+  out_pos[1] = 0;
+  out_pos[2] = 0;
+  if (item_obj == (char *)0)
+    return;
+  if ((*(unsigned char *)(item_obj + 0x1a4) & 1) != 0) {
+    owner = *(int *)(item_obj + 0x70);
+    if (owner == -1)
+      return;
+    owner = *(int *)((char *)datum_get(*(data_t **)0x5aa6d4, owner) + 0x34);
+    if (owner == -1)
+      return;
+    unit_obj = (char *)object_get_and_verify_type(owner, 3);
+    out_pos[0] = *(float *)(unit_obj + 0x50);
+    out_pos[1] = *(float *)(unit_obj + 0x54);
+    out_pos[2] = *(float *)(unit_obj + 0x58);
+    return;
+  }
+  out_pos[0] = *(float *)(item_obj + 0x50);
+  out_pos[1] = *(float *)(item_obj + 0x54);
+  out_pos[2] = *(float *)(item_obj + 0x58);
+}
 
 /* FUN_000f7110 (0xf7110) — XBE naked draft (batch 234). */
 #if defined(__clang__)

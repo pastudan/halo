@@ -13283,48 +13283,26 @@ unsigned short FUN_00053960(void)
     sum = (unsigned short)(sum + *(unsigned char *)((char *)enc + 6));
   return sum;
 }
-/* FUN_000539c0 (0x539c0) — XBE naked draft (batch 167). */
-#if defined(__clang__)
-static int (*const b539c0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static void (*const b539c0_c53800)(void) = FUN_00053800;
-
-__attribute__((naked, noinline))
+/* FUN_000539c0 (0x539c0) — readable C lift. */
 void FUN_000539c0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movswl 0x5abeee, %%eax\n\t"
-      "movswl 0x5abaae, %%ecx\n\t"
-      "movswl 0x5abb36, %%edx\n\t"
-      "pushl $0x300\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x25c134\n\t"
-      "pushl $0x5ab280\n\t"
-      "movw $0x96, -0x4(%%ebp)\n\t"
-      "movw $0x12c, -0x2(%%ebp)\n\t"
-      "call *%[c1d90f0]\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x2ee6c4, %%eax\n\t"
-      "pushl $2\n\t"
-      "pushl $0x5ab280\n\t"
-      "call *%[c53800]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d90f0] "m"(b539c0_c1d90f0), [c53800] "m"(b539c0_c53800)
-      : "memory");
-}
-#else
-#error "FUN_000539c0: clang naked draft required"
-#endif
+  int16_t vals[2];
+  void *color;
+  char *buf;
 
+  vals[0] = 0x96;
+  vals[1] = 0x12c;
+  buf = (char *)0x5ab280;
+  crt_sprintf(
+      buf,
+      (const char *)0x25c134,
+      (int)*(int16_t *)0x5abb36,
+      (int)*(int16_t *)0x5abaae,
+      (int)*(int16_t *)0x5abeee,
+      0x300);
+  color = *(void **)0x2ee6c4;
+  FUN_00053800(buf, 2, vals, color);
+}
 
 /* FUN_00053a20 (0x53a20) — readable C lift. */
 void FUN_00053a20(void)
