@@ -960,57 +960,19 @@ int uiscntrl(int c)
   return FUN_001dc3e9(c, 0x20);
 }
 
-/* utoupper (0x19e5c0) — XBE naked draft (batch 288). */
-#if defined(__clang__)
-static wchar_t * (*const b19e5c0_c1dc27c)(wchar_t *s, size_t count) = FUN_001dc27c;
-
-__attribute__((naked, noinline))
-int utoupper(int c __attribute__((unused)))
+/* utoupper (0x19e5c0) — readable C lift. */
+int utoupper(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dc27c]\n\t"
-      "addl $4, %%esp\n\t"
-      "movzwl %%ax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc27c] "m"(b19e5c0_c1dc27c)
-      : "memory");
+  typedef unsigned short (*towupper_fn)(unsigned short);
+  return (int)((towupper_fn)FUN_001dc27c)((unsigned short)c);
 }
-#else
-#error "utoupper: clang naked draft required"
-#endif
 
-
-/* utolower (0x19e5e0) — XBE naked draft (batch 288). */
-#if defined(__clang__)
-static wchar_t * (*const b19e5e0_c1da8e3)(wchar_t *s, size_t count) = FUN_001da8e3;
-
-__attribute__((naked, noinline))
-int utolower(int c __attribute__((unused)))
+/* utolower (0x19e5e0) — readable C lift. */
+int utolower(int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1da8e3]\n\t"
-      "addl $4, %%esp\n\t"
-      "movzwl %%ax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1da8e3] "m"(b19e5e0_c1da8e3)
-      : "memory");
+  typedef unsigned short (*towlower_fn)(unsigned short);
+  return (int)((towlower_fn)FUN_001da8e3)((unsigned short)c);
 }
-#else
-#error "utolower: clang naked draft required"
-#endif
-
 
 /* ufgetc (0x19e600) — XBE naked draft (batch 283). */
 #if defined(__clang__)

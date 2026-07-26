@@ -7051,34 +7051,11 @@ int16_t hs_find_tag_reference_by_index(int tag_index __attribute__((unused)))
 #endif
 
 
-/* FUN_000c4010 (0xc4010) — XBE naked draft (batch 213). */
-#if defined(__clang__)
-static int (*const bc4010_c1dd801)(const char *a, const char *b) = crt_stricmp;
-
-__attribute__((naked, noinline))
-int FUN_000c4010(const char **a __attribute__((unused)), const char **b __attribute__((unused)))
+/* FUN_000c4010 (0xc4010) — readable C lift. */
+int FUN_000c4010(const char **a, const char **b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dd801] "m"(bc4010_c1dd801)
-      : "memory");
+  return crt_stricmp(*a, *b);
 }
-#else
-#error "FUN_000c4010: clang naked draft required"
-#endif
-
 
 /* FUN_000c4030 (0xc4030) — XBE naked draft (batch 162). */
 #if defined(__clang__)
