@@ -15108,7 +15108,8 @@
         {
           "addr": "0x125cb0",
           "decl": "char network_game_client_advertised_game_is_valid(void *game);",
-          "ported": false
+          "ported": false,
+          "name": "network_game_client_advertised_game_is_valid"
         },
         {
           "addr": "0x125ce0",
@@ -17992,8 +17993,9 @@
         },
         {
           "addr": "0xa2c70",
-          "decl": "void FUN_000a2c70(void);",
-          "ported": false
+          "decl": "float FUN_000a2c70(float scale, float numer, float denom, short function_type);",
+          "ported": true,
+          "name": "FUN_000a2c70"
         },
         {
           "addr": "0xa2d30",
@@ -25009,8 +25011,9 @@
         },
         {
           "addr": "0x1cc440",
-          "decl": "int FUN_001cc440(int source@<edi>);",
-          "ported": false
+          "decl": "int FUN_001cc440(int source);",
+          "ported": false,
+          "name": "FUN_001cc440"
         },
         {
           "addr": "0x1cc4f0",
@@ -33715,7 +33718,8 @@
         {
           "addr": "0xfc8e0",
           "decl": "float weapon_get_field_of_view(int weapon_handle, float base_fov, int16_t zoom_level);",
-          "ported": false
+          "ported": true,
+          "name": "weapon_get_field_of_view"
         },
         {
           "addr": "0xfc930",
@@ -33779,7 +33783,8 @@
         {
           "addr": "0xfd150",
           "decl": "void FUN_000fd150(int weapon_handle);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000fd150"
         },
         {
           "addr": "0xfd180",

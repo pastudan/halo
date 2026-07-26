@@ -3386,54 +3386,20 @@ float weapon_get_zoom_magnification(int weapon_handle __attribute__((unused)), i
 #endif
 
 
-/* weapon_get_field_of_view (0xfc8e0) — XBE naked draft (batch 166). */
-#if defined(__clang__)
-static float (*const bfc8e0_cfc780)(int weapon_handle, int16_t zoom_level) = weapon_get_zoom_magnification;
-
-__attribute__((naked, noinline))
-float weapon_get_field_of_view(int weapon_handle __attribute__((unused)), float base_fov __attribute__((unused)), int16_t zoom_level __attribute__((unused)))
+/* weapon_get_field_of_view (0xfc8e0) — readable C lift. */
+float weapon_get_field_of_view(int weapon_handle, float base_fov, int16_t zoom_level)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[cfc780]\n\t"
-      "fcoms 0x2533c8\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lweapon_get_field_of_view_1\n\t"
-      "fdivrs 0xc(%%ebp)\n\t"
-      "fcoms 0x28af00\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lweapon_get_field_of_view_1\n\t"
-      "fcoms 0x28aefc\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lweapon_get_field_of_view_2\n\t"
-      ".Lweapon_get_field_of_view_1:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      ".Lweapon_get_field_of_view_2:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cfc780] "m"(bfc8e0_cfc780)
-      : "memory");
+  float mag = weapon_get_zoom_magnification(weapon_handle, zoom_level);
+  float one = *(float *)0x2533c8;
+  float v;
+  if (mag == one)
+    return base_fov;
+  v = base_fov / mag;
+  /* Keep v only if v > *(float*)0x28af00 and v < *(float*)0x28aefc (asm tests). */
+  if (v > *(float *)0x28af00 && v < *(float *)0x28aefc)
+    return v;
+  return base_fov;
 }
-#else
-#error "weapon_get_field_of_view: clang naked draft required"
-#endif
-
-
 /* weapon_prevents_melee_attack (0xfc930) — readable C lift. */
 char weapon_prevents_melee_attack(int weapon_handle)
 {
