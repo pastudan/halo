@@ -34753,7 +34753,7 @@
         },
         {
           "addr": "0x49280",
-          "decl": "void FUN_00049280(int16_t count, float *points, float *point_a @<ecx>, void *color @<ebx>);",
+          "decl": "void FUN_00049280(int16_t count, float *points, float *point_a, void *color);",
           "ported": true
         },
         {
@@ -34944,8 +34944,9 @@
         },
         {
           "addr": "0x4b770",
-          "decl": "void ai_debug_lineofsight(void);",
-          "ported": false
+          "decl": "void ai_debug_lineofsight(float *pos_a, int16_t key_a, float *pos_b, int16_t key_b);",
+          "ported": true,
+          "name": "ai_debug_lineofsight"
         },
         {
           "addr": "0x4b7a0",
@@ -38903,7 +38904,7 @@
       "functions": [
         {
           "addr": "0x24000",
-          "decl": "void FUN_00024000(void *unused, float score, void *ctx @<esi>);",
+          "decl": "void FUN_00024000(void *ctx, float score, int type, void *position);",
           "ported": false,
           "name": "FUN_00024000"
         },

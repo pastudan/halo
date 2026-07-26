@@ -3635,43 +3635,13 @@ void FUN_0004b670(void)
 #endif
 
 
-/* ai_debug_lineofsight (0x4b770) — XBE naked draft (batch 166). */
-#if defined(__clang__)
-static int16_t (*const b4b770_c497c0)(float *pos, int16_t key) = FUN_000497c0;
-static int (*const b4b770_c498d0)(int16_t a, int16_t b) = FUN_000498d0;
-
-__attribute__((naked, noinline))
-void ai_debug_lineofsight(void)
+/* ai_debug_lineofsight (0x4b770) — readable C lift. */
+void ai_debug_lineofsight(float *pos_a, int16_t key_a, float *pos_b, int16_t key_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "call *%[c497c0]\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movw %%ax, %%si\n\t"
-      "call *%[c497c0]\n\t"
-      "movl %%esi, %%edi\n\t"
-      "call *%[c498d0]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c497c0] "m"(b4b770_c497c0), [c498d0] "m"(b4b770_c498d0)
-      : "memory");
+  int16_t idx_b = FUN_000497c0(pos_b, key_b);
+  int16_t idx_a = FUN_000497c0(pos_a, key_a);
+  FUN_000498d0(idx_a, idx_b);
 }
-#else
-#error "ai_debug_lineofsight: clang naked draft required"
-#endif
-
 
 /* FUN_0004b7a0 (0x4b7a0) — XBE naked draft (batch 157). */
 #if defined(__clang__)

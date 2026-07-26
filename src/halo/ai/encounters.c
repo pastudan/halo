@@ -5160,47 +5160,27 @@ void encounter_set_respawn(int encounter_handle, char flag)
   FUN_0005a4e0(encounter_handle);
 }
 
-/* FUN_00053bf0 (0x53bf0) — XBE naked draft (batch 238). */
-#if defined(__clang__)
-static int (*const b53bf0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static void (*const b53bf0_c53800)(void) = FUN_00053800;
 
-__attribute__((naked, noinline))
+/* FUN_00053bf0 (0x53bf0) — readable C lift. */
 void FUN_00053bf0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movswl 0x5ac87e, %%eax\n\t"
-      "movswl 0x5ac7f6, %%ecx\n\t"
-      "movswl 0x5ac76e, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x25c218\n\t"
-      "pushl $0x5ab280\n\t"
-      "movw $0x96, -0x8(%%ebp)\n\t"
-      "movw $0x12c, -0x6(%%ebp)\n\t"
-      "movw $0x1c2, -0x4(%%ebp)\n\t"
-      "call *%[c1d90f0]\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x2ee6c4, %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl $0x5ab280\n\t"
-      "call *%[c53800]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d90f0] "m"(b53bf0_c1d90f0), [c53800] "m"(b53bf0_c53800)
-      : "memory");
+  short column_positions[3];
+  char *debug_row = (char *)0x5ab280;
+
+  crt_sprintf(debug_row, (const char *)0x25c218,
+              (int)*(int16_t *)0x5ac76e, (int)*(int16_t *)0x5ac7f6,
+              (int)*(int16_t *)0x5ac87e);
+  column_positions[0] = 0x96;
+  column_positions[1] = 0x12c;
+  column_positions[2] = 0x1c2;
+  {
+    void (*row_print)(char *, int, short *, void *) =
+        (void (*)(char *, int, short *, void *))(void *)FUN_00053800;
+    row_print(debug_row, 3, column_positions, *(void **)0x2ee6c4);
+  }
 }
-#else
-#error "FUN_00053bf0: clang naked draft required"
-#endif
+
+
 
 
 /* 0x00053b80 — debug overlay row: collision / line-of-sight / line-of-fire /
