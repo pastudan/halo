@@ -346,62 +346,24 @@ int player_control_get_aiming_unit_index(int16_t local_player_index)
   slot = (int *)(base + ((int)local_player_index * 0x40) + 0x10);
   return unit_get_aiming_unit_index(*slot);
 }
-/* player_control_get_target_object_index (0xb6620) — XBE naked draft (batch 159). */
-#if defined(__clang__)
-static void (*const bb6620_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb6620_exitfn)(int) = system_exit;
-static void *(*const bb6620_tryget)(int, int) = object_try_and_get_and_verify_type;
-
-__attribute__((naked, noinline))
-int player_control_get_target_object_index(int16_t local_player_index __attribute__((unused)))
+/* /* player_control_get_target_object_index (0xb6620) — readable C lift. */
+int player_control_get_target_object_index(int16_t local_player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lplayer_control_get_target_object_index_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lplayer_control_get_target_object_index_2\n\t"
-      ".Lplayer_control_get_target_object_index_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb1\n\t"
-      "pushl $0x26e1e8\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_control_get_target_object_index_2:\n\t"
-      "movl 0x457090, %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $6, %%eax\n\t"
-      "movl 0x38(%%eax,%%ecx,1), %%edx\n\t"
-      "leal 0x10(%%eax,%%ecx,1), %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplayer_control_get_target_object_index_3\n\t"
-      "movl 0x28(%%esi), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_control_get_target_object_index_3:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bb6620_assert), [exitfn] "m"(bb6620_exitfn), [tryget] "m"(bb6620_tryget)
-      : "memory");
-}
-#else
-#error "player_control_get_target_object_index: clang naked draft required"
-#endif
+  unsigned char *base;
+  unsigned char *slot;
+  void *obj;
 
+  if (local_player_index < 0 || local_player_index >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x26e1e8, 0xb1, 1);
+    system_exit(-1);
+  }
+  base = *(unsigned char **)0x457090;
+  slot = base + ((int)local_player_index * 0x40) + 0x10;
+  obj = object_try_and_get_and_verify_type(*(int *)(slot + 0x28), -1);
+  if (obj != (void *)0)
+    return *(int *)(slot + 0x28);
+  return -1;
+}
 
 /* player_control_get_field_of_view (0xb6690) — XBE naked draft (batch 146). */
 #if defined(__clang__)
