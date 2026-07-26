@@ -34152,7 +34152,7 @@
         },
         {
           "addr": "0x2f6e0",
-          "decl": "char actor_perception_desire_prop(int actor_handle, int existing_prop, int unit_handle, int owner_handle, char friendly, char field_63, char field_12e, int16_t field_76, float vis_metric, int16_t scale, int sense, char field_127, char *out_flag);",
+          "decl": "char actor_perception_desire_prop(int actor_handle, int existing_prop, int unit_handle, int owner_handle, char field_63, char field_12e, char friendly, char field_127, int16_t field_76, int16_t scale, float visibility, int sense, char *out_flag);",
           "name": "actor_perception_desire_prop",
           "source_path": "src/halo/ai/actor_perception.c",
           "ported": false
@@ -34268,6 +34268,8 @@
         {
           "addr": "0x31a90",
           "decl": "void actor_perception_find_sense_position(int actor_handle, float *position, int param_3, void *input_block_out);",
+          "name": "actor_perception_find_sense_position",
+          "source_path": "src/halo/ai/actor_perception.c",
           "ported": false
         },
         {
@@ -34286,7 +34288,9 @@
         },
         {
           "addr": "0x32170",
-          "decl": "void FUN_00032170(void);",
+          "decl": "char FUN_00032170(float *sense_pos_out, int actor_handle, int unit_handle, char flag);",
+          "name": "FUN_00032170",
+          "source_path": "src/halo/ai/actor_perception.c",
           "ported": false
         },
         {
@@ -34296,7 +34300,9 @@
         },
         {
           "addr": "0x32940",
-          "decl": "void actor_expected_acknowledgement(void);",
+          "decl": "char actor_expected_acknowledgement(int actor_handle, int prop_handle);",
+          "name": "actor_expected_acknowledgement",
+          "source_path": "src/halo/ai/actor_perception.c",
           "ported": false
         },
         {
@@ -34326,7 +34332,7 @@
         },
         {
           "addr": "0x33330",
-          "decl": "void actor_perception_become_acknowledged(int actor_handle, int prop_handle, int param_3);",
+          "decl": "void actor_perception_become_acknowledged(int actor_handle, int prop_handle, char *param_3);",
           "ported": false
         },
         {
@@ -40230,17 +40236,23 @@
         },
         {
           "addr": "0x5f240",
-          "decl": "void build_path_edges_for_surface(void);",
+          "decl": "int16_t build_path_edges_for_surface(void *scenario, int surface_index, char *out_edges);",
+          "name": "build_path_edges_for_surface",
+          "source_path": "src/halo/ai/path.c",
           "ported": false
         },
         {
           "addr": "0x5f3c0",
-          "decl": "void closest_point_to_attractor(void);",
+          "decl": "void closest_point_to_attractor(float *segment_start, float *segment_end, float *reference, float *out_point);",
+          "name": "closest_point_to_attractor",
+          "source_path": "src/halo/ai/path.c",
           "ported": false
         },
         {
           "addr": "0x5f490",
-          "decl": "void path_attractor_weight(void);",
+          "decl": "float path_attractor_weight(void *path_state, float *node_pos, float *step_pos, float *out_dist);",
+          "name": "path_attractor_weight",
+          "source_path": "src/halo/ai/path.c",
           "ported": false
         },
         {

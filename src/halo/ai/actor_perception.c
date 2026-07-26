@@ -603,27 +603,140 @@ void FUN_0002f5f0(void)
   (void)edi;
 }
 
-/* 0x2f6e0 */
+/* 0x2f6e0 — decide whether an actor wants a prop acknowledgement. */
 char actor_perception_desire_prop(
     int actor_handle, int existing_prop, int unit_handle, int owner_handle,
-    char friendly, char field_63, char field_12e, int16_t field_76,
-    float vis_metric, int16_t scale, int sense, char field_127, char *out_flag)
+    char field_63, char field_12e, char friendly, char field_127,
+    int16_t field_76, int16_t scale, float visibility, int sense,
+    char *out_flag)
 {
-  (void)actor_handle;
-  (void)existing_prop;
-  (void)unit_handle;
-  (void)owner_handle;
-  (void)friendly;
-  (void)field_63;
-  (void)field_12e;
-  (void)field_76;
-  (void)vis_metric;
-  (void)scale;
-  (void)sense;
-  (void)field_127;
+  char *actor;
+  char *owner;
+  char *unit;
+  char *encounter;
+  char desire;
+  char out_desire;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (owner_handle == -1)
+    owner = 0;
+  else
+    owner = (char *)datum_get(actor_data, owner_handle);
+
+  desire = field_127;
+  out_desire = 0;
+
+  if (field_127 != 0 && friendly == 0)
+    goto finish;
+  if ((int16_t)existing_prop >= 4 && (int16_t)existing_prop <= 5) {
+    desire = 0;
+    goto finish;
+  }
+  if (field_63 != 0) {
+    desire = 1;
+    goto finish;
+  }
+  if (owner != 0 && *(char *)(owner + 8) != 0 && *(char *)(owner + 0x13) == 0) {
+    desire = 0;
+    goto finish;
+  }
+  if ((int16_t)existing_prop == -1) {
+    if (field_12e != 0 || scale > 0) {
+      desire = 1;
+      goto finish;
+    }
+  }
+  if (visibility < *(float *)0x255fe0) {
+    desire = 0;
+    goto finish;
+  }
+
+  if (desire != 0) {
+    encounter = 0;
+    if (*(int *)(actor + 0x34) != -1) {
+      encounter =
+          (char *)datum_get(*(void **)0x5ab270, *(int *)(actor + 0x34));
+      unit = (char *)object_get_and_verify_type(unit_handle, 3);
+      {
+        int max_teams = *(int *)(encounter + 0x58);
+        int actor_teams = *(int *)(actor + 0x3a0);
+        int unit_teams = *(int *)(unit + 0x3cc);
+        if (max_teams < actor_teams)
+          max_teams = actor_teams;
+        if (max_teams != -1 && unit_teams != -1 && unit_teams < max_teams)
+          desire = 0;
+      }
+      if (desire != 0) {
+        char hidden = 0;
+        if (*(char *)(encounter + 0x45) != 0 ||
+            *(char *)(encounter + 0x44) != 0 || *(char *)(encounter + 0x42) != 0)
+          hidden = 0;
+        else
+          hidden = 1;
+        if (hidden != 0) {
+          if (visibility <= *(float *)0x255fdc) {
+            desire = 1;
+            goto finish;
+          }
+        } else if (field_127 != 0) {
+          if (visibility <= *(float *)0x2533c0) {
+            desire = 1;
+            goto finish;
+          }
+          if (field_127 != 0 && field_76 > 0x96) {
+            desire = 0;
+            goto finish;
+          }
+        }
+      }
+    }
+    if (actor_action_try_to_panic(actor_handle) > 1) {
+      desire = 0;
+      goto finish;
+    }
+    if (field_127 != 0) {
+      float threshold = *(float *)0x254e74;
+      if (*(int16_t *)(actor + 0x6a) < 3)
+        threshold = *(float *)0x254df8;
+      if (visibility > threshold) {
+        desire = 0;
+        goto finish;
+      }
+    }
+    desire = 1;
+    goto finish;
+  }
+
+  if (field_127 != 0) {
+    if (visibility > *(float *)0x255fd8) {
+      desire = 1;
+      out_desire = 1;
+    } else if (visibility <= *(float *)0x255fdc) {
+      desire = 1;
+      out_desire = 0;
+    } else {
+      desire = 0;
+    }
+    goto finish;
+  }
+
+  if (*(int16_t *)(actor + 0x6e) >= 4) {
+    out_desire = 1;
+    goto finish;
+  }
+  if (*(char *)(actor + 0x1cc) != 0) {
+    out_desire = 0;
+    goto finish;
+  }
+  if (visibility > *(float *)0x254e74)
+    out_desire = 1;
+  else
+    out_desire = 0;
+
+finish:
   if (out_flag != 0)
-    *out_flag = 0;
-  return 0;
+    *out_flag = out_desire;
+  return desire;
 }
 
 /* 0x2fb60 — fpatan(y, x) */
@@ -1126,34 +1239,70 @@ int actor_audibility_at_point(int actor_handle, void *input_block, float *positi
   (void)edi;
 }
 
-/* 0x31a90 */
-void actor_perception_find_sense_position(int actor_handle, float *position, int param_3, void *input_block_out)
+/* 0x31a90 — fill actor sense input block from closest swarm member. */
+void actor_perception_find_sense_position(int actor_handle, float *position,
+                                          int param_3, void *input_block_out)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-  int local_8 = 0;
+  char *actor;
+  char *swarm;
+  char *member;
+  int16_t member_index;
+  int16_t member_count;
+  int best_unit;
+  float best_dist_sq;
+  float delta[3];
+  float dist_sq;
+  int i;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), actor_handle);
-  /* test (char)eax, (char)eax -> je 0x31be5 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a0), 0);
-  display_assert((char *)0x00256190, (char *)0x00255fb0, 1637, 1);
-  system_exit(edi);
-  /* relift: cmp dword ptr [esi + 0x24], edi -> jne 0x31b24 */
-  display_assert((char *)0x00256168, (char *)0x00255fb0, 1638, 1);
-  system_exit(edi);
-  datum_get((data_t *)(uintptr_t)*(int *)(0x63259c), 0);
-  /* relift: cmp dword ptr [ebp - 8], -1 -> jne 0x31bca */
-  display_assert((char *)0x00256150, (char *)0x00255fb0, 1655, 1);
-  system_exit(-1);
-  FUN_0003bde0(actor_handle, local_8, (char *)(uintptr_t)input_block_out);
+  (void)param_3;
 
-  (void)eax;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
-  (void)local_8;
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (*(char *)(actor + 6) == 0) {
+    char *src = actor + 0x120;
+    char *dst = (char *)input_block_out;
+    for (i = 0; i < 0xe; i++)
+      *(int *)(dst + i * 4) = *(int *)(src + i * 4);
+    return;
+  }
+
+  if (*(int16_t *)(actor + 0x1e) <= 0) {
+    display_assert("actor->swarm_data.swarm_count>0",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x665, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(actor + 0x24) == -1) {
+    display_assert("actor->swarm_data.unit!=NONE",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x666, 1);
+    system_exit(-1);
+  }
+
+  swarm = (char *)datum_get(*(void **)0x6325a0, *(int *)(actor + 0x28));
+  best_unit = -1;
+  best_dist_sq = 3.4028235e38f;
+  member_count = *(int16_t *)(swarm + 2);
+
+  for (member_index = 0; member_index < member_count; member_index++) {
+    member = (char *)datum_get(
+        *(void **)0x63259c,
+        *(int *)(swarm + member_index * 4 + 0x58));
+    delta[0] = position[0] - *(float *)(member + 4);
+    delta[1] = position[1] - *(float *)(member + 8);
+    delta[2] = position[2] - *(float *)(member + 0xc);
+    dist_sq = delta[0] * delta[0] + delta[1] * delta[1] +
+              delta[2] * delta[2];
+    if (dist_sq <= best_dist_sq) {
+      best_dist_sq = dist_sq;
+      best_unit = *(int *)(swarm + member_index * 4 + 0x18);
+    }
+  }
+
+  if (best_unit == -1) {
+    display_assert("result!=NONE",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x677, 1);
+    system_exit(-1);
+  }
+
+  FUN_0003bde0(actor_handle, best_unit, (char *)input_block_out);
 }
 
 /* 0x31c00 — pick the closest swarm member unit to a reference point. */
@@ -1395,33 +1544,84 @@ void prop_position_refresh(int actor_handle, int prop_handle, float *out_pos,
   }
 }
 
-/* 0x32170 */
-void FUN_00032170(void)
+/* 0x32170 — register a vehicle danger zone on an actor. */
+char FUN_00032170(float *sense_pos_out, int actor_handle, int unit_handle,
+                  char flag)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *actor;
+  char *vehicle;
+  char *vehicle_def;
+  char sense_block[0x4c];
+  char *sense_pos;
+  float world_pos[3];
+  float delta[3];
+  float dist;
+  float vel_sq;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  /* cmp ecx, -1 -> jne 0x32370 */
-  object_get_and_verify_type(0, 2);
-  tag_get('ihev', *(int *)(eax));
-  /* relift: relift: fcomp dword ptr [0x25620c] */
-  object_get_world_position(0, (void *)0);
-  /* test edi, edi -> jne 0x3222c */
-  actor_perception_find_sense_position(0, (void *)0, -1, (void *)0);
-  /* test (char)eax, 0x41 -> jne 0x3236e */
-  /* relift: cmp dword ptr [esi + 0x28c], ecx -> je 0x3236e */
-  csmemset((void *)((char *)eax + 0x280), 0, 108);
-  object_get_and_verify_type(0, 3);
-  game_allegiance_get_team_is_friendly(0, eax);
-  /* test (char)eax, (char)eax -> jne 0x32365 */
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (*(int *)(actor + 0x158) != -1)
+    return 0;
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  vehicle = (char *)object_get_and_verify_type(unit_handle, 2);
+  vehicle_def = (char *)tag_get('ihev', *(int *)vehicle);
+  if (*(char *)(vehicle_def + 0x2f0) >= 0)
+    return 0;
+
+  vel_sq = *(float *)(vehicle + 0x18) * *(float *)(vehicle + 0x18) +
+           *(float *)(vehicle + 0x1c) * *(float *)(vehicle + 0x1c) +
+           *(float *)(vehicle + 0x20) * *(float *)(vehicle + 0x20);
+  if (vel_sq > *(float *)0x25620c)
+    return 0;
+
+  object_get_world_position(unit_handle, (vector3_t *)world_pos);
+  if (sense_pos_out == 0) {
+    actor_perception_find_sense_position(actor_handle, world_pos, -1,
+                                         sense_block);
+    sense_pos = sense_block;
+  } else {
+    sense_pos = (char *)sense_pos_out;
+  }
+
+  delta[0] = world_pos[0] - *(float *)(sense_pos + 0xc);
+  delta[1] = world_pos[1] - *(float *)(sense_pos + 0x10);
+  delta[2] = world_pos[2] - *(float *)(sense_pos + 0x14);
+  dist = sqrtf(delta[0] * delta[0] + delta[1] * delta[1] +
+               delta[2] * delta[2]);
+
+  if (dist > *(float *)(vehicle_def + 4) + *(float *)0x253f34)
+    return 0;
+
+  if (*(int16_t *)(actor + 0x280) >= 3) {
+    if (*(int16_t *)(actor + 0x280) != 3)
+      return 0;
+    if (*(int *)(actor + 0x28c) == unit_handle &&
+        dist <= *(float *)(actor + 0x2d4))
+      return 0;
+  }
+
+  csmemset(actor + 0x280, 0, 0x6c);
+  *(int *)(actor + 0x28c) = unit_handle;
+  *(int16_t *)(actor + 0x280) = 3;
+  *(int *)(actor + 0x290) = *(int *)(vehicle + 0x2d4);
+  *(int *)(actor + 0x294) = *(int *)(vehicle_def + 4);
+  *(float *)(actor + 0x298) = world_pos[0];
+  *(float *)(actor + 0x29c) = world_pos[1];
+  *(float *)(actor + 0x2a0) = world_pos[2];
+  *(float *)(actor + 0x2a4) = *(float *)(vehicle + 0x18);
+  *(float *)(actor + 0x2a8) = *(float *)(vehicle + 0x1c);
+  *(float *)(actor + 0x2ac) = *(float *)(vehicle + 0x20);
+  *(int16_t *)(actor + 0x284) = 0x14;
+  *(char *)(actor + 0x286) = flag;
+  *(int16_t *)(actor + 0x282) = 0;
+
+  if (*(int *)(actor + 0x290) != -1) {
+    char *parent =
+        (char *)object_get_and_verify_type(*(int *)(vehicle + 0x2d4), 3);
+    if (!game_allegiance_get_team_is_friendly(*(int16_t *)(actor + 0x3e),
+                                              *(int16_t *)(parent + 0x68)))
+      *(int16_t *)(actor + 0x282) = 1;
+  }
+  return 1;
 }
 
 /* 0x32380 */
@@ -1508,45 +1708,57 @@ void actor_perception_refresh_danger_zone(void)
   (void)local_c;
 }
 
-/* 0x32940 */
-void actor_expected_acknowledgement(void)
+/* 0x32940 — scan actor props for a duplicate acknowledgement candidate. */
+char actor_expected_acknowledgement(int actor_handle, int prop_handle)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int ebp = 0;
+  char *prop;
+  char *other;
+  char result;
+  int iter[2];
+  float dx;
+  float dy;
+  float dz;
+  float dot;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
-  /* cmp (int16_t)eax, 4 -> jl 0x3299f */
-  /* cmp (int16_t)eax, 5 -> jg 0x3299f */
-  display_assert((char *)0x00256318, (char *)0x00255fb0, 3618, 1);
-  system_exit(-1);
-  FUN_00064540((void *)0, 0);
-  FUN_00064570((void *)0);
-  /* test ecx, ecx -> je 0x32ab1 */
-  /* relift: cmp dword ptr [ebp - 8], edx -> je 0x32a9b */
-  /* relift: cmp eax, dword ptr [esi + 0x18] -> je 0x32a16 */
-  /* relift: cmp edx, dword ptr [esi + 0x1c] -> je 0x32a16 */
-  /* test (char)eax, (char)eax -> je 0x32a9b */
-  /* test (char)eax, (char)eax -> je 0x32a9b */
-  /* cmp (int16_t)eax, 4 -> jl 0x32a02 */
-  /* cmp (int16_t)eax, 5 -> jle 0x32a16 */
-  /* cmp (int16_t)eax, 2 -> jl 0x32a9b */
-  /* cmp (int16_t)eax, 3 -> jg 0x32a9b */
-  /* relift: relift: fcomp dword ptr [0x253dcc] */
-  /* relift: relift: fcomp qword ptr [0x256310] */
-  /* relift: relift: fcomp dword ptr [0x253398] */
-  /* test (char)eax, 0x41 -> jne 0x32a9b */
-  FUN_00064570((void *)0);
-  /* test ecx, ecx -> jne 0x329c0 */
+  prop = (char *)datum_get(prop_data, prop_handle);
+  if (*(int16_t *)(prop + 0x24) >= 4 && *(int16_t *)(prop + 0x24) <= 5) {
+    display_assert("prop->status<4 || prop->status>5",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xe22, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)ebp;
+  result = 0;
+  FUN_00064540(iter, actor_handle);
+  while ((other = (char *)FUN_00064570(iter)) != 0) {
+    int16_t other_status;
+
+    if (iter[0] == prop_handle)
+      continue;
+    if (*(int *)(other + 0x18) != *(int *)(prop + 0x18) &&
+        *(int *)(other + 0x1c) != *(int *)(prop + 0x1c))
+      continue;
+    if (*(char *)(prop + 0x60) == 0 || *(char *)(other + 0x60) == 0)
+      continue;
+
+    other_status = *(int16_t *)(other + 0x24);
+    if ((other_status >= 4 && other_status <= 5) ||
+        (other_status >= 2 && other_status <= 3)) {
+      dx = *(float *)(prop + 0xbc) - *(float *)(other + 0xbc);
+      dy = *(float *)(prop + 0xc0) - *(float *)(other + 0xc0);
+      if (dx * dx + dy * dy > *(float *)0x253dcc)
+        continue;
+      dz = *(float *)(other + 0xc4) - *(float *)(prop + 0xc4);
+      if (fabsf(dz) > *(double *)0x256310)
+        continue;
+      dot = *(float *)(other + 0xe0) * *(float *)(prop + 0xe0) +
+            *(float *)(other + 0xe4) * *(float *)(prop + 0xe4) +
+            *(float *)(other + 0xe8) * *(float *)(prop + 0xe8);
+      if (dot >= *(float *)0x253398)
+        continue;
+      result = 1;
+    }
+  }
+  return result;
 }
 
 /* 0x32ac0 */
@@ -1733,27 +1945,44 @@ void actor_emotion_update(int actor_handle)
 }
 
 /* 0x33330 */
-void actor_perception_become_acknowledged(int actor_handle, int prop_handle, int param_3)
+void actor_perception_become_acknowledged(int actor_handle, int prop_handle,
+                                          char *param_3)
 {
-  int eax = 0;
-  int ecx = 0;
-  int local_4 = 0;
-  int local_8 = 0;
+  char *prop;
+  char *parent_prop;
+  char parent_exists;
+  char expected;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), prop_handle);
-  /* cmp (int16_t)ecx, 2 -> jl 0x33364 */
-  /* cmp (int16_t)ecx, 3 -> jle 0x33431 */
-  actor_expected_acknowledgement();
-  /* test (char)eax, (char)eax -> je 0x33413 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
-  FUN_0003b410(actor_handle, 0, prop_handle);
-  prop_iterator_next(actor_handle, 0);
-  actor_perception_acknowledge(actor_handle, prop_handle, local_4, local_8);
+  expected = 0;
+  prop = (char *)datum_get(prop_data, prop_handle);
+  if (*(int16_t *)(prop + 0x24) >= 2 && *(int16_t *)(prop + 0x24) <= 3)
+    goto finish;
 
-  (void)eax;
-  (void)ecx;
-  (void)local_4;
-  (void)local_8;
+  parent_exists = *(int *)(prop + 0xc) != -1;
+  expected = actor_expected_acknowledgement(actor_handle, prop_handle);
+  if (parent_exists != 0) {
+    parent_prop = (char *)datum_get(prop_data, *(int *)(prop + 0xc));
+    *(int *)(prop + 0x50) = *(int *)(parent_prop + 0x50);
+    *(int *)(prop + 0x54) = *(int *)(parent_prop + 0x54);
+    *(int *)(prop + 0x58) = *(int *)(parent_prop + 0x58);
+    *(int *)(prop + 0x5c) = *(int *)(parent_prop + 0x5c);
+    *(int16_t *)(prop + 0x9c) = *(int16_t *)(parent_prop + 0x9c);
+    *(int *)(prop + 0xa0) = *(int *)(parent_prop + 0xa0);
+    *(char *)(prop + 0xa4) = *(char *)(parent_prop + 0xa4);
+    *(int16_t *)(prop + 0xa6) = *(int16_t *)(parent_prop + 0xa6);
+    *(int16_t *)(prop + 0xa8) = *(int16_t *)(parent_prop + 0xa8);
+    FUN_0003b410(actor_handle, *(int *)(prop + 0xc), prop_handle);
+    prop_iterator_next(actor_handle, *(int *)(prop + 0xc));
+    *(int *)(prop + 0xc) = -1;
+  }
+
+  *(int16_t *)(prop + 0x24) = 3;
+  actor_perception_acknowledge(actor_handle, prop_handle, expected,
+                               parent_exists);
+
+finish:
+  if (param_3 != 0)
+    *param_3 = expected;
 }
 
 /* 0x33440 — refresh prop status flags from actor + unit state. */
@@ -1995,7 +2224,7 @@ void actor_perception_refresh_test_object(void)
   /* test (char)eax, (char)eax -> jne 0x34930 */
   /* cmp (int16_t)eax, 1 -> jne 0x34748 */
   /* relift: cmp dword ptr [esi + 0x2d4], -1 -> jne 0x34930 */
-  FUN_00032170();
+  /* relift: FUN_00032170(NULL, actor, unit, 0) */
   /* cmp (int16_t)eax, 5 -> jne 0x34930 */
   tag_get('jorp', 0);
   /* test (char)eax, 0x41 -> jne 0x34930 */

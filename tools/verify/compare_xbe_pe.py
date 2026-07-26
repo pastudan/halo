@@ -148,6 +148,14 @@ def main() -> int:
         ("prop_status_refresh", 0x33440, 0x342a0),
         ("FUN_0005f740", 0x5f740, 0x5ff70),
         ("actor_perception_unit_from_swarm", 0x31c00, 0x31df0),
+        # perception + path edge wave (2026-07-26)
+        ("build_path_edges_for_surface", 0x5f240, 0x5f3c0),
+        ("closest_point_to_attractor", 0x5f3c0, 0x5f490),
+        ("path_attractor_weight", 0x5f490, 0x5f550),
+        ("actor_perception_desire_prop", 0x2f6e0, 0x2f910),
+        ("actor_perception_find_sense_position", 0x31a90, 0x31c00),
+        ("FUN_00032170", 0x32170, 0x32380),
+        ("actor_expected_acknowledgement", 0x32940, 0x32ac0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

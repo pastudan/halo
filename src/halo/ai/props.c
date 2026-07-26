@@ -681,10 +681,10 @@ int prop_new_unacknowledged(int actor_handle, int unit_handle, char friendly)
       out_flag = 0;
       if (actor_perception_desire_prop(
               actor_handle, -1, *(int *)(prop + 0x18), *(int *)(prop + 0x1c),
-              *(char *)(prop + 0x60), *(char *)(prop + 0x63),
-              *(char *)(prop + 0x12e), *(int16_t *)(prop + 0x76), vis * vis,
-              *(int16_t *)(prop + 0x6a), *(int *)(prop + 0x20),
-              *(char *)(prop + 0x127), &out_flag)) {
+              *(char *)(prop + 0x63), *(char *)(prop + 0x12e),
+              *(char *)(prop + 0x60), *(char *)(prop + 0x127),
+              *(int16_t *)(prop + 0x76), *(int16_t *)(prop + 0x6a), vis,
+              *(int *)(prop + 0x20), &out_flag)) {
         if (*(char *)(prop + 0x60) != friendly) {
           prop_handle = *(int *)(prop + 8);
           continue;
@@ -893,9 +893,7 @@ int FUN_00064b40(int actor_handle, int unit_handle, char create_if_needed,
   if (*(int16_t *)(prop + 0x30) < 2)
     return prop_handle;
 
-  actor_expected_acknowledgement();
-  actor_perception_acknowledge(actor_handle, prop_handle, 0, 0);
-  ack = 0;
+  ack = actor_expected_acknowledgement(actor_handle, prop_handle);
   *(int16_t *)(prop + 0x24) = 3;
   actor_perception_acknowledge(actor_handle, prop_handle, ack, 0);
   return prop_handle;

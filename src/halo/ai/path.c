@@ -1095,56 +1095,158 @@ void FUN_0005f1d0(void)
   (void)edi;
 }
 
-/* 0x5f240 */
-void build_path_edges_for_surface(void)
+/* 0x5f240 — enumerate BSP surface edges into a path-search buffer. */
+int16_t build_path_edges_for_surface(void *scenario, int surface_index,
+                                     char *out_edges)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-  int local_10 = 0;
-  int local_c = 0;
+  char *sc;
+  char *bsp;
+  char *surfaces_block;
+  char *surface;
+  char *surfaces_count_ptr;
+  char *edges_block;
+  char *vertices_block;
+  char *sector_map;
+  int edge_link;
+  int16_t out_count;
+  char matched;
+  int adj_slot;
 
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* relift: cmp edi, dword ptr [esi + 0x3c] -> jl 0x5f294 */
-  display_assert((char *)0x0025e584, (char *)0x0025e0ac, 1496, 1);
-  system_exit(-1);
-  tag_block_get_element((void *)((char *)eax + 0x3c), 0, 12);
-  tag_block_get_element((void *)(uintptr_t)local_10, 0, 24);
-  /* test eax, eax -> jl 0x5f30b */
-  /* relift: cmp eax, dword ptr [ecx] -> jl 0x5f32b */
-  display_assert((char *)0x0025e528, (char *)0x0025e0ac, 1518, 1);
-  system_exit(-1);
-  tag_block_get_element((void *)(uintptr_t)local_c, *(int *)(eax), 16);
-  tag_block_get_element((void *)(uintptr_t)local_c, 0, 16);
-  /* relift: cmp edi, dword ptr [eax + 4] -> jne 0x5f2ba */
+  sc = (char *)scenario;
+  bsp = tag_block_get_element(sc + 0xb0, 0, 0x60);
+  if (surface_index < 0 || surface_index >= *(int *)(bsp + 0x3c)) {
+    display_assert("surface_index>=0 && surface_index<bsp->surfaces.count",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x5d8, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
-  (void)local_10;
-  (void)local_c;
+  surfaces_block = tag_block_get_element(bsp + 0x3c, 0, 0xc);
+  surface = tag_block_get_element(surfaces_block, surface_index, 0x18);
+  surfaces_count_ptr = bsp + 0x3c;
+  edges_block = bsp + 0x48;
+  vertices_block = bsp + 0x54;
+  sector_map = *(char **)(sc + 0x1e8);
+
+  edge_link = *(int *)(surface + 4);
+  out_count = 0;
+
+  for (;;) {
+    char *edge_desc;
+    char *out;
+    int adj_surface;
+    float *vert_a;
+    float *vert_b;
+
+    edge_desc = tag_block_get_element(edges_block, edge_link, 0x18);
+    matched = (char)(surface_index == *(int *)(edge_desc + 0x14));
+    adj_slot = matched ? 0 : 1;
+
+    out = out_edges + (int)out_count * 0x20;
+    adj_surface = *(int *)(edge_desc + adj_slot * 4 + 0x10);
+    *(int *)out = adj_surface;
+
+    if (adj_surface != -1) {
+      if (adj_surface < 0 || adj_surface >= *(int *)surfaces_count_ptr) {
+        display_assert(
+            "adjacent_surface_index>=0 && "
+            "adjacent_surface_index<bsp->surfaces.count",
+            "c:\\halo\\SOURCE\\ai\\path.c", 0x5ee, 1);
+        system_exit(-1);
+      }
+      *(char *)(out + 4) = sector_map[adj_surface];
+    } else {
+      *(char *)(out + 4) = 0;
+    }
+
+    vert_a = tag_block_get_element(vertices_block, *(int *)edge_desc, 0x10);
+    vert_b = tag_block_get_element(vertices_block, *(int *)(edge_desc + 4), 0x10);
+    *(float *)(out + 8) = vert_a[0];
+    *(float *)(out + 0xc) = vert_a[1];
+    *(float *)(out + 0x10) = vert_a[2];
+    *(float *)(out + 0x14) = vert_b[0] - vert_a[0];
+    *(float *)(out + 0x18) = vert_b[1] - vert_a[1];
+    *(float *)(out + 0x1c) = vert_b[2] - vert_a[2];
+
+    out_count++;
+    if (out_count >= 0x40)
+      break;
+
+    edge_link = *(int *)(edge_desc + adj_slot * 4 + 8);
+    if (edge_link == *(int *)(surface + 4))
+      break;
+  }
+
+  return out_count;
 }
 
-/* 0x5f3c0 */
-void closest_point_to_attractor(void)
+/* 0x5f3c0 — closest point on a segment to a reference point. */
+void closest_point_to_attractor(float *segment_start, float *segment_end,
+                                float *reference, float *out_point)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  float delta[3];
+  float to_ref[3];
+  float denom;
+  float t;
+
+  delta[0] = segment_end[0] - segment_start[0];
+  delta[1] = segment_end[1] - segment_start[1];
+  delta[2] = segment_end[2] - segment_start[2];
+
+  to_ref[0] = reference[0] - segment_start[0];
+  to_ref[1] = reference[1] - segment_start[1];
+  to_ref[2] = reference[2] - segment_start[2];
+
+  denom = delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2];
+  t = (to_ref[0] * delta[0] + to_ref[1] * delta[1] + to_ref[2] * delta[2]) /
+      denom;
+
+  if (t >= *(float *)0x2533c0 && t <= *(float *)0x2533c8) {
+    out_point[0] = segment_start[0] + t * delta[0];
+    out_point[1] = segment_start[1] + t * delta[1];
+    out_point[2] = segment_start[2] + t * delta[2];
+    return;
+  }
+
+  out_point[0] = segment_end[0];
+  out_point[1] = segment_end[1];
+  out_point[2] = segment_end[2];
 }
 
-/* 0x5f490 */
-void path_attractor_weight(void)
+/* 0x5f490 — compute path attractor weight from a step position. */
+float path_attractor_weight(void *path_state, float *node_pos, float *step_pos,
+                            float *out_dist)
 {
-  int esi = 0;
+  char *path;
+  float closest[3];
+  float delta[3];
+  float dist_sq;
+  float dist;
+  float weight;
 
-  closest_point_to_attractor();
-  /* test esi, esi -> jne 0x5f53b */
-  display_assert((char *)0x0025e5c4, (char *)0x0025e0ac, 1631, 1);
-  system_exit(-1);
+  path = (char *)path_state;
+  closest_point_to_attractor(step_pos, (float *)(path + 0x28), node_pos,
+                             closest);
 
-  (void)esi;
+  delta[0] = closest[0] - *(float *)(path + 0x28);
+  delta[1] = closest[1] - *(float *)(path + 0x2c);
+  delta[2] = closest[2] - *(float *)(path + 0x30);
+  dist_sq = delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2];
+
+  weight = 0.0f;
+  dist = 3.4028235e38f;
+  if (dist_sq < *(float *)(path + 0x38) * *(float *)(path + 0x38)) {
+    dist = sqrtf(dist_sq);
+    weight = (*(float *)0x2533c8 - dist / *(float *)(path + 0x38)) *
+             *(float *)(path + 0x3c);
+  }
+
+  if (out_dist == 0) {
+    display_assert("out_dist",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x65f, 1);
+    system_exit(-1);
+  }
+  *out_dist = dist;
+  return weight;
 }
 
 /* 0x5f550 */
@@ -1160,7 +1262,7 @@ char path_state_estimated_distance(void *path_state, void *fp_element, int surfa
   system_exit(-1);
   /* cmp (int16_t)ebx, -1 -> je 0x5f706 */
   path_get_node((char *)(uintptr_t)path_state, eax);
-  closest_point_to_attractor();
+  /* relift: closest_point_to_attractor(...) */
   /* test (char)eax, 0x41 -> jne 0x5f63c */
   /* relift: relift: fld dword ptr [0x2533c0] */
   /* test eax, eax -> je 0x5f647 */
@@ -1200,6 +1302,7 @@ char FUN_0005f740(unsigned int *path_buf)
   char process_edge;
   float step_cost;
   float dist_sq;
+  float edge_len;
   float new_cost;
   float focus_dist_sq;
   float step_pos[3];
@@ -1218,7 +1321,7 @@ char FUN_0005f740(unsigned int *path_buf)
       break;
 
     node = path_get_node(path, node_index);
-    scenario = (char *)path + *(int *)(path + 0x64);
+    scenario = *(char **)(path + 0x64);
     tag_block = tag_block_get_element(scenario + 0xb0, 0, 0x60);
     surface_index = *(int *)(node + 8);
     if (surface_index < 0 ||
@@ -1240,19 +1343,20 @@ char FUN_0005f740(unsigned int *path_buf)
         goto mark_unreachable;
     }
 
-    build_path_edges_for_surface();
-    edge_count = 0;
+    edge_count =
+        build_path_edges_for_surface(scenario, surface_index, edges);
     if (edge_count <= 0)
       continue;
 
-    edge = edges + 0x28;
+    edge = edges + 0x18;
     edge_remaining = edge_count;
     while (edge_remaining-- > 0) {
       process_edge = 1;
       if (*(char *)(path + 4) == 0 && *(char *)(edge - 0x14) < 0) {
         surface_table = tag_block_get_element(scenario + 0xb0, 0, 0x60);
         tag_block = tag_block_get_element((char *)surface_table + 0x3c, 0, 0xc);
-        tag_block = tag_block_get_element(tag_block, *(int *)(edge - 0x18), 0x10);
+        tag_block =
+            tag_block_get_element(tag_block, *(int *)(edge - 0x18), 0x10);
         if ((*(char *)((char *)tag_block + 8) & 8) != 0) {
           if (breakable_surfaces_get_bsp_surface_data() == 0)
             process_edge = 0;
@@ -1279,13 +1383,19 @@ char FUN_0005f740(unsigned int *path_buf)
                     (step_pos[1] - *(float *)(node + 0x10)) +
                 (step_pos[2] - *(float *)(node + 0x14)) *
                     (step_pos[2] - *(float *)(node + 0x14));
-      new_cost = sqrtf(dist_sq) + *(float *)(node + 0x20);
+      edge_len = sqrtf(dist_sq);
+      new_cost = edge_len + *(float *)(node + 0x20);
       heap_key = new_cost + *(float *)(node + 0x24);
 
       if (*(char *)(path + 0x24) != 0) {
-        path_attractor_weight();
-        if (new_cost + *(float *)0x2533c8 < *(float *)(node + 0x1c))
-          step_pos[0] = *(float *)(node + 0x1c);
+        float attractor_dist;
+        float weight = path_attractor_weight(path, (float *)(node + 0xc),
+                                             step_pos, &attractor_dist);
+        float adjusted = (weight + *(float *)0x2533c8) * edge_len;
+
+        if (adjusted >= attractor_dist)
+          attractor_dist = *(float *)(node + 0x1c);
+        heap_key = adjusted + *(float *)(node + 0x24);
       }
 
       if (*(char *)(path + 0x4c) != 0) {

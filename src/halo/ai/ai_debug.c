@@ -1202,7 +1202,7 @@ void FUN_0004b320(void)
   FUN_00189cb0(0, (void *)(uintptr_t)eax, (void *)(uintptr_t)eax, 0);
   /* test ebx, ebx -> je 0x4b667 */
   /* test (char)eax, (char)eax -> je 0x4b667 */
-  path_attractor_weight();
+  /* relift: path_attractor_weight(...) */
   /* test eax, eax -> je 0x4b61f */
   csprintf((char *)0x005ab100, (char *)0x0025afc4);
   FUN_00189cb0(0, (void *)(uintptr_t)eax, (void *)(uintptr_t)eax, 0);
