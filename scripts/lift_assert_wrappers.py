@@ -1185,7 +1185,7 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
                             break
                     if ok:
                         if ret1 and is_void(sigm):
-                            sigm = sigm.replace("void ", "int ", 1)
+                            sigm = sigm.replace("void ", "char ", 1)
                         out = (
                             f"{sigm}\n{{\n"
                             f"  if ({psm[ai]} == NULL) {{\n"

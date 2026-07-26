@@ -798,7 +798,7 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
             return (
                 f"{sig}\n{{\n"
                 f"  void *obj = {f1}({ps[0]}, {mid[1][1]});\n"
-                f"  {f2}(*(void **)obj, {mid[6][1]});\n"
+                f"  {f2}({mid[6][1]}, *(int *)obj);\n"
                 f"  {ret}1;\n"
                 f"}}\n"
             )
@@ -867,7 +867,7 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
             return (
                 f"{sig}\n{{\n"
                 f"  void *obj = {f1}({ps[0]}, {mid[2][1]});\n"
-                f"  void *tag = {f2}(*(void **)obj, {mid[7][1]});\n"
+                f"  void *tag = {f2}({mid[7][1]}, *(int *)obj);\n"
                 f"  if (*(uint16_t *)((char *)tag + 0x{o:x}) == (uint16_t){cm.group(2)})\n"
                 f"    {f3}();\n"
                 f"}}\n"
@@ -912,6 +912,105 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
                 f"  *(uint16_t *)((char *)pe + {stores['word']}) = (uint16_t){ps[3]};\n"
                 f"  *(uint8_t *)((char *)pe + {b_off}) = (uint8_t){b_imm};\n"
                 f"  *(uint32_t *)((char *)pe + 0x{off_ret.group(1)}) = (uint32_t){fn}();\n"
+                f"}}\n"
+            )
+
+
+    # HS: ebx=substr (reg), push callback; call F — emit cdecl F(callback, substr)
+    if (
+        len(mid) == 6
+        and mid[0] == ("push", "ebx")
+        and mid[1] == ("mov", "ebx, dword ptr [ebp + 8]")
+        and mid[2][0] == "push"
+        and re.match(r"0x[0-9a-fA-F]+$", mid[2][1])
+        and mid[3][0] == "call"
+        and mid[4][0] == "add"
+        and mid[5] == ("pop", "ebx")
+    ):
+        fn = callee(mid[3][1])
+        cb = name_by.get(int(mid[2][1], 16))
+        if fn and cb and ps:
+            return (
+                f"{sig}\n{{\n"
+                f"  {fn}((void *){cb}, {ps[0]});\n"
+                f"}}\n"
+            )
+
+    # player_control_get_zoom_level
+    if (
+        len(mid) >= 8
+        and mid[0] == ("mov", "ecx, dword ptr [ebp + 8]")
+        and mid[1] == ("or", "eax, 0xffffffff")
+        and mid[2] == ("cmp", "cx, -1")
+        and mid[3][0] == "je"
+        and mid[4] == ("push", "ecx")
+        and mid[5][0] == "call"
+        and mid[6][0] == "mov"
+        and "ax, word ptr [eax +" in mid[6][1]
+        and mid[7][0] == "add"
+    ):
+        fn = callee(mid[5][1])
+        off = re.search(r"\[eax \+ (0x[0-9a-f]+)\]", mid[6][1])
+        if fn and off and ps:
+            return (
+                f"short {name}(short {ps[0]})\n{{\n"
+                f"  if ((short){ps[0]} == (short)-1)\n"
+                f"    return -1;\n"
+                f"  return *(short *)((char *){fn}({ps[0]}) + {off.group(1)});\n"
+                f"}}\n"
+            )
+
+    # animation_get_root_matrix
+    if (
+        len(body) >= 12
+        and body[0] == ("push", "ebp")
+        and body[1] == ("mov", "ebp, esp")
+        and body[2][0] == "movsx"
+        and "word ptr [ebp + 0xc]" in body[2][1]
+        and body[3] == ("mov", "ecx, dword ptr [ebp + 8]")
+        and body[4][0] == "push"
+        and body[5] == ("push", "eax")
+        and body[6][0] == "add"
+        and "ecx," in body[6][1]
+        and body[7] == ("push", "ecx")
+        and body[8][0] == "call"
+        and body[9][0] == "add"
+        and body[10][0] == "add"
+        and body[10][1].startswith("eax,")
+        and body[11] == ("pop", "ebp")
+    ):
+        fn = callee(body[8][1])
+        base_off = body[6][1].split(",")[-1].strip()
+        addend = body[10][1].split(",")[-1].strip()
+        stride = body[4][1]
+        if fn:
+            a0 = ps[0] if ps else "a0"
+            a1 = ps[1] if len(ps) > 1 else "a1"
+            return (
+                f"void *{name}(void *{a0}, short {a1})\n{{\n"
+                f"  return (char *){fn}((char *){a0} + {base_off}, {a1}, {stride}) + {addend};\n"
+                f"}}\n"
+            )
+
+    # stdcall SetVertexData4f wrapper (progress_bar FUN_000e1f20)
+    if (
+        len(body) == 16
+        and body[0] == ("push", "ebp")
+        and body[1] == ("mov", "ebp, esp")
+        and body[2] == ("mov", "eax, dword ptr [ebp + 0x1c]")
+        and body[12][0] == "call"
+        and body[13] == ("xor", "eax, eax")
+        and body[14] == ("pop", "ebp")
+        and body[15][0] == "ret"
+    ):
+        fn = callee(body[12][1])
+        if fn:
+            return (
+                f"int __stdcall {name}(int unused, unsigned int reg, float a, float b, float c, float d)\n"
+                f"{{\n"
+                f"  (void)unused;\n"
+                f"  {fn}(reg, a, b, c, d);\n"
+                f"  return 0;\n"
                 f"}}\n"
             )
 
