@@ -1783,8 +1783,8 @@ found_corrupt:
   }
 }
 
-/* HUD meter/cursor sprite draw with rotation.  `element` (@<ecx>) is a meter
- * widget-collection element; `scale` (@<eax>) holds the two screen-scale
+/* HUD meter/cursor sprite draw with rotation.  `element` () is a meter
+ * widget-collection element; `scale` () holds the two screen-scale
  * factors (scale[0]=x, scale[1]=y).  Builds a four-vertex rotated quad from the
  * caller's icon_rect (UVs) and `corners` offsets, rotated by `angle`, then
  * resolves up to three icon bitmaps (element+0x70/0x80/0x90), fills a sprite

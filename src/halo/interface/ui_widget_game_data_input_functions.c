@@ -9378,7 +9378,7 @@ void get_editable_playlist_profile_display_name(void *widget)
 
 
 __attribute__((naked, noinline))
-void FUN_000f3690(int *out_handles /* @<eax> */, void *widget /* @<ecx> */)
+void FUN_000f3690(int *out_handles /*  */, void *widget /*  */)
 {
   __asm__ volatile(
       "movl 0x38(%%ecx), %%edx\n\t"

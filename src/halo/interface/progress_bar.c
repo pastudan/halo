@@ -2045,69 +2045,27 @@ void progress_bar_eachframe(void)
 #endif
 
 
-/* FUN_000e33a0 (0xe33a0) — XBE naked draft (batch 176). */
-#if defined(__clang__)
-static data_t * (*const be33a0_c1194d0)(char *name, int16_t maximum_count, int16_t size) = data_new;
-static void (*const be33a0_c119b20)(data_t *data) = data_delete_all;
-
-__attribute__((naked, noinline))
+/* FUN_000e33a0 (0xe33a0) — readable C lift. */
 void FUN_000e33a0(void)
 {
-  __asm__ volatile(
-      "pushl $0x124\n\t"
-      "pushl $0x20\n\t"
-      "pushl $0x282db4\n\t"
-      "call *%[c1194d0]\n\t"
-      "pushl %%eax\n\t"
-      "movl %%eax, 0x46c408\n\t"
-      "movb $1, 0x46c404\n\t"
-      "call *%[c119b20]\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl $0, 0x46c414\n\t"
-      "movl %%eax, 0x46c40c\n\t"
-      "movl %%eax, 0x46c410\n\t"
-      "ret\n\t"
-      :
-      : [c1194d0] "m"(be33a0_c1194d0), [c119b20] "m"(be33a0_c119b20)
-      : "memory");
+  void *d = data_new((void *)0x282db4, 0x20, 0x124);
+  *(void **)0x46c408 = d;
+  *(unsigned char *)0x46c404 = 1;
+  data_delete_all(d);
+  *(int *)0x46c414 = 0;
+  *(int *)0x46c40c = -1;
+  *(int *)0x46c410 = -1;
 }
-#else
-#error "FUN_000e33a0: clang naked draft required"
-#endif
 
-
-/* FUN_000e33e0 (0xe33e0) — XBE naked draft (batch 164). */
-#if defined(__clang__)
-static void (*const be33e0_c119550)(data_t *data) = data_make_invalid;
-static void (*const be33e0_c119520)(data_t *data) = data_dispose;
-
-__attribute__((naked, noinline))
+/* FUN_000e33e0 (0xe33e0) — readable C lift. */
 void FUN_000e33e0(void)
 {
-  __asm__ volatile(
-      "movl 0x46c408, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000e33e0_2\n\t"
-      "movb 0x24(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_000e33e0_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119550]\n\t"
-      "movl 0x46c408, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000e33e0_1:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119520]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000e33e0_2:\n\t"
-      "movb $0, 0x46c404\n\t"
-      "ret\n\t"
-      :
-      : [c119550] "m"(be33e0_c119550), [c119520] "m"(be33e0_c119520)
-      : "memory");
+  void *d = *(void **)0x46c408;
+  if (d) {
+    if (*((unsigned char *)d + 0x24))
+      data_make_invalid(d);
+    data_dispose(*(void **)0x46c408);
+  }
+  *(unsigned char *)0x46c404 = 0;
 }
-#else
-#error "FUN_000e33e0: clang naked draft required"
-#endif
 

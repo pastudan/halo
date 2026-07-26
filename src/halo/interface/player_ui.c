@@ -343,32 +343,14 @@ void player_ui_autojoin_players_to_next_multiplayer_game(void)
   *(char *)0x46bfbc = *(char *)0x46bfc3;
 }
 
-/* player_ui_clear_multiplayer_variant (0xe0960) — XBE naked draft (batch 203). */
-#if defined(__clang__)
-static void (*const be0960_cfff70)(short param) = set_game_connection;
-static void (*const be0960_ca81c0)(void) = game_engine_dispose;
-static void (*const be0960_ca7490)(game_variant_t *variant) = game_set_game_variant;
-
-__attribute__((naked, noinline))
+/* player_ui_clear_multiplayer_variant (0xe0960) — readable C lift. */
 void player_ui_clear_multiplayer_variant(void)
 {
-  __asm__ volatile(
-      "pushl $0\n\t"
-      "movb $0, 0x46c034\n\t"
-      "call *%[cfff70]\n\t"
-      "call *%[ca81c0]\n\t"
-      "pushl $0\n\t"
-      "call *%[ca7490]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [cfff70] "m"(be0960_cfff70), [ca81c0] "m"(be0960_ca81c0), [ca7490] "m"(be0960_ca7490)
-      : "memory");
+  *(unsigned char *)0x46c034 = 0;
+  set_game_connection(0);
+  game_engine_dispose();
+  game_set_game_variant(0);
 }
-#else
-#error "player_ui_clear_multiplayer_variant: clang naked draft required"
-#endif
-
 
 /* player_ui_get_active_player_profile (0xe0980) — XBE naked draft (batch 162). */
 #if defined(__clang__)
@@ -1245,64 +1227,14 @@ int player0_look_pitch_is_inverted(void)
   return 0;
 }
 
-/* FUN_000e1060 (0xe1060) — XBE naked draft (batch 156). */
-#if defined(__clang__)
-static void (*const be1060_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be1060_exitfn)(int) = system_exit;
-static void *(*const be1060_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* FUN_000e1060 (0xe1060) — readable C lift. */
 int FUN_000e1060(void)
 {
-  __asm__ volatile(
-      "movb 0x46bf09, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000e1060_1\n\t"
-      "cmpb $1, %%al\n\t"
-      "je .LFUN_000e1060_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1060_1:\n\t"
-      "movl $1, %%eax\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000e1060_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x365\n\t"
-      "pushl $0x282724\n\t"
-      "pushl $0x2829b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000e1060_2:\n\t"
-      "pushl $0x30\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw $0xffff, 0x18(%%esi)\n\t"
-      "movb $0, 0x28(%%esi)\n\t"
-      "movb $0, 0x29(%%esi)\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be1060_assert), [exitfn] "m"(be1060_exitfn), [memset] "m"(be1060_memset)
-      : "memory");
+  unsigned char v = *(unsigned char *)0x46bf09;
+  if (v == 0 || v == 1)
+    return 1;
+  return 0;
 }
-#else
-#error "FUN_000e1060: clang naked draft required"
-#endif
-
 
 /* FUN_000e10c0 (0xe10c0) — XBE naked draft (batch 118). */
 #if defined(__clang__)

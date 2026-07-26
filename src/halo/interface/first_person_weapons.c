@@ -12,47 +12,19 @@ void FUN_000dc750(void)
   }
 }
 
-/* FUN_000dc7a0 (0xdc7a0) — XBE naked draft (batch 162). */
-#if defined(__clang__)
-static void *(*const bdc7a0_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* FUN_000dc7a0 (0xdc7a0) — readable C lift. */
 void FUN_000dc7a0(void)
 {
-  __asm__ volatile(
-      "movl 0x46bea8, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl $4, %%ebx\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      ".LFUN_000dc7a0_1:\n\t"
-      "pushl $0x1ea0\n\t"
-      "addl %%esi, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x46bea8, %%eax\n\t"
-      "movl %%edi, 0x4(%%esi,%%eax,1)\n\t"
-      "movl %%edi, 0x1e98(%%esi,%%eax,1)\n\t"
-      "movw %%di, 0x1e9c(%%esi,%%eax,1)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $0x1ea0, %%esi\n\t"
-      "decl %%ebx\n\t"
-      "jne .LFUN_000dc7a0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(bdc7a0_memset)
-      : "memory");
+  int i;
+  for (i = 0; i < 4; i++) {
+    int off = i * 0x1ea0;
+    char *base = *(char **)0x46bea8;
+    csmemset(base + off, 0, 0x1ea0);
+    *(int *)(base + off + 4) = -1;
+    *(int *)(base + off + 0x1e98) = -1;
+    *(int16_t *)(base + off + 0x1e9c) = -1;
+  }
 }
-#else
-#error "FUN_000dc7a0: clang naked draft required"
-#endif
-
 
 /* Map a first-person weapon state to an animation graph index (0xdc8c0).
  * Pure lookup table: 24 states (0..23) map to animation indices; any
@@ -961,7 +933,7 @@ static int (*const bdcdc0_cba3c0)(int16_t local_player_index) = local_player_get
 static void *(*const bdcdc0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 
 __attribute__((naked, noinline))
-int16_t FUN_000dcdc0(int object_handle /* @<edi> */)
+int16_t FUN_000dcdc0(int object_handle /*  */)
 {
   __asm__ volatile(
       "pushl %%esi\n\t"
@@ -1545,7 +1517,7 @@ static void *(*const fpwu_tag)(int, int) = tag_get;
 static void (*const fpwu_ftol)(void) = FUN_001d9068;
 
 __attribute__((naked, noinline))
-void first_person_weapon_update(int16_t local_player_index@<ax>)
+void first_person_weapon_update(int16_t local_player_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2474,7 +2446,7 @@ static void *(*const bde3f0_get)(int, int) = object_get_and_verify_type;
 static void *(*const bde3f0_tag)(int, int) = tag_get;
 
 __attribute__((naked, noinline))
-void FUN_000de3f0(int local_player_index@<ebx>)
+void FUN_000de3f0(int local_player_index)
 {
   __asm__ volatile(
       "testw %%bx, %%bx\n\t"

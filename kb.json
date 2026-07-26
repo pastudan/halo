@@ -18270,7 +18270,7 @@
         {
           "addr": "0xe0960",
           "decl": "void player_ui_clear_multiplayer_variant(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0980",
@@ -18370,7 +18370,7 @@
         {
           "addr": "0xe1060",
           "decl": "int FUN_000e1060(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe10c0",
@@ -20351,12 +20351,12 @@
         {
           "addr": "0xe33a0",
           "decl": "void FUN_000e33a0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe33e0",
           "decl": "void FUN_000e33e0(void);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "progress_bar.obj",

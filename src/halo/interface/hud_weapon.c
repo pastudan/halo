@@ -65,7 +65,7 @@ void FUN_000d8b90(char show)
 
 /* FUN_000d8bc0 (0xd8bc0) — per-local-player weapon-HUD state accessor.
  * Returns &globals[local_player_index] at stride 0x28.  Index in ESI. */
-void *FUN_000d8bc0(int16_t local_player_index /* @<esi> */)
+void *FUN_000d8bc0(int16_t local_player_index /*  */)
 {
   if (local_player_index >= 0 && local_player_index < 4) {
     if (weapon_hud_globals == 0) {
@@ -83,7 +83,7 @@ void *FUN_000d8bc0(int16_t local_player_index /* @<esi> */)
 
 /* FUN_000d8c30 (0xd8c30) — per-local-player accessor into a second globals
  * region: &globals[local_player_index+2] at stride 0x50.  Index in ESI. */
-void *FUN_000d8c30(int16_t local_player_index /* @<esi> */)
+void *FUN_000d8c30(int16_t local_player_index /*  */)
 {
   if (local_player_index >= 0 && local_player_index < 4) {
     if (weapon_hud_globals == 0) {
@@ -103,8 +103,8 @@ void *FUN_000d8c30(int16_t local_player_index /* @<esi> */)
  * player's HUD.  EAX = current object handle (gate: skip when NONE),
  * ESI = local player index.  Looks up the player record and re-verifies the
  * unit object it references (type mask 3). */
-void FUN_000d8ca0(int object_handle /* @<eax> */,
-                  int16_t local_player_index /* @<esi> */)
+void FUN_000d8ca0(int object_handle /*  */,
+                  int16_t local_player_index /*  */)
 {
   int player_index;
   void *player_datum;
@@ -259,13 +259,13 @@ LAB_corrupt:
 }
 
 /* FUN_000d8ff0 (0xd8ff0) — draw the full weapon-HUD crosshair hierarchy for one
- * weapon.  @<eax> = weapon-HUD-hierarchy tag index (wphi), @<ecx> = player datum
+ * weapon.   = weapon-HUD-hierarchy tag index (wphi),  = player datum
  * pointer, stack = referencing weapon object handle and a per-weapon state buffer
  * (buf).  Walks the wphi child chain (up to 16 levels); for each crosshair block
  * and each overlay element it evaluates the state selector, resolves the bitmap
  * frame, and draws it.  Guarded by the return-address canary + 0x200-byte
  * stack-corruption sentinel idiom. */
-void FUN_000d8ff0(int whud_index /* @<eax> */, int *player /* @<ecx> */,
+void FUN_000d8ff0(int whud_index /*  */, int *player /*  */,
                   int weapon_handle, int buf)
 {
   int canary;

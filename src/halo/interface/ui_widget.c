@@ -2367,7 +2367,7 @@ static void (*const be4800_assert)(const char *, const char *, int, bool) = disp
 static void (*const be4800_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void ui_widget_link_child(void *parent, void *child@<ebx>)
+void ui_widget_link_child(void *parent, void *child)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2457,7 +2457,7 @@ float widget_instance_get_opacity_product(void *widget)
 static void *(*const be4980_tag)(int, int) = tag_get;
 
 __attribute__((naked, noinline))
-char widget_instance_is_visible_in_parent_chain(void *widget@<eax>)
+char widget_instance_is_visible_in_parent_chain(void *widget)
 {
   __asm__ volatile(
       "pushl %%esi\n\t"
@@ -2531,7 +2531,7 @@ char widget_instance_is_visible_in_parent_chain(void *widget@<eax>)
 
 
 __attribute__((naked, noinline))
-char widget_instance_parent_allows_focus(void *widget@<eax>)
+char widget_instance_parent_allows_focus(void *widget)
 {
   __asm__ volatile(
       "movl 0x30(%%eax), %%edx\n\t"
@@ -2581,7 +2581,7 @@ static size_t (*const be4a80_c1db11e)(const wchar_t *str) = _wcslen;
 static int (*const be4a80_c1dc34b)(const wchar_t *s1, const wchar_t *s2, size_t count) = __wcsnicmp;
 
 __attribute__((naked, noinline))
-int16_t ui_widget_find_localized_string_index(wchar_t *needle@<ebx>)
+int16_t ui_widget_find_localized_string_index(wchar_t *needle)
 {
   __asm__ volatile(
       "pushl %%esi\n\t"
@@ -2631,7 +2631,7 @@ static void (*const be4c70_c19cdb0)(short *out_rect, void *text, short *out_boun
 static void (*const be4c70_c184060)(void *screen_pos, short *bounds, const void *color, int flags, unsigned short *text) = rasterizer_draw_string;
 
 __attribute__((naked, noinline))
-void FUN_000e4c70(void *draw_state@<edi>, void *cursor@<ebx>, int string_index)
+void FUN_000e4c70(void *draw_state, void *cursor, int string_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2694,7 +2694,7 @@ static wchar_t * (*const be4ce0_c1db134)(const wchar_t *s, wchar_t c) = _wcschr;
 static int16_t (*const be4ce0_ce4a80)(wchar_t *needle) = ui_widget_find_localized_string_index;
 
 __attribute__((naked, noinline))
-char ui_widget_match_localized_substring(wchar_t *text@<eax>)
+char ui_widget_match_localized_substring(wchar_t *text)
 {
   __asm__ volatile(
       "testl %%eax, %%eax\n\t"
@@ -2751,7 +2751,7 @@ static void *(*const be4d40_memset)(void *, int, unsigned int) = csmemset;
 static void (*const be4d40_cce6c0)(short local_player_index, void *preferences_out) = input_abstraction_get_local_player_preferences;
 
 __attribute__((naked, noinline))
-char ui_widget_player_prefers_metric_units(int16_t player_index@<ax>)
+char ui_widget_player_prefers_metric_units(int16_t player_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2804,95 +2804,23 @@ char ui_widget_player_prefers_metric_units(int16_t player_index@<ax>)
 #endif
 
 
-/* get_ui_rgb_white (0xe54e0) — XBE naked draft (batch 164). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* get_ui_rgb_white (0xe54e0) — readable C lift. */
 void get_ui_rgb_white(float *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0x2ee708, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl 0x31e148, %%ecx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl 0x31e14c, %%edx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl 0x31e150, %%eax\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  out[0] = *(float *)0x31e148;
+  out[1] = *(float *)0x31e14c;
+  out[2] = *(float *)0x31e150;
 }
-#else
-#error "get_ui_rgb_white: clang naked draft required"
-#endif
 
-
-/* get_ui_argb_white (0xe5530) — XBE naked draft (batch 164). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* get_ui_argb_white (0xe5530) — readable C lift. */
 void get_ui_argb_white(float *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x2ee6c4, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl 0x31e148, %%edx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "movl 0x31e150, %%edx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl 0x31e14c, %%eax\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%edx)\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0xc(%%edx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float *src = *(float **)0x2ee6c4;
+  out[0] = src[0];
+  out[1] = *(float *)0x31e148;
+  out[2] = *(float *)0x31e14c;
+  out[3] = *(float *)0x31e150;
 }
-#else
-#error "get_ui_argb_white: clang naked draft required"
-#endif
-
 
 void __stdcall ui_widget_filesystem_check_thread_proc(int unused)
 {
@@ -4902,7 +4830,7 @@ static void (*const be4ad0_ftol)(void) = FUN_001d9068;
 static void (*const be4ad0_cd3200)(int bitmap_data, short screen_index, short *screen_pos, int uv_rect, float scale_value, float rotation, int color, char use_bitmap_size) = FUN_000d3200;
 
 __attribute__((naked, noinline))
-void FUN_000e4ad0(void *icon_state /* @<esi> */, int16_t *cursor /* @<ebx> */, int string_index)
+void FUN_000e4ad0(void *icon_state /*  */, int16_t *cursor /*  */, int string_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -5399,7 +5327,7 @@ static void (*const be5b10_ce4800)(void *parent, void *child) = ui_widget_link_c
 static void (*const be5b10_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_000e5b10(void *widget /* @<ebx> */, void *draw_state /* @<esi> */)
+void FUN_000e5b10(void *widget /*  */, void *draw_state /*  */)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -6018,7 +5946,7 @@ static void (*const be6140_ce5de0)(int16_t *rect, int param_2, int param_3, int 
 static void (*const be6140_c184060)(void *screen_pos, short *bounds, const void *color, int flags, unsigned short *text) = rasterizer_draw_string;
 
 __attribute__((naked, noinline))
-void FUN_000e6140(void *widget /* @<eax> */, void *draw_state /* @<ecx> */)
+void FUN_000e6140(void *widget /*  */, void *draw_state /*  */)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -6337,7 +6265,7 @@ static void (*const be6450_c8f390)(unsigned __int16 a1, const char *a2, ...) = e
 static void (*const be6450_c11f620)(void *pool, void *block) = stack_memory_pool_deallocate;
 
 __attribute__((naked, noinline))
-void FUN_000e6450(void *draw_state, void *widget /* @<esi> */, int param_3, int param_4)
+void FUN_000e6450(void *draw_state, void *widget /*  */, int param_3, int param_4)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -11871,7 +11799,7 @@ static void (*const be46f0_assert)(const char *, const char *, int, bool) = disp
 static void (*const be46f0_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void ui_widget_pending_load_push_internal(int *head@<ebx>, void *record@<edi>)
+void ui_widget_pending_load_push_internal(int *head, void *record)
 {
   __asm__ volatile(
       "movl 0x31e04c, %%eax\n\t"
@@ -11936,7 +11864,7 @@ static void (*const be4770_exitfn)(int) = system_exit;
 static void (*const be4770_c11f620)(void *pool, void *block) = stack_memory_pool_deallocate;
 
 __attribute__((naked, noinline))
-void ui_widget_pending_load_pop(int *head@<edi>, void *record@<esi>)
+void ui_widget_pending_load_pop(int *head, void *record)
 {
   __asm__ volatile(
       "testl %%edi, %%edi\n\t"
@@ -11986,7 +11914,7 @@ static void (*const be5090_ce4f20)(void *root_widget, void *target_widget) = ui_
 static char (*const be5090_ce4980)(void *widget) = widget_instance_is_visible_in_parent_chain;
 
 __attribute__((naked, noinline))
-void ui_widget_pending_load_apply(int a6@<eax>, int widget, int16_t a7)
+void ui_widget_pending_load_apply(int a6, int widget, int16_t a7)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -12089,7 +12017,7 @@ void ui_widget_pending_load_apply(int a6@<eax>, int widget, int16_t a7)
 
 
 __attribute__((naked, noinline))
-void ui_widget_update_list_selection(void *widget@<ecx>, void *definition)
+void ui_widget_update_list_selection(void *widget, void *definition)
 {
   __asm__ volatile(
       "movl 0x34(%%ecx), %%eax\n\t"
@@ -12157,7 +12085,7 @@ void ui_widget_update_list_selection(void *widget@<ecx>, void *definition)
 static void *(*const be53e0_tag)(int, int) = tag_get;
 
 __attribute__((naked, noinline))
-void ui_widget_list_prev(void *widget@<edi>)
+void ui_widget_list_prev(void *widget)
 {
   __asm__ volatile(
       "movl 0x38(%%edi), %%eax\n\t"
@@ -12218,7 +12146,7 @@ void ui_widget_list_prev(void *widget@<edi>)
 static void *(*const be5440_tag)(int, int) = tag_get;
 
 __attribute__((naked, noinline))
-void ui_widget_list_next(void *widget@<edi>)
+void ui_widget_list_next(void *widget)
 {
   __asm__ volatile(
       "movl 0x38(%%edi), %%eax\n\t"
@@ -12311,7 +12239,7 @@ static void * (*const be68e0_ce84e0)(const char *name, int tag_index, int is_chi
 static void (*const be68e0_ce5090)(int a6, int widget, int16_t a7) = ui_widget_pending_load_apply;
 
 __attribute__((naked, noinline))
-void ui_widget_close_and_reload(void *widget@<eax>)
+void ui_widget_close_and_reload(void *widget)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -13356,7 +13284,7 @@ static void (*const be7b10_cb5c70)(bool) = game_time_set_paused;
 static void (*const be7b10_c1cb8a0)(int enabled) = sound_set_music_enabled;
 
 __attribute__((naked, noinline))
-void ui_widget_load_from_tag_internal(void *tag_data@<eax>, void *widget@<edx>, void *parent@<ecx>, int tag_index, int widget_stack, int widget_stack_base)
+void ui_widget_load_from_tag_internal(void *tag_data, void *widget, void *parent, int tag_index, int widget_stack, int widget_stack_base)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

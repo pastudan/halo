@@ -88,10 +88,10 @@ void FUN_000d3fe0(int param_1, short *param_2, int param_3,
         }
         FUN_000d1f40((short)*(int *)0x506548, (unsigned short *)param_2,
                      (short *)param_3, 0, draw_flag, 0, (short *)local_18);
-        /* d1890: @<eax>=local_4c (out corners), @<edi>=puVar3 (in rect),
-         * @<bl>=cVar5 (align flag); 2 stack args: bitmap, screen index. */
+        /* d1890: =local_4c (out corners), =puVar3 (in rect),
+         * =cVar5 (align flag); 2 stack args: bitmap, screen index. */
         FUN_000d1890((float *)local_4c, puVar3, cVar5, (short *)local_c, *param_2);
-        /* d27a0: @<ecx>=local_1c (element ptr), @<eax>=scale[2];
+        /* d27a0: =local_1c (element ptr), =scale[2];
          * 6 stack args; 6th = uVar4 (color, raw int bitpattern). */
         FUN_000d27a0(local_1c, scale, param_1, local_18, puVar3,
                      (float *)local_4c, 0, uVar4);
@@ -1068,7 +1068,7 @@ void hud_set_state_message_text(short param_1, short param_2, short param_3, uns
 /* Find a message slot in the 4-entry array at base (each 0x8c bytes).
  * Prefers: exact match (tag_handle + param2), then free slot, then oldest.
  * tag_handle passed in ESI (register arg). */
-void *hud_find_message_slot(int base, int param2, int tag_handle /* @<esi> */)
+void *hud_find_message_slot(int base, int param2, int tag_handle /*  */)
 {
   int16_t i;
   int16_t best_index;

@@ -15,8 +15,8 @@
  * EDX = bitmap_data (pixel dims at +4/+6).  Resolves the placement via
  * FUN_000d1f40, the corner geometry via FUN_000d1890, and blits via
  * FUN_000d2580.  Debug stack canary guards the frame.  hud_draw.c line 0x32e. */
-void FUN_000d3080(int crosshair_overlay /* @<eax> */, int hud_globals /* @<ecx> */,
-                  int bitmap_data /* @<edx> */, int bitmap_handle, short *placement,
+void FUN_000d3080(int crosshair_overlay /*  */, int hud_globals /*  */,
+                  int bitmap_data /*  */, int bitmap_handle, short *placement,
                   float scale, int angle, int color, int screen_pos,
                   char use_bitmap_size, char param_11)
 {

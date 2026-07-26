@@ -1808,8 +1808,8 @@
     "class": "non_leaf"
   },
   "0x60070": {
-    "confidence": "high",
-    "coverage_pct": 78.2,
+    "confidence": "moderate",
+    "coverage_pct": 59.0,
     "class": "non_leaf"
   },
   "0x600c0": {
@@ -3338,6 +3338,16 @@
   },
   "0xe5440": {
     "class": "non_leaf"
+  },
+  "0xe54e0": {
+    "class": "non_leaf",
+    "confidence": "high",
+    "coverage_pct": 100.0
+  },
+  "0xe5530": {
+    "class": "non_leaf",
+    "confidence": "high",
+    "coverage_pct": 100.0
   },
   "0xe68e0": {
     "class": "non_leaf",
