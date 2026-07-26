@@ -23589,7 +23589,8 @@
         {
           "addr": "0x1c26b0",
           "decl": "void FUN_001c26b0(int a0, int a1, int a2);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001c26b0"
         },
         {
           "addr": "0x1c26f0",
