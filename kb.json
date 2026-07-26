@@ -18636,7 +18636,7 @@
         {
           "addr": "0xbae10",
           "decl": "bool player_examine_nearby_unit(int player_unit_handle, int nearby_unit_handle);",
-          "ported": false,
+          "ported": true,
           "name": "player_examine_nearby_unit"
         },
         {

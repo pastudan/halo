@@ -453,44 +453,15 @@ int players_compute_local_player_count(void)
   return count;
 }
 
-/* Check whether the player's unit should interact with a nearby unit
- * (e.g. swap weapons on approach).
- *
- * player_unit_handle  -- the player's unit datum handle
- * nearby_unit_handle  -- the unit near the player to examine
- *
- * Returns true if the player should pick up / interact with the nearby unit.
- * The decision involves:
- *   1. Looking up the nearby unit's weapon tag (weap at +0x308 flags)
- *   2. Checking unit weapon counts (0x1aad90, 0x1aae00)
- *   3. Checking game engine running state
- *   4. Checking unit_can_pick_up_weapon (0xaba00) as fallback */
+/* player_examine_nearby_unit (0xbae10) — XBE is a single `ret` stub.
+ * Prior C body was wrong (full pickup logic). Match the prototype stub. */
 bool player_examine_nearby_unit(int player_unit_handle, int nearby_unit_handle)
 {
-  int *nearby_obj;
-  char *weap_tag;
-  short weapon_count;
-  bool can_swap;
-
-  nearby_obj = (int *)object_try_and_get_and_verify_type(nearby_unit_handle, 4);
-  weap_tag = (char *)tag_get(0x77656170, *nearby_obj);
-  weapon_count = unit_count_weapons(player_unit_handle);
-  can_swap = unit_weapon_is_new(player_unit_handle, nearby_unit_handle);
-  if ((can_swap && (*(unsigned char *)(weap_tag + 0x308) & 0x10) != 0) ||
-      weapon_count == 0) {
-    return true;
-  }
-  if (!game_engine_running()) {
-    if (unit_weapon_is_new(player_unit_handle, nearby_unit_handle) &&
-        weapon_count < 2) {
-      return true;
-    }
-  }
-  if (game_engine_can_pick_up_weapon(player_unit_handle, nearby_unit_handle)) {
-    return true;
-  }
+  (void)player_unit_handle;
+  (void)nearby_unit_handle;
   return false;
 }
+
 
 /* Clear the action-result fields on a player datum.
  *
