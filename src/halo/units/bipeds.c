@@ -1716,13 +1716,40 @@ int FUN_001a1a10(float scale, float *out_point, void *out_vec,
  * keystone return flows through (caller 0x56c60 tests the result == -1).
  */
 #if defined(__clang__)
-__attribute__((noinline))
-#endif
+static int (*const biped_approx_probe)(float, float *, void *, float *, int) =
+    FUN_001a1a10;
+
+__attribute__((naked, noinline))
+int biped_approximate_surface_index(int unit_handle __attribute__((unused)),
+                                    float *out_point __attribute__((unused)))
+{
+  /* XBE: direction@eax from 0x31fc50, unit@edi, scale=2.0f on stack. */
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl 8(%%ebp), %%edi\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x31fc50, %%eax\n\t"
+      "pushl $0x40000000\n\t"
+      "call *%[probe]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [probe] "m"(biped_approx_probe)
+      : "memory");
+}
+#else
 int biped_approximate_surface_index(int unit_handle, float *out_point)
 {
   return FUN_001a1a10(2.0f, out_point, (void *)0, *(float **)0x31fc50,
                       unit_handle);
 }
+#endif
 
 /* biped_find_pathfinding_surface_index (0x1a1bc0)
  *

@@ -1209,6 +1209,62 @@ char weapon_useful(int weapon_handle)
 #endif
 
 /* 0xfb010 — Movement penalty from weapon tag, gated by trigger mode. */
+#if defined(__clang__)
+static void *(*const wcmp_get)(int, int) = object_get_and_verify_type;
+static void *(*const wcmp_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+float weapon_compute_movement_penalty(int weapon_handle __attribute__((unused)),
+                                      char aiming __attribute__((unused)),
+                                      char param_3 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je 1f\n\t"
+      "flds 0x400(%%eax)\n\t"
+      "jmp 2f\n\t"
+      "1:\n\t"
+      "flds 0x404(%%eax)\n\t"
+      "2:\n\t"
+      "movswl 0x3fc(%%eax), %%eax\n\t"
+      "decl %%eax\n\t"
+      "je 3f\n\t"
+      "decl %%eax\n\t"
+      "jne 4f\n\t"
+      "movl $1, %%eax\n\t"
+      "cmpw %%ax, 0x258(%%esi)\n\t"
+      "je 3f\n\t"
+      "cmpw %%ax, 0x264(%%esi)\n\t"
+      "jne 4f\n\t"
+      "3:\n\t"
+      "movb 0x10(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne 4f\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c0\n\t"
+      "4:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(wcmp_get), [tag] "m"(wcmp_tag)
+      : "memory");
+}
+#else
 float weapon_compute_movement_penalty(int weapon_handle, char aiming,
                                       char param_3)
 {
@@ -1223,15 +1279,19 @@ float weapon_compute_movement_penalty(int weapon_handle, char aiming,
     result = *(float *)(tag_data + 0x404);
 
   mode = *(int16_t *)(tag_data + 0x3fc) - 1;
-  if (mode == 0 || mode == 1) {
-    if (*(int16_t *)(weapon_obj + 0x258) != 1 &&
-        *(int16_t *)(weapon_obj + 0x264) != 1 && param_3 == 0) {
-      return 0.0f;
-    }
+  if (mode == 0)
+    goto gate;
+  if (mode != 1)
+    return result;
+  if (*(int16_t *)(weapon_obj + 0x258) == 1 ||
+      *(int16_t *)(weapon_obj + 0x264) == 1) {
+  gate:
+    if (param_3 == 0)
+      return *(float *)0x2533c0;
   }
-
   return result;
 }
+#endif
 
 /* 0xfb320 */
 char *FUN_000fb320(void *weapon_obj, int16_t trigger_index)
@@ -2002,6 +2062,78 @@ void weapon_export_function_values(int weapon_handle)
 }
 
 /* 0xfc4b0 — store owner transition state and evaluate owned-weapon curve. */
+#if defined(__clang__)
+static void *(*const wou_get)(int, int) = object_get_and_verify_type;
+static void *(*const wou_tag)(int, int) = tag_get;
+static float (*const wou_eval)(short, float) = transition_function_evaluate;
+static char *(*const wou_csprintf)(char *, const char *, ...) = csprintf;
+static void (*const wou_assert)(const char *, const char *, int, bool) =
+    display_assert;
+static void (*const wou_exit)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void weapon_owner_update(int weapon_handle __attribute__((unused)),
+                         int16_t owner_state __attribute__((unused)),
+                         float t __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movw 0xc(%%ebp), %%dx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $4\n\t"
+      "movw %%dx, 0x1e0(%%esi)\n\t"
+      "call *%[eval]\n\t"
+      "fsts 0xc(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "fsts 0x1e4(%%esi)\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "jne 1f\n\t"
+      "movl 0x1e4(%%esi), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4af\n\t"
+      "pushl $0x28ad48\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x28aeb8\n\t"
+      "pushl $0x25eb8c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[csprintf]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exit]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "1:\n\t"
+      "fstp %%st(0)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(wou_get), [tag] "m"(wou_tag), [eval] "m"(wou_eval),
+        [csprintf] "m"(wou_csprintf), [assert] "m"(wou_assert),
+        [exit] "m"(wou_exit)
+      : "memory");
+}
+#else
 void weapon_owner_update(int weapon_handle, int16_t owner_state, float t)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
@@ -2020,6 +2152,7 @@ void weapon_owner_update(int weapon_handle, int16_t owner_state, float t)
     system_exit(-1);
   }
 }
+#endif
 
 /* 0xfc550 — build HUD magazine/heat state (10-byte magazine records). */
 #if defined(__clang__)

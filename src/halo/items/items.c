@@ -1621,9 +1621,41 @@ char FUN_000f5650(void)
 }
 
 /* 0xf5660 — virtual-keyboard cursor left (skip duplicate keymap glyphs). */
-#if defined(__i386__) && defined(__GNUC__)
-__attribute__((noinline))
-#endif
+#if defined(__clang__)
+static void (*const FUN_000f5660_snd)(int16_t) = ui_play_audio_feedback_sound;
+
+__attribute__((naked, noinline))
+char FUN_000f5660(void)
+{
+  __asm__ volatile(
+      "movswl 0x46cef8, %%ecx\n\t"
+      "movw 0x46cefa, %%ax\n\t"
+      "imull $0xb, %%ecx, %%ecx\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movb 0x28a790(%%edx,%%ecx), %%dl\n\t"
+      "pushl %%esi\n\t"
+      "jmp 2f\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      "2:\n\t"
+      "decw %%ax\n\t"
+      "jns 1f\n\t"
+      "movw $0xa, %%ax\n\t"
+      "1:\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "cmpb %%dl, 0x28a790(%%esi,%%ecx)\n\t"
+      "je 2b\n\t"
+      "pushl $1\n\t"
+      "movw %%ax, 0x46cefa\n\t"
+      "call *%[snd]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "ret\n\t"
+      :
+      : [snd] "m"(FUN_000f5660_snd)
+      : "memory");
+}
+#else
 char FUN_000f5660(void)
 {
   int16_t row;
@@ -1646,11 +1678,45 @@ char FUN_000f5660(void)
   ui_play_audio_feedback_sound(1);
   return 1;
 }
+#endif
 
 /* 0xf56b0 — virtual-keyboard cursor right (skip duplicate keymap glyphs). */
-#if defined(__i386__) && defined(__GNUC__)
-__attribute__((noinline))
-#endif
+#if defined(__clang__)
+static void (*const FUN_000f56b0_snd)(int16_t) = ui_play_audio_feedback_sound;
+
+__attribute__((naked, noinline))
+char FUN_000f56b0(void)
+{
+  __asm__ volatile(
+      "movswl 0x46cef8, %%ecx\n\t"
+      "movw 0x46cefa, %%ax\n\t"
+      "imull $0xb, %%ecx, %%ecx\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movb 0x28a790(%%edx,%%ecx), %%dl\n\t"
+      "pushl %%esi\n\t"
+      "jmp 2f\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      "2:\n\t"
+      "incw %%ax\n\t"
+      "cmpw $0xb, %%ax\n\t"
+      "jne 1f\n\t"
+      "xorw %%ax, %%ax\n\t"
+      "1:\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "cmpb %%dl, 0x28a790(%%esi,%%ecx)\n\t"
+      "je 2b\n\t"
+      "pushl $1\n\t"
+      "movw %%ax, 0x46cefa\n\t"
+      "call *%[snd]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "ret\n\t"
+      :
+      : [snd] "m"(FUN_000f56b0_snd)
+      : "memory");
+}
+#else
 char FUN_000f56b0(void)
 {
   int16_t row;
@@ -1673,6 +1739,7 @@ char FUN_000f56b0(void)
   ui_play_audio_feedback_sound(1);
   return 1;
 }
+#endif
 
 /* 0xf5800 — look up a soft-keyboard glyph for slot_index (@<si>). */
 #if defined(__clang__)

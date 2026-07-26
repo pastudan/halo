@@ -1892,6 +1892,49 @@ void FUN_001390d0(int material, int bitmap_ref, uint16_t *indices, float bary_u,
 /* --- damage.obj batch drafts (2026-07-26) --- */
 
 /* 0x136700 — Maximum shield vitality, optionally scaled by game difficulty. */
+#if defined(__clang__)
+static void *(*const ogmsv_get)(int, int) = object_get_and_verify_type;
+static float (*const ogmsv_scale)(short, int) = FUN_000b55b0;
+
+__attribute__((naked, noinline))
+float object_get_maximum_shield_vitality(
+    int object_handle __attribute__((unused)),
+    char use_shield_multiplier __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0x8c(%%eax), %%ecx\n\t"
+      "movl %%ecx, -4(%%ebp)\n\t"
+      "movb 0xc(%%ebp), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne 1f\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x68(%%eax), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $2\n\t"
+      "call *%[scale]\n\t"
+      "fmuls -4(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "1:\n\t"
+      "flds -4(%%ebp)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(ogmsv_get), [scale] "m"(ogmsv_scale)
+      : "memory");
+}
+#else
 float object_get_maximum_shield_vitality(int object_handle,
                                          char use_shield_multiplier)
 {
@@ -1903,6 +1946,7 @@ float object_get_maximum_shield_vitality(int object_handle,
 
   return FUN_000b55b0(2, *(int16_t *)(obj + 0x68)) * maximum;
 }
+#endif
 
 /* 0x138f30 — bilinear 2D (out@eax, c@ecx, d@edx, base@esi; u/v cdecl). */
 #if defined(__clang__)
@@ -2014,42 +2058,116 @@ void FUN_00138f70(float *output, float *vertex_c, float *vertex_d, float *base,
 }
 #endif
 
-#if defined(__i386__) && defined(__GNUC__)
-static void FUN_00138fd0_bilinear_uv(float *uv, const float *v0, const float *v1,
-                                     const float *v2, float u, float v)
+/* 0x138fd0 — Sample lightmap RGB at barycentric UV on a material surface. */
+#if defined(__clang__)
+static void (*const FUN_00138fd0_assert)(const char *, const char *, int, bool) =
+    display_assert;
+static void (*const FUN_00138fd0_exit)(int) = system_exit;
+static void (*const FUN_00138fd0_uv)(int, float *) = FUN_001806e0;
+static unsigned int (*const FUN_00138fd0_pix)(int, float *, float, float *) =
+    bitmap_2d_get_pixel;
+static void (*const FUN_00138fd0_rgb)(unsigned int, float *) =
+    pixel32_to_real_rgb_color;
+
+__attribute__((naked, noinline))
+void FUN_00138fd0(int material __attribute__((unused)),
+                  int lightmap __attribute__((unused)),
+                  unsigned short *vertex_indices __attribute__((unused)),
+                  float u __attribute__((unused)), float v __attribute__((unused)),
+                  float *out_rgb __attribute__((unused)))
 {
   __asm__ volatile(
-      "fld %2\n\t"
-      "fsub %5\n\t"
-      "fmul %8\n\t"
-      "fld %3\n\t"
-      "fsub %5\n\t"
-      "fmul %9\n\t"
-      "faddp\n\t"
-      "fadd %5\n\t"
-      "fstp %0\n\t"
-      "fld %4\n\t"
-      "fsub %6\n\t"
-      "fmul %8\n\t"
-      "fld %7\n\t"
-      "fsub %6\n\t"
-      "fmul %9\n\t"
-      "faddp\n\t"
-      "fadd %6\n\t"
-      "fstp %1"
-      : "=m"(uv[0]), "=m"(uv[1])
-      : "m"(v1[0]), "m"(v2[0]), "m"(v1[1]), "m"(v0[0]), "m"(v0[1]), "m"(v2[1]),
-        "m"(u), "m"(v)
-      : "st");
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x20, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl 8(%%ebp), %%esi\n\t"
+      "movw 0xc4(%%esi), %%ax\n\t"
+      "cmpw $2, %%ax\n\t"
+      "pushl %%edi\n\t"
+      "je 1f\n\t"
+      "cmpw $3, %%ax\n\t"
+      "je 1f\n\t"
+      "pushl $1\n\t"
+      "pushl $0x8f\n\t"
+      "pushl $0x29b324\n\t"
+      "pushl $0x29b268\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exit]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "1:\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "movzwl (%%edi), %%edx\n\t"
+      "movl 0xb4(%%esi), %%ecx\n\t"
+      "leal -0x20(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal (%%edx,%%ecx,4), %%eax\n\t"
+      "movl 0xf8(%%esi), %%ecx\n\t"
+      "leal (%%ecx,%%eax,8), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[uv]\n\t"
+      "movzwl 2(%%edi), %%ecx\n\t"
+      "movl 0xb4(%%esi), %%edx\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal (%%ecx,%%edx,4), %%eax\n\t"
+      "movl 0xf8(%%esi), %%ecx\n\t"
+      "leal (%%ecx,%%eax,8), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[uv]\n\t"
+      "movzwl 4(%%edi), %%ecx\n\t"
+      "movl 0xb4(%%esi), %%edx\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal (%%ecx,%%edx,4), %%eax\n\t"
+      "movl 0xf8(%%esi), %%ecx\n\t"
+      "leal (%%ecx,%%eax,8), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[uv]\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "fsubs -0x20(%%ebp)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "fmuls 0x14(%%ebp)\n\t"
+      "pushl $0x3f800000\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "leal -8(%%ebp), %%ecx\n\t"
+      "fsubs -0x20(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "fmuls 0x18(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadds -0x20(%%ebp)\n\t"
+      "fstps -8(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fsubs -0x1c(%%ebp)\n\t"
+      "fmuls 0x14(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fsubs -0x1c(%%ebp)\n\t"
+      "fmuls 0x18(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadds -0x1c(%%ebp)\n\t"
+      "fstps -4(%%ebp)\n\t"
+      "call *%[pix]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rgb]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(FUN_00138fd0_assert), [exit] "m"(FUN_00138fd0_exit),
+        [uv] "m"(FUN_00138fd0_uv), [pix] "m"(FUN_00138fd0_pix),
+        [rgb] "m"(FUN_00138fd0_rgb)
+      : "memory");
 }
-#endif
-
-#if defined(__i386__) && defined(__GNUC__)
-#pragma GCC push_options
-#pragma GCC optimize("O0")
-#endif
-
-/* 0x138fd0 — Sample lightmap RGB at barycentric UV on a material surface. */
+#else
 void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices,
                   float u, float v, float *out_rgb)
 {
@@ -2064,30 +2182,21 @@ void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices,
   float uv[2];
   unsigned int pixel;
 
-  if (ax != 2) {
-    if (ax != 3) {
-      display_assert((char *)0x0029b268, (char *)0x0029b324, 0x8f, 1);
-      system_exit(-1);
-    }
+  if (ax != 2 && ax != 3) {
+    display_assert((char *)0x0029b268, (char *)0x0029b324, 0x8f, 1);
+    system_exit(-1);
   }
 
   FUN_001806e0(verts_base + ((int)edi[0] + edx * 4) * 8, v0);
   FUN_001806e0(verts_base + ((int)edi[1] + edx * 4) * 8, v1);
   FUN_001806e0(verts_base + ((int)edi[2] + edx * 4) * 8, v2);
 
-#if defined(__i386__) && defined(__GNUC__)
-  FUN_00138fd0_bilinear_uv(uv, v0, v1, v2, u, v);
-#else
   uv[0] = v0[0] + (v1[0] - v0[0]) * u + (v2[0] - v0[0]) * v;
   uv[1] = v0[1] + (v1[1] - v0[1]) * u + (v2[1] - v0[1]) * v;
-#endif
 
   pixel = bitmap_2d_get_pixel(lightmap, uv, 1.0f, out_rgb);
   pixel32_to_real_rgb_color(pixel, out_rgb);
 }
-
-#if defined(__i386__) && defined(__GNUC__)
-#pragma GCC pop_options
 #endif
 /* --- damage.obj orphan shells (2026-07-26) --- */
 

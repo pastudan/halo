@@ -50,8 +50,16 @@ def pe_fn_bytes(pe: pefile.PE, name: str) -> tuple[bytes, int]:
     size = min((nxt - addr) if nxt else 0x800, 0x1000)
     off = pe.get_offset_from_rva(addr - base)
     data = pe.__data__[off : off + size]
+    # Strip trailing padding bytes, then drop trailing NOP instructions
+    # (clang often emits multi-byte NOPs that may be truncated at the next export).
     while len(data) > 16 and data[-1] in (0x90, 0xCC, 0x00):
         data = data[:-1]
+    md = Cs(CS_ARCH_X86, CS_MODE_32)
+    while True:
+        insns = list(md.disasm(data, addr))
+        if len(insns) < 2 or insns[-1].mnemonic != "nop":
+            break
+        data = data[: insns[-1].address - addr]
     return data, addr
 
 
@@ -222,7 +230,7 @@ def main() -> int:
         ("FUN_0005c680", 0x5c680, 0x5c940),
         ("FUN_0005ca80", 0x5ca80, 0x5d200),
         # damage + objects + vehicles + weapons wave (2026-07-26)
-        ("object_get_maximum_shield_vitality", 0x136700, 0x136740),
+        ("object_get_maximum_shield_vitality", 0x136700, 0x136741),
         ("FUN_00136b40", 0x136b40, 0x136bc0),
         ("FUN_00138f30", 0x138f30, 0x138f69),
         ("FUN_00138f70", 0x138f70, 0x138fc5),
@@ -231,9 +239,9 @@ def main() -> int:
         ("vehicle_causes_collision_damage", 0x1b5580, 0x1b55c0),
         ("weapon_can_be_fired", 0xfaf50, 0xfafe0),
         ("weapon_useful", 0xfafe0, 0xfb00c),
-        ("weapon_compute_movement_penalty", 0xfb010, 0xfb080),
+        ("weapon_compute_movement_penalty", 0xfb010, 0xfb07c),
         ("FUN_00085350", 0x85350, 0x85380),
-        ("FUN_00138fd0", 0x138fd0, 0x1390d0),
+        ("FUN_00138fd0", 0x138fd0, 0x1390cf),
         ("vehicle_hover", 0x1b55c0, 0x1b55f0),
         ("vehicle_is_flipped", 0x1b5680, 0x1b56ac),
         ("FUN_001a0db0", 0x1a0db0, 0x1a0e00),
@@ -271,7 +279,7 @@ def main() -> int:
         ("FUN_001b6ca0", 0x1b6ca0, 0x1b6e20),
         # gameplay wave 12 (2026-07-26)
         ("FUN_000de560", 0xde560, 0xdeb50),
-        ("FUN_001b5f20", 0x1b5f20, 0x1b5ff0),
+        ("FUN_001b5f20", 0x1b5f20, 0x1b5fed),
         ("FUN_001b6560", 0x1b6560, 0x1b69a0),
         ("FUN_001b69a0", 0x1b69a0, 0x1b6ca0),
         ("FUN_001b6e20", 0x1b6e20, 0x1b7020),
@@ -383,13 +391,13 @@ def main() -> int:
         ("vehicle_new", 0x1b5820, 0x1b5890),
         ("FUN_000dcdc0", 0xdcdc0, 0xdce00),
         ("first_person_weapon_center_flashlight", 0xdd260, 0xdd340),
-        ("FUN_00145660", 0x145660, 0x145740),
+        ("FUN_00145660", 0x145660, 0x14573b),
         ("FUN_00146be0", 0x146be0, 0x146d40),
         # gameplay wave 30 (2026-07-26)
         ("first_person_weapon_render_update", 0xddae0, 0xddb90),
         ("lights_initialize", 0x1391e0, 0x139290),
         ("FUN_00145580", 0x145580, 0x145610),
-        ("weapon_owner_update", 0xfc4b0, 0xfc550),
+        ("weapon_owner_update", 0xfc4b0, 0xfc549),
         ("FUN_00085280", 0x85280, 0x85350),
         ("FUN_00145610", 0x145610, 0x145660),
         ("lights_initialize_for_new_map", 0x1392b0, 0x1392e0),
@@ -404,8 +412,8 @@ def main() -> int:
         ("FUN_000fce60", 0xfce60, 0xfceb4),
         ("FUN_000fcdd0", 0xfcdd0, 0xfce59),
         # gameplay wave 32 (2026-07-26)
-        ("FUN_000f5660", 0xf5660, 0xf56b0),
-        ("FUN_000f56b0", 0xf56b0, 0xf5700),
+        ("FUN_000f5660", 0xf5660, 0xf56a8),
+        ("FUN_000f56b0", 0xf56b0, 0xf56fb),
         ("object_postprocess_node_matrices", 0x13df70, 0x13dfc0),
         ("weapon_reloading", 0xfc690, 0xfc70a),
         ("FUN_000fb510", 0xfb510, 0xfb594),
@@ -437,7 +445,7 @@ def main() -> int:
         ("FUN_001b5500", 0x1b5500, 0x1b5540),
         ("vehicle_causes_collision_damage", 0x1b5580, 0x1b55b0),
         ("vehicle_hover", 0x1b55c0, 0x1b55f0),
-        ("biped_approximate_surface_index", 0x1a1b90, 0x1a1bc0),
+        ("biped_approximate_surface_index", 0x1a1b90, 0x1a1bb2),
         ("first_person_weapon_get_marker_by_name_render", 0xddb90, 0xddbd0),
         ("weapon_get_zoom_magnification", 0xfc780, 0xfc8e0),
         ("FUN_000fd0b0", 0xfd0b0, 0xfd145),
@@ -473,6 +481,16 @@ def main() -> int:
         ("object_propagate_flag_to_children", 0x13ee60, 0x13eef6),
         ("FUN_00138f30", 0x138f30, 0x138f69),
         ("FUN_00138f70", 0x138f70, 0x138fc5),
+        # gameplay wave 39 (2026-07-26)
+        ("biped_approximate_surface_index", 0x1a1b90, 0x1a1bb2),
+        ("object_get_maximum_shield_vitality", 0x136700, 0x136741),
+        ("FUN_000f5660", 0xf5660, 0xf56a8),
+        ("FUN_000f56b0", 0xf56b0, 0xf56fb),
+        ("weapon_owner_update", 0xfc4b0, 0xfc549),
+        ("FUN_001b5f20", 0x1b5f20, 0x1b5fed),
+        ("FUN_00145660", 0x145660, 0x14573b),
+        ("weapon_compute_movement_penalty", 0xfb010, 0xfb07c),
+        ("FUN_00138fd0", 0x138fd0, 0x1390cf),
     ]
 
     xbe = Xbe.from_file(args.xbe)
