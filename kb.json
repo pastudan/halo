@@ -22718,7 +22718,8 @@
         },
         {
           "addr": "0x188ec0",
-          "decl": "void FUN_00188ec0(short type, ...);"
+          "decl": "void FUN_00188ec0(short type, ...);",
+          "ported": false
         },
         {
           "addr": "0x189150",
@@ -29503,7 +29504,8 @@
           "decl": "void __stdcall BinkSetSoundSystem(void *open_proc, void *close_proc);"
         }
       ],
-      "name": "bink.obj"
+      "name": "bink.obj",
+      "source": "bink/bink.c"
     },
     {
       "functions": [
@@ -31156,7 +31158,8 @@
         },
         {
           "addr": "0x11cfd0",
-          "decl": "void FUN_0011cfd0(int *ptr, int value);"
+          "decl": "void FUN_0011cfd0(int *ptr, int value);",
+          "ported": false
         },
         {
           "addr": "0x11cfe0",
@@ -31638,7 +31641,8 @@
           "decl": "void __stdcall D3D_BlockOnTime(uint32_t time, int param2);"
         }
       ],
-      "name": "D3D8:d3dresource.obj"
+      "name": "D3D8:d3dresource.obj",
+      "source": "render/d3d8_d3dresource.c"
     },
     {
       "functions": [
@@ -31667,7 +31671,8 @@
           "decl": "int __stdcall D3DDevice_PersistDisplay(void);"
         }
       ],
-      "name": "D3D8:d3dsurface.obj"
+      "name": "D3D8:d3dsurface.obj",
+      "source": "render/d3d8_d3dsurface.c"
     },
     {
       "functions": [
@@ -33008,7 +33013,8 @@
         {
           "addr": "0x2bd80",
           "decl": "void FUN_0002bd80(int actor_handle , float *facing, float *vel_out, float *speed_out);",
-          "name": "FUN_0002bd80"
+          "name": "FUN_0002bd80",
+          "ported": false
         },
         {
           "addr": "0x2a530",
@@ -39169,7 +39175,8 @@
           "addr": "0x8d410",
           "decl": "void FUN_0008d410(void);"
         }
-      ]
+      ],
+      "source": "camera/static_camera.c"
     },
     {
       "name": "rasterizer_xbox_shadows.obj",
