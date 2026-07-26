@@ -94,6 +94,103 @@ def try_emit_c(insns: list, decl: str, name: str) -> str | None:
     if body_ops == [("xor", "eax, eax")] or body_ops == [("xor", "eax, eax"), ("nop", "")]:
         return f"{sig} {{\n  return 0;\n}}\n"
 
+    # mov al/ax/eax, [imm]; ret  — load global scalar
+    if len(body_ops) == 1 and body_ops[0][0] == "mov":
+        m = re.match(
+            r"(al|ax|eax), (byte|word|dword) ptr \[0x([0-9a-f]+)\]",
+            body_ops[0][1],
+        )
+        if m:
+            g = int(m.group(3), 16)
+            ctype = {"byte": "uint8_t", "word": "uint16_t", "dword": "uint32_t"}[m.group(2)]
+            return f"{sig} {{\n  return *({ctype} *)0x{g:x};\n}}\n"
+        m = re.match(r"eax, (0x[0-9a-f]+|\d+)", body_ops[0][1])
+        if m:
+            return f"{sig} {{\n  return ({m.group(1)});\n}}\n"
+        m = re.match(
+            r"(byte|word|dword) ptr \[0x([0-9a-f]+)\], (0x[0-9a-f]+|\d+)",
+            body_ops[0][1],
+        )
+        if m:
+            ctype = {"byte": "uint8_t", "word": "uint16_t", "dword": "uint32_t"}[m.group(1)]
+            g = int(m.group(2), 16)
+            return (
+                f"{sig} {{\n"
+                f"  *({ctype} *)0x{g:x} = ({ctype}){m.group(3)};\n"
+                f"}}\n"
+            )
+
+    # push imm; call rel; pop ecx; ret  — stdcall thunk (one stack arg)
+    if (
+        len(body_ops) == 3
+        and body_ops[0][0] == "push"
+        and body_ops[1][0] == "call"
+        and body_ops[2] == ("pop", "ecx")
+    ):
+        mimm = re.match(r"(-?0x[0-9a-f]+|-?\d+)", body_ops[0][1])
+        mcall = re.match(r"0x([0-9a-f]+)", body_ops[1][1])
+        if mimm and mcall:
+            targ = int(mcall.group(1), 16)
+            return (
+                f"{sig} {{\n"
+                f"  ((void (*)(int))0x{targ:x})({mimm.group(1)});\n"
+                f"}}\n"
+            )
+
+    # push ebp; mov ebp,esp; fld [ebp+8]; fld [ebp+0xc]; fpatan; pop ebp; ret
+    if body_ops == [
+        ("push", "ebp"),
+        ("mov", "ebp, esp"),
+        ("fld", "dword ptr [ebp + 8]"),
+        ("fld", "dword ptr [ebp + 0xc]"),
+        ("fpatan", ""),
+        ("pop", "ebp"),
+    ]:
+        m = re.search(r"\(([^)]*)\)", sig)
+        params = [p.strip() for p in (m.group(1) if m else "").split(",") if p.strip()]
+        if len(params) >= 2:
+            a0 = params[0].split()[-1].strip("*")
+            a1 = params[1].split()[-1].strip("*")
+            return (
+                f"{sig} {{\n"
+                f"  return x87_fatan2f({a0}, {a1});\n"
+                f"}}\n"
+            )
+
+    # push ebp; mov ebp,esp; mov eax,[ebp+8]; fld [ebp+0xc]; mov ecx,[ebp+0x10];
+    # fstp [eax]; mov edx,[ebp+0x14]; mov [eax+4],ecx; mov [eax+8],edx; pop ebp; ret
+    if (
+        len(body_ops) >= 8
+        and body_ops[0] == ("push", "ebp")
+        and body_ops[1] == ("mov", "ebp, esp")
+        and body_ops[-1] == ("pop", "ebp")
+    ):
+        mid = body_ops[2:-1]
+        if (
+            len(mid) == 7
+            and mid[0][1] == "eax, dword ptr [ebp + 8]"
+            and mid[1][0] == "fld"
+            and mid[2][1] == "ecx, dword ptr [ebp + 0x10]"
+            and mid[3][0] == "fstp"
+            and mid[4][1] == "edx, dword ptr [ebp + 0x14]"
+            and mid[5][1] == "dword ptr [eax + 4], ecx"
+            and mid[6][1] == "dword ptr [eax + 8], edx"
+        ):
+            m = re.search(r"\(([^)]*)\)", sig)
+            params = [p.strip() for p in (m.group(1) if m else "").split(",") if p.strip()]
+            if len(params) >= 4:
+                out = params[0].split()[-1].strip("*")
+                val = params[1].split()[-1].strip("*")
+                f4 = params[2].split()[-1].strip("*")
+                f8 = params[3].split()[-1].strip("*")
+                return (
+                    f"{sig} {{\n"
+                    f"  {out}[0] = {val};\n"
+                    f"  *(int *)({out} + 1) = {f4};\n"
+                    f"  *(int *)({out} + 2) = {f8};\n"
+                    f"}}\n"
+                )
+
     # mov eax, [imm]; mov byte/word/dword [eax+off], imm; ret  (store via global ptr)
     # cinematic_skip_start style: mov eax,[g]; mov byte ptr [eax+off], imm; ret
     if len(body_ops) == 2 and body_ops[0][0] == "mov" and body_ops[1][0] == "mov":

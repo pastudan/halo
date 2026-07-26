@@ -5401,7 +5401,7 @@
         {
           "addr": "0x93030",
           "decl": "void cinematic_suppress_bsp_object_creation(int a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x93050",
@@ -19798,7 +19798,7 @@
         {
           "addr": "0x8f870",
           "decl": "void profile_seconds_elapsed(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8f880",
@@ -20018,7 +20018,7 @@
         {
           "addr": "0x92050",
           "decl": "void FUN_00092050(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x92060",

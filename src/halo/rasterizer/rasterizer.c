@@ -8080,11 +8080,10 @@ void FUN_00172520(void)
 #endif
 
 
-/* 0x172640 */
+/* FUN_00172640 (0x172640) — readable C lift. */
 void FUN_00172640(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  *(unsigned int *)0x47e4b0 = 0;
 }
 
 /* FUN_00172650 (0x172650) — XBE naked draft (batch 380). */

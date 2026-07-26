@@ -9019,11 +9019,10 @@ void FUN_001659a0(void)
 #endif
 
 
-/* 0x1659f0 */
+/* FUN_001659f0 (0x1659f0) — readable C lift. */
 void FUN_001659f0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  *(unsigned int *)0x47df04 = 0;
 }
 
 /* 0x165a00 */
@@ -9354,11 +9353,10 @@ void FUN_00165ea0(void)
 #endif
 
 
-/* 0x165fc0 */
+/* FUN_00165fc0 (0x165fc0) — readable C lift. */
 void FUN_00165fc0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  *(unsigned int *)0x47df34 = 0;
 }
 
 /* FUN_00165fd0 (0x165fd0) — readable C lift. */

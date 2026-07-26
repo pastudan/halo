@@ -30993,7 +30993,9 @@
     "coverage_pct": 100.0
   },
   "0x93030": {
-    "class": "non_leaf"
+    "class": "non_leaf",
+    "confidence": "high",
+    "coverage_pct": 100.0
   },
   "0x94290": {
     "class": "leaf",

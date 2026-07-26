@@ -495,50 +495,10 @@ void symbol_table_dispose(int32_t *symtab __attribute__((unused)))
 /* --- profile.obj batch drafts (2026-07-26) --- */
 
 /* profile_seconds_elapsed (0x8f870) — readable C lift. */
-void profile_seconds_elapsed(int seconds)
+void profile_seconds_elapsed(int v)
 {
-  *(int *)0x449cc8 = seconds;
+  *(int *)0x449cc8 = v;
 }
-
-/* profile_lapsed_frames (0x8f880) — XBE naked draft (batch 282). */
-#if defined(__clang__)
-static char * (*const b8f880_c8dff0)(char *destination, const char *source) = csstrcpy;
-
-__attribute__((naked, noinline))
-void profile_lapsed_frames(void)
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movw %%ax, 0x449ccc\n\t"
-      "jg .Lprofile_lapsed_frames_1\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $0, 0x449cd4\n\t"
-      "jne .Lprofile_lapsed_frames_2\n\t"
-      ".Lprofile_lapsed_frames_1:\n\t"
-      "movb $1, 0x449cd4\n\t"
-      ".Lprofile_lapsed_frames_2:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lprofile_lapsed_frames_3\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x449cd5\n\t"
-      "call *%[c8dff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lprofile_lapsed_frames_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8dff0] "m"(b8f880_c8dff0)
-      : "memory");
-}
-#else
-#error "profile_lapsed_frames: clang naked draft required"
-#endif
-
 
 /* profile_lapsed_msec (0x8f8c0) — XBE naked draft (batch 284). */
 #if defined(__clang__)
@@ -3934,52 +3894,10 @@ void FUN_00091ef0(int *keys __attribute__((unused)), int count __attribute__((un
 
 
 /* FUN_00092050 (0x92050) — readable C lift. */
-void FUN_00092050(char value)
+void FUN_00092050(char v)
 {
-  *(uint8_t *)0x2ee784 = (uint8_t)value;
+  *(unsigned char *)0x2ee784 = (unsigned char)v;
 }
-
-/* profile_idle_start (0x92060) — XBE naked draft (batch 262). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void profile_idle_start(void)
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lprofile_idle_start_2\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "ja .Lprofile_idle_start_2\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lprofile_idle_start_1\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jb .Lprofile_idle_start_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lprofile_idle_start_1:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lprofile_idle_start_2:\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "profile_idle_start: clang naked draft required"
-#endif
-
 
 /* 0x92110 */
 char *FUN_00092110(int32_t addr, int32_t *symtab)

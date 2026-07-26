@@ -241,55 +241,11 @@ void cinematic_force_title(short title)
 }
 
 /* cinematic_suppress_bsp_object_creation (0x93030) — readable C lift. */
-void cinematic_suppress_bsp_object_creation(char suppress)
+void cinematic_suppress_bsp_object_creation(char v)
 {
-  uint8_t *base = *(uint8_t **)0x44df00;
-  base[0xb] = (uint8_t)suppress;
+  unsigned char *base = *(unsigned char **)0x44df00;
+  base[0xb] = (unsigned char)v;
 }
-
-/* cinematic_stop (0x93050) — XBE naked draft (batch 287). */
-#if defined(__clang__)
-static void (*const b93050_cba6d0)(bool) = player_input_enable;
-static void (*const b93050_c3f7b0)(char param_1) = ai_globals_dialogue_triggers_enabled;
-static void (*const b93050_c17d950)(void) = FUN_0017d950;
-static void *(*const b93050_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b93050_c17dec0)(int a0) = (void *)FUN_0017dec0;
-
-__attribute__((naked, noinline))
-void cinematic_stop(void)
-{
-  __asm__ volatile(
-      "movl 0x44df00, %%eax\n\t"
-      "pushl $1\n\t"
-      "movb $0, 0x8(%%eax)\n\t"
-      "call *%[cba6d0]\n\t"
-      "pushl $1\n\t"
-      "call *%[c3f7b0]\n\t"
-      "movl 0x44df00, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $0, 0x9(%%ecx)\n\t"
-      "call *%[c17d950]\n\t"
-      "movl 0x47e4d0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lcinematic_stop_1\n\t"
-      "pushl $0x10\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lcinematic_stop_1:\n\t"
-      "pushl $0\n\t"
-      "call *%[c17dec0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".byte 0xe9, 0x12, 0x5d, 0x05, 0x00\n\t"
-      :
-      : [cba6d0] "m"(b93050_cba6d0), [c3f7b0] "m"(b93050_c3f7b0), [c17d950] "m"(b93050_c17d950), [memset] "m"(b93050_memset), [c17dec0] "m"(b93050_c17dec0)
-      : "memory");
-}
-#else
-#error "cinematic_stop: clang naked draft required"
-#endif
-
 
 /* cinematic_set_title_delayed (0x930b0) — XBE naked draft (batch 273). */
 #if defined(__clang__)
