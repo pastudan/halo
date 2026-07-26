@@ -4886,7 +4886,7 @@
         },
         {
           "addr": "0x145660",
-          "decl": "void FUN_00145660(int object_handle /* @<eax> */, int animation_graph_tag, const char *anim_name, int16_t frame);",
+          "decl": "void FUN_00145660(int object_handle @<eax>, int a1, const char *a2, int16_t a3);",
           "ported": false
         },
         {
@@ -4897,12 +4897,12 @@
         {
           "addr": "0x1457b0",
           "decl": "void FUN_001457b0(int a0, int a1, int a2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1457d0",
           "decl": "void FUN_001457d0(int a0, int a1, int a2, int a3);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x145990",
