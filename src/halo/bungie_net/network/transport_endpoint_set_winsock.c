@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Xbox network transport layer — Winsock/XNet wrapper. */
 
 /* Initialize the Xbox network transport layer.
@@ -1207,38 +1208,17 @@ void *transport_get_xnaddr(void *dst)
   return dst;
 }
 
-/* transport_get_key_id (0x82090) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-static void (*const b82090_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b82090_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* transport_get_key_id (0x82090) — readable C lift (assert wrapper). */
 int64_t transport_get_key_id(void)
 {
-  __asm__ volatile(
-      "movl 0x335094, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .Ltransport_get_key_id_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe0\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x2664a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltransport_get_key_id_1:\n\t"
-      "movl 0x5ab220, %%eax\n\t"
-      "movl 0x5ab224, %%edx\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b82090_assert), [exitfn] "m"(b82090_exitfn)
-      : "memory");
+  if (*(int *)0x335094 <= 0) {
+    display_assert((const char *)0x2664a8, (const char *)0x266458, 0xe0, 1);
+    system_exit(-1);
+  }
+  /* edx:eax */
+  (void)*(uint32_t *)0x5ab224;
+  return *(uint32_t *)0x5ab220;
 }
-#else
-#error "transport_get_key_id: clang naked draft required"
-#endif
-
 
 /* 0x820d0 */
 void *transport_get_key(void *dst)

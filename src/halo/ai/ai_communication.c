@@ -423,51 +423,19 @@ int16_t ai_communication_get_type_by_name(const char *name __attribute__((unused
 #endif
 
 
-/* ai_communication_packet_new (0x42d20) — XBE naked draft (batch 176). */
-#if defined(__clang__)
-static void (*const b42d20_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b42d20_exitfn)(int) = system_exit;
-static void *(*const b42d20_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void ai_communication_packet_new(void *packet __attribute__((unused)))
+/* ai_communication_packet_new (0x42d20) — readable C lift (assert wrapper). */
+void ai_communication_packet_new(void *packet)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lai_communication_packet_new_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x300\n\t"
-      "pushl $0x2599b4\n\t"
-      "pushl $0x2599f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_communication_packet_new_1:\n\t"
-      "pushl $0x20\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl $0xffffffff, (%%esi)\n\t"
-      "movw $0xffff, 0x4(%%esi)\n\t"
-      "movw $0xffff, 0x6(%%esi)\n\t"
-      "movw $0xffff, 0x8(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b42d20_assert), [exitfn] "m"(b42d20_exitfn), [memset] "m"(b42d20_memset)
-      : "memory");
+  if (packet == NULL) {
+    display_assert((const char *)0x2599f8, (const char *)0x2599b4, 0x300, 1);
+    system_exit(-1);
+  }
+  csmemset(packet, 0, 0x20);
+  *(uint32_t *)((char *)packet + 0x0) = (uint32_t)0xffffffff;
+  *(uint16_t *)((char *)packet + 0x4) = (uint16_t)0xffff;
+  *(uint16_t *)((char *)packet + 0x6) = (uint16_t)0xffff;
+  *(uint16_t *)((char *)packet + 0x8) = (uint16_t)0xffff;
 }
-#else
-#error "ai_communication_packet_new: clang naked draft required"
-#endif
-
 
 /* FUN_00042d80 (0x42d80) — XBE naked draft (batch 154). */
 #if defined(__clang__)

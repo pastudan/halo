@@ -3724,100 +3724,6 @@ void FUN_000fcc90(int16_t magazine_index, int weapon_handle)
 #endif
 
 /* 0xfcd10 — begin charged-trigger fire (trigger@eax, weapon cdecl). */
-#if defined(__clang__)
-static void *(*const FUN_000fcd10_get)(int, int) = object_get_and_verify_type;
-static char *(*const FUN_000fcd10_entry)(void *, int16_t) = FUN_000fb320;
-static void *(*const FUN_000fcd10_tag)(int, int) = tag_get;
-static void *(*const FUN_000fcd10_elem)(void *, int, int) = tag_block_get_element;
-static void (*const FUN_000fcd10_ftol)(void) = FUN_001d9068;
-static void (*const FUN_000fcd10_assert)(const char *, const char *, int,
-                                         bool) = display_assert;
-static void (*const FUN_000fcd10_exit)(int) = system_exit;
-static int (*const FUN_000fcd10_anim)(int, char, int16_t) =
-    weapon_set_animation_state;
-static void (*const FUN_000fcd10_msg)(int, int) =
-    first_person_weapon_message_from_weapon;
-
-__attribute__((naked, noinline))
-void FUN_000fcd10(int16_t trigger_index __attribute__((unused)),
-                  int weapon_handle __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $4\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[entry]\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movswl %%si, %%edi\n\t"
-      "pushl $0x114\n\t"
-      "addl $0x4fc, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "flds 0x4c(%%eax)\n\t"
-      "fmuls 0x253394\n\t"
-      "call *%[ftol]\n\t"
-      "pushl $4\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, -4(%%ebp)\n\t"
-      "call *%[get]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "jl 1f\n\t"
-      "cmpw $2, %%si\n\t"
-      "jl 2f\n\t"
-      "1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa11\n\t"
-      "pushl $0x28ad48\n\t"
-      "pushl $0x28ae40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exit]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "2:\n\t"
-      "movw -4(%%ebp), %%dx\n\t"
-      "leal (%%edi,%%edi,8), %%ecx\n\t"
-      "leal (%%ebx,%%ecx,4), %%eax\n\t"
-      "leal 7(%%esi), %%ebx\n\t"
-      "movl 8(%%ebp), %%esi\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "movb $3, 0x211(%%eax)\n\t"
-      "movw %%dx, 0x212(%%eax)\n\t"
-      "call *%[anim]\n\t"
-      "pushl $0xe\n\t"
-      "pushl %%esi\n\t"
-      "call *%[msg]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_000fcd10_get), [entry] "m"(FUN_000fcd10_entry),
-        [tag] "m"(FUN_000fcd10_tag), [elem] "m"(FUN_000fcd10_elem),
-        [ftol] "m"(FUN_000fcd10_ftol), [assert] "m"(FUN_000fcd10_assert),
-        [exit] "m"(FUN_000fcd10_exit), [anim] "m"(FUN_000fcd10_anim),
-        [msg] "m"(FUN_000fcd10_msg)
-      : "memory");
-}
-#else
 void FUN_000fcd10(int16_t trigger_index, int weapon_handle)
 {
   char *weapon_obj;
@@ -3830,7 +3736,7 @@ void FUN_000fcd10(int16_t trigger_index, int weapon_handle)
   trig_def = (char *)tag_block_get_element(
       (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4fc,
       (int)trigger_index, 0x114);
-  frame = (int16_t)(int)(*(float *)(trig_def + 0x4c) * *(float *)0x253394);
+  frame = (int16_t)(int)(*(float *)(trig_def + 0x4c) * 30.0f);
 
   weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
   if ((int16_t)trigger_index < 0 || (int16_t)trigger_index >= 2) {
@@ -3844,7 +3750,7 @@ void FUN_000fcd10(int16_t trigger_index, int weapon_handle)
   weapon_set_animation_state(weapon_handle, 1, (int16_t)(idx + 7));
   first_person_weapon_message_from_weapon(weapon_handle, 0xe);
 }
-#endif
+
 
 /* 0xfcdd0 — clear trigger charge/state (weapon@eax, trigger@ecx). */
 #if defined(__clang__)

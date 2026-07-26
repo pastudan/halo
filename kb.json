@@ -26699,7 +26699,7 @@
         {
           "addr": "0x82090",
           "decl": "int64_t transport_get_key_id(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x820d0",
@@ -34417,7 +34417,7 @@
         {
           "addr": "0x42d20",
           "decl": "void ai_communication_packet_new(void *packet);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x42d80",
