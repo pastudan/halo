@@ -2178,54 +2178,15 @@ void FUN_000c1950(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, 0);
 }
 
-/* FUN_000c1990 (0xc1990) — XBE naked draft (batch 181). */
-#if defined(__clang__)
-static int (*const bc1990_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc1990_cb6430)(char enable) = scripted_player_control_set_camera_control;
-static void (*const bc1990_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c1990(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c1990 — readable C lift (HS value-return wrapper). */
+void FUN_000c1990(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c1990_1\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cb6430]\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000c1990_1:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bc1990_ccc560), [cb6430] "m"(bc1990_cb6430), [ccbf80] "m"(bc1990_ccbf80)
-      : "memory");
+  typedef unsigned char (*ret_fn)(char);
+  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum, (int)((ret_fn)scripted_player_control_set_camera_control)((char)(unsigned char)args[0]));
+  }
 }
-#else
-#error "FUN_000c1990: clang naked draft required"
-#endif
-
 
 /* FUN_000c19e0 (0xc19e0) — readable C lift (HS wrapper). */
 void FUN_000c19e0(int16_t function_index, int thread_datum, char init)
