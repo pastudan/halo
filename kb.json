@@ -12328,7 +12328,8 @@
         {
           "addr": "0xc9e50",
           "decl": "void FUN_000c9e50(int object_handle, int attach_object, int marker_id);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000c9e50"
         },
         {
           "addr": "0xc9ec0",
