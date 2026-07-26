@@ -4353,44 +4353,74 @@ void FUN_001a2a60(int unit_handle __attribute__((unused)), char *state __attribu
 #endif
 
 
-/* FUN_001a2b10 (0x1a2b10) — post-slipping update step
- *
- * Step in the biped update dispatcher (FUN_001a6350). If the biped's slipping
- * counter (object+0x45a) has exceeded 3 ticks AND the object's linear velocity
- * magnitude squared (object+0x18..0x20) exceeds the "moving" threshold at
- * 0x25620c (== 1/900), fires two collision-user events via FUN_001a0f10 with
- * selector indices 0 then 1 (param_2 = 2). Always emits the "post-slipping"
- * timing marker via FUN_001a2800.
- *
- * unit_handle arrives in EDI (register parameter). The caller (FUN_001a6350)
- * also pushes a pointer to its update-state byte buffer, but this function
- * never reads it; it is not declared as a parameter because the original is
- * frameless (no EBP frame, no stack-arg load) — the caller's cdecl push and
- * matching ESP cleanup are unaffected.
- *
- * Confirmed: object_get_and_verify_type(unit_handle, 1); tag_get('bipd',...);
- * velocity sum-of-squares at +0x18/+0x1c/+0x20 vs threshold 0x25620c;
- * FUN_001a0f10(unit, 2, idx) with idx routed to BX (0 then 1).
- */
-void FUN_001a2b10(int unit_handle /* @edi */)
+/* FUN_001a2b10 (0x1a2b10) — XBE naked draft (batch 66). */
+#if defined(__clang__)
+static void *(*const b1a2b10_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a2b10_tag)(int, int) = tag_get;
+static void (*const b1a2b10_c1a0f10)(int unit_handle, int param_2, short index) = FUN_001a0f10;
+static void (*const b1a2b10_c1a2800)(int unit_handle, const char *failure_kind) = FUN_001a2800;
+
+__attribute__((naked, noinline))
+void FUN_001a2b10(int unit_handle __attribute__((unused)))
 {
-  unsigned int *object;
-  float *velocity;
-
-  object = (unsigned int *)object_get_and_verify_type(unit_handle, 1);
-  tag_get(0x62697064, (int)object[0]); /* 'bipd' */
-
-  velocity = (float *)(object + 6); /* +0x18: linear velocity vec3 */
-  if ((*(char *)((int)object + 0x45a) > 3) &&
-      (velocity[2] * velocity[2] + velocity[1] * velocity[1] +
-         velocity[0] * velocity[0] >
-       *(float *)0x25620c)) {
-    FUN_001a0f10(unit_handle, 2, 0);
-    FUN_001a0f10(unit_handle, 2, 1);
-  }
-
-  FUN_001a2800(unit_handle, "post-slipping");
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x45a(%%esi), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpb $3, %%al\n\t"
+      "jle .LFUN_001a2b10_1\n\t"
+      "flds 0x20(%%esi)\n\t"
+      "flds 0x1c(%%esi)\n\t"
+      "flds 0x18(%%esi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fcomps 0x25620c\n\t"
+      "fstp %%st(0)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $0x41, %%ah\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .LFUN_001a2b10_1\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $2\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "call *%[c1a0f10]\n\t"
+      "pushl $2\n\t"
+      "pushl %%edi\n\t"
+      "movl $1, %%ebx\n\t"
+      "call *%[c1a0f10]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_001a2b10_1:\n\t"
+      "pushl $0x2b4fac\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c1a2800]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a2b10_get), [tag] "m"(b1a2b10_tag), [c1a0f10] "m"(b1a2b10_c1a0f10), [c1a2800] "m"(b1a2b10_c1a2800)
+      : "memory");
 }
+#else
+#error "FUN_001a2b10: clang naked draft required"
+#endif
+
 
 /* FUN_001a2b90 (0x1a2b90) — XBE naked draft (batch 55). */
 #if defined(__clang__)
