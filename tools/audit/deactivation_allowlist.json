@@ -26178,5 +26178,4219 @@
     "object": "XAPILIB:xbox_crt.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfa3f",
+    "name": "SetThreadPriorityBoost",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfa85",
+    "name": "FUN_001cfa85",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfac6",
+    "name": "FUN_001cfac6",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfaec",
+    "name": "ResumeThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfb12",
+    "name": "RaiseException",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfb98",
+    "name": "SwitchToThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfbbd",
+    "name": "GetExitCodeThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfc1b",
+    "name": "FUN_001cfc1b",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfca4",
+    "name": "XRegisterThreadNotifyRoutine",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfd8c",
+    "name": "CreateThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfde0",
+    "name": "FUN_001cfde0",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfded",
+    "name": "CreateEventA",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfe4e",
+    "name": "OpenEventA",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfeaa",
+    "name": "SetEvent",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cfeca",
+    "name": "ResetEvent",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cff08",
+    "name": "FUN_001cff08",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cff63",
+    "name": "FUN_001cff63",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cffe5",
+    "name": "CreateMutexA",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d003d",
+    "name": "FUN_001d003d",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d0099",
+    "name": "ReleaseMutex",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d00b9",
+    "name": "FUN_001d00b9",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d00fd",
+    "name": "SignalObjectAndWait",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d0144",
+    "name": "FUN_001d0144",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d01c4",
+    "name": "SleepEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d0216",
+    "name": "FUN_001d0216",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d0274",
+    "name": "FUN_001d0274",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d02d0",
+    "name": "FUN_001d02d0",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d0336",
+    "name": "WaitForSingleObject",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d0348",
+    "name": "FUN_001d0348",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d0362",
+    "name": "FUN_001d0362",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d0370",
+    "name": "OutputDebugStringA",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d03a2",
+    "name": "OutputDebugStringW",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d03ee",
+    "name": "FUN_001d03ee",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d040f",
+    "name": "FUN_001d040f",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1d0447",
+    "name": "FUN_001d0447",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e6ae0",
+    "name": "D3DDevice_CreateTexture",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e6bd0",
+    "name": "D3DDevice_SetTransform",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e6ce0",
+    "name": "D3DDevice_GetTransform",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e7110",
+    "name": "D3DDevice_BlockUntilVerticalBlank",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e7af0",
+    "name": "D3DDevice_SetRenderTarget",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e7d50",
+    "name": "D3DDevice_GetBackBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e8270",
+    "name": "D3DDevice_GetDepthStencilSurface",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e8700",
+    "name": "D3DDevice_SetTexture",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e9350",
+    "name": "D3DDevice_SetRenderState_Simple",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e9380",
+    "name": "D3DDevice_SetRenderState_Deferred",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e9410",
+    "name": "D3DDevice_SetTextureStageState",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e96d0",
+    "name": "D3DDevice_SetRenderState_CullMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1e9c20",
+    "name": "D3DDevice_SetTextureState_BorderColor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ea290",
+    "name": "D3DDevice_SetRenderState_ZEnable",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ea650",
+    "name": "D3DDevice_Clear",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1eb7f0",
+    "name": "D3DDevice_SetVertexShader",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ec120",
+    "name": "D3DDevice_SetPixelShaderProgram",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ed280",
+    "name": "D3DDevice_SetVertexData2f",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ed2c0",
+    "name": "D3DDevice_SetVertexData4f",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ed320",
+    "name": "D3DDevice_SetVertexData2s",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ed400",
+    "name": "D3DDevice_SetVertexDataColor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ed450",
+    "name": "D3DDevice_Begin",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1ed490",
+    "name": "D3DDevice_End",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x204f23",
+    "name": "IDirectSoundBuffer_SetVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x204f3f",
+    "name": "IDirectSoundBuffer_SetPitch",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x20519e",
+    "name": "IDirectSoundBuffer_SetLoopRegion",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x2051fa",
+    "name": "IDirectSoundBuffer_SetCurrentPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x205266",
+    "name": "IDirectSoundStream_SetVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x2052e8",
+    "name": "IDirectSoundStream_SetConeAngles",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x205316",
+    "name": "IDirectSoundStream_SetConeOutsideVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x20531b",
+    "name": "IDirectSoundStream_SetMaxDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x205333",
+    "name": "IDirectSoundStream_SetMinDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x2053a7",
+    "name": "IDirectSoundStream_SetAllParameters",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x205b43",
+    "name": "IDirectSoundBuffer_Play",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x205b7f",
+    "name": "IDirectSoundBuffer_SetBufferData",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x205bbf",
+    "name": "IDirectSoundStream_SetFrequency",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x2062d0",
+    "name": "DirectSoundCreateBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001cfb73",
+    "name": "QueueUserAPC",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001cfbab",
+    "name": "ExitThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001cfcf4",
+    "name": "XapiThreadStartup",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001cfee8",
+    "name": "PulseEvent",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d3717",
+    "name": "MmQueryAllocationSize",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8bd0",
+    "name": "NtDuplicateObject",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8bd6",
+    "name": "RtlLeaveCriticalSection",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8bdc",
+    "name": "RtlEnterCriticalSection",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8be2",
+    "name": "ObfDereferenceObject",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8be8",
+    "name": "KeSetBasePriorityThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8bee",
+    "name": "ObReferenceObjectByHandle",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8bf4",
+    "name": "KeQueryBasePriorityThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8bfa",
+    "name": "KeSetDisableBoostThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c00",
+    "name": "NtSuspendThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c06",
+    "name": "NtResumeThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c0c",
+    "name": "RtlRaiseException",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c12",
+    "name": "NtQueueApcThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c18",
+    "name": "NtYieldExecution",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c1e",
+    "name": "PsTerminateSystemThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c24",
+    "name": "PsCreateSystemThreadEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c2a",
+    "name": "NtCreateEvent",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c30",
+    "name": "ObOpenObjectByName",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c3c",
+    "name": "NtSetEvent",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c42",
+    "name": "NtClearEvent",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c48",
+    "name": "NtPulseEvent",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c4e",
+    "name": "NtCreateSemaphore",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c54",
+    "name": "NtReleaseSemaphore",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c5a",
+    "name": "NtCreateMutant",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c60",
+    "name": "NtReleaseMutant",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c66",
+    "name": "NtWaitForSingleObjectEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c6c",
+    "name": "NtSignalAndWaitForSingleObjectEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c72",
+    "name": "NtWaitForMultipleObjectsEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c78",
+    "name": "KeDelayExecutionThread",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c7e",
+    "name": "NtCreateTimer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c84",
+    "name": "NtSetTimerEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c8a",
+    "name": "NtCancelTimer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c90",
+    "name": "RtlFreeAnsiString",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c96",
+    "name": "RtlUnicodeStringToAnsiString",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8c9c",
+    "name": "RtlInitUnicodeString",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8ca2",
+    "name": "RtlTimeToTimeFields",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8cae",
+    "name": "RtlTimeFieldsToTime",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8cb4",
+    "name": "NtAllocateVirtualMemory",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8cba",
+    "name": "NtFreeVirtualMemory",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8cc0",
+    "name": "NtProtectVirtualMemory",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8cc6",
+    "name": "NtQueryVirtualMemory",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8ccc",
+    "name": "MmQueryStatistics",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8cd2",
+    "name": "NtSetInformationFile",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8cde",
+    "name": "NtQueryFullAttributesFile",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8ce4",
+    "name": "FscSetCacheSize",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8cea",
+    "name": "FscGetCacheSize",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8cf0",
+    "name": "NtQueryDirectoryFile",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8cf6",
+    "name": "NtWaitForSingleObject",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8cfc",
+    "name": "NtReadFile",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d08",
+    "name": "NtQueryInformationFile",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d14",
+    "name": "NtFlushBuffersFile",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d1a",
+    "name": "NtUserIoApcDispatcher",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d2c",
+    "name": "NtReadFileScatter",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d38",
+    "name": "NtCreateFile",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d3e",
+    "name": "MmFreeSystemMemory",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d44",
+    "name": "MmAllocateSystemMemory",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d4a",
+    "name": "KeWaitForSingleObject",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d50",
+    "name": "KfLowerIrql",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d56",
+    "name": "KeRaiseIrqlToDpcLevel",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d5c",
+    "name": "IoCreateDevice",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d62",
+    "name": "ExAllocatePool",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d68",
+    "name": "KeSetEvent",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d6e",
+    "name": "KeInitializeTimerEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d74",
+    "name": "KeInitializeDpc",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d7a",
+    "name": "IoInvalidDeviceRequest",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d80",
+    "name": "RtlNtStatusToDosError",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d86",
+    "name": "NtCreateIoCompletion",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d8c",
+    "name": "NtSetIoCompletion",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d92",
+    "name": "NtRemoveIoCompletion",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d98",
+    "name": "KeSetTimer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8d9e",
+    "name": "KeCancelTimer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8da4",
+    "name": "MmPersistContiguousMemory",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8daa",
+    "name": "MmAllocateContiguousMemory",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8db6",
+    "name": "HalReturnToFirmware",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8dbc",
+    "name": "NtQuerySymbolicLinkObject",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8dc2",
+    "name": "NtOpenSymbolicLinkObject",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8dc8",
+    "name": "KeQueryPerformanceCounter",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8dce",
+    "name": "KeQueryPerformanceFrequency",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8dd4",
+    "name": "MmAllocateContiguousMemoryEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8de0",
+    "name": "MmSetAddressProtect",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8dec",
+    "name": "IoCreateSymbolicLink",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8df2",
+    "name": "IoDeleteSymbolicLink",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e10",
+    "name": "RtlFillMemoryUlong",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e16",
+    "name": "RtlCompareMemoryUlong",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e1c",
+    "name": "RtlCompareMemory",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e22",
+    "name": "RtlInitializeCriticalSection",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e28",
+    "name": "IoStartPacket",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e2e",
+    "name": "IofCompleteRequest",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e34",
+    "name": "IoStartNextPacket",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e3a",
+    "name": "ExFreePool",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e40",
+    "name": "IoMarkIrpMustComplete",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e46",
+    "name": "HalIsResetOrShutdownPending",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e4c",
+    "name": "KeQueryInterruptTime",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e52",
+    "name": "HalInitiateShutdown",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e58",
+    "name": "HalGetInterruptVector",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e5e",
+    "name": "KfRaiseIrql",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e64",
+    "name": "HalRegisterShutdownNotification",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e6a",
+    "name": "KeConnectInterrupt",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e70",
+    "name": "KeInitializeInterrupt",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e76",
+    "name": "KeStallExecutionProcessor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e7c",
+    "name": "RtlEqualString",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e82",
+    "name": "XeLoadSection",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e88",
+    "name": "XeUnloadSection",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e8e",
+    "name": "MmGetPhysicalAddress",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e94",
+    "name": "MmLockUnlockBufferPages",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8e9a",
+    "name": "KeInsertQueueDpc",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8ea0",
+    "name": "MmLockUnlockPhysicalPage",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8ea6",
+    "name": "AvGetSavedDataAddress",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8eac",
+    "name": "AvSendTVEncoderOption",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8eb2",
+    "name": "AvSetDisplayMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8eb8",
+    "name": "AvSetSavedDataAddress",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8ec4",
+    "name": "KeDisconnectInterrupt",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8eca",
+    "name": "MmClaimGpuInstanceMemory",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8ed0",
+    "name": "ExQueryPoolBlockSize",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8ed6",
+    "name": "ExAllocatePoolWithTag",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8edc",
+    "name": "KeRemoveQueueDpc",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8ee2",
+    "name": "KeSynchronizeExecution",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8ee8",
+    "name": "KeSaveFloatingPointState",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8eee",
+    "name": "KeRestoreFloatingPointState",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8ef4",
+    "name": "PhyGetLinkState",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8efa",
+    "name": "PhyInitialize",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8f00",
+    "name": "KeWaitForMultipleObjects",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001d8f12",
+    "name": "KeSetTimerEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e64e7",
+    "name": "DbgBreakPoint",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e657e",
+    "name": "KeBugCheck",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e658a",
+    "name": "RtlAnsiStringToUnicodeString",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e69f0",
+    "name": "D3DDevice_GetDeviceCaps",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6a10",
+    "name": "D3DDevice_GetCreationParameters",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6a50",
+    "name": "D3DDevice_SetGammaRamp",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6ab0",
+    "name": "D3DDevice_GetGammaRamp",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6b10",
+    "name": "D3DDevice_CreateVolumeTexture",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6b40",
+    "name": "D3DDevice_CreateCubeTexture",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6ba0",
+    "name": "D3DDevice_CreateImageSurface",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6bc0",
+    "name": "D3DDevice_SetRenderState",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6d10",
+    "name": "D3DDevice_MultiplyTransform",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6d60",
+    "name": "D3DDevice_GetViewport",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6d80",
+    "name": "D3DDevice_SetMaterial",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6db0",
+    "name": "D3DDevice_GetMaterial",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6dd0",
+    "name": "D3DDevice_SetBackMaterial",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6e00",
+    "name": "D3DDevice_GetBackMaterial",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6e30",
+    "name": "D3DDevice_GetLight",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6e60",
+    "name": "D3DDevice_GetLightEnable",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6ed0",
+    "name": "D3DDevice_SwitchTexture",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6f30",
+    "name": "D3DDevice_AddRef",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6f50",
+    "name": "D3DDevice_Release",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6fa0",
+    "name": "D3DDevice_BlockOnFence",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e6fb0",
+    "name": "D3DDevice_KickPushBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e7030",
+    "name": "D3DDevice_GetVisibilityTestResult",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e70e0",
+    "name": "D3DDevice_SetVerticalBlankCallback",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e7140",
+    "name": "D3DDevice_GetProjectionViewportMatrix",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e7180",
+    "name": "D3DDevice_GetModelView",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e7200",
+    "name": "D3DDevice_GetTile",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e7230",
+    "name": "D3DDevice_GetScissors",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e72a0",
+    "name": "D3DDevice_SetFlickerFilter",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e72c0",
+    "name": "D3DDevice_SetSoftDisplayFilter",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e73a0",
+    "name": "D3DDevice_InsertFence",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e73b0",
+    "name": "D3DResource_AddRef",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e76b0",
+    "name": "D3DBaseTexture_GetLevelCount",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e79d0",
+    "name": "D3DDevice_GetDisplayMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e7a30",
+    "name": "D3DDevice_Reset",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e7de0",
+    "name": "D3DDevice_CopyRects",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e8250",
+    "name": "D3DDevice_GetRenderTarget",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e82a0",
+    "name": "D3DDevice_SetViewport",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e8400",
+    "name": "D3DDevice_SetLight",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e85e0",
+    "name": "D3DDevice_LightEnable",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e86c0",
+    "name": "D3DDevice_GetTexture2",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e88a0",
+    "name": "D3DDevice_SetPalette",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e8920",
+    "name": "D3DDevice_SetIndices",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e8a00",
+    "name": "D3DDevice_IsBusy",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e8a40",
+    "name": "D3DDevice_BeginVisibilityTest",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e8a70",
+    "name": "D3DDevice_EndVisibilityTest",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e8ad0",
+    "name": "D3DDevice_GetDisplayFieldStatus",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e8b10",
+    "name": "D3DDevice_FlushVertexCache",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e8b40",
+    "name": "D3DDevice_SetModelView",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e8d30",
+    "name": "D3DDevice_SetTile",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9000",
+    "name": "D3DDevice_SetScissors",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e92f0",
+    "name": "D3DDevice_SetRenderState_MultiSampleType",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9320",
+    "name": "D3DDevice_SetRenderState_PSTextureModes",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e93a0",
+    "name": "D3DDevice_SetRenderStateNotInline",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9400",
+    "name": "D3DDevice_SetRenderState2",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9620",
+    "name": "D3DDevice_SetRenderState_EdgeAntiAlias",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9650",
+    "name": "D3DDevice_SetRenderState_ShadowFunc",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9680",
+    "name": "D3DDevice_SetRenderState_FogColor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9740",
+    "name": "D3DDevice_SetRenderState_FrontFace",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9780",
+    "name": "D3DDevice_SetRenderState_NormalizeNormals",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e97b0",
+    "name": "D3DDevice_SetRenderState_TextureFactor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9800",
+    "name": "D3DDevice_SetRenderState_LineWidth",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9860",
+    "name": "D3DDevice_SetRenderState_Dxt1NoiseEnable",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e98e0",
+    "name": "D3DDevice_SetRenderState_ZBias",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9960",
+    "name": "D3DDevice_SetRenderState_LogicOp",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e99b0",
+    "name": "D3DDevice_SetRenderState_FillMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e99f0",
+    "name": "D3DDevice_SetRenderState_BackFillMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9a40",
+    "name": "D3DDevice_SetRenderState_TwoSidedLighting",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9aa0",
+    "name": "D3DDevice_SetRenderState_VertexBlend",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9ae0",
+    "name": "D3DDevice_SetTextureState_TexCoordIndex",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9bc0",
+    "name": "D3DDevice_SetTextureState_BumpEnv",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9c60",
+    "name": "D3DDevice_SetTextureState_ColorKeyColor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001e9cb0",
+    "name": "D3DDevice_SetTextureStageStateNotInline",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ea1c0",
+    "name": "D3D_CommonSetDebugRegisters",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ea300",
+    "name": "D3DDevice_SetRenderState_StencilEnable",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ea380",
+    "name": "D3DDevice_SetRenderState_StencilFail",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ea3f0",
+    "name": "D3DDevice_SetRenderState_YuvEnable",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ea420",
+    "name": "D3DDevice_SetRenderState_OcclusionCullEnable",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ea480",
+    "name": "D3DDevice_SetRenderState_StencilCullEnable",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ea4e0",
+    "name": "D3DDevice_SetRenderState_RopZCmpAlwaysRead",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ea500",
+    "name": "D3DDevice_SetRenderState_RopZRead",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ea520",
+    "name": "D3DDevice_SetRenderState_DoNotCullUncompressed",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ea540",
+    "name": "D3DDevice_SetRenderState_MultiSampleAntiAlias",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ea590",
+    "name": "D3DDevice_SetRenderState_MultiSampleMask",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eac90",
+    "name": "D3DDevice_GetShaderConstantMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eaf70",
+    "name": "D3DDevice_CreateVertexShader",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb0b0",
+    "name": "D3DDevice_GetVertexShader",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb0d0",
+    "name": "D3DDevice_GetVertexShaderConstant",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb110",
+    "name": "D3DDevice_GetVertexShaderInput",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb2d0",
+    "name": "D3DDevice_SetStreamSource",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb3b0",
+    "name": "D3DDevice_RunVertexStateShader",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb400",
+    "name": "D3DDevice_LoadVertexShader",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb460",
+    "name": "D3DDevice_LoadVertexShaderProgram",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb4d0",
+    "name": "D3DDevice_SelectVertexShader",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb540",
+    "name": "D3DDevice_GetVertexShaderSize",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb560",
+    "name": "D3DDevice_GetVertexShaderType",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb590",
+    "name": "D3DDevice_SetShaderConstantMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb6d0",
+    "name": "D3DDevice_DeleteVertexShader",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb8d0",
+    "name": "D3DDevice_SetVertexShaderConstant",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eb970",
+    "name": "D3DDevice_GetVertexShaderDeclaration",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ebda0",
+    "name": "D3DDevice_GetVertexShaderFunction",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ebe60",
+    "name": "D3DDevice_SetVertexShaderInput",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ec0b0",
+    "name": "D3DDevice_CreatePixelShader",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ec100",
+    "name": "D3DDevice_DeletePixelShader",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ec160",
+    "name": "D3DDevice_GetPixelShader",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ec5c0",
+    "name": "D3DDevice_SetPixelShader",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ec780",
+    "name": "D3DDevice_SetPixelShaderConstant",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ecc70",
+    "name": "D3DDevice_DrawVerticesUP",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ecdb0",
+    "name": "D3DDevice_DrawIndexedVerticesUP",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ecef0",
+    "name": "D3DDevice_DrawVertices",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ecf90",
+    "name": "D3DDevice_DrawIndexedVertices",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ed200",
+    "name": "D3DDevice_PrimeVertexCache",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ed360",
+    "name": "D3DDevice_SetVertexData4s",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ed3b0",
+    "name": "D3DDevice_SetVertexData4ub",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ed570",
+    "name": "D3DResource_GetType",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001edc20",
+    "name": "D3DTexture_GetSurfaceLevel",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001edcb0",
+    "name": "D3DCubeTexture_GetCubeMapSurface",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001edd10",
+    "name": "D3DCubeTexture_LockRect",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001edd80",
+    "name": "D3DVolumeTexture_LockBox",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eddd0",
+    "name": "D3D_CreateTexture",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001edea0",
+    "name": "D3D_SetPushBufferSize",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001edec0",
+    "name": "Direct3D_CreateDevice",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ee920",
+    "name": "D3DDevice_Present",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eeac0",
+    "name": "D3D_GetAdapterIdentifier",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eeaf0",
+    "name": "D3D_GetAdapterModeCount",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eeb90",
+    "name": "D3D_EnumAdapterModes",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eecf0",
+    "name": "D3D_GetDeviceCaps",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eed40",
+    "name": "D3D_GetAdapterDisplayMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eee20",
+    "name": "D3D_CheckDeviceFormat",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eeea0",
+    "name": "Direct3D_CheckDeviceMultiSampleType",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eef80",
+    "name": "D3DDevice_CreateIndexBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001eefe0",
+    "name": "D3DPalette_Lock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ef0a0",
+    "name": "D3DDevice_CreateVertexBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ef100",
+    "name": "D3DVertexBuffer_Lock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ef150",
+    "name": "D3DVertexBuffer_GetDesc",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ef170",
+    "name": "D3DDevice_CreatePalette",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ef1e0",
+    "name": "D3DSurface_GetDesc",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ef200",
+    "name": "D3DSurface_LockRect",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ef890",
+    "name": "D3DDevice_IsFencePending",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ef8c0",
+    "name": "D3DDevice_InsertCallback",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ef930",
+    "name": "CDevice_KickOff",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001ef9e0",
+    "name": "D3D_SetFence",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001efb70",
+    "name": "CDevice_MakeSpace",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001efd80",
+    "name": "D3D_BlockOnResource",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001efe10",
+    "name": "XMETAL_StartPush",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f02d0",
+    "name": "D3D_UpdateProjectionViewportTransform",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f05e0",
+    "name": "D3D_LazySetPointParams",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f1bc0",
+    "name": "CDevice_SetStateVB",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f1eb0",
+    "name": "CDevice_SetStateUP",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f30c0",
+    "name": "CDevice_FreeFrameBuffers",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f31c0",
+    "name": "CDevice_InitializeFrameBuffers",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f4590",
+    "name": "Lock3DSurface",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f4880",
+    "name": "CMiniport_GetDisplayCapabilities",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f4aa0",
+    "name": "CMiniport_IsFlipPending",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f5390",
+    "name": "D3D_AllocContiguousMemory",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f5b5b",
+    "name": "CMiniport_CreateCtxDmaObject",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f5d4d",
+    "name": "CMiniport_InitHardware",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f9165",
+    "name": "D3D_ClearStateBlockFlags",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f91a1",
+    "name": "D3DDevice_BeginStateBlock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f91af",
+    "name": "D3DDevice_Suspend",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f92f0",
+    "name": "D3D_RecordStateBlock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f971e",
+    "name": "D3DDevice_ApplyStateBlock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f98a6",
+    "name": "D3DDevice_CaptureStateBlock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f9b53",
+    "name": "D3DDevice_DeleteStateBlock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f9be4",
+    "name": "D3DDevice_CreateStateBlock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x001f9d0f",
+    "name": "D3DDevice_EndStateBlock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020368b",
+    "name": "DirectSoundEnterCriticalSection",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020380b",
+    "name": "CMcpxAPU_ServiceDeferredCommandsLow",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203810",
+    "name": "CMcpxVoiceClient_SetVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020384b",
+    "name": "IDirectSound_AddRef",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203861",
+    "name": "IDirectSound_Release",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203877",
+    "name": "IDirectSoundBuffer_Unlock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203881",
+    "name": "IDirectSoundBuffer_AddRef",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203897",
+    "name": "IDirectSoundBuffer_Release",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002038d9",
+    "name": "DirectSoundGetSampleTime",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002038df",
+    "name": "DirectSoundUseFullHRTF",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002038fe",
+    "name": "DirectSoundUseLightHRTF",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203936",
+    "name": "DSound_CRefCount_AddRef",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020395b",
+    "name": "DSound_CRefCount_Release",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002039b7",
+    "name": "CDirectSound_GetCaps",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203a07",
+    "name": "CDirectSound_GetSpeakerConfig",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203a21",
+    "name": "CDirectSound_DownloadEffectsImage",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203a65",
+    "name": "CDirectSound_SetEffectData",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203ab0",
+    "name": "CDirectSound_GetEffectData",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203af2",
+    "name": "CDirectSound_CommitEffectData",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203b25",
+    "name": "CDirectSound_SetMixBinHeadroom",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203b5a",
+    "name": "CDirectSound_SetAllParameters",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203b95",
+    "name": "CDirectSound_SetDistanceFactor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203bd4",
+    "name": "CDirectSound_SetDopplerFactor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203c13",
+    "name": "CDirectSound_SetRolloffFactor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203c52",
+    "name": "CDirectSound_SetOrientation",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203cba",
+    "name": "CDirectSound_SetPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203d0c",
+    "name": "CDirectSound_SetVelocity",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203d5e",
+    "name": "CDirectSound_SetI3DL2Listener",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203da9",
+    "name": "CDirectSound_CommitDeferredSettings",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203dd4",
+    "name": "CDirectSound_GetTime",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203de3",
+    "name": "CDirectSound_DoWork",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203e0a",
+    "name": "CDirectSound_EnableHeadphones",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203f32",
+    "name": "CDirectSoundVoice_SetPitch",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203f69",
+    "name": "CDirectSoundVoice_SetVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203fa3",
+    "name": "CDirectSoundVoice_SetLFO",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00203fd4",
+    "name": "CDirectSoundVoice_SetEG",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204005",
+    "name": "CDirectSoundVoice_SetFilter",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204036",
+    "name": "CDirectSoundVoice_SetHeadroom",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204075",
+    "name": "CDirectSoundVoice_SetMixBinVolumes",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002040e9",
+    "name": "CDirectSoundVoice_SetAllParameters",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204124",
+    "name": "CDirectSoundVoice_SetConeAngles",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204163",
+    "name": "CDirectSoundVoice_SetConeOrientation",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002041b5",
+    "name": "CDirectSoundVoice_SetConeOutsideVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002041f0",
+    "name": "CDirectSoundVoice_SetMaxDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020422f",
+    "name": "CDirectSoundVoice_SetMinDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020426e",
+    "name": "CDirectSoundVoice_SetMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002042a9",
+    "name": "CDirectSoundVoice_SetPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002042fb",
+    "name": "CDirectSoundVoice_SetVelocity",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020434d",
+    "name": "CDirectSoundVoice_SetI3DL2Source",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002043a4",
+    "name": "CDirectSoundBuffer_PlayEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002043e1",
+    "name": "CDirectSoundBuffer_StopEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204437",
+    "name": "CDirectSoundBuffer_GetStatus",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204468",
+    "name": "CDirectSoundBuffer_SetLoopRegion",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002044b5",
+    "name": "CDirectSoundBuffer_GetCurrentPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002044ea",
+    "name": "CDirectSoundBuffer_Lock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204590",
+    "name": "CDirectSoundBuffer_SetCurrentPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020466c",
+    "name": "CDirectSoundStream_GetInfo",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002046b7",
+    "name": "CDirectSoundStream_Discontinuity",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002046e4",
+    "name": "CDirectSoundStream_Flush",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204711",
+    "name": "CDirectSoundStream_GetStatus__r1",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204746",
+    "name": "CDirectSoundStream_Process",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020476e",
+    "name": "CDirectSoundStream_Pause",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020497d",
+    "name": "CDirectSoundBuffer_SetVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204982",
+    "name": "CDirectSoundBuffer_SetPitch",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204987",
+    "name": "CDirectSoundBuffer_SetLFO",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020498c",
+    "name": "CDirectSoundBuffer_SetEG",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204991",
+    "name": "CDirectSoundBuffer_SetFilter",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204996",
+    "name": "CDirectSoundBuffer_SetHeadroom",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020499b",
+    "name": "CDirectSoundBuffer_SetMixBinVolumes",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002049a0",
+    "name": "CDirectSoundBuffer_SetAllParameters",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002049a5",
+    "name": "CDirectSoundBuffer_SetConeAngles",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002049aa",
+    "name": "CDirectSoundBuffer_SetConeOrientation",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002049d3",
+    "name": "CDirectSoundBuffer_SetConeOutsideVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002049d8",
+    "name": "CDirectSoundBuffer_SetMaxDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002049f0",
+    "name": "CDirectSoundBuffer_SetMinDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204a08",
+    "name": "CDirectSoundBuffer_SetMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204a0d",
+    "name": "CDirectSoundBuffer_SetPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204a36",
+    "name": "CDirectSoundBuffer_SetVelocity",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204a5f",
+    "name": "CDirectSoundBuffer_SetI3DL2Source",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204a64",
+    "name": "CDirectSoundStream_SetPitch",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204a78",
+    "name": "CDirectSoundStream_SetVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204a8c",
+    "name": "CDirectSoundStream_SetLFO",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204aa0",
+    "name": "CDirectSoundStream_SetEG",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204ab4",
+    "name": "CDirectSoundStream_SetFilter",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204ac8",
+    "name": "CDirectSoundStream_SetHeadroom",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204adc",
+    "name": "CDirectSoundStream_SetMixBinVolumes_12",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204af4",
+    "name": "CDirectSoundStream_SetAllParameters",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204b0c",
+    "name": "CDirectSoundStream_SetConeAngles",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204b28",
+    "name": "CDirectSoundStream_SetConeOrientation",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204b55",
+    "name": "CDirectSoundStream_SetConeOutsideVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204b6d",
+    "name": "CDirectSoundStream_SetMaxDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204b89",
+    "name": "CDirectSoundStream_SetMinDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204ba5",
+    "name": "CDirectSoundStream_SetMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204bbd",
+    "name": "CDirectSoundStream_SetPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204bea",
+    "name": "CDirectSoundStream_SetVelocity",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204c17",
+    "name": "CDirectSoundStream_SetI3DL2Source",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204c5d",
+    "name": "IDirectSound_GetCaps",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204c79",
+    "name": "IDirectSound_GetSpeakerConfig",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204c95",
+    "name": "IDirectSound_DownloadEffectsImage",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204cbc",
+    "name": "IDirectSound_GetEffectData",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204ce3",
+    "name": "IDirectSound_SetEffectData",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204d0d",
+    "name": "IDirectSound_CommitEffectData",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204d25",
+    "name": "IDirectSound_EnableHeadphones",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204d41",
+    "name": "IDirectSound_SetMixBinHeadroom",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204d61",
+    "name": "IDirectSound_SetAllParameters",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204d81",
+    "name": "IDirectSound_SetDistanceFactor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204da5",
+    "name": "IDirectSound_SetDopplerFactor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204dc9",
+    "name": "IDirectSound_SetOrientation",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204e13",
+    "name": "IDirectSound_SetPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204e48",
+    "name": "IDirectSound_SetRolloffFactor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204e6c",
+    "name": "IDirectSound_SetVelocity",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204ea1",
+    "name": "IDirectSound_CommitDeferredSettings",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204eb9",
+    "name": "IDirectSound_GetTime",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204ed5",
+    "name": "IDirectSound_SetI3DL2Listener",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204f5b",
+    "name": "IDirectSoundBuffer_SetLFO",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204f77",
+    "name": "IDirectSoundBuffer_SetEG",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204f93",
+    "name": "IDirectSoundBuffer_SetFilter",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204faf",
+    "name": "IDirectSoundBuffer_SetHeadroom",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204fcb",
+    "name": "IDirectSoundBuffer_SetMixBinVolumes_12",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00204feb",
+    "name": "IDirectSoundBuffer_SetAllParameters",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020500b",
+    "name": "IDirectSoundBuffer_SetConeAngles",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020502f",
+    "name": "IDirectSoundBuffer_SetConeOrientation",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205064",
+    "name": "IDirectSoundBuffer_SetConeOutsideVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205084",
+    "name": "IDirectSoundBuffer_SetMaxDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002050a8",
+    "name": "IDirectSoundBuffer_SetMinDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002050cc",
+    "name": "IDirectSoundBuffer_SetMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002050ec",
+    "name": "IDirectSoundBuffer_SetPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205121",
+    "name": "IDirectSoundBuffer_SetVelocity",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205156",
+    "name": "IDirectSoundBuffer_PlayEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020517a",
+    "name": "IDirectSoundBuffer_StopEx",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002051be",
+    "name": "IDirectSoundBuffer_GetStatus",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002051da",
+    "name": "IDirectSoundBuffer_GetCurrentPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205216",
+    "name": "IDirectSoundBuffer_Lock",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205246",
+    "name": "IDirectSoundBuffer_SetI3DL2Source",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020527a",
+    "name": "IDirectSoundStream_SetPitch",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020528e",
+    "name": "IDirectSoundStream_SetLFO",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002052a2",
+    "name": "IDirectSoundStream_SetEG",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002052b6",
+    "name": "IDirectSoundStream_SetFilter",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002052ca",
+    "name": "IDirectSoundStream_SetHeadroom",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002052de",
+    "name": "IDirectSoundStream_SetMixBinVolumes_12",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002052ed",
+    "name": "IDirectSoundStream_SetConeOrientation",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020534b",
+    "name": "IDirectSoundStream_SetMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205350",
+    "name": "IDirectSoundStream_SetPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205379",
+    "name": "IDirectSoundStream_SetVelocity",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002053a2",
+    "name": "IDirectSoundStream_Pause",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002053ac",
+    "name": "DirectSoundDoWork",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002055a1",
+    "name": "CDirectSoundVoice_SetFrequency",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002055e4",
+    "name": "CDirectSoundVoice_SetOutputBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205650",
+    "name": "CDirectSoundVoice_SetMixBins",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002056a8",
+    "name": "CDirectSoundBufferSettings_SetBufferData",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205768",
+    "name": "CDirectSoundBuffer_SetBufferData",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002057dd",
+    "name": "CDirectSoundBuffer_Play",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020580f",
+    "name": "CDirectSoundBuffer_Stop",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020583f",
+    "name": "CDirectSoundBuffer_SetNotificationPositions",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205894",
+    "name": "CDirectSoundBuffer_SetOutputBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002059f9",
+    "name": "CDirectSoundStream_AddRef",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205a09",
+    "name": "CDirectSoundStream_Release",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205a19",
+    "name": "CDirectSoundStream_SetOutputBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205aa8",
+    "name": "CDirectSoundBuffer_SetFrequency",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205aad",
+    "name": "CDirectSoundBuffer_SetMixBins",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205ac7",
+    "name": "CDirectSoundStream_SetFrequency",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205adb",
+    "name": "CDirectSoundStream_SetMixBins",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205aef",
+    "name": "IDirectSoundBuffer_SetFrequency",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205b0b",
+    "name": "IDirectSoundBuffer_SetOutputBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205b27",
+    "name": "IDirectSoundBuffer_SetMixBins",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205b67",
+    "name": "IDirectSoundBuffer_Stop",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205b9f",
+    "name": "IDirectSoundBuffer_SetNotificationPositions",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205bd3",
+    "name": "IDirectSoundStream_SetOutputBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205bd8",
+    "name": "IDirectSoundStream_SetMixBins",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205e69",
+    "name": "CDirectSoundStream_Constructor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205f6d",
+    "name": "CDirectSound_CreateSoundBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00205fed",
+    "name": "CDirectSound_CreateSoundStream",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002060d4",
+    "name": "IDirectSound_CreateSoundBuffer",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002060f8",
+    "name": "IDirectSound_CreateSoundStream",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00206232",
+    "name": "DirectSoundCreate",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020630e",
+    "name": "DirectSoundCreateStream",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00206a5e",
+    "name": "CMcpxAPU_Commit3dSettings",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00206dc4",
+    "name": "CMcpxAPU_SetMixBinHeadroom",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00207234",
+    "name": "CMcpxAPU_Set3dParameters",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00207265",
+    "name": "CMcpxAPU_Set3dDistanceFactor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00207289",
+    "name": "CMcpxAPU_Set3dDopplerFactor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002072ad",
+    "name": "CMcpxAPU_Set3dRolloffFactor",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00207309",
+    "name": "CMcpxAPU_Set3dPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00207334",
+    "name": "CMcpxAPU_Set3dVelocity",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020735f",
+    "name": "CMcpxAPU_SetI3DL2Listener",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00208da2",
+    "name": "CMcpxVoiceClient_SetFilter",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002097a9",
+    "name": "CMcpxVoiceClient_SetMixBins",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00209961",
+    "name": "CMcpxVoiceClient_SetPitch",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00209c05",
+    "name": "CMcpxVoiceClient_SetLFO",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00209d16",
+    "name": "CMcpxVoiceClient_SetEG",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00209e6d",
+    "name": "CMcpxVoiceClient_Commit3dSettings",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020a0ef",
+    "name": "CMcpxVoiceClient_Set3dParameters",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020a145",
+    "name": "CMcpxVoiceClient_Set3dConeOrientation",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020a16d",
+    "name": "CMcpxVoiceClient_Set3dConeOutsideVolume",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020a18e",
+    "name": "CMcpxVoiceClient_Set3dMaxDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020a1af",
+    "name": "CMcpxVoiceClient_Set3dMinDistance",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020a1d0",
+    "name": "CMcpxVoiceClient_Set3dMode",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020a1f1",
+    "name": "CMcpxVoiceClient_Set3dPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020a219",
+    "name": "CMcpxVoiceClient_Set3dVelocity",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020a241",
+    "name": "CMcpxVoiceClient_SetI3DL2Source",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020a2f5",
+    "name": "CSensaura3d_GetFullHRTFFilterPair",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020a431",
+    "name": "CSensaura3d_GetLiteHRTFFilterPair",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020b0ac",
+    "name": "CMcpxBuffer_GetStatus",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020b0f7",
+    "name": "CMcpxBuffer_GetCurrentPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020b873",
+    "name": "CMcpxBuffer_Stop",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020b8d7",
+    "name": "CMcpxBuffer_SetCurrentPosition",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020ba90",
+    "name": "CMcpxBuffer_SetBufferData",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020baa4",
+    "name": "CMcpxBuffer_Play",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020c050",
+    "name": "CMcpxStream_Pause",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020c3fe",
+    "name": "CMcpxStream_Flush",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020c752",
+    "name": "CMcpxStream_Discontinuity",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020c857",
+    "name": "XAudioCalculatePitch",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020ca62",
+    "name": "XAudioCreatePcmFormat",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020caac",
+    "name": "XAudioCreateAdpcmFormat",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0020cbad",
+    "name": "IsValidFormat",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002235c4",
+    "name": "GetLastError",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00223be7",
+    "name": "ioctlsocket",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002240c3",
+    "name": "listen",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00224881",
+    "name": "bind",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00224904",
+    "name": "connect",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x00225021",
+    "name": "socket",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002256bb",
+    "name": "recv",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x002258a4",
+    "name": "send",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024b4e4",
+    "name": "MU_Init",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024b724",
+    "name": "IUsbInit_GetMaxDeviceTypeCount",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024ba93",
+    "name": "FUN_0024ba93",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024bb54",
+    "name": "XInitDevices",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024c143",
+    "name": "XInputOpen",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024c1b8",
+    "name": "XInputClose",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024c1c4",
+    "name": "XInputGetCapabilities",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024c3b6",
+    "name": "XInputGetState",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024c45f",
+    "name": "XInputPoll",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024c932",
+    "name": "XGetDevices",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024c954",
+    "name": "XGetDeviceChanges",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x0024d009",
+    "name": "XID_fCloseDevice",
+    "object": "<xdk_stubs>",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

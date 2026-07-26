@@ -39129,235 +39129,293 @@
       "functions": [
         {
           "addr": "0x1cfa3f",
-          "decl": "void SetThreadPriorityBoost(void);"
+          "decl": "void SetThreadPriorityBoost(void);",
+          "ported": false
         },
         {
           "addr": "0x1cfa85",
-          "decl": "void FUN_001cfa85(void);"
+          "decl": "void FUN_001cfa85(void);",
+          "ported": false
         },
         {
           "addr": "0x1cfac6",
-          "decl": "void FUN_001cfac6(void);"
+          "decl": "void FUN_001cfac6(void);",
+          "ported": false
         },
         {
           "addr": "0x1cfaec",
-          "decl": "int __stdcall ResumeThread(int thread_handle);"
+          "decl": "int __stdcall ResumeThread(int thread_handle);",
+          "ported": false
         },
         {
           "addr": "0x1cfb12",
-          "decl": "void RaiseException(void);"
+          "decl": "void RaiseException(void);",
+          "ported": false
         },
         {
           "addr": "0x1cfb98",
-          "decl": "void SwitchToThread(void);"
+          "decl": "void SwitchToThread(void);",
+          "ported": false
         },
         {
           "addr": "0x1cfbbd",
-          "decl": "int __stdcall GetExitCodeThread(int thread_handle, int *exit_code);"
+          "decl": "int __stdcall GetExitCodeThread(int thread_handle, int *exit_code);",
+          "ported": false
         },
         {
           "addr": "0x1cfc1b",
-          "decl": "void FUN_001cfc1b(void);"
+          "decl": "void FUN_001cfc1b(void);",
+          "ported": false
         },
         {
           "addr": "0x1cfca4",
-          "decl": "void XRegisterThreadNotifyRoutine(void);"
+          "decl": "void XRegisterThreadNotifyRoutine(void);",
+          "ported": false
         },
         {
           "addr": "0x1cfd8c",
-          "decl": "void * __stdcall CreateThread(void *security, int stack_size, void *func, void *param, int flags, int *thread_id);"
+          "decl": "void * __stdcall CreateThread(void *security, int stack_size, void *func, void *param, int flags, int *thread_id);",
+          "ported": false
         },
         {
           "addr": "0x1cfde0",
-          "decl": "void FUN_001cfde0(void);"
+          "decl": "void FUN_001cfde0(void);",
+          "ported": false
         },
         {
           "addr": "0x1cfded",
-          "decl": "void * __stdcall CreateEventA(void *security, int manual_reset, int initial_state, const char *name);"
+          "decl": "void * __stdcall CreateEventA(void *security, int manual_reset, int initial_state, const char *name);",
+          "ported": false
         },
         {
           "addr": "0x1cfe4e",
-          "decl": "void OpenEventA(void);"
+          "decl": "void OpenEventA(void);",
+          "ported": false
         },
         {
           "addr": "0x1cfeaa",
-          "decl": "bool __stdcall SetEvent(void *handle);"
+          "decl": "bool __stdcall SetEvent(void *handle);",
+          "ported": false
         },
         {
           "addr": "0x1cfeca",
-          "decl": "void ResetEvent(void);"
+          "decl": "void ResetEvent(void);",
+          "ported": false
         },
         {
           "addr": "0x1cff08",
-          "decl": "void FUN_001cff08(void);"
+          "decl": "void FUN_001cff08(void);",
+          "ported": false
         },
         {
           "addr": "0x1cff63",
-          "decl": "void FUN_001cff63(void);"
+          "decl": "void FUN_001cff63(void);",
+          "ported": false
         },
         {
           "addr": "0x1cffe5",
-          "decl": "void CreateMutexA(void);"
+          "decl": "void CreateMutexA(void);",
+          "ported": false
         },
         {
           "addr": "0x1d003d",
-          "decl": "void FUN_001d003d(void);"
+          "decl": "void FUN_001d003d(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0099",
-          "decl": "int __stdcall ReleaseMutex(int mutex_handle);"
+          "decl": "int __stdcall ReleaseMutex(int mutex_handle);",
+          "ported": false
         },
         {
           "addr": "0x1d00b9",
-          "decl": "void FUN_001d00b9(void);"
+          "decl": "void FUN_001d00b9(void);",
+          "ported": false
         },
         {
           "addr": "0x1d00fd",
-          "decl": "void SignalObjectAndWait(void);"
+          "decl": "void SignalObjectAndWait(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0144",
-          "decl": "void FUN_001d0144(void);"
+          "decl": "void FUN_001d0144(void);",
+          "ported": false
         },
         {
           "addr": "0x1d01c4",
-          "decl": "unsigned int __stdcall SleepEx(unsigned int milliseconds, int alertable);"
+          "decl": "unsigned int __stdcall SleepEx(unsigned int milliseconds, int alertable);",
+          "ported": false
         },
         {
           "addr": "0x1d0216",
-          "decl": "void FUN_001d0216(void);"
+          "decl": "void FUN_001d0216(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0274",
-          "decl": "void FUN_001d0274(void);"
+          "decl": "void FUN_001d0274(void);",
+          "ported": false
         },
         {
           "addr": "0x1d02d0",
-          "decl": "void FUN_001d02d0(void);"
+          "decl": "void FUN_001d02d0(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0336",
-          "decl": "int __stdcall WaitForSingleObject(int handle, int timeout_ms);"
+          "decl": "int __stdcall WaitForSingleObject(int handle, int timeout_ms);",
+          "ported": false
         },
         {
           "addr": "0x1d0348",
-          "decl": "void FUN_001d0348(void);"
+          "decl": "void FUN_001d0348(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0362",
-          "decl": "void FUN_001d0362(void);"
+          "decl": "void FUN_001d0362(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0370",
-          "decl": "void OutputDebugStringA(void);"
+          "decl": "void OutputDebugStringA(void);",
+          "ported": false
         },
         {
           "addr": "0x1d03a2",
-          "decl": "void OutputDebugStringW(void);"
+          "decl": "void OutputDebugStringW(void);",
+          "ported": false
         },
         {
           "addr": "0x1d03ee",
-          "decl": "void FUN_001d03ee(void);"
+          "decl": "void FUN_001d03ee(void);",
+          "ported": false
         },
         {
           "addr": "0x1d040f",
-          "decl": "void FUN_001d040f(void);"
+          "decl": "void FUN_001d040f(void);",
+          "ported": false
         },
         {
           "addr": "0x1d0447",
-          "decl": "void FUN_001d0447(void);"
+          "decl": "void FUN_001d0447(void);",
+          "ported": false
         },
         {
           "addr": "0x1e6ae0",
-          "decl": "void __stdcall D3DDevice_CreateTexture(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture);"
+          "decl": "void __stdcall D3DDevice_CreateTexture(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture);",
+          "ported": false
         },
         {
           "addr": "0x1e6bd0",
-          "decl": "void __stdcall D3DDevice_SetTransform(uint32_t type, void *matrix);"
+          "decl": "void __stdcall D3DDevice_SetTransform(uint32_t type, void *matrix);",
+          "ported": false
         },
         {
           "addr": "0x1e6ce0",
-          "decl": "void __stdcall D3DDevice_GetTransform(uint32_t type, void *matrix_out);"
+          "decl": "void __stdcall D3DDevice_GetTransform(uint32_t type, void *matrix_out);",
+          "ported": false
         },
         {
           "addr": "0x1e7110",
-          "decl": "void D3DDevice_BlockUntilVerticalBlank(void);"
+          "decl": "void D3DDevice_BlockUntilVerticalBlank(void);",
+          "ported": false
         },
         {
           "addr": "0x1e7af0",
-          "decl": "void __stdcall D3DDevice_SetRenderTarget(void *render_target, void *depth_stencil);"
+          "decl": "void __stdcall D3DDevice_SetRenderTarget(void *render_target, void *depth_stencil);",
+          "ported": false
         },
         {
           "addr": "0x1e7d50",
-          "decl": "int __stdcall D3DDevice_GetBackBuffer(int back_buffer, uint32_t type, void **out_surface);"
+          "decl": "int __stdcall D3DDevice_GetBackBuffer(int back_buffer, uint32_t type, void **out_surface);",
+          "ported": false
         },
         {
           "addr": "0x1e8270",
-          "decl": "int __stdcall D3DDevice_GetDepthStencilSurface(void **out_surface);"
+          "decl": "int __stdcall D3DDevice_GetDepthStencilSurface(void **out_surface);",
+          "ported": false
         },
         {
           "addr": "0x1e8700",
-          "decl": "void __stdcall D3DDevice_SetTexture(uint32_t stage, void *texture);"
+          "decl": "void __stdcall D3DDevice_SetTexture(uint32_t stage, void *texture);",
+          "ported": false
         },
         {
           "addr": "0x1e9350",
-          "decl": "void D3DDevice_SetRenderState_Simple(uint32_t reg@<ecx>, uint32_t value@<edx>);"
+          "decl": "void D3DDevice_SetRenderState_Simple(uint32_t reg@<ecx>, uint32_t value@<edx>);",
+          "ported": false
         },
         {
           "addr": "0x1e9380",
-          "decl": "void D3DDevice_SetRenderState_Deferred(uint32_t reg_index@<ecx>, uint32_t value@<edx>);"
+          "decl": "void D3DDevice_SetRenderState_Deferred(uint32_t reg_index@<ecx>, uint32_t value@<edx>);",
+          "ported": false
         },
         {
           "addr": "0x1e9410",
-          "decl": "void __stdcall D3DDevice_SetTextureStageState(uint32_t stage@<ecx>, uint32_t state@<edx>, uint32_t value);"
+          "decl": "void __stdcall D3DDevice_SetTextureStageState(uint32_t stage@<ecx>, uint32_t state@<edx>, uint32_t value);",
+          "ported": false
         },
         {
           "addr": "0x1e96d0",
-          "decl": "void __stdcall D3DDevice_SetRenderState_CullMode(uint32_t mode);"
+          "decl": "void __stdcall D3DDevice_SetRenderState_CullMode(uint32_t mode);",
+          "ported": false
         },
         {
           "addr": "0x1e9c20",
-          "decl": "void __stdcall D3DDevice_SetTextureState_BorderColor(uint32_t stage, uint32_t color);"
+          "decl": "void __stdcall D3DDevice_SetTextureState_BorderColor(uint32_t stage, uint32_t color);",
+          "ported": false
         },
         {
           "addr": "0x1ea290",
-          "decl": "void __stdcall D3DDevice_SetRenderState_ZEnable(uint32_t enable);"
+          "decl": "void __stdcall D3DDevice_SetRenderState_ZEnable(uint32_t enable);",
+          "ported": false
         },
         {
           "addr": "0x1ea650",
-          "decl": "void __stdcall D3DDevice_Clear(uint32_t count, void *rects, uint32_t flags, uint32_t color, float z, uint32_t stencil);"
+          "decl": "void __stdcall D3DDevice_Clear(uint32_t count, void *rects, uint32_t flags, uint32_t color, float z, uint32_t stencil);",
+          "ported": false
         },
         {
           "addr": "0x1eb7f0",
-          "decl": "void __stdcall D3DDevice_SetVertexShader(uint32_t shader);"
+          "decl": "void __stdcall D3DDevice_SetVertexShader(uint32_t shader);",
+          "ported": false
         },
         {
           "addr": "0x1ec120",
-          "decl": "void __stdcall D3DDevice_SetPixelShaderProgram(void *program);"
+          "decl": "void __stdcall D3DDevice_SetPixelShaderProgram(void *program);",
+          "ported": false
         },
         {
           "addr": "0x1ed280",
-          "decl": "void __stdcall D3DDevice_SetVertexData2f(uint32_t reg, float a, float b);"
+          "decl": "void __stdcall D3DDevice_SetVertexData2f(uint32_t reg, float a, float b);",
+          "ported": false
         },
         {
           "addr": "0x1ed2c0",
-          "decl": "void __stdcall D3DDevice_SetVertexData4f(uint32_t reg, float a, float b, float c, float d);"
+          "decl": "void __stdcall D3DDevice_SetVertexData4f(uint32_t reg, float a, float b, float c, float d);",
+          "ported": false
         },
         {
           "addr": "0x1ed320",
-          "decl": "void __stdcall D3DDevice_SetVertexData2s(unsigned int reg, int a, int b);"
+          "decl": "void __stdcall D3DDevice_SetVertexData2s(unsigned int reg, int a, int b);",
+          "ported": false
         },
         {
           "addr": "0x1ed400",
-          "decl": "void __stdcall D3DDevice_SetVertexDataColor(unsigned int reg, unsigned int color);"
+          "decl": "void __stdcall D3DDevice_SetVertexDataColor(unsigned int reg, unsigned int color);",
+          "ported": false
         },
         {
           "addr": "0x1ed450",
-          "decl": "void __stdcall D3DDevice_Begin(uint32_t primitive_type);"
+          "decl": "void __stdcall D3DDevice_Begin(uint32_t primitive_type);",
+          "ported": false
         },
         {
           "addr": "0x1ed490",
-          "decl": "void D3DDevice_End(void);"
+          "decl": "void D3DDevice_End(void);",
+          "ported": false
         },
         {
           "addr": "0x1efd60",
@@ -39366,59 +39424,73 @@
         },
         {
           "addr": "0x204f23",
-          "decl": "int __stdcall IDirectSoundBuffer_SetVolume(void *buffer, int volume);"
+          "decl": "int __stdcall IDirectSoundBuffer_SetVolume(void *buffer, int volume);",
+          "ported": false
         },
         {
           "addr": "0x204f3f",
-          "decl": "int __stdcall IDirectSoundBuffer_SetPitch(void *buffer, int pitch);"
+          "decl": "int __stdcall IDirectSoundBuffer_SetPitch(void *buffer, int pitch);",
+          "ported": false
         },
         {
           "addr": "0x20519e",
-          "decl": "int __stdcall IDirectSoundBuffer_SetLoopRegion(void *buffer, uint32_t start, uint32_t length);"
+          "decl": "int __stdcall IDirectSoundBuffer_SetLoopRegion(void *buffer, uint32_t start, uint32_t length);",
+          "ported": false
         },
         {
           "addr": "0x2051fa",
-          "decl": "int __stdcall IDirectSoundBuffer_SetCurrentPosition(void *buffer, uint32_t position);"
+          "decl": "int __stdcall IDirectSoundBuffer_SetCurrentPosition(void *buffer, uint32_t position);",
+          "ported": false
         },
         {
           "addr": "0x205266",
-          "decl": "int __stdcall IDirectSoundStream_SetVolume(void *stream, int volume);"
+          "decl": "int __stdcall IDirectSoundStream_SetVolume(void *stream, int volume);",
+          "ported": false
         },
         {
           "addr": "0x2052e8",
-          "decl": "int __stdcall IDirectSoundStream_SetConeAngles(void *stream, int inner_angle, int outer_angle, int deferred);"
+          "decl": "int __stdcall IDirectSoundStream_SetConeAngles(void *stream, int inner_angle, int outer_angle, int deferred);",
+          "ported": false
         },
         {
           "addr": "0x205316",
-          "decl": "int __stdcall IDirectSoundStream_SetConeOutsideVolume(void *stream, int volume, int deferred);"
+          "decl": "int __stdcall IDirectSoundStream_SetConeOutsideVolume(void *stream, int volume, int deferred);",
+          "ported": false
         },
         {
           "addr": "0x20531b",
-          "decl": "int __stdcall IDirectSoundStream_SetMaxDistance(void *stream, float distance, int deferred);"
+          "decl": "int __stdcall IDirectSoundStream_SetMaxDistance(void *stream, float distance, int deferred);",
+          "ported": false
         },
         {
           "addr": "0x205333",
-          "decl": "int __stdcall IDirectSoundStream_SetMinDistance(void *stream, float distance, int deferred);"
+          "decl": "int __stdcall IDirectSoundStream_SetMinDistance(void *stream, float distance, int deferred);",
+          "ported": false
         },
         {
           "addr": "0x2053a7",
-          "decl": "int __stdcall IDirectSoundStream_SetAllParameters(void *stream, void *params, int deferred);"
+          "decl": "int __stdcall IDirectSoundStream_SetAllParameters(void *stream, void *params, int deferred);",
+          "ported": false
         },
         {
           "addr": "0x205b43",
-          "decl": "int __stdcall IDirectSoundBuffer_Play(void *buffer, uint32_t reserved, uint32_t priority, uint32_t flags);"
+          "decl": "int __stdcall IDirectSoundBuffer_Play(void *buffer, uint32_t reserved, uint32_t priority, uint32_t flags);",
+          "ported": false
         },
         {
           "addr": "0x205b7f",
-          "decl": "int __stdcall IDirectSoundBuffer_SetBufferData(void *buffer, void *data, uint32_t size);"
+          "decl": "int __stdcall IDirectSoundBuffer_SetBufferData(void *buffer, void *data, uint32_t size);",
+          "ported": false
         },
         {
           "addr": "0x205bbf",
-          "decl": "int __stdcall IDirectSoundStream_SetFrequency(void *stream, int frequency);"
+          "decl": "int __stdcall IDirectSoundStream_SetFrequency(void *stream, int frequency);",
+          "ported": false
         },
         {
           "addr": "0x2062d0",
-          "decl": "int __stdcall DirectSoundCreateBuffer(void *desc, void **out_buffer);"
+          "decl": "int __stdcall DirectSoundCreateBuffer(void *desc, void **out_buffer);",
+          "ported": false
         },
         {
           "addr": "0x2038df",
@@ -39477,7 +39549,7 @@
         }
       ],
       "name": "<xdk_stubs>",
-      "source": null
+      "source": "xdk/xdk_stubs_rt.c"
     },
     {
       "functions": [
@@ -40502,2127 +40574,2658 @@
       "functions": [
         {
           "addr": "0x001cfb73",
-          "decl": "void QueueUserAPC(void);"
+          "decl": "void QueueUserAPC(void);",
+          "ported": false
         },
         {
           "addr": "0x001cfbab",
-          "decl": "void ExitThread(void);"
+          "decl": "void ExitThread(void);",
+          "ported": false
         },
         {
           "addr": "0x001cfcf4",
-          "decl": "void XapiThreadStartup(void);"
+          "decl": "void XapiThreadStartup(void);",
+          "ported": false
         },
         {
           "addr": "0x001cfee8",
-          "decl": "void PulseEvent(void);"
+          "decl": "void PulseEvent(void);",
+          "ported": false
         },
         {
           "addr": "0x001d3717",
-          "decl": "void MmQueryAllocationSize(void);"
+          "decl": "void MmQueryAllocationSize(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8bd0",
-          "decl": "void NtDuplicateObject(void);"
+          "decl": "void NtDuplicateObject(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8bd6",
-          "decl": "void RtlLeaveCriticalSection(void);"
+          "decl": "void RtlLeaveCriticalSection(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8bdc",
-          "decl": "void RtlEnterCriticalSection(void);"
+          "decl": "void RtlEnterCriticalSection(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8be2",
-          "decl": "void ObfDereferenceObject(void);"
+          "decl": "void ObfDereferenceObject(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8be8",
-          "decl": "void KeSetBasePriorityThread(void);"
+          "decl": "void KeSetBasePriorityThread(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8bee",
-          "decl": "void ObReferenceObjectByHandle(void);"
+          "decl": "void ObReferenceObjectByHandle(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8bf4",
-          "decl": "void KeQueryBasePriorityThread(void);"
+          "decl": "void KeQueryBasePriorityThread(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8bfa",
-          "decl": "void KeSetDisableBoostThread(void);"
+          "decl": "void KeSetDisableBoostThread(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c00",
-          "decl": "void NtSuspendThread(void);"
+          "decl": "void NtSuspendThread(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c06",
-          "decl": "void NtResumeThread(void);"
+          "decl": "void NtResumeThread(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c0c",
-          "decl": "void RtlRaiseException(void);"
+          "decl": "void RtlRaiseException(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c12",
-          "decl": "void NtQueueApcThread(void);"
+          "decl": "void NtQueueApcThread(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c18",
-          "decl": "void NtYieldExecution(void);"
+          "decl": "void NtYieldExecution(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c1e",
-          "decl": "void PsTerminateSystemThread(void);"
+          "decl": "void PsTerminateSystemThread(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c24",
-          "decl": "void PsCreateSystemThreadEx(void);"
+          "decl": "void PsCreateSystemThreadEx(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c2a",
-          "decl": "void NtCreateEvent(void);"
+          "decl": "void NtCreateEvent(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c30",
-          "decl": "void ObOpenObjectByName(void);"
+          "decl": "void ObOpenObjectByName(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c3c",
-          "decl": "void NtSetEvent(void);"
+          "decl": "void NtSetEvent(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c42",
-          "decl": "void NtClearEvent(void);"
+          "decl": "void NtClearEvent(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c48",
-          "decl": "void NtPulseEvent(void);"
+          "decl": "void NtPulseEvent(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c4e",
-          "decl": "void NtCreateSemaphore(void);"
+          "decl": "void NtCreateSemaphore(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c54",
-          "decl": "void NtReleaseSemaphore(void);"
+          "decl": "void NtReleaseSemaphore(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c5a",
-          "decl": "void NtCreateMutant(void);"
+          "decl": "void NtCreateMutant(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c60",
-          "decl": "void NtReleaseMutant(void);"
+          "decl": "void NtReleaseMutant(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c66",
-          "decl": "void NtWaitForSingleObjectEx(void);"
+          "decl": "void NtWaitForSingleObjectEx(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c6c",
-          "decl": "void NtSignalAndWaitForSingleObjectEx(void);"
+          "decl": "void NtSignalAndWaitForSingleObjectEx(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c72",
-          "decl": "void NtWaitForMultipleObjectsEx(void);"
+          "decl": "void NtWaitForMultipleObjectsEx(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c78",
-          "decl": "void KeDelayExecutionThread(void);"
+          "decl": "void KeDelayExecutionThread(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c7e",
-          "decl": "void NtCreateTimer(void);"
+          "decl": "void NtCreateTimer(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c84",
-          "decl": "void NtSetTimerEx(void);"
+          "decl": "void NtSetTimerEx(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c8a",
-          "decl": "void NtCancelTimer(void);"
+          "decl": "void NtCancelTimer(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c90",
-          "decl": "void RtlFreeAnsiString(void);"
+          "decl": "void RtlFreeAnsiString(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c96",
-          "decl": "void RtlUnicodeStringToAnsiString(void);"
+          "decl": "void RtlUnicodeStringToAnsiString(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8c9c",
-          "decl": "void RtlInitUnicodeString(void);"
+          "decl": "void RtlInitUnicodeString(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8ca2",
-          "decl": "void RtlTimeToTimeFields(void);"
+          "decl": "void RtlTimeToTimeFields(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8cae",
-          "decl": "void RtlTimeFieldsToTime(void);"
+          "decl": "void RtlTimeFieldsToTime(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8cb4",
-          "decl": "void NtAllocateVirtualMemory(void);"
+          "decl": "void NtAllocateVirtualMemory(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8cba",
-          "decl": "void NtFreeVirtualMemory(void);"
+          "decl": "void NtFreeVirtualMemory(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8cc0",
-          "decl": "void NtProtectVirtualMemory(void);"
+          "decl": "void NtProtectVirtualMemory(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8cc6",
-          "decl": "void NtQueryVirtualMemory(void);"
+          "decl": "void NtQueryVirtualMemory(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8ccc",
-          "decl": "void MmQueryStatistics(void);"
+          "decl": "void MmQueryStatistics(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8cd2",
-          "decl": "void NtSetInformationFile(void);"
+          "decl": "void NtSetInformationFile(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8cde",
-          "decl": "void NtQueryFullAttributesFile(void);"
+          "decl": "void NtQueryFullAttributesFile(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8ce4",
-          "decl": "void FscSetCacheSize(void);"
+          "decl": "void FscSetCacheSize(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8cea",
-          "decl": "void FscGetCacheSize(void);"
+          "decl": "void FscGetCacheSize(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8cf0",
-          "decl": "void NtQueryDirectoryFile(void);"
+          "decl": "void NtQueryDirectoryFile(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8cf6",
-          "decl": "void NtWaitForSingleObject(void);"
+          "decl": "void NtWaitForSingleObject(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8cfc",
-          "decl": "void NtReadFile(void);"
+          "decl": "void NtReadFile(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d08",
-          "decl": "void NtQueryInformationFile(void);"
+          "decl": "void NtQueryInformationFile(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d14",
-          "decl": "void NtFlushBuffersFile(void);"
+          "decl": "void NtFlushBuffersFile(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d1a",
-          "decl": "void NtUserIoApcDispatcher(void);"
+          "decl": "void NtUserIoApcDispatcher(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d2c",
-          "decl": "void NtReadFileScatter(void);"
+          "decl": "void NtReadFileScatter(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d38",
-          "decl": "void NtCreateFile(void);"
+          "decl": "void NtCreateFile(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d3e",
-          "decl": "void MmFreeSystemMemory(void);"
+          "decl": "void MmFreeSystemMemory(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d44",
-          "decl": "void MmAllocateSystemMemory(void);"
+          "decl": "void MmAllocateSystemMemory(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d4a",
-          "decl": "void KeWaitForSingleObject(void);"
+          "decl": "void KeWaitForSingleObject(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d50",
-          "decl": "void KfLowerIrql(void);"
+          "decl": "void KfLowerIrql(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d56",
-          "decl": "void KeRaiseIrqlToDpcLevel(void);"
+          "decl": "void KeRaiseIrqlToDpcLevel(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d5c",
-          "decl": "void IoCreateDevice(void);"
+          "decl": "void IoCreateDevice(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d62",
-          "decl": "void ExAllocatePool(void);"
+          "decl": "void ExAllocatePool(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d68",
-          "decl": "void KeSetEvent(void);"
+          "decl": "void KeSetEvent(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d6e",
-          "decl": "void KeInitializeTimerEx(void);"
+          "decl": "void KeInitializeTimerEx(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d74",
-          "decl": "void KeInitializeDpc(void);"
+          "decl": "void KeInitializeDpc(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d7a",
-          "decl": "void IoInvalidDeviceRequest(void);"
+          "decl": "void IoInvalidDeviceRequest(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d80",
-          "decl": "void RtlNtStatusToDosError(void);"
+          "decl": "void RtlNtStatusToDosError(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d86",
-          "decl": "void NtCreateIoCompletion(void);"
+          "decl": "void NtCreateIoCompletion(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d8c",
-          "decl": "void NtSetIoCompletion(void);"
+          "decl": "void NtSetIoCompletion(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d92",
-          "decl": "void NtRemoveIoCompletion(void);"
+          "decl": "void NtRemoveIoCompletion(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d98",
-          "decl": "void KeSetTimer(void);"
+          "decl": "void KeSetTimer(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8d9e",
-          "decl": "void KeCancelTimer(void);"
+          "decl": "void KeCancelTimer(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8da4",
-          "decl": "void MmPersistContiguousMemory(void);"
+          "decl": "void MmPersistContiguousMemory(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8daa",
-          "decl": "void MmAllocateContiguousMemory(void);"
+          "decl": "void MmAllocateContiguousMemory(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8db6",
-          "decl": "void HalReturnToFirmware(void);"
+          "decl": "void HalReturnToFirmware(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8dbc",
-          "decl": "void NtQuerySymbolicLinkObject(void);"
+          "decl": "void NtQuerySymbolicLinkObject(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8dc2",
-          "decl": "void NtOpenSymbolicLinkObject(void);"
+          "decl": "void NtOpenSymbolicLinkObject(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8dc8",
-          "decl": "void KeQueryPerformanceCounter(void);"
+          "decl": "void KeQueryPerformanceCounter(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8dce",
-          "decl": "void KeQueryPerformanceFrequency(void);"
+          "decl": "void KeQueryPerformanceFrequency(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8dd4",
-          "decl": "void MmAllocateContiguousMemoryEx(void);"
+          "decl": "void MmAllocateContiguousMemoryEx(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8de0",
-          "decl": "void MmSetAddressProtect(void);"
+          "decl": "void MmSetAddressProtect(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8dec",
-          "decl": "void IoCreateSymbolicLink(void);"
+          "decl": "void IoCreateSymbolicLink(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8df2",
-          "decl": "void IoDeleteSymbolicLink(void);"
+          "decl": "void IoDeleteSymbolicLink(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e10",
-          "decl": "void RtlFillMemoryUlong(void);"
+          "decl": "void RtlFillMemoryUlong(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e16",
-          "decl": "void RtlCompareMemoryUlong(void);"
+          "decl": "void RtlCompareMemoryUlong(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e1c",
-          "decl": "void RtlCompareMemory(void);"
+          "decl": "void RtlCompareMemory(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e22",
-          "decl": "void RtlInitializeCriticalSection(void);"
+          "decl": "void RtlInitializeCriticalSection(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e28",
-          "decl": "void IoStartPacket(void);"
+          "decl": "void IoStartPacket(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e2e",
-          "decl": "void IofCompleteRequest(void);"
+          "decl": "void IofCompleteRequest(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e34",
-          "decl": "void IoStartNextPacket(void);"
+          "decl": "void IoStartNextPacket(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e3a",
-          "decl": "void ExFreePool(void);"
+          "decl": "void ExFreePool(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e40",
-          "decl": "void IoMarkIrpMustComplete(void);"
+          "decl": "void IoMarkIrpMustComplete(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e46",
-          "decl": "void HalIsResetOrShutdownPending(void);"
+          "decl": "void HalIsResetOrShutdownPending(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e4c",
-          "decl": "void KeQueryInterruptTime(void);"
+          "decl": "void KeQueryInterruptTime(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e52",
-          "decl": "void HalInitiateShutdown(void);"
+          "decl": "void HalInitiateShutdown(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e58",
-          "decl": "void HalGetInterruptVector(void);"
+          "decl": "void HalGetInterruptVector(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e5e",
-          "decl": "void KfRaiseIrql(void);"
+          "decl": "void KfRaiseIrql(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e64",
-          "decl": "void HalRegisterShutdownNotification(void);"
+          "decl": "void HalRegisterShutdownNotification(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e6a",
-          "decl": "void KeConnectInterrupt(void);"
+          "decl": "void KeConnectInterrupt(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e70",
-          "decl": "void KeInitializeInterrupt(void);"
+          "decl": "void KeInitializeInterrupt(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e76",
-          "decl": "void KeStallExecutionProcessor(void);"
+          "decl": "void KeStallExecutionProcessor(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e7c",
-          "decl": "void RtlEqualString(void);"
+          "decl": "void RtlEqualString(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e82",
-          "decl": "void XeLoadSection(void);"
+          "decl": "void XeLoadSection(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e88",
-          "decl": "void XeUnloadSection(void);"
+          "decl": "void XeUnloadSection(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e8e",
-          "decl": "void MmGetPhysicalAddress(void);"
+          "decl": "void MmGetPhysicalAddress(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e94",
-          "decl": "void MmLockUnlockBufferPages(void);"
+          "decl": "void MmLockUnlockBufferPages(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8e9a",
-          "decl": "void KeInsertQueueDpc(void);"
+          "decl": "void KeInsertQueueDpc(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8ea0",
-          "decl": "void MmLockUnlockPhysicalPage(void);"
+          "decl": "void MmLockUnlockPhysicalPage(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8ea6",
-          "decl": "void AvGetSavedDataAddress(void);"
+          "decl": "void AvGetSavedDataAddress(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8eac",
-          "decl": "void AvSendTVEncoderOption(void);"
+          "decl": "void AvSendTVEncoderOption(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8eb2",
-          "decl": "void AvSetDisplayMode(void);"
+          "decl": "void AvSetDisplayMode(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8eb8",
-          "decl": "void AvSetSavedDataAddress(void);"
+          "decl": "void AvSetSavedDataAddress(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8ec4",
-          "decl": "void KeDisconnectInterrupt(void);"
+          "decl": "void KeDisconnectInterrupt(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8eca",
-          "decl": "void MmClaimGpuInstanceMemory(void);"
+          "decl": "void MmClaimGpuInstanceMemory(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8ed0",
-          "decl": "void ExQueryPoolBlockSize(void);"
+          "decl": "void ExQueryPoolBlockSize(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8ed6",
-          "decl": "void ExAllocatePoolWithTag(void);"
+          "decl": "void ExAllocatePoolWithTag(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8edc",
-          "decl": "void KeRemoveQueueDpc(void);"
+          "decl": "void KeRemoveQueueDpc(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8ee2",
-          "decl": "void KeSynchronizeExecution(void);"
+          "decl": "void KeSynchronizeExecution(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8ee8",
-          "decl": "void KeSaveFloatingPointState(void);"
+          "decl": "void KeSaveFloatingPointState(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8eee",
-          "decl": "void KeRestoreFloatingPointState(void);"
+          "decl": "void KeRestoreFloatingPointState(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8ef4",
-          "decl": "void PhyGetLinkState(void);"
+          "decl": "void PhyGetLinkState(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8efa",
-          "decl": "void PhyInitialize(void);"
+          "decl": "void PhyInitialize(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8f00",
-          "decl": "void KeWaitForMultipleObjects(void);"
+          "decl": "void KeWaitForMultipleObjects(void);",
+          "ported": false
         },
         {
           "addr": "0x001d8f12",
-          "decl": "void KeSetTimerEx(void);"
+          "decl": "void KeSetTimerEx(void);",
+          "ported": false
         },
         {
           "addr": "0x001e64e7",
-          "decl": "void DbgBreakPoint(void);"
+          "decl": "void DbgBreakPoint(void);",
+          "ported": false
         },
         {
           "addr": "0x001e657e",
-          "decl": "void KeBugCheck(void);"
+          "decl": "void KeBugCheck(void);",
+          "ported": false
         },
         {
           "addr": "0x001e658a",
-          "decl": "void RtlAnsiStringToUnicodeString(void);"
+          "decl": "void RtlAnsiStringToUnicodeString(void);",
+          "ported": false
         },
         {
           "addr": "0x001e69f0",
-          "decl": "void __stdcall D3DDevice_GetDeviceCaps(void *caps);"
+          "decl": "void __stdcall D3DDevice_GetDeviceCaps(void *caps);",
+          "ported": false
         },
         {
           "addr": "0x001e6a10",
-          "decl": "void D3DDevice_GetCreationParameters(void);"
+          "decl": "void D3DDevice_GetCreationParameters(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6a50",
-          "decl": "void D3DDevice_SetGammaRamp(void);"
+          "decl": "void D3DDevice_SetGammaRamp(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6ab0",
-          "decl": "void D3DDevice_GetGammaRamp(void);"
+          "decl": "void D3DDevice_GetGammaRamp(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6b10",
-          "decl": "void D3DDevice_CreateVolumeTexture(void);"
+          "decl": "void D3DDevice_CreateVolumeTexture(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6b40",
-          "decl": "void D3DDevice_CreateCubeTexture(void);"
+          "decl": "void D3DDevice_CreateCubeTexture(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6ba0",
-          "decl": "void D3DDevice_CreateImageSurface(void);"
+          "decl": "void D3DDevice_CreateImageSurface(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6bc0",
-          "decl": "void D3DDevice_SetRenderState(void);"
+          "decl": "void D3DDevice_SetRenderState(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6d10",
-          "decl": "void D3DDevice_MultiplyTransform(void);"
+          "decl": "void D3DDevice_MultiplyTransform(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6d60",
-          "decl": "void D3DDevice_GetViewport(void);"
+          "decl": "void D3DDevice_GetViewport(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6d80",
-          "decl": "void D3DDevice_SetMaterial(void);"
+          "decl": "void D3DDevice_SetMaterial(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6db0",
-          "decl": "void D3DDevice_GetMaterial(void);"
+          "decl": "void D3DDevice_GetMaterial(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6dd0",
-          "decl": "void D3DDevice_SetBackMaterial(void);"
+          "decl": "void D3DDevice_SetBackMaterial(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6e00",
-          "decl": "void D3DDevice_GetBackMaterial(void);"
+          "decl": "void D3DDevice_GetBackMaterial(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6e30",
-          "decl": "void D3DDevice_GetLight(void);"
+          "decl": "void D3DDevice_GetLight(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6e60",
-          "decl": "void D3DDevice_GetLightEnable(void);"
+          "decl": "void D3DDevice_GetLightEnable(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6ed0",
-          "decl": "void D3DDevice_SwitchTexture(void);"
+          "decl": "void D3DDevice_SwitchTexture(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6f30",
-          "decl": "void D3DDevice_AddRef(void);"
+          "decl": "void D3DDevice_AddRef(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6f50",
-          "decl": "void D3DDevice_Release(void);"
+          "decl": "void D3DDevice_Release(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6fa0",
-          "decl": "void D3DDevice_BlockOnFence(void);"
+          "decl": "void D3DDevice_BlockOnFence(void);",
+          "ported": false
         },
         {
           "addr": "0x001e6fb0",
-          "decl": "void D3DDevice_KickPushBuffer(void);"
+          "decl": "void D3DDevice_KickPushBuffer(void);",
+          "ported": false
         },
         {
           "addr": "0x001e7030",
-          "decl": "void D3DDevice_GetVisibilityTestResult(void);"
+          "decl": "void D3DDevice_GetVisibilityTestResult(void);",
+          "ported": false
         },
         {
           "addr": "0x001e70e0",
-          "decl": "void D3DDevice_SetVerticalBlankCallback(void);"
+          "decl": "void D3DDevice_SetVerticalBlankCallback(void);",
+          "ported": false
         },
         {
           "addr": "0x001e7140",
-          "decl": "void D3DDevice_GetProjectionViewportMatrix(void);"
+          "decl": "void D3DDevice_GetProjectionViewportMatrix(void);",
+          "ported": false
         },
         {
           "addr": "0x001e7180",
-          "decl": "void D3DDevice_GetModelView(void);"
+          "decl": "void D3DDevice_GetModelView(void);",
+          "ported": false
         },
         {
           "addr": "0x001e7200",
-          "decl": "void D3DDevice_GetTile(void);"
+          "decl": "void D3DDevice_GetTile(void);",
+          "ported": false
         },
         {
           "addr": "0x001e7230",
-          "decl": "void D3DDevice_GetScissors(void);"
+          "decl": "void D3DDevice_GetScissors(void);",
+          "ported": false
         },
         {
           "addr": "0x001e72a0",
-          "decl": "void D3DDevice_SetFlickerFilter(void);"
+          "decl": "void D3DDevice_SetFlickerFilter(void);",
+          "ported": false
         },
         {
           "addr": "0x001e72c0",
-          "decl": "void D3DDevice_SetSoftDisplayFilter(void);"
+          "decl": "void D3DDevice_SetSoftDisplayFilter(void);",
+          "ported": false
         },
         {
           "addr": "0x001e73a0",
-          "decl": "void D3DDevice_InsertFence(void);"
+          "decl": "void D3DDevice_InsertFence(void);",
+          "ported": false
         },
         {
           "addr": "0x001e73b0",
-          "decl": "void D3DResource_AddRef(void);"
+          "decl": "void D3DResource_AddRef(void);",
+          "ported": false
         },
         {
           "addr": "0x001e76b0",
-          "decl": "void D3DBaseTexture_GetLevelCount(void);"
+          "decl": "void D3DBaseTexture_GetLevelCount(void);",
+          "ported": false
         },
         {
           "addr": "0x001e79d0",
-          "decl": "void D3DDevice_GetDisplayMode(void);"
+          "decl": "void D3DDevice_GetDisplayMode(void);",
+          "ported": false
         },
         {
           "addr": "0x001e7a30",
-          "decl": "void D3DDevice_Reset(void);"
+          "decl": "void D3DDevice_Reset(void);",
+          "ported": false
         },
         {
           "addr": "0x001e7de0",
-          "decl": "void D3DDevice_CopyRects(void);"
+          "decl": "void D3DDevice_CopyRects(void);",
+          "ported": false
         },
         {
           "addr": "0x001e8250",
-          "decl": "void D3DDevice_GetRenderTarget(void);"
+          "decl": "void D3DDevice_GetRenderTarget(void);",
+          "ported": false
         },
         {
           "addr": "0x001e82a0",
-          "decl": "void __stdcall D3DDevice_SetViewport(void *viewport);"
+          "decl": "void __stdcall D3DDevice_SetViewport(void *viewport);",
+          "ported": false
         },
         {
           "addr": "0x001e8400",
-          "decl": "void D3DDevice_SetLight(void);"
+          "decl": "void D3DDevice_SetLight(void);",
+          "ported": false
         },
         {
           "addr": "0x001e85e0",
-          "decl": "void D3DDevice_LightEnable(void);"
+          "decl": "void D3DDevice_LightEnable(void);",
+          "ported": false
         },
         {
           "addr": "0x001e86c0",
-          "decl": "void D3DDevice_GetTexture2(void);"
+          "decl": "void D3DDevice_GetTexture2(void);",
+          "ported": false
         },
         {
           "addr": "0x001e88a0",
-          "decl": "void D3DDevice_SetPalette(void);"
+          "decl": "void D3DDevice_SetPalette(void);",
+          "ported": false
         },
         {
           "addr": "0x001e8920",
-          "decl": "void D3DDevice_SetIndices(void);"
+          "decl": "void D3DDevice_SetIndices(void);",
+          "ported": false
         },
         {
           "addr": "0x001e8a00",
-          "decl": "void D3DDevice_IsBusy(void);"
+          "decl": "void D3DDevice_IsBusy(void);",
+          "ported": false
         },
         {
           "addr": "0x001e8a40",
-          "decl": "void D3DDevice_BeginVisibilityTest(void);"
+          "decl": "void D3DDevice_BeginVisibilityTest(void);",
+          "ported": false
         },
         {
           "addr": "0x001e8a70",
-          "decl": "void D3DDevice_EndVisibilityTest(void);"
+          "decl": "void D3DDevice_EndVisibilityTest(void);",
+          "ported": false
         },
         {
           "addr": "0x001e8ad0",
-          "decl": "void D3DDevice_GetDisplayFieldStatus(void);"
+          "decl": "void D3DDevice_GetDisplayFieldStatus(void);",
+          "ported": false
         },
         {
           "addr": "0x001e8b10",
-          "decl": "void D3DDevice_FlushVertexCache(void);"
+          "decl": "void D3DDevice_FlushVertexCache(void);",
+          "ported": false
         },
         {
           "addr": "0x001e8b40",
-          "decl": "void D3DDevice_SetModelView(void);"
+          "decl": "void D3DDevice_SetModelView(void);",
+          "ported": false
         },
         {
           "addr": "0x001e8d30",
-          "decl": "void D3DDevice_SetTile(void);"
+          "decl": "void D3DDevice_SetTile(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9000",
-          "decl": "void D3DDevice_SetScissors(void);"
+          "decl": "void D3DDevice_SetScissors(void);",
+          "ported": false
         },
         {
           "addr": "0x001e92f0",
-          "decl": "void D3DDevice_SetRenderState_MultiSampleType(void);"
+          "decl": "void D3DDevice_SetRenderState_MultiSampleType(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9320",
-          "decl": "void D3DDevice_SetRenderState_PSTextureModes(void);"
+          "decl": "void D3DDevice_SetRenderState_PSTextureModes(void);",
+          "ported": false
         },
         {
           "addr": "0x001e93a0",
-          "decl": "void D3DDevice_SetRenderStateNotInline(void);"
+          "decl": "void D3DDevice_SetRenderStateNotInline(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9400",
-          "decl": "void D3DDevice_SetRenderState2(void);"
+          "decl": "void D3DDevice_SetRenderState2(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9620",
-          "decl": "void D3DDevice_SetRenderState_EdgeAntiAlias(void);"
+          "decl": "void D3DDevice_SetRenderState_EdgeAntiAlias(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9650",
-          "decl": "void D3DDevice_SetRenderState_ShadowFunc(void);"
+          "decl": "void D3DDevice_SetRenderState_ShadowFunc(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9680",
-          "decl": "void D3DDevice_SetRenderState_FogColor(void);"
+          "decl": "void D3DDevice_SetRenderState_FogColor(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9740",
-          "decl": "void D3DDevice_SetRenderState_FrontFace(void);"
+          "decl": "void D3DDevice_SetRenderState_FrontFace(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9780",
-          "decl": "void D3DDevice_SetRenderState_NormalizeNormals(void);"
+          "decl": "void D3DDevice_SetRenderState_NormalizeNormals(void);",
+          "ported": false
         },
         {
           "addr": "0x001e97b0",
-          "decl": "void D3DDevice_SetRenderState_TextureFactor(void);"
+          "decl": "void D3DDevice_SetRenderState_TextureFactor(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9800",
-          "decl": "void D3DDevice_SetRenderState_LineWidth(void);"
+          "decl": "void D3DDevice_SetRenderState_LineWidth(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9860",
-          "decl": "void D3DDevice_SetRenderState_Dxt1NoiseEnable(void);"
+          "decl": "void D3DDevice_SetRenderState_Dxt1NoiseEnable(void);",
+          "ported": false
         },
         {
           "addr": "0x001e98e0",
-          "decl": "void __stdcall D3DDevice_SetRenderState_ZBias(uint32_t value);"
+          "decl": "void __stdcall D3DDevice_SetRenderState_ZBias(uint32_t value);",
+          "ported": false
         },
         {
           "addr": "0x001e9960",
-          "decl": "void D3DDevice_SetRenderState_LogicOp(void);"
+          "decl": "void D3DDevice_SetRenderState_LogicOp(void);",
+          "ported": false
         },
         {
           "addr": "0x001e99b0",
-          "decl": "void __stdcall D3DDevice_SetRenderState_FillMode(uint32_t value);"
+          "decl": "void __stdcall D3DDevice_SetRenderState_FillMode(uint32_t value);",
+          "ported": false
         },
         {
           "addr": "0x001e99f0",
-          "decl": "void D3DDevice_SetRenderState_BackFillMode(void);"
+          "decl": "void D3DDevice_SetRenderState_BackFillMode(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9a40",
-          "decl": "void D3DDevice_SetRenderState_TwoSidedLighting(void);"
+          "decl": "void D3DDevice_SetRenderState_TwoSidedLighting(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9aa0",
-          "decl": "void D3DDevice_SetRenderState_VertexBlend(void);"
+          "decl": "void D3DDevice_SetRenderState_VertexBlend(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9ae0",
-          "decl": "void D3DDevice_SetTextureState_TexCoordIndex(void);"
+          "decl": "void D3DDevice_SetTextureState_TexCoordIndex(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9bc0",
-          "decl": "void D3DDevice_SetTextureState_BumpEnv(void);"
+          "decl": "void D3DDevice_SetTextureState_BumpEnv(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9c60",
-          "decl": "void D3DDevice_SetTextureState_ColorKeyColor(void);"
+          "decl": "void D3DDevice_SetTextureState_ColorKeyColor(void);",
+          "ported": false
         },
         {
           "addr": "0x001e9cb0",
-          "decl": "void D3DDevice_SetTextureStageStateNotInline(void);"
+          "decl": "void D3DDevice_SetTextureStageStateNotInline(void);",
+          "ported": false
         },
         {
           "addr": "0x001ea1c0",
-          "decl": "void D3D_CommonSetDebugRegisters(void);"
+          "decl": "void D3D_CommonSetDebugRegisters(void);",
+          "ported": false
         },
         {
           "addr": "0x001ea300",
-          "decl": "void __stdcall D3DDevice_SetRenderState_StencilEnable(uint32_t value);"
+          "decl": "void __stdcall D3DDevice_SetRenderState_StencilEnable(uint32_t value);",
+          "ported": false
         },
         {
           "addr": "0x001ea380",
-          "decl": "void __stdcall D3DDevice_SetRenderState_StencilFail(uint32_t value);"
+          "decl": "void __stdcall D3DDevice_SetRenderState_StencilFail(uint32_t value);",
+          "ported": false
         },
         {
           "addr": "0x001ea3f0",
-          "decl": "void D3DDevice_SetRenderState_YuvEnable(void);"
+          "decl": "void D3DDevice_SetRenderState_YuvEnable(void);",
+          "ported": false
         },
         {
           "addr": "0x001ea420",
-          "decl": "void D3DDevice_SetRenderState_OcclusionCullEnable(void);"
+          "decl": "void D3DDevice_SetRenderState_OcclusionCullEnable(void);",
+          "ported": false
         },
         {
           "addr": "0x001ea480",
-          "decl": "void D3DDevice_SetRenderState_StencilCullEnable(void);"
+          "decl": "void D3DDevice_SetRenderState_StencilCullEnable(void);",
+          "ported": false
         },
         {
           "addr": "0x001ea4e0",
-          "decl": "void D3DDevice_SetRenderState_RopZCmpAlwaysRead(void);"
+          "decl": "void D3DDevice_SetRenderState_RopZCmpAlwaysRead(void);",
+          "ported": false
         },
         {
           "addr": "0x001ea500",
-          "decl": "void D3DDevice_SetRenderState_RopZRead(void);"
+          "decl": "void D3DDevice_SetRenderState_RopZRead(void);",
+          "ported": false
         },
         {
           "addr": "0x001ea520",
-          "decl": "void D3DDevice_SetRenderState_DoNotCullUncompressed(void);"
+          "decl": "void D3DDevice_SetRenderState_DoNotCullUncompressed(void);",
+          "ported": false
         },
         {
           "addr": "0x001ea540",
-          "decl": "void D3DDevice_SetRenderState_MultiSampleAntiAlias(void);"
+          "decl": "void D3DDevice_SetRenderState_MultiSampleAntiAlias(void);",
+          "ported": false
         },
         {
           "addr": "0x001ea590",
-          "decl": "void D3DDevice_SetRenderState_MultiSampleMask(void);"
+          "decl": "void D3DDevice_SetRenderState_MultiSampleMask(void);",
+          "ported": false
         },
         {
           "addr": "0x001eac90",
-          "decl": "void D3DDevice_GetShaderConstantMode(void);"
+          "decl": "void D3DDevice_GetShaderConstantMode(void);",
+          "ported": false
         },
         {
           "addr": "0x001eaf70",
-          "decl": "void D3DDevice_CreateVertexShader(void);"
+          "decl": "void D3DDevice_CreateVertexShader(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb0b0",
-          "decl": "void D3DDevice_GetVertexShader(void);"
+          "decl": "void D3DDevice_GetVertexShader(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb0d0",
-          "decl": "void D3DDevice_GetVertexShaderConstant(void);"
+          "decl": "void D3DDevice_GetVertexShaderConstant(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb110",
-          "decl": "void D3DDevice_GetVertexShaderInput(void);"
+          "decl": "void D3DDevice_GetVertexShaderInput(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb2d0",
-          "decl": "void __stdcall D3DDevice_SetStreamSource(uint32_t stream, void *vertex_buffer, uint32_t stride);"
+          "decl": "void __stdcall D3DDevice_SetStreamSource(uint32_t stream, void *vertex_buffer, uint32_t stride);",
+          "ported": false
         },
         {
           "addr": "0x001eb3b0",
-          "decl": "void D3DDevice_RunVertexStateShader(void);"
+          "decl": "void D3DDevice_RunVertexStateShader(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb400",
-          "decl": "void D3DDevice_LoadVertexShader(void);"
+          "decl": "void D3DDevice_LoadVertexShader(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb460",
-          "decl": "void D3DDevice_LoadVertexShaderProgram(void);"
+          "decl": "void D3DDevice_LoadVertexShaderProgram(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb4d0",
-          "decl": "void D3DDevice_SelectVertexShader(void);"
+          "decl": "void D3DDevice_SelectVertexShader(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb540",
-          "decl": "void D3DDevice_GetVertexShaderSize(void);"
+          "decl": "void D3DDevice_GetVertexShaderSize(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb560",
-          "decl": "void D3DDevice_GetVertexShaderType(void);"
+          "decl": "void D3DDevice_GetVertexShaderType(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb590",
-          "decl": "void D3DDevice_SetShaderConstantMode(void);"
+          "decl": "void D3DDevice_SetShaderConstantMode(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb6d0",
-          "decl": "void D3DDevice_DeleteVertexShader(void);"
+          "decl": "void D3DDevice_DeleteVertexShader(void);",
+          "ported": false
         },
         {
           "addr": "0x001eb8d0",
-          "decl": "void __stdcall D3DDevice_SetVertexShaderConstant(int register_index, const void *data, uint32_t count);"
+          "decl": "void __stdcall D3DDevice_SetVertexShaderConstant(int register_index, const void *data, uint32_t count);",
+          "ported": false
         },
         {
           "addr": "0x001eb970",
-          "decl": "void D3DDevice_GetVertexShaderDeclaration(void);"
+          "decl": "void D3DDevice_GetVertexShaderDeclaration(void);",
+          "ported": false
         },
         {
           "addr": "0x001ebda0",
-          "decl": "void D3DDevice_GetVertexShaderFunction(void);"
+          "decl": "void D3DDevice_GetVertexShaderFunction(void);",
+          "ported": false
         },
         {
           "addr": "0x001ebe60",
-          "decl": "void D3DDevice_SetVertexShaderInput(void);"
+          "decl": "void D3DDevice_SetVertexShaderInput(void);",
+          "ported": false
         },
         {
           "addr": "0x001ec0b0",
-          "decl": "void D3DDevice_CreatePixelShader(void);"
+          "decl": "void D3DDevice_CreatePixelShader(void);",
+          "ported": false
         },
         {
           "addr": "0x001ec100",
-          "decl": "void D3DDevice_DeletePixelShader(void);"
+          "decl": "void D3DDevice_DeletePixelShader(void);",
+          "ported": false
         },
         {
           "addr": "0x001ec160",
-          "decl": "void D3DDevice_GetPixelShader(void);"
+          "decl": "void D3DDevice_GetPixelShader(void);",
+          "ported": false
         },
         {
           "addr": "0x001ec5c0",
-          "decl": "void D3DDevice_SetPixelShader(void);"
+          "decl": "void D3DDevice_SetPixelShader(void);",
+          "ported": false
         },
         {
           "addr": "0x001ec780",
-          "decl": "void D3DDevice_SetPixelShaderConstant(void);"
+          "decl": "void D3DDevice_SetPixelShaderConstant(void);",
+          "ported": false
         },
         {
           "addr": "0x001ecc70",
-          "decl": "void D3DDevice_DrawVerticesUP(void);"
+          "decl": "void D3DDevice_DrawVerticesUP(void);",
+          "ported": false
         },
         {
           "addr": "0x001ecdb0",
-          "decl": "void D3DDevice_DrawIndexedVerticesUP(void);"
+          "decl": "void D3DDevice_DrawIndexedVerticesUP(void);",
+          "ported": false
         },
         {
           "addr": "0x001ecef0",
-          "decl": "void __stdcall D3DDevice_DrawVertices(uint32_t primitive_type, uint32_t start_vertex, uint32_t vertex_count);"
+          "decl": "void __stdcall D3DDevice_DrawVertices(uint32_t primitive_type, uint32_t start_vertex, uint32_t vertex_count);",
+          "ported": false
         },
         {
           "addr": "0x001ecf90",
-          "decl": "void D3DDevice_DrawIndexedVertices(void);"
+          "decl": "void D3DDevice_DrawIndexedVertices(void);",
+          "ported": false
         },
         {
           "addr": "0x001ed200",
-          "decl": "void D3DDevice_PrimeVertexCache(void);"
+          "decl": "void D3DDevice_PrimeVertexCache(void);",
+          "ported": false
         },
         {
           "addr": "0x001ed360",
-          "decl": "void D3DDevice_SetVertexData4s(void);"
+          "decl": "void D3DDevice_SetVertexData4s(void);",
+          "ported": false
         },
         {
           "addr": "0x001ed3b0",
-          "decl": "void __stdcall D3DDevice_SetVertexData4ub(uint32_t reg, uint32_t r, uint32_t g, uint32_t b, uint32_t a);"
+          "decl": "void __stdcall D3DDevice_SetVertexData4ub(uint32_t reg, uint32_t r, uint32_t g, uint32_t b, uint32_t a);",
+          "ported": false
         },
         {
           "addr": "0x001ed570",
-          "decl": "void D3DResource_GetType(void);"
+          "decl": "void D3DResource_GetType(void);",
+          "ported": false
         },
         {
           "addr": "0x001edc20",
-          "decl": "void D3DTexture_GetSurfaceLevel(void);"
+          "decl": "void D3DTexture_GetSurfaceLevel(void);",
+          "ported": false
         },
         {
           "addr": "0x001edcb0",
-          "decl": "void D3DCubeTexture_GetCubeMapSurface(void);"
+          "decl": "void D3DCubeTexture_GetCubeMapSurface(void);",
+          "ported": false
         },
         {
           "addr": "0x001edd10",
-          "decl": "void D3DCubeTexture_LockRect(void);"
+          "decl": "void D3DCubeTexture_LockRect(void);",
+          "ported": false
         },
         {
           "addr": "0x001edd80",
-          "decl": "void D3DVolumeTexture_LockBox(void);"
+          "decl": "void D3DVolumeTexture_LockBox(void);",
+          "ported": false
         },
         {
           "addr": "0x001eddd0",
-          "decl": "void D3D_CreateTexture(void);"
+          "decl": "void D3D_CreateTexture(void);",
+          "ported": false
         },
         {
           "addr": "0x001edea0",
-          "decl": "void D3D_SetPushBufferSize(void);"
+          "decl": "void D3D_SetPushBufferSize(void);",
+          "ported": false
         },
         {
           "addr": "0x001edec0",
-          "decl": "void Direct3D_CreateDevice(void);"
+          "decl": "void Direct3D_CreateDevice(void);",
+          "ported": false
         },
         {
           "addr": "0x001ee920",
-          "decl": "void __stdcall D3DDevice_Present(void *source_rect, void *dest_rect, void *window_override, void *dirty_region);"
+          "decl": "void __stdcall D3DDevice_Present(void *source_rect, void *dest_rect, void *window_override, void *dirty_region);",
+          "ported": false
         },
         {
           "addr": "0x001eeac0",
-          "decl": "void D3D_GetAdapterIdentifier(void);"
+          "decl": "void D3D_GetAdapterIdentifier(void);",
+          "ported": false
         },
         {
           "addr": "0x001eeaf0",
-          "decl": "void D3D_GetAdapterModeCount(void);"
+          "decl": "void D3D_GetAdapterModeCount(void);",
+          "ported": false
         },
         {
           "addr": "0x001eeb90",
-          "decl": "void D3D_EnumAdapterModes(void);"
+          "decl": "void D3D_EnumAdapterModes(void);",
+          "ported": false
         },
         {
           "addr": "0x001eecf0",
-          "decl": "void D3D_GetDeviceCaps(void);"
+          "decl": "void D3D_GetDeviceCaps(void);",
+          "ported": false
         },
         {
           "addr": "0x001eed40",
-          "decl": "void D3D_GetAdapterDisplayMode(void);"
+          "decl": "void D3D_GetAdapterDisplayMode(void);",
+          "ported": false
         },
         {
           "addr": "0x001eee20",
-          "decl": "void D3D_CheckDeviceFormat(void);"
+          "decl": "void D3D_CheckDeviceFormat(void);",
+          "ported": false
         },
         {
           "addr": "0x001eeea0",
-          "decl": "void Direct3D_CheckDeviceMultiSampleType(void);"
+          "decl": "void Direct3D_CheckDeviceMultiSampleType(void);",
+          "ported": false
         },
         {
           "addr": "0x001eef80",
-          "decl": "void D3DDevice_CreateIndexBuffer(void);"
+          "decl": "void D3DDevice_CreateIndexBuffer(void);",
+          "ported": false
         },
         {
           "addr": "0x001eefe0",
-          "decl": "void D3DPalette_Lock(void);"
+          "decl": "void D3DPalette_Lock(void);",
+          "ported": false
         },
         {
           "addr": "0x001ef0a0",
-          "decl": "int __stdcall D3DDevice_CreateVertexBuffer(uint32_t length, uint32_t usage, uint32_t fvf, uint32_t pool, void **ppVertexBuffer);"
+          "decl": "int __stdcall D3DDevice_CreateVertexBuffer(uint32_t length, uint32_t usage, uint32_t fvf, uint32_t pool, void **ppVertexBuffer);",
+          "ported": false
         },
         {
           "addr": "0x001ef100",
-          "decl": "void D3DVertexBuffer_Lock(void);"
+          "decl": "void D3DVertexBuffer_Lock(void);",
+          "ported": false
         },
         {
           "addr": "0x001ef150",
-          "decl": "void D3DVertexBuffer_GetDesc(void);"
+          "decl": "void D3DVertexBuffer_GetDesc(void);",
+          "ported": false
         },
         {
           "addr": "0x001ef170",
-          "decl": "void D3DDevice_CreatePalette(void);"
+          "decl": "void D3DDevice_CreatePalette(void);",
+          "ported": false
         },
         {
           "addr": "0x001ef1e0",
-          "decl": "int __stdcall D3DSurface_GetDesc(void *surface, void *desc);"
+          "decl": "int __stdcall D3DSurface_GetDesc(void *surface, void *desc);",
+          "ported": false
         },
         {
           "addr": "0x001ef200",
-          "decl": "int __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags);"
+          "decl": "int __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags);",
+          "ported": false
         },
         {
           "addr": "0x001ef890",
-          "decl": "void D3DDevice_IsFencePending(void);"
+          "decl": "void D3DDevice_IsFencePending(void);",
+          "ported": false
         },
         {
           "addr": "0x001ef8c0",
-          "decl": "void __stdcall D3DDevice_InsertCallback(uint32_t type, void *callback, uint32_t context);"
+          "decl": "void __stdcall D3DDevice_InsertCallback(uint32_t type, void *callback, uint32_t context);",
+          "ported": false
         },
         {
           "addr": "0x001ef930",
-          "decl": "void CDevice_KickOff(void);"
+          "decl": "void CDevice_KickOff(void);",
+          "ported": false
         },
         {
           "addr": "0x001ef9e0",
-          "decl": "void D3D_SetFence(void);"
+          "decl": "void D3D_SetFence(void);",
+          "ported": false
         },
         {
           "addr": "0x001efb70",
-          "decl": "void CDevice_MakeSpace(void);"
+          "decl": "void CDevice_MakeSpace(void);",
+          "ported": false
         },
         {
           "addr": "0x001efd80",
-          "decl": "void D3D_BlockOnResource(void);"
+          "decl": "void D3D_BlockOnResource(void);",
+          "ported": false
         },
         {
           "addr": "0x001efe10",
-          "decl": "void XMETAL_StartPush(void);"
+          "decl": "void XMETAL_StartPush(void);",
+          "ported": false
         },
         {
           "addr": "0x001f02d0",
-          "decl": "void D3D_UpdateProjectionViewportTransform(void);"
+          "decl": "void D3D_UpdateProjectionViewportTransform(void);",
+          "ported": false
         },
         {
           "addr": "0x001f05e0",
-          "decl": "void D3D_LazySetPointParams(void);"
+          "decl": "void D3D_LazySetPointParams(void);",
+          "ported": false
         },
         {
           "addr": "0x001f1bc0",
-          "decl": "void CDevice_SetStateVB(void);"
+          "decl": "void CDevice_SetStateVB(void);",
+          "ported": false
         },
         {
           "addr": "0x001f1eb0",
-          "decl": "void CDevice_SetStateUP(void);"
+          "decl": "void CDevice_SetStateUP(void);",
+          "ported": false
         },
         {
           "addr": "0x001f30c0",
-          "decl": "void CDevice_FreeFrameBuffers(void);"
+          "decl": "void CDevice_FreeFrameBuffers(void);",
+          "ported": false
         },
         {
           "addr": "0x001f31c0",
-          "decl": "void CDevice_InitializeFrameBuffers(void);"
+          "decl": "void CDevice_InitializeFrameBuffers(void);",
+          "ported": false
         },
         {
           "addr": "0x001f4590",
-          "decl": "void Lock3DSurface(void);"
+          "decl": "void Lock3DSurface(void);",
+          "ported": false
         },
         {
           "addr": "0x001f4880",
-          "decl": "void CMiniport_GetDisplayCapabilities(void);"
+          "decl": "void CMiniport_GetDisplayCapabilities(void);",
+          "ported": false
         },
         {
           "addr": "0x001f4aa0",
-          "decl": "void CMiniport_IsFlipPending(void);"
+          "decl": "void CMiniport_IsFlipPending(void);",
+          "ported": false
         },
         {
           "addr": "0x001f5390",
-          "decl": "void D3D_AllocContiguousMemory(void);"
+          "decl": "void D3D_AllocContiguousMemory(void);",
+          "ported": false
         },
         {
           "addr": "0x001f5b5b",
-          "decl": "void CMiniport_CreateCtxDmaObject(void);"
+          "decl": "void CMiniport_CreateCtxDmaObject(void);",
+          "ported": false
         },
         {
           "addr": "0x001f5d4d",
-          "decl": "void CMiniport_InitHardware(void);"
+          "decl": "void CMiniport_InitHardware(void);",
+          "ported": false
         },
         {
           "addr": "0x001f9165",
-          "decl": "void D3D_ClearStateBlockFlags(void);"
+          "decl": "void D3D_ClearStateBlockFlags(void);",
+          "ported": false
         },
         {
           "addr": "0x001f91a1",
-          "decl": "void D3DDevice_BeginStateBlock(void);"
+          "decl": "void D3DDevice_BeginStateBlock(void);",
+          "ported": false
         },
         {
           "addr": "0x001f91af",
-          "decl": "void D3DDevice_Suspend(void);"
+          "decl": "void D3DDevice_Suspend(void);",
+          "ported": false
         },
         {
           "addr": "0x001f92f0",
-          "decl": "void D3D_RecordStateBlock(void);"
+          "decl": "void D3D_RecordStateBlock(void);",
+          "ported": false
         },
         {
           "addr": "0x001f971e",
-          "decl": "void D3DDevice_ApplyStateBlock(void);"
+          "decl": "void D3DDevice_ApplyStateBlock(void);",
+          "ported": false
         },
         {
           "addr": "0x001f98a6",
-          "decl": "void D3DDevice_CaptureStateBlock(void);"
+          "decl": "void D3DDevice_CaptureStateBlock(void);",
+          "ported": false
         },
         {
           "addr": "0x001f9b53",
-          "decl": "void D3DDevice_DeleteStateBlock(void);"
+          "decl": "void D3DDevice_DeleteStateBlock(void);",
+          "ported": false
         },
         {
           "addr": "0x001f9be4",
-          "decl": "void D3DDevice_CreateStateBlock(void);"
+          "decl": "void D3DDevice_CreateStateBlock(void);",
+          "ported": false
         },
         {
           "addr": "0x001f9d0f",
-          "decl": "void D3DDevice_EndStateBlock(void);"
+          "decl": "void D3DDevice_EndStateBlock(void);",
+          "ported": false
         },
         {
           "addr": "0x0020368b",
-          "decl": "void DirectSoundEnterCriticalSection(void);"
+          "decl": "void DirectSoundEnterCriticalSection(void);",
+          "ported": false
         },
         {
           "addr": "0x0020380b",
-          "decl": "void CMcpxAPU_ServiceDeferredCommandsLow(void);"
+          "decl": "void CMcpxAPU_ServiceDeferredCommandsLow(void);",
+          "ported": false
         },
         {
           "addr": "0x00203810",
-          "decl": "void CMcpxVoiceClient_SetVolume(void);"
+          "decl": "void CMcpxVoiceClient_SetVolume(void);",
+          "ported": false
         },
         {
           "addr": "0x0020384b",
-          "decl": "void IDirectSound_AddRef(void);"
+          "decl": "void IDirectSound_AddRef(void);",
+          "ported": false
         },
         {
           "addr": "0x00203861",
-          "decl": "void IDirectSound_Release(void);"
+          "decl": "void IDirectSound_Release(void);",
+          "ported": false
         },
         {
           "addr": "0x00203877",
-          "decl": "void IDirectSoundBuffer_Unlock(void);"
+          "decl": "void IDirectSoundBuffer_Unlock(void);",
+          "ported": false
         },
         {
           "addr": "0x00203881",
-          "decl": "void IDirectSoundBuffer_AddRef(void);"
+          "decl": "void IDirectSoundBuffer_AddRef(void);",
+          "ported": false
         },
         {
           "addr": "0x00203897",
-          "decl": "void IDirectSoundBuffer_Release(void);"
+          "decl": "void IDirectSoundBuffer_Release(void);",
+          "ported": false
         },
         {
           "addr": "0x002038d9",
-          "decl": "void DirectSoundGetSampleTime(void);"
+          "decl": "void DirectSoundGetSampleTime(void);",
+          "ported": false
         },
         {
           "addr": "0x002038df",
-          "decl": "void DirectSoundUseFullHRTF(void);"
+          "decl": "void DirectSoundUseFullHRTF(void);",
+          "ported": false
         },
         {
           "addr": "0x002038fe",
-          "decl": "void DirectSoundUseLightHRTF(void);"
+          "decl": "void DirectSoundUseLightHRTF(void);",
+          "ported": false
         },
         {
           "addr": "0x00203936",
-          "decl": "void DSound_CRefCount_AddRef(void);"
+          "decl": "void DSound_CRefCount_AddRef(void);",
+          "ported": false
         },
         {
           "addr": "0x0020395b",
-          "decl": "void DSound_CRefCount_Release(void);"
+          "decl": "void DSound_CRefCount_Release(void);",
+          "ported": false
         },
         {
           "addr": "0x002039b7",
-          "decl": "void CDirectSound_GetCaps(void);"
+          "decl": "void CDirectSound_GetCaps(void);",
+          "ported": false
         },
         {
           "addr": "0x00203a07",
-          "decl": "void CDirectSound_GetSpeakerConfig(void);"
+          "decl": "void CDirectSound_GetSpeakerConfig(void);",
+          "ported": false
         },
         {
           "addr": "0x00203a21",
-          "decl": "void CDirectSound_DownloadEffectsImage(void);"
+          "decl": "void CDirectSound_DownloadEffectsImage(void);",
+          "ported": false
         },
         {
           "addr": "0x00203a65",
-          "decl": "void CDirectSound_SetEffectData(void);"
+          "decl": "void CDirectSound_SetEffectData(void);",
+          "ported": false
         },
         {
           "addr": "0x00203ab0",
-          "decl": "void CDirectSound_GetEffectData(void);"
+          "decl": "void CDirectSound_GetEffectData(void);",
+          "ported": false
         },
         {
           "addr": "0x00203af2",
-          "decl": "void CDirectSound_CommitEffectData(void);"
+          "decl": "void CDirectSound_CommitEffectData(void);",
+          "ported": false
         },
         {
           "addr": "0x00203b25",
-          "decl": "void CDirectSound_SetMixBinHeadroom(void);"
+          "decl": "void CDirectSound_SetMixBinHeadroom(void);",
+          "ported": false
         },
         {
           "addr": "0x00203b5a",
-          "decl": "void CDirectSound_SetAllParameters(void);"
+          "decl": "void CDirectSound_SetAllParameters(void);",
+          "ported": false
         },
         {
           "addr": "0x00203b95",
-          "decl": "void CDirectSound_SetDistanceFactor(void);"
+          "decl": "void CDirectSound_SetDistanceFactor(void);",
+          "ported": false
         },
         {
           "addr": "0x00203bd4",
-          "decl": "void CDirectSound_SetDopplerFactor(void);"
+          "decl": "void CDirectSound_SetDopplerFactor(void);",
+          "ported": false
         },
         {
           "addr": "0x00203c13",
-          "decl": "void CDirectSound_SetRolloffFactor(void);"
+          "decl": "void CDirectSound_SetRolloffFactor(void);",
+          "ported": false
         },
         {
           "addr": "0x00203c52",
-          "decl": "void CDirectSound_SetOrientation(void);"
+          "decl": "void CDirectSound_SetOrientation(void);",
+          "ported": false
         },
         {
           "addr": "0x00203cba",
-          "decl": "void CDirectSound_SetPosition(void);"
+          "decl": "void CDirectSound_SetPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x00203d0c",
-          "decl": "void CDirectSound_SetVelocity(void);"
+          "decl": "void CDirectSound_SetVelocity(void);",
+          "ported": false
         },
         {
           "addr": "0x00203d5e",
-          "decl": "void CDirectSound_SetI3DL2Listener(void);"
+          "decl": "void CDirectSound_SetI3DL2Listener(void);",
+          "ported": false
         },
         {
           "addr": "0x00203da9",
-          "decl": "void CDirectSound_CommitDeferredSettings(void);"
+          "decl": "void CDirectSound_CommitDeferredSettings(void);",
+          "ported": false
         },
         {
           "addr": "0x00203dd4",
-          "decl": "void CDirectSound_GetTime(void);"
+          "decl": "void CDirectSound_GetTime(void);",
+          "ported": false
         },
         {
           "addr": "0x00203de3",
-          "decl": "void CDirectSound_DoWork(void);"
+          "decl": "void CDirectSound_DoWork(void);",
+          "ported": false
         },
         {
           "addr": "0x00203e0a",
-          "decl": "void CDirectSound_EnableHeadphones(void);"
+          "decl": "void CDirectSound_EnableHeadphones(void);",
+          "ported": false
         },
         {
           "addr": "0x00203f32",
-          "decl": "void CDirectSoundVoice_SetPitch(void);"
+          "decl": "void CDirectSoundVoice_SetPitch(void);",
+          "ported": false
         },
         {
           "addr": "0x00203f69",
-          "decl": "void CDirectSoundVoice_SetVolume(void);"
+          "decl": "void CDirectSoundVoice_SetVolume(void);",
+          "ported": false
         },
         {
           "addr": "0x00203fa3",
-          "decl": "void CDirectSoundVoice_SetLFO(void);"
+          "decl": "void CDirectSoundVoice_SetLFO(void);",
+          "ported": false
         },
         {
           "addr": "0x00203fd4",
-          "decl": "void CDirectSoundVoice_SetEG(void);"
+          "decl": "void CDirectSoundVoice_SetEG(void);",
+          "ported": false
         },
         {
           "addr": "0x00204005",
-          "decl": "void CDirectSoundVoice_SetFilter(void);"
+          "decl": "void CDirectSoundVoice_SetFilter(void);",
+          "ported": false
         },
         {
           "addr": "0x00204036",
-          "decl": "void CDirectSoundVoice_SetHeadroom(void);"
+          "decl": "void CDirectSoundVoice_SetHeadroom(void);",
+          "ported": false
         },
         {
           "addr": "0x00204075",
-          "decl": "void CDirectSoundVoice_SetMixBinVolumes(void);"
+          "decl": "void CDirectSoundVoice_SetMixBinVolumes(void);",
+          "ported": false
         },
         {
           "addr": "0x002040e9",
-          "decl": "void CDirectSoundVoice_SetAllParameters(void);"
+          "decl": "void CDirectSoundVoice_SetAllParameters(void);",
+          "ported": false
         },
         {
           "addr": "0x00204124",
-          "decl": "void CDirectSoundVoice_SetConeAngles(void);"
+          "decl": "void CDirectSoundVoice_SetConeAngles(void);",
+          "ported": false
         },
         {
           "addr": "0x00204163",
-          "decl": "void CDirectSoundVoice_SetConeOrientation(void);"
+          "decl": "void CDirectSoundVoice_SetConeOrientation(void);",
+          "ported": false
         },
         {
           "addr": "0x002041b5",
-          "decl": "void CDirectSoundVoice_SetConeOutsideVolume(void);"
+          "decl": "void CDirectSoundVoice_SetConeOutsideVolume(void);",
+          "ported": false
         },
         {
           "addr": "0x002041f0",
-          "decl": "void CDirectSoundVoice_SetMaxDistance(void);"
+          "decl": "void CDirectSoundVoice_SetMaxDistance(void);",
+          "ported": false
         },
         {
           "addr": "0x0020422f",
-          "decl": "void CDirectSoundVoice_SetMinDistance(void);"
+          "decl": "void CDirectSoundVoice_SetMinDistance(void);",
+          "ported": false
         },
         {
           "addr": "0x0020426e",
-          "decl": "void CDirectSoundVoice_SetMode(void);"
+          "decl": "void CDirectSoundVoice_SetMode(void);",
+          "ported": false
         },
         {
           "addr": "0x002042a9",
-          "decl": "void CDirectSoundVoice_SetPosition(void);"
+          "decl": "void CDirectSoundVoice_SetPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x002042fb",
-          "decl": "void CDirectSoundVoice_SetVelocity(void);"
+          "decl": "void CDirectSoundVoice_SetVelocity(void);",
+          "ported": false
         },
         {
           "addr": "0x0020434d",
-          "decl": "void CDirectSoundVoice_SetI3DL2Source(void);"
+          "decl": "void CDirectSoundVoice_SetI3DL2Source(void);",
+          "ported": false
         },
         {
           "addr": "0x002043a4",
-          "decl": "void CDirectSoundBuffer_PlayEx(void);"
+          "decl": "void CDirectSoundBuffer_PlayEx(void);",
+          "ported": false
         },
         {
           "addr": "0x002043e1",
-          "decl": "void CDirectSoundBuffer_StopEx(void);"
+          "decl": "void CDirectSoundBuffer_StopEx(void);",
+          "ported": false
         },
         {
           "addr": "0x00204437",
-          "decl": "void CDirectSoundBuffer_GetStatus(void);"
+          "decl": "void CDirectSoundBuffer_GetStatus(void);",
+          "ported": false
         },
         {
           "addr": "0x00204468",
-          "decl": "void CDirectSoundBuffer_SetLoopRegion(void);"
+          "decl": "void CDirectSoundBuffer_SetLoopRegion(void);",
+          "ported": false
         },
         {
           "addr": "0x002044b5",
-          "decl": "void CDirectSoundBuffer_GetCurrentPosition(void);"
+          "decl": "void CDirectSoundBuffer_GetCurrentPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x002044ea",
-          "decl": "void CDirectSoundBuffer_Lock(void);"
+          "decl": "void CDirectSoundBuffer_Lock(void);",
+          "ported": false
         },
         {
           "addr": "0x00204590",
-          "decl": "void CDirectSoundBuffer_SetCurrentPosition(void);"
+          "decl": "void CDirectSoundBuffer_SetCurrentPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x0020466c",
-          "decl": "void CDirectSoundStream_GetInfo(void);"
+          "decl": "void CDirectSoundStream_GetInfo(void);",
+          "ported": false
         },
         {
           "addr": "0x002046b7",
-          "decl": "void CDirectSoundStream_Discontinuity(void);"
+          "decl": "void CDirectSoundStream_Discontinuity(void);",
+          "ported": false
         },
         {
           "addr": "0x002046e4",
-          "decl": "void CDirectSoundStream_Flush(void);"
+          "decl": "void CDirectSoundStream_Flush(void);",
+          "ported": false
         },
         {
           "addr": "0x00204711",
-          "decl": "void CDirectSoundStream_GetStatus__r1(void);"
+          "decl": "void CDirectSoundStream_GetStatus__r1(void);",
+          "ported": false
         },
         {
           "addr": "0x00204746",
-          "decl": "void CDirectSoundStream_Process(void);"
+          "decl": "void CDirectSoundStream_Process(void);",
+          "ported": false
         },
         {
           "addr": "0x0020476e",
-          "decl": "void CDirectSoundStream_Pause(void);"
+          "decl": "void CDirectSoundStream_Pause(void);",
+          "ported": false
         },
         {
           "addr": "0x0020497d",
-          "decl": "void CDirectSoundBuffer_SetVolume(void);"
+          "decl": "void CDirectSoundBuffer_SetVolume(void);",
+          "ported": false
         },
         {
           "addr": "0x00204982",
-          "decl": "void CDirectSoundBuffer_SetPitch(void);"
+          "decl": "void CDirectSoundBuffer_SetPitch(void);",
+          "ported": false
         },
         {
           "addr": "0x00204987",
-          "decl": "void CDirectSoundBuffer_SetLFO(void);"
+          "decl": "void CDirectSoundBuffer_SetLFO(void);",
+          "ported": false
         },
         {
           "addr": "0x0020498c",
-          "decl": "void CDirectSoundBuffer_SetEG(void);"
+          "decl": "void CDirectSoundBuffer_SetEG(void);",
+          "ported": false
         },
         {
           "addr": "0x00204991",
-          "decl": "void CDirectSoundBuffer_SetFilter(void);"
+          "decl": "void CDirectSoundBuffer_SetFilter(void);",
+          "ported": false
         },
         {
           "addr": "0x00204996",
-          "decl": "void CDirectSoundBuffer_SetHeadroom(void);"
+          "decl": "void CDirectSoundBuffer_SetHeadroom(void);",
+          "ported": false
         },
         {
           "addr": "0x0020499b",
-          "decl": "void CDirectSoundBuffer_SetMixBinVolumes(void);"
+          "decl": "void CDirectSoundBuffer_SetMixBinVolumes(void);",
+          "ported": false
         },
         {
           "addr": "0x002049a0",
-          "decl": "void CDirectSoundBuffer_SetAllParameters(void);"
+          "decl": "void CDirectSoundBuffer_SetAllParameters(void);",
+          "ported": false
         },
         {
           "addr": "0x002049a5",
-          "decl": "void CDirectSoundBuffer_SetConeAngles(void);"
+          "decl": "void CDirectSoundBuffer_SetConeAngles(void);",
+          "ported": false
         },
         {
           "addr": "0x002049aa",
-          "decl": "void CDirectSoundBuffer_SetConeOrientation(void);"
+          "decl": "void CDirectSoundBuffer_SetConeOrientation(void);",
+          "ported": false
         },
         {
           "addr": "0x002049d3",
-          "decl": "void CDirectSoundBuffer_SetConeOutsideVolume(void);"
+          "decl": "void CDirectSoundBuffer_SetConeOutsideVolume(void);",
+          "ported": false
         },
         {
           "addr": "0x002049d8",
-          "decl": "void CDirectSoundBuffer_SetMaxDistance(void);"
+          "decl": "void CDirectSoundBuffer_SetMaxDistance(void);",
+          "ported": false
         },
         {
           "addr": "0x002049f0",
-          "decl": "void CDirectSoundBuffer_SetMinDistance(void);"
+          "decl": "void CDirectSoundBuffer_SetMinDistance(void);",
+          "ported": false
         },
         {
           "addr": "0x00204a08",
-          "decl": "void CDirectSoundBuffer_SetMode(void);"
+          "decl": "void CDirectSoundBuffer_SetMode(void);",
+          "ported": false
         },
         {
           "addr": "0x00204a0d",
-          "decl": "void CDirectSoundBuffer_SetPosition(void);"
+          "decl": "void CDirectSoundBuffer_SetPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x00204a36",
-          "decl": "void CDirectSoundBuffer_SetVelocity(void);"
+          "decl": "void CDirectSoundBuffer_SetVelocity(void);",
+          "ported": false
         },
         {
           "addr": "0x00204a5f",
-          "decl": "void CDirectSoundBuffer_SetI3DL2Source(void);"
+          "decl": "void CDirectSoundBuffer_SetI3DL2Source(void);",
+          "ported": false
         },
         {
           "addr": "0x00204a64",
-          "decl": "void CDirectSoundStream_SetPitch(void);"
+          "decl": "void CDirectSoundStream_SetPitch(void);",
+          "ported": false
         },
         {
           "addr": "0x00204a78",
-          "decl": "void CDirectSoundStream_SetVolume(void);"
+          "decl": "void CDirectSoundStream_SetVolume(void);",
+          "ported": false
         },
         {
           "addr": "0x00204a8c",
-          "decl": "void CDirectSoundStream_SetLFO(void);"
+          "decl": "void CDirectSoundStream_SetLFO(void);",
+          "ported": false
         },
         {
           "addr": "0x00204aa0",
-          "decl": "void CDirectSoundStream_SetEG(void);"
+          "decl": "void CDirectSoundStream_SetEG(void);",
+          "ported": false
         },
         {
           "addr": "0x00204ab4",
-          "decl": "void CDirectSoundStream_SetFilter(void);"
+          "decl": "void CDirectSoundStream_SetFilter(void);",
+          "ported": false
         },
         {
           "addr": "0x00204ac8",
-          "decl": "void CDirectSoundStream_SetHeadroom(void);"
+          "decl": "void CDirectSoundStream_SetHeadroom(void);",
+          "ported": false
         },
         {
           "addr": "0x00204adc",
-          "decl": "void CDirectSoundStream_SetMixBinVolumes_12(void);"
+          "decl": "void CDirectSoundStream_SetMixBinVolumes_12(void);",
+          "ported": false
         },
         {
           "addr": "0x00204af4",
-          "decl": "void CDirectSoundStream_SetAllParameters(void);"
+          "decl": "void CDirectSoundStream_SetAllParameters(void);",
+          "ported": false
         },
         {
           "addr": "0x00204b0c",
-          "decl": "void CDirectSoundStream_SetConeAngles(void);"
+          "decl": "void CDirectSoundStream_SetConeAngles(void);",
+          "ported": false
         },
         {
           "addr": "0x00204b28",
-          "decl": "void CDirectSoundStream_SetConeOrientation(void);"
+          "decl": "void CDirectSoundStream_SetConeOrientation(void);",
+          "ported": false
         },
         {
           "addr": "0x00204b55",
-          "decl": "void CDirectSoundStream_SetConeOutsideVolume(void);"
+          "decl": "void CDirectSoundStream_SetConeOutsideVolume(void);",
+          "ported": false
         },
         {
           "addr": "0x00204b6d",
-          "decl": "void CDirectSoundStream_SetMaxDistance(void);"
+          "decl": "void CDirectSoundStream_SetMaxDistance(void);",
+          "ported": false
         },
         {
           "addr": "0x00204b89",
-          "decl": "void CDirectSoundStream_SetMinDistance(void);"
+          "decl": "void CDirectSoundStream_SetMinDistance(void);",
+          "ported": false
         },
         {
           "addr": "0x00204ba5",
-          "decl": "void CDirectSoundStream_SetMode(void);"
+          "decl": "void CDirectSoundStream_SetMode(void);",
+          "ported": false
         },
         {
           "addr": "0x00204bbd",
-          "decl": "void CDirectSoundStream_SetPosition(void);"
+          "decl": "void CDirectSoundStream_SetPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x00204bea",
-          "decl": "void CDirectSoundStream_SetVelocity(void);"
+          "decl": "void CDirectSoundStream_SetVelocity(void);",
+          "ported": false
         },
         {
           "addr": "0x00204c17",
-          "decl": "void CDirectSoundStream_SetI3DL2Source(void);"
+          "decl": "void CDirectSoundStream_SetI3DL2Source(void);",
+          "ported": false
         },
         {
           "addr": "0x00204c5d",
-          "decl": "void IDirectSound_GetCaps(void);"
+          "decl": "void IDirectSound_GetCaps(void);",
+          "ported": false
         },
         {
           "addr": "0x00204c79",
-          "decl": "void IDirectSound_GetSpeakerConfig(void);"
+          "decl": "void IDirectSound_GetSpeakerConfig(void);",
+          "ported": false
         },
         {
           "addr": "0x00204c95",
-          "decl": "void IDirectSound_DownloadEffectsImage(void);"
+          "decl": "void IDirectSound_DownloadEffectsImage(void);",
+          "ported": false
         },
         {
           "addr": "0x00204cbc",
-          "decl": "void IDirectSound_GetEffectData(void);"
+          "decl": "void IDirectSound_GetEffectData(void);",
+          "ported": false
         },
         {
           "addr": "0x00204ce3",
-          "decl": "void IDirectSound_SetEffectData(void);"
+          "decl": "void IDirectSound_SetEffectData(void);",
+          "ported": false
         },
         {
           "addr": "0x00204d0d",
-          "decl": "void IDirectSound_CommitEffectData(void);"
+          "decl": "void IDirectSound_CommitEffectData(void);",
+          "ported": false
         },
         {
           "addr": "0x00204d25",
-          "decl": "void IDirectSound_EnableHeadphones(void);"
+          "decl": "void IDirectSound_EnableHeadphones(void);",
+          "ported": false
         },
         {
           "addr": "0x00204d41",
-          "decl": "void IDirectSound_SetMixBinHeadroom(void);"
+          "decl": "void IDirectSound_SetMixBinHeadroom(void);",
+          "ported": false
         },
         {
           "addr": "0x00204d61",
-          "decl": "void IDirectSound_SetAllParameters(void);"
+          "decl": "void IDirectSound_SetAllParameters(void);",
+          "ported": false
         },
         {
           "addr": "0x00204d81",
-          "decl": "void IDirectSound_SetDistanceFactor(void);"
+          "decl": "void IDirectSound_SetDistanceFactor(void);",
+          "ported": false
         },
         {
           "addr": "0x00204da5",
-          "decl": "void IDirectSound_SetDopplerFactor(void);"
+          "decl": "void IDirectSound_SetDopplerFactor(void);",
+          "ported": false
         },
         {
           "addr": "0x00204dc9",
-          "decl": "void IDirectSound_SetOrientation(void);"
+          "decl": "void IDirectSound_SetOrientation(void);",
+          "ported": false
         },
         {
           "addr": "0x00204e13",
-          "decl": "void IDirectSound_SetPosition(void);"
+          "decl": "void IDirectSound_SetPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x00204e48",
-          "decl": "void IDirectSound_SetRolloffFactor(void);"
+          "decl": "void IDirectSound_SetRolloffFactor(void);",
+          "ported": false
         },
         {
           "addr": "0x00204e6c",
-          "decl": "void IDirectSound_SetVelocity(void);"
+          "decl": "void IDirectSound_SetVelocity(void);",
+          "ported": false
         },
         {
           "addr": "0x00204ea1",
-          "decl": "void IDirectSound_CommitDeferredSettings(void);"
+          "decl": "void IDirectSound_CommitDeferredSettings(void);",
+          "ported": false
         },
         {
           "addr": "0x00204eb9",
-          "decl": "void IDirectSound_GetTime(void);"
+          "decl": "void IDirectSound_GetTime(void);",
+          "ported": false
         },
         {
           "addr": "0x00204ed5",
-          "decl": "void IDirectSound_SetI3DL2Listener(void);"
+          "decl": "void IDirectSound_SetI3DL2Listener(void);",
+          "ported": false
         },
         {
           "addr": "0x00204f5b",
-          "decl": "void IDirectSoundBuffer_SetLFO(void);"
+          "decl": "void IDirectSoundBuffer_SetLFO(void);",
+          "ported": false
         },
         {
           "addr": "0x00204f77",
-          "decl": "void IDirectSoundBuffer_SetEG(void);"
+          "decl": "void IDirectSoundBuffer_SetEG(void);",
+          "ported": false
         },
         {
           "addr": "0x00204f93",
-          "decl": "void IDirectSoundBuffer_SetFilter(void);"
+          "decl": "void IDirectSoundBuffer_SetFilter(void);",
+          "ported": false
         },
         {
           "addr": "0x00204faf",
-          "decl": "void IDirectSoundBuffer_SetHeadroom(void);"
+          "decl": "void IDirectSoundBuffer_SetHeadroom(void);",
+          "ported": false
         },
         {
           "addr": "0x00204fcb",
-          "decl": "void IDirectSoundBuffer_SetMixBinVolumes_12(void);"
+          "decl": "void IDirectSoundBuffer_SetMixBinVolumes_12(void);",
+          "ported": false
         },
         {
           "addr": "0x00204feb",
-          "decl": "void IDirectSoundBuffer_SetAllParameters(void);"
+          "decl": "void IDirectSoundBuffer_SetAllParameters(void);",
+          "ported": false
         },
         {
           "addr": "0x0020500b",
-          "decl": "void IDirectSoundBuffer_SetConeAngles(void);"
+          "decl": "void IDirectSoundBuffer_SetConeAngles(void);",
+          "ported": false
         },
         {
           "addr": "0x0020502f",
-          "decl": "void IDirectSoundBuffer_SetConeOrientation(void);"
+          "decl": "void IDirectSoundBuffer_SetConeOrientation(void);",
+          "ported": false
         },
         {
           "addr": "0x00205064",
-          "decl": "void IDirectSoundBuffer_SetConeOutsideVolume(void);"
+          "decl": "void IDirectSoundBuffer_SetConeOutsideVolume(void);",
+          "ported": false
         },
         {
           "addr": "0x00205084",
-          "decl": "void IDirectSoundBuffer_SetMaxDistance(void);"
+          "decl": "void IDirectSoundBuffer_SetMaxDistance(void);",
+          "ported": false
         },
         {
           "addr": "0x002050a8",
-          "decl": "void IDirectSoundBuffer_SetMinDistance(void);"
+          "decl": "void IDirectSoundBuffer_SetMinDistance(void);",
+          "ported": false
         },
         {
           "addr": "0x002050cc",
-          "decl": "void IDirectSoundBuffer_SetMode(void);"
+          "decl": "void IDirectSoundBuffer_SetMode(void);",
+          "ported": false
         },
         {
           "addr": "0x002050ec",
-          "decl": "void IDirectSoundBuffer_SetPosition(void);"
+          "decl": "void IDirectSoundBuffer_SetPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x00205121",
-          "decl": "void IDirectSoundBuffer_SetVelocity(void);"
+          "decl": "void IDirectSoundBuffer_SetVelocity(void);",
+          "ported": false
         },
         {
           "addr": "0x00205156",
-          "decl": "void IDirectSoundBuffer_PlayEx(void);"
+          "decl": "void IDirectSoundBuffer_PlayEx(void);",
+          "ported": false
         },
         {
           "addr": "0x0020517a",
-          "decl": "void IDirectSoundBuffer_StopEx(void);"
+          "decl": "void IDirectSoundBuffer_StopEx(void);",
+          "ported": false
         },
         {
           "addr": "0x002051be",
-          "decl": "void IDirectSoundBuffer_GetStatus(void);"
+          "decl": "void IDirectSoundBuffer_GetStatus(void);",
+          "ported": false
         },
         {
           "addr": "0x002051da",
-          "decl": "void IDirectSoundBuffer_GetCurrentPosition(void);"
+          "decl": "void IDirectSoundBuffer_GetCurrentPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x00205216",
-          "decl": "void IDirectSoundBuffer_Lock(void);"
+          "decl": "void IDirectSoundBuffer_Lock(void);",
+          "ported": false
         },
         {
           "addr": "0x00205246",
-          "decl": "void IDirectSoundBuffer_SetI3DL2Source(void);"
+          "decl": "void IDirectSoundBuffer_SetI3DL2Source(void);",
+          "ported": false
         },
         {
           "addr": "0x0020527a",
-          "decl": "void IDirectSoundStream_SetPitch(void);"
+          "decl": "void IDirectSoundStream_SetPitch(void);",
+          "ported": false
         },
         {
           "addr": "0x0020528e",
-          "decl": "void IDirectSoundStream_SetLFO(void);"
+          "decl": "void IDirectSoundStream_SetLFO(void);",
+          "ported": false
         },
         {
           "addr": "0x002052a2",
-          "decl": "void IDirectSoundStream_SetEG(void);"
+          "decl": "void IDirectSoundStream_SetEG(void);",
+          "ported": false
         },
         {
           "addr": "0x002052b6",
-          "decl": "void IDirectSoundStream_SetFilter(void);"
+          "decl": "void IDirectSoundStream_SetFilter(void);",
+          "ported": false
         },
         {
           "addr": "0x002052ca",
-          "decl": "void IDirectSoundStream_SetHeadroom(void);"
+          "decl": "void IDirectSoundStream_SetHeadroom(void);",
+          "ported": false
         },
         {
           "addr": "0x002052de",
-          "decl": "void IDirectSoundStream_SetMixBinVolumes_12(void);"
+          "decl": "void IDirectSoundStream_SetMixBinVolumes_12(void);",
+          "ported": false
         },
         {
           "addr": "0x002052ed",
-          "decl": "void IDirectSoundStream_SetConeOrientation(void);"
+          "decl": "void IDirectSoundStream_SetConeOrientation(void);",
+          "ported": false
         },
         {
           "addr": "0x0020534b",
-          "decl": "void IDirectSoundStream_SetMode(void);"
+          "decl": "void IDirectSoundStream_SetMode(void);",
+          "ported": false
         },
         {
           "addr": "0x00205350",
-          "decl": "void IDirectSoundStream_SetPosition(void);"
+          "decl": "void IDirectSoundStream_SetPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x00205379",
-          "decl": "void IDirectSoundStream_SetVelocity(void);"
+          "decl": "void IDirectSoundStream_SetVelocity(void);",
+          "ported": false
         },
         {
           "addr": "0x002053a2",
-          "decl": "void IDirectSoundStream_Pause(void);"
+          "decl": "void IDirectSoundStream_Pause(void);",
+          "ported": false
         },
         {
           "addr": "0x002053ac",
-          "decl": "void DirectSoundDoWork(void);"
+          "decl": "void DirectSoundDoWork(void);",
+          "ported": false
         },
         {
           "addr": "0x002055a1",
-          "decl": "void CDirectSoundVoice_SetFrequency(void);"
+          "decl": "void CDirectSoundVoice_SetFrequency(void);",
+          "ported": false
         },
         {
           "addr": "0x002055e4",
-          "decl": "void CDirectSoundVoice_SetOutputBuffer(void);"
+          "decl": "void CDirectSoundVoice_SetOutputBuffer(void);",
+          "ported": false
         },
         {
           "addr": "0x00205650",
-          "decl": "void CDirectSoundVoice_SetMixBins(void);"
+          "decl": "void CDirectSoundVoice_SetMixBins(void);",
+          "ported": false
         },
         {
           "addr": "0x002056a8",
-          "decl": "void CDirectSoundBufferSettings_SetBufferData(void);"
+          "decl": "void CDirectSoundBufferSettings_SetBufferData(void);",
+          "ported": false
         },
         {
           "addr": "0x00205768",
-          "decl": "void CDirectSoundBuffer_SetBufferData(void);"
+          "decl": "void CDirectSoundBuffer_SetBufferData(void);",
+          "ported": false
         },
         {
           "addr": "0x002057dd",
-          "decl": "void CDirectSoundBuffer_Play(void);"
+          "decl": "void CDirectSoundBuffer_Play(void);",
+          "ported": false
         },
         {
           "addr": "0x0020580f",
-          "decl": "void CDirectSoundBuffer_Stop(void);"
+          "decl": "void CDirectSoundBuffer_Stop(void);",
+          "ported": false
         },
         {
           "addr": "0x0020583f",
-          "decl": "void CDirectSoundBuffer_SetNotificationPositions(void);"
+          "decl": "void CDirectSoundBuffer_SetNotificationPositions(void);",
+          "ported": false
         },
         {
           "addr": "0x00205894",
-          "decl": "void CDirectSoundBuffer_SetOutputBuffer(void);"
+          "decl": "void CDirectSoundBuffer_SetOutputBuffer(void);",
+          "ported": false
         },
         {
           "addr": "0x002059f9",
-          "decl": "void CDirectSoundStream_AddRef(void);"
+          "decl": "void CDirectSoundStream_AddRef(void);",
+          "ported": false
         },
         {
           "addr": "0x00205a09",
-          "decl": "void CDirectSoundStream_Release(void);"
+          "decl": "void CDirectSoundStream_Release(void);",
+          "ported": false
         },
         {
           "addr": "0x00205a19",
-          "decl": "void CDirectSoundStream_SetOutputBuffer(void);"
+          "decl": "void CDirectSoundStream_SetOutputBuffer(void);",
+          "ported": false
         },
         {
           "addr": "0x00205aa8",
-          "decl": "void CDirectSoundBuffer_SetFrequency(void);"
+          "decl": "void CDirectSoundBuffer_SetFrequency(void);",
+          "ported": false
         },
         {
           "addr": "0x00205aad",
-          "decl": "void CDirectSoundBuffer_SetMixBins(void);"
+          "decl": "void CDirectSoundBuffer_SetMixBins(void);",
+          "ported": false
         },
         {
           "addr": "0x00205ac7",
-          "decl": "void CDirectSoundStream_SetFrequency(void);"
+          "decl": "void CDirectSoundStream_SetFrequency(void);",
+          "ported": false
         },
         {
           "addr": "0x00205adb",
-          "decl": "void CDirectSoundStream_SetMixBins(void);"
+          "decl": "void CDirectSoundStream_SetMixBins(void);",
+          "ported": false
         },
         {
           "addr": "0x00205aef",
-          "decl": "void IDirectSoundBuffer_SetFrequency(void);"
+          "decl": "void IDirectSoundBuffer_SetFrequency(void);",
+          "ported": false
         },
         {
           "addr": "0x00205b0b",
-          "decl": "void IDirectSoundBuffer_SetOutputBuffer(void);"
+          "decl": "void IDirectSoundBuffer_SetOutputBuffer(void);",
+          "ported": false
         },
         {
           "addr": "0x00205b27",
-          "decl": "void IDirectSoundBuffer_SetMixBins(void);"
+          "decl": "void IDirectSoundBuffer_SetMixBins(void);",
+          "ported": false
         },
         {
           "addr": "0x00205b67",
-          "decl": "void IDirectSoundBuffer_Stop(void);"
+          "decl": "void IDirectSoundBuffer_Stop(void);",
+          "ported": false
         },
         {
           "addr": "0x00205b9f",
-          "decl": "void IDirectSoundBuffer_SetNotificationPositions(void);"
+          "decl": "void IDirectSoundBuffer_SetNotificationPositions(void);",
+          "ported": false
         },
         {
           "addr": "0x00205bd3",
-          "decl": "void IDirectSoundStream_SetOutputBuffer(void);"
+          "decl": "void IDirectSoundStream_SetOutputBuffer(void);",
+          "ported": false
         },
         {
           "addr": "0x00205bd8",
-          "decl": "void IDirectSoundStream_SetMixBins(void);"
+          "decl": "void IDirectSoundStream_SetMixBins(void);",
+          "ported": false
         },
         {
           "addr": "0x00205e69",
-          "decl": "void CDirectSoundStream_Constructor(void);"
+          "decl": "void CDirectSoundStream_Constructor(void);",
+          "ported": false
         },
         {
           "addr": "0x00205f6d",
-          "decl": "void CDirectSound_CreateSoundBuffer(void);"
+          "decl": "void CDirectSound_CreateSoundBuffer(void);",
+          "ported": false
         },
         {
           "addr": "0x00205fed",
-          "decl": "void CDirectSound_CreateSoundStream(void);"
+          "decl": "void CDirectSound_CreateSoundStream(void);",
+          "ported": false
         },
         {
           "addr": "0x002060d4",
-          "decl": "void IDirectSound_CreateSoundBuffer(void);"
+          "decl": "void IDirectSound_CreateSoundBuffer(void);",
+          "ported": false
         },
         {
           "addr": "0x002060f8",
-          "decl": "void IDirectSound_CreateSoundStream(void);"
+          "decl": "void IDirectSound_CreateSoundStream(void);",
+          "ported": false
         },
         {
           "addr": "0x00206232",
-          "decl": "void DirectSoundCreate(void);"
+          "decl": "void DirectSoundCreate(void);",
+          "ported": false
         },
         {
           "addr": "0x0020630e",
-          "decl": "void DirectSoundCreateStream(void);"
+          "decl": "void DirectSoundCreateStream(void);",
+          "ported": false
         },
         {
           "addr": "0x00206a5e",
-          "decl": "void CMcpxAPU_Commit3dSettings(void);"
+          "decl": "void CMcpxAPU_Commit3dSettings(void);",
+          "ported": false
         },
         {
           "addr": "0x00206dc4",
-          "decl": "void CMcpxAPU_SetMixBinHeadroom(void);"
+          "decl": "void CMcpxAPU_SetMixBinHeadroom(void);",
+          "ported": false
         },
         {
           "addr": "0x00207234",
-          "decl": "void CMcpxAPU_Set3dParameters(void);"
+          "decl": "void CMcpxAPU_Set3dParameters(void);",
+          "ported": false
         },
         {
           "addr": "0x00207265",
-          "decl": "void CMcpxAPU_Set3dDistanceFactor(void);"
+          "decl": "void CMcpxAPU_Set3dDistanceFactor(void);",
+          "ported": false
         },
         {
           "addr": "0x00207289",
-          "decl": "void CMcpxAPU_Set3dDopplerFactor(void);"
+          "decl": "void CMcpxAPU_Set3dDopplerFactor(void);",
+          "ported": false
         },
         {
           "addr": "0x002072ad",
-          "decl": "void CMcpxAPU_Set3dRolloffFactor(void);"
+          "decl": "void CMcpxAPU_Set3dRolloffFactor(void);",
+          "ported": false
         },
         {
           "addr": "0x00207309",
-          "decl": "void CMcpxAPU_Set3dPosition(void);"
+          "decl": "void CMcpxAPU_Set3dPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x00207334",
-          "decl": "void CMcpxAPU_Set3dVelocity(void);"
+          "decl": "void CMcpxAPU_Set3dVelocity(void);",
+          "ported": false
         },
         {
           "addr": "0x0020735f",
-          "decl": "void CMcpxAPU_SetI3DL2Listener(void);"
+          "decl": "void CMcpxAPU_SetI3DL2Listener(void);",
+          "ported": false
         },
         {
           "addr": "0x00208da2",
-          "decl": "void CMcpxVoiceClient_SetFilter(void);"
+          "decl": "void CMcpxVoiceClient_SetFilter(void);",
+          "ported": false
         },
         {
           "addr": "0x002097a9",
-          "decl": "void CMcpxVoiceClient_SetMixBins(void);"
+          "decl": "void CMcpxVoiceClient_SetMixBins(void);",
+          "ported": false
         },
         {
           "addr": "0x00209961",
-          "decl": "void CMcpxVoiceClient_SetPitch(void);"
+          "decl": "void CMcpxVoiceClient_SetPitch(void);",
+          "ported": false
         },
         {
           "addr": "0x00209c05",
-          "decl": "void CMcpxVoiceClient_SetLFO(void);"
+          "decl": "void CMcpxVoiceClient_SetLFO(void);",
+          "ported": false
         },
         {
           "addr": "0x00209d16",
-          "decl": "void CMcpxVoiceClient_SetEG(void);"
+          "decl": "void CMcpxVoiceClient_SetEG(void);",
+          "ported": false
         },
         {
           "addr": "0x00209e6d",
-          "decl": "void CMcpxVoiceClient_Commit3dSettings(void);"
+          "decl": "void CMcpxVoiceClient_Commit3dSettings(void);",
+          "ported": false
         },
         {
           "addr": "0x0020a0ef",
-          "decl": "void CMcpxVoiceClient_Set3dParameters(void);"
+          "decl": "void CMcpxVoiceClient_Set3dParameters(void);",
+          "ported": false
         },
         {
           "addr": "0x0020a145",
-          "decl": "void CMcpxVoiceClient_Set3dConeOrientation(void);"
+          "decl": "void CMcpxVoiceClient_Set3dConeOrientation(void);",
+          "ported": false
         },
         {
           "addr": "0x0020a16d",
-          "decl": "void CMcpxVoiceClient_Set3dConeOutsideVolume(void);"
+          "decl": "void CMcpxVoiceClient_Set3dConeOutsideVolume(void);",
+          "ported": false
         },
         {
           "addr": "0x0020a18e",
-          "decl": "void CMcpxVoiceClient_Set3dMaxDistance(void);"
+          "decl": "void CMcpxVoiceClient_Set3dMaxDistance(void);",
+          "ported": false
         },
         {
           "addr": "0x0020a1af",
-          "decl": "void CMcpxVoiceClient_Set3dMinDistance(void);"
+          "decl": "void CMcpxVoiceClient_Set3dMinDistance(void);",
+          "ported": false
         },
         {
           "addr": "0x0020a1d0",
-          "decl": "void CMcpxVoiceClient_Set3dMode(void);"
+          "decl": "void CMcpxVoiceClient_Set3dMode(void);",
+          "ported": false
         },
         {
           "addr": "0x0020a1f1",
-          "decl": "void CMcpxVoiceClient_Set3dPosition(void);"
+          "decl": "void CMcpxVoiceClient_Set3dPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x0020a219",
-          "decl": "void CMcpxVoiceClient_Set3dVelocity(void);"
+          "decl": "void CMcpxVoiceClient_Set3dVelocity(void);",
+          "ported": false
         },
         {
           "addr": "0x0020a241",
-          "decl": "void CMcpxVoiceClient_SetI3DL2Source(void);"
+          "decl": "void CMcpxVoiceClient_SetI3DL2Source(void);",
+          "ported": false
         },
         {
           "addr": "0x0020a2f5",
-          "decl": "void CSensaura3d_GetFullHRTFFilterPair(void);"
+          "decl": "void CSensaura3d_GetFullHRTFFilterPair(void);",
+          "ported": false
         },
         {
           "addr": "0x0020a431",
-          "decl": "void CSensaura3d_GetLiteHRTFFilterPair(void);"
+          "decl": "void CSensaura3d_GetLiteHRTFFilterPair(void);",
+          "ported": false
         },
         {
           "addr": "0x0020b0ac",
-          "decl": "void CMcpxBuffer_GetStatus(void);"
+          "decl": "void CMcpxBuffer_GetStatus(void);",
+          "ported": false
         },
         {
           "addr": "0x0020b0f7",
-          "decl": "void CMcpxBuffer_GetCurrentPosition(void);"
+          "decl": "void CMcpxBuffer_GetCurrentPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x0020b873",
-          "decl": "void CMcpxBuffer_Stop(void);"
+          "decl": "void CMcpxBuffer_Stop(void);",
+          "ported": false
         },
         {
           "addr": "0x0020b8d7",
-          "decl": "void CMcpxBuffer_SetCurrentPosition(void);"
+          "decl": "void CMcpxBuffer_SetCurrentPosition(void);",
+          "ported": false
         },
         {
           "addr": "0x0020ba90",
-          "decl": "void CMcpxBuffer_SetBufferData(void);"
+          "decl": "void CMcpxBuffer_SetBufferData(void);",
+          "ported": false
         },
         {
           "addr": "0x0020baa4",
-          "decl": "void CMcpxBuffer_Play(void);"
+          "decl": "void CMcpxBuffer_Play(void);",
+          "ported": false
         },
         {
           "addr": "0x0020c050",
-          "decl": "void CMcpxStream_Pause(void);"
+          "decl": "void CMcpxStream_Pause(void);",
+          "ported": false
         },
         {
           "addr": "0x0020c3fe",
-          "decl": "void CMcpxStream_Flush(void);"
+          "decl": "void CMcpxStream_Flush(void);",
+          "ported": false
         },
         {
           "addr": "0x0020c752",
-          "decl": "void CMcpxStream_Discontinuity(void);"
+          "decl": "void CMcpxStream_Discontinuity(void);",
+          "ported": false
         },
         {
           "addr": "0x0020c857",
-          "decl": "void XAudioCalculatePitch(void);"
+          "decl": "void XAudioCalculatePitch(void);",
+          "ported": false
         },
         {
           "addr": "0x0020ca62",
-          "decl": "void XAudioCreatePcmFormat(void);"
+          "decl": "void XAudioCreatePcmFormat(void);",
+          "ported": false
         },
         {
           "addr": "0x0020caac",
-          "decl": "void XAudioCreateAdpcmFormat(void);"
+          "decl": "void XAudioCreateAdpcmFormat(void);",
+          "ported": false
         },
         {
           "addr": "0x0020cbad",
-          "decl": "void IsValidFormat(void);"
+          "decl": "void IsValidFormat(void);",
+          "ported": false
         },
         {
           "addr": "0x002235c4",
-          "decl": "void GetLastError(void);"
+          "decl": "void GetLastError(void);",
+          "ported": false
         },
         {
           "addr": "0x00223be7",
-          "decl": "void ioctlsocket(void);"
+          "decl": "void ioctlsocket(void);",
+          "ported": false
         },
         {
           "addr": "0x002240c3",
-          "decl": "void listen(void);"
+          "decl": "void listen(void);",
+          "ported": false
         },
         {
           "addr": "0x00224881",
-          "decl": "int __stdcall bind(void *xnet@<ecx>, unsigned int socket, const void *name, int namelen);"
+          "decl": "int __stdcall bind(void *xnet@<ecx>, unsigned int socket, const void *name, int namelen);",
+          "ported": false
         },
         {
           "addr": "0x00224904",
-          "decl": "int __stdcall connect(void *xnet@<ecx>, unsigned int socket, const void *name, int namelen);"
+          "decl": "int __stdcall connect(void *xnet@<ecx>, unsigned int socket, const void *name, int namelen);",
+          "ported": false
         },
         {
           "addr": "0x00225021",
-          "decl": "int __stdcall socket(void *xnet@<ecx>, int af, int type, int protocol);"
+          "decl": "int __stdcall socket(void *xnet@<ecx>, int af, int type, int protocol);",
+          "ported": false
         },
         {
           "addr": "0x002256bb",
-          "decl": "int __stdcall recv(void *xnet@<ecx>, unsigned int socket, char *buf, int len, int flags);"
+          "decl": "int __stdcall recv(void *xnet@<ecx>, unsigned int socket, char *buf, int len, int flags);",
+          "ported": false
         },
         {
           "addr": "0x002258a4",
-          "decl": "int __stdcall send(void *xnet@<ecx>, unsigned int socket, const char *buf, int len, int flags);"
+          "decl": "int __stdcall send(void *xnet@<ecx>, unsigned int socket, const char *buf, int len, int flags);",
+          "ported": false
         },
         {
           "addr": "0x0024b4e4",
-          "decl": "void MU_Init(void);"
+          "decl": "void MU_Init(void);",
+          "ported": false
         },
         {
           "addr": "0x0024b724",
-          "decl": "void IUsbInit_GetMaxDeviceTypeCount(void);"
+          "decl": "void IUsbInit_GetMaxDeviceTypeCount(void);",
+          "ported": false
         },
         {
           "addr": "0x0024ba93",
-          "decl": "void ??_H@YGXPAXIHP6EPAX0@Z@FUN_0024ba93(void);"
+          "decl": "void ??_H@YGXPAXIHP6EPAX0@Z@FUN_0024ba93(void);",
+          "ported": false
         },
         {
           "addr": "0x0024bb54",
-          "decl": "void XInitDevices(void);"
+          "decl": "void XInitDevices(void);",
+          "ported": false
         },
         {
           "addr": "0x0024c143",
-          "decl": "void XInputOpen(void);"
+          "decl": "void XInputOpen(void);",
+          "ported": false
         },
         {
           "addr": "0x0024c1b8",
-          "decl": "void XInputClose(void);"
+          "decl": "void XInputClose(void);",
+          "ported": false
         },
         {
           "addr": "0x0024c1c4",
-          "decl": "void XInputGetCapabilities(void);"
+          "decl": "void XInputGetCapabilities(void);",
+          "ported": false
         },
         {
           "addr": "0x0024c3b6",
-          "decl": "void XInputGetState(void);"
+          "decl": "void XInputGetState(void);",
+          "ported": false
         },
         {
           "addr": "0x0024c45f",
-          "decl": "void XInputPoll(void);"
+          "decl": "void XInputPoll(void);",
+          "ported": false
         },
         {
           "addr": "0x0024c932",
-          "decl": "void XGetDevices(void);"
+          "decl": "void XGetDevices(void);",
+          "ported": false
         },
         {
           "addr": "0x0024c954",
-          "decl": "void XGetDeviceChanges(void);"
+          "decl": "void XGetDeviceChanges(void);",
+          "ported": false
         },
         {
           "addr": "0x0024d009",
-          "decl": "void XID_fCloseDevice(void);"
+          "decl": "void XID_fCloseDevice(void);",
+          "ported": false
         }
       ],
       "data": [],
-      "name": "<xdk_stubs>"
+      "name": "<xdk_stubs>",
+      "source": "xdk/xdk_stubs_xapi.c"
     },
     {
       "name": "wind.obj",

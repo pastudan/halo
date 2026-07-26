@@ -179,6 +179,8 @@
 	halo/xdk/xnet/xnet.c
 	halo/xdk/xnet/wsock.c
 	halo/xdk/xapilib/xinput.c
+	halo/xdk/xdk_stubs_rt.c
+	halo/xdk/xdk_stubs_xapi.c
 	halo/shell.c
 	halo/shell_xbox.c
 		halo/cache/xbox_texture_cache.c
