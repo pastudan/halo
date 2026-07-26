@@ -21781,7 +21781,7 @@
         },
         {
           "addr": "0x128c0",
-          "decl": "int action_avoid_setup(int * a0, void * a1);",
+          "decl": "int action_avoid_setup(int * a0, int * a1);",
           "ported": false
         },
         {
