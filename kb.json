@@ -26142,139 +26142,173 @@
       "functions": [
         {
           "addr": "0xedcd0",
-          "decl": "void FUN_000edcd0(void);"
+          "decl": "void FUN_000edcd0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xedfb0",
-          "decl": "void FUN_000edfb0(void);"
+          "decl": "void FUN_000edfb0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xee500",
-          "decl": "void FUN_000ee500(void);"
+          "decl": "void FUN_000ee500(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xee810",
-          "decl": "void FUN_000ee810(void);"
+          "decl": "void FUN_000ee810(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xeea10",
-          "decl": "void playlist_profile_initialize_name(void);"
+          "decl": "void playlist_profile_initialize_name(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xeead0",
-          "decl": "void playlist_profile_initialize_ctf_rules(void);"
+          "decl": "void playlist_profile_initialize_ctf_rules(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xeebe0",
-          "decl": "void FUN_000eebe0(void);"
+          "decl": "void FUN_000eebe0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xeec10",
-          "decl": "void FUN_000eec10(void);"
+          "decl": "void FUN_000eec10(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xeed10",
-          "decl": "void FUN_000eed10(void);"
+          "decl": "void FUN_000eed10(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xeeeb0",
-          "decl": "void FUN_000eeeb0(void);"
+          "decl": "void FUN_000eeeb0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xeef30",
-          "decl": "void FUN_000eef30(void);"
+          "decl": "void FUN_000eef30(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xef110",
-          "decl": "void FUN_000ef110(void);"
+          "decl": "void FUN_000ef110(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xef3f0",
-          "decl": "void FUN_000ef3f0(void);"
+          "decl": "void FUN_000ef3f0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xef5c0",
-          "decl": "void playlist_profile_initialize_racing_rules(void);"
+          "decl": "void playlist_profile_initialize_racing_rules(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xef900",
-          "decl": "void FUN_000ef900(void);"
+          "decl": "void FUN_000ef900(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xef970",
-          "decl": "void FUN_000ef970(void);"
+          "decl": "void FUN_000ef970(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xefa80",
-          "decl": "void FUN_000efa80(void);"
+          "decl": "void FUN_000efa80(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xefc60",
-          "decl": "void FUN_000efc60(void);"
+          "decl": "void FUN_000efc60(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xefde0",
-          "decl": "void FUN_000efde0(void);"
+          "decl": "void FUN_000efde0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xefed0",
-          "decl": "void FUN_000efed0(void);"
+          "decl": "void FUN_000efed0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xeff70",
-          "decl": "void FUN_000eff70(void);"
+          "decl": "void FUN_000eff70(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0070",
-          "decl": "void FUN_000f0070(void);"
+          "decl": "void FUN_000f0070(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf00b0",
-          "decl": "void FUN_000f00b0(void);"
+          "decl": "void FUN_000f00b0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0100",
-          "decl": "void FUN_000f0100(void);"
+          "decl": "void FUN_000f0100(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0170",
-          "decl": "void FUN_000f0170(void);"
+          "decl": "void FUN_000f0170(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf01d0",
-          "decl": "void player_profile_end_editing(void);"
+          "decl": "void player_profile_end_editing(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0250",
-          "decl": "void player_profile_save_changes(void);"
+          "decl": "void player_profile_save_changes(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf03d0",
-          "decl": "void FUN_000F03D0(void);"
+          "decl": "void FUN_000F03D0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0430",
-          "decl": "void player_profile_initialize_advanced_controller_settings(void);"
+          "decl": "void player_profile_initialize_advanced_controller_settings(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf04c0",
-          "decl": "void FUN_000f04c0(void);"
+          "decl": "void FUN_000f04c0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0620",
-          "decl": "void FUN_000f0620(void);"
+          "decl": "void FUN_000f0620(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0640",
-          "decl": "void FUN_000f0640(void);"
+          "decl": "void FUN_000f0640(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0740",
-          "decl": "void FUN_000f0740(void);"
+          "decl": "void FUN_000f0740(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0790",
-          "decl": "void FUN_000f0790(void);"
+          "decl": "void FUN_000f0790(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0a30",
@@ -26283,23 +26317,28 @@
         },
         {
           "addr": "0xf0aa0",
-          "decl": "void FUN_000f0aa0(void);"
+          "decl": "void FUN_000f0aa0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0bb0",
-          "decl": "void FUN_000f0bb0(void);"
+          "decl": "void FUN_000f0bb0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0c60",
-          "decl": "void FUN_000f0c60(void);"
+          "decl": "void FUN_000f0c60(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0d10",
-          "decl": "void playlist_settings_menu_update_extended_description(void);"
+          "decl": "void playlist_settings_menu_update_extended_description(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0d90",
-          "decl": "void FUN_000f0d90(void);"
+          "decl": "void FUN_000f0d90(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf0ea0",
@@ -26308,127 +26347,158 @@
         },
         {
           "addr": "0xf0f30",
-          "decl": "void FUN_000f0f30(void);"
+          "decl": "void FUN_000f0f30(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf1710",
-          "decl": "void FUN_000f1710(void);"
+          "decl": "void FUN_000f1710(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf1ed0",
-          "decl": "void network_pregame_status_screen_update(void);"
+          "decl": "void network_pregame_status_screen_update(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2390",
-          "decl": "void FUN_000f2390(void);"
+          "decl": "void FUN_000f2390(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf24b0",
-          "decl": "void mutliplayer_settings_select_list_update_displayed_items(void);"
+          "decl": "void mutliplayer_settings_select_list_update_displayed_items(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2560",
-          "decl": "void FUN_000f2560(void);"
+          "decl": "void FUN_000f2560(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2690",
-          "decl": "void FUN_000f2690(void);"
+          "decl": "void FUN_000f2690(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2720",
-          "decl": "void FUN_000f2720(void);"
+          "decl": "void FUN_000f2720(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2850",
-          "decl": "void FUN_000f2850(void);"
+          "decl": "void FUN_000f2850(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf28e0",
-          "decl": "void FUN_000f28e0(void);"
+          "decl": "void FUN_000f28e0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2990",
-          "decl": "void FUN_000f2990(void);"
+          "decl": "void FUN_000f2990(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2a40",
-          "decl": "void FUN_000f2a40(void);"
+          "decl": "void FUN_000f2a40(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2b00",
-          "decl": "void FUN_000f2b00(void);"
+          "decl": "void FUN_000f2b00(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2b90",
-          "decl": "void FUN_000f2b90(void);"
+          "decl": "void FUN_000f2b90(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2d50",
-          "decl": "void FUN_000f2d50(void);"
+          "decl": "void FUN_000f2d50(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2e60",
-          "decl": "void FUN_000f2e60(void);"
+          "decl": "void FUN_000f2e60(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2ed0",
-          "decl": "void FUN_000f2ed0(void);"
+          "decl": "void FUN_000f2ed0(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf2f60",
-          "decl": "void FUN_000f2f60(void);"
+          "decl": "void FUN_000f2f60(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf3010",
-          "decl": "void solo_game_objective_text(void);"
+          "decl": "void solo_game_objective_text(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf31d0",
-          "decl": "void color_picker_get_string(void);"
+          "decl": "void color_picker_get_string(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf3280",
-          "decl": "void FUN_000f3280(void);"
+          "decl": "void FUN_000f3280(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf3320",
-          "decl": "void FUN_000f3320(void);"
+          "decl": "void FUN_000f3320(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf3400",
-          "decl": "void game_options_menu_update_pic_desc(void);"
+          "decl": "void game_options_menu_update_pic_desc(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf3540",
-          "decl": "void mp_level_select_list_update_displayed_items(void);"
+          "decl": "void mp_level_select_list_update_displayed_items(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf3590",
-          "decl": "void get_editable_player_profile_display_name(void);"
+          "decl": "void get_editable_player_profile_display_name(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf3640",
-          "decl": "void get_editable_playlist_profile_display_name(void);"
+          "decl": "void get_editable_playlist_profile_display_name(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf3690",
-          "decl": "void FUN_000f3690(void);"
+          "decl": "void FUN_000f3690(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf3740",
-          "decl": "void multiplayer_game_set_text_box_for_game_ruleset(void);"
+          "decl": "void multiplayer_game_set_text_box_for_game_ruleset(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf3850",
-          "decl": "void multiplayer_game_set_text_box_for_teams_noteams(void);"
+          "decl": "void multiplayer_game_set_text_box_for_teams_noteams(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf3960",
-          "decl": "void FUN_000f3960(void);"
+          "decl": "void FUN_000f3960(void *widget);",
+          "ported": false
         },
         {
           "addr": "0xf39c0",
-          "decl": "void FUN_000f39c0(void);"
+          "decl": "void FUN_000f39c0(void *widget);",
+          "ported": false
         }
       ],
       "name": "ui_widget_game_data_input_functions.obj",
