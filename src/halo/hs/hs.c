@@ -4569,58 +4569,25 @@ void hs_doc(void)
 #endif
 
 
-/* FUN_000c4f90 (0xc4f90) — XBE naked draft (batch 183). */
-#if defined(__clang__)
-static bool (*const bc4f90_cc47c0)(void) = hs_needs_recompile;
-static bool (*const bc4f90_cc4970)(void) = hs_mark_recompile;
-static void (*const bc4f90_cc4dd0)(void) = hs_dispose_from_old_map;
-static scenario_t * (*const bc4f90_c18e380)(void) = global_scenario_get;
-static void (*const bc4f90_cc3b60)(void) = hs_scripts_initialize;
-static bool (*const bc4f90_cc4c10)(int preserve_syntax) = hs_load_scenario_scripts;
-static void (*const bc4f90_cce1c0)(void) = hs_runtime_initialize;
-static void (*const bc4f90_ccdb30)(void) = hs_runtime_initialize_for_new_map;
-
-__attribute__((naked, noinline))
+/* FUN_000c4f90 (0xc4f90) — readable C lift: recompile/reload HS if needed. */
 void FUN_000c4f90(void)
 {
-  __asm__ volatile(
-      "call *%[cc47c0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000c4f90_4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cc4970]\n\t"
-      "call *%[cc4dd0]\n\t"
-      "cmpl $-1, 0x326a08\n\t"
-      "je .LFUN_000c4f90_1\n\t"
-      "call *%[c18e380]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jmp .LFUN_000c4f90_2\n\t"
-      ".LFUN_000c4f90_1:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".LFUN_000c4f90_2:\n\t"
-      "call *%[cc3b60]\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_000c4f90_3\n\t"
-      "movl 0x474(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c4f90_3\n\t"
-      "pushl $0\n\t"
-      "call *%[cc4c10]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000c4f90_3:\n\t"
-      "call *%[cce1c0]\n\t"
-      "popl %%esi\n\t"
-      "jmp *%[ccdb30]\n\t"
-      ".LFUN_000c4f90_4:\n\t"
-      "ret\n\t"
-      :
-      : [cc47c0] "m"(bc4f90_cc47c0), [cc4970] "m"(bc4f90_cc4970), [cc4dd0] "m"(bc4f90_cc4dd0), [c18e380] "m"(bc4f90_c18e380), [cc3b60] "m"(bc4f90_cc3b60), [cc4c10] "m"(bc4f90_cc4c10), [cce1c0] "m"(bc4f90_cce1c0), [ccdb30] "m"(bc4f90_ccdb30)
-      : "memory");
-}
-#else
-#error "FUN_000c4f90: clang naked draft required"
-#endif
+  char *scenario;
 
+  if (!hs_needs_recompile())
+    return;
+  hs_mark_recompile();
+  hs_dispose_from_old_map();
+  if (*(int *)0x326a08 != -1)
+    scenario = (char *)global_scenario_get();
+  else
+    scenario = 0;
+  hs_scripts_initialize();
+  if (scenario && *(int *)(scenario + 0x474))
+    hs_load_scenario_scripts(0);
+  hs_runtime_initialize();
+  __attribute__((musttail)) return hs_runtime_initialize_for_new_map();
+}
 
 /* FUN_000c5310 (0xc5310) — XBE naked draft (batch 112). */
 #if defined(__clang__)
