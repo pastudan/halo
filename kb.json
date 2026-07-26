@@ -17499,7 +17499,7 @@
         },
         {
           "addr": "0x9fa60",
-          "decl": "void FUN_0009fa60(void);",
+          "decl": "void FUN_0009fa60(void *system, void *arg);",
           "ported": false
         },
         {
@@ -17515,8 +17515,8 @@
         },
         {
           "addr": "0x9fca0",
-          "decl": "void FUN_0009fca0(void);",
-          "ported": false
+          "decl": "void FUN_0009fca0(void *system, void *arg);",
+          "ported": true
         },
         {
           "addr": "0xa0800",
