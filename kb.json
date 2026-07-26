@@ -8012,7 +8012,7 @@
         },
         {
           "addr": "0x19acf0",
-          "decl": "void file_write_to_position(void);",
+          "decl": "char file_write_to_position(void *info, int offset, void *buffer, int size);",
           "ported": false
         },
         {
@@ -12365,12 +12365,12 @@
         },
         {
           "addr": "0xca3f0",
-          "decl": "void FUN_000ca3f0(int object_handle, int scenario_index);",
+          "decl": "void FUN_000ca3f0(int object_handle, int16_t scenario_index);",
           "ported": false
         },
         {
           "addr": "0xca410",
-          "decl": "void FUN_000ca410(int object_handle, int scenario_index);",
+          "decl": "void FUN_000ca410(int object_handle, int16_t scenario_index);",
           "ported": false
         },
         {
@@ -24510,12 +24510,12 @@
         {
           "addr": "0x1c9250",
           "decl": "int dsound_occlusion_from_occlusion(float occlusion);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c9270",
           "decl": "int dsound_obstruction_from_obstruction(float obstruction);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c9350",
