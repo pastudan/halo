@@ -16910,5 +16910,47 @@
     "object": "edit_text.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cf840",
+    "name": "FUN_001cf840",
+    "object": "d3d_intimacy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cf900",
+    "name": "CloseHandle",
+    "object": "d3d_intimacy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cf944",
+    "name": "XapiCallThreadNotifyRoutines",
+    "object": "d3d_intimacy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cf97c",
+    "name": "UnhandledExceptionFilter",
+    "object": "d3d_intimacy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cf999",
+    "name": "SetThreadPriority",
+    "object": "d3d_intimacy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1cf9eb",
+    "name": "GetThreadPriority",
+    "object": "d3d_intimacy.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

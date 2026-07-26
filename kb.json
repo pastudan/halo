@@ -5940,27 +5940,33 @@
         },
         {
           "addr": "0x1cf840",
-          "decl": "void FUN_001cf840(void);"
+          "decl": "void FUN_001cf840(void);",
+          "ported": false
         },
         {
           "addr": "0x1cf900",
-          "decl": "int __stdcall CloseHandle(int handle);"
+          "decl": "int __stdcall CloseHandle(int handle);",
+          "ported": false
         },
         {
           "addr": "0x1cf944",
-          "decl": "void XapiCallThreadNotifyRoutines(void);"
+          "decl": "void XapiCallThreadNotifyRoutines(void);",
+          "ported": false
         },
         {
           "addr": "0x1cf97c",
-          "decl": "void UnhandledExceptionFilter(void);"
+          "decl": "void UnhandledExceptionFilter(void);",
+          "ported": false
         },
         {
           "addr": "0x1cf999",
-          "decl": "int __stdcall SetThreadPriority(int thread_handle, int priority);"
+          "decl": "int __stdcall SetThreadPriority(int thread_handle, int priority);",
+          "ported": false
         },
         {
           "addr": "0x1cf9eb",
-          "decl": "void GetThreadPriority(void);"
+          "decl": "void GetThreadPriority(void);",
+          "ported": false
         }
       ],
       "name": "d3d_intimacy.obj",
