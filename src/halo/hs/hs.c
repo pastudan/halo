@@ -3038,54 +3038,15 @@ void FUN_000c2ad0(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, 0);
 }
 
-/* FUN_000c2b10 (0xc2b10) — XBE naked draft (batch 186). */
-#if defined(__clang__)
-static int (*const bc2b10_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc2b10_c1c8c80)(const char *sound_name, float volume, int16_t transition_ticks) = game_sound_set_music_volume;
-static void (*const bc2b10_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c2b10(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c2b10 (0xc2b10) — readable C lift (HS macro-eval wrapper). */
+void FUN_000c2b10(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c2b10_1\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x8(%%eax), %%dx\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c8c80]\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000c2b10_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bc2b10_ccc560), [c1c8c80] "m"(bc2b10_c1c8c80), [ccbf80] "m"(bc2b10_ccbf80)
-      : "memory");
+  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    game_sound_set_music_volume((const char *)(uintptr_t)args[0], *(float *)&args[1], (int16_t)(uint16_t)args[2]);
+  }
+  hs_return(thread_datum, 0);
 }
-#else
-#error "FUN_000c2b10: clang naked draft required"
-#endif
-
 
 /* FUN_000c2b50 (0xc2b50) — readable C lift (HS macro-eval wrapper). */
 void FUN_000c2b50(int16_t function_index, int thread_datum, char init)
@@ -4009,48 +3970,15 @@ void FUN_000c39f0(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, 0);
 }
 
-/* FUN_000c3a10 (0xc3a10) — XBE naked draft (batch 208). */
-#if defined(__clang__)
-static int (*const bc3a10_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc3a10_c12aa80)(const char *name) = xbox_set_machine_name;
-static void (*const bc3a10_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c3a10(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c3a10 (0xc3a10) — readable C lift (HS macro-eval wrapper). */
+void FUN_000c3a10(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c3a10_1\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c12aa80]\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000c3a10_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bc3a10_ccc560), [c12aa80] "m"(bc3a10_c12aa80), [ccbf80] "m"(bc3a10_ccbf80)
-      : "memory");
+  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    xbox_set_machine_name((const char *)(uintptr_t)args[0]);
+  }
+  hs_return(thread_datum, 0);
 }
-#else
-#error "FUN_000c3a10: clang naked draft required"
-#endif
-
 
 /* FUN_000c1f80 (0xc1f80) — readable C lift: hs_return(thread, 0). */
 void FUN_000c1f80(short function_index, int thread_datum, char init)
