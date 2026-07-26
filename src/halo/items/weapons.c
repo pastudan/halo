@@ -3626,69 +3626,23 @@ void FUN_000fcdd0(int16_t trigger_index, int weapon_handle)
 }
 #endif
 
-/* 0xfce60 — force trigger into overheated/empty recovery (handle@eax, trig@si). */
-#if defined(__clang__)
-static void *(*const FUN_000fce60_get)(int, int) = object_get_and_verify_type;
-static void (*const FUN_000fce60_assert)(const char *, const char *, int,
-                                         bool) = display_assert;
-static void (*const FUN_000fce60_exit)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_000fce60(int weapon_handle __attribute__((unused)),
-                  int16_t trigger_index __attribute__((unused)))
+/* FUN_000fce60 (0xfce60) — readable C lift: init trigger overcharged state. */
+void FUN_000fce60(int weapon_handle /*@<eax>*/, int16_t trigger_index /*@<si>*/)
 {
-  __asm__ volatile(
-      "pushl %%edi\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "movl %%eax, %%edi\n\t"
-      "jl 1f\n\t"
-      "cmpw $2, %%si\n\t"
-      "jl 2f\n\t"
-      "1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa11\n\t"
-      "pushl $0x28ad48\n\t"
-      "pushl $0x28ae40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exit]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,8), %%ecx\n\t"
-      "leal (%%edi,%%ecx,4), %%eax\n\t"
-      "movb $7, 0x211(%%eax)\n\t"
-      "movw $-1, 0x212(%%eax)\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_000fce60_get), [assert] "m"(FUN_000fce60_assert),
-        [exit] "m"(FUN_000fce60_exit)
-      : "memory");
-}
-#else
-void FUN_000fce60(int weapon_handle, int16_t trigger_index)
-{
-  char *weapon_obj;
-  char *entry;
-  int idx;
+  extern char DAT_0028ad48[];
+  extern char DAT_0028ae40[];
+  char *weapon;
+  char *slot;
 
-  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  if ((int16_t)trigger_index < 0 || (int16_t)trigger_index >= 2) {
-    display_assert((char *)0x0028ae40, (char *)0x0028ad48, 0xa11, 1);
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  if (trigger_index < 0 || trigger_index >= 2) {
+    display_assert(DAT_0028ae40, DAT_0028ad48, 0xa11, 1);
     system_exit(-1);
   }
-
-  idx = (int)(int16_t)trigger_index;
-  entry = weapon_obj + (idx + idx * 8) * 4;
-  entry[0x211] = 7;
-  *(int16_t *)(entry + 0x212) = (int16_t)0xffff;
+  slot = weapon + (int)trigger_index * 36;
+  *(unsigned char *)(slot + 0x211) = 7;
+  *(int16_t *)(slot + 0x212) = -1;
 }
-#endif
 
 /* 0xfcec0 — clear trigger heat then reset charge (trigger@eax, weapon@ebx). */
 #if defined(__clang__)

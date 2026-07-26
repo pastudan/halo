@@ -33794,8 +33794,8 @@
         },
         {
           "addr": "0xfce60",
-          "decl": "void FUN_000fce60(int weapon_handle, int16_t trigger_index);",
-          "ported": false,
+          "decl": "void FUN_000fce60(int weapon_handle@<eax>, int16_t trigger_index@<si>);",
+          "ported": true,
           "name": "FUN_000fce60"
         },
         {
@@ -40512,7 +40512,7 @@
         },
         {
           "addr": "0x62b20",
-          "decl": "char FUN_00062b20(unsigned char *flag_base @<eax>, int index @<edx>, char skip_check @<bl>, void *block, void *bitvec);",
+          "decl": "char FUN_00062b20(unsigned char *flag_base @<eax>, int index @<edx>, char skip_check @<ebx>, void *block, void *bitvec);",
           "ported": false,
           "name": "FUN_00062b20"
         },
