@@ -525,56 +525,16 @@ float device_group_get_value(int a0)
   return *(float *)((char *)d + 4);
 }
 
-/* device_group_set_real (0x966d0) — XBE naked draft (batch 282). */
-#if defined(__clang__)
-static void *(*const b966d0_get)(int, int) = object_get_and_verify_type;
-static void (*const b966d0_c958f0)(int object) = FUN_000958f0;
-static void (*const b966d0_c95be0)(int object) = FUN_00095be0;
-
-__attribute__((naked, noinline))
-void device_group_set_real(int device_group_handle __attribute__((unused)), int unit_handle __attribute__((unused)))
+/* device_group_set_real (0x966d0) — readable C lift. */
+void device_group_set_real(int object_handle, int arg)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x64(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "subl $7, %%eax\n\t"
-      "je .Ldevice_group_set_real_1\n\t"
-      "decl %%eax\n\t"
-      "jne .Ldevice_group_set_real_2\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c958f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldevice_group_set_real_1:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c95be0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Ldevice_group_set_real_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b966d0_get), [c958f0] "m"(b966d0_c958f0), [c95be0] "m"(b966d0_c95be0)
-      : "memory");
+  void *obj = object_get_and_verify_type(object_handle, 0x380);
+  int t = *(short *)((char *)obj + 0x64) - 7;
+  if (t == 0)
+    FUN_00095be0(object_handle, arg);
+  else if (t == 1)
+    FUN_000958f0(object_handle, arg);
 }
-#else
-#error "device_group_set_real: clang naked draft required"
-#endif
-
-
 /* device_can_change_position (0x96720) — XBE naked draft (batch 279). */
 #if defined(__clang__)
 static void *(*const b96720_get)(int, int) = object_get_and_verify_type;

@@ -17853,12 +17853,14 @@
         {
           "addr": "0xb6e10",
           "decl": "char limit2d(float *vec, float max_len);",
-          "ported": false
+          "ported": false,
+          "name": "limit2d"
         },
         {
           "addr": "0xb6e60",
           "decl": "void interpolate_scalar(float *value, float target, float max_delta);",
-          "ported": false
+          "ported": true,
+          "name": "interpolate_scalar"
         },
         {
           "addr": "0xb70b0",
@@ -18568,7 +18570,8 @@
         {
           "addr": "0xbaa90",
           "decl": "int16_t player_get_starting_location_count(void);",
-          "ported": false
+          "ported": true,
+          "name": "player_get_starting_location_count"
         },
         {
           "addr": "0xbaae0",
@@ -22975,8 +22978,9 @@
         },
         {
           "addr": "0x958f0",
-          "decl": "void FUN_000958f0(int object);",
-          "ported": true
+          "decl": "void FUN_000958f0(int object, int arg);",
+          "ported": true,
+          "name": "FUN_000958f0"
         },
         {
           "addr": "0x95930",
@@ -23010,8 +23014,9 @@
         },
         {
           "addr": "0x95be0",
-          "decl": "void FUN_00095be0(int object);",
-          "ported": false
+          "decl": "void FUN_00095be0(int object, int arg);",
+          "ported": false,
+          "name": "FUN_00095be0"
         },
         {
           "addr": "0x95c10",
@@ -39971,8 +39976,9 @@
         },
         {
           "addr": "0x966d0",
-          "decl": "void device_group_set_real(int device_group_handle, int unit_handle);",
-          "ported": false
+          "decl": "void device_group_set_real(int object_handle, int arg);",
+          "ported": true,
+          "name": "device_group_set_real"
         },
         {
           "addr": "0x96720",
