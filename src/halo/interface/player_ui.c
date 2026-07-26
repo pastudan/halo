@@ -446,7 +446,7 @@ void player_ui_autolevel_enabled(void)
 
 /* player_ui_get_path_to_local_player_profile_directory (0xe0bf0) — XBE naked draft (batch 163). */
 #if defined(__clang__)
-static void (*const be0bf0_c1c1280)(void) = FUN_001c1280;
+static char (*const be0bf0_c1c1280)(int, void *) = FUN_001c1280;
 
 __attribute__((naked, noinline))
 char player_ui_get_path_to_local_player_profile_directory(int16_t local_player_index, void *out_path)
@@ -484,8 +484,8 @@ char player_ui_get_path_to_local_player_profile_directory(int16_t local_player_i
 
 /* player_ui_get_player1_last_used_profile_index (0xe0c90) — XBE naked draft (batch 163). */
 #if defined(__clang__)
-static void (*const be0c90_c1c2d20)(void) = saved_game_file_retrieve_player1_last_used_profile_directory;
-static void (*const be0c90_c1c38d0)(void) = saved_game_file_find_profile_index_for_directory_path;
+static char (*const be0c90_c1c2d20)(void *) = saved_game_file_retrieve_player1_last_used_profile_directory;
+static int (*const be0c90_c1c38d0)(void *, int) = saved_game_file_find_profile_index_for_directory_path;
 
 __attribute__((naked, noinline))
 int player_ui_get_player1_last_used_profile_index(void)
@@ -839,7 +839,7 @@ void player_ui_edit_profile_is_dirty(void)
 
 /* player_ui_activate_all_solo_levels (0xe0fd0) — XBE naked draft (batch 163). */
 #if defined(__clang__)
-static void (*const be0fd0_c1c1bc0)(void) = player_profile_get_from_path;
+static void (*const be0fd0_c1c1bc0)(int, void *) = player_profile_get_from_path;
 
 __attribute__((naked, noinline))
 void player_ui_activate_all_solo_levels(void)
@@ -1346,7 +1346,7 @@ static void (*const be15b0_c1c1e20)(void) = FUN_001c1e20;
 static void (*const be15b0_c1c27f0)(void) = playlist_profile_get_display_name;
 static void (*const be15b0_c1c4da0)(void) = FUN_001c4da0;
 static void (*const be15b0_c1c2e00)(void) = saved_game_file_remember_last_used_multiplayer_variant_directory;
-static void (*const be15b0_c1c1bc0)(void) = player_profile_get_from_path;
+static void (*const be15b0_c1c1bc0)(int, void *) = player_profile_get_from_path;
 
 __attribute__((naked, noinline))
 void player_ui_save_profile(void)
@@ -1505,7 +1505,7 @@ void player_ui_end_editing_profile(void)
 /* FUN_000e1770 (0xe1770) — XBE naked draft (batch 234). */
 #if defined(__clang__)
 static void (*const be1770_ce1000)(void) = FUN_000e1000;
-static void (*const be1770_c1c1bc0)(void) = player_profile_get_from_path;
+static void (*const be1770_c1c1bc0)(int, void *) = player_profile_get_from_path;
 static void (*const be1770_ce10c0)(void) = FUN_000e10c0;
 
 __attribute__((naked, noinline))

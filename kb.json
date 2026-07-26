@@ -17371,8 +17371,8 @@
         },
         {
           "addr": "0x8cf10",
-          "decl": "void FUN_0008cf10(void);",
-          "ported": false
+          "decl": "void FUN_0008cf10(float *angles, float pitch, float *vec);",
+          "ported": true
         },
         {
           "addr": "0x8cf30",
@@ -20311,7 +20311,7 @@
         {
           "addr": "0xe21e0",
           "decl": "void D3DXMatrixIdentity(float *m);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe2220",
@@ -22874,7 +22874,7 @@
         {
           "addr": "0x94c70",
           "decl": "void recorded_animations_clear_debug_storage(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x94cb0",
