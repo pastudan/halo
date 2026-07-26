@@ -11841,7 +11841,7 @@
         },
         {
           "addr": "0xc4e90",
-          "decl": "void hs_doc(void);",
+          "decl": "* Calls hs_doc() to dump HaloScript documentation to the console,\n * then returns void to the HS thread. */\nvoid FUN_000c4ff0(int16_t function_index, int thread_datum, char init);",
           "ported": false
         },
         {
@@ -12184,12 +12184,12 @@
         },
         {
           "addr": "0xc9050",
-          "decl": "int hs_compile(int source_length, const char *source, int *error_info, char **error_text);",
+          "decl": "int hs_compile(int source_length, const char *source, int *error_info,\n               char **error_text);",
           "ported": true
         },
         {
           "addr": "0xc92b0",
-          "decl": "bool hs_compile_source(int source_file_size, void *source_ptr, char **error_info, char **error_text);",
+          "decl": "bool hs_compile_source(int source_file_size, void *source_ptr,\n                       char **error_info, char **error_text);",
           "ported": true
         },
         {
@@ -12420,12 +12420,12 @@
         },
         {
           "addr": "0xca890",
-          "decl": "const char *FUN_000ca890(int datum_index@<eax>);",
+          "decl": "const char *FUN_000ca890(int datum_index);",
           "ported": true
         },
         {
           "addr": "0xca940",
-          "decl": "int hs_thread_new(int script_index@<ebx>, int type);",
+          "decl": "static int hs_thread_new(int script_index, int type);",
           "ported": true
         },
         {
@@ -12435,7 +12435,7 @@
         },
         {
           "addr": "0xcaa80",
-          "decl": "char *hs_get_thread_script_name(int thread_index@<esi>);",
+          "decl": "* hs_get_thread_script_name (0xcaa80) takes ESI=thread_index\n           * as register arg and returns the script name string. */\n          if (*(int *)(internal_thread + 0x8) != 0);",
           "ported": true
         },
         {
@@ -12450,7 +12450,7 @@
         },
         {
           "addr": "0xcaba0",
-          "decl": "void *hs_thread_stack_alloc(int thread_handle@<eax>, int size);",
+          "decl": "static void *hs_thread_stack_alloc(int thread_handle, int size);",
           "ported": true
         },
         {
@@ -12460,7 +12460,7 @@
         },
         {
           "addr": "0xcada0",
-          "decl": "int FUN_000cada0(int16_t script_index@<edi>);",
+          "decl": "*            via FUN_000cada0(@EDI). Negative ticks \u2192 sleep_until = -2\n * (forever). Positive ticks \u2192 sleep_until = game_time + ticks. Backs up the\n *            target's old sleep_until if sleeping a different thread.\n *\n * Stack allocations:\n *   4 bytes \u2014 sleep_ticks (int16_t value from evaluation)\n *   4 bytes \u2014 target_ref (int16_t script index of target thread, or -1)\n *   2 bytes \u2014 phase counter\n *\n * Assert: function_index == 0x13 (_hs_function_sleep).\n *\n * Globals:\n *   0x5aa6c4 = hs_thread_data (data_t*)\n *   0x5aa6c8 = hs_syntax_data (data_t*)\n */\nvoid hs_evaluate_sleep(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -12526,7 +12526,7 @@
         },
         {
           "addr": "0xcaff0",
-          "decl": "bool hs_object_types_compatible(int16_t actual_offset@<ax>, int16_t desired_offset@<si>);",
+          "decl": "static bool hs_object_types_compatible(int16_t actual_offset,\n                                       int16_t desired_offset);",
           "ported": true
         },
         {
@@ -12576,7 +12576,7 @@
         },
         {
           "addr": "0xcbf80",
-          "decl": "void hs_return(int thread_handle, int value);",
+          "decl": "* Result is committed via hs_return(thread_datum, (int)(uint8_t)result).\n */\nvoid hs_evaluate_inequality(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -12601,12 +12601,12 @@
         },
         {
           "addr": "0xcc3a0",
-          "decl": "int FUN_000cc3a0(int thread_datum@<eax>, int16_t param_count, int formal_params, char init);",
+          "decl": "int FUN_000cc3a0(int thread_datum, int16_t param_count, int formal_params,\n                 char init);",
           "ported": true
         },
         {
           "addr": "0xcc560",
-          "decl": "int hs_macro_function_evaluate(int16_t function_index, int thread_datum, char init);",
+          "decl": "int hs_macro_function_evaluate(int16_t function_index, int thread_datum,\n                               char init);",
           "ported": true
         },
         {
@@ -12616,7 +12616,7 @@
         },
         {
           "addr": "0xcc660",
-          "decl": "void hs_evaluate_begin_random(int16_t function_index, int thread_datum, char init);",
+          "decl": "void hs_evaluate_begin_random(int16_t function_index, int thread_datum,\n                              char init);",
           "ported": true
         },
         {
@@ -12656,7 +12656,7 @@
         },
         {
           "addr": "0xcd2a0",
-          "decl": "void hs_evaluate_sleep_until(int16_t function_index, int thread_datum, char init);",
+          "decl": "void hs_evaluate_sleep_until(int16_t function_index, int thread_datum,\n                             char init);",
           "ported": true
         },
         {
@@ -12666,12 +12666,12 @@
         },
         {
           "addr": "0xcd5a0",
-          "decl": "void hs_evaluate_object_cast_up(int16_t function_index, int thread_datum, char init);",
+          "decl": "void hs_evaluate_object_cast_up(int16_t function_index, int thread_datum,\n                                char init);",
           "ported": true
         },
         {
           "addr": "0xcd6c0",
-          "decl": "void hs_evaluate_debug_string(int16_t function_index, int thread_datum, char init);",
+          "decl": "void hs_evaluate_debug_string(int16_t function_index, int thread_datum,\n                              char init);",
           "ported": true
         },
         {
@@ -12751,7 +12751,7 @@
         },
         {
           "addr": "0xce320",
-          "decl": "int FUN_000ce320(int parent_handle, int *iter_state);",
+          "decl": "int FUN_000ce320(int param_1, int *param_2);",
           "ported": true
         },
         {
@@ -12776,7 +12776,7 @@
         },
         {
           "addr": "0xce450",
-          "decl": "int FUN_000ce450(int parent_handle, int *iter_state);",
+          "decl": "int FUN_000ce450(int param_1, int *param_2);",
           "ported": true
         },
         {
@@ -14413,7 +14413,7 @@
         {
           "addr": "0x100860",
           "decl": "int main_get_current_solo_level(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x100870",
@@ -14949,7 +14949,7 @@
         },
         {
           "addr": "0x1260c0",
-          "decl": "bool FUN_001260c0(void *server /* @<esi> */);",
+          "decl": "bool FUN_001260c0(void *server);",
           "ported": true
         },
         {
@@ -17251,7 +17251,7 @@
         },
         {
           "addr": "0x8a350",
-          "decl": "void observer_result_initialize(void *observer @<esi>);",
+          "decl": "void observer_result_initialize(void *observer);",
           "ported": true
         },
         {
@@ -17281,7 +17281,7 @@
         },
         {
           "addr": "0x8a660",
-          "decl": "void observer_apply_acceleration(int16_t local_player_index @<eax>);",
+          "decl": "void observer_apply_acceleration(int16_t local_player_index);",
           "ported": true
         },
         {
@@ -17326,7 +17326,7 @@
         },
         {
           "addr": "0x8b470",
-          "decl": "void observer_compute_accelerations(int16_t local_player_index @<eax>);",
+          "decl": "void observer_compute_accelerations(int16_t local_player_index);",
           "ported": true
         },
         {
@@ -17336,7 +17336,7 @@
         },
         {
           "addr": "0x8c030",
-          "decl": "void FUN_0008c030(float *forward1, float *result_angular, float *forward0, float *up0, float *up1);",
+          "decl": "void FUN_0008c030(float *forward1, float *result_angular, float *forward0,\n                  float *up0, float *up1);",
           "ported": true
         },
         {
@@ -17346,12 +17346,12 @@
         },
         {
           "addr": "0x8c440",
-          "decl": "void FUN_0008c440(void *velocities, void *result @<eax>, void *state @<ecx>);",
+          "decl": "* Dispatches to FUN_0008c440 (linear+angular delta) with pointers into the\n * observer struct: velocities at +0xc, result at +0x260, state at +0xb0. */\nvoid observer_compute_velocities(int16_t local_player_index);",
           "ported": true
         },
         {
           "addr": "0x8c4b0",
-          "decl": "void observer_update_result(int16_t local_player_index @<eax>);",
+          "decl": "void observer_update_result(int16_t local_player_index);",
           "ported": true
         },
         {
@@ -17361,7 +17361,7 @@
         },
         {
           "addr": "0x8cd40",
-          "decl": "void observer_update_positions(int16_t local_player_index @<eax>);",
+          "decl": "void observer_update_positions(int16_t local_player_index);",
           "ported": true
         },
         {
@@ -17371,7 +17371,7 @@
         },
         {
           "addr": "0x8cf10",
-          "decl": "void FUN_0008cf10(void);",
+          "decl": "void FUN_0008cf10(float *angles, float pitch, float *vec);",
           "ported": true
         },
         {
@@ -19820,12 +19820,12 @@
         },
         {
           "addr": "0x8fa40",
-          "decl": "void profile_enter_private(void*);",
+          "decl": "void profile_enter_private(void *section);",
           "ported": true
         },
         {
           "addr": "0x8fac0",
-          "decl": "void profile_exit_private(void*);",
+          "decl": "void profile_exit_private(void *section);",
           "ported": true
         },
         {
@@ -19835,7 +19835,7 @@
         },
         {
           "addr": "0x90170",
-          "decl": "void FUN_00090170(int *out@<eax>, int a, int b);",
+          "decl": "void FUN_00090170(int *out, int a, int b);",
           "ported": true
         },
         {
@@ -19876,7 +19876,7 @@
         {
           "addr": "0x90880",
           "decl": "void profile_sections_deactivate(int a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x908a0",
@@ -19950,7 +19950,7 @@
         },
         {
           "addr": "0x915b0",
-          "decl": "void profile_render_window_start(char a1);",
+          "decl": "void profile_render_window_start(char window_param);",
           "ported": true
         },
         {
@@ -20215,7 +20215,7 @@
         },
         {
           "addr": "0xe1c90",
-          "decl": "void progress_bar_begin(bool);",
+          "decl": "void progress_bar_begin(bool suppress);",
           "ported": true
         },
         {
@@ -20255,7 +20255,7 @@
         },
         {
           "addr": "0xe26c0",
-          "decl": "void progress_bar_draw_loading_bar(float *rect@<eax>, float *color@<ecx>, float alpha, float progress);",
+          "decl": "void progress_bar_draw_loading_bar(float *rect, float *color, float alpha,\n                                   float progress);",
           "ported": true
         },
         {
@@ -26776,7 +26776,7 @@
         },
         {
           "addr": "0x82df0",
-          "decl": "void count_endpoints_in_set(void);",
+          "decl": "int count_endpoints_in_set(void * a0);",
           "ported": true
         },
         {
@@ -26791,17 +26791,17 @@
         },
         {
           "addr": "0x831e0",
-          "decl": "void FUN_000831e0(void);",
+          "decl": "int FUN_000831e0(void * a0);",
           "ported": true
         },
         {
           "addr": "0x83220",
-          "decl": "void FUN_00083220(void);",
+          "decl": "int FUN_00083220(void * a0);",
           "ported": true
         },
         {
           "addr": "0x83260",
-          "decl": "void FUN_00083260(void);",
+          "decl": "uint16_t FUN_00083260(void * a0);",
           "ported": true
         },
         {
@@ -28143,7 +28143,7 @@
         {
           "addr": "0x19f040",
           "decl": "void *upopen(const wchar_t *command, const wchar_t *mode);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f0e0",
@@ -28153,7 +28153,7 @@
         {
           "addr": "0x19f150",
           "decl": "wchar_t *utmpnam(wchar_t *buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f160",
@@ -28188,7 +28188,7 @@
         {
           "addr": "0x19f4f0",
           "decl": "wchar_t *FUN_0019f4f0(int param);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f530",
@@ -30356,12 +30356,12 @@
         },
         {
           "addr": "0x181020",
-          "decl": "int *FUN_00181020(short index @<si>);",
+          "decl": "int *FUN_00181020(short index);",
           "ported": false
         },
         {
           "addr": "0x181060",
-          "decl": "unsigned char *FUN_00181060(void *lens_flare_params @<eax>);",
+          "decl": "unsigned char *FUN_00181060(void *lens_flare_params);",
           "ported": false
         },
         {
@@ -30572,12 +30572,12 @@
         },
         {
           "addr": "0x183e60",
-          "decl": "void rasterizer_text_draw(void *screen_pos, short *bounds, const void *color, int flags, const char *text);",
+          "decl": "void rasterizer_text_draw(void *screen_pos, short *bounds, const void *color,\n                          int flags, const char *text);",
           "ported": true
         },
         {
           "addr": "0x184060",
-          "decl": "void rasterizer_draw_string(void *screen_pos, short *bounds, const void *color, int flags, unsigned short *text);",
+          "decl": "void rasterizer_draw_string(void *screen_pos, short *bounds, const void *color,\n                            int flags, unsigned short *text);",
           "ported": true
         },
         {
@@ -33520,7 +33520,7 @@
         },
         {
           "addr": "0xfaed0",
-          "decl": "float weapon_estimate_time_to_target(int weapon_handle, int16_t trigger_index, float param_3);",
+          "decl": "float weapon_estimate_time_to_target(int weapon_handle, int16_t trigger_index,\n                                     float param_3);",
           "ported": true,
           "source_path": "halo/items/weapons.c"
         },
@@ -33536,7 +33536,7 @@
         },
         {
           "addr": "0xfb010",
-          "decl": "float weapon_compute_movement_penalty(int weapon_handle, char aiming, char param_3);",
+          "decl": "float weapon_compute_movement_penalty(int weapon_handle, char aiming,\n                                      char param_3);",
           "ported": true
         },
         {
@@ -33561,7 +33561,7 @@
         },
         {
           "addr": "0xfb140",
-          "decl": "int16_t weapon_get_animation_frame(int weapon_handle, int16_t param_2, int16_t param_3, int16_t param_4);",
+          "decl": "int16_t weapon_get_animation_frame(int weapon_handle, int16_t param_2,\n                                   int16_t param_3, int16_t param_4);",
           "ported": true,
           "source_path": "halo/items/weapons.c"
         },
@@ -33574,18 +33574,18 @@
         },
         {
           "addr": "0xfb320",
-          "decl": "char *FUN_000fb320(void *weapon_obj@<edi>, int16_t trigger_index@<esi>);",
+          "decl": "char *FUN_000fb320(void *weapon_obj, int16_t trigger_index);",
           "ported": true
         },
         {
           "addr": "0xfb370",
-          "decl": "void *FUN_000fb370(void *weapon_obj@<edi>, int16_t magazine_index@<si>);",
+          "decl": "void *FUN_000fb370(void *weapon_obj, int16_t magazine_index);",
           "ported": true,
           "source_path": "halo/items/weapons.c"
         },
         {
           "addr": "0xfb3c0",
-          "decl": "bool weapon_has_activity(int weapon_handle @<eax>);",
+          "decl": "bool weapon_has_activity(int weapon_handle);",
           "ported": true,
           "source_path": "halo/items/weapons.c"
         },
@@ -33596,17 +33596,17 @@
         },
         {
           "addr": "0xfb5a0",
-          "decl": "char FUN_000fb5a0(int weapon_handle@<eax>, int16_t trigger_index@<ecx>);",
+          "decl": "char FUN_000fb5a0(int weapon_handle, int16_t trigger_index);",
           "ported": false
         },
         {
           "addr": "0xfb690",
-          "decl": "void FUN_000fb690(int weapon_handle@<eax>, int16_t magazine_index@<cx>);",
+          "decl": "void FUN_000fb690(int weapon_handle, int16_t magazine_index);",
           "ported": false
         },
         {
           "addr": "0xfb6e0",
-          "decl": "int weapon_start_effect(int trigger_effect, float scale, float param_3, int weapon_handle @<eax>);",
+          "decl": "int weapon_start_effect(int trigger_effect, float scale, float param_3,\n                        int weapon_handle);",
           "ported": true,
           "source_path": "halo/items/weapons.c"
         },
@@ -33617,7 +33617,7 @@
         },
         {
           "addr": "0xfb880",
-          "decl": "void weapon_trigger_release_charge(int16_t charge_counter, int weapon_handle, char state, int16_t trigger_index);",
+          "decl": "void weapon_trigger_release_charge(int16_t charge_counter, int weapon_handle,\n                                   char state, int16_t trigger_index);",
           "ported": false
         },
         {
@@ -33632,12 +33632,12 @@
         },
         {
           "addr": "0xfba00",
-          "decl": "char FUN_000fba00(int16_t value, int16_t threshold);",
+          "decl": "char FUN_000fba00(short value, short threshold);",
           "ported": true
         },
         {
           "addr": "0xfba20",
-          "decl": "int weapon_set_animation_state(int weapon_handle, char param_2, int16_t state @<bx>);",
+          "decl": "int weapon_set_animation_state(int weapon_handle, char param_2, int16_t state);",
           "ported": true,
           "source_path": "halo/items/weapons.c"
         },
@@ -33669,7 +33669,7 @@
         },
         {
           "addr": "0xfc290",
-          "decl": "bool weapon_handle_potential_inventory_item(int seat_occupant, int object_handle, uint16_t local_player_index, int16_t *seat_index);",
+          "decl": "bool weapon_handle_potential_inventory_item(int weapon_handle,\n                                            int source_handle,\n                                            uint16_t local_player_index,\n                                            int16_t *rounds_out);",
           "ported": true,
           "source_path": "halo/items/weapons.c"
         },
@@ -33758,7 +33758,7 @@
         },
         {
           "addr": "0xfd0b0",
-          "decl": "void FUN_000fd0b0(int16_t angle_index, float *out_x, float *out_y, int16_t param_3, float scale, char flag);",
+          "decl": "void FUN_000fd0b0(int16_t angle_index, float *out_x, float *out_y,\n                  int16_t param_3, float scale, char flag);",
           "ported": true
         },
         {
@@ -33788,7 +33788,7 @@
         },
         {
           "addr": "0xfd400",
-          "decl": "bool weapon_aim(int weapon_handle, int16_t trigger_index, void *param_3, void *param_4, int param_5, float *param_6, int param_7, void *param_8, void *param_9);",
+          "decl": "bool weapon_aim(int weapon_handle, int16_t trigger_index, void *param_3,\n                void *param_4, int param_5, float *param_6, int param_7,\n                void *param_8, void *param_9);",
           "ported": true,
           "signature": "bool weapon_aim(int weapon_handle, int16_t trigger_index, void *param_3, void *param_4, int param_5, float *param_6, int param_7, void *param_8, void *param_9)",
           "source_path": "halo/items/weapons.c"
@@ -33796,7 +33796,7 @@
         {
           "addr": "0xfd510",
           "decl": "void weapon_stop_reload(int weapon_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfd520",
@@ -35099,7 +35099,7 @@
         },
         {
           "addr": "0x547c0",
-          "decl": "int FUN_000547c0(int encounter_handle);",
+          "decl": "* dword of the result and passes it through FUN_000547c0 (encounter-handle\n * accessor), delivering the full-dword result via hs_return(thread_datum,\n * value). The one difference from the 0xc1420 twin: the accessor result is the\n * full dword (no 16-bit partial store / wide read here) and the callee is\n * 0x547c0 rather than 0x55640. thread_datum is reused as both the evaluate arg\n * and the hs_return thread handle.\n *\n * Callees:\n *   0xcc560 = hs_macro_function_evaluate -> result pointer (in EAX)\n *   0x547c0 = FUN_000547c0(encounter_handle) -> int\n *   0xcbf80 = hs_return(thread_handle, value)\n */\nvoid FUN_000c1470(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35225,7 +35225,7 @@
         },
         {
           "addr": "0x55660",
-          "decl": "int FUN_00055660(unsigned int ai_ref);",
+          "decl": "* it through FUN_00055660 (count_type 0 \"start\"/min accessor), and commits\n * the resulting 16-bit value to the thread via hs_return.\n *\n * The thread_datum argument is reused for both the evaluate call (arg 2) and\n * the hs_return call (arg 1) \u2014 a single value flows to both.\n *\n * Callees (all cdecl, in kb.json):\n *   0xcc560 = hs_macro_function_evaluate(int16 fn_index, int thread_datum,\n *             char init) -> int* (result record, NULL on failure)\n *   0x55660 = FUN_00055660(unsigned int ai_ref) -> int (16-bit count/index)\n *   0xcbf80 = hs_return(int thread_handle, int value)\n *\n * The committed value is a 16-bit quantity zero-extended into a dword: the\n * disassembly zero-inits the full dword slot ([EBP-4] = 0), stores only the\n * low word (MOV [EBP-4],AX) from FUN_00055660's return, then reloads the full\n * dword \u2014 so the high 16 bits stay 0. Modeled here with a int/uint16 union.\n */\nvoid FUN_000c1300(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35240,7 +35240,7 @@
         },
         {
           "addr": "0x556f0",
-          "decl": "bool FUN_000556f0(unsigned int ai_ref);",
+          "decl": "* FUN_000556f0 (ai_ref-valid predicate, returns bool in AL), and returns the\n * boolean (zero-extended to int) to the thread via hs_return.\n *\n * thread_datum is forwarded unchanged as both the thread argument to\n * hs_macro_function_evaluate and the thread handle to hs_return (the original\n * reuses the same value for both \u2014 consistent).\n *\n * Callees:\n *   0xcc560 = hs_macro_function_evaluate(int16_t, int, char) -> result ptr\n *   0x556f0 = FUN_000556f0(unsigned int ai_ref) -> bool\n *   0xcbf80 = hs_return(int thread_handle, int value)\n */\nvoid FUN_000c1210(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35517,7 +35517,7 @@
         },
         {
           "addr": "0x57aa0",
-          "decl": "void FUN_00057aa0(int encounter_handle, short state);",
+          "decl": "* FUN_00057aa0(encounter_handle, state) then returns void to the HS thread\n * via hs_return(thread_datum, 0). The +0x4 read is a narrow int16 load. */\nvoid FUN_000c0c30(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35527,7 +35527,7 @@
         },
         {
           "addr": "0x57bc0",
-          "decl": "short FUN_00057bc0(int encounter_handle);",
+          "decl": "* dword of the result and passes it through FUN_00057bc0 (ai_status accessor,\n * returns a short in AX), delivering the value via hs_return(thread_datum,\n * value). Like the 0xc1420 twin (and unlike 0xc1470), the accessor result is a\n * 16-bit value: the result slot is a 4-byte stack local zero-initialized up\n * front (`mov DWORD PTR [ebp-4],0`), only its low 16 bits are overwritten from\n * AX (`mov WORD PTR [ebp-4],ax`), then the full dword is read back\n * (`mov eax,[ebp-4]`) \u2014 the high word stays 0. A union reproduces this\n * partial-store / wide-read exactly. The one difference from the 0xc1420 twin\n * is the accessor callee: 0x57bc0 rather than 0x55640. thread_datum is reused\n * as both the evaluate arg and the hs_return thread handle.\n *\n * Callees:\n *   0xcc560 = hs_macro_function_evaluate -> result pointer (in EAX)\n *   0x57bc0 = FUN_00057bc0(encounter_handle) -> short (low 16 bits consumed)\n *   0xcbf80 = hs_return(thread_handle, value)\n */\nvoid FUN_000c14b0(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35537,7 +35537,7 @@
         },
         {
           "addr": "0x57c70",
-          "decl": "void FUN_00057c70(int encounter_handle, char param_2);",
+          "decl": "* FUN_00057c70(encounter_handle, value) then returns void to the HS thread\n * via hs_return(thread_datum, 0). The +0x4 read is a narrow byte (char) load\n * \u2014 result is int*, so (result + 1) = +4 bytes, cast to char*. */\nvoid FUN_000c0c70(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35557,7 +35557,7 @@
         },
         {
           "addr": "0x57fd0",
-          "decl": "void FUN_00057fd0(int param_1, short param_2);",
+          "decl": "* FUN_00057fd0(handle, state) then returns void to the HS thread via\n * hs_return(thread_datum, 0). */\nvoid FUN_000c0d50(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35572,7 +35572,7 @@
         },
         {
           "addr": "0x58110",
-          "decl": "void FUN_00058110(int param_1);",
+          "decl": "* success calls FUN_00058110(*result) then returns void to the HS thread via\n * hs_return(thread_datum, 0). */\nvoid FUN_000c0e10(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -35582,7 +35582,7 @@
         },
         {
           "addr": "0x58220",
-          "decl": "void FUN_00058220(int param_1);",
+          "decl": "* the result block and passes that value to FUN_00058220 (a dispose/release\n * helper). On success calls FUN_00058220(result[0]) then returns void to the\n * HS thread via hs_return(thread_datum, 0). */\nvoid FUN_000c0e90(int16_t function_index, int thread_datum, char init);",
           "ported": true
         },
         {
@@ -36045,7 +36045,7 @@
         },
         {
           "addr": "0x64400",
-          "decl": "void FUN_00064400(int actor_handle@<eax>, int prop_handle@<edi>);",
+          "decl": "*\n * Calls FUN_00064400 (@eax=actor_handle, @edi=prop_handle) to splice the\n * prop out of the actor's singly-linked chain, then datum_delete to free\n * the slot.\n *\n * Call-site verification (disasm 0x64a80):\n *   MOV EAX,[EBP+0x8]  \u2192 actor_handle \u2192 @eax for FUN_00064400  YES\n *   MOV EDI,[EBP+0xc]  \u2192 prop_handle  \u2192 @edi for FUN_00064400  YES\n *   CALL 0x64400                                                 YES\n *   MOV EAX,[0x5ab23c] \u2192 prop_data    \u2192 datum_delete arg1       YES\n *   PUSH EDI            \u2192 prop_handle  \u2192 datum_delete arg2       YES\n *   PUSH EAX            \u2192 datum_delete arg1                      YES\n *   CALL 0x1196d0                                                YES\n *   ADD ESP,0x8         \u2192 2-arg cdecl cleanup                   YES */\nvoid prop_iterator_next(int actor_handle, int prop_handle);",
           "ported": true
         },
         {
@@ -36153,7 +36153,7 @@
         },
         {
           "addr": "0x64fa0",
-          "decl": "void FUN_00064fa0(void);",
+          "decl": "int FUN_00064fa0(void *prop, int a1);",
           "ported": true
         },
         {
@@ -36176,7 +36176,7 @@
         },
         {
           "addr": "0x650a0",
-          "decl": "void FUN_000650a0(void);",
+          "decl": "int FUN_000650a0(void *prop, int a1);",
           "ported": true
         },
         {
@@ -39970,12 +39970,12 @@
         },
         {
           "addr": "0x147520",
-          "decl": "void render_debug_collision_vertex(int bsp, int vertex_index, float *matrix, float scale, void *color);",
+          "decl": "void render_debug_collision_vertex(int bsp, int vertex_index, float *matrix,\n                                   float scale, void *color);",
           "ported": true
         },
         {
           "addr": "0x147570",
-          "decl": "void render_debug_collision_edge(int bsp, int edge_index, int matrix_or_flag, void *color);",
+          "decl": "void render_debug_collision_edge(int bsp, int edge_index, int matrix_or_flag,\n                                 void *color);",
           "ported": true,
           "source_path": "src/halo/physics/collision_bsp.c"
         },

@@ -1921,32 +1921,12 @@ void profile_sections_activate(int a0)
   FUN_000907c0(1);
 }
 
-/* profile_sections_deactivate (0x90880) — XBE naked draft (batch 274). */
-#if defined(__clang__)
-static void (*const b90880_c907c0)(int a0) = FUN_000907c0;
-
-__attribute__((naked, noinline))
-void profile_sections_deactivate(int a0 __attribute__((unused)))
+/* profile_sections_deactivate (0x90880) — readable C lift. */
+void profile_sections_deactivate(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $0\n\t"
-      "call *%[c907c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c907c0] "m"(b90880_c907c0)
-      : "memory");
+  (void)a0;
+  FUN_000907c0(0);
 }
-#else
-#error "profile_sections_deactivate: clang naked draft required"
-#endif
-
 
 /* profile_find_frame_value (0x908a0) — XBE naked draft (batch 241). */
 #if defined(__clang__)
