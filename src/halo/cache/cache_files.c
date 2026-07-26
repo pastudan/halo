@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* --- cache_files.obj batch drafts (2026-07-26) --- */
 
 /* scenario_tags_unload (0x1b9890) — XBE naked draft (batch 286). */
@@ -3982,148 +3983,10 @@ void tag_groups_checksum(void)
 #endif
 
 
-/* FUN_001b9920 (0x1b9920) — readable C lift from XBE leaf. */
-int FUN_001b9920(void)
-{
-  return *(int *)0x4e4d68;
+int FUN_001b9920(void) {
+  return *(uint32_t *)0x4e4d68;
 }
 
-/* 0x1b9bf0 */
-int *tag_instance_resolve(int tag_index)
-{
-  int eax = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (char)eax, (char)eax -> jne 0x1b9c19 */
-  display_assert((char *)0x002b7da8, (char *)0x002b7dc8, 467, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x1b9c42 */
-  display_assert((char *)0x002b7dec, (char *)0x002b7dc8, 468, 0);
-  system_exit(0);
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x1b9c57 */
-  /* cmp eax, edx -> jl 0x1b9c86 */
-  csprintf((char *)0x005ab100, (char *)0x002b8000);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-  /* test edi, 0xffff0000 -> je 0x1b9cd1 */
-  /* relift: cmp dword ptr [esi + 0xc], edi -> je 0x1b9cd1 */
-  csprintf((char *)0x005ab100, (char *)0x002b8000);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-  return NULL;
-
-  (void)eax;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-}
-
-/* cache_file_header_verify (0x1b9ce0) — XBE naked draft (batch 275). */
-#if defined(__clang__)
-static int (*const b1b9ce0_c8df60)(const char *s1) = csstrlen;
-static int (*const b1b9ce0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
-static char * (*const b1b9ce0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b1b9ce0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1b9ce0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-bool cache_file_header_verify(void *header __attribute__((unused)), const char *path __attribute__((unused)), int report_errors __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl $0x68656164, (%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lcache_file_header_verify_3\n\t"
-      "cmpl $0x666f6f74, 0x7fc(%%esi)\n\t"
-      "jne .Lcache_file_header_verify_3\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .Lcache_file_header_verify_3\n\t"
-      "cmpl $0x11600000, %%eax\n\t"
-      "jg .Lcache_file_header_verify_3\n\t"
-      "leal 0x20(%%esi), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8df60]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $0x1f, %%eax\n\t"
-      "ja .Lcache_file_header_verify_3\n\t"
-      "cmpl $5, 0x4(%%esi)\n\t"
-      "je .Lcache_file_header_verify_1\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lcache_file_header_verify_6\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1f1\n\t"
-      "pushl $0x2b7dc8\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2b8084\n\t"
-      "jmp .Lcache_file_header_verify_4\n\t"
-      ".Lcache_file_header_verify_1:\n\t"
-      "addl $0x40, %%esi\n\t"
-      "pushl $0x288bdc\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8dcb0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lcache_file_header_verify_2\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lcache_file_header_verify_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1f6\n\t"
-      "pushl $0x2b7dc8\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2b804c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "jmp .Lcache_file_header_verify_5\n\t"
-      ".Lcache_file_header_verify_2:\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcache_file_header_verify_3:\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lcache_file_header_verify_6\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1ed\n\t"
-      "pushl $0x2b7dc8\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x2b8024\n\t"
-      ".Lcache_file_header_verify_4:\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lcache_file_header_verify_5:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcache_file_header_verify_6:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8df60] "m"(b1b9ce0_c8df60), [c8dcb0] "m"(b1b9ce0_c8dcb0), [c8d9d0] "m"(b1b9ce0_c8d9d0), [assert] "m"(b1b9ce0_assert), [exitfn] "m"(b1b9ce0_exitfn)
-      : "memory");
-}
-#else
-#error "cache_file_header_verify: clang naked draft required"
-#endif
 
 
 /* cache_files_give_time_to_precache (0x1b9de0) — XBE naked draft (batch 281). */

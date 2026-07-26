@@ -328,6 +328,62 @@ def try_emit_c(insns: list, decl: str, name: str) -> str | None:
                 f"}}\n"
             )
 
+
+    # Frame global store: mov eax/al, [ebp+8]; mov [imm], eax/al
+    if (
+        len(body_ops) >= 4
+        and body_ops[0] == ("push", "ebp")
+        and body_ops[1] == ("mov", "ebp, esp")
+        and body_ops[-1] == ("pop", "ebp")
+    ):
+        mid = body_ops[2:-1]
+        if len(mid) == 2 and mid[0][0] == "mov" and mid[1][0] == "mov":
+            load_ok = mid[0][1] in (
+                "eax, dword ptr [ebp + 8]",
+                "eax, dword ptr [ebp + 0x8]",
+                "al, byte ptr [ebp + 8]",
+                "al, byte ptr [ebp + 0x8]",
+            )
+            m1 = re.match(
+                r"(byte|dword) ptr \[0x([0-9a-f]+)\], (eax|al)",
+                mid[1][1],
+            )
+            if load_ok and m1:
+                width, g = m1.group(1), int(m1.group(2), 16)
+                m = re.search(r"\(([^)]*)\)", sig)
+                params = (m.group(1) if m else "").strip()
+                pname = "value"
+                if params and params != "void":
+                    pname = params.split(",")[0].strip().split()[-1].strip("*")
+                ctype = "uint8_t" if width == "byte" else "uint32_t"
+                return (
+                    f"{sig} {{\n"
+                    f"  *({ctype} *)0x{g:x} = ({ctype}){pname};\n"
+                    f"}}\n"
+                )
+
+    # mov dword/byte ptr [imm], imm; ret
+    if len(body_ops) == 1 and body_ops[0][0] == "mov":
+        m = re.match(
+            r"(byte|word|dword) ptr \[0x([0-9a-f]+)\], (0x[0-9a-f]+|\d+)",
+            body_ops[0][1],
+        )
+        if m:
+            width, g, val = m.group(1), int(m.group(2), 16), m.group(3)
+            ctype = {"byte": "uint8_t", "word": "uint16_t", "dword": "uint32_t"}[width]
+            return (
+                f"{sig} {{\n"
+                f"  *({ctype} *)0x{g:x} = ({ctype}){val};\n"
+                f"}}\n"
+            )
+        m = re.match(r"eax, (0x[0-9a-f]+|\d+)", body_ops[0][1])
+        if m:
+            return f"{sig} {{\n  return {m.group(1)};\n}}\n"
+        m = re.match(r"eax, dword ptr \[0x([0-9a-f]+)\]", body_ops[0][1])
+        if m:
+            g = int(m.group(1), 16)
+            return f"{sig} {{\n  return *(uint32_t *)0x{g:x};\n}}\n"
+
     return None
 
 
