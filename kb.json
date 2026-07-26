@@ -34867,7 +34867,7 @@
         {
           "addr": "0x4a460",
           "decl": "void FUN_0004a460(int count, const char **names, unsigned int *bitvec, int vector_size, int16_t (*lookup)(const char *));",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0004a460"
         },
         {
@@ -40510,8 +40510,9 @@
         },
         {
           "addr": "0x62b20",
-          "decl": "void FUN_00062b20(void);",
-          "ported": false
+          "decl": "char FUN_00062b20(unsigned char *flag_base @<eax>, int index @<edx>, char skip_check @<bl>, void *block, void *bitvec);",
+          "ported": false,
+          "name": "FUN_00062b20"
         },
         {
           "addr": "0x62ba0",
