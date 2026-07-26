@@ -19812,7 +19812,7 @@
         {
           "addr": "0x8f8c0",
           "decl": "void profile_lapsed_msec(int value);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x8f8e0",
@@ -34803,9 +34803,8 @@
         },
         {
           "addr": "0x4a650",
-          "decl": "void FUN_0004a650(int a, int b);",
-          "ported": false,
-          "name": "FUN_0004a650"
+          "decl": "void ai_debug_idle_look_clear(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x4a680",
@@ -34820,7 +34819,7 @@
         {
           "addr": "0x4a6e0",
           "decl": "void ai_debug_idle_look_clear(int actor_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x4a710",
