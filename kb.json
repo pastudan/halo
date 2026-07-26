@@ -36327,7 +36327,7 @@
         {
           "addr": "0x651a0",
           "decl": "int FUN_000651a0(void *prop, int key);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000651a0"
         },
         {
