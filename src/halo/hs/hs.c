@@ -2323,7 +2323,7 @@ void FUN_000c18b0(int16_t function_index __attribute__((unused)), int thread_dat
 
 /* FUN_000c18d0 (0xc18d0) — XBE naked draft (batch 190). */
 #if defined(__clang__)
-static void (*const bc18d0_ca7470)(void) = FUN_000A7470;
+static void (*const bc18d0_ca7470)(void) = (void *)FUN_000A7470;
 static void (*const bc18d0_ccbf80)(int thread_handle, int value) = hs_return;
 
 __attribute__((naked, noinline))

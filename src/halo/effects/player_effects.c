@@ -809,30 +809,11 @@ void player_effect_clear_damage_indicators(int player_index __attribute__((unuse
 #endif
 
 
-/* FUN_000a2a90 (0xa2a90) — XBE naked draft (batch 178). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000a2a90(void)
+/* FUN_000a2a90 (0xa2a90) — readable C lift: lerp(a, 1, t) = a+(1-a)*t. */
+float FUN_000a2a90(float a, float t)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x2533c8\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fadds 0x8(%%ebp)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (*(float *)0x2533c8 - a) * t + a;
 }
-#else
-#error "FUN_000a2a90: clang naked draft required"
-#endif
-
 
 /* FUN_000a2ab0 (0xa2ab0) — XBE naked draft (batch 136). */
 #if defined(__clang__)
@@ -1127,33 +1108,15 @@ void player_effect_continuous_refresh(void)
 #endif
 
 
-/* scripted_player_effect_set_translation (0xa2dc0) — XBE naked draft (batch 173). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void scripted_player_effect_set_translation(int a0 __attribute__((unused)), float a1 __attribute__((unused)), float a2 __attribute__((unused)))
+/* scripted_player_effect_set_translation (0xa2dc0) — readable C lift. */
+void scripted_player_effect_set_translation(int a0, float a1, float a2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x3c4(%%eax)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x3c8(%%eax)\n\t"
-      "movl %%ecx, 0x3cc(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "scripted_player_effect_set_translation: clang naked draft required"
-#endif
+  char *g = *(char **)0x4557ec;
 
+  *(int *)(g + 0x3c4) = a0;
+  *(float *)(g + 0x3c8) = a1;
+  *(float *)(g + 0x3cc) = a2;
+}
 
 /* scripted_player_effect_start (0xa2df0) — XBE naked draft (batch 165). */
 #if defined(__clang__)

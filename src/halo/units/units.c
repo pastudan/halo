@@ -22957,78 +22957,28 @@ char FUN_001a6350(int unit_handle __attribute__((unused)))
 
 /* --- units.obj orphan shells (2026-07-26) --- */
 
-/* 0x1a8770 — True when anim_state@ecx byte +0xb is firing (3 or 4). */
-#if defined(__clang__)
-__attribute__((naked, noinline))
-char FUN_001a8770(void *anim_state __attribute__((unused)))
-{
-  __asm__ volatile(
-      "movb 0xb(%%ecx), %%cl\n\t"
-      "xorb %%al, %%al\n\t"
-      "cmpb $3, %%cl\n\t"
-      "jl 1f\n\t"
-      "cmpb $4, %%cl\n\t"
-      "jg 1f\n\t"
-      "movb $1, %%al\n\t"
-      "1:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
+/* FUN_001a8770 (0x1a8770) — readable C lift. */
 char FUN_001a8770(void *anim_state)
 {
-  char state = *(char *)((char *)anim_state + 0xb);
+  unsigned char state = *((unsigned char *)anim_state + 0xb);
 
-  if (state < 3)
-    return 0;
-  if (state > 4)
-    return 0;
-  return 1;
+  return state >= 3 && state <= 4;
 }
-#endif
 
-/* 0x1a8890 — gate on anim_state@ecx [0xc]==0 and motion band at [0xb]. */
-#if defined(__clang__)
-__attribute__((naked, noinline))
-char FUN_001a8890(void *anim_state __attribute__((unused)))
-{
-  __asm__ volatile(
-      "movb 0xc(%%ecx), %%al\n\t"
-      "movb 0xb(%%ecx), %%cl\n\t"
-      "testb %%al, %%al\n\t"
-      "sete %%al\n\t"
-      "cmpb $0x17, %%cl\n\t"
-      "jl 2f\n\t"
-      "cmpb $0x23, %%cl\n\t"
-      "jle 1f\n\t"
-      "cmpb $0x29, %%cl\n\t"
-      "jne 2f\n\t"
-      "1:\n\t"
-      "xorb %%al, %%al\n\t"
-      "2:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
+/* FUN_001a8890 (0x1a8890) — readable C lift. */
 char FUN_001a8890(void *anim_state)
 {
-  char zero_flag = *(char *)((char *)anim_state + 0xc);
-  char band = *(char *)((char *)anim_state + 0xb);
-  char result = (zero_flag == 0);
+  unsigned char flag = *((unsigned char *)anim_state + 0xc);
+  unsigned char state = *((unsigned char *)anim_state + 0xb);
+  char result = (flag == 0);
 
-  if (band < 0x17)
-    return result;
-  if (band <= 0x23)
-    return 0;
-  if (band == 0x29)
-    return 0;
+  if (state >= 0x17 && state <= 0x23) {
+    result = 0;
+  } else if (state == 0x29) {
+    result = 0;
+  }
   return result;
 }
-#endif
 
 /* 0x1a8910 — table lookup on anim_state@cx for states 0x1e..0x29.
  * XBE uses an in-function jump table; slot table is in .rodata so the PE

@@ -1,3 +1,4 @@
+#include "x87_math.h"
 void cheats_initialize(void)
 {
   csmemset(cheats_globals, 0, sizeof(cheats_globals));
@@ -550,29 +551,11 @@ void FUN_000a5700(void)
 #endif
 
 
-/* FUN_000a57a0 (0xa57a0) — XBE naked draft (batch 180). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000a57a0(void)
+/* FUN_000a57a0 (0xa57a0) — readable C lift: 1/sqrt(x). */
+float FUN_000a57a0(float x)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fsqrt\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return *(float *)0x2533c8 / x87_sqrt(x);
 }
-#else
-#error "FUN_000a57a0: clang naked draft required"
-#endif
-
 
 /* FUN_000a57b0 (0xa57b0) — XBE naked draft (batch 153). */
 #if defined(__clang__)

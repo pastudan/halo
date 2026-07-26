@@ -915,31 +915,16 @@ void FUN_00184980(char param_1 __attribute__((unused)))
 #endif
 
 
-/* render_effects (0x184b60) — XBE naked draft (batch 176). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void render_effects(int a0 __attribute__((unused)))
+/* render_effects (0x184b60) — readable C lift. */
+void render_effects(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "movb %%al, 0x32574d\n\t"
-      "movb %%al, 0x32574c\n\t"
-      "movb %%al, 0x32574b\n\t"
-      "movb %%al, 0x32574a\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "render_effects: clang naked draft required"
-#endif
+  char v = (char)a0;
 
+  *(char *)0x32574d = v;
+  *(char *)0x32574c = v;
+  *(char *)0x32574b = v;
+  *(char *)0x32574a = v;
+}
 
 /* render_location_visible (0x184de0) — XBE naked draft (batch 170). */
 #if defined(__clang__)

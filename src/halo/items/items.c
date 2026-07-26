@@ -3324,43 +3324,17 @@ void FUN_000f4cf0(void *widget)
 #endif
 
 
-/* FUN_000f5640 (0xf5640) — XBE naked draft (batch 235). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_000f5640 (0xf5640) — readable C lift. */
 char FUN_000f5640(void)
 {
-  __asm__ volatile(
-      "movb 0x46cef0, %%al\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return *(char *)0x46cef0;
 }
-#else
-#error "FUN_000f5640: clang naked draft required"
-#endif
 
-
-/* FUN_000f5650 (0xf5650) — XBE naked draft (batch 235). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_000f5650 (0xf5650) — readable C lift. */
 char FUN_000f5650(void)
 {
-  __asm__ volatile(
-      "movb 0x46cf06, %%al\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return *(char *)0x46cf06;
 }
-#else
-#error "FUN_000f5650: clang naked draft required"
-#endif
-
 
 /* 0xf5660 — virtual-keyboard cursor left (skip duplicate keymap glyphs). */
 #if defined(__clang__)

@@ -35,38 +35,17 @@ void player_control_dispose(void)
 {
 }
 
-/* scripted_player_control_set_camera_control (0xb6430) — XBE naked draft (batch 177). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void scripted_player_control_set_camera_control(char enable __attribute__((unused)))
+/* scripted_player_control_set_camera_control (0xb6430) — readable C lift. */
+void scripted_player_control_set_camera_control(char enable)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x457090, %%ecx\n\t"
-      "movl 0xc(%%ecx), %%edx\n\t"
-      "jne .Lscripted_player_control_set_camera_control_1\n\t"
-      "orl $1, %%edx\n\t"
-      "movl %%edx, 0xc(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lscripted_player_control_set_camera_control_1:\n\t"
-      "andl $0xfffffffe, %%edx\n\t"
-      "movl %%edx, 0xc(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "scripted_player_control_set_camera_control: clang naked draft required"
-#endif
+  unsigned int *flags = (unsigned int *)((char *)player_control_globals + 0xc);
 
+  if (enable) {
+    *flags &= ~1u;
+  } else {
+    *flags |= 1u;
+  }
+}
 
 /* player_control_get_autoaim_level (0xb6940) — XBE naked draft (batch 169). */
 #if defined(__clang__)

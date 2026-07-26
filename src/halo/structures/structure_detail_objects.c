@@ -345,20 +345,8 @@ void structure_detail_objects_dispose_from_old_map(void)
   (void)0;
 }
 
-/* structure_detail_objects_dispose (0x1939d0) — XBE naked draft (batch 219). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* structure_detail_objects_dispose (0x1939d0) — readable C lift (empty). */
 void structure_detail_objects_dispose(void)
 {
-  __asm__ volatile(
-      "ret\n\t"
-      :
-      :
-      : "memory");
 }
-#else
-#error "structure_detail_objects_dispose: clang naked draft required"
-#endif
 

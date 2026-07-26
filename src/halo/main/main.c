@@ -3123,120 +3123,46 @@ const char *main_get_map_name(void)
   return (const char *)0x46da55;
 }
 
-/* main_set_difficulty (0x100060) — XBE naked draft (batch 177). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void main_set_difficulty(int16_t difficulty __attribute__((unused)))
+/* main_set_difficulty (0x100060) — readable C lift. */
+void main_set_difficulty(int16_t difficulty)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lmain_set_difficulty_1\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jge .Lmain_set_difficulty_1\n\t"
-      "movw %%ax, 0x31fa90\n\t"
-      ".Lmain_set_difficulty_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (difficulty >= 0 && difficulty < 4) {
+    *(int16_t *)0x31fa90 = difficulty;
+  }
 }
-#else
-#error "main_set_difficulty: clang naked draft required"
-#endif
 
-
-/* main_reset_map (0x1002a0) — XBE naked draft (batch 179). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* main_reset_map (0x1002a0) — readable C lift. */
 void main_reset_map(void)
 {
-  __asm__ volatile(
-      "xorb %%al, %%al\n\t"
-      "movw $0xffff, 0x46da40\n\t"
-      "movb %%al, 0x46da28\n\t"
-      "movb $1, 0x46da24\n\t"
-      "movb %%al, 0x46da3b\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(int16_t *)0x46da40 = (int16_t)0xffff;
+  *(char *)0x46da28 = 0;
+  *(char *)0x46da24 = 1;
+  *(char *)0x46da3b = 0;
 }
-#else
-#error "main_reset_map: clang naked draft required"
-#endif
 
-
-/* main_revert_map (0x1002c0) — XBE naked draft (batch 179). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* main_revert_map (0x1002c0) — readable C lift. */
 void main_revert_map(void)
 {
-  __asm__ volatile(
-      "xorb %%al, %%al\n\t"
-      "movw $0xffff, 0x46da40\n\t"
-      "movb %%al, 0x46da28\n\t"
-      "movb $1, 0x46da26\n\t"
-      "movb %%al, 0x46da3b\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(int16_t *)0x46da40 = (int16_t)0xffff;
+  *(char *)0x46da28 = 0;
+  *(char *)0x46da26 = 1;
+  *(char *)0x46da3b = 0;
 }
-#else
-#error "main_revert_map: clang naked draft required"
-#endif
 
-
-/* main_skip_cinematic (0x1002e0) — XBE naked draft (batch 396). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* main_skip_cinematic (0x1002e0) — readable C lift. */
 void main_skip_cinematic(void)
 {
-  __asm__ volatile(
-      "movw $0xffff, 0x46da40\n\t"
-      "movb $0, 0x46da28\n\t"
-      "movb $1, 0x46da27\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(int16_t *)0x46da40 = (int16_t)0xffff;
+  *(char *)0x46da28 = 0;
+  *(char *)0x46da27 = 1;
 }
-#else
-#error "main_skip_cinematic: clang naked draft required"
-#endif
 
-
-/* main_save_map_nonsafe (0x100300) — XBE naked draft (batch 396). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* main_save_map_nonsafe (0x100300) — readable C lift. */
 void main_save_map_nonsafe(void)
 {
-  __asm__ volatile(
-      "movb $1, 0x46da28\n\t"
-      "movb $0, 0x46da29\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(char *)0x46da28 = 1;
+  *(char *)0x46da29 = 0;
 }
-#else
-#error "main_save_map_nonsafe: clang naked draft required"
-#endif
-
 
 char main_saving_map(void)
 {
@@ -3281,72 +3207,28 @@ void main_save_map_safe(void)
 #endif
 
 
-/* main_won_map (0x100370) — XBE naked draft (batch 396). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* main_won_map (0x100370) — readable C lift. */
 void main_won_map(void)
 {
-  __asm__ volatile(
-      "movb $0, 0x46da28\n\t"
-      "movb $1, 0x46da3a\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(char *)0x46da28 = 0;
+  *(char *)0x46da3a = 1;
 }
-#else
-#error "main_won_map: clang naked draft required"
-#endif
 
-
-/* FUN_00100380 (0x100380) — XBE naked draft (batch 396). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_00100380 (0x100380) — readable C lift. */
 void FUN_00100380(void)
 {
-  __asm__ volatile(
-      "movb $0, 0x46da28\n\t"
-      "movb $1, 0x46da3b\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(char *)0x46da28 = 0;
+  *(char *)0x46da3b = 1;
 }
-#else
-#error "FUN_00100380: clang naked draft required"
-#endif
 
-
-/* main_respawn (0x100390) — XBE naked draft (batch 198). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void main_respawn(char flag __attribute__((unused)))
+/* main_respawn (0x100390) — readable C lift. */
+void main_respawn(char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $1, 0x46da3c\n\t"
-      "je .Lmain_respawn_1\n\t"
-      "movw $0x5b, 0x46da4e\n\t"
-      ".Lmain_respawn_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(char *)0x46da3c = 1;
+  if (flag) {
+    *(int16_t *)0x46da4e = 0x5b;
+  }
 }
-#else
-#error "main_respawn: clang naked draft required"
-#endif
-
 
 /* main_save_core (0x1003b0) — XBE naked draft (batch 178). */
 #if defined(__clang__)

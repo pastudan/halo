@@ -1942,129 +1942,59 @@ void ui_widget_clear_last_error_index(void)
   *(int *)0x31e4c0 = -1;
 }
 
-/* event_controller_index_compatible_with_widget (0xe3b80) — XBE naked draft (batch 198). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-bool event_controller_index_compatible_with_widget(void *widget __attribute__((unused)), void *event_data __attribute__((unused)))
+/* event_controller_index_compatible_with_widget (0xe3b80) — readable C lift. */
+bool event_controller_index_compatible_with_widget(void *widget, void *event_data)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movw 0x8(%%eax), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Levent_controller_index_compatible_with_widget_1\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "cmpw 0x2(%%ecx), %%ax\n\t"
-      "je .Levent_controller_index_compatible_with_widget_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Levent_controller_index_compatible_with_widget_1:\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t idx = *(int16_t *)((char *)event_data + 8);
+
+  if (idx == (int16_t)0xffff) {
+    return true;
+  }
+  if (idx == *(int16_t *)((char *)widget + 2)) {
+    return true;
+  }
+  return false;
 }
-#else
-#error "event_controller_index_compatible_with_widget: clang naked draft required"
-#endif
 
-
-/* set_ui_plasma_effect_color (0xe3bb0) — XBE naked draft (batch 165). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void set_ui_plasma_effect_color(float r __attribute__((unused)), float g __attribute__((unused)), float b __attribute__((unused)), float a __attribute__((unused)))
+/* set_ui_plasma_effect_color (0xe3bb0) — readable C lift. */
+void set_ui_plasma_effect_color(float r, float g, float b, float a)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl %%eax, 0x5aa460\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl %%ecx, 0x5aa464\n\t"
-      "movl %%edx, 0x5aa468\n\t"
-      "movl %%eax, 0x5aa46c\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(float *)0x5aa460 = r;
+  *(float *)0x5aa464 = g;
+  *(float *)0x5aa468 = b;
+  *(float *)0x5aa46c = a;
 }
-#else
-#error "set_ui_plasma_effect_color: clang naked draft required"
-#endif
 
-
-/* ui_widgets_set_fade_value (0xe3c90) — XBE naked draft (batch 178). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void ui_widgets_set_fade_value(float fade __attribute__((unused)))
+/* ui_widgets_set_fade_value (0xe3c90) — readable C lift. */
+void ui_widgets_set_fade_value(float fade)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x46cc4c\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(float *)0x46cc4c = fade;
 }
-#else
-#error "ui_widgets_set_fade_value: clang naked draft required"
-#endif
-
 
 void ui_widget_debug_show_path(char show)
 {
   *(char *)0x46cc84 = show;
 }
 
-/* widget_instance_count_children (0xe3cb0) — XBE naked draft (batch 204). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int widget_instance_count_children(void *widget __attribute__((unused)))
+/* widget_instance_count_children (0xe3cb0) — readable C lift. */
+int widget_instance_count_children(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lwidget_instance_count_children_2\n\t"
-      "movl 0x34(%%ecx), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lwidget_instance_count_children_2\n\t"
-      ".Lwidget_instance_count_children_1:\n\t"
-      "movl 0x2c(%%ecx), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jne .Lwidget_instance_count_children_1\n\t"
-      ".Lwidget_instance_count_children_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "widget_instance_count_children: clang naked draft required"
-#endif
+  int count = 0;
+  void *child;
 
+  if (widget == NULL) {
+    return 0;
+  }
+  child = *(void **)((char *)widget + 0x34);
+  if (child == NULL) {
+    return 0;
+  }
+  do {
+    child = *(void **)((char *)child + 0x2c);
+    count++;
+  } while (child != NULL);
+  return count;
+}
 
 void *widget_instance_get_nth_child(void *widget, int index)
 {
@@ -3735,31 +3665,13 @@ char FUN_000E9D40(void)
 #endif
 
 
-/* FUN_000e9fd0 (0xe9fd0) — XBE naked draft (batch 169). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_000e9fd0(void *widget __attribute__((unused)))
+/* FUN_000e9fd0 (0xe9fd0) — readable C lift. */
+char FUN_000e9fd0(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%ecx, 0x40(%%eax)\n\t"
-      "movw %%cx, 0x44(%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(int *)((char *)widget + 0x40) = 0;
+  *(int16_t *)((char *)widget + 0x44) = 0;
+  return 1;
 }
-#else
-#error "FUN_000e9fd0: clang naked draft required"
-#endif
-
 
 /* FUN_000ea1f0 (0xea1f0) — readable C lift from XBE leaf. */
 char FUN_000ea1f0(void *widget)

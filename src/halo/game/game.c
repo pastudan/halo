@@ -2793,27 +2793,14 @@ void slayer_engine_display_score(void)
 
 /* --- game.obj orphan shells (2026-07-26) --- */
 
-/* FUN_000A7470 (0xa7470) — XBE naked draft (batch 166). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000A7470(void)
+/* FUN_000A7470 (0xa7470) — readable C lift. */
+int FUN_000A7470(void)
 {
-  __asm__ volatile(
-      "movl 0x4566ec, %%eax\n\t"
-      "movw 0xe(%%eax), %%ax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "jg .LFUN_000A7470_1\n\t"
-      "movl $1, %%eax\n\t"
-      ".LFUN_000A7470_1:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t v = *(int16_t *)(*(char **)0x4566ec + 0xe);
+
+  if (v > 1) {
+    return (int)v;
+  }
+  return 1;
 }
-#else
-#error "FUN_000A7470: clang naked draft required"
-#endif
 

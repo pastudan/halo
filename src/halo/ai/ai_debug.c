@@ -1085,32 +1085,13 @@ void ai_debug_communication_focus(int a0 __attribute__((unused)), int a1 __attri
 #endif
 
 
-/* ai_debug_idle_look_clear (0x4a6e0) — XBE naked draft (batch 214). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void ai_debug_idle_look_clear(int actor_handle __attribute__((unused)))
+/* ai_debug_idle_look_clear (0x4a6e0) — readable C lift. */
+void ai_debug_idle_look_clear(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "setne %%cl\n\t"
-      "movb %%cl, 0x6323d4\n\t"
-      "movl %%eax, 0x6323d8\n\t"
-      "movw $0, 0x6323dc\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(char *)0x6323d4 = actor_handle != -1;
+  *(int *)0x6323d8 = actor_handle;
+  *(int16_t *)0x6323dc = 0;
 }
-#else
-#error "ai_debug_idle_look_clear: clang naked draft required"
-#endif
-
 
 /* ai_debug_idle_look_addprop (0x4a710) — XBE naked draft (batch 169). */
 #if defined(__clang__)
@@ -14071,25 +14052,11 @@ void FUN_00053890(void)
 #endif
 
 
-/* FUN_000538d0 (0x538d0) — XBE naked draft (batch 219). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_000538d0 (0x538d0) — readable C lift. */
 int16_t FUN_000538d0(void)
 {
-  __asm__ volatile(
-      "movl 0x5ab270, %%eax\n\t"
-      "movw 0x30(%%eax), %%ax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return *(int16_t *)(*(char **)0x5ab270 + 0x30);
 }
-#else
-#error "FUN_000538d0: clang naked draft required"
-#endif
-
 
 /* FUN_000538f0 (0x538f0) — XBE naked draft (batch 150). */
 #if defined(__clang__)
