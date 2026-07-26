@@ -35080,7 +35080,7 @@
         },
         {
           "addr": "0x538f0",
-          "decl": "void FUN_000538f0(void);",
+          "decl": "int16_t FUN_000538f0(void);",
           "ported": true
         },
         {
