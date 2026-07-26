@@ -3639,6 +3639,69 @@ void FUN_000fcbd0(int16_t magazine_index __attribute__((unused)), int weapon_han
 
 
 /* 0xfcc90 — zero magazine reload state (magazine@eax, weapon cdecl). */
+#if defined(__clang__)
+static void *(*const FUN_000fcc90_get)(int, int) = object_get_and_verify_type;
+static void *(*const FUN_000fcc90_mag)(void *, int16_t) = FUN_000fb370;
+static void *(*const FUN_000fcc90_tag)(int, int) = tag_get;
+static void *(*const FUN_000fcc90_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+void FUN_000fcc90(int16_t magazine_index __attribute__((unused)),
+                  int weapon_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[mag]\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movswl %%si, %%ebx\n\t"
+      "pushl $0x70\n\t"
+      "addl $0x4f0, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 8(%%ebp), %%edx\n\t"
+      "pushl $4\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[mag]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "pushl $0x70\n\t"
+      "addl $0x4f0, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0x38, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movw $0, (%%esi)\n\t"
+      "movw $0, 2(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(FUN_000fcc90_get), [mag] "m"(FUN_000fcc90_mag),
+        [tag] "m"(FUN_000fcc90_tag), [elem] "m"(FUN_000fcc90_elem)
+      : "memory");
+}
+#else
 void FUN_000fcc90(int16_t magazine_index, int weapon_handle)
 {
   char *weapon_obj;
@@ -3658,7 +3721,7 @@ void FUN_000fcc90(int16_t magazine_index, int weapon_handle)
   magazine[0] = 0;
   magazine[1] = 0;
 }
-
+#endif
 
 /* 0xfcd10 — begin charged-trigger fire (trigger@eax, weapon cdecl). */
 #if defined(__clang__)
