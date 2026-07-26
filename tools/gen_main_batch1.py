@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-"""Generate main.obj batch1 draft implementations."""
+"""Generate main.obj batch1 draft implementations + disassembly artifact."""
 from __future__ import annotations
 
+import json
+import re
 from pathlib import Path
+
+from capstone import CS_ARCH_X86, CS_MODE_32, Cs
+from xbe import Xbe
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "tools" / "main_batch1_fragment.c"
+DISASM_OUT = ROOT / "artifacts" / "main_batch1_disasm.txt"
+OBJECT = "main.obj"
 
 IMPL = r'''
 /* --- main.obj batch1 drafts (2026-07-26) --- */
@@ -304,6 +311,52 @@ void main_roll_credits(void)
   main_menu_load();
   FUN_000dc110();
 }
+
+void FUN_001008a0(int num_players /* @<ebx> */, int *horizontal_out,
+                  int *vertical_out)
+{
+  int horizontal = 1;
+  int vertical = 1;
+
+  if (num_players <= 0) {
+    display_assert((char *)0x28b294, "c:\\halo\\SOURCE\\main\\main.c", 0x51c, 1);
+    system_exit(-1);
+  }
+  if (num_players > 1) {
+    while (vertical * horizontal < num_players) {
+      if (horizontal < vertical)
+        horizontal++;
+      else {
+        horizontal = 1;
+        vertical++;
+      }
+    }
+  }
+  *horizontal_out = horizontal;
+  *vertical_out = vertical;
+}
+
+void main_movie_start(float frame_rate)
+{
+  void *bitmap;
+
+  if (main_globals_movie != NULL) {
+    display_assert((char *)0x28b58c, "c:\\halo\\SOURCE\\main\\main.c", 0xa6b, 1);
+    system_exit(-1);
+  }
+  bitmap = bitmap_2d_new(0x280, 0x1e0, 0, 0xa);
+  main_globals_movie = bitmap;
+  if (bitmap == NULL)
+    return;
+  directory_create_or_delete_contents();
+  movie_frame_count = 0;
+  if (frame_rate != *(float *)0x253f44) {
+    *(float *)0x46da20 = *(float *)0x2533c8 / frame_rate;
+  } else {
+    *(float *)0x46da20 = 0.03333333507180214f;
+  }
+  game_time_set_speed(1.0f);
+}
 '''
 
 DECLS = {
@@ -343,11 +396,79 @@ DECLS = {
     "0x101cc0": "void main_print_version(void);",
     "0x101ec0": "void main_save_map_no_timeout(void);",
     "0x102070": "void main_roll_credits(void);",
+    "0x1008a0": "void FUN_001008a0(int num_players @<ebx>, int *horizontal_out, int *vertical_out);",
+    "0x101bc0": "void main_movie_start(float frame_rate);",
 }
+
+SKIP_DISASM = {"0xe8e20", "0xffeb0"}
+
+
+def write_disasm() -> None:
+    xbe = Xbe.from_file(str(ROOT / "halo-patched/cachebeta.xbe"))
+    md = Cs(CS_ARCH_X86, CS_MODE_32)
+    kb = json.loads((ROOT / "kb.json").read_text())
+    obj = next(o for o in kb["objects"] if o["name"] == OBJECT)
+    fns = sorted(obj["functions"], key=lambda f: int(f["addr"], 16))
+    addrs = [(int(f["addr"], 16), f) for f in fns]
+
+    addr_name: dict[int, str] = {}
+    for o in kb["objects"]:
+        for f in o.get("functions", []):
+            m = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*\(", f.get("decl") or "")
+            if m:
+                addr_name[int(f["addr"], 16)] = m.group(1)
+
+    def get_bytes(va: int, end: int) -> bytes:
+        for sec in xbe.sections.values():
+            s = sec.header.virtual_addr
+            if s <= va < s + sec.header.virtual_size:
+                return bytes(sec.data[va - s : end - s])
+        raise RuntimeError(hex(va))
+
+    chunks: list[str] = []
+    for i, (va, f) in enumerate(addrs):
+        if f.get("ported") in (True, False):
+            continue
+        if f["addr"] in SKIP_DISASM:
+            continue
+        end = addrs[i + 1][0] if i + 1 < len(addrs) else va + 0x200
+        size = end - va
+        data = get_bytes(va, min(end, va + 0x800))
+        insns = list(md.disasm(data, va))
+        lines: list[str] = []
+        calls = 0
+        for x in insns:
+            if x.address >= end:
+                break
+            line = f"  {x.address:08x}: {x.mnemonic:8} {x.op_str}"
+            if x.mnemonic == "call" and x.op_str.startswith("0x"):
+                t = int(x.op_str, 16)
+                nm = addr_name.get(t, "")
+                if nm:
+                    line += f"  ; {nm}"
+                calls += 1
+            lines.append(line)
+        name = re.search(
+            r"([A-Za-z_][A-Za-z0-9_]*)\s*\(",
+            f.get("decl", "void FUN(void);"),
+        ).group(1)
+        header = (
+            f"\n=== {name} @ {f['addr']} end~{end:08x} "
+            f"insns={len(lines)} calls={calls} ===\n"
+        )
+        body = "\n".join(lines[:200])
+        if len(lines) > 200:
+            body += f"\n  ... ({len(lines) - 200} more insns)"
+        chunks.append(header + body)
+
+    DISASM_OUT.parent.mkdir(exist_ok=True)
+    DISASM_OUT.write_text("\n".join(chunks) + ("\n" if chunks else ""))
+    print("wrote", DISASM_OUT, len(chunks), "functions")
 
 
 def main() -> None:
     OUT.write_text(IMPL.lstrip() + "\n")
+    write_disasm()
     print("wrote", OUT, len(DECLS), "functions")
 
 

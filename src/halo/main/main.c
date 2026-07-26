@@ -3214,3 +3214,49 @@ void main_roll_credits(void)
   FUN_000dc110();
 }
 
+void FUN_001008a0(int num_players /* @<ebx> */, int *horizontal_out,
+                  int *vertical_out)
+{
+  int horizontal = 1;
+  int vertical = 1;
+
+  if (num_players <= 0) {
+    display_assert((char *)0x28b294, "c:\\halo\\SOURCE\\main\\main.c", 0x51c, 1);
+    system_exit(-1);
+  }
+  if (num_players > 1) {
+    while (vertical * horizontal < num_players) {
+      if (horizontal < vertical)
+        horizontal++;
+      else {
+        horizontal = 1;
+        vertical++;
+      }
+    }
+  }
+  *horizontal_out = horizontal;
+  *vertical_out = vertical;
+}
+
+void main_movie_start(float frame_rate)
+{
+  void *bitmap;
+
+  if (main_globals_movie != NULL) {
+    display_assert((char *)0x28b58c, "c:\\halo\\SOURCE\\main\\main.c", 0xa6b, 1);
+    system_exit(-1);
+  }
+  bitmap = bitmap_2d_new(0x280, 0x1e0, 0, 0xa);
+  main_globals_movie = bitmap;
+  if (bitmap == NULL)
+    return;
+  directory_create_or_delete_contents();
+  movie_frame_count = 0;
+  if (frame_rate != *(float *)0x253f44) {
+    *(float *)0x46da20 = *(float *)0x2533c8 / frame_rate;
+  } else {
+    *(float *)0x46da20 = 0.03333333507180214f;
+  }
+  game_time_set_speed(1.0f);
+}
+

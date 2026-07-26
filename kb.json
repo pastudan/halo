@@ -13640,7 +13640,8 @@
         },
         {
           "addr": "0x1008a0",
-          "decl": "void FUN_001008a0(void);"
+          "decl": "void FUN_001008a0(int num_players @<ebx>, int *horizontal_out, int *vertical_out);",
+          "ported": false
         },
         {
           "addr": "0x100910",
@@ -13694,7 +13695,8 @@
         },
         {
           "addr": "0x101bc0",
-          "decl": "void main_movie_start(void);"
+          "decl": "void main_movie_start(float frame_rate);",
+          "ported": false
         },
         {
           "addr": "0x101c90",
