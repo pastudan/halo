@@ -36220,7 +36220,8 @@
       "functions": [
         {
           "addr": "0x147380",
-          "decl": "void FUN_00147380(void);"
+          "decl": "int FUN_00147380(int tag_base, uint32_t node_index, float *verts, int counts, float epsilon, void (*callback)(float *, int, unsigned int, unsigned int, void *), void *ctx);",
+          "ported": false
         },
         {
           "addr": "0x1473b0",
@@ -36326,7 +36327,8 @@
         },
         {
           "addr": "0x148440",
-          "decl": "void FUN_00148440(void);"
+          "decl": "char FUN_00148440(void *state, int node_index, float t0, float t1);",
+          "ported": false
         },
         {
           "addr": "0x1486e0",
@@ -36355,7 +36357,8 @@
         },
         {
           "addr": "0x148b20",
-          "decl": "void collision_bsp_test_pill_new(void);"
+          "decl": "void collision_bsp_test_pill_new(int bsp, short flags, int breakable_surfaces, int origin, int direction, float radius, float *result, float *normal_out);",
+          "ported": false
         },
         {
           "addr": "0x148b90",
@@ -36387,7 +36390,8 @@
         },
         {
           "addr": "0x149570",
-          "decl": "void FUN_00149570(void);"
+          "decl": "char FUN_00149570(void *state, int node_index);",
+          "ported": false
         },
         {
           "addr": "0x149680",

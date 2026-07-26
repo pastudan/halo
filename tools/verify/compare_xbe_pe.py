@@ -66,18 +66,22 @@ def main() -> int:
     args = ap.parse_args()
 
     targets = [
+        ("FUN_00147380", 0x147380, 0x1473b0),
         ("collision_surface_project_point2d", 0x147990, 0x1479d8),
         ("collision_surface_test_point2d", 0x1479e0, 0x147ad7),
         ("collision_surface_find_closest_point2d", 0x147ae0, 0x147d10),
         ("FUN_00147ed0", 0x147ed0, 0x148240),
         ("FUN_00148240", 0x148240, 0x148365),
+        ("FUN_00148440", 0x148440, 0x1486e0),
         ("FUN_00148370", 0x148370, 0x148440),
         ("FUN_001486e0", 0x1486e0, 0x148780),
         ("FUN_00148780", 0x148780, 0x148910),
+        ("collision_bsp_test_pill_new", 0x148b20, 0x148b90),
         ("bsp3d_test_sphere_recursive", 0x148b90, 0x148eb0),
         ("FUN_00148910", 0x148910, 0x148b20),
         ("FUN_00148eb0", 0x148eb0, 0x1491d0),
         ("FUN_001491d0", 0x1491d0, 0x1493b0),
+        ("FUN_00149570", 0x149570, 0x149680),
         ("collision_bsp_test_sphere", 0x1493b0, 0x149480),
         ("collision_bsp_test_vector", 0x149480, 0x149570),
     ]

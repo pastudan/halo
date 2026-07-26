@@ -1758,3 +1758,263 @@ int collision_bsp_test_sphere(int bsp, short flags, int breakable_surfaces,
   }
   return 0;
 }
+
+
+/* -------------------------------------------------------------------------
+ * FUN_00147380 (0x147380) — thin wrapper: FUN_001470b0 with flags = -1.
+ * ported:false until verified.
+ * ------------------------------------------------------------------------- */
+int FUN_00147380(int tag_base, uint32_t node_index, float *verts, int counts,
+                 float epsilon,
+                 void (*callback)(float *, int, unsigned int, unsigned int,
+                                  void *),
+                 void *ctx)
+{
+  return FUN_001470b0(tag_base, node_index, (uint32_t)-1, verts, counts, epsilon,
+                      callback, ctx);
+}
+
+/* -------------------------------------------------------------------------
+ * Pill path: collision_bsp_test_pill_new (0x148b20) + FUN_00148440 (0x148440)
+ * + FUN_00149570 (0x149570) 2D BSP → FUN_001491d0.
+ *
+ * Pill state (wrapper stack):
+ *   +0 bsp, +4 flags, +8 breakable, +0xc origin*, +0x10 direction*,
+ *   +0x14 radius, +0x18 result*, +0x1c normal*, +0x20 unused0,
+ *   +0x24 leaf_side?, +0x28 plane_index (-1).
+ * ported:false until verified.
+ * ------------------------------------------------------------------------- */
+typedef struct collision_bsp_pill_state {
+  int bsp;
+  unsigned short flags;
+  unsigned short pad0;
+  int breakable_surfaces;
+  float *origin;
+  float *direction;
+  float radius;
+  float *result;
+  float *normal_out;
+  int field_20;
+  unsigned char leaf_side;
+  unsigned char pad1[3];
+  int plane_index;
+} collision_bsp_pill_state;
+
+char FUN_00148440(void *state_v, int node_index, float t0, float t1)
+{
+  collision_bsp_pill_state *state;
+  int *bsp3d_node;
+  float *plane;
+  float *origin;
+  float *direction;
+  float d0, d1, d_end;
+  float neg_r;
+  char front_open;
+  char back_open;
+  char hit_a;
+  char hit_b;
+  int child;
+  float t_near, inv, t_enter, t_leave;
+  float *result;
+  float *normal;
+  int plane_idx;
+  char dir_pos;
+
+  state = (collision_bsp_pill_state *)state_v;
+
+node_loop:
+  if (node_index < 0) {
+    goto leaf;
+  }
+
+  bsp3d_node =
+    (int *)tag_block_get_element((char *)state->bsp, node_index, 0xc);
+  plane = (float *)tag_block_get_element((char *)state->bsp + 0xc,
+                                         bsp3d_node[0], 0x10);
+  origin = state->origin;
+  direction = state->direction;
+  d0 = origin[2] * plane[2] + origin[1] * plane[1] + origin[0] * plane[0] -
+       plane[3];
+  /* dir·n stored then endpoints */
+  d_end = direction[2] * plane[2] + direction[1] * plane[1] +
+          direction[0] * plane[0];
+  /* ebp+0xc overwritten with d_end in asm; d at t1 = d_end*t1 + d0 */
+  d1 = d_end * t1 + d0;
+  /* front_open if d0 < radius OR d1 < radius */
+  front_open = 0;
+  if (d0 < state->radius || d1 < state->radius) {
+    front_open = 1;
+  }
+  neg_r = -state->radius;
+  /* both endpoints <= -radius → closed on back; else open */
+  back_open = 1;
+  if (d0 <= neg_r && d1 <= neg_r) {
+    back_open = 0;
+  }
+
+  if (front_open && back_open) {
+    goto straddle;
+  }
+
+  child = bsp3d_node[(back_open ? 1 : 0) + 1];
+  node_index = child;
+  if (node_index >= 0) {
+    goto node_loop;
+  }
+
+leaf:
+  if (node_index != -1) {
+    return 0;
+  }
+  plane_idx = state->plane_index;
+  if (plane_idx == -1) {
+    return 0;
+  }
+  plane = (float *)tag_block_get_element((char *)state->bsp + 0xc,
+                                         plane_idx & 0x7fffffff, 0x10);
+  result = state->result;
+  normal = state->normal_out;
+  *result = t0;
+  if (plane_idx < 0) {
+    normal[0] = -plane[0];
+    normal[1] = -plane[1];
+    normal[2] = -plane[2];
+  } else {
+    normal[0] = plane[0];
+    normal[1] = plane[1];
+    normal[2] = plane[2];
+  }
+  return 1;
+
+straddle:
+  /* clip t interval against expanded plane slab ± radius */
+  /* d_end == 0 → parallel special */
+  if (d_end == *(float *)0x2533c0) {
+    t_enter = t1;
+    t_leave = t0;
+  } else {
+    inv = *(float *)0x2533c8 / d_end;
+    t_enter = -((d0 + state->radius) * inv);
+    t_leave = -((d0 - state->radius) * inv);
+    if (t_enter > t_leave) {
+      t_near = t_enter;
+      t_enter = t_leave;
+      t_leave = t_near;
+    }
+  }
+  /* clamp enter/leave into [t0,t1] */
+  if (t_enter < t0) {
+    t_enter = t0;
+  }
+  if (t_enter > t1) {
+    t_enter = t1;
+  }
+  if (t_leave < t0) {
+    /* empty — only far side? asm sets leave=t0 enter=t1 paths */
+    t_leave = t0;
+  }
+  if (t_leave > t1) {
+    t_leave = t1;
+  }
+
+  /* near child first: child index by !(d_end > 0) → sete on bl where bl=(d_end>0) */
+  dir_pos = (d_end > *(float *)0x2533c0) ? 1 : 0;
+  {
+    child = bsp3d_node[(!dir_pos) + 1];
+    hit_a = FUN_00148440(state, child, t0, t_enter);
+    if (hit_a) {
+      if (!(state->result[0] < t_leave)) {
+        /* keep searching far if hit t >= leave */
+        t1 = state->result[0];
+      } else {
+        return 1;
+      }
+    }
+    state->plane_index = bsp3d_node[0];
+    if (dir_pos) {
+      state->plane_index |= (int)0x80000000;
+    } else {
+      state->plane_index &= 0x7fffffff;
+    }
+    child = bsp3d_node[dir_pos + 1];
+    hit_b = FUN_00148440(state, child, t_leave, t1);
+    return (char)(hit_b | hit_a);
+  }
+}
+
+void collision_bsp_test_pill_new(int bsp, short flags, int breakable_surfaces,
+                                 int origin, int direction, float radius,
+                                 float *result, float *normal_out)
+{
+  collision_bsp_pill_state state;
+
+  state.bsp = bsp;
+  state.flags = (unsigned short)flags;
+  state.pad0 = 0;
+  state.breakable_surfaces = breakable_surfaces;
+  state.origin = (float *)origin;
+  state.direction = (float *)direction;
+  state.radius = radius;
+  state.result = result;
+  state.normal_out = normal_out;
+  state.field_20 = -1;
+  state.leaf_side = 0;
+  state.plane_index = -1;
+  *(unsigned int *)result = 0x7f7fffff;
+
+  FUN_00148440(&state, 0, *(float *)0x2533c0, *(float *)0x2533c8);
+}
+
+/* FUN_00149570 — 2D BSP node walk for pill; leaf → FUN_001491d0.
+ * Uses point2d at +0x21c/+0x220/+0x224/+0x228 and radius at +0xc (pill edge state).
+ * For our edge-test state layout this is the collision_bsp_edge_test_state
+ * extended; keep using void* and offsets matching XBE. */
+char FUN_00149570(void *state_v, int node_index)
+{
+  char *state;
+  float *node;
+  float d0, d1;
+  float rad, eps;
+  float neg;
+  char front_hit;
+  char back_hit;
+  char hit;
+
+  state = (char *)state_v;
+  if (node_index < 0) {
+    hit = FUN_001491d0(state_v, node_index & 0x7fffffff);
+    return hit;
+  }
+
+  node = (float *)tag_block_get_element((char *)(*(int *)state) + 0x30,
+                                        node_index, 0x14);
+  /* point2d at +0x21c (x) and +0x220 (y); direction2d at +0x224/+0x228 */
+  d0 = *(float *)(state + 0x220) * node[1] +
+       *(float *)(state + 0x21c) * node[0] - node[2];
+  d1 = *(float *)(state + 0x228) * node[1] +
+       *(float *)(state + 0x224) * node[0] + d0;
+
+  rad = *(float *)(state + 0xc);
+  eps = *(float *)0x29cb64;
+  front_hit = 0;
+  if (d0 < rad + eps || d1 < rad + eps) {
+    front_hit = 1;
+  }
+  neg = -(rad)-eps;
+  back_hit = 1;
+  if (d0 <= neg && d1 <= neg) {
+    back_hit = 0;
+  }
+
+  if (front_hit) {
+    if (FUN_00149570(state_v, *(int *)((char *)node + 0xc))) {
+      return 1;
+    }
+  }
+  if (back_hit) {
+    if (FUN_00149570(state_v, *(int *)((char *)node + 0x10))) {
+      return 1;
+    }
+  }
+  return 0;
+}
