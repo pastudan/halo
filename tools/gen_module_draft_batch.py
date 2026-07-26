@@ -42,11 +42,12 @@ def fn_name(decl: str, addr: str) -> str:
 
 
 def existing_fn_names(src_text: str) -> set[str]:
+    text = strip_c_comments(src_text)
     return set(
         re.findall(
-            r"^(?:static\s+)?(?:inline\s+)?(?:[\w\s*]+?(?:\*|\s+))([A-Za-z_][A-Za-z0-9_]*)\s*\(",
-            src_text,
-            re.M,
+            r"(?m)^(?:static\s+)?(?:inline\s+)?(?:[\w\s*]+?(?:\*|\s+))"
+            r"([A-Za-z_][A-Za-z0-9_]*)\s*\([^;]*\)\s*\{",
+            text,
         )
     )
 
