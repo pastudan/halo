@@ -3728,15 +3728,17 @@ void weapon_stop_reload(int weapon_handle)
   weapon_reset_state(weapon_handle);
 }
 
-/* FUN_000fd520 (0xfd520) — readable C lift. */
-void FUN_000fd520(int16_t trigger_index, int weapon_handle)
+/* FUN_000fd520 (0xfd520) — readable C lift: clear trigger ownership then reset. */
+void FUN_000fd520(int16_t trigger_index /*@<eax>*/, int weapon_handle /*@<ecx>*/)
 {
   char *weapon;
-  char *weap_tag;
+  char *trig;
+  void *tag;
+
   weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
-  (void)FUN_000fb320(weapon, trigger_index);
-  weap_tag = (char *)tag_get(0x77656170, *(int *)weapon);
-  (void)tag_block_get_element((void *)(weap_tag + 0x4fc), (int)trigger_index, 0x114);
+  trig = FUN_000fb320(weapon, trigger_index);
+  tag = tag_get(0x77656170, *(int *)weapon);
+  (void)tag_block_get_element((char *)tag + 0x4fc, (int)trigger_index, 0x114);
   *(int *)(weapon + 0x200) = -1;
   FUN_000fcec0(trigger_index, weapon_handle);
 }
