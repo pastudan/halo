@@ -1490,45 +1490,63 @@ void FUN_000f46e0(void *widget)
   }
 }
 
-/* 0xf4b60 */
-void FUN_000f4b60(void)
+/* 0xf4b60 — sync item-profile UI child text indices from parent widget bytes. */
+void FUN_000f4b60(void *widget)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *tag;
+  int handles[3];
+  int index;
+  unsigned char *byte_table;
 
-  display_assert((char *)0x0028a058, (char *)0x00288938, 2372, 0);
-  system_exit(0);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [edi], 2 -> je 0xf4bcb */
-  display_assert((char *)0x0028a01c, (char *)0x00288938, 2377, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [edi + 0x3e0], 3 -> je 0xf4bf4 */
-  display_assert((char *)0x00289fd8, (char *)0x00288938, 2378, 0);
-  system_exit(0);
-  FUN_000f3690(0, 0);
-  /* relift: cmp dword ptr [ebp + edi*4 - 0xc], -1 -> je 0xf4ce5 */
-  widget_instance_get_nth_child((void *)(uintptr_t)esi, 0);
-  tag_get('aLeD', 0);
-  /* cmp ecx, 2 -> je 0xf4c58 */
-  display_assert((char *)0x00289f90, (char *)0x00288938, 2395, 0);
-  system_exit(0);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [eax], 1 -> je 0xf4c8e */
-  display_assert((char *)0x00289f48, (char *)0x00288938, 2397, 0);
-  system_exit(0);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [eax], 0 -> je 0xf4cc4 */
-  display_assert((char *)0x00289ef8, (char *)0x00288938, 2399, 0);
-  system_exit(0);
+  if (*(int *)((char *)widget + 0x40) == 0) {
+    display_assert((char *)0x0028a058, (char *)0x00288938, 0x944, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  tag = (char *)tag_get(0x44654c61, *(int *)widget); /* 'aLeD' */
+  if (*(int16_t *)tag != 2) {
+    display_assert((char *)0x0028a01c, (char *)0x00288938, 0x949, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(tag + 0x3e0) != 3) {
+    display_assert((char *)0x00289fd8, (char *)0x00288938, 0x94a, 1);
+    system_exit(-1);
+  }
+
+  FUN_000f3690(handles, widget);
+  byte_table = *(unsigned char **)((char *)widget + 0x40);
+
+  for (index = 0; index < 3; index++) {
+    char *child_inst;
+    char *child_def;
+    char *nested;
+    uint16_t value;
+
+    if (handles[index] == -1)
+      break;
+
+    child_inst = (char *)widget_instance_get_nth_child(widget, index);
+    child_def = *(char **)(child_inst + 0x34);
+    nested = *(char **)(child_def + 0x2c);
+
+    if (*(int *)((char *)tag_get(0x44654c61, *(int *)child_inst) + 0x3e0) !=
+        2) {
+      display_assert((char *)0x00289f90, (char *)0x00288938, 0x95b, 1);
+      system_exit(-1);
+    }
+    if (*(int16_t *)tag_get(0x44654c61, *(int *)child_def) != 1) {
+      display_assert((char *)0x00289f48, (char *)0x00288938, 0x95d, 1);
+      system_exit(-1);
+    }
+    if (*(int16_t *)tag_get(0x44654c61, *(int *)nested) != 0) {
+      display_assert((char *)0x00289ef8, (char *)0x00288938, 0x95f, 1);
+      system_exit(-1);
+    }
+
+    value = (uint16_t)byte_table[handles[index]];
+    *(uint16_t *)(child_def + 0x40) = value;
+    *(uint16_t *)(nested + 0x50) = value;
+  }
 }
 
 /* 0xf4cf0 — sync multiplayer item UI child text-box indices from parent widget. */
@@ -1637,106 +1655,214 @@ char FUN_000f56b0(void)
   (void)esi;
 }
 
-/* 0xf5800 */
-void FUN_000f5800(void)
+/* 0xf5800 — look up a soft-keyboard glyph for slot_index (@<si>). */
+unsigned short FUN_000f5800(int16_t slot_index /* @<si> */)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
+  char *ui_globals;
+  char *entry;
+  unsigned short glyph;
+  char shift;
+  char alt;
+  char caps;
 
-  /* test eax, eax -> jne 0xf5829 */
-  display_assert((char *)0x0028a97c, (char *)0x0028a854, 986, 0);
-  system_exit(0);
-  /* cmp (int16_t)esi, 0x24 -> jb 0xf584f */
-  display_assert((char *)0x0028a94c, (char *)0x0028a854, 987, 0);
-  system_exit(0);
-  /* test (char)ecx, (char)ecx -> je 0xf587d */
-  /* test (char)ecx, (char)ecx -> je 0xf588d */
-  /* test (char)ecx, (char)ecx -> je 0xf58a7 */
-  /* test (char)ecx, (char)ecx -> je 0xf58b7 */
-  /* test (int16_t)eax, (int16_t)eax -> jne 0xf58c5 */
-  /* relift: tail-call FUN_000f5800(); */
+  ui_globals = *(char **)0x46cef4;
+  if (ui_globals == 0) {
+    display_assert((char *)0x0028a97c, (char *)0x0028a854, 0x3da, 1);
+    system_exit(-1);
+  }
+  if ((uint16_t)slot_index >= 0x24) {
+    display_assert((char *)0x0028a94c, (char *)0x0028a854, 0x3db, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  entry = *(char **)(ui_globals + 0x34) + (int)slot_index * 0x50;
+  shift = *(char *)0x46cef1;
+  alt = *(char *)0x46cef2;
+  caps = *(char *)0x46cef3;
+
+  if (shift != 0) {
+    if (alt != 0)
+      glyph = *(unsigned short *)(entry + 0xa);
+    else if (caps != 0)
+      glyph = *(unsigned short *)(entry + 0xc);
+    else
+      glyph = *(unsigned short *)(entry + 4);
+  } else if (alt != 0) {
+    if (caps != 0)
+      glyph = *(unsigned short *)(entry + 0xe);
+    else
+      glyph = *(unsigned short *)(entry + 6);
+  } else if (caps != 0) {
+    glyph = *(unsigned short *)(entry + 8);
+  } else {
+    glyph = *(unsigned short *)(entry + 2);
+  }
+
+  if (glyph == 0)
+    glyph = 0x7f;
+  return glyph;
 }
 
 /* 0xf5900 — draw the item/profile name UI (font, bitmap, editable string). */
 void FUN_000f5900(void)
 {
-  void *ui_globals;
+  char *ui_globals;
   char *font_tag;
   float color_white[4];
   float color_grey[4];
-  int16_t full_rect[4];
-  int16_t text_rect[4];
+  int16_t rect[4];
+  int16_t tmp_rect[4];
   void *bitmap;
+  wchar_t *text;
+  wchar_t *cursor;
+  int slot;
+  char *bitm_base;
+  int16_t *screen_slot;
+  unsigned short glyph;
+  void *glyph_info;
+  unsigned int millis;
 
-  color_white[0] = 1.0f;
-  color_white[1] = 1.0f;
-  color_white[2] = 1.0f;
-  color_white[3] = 1.0f;
-  color_grey[0] = 0.9f;
-  color_grey[1] = 0.9f;
-  color_grey[2] = 0.9f;
-  color_grey[3] = 0.9f;
+  color_white[0] = color_white[1] = color_white[2] = color_white[3] = 1.0f;
+  color_grey[0] = color_grey[1] = color_grey[2] = color_grey[3] = 0.9f;
 
-  ui_globals = *(void **)0x46cef4;
-  if (ui_globals == 0 || *(int *)((char *)ui_globals + 0xc) == -1) {
+  ui_globals = *(char **)0x46cef4;
+  if (ui_globals == 0 || *(int *)(ui_globals + 0xc) == -1) {
     display_assert((char *)0x0028a9d8, (char *)0x0028a854, 0x40b, 1);
     system_exit(-1);
-    ui_globals = *(void **)0x46cef4;
+    ui_globals = *(char **)0x46cef4;
   }
 
-  font_tag = (char *)tag_get(0x666f6e74, *(int *)((char *)ui_globals + 0xc)); /* 'font' */
+  font_tag = (char *)tag_get(0x666f6e74, *(int *)(ui_globals + 0xc));
   if (font_tag == 0) {
     display_assert((char *)0x0028a9c0, (char *)0x0028a854, 0x40d, 1);
     system_exit(-1);
   }
 
-  full_rect[0] = 0;
-  full_rect[1] = 0;
-  full_rect[2] = 0x1e0;
-  full_rect[3] = 0x280;
-
-  if (*(int *)((char *)ui_globals + 0x1c) != -1) {
-    bitmap = FUN_00077040(*(int *)((char *)ui_globals + 0x1c), 0, 0);
+  if (*(int *)(ui_globals + 0x1c) != -1) {
+    rect[0] = 0;
+    rect[1] = 0;
+    rect[2] = 0x1e0;
+    rect[3] = 0x280;
+    bitmap = FUN_00077040(*(int *)(ui_globals + 0x1c), 0, 0);
     if (bitmap == 0) {
       display_assert((char *)0x00263768, (char *)0x0028a854, 0x415, 1);
       system_exit(-1);
     }
-    draw_bitmap_in_rect((int)(uintptr_t)bitmap, full_rect, full_rect, full_rect,
-                        0, 0, 0);
+    draw_bitmap_in_rect((int)(uintptr_t)bitmap, rect, rect, 0, 0, 0, -1);
   }
 
-  draw_string_set_font(*(int *)((char *)ui_globals + 0xc), 0, 0, -1,
-                       color_white);
+  draw_string_set_font(*(int *)(ui_globals + 0xc), -1, 0, 0, color_grey);
 
-  if (*(int *)((char *)ui_globals + 0x2c) != -1) {
-    text_rect[0] = 0x4e;
-    text_rect[1] = 0x72;
-    text_rect[2] = 0x6e;
-    text_rect[3] = 0x280;
-    FUN_0019d420(*(int *)((char *)ui_globals + 0x2c),
-                 (int)*(uint16_t *)0x46cf04);
-    rasterizer_draw_string((void *)text_rect, text_rect, color_grey, 0,
-                           (unsigned short *)0);
+  if (*(int *)(ui_globals + 0x2c) != -1) {
+    rect[0] = 0x4e;
+    rect[1] = 0x72;
+    rect[2] = 0x6e;
+    rect[3] = 0x280;
+    rasterizer_draw_string(
+        (void *)rect, rect, 0, 0,
+        (unsigned short *)FUN_0019d420(*(int *)(ui_globals + 0x2c),
+                                       (int)*(uint16_t *)0x46cf04));
   }
 
-  draw_string_set_font(*(int *)((char *)ui_globals + 0xc), 0, 0, -1,
-                       color_white);
+  draw_string_set_font(*(int *)(ui_globals + 0xc), -1, 2, 0, color_white);
 
-  if (*(void **)0x46cf08 != 0) {
-    text_rect[0] = 0x4e;
-    text_rect[1] = 0x8c;
-    text_rect[2] = 0x1c2;
-    text_rect[3] = 0xa0;
-    rasterizer_draw_string((void *)0x46cf08, text_rect, color_white, 0,
-                           *(unsigned short **)0x46cf0c);
+  rect[0] = 0x76;
+  rect[1] = 0xdc;
+  rect[2] = 0x8f;
+  rect[3] = 0x1a4;
+
+  if (*(char *)0x46cf07 == 1) {
+    bitmap = FUN_00077040(*(int *)0x46cf14, 0, 0);
+    if (bitmap != 0) {
+      FUN_0019cdb0(rect, *(void **)0x46cf08, tmp_rect, rect);
+      tmp_rect[1] = (int16_t)(tmp_rect[1] - 2);
+      tmp_rect[3] = (int16_t)(tmp_rect[3] + 2);
+      draw_bitmap_in_rect((int)(uintptr_t)bitmap, tmp_rect, rect, 0, 0, 0,
+                          0x7f7f7f7f);
+    }
   }
 
-  FUN_000f5800();
+  rasterizer_draw_string((void *)rect, rect, 0, 0, *(unsigned short **)0x46cf08);
+
+  if (*(char *)0x46cf07 == 0 && *(int *)0x46cf14 != -1) {
+    millis = system_milliseconds();
+    if ((((millis * (unsigned)0x10624dd3) >> 6) & 1) != 0) {
+      int width = 0;
+      int half = 0;
+      int line_h =
+          (int)*(uint16_t *)(font_tag + 4) + (int)*(uint16_t *)(font_tag + 6);
+      text = *(wchar_t **)0x46cf08;
+      cursor = *(wchar_t **)0x46cf0c;
+      bitmap = FUN_00077040(*(int *)0x46cf14, 0, 0);
+      if (bitmap != 0) {
+        if (text != 0) {
+          wchar_t *p = text;
+          while (*p != 0) {
+            glyph_info = FUN_0019cff0(font_tag, (unsigned short)*p);
+            if (glyph_info == 0)
+              break;
+            if ((uintptr_t)p < (uintptr_t)cursor)
+              width += (int)*(int16_t *)((char *)glyph_info + 2);
+            half += (int)*(int16_t *)((char *)glyph_info + 2);
+            p++;
+          }
+        }
+        half >>= 1;
+        rect[0] = 0x78;
+        rect[1] = (int16_t)(width - half + 0x140);
+        rect[2] = (int16_t)(line_h + 0x78);
+        rect[3] = (int16_t)(rect[1] + 1);
+        draw_bitmap_in_rect((int)(uintptr_t)bitmap, 0, rect, 0, 0, 0, -1);
+      }
+    }
+  }
+
+  draw_string_set_font(*(int *)(ui_globals + 0xc), -1, 2, 0, color_white);
+
+  bitm_base = *(char **)(ui_globals + 0x34) + 0x2c;
+  screen_slot = (int16_t *)0x31e5b0;
+  for (slot = 0; (uintptr_t)screen_slot < 0x31e6d0u; slot++) {
+    int key_action;
+    int bitm_index;
+    int16_t bounds[4];
+
+    glyph = FUN_000f5800((int16_t)slot);
+    glyph_info = FUN_0019cff0(font_tag, glyph);
+    if (glyph_info == 0) {
+      glyph = 0x7f;
+      glyph_info = FUN_0019cff0(font_tag, glyph);
+    }
+    if (glyph_info != 0) {
+      bounds[0] = screen_slot[0];
+      bounds[1] = (int16_t)(screen_slot[1] + 2);
+      bounds[2] = screen_slot[2];
+      bounds[3] = (int16_t)(screen_slot[3] + 2);
+      bounds[0] = (int16_t)(bounds[0] + 5);
+      bounds[2] = (int16_t)(bounds[2] + 5);
+      rasterizer_draw_string((void *)bounds, 0, 0, 0, &glyph);
+    }
+
+    key_action =
+        (int)(signed char)*((char *)0x28a790 + (int)*(int16_t *)0x46cef8 * 11 +
+                            (int)*(int16_t *)0x46cefa);
+    if (key_action == slot) {
+      if (*(int16_t *)0x46cefe == 4)
+        bitm_index = *(int *)(bitm_base + 0x10);
+      else
+        bitm_index = *(int *)bitm_base;
+    } else {
+      bitm_index = *(int *)(bitm_base - 0x10);
+    }
+    if (bitm_index != -1) {
+      bitmap = FUN_00077040(bitm_index, 0, 0);
+      if (bitmap != 0)
+        draw_bitmap_in_rect((int)(uintptr_t)bitmap, screen_slot, screen_slot, 0,
+                            0, 0, -1);
+    }
+
+    screen_slot += 4;
+    bitm_base += 0x50;
+  }
 }
 
 /* 0xf5f10 */
@@ -1798,7 +1924,7 @@ char FUN_000f5fb0(void)
             (int)ustrlen((unsigned short *)buf) * 2 - 2 >=
         2) {
       ustrlen((unsigned short *)buf);
-      FUN_000f5800();
+      FUN_000f5800(0);
       ustrcmp(buf, (wchar_t *)0x0028aa44);
       align_to_character();
       ustrlen((unsigned short *)buf);

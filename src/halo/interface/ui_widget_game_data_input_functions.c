@@ -2297,21 +2297,49 @@ void get_editable_playlist_profile_display_name(void *widget)
 }
 
 /* 0xf3690 — collect up to 3 child widget text handles for item UI sync. */
-void FUN_000f3690(int *out_handles, void *widget)
+/* 0xf3690 — resolve three neighboring list indices for a widget spinner. */
+void FUN_000f3690(int *out_handles /* @<eax> */, void *widget /* @<ecx> */)
 {
-  int i;
-  if (out_handles == 0)
-    return;
-  for (i = 0; i < 3; i++)
-    out_handles[i] = -1;
-  if (widget == 0)
-    return;
-  for (i = 0; i < 3; i++) {
-    char *child = (char *)widget_instance_get_nth_child(widget, i);
-    if (child == 0)
-      break;
-    out_handles[i] = *(int *)child;
+  char *w = (char *)widget;
+  char *related;
+  int count;
+  int a;
+  int b;
+  int c;
+
+  related = *(char **)(w + 0x34);
+  if (*(int *)(w + 0x38) == (int)related) {
+    a = (int)*(int16_t *)(w + 0x3c);
+    b = a + 1;
+    count = (int)*(uint16_t *)(w + 0x44);
+    if (b == count)
+      b = 0;
+    c = b + 1;
+    if (c == count)
+      c = 0;
+  } else if (*(int *)(w + 0x38) == *(int *)(related + 0x2c)) {
+    b = (int)*(int16_t *)(w + 0x3c);
+    a = b - 1;
+    if (a < 0)
+      a = (int)*(uint16_t *)(w + 0x44) - 1;
+    c = b + 1;
+    count = (int)*(uint16_t *)(w + 0x44);
+    if (c == count)
+      c = 0;
+  } else {
+    c = (int)*(int16_t *)(w + 0x3c);
+    b = c - 1;
+    if (b < 0)
+      b = (int)*(uint16_t *)(w + 0x44) - 1;
+    a = b - 1;
+    if (a < 0)
+      a = (int)*(uint16_t *)(w + 0x44) - 1;
   }
+
+  count = (int)*(uint16_t *)(w + 0x44);
+  out_handles[0] = (a < count) ? a : -1;
+  out_handles[1] = (b < count) ? b : -1;
+  out_handles[2] = (c < count) ? c : -1;
 }
 
 /* 0xf3740 */

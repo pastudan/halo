@@ -8138,7 +8138,7 @@
         },
         {
           "addr": "0xdd190",
-          "decl": "void first_person_weapon_get_marker_by_name(void);",
+          "decl": "int16_t first_person_weapon_get_marker_by_name(int object_handle, const char *marker_name, void *out_markers, int16_t max_markers);",
           "ported": false
         },
         {
@@ -13921,7 +13921,7 @@
         },
         {
           "addr": "0xf4b60",
-          "decl": "void FUN_000f4b60(void);",
+          "decl": "void FUN_000f4b60(void *widget);",
           "ported": false
         },
         {
@@ -13987,7 +13987,7 @@
         },
         {
           "addr": "0xf5800",
-          "decl": "void FUN_000f5800(void);",
+          "decl": "unsigned short FUN_000f5800(int16_t slot_index /* @<si> */);",
           "ported": false
         },
         {
@@ -33398,7 +33398,7 @@
         },
         {
           "addr": "0x19cff0",
-          "decl": "void FUN_0019cff0(void);",
+          "decl": "void *FUN_0019cff0(void *font_tag, unsigned short character);",
           "ported": false
         },
         {

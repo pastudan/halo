@@ -182,7 +182,6 @@ def main() -> int:
         ("FUN_00022b40", 0x22b40, 0x22ba0),
         ("object_update", 0x1444f0, 0x1446a0),
         ("FUN_00085000", 0x85000, 0x850ce),
-        ("FUN_00134070", 0x134070, 0x1342a0),
         # encounters.obj implemented-but-unported (2026-07-26)
         ("FUN_00053b80", 0x53b80, 0x53bf0),
         ("FUN_00053bf0", 0x53bf0, 0x53c50),
@@ -287,7 +286,6 @@ def main() -> int:
         # gameplay wave 14 (2026-07-26)
         ("FUN_001345b0", 0x1345b0, 0x134adb),
         ("FUN_00133300", 0x133300, 0x133496),
-        ("FUN_00134070", 0x134070, 0x1342a0),
         ("actor_aim_projectile", 0x220c0, 0x22390),
         ("FUN_001b4dc0", 0x1b4dc0, 0x1b5400),
         # gameplay wave 15 (2026-07-26)
@@ -334,6 +332,13 @@ def main() -> int:
         ("object_compute_function_values", 0x13e7b0, 0x13eb30),
         ("weapon_export_function_values", 0xfbf00, 0xfc290),
         ("glow_trailing_particle_new", 0x134350, 0x1345b0),
+        # gameplay wave 22 (2026-07-26)
+        ("FUN_000f4b60", 0xf4b60, 0xf4cf0),
+        ("FUN_000f5900", 0xf5900, 0xf5f10),
+        ("FUN_000f5800", 0xf5800, 0xf58d0),
+        ("FUN_000f3690", 0xf3690, 0xf3740),
+        ("FUN_0019cff0", 0x19cff0, 0x19d070),
+        ("first_person_weapon_get_marker_by_name", 0xdd190, 0xdd260),
     ]
 
     xbe = Xbe.from_file(args.xbe)

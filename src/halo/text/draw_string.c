@@ -1154,7 +1154,7 @@ void FUN_0019c1b0(void)
   /* relift: cmp (int16_t)eax, word ptr [0x4d9b4a] -> jl 0x19c2cc */
   /* relift: cmp (int16_t)eax, word ptr [0x4d9b4c] -> jge 0x19c2cc */
   parse_string();
-  FUN_0019cff0();
+  FUN_0019cff0(0, 0);
   /* cmp eax, edi -> je 0x19c3a6 */
   /* cmp edi, ebx -> jle 0x19c33e */
   /* cmp (int16_t)ecx, (int16_t)ebx -> jge 0x19c351 */
@@ -1199,7 +1199,7 @@ void FUN_0019c3c0(void)
   /* relift: cmp (int16_t)eax, word ptr [0x4d9b4a] -> jl 0x19c4dc */
   /* relift: cmp (int16_t)eax, word ptr [0x4d9b4c] -> jge 0x19c4dc */
   FUN_0019c0a0((void *)0);
-  FUN_0019cff0();
+  FUN_0019cff0(0, 0);
   /* cmp eax, edi -> je 0x19c5b5 */
   /* cmp edi, ebx -> jle 0x19c54d */
   /* cmp (int16_t)ecx, (int16_t)ebx -> jge 0x19c560 */
@@ -1222,7 +1222,7 @@ void FUN_0019c3c0(void)
   parse_string();
   /* cmp (int16_t)eax, 2 -> je 0x19c784 */
   /* cmp (int16_t)eax, 6 -> je 0x19c784 */
-  FUN_0019cff0();
+  FUN_0019cff0(0, 0);
   /* test eax, eax -> je 0x19c7fa */
   /* relift: cmp word ptr [ebp - 0x40], 2 -> je 0x19c7b1 */
   /* cmp (int16_t)edi, 2 -> jne 0x19c7b1 */

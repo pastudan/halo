@@ -176,7 +176,7 @@ void FUN_0019c5d0(void *callback, void *screen_pos, const void *color, void *cli
   parse_string();
   /* cmp (int16_t)eax, 2 -> je 0x19c784 */
   /* cmp (int16_t)eax, 6 -> je 0x19c784 */
-  FUN_0019cff0();
+  FUN_0019cff0(0, 0);
   /* test eax, eax -> je 0x19c7fa */
   /* relift: cmp word ptr [ebp - 0x40], 2 -> je 0x19c7b1 */
   /* cmp (int16_t)edi, 2 -> jne 0x19c7b1 */
@@ -231,7 +231,7 @@ void FUN_0019c960(void *callback, void *screen_pos, const void *color, void *cli
   FUN_0019c0a0((void *)0);
   /* cmp (int16_t)eax, 2 -> je 0x19cb20 */
   /* cmp (int16_t)eax, 6 -> je 0x19cb20 */
-  FUN_0019cff0();
+  FUN_0019cff0(0, 0);
   /* test eax, eax -> je 0x19cb99 */
   /* relift: cmp word ptr [ebp - 0x44], (int16_t)ecx -> je 0x19cb51 */
   /* relift: cmp word ptr [ebp - 0x28], (int16_t)ecx -> jne 0x19cb51 */
@@ -338,22 +338,32 @@ void FUN_0019cec0(void)
 }
 
 /* 0x19cff0 */
-void FUN_0019cff0(void)
+/* 0x19cff0 — resolve a font character metrics element for `character`. */
+void *FUN_0019cff0(void *font_tag, unsigned short character)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edi = 0;
+  char *font = (char *)font_tag;
+  char *page;
+  int page_count;
+  int16_t glyph_index;
 
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
-  /* test ecx, ecx -> jle 0x19d057 */
-  /* cmp ecx, 0x100 -> jne 0x19d035 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* cmp (int16_t)eax, 0xffff -> je 0x19d057 */
-  tag_block_get_element((void *)(uintptr_t)edi, 0, 0);
+  page = (char *)tag_block_get_element(font + 0x30, (int)(character >> 8), 0xc);
+  page_count = *(int *)page;
+  if (page_count <= 0)
+    return 0;
 
-  (void)eax;
-  (void)ecx;
-  (void)edi;
+  if (page_count == 0x100)
+    page = (char *)tag_block_get_element(page, (int)(character & 0xff), 2);
+  else
+    page = 0;
+
+  if (page == 0)
+    return 0;
+
+  glyph_index = *(int16_t *)page;
+  if (glyph_index == (int16_t)0xffff)
+    return 0;
+
+  return tag_block_get_element(font + 0x7c, (int)glyph_index, 0x14);
 }
 
 /* 0x19d060 */

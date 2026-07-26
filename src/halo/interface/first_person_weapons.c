@@ -1012,34 +1012,47 @@ void first_person_weapon_draw(void)
   }
 }
 
-/* 0xdd190 */
-void first_person_weapon_get_marker_by_name(void)
+/* 0xdd190 — resolve a named marker on the local player's FP weapon model. */
+int16_t first_person_weapon_get_marker_by_name(int object_handle,
+                                              const char *marker_name,
+                                              void *out_markers,
+                                              int16_t max_markers)
 {
-  int eax = 0;
-  int ebx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *weapon;
+  int16_t local_player;
+  char *fp;
+  char *weap_tag;
+  char *antr;
+  int16_t node_count;
 
-  object_try_and_get_and_verify_type(0, 0);
-  /* test ebx, ebx -> je 0xdd254 */
-  FUN_000dcd60(0);
-  /* cmp (int16_t)esi, -1 -> je 0xdd24d */
-  director_get_perspective(esi);
-  /* test (int16_t)eax, (int16_t)eax -> jne 0xdd24d */
-  FUN_000dcaf0();
-  tag_get('paew', 0);
-  /* test (char)eax, (char)eax -> je 0xdd24d */
-  /* relift: cmp dword ptr [edi + 0x468], -1 -> je 0xdd24d */
-  /* cmp eax, -1 -> je 0xdd24d */
-  tag_get(0x616e7472, 0);
-  FUN_00124730(0, (char *)(uintptr_t)eax, (char *)0, 0, edx, (void *)0, 0, (void *)0, 0);
+  weapon = (char *)object_try_and_get_and_verify_type(object_handle, 4);
+  if (weapon == 0)
+    return 0;
 
-  (void)eax;
-  (void)ebx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  local_player = FUN_000dcd60(object_handle);
+  if (local_player == (int16_t)-1)
+    return 0;
+  if (director_get_perspective(local_player) != 0)
+    return 0;
+
+  if (local_player < 0 || local_player >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 0x599, 1);
+    system_exit(-1);
+  }
+  fp = (char *)(*(int *)0x46bea8) + (int)local_player * 0x1ea0;
+  weap_tag = (char *)tag_get(0x77656170, *(int *)weapon); /* 'weap' */
+  if (fp[0x1d8c] == 0)
+    return 0;
+  if (*(int *)(weap_tag + 0x468) == -1)
+    return 0;
+  if (*(int *)(weap_tag + 0x478) == -1)
+    return 0;
+
+  antr = (char *)tag_get(0x616e7472, *(int *)(weap_tag + 0x478)); /* 'antr' */
+  node_count = *(int16_t *)(antr + 0x68);
+  return FUN_00124730(*(int *)(weap_tag + 0x468), marker_name, (char *)0,
+                      (int)(fp + 0x1d8e), node_count, (void *)(fp + 0x108c), 0,
+                      out_markers, max_markers);
 }
 
 /* 0xdd260 */
@@ -1055,7 +1068,7 @@ void first_person_weapon_center_flashlight(int object_handle, float *out_positio
   display_assert((char *)0x00266fc0, (char *)0x00282294, 1433, 0);
   system_exit(0);
   /* test (char)ecx, (char)ecx -> je 0xdd332 */
-  first_person_weapon_get_marker_by_name();
+  first_person_weapon_get_marker_by_name(0, (const char *)0, (void *)0, 0);
   /* test (int16_t)eax, (int16_t)eax -> jle 0xdd332 */
 
   (void)ecx;
@@ -1077,7 +1090,7 @@ char first_person_weapon_adjust_light(int object_handle, int marker_result, void
   /* relift: cmp (int16_t)esi, word ptr [0x506548] -> jne 0xdd402 */
   FUN_000dcaf0();
   /* relift: cmp byte ptr [eax], 0 -> je 0xdd402 */
-  first_person_weapon_get_marker_by_name();
+  first_person_weapon_get_marker_by_name(0, (const char *)0, (void *)0, 0);
   /* test (int16_t)eax, (int16_t)eax -> jle 0xdd402 */
   return 0;
 
@@ -1299,7 +1312,7 @@ void first_person_weapon_get_marker_by_name_render(void)
 {
   FUN_000dcd60(0);
   /* relift: cmp word ptr [0x506548], (int16_t)eax -> jne 0xddbbd */
-  first_person_weapon_get_marker_by_name();
+  first_person_weapon_get_marker_by_name(0, (const char *)0, (void *)0, 0);
 }
 
 /* 0xde0e0 */
