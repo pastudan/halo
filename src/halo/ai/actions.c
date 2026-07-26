@@ -2168,59 +2168,30 @@ char actor_action_handle_done_fleeing(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* actor_action_handle_combat_failure (0x1f920) — XBE naked draft (batch 94). */
-#if defined(__clang__)
-static void *(*const b1f920_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char (*const b1f920_c1e8a0)(int actor_handle) = actor_action_handle_combat_selection;
-static void (*const b1f920_c1f976)(void) = (void (*)(void))actor_action_handle_exit_pursuit;
-
-__attribute__((naked, noinline))
-char actor_action_handle_combat_failure(int actor_handle __attribute__((unused)))
+/* actor_action_handle_combat_failure (0x1f920) — readable C lift. */
+char actor_action_handle_combat_failure(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "cmpw $0xa, 0x6c(%%ecx)\n\t"
-      "jne .Lactor_action_handle_combat_failure_2\n\t"
-      "movw 0xa0(%%ecx), %%dx\n\t"
-      "cmpw $2, %%dx\n\t"
-      "je .Lactor_action_handle_combat_failure_10000\n\t"
-      "cmpw $3, %%dx\n\t"
-      "je .Lactor_action_handle_combat_failure_10000\n\t"
-      "cmpw $4, %%dx\n\t"
-      "je .Lactor_action_handle_combat_failure_1\n\t"
-      "cmpw $5, %%dx\n\t"
-      "jne .Lactor_action_handle_combat_failure_2\n\t"
-      ".Lactor_action_handle_combat_failure_1:\n\t"
-      "movb 0xc5(%%ecx), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lactor_action_handle_combat_failure_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1e8a0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lactor_action_handle_combat_failure_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_handle_combat_failure_10000:\n\t"
-      "jmp *%[c1f976]\n\t"
-      :
-      : [dget] "m"(b1f920_dget), [c1e8a0] "m"(b1f920_c1e8a0), [c1f976] "m"(b1f920_c1f976)
-      : "memory");
-}
-#else
-#error "actor_action_handle_combat_failure: clang naked draft required"
-#endif
+  char *actor;
+  short mode;
 
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  if (*(short *)(actor + 0x6c) != 0xa) {
+    return 0;
+  }
+  mode = *(short *)(actor + 0xa0);
+  if (mode == 2 || mode == 3) {
+    if (actor[0xa3] != 0 || actor[0xa4] != 0 || actor[0xc5] != 0) {
+      FUN_0001e8a0(actor_handle); /* 0x1e8a0 placeholder name */
+    }
+    return 0;
+  }
+  if (mode == 4 || mode == 5) {
+    if (actor[0xc5] != 0) {
+      FUN_0001e8a0(actor_handle);
+    }
+  }
+  return 0;
+}
 
 /* actor_action_handle_exit_pursuit (0x1f9a0) — Handles exit from pursuit-type
  * actions (guard=5, vehicle_patrol=7, vehicle=8). For guard actions, checks
