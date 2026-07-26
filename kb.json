@@ -20335,7 +20335,7 @@
         },
         {
           "addr": "0xe1f00",
-          "decl": "int __stdcall FUN_000e1f00(unsigned int reg, float a, float b);",
+          "decl": "void FUN_000e1f00(void);",
           "ported": false
         },
         {

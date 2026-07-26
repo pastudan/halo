@@ -6010,50 +6010,18 @@ void FUN_000ce0c0(data_t *data __attribute__((unused)), int *head __attribute__(
 #endif
 
 
-/* FUN_000ce110 (0xce110) — XBE naked draft (batch 176). */
-#if defined(__clang__)
-static void *(*const bce110_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bce110_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
-void FUN_000ce110(data_t *data __attribute__((unused)), int link __attribute__((unused)))
+/* FUN_000ce110 (0xce110) — readable C lift: delete linked datum chain. */
+void FUN_000ce110(data_t *data, int link)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000ce110_2\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      ".LFUN_000ce110_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[dget]\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c1196d0]\n\t"
-      "movl 0x8(%%edi), %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_000ce110_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000ce110_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bce110_dget), [c1196d0] "m"(bce110_c1196d0)
-      : "memory");
+  char *node;
+  int next;
+  while (link != -1) {
+    node = (char *)datum_get(data, link);
+    next = *(int *)(node + 8);
+    datum_delete(data, link);
+    link = next;
+  }
 }
-#else
-#error "FUN_000ce110: clang naked draft required"
-#endif
-
 
 /* FUN_000ce150 (0xce150) — readable C lift: init object list data arrays. */
 void FUN_000ce150(void)
