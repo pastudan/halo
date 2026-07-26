@@ -4222,13 +4222,36 @@ void encounters_unit_died(int unit_handle)
   }
 }
 
-/* encounter_force_activate (0x5ba70) — readable C lift (ai campaign). */
-void encounter_force_activate(int encounter_handle)
+/* encounter_force_activate (0x5ba70) — XBE naked draft (batch 238). */
+#if defined(__clang__)
+static void *(*const b5ba70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void encounter_force_activate(int encounter_handle __attribute__((unused)))
 {
-  void *d = datum_get(*(void **)0x5ab270, encounter_handle);
-  *(unsigned short *)((char *)d + 0xe) = (unsigned short)0x96;
-  FUN_0005a4e0(encounter_handle);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "movw $0x96, 0xe(%%eax)\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      ".byte 0xe9, 0x4b, 0xea, 0xff, 0xff\n\t"
+      :
+      : [dget] "m"(b5ba70_dget)
+      : "memory");
 }
+#else
+#error "encounter_force_activate: clang naked draft required"
+#endif
+
 
 /* encounter_force_deactivate (0x5baa0) — XBE naked draft (batch 238). */
 #if defined(__clang__)

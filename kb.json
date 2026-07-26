@@ -34990,7 +34990,7 @@
         {
           "addr": "0x53890",
           "decl": "unsigned short FUN_00053890(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00053890"
         },
         {
