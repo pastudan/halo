@@ -465,7 +465,7 @@
         },
         {
           "addr": "0x1330f0",
-          "decl": "void FUN_001330f0(int glow_widget@<eax>);",
+          "decl": "void FUN_001330f0(int glow_widget@<eax>, int particle_ptr@<esi>);",
           "ported": false
         },
         {
@@ -485,7 +485,7 @@
         },
         {
           "addr": "0x133300",
-          "decl": "void FUN_00133300(int particle_ptr@<edi>, int object_handle);",
+          "decl": "void FUN_00133300(int glow_widget@<ebx>, int particle_ptr@<edi>, int object_handle);",
           "ported": false
         },
         {
@@ -29560,7 +29560,7 @@
         },
         {
           "addr": "0x1b5890",
-          "decl": "void vehicle_preprocess_node_orientations(void);",
+          "decl": "void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output);",
           "ported": false
         },
         {

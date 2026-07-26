@@ -535,70 +535,159 @@ void vehicle_new(void)
   vehicle_reset();
 }
 
-/* 0x1b5890 */
-void vehicle_preprocess_node_orientations(void)
+/* 0x1b5890 — Preprocess vehicle antenna node orientations from rtna tag. */
+static float vehicle_clamp_unit_float(float value)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edi = 0;
-  int local_8 = 0;
+  if (!(value > 0.0f))
+    return 0.0f;
+  if (value > 1.0f)
+    return 1.0f;
+  return value;
+}
 
-  object_get_and_verify_type(0, 2);
-  tag_get('ihev', *(int *)(eax));
-  /* cmp eax, -1 -> je 0x1b5c85 */
-  tag_get('rtna', 0);
-  /* test ecx, ecx -> je 0x1b5c83 */
-  tag_block_get_element((void *)((char *)eax + 0x24), 0, 116);
-  /* test edi, edi -> je 0x1b5c83 */
-  /* test eax, eax -> jle 0x1b5939 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x1b5939 */
-  tag_block_get_element((void *)((char *)eax + 0x74), 0, 180);
-  FUN_00122e50(eax, (float *)0, 0.0f, 0.0f, 0);
-  /* relift: cmp dword ptr [edi + 0x5c], 1 -> jle 0x1b59e1 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x1b59e1 */
-  tag_block_get_element((void *)((char *)eax + 0x74), eax, 180);
-  triple_product3d((float *)((char *)eax + 0x30), (float *)((char *)eax + 0x24), (float *)((char *)eax + 0x18));
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b59be */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  FUN_00122690((void *)0, 0.0f, (void *)0);
-  /* relift: cmp dword ptr [edi + 0x5c], 2 -> jle 0x1b5a74 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x1b5a74 */
-  tag_block_get_element((void *)((char *)eax + 0x74), eax, 180);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  FUN_00122690((void *)0, 0.0f, (void *)0);
-  /* relift: cmp dword ptr [edi + 0x5c], 3 -> jle 0x1b5b41 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x1b5b41 */
-  tag_block_get_element((void *)((char *)eax + 0x74), 0, 180);
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b5ae8 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b5b21 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  FUN_00122690((void *)0, 0.0f, (void *)0);
-  /* relift: cmp dword ptr [edi + 0x5c], 4 -> jle 0x1b5b69 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x1b5b69 */
-  tag_block_get_element((void *)((char *)eax + 0x74), eax, 180);
-  /* relift: cmp dword ptr [edi + 0x5c], 5 -> jle 0x1b5bdc */
-  /* cmp (int16_t)eax, 0xffff -> je 0x1b5bdc */
-  tag_block_get_element((void *)((char *)eax + 0x74), eax, 180);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b5bb7 */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  FUN_00122690((void *)0, 0.0f, (void *)0);
-  tag_block_get_element((void *)(uintptr_t)local_8, 0, 20);
-  /* cmp (int16_t)eax, 0xffff -> je 0x1b5c6e */
-  tag_block_get_element((void *)((char *)eax + 0x74), eax, 180);
-  /* cmp (char)ecx, 0xff -> jne 0x1b5c3f */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  FUN_00122690((void *)0, 0.0f, (void *)0);
-  /* relift: cmp edi, dword ptr [eax] -> jl 0x1b5bf8 */
+static void vehicle_preprocess_apply_frame(char *vehicle_tag, char *node_block,
+                                           int node_index, void *node_output,
+                                           float frame)
+{
+  int16_t *indices;
+  char *animation;
 
-  (void)eax;
-  (void)ecx;
-  (void)edi;
-  (void)local_8;
+  if (*(int *)(node_block + 0x5c) <= node_index)
+    return;
+
+  indices = *(int16_t **)(node_block + 0x60);
+  if (indices[node_index] == (int16_t)-1)
+    return;
+
+  animation = (char *)tag_block_get_element(vehicle_tag + 0x74,
+                                            (int)indices[node_index], 0xb4);
+  FUN_00122690(animation, frame, node_output);
+}
+
+void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
+{
+  char *vehicle;
+  char *vehicle_tag;
+  char *antenna_tag;
+  char *node_block;
+  int16_t *node_indices;
+  int node_count;
+  int wheel_count;
+  int wheel_index;
+  float frame;
+  float steer;
+
+  vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehicle_tag = (char *)tag_get('ihev', *(int *)vehicle);
+
+  if (*(int *)(vehicle_tag + 0x44) == -1)
+    return;
+
+  antenna_tag = (char *)tag_get('rtna', *(int *)(vehicle_tag + 0x44));
+  node_block = (char *)tag_block_get_element(antenna_tag + 0x24, 0, 0x74);
+  if (node_block == 0)
+    return;
+
+  node_count = *(int *)(node_block + 0x5c);
+  node_indices = *(int16_t **)(node_block + 0x60);
+
+  if (node_count > 0 && node_indices[0] != (int16_t)-1) {
+    char *animation =
+      (char *)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[0],
+                                    0xb4);
+    FUN_00122e50((int)animation, (float *)(vehicle + 0x434), 0.0f, 0.0f,
+                 (int)node_output);
+  }
+
+  if (node_count > 1 && node_indices[1] != (int16_t)-1) {
+    char *animation =
+      (char *)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[1],
+                                    0xb4);
+    steer = triple_product3d((float *)(vehicle + 0x18),
+                             (float *)(vehicle + 0x24),
+                             (float *)(vehicle + 0x30));
+    steer /= *(float *)(vehicle_tag + 0x2f8);
+    steer += 1.0f;
+    steer *= *(float *)0x253398;
+    frame = vehicle_clamp_unit_float(steer);
+    frame *= (float)(*(int16_t *)(animation + 0x22) - 1);
+    vehicle_preprocess_apply_frame(vehicle_tag, node_block, 1, node_output,
+                                 frame);
+  }
+
+  if (node_count > 2 && node_indices[2] != (int16_t)-1) {
+    char *animation =
+      (char *)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[2],
+                                    0xb4);
+    if (*(float *)(vehicle + 0x42c) <= 0.0f) {
+      frame = 0.0f;
+    } else {
+      frame = *(float *)(vehicle + 0x42c) / *(float *)(vehicle_tag + 0x2fc);
+      frame = *(float *)0x253398 - frame;
+    }
+    frame = vehicle_clamp_unit_float(frame);
+    frame *= (float)(*(int16_t *)(animation + 0x22) - 1);
+    vehicle_preprocess_apply_frame(vehicle_tag, node_block, 2, node_output,
+                                 frame);
+  }
+
+  if (node_count > 3 && node_indices[3] != (int16_t)-1) {
+    char *animation =
+      (char *)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[3],
+                                    0xb4);
+    steer = *(float *)(vehicle + 0x20) * *(float *)(vehicle + 0x2c) +
+            *(float *)(vehicle + 0x1c) * *(float *)(vehicle + 0x28) +
+            *(float *)(vehicle + 0x18) * *(float *)(vehicle + 0x24);
+    if (!(steer > 0.0f))
+      frame = 0.0f;
+    else {
+      if (steer < 0.0f)
+        steer = -steer;
+      frame = vehicle_clamp_unit_float(steer / *(float *)(vehicle_tag + 0x2f8));
+    }
+    frame *= (float)(*(int16_t *)(animation + 0x22) - 1);
+    vehicle_preprocess_apply_frame(vehicle_tag, node_block, 3, node_output,
+                                 frame);
+  }
+
+  if (node_count > 4 && node_indices[4] != (int16_t)-1)
+    (void)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[4], 0xb4);
+
+  if (node_count > 5 && node_indices[5] != (int16_t)-1) {
+    char *animation =
+      (char *)tag_block_get_element(vehicle_tag + 0x74, (int)node_indices[5],
+                                    0xb4);
+    if (*(float *)(vehicle_tag + 0x310) > 0.0f)
+      frame = *(float *)(vehicle + 0x438) / *(float *)(vehicle_tag + 0x310);
+    else
+      frame = 0.0f;
+    frame *= (float)*(int16_t *)(animation + 0x22);
+    vehicle_preprocess_apply_frame(vehicle_tag, node_block, 5, node_output,
+                                 frame);
+  }
+
+  wheel_count = *(int *)(node_block + 0x68);
+  for (wheel_index = 0; wheel_index < wheel_count; wheel_index++) {
+    char *wheel_entry;
+    char *wheel_animation;
+    int16_t anim_index;
+
+    wheel_entry = (char *)tag_block_get_element(node_block + 0x68, wheel_index,
+                                                0x14);
+    anim_index = *(int16_t *)(wheel_entry + 2);
+    if (anim_index == (int16_t)-1)
+      continue;
+
+    wheel_animation = (char *)tag_block_get_element(vehicle_tag + 0x74,
+                                                    (int)anim_index, 0xb4);
+    if ((unsigned char)vehicle[0x44c + wheel_index] == 0xff)
+      frame = 1.0f;
+    else
+      frame = (float)(unsigned char)vehicle[0x44c + wheel_index] *
+              *(float *)0x261518;
+    frame *= (float)(*(int16_t *)(wheel_animation + 0x22) - 1);
+    FUN_00122690(wheel_animation, frame, node_output);
+  }
 }
 
 /* 0x1b5c90 */

@@ -931,12 +931,12 @@ char FUN_00130b70(void *client, const char *data, int count)
   /* test esi, esi -> je 0x1348d0 */
   /* relift: test byte ptr [esi + 0x54], 2 -> jne 0x1348c9 */
   FUN_00134070(0, 0, 0, 0.0f, 0.0f);
-  FUN_00133300(0, 0);
+  FUN_00133300(0, 0, 0);
   /* test esi, esi -> jne 0x134893 */
   /* test esi, esi -> je 0x1349fb */
   /* relift: test byte ptr [esi + 0x54], 2 -> je 0x1349f0 */
   game_time_get();
-  FUN_001330f0(0);
+  FUN_001330f0(0, 0);
   tag_get('!wlg', 0);
   /* test (char)ecx, 0x10 -> je 0x13494d */
   /* test (char)eax, 0x41 -> jne 0x134947 */

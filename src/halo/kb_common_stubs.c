@@ -6938,6 +6938,7 @@ void FUN_001330a0(void)
 }
 
 /* 0x1330f0 */
+#if 0 /* ported in objects.c */
 void FUN_001330f0(int glow_widget)
 {
   int eax = 0;
@@ -6950,6 +6951,7 @@ void FUN_001330f0(int glow_widget)
   (void)eax;
   (void)ecx;
 }
+#endif
 
 /* 0x133170 */
 void FUN_00133170(void)
@@ -6966,6 +6968,7 @@ void FUN_00133170(void)
 }
 
 /* 0x1331d0 */
+#if 0 /* ported in objects.c */
 void FUN_001331d0(int glow_widget, int particle_ptr)
 {
   int eax = 0;
@@ -6978,6 +6981,7 @@ void FUN_001331d0(int glow_widget, int particle_ptr)
   (void)eax;
   (void)ecx;
 }
+#endif
 
 /* 0x133260 */
 void FUN_00133260(void)
@@ -6998,6 +7002,7 @@ void FUN_00133260(void)
 }
 
 /* 0x133300 */
+#if 0 /* ported in objects.c */
 void FUN_00133300(int particle_ptr, int object_handle)
 {
   int eax = 0;
@@ -7019,6 +7024,7 @@ void FUN_00133300(int particle_ptr, int object_handle)
   (void)ecx;
   (void)esi;
 }
+#endif
 
 /* 0x1334f0 */
 void FUN_001334f0(void)
@@ -7218,12 +7224,12 @@ void get_particle_world_position(int glow_widget, int particle_ptr, float param_
   /* test esi, esi -> je 0x1348d0 */
   /* relift: test byte ptr [esi + 0x54], 2 -> jne 0x1348c9 */
   FUN_00134070(0, 0, 0, 0.0f, 0.0f);
-  FUN_00133300(0, 0);
+  FUN_00133300(0, 0, 0);
   /* test esi, esi -> jne 0x134893 */
   /* test esi, esi -> je 0x1349fb */
   /* relift: test byte ptr [esi + 0x54], 2 -> je 0x1349f0 */
   game_time_get();
-  FUN_001330f0(0);
+  FUN_001330f0(0, 0);
   tag_get('!wlg', 0);
   /* test (char)ecx, 0x10 -> je 0x13494d */
   /* test (char)eax, 0x41 -> jne 0x134947 */

@@ -13003,80 +13003,341 @@ int glow_trailing_particle_new(int glow_widget_ptr)
   return (int)particle;
 }
 
+
+void FUN_00133300(int glow_widget, int particle_ptr, int object_handle)
+{
+  char *widget = (char *)glow_widget;
+  char *particle = (char *)particle_ptr;
+  char *glow_def;
+  float fn_value;
+  int16_t fn_index;
+  float path_ratio;
+  float fade;
+
+  glow_def = (char *)tag_get('!wlg', *(int *)(widget + 0x224));
+  fn_index = *(int16_t *)(glow_def + 0xb0);
+  fn_value = 0.0f;
+  if (fn_index != (int16_t)-1) {
+    if (!object_get_function_value(object_handle, fn_index, &fn_value))
+      fn_value = 0.0f;
+    *(float *)(particle + 0x10) =
+        (*(float *)(glow_def + 0xc8) - *(float *)(glow_def + 0xb8)) *
+            fn_value +
+        *(float *)(glow_def + 0xb8);
+    *(float *)(particle + 0x14) =
+        (*(float *)(glow_def + 0xcc) - *(float *)(glow_def + 0xbc)) *
+            fn_value +
+        *(float *)(glow_def + 0xbc);
+    *(float *)(particle + 0x18) =
+        (*(float *)(glow_def + 0xd0) - *(float *)(glow_def + 0xc0)) *
+            fn_value +
+        *(float *)(glow_def + 0xc0);
+    *(float *)(particle + 0xc) = 1.0f;
+  } else {
+    *(float *)(particle + 0xc) = 1.0f;
+  }
+
+  if ((glow_def[0x28] & 1) != 0) {
+    *(float *)(particle + 0x10) =
+        (*(float *)(glow_def + 0xc8) - *(float *)(glow_def + 0xb8)) *
+            *(float *)(glow_def + 0xf4) * *(float *)(particle + 0x28) +
+        *(float *)(glow_def + 0xb8);
+    *(float *)(particle + 0x14) =
+        (*(float *)(glow_def + 0xcc) - *(float *)(glow_def + 0xbc)) *
+            *(float *)(glow_def + 0xf4) * *(float *)(particle + 0x28) +
+        *(float *)(glow_def + 0xbc);
+    *(float *)(particle + 0x18) =
+        (*(float *)(glow_def + 0xd0) - *(float *)(glow_def + 0xc0)) *
+            *(float *)(glow_def + 0xf4) * *(float *)(particle + 0x28) +
+        *(float *)(glow_def + 0xc0);
+    *(float *)(particle + 0xc) = 1.0f;
+  }
+
+  path_ratio = *(float *)(particle + 0x28) / *(float *)(widget + 0x234);
+  fade = *(float *)(glow_def + 0xf8) * *(float *)0x253398;
+  if (path_ratio > fade) {
+    if (1.0f - fade > 0.0f)
+      *(float *)(particle + 0x58) = (path_ratio - fade) / (1.0f - fade);
+    else
+      *(float *)(particle + 0x58) = 1.0f;
+  } else {
+    *(float *)(particle + 0x58) = 0.0f;
+  }
+  if (*(float *)(particle + 0x58) < 0.0f)
+    *(float *)(particle + 0x58) = 0.0f;
+  else if (*(float *)(particle + 0x58) > 1.0f)
+    *(float *)(particle + 0x58) = 1.0f;
+}
+
+#if defined(__i386__) && defined(__GNUC__)
+#endif
+void FUN_001330f0(int glow_widget, int particle_ptr)
+{
+  char *glow_def;
+  float ratio;
+  int16_t age;
+  int16_t lifetime;
+
+  glow_def = (char *)tag_get('!wlg', *(int *)(glow_widget + 0x224));
+  if ((glow_def[0x28] & 8) == 0) {
+    *(float *)(particle_ptr + 0x58) = 1.0f;
+    return;
+  }
+
+  age = *(int16_t *)(particle_ptr + 0x50);
+  lifetime = *(int16_t *)(particle_ptr + 0x52);
+  if (lifetime <= 0) {
+    *(float *)(particle_ptr + 0x58) = 0.0f;
+    return;
+  }
+
+  ratio = 1.0f - (float)age / (float)lifetime;
+  if (ratio < 0.0f)
+    ratio = 0.0f;
+  else if (ratio > 1.0f)
+    ratio = 1.0f;
+  *(float *)(particle_ptr + 0x58) = ratio;
+}
+
+#if defined(__i386__) && defined(__GNUC__)
+#endif
+void FUN_001331d0(int glow_widget, int particle_ptr)
+{
+  char *particle = (char *)particle_ptr;
+  char *glow_def;
+  float ratio;
+  int16_t age;
+  int16_t lifetime;
+
+  glow_def = (char *)tag_get('!wlg', *(int *)(glow_widget + 0x224));
+  if ((glow_def[0x28] & 0x20) != 0) {
+    age = *(int16_t *)(particle + 0x50);
+    lifetime = *(int16_t *)(particle + 0x52);
+    if (lifetime <= 0) {
+      ratio = 0.0f;
+    } else {
+      ratio = 1.0f - (float)age / (float)lifetime;
+      if (ratio < 0.0f)
+        ratio = 0.0f;
+      else if (ratio > 1.0f)
+        ratio = 1.0f;
+    }
+    *(float *)(particle + 0x44) = ratio * *(float *)(particle + 0x38);
+    *(float *)(particle + 0x48) = ratio * *(float *)(particle + 0x3c);
+    *(float *)(particle + 0x4c) = ratio * *(float *)(particle + 0x40);
+    return;
+  }
+
+  *(float *)(particle + 0x44) = *(float *)(particle + 0x38);
+  *(float *)(particle + 0x48) = *(float *)(particle + 0x3c);
+  *(float *)(particle + 0x4c) = *(float *)(particle + 0x40);
+}
+
 /* 0x1345b0 */
 void FUN_001345b0(int glow_widget, int object_handle)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *widget = (char *)glow_widget;
+  char *glow_def;
+  int16_t marker_count;
+  float spawn_rate;
+  float secondary_rate;
+  int particle;
+  int16_t tick;
+  float trail_budget;
+  float trail_step;
 
-  tag_get('!wlg', 0);
-  object_get_markers_by_string_id(glow_widget, (void *)(uintptr_t)eax, (void *)((char *)eax + 0x8), 5);
-  /* cmp (int16_t)eax, 1 -> jle 0x134876 */
-  /* relift: cmp word ptr [ebp - 8], (int16_t)esi -> je 0x13469a */
-  normalize3d((float *)0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x134711 */
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x134709 */
-  /* relift: cmp word ptr [ebp + edi*2 - 0x24], (int16_t)ecx -> je 0x134706 */
-  /* test (int16_t)eax, (int16_t)eax -> jge 0x1346f4 */
-  /* cmp eax, edx -> jl 0x134730 */
-  FUN_001342a0(0);
-  /* cmp (int16_t)eax, 1 -> jle 0x134876 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x13482b */
-  object_get_function_value(0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> jne 0x134815 */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  object_get_function_value(0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> jne 0x134857 */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  game_time_get();
-  /* relift: cmp word ptr [ebx + 4], 1 -> jle 0x1348d0 */
-  /* test esi, esi -> je 0x1348d0 */
-  /* relift: test byte ptr [esi + 0x54], 2 -> jne 0x1348c9 */
-  /* relift: relift: fld dword ptr [0x50654c] */
-  FUN_00134070(0, 0, 0, 0.0f, 0.0f);
-  FUN_00133300(glow_widget, 0);
-  /* test esi, esi -> jne 0x134893 */
-  /* test esi, esi -> je 0x1349fb */
-  /* relift: test byte ptr [esi + 0x54], 2 -> je 0x1349f0 */
-  game_time_get();
-  FUN_001330f0(0);
-  tag_get('!wlg', 0);
-  /* test (char)ecx, 0x10 -> je 0x13494d */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x134947 */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  FUN_001331d0(0, 0);
-  tag_get('!wlg', 0);
-  tag_get('!wlg', 0);
-  /* relift: cmp (int16_t)edx, word ptr [esi + 0x52] -> jle 0x1349f0 */
-  /* test ecx, ecx -> je 0x1349d0 */
-  datum_delete((data_t *)(uintptr_t)*(int *)(0x5a90cc), 0);
-  /* test esi, esi -> jne 0x1348e0 */
-  /* relift: relift: fcomp dword ptr [0x25bb10] */
-  /* test (char)eax, 0x41 -> jne 0x134ad4 */
-  /* relift: relift: fld dword ptr [0x253394] */
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x134ad4 */
-  glow_trailing_particle_new(0);
-  /* test eax, eax -> je 0x134ab4 */
-  /* test ecx, ecx -> je 0x134a7b */
-  FUN_001d9068();
-  /* test (char)eax, 0x41 -> je 0x134a53 */
-  display_assert((char *)0x0029ac28, (char *)0x0029ab60, 521, 1);
-  system_exit(-1);
+  glow_def = (char *)tag_get('!wlg', *(int *)(widget + 0x224));
+  if (glow_def == (char *)0)
+    return;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  marker_count = (int16_t)object_get_markers_by_string_id(
+      object_handle, widget + 8, glow_def, 5);
+  *(int16_t *)(widget + 4) = marker_count;
+
+  if (widget[2] == 0) {
+    if (marker_count > 1) {
+      int16_t point_index;
+      int16_t row;
+      int16_t best_index;
+      float best_dot;
+      int16_t marker_indices[5];
+      char *point_row;
+
+      for (row = 0; row < marker_count; row++) {
+        best_index = (int16_t)-1;
+        best_dot = -1.0f;
+        point_row = widget + 0x70 + row * 0x6c;
+        for (point_index = 0; point_index < marker_count; point_index++) {
+          char *point = widget + 8 + point_index * 0x6c;
+          float delta[3];
+          float dot;
+          delta[0] = *(float *)(point + 0x58) - *(float *)(point_row + 0x58);
+          delta[1] = *(float *)(point + 0x5c) - *(float *)(point_row + 0x5c);
+          delta[2] = *(float *)(point + 0x60) - *(float *)(point_row + 0x60);
+          normalize3d(delta);
+          dot = delta[0] * *(float *)(point_row + 0x34) +
+                delta[1] * *(float *)(point_row + 0x38) +
+                delta[2] * *(float *)(point_row + 0x3c);
+          if (dot > best_dot) {
+            best_dot = dot;
+            best_index = point_index;
+          }
+        }
+        marker_indices[row] = best_index;
+      }
+
+      for (row = 0; row < marker_count; row++)
+        *(int16_t *)(widget + 0x22a + row * 2) = marker_indices[row];
+
+      *(float *)(widget + 0x234) = 0.0f;
+      for (row = 0; row + 1 < marker_count; row++) {
+        int16_t a = *(int16_t *)(widget + 0x22a + row * 2);
+        int16_t b = *(int16_t *)(widget + 0x22a + row * 2 + 2);
+        char *pa = widget + 8 + (int)a * 0x6c + 0x60;
+        char *pb = widget + 8 + (int)b * 0x6c + 0x60;
+        float dx = *(float *)pb - *(float *)pa;
+        float dy = *(float *)(pb + 4) - *(float *)(pa + 4);
+        float dz = *(float *)(pb + 8) - *(float *)(pa + 8);
+        float seg = dx * dx + dy * dy + dz * dz;
+        float len = seg > 0.0f ? sqrtf(seg) : 0.0f;
+        *(float *)(widget + 0x23c + row * 4) = len;
+        *(float *)(widget + 0x234) += len;
+      }
+
+      FUN_001342a0(glow_widget);
+      *(int16_t *)(widget + 0x258) = 0;
+      widget[2] = 1;
+      return;
+    }
+  }
+
+  spawn_rate = *(float *)(glow_def + 0x64);
+  secondary_rate = 1.0f;
+  if (*(int16_t *)(glow_def + 0x60) != (int16_t)-1) {
+    float fn_value = 0.0f;
+    if (object_get_function_value(object_handle, *(int16_t *)(glow_def + 0x60),
+                                  &fn_value))
+      spawn_rate = (*(float *)(glow_def + 0x6c) - *(float *)(glow_def + 0x68)) *
+                       fn_value +
+                   *(float *)(glow_def + 0x68);
+    else
+      spawn_rate = 0.0f;
+    spawn_rate *= *(float *)(glow_def + 0x64);
+  }
+  if (*(int16_t *)(glow_def + 0x70) != (int16_t)-1) {
+    float fn_value = 0.0f;
+    if (object_get_function_value(object_handle, *(int16_t *)(glow_def + 0x70),
+                                  &fn_value))
+      secondary_rate =
+          (*(float *)(glow_def + 0x7c) - *(float *)(glow_def + 0x78)) *
+              fn_value +
+          *(float *)(glow_def + 0x78);
+    else
+      secondary_rate = 0.0f;
+    secondary_rate *= *(float *)(glow_def + 0x74);
+  }
+  if (secondary_rate > 0.0f)
+    spawn_rate /= secondary_rate;
+
+  tick = (int16_t)game_time_get();
+  *(int16_t *)(widget + 0x258) += tick;
+
+  if (*(int16_t *)(widget + 4) > 1) {
+    int p = *(int *)(widget + 0x250);
+    while (p != 0) {
+      char *particle_ptr = (char *)p;
+      if ((*(unsigned char *)(particle_ptr + 0x54) & 2) == 0) {
+        float ratio = spawn_rate;
+        float delta = *(float *)0x50654c * secondary_rate;
+        FUN_00134070(glow_widget, p, object_handle, delta, ratio);
+        FUN_00133300(glow_widget, p, object_handle);
+        *(float *)(particle_ptr + 0x24) = *(float *)(particle_ptr + 0x20);
+      }
+      p = *(int *)(particle_ptr + 0x5c);
+    }
+  }
+
+  {
+    int p = *(int *)(widget + 0x250);
+    float dt = *(float *)0x50654c;
+    while (p != 0) {
+      char *particle_ptr = (char *)p;
+      if ((*(unsigned char *)(particle_ptr + 0x54) & 2) != 0) {
+        char *def;
+        *(int16_t *)(particle_ptr + 0x50) += (int16_t)game_time_get();
+        FUN_001330f0(glow_widget, p);
+        def = (char *)tag_get('!wlg', *(int *)(widget + 0x224));
+        if ((def[0x28] & 0x10) != 0) {
+          int16_t age = *(int16_t *)(particle_ptr + 0x50);
+          int16_t life = *(int16_t *)(particle_ptr + 0x52);
+          float ratio;
+          if (life <= 0)
+            ratio = 0.0f;
+          else {
+            ratio = 1.0f - (float)age / (float)life;
+            if (ratio < 0.0f)
+              ratio = 0.0f;
+          }
+          *(float *)(particle_ptr + 0x24) = ratio * *(float *)(particle_ptr + 0x20);
+        }
+        FUN_001331d0(glow_widget, p);
+        *(float *)(particle_ptr + 0x2c) +=
+            dt * *(float *)(particle_ptr + 0x44);
+        *(float *)(particle_ptr + 0x30) +=
+            dt * *(float *)(particle_ptr + 0x48);
+        *(float *)(particle_ptr + 0x34) +=
+            dt * *(float *)(particle_ptr + 0x4c);
+
+        if (*(int16_t *)(particle_ptr + 0x50) >
+            *(int16_t *)(particle_ptr + 0x52)) {
+          int prev = *(int *)(particle_ptr + 0x60);
+          int next = *(int *)(particle_ptr + 0x5c);
+          if (prev != 0)
+            *(int *)(prev + 0x5c) = next;
+          else
+            *(int *)(widget + 0x250) = next;
+          if (next != 0)
+            *(int *)(next + 0x60) = prev;
+          else
+            *(int *)(widget + 0x254) = prev;
+          datum_delete(*(data_t **)0x5a90cc,
+                       *(int *)(particle_ptr + 4));
+          *(int16_t *)(widget + 0x24c) -= 1;
+        }
+      }
+      p = *(int *)(particle_ptr + 0x5c);
+    }
+  }
+
+  if (*(float *)(glow_def + 0xfc) <= *(float *)0x25bb10)
+    return;
+
+  trail_step = *(float *)0x253394 / *(float *)(glow_def + 0xfc);
+  if (trail_step > 1.0f)
+    trail_step = 1.0f;
+  trail_budget = (float)*(int16_t *)(widget + 0x258);
+
+  while (trail_budget >= trail_step) {
+    particle = glow_trailing_particle_new(glow_widget);
+    if (particle == 0) {
+      display_assert((char *)0x0029ac28, (char *)0x0029ab60, 0x209, 1);
+      system_exit(-1);
+    }
+    {
+      int prev = *(int *)(widget + 0x254);
+      *(int16_t *)(widget + 0x24c) += 1;
+      if (prev != 0)
+        *(int *)(prev + 0x5c) = particle;
+      else
+        *(int *)(widget + 0x250) = particle;
+      *(int *)(particle + 0x60) = prev;
+      *(int *)(widget + 0x254) = particle;
+    }
+    FUN_001d9068();
+    *(int16_t *)(widget + 0x258) -= (int16_t)trail_step;
+    trail_budget = (float)*(int16_t *)(widget + 0x258);
+  }
+
 }
 
 /* 0x134c40 */

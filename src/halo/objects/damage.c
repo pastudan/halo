@@ -1445,7 +1445,7 @@ after_modifier:
 /* Unported: only caller (FUN_001377d0) is unported and passes 3 register
  * args (@<eax>, @<ecx>, @<esi>) that our cdecl C function cannot receive.
  * Original XBE code runs and correctly calls our ported callees. */
-#if 0
+#if 1
 void FUN_00137170(float *incident_direction, float *surface_normal,
                   int object_handle, int effect_tag_index,
                   short marker_index, float *position)
@@ -2029,157 +2029,338 @@ void FUN_00136b40(int object_handle)
 }
 
 /* 0x136bc0 */
-void FUN_00136bc0(int current_object_handle, void *collision_model, int material, void *damage_effect, void *damage_params, unsigned int *flags, float *shield_damage, float *body_damage)
+void FUN_00136bc0(int current_object_handle, void *collision_model, int material,
+                  void *damage_effect, void *damage_params, unsigned int *flags,
+                  float *shield_damage, float *body_damage)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
+  char *obj;
+  char *coll;
+  char *mat;
+  char *jpt;
+  float remaining;
+  float shield_apply;
+  float max_shield;
+  float recharge_frac;
+  float scaled;
+  float actual;
+  char report_shield;
+  char friendly_fire;
 
-  object_get_and_verify_type(0, 0);
-  game_engine_running();
-  /* test (char)eax, (char)eax -> jne 0x136c05 */
-  /* relift: cmp word ptr [ecx + 2], (int16_t)eax -> jne 0x136c05 */
-  /* relift: cmp word ptr [esi + 0x68], (int16_t)eax -> jne 0x136c05 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x136ed9 */
-  object_get_and_verify_type(0, 0);
-  FUN_000b55b0(0, 0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x136c67 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: test byte ptr [ebx], 4 -> jne 0x136cf4 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x136cf4 */
-  transition_function_evaluate(0, 0.0f);
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: test byte ptr [esi + 0xb6], 0x10 -> je 0x136d0f */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x20 -> je 0x136d5d */
-  FUN_000b5590(0);
-  /* test (char)eax, 0x41 -> jne 0x136d5b */
-  /* cmp (int16_t)eax, 0x21 -> jl 0x136d9b */
-  display_assert((char *)0x0029aee0, (char *)0x0029af50, 1550, 0);
-  system_exit(0);
-  /* test (char)eax, 0x41 -> je 0x136e26 */
-  /* relift: cmp word ptr [ecx], 3 -> je 0x136e26 */
-  /* test (char)eax, 8 -> jne 0x136df5 */
-  /* test (char)eax, 2 -> jne 0x136e6e */
-  FUN_001369e0(0, 0);
-  /* test (char)eax, 0x41 -> jne 0x136e46 */
-  FUN_00136b40(0);
-  /* test (char)eax, (char)eax -> jne 0x136eed */
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x136ec4 */
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x136eed */
-  /* test (char)eax, 1 -> je 0x136f10 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  FUN_001d9068();
+  obj = (char *)object_get_and_verify_type(current_object_handle, -1);
+  coll = (char *)collision_model;
+  mat = (char *)material;
+  jpt = (char *)damage_effect;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
+  remaining = *body_damage;
+  shield_apply = remaining;
+  report_shield = 0;
+  friendly_fire = 0;
+
+  if (!game_engine_running()) {
+    if (*(short *)(jpt + 2) == 1 && *(short *)(obj + 0x68) == 1)
+      friendly_fire = 1;
+  }
+
+  if (*(float *)(obj + 0x94) <= 0.0f) {
+    shield_apply = 0.0f;
+    *(float *)(obj + 0x94) = 0.0f;
+    goto write_outputs;
+  }
+
+  max_shield = *(float *)(obj + 0x8c);
+  if (!friendly_fire)
+    max_shield = FUN_000b55b0(2, (int)*(unsigned short *)(obj + 0x68)) *
+                 max_shield;
+
+  if (max_shield > 0.0f)
+    recharge_frac = 1.0f / max_shield;
+  else
+    recharge_frac = 0.0f;
+
+  if ((*flags & 0x10) == 0 || (coll[0] & 4) == 0) {
+    shield_apply = (1.0f - *(float *)(mat + 0x28)) * remaining;
+    if (*(float *)(obj + 0x94) > *(float *)(coll + 0xf0) &&
+        *(float *)(coll + 0xf0) > 0.0f) {
+      float ratio = *(float *)(obj + 0x94) / *(float *)(coll + 0xf0);
+      float t = transition_function_evaluate(
+          *(short *)(coll + 0xec), ratio);
+      shield_apply *= (1.0f - *(float *)(coll + 0xf4)) * t +
+                      *(float *)(coll + 0xf4);
+    }
+  }
+
+  if ((*(unsigned char *)(obj + 0xb6) & 0x10) != 0) {
+    shield_apply = remaining;
+    remaining = 0.0f;
+    goto shield_recharge;
+  }
+
+  if (!(shield_apply > 0.0f))
+    shield_apply = 0.0f;
+  remaining -= shield_apply;
+
+  if ((*flags & 0x30) == 0x30) {
+    float diff = FUN_000b5590(0);
+    if (diff > 0.0f)
+      shield_apply /= diff;
+  }
+
+  scaled = shield_apply * *(float *)(mat + 0x2c);
+  {
+    int16_t shield_mat = *(int16_t *)(coll + 0xd2);
+    if (shield_mat < 0 || shield_mat >= 0x21) {
+      display_assert((char *)0x0029aee0, (char *)0x0029af50, 0x60e, 1);
+      system_exit(-1);
+    }
+    scaled *= *(float *)((char *)jpt + (int)shield_mat * 4 + 0x3c);
+  }
+  if (scaled > *(float *)0x253f44)
+    report_shield = 1;
+
+  actual = recharge_frac * scaled;
+  if (actual > *(float *)(obj + 0x94) || *(short *)jpt == 3) {
+    remaining += scaled - max_shield * *(float *)(obj + 0x94);
+    if (remaining < 0.0f)
+      remaining = 0.0f;
+    *(float *)(obj + 0x94) = 0.0f;
+    if ((*(unsigned char *)(obj + 0xb6) & 8) == 0) {
+      object_deplete_shield(current_object_handle);
+      *flags |= 8;
+    }
+  } else {
+    if ((*(unsigned char *)(obj + 0xb6) & 8) == 0)
+      *(float *)(obj + 0x94) -= actual;
+    if ((*(unsigned char *)(obj + 0xb6) & 2) == 0 &&
+        *(float *)(obj + 0x94) <= *(float *)(coll + 0x184)) {
+      FUN_001369e0(current_object_handle, *(int *)(coll + 0x194));
+      *(unsigned char *)(obj + 0xb6) |= 2;
+    }
+  }
+
+shield_recharge:
+  if (!report_shield) {
+    float pool = *body_damage - remaining;
+    pool *= recharge_frac;
+    if ((*(unsigned char *)(obj + 0xb6) & 8) == 0)
+      *(float *)(obj + 0x98) = 1.0f;
+    *(float *)(obj + 0xa4) += pool;
+    if (*(float *)(obj + 0x98) > 1.0f)
+      *(float *)(obj + 0x98) = 1.0f;
+    if (*(float *)(obj + 0xa4) > 1.0f)
+      *(float *)(obj + 0xa4) = 1.0f;
+  }
+
+write_outputs:
+  if (shield_apply > *(float *)(coll + 0x108)) {
+    if (*(float *)(obj + 0x94) == 0.0f) {
+      FUN_001d9068();
+      *(short *)(obj + 0xb4) =
+          (short)(int)(*(float *)(coll + 0x10c) * *(float *)0x253394);
+    }
+  }
+  *shield_damage = shield_apply;
+  *body_damage = remaining;
 }
 
 /* 0x1377d0 */
-void FUN_001377d0(int object_handle, int region_index, int node_index, unsigned int param_4, void *collision_model, int material, void *damage_effect, void *damage_params, unsigned int *flags, float *body_damage, void **param_11, float scale)
+void FUN_001377d0(int object_handle, int region_index, int node_index,
+                  unsigned int param_4, void *collision_model, int material,
+                  void *damage_effect, void *damage_params, unsigned int *flags,
+                  float *body_damage, void **param_11, float scale)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
+  char *obj;
+  char *coll;
+  char *mat;
+  char *jpt;
+  char *dp;
+  float body_scale;
+  float max_body;
+  float recent_a;
+  float recent_b;
+  char friendly_fire;
+  int region;
 
-  object_get_and_verify_type(0, 0);
-  /* relift: cmp word ptr [esi + 0x64], 1 -> jne 0x137824 */
-  object_get_and_verify_type(0, 0);
-  /* cmp ecx, -1 -> jne 0x137824 */
-  game_engine_running();
-  /* test (char)eax, (char)eax -> jne 0x137843 */
-  /* relift: cmp word ptr [edx + 2], (int16_t)eax -> jne 0x137843 */
-  /* relift: cmp word ptr [esi + 0x68], (int16_t)eax -> jne 0x137843 */
-  object_get_and_verify_type(0, 0);
-  FUN_000b55b0(0, 0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x137890 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* test (char)eax, 0x10 -> je 0x1378de */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  FUN_000b5590(0);
-  /* test (char)eax, 0x41 -> jne 0x1378d9 */
-  /* cmp (int16_t)eax, 0x21 -> jl 0x137916 */
-  display_assert((char *)0x0029b078, (char *)0x0029af50, 1295, 0);
-  system_exit(0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1379c8 */
-  /* relift: test byte ptr [ebx + 0x20], 1 -> je 0x1379c8 */
-  /* test (char)eax, 2 -> je 0x13799c */
-  game_engine_running();
-  /* test (char)eax, (char)eax -> jne 0x13797b */
-  /* relift: cmp word ptr [esi + 0x64], 0 -> jne 0x13797b */
-  object_get_and_verify_type(0, 0);
-  /* cmp ecx, -1 -> jne 0x1379c8 */
-  game_engine_running();
-  /* test (char)eax, (char)eax -> je 0x1379c8 */
-  /* test (char)eax, 8 -> je 0x1379c8 */
-  game_engine_running();
-  /* test (char)eax, (char)eax -> je 0x1379c8 */
-  /* test (char)eax, 0x41 -> jne 0x1379c8 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x137a7b */
-  /* test edx, eax -> jne 0x137a78 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  FUN_001d9068();
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x137a78 */
-  /* test (char)eax, 0x41 -> jne 0x137a78 */
-  FUN_00137690(0, 0);
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x137abe */
-  /* relift: relift: fcomp dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x137ad4 */
-  /* relift: relift: mov (char)eax, byte ptr [0x5aa890] */
-  /* test (char)eax, (char)eax -> je 0x137b68 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test dl, 3 -> je 0x137b68 */
-  object_get_and_verify_type(0, 0);
-  /* test (char)eax, (char)eax -> jne 0x137b5e */
-  /* relift: cmp word ptr [esi + 0x64], 1 -> jne 0x137b68 */
-  /* cmp eax, ebx -> je 0x137b68 */
-  object_get_and_verify_type(0, 0);
-  /* test dl, 3 -> je 0x137b52 */
-  /* relift: cmp dword ptr [eax + 0x1c8], ebx -> jne 0x137b5e */
-  /* cmp eax, ebx -> jne 0x137b31 */
-  object_get_and_verify_type(0, 0);
-  object_get_and_verify_type(0, 0);
-  FUN_000b55b0(0, 0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  object_destroy(0);
-  /* test (char)eax, 4 -> jne 0x137c89 */
-  /* test eax, eax -> jle 0x137c3c */
-  tag_block_get_element((void *)(uintptr_t)esi, 0, 84);
-  /* test (char)ecx, 4 -> je 0x137c32 */
-  FUN_00137690(0, 0);
-  /* cmp eax, ecx -> jl 0x137c12 */
-  object_deplete_body(0);
-  /* relift: test byte ptr [esi + 0xb6], 1 -> jne 0x137c89 */
-  FUN_0009ec30(0, 0, 0, 0, 0.0f, 0.0f, 0, 0);
-  /* relift: test byte ptr [ebx + 4], 2 -> je 0x137cb6 */
-  /* cmp ecx, -1 -> je 0x137cb6 */
-  FUN_00137170((float *)(uintptr_t)ecx, (float *)(uintptr_t)edx, 0, 0, 0, (float *)0);
-  /* relift: test byte ptr [ebx + 4], 1 -> je 0x137cf9 */
-  /* test (char)eax, 0x41 -> jne 0x137cf9 */
-  /* cmp eax, -1 -> je 0x137cf9 */
-  /* relift: cmp word ptr [ecx + 2], 7 -> je 0x137cf9 */
-  FUN_0009ec30(0, 0, 0, 0, 0.0f, 0.0f, 0, 0);
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  coll = (char *)collision_model;
+  mat = (char *)material;
+  jpt = (char *)damage_effect;
+  dp = (char *)damage_params;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  body_scale = scale * *(float *)(mat + 0x3c);
+
+  if ((dp[0] & 0x40) != 0 && *(short *)(obj + 0x64) == 1) {
+    char *veh =
+        (char *)object_get_and_verify_type(object_handle, 3);
+    if (*(int *)(veh + 0x2d4) == -1)
+      body_scale = 0.0f;
+  }
+
+  friendly_fire = 0;
+  if (!game_engine_running()) {
+    if (*(short *)(jpt + 2) == 1 && *(short *)(obj + 0x68) == 1)
+      friendly_fire = 1;
+  }
+
+  max_body = *(float *)(obj + 0x88);
+  if (!friendly_fire)
+    max_body = FUN_000b55b0(1, (int)*(unsigned short *)(obj + 0x68)) *
+               max_body;
+
+  if ((*(unsigned int *)dp & 0x30) == 0x30) {
+    body_scale = (1.0f - *(float *)(mat + 0x44)) * body_scale;
+    if ((*(unsigned int *)dp & 0x20) != 0) {
+      float diff = FUN_000b5590(0);
+      if (diff > 0.0f)
+        body_scale /= diff;
+    }
+  }
+
+  {
+    int16_t mat_type = *(int16_t *)(mat + 0x24);
+    if (mat_type < 0 || mat_type >= 0x21) {
+      display_assert((char *)0x0029b078, (char *)0x0029af50, 0x50f, 1);
+      system_exit(-1);
+    }
+    body_scale *= *(float *)((char *)jpt + (int)mat_type * 4 + 0x3c);
+  }
+
+  if ((*(unsigned char *)(obj + 0xb7) & 8) == 0) {
+    if (body_scale > 0.0f && (mat[0x20] & 1) != 0) {
+      if ((*(unsigned int *)(jpt + 4) & 2) != 0) {
+        char instant = 0;
+        if (!game_engine_running() && *(short *)(obj + 0x64) == 0) {
+          char *unit =
+              (char *)object_get_and_verify_type(object_handle, 3);
+          if (*(int *)(unit + 0x1c8) == -1)
+            instant = 1;
+        }
+        if (instant || ((*(unsigned int *)(jpt + 4) & 8) != 0 &&
+                        game_engine_running())) {
+          if (instant || body_scale * 2.0f > *(float *)(obj + 0x90))
+            *flags |= 0x80;
+        }
+      } else if ((*(unsigned int *)(jpt + 4) & 8) != 0 &&
+                 game_engine_running()) {
+        if (body_scale * 2.0f > *(float *)(obj + 0x90))
+          *flags |= 0x80;
+      }
+      if ((*flags & 0x40) == 0)
+        *(float *)(obj + 0x90) = 0.0f;
+      else
+        *flags |= 0x40;
+    }
+    *(float *)(obj + 0x90) -= body_scale;
+  }
+
+  if ((short)region_index != (short)-1) {
+    region = (int)(short)region_index;
+    if (((*(unsigned short *)(obj + 0x124) >> region) & 1) == 0) {
+      char *region_elem = (char *)tag_block_get_element(
+          (int *)(coll + 0x240), region, 0x54);
+      float region_damage = body_scale * *(float *)0x2602c8;
+      region_damage += (float)(unsigned char)obj[0x128 + region];
+      FUN_001d9068();
+      obj[0x128 + region] = (char)(int)region_damage;
+      if (*(float *)(region_elem + 0x28) > 0.0f) {
+        float threshold =
+            (float)(unsigned char)obj[0x128 + region] *
+            *(float *)0x261518;
+        if (threshold >= *(float *)(region_elem + 0x28)) {
+          FUN_00137690(object_handle, region);
+          *flags |= 2;
+        }
+      }
+    }
+  }
+
+  *(int *)(obj + 0xb0) = 0;
+  recent_a = *(float *)(obj + 0x9c) + body_scale;
+  recent_b = *(float *)(obj + 0xa8) + body_scale;
+  *(float *)(obj + 0x9c) = recent_a;
+  *(float *)(obj + 0xa8) = recent_b;
+  if (recent_a > 1.0f)
+    *(float *)(obj + 0x9c) = 1.0f;
+  if (recent_b > 1.0f)
+    *(float *)(obj + 0xa8) = 1.0f;
+
+  if (*(char *)0x5aa890 != 0 && *(float *)(obj + 0x90) > 0.0f) {
+    char zero_body = 0;
+    if (((1 << *(unsigned char *)(obj + 0x64)) & 3) != 0) {
+      char *unit =
+          (char *)object_get_and_verify_type(object_handle, 3);
+      if (*(int *)(unit + 0x1c8) != -1)
+        zero_body = 1;
+      else if (*(short *)(obj + 0x64) == 1) {
+        int child = *(int *)(obj + 0xc8);
+        while (child != -1) {
+          char *child_obj =
+              (char *)object_get_and_verify_type(child, -1);
+          if (((1 << *(unsigned char *)(child_obj + 0x64)) & 3) != 0 &&
+              *(int *)(child_obj + 0x1c8) != -1) {
+            zero_body = 1;
+            break;
+          }
+          child = *(int *)(child_obj + 0xc4);
+          if (child == -1)
+            break;
+        }
+      }
+    }
+    if (zero_body)
+      *(float *)(obj + 0x90) = 0.0f;
+  }
+
+  {
+    float body_vitality = *(float *)(obj + 0x90);
+    float threshold =
+        FUN_000b55b0(1, (int)*(unsigned short *)(obj + 0x68)) *
+        *(float *)(obj + 0x88) * body_vitality;
+    if (*(float *)(dp + 0xb8) > 0.0f &&
+        threshold <= *(float *)(dp + 0xb8)) {
+      object_destroy(object_handle);
+      *flags |= 5;
+    } else if (threshold <= 0.0f) {
+      if ((*(unsigned char *)(obj + 0xb6) & 4) == 0) {
+        int region_count = *(int *)(coll + 0x240);
+        int *region_block = (int *)(coll + 0x240);
+        int index;
+        for (index = 0; index < region_count; index++) {
+          char *region_elem = (char *)tag_block_get_element(
+              region_block, index, 0x54);
+          if ((region_elem[0x20] & 4) != 0)
+            FUN_00137690(object_handle, index);
+        }
+        object_deplete_body(object_handle);
+        *flags |= 1;
+      }
+    } else if (threshold <= *(float *)(mat + 0x94) &&
+               (*(unsigned char *)(obj + 0xb6) & 1) == 0) {
+      FUN_0009ec30(*(int *)(mat + 0xa4), object_handle, object_handle, -1,
+                   0.0f, 0.0f, 0, 0);
+      *(unsigned char *)(obj + 0xb6) |= 1;
+    }
+  }
+
+  if ((dp[4] & 2) != 0) {
+    int coll_index = *(int *)(mat + 0x7c);
+    if (coll_index != -1) {
+      FUN_00137170((float *)(dp + 0x28), (float *)(dp + 0x34),
+                   object_handle, coll_index, (short)node_index,
+                   (float *)(dp + 0x28));
+    }
+  }
+
+  if ((dp[4] & 1) != 0 && body_scale > *(float *)(mat + 0x80)) {
+    int effect_index = *(int *)(mat + 0x90);
+    if (effect_index != -1 && *(short *)(jpt + 2) != 7) {
+      FUN_0009ec30(effect_index, object_handle, object_handle, -1, 0.0f,
+                   0.0f, 0, 0);
+    }
+  }
+
+  *body_damage = body_scale;
+  if (param_11 != (void **)0)
+    *param_11 = (void *)(uintptr_t) *(unsigned int *)(mat + 0x3c);
 }
 
 /* 0x138900 */
