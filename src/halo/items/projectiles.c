@@ -855,256 +855,369 @@ bool FUN_000f8720(int projectile_handle, float *new_pos,
   return 0;
 }
 
-/* Detonate a projectile: fire effects, apply area damage, notify AI.
- *
- * param_1 (projectile_handle): datum handle of the projectile object.
- * param_2 (has_hit_count): non-zero if the projectile has accumulated a hit
- *   counter (used to decide whether to update the contrail attachment state).
- * param_3 (current_time): current game time in seconds; used to compute the
- *   contrail delta-time argument.
- *
- * Flow:
- *   1. If the tag has the burst-fire flag (bit 3 at tag+0x17c) and the
- *      projectile has a parent with more than 6 siblings of the same type,
- *      kill or randomize the excess siblings' velocities and then
- *      detach from the parent and reposition at the burst centre.
- *   2. If has_hit_count and the projectile has a valid contrail attachment,
- *      compute node matrices and set the contrail state.
- *   3. Fire the primary effect at the projectile's world position.
- *   4. If the projectile has a parent and the tag has splash-damage data
- *      (tag+0x220), apply area damage to the scene.
- *   5. Look up the detonation-effect index (proj+0x1e2); fire a per-slot
- *      secondary effect if the index is valid.
- *   6. Notify the AI subsystem of the detonation position.
- *
- * Binary: 0x000f8920 in projectiles.obj.
- * Confirmed: prototype from caller FUN_000f9c40 @ 0xfab65
- *   (SETZ AL for param_2, EDX=[EBP-0x18] for param_3, ECX=[EBP+8] for param_1).
- */
-void FUN_000f8920(int projectile_handle, char has_hit_count, float current_time)
+/* FUN_000f8920 (0xf8920) — XBE naked draft (batch 57). */
+#if defined(__clang__)
+static void *(*const bf8920_get)(int, int) = object_get_and_verify_type;
+static void *(*const bf8920_tag)(int, int) = tag_get;
+static bool (*const bf8920_gerun)(void) = game_engine_running;
+static int *(*const bf8920_gseed)(void) = get_global_random_seed_address;
+static float (*const bf8920_rmreal)(unsigned int *) = random_math_real;
+static vector3_t * (*const bf8920_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+static void (*const bf8920_c1411c0)(int object_handle) = object_detach_from_parent;
+static void (*const bf8920_otrans)(int, float *, void *) = object_translate;
+static bool (*const bf8920_oplace)(int, float *) = object_try_place;
+static void (*const bf8920_c1446a0)(int object_handle) = object_update_children_recursive;
+static void (*const bf8920_c141b70)(int object_handle) = object_compute_node_matrices;
+static void (*const bf8920_c986d0)(int contrail_handle, bool reset_points, float delta_time) = contrail_set_state_for_object;
+static void (*const bf8920_c141360)(int object_handle, float *out_forward, float *out_up) = object_get_orientation;
+static int (*const bf8920_c9f0e0)(int effect_tag_index, int object_index, float *translational_velocity, short marker_count, void *effect_definition, float *marker_points, float *marker_forwards, float scale_a, float scale_b, float unknown1, float unknown2, float unknown3) = effect_new_unattached_from_markers;
+static void (*const bf8920_c136750)(void *damage_params, int tag_index) = damage_data_new;
+static void (*const bf8920_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = object_cause_damage;
+static void *(*const bf8920_elem)(void *, int, int) = tag_block_get_element;
+static void (*const bf8920_c425c0)(int object_handle, float *position, short effect_type, short volume, short count) = FUN_000425c0;
+
+__attribute__((naked, noinline))
+void FUN_000f8920(int projectile_handle __attribute__((unused)), char has_hit_count __attribute__((unused)), float current_time __attribute__((unused)))
 {
-  char *proj; /* projectile object data pointer (type 0x20) */
-  char *proj_tag; /* projectile tag data pointer (group 'proj') */
-  int effect_tag; /* current effect tag index; updated in burst block */
-  void *effect_def[2]; /* effect definition passed to
-                          effect_new_unattached_from_markers */
-
-  /* burst-limit locals */
-  char *parent_obj; /* type-any parent object ptr */
-  int sibling; /* datum handle of current sibling in child list */
-  char *sibling_base; /* type-any sibling object ptr */
-  char *sibling_proj; /* type-0x20 sibling projectile ptr */
-  int count; /* count of active same-type siblings */
-
-  /* world position and orientation buffers */
-  float pos[3]; /* projectile world position ([EBP-0x30]) */
-  /* MSVC stack overlap: fwd[0..2] at [EBP-0x54], up_buf at [EBP-0x48] are
-   * contiguous. Effects system indexes forwards[1] when marker_count=2 and
-   * the event matches "gravity", reading what MSVC laid out as up_buf. */
-  float fwd[6]; /* [0..2]=forward, [3..5]=up (second marker forward) */
-  float up_buf[3]; /* temp for *0x31fc50; copied into fwd[3..5] */
-  float parent_pos[3]; /* parent world position (local_b8) */
-  float saved_vel[3]; /* saved proj object position at 0xc..0x14 */
-
-  /* damage params for area damage (0xac bytes as in damage_data_new) */
-  char damage_params[0xac];
-  float fwd2[3]; /* forward buf for area-damage object_get_orientation
-                    ([EBP-0x74]) */
-  float pos2[3]; /* world pos for area-damage object_get_world_position ([EBP-0x8c]) */
-
-  /* secondary detonation effect */
-  short det_idx; /* proj->detonation_effect_index at proj+0x1e2 */
-  void *det_entry; /* pointer to tag-block element */
-  int det_effect;
-
-  /* AI notification */
-  short ai_volume;
-
-  /* --- Setup. --- */
-  proj = (char *)object_get_and_verify_type(projectile_handle, 0x20);
-  proj_tag = (char *)tag_get(0x70726f6a, *(int *)proj);
-  effect_tag = *(int *)(proj_tag + 0x1b8);
-
-  /* Effect definition struct: two pointer-sized globals on the stack. */
-  effect_def[0] = (void *)0x25386fu; /* DAT_0025386f */
-  effect_def[1] = (void *)0x26ad40u; /* "gravity" marker name string */
-
-  /* --- Block 1: Burst-fire sibling count limit. ---
-   * Condition: tag flag bit 3 at +0x17c (burst-limit enabled),
-   *            proj not already detonating (bit 6 at +0x1dc clear),
-   *            projectile has a valid parent (proj+0xcc != -1). */
-  if (((*(uint8_t *)(proj_tag + 0x17c) & 8u) != 0) &&
-      ((*(uint8_t *)(proj + 0x1dc) & 0x40u) == 0) &&
-      (*(int *)(proj + 0xcc) != -1)) {
-    parent_obj = (char *)object_get_and_verify_type(*(int *)(proj + 0xcc), -1);
-    sibling = *(int *)(parent_obj + 0xc8); /* first child */
-    count = 0;
-
-    /* Count siblings with the same tag group that are not detonating. */
-    while (sibling != -1) {
-      sibling_base = (char *)object_get_and_verify_type(sibling, -1);
-      if (*(int *)sibling_base == *(int *)proj) {
-        sibling_proj = (char *)object_get_and_verify_type(sibling, 0x20);
-        if ((*(uint8_t *)(sibling_proj + 0x1dc) & 0x40u) == 0)
-          count++;
-      }
-      sibling = *(int *)(sibling_base + 0xc4);
-    }
-
-    /* Proceed if: parent has no weapon (short at +0x64 == 0),
-     * game engine not running or game_engine_running() returns true,
-     * and (short)count > 6. */
-    if ((*(short *)(parent_obj + 0x64) == 0) &&
-        ((*(int *)((char *)object_get_and_verify_type(*(int *)(proj + 0xcc),
-                                                      1) +
-                   0x1c8) == -1) ||
-         game_engine_running()) &&
-        ((short)count > 6)) {
-      sibling = *(int *)(parent_obj + 0xc8);
-      while (sibling != -1) {
-        sibling_base = (char *)object_get_and_verify_type(sibling, -1);
-        if (*(int *)sibling_base == *(int *)proj) {
-          sibling_proj = (char *)object_get_and_verify_type(sibling, 0x20);
-          if ((*(uint8_t *)(sibling_proj + 0x1dc) & 0x40u) == 0) {
-            /* Second lookup: get proj ptr for mutation. */
-            sibling_proj = (char *)object_get_and_verify_type(sibling, 0x20);
-            if ((short)count <= 6) {
-              /* Remaining (<=6): mark detonating, randomize vel. */
-              *(uint32_t *)(sibling_proj + 0x1dc) |= 0x40u;
-              *(float *)(sibling_proj + 0x1f0) *= random_math_real(
-                (unsigned int *)get_global_random_seed_address());
-              *(float *)(sibling_proj + 0x1f8) *= random_math_real(
-                (unsigned int *)get_global_random_seed_address());
-            } else {
-              /* Excess (>6): zero angular/linear velocity. */
-              *(float *)(sibling_proj + 0x1f0) = 0.0f;
-              *(float *)(sibling_proj + 0x1f8) = 0.0f;
-            }
-            count--;
-          }
-        }
-        sibling = *(int *)(sibling_base + 0xc4);
-      }
-
-      /* Switch effect to burst-centre effect (tag+0x198). */
-      effect_tag = *(int *)(proj_tag + 0x198);
-
-      /* Detach from parent and reposition at burst centre. */
-      object_get_world_position(*(int *)(proj + 0xcc), (vector3_t *)parent_pos);
-      object_detach_from_parent(projectile_handle);
-
-      /* Save projectile position from obj+0xc. */
-      saved_vel[0] = *(float *)(proj + 0xc);
-      saved_vel[1] = *(float *)(proj + 0x10);
-      saved_vel[2] = *(float *)(proj + 0x14);
-
-      object_translate(projectile_handle, parent_pos, (void *)0);
-      object_try_place(projectile_handle, saved_vel);
-      object_update_children_recursive(projectile_handle);
-    }
-  }
-
-  /* (EBX restored from [EBP-8] = proj_tag; EDI restored from [EBP+8] = param_1.
-   * In C these variables are unchanged.) */
-
-  /* --- Block 2: Contrail attachment update. ---
-   * Only if has_hit_count, and attachment index and contrail handle are valid.
-   */
-  if (has_hit_count && (*(int *)(proj + 0x1ec) != -1) &&
-      (*(int *)(proj + 0xfc + *(int *)(proj + 0x1ec) * 4) != -1)) {
-    object_compute_node_matrices(projectile_handle);
-
-    /* contrail_set_state_for_object(contrail_handle, reset_points, dt):
-     * dt = (DAT_0028ab38) * (*(float*)0x2533c8 - current_time).
-     * Binary: FLD 0x2533c8; FSUB [EBP+0x10]; FMUL 0x28ab38;
-     *         FSTP [ESP]; PUSH 0; PUSH ECX; CALL 0x986d0.
-     * This is the push-then-fstp float argument pattern. */
-    contrail_set_state_for_object(
-      *(int *)(proj + 0xfc + *(int *)(proj + 0x1ec) * 4), 0,
-      (*(float *)0x2533c8u - current_time) * *(float *)0x28ab38u);
-  }
-
-  /* --- Block 3: Primary effect at projectile world position. --- */
-  object_get_world_position(projectile_handle, (vector3_t *)pos);
-  object_get_orientation(projectile_handle, fwd, up_buf);
-
-  /* MSVC stack overlap: up_buf at [EBP-0x48] is the second marker forward
-   * (forwards[1]) when the effects system indexes with marker_count=2. */
-  up_buf[0] = (*(float **)0x31fc50u)[0];
-  up_buf[1] = (*(float **)0x31fc50u)[1];
-  up_buf[2] = (*(float **)0x31fc50u)[2];
-  fwd[3] = up_buf[0];
-  fwd[4] = up_buf[1];
-  fwd[5] = up_buf[2];
-
-  effect_new_unattached_from_markers(effect_tag, *(int *)(proj + 0x74),
-                                     (float *)0, 2, effect_def, pos, fwd, 0.0f,
-                                     0.0f, 0.0f, 0.0f, 1.0f);
-
-  /* --- Block 4: Area damage (if parent valid and tag has splash entry). --- */
-  if ((*(int *)(proj + 0xcc) != -1) && (*(int *)(proj_tag + 0x220) != -1)) {
-    damage_data_new(damage_params, *(int *)(proj_tag + 0x220));
-
-    /* Set "area damage" flag bit 3 (at damage_params+4). */
-    *(uint32_t *)(damage_params + 4) |= 8u;
-
-    /* Forward only (no up needed). */
-    object_get_orientation(projectile_handle, fwd2, (float *)0);
-
-    /* Get world position for damage origin. */
-    object_get_world_position(projectile_handle, (vector3_t *)pos2);
-
-    /* Store position into damage_params (offsets from disasm:
-     * [EBP-0x80] = damage_params+0x28, [EBP-0x7c] = +0x2c, [EBP-0x78] = +0x30).
-     * Confirmed by: MOV [EBP-0x80],EDX; MOV [EBP-0x7c],EAX; MOV [EBP-0x78],ECX
-     * where damage_params base = [EBP-0xa8]. */
-    *(float *)(damage_params + 0x28) = pos2[0];
-    *(float *)(damage_params + 0x2c) = pos2[1];
-    *(float *)(damage_params + 0x30) = pos2[2];
-
-    /* Object-index and team fields.
-     * [EBP-0x9c] = damage_params+0x0c = obj+0x74 (object index).
-     * [EBP-0xa0] = damage_params+0x08 = obj+0x70.
-     * [EBP-0x98] = damage_params+0x10 = word at obj+0x68 (team). */
-    *(int *)(damage_params + 0x0c) = *(int *)(proj + 0x74);
-    *(int *)(damage_params + 0x08) = *(int *)(proj + 0x70);
-    *(short *)(damage_params + 0x10) = *(short *)(proj + 0x68);
-
-    object_cause_damage(
-      damage_params, *(int *)(proj + 0xcc), (short)-1,
-      (short)-1, /* dup-args-ok: verified 3x PUSH -1 at 0x000f8c5e/6c/7a */
-      (short)-1, 0u);
-  }
-
-  /* --- Block 5: Secondary detonation effect by per-slot index. ---
-   * proj->detonation_effect_index at proj+0x1e2 (short).
-   * If -1: skip. If negative (but not -1): use global null entry 0x31ed08.
-   * If out of range: same null entry. Otherwise: tag_block_get_element. */
-  det_idx = *(short *)(proj + 0x1e2);
-
-  if (det_idx != (short)-1) {
-    if (det_idx < 0) {
-      det_entry = (void *)0x31ed08u;
-    } else if ((int)det_idx >= *(int *)(proj_tag + 0x240)) {
-      det_entry = (void *)0x31ed08u;
-    } else {
-      det_entry =
-        tag_block_get_element((void *)(proj_tag + 0x240), (int)det_idx, 0xa0);
-    }
-
-    det_effect = *(int *)((char *)det_entry + 0x74);
-    effect_new_unattached_from_markers(det_effect, *(int *)(proj + 0x74),
-                                       (float *)0, 2, effect_def, pos, fwd,
-                                       0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-  }
-
-  /* --- Block 6: Notify AI of detonation position. ---
-   * FUN_000425c0(object_handle, position, effect_type, volume, count).
-   * proj_tag+0x1f0 = AI sound volume category (short).
-   * effect_type=2 (explosive), count=1. */
-  ai_volume = *(short *)(proj_tag + 0x1f0);
-  FUN_000425c0(projectile_handle, pos, (short)2, ai_volume, (short)1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc0, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x70726f6a\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl $0x25386f, -0x14(%%ebp)\n\t"
+      "movl $0x26ad40, -0x10(%%ebp)\n\t"
+      "movb 0x17c(%%ebx), %%al\n\t"
+      "movl 0x1b8(%%ebx), %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb $8, %%al\n\t"
+      "movl %%ebx, -0x8(%%ebp)\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "je .LFUN_000f8920_11\n\t"
+      "testb $0x40, 0x1dc(%%esi)\n\t"
+      "jne .LFUN_000f8920_11\n\t"
+      "movl 0xcc(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000f8920_11\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0xc8(%%ebx), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movl %%ebx, -0x18(%%ebp)\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "je .LFUN_000f8920_3\n\t"
+      ".LFUN_000f8920_1:\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "jne .LFUN_000f8920_2\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movb 0x1dc(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $0x40, %%cl\n\t"
+      "jne .LFUN_000f8920_2\n\t"
+      "incl -0x4(%%ebp)\n\t"
+      ".LFUN_000f8920_2:\n\t"
+      "movl 0xc4(%%ebx), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .LFUN_000f8920_1\n\t"
+      "movl -0x18(%%ebp), %%ebx\n\t"
+      ".LFUN_000f8920_3:\n\t"
+      "cmpw $0, 0x64(%%ebx)\n\t"
+      "jne .LFUN_000f8920_10\n\t"
+      "movl 0xcc(%%esi), %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0x1c8(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_000f8920_4\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000f8920_10\n\t"
+      ".LFUN_000f8920_4:\n\t"
+      "cmpw $6, -0x4(%%ebp)\n\t"
+      "jle .LFUN_000f8920_10\n\t"
+      "movl 0xc8(%%ebx), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_000f8920_9\n\t"
+      "jmp .LFUN_000f8920_5\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_000f8920_5:\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jne .LFUN_000f8920_8\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movb 0x1dc(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $0x40, %%cl\n\t"
+      "jne .LFUN_000f8920_8\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $6, -0x4(%%ebp)\n\t"
+      "movl %%eax, %%edi\n\t"
+      "jg .LFUN_000f8920_6\n\t"
+      "orl $0x40, 0x1dc(%%edi)\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "fmuls 0x1f0(%%edi)\n\t"
+      "fstps 0x1f0(%%edi)\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "fmuls 0x1f8(%%edi)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstps 0x1f8(%%edi)\n\t"
+      "jmp .LFUN_000f8920_7\n\t"
+      ".LFUN_000f8920_6:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%eax, 0x1f0(%%edi)\n\t"
+      "movl %%eax, 0x1f8(%%edi)\n\t"
+      ".LFUN_000f8920_7:\n\t"
+      "decl -0x4(%%ebp)\n\t"
+      ".LFUN_000f8920_8:\n\t"
+      "movl 0xc4(%%ebx), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .LFUN_000f8920_5\n\t"
+      ".LFUN_000f8920_9:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl 0x198(%%edx), %%eax\n\t"
+      "movl 0xcc(%%esi), %%edx\n\t"
+      "leal -0xb4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "call *%[c1412f0]\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1411c0]\n\t"
+      "leal 0xc(%%esi), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%ecx, -0x3c(%%ebp)\n\t"
+      "pushl $0\n\t"
+      "leal -0xb4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%edx, -0x38(%%ebp)\n\t"
+      "movl %%eax, -0x34(%%ebp)\n\t"
+      "call *%[otrans]\n\t"
+      "leal -0x3c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[oplace]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1446a0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      ".LFUN_000f8920_10:\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl -0x8(%%ebp), %%ebx\n\t"
+      ".LFUN_000f8920_11:\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000f8920_12\n\t"
+      "movl 0x1ec(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000f8920_12\n\t"
+      "cmpl $-1, 0xfc(%%esi,%%eax,4)\n\t"
+      "je .LFUN_000f8920_12\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c141b70]\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs 0x10(%%ebp)\n\t"
+      "movl 0x1ec(%%esi), %%eax\n\t"
+      "movl 0xfc(%%esi,%%eax,4), %%ecx\n\t"
+      "fmuls 0x28ab38\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c986d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_000f8920_12:\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1412f0]\n\t"
+      "leal -0xc0(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x54(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c141360]\n\t"
+      "movl -0x30(%%ebp), %%edx\n\t"
+      "movl -0x2c(%%ebp), %%eax\n\t"
+      "movl -0x28(%%ebp), %%ecx\n\t"
+      "pushl $1\n\t"
+      "pushl $0\n\t"
+      "movl %%edx, -0x24(%%ebp)\n\t"
+      "movl 0x31fc50, %%edx\n\t"
+      "movl %%ecx, -0x1c(%%ebp)\n\t"
+      "pushl $0\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "pushl $0\n\t"
+      "movl %%eax, -0x48(%%ebp)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "pushl $0\n\t"
+      "movl %%ecx, -0x44(%%ebp)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "leal -0x54(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edx, -0x40(%%ebp)\n\t"
+      "movl 0x74(%%esi), %%eax\n\t"
+      "leal -0x30(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $2\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c9f0e0]\n\t"
+      "movl 0xcc(%%esi), %%eax\n\t"
+      "addl $0x44, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000f8920_13\n\t"
+      "movl 0x220(%%ebx), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000f8920_13\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xa8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c136750]\n\t"
+      "movl -0xa4(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "leal -0x74(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "orl $8, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ecx, -0xa4(%%ebp)\n\t"
+      "call *%[c141360]\n\t"
+      "leal -0x8c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1412f0]\n\t"
+      "movl -0x8c(%%ebp), %%edx\n\t"
+      "movl -0x88(%%ebp), %%eax\n\t"
+      "movl -0x84(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "movl %%edx, -0x80(%%ebp)\n\t"
+      "movl 0x74(%%esi), %%edx\n\t"
+      "movl %%eax, -0x7c(%%ebp)\n\t"
+      "movl 0x70(%%esi), %%eax\n\t"
+      "pushl $-1\n\t"
+      "movl %%edx, -0x9c(%%ebp)\n\t"
+      "movl 0xcc(%%esi), %%edx\n\t"
+      "pushl $-1\n\t"
+      "movl %%eax, -0xa0(%%ebp)\n\t"
+      "movl %%ecx, -0x78(%%ebp)\n\t"
+      "movw 0x68(%%esi), %%cx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0xa8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movw %%cx, -0x98(%%ebp)\n\t"
+      "call *%[c137d20]\n\t"
+      "addl $0x34, %%esp\n\t"
+      ".LFUN_000f8920_13:\n\t"
+      "movw 0x1e2(%%esi), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_000f8920_16\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .LFUN_000f8920_14\n\t"
+      "movl 0x240(%%ebx), %%edx\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "leal 0x240(%%ebx), %%ecx\n\t"
+      "jge .LFUN_000f8920_14\n\t"
+      "pushl $0xa0\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_000f8920_15\n\t"
+      ".LFUN_000f8920_14:\n\t"
+      "movl $0x31ed08, %%eax\n\t"
+      ".LFUN_000f8920_15:\n\t"
+      "movl 0x74(%%eax), %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "leal -0x54(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x74(%%esi), %%edx\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $2\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c9f0e0]\n\t"
+      "addl $0x30, %%esp\n\t"
+      ".LFUN_000f8920_16:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x1f0(%%ebx), %%cx\n\t"
+      "pushl $1\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $2\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c425c0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bf8920_get), [tag] "m"(bf8920_tag), [gerun] "m"(bf8920_gerun), [gseed] "m"(bf8920_gseed), [rmreal] "m"(bf8920_rmreal), [c1412f0] "m"(bf8920_c1412f0), [c1411c0] "m"(bf8920_c1411c0), [otrans] "m"(bf8920_otrans), [oplace] "m"(bf8920_oplace), [c1446a0] "m"(bf8920_c1446a0), [c141b70] "m"(bf8920_c141b70), [c986d0] "m"(bf8920_c986d0), [c141360] "m"(bf8920_c141360), [c9f0e0] "m"(bf8920_c9f0e0), [c136750] "m"(bf8920_c136750), [c137d20] "m"(bf8920_c137d20), [elem] "m"(bf8920_elem), [c425c0] "m"(bf8920_c425c0)
+      : "memory");
 }
+#else
+#error "FUN_000f8920: clang naked draft required"
+#endif
+
 
 /* Initialise a newly-created projectile object.
  *

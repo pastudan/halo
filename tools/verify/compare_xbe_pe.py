@@ -664,6 +664,15 @@ def main() -> int:
         ("FUN_001a0be0", 0x1a0be0, 0x1a0da9),
         ("structure_test_vector", 0x198cb0, 0x198f0a),
         ("game_engine_get_score_hud_text", 0xac4e0, 0xac9d8),
+        # gameplay wave 57 (2026-07-26)
+        ("FUN_001a6e20", 0x1a6e20, 0x1a6ee1),
+        ("unit_adjust_projectile_ray", 0x1acf90, 0x1ad051),
+        ("FUN_0013ab20", 0x13ab20, 0x13aec9),
+        ("FUN_0013cf50", 0x13cf50, 0x13d567),
+        ("FUN_00134e80", 0x134e80, 0x135209),
+        ("FUN_001a6ef0", 0x1a6ef0, 0x1a70c1),
+        ("FUN_000f8920", 0xf8920, 0xf8d27),
+        ("FUN_001b2780", 0x1b2780, 0x1b2b7d),
     ]
 
     xbe = Xbe.from_file(args.xbe)
