@@ -398,13 +398,26 @@ __attribute__((naked)) { decl.replace(name, 'THUNK('+name+')') }
 							continue
 						# Reject prose / comment fragments agents sometimes write into
 						# kb.json "decl" (poisons every TU that includes decl.h).
+						# Nested parens are allowed (function-pointer params, e.g. qsort).
 						_ds = decl_str.strip()
+						_bal = 0
+						_parens_ok = True
+						for _ch in _ds:
+							if _ch == '(':
+								_bal += 1
+							elif _ch == ')':
+								_bal -= 1
+								if _bal < 0:
+									_parens_ok = False
+									break
+						if _bal != 0:
+							_parens_ok = False
 						if (
 							'\n' in _ds
 							or _ds.startswith('*')
 							or not _ds.endswith(';')
-							or _ds.count('(') != 1
-							or _ds.count(')') != 1
+							or not _parens_ok
+							or '(' not in _ds
 							or any(
 								x in _ds
 								for x in (

@@ -34268,7 +34268,7 @@
         },
         {
           "addr": "0x31440",
-          "decl": "void actor_berserk(int actor_handle, char enable);",
+          "decl": "void actor_berserk(int actor_handle, int berserk_flag);",
           "ported": true
         },
         {
@@ -37679,7 +37679,7 @@
         },
         {
           "addr": "0x120470",
-          "decl": "void FUN_00120470(void);",
+          "decl": "void FUN_00120470(void *ctrl, int datum_handle);",
           "ported": false
         },
         {
@@ -37734,7 +37734,7 @@
         },
         {
           "addr": "0x120930",
-          "decl": "void quaternion_decompress_6byte_renormalized(void);",
+          "decl": "void quaternion_decompress_6byte_renormalized(void *compressed, float *out);",
           "ported": false
         },
         {
@@ -37769,7 +37769,7 @@
         },
         {
           "addr": "0x120ee0",
-          "decl": "void animation_frame_get_xy_translation(void);",
+          "decl": "void animation_frame_get_xy_translation(void *animation, short frame_index, float *out_xy);",
           "ported": false
         },
         {
@@ -37854,7 +37854,7 @@
         },
         {
           "addr": "0x123e20",
-          "decl": "void animation_get_root_matrix(void);",
+          "decl": "void *animation_get_root_matrix(void *anim_graph, int index);",
           "ported": false
         },
         {
