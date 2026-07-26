@@ -3068,103 +3068,23 @@ void FUN_000c2b90(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, 0);
 }
 
-/* FUN_000c2bd0 (0xc2bd0) — XBE naked draft (batch 181). */
-#if defined(__clang__)
-static int (*const bc2bd0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static char (*const bc2bd0_cd0400)(char visible) = scripted_show_hud;
-static void (*const bc2bd0_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c2bd0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c2bd0 (0xc2bd0) — readable C lift (HS value-return wrapper). */
+void FUN_000c2bd0(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c2bd0_1\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cd0400]\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000c2bd0_1:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bc2bd0_ccc560), [cd0400] "m"(bc2bd0_cd0400), [ccbf80] "m"(bc2bd0_ccbf80)
-      : "memory");
+  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum, (int)(unsigned char)scripted_show_hud((char)(uint8_t)*((unsigned char *)args + 0)));
+  }
 }
-#else
-#error "FUN_000c2bd0: clang naked draft required"
-#endif
 
-
-/* FUN_000c2c20 (0xc2c20) — XBE naked draft (batch 181). */
-#if defined(__clang__)
-static int (*const bc2c20_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static char (*const bc2c20_cd0420)(char visible) = scripted_show_hud_help_text;
-static void (*const bc2c20_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c2c20(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c2c20 (0xc2c20) — readable C lift (HS value-return wrapper). */
+void FUN_000c2c20(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c2c20_1\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cd0420]\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000c2c20_1:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bc2c20_ccc560), [cd0420] "m"(bc2c20_cd0420), [ccbf80] "m"(bc2c20_ccbf80)
-      : "memory");
+  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    hs_return(thread_datum, (int)(unsigned char)scripted_show_hud_help_text((char)(uint8_t)*((unsigned char *)args + 0)));
+  }
 }
-#else
-#error "FUN_000c2c20: clang naked draft required"
-#endif
-
 
 /* FUN_000c2c70 (0xc2c70) — readable C lift (HS evaluate wrapper). */
 void FUN_000c2c70(int16_t function_index, int thread_datum, char init)

@@ -11270,12 +11270,12 @@
         {
           "addr": "0xc2bd0",
           "decl": "void FUN_000c2bd0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc2c20",
           "decl": "void FUN_000c2c20(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc2c70",

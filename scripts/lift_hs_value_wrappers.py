@@ -262,39 +262,37 @@ def try_emit(insns: list[str], name: str, name_by: dict, decl_by: dict) -> str |
 
     action_part = mid[: hr_i - 2]
 
-    # Pattern: ... call F; mov byte/word/dword [ebp-4], al/ax/eax; mov ecx,[ebp-4]; push ecx
-    # so ret_push is ecx from slot
-    if ret_push[1] == "ecx" and len(action_part) >= 3:
-        # strip trailing mov ecx, [ebp-4]; and store to [ebp-4]
+    # Pattern: call F; mov byte/word/dword [ebp-4], al/ax/eax; mov r32,[ebp-4]; push r32
+    if ret_push[1] in ("eax", "ecx", "edx") and len(action_part) >= 2:
+        ap = list(action_part)
+        # strip mov r32, [ebp-4]
         if (
-            action_part[-1][0] == "mov"
-            and "ebp - 4" in action_part[-1][1]
-            and action_part[-1][1].startswith("ecx,")
+            ap
+            and ap[-1][0] == "mov"
+            and "ebp - 4" in ap[-1][1]
+            and ap[-1][1].startswith(ret_push[1] + ",")
         ):
-            action_part = action_part[:-1]
-        if action_part and action_part[-1][0] == "mov" and "ptr [ebp - 4]" in action_part[-1][1]:
-            # store return of call into slot — previous should be call
-            store = action_part[-1]
-            action_part = action_part[:-1]
-            call = parse_arg_loads(action_part, decl_by, name_by)
-            if not call:
-                return None
-            # width from store
-            if "byte ptr" in store[1]:
-                cast = "(int)(unsigned char)"
-            elif "word ptr" in store[1]:
-                cast = "(int)(unsigned short)"
-            else:
-                cast = "(int)"
-            return (
-                f"void {name}(int16_t function_index, int thread_datum, char init)\n"
-                f"{{\n"
-                f"  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);\n"
-                f"  if (args) {{\n"
-                f"    hs_return(thread_datum, {cast}{call});\n"
-                f"  }}\n"
-                f"}}\n"
-            )
+            ap = ap[:-1]
+        if ap and ap[-1][0] == "mov" and "ptr [ebp - 4]" in ap[-1][1]:
+            store = ap[-1]
+            ap = ap[:-1]
+            call = parse_arg_loads(ap, decl_by, name_by)
+            if call:
+                if "byte ptr" in store[1]:
+                    cast = "(int)(unsigned char)"
+                elif "word ptr" in store[1]:
+                    cast = "(int)(unsigned short)"
+                else:
+                    cast = "(int)"
+                return (
+                    f"void {name}(int16_t function_index, int thread_datum, char init)\n"
+                    f"{{\n"
+                    f"  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);\n"
+                    f"  if (args) {{\n"
+                    f"    hs_return(thread_datum, {cast}{call});\n"
+                    f"  }}\n"
+                    f"}}\n"
+                )
 
     # Pattern: push eax after call (return value in eax) — ret_push == eax
     if ret_push[1] == "eax":
