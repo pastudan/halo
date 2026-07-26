@@ -11515,7 +11515,8 @@
         {
           "addr": "0xc3700",
           "decl": "void FUN_000c3700(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000c3700"
         },
         {
           "addr": "0xc3760",
