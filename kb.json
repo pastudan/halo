@@ -12264,7 +12264,7 @@
         {
           "addr": "0xc9a20",
           "decl": "void FUN_000c9a20(int16_t name_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9a50",
