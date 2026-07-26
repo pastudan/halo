@@ -11475,7 +11475,7 @@
         {
           "addr": "0xc35b0",
           "decl": "void FUN_000c35b0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc3600",
@@ -11485,7 +11485,7 @@
         {
           "addr": "0xc3620",
           "decl": "void FUN_000c3620(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc3660",
@@ -11495,7 +11495,7 @@
         {
           "addr": "0xc36a0",
           "decl": "void FUN_000c36a0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc3700",
@@ -11505,7 +11505,7 @@
         {
           "addr": "0xc3760",
           "decl": "void FUN_000c3760(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc37b0",
@@ -11520,7 +11520,7 @@
         {
           "addr": "0xc3810",
           "decl": "void FUN_000c3810(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc3850",
@@ -11565,7 +11565,7 @@
         {
           "addr": "0xc39b0",
           "decl": "void FUN_000c39b0(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc39f0",
