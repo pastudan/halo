@@ -752,14 +752,15 @@ def find_naked_block_ai(text: str, name: str, addr: int):
         return span
     addr_hex = f"0x{addr:x}"
     for nm in (name, f"FUN_{addr:08x}", f"FUN_{addr:08X}"):
-        # /* ... 0xADDR ... */ + optional #if naked + body through matching #endif or }
+        # Tail-call naked: #if i386 asm jmp; #else C; #endif \n}
         pat = re.compile(
-            rf"/\*[^*]*\b{re.escape(addr_hex)}\b[\s\S]*?"
-            rf"(?:#if defined\(__i386__\)[\s\S]*?#endif\s*\n)?"
-            rf"(?:__attribute__\(\(naked[^\)]*\)\)\s*\n)?"
-            rf"(?:#endif\s*\n)?"
-            rf"[\w\s\*]+?\b{re.escape(nm)}\s*\([\s\S]*?"
-            rf"(?:#if defined\(__i386__\)[\s\S]*?#else\s*[\s\S]*?#endif\s*\n|\n\}}\s*\n)",
+            rf"/\*[^*]*\b{re.escape(addr_hex)}\b[^*]*\*/\s*"
+            rf"#if defined\(__i386__\)[^\n]*\n"
+            rf"__attribute__\(\(naked\)\)\s*\n"
+            rf"#endif\s*\n"
+            rf"[\w\s\*]+?\b{re.escape(nm)}\s*\([^{{]*\)\s*\{{\s*"
+            rf"#if defined\(__i386__\)[\s\S]*?#else[\s\S]*?#endif\s*\n"
+            rf"\}}\s*\n",
             re.M | re.I,
         )
         m = pat.search(text)

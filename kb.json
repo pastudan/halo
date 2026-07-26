@@ -36151,8 +36151,9 @@
         },
         {
           "addr": "0x64fa0",
-          "decl": "void FUN_00064fa0(void);",
-          "ported": false
+          "decl": "int FUN_00064fa0(void *prop@<edx>, int a1);",
+          "ported": true,
+          "name": "FUN_00064fa0"
         },
         {
           "addr": "0x64fe0",
