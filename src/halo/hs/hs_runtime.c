@@ -5039,106 +5039,380 @@ void render_debug_scripting(void)
   draw_string_set_tab_stops(0, 0);
 }
 
+/* render_debug_trigger_volumes (0xcbb40) — XBE naked draft (batch 107). */
+#if defined(__clang__)
+static scenario_t * (*const bcbb40_c18e380)(void) = global_scenario_get;
+static void *(*const bcbb40_elem)(void *, int, int) = tag_block_get_element;
+static void (*const bcbb40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bcbb40_exitfn)(int) = system_exit;
+static void (*const bcbb40_m4x3)(void *, float *, float *, float *) = matrix4x3_from_forward_up_position;
+static void (*const bcbb40_mscale)(float *, float *, float *) = matrix_scale_transform_vector;
+static void (*const bcbb40_c189ba0)(float *points, short count, void *color) = FUN_00189ba0;
+static void (*const bcbb40_c188a90)(float *points, short count, void *color) = FUN_00188a90;
+static bool (*const bcbb40_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
+static void (*const bcbb40_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
+
+__attribute__((naked, noinline))
 void render_debug_trigger_volumes(void)
 {
-  void *block;
-  int count;
-  int index;
-  char *elem;
-  int16_t shape;
-  float matrix[12];
-  float scale[3];
-  float position[3];
-  float corners[2][3];
-  float draw_pts[6];
-  float color[4];
-  float label_pos[3];
-  float direction[3];
-  int16_t collision[4];
-  int face;
-  int edge;
-  uint32_t *flag_word;
-  int highlight;
-  void *color_ptr;
-
-  if (*(uint8_t *)0x5aa69c == 0)
-    return;
-
-  block = (char *)global_scenario_get() + 0x360;
-  count = *(int *)block;
-  for (index = 0; index < count; index++) {
-    elem = (char *)tag_block_get_element(block, index, 0x60);
-    shape = *(int16_t *)elem;
-    if (shape == 0) {
-      csmemcpy(matrix, *(void **)0x31fc60, 0x30);
-      position[0] = *(float *)(elem + 0x48);
-      position[1] = *(float *)(elem + 0x50);
-      position[2] = *(float *)(elem + 0x58);
-      scale[0] = *(float *)(elem + 0x4c) - position[0];
-      scale[1] = *(float *)(elem + 0x54) - position[1];
-      scale[2] = *(float *)(elem + 0x5c) - position[2];
-    } else if (shape == 1) {
-      matrix4x3_from_forward_up_position(
-          matrix, (float *)(elem + 0x48), (float *)(elem + 0x3c),
-          (float *)(elem + 0x30));
-      matrix_scale_transform_vector(matrix, (float *)(elem + 0x54), scale);
-    } else {
-      display_assert((const char *)0x2805bc, (const char *)0x255ee8, 0x213, 1);
-      system_exit(-1);
-    }
-
-    flag_word = (uint32_t *)(0x5aa6a0 + ((index >> 5) * 4));
-    highlight = (*flag_word & (1U << (index & 0x1f))) != 0;
-
-    for (face = 0; face < 6; face++) {
-      for (edge = 0; edge < 4; edge++) {
-        corners[0][0] = corners[1][0] = 0.0f;
-        corners[0][1] = corners[1][1] = 0.0f;
-        corners[0][2] = corners[1][2] = 0.0f;
-        if ((face & 1) != 0) {
-          corners[0][face / 2] = scale[face / 2];
-          corners[1][face / 2] = scale[face / 2];
-        }
-        matrix_scale_transform_vector(matrix, corners[0], draw_pts);
-        matrix_scale_transform_vector(matrix, corners[1], draw_pts + 3);
-        draw_pts[0] += position[0];
-        draw_pts[1] += position[1];
-        draw_pts[2] += position[2];
-        draw_pts[3] += position[0];
-        draw_pts[4] += position[1];
-        draw_pts[5] += position[2];
-
-        if (!highlight) {
-          color_ptr = *(void **)0x2ee6d8;
-          FUN_00189ba0(draw_pts, 4, color_ptr);
-        } else {
-          color[0] = 0.15f;
-          color[1] = 0.10f;
-          color[2] = 0.05f;
-          color[3] = 1.0f;
-          FUN_00189ba0(draw_pts, 4, color);
-          FUN_00188a90(draw_pts, 4, color);
-        }
-      }
-    }
-
-    label_pos[0] = scale[0] * *(float *)0x253398 + position[0];
-    label_pos[1] = scale[1] * *(float *)0x253398 + position[1];
-    label_pos[2] = scale[2] * *(float *)0x253398 + position[2];
-    direction[0] = label_pos[0] - *(float *)0x506550;
-    direction[1] = label_pos[1] - *(float *)0x506554;
-    direction[2] = label_pos[2] - *(float *)0x506558;
-    direction[0] *= *(float *)0x255ed4;
-    direction[1] *= *(float *)0x255ed4;
-    direction[2] *= *(float *)0x255ed4;
-
-    if (!FUN_0014df70(0xc2ad, (float *)0x506550, direction, -1, collision))
-      continue;
-
-    color_ptr = highlight ? *(void **)0x2ee6e0 : *(void **)0x2ee6c4;
-    FUN_00189cb0(1, label_pos, elem + 4, (int)color_ptr);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x120, %%esp\n\t"
+      "movb 0x5aa69c, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lrender_debug_trigger_volumes_15\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c18e380]\n\t"
+      "movl 0x360(%%eax), %%ecx\n\t"
+      "addl $0x360, %%eax\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "movl %%ebx, -0x6c(%%ebp)\n\t"
+      "movl %%eax, -0x70(%%ebp)\n\t"
+      "jle .Lrender_debug_trigger_volumes_14\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jmp .Lrender_debug_trigger_volumes_2\n\t"
+      ".Lrender_debug_trigger_volumes_1:\n\t"
+      "movl -0x70(%%ebp), %%eax\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lrender_debug_trigger_volumes_2:\n\t"
+      "pushl $0x60\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movswl (%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "subl $0, %%ecx\n\t"
+      "movl %%eax, -0x68(%%ebp)\n\t"
+      "je .Lrender_debug_trigger_volumes_4\n\t"
+      "decl %%ecx\n\t"
+      "je .Lrender_debug_trigger_volumes_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x213\n\t"
+      "pushl $0x2805bc\n\t"
+      "pushl $0x255ee8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .Lrender_debug_trigger_volumes_5\n\t"
+      ".Lrender_debug_trigger_volumes_3:\n\t"
+      "leal 0x54(%%eax), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "movl (%%edx), %%esi\n\t"
+      "movl %%esi, -0x24(%%ebp)\n\t"
+      "movl 0x4(%%edx), %%esi\n\t"
+      "movl %%esi, -0x20(%%ebp)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, -0x1c(%%ebp)\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0x30(%%ebp)\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl %%edx, -0x2c(%%ebp)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "leal 0x3c(%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%ecx, -0x28(%%ebp)\n\t"
+      "leal 0x30(%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x48, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xd0(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[m4x3]\n\t"
+      "leal -0x30(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x24(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0xd0(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[mscale]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "jmp .Lrender_debug_trigger_volumes_5\n\t"
+      ".Lrender_debug_trigger_volumes_4:\n\t"
+      "movl 0x31fc60, %%esi\n\t"
+      "movl $0xd, %%ecx\n\t"
+      "leal -0xd0(%%ebp), %%edi\n\t"
+      "rep movsl\n\t"
+      "flds 0x58(%%eax)\n\t"
+      "flds 0x50(%%eax)\n\t"
+      "movl 0x48(%%eax), %%ecx\n\t"
+      "movl %%ecx, -0xa8(%%ebp)\n\t"
+      "fstps -0xa4(%%ebp)\n\t"
+      "fstps -0xa0(%%ebp)\n\t"
+      "flds 0x5c(%%eax)\n\t"
+      "fsubs 0x58(%%eax)\n\t"
+      "flds 0x54(%%eax)\n\t"
+      "fsubs 0x50(%%eax)\n\t"
+      "flds 0x4c(%%eax)\n\t"
+      "fsubs 0x48(%%eax)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "movl -0x24(%%ebp), %%edx\n\t"
+      "movl %%edx, -0x30(%%ebp)\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x2c(%%ebp)\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "movl -0x1c(%%ebp), %%ecx\n\t"
+      "movl %%ecx, -0x28(%%ebp)\n\t"
+      ".Lrender_debug_trigger_volumes_5:\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "sarl $5, %%ebx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edi\n\t"
+      "leal 0x5aa6a0(,%%ebx,4), %%edx\n\t"
+      "shll %%cl, %%edi\n\t"
+      "movl %%edx, -0x8c(%%ebp)\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movl $6, -0x64(%%ebp)\n\t"
+      "jmp .Lrender_debug_trigger_volumes_6\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lrender_debug_trigger_volumes_6:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl %%esi, %%eax\n\t"
+      "cdq\n\t"
+      "subl %%edx, %%eax\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "sarl $1, %%eax\n\t"
+      "andl $0x80000001, %%ecx\n\t"
+      "movl $0, -0x18(%%ebp)\n\t"
+      "jns .Lrender_debug_trigger_volumes_7\n\t"
+      "decl %%ecx\n\t"
+      "orl $0xfffffffe, %%ecx\n\t"
+      "incl %%ecx\n\t"
+      ".Lrender_debug_trigger_volumes_7:\n\t"
+      "testw %%cx, %%cx\n\t"
+      "movl $3, %%ebx\n\t"
+      "je .Lrender_debug_trigger_volumes_8\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "fadds -0xa8(%%ebp)\n\t"
+      "leal 0x1(%%ecx), %%eax\n\t"
+      "cdq\n\t"
+      "idivl %%ebx\n\t"
+      "fstps -0x60(%%ebp)\n\t"
+      "flds -0x2c(%%ebp)\n\t"
+      "fadds -0xa4(%%ebp)\n\t"
+      "fstps -0x5c(%%ebp)\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fadds -0xa0(%%ebp)\n\t"
+      "fstps -0x58(%%ebp)\n\t"
+      "leal 0x2(%%ecx), %%eax\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "shll $2, %%edx\n\t"
+      "flds -0x24(%%ebp,%%edx,1)\n\t"
+      "fchs\n\t"
+      "fstps -0x18(%%ebp,%%edx,1)\n\t"
+      "cdq\n\t"
+      "idivl %%ecx\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "leal -0xd0(%%ebp), %%ecx\n\t"
+      "shll $2, %%edx\n\t"
+      "flds -0x24(%%ebp,%%edx,1)\n\t"
+      "fchs\n\t"
+      "fstps -0xc(%%ebp,%%edx,1)\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[mscale]\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xd0(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "jmp .Lrender_debug_trigger_volumes_9\n\t"
+      ".Lrender_debug_trigger_volumes_8:\n\t"
+      "movl -0xa4(%%ebp), %%ecx\n\t"
+      "movl -0xa8(%%ebp), %%edx\n\t"
+      "movl %%edx, -0x60(%%ebp)\n\t"
+      "movl -0xa0(%%ebp), %%edx\n\t"
+      "movl %%ecx, -0x5c(%%ebp)\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "movl %%edx, -0x58(%%ebp)\n\t"
+      "leal 0x1(%%ecx), %%eax\n\t"
+      "cdq\n\t"
+      "idivl %%ebx\n\t"
+      "shll $2, %%edx\n\t"
+      "movl -0x24(%%ebp,%%edx,1), %%eax\n\t"
+      "movl %%eax, -0x18(%%ebp,%%edx,1)\n\t"
+      "leal 0x2(%%ecx), %%eax\n\t"
+      "cdq\n\t"
+      "movl $3, %%ecx\n\t"
+      "idivl %%ecx\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "shll $2, %%edx\n\t"
+      "movl -0x24(%%ebp,%%edx,1), %%eax\n\t"
+      "movl %%eax, -0xc(%%ebp,%%edx,1)\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0xd0(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[mscale]\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0xd0(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      ".Lrender_debug_trigger_volumes_9:\n\t"
+      "call *%[mscale]\n\t"
+      "flds -0x60(%%ebp)\n\t"
+      "fadds -0x18(%%ebp)\n\t"
+      "movl -0x8c(%%ebp), %%ebx\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%edi, %%eax\n\t"
+      "fstps -0x54(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fadds -0x5c(%%ebp)\n\t"
+      "fstps -0x50(%%ebp)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fadds -0x58(%%ebp)\n\t"
+      "fstps -0x4c(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fadds -0x54(%%ebp)\n\t"
+      "fstps -0x48(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fadds -0x50(%%ebp)\n\t"
+      "fstps -0x44(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fadds -0x4c(%%ebp)\n\t"
+      "fstps -0x40(%%ebp)\n\t"
+      "flds -0x48(%%ebp)\n\t"
+      "fsubs -0x18(%%ebp)\n\t"
+      "fstps -0x3c(%%ebp)\n\t"
+      "flds -0x44(%%ebp)\n\t"
+      "fsubs -0x14(%%ebp)\n\t"
+      "fstps -0x38(%%ebp)\n\t"
+      "flds -0x40(%%ebp)\n\t"
+      "fsubs -0x10(%%ebp)\n\t"
+      "fstps -0x34(%%ebp)\n\t"
+      "je .Lrender_debug_trigger_volumes_10\n\t"
+      "movl 0x2ee6d8, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x60(%%ebp), %%edx\n\t"
+      "pushl $4\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c189ba0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .Lrender_debug_trigger_volumes_11\n\t"
+      ".Lrender_debug_trigger_volumes_10:\n\t"
+      "movl 0x2ee6d8, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, -0x9c(%%ebp)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, -0x98(%%ebp)\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl %%ecx, -0x94(%%ebp)\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "movl 0x2ee6d0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x60(%%ebp), %%ecx\n\t"
+      "pushl $4\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%edx, -0x90(%%ebp)\n\t"
+      "movl $0x3e19999a, -0x9c(%%ebp)\n\t"
+      "call *%[c189ba0]\n\t"
+      "leal -0x9c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x60(%%ebp), %%eax\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c188a90]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".Lrender_debug_trigger_volumes_11:\n\t"
+      "movl -0x64(%%ebp), %%eax\n\t"
+      "incl %%esi\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0x64(%%ebp)\n\t"
+      "jne .Lrender_debug_trigger_volumes_6\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "leal -0x120(%%ebp), %%ecx\n\t"
+      "fmuls 0x253398\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $-1\n\t"
+      "leal -0x88(%%ebp), %%edx\n\t"
+      "fadds -0xa8(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x506550\n\t"
+      "pushl $0xc2ad\n\t"
+      "fstps -0x7c(%%ebp)\n\t"
+      "flds -0x2c(%%ebp)\n\t"
+      "fmuls 0x253398\n\t"
+      "fadds -0xa4(%%ebp)\n\t"
+      "fstps -0x78(%%ebp)\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fmuls 0x253398\n\t"
+      "fadds -0xa0(%%ebp)\n\t"
+      "fstps -0x74(%%ebp)\n\t"
+      "flds -0x7c(%%ebp)\n\t"
+      "fsubs 0x506550\n\t"
+      "flds -0x78(%%ebp)\n\t"
+      "fsubs 0x506554\n\t"
+      "flds -0x74(%%ebp)\n\t"
+      "fsubs 0x506558\n\t"
+      "fstps -0x80(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls 0x255ed4\n\t"
+      "fstps -0x88(%%ebp)\n\t"
+      "fmuls 0x255ed4\n\t"
+      "fstps -0x84(%%ebp)\n\t"
+      "flds -0x80(%%ebp)\n\t"
+      "fmuls 0x255ed4\n\t"
+      "fstps -0x80(%%ebp)\n\t"
+      "call *%[ray]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lrender_debug_trigger_volumes_13\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl -0x68(%%ebp), %%ecx\n\t"
+      "addl $4, %%ecx\n\t"
+      "testl %%edi, %%eax\n\t"
+      "movl 0x2ee6e0, %%eax\n\t"
+      "leal -0x7c(%%ebp), %%edx\n\t"
+      "jne .Lrender_debug_trigger_volumes_12\n\t"
+      "movl 0x2ee6c4, %%eax\n\t"
+      ".Lrender_debug_trigger_volumes_12:\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $1\n\t"
+      "call *%[c189cb0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lrender_debug_trigger_volumes_13:\n\t"
+      "movl -0x6c(%%ebp), %%eax\n\t"
+      "incl %%eax\n\t"
+      "movswl %%ax, %%ebx\n\t"
+      "movl %%eax, -0x6c(%%ebp)\n\t"
+      "movl -0x70(%%ebp), %%eax\n\t"
+      "cmpl (%%eax), %%ebx\n\t"
+      "jl .Lrender_debug_trigger_volumes_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      ".Lrender_debug_trigger_volumes_14:\n\t"
+      "popl %%ebx\n\t"
+      ".Lrender_debug_trigger_volumes_15:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(bcbb40_c18e380), [elem] "m"(bcbb40_elem), [assert] "m"(bcbb40_assert), [exitfn] "m"(bcbb40_exitfn), [m4x3] "m"(bcbb40_m4x3), [mscale] "m"(bcbb40_mscale), [c189ba0] "m"(bcbb40_c189ba0), [c188a90] "m"(bcbb40_c188a90), [ray] "m"(bcbb40_ray), [c189cb0] "m"(bcbb40_c189cb0)
+      : "memory");
 }
+#else
+#error "render_debug_trigger_volumes: clang naked draft required"
+#endif
+
 
 void hs_evaluate_wake(int16_t function_index, int thread_datum, char init)
 {
