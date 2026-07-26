@@ -12546,58 +12546,20 @@ void FUN_00052ab0(void)
 #endif
 
 
-/* FUN_00052b60 (0x52b60) — XBE naked draft (batch 161). */
-#if defined(__clang__)
-static void (*const b52b60_c59b10)(void *iter, char flag) = encounter_iterator_next;
-static int (*const b52b60_c59b50)(void *iter) = FUN_00059b50;
-static void (*const b52b60_c4c920)(int actor_handle, char debug_selected, void *debug_context) = FUN_0004c920;
-
-__attribute__((naked, noinline))
-void FUN_00052b60(char reverse_iteration __attribute__((unused)))
+/* FUN_00052b60 (0x52b60) — readable C lift. */
+void FUN_00052b60(char reverse_iteration)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "testb %%dl, %%dl\n\t"
-      "sete %%al\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c59b10]\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c59b50]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00052b60_2\n\t"
-      ".LFUN_00052b60_1:\n\t"
-      "movl 0x5ac9f8, %%ecx\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "sete %%cl\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c4c920]\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c59b50]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00052b60_1\n\t"
-      ".LFUN_00052b60_2:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c59b10] "m"(b52b60_c59b10), [c59b50] "m"(b52b60_c59b50), [c4c920] "m"(b52b60_c4c920)
-      : "memory");
-}
-#else
-#error "FUN_00052b60: clang naked draft required"
-#endif
+  char iter[0x1c];
+  int actor;
+  char selected;
 
+  encounter_iterator_next(iter, (char)(reverse_iteration == 0));
+  while (FUN_00059b50(iter)) {
+    actor = *(int *)(iter + 0x14);
+    selected = (char)(actor == *(int *)0x5ac9f8);
+    FUN_0004c920(actor, selected, 0);
+  }
+}
 
 /* FUN_00052bb0 (0x52bb0) — XBE naked draft (batch 104). */
 #if defined(__clang__)

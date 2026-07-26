@@ -34966,8 +34966,8 @@
         },
         {
           "addr": "0x52b60",
-          "decl": "void FUN_00052b60(char reverse_iteration);",
-          "ported": false
+          "decl": "void FUN_00052b60(char reverse_iteration @<dl>);",
+          "ported": true
         },
         {
           "addr": "0x52bb0",
