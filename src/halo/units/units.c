@@ -638,38 +638,61 @@ int FUN_001a6820(int param_1, char param_2)
     (int *)tag_block_get_element(block, (int)(short)iVar1, 0x30));
 }
 
-/* FUN_001a6870 (0x1a6870)
- *
- * Returns verify_tag_reference result for the animation at index bool(param_3)
- * (0 or 1, clamped) from a nested tag block. First gets element param_2 from
- * the block at param_1+0x2e4 (stride 0x11c), then reads sub-block at +0xdc.
- * Returns -1 if clamped index is negative.
- *
- * Confirmed: MOVSX EAX,CX (param_2); ADD ECX,0x2e4; CALL tag_block_get_element;
- * MOV DL,[ebp+0x10] (param_3); XOR ECX,ECX; TEST DL,DL; SETNE CL;
- * LEA EDX,[EAX+0xdc]; MOV EAX,[EDX]; DEC EAX; MOVSX ECX,CX; ...
- */
-int FUN_001a6870(int param_1, short param_2, char param_3)
-{
-  int iVar1;
-  int iVar2;
-  int *block;
-  int bVal;
+/* FUN_001a6870 (0x1a6870) — XBE naked draft (batch 68). */
+#if defined(__clang__)
+static void *(*const b1a6870_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b1a6870_c19b120)(int *tag_ref) = verify_tag_reference;
 
-  iVar1 =
-    (int)tag_block_get_element((void *)(param_1 + 0x2e4), (int)param_2, 0x11c);
-  bVal = (int)(short)(unsigned short)(param_3 != '\0');
-  iVar2 = *(int *)(iVar1 + 0xdc) - 1;
-  block = (int *)(iVar1 + 0xdc);
-  if (bVal <= iVar2) {
-    iVar2 = bVal;
-  }
-  if ((short)iVar2 < 0) {
-    return -1;
-  }
-  return (int)verify_tag_reference(
-    (int *)tag_block_get_element(block, (int)(short)iVar2, 0x30));
+__attribute__((naked, noinline))
+int FUN_001a6870(int param_1 __attribute__((unused)), short param_2 __attribute__((unused)), char param_3 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0x11c\n\t"
+      "pushl %%eax\n\t"
+      "addl $0x2e4, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movb 0x10(%%ebp), %%dl\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%dl, %%dl\n\t"
+      "setne %%cl\n\t"
+      "leal 0xdc(%%eax), %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "decl %%eax\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jg .LFUN_001a6870_1\n\t"
+      "movl %%ecx, %%eax\n\t"
+      ".LFUN_001a6870_1:\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jge .LFUN_001a6870_2\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001a6870_2:\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "pushl $0x30\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19b120]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b1a6870_elem), [c19b120] "m"(b1a6870_c19b120)
+      : "memory");
 }
+#else
+#error "FUN_001a6870: clang naked draft required"
+#endif
+
 
 /* FUN_001a6bc0 (0x1a6bc0)
  *
@@ -1702,43 +1725,62 @@ int FUN_001a7650(void *tag_data __attribute__((unused)), int dialogue_type __att
 #endif
 
 
-/* FUN_001a7730 (0x1a7730) — unit_dialogue_select_variant
- *
- * Selects a dialogue variant for the unit. Queries FUN_001a7650 with the
- * unit's current dialogue type (+0x6e). If that fails (returns -1), tries
- * type 0 (default). If that also fails, tries type -1 (wildcard).
- * Stores the resulting dialogue tag index at unit+0x334.
- *
- * Confirmed: @eax = unit_handle (PUSH EAX at 001a7734).
- * Confirmed: FUN_001a7650 takes @ecx = tag data pointer, stack param = type.
- * Confirmed: three fallback calls in sequence.
- * Confirmed: result stored at [ESI + 0x334].
- */
-void FUN_001a7730(int unit_handle)
+/* FUN_001a7730 (0x1a7730) — XBE naked draft (batch 68). */
+#if defined(__clang__)
+static void *(*const b1a7730_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a7730_tag)(int, int) = tag_get;
+static int (*const b1a7730_c1a7650)(void *tag_data, int dialogue_type) = FUN_001a7650;
+
+__attribute__((naked, noinline))
+void FUN_001a7730(int unit_handle __attribute__((unused)))
 {
-  char *unit;
-  char *tag_data;
-  int result;
-  int16_t dialogue_type;
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  tag_data = (char *)tag_get(0x756e6974, *(int *)unit);
-
-  dialogue_type = *(int16_t *)(unit + 0x6e);
-  if (dialogue_type > 0) {
-    result = FUN_001a7650(tag_data, (int)dialogue_type);
-    if (result != -1) {
-      *(int *)(unit + 0x334) = result;
-      return;
-    }
-  }
-
-  result = FUN_001a7650(tag_data, 0);
-  if (result == -1) {
-    result = FUN_001a7650(tag_data, -1);
-  }
-  *(int *)(unit + 0x334) = result;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x6e(%%esi), %%ax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .LFUN_001a7730_1\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "call *%[c1a7650]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_001a7730_2\n\t"
+      ".LFUN_001a7730_1:\n\t"
+      "pushl $0\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "call *%[c1a7650]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_001a7730_2\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "call *%[c1a7650]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001a7730_2:\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x334(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a7730_get), [tag] "m"(b1a7730_tag), [c1a7650] "m"(b1a7730_c1a7650)
+      : "memory");
 }
+#else
+#error "FUN_001a7730: clang naked draft required"
+#endif
+
 
 /* unit_set_actively_controlled_flag (0x1a7f80)
  *
@@ -11107,40 +11149,62 @@ void unit_select_weapon_after_vehicle_exit(int unit_handle)
   unit_update_weapon_readiness(unit_handle, 1);
 }
 
-/* FUN_001abd10 (0x1abd10)
- * Plays impact sounds for melee damage. Looks up the unit's material type
- * sound via FUN_0018e500 and plays it on the unit. If a damage effect tag is
- * provided, also plays the effect's melee impact sound (tag 'jpt!'+0x120).
- * Register args: @eax = material_type, @esi = unit_handle,
- *                @edi = damage_effect_tag (or -1).
- * Confirmed from callers 0x1ae840 @001aea76, 0x1aea90 @001af016. */
-void FUN_001abd10(int16_t material_type, int unit_handle, int weapon_tag_index)
+/* FUN_001abd10 (0x1abd10) — XBE naked draft (batch 68). */
+#if defined(__clang__)
+static void * (*const b1abd10_c18e500)(int16_t material_type) = FUN_0018e500;
+static int (*const b1abd10_c1c7e70)(int object_handle, int tag_index, int16_t marker, float *position, float *forward, float scale) = object_impulse_sound_new;
+static void *(*const b1abd10_tag)(int, int) = tag_get;
+
+__attribute__((naked, noinline))
+void FUN_001abd10(int16_t material_type __attribute__((unused)), int unit_handle __attribute__((unused)), int weapon_tag_index __attribute__((unused)))
 {
-  char *material_effects;
-  int sound_tag;
-  char *weapon_tag;
-  float *position;
-  float *forward;
-
-  position = *(float **)0x31fc1c;
-  forward = *(float **)0x31fc3c;
-
-  material_effects = (char *)FUN_0018e500(material_type);
-  sound_tag = *(int *)(material_effects + 0x370);
-  if (sound_tag != -1) {
-    object_impulse_sound_new(unit_handle, sound_tag, -1, position, forward,
-                             1.0f);
-  }
-
-  if (weapon_tag_index != -1) {
-    weapon_tag = (char *)tag_get(0x6a707421, weapon_tag_index);
-    sound_tag = *(int *)(weapon_tag + 0x120);
-    if (sound_tag != -1) {
-      object_impulse_sound_new(unit_handle, sound_tag, -1, position, forward,
-                               1.0f);
-    }
-  }
+  __asm__ volatile(
+      "pushl %%eax\n\t"
+      "call *%[c18e500]\n\t"
+      "movl 0x370(%%eax), %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001abd10_1\n\t"
+      "movl 0x31fc3c, %%ecx\n\t"
+      "movl 0x31fc1c, %%edx\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1c7e70]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".LFUN_001abd10_1:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_001abd10_2\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x6a707421\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x120(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001abd10_2\n\t"
+      "movl 0x31fc3c, %%ecx\n\t"
+      "movl 0x31fc1c, %%edx\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1c7e70]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".LFUN_001abd10_2:\n\t"
+      "ret\n\t"
+      :
+      : [c18e500] "m"(b1abd10_c18e500), [c1c7e70] "m"(b1abd10_c1c7e70), [tag] "m"(b1abd10_tag)
+      : "memory");
 }
+#else
+#error "FUN_001abd10: clang naked draft required"
+#endif
+
 
 /* unit_flame_to_death (0x1ac550)
  * Handles the flame-to-death damage effect when a unit's flame-death
