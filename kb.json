@@ -33797,8 +33797,8 @@
         },
         {
           "addr": "0xfcbd0",
-          "decl": "void FUN_000fcbd0(int16_t magazine_index, int weapon_handle);",
-          "ported": false
+          "decl": "void FUN_000fcbd0(int16_t magazine_index @<eax>, int weapon_handle);",
+          "ported": true
         },
         {
           "addr": "0xfcc90",

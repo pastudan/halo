@@ -2846,97 +2846,30 @@ char weapon_prevents_melee_attack(int weapon_handle)
     return 0;
   return 1;
 }
-/* FUN_000fcbd0 (0xfcbd0) — XBE naked draft (batch 140). */
-#if defined(__clang__)
-static void *(*const bfcbd0_get)(int, int) = object_get_and_verify_type;
-static void * (*const bfcbd0_cfb370)(void *weapon_obj, int16_t magazine_index) = FUN_000fb370;
-static void *(*const bfcbd0_tag)(int, int) = tag_get;
-static void *(*const bfcbd0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const bfcbd0_cfba20)(int weapon_handle, char param_2, int16_t state) = weapon_set_animation_state;
-static int (*const bfcbd0_cfb6e0)(int trigger_effect, float scale, float param_3, int weapon_handle) = weapon_start_effect;
-static void (*const bfcbd0_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-void FUN_000fcbd0(int16_t magazine_index __attribute__((unused)), int weapon_handle __attribute__((unused)))
+/* FUN_000fcbd0 (0xfcbd0) — readable C lift. */
+void FUN_000fcbd0(int16_t magazine_index, int weapon_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "call *%[cfb370]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movswl (%%esi), %%eax\n\t"
-      "subl $0, %%eax\n\t"
-      "je .LFUN_000fcbd0_1\n\t"
-      "subl $2, %%eax\n\t"
-      "jne .LFUN_000fcbd0_2\n\t"
-      ".LFUN_000fcbd0_1:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $4\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[get]\n\t"
-      "movb 0x211(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_000fcbd0_2\n\t"
-      "movb 0x235(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_000fcbd0_2\n\t"
-      "movb 0x1e8(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_000fcbd0_2\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "pushl $0x70\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x4f0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "addl $3, %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[cfba20]\n\t"
-      "movl 0x54(%%edi), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "call *%[cfb6e0]\n\t"
-      "movw $3, (%%esi)\n\t"
-      "flds 0x1c(%%edi)\n\t"
-      "fmuls 0x253394\n\t"
-      "addl $0x28, %%esp\n\t"
-      "call *%[ftol]\n\t"
-      "movw %%ax, 0x2(%%esi)\n\t"
-      ".LFUN_000fcbd0_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bfcbd0_get), [cfb370] "m"(bfcbd0_cfb370), [tag] "m"(bfcbd0_tag), [elem] "m"(bfcbd0_elem), [cfba20] "m"(bfcbd0_cfba20), [cfb6e0] "m"(bfcbd0_cfb6e0), [ftol] "m"(bfcbd0_ftol)
-      : "memory");
-}
-#else
-#error "FUN_000fcbd0: clang naked draft required"
-#endif
+  char *weapon;
+  char *mag;
+  char *weap_tag;
+  char *mag_def;
 
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  mag = (char *)FUN_000fb370(weapon, magazine_index);
+  if (*(int16_t *)mag != 0 && *(int16_t *)mag != 2)
+    return;
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  if (weapon[0x211] || weapon[0x235] || weapon[0x1e8])
+    return;
+  weap_tag = (char *)tag_get(0x77656170, *(int *)weapon);
+  mag_def = (char *)tag_block_get_element((void *)(weap_tag + 0x4f0),
+                                          (int)magazine_index, 0x70);
+  (void)weapon_set_animation_state(weapon_handle, 0, (int16_t)(magazine_index + 3));
+  (void)weapon_start_effect(*(int *)(mag_def + 0x54), 0.0f, 0.0f, weapon_handle);
+  *(int16_t *)mag = 3;
+  *(int16_t *)(mag + 2) =
+      (int16_t)(int)(*(float *)(mag_def + 0x1c) * *(float *)0x253394);
+}
 
 /* FUN_000fcc90 (0xfcc90) — readable C lift: clear magazine loaded/total. */
 void FUN_000fcc90(int16_t magazine_index /*@<eax>*/, int weapon_handle)
