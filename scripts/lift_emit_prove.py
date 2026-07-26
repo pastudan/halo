@@ -36,9 +36,55 @@ from tu_compile import docker_compile, regen_decl_h  # noqa: E402
 import lift_assert_wrappers as law  # noqa: E402
 import lift_thin_wrappers as ltw  # noqa: E402
 import lifter_j as lj  # noqa: E402
+import lifter_interface as li  # noqa: E402
 
 SKIP = ("xdk/", "d3d", "dsound", "libcmt", "bink", "xnet", "xapilib", "kb_common")
 COMMIT_EVERY = 8
+
+
+
+def run_uni(name: str, addr: int, seeds: int, timeout: float) -> dict:
+    """Docker-TU path already compiled; Unicorn with stub-arg off.
+
+    Oracle DIR32 push-imm capture currently yields 0x00500xxx for string/global
+    immediates (vs correct candidate 0x28xxxx), false-failing assert wrappers.
+    """
+    import time
+    outj = ROOT / "artifacts" / "equivalence" / f"uni_{addr:08x}_s{seeds}.json"
+    cmd = [
+        sys.executable,
+        str(ROOT / "tools" / "equivalence" / "unicorn_diff.py"),
+        name,
+        "--allow-stubs",
+        "--no-stub-arg-trace",
+        "--seeds",
+        str(seeds),
+        "-q",
+        "--output-json",
+        str(outj),
+    ]
+    t0 = time.time()
+    try:
+        proc = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True, timeout=timeout)
+        timed_out = False
+    except subprocess.TimeoutExpired as exc:
+        timed_out = True
+        proc = subprocess.CompletedProcess(cmd, 124, "", "timeout")
+    text = (proc.stdout or "") + (proc.stderr or "")
+    m = re.search(r"(\d+) passed, (\d+) failed, (\d+) errors", text)
+    passed = failed = errors = None
+    if m:
+        passed, failed, errors = map(int, m.groups())
+    return {
+        "rc": proc.returncode,
+        "passed": passed,
+        "failed": failed,
+        "errors": errors,
+        "dt": round(time.time() - t0, 2),
+        "tail": text[-400:],
+        "missing_candidate": False,
+        "timeout": timed_out,
+    }
 
 
 def update_decl(addr: int, decl: str) -> None:
@@ -159,7 +205,10 @@ def main() -> int:
         decl = decl_by.get(ai) or f"void {name}(void);"
         body = None
         kind = None
-        if ai in lj.HAND:
+        if ai in getattr(li, "HAND", {}):
+            body = li.HAND[ai][2]
+            kind = "iface_hand"
+        if not body and ai in lj.HAND:
             body = lj.HAND[ai][2]
             kind = "hand"
         if not body:
@@ -168,6 +217,9 @@ def main() -> int:
         if not body:
             body = ltw.try_emit([f"{m} {o}".strip() for m, o in ops], decl, name, name_by)
             kind = "thin" if body else None
+        if not body:
+            body = li.try_pattern_emit(ops, decl, name, name_by)
+            kind = "ipat" if body else None
         if not body:
             body = lj.try_pattern_emit(ops, decl, name, name_by)
             kind = "jpat" if body else None
@@ -226,9 +278,9 @@ def main() -> int:
             sp.write_text(text, encoding="utf-8")
             print("  oracle FAIL", flush=True)
             continue
-        res = run_unicorn(name, ai, args.seeds, timeout=args.timeout)
+        res = run_uni(name, ai, args.seeds, args.timeout)
         if not clear_pass(res, args.seeds):
-            res2 = run_unicorn(hex(ai), ai, args.seeds, timeout=args.timeout)
+            res2 = run_uni(hex(ai), ai, args.seeds, args.timeout)
             if clear_pass(res2, args.seeds) or (res2.get("passed") or 0) > (
                 res.get("passed") or 0
             ):

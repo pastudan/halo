@@ -170,13 +170,7 @@ H(
 /* FUN_000e9a60 (0xe9a60) — readable C lift. */
 char FUN_000e9a60(void *widget)
 {
-  /* Inline zero of 0x50 bytes at 0x46cce8 (avoids csmemset stub-arg harness quirk). */
-  {
-    unsigned int *p = (unsigned int *)0x46cce8;
-    int i;
-    for (i = 0; i < 0x14; i++)
-      p[i] = 0;
-  }
+  csmemset((void *)0x46cce8, 0, 0x50);
   *(int *)((char *)widget + 0x40) = 0;
   *(unsigned short *)((char *)widget + 0x44) = 0;
   return 1;
