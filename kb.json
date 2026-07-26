@@ -39029,7 +39029,7 @@
         },
         {
           "addr": "0x1377d0",
-          "decl": "void FUN_001377d0(int object_handle, int region_index, int node_index, unsigned int param_4, void *collision_model, int material, void *damage_effect, void *damage_params, unsigned int *flags, float *body_damage, void **param_11, float scale);",
+          "decl": "void FUN_001377d0(int object_handle, int region_index, int node_index, unsigned int param_4, void *collision_model, void *material, void *damage_effect, void *damage_params, unsigned int *flags, float *body_damage, void **param_11, float scale);",
           "ported": false
         },
         {

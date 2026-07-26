@@ -2031,7 +2031,6 @@ char FUN_00149570(void *state_v, int node_index)
  *   +0x21a sign, +0x21c… point2d working area.
  * Leaf: project hit → bsp2d surface → FUN_00148240 → fill result; also
  * tries FUN_00149570 on projected origin for edge hits.
- * ported:false — large interim draft; tighten against ASM under VC71.
  * ------------------------------------------------------------------------- */
 typedef struct collision_bsp_pill_walk_state {
   int bsp;

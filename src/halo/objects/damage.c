@@ -1333,7 +1333,7 @@ after_modifier:
         /* BUG2-FIX: arg10 = &body_damage (EBP-0x24), NOT &shield_damage.
          * Disasm at 0x138354: LEA EDX,[EBP-0x24]; PUSH EDX. */
         FUN_001377d0(current_object_handle, body_region, body_node,
-                     body_flags_mask, coll_data, (int)material_data, jpt_offset,
+                     body_flags_mask, coll_data, material_data, jpt_offset,
                      damage_params, &damage_flags, &body_damage, &effect_ptr,
                      damage_scale);
         damaged_object_count = 0;
@@ -2042,6 +2042,7 @@ void FUN_00136bc0(int current_object_handle, void *collision_model, void *materi
   float max_shield;
   float recharge_frac;
   float scaled;
+  float actual;
   char report_shield;
   char friendly_fire;
 
@@ -2116,8 +2117,9 @@ void FUN_00136bc0(int current_object_handle, void *collision_model, void *materi
   if (scaled > *(float *)0x253f44)
     report_shield = 1;
 
-  if (scaled > *(float *)(obj + 0x94) || *(short *)jpt == 3) {
-    float overflow = scaled - recharge_frac * *(float *)(obj + 0x94);
+  actual = recharge_frac * scaled;
+  if (actual > *(float *)(obj + 0x94) || *(short *)jpt == 3) {
+    float overflow = scaled - max_shield * *(float *)(obj + 0x94);
     if (overflow >= 0.0f)
       remaining += overflow;
     *(float *)(obj + 0x94) = 0.0f;
@@ -2127,7 +2129,7 @@ void FUN_00136bc0(int current_object_handle, void *collision_model, void *materi
     }
   } else {
     if ((*(unsigned char *)(obj + 0xb6) & 8) == 0)
-      *(float *)(obj + 0x94) -= scaled;
+      *(float *)(obj + 0x94) -= actual;
     if ((*(unsigned char *)(obj + 0xb6) & 2) == 0 &&
         *(float *)(obj + 0x94) <= *(float *)(coll + 0x184)) {
       FUN_001369e0(current_object_handle, *(int *)(coll + 0x194));
@@ -2138,6 +2140,7 @@ void FUN_00136bc0(int current_object_handle, void *collision_model, void *materi
 shield_recharge:
   if (!report_shield) {
     float pool = *body_damage - remaining;
+    *(int *)(obj + 0xac) = 0;
     pool *= recharge_frac;
     if ((*(unsigned char *)(obj + 0xb6) & 8) == 0)
       *(float *)(obj + 0x98) = *(float *)0x2533c8;
@@ -2150,9 +2153,11 @@ shield_recharge:
 
 write_outputs:
   if (shield_apply > *(float *)(coll + 0x108)) {
-    if (*(float *)(obj + 0x94) == 0.0f)
+    if (*(float *)(obj + 0x94) == 0.0f) {
+      FUN_001d9068();
       *(short *)(obj + 0xb4) =
           (short)(int)(*(float *)(coll + 0x10c) * *(float *)0x253394);
+    }
   }
   *shield_damage = shield_apply;
   *body_damage = remaining;
@@ -2160,7 +2165,7 @@ write_outputs:
 
 /* 0x1377d0 */
 void FUN_001377d0(int object_handle, int region_index, int node_index,
-                  unsigned int param_4, void *collision_model, int material,
+                  unsigned int param_4, void *collision_model, void *material,
                   void *damage_effect, void *damage_params, unsigned int *flags,
                   float *body_damage, void **param_11, float scale)
 {
@@ -2255,7 +2260,6 @@ void FUN_001377d0(int object_handle, int region_index, int node_index,
           (int *)(coll + 0x240), region, 0x54);
       float region_damage = body_scale * *(float *)0x2602c8;
       region_damage += (float)(unsigned char)obj[0x128 + region];
-      FUN_001d9068();
       obj[0x128 + region] = (char)(int)region_damage;
       if (*(float *)(region_elem + 0x28) > 0.0f) {
         float threshold =
@@ -2274,10 +2278,10 @@ void FUN_001377d0(int object_handle, int region_index, int node_index,
   recent_b = *(float *)(obj + 0xa8) + body_scale;
   *(float *)(obj + 0x9c) = recent_a;
   *(float *)(obj + 0xa8) = recent_b;
-  if (recent_a > 1.0f)
-    *(float *)(obj + 0x9c) = 1.0f;
-  if (recent_b > 1.0f)
-    *(float *)(obj + 0xa8) = 1.0f;
+  if (recent_a > *(float *)0x2533c8)
+    *(float *)(obj + 0x9c) = *(float *)0x2533c8;
+  if (recent_b > *(float *)0x2533c8)
+    *(float *)(obj + 0xa8) = *(float *)0x2533c8;
 
   if (*(char *)0x5aa890 != 0 && *(float *)(obj + 0x90) > 0.0f) {
     char zero_body = 0;

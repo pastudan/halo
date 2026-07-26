@@ -613,22 +613,9 @@ static float vehicle_clamp_unit_float(float value)
   return value;
 }
 
-static void vehicle_preprocess_apply_frame(char *vehicle_tag, char *node_block,
-                                           int node_index, void *node_output,
-                                           float frame)
+static void vehicle_preprocess_apply_animation(char *animation, float frame,
+                                               void *node_output)
 {
-  int16_t *indices;
-  char *animation;
-
-  if (*(int *)(node_block + 0x5c) <= node_index)
-    return;
-
-  indices = *(int16_t **)(node_block + 0x60);
-  if (indices[node_index] == (int16_t)-1)
-    return;
-
-  animation = (char *)tag_block_get_element(vehicle_tag + 0x74,
-                                            (int)indices[node_index], 0xb4);
   FUN_00122690(animation, frame, node_output);
 }
 
@@ -675,12 +662,16 @@ void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
                              (float *)(vehicle + 0x24),
                              (float *)(vehicle + 0x30));
     steer /= *(float *)(vehicle_tag + 0x2f8);
-    steer += 1.0f;
+    steer += *(float *)0x2533c8;
     steer *= *(float *)0x253398;
-    frame = vehicle_clamp_unit_float(steer);
+    if (steer <= 0.0f)
+      frame = 0.0f;
+    else if (steer >= 1.0f)
+      frame = 1.0f;
+    else
+      frame = steer;
     frame *= (float)(*(int16_t *)(animation + 0x22) - 1);
-    vehicle_preprocess_apply_frame(vehicle_tag, node_block, 1, node_output,
-                                 frame);
+    vehicle_preprocess_apply_animation(animation, frame, node_output);
   }
 
   if (node_count > 2 && node_indices[2] != (int16_t)-1) {
@@ -693,13 +684,11 @@ void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
       frame = *(float *)0x253398 - frame;
     } else {
       frame = *(float *)(vehicle + 0x42c) / *(float *)(vehicle_tag + 0x2f8);
-      frame += 1.0f;
+      frame += *(float *)0x2533c8;
       frame *= *(float *)0x253398;
     }
-    frame = vehicle_clamp_unit_float(frame);
     frame *= (float)(*(int16_t *)(animation + 0x22) - 1);
-    vehicle_preprocess_apply_frame(vehicle_tag, node_block, 2, node_output,
-                                 frame);
+    vehicle_preprocess_apply_animation(animation, frame, node_output);
   }
 
   if (node_count > 3 && node_indices[3] != (int16_t)-1) {
@@ -711,11 +700,17 @@ void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
             *(float *)(vehicle + 0x18) * *(float *)(vehicle + 0x24);
     if (steer <= 0.0f)
       frame = 0.0f;
+    else if (steer >= 1.0f)
+      frame = 1.0f;
     else
-      frame = vehicle_clamp_unit_float(steer / fabsf(*(float *)(vehicle_tag + 0x2f8)));
+      frame = steer;
+    frame /= fabsf(*(float *)(vehicle_tag + 0x2f8));
+    if (frame <= 0.0f)
+      frame = 0.0f;
+    else if (frame >= 1.0f)
+      frame = 1.0f;
     frame *= (float)(*(int16_t *)(animation + 0x22) - 1);
-    vehicle_preprocess_apply_frame(vehicle_tag, node_block, 3, node_output,
-                                 frame);
+    vehicle_preprocess_apply_animation(animation, frame, node_output);
   }
 
   if (node_count > 4 && node_indices[4] != (int16_t)-1)
@@ -730,8 +725,7 @@ void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
     else
       frame = 0.0f;
     frame *= (float)*(int16_t *)(animation + 0x22);
-    vehicle_preprocess_apply_frame(vehicle_tag, node_block, 5, node_output,
-                                 frame);
+    vehicle_preprocess_apply_animation(animation, frame, node_output);
   }
 
   wheel_count = *(int *)(node_block + 0x68);
