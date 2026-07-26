@@ -139,7 +139,7 @@ static void (*const be0740_assert)(const char *, const char *, int, bool) = disp
 static void (*const be0740_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void player_ui_set_single_player_local_player_controller(short player_index, short controller_index)
+void player_ui_set_single_player_local_player_controller(int16_t local_player_index, int16_t controller_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

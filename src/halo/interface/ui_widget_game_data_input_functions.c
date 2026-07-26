@@ -9627,45 +9627,20 @@ void multiplayer_game_set_text_box_for_teams_noteams(void *widget)
 #endif
 
 
-/* FUN_000f3960 (0xf3960) — XBE naked draft (batch 153). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000f3960(void *widget)
+/* FUN_000f3960 (0xf3960) — readable C lift: compare two int handles. */
+int FUN_000f3960(int *a, int *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "jne .LFUN_000f3960_1\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_000f3960_2\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f3960_1:\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_000f3960_2\n\t"
-      "orl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f3960_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int va = *a;
+  int vb = *b;
+  if (va == -1) {
+    if (vb == -1)
+      return 0;
+    return 1;
+  }
+  if (vb == -1)
+    return -1;
+  return 0;
 }
-#else
-#error "FUN_000f3960: clang naked draft required"
-#endif
-
 
 /* FUN_000f39c0 (0xf39c0) — XBE naked draft (batch 113). */
 #if defined(__clang__)

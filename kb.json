@@ -7677,8 +7677,8 @@
         },
         {
           "addr": "0xdb0b0",
-          "decl": "void FUN_000db0b0(void);",
-          "ported": false
+          "decl": "char *FUN_000db0b0(int16_t local_player_index@<si>);",
+          "ported": true
         },
         {
           "addr": "0xdb0f0",
@@ -8115,8 +8115,8 @@
         },
         {
           "addr": "0xdcaf0",
-          "decl": "char *FUN_000dcaf0(int16_t local_player_index);",
-          "ported": false
+          "decl": "char *FUN_000dcaf0(int16_t local_player_index@<si>);",
+          "ported": true
         },
         {
           "addr": "0xdcbd0",
@@ -12207,7 +12207,7 @@
         },
         {
           "addr": "0xc95d0",
-          "decl": "char FUN_000c95d0(int value);",
+          "decl": "void FUN_000c95d0(const char *text);",
           "ported": false
         },
         {
@@ -18244,7 +18244,7 @@
         },
         {
           "addr": "0xe0740",
-          "decl": "void player_ui_set_single_player_local_player_controller(void);",
+          "decl": "void player_ui_set_single_player_local_player_controller(int16_t local_player_index, int16_t controller_index);",
           "name": "player_ui_set_single_player_local_player_controller",
           "ported": false
         },
@@ -27840,8 +27840,8 @@
         },
         {
           "addr": "0xf3960",
-          "decl": "void FUN_000f3960(void *widget);",
-          "ported": false
+          "decl": "int FUN_000f3960(int *a, int *b);",
+          "ported": true
         },
         {
           "addr": "0xf39c0",

@@ -2828,42 +2828,15 @@ void FUN_000daee0(void)
 #endif
 
 
-/* FUN_000db0b0 (0xdb0b0) — XBE naked draft (batch 172). */
-#if defined(__clang__)
-static void (*const bdb0b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bdb0b0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_000db0b0(void)
+/* FUN_000db0b0 (0xdb0b0) — readable C lift: motion-sensor slot blob. */
+char *FUN_000db0b0(int16_t local_player_index)
 {
-  __asm__ volatile(
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_000db0b0_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .LFUN_000db0b0_2\n\t"
-      ".LFUN_000db0b0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x11f\n\t"
-      "pushl $0x282094\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000db0b0_2:\n\t"
-      "movl 0x46bd2c, %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0x568, %%eax, %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bdb0b0_assert), [exitfn] "m"(bdb0b0_exitfn)
-      : "memory");
+  if (local_player_index < 0 || local_player_index >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282094, 0x11f, 1);
+    system_exit(-1);
+  }
+  return (char *)(*(int *)0x46bd2c) + (int)local_player_index * 0x568;
 }
-#else
-#error "FUN_000db0b0: clang naked draft required"
-#endif
-
 
 /* FUN_000db1e0 (0xdb1e0) — XBE naked draft (batch 172). */
 #if defined(__clang__)
@@ -3909,7 +3882,7 @@ void update_motion_sensor(void)
 static int (*const bdbcb0_cd1540)(void) = FUN_000d1540;
 static void *(*const bdbcb0_memset)(void *, int, unsigned int) = csmemset;
 static int16_t (*const bdbcb0_c86410)(int16_t local_player_index) = director_get_perspective;
-static void (*const bdbcb0_cdb0b0)(void) = FUN_000db0b0;
+static char *(*const bdbcb0_cdb0b0)(int16_t local_player_index) = FUN_000db0b0;
 static void (*const bdbcb0_cdb1e0)(void) = FUN_000db1e0;
 static float (*const bdbcb0_c1d9e70)(float base, float exponent) = FUN_001d9e70;
 static void (*const bdbcb0_cdb330)(void) = render_blip;
