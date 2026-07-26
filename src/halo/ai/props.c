@@ -2111,59 +2111,26 @@ void FUN_00065250(void)
 #endif
 
 
-/* FUN_000652a0 (0x652a0) — XBE naked draft (batch 160). */
-#if defined(__clang__)
-static void (*const b652a0_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-static void * (*const b652a0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void * (*const b652a0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-void FUN_000652a0(void)
+/* FUN_000652a0 (0x652a0) — readable C lift. */
+void FUN_000652a0(int count, void **out_ptr, void *src)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000652a0_1\n\t"
-      "pushl $0x51\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl $0, (%%esi)\n\t"
-      ".LFUN_000652a0_1:\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "addl %%edi, %%edi\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_000652a0_2\n\t"
-      "pushl $0x53\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "je .LFUN_000652a0_2\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000652a0_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8ef70] "m"(b652a0_c8ef70), [c8ee60] "m"(b652a0_c8ee60), [c8e0b0] "m"(b652a0_c8e0b0)
-      : "memory");
-}
-#else
-#error "FUN_000652a0: clang naked draft required"
-#endif
+  void *p;
+  int nbytes;
 
+  if (*out_ptr) {
+    debug_free(*out_ptr, (const char *)0x25f5c4, 0x51);
+    *out_ptr = 0;
+  }
+  nbytes = count + count;
+  if (!src) {
+    return;
+  }
+  p = debug_malloc((uint32_t)nbytes, 0, (const char *)0x25f5c4, 0x53);
+  *out_ptr = p;
+  if (p) {
+    csmemcpy(p, src, (size_t)nbytes);
+  }
+}
 
 /* FUN_000652f0 (0x652f0) — XBE naked draft (batch 105). */
 #if defined(__clang__)

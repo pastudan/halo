@@ -5512,95 +5512,31 @@ int FUN_00057b40(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_0005ac60 (0x5ac60) — XBE naked draft (batch 226). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_0005ac60(int *samples __attribute__((unused)), int score __attribute__((unused)), float y __attribute__((unused)), float x __attribute__((unused)), float z __attribute__((unused)))
+/* FUN_0005ac60 (0x5ac60) — readable C lift. */
+char FUN_0005ac60(int *samples, int score, float y, float x, float z)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "xorb %%dl, %%dl\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "addl $4, %%ecx\n\t"
-      ".LFUN_0005ac60_1:\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps (%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0005ac60_4\n\t"
-      "cmpw $1, %%si\n\t"
-      "jge .LFUN_0005ac60_3\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl $1, %%edx\n\t"
-      "addl $0x10, %%eax\n\t"
-      "subl %%esi, %%edx\n\t"
-      "movzwl %%dx, %%edx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      ".LFUN_0005ac60_2:\n\t"
-      "leal -0x10(%%eax), %%edx\n\t"
-      "movl %%edx, %%edi\n\t"
-      "movl (%%edi), %%ebx\n\t"
-      "movl %%ebx, (%%eax)\n\t"
-      "movl 0x4(%%edi), %%ebx\n\t"
-      "movl %%ebx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%edi), %%ebx\n\t"
-      "movl 0xc(%%edi), %%edi\n\t"
-      "movl %%ebx, 0x8(%%eax)\n\t"
-      "movl %%edi, 0xc(%%eax)\n\t"
-      "movl %%edx, %%eax\n\t"
-      "decl -0x4(%%ebp)\n\t"
-      "jne .LFUN_0005ac60_2\n\t"
-      ".LFUN_0005ac60_3:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x4(%%ecx)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movb $1, %%dl\n\t"
-      ".LFUN_0005ac60_4:\n\t"
-      "incl %%esi\n\t"
-      "addl $0x10, %%ecx\n\t"
-      "cmpw $2, %%si\n\t"
-      "jl .LFUN_0005ac60_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%dl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      :
-      : "memory");
+  char inserted = 0;
+  unsigned short i;
+  for (i = 0; i < 2; i++) {
+    char *slot = (char *)samples + 4 + i * 0x10;
+    if (!(y > *(float *)slot))
+      continue;
+    if (i < 1) {
+      char *dst = (char *)samples + 0x10;
+      char *src = (char *)samples;
+      *(int *)dst = *(int *)src;
+      *(int *)(dst + 4) = *(int *)(src + 4);
+      *(int *)(dst + 8) = *(int *)(src + 8);
+      *(int *)(dst + 0xc) = *(int *)(src + 0xc);
+    }
+    *(float *)slot = y;
+    *(int *)(slot - 4) = score;
+    *(float *)(slot + 8) = z;
+    *(float *)(slot + 4) = x;
+    inserted = 1;
+  }
+  return inserted;
 }
-#else
-#error "FUN_0005ac60: clang naked draft required"
-#endif
-
-
 /* FUN_00059c40 (0x59c40) — XBE naked draft (batch 233). */
 #if defined(__clang__)
 static void *(*const b59c40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
