@@ -1685,6 +1685,531 @@ bool hs_type_check(int datum_index, int16_t check_type)
   return FUN_000c74c0(datum_index);
 }
 
+int FUN_000c5310(int parent_handle, int sibling_handle);
+int16_t FUN_0018ea50(void *param_1, const char *name);
+
+/* 0xc6a30 — Case-sensitive name lookup in a string table (register args in
+ * binary: count@<di>, str on stack, table@<ebx>). Returns the matching index
+ * or -1. */
+int16_t FUN_000c6a30(const char *str, const char **names, int16_t count)
+{
+  int16_t i;
+
+  i = 0;
+  if (count <= 0)
+    return -1;
+
+  do {
+    if (csstrcmp(str, names[(int)i]) == 0)
+      return i;
+    i++;
+  } while (i < count);
+
+  return -1;
+}
+
+/* 0xc5f60 — Compile an enum literal (types 0x20..0x24). Validates the name
+ * against the enum table at 0x2726b4 and stores the index in node+0x10. */
+bool hs_parse_enum(int datum_index)
+{
+  char *node;
+  int16_t type;
+  int16_t *enum_hdr;
+  const char **names;
+  int16_t count;
+  int16_t i;
+  char *str;
+
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
+  type = *(int16_t *)(node + 0x4);
+
+  if (type < 0x20 || type > 0x24) {
+    display_assert("HS_TYPE_IS_ENUM(expression->type)",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x6bc, 1);
+    system_exit(-1);
+  }
+
+  if (*(int16_t *)(node + 0x2) != type) {
+    display_assert("expression->constant_type==expression->type",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x6bd, 1);
+    system_exit(-1);
+  }
+
+  enum_hdr = (int16_t *)(0x2726b4 + (int)type * 8);
+  count = *enum_hdr;
+  if (count == 0) {
+    display_assert("enum->count>0", "c:\\halo\\SOURCE\\hs\\hs_compile.c",
+                   0x6be, 1);
+    system_exit(-1);
+  }
+
+  names = *(const char ***)((char *)enum_hdr + 4);
+  str = (char *)(*(int *)(node + 0xc) + *(int *)0x46b6e8);
+
+  i = 0;
+  while (i < count) {
+    if (crt_stricmp(str, names[(int)i]) == 0) {
+      *(int16_t *)(node + 0x10) = i;
+      return true;
+    }
+    i++;
+  }
+
+  crt_sprintf((char *)0x46b704, "this is not a valid %s",
+              ((const char **)0x2f14a8)[(int)type]);
+  if (count > 1) {
+    FUN_0008dc30((char *)0x46b704, (const char *)0x27c028);
+    i = 0;
+    while (i < count - 1) {
+      FUN_0008dc30((char *)0x46b704, names[(int)i]);
+      FUN_0008dc30((char *)0x46b704, (const char *)0x27c024);
+      i++;
+    }
+    if (count > 1)
+      FUN_0008dc30((char *)0x46b704, (const char *)0x27c020);
+    FUN_0008dc30((char *)0x46b704, (const char *)0x27c028);
+    FUN_0008dc30((char *)0x46b704, names[(int)(count - 1)]);
+    FUN_0008dc30((char *)0x46b704, (const char *)0x27c01c);
+  }
+
+  *(const char **)0x46b6fc = (const char *)0x46b704;
+  *(int *)0x46b700 = *(int *)(node + 0xc);
+  *(int16_t *)(node + 0x10) = i;
+  return false;
+}
+
+/* 0xc66d0 — Resolve an object/enum name (types 0x2b..0x30) against the
+ * scenario object list and validate the object type mask. */
+bool FUN_000c66d0(int datum_index)
+{
+  char *node;
+  int16_t type;
+  int16_t obj_idx;
+  char *elem;
+  int16_t mask;
+  uint32_t bit;
+
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
+  type = *(int16_t *)(node + 0x4);
+
+  if (type < 0x2b || type > 0x30) {
+    display_assert("HS_TYPE_IS_ENUM(expression->type)",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x771, 1);
+    system_exit(-1);
+  }
+
+  obj_idx = FUN_0018ea50(
+    global_scenario_get(),
+    (const char *)(*(int *)(node + 0xc) + *(int *)0x46b6e8));
+  if (obj_idx == -1) {
+    *(const char **)0x46b6fc = (const char *)0x27c384;
+    *(int *)0x46b700 = *(int *)(node + 0xc);
+    return false;
+  }
+
+  elem = (char *)tag_block_get_element((char *)global_scenario_get() + 0x204,
+                                       (int)obj_idx, 0x24);
+  if (*(int16_t *)(elem + 0x20) == -1) {
+    display_assert("object->type!=NONE",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x77a, 1);
+    system_exit(-1);
+  }
+
+  mask = *(int16_t *)(0x26f2ca + (int)type * 2);
+  bit = 1U << (uint32_t)(uint8_t) * (uint8_t *)(elem + 0x20);
+  if ((bit & (uint32_t)(uint16_t)mask) == 0) {
+    crt_sprintf((char *)0x46b704, "this is not a valid %s name",
+                ((const char **)0x2f14a8)[(int)type]);
+    *(const char **)0x46b6fc = (const char *)0x46b704;
+    *(int *)0x46b700 = *(int *)(node + 0xc);
+    return false;
+  }
+
+  *(int16_t *)(node + 0x10) = obj_idx;
+  return true;
+}
+
+/* 0xc6940 — Compile a material literal (type 0x16) from the scenario's
+ * material tag block. Returns false when no material tag is assigned. */
+bool FUN_000c6940(int datum_index)
+{
+  char *node;
+  scenario_t *scenario;
+  void *mat_block;
+
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
+  if (*(int16_t *)(node + 0x4) != 0x16) {
+    display_assert("hs_syntax_get(expression_index)->type==_hs_type_material",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x7bf, 1);
+    system_exit(-1);
+  }
+
+  scenario = global_scenario_get();
+  if (*(int *)((char *)scenario + 0x5a0) == -1)
+    return false;
+
+  mat_block = tag_get(0x686d7420, *(int *)((char *)scenario + 0x5a0));
+  return FUN_000c6130(datum_index, (char *)mat_block + 0x20, 0x40, 0);
+}
+
+/* 0xc7e50 — Validate macro/function actual arguments against the descriptor
+ * parameter type list in hs_function_table_get(function_index). */
+char hs_macro_function_parse(int16_t function_index, int root_datum)
+{
+  void *entry;
+  char *syntax;
+  int arg;
+  int16_t arg_idx;
+  int16_t arg_count;
+  char ok;
+
+  entry = hs_function_table_get(function_index);
+  if (*(int16_t *)entry < 4 || *(int16_t *)entry >= 0x31) {
+    display_assert("hs_type_valid(function->return_type)",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x819, 1);
+    system_exit(-1);
+  }
+
+  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(syntax + 0x10));
+  arg = *(int *)(syntax + 0x8);
+  ok = 1;
+  arg_idx = 0;
+  arg_count = *(int16_t *)((char *)entry + 0x18);
+
+  while (arg_idx < arg_count) {
+    if (arg == -1)
+      break;
+    if (!hs_type_check(arg, *(int16_t *)((char *)entry + 0x1a + (int)arg_idx * 2)))
+      ok = 0;
+    if (!ok)
+      break;
+    syntax = (char *)datum_get(*(data_t **)0x5aa6c8, arg);
+    arg = *(int *)(syntax + 0x8);
+    arg_idx++;
+  }
+
+  if (!ok)
+    return 0;
+
+  if (arg_idx == arg_count && arg == -1)
+    return 1;
+
+  crt_sprintf((char *)0x46b704, "too few arguments to function `%s`",
+              *(const char **)((char *)entry + 4));
+  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  *(const char **)0x46b6fc = (const char *)0x46b704;
+  *(int *)0x46b700 = *(int *)(syntax + 0xc);
+  return 0;
+}
+
+/* 0xc7f70 — Parse (begin ...) or (begin_random ...) script forms. */
+char hs_parse_begin(int16_t function_index, int root_datum)
+{
+  char *expr;
+  char *head;
+  char ok;
+  int link;
+  int depth;
+  int16_t check_type;
+  void *entry;
+
+  if (function_index != 0 && function_index != 1) {
+    display_assert("function_index==_hs_function_begin || "
+                   "function_index==_hs_function_begin_random",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x15, 1);
+    system_exit(-1);
+  }
+
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(expr + 0x10));
+  link = *(int *)(head + 0x8);
+  ok = 1;
+  depth = 0;
+
+  while (link != -1) {
+    head = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+    if (function_index == 0) {
+      if (*(int *)(head + 0x8) == -1)
+        check_type = *(int16_t *)(expr + 0x4);
+      else
+        check_type = 4;
+    } else {
+      check_type = *(int16_t *)(expr + 0x4);
+    }
+
+    ok = hs_type_check(link, check_type);
+    if (*(int16_t *)(expr + 0x4) == 0 && ok) {
+      head = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+      *(int16_t *)(expr + 0x4) = *(int16_t *)(head + 0x4);
+    }
+
+    head = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+    link = *(int *)(head + 0x8);
+    depth++;
+    if (!ok)
+      break;
+  }
+
+  if (!ok)
+    return 0;
+
+  if (depth >= 1) {
+    if (depth <= 0x20 || function_index != 1)
+      return 1;
+    expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+    *(const char **)0x46b6fc = (const char *)0x27cce8;
+    *(int *)0x46b700 = *(int *)(expr + 0xc);
+    return 0;
+  }
+
+  entry = hs_function_table_get(function_index);
+  crt_sprintf((char *)0x46b704, "too few arguments to function `%s`",
+              *(const char **)((char *)entry + 4));
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  *(const char **)0x46b6fc = (const char *)0x46b704;
+  *(int *)0x46b700 = *(int *)(expr + 0xc);
+  return 0;
+}
+
+/* 0xc8120 — Parse (if <bool> <then> [<else>]). */
+char hs_parse_if(int16_t function_index, int root_datum)
+{
+  char *expr;
+  char *head;
+  int cond;
+  int then_arg;
+  int else_arg;
+  char result;
+
+  if (function_index != 2) {
+    display_assert("function_index==_hs_function_if",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x5b, 1);
+    system_exit(-1);
+  }
+
+  result = 0;
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(expr + 0x10));
+  cond = *(int *)(head + 0x8);
+  if (cond == -1)
+    goto too_many;
+
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, cond);
+  then_arg = *(int *)(head + 0x8);
+  if (then_arg == -1)
+    goto too_many;
+
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, then_arg);
+  else_arg = *(int *)(head + 0x8);
+  if (else_arg != -1) {
+    head = (char *)datum_get(*(data_t **)0x5aa6c8, else_arg);
+    if (*(int *)(head + 0x8) != -1)
+      goto too_many;
+  }
+
+  if (!hs_type_check(cond, 5))
+    return result;
+
+  if (hs_type_check(then_arg, *(int16_t *)(expr + 0x4))) {
+    if (*(int16_t *)(expr + 0x4) == 0) {
+      head = (char *)datum_get(*(data_t **)0x5aa6c8, then_arg);
+      *(int16_t *)(expr + 0x4) = *(int16_t *)(head + 0x4);
+    }
+    if (else_arg == -1 || hs_type_check(else_arg, *(int16_t *)(expr + 0x4)))
+      return 1;
+    return result;
+  }
+
+  if (*(int *)0x46b6fc != 0 || *(int16_t *)(expr + 0x4) != 0 || else_arg == -1)
+    return result;
+
+  if (!hs_type_check(else_arg, 0))
+    return result;
+
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, else_arg);
+  *(int16_t *)(expr + 0x4) = *(int16_t *)(head + 0x4);
+  result = hs_type_check(then_arg, *(int16_t *)(expr + 0x4));
+  return result;
+
+too_many:
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  *(const char **)0x46b6fc = (const char *)0x27cdf0;
+  *(int *)0x46b700 = *(int *)(expr + 0xc);
+  return result;
+}
+
+/* 0xc82e0 — Parse (cond ...) by cloning a branch node via FUN_000c5310. */
+char hs_parse_cond(int16_t function_index, int root_datum)
+{
+  char *expr;
+  char *pred;
+  char *src;
+  char *dst;
+  int branch;
+  int16_t saved_type;
+  int16_t saved_word;
+
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  pred = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(expr + 0x10));
+  branch = FUN_000c5310(*(int *)(pred + 0x8), root_datum);
+  if (branch == -1)
+    return 0;
+
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  dst = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  src = (char *)datum_get(*(data_t **)0x5aa6c8, branch);
+  saved_type = *(int16_t *)(dst + 0x4);
+  saved_word = *(int16_t *)dst;
+  *(int *)(dst + 0x8) = *(int *)(src + 0x8);
+  csmemcpy(dst, src, 0x14);
+  *(int16_t *)dst = saved_word;
+  return hs_type_check(root_datum, saved_type);
+}
+
+/* 0xc8380 — Parse (set <global> <value>). */
+char hs_parse_set(int16_t function_index, int root_datum)
+{
+  char *expr;
+  char *head;
+  char *var_node;
+  char *value_node;
+  int var_arg;
+  int value_arg;
+  int16_t global_idx;
+  int16_t global_type;
+
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(expr + 0x10));
+  var_arg = *(int *)(head + 0x8);
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+
+  if (var_arg == -1) {
+    *(const char **)0x46b6fc = (const char *)0x27ce40;
+    *(int *)0x46b700 = *(int *)(expr + 0xc);
+    return 0;
+  }
+
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, var_arg);
+  value_arg = *(int *)(head + 0x8);
+  if (value_arg == -1) {
+    *(const char **)0x46b6fc = (const char *)0x27ce6c;
+    *(int *)0x46b700 = *(int *)(expr + 0xc);
+    return 0;
+  }
+
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, value_arg);
+  if (*(int *)(head + 0x8) != -1) {
+    head = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(head + 0x8));
+    *(const char **)0x46b6fc = (const char *)0x27ce8c;
+    *(int *)0x46b700 = *(int *)(head + 0xc);
+    return 0;
+  }
+
+  var_node = (char *)datum_get(*(data_t **)0x5aa6c8, var_arg);
+  global_idx = hs_find_global_by_name(
+    (const char *)(*(int *)(var_node + 0xc) + *(int *)0x46b6e8));
+  if (global_idx == -1) {
+    *(const char **)0x46b6fc = (const char *)0x27ceac;
+    *(int *)0x46b700 = *(int *)(var_node + 0xc);
+    return 0;
+  }
+
+  global_type = hs_global_get_type((uint16_t)global_idx);
+  *(int16_t *)(var_node + 0x4) = global_type;
+  if (*(int16_t *)(expr + 0x4) != 0 &&
+      !hs_types_compatible(global_type, *(int16_t *)(expr + 0x4))) {
+    crt_sprintf((char *)0x46b704,
+                "i expected a %s, but the variable has type %s",
+                ((const char **)0x2f14a8)[(int)*(int16_t *)(expr + 0x4)],
+                ((const char **)0x2f14a8)[(int)global_type]);
+    expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+    *(const char **)0x46b6fc = (const char *)0x46b704;
+    *(int *)0x46b700 = *(int *)(expr + 0xc);
+    return 0;
+  }
+
+  if (!FUN_000c5840(var_arg)) {
+    display_assert("hs_parse_set: global variable reference",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x126, 1);
+    system_exit(-1);
+  }
+
+  if (*(int16_t *)(expr + 0x4) == 0)
+    *(int16_t *)(expr + 0x4) = global_type;
+
+  value_node = (char *)datum_get(*(data_t **)0x5aa6c8, value_arg);
+  return hs_type_check(value_arg, *(int16_t *)(value_node + 0x4));
+}
+
+/* 0xc85b0 — Parse (and ...) / (or ...) boolean n-ary forms (fn index 5/6). */
+char FUN_000c85b0(int16_t function_index, int root_datum)
+{
+  char *syntax;
+  char *link_node;
+  char *node;
+  int link;
+  int depth;
+  char ok;
+  void *entry;
+  const char *name;
+
+  if (function_index != 5 && function_index != 6) {
+    display_assert("function_index==_hs_function_and || "
+                   "function_index==_hs_function_or",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x15d, 1);
+    system_exit(-1);
+  }
+
+  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(syntax + 0x10));
+  link = *(int *)(node + 0x8);
+  ok = 1;
+  depth = 0;
+
+  while (link != -1) {
+    if (*(int *)0x46b6fc != 0) {
+      display_assert("!hs_compile_globals.error",
+                     "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x48e, 1);
+      system_exit(-1);
+    }
+
+    link_node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+    if (*(int16_t *)(link_node + 0x4) == 0) {
+      *(int16_t *)(link_node + 0x4) = 5;
+      node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+      if ((*(uint8_t *)(node + 0x6) & 1) != 0) {
+        *(int16_t *)(link_node + 0x2) = 5;
+        ok = FUN_000c73a0(link);
+      } else {
+        ok = FUN_000c74c0(link);
+      }
+    }
+
+    node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+    link = *(int *)(node + 0x8);
+    depth++;
+    if (!ok)
+      break;
+  }
+
+  if (ok)
+    return 1;
+
+  if (depth >= 2)
+    return ok;
+
+  entry = hs_function_table_get(function_index);
+  name = *(const char **)((char *)entry + 4);
+  crt_sprintf((char *)0x46b704, "too few arguments to function `%s`", name);
+  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  *(const char **)0x46b6fc = (const char *)0x46b704;
+  *(int *)0x46b700 = *(int *)(syntax + 0xc);
+  return 0;
+}
+
 /* Recompile all HS scripts and globals in the current scenario (0xc93f0).
  * First resizes the scenario's HS string data block (scenario+0x488) to the
  * current source_size, then initialises the compile globals for a new pass.

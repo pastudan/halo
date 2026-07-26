@@ -11197,7 +11197,8 @@
         },
         {
           "addr": "0xc5f60",
-          "decl": "void hs_parse_enum(void);"
+          "decl": "bool hs_parse_enum(int datum_index);",
+          "ported": false
         },
         {
           "addr": "0xc6130",
@@ -11256,7 +11257,8 @@
         },
         {
           "addr": "0xc66d0",
-          "decl": "bool FUN_000c66d0(int datum_index);"
+          "decl": "bool FUN_000c66d0(int datum_index);",
+          "ported": false
         },
         {
           "addr": "0xc6810",
@@ -11270,7 +11272,8 @@
         },
         {
           "addr": "0xc6940",
-          "decl": "void FUN_000c6940(void);"
+          "decl": "bool FUN_000c6940(int datum_index);",
+          "ported": false
         },
         {
           "addr": "0xc69d0",
@@ -11279,7 +11282,8 @@
         },
         {
           "addr": "0xc6a30",
-          "decl": "void FUN_000c6a30(void);"
+          "decl": "int16_t FUN_000c6a30(const char *str, const char **names, int16_t count);",
+          "ported": false
         },
         {
           "addr": "0xc6a70",
@@ -11338,27 +11342,33 @@
         },
         {
           "addr": "0xc7e50",
-          "decl": "void hs_macro_function_parse(void);"
+          "decl": "char hs_macro_function_parse(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc7f70",
-          "decl": "void hs_parse_begin(void);"
+          "decl": "char hs_parse_begin(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc8120",
-          "decl": "void hs_parse_if(void);"
+          "decl": "char hs_parse_if(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc82e0",
-          "decl": "void hs_parse_cond(void);"
+          "decl": "char hs_parse_cond(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc8380",
-          "decl": "void hs_parse_set(void);"
+          "decl": "char hs_parse_set(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc85b0",
-          "decl": "void FUN_000c85b0(void);"
+          "decl": "char FUN_000c85b0(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc93f0",
