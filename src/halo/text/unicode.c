@@ -1622,60 +1622,19 @@ void *ufreopen(const wchar_t *path, const wchar_t *mode, void *stream)
   return __wfreopen(path, mode, stream);
 }
 
-/* uperror (0x19efd0) — XBE naked draft (batch 273). */
-#if defined(__clang__)
-static void (*const b19efd0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19efd0_exitfn)(int) = system_exit;
-static size_t (*const b19efd0_c1db11e)(const wchar_t *str) = _wcslen;
-static void (*const b19efd0_c1dcd6e)(const wchar_t *prefix) = FUN_001dcd6e;
-
-__attribute__((naked, noinline))
-void uperror(const wchar_t *prefix __attribute__((unused)))
+/* uperror (0x19efd0) — readable C lift. */
+void uperror(const wchar_t *prefix)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Luperror_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x39a\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x27b838\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Luperror_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1db11e]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $0x8000, %%eax\n\t"
-      "jb .Luperror_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x39b\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b4858\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Luperror_2:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1dcd6e]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b19efd0_assert), [exitfn] "m"(b19efd0_exitfn), [c1db11e] "m"(b19efd0_c1db11e), [c1dcd6e] "m"(b19efd0_c1dcd6e)
-      : "memory");
+  if (prefix == NULL) {
+    display_assert((const char *)0x27b838, (const char *)0x2b45b4, 0x39a, 1);
+    system_exit(-1);
+  }
+  if ((unsigned)_wcslen(prefix) >= 0x8000) {
+    display_assert((const char *)0x2b4858, (const char *)0x2b45b4, 0x39b, 1);
+    system_exit(-1);
+  }
+  FUN_001dcd6e(prefix);
 }
-#else
-#error "uperror: clang naked draft required"
-#endif
-
 
 /* 0x19f040 */
 void *upopen(const wchar_t *command, const wchar_t *mode)

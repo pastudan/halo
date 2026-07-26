@@ -28138,7 +28138,7 @@
         {
           "addr": "0x19efd0",
           "decl": "void uperror(const wchar_t *prefix);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f040",
