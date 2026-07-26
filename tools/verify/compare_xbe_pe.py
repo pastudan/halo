@@ -320,7 +320,7 @@ def main() -> int:
         ("item_update", 0xf7340, 0xf7cb0),
         ("FUN_000f5900", 0xf5900, 0xf5f10),
         ("FUN_000f5fb0", 0xf5fb0, 0xf63c4),
-        ("FUN_000f4cf0", 0xf4cf0, 0xf4ea0),
+        ("FUN_000f4cf0", 0xf4cf0, 0xf4e92),
         # gameplay wave 19 (2026-07-26)
         ("FUN_000f7110", 0xf7110, 0xf7340),
         ("multiplayer_settings_select_list_update_item", 0xf4210, 0xf46e0),
@@ -419,7 +419,7 @@ def main() -> int:
         ("FUN_000fb510", 0xfb510, 0xfb594),
         ("weapon_trigger_release_charge", 0xfb880, 0xfb904),
         ("FUN_000fcd10", 0xfcd10, 0xfcdcd),
-        ("weapon_new", 0xfbd10, 0xfbea0),
+        ("weapon_new", 0xfbd10, 0xfbe94),
         # gameplay wave 33 (2026-07-26)
         ("lights_enable", 0x139300, 0x139310),
         ("light_delete", 0x139310, 0x139350),
@@ -503,6 +503,12 @@ def main() -> int:
         ("FUN_00134070", 0x134070, 0x134292),
         ("glow_trailing_particle_new", 0x134350, 0x1345b0),
         ("FUN_001b6e20", 0x1b6e20, 0x1b7016),
+        # gameplay wave 42 (2026-07-26)
+        ("weapon_new", 0xfbd10, 0xfbe94),
+        ("FUN_001b7020", 0x1b7020, 0x1b72a5),
+        ("FUN_000f4cf0", 0xf4cf0, 0xf4e92),
+        ("FUN_001b72b0", 0x1b72b0, 0x1b74c6),
+        ("FUN_00136b40", 0x136b40, 0x136bbe),
     ]
 
     xbe = Xbe.from_file(args.xbe)
