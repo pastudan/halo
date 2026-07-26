@@ -1161,90 +1161,112 @@ void biped_stop_limp_body_physics(int unit_handle)
   *(uint32_t *)(obj + 0x424) = flags424;
 }
 
-/* FUN_001a0a40 (0x1a0a40)
- *
- * Per-frame melee-contact/bump handler for bipeds. Tracks a timer (obj+0x458)
- * and triggers AI bump notification and optional player-unit reassignment.
- *
- * Register args (confirmed from caller FUN_001a5300 at 0x1a61ba/0x1a61c4):
- *   @edi  unit_handle  — biped datum handle
- *   @ebx  biped_obj    — pointer to biped object data (pre-fetched by caller)
- * Stack arg:
- *   velocity_ptr  [EBP+0x8]  — pointer to the biped's velocity vector (3
- * floats)
- *
- * Logic:
- *   If timer (obj+0x458) is negative (counting up through negatives):
- *     - If no new contact (EDI == -1): just increment timer and return.
- *     - Else: fall through to common exit (set timer to 0xf1).
- *   If timer >= 0 and no new contact (EDI == -1): early return (nothing to do).
- *   Otherwise:
- *     - Get the contact object (EDI, type -1).
- *     - Call ai_handle_bump(biped_handle, contact_handle, velocity_ptr).
- *     - If vehicle slot (obj+0x1c8) != -1 OR recorded-animation controlling:
- *         If obj+0x454 (last contact) != new contact: store new contact, clear
- * timer, return. Else: increment timer; if timer reaches 4 (> 3): If in
- * multiplayer + has local player: set obj+0x458=0xf1, call
- * players_set_local_player_unit. Fall-through/exit: set obj+0x458 = 0xf1.
- *
- * Confirmed: obj+0x458 = bump_timer (int8_t); obj+0x1c8 = vehicle_datum handle.
- * Confirmed: obj+0x454 = last_contact handle; obj+0x1c8 = vehicle slot.
- * Confirmed: DAT_005aa893 = multiplayer flag.
- * Confirmed: CALL 0x94ff0 (recorded_animation_controlling_unit).
- * Confirmed: CALL 0xb6990 (unit_get_local_player_index), returns int16_t (-1 =
- * none). Confirmed: CALL 0xba5f0 (players_set_local_player_unit(player_idx,
- * unit_handle)). Confirmed: [EDX+0x64] word = some vehicle-seat type field
- * checked == 0. Inferred: 0xf1 timer value = "reset/cleared" sentinel.
- */
-void FUN_001a0a40(int contact_handle /* @edi */, int unit_handle /* @ebx */,
-                  float *velocity_ptr)
+/* FUN_001a0a40 (0x1a0a40) — XBE naked draft (batch 63). */
+#if defined(__clang__)
+static void *(*const b1a0a40_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a0a40_tag)(int, int) = tag_get;
+static void (*const b1a0a40_c40360)(int param_1, int param_2, float *velocity_ptr) = ai_handle_bump;
+static char (*const b1a0a40_c94ff0)(int unit_handle) = recorded_animation_controlling_unit;
+static int16_t (*const b1a0a40_cb6990)(int unit_handle) = unit_get_local_player_index;
+static void (*const b1a0a40_cba5f0)(int16_t local_player_index, int unit_handle) = players_set_local_player_unit;
+
+__attribute__((naked, noinline))
+void FUN_001a0a40(int contact_handle __attribute__((unused)), int unit_handle __attribute__((unused)), float *velocity_ptr __attribute__((unused)))
 {
-  char *obj;
-  char *contact_obj;
-  int8_t timer;
-  int16_t player_idx;
-
-  obj = (char *)object_get_and_verify_type(unit_handle, 1);
-  tag_get(0x62697064, *(int *)obj);
-
-  timer = *(int8_t *)(obj + 0x458);
-  if (timer < 0) {
-    if (contact_handle == -1) {
-      *(int8_t *)(obj + 0x458) = timer + 1;
-      return;
-    }
-  } else {
-    if (contact_handle == -1) {
-      return;
-    }
-    contact_obj = (char *)object_get_and_verify_type(contact_handle, -1);
-    ai_handle_bump(unit_handle, contact_handle, velocity_ptr);
-    if ((*(int *)(obj + 0x1c8) == -1) &&
-        (recorded_animation_controlling_unit(unit_handle) == 0)) {
-      return;
-    }
-    if (*(int *)(obj + 0x454) != contact_handle) {
-      *(int *)(obj + 0x454) = contact_handle;
-      *(int8_t *)(obj + 0x458) = 0;
-      return;
-    }
-    timer = *(int8_t *)(obj + 0x458);
-    timer++;
-    *(int8_t *)(obj + 0x458) = timer;
-    if (timer <= 3) {
-      return;
-    }
-    if ((*(int16_t *)(contact_obj + 0x64) == 0) &&
-        (*(uint8_t *)0x5aa893 != 0)) {
-      player_idx = unit_get_local_player_index(unit_handle);
-      if (player_idx != -1) {
-        *(uint8_t *)(contact_obj + 0x458) = 0xf1;
-        players_set_local_player_unit(player_idx, unit_handle);
-      }
-    }
-  }
-  *(uint8_t *)(obj + 0x458) = 0xf1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x458(%%esi), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jge .LFUN_001a0a40_1\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .LFUN_001a0a40_4\n\t"
+      "incb %%al\n\t"
+      "movb %%al, 0x458(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001a0a40_1:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_001a0a40_5\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "call *%[c40360]\n\t"
+      "movl 0x1c8(%%esi), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .LFUN_001a0a40_2\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c94ff0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001a0a40_5\n\t"
+      ".LFUN_001a0a40_2:\n\t"
+      "cmpl %%edi, 0x454(%%esi)\n\t"
+      "je .LFUN_001a0a40_3\n\t"
+      "movl %%edi, 0x454(%%esi)\n\t"
+      "movb $0, 0x458(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001a0a40_3:\n\t"
+      "movb 0x458(%%esi), %%cl\n\t"
+      "incb %%cl\n\t"
+      "movb %%cl, %%al\n\t"
+      "cmpb $3, %%al\n\t"
+      "movb %%cl, 0x458(%%esi)\n\t"
+      "jle .LFUN_001a0a40_5\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "cmpw $0, 0x64(%%edx)\n\t"
+      "jne .LFUN_001a0a40_4\n\t"
+      "movb 0x5aa893, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001a0a40_4\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cb6990]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_001a0a40_4\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "movb $0xf1, 0x458(%%ecx)\n\t"
+      "call *%[cba5f0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_001a0a40_4:\n\t"
+      "movb $0xf1, 0x458(%%esi)\n\t"
+      ".LFUN_001a0a40_5:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a0a40_get), [tag] "m"(b1a0a40_tag), [c40360] "m"(b1a0a40_c40360), [c94ff0] "m"(b1a0a40_c94ff0), [cb6990] "m"(b1a0a40_cb6990), [cba5f0] "m"(b1a0a40_cba5f0)
+      : "memory");
 }
+#else
+#error "FUN_001a0a40: clang naked draft required"
+#endif
+
 
 /* FUN_001a0b30 (0x1a0b30)
  *
@@ -1532,73 +1554,109 @@ int biped_flying_through_air(int unit_handle)
   return 0;
 }
 
-/* FUN_001a0e00 (0x1a0e00)
- *
- * Advances a biped animation/transition phase based on an elapsed-time
- * threshold. The biped tag stores three phase boundaries (in ticks) at
- * tag+0x3dc/0x3e0/0x3e4, converted to seconds via *(1/30). Given the elapsed
- * time `threshold`, selects which phase the biped is in, computes a normalized
- * progress t (clamped to [0,1]) across that phase, and writes:
- *   unit+0x460 (uint16) = phase flag (0 = first phase, 1 = second phase)
- *   unit+0x428 (byte)   = 0
- *   unit+0x429 (byte)   = (char)(int)(phase_rate * t)
- * where phase_rate = tag[0x3d4 or 0x3d8] * TICKS_PER_SECOND.
- *
- * unit_handle is passed in EAX (register arg); `threshold` is the cdecl stack
- * arg. _ftol2 (0x1d9068) is the MSVC float->int intrinsic — written as (int).
- * Constant 0x2546a4 = seconds-per-tick (1/30); 0x253394 = TICKS_PER_SECOND.
- */
-void FUN_001a0e00(float threshold, int unit_handle)
+/* FUN_001a0e00 (0x1a0e00) — XBE naked draft (batch 63). */
+#if defined(__clang__)
+static void *(*const b1a0e00_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a0e00_tag)(int, int) = tag_get;
+static void (*const b1a0e00_ftol)(void) = FUN_001d9068;
+
+__attribute__((naked, noinline))
+void FUN_001a0e00(float threshold __attribute__((unused)), int unit_handle __attribute__((unused)))
 {
-  char *unit_obj;
-  char *biped_tag;
-  float fVar1;
-  float fVar2;
-  float range;
-  float offset;
-  float base;
-  float scaled;
-  float t;
-  int flag;
-
-  unit_obj = (char *)object_get_and_verify_type(unit_handle, 1);
-  biped_tag = (char *)tag_get(0x62697064, *(int *)unit_obj);
-
-  fVar1 = *(float *)(biped_tag + 0x3dc) * *(float *)0x2546a4;
-  fVar2 = *(float *)(biped_tag + 0x3e0) * *(float *)0x2546a4;
-
-  /* Branch primitives transcribed from the disassembly: the original tests with
-   * `<` (FCOMP; TEST AH,0x5) and inverts the jump, so mirror those `<` forms
-   * and the early-exit shape rather than the algebraically-equivalent `<=`
-   * nesting. */
-  if (threshold < fVar1) {
-    return;
-  }
-  if (threshold < fVar2) {
-    offset = threshold - fVar1;
-    range = fVar2 - fVar1;
-    base = *(float *)(biped_tag + 0x3d4);
-    flag = 0;
-  } else {
-    range = *(float *)(biped_tag + 0x3e4) * *(float *)0x2546a4 - fVar2;
-    offset = threshold;
-    base = *(float *)(biped_tag + 0x3d8);
-    flag = 1;
-  }
-  scaled = base * TICKS_PER_SECOND;
-  if (range <= 0.0f) {
-    return;
-  }
-  t = offset / range;
-  if (t < 0.0f) {
-    t = 0.0f;
-  } else if (1.0f < t) {
-    t = 1.0f;
-  }
-  *(uint16_t *)(unit_obj + 0x460) = (uint16_t)flag;
-  *(unsigned char *)(unit_obj + 0x428) = 0;
-  *(unsigned char *)(unit_obj + 0x429) = (unsigned char)(int)(scaled * t);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "flds 0x3dc(%%ecx)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "fmuls 0x2546a4\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds 0x3e0(%%ecx)\n\t"
+      "fmuls 0x2546a4\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps -0x4(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_001a0e00_6\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a0e00_1\n\t"
+      "fsubs -0x4(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fsubs -0x4(%%ebp)\n\t"
+      "flds 0x3d4(%%ecx)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "jmp .LFUN_001a0e00_2\n\t"
+      ".LFUN_001a0e00_1:\n\t"
+      "flds 0x3e4(%%ecx)\n\t"
+      "fmuls 0x2546a4\n\t"
+      "fsubs -0x8(%%ebp)\n\t"
+      "flds 0x3d8(%%ecx)\n\t"
+      "movl $1, %%ecx\n\t"
+      ".LFUN_001a0e00_2:\n\t"
+      "fmuls 0x253394\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a0e00_5\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a0e00_3\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .LFUN_001a0e00_4\n\t"
+      ".LFUN_001a0e00_3:\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a0e00_4\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c8\n\t"
+      ".LFUN_001a0e00_4:\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "movw %%cx, 0x460(%%esi)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "movb $0, 0x428(%%esi)\n\t"
+      "call *%[ftol]\n\t"
+      "fstp %%st(0)\n\t"
+      "movb %%al, 0x429(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001a0e00_5:\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_001a0e00_6:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a0e00_get), [tag] "m"(b1a0e00_tag), [ftol] "m"(b1a0e00_ftol)
+      : "memory");
 }
+#else
+#error "FUN_001a0e00: clang naked draft required"
+#endif
+
 
 /* FUN_001a0f10 (0x1a0f10) — XBE naked draft (batch 62). */
 #if defined(__clang__)

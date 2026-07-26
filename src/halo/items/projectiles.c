@@ -3870,14 +3870,88 @@ void FUN_000face0(int animation_graph_tag_index, short *state, int *out_sound)
   animation_update_internal(1, animation_graph_tag_index, state, out_sound);
 }
 
-/*
- * Wrapper: choose a random animation from the given animation graph
- * for the given animation index, using update_kind=1 (normal update).
- * Calls model_animation_choose_random(1, animation_graph_tag_index,
- * animation_index). Called by unit_try_and_exit_seat when transitioning a unit
- * to a new animation state after a melee/scripted override.
- */
-int16_t FUN_000fad00(int animation_graph_tag_index, int16_t animation_index)
+/* FUN_000fad00 (0xfad00) — XBE naked draft (batch 63). */
+#if defined(__clang__)
+static int (*const bfad00_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = model_animation_choose_random;
+
+__attribute__((naked, noinline))
+int16_t FUN_000fad00(int animation_graph_tag_index __attribute__((unused)), int16_t animation_index __attribute__((unused)))
 {
-  return model_animation_choose_random(1, animation_graph_tag_index, animation_index);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $1\n\t"
+      "call *%[c120f20]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "ret\n\t"
+      :
+      : [c120f20] "m"(bfad00_c120f20)
+      : "memory");
 }
+#else
+#error "FUN_000fad00: clang naked draft required"
+#endif
+

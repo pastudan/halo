@@ -9981,39 +9981,107 @@ void FUN_001a6bf0(int unit_handle)
   }
 }
 
-/* FUN_001a70d0 (0x1a70d0)
- * Initiates direct sound speech on a unit (used for scripted dialogue). */
-void FUN_001a70d0(int unit_handle, int sound_tag, int sound_handle)
-{
-  char *unit;
-  int result;
-  char speech_buf[0x30];
-  int local_8;
+/* FUN_001a70d0 (0x1a70d0) — XBE naked draft (batch 63). */
+#if defined(__clang__)
+static void *(*const b1a70d0_get)(int, int) = object_get_and_verify_type;
+static short (*const b1a70d0_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = FUN_001a68d0;
+static void *(*const b1a70d0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b1a70d0_c42d20)(void *packet) = ai_communication_packet_new;
+static void (*const b1a70d0_c1a6ef0)(int actor, short count, void *comm_buf) = FUN_001a6ef0;
+static void (*const b1a70d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1a70d0_exitfn)(int) = system_exit;
+static void (*const b1a70d0_c44fd0)(int unit_handle, uint16_t priority, uint16_t type, void *comm_data) = FUN_00044fd0;
 
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  local_8 = -1;
-  result = FUN_001a68d0(unit_handle, 6, 0, 0, 0, (int16_t *)&local_8, &result);
-  if ((int16_t)result < 3) {
-    result = 2;
-  }
-  csmemset(speech_buf, 0, 0x30);
-  *(int16_t *)(speech_buf + 0x00) = 6;
-  *(int16_t *)(speech_buf + 0x02) = -1;
-  *(int *)(speech_buf + 0x04) = sound_tag;
-  *(int16_t *)(speech_buf + 0x0c) = 0x18;
-  ai_communication_packet_new(speech_buf + 0x10);
-  FUN_001a6ef0(unit_handle, (int16_t)result, speech_buf);
-  if (*(int *)(unit + 0x33c) != sound_tag) {
-    display_assert(
-        "unit->unit.speech.current.sound_definition_index == sound_definition_index",
-        "c:\\halo\\SOURCE\\units\\unit_dialogue.c", 0x196, 1);
-    system_exit(-1);
-  }
-  *(int *)(unit + 0x3b0) = sound_handle;
-  *(uint8_t *)(unit + 0x3a4) = 1;
-  *(int16_t *)(unit + 0x3a8) = 0;
-  FUN_00044fd0(unit_handle, 6, 0xffff, unit + 0x348);
+__attribute__((naked, noinline))
+void FUN_001a70d0(int unit_handle __attribute__((unused)), int sound_tag __attribute__((unused)), int sound_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x34, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "leal 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $6\n\t"
+      "pushl %%edi\n\t"
+      "movl $0xffffffff, -0x4(%%ebp)\n\t"
+      "movl %%ebx, 0xc(%%ebp)\n\t"
+      "call *%[c1a68d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "cmpw $2, %%ax\n\t"
+      "movl %%eax, 0xc(%%ebp)\n\t"
+      "jg .LFUN_001a70d0_1\n\t"
+      "movl $2, 0xc(%%ebp)\n\t"
+      ".LFUN_001a70d0_1:\n\t"
+      "pushl $0x30\n\t"
+      "leal -0x34(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[memset]\n\t"
+      "leal -0x24(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movw $6, -0x34(%%ebp)\n\t"
+      "movw $0xffff, -0x32(%%ebp)\n\t"
+      "movl %%ebx, -0x30(%%ebp)\n\t"
+      "movw $0x18, -0x28(%%ebp)\n\t"
+      "call *%[c42d20]\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "leal -0x34(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1a6ef0]\n\t"
+      "movl 0x33c(%%esi), %%eax\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "je .LFUN_001a70d0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x196\n\t"
+      "pushl $0x2b66ec\n\t"
+      "pushl $0x2b67e0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a70d0_2:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x3b0(%%esi)\n\t"
+      "movb $1, 0x3a4(%%esi)\n\t"
+      "movw $0, 0x3a8(%%esi)\n\t"
+      "addl $0x348, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $-1\n\t"
+      "pushl $6\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c44fd0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a70d0_get), [c1a68d0] "m"(b1a70d0_c1a68d0), [memset] "m"(b1a70d0_memset), [c42d20] "m"(b1a70d0_c42d20), [c1a6ef0] "m"(b1a70d0_c1a6ef0), [assert] "m"(b1a70d0_assert), [exitfn] "m"(b1a70d0_exitfn), [c44fd0] "m"(b1a70d0_c44fd0)
+      : "memory");
 }
+#else
+#error "FUN_001a70d0: clang naked draft required"
+#endif
+
 
 /* unit_export_function_values (0x1a8010)
  * Exports 4 animation function values from unit tag to unit+0xD4. */

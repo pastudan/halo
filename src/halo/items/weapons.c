@@ -1060,50 +1060,102 @@ void FUN_000fc990(int16_t magazine_index __attribute__((unused)), int weapon_han
 #endif
 
 
-/* Complete a magazine reload cycle (0xfcaf0).
- * Transfers rounds from unloaded reserve to the loaded count, capped by
- * the tag's rounds-per-reload and maximum-rounds fields. Adjusts reserve
- * for dual-wield. Optionally starts the next reload cycle if rounds remain. */
-void FUN_000fcaf0(int weapon_handle, int magazine_index)
+/* FUN_000fcaf0 (0xfcaf0) — XBE naked draft (batch 63). */
+#if defined(__clang__)
+static void *(*const bfcaf0_get)(int, int) = object_get_and_verify_type;
+static void * (*const bfcaf0_cfb370)(void *weapon_obj, int16_t magazine_index) = FUN_000fb370;
+static void *(*const bfcaf0_tag)(int, int) = tag_get;
+static void *(*const bfcaf0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const bfcaf0_cfc990)(int16_t magazine_index, int weapon_handle, int param_2) = FUN_000fc990;
+
+__attribute__((naked, noinline))
+void FUN_000fcaf0(int weapon_handle __attribute__((unused)), int magazine_index __attribute__((unused)))
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  int16_t *magazine =
-    (int16_t *)FUN_000fb370((void *)weapon_obj, (int16_t)magazine_index);
-  void *tag_data = tag_get(0x77656170, *(int *)weapon_obj);
-  char *mag_def = (char *)tag_block_get_element(
-    (char *)tag_data + 0x4f0, (int)(int16_t)magazine_index, 0x70);
-  int16_t rounds_unloaded;
-  int16_t rounds_to_load;
-  int16_t total;
-
-  if ((*mag_def & 1) != 0) {
-    magazine[4] = 0;
-  }
-
-  rounds_unloaded = magazine[3];
-  rounds_to_load = rounds_unloaded;
-  if (*(int16_t *)(mag_def + 0x18) <= rounds_unloaded) {
-    rounds_to_load = *(int16_t *)(mag_def + 0x18);
-  }
-
-  total = magazine[4] + rounds_to_load;
-  if (total > *(int16_t *)(mag_def + 0xa)) {
-    total = *(int16_t *)(mag_def + 0xa);
-  }
-
-  if (*(char *)0x5aa892 == 0 && (*(uint8_t *)(weapon_obj + 0x1a4) & 2) != 0) {
-    magazine[3] = (rounds_unloaded - total) + magazine[4];
-  }
-
-  magazine[4] = total;
-  magazine[0] = 2;
-  magazine[1] = 0;
-
-  if (magazine[3] > 0 && total < *(int16_t *)(mag_def + 0xa) &&
-      (*mag_def & 1) == 0 && (*(uint8_t *)(weapon_obj + 0x1e0) & 0x26) == 0) {
-    FUN_000fc990((int16_t)magazine_index, weapon_handle, 0);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "call *%[cfb370]\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[tag]\n\t"
+      "movswl 0xc(%%ebp), %%edx\n\t"
+      "pushl $0x70\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x4f0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movb (%%eax), %%cl\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testb $1, %%cl\n\t"
+      "je .LFUN_000fcaf0_1\n\t"
+      "movw $0, 0x8(%%esi)\n\t"
+      ".LFUN_000fcaf0_1:\n\t"
+      "movw 0x6(%%esi), %%dx\n\t"
+      "movw 0x18(%%eax), %%cx\n\t"
+      "cmpw %%dx, %%cx\n\t"
+      "movswl %%dx, %%edi\n\t"
+      "jg .LFUN_000fcaf0_2\n\t"
+      "movswl %%cx, %%edi\n\t"
+      ".LFUN_000fcaf0_2:\n\t"
+      "movw 0x8(%%esi), %%cx\n\t"
+      "addw %%di, %%cx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movw 0xa(%%eax), %%di\n\t"
+      "cmpw %%di, %%cx\n\t"
+      "jle .LFUN_000fcaf0_3\n\t"
+      "movl %%edi, %%ecx\n\t"
+      ".LFUN_000fcaf0_3:\n\t"
+      "cmpb $0, 0x5aa892\n\t"
+      "jne .LFUN_000fcaf0_4\n\t"
+      "testb $2, 0x1a4(%%ebx)\n\t"
+      "je .LFUN_000fcaf0_4\n\t"
+      "subl %%ecx, %%edx\n\t"
+      "addw 0x8(%%esi), %%dx\n\t"
+      "movw %%dx, 0x6(%%esi)\n\t"
+      ".LFUN_000fcaf0_4:\n\t"
+      "cmpw $0, 0x6(%%esi)\n\t"
+      "movw %%cx, 0x8(%%esi)\n\t"
+      "movw $2, (%%esi)\n\t"
+      "movw $0, 0x2(%%esi)\n\t"
+      "jle .LFUN_000fcaf0_5\n\t"
+      "cmpw 0xa(%%eax), %%cx\n\t"
+      "jge .LFUN_000fcaf0_5\n\t"
+      "testb $1, (%%eax)\n\t"
+      "jne .LFUN_000fcaf0_5\n\t"
+      "testb $0x26, 0x1e0(%%ebx)\n\t"
+      "jne .LFUN_000fcaf0_5\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "call *%[cfc990]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000fcaf0_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfcaf0_get), [cfb370] "m"(bfcaf0_cfb370), [tag] "m"(bfcaf0_tag), [elem] "m"(bfcaf0_elem), [cfc990] "m"(bfcaf0_cfc990)
+      : "memory");
 }
+#else
+#error "FUN_000fcaf0: clang naked draft required"
+#endif
+
 
 /* 0xfcf20 — weapon_reset_state
  *
