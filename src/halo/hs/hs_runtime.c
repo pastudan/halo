@@ -3723,32 +3723,11 @@ void hs_object_iterate_names_containing(void *callback __attribute__((unused)), 
 #endif
 
 
-/* FUN_000c9b90 (0xc9b90) — XBE naked draft (batch 213). */
-#if defined(__clang__)
-static void (*const bc9b90_cc9b10)(void *callback, const char *substr) = hs_object_iterate_names_containing;
-
-__attribute__((naked, noinline))
-void FUN_000c9b90(const char *substr __attribute__((unused)))
+/* FUN_000c9b90 (0xc9b90) — readable C lift. */
+void FUN_000c9b90(const char *substr)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl $0xc9990\n\t"
-      "call *%[cc9b10]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc9b10] "m"(bc9b90_cc9b10)
-      : "memory");
+  hs_object_iterate_names_containing(FUN_000c9990, substr);
 }
-#else
-#error "FUN_000c9b90: clang naked draft required"
-#endif
-
 
 /* FUN_000cae80 (0xcae80) — readable C lift from XBE leaf (int == 0). */
 char FUN_000cae80(int value)
@@ -4465,59 +4444,17 @@ void FUN_000ca110(int16_t name_index __attribute__((unused)))
 #endif
 
 
-/* FUN_000c9bb0 (0xc9bb0) — XBE naked draft (batch 213). */
-#if defined(__clang__)
-static void (*const bc9bb0_cc9b10)(void *callback, const char *substr) = hs_object_iterate_names_containing;
-
-__attribute__((naked, noinline))
-void FUN_000c9bb0(const char *substr __attribute__((unused)))
+/* FUN_000c9bb0 (0xc9bb0) — readable C lift. */
+void FUN_000c9bb0(const char *substr)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl $0xc9a20\n\t"
-      "call *%[cc9b10]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc9b10] "m"(bc9bb0_cc9b10)
-      : "memory");
+  hs_object_iterate_names_containing(FUN_000c9a20, substr);
 }
-#else
-#error "FUN_000c9bb0: clang naked draft required"
-#endif
 
-
-/* FUN_000ca140 (0xca140) — XBE naked draft (batch 213). */
-#if defined(__clang__)
-static void (*const bca140_cc9b10)(void *callback, const char *substr) = hs_object_iterate_names_containing;
-
-__attribute__((naked, noinline))
-void FUN_000ca140(const char *substr __attribute__((unused)))
+/* FUN_000ca140 (0xca140) — readable C lift. */
+void FUN_000ca140(const char *substr)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl $0xca110\n\t"
-      "call *%[cc9b10]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc9b10] "m"(bca140_cc9b10)
-      : "memory");
+  hs_object_iterate_names_containing(FUN_000ca110, substr);
 }
-#else
-#error "FUN_000ca140: clang naked draft required"
-#endif
-
 
 static __attribute__((unused)) void hs_runtime_set_game_flag(int16_t game_flag, char set_flag)
 {

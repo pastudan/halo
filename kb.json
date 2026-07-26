@@ -12273,12 +12273,12 @@
         {
           "addr": "0xc9b90",
           "decl": "void FUN_000c9b90(const char *substr);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9bb0",
           "decl": "void FUN_000c9bb0(const char *substr);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9bd0",
@@ -12358,7 +12358,7 @@
         {
           "addr": "0xca140",
           "decl": "void FUN_000ca140(const char *substr);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca160",
@@ -34459,7 +34459,7 @@
         {
           "addr": "0x42f60",
           "decl": "char FUN_00042f60(int actor, int unit, int prop);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x42fa0",
@@ -38838,7 +38838,7 @@
       "functions": [
         {
           "addr": "0x24000",
-          "decl": "void FUN_00024000(void *ctx, float score, int type, void *position @<esi>);",
+          "decl": "void FUN_00024000(void *ctx, float score, int type, void *position);",
           "ported": false
         },
         {
