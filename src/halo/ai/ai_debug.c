@@ -986,7 +986,7 @@ void ai_debug_communication_ignore(int a0, int a1)
 /* ai_debug_communication_focus (0x4a6b0) — readable C lift. */
 void ai_debug_communication_focus(int a0, int a1)
 {
-  FUN_0004a460(a0, a1, (void *)0x5aca24, 0x39, 0x42ce0);
+  FUN_0004a460(a0, a1, (void *)0x5aca24, 0xd1, 0x1a67e0);
 }
 
 /* ai_debug_idle_look_clear (0x4a6e0) — readable C lift. */
