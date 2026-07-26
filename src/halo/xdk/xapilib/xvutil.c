@@ -2,19 +2,45 @@
 
 /* --- XAPILIB:xvutil.obj batch drafts (2026-07-26) --- */
 
-/* 0x1d04f1 */
+/* FUN_001d04f1 (0x1d04f1) — XBE naked draft (batch 321). */
+#if defined(__clang__)
+static void (*const b1d04f1_c1d4464)(void) = FUN_001d4464;
+
+__attribute__((naked, noinline))
 void FUN_001d04f1(void)
 {
-  int eax = 0;
-  int ebp = 0;
-
-  FUN_001d4464();
-  /* test eax, eax -> jne 0x1d0518 */
-  /* relift: test byte ptr [ebp - 4], 2 -> je 0x1d0518 */
-
-  (void)eax;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $4\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x11\n\t"
+      "call *%[c1d4464]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_001d04f1_1\n\t"
+      "testb $2, -0x4(%%ebp)\n\t"
+      "je .LFUN_001d04f1_1\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      ".LFUN_001d04f1_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d4464] "m"(b1d04f1_c1d4464)
+      : "memory");
 }
+#else
+#error "FUN_001d04f1: clang naked draft required"
+#endif
+
 
 /* 0x1d051d */
 void GetLocalTime(void *system_time)
@@ -31,12 +57,56 @@ int FUN_001d0581(void)
   return 0;
 }
 
-/* 0x1d0589 */
+/* FUN_001d0589 (0x1d0589) — XBE naked draft (batch 321). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_001d0589(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "call *0x253138\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movw -0x18(%%ebp), %%cx\n\t"
+      "movw %%cx, (%%eax)\n\t"
+      "movw -0x16(%%ebp), %%cx\n\t"
+      "movw %%cx, 0x2(%%eax)\n\t"
+      "movw -0x14(%%ebp), %%cx\n\t"
+      "movw %%cx, 0x6(%%eax)\n\t"
+      "movw -0xa(%%ebp), %%cx\n\t"
+      "movw %%cx, 0x4(%%eax)\n\t"
+      "movw -0x12(%%ebp), %%cx\n\t"
+      "movw %%cx, 0x8(%%eax)\n\t"
+      "movw -0x10(%%ebp), %%cx\n\t"
+      "movw %%cx, 0xa(%%eax)\n\t"
+      "movw -0xe(%%ebp), %%cx\n\t"
+      "movw %%cx, 0xc(%%eax)\n\t"
+      "movw -0xc(%%ebp), %%cx\n\t"
+      "movw %%cx, 0xe(%%eax)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001d0589: clang naked draft required"
+#endif
+
 
 /* 0x1d05f4 */
 bool SystemTimeToFileTime(void *system_time, void *file_time)
@@ -267,46 +337,176 @@ void FUN_001d06a0(void)
 #endif
 
 
-/* 0x1d08aa */
+/* GetTimeZoneInformation (0x1d08aa) — XBE naked draft (batch 321). */
+#if defined(__clang__)
+static void (*const b1d08aa_c1d0447)(void) = FUN_001d0447;
+static void __stdcall (*const b1d08aa_c1d2268)(unsigned int error) = (void *)SetLastError;
+static void (*const b1d08aa_c1d06a0)(void) = FUN_001d06a0;
+static void (*const b1d08aa_c1dd620)(void) = __allmul;
+
+__attribute__((naked, noinline))
 void GetTimeZoneInformation(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int ebp = 0;
-
-  FUN_001d0447();
-  /* cmp eax, ebx -> je 0x1d08d3 */
-  SetLastError(eax);
-  /* relift: cmp word ptr [esi + 0x46], (int16_t)ebx -> je 0x1d09fd */
-  /* relift: cmp word ptr [esi + 0x9a], (int16_t)ebx -> je 0x1d09fd */
-  FUN_001d06a0();
-  /* test (char)eax, (char)eax -> je 0x1d09fd */
-  FUN_001d06a0();
-  /* test (char)eax, (char)eax -> je 0x1d09fd */
-  __allmul();
-  __allmul();
-  __allmul();
-  /* cmp ebx, edx -> jg 0x1d09e0 */
-  /* relift: cmp dword ptr [ebp - 0x18], eax -> jae 0x1d09e0 */
-  /* relift: cmp dword ptr [ebp - 4], ebx -> jl 0x1d09db */
-  /* relift: cmp ecx, dword ptr [ebp - 0x18] -> jb 0x1d09db */
-  /* relift: cmp dword ptr [ebp - 4], edx -> jg 0x1d09db */
-  /* cmp ecx, eax -> jb 0x1d09fa */
-  /* relift: cmp dword ptr [ebp - 4], edx -> jl 0x1d09fa */
-  /* cmp ecx, eax -> jb 0x1d09fa */
-  /* relift: cmp dword ptr [ebp - 4], ebx -> jg 0x1d09fa */
-  /* relift: cmp ecx, dword ptr [ebp - 0x18] -> jb 0x1d09db */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x28, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "leal 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "call *%[c1d0447]\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "je .LGetTimeZoneInformation_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2268]\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "jmp .LGetTimeZoneInformation_10\n\t"
+      ".LGetTimeZoneInformation_1:\n\t"
+      "cmpl %%ebx, 0x8(%%ebp)\n\t"
+      "pushl %%edi\n\t"
+      "jne .LGetTimeZoneInformation_2\n\t"
+      "movl %%ebx, 0x54(%%esi)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal 0x44(%%esi), %%edi\n\t"
+      ".byte 0xab\n\t"
+      ".byte 0xab\n\t"
+      ".byte 0xab\n\t"
+      ".byte 0xab\n\t"
+      "movl %%ebx, 0xa8(%%esi)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal 0x98(%%esi), %%edi\n\t"
+      ".byte 0xab\n\t"
+      ".byte 0xab\n\t"
+      ".byte 0xab\n\t"
+      ".byte 0xab\n\t"
+      "pushl $0x10\n\t"
+      "popl %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal 0x58(%%esi), %%edi\n\t"
+      "rep stosl\n\t"
+      ".LGetTimeZoneInformation_2:\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x25313c\n\t"
+      "cmpw %%bx, 0x46(%%esi)\n\t"
+      "je .LGetTimeZoneInformation_9\n\t"
+      "cmpw %%bx, 0x9a(%%esi)\n\t"
+      "je .LGetTimeZoneInformation_9\n\t"
+      "pushl $1\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x44(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d06a0]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LGetTimeZoneInformation_9\n\t"
+      "pushl $1\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x20(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x98(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d06a0]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LGetTimeZoneInformation_9\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "imull $0x3c, %%eax, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "cdq\n\t"
+      "movl $0x989680, %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dd620]\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "movl 0x54(%%esi), %%eax\n\t"
+      "imull $0x3c, %%eax, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "cdq\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dd620]\n\t"
+      "addl -0x10(%%ebp), %%eax\n\t"
+      "movl %%edx, %%ebx\n\t"
+      "adcl -0xc(%%ebp), %%ebx\n\t"
+      "addl -0x20(%%ebp), %%eax\n\t"
+      "pushl $0\n\t"
+      "adcl -0x1c(%%ebp), %%ebx\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "movl 0xa8(%%esi), %%eax\n\t"
+      "imull $0x3c, %%eax, %%eax\n\t"
+      "cdq\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dd620]\n\t"
+      "addl -0x10(%%ebp), %%eax\n\t"
+      "adcl -0xc(%%ebp), %%edx\n\t"
+      "addl -0x28(%%ebp), %%eax\n\t"
+      "adcl -0x24(%%ebp), %%edx\n\t"
+      "cmpl %%edx, %%ebx\n\t"
+      "jg .LGetTimeZoneInformation_6\n\t"
+      "jl .LGetTimeZoneInformation_3\n\t"
+      "cmpl %%eax, -0x18(%%ebp)\n\t"
+      "jae .LGetTimeZoneInformation_6\n\t"
+      ".LGetTimeZoneInformation_3:\n\t"
+      "cmpl %%ebx, -0x4(%%ebp)\n\t"
+      "jl .LGetTimeZoneInformation_5\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "jg .LGetTimeZoneInformation_4\n\t"
+      "cmpl -0x18(%%ebp), %%ecx\n\t"
+      "jb .LGetTimeZoneInformation_5\n\t"
+      ".LGetTimeZoneInformation_4:\n\t"
+      "cmpl %%edx, -0x4(%%ebp)\n\t"
+      "jg .LGetTimeZoneInformation_5\n\t"
+      "jl .LGetTimeZoneInformation_8\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jb .LGetTimeZoneInformation_8\n\t"
+      ".LGetTimeZoneInformation_5:\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "incl %%ebx\n\t"
+      "jmp .LGetTimeZoneInformation_9\n\t"
+      ".LGetTimeZoneInformation_6:\n\t"
+      "cmpl %%edx, -0x4(%%ebp)\n\t"
+      "jl .LGetTimeZoneInformation_8\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "jg .LGetTimeZoneInformation_7\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jb .LGetTimeZoneInformation_8\n\t"
+      ".LGetTimeZoneInformation_7:\n\t"
+      "cmpl %%ebx, -0x4(%%ebp)\n\t"
+      "jg .LGetTimeZoneInformation_8\n\t"
+      "jl .LGetTimeZoneInformation_5\n\t"
+      "cmpl -0x18(%%ebp), %%ecx\n\t"
+      "jb .LGetTimeZoneInformation_5\n\t"
+      ".LGetTimeZoneInformation_8:\n\t"
+      "pushl $2\n\t"
+      "popl %%ebx\n\t"
+      ".LGetTimeZoneInformation_9:\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "popl %%edi\n\t"
+      ".LGetTimeZoneInformation_10:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d0447] "m"(b1d08aa_c1d0447), [c1d2268] "m"(b1d08aa_c1d2268), [c1d06a0] "m"(b1d08aa_c1d06a0), [c1dd620] "m"(b1d08aa_c1dd620)
+      : "memory");
 }
+#else
+#error "GetTimeZoneInformation: clang naked draft required"
+#endif
+
 
 /* 0x1d0a06 */
 void FUN_001d0a06(void)
@@ -448,11 +648,30 @@ void * LocalFree(void *ptr)
   return NULL;
 }
 
-/* 0x1d0c48 */
+/* FUN_001d0c48 (0x1d0c48) — XBE naked draft (batch 324). */
+#if defined(__clang__)
+static void (*const b1d0c48_c1d5c66)(void) = FUN_001d5c66;
+
+__attribute__((naked, noinline))
 void FUN_001d0c48(void)
 {
-  FUN_001d5c66();
+  __asm__ volatile(
+      "movl 0x4(%%esp), %%eax\n\t"
+      "pushl 0x8(%%esp)\n\t"
+      "shrl $3, %%eax\n\t"
+      "andl $8, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0x632a28\n\t"
+      "call *%[c1d5c66]\n\t"
+      "ret\n\t"
+      :
+      : [c1d5c66] "m"(b1d0c48_c1d5c66)
+      : "memory");
 }
+#else
+#error "FUN_001d0c48: clang naked draft required"
+#endif
+
 
 /* 0x1d0c65 */
 void FUN_001d0c65(void)

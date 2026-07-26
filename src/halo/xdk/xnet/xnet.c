@@ -366,21 +366,46 @@ void XGetSectionSize(void)
   (void)0;
 }
 
-/* 0x1d8b76 */
+/* XNetGetEthernetLinkStatus (0x1d8b76) — XBE naked draft (batch 327). */
+#if defined(__clang__)
+static void (*const b1d8b76_c1d0362)(void) = FUN_001d0362;
+
+__attribute__((naked, noinline))
 uint32_t XNetGetEthernetLinkStatus(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* cmp eax, esi -> je 0x1d8b97 */
-  FUN_001d0362();
-  /* relift: cmp dword ptr [0x4ee4b0], esi -> jne 0x1d8ba7 */
-  /* mem[0x004ee4b4] = esi */
-  return 0;
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      ".LXNetGetEthernetLinkStatus_1:\n\t"
+      "movl $0, %%eax\n\t"
+      "movl $0x4ee4b4, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      ".byte 0x0f, 0xb1, 0x11\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "je .LXNetGetEthernetLinkStatus_2\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d0362]\n\t"
+      "jmp .LXNetGetEthernetLinkStatus_1\n\t"
+      ".LXNetGetEthernetLinkStatus_2:\n\t"
+      "cmpl %%esi, 0x4ee4b0\n\t"
+      "jne .LXNetGetEthernetLinkStatus_3\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *0x2532e4\n\t"
+      ".LXNetGetEthernetLinkStatus_3:\n\t"
+      "pushl %%esi\n\t"
+      "movl %%esi, 0x4ee4b4\n\t"
+      "call *0x2532e0\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c1d0362] "m"(b1d8b76_c1d0362)
+      : "memory");
 }
+#else
+#error "XNetGetEthernetLinkStatus: clang naked draft required"
+#endif
+
 
 /* 0x1d8df8 */
 void XcSHAUpdate(int a, int b, int c)

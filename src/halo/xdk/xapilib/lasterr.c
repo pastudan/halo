@@ -325,37 +325,110 @@ int XSetNicknameW(void *param_1, int param_2)
   (void)ebp;
 }
 
-/* 0x1d292e */
+/* FUN_001d292e (0x1d292e) — XBE naked draft (batch 327). */
+#if defined(__clang__)
+static size_t (*const b1d292e_c1db11e)(const wchar_t *str) = _wcslen;
+static int (*const b1d292e_c1dc2c3)(const wchar_t *s1, const wchar_t *s2) = __wcsicmp;
+static void (*const b1d292e_c1db180)(void) = _wcscpy;
+
+__attribute__((naked, noinline))
 void FUN_001d292e(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: cmp word ptr [eax], (int16_t)edi -> je 0x1d29bc */
-  _wcslen((wchar_t *)(uintptr_t)eax);
-  /* cmp eax, edi -> je 0x1d2978 */
-  /* relift: cmp edx, dword ptr [ecx + esi + 0xc] -> jne 0x1d29bc */
-  /* relift: cmp dword ptr [esi + 4], edi -> jbe 0x1d29b0 */
-  __wcsicmp((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)ebx);
-  /* relift: cmp edi, dword ptr [esi + 4] -> jb 0x1d2987 */
-  /* relift: cmp dword ptr [esi + 8], 0 -> jne 0x1d29ce */
-  /* relift: cmp dword ptr [ebp + 8], 0 -> je 0x1d29ce */
-  /* relift: cmp dword ptr [esi + 4], 0x32 -> jb 0x1d2945 */
-  _wcscpy();
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x10118, %%eax\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_001d292e_7\n\t"
+      ".LFUN_001d292e_1:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "imull $0x44, %%eax, %%eax\n\t"
+      "leal 0x10(%%eax,%%esi,1), %%eax\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "cmpw %%di, (%%eax)\n\t"
+      "je .LFUN_001d292e_6\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1db11e]\n\t"
+      "cmpl 0x10(%%ebp), %%eax\n\t"
+      "popl %%ecx\n\t"
+      "jae .LFUN_001d292e_6\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "je .LFUN_001d292e_2\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "imull $0x44, %%ecx, %%ecx\n\t"
+      "cmpl 0xc(%%ecx,%%esi,1), %%edx\n\t"
+      "jne .LFUN_001d292e_6\n\t"
+      ".LFUN_001d292e_2:\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "movl %%edi, 0x8(%%ebp)\n\t"
+      "jne .LFUN_001d292e_5\n\t"
+      "cmpl %%edi, 0x4(%%esi)\n\t"
+      "jbe .LFUN_001d292e_5\n\t"
+      "leal 0x10(%%esi), %%ebx\n\t"
+      ".LFUN_001d292e_3:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "imull $0x44, %%eax, %%eax\n\t"
+      "leal 0x10(%%eax,%%esi,1), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dc2c3]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "popl %%ecx\n\t"
+      "popl %%ecx\n\t"
+      "je .LFUN_001d292e_4\n\t"
+      "incl %%edi\n\t"
+      "addl $0x44, %%ebx\n\t"
+      "cmpl 0x4(%%esi), %%edi\n\t"
+      "jb .LFUN_001d292e_3\n\t"
+      "jmp .LFUN_001d292e_5\n\t"
+      ".LFUN_001d292e_4:\n\t"
+      "movl $1, 0x8(%%ebp)\n\t"
+      ".LFUN_001d292e_5:\n\t"
+      "cmpl $0, 0x8(%%esi)\n\t"
+      "jne .LFUN_001d292e_9\n\t"
+      "cmpl $0, 0x8(%%ebp)\n\t"
+      "je .LFUN_001d292e_9\n\t"
+      ".LFUN_001d292e_6:\n\t"
+      "incl 0x4(%%esi)\n\t"
+      ".LFUN_001d292e_7:\n\t"
+      "cmpl $0x32, 0x4(%%esi)\n\t"
+      "jb .LFUN_001d292e_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_001d292e_8:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      ".LFUN_001d292e_9:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "imull $0x44, %%eax, %%eax\n\t"
+      "leal 0x10(%%eax,%%esi,1), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0xc(%%ebp)\n\t"
+      "call *%[c1db180]\n\t"
+      "incl 0x4(%%esi)\n\t"
+      "popl %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ecx\n\t"
+      "incl %%eax\n\t"
+      "jmp .LFUN_001d292e_8\n\t"
+      :
+      : [c1db11e] "m"(b1d292e_c1db11e), [c1dc2c3] "m"(b1d292e_c1dc2c3), [c1db180] "m"(b1d292e_c1db180)
+      : "memory");
 }
+#else
+#error "FUN_001d292e: clang naked draft required"
+#endif
+
 
 /* 0x1d29eb */
 int FUN_001d29eb(int param_1, void *param_2, int param_3)
