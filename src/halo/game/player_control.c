@@ -191,40 +191,120 @@ void interpolate_scalar(float *value, float target, float max_delta)
     *value += delta;
 }
 
-/* Piecewise-linear sample of table[0..count) at |t| in [0,1], with sign of t
- * applied by negating the result when t >= 0 (matches XBE polarity). */
-float evaluate_piecewise_linear_function(int16_t count, float *table, float t)
-{
-  char positive;
-  int n;
-  float idx_f;
-  int16_t i;
-  int16_t j;
-  float result;
+/* evaluate_piecewise_linear_function (0xb64c0) — XBE naked draft (batch 129). */
+#if defined(__clang__)
+static void (*const bb64c0_ftol)(void) = FUN_001d9068;
+static void (*const bb64c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb64c0_exitfn)(int) = system_exit;
 
-  positive = 1;
-  if (t < *(float *)0x2533c0)
-    positive = 0;
-  n = (int)count - 1;
-  idx_f = fabsf(t) * (float)n;
-  if (idx_f < 0.0)
-    idx_f = 0.0f;
-  else if (idx_f > (float)count - *(float *)0x2533c8)
-    idx_f = (float)count - *(float *)0x2533c8;
-  i = (int16_t)(int)idx_f;
-  if (i < 0)
-    i = 0;
-  else if ((int)i > n)
-    i = (int16_t)n;
-  j = (int16_t)(i + 1);
-  if ((int)j > n)
-    j = (int16_t)n;
-  assert_halt(table && i >= 0 && i <= j && j < count);
-  result = table[i] + (idx_f - (float)i) * (table[j] - table[i]);
-  if (positive)
-    result = -result;
-  return result;
+__attribute__((naked, noinline))
+float evaluate_piecewise_linear_function(int16_t count __attribute__((unused)), float *table __attribute__((unused)), float t __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Levaluate_piecewise_linear_function_1\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      ".Levaluate_piecewise_linear_function_1:\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "pushl %%ebx\n\t"
+      "fabs\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x1(%%eax), %%esi\n\t"
+      "movl %%esi, -0x8(%%ebp)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "pushl %%edi\n\t"
+      "fimull -0x8(%%ebp)\n\t"
+      "fcoml 0x2602c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Levaluate_piecewise_linear_function_2\n\t"
+      "fstp %%st(0)\n\t"
+      "fldl 0x2602c0\n\t"
+      "jmp .Levaluate_piecewise_linear_function_3\n\t"
+      ".Levaluate_piecewise_linear_function_2:\n\t"
+      "fildl -0xc(%%ebp)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fsts 0x10(%%ebp)\n\t"
+      "fld %%st(1)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Levaluate_piecewise_linear_function_3\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      ".Levaluate_piecewise_linear_function_3:\n\t"
+      "fsts 0x10(%%ebp)\n\t"
+      "call *%[ftol]\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jge .Levaluate_piecewise_linear_function_4\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .Levaluate_piecewise_linear_function_5\n\t"
+      ".Levaluate_piecewise_linear_function_4:\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jle .Levaluate_piecewise_linear_function_5\n\t"
+      "movl %%esi, %%eax\n\t"
+      ".Levaluate_piecewise_linear_function_5:\n\t"
+      "movswl %%ax, %%edi\n\t"
+      "leal 0x1(%%edi), %%ebx\n\t"
+      "cmpl %%esi, %%ebx\n\t"
+      "movl %%edi, -0xc(%%ebp)\n\t"
+      "jle .Levaluate_piecewise_linear_function_6\n\t"
+      "movl %%esi, %%ebx\n\t"
+      ".Levaluate_piecewise_linear_function_6:\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Levaluate_piecewise_linear_function_7\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Levaluate_piecewise_linear_function_7\n\t"
+      "cmpw %%bx, %%ax\n\t"
+      "jg .Levaluate_piecewise_linear_function_7\n\t"
+      "cmpw 0x8(%%ebp), %%bx\n\t"
+      "jl .Levaluate_piecewise_linear_function_8\n\t"
+      ".Levaluate_piecewise_linear_function_7:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x14b\n\t"
+      "pushl $0x26e1e8\n\t"
+      "pushl $0x26e228\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Levaluate_piecewise_linear_function_8:\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "flds (%%esi,%%eax,4)\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "fsubs (%%esi,%%edi,4)\n\t"
+      "fildl -0xc(%%ebp)\n\t"
+      "fsubrs 0x10(%%ebp)\n\t"
+      ".byte 0xde, 0xc9\n\t"
+      "fadds (%%esi,%%edi,4)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "je .Levaluate_piecewise_linear_function_9\n\t"
+      "fchs\n\t"
+      ".Levaluate_piecewise_linear_function_9:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ftol] "m"(bb64c0_ftol), [assert] "m"(bb64c0_assert), [exitfn] "m"(bb64c0_exitfn)
+      : "memory");
 }
+#else
+#error "evaluate_piecewise_linear_function: clang naked draft required"
+#endif
+
 
 /* player_control_get_unit_index (0xb6870) — XBE naked draft (batch 97). */
 #if defined(__clang__)

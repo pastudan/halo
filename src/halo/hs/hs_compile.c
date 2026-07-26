@@ -2285,56 +2285,132 @@ bool hs_parse_enum(int datum_index __attribute__((unused)))
 #endif
 
 
-/* 0xc66d0 — Resolve an object/enum name (types 0x2b..0x30) against the
- * scenario object list and validate the object type mask. */
-bool FUN_000c66d0(int datum_index)
+/* FUN_000c66d0 (0xc66d0) — XBE naked draft (batch 128). */
+#if defined(__clang__)
+static void *(*const bc66d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bc66d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bc66d0_exitfn)(int) = system_exit;
+static scenario_t * (*const bc66d0_c18e380)(void) = global_scenario_get;
+static int16_t (*const bc66d0_c18ea50)(void *param_1, const char *name) = FUN_0018ea50;
+static void *(*const bc66d0_elem)(void *, int, int) = tag_block_get_element;
+static int (*const bc66d0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+
+__attribute__((naked, noinline))
+bool FUN_000c66d0(int datum_index __attribute__((unused)))
 {
-  char *node;
-  int16_t type;
-  int16_t obj_idx;
-  char *elem;
-  int16_t mask;
-  uint32_t bit;
-
-  node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
-  type = *(int16_t *)(node + 0x4);
-
-  if (type < 0x2b || type > 0x30) {
-    display_assert("HS_TYPE_IS_ENUM(expression->type)",
-                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x771, 1);
-    system_exit(-1);
-  }
-
-  obj_idx = FUN_0018ea50(
-    global_scenario_get(),
-    (const char *)(*(int *)(node + 0xc) + *(int *)0x46b6e8));
-  if (obj_idx == -1) {
-    *(const char **)0x46b6fc = (const char *)0x27c384;
-    *(int *)0x46b700 = *(int *)(node + 0xc);
-    return false;
-  }
-
-  elem = (char *)tag_block_get_element((char *)global_scenario_get() + 0x204,
-                                       (int)obj_idx, 0x24);
-  if (*(int16_t *)(elem + 0x20) == -1) {
-    display_assert("object->type!=NONE",
-                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x77a, 1);
-    system_exit(-1);
-  }
-
-  mask = *(int16_t *)(0x26f2ca + (int)type * 2);
-  bit = 1U << (uint32_t)(uint8_t) * (uint8_t *)(elem + 0x20);
-  if ((bit & (uint32_t)(uint16_t)mask) == 0) {
-    crt_sprintf((char *)0x46b704, "this is not a valid %s name",
-                ((const char **)0x2f14a8)[(int)type]);
-    *(const char **)0x46b6fc = (const char *)0x46b704;
-    *(int *)0x46b700 = *(int *)(node + 0xc);
-    return false;
-  }
-
-  *(int16_t *)(node + 0x10) = obj_idx;
-  return true;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x5aa6c8, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movw 0x4(%%esi), %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0x2b, %%ax\n\t"
+      "jl .LFUN_000c66d0_1\n\t"
+      "cmpw $0x30, %%ax\n\t"
+      "jle .LFUN_000c66d0_2\n\t"
+      ".LFUN_000c66d0_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x771\n\t"
+      "pushl $0x27bd0c\n\t"
+      "pushl $0x27c3f4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000c66d0_2:\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "addl 0x46b6e8, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c18e380]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18ea50]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "cmpw $-1, %%di\n\t"
+      "je .LFUN_000c66d0_5\n\t"
+      "movswl %%di, %%eax\n\t"
+      "pushl $0x24\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x204, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $-1, 0x20(%%ebx)\n\t"
+      "jne .LFUN_000c66d0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x77a\n\t"
+      "pushl $0x27bd0c\n\t"
+      "pushl $0x27c3cc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000c66d0_3:\n\t"
+      "movswl 0x4(%%esi), %%eax\n\t"
+      "movswl 0x26f2ca(,%%eax,2), %%edx\n\t"
+      "movl $1, %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movb 0x20(%%ebx), %%cl\n\t"
+      "movl -0x4(%%ebp), %%ebx\n\t"
+      "shll %%cl, %%ebx\n\t"
+      "testl %%edx, %%ebx\n\t"
+      "je .LFUN_000c66d0_4\n\t"
+      "movw %%di, 0x10(%%esi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c66d0_4:\n\t"
+      "movl 0x2f14a8(,%%eax,4), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x27c3a8\n\t"
+      "pushl $0x46b704\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movl $0x46b704, 0x46b6fc\n\t"
+      "movl 0xc(%%esi), %%ecx\n\t"
+      "popl %%esi\n\t"
+      "movl %%ecx, 0x46b700\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c66d0_5:\n\t"
+      "popl %%edi\n\t"
+      "movl $0x27c384, 0x46b6fc\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "movl %%edx, 0x46b700\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bc66d0_dget), [assert] "m"(bc66d0_assert), [exitfn] "m"(bc66d0_exitfn), [c18e380] "m"(bc66d0_c18e380), [c18ea50] "m"(bc66d0_c18ea50), [elem] "m"(bc66d0_elem), [c1d90f0] "m"(bc66d0_c1d90f0)
+      : "memory");
 }
+#else
+#error "FUN_000c66d0: clang naked draft required"
+#endif
+
 
 /* 0xc6940 — Compile a material literal (type 0x16) from the scenario's
  * material tag block. Returns false when no material tag is assigned. */
@@ -2359,56 +2435,135 @@ bool FUN_000c6940(int datum_index)
   return FUN_000c6130(datum_index, (char *)mat_block + 0x20, 0x40, 0);
 }
 
-/* 0xc7e50 — Validate macro/function actual arguments against the descriptor
- * parameter type list in hs_function_table_get(function_index). */
-char hs_macro_function_parse(int16_t function_index, int root_datum)
+/* hs_macro_function_parse (0xc7e50) — XBE naked draft (batch 127). */
+#if defined(__clang__)
+static void * (*const bc7e50_cc3d00)(int16_t function_index) = hs_function_table_get;
+static void *(*const bc7e50_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bc7e50_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bc7e50_exitfn)(int) = system_exit;
+static bool (*const bc7e50_cc7d80)(int datum_index, int16_t check_type) = hs_type_check;
+static int (*const bc7e50_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+
+__attribute__((naked, noinline))
+char hs_macro_function_parse(int16_t function_index __attribute__((unused)), int root_datum __attribute__((unused)))
 {
-  void *entry;
-  char *syntax;
-  int arg;
-  int16_t arg_idx;
-  int16_t arg_count;
-  char ok;
-
-  entry = hs_function_table_get(function_index);
-  if (*(int16_t *)entry < 4 || *(int16_t *)entry >= 0x31) {
-    display_assert("hs_type_valid(function->return_type)",
-                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x819, 1);
-    system_exit(-1);
-  }
-
-  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
-  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(syntax + 0x10));
-  arg = *(int *)(syntax + 0x8);
-  ok = 1;
-  arg_idx = 0;
-  arg_count = *(int16_t *)((char *)entry + 0x18);
-
-  while (arg_idx < arg_count) {
-    if (arg == -1)
-      break;
-    if (!hs_type_check(arg, *(int16_t *)((char *)entry + 0x1a + (int)arg_idx * 2)))
-      ok = 0;
-    if (!ok)
-      break;
-    syntax = (char *)datum_get(*(data_t **)0x5aa6c8, arg);
-    arg = *(int *)(syntax + 0x8);
-    arg_idx++;
-  }
-
-  if (!ok)
-    return 0;
-
-  if (arg_idx == arg_count && arg == -1)
-    return 1;
-
-  crt_sprintf((char *)0x46b704, "too few arguments to function `%s`",
-              *(const char **)((char *)entry + 4));
-  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
-  *(const char **)0x46b6fc = (const char *)0x46b704;
-  *(int *)0x46b700 = *(int *)(syntax + 0xc);
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "call *%[cc3d00]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%eax), %%eax\n\t"
+      "movl 0x5aa6c8, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%edi\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jl .Lhs_macro_function_parse_1\n\t"
+      "cmpw $0x31, %%ax\n\t"
+      "jl .Lhs_macro_function_parse_2\n\t"
+      ".Lhs_macro_function_parse_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x819\n\t"
+      "pushl $0x27bd0c\n\t"
+      "pushl $0x27ccc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lhs_macro_function_parse_2:\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lhs_macro_function_parse_3:\n\t"
+      "cmpw 0x18(%%esi), %%bx\n\t"
+      "jge .Lhs_macro_function_parse_6\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lhs_macro_function_parse_6\n\t"
+      "movswl %%bx, %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x1a(%%esi,%%edx,2), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cc7d80]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lhs_macro_function_parse_4\n\t"
+      "movl 0x5aa6c8, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lhs_macro_function_parse_5\n\t"
+      ".Lhs_macro_function_parse_4:\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      ".Lhs_macro_function_parse_5:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "incl %%ebx\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lhs_macro_function_parse_3\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lhs_macro_function_parse_6:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lhs_macro_function_parse_8\n\t"
+      "movw 0x18(%%esi), %%cx\n\t"
+      "cmpw %%cx, %%bx\n\t"
+      "jne .Lhs_macro_function_parse_7\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lhs_macro_function_parse_8\n\t"
+      ".Lhs_macro_function_parse_7:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x27cc90\n\t"
+      "pushl $0x46b704\n\t"
+      "call *%[c1d90f0]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl $0x46b704, 0x46b6fc\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movl %%eax, 0x46b700\n\t"
+      "xorb %%al, %%al\n\t"
+      ".Lhs_macro_function_parse_8:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cc3d00] "m"(bc7e50_cc3d00), [dget] "m"(bc7e50_dget), [assert] "m"(bc7e50_assert), [exitfn] "m"(bc7e50_exitfn), [cc7d80] "m"(bc7e50_cc7d80), [c1d90f0] "m"(bc7e50_c1d90f0)
+      : "memory");
 }
+#else
+#error "hs_macro_function_parse: clang naked draft required"
+#endif
+
 
 /* hs_parse_begin (0xc7f70) — XBE naked draft (batch 119). */
 #if defined(__clang__)
@@ -3020,71 +3175,153 @@ char hs_parse_set(int16_t function_index __attribute__((unused)), int root_datum
 #endif
 
 
-/* 0xc85b0 — Parse (and ...) / (or ...) boolean n-ary forms (fn index 5/6). */
-char FUN_000c85b0(int16_t function_index, int root_datum)
+/* FUN_000c85b0 (0xc85b0) — XBE naked draft (batch 124). */
+#if defined(__clang__)
+static void *(*const bc85b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bc85b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bc85b0_exitfn)(int) = system_exit;
+static bool (*const bc85b0_cc73a0)(int datum_index) = FUN_000c73a0;
+static bool (*const bc85b0_cc74c0)(int datum_index) = FUN_000c74c0;
+static void * (*const bc85b0_cc3d00)(int16_t function_index) = hs_function_table_get;
+static int (*const bc85b0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+
+__attribute__((naked, noinline))
+char FUN_000c85b0(int16_t function_index __attribute__((unused)), int root_datum __attribute__((unused)))
 {
-  char *syntax;
-  char *link_node;
-  char *node;
-  int link;
-  int depth;
-  char ok;
-  void *entry;
-  const char *name;
-
-  if (function_index != 5 && function_index != 6) {
-    display_assert("function_index==_hs_function_and || "
-                   "function_index==_hs_function_or",
-                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x15d, 1);
-    system_exit(-1);
-  }
-
-  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
-  node = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(syntax + 0x10));
-  link = *(int *)(node + 0x8);
-  ok = 1;
-  depth = 0;
-
-  while (link != -1) {
-    if (*(int *)0x46b6fc != 0) {
-      display_assert("!hs_compile_globals.error",
-                     "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x48e, 1);
-      system_exit(-1);
-    }
-
-    link_node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
-    if (*(int16_t *)(link_node + 0x4) == 0) {
-      *(int16_t *)(link_node + 0x4) = 5;
-      node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
-      if ((*(uint8_t *)(node + 0x6) & 1) != 0) {
-        *(int16_t *)(link_node + 0x2) = 5;
-        ok = FUN_000c73a0(link);
-      } else {
-        ok = FUN_000c74c0(link);
-      }
-    }
-
-    node = (char *)datum_get(*(data_t **)0x5aa6c8, link);
-    link = *(int *)(node + 0x8);
-    depth++;
-    if (!ok)
-      break;
-  }
-
-  if (ok)
-    return 1;
-
-  if (depth >= 2)
-    return ok;
-
-  entry = hs_function_table_get(function_index);
-  name = *(const char **)((char *)entry + 4);
-  crt_sprintf((char *)0x46b704, "too few arguments to function `%s`", name);
-  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
-  *(const char **)0x46b6fc = (const char *)0x46b704;
-  *(int *)0x46b700 = *(int *)(syntax + 0xc);
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x5aa6c8, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movb $1, %%bl\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%eax), %%edx\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%edi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $5, %%ax\n\t"
+      "je .LFUN_000c85b0_1\n\t"
+      "cmpw $6, %%ax\n\t"
+      "je .LFUN_000c85b0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x15d\n\t"
+      "pushl $0x27cdc0\n\t"
+      "pushl $0x27cf68\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000c85b0_1:\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      ".LFUN_000c85b0_2:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_000c85b0_8\n\t"
+      "movl 0x5aa6c8, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "movb $1, %%bl\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x46b6fc, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c85b0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x48e\n\t"
+      "pushl $0x27bd0c\n\t"
+      "pushl $0x27cbd4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000c85b0_3:\n\t"
+      "cmpw $0, 0x4(%%esi)\n\t"
+      "jne .LFUN_000c85b0_6\n\t"
+      "movl $5, %%ebx\n\t"
+      "movw %%bx, 0x4(%%esi)\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0x6(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $1, %%cl\n\t"
+      "je .LFUN_000c85b0_4\n\t"
+      "movw %%bx, 0x2(%%esi)\n\t"
+      "call *%[cc73a0]\n\t"
+      "jmp .LFUN_000c85b0_5\n\t"
+      ".LFUN_000c85b0_4:\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "call *%[cc74c0]\n\t"
+      ".LFUN_000c85b0_5:\n\t"
+      "movb %%al, %%bl\n\t"
+      ".LFUN_000c85b0_6:\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%eax), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "incl %%ecx\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "jne .LFUN_000c85b0_2\n\t"
+      ".LFUN_000c85b0_7:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c85b0_8:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_000c85b0_7\n\t"
+      "cmpw $2, -0x4(%%ebp)\n\t"
+      "jge .LFUN_000c85b0_7\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[cc3d00]\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x27cf38\n\t"
+      "pushl $0x46b704\n\t"
+      "call *%[c1d90f0]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x5aa6c8, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0x46b704, 0x46b6fc\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%edx, 0x46b700\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bc85b0_dget), [assert] "m"(bc85b0_assert), [exitfn] "m"(bc85b0_exitfn), [cc73a0] "m"(bc85b0_cc73a0), [cc74c0] "m"(bc85b0_cc74c0), [cc3d00] "m"(bc85b0_cc3d00), [c1d90f0] "m"(bc85b0_c1d90f0)
+      : "memory");
 }
+#else
+#error "FUN_000c85b0: clang naked draft required"
+#endif
+
 
 /* Recompile all HS scripts and globals in the current scenario (0xc93f0).
  * First resizes the scenario's HS string data block (scenario+0x488) to the

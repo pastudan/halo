@@ -722,29 +722,128 @@ void FUN_00085ab0(void)
   (void)ebp;
 }
 
-/* 0x85b60 */
+/* FUN_00085b60 (0x85b60) — XBE naked draft (batch 129). */
+#if defined(__clang__)
+static void * (*const b85b60_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;
+static void (*const b85b60_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b85b60_exitfn)(int) = system_exit;
+static unsigned int *(*const b85b60_lseed)(void) = random_math_get_local_seed_address;
+static float (*const b85b60_rrange)(int *, float, float) = random_real_range;
+static bool (*const b85b60_gerun)(void) = game_engine_running;
+static int (*const b85b60_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
+static void *(*const b85b60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
 void FUN_00085b60(void)
 {
-  int eax = 0;
-  int ebx = 0;
-
-  observer_get_camera(ebx);
-  display_assert((char *)0x00266e9c, (char *)0x00266f44, 23, 0);
-  system_exit(0);
-  random_math_get_local_seed_address();
-  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
-  random_math_get_local_seed_address();
-  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
-  random_math_get_local_seed_address();
-  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
-  game_engine_running();
-  /* test (char)eax, (char)eax -> je 0x85c2b */
-  local_player_get_player_index(0);
-  datum_get((void *)(uintptr_t)eax, 0);
-
-  (void)eax;
-  (void)ebx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c8a4e0]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "jne .LFUN_00085b60_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x17\n\t"
+      "pushl $0x266f44\n\t"
+      "pushl $0x266e9c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00085b60_1:\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edi), %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%edi), %%ecx\n\t"
+      "pushl $0x40c00000\n\t"
+      "pushl $0x40000000\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movl $0x3f9c61aa, 0x18(%%esi)\n\t"
+      "call *%[lseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rrange]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0x40c90fdb\n\t"
+      "fstps 0x14(%%esi)\n\t"
+      "pushl $0\n\t"
+      "call *%[lseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rrange]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0x3f8cbe4c\n\t"
+      "fstps 0xc(%%esi)\n\t"
+      "pushl $0x3ef1463b\n\t"
+      "call *%[lseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rrange]\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "movl 0x266f38, %%edx\n\t"
+      "fchs\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fstps 0x10(%%esi)\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movl %%edx, 0x1c(%%esi)\n\t"
+      "je .LFUN_00085b60_2\n\t"
+      "flds 0x2548fc\n\t"
+      "jmp .LFUN_00085b60_4\n\t"
+      ".LFUN_00085b60_2:\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00085b60_3\n\t"
+      "flds 0x266f3c\n\t"
+      "jmp .LFUN_00085b60_4\n\t"
+      ".LFUN_00085b60_3:\n\t"
+      "flds 0x266f40\n\t"
+      ".LFUN_00085b60_4:\n\t"
+      "pushl %%ebx\n\t"
+      "fstps 0x2c(%%esi)\n\t"
+      "call *%[cba3c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movl %%eax, 0x20(%%esi)\n\t"
+      "jne .LFUN_00085b60_5\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x38(%%eax), %%eax\n\t"
+      "movl 0x20(%%esi), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x28(%%esi)\n\t"
+      "movl %%ecx, 0x24(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00085b60_5:\n\t"
+      "movl 0x20(%%esi), %%ecx\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x28(%%esi)\n\t"
+      "movl %%ecx, 0x24(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8a4e0] "m"(b85b60_c8a4e0), [assert] "m"(b85b60_assert), [exitfn] "m"(b85b60_exitfn), [lseed] "m"(b85b60_lseed), [rrange] "m"(b85b60_rrange), [gerun] "m"(b85b60_gerun), [cba3c0] "m"(b85b60_cba3c0), [dget] "m"(b85b60_dget)
+      : "memory");
 }
+#else
+#error "FUN_00085b60: clang naked draft required"
+#endif
+
 
 /* FUN_00085c80 (0x85c80) — XBE naked draft (batch 106). */
 #if defined(__clang__)
@@ -1476,60 +1575,266 @@ void FUN_00086670(void)
 #endif
 
 
-/* 0x86900 */
+/* director_load_camera (0x86900) — XBE naked draft (batch 126). */
+#if defined(__clang__)
+static void * (*const b86900_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
+static void (*const b86900_c1da081)(void) = _fscanf;
+static int (*const b86900_c1d9dac)(void *stream) = crt_fclose;
+static void (*const b86900_c89350)(void) = FUN_00089350;
+static void (*const b86900_c8aa80)(float *forward, float *up) = observer_up_from_forward;
+static float (*const b86900_c10c510)(float *v1, float *v2) = FUN_0010c510;
+
+__attribute__((naked, noinline))
 void director_load_camera(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  crt_fopen((char *)0x00267084, (char *)0x002658a4);
-  /* test esi, esi -> je 0x86a40 */
-  _fscanf();
-  _fscanf();
-  _fscanf();
-  _fscanf();
-  crt_fclose((void *)(uintptr_t)esi);
-  FUN_00089350();
-  observer_up_from_forward((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
-  FUN_0010c510((float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
-  /* test (char)eax, 0x41 -> jne 0x86a13 */
-  /* mem[0x003352d4] = ecx */
-  /* mem[0x003352b8] = 0x893a0 */
-  /* mem[0x00335374] = 0x3f800000 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x34, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x2658a4\n\t"
+      "pushl $0x267084\n\t"
+      "call *%[c1d9e59]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Ldirector_load_camera_2\n\t"
+      "leal -0x2c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x30(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x34(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x267078\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1da081]\n\t"
+      "leal -0x20(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x24(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x28(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x267078\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1da081]\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x267078\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1da081]\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x267074\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1da081]\n\t"
+      "addl $0x48, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d9dac]\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x34(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x3352bc\n\t"
+      "call *%[c89350]\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8aa80]\n\t"
+      "leal -0x1c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10c510]\n\t"
+      "fstps 0x3352d0\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "addl $0x20, %%esp\n\t"
+      "fmuls -0xc(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls -0x1c(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls -0x10(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls -0xc(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fxch %%st(3)\n\t"
+      "fmuls -0x28(%%ebp)\n\t"
+      ".byte 0xde, 0xc3\n\t"
+      "fxch %%st(2)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fstp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Ldirector_load_camera_1\n\t"
+      "flds 0x3352d0\n\t"
+      "fchs\n\t"
+      "fstps 0x3352d0\n\t"
+      ".Ldirector_load_camera_1:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x3352d4\n\t"
+      "movl $0x893a0, 0x3352b8\n\t"
+      "movl $0x3f800000, 0x335374\n\t"
+      "movb $0, 0x335370\n\t"
+      "movw $2, 0x3352b0\n\t"
+      ".Ldirector_load_camera_2:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d9e59] "m"(b86900_c1d9e59), [c1da081] "m"(b86900_c1da081), [c1d9dac] "m"(b86900_c1d9dac), [c89350] "m"(b86900_c89350), [c8aa80] "m"(b86900_c8aa80), [c10c510] "m"(b86900_c10c510)
+      : "memory");
 }
+#else
+#error "director_load_camera: clang naked draft required"
+#endif
 
-/* 0x86a50 */
+
+/* FUN_00086a50 (0x86a50) — XBE naked draft (batch 127). */
+#if defined(__clang__)
+static void (*const b86a50_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b86a50_exitfn)(int) = system_exit;
+static void (*const b86a50_c89850)(void) = following_camera_new;
+static void (*const b86a50_c865a0)(int16_t local_player_index, int param_1, bool param_2) = FUN_000865a0;
+static void (*const b86a50_c8cf10)(void) = FUN_0008cf10;
+static void (*const b86a50_c89350)(void) = FUN_00089350;
+static void (*const b86a50_c88c40)(void) = first_person_camera_new;
+static void (*const b86a50_cff4d0)(int channel, const char *format, ...) = console_printf;
+
+__attribute__((naked, noinline))
 void FUN_00086a50(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* cmp (int16_t)esi, 4 -> jl 0x86a82 */
-  display_assert((char *)0x00266fc0, (char *)0x0026700c, 179, 0);
-  system_exit(0);
-  /* cmp eax, 4 -> ja 0x86b24 */
-  following_camera_new();
-  FUN_000865a0(0x00089cd0, 0, 0);
-  FUN_0008cf10();
-  FUN_000865a0(0x0008cf30, 0, 0);
-  FUN_00089350();
-  FUN_000865a0(0x000893a0, 0, 0);
-  first_person_camera_new();
-  FUN_000865a0(0x00089270, 0, 0);
-  display_assert((char *)0, (char *)0x0026700c, 512, 0);
-  system_exit(0);
-  console_printf(0, (char *)0x00267094);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "jl .LFUN_00086a50_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .LFUN_00086a50_2\n\t"
+      ".LFUN_00086a50_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb3\n\t"
+      "pushl $0x26700c\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00086a50_2:\n\t"
+      "movswl 0x8(%%ebp), %%ecx\n\t"
+      "movswl %%si, %%edi\n\t"
+      "imull $0xf8, %%edi, %%edi\n\t"
+      "addl $0x3352b0, %%edi\n\t"
+      "movswl (%%edi), %%eax\n\t"
+      "incl %%eax\n\t"
+      "cdq\n\t"
+      "idivl %%ecx\n\t"
+      "movw %%dx, (%%edi)\n\t"
+      "movswl %%dx, %%edx\n\t"
+      "movswl (%%ebx,%%edx,2), %%eax\n\t"
+      "cmpl $4, %%eax\n\t"
+      "ja .LFUN_00086a50_7\n\t"
+      "jmp *.LFUN_00086a50_jt(,%%eax,4)\n\t"
+      ".LFUN_00086a50_3:\n\t"
+      "leal 0xc(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c89850]\n\t"
+      "pushl $1\n\t"
+      "pushl $0x89cd0\n\t"
+      "call *%[c865a0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_00086a50_9\n\t"
+      ".LFUN_00086a50_4:\n\t"
+      "movl 0x74(%%edi), %%edx\n\t"
+      "leal 0x7c(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0xc(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8cf10]\n\t"
+      "pushl $1\n\t"
+      "pushl $0x8cf30\n\t"
+      "call *%[c865a0]\n\t"
+      "jmp .LFUN_00086a50_8\n\t"
+      ".LFUN_00086a50_5:\n\t"
+      "leal 0x7c(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x5c(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0xc(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c89350]\n\t"
+      "pushl $1\n\t"
+      "pushl $0x893a0\n\t"
+      "call *%[c865a0]\n\t"
+      "jmp .LFUN_00086a50_8\n\t"
+      ".LFUN_00086a50_6:\n\t"
+      "leal 0xc(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c88c40]\n\t"
+      "pushl $1\n\t"
+      "pushl $0x89270\n\t"
+      "call *%[c865a0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_00086a50_9\n\t"
+      ".LFUN_00086a50_7:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x200\n\t"
+      "pushl $0x26700c\n\t"
+      "pushl $0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      ".LFUN_00086a50_8:\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00086a50_9:\n\t"
+      "movswl (%%edi), %%edx\n\t"
+      "movswl (%%ebx,%%edx,2), %%eax\n\t"
+      "movl 0x2ee5e0(,%%eax,4), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x267094\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_00086a50_jt:\n\t"
+      ".long .LFUN_00086a50_3\n\t"
+      ".long .LFUN_00086a50_4\n\t"
+      ".long .LFUN_00086a50_5\n\t"
+      ".long .LFUN_00086a50_9\n\t"
+      ".long .LFUN_00086a50_6\n\t"
+      ".text\n\t"
+      :
+      : [assert] "m"(b86a50_assert), [exitfn] "m"(b86a50_exitfn), [c89850] "m"(b86a50_c89850), [c865a0] "m"(b86a50_c865a0), [c8cf10] "m"(b86a50_c8cf10), [c89350] "m"(b86a50_c89350), [c88c40] "m"(b86a50_c88c40), [cff4d0] "m"(b86a50_cff4d0)
+      : "memory");
 }
+#else
+#error "FUN_00086a50: clang naked draft required"
+#endif
+
 
 /* 0x86b80 */
 void director_camera_deterministic(void)
@@ -1983,36 +2288,161 @@ void editor_camera_update(void)
   (void)edi;
 }
 
-/* 0x88050 */
+/* editor_camera_set_scripted (0x88050) — XBE naked draft (batch 122). */
+#if defined(__clang__)
+static void (*const b88050_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b88050_exitfn)(int) = system_exit;
+static void (*const b88050_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
+static void (*const b88050_c879d0)(void) = editor_camera_set_position;
+static void (*const b88050_c85280)(float *position, float *forward, float *up, float param_4, short param_5, int param_6) = FUN_00085280;
+static void (*const b88050_c87eb0)(void) = FUN_00087eb0;
+static void (*const b88050_cff4d0)(int channel, const char *format, ...) = console_printf;
+
+__attribute__((naked, noinline))
 void editor_camera_set_scripted(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  /* test (char)ebx, (char)ebx -> je 0x88135 */
-  /* test (int16_t)eax, (int16_t)eax -> je 0x880b4 */
-  /* test edx, edx -> jne 0x880a1 */
-  display_assert((char *)0x0026718c, (char *)0x00267120, 387, 0);
-  system_exit(0);
-  vector_to_angles((float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
-  editor_camera_set_position();
-  /* cmp eax, -1 -> je 0x8810e */
-  FUN_00085280((void *)0x003356b8, (float *)(uintptr_t)eax, (float *)0, 0.0f, 0, 0);
-  FUN_00085280((float *)(uintptr_t)eax, (float *)0, (float *)0, 0.0f, 0, 0);
-  vector_to_angles((float *)(uintptr_t)eax, (float *)0);
-  FUN_00087eb0();
-  /* test edx, edx -> jne 0x881b8 */
-  display_assert((char *)0x0026718c, (char *)0x00267120, 414, 0);
-  system_exit(0);
-  console_printf(0, (char *)0x002671d8);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movb 0x8(%%ebp), %%bl\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Leditor_camera_set_scripted_4\n\t"
+      "movw 0x3356c4, %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Leditor_camera_set_scripted_2\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "movl 0x2ee67c(,%%ecx,8), %%edx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jne .Leditor_camera_set_scripted_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x183\n\t"
+      "pushl $0x267120\n\t"
+      "pushl $0x26718c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movw 0x3356c4, %%ax\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Leditor_camera_set_scripted_1:\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movl 0x3356b0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x2ee67c(,%%edx,8)\n\t"
+      "addl $4, %%esp\n\t"
+      ".Leditor_camera_set_scripted_2:\n\t"
+      "movl 0x2ee670, %%ecx\n\t"
+      "addl $0x1c, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c10cc00]\n\t"
+      "movl 0x2ee670, %%ecx\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "addl $0x10, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c879d0]\n\t"
+      "movl 0x2ee66c, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Leditor_camera_set_scripted_3\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x2ee670, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl $0x3f9c61aa\n\t"
+      "leal 0x28(%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x1c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x3356b8\n\t"
+      "call *%[c85280]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "jmp .Leditor_camera_set_scripted_6\n\t"
+      ".Leditor_camera_set_scripted_3:\n\t"
+      "movl 0x2ee670, %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl $0\n\t"
+      "pushl $0x3f9c61aa\n\t"
+      "leal 0x28(%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x1c(%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x10, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c85280]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "jmp .Leditor_camera_set_scripted_6\n\t"
+      ".Leditor_camera_set_scripted_4:\n\t"
+      "movl 0x2ee670, %%eax\n\t"
+      "addl $0x10, %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl 0x3356b0, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl (%%ecx), %%esi\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%esi, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%esi\n\t"
+      "movl %%esi, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "movl 0x2ee670, %%edx\n\t"
+      "addl $0x1c, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl $0xc, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10cc00]\n\t"
+      "movl 0x2ee66c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c87eb0]\n\t"
+      "movw 0x3356c4, %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "popl %%esi\n\t"
+      "je .Leditor_camera_set_scripted_6\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "movl 0x2ee67c(,%%ecx,8), %%edx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jne .Leditor_camera_set_scripted_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19e\n\t"
+      "pushl $0x267120\n\t"
+      "pushl $0x26718c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movw 0x3356c4, %%ax\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Leditor_camera_set_scripted_5:\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movl 0x3356b0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x2ee680(,%%edx,8)\n\t"
+      "addl $4, %%esp\n\t"
+      ".Leditor_camera_set_scripted_6:\n\t"
+      "movb 0x335698, %%cl\n\t"
+      "movzbl %%bl, %%edx\n\t"
+      "movl 0x2ee694(,%%edx,4), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2671d8\n\t"
+      "pushl $0\n\t"
+      "movb %%cl, 0x3356ca\n\t"
+      "movb %%bl, 0x335698\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b88050_assert), [exitfn] "m"(b88050_exitfn), [c10cc00] "m"(b88050_c10cc00), [c879d0] "m"(b88050_c879d0), [c85280] "m"(b88050_c85280), [c87eb0] "m"(b88050_c87eb0), [cff4d0] "m"(b88050_cff4d0)
+      : "memory");
 }
+#else
+#error "editor_camera_set_scripted: clang naked draft required"
+#endif
+
 
 /* 0x88200 */
 void FUN_00088200(void)

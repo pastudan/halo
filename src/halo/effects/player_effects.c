@@ -424,28 +424,137 @@ void FUN_000a3b80(int player_index __attribute__((unused)), void *damage_params 
 
 /* --- player_effects.obj batch drafts (2026-07-26) --- */
 
-/* 0xa27a0 */
+/* player_effect_add_continuous_effect (0xa27a0) — XBE naked draft (batch 127). */
+#if defined(__clang__)
+static void *(*const ba27a0_tag)(int, int) = tag_get;
+static char * (*const ba27a0_ca2690)(int16_t local_player_index) = player_effect_get;
+static int (*const ba27a0_gtime)(void) = game_time_get;
+static float (*const ba27a0_c10a5e0)(int16_t function_type, float input) = FUN_0010a5e0;
+static void *(*const ba27a0_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void player_effect_add_continuous_effect(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
-
-  tag_get(0x63646d67, 0);
-  player_effect_get(ecx);
-  /* test (char)eax, 0x41 -> jne 0xa2821 */
-  game_time_get();
-  FUN_0010a5e0(edx, 0.0f);
-  csmemset((void *)(uintptr_t)edi, 0, 16);
-  /* test (char)eax, 0x41 -> je 0xa2896 */
-  /* test (char)eax, 0x41 -> je 0xa28b7 */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x63646d67\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "fcomps 0x4(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lplayer_effect_add_continuous_effect_7\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ca2690]\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fsubs (%%esi)\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "flds (%%esi)\n\t"
+      "addl $4, %%esp\n\t"
+      "fsubs 0x4(%%esi)\n\t"
+      "leal 0xcc(%%ebx), %%edi\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fsubrs 0x2533c8\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lplayer_effect_add_continuous_effect_1\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0, 0x10(%%ebp)\n\t"
+      "jmp .Lplayer_effect_add_continuous_effect_3\n\t"
+      ".Lplayer_effect_add_continuous_effect_1:\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lplayer_effect_add_continuous_effect_2\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0x3f800000, 0x10(%%ebp)\n\t"
+      "jmp .Lplayer_effect_add_continuous_effect_3\n\t"
+      ".Lplayer_effect_add_continuous_effect_2:\n\t"
+      "fstps 0x10(%%ebp)\n\t"
+      ".Lplayer_effect_add_continuous_effect_3:\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x58(%%esi), %%dx\n\t"
+      "pushl %%ecx\n\t"
+      "fdivs 0x5c(%%esi)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c10a5e0]\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs 0x60(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, 0xdc(%%ebx)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls 0x60(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fmuls 0x10(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "jle .Lplayer_effect_add_continuous_effect_4\n\t"
+      "pushl $0x10\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "movw $0, 0xdc(%%ebx)\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lplayer_effect_add_continuous_effect_4:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x44(%%esi)\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lplayer_effect_add_continuous_effect_5\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c0\n\t"
+      ".Lplayer_effect_add_continuous_effect_5:\n\t"
+      "fadds 0x8(%%edi)\n\t"
+      "fstps 0x8(%%edi)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x48(%%esi)\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lplayer_effect_add_continuous_effect_6\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c0\n\t"
+      ".Lplayer_effect_add_continuous_effect_6:\n\t"
+      "fadds 0xc(%%edi)\n\t"
+      "fstps 0xc(%%edi)\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fmuls 0x24(%%esi)\n\t"
+      "fadds (%%edi)\n\t"
+      "fstps (%%edi)\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fmuls 0x28(%%esi)\n\t"
+      "fadds 0x4(%%edi)\n\t"
+      "fstps 0x4(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".Lplayer_effect_add_continuous_effect_7:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(ba27a0_tag), [ca2690] "m"(ba27a0_ca2690), [gtime] "m"(ba27a0_gtime), [c10a5e0] "m"(ba27a0_c10a5e0), [memset] "m"(ba27a0_memset)
+      : "memory");
 }
+#else
+#error "player_effect_add_continuous_effect: clang naked draft required"
+#endif
+
 
 /* 0xa28e0 */
 void scripted_player_effect_set_rotation(int a0, float a1, float a2)

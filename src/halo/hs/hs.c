@@ -3544,50 +3544,138 @@ void FUN_000c2140(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, 0);
 }
 
-/* 0xc3a50 — merge source-file globals from src scenario into dst, clear scripts */
+/* hs_scenario_merge (0xc3a50) — XBE naked draft (batch 127). */
+#if defined(__clang__)
+static void *(*const bc3a50_elem)(void *, int, int) = tag_block_get_element;
+static int (*const bc3a50_c1dd801)(const char *a, const char *b) = crt_stricmp;
+static int16_t (*const bc3a50_c1b9ad0)(void *tag_block) = tag_block_add_element;
+static char * (*const bc3a50_c8dff0)(char *destination, const char *source) = csstrcpy;
+static bool (*const bc3a50_c1b9ab0)(void *tag_data, int size) = tag_data_resize;
+static void * (*const bc3a50_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static bool (*const bc3a50_c1b9a90)(void *block, int count) = tag_block_resize;
 
-char hs_scenario_merge(void *dst_scenario, void *src_scenario)
+__attribute__((naked, noinline))
+char hs_scenario_merge(void *dst_scenario __attribute__((unused)), void *src_scenario __attribute__((unused)))
 {
-  char ok;
-  int i;
-  int j;
-  void *dst_globals;
-  void *src_globals;
-  void *src_elem;
-  void *dst_elem;
-  int16_t added;
-  void *new_elem;
-
-  ok = 1;
-  src_globals = (char *)src_scenario + 0x4c0;
-  dst_globals = (char *)dst_scenario + 0x4c0;
-  for (i = 0; i < *(int *)src_globals; i++) {
-    src_elem = tag_block_get_element(src_globals, i, 0x34);
-    for (j = 0; j < *(int *)dst_globals; j++) {
-      dst_elem = tag_block_get_element(dst_globals, j, 0x34);
-      if (crt_stricmp((const char *)src_elem, (const char *)dst_elem) == 0)
-        break;
-    }
-    if (j == *(int *)dst_globals) {
-      added = tag_block_add_element(dst_globals);
-      if (added == (int16_t)0xffff) {
-        ok = 0;
-      } else {
-        new_elem = tag_block_get_element(dst_globals, added, 0x34);
-        csstrcpy((char *)new_elem, (const char *)src_elem);
-        if (!tag_data_resize((char *)new_elem + 0x20, *(int *)((char *)src_elem + 0x20))) {
-          ok = 0;
-        } else {
-          csmemcpy(*(void **)((char *)new_elem + 0x2c),
-                   *(void **)((char *)src_elem + 0x2c),
-                   *(int *)((char *)src_elem + 0x20));
-        }
-      }
-    }
-  }
-  tag_block_resize((char *)dst_scenario + 0x49c, 0);
-  return ok;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x4c0(%%ecx), %%edx\n\t"
+      "addl $0x4c0, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%ecx, 0xc(%%ebp)\n\t"
+      "jle .Lhs_scenario_merge_7\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "addl $0x4c0, %%esi\n\t"
+      "jmp .Lhs_scenario_merge_2\n\t"
+      ".Lhs_scenario_merge_1:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Lhs_scenario_merge_2:\n\t"
+      "pushl $0x34\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lhs_scenario_merge_4\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lhs_scenario_merge_3:\n\t"
+      "pushl $0x34\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1dd801]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lhs_scenario_merge_4\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "incl %%ebx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lhs_scenario_merge_3\n\t"
+      ".Lhs_scenario_merge_4:\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jne .Lhs_scenario_merge_6\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1b9ad0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lhs_scenario_merge_5\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "pushl $0x34\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c8dff0]\n\t"
+      "movl 0x20(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0x20(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1b9ab0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lhs_scenario_merge_5\n\t"
+      "movl 0x20(%%edi), %%ecx\n\t"
+      "movl 0x2c(%%edi), %%edx\n\t"
+      "movl 0x2c(%%ebx), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .Lhs_scenario_merge_6\n\t"
+      ".Lhs_scenario_merge_5:\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      ".Lhs_scenario_merge_6:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "jl .Lhs_scenario_merge_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lhs_scenario_merge_7:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "addl $0x49c, %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1b9a90]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(bc3a50_elem), [c1dd801] "m"(bc3a50_c1dd801), [c1b9ad0] "m"(bc3a50_c1b9ad0), [c8dff0] "m"(bc3a50_c8dff0), [c1b9ab0] "m"(bc3a50_c1b9ab0), [c8e0b0] "m"(bc3a50_c8e0b0), [c1b9a90] "m"(bc3a50_c1b9a90)
+      : "memory");
 }
+#else
+#error "hs_scenario_merge: clang naked draft required"
+#endif
+
 
 /* 0xc3db0 — find scenario script-source tag-reference index by tag index */
 

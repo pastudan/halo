@@ -3152,133 +3152,279 @@ void FUN_000ba890(int player_handle, int target_handle)
   *((char *)players_globals + 0x28) = 0;
 }
 
-/* Rebind local player controls after a save-game load (0xba970). */
+/* player_control_update_for_loaded_game_state (0xba970) — XBE naked draft (batch 128). */
+#if defined(__clang__)
+static __int16 (*const bba970_ce07c0)(__int16 a1) = player_ui_get_single_player_local_player_controller;
+static int (*const bba970_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
+static void (*const bba970_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bba970_exitfn)(int) = system_exit;
+static void *(*const bba970_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const bba970_cba410)(unsigned __int16 a1, int a2) = local_player_set_player_index;
+static void (*const bba970_cb6fc0)(uint16_t local_player_index, int player_index) = player_control_new_unit;
+static void (*const bba970_cd98c0)(void) = FUN_000d98c0;
+static void (*const bba970_cd7780)(short old_player, short new_player) = FUN_000d7780;
+static void (*const bba970_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
 void player_control_update_for_loaded_game_state(void)
 {
-  int16_t local_player_index;
-  int16_t controller_index;
-  int16_t saved_player_index;
-  int player_handle;
-  char *player;
-  int unit_handle;
-
-  local_player_index = 0;
-  controller_index = player_ui_get_single_player_local_player_controller(0);
-  if (controller_index == (int16_t)NONE)
-    saved_player_index = 0;
-  else
-    saved_player_index = controller_index;
-
-  if (local_player_get_player_index((uint16_t)saved_player_index) != NONE)
-    return;
-
-  if (*(int16_t *)0x31fa94 != 1)
-    goto load_failed;
-
-  while (local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS) {
-    if (local_player_index < NONE || local_player_index >= 4) {
-      display_assert("((local_player_index>=0) && (local_player_index<"
-                     "MAXIMUM_NUMBER_OF_LOCAL_PLAYERS)) || "
-                     "(local_player_index==NONE)",
-                     "c:\\halo\\SOURCE\\game\\players.c", 0x3ab, 1);
-      system_exit(NONE);
-    }
-
-    player_handle = *(int *)&players_globals->unk_0[4 + local_player_index * 4];
-    if (player_handle == NONE) {
-      local_player_index++;
-      continue;
-    }
-
-    player = (char *)datum_get(player_data, player_handle);
-    local_player_set_player_index((uint16_t)local_player_index, NONE);
-    player_control_new_unit((uint16_t)local_player_index, NONE);
-    local_player_set_player_index((uint16_t)saved_player_index,
-                                  player_handle);
-    player_control_new_unit((uint16_t)local_player_index, player_handle);
-    unit_handle = *(int *)(player + 0x34);
-    player_control_new_unit((uint16_t)local_player_index, unit_handle);
-    ((void (*)(int, int))0xd98c0)(saved_player_index, local_player_index);
-    FUN_000d7780(saved_player_index, local_player_index);
-    error(2, (char *)0x26ece4);
-    return;
-  }
-
-  if (local_player_index >= MAXIMUM_NUMBER_OF_LOCAL_PLAYERS) {
-    error(2, (char *)0x26ec78);
-    return;
-  }
-
-load_failed:
-  error(2, (char *)0x26ebd8);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ce07c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jne .Lplayer_control_update_for_loaded_game_state_1\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "movl %%esi, %%eax\n\t"
+      ".Lplayer_control_update_for_loaded_game_state_1:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cba3c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lplayer_control_update_for_loaded_game_state_9\n\t"
+      "movw 0x31fa94, %%ax\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .Lplayer_control_update_for_loaded_game_state_8\n\t"
+      "pushl %%edi\n\t"
+      ".Lplayer_control_update_for_loaded_game_state_2:\n\t"
+      "cmpw $-1, %%si\n\t"
+      "jl .Lplayer_control_update_for_loaded_game_state_3\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_control_update_for_loaded_game_state_4\n\t"
+      ".Lplayer_control_update_for_loaded_game_state_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3ab\n\t"
+      "pushl $0x26eb68\n\t"
+      "pushl $0x26eb88\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_control_update_for_loaded_game_state_4:\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .Lplayer_control_update_for_loaded_game_state_5\n\t"
+      "movl 0x5aa6cc, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl 0x4(%%ecx,%%eax,4), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .Lplayer_control_update_for_loaded_game_state_6\n\t"
+      ".Lplayer_control_update_for_loaded_game_state_5:\n\t"
+      "incl %%esi\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_control_update_for_loaded_game_state_2\n\t"
+      "jmp .Lplayer_control_update_for_loaded_game_state_7\n\t"
+      ".Lplayer_control_update_for_loaded_game_state_6:\n\t"
+      "movl 0x5aa6d4, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[cba410]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cb6fc0]\n\t"
+      "pushl %%edi\n\t"
+      "movl -0x4(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cba410]\n\t"
+      "movl 0x34(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cb6fc0]\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cd98c0]\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cd7780]\n\t"
+      "pushl $0x26ece4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x40, %%esp\n\t"
+      "popl %%ebx\n\t"
+      ".Lplayer_control_update_for_loaded_game_state_7:\n\t"
+      "cmpw $4, %%si\n\t"
+      "popl %%edi\n\t"
+      "jne .Lplayer_control_update_for_loaded_game_state_9\n\t"
+      "pushl $0x26ec78\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayer_control_update_for_loaded_game_state_8:\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x26ebd8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lplayer_control_update_for_loaded_game_state_9:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [ce07c0] "m"(bba970_ce07c0), [cba3c0] "m"(bba970_cba3c0), [assert] "m"(bba970_assert), [exitfn] "m"(bba970_exitfn), [dget] "m"(bba970_dget), [cba410] "m"(bba970_cba410), [cb6fc0] "m"(bba970_cb6fc0), [cd98c0] "m"(bba970_cd98c0), [cd7780] "m"(bba970_cd7780), [c8f390] "m"(bba970_c8f390)
+      : "memory");
 }
+#else
+#error "player_control_update_for_loaded_game_state: clang naked draft required"
+#endif
 
-/* Apply a starting-equipment entry to a unit (0xbb410). */
-void player_add_equipment(int unit_handle, int16_t equipment_index, char reset)
+
+/* player_add_equipment (0xbb410) — XBE naked draft (batch 125). */
+#if defined(__clang__)
+static void *(*const bbb410_tryget)(int, int) = object_try_and_get_and_verify_type;
+static scenario_t * (*const bbb410_c18e380)(void) = global_scenario_get;
+static void *(*const bbb410_elem)(void *, int, int) = tag_block_get_element;
+static void (*const bbb410_c1aac80)(int unit_handle) = unit_clear_weapons;
+static int (*const bbb410_cbac10)(int tag_index, void *start_loc) = FUN_000bac10;
+static bool (*const bbb410_c1b1db0)(int unit_handle, int seat_object_handle, int16_t flag) = unit_enter_seat;
+static void (*const bbb410_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bbb410_odel)(int) = object_delete;
+
+__attribute__((naked, noinline))
+void player_add_equipment(int unit_handle __attribute__((unused)), int16_t equipment_index __attribute__((unused)), char reset __attribute__((unused)))
 {
-  char *unit_obj;
-  int weapon_handle;
-  void *scenario;
-  void *equipment_block;
-  void *equipment_entry;
-  int spawned_object;
-  float *unit_stats;
-  float *entry_stats;
-
-  if (unit_handle == NONE)
-    return;
-  if (equipment_index == (int16_t)NONE)
-    return;
-
-  unit_obj = (char *)object_try_and_get_and_verify_type(unit_handle, 3);
-  if (unit_obj == NULL)
-    return;
-
-  weapon_handle = *(int *)(unit_obj + 0x1c8);
-  if (weapon_handle == NONE)
-    return;
-
-  scenario = global_scenario_get();
-  equipment_block = tag_block_get_element((char *)scenario + 0x348,
-                                          (unsigned short)equipment_index, 0x68);
-  if (reset) {
-    unit_clear_weapons(unit_handle);
-    *(int *)(unit_obj + 0x94) = 0;
-    *(int *)(unit_obj + 0x90) = 0;
-    *(int16_t *)(unit_obj + 0x2ce) = 0;
-  }
-
-  equipment_entry = equipment_block;
-  if (*(int *)((char *)equipment_entry + 0x34) != NONE) {
-    spawned_object =
-        FUN_000bac10(unit_handle, (char *)equipment_entry + 0x28);
-    if (spawned_object != NONE &&
-        !unit_enter_seat(unit_handle, spawned_object, reset != 0)) {
-      error(2, (char *)0x26ed88);
-      object_delete(spawned_object);
-    }
-  }
-
-  if (*(int *)((char *)equipment_entry + 0x48) != NONE) {
-    spawned_object =
-        FUN_000bac10(unit_handle, (char *)equipment_entry + 0x3c);
-    if (spawned_object != NONE &&
-        !unit_enter_seat(unit_handle, spawned_object, 0)) {
-      error(2, (char *)0x26ed88);
-      object_delete(spawned_object);
-    }
-  }
-
-  unit_stats = (float *)((char *)unit_obj + 0x94);
-  entry_stats = (float *)((char *)equipment_entry + 0x24);
-  unit_stats[0] = entry_stats[0] + unit_stats[0];
-  unit_stats[-1] = ((float *)((char *)equipment_entry + 0x20))[0] +
-                   unit_stats[-1];
-  ((char *)unit_obj + 0x2ce)[0] +=
-      *((char *)equipment_entry + 0x50);
-  ((char *)unit_obj + 0x2ce)[1] +=
-      *((char *)equipment_entry + 0x51);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lplayer_add_equipment_7\n\t"
+      "pushl %%ebx\n\t"
+      "movw 0xc(%%ebp), %%bx\n\t"
+      "cmpw $-1, %%bx\n\t"
+      "pushl %%esi\n\t"
+      "je .Lplayer_add_equipment_6\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[tryget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x1c8(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayer_add_equipment_6\n\t"
+      "call *%[c18e380]\n\t"
+      "movswl %%bx, %%ecx\n\t"
+      "pushl $0x68\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x348, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movb 0x10(%%ebp), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayer_add_equipment_1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1aac80]\n\t"
+      "addl $4, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%eax, 0x94(%%esi)\n\t"
+      "movl %%eax, 0x90(%%esi)\n\t"
+      "movw %%ax, 0x2ce(%%esi)\n\t"
+      ".Lplayer_add_equipment_1:\n\t"
+      "cmpl $-1, 0x34(%%ebx)\n\t"
+      "je .Lplayer_add_equipment_3\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x28(%%ebx), %%edi\n\t"
+      "call *%[cbac10]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lplayer_add_equipment_2\n\t"
+      "movb 0x10(%%ebp), %%cl\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testb %%cl, %%cl\n\t"
+      "setne %%dl\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1b1db0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lplayer_add_equipment_2\n\t"
+      "pushl $0x26ed88\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[odel]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lplayer_add_equipment_2:\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      ".Lplayer_add_equipment_3:\n\t"
+      "cmpl $-1, 0x48(%%ebx)\n\t"
+      "je .Lplayer_add_equipment_4\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x3c(%%ebx), %%edi\n\t"
+      "call *%[cbac10]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lplayer_add_equipment_4\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1b1db0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lplayer_add_equipment_4\n\t"
+      "pushl $0x26ed88\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[odel]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lplayer_add_equipment_4:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "addl $0x2ce, %%esi\n\t"
+      "fadds -0x23a(%%esi)\n\t"
+      "addl $0x50, %%ebx\n\t"
+      "movl $2, %%eax\n\t"
+      "fstps -0x23a(%%esi)\n\t"
+      "flds -0x30(%%ebx)\n\t"
+      "fadds -0x23e(%%esi)\n\t"
+      "fstps -0x23e(%%esi)\n\t"
+      ".Lplayer_add_equipment_5:\n\t"
+      "movb (%%ebx), %%dl\n\t"
+      "movb (%%esi), %%cl\n\t"
+      "addb %%dl, %%cl\n\t"
+      "incl %%ebx\n\t"
+      "movb %%cl, (%%esi)\n\t"
+      "incl %%esi\n\t"
+      "decl %%eax\n\t"
+      "jne .Lplayer_add_equipment_5\n\t"
+      ".Lplayer_add_equipment_6:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lplayer_add_equipment_7:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tryget] "m"(bbb410_tryget), [c18e380] "m"(bbb410_c18e380), [elem] "m"(bbb410_elem), [c1aac80] "m"(bbb410_c1aac80), [cbac10] "m"(bbb410_cbac10), [c1b1db0] "m"(bbb410_c1b1db0), [c8f390] "m"(bbb410_c8f390), [odel] "m"(bbb410_odel)
+      : "memory");
 }
+#else
+#error "player_add_equipment: clang naked draft required"
+#endif
+
 
 /* Apply or extend an active-camo / vision powerup timer (0xbc320). */
 char player_handle_powerup(int player_handle, int16_t powerup_index,
@@ -3501,64 +3647,150 @@ void players_debug_render(void)
 #endif
 
 
-/* Teleport a local player onto a structure-BSP anchor during reconnect (0xbc920). */
-void players_update_before_game_client(int player_handle, int anchor_unit,
-                                       float *position)
+/* players_update_before_game_client (0xbc920) — XBE naked draft (batch 125). */
+#if defined(__clang__)
+static void *(*const bbc920_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const bbc920_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void (*const bbc920_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bbc920_exitfn)(int) = system_exit;
+static scenario_t * (*const bbc920_c18e380)(void) = global_scenario_get;
+static void *(*const bbc920_elem)(void *, int, int) = tag_block_get_element;
+static char (*const bbc920_c18ef00)(int cluster_index, int object_handle) = FUN_0018ef00;
+static int (*const bbc920_c18e720)(int point) = FUN_0018e720;
+static void *(*const bbc920_get)(int, int) = object_get_and_verify_type;
+static void (*const bbc920_c1b2dd0)(int unit_handle) = unit_exit_seat_end;
+static char (*const bbc920_cbb670)(int player_handle, void *a, void *b) = FUN_000bb670;
+
+__attribute__((naked, noinline))
+void players_update_before_game_client(int player_handle __attribute__((unused)), int anchor_unit __attribute__((unused)), float *position __attribute__((unused)))
 {
-  char *player;
-  char *unit_obj;
-  void *scenario;
-  void *trigger_block;
-  int16_t structure_bsp_index;
-  char cluster_matches;
-  int vehicle_object;
-
-  if (player_handle == NONE) {
-    display_assert("player_handle!=NONE",
-                   "c:\\halo\\SOURCE\\game\\players.c", 0x4c7, 1);
-    system_exit(NONE);
-  }
-  if (position == NULL) {
-    display_assert("position",
-                   "c:\\halo\\SOURCE\\game\\players.c", 0x4c8, 1);
-    system_exit(NONE);
-  }
-
-  player = (char *)datum_get(player_data, player_handle);
-  unit_obj = (char *)object_try_and_get_and_verify_type(
-      *(int *)(player + 0x34), 1);
-  if (unit_obj == NULL)
-    return;
-
-  cluster_matches = 0;
-  structure_bsp_index = *(int16_t *)((char *)players_globals + 0x2a);
-  if (structure_bsp_index != (int16_t)NONE) {
-    scenario = global_scenario_get();
-    trigger_block = tag_block_get_element((char *)scenario + 0x39c,
-                                          (unsigned short)structure_bsp_index,
-                                          8);
-    cluster_matches = FUN_0018ef00((int)*(int16_t *)trigger_block,
-                                   *(int *)(player + 0x34));
-  }
-
-  vehicle_object = FUN_0018e720((int)(unit_obj + 0x50));
-  if (vehicle_object != NONE && !cluster_matches)
-    return;
-
-  if (*(int *)(unit_obj + 0xcc) != NONE) {
-    char *anchor_obj;
-    anchor_obj = (char *)object_get_and_verify_type(anchor_unit, 1);
-    if (*(int *)(unit_obj + 0xcc) != *(int *)(anchor_obj + 0xcc))
-      unit_exit_seat_end(*(int *)(player + 0x34));
-    if (*(int *)(unit_obj + 0xcc) != NONE)
-      return;
-  }
-
-  if (!FUN_000bb670(player_handle, (void *)anchor_unit, position))
-    *((char *)players_globals + 0x2e) = 1;
-  else
-    *((char *)players_globals + 0x2e) = 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%eax), %%edi\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[tryget]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jne .Lplayers_update_before_game_client_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4c7\n\t"
+      "pushl $0x26eb68\n\t"
+      "pushl $0x26c18c\n\t"
+      "call *%[assert]\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayers_update_before_game_client_1:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lplayers_update_before_game_client_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4c8\n\t"
+      "pushl $0x26eb68\n\t"
+      "pushl $0x267114\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayers_update_before_game_client_2:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lplayers_update_before_game_client_9\n\t"
+      "movl 0x5aa6cc, %%ecx\n\t"
+      "movw 0x2a(%%ecx), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lplayers_update_before_game_client_3\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "pushl $8\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x39c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movswl (%%eax), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18ef00]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "je .Lplayers_update_before_game_client_4\n\t"
+      ".Lplayers_update_before_game_client_3:\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      ".Lplayers_update_before_game_client_4:\n\t"
+      "leal 0x50(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c18e720]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lplayers_update_before_game_client_5\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayers_update_before_game_client_9\n\t"
+      ".Lplayers_update_before_game_client_5:\n\t"
+      "cmpl $-1, 0xcc(%%esi)\n\t"
+      "je .Lplayers_update_before_game_client_7\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movl 0xcc(%%esi), %%ecx\n\t"
+      "movl 0xcc(%%eax), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "je .Lplayers_update_before_game_client_6\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1b2dd0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lplayers_update_before_game_client_6:\n\t"
+      "cmpl $-1, 0xcc(%%esi)\n\t"
+      "jne .Lplayers_update_before_game_client_8\n\t"
+      ".Lplayers_update_before_game_client_7:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cbb670]\n\t"
+      "movl 0x5aa6cc, %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "sete %%cl\n\t"
+      "popl %%edi\n\t"
+      "movb %%cl, 0x2e(%%edx)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lplayers_update_before_game_client_8:\n\t"
+      "movl 0x5aa6cc, %%edx\n\t"
+      "movb $1, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "sete %%cl\n\t"
+      "movb %%cl, 0x2e(%%edx)\n\t"
+      ".Lplayers_update_before_game_client_9:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bbc920_dget), [tryget] "m"(bbc920_tryget), [assert] "m"(bbc920_assert), [exitfn] "m"(bbc920_exitfn), [c18e380] "m"(bbc920_c18e380), [elem] "m"(bbc920_elem), [c18ef00] "m"(bbc920_c18ef00), [c18e720] "m"(bbc920_c18e720), [get] "m"(bbc920_get), [c1b2dd0] "m"(bbc920_c1b2dd0), [cbb670] "m"(bbc920_cbb670)
+      : "memory");
 }
+#else
+#error "players_update_before_game_client: clang naked draft required"
+#endif
+
 
 /* players_reconnect_to_structure_bsp (0xbca60) — XBE naked draft (batch 111). */
 #if defined(__clang__)

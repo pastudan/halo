@@ -1141,122 +1141,370 @@ void FUN_000b43b0(void)
   (void)edi;
 }
 
-/* 0xb4490 */
+/* FUN_000b4490 (0xb4490) — XBE naked draft (batch 126). */
+#if defined(__clang__)
+static scenario_t * (*const bb4490_c18e380)(void) = global_scenario_get;
+static void (*const bb4490_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const bb4490_c119810)(data_iter_t *iterator) = data_iterator_next;
+static void *(*const bb4490_get)(int, int) = object_get_and_verify_type;
+static void (*const bb4490_cb43b0)(void) = FUN_000b43b0;
+static void *(*const bb4490_elem)(void *, int, int) = tag_block_get_element;
+static int (*const bb4490_cb3770)(int param_1) = FUN_000b3770;
+static void (*const bb4490_opnew)(void *, int, int) = object_placement_data_new;
+static void (*const bb4490_c10cc70)(float *output, float angle) = vector3d_from_angle;
+static int (*const bb4490_onew)(void *) = object_new;
+
+__attribute__((naked, noinline))
 void FUN_000b4490(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
-
-  global_scenario_get();
-  data_iterator_new((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
-  data_iterator_next((void *)(uintptr_t)edx);
-  /* test eax, eax -> je 0xb4529 */
-  /* cmp eax, -1 -> je 0xb44ec */
-  object_get_and_verify_type(0, 0);
-  /* cmp ebx, 8 -> je 0xb4529 */
-  /* test eax, eax -> je 0xb4501 */
-  FUN_000b43b0();
-  /* cmp eax, -1 -> je 0xb4529 */
-  data_iterator_next((void *)0);
-  /* test eax, eax -> jne 0xb44d7 */
-  /* test ebx, ebx -> jle 0xb45b9 */
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 148);
-  FUN_000b3770(0);
-  /* cmp eax, -1 -> je 0xb45b4 */
-  object_placement_data_new((void *)(uintptr_t)eax, 0, 0);
-  vector3d_from_angle((float *)(uintptr_t)eax, 0.0f);
-  object_new((void *)(uintptr_t)ecx);
-  /* cmp edi, ebx -> jl 0xb4540 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xbc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e380]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $7, %%ecx\n\t"
+      "leal -0x30(%%ebp), %%edi\n\t"
+      "movl $0xffffffff, -0x34(%%ebp)\n\t"
+      "rep stosl\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000b4490_6\n\t"
+      ".LFUN_000b4490_1:\n\t"
+      "movl 0x34(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000b4490_2\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .LFUN_000b4490_3\n\t"
+      ".LFUN_000b4490_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_000b4490_3:\n\t"
+      "cmpl $8, %%ebx\n\t"
+      "je .LFUN_000b4490_6\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000b4490_4\n\t"
+      "leal -0x34(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0xc, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "jmp .LFUN_000b4490_5\n\t"
+      ".LFUN_000b4490_4:\n\t"
+      "leal -0x34(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      ".LFUN_000b4490_5:\n\t"
+      "call *%[cb43b0]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000b4490_6\n\t"
+      "movl %%eax, -0x34(%%ebp,%%ebx,4)\n\t"
+      "leal -0x14(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "incl %%ebx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000b4490_1\n\t"
+      ".LFUN_000b4490_6:\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jle .LFUN_000b4490_9\n\t"
+      "addl $0x378, %%esi\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_000b4490_7:\n\t"
+      "movl -0x34(%%ebp,%%edi,4), %%ecx\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "pushl $0x94\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[cb3770]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000b4490_8\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xbc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[opnew]\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0xa4(%%ebp)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl %%eax, -0xa0(%%ebp)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, -0x9c(%%ebp)\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x88(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10cc70]\n\t"
+      "leal -0xbc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[onew]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movb $1, 0x456fdc\n\t"
+      ".LFUN_000b4490_8:\n\t"
+      "incl %%edi\n\t"
+      "cmpl %%ebx, %%edi\n\t"
+      "jl .LFUN_000b4490_7\n\t"
+      ".LFUN_000b4490_9:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(bb4490_c18e380), [c1197b0] "m"(bb4490_c1197b0), [c119810] "m"(bb4490_c119810), [get] "m"(bb4490_get), [cb43b0] "m"(bb4490_cb43b0), [elem] "m"(bb4490_elem), [cb3770] "m"(bb4490_cb3770), [opnew] "m"(bb4490_opnew), [c10cc70] "m"(bb4490_c10cc70), [onew] "m"(bb4490_onew)
+      : "memory");
 }
+#else
+#error "FUN_000b4490: clang naked draft required"
+#endif
 
-/* 0xb46b0 */
+
+/* race_update_team_score (0xb46b0) — XBE naked draft (batch 126). */
+#if defined(__clang__)
+static scenario_t * (*const bb46b0_c18e380)(void) = global_scenario_get;
+static void *(*const bb46b0_elem)(void *, int, int) = tag_block_get_element;
+static char (*const bb46b0_cb3b30)(int flag_index, int param_1) = FUN_000b3b30;
+static void (*const bb46b0_cb2610)(int event_type) = game_engine_post_event;
+static void * (*const bb46b0_ca9350)(void) = game_engine_get_variant;
+static void (*const bb46b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb46b0_exitfn)(int) = system_exit;
+static void (*const bb46b0_cb39a0)(int player_handle) = FUN_000b39a0;
+static int (*const bb46b0_cb45c0)(int param_1) = FUN_000b45c0;
+
+__attribute__((naked, noinline))
 void race_update_team_score(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  global_scenario_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  FUN_000b3b30(0, 0);
-  /* test (char)eax, (char)eax -> je 0xb47f5 */
-  game_engine_post_event(0);
-  /* cmp eax, -1 -> jne 0xb4742 */
-  game_engine_get_variant();
-  /* test ecx, ecx -> jne 0xb4737 */
-  display_assert((char *)0x0026dc08, (char *)0x0026d8f4, 723, 0);
-  system_exit(0);
-  game_engine_get_variant();
-  /* relift: cmp dword ptr [eax + 0x4c], 2 -> jne 0xb476e */
-  FUN_000b39a0(0);
-  FUN_000b45c0(0);
-  /* mem[0x00456f94] = eax */
-  FUN_000b39a0(0);
-  /* test eax, esi -> je 0xb47c0 */
-  display_assert((char *)0x0026dbe0, (char *)0x0026d8f4, 745, 0);
-  system_exit(0);
-  /* test edi, ecx -> je 0xb47f4 */
-  display_assert((char *)0x0026dba8, (char *)0x0026d8f4, 749, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[c18e380]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0x94\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x378, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movswl 0x12(%%edi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "call *%[cb3b30]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lrace_update_team_score_7\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "pushl $0x1a\n\t"
+      "andl $0xffff, %%esi\n\t"
+      "call *%[cb2610]\n\t"
+      "movl 0x456f14(,%%esi,4), %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lrace_update_team_score_2\n\t"
+      "call *%[ca9350]\n\t"
+      "movl 0x4c(%%eax), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jne .Lrace_update_team_score_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2d3\n\t"
+      "pushl $0x26d8f4\n\t"
+      "pushl $0x26dc08\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrace_update_team_score_1:\n\t"
+      "movswl 0x12(%%edi), %%edx\n\t"
+      "movl %%edx, 0x456f14(,%%esi,4)\n\t"
+      ".Lrace_update_team_score_2:\n\t"
+      "call *%[ca9350]\n\t"
+      "cmpl $2, 0x4c(%%eax)\n\t"
+      "jne .Lrace_update_team_score_3\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[cb39a0]\n\t"
+      "movl 0x456f94, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cb45c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x456f94\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrace_update_team_score_3:\n\t"
+      "movl 0x456f54(,%%esi,4), %%eax\n\t"
+      "cmpl 0x456f10, %%eax\n\t"
+      "leal 0x456f54(,%%esi,4), %%edi\n\t"
+      "jne .Lrace_update_team_score_4\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[cb39a0]\n\t"
+      "popl %%esi\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrace_update_team_score_4:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl $1, %%esi\n\t"
+      "shll %%cl, %%esi\n\t"
+      "testl %%esi, %%eax\n\t"
+      "je .Lrace_update_team_score_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2e9\n\t"
+      "pushl $0x26d8f4\n\t"
+      "pushl $0x26dbe0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrace_update_team_score_5:\n\t"
+      "movl (%%edi), %%ebx\n\t"
+      "orl %%esi, %%ebx\n\t"
+      "movl %%ebx, (%%edi)\n\t"
+      "movl 0x456f10, %%ecx\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "notl %%ecx\n\t"
+      "testl %%ecx, %%edi\n\t"
+      "je .Lrace_update_team_score_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2ed\n\t"
+      "pushl $0x26d8f4\n\t"
+      "pushl $0x26dba8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrace_update_team_score_6:\n\t"
+      "popl %%esi\n\t"
+      ".Lrace_update_team_score_7:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e380] "m"(bb46b0_c18e380), [elem] "m"(bb46b0_elem), [cb3b30] "m"(bb46b0_cb3b30), [cb2610] "m"(bb46b0_cb2610), [ca9350] "m"(bb46b0_ca9350), [assert] "m"(bb46b0_assert), [exitfn] "m"(bb46b0_exitfn), [cb39a0] "m"(bb46b0_cb39a0), [cb45c0] "m"(bb46b0_cb45c0)
+      : "memory");
 }
+#else
+#error "race_update_team_score: clang naked draft required"
+#endif
 
-/* 0xb4800 */
+
+/* FUN_000B4800 (0xb4800) — XBE naked draft (batch 123). */
+#if defined(__clang__)
+static void *(*const bb4800_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bb4800_ca9970)(int param_1, int param_2, int param_3) = game_engine_state_message;
+static bool (*const bb4800_ca8e40)(void) = game_engine_can_score;
+static void *(*const bb4800_get)(int, int) = object_get_and_verify_type;
+static int (*const bb4800_cad270)(float *position, float radius, float height, int16_t type, int16_t index) = find_netgame_flag;
+static void (*const bb4800_cb46b0)(void) = race_update_team_score;
+
+__attribute__((naked, noinline))
 void FUN_000B4800(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  datum_get((void *)(uintptr_t)eax, 0);
-  game_engine_state_message(0, 22, 0);
-  /* cmp eax, -1 -> je 0xb4897 */
-  game_engine_can_score();
-  /* test (char)eax, (char)eax -> je 0xb4897 */
-  object_get_and_verify_type(0, 0);
-  /* cmp ecx, -1 -> je 0xb486d */
-  object_get_and_verify_type(0, 0);
-  find_netgame_flag((float *)(uintptr_t)eax, 0.0f, 0.0f, 0, 0);
-  find_netgame_flag((float *)(uintptr_t)eax, 0.0f, 0.0f, 0, 0);
-  /* cmp eax, -1 -> je 0xb4897 */
-  race_update_team_score();
-  game_time_get();
-  /* cmp eax, 2 -> jne 0xb4915 */
-  FUN_000b36f0();
-  FUN_000b4490();
-  FUN_000a95a0();
-  game_engine_post_event(0);
-  /* test (char)eax, (char)eax -> je 0xb4915 */
-  game_engine_get_variant();
-  /* cmp eax, 4 -> ja 0xb4915 */
-  game_engine_post_event(23);
-  game_engine_post_event(24);
-  game_engine_post_event(25);
-  game_engine_post_event(25);
-  FUN_000a95a0();
-  /* test (char)eax, (char)eax -> je 0xb4943 */
-  FUN_000b3c60(0);
-  /* test (char)eax, (char)eax -> jne 0xb492f */
-  game_engine_start_over();
-  FUN_000b3c60(0);
-  game_engine_start_over();
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x16\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[ca9970]\n\t"
+      "movl 0x34(%%esi), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000B4800_3\n\t"
+      "call *%[ca8e40]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000B4800_3\n\t"
+      "movl 0x34(%%esi), %%ecx\n\t"
+      "pushl $3\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[get]\n\t"
+      "movl 0xcc(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_000B4800_1\n\t"
+      "pushl $3\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[get]\n\t"
+      "pushl $-1\n\t"
+      "pushl $3\n\t"
+      "pushl $0\n\t"
+      "addl $0x50, %%eax\n\t"
+      "pushl $0x40200000\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cad270]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "jmp .LFUN_000B4800_2\n\t"
+      ".LFUN_000B4800_1:\n\t"
+      "pushl $-1\n\t"
+      "pushl $3\n\t"
+      "pushl $0x3f19999a\n\t"
+      "addl $0x50, %%eax\n\t"
+      "pushl $0x3fc00000\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cad270]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000B4800_2:\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000B4800_3\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[cb46b0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_000B4800_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bb4800_dget), [ca9970] "m"(bb4800_ca9970), [ca8e40] "m"(bb4800_ca8e40), [get] "m"(bb4800_get), [cad270] "m"(bb4800_cad270), [cb46b0] "m"(bb4800_cb46b0)
+      : "memory");
 }
+#else
+#error "FUN_000B4800: clang naked draft required"
+#endif
+
 
 /* 0xb4a70 */
 void FUN_000b4a70(void)

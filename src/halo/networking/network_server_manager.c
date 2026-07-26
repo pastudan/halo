@@ -1462,79 +1462,158 @@ void network_game_server_change_game_variant(void *server, void *variant)
   }
 }
 
-/* Add a new client connection to the server (0x12d880).
- * Finds the first empty machine slot (short == -1 at +0x448 stride 0x10),
- * validates the remote address, stores the connection, and signals accept. */
-bool FUN_0012d880(int server, int new_connection)
+/* FUN_0012d880 (0x12d880) — XBE naked draft (batch 123). */
+#if defined(__clang__)
+static void (*const b12d880_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b12d880_exitfn)(int) = system_exit;
+static bool (*const b12d880_c12c100)(void *server) = network_game_server_game_is_open;
+static void (*const b12d880_c1283c0)(int connection, void *buf, int flag) = network_connection_get_address;
+static bool (*const b12d880_c12a160)(void) = network_game_accept_remote_connections;
+static const char * (*const b12d880_c81b90)(void *addr) = transport_address_to_string;
+static void (*const b12d880_c12b650)(const char *fmt, ...) = network_game_log;
+static void (*const b12d880_c12acb0)(void *game, uint16_t machine_index) = network_game_invalidate_machine;
+static bool (*const b12d880_c1285c0)(int connection, int new_connection) = network_connection_server_accept_client_connection;
+
+__attribute__((naked, noinline))
+bool FUN_0012d880(int server __attribute__((unused)), int new_connection __attribute__((unused)))
 {
-  char *s = (char *)server;
-  bool result = false;
-  int i;
-  short *slot;
-  char addr_buf[24];
-  const char *addr_str;
-
-  if (!server || !new_connection) {
-    display_assert("server && new_connection",
-                   "c:\\halo\\SOURCE\\networking\\network_server_manager.c",
-                   0x7d4, 1);
-    system_exit(-1);
-  }
-
-  if (!network_game_server_game_is_open((void *)server)) {
-    network_game_log(
-      "network_game_server_add_new_client() failed because the game is closed");
-    return result;
-  }
-
-  i = 0;
-  slot = (short *)(s + 0x448);
-  do {
-    if (*slot == -1) {
-      csmemset(addr_buf, 0, 24);
-      network_connection_get_address(new_connection, addr_buf, 0);
-      if (*(int *)addr_buf == 0) {
-        network_game_log(
-          "network_connection_get_address() failed to get a valid address "
-          "in network_game_server_add_new_client()");
-        result = false;
-      } else {
-        if (!network_game_accept_remote_connections() &&
-            *(int *)addr_buf != 0x7f000001) {
-          addr_str = transport_address_to_string(addr_buf);
-          network_game_log(
-            "remote system tried to join our server but we are not accepting "
-            "remote connections: address= '%s'",
-            addr_str);
-          result = false;
-        } else {
-          *(int *)(s + i * 0x10 + 0x43c) = new_connection;
-          network_game_invalidate_machine(s + 8, i);
-          *(short *)(s + i * 0x10 + 0x448) = (short)i;
-          *(short *)(s + i * 0x10 + 0x44a) = 1;
-          result = network_connection_server_accept_client_connection(
-            *(int *)s, new_connection);
-          if (result == 1) {
-            addr_str = transport_address_to_string(addr_buf);
-            network_game_log("new remote connection accepted from %s",
-                             addr_str);
-          }
-        }
-      }
-      break;
-    }
-    i++;
-    slot += 8;
-    result = false;
-  } while (i < 4);
-
-  if (i == 4) {
-    network_game_log("failed to find an available machine slot in "
-                     "network_game_server_add_new_client()");
-  }
-
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x1c, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "je .LFUN_0012d880_1\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0012d880_2\n\t"
+      ".LFUN_0012d880_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x7d4\n\t"
+      "pushl $0x296bf0\n\t"
+      "pushl $0x297a9c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0012d880_2:\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c12c100]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0012d880_10\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "leal 0x448(%%ebx), %%eax\n\t"
+      ".LFUN_0012d880_3:\n\t"
+      "cmpw $-1, (%%eax)\n\t"
+      "je .LFUN_0012d880_4\n\t"
+      "incl %%esi\n\t"
+      "addl $0x10, %%eax\n\t"
+      "cmpl $4, %%esi\n\t"
+      "jl .LFUN_0012d880_3\n\t"
+      "jmp .LFUN_0012d880_7\n\t"
+      ".LFUN_0012d880_4:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x1c(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl $0, -0x1c(%%ebp)\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "call *%[c1283c0]\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0012d880_6\n\t"
+      "call *%[c12a160]\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0012d880_5\n\t"
+      "cmpl $0x7f000001, -0x1c(%%ebp)\n\t"
+      "je .LFUN_0012d880_5\n\t"
+      "leal -0x1c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c81b90]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x297a38\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_0012d880_7\n\t"
+      ".LFUN_0012d880_5:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl %%esi, %%edx\n\t"
+      "shll $4, %%edx\n\t"
+      "leal 0x8(%%ebx), %%ecx\n\t"
+      "leal (%%edx,%%ebx,1), %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, 0x43c(%%edi)\n\t"
+      "call *%[c12acb0]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movw %%si, 0x448(%%edi)\n\t"
+      "movw $1, 0x44a(%%edi)\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1285c0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movb %%al, %%bl\n\t"
+      "cmpb $1, %%bl\n\t"
+      "popl %%edi\n\t"
+      "jne .LFUN_0012d880_8\n\t"
+      "leal -0x1c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c81b90]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x297a10\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_0012d880_8\n\t"
+      ".LFUN_0012d880_6:\n\t"
+      "pushl $0x2979a8\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_0012d880_7:\n\t"
+      "movb -0x1(%%ebp), %%bl\n\t"
+      ".LFUN_0012d880_8:\n\t"
+      "cmpl $4, %%esi\n\t"
+      "popl %%esi\n\t"
+      "jne .LFUN_0012d880_9\n\t"
+      "pushl $0x297950\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_0012d880_9:\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0012d880_10:\n\t"
+      "pushl $0x297908\n\t"
+      "call *%[c12b650]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b12d880_assert), [exitfn] "m"(b12d880_exitfn), [c12c100] "m"(b12d880_c12c100), [c1283c0] "m"(b12d880_c1283c0), [c12a160] "m"(b12d880_c12a160), [c81b90] "m"(b12d880_c81b90), [c12b650] "m"(b12d880_c12b650), [c12acb0] "m"(b12d880_c12acb0), [c1285c0] "m"(b12d880_c1285c0)
+      : "memory");
 }
+#else
+#error "FUN_0012d880: clang naked draft required"
+#endif
+
 
 /* Handle incoming datagrams on the server's public endpoint (0x12d9f0).
  * Loops reading datagrams and dispatching them until none remain. */
