@@ -2505,8 +2505,8 @@
         },
         {
           "addr": "0x1c0e0",
-          "decl": "char FUN_0001c0e0(int actor_handle, char param_2, void *state_data);",
-          "ported": false,
+          "decl": "char FUN_0001c0e0(int actor_handle, char param_2, char *state_data);",
+          "ported": true,
           "name": "FUN_0001c0e0"
         },
         {
@@ -5227,7 +5227,7 @@
         {
           "addr": "0xa57b0",
           "decl": "short FUN_000a57b0(float *vec, float max_len);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a57b0"
         },
         {
@@ -18309,7 +18309,7 @@
         },
         {
           "addr": "0xe0980",
-          "decl": "void player_ui_get_active_player_profile(void);",
+          "decl": "void player_ui_get_active_player_profile(int16_t local_player_index, void *out_profile);",
           "ported": true
         },
         {
@@ -19703,7 +19703,7 @@
       "functions": [
         {
           "addr": "0x154270",
-          "decl": "float FUN_00154270(float *bounds, float from, char wrap_flag, float to);",
+          "decl": "void FUN_00154270(int object_handle, void *buf_a, void *buf_b, float *force, float *aux);",
           "ported": false
         },
         {
@@ -20367,7 +20367,7 @@
         },
         {
           "addr": "0xe2680",
-          "decl": "void FUN_000e2680(void);",
+          "decl": "void FUN_000e2680(float x, float y, float z);",
           "ported": true
         },
         {
@@ -29592,7 +29592,7 @@
         {
           "addr": "0x1b5680",
           "decl": "char vehicle_is_flipped(int vehicle_handle);",
-          "ported": false,
+          "ported": true,
           "name": "vehicle_is_flipped"
         },
         {
