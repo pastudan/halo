@@ -7420,11 +7420,13 @@
       "functions": [
         {
           "addr": "0x199d40",
-          "decl": "void FUN_00199d40(void);"
+          "decl": "void FUN_00199d40(void);",
+          "ported": false
         },
         {
           "addr": "0x19a020",
-          "decl": "void file_compare_last_modification_dates(void);"
+          "decl": "void file_compare_last_modification_dates(void);",
+          "ported": false
         },
         {
           "addr": "0x19a040",
@@ -7458,7 +7460,8 @@
         },
         {
           "addr": "0x19a400",
-          "decl": "void file_read_only(void);"
+          "decl": "void file_read_only(void);",
+          "ported": false
         },
         {
           "addr": "0x19a450",
@@ -7512,7 +7515,8 @@
         },
         {
           "addr": "0x19aad0",
-          "decl": "void file_set_eof(void);"
+          "decl": "void file_set_eof(void);",
+          "ported": false
         },
         {
           "addr": "0x19ab50",
@@ -7521,7 +7525,8 @@
         },
         {
           "addr": "0x19ac00",
-          "decl": "void file_write(void);"
+          "decl": "void file_write(void);",
+          "ported": false
         },
         {
           "addr": "0x19acb0",
@@ -7530,15 +7535,18 @@
         },
         {
           "addr": "0x19acf0",
-          "decl": "void file_write_to_position(void);"
+          "decl": "void file_write_to_position(void);",
+          "ported": false
         },
         {
           "addr": "0x19ad30",
-          "decl": "void file_get_last_modification_date(void);"
+          "decl": "void file_get_last_modification_date(void);",
+          "ported": false
         },
         {
           "addr": "0x19adf0",
-          "decl": "void file_get_size(void);"
+          "decl": "void file_get_size(void);",
+          "ported": false
         },
         {
           "addr": "0x19aed0",
