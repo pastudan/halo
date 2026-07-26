@@ -18370,7 +18370,8 @@
         {
           "addr": "0xe0dd0",
           "decl": "char player_ui_edit_profile_name_is_dirty(void);",
-          "ported": false
+          "ported": false,
+          "name": "player_ui_edit_profile_name_is_dirty"
         },
         {
           "addr": "0xe0e40",
@@ -33865,8 +33866,9 @@
         },
         {
           "addr": "0xfd520",
-          "decl": "void FUN_000fd520(int16_t trigger_index @<eax>, int weapon_handle @<ecx>);",
-          "ported": true
+          "decl": "void FUN_000fd520(int16_t trigger_index@<eax>, int weapon_handle@<ecx>);",
+          "ported": true,
+          "name": "FUN_000fd520"
         },
         {
           "addr": "0xfd570",
@@ -38965,8 +38967,9 @@
         },
         {
           "addr": "0x245d0",
-          "decl": "void post_evaluator_hide(void);",
-          "ported": true
+          "decl": "int post_evaluator_hide(void *unused, void *ctx, void *cand);",
+          "ported": true,
+          "name": "post_evaluator_hide"
         },
         {
           "addr": "0x246b0",

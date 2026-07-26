@@ -598,109 +598,49 @@ void FUN_00024450(void)
 #endif
 
 
-/* post_evaluator_hide (0x245d0) — XBE naked draft (batch 135). */
-#if defined(__clang__)
-static void (*const b245d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b245d0_exitfn)(int) = system_exit;
-static void (*const b245d0_c24000)(void *ctx, float score, int type, void *position) = (void (*)(void *, float, int, void *))(void *)&FUN_00024000;
-
-__attribute__((naked, noinline))
-void post_evaluator_hide(void)
+/* post_evaluator_hide (0x245d0) — readable C lift. */
+int post_evaluator_hide(void *unused, void *ctx, void *cand)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movb 0x5fc(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lpost_evaluator_hide_9\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lpost_evaluator_hide_1\n\t"
-      "flds 0x660(%%edi)\n\t"
-      "movl $1, %%eax\n\t"
-      "fadds 0x254cc8\n\t"
-      "fstps 0x660(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpost_evaluator_hide_1:\n\t"
-      "movswl 0x6(%%esi), %%eax\n\t"
-      "cmpl $4, %%eax\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      "ja .Lpost_evaluator_hide_7\n\t"
-      "jmp *.Lpost_evaluator_hide_jt(,%%eax,4)\n\t"
-      ".Lpost_evaluator_hide_2:\n\t"
-      "movl $0x41400000, 0xc(%%ebp)\n\t"
-      "jmp .Lpost_evaluator_hide_8\n\t"
-      ".Lpost_evaluator_hide_3:\n\t"
-      "movl $0x41200000, 0xc(%%ebp)\n\t"
-      "jmp .Lpost_evaluator_hide_8\n\t"
-      ".Lpost_evaluator_hide_4:\n\t"
-      "movb 0x8(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lpost_evaluator_hide_6\n\t"
-      "movl $0x40c00000, 0xc(%%ebp)\n\t"
-      "jmp .Lpost_evaluator_hide_8\n\t"
-      ".Lpost_evaluator_hide_5:\n\t"
-      "movl $0x40800000, 0xc(%%ebp)\n\t"
-      "jmp .Lpost_evaluator_hide_8\n\t"
-      ".Lpost_evaluator_hide_6:\n\t"
-      "movb $1, 0x31(%%esi)\n\t"
-      "movb 0x14(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lpost_evaluator_hide_8\n\t"
-      "movb $0, 0x30(%%esi)\n\t"
-      "jmp .Lpost_evaluator_hide_8\n\t"
-      ".Lpost_evaluator_hide_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x45d\n\t"
-      "pushl $0x254c8c\n\t"
-      "pushl $0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpost_evaluator_hide_8:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0x12\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c24000]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lpost_evaluator_hide_9:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lpost_evaluator_hide_10\n\t"
-      "popl %%edi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpost_evaluator_hide_10:\n\t"
-      "movzbl 0x30(%%esi), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lpost_evaluator_hide_jt:\n\t"
-      ".long .Lpost_evaluator_hide_6\n\t"
-      ".long .Lpost_evaluator_hide_4\n\t"
-      ".long .Lpost_evaluator_hide_2\n\t"
-      ".long .Lpost_evaluator_hide_5\n\t"
-      ".long .Lpost_evaluator_hide_3\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(b245d0_assert), [exitfn] "m"(b245d0_exitfn), [c24000] "m"(b245d0_c24000)
-      : "memory");
+  float score;
+  int kind;
+  (void)unused;
+  if (*(unsigned char *)((char *)ctx + 0x5fc) == 0)
+    goto done;
+  if (cand == 0) {
+    *(float *)((char *)ctx + 0x660) =
+        *(float *)((char *)ctx + 0x660) + *(float *)0x254cc8;
+    return 1;
+  }
+  kind = *(short *)((char *)cand + 6);
+  score = 0.0f;
+  if ((unsigned)kind > 4u) {
+    display_assert((const char *)0, (const char *)0x254c8c, 0x45d, 1);
+    system_exit(-1);
+  } else if (kind == 2) {
+    score = 12.0f;
+  } else if (kind == 4) {
+    score = 10.0f;
+  } else if (kind == 1) {
+    if (*(unsigned char *)((char *)ctx + 8) != 0)
+      score = 6.0f;
+    else {
+      *((unsigned char *)cand + 0x31) = 1;
+      if (*(unsigned char *)((char *)ctx + 0x14) == 0)
+        *((unsigned char *)cand + 0x30) = 0;
+    }
+  } else if (kind == 3) {
+    score = 4.0f;
+  } else {
+    *((unsigned char *)cand + 0x31) = 1;
+    if (*(unsigned char *)((char *)ctx + 0x14) == 0)
+      *((unsigned char *)cand + 0x30) = 0;
+  }
+  FUN_00024000(ctx, score, 0x12, 0, ctx);
+done:
+  if (cand == 0)
+    return 1;
+  return *(unsigned char *)((char *)cand + 0x30);
 }
-#else
-#error "post_evaluator_hide: clang naked draft required"
-#endif
-
 
 /* FUN_000246b0 (0x246b0) — XBE naked draft (batch 141). */
 #if defined(__clang__)
