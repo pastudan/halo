@@ -14016,7 +14016,7 @@
         {
           "addr": "0xf5f90",
           "decl": "void items_initialize(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf5fa0",
