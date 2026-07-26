@@ -840,7 +840,33 @@ char path_state_approach_point(void *path_state, float *fp_results, int fp_count
 /* 0x5ef80 */
 char FUN_0005ef80(unsigned int *path_buf)
 {
-  (void)path_buf;
+  int eax = 0;
+  int ecx = 0;
+  int edi = 0;
+
+  /* cmp eax, -1 -> je 0x5f086 */
+  /* relift: relift: fcomp dword ptr [0x25ddb8] */
+  /* test (char)eax, 0x41 -> jne 0x5f086 */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test ecx, ecx -> jl 0x5efca */
+  /* relift: cmp ecx, dword ptr [eax + 0x3c] -> jl 0x5efea */
+  display_assert((char *)0x0025e4c0, (char *)0x0025e0ac, 689, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x5f08d */
+  FUN_001d9068();
+  error(0, (char *)0x0025e448);
+  /* relift: cmp word ptr [edi + 0x80], 0 -> je 0x5f0c5 */
+  display_assert((char *)0x0025e42c, (char *)0x0025e0ac, 716, 0);
+  system_exit(0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test ecx, ecx -> jl 0x5f156 */
+  /* relift: cmp ecx, dword ptr [eax + 0x3c] -> jl 0x5f176 */
+  display_assert((char *)0x0025e3d0, (char *)0x0025e0ac, 739, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x5f1a1 */
+  path_heap_insert();
+  (void)ecx;
+  (void)edi;
   return 0;
 }
 

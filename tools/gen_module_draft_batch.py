@@ -21,6 +21,34 @@ def strip_c_comments(s: str) -> str:
     return re.sub(r"/\*.*?\*/", "", s, flags=re.DOTALL)
 
 
+def strip_c_comments_indexed(s: str) -> tuple[str, list[int]]:
+    """Return comment-stripped text and stripped[i] -> original index map."""
+    out: list[str] = []
+    idx_map: list[int] = []
+    i = 0
+    n = len(s)
+    while i < n:
+        if s.startswith("/*", i):
+            end = s.find("*/", i + 2)
+            if end < 0:
+                break
+            i = end + 2
+            continue
+        out.append(s[i])
+        idx_map.append(i)
+        i += 1
+    return "".join(out), idx_map
+
+
+def map_stripped_span(stripped_start: int, stripped_end: int, idx_map: list[int]) -> tuple[int, int]:
+    if stripped_start >= len(idx_map):
+        return stripped_start, stripped_end
+    orig_start = idx_map[stripped_start]
+    end_idx = min(stripped_end - 1, len(idx_map) - 1)
+    orig_end = idx_map[end_idx] + 1
+    return orig_start, orig_end
+
+
 def sanitize_decl_for_c(decl: str) -> str:
     decl = strip_c_comments(decl)
     decl = re.sub(r"\s*@<[^>]+>", "", decl)
@@ -275,7 +303,7 @@ def ret_kind(decl: str) -> str:
         return "void"
     if "*" in head:
         return "ptr"
-    if re.search(r"\bchar\b", head):
+    if re.search(r"\b(char|bool)\b", head):
         return "char"
     if re.search(r"\b(int|short|long|bool|float|double|wchar_t|size_t|uint|int64_t|int32_t|int16_t|uint32_t|uint16_t|uint8_t)\b", head):
         return "scalar"

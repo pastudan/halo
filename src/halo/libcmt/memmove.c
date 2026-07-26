@@ -5,8 +5,7 @@
 /* 0x1da290 */
 void *memmove(void *dest, const void *src, size_t size)
 {
-  (void)dest;
-  (void)src;
-  (void)size;
+  /* relift: no calls detected — manual review */
+  (void)0;
   return NULL;
 }

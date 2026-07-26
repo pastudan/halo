@@ -1151,7 +1151,6 @@ finish:
 /* orphan 0x95640 */
 char recorded_animation_play(int actor, short anim_idx)
 {
-  (void)actor;
-  (void)anim_idx;
+  recorded_animation_play_internal(0, 0, 0);
   return 0;
 }

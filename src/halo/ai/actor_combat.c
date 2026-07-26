@@ -1103,6 +1103,14 @@ void FUN_00022dc0(int actor_handle)
 /* orphan 0x22b40 */
 void FUN_00022b40(int actor_handle, float *aim_vector)
 {
-  (void)actor_handle;
-  (void)aim_vector;
+  int eax = 0;
+  int esi = 0;
+
+  datum_get((void *)(uintptr_t)eax, 0);
+  tag_get('vtca', 0);
+  FUN_00021ae0(0, 0.0f, 0.0f, (float *)(uintptr_t)esi, (void *)0);
+  /* test (char)eax, (char)eax -> je 0x22b95 */
+
+  (void)eax;
+  (void)esi;
 }

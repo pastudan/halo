@@ -5,24 +5,101 @@
 /* 0x1d9dac */
 int crt_fclose(void *stream)
 {
-  (void)stream;
+  int esi = 0;
+
+  FUN_001dd5c8();
+  /* relift: test byte ptr [esi + 0xc], 0x40 -> je 0x1d9dd2 */
+  __SEH_epilog();
+  __lock_file();
+  __fclose_lk();
+  FUN_001d9df5();
   return 0;
+
+  (void)esi;
 }
 
 /* 0x1d9df5 */
 void FUN_001d9df5(void)
 {
-
+  __unlock_file();
 }
 
 /* 0x1d9dfd */
 void __fsopen(void)
 {
+  int eax = 0;
 
+  FUN_001dd5c8();
+  __getstream();
+  /* test eax, eax -> jne 0x1d9e24 */
+  FUN_001db777();
+  __openfile();
+  FUN_001d9e4f();
+  __SEH_epilog();
+
+  (void)eax;
 }
 
 /* 0x1d9e4f */
 void FUN_001d9e4f(void)
 {
+  int eax = 0;
+  int ecx = 0;
 
+  __unlock_file();
+  __fsopen();
+  FUN_001d9e94();
+  __fload_withFB();
+  /* relift: cmp word ptr [esp], 0x27f -> je 0x1d9ea8 */
+  FUN_001dedd5();
+  /* cmp ecx, 0x7ff00000 -> je 0x1d9f5b */
+  __fload_withFB();
+  /* test eax, 0x7ff00000 -> je 0x1d9fca */
+  FUN_001dedc0();
+  /* cmp (char)ecx, 1 -> jne 0x1d9eef */
+  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
+  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
+  FUN_001ded6c();
+  __fload_withFB();
+  /* relift: test byte ptr [esp + 0x16], 8 -> jne 0x1d9f3e */
+  /* relift: test byte ptr [esp + 0xe], 8 -> jne 0x1d9f3e */
+  __fload_withFB();
+  /* cmp eax, 0x7ff00000 -> jne 0x1d9f8f */
+  /* test ecx, ecx -> jne 0x1d9f4e */
+  FUN_001e07c0();
+  /* test eax, eax -> je 0x1dee5e */
+  FUN_001da059();
+  /* relift: test dword ptr [esp + 0x17], 0x80 -> je 0x1da01a */
+  /* relift: relift: fld xword ptr [0x331758] */
+  /* test (char)ecx, (char)ecx -> je 0x1da010 */
+  /* test (char)ecx, (char)ecx -> je 0x1dee5e */
+  FUN_001da059();
+  /* test (char)ecx, (char)ecx -> jne 0x1d9ee1 */
+  /* relift: relift: fld xword ptr [0x3314b8] */
+  FUN_001dd5c8();
+  __lock_file();
+  FUN_001e0984();
+  FUN_001da0c1();
+  __SEH_epilog();
+  __unlock_file();
+  FUN_001dee48();
+  FUN_001da0e9();
+  __fload_withFB();
+  /* relift: cmp word ptr [esp], 0x27f -> je 0x1da0fd */
+  FUN_001dedd5();
+  /* cmp eax, 0x3ff00000 -> jae 0x1da12f */
+  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
+  /* relift: relift: fld xword ptr [0x3314c2] */
+  FUN_001dedec();
+  /* test eax, 0xfffff -> jne 0x1da156 */
+  /* relift: cmp dword ptr [esp + 8], 0 -> jne 0x1da156 */
+  /* relift: relift: fld xword ptr [0x3314b8] */
+  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
+  __startOneArgErrorHandling();
+  FUN_001e153d();
+  FUN_001e153d();
+  FUN_001de452();
+
+  (void)eax;
+  (void)ecx;
 }

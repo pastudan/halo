@@ -115,9 +115,112 @@ def fn_name_from_decl(decl: str, addr: str) -> str:
     return GEN.fn_name(decl, addr)
 
 
+def addr_in_prefix(prefix: str, addr: str) -> bool:
+    va = int(addr, 16)
+    forms = {
+        addr.lower(),
+        f"0x{va:x}",
+        f"0x{va:08x}",
+        f"0x{va:08x}".lstrip("0").replace("x", "x0", 1) if va else addr.lower(),
+    }
+    pl = prefix.lower()
+    return any(fm in pl for fm in forms)
+
+
 def find_function_def(src: str, name: str) -> tuple[int, int, int] | None:
     """Return (sig_start, body_start, body_end) for named function."""
     return GEN.find_function_def(src, name)
+
+
+def addr_marker_forms(addr: str) -> list[str]:
+    va = int(addr, 16)
+    raw = [
+        addr.lower(),
+        f"0x{va:x}",
+        f"0x{va:08x}",
+    ]
+    out: list[str] = []
+    for a in raw:
+        out.append(f"/* {a} */")
+        out.append(f"/* orphan {a} */")
+    return out
+
+
+def find_function_def_by_addr(src: str, name: str, addr: str) -> tuple[int, int, int] | None:
+    """Locate function in original source via addr comment marker + name."""
+    va = int(addr, 16)
+    for marker in addr_marker_forms(addr):
+        pos = 0
+        while True:
+            idx = src.find(marker, pos)
+            if idx < 0:
+                break
+            pos = idx + len(marker)
+            window = src[idx : idx + 800]
+            m = re.search(
+                rf"(?m)^(?!\s)(?:static\s+)?(?:inline\s+)?"
+                rf"(?:__declspec\s*\([^)]*\)\s+)?"
+                rf"(?:[\w\s*]+?(?:\*|\s+)|[\w\s]+\*\s*)"
+                rf"(?:__stdcall\s+|__cdecl\s+|__fastcall\s+)?"
+                rf"{re.escape(name)}\s*\(",
+                window,
+            )
+            if not m:
+                continue
+            sig_start = idx + m.start()
+            paren_open = idx + m.end() - 1
+            paren_close = GEN.scan_balanced(src, paren_open, "(", ")")
+            if paren_close is None:
+                continue
+            i = paren_close + 1
+            while i < len(src) and src[i].isspace():
+                i += 1
+            if i >= len(src) or src[i] != "{":
+                continue
+            body_start = i + 1
+            body_end = GEN.scan_balanced(src, i, "{", "}")
+            if body_end is None:
+                continue
+            return sig_start, body_start, body_end
+    return None
+
+
+def find_function_def_for_addr(src: str, name: str, addr: str) -> tuple[int, int, int] | None:
+    span = find_function_def_by_addr(src, name, addr)
+    if span is not None:
+        return span
+    stripped, idx_map = GEN.strip_c_comments_indexed(src)
+    hits: list[tuple[int, int, int]] = []
+    for fn, sig_s, body_s, body_e in GEN.iter_fn_defs(stripped):
+        if fn != name:
+            continue
+        sig_o, _ = GEN.map_stripped_span(sig_s, sig_s + 1, idx_map)
+        _, body_eo = GEN.map_stripped_span(body_s, body_e, idx_map)
+        _, body_so = GEN.map_stripped_span(body_s, body_s + 1, idx_map)
+        hits.append((sig_o, body_so, body_eo))
+    if len(hits) == 1:
+        return hits[0]
+    return None
+
+
+def _span_from_sig_start(src: str, sig_start: int, name: str) -> tuple[int, int, int] | None:
+    m = re.search(rf"{re.escape(name)}\s*\(", src[sig_start:])
+    if not m:
+        return None
+    paren_open = sig_start + m.end() - 1
+    paren_close = GEN.scan_balanced(src, paren_open, "(", ")")
+    if paren_close is None:
+        return None
+    i = paren_close + 1
+    while i < len(src) and src[i].isspace():
+        i += 1
+    if i >= len(src) or src[i] != "{":
+        return None
+    body_start = i + 1
+    body_end = GEN.scan_balanced(src, i, "{", "}")
+    if body_end is None:
+        return None
+    return sig_start, body_start, body_end
 
 
 def infer_stack_params(insns) -> list[tuple[int, str]]:
@@ -789,7 +892,17 @@ def lift_function(
         lines = fixed
         if not any("return" in ln for ln in lines):
             lines.append("  return NULL;")
-    elif sig_ret in ("scalar", "char") and not any("return" in ln for ln in lines):
+    elif sig_ret == "char":
+        fixed = []
+        for ln in lines:
+            if re.match(r"\s*return NULL;\s*$", ln):
+                fixed.append("  return 0;")
+            else:
+                fixed.append(ln)
+        lines = fixed
+        if not any("return" in ln for ln in lines):
+            lines.append("  return 0;")
+    elif sig_ret == "scalar" and not any("return" in ln for ln in lines):
         lines.append("  return 0;")
 
     decl_params = GEN.parse_params(GEN.sanitize_decl_for_c(sig + ";"))
@@ -846,9 +959,23 @@ def disasm_function(md, get_bytes, va: int, end: int) -> list:
     return insns
 
 
-def relift_object(object_name: str, *, dry_run: bool = False, force: bool = False) -> dict:
+def relift_object(
+    object_name: str,
+    *,
+    occurrence: int = 0,
+    dry_run: bool = False,
+    force: bool = False,
+) -> dict:
     kb = json.loads((ROOT / "kb.json").read_text())
-    obj = next(o for o in kb["objects"] if o["name"] == object_name)
+    matches = [o for o in kb["objects"] if o["name"] == object_name]
+    if not matches:
+        raise SystemExit(f"unknown object {object_name!r}")
+    if occurrence >= len(matches):
+        raise SystemExit(
+            f"occurrence {occurrence} out of range for {object_name!r} "
+            f"({len(matches)} entries)"
+        )
+    obj = matches[occurrence]
     src_rel = obj.get("source")
     if not src_rel:
         raise SystemExit(f"no source for {object_name}")
@@ -883,7 +1010,7 @@ def relift_object(object_name: str, *, dry_run: bool = False, force: bool = Fals
         addr = fn["addr"].lower()
         decl = fn.get("decl") or f"void FUN_{int(addr, 16):08x}(void);"
         name = fn_name_from_decl(decl, addr)
-        span = find_function_def(src, name)
+        span = find_function_def_for_addr(src, name, addr)
         if span is None:
             skipped += 1
             continue
@@ -918,11 +1045,11 @@ def relift_object(object_name: str, *, dry_run: bool = False, force: bool = Fals
             sig=sig,
             caller_name=name,
         )
-        new_fn = f"{sig}\n{{\n" + "\n".join(body_lines) + "\n}"
-        work.append((sig_start, body_end, new_fn))
+        new_body = "\n" + "\n".join(body_lines) + "\n"
+        work.append((body_start, body_end, new_body))
 
-    for sig_start, body_end, new_fn in sorted(work, key=lambda x: x[0], reverse=True):
-        src = src[:sig_start] + new_fn + src[body_end + 1 :]
+    for body_start, body_end, new_body in sorted(work, key=lambda x: x[0], reverse=True):
+        src = src[:body_start] + new_body + src[body_end:]
         relifted += 1
 
     if relifted and not dry_run:
@@ -933,6 +1060,8 @@ def relift_object(object_name: str, *, dry_run: bool = False, force: bool = Fals
 
     return {
         "object": object_name,
+        "occurrence": occurrence,
+        "source_file": src_rel,
         "relifted": relifted,
         "skipped": skipped,
         "stub_before": stub_before,
@@ -943,6 +1072,7 @@ def relift_object(object_name: str, *, dry_run: bool = False, force: bool = Fals
 def main() -> None:
     ap = argparse.ArgumentParser(description="Relift stub bodies from XBE")
     ap.add_argument("--object", action="append", required=True)
+    ap.add_argument("--occurrence", type=int, default=0)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force", action="store_true", help="Re-relift prior relift drafts")
     args = ap.parse_args()
@@ -950,11 +1080,16 @@ def main() -> None:
     total = 0
     results = []
     for obj in args.object:
-        r = relift_object(obj, dry_run=args.dry_run, force=args.force)
+        r = relift_object(
+            obj, occurrence=args.occurrence, dry_run=args.dry_run, force=args.force
+        )
         results.append(r)
         total += r["relifted"]
+        label = r["object"]
+        if r.get("occurrence"):
+            label = f"{label}[{r['occurrence']}]"
         print(
-            f"{r['object']}: relifted {r['relifted']} "
+            f"{label}: relifted {r['relifted']} "
             f"(skipped {r['skipped']}, stubs {r['stub_before']})"
         )
 

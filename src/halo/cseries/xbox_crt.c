@@ -311,85 +311,503 @@ __attribute__((naked)) void _chkstk(void)
 /* 0x1d63d5 */
 void FUN_001d63d5(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d63e7 */
+  FUN_001dd5c8();
+  /* cmp eax, 0x7fffffff -> jbe 0x1d641a */
+  /* cmp eax, edi -> jne 0x1d6421 */
+  /* relift: test dword ptr [ebp + 0xc], 0x3c000100 -> jne 0x1d644a */
+  /* relift: cmp dword ptr [esi + 0x17c], edi -> je 0x1d6455 */
+  /* relift: test byte ptr [ebp + 0xc], 1 -> jne 0x1d6474 */
+  /* cmp ebx, 0x80 -> jae 0x1d668c */
+  /* cmp eax, edi -> je 0x1d6541 */
+  /* cmp eax, ecx -> jne 0x1d64ea */
+  /* cmp (int16_t)eax, 0x80 -> jae 0x1d64ea */
+  /* test (char)ecx, 4 -> je 0x1d6521 */
+  /* test (char)ecx, 2 -> je 0x1d650e */
+  /* cmp eax, 4 -> jbe 0x1d650e */
+  /* cmp ebx, 0x20 -> jae 0x1d65b4 */
+  /* test edx, edx -> jne 0x1d65d6 */
+  /* test ecx, ecx -> jne 0x1d6644 */
+  /* test ecx, ecx -> jne 0x1d65ff */
+  /* test ecx, ecx -> je 0x1d6695 */
+  FUN_001d8750(0);
+  /* cmp ebx, 0x40 -> jae 0x1d6613 */
+  /* test edx, edx -> je 0x1d65dd */
+  /* test ecx, ecx -> jne 0x1d6644 */
+  /* test ecx, ecx -> je 0x1d6695 */
+  FUN_001d8750(0);
+  /* cmp ebx, 0x60 -> jae 0x1d6658 */
+  /* test eax, eax -> jne 0x1d6672 */
+  /* test ecx, ecx -> je 0x1d6695 */
+  FUN_001d8750(0);
+  /* test eax, eax -> je 0x1d6695 */
+  FUN_001d8750(0);
+  /* relift: cmp ebx, dword ptr [esi + 0x1c] -> ja 0x1d6b4e */
+  /* cmp esi, eax -> je 0x1d66b8 */
+  /* cmp ecx, ebx -> jae 0x1d66d0 */
+  FUN_001d5411();
+  /* test edi, edi -> je 0x1d6b3d */
+  /* cmp eax, ecx -> jne 0x1d671c */
+  /* cmp (int16_t)eax, 0x80 -> jae 0x1d671c */
+  /* test (char)ecx, 4 -> je 0x1d6756 */
+  /* test (char)ecx, 2 -> je 0x1d6740 */
+  /* cmp eax, 4 -> jbe 0x1d6740 */
+  /* test ebx, ebx -> je 0x1d6aef */
+  /* cmp ebx, 1 -> jne 0x1d67a8 */
+  /* test dl, 0x10 -> je 0x1d6887 */
+  /* cmp (int16_t)ebx, 0x80 -> jae 0x1d6833 */
+  /* relift: cmp dword ptr [edi], edi -> jne 0x1d6863 */
+  /* cmp edx, edi -> je 0x1d685d */
+  /* relift: cmp (int16_t)ebx, word ptr [ecx] -> jbe 0x1d685d */
+  /* test (char)ecx, 1 -> je 0x1d694a */
+  /* cmp (int16_t)ebx, 0x80 -> jae 0x1d6906 */
+  /* relift: cmp dword ptr [edi], edi -> jne 0x1d6936 */
+  /* cmp edx, edi -> je 0x1d6930 */
+  /* relift: cmp (int16_t)ebx, word ptr [ecx] -> jbe 0x1d6930 */
+  /* cmp ecx, edx -> jne 0x1d69ae */
+  /* cmp (int16_t)ecx, 0x80 -> jae 0x1d69ae */
+  /* test (char)ecx, 4 -> je 0x1d69f1 */
+  /* test (char)ecx, 2 -> je 0x1d69d8 */
+  /* cmp eax, 4 -> jbe 0x1d69d8 */
+  /* cmp ebx, 0xff00 -> ja 0x1d6ac7 */
+  /* relift: test byte ptr [esi + 5], 0x10 -> jne 0x1d6a21 */
+  /* cmp (int16_t)ebx, 0x80 -> jae 0x1d6a83 */
+  /* relift: cmp dword ptr [edi], edi -> jne 0x1d6ab3 */
+  /* cmp edx, edi -> je 0x1d6aad */
+  /* relift: cmp (int16_t)ebx, word ptr [ecx] -> jbe 0x1d6aad */
+  FUN_001d4cd9();
+  /* relift: test byte ptr [esi + 5], 0x10 -> je 0x1d6aef */
+  /* relift: test byte ptr [ebp - 0x3d], 0x10 -> je 0x1d6b01 */
+  /* relift: test byte ptr [ebp + 0xc], 8 -> je 0x1d6b16 */
+  /* relift: test byte ptr [edi + 5], 2 -> je 0x1d6c60 */
+  FUN_001d4dd3();
+  /* relift: test byte ptr [esi + 0x14], 2 -> je 0x1d6c01 */
+  /* cmp eax, edi -> jl 0x1d6c0b */
+  /* relift: test byte ptr [ebp + 0xc], 4 -> je 0x1d6c60 */
+  /* test ecx, ecx -> je 0x1d6c7e */
+  /* relift: FUN_001d6c92(0, 0); */
+  __SEH_epilog();
+  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d6ca7 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x1d6ca8 */
 void FUN_001d6ca8(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  FUN_001dd5c8();
+  /* test ecx, ecx -> jne 0x1d6cd2 */
+  /* test (char)eax, 1 -> jne 0x1d6cf3 */
+  /* relift: test byte ptr [edi + 5], 8 -> jne 0x1d6e00 */
+  FUN_001d4a34();
+  /* cmp ecx, 0x80 -> jae 0x1d6d84 */
+  /* relift: cmp dword ptr [edx], edx -> jne 0x1d6d63 */
+  /* relift: cmp ecx, dword ptr [esi + 0x28] -> jb 0x1d6da0 */
+  /* relift: cmp edx, dword ptr [esi + 0x2c] -> jb 0x1d6da0 */
+  FUN_001d5598();
+  /* cmp ecx, 0xff00 -> ja 0x1d6df6 */
+  /* cmp esi, ecx -> je 0x1d6dd8 */
+  /* relift: cmp (int16_t)edi, word ptr [edx] -> jbe 0x1d6dd8 */
+  FUN_001d4cd9();
+  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d6e2c */
+  /* test eax, eax -> jge 0x1d6e4e */
+  FUN_001d6e65();
+  __SEH_epilog();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x1d6e65 */
 void FUN_001d6e65(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d6e77 */
+  FUN_001dd5c8();
+  /* relift: test byte ptr [ebp + 0xc], 1 -> jne 0x1d6ead */
+  /* test dl, 1 -> je 0x1d6ff9 */
+  /* test (char)ecx, 7 -> jne 0x1d6ff9 */
+  /* relift: cmp byte ptr [eax + 4], 0x40 -> jae 0x1d6ff9 */
+  /* test dl, 8 -> je 0x1d6f1d */
+  /* cmp eax, edi -> jl 0x1d6ff9 */
+  FUN_001d4a34();
+  /* relift: cmp ecx, dword ptr [esi + 0x28] -> jb 0x1d6f51 */
+  /* relift: cmp edx, dword ptr [esi + 0x2c] -> jb 0x1d6f51 */
+  FUN_001d5598();
+  /* cmp ecx, 0xff00 -> ja 0x1d6fed */
+  /* cmp (int16_t)ebx, 0x80 -> jae 0x1d6fab */
+  /* relift: cmp dword ptr [edx], edx -> jne 0x1d6fcf */
+  /* cmp edi, edx -> je 0x1d6fcc */
+  /* relift: cmp (int16_t)ebx, word ptr [ecx] -> jbe 0x1d6fcc */
+  FUN_001d4cd9();
+  /* relift: FUN_001d7028(0, 0); */
+  __SEH_epilog();
+  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d703a */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x1d703b */
 void FUN_001d703b(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  FUN_001dd5c8();
+  /* test esi, esi -> je 0x1d706c */
+  /* cmp edx, 0x7fffffff -> jbe 0x1d7073 */
+  /* test edx, edx -> jne 0x1d7078 */
+  /* relift: test dword ptr [ebp + 0xc], 0x3c000100 -> jne 0x1d709b */
+  /* relift: cmp dword ptr [eax + 0x17c], 0 -> jne 0x1d709b */
+  /* relift: test byte ptr [esi - 0xb], 2 -> je 0x1d70a1 */
+  /* relift: test byte ptr [ebp + 0xc], 1 -> jne 0x1d70bf */
+  /* test (char)eax, 1 -> je 0x1d76e4 */
+  /* cmp edi, edx -> ja 0x1d7525 */
+  /* cmp edi, edx -> jne 0x1d7143 */
+  /* test (char)ecx, (char)ecx -> je 0x1d7152 */
+  /* relift: test byte ptr [ebx + 5], 2 -> je 0x1d7175 */
+  /* cmp ecx, esi -> jbe 0x1d71a5 */
+  /* relift: test byte ptr [ebp + 0xc], 8 -> je 0x1d71a5 */
+  /* cmp ecx, edx -> je 0x1d7683 */
+  /* test (char)eax, 8 -> je 0x1d71ff */
+  /* test eax, eax -> jl 0x1d7683 */
+  /* test (char)eax, 0x10 -> je 0x1d72c3 */
+  /* cmp (int16_t)edi, 0x80 -> jae 0x1d7291 */
+  /* relift: cmp dword ptr [eax], eax -> jne 0x1d72b5 */
+  /* cmp edx, eax -> je 0x1d72b2 */
+  /* relift: cmp (int16_t)edi, word ptr [ecx] -> jbe 0x1d72b2 */
+  /* test (char)eax, 1 -> je 0x1d737d */
+  /* cmp (int16_t)edi, 0x80 -> jae 0x1d7336 */
+  /* relift: cmp dword ptr [eax], eax -> jne 0x1d7369 */
+  /* cmp edx, eax -> je 0x1d7363 */
+  /* relift: cmp (int16_t)edi, word ptr [ecx] -> jbe 0x1d7363 */
+  /* cmp eax, ecx -> jne 0x1d73e3 */
+  /* cmp (int16_t)eax, 0x80 -> jae 0x1d73e3 */
+  /* test (char)ecx, 4 -> je 0x1d7429 */
+  /* test (char)ecx, 2 -> je 0x1d7410 */
+  /* cmp eax, 4 -> jbe 0x1d7410 */
+  /* cmp edi, 0xff00 -> ja 0x1d7516 */
+  /* relift: test byte ptr [esi + 5], 0x10 -> jne 0x1d7458 */
+  /* cmp (int16_t)edi, 0x80 -> jae 0x1d74bf */
+  /* relift: cmp dword ptr [eax], eax -> jne 0x1d74ef */
+  /* cmp edx, eax -> je 0x1d74e9 */
+  /* relift: cmp (int16_t)edi, word ptr [ecx] -> jbe 0x1d74e9 */
+  FUN_001d4cd9();
+  /* test (char)ecx, (char)ecx -> jne 0x1d7544 */
+  FUN_001d4ec6();
+  /* test (char)eax, (char)eax -> jne 0x1d7683 */
+  /* relift: test byte ptr [ebp + 0xc], 0x10 -> je 0x1d7553 */
+  /* test (char)eax, 2 -> je 0x1d75c1 */
+  FUN_001d4dd3();
+  /* test (int16_t)eax, (int16_t)eax -> je 0x1d759a */
+  /* test (char)eax, (char)eax -> je 0x1d75d1 */
+  FUN_001d5c66();
+  /* test eax, eax -> je 0x1d7680 */
+  /* relift: test byte ptr [eax + 5], 2 -> je 0x1d7628 */
+  FUN_001d4dd3();
+  /* relift: test byte ptr [ebx + 5], 2 -> je 0x1d7622 */
+  FUN_001d4dd3();
+  /* cmp eax, esi -> jb 0x1d7631 */
+  memmove((void *)0, (void *)(uintptr_t)0, eax);
+  /* relift: cmp dword ptr [ebp + 0x14], esi -> jbe 0x1d766c */
+  /* relift: test byte ptr [ebp + 0xc], 8 -> je 0x1d766c */
+  FUN_001d6ca8();
+  /* relift: cmp dword ptr [ebp + 0x10], 0 -> jne 0x1d76e4 */
+  /* relift: test byte ptr [ebp + 0xc], 4 -> je 0x1d76e4 */
+  FUN_001d76fc();
+  __SEH_epilog();
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x1d76fc */
 void FUN_001d76fc(void)
 {
-
+  /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x1d771c */
 void XAutoPowerDownResetTimer(void)
 {
-
+  /* relift: no calls detected — manual review */
+  (void)0;
 }
 
 /* 0x1d7749 */
 void FUN_001d7749(void)
 {
+  int eax = 0;
 
+  FUN_001d4464();
+  /* test eax, eax -> jne 0x1d77a2 */
+  /* mem[0x00632a08] = eax */
+  /* mem[0x00632a0c] = 1 */
+  XAutoPowerDownResetTimer();
+
+  (void)eax;
 }
 
 /* 0x1d77b3 */
 void FUN_001d77b3(void)
 {
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
 
+  xCompareStringA(0, 0, 0, (char *)(uintptr_t)esi, 0);
+  /* test eax, eax -> jne 0x1d7810 */
+  /* relift: cmp dword ptr [esp + 8], eax -> je 0x1d7808 */
+  /* test esi, esi -> je 0x1d7803 */
+  /* relift: cmp dl, byte ptr [esi] -> jne 0x1d77fc */
+  /* test (char)ecx, (char)ecx -> je 0x1d77f8 */
+  /* relift: cmp dl, byte ptr [esi + 1] -> jne 0x1d77fc */
+  /* test (char)ecx, (char)ecx -> jne 0x1d77da */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
 
 /* 0x1d7a59 */
 void FUN_001d7a59(void)
 {
+  int ecx = 0;
+  int esi = 0;
+  int ebp = 0;
 
+  FUN_001dd5c8();
+  /* relift: cmp dword ptr [ebp + 0x10], esi -> je 0x1d7aa7 */
+  /* relift: cmp dword ptr [ebp + 0x10], esi -> je 0x1d7a9f */
+  /* cmp (int16_t)ecx, (int16_t)esi -> je 0x1d7a9a */
+  /* relift: cmp dword ptr [ebp + 0x10], esi -> jne 0x1d7aa4 */
+  __SEH_epilog();
+  FUN_001dd5c8();
+  _wcscat();
+  __SEH_epilog();
+  FUN_001dd5c8();
+  /* relift: cmp dword ptr [ebp + 8], 0 -> je 0x1d7b2d */
+  _wcslen((wchar_t *)0);
+  __SEH_epilog();
+
+  (void)ecx;
+  (void)esi;
+  (void)ebp;
 }
 
 /* 0x1d7b37 */
 int FUN_001d7b37(void *handle, void *buf)
 {
-  (void)handle;
-  (void)buf;
+  int ebx = 0;
+  int edx = 0;
+  int edi = 0;
+
+  /* cmp edi, ebx -> jl 0x1d7c53 */
+  /* test edi, edi -> jl 0x1d7c53 */
+  /* test (char)ebx, (char)ebx -> je 0x1d7beb */
+  /* relift: tail-call FUN_001d7b37(); */
+  /* test dl, 1 -> je 0x1d7c23 */
+  /* test edi, edi -> jl 0x1d7c42 */
+  /* test edi, edi -> jge 0x1d7b47 */
+  /* cmp edi, 0xc000000f -> jne 0x1d7cac */
   return 0;
+
+  (void)ebx;
+  (void)edx;
+  (void)edi;
 }
 
 /* 0x1d7d84 */
 void FUN_001d7d84(void)
 {
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  /* cmp (char)ecx, (char)ebx -> jne 0x1d7d97 */
+  FUN_001d789a((char *)(uintptr_t)esi, (char *)(uintptr_t)0, 0);
+  /* cmp edi, ebx -> jl 0x1d7e4d */
+  /* relift: cmp dword ptr [ebp - 0x2c], ebx -> jne 0x1d7e4d */
+  /* relift: cmp dword ptr [ebp - 0x28], ebx -> jne 0x1d7e4d */
+  FUN_001d8aef();
+  /* cmp esi, ebx -> je 0x1d7e4d */
+  XGetSectionSize();
+  FUN_001d8b10();
+  /* cmp edi, 0xc0000035 -> jne 0x1d7e62 */
+
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
 
 /* 0x1d7e6b */
 void XapiMapLetterToDirectory(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int ebp = 0;
 
+  /* cmp eax, 0xc0000103 -> jne 0x1d7ecc */
+  /* relift: cmp dword ptr [ebp + 0xc], ebx -> jl 0x1d8195 */
+  /* cmp (char)ecx, (char)ebx -> jne 0x1d7ee0 */
+  /* relift: cmp byte ptr [eax - 1], 0x5c -> je 0x1d7f02 */
+  /* cmp dl, (char)ebx -> jne 0x1d7f15 */
+  /* relift: cmp dword ptr [ebp + 0x1c], ebx -> je 0x1d7fa6 */
+  /* cmp esi, ebx -> je 0x1d8177 */
+  FUN_001d8a88();
+  FUN_001d8a88();
+  FUN_001d8a88();
+  /* relift: cmp word ptr [esi], (int16_t)ebx -> je 0x1d8131 */
+  /* cmp (char)ecx, (char)ebx -> jne 0x1d7ff5 */
+  FUN_001d789a((char *)(uintptr_t)esi, (char *)0x002c2030, 0);
+  /* relift: cmp dword ptr [ebp - 0x3c], ebx -> jne 0x1d811c */
+  /* relift: cmp dword ptr [ebp - 0x38], ebx -> jne 0x1d811c */
+  /* relift: cmp dword ptr [ebp + 0x10], -1 -> je 0x1d80d1 */
+  FUN_001d8aef();
+  /* cmp esi, ebx -> je 0x1d80d1 */
+  XGetSectionSize();
+  FUN_001d8b10();
+  FUN_001dd6f5();
+  /* cmp eax, 0xc0000035 -> jne 0x1d8131 */
+  /* relift: cmp dword ptr [ebp + 0xc], ebx -> jl 0x1d8177 */
+  /* relift: cmp dword ptr [ebp + 0x1c], -1 -> je 0x1d8154 */
+  FUN_001d7d84();
+  /* relift: cmp dword ptr [ebp + 0xc], ebx -> jl 0x1d8177 */
+  /* relift: cmp dword ptr [ebp - 0x1c], -1 -> je 0x1d8177 */
+  FUN_001d7d84();
+  /* relift: cmp dword ptr [ebp + 0xc], ebx -> jl 0x1d8195 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)ebp;
 }
 
 /* 0x1d819f */
 void FUN_001d819f(void)
 {
+  int eax = 0;
 
+  crt_sprintf((char *)(uintptr_t)eax, (char *)0x002c1e28);
+  XapiMapLetterToDirectory();
+  /* test eax, eax -> jl 0x1d81f0 */
+  XapiMapLetterToDirectory();
+
+  (void)eax;
 }
 
 /* 0x1d81f4 */
 void XapiBootToDash(void)
 {
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  /* relift: cmp dword ptr [eax + 8], 0xfffe0000 -> je 0x1d8250 */
+  XLaunchNewImageA((char *)0, (void *)(uintptr_t)eax);
+  FUN_001d7749();
+  FUN_001d5842();
+  /* mem[0x00632a28] = eax */
+  /* relift: test byte ptr [0x10124], 8 -> jne 0x1d8323 */
+  FUN_001d7d21((void *)0x0032fd70);
+  /* test eax, eax -> jl 0x1d82ff */
+  /* cmp eax, esi -> jge 0x1d82d9 */
+  /* cmp eax, 0xc0000035 -> jne 0x1d829d */
+  FUN_001d819f();
+  /* cmp eax, esi -> jge 0x1d8303 */
+  /* cmp eax, 0xc000007f -> jne 0x1d82ff */
+  /* test (char)eax, 1 -> je 0x1d8342 */
+  XMountUtilityDrive();
+  /* test eax, eax -> jne 0x1d8342 */
+  /* relift: tail-call XapiBootToDash(); */
+  /* cmp eax, esi -> jge 0x1d8342 */
+  /* cmp eax, 0xc0000035 -> jne 0x1d829d */
+  FUN_001d454b();
+  /* cmp esi, eax -> jae 0x1d8364 */
+  /* relift: tail-call XapiBootToDash(); */
+  /* cmp eax, edi -> jge 0x1d83ac */
+  XapiSetLastNTError(0);
+  /* cmp ebx, edi -> jge 0x1d83e2 */
+  FUN_001d8750(0);
+  /* cmp esi, edi -> jge 0x1d841e */
+  /* relift: cmp dword ptr [ebp - 0xc], edi -> jae 0x1d84b1 */
+  __alldiv();
+  /* cmp eax, 0xfff0 -> jae 0x1d8479 */
+  /* cmp eax, edi -> ja 0x1d84b1 */
+  /* cmp eax, esi -> jb 0x1d84c6 */
+  /* relift: cmp dword ptr [ebp - 0x10], edi -> jbe 0x1d84c6 */
+  SetLastError(112);
+  FUN_001d0bb9(ecx, ebx);
+  /* test esi, esi -> jne 0x1d84e6 */
+  LocalFree((void *)(uintptr_t)esi);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }

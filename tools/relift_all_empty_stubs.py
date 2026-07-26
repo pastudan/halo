@@ -40,12 +40,19 @@ def load_modules():
     return load_gen(), relift_module()
 
 
-def empty_stub_objects(force: bool = False) -> list[str]:
+def object_occurrence(kb: dict, idx: int) -> int:
+    on = kb["objects"][idx].get("name") or ""
+    same = [i for i, o in enumerate(kb["objects"]) if o.get("name") == on]
+    return same.index(idx)
+
+
+def empty_stub_objects(force: bool = False) -> list[tuple[str, int]]:
     gen, relift = load_modules()
     kb = json.loads((ROOT / "kb.json").read_text())
-    counts: Counter[str] = Counter()
-    for obj in kb["objects"]:
+    counts: Counter[tuple[str, int]] = Counter()
+    for idx, obj in enumerate(kb["objects"]):
         on = obj.get("name") or ""
+        occ = object_occurrence(kb, idx)
         src_rel = obj.get("source")
         if not src_rel:
             continue
@@ -58,15 +65,15 @@ def empty_stub_objects(force: bool = False) -> list[str]:
                 continue
             addr = f["addr"].lower()
             name = gen.fn_name(f.get("decl") or "", addr)
-            span = relift.find_function_def(text, name)
+            span = relift.find_function_def_for_addr(text, name, addr)
             if span is None:
-                counts[on] += 1
+                counts[(on, occ)] += 1
                 continue
             _, bs, be = span
             body = text[bs:be]
             if relift.is_stub_body(body) or (force and relift.is_relift_draft(body)):
-                counts[on] += 1
-    return [o for o, _ in counts.most_common()]
+                counts[(on, occ)] += 1
+    return [key for key, _ in counts.most_common()]
 
 
 def main() -> None:
@@ -76,14 +83,21 @@ def main() -> None:
     ap.add_argument("--object", action="append")
     args = ap.parse_args()
 
-    objects = args.object if args.object else empty_stub_objects(force=args.force)
+    objects = (
+        [(o, 0) for o in args.object]
+        if args.object
+        else empty_stub_objects(force=args.force)
+    )
     if args.list:
         gen, relift = load_modules()
         kb = json.loads((ROOT / "kb.json").read_text())
         total = 0
         rows = []
-        for on in objects:
-            obj = next(o for o in kb["objects"] if o.get("name") == on)
+        for on, occ in objects:
+            matches = [o for o in kb["objects"] if o.get("name") == on]
+            if occ >= len(matches):
+                continue
+            obj = matches[occ]
             src_path = ROOT / "src" / "halo" / obj["source"]
             text = src_path.read_text() if src_path.is_file() else ""
             n = 0
@@ -91,7 +105,8 @@ def main() -> None:
                 if f.get("ported") is not False:
                     continue
                 name = gen.fn_name(f.get("decl") or "", f["addr"].lower())
-                span = relift.find_function_def(text, name) if text else None
+                addr = f["addr"].lower()
+                span = relift.find_function_def_for_addr(text, name, addr)
                 if span is None:
                     n += 1
                     continue
@@ -102,16 +117,19 @@ def main() -> None:
                 ):
                     n += 1
             if n:
-                rows.append((on, n))
+                label = f"{on}[{occ}]" if occ else on
+                rows.append((label, n))
                 total += n
-        for on, n in sorted(rows, key=lambda x: -x[1])[:40]:
-            print(f"  {on}: {n}")
+        for label, n in sorted(rows, key=lambda x: -x[1])[:40]:
+            print(f"  {label}: {n}")
         print(f"TOTAL empty: {total} across {len(rows)} objects")
         return
 
     total = 0
-    for on in objects:
+    for on, occ in objects:
         cmd = [sys.executable, "tools/relift_stubs_from_xbe.py", "--object", on]
+        if occ:
+            cmd.extend(["--occurrence", str(occ)])
         if args.force:
             cmd.append("--force")
         proc = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)

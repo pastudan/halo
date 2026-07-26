@@ -657,7 +657,25 @@ void ai_debug_lineoffire_addpill(float *vec_a, float *vec_b, int param_3, char p
 /* 0x494e0 */
 void FUN_000494e0(void)
 {
+  int eax = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  /* relift: relift: mov (char)eax, byte ptr [0x5acab8] */
+  /* test (char)eax, (char)eax -> je 0x4959e */
+  /* relift: relift: fld dword ptr [0x5acabc] */
+  /* relift: relift: mov (char)eax, byte ptr [0x5acab9] */
+  /* relift: relift: fld dword ptr [0x5acac0] */
+  /* relift: relift: fld dword ptr [0x5acac4] */
+  FUN_00189270(0, (void *)0x005acabc, (float *)(uintptr_t)eax, (void *)(uintptr_t)eax);
+  /* test eax, eax -> jle 0x4959d */
+  FUN_00189860(0, (void *)(uintptr_t)edi, (void *)(uintptr_t)edx, 0.0f, (void *)(uintptr_t)eax);
+  /* cmp esi, eax -> jl 0x49560 */
+  (void)eax;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
 
 /* 0x495b0 */
@@ -2534,9 +2552,47 @@ void FUN_00053af0(void)
 /* orphan 0x4a460 */
 void FUN_0004a460(int a0, int a1, void *buf, int buf_size, int max_entries)
 {
-  (void)a0;
-  (void)a1;
-  (void)buf;
-  (void)buf_size;
-  (void)max_entries;
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  display_assert((char *)0x0025aea4, (char *)0x0025ab74, 4947, 0);
+  system_exit(0);
+  /* cmp ebx, 0x800 -> jbe 0x4a4c6 */
+  display_assert((char *)0x0025ae90, (char *)0x0025ab74, 4948, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)eax, 0, ebx);
+  /* cmp eax, edi -> jle 0x4a587 */
+  /* cmp (int16_t)esi, -1 -> je 0x4a551 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x4a514 */
+  /* cmp eax, ecx -> jb 0x4a534 */
+  display_assert((char *)0x0025ae60, (char *)0x0025ab74, 4957, 0);
+  system_exit(0);
+  csstrcmp((char *)(uintptr_t)ecx, (char *)0x0025ae38);
+  /* test eax, eax -> jne 0x4a57b */
+  csmemset((void *)(uintptr_t)edx, 0, ebx);
+  /* cmp edi, eax -> jl 0x4a4f0 */
+  /* test edi, edi -> jbe 0x4a63b */
+  /* relift: test dword ptr [ebp + eax - 0x108], edx -> je 0x4a5c1 */
+  /* relift: test dword ptr [eax + ecx], edx -> je 0x4a5be */
+  /* cmp esi, edi -> jb 0x4a594 */
+  /* test (int16_t)esi, (int16_t)esi -> je 0x4a5fa */
+  bit_vector_or(edi, 0, 0, 0);
+  console_printf(0, (char *)0x0025ae50);
+  /* test (int16_t)esi, (int16_t)esi -> je 0x4a63b */
+  FUN_00108fa0(edi, 0, 0);
+  bit_vector_and(edi, 0, 0, 0);
+  console_printf(0, (char *)0x0025ae3c);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
