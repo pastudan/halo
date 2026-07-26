@@ -3326,3 +3326,868 @@ void FUN_000ca140(const char *substr)
 {
   hs_object_iterate_names_containing((void *)FUN_000ca110, substr);
 }
+
+static void hs_runtime_set_game_flag(int16_t game_flag, char set_flag)
+{
+  int word_index;
+  int bit_index;
+  uint32_t mask;
+  uint32_t *flags;
+
+  word_index = (int)game_flag >> 5;
+  bit_index = (int)game_flag & 0x1f;
+  mask = (uint32_t)(1U << bit_index);
+  flags = (uint32_t *)(0x5aa6a0 + word_index * 4);
+  if (set_flag)
+    *flags |= mask;
+  else
+    *flags &= ~mask;
+}
+
+char FUN_000c8b90(int16_t node_type, int datum_index)
+{
+  char *node;
+  char *expr_node;
+  int expr_datum;
+  int inner_datum;
+  char ok;
+
+  (void)ok;
+  ok = 0;
+  if (node_type != 0x13) {
+    display_assert((const char *)0x27cdc0, (const char *)0x27d0fc, 0x20e, 1);
+    system_exit(-1);
+  }
+
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
+  expr_datum = *(int *)(node + 0x10);
+  expr_node = (char *)datum_get(*(data_t **)0x5aa6c8, expr_datum);
+  expr_datum = *(int *)(expr_node + 8);
+  if (expr_datum == -1) {
+    *(int *)0x46b6fc = (int)0x27d0bc;
+    node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
+    *(int *)0x46b700 = *(int *)(node + 0xc);
+    return 0;
+  }
+
+  if (!hs_type_check(expr_datum, 7))
+    return 0;
+
+  inner_datum = *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, expr_datum) + 8);
+  if (inner_datum != -1 && !hs_type_check(inner_datum, 0xa))
+    return 0;
+
+  return 1;
+}
+
+char FUN_000c8e00(int16_t function_index, int root_datum)
+{
+  void *entry;
+  char *syntax_node;
+  char result;
+
+  result = 0;
+  syntax_node = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  (void)syntax_node;
+
+  if (function_index != 0x16) {
+    display_assert((const char *)0x27cdc0, (const char *)0x27d228, 0x27f, 1);
+    system_exit(-1);
+  }
+
+  entry = hs_function_table_get(function_index);
+  if (!FUN_000c55d0(*(const char **)((char *)entry + 4),
+                    (int *)&function_index, 1, root_datum))
+    return result;
+
+  if (hs_type_check(function_index, 0))
+    return 1;
+
+  if (*(int *)0x46b6fc != 0)
+    return result;
+
+  *(int *)0x46b6fc = (int)0x27d1e0;
+  syntax_node = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  *(int *)0x46b700 = *(int *)(syntax_node + 0xc);
+  return result;
+}
+
+char FUN_000c8ec0(int16_t function_index, int root_datum)
+{
+  void *entry;
+  char result;
+
+  result = 0;
+  if (function_index < 0x17 || function_index > 0x17) {
+    display_assert((const char *)0x27cdc0, (const char *)0x27d250, 0x29a, 1);
+    system_exit(-1);
+  }
+
+  entry = hs_function_table_get(function_index);
+  if (!FUN_000c55d0(*(const char **)((char *)entry + 4),
+                    (int *)&function_index, 1, root_datum))
+    return result;
+
+  return hs_type_check(function_index, 0x25);
+}
+
+int FUN_000c95f0(void)
+{
+  int list;
+  int idx;
+  char *thread;
+
+  list = FUN_000ce200();
+  idx = data_next_index(*(data_t **)0x5aa6d4, -1);
+  while (idx != -1) {
+    thread = (char *)datum_get(*(data_t **)0x5aa6d4, idx);
+    if (*(int *)(thread + 0x34) != -1)
+      FUN_000ce2b0(list, *(int *)(thread + 0x34));
+    idx = data_next_index(*(data_t **)0x5aa6d4, idx);
+  }
+  return list;
+}
+
+char FUN_000c9650(int16_t game_flag, int list_handle, char set_flag)
+{
+  int cursor;
+  int object_handle;
+  char matched;
+
+  matched = set_flag;
+  cursor = -1;
+  object_handle = FUN_000ce450(list_handle, &cursor);
+  while (object_handle != -1) {
+    if (FUN_0018ef00(object_handle, (int)game_flag)) {
+      if (!set_flag)
+        matched = 1;
+    } else {
+      if (set_flag)
+        matched = 0;
+      else
+        return 0;
+    }
+    object_handle = FUN_000ce320(list_handle, &cursor);
+  }
+
+  hs_runtime_set_game_flag(game_flag, matched);
+  return matched;
+}
+
+char FUN_000c9700(int object_handle, int unused, float distance)
+{
+  float position[3];
+  float scaled;
+  char *obj;
+
+  (void)unused;
+  if (object_handle == -1)
+    return 0;
+
+  if (object_try_and_get_and_verify_type(object_handle, 3)) {
+    unit_get_head_position(object_handle, position);
+  } else {
+    obj = (char *)object_get_and_verify_type(object_handle, -1);
+    position[0] = *(float *)(obj + 0x50);
+    position[1] = *(float *)(obj + 0x54);
+    position[2] = *(float *)(obj + 0x58);
+  }
+
+  scaled = distance * *(float *)0x253d4c;
+  return FUN_001aa430(object_handle, position, scaled);
+}
+
+char FUN_000c9770(int list_handle, int param, float distance)
+{
+  int cursor;
+  int object_handle;
+
+  cursor = -1;
+  object_handle = FUN_000ce450(list_handle, &cursor);
+  while (object_handle != -1) {
+    if (object_try_and_get_and_verify_type(object_handle, 3)) {
+      if (FUN_000c9700(object_handle, param, distance))
+        return 1;
+    }
+    object_handle = FUN_000ce320(list_handle, &cursor);
+  }
+  return 0;
+}
+
+void FUN_000c97f0(int object_handle, int16_t scenario_index, float distance)
+{
+  void *elem;
+  float scaled;
+
+  if (scenario_index == 0)
+    return;
+
+  scaled = distance * *(float *)0x253d4c;
+  elem = tag_block_get_element((char *)global_scenario_get() + 0x4e4,
+                               scenario_index, 0x5c);
+  FUN_001aa430(object_handle, (float *)((char *)elem + 0x24), scaled);
+}
+
+char FUN_000c9840(int list_handle, int16_t scenario_index, float distance)
+{
+  int cursor;
+  int object_handle;
+
+  cursor = -1;
+  object_handle = FUN_000ce450(list_handle, &cursor);
+  while (object_handle != -1) {
+    if (object_try_and_get_and_verify_type(object_handle, 3)) {
+      if (scenario_index != 0) {
+        FUN_000c97f0(object_handle, scenario_index, distance);
+        return 1;
+      }
+    }
+    object_handle = FUN_000ce320(list_handle, &cursor);
+  }
+  return 0;
+}
+
+void FUN_000c9a50(void)
+{
+  data_iter_t iter;
+  char obj_iter[0x10];
+  void *entry;
+  char *obj;
+  int handle;
+  int child;
+
+  data_iterator_new(&iter, *(data_t **)0x5aa6d4);
+  entry = data_iterator_next(&iter);
+  while (entry != 0) {
+    child = *(int *)((char *)entry + 0x34);
+    if (child != -1) {
+      if (object_get_root_parent(child) != child)
+        unit_exit_seat_end(child);
+    }
+    entry = data_iterator_next(&iter);
+  }
+
+  object_iterator_new(obj_iter, -1, 0);
+  obj = (char *)object_iterator_next(obj_iter);
+  while (obj != 0) {
+    handle = *(int *)(obj_iter + 8);
+    if (*(int *)(obj + 0xcc) == -1) {
+      if (!FUN_000c98e0(handle))
+        object_delete(handle);
+    }
+    obj = (char *)object_iterator_next(obj_iter);
+  }
+}
+
+int FUN_000c9bd0(int list_handle, int16_t skip_count)
+{
+  int cursor;
+  int object_handle;
+
+  if (skip_count <= 0)
+    return 0;
+
+  cursor = -1;
+  object_handle = FUN_000ce450(list_handle, &cursor);
+  while (object_handle != -1 && skip_count > 0) {
+    object_handle = FUN_000ce320(list_handle, &cursor);
+    skip_count--;
+  }
+  return 0;
+}
+
+void FUN_000c9c10(int object_handle, float value)
+{
+  char *obj;
+  float scale;
+
+  if (object_handle == -1)
+    return;
+
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  if (value == *(float *)0x2533c0)
+    scale = *(float *)0x2533c0;
+  else if (value == *(float *)0x2533c8)
+    scale = *(float *)0x2533c8;
+  else
+    scale = value;
+  *(float *)(obj + 0x94) = scale * *(float *)(obj + 0x8c);
+}
+
+void FUN_000c9c80(int object_handle, int region_name, int variant)
+{
+  char *obj;
+  void *tag;
+  void *mode_tag;
+  void *regions;
+  int count;
+  int i;
+  int region_index;
+  const char *region_str;
+  const char *variant_str;
+
+  if (object_handle == -1)
+    return;
+
+  region_str = (const char *)region_name;
+  variant_str = (const char *)variant;
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  tag = tag_get(*(int *)obj, 0x6f626a65);
+  region_index = -1;
+  if (csstrcmp(variant_str, (const char *)0x25386f) != 0) {
+    mode_tag = tag_get(*(int *)((char *)tag + 0x34), 0x6d6f6465);
+    regions = (char *)mode_tag + 0xc4;
+    count = *(int *)regions;
+    for (i = 0; i < count; i++) {
+      void *elem =
+        tag_block_get_element(regions, i, 0x4c);
+      if (crt_stricmp(region_str, (const char *)elem) == 0) {
+        region_index = i;
+        break;
+      }
+    }
+  }
+  object_permute_region(object_handle, variant_str, (int16_t)region_index, 1);
+}
+
+void FUN_000c9d40(int list_handle)
+{
+  int cursor;
+  int object_handle;
+
+  cursor = -1;
+  object_handle = FUN_000ce450(list_handle, &cursor);
+  while (object_handle != -1) {
+    FUN_0013ddd0(object_handle);
+    object_handle = FUN_000ce320(list_handle, &cursor);
+  }
+}
+
+void FUN_000c9d80(int object_type)
+{
+  char iter[0x10];
+  char *obj;
+  int handle;
+
+  object_iterator_new(iter, -1, 0);
+  obj = (char *)object_iterator_next(iter);
+  while (obj != 0) {
+    handle = *(int *)(iter + 8);
+    if (*(int *)obj == object_type)
+      object_delete(handle);
+    obj = (char *)object_iterator_next(iter);
+  }
+  FUN_00145490();
+}
+
+void FUN_000c9de0(int effect_tag, int16_t scenario_index)
+{
+  void *elem;
+  float facing[3];
+
+  elem = tag_block_get_element((char *)global_scenario_get() + 0x4e4,
+                               scenario_index, 0x5c);
+  angles_to_vector((float *)((char *)elem + 0x30), facing);
+  effect_new_unattached_from_markers(
+    *(int *)0x31fc38, -1, 0, 1, 0, (float *)((char *)elem + 0x24), facing,
+    1.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+  (void)effect_tag;
+}
+
+void FUN_000c9e50(int object_handle, int attach_object, int marker_id)
+{
+  char markers[0x6c];
+  int16_t count;
+  void *marker_name;
+
+  if (object_handle == -1 || attach_object == -1)
+    return;
+
+  marker_name = &marker_id;
+  count = object_get_markers_by_string_id(attach_object, marker_name, markers, 1);
+  if (count == 0)
+    return;
+
+  effect_new_attached_from_markers(
+    marker_id, object_handle, attach_object, 0, count, markers,
+    (float *)(markers + 0x30), (float *)(markers + 0xc), 1.0f, 1.0f, 0.0f, 0.0f);
+}
+
+void FUN_000c9ec0(int damage_type, int16_t scenario_index)
+{
+  void *elem;
+  char damage[0x54];
+  float location[3];
+  float point[3];
+
+  elem = tag_block_get_element((char *)global_scenario_get() + 0x4e4,
+                               scenario_index, 0x5c);
+  damage_data_new(damage, damage_type);
+  point[0] = *(float *)((char *)elem + 0x24);
+  point[1] = *(float *)((char *)elem + 0x28);
+  point[2] = *(float *)((char *)elem + 0x2c);
+  scenario_location_from_point(location, point);
+  *(float *)(damage + 0x2c) = point[0];
+  *(float *)(damage + 0x28) = point[1];
+  *(float *)(damage + 0x24) = point[2];
+  FUN_00138e30(damage, -1);
+}
+
+void FUN_000c9f30(int damage_type, int object_handle)
+{
+  char damage[0x54];
+  float point[3];
+  float location[3];
+
+  if (object_handle == -1)
+    return;
+
+  damage_data_new(damage, damage_type);
+  object_get_world_position(object_handle, (vector3_t *)point);
+  *(float *)(damage + 0x2c) = point[0];
+  *(float *)(damage + 0x28) = point[1];
+  *(float *)(damage + 0x24) = point[2];
+  scenario_location_from_point(location, point);
+  object_cause_damage(damage, object_handle, -1, -1, -1, 0);
+}
+
+float FUN_000ca010(int object_handle)
+{
+  float *globals;
+
+  (void)object_handle;
+  globals = FUN_000c9f90();
+  if (globals != 0)
+    return globals[0];
+  return *(float *)0x2533c0;
+}
+
+void FUN_000ca030(int object_handle, float value)
+{
+  float *globals;
+
+  (void)object_handle;
+  globals = FUN_000c9f90();
+  if (globals != 0)
+    globals[0] = value;
+}
+
+char FUN_000ca050(int16_t game_flag, int list_handle)
+{
+  int cursor;
+  int object_handle;
+
+  cursor = -1;
+  object_handle = FUN_000ce450(list_handle, &cursor);
+  while (object_handle != -1) {
+    if (!FUN_0018ef00(object_handle, (int)game_flag)) {
+      hs_runtime_set_game_flag(game_flag, 0);
+      return 0;
+    }
+    object_handle = FUN_000ce320(list_handle, &cursor);
+  }
+  hs_runtime_set_game_flag(game_flag, 1);
+  return 1;
+}
+
+char FUN_000ca0f0(int16_t game_flag, int list_handle)
+{
+  return FUN_000c9650(game_flag, list_handle, 0);
+}
+
+void FUN_000ca160(int16_t scenario_index, char teleport_flag, char facing_flag,
+                  int object_handle)
+{
+  char *obj;
+  void *scenario_elem;
+  float *position_ptr;
+  float facing[3];
+  float matrix[0x10];
+  float transformed[3];
+  char *unit;
+  int player_index;
+  char *thread;
+  void *vehicle_matrix;
+  float *facing_out;
+
+  if (object_handle == -1)
+    return;
+
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  scenario_elem = tag_block_get_element((char *)global_scenario_get() + 0x4e4,
+                                          scenario_index, 0x5c);
+  position_ptr = (float *)((char *)scenario_elem + 0x24);
+  if (!valid_real_point3d(position_ptr)) {
+    display_assert((const char *)0x280408, (const char *)0x280450, 0x1cc, 1);
+    system_exit(-1);
+  }
+
+  if (teleport_flag && *(int *)(obj + 0xcc) != -1) {
+    if (object_try_and_get_and_verify_type(object_handle, 3))
+      unit_exit_seat_end(object_handle);
+    else
+      object_detach_from_parent(object_handle);
+  }
+
+  angles_to_vector((float *)((char *)scenario_elem + 0x30), facing);
+  if (!valid_real_normal3d(facing)) {
+    display_assert((const char *)0x280408, (const char *)0x26a9c0, 0x1df, 1);
+    system_exit(-1);
+  }
+
+  object_reset(object_handle);
+  unit = (char *)object_try_and_get_and_verify_type(object_handle, 3);
+  player_index = player_index_from_unit_index(object_handle);
+  thread = 0;
+  facing_out = 0;
+
+  if (unit) {
+    if (*(int *)(unit + 0xcc) != -1) {
+      vehicle_matrix = object_get_node_matrix(*(int *)(unit + 0xcc),
+                                              *(int16_t *)(unit + 0xd0));
+      matrix_inverse(matrix, vehicle_matrix);
+      matrix_transform_vector(transformed, facing, matrix);
+    } else {
+      transformed[0] = facing[0];
+      transformed[1] = facing[1];
+      transformed[2] = facing[2];
+    }
+
+    if (facing_flag) {
+      *(float *)(unit + 0x1d4) = facing[0];
+      *(float *)(unit + 0x1d8) = facing[1];
+      *(float *)(unit + 0x1dc) = facing[2];
+      *(float *)(unit + 0x1e0) = facing[0];
+      *(float *)(unit + 0x1e4) = facing[1];
+      *(float *)(unit + 0x1e8) = facing[2];
+      *(float *)(unit + 0x204) = facing[0];
+      *(float *)(unit + 0x208) = facing[1];
+      *(float *)(unit + 0x20c) = facing[2];
+    }
+
+    if (player_index != -1) {
+      thread = (char *)datum_get(*(data_t **)0x5aa6d4, player_index);
+      if (teleport_flag)
+        player_teleport(player_index, (void *)-1, position_ptr);
+      if (facing_flag && *(int16_t *)(thread + 2) != (int16_t)-1)
+        player_control_set_facing(*(int16_t *)(thread + 2), transformed);
+    }
+
+    if (facing_flag && thread == 0)
+      facing_out = facing;
+  }
+
+  if (teleport_flag) {
+    if (thread != 0)
+      return;
+    object_set_position(object_handle, 0, facing_out, position_ptr);
+    return;
+  }
+
+  object_set_position(object_handle, 0, facing_flag ? facing : 0, 0);
+}
+
+void FUN_000ca3f0(int object_handle, int16_t scenario_index)
+{
+  FUN_000ca160(scenario_index, 1, 1, object_handle);
+}
+
+void FUN_000ca410(int object_handle, int16_t scenario_index)
+{
+  FUN_000ca160(scenario_index, 1, 0, object_handle);
+}
+
+void FUN_000ca430(int16_t game_flag, int16_t scenario_index)
+{
+  int idx;
+  char *thread;
+  int object_handle;
+
+  idx = data_next_index(*(data_t **)0x5aa6d4, -1);
+  while (idx != -1) {
+    thread = (char *)datum_get(*(data_t **)0x5aa6d4, idx);
+    object_handle = *(int *)(thread + 0x34);
+    if (object_handle != -1) {
+      if (!FUN_0018ef00(object_handle, (int)game_flag))
+        FUN_000ca160(scenario_index, 1, 1, object_handle);
+    }
+    idx = data_next_index(*(data_t **)0x5aa6d4, idx);
+  }
+}
+
+void FUN_000ca670(int16_t type, int16_t enum_index, char *buffer)
+{
+  int16_t *table;
+  const char **names;
+  const char *word;
+
+  if (type < 0x20 || type > 0x24) {
+    display_assert((const char *)0x280478, (const char *)0x28054c, 0x27b, 1);
+    system_exit(-1);
+  }
+
+  table = (int16_t *)(0x2726b4 + (int)type * 8);
+  if (enum_index < 0 || enum_index >= *table) {
+    display_assert((const char *)0x280478, (const char *)0x280518, 0x27c, 1);
+    system_exit(-1);
+  }
+
+  names = *(const char ***)((char *)table + 4);
+  word = names[enum_index];
+  crt_sprintf(buffer, (const char *)0x257984, word);
+}
+
+void FUN_000ca700(void)
+{
+  void *threads;
+  void *globals;
+  int max_globals;
+
+  threads = game_state_data_new((char *)0x2805e8, 0x100, 0x218);
+  *(void **)0x5aa6c4 = threads;
+  globals = game_state_data_new((char *)0x2805dc, 0x400, 8);
+  *(void **)0x5aa6c0 = globals;
+  if (threads == 0 || globals == 0)
+    return;
+
+  max_globals = (int)*(int16_t *)0x27d504 * 2;
+  if (max_globals >= 0x400) {
+    display_assert((const char *)0x280598, (const char *)0x2805bc, 0xa9, 1);
+    system_exit(-1);
+  }
+  data_new_at_index((data_t *)globals);
+}
+
+const char *FUN_000ca890(int datum_index)
+{
+  char *node;
+  char *thread;
+  int16_t script_index;
+  void *entry;
+
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
+  thread = (char *)datum_get(*(data_t **)0x5aa6c4, *(int *)(node + 8));
+  if ((*(uint8_t *)(thread + 6) & 2) == 0) {
+    while (*(int16_t *)(node + 2) == 0) {
+      if (*(int *)(thread + 0x10) != datum_index)
+        break;
+      if (*(int *)(node + 0xe) == -1)
+        return (const char *)0x2805f4;
+      node = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(node + 0xe));
+      thread = (char *)datum_get(*(data_t **)0x5aa6c4, *(int *)(node + 8));
+      if ((*(uint8_t *)(thread + 6) & 2) != 0)
+        break;
+    }
+  }
+
+  script_index = *(int16_t *)(node + 2);
+  if ((*(uint8_t *)(thread + 6) & 2) != 0) {
+    return (const char *)tag_block_get_element(
+      (char *)global_scenario_get() + 0x49c, script_index, 0x5c);
+  }
+
+  entry = hs_function_table_get(script_index);
+  return *(const char **)((char *)entry + 4);
+}
+
+void FUN_000cacf0(int thread_index)
+{
+  char *thread;
+  char *stack;
+  char *syntax;
+  char *frame;
+
+  thread = (char *)datum_get(*(data_t **)0x5aa6c4, thread_index);
+  if (*(int *)(thread + 8) == -1)
+    return;
+
+  if ((*(uint8_t *)(thread + 3) & 2) != 0) {
+    *(int *)(thread + 8) = *(int *)(thread + 0xc);
+    *(uint8_t *)(thread + 3) = (char)(*(uint8_t *)(thread + 3) & ~2);
+    return;
+  }
+
+  stack = *(char **)(thread + 0x10);
+  syntax = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(stack + 4));
+  if (*(int16_t *)(syntax + 2) == 0x14) {
+    frame = (char *)datum_get(*(data_t **)0x5aa6c4, thread_index);
+    *(int *)(frame + 0x10) = **(int **)(stack + 0);
+    return;
+  }
+
+  if (*(int *)(stack + 0) != 0 &&
+      *(int *)(*(int *)(stack + 0) + 4) != -1) {
+    syntax = (char *)datum_get(*(data_t **)0x5aa6c8,
+                               *(int *)(*(int *)(stack + 0) + 4));
+    if (*(int16_t *)(syntax + 2) == 0x14) {
+      FUN_000cab80(thread_index);
+      FUN_000cab80(thread_index);
+      *(uint8_t *)(thread + 3) = (char)(*(uint8_t *)(thread + 3) & ~1);
+    }
+  }
+}
+
+int FUN_000cae00(const char *script_name)
+{
+  int idx;
+  char *thread;
+  void *elem;
+
+  idx = data_next_index(*(data_t **)0x5aa6c4, -1);
+  while (idx != -1) {
+    thread = (char *)datum_get(*(data_t **)0x5aa6c4, idx);
+    if (*(int *)(thread + 4) != -1) {
+      elem = tag_block_get_element((char *)global_scenario_get() + 0x49c,
+                                     *(int *)(thread + 4), 0x5c);
+      if (crt_stricmp(script_name, (const char *)elem) == 0)
+        return idx;
+    }
+    idx = data_next_index(*(data_t **)0x5aa6c4, idx);
+  }
+  return -1;
+}
+
+int FUN_000caf80(int16_t name_index)
+{
+  int handle;
+  int list;
+
+  list = -1;
+  handle = object_name_list_get_handle(name_index);
+  if (handle != -1) {
+    list = FUN_000ce200();
+    FUN_000ce2b0(list, handle);
+  }
+  return list;
+}
+
+char FUN_000cb940(int16_t param, int thread_index, const char *detail)
+{
+  const char *msg;
+  char *thread;
+
+  (void)param;
+  thread = (char *)datum_get(*(data_t **)0x5aa6c4, thread_index);
+  (void)thread;
+  msg = detail ? detail : (const char *)0x28092c;
+  (void)msg;
+  error(2, (const char *)0x280900, hs_get_thread_script_name(thread_index));
+  return 0;
+}
+
+void hs_runtime_update(void)
+{
+  int idx;
+  char *thread;
+  int game_time;
+  char saw_script_thread;
+
+  if (*(uint8_t *)0x46b810 == 0)
+    return;
+
+  game_time = game_time_get();
+  saw_script_thread = 0;
+  idx = data_next_index(*(data_t **)0x5aa6c4, -1);
+  while (idx != -1 && *(uint8_t *)0x46b810 != 0) {
+    thread = (char *)datum_get(*(data_t **)0x5aa6c4, idx);
+    if (*(uint8_t *)(thread + 2) == 2)
+      saw_script_thread = 1;
+    if (*(int *)(thread + 8) >= 0 && *(int *)(thread + 8) <= game_time)
+      FUN_000cd840(idx);
+    idx = data_next_index(*(data_t **)0x5aa6c4, idx);
+  }
+
+  FUN_000ce3c0();
+
+  if (saw_script_thread)
+    return;
+
+  game_time = game_time_get();
+  if ((game_time & 0xf) == 0)
+    hs_scripts_dispose();
+}
+
+void FUN_000ce050(int save_type, int slot)
+{
+  char buffer[0x100];
+
+  crt_sprintf(buffer, (const char *)0x280e94, save_type);
+  game_state_data_new(buffer, (int16_t)slot, 0xc);
+}
+
+void FUN_000ce0c0(data_t *data, int *head, int object_handle)
+{
+  int link;
+  char *node;
+
+  link = data_new_at_index(data);
+  if (link == -1) {
+    error(2, (const char *)0x280ea4, data,
+          (int)*(int16_t *)((char *)data + 0x20));
+    return;
+  }
+
+  node = (char *)datum_get(data, link);
+  *(int *)(node + 4) = object_handle;
+  *(int *)(node + 8) = *head;
+  *head = link;
+}
+
+void FUN_000ce110(data_t *data, int link)
+{
+  char *node;
+  int next;
+
+  if (link == -1)
+    return;
+
+  while (link != -1) {
+    node = (char *)datum_get(data, link);
+    next = *(int *)(node + 8);
+    datum_delete(data, link);
+    link = next;
+  }
+}
+
+void FUN_000ce150(void)
+{
+  char buffer[0x100];
+
+  *(void **)0x5aa698 =
+    game_state_data_new((char *)0x280edc, 0x30, 0xc);
+  crt_sprintf(buffer, (const char *)0x280e94, 0);
+  *(void **)0x5aa694 = game_state_data_new(buffer, 0x80, 0xc);
+}
+
+void object_list_delete(int list_handle)
+{
+  char *list;
+  data_t *link_data;
+
+  if (list_handle == -1)
+    return;
+
+  list = (char *)datum_get(*(data_t **)0x5aa698, list_handle);
+  if (*(int16_t *)(list + 4) != 0) {
+    display_assert((const char *)0x280f0c, (const char *)0x280ef0, 0x64, 1);
+    system_exit(-1);
+  }
+
+  link_data = *(data_t **)0x5aa694;
+  FUN_000ce110(link_data, *(int *)(list + 8));
+  datum_delete(*(data_t **)0x5aa698, list_handle);
+}
+
+void FUN_000ce3c0(void)
+{
+  int idx;
+  char *list;
+
+  idx = data_next_index(*(data_t **)0x5aa698, -1);
+  while (idx != -1) {
+    list = (char *)datum_get(*(data_t **)0x5aa698, idx);
+    if (*(int16_t *)(list + 4) == 0)
+      object_list_delete(idx);
+    idx = data_next_index(*(data_t **)0x5aa698, idx);
+  }
+}

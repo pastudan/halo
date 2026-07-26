@@ -11391,7 +11391,8 @@
         },
         {
           "addr": "0xc8b90",
-          "decl": "void FUN_000c8b90(void);"
+          "decl": "char FUN_000c8b90(int16_t node_type, int datum_index);",
+          "ported": false
         },
         {
           "addr": "0xc8c50",
@@ -11403,11 +11404,13 @@
         },
         {
           "addr": "0xc8e00",
-          "decl": "void FUN_000c8e00(void);"
+          "decl": "char FUN_000c8e00(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc8ec0",
-          "decl": "void FUN_000c8ec0(void);"
+          "decl": "char FUN_000c8ec0(int16_t function_index, int root_datum);",
+          "ported": false
         },
         {
           "addr": "0xc8f40",
@@ -11440,27 +11443,33 @@
         },
         {
           "addr": "0xc95f0",
-          "decl": "int FUN_000c95f0(void);"
+          "decl": "int FUN_000c95f0(void);",
+          "ported": false
         },
         {
           "addr": "0xc9650",
-          "decl": "void FUN_000c9650(void);"
+          "decl": "char FUN_000c9650(int16_t game_flag, int list_handle, char set_flag);",
+          "ported": false
         },
         {
           "addr": "0xc9700",
-          "decl": "void FUN_000c9700(void);"
+          "decl": "char FUN_000c9700(int object_handle, int unused, float distance);",
+          "ported": false
         },
         {
           "addr": "0xc9770",
-          "decl": "int FUN_000c9770(int a0, int a1, float a2);"
+          "decl": "char FUN_000c9770(int list_handle, int param, float distance);",
+          "ported": false
         },
         {
           "addr": "0xc97f0",
-          "decl": "void FUN_000c97f0(void);"
+          "decl": "void FUN_000c97f0(int object_handle, int16_t scenario_index, float distance);",
+          "ported": false
         },
         {
           "addr": "0xc9840",
-          "decl": "int FUN_000c9840(int a0, int a1, float a2);"
+          "decl": "char FUN_000c9840(int list_handle, int16_t scenario_index, float distance);",
+          "ported": false
         },
         {
           "addr": "0xc98e0",
@@ -11484,7 +11493,8 @@
         },
         {
           "addr": "0xc9a50",
-          "decl": "void FUN_000c9a50(void);"
+          "decl": "void FUN_000c9a50(void);",
+          "ported": false
         },
         {
           "addr": "0xc9b10",
@@ -11503,59 +11513,73 @@
         },
         {
           "addr": "0xc9bd0",
-          "decl": "int FUN_000c9bd0(int a0, int a1);"
+          "decl": "int FUN_000c9bd0(int list_handle, int16_t skip_count);",
+          "ported": false
         },
         {
           "addr": "0xc9c10",
-          "decl": "void FUN_000c9c10(int a0, float a1);"
+          "decl": "void FUN_000c9c10(int object_handle, float value);",
+          "ported": false
         },
         {
           "addr": "0xc9c80",
-          "decl": "void FUN_000c9c80(int a0, int a1, int a2);"
+          "decl": "void FUN_000c9c80(int object_handle, int region_name, int variant);",
+          "ported": false
         },
         {
           "addr": "0xc9d40",
-          "decl": "void FUN_000c9d40(int a0);"
+          "decl": "void FUN_000c9d40(int list_handle);",
+          "ported": false
         },
         {
           "addr": "0xc9d80",
-          "decl": "void FUN_000c9d80(int a0);"
+          "decl": "void FUN_000c9d80(int object_type);",
+          "ported": false
         },
         {
           "addr": "0xc9de0",
-          "decl": "void FUN_000c9de0(int a0, int a1);"
+          "decl": "void FUN_000c9de0(int effect_tag, int16_t scenario_index);",
+          "ported": false
         },
         {
           "addr": "0xc9e50",
-          "decl": "void FUN_000c9e50(int a0, int a1, int a2);"
+          "decl": "void FUN_000c9e50(int object_handle, int attach_object, int marker_id);",
+          "ported": false
         },
         {
           "addr": "0xc9ec0",
-          "decl": "void FUN_000c9ec0(int a0, int a1);"
+          "decl": "void FUN_000c9ec0(int damage_type, int16_t scenario_index);",
+          "ported": false
         },
         {
           "addr": "0xc9f30",
-          "decl": "void FUN_000c9f30(int a0, int a1);"
+          "decl": "void FUN_000c9f30(int damage_type, int object_handle);",
+          "ported": false
         },
         {
           "addr": "0xc9f90",
-          "decl": "void FUN_000c9f90(void);"
+          "decl": "float *FUN_000c9f90(void);",
+          "ported": false
         },
         {
           "addr": "0xca010",
-          "decl": "int FUN_000ca010(int a0);"
+          "decl": "float FUN_000ca010(int object_handle);",
+          "ported": false
         },
         {
           "addr": "0xca030",
-          "decl": "void FUN_000ca030(int a0, float a1);"
+          "decl": "void FUN_000ca030(int object_handle, float value);",
+          "ported": false
         },
         {
           "addr": "0xca050",
-          "decl": "int FUN_000ca050(int a0, int a1);"
+          "decl": "char FUN_000ca050(int16_t game_flag, int list_handle);",
+          "ported": false
         },
         {
           "addr": "0xca0f0",
-          "decl": "int FUN_000ca0f0(int a0, int a1);"
+          "decl": "char FUN_000ca0f0(int16_t game_flag, int list_handle);",
+          "ported": false
         },
         {
           "addr": "0xca110",
@@ -11569,19 +11593,23 @@
         },
         {
           "addr": "0xca160",
-          "decl": "void FUN_000ca160(void);"
+          "decl": "void FUN_000ca160(int16_t scenario_index, char teleport_flag, char facing_flag, int object_handle@<ebx>);",
+          "ported": false
         },
         {
           "addr": "0xca3f0",
-          "decl": "void FUN_000ca3f0(int a0, int a1);"
+          "decl": "void FUN_000ca3f0(int object_handle, int16_t scenario_index);",
+          "ported": false
         },
         {
           "addr": "0xca410",
-          "decl": "void FUN_000ca410(int a0, int a1);"
+          "decl": "void FUN_000ca410(int object_handle, int16_t scenario_index);",
+          "ported": false
         },
         {
           "addr": "0xca430",
-          "decl": "void FUN_000ca430(int a, int b);"
+          "decl": "void FUN_000ca430(int16_t game_flag, int16_t scenario_index);",
+          "ported": false
         },
         {
           "addr": "0xca4e0",
@@ -11610,11 +11638,13 @@
         },
         {
           "addr": "0xca670",
-          "decl": "void FUN_000ca670(void);"
+          "decl": "void FUN_000ca670(int16_t type, int16_t enum_index, char *buffer);",
+          "ported": false
         },
         {
           "addr": "0xca700",
-          "decl": "void FUN_000CA700(void);"
+          "decl": "void FUN_000ca700(void);",
+          "ported": false
         },
         {
           "addr": "0xca800",
@@ -11623,7 +11653,8 @@
         },
         {
           "addr": "0xca890",
-          "decl": "void FUN_000ca890(void);"
+          "decl": "const char *FUN_000ca890(int datum_index@<eax>);",
+          "ported": false
         },
         {
           "addr": "0xca940",
@@ -11657,7 +11688,8 @@
         },
         {
           "addr": "0xcacf0",
-          "decl": "void FUN_000cacf0(void);"
+          "decl": "void FUN_000cacf0(int thread_index@<edi>);",
+          "ported": false
         },
         {
           "addr": "0xcada0",
@@ -11666,7 +11698,8 @@
         },
         {
           "addr": "0xcae00",
-          "decl": "void FUN_000cae00(void);"
+          "decl": "int FUN_000cae00(const char *script_name@<edi>);",
+          "ported": false
         },
         {
           "addr": "0xcae80",
@@ -11715,7 +11748,8 @@
         },
         {
           "addr": "0xcaf80",
-          "decl": "void FUN_000caf80(void);"
+          "decl": "int FUN_000caf80(int16_t name_index);",
+          "ported": false
         },
         {
           "addr": "0xcafc0",
@@ -11749,7 +11783,8 @@
         },
         {
           "addr": "0xcb940",
-          "decl": "void FUN_000cb940(void);"
+          "decl": "char FUN_000cb940(int16_t param, int thread_index@<eax>, const char *detail@<edi>);",
+          "ported": false
         },
         {
           "addr": "0xcb980",
@@ -11880,7 +11915,8 @@
         },
         {
           "addr": "0xcde00",
-          "decl": "void hs_runtime_update(void);"
+          "decl": "void hs_runtime_update(void);",
+          "ported": false
         },
         {
           "addr": "0xcdeb0",
@@ -11893,7 +11929,8 @@
         },
         {
           "addr": "0xce050",
-          "decl": "void FUN_000ce050(void);"
+          "decl": "void FUN_000ce050(int save_type, int slot);",
+          "ported": false
         },
         {
           "addr": "0xce090",
@@ -11902,15 +11939,18 @@
         },
         {
           "addr": "0xce0c0",
-          "decl": "void FUN_000ce0c0(void);"
+          "decl": "void FUN_000ce0c0(data_t *data, int *head, int object_handle);",
+          "ported": false
         },
         {
           "addr": "0xce110",
-          "decl": "void FUN_000ce110(void);"
+          "decl": "void FUN_000ce110(data_t *data, int link);",
+          "ported": false
         },
         {
           "addr": "0xce150",
-          "decl": "void FUN_000ce150(void);"
+          "decl": "void FUN_000ce150(void);",
+          "ported": false
         },
         {
           "addr": "0xce1c0",
@@ -11929,7 +11969,8 @@
         },
         {
           "addr": "0xce240",
-          "decl": "void object_list_delete(void);"
+          "decl": "void object_list_delete(int list_handle);",
+          "ported": false
         },
         {
           "addr": "0xce2b0",
@@ -11953,7 +11994,8 @@
         },
         {
           "addr": "0xce3c0",
-          "decl": "void FUN_000ce3c0(void);"
+          "decl": "void FUN_000ce3c0(void);",
+          "ported": false
         },
         {
           "addr": "0xce420",
