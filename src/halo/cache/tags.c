@@ -668,45 +668,20 @@ void cache_copy_compressed_alloc(void)
 #endif
 
 
-/* FUN_001ba6c0 (0x1ba6c0) — XBE naked draft (batch 283). */
-#if defined(__clang__)
-static void (*const b1ba6c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1ba6c0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_001ba6c0(void)
+/* FUN_001ba6c0 (0x1ba6c0) — readable C lift. */
+void FUN_001ba6c0(int unused, unsigned int value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x32ea98, %%eax\n\t"
-      "movl 0x948(%%eax), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "jbe .LFUN_001ba6c0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2c6\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b842c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x32ea98, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ba6c0_1:\n\t"
-      "movl %%esi, 0x948(%%eax)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1ba6c0_assert), [exitfn] "m"(b1ba6c0_exitfn)
-      : "memory");
+  extern char DAT_002b842c[];
+  extern char DAT_002b839c[];
+  char *base = *(char **)0x32ea98;
+  (void)unused;
+  if (value > *(unsigned int *)(base + 0x948)) {
+    display_assert(DAT_002b842c, DAT_002b839c, 0x2c6, 1);
+    system_exit(-1);
+    base = *(char **)0x32ea98;
+  }
+  *(unsigned int *)(base + 0x948) = value;
 }
-#else
-#error "FUN_001ba6c0: clang naked draft required"
-#endif
-
 
 /* FUN_001ba710 (0x1ba710) — XBE naked draft (batch 281). */
 #if defined(__clang__)

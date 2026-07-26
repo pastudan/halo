@@ -6366,8 +6366,8 @@
         },
         {
           "addr": "0x11fd50",
-          "decl": "void FUN_0011fd50(void);",
-          "ported": false
+          "decl": "void FUN_0011fd50(void *pool@<esi>);",
+          "ported": true
         },
         {
           "addr": "0x11fdb0",
@@ -6376,13 +6376,13 @@
         },
         {
           "addr": "0x11fe80",
-          "decl": "void FUN_0011fe80(void);",
-          "ported": false
+          "decl": "void FUN_0011fe80(void *pool);",
+          "ported": true
         },
         {
           "addr": "0x11feb0",
-          "decl": "void FUN_0011feb0(void);",
-          "ported": false
+          "decl": "void FUN_0011feb0(void *pool);",
+          "ported": true
         },
         {
           "addr": "0x11fef0",
@@ -25362,8 +25362,8 @@
         },
         {
           "addr": "0x1ba6c0",
-          "decl": "void FUN_001ba6c0(void);",
-          "ported": false
+          "decl": "void FUN_001ba6c0(int unused, unsigned int value);",
+          "ported": true
         },
         {
           "addr": "0x1ba710",
