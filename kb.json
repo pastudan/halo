@@ -18295,7 +18295,7 @@
         {
           "addr": "0xe0ab0",
           "decl": "char player_ui_game_variant_specified(void *out_variant);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0b00",
@@ -18325,7 +18325,7 @@
         {
           "addr": "0xe0d80",
           "decl": "char player_ui_edit_profile_is_default_profile(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0dd0",
@@ -18340,7 +18340,7 @@
         {
           "addr": "0xe0ea0",
           "decl": "void *player_ui_get_edit_player_profile(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0ec0",

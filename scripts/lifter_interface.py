@@ -779,9 +779,27 @@ def commit_chunk(n: int, paths: set[Path], do_push: bool = True) -> str | None:
     return sha
 
 
-def prove_addr(name: str, addr: int, seeds: int, timeout: float) -> dict:
+def prove_addr(
+    name: str,
+    addr: int,
+    seeds: int,
+    timeout: float,
+    src: str | None = None,
+) -> dict:
     if not ensure_oracle(addr):
         return {"ok": False, "err": "oracle", "passed": 0, "failed": 0, "errors": 0}
+    if src:
+        src_rel = src.replace("\\", "/")
+        if "src/halo/" in src_rel:
+            src_rel = src_rel.split("src/halo/", 1)[1]
+        if not docker_compile(src_rel):
+            return {
+                "ok": False,
+                "err": "compile",
+                "passed": 0,
+                "failed": 0,
+                "errors": 0,
+            }
     res = run_unicorn(name, addr, seeds, timeout=timeout)
     if not clear_pass(res, seeds):
         res2 = run_unicorn(hex(addr), addr, seeds, timeout=timeout)
@@ -1156,11 +1174,9 @@ def main() -> int:
                 continue
             if job.get("decl"):
                 set_kb_decl(ai, job["decl"])
-                for stale in (ROOT / "build" / "generated").glob("decl.h"):
-                    try:
-                        stale.unlink()
-                    except OSError:
-                        pass
+                if not regen_decl_h():
+                    print("  decl.h regen FAIL", flush=True)
+                    continue
             text0 = path.read_text(encoding="utf-8", errors="replace")
             if not is_naked_near_def(text0.splitlines(), name, hex(ai)):
                 kind = "prove"
@@ -1171,7 +1187,7 @@ def main() -> int:
                     continue
 
         t0 = time.time()
-        res = prove_addr(name, ai, args.seeds, args.timeout)
+        res = prove_addr(name, ai, args.seeds, args.timeout, src=src)
         print(
             f"  unicorn {res.get('passed')}/{res.get('failed')}/{res.get('errors')} "
             f"ok={res.get('ok')} dt={time.time()-t0:.1f}",
