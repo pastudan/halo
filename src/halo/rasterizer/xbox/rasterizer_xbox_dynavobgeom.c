@@ -8647,7 +8647,7 @@ void FUN_00164cf0(void)
 #if defined(__clang__)
 static void (*const b165420_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b165420_exitfn)(int) = system_exit;
-static void (*const b165420_c190a30)(void) = shader_type_is_valid_for_environment;
+static void (*const b165420_c190a30)(void) = (void *)shader_type_is_valid_for_environment;
 static char (*const b165420_c1908a0)(void *shader) = shader_is_decal;
 static void * (*const b165420_c184330)(void) = rasterizer_transparent_geometry_group_new;
 static void (*const b165420_c182590)(int data, int size) = rasterizer_memory_pool_copy;
@@ -16802,7 +16802,7 @@ void FUN_0016bed0(void)
 static void * (*const b16c090_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
 static void (*const b16c090_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b16c090_exitfn)(int) = system_exit;
-static void (*const b16c090_c190a50)(void) = shader_type_is_valid_for_model;
+static void (*const b16c090_c190a50)(void) = (void *)shader_type_is_valid_for_model;
 static char (*const b16c090_c1908a0)(void *shader) = shader_is_decal;
 static void * (*const b16c090_c184360)(void) = rasterizer_secondary_geometry_group_new;
 static void * (*const b16c090_c184330)(void) = rasterizer_transparent_geometry_group_new;

@@ -384,7 +384,7 @@ def main() -> int:
             continue
         end = starts[i + 1] if i + 1 < len(starts) else ai + 40
         size = end - ai
-        if size > 40:
+        if size > 48:
             continue
         src = meta.get("source") or ""
         if any(
@@ -420,6 +420,26 @@ def main() -> int:
         text = sp.read_text(encoding="utf-8", errors="replace")
         span = find_naked_def(text, meta["name"], ai)
         if not span:
+            # Already readable C — still try to prove.
+            if "readable C lift" in text[
+                max(0, text.find(meta["name"]) - 80) : text.find(meta["name"]) + 40
+            ] or f"FUN_{ai:08x}" in text and "naked" not in text[
+                max(0, text.find(f"FUN_{ai:08x}") - 120) : text.find(f"FUN_{ai:08x}") + 20
+            ]:
+                print(f"PROVE-ONLY {hex(ai)} {meta['name']}")
+                if run_unicorn(meta["name"], ai):
+                    for obj in kb.get("objects", []):
+                        for fn in obj.get("functions") or []:
+                            if fn.get("addr") and int(fn["addr"], 16) == ai:
+                                fn["ported"] = True
+                                flips.append(hex(ai))
+                                break
+                    with LEDGER.open("a") as f:
+                        f.write(
+                            json.dumps({"addr": hex(ai), "name": meta["name"], "ok": True})
+                            + "\n"
+                        )
+                continue
             print(f"skip no naked def {hex(ai)} {meta['name']} in {sp}")
             continue
         # ensure includes
@@ -451,6 +471,10 @@ def main() -> int:
             with LEDGER.open("a") as f:
                 f.write(json.dumps({"addr": hex(ai), "name": meta["name"], "ok": False}) + "\n")
             print(f"  REVERT {hex(ai)}")
+
+        if len(flips) and len(flips) % 20 == 0:
+            KB_PATH.write_text(json.dumps(kb, indent=2) + "\n")
+            print(f"checkpoint flips={len(flips)}")
 
     if flips:
         KB_PATH.write_text(json.dumps(kb, indent=2) + "\n")
