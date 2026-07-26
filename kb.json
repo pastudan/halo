@@ -2506,8 +2506,7 @@
         {
           "addr": "0x1c0e0",
           "decl": "char FUN_0001c0e0(int actor_handle, char param_2, int state_data);",
-          "ported": false,
-          "name": "FUN_0001c0e0"
+          "ported": false
         },
         {
           "addr": "0x1c190",
@@ -5199,12 +5198,12 @@
         },
         {
           "addr": "0xa5590",
-          "decl": "float FUN_000a5590(float a, float b);",
+          "decl": "void FUN_000a5590(void);",
           "ported": false
         },
         {
           "addr": "0xa55e0",
-          "decl": "float FUN_000a55e0(float a, float b, float c, float d);",
+          "decl": "void FUN_000a55e0(void);",
           "ported": false
         },
         {
@@ -11626,7 +11625,7 @@
         {
           "addr": "0xc3db0",
           "decl": "int16_t hs_find_tag_reference_by_index(int tag_index);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xc3e10",
@@ -11805,8 +11804,8 @@
         },
         {
           "addr": "0xc4ae0",
-          "decl": "void FUN_000c4ae0(int16_t function_index, char *dest);",
-          "ported": true
+          "decl": "void FUN_000c4ae0(int16_t function_index@<eax>, char *dest);",
+          "ported": false
         },
         {
           "addr": "0xc4b00",
@@ -11846,7 +11845,7 @@
         {
           "addr": "0xc4e20",
           "decl": "void hs_help(const char *name);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4e90",
@@ -12260,12 +12259,12 @@
         {
           "addr": "0xc99e0",
           "decl": "void FUN_000c99e0(int object_handle);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xc9a20",
           "decl": "void FUN_000c9a20(int16_t name_index);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xc9a50",
@@ -12334,18 +12333,18 @@
         },
         {
           "addr": "0xc9f90",
-          "decl": "float *FUN_000c9f90(int object_handle);",
-          "ported": true
+          "decl": "float *FUN_000c9f90(void);",
+          "ported": false
         },
         {
           "addr": "0xca010",
           "decl": "float FUN_000ca010(int object_handle);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xca030",
           "decl": "void FUN_000ca030(int object_handle, float value);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xca050",
@@ -12511,7 +12510,7 @@
         {
           "addr": "0xcaf40",
           "decl": "int16_t FUN_000caf40(float x);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xcaf60",
@@ -24912,7 +24911,7 @@
         {
           "addr": "0x1be270",
           "decl": "void *FUN_001be270(int cache_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1be2b0",
@@ -33479,7 +33478,7 @@
         {
           "addr": "0x19d3c0",
           "decl": "char *FUN_0019d3c0(int index, short param_2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19d420",
@@ -34753,8 +34752,8 @@
         },
         {
           "addr": "0x49280",
-          "decl": "void FUN_00049280(int16_t count, float *points, float *point_a, void *color);",
-          "ported": true
+          "decl": "void FUN_00049280(void);",
+          "ported": false
         },
         {
           "addr": "0x49300",
@@ -34775,8 +34774,7 @@
         {
           "addr": "0x49430",
           "decl": "void ai_debug_lineoffire_addpill(float *vec_a, float *vec_b, float param_3, char param_4);",
-          "ported": false,
-          "name": "ai_debug_lineoffire_addpill"
+          "ported": false
         },
         {
           "addr": "0x494d0",
@@ -34944,9 +34942,8 @@
         },
         {
           "addr": "0x4b770",
-          "decl": "void ai_debug_lineofsight(float *pos_a, int16_t key_a, float *pos_b, int16_t key_b);",
-          "ported": true,
-          "name": "ai_debug_lineofsight"
+          "decl": "void ai_debug_lineofsight(void);",
+          "ported": false
         },
         {
           "addr": "0x4b7a0",
@@ -35043,7 +35040,7 @@
         },
         {
           "addr": "0x53790",
-          "decl": "void FUN_00053790(char *buffer);",
+          "decl": "void FUN_00053790(void);",
           "ported": false
         },
         {
@@ -35076,26 +35073,22 @@
         {
           "addr": "0x539c0",
           "decl": "void FUN_000539c0(void);",
-          "ported": false,
-          "name": "FUN_000539c0"
+          "ported": false
         },
         {
           "addr": "0x53a20",
           "decl": "void FUN_00053a20(void);",
-          "ported": false,
-          "name": "FUN_00053a20"
+          "ported": false
         },
         {
           "addr": "0x53a90",
           "decl": "void FUN_00053a90(void);",
-          "ported": false,
-          "name": "FUN_00053a90"
+          "ported": false
         },
         {
           "addr": "0x53af0",
           "decl": "void FUN_00053af0(void);",
-          "ported": false,
-          "name": "FUN_00053af0"
+          "ported": false
         }
       ],
       "name": "ai_debug.obj",
@@ -35359,7 +35352,7 @@
         {
           "addr": "0x58cc0",
           "decl": "void ai_scripting_follow_distance(int a0, int a1, int a2);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x58d40",
@@ -35381,8 +35374,7 @@
         {
           "addr": "0x53bf0",
           "decl": "void FUN_00053bf0(void);",
-          "ported": false,
-          "name": "FUN_00053bf0"
+          "ported": false
         },
         {
           "addr": "0x53c50",
@@ -39705,7 +39697,7 @@
         },
         {
           "addr": "0x81a90",
-          "decl": "void transport_address_equivalent(void);",
+          "decl": "bool transport_address_equivalent(const void *a, const void *b);",
           "ported": false,
           "name": "transport_address_equivalent"
         },
@@ -40436,8 +40428,7 @@
         {
           "addr": "0x60200",
           "decl": "float FUN_00060200(void *path, int16_t heap_index);",
-          "ported": false,
-          "name": "FUN_00060200"
+          "ported": false
         },
         {
           "addr": "0x60260",
