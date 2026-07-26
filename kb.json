@@ -12564,7 +12564,7 @@
         {
           "addr": "0xcb940",
           "decl": "char FUN_000cb940(int16_t param, int thread_index@<eax>, const char *detail@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcb980",
@@ -34863,8 +34863,9 @@
         },
         {
           "addr": "0x4a460",
-          "decl": "void FUN_0004a460(int a0, int a1, void *buf, int buf_size, int max_entries);",
-          "ported": false
+          "decl": "void FUN_0004a460(int count, const char **names, unsigned int *bitvec, int vector_size, int16_t (*lookup)(const char *));",
+          "ported": false,
+          "name": "FUN_0004a460"
         },
         {
           "addr": "0x4a650",

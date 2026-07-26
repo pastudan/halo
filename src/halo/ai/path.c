@@ -1723,25 +1723,19 @@ void closest_point_to_attractor(float *segment_start, float *segment_end, float 
   out_point[2] = segment_start[2] + t * dz;
 }
 
-/* path_attractor_weight (0x5f490) — readable C lift. */
+/* path_attractor_weight (0x5f490) — readable C lift.
+ * x87 fsqrt only — freestanding clang turns __builtin_sqrtf into stubbed sqrtf. */
 float path_attractor_weight(void *path_state, float *node_pos, float *step_pos, float *out_dist)
 {
   float closest[3];
   float *attractor;
-  float dx;
-  float dy;
-  float dz;
-  float dist_sq;
-  float weight;
-  float dist;
-  float radius;
+  float dx, dy, dz, dist_sq, weight, dist, radius;
+  unsigned dist_bits;
 
   attractor = (float *)((char *)path_state + 0x28);
   weight = 0.0f;
-  dist = 3.4028235e38f;
-  closest[0] = 0.0f;
-  closest[1] = 0.0f;
-  closest[2] = 0.0f;
+  dist_bits = 0x7f7fffffu;
+  dist = *(float *)&dist_bits;
   closest_point_to_attractor(node_pos, step_pos, attractor, closest);
   dx = closest[0] - attractor[0];
   dy = closest[1] - attractor[1];
@@ -1749,8 +1743,9 @@ float path_attractor_weight(void *path_state, float *node_pos, float *step_pos, 
   dist_sq = dx * dx + dy * dy + dz * dz;
   radius = *(float *)((char *)path_state + 0x38);
   if (dist_sq < radius * radius) {
-    dist = __builtin_sqrtf(dist_sq);
-    weight = (1.0f - dist / radius) * *(float *)((char *)path_state + 0x3c);
+    dist = dist_sq;
+    __asm__ volatile("fsqrt" : "+t"(dist));
+    weight = (*(float *)0x2533c8 - dist / radius) * *(float *)((char *)path_state + 0x3c);
   }
   if (out_dist == 0) {
     display_assert((const char *)0x25e5c4, (const char *)0x25e0ac, 0x65f, 1);

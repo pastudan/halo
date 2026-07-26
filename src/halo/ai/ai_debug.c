@@ -974,19 +974,19 @@ void ai_debug_get_last_path(float *vec_a, float *vec_b)
 /* ai_debug_communication_suppress (0x4a650) — readable C lift. */
 void ai_debug_communication_suppress(int a0, int a1)
 {
-  FUN_0004a460(a0, a1, (void *)0x5aca14, 0x39, 0x42ce0);
+  FUN_0004a460(a0, (const char **)a1, (unsigned int *)0x5aca14, 0x39, (int16_t (*)(const char *))0x42ce0);
 }
 
 /* ai_debug_communication_ignore (0x4a680) — readable C lift. */
 void ai_debug_communication_ignore(int a0, int a1)
 {
-  FUN_0004a460(a0, a1, (void *)0x5aca1c, 0x39, 0x42ce0);
+  FUN_0004a460(a0, (const char **)a1, (unsigned int *)0x5aca1c, 0x39, (int16_t (*)(const char *))0x42ce0);
 }
 
 /* ai_debug_communication_focus (0x4a6b0) — readable C lift. */
 void ai_debug_communication_focus(int a0, int a1)
 {
-  FUN_0004a460(a0, a1, (void *)0x5aca24, 0xd1, 0x1a67e0);
+  FUN_0004a460(a0, (const char **)a1, (unsigned int *)0x5aca24, 0xd1, (int16_t (*)(const char *))0x1a67e0);
 }
 
 /* ai_debug_idle_look_clear (0x4a6e0) — readable C lift. */
@@ -13379,205 +13379,58 @@ void FUN_00053af0(void)
 
 /* --- ai_debug.obj orphan shells (2026-07-26) --- */
 
-/* FUN_0004a460 (0x4a460) — XBE naked draft (batch 116). */
-#if defined(__clang__)
-static void (*const b4a460_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b4a460_exitfn)(int) = system_exit;
-static void *(*const b4a460_memset)(void *, int, unsigned int) = csmemset;
-static int (*const b4a460_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
-static void (*const b4a460_c108f00)(int16_t bit_vector_size, int v0, int v1, int result_out) = bit_vector_or;
-static void (*const b4a460_cff4d0)(int channel, const char *format, ...) = console_printf;
-static void (*const b4a460_c108fa0)(int16_t bit_vector_size, int vector, int result_out) = FUN_00108fa0;
-static char (*const b4a460_c108e70)(int16_t bit_vector_size, int v0, int v1, int result_out) = bit_vector_and;
-
-__attribute__((naked, noinline))
-void FUN_0004a460(int a0, int a1, void *buf, int buf_size, int max_entries)
+/* FUN_0004a460 (0x4a460) — readable C lift. 5th arg = lookup CALLBACK. */
+void FUN_0004a460(int count, const char **names, unsigned int *bitvec, int vector_size,
+                  int16_t (*lookup)(const char *))
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x108, %%esp\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "jne .LFUN_0004a460_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1353\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl $0x25aea4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0004a460_1:\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "cmpl $0x800, %%ebx\n\t"
-      "jbe .LFUN_0004a460_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1354\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl $0x25ae90\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0004a460_2:\n\t"
-      "addl $0x1f, %%ebx\n\t"
-      "shrl $5, %%ebx\n\t"
-      "shll $2, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "leal -0x108(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jle .LFUN_0004a460_8\n\t"
-      "jmp .LFUN_0004a460_3\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_0004a460_3:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl (%%ecx,%%edi,4), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *0x18(%%ebp)\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .LFUN_0004a460_6\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_0004a460_4\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jb .LFUN_0004a460_5\n\t"
-      ".LFUN_0004a460_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x135d\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl $0x25ae60\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0004a460_5:\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "sarl $5, %%edx\n\t"
-      "leal -0x108(%%ebp,%%edx,4), %%eax\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "orl %%edx, (%%eax)\n\t"
-      "jmp .LFUN_0004a460_7\n\t"
-      ".LFUN_0004a460_6:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl (%%eax,%%edi,4), %%ecx\n\t"
-      "pushl $0x25ae38\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8dcb0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0004a460_7\n\t"
-      "pushl %%ebx\n\t"
-      "leal -0x108(%%ebp), %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_0004a460_7:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "incl %%edi\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jl .LFUN_0004a460_3\n\t"
-      ".LFUN_0004a460_8:\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jbe .LFUN_0004a460_13\n\t"
-      ".LFUN_0004a460_9:\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl $1, %%edx\n\t"
-      "sarl $5, %%eax\n\t"
-      "shll %%cl, %%edx\n\t"
-      "shll $2, %%eax\n\t"
-      "testl %%edx, -0x108(%%ebp,%%eax,1)\n\t"
-      "je .LFUN_0004a460_11\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "testl %%edx, (%%eax,%%ecx,1)\n\t"
-      "je .LFUN_0004a460_10\n\t"
-      "incl -0x4(%%ebp)\n\t"
-      "jmp .LFUN_0004a460_11\n\t"
-      ".LFUN_0004a460_10:\n\t"
-      "incl -0x8(%%ebp)\n\t"
-      ".LFUN_0004a460_11:\n\t"
-      "incl %%esi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "jb .LFUN_0004a460_9\n\t"
-      "movl -0x8(%%ebp), %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "je .LFUN_0004a460_12\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x108(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c108f00]\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25ae50\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0004a460_12:\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "je .LFUN_0004a460_13\n\t"
-      "leal -0x108(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x108(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c108fa0]\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x108(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c108e70]\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x25ae3c\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x28, %%esp\n\t"
-      ".LFUN_0004a460_13:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b4a460_assert), [exitfn] "m"(b4a460_exitfn), [memset] "m"(b4a460_memset), [c8dcb0] "m"(b4a460_c8dcb0), [c108f00] "m"(b4a460_c108f00), [cff4d0] "m"(b4a460_cff4d0), [c108fa0] "m"(b4a460_c108fa0), [c108e70] "m"(b4a460_c108e70)
-      : "memory");
+  unsigned int local_bits[0x40];
+  int matched, missing, i, word_bytes;
+  int16_t idx;
+  unsigned int bit;
+  unsigned int *word;
+
+  matched = 0;
+  missing = 0;
+  if (lookup == 0) {
+    display_assert((const char *)0x25aea4, (const char *)0x25ab74, 0x1353, 1);
+    system_exit(-1);
+  }
+  if ((unsigned)vector_size > 0x800u) {
+    display_assert((const char *)0x25ae90, (const char *)0x25ab74, 0x1354, 1);
+    system_exit(-1);
+  }
+  word_bytes = (int)(((unsigned)(vector_size + 0x1f) >> 5) << 2);
+  csmemset(local_bits, 0, (unsigned)word_bytes);
+  for (i = 0; i < count; i++) {
+    idx = lookup(names[i]);
+    if (idx == -1) {
+      if (csstrcmp(names[i], (const char *)0x25ae38) == 0)
+        csmemset(local_bits, -1, (unsigned)word_bytes);
+    } else if (idx < 0 || (int)idx >= vector_size) {
+      display_assert((const char *)0x25ae60, (const char *)0x25ab74, 0x135d, 1);
+      system_exit(-1);
+    } else {
+      word = &local_bits[(unsigned)idx >> 5];
+      bit = 1u << ((unsigned)idx & 0x1f);
+      *word |= bit;
+    }
+  }
+  for (i = 0; i < vector_size; i++) {
+    bit = 1u << ((unsigned)i & 0x1f);
+    word = &local_bits[(unsigned)i >> 5];
+    if ((*word & bit) == 0) continue;
+    if ((bitvec[(unsigned)i >> 5] & bit) != 0) matched++;
+    else missing++;
+  }
+  if ((int16_t)missing != 0) {
+    bit_vector_or((int16_t)vector_size, (int)local_bits, (int)bitvec, (int)bitvec);
+    console_printf(0, (const char *)0x25ae50, (int)(int16_t)missing);
+    return;
+  }
+  if ((int16_t)matched != 0) {
+    FUN_00108fa0((int16_t)vector_size, (int)local_bits, (int)local_bits);
+    bit_vector_and((int16_t)vector_size, (int)local_bits, (int)bitvec, (int)bitvec);
+    console_printf(0, (const char *)0x25ae3c, (int)(int16_t)matched);
+  }
 }
-#else
-#error "FUN_0004a460: clang naked draft required"
-#endif
 

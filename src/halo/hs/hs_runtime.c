@@ -6033,51 +6033,22 @@ int FUN_000caf80(int16_t name_index)
   return list;
 }
 
-/* FUN_000cb940 (0xcb940) — XBE naked draft (batch 198). */
-#if defined(__clang__)
-static void *(*const bcb940_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char * (*const bcb940_ccaa80)(int thread_index) = hs_get_thread_script_name;
-static void (*const bcb940_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-char FUN_000cb940(int16_t param __attribute__((unused)), int thread_index __attribute__((unused)), const char *detail __attribute__((unused)))
+/* FUN_000cb940 (0xcb940) — readable C lift: report script recompile error. */
+char FUN_000cb940(int16_t param, int thread_index /*@<eax>*/, const char *detail /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x5aa6c4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movl %%edi, %%eax\n\t"
-      "jne .LFUN_000cb940_1\n\t"
-      "movl $0x28092c, %%eax\n\t"
-      ".LFUN_000cb940_1:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ccaa80]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x280900\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bcb940_dget), [ccaa80] "m"(bcb940_ccaa80), [c8f390] "m"(bcb940_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_000cb940: clang naked draft required"
-#endif
+  extern char DAT_00280900[];
+  extern char DAT_0028092c[];
+  const char *msg;
+  char *name;
 
+  (void)datum_get(*(data_t **)0x5aa6c4, thread_index);
+  msg = detail;
+  if (msg == 0)
+    msg = DAT_0028092c;
+  name = hs_get_thread_script_name(thread_index);
+  error(2, DAT_00280900, name, msg, (int)param);
+  return 0;
+}
 
 /* hs_runtime_update (0xcde00) — XBE naked draft (batch 143). */
 #if defined(__clang__)
