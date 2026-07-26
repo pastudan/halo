@@ -238,12 +238,91 @@ void FUN_00081170(void)
   (void)edx;
 }
 
-/* 0x81250 */
+/* FUN_00081250 (0x81250) — XBE naked draft (batch 336). */
+#if defined(__clang__)
+static void (*const b81250_c81090)(void) = FUN_00081090;
+static void (*const b81250_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
 void FUN_00081250(void)
 {
-  FUN_00081090();
-  error(0, (char *)0x00265e2c);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x14, %%esp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "subl %%eax, %%ecx\n\t"
+      "subl %%eax, %%edx\n\t"
+      "subl %%eax, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "movl %%esi, -0x14(%%ebp)\n\t"
+      "movl $2, -0x8(%%ebp)\n\t"
+      "jmp .LFUN_00081250_2\n\t"
+      ".LFUN_00081250_1:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00081250_2:\n\t"
+      "movl (%%ecx,%%eax,1), %%edi\n\t"
+      "movl (%%eax), %%ebx\n\t"
+      "movl (%%edx,%%eax,1), %%esi\n\t"
+      "call *%[c81090]\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "movl %%eax, (%%edx,%%ecx,1)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "addl $4, %%ecx\n\t"
+      "decl %%eax\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jne .LFUN_00081250_1\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x265e2c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x28, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c81090] "m"(b81250_c81090), [c8f390] "m"(b81250_c8f390)
+      : "memory");
 }
+#else
+#error "FUN_00081250: clang naked draft required"
+#endif
+
 
 /* FUN_00081300 (0x81300) — XBE naked draft (batch 320). */
 #if defined(__clang__)

@@ -77,12 +77,66 @@ int XapiFormatFATVolume(void *device_path)
   (void)ebp;
 }
 
-/* 0x1d86c3 */
+/* _cinit (0x1d86c3) — XBE naked draft (batch 329). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void _cinit(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x331010, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .L_cinit_1\n\t"
+      "call *%%eax\n\t"
+      ".L_cinit_1:\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl $0x2c84e0, %%eax\n\t"
+      "movl $0x2c84ec, %%edi\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jae .L_cinit_4\n\t"
+      ".L_cinit_2:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .L_cinit_3\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .L_cinit_3\n\t"
+      "call *%%eax\n\t"
+      ".L_cinit_3:\n\t"
+      "addl $4, %%esi\n\t"
+      "cmpl %%edi, %%esi\n\t"
+      "jb .L_cinit_2\n\t"
+      ".L_cinit_4:\n\t"
+      "movl $0x2c84d0, %%esi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl $0x2c84dc, %%edi\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "jae .L_cinit_7\n\t"
+      ".L_cinit_5:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .L_cinit_6\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .L_cinit_6\n\t"
+      "call *%%eax\n\t"
+      ".L_cinit_6:\n\t"
+      "addl $4, %%esi\n\t"
+      "cmpl %%edi, %%esi\n\t"
+      "jb .L_cinit_5\n\t"
+      ".L_cinit_7:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "_cinit: clang naked draft required"
+#endif
+
 
 /* 0x1d871b */
 void _rtinit(void)

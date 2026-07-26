@@ -241,12 +241,59 @@ void FUN_001d243e(void)
   (void)ebp;
 }
 
-/* 0x1d2518 */
+/* XGetLaunchInfo (0x1d2518) — XBE naked draft (batch 331). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void XGetLaunchInfo(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "movl 0x2531f0, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .LXGetLaunchInfo_2\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "cmpl $2, %%eax\n\t"
+      "je .LXGetLaunchInfo_1\n\t"
+      "cmpl $3, %%eax\n\t"
+      "je .LXGetLaunchInfo_1\n\t"
+      "movl 0x10118, %%edx\n\t"
+      "movl 0x4(%%ecx), %%ecx\n\t"
+      "cmpl 0x8(%%edx), %%ecx\n\t"
+      "jne .LXGetLaunchInfo_2\n\t"
+      ".LXGetLaunchInfo_1:\n\t"
+      "movl 0x4(%%esp), %%ecx\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "movl 0x2531f0, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl (%%eax), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%esp), %%edi\n\t"
+      "addl $0x400, %%esi\n\t"
+      "movl $0x300, %%ecx\n\t"
+      "rep movsl\n\t"
+      "movl 0x2531f0, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "andl $0, (%%eax)\n\t"
+      "pushl %%ecx\n\t"
+      "call *0x2531f4\n\t"
+      "popl %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "jmp .LXGetLaunchInfo_3\n\t"
+      ".LXGetLaunchInfo_2:\n\t"
+      "movl $0x490, %%eax\n\t"
+      ".LXGetLaunchInfo_3:\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "XGetLaunchInfo: clang naked draft required"
+#endif
+
 
 /* 0x1d259b */
 void FUN_001d259b(void)

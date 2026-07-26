@@ -508,12 +508,62 @@ void GetTimeZoneInformation(void)
 #endif
 
 
-/* 0x1d0a06 */
+/* FUN_001d0a06 (0x1d0a06) — XBE naked draft (batch 331). */
+#if defined(__clang__)
+static void (*const b1d0a06_c1d08aa)(void) = GetTimeZoneInformation;
+static void (*const b1d0a06_c1dd620)(void) = __allmul;
+
+__attribute__((naked, noinline))
 void FUN_001d0a06(void)
 {
-  GetTimeZoneInformation();
-  __allmul();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "leal -0x74(%%esp), %%ebp\n\t"
+      "subl $0xac, %%esp\n\t"
+      "leal -0x38(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d08aa]\n\t"
+      "subl $0, %%eax\n\t"
+      "je .LFUN_001d0a06_4\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_001d0a06_3\n\t"
+      "decl %%eax\n\t"
+      "je .LFUN_001d0a06_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .LFUN_001d0a06_5\n\t"
+      ".LFUN_001d0a06_1:\n\t"
+      "movl 0x70(%%ebp), %%ecx\n\t"
+      ".LFUN_001d0a06_2:\n\t"
+      "movl -0x38(%%ebp), %%eax\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "jmp .LFUN_001d0a06_5\n\t"
+      ".LFUN_001d0a06_3:\n\t"
+      "movl 0x1c(%%ebp), %%ecx\n\t"
+      "jmp .LFUN_001d0a06_2\n\t"
+      ".LFUN_001d0a06_4:\n\t"
+      "movl -0x38(%%ebp), %%eax\n\t"
+      ".LFUN_001d0a06_5:\n\t"
+      "imull $0x3c, %%eax, %%eax\n\t"
+      "pushl $0\n\t"
+      "cdq\n\t"
+      "pushl $0x989680\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1dd620]\n\t"
+      "movl 0x7c(%%ebp), %%ecx\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "addl $0x74, %%ebp\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d08aa] "m"(b1d0a06_c1d08aa), [c1dd620] "m"(b1d0a06_c1dd620)
+      : "memory");
 }
+#else
+#error "FUN_001d0a06: clang naked draft required"
+#endif
+
 
 /* FUN_001d0a5c (0x1d0a5c) — XBE naked draft (batch 314). */
 #if defined(__clang__)
@@ -609,11 +659,28 @@ void FUN_001d0b31(void)
   (void)ebp;
 }
 
-/* 0x1d0b9c */
+/* FUN_001d0b9c (0x1d0b9c) — XBE naked draft (batch 330). */
+#if defined(__clang__)
+static void (*const b1d0b9c_c1d6ca8)(void) = FUN_001d6ca8;
+
+__attribute__((naked, noinline))
 void FUN_001d0b9c(void)
 {
-  FUN_001d6ca8();
+  __asm__ volatile(
+      "pushl 0xc(%%esp)\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "call *%[c1d6ca8]\n\t"
+      "movzbl %%al, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c1d6ca8] "m"(b1d0b9c_c1d6ca8)
+      : "memory");
 }
+#else
+#error "FUN_001d0b9c: clang naked draft required"
+#endif
+
 
 /* 0x1d0bb3 */
 void FUN_001d0bb3(void)
@@ -635,11 +702,27 @@ void * FUN_001d0bb9(unsigned int flags, unsigned int size)
   (void)eax;
 }
 
-/* 0x1d0c02 */
+/* FUN_001d0c02 (0x1d0c02) — XBE naked draft (batch 334). */
+#if defined(__clang__)
+static void (*const b1d0c02_c1d52c4)(void) = FUN_001d52c4;
+
+__attribute__((naked, noinline))
 void FUN_001d0c02(void)
 {
-  FUN_001d52c4();
+  __asm__ volatile(
+      "pushl 0x4(%%esp)\n\t"
+      "pushl $0\n\t"
+      "pushl 0x632a28\n\t"
+      "call *%[c1d52c4]\n\t"
+      "ret\n\t"
+      :
+      : [c1d52c4] "m"(b1d0c02_c1d52c4)
+      : "memory");
 }
+#else
+#error "FUN_001d0c02: clang naked draft required"
+#endif
+
 
 /* 0x1d0c16 */
 void * LocalFree(void *ptr)

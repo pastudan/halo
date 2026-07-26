@@ -497,36 +497,100 @@ void FUN_0017d150(void)
   FUN_0015a7f0((float *)0, (float *)0, (float *)0, (float *)0);
 }
 
-/* 0x17d1a0 */
-void FUN_0017d1a0(int param_1)
+/* FUN_0017d1a0 (0x17d1a0) — XBE naked draft (batch 334). */
+#if defined(__clang__)
+static void (*const b17d1a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b17d1a0_exitfn)(int) = system_exit;
+static bool (*const b17d1a0_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
+static void (*const b17d1a0_c16b180)(void) = FUN_0016b180;
+
+__attribute__((naked, noinline))
+void FUN_0017d1a0(int param_1 __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int edx = 0;
-
-  /* test (char)ebx, (char)ebx -> jne 0x17d292 */
-  /* relift: cmp word ptr [0x4761d8], 0x20 -> jl 0x17d1dc */
-  display_assert((char *)0x00253440, (char *)0x002af1ec, 740, 0);
-  system_exit(0);
-  /* relift: relift: mov (int16_t)eax, word ptr [0x4761d8] */
-  /* relift: relift: fld dword ptr [0x5a5bd4] */
-  /* relift: relift: mov word ptr [0x4761d8], (int16_t)eax */
-  /* relift: relift: fld dword ptr [0x5a5bd8] */
-  /* relift: relift: fld dword ptr [0x5a5bdc] */
-  FUN_0014df70(0, (float *)0, (float *)0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x17d253 */
-  /* mem[0x0047e4cc] = edx */
-  /* relift: cmp word ptr [0x4761d8], 1 -> jg 0x17d27d */
-  display_assert((char *)0x00253418, (char *)0x002af1ec, 756, 0);
-  system_exit(0);
-  FUN_0016b180();
-  /* mem[0x0047e4cc] = 0xffffffff */
-  FUN_0016b180();
-
-  (void)eax;
-  (void)ebx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x5c, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .LFUN_0017d1a0_4\n\t"
+      "cmpw $0x20, 0x4761d8\n\t"
+      "jl .LFUN_0017d1a0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2e4\n\t"
+      "pushl $0x2af1ec\n\t"
+      "pushl $0x253440\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0017d1a0_1:\n\t"
+      "movw 0x4761d8, %%ax\n\t"
+      "flds 0x5a5bd4\n\t"
+      "fmuls 0x2af240\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "incw %%ax\n\t"
+      "movw %%ax, 0x4761d8\n\t"
+      "movswl 0x506548, %%eax\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x5a5bd8\n\t"
+      "fmuls 0x2af240\n\t"
+      "leal -0x5c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "flds 0x5a5bdc\n\t"
+      "movw $0x15, 0x5a8c80(,%%ecx,2)\n\t"
+      "fmuls 0x2af240\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x5a5bc8\n\t"
+      "pushl $0xfff80\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "call *%[ray]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0017d1a0_2\n\t"
+      "movl -0x24(%%ebp), %%edx\n\t"
+      "movl %%edx, 0x47e4cc\n\t"
+      ".LFUN_0017d1a0_2:\n\t"
+      "cmpw $1, 0x4761d8\n\t"
+      "jg .LFUN_0017d1a0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2f4\n\t"
+      "pushl $0x2af1ec\n\t"
+      "pushl $0x253418\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0017d1a0_3:\n\t"
+      "decw 0x4761d8\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c16b180]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0017d1a0_4:\n\t"
+      "pushl %%ebx\n\t"
+      "movl $0xffffffff, 0x47e4cc\n\t"
+      "call *%[c16b180]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b17d1a0_assert), [exitfn] "m"(b17d1a0_exitfn), [ray] "m"(b17d1a0_ray), [c16b180] "m"(b17d1a0_c16b180)
+      : "memory");
 }
+#else
+#error "FUN_0017d1a0: clang naked draft required"
+#endif
+
 
 /* FUN_0017d2b0 (0x17d2b0) — XBE naked draft (batch 298). */
 #if defined(__clang__)
@@ -1290,28 +1354,114 @@ void FUN_0017db20(int a0, float a1, float a2)
   (void)0;
 }
 
-/* 0x17db40 */
-void rasterizer_screen_effect_set_video(int a0, float a1)
+/* rasterizer_screen_effect_set_video (0x17db40) — XBE naked draft (batch 332). */
+#if defined(__clang__)
+static void (*const b17db40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b17db40_exitfn)(int) = system_exit;
+static void *(*const b17db40_memset)(void *, int, unsigned int) = csmemset;
+static void *(*const b17db40_tag)(int, int) = tag_get;
+static void *(*const b17db40_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b17db40_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+void rasterizer_screen_effect_set_video(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* cmp eax, esi -> je 0x17dc5d */
-  /* cmp eax, esi -> jne 0x17db81 */
-  display_assert((char *)0x0029da1c, (char *)0x002af334, 225, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [eax + 0x128], -1 -> je 0x17dc4e */
-  /* relift: cmp dword ptr [eax + 0x138], -1 -> je 0x17dc4e */
-  csmemset((void *)(uintptr_t)eax, 0, 56);
-  tag_get(0x6269746d, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  tag_get(0x6269746d, 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  error(0, (char *)0x002af380);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x47e4d4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "je .Lrasterizer_screen_effect_set_video_3\n\t"
+      "movl 0x476204, %%eax\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jne .Lrasterizer_screen_effect_set_video_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe1\n\t"
+      "pushl $0x2af334\n\t"
+      "pushl $0x29da1c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl 0x476204, %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_screen_effect_set_video_1:\n\t"
+      "cmpl $-1, 0x128(%%eax)\n\t"
+      "je .Lrasterizer_screen_effect_set_video_2\n\t"
+      "cmpl $-1, 0x138(%%eax)\n\t"
+      "je .Lrasterizer_screen_effect_set_video_2\n\t"
+      "movl 0x47e4d4, %%eax\n\t"
+      "pushl $0x38\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x47e4d4, %%eax\n\t"
+      "movw 0x8(%%ebp), %%cx\n\t"
+      "movl %%esi, 0x3c(%%eax)\n\t"
+      "movl %%esi, 0x40(%%eax)\n\t"
+      "movl %%esi, 0x44(%%eax)\n\t"
+      "movl %%esi, 0x48(%%eax)\n\t"
+      "movl %%esi, 0x4c(%%eax)\n\t"
+      "movl %%esi, 0x50(%%eax)\n\t"
+      "movl %%esi, 0x54(%%eax)\n\t"
+      "movl %%esi, 0x58(%%eax)\n\t"
+      "movl %%esi, 0x5c(%%eax)\n\t"
+      "movl %%esi, 0x60(%%eax)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0x23(%%eax)\n\t"
+      "movw %%cx, 0x24(%%eax)\n\t"
+      "movl 0x476204, %%edx\n\t"
+      "movl 0x128(%%edx), %%eax\n\t"
+      "pushl $0x30\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6269746d\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x60, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x47e4d4, %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl %%eax, 0x28(%%ecx)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%edx, 0x2c(%%ecx)\n\t"
+      "movl $0x3f800000, 0x30(%%ecx)\n\t"
+      "movl 0x476204, %%eax\n\t"
+      "movl 0x138(%%eax), %%ecx\n\t"
+      "pushl $0x30\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6269746d\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x60, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x47e4d4, %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, 0x34(%%edx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrasterizer_screen_effect_set_video_2:\n\t"
+      "pushl $0x2af380\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lrasterizer_screen_effect_set_video_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b17db40_assert), [exitfn] "m"(b17db40_exitfn), [memset] "m"(b17db40_memset), [tag] "m"(b17db40_tag), [elem] "m"(b17db40_elem), [c8f390] "m"(b17db40_c8f390)
+      : "memory");
 }
+#else
+#error "rasterizer_screen_effect_set_video: clang naked draft required"
+#endif
+
 
 /* 0x17dc60 */
 void FUN_0017dc60(void)
@@ -2611,34 +2761,142 @@ void FUN_0017ed90(void)
   (void)0;
 }
 
-/* 0x17edd0 */
+/* rasterizer_frame_statistics_count_static_vertices (0x17edd0) — XBE naked draft (batch 330). */
+#if defined(__clang__)
+static void * (*const b17edd0_c17c980)(int handle) = rasterizer_widget_begin;
+static void (*const b17edd0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b17edd0_exitfn)(int) = system_exit;
+static void * (*const b17edd0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void (*const b17edd0_c91da0)(void) = FUN_00091da0;
+static void (*const b17edd0_c17c990)(int handle) = rasterizer_widget_set_texture;
+
+__attribute__((naked, noinline))
 void rasterizer_frame_statistics_count_static_vertices(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edi = 0;
-
-  rasterizer_widget_begin(0);
-  display_assert((char *)0x002af788, (char *)0x002af728, 217, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x17ee59 */
-  display_assert((char *)0x002af760, (char *)0x002af728, 218, 0);
-  system_exit(0);
-  csmemcpy((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, eax);
-  FUN_00091da0();
-  /* test edi, edi -> jle 0x17eeb5 */
-  /* cmp (int16_t)ebx, (int16_t)eax -> je 0x17eeb0 */
-  /* cmp ecx, edi -> jl 0x17eea0 */
-  rasterizer_widget_set_texture(0);
-  /* cmp (int16_t)eax, 3 -> je 0x17eee1 */
-  /* cmp (int16_t)eax, 4 -> je 0x17eee1 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "jl .Lrasterizer_frame_statistics_count_static_vertices_6\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c17c980]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "je .Lrasterizer_frame_statistics_count_static_vertices_8\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "cmpl $0x6000, %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "leal (%%esi,%%esi,2), %%edi\n\t"
+      "movl $0xffff, %%ebx\n\t"
+      "jl .Lrasterizer_frame_statistics_count_static_vertices_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd9\n\t"
+      "pushl $0x2af728\n\t"
+      "pushl $0x2af788\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_frame_statistics_count_static_vertices_1:\n\t"
+      "movl 0x47ec40, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lrasterizer_frame_statistics_count_static_vertices_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xda\n\t"
+      "pushl $0x2af728\n\t"
+      "pushl $0x2af760\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_frame_statistics_count_static_vertices_2:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "leal (%%esi,%%esi,2), %%eax\n\t"
+      "shll $1, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "leal (%%edx,%%ecx,2), %%eax\n\t"
+      "movl 0x47ec40, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8e0b0]\n\t"
+      "movl 0x47ec40, %%edx\n\t"
+      "pushl $0x17ed70\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c91da0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jle .Lrasterizer_frame_statistics_count_static_vertices_5\n\t"
+      "movl 0x47ec40, %%edx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lrasterizer_frame_statistics_count_static_vertices_3:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%edx,%%ecx,2), %%ax\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "je .Lrasterizer_frame_statistics_count_static_vertices_4\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "incl -0x4(%%ebp)\n\t"
+      ".Lrasterizer_frame_statistics_count_static_vertices_4:\n\t"
+      "incl %%ecx\n\t"
+      "cmpl %%edi, %%ecx\n\t"
+      "jl .Lrasterizer_frame_statistics_count_static_vertices_3\n\t"
+      ".Lrasterizer_frame_statistics_count_static_vertices_5:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c17c990]\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrasterizer_frame_statistics_count_static_vertices_6:\n\t"
+      "negl %%eax\n\t"
+      "cmpw $3, %%ax\n\t"
+      "je .Lrasterizer_frame_statistics_count_static_vertices_7\n\t"
+      "cmpw $4, %%ax\n\t"
+      "je .Lrasterizer_frame_statistics_count_static_vertices_7\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrasterizer_frame_statistics_count_static_vertices_7:\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "cdq\n\t"
+      "subl $2, %%ecx\n\t"
+      "idivl %%ecx\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrasterizer_frame_statistics_count_static_vertices_8:\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c17c980] "m"(b17edd0_c17c980), [assert] "m"(b17edd0_assert), [exitfn] "m"(b17edd0_exitfn), [c8e0b0] "m"(b17edd0_c8e0b0), [c91da0] "m"(b17edd0_c91da0), [c17c990] "m"(b17edd0_c17c990)
+      : "memory");
 }
+#else
+#error "rasterizer_frame_statistics_count_static_vertices: clang naked draft required"
+#endif
+
 
 /* FUN_0017ef00 (0x17ef00) — XBE naked draft (batch 308). */
 #if defined(__clang__)

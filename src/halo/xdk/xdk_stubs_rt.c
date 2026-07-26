@@ -126,18 +126,82 @@ int ResumeThread(int thread_handle)
   (void)eax;
 }
 
-/* 0x1cfb12 */
+/* RaiseException (0x1cfb12) — XBE naked draft (batch 332). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void RaiseException(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x50, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "andl $0, -0x48(%%ebp)\n\t"
+      "movl %%eax, -0x50(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "andl $1, %%eax\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, -0x4c(%%ebp)\n\t"
+      "movl $0x1cfb12, -0x44(%%ebp)\n\t"
+      "je .LRaiseException_2\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "cmpl $0xf, %%ecx\n\t"
+      "jbe .LRaiseException_1\n\t"
+      "pushl $0xf\n\t"
+      "popl %%ecx\n\t"
+      ".LRaiseException_1:\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%ecx, -0x40(%%ebp)\n\t"
+      "je .LRaiseException_3\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x3c(%%ebp), %%edi\n\t"
+      "rep movsl\n\t"
+      "popl %%edi\n\t"
+      "jmp .LRaiseException_3\n\t"
+      ".LRaiseException_2:\n\t"
+      "andl $0, -0x40(%%ebp)\n\t"
+      ".LRaiseException_3:\n\t"
+      "leal -0x50(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *0x2530c0\n\t"
+      "popl %%esi\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "RaiseException: clang naked draft required"
+#endif
 
-/* 0x1cfb98 */
+
+/* SwitchToThread (0x1cfb98) — XBE naked draft (batch 331). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void SwitchToThread(void)
 {
-  XapiCallThreadNotifyRoutines();
+  __asm__ volatile(
+      "call *0x2530c8\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpl $0x40000024, %%eax\n\t"
+      "setne %%cl\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "SwitchToThread: clang naked draft required"
+#endif
+
 
 /* 0x1cfbbd */
 int GetExitCodeThread(int thread_handle, int *exit_code)
@@ -155,18 +219,74 @@ int GetExitCodeThread(int thread_handle, int *exit_code)
   (void)ecx;
 }
 
-/* 0x1cfc1b */
+/* FUN_001cfc1b (0x1cfc1b) — XBE naked draft (batch 334). */
+#if defined(__clang__)
+static void __stdcall (*const b1cfc1b_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void FUN_001cfc1b(void)
 {
-  int eax = 0;
-  int ebx = 0;
-
-  /* cmp eax, ebx -> jl 0x1cfc97 */
-  XapiSetLastNTError(0);
-
-  (void)eax;
-  (void)ebx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "leal 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0x2530ac\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *0x2530a8\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "jl .LFUN_001cfc1b_3\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0x110(%%ecx), %%edx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "movl 0x114(%%ecx), %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "cmpb %%bl, 0x4(%%ecx)\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "je .LFUN_001cfc1b_1\n\t"
+      "movl 0x118(%%ecx), %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "movl 0x11c(%%ecx), %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "jmp .LFUN_001cfc1b_2\n\t"
+      ".LFUN_001cfc1b_1:\n\t"
+      "movl %%ebx, (%%eax)\n\t"
+      "movl %%ebx, 0x4(%%eax)\n\t"
+      ".LFUN_001cfc1b_2:\n\t"
+      "movl 0x18(%%ecx), %%eax\n\t"
+      "movl 0x2530d0, %%edx\n\t"
+      "mull (%%edx)\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "movl %%edx, 0x4(%%esi)\n\t"
+      "movl %%ebx, (%%eax)\n\t"
+      "movl %%ebx, 0x4(%%eax)\n\t"
+      "call *0x2530a0\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "popl %%esi\n\t"
+      "jmp .LFUN_001cfc1b_4\n\t"
+      ".LFUN_001cfc1b_3:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d2296]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_001cfc1b_4:\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d2296] "m"(b1cfc1b_c1d2296)
+      : "memory");
 }
+#else
+#error "FUN_001cfc1b: clang naked draft required"
+#endif
+
 
 /* 0x1cfca4 */
 void XRegisterThreadNotifyRoutine(void)
@@ -474,12 +594,45 @@ void FUN_001d0362(void)
   SleepEx(0, 0);
 }
 
-/* 0x1d0370 */
+/* OutputDebugStringA (0x1d0370) — XBE naked draft (batch 336). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void OutputDebugStringA(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "leal 0x1(%%eax), %%ecx\n\t"
+      ".LOutputDebugStringA_1:\n\t"
+      "movb (%%eax), %%dl\n\t"
+      "incl %%eax\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .LOutputDebugStringA_1\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "movw %%ax, -0x8(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "incl %%eax\n\t"
+      "movw %%ax, -0x6(%%ebp)\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "movl $1, %%eax\n\t"
+      ".byte 0xcd, 0x2d\n\t"
+      ".byte 0xcc\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "OutputDebugStringA: clang naked draft required"
+#endif
+
 
 /* 0x1d03a2 */
 void OutputDebugStringW(void)

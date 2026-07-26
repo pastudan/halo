@@ -4434,39 +4434,137 @@ unsigned char *FUN_00181060(void *lens_flare_params)
   (void)edi;
 }
 
-/* 0x181180 */
+/* FUN_00181180 (0x181180) — XBE naked draft (batch 333). */
+#if defined(__clang__)
+static void (*const b181180_c16f910)(int16_t profile) = FUN_0016f910;
+static void (*const b181180_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b181180_exitfn)(int) = system_exit;
+static unsigned char * (*const b181180_c181060)(void *lens_flare_params) = FUN_00181060;
+static void (*const b181180_c17d040)(void) = FUN_0017d040;
+static void (*const b181180_c16fa40)(int16_t profile) = FUN_0016fa40;
+
+__attribute__((naked, noinline))
 void FUN_00181180(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int ebp = 0;
-
-  FUN_0016f910(24);
-  /* relift: relift: mov (char)eax, byte ptr [0x3256d7] */
-  /* test (char)eax, (char)eax -> je 0x181293 */
-  /* relift: relift: mov (int16_t)eax, word ptr [0x46e008] */
-  /* cmp (int16_t)eax, 1 -> jg 0x181293 */
-  /* relift: cmp word ptr [0x31fa98], 1 -> jg 0x181293 */
-  /* relift: cmp word ptr [ebp - 4], 0 -> jl 0x1811db */
-  /* cmp esi, eax -> jl 0x1811f8 */
-  display_assert((char *)0x002b0174, (char *)0x002b01b4, 67, 0);
-  system_exit(0);
-  FUN_00181060((void *)0);
-  /* test eax, eax -> jle 0x18123a */
-  FUN_0017d040();
-  /* cmp eax, 0xff -> jge 0x18123f */
-  /* test (char)ecx, (char)ecx -> jne 0x181242 */
-  /* cmp (char)ecx, (char)eax -> jbe 0x18125e */
-  /* cmp esi, eax -> jl 0x1811d0 */
-  /* mem[0x004d0480] = 0 */
-  FUN_0016fa40(24);
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x18\n\t"
+      "call *%[c16f910]\n\t"
+      "movb 0x3256d7, %%al\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00181180_12\n\t"
+      "movw 0x46e008, %%ax\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jg .LFUN_00181180_12\n\t"
+      "jne .LFUN_00181180_1\n\t"
+      "cmpw $1, 0x31fa98\n\t"
+      "jg .LFUN_00181180_12\n\t"
+      ".LFUN_00181180_1:\n\t"
+      "movl 0x4d0480, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "jle .LFUN_00181180_11\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      ".LFUN_00181180_2:\n\t"
+      "cmpw $0, -0x4(%%ebp)\n\t"
+      "jl .LFUN_00181180_3\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jl .LFUN_00181180_4\n\t"
+      ".LFUN_00181180_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x43\n\t"
+      "pushl $0x2b01b4\n\t"
+      "pushl $0x2b0174\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00181180_4:\n\t"
+      "leal (%%esi,%%esi,4), %%edi\n\t"
+      "leal 0x4c6480(,%%edi,8), %%edi\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c181060]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x24(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .LFUN_00181180_5\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c17d040]\n\t"
+      "imull $0xff, %%eax, %%eax\n\t"
+      "movl 0x24(%%edi), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "sarl $1, %%edx\n\t"
+      "addl %%edx, %%eax\n\t"
+      "cdq\n\t"
+      "idivl %%ecx\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0xff, %%eax\n\t"
+      "jge .LFUN_00181180_6\n\t"
+      "movb %%al, %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_00181180_7\n\t"
+      ".LFUN_00181180_5:\n\t"
+      "movb $0, (%%ebx)\n\t"
+      "jmp .LFUN_00181180_10\n\t"
+      ".LFUN_00181180_6:\n\t"
+      "orb $0xff, %%cl\n\t"
+      ".LFUN_00181180_7:\n\t"
+      "movb (%%ebx), %%al\n\t"
+      "cmpb %%al, %%cl\n\t"
+      "jbe .LFUN_00181180_8\n\t"
+      "movzbl %%al, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "movzbl %%cl, %%ecx\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "cdq\n\t"
+      "andl $3, %%edx\n\t"
+      "addl %%edx, %%eax\n\t"
+      "sarl $2, %%eax\n\t"
+      "jmp .LFUN_00181180_9\n\t"
+      ".LFUN_00181180_8:\n\t"
+      "jae .LFUN_00181180_10\n\t"
+      "movzbl %%al, %%eax\n\t"
+      "movzbl %%cl, %%edx\n\t"
+      "addl %%edx, %%eax\n\t"
+      "cdq\n\t"
+      "subl %%edx, %%eax\n\t"
+      "sarl $1, %%eax\n\t"
+      ".LFUN_00181180_9:\n\t"
+      "movb %%al, (%%ebx)\n\t"
+      ".LFUN_00181180_10:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "incl %%eax\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl 0x4d0480, %%eax\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jl .LFUN_00181180_2\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_00181180_11:\n\t"
+      "movl $0, 0x4d0480\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_00181180_12:\n\t"
+      "pushl $0x18\n\t"
+      "call *%[c16fa40]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c16f910] "m"(b181180_c16f910), [assert] "m"(b181180_assert), [exitfn] "m"(b181180_exitfn), [c181060] "m"(b181180_c181060), [c17d040] "m"(b181180_c17d040), [c16fa40] "m"(b181180_c16fa40)
+      : "memory");
 }
+#else
+#error "FUN_00181180: clang naked draft required"
+#endif
+
 
 /* FUN_001812c0 (0x1812c0) — XBE naked draft (batch 323). */
 #if defined(__clang__)
@@ -4871,68 +4969,302 @@ void FUN_00182610(void)
 #endif
 
 
-/* 0x182840 */
+/* rasterizer_xbox_bitmap_swizzle2d_byte (0x182840) — XBE naked draft (batch 332). */
+#if defined(__clang__)
+static void (*const b182840_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b182840_exitfn)(int) = system_exit;
+static void (*const b182840_c182610)(void) = FUN_00182610;
+
+__attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle2d_byte(void)
 {
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  display_assert((char *)0x002b08ac, (char *)0x002b087c, 147, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [ebp + 0xc], edi -> jne 0x18289c */
-  display_assert((char *)0x002b07dc, (char *)0x002b087c, 148, 0);
-  system_exit(0);
-  FUN_00182610();
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x182908 */
-  /* test (int16_t)esi, (int16_t)esi -> jle 0x1828f9 */
-
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "movl %%edi, -0x4(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_byte_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x93\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0x2b08ac\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_1:\n\t"
+      "cmpl %%edi, 0xc(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_byte_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x94\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0x2b07dc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_2:\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c182610]\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lrasterizer_xbox_bitmap_swizzle2d_byte_6\n\t"
+      "movzwl %%ax, %%ecx\n\t"
+      "movl 0x4d0498, %%eax\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl 0x4d0494, %%ecx\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_3:\n\t"
+      "testw %%si, %%si\n\t"
+      "jle .Lrasterizer_xbox_bitmap_swizzle2d_byte_5\n\t"
+      "movzwl %%si, %%edx\n\t"
+      "movl %%edx, 0x14(%%ebp)\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_4:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movb (%%ebx,%%edx,1), %%dl\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "orl %%edi, %%ecx\n\t"
+      "movb %%dl, (%%ecx,%%esi,1)\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "subl %%eax, %%edi\n\t"
+      "incl %%ebx\n\t"
+      "andl %%eax, %%edi\n\t"
+      "decl %%ecx\n\t"
+      "movl %%ecx, 0x14(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_byte_4\n\t"
+      "movl 0x4d0494, %%ecx\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_5:\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "subl %%ecx, %%edx\n\t"
+      "andl %%ecx, %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "decl -0x8(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_byte_3\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b182840_assert), [exitfn] "m"(b182840_exitfn), [c182610] "m"(b182840_c182610)
+      : "memory");
 }
+#else
+#error "rasterizer_xbox_bitmap_swizzle2d_byte: clang naked draft required"
+#endif
 
-/* 0x182910 */
+
+/* rasterizer_xbox_bitmap_swizzle2d_word (0x182910) — XBE naked draft (batch 332). */
+#if defined(__clang__)
+static void (*const b182910_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b182910_exitfn)(int) = system_exit;
+static void (*const b182910_c182610)(void) = FUN_00182610;
+
+__attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle2d_word(void)
 {
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  display_assert((char *)0x002b08ac, (char *)0x002b087c, 176, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [ebp + 0xc], edi -> jne 0x18296c */
-  display_assert((char *)0x002b07dc, (char *)0x002b087c, 177, 0);
-  system_exit(0);
-  FUN_00182610();
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x1829da */
-  /* test (int16_t)esi, (int16_t)esi -> jle 0x1829cb */
-
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "movl %%edi, -0x4(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_word_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb0\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0x2b08ac\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_word_1:\n\t"
+      "cmpl %%edi, 0xc(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_word_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb1\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0x2b07dc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_word_2:\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c182610]\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lrasterizer_xbox_bitmap_swizzle2d_word_6\n\t"
+      "movzwl %%ax, %%ecx\n\t"
+      "movl 0x4d0498, %%eax\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl 0x4d0494, %%ecx\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_word_3:\n\t"
+      "testw %%si, %%si\n\t"
+      "jle .Lrasterizer_xbox_bitmap_swizzle2d_word_5\n\t"
+      "movzwl %%si, %%edx\n\t"
+      "movl %%edx, 0x14(%%ebp)\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_word_4:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movw (%%edx,%%ebx,2), %%dx\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "orl %%edi, %%ecx\n\t"
+      "movw %%dx, (%%esi,%%ecx,2)\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "subl %%eax, %%edi\n\t"
+      "incl %%ebx\n\t"
+      "andl %%eax, %%edi\n\t"
+      "decl %%ecx\n\t"
+      "movl %%ecx, 0x14(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_word_4\n\t"
+      "movl 0x4d0494, %%ecx\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_word_5:\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "subl %%ecx, %%edx\n\t"
+      "andl %%ecx, %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "decl -0x8(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_word_3\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_word_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b182910_assert), [exitfn] "m"(b182910_exitfn), [c182610] "m"(b182910_c182610)
+      : "memory");
 }
+#else
+#error "rasterizer_xbox_bitmap_swizzle2d_word: clang naked draft required"
+#endif
 
-/* 0x1829f0 */
+
+/* rasterizer_xbox_bitmap_swizzle2d_long (0x1829f0) — XBE naked draft (batch 332). */
+#if defined(__clang__)
+static void (*const b1829f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1829f0_exitfn)(int) = system_exit;
+static void (*const b1829f0_c182610)(void) = FUN_00182610;
+
+__attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle2d_long(void)
 {
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  display_assert((char *)0x002b08ac, (char *)0x002b087c, 205, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [ebp + 0xc], edi -> jne 0x182a4c */
-  display_assert((char *)0x002b07dc, (char *)0x002b087c, 206, 0);
-  system_exit(0);
-  FUN_00182610();
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x182ab8 */
-  /* test (int16_t)esi, (int16_t)esi -> jle 0x182aa9 */
-
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "movl %%edi, -0x4(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_long_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xcd\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0x2b08ac\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_long_1:\n\t"
+      "cmpl %%edi, 0xc(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_long_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xce\n\t"
+      "pushl $0x2b087c\n\t"
+      "pushl $0x2b07dc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_long_2:\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c182610]\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .Lrasterizer_xbox_bitmap_swizzle2d_long_6\n\t"
+      "movzwl %%ax, %%ecx\n\t"
+      "movl 0x4d0498, %%eax\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl 0x4d0494, %%ecx\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_long_3:\n\t"
+      "testw %%si, %%si\n\t"
+      "jle .Lrasterizer_xbox_bitmap_swizzle2d_long_5\n\t"
+      "movzwl %%si, %%edx\n\t"
+      "movl %%edx, 0x14(%%ebp)\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_long_4:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl (%%edx,%%ebx,4), %%edx\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "orl %%edi, %%ecx\n\t"
+      "movl %%edx, (%%esi,%%ecx,4)\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "subl %%eax, %%edi\n\t"
+      "incl %%ebx\n\t"
+      "andl %%eax, %%edi\n\t"
+      "decl %%ecx\n\t"
+      "movl %%ecx, 0x14(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_long_4\n\t"
+      "movl 0x4d0494, %%ecx\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_long_5:\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "subl %%ecx, %%edx\n\t"
+      "andl %%ecx, %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "decl -0x8(%%ebp)\n\t"
+      "jne .Lrasterizer_xbox_bitmap_swizzle2d_long_3\n\t"
+      ".Lrasterizer_xbox_bitmap_swizzle2d_long_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1829f0_assert), [exitfn] "m"(b1829f0_exitfn), [c182610] "m"(b1829f0_c182610)
+      : "memory");
 }
+#else
+#error "rasterizer_xbox_bitmap_swizzle2d_long: clang naked draft required"
+#endif
+
 
 /* rasterizer_xbox_bitmap_swizzle3d_byte (0x182ac0) — XBE naked draft (batch 324). */
 #if defined(__clang__)

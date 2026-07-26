@@ -476,31 +476,100 @@ int __wcsicmp(const wchar_t *s1, const wchar_t *s2)
   (void)edi;
 }
 
-/* 0x1dc34b */
-int __wcsnicmp(const wchar_t *s1, const wchar_t *s2, size_t count)
+/* __wcsnicmp (0x1dc34b) — XBE naked draft (batch 333). */
+#if defined(__clang__)
+static wchar_t * (*const b1dc34b_c1da8e3)(wchar_t *s, size_t count) = FUN_001da8e3;
+
+__attribute__((naked, noinline))
+int __wcsnicmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __attribute__((unused)), size_t count __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: cmp dword ptr [ebp + 0x10], eax -> je 0x1dc3e7 */
-  /* cmp (int16_t)eax, 0x41 -> jb 0x1dc37c */
-  /* cmp (int16_t)eax, 0x41 -> jb 0x1dc392 */
-  /* cmp (int16_t)eax, 0x5a -> ja 0x1dc392 */
-  /* test (int16_t)ebx, (int16_t)ebx -> je 0x1dc3de */
-  /* cmp (int16_t)ebx, (int16_t)eax -> je 0x1dc368 */
-  FUN_001da8e3((wchar_t *)(uintptr_t)eax, edi);
-  FUN_001da8e3((wchar_t *)(uintptr_t)eax, 0);
-  /* test (int16_t)ebx, (int16_t)ebx -> je 0x1dc3dc */
-  /* cmp (int16_t)ebx, (int16_t)eax -> je 0x1dc3af */
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl %%eax, 0x10(%%ebp)\n\t"
+      "je .L__wcsnicmp_9\n\t"
+      "cmpl %%eax, 0x4fc25c\n\t"
+      "pushl %%ebx\n\t"
+      "jne .L__wcsnicmp_5\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      ".L__wcsnicmp_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%ecx), %%ax\n\t"
+      "cmpw $0x41, %%ax\n\t"
+      "jb .L__wcsnicmp_2\n\t"
+      "cmpw $0x5a, %%ax\n\t"
+      "leal 0x20(%%eax), %%ebx\n\t"
+      "jbe .L__wcsnicmp_3\n\t"
+      ".L__wcsnicmp_2:\n\t"
+      "movl %%eax, %%ebx\n\t"
+      ".L__wcsnicmp_3:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%edx), %%ax\n\t"
+      "cmpw $0x41, %%ax\n\t"
+      "jb .L__wcsnicmp_4\n\t"
+      "cmpw $0x5a, %%ax\n\t"
+      "ja .L__wcsnicmp_4\n\t"
+      "addl $0x20, %%eax\n\t"
+      ".L__wcsnicmp_4:\n\t"
+      "incl %%ecx\n\t"
+      "incl %%ecx\n\t"
+      "incl %%edx\n\t"
+      "incl %%edx\n\t"
+      "decl 0x10(%%ebp)\n\t"
+      "je .L__wcsnicmp_8\n\t"
+      "testw %%bx, %%bx\n\t"
+      "je .L__wcsnicmp_8\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "je .L__wcsnicmp_1\n\t"
+      "jmp .L__wcsnicmp_8\n\t"
+      ".L__wcsnicmp_5:\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      ".L__wcsnicmp_6:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1da8e3]\n\t"
+      "incl %%esi\n\t"
+      "incl %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw (%%edi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1da8e3]\n\t"
+      "incl %%edi\n\t"
+      "popl %%ecx\n\t"
+      "incl %%edi\n\t"
+      "decl 0x10(%%ebp)\n\t"
+      "popl %%ecx\n\t"
+      "je .L__wcsnicmp_7\n\t"
+      "testw %%bx, %%bx\n\t"
+      "je .L__wcsnicmp_7\n\t"
+      "cmpw %%ax, %%bx\n\t"
+      "je .L__wcsnicmp_6\n\t"
+      ".L__wcsnicmp_7:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      ".L__wcsnicmp_8:\n\t"
+      "movzwl %%ax, %%ecx\n\t"
+      "movzwl %%bx, %%eax\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "popl %%ebx\n\t"
+      ".L__wcsnicmp_9:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1da8e3] "m"(b1dc34b_c1da8e3)
+      : "memory");
 }
+#else
+#error "__wcsnicmp: clang naked draft required"
+#endif
+
 
 /* 0x1dc3e9 */
 int FUN_001dc3e9(int c, int mask)

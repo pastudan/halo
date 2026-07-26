@@ -97,21 +97,64 @@ void FUN_0006e930(void)
 #endif
 
 
-/* 0x6e980 */
+/* FUN_0006e980 (0x6e980) — XBE naked draft (batch 335). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_0006e980(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  /* test eax, eax -> je 0x6e9f8 */
-  /* test eax, eax -> jne 0x6e9f8 */
-  /* relift: cmp word ptr [eax + 6], 1 -> jne 0x6ea1a */
-  FUN_00068a30(0, (char *)0x002610f4);
-  FUN_00068a30(0, (char *)(uintptr_t)ecx);
-
-  (void)eax;
-  (void)ecx;
+  __asm__ volatile(
+      "xorl %%edx, %%edx\n\t"
+      "movl %%esi, 0xe8(%%ecx)\n\t"
+      "movl 0x1c(%%ecx), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x28(%%ecx), %%edi\n\t"
+      "leal -0x1(%%eax,%%edi,1), %%eax\n\t"
+      "divl %%edi\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "divl %%edi\n\t"
+      "imull 0x2c(%%ecx), %%edx\n\t"
+      "movl %%edx, 0xd4(%%ecx)\n\t"
+      "movl 0x2c(%%ecx), %%edi\n\t"
+      "movl 0x20(%%ecx), %%edx\n\t"
+      "leal -0x1(%%edx,%%edi,1), %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "divl %%edi\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "divl %%edi\n\t"
+      "movl 0x12c(%%ecx), %%eax\n\t"
+      "popl %%edi\n\t"
+      "imull 0x28(%%ecx), %%edx\n\t"
+      "movl %%eax, 0x134(%%ecx)\n\t"
+      "movl %%edx, 0xe4(%%ecx)\n\t"
+      "movl 0xc0(%%ecx), %%edx\n\t"
+      "movl (%%edx,%%esi,4), %%eax\n\t"
+      "movl %%eax, 0x138(%%ecx)\n\t"
+      "movl 0xf0(%%ecx), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0006e980_1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0006e980_1\n\t"
+      "ret\n\t"
+      ".LFUN_0006e980_1:\n\t"
+      "movl $1, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0006e980: clang naked draft required"
+#endif
+
 
 /* 0x6ea50 */
 void FUN_0006ea50(void)
@@ -1102,24 +1145,86 @@ void FUN_0006fbd0(void)
   (void)edi;
 }
 
-/* 0x6fc60 */
+/* FUN_0006fc60 (0x6fc60) — XBE naked draft (batch 333). */
+#if defined(__clang__)
+static void * (*const b6fc60_c8f040)(void *ptr, int new_size, const char *file, int line) = debug_realloc;
+static void *(*const b6fc60_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b6fc60_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+
+__attribute__((naked, noinline))
 void FUN_0006fc60(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  debug_realloc((void *)(uintptr_t)ecx, 0, (char *)0, 0);
-  debug_realloc((void *)(uintptr_t)eax, 0, (char *)0, 0);
-  /* test eax, eax -> je 0x6fd0b */
-  csmemset((void *)(uintptr_t)edx, 0, 0);
-  csmemset((void *)(uintptr_t)eax, 0, 0);
-  FUN_00068a30(0, (char *)0x00261434);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xb8(%%esi), %%eax\n\t"
+      "movl 0xbc(%%esi), %%ecx\n\t"
+      "pushl $0x1fd\n\t"
+      "addl %%edi, %%eax\n\t"
+      "pushl $0x2612f0\n\t"
+      "shll $2, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8f040]\n\t"
+      "movl 0xb8(%%esi), %%edx\n\t"
+      "pushl $0x1ff\n\t"
+      "addl %%edi, %%edx\n\t"
+      "pushl $0x2612f0\n\t"
+      "shll $2, %%edx\n\t"
+      "movl %%eax, 0xbc(%%esi)\n\t"
+      "movl 0xc0(%%esi), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8f040]\n\t"
+      "movl 0xbc(%%esi), %%ecx\n\t"
+      "addl $0x20, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%eax, 0xc0(%%esi)\n\t"
+      "je .LFUN_0006fc60_1\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0006fc60_1\n\t"
+      "movl 0xb8(%%esi), %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "leal (,%%edi,4), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "addl %%ecx, %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[memset]\n\t"
+      "movl 0xc0(%%esi), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "addl 0xb8(%%esi), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl 0xb8(%%esi), %%eax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "addl %%edi, %%eax\n\t"
+      "movl %%eax, 0xb8(%%esi)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0006fc60_1:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl $0, 0xb8(%%esi)\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x261434\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c68a30]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8f040] "m"(b6fc60_c8f040), [memset] "m"(b6fc60_memset), [c68a30] "m"(b6fc60_c68a30)
+      : "memory");
 }
+#else
+#error "FUN_0006fc60: clang naked draft required"
+#endif
+
 
 /* 0x6fd30 */
 void FUN_0006fd30(void)
@@ -1502,13 +1607,46 @@ void FUN_00070460(void)
   (void)eax;
 }
 
-/* 0x704c0 */
+/* FUN_000704c0 (0x704c0) — XBE naked draft (batch 330). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_000704c0(void)
 {
-  FUN_001d9068();
-  FUN_001d9068();
-  FUN_001d9068();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movzbl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fmuls 0x2ed08c\n\t"
+      "fmuls 0x261518\n\t"
+      "fstps (%%eax)\n\t"
+      "movzbl 0x1(%%ecx), %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fmuls 0x2ed090\n\t"
+      "fmuls 0x261518\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "movzbl 0x2(%%ecx), %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fmuls 0x2ed094\n\t"
+      "fmuls 0x261518\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000704c0: clang naked draft required"
+#endif
+
 
 /* 0x70570 */
 void FUN_00070570(void)
@@ -1517,12 +1655,56 @@ void FUN_00070570(void)
   (void)0;
 }
 
-/* 0x705b0 */
+/* FUN_000705b0 (0x705b0) — XBE naked draft (batch 332). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_000705b0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw (%%eax), %%cx\n\t"
+      "movb %%cl, %%dl\n\t"
+      "shlb $3, %%dl\n\t"
+      "pushl %%ebx\n\t"
+      "movb %%dl, %%bl\n\t"
+      "shrb $5, %%bl\n\t"
+      "orb %%bl, %%dl\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "shrl $5, -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movb -0x4(%%ebp), %%cl\n\t"
+      "shlb $2, %%cl\n\t"
+      "movb %%dl, -0x4(%%ebp)\n\t"
+      "movb %%cl, %%dl\n\t"
+      "shrb $6, %%dl\n\t"
+      "orb %%dl, %%cl\n\t"
+      "shrl $6, %%eax\n\t"
+      "shlb $3, %%al\n\t"
+      "movb %%cl, -0x3(%%ebp)\n\t"
+      "movb %%al, %%cl\n\t"
+      "shrb $5, %%cl\n\t"
+      "orb %%cl, %%al\n\t"
+      "movb %%al, -0x2(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000705b0: clang naked draft required"
+#endif
+
 
 /* FUN_00070610 (0x70610) — XBE naked draft (batch 298). */
 #if defined(__clang__)
