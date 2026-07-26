@@ -133,28 +133,76 @@ void system_free(void *ptr)
   ((void *(__stdcall *)(void *))0x1d0c16)(ptr);
 }
 
-void *system_realloc(void *ptr, int size)
-{
-  if (size < 0) {
-    display_assert("size>=0", "c:\\halo\\SOURCE\\cseries\\cseries_windows.c",
-                   0x9c, 1);
-    halt_and_catch_fire();
-  }
-  if (ptr == NULL) {
-    if (size == 0) {
-      display_assert("pointer||size",
-                     "c:\\halo\\SOURCE\\cseries\\cseries_windows.c", 0x9d, 1);
-      halt_and_catch_fire();
-    }
-    return ((void *(__stdcall *)(uint32_t, uint32_t))0x1d0c48)(0, size);
-  }
-  if (size != 0)
-    return ((void *(__stdcall *)(void *, uint32_t, uint32_t))0x1d0c65)(ptr,
-                                                                       size, 2);
+/* system_realloc (0x8e3f0) — XBE naked draft (batch 92). */
+#if defined(__clang__)
+static void (*const b8e3f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b8e3f0_c1029a0)(void) = halt_and_catch_fire;
+static void (*const b8e3f0_c1d0c48)(void) = FUN_001d0c48;
+static void (*const b8e3f0_c1d0c65)(void) = FUN_001d0c65;
+static void *__stdcall (*const b8e3f0_c1d0c16)(void *ptr) = LocalFree;
 
-  ((void(__stdcall *)(void *))0x1d0c16)(ptr);
-  return NULL;
+__attribute__((naked, noinline))
+void * system_realloc(void *ptr __attribute__((unused)), int size __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jge .Lsystem_realloc_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9c\n\t"
+      "pushl $0x267a3c\n\t"
+      "pushl $0x267a80\n\t"
+      "call *%[assert]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "call *%[c1029a0]\n\t"
+      ".Lsystem_realloc_1:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lsystem_realloc_3\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lsystem_realloc_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9d\n\t"
+      "pushl $0x267a3c\n\t"
+      "pushl $0x267a70\n\t"
+      "call *%[assert]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "call *%[c1029a0]\n\t"
+      ".Lsystem_realloc_2:\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0\n\t"
+      "call *%[c1d0c48]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lsystem_realloc_3:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lsystem_realloc_4\n\t"
+      "pushl $2\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d0c65]\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lsystem_realloc_4:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d0c16]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b8e3f0_assert), [c1029a0] "m"(b8e3f0_c1029a0), [c1d0c48] "m"(b8e3f0_c1d0c48), [c1d0c65] "m"(b8e3f0_c1d0c65), [c1d0c16] "m"(b8e3f0_c1d0c16)
+      : "memory");
 }
+#else
+#error "system_realloc: clang naked draft required"
+#endif
+
 
 uint32_t system_get_used_memory_size(uint32_t *output)
 {

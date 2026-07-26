@@ -4485,84 +4485,69 @@ void FUN_00046f10(int16_t type __attribute__((unused)), int unit_handle __attrib
 
 /* --- ai_communication.obj orphan shells (2026-07-26) --- */
 
-/* orphan 0x48e90 */
+/* ai_debug_initialize (0x48e90) — XBE naked draft (batch 92). */
+#if defined(__clang__)
+static void *(*const b48e90_memset)(void *, int, unsigned int) = csmemset;
+static void * (*const b48e90_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
+static void (*const b48e90_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b48e90_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void ai_debug_initialize(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  csmemset((void *)0x005ac9c0, 0, 0x00085b2c);
-  /* mem[0x005ac9f8] = 0xffffffff */
-  /* mem[0x005ac9f4] = 0xffffffff */
-  /* mem[0x005acab4] = 1 */
-  /* relift: relift: mov byte ptr [0x5aca65], 1 */
-  debug_malloc(0x00657c00, 0, (char *)0x0025ab74, 147);
-  /* mem[0x00331f58] = eax */
-  /* test eax, eax -> jne 0x48f16 */
-  debug_malloc(0x00394f80, eax, (char *)0x0025ab74, 148);
-  /* mem[0x00331f5c] = eax */
-  /* test ecx, ecx -> je 0x48f24 */
-  /* test eax, eax -> jne 0x48f44 */
-  display_assert((char *)0x0025ab48, (char *)0x0025ab74, 150, 0);
-  system_exit(0);
-  /* test eax, eax -> je 0x48f76 */
-  debug_free((void *)(uintptr_t)eax, (char *)0x0025ab74, 160);
-  /* mem[0x00331f58] = 0 */
-  /* test eax, eax -> je 0x48f9c */
-  debug_free((void *)(uintptr_t)eax, (char *)0x0025ab74, 166);
-  /* mem[0x00331f5c] = 0 */
-  FUN_0018e3b0();
-  /* test eax, eax -> je 0x48fe3 */
-  /* cmp ecx, -1 -> je 0x48fe3 */
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  csstrncpy((char *)0x005ac9d2, (char *)(uintptr_t)eax, 32);
-  /* relift: relift: mov byte ptr [0x5ac9f1], 0 */
-  csstrcpy((char *)0x005ac9d2, (char *)0x0025386f);
-  /* test eax, eax -> jne 0x49029 */
-  display_assert((char *)0x0025abac, (char *)0x0025ab74, 208, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)eax, 0, 0x00657c00);
-  /* test eax, eax -> jne 0x49067 */
-  display_assert((char *)0x0025ab94, (char *)0x0025ab74, 211, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)ecx, 0, 0x00394f80);
-  /* relift: cmp dword ptr [ecx + edx], edi -> jne 0x490b0 */
-  /* test dl, dl -> je 0x490f0 */
-  /* relift: cmp dword ptr [eax - 4], edx -> jne 0x490f0 */
-  /* cmp edx, esi -> jle 0x490f0 */
-  /* cmp (int16_t)ecx, 0x20 -> jl 0x490d7 */
-  /* cmp (int16_t)edi, -1 -> jne 0x49109 */
-  /* cmp edi, esi -> jne 0x49152 */
-  /* test (char)ebx, (char)ebx -> je 0x4916a */
-  /* cmp (int16_t)edx, -1 -> jne 0x49161 */
-  /* test (char)ebx, (char)ebx -> jne 0x49161 */
-  /* cmp (int16_t)ecx, 0x20 -> jl 0x49130 */
-  /* cmp (int16_t)edx, -1 -> jne 0x491d7 */
-  /* test (char)eax, (char)eax -> jne 0x491b3 */
-  display_assert((char *)0x0025abc0, (char *)0x0025ab74, 291, 0);
-  system_exit(0);
-  /* relift: cmp eax, dword ptr [ebp - 4] -> jge 0x491c1 */
-  /* cmp (int16_t)edi, 0x20 -> jl 0x49184 */
-  /* cmp (int16_t)edx, -1 -> je 0x49212 */
-  csmemset((void *)(uintptr_t)esi, 0, 0);
-  game_time_get();
-  /* cmp eax, esi -> je 0x4926a */
-  /* mem[0x005ac9f4] = esi */
-  /* relift: relift: mov byte ptr [0x629d40], 0 */
-  csmemset((void *)0x00629d44, 0, 1648);
-  csmemset((void *)0x0062a3b4, 0, 32768);
-  ai_debug_select_actor(0, 0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl $0x85b2c\n\t"
+      "pushl $0\n\t"
+      "pushl $0x5ac9c0\n\t"
+      "call *%[memset]\n\t"
+      "movl 0x331f58, %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0xffffffff, 0x5ac9f8\n\t"
+      "movl $0xffffffff, 0x5ac9f4\n\t"
+      "movl $1, 0x5acab4\n\t"
+      "movb $1, 0x5aca65\n\t"
+      "jne .Lai_debug_initialize_1\n\t"
+      "pushl $0x93\n\t"
+      "pushl $0x25ab74\n\t"
+      "pushl $0\n\t"
+      "pushl $0x657c00\n\t"
+      "call *%[c8ee60]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%eax, 0x331f58\n\t"
+      ".Lai_debug_initialize_1:\n\t"
+      "movl 0x331f5c, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lai_debug_initialize_2\n\t"
+      "pushl $0x94\n\t"
+      "pushl $0x25ab74\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x394f80\n\t"
+      "call *%[c8ee60]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%eax, 0x331f5c\n\t"
+      ".Lai_debug_initialize_2:\n\t"
+      "movl 0x331f58, %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lai_debug_initialize_3\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lai_debug_initialize_4\n\t"
+      ".Lai_debug_initialize_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x96\n\t"
+      "pushl $0x25ab74\n\t"
+      "pushl $0x25ab48\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lai_debug_initialize_4:\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b48e90_memset), [c8ee60] "m"(b48e90_c8ee60), [assert] "m"(b48e90_assert), [exitfn] "m"(b48e90_exitfn)
+      : "memory");
 }
+#else
+#error "ai_debug_initialize: clang naked draft required"
+#endif
+

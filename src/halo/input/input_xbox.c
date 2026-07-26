@@ -467,39 +467,70 @@ void input_open_state_file(void)
   }
 }
 
-/* input_state_process_packet (0xce620)
- * Dispatch one input_gamepad_state packet according to the current input
- * state mode:
- *   mode 3 (record)  — write packet to the state file
- *   mode 4 (playback)— read  packet from the state file
- *   mode 5 (loop)    — delegate to FUN_000ce530 for loop-playback handling */
-void input_state_process_packet(void *state)
+/* input_state_process_packet (0xce620) — XBE naked draft (batch 92). */
+#if defined(__clang__)
+static void (*const bce620_cce530)(void *state) = FUN_000ce530;
+static int __stdcall (*const bce620_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = ReadFile;
+static int __stdcall (*const bce620_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = WriteFile;
+
+__attribute__((naked, noinline))
+void input_state_process_packet(void *state __attribute__((unused)))
 {
-  uint32_t bytes_transferred;
-  switch (*input_state_mode()) {
-  case 3:
-    bytes_transferred = 0;
-    WriteFile(*input_state_file_handle(), state, sizeof(input_gamepad_state),
-              &bytes_transferred, NULL);
-    break;
-  case 4:
-    bytes_transferred = 0;
-    ReadFile(*input_state_file_handle(), state, sizeof(input_gamepad_state),
-             &bytes_transferred, NULL);
-#ifdef DECOMP_CUSTOM
-    /* core-loop: recording exhausted (EOF) and a core is loaded -> request a
-     * core reload. The load-core dispatch in main_loop then rewinds playback to
-     * packet 0, so the stored input re-executes. No player death required. */
-    if (core_loop_enabled && bytes_transferred == 0 && core_name[0]) {
-      game_state_load_core_pending = 1;
-    }
-#endif
-    break;
-  case 5:
-    FUN_000ce530(state);
-    break;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x46b818, %%eax\n\t"
+      "subl $3, %%eax\n\t"
+      "je .Linput_state_process_packet_2\n\t"
+      "decl %%eax\n\t"
+      "je .Linput_state_process_packet_1\n\t"
+      "decl %%eax\n\t"
+      "jne .Linput_state_process_packet_3\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cce530]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Linput_state_process_packet_1:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl 0x46b814, %%eax\n\t"
+      "pushl $0\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x28\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "call *%[c1d13c9]\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Linput_state_process_packet_2:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl 0x46b814, %%eax\n\t"
+      "pushl $0\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x28\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "call *%[c1d14b6]\n\t"
+      ".Linput_state_process_packet_3:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cce530] "m"(bce620_cce530), [c1d13c9] "m"(bce620_c1d13c9), [c1d14b6] "m"(bce620_c1d14b6)
+      : "memory");
 }
+#else
+#error "input_state_process_packet: clang naked draft required"
+#endif
+
 
 /* FUN_000cf3e0 (0xcf3e0)
  * Remaps a short value from range [-param_2..param_2] to

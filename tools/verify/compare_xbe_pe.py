@@ -1120,6 +1120,19 @@ def main() -> int:
         ("actor_move_animation_impulse", 0x2a7e0, 0x2a85d),
         ("actor_action_handle_berserk_transition", 0x20470, 0x204e6),
         ("game_engine_player_event", 0xad0c0, 0xad135),
+        # gameplay wave 92 (2026-07-26) — structures/memory/AI Capstone weaks
+        ("FUN_00195650", 0x195650, 0x1956c7),
+        ("hud_find_nav_point_by_name", 0xd5ec0, 0xd5f38),
+        ("FUN_0011d010", 0x11d010, 0x11d089),
+        ("system_realloc", 0x8e3f0, 0x8e468),
+        ("FUN_000151b0", 0x151b0, 0x15248),
+        ("scenario_location_potentially_visible", 0x18e9b0, 0x18ea41),
+        ("FUN_0011c210", 0x11c210, 0x11c282),
+        ("first_person_weapon_get_local_index", 0xdd110, 0xdd184),
+        ("FUN_0011a560", 0x11a560, 0x11a5ca),
+        ("ai_debug_initialize", 0x48e90, 0x48f45),
+        ("input_state_process_packet", 0xce620, 0xce688),
+        ("cluster_partition_iter_first", 0x191a50, 0x191ac2),
     ]
 
     xbe = Xbe.from_file(args.xbe)

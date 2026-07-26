@@ -1882,48 +1882,73 @@ void FUN_00015150(int actor_handle)
   }
 }
 
-/* FUN_000151b0 (0x151b0)
- * Advance actor look timers and conditionally start the unit running blindly.
- *
- * Increments actor+0xb4 (look frame count).  Decrements actor+0x9c if > 0.
- * Decrements actor+0x9e if > 0; when it reaches exactly 0 AND the actor has
- * a unit (actor+0x18 != -1) AND actor+0xa8 is in [9, 12], calls
- * unit_start_running_blindly.  If actor+0xa8 > 0, sets actor+0x39c to
- * game_time_get() + 0x2ee.
- *
- * Confirmed: INC EDX; MOV dword ptr [ESI+0xb4],EDX at 0x151d8/0x151dc.
- * Confirmed: TEST AX,AX / JLE; DEC AX; MOV word ptr [ESI+0x9c],AX at
- *   0x151d9-0x151e5 — decrement 0x9c if > 0.
- * Confirmed: MOV AX,[ESI+0x9e] / TEST / JLE; DEC AX; TEST AX,AX / JNZ at
- *   0x151ee-0x15205 — decrement 0x9e, proceed only if result == 0.
- * Confirmed: CMP AX,0x9 / JL; CMP AX,0xC / JG at 0x15216-0x15220.
- * Confirmed: CALL 0xb5aa0 (game_time_get); ADD EAX,0x2ee;
- *   MOV dword ptr [ESI+0x39c],EAX at 0x15235-0x1523f.
- * Inferred: actor+0x9c = secondary look cooldown (int16_t).
- * Inferred: actor+0x39c = next-look-allowed time (int). */
-void FUN_000151b0(int actor_handle)
+/* FUN_000151b0 (0x151b0) — XBE naked draft (batch 92). */
+#if defined(__clang__)
+static void *(*const b151b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b151b0_c1ac450)(int unit_handle) = unit_start_running_blindly;
+static int (*const b151b0_gtime)(void) = game_time_get;
+
+__attribute__((naked, noinline))
+void FUN_000151b0(int actor_handle __attribute__((unused)))
 {
-  short counter;
-  int timer;
-  char *actor;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  *(int *)(actor + 0xb4) = *(int *)(actor + 0xb4) + 1;
-  if (*(short *)(actor + 0x9c) > 0) {
-    *(short *)(actor + 0x9c) = *(short *)(actor + 0x9c) - 1;
-  }
-  if (*(short *)(actor + 0x9e) > 0) {
-    counter = *(short *)(actor + 0x9e) - 1;
-    *(short *)(actor + 0x9e) = counter;
-    if (counter == 0 && *(int *)(actor + 0x18) != -1 &&
-        *(short *)(actor + 0xa8) >= 9 && *(short *)(actor + 0xa8) <= 0xc) {
-      unit_start_running_blindly(*(int *)(actor + 0x18));
-    }
-  }
-  if (*(short *)(actor + 0xa8) > 0) {
-    timer = game_time_get();
-    *(int *)(actor + 0x39c) = timer + 0x2ee;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0xb4(%%esi), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x9c(%%esi), %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "incl %%edx\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movl %%edx, 0xb4(%%esi)\n\t"
+      "jle .LFUN_000151b0_1\n\t"
+      "decl %%eax\n\t"
+      "movw %%ax, 0x9c(%%esi)\n\t"
+      ".LFUN_000151b0_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x9e(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jle .LFUN_000151b0_2\n\t"
+      "decl %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movw %%ax, 0x9e(%%esi)\n\t"
+      "jne .LFUN_000151b0_2\n\t"
+      "movl 0x18(%%esi), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_000151b0_2\n\t"
+      "movw 0xa8(%%esi), %%ax\n\t"
+      "cmpw $9, %%ax\n\t"
+      "jl .LFUN_000151b0_2\n\t"
+      "cmpw $0xc, %%ax\n\t"
+      "jg .LFUN_000151b0_2\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ac450]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_000151b0_2:\n\t"
+      "cmpw $0, 0xa8(%%esi)\n\t"
+      "jle .LFUN_000151b0_3\n\t"
+      "call *%[gtime]\n\t"
+      "addl $0x2ee, %%eax\n\t"
+      "movl %%eax, 0x39c(%%esi)\n\t"
+      ".LFUN_000151b0_3:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b151b0_dget), [c1ac450] "m"(b151b0_c1ac450), [gtime] "m"(b151b0_gtime)
+      : "memory");
 }
+#else
+#error "FUN_000151b0: clang naked draft required"
+#endif
+
 
 /* FUN_00015250 (0x15250)
  * Classify the actor's current looking state and configure the firing-position

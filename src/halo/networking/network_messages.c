@@ -392,33 +392,70 @@ int FUN_0011a430(int *state __attribute__((unused)), short count __attribute__((
 #endif
 
 
-/* decode_byte — read a single byte from the decode buffer (0x11a560).
- * Source: data_encoding.c. */
-__declspec(noinline) unsigned char FUN_0011a560(int *state)
-{
-  int new_offset;
-  unsigned char *ptr;
+/* FUN_0011a560 (0x11a560) — XBE naked draft (batch 92). */
+#if defined(__clang__)
+static void (*const b11a560_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11a560_exitfn)(int) = system_exit;
 
-  if (((state == NULL) || (*state == 0) || (state[1] < 0)) ||
-      (state[2] < state[1])) {
-    display_assert("state && state->buffer && state->offset>=0 && "
-                   "state->offset<=state->buffer_size",
-                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0x100, 1);
-    system_exit(-1);
-  }
-  new_offset = state[1] + 1;
-  if ((state[2] < new_offset) || ((char)state[3] != '\0')) {
-    *(unsigned char *)(state + 3) = 1;
-  }
-  else {
-    ptr = (unsigned char *)(*state + state[1]);
-    state[1] = new_offset;
-    if (ptr != NULL) {
-      return *ptr;
-    }
-  }
-  return 0;
+__attribute__((naked, noinline))
+unsigned char FUN_0011a560(int *state __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_0011a560_1\n\t"
+      "cmpl $0, (%%esi)\n\t"
+      "je .LFUN_0011a560_1\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_0011a560_1\n\t"
+      "cmpl 0x8(%%esi), %%eax\n\t"
+      "jle .LFUN_0011a560_2\n\t"
+      ".LFUN_0011a560_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x100\n\t"
+      "pushl $0x28eef8\n\t"
+      "pushl $0x28f058\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011a560_2:\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "leal 0x1(%%ecx), %%edx\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "jg .LFUN_0011a560_3\n\t"
+      "movb 0xc(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0011a560_3\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%edx, 0x4(%%esi)\n\t"
+      "je .LFUN_0011a560_4\n\t"
+      "movzbl (%%eax), %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011a560_3:\n\t"
+      "movb $1, 0xc(%%esi)\n\t"
+      ".LFUN_0011a560_4:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11a560_assert), [exitfn] "m"(b11a560_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_0011a560: clang naked draft required"
+#endif
+
 
 /* FUN_0011a5d0 (0x11a5d0) — XBE naked draft (batch 90). */
 #if defined(__clang__)
@@ -2691,42 +2728,73 @@ void FUN_0011c1e0(int *ptr)
   *ptr = 0;
 }
 
-/* lra_cache_validate_block — validate a block header (0x11c210).
- * Register args: @EBX = cache, @ESI = block header. */
-void FUN_0011c210(int cache, int block)
-{
-  unsigned int cache_size;
-  int block_size;
-  int block_offset;
-  int next_offset;
+/* FUN_0011c210 (0x11c210) — XBE naked draft (batch 92). */
+#if defined(__clang__)
+static char * (*const b11c210_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b11c210_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11c210_exitfn)(int) = system_exit;
+static void (*const b11c210_c11c282)(void) = (void (*)(void))FUN_0011c290;
 
-  if ((((*(unsigned int *)(block + 4) & 0xfffffffc) == 0x41626c68) &&
-       (block_size = *(int *)(block + 8), block_size >= 0)) &&
-      (cache_size = *(unsigned int *)(cache + 0x20),
-       block_size < (int)cache_size)) {
-    block_offset = block - *(int *)(cache + 0x24);
-    if ((block_offset >= 0) &&
-        (block_size + block_offset <= (int)cache_size)) {
-      if (*(int *)(block + 0xc) == 0) {
-        next_offset = 0;
-      }
-      else {
-        next_offset = *(int *)(block + 0xc) - *(int *)(cache + 0x24);
-        if (next_offset < 0) goto corrupt;
-      }
-      if (next_offset + 0x10U <= cache_size) {
-        return;
-      }
-    }
-  }
-corrupt:
-  display_assert(
-    csprintf(error_string_buffer,
-             "lra cache %s @%p block @%p appears to be corrupt",
-             (char *)cache, (void *)cache, (void *)block),
-    "c:\\halo\\SOURCE\\memory\\lra_cache.c", 0x18e, 1);
-  system_exit(-1);
+__attribute__((naked, noinline))
+void FUN_0011c210(int cache __attribute__((unused)), int block __attribute__((unused)))
+{
+  __asm__ volatile(
+      "movl 0x4(%%esi), %%eax\n\t"
+      "andl $0xfffffffc, %%eax\n\t"
+      "cmpl $0x41626c68, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_0011c210_1\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jl .LFUN_0011c210_1\n\t"
+      "movl 0x20(%%ebx), %%edi\n\t"
+      "cmpl %%edi, %%ecx\n\t"
+      "jge .LFUN_0011c210_1\n\t"
+      "movl 0x24(%%ebx), %%edx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "subl %%edx, %%eax\n\t"
+      "js .LFUN_0011c210_1\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "cmpl %%edi, %%ecx\n\t"
+      "jg .LFUN_0011c210_1\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0011c210_10000\n\t"
+      "subl %%edx, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_0011c210_1\n\t"
+      "addl $0x10, %%eax\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "jbe .LFUN_0011c210_2\n\t"
+      ".LFUN_0011c210_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x18e\n\t"
+      "pushl $0x28f768\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x28f734\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011c210_2:\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      ".LFUN_0011c210_10000:\n\t"
+      "jmp *%[c11c282]\n\t"
+      :
+      : [c8d9d0] "m"(b11c210_c8d9d0), [assert] "m"(b11c210_assert), [exitfn] "m"(b11c210_exitfn), [c11c282] "m"(b11c210_c11c282)
+      : "memory");
 }
+#else
+#error "FUN_0011c210: clang naked draft required"
+#endif
+
 
 /* lra_cache_validate — validate cache struct integrity (0x11c290).
  * Register arg: @EAX = cache. */

@@ -2929,41 +2929,72 @@ valid:
           (1u << (cluster_index & 0x1f))) != 0;
 }
 
-/* 0x18e9b0 — test whether a BSP location's cluster is in the combined
- * potentially-visible set for all players. Asserts the location's cluster_index
- * (location+4, int16) is in [0, global_structure_bsp->clusters.count). Then
- * fetches the combined PVS bit vector (players_get_combined_pvs) and returns
- * the cluster's bit. This is the all-players variant of
- * scenario_location_potentially_visible_local (which uses the local-player
- * PVS); its assert line is 0x1ef vs 0x1e7. cdecl: location [EBP+8]. Returns
- * bool. */
-bool scenario_location_potentially_visible(void *location)
+/* scenario_location_potentially_visible (0x18e9b0) — XBE naked draft (batch 92). */
+#if defined(__clang__)
+static void (*const b18e9b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b18e9b0_exitfn)(int) = system_exit;
+static void * (*const b18e9b0_cba6c0)(void) = players_get_combined_pvs;
+
+__attribute__((naked, noinline))
+bool scenario_location_potentially_visible(void *location __attribute__((unused)))
 {
-  int16_t cluster_index;
-  void *pvs;
-
-  if (*(int16_t *)((char *)location + 4) >= 0) {
-    if (!global_structure_bsp) {
-      display_assert("global_structure_bsp",
-                     "c:\\halo\\SOURCE\\scenario\\scenario.c", 0xc5, 1);
-      system_exit(-1);
-    }
-    if ((int)*(int16_t *)((char *)location + 4) <
-        *(int *)((char *)global_structure_bsp + 0x134))
-      goto valid;
-  }
-  display_assert(
-    "location->cluster_index>=0 && "
-    "location->cluster_index<global_structure_bsp_get()->clusters.count",
-    "c:\\halo\\SOURCE\\scenario\\scenario.c", 0x1ef, 1);
-  system_exit(-1);
-
-valid:
-  cluster_index = *(int16_t *)((char *)location + 4);
-  pvs = players_get_combined_pvs();
-  return (*(uint32_t *)((char *)pvs + ((int)cluster_index >> 5) * 4) &
-          (1u << (cluster_index & 0x1f))) != 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpw $0, 0x4(%%esi)\n\t"
+      "jl .Lscenario_location_potentially_visible_2\n\t"
+      "movl 0x5064e0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lscenario_location_potentially_visible_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xc5\n\t"
+      "pushl $0x2b2038\n\t"
+      "pushl $0x2b206c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lscenario_location_potentially_visible_1:\n\t"
+      "movswl 0x4(%%esi), %%eax\n\t"
+      "movl 0x5064e0, %%ecx\n\t"
+      "cmpl 0x134(%%ecx), %%eax\n\t"
+      "jl .Lscenario_location_potentially_visible_3\n\t"
+      ".Lscenario_location_potentially_visible_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1ef\n\t"
+      "pushl $0x2b2038\n\t"
+      "pushl $0x2b0f40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lscenario_location_potentially_visible_3:\n\t"
+      "movswl 0x4(%%esi), %%esi\n\t"
+      "call *%[cba6c0]\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "movl %%esi, %%edx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%esi\n\t"
+      "shll %%cl, %%esi\n\t"
+      "sarl $5, %%edx\n\t"
+      "movl (%%eax,%%edx,4), %%eax\n\t"
+      "andl %%esi, %%eax\n\t"
+      "negl %%eax\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "negl %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b18e9b0_assert), [exitfn] "m"(b18e9b0_exitfn), [cba6c0] "m"(b18e9b0_cba6c0)
+      : "memory");
 }
+#else
+#error "scenario_location_potentially_visible: clang naked draft required"
+#endif
+
 
 /* 0x18ea50 — find a named entry in a scenario tag's name block (param_1+0x204,
  * element size 0x24) by csstrcmp against `name`; returns the 0-based index or

@@ -3177,28 +3177,70 @@ void cluster_partition_remove_object(void *partition __attribute__((unused)), in
 #endif
 
 
-int cluster_partition_iter_first(void *partition, int *state,
-                                 int16_t cluster_idx)
+/* cluster_partition_iter_first (0x191a50) — XBE naked draft (batch 92). */
+#if defined(__clang__)
+static void * (*const b191a50_c18e3c0)(void) = scenario_get;
+static void (*const b191a50_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b191a50_exitfn)(int) = system_exit;
+static void *(*const b191a50_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+int cluster_partition_iter_first(void *partition __attribute__((unused)), int *state __attribute__((unused)), int16_t cluster_idx __attribute__((unused)))
 {
-  if (cluster_idx < 0 ||
-      cluster_idx >= *(int *)((char *)scenario_get() + 0x134)) {
-    display_assert("cluster_index>=0 && "
-                   "cluster_index<global_structure_bsp_get()->clusters.count",
-                   "c:\\halo\\SOURCE\\structures\\cluster_partitions.c", 0xd5,
-                   true);
-    system_exit(-1);
-  }
-
-  *state = *(int *)(*(int *)partition + cluster_idx * 4);
-  if (*state != -1) {
-    char *cluster_reference =
-      datum_get(*(void **)((char *)partition + 4), *state);
-    *state = *(int *)(cluster_reference + 8);
-    return *(int *)(cluster_reference + 4);
-  }
-
-  return -1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x10(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lcluster_partition_iter_first_1\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl 0x134(%%eax), %%edx\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jl .Lcluster_partition_iter_first_2\n\t"
+      ".Lcluster_partition_iter_first_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd5\n\t"
+      "pushl $0x2b26b8\n\t"
+      "pushl $0x2b2668\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcluster_partition_iter_first_2:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "movswl %%si, %%edx\n\t"
+      "movl (%%eax,%%edx,4), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "movl 0x4(%%ecx), %%ecx\n\t"
+      "je .Lcluster_partition_iter_first_3\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ecx, (%%esi)\n\t"
+      "movl 0x4(%%eax), %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcluster_partition_iter_first_3:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e3c0] "m"(b191a50_c18e3c0), [assert] "m"(b191a50_assert), [exitfn] "m"(b191a50_exitfn), [dget] "m"(b191a50_dget)
+      : "memory");
 }
+#else
+#error "cluster_partition_iter_first: clang naked draft required"
+#endif
+
 
 /* leaf_map_node_stack_push (FUN_00191ad0, 0x191ad0)
  *
@@ -3976,43 +4018,73 @@ void FUN_00195550(short surface_count __attribute__((unused)), int *out_indices 
 #endif
 
 
-/* 0x195650 - copy a sorted set of structure-surface tag elements to a buffer.
- *
- * Sorts the caller-supplied index array (indices[count]) ascending in place via
- * the generic sort FUN_00091ef0 with comparator FUN_00195530, then walks the
- * sorted indices and copies each surface's 6-byte (short[3]) tag element from
- * the scenario structure-BSP surfaces tag_block at scenario+0xf8 into out
- * (stride 6 bytes).  Mirrors the element copy in FUN_00195550.
- *
- * Register ABI (from prologue at 0x195650): MOV ESI,EAX / MOV EDI,ECX /
- * MOV BX,DX -> EAX=out, ECX=indices, EDX=count(int16).  All three args are
- * register-passed; there are no stack args.  The loop counter is the unsigned
- * 16-bit count (MOVZX EBX,BX); the copy is exactly three 16-bit moves. */
-void FUN_00195650(void *out, int *indices, short count)
-{
-  int scenario;
-  int *block;
-  uint16_t *elem;
-  uint16_t *dst;
-  int remaining;
+/* FUN_00195650 (0x195650) — XBE naked draft (batch 92). */
+#if defined(__clang__)
+static void * (*const b195650_c18e3c0)(void) = scenario_get;
+static void (*const b195650_c91ef0)(int *keys, int count, int (*cmp)(int, int)) = FUN_00091ef0;
+static void *(*const b195650_elem)(void *, int, int) = tag_block_get_element;
 
-  scenario = (int)scenario_get();
-  FUN_00091ef0(indices, count, (int (*)(int, int))FUN_00195530);
-  if (0 < count) {
-    block = (int *)(scenario + 0xf8);
-    dst = (uint16_t *)out;
-    remaining = (unsigned short)count;
-    do {
-      elem = (uint16_t *)tag_block_get_element(block, *indices, 6);
-      dst[0] = elem[0];
-      dst[1] = elem[1];
-      dst[2] = elem[2];
-      indices = indices + 1;
-      dst = dst + 3;
-      remaining = remaining - 1;
-    } while (remaining != 0);
-  }
+__attribute__((naked, noinline))
+void FUN_00195650(void *out __attribute__((unused)), int *indices __attribute__((unused)), int16_t count __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl %%ecx, %%edi\n\t"
+      "movw %%dx, %%bx\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "pushl $0x195530\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c91ef0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jle .LFUN_00195650_2\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "addl $0xf8, %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movzwl %%bx, %%ebx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00195650_1:\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "pushl $6\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movw (%%eax), %%cx\n\t"
+      "movw %%cx, (%%esi)\n\t"
+      "movw 0x2(%%eax), %%dx\n\t"
+      "movw %%dx, 0x2(%%esi)\n\t"
+      "movw 0x4(%%eax), %%ax\n\t"
+      "movw %%ax, 0x4(%%esi)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "addl $4, %%edi\n\t"
+      "addl $6, %%esi\n\t"
+      "decl %%ebx\n\t"
+      "jne .LFUN_00195650_1\n\t"
+      ".LFUN_00195650_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e3c0] "m"(b195650_c18e3c0), [c91ef0] "m"(b195650_c91ef0), [elem] "m"(b195650_elem)
+      : "memory");
 }
+#else
+#error "FUN_00195650: clang naked draft required"
+#endif
+
 
 /* FUN_001956d0 (0x1956d0) — XBE naked draft (batch 88). */
 #if defined(__clang__)

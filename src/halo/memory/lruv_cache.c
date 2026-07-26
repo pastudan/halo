@@ -1066,50 +1066,74 @@ typedef struct {
   char unk_14[8]; ///< offset=0x14
 } lruv_cache_block_t;
 
-/* 0x11d010: lru_cache block-header integrity validator.
- * lruv_cache.obj (asserts against c:\halo\SOURCE\memory\lru_cache.c line
- * 0x156=342). cdecl(cache, entry). Verified against disassembly.
- *
- * Passes silently when the block header is intact:
- *   - signature word at entry+4, low bit (used/free flag) masked off, equals
- *     0x55626c6a,
- *   - the next-block link at entry+0xc is 0,
- *   - the byte offset (entry - cache+0x34) is >= 0 and cache+0x24 plus that
- *     offset does not exceed cache+0x28 (block lies inside the data region),
- * and
- *   - the page/count field at entry+8 is (unsigned) below cache+0x3c.
- * On any failure it formats the "appears to be corrupt" message into the shared
- * scratch buffer at 0x5ab100 and hits display_assert + system_exit(-1). Note
- * the assert nesting: the file/line/halt args (line 0x156, halt 1) belong to
- * display_assert and are pushed before csprintf's 5 args (Ghidra cdecl arg
- * mis-grouping); the trailing ADD ESP,0x14 confirms the split.
- *
- * The call inside the OK branch is a literal CALL 0x11d010 (self-address) with
- * cdecl args (cache, entry) — verified at 0x11d031. A block that passes the
- * header checks re-satisfies them on re-entry, so this cannot be functional
- * recursion; it is MSVC /OPT:ICF COMDAT folding of a byte-identical sibling
- * validator onto this address. Reproduced as a self-call to match the bytes. */
-void FUN_0011d010(int cache, void *entry)
-{
-  int offset;
+/* FUN_0011d010 (0x11d010) — XBE naked draft (batch 92). */
+#if defined(__clang__)
+static void (*const b11d010_c11d010)(int cache, void *entry) = FUN_0011d010;
+static char * (*const b11d010_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b11d010_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11d010_exitfn)(int) = system_exit;
 
-  if (((*(unsigned int *)((char *)entry + 4) & 0xfffffffe) == 0x55626c6a) &&
-      (*(int *)((char *)entry + 0xc) == 0)) {
-    FUN_0011d010(cache, entry);
-    offset = (int)entry - *(int *)(cache + 0x34);
-    if ((offset >= 0) &&
-        (*(int *)(cache + 0x24) + offset <= *(int *)(cache + 0x28)) &&
-        (*(unsigned int *)((char *)entry + 8) <
-         *(unsigned int *)(cache + 0x3c))) {
-      return;
-    }
-  }
-  display_assert(csprintf((char *)0x5ab100,
-                          "lru cache %s @%p block @%p appears to be corrupt",
-                          cache, cache, entry),
-                 "c:\\halo\\SOURCE\\memory\\lru_cache.c", 0x156, 1);
-  system_exit(-1);
+__attribute__((naked, noinline))
+void FUN_0011d010(int cache __attribute__((unused)), void *entry __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "movl 0x4(%%edi), %%eax\n\t"
+      "andl $0xfffffffe, %%eax\n\t"
+      "cmpl $0x55626c6a, %%eax\n\t"
+      "jne .LFUN_0011d010_1\n\t"
+      "movl 0xc(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0011d010_1\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c11d010]\n\t"
+      "movl 0x34(%%esi), %%ecx\n\t"
+      "movl %%edi, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "js .LFUN_0011d010_1\n\t"
+      "movl 0x24(%%esi), %%ecx\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "cmpl 0x28(%%esi), %%ecx\n\t"
+      "jg .LFUN_0011d010_1\n\t"
+      "movl 0x8(%%edi), %%edx\n\t"
+      "cmpl 0x3c(%%esi), %%edx\n\t"
+      "jb .LFUN_0011d010_2\n\t"
+      ".LFUN_0011d010_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x156\n\t"
+      "pushl $0x28fa1c\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28f9e8\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011d010_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11d010] "m"(b11d010_c11d010), [c8d9d0] "m"(b11d010_c8d9d0), [assert] "m"(b11d010_assert), [exitfn] "m"(b11d010_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_0011d010: clang naked draft required"
+#endif
+
 
 /* 0x11d110: Allocate and initialize an lru_cache. Rounds the per-element size
  * (block_size + 0x10 block header) up to a 4-byte multiple, derives the

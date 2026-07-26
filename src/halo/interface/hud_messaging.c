@@ -1557,36 +1557,75 @@ LAB_000d5e65_skip:
   }
   return;
 }
-/* hud_find_nav_point_by_name (0xd5ec0)
- * Search the nav point definitions for a matching name, return its index. */
-short hud_find_nav_point_by_name(const char *param_1)
-{
-  short found;
-  short i;
-  int element;
-  int result;
+/* hud_find_nav_point_by_name (0xd5ec0) — XBE naked draft (batch 92). */
+#if defined(__clang__)
+static void *(*const bd5ec0_elem)(void *, int, int) = tag_block_get_element;
+static int (*const bd5ec0_c1dd801)(const char *a, const char *b) = crt_stricmp;
+static void (*const bd5ec0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
-  found = -1;
-  if (*(int *)0x46bd0c != 0) {
-    i = 0;
-    if (*(int *)(*(int *)0x46bd0c + 0x160) > 0) {
-      do {
-        element = (int)tag_block_get_element((void *)(*(int *)0x46bd0c + 0x160),
-                                             (int)i, 0x68);
-        result = csstricmp(param_1, (const char *)element);
-        if (result == 0) {
-          found = i;
-          if (i != -1)
-            return i;
-          break;
-        }
-        i = i + 1;
-      } while ((int)i < *(int *)(*(int *)0x46bd0c + 0x160));
-    }
-  }
-  error(2, "could not find nav point");
-  return found;
+__attribute__((naked, noinline))
+short hud_find_nav_point_by_name(const char *param_1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x46bd0c, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "je .Lhud_find_nav_point_by_name_3\n\t"
+      "movl 0x160(%%eax), %%ecx\n\t"
+      "addl $0x160, %%eax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .Lhud_find_nav_point_by_name_3\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      ".Lhud_find_nav_point_by_name_1:\n\t"
+      "pushl $0x68\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1dd801]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lhud_find_nav_point_by_name_2\n\t"
+      "movl 0x46bd0c, %%eax\n\t"
+      "movl 0x160(%%eax), %%edx\n\t"
+      "incl %%esi\n\t"
+      "addl $0x160, %%eax\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jl .Lhud_find_nav_point_by_name_1\n\t"
+      "jmp .Lhud_find_nav_point_by_name_3\n\t"
+      ".Lhud_find_nav_point_by_name_2:\n\t"
+      "cmpw $-1, %%si\n\t"
+      "movl %%esi, %%ebx\n\t"
+      "jne .Lhud_find_nav_point_by_name_4\n\t"
+      ".Lhud_find_nav_point_by_name_3:\n\t"
+      "pushl $0x281d14\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lhud_find_nav_point_by_name_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%bx, %%ax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(bd5ec0_elem), [c1dd801] "m"(bd5ec0_c1dd801), [c8f390] "m"(bd5ec0_c8f390)
+      : "memory");
 }
+#else
+#error "hud_find_nav_point_by_name: clang naked draft required"
+#endif
+
 
 /* hud_get_nav_point_data (0xd5f40)
  * Returns pointer to a player's nav point data (0x30 bytes per player). */
