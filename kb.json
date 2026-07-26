@@ -19629,71 +19629,88 @@
         },
         {
           "addr": "0xe19c0",
-          "decl": "void tgaLoad(void);"
+          "decl": "void tgaLoad(void);",
+          "ported": false
         },
         {
           "addr": "0xe1a10",
-          "decl": "void FUN_000e1a10(void);"
+          "decl": "void FUN_000e1a10(void);",
+          "ported": false
         },
         {
           "addr": "0xe1d00",
-          "decl": "void FUN_000e1d00(void);"
+          "decl": "void FUN_000e1d00(void);",
+          "ported": false
         },
         {
           "addr": "0xe1f00",
-          "decl": "void FUN_000e1f00(void);"
+          "decl": "void FUN_000e1f00(void);",
+          "ported": false
         },
         {
           "addr": "0xe1f20",
-          "decl": "void FUN_000e1f20(void);"
+          "decl": "void FUN_000e1f20(void);",
+          "ported": false
         },
         {
           "addr": "0xe2170",
-          "decl": "void FUN_000e2170(void);"
+          "decl": "void FUN_000e2170(void);",
+          "ported": false
         },
         {
           "addr": "0xe21b0",
-          "decl": "void FUN_000e21b0(void);"
+          "decl": "void FUN_000e21b0(void);",
+          "ported": false
         },
         {
           "addr": "0xe21e0",
-          "decl": "void D3DXMatrixIdentity(void);"
+          "decl": "void D3DXMatrixIdentity(void);",
+          "ported": false
         },
         {
           "addr": "0xe2220",
-          "decl": "void SetRenderStateSmart(int state, int value);"
+          "decl": "void SetRenderStateSmart(int state, int value);",
+          "ported": false
         },
         {
           "addr": "0xe2470",
-          "decl": "void SetTextureStageStateSmart(int stage, int state, int value);"
+          "decl": "void SetTextureStageStateSmart(int stage, int state, int value);",
+          "ported": false
         },
         {
           "addr": "0xe2650",
-          "decl": "void FUN_000e2650(void);"
+          "decl": "void FUN_000e2650(void);",
+          "ported": false
         },
         {
           "addr": "0xe2680",
-          "decl": "void FUN_000e2680(void);"
+          "decl": "void FUN_000e2680(void);",
+          "ported": false
         },
         {
           "addr": "0xe2820",
-          "decl": "void FUN_000e2820(void);"
+          "decl": "void FUN_000e2820(void);",
+          "ported": false
         },
         {
           "addr": "0xe2880",
-          "decl": "void FUN_000e2880(void);"
+          "decl": "void FUN_000e2880(void);",
+          "ported": false
         },
         {
           "addr": "0xe28e0",
-          "decl": "void progress_bar_eachframe(void);"
+          "decl": "void progress_bar_eachframe(void);",
+          "ported": false
         },
         {
           "addr": "0xe33a0",
-          "decl": "void FUN_000e33a0(void);"
+          "decl": "void FUN_000e33a0(void);",
+          "ported": false
         },
         {
           "addr": "0xe33e0",
-          "decl": "void FUN_000e33e0(void);"
+          "decl": "void FUN_000e33e0(void);",
+          "ported": false
         }
       ],
       "name": "progress_bar.obj",

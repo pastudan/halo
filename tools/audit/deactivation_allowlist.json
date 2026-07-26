@@ -14215,5 +14215,124 @@
     "object": "devices.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe19c0",
+    "name": "tgaLoad",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe1a10",
+    "name": "FUN_000e1a10",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe1d00",
+    "name": "FUN_000e1d00",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe1f00",
+    "name": "FUN_000e1f00",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe1f20",
+    "name": "FUN_000e1f20",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe2170",
+    "name": "FUN_000e2170",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe21b0",
+    "name": "FUN_000e21b0",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe21e0",
+    "name": "D3DXMatrixIdentity",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe2220",
+    "name": "SetRenderStateSmart",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe2470",
+    "name": "SetTextureStageStateSmart",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe2650",
+    "name": "FUN_000e2650",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe2680",
+    "name": "FUN_000e2680",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe2820",
+    "name": "FUN_000e2820",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe2880",
+    "name": "FUN_000e2880",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe28e0",
+    "name": "progress_bar_eachframe",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe33a0",
+    "name": "FUN_000e33a0",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xe33e0",
+    "name": "FUN_000e33e0",
+    "object": "progress_bar.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
