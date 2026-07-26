@@ -2832,17 +2832,46 @@ void cluster_partition_null_references(int *partition)
   }
 }
 
-int cluster_partition_iter_next(void *partition, int *state)
-{
-  if (*state != -1) {
-    char *cluster_reference =
-      datum_get(*(void **)((char *)partition + 4), *state);
-    *state = *(int *)(cluster_reference + 8);
-    return *(int *)(cluster_reference + 4);
-  }
+/* cluster_partition_iter_next (0x191660) — XBE naked draft (batch 97). */
+#if defined(__clang__)
+static void *(*const b191660_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 
-  return -1;
+__attribute__((naked, noinline))
+int cluster_partition_iter_next(void *partition __attribute__((unused)), int *state __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lcluster_partition_iter_next_1\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ecx, (%%esi)\n\t"
+      "movl 0x4(%%eax), %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcluster_partition_iter_next_1:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b191660_dget)
+      : "memory");
 }
+#else
+#error "cluster_partition_iter_next: clang naked draft required"
+#endif
+
 
 /* Seed-and-advance a cluster iterator (0x191690).
  * Stores cluster_handle into *out_cluster unconditionally; if the handle is
@@ -2929,25 +2958,49 @@ void cluster_partition_copy(void **destination __attribute__((unused)), void **s
 #endif
 
 
-/* 0x191750 - get a pointer to a cluster partition's per-cluster slot.
- * (TU: c:\halo\SOURCE\structures\cluster_partitions.c)
- *
- * Register ABI (prologue at 0x191750): TEST SI,SI and direct use of ESI; the
- * only register arg is cluster_index@<esi> (short). Stack arg: partition
- * ([EBP+0x8]), whose first field (partition[0]) is the per-cluster int array
- * base.  Bounds-checks cluster_index against clusters.count (scenario+0x134)
- * and returns &partition[0][cluster_index]. */
-int *FUN_00191750(short cluster_index /* @<esi> */, int **partition)
+/* FUN_00191750 (0x191750) — XBE naked draft (batch 97). */
+#if defined(__clang__)
+static void * (*const b191750_c18e3c0)(void) = scenario_get;
+static void (*const b191750_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b191750_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int * FUN_00191750(short cluster_index __attribute__((unused)), int **partition __attribute__((unused)))
 {
-  if (cluster_index < 0 ||
-      (int)cluster_index >= *(int *)((char *)scenario_get() + 0x134)) {
-    display_assert(
-        "cluster_index>=0 && cluster_index<global_structure_bsp_get()->clusters.count",
-        "c:\\halo\\SOURCE\\structures\\cluster_partitions.c", 0xd5, true);
-    system_exit(-1);
-  }
-  return *partition + cluster_index;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_00191750_1\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl 0x134(%%eax), %%edx\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jl .LFUN_00191750_2\n\t"
+      ".LFUN_00191750_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd5\n\t"
+      "pushl $0x2b26b8\n\t"
+      "pushl $0x2b2668\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00191750_2:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movswl %%si, %%edx\n\t"
+      "leal (%%ecx,%%edx,4), %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e3c0] "m"(b191750_c18e3c0), [assert] "m"(b191750_assert), [exitfn] "m"(b191750_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00191750: clang naked draft required"
+#endif
+
 
 /* cluster_partition_add_object (0x1917a0) — XBE naked draft (batch 82). */
 #if defined(__clang__)

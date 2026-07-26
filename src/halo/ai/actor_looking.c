@@ -3168,35 +3168,47 @@ void FUN_00015f60(int actor_handle __attribute__((unused)), int *param_2 __attri
 #endif
 
 
-/* actor_replace_prop_handle (0x16000)
- * Replace all references to old_handle in actor prop fields with new_handle.
- *
- * Checks actor+0xd8 (prop field) and actor+0xac (scripted-look prop handle).
- * If new_handle is -1 (invalid datum), also clears the byte flag at actor+0xab.
- *
- * Confirmed: cdecl, three stack args at [EBP+0x8], [EBP+0xC], [EBP+0x10].
- * Confirmed: datum_get(actor_data=DAT_006325a4, actor_handle) at 0x1600e.
- * Confirmed: ADD EAX,0x9c at 0x1601c gives base; [EAX+0x3c]=actor+0xd8,
- *   [EAX+0x10]=actor+0xac, byte [EAX+0x0f]=actor+0xab.
- * Confirmed: CMP [EAX+0x3c],EDX / MOV [EAX+0x3c],ECX at 0x16024-0x1602b.
- * Confirmed: CMP [EAX+0x10],EDX / MOV [EAX+0x10],ECX / CMP ECX,-1 /
- *   MOV byte [EAX+0xf],0 at 0x1602e-0x1603b.
- * Inferred: actor+0xd8 = prop datum handle; actor+0xac = scripted-look prop
- * handle; actor+0xab = scripted-look prop valid flag. */
-void actor_replace_prop_handle(int actor_handle, int old_handle, int new_handle)
+/* actor_replace_prop_handle (0x16000) — XBE naked draft (batch 97). */
+#if defined(__clang__)
+static void *(*const b16000_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void actor_replace_prop_handle(int actor_handle __attribute__((unused)), int old_handle __attribute__((unused)), int new_handle __attribute__((unused)))
 {
-  char *actor;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(int *)(actor + 0xd8) == old_handle) {
-    *(int *)(actor + 0xd8) = new_handle;
-  }
-  if (*(int *)(actor + 0xac) == old_handle) {
-    *(int *)(actor + 0xac) = new_handle;
-    if (new_handle == -1) {
-      *(char *)(actor + 0xab) = 0;
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xd8(%%eax), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "addl $0x9c, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "jne .Lactor_replace_prop_handle_1\n\t"
+      "movl %%ecx, 0x3c(%%eax)\n\t"
+      ".Lactor_replace_prop_handle_1:\n\t"
+      "cmpl %%edx, 0x10(%%eax)\n\t"
+      "jne .Lactor_replace_prop_handle_2\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "movl %%ecx, 0x10(%%eax)\n\t"
+      "jne .Lactor_replace_prop_handle_2\n\t"
+      "movb $0, 0xf(%%eax)\n\t"
+      ".Lactor_replace_prop_handle_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b16000_dget)
+      : "memory");
 }
+#else
+#error "actor_replace_prop_handle: clang naked draft required"
+#endif
+
 
 /* FUN_00016050 (0x16050) — XBE naked draft (batch 75). */
 #if defined(__clang__)

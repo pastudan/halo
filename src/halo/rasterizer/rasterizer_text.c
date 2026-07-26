@@ -2467,28 +2467,51 @@ void rasterizer_text_get_character_position(short index __attribute__((unused)),
 #endif
 
 
-/* rasterizer_text_evict_character: evict a hardware character from the cache.
- * Original ABI: ESI=slot (pointer to character pointer in cache)
- */
-void rasterizer_text_evict_character(int **slot)
+/* rasterizer_text_evict_character (0x183820) — XBE naked draft (batch 97). */
+#if defined(__clang__)
+static void (*const b183820_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b183820_exitfn)(int) = system_exit;
+static void (*const b183820_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+void rasterizer_text_evict_character(int **slot __attribute__((unused)))
 {
-  int *character;
-
-  if (slot == (int **)0) {
-    display_assert("hardware_character",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_text.c", 0x262, 1);
-    system_exit(-1);
-  }
-
-  character = *slot;
-  if (character != (int *)0) {
-    *(short *)((char *)character + 0xc) = -1;
-    if (*(short *)((char *)character + 0xe) == *(short *)0x325748) {
-      error(3, "font cache overwrote character in use");
-    }
-    *slot = (int *)0;
-  }
+  __asm__ volatile(
+      "testl %%esi, %%esi\n\t"
+      "jne .Lrasterizer_text_evict_character_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x262\n\t"
+      "pushl $0x2b0a0c\n\t"
+      "pushl $0x2b0aec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_text_evict_character_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lrasterizer_text_evict_character_3\n\t"
+      "movw $0xffff, 0xc(%%eax)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "movw 0xe(%%eax), %%cx\n\t"
+      "cmpw 0x325748, %%cx\n\t"
+      "jne .Lrasterizer_text_evict_character_2\n\t"
+      "pushl $0x2b0ac4\n\t"
+      "pushl $3\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lrasterizer_text_evict_character_2:\n\t"
+      "movl $0, (%%esi)\n\t"
+      ".Lrasterizer_text_evict_character_3:\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b183820_assert), [exitfn] "m"(b183820_exitfn), [c8f390] "m"(b183820_c8f390)
+      : "memory");
 }
+#else
+#error "rasterizer_text_evict_character: clang naked draft required"
+#endif
+
 
 /* rasterizer_text_cache_character (0x183880) — XBE naked draft (batch 80). */
 #if defined(__clang__)

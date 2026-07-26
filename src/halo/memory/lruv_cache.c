@@ -414,41 +414,97 @@ void * FUN_0011c5f0(int cache __attribute__((unused)), int size __attribute__((u
 #endif
 
 
-/* 0x11c530: Mark a cached block dirty / most-recently-used. Requires a
- * non-NULL user pointer (asserted, line 0x12a). Runs the cache post-touch
- * bookkeeping (FUN_0011c290, cache in EAX) then the block-relink step
- * (FUN_0011c210, cache in EBX + block header in ESI, header = pointer-0x10),
- * and finally SETS bit0 of the dword at pointer-0xc (header+4), marking the
- * block in-use. Source: c:\halo\SOURCE\memory\lra_cache.c */
-void FUN_0011c530(int cache, int block)
-{
-  int header = block - 0x10;
-  if (block == 0) {
-    display_assert("pointer", "c:\\halo\\SOURCE\\memory\\lra_cache.c", 0x12a, 1);
-    system_exit(-1);
-  }
-  FUN_0011c290(cache);
-  FUN_0011c210(cache, header);
-  *(unsigned int *)(header + 4) |= 1;
-}
+/* FUN_0011c530 (0x11c530) — XBE naked draft (batch 97). */
+#if defined(__clang__)
+static void (*const b11c530_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11c530_exitfn)(int) = system_exit;
+static void (*const b11c530_c11c290)(int cache) = FUN_0011c290;
+static void (*const b11c530_c11c210)(int cache, int block) = FUN_0011c210;
 
-/* 0x11c580: Release a cached block back to its cache. Requires a non-NULL user
- * pointer (asserted, line 0x13a). The block header sits 0x10 bytes before the
- * user pointer. Runs the cache post-touch bookkeeping (FUN_0011c290, cache in
- * EAX) then the block-release step (FUN_0011c210, cache in EBX + header in
- * ESI), and finally CLEARS bit0 of the dword at pointer-0xc (header+4),
- * marking the block not-in-use. Source: c:\halo\SOURCE\memory\lra_cache.c */
-void FUN_0011c580(int cache, void *pointer)
+__attribute__((naked, noinline))
+void FUN_0011c530(int cache __attribute__((unused)), int block __attribute__((unused)))
 {
-  char *block = (char *)pointer - 0x10;
-  if (pointer == NULL) {
-    display_assert("pointer", "c:\\halo\\SOURCE\\memory\\lra_cache.c", 0x13a, 1);
-    system_exit(-1);
-  }
-  FUN_0011c290(cache);
-  FUN_0011c210(cache, (int)block);
-  *(unsigned int *)(block + 4) &= 0xfffffffe;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x10(%%eax), %%esi\n\t"
+      "jne .LFUN_0011c530_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x12a\n\t"
+      "pushl $0x28f768\n\t"
+      "pushl $0x267eec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011c530_1:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[c11c290]\n\t"
+      "call *%[c11c210]\n\t"
+      "orl $1, 0x4(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11c530_assert), [exitfn] "m"(b11c530_exitfn), [c11c290] "m"(b11c530_c11c290), [c11c210] "m"(b11c530_c11c210)
+      : "memory");
 }
+#else
+#error "FUN_0011c530: clang naked draft required"
+#endif
+
+
+/* FUN_0011c580 (0x11c580) — XBE naked draft (batch 97). */
+#if defined(__clang__)
+static void (*const b11c580_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11c580_exitfn)(int) = system_exit;
+static void (*const b11c580_c11c290)(int cache) = FUN_0011c290;
+static void (*const b11c580_c11c210)(int cache, int block) = FUN_0011c210;
+
+__attribute__((naked, noinline))
+void FUN_0011c580(int cache __attribute__((unused)), void *pointer __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x10(%%eax), %%esi\n\t"
+      "jne .LFUN_0011c580_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x13a\n\t"
+      "pushl $0x28f768\n\t"
+      "pushl $0x267eec\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011c580_1:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[c11c290]\n\t"
+      "call *%[c11c210]\n\t"
+      "andl $0xfffffffe, 0x4(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11c580_assert), [exitfn] "m"(b11c580_exitfn), [c11c290] "m"(b11c580_c11c290), [c11c210] "m"(b11c580_c11c210)
+      : "memory");
+}
+#else
+#error "FUN_0011c580: clang naked draft required"
+#endif
+
 
 /* lrar_cache_dispose (0x11cab0) — XBE naked draft (batch 85). */
 #if defined(__clang__)
@@ -1205,20 +1261,47 @@ void *FUN_0011d110(const char *name, int total_size, int block_size,
   return cache;
 }
 
-/* 0x11d250: Dispose of an lru_cache. Runs the teardown helper
- * (FUN_0011d090), frees the backing buffer stored at cache+0x34 when the
- * ownership flag byte at cache+0x38 is set, then frees the cache struct
- * itself. debug_free line args 0x9c/0x9d are the MSVC debug-allocator
- * call-site tracking. Source: c:\halo\SOURCE\memory\lru_cache.c */
-void lru_cache_dispose(void *cache)
+/* lru_cache_dispose (0x11d250) — XBE naked draft (batch 97). */
+#if defined(__clang__)
+static void (*const b11d250_c11d090)(int cache) = FUN_0011d090;
+static void (*const b11d250_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+
+__attribute__((naked, noinline))
+void lru_cache_dispose(void *cache __attribute__((unused)))
 {
-  FUN_0011d090((int)cache);
-  if (*(char *)((char *)cache + 0x38) != '\0') {
-    debug_free(*(void **)((char *)cache + 0x34),
-               "c:\\halo\\SOURCE\\memory\\lru_cache.c", 0x9c);
-  }
-  debug_free(cache, "c:\\halo\\SOURCE\\memory\\lru_cache.c", 0x9d);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[c11d090]\n\t"
+      "movb 0x38(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Llru_cache_dispose_1\n\t"
+      "movl 0x34(%%esi), %%eax\n\t"
+      "pushl $0x9c\n\t"
+      "pushl $0x28fa1c\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Llru_cache_dispose_1:\n\t"
+      "pushl $0x9d\n\t"
+      "pushl $0x28fa1c\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11d090] "m"(b11d250_c11d090), [c8ef70] "m"(b11d250_c8ef70)
+      : "memory");
 }
+#else
+#error "lru_cache_dispose: clang naked draft required"
+#endif
+
 
 /* 0x11d2a0: Flush all cached entries. Runs the teardown helper
  * (FUN_0011d090, cache in @eax), then iterates the fixed-stride element

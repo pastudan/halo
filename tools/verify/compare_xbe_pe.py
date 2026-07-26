@@ -1185,6 +1185,19 @@ def main() -> int:
         ("FUN_000c11d0", 0xc11d0, 0xc1208),
         ("ai_debug_actor_deleted", 0x49080, 0x490be),
         ("network_player_reset", 0x12a920, 0x12a960),
+        # gameplay wave 97 (2026-07-26) — memory/AI/rasterizer Capstone weaks
+        ("FUN_0011c530", 0x11c530, 0x11c576),
+        ("FUN_0011c580", 0x11c580, 0x11c5c6),
+        ("FUN_000c10d0", 0xc10d0, 0xc1106),
+        ("rasterizer_text_evict_character", 0x183820, 0x183875),
+        ("ai_debug_dispose_from_old_map", 0x48fa0, 0x48ff6),
+        ("ai_debug_select_encounter", 0x49220, 0x4926d),
+        ("player_control_get_unit_index", 0xb6870, 0xb68b6),
+        ("FUN_00191750", 0x191750, 0x191797),
+        ("actor_replace_prop_handle", 0x16000, 0x16041),
+        ("cluster_partition_iter_next", 0x191660, 0x19168f),
+        ("FUN_0011c430", 0x11c430, 0x11c471),
+        ("lru_cache_dispose", 0x11d250, 0x11d291),
     ]
 
     xbe = Xbe.from_file(args.xbe)

@@ -17,29 +17,50 @@ void ai_debug_dispose(void)
   }
 }
 
-/* ai_debug_dispose_from_old_map: if a valid scenario is loaded and a current
- * encounter is selected (DAT_005ac9f4 != -1), copy the encounter name from the
- * scenario tag block into DAT_005ac9d2 and clear the dirty flag. Otherwise zero
- * the name buffer via csstrcpy with empty string.
- *
- * No __FILE__ string.  Called from ai_dispose_from_old_map (0x3f720) and
- * ai_handle_editing. */
+/* ai_debug_dispose_from_old_map (0x48fa0) — XBE naked draft (batch 97). */
+#if defined(__clang__)
+static void * (*const b48fa0_c18e3b0)(void) = FUN_0018e3b0;
+static void *(*const b48fa0_elem)(void *, int, int) = tag_block_get_element;
+static void * (*const b48fa0_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+static char * (*const b48fa0_c8dff0)(char *destination, const char *source) = csstrcpy;
+
+__attribute__((naked, noinline))
 void ai_debug_dispose_from_old_map(void)
 {
-  void *scenario;
-  void *encounter;
-
-  scenario = FUN_0018e3b0();
-  if (scenario != NULL && *(int32_t *)0x5ac9f4 != -1) {
-    encounter =
-      tag_block_get_element((void *)((char *)scenario + 0x42c),
-                            (int)(*(uint32_t *)0x5ac9f4 & 0xffff), 0xb0);
-    csstrncpy((char *)0x5ac9d2, encounter, 0x20);
-    *(uint8_t *)0x5ac9f1 = 0;
-    return;
-  }
-  csstrcpy((char *)0x5ac9d2, (const char *)0x25386f);
+  __asm__ volatile(
+      "call *%[c18e3b0]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lai_debug_dispose_from_old_map_1\n\t"
+      "movl 0x5ac9f4, %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .Lai_debug_dispose_from_old_map_1\n\t"
+      "pushl $0xb0\n\t"
+      "andl $0xffff, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x42c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x5ac9d2\n\t"
+      "call *%[c8de70]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movb $0, 0x5ac9f1\n\t"
+      "ret\n\t"
+      ".Lai_debug_dispose_from_old_map_1:\n\t"
+      "pushl $0x25386f\n\t"
+      "pushl $0x5ac9d2\n\t"
+      "call *%[c8dff0]\n\t"
+      "addl $8, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [c18e3b0] "m"(b48fa0_c18e3b0), [elem] "m"(b48fa0_elem), [c8de70] "m"(b48fa0_c8de70), [c8dff0] "m"(b48fa0_c8dff0)
+      : "memory");
 }
+#else
+#error "ai_debug_dispose_from_old_map: clang naked draft required"
+#endif
+
 
 /* ai_debug_clear_storage (0x49000) — XBE naked draft (batch 94). */
 #if defined(__clang__)
@@ -282,16 +303,48 @@ void * ai_debug_get_path_storage(int actor_handle __attribute__((unused)))
  * encounter_idx [match] */
 void ai_debug_select_actor(int encounter_idx, int param_2);
 
-void ai_debug_select_encounter(int encounter_idx)
+/* ai_debug_select_encounter (0x49220) — XBE naked draft (batch 97). */
+#if defined(__clang__)
+static void *(*const b49220_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b49220_c4b1b0)(int encounter_idx, int param_2) = ai_debug_select_actor;
+
+__attribute__((naked, noinline))
+void ai_debug_select_encounter(int encounter_idx __attribute__((unused)))
 {
-  if (*(int32_t *)0x5ac9f4 != encounter_idx) {
-    *(int32_t *)0x5ac9f4 = encounter_idx;
-    *(uint8_t *)0x629d40 = 0;
-    csmemset((void *)0x629d44, 0, 0x670);
-    csmemset((void *)0x62a3b4, 0, 0x8000);
-    ai_debug_select_actor(encounter_idx, -1);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5ac9f4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "je .Lai_debug_select_encounter_1\n\t"
+      "pushl $0x670\n\t"
+      "pushl $0\n\t"
+      "pushl $0x629d44\n\t"
+      "movl %%esi, 0x5ac9f4\n\t"
+      "movb $0, 0x629d40\n\t"
+      "call *%[memset]\n\t"
+      "pushl $0x8000\n\t"
+      "pushl $0\n\t"
+      "pushl $0x62a3b4\n\t"
+      "call *%[memset]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c4b1b0]\n\t"
+      "addl $0x20, %%esp\n\t"
+      ".Lai_debug_select_encounter_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b49220_memset), [c4b1b0] "m"(b49220_c4b1b0)
+      : "memory");
 }
+#else
+#error "ai_debug_select_encounter: clang naked draft required"
+#endif
+
 
 /* FUN_000494d0: set debug ray-test success flag.
  *

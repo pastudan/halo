@@ -226,13 +226,48 @@ float evaluate_piecewise_linear_function(int16_t count, float *table, float t)
   return result;
 }
 
-int player_control_get_unit_index(int16_t local_player_index)
+/* player_control_get_unit_index (0xb6870) — XBE naked draft (batch 97). */
+#if defined(__clang__)
+static void (*const bb6870_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bb6870_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int player_control_get_unit_index(int16_t local_player_index __attribute__((unused)))
 {
-  assert_halt(local_player_index >= 0 &&
-              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
-  return *(int *)((char *)player_control_globals +
-                  (int)local_player_index * 0x40 + 0x10);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lplayer_control_get_unit_index_1\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lplayer_control_get_unit_index_2\n\t"
+      ".Lplayer_control_get_unit_index_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb1\n\t"
+      "pushl $0x26e1e8\n\t"
+      "pushl $0x266fc0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayer_control_get_unit_index_2:\n\t"
+      "movl 0x457090, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "shll $6, %%eax\n\t"
+      "movl 0x10(%%eax,%%ecx,1), %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bb6870_assert), [exitfn] "m"(bb6870_exitfn)
+      : "memory");
 }
+#else
+#error "player_control_get_unit_index: clang naked draft required"
+#endif
+
 
 int player_control_get_aiming_unit_index(int16_t local_player_index)
 {
