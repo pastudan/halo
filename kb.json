@@ -4727,7 +4727,8 @@
         },
         {
           "addr": "0xa6470",
-          "decl": "void FUN_000a6470(void);"
+          "decl": "int FUN_000a6470(int16_t local_player_index, float *field_2c, float *field_30, float *scratch_a, float *scratch_b);",
+          "ported": false
         },
         {
           "addr": "0xa65e0",
@@ -12523,7 +12524,8 @@
         },
         {
           "addr": "0xce7f0",
-          "decl": "void input_abstraction_get_input_state(void);"
+          "decl": "void *input_abstraction_get_input_state(int gamepad_index);",
+          "ported": false
         },
         {
           "addr": "0xce840",
@@ -16582,7 +16584,8 @@
         },
         {
           "addr": "0xb70b0",
-          "decl": "void get_local_player_input_blob(void);"
+          "decl": "void get_local_player_input_blob(int16_t local_player_index, float delta_time, char *out_blob@<ebx>);",
+          "ported": false
         },
         {
           "addr": "0xb7e30",
@@ -17338,7 +17341,8 @@
         },
         {
           "addr": "0xbbbe0",
-          "decl": "void find_best_starting_location_index(void);"
+          "decl": "int16_t find_best_starting_location_index(int team_or_player);",
+          "ported": false
         },
         {
           "addr": "0xbbcb0",

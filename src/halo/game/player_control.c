@@ -921,6 +921,516 @@ void player_control_initialize_for_new_map(void)
   }
 }
 
+/* Read controller/keyboard state into a 0x20-byte local input blob.
+ * Original Xbox ABI passes out_blob in EBX with cdecl stack args for index
+ * and delta_time. */
+void get_local_player_input_blob(int16_t local_player_index, float delta_time,
+                                 char *out_blob)
+{
+  int player_index;
+  char *slot;
+  char *player;
+  int16_t gamepad_index;
+  char is_primary_player;
+  void *game_tag_elem;
+  void *abstract_input;
+  int unit_handle;
+  char *unit_obj;
+  float look_scale_x;
+  float look_scale_y;
+  float abs_look_x;
+  float abs_look_y;
+  float deadzone_scale;
+  float look_x;
+  float look_y;
+  float move_x;
+  float move_y;
+  float aim_speed;
+  float scratch_a;
+  float scratch_b;
+  float scratch_c;
+  float scratch_d;
+  uint32_t flags18;
+  uint32_t flags1c;
+  char action_bytes[0xc];
+  int i;
+  int bit;
+  uint16_t blocked;
+  uint16_t mask;
+  int edx;
+
+  player_index = local_player_get_player_index(local_player_index);
+  csmemset(out_blob, 0, 0x20);
+  if (player_index == NONE)
+    goto validate_trigger;
+
+  slot = (char *)player_control_get_data(local_player_index);
+  player = (char *)datum_get(*(data_t **)0x5aa6d4, player_index);
+  gamepad_index = *(int16_t *)(player + 0x2);
+  is_primary_player = (char)(gamepad_index == *(int16_t *)0x457094);
+
+  {
+    void *globals = game_globals_get();
+    game_tag_elem = tag_block_get_element((char *)globals + 0x110, 0, 0x80);
+  }
+
+  if (gamepad_index != (int16_t)NONE && input_has_gamepad(gamepad_index)) {
+    (void)input_get_gamepad_state((int)gamepad_index);
+    abstract_input = input_abstraction_get_input_state((int)gamepad_index);
+
+    look_scale_x = 0.0f;
+    look_scale_y = 0.0f;
+    unit_handle = *(int *)(slot + 0x24);
+    if (unit_handle != NONE) {
+      unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
+      look_scale_x =
+        *(float *)((char *)0x457098 + (int)local_player_index * 4) *
+        *(float *)0x253d4c * *(float *)0x2546a4;
+      look_scale_y =
+        *(float *)((char *)0x4570a8 + (int)local_player_index * 4) *
+        *(float *)0x253d4c * *(float *)0x2546a4;
+      if (*(int *)(unit_obj + 0xcc) != NONE &&
+          *(int16_t *)(unit_obj + 0x2a0) != (int16_t)NONE) {
+        void *parent_obj;
+        void *unit_tag;
+        void *seat_elem;
+        parent_obj =
+          (char *)object_get_and_verify_type(*(int *)(unit_obj + 0xcc), 3);
+        unit_tag = tag_get(0x756e6974, *(int *)parent_obj);
+        seat_elem = tag_block_get_element((char *)unit_tag + 0x2e4,
+                                          *(int16_t *)(unit_obj + 0x2a0),
+                                          0x11c);
+        if (*(float *)((char *)seat_elem + 0x7c) != *(float *)0x2533c0)
+          look_scale_x = *(float *)((char *)seat_elem + 0x7c) *
+                         *(float *)0x253d4c * *(float *)0x2546a4;
+        if (*(float *)((char *)seat_elem + 0x80) != *(float *)0x2533c0)
+          look_scale_y = *(float *)((char *)seat_elem + 0x80) *
+                         *(float *)0x253d4c * *(float *)0x2546a4;
+      }
+    }
+
+    move_x = *(float *)((char *)abstract_input + 0xc);
+    move_y = *(float *)((char *)abstract_input + 0x10);
+    *(float *)out_blob = move_x;
+    *(float *)(out_blob + 4) = move_y;
+
+    abs_look_x = *(float *)((char *)abstract_input + 0x14);
+    if (abs_look_x < 0.0f)
+      abs_look_x = -abs_look_x;
+    abs_look_y = *(float *)((char *)abstract_input + 0x18);
+    if (abs_look_y < 0.0f)
+      abs_look_y = -abs_look_y;
+
+    deadzone_scale = *(float *)0x2533c8;
+    if (abs_look_x <= *(float *)0x25496c && abs_look_y <= *(float *)0x25496c) {
+      if (abs_look_y <= abs_look_x) {
+        if (abs_look_x > *(float *)0x2533c0)
+          abs_look_y = abs_look_y / abs_look_x;
+        else
+          abs_look_y = 1.0f;
+      } else {
+        if (abs_look_y > *(float *)0x2533c0)
+          abs_look_x = abs_look_x / abs_look_y;
+        abs_look_y = 1.0f;
+      }
+      deadzone_scale = sqrtf(abs_look_y * abs_look_y +
+                             *(float *)0x2533c8 * *(float *)0x2533c8);
+    }
+
+    look_x = deadzone_scale * *(float *)((char *)abstract_input + 0x14);
+    if (look_x <= *(float *)0x255e94)
+      look_x = -1.0f;
+    else if (look_x >= *(float *)0x2533c8)
+      look_x = 1.0f;
+
+    look_y = deadzone_scale * *(float *)((char *)abstract_input + 0x18);
+    if (look_y <= *(float *)0x255e94)
+      look_y = -1.0f;
+    else if (look_y >= *(float *)0x2533c8)
+      look_y = 1.0f;
+
+    if ((*(uint8_t *)((char *)player_control_globals + 0xc) & 1) ||
+        game_time_get_paused()) {
+      look_x = 0.0f;
+      look_y = 0.0f;
+    } else {
+      int southpaw_y;
+      int southpaw_x;
+      int16_t curve_count;
+      float *curve_table;
+      float y_curve_scale;
+      float x_curve_scale;
+
+      southpaw_y = (int)*(char *)0x4570ba + 1;
+      if (*(char *)((char *)abstract_input + 0xb) && *(char *)0x4570b9)
+        southpaw_y = (*(char *)0x4570ba == 0) + 1;
+      y_curve_scale = (float)southpaw_y;
+
+      southpaw_x = (int)*(char *)0x4570ba + 1;
+      if (*(char *)((char *)abstract_input + 0xb) && *(char *)0x4570b9)
+        southpaw_x = (*(char *)0x4570ba == 0) + 1;
+      x_curve_scale = (float)southpaw_x;
+
+      curve_count = *(int16_t *)((char *)game_tag_elem + 0x74);
+      curve_table = *(float **)((char *)game_tag_elem + 0x78);
+      if ((int)curve_count <= 1) {
+        display_assert("player_control->look_curve_node_count>1",
+                       "c:\\halo\\SOURCE\\game\\player_control.c", 0x1c8, 1);
+        system_exit(NONE);
+      }
+
+      look_x = evaluate_piecewise_linear_function(curve_count, curve_table,
+                                                 look_x);
+      look_x *= y_curve_scale;
+      look_x *= look_scale_x;
+
+      look_y = evaluate_piecewise_linear_function(curve_count, curve_table,
+                                                  look_y);
+      look_y *= x_curve_scale;
+      look_y *= look_scale_y;
+
+      if (unit_handle != NONE) {
+        int16_t zoom_weapon = *(int16_t *)(slot + 0x24);
+        if (zoom_weapon != (int16_t)NONE) {
+          float zoom = unit_get_zoom_magnification(unit_handle, zoom_weapon);
+          look_x = look_x * (zoom / *(float *)0x2533c8);
+          look_y = look_y * zoom;
+        }
+      }
+
+      if (unit_handle != NONE) {
+        void *player_settings;
+        void *unit_obj2;
+        player_settings =
+          tag_block_get_element((void *)((char *)game_globals_get() + 0x170), 0,
+                                0xf4);
+        unit_obj2 = object_get_and_verify_type(unit_handle, 3);
+        look_x = look_x * (*(float *)((char *)unit_obj2 + 0x3d4) *
+                           *(float *)((char *)player_settings + 0x84) -
+                           *(float *)0x2533c8);
+        look_y = look_y * look_scale_y;
+      }
+
+      if (*(float *)((char *)abstract_input + 0x40) != *(float *)0x2533c0) {
+        if (fabsf(look_x) <= (double)*(float *)((char *)abstract_input + 0x48)) {
+          float v =
+            *(float *)(slot + 0x34) / *(float *)((char *)abstract_input + 0x40);
+          if (v <= *(float *)0x2533c0)
+            v = *(float *)0x2533c0;
+          else if (v >= *(float *)0x2533c8)
+            v = *(float *)0x2533c8;
+          look_x = (*(float *)((char *)abstract_input + 0x44) -
+                    *(float *)0x2533c8) *
+                     v +
+                   *(float *)0x2533c8;
+          look_x *= look_scale_x;
+          *(float *)(slot + 0x34) += delta_time * *(float *)0x253394;
+        } else {
+          *(float *)(slot + 0x34) = 0.0f;
+        }
+      }
+
+      scratch_c = look_x;
+      scratch_d = look_y;
+      *(int *)(slot + 0x28) =
+        FUN_000a6470(local_player_index, (float *)(slot + 0x2c),
+                      (float *)(slot + 0x30), &scratch_a, &scratch_b);
+
+      if (*(char *)0x2f0291 && *(float *)(slot + 0x30) == *(float *)0x2533c0 &&
+          fabsf(look_x) > *(double *)0x2533d0 &&
+          fabsf(look_y) > *(double *)0x2533d0 &&
+          fabsf(move_x) > *(double *)0x2533d0 &&
+          fabsf(move_y) > *(double *)0x2533d0) {
+        look_x = scratch_d * delta_time * *(float *)0x253394;
+        look_y = scratch_c * delta_time * *(float *)0x253394;
+        look_x = scratch_c * look_x;
+        look_y = scratch_d * look_y;
+      } else {
+        aim_speed = game_time_get_speed();
+        if (*(float *)abstract_input != *(float *)0x2533c0) {
+          if (*(float *)abstract_input >= *(float *)0x2533c8)
+            look_x = *(float *)0x2533c8;
+          else
+            look_x = *(float *)abstract_input;
+        } else
+          look_x = *(float *)0x2533c0;
+        look_x = look_x * *(float *)(slot + 0x30) - *(float *)0x2533c8;
+
+        if (*(float *)((char *)abstract_input + 4) != *(float *)0x2533c0) {
+          if (*(float *)((char *)abstract_input + 4) >= *(float *)0x2533c8)
+            move_y = *(float *)0x2533c8;
+          else
+            move_y = *(float *)((char *)abstract_input + 4);
+        } else
+          move_y = *(float *)0x2533c0;
+        move_y *= *(float *)(slot + 0x30);
+
+        if (game_players_are_double_speed())
+          aim_speed *= *(float *)0x253398;
+
+        scratch_a *= aim_speed;
+        if (scratch_a <= *(float *)0x26e2f8)
+          scratch_a = *(float *)0xbdd67750;
+        else if (scratch_a >= *(float *)0x26e2f4)
+          scratch_a = *(float *)0x3dd67750;
+
+        if (aim_speed <= *(float *)0x26e2f0)
+          aim_speed = *(float *)0x26e2f0;
+        else if (aim_speed >= *(float *)0x26e2ec)
+          aim_speed = *(float *)0x26e2ec;
+
+        look_x = scratch_a * move_y + look_x * scratch_c;
+        look_y = aim_speed * move_y + look_y * scratch_d;
+      }
+
+      *(float *)(out_blob + 0xc) = look_x;
+      *(float *)(out_blob + 0x10) = look_y;
+    }
+
+    csmemset(action_bytes, 0, sizeof(action_bytes));
+    blocked = *(uint16_t *)(slot + 8) & *(uint16_t *)(slot + 0xa);
+    if (blocked) {
+      for (edx = 1; edx <= 0xc; edx++) {
+        mask = (uint16_t)(1 << (edx - 1));
+        if ((blocked & mask) && !((char *)abstract_input)[edx - 1]) {
+          blocked &= ~mask;
+          *(uint16_t *)(slot + 8) = blocked;
+          *(uint16_t *)(slot + 0xa) &= ~mask;
+        }
+      }
+    }
+
+    for (i = 0; i < 0xc; i += 6) {
+      for (bit = 0; bit < 6; bit++) {
+        mask = (uint16_t)(1 << (i + bit));
+        if ((*(uint16_t *)(slot + 8) & mask) == 0)
+          action_bytes[i + bit] = ((char *)abstract_input)[i + bit];
+      }
+    }
+
+    flags18 = 0;
+    flags1c = 0;
+
+    unit_handle = *(int *)(player + 0x34);
+    if (unit_handle != NONE &&
+        object_try_and_get_and_verify_type(unit_handle, 1)) {
+      char *checked = (char *)object_try_and_get_and_verify_type(unit_handle, 1);
+      if (!*(char *)0x4570b8 && !(*(char *)(checked + 0x424) & 1)) {
+        float mag_sq = move_y * move_y + move_x * move_x;
+        if (!(mag_sq > *(float *)0x26e2e8))
+          goto skip_fire_flag;
+      }
+      if (action_bytes[7])
+        flags18 |= 1;
+      else
+        flags18 &= ~1u;
+    }
+  skip_fire_flag:;
+
+    *(float *)(out_blob + 8) =
+      (float)(int)(*(char *)((char *)abstract_input + 7)) *
+      *(float *)0x26e1e4;
+
+    if (action_bytes[7])
+      flags18 |= 0x800;
+    else
+      flags18 &= ~0x800u;
+
+    if (action_bytes[6]) {
+      flags18 |= 0x2000;
+      flags18 |= 0x1000;
+    } else {
+      flags18 &= ~0x2000u;
+      flags18 &= ~0x1000u;
+    }
+
+    if (action_bytes[11] == 1)
+      flags1c |= 4;
+    else
+      flags1c &= ~4u;
+
+    if (action_bytes[2])
+      flags18 |= 0x40;
+    else
+      flags18 &= ~0x40u;
+
+    if ((int)(int16_t)action_bytes[2] >= *(int16_t *)((char *)game_tag_elem + 0x6c))
+      flags18 |= 0x4000;
+    else
+      flags18 &= ~0x4000u;
+
+    if (action_bytes[5])
+      flags18 |= 0x10;
+    else
+      flags18 &= ~0x10u;
+
+    if (action_bytes[0])
+      flags18 |= 2;
+    else
+      flags18 &= ~2u;
+
+    if (action_bytes[4])
+      flags18 |= 0x80;
+    else
+      flags18 &= ~0x80u;
+
+    if (action_bytes[3] == 1)
+      flags1c |= 1;
+    else
+      flags1c &= ~1u;
+
+    if (action_bytes[1] == 1)
+      flags1c |= 2;
+    else
+      flags1c &= ~2u;
+
+    *(int *)(out_blob + 0x18) = (int)flags18;
+    *(int *)(out_blob + 0x1c) = (int)flags1c;
+    if ((*(uint16_t *)(slot + 9) & 2) == 0) {
+      void *gp = input_get_gamepad_state((int)gamepad_index);
+      out_blob[0x15] = ((char *)gp)[0x11];
+    }
+    if ((*(uint16_t *)(slot + 8) & 4) == 0) {
+      void *gp = input_get_gamepad_state((int)gamepad_index);
+      out_blob[0x14] = ((char *)gp)[0x10];
+    }
+    goto normalize_move;
+
+  } else {
+    int kb_state;
+    kb_state = FUN_000cf690();
+    if (!kb_state || !is_primary_player)
+      goto finalize_flags;
+
+    kb_state = FUN_000cf690();
+    *(float *)out_blob =
+      (float)((int)input_key_is_down(0x2e) - (int)input_key_is_down(0x20));
+    *(float *)(out_blob + 4) =
+      (float)((int)input_key_is_down(0x2f) - (int)input_key_is_down(0x2d));
+
+    if (!((*(uint8_t *)((char *)player_control_globals + 0xc) & 1)) &&
+        !game_time_get_paused()) {
+      *(float *)(out_blob + 0xc) =
+        (float)(int)(*(float *)(slot + 0x2c) * *(float *)0x26e1dc * -1.0f);
+      *(float *)(out_blob + 0x10) =
+        (float)(int)(*(float *)(slot + 0x30) * *(float *)0x26e1e0 * -1.0f);
+    } else {
+      *(int *)(out_blob + 0xc) = 0;
+      *(int *)(out_blob + 0x10) = 0;
+    }
+
+    flags18 = 0;
+    flags1c = 0;
+    if (input_key_is_down(0x69))
+      flags18 |= 0x100;
+    else
+      flags18 &= ~0x100u;
+    if (input_key_is_down(0x6c))
+      flags18 |= 0x200;
+    else
+      flags18 &= ~0x200u;
+    if (input_key_is_down(0x48))
+      flags18 |= 1;
+    else
+      flags18 &= ~1u;
+    if (input_key_is_down(0x1f))
+      flags18 |= 2;
+    else
+      flags18 &= ~2u;
+    if (input_key_is_down(0x3b))
+      flags18 |= 0x40;
+    else
+      flags18 &= ~0x40u;
+    if (input_key_is_down(0x22))
+      flags18 |= 0x10;
+    else
+      flags18 &= ~0x10u;
+    if (input_key_is_down(0x6a))
+      flags18 |= 0x400;
+    else
+      flags18 &= ~0x400u;
+    if (*(char *)(slot + 0xc))
+      flags18 |= 0x800;
+    else
+      flags18 &= ~0x800u;
+    if (*(char *)(slot + 0xe))
+      flags18 |= 0x2000;
+    else
+      flags18 &= ~0x2000u;
+    if (input_key_is_down(0x3a) == 1)
+      flags1c |= 4;
+    else
+      flags1c &= ~4u;
+    if (input_key_is_down(0x21) == 1)
+      flags1c |= 1;
+    else
+      flags1c &= ~1u;
+
+    *(int *)(out_blob + 0x18) = (int)flags18;
+    *(int *)(out_blob + 0x1c) = (int)flags1c;
+  }
+
+finalize_flags:
+  flags18 = *(uint32_t *)(out_blob + 0x18);
+  flags1c = *(uint32_t *)(out_blob + 0x1c);
+
+  if (flags18 & 0x800)
+    *(float *)(out_blob + 8) = *(float *)0x2533c8;
+  else
+    *(float *)(out_blob + 8) = *(float *)0x2533c0;
+
+  if (input_key_is_down(0x2b) == 1)
+    flags1c |= 8;
+  else
+    flags1c &= ~8u;
+  if (input_key_is_down(0x2a) == 1)
+    flags1c |= 0x10;
+  else
+    flags1c &= ~0x10u;
+  if (input_key_is_down(0x29) == 1)
+    flags1c |= 0x20;
+  else
+    flags1c &= ~0x20u;
+  if (input_key_is_down(0x11) == 1)
+    flags18 |= 4;
+  else
+    flags18 &= ~4u;
+  if (input_key_is_down(0x12) == 1)
+    flags18 |= 8;
+  else
+    flags18 &= ~8u;
+
+  *(int *)(out_blob + 0x18) = (int)flags18;
+  *(int *)(out_blob + 0x1c) = (int)flags1c;
+
+normalize_move:
+  if (*(float *)(out_blob + 4) != 0.0f || *(float *)out_blob != 0.0f) {
+    float mag_sq = *(float *)(out_blob + 4) * *(float *)(out_blob + 4) +
+                   *(float *)out_blob * *(float *)out_blob;
+    if (mag_sq <= *(float *)0x2533c8) {
+      float scale = sqrtf(mag_sq) / *(float *)0x2533c8;
+      *(float *)out_blob *= scale;
+      *(float *)(out_blob + 4) *= scale;
+    }
+  }
+
+validate_trigger:
+  FUN_000b6bd0(out_blob);
+  {
+    uint32_t bits = *(uint32_t *)(out_blob + 8);
+    if ((bits & 0x7f800000u) == 0x7f800000u) {
+      char *msg =
+        csprintf((char *)0x5ab100, "%s: assert_valid_real(0x%08X %f)",
+                 "input->primary_trigger", bits,
+                 (double)*(float *)(out_blob + 8));
+      display_assert(msg, "c:\\halo\\SOURCE\\game\\player_control.c", 0x2b6,
+                     1);
+      system_exit(NONE);
+    }
+  }
+}
+
+
 /* Process input for a local player: read controller/keyboard state, handle
  * weapon switching and grenade throwing, detect autoaim idle, validate
  * facing angles, and submit the resulting action to the game engine.
@@ -944,24 +1454,8 @@ void player_control_get_facing(int16_t local_player_index, float delta_time)
     game_tag_elem = tag_block_get_element((char *)globals + 0x110, 0, 0x80);
   }
 
-  /* fill action with sentinel 0xfa, then read actual input */
   csmemset(action, 0xfa, 0x20);
-  {
-    /* player_control_get_input reads EBX as the output action struct.
-     * With -fno-omit-frame-pointer, EBP-relative memory refs are stable
-     * across pushes, so push operands can use memory constraints. */
-    int _dt_bits = *(int *)&delta_time;
-    int _idx = (int)local_player_index;
-    int _ebx = (int)action;
-    asm volatile(
-      "pushl %[dt]\n\t"
-      "pushl %[idx]\n\t"
-      "call *%[fn]\n\t"
-      "addl $8, %%esp"
-      : "+b"(_ebx)
-      : [fn] "r"((void *)0xb70b0), [dt] "g"(_dt_bits), [idx] "g"(_idx)
-      : "eax", "ecx", "edx", "memory", "cc");
-  }
+  get_local_player_input_blob(local_player_index, delta_time, action);
 
   player_index = local_player_get_player_index(local_player_index);
 

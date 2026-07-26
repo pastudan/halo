@@ -2539,6 +2539,44 @@ void players_set_local_player_unit(int16_t local_player_index, int unit_handle)
   player_control_new_unit((uint16_t)local_player_index, unit_handle);
 }
 
+/* Weighted random pick among starting locations (rating * 0.5 * U[0,1]). */
+int16_t find_best_starting_location_index(int team_or_player)
+{
+  void *scenario;
+  int netgame_index;
+  void *netgame;
+  int16_t count;
+  int16_t best;
+  float best_score;
+  int16_t i;
+  void *loc;
+  float rating;
+  float score;
+
+  scenario = global_scenario_get();
+  netgame_index = *(int *)0x5ac9f4;
+  count = *(int16_t *)((char *)scenario + 0x354);
+  if (netgame_index != NONE) {
+    netgame = tag_block_get_element((char *)scenario + 0x42c,
+                                    netgame_index & 0xffff, 0xb0);
+    if (*(int *)((char *)netgame + 0xa4) > 0)
+      count = (int16_t)*(int *)((char *)netgame + 0xa4);
+  }
+  best = (int16_t)NONE;
+  best_score = 0.0f;
+  for (i = 0; i < count; i++) {
+    loc = player_get_starting_location(i);
+    rating = game_engine_get_starting_location_rating(team_or_player, (int)loc);
+    score = random_real_range(get_global_random_seed_address(), 0.0f, 1.0f) *
+            0.5f * rating;
+    if (score > best_score) {
+      best_score = score;
+      best = i;
+    }
+  }
+  return best;
+}
+
 /* Teleport wrapper: exit seat if needed, then FUN_000bb670. */
 char player_teleport(int player_handle, void *a, void *b)
 {
