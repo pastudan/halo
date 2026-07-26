@@ -13830,5 +13830,138 @@
     "object": "game_sound.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7ba50",
+    "name": "FUN_0007ba50",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7bcb0",
+    "name": "FUN_0007bcb0",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7bd90",
+    "name": "FUN_0007bd90",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7be60",
+    "name": "bitmap_compress_to_mipmap",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7c070",
+    "name": "bitmap_3d_compress_to_mipmap",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7c490",
+    "name": "FUN_0007c490",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7cb60",
+    "name": "bitmap_3d_address",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7cdf0",
+    "name": "bitmap_cube_map_address",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7d0d0",
+    "name": "bitmap_format_to_a8r8g8b8",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7d300",
+    "name": "palette_find_closest_match",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7dad0",
+    "name": "bitmap_2d_get_pixel",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7dfe0",
+    "name": "bitmap_get_pixel_count",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7e040",
+    "name": "bitmap_get_pixel_data_size",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7e0b0",
+    "name": "bitmap_2d_new",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7e230",
+    "name": "bitmap_3d_new",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7e3f0",
+    "name": "bitmap_cube_map_new",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7e560",
+    "name": "bitmap_3d_slice_insert",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7e7e0",
+    "name": "bitmap_cube_map_face_extract",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x7ea60",
+    "name": "FUN_0007ea60",
+    "object": "bitmaps.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

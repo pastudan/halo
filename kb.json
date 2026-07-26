@@ -4127,23 +4127,28 @@
       "functions": [
         {
           "addr": "0x7ba50",
-          "decl": "void FUN_0007ba50(void *bitmap@<edi>);"
+          "decl": "void FUN_0007ba50(void *bitmap@<edi>);",
+          "ported": false
         },
         {
           "addr": "0x7bcb0",
-          "decl": "void FUN_0007bcb0(void *bitmap@<esi>);"
+          "decl": "void FUN_0007bcb0(void *bitmap@<esi>);",
+          "ported": false
         },
         {
           "addr": "0x7bd90",
-          "decl": "void FUN_0007bd90(void *bitmap@<ebx>);"
+          "decl": "void FUN_0007bd90(void *bitmap@<ebx>);",
+          "ported": false
         },
         {
           "addr": "0x7be60",
-          "decl": "void bitmap_compress_to_mipmap(void);"
+          "decl": "void bitmap_compress_to_mipmap(void);",
+          "ported": false
         },
         {
           "addr": "0x7c070",
-          "decl": "void bitmap_3d_compress_to_mipmap(void);"
+          "decl": "void bitmap_3d_compress_to_mipmap(void);",
+          "ported": false
         },
         {
           "addr": "0x7c270",
@@ -4152,7 +4157,8 @@
         },
         {
           "addr": "0x7c490",
-          "decl": "void FUN_0007c490(void);"
+          "decl": "void FUN_0007c490(void);",
+          "ported": false
         },
         {
           "addr": "0x7c5f0",
@@ -4196,11 +4202,13 @@
         },
         {
           "addr": "0x7cb60",
-          "decl": "void *bitmap_3d_address(void *bitmap, short x, short y, short face_index, short mipmap_index);"
+          "decl": "void *bitmap_3d_address(void *bitmap, short x, short y, short face_index, short mipmap_index);",
+          "ported": false
         },
         {
           "addr": "0x7cdf0",
-          "decl": "void *bitmap_cube_map_address(void *bitmap, short x, short y, short z, short mipmap_index);"
+          "decl": "void *bitmap_cube_map_address(void *bitmap, short x, short y, short z, short mipmap_index);",
+          "ported": false
         },
         {
           "addr": "0x7d000",
@@ -4210,11 +4218,13 @@
         },
         {
           "addr": "0x7d0d0",
-          "decl": "void bitmap_format_to_a8r8g8b8(void);"
+          "decl": "void bitmap_format_to_a8r8g8b8(void);",
+          "ported": false
         },
         {
           "addr": "0x7d300",
-          "decl": "void palette_find_closest_match(void);"
+          "decl": "void palette_find_closest_match(void);",
+          "ported": false
         },
         {
           "addr": "0x7d440",
@@ -4274,39 +4284,48 @@
         },
         {
           "addr": "0x7dad0",
-          "decl": "unsigned int bitmap_2d_get_pixel(int bitmap_ref, float *uv, float level, float *out);"
+          "decl": "unsigned int bitmap_2d_get_pixel(int bitmap_ref, float *uv, float level, float *out);",
+          "ported": false
         },
         {
           "addr": "0x7dfe0",
-          "decl": "int bitmap_get_pixel_count(void *bitmap);"
+          "decl": "int bitmap_get_pixel_count(void *bitmap);",
+          "ported": false
         },
         {
           "addr": "0x7e040",
-          "decl": "int bitmap_get_pixel_data_size(void *bitmap_data);"
+          "decl": "int bitmap_get_pixel_data_size(void *bitmap_data);",
+          "ported": false
         },
         {
           "addr": "0x7e0b0",
-          "decl": "void *bitmap_2d_new(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format);"
+          "decl": "void *bitmap_2d_new(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format);",
+          "ported": false
         },
         {
           "addr": "0x7e230",
-          "decl": "void *bitmap_3d_new(unsigned short width, unsigned short height, unsigned short depth, unsigned short mipmap_count, unsigned short format);"
+          "decl": "void *bitmap_3d_new(unsigned short width, unsigned short height, unsigned short depth, unsigned short mipmap_count, unsigned short format);",
+          "ported": false
         },
         {
           "addr": "0x7e3f0",
-          "decl": "void *bitmap_cube_map_new(unsigned short width, unsigned short mipmap_count, unsigned short format);"
+          "decl": "void *bitmap_cube_map_new(unsigned short width, unsigned short mipmap_count, unsigned short format);",
+          "ported": false
         },
         {
           "addr": "0x7e560",
-          "decl": "void bitmap_3d_slice_insert(void);"
+          "decl": "void bitmap_3d_slice_insert(void);",
+          "ported": false
         },
         {
           "addr": "0x7e7e0",
-          "decl": "void bitmap_cube_map_face_extract(void *src_bitmap, void *dst_bitmap, int face, int slice);"
+          "decl": "void bitmap_cube_map_face_extract(void *src_bitmap, void *dst_bitmap, int face, int slice);",
+          "ported": false
         },
         {
           "addr": "0x7ea60",
-          "decl": "void FUN_0007ea60(void);"
+          "decl": "void FUN_0007ea60(void);",
+          "ported": false
         }
       ],
       "name": "bitmaps.obj",
