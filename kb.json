@@ -5215,7 +5215,7 @@
         {
           "addr": "0xa57a0",
           "decl": "float FUN_000a57a0(float x);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xa57b0",
@@ -10965,7 +10965,7 @@
         {
           "addr": "0xc1f80",
           "decl": "void FUN_000c1f80(short function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc1fa0",
@@ -11000,7 +11000,7 @@
         {
           "addr": "0xc2100",
           "decl": "void FUN_000c2100(short function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc2120",
@@ -14250,7 +14250,7 @@
         {
           "addr": "0x100060",
           "decl": "void main_set_difficulty(int16_t difficulty);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x100080",
@@ -17697,12 +17697,12 @@
         {
           "addr": "0xb63d0",
           "decl": "void player_control_initialize(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6430",
           "decl": "void scripted_player_control_set_camera_control(char enable);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb64c0",
@@ -18262,7 +18262,7 @@
         {
           "addr": "0xe0930",
           "decl": "void player_ui_autojoin_players_to_next_multiplayer_game(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0960",
