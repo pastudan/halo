@@ -798,71 +798,23 @@ void FUN_001c6ca0(void)
 #endif
 
 
-/* FUN_001c6d20 (0x1c6d20) — XBE naked draft (batch 287). */
-#if defined(__clang__)
-static bool (*const b1c6d20_c19a7a0)(file_ref_t *info, int flags) = file_open;
-static bool (*const b1c6d20_c19acb0)(file_ref_t *info, int offset, int size, void *buffer) = file_read_from_position;
-static void (*const b1c6d20_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
-static bool (*const b1c6d20_c19a930)(file_ref_t *info) = file_close;
-
-__attribute__((naked, noinline))
-void FUN_001c6d20(void)
+/* FUN_001c6d20 (0x1c6d20) — readable C lift: detect RIFF/WAVE header. */
+char FUN_001c6d20(file_ref_t *info)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c19a7a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6d20_2\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xc\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19acb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6d20_1\n\t"
-      "pushl $1\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x32ec44\n\t"
-      "call *%[c118be0]\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $0x52494646, %%eax\n\t"
-      "jne .LFUN_001c6d20_1\n\t"
-      "cmpl $0x57415645, -0x4(%%ebp)\n\t"
-      "jne .LFUN_001c6d20_1\n\t"
-      "movb $1, %%bl\n\t"
-      ".LFUN_001c6d20_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_001c6d20_2:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19a7a0] "m"(b1c6d20_c19a7a0), [c19acb0] "m"(b1c6d20_c19acb0), [c118be0] "m"(b1c6d20_c118be0), [c19a930] "m"(b1c6d20_c19a930)
-      : "memory");
+  char ok;
+  unsigned int hdr[3];
+  ok = 0;
+  if (!file_open(info, 1))
+    return 0;
+  if (file_read_from_position(info, 0, 0xc, hdr))
+  {
+    FUN_00118be0((void *)0x32ec44, hdr, 1);
+    if (hdr[0] == 0x52494646u && hdr[2] == 0x57415645u)
+      ok = 1;
+  }
+  file_close(info);
+  return ok;
 }
-#else
-#error "FUN_001c6d20: clang naked draft required"
-#endif
-
-
 /* FUN_001c6d90 (0x1c6d90) — XBE naked draft (batch 265). */
 #if defined(__clang__)
 static bool (*const b1c6d90_c19a7a0)(file_ref_t *info, int flags) = file_open;
@@ -1131,155 +1083,63 @@ void FUN_001c6ed0(void)
 #endif
 
 
-/* FUN_001c6fb0 (0x1c6fb0) — XBE naked draft (batch 265). */
-#if defined(__clang__)
-static void (*const b1c6fb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c6fb0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_001c6fb0(void)
+/* FUN_001c6fb0 (0x1c6fb0) — readable C lift: expand 8-bit PCM to 16-bit in place. */
+void FUN_001c6fb0(void *header, int *count_ptr, unsigned char *buffer)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw 0x8(%%eax), %%ax\n\t"
-      "cmpw $8, %%ax\n\t"
-      "jne .LFUN_001c6fb0_3\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "decl %%eax\n\t"
-      "leal (%%eax,%%ecx,1), %%edx\n\t"
-      "leal (%%ecx,%%eax,2), %%ecx\n\t"
-      "js .LFUN_001c6fb0_2\n\t"
-      "incl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "jmp .LFUN_001c6fb0_1\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_001c6fb0_1:\n\t"
-      "movzbw (%%edx), %%di\n\t"
-      "subl $2, %%ecx\n\t"
-      "imull $0x101, %%edi, %%edi\n\t"
-      "addl $0x7f80, %%edi\n\t"
-      "movw %%di, 0x2(%%ecx)\n\t"
-      "decl %%edx\n\t"
-      "decl %%eax\n\t"
-      "jne .LFUN_001c6fb0_1\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_001c6fb0_2:\n\t"
-      "shll $1, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c6fb0_3:\n\t"
-      "cmpw $0x10, %%ax\n\t"
-      "je .LFUN_001c6fb0_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x118\n\t"
-      "pushl $0x2bc3cc\n\t"
-      "pushl $0x2bc3a4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c6fb0_4:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c6fb0_assert), [exitfn] "m"(b1c6fb0_exitfn)
-      : "memory");
+  int count;
+  int i;
+  unsigned char *src;
+  unsigned short *dst;
+  unsigned int sample;
+  if (*(unsigned short *)((char *)header + 8) != 8)
+    return;
+  count = *count_ptr;
+  if (count > 0)
+  {
+    src = buffer + (count - 1);
+    dst = (unsigned short *)(buffer + (count - 1) * 2);
+    for (i = count; i != 0; i--)
+    {
+      sample = (unsigned int)(*src) * 0x101u + 0x7f80u;
+      *dst = (unsigned short)sample;
+      src--;
+      dst--;
+    }
+  }
+  *count_ptr <<= 1;
 }
-#else
-#error "FUN_001c6fb0: clang naked draft required"
-#endif
-
-
-/* game_sound_clear (0x1c70b0) — XBE naked draft (batch 272). */
-#if defined(__clang__)
-static int (*const b1c70b0_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const b1c70b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b1c70b0_tag)(int, int) = tag_get;
-static void (*const b1c70b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c70b0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* game_sound_clear (0x1c70b0) — readable C lift: detach looping sound owners. */
 void game_sound_clear(void)
 {
-  __asm__ volatile(
-      "movl 0x5054e4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lgame_sound_clear_5\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lgame_sound_clear_1:\n\t"
-      "movl 0x5054e4, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x6c736e64\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x1c(%%ebx), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jne .Lgame_sound_clear_3\n\t"
-      "testb $0x10, 0x4(%%esi)\n\t"
-      "jne .Lgame_sound_clear_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xaf\n\t"
-      "pushl $0x2bc464\n\t"
-      "pushl $0x2bc428\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgame_sound_clear_2:\n\t"
-      "movl $0xffffffff, 0x1c(%%ebx)\n\t"
-      "jmp .Lgame_sound_clear_4\n\t"
-      ".Lgame_sound_clear_3:\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lgame_sound_clear_4\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5054e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lgame_sound_clear_4:\n\t"
-      "movl 0x5054e4, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .Lgame_sound_clear_1\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lgame_sound_clear_5:\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(b1c70b0_c1198f0), [dget] "m"(b1c70b0_dget), [tag] "m"(b1c70b0_tag), [assert] "m"(b1c70b0_assert), [exitfn] "m"(b1c70b0_exitfn)
-      : "memory");
+  data_t *data;
+  int index;
+  char *datum;
+  char *tag;
+  int owner;
+  data = *(data_t **)0x5054e4;
+  index = data_next_index(data, -1);
+  while (index != -1)
+  {
+    datum = (char *)datum_get(data, index);
+    tag = (char *)tag_get(0x6c736e64, *(int *)(datum + 0xc));
+    owner = *(int *)(tag + 0x1c);
+    if (owner == index)
+    {
+      if ((datum[4] & 0x10) == 0)
+      {
+        display_assert((const char *)0x2bc428, (const char *)0x2bc464, 0xaf, 1);
+        system_exit(-1);
+      }
+      *(int *)(tag + 0x1c) = -1;
+    }
+    else if (owner != -1)
+    {
+      datum_get(*(data_t **)0x5054e4, owner);
+    }
+    data = *(data_t **)0x5054e4;
+    index = data_next_index(data, index);
+  }
 }
-#else
-#error "game_sound_clear: clang naked draft required"
-#endif
-
-
 /* game_sound_restore (0x1c7160) — XBE naked draft (batch 275). */
 #if defined(__clang__)
 static int (*const b1c7160_c1198f0)(data_t *data, int prev_index) = data_next_index;
@@ -1640,57 +1500,21 @@ void scripted_looping_sound_set_alternate(int a0, int a1)
   *(unsigned int *)((char *)d + 4) = flags;
 }
 
-/* unattached_looping_sound_start (0x1c7710) — XBE naked draft (batch 287). */
-#if defined(__clang__)
-static void *(*const b1c7710_tag)(int, int) = tag_get;
-static int (*const b1c7710_c1c7230)(int object_index, int sound_tag_index, void *marker_name, short scale_index) = game_looping_sound_new;
-static void *(*const b1c7710_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-int unattached_looping_sound_start(int sound_tag __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
+/* unattached_looping_sound_start (0x1c7710) — readable C lift. */
+int unattached_looping_sound_start(int sound_tag, int param_2, int param_3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x6c736e64\n\t"
-      "call *%[tag]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x25386f\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c7230]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lunattached_looping_sound_start_1\n\t"
-      "movl 0x5054e4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "orl $1, %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      ".Lunattached_looping_sound_start_1:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b1c7710_tag), [c1c7230] "m"(b1c7710_c1c7230), [dget] "m"(b1c7710_dget)
-      : "memory");
+  int handle;
+  char *datum;
+  tag_get(0x6c736e64, sound_tag);
+  handle = game_looping_sound_new(param_2, sound_tag, (void *)0x25386f, -1);
+  if (handle != -1)
+  {
+    datum = (char *)datum_get(*(data_t **)0x5054e4, handle);
+    *(int *)(datum + 4) |= 1;
+    *(int *)(datum + 8) = param_3;
+  }
+  return handle;
 }
-#else
-#error "unattached_looping_sound_start: clang naked draft required"
-#endif
-
-
 /* unattached_looping_sound_stop (0x1c7770) — XBE naked draft (batch 288). */
 #if defined(__clang__)
 static void *(*const b1c7770_dget)(void *, int) = (void *(*)(void *, int))datum_get;
@@ -1985,62 +1809,28 @@ void FUN_001c77a0(void)
 #endif
 
 
-/* FUN_001c7ca0 (0x1c7ca0) — XBE naked draft (batch 263). */
-#if defined(__clang__)
-static void *(*const b1c7ca0_tag)(int, int) = tag_get;
-static void *(*const b1c7ca0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_001c7ca0(void)
+/* FUN_001c7ca0 (0x1c7ca0) — readable C lift: release looping sound owner. */
+void FUN_001c7ca0(unsigned char clear_flag, int sound_tag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001c7ca0_2\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6c736e64\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x1c(%%edi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001c7ca0_1\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5054e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "andl $0xffffffef, 0x4(%%esi)\n\t"
-      "movl 0x1c(%%edi), %%eax\n\t"
-      "movl 0x5054e4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "orl $2, 0x4(%%eax)\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $0xffffffff, 0x1c(%%edi)\n\t"
-      "je .LFUN_001c7ca0_1\n\t"
-      "orl $4, 0x4(%%esi)\n\t"
-      ".LFUN_001c7ca0_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_001c7ca0_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b1c7ca0_tag), [dget] "m"(b1c7ca0_dget)
-      : "memory");
+  char *tag;
+  char *datum;
+  char *datum2;
+  int owner;
+  if (sound_tag == -1)
+    return;
+  tag = (char *)tag_get(0x6c736e64, sound_tag);
+  owner = *(int *)(tag + 0x1c);
+  if (owner == -1)
+    return;
+  datum = (char *)datum_get(*(data_t **)0x5054e4, owner);
+  *(int *)(datum + 4) &= ~0x10;
+  owner = *(int *)(tag + 0x1c);
+  datum2 = (char *)datum_get(*(data_t **)0x5054e4, owner);
+  *(int *)(datum2 + 4) |= 2;
+  *(int *)(tag + 0x1c) = -1;
+  if (clear_flag)
+    *(int *)(datum + 4) |= 4;
 }
-#else
-#error "FUN_001c7ca0: clang naked draft required"
-#endif
-
-
 /* scripted_sound_new (0x1c7f80) — XBE naked draft (batch 256). */
 #if defined(__clang__)
 static void *(*const b1c7f80_tag)(int, int) = tag_get;

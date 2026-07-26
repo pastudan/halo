@@ -10029,8 +10029,8 @@
         },
         {
           "addr": "0x1c6d20",
-          "decl": "void FUN_001c6d20(void);",
-          "ported": false
+          "decl": "char FUN_001c6d20(file_ref_t *info);",
+          "ported": true
         },
         {
           "addr": "0x1c6d90",
@@ -10044,13 +10044,13 @@
         },
         {
           "addr": "0x1c6fb0",
-          "decl": "void FUN_001c6fb0(void);",
-          "ported": false
+          "decl": "void FUN_001c6fb0(void *header, int *count_ptr, unsigned char *buffer);",
+          "ported": true
         },
         {
           "addr": "0x1c70b0",
           "decl": "void game_sound_clear(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c7160",
@@ -10090,7 +10090,7 @@
         {
           "addr": "0x1c7710",
           "decl": "int unattached_looping_sound_start(int sound_tag, int param_2, int param_3);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c7770",
@@ -10104,8 +10104,8 @@
         },
         {
           "addr": "0x1c7ca0",
-          "decl": "void FUN_001c7ca0(void);",
-          "ported": false
+          "decl": "void FUN_001c7ca0(unsigned char clear_flag, int sound_tag @<eax>);",
+          "ported": true
         },
         {
           "addr": "0x1c7d10",
@@ -12245,9 +12245,8 @@
         },
         {
           "addr": "0xc9700",
-          "decl": "char FUN_000c9700(int object_handle, int unused, float distance);",
-          "ported": true,
-          "name": "FUN_000c9700"
+          "decl": "char FUN_000c9700(int object_handle, int target_handle, float distance);",
+          "ported": true
         },
         {
           "addr": "0xc9770",
@@ -39346,9 +39345,8 @@
         },
         {
           "addr": "0x139350",
-          "decl": "int16_t FUN_00139350(int light_handle@<eax>, int16_t *out_buffer@<ebx>, int16_t max_count@<di>);",
-          "ported": false,
-          "name": "FUN_00139350"
+          "decl": "int16_t FUN_00139350(int light_handle @<eax>, int16_t *out_buffer @<ebx>, int16_t max_count @<edi>);",
+          "ported": true
         },
         {
           "addr": "0x1393b0",
