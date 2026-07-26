@@ -2375,57 +2375,17 @@ void FUN_001c1950(void)
 #endif
 
 
-/* FUN_001c19a0 (0x1c19a0) — XBE naked draft (batch 279). */
-#if defined(__clang__)
-static unsigned int *(*const b1c19a0_lseed)(void) = random_math_get_local_seed_address;
-static int16_t (*const b1c19a0_c10b2d0)(unsigned int *seed, int16_t min, int16_t max) = random_range;
-
-__attribute__((naked, noinline))
+/* FUN_001c19a0 (0x1c19a0) — readable C lift. */
 int FUN_001c19a0(void)
 {
-  __asm__ volatile(
-      "pushl $3\n\t"
-      "pushl $0\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10b2d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [lseed] "m"(b1c19a0_lseed), [c10b2d0] "m"(b1c19a0_c10b2d0)
-      : "memory");
+  return (int)(short)random_range(random_math_get_local_seed_address(), 0, 3);
 }
-#else
-#error "FUN_001c19a0: clang naked draft required"
-#endif
 
-
-/* FUN_001c19c0 (0x1c19c0) — XBE naked draft (batch 279). */
-#if defined(__clang__)
-static unsigned int *(*const b1c19c0_lseed)(void) = random_math_get_local_seed_address;
-static int16_t (*const b1c19c0_c10b2d0)(unsigned int *seed, int16_t min, int16_t max) = random_range;
-
-__attribute__((naked, noinline))
+/* FUN_001c19c0 (0x1c19c0) — readable C lift. */
 int FUN_001c19c0(void)
 {
-  __asm__ volatile(
-      "pushl $0x11\n\t"
-      "pushl $0\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10b2d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [lseed] "m"(b1c19c0_lseed), [c10b2d0] "m"(b1c19c0_c10b2d0)
-      : "memory");
+  return (int)(short)random_range(random_math_get_local_seed_address(), 0, 0x11);
 }
-#else
-#error "FUN_001c19c0: clang naked draft required"
-#endif
-
 
 /* FUN_001c19e0 (0x1c19e0) — XBE naked draft (batch 242). */
 #if defined(__clang__)

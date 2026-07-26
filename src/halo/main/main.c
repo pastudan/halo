@@ -3628,26 +3628,11 @@ int main_get_solo_level_from_name(const char *map_name __attribute__((unused)))
 #endif
 
 
-/* main_get_current_solo_level (0x100860) — XBE naked draft (batch 396). */
-#if defined(__clang__)
-static int (*const b100860_c1006f0)(const char *map_name) = (void *)main_get_solo_level_from_name;
-
-__attribute__((naked, noinline))
+/* main_get_current_solo_level (0x100860) — readable C lift (thin wrapper). */
 int main_get_current_solo_level(void)
 {
-  __asm__ volatile(
-      "pushl $0x46da55\n\t"
-      "call *%[c1006f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c1006f0] "m"(b100860_c1006f0)
-      : "memory");
+  return main_get_solo_level_from_name(0x46da55);
 }
-#else
-#error "main_get_current_solo_level: clang naked draft required"
-#endif
-
 
 const char *main_get_solo_level_name(int16_t index)
 {
