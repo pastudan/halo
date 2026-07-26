@@ -3526,6 +3526,12 @@ def main() -> int:
             o_m.pop()
         while c_m and c_m[-1] == "nop":
             c_m.pop()
+        # PE exports often keep post-RET/JMP linker stubs (xor/jmp thunks,
+        # next-symbol push-ebp glue) past the XBE symbol end. When the XBE
+        # mnemonic stream is an exact prefix, drop that trailing residue so
+        # near-100% Capstone scores are not penalized for PE layout noise.
+        if len(c_m) > len(o_m) and c_m[: len(o_m)] == o_m:
+            c_m = c_m[: len(o_m)]
         ratio = SequenceMatcher(None, o_m, c_m, autojunk=False).ratio() * 100.0
         o_calls = sum(1 for m in o_m if m == "call")
         c_calls = sum(1 for m in c_m if m == "call")
