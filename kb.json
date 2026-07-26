@@ -21337,7 +21337,8 @@
         },
         {
           "addr": "0x1ada0",
-          "decl": "void FUN_0001ada0(void);"
+          "decl": "void FUN_0001ada0(void);",
+          "ported": false
         },
         {
           "addr": "0x109010",
@@ -21442,7 +21443,8 @@
         },
         {
           "addr": "0x109a60",
-          "decl": "void FUN_00109a60(void);"
+          "decl": "void FUN_00109a60(void);",
+          "ported": false
         },
         {
           "addr": "0x109ba0",
@@ -21980,7 +21982,8 @@
         },
         {
           "addr": "0x111770",
-          "decl": "void FUN_00111770(int state @<esi>);"
+          "decl": "void FUN_00111770(int state @<esi>);",
+          "ported": false
         },
         {
           "addr": "0x111910",
@@ -22029,7 +22032,8 @@
         },
         {
           "addr": "0x1128c0",
-          "decl": "void FUN_001128c0(int gz @<eax>);"
+          "decl": "void FUN_001128c0(int gz @<eax>);",
+          "ported": false
         },
         {
           "addr": "0x112cd0",
@@ -22098,7 +22102,8 @@
         },
         {
           "addr": "0x113230",
-          "decl": "void * FUN_00113230(char *path, int fd, char *mode@<eax>);"
+          "decl": "void * FUN_00113230(char *path, int fd, char *mode@<eax>);",
+          "ported": false
         },
         {
           "addr": "0x113480",
@@ -22147,7 +22152,8 @@
         },
         {
           "addr": "0x113a90",
-          "decl": "int FUN_00113a90(int codes, int *z, int r);"
+          "decl": "int FUN_00113a90(int codes, int *z, int r);",
+          "ported": false
         }
       ],
       "name": "real_math.obj",
