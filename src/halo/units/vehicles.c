@@ -1915,36 +1915,66 @@ void vehicle_export_function_values(int vehicle_handle)
   }
 }
 
-/* 0x1b8060 */
+/* 0x1b8060 — true when vehicle contact normals oppose the stuck probe vector. */
 char vehicle_stuck(int unit_handle, float *vec)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int local_60 = 0;
+  char *vehicle;
+  char contact[0x64];
+  float accum[3];
+  float average[3];
+  float world[3];
+  float *gravity;
+  float *plane;
+  int mask;
+  int contact_count;
+  int matched;
+  int i;
+  char *block;
 
-  object_get_and_verify_type(unit_handle, 2);
-  FUN_001509c0((void *)0, unit_handle);
-  /* test (char)eax, (char)eax -> je 0x1b81b6 */
-  /* test ecx, ecx -> jle 0x1b81be */
-  /* relift: test dword ptr [ebx + 0x478], edx -> je 0x1b8110 */
-  tag_block_get_element((void *)(uintptr_t)local_60, 0, 128);
-  /* cmp ecx, edx -> jl 0x1b80d0 */
-  /* test (int16_t)esi, (int16_t)esi -> jle 0x1b81ad */
-  matrix_transform_point((float *)0, (float *)0, (float *)0);
-  object_get_world_position(unit_handle, (void *)0);
-  normalize3d((float *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  return 0;
+  vehicle = (char *)object_get_and_verify_type(unit_handle, 2);
+  mask = *(int *)(vehicle + 0x478);
+  if (mask == 0)
+    return 0;
+  if (!FUN_001509c0((int *)contact, unit_handle))
+    return 0;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)local_60;
+  gravity = *(float **)0x31fc1c;
+  accum[0] = gravity[0];
+  accum[1] = gravity[1];
+  accum[2] = gravity[2];
+
+  block = *(char **)(contact + 4);
+  contact_count = *(int *)(block + 0x74);
+  matched = 0;
+  for (i = 0; i < contact_count; i++) {
+    if ((mask & (1 << i)) != 0) {
+      plane = (float *)((char *)tag_block_get_element(block + 0x74, i, 0x80) +
+                        0x38);
+      accum[0] += plane[0];
+      accum[1] += plane[1];
+      accum[2] += plane[2];
+      matched++;
+    }
+  }
+
+  if (matched <= 0)
+    return 0;
+
+  {
+    float inv = *(float *)0x2533c8 / (float)matched;
+    accum[0] *= inv;
+    accum[1] *= inv;
+    accum[2] *= inv;
+  }
+
+  matrix_transform_point((float *)(contact + 8), accum, average);
+  object_get_world_position(unit_handle, (void *)world);
+  vec[0] = average[0] - world[0];
+  vec[1] = average[1] - world[1];
+  vec[2] = average[2] - world[2];
+  if (normalize3d(vec) == 0.0f)
+    return 0;
+  return 1;
 }
 
 /* 0x1b81d0 — vehicle ground force / wheel integration.

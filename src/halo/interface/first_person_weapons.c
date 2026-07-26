@@ -921,51 +921,95 @@ void FUN_000dcdc0(void)
   (void)edi;
 }
 
-/* 0xdce80 */
+/* 0xdce80 — draw the local player's first-person weapon (and optional arms). */
 void first_person_weapon_draw(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  int16_t local_player;
+  char *fp;
+  char *unit;
+  char *weapon_obj;
+  char *weap;
+  char *globals_player;
+  void *leaf;
+  int player_index;
+  int unit_handle;
+  int mode_tag;
+  uint32_t lod_bits;
+  float lod;
+  char light_info[0x38];
+  char node_matrices[0xd00];
 
-  /* cmp (int16_t)eax, (int16_t)edi -> je 0xdd0fd */
-  /* cmp (int16_t)eax, 4 -> jl 0xdcece */
-  display_assert((char *)0x00266fc0, (char *)0x00282294, 1433, 0);
-  system_exit(0);
-  local_player_get_player_index(0);
-  /* cmp eax, edi -> je 0xdd0fb */
-  local_player_get_player_index(eax);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* relift: cmp byte ptr [esi], 0 -> je 0xdd0fb */
-  /* relift: cmp dword ptr [esi + 4], edi -> je 0xdd0fb */
-  /* relift: cmp dword ptr [esi + 8], edi -> je 0xdd0fb */
-  object_get_and_verify_type(0, 0);
-  object_get_and_verify_type(0, 0);
-  tag_get('paew', 0);
-  /* cmp eax, -1 -> je 0xdd0fb */
-  game_globals_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  tag_get('rtna', 0);
-  scenario_leaf_index_from_point(0, 0.0f);
-  /* test (char)eax, 0x41 -> je 0xdcfd7 */
-  /* test (char)eax, (char)eax -> je 0xdd086 */
-  /* cmp eax, -1 -> je 0xdd086 */
-  fp_anim_apply_node_remap(0, 0, 0, 0, (void *)0);
-  FUN_00123ed0(0, 0.0f, (void *)(uintptr_t)edx, (void *)0, (void *)(uintptr_t)eax, (void *)0, 0, (void *)0, 0, (void *)0, 0, 0, 0);
-  /* test (char)eax, (char)eax -> je 0xdd0fb */
-  /* cmp eax, -1 -> je 0xdd0fb */
-  fp_anim_apply_node_remap(0, 0, 0, 0, (void *)0);
-  FUN_00123ed0(0, 0.0f, (void *)(uintptr_t)eax, (void *)0, (void *)(uintptr_t)ebx, (void *)0, 0, (void *)0, 0, (void *)0, 0, 0, 0);
+  local_player = *(int16_t *)0x506548;
+  if (local_player == (int16_t)-1)
+    return;
+  if (local_player < 0 || local_player >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 0x599, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  fp = (char *)(*(int *)0x46bea8) + (int)local_player * 0x1ea0;
+  player_index = local_player_get_player_index(*(int *)0x506548);
+  if (player_index == -1)
+    return;
+  player_index =
+      local_player_get_player_index((int16_t)(*(uint16_t *)0x506548));
+  unit_handle =
+      *(int *)((char *)datum_get(*(data_t **)0x5aa6d4, player_index) + 0x34);
+  if (unit_handle == -1)
+    return;
+  if (fp[0] == 0 || *(int *)(fp + 4) == -1 || *(int *)(fp + 8) == -1)
+    return;
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  weapon_obj = (char *)object_get_and_verify_type(*(int *)(fp + 8), 4);
+  weap = (char *)tag_get(0x77656170, *(int *)weapon_obj); /* 'weap' */
+  if (*(int *)(weap + 0x478) == -1)
+    return;
+
+  globals_player = (char *)tag_block_get_element(
+      (char *)game_globals_get() + 0x17c, 0, 0xc0);
+  (void)tag_get(0x616e7472, *(int *)(weap + 0x478)); /* 'antr' */
+  lod_bits = 0x7f7fffff;
+  lod = *(float *)&lod_bits;
+  leaf = scenario_leaf_index_from_point(unit_handle, lod);
+
+  csmemset(light_info, 0, sizeof(light_info));
+  if (((*(unsigned char *)(unit + 0x1b4) & 0x10) != 0) ||
+      (*(float *)(unit + 0x32c) > 0.0f)) {
+    *(int *)(light_info + 4) = *(int *)(unit + 0x32c);
+    *(int *)(light_info + 8) = *(int *)(unit + 0x330);
+    *(int *)(light_info + 0xc) = unit_handle;
+    *(int *)(light_info + 0x10) = *(int *)0x506550;
+    *(int *)(light_info + 0x14) = *(int *)0x506554;
+    *(int *)(light_info + 0x18) = *(int *)0x506558;
+    *(int16_t *)light_info = 1;
+  } else {
+    *(int16_t *)light_info = 0;
+  }
+
+  if (fp[0x1d8c] != 0) {
+    mode_tag = *(int *)(weap + 0x468);
+    if (mode_tag != -1) {
+      fp_anim_apply_node_remap(mode_tag, (int)node_matrices,
+                               *(int *)(weap + 0x478), (int)(fp + 0x108c),
+                               (int16_t *)(fp + 0x1d8e));
+      FUN_00123ed0(mode_tag, 0.0f, node_matrices, 0, weapon_obj + 0x168,
+                   weapon_obj + 0xe4, (int)leaf, (void *)0x506550, 0,
+                   light_info, *(int *)(fp + 8), 0, 8);
+    }
+  }
+
+  if (fp[0x1e0e] != 0) {
+    mode_tag = *(int *)(globals_player + 0xc);
+    if (mode_tag != -1) {
+      fp_anim_apply_node_remap(mode_tag, (int)node_matrices,
+                               *(int *)(weap + 0x478), (int)(fp + 0x108c),
+                               (int16_t *)(fp + 0x1e10));
+      FUN_00123ed0(mode_tag, 0.0f, node_matrices, 0, unit + 0x168, unit + 0xe4,
+                   (int)leaf, (void *)0x506550, 0, light_info, *(int *)(fp + 8),
+                   0, 8);
+    }
+  }
 }
 
 /* 0xdd190 */

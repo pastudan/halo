@@ -76,69 +76,163 @@ char FUN_0001b750(int actor_handle, int vehicle_handle, int16_t seat_index,
 }
 /* --- action_vehicle.obj batch drafts (2026-07-26) --- */
 
-/* 0x1aeb0 */
-char FUN_0001aeb0(int actor_handle, int vehicle_handle, short seat_index, int param_4, float *out_attach0, float *out_attach1, float *out_attach2, int param_8, int param_9, int param_10, int param_11)
+/* 0x1aeb0 — score / produce seat-enter attach points for an actor→vehicle. */
+char FUN_0001aeb0(int actor_handle, int vehicle_handle, short seat_index,
+                  int param_4, float *out_attach0, float *out_attach1,
+                  float *out_attach2, int param_8, int param_9, int param_10,
+                  int param_11)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *actor;
+  char *actr;
+  char *actv;
+  float attach0[3];
+  float attach1[3];
+  float attach2[3];
+  float world[3];
+  float dir[3];
+  float iter[6];
+  float dist;
+  float score;
+  char flag_near;
+  char flag_mid;
+  char flag_far;
+  int *prop;
+  int other_handle;
+  char *other;
 
-  datum_get((void *)(uintptr_t)ecx, 0);
-  tag_get('rtca', 0);
-  tag_get('vtca', 0);
-  unit_seat_filled(0, ecx);
-  /* test (char)eax, (char)eax -> jne 0x1b276 */
-  unit_seat_allow_noncombatants(0, eax);
-  /* test (char)eax, (char)eax -> je 0x1b276 */
-  unit_get_seat_enter_position(0, 0, ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
-  /* test (char)eax, (char)eax -> je 0x1b276 */
-  object_get_world_position(0, (void *)(uintptr_t)eax);
-  magnitude3d((float *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  FUN_00064540((void *)0, 0);
-  FUN_00064570((void *)(uintptr_t)edx);
-  /* test eax, eax -> je 0x1b0e5 */
-  /* test (char)ecx, (char)ecx -> jne 0x1b0d1 */
-  /* cmp eax, -1 -> je 0x1b0d1 */
-  datum_absolute_index_to_index((void *)(uintptr_t)eax, 0);
-  /* relift: cmp word ptr [eax + 0x6c], (int16_t)ebx -> jne 0x1b0d1 */
-  /* relift: cmp dword ptr [eax + 0x9c], edi -> jne 0x1b0d1 */
-  /* relift: cmp (int16_t)ecx, word ptr [ebp + 0x10] -> jne 0x1b0c7 */
-  unit_seat_is_driver(0, ecx);
-  FUN_00064570((void *)(uintptr_t)ecx);
-  /* test eax, eax -> jne 0x1b050 */
-  object_get_and_verify_type(0, 0);
-  /* test (char)ecx, (char)ecx -> jne 0x1b113 */
-  tag_get('ihev', 0);
-  unit_seat_is_driver(0, ebx);
-  magnitude3d((float *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c4] */
-  /* test (char)eax, 0x41 -> je 0x1b17d */
-  /* relift: relift: fcomp dword ptr [0x253f38] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b1a2 */
-  unit_seat_is_gunner(0, 0);
-  /* test (char)eax, (char)eax -> jne 0x1b1f1 */
-  unit_seat_is_gunner(0, 0);
-  /* test (char)eax, (char)eax -> je 0x1b1f1 */
-  /* test eax, eax -> je 0x1b20c */
-  /* test eax, eax -> je 0x1b224 */
-  /* test eax, eax -> je 0x1b23c */
-  /* test eax, eax -> je 0x1b247 */
-  /* test eax, eax -> je 0x1b255 */
-  /* test eax, eax -> je 0x1b261 */
-  /* test eax, eax -> je 0x1b26d */
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  actr = (char *)tag_get(0x61637472, *(int *)(actor + 0x58)); /* 'actr' */
+  actv = (char *)tag_get(0x61637476, *(int *)(actor + 0x5c)); /* 'actv' */
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
-  (void)ebp;
-  return 0;
+  if (unit_seat_filled(vehicle_handle, seat_index))
+    return 0;
+  if ((*(unsigned char *)(actr + 4) & 8) != 0 &&
+      !unit_seat_allow_noncombatants(vehicle_handle, seat_index))
+    return 0;
+  if (!unit_get_seat_enter_position(*(int *)(actor + 0x18), vehicle_handle,
+                                    seat_index, attach0, attach1, attach2))
+    return 0;
+
+  object_get_world_position(vehicle_handle, (void *)world);
+  (void)world;
+
+  dir[0] = attach1[0] - attach0[0];
+  dir[1] = attach1[1] - attach0[1];
+  dir[2] = 0.0f;
+  if (magnitude3d(dir) == 0.0f) {
+    dir[0] = *(float *)(actor + 0x174);
+    dir[1] = *(float *)(actor + 0x178);
+    dir[2] = *(float *)(actor + 0x17c);
+  }
+
+  {
+    float dx0 = attach0[0] - *(float *)(actor + 0x12c);
+    float dy0 = attach0[1] - *(float *)(actor + 0x130);
+    float dx1 = attach1[0] - *(float *)(actor + 0x12c);
+    float dy1 = attach1[1] - *(float *)(actor + 0x130);
+    float d0 = sqrtf(dx0 * dx0 + dy0 * dy0);
+    float d1 = sqrtf(dx1 * dx1 + dy1 * dy1);
+    if (d1 < d0) {
+      dist = d1;
+    } else {
+      dist = d0;
+    }
+  }
+
+  FUN_00064540((int *)iter, actor_handle);
+  for (prop = (int *)FUN_00064570((int *)iter); prop != 0;
+       prop = (int *)FUN_00064570((int *)iter)) {
+    if (*(char *)((char *)prop + 0x60) != 0)
+      continue;
+    other_handle = *(int *)((char *)prop + 0x1c);
+    if (other_handle == -1)
+      continue;
+    other = (char *)datum_absolute_index_to_index(*(data_t **)0x6325a4,
+                                                  other_handle);
+    if (other == 0)
+      continue;
+    if (*(int16_t *)(other + 0x6c) != 9)
+      continue;
+    if (*(int *)(other + 0x9c) != vehicle_handle)
+      continue;
+    if (*(int16_t *)(other + 0xa0) != seat_index) {
+      (void)unit_seat_is_driver(vehicle_handle, *(int16_t *)(other + 0xa0));
+      continue;
+    }
+    {
+      float ox = *(float *)(other + 0xcc) - *(float *)(other + 0x12c);
+      float oy = *(float *)(other + 0xd0) - *(float *)(other + 0x130);
+      if ((ox * ox + oy * oy) < dist * dist)
+        return 0;
+    }
+  }
+
+  {
+    char *vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
+    if (!param_4) {
+      (void)tag_get(0x76656869, *(int *)vehicle); /* 'vehi' */
+      (void)unit_seat_is_driver(vehicle_handle, seat_index);
+    }
+  }
+
+  {
+    float dx = attach1[0] - *(float *)(actor + 0x12c);
+    float dy = attach1[1] - *(float *)(actor + 0x130);
+    float facing_dot =
+        dy * *(float *)(actor + 0x178) + dx * *(float *)(actor + 0x174);
+    float scratch[3];
+
+    scratch[0] = dx;
+    scratch[1] = dy;
+    scratch[2] = 0.0f;
+    (void)magnitude3d(scratch);
+
+    flag_near = 1;
+    if (dist < *(float *)0x2533c4)
+      flag_near = 0;
+
+    flag_mid = 1;
+    if (!(facing_dot > *(float *)0x253f3c))
+      flag_mid = 0;
+
+    flag_far = 0;
+    if (dist < *(float *)0x253f38 && facing_dot > 0.0f)
+      flag_far = 1;
+
+    score = *(float *)0x253f34 / (dist + *(float *)0x2533c8);
+    if ((signed char)actv[0] < 0) {
+      if (!unit_seat_is_gunner(vehicle_handle, seat_index))
+        score += *(float *)0x253f30;
+    } else if (unit_seat_is_gunner(vehicle_handle, seat_index)) {
+      score += *(float *)0x253f30;
+    }
+
+    if (out_attach0) {
+      out_attach0[0] = attach0[0];
+      out_attach0[1] = attach0[1];
+      out_attach0[2] = attach0[2];
+    }
+    if (out_attach1) {
+      out_attach1[0] = dir[0];
+      out_attach1[1] = dir[1];
+      out_attach1[2] = dir[2];
+    }
+    if (out_attach2) {
+      out_attach2[0] = attach2[0];
+      out_attach2[1] = attach2[1];
+      out_attach2[2] = attach2[2];
+    }
+    if (param_8)
+      *(float *)param_8 = score;
+    if (param_9)
+      *(char *)param_9 = flag_near;
+    if (param_10)
+      *(char *)param_10 = flag_mid;
+    if (param_11)
+      *(char *)param_11 = flag_far;
+  }
+
+  return 1;
 }
 
 /* 0x1b280 — compute vehicle seat-attach probe pose for an actor. */

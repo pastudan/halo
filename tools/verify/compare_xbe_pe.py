@@ -327,6 +327,13 @@ def main() -> int:
         ("FUN_0001b280", 0x1b280, 0x1b750),
         ("get_local_player_input_blob", 0xb70b0, 0xb7e30),
         ("FUN_00136bc0", 0x136bc0, 0x136f40),
+        # gameplay wave 21 (2026-07-26)
+        ("first_person_weapon_draw", 0xdce80, 0xdd110),
+        ("FUN_0001aeb0", 0x1aeb0, 0x1b280),
+        ("vehicle_stuck", 0x1b8060, 0x1b81d0),
+        ("object_compute_function_values", 0x13e7b0, 0x13eb30),
+        ("weapon_export_function_values", 0xfbf00, 0xfc290),
+        ("glow_trailing_particle_new", 0x134350, 0x1345b0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

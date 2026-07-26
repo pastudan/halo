@@ -5201,6 +5201,9 @@ void object_choose_random_region_permutations(int object_handle /* @<edi> */)
  * Confirmed: time scale const *(float*)0x2546a4; output array obj+0xe4.
  * Confirmed: CMP 0x5;JL branches are vestigial bounds checks (identical loads).
  * Uncertain: many field offsets within the 0x168-byte element (see inline). */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((regparm(1)))
+#endif
 void object_compute_function_values(int object_handle /* @<eax> */)
 {
   char *obj;
@@ -5338,7 +5341,8 @@ void object_compute_function_values(int object_handle /* @<eax> */)
 
     /* --- accumulator wrap (flag bit 1), using prior slot value --- */
     if ((*(unsigned char *)elem & 2) != 0) {
-      value = x87_fmod(value + *(float *)(obj + 0xe4 + (int)i * 4), 1.0);
+      value = x87_fmod(value + *(float *)(obj + 0xe4 + (int)i * 4),
+                       *(double *)0x2573d8);
     }
 
     /* --- store result and update active bitmask --- */
@@ -13015,18 +13019,22 @@ void FUN_001342a0(int glow_widget_ptr)
   }
 }
 
-/* 0x134350 — Allocate one trailing glow particle for a widget path. */
-int glow_trailing_particle_new(int glow_widget_ptr)
+/* 0x134350 — Allocate one trailing glow particle for a widget path.
+ * XBE: glow_widget_ptr arrives in EBX (@<ebx>); C export is cdecl. */
+int glow_trailing_particle_new(int glow_widget_ptr /* @<ebx> */)
 {
   char *widget = (char *)glow_widget_ptr;
   char *glow_def;
-  char *particle;
+  char *particle = 0;
   data_t *particle_table;
   int particle_index;
-  int16_t direction_type;
+  int direction_type;
   float scale;
   float lifetime;
+  float t;
   int *seed;
+  float neg1;
+  float pos1;
 
   glow_def = (char *)tag_get(0x676c7721, *(int *)(widget + 0x224)); /* '!wlg' */
   particle_table = *(data_t **)0x5a90cc;
@@ -13037,8 +13045,6 @@ int glow_trailing_particle_new(int glow_widget_ptr)
   particle = (char *)datum_get(particle_table, particle_index);
   *(int *)(particle + 4) = particle_index;
 
-  /* XBE: path widgets (>1 marker) sample lifetime into particle+0x28, then
-   * call get_particle_world_position(widget, particle, 0). */
   if (*(int16_t *)(widget + 4) > 1) {
     float path_max =
         *(float *)(glow_def + 0x10c) * *(float *)(widget + 0x234);
@@ -13046,38 +13052,45 @@ int glow_trailing_particle_new(int glow_widget_ptr)
         *(float *)(glow_def + 0x108) * *(float *)(widget + 0x234);
 
     seed = (int *)random_math_get_local_seed_address();
-    *(float *)(particle + 0x28) =
-        random_real_range(seed, path_min, path_max);
-    get_particle_world_position(glow_widget_ptr, (int)particle, 0.0f);
+    *(float *)(particle + 0x28) = random_real_range(seed, path_min, path_max);
+    get_particle_world_position((int)widget, (int)particle, 0.0f);
   } else {
-    *(float *)(particle + 0x2c) = *(float *)(widget + 0x68);
-    *(float *)(particle + 0x30) = *(float *)(widget + 0x6c);
-    *(float *)(particle + 0x34) = *(float *)(widget + 0x70);
+    *(int *)(particle + 0x2c) = *(int *)(widget + 0x68);
+    *(int *)(particle + 0x30) = *(int *)(widget + 0x6c);
+    *(int *)(particle + 0x34) = *(int *)(widget + 0x70);
   }
 
-  direction_type = *(int16_t *)(glow_def + 0x26);
-  if (direction_type == 0) {
-    *(float *)(particle + 0x38) = 0.0f;
-    *(float *)(particle + 0x3c) = 0.0f;
-    *(float *)(particle + 0x40) = 1.0f;
-  } else if (direction_type == 1) {
+  /* XBE: movsx/sub/dec chain on direction enum. */
+  direction_type = (int)*(int16_t *)(glow_def + 0x26);
+  neg1 = -1.0f;
+  pos1 = 1.0f;
+  switch (direction_type) {
+  case 0:
+    *(int *)(particle + 0x38) = 0;
+    *(int *)(particle + 0x3c) = 0;
+    *(int *)(particle + 0x40) = 0x3f800000;
+    break;
+  case 1: {
     int16_t point_index = *(int16_t *)(particle + 2);
     char *point = widget + 0x5c + (int)point_index * 0x6c;
-
-    *(float *)(particle + 0x38) = *(float *)(point + 0);
-    *(float *)(particle + 0x3c) = *(float *)(point + 4);
-    *(float *)(particle + 0x40) = *(float *)(point + 8);
-  } else if (direction_type == 2) {
+    *(int *)(particle + 0x38) = *(int *)(point + 0);
+    *(int *)(particle + 0x3c) = *(int *)(point + 4);
+    *(int *)(particle + 0x40) = *(int *)(point + 8);
+    break;
+  }
+  case 2:
     seed = (int *)random_math_get_local_seed_address();
-    *(float *)(particle + 0x38) = random_real_range(seed, -1.0f, 1.0f);
+    *(float *)(particle + 0x38) = random_real_range(seed, neg1, pos1);
     seed = (int *)random_math_get_local_seed_address();
-    *(float *)(particle + 0x3c) = random_real_range(seed, -1.0f, 1.0f);
+    *(float *)(particle + 0x3c) = random_real_range(seed, neg1, pos1);
     seed = (int *)random_math_get_local_seed_address();
-    *(float *)(particle + 0x40) = random_real_range(seed, -1.0f, 1.0f);
-    normalize3d((float *)(particle + 0x38));
-  } else {
+    *(float *)(particle + 0x40) = random_real_range(seed, neg1, pos1);
+    (void)normalize3d((float *)(particle + 0x38));
+    break;
+  default:
     display_assert((char *)0x0029abfc, (char *)0x0029ab60, 0x3e4, 1);
     system_exit(-1);
+    break;
   }
 
   scale = *(float *)(glow_def + 0x104) * *(float *)0x2546a4;
@@ -13088,7 +13101,6 @@ int glow_trailing_particle_new(int glow_widget_ptr)
   seed = (int *)random_math_get_local_seed_address();
   lifetime = random_real_range(seed, *(float *)(glow_def + 0xa0),
                                *(float *)(glow_def + 0xa4));
-  /* XBE always divides by widget+0x228 (may be 0). */
   *(float *)(particle + 0x20) =
       lifetime / (float)*(int16_t *)(widget + 0x228);
 
@@ -13096,17 +13108,17 @@ int glow_trailing_particle_new(int glow_widget_ptr)
       (int16_t)(int)(*(float *)(glow_def + 0x100) * *(float *)0x253394);
 
   seed = (int *)random_math_get_local_seed_address();
-  scale = random_real_range(seed, 0.0f, 1.0f);
-  *(float *)(particle + 0xc) = 1.0f;
-  *(int *)(particle + 0x54) |= 2;
+  t = random_real_range(seed, 0.0f, 1.0f);
+  *(int *)(particle + 0xc) = 0x3f800000;
+  *(int *)(particle + 0x54) = *(int *)(particle + 0x54) | 2;
   *(float *)(particle + 0x10) =
-      (*(float *)(glow_def + 0xc8) - *(float *)(glow_def + 0xb8)) * scale +
+      (*(float *)(glow_def + 0xc8) - *(float *)(glow_def + 0xb8)) * t +
       *(float *)(glow_def + 0xb8);
   *(float *)(particle + 0x14) =
-      (*(float *)(glow_def + 0xcc) - *(float *)(glow_def + 0xbc)) * scale +
+      (*(float *)(glow_def + 0xcc) - *(float *)(glow_def + 0xbc)) * t +
       *(float *)(glow_def + 0xbc);
   *(float *)(particle + 0x18) =
-      (*(float *)(glow_def + 0xd0) - *(float *)(glow_def + 0xc0)) * scale +
+      (*(float *)(glow_def + 0xd0) - *(float *)(glow_def + 0xc0)) * t +
       *(float *)(glow_def + 0xc0);
 
   return (int)particle;

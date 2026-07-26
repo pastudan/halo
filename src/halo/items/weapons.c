@@ -1555,37 +1555,44 @@ static float weapon_export_eval_function(int weapon_handle, char *weapon_obj,
   return value;
 }
 
-/* 0xfbf00 */
+/* 0xfbf00 — export up to 4 weapon function values onto the attachment root. */
 void weapon_export_function_values(int weapon_handle)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
   char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
   char *out_obj = weapon_obj;
-  int slot;
+  int16_t *fn_ids;
+  float *out_slots;
+  int remaining;
 
-  /* Walk attached parents; function slots are written on the top object. */
+  /* Walk attached parents while the "attached" flag stays set. */
   if ((out_obj[4] & 1) != 0) {
     while (*(int *)(out_obj + 0xcc) != -1) {
-      char *parent =
+      out_obj =
           (char *)object_get_and_verify_type(*(int *)(out_obj + 0xcc), -1);
-      out_obj = parent;
       if ((out_obj[4] & 1) == 0)
         break;
     }
   }
 
-  for (slot = 0; slot < 4; slot++) {
-    int16_t function_id = *(int16_t *)(tag_data + 0x330 + slot * 2);
-    float *out = (float *)(out_obj + 0xd4 + slot * 4);
+  out_slots = (float *)(out_obj + 0xd4);
+  fn_ids = (int16_t *)(tag_data + 0x330);
+  remaining = 4;
+  do {
+    int16_t function_id = *fn_ids;
 
-    if (function_id == 0)
-      continue;
-    if ((unsigned)((int)function_id - 1) > 15)
-      continue;
+    if (function_id != 0) {
+      float value = 0.0f;
+      if ((unsigned)((int)function_id - 1) <= 15)
+        value = weapon_export_eval_function(weapon_handle, weapon_obj, tag_data,
+                                            function_id);
+      *out_slots = value;
+    }
 
-    *out = weapon_export_eval_function(weapon_handle, weapon_obj, tag_data,
-                                       function_id);
-  }
+    fn_ids++;
+    out_slots++;
+    remaining--;
+  } while (remaining != 0);
 }
 
 /* 0xfc4b0 */
