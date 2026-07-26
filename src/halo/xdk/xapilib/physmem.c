@@ -2311,13 +2311,44 @@ void FUN_001d41be(void)
 #endif
 
 
-/* 0x1d4230 */
+/* FUN_001d4230 (0x1d4230) — XBE naked draft (batch 385). */
+#if defined(__clang__)
+static void (*const b1d4230_c1d4157)(void) = (void *)FUN_001d4157;
+static void (*const b1d4230_c1d8df8)(void) = (void *)XcSHAUpdate;
+static void (*const b1d4230_c1d41be)(void) = (void *)FUN_001d41be;
+
+__attribute__((naked, noinline))
 void FUN_001d4230(void)
 {
-  FUN_001d4157();
-  XcSHAUpdate(0, 0, 20);
-  FUN_001d41be();
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0x8(%%esp), %%esi\n\t"
+      "addl $8, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x10\n\t"
+      "pushl 0x253234\n\t"
+      "call *%[c1d4157]\n\t"
+      "pushl $0x14\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d8df8]\n\t"
+      "pushl 0x10(%%esp)\n\t"
+      "pushl $0x10\n\t"
+      "pushl 0x253234\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d41be]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c1d4157] "m"(b1d4230_c1d4157), [c1d8df8] "m"(b1d4230_c1d8df8), [c1d41be] "m"(b1d4230_c1d41be)
+      : "memory");
 }
+#else
+#error "FUN_001d4230: clang naked draft required"
+#endif
+
 
 /* XCalculateSignatureBegin (0x1d426b) — XBE naked draft (batch 347). */
 #if defined(__clang__)
@@ -2363,11 +2394,30 @@ void XCalculateSignatureBegin(void)
 #endif
 
 
-/* 0x1d42a9 */
+/* FUN_001d42a9 (0x1d42a9) — XBE naked draft (batch 386). */
+#if defined(__clang__)
+static void (*const b1d42a9_c1d8df8)(void) = (void *)XcSHAUpdate;
+
+__attribute__((naked, noinline))
 void FUN_001d42a9(void)
 {
-  XcSHAUpdate(0, 0, 0);
+  __asm__ volatile(
+      "pushl 0xc(%%esp)\n\t"
+      "movl 0x8(%%esp), %%eax\n\t"
+      "pushl 0xc(%%esp)\n\t"
+      "addl $8, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d8df8]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      :
+      : [c1d8df8] "m"(b1d42a9_c1d8df8)
+      : "memory");
 }
+#else
+#error "FUN_001d42a9: clang naked draft required"
+#endif
+
 
 /* FUN_001d42c3 (0x1d42c3) — XBE naked draft (batch 356). */
 #if defined(__clang__)
@@ -2612,11 +2662,34 @@ void FUN_001d4436(void)
 #endif
 
 
-/* 0x1d4464 */
+/* FUN_001d4464 (0x1d4464) — XBE naked draft (batch 388). */
+#if defined(__clang__)
+static void (*const b1d4464_c1d8e0a)(void) = (void *)ExQueryNonVolatileSetting;
+
+__attribute__((naked, noinline))
 void FUN_001d4464(void)
 {
-  ExQueryNonVolatileSetting(0, 0, 0, 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl 0x18(%%ebp)\n\t"
+      "pushl 0x14(%%ebp)\n\t"
+      "pushl 0x10(%%ebp)\n\t"
+      "pushl 0xc(%%ebp)\n\t"
+      "pushl 0x8(%%ebp)\n\t"
+      "call *%[c1d8e0a]\n\t"
+      "pushl %%eax\n\t"
+      "call *0x2531d0\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d8e0a] "m"(b1d4464_c1d8e0a)
+      : "memory");
 }
+#else
+#error "FUN_001d4464: clang naked draft required"
+#endif
+
 
 /* FUN_001d4486 (0x1d4486) — XBE naked draft (batch 378). */
 #if defined(__clang__)

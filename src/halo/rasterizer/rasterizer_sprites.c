@@ -1316,18 +1316,42 @@ void FUN_0017d8f0(void)
 #endif
 
 
-/* 0x17d910 */
+/* rasterizer_screen_effects_initialize (0x17d910) — XBE naked draft (batch 387). */
+#if defined(__clang__)
+static void * (*const b17d910_c1bfbf0)(const char *name, const char *a2, int size) = (void *)game_state_malloc;
+static void (*const b17d910_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b17d910_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void rasterizer_screen_effects_initialize(void)
 {
-  int eax = 0;
-
-  game_state_malloc((char *)0x002af368, (char *)0, 120);
-  /* mem[0x0047e4d4] = eax */
-  display_assert((char *)0x002af314, (char *)0x002af334, 54, 0);
-  system_exit(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl $0x78\n\t"
+      "pushl $0\n\t"
+      "pushl $0x2af368\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x47e4d4\n\t"
+      "jne .Lrasterizer_screen_effects_initialize_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x36\n\t"
+      "pushl $0x2af334\n\t"
+      "pushl $0x2af314\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_screen_effects_initialize_1:\n\t"
+      "ret\n\t"
+      :
+      : [c1bfbf0] "m"(b17d910_c1bfbf0), [assert] "m"(b17d910_assert), [exitfn] "m"(b17d910_exitfn)
+      : "memory");
 }
+#else
+#error "rasterizer_screen_effects_initialize: clang naked draft required"
+#endif
+
 
 /* FUN_0017d950 (0x17d950) — XBE naked draft (batch 381). */
 #if defined(__clang__)
@@ -3062,23 +3086,68 @@ void FUN_0017eb30(float *point0 __attribute__((unused)), float *point1 __attribu
 #endif
 
 
-/* 0x17eb50 */
+/* FUN_0017eb50 (0x17eb50) — XBE naked draft (batch 385). */
+#if defined(__clang__)
+static void * (*const b17eb50_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
+static void (*const b17eb50_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+
+__attribute__((naked, noinline))
 void FUN_0017eb50(void)
 {
-  int eax = 0;
-
-  debug_malloc(0x00024000, 0, (char *)0x002af728, 41);
-  /* mem[0x0047ec40] = eax */
-  error(0, (char *)0x002af710);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl $0x29\n\t"
+      "pushl $0x2af728\n\t"
+      "pushl $0\n\t"
+      "pushl $0x24000\n\t"
+      "movb $1, %%bl\n\t"
+      "call *%[c8ee60]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x47ec40\n\t"
+      "jne .LFUN_0017eb50_1\n\t"
+      "pushl $0x2af710\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_0017eb50_1:\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c8ee60] "m"(b17eb50_c8ee60), [c8f390] "m"(b17eb50_c8f390)
+      : "memory");
 }
+#else
+#error "FUN_0017eb50: clang naked draft required"
+#endif
 
-/* 0x17eb90 */
+
+/* FUN_0017eb90 (0x17eb90) — XBE naked draft (batch 387). */
+#if defined(__clang__)
+static void *(*const b17eb90_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void FUN_0017eb90(void)
 {
-  csmemset((void *)0x005a5400, 0, 368);
+  __asm__ volatile(
+      "pushl $0x170\n\t"
+      "pushl $0\n\t"
+      "pushl $0x5a5400\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b17eb90_memset)
+      : "memory");
 }
+#else
+#error "FUN_0017eb90: clang naked draft required"
+#endif
+
 
 /* FUN_0017ebb0 (0x17ebb0) — XBE naked draft (batch 300). */
 #if defined(__clang__)

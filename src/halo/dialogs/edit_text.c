@@ -566,18 +566,43 @@ int FUN_00096f20(int a0 __attribute__((unused)), float a1 __attribute__((unused)
 #endif
 
 
-/* 0x97040 */
-void FUN_00097040(int a0, float a1)
+/* FUN_00097040 (0x97040) — XBE naked draft (batch 387). */
+#if defined(__clang__)
+static void *(*const b97040_get)(int, int) = object_get_and_verify_type;
+static void (*const b97040_c96510)(int a0, float a1) = (void *)device_group_set_actual_value;
+
+__attribute__((naked, noinline))
+void FUN_00097040(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
 {
-  int eax = 0;
-
-  /* cmp eax, -1 -> je 0x97073 */
-  object_get_and_verify_type(0, 896);
-  /* cmp (int16_t)eax, 0xffff -> je 0x97073 */
-  device_group_set_actual_value(0, 0.0f);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00097040_1\n\t"
+      "pushl $0x380\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movswl 0x1b4(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_00097040_1\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c96510]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00097040_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b97040_get), [c96510] "m"(b97040_c96510)
+      : "memory");
 }
+#else
+#error "FUN_00097040: clang naked draft required"
+#endif
+
 
 /* FUN_00097080 (0x97080) — XBE naked draft (batch 372). */
 #if defined(__clang__)

@@ -5185,14 +5185,54 @@ void FUN_0016f610(void)
 #endif
 
 
-/* 0x16f6c0 */
+/* FUN_0016f6c0 (0x16f6c0) — XBE naked draft (batch 387). */
+#if defined(__clang__)
+static void *(*const b16f6c0_memset)(void *, int, unsigned int) = csmemset;
+static bool __stdcall (*const b16f6c0_c1d33fb)(void *freq) = (void *)QueryPerformanceFrequency;
+
+__attribute__((naked, noinline))
 void FUN_0016f6c0(void)
 {
-  csmemset((void *)0x0047e108, 0, 128);
-  csmemset((void *)0x0047e088, 0, 128);
-  csmemset((void *)0x0047e008, 0, 128);
-  QueryPerformanceFrequency((void *)0x00325178);
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl $0x1d, %%ecx\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LFUN_0016f6c0_1:\n\t"
+      "movl %%esi, 0x47e358(%%eax)\n\t"
+      "movl %%esi, 0x47e35c(%%eax)\n\t"
+      "movl %%esi, 0x47e270(%%eax)\n\t"
+      "movl %%esi, 0x47e274(%%eax)\n\t"
+      "addl $8, %%eax\n\t"
+      "decl %%ecx\n\t"
+      "jne .LFUN_0016f6c0_1\n\t"
+      "pushl $0x80\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x47e108\n\t"
+      "call *%[memset]\n\t"
+      "pushl $0x80\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x47e088\n\t"
+      "call *%[memset]\n\t"
+      "pushl $0x80\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x47e008\n\t"
+      "call *%[memset]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl $0x325178\n\t"
+      "call *%[c1d33fb]\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b16f6c0_memset), [c1d33fb] "m"(b16f6c0_c1d33fb)
+      : "memory");
 }
+#else
+#error "FUN_0016f6c0: clang naked draft required"
+#endif
+
 
 /* FUN_0016f730 (0x16f730) — XBE naked draft (batch 329). */
 #if defined(__clang__)
@@ -9604,19 +9644,34 @@ void FUN_001741d0(float *quad __attribute__((unused)))
 #endif
 
 
-/* 0x1744f0 */
+/* FUN_001744f0 (0x1744f0) — XBE naked draft (batch 389). */
+#if defined(__clang__)
+static int __stdcall (*const b1744f0_c1ef0a0)(uint32_t length, uint32_t usage, uint32_t fvf, uint32_t pool, void **ppVertexBuffer) = (void *)D3DDevice_CreateVertexBuffer;
+
+__attribute__((naked, noinline))
 void FUN_001744f0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  D3DDevice_CreateVertexBuffer(ecx, eax, edx, ecx, (void *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ef0a0]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1ef0a0] "m"(b1744f0_c1ef0a0)
+      : "memory");
 }
+#else
+#error "FUN_001744f0: clang naked draft required"
+#endif
+
 
 /* FUN_00174510 (0x174510) — XBE naked draft (batch 313). */
 #if defined(__clang__)
@@ -10930,12 +10985,28 @@ void FUN_001792a0(void)
 #endif
 
 
-/* 0x1792c0 */
-void FUN_001792C0(int param_1)
+/* FUN_001792C0 (0x1792c0) — XBE naked draft (batch 387). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void FUN_001792C0(int param_1 __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "movb %%al, 0x47e4c9\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001792C0: clang naked draft required"
+#endif
+
 
 /* 0x1792d0 */
 void FUN_001792d0(void)
@@ -12540,15 +12611,33 @@ void FUN_0017a8a0(void)
 #endif
 
 
-/* 0x17ad20 */
+/* FUN_0017ad20 (0x17ad20) — XBE naked draft (batch 388). */
+#if defined(__clang__)
+static void __stdcall (*const b17ad20_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
+
+__attribute__((naked, noinline))
 void FUN_0017ad20(void)
 {
-  int edx = 0;
-
-  D3DDevice_SetVertexData2f(edx, 0.0f, 0.0f);
-
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1ed280]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1ed280] "m"(b17ad20_c1ed280)
+      : "memory");
 }
+#else
+#error "FUN_0017ad20: clang naked draft required"
+#endif
+
 
 /* FUN_0017ad40 (0x17ad40) — XBE naked draft (batch 376). */
 #if defined(__clang__)
@@ -14861,18 +14950,42 @@ char FUN_0017c2f0(void *shader __attribute__((unused)), void *state __attribute_
 #endif
 
 
-/* 0x17c790 */
+/* rasterizer_window_set_fog (0x17c790) — XBE naked draft (batch 387). */
+#if defined(__clang__)
+static void * (*const b17c790_c1bfbf0)(const char *name, const char *a2, int size) = (void *)game_state_malloc;
+static void (*const b17c790_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b17c790_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void rasterizer_window_set_fog(void)
 {
-  int eax = 0;
-
-  game_state_malloc((char *)0x002af214, (char *)0, 16);
-  /* mem[0x0047e4d0] = eax */
-  display_assert((char *)0x002af1bc, (char *)0x002af1ec, 289, 0);
-  system_exit(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl $0x10\n\t"
+      "pushl $0\n\t"
+      "pushl $0x2af214\n\t"
+      "call *%[c1bfbf0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x47e4d0\n\t"
+      "jne .Lrasterizer_window_set_fog_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x121\n\t"
+      "pushl $0x2af1ec\n\t"
+      "pushl $0x2af1bc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_window_set_fog_1:\n\t"
+      ".byte 0xe9, 0x41, 0xa8, 0xfd, 0xff\n\t"
+      :
+      : [c1bfbf0] "m"(b17c790_c1bfbf0), [assert] "m"(b17c790_assert), [exitfn] "m"(b17c790_exitfn)
+      : "memory");
 }
+#else
+#error "rasterizer_window_set_fog: clang naked draft required"
+#endif
+
 
 /* 0x17c7d0 */
 void FUN_0017C7D0(void)

@@ -175,34 +175,66 @@ void *rasterizer_get_default_hardware_format(void *bitmap_data)
 }
 /* --- rasterizer_xbox.obj batch drafts (2026-07-26) --- */
 
-/* 0x155350 */
+/* FUN_00155350 (0x155350) — XBE naked draft (batch 385). */
+#if defined(__clang__)
+static void __stdcall (*const b155350_c1ee920)(void *source_rect, void *dest_rect, void *window_override, void *dirty_region) = (void *)D3DDevice_Present;
+
+__attribute__((naked, noinline))
 void FUN_00155350(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  D3DDevice_Present((void *)(uintptr_t)eax, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
-  D3DDevice_GetBackBuffer(0, ecx, (void *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ee920]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1ee920] "m"(b155350_c1ee920)
+      : "memory");
 }
+#else
+#error "FUN_00155350: clang naked draft required"
+#endif
 
-/* 0x155380 */
+
+/* FUN_00155380 (0x155380) — XBE naked draft (batch 388). */
+#if defined(__clang__)
+static void __stdcall (*const b155380_c1e6ae0)(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture) = (void *)D3DDevice_CreateTexture;
+
+__attribute__((naked, noinline))
 void FUN_00155380(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  D3DDevice_CreateTexture(eax, edx, ecx, eax, edx, ecx, (void *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1e6ae0]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1e6ae0] "m"(b155380_c1e6ae0)
+      : "memory");
 }
+#else
+#error "FUN_00155380: clang naked draft required"
+#endif
+
 
 /* FUN_001553a0 (0x1553a0) — XBE naked draft (batch 343). */
 #if defined(__clang__)
@@ -351,17 +383,36 @@ void rasterizer_spin_end(void)
   (void)0;
 }
 
-/* 0x1559d0 */
+/* _rasterizer_windows_begin (0x1559d0) — XBE naked draft (batch 386). */
+#if defined(__clang__)
+static void (*const b1559d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1559d0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void _rasterizer_windows_begin(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jne 0x1559f9 */
-  display_assert((char *)0x0029dc40, (char *)0x0029dc0c, 1331, 0);
-  system_exit(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x476ab0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .L_rasterizer_windows_begin_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x533\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29dc40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".L_rasterizer_windows_begin_1:\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1559d0_assert), [exitfn] "m"(b1559d0_exitfn)
+      : "memory");
 }
+#else
+#error "_rasterizer_windows_begin: clang naked draft required"
+#endif
+
 
 /* _rasterizer_window_get_fog (0x155a00) — XBE naked draft (batch 380). */
 #if defined(__clang__)
@@ -404,17 +455,36 @@ void _rasterizer_window_get_fog(void)
 #endif
 
 
-/* 0x155a40 */
+/* _rasterizer_windows_end (0x155a40) — XBE naked draft (batch 386). */
+#if defined(__clang__)
+static void (*const b155a40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b155a40_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void _rasterizer_windows_end(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jne 0x155a69 */
-  display_assert((char *)0x0029dc40, (char *)0x0029dc0c, 1629, 0);
-  system_exit(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x476ab0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .L_rasterizer_windows_end_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x65d\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29dc40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".L_rasterizer_windows_end_1:\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b155a40_assert), [exitfn] "m"(b155a40_exitfn)
+      : "memory");
 }
+#else
+#error "_rasterizer_windows_end: clang naked draft required"
+#endif
+
 
 /* _rasterizer_frame_end (0x155a70) — XBE naked draft (batch 335). */
 #if defined(__clang__)
@@ -519,19 +589,35 @@ void _rasterizer_frame_end(void)
 #endif
 
 
-/* 0x155b60 */
+/* FUN_00155b60 (0x155b60) — XBE naked draft (batch 385). */
+#if defined(__clang__)
+static void __stdcall (*const b155b60_c1edc70)(void *texture, unsigned int level, void *locked_rect, void *rect, unsigned int flags) = (void *)D3DTexture_LockRect;
+
+__attribute__((naked, noinline))
 void FUN_00155b60(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  D3DTexture_LockRect((void *)(uintptr_t)ecx, eax, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1edc70]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1edc70] "m"(b155b60_c1edc70)
+      : "memory");
 }
+#else
+#error "FUN_00155b60: clang naked draft required"
+#endif
+
 
 /* _rasterizer_dispose (0x155b90) — XBE naked draft (batch 383). */
 #if defined(__clang__)
@@ -2102,19 +2188,33 @@ void FUN_001569f0(void)
 #endif
 
 
-/* 0x156a90 */
+/* FUN_00156a90 (0x156a90) — XBE naked draft (batch 387). */
+#if defined(__clang__)
+static int __stdcall (*const b156a90_c1ef200)(void *surface, void *locked_rect, void *rect, uint32_t flags) = (void *)D3DSurface_LockRect;
+
+__attribute__((naked, noinline))
 void FUN_00156a90(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  D3DSurface_LockRect((void *)(uintptr_t)eax, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ef200]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1ef200] "m"(b156a90_c1ef200)
+      : "memory");
 }
+#else
+#error "FUN_00156a90: clang naked draft required"
+#endif
+
 
 /* rasterizer_set_model_lighting (0x156ab0) — XBE naked draft (batch 319). */
 #if defined(__clang__)
