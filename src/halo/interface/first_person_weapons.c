@@ -1391,19 +1391,23 @@ void FUN_000de0e0(int object_handle, int16_t local_player_index)
   FUN_000dde80((int)(int16_t)local_player_index);
 }
 
-/* 0xde360 */
+/* 0xde360 — forward a weapon message via FP slot, or unit-held weapon sound. */
 void first_person_weapon_message_from_unit(int unit_handle, int message_type)
 {
-  int esi = 0;
+  int16_t local_index;
+  char *unit_obj;
+  int16_t weapon_index;
 
-  FUN_000dcdc0(unit_handle);
-  FUN_000de140(0, 0);
-  /* cmp (int16_t)esi, -1 -> jne 0xde3a6 */
-  object_get_and_verify_type(0, 0);
-  /* cmp (int16_t)eax, (int16_t)esi -> je 0xde3a6 */
-  FUN_000dc9d0(0, 0);
+  local_index = FUN_000dcdc0(unit_handle);
+  FUN_000de140((int)local_index, message_type);
+  if (local_index != (int16_t)-1)
+    return;
 
-  (void)esi;
+  unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
+  weapon_index = *(int16_t *)(unit_obj + 0x2a2);
+  if (weapon_index == local_index)
+    return;
+  FUN_000dc9d0(message_type, (int)weapon_index);
 }
 
 /* 0xde3f0 — Advance first-person weapon state for one local player. */

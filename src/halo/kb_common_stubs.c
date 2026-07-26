@@ -5590,7 +5590,7 @@ void FUN_000fdc90(void)
   /* cmp (int16_t)eax, 2 -> jl 0xfe3f3 */
   display_assert((char *)0x0028ae40, (char *)0x0028ad48, 2577, 0);
   system_exit(0);
-  FUN_000fcec0(0, 0, 0);
+  FUN_000fcec0(0, 0);
   weapon_start_effect(0, 0.0f, 0.0f, 0);
 
   (void)eax;
@@ -5695,7 +5695,7 @@ void FUN_000fe790(void)
   system_exit(0);
   /* relift: cmp dword ptr [ecx], 1 -> jle 0xfe86d */
   FUN_000fdc90();
-  FUN_000fcec0(0, 0, 0);
+  FUN_000fcec0(0, 0);
 
   (void)eax;
   (void)ecx;
@@ -5824,7 +5824,7 @@ void FUN_000fe910(void)
   /* cmp (char)eax, 0x7f -> jge 0xff14b */
   /* relift: cmp word ptr [edi + 2], (int16_t)ecx -> je 0xff013 */
   FUN_000fe450();
-  FUN_000fcec0(0, 0, 0);
+  FUN_000fcec0(0, 0);
   /* test (char)eax, (char)eax -> jne 0xff03d */
   FUN_000fe450();
   /* relift: cmp word ptr [edi + 2], (int16_t)ecx -> jne 0xff14b */

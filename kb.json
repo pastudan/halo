@@ -13951,12 +13951,12 @@
         },
         {
           "addr": "0xf5640",
-          "decl": "void FUN_000f5640(void);",
+          "decl": "char FUN_000f5640(void);",
           "ported": false
         },
         {
           "addr": "0xf5650",
-          "decl": "void FUN_000f5650(void);",
+          "decl": "char FUN_000f5650(void);",
           "ported": false
         },
         {
@@ -33713,7 +33713,7 @@
         },
         {
           "addr": "0xfcc90",
-          "decl": "void FUN_000fcc90(int weapon_handle, int16_t magazine_index);",
+          "decl": "void FUN_000fcc90(int16_t magazine_index, int weapon_handle);",
           "ported": false
         },
         {
@@ -33733,7 +33733,7 @@
         },
         {
           "addr": "0xfcec0",
-          "decl": "void FUN_000fcec0(int param_a, int weapon_handle, int16_t trigger_index);",
+          "decl": "void FUN_000fcec0(int16_t trigger_index, int weapon_handle);",
           "ported": false
         },
         {
@@ -39129,7 +39129,7 @@
         },
         {
           "addr": "0x139300",
-          "decl": "int lights_enable(int a0);",
+          "decl": "char lights_enable(char active);",
           "ported": false
         },
         {

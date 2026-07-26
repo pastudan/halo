@@ -1608,18 +1608,16 @@ void FUN_000f4cf0(void *widget)
   }
 }
 
-/* 0xf5640 */
-void FUN_000f5640(void)
+/* 0xf5640 — virtual-keyboard edit-session active flag. */
+char FUN_000f5640(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  return *(char *)0x46cef0;
 }
 
-/* 0xf5650 */
-void FUN_000f5650(void)
+/* 0xf5650 — virtual-keyboard caps/shift-related UI flag. */
+char FUN_000f5650(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  return *(char *)0x46cf06;
 }
 
 /* 0xf5660 — virtual-keyboard cursor left (skip duplicate keymap glyphs). */
@@ -1896,27 +1894,17 @@ void object_get_type(void)
   (void)eax;
 }
 
-/* 0xf5f90 */
+/* 0xf5f90 — items TU init alias (XBE: jmp FUN_000f57a0). */
 void items_initialize(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-
-  ustrncpy((wchar_t *)(uintptr_t)eax, (wchar_t *)0x0046cf18, ecx);
-  /* mem[0x0046cf08] = ebx */
-  ui_play_audio_feedback_sound(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
+  FUN_000f57a0();
 }
 
-/* 0xf5fa0 */
+/* 0xf5fa0 — flush the item-name keyboard if an edit session is active. */
 void items_initialize_for_new_map(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  if (*(char *)0x46cef0 != 0)
+    FUN_000f5900();
 }
 
 /* 0xf5fb0 — handle item-name UI keyboard/controller actions (jump table). */

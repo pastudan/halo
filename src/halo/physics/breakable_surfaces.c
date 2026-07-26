@@ -1077,17 +1077,8 @@ void FUN_001457d0(int a0, int a1, int a2, int a3)
 }
 /* --- breakable_surfaces.obj orphan shells (2026-07-26) --- */
 
-/* orphan 0x1459d0 */
+/* 0x1459d0 — XBE thunk to breakable_surfaces_initialize_for_new_map. */
 void breakable_surfaces_reset(void)
 {
-  int eax = 0;
-  int edx = 0;
-
-  /* test edx, edx -> jne 0x145921 */
-  display_assert((char *)0x0029c810, (char *)0x0029c818, 90, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)eax, 0, 32);
-
-  (void)eax;
-  (void)edx;
+  breakable_surfaces_initialize_for_new_map();
 }

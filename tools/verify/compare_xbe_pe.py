@@ -412,6 +412,18 @@ def main() -> int:
         ("weapon_trigger_release_charge", 0xfb880, 0xfb910),
         ("FUN_000fcd10", 0xfcd10, 0xfcdd0),
         ("weapon_new", 0xfbd10, 0xfbea0),
+        # gameplay wave 33 (2026-07-26)
+        ("lights_enable", 0x139300, 0x139310),
+        ("light_delete", 0x139310, 0x139350),
+        ("first_person_weapon_message_from_unit", 0xde360, 0xde3f0),
+        ("FUN_000fcec0", 0xfcec0, 0xfcf20),
+        ("FUN_000fcc90", 0xfcc90, 0xfcd10),
+        ("FUN_000f5640", 0xf5640, 0xf5650),
+        ("FUN_000f5650", 0xf5650, 0xf5660),
+        ("items_initialize", 0xf5f90, 0xf5fa0),
+        ("items_initialize_for_new_map", 0xf5fa0, 0xf5fb0),
+        ("breakable_surfaces_reset", 0x1459d0, 0x1459e0),
+        ("weapon_delete", 0xfbea0, 0xfbf00),
     ]
 
     xbe = Xbe.from_file(args.xbe)

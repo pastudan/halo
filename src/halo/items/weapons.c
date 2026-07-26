@@ -1459,7 +1459,10 @@ char weapon_new(int weapon_handle)
   return 1;
 }
 
-/* 0xfbea0 */
+/* 0xfbea0 — assert non-deletable network weapons are not deleted in MP. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
 void weapon_delete(int weapon_handle)
 {
   char *tag_data;
@@ -1468,11 +1471,10 @@ void weapon_delete(int weapon_handle)
     return;
 
   tag_data = (char *)tag_get(
-    0x77656170,
-    *(int *)object_get_and_verify_type(weapon_handle, 4));
-
-  if ((*(uint32_t *)(tag_data + 0x308) >> 3) & 1) {
-    display_assert(0, "c:\\halo\\SOURCE\\items\\weapons.c", 0xea, 1);
+      0x77656170,
+      *(int *)object_get_and_verify_type(weapon_handle, 4));
+  if (((*(uint32_t *)(tag_data + 0x308) >> 3) & 1) != 0) {
+    display_assert((char *)0x0028ae98, (char *)0x0028ad48, 0xea, 1);
     system_exit(-1);
   }
 }
@@ -1832,19 +1834,26 @@ void FUN_000fcbd0(int16_t magazine_index, int weapon_handle)
 }
 
 /* 0xfcc90 */
-void FUN_000fcc90(int weapon_handle, int16_t magazine_index)
+/* 0xfcc90 — zero a magazine's reload state/time after definition lookup. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
+void FUN_000fcc90(int16_t magazine_index, int weapon_handle)
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  int16_t *magazine =
-    (int16_t *)FUN_000fb370((void *)weapon_obj, magazine_index);
+  char *weapon_obj;
+  int16_t *magazine;
 
-  tag_get(0x77656170, *(int *)weapon_obj);
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  FUN_000fb370((void *)weapon_obj, magazine_index);
   tag_block_get_element(
-    (char *)tag_get(0x77656170,
-                    *(int *)object_get_and_verify_type(weapon_handle, 4)) +
-      0x4f0,
-    (int)magazine_index, 0x70);
+      (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4f0,
+      (int)magazine_index, 0x70);
 
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  magazine = (int16_t *)FUN_000fb370((void *)weapon_obj, magazine_index);
+  tag_block_get_element(
+      (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4f0,
+      (int)magazine_index, 0x70);
   magazine[0] = 0;
   magazine[1] = 0;
 }
@@ -1928,19 +1937,22 @@ void FUN_000fce60(int weapon_handle, int16_t trigger_index)
   *(int16_t *)(weapon_obj + idx * 36 + 0x212) = (int16_t)-1;
 }
 
-/* 0xfcec0 */
-void FUN_000fcec0(int param_a, int weapon_handle, int16_t trigger_index)
+/* 0xfcec0 — clear a trigger's heat byte, then reset its charge state. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
+void FUN_000fcec0(int16_t trigger_index, int weapon_handle)
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *trigger_entry = weapon_get_trigger_entry(weapon_obj, trigger_index);
+  char *weapon_obj;
+  char *trigger_entry;
 
-  tag_get(0x77656170, *(int *)weapon_obj);
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  trigger_entry = FUN_000fb320(weapon_obj, trigger_index);
   tag_block_get_element(
-    (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4fc,
-    (int)trigger_index, 0x114);
-
+      (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4fc,
+      (int)trigger_index, 0x114);
   trigger_entry[0] = 0;
-  FUN_000fcdd0((int)trigger_index, weapon_handle);
+  FUN_000fcdd0(trigger_index, weapon_handle);
 }
 
 /* 0xfd0b0 */
@@ -2004,7 +2016,8 @@ void FUN_000fd520(int param_a, int weapon_handle, int16_t trigger_index)
     (int)trigger_index, 0x114);
 
   *(int *)(weapon_obj + 0x200) = -1;
-  FUN_000fcec0(param_a, weapon_handle, trigger_index);
+  FUN_000fcec0(trigger_index, weapon_handle);
+  (void)param_a;
 }
 
 /* 0xfd570 — fire projectile(s) from a weapon trigger. */

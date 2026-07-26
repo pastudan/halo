@@ -46,26 +46,22 @@ void lights_dispose_from_old_map(void)
   cluster_partition_dispose((void *)0x005a90b0);
 }
 
-/* 0x139300 */
-int lights_enable(int a0)
+/* 0x139300 — set the global lights-active flag (returns the stored value). */
+char lights_enable(char active)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  **(char **)0x46f074 = active;
+  return active;
 }
 
-/* 0x139310 */
+/* 0x139310 — remove a light from the cluster partition and delete its datum. */
 void light_delete(int light_handle)
 {
-  int eax = 0;
-  int ecx = 0;
+  char *light;
 
-  datum_get((void *)(uintptr_t)eax, 0);
-  cluster_partition_remove_object((void *)0x005a90b0, 0, (void *)(uintptr_t)eax);
-  datum_delete((void *)(uintptr_t)ecx, 0);
-
-  (void)eax;
-  (void)ecx;
+  light = (char *)datum_get(*(void **)0x5a90bc, light_handle);
+  cluster_partition_remove_object((void *)0x005a90b0, light_handle,
+                                  (void *)(light + 0x10));
+  datum_delete(*(void **)0x5a90bc, light_handle);
 }
 
 /* 0x139350 — collect gel/cluster indices overlapping a light's partition. */
