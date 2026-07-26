@@ -5226,7 +5226,7 @@
         },
         {
           "addr": "0xa57b0",
-          "decl": "short FUN_000a57b0(float *vec, float max_len);",
+          "decl": "char FUN_000a57b0(float *vec, float max_len);",
           "ported": true,
           "name": "FUN_000a57b0"
         },
@@ -33976,8 +33976,8 @@
         },
         {
           "addr": "0x22b40",
-          "decl": "void FUN_00022b40(int actor_handle @<ebx>, float *aim_vector @<esi>);",
-          "ported": false
+          "decl": "char FUN_00022b40(int actor_handle @<ebx>, float *aim_vector @<esi>);",
+          "ported": true
         },
         {
           "addr": "0x22ba0",

@@ -3431,56 +3431,26 @@ void FUN_00022dc0(int actor_handle __attribute__((unused)))
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((regparm(2)))
 #endif
-/* FUN_00022b40 (0x22b40) — XBE naked draft (batch 232). */
-#if defined(__clang__)
-static void *(*const b22b40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b22b40_tag)(int, int) = tag_get;
-static char (*const b22b40_c21ae0)(int actor_handle, float range, float param3, float *encounter_pos, short *out_count) = FUN_00021ae0;
-
-__attribute__((naked, noinline))
-void FUN_00022b40(int actor_handle __attribute__((unused)), float *aim_vector __attribute__((unused)))
+/* FUN_00022b40 (0x22b40) — readable C lift. */
+char FUN_00022b40(int actor_handle, float *aim_vector)
 {
-  __asm__ volatile(
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x5c(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x61637476\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x19c(%%eax), %%edx\n\t"
-      "movl 0x188(%%eax), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c21ae0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00022b40_1\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "addl $0x6a8, %%edi\n\t"
-      "movl %%ecx, (%%edi)\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl %%edx, 0x4(%%edi)\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "movl %%eax, 0x8(%%edi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      ".LFUN_00022b40_1:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b22b40_dget), [tag] "m"(b22b40_tag), [c21ae0] "m"(b22b40_c21ae0)
-      : "memory");
+  char *actor;
+  char *actv;
+  char ok;
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  actv = (char *)tag_get(0x61637476, *(int *)(actor + 0x5c));
+  ok = FUN_00021ae0(
+      actor_handle,
+      *(float *)(actv + 0x188),
+      *(float *)(actv + 0x19c),
+      aim_vector,
+      0);
+  if (!ok) {
+    return 0;
+  }
+  *(float *)(actor + 0x6a8) = aim_vector[0];
+  *(float *)(actor + 0x6ac) = aim_vector[1];
+  *(float *)(actor + 0x6b0) = aim_vector[2];
+  return 1;
 }
-#else
-#error "FUN_00022b40: clang naked draft required"
-#endif
 
