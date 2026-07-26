@@ -1852,42 +1852,17 @@ void simple_cache_copy_thread(void)
 #endif
 
 
-/* cache_files_dispose (0x1bc360) — XBE naked draft (batch 279). */
-#if defined(__clang__)
-static void (*const b1bc360_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bc360_exitfn)(int) = system_exit;
-static void (*const b1bc360_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
+/* cache_files_dispose (0x1bc360) — readable C lift. */
 void cache_files_dispose(void)
 {
-  __asm__ volatile(
-      "cmpw $-1, 0x4e9244\n\t"
-      "je .Lcache_files_dispose_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc9\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8c68\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcache_files_dispose_1:\n\t"
-      "movl 0x4e9250, %%eax\n\t"
-      "pushl $0xcb\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1bc360_assert), [exitfn] "m"(b1bc360_exitfn), [c8ef70] "m"(b1bc360_c8ef70)
-      : "memory");
+  extern char DAT_002b8c68[];
+  extern char DAT_002b8c98[];
+  if (*(int16_t *)0x4e9244 != -1) {
+    display_assert(DAT_002b8c68, DAT_002b8c98, 0xc9, 1);
+    system_exit(-1);
+  }
+  debug_free(*(void **)0x4e9250, DAT_002b8c98, 0xcb);
 }
-#else
-#error "cache_files_dispose: clang naked draft required"
-#endif
-
 
 /* FUN_001bc3b0 (0x1bc3b0) — XBE naked draft (batch 248). */
 #if defined(__clang__)

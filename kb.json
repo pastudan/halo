@@ -4960,7 +4960,7 @@
         {
           "addr": "0x1bc360",
           "decl": "void cache_files_dispose(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bc3b0",
