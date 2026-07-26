@@ -321,207 +321,297 @@ static double anim_floor(double x)
   return (double)((x < (double)i) ? (i - 1) : i);
 }
 
-/* animation_get_node_orientations (0x121640) — Interpolate keyframed
- * translation data for a single node in a compressed animation.
- *
- * Given an animation structure, a fractional frame index, a translation
- * keyframe count, a node index, and an output buffer, this function resolves
- * the two bracketing keyframes and either copies the exact keyframe data or
- * interpolates between them using points_interpolate (vec3 lerp).
- *
- * The animation's tag_data (at animation+0xa0) contains:
- *   +0x0c: offset to a per-component packed descriptor array (4 bytes each,
- *          low 12 bits = keyframe_count, high 4 bits = data_offset_index).
- *   +0x10: offset to keyframe_frame_indices (unsigned short array).
- *   +0x14: offset to default_translations (vec3 array, 12 bytes per node).
- *   +0x18: offset to keyframe_data (vec3 array, 12 bytes per keyframe).
- *
- * Three branches for the frame position:
- *   1. Before the first keyframe: interpolate between default_translation[node]
- *      and keyframe_data[0], with kf0_frame=0 and
- * kf1_frame=first_keyframe_frame.
- *   2. At the last keyframe: interpolate between keyframe_data[last] and
- *      default_translation[node], with kf0_frame=last_frame and
- * kf1_frame=last+1.
- *   3. Between two keyframes: binary-search via FUN_00120d10, then interpolate
- *      between the two bracketing keyframe entries.
- *
- * If frame == kf0_frame exactly, copies this_kf_data directly (no blend).
- *
- * Confirmed: cdecl, 5 args, void return.
- * Confirmed: CALL tag_data_get_pointer(animation+0xa0, *(int*)(animation+0x88),
- * 0) at 0x12165b. Confirmed: CALL floor() at 0x12175f (CRT 0x1d9c2b), result
- * truncated to short frame_index. Confirmed: CALL
- * FUN_00120d10(keyframe_frame_indices, frame_index) at 0x12182d with
- * keyframe_count in EDI. Confirmed: CALL points_interpolate(this_kf_data,
- * next_kf_data, blend, out) at 0x121928. Confirmed: Assert strings at 0x5f2,
- * 0x5f4, 0x609, 0x60a, 0x61e, 0x62f, 0x630. Confirmed: Before-first-keyframe
- * branch saves kf0_frame to kf1_frame before zeroing (MOV EBX,EDX at 0x1217fa).
- */
-void animation_get_node_orientations(void *animation, float frame,
-                                     unsigned short translation_count,
-                                     short node_index, void *out_translation)
+/* animation_get_node_orientations (0x121640) — XBE naked draft (batch 53). */
+#if defined(__clang__)
+static void * (*const b121640_c19b1a0)(void *tag_data, int offset, int size) = tag_data_get_pointer;
+static void (*const b121640_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b121640_exitfn)(int) = system_exit;
+static double (*const b121640_c1d9c2b)(double x) = floor;
+static short (*const b121640_c120d10)(unsigned short *keyframe_frame_indices, short target_frame_index, short keyframe_count) = FUN_00120d10;
+static void (*const b121640_c10b7d0)(float *a, float *b, float blend, float *out) = points_interpolate;
+
+__attribute__((naked, noinline))
+void animation_get_node_orientations(void *animation __attribute__((unused)), float frame __attribute__((unused)), unsigned short translation_count __attribute__((unused)), short node_index __attribute__((unused)), void *out_translation __attribute__((unused)))
 {
-  char *anim;
-  char *tag_data_base;
-  unsigned int descriptor;
-  unsigned short keyframe_count;
-  int data_offset_index;
-  char *default_translations;
-  char *keyframe_data;
-  unsigned short *keyframe_frame_indices;
-  int frame_count_i;
-  float frame_floor_f;
-  short frame_index;
-  int kf_count_i;
-  unsigned short kf0_frame;
-  unsigned short kf1_frame;
-  char *this_kf_data;
-  char *next_kf_data;
-  short kf_idx;
-  float this_frame_f;
-  float blend;
-
-  anim = (char *)animation;
-
-  /* Resolve tag_data pointer */
-  tag_data_base =
-    (char *)tag_data_get_pointer(anim + 0xa0, *(int *)(anim + 0x88), 0);
-
-  /* Read packed descriptor for this translation component */
-  descriptor =
-    *(unsigned int *)(tag_data_base + *(int *)(tag_data_base + 0x0c) +
-                      (short)translation_count * 4);
-  keyframe_count = (unsigned short)(descriptor & 0xfff);
-  data_offset_index = (int)(short)(descriptor >> 0xc);
-
-  /* Default translations and keyframe arrays are relative to tag_data_base */
-  default_translations = tag_data_base + *(int *)(tag_data_base + 0x14);
-  keyframe_data =
-    tag_data_base + *(int *)(tag_data_base + 0x18) + data_offset_index * 0xc;
-  keyframe_frame_indices =
-    (unsigned short *)(tag_data_base + *(int *)(tag_data_base + 0x10) +
-                       data_offset_index * 2);
-
-  /* Assert: real_frame_index >= 0.0f */
-  if (frame < 0.0f) {
-    display_assert("real_frame_index>=0.0f",
-                   "c:\\halo\\SOURCE\\models\\model_animations.c", 0x5f2, 1);
-    system_exit(-1);
-  }
-
-  /* Assert: real_frame_index < (real)animation->frame_count */
-  frame_count_i = (int)*(short *)(anim + 0x22);
-  if (frame >= (float)frame_count_i) {
-    display_assert("real_frame_index<(real)animation->frame_count",
-                   "c:\\halo\\SOURCE\\models\\model_animations.c", 0x5f4, 1);
-    system_exit(-1);
-  }
-
-  /* If keyframe_count == 0, return the default translation for this node */
-  if (keyframe_count == 0) {
-    char *def = default_translations + (int)node_index * 0xc;
-    int *out = (int *)out_translation;
-    out[0] = *(int *)(def);
-    out[1] = *(int *)(def + 4);
-    out[2] = *(int *)(def + 8);
-    return;
-  }
-
-  /* Compute integer frame index from floor(frame) */
-  frame_floor_f = (float)anim_floor((double)frame);
-  frame_index = (short)(int)frame_floor_f;
-
-  /* Assert: frame_index >= 0 && frame_index <=
-   * keyframe_frame_indices[keyframe_count-1] */
-  kf_count_i = (int)(short)keyframe_count;
-  if (frame_index < 0 ||
-      (int)frame_index >
-        (int)(unsigned int)keyframe_frame_indices[kf_count_i - 1]) {
-    display_assert(
-      "frame_index>=0 && frame_index<=keyframe_frame_indices[keyframe_count-1]",
-      "c:\\halo\\SOURCE\\models\\model_animations.c", 0x609, 1);
-    system_exit(-1);
-  }
-
-  /* Assert: keyframe_frame_indices[keyframe_count-1] == animation->frame_count
-   * - 1 */
-  if ((unsigned int)keyframe_frame_indices[kf_count_i - 1] !=
-      (unsigned int)((int)*(short *)(anim + 0x22) - 1)) {
-    display_assert(
-      "keyframe_frame_indices[keyframe_count-1]==animation->frame_count-1",
-      "c:\\halo\\SOURCE\\models\\model_animations.c", 0x60a, 1);
-    system_exit(-1);
-  }
-
-  /* Determine which two keyframes bracket the current frame */
-  kf0_frame = keyframe_frame_indices[0];
-
-  if ((int)frame_index < (int)(unsigned int)kf0_frame) {
-    /* Before the first keyframe: interpolate default -> first keyframe */
-    this_kf_data = default_translations + (int)node_index * 0xc;
-    kf1_frame = kf0_frame;
-    kf0_frame = 0;
-    next_kf_data = keyframe_data;
-  } else {
-    kf1_frame = keyframe_frame_indices[kf_count_i - 1];
-
-    if ((int)frame_index == (int)(unsigned int)kf1_frame) {
-      /* At the last keyframe: interpolate last keyframe -> default */
-      this_kf_data = keyframe_data + (kf_count_i - 1) * 0xc;
-      kf0_frame = kf1_frame;
-      kf1_frame = kf1_frame + 1;
-      next_kf_data = default_translations + (int)node_index * 0xc;
-    } else {
-      /* Between two keyframes: binary search */
-      kf_idx = FUN_00120d10(keyframe_frame_indices, (short)(int)frame_floor_f,
-                            keyframe_count);
-
-      if (kf_idx < 0 || (int)kf_idx >= kf_count_i - 1) {
-        display_assert("keyframe_index>=0 && keyframe_index<keyframe_count-1",
-                       "c:\\halo\\SOURCE\\models\\model_animations.c", 0x61e,
-                       1);
-        system_exit(-1);
-      }
-
-      kf0_frame = keyframe_frame_indices[(int)kf_idx];
-      kf1_frame = keyframe_frame_indices[(int)kf_idx + 1];
-      this_kf_data = keyframe_data + (int)kf_idx * 0xc;
-      next_kf_data = this_kf_data + 0xc;
-    }
-  }
-
-  /* If frame == this_keyframe_frame exactly, copy directly */
-  this_frame_f = (float)(int)(short)kf0_frame;
-  if (frame == this_frame_f) {
-    int *out = (int *)out_translation;
-    out[0] = *(int *)(this_kf_data);
-    out[1] = *(int *)(this_kf_data + 4);
-    out[2] = *(int *)(this_kf_data + 8);
-    return;
-  }
-
-  /* Compute blend factor and interpolate */
-  blend = (frame - this_frame_f) /
-          (float)((int)(short)kf1_frame - (int)(short)kf0_frame);
-
-  /* Assert: real_frame_index >= (real)this_keyframe_frame_index */
-  if (frame < this_frame_f) {
-    display_assert("real_frame_index>=(real)this_keyframe_frame_index",
-                   "c:\\halo\\SOURCE\\models\\model_animations.c", 0x62f, 1);
-    system_exit(-1);
-  }
-
-  /* Assert: real_frame_index < (real)next_keyframe_frame_index */
-  if (frame >= (float)(int)(short)kf1_frame) {
-    display_assert("real_frame_index< (real)next_keyframe_frame_index",
-                   "c:\\halo\\SOURCE\\models\\model_animations.c", 0x630, 1);
-    system_exit(-1);
-  }
-
-  points_interpolate((float *)this_kf_data, (float *)next_kf_data, blend,
-                     (float *)out_translation);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x88(%%eax), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0xa0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19b1a0]\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movswl 0x10(%%ebp), %%edx\n\t"
+      "fcomps 0x2533c0\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "movl 0x14(%%esi), %%edi\n\t"
+      "leal (%%eax,%%edx,4), %%ecx\n\t"
+      "movl (%%ecx,%%esi,1), %%eax\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "andl $0xfff, %%eax\n\t"
+      "movl %%eax, 0x10(%%ebp)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "addl %%esi, %%edi\n\t"
+      "shrl $0xc, %%ebx\n\t"
+      "testb $1, %%ah\n\t"
+      "je .Lanimation_get_node_orientations_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5f2\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x2911a4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lanimation_get_node_orientations_1:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movswl 0x22(%%edx), %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "fildl -0x8(%%ebp)\n\t"
+      "fcomps 0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lanimation_get_node_orientations_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5f4\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x291174\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lanimation_get_node_orientations_2:\n\t"
+      "cmpw $0, 0x10(%%ebp)\n\t"
+      "jge .Lanimation_get_node_orientations_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5f6\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x291160\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpw $0, 0x10(%%ebp)\n\t"
+      ".Lanimation_get_node_orientations_3:\n\t"
+      "jne .Lanimation_get_node_orientations_4\n\t"
+      "movswl 0x14(%%ebp), %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "leal (%%edi,%%ecx,4), %%edx\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "popl %%esi\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lanimation_get_node_orientations_4:\n\t"
+      "movl 0x18(%%esi), %%edx\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "leal (%%edx,%%ecx,4), %%ecx\n\t"
+      "addl %%esi, %%ecx\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl 0x10(%%esi), %%ecx\n\t"
+      "leal (%%ecx,%%eax,2), %%ebx\n\t"
+      "subl $8, %%esp\n\t"
+      "addl %%esi, %%ebx\n\t"
+      "fstpl (%%esp)\n\t"
+      "call *%[c1d9c2b]\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fistps -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lanimation_get_node_orientations_5\n\t"
+      "movswl 0x10(%%ebp), %%edx\n\t"
+      "movzwl -0x2(%%ebx,%%edx,2), %%ecx\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "jle .Lanimation_get_node_orientations_6\n\t"
+      ".Lanimation_get_node_orientations_5:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x609\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x291118\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lanimation_get_node_orientations_6:\n\t"
+      "movswl 0x10(%%ebp), %%esi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movswl 0x22(%%eax), %%ecx\n\t"
+      "movzwl -0x2(%%ebx,%%esi,2), %%edx\n\t"
+      "decl %%ecx\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "je .Lanimation_get_node_orientations_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x60a\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x2910d0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lanimation_get_node_orientations_7:\n\t"
+      "movw (%%ebx), %%dx\n\t"
+      "movswl -0x4(%%ebp), %%eax\n\t"
+      "movzwl %%dx, %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jge .Lanimation_get_node_orientations_8\n\t"
+      "movswl 0x14(%%ebp), %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal (%%edi,%%eax,4), %%esi\n\t"
+      "movl -0x8(%%ebp), %%edi\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movl %%edx, %%ebx\n\t"
+      "jmp .Lanimation_get_node_orientations_12\n\t"
+      ".Lanimation_get_node_orientations_8:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw -0x2(%%ebx,%%esi,2), %%cx\n\t"
+      "movzwl %%cx, %%edx\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "jne .Lanimation_get_node_orientations_9\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "leal (%%esi,%%esi,2), %%eax\n\t"
+      "leal -0xc(%%edx,%%eax,4), %%esi\n\t"
+      "movswl 0x14(%%ebp), %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal 0x1(%%ecx), %%ebx\n\t"
+      "leal (%%edi,%%eax,4), %%edi\n\t"
+      "jmp .Lanimation_get_node_orientations_12\n\t"
+      ".Lanimation_get_node_orientations_9:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c120d10]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Lanimation_get_node_orientations_10\n\t"
+      "movswl %%di, %%edx\n\t"
+      "decl %%esi\n\t"
+      "cmpl %%esi, %%edx\n\t"
+      "jl .Lanimation_get_node_orientations_11\n\t"
+      ".Lanimation_get_node_orientations_10:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x61e\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x290ea4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lanimation_get_node_orientations_11:\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "movw (%%ebx,%%eax,2), %%cx\n\t"
+      "movw 0x2(%%ebx,%%eax,2), %%bx\n\t"
+      "leal (%%eax,%%eax,2), %%edx\n\t"
+      "leal (%%esi,%%edx,4), %%esi\n\t"
+      "leal 0xc(%%esi), %%edi\n\t"
+      ".Lanimation_get_node_orientations_12:\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "movl %%ecx, 0x10(%%ebp)\n\t"
+      "fildl 0x10(%%ebp)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lanimation_get_node_orientations_13\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "fstp %%st(0)\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lanimation_get_node_orientations_13:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "fsub %%st(1), %%st(0)\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "movl %%eax, 0x10(%%ebp)\n\t"
+      "fidivl 0x10(%%ebp)\n\t"
+      "fstps 0x10(%%ebp)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $1, %%ah\n\t"
+      "je .Lanimation_get_node_orientations_14\n\t"
+      "pushl $1\n\t"
+      "pushl $0x62f\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x291098\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lanimation_get_node_orientations_14:\n\t"
+      "fildl 0x8(%%ebp)\n\t"
+      "fcomps 0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lanimation_get_node_orientations_15\n\t"
+      "pushl $1\n\t"
+      "pushl $0x630\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x291064\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lanimation_get_node_orientations_15:\n\t"
+      "movl 0x18(%%ebp), %%edx\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c10b7d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      :
+      : [c19b1a0] "m"(b121640_c19b1a0), [assert] "m"(b121640_assert), [exitfn] "m"(b121640_exitfn), [c1d9c2b] "m"(b121640_c1d9c2b), [c120d10] "m"(b121640_c120d10), [c10b7d0] "m"(b121640_c10b7d0)
+      : "memory");
 }
+#else
+#error "animation_get_node_orientations: clang naked draft required"
+#endif
+
 
 /* overlay_animation_apply_continuous_scaled (0x121940) — Interpolate keyframed
  * scale data for a single node in a compressed animation.
@@ -723,185 +813,327 @@ void overlay_animation_apply_continuous_scaled(void *animation, float frame,
   scalars_interpolate(this_kf_scale, next_kf_scale, blend, (float *)out_scale);
 }
 
-/* FUN_00121d60 (0x121d60) — Decode a single animation frame into per-node
- * rotation/translation/scale data.
- *
- * For each node in the animation (animation+0x2c count), decodes rotation
- * (quaternion), translation (vec3), and scale (float) from either:
- *   - Compressed keyframed data (when flag bit 0 is set and compression is
- *     active), using
- * FUN_00121330/animation_get_node_orientations/overlay_animation_apply_continuous_scaled
- * interpolators.
- *   - Uncompressed frame data via
- * quaternion_decompress_8byte/quaternion_decompress_6byte or raw memcpy from
- * default data (animation+0x98).
- *
- * Three bitmask arrays at animation offsets 0x5c, 0x6c, 0x7c (4 DWORDs each
- * for up to 128 nodes) indicate which nodes have animated rotation,
- * translation, and scale respectively. Bit=1 means animated (read from
- * frame data), bit=0 means static (read from default data).
- *
- * If the animation type (animation+0x20) is nonzero, or the mode_tag check
- * fails, falls back to FUN_00123aa0 which fills default node transforms.
- *
- * After the loop, two assertions verify that exactly the right amount of
- * frame data and default data was consumed.
- *
- * Confirmed: cdecl, 4 args, void return.
- * Confirmed: CALL FUN_00120500 at 0x121dca and 0x121fd5 (2 args: animation,
- * frame_index). Confirmed: CALL quaternion_decompress_8byte at 0x121e63 and
- * 0x121e9d (2 args: src_shorts, dest_floats). Confirmed: CALL
- * quaternion_decompress_6byte at 0x121e89 (2 args: compressed_data,
- * dest_floats). Confirmed: CALL sphere_intersects_rectangle3d at 0x121e8f (1
- * arg: quaternion). Confirmed: CALL FUN_00121330 at 0x121e51 (5 args:
- * animation, frame_float, count, node, out). Confirmed: CALL
- * animation_get_node_orientations at 0x121edc (5 args: animation, frame_float,
- * count, node, out). Confirmed: CALL overlay_animation_apply_continuous_scaled
- * at 0x121f78 (5 args: animation, frame_float, count, node, out). Confirmed:
- * CALL FUN_00123aa0 at 0x12204a (2 args: mode_tag, out_node_data).
- */
-void FUN_00121d60(void *mode_tag, void *animation, int animation_index,
-                  void *out_node_data)
+/* FUN_00121d60 (0x121d60) — XBE naked draft (batch 53). */
+#if defined(__clang__)
+static void * (*const b121d60_c120500)(void *animation, short frame_index) = FUN_00120500;
+static void (*const b121d60_c121330)(void *animation, float frame, unsigned short rotation_count, short node_index, void *out_rotation) = FUN_00121330;
+static void (*const b121d60_c120810)(short *src, float *dest) = quaternion_decompress_8byte;
+static void (*const b121d60_c120870)(void *compressed_data, float *dest) = quaternion_decompress_6byte;
+static void (*const b121d60_c10ca30)(float *quaternion) = sphere_intersects_rectangle3d;
+static void (*const b121d60_c121640)(void *animation, float frame, unsigned short translation_count, short node_index, void *out_translation) = animation_get_node_orientations;
+static void (*const b121d60_c121940)(void *animation, float frame, unsigned short scale_count, short node_index, void *out_scale) = overlay_animation_apply_continuous_scaled;
+static void (*const b121d60_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b121d60_exitfn)(int) = system_exit;
+static void (*const b121d60_c123aa0)(void *mode_tag, void *out_node_data) = FUN_00123aa0;
+
+__attribute__((naked, noinline))
+void FUN_00121d60(void *mode_tag __attribute__((unused)), void *animation __attribute__((unused)), int animation_index __attribute__((unused)), void *out_node_data __attribute__((unused)))
 {
-  int param_1;
-  int param_2;
-  int param_4;
-  unsigned int uVar6;
-  int iVar7;
-  short sVar5;
-  int iVar3;
-  unsigned int local_1c;
-  unsigned int local_20;
-  unsigned int local_14;
-  int local_10;
-  int local_18;
-  int local_24;
-  int *local_c;
-  int *local_8;
-  int bVar2;
-  int *puVar4;
-
-  param_1 = (int)mode_tag;
-  param_2 = (int)animation;
-  param_4 = (int)out_node_data;
-  uVar6 = 0;
-
-  if (*(short *)(param_2 + 0x20) == 0 &&
-      (param_1 == 0 ||
-       (((*(int *)(param_2 + 0x28) == 0 ||
-          *(int *)(param_2 + 0x28) == *(int *)(param_1 + 4) ||
-          *(int *)(param_1 + 4) == 0) &&
-         *(int *)(param_1 + 0xb8) == (int)*(short *)(param_2 + 0x2c))))) {
-    if (((*(unsigned char *)(param_2 + 0x3a) & 1) == 0) ||
-        (DAT_00322600 == '\0' && *(int *)(param_2 + 0x88) != 0)) {
-      bVar2 = 0;
-    } else {
-      bVar2 = 1;
-    }
-
-    local_8 = (int *)FUN_00120500(animation, (short)animation_index);
-    local_c = *(int **)(param_2 + 0x98);
-    local_10 = 0;
-    local_18 = 0;
-    local_24 = 0;
-    if (0 < *(short *)(param_2 + 0x2c)) {
-      do {
-        sVar5 = (short)uVar6;
-        iVar7 = sVar5 * 0x20 + param_4;
-        if ((uVar6 & 0x1f) == 0) {
-          iVar3 = (int)(sVar5 >> 5);
-          local_1c = *(unsigned int *)(param_2 + 0x5c + iVar3 * 4);
-          local_14 = *(unsigned int *)(param_2 + 0x6c + iVar3 * 4);
-          local_20 = *(unsigned int *)(param_2 + 0x7c + iVar3 * 4);
-        }
-        if ((local_14 & 1) == 0) {
-          if (bVar2) {
-            quaternion_decompress_6byte(
-              (void *)(local_8[1] + sVar5 * 6 + (int)local_8), (float *)iVar7);
-            sphere_intersects_rectangle3d((float *)iVar7);
-          } else {
-            quaternion_decompress_8byte((short *)local_c, (float *)iVar7);
-            local_c = (int *)((char *)local_c + 8);
-          }
-        } else if (bVar2) {
-          FUN_00121330(animation, (float)(int)(short)animation_index,
-                       (unsigned short)local_10, sVar5, (void *)iVar7);
-          local_10 = local_10 + 1;
-        } else {
-          quaternion_decompress_8byte((short *)local_8, (float *)iVar7);
-          local_8 = (int *)((char *)local_8 + 8);
-        }
-        local_14 = local_14 >> 1;
-
-        if ((local_1c & 1) == 0) {
-          if (bVar2) {
-            puVar4 = (int *)(local_8[5] + sVar5 * 0xc + (int)local_8);
-            *(int *)(iVar7 + 0x10) = puVar4[0];
-            *(int *)(iVar7 + 0x14) = puVar4[1];
-            *(int *)(iVar7 + 0x18) = puVar4[2];
-          } else {
-            *(int *)(iVar7 + 0x10) = local_c[0];
-            *(int *)(iVar7 + 0x14) = local_c[1];
-            *(int *)(iVar7 + 0x18) = local_c[2];
-            local_c = (int *)((char *)local_c + 0xc);
-          }
-        } else if (bVar2) {
-          animation_get_node_orientations(
-            animation, (float)(int)(short)animation_index,
-            (unsigned short)local_18, sVar5, (void *)(iVar7 + 0x10));
-          local_18 = local_18 + 1;
-        } else {
-          *(int *)(iVar7 + 0x10) = local_8[0];
-          *(int *)(iVar7 + 0x14) = local_8[1];
-          *(int *)(iVar7 + 0x18) = local_8[2];
-          local_8 = (int *)((char *)local_8 + 0xc);
-        }
-        local_1c = local_1c >> 1;
-
-        if ((local_20 & 1) == 0) {
-          if (bVar2) {
-            *(int *)(iVar7 + 0x1c) = 0x3f800000;
-          } else {
-            *(int *)(iVar7 + 0x1c) = *local_c;
-            local_c = (int *)((char *)local_c + 4);
-          }
-        } else if (bVar2) {
-          overlay_animation_apply_continuous_scaled(
-            animation, (float)(int)(short)animation_index,
-            (unsigned short)local_24, sVar5, (void *)(iVar7 + 0x1c));
-          local_24 = local_24 + 1;
-        } else {
-          *(int *)(iVar7 + 0x1c) = *local_8;
-          local_8 = (int *)((char *)local_8 + 4);
-        }
-        local_20 = local_20 >> 1;
-
-        uVar6 = uVar6 + 1;
-      } while ((short)uVar6 < *(short *)(param_2 + 0x2c));
-    }
-    if (!bVar2) {
-      iVar7 = (int)FUN_00120500(animation, (short)animation_index);
-      if ((int)local_8 - iVar7 != (int)*(short *)(param_2 + 0x24)) {
-        display_assert("compressed || (byte *)data-(byte "
-                       "*)animation_get_frame_data(animation, "
-                       "frame_index)==animation->frame_size",
-                       "c:\\halo\\SOURCE\\models\\model_animations.c", 0x141,
-                       1);
-        system_exit(-1);
-      }
-      if ((int)local_c - *(int *)(param_2 + 0x98) != *(int *)(param_2 + 0x8c)) {
-        display_assert("compressed || (byte *)default_data-(byte "
-                       "*)animation_get_default_data(animation)==animation->"
-                       "default_data.size",
-                       "c:\\halo\\SOURCE\\models\\model_animations.c", 0x142,
-                       1);
-        system_exit(-1);
-      }
-    }
-  } else {
-    FUN_00123aa0(mode_tag, out_node_data);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x24, %%esp\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpw %%bx, 0x20(%%edi)\n\t"
+      "jne .LFUN_00121d60_23\n\t"
+      "cmpl %%ebx, %%edx\n\t"
+      "je .LFUN_00121d60_2\n\t"
+      "movl 0x28(%%edi), %%eax\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "je .LFUN_00121d60_1\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .LFUN_00121d60_1\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "jne .LFUN_00121d60_23\n\t"
+      ".LFUN_00121d60_1:\n\t"
+      "movswl 0x2c(%%edi), %%eax\n\t"
+      "cmpl %%eax, 0xb8(%%edx)\n\t"
+      "jne .LFUN_00121d60_23\n\t"
+      ".LFUN_00121d60_2:\n\t"
+      "testb $1, 0x3a(%%edi)\n\t"
+      "je .LFUN_00121d60_4\n\t"
+      "movb 0x322600, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00121d60_3\n\t"
+      "cmpl %%ebx, 0x88(%%edi)\n\t"
+      "jne .LFUN_00121d60_4\n\t"
+      ".LFUN_00121d60_3:\n\t"
+      "movb $1, 0xf(%%ebp)\n\t"
+      "jmp .LFUN_00121d60_5\n\t"
+      ".LFUN_00121d60_4:\n\t"
+      "movb $0, 0xf(%%ebp)\n\t"
+      ".LFUN_00121d60_5:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c120500]\n\t"
+      "movl 0x98(%%edi), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw %%bx, 0x2c(%%edi)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "movl %%ebx, -0xc(%%ebp)\n\t"
+      "movl %%ebx, -0x14(%%ebp)\n\t"
+      "movl %%ebx, -0x20(%%ebp)\n\t"
+      "jle .LFUN_00121d60_21\n\t"
+      "pushl %%esi\n\t"
+      "jmp .LFUN_00121d60_7\n\t"
+      ".LFUN_00121d60_6:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00121d60_7:\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movswl %%bx, %%esi\n\t"
+      "shll $5, %%esi\n\t"
+      "addl %%edx, %%esi\n\t"
+      "testb $0x1f, %%bl\n\t"
+      "jne .LFUN_00121d60_8\n\t"
+      "movw %%bx, %%ax\n\t"
+      "sarw $5, %%ax\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movl 0x5c(%%edi,%%eax,4), %%edx\n\t"
+      "movl %%edx, -0x18(%%ebp)\n\t"
+      "movl 0x6c(%%edi,%%eax,4), %%edx\n\t"
+      "movl 0x7c(%%edi,%%eax,4), %%eax\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      ".LFUN_00121d60_8:\n\t"
+      "testb $1, -0x10(%%ebp)\n\t"
+      "movb 0xf(%%ebp), %%al\n\t"
+      "pushl %%esi\n\t"
+      "je .LFUN_00121d60_10\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00121d60_9\n\t"
+      "movswl 0x10(%%ebp), %%edx\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%edx, -0x24(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "fildl -0x24(%%ebp)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c121330]\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "jmp .LFUN_00121d60_12\n\t"
+      ".LFUN_00121d60_9:\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c120810]\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "addl $8, %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_00121d60_12\n\t"
+      ".LFUN_00121d60_10:\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00121d60_11\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%eax\n\t"
+      "leal (%%edx,%%eax,2), %%eax\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c120870]\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c10ca30]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_00121d60_12\n\t"
+      ".LFUN_00121d60_11:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c120810]\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "addl $8, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      ".LFUN_00121d60_12:\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "movb -0x18(%%ebp), %%al\n\t"
+      "shrl $1, %%ecx\n\t"
+      "testb $1, %%al\n\t"
+      "movb 0xf(%%ebp), %%al\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "je .LFUN_00121d60_14\n\t"
+      "testb %%al, %%al\n\t"
+      "leal 0x10(%%esi), %%edx\n\t"
+      "je .LFUN_00121d60_13\n\t"
+      "movswl 0x10(%%ebp), %%ecx\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%ecx, -0x24(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "fildl -0x24(%%ebp)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c121640]\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "jmp .LFUN_00121d60_16\n\t"
+      ".LFUN_00121d60_13:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, (%%edx)\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "addl $0xc, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_00121d60_16\n\t"
+      ".LFUN_00121d60_14:\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00121d60_15\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x14(%%eax), %%edx\n\t"
+      "leal (%%edx,%%ecx,4), %%ecx\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "leal 0x10(%%esi), %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl %%eax, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "jmp .LFUN_00121d60_16\n\t"
+      ".LFUN_00121d60_15:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "leal 0x10(%%esi), %%edx\n\t"
+      "movl %%ecx, (%%edx)\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "addl $0xc, -0x8(%%ebp)\n\t"
+      ".LFUN_00121d60_16:\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "movb -0x1c(%%ebp), %%al\n\t"
+      "shrl $1, %%ecx\n\t"
+      "testb $1, %%al\n\t"
+      "movb 0xf(%%ebp), %%al\n\t"
+      "movl %%ecx, -0x18(%%ebp)\n\t"
+      "je .LFUN_00121d60_18\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00121d60_17\n\t"
+      "movswl 0x10(%%ebp), %%ecx\n\t"
+      "addl $0x1c, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "movl -0x20(%%ebp), %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%ecx, -0x24(%%ebp)\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "fildl -0x24(%%ebp)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c121940]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "incl %%esi\n\t"
+      "movl %%esi, -0x20(%%ebp)\n\t"
+      "jmp .LFUN_00121d60_20\n\t"
+      ".LFUN_00121d60_17:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "addl $4, %%eax\n\t"
+      "movl %%edx, 0x1c(%%esi)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_00121d60_20\n\t"
+      ".LFUN_00121d60_18:\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00121d60_19\n\t"
+      "movl $0x3f800000, 0x1c(%%esi)\n\t"
+      "jmp .LFUN_00121d60_20\n\t"
+      ".LFUN_00121d60_19:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "addl $4, %%eax\n\t"
+      "movl %%ecx, 0x1c(%%esi)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      ".LFUN_00121d60_20:\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "shrl $1, %%edx\n\t"
+      "incl %%ebx\n\t"
+      "cmpw 0x2c(%%edi), %%bx\n\t"
+      "movl %%edx, -0x1c(%%ebp)\n\t"
+      "jl .LFUN_00121d60_6\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_00121d60_21:\n\t"
+      "movb 0xf(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00121d60_24\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c120500]\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "subl %%eax, %%ecx\n\t"
+      "movswl 0x24(%%edi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "je .LFUN_00121d60_22\n\t"
+      "pushl $1\n\t"
+      "pushl $0x141\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x291230\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00121d60_22:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl 0x98(%%edi), %%edx\n\t"
+      "movl 0x8c(%%edi), %%ecx\n\t"
+      "subl %%edx, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .LFUN_00121d60_24\n\t"
+      "pushl $1\n\t"
+      "pushl $0x142\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x2911c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00121d60_23:\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c123aa0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00121d60_24:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      :
+      : [c120500] "m"(b121d60_c120500), [c121330] "m"(b121d60_c121330), [c120810] "m"(b121d60_c120810), [c120870] "m"(b121d60_c120870), [c10ca30] "m"(b121d60_c10ca30), [c121640] "m"(b121d60_c121640), [c121940] "m"(b121d60_c121940), [assert] "m"(b121d60_assert), [exitfn] "m"(b121d60_exitfn), [c123aa0] "m"(b121d60_c123aa0)
+      : "memory");
 }
+#else
+#error "FUN_00121d60: clang naked draft required"
+#endif
+
 
 /* FUN_00123aa0 (0x123aa0) — Fill default node transforms from mode tag.
  *

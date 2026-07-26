@@ -578,6 +578,15 @@ def main() -> int:
         ("FUN_001a71c0", 0x1a71c0, 0x1a74c9),
         ("unit_find_best_enter_seat", 0x1ad800, 0x1ada86),
         ("unit_exit_seat_end", 0x1b2dd0, 0x1b3055),
+        # gameplay wave 53 (2026-07-26)
+        ("FUN_001a6350", 0x1a6350, 0x1a6798),
+        ("FUN_00121d60", 0x121d60, 0x122059),
+        ("animation_get_node_orientations", 0x121640, 0x121938),
+        ("FUN_001ab110", 0x1ab110, 0x1ab40a),
+        ("FUN_001a7790", 0x1a7790, 0x1a7a88),
+        ("unit_board_vehicle", 0x1b2b80, 0x1b2dcf),
+        ("unit_control_trace", 0x1af6b0, 0x1af98f),
+        ("unit_impact_melee_damage", 0x1b2290, 0x1b24ca),
     ]
 
     xbe = Xbe.from_file(args.xbe)
