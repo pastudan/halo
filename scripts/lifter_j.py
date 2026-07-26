@@ -41,9 +41,35 @@ PREF = (
     "sound/",
     "tag_files/",
     "saved_games/",
+    "saved games/",
     "devices/",
     "models/",
+    "camera/",
+    "game/",
+    "interface/",
+    "effects/",
+    "ai/",
+    "objects/",
+    "units/",
+    "items/",
+    "physics/",
+    "structures/",
+    "cutscene/",
+    "cseries/",
+    "main/",
+    "text/",
+    "bungie_net/",
+    "input/",
+    "memory/",
+    "cache/",
+    "math/",
+    "networking/",
+    "render/",
+    "scenario/",
+    "rasterizer/",
+    "shaders/",
 )
+
 LEDGER_TAG = "lifter_j"
 COMMIT_EVERY = 10
 MAX_SIZE = 256
@@ -797,12 +823,17 @@ def prove_addr(
     if not ensure_oracle(addr):
         return {"ok": False, "err": "oracle", "passed": 0, "failed": 0, "errors": 0}
     if src:
-        from tu_compile import docker_compile
-
         src_rel = src.replace("\\", "/")
         if "src/halo/" in src_rel:
             src_rel = src_rel.split("src/halo/", 1)[1]
-        if not docker_compile(src_rel):
+        try:
+            from unicorn_diff import _compile_build_obj_for_source
+        except ImportError:
+            sys.path.insert(0, str(ROOT / "tools" / "equivalence"))
+            from unicorn_diff import _compile_build_obj_for_source  # type: ignore
+        obj, err = _compile_build_obj_for_source(src_rel)
+        if not obj:
+            print("compile FAIL", src_rel, (err or "")[:200], flush=True)
             return {
                 "ok": False,
                 "err": "compile",

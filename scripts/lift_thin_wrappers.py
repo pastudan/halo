@@ -602,6 +602,26 @@ def main() -> int:
         sp.write_text(text[: span[0]] + c_src + "\n" + text[span[1] :], encoding="utf-8")
         cache[sp] = sp.read_text(encoding="utf-8", errors="replace").splitlines()
         print(f"LIFTED {hex(ai)} {name}", flush=True)
+        sig_line = body.split("{", 1)[0].strip()
+        if sig_line:
+            kb_u = json.loads(KB_PATH.read_text(encoding="utf-8"))
+            decl = sig_line if sig_line.endswith(";") else sig_line + ";"
+            for o in kb_u.get("objects", []):
+                for fn in o.get("functions") or []:
+                    if isinstance(fn, dict) and fn.get("addr") and int(fn["addr"], 16) == ai:
+                        fn["decl"] = decl
+                        break
+            KB_PATH.write_text(json.dumps(kb_u, indent=2) + "\n", encoding="utf-8")
+            decl_h = ROOT / "build" / "generated" / "decl.h"
+            if decl_h.exists():
+                dh = decl_h.read_text(encoding="utf-8", errors="replace")
+                pat = re.compile(
+                    rf"^(HFUNC\s+)(.+?\s+){re.escape(name)}\s*\([^;]*\);",
+                    re.M,
+                )
+                dh2, nsub = pat.subn(lambda m: f"HFUNC {sig_line};", dh, count=1)
+                if nsub:
+                    decl_h.write_text(dh2, encoding="utf-8")
         for stale in (ROOT / "build").rglob(sp.name + ".obj"):
             try:
                 stale.unlink()

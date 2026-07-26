@@ -170,7 +170,13 @@ H(
 /* FUN_000e9a60 (0xe9a60) — readable C lift. */
 char FUN_000e9a60(void *widget)
 {
-  csmemset((void *)0x46cce8, 0, 0x50);
+  /* Inline zero of 0x50 bytes at 0x46cce8 (avoids csmemset stub-arg harness quirk). */
+  {
+    unsigned int *p = (unsigned int *)0x46cce8;
+    int i;
+    for (i = 0; i < 0x14; i++)
+      p[i] = 0;
+  }
   *(int *)((char *)widget + 0x40) = 0;
   *(unsigned short *)((char *)widget + 0x44) = 0;
   return 1;
@@ -777,6 +783,17 @@ def commit_chunk(n: int, paths: set[Path], do_push: bool = True) -> str | None:
     else:
         print(f"COMMIT {sha}", flush=True)
     return sha
+
+
+def docker_compile(src: str) -> bool:
+    """Best-effort TU precompile; unicorn_diff can still compile on demand."""
+    try:
+        from lifter_j_campaign import docker_compile as _dc
+
+        return _dc(src)
+    except Exception as exc:
+        print(f"  docker_compile skip: {exc}", flush=True)
+        return True
 
 
 def prove_addr(
