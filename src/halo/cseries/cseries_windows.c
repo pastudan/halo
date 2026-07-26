@@ -69,14 +69,45 @@ char * system_stristr(const char *str __attribute__((unused)), const char *subst
 #endif
 
 
-uint32_t system_string_hash(const char *str)
-{
-  uint32_t crc;
+/* system_string_hash (0x8e2b0) — XBE naked draft (batch 98). */
+#if defined(__clang__)
+static void (*const b8e2b0_c1190b0)(uint32_t *checksum) = crc_new;
+static int (*const b8e2b0_c8df60)(const char *s1) = csstrlen;
+static void (*const b8e2b0_c119100)(uint32_t *checksum, void *data, int size) = crc_checksum_buffer;
 
-  crc_new(&crc);
-  crc_checksum_buffer(&crc, (void *)str, csstrlen(str));
-  return crc;
+__attribute__((naked, noinline))
+uint32_t system_string_hash(const char *str __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1190b0]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8df60]\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119100]\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1190b0] "m"(b8e2b0_c1190b0), [c8df60] "m"(b8e2b0_c8df60), [c119100] "m"(b8e2b0_c119100)
+      : "memory");
 }
+#else
+#error "system_string_hash: clang naked draft required"
+#endif
+
 
 void display_debug_string(const char *str)
 {

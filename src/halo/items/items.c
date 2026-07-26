@@ -895,27 +895,47 @@ void FUN_000f67f0(int equipment_tag_index)
   }
 }
 
-/* Item garbage-collection countdown tick (0xf6820).
- * Fetches the item object (type mask 0x10), decrements the signed 16-bit
- * despawn timer at item_obj+0x1dc (seeded to a random [300,600] value by
- * item_begin_garbage_collection), and deletes the object once the timer
- * reaches 0. Returns whether the item survived this tick (timer still > 0);
- * the original latches this into BL via SETG and returns it in AL.
- * Despite the kb name "item_new", the binary behavior is a per-tick
- * release/countdown, not allocation. */
-char item_new(int object_handle)
-{
-  char *item_obj;
-  char survived;
+/* item_new (0xf6820) — XBE naked draft (batch 98). */
+#if defined(__clang__)
+static void *(*const bf6820_get)(int, int) = object_get_and_verify_type;
+static void (*const bf6820_odel)(int) = object_delete;
 
-  item_obj = (char *)object_get_and_verify_type(object_handle, 0x10);
-  *(int16_t *)(item_obj + 0x1dc) = *(int16_t *)(item_obj + 0x1dc) - 1;
-  survived = *(int16_t *)(item_obj + 0x1dc) > 0;
-  if (!survived) {
-    object_delete(object_handle);
-  }
-  return survived;
+__attribute__((naked, noinline))
+char item_new(int object_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "decw 0x1dc(%%eax)\n\t"
+      "movw 0x1dc(%%eax), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "setg %%bl\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .Litem_new_1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[odel]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Litem_new_1:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bf6820_get), [odel] "m"(bf6820_odel)
+      : "memory");
 }
+#else
+#error "item_new: clang naked draft required"
+#endif
+
 
 /* item_begin_garbage_collection (0xf6860) — XBE naked draft (batch 96). */
 #if defined(__clang__)

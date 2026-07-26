@@ -48,18 +48,46 @@ float *FUN_0017ffc0(float *param_1, unsigned int param_2)
   return param_1;
 }
 
-/* rasterizer_geometry_vertex_type_to_stride: return vertex stride for type,
- * assert valid range (0x180050) */
-int FUN_00180050(short param_1)
+/* FUN_00180050 (0x180050) — XBE naked draft (batch 98). */
+#if defined(__clang__)
+static void (*const b180050_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b180050_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int FUN_00180050(short param_1 __attribute__((unused)))
 {
-  if ((param_1 < 0) || (0xb < param_1)) {
-    display_assert("type>=0 && type<NUMBER_OF_RASTERIZER_VERTEX_TYPES",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0xaa,
-                   1);
-    system_exit(-1);
-  }
-  return (int)*(short *)(0x2afe14 + param_1 * 2);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_00180050_1\n\t"
+      "cmpw $0xc, %%si\n\t"
+      "jl .LFUN_00180050_2\n\t"
+      ".LFUN_00180050_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xaa\n\t"
+      "pushl $0x2afe38\n\t"
+      "pushl $0x2a0228\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00180050_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movswl 0x2afe14(,%%eax,2), %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b180050_assert), [exitfn] "m"(b180050_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00180050: clang naked draft required"
+#endif
+
 
 /* FUN_001800b0 (0x1800b0) — XBE naked draft (batch 79). */
 #if defined(__clang__)
@@ -1825,22 +1853,45 @@ void FUN_00181c20(void)
 
 /* rasterizer_memory_pool.c */
 
-/* rasterizer_memory_pool_new: allocate global rasterizer memory pool (0x1824e0)
- */
+/* rasterizer_memory_pool_new (0x1824e0) — XBE naked draft (batch 98). */
+#if defined(__clang__)
+static void * (*const b1824e0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
+static void (*const b1824e0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
 int rasterizer_memory_pool_new(void)
 {
-  void *pool;
-  char result;
-  result = 1;
-  pool = (void *)debug_malloc(
-    0x18000, 0, "c:\\halo\\SOURCE\\rasterizer\\rasterizer_memory_pool.c", 0x13);
-  *(void **)0x4d0488 = pool;
-  if (pool == 0) {
-    error(2, "### ERROR rasterizer failed to allocate global memory pool");
-    return 0;
-  }
-  return result;
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl $0x13\n\t"
+      "pushl $0x2b077c\n\t"
+      "pushl $0\n\t"
+      "pushl $0x18000\n\t"
+      "movb $1, %%bl\n\t"
+      "call *%[c8ee60]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x4d0488\n\t"
+      "jne .Lrasterizer_memory_pool_new_1\n\t"
+      "pushl $0x2b0740\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".Lrasterizer_memory_pool_new_1:\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [c8ee60] "m"(b1824e0_c8ee60), [c8f390] "m"(b1824e0_c8f390)
+      : "memory");
 }
+#else
+#error "rasterizer_memory_pool_new: clang naked draft required"
+#endif
+
 
 /* rasterizer_memory_pool_reset: reset pool allocation cursor to zero (0x182520)
  */
@@ -1901,18 +1952,47 @@ int rasterizer_memory_pool_alloc(int data __attribute__((unused)), int size __at
 #endif
 
 
-/* rasterizer_memory_pool_copy: assert data non-null then copy into pool
- * (0x182590) */
-void rasterizer_memory_pool_copy(int data, int size)
+/* rasterizer_memory_pool_copy (0x182590) — XBE naked draft (batch 98). */
+#if defined(__clang__)
+static void (*const b182590_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b182590_exitfn)(int) = system_exit;
+static int (*const b182590_c182530)(int data, int size) = rasterizer_memory_pool_alloc;
+
+__attribute__((naked, noinline))
+void rasterizer_memory_pool_copy(int data __attribute__((unused)), int size __attribute__((unused)))
 {
-  if (data == 0) {
-    display_assert("data",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_memory_pool.c",
-                   0x42, 1);
-    system_exit(-1);
-  }
-  rasterizer_memory_pool_alloc(data, size);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lrasterizer_memory_pool_copy_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x42\n\t"
+      "pushl $0x2b077c\n\t"
+      "pushl $0x2b07dc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_memory_pool_copy_1:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c182530]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b182590_assert), [exitfn] "m"(b182590_exitfn), [c182530] "m"(b182590_c182530)
+      : "memory");
 }
+#else
+#error "rasterizer_memory_pool_copy: clang naked draft required"
+#endif
+
 
 /* FUN_001825d0: stub (0x1825d0) */
 void FUN_001825d0(void)

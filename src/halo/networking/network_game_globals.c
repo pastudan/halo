@@ -763,31 +763,49 @@ void FUN_0012a7a0(void)
   }
 }
 
-/* Return the number of games played from the active network game globals.
- * Resolves the server's game globals if a server exists, otherwise the
- * client's; asserts a non-null game pointer was resolved, then reads the
- * field at game+0x428.
- * 0x12a830 / network_game_globals.obj */
+/* network_game_get_number_of_games_played (0x12a830) — XBE naked draft (batch 98). */
+#if defined(__clang__)
+static int (*const b12a830_c12d570)(void *server) = network_game_server_get_game;
+static void (*const b12a830_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b12a830_exitfn)(int) = system_exit;
+static void (*const b12a830_c12a86e)(void) = (void (*)(void))FUN_0012a890;
+
+__attribute__((naked, noinline))
 int network_game_get_number_of_games_played(void)
 {
-  int game;
-
-  if (*(void **)0x0046e8bc != NULL) {
-    game = network_game_server_get_game(*(void **)0x0046e8bc);
-  } else if (*(void **)0x0046e8c0 != NULL) {
-    game = (int)network_game_client_get_machine_index(*(void **)0x0046e8c0);
-  } else {
-    game = 0;
-  }
-
-  if (game == 0) {
-    display_assert(
-      "game", "c:\\halo\\SOURCE\\networking\\network_game_globals.c", 0x73, 1);
-    system_exit(-1);
-  }
-
-  return *(int *)(game + 0x428);
+  __asm__ volatile(
+      "movl 0x46e8bc, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "je .Lnetwork_game_get_number_of_games_played_10000\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c12d570]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lnetwork_game_get_number_of_games_played_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x73\n\t"
+      "pushl $0x2955e0\n\t"
+      "pushl $0x2861a8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lnetwork_game_get_number_of_games_played_1:\n\t"
+      "movl 0x428(%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      ".Lnetwork_game_get_number_of_games_played_10000:\n\t"
+      "jmp *%[c12a86e]\n\t"
+      :
+      : [c12d570] "m"(b12a830_c12d570), [assert] "m"(b12a830_assert), [exitfn] "m"(b12a830_exitfn), [c12a86e] "m"(b12a830_c12a86e)
+      : "memory");
 }
+#else
+#error "network_game_get_number_of_games_played: clang naked draft required"
+#endif
+
 
 /* Create and initialize the global network game server.
  * Asserts the server slot is empty, allocates via FUN_0012eef0,

@@ -11361,23 +11361,46 @@ void scripting_magic_melee_attack(void)
   unit_melee_attack_begin(unit_handle, 0, 0);
 }
 
-/* unit_select_weapon_after_vehicle_exit (0x1b2740)
- * After exiting a vehicle, selects the next available weapon and updates
- * weapon readiness. Reads current weapon index, finds the next weapon,
- * stores it as the next weapon index, then calls unit_update_weapon_readiness.
- * Register arg: unit_handle in EAX. */
-void unit_select_weapon_after_vehicle_exit(int unit_handle)
-{
-  char *unit;
-  uint16_t current_idx;
-  int16_t next_idx;
+/* unit_select_weapon_after_vehicle_exit (0x1b2740) — XBE naked draft (batch 98). */
+#if defined(__clang__)
+static void *(*const b1b2740_get)(int, int) = object_get_and_verify_type;
+static int16_t (*const b1b2740_c1ae490)(int unit_handle, int16_t current_index, int16_t direction) = FUN_001ae490;
+static void (*const b1b2740_c1b1ee0)(int unit_handle, int flag) = unit_update_weapon_readiness;
 
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  current_idx = *(uint16_t *)(unit + 0x2a2);
-  next_idx = unit_next_weapon_index(unit_handle, (int16_t)current_idx, 0);
-  *(int16_t *)(unit + 0x2a4) = next_idx;
-  unit_update_weapon_readiness(unit_handle, 1);
+__attribute__((naked, noinline))
+void unit_select_weapon_after_vehicle_exit(int unit_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x2a2(%%edi), %%ax\n\t"
+      "pushl $0\n\t"
+      "movl %%esi, %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ae490]\n\t"
+      "pushl $1\n\t"
+      "movw %%ax, 0x2a4(%%edi)\n\t"
+      "call *%[c1b1ee0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1b2740_get), [c1ae490] "m"(b1b2740_c1ae490), [c1b1ee0] "m"(b1b2740_c1b1ee0)
+      : "memory");
 }
+#else
+#error "unit_select_weapon_after_vehicle_exit: clang naked draft required"
+#endif
+
 
 /* FUN_001abd10 (0x1abd10) — XBE naked draft (batch 68). */
 #if defined(__clang__)

@@ -1198,6 +1198,19 @@ def main() -> int:
         ("cluster_partition_iter_next", 0x191660, 0x19168f),
         ("FUN_0011c430", 0x11c430, 0x11c471),
         ("lru_cache_dispose", 0x11d250, 0x11d291),
+        # gameplay wave 98 (2026-07-26) — items/units/net/math Capstone weaks
+        ("item_new", 0xf6820, 0xf685a),
+        ("unit_select_weapon_after_vehicle_exit", 0x1b2740, 0x1b2777),
+        ("rasterizer_memory_pool_copy", 0x182590, 0x1825c8),
+        ("network_client_switch_to_postgame", 0x125610, 0x125659),
+        ("network_game_get_number_of_games_played", 0x12a830, 0x12a86e),
+        ("FUN_00180050", 0x180050, 0x180091),
+        ("lruv_block_touched", 0x11da30, 0x11da5d),
+        ("cluster_partition_dispose", 0x191600, 0x191630),
+        ("system_string_hash", 0x8e2b0, 0x8e2dd),
+        ("rasterizer_memory_pool_new", 0x1824e0, 0x182519),
+        ("random_real_range", 0x10b270, 0x10b2ab),
+        ("angles_to_vector", 0x10cc40, 0x10cc6b),
     ]
 
     xbe = Xbe.from_file(args.xbe)

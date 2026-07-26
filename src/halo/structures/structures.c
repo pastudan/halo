@@ -2793,24 +2793,45 @@ void cluster_partition_clear(void *partition)
   data_delete_all((data_t *)part[1]);
 }
 
-/* Dispose both datum pools of a cluster partition (0x191600).
- * Mirrors cluster_partition_clear's pool layout: the per-object cluster
- * references (partition[2]) are disposed first, then the per-cluster object
- * references (partition[1]). Each pool is a data_t whose signature byte at
- * +0x24 is non-zero only while allocated; disposal is skipped otherwise.
- * Callee (data_make_invalid) and disposal order confirmed from disassembly.
- */
-void cluster_partition_dispose(void *partition)
-{
-  data_t **part = (data_t **)partition;
+/* cluster_partition_dispose (0x191600) — XBE naked draft (batch 98). */
+#if defined(__clang__)
+static void (*const b191600_c119550)(data_t *data) = data_make_invalid;
 
-  if (*((char *)part[2] + 0x24) != '\0') {
-    data_make_invalid(part[2]);
-  }
-  if (*((char *)part[1] + 0x24) != '\0') {
-    data_make_invalid(part[1]);
-  }
+__attribute__((naked, noinline))
+void cluster_partition_dispose(void *partition __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "movb 0x24(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lcluster_partition_dispose_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119550]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lcluster_partition_dispose_1:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "movb 0x24(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "popl %%esi\n\t"
+      "je .Lcluster_partition_dispose_2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119550]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lcluster_partition_dispose_2:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c119550] "m"(b191600_c119550)
+      : "memory");
 }
+#else
+#error "cluster_partition_dispose: clang naked draft required"
+#endif
+
 
 /* Null a cluster partition's three references (0x191630).
  * Zeroes the head-array pointer (partition[0]), the per-object cluster

@@ -1602,23 +1602,44 @@ int lruv_block_get_address(void *lruv, int block_index)
   return block->first_page_index << (c->page_size_bits & 0x1f);
 }
 
-/* lruv_block_touched (0x11da30)
- *
- * Return true if the given cache block was stamped during the current
- * cache cycle: compares the block's stamp field (block+0x14) against
- * the cache's current generation counter (cache+0x30, field_30).  Runs
- * the fast integrity check before the datum lookup.  Sibling of
- * lruv_block_get_address (0x11da00).
- */
-bool lruv_block_touched(void *lruv, int block_index)
-{
-  lruv_cache_t *c = (lruv_cache_t *)lruv;
-  lruv_cache_block_t *block;
+/* lruv_block_touched (0x11da30) — XBE naked draft (batch 98). */
+#if defined(__clang__)
+static void (*const b11da30_c11d550)(void *cache, char do_full_check) = lruv_cache_verify;
+static void *(*const b11da30_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 
-  lruv_cache_verify(lruv, 0);
-  block = (lruv_cache_block_t *)datum_get(c->blocks, block_index);
-  return *(int *)block->unk_14 == c->field_30;
+__attribute__((naked, noinline))
+bool lruv_block_touched(void *lruv __attribute__((unused)), int block_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c11d550]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x3c(%%esi), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x14(%%eax), %%eax\n\t"
+      "subl 0x30(%%esi), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "negl %%eax\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c11d550] "m"(b11da30_c11d550), [dget] "m"(b11da30_dget)
+      : "memory");
 }
+#else
+#error "lruv_block_touched: clang naked draft required"
+#endif
+
 
 /* lruv_cache_get_page_usage (0x11da60) — XBE naked draft (batch 88). */
 #if defined(__clang__)
