@@ -324,21 +324,76 @@ void FUN_000d46e0(void)
 {
 }
 
-/* scripted_hud_set_state_message (0xd46f0)
- * Sets the scripted HUD message from the scenario's HMT tag. */
-void scripted_hud_set_state_message(short param_1)
-{
-  int scenario;
-  int hmt;
+/* hud_set_state_message (0xd4d90) — XBE naked draft (batch 91). */
+#if defined(__clang__)
+static void *(*const bd4d90_tag)(int, int) = tag_get;
+static void *(*const bd4d90_elem)(void *, int, int) = tag_block_get_element;
 
-  scenario = (int)global_scenario_get();
-  if (*(char *)(*(int *)0x46bd10 + 1) != '\0' &&
-      *(int *)(scenario + 0x5a0) != -1) {
-    hmt = (int)tag_get(0x686d7420, *(int *)(scenario + 0x5a0));
-    *(int *)(*(int *)0x46bd18 + 0x118c) =
-      (int)tag_block_get_element((void *)(hmt + 0x20), (int)param_1, 0x40);
-  }
+__attribute__((naked, noinline))
+void hud_set_state_message(short param_1 __attribute__((unused)), short param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x46bd10, %%eax\n\t"
+      "movb 0x1(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lhud_set_state_message_3\n\t"
+      "movl 0x46bd0c, %%ecx\n\t"
+      "movl 0xfc(%%ecx), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lhud_set_state_message_3\n\t"
+      "movl 0x46bd18, %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movswl 0x8(%%ebp), %%esi\n\t"
+      "imull $0x460, %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "addl %%edx, %%esi\n\t"
+      "cmpw $-1, %%di\n\t"
+      "je .Lhud_set_state_message_2\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x686d7420\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x20(%%eax), %%edx\n\t"
+      "addl $0x20, %%eax\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jge .Lhud_set_state_message_1\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $-1, %%di\n\t"
+      "setne %%dl\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x454(%%esi)\n\t"
+      "movb $0, 0x459(%%esi)\n\t"
+      "movb %%dl, 0x458(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lhud_set_state_message_1:\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "cmpw $-1, %%di\n\t"
+      ".Lhud_set_state_message_2:\n\t"
+      "setne %%dl\n\t"
+      "popl %%edi\n\t"
+      "movb %%dl, 0x458(%%esi)\n\t"
+      "popl %%esi\n\t"
+      ".Lhud_set_state_message_3:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(bd4d90_tag), [elem] "m"(bd4d90_elem)
+      : "memory");
 }
+#else
+#error "hud_set_state_message: clang naked draft required"
+#endif
+
 
 /* scripted_hud_set_flashing_state (0xd4740)
  * Sets the flashing state flag and records the game tick. */
@@ -788,33 +843,6 @@ int hud_messaging_get_objective(void)
 #error "hud_messaging_get_objective: clang naked draft required"
 #endif
 
-
-/* hud_set_state_message (0xd4d90)
- * Set a HUD message element reference for a player. */
-void hud_set_state_message(short param_1, short param_2)
-{
-  int iVar1;
-  int iVar3;
-  short sVar4;
-
-  if (*(char *)(*(int *)0x46bd10 + 1) == '\0' &&
-      *(int *)(*(int *)0x46bd0c + 0xfc) != -1) {
-    iVar3 = (int)(short)param_1 * 0x460 + *(int *)0x46bd18;
-    sVar4 = param_2;
-    if (param_2 != -1) {
-      iVar1 = (int)tag_get(0x686d7420, *(int *)(*(int *)0x46bd0c + 0xfc));
-      if ((int)(short)param_2 < *(int *)(iVar1 + 0x20)) {
-        *(int *)(iVar3 + 0x454) = (int)tag_block_get_element(
-          (void *)(iVar1 + 0x20), (int)(short)param_2, 0x40);
-        *(unsigned char *)(iVar3 + 0x459) = 0;
-        *(unsigned char *)(iVar3 + 0x458) = (param_2 != -1);
-        return;
-      }
-      sVar4 = -1;
-    }
-    *(unsigned char *)(iVar3 + 0x458) = (sVar4 != -1);
-  }
-}
 
 /* hud_set_state_message_icon (0xd4e30)
  * Set a numeric value for a HUD message element. */

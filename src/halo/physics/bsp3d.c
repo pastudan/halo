@@ -39,43 +39,77 @@ uint32_t FUN_00146d40(void *bsp2d_nodes, float *point2d, int node_index)
   return 0xffffffff;
 }
 
-/* bsp3d_find_leaf (0x146db0): descend the BSP3D node tree from `root` to the
- * leaf containing `point`.
- *
- * Two tag_blocks live in the bsp3d structure: the nodes block at base+0
- * (stride 0xc = 3 dwords: [0]=plane index, [1]=back child, [2]=front child)
- * and the planes block at base+0xc (stride 0x10 = 4 floats: [0..2]=normal xyz,
- * [3]=plane distance d).
- *
- * At each node we compute the signed distance dot(normal, point) - d. If it is
- * >= 0.0f we take the front child (index 2), otherwise the back child (index
- * 1). The multiply-add is emitted in x,z,y source order to match the original's
- * x87 scheduling. We keep descending while the child link is a non-negative
- * (interior-node) index; when it goes negative we stop. A link of 0xffffffff
- * means solid/no-leaf; any other negative link is a leaf index with its high
- * sign bit stripped.
- */
-uint32_t bsp3d_find_leaf(void *bsp3d, int root, void *point)
+/* bsp3d_find_leaf (0x146db0) — XBE naked draft (batch 91). */
+#if defined(__clang__)
+static void *(*const b146db0_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+uint32_t bsp3d_find_leaf(void *bsp3d __attribute__((unused)), int root __attribute__((unused)), void *point __attribute__((unused)))
 {
-  uint32_t *node;
-  float *plane;
-  float *p = (float *)point;
-  uint32_t node_index = (uint32_t)root;
-  float dist;
-
-  do {
-    node = (uint32_t *)tag_block_get_element(bsp3d, (int)node_index, 0xc);
-    plane =
-      (float *)tag_block_get_element((char *)bsp3d + 0xc, (int)node[0], 0x10);
-    dist = (plane[0] * p[0] + plane[2] * p[2] + plane[1] * p[1]) - plane[3];
-    node_index = node[1 + (0.0f <= dist ? 1 : 0)];
-  } while ((int)node_index >= 0);
-
-  if (node_index != 0xffffffff) {
-    return node_index & 0x7fffffff;
-  }
-  return 0xffffffff;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "nop\n\t"
+      ".Lbsp3d_find_leaf_1:\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%eax\n\t"
+      "leal 0xc(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%eax)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0xc(%%eax)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lbsp3d_find_leaf_2\n\t"
+      "movl $1, %%eax\n\t"
+      "jmp .Lbsp3d_find_leaf_3\n\t"
+      ".Lbsp3d_find_leaf_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lbsp3d_find_leaf_3:\n\t"
+      "movl 0x4(%%edi,%%eax,4), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jns .Lbsp3d_find_leaf_1\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "je .Lbsp3d_find_leaf_4\n\t"
+      "andl $0x7fffffff, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lbsp3d_find_leaf_4:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b146db0_elem)
+      : "memory");
 }
+#else
+#error "bsp3d_find_leaf: clang naked draft required"
+#endif
+
 
 /* bsp3d_clip_line_to_leaves (0x146e30) — XBE naked draft (batch 80). */
 #if defined(__clang__)

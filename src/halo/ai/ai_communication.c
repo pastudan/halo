@@ -276,34 +276,79 @@ void ai_communication_dispose_from_old_map(void)
   data_make_invalid(*(void **)0x6324ec);
 }
 
-/* ai_conversation_advance (0x43520) — iterate all conversations and mark
- * matching entries as advanced. For each conversation whose index field
- * (+0x2) matches param_1, sets byte +0x9 to 1. When the AI debug flag
- * at 0x5aca5f is set, logs the advance via console_printf with the
- * conversation name from the scenario tag block at offset 0x468. */
-void ai_conversation_advance(short param_1)
-{
-  data_iter_t iter;
-  char *conversation;
+/* ai_conversation_advance (0x43520) — XBE naked draft (batch 91). */
+#if defined(__clang__)
+static void (*const b43520_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b43520_c119810)(data_iter_t *iterator) = data_iterator_next;
+static scenario_t * (*const b43520_c18e380)(void) = global_scenario_get;
+static void *(*const b43520_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b43520_cff4d0)(int channel, const char *format, ...) = console_printf;
 
-  data_iterator_new(&iter, *(data_t **)0x6324ec);
-  conversation = (char *)data_iterator_next(&iter);
-  if (conversation == 0) {
-    return;
-  }
-  do {
-    if (*(short *)(conversation + 2) == param_1) {
-      if (*(char *)0x5aca5f != '\0') {
-        console_printf(0, "%s: told to advance by scripting",
-          tag_block_get_element(
-            (char *)global_scenario_get() + 0x468,
-            0x74, (int)param_1));
-      }
-      conversation[9] = 1;
-    }
-    conversation = (char *)data_iterator_next(&iter);
-  } while (conversation != 0);
+__attribute__((naked, noinline))
+void ai_conversation_advance(short param_1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x6324ec, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Lai_conversation_advance_4\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lai_conversation_advance_1:\n\t"
+      "cmpw %%si, 0x2(%%edi)\n\t"
+      "jne .Lai_conversation_advance_3\n\t"
+      "movb 0x5aca5f, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_conversation_advance_2\n\t"
+      "movswl %%si, %%eax\n\t"
+      "pushl $0x74\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x468, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x259aa0\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".Lai_conversation_advance_2:\n\t"
+      "movb $1, 0x9(%%edi)\n\t"
+      ".Lai_conversation_advance_3:\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lai_conversation_advance_1\n\t"
+      "popl %%esi\n\t"
+      ".Lai_conversation_advance_4:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1197b0] "m"(b43520_c1197b0), [c119810] "m"(b43520_c119810), [c18e380] "m"(b43520_c18e380), [elem] "m"(b43520_elem), [cff4d0] "m"(b43520_cff4d0)
+      : "memory");
 }
+#else
+#error "ai_conversation_advance: clang naked draft required"
+#endif
+
 /* --- ai_communication.obj batch1 drafts (2026-07-26) --- */
 
 char actor_is_fighting(int actor_handle);

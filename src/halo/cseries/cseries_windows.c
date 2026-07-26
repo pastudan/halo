@@ -1,25 +1,73 @@
-char *system_stristr(const char *str, const char *substr)
+/* system_stristr (0x8e250) — XBE naked draft (batch 91). */
+#if defined(__clang__)
+static int (*const b8e250_c8df60)(const char *s1) = csstrlen;
+static int (*const b8e250_c1e6596)(const char *a, const char *b, size_t n) = __strnicmp;
+
+__attribute__((naked, noinline))
+char * system_stristr(const char *str __attribute__((unused)), const char *substr __attribute__((unused)))
 {
-  char c;
-  char sc;
-  int len;
-
-  c = *substr;
-  if (c == '\0')
-    return (char *)str;
-
-  len = csstrlen(substr + 1);
-  for (;;) {
-    do {
-      sc = *str++;
-      if (sc == '\0')
-        return NULL;
-    } while (sc != c);
-    if (((int(__cdecl *)(const char *, const char *, size_t))0x1e6596)(
-          str, substr + 1, len) == 0)
-      return (char *)(str - 1);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "movb (%%edi), %%bl\n\t"
+      "incl %%edi\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lsystem_stristr_3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c8df60]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, 0xc(%%ebp)\n\t"
+      "nop\n\t"
+      ".Lsystem_stristr_1:\n\t"
+      "movb (%%esi), %%al\n\t"
+      "incl %%esi\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lsystem_stristr_2\n\t"
+      "cmpb %%bl, %%al\n\t"
+      "jne .Lsystem_stristr_1\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1e6596]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lsystem_stristr_1\n\t"
+      "decl %%esi\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lsystem_stristr_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lsystem_stristr_3:\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8df60] "m"(b8e250_c8df60), [c1e6596] "m"(b8e250_c1e6596)
+      : "memory");
 }
+#else
+#error "system_stristr: clang naked draft required"
+#endif
+
 
 uint32_t system_string_hash(const char *str)
 {

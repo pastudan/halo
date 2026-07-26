@@ -120,30 +120,74 @@ void midpoint3d(float *a, float *b, float *out)
   out[2] = (a[2] + b[2]) * 0.5f;
 }
 
-/* actor_test_destination (0x2a580) — check whether an actor has reached its
- * destination. Returns 1 if movement state is 0 or 1, or if the squared
- * distance to the destination is less than the squared tolerance. Stores the
- * result in actor[0x484]. */
-char actor_test_destination(int actor_handle)
-{
-  char *actor;
-  float tol;
-  float dx, dy, dz;
+/* actor_test_destination (0x2a580) — XBE naked draft (batch 91). */
+#if defined(__clang__)
+static void *(*const b2a580_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static float (*const b2a580_c3bd50)(int actor_handle) = actor_destination_tolerance;
 
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  if (*(short *)(actor + 0x46c) == 0 || *(short *)(actor + 0x46c) == 1) {
-    *(char *)(actor + 0x484) = 1;
-  } else {
-    tol = actor_destination_tolerance(actor_handle);
-    dx = *(float *)(actor + 0x488) - *(float *)(actor + 0x12c);
-    dy = *(float *)(actor + 0x48c) - *(float *)(actor + 0x130);
-    dz = *(float *)(actor + 0x490) - *(float *)(actor + 0x134);
-    if (tol * tol > dz * dz + dx * dx + dy * dy) {
-      *(char *)(actor + 0x484) = 1;
-    }
-  }
-  return *(char *)(actor + 0x484);
+__attribute__((naked, noinline))
+char actor_test_destination(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movw 0x46c(%%esi), %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lactor_test_destination_1\n\t"
+      "cmpw $1, %%ax\n\t"
+      "je .Lactor_test_destination_1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c3bd50]\n\t"
+      "flds 0x488(%%esi)\n\t"
+      "fsubs 0x12c(%%esi)\n\t"
+      "addl $4, %%esp\n\t"
+      "flds 0x48c(%%esi)\n\t"
+      "fsubs 0x130(%%esi)\n\t"
+      "flds 0x490(%%esi)\n\t"
+      "fsubs 0x134(%%esi)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(4)\n\t"
+      ".byte 0xd8, 0xcd\n\t"
+      "fcompp\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $0x41, %%ah\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .Lactor_test_destination_2\n\t"
+      ".Lactor_test_destination_1:\n\t"
+      "movb $1, 0x484(%%esi)\n\t"
+      ".Lactor_test_destination_2:\n\t"
+      "movb 0x484(%%esi), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2a580_dget), [c3bd50] "m"(b2a580_c3bd50)
+      : "memory");
 }
+#else
+#error "actor_test_destination: clang naked draft required"
+#endif
+
 
 /* actor_get_stopping_distances (0x2a610) — XBE naked draft (batch 83). */
 #if defined(__clang__)
@@ -312,33 +356,75 @@ void actor_get_stopping_distances(int actor_handle __attribute__((unused)), floa
 #endif
 
 
-/* 0x2a7e0 — Set actor goal destination if not already occupied.
- * Calls actor_set_dormant(actor, 0), then checks actor->goal_slot (+0x418)
- * and vehicle-in-air state. On success writes param_2 to +0x418 and
- * copies two ints from param_3 to +0x41c/+0x420. Returns 1 on success, 0 on
- * failure. */
-int actor_move_animation_impulse(int actor_handle, int16_t param_2,
-                                 int *param_3)
-{
-  char *actor;
-  char *actor2;
-  char result;
+/* actor_move_animation_impulse (0x2a7e0) — XBE naked draft (batch 91). */
+#if defined(__clang__)
+static void *(*const b2a7e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b2a7e0_c3ca40)(int actor_handle, char flag) = actor_set_dormant;
+static bool (*const b2a7e0_c1a9ad0)(int unit_handle) = unit_is_busy;
 
-  result = 0;
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  actor_set_dormant(actor_handle, 0);
-  actor2 = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  if (*(int16_t *)(actor2 + 0x418) == -1) {
-    if (*(int *)(actor2 + 0x18) == -1 ||
-        !unit_is_busy(*(int *)(actor2 + 0x18))) {
-      *(int16_t *)(actor + 0x418) = param_2;
-      *(int *)(actor + 0x41c) = *param_3;
-      *(int *)(actor + 0x420) = param_3[1];
-      result = 1;
-    }
-  }
-  return (int)result;
+__attribute__((naked, noinline))
+int actor_move_animation_impulse(int actor_handle __attribute__((unused)), int16_t param_2 __attribute__((unused)), int *param_3 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c3ca40]\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpw $-1, 0x418(%%eax)\n\t"
+      "jne .Lactor_move_animation_impulse_2\n\t"
+      "movl 0x18(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_move_animation_impulse_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1a9ad0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_move_animation_impulse_2\n\t"
+      ".Lactor_move_animation_impulse_1:\n\t"
+      "movw 0xc(%%ebp), %%dx\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movw %%dx, 0x418(%%edi)\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x41c(%%edi)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x420(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_move_animation_impulse_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2a7e0_dget), [c3ca40] "m"(b2a7e0_c3ca40), [c1a9ad0] "m"(b2a7e0_c1a9ad0)
+      : "memory");
 }
+#else
+#error "actor_move_animation_impulse: clang naked draft required"
+#endif
+
 
 /* actor_move_force_stop (0x2a860) — XBE naked draft (batch 90). */
 #if defined(__clang__)
@@ -1587,48 +1673,75 @@ char FUN_0002b310(float *direction __attribute__((unused)), short count __attrib
 #endif
 
 
-/* 0x2b400 — actor_move_transform_avoidance_vector: transform a local-space
- * direction vector (in_vec) by the avoidance_data's per-instance 3x3 rotation
- * (rows at +0x18/+0x24/+0x30) and add the global world translation row read
- * from the dereferenced pointer at *0x31fc38 (translation at +0x0/+0x4/+0x8).
- *
- * cdecl, all stack args (confirmed: PUSH EBP / RET, no RET N; caller
- * FUN_0004c920 @ 0x4d39c-0x4d39d pushes EAX=[EDI+0x1a0] last).
- *   matrix   : per-instance struct, 3x3 rotation rows at +0x18..+0x38
- *   in_vec   : float[3] local-space direction
- *   out_vec  : float[3] world-space output
- *
- * Confirmed (disasm 0x2b406-0x2b41c): out_vec is seeded from the world matrix
- * translation row via the once-dereferenced global pointer at *0x31fc38, NOT
- * the raw global address.  Confirmed three interleaved read-modify-write passes
- * (one per in_vec component) with operand order in_vec[c] * mtx[col] + out[r].
- */
-void actor_move_transform_avoidance_vector(int matrix, float *in_vec,
-                                           float *out_vec)
+/* actor_move_transform_avoidance_vector (0x2b400) — XBE naked draft (batch 91). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void actor_move_transform_avoidance_vector(int matrix __attribute__((unused)), float *in_vec __attribute__((unused)), float *out_vec __attribute__((unused)))
 {
-  float *world_translation;
-  float component;
-
-  world_translation = *(float **)0x31fc38;
-  out_vec[0] = world_translation[0];
-  out_vec[1] = world_translation[1];
-  out_vec[2] = world_translation[2];
-
-  component = in_vec[0];
-  out_vec[0] = component * *(float *)(matrix + 0x18) + out_vec[0];
-  out_vec[1] = component * *(float *)(matrix + 0x1c) + out_vec[1];
-  out_vec[2] = component * *(float *)(matrix + 0x20) + out_vec[2];
-
-  component = in_vec[1];
-  out_vec[0] = component * *(float *)(matrix + 0x24) + out_vec[0];
-  out_vec[1] = component * *(float *)(matrix + 0x28) + out_vec[1];
-  out_vec[2] = component * *(float *)(matrix + 0x2c) + out_vec[2];
-
-  component = in_vec[2];
-  out_vec[0] = component * *(float *)(matrix + 0x30) + out_vec[0];
-  out_vec[1] = component * *(float *)(matrix + 0x34) + out_vec[1];
-  out_vec[2] = component * *(float *)(matrix + 0x38) + out_vec[2];
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl 0x31fc38, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl (%%ecx), %%esi\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%esi, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%esi\n\t"
+      "movl %%esi, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "flds (%%edx)\n\t"
+      "popl %%esi\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x18(%%ecx)\n\t"
+      "fadds (%%eax)\n\t"
+      "fstps (%%eax)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x1c(%%ecx)\n\t"
+      "fadds 0x4(%%eax)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "fmuls 0x20(%%ecx)\n\t"
+      "fadds 0x8(%%eax)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "flds 0x4(%%edx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x24(%%ecx)\n\t"
+      "fadds (%%eax)\n\t"
+      "fstps (%%eax)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x28(%%ecx)\n\t"
+      "fadds 0x4(%%eax)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "fmuls 0x2c(%%ecx)\n\t"
+      "fadds 0x8(%%eax)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "flds 0x8(%%edx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x30(%%ecx)\n\t"
+      "fadds (%%eax)\n\t"
+      "fstps (%%eax)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x34(%%ecx)\n\t"
+      "fadds 0x4(%%eax)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "fmuls 0x38(%%ecx)\n\t"
+      "fadds 0x8(%%eax)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "actor_move_transform_avoidance_vector: clang naked draft required"
+#endif
+
 
 /* actor_move_get_avoidance_vector (0x2b490) — XBE naked draft (batch 85). */
 #if defined(__clang__)

@@ -1107,6 +1107,19 @@ def main() -> int:
         ("reference_list_remove", 0x1913c0, 0x19143e),
         ("FUN_0011a5d0", 0x11a5d0, 0x11a650),
         ("FUN_0011a650", 0x11a650, 0x11a6cf),
+        # gameplay wave 91 (2026-07-26) — priority AI/rasterizer/HUD Capstone weaks
+        ("actor_move_transform_avoidance_vector", 0x2b400, 0x2b487),
+        ("bsp3d_find_leaf", 0x146db0, 0x146e25),
+        ("hashtable_dispose", 0x11b960, 0x11b9f1),
+        ("rasterizer_text_get_character_position", 0x183770, 0x183814),
+        ("rasterizer_transparent_geometry_next_group", 0x1843b0, 0x18444d),
+        ("system_stristr", 0x8e250, 0x8e2a6),
+        ("hud_set_state_message", 0xd4d90, 0xd4e2a),
+        ("actor_test_destination", 0x2a580, 0x2a60e),
+        ("ai_conversation_advance", 0x43520, 0x435a1),
+        ("actor_move_animation_impulse", 0x2a7e0, 0x2a85d),
+        ("actor_action_handle_berserk_transition", 0x20470, 0x204e6),
+        ("game_engine_player_event", 0xad0c0, 0xad135),
     ]
 
     xbe = Xbe.from_file(args.xbe)

@@ -2293,31 +2293,79 @@ void rasterizer_text_cache_dispose(void)
  *       +0x6 (short):  screen_y
  */
 
-/* rasterizer_text_get_character_position: get hardware character screen position.
- * Original ABI: AX=index, EBX=*out_y, stack=*out_x
- */
-void rasterizer_text_get_character_position(short index, short *out_y,
-                                            short *out_x)
+/* rasterizer_text_get_character_position (0x183770) — XBE naked draft (batch 91). */
+#if defined(__clang__)
+static void (*const b183770_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b183770_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void rasterizer_text_get_character_position(short index __attribute__((unused)), short *out_y __attribute__((unused)), short *out_x __attribute__((unused)))
 {
-  if (*(char *)0x4d04a0 == 0) {
-    display_assert("hardware_character_cache.initialized",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_text.c", 0x255, 1);
-    system_exit(-1);
-  }
-  if (index < 0 || index >= 256) {
-    display_assert("hardware_character_index>=0 && "
-                   "hardware_character_index<MAXIMUM_HARDWARE_CHARACTERS",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_text.c", 0x256, 1);
-    system_exit(-1);
-  }
-  if (out_x == (short *)0 || out_y == (short *)0) {
-    display_assert("x0 && y0",
-                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_text.c", 599, 1);
-    system_exit(-1);
-  }
-  *out_x = *(short *)(0x4d04b4 + index * 8);
-  *out_y = *(short *)(0x4d04b6 + index * 8);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw %%ax, %%si\n\t"
+      "movb 0x4d04a0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "pushl %%edi\n\t"
+      "movswl %%si, %%edi\n\t"
+      "leal 0x4d04b0(,%%edi,8), %%edi\n\t"
+      "jne .Lrasterizer_text_get_character_position_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x255\n\t"
+      "pushl $0x2b0a0c\n\t"
+      "pushl $0x2b0a9c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_text_get_character_position_1:\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lrasterizer_text_get_character_position_2\n\t"
+      "cmpw $0x100, %%si\n\t"
+      "jl .Lrasterizer_text_get_character_position_3\n\t"
+      ".Lrasterizer_text_get_character_position_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x256\n\t"
+      "pushl $0x2b0a0c\n\t"
+      "pushl $0x2b0a48\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_text_get_character_position_3:\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lrasterizer_text_get_character_position_4\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lrasterizer_text_get_character_position_5\n\t"
+      ".Lrasterizer_text_get_character_position_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x257\n\t"
+      "pushl $0x2b0a0c\n\t"
+      "pushl $0x2b0a38\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_text_get_character_position_5:\n\t"
+      "movw 0x4(%%edi), %%ax\n\t"
+      "movw %%ax, (%%esi)\n\t"
+      "movw 0x6(%%edi), %%cx\n\t"
+      "popl %%edi\n\t"
+      "movw %%cx, (%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b183770_assert), [exitfn] "m"(b183770_exitfn)
+      : "memory");
 }
+#else
+#error "rasterizer_text_get_character_position: clang naked draft required"
+#endif
+
 
 /* rasterizer_text_evict_character: evict a hardware character from the cache.
  * Original ABI: ESI=slot (pointer to character pointer in cache)
@@ -3120,39 +3168,79 @@ void *rasterizer_secondary_geometry_groups_get(short *out_count)
   return *(void **)0x4d0cf0;
 }
 
-/* rasterizer_transparent_geometry_next_group: return next sorted group after
- * given group (0x1843b0) */
-void *rasterizer_transparent_geometry_next_group(void *group)
-{
-  short next_index;
-  short sorted_index;
+/* rasterizer_transparent_geometry_next_group (0x1843b0) — XBE naked draft (batch 91). */
+#if defined(__clang__)
+static void (*const b1843b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1843b0_exitfn)(int) = system_exit;
 
-  if (group != (void *)0) {
-    sorted_index = *(short *)((char *)group + 0x90);
-    next_index = (short)(sorted_index + 1);
-    if (*(int *)((char *)group + 0x90) < 0 ||
-        *(int *)0x4d0cf4 <= *(int *)((char *)group + 0x90)) {
-      display_assert(
-        "group->sorted_index>=0 && "
-        "group->sorted_index<transparent_geometry_group_count",
-        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_transparent_geometry.c", 0x89,
-        1);
-      system_exit(-1);
-    }
-    if (next_index < *(int *)0x4d0cf4) {
-      if (next_index < 0) {
-        display_assert(
-          "next_group_sorted_index>=0",
-          "c:\\halo\\SOURCE\\rasterizer\\rasterizer_transparent_geometry.c",
-          0x8d, 1);
-        system_exit(-1);
-      }
-      return (void *)(*(short *)(*(int *)0x4d0cfc + next_index * 2) * 0xa0 +
-                      *(int *)0x4d0cec);
-    }
-  }
-  return (void *)0;
+__attribute__((naked, noinline))
+void * rasterizer_transparent_geometry_next_group(void *group __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .Lrasterizer_transparent_geometry_next_group_5\n\t"
+      "movw 0x90(%%eax), %%si\n\t"
+      "movl 0x90(%%eax), %%eax\n\t"
+      "incw %%si\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .Lrasterizer_transparent_geometry_next_group_1\n\t"
+      "cmpl 0x4d0cf4, %%eax\n\t"
+      "jl .Lrasterizer_transparent_geometry_next_group_2\n\t"
+      ".Lrasterizer_transparent_geometry_next_group_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x89\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl $0x2b0d00\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_transparent_geometry_next_group_2:\n\t"
+      "movl 0x4d0cf4, %%eax\n\t"
+      "movswl %%si, %%edi\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "jge .Lrasterizer_transparent_geometry_next_group_4\n\t"
+      "testw %%si, %%si\n\t"
+      "jge .Lrasterizer_transparent_geometry_next_group_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x8d\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl $0x2b0ce4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_transparent_geometry_next_group_3:\n\t"
+      "movl 0x4d0cfc, %%eax\n\t"
+      "movswl (%%eax,%%edi,2), %%eax\n\t"
+      "movl 0x4d0cec, %%ecx\n\t"
+      "leal (%%eax,%%eax,4), %%eax\n\t"
+      "shll $5, %%eax\n\t"
+      "popl %%edi\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrasterizer_transparent_geometry_next_group_4:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lrasterizer_transparent_geometry_next_group_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1843b0_assert), [exitfn] "m"(b1843b0_exitfn)
+      : "memory");
 }
+#else
+#error "rasterizer_transparent_geometry_next_group: clang naked draft required"
+#endif
+
 
 /* rasterizer_transparent_geometry_group_get: return group by presorted index
  * (0x184460) */

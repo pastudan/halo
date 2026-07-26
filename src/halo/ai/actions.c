@@ -2874,29 +2874,73 @@ char actor_action_try_to_dive(int actor_handle __attribute__((unused)), short di
 #endif
 
 
-/* actor_action_handle_berserk_transition (0x20470) — Handles berserk state
- * transition. If the actor's berserk timer (offset 0x310) has reached the
- * threshold and the actor is not already berserking (0x378), calls
- * actor_berserk. If the actor's action priority (0x6e) is >= 4 (i.e. > 3),
- * delegates to combat selection. Always clears the berserk timer. Returns
- * the result of combat selection, or 0 otherwise. */
-char actor_action_handle_berserk_transition(int actor_handle, short param_2)
-{
-  char *actor;
+/* actor_action_handle_berserk_transition (0x20470) — XBE naked draft (batch 91). */
+#if defined(__clang__)
+static void *(*const b20470_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b20470_c31440)(int actor_handle, int berserk_flag) = actor_berserk;
+static char (*const b20470_c1e8a0)(int actor_handle) = actor_action_handle_combat_selection;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(short *)(actor + 0x310) < param_2 || *(char *)(actor + 0x378) != '\0') {
-    *(short *)(actor + 0x310) = 0;
-    return 0;
-  }
-  actor_berserk(actor_handle, 1);
-  if (*(short *)(actor + 0x6e) > 3) {
-    *(short *)(actor + 0x310) = 0;
-    return actor_action_handle_combat_selection(actor_handle);
-  }
-  *(short *)(actor + 0x310) = 0;
-  return 0;
+__attribute__((naked, noinline))
+char actor_action_handle_berserk_transition(int actor_handle __attribute__((unused)), short param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movw 0x310(%%esi), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpw 0xc(%%ebp), %%cx\n\t"
+      "jl .Lactor_action_handle_berserk_transition_2\n\t"
+      "cmpb %%bl, 0x378(%%esi)\n\t"
+      "jne .Lactor_action_handle_berserk_transition_2\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c31440]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $4, 0x6e(%%esi)\n\t"
+      "jl .Lactor_action_handle_berserk_transition_1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1e8a0]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movw %%bx, 0x310(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_handle_berserk_transition_1:\n\t"
+      "popl %%edi\n\t"
+      "movw $0, 0x310(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_action_handle_berserk_transition_2:\n\t"
+      "popl %%edi\n\t"
+      "movw %%bx, 0x310(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b20470_dget), [c31440] "m"(b20470_c31440), [c1e8a0] "m"(b20470_c1e8a0)
+      : "memory");
 }
+#else
+#error "actor_action_handle_berserk_transition: clang naked draft required"
+#endif
+
 
 /* actor_action_handle_combat_transition (0x204f0) — XBE naked draft (batch 88). */
 #if defined(__clang__)
