@@ -7159,7 +7159,7 @@
         {
           "addr": "0x87ac0",
           "decl": "void FUN_00087ac0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x87b00",
@@ -14521,7 +14521,7 @@
         {
           "addr": "0x101ec0",
           "decl": "void main_save_map_no_timeout(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x101f00",
@@ -15009,7 +15009,7 @@
           "addr": "0x124c10",
           "decl": "void *network_game_client_get_machine(void *client);",
           "name": "network_game_client_get_machine",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x124c80",
@@ -18242,7 +18242,7 @@
         {
           "addr": "0xe0810",
           "decl": "int player_ui_get_single_player_local_player_from_controller(short local_player_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0840",
@@ -18638,7 +18638,7 @@
         {
           "addr": "0xbb2b0",
           "decl": "char valid_real_vector2d(float *v);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbb2f0",
@@ -23901,12 +23901,12 @@
         {
           "addr": "0x1909d0",
           "decl": "char shader_type_is_transparent(short shader_type);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1909f0",
           "decl": "char shader_type_is_lightmapped(short shader_type);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x190a10",
@@ -23916,7 +23916,7 @@
         {
           "addr": "0x190a30",
           "decl": "char shader_type_is_valid_for_environment(short shader_type);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x190a50",
@@ -23926,7 +23926,7 @@
         {
           "addr": "0x190a70",
           "decl": "char shader_type_is_valid_for_modifier(short shader_type);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x190a90",
