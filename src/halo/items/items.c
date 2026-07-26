@@ -1491,6 +1491,149 @@ void FUN_000f46e0(void *widget)
 }
 
 /* 0xf4b60 — sync item-profile UI child text indices from parent widget bytes. */
+#if defined(__clang__)
+static void (*const f4b60_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const f4b60_exitfn)(int) = system_exit;
+static void *(*const f4b60_tag)(int, int) = tag_get;
+static void (*const f4b60_handles)(int *, void *) = FUN_000f3690;
+static void *(*const f4b60_nth)(void *, int) = widget_instance_get_nth_child;
+
+__attribute__((naked, noinline))
+void FUN_000f4b60(void *widget __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 8(%%ebp), %%esi\n\t"
+      "movl 64(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_000f4b60_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x944\n\t"
+      "pushl $0x288938\n\t"
+      "pushl $0x28a058\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000f4b60_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x44654c61\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, (%%edi)\n\t"
+      "je .LFUN_000f4b60_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x949\n\t"
+      "pushl $0x288938\n\t"
+      "pushl $0x28a01c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000f4b60_2:\n\t"
+      "cmpl $3, 992(%%edi)\n\t"
+      "je .LFUN_000f4b60_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x94a\n\t"
+      "pushl $0x288938\n\t"
+      "pushl $0x289fd8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000f4b60_3:\n\t"
+      "leal -12(%%ebp), %%eax\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "call *%[handles]\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "jmp .LFUN_000f4b60_5\n\t"
+      ".LFUN_000f4b60_4:\n\t"
+      "movl 8(%%ebp), %%esi\n\t"
+      ".LFUN_000f4b60_5:\n\t"
+      "cmpl $-1, -12(%%ebp,%%edi,4)\n\t"
+      "je .LFUN_000f4b60_9\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[nth]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 52(%%eax), %%esi\n\t"
+      "movl 44(%%esi), %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x44654c61\n\t"
+      "call *%[tag]\n\t"
+      "movl 992(%%eax), %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $2, %%ecx\n\t"
+      "je .LFUN_000f4b60_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0x95b\n\t"
+      "pushl $0x288938\n\t"
+      "pushl $0x289f90\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000f4b60_6:\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x44654c61\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $1, (%%eax)\n\t"
+      "je .LFUN_000f4b60_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x95d\n\t"
+      "pushl $0x288938\n\t"
+      "pushl $0x289f48\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000f4b60_7:\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x44654c61\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, (%%eax)\n\t"
+      "je .LFUN_000f4b60_8\n\t"
+      "pushl $1\n\t"
+      "pushl $0x95f\n\t"
+      "pushl $0x288938\n\t"
+      "pushl $0x289ef8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000f4b60_8:\n\t"
+      "movl 8(%%ebp), %%ecx\n\t"
+      "movl 64(%%ecx), %%edx\n\t"
+      "movl -12(%%ebp,%%edi,4), %%eax\n\t"
+      "movzbw (%%eax,%%edx,1), %%ax\n\t"
+      "incl %%edi\n\t"
+      "cmpl $3, %%edi\n\t"
+      "movw %%ax, 64(%%esi)\n\t"
+      "movw %%ax, 80(%%ebx)\n\t"
+      "jl .LFUN_000f4b60_4\n\t"
+      ".LFUN_000f4b60_9:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(f4b60_assert), [exitfn] "m"(f4b60_exitfn), [tag] "m"(f4b60_tag), [handles] "m"(f4b60_handles), [nth] "m"(f4b60_nth)
+      : "memory");
+}
+#else
 void FUN_000f4b60(void *widget)
 {
   char *tag;
@@ -1548,6 +1691,8 @@ void FUN_000f4b60(void *widget)
     *(uint16_t *)(nested + 0x50) = value;
   }
 }
+#endif
+
 
 /* 0xf4cf0 — sync multiplayer item UI child text-box indices from parent widget. */
 void FUN_000f4cf0(void *widget)
