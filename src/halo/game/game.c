@@ -1967,38 +1967,17 @@ void FUN_000b4bf0(void)
 #endif
 
 
-/* FUN_000b4d00 (0xb4d00) — XBE naked draft (batch 169). */
-#if defined(__clang__)
-static void *(*const bb4d00_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_000b4d00(void)
+/* FUN_000b4d00 (0xb4d00) — readable C lift: add to team/player score buckets. */
+void FUN_000b4d00(int player_handle /*@<eax>*/, int delta /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x20(%%eax), %%eax\n\t"
-      "addl %%edi, 0x456fe0(,%%eax,4)\n\t"
-      "andl $0xffff, %%esi\n\t"
-      "movl 0x457020(,%%esi,4), %%ecx\n\t"
-      "leal 0x457020(,%%esi,4), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "addl %%edi, %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bb4d00_dget)
-      : "memory");
-}
-#else
-#error "FUN_000b4d00: clang naked draft required"
-#endif
+  char *player;
+  int team;
 
+  player = (char *)datum_get(*(data_t **)0x5aa6d4, player_handle);
+  team = *(int *)(player + 0x20);
+  *(int *)(0x456fe0 + team * 4) += delta;
+  *(int *)(0x457020 + (player_handle & 0xffff) * 4) += delta;
+}
 
 /* find_next_target (0xb4e20) — XBE naked draft (batch 121). */
 #if defined(__clang__)

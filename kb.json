@@ -8443,8 +8443,9 @@
         },
         {
           "addr": "0xb4d00",
-          "decl": "void FUN_000b4d00(void);",
-          "ported": false
+          "decl": "void FUN_000b4d00(int player_handle@<eax>, int delta@<edi>);",
+          "ported": true,
+          "name": "FUN_000b4d00"
         },
         {
           "addr": "0xb4d50",
