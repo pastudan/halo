@@ -1854,55 +1854,19 @@ int FUN_000829b0(int endpoint_set __attribute__((unused)))
 #endif
 
 
-/* FUN_00082a30 (0x82a30) — XBE naked draft (batch 275). */
-#if defined(__clang__)
-static void (*const b82a30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b82a30_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int FUN_00082a30(int endpoint_set __attribute__((unused)))
+/* FUN_00082a30 (0x82a30) — readable C lift. */
+int FUN_00082a30(int endpoint_set)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00082a30_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x289\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x266450\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00082a30_1:\n\t"
-      "movb 0x335090, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00082a30_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x28a\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x265fe4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00082a30_2:\n\t"
-      "movl 0x10c(%%esi), %%eax\n\t"
-      "incl %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b82a30_assert), [exitfn] "m"(b82a30_exitfn)
-      : "memory");
+  if (endpoint_set == NULL) {
+    display_assert((const char *)0x266450, (const char *)0x266458, 0x289, 1);
+    system_exit(-1);
+  }
+  if (*(uint8_t *)0x335090 == 0) {
+    display_assert((const char *)0x265fe4, (const char *)0x266458, 0x28a, 1);
+    system_exit(-1);
+  }
+  return *(uint32_t *)((char *)endpoint_set + 0x10c) + 1;
 }
-#else
-#error "FUN_00082a30: clang naked draft required"
-#endif
-
 
 /* FUN_00082a90 (0x82a90) — XBE naked draft (batch 260). */
 #if defined(__clang__)
@@ -3443,38 +3407,14 @@ int FUN_00084740(int endpoint __attribute__((unused)), void *message __attribute
 #endif
 
 
-/* FUN_00084940 (0x84940) — XBE naked draft (batch 283). */
-#if defined(__clang__)
-static int (*const b84940_c84450)(int listening_endpoint) = FUN_00084450;
-static void (*const b84940_c848c0)(int *ep) = destroy_endpoint;
-
-__attribute__((naked, noinline))
-int FUN_00084940(int listening_endpoint __attribute__((unused)))
+/* FUN_00084940 (0x84940) — readable C lift. */
+int FUN_00084940(int listening_endpoint)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c84450]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00084940_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c848c0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_00084940_1:\n\t"
-      "xorw %%ax, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c84450] "m"(b84940_c84450), [c848c0] "m"(b84940_c848c0)
-      : "memory");
+  void *p = FUN_00084450(listening_endpoint);
+  if (p)
+    destroy_endpoint(p);
+  return 0;
 }
-#else
-#error "FUN_00084940: clang naked draft required"
-#endif
-
 
 /* FUN_00084970 (0x84970) — readable C lift. */
 void FUN_00084970(unsigned int *ep)

@@ -12371,8 +12371,8 @@
         },
         {
           "addr": "0xca410",
-          "decl": "void FUN_000ca410(int object_handle, int16_t scenario_index);",
-          "ported": false
+          "decl": "void FUN_000ca410(int object_handle, int scenario_index);",
+          "ported": true
         },
         {
           "addr": "0xca430",
@@ -26751,7 +26751,7 @@
         {
           "addr": "0x82a30",
           "decl": "int FUN_00082a30(int endpoint_set);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x82a90",
@@ -26851,7 +26851,7 @@
         {
           "addr": "0x84940",
           "decl": "int FUN_00084940(int listening_endpoint);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x84970",
@@ -29684,8 +29684,8 @@
       "functions": [
         {
           "addr": "0xa3e60",
-          "decl": "void FUN_000a3e60(void);",
-          "ported": false
+          "decl": "void *FUN_000a3e60(int16_t index);",
+          "ported": true
         },
         {
           "addr": "0xa3ea0",
@@ -39706,12 +39706,12 @@
         },
         {
           "addr": "0x80380",
-          "decl": "void FUN_00080380(void);",
+          "decl": "void FUN_00080380(void *a0, void *a1, void *a2);",
           "ported": false
         },
         {
           "addr": "0x803b0",
-          "decl": "void FUN_000803b0(void);",
+          "decl": "void FUN_000803b0(void *a0, void *a1);",
           "ported": false
         },
         {

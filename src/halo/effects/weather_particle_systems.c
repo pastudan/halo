@@ -1,3 +1,4 @@
+#include <stdint.h>
 void weather_particle_systems_initialize(void)
 {
   weather_particle_system_data = data_new("weather particles", 0x200, 0x54);
@@ -37,41 +38,15 @@ void weather_particle_systems_dispose(void)
 }
 /* --- weather_particle_systems.obj batch drafts (2026-07-26) --- */
 
-/* FUN_000a3e60 (0xa3e60) — XBE naked draft (batch 173). */
-#if defined(__clang__)
-static void (*const ba3e60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba3e60_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_000a3e60(void)
+/* FUN_000a3e60 (0xa3e60) — readable C lift. */
+void *FUN_000a3e60(int16_t index)
 {
-  __asm__ volatile(
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_000a3e60_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .LFUN_000a3e60_2\n\t"
-      ".LFUN_000a3e60_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5b\n\t"
-      "pushl $0x26af50\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000a3e60_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0x9c, %%eax, %%eax\n\t"
-      "addl $0x4557f4, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(ba3e60_assert), [exitfn] "m"(ba3e60_exitfn)
-      : "memory");
+  if (index < 0 || index >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x26af50, 0x5b, 1);
+    system_exit(-1);
+  }
+  return (void *)(0x4557f4 + (int)index * 0x9c);
 }
-#else
-#error "FUN_000a3e60: clang naked draft required"
-#endif
-
 
 /* FUN_000a3ea0 (0xa3ea0) — XBE naked draft (batch 177). */
 #if defined(__clang__)

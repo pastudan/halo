@@ -6293,35 +6293,11 @@ void FUN_000ca3f0(int object_handle, int scenario_index)
   FUN_000ca160(scenario_index, 1, 1, object_handle);
 }
 
-/* FUN_000ca410 (0xca410) — XBE naked draft (batch 202). */
-#if defined(__clang__)
-static void (*const bca410_cca160)(int16_t scenario_index, char teleport_flag, char facing_flag, int object_handle) = FUN_000ca160;
-
-__attribute__((naked, noinline))
-void FUN_000ca410(int object_handle __attribute__((unused)), int16_t scenario_index __attribute__((unused)))
+/* FUN_000ca410 (0xca410) — readable C lift. */
+void FUN_000ca410(int object_handle, int scenario_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cca160]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cca160] "m"(bca410_cca160)
-      : "memory");
+  FUN_000ca160(scenario_index, 0, 1, object_handle);
 }
-#else
-#error "FUN_000ca410: clang naked draft required"
-#endif
-
 
 /* FUN_000ca430 (0xca430) — XBE naked draft (batch 137). */
 #if defined(__clang__)
