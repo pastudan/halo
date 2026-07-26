@@ -35361,7 +35361,7 @@
         {
           "addr": "0x53e80",
           "decl": "int FUN_00053e80(void *ai_profile_element, const char *name);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x53ee0",
