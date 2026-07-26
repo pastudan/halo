@@ -197,13 +197,13 @@ void player_ui_set_single_player_local_player_controller(void)
 
 
 /* player_ui_get_single_player_local_player_from_controller (0xe0810) — readable C lift. */
-short player_ui_get_single_player_local_player_from_controller(short controller)
+int player_ui_get_single_player_local_player_from_controller(short local_player_index)
 {
   short i;
   for (i = 0; i < 4; i++) {
-    if (*(short *)(0x46bfc4 + (int)i * 2) == controller) return i;
+    if (*(short *)(0x46bfc4 + (int)i * 2) == local_player_index) return i;
   }
-  return (short)-1;
+  return -1;
 }
 
 /* player_ui_local_player_joined_multiplayer_game (0xe0840) — XBE naked draft (batch 173). */

@@ -377,51 +377,17 @@ const char *ai_communication_get_type_name(int16_t type)
   return (const char *)0x253b58;
 }
 
-/* ai_communication_get_type_by_name (0x42ce0) — XBE naked draft (batch 179). */
-#if defined(__clang__)
-static int (*const b42ce0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
-
-__attribute__((naked, noinline))
-int16_t ai_communication_get_type_by_name(const char *name __attribute__((unused)))
+/* ai_communication_get_type_by_name (0x42ce0) — readable C lift (ai campaign). */
+int16_t ai_communication_get_type_by_name(const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl $0x2c8d78, %%edi\n\t"
-      ".Lai_communication_get_type_by_name_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8dcb0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lai_communication_get_type_by_name_2\n\t"
-      "movl %%esi, %%ebx\n\t"
-      ".Lai_communication_get_type_by_name_2:\n\t"
-      "incl %%esi\n\t"
-      "addl $4, %%edi\n\t"
-      "cmpw $0x39, %%si\n\t"
-      "jl .Lai_communication_get_type_by_name_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8dcb0] "m"(b42ce0_c8dcb0)
-      : "memory");
+  int16_t found = -1;
+  const char **table = (const char **)0x2c8d78;
+  for (int16_t i = 0; i < 0x39; i++) {
+    if (csstrcmp(table[i], name) == 0)
+      found = i;
+  }
+  return found;
 }
-#else
-#error "ai_communication_get_type_by_name: clang naked draft required"
-#endif
-
 
 /* ai_communication_packet_new (0x42d20) — readable C lift (assert wrapper). */
 void ai_communication_packet_new(void *packet)

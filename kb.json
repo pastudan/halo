@@ -34413,7 +34413,7 @@
         {
           "addr": "0x42ce0",
           "decl": "int16_t ai_communication_get_type_by_name(const char *name);",
-          "ported": false,
+          "ported": true,
           "name": "ai_communication_get_type_by_name"
         },
         {
