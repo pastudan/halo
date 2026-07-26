@@ -6301,8 +6301,8 @@
         },
         {
           "addr": "0x11eac0",
-          "decl": "void memory_block_get_user_size(void);",
-          "ported": false
+          "decl": "int memory_block_get_user_size(void *block@<esi>);",
+          "ported": true
         },
         {
           "addr": "0x11eb10",
@@ -8028,7 +8028,7 @@
         },
         {
           "addr": "0x19acf0",
-          "decl": "void file_write_to_position(void);",
+          "decl": "bool file_write_to_position(file_ref_t *info, int offset, void *buffer, int size);",
           "ported": false
         },
         {
@@ -15152,8 +15152,8 @@
         },
         {
           "addr": "0x125fb0",
-          "decl": "void FUN_00125fb0(void *client, int16_t reason);",
-          "ported": false,
+          "decl": "void FUN_00125fb0(void *client@<esi>, int16_t reason@<eax>);",
+          "ported": true,
           "name": "FUN_00125fb0"
         },
         {
@@ -23747,7 +23747,7 @@
         },
         {
           "addr": "0x1c3710",
-          "decl": "void FUN_001c3710(void);",
+          "decl": "unsigned int FUN_001c3710(unsigned int a@<eax>, unsigned int c@<ecx>, unsigned int d@<edx>, unsigned char flag_a, unsigned char flag_b);",
           "ported": false
         },
         {
@@ -25357,8 +25357,8 @@
         },
         {
           "addr": "0x1ba660",
-          "decl": "void cache_copy_compressed_alloc(void);",
-          "ported": false
+          "decl": "void *cache_copy_compressed_alloc(int unused, int a, int b);",
+          "ported": true
         },
         {
           "addr": "0x1ba6c0",
@@ -25392,8 +25392,8 @@
         },
         {
           "addr": "0x1baa50",
-          "decl": "void FUN_001baa50(void);",
-          "ported": false
+          "decl": "int FUN_001baa50(char *base@<edi>, int ptr@<eax>);",
+          "ported": true
         },
         {
           "addr": "0x1bab60",
@@ -33450,8 +33450,8 @@
         },
         {
           "addr": "0x97040",
-          "decl": "void FUN_00097040(int a0, float a1);",
-          "ported": false
+          "decl": "void FUN_00097040(int object_handle, float value);",
+          "ported": true
         },
         {
           "addr": "0x97080",
@@ -33460,13 +33460,13 @@
         },
         {
           "addr": "0x97220",
-          "decl": "int FUN_00097220(int a0, float a1);",
-          "ported": false
+          "decl": "char FUN_00097220(int object_handle, float value);",
+          "ported": true
         },
         {
           "addr": "0x97260",
-          "decl": "void FUN_00097260(int a0, float a1);",
-          "ported": false
+          "decl": "void FUN_00097260(int object_handle, float value);",
+          "ported": true
         }
       ],
       "name": "edit_text.obj",

@@ -1034,45 +1034,19 @@ void *stack_memory_pool_realloc(void *pool, int block, unsigned short new_size,
 }
 /* --- stack_memory_pool.obj batch drafts (2026-07-26) --- */
 
-/* memory_block_get_user_size (0x11eac0) — XBE naked draft (batch 169). */
-#if defined(__clang__)
-static void (*const b11eac0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11eac0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void memory_block_get_user_size(void)
+/* memory_block_get_user_size (0x11eac0) — readable C lift. */
+int memory_block_get_user_size(void *block)
 {
-  __asm__ volatile(
-      "testl %%esi, %%esi\n\t"
-      "jne .Lmemory_block_get_user_size_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x237\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x2901b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x22f\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x2901b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x28, %%esp\n\t"
-      ".Lmemory_block_get_user_size_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "andl $0x7fffffff, %%eax\n\t"
-      "subl $0x20, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11eac0_assert), [exitfn] "m"(b11eac0_exitfn)
-      : "memory");
+  extern char DAT_002901b8[];
+  extern char DAT_0029018c[];
+  if (!block) {
+    display_assert(DAT_002901b8, DAT_0029018c, 0x237, 1);
+    system_exit(-1);
+    display_assert(DAT_002901b8, DAT_0029018c, 0x22f, 1);
+    system_exit(-1);
+  }
+  return (*(int *)block & 0x7fffffff) - 0x20;
 }
-#else
-#error "memory_block_get_user_size: clang naked draft required"
-#endif
-
 
 /* FUN_0011eb10 (0x11eb10) — readable C lift. */
 int FUN_0011eb10(void *pool /*@<esi>*/)

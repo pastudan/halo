@@ -2765,46 +2765,22 @@ char FUN_00125ce0(void *slot_array /* */ __attribute__((unused)), void *advertis
 #endif
 
 
-/* FUN_00125fb0 (0x125fb0) — XBE naked draft (batch 167). */
-#if defined(__clang__)
-static void (*const b125fb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b125fb0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00125fb0(void *client /* */ __attribute__((unused)), int16_t reason /* */ __attribute__((unused)))
+/* FUN_00125fb0 (0x125fb0) — readable C lift. */
+void FUN_00125fb0(void *client, int16_t reason)
 {
-  __asm__ volatile(
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "jne .LFUN_00125fb0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x662\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x2917a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00125fb0_1:\n\t"
-      "cmpw $9, %%di\n\t"
-      "jb .LFUN_00125fb0_2\n\t"
-      "movl $1, %%edi\n\t"
-      ".LFUN_00125fb0_2:\n\t"
-      "cmpw $0, 0xca8(%%esi)\n\t"
-      "jne .LFUN_00125fb0_3\n\t"
-      "movw %%di, 0xca8(%%esi)\n\t"
-      ".LFUN_00125fb0_3:\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b125fb0_assert), [exitfn] "m"(b125fb0_exitfn)
-      : "memory");
+  extern char DAT_002917a8[];
+  extern char DAT_00291774[];
+  if (!client) {
+    display_assert(DAT_002917a8, DAT_00291774, 0x662, 1);
+    system_exit(-1);
+  }
+  if ((uint16_t)reason >= 9) {
+    reason = 1;
+  }
+  if (*(int16_t *)((char *)client + 0xca8) == 0) {
+    *(int16_t *)((char *)client + 0xca8) = reason;
+  }
 }
-#else
-#error "FUN_00125fb0: clang naked draft required"
-#endif
-
 
 /* network_game_client_leave_game (0x126140) — XBE naked draft (batch 114). */
 #if defined(__clang__)
