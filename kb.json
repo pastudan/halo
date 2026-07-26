@@ -14002,7 +14002,7 @@
         {
           "addr": "0xf5f10",
           "decl": "int object_get_type(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf5f30",
@@ -14017,7 +14017,7 @@
         {
           "addr": "0xf5fa0",
           "decl": "void items_initialize_for_new_map(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf5fb0",
@@ -29496,7 +29496,7 @@
         {
           "addr": "0x1a8910",
           "decl": "char FUN_001a8910(int16_t anim_state@<ecx>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1a8950",
@@ -29527,12 +29527,12 @@
         {
           "addr": "0x1b5580",
           "decl": "void vehicle_causes_collision_damage(int vehicle_handle, void *placement);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b55c0",
           "decl": "char vehicle_hover(int vehicle_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b5610",
@@ -33528,7 +33528,7 @@
         {
           "addr": "0xfafe0",
           "decl": "char weapon_useful(int weapon_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfb010",
@@ -39135,12 +39135,12 @@
         {
           "addr": "0x1392b0",
           "decl": "void lights_initialize_for_new_map(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1392e0",
           "decl": "void lights_dispose_from_old_map(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x139300",

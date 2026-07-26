@@ -1703,44 +1703,12 @@ char weapon_can_be_fired(int weapon_handle __attribute__((unused)))
 
 
 /* 0xfafe0 — true when weapon age/heat is still below 1.0. */
-#if defined(__clang__)
-static void *(*const weapon_useful_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-char weapon_useful(int weapon_handle __attribute__((unused)))
-{
-  /* XBE: fcomp 1.0; AH&1 (less) -> return 1, else 0. */
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "flds 0x1f0(%%eax)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne 1f\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "1:\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(weapon_useful_get)
-      : "memory");
-}
-#else
 char weapon_useful(int weapon_handle)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
   return (*(float *)(weapon_obj + 0x1f0) < *(float *)0x2533c8) ? 1 : 0;
 }
-#endif
+
 
 /* 0xfb010 — Movement penalty from weapon tag, gated by trigger mode. */
 #if defined(__clang__)

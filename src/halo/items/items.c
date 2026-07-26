@@ -4144,32 +4144,12 @@ void FUN_000f5900(void)
 #endif
 
 /* 0xf5f10 — remaining UTF-16 capacity in the item-name edit buffer. */
-#if defined(__clang__)
-static int (*const object_get_type_ustrlen)(const unsigned short *) = ustrlen;
-
-__attribute__((naked, noinline))
-int object_get_type(void)
-{
-  __asm__ volatile(
-      "movl 0x46cf08, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[f]\n\t"
-      "leal 2(%%eax,%%eax), %%ecx\n\t"
-      "movzwl 0x46cefc, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [f] "m"(object_get_type_ustrlen)
-      : "memory");
-}
-#else
 int object_get_type(void)
 {
   int len = ustrlen(*(const unsigned short **)0x46cf08);
   return (int)*(uint16_t *)0x46cefc - (len + len + 2);
 }
-#endif
+
 
 /* items_initialize (0xf5f90) — XBE naked draft (batch 220). */
 #if defined(__clang__)
@@ -4200,27 +4180,13 @@ void items_initialize(void)
 #endif
 
 
-/* items_initialize_for_new_map (0xf5fa0) — XBE naked draft (batch 236). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* items_initialize_for_new_map (0xf5fa0) — readable C lift. */
 void items_initialize_for_new_map(void)
 {
-  __asm__ volatile(
-      "movb 0x46cef0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Litems_initialize_for_new_map_1\n\t"
-      ".byte 0xe9, 0x52, 0xf9, 0xff, 0xff\n\t"
-      ".Litems_initialize_for_new_map_1:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (*(unsigned char *)0x46cef0)
+    FUN_000f5900();
 }
-#else
-#error "items_initialize_for_new_map: clang naked draft required"
-#endif
+
 
 
 /* FUN_000f5fb0 (0xf5fb0) — XBE naked draft (batch 222). */

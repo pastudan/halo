@@ -80,56 +80,23 @@ void lights_dispose(void)
   cluster_partition_null_references((int *)0x5a90b0);
 }
 
-/* lights_initialize_for_new_map (0x1392b0) — XBE naked draft (batch 237). */
-#if defined(__clang__)
-static void (*const b1392b0_c119b20)(data_t *data) = data_delete_all;
-static void (*const b1392b0_c1915d0)(void *partition) = cluster_partition_clear;
-
-__attribute__((naked, noinline))
+/* lights_initialize_for_new_map (0x1392b0) — readable C lift. */
 void lights_initialize_for_new_map(void)
 {
-  __asm__ volatile(
-      "movl 0x5a90bc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119b20]\n\t"
-      "movl 0x46f074, %%ecx\n\t"
-      "pushl $0x5a90b0\n\t"
-      "movb $1, (%%ecx)\n\t"
-      "call *%[c1915d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c119b20] "m"(b1392b0_c119b20), [c1915d0] "m"(b1392b0_c1915d0)
-      : "memory");
+  data_delete_all(*(void **)0x5a90bc);
+  **(unsigned char **)0x46f074 = 1;
+  cluster_partition_clear((void *)0x5a90b0);
 }
-#else
-#error "lights_initialize_for_new_map: clang naked draft required"
-#endif
 
 
-/* lights_dispose_from_old_map (0x1392e0) — XBE naked draft (batch 238). */
-#if defined(__clang__)
-static void (*const b1392e0_c119550)(data_t *data) = data_make_invalid;
-static void (*const b1392e0_c191600)(void *partition) = cluster_partition_dispose;
 
-__attribute__((naked, noinline))
+/* lights_dispose_from_old_map (0x1392e0) — readable C lift. */
 void lights_dispose_from_old_map(void)
 {
-  __asm__ volatile(
-      "movl 0x5a90bc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119550]\n\t"
-      "pushl $0x5a90b0\n\t"
-      "call *%[c191600]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c119550] "m"(b1392e0_c119550), [c191600] "m"(b1392e0_c191600)
-      : "memory");
+  data_make_invalid(*(void **)0x5a90bc);
+  cluster_partition_dispose((void *)0x5a90b0);
 }
-#else
-#error "lights_dispose_from_old_map: clang naked draft required"
-#endif
+
 
 
 /* 0x139300 — set the global lights-active flag (returns the stored value). */

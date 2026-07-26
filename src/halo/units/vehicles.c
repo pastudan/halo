@@ -1211,39 +1211,6 @@ void FUN_001b5500(int unit_handle)
 #endif
 
 /* 0x1b5580 — Place vehicle and apply collision damage from placement. */
-#if defined(__clang__)
-static void (*const vehicle_ccd_place)(int, void *) = unit_place;
-static void (*const vehicle_ccd_script)(int, void *) = FUN_0013d870;
-
-__attribute__((naked, noinline))
-void vehicle_causes_collision_damage(int vehicle_handle __attribute__((unused)),
-                                     void *placement __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 8(%%ebp), %%edi\n\t"
-      "leal 0x48(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[place]\n\t"
-      "addl $0x28, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[script]\n\t"
-      "addl $16, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [place] "m"(vehicle_ccd_place), [script] "m"(vehicle_ccd_script)
-      : "memory");
-}
-#else
 void vehicle_causes_collision_damage(int vehicle_handle, void *placement)
 {
   char *place = (char *)placement;
@@ -1251,38 +1218,9 @@ void vehicle_causes_collision_damage(int vehicle_handle, void *placement)
   unit_place(vehicle_handle, place + 0x48);
   FUN_0013d870(vehicle_handle, place + 0x28);
 }
-#endif
+
 
 /* 0x1b55c0 — Returns true when the vehicle tag has hover physics enabled. */
-#if defined(__clang__)
-static void *(*const vehicle_hover_get)(int, int) = object_get_and_verify_type;
-static void *(*const vehicle_hover_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-char vehicle_hover(int vehicle_handle __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x76656869\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x2f0(%%eax), %%eax\n\t"
-      "shrl $7, %%eax\n\t"
-      "addl $16, %%esp\n\t"
-      "andl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(vehicle_hover_get), [tag] "m"(vehicle_hover_tag)
-      : "memory");
-}
-#else
 char vehicle_hover(int vehicle_handle)
 {
   char *vehicle_obj = (char *)object_get_and_verify_type(vehicle_handle, 2);
@@ -1290,7 +1228,7 @@ char vehicle_hover(int vehicle_handle)
 
   return (char)((*(unsigned int *)(vehicle_tag + 0x2f0) >> 7) & 1);
 }
-#endif
+
 
 /* 0x1b5610 — Toggle vehicle world-position refresh flag (+0x424 bit 1). */
 #if defined(__clang__)
