@@ -76,7 +76,34 @@ def load_decls(object_name: str, *, skip_existing: bool = False) -> dict[str, st
     return decls
 
 
-def parse_params(decl: str) -> list[str]:
+TYPE_KEYWORDS = {
+    "void",
+    "char",
+    "short",
+    "int",
+    "long",
+    "float",
+    "double",
+    "bool",
+    "signed",
+    "unsigned",
+    "const",
+    "struct",
+    "enum",
+    "union",
+    "static",
+    "register",
+    "volatile",
+    "size_t",
+    "uint",
+    "int64_t",
+    "int32_t",
+    "int16_t",
+    "wchar_t",
+}
+
+
+def split_param_strings(decl: str) -> list[str]:
     m = re.search(r"\(([^)]*)\)", decl)
     if not m:
         return []
@@ -98,13 +125,39 @@ def parse_params(decl: str) -> list[str]:
         cur.append(ch)
     if cur:
         out.append("".join(cur).strip())
+    return out
+
+
+def parse_params(decl: str) -> list[str]:
     names: list[str] = []
-    for p in out:
-        p = re.sub(r"\[[^\]]*\]", "", p).strip()
+    for i, p in enumerate(split_param_strings(decl)):
+        p = strip_c_comments(re.sub(r"\[[^\]]*\]", "", p)).strip()
         tok = re.split(r"\s+", p.replace("*", " ").strip())
-        if tok:
-            names.append(clean_param_name(tok[-1]))
+        cand = tok[-1] if tok else ""
+        if (
+            cand
+            and cand not in TYPE_KEYWORDS
+            and re.match(r"^[A-Za-z_]", cand)
+        ):
+            names.append(clean_param_name(cand))
+        else:
+            names.append(f"unused_arg_{i}")
     return names
+
+
+def format_fn_signature(decl: str, param_names: list[str]) -> str:
+    head = decl.split("(", 1)[0].strip()
+    raw_params = split_param_strings(decl)
+    if not raw_params:
+        return f"{head}(void)"
+    sig_params: list[str] = []
+    for raw, name in zip(raw_params, param_names):
+        raw = strip_c_comments(re.sub(r"\[[^\]]*\]", "", raw)).strip()
+        if re.search(rf"\b{re.escape(name)}\s*$", raw):
+            sig_params.append(raw)
+        else:
+            sig_params.append(f"{raw} {name}")
+    return f"{head}({', '.join(sig_params)})"
 
 
 def ret_kind(decl: str) -> str:
@@ -132,7 +185,8 @@ def gen_stub_body(decl: str) -> str:
     elif kind == "scalar":
         lines.append("  return 0;")
     inner = "\n".join(lines)
-    return f"{c_decl.split(';')[0]}\n{{\n{inner}\n}}\n"
+    sig = format_fn_signature(c_decl.rstrip(";"), params)
+    return f"{sig}\n{{\n{inner}\n}}\n"
 
 
 def write_disasm(object_name: str, decls: dict[str, str], out: Path) -> None:
