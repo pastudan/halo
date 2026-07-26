@@ -905,6 +905,15 @@ def main() -> int:
         ("FUN_00019b20", 0x19b20, 0x19c61),
         ("actor_look_secondary_stop", 0x16bd0, 0x16c3e),
         ("FUN_00016ff0", 0x16ff0, 0x1705a),
+        # gameplay wave 76 (2026-07-26)
+        ("FUN_00015f60", 0x15f60, 0x15ffd),
+        ("FUN_00014480", 0x14480, 0x1450d),
+        ("FUN_00014540", 0x14540, 0x145bc),
+        ("FUN_00015880", 0x15880, 0x158fb),
+        ("FUN_0001a600", 0x1a600, 0x1a666),
+        ("FUN_00014ba0", 0x14ba0, 0x14c03),
+        ("FUN_00024ca0", 0x24ca0, 0x24cee),
+        ("FUN_00016cf0", 0x16cf0, 0x16d38),
     ]
 
     xbe = Xbe.from_file(args.xbe)

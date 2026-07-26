@@ -583,53 +583,76 @@ void FUN_00014460(int actor_handle)
   datum_get(actor_data, actor_handle);
 }
 
-/* FUN_00014480 (0x14480)
- * Set up an actor's prop-look reference from its conversation or existing prop.
- *
- * Looks up the actor's conversation handle (actor+0x9c).  If a conversation
- * is active, fetches the conversation record and, if the actor has no current
- * prop (actor+0xac == -1), looks up the active prop for the conversation's
- * unit (conversation+0x10) via prop_get_active_by_unit_index.  Then marks
- * actor+0x3fc = 1 (look-spec active).  If a prop was resolved, sets the
- * look-type word at actor+0x3e8 = 3, the look-active flag at actor+0x3ec = 1,
- * and stores the prop handle at actor+0x3f0.
- *
- * Confirmed: datum_get(actor_data, actor_handle); ESI = actor record.
- * Confirmed: CMP dword [ESI+0x9c],-0x1; JZ skip; PUSH [ESI+0x9c]; MOV
- *   ECX,[0x6324ec]; PUSH ECX; CALL datum_get → EAX = conversation ptr.
- * Confirmed: MOV ECX,[ESI+0xac]; CMP ECX,-0x1; JZ prop_none;
- *   MOV EDI,ECX.
- * Confirmed: TEST EAX,EAX; JZ done; MOV EAX,[EAX+0x10]; CMP EAX,-0x1;
- *   JZ done; PUSH EAX; PUSH EBX; CALL 0x64ab0 → prop_get_active_by_unit_index.
- * Confirmed: MOV word [ESI+0x3fc],1; if EDI!=-1: MOV word [ESI+0x3e8],3;
- *   MOV word [ESI+0x3ec],1; MOV dword [ESI+0x3f0],EDI. */
-void FUN_00014480(int actor_handle)
-{
-  char *actor;
-  char *conversation;
-  int16_t *move_type;
-  int prop_handle_init;
-  int prop_handle;
+/* FUN_00014480 (0x14480) — XBE naked draft (batch 76). */
+#if defined(__clang__)
+static void *(*const b14480_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const b14480_c64ab0)(int actor_handle, int object_handle) = prop_get_active_by_unit_index;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  conversation = NULL;
-  prop_handle_init = *(int *)(actor + 0xac);
-  if (*(int *)(actor + 0x9c) != -1)
-    conversation =
-      (char *)datum_get(*(data_t **)0x6324ec, *(int *)(actor + 0x9c));
-  prop_handle = prop_handle_init;
-  if (prop_handle == -1 && conversation != NULL &&
-      *(int *)(conversation + 0x10) != -1)
-    prop_handle = prop_get_active_by_unit_index(actor_handle,
-                                                *(int *)(conversation + 0x10));
-  *(int16_t *)(actor + 0x3fc) = 1;
-  if (prop_handle != -1) {
-    move_type = (int16_t *)(actor + 0x3e8);
-    *move_type = 3;
-    *(int16_t *)(actor + 0x3ec) = 1;
-    *(int *)(actor + 0x3f0) = prop_handle;
-  }
+__attribute__((naked, noinline))
+void FUN_00014480(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x9c(%%esi), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_00014480_1\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x6324ec, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00014480_1:\n\t"
+      "movl 0xac(%%esi), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_00014480_2\n\t"
+      "movl %%ecx, %%edi\n\t"
+      "jmp .LFUN_00014480_3\n\t"
+      ".LFUN_00014480_2:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00014480_3\n\t"
+      "movl 0x10(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00014480_3\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c64ab0]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      ".LFUN_00014480_3:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movl $1, %%eax\n\t"
+      "movw %%ax, 0x3fc(%%esi)\n\t"
+      "je .LFUN_00014480_4\n\t"
+      "movw $3, 0x3e8(%%esi)\n\t"
+      "movw %%ax, 0x3ec(%%esi)\n\t"
+      "movl %%edi, 0x3f0(%%esi)\n\t"
+      ".LFUN_00014480_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b14480_dget), [c64ab0] "m"(b14480_c64ab0)
+      : "memory");
 }
+#else
+#error "FUN_00014480: clang naked draft required"
+#endif
+
 
 /* actor_set_prop_if_match (0x14510)
  * Conditionally replace an actor's prop handle if it matches old_prop.
@@ -650,65 +673,74 @@ void actor_set_prop_if_match(int actor_handle, int old_prop, int new_prop)
   }
 }
 
-/* FUN_00014540 (0x14540)
- * Initialize actor looking state from the scripted look target at activation.
- *
- * Called during actor activation (FUN_0003ec80) after prop and movement init.
- * Reads the actor's scripted-look target handle at actor+0x1dc.  If set (not
- * -1) and the actor also has a secondary-look object handle at actor+0x1e0,
- * it attempts to find an existing look-at entry for that object via
- * prop_get_active_by_unit_index.  If one is found it is passed as an
- * object-handle look target (type 1); otherwise the object's position is
- * fetched via unit_get_head_position and a position look target (type 3) is
- * issued via FUN_00027a60.
- *
- * Confirmed: datum_get(actor_data, actor_handle) at 0x14552.
- * Confirmed: guard on [actor+0x1dc] != -1 AND [actor+0x1e0] != -1 at
- *   0x14559/0x14567.
- * Confirmed: prop_get_active_by_unit_index(actor_handle, [actor+0x1e0]) at
- * 0x14574. Confirmed: branch on return == -1 at 0x1457c/0x1457f. Confirmed:
- * type=1 path: MOV word [EBP-0x10],1; MOV [EBP-0xc],EAX at 0x14581/0x14587.
- * Confirmed: type=3 path: MOV word [EBP-0x10],3 at 0x14597; CALL 0x1a9200
- *   with args ([actor+0x1e0], &buf[1]) at 0x1459d.
- * Confirmed: FUN_00027a60(actor_handle, 8, 5, &buf) at 0x145ae.
- * Confirmed: cdecl: ADD ESP,0x10 after FUN_00027a60; ADD ESP,0x8 after
- *   prop_get_active_by_unit_index and unit_get_head_position. */
-void FUN_00014540(int actor_handle)
+/* FUN_00014540 (0x14540) — XBE naked draft (batch 76). */
+#if defined(__clang__)
+static void *(*const b14540_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const b14540_c64ab0)(int actor_handle, int object_handle) = prop_get_active_by_unit_index;
+static void (*const b14540_c1a9200)(int object_handle, float *out_position) = unit_get_head_position;
+static int (*const b14540_c27a60)(int actor_handle, short look_type, short priority, short *look_buf) = FUN_00027a60;
+
+__attribute__((naked, noinline))
+void FUN_00014540(int actor_handle __attribute__((unused)))
 {
-  char *actor;
-  int look_object; /* [actor+0x1e0]: handle of scripted look object */
-  int look_entry; /* return from prop_get_active_by_unit_index: existing look
-                     entry or -1 */
-
-  /* Buffer passed to FUN_00027a60: { int16_t type; int16_t pad; int data[3]; }
-   * type=1 (object handle look): data[0] = look_entry handle
-   * type=3 (position look):      data[0..2] = xyz position from
-   * unit_get_head_position Total: 2 + 2(pad) + 12 = 16 bytes (0x10), matching
-   * SUB ESP,0x10 */
-  short look_buf[8]; /* 16 bytes on stack: [0]=type word, [2..7]=data dwords */
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-
-  if (*(int *)(actor + 0x1dc) == -1)
-    return;
-  if (*(int *)(actor + 0x1e0) == -1)
-    return;
-
-  look_object = *(int *)(actor + 0x1e0);
-
-  look_entry = prop_get_active_by_unit_index(actor_handle, look_object);
-  if (look_entry != -1) {
-    /* Existing look entry found: use it as an object-handle target (type 1) */
-    look_buf[0] = 1;
-    *(int *)&look_buf[2] = look_entry;
-  } else {
-    /* No existing look entry: use object's world position (type 3) */
-    look_buf[0] = 3;
-    unit_get_head_position(look_object, (float *)&look_buf[2]);
-  }
-
-  FUN_00027a60(actor_handle, 8, 5, look_buf);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x1dc(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00014540_3\n\t"
+      "movl 0x1e0(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00014540_3\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c64ab0]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00014540_1\n\t"
+      "movw $1, -0x10(%%ebp)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "jmp .LFUN_00014540_2\n\t"
+      ".LFUN_00014540_1:\n\t"
+      "movl 0x1e0(%%esi), %%edx\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movw $3, -0x10(%%ebp)\n\t"
+      "call *%[c1a9200]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_00014540_2:\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $5\n\t"
+      "pushl $8\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c27a60]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_00014540_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b14540_dget), [c64ab0] "m"(b14540_c64ab0), [c1a9200] "m"(b14540_c1a9200), [c27a60] "m"(b14540_c27a60)
+      : "memory");
 }
+#else
+#error "FUN_00014540: clang naked draft required"
+#endif
+
 
 /* FUN_000145c0 (0x145c0)
  * Stop any active conversation for this actor.
@@ -1198,32 +1230,58 @@ void FUN_00014b70(int actor_handle)
   *(char *)(actor + 0xa2) = 1;
 }
 
-/* FUN_00014ba0 (0x14ba0)
- * Select an actor look-direction weight vector based on look state.
- *
- * If the actor's look-count at actor+0xa8 (int16_t) is positive, copies the
- * 16-byte vector from the global pointer at 0x2ee6e0; otherwise copies from
- * the global pointer at 0x2ee6d4.
- *
- * Confirmed: datum_get(actor_data, actor_handle) → actor.
- * Confirmed: CMP WORD PTR [EAX+0xc], 0 after ADD EAX,0x9c → actor+0xa8.
- * Confirmed: 16-byte (4 dword) copy from dereferenced global pointer. */
-void FUN_00014ba0(int actor_handle, int *param_2)
-{
-  struct look_vec4 {
-    int v0, v1, v2, v3;
-  };
-  char *actor;
-  char *looking;
+/* FUN_00014ba0 (0x14ba0) — XBE naked draft (batch 76). */
+#if defined(__clang__)
+static void *(*const b14ba0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  looking = actor + 0x9c;
-  if (*(short *)(looking + 0xc) > 0) {
-    *(struct look_vec4 *)param_2 = **(struct look_vec4 **)0x2ee6e0;
-    return;
-  }
-  *(struct look_vec4 *)param_2 = **(struct look_vec4 **)0x2ee6d4;
+__attribute__((naked, noinline))
+void FUN_00014ba0(int actor_handle __attribute__((unused)), int *param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $0x9c, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, 0xc(%%eax)\n\t"
+      "jle .LFUN_00014ba0_1\n\t"
+      "movl 0x2ee6e0, %%edx\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movl 0xc(%%edx), %%edx\n\t"
+      "movl %%edx, 0xc(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00014ba0_1:\n\t"
+      "movl 0x2ee6d4, %%eax\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%eax), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "movl %%eax, 0xc(%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b14ba0_dget)
+      : "memory");
 }
+#else
+#error "FUN_00014ba0: clang naked draft required"
+#endif
+
 
 /* FUN_00014c10 (0x14c10)
  * Firing-position state update for look/fight actor actions.
@@ -2372,35 +2430,69 @@ int FUN_00015520(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_00015880 (0x15880)
- * Initializes a guard state block (0x44 bytes) for the given actor.
- * Copies 3 floats from actor+0x174..0x17c into state_data+0x18..0x20,
- * sets state_data+0x24 = 1 (short), state_data+0x14 = 1 (byte),
- * state_data+0x3c = -1 (sentinel), and clears the rest to zero.
- *
- * Confirmed: datum_get(actor_data, actor_handle) call at 0x15890.
- * Confirmed: assert on state_data != NULL (line 0x72 in action_guard.c).
- * Confirmed: csmemset(state_data, 0, 0x44) at 0x158be.
- * Confirmed: all field offsets from raw disassembly MOV stores.
- */
-int FUN_00015880(int actor_handle, char *state_data)
+/* FUN_00015880 (0x15880) — XBE naked draft (batch 76). */
+#if defined(__clang__)
+static void *(*const b15880_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b15880_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b15880_exitfn)(int) = system_exit;
+static void *(*const b15880_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
+int FUN_00015880(int actor_handle __attribute__((unused)), char *state_data __attribute__((unused)))
 {
-  char *actor;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (state_data == NULL) {
-    display_assert("state_data", "c:\\halo\\SOURCE\\ai\\action_guard.c", 0x72,
-                   1);
-    system_exit(-1);
-  }
-  csmemset(state_data, 0, 0x44);
-  *(short *)(state_data + 0x24) = 1;
-  *(char *)(state_data + 0x14) = 1;
-  *(int *)(state_data + 0x18) = *(int *)(actor + 0x174);
-  *(int *)(state_data + 0x1c) = *(int *)(actor + 0x178);
-  *(int *)(state_data + 0x20) = *(int *)(actor + 0x17c);
-  *(int *)(state_data + 0x3c) = -1;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "jne .LFUN_00015880_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x72\n\t"
+      "pushl $0x253638\n\t"
+      "pushl $0x25334c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00015880_1:\n\t"
+      "pushl $0x44\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw $1, 0x24(%%esi)\n\t"
+      "movb $1, 0x14(%%esi)\n\t"
+      "addl $0x174, %%edi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "leal 0x18(%%esi), %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl 0x8(%%edi), %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movl $0xffffffff, 0x3c(%%esi)\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b15880_dget), [assert] "m"(b15880_assert), [exitfn] "m"(b15880_exitfn), [memset] "m"(b15880_memset)
+      : "memory");
 }
+#else
+#error "FUN_00015880: clang naked draft required"
+#endif
+
 
 /* FUN_00015900 (0x15900)
  * Initializes a guard state block (0x44 bytes) for the given actor,
@@ -2737,42 +2829,82 @@ void actor_clear_flee_target(int actor_handle)
   }
 }
 
-/* FUN_00015f60 (0x15f60)
- * Copy 16-byte look-target vector from one of three global pointers based
- * on actor's look-suppress/phase flags (actor+0xa4, 0xa5, 0xa6).
- *
- * Confirmed: datum_get(actor_data, actor_handle) at 0x15f6c.
- * Confirmed: PTR_DAT_002ee6f4=default, 002ee6e8=phase1, 002ee704=phase2. */
-void FUN_00015f60(int actor_handle, int *param_2)
+/* FUN_00015f60 (0x15f60) — XBE naked draft (batch 76). */
+#if defined(__clang__)
+static void *(*const b15f60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+
+__attribute__((naked, noinline))
+void FUN_00015f60(int actor_handle __attribute__((unused)), int *param_2 __attribute__((unused)))
 {
-  int *src;
-  char *actor;
-  actor = (char *)datum_get(actor_data, actor_handle);
-  src = *(int **)0x2ee700;
-  if (*(char *)(actor + 0xa4) != '\0') {
-    if (*(char *)(actor + 0xa6) != '\0') {
-      src = *(int **)0x2ee704;
-      param_2[0] = src[0];
-      param_2[1] = src[1];
-      param_2[2] = src[2];
-      param_2[3] = src[3];
-      return;
-    }
-    src = *(int **)0x2ee6f4;
-    if (*(char *)(actor + 0xa5) != '\0') {
-      src = *(int **)0x2ee6e8;
-      param_2[1] = src[1];
-      param_2[0] = src[0];
-      param_2[2] = src[2];
-      param_2[3] = src[3];
-      return;
-    }
-  }
-  param_2[0] = src[0];
-  param_2[1] = src[1];
-  param_2[2] = src[2];
-  param_2[3] = src[3];
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0xa4(%%eax), %%cl\n\t"
+      "addl $0x9c, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_00015f60_1\n\t"
+      "movl 0x2ee700, %%edx\n\t"
+      "jmp .LFUN_00015f60_4\n\t"
+      ".LFUN_00015f60_1:\n\t"
+      "movb 0xa(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_00015f60_2\n\t"
+      "movl 0x2ee704, %%eax\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%eax), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "movl %%eax, 0xc(%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00015f60_2:\n\t"
+      "movb 0x9(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_00015f60_3\n\t"
+      "movl 0x2ee6e8, %%ecx\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl %%eax, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%eax\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movl 0xc(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0xc(%%edx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00015f60_3:\n\t"
+      "movl 0x2ee6f4, %%edx\n\t"
+      ".LFUN_00015f60_4:\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movl 0xc(%%edx), %%edx\n\t"
+      "movl %%edx, 0xc(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b15f60_dget)
+      : "memory");
 }
+#else
+#error "FUN_00015f60: clang naked draft required"
+#endif
+
 
 /* actor_replace_prop_handle (0x16000)
  * Replace all references to old_handle in actor prop fields with new_handle.
@@ -3911,26 +4043,56 @@ void FUN_00016cd0(int param_1, int param_2, int param_3, char *param_4)
   param_4[4] = (param_4[4] & (char)0xef) | 8;
 }
 
-/* FUN_00016cf0 (0x16cf0)
- * Execute command-list step: get unit, optionally dispatch FUN_000169a0,
- * then clear bit 12 (0x1000) from unit+0x1b4.
- *
- * Confirmed: object_get_and_verify_type(param_2, 3) → unit.
- * Confirmed: TEST AL,0x2 on param_4[4]; if clear, call FUN_000169a0.
- * Confirmed: LEA EAX,[EBP+0x17] → address of high byte of param_4 on stack.
- * Confirmed: AND [EDI+0x1b4],0xffffefff at end. */
-void FUN_00016cf0(int param_1, int param_2, short param_3, int param_4,
-                  int param_5)
-{
-  char *unit;
+/* FUN_00016cf0 (0x16cf0) — XBE naked draft (batch 76). */
+#if defined(__clang__)
+static void *(*const b16cf0_get)(int, int) = object_get_and_verify_type;
+static void (*const b16cf0_c169a0)(int actor_handle, int unit_handle, short scenario_idx, int param_4, char *out_index, void *state_ptr) = FUN_000169a0;
 
-  unit = (char *)object_get_and_verify_type(param_2, 3);
-  if ((*(char *)(param_4 + 4) & 2) == 0) {
-    FUN_000169a0(param_1, param_2, param_3, param_5,
-                 (char *)((int)&param_4 + 3), (void *)param_4);
-  }
-  *(int *)(unit + 0x1b4) = *(int *)(unit + 0x1b4) & 0xffffefff;
+__attribute__((naked, noinline))
+void FUN_00016cf0(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), short param_3 __attribute__((unused)), int param_4 __attribute__((unused)), int param_5 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movb 0x4(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $2, %%al\n\t"
+      "jne .LFUN_00016cf0_1\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "leal 0x17(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c169a0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00016cf0_1:\n\t"
+      "andl $0xffffefff, 0x1b4(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b16cf0_get), [c169a0] "m"(b16cf0_c169a0)
+      : "memory");
 }
+#else
+#error "FUN_00016cf0: clang naked draft required"
+#endif
+
 
 /* actor_look_compute_prop_interest (0x16d40)
  * Iterate an actor's prop list (or each swarm unit's list for swarm actors)
@@ -7883,38 +8045,59 @@ void FUN_0001a5d0(int actor_handle)
   *(int *)(actor + 0xac) = -1;
 }
 
-/* FUN_0001a600 (0x1a600)
- * Select actor look-direction weights based on uncover state.
- *
- * If actor+0x9c (char, uncover active flag) is non-zero, copies the 16-byte
- * vector from the global pointer at 0x2ee6d8; otherwise copies from 0x2ee6ec.
- *
- * Confirmed: datum_get(actor_data, actor_handle) → actor.
- * Confirmed: TEST CL,CL after MOV CL,[EAX+0x9c] → char comparison.
- * Confirmed: 16-byte (4 dword) copy from dereferenced global pointer. */
-void FUN_0001a600(int actor_handle, int *param_2)
-{
-  char *actor;
-  char *looking;
-  char *src;
-  int *p;
+/* FUN_0001a600 (0x1a600) — XBE naked draft (batch 76). */
+#if defined(__clang__)
+static void *(*const b1a600_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  looking = actor + 0x9c;
-  if (*looking != '\0') {
-    src = *(char **)0x2ee6d8;
-    p = (int *)src;
-    *param_2 = *p;
-    param_2[1] = *(int *)(src + 4);
-    param_2[2] = *(int *)(src + 8);
-    param_2[3] = *(int *)(src + 0xc);
-    return;
-  }
-  *param_2 = *(int *)*(char **)0x2ee6ec;
-  param_2[1] = *(int *)(*(char **)0x2ee6ec + 4);
-  param_2[2] = *(int *)(*(char **)0x2ee6ec + 8);
-  param_2[3] = *(int *)(*(char **)0x2ee6ec + 0xc);
+__attribute__((naked, noinline))
+void FUN_0001a600(int actor_handle __attribute__((unused)), int *param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0x9c(%%eax), %%cl\n\t"
+      "addl $0x9c, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_0001a600_1\n\t"
+      "movl 0x2ee6d8, %%edx\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%edx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movl 0xc(%%edx), %%edx\n\t"
+      "movl %%edx, 0xc(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0001a600_1:\n\t"
+      "movl 0x2ee6ec, %%eax\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%eax), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "movl %%eax, 0xc(%%ecx)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1a600_dget)
+      : "memory");
 }
+#else
+#error "FUN_0001a600: clang naked draft required"
+#endif
+
 
 /* FUN_0001a670 (0x1a670)
  * Initialize uncover timer and optionally emit a communication vocalization.
@@ -8370,33 +8553,58 @@ void FUN_0001ac00(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_00024ca0 (0x24ca0)
- * Check if a firing position index is in the actor's active set.
- *
- * Searches the actor's 4-entry firing position array at actor+0x3ca
- * (int16_t stride 4) for param_2. Returns 1 if found, 0 if not found or
- * if param_2 == -1.
- *
- * Confirmed: CMP SI,-1; JZ (short-circuit on NONE).
- * Confirmed: MOVSX EDI,CX; CMP SI,[EDX+EDI*4+0x3ca] loop with CX < 4. */
-char FUN_00024ca0(int actor_handle, short param_2)
-{
-  char *actor;
-  char result;
-  short i;
+/* FUN_00024ca0 (0x24ca0) — XBE naked draft (batch 76). */
+#if defined(__clang__)
+static void *(*const b24ca0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 
-  actor = (char *)datum_get(actor_data, actor_handle);
-  result = 0;
-  if (param_2 != -1) {
-    for (i = 0; i < 4; i++) {
-      if (param_2 == *(short *)(actor + 0x3ca + (int)i * 4)) {
-        result = 1;
-        break;
-      }
-    }
-  }
-  return result;
+__attribute__((naked, noinline))
+char FUN_00024ca0(int actor_handle __attribute__((unused)), short param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movw 0xc(%%ebp), %%si\n\t"
+      "movl %%eax, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .LFUN_00024ca0_3\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "jmp .LFUN_00024ca0_1\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LFUN_00024ca0_1:\n\t"
+      "movswl %%cx, %%edi\n\t"
+      "cmpw 0x3ca(%%edx,%%edi,4), %%si\n\t"
+      "je .LFUN_00024ca0_2\n\t"
+      "incl %%ecx\n\t"
+      "cmpw $4, %%cx\n\t"
+      "jl .LFUN_00024ca0_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00024ca0_2:\n\t"
+      "movb $1, %%al\n\t"
+      ".LFUN_00024ca0_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b24ca0_dget)
+      : "memory");
 }
+#else
+#error "FUN_00024ca0: clang naked draft required"
+#endif
+
 
 /* FUN_00024cf0 (0x24cf0) — XBE naked draft (batch 69). */
 #if defined(__clang__)
