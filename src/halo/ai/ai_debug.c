@@ -13334,59 +13334,32 @@ void FUN_00053a90(void)
   row_print(debug_row, 1, column_positions, row_ctx);
 }
 
-/* FUN_00053af0 (0x53af0) — XBE naked draft (batch 157). */
-#if defined(__clang__)
-static int (*const b53af0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static void (*const b53af0_c53800)(void) = FUN_00053800;
-
-__attribute__((naked, noinline))
+/* FUN_00053af0 (0x53af0) — readable C lift. */
 void FUN_00053af0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movswl 0x5ac086, %%eax\n\t"
-      "movswl 0x5abffe, %%ecx\n\t"
-      "movswl 0x5abf76, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movswl 0x5ac3b6, %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movswl 0x5ac32e, %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movswl 0x5ac2a6, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movswl 0x5ac21e, %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movswl 0x5ac196, %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movswl 0x5ac10e, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x25c198\n\t"
-      "pushl $0x5ab280\n\t"
-      "movw $0x96, -0x8(%%ebp)\n\t"
-      "movw $0x12c, -0x6(%%ebp)\n\t"
-      "movw $0x1c2, -0x4(%%ebp)\n\t"
-      "call *%[c1d90f0]\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x2ee6c4, %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl $0x5ab280\n\t"
-      "call *%[c53800]\n\t"
-      "addl $0x38, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d90f0] "m"(b53af0_c1d90f0), [c53800] "m"(b53af0_c53800)
-      : "memory");
+  int16_t vals[3];
+  void *color;
+  char *buf;
+
+  vals[0] = 0x96;
+  vals[1] = 0x12c;
+  vals[2] = 0x1c2;
+  buf = (char *)0x5ab280;
+  crt_sprintf(
+      buf,
+      (const char *)0x25c198,
+      (int)*(int16_t *)0x5ac10e,
+      (int)*(int16_t *)0x5ac196,
+      (int)*(int16_t *)0x5ac21e,
+      (int)*(int16_t *)0x5ac2a6,
+      (int)*(int16_t *)0x5ac32e,
+      (int)*(int16_t *)0x5ac3b6,
+      (int)*(int16_t *)0x5abf76,
+      (int)*(int16_t *)0x5abffe,
+      (int)*(int16_t *)0x5ac086);
+  color = *(void **)0x2ee6c4;
+  FUN_00053800(buf, 3, vals, color);
 }
-#else
-#error "FUN_00053af0: clang naked draft required"
-#endif
 
 /* --- ai_debug.obj orphan shells (2026-07-26) --- */
 
