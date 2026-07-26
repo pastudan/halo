@@ -22360,56 +22360,69 @@
         },
         {
           "addr": "0x184570",
-          "decl": "char FUN_00184570(void *group);"
+          "decl": "char FUN_00184570(void *group);",
+          "ported": false
         },
         {
           "addr": "0x1845b0",
-          "decl": "void FUN_001845b0(void *group, int a2);"
+          "decl": "void FUN_001845b0(void *group, int a2);",
+          "ported": false
         },
         {
           "addr": "0x184610",
-          "decl": "int FUN_00184610(void *group);"
+          "decl": "int FUN_00184610(void *group);",
+          "ported": false
         },
         {
           "addr": "0x184680",
-          "decl": "void FUN_00184680(void);"
+          "decl": "void FUN_00184680(void);",
+          "ported": false
         },
         {
           "addr": "0x184690",
-          "decl": "void FUN_00184690(void);"
+          "decl": "void FUN_00184690(void);",
+          "ported": false
         },
         {
           "addr": "0x184710",
-          "decl": "void FUN_00184710(void);"
+          "decl": "void FUN_00184710(void);",
+          "ported": false
         },
         {
           "addr": "0x184750",
-          "decl": "void group_sorted_indices_cmpfn(void);"
+          "decl": "void group_sorted_indices_cmpfn(void);",
+          "ported": false
         },
         {
           "addr": "0x1848d0",
-          "decl": "void rasterizer_sort_internal(void);"
+          "decl": "void rasterizer_sort_internal(void);",
+          "ported": false
         },
         {
           "addr": "0x184980",
-          "decl": "void FUN_00184980(char param_1);"
+          "decl": "void FUN_00184980(char param_1);",
+          "ported": false
         },
         {
           "addr": "0x184b60",
-          "decl": "void render_effects(int a0);"
+          "decl": "void render_effects(int a0);",
+          "ported": false
         },
         {
           "addr": "0x184de0",
-          "decl": "char render_location_visible(void *location);"
+          "decl": "char render_location_visible(void *location);",
+          "ported": false
         },
         {
           "addr": "0x184e50",
-          "decl": "void *rendered_cluster_get(int rendered_cluster_index);"
+          "decl": "void *rendered_cluster_get(int rendered_cluster_index);",
+          "ported": false
         },
         {
           "addr": "0x184ea0",
           "name": "render_scene",
-          "decl": "void render_scene(int16_t player_index@<ebx>, void *render_cam, void *render_frustum, void *rasterizer_cam, void *rasterizer_frustum, int16_t pass_type, char reflected);"
+          "decl": "void render_scene(int16_t player_index@<ebx>, void *render_cam, void *render_frustum, void *rasterizer_cam, void *rasterizer_frustum, int16_t pass_type, char reflected);",
+          "ported": false
         }
       ],
       "name": "render.obj",
