@@ -642,94 +642,50 @@ done:
   return *(unsigned char *)((char *)cand + 0x30);
 }
 
-/* FUN_000246b0 (0x246b0) — XBE naked draft (batch 141). */
-#if defined(__clang__)
-static void (*const b246b0_c24000)(void *ctx, float score, int type, void *position) = (void (*)(void *, float, int, void *))(void *)&FUN_00024000;
-
-__attribute__((naked, noinline))
-void FUN_000246b0(void)
+/* FUN_000246b0 (0x246b0) — readable C lift. */
+int FUN_000246b0(void *unused, void *ctx, void *cand)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movb 0x5fc(%%ecx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "je .LFUN_000246b0_7\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000246b0_1\n\t"
-      "flds 0x660(%%ecx)\n\t"
-      "movl $1, %%eax\n\t"
-      "fadds 0x254cd0\n\t"
-      "popl %%esi\n\t"
-      "fstps 0x660(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000246b0_1:\n\t"
-      "movswl 0x6(%%esi), %%eax\n\t"
-      "subl $0, %%eax\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      "je .LFUN_000246b0_5\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_000246b0_4\n\t"
-      "flds 0x600(%%ecx)\n\t"
-      "fsubs 0x254ccc\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_000246b0_2\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "flds 0x2c(%%esi)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000246b0_6\n\t"
-      "jmp .LFUN_000246b0_3\n\t"
-      ".LFUN_000246b0_2:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_000246b0_3:\n\t"
-      "movb $1, 0x31(%%esi)\n\t"
-      "movb 0x14(%%ecx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000246b0_6\n\t"
-      "movb $0, 0x30(%%esi)\n\t"
-      "jmp .LFUN_000246b0_6\n\t"
-      ".LFUN_000246b0_4:\n\t"
-      "movl $0x41200000, 0xc(%%ebp)\n\t"
-      "jmp .LFUN_000246b0_6\n\t"
-      ".LFUN_000246b0_5:\n\t"
-      "movl $0x41a00000, 0xc(%%ebp)\n\t"
-      ".LFUN_000246b0_6:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0x14\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c24000]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000246b0_7:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000246b0_8\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000246b0_8:\n\t"
-      "movzbl 0x30(%%esi), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c24000] "m"(b246b0_c24000)
-      : "memory");
+  float score;
+  int kind;
+  float dist;
+  float d2;
+  float c2;
+  (void)unused;
+  if (*(unsigned char *)((char *)ctx + 0x5fc) == 0)
+    goto done;
+  if (cand == 0) {
+    *(float *)((char *)ctx + 0x660) =
+        *(float *)((char *)ctx + 0x660) + *(float *)0x254cd0;
+    return 1;
+  }
+  kind = *(short *)((char *)cand + 6);
+  score = 0.0f;
+  if (kind == 0) {
+    score = 20.0f;
+  } else if (kind == 1) {
+    score = 10.0f;
+  } else {
+    dist = *(float *)((char *)ctx + 0x600) - *(float *)0x254ccc;
+    if (dist < *(float *)0x2533c0 || dist != dist) {
+      *((unsigned char *)cand + 0x31) = 1;
+      if (*(unsigned char *)((char *)ctx + 0x14) == 0)
+        *((unsigned char *)cand + 0x30) = 0;
+    } else {
+      d2 = dist * dist;
+      c2 = *(float *)((char *)cand + 0x2c);
+      if (!(c2 > d2)) {
+        *((unsigned char *)cand + 0x31) = 1;
+        if (*(unsigned char *)((char *)ctx + 0x14) == 0)
+          *((unsigned char *)cand + 0x30) = 0;
+      }
+    }
+  }
+  FUN_00024000(ctx, score, 0x14, 0, ctx);
+done:
+  if (cand == 0)
+    return 1;
+  return *(unsigned char *)((char *)cand + 0x30);
 }
-#else
-#error "FUN_000246b0: clang naked draft required"
-#endif
-
 
 /* FUN_00024770 (0x24770) — readable C lift. */
 int FUN_00024770(void *unused, void *ctx, void *cand)
