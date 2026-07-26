@@ -13893,7 +13893,7 @@
         {
           "addr": "0xdff70",
           "decl": "void interface_draw_fullscreen_overlays(void);",
-          "ported": true,
+          "ported": false,
           "name": "interface_draw_fullscreen_overlays"
         },
         {
@@ -40409,7 +40409,7 @@
         },
         {
           "addr": "0x5f1d0",
-          "decl": "float FUN_0005f1d0(void *base @<eax>, float *dst @<edi>, float *src @<esi>, int surface_index);",
+          "decl": "float FUN_0005f1d0(void *base, float *dst, float *src, int surface_index);",
           "ported": true,
           "name": "FUN_0005f1d0"
         },
@@ -40500,7 +40500,7 @@
         {
           "addr": "0x60260",
           "decl": "void FUN_00060260(unsigned short channel, void *path @<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00060260"
         },
         {
