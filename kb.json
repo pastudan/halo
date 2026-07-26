@@ -18244,7 +18244,8 @@
         },
         {
           "addr": "0xe0740",
-          "decl": "void player_ui_set_single_player_local_player_controller(void);",
+          "decl": "void player_ui_set_single_player_local_player_controller(short player_index, short controller_index);",
+          "name": "player_ui_set_single_player_local_player_controller",
           "ported": false
         },
         {

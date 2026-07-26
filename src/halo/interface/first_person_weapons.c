@@ -2281,7 +2281,7 @@ static int16_t (*const fp_marker_by_name)(int, const char *, void *, int16_t) =
 int16_t first_person_weapon_get_marker_by_name_render(
     int object_handle, const char *marker_name, void *out_markers, int16_t max_markers)
 {
-  if (*(int16_t *)0x506548 != (int16_t)FUN_000dcd60())
+  if (*(int16_t *)0x506548 != (int16_t)FUN_000dcd60(object_handle))
     return 0;
   return first_person_weapon_get_marker_by_name(
       object_handle, marker_name, out_markers, max_markers);

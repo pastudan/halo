@@ -1177,7 +1177,7 @@ void FUN_00080210(void)
 static bool (*const b80380_c11aa40)(int group, void *decoded_packet, char *encoded_packet, short *encoded_packet_size, short *packet_type, short *packet_version, short expected_packet_class) = FUN_0011aa40;
 
 __attribute__((naked, noinline))
-void FUN_00080380(void)
+void FUN_00080380(void *decoded_packet, char *encoded_packet, short *encoded_packet_size)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1210,7 +1210,7 @@ void FUN_00080380(void)
 static bool (*const b803b0_c11aca0)(group_definition *group, void *data, char *encoded_buf, int32_t *encoded_size, int16_t type, int one) = encode_packet_group;
 
 __attribute__((naked, noinline))
-void FUN_000803b0(void)
+void FUN_000803b0(void *a0, void *a1)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

@@ -2890,7 +2890,7 @@ static void (*const bef900_exitfn)(int) = system_exit;
 static void (*const bef900_c12a6c0)(short player) = network_game_client_local_player_quit;
 
 __attribute__((naked, noinline))
-void FUN_000ef900(void *widget)
+char FUN_000ef900(void *widget, void *item)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
