@@ -29547,7 +29547,7 @@
         {
           "addr": "0x1b56b0",
           "decl": "void FUN_001b56b0(int vehicle_handle@<eax>, void *physics_state@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b5750",
@@ -29572,7 +29572,7 @@
         {
           "addr": "0x1b5c90",
           "decl": "void vehicle_accelerate(int handle, float *velocity);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b5d90",
@@ -29657,7 +29657,7 @@
         {
           "addr": "0x1b8060",
           "decl": "char vehicle_stuck(int unit_handle, float *vec);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b81d0",
@@ -33533,7 +33533,7 @@
         {
           "addr": "0xfb010",
           "decl": "float weapon_compute_movement_penalty(int weapon_handle, char aiming, char param_3);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfb090",
@@ -33672,7 +33672,7 @@
         {
           "addr": "0xfc4b0",
           "decl": "void weapon_owner_update(int weapon_handle, int16_t owner_state, float t);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfc550",
