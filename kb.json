@@ -40300,7 +40300,7 @@
         },
         {
           "addr": "0x5e700",
-          "decl": "void FUN_0005e700(void);",
+          "decl": "char FUN_0005e700(int surface_index, void *block_base @<eax>);",
           "ported": true
         },
         {
