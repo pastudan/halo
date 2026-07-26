@@ -2620,42 +2620,16 @@ void tiny_point2d_set(void)
 #endif
 
 
-/* FUN_000dae90 (0xdae90) — XBE naked draft (batch 165). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000dae90(void)
+/* FUN_000dae90 (0xdae90) — readable C lift. */
+void FUN_000dae90(signed char *in_bytes, float *out_xy)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movsbl (%%ecx), %%edx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "movl 0x46bd0c, %%edx\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fmuls 0x2d0(%%edx)\n\t"
-      "fmuls 0x2820c0\n\t"
-      "fstps (%%eax)\n\t"
-      "movsbl 0x1(%%ecx), %%ecx\n\t"
-      "movl 0x46bd0c, %%edx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fmuls 0x2d0(%%edx)\n\t"
-      "fmuls 0x2820c0\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int g = *(int *)0x46bd0c;
+  int v;
+  v = (int)in_bytes[0];
+  out_xy[0] = (float)v * *(float *)(g + 0x2d0) * *(float *)0x2820c0;
+  v = (int)in_bytes[1];
+  out_xy[1] = (float)v * *(float *)(g + 0x2d0) * *(float *)0x2820c0;
 }
-#else
-#error "FUN_000dae90: clang naked draft required"
-#endif
-
 
 /* FUN_000daee0 (0xdaee0) — XBE naked draft (batch 115). */
 #if defined(__clang__)

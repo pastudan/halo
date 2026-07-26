@@ -5205,7 +5205,7 @@
         },
         {
           "addr": "0xa55e0",
-          "decl": "float FUN_000a55e0(float a, float b, float c, float d);",
+          "decl": "void FUN_000a55e0(void);",
           "ported": false,
           "name": "FUN_000a55e0"
         },
@@ -7676,7 +7676,7 @@
         },
         {
           "addr": "0xdae90",
-          "decl": "void FUN_000dae90(void);",
+          "decl": "void FUN_000dae90(signed char *in_bytes@<ecx>, float *out_xy@<eax>);",
           "ported": true
         },
         {
