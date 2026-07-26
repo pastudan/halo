@@ -187,332 +187,106 @@ int16_t player_control_get_zoom_level(int16_t local_player_index __attribute__((
 #endif
 
 
-/* player_control_action_test_reset (0xb6a90) — XBE naked draft (batch 395). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_reset (0xb6a90) — readable C lift. */
 void player_control_action_test_reset(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl $0, (%%eax)\n\t"
-      "movl $0, 0x4(%%eax)\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(int *)player_control_globals = 0;
+  *((int *)player_control_globals + 1) = 0;
 }
-#else
-#error "player_control_action_test_reset: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_accept (0xb6ab0) — XBE naked draft (batch 206). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_accept (0xb6ab0) — readable C lift. */
 char player_control_action_test_accept(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl $4, %%ecx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "orl %%ecx, 0x8(%%eax)\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "shrl $2, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int *g = (unsigned int *)player_control_globals;
+
+  g[1] |= 4u;
+  g[2] |= 4u;
+  return (char)((g[0] >> 2) & 1u);
 }
-#else
-#error "player_control_action_test_accept: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_back (0xb6ad0) — XBE naked draft (batch 206). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_back (0xb6ad0) — readable C lift. */
 char player_control_action_test_back(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl $8, %%ecx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "orl %%ecx, 0x8(%%eax)\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "shrl $3, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int *g = (unsigned int *)player_control_globals;
+
+  g[1] |= 8u;
+  g[2] |= 8u;
+  return (char)((g[0] >> 3) & 1u);
 }
-#else
-#error "player_control_action_test_back: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_action (0xb6af0) — XBE naked draft (batch 203). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_action (0xb6af0) — readable C lift. */
 char player_control_action_test_action(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl $1, %%ecx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "orl %%ecx, 0x8(%%eax)\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "andl %%ecx, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int *g = (unsigned int *)player_control_globals;
+
+  g[1] |= 1u;
+  g[2] |= 1u;
+  return (char)(g[0] & 1u);
 }
-#else
-#error "player_control_action_test_action: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_jump (0xb6b10) — XBE naked draft (batch 179). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_jump (0xb6b10) — readable C lift. */
 char player_control_action_test_jump(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "shrl $1, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (*(unsigned int *)player_control_globals >> 1) & 1;
 }
-#else
-#error "player_control_action_test_jump: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_primary_trigger (0xb6b20) — XBE naked draft (batch 179). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_primary_trigger (0xb6b20) — readable C lift. */
 char player_control_action_test_primary_trigger(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "shrl $4, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (*(unsigned int *)player_control_globals >> 4) & 1;
 }
-#else
-#error "player_control_action_test_primary_trigger: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_grenade_trigger (0xb6b30) — XBE naked draft (batch 179). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_grenade_trigger (0xb6b30) — readable C lift. */
 char player_control_action_test_grenade_trigger(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "shrl $5, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (*(unsigned int *)player_control_globals >> 5) & 1;
 }
-#else
-#error "player_control_action_test_grenade_trigger: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_zoom (0xb6b40) — XBE naked draft (batch 180). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_zoom (0xb6b40) — readable C lift. */
 char player_control_action_test_zoom(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "shrl $6, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (*(unsigned int *)player_control_globals >> 6) & 1;
 }
-#else
-#error "player_control_action_test_zoom: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_move_relative_all_directions (0xb6b50) — XBE naked draft (batch 168). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_move_relative_all_directions (0xb6b50). */
 char player_control_action_test_move_relative_all_directions(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "notl %%eax\n\t"
-      "andl $0x7800, %%eax\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int flags = *(unsigned int *)player_control_globals;
+
+  return (char)((flags & 0x7800u) == 0x7800u);
 }
-#else
-#error "player_control_action_test_move_relative_all_directions: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_look_relative_all_directions (0xb6b70) — XBE naked draft (batch 168). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_look_relative_all_directions (0xb6b70). */
 char player_control_action_test_look_relative_all_directions(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "notl %%eax\n\t"
-      "andl $0x780, %%eax\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int flags = *(unsigned int *)player_control_globals;
+
+  return (char)((flags & 0x780u) == 0x780u);
 }
-#else
-#error "player_control_action_test_look_relative_all_directions: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_look_relative_left (0xb6b90) — XBE naked draft (batch 180). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_look_relative_left (0xb6b90) — readable C lift. */
 char player_control_action_test_look_relative_left(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "shrl $9, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (*(unsigned int *)player_control_globals >> 9) & 1;
 }
-#else
-#error "player_control_action_test_look_relative_left: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_look_relative_right (0xb6ba0) — XBE naked draft (batch 180). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_look_relative_right (0xb6ba0) — readable C lift. */
 char player_control_action_test_look_relative_right(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "shrl $0xa, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (*(unsigned int *)player_control_globals >> 10) & 1;
 }
-#else
-#error "player_control_action_test_look_relative_right: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_look_relative_up (0xb6bb0) — XBE naked draft (batch 176). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_look_relative_up (0xb6bb0) — readable C lift. */
 char player_control_action_test_look_relative_up(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "shrl $7, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (*(unsigned int *)player_control_globals >> 7) & 1;
 }
-#else
-#error "player_control_action_test_look_relative_up: clang naked draft required"
-#endif
 
-
-/* player_control_action_test_look_relative_down (0xb6bc0) — XBE naked draft (batch 176). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* player_control_action_test_look_relative_down (0xb6bc0) — readable C lift. */
 char player_control_action_test_look_relative_down(void)
 {
-  __asm__ volatile(
-      "movl 0x457090, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "shrl $8, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return (*(unsigned int *)player_control_globals >> 8) & 1;
 }
-#else
-#error "player_control_action_test_look_relative_down: clang naked draft required"
-#endif
-
 
 /* FUN_000b6dd0 (0xb6dd0) — XBE naked draft (batch 167). */
 #if defined(__clang__)

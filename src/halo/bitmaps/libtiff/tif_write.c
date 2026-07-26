@@ -8023,9 +8023,9 @@ static void (*const b72f70_c108bc0)(void) = FUN_00108bc0;
 static void *(*const b72f70_tag)(int, int) = tag_get;
 static void *(*const b72f70_elem)(void *, int, int) = tag_block_get_element;
 static void * (*const b72f70_c77040)(int tag_index, short sequence_index, short frame_index) = FUN_00077040;
-static void (*const b72f70_c108a10)(void) = FUN_00108a10;
-static void (*const b72f70_c108a30)(void) = FUN_00108a30;
-static void (*const b72f70_c1089d0)(void) = FUN_001089d0;
+static void (*const b72f70_c108a10)(void) = (void *)FUN_00108a10;
+static void (*const b72f70_c108a30)(void) = (void *)FUN_00108a30;
+static void (*const b72f70_c1089d0)(void) = (void *)FUN_001089d0;
 static void (*const b72f70_c72490)(void) = FUN_00072490;
 
 __attribute__((naked, noinline))
@@ -10422,7 +10422,7 @@ void FUN_000745c0(void)
 /* FUN_000747d0 (0x747d0) — XBE naked draft (batch 323). */
 #if defined(__clang__)
 static void (*const b747d0_c11feb0)(void) = FUN_0011feb0;
-static void (*const b747d0_c108e20)(void) = FUN_00108e20;
+static void (*const b747d0_c108e20)(void) = (void *)FUN_00108e20;
 static void (*const b747d0_c11fdb0)(void) = FUN_0011fdb0;
 static void (*const b747d0_c120250)(void) = FUN_00120250;
 static void (*const b747d0_c120400)(void) = FUN_00120400;
@@ -10685,7 +10685,7 @@ static int (*const b74a30_c7e040)(void *bitmap_data) = bitmap_get_pixel_data_siz
 static void * (*const b74a30_c7cdf0)(void *bitmap, short x, short y, short z, short mipmap_index) = bitmap_cube_map_address;
 static void * (*const b74a30_c7cb60)(void *bitmap, short x, short y, short face_index, short mipmap_index) = bitmap_3d_address;
 static void * (*const b74a30_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b74a30_c1089d0)(void) = FUN_001089d0;
+static void (*const b74a30_c1089d0)(void) = (void *)FUN_001089d0;
 static void (*const b74a30_c72490)(void) = FUN_00072490;
 static void (*const b74a30_c77540)(void *bitmap) = FUN_00077540;
 

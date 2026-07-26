@@ -5,6 +5,7 @@
  */
 
 #include "../../common.h"
+#include "x87_math.h"
 
 /* FUN_0002f1a0: set actor movement destination or refresh path.
  *
@@ -1237,29 +1238,11 @@ char actor_perception_desire_prop(int actor_handle __attribute__((unused)), int 
 #endif
 
 
-/* arctangent (0x2fb60) — XBE naked draft (batch 179). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float arctangent(float y __attribute__((unused)), float x __attribute__((unused)))
+/* arctangent (0x2fb60) — readable C lift from XBE leaf (x87 fpatan). */
+float arctangent(float y, float x)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fpatan\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return x87_fatan2f(y, x);
 }
-#else
-#error "arctangent: clang naked draft required"
-#endif
-
 
 /* actor_situation_update_target_status (0x300b0) — XBE naked draft (batch 118). */
 #if defined(__clang__)

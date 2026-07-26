@@ -1494,45 +1494,19 @@ void FUN_000e21b0(void)
 #endif
 
 
-/* D3DXMatrixIdentity (0xe21e0) — XBE naked draft (batch 164). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void D3DXMatrixIdentity(void)
+/* D3DXMatrixIdentity (0xe21e0) — readable C lift from XBE leaf. */
+void D3DXMatrixIdentity(float *m)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%ecx, 0x38(%%eax)\n\t"
-      "movl %%ecx, 0x34(%%eax)\n\t"
-      "movl %%ecx, 0x30(%%eax)\n\t"
-      "movl %%ecx, 0x2c(%%eax)\n\t"
-      "movl %%ecx, 0x24(%%eax)\n\t"
-      "movl %%ecx, 0x20(%%eax)\n\t"
-      "movl %%ecx, 0x1c(%%eax)\n\t"
-      "movl %%ecx, 0x18(%%eax)\n\t"
-      "movl %%ecx, 0x10(%%eax)\n\t"
-      "movl %%ecx, 0xc(%%eax)\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl $0x3f800000, %%ecx\n\t"
-      "movl %%ecx, 0x3c(%%eax)\n\t"
-      "movl %%ecx, 0x28(%%eax)\n\t"
-      "movl %%ecx, 0x14(%%eax)\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "D3DXMatrixIdentity: clang naked draft required"
-#endif
+  int i;
 
+  for (i = 0; i < 16; i++) {
+    m[i] = 0.0f;
+  }
+  m[0] = 1.0f;
+  m[5] = 1.0f;
+  m[10] = 1.0f;
+  m[15] = 1.0f;
+}
 
 /* SetRenderStateSmart (0xe2220) — XBE naked draft (batch 110). */
 #if defined(__clang__)

@@ -1554,34 +1554,16 @@ void first_person_camera_update(void)
 #endif
 
 
-/* FUN_00089330 (0x89330) — XBE naked draft (batch 171). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00089330(void)
+/* FUN_00089330 (0x89330) — readable C lift from XBE leaf. */
+void FUN_00089330(int *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl %%ecx, 0xc(%%eax)\n\t"
-      "movl %%ecx, 0x10(%%eax)\n\t"
-      "movl %%ecx, 0x14(%%eax)\n\t"
-      "movl $0x3f9c61aa, 0x18(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  out[1] = 0;
+  out[0] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = 0;
+  out[6] = 0x3f9c61aa; /* ~1.222f */
 }
-#else
-#error "FUN_00089330: clang naked draft required"
-#endif
-
 
 /* FUN_00089350 (0x89350) — XBE naked draft (batch 169). */
 #if defined(__clang__)

@@ -3564,30 +3564,11 @@ int FUN_000ce450(int param_1, int *param_2)
   return -1;
 }
 
-/* FUN_000c95c0 (0xc95c0) — XBE naked draft (batch 179). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_000c95c0(char value __attribute__((unused)))
+/* FUN_000c95c0 (0xc95c0) — readable C lift from XBE leaf (!value as bool). */
+char FUN_000c95c0(char value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "sete %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return value == 0;
 }
-#else
-#error "FUN_000c95c0: clang naked draft required"
-#endif
-
 
 /* FUN_000c95d0 (0xc95d0) — XBE naked draft (batch 203). */
 #if defined(__clang__)
@@ -3768,56 +3749,17 @@ void FUN_000c9b90(const char *substr __attribute__((unused)))
 #endif
 
 
-/* FUN_000cae80 (0xcae80) — XBE naked draft (batch 177). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_000cae80(int value __attribute__((unused)))
+/* FUN_000cae80 (0xcae80) — readable C lift from XBE leaf (int == 0). */
+char FUN_000cae80(int value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "sete %%al\n\t"
-      "movb %%al, 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return value == 0;
 }
-#else
-#error "FUN_000cae80: clang naked draft required"
-#endif
 
-
-/* FUN_000caea0 (0xcaea0) — XBE naked draft (batch 206). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_000caea0(int16_t value __attribute__((unused)))
+/* FUN_000caea0 (0xcaea0) — readable C lift from XBE leaf (int16 == 0). */
+char FUN_000caea0(int16_t value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpw $0, 0x8(%%ebp)\n\t"
-      "sete %%al\n\t"
-      "movb %%al, 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return value == 0;
 }
-#else
-#error "FUN_000caea0: clang naked draft required"
-#endif
-
 
 /* FUN_000caec0 (0xcaec0) — XBE naked draft (batch 173). */
 #if defined(__clang__)
@@ -3851,82 +3793,35 @@ char FUN_000caec0(const char *s __attribute__((unused)))
 #endif
 
 
-/* FUN_000caef0 (0xcaef0) — XBE naked draft (batch 178). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float FUN_000caef0(int16_t value __attribute__((unused)))
+/* FUN_000caef0 (0xcaef0) — readable C lift: int16→float bits in EAX. */
+int FUN_000caef0(int16_t value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float f = (float)(int)value;
+  int bits;
+
+  __builtin_memcpy(&bits, &f, sizeof(bits));
+  return bits;
 }
-#else
-#error "FUN_000caef0: clang naked draft required"
-#endif
 
-
-/* FUN_000caf10 (0xcaf10) — XBE naked draft (batch 176). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float FUN_000caf10(int value __attribute__((unused)))
+/* FUN_000caf10 (0xcaf10) — readable C lift: int→float bits in EAX. */
+int FUN_000caf10(int value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float f = (float)value;
+  int bits;
+
+  __builtin_memcpy(&bits, &f, sizeof(bits));
+  return bits;
 }
-#else
-#error "FUN_000caf10: clang naked draft required"
-#endif
 
-
-/* FUN_000caf20 (0xcaf20) — XBE naked draft (batch 188). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float FUN_000caf20(int16_t value __attribute__((unused)))
+/* FUN_000caf20 (0xcaf20) — readable C lift: (int16+1)→float bits in EAX. */
+int FUN_000caf20(int16_t value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_000caf20: clang naked draft required"
-#endif
+  float f = (float)((int)value + 1);
+  int bits;
 
+  __builtin_memcpy(&bits, &f, sizeof(bits));
+  return bits;
+}
 
 /* FUN_000caf40 (0xcaf40) — XBE naked draft (batch 175). */
 #if defined(__clang__)
@@ -3975,29 +3870,11 @@ int FUN_000caf60(float value __attribute__((unused)))
 #endif
 
 
-/* FUN_000caf70 (0xcaf70) — XBE naked draft (batch 178). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int16_t FUN_000caf70(int16_t value __attribute__((unused)))
+/* FUN_000caf70 (0xcaf70) — readable C lift from XBE leaf (int16 identity). */
+int16_t FUN_000caf70(int16_t value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "movw %%ax, 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return value;
 }
-#else
-#error "FUN_000caf70: clang naked draft required"
-#endif
-
 
 /* FUN_000ce200 (0xce200) — XBE naked draft (batch 206). */
 #if defined(__clang__)

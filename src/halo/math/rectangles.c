@@ -1320,167 +1320,56 @@ void *FUN_001087b0(int type)
   (void)edi;
 }
 
-/* FUN_001089a0 (0x1089a0) — XBE naked draft (batch 276). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001089a0(int *bounds __attribute__((unused)), int y0 __attribute__((unused)), int x0 __attribute__((unused)), int h __attribute__((unused)), int w __attribute__((unused)))
+/* FUN_001089a0 (0x1089a0) — readable C lift from XBE leaf.
+ * Sets rectangle2d as (x0,y0,x1,y1) from (y0,x0,y1,x1) args. */
+void FUN_001089a0(int *bounds, int y0, int x0, int y1, int x1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "movw 0x10(%%ebp), %%dx\n\t"
-      "movw %%cx, 0x2(%%eax)\n\t"
-      "movw 0x14(%%ebp), %%cx\n\t"
-      "movw %%dx, (%%eax)\n\t"
-      "movw 0x18(%%ebp), %%dx\n\t"
-      "movw %%cx, 0x6(%%eax)\n\t"
-      "movw %%dx, 0x4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t *r = (int16_t *)bounds;
+  r[1] = (int16_t)y0;
+  r[0] = (int16_t)x0;
+  r[3] = (int16_t)y1;
+  r[2] = (int16_t)x1;
 }
-#else
-#error "FUN_001089a0: clang naked draft required"
-#endif
 
-
-/* FUN_001089d0 (0x1089d0) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001089d0(void)
+/* FUN_001089d0 (0x1089d0) — readable C lift from XBE leaf. */
+void FUN_001089d0(int *point, int x, int y)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "movw 0x10(%%ebp), %%dx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      "movw %%dx, 0x2(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t *p = (int16_t *)point;
+  p[0] = (int16_t)x;
+  p[1] = (int16_t)y;
 }
-#else
-#error "FUN_001089d0: clang naked draft required"
-#endif
 
-
-/* FUN_001089f0 (0x1089f0) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001089f0(void)
+/* FUN_001089f0 (0x1089f0) — readable C lift from XBE leaf. */
+void FUN_001089f0(int *point, int dx, int dy)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "movw 0x10(%%ebp), %%dx\n\t"
-      "addw %%cx, (%%eax)\n\t"
-      "addw %%dx, 0x2(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t *p = (int16_t *)point;
+  p[0] = (int16_t)(p[0] + (int16_t)dx);
+  p[1] = (int16_t)(p[1] + (int16_t)dy);
 }
-#else
-#error "FUN_001089f0: clang naked draft required"
-#endif
 
-
-/* FUN_00108a10 (0x108a10) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00108a10(void)
+/* FUN_00108a10 (0x108a10) — readable C lift from XBE leaf (rect height). */
+int FUN_00108a10(int *rect)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6(%%ecx), %%ax\n\t"
-      "movswl 0x2(%%ecx), %%ecx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t *r = (int16_t *)rect;
+  return (int)(uint16_t)r[3] - (int)r[1];
 }
-#else
-#error "FUN_00108a10: clang naked draft required"
-#endif
 
-
-/* FUN_00108a30 (0x108a30) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00108a30(void)
+/* FUN_00108a30 (0x108a30) — readable C lift from XBE leaf (rect width). */
+int FUN_00108a30(int *rect)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x4(%%ecx), %%ax\n\t"
-      "movswl (%%ecx), %%ecx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t *r = (int16_t *)rect;
+  return (int)(uint16_t)r[2] - (int)r[0];
 }
-#else
-#error "FUN_00108a30: clang naked draft required"
-#endif
 
-
-/* FUN_00108a50 (0x108a50) — XBE naked draft (batch 280). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00108a50(void)
+/* FUN_00108a50 (0x108a50) — readable C lift from XBE leaf (inset rect). */
+void FUN_00108a50(int *rect, int dy, int dx)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "addw %%cx, 0x2(%%eax)\n\t"
-      "subw %%cx, 0x6(%%eax)\n\t"
-      "movw 0x10(%%ebp), %%cx\n\t"
-      "addw %%cx, (%%eax)\n\t"
-      "subw %%cx, 0x4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t *r = (int16_t *)rect;
+  r[1] = (int16_t)(r[1] + (int16_t)dy);
+  r[3] = (int16_t)(r[3] - (int16_t)dy);
+  r[0] = (int16_t)(r[0] + (int16_t)dx);
+  r[2] = (int16_t)(r[2] - (int16_t)dx);
 }
-#else
-#error "FUN_00108a50: clang naked draft required"
-#endif
-
 
 /* FUN_00108a90 (0x108a90) — XBE naked draft (batch 253). */
 #if defined(__clang__)
@@ -1762,43 +1651,29 @@ void FUN_00108c60(void)
 #endif
 
 
-/* FUN_00108cd0 (0x108cd0) — XBE naked draft (batch 266). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00108cd0(void)
+/* FUN_00108cd0 (0x108cd0) — readable C lift from XBE leaf (point in rect).
+ * Point stored as (y,x); rect as (x0,y0,x1,y1); half-open ranges. */
+char FUN_00108cd0(int *rect, int *point)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movw (%%esi), %%dx\n\t"
-      "xorb %%al, %%al\n\t"
-      "cmpw 0x2(%%ecx), %%dx\n\t"
-      "jl .LFUN_00108cd0_1\n\t"
-      "cmpw 0x6(%%ecx), %%dx\n\t"
-      "jge .LFUN_00108cd0_1\n\t"
-      "movw 0x2(%%esi), %%dx\n\t"
-      "cmpw (%%ecx), %%dx\n\t"
-      "jl .LFUN_00108cd0_1\n\t"
-      "cmpw 0x4(%%ecx), %%dx\n\t"
-      "jge .LFUN_00108cd0_1\n\t"
-      "movb $1, %%al\n\t"
-      ".LFUN_00108cd0_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_00108cd0: clang naked draft required"
-#endif
+  int16_t *r = (int16_t *)rect;
+  int16_t *p = (int16_t *)point;
+  int16_t py = p[0];
+  int16_t px = p[1];
 
+  if (py < r[1]) {
+    return 0;
+  }
+  if (py >= r[3]) {
+    return 0;
+  }
+  if (px < r[0]) {
+    return 0;
+  }
+  if (px >= r[2]) {
+    return 0;
+  }
+  return 1;
+}
 
 /* FUN_00108d00 (0x108d00) — XBE naked draft (batch 263). */
 #if defined(__clang__)
@@ -1880,39 +1755,19 @@ void FUN_00108d40(void)
 #endif
 
 
-/* FUN_00108d80 (0x108d80) — XBE naked draft (batch 271). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00108d80(void)
+/* FUN_00108d80 (0x108d80) — readable C lift from XBE leaf (point2d equal). */
+int FUN_00108d80(int *a, int *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw (%%eax), %%dx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "cmpw (%%ecx), %%dx\n\t"
-      "jne .LFUN_00108d80_1\n\t"
-      "movw 0x2(%%eax), %%ax\n\t"
-      "cmpw 0x2(%%ecx), %%ax\n\t"
-      "jne .LFUN_00108d80_1\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00108d80_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t *pa = (int16_t *)a;
+  int16_t *pb = (int16_t *)b;
+  if (pa[0] != pb[0]) {
+    return 0;
+  }
+  if (pa[1] != pb[1]) {
+    return 0;
+  }
+  return 1;
 }
-#else
-#error "FUN_00108d80: clang naked draft required"
-#endif
-
 
 /* FUN_00108dd0 (0x108dd0) — XBE naked draft (batch 272). */
 #if defined(__clang__)
@@ -1981,35 +1836,18 @@ void FUN_00108df0(void)
 #endif
 
 
-/* FUN_00108e20 (0x108e20) — XBE naked draft (batch 280). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00108e20(void)
+/* FUN_00108e20 (0x108e20) — readable C lift from XBE leaf (next power of two). */
+int FUN_00108e20(unsigned int value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movzwl 0x8(%%ebp), %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jle .LFUN_00108e20_2\n\t"
-      ".LFUN_00108e20_1:\n\t"
-      "shll $1, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_00108e20_1\n\t"
-      ".LFUN_00108e20_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_00108e20: clang naked draft required"
-#endif
+  int result = 1;
 
+  if ((int)value > 1) {
+    while (result < (int)value) {
+      result <<= 1;
+    }
+  }
+  return result;
+}
 
 /* FUN_00108e40 (0x108e40) — XBE naked draft (batch 253). */
 #if defined(__clang__)

@@ -11,40 +11,14 @@ extern double __cdecl fabs(double);
 #define fabs __builtin_fabs
 #endif
 
-/* plane_negate (0x994d0) — XBE naked draft (batch 292). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void plane_negate(float *plane_in __attribute__((unused)), float *plane_out __attribute__((unused)))
+/* plane_negate (0x994d0) — readable C lift from XBE leaf. */
+void plane_negate(float *plane_in, float *plane_out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds (%%ecx)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "fchs\n\t"
-      "fstps (%%eax)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fchs\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "fchs\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "flds 0xc(%%ecx)\n\t"
-      "fchs\n\t"
-      "fstps 0xc(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  plane_out[0] = -plane_in[0];
+  plane_out[1] = -plane_in[1];
+  plane_out[2] = -plane_in[2];
+  plane_out[3] = -plane_in[3];
 }
-#else
-#error "plane_negate: clang naked draft required"
-#endif
-
 
 /* 0x106390 — Perimeter of a closed 2D polygon.
  * vertices is a flat array of (x,y) pairs; vertex_count is the vertex count.

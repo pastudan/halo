@@ -2208,7 +2208,7 @@ void FUN_0011ff10(void)
 /* FUN_0011ff70 (0x11ff70) — XBE naked draft (batch 112). */
 #if defined(__clang__)
 static void (*const b11ff70_chkstk)(void) = FUN_001d90e0;
-static void (*const b11ff70_c108e20)(void) = FUN_00108e20;
+static void (*const b11ff70_c108e20)(void) = (void *)FUN_00108e20;
 static void (*const b11ff70_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b11ff70_exitfn)(int) = system_exit;
 static void (*const b11ff70_c11fd50)(void) = FUN_0011fd50;

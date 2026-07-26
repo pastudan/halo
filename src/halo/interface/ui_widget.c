@@ -3761,31 +3761,13 @@ char FUN_000e9fd0(void *widget __attribute__((unused)))
 #endif
 
 
-/* FUN_000ea1f0 (0xea1f0) — XBE naked draft (batch 214). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_000ea1f0(void *widget __attribute__((unused)))
+/* FUN_000ea1f0 (0xea1f0) — readable C lift from XBE leaf. */
+char FUN_000ea1f0(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%ecx, 0x40(%%eax)\n\t"
-      "movw %%cx, 0x44(%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(int *)((char *)widget + 0x40) = 0;
+  *(int16_t *)((char *)widget + 0x44) = 0;
+  return 1;
 }
-#else
-#error "FUN_000ea1f0: clang naked draft required"
-#endif
-
 
 /* FUN_000ea540 (0xea540) — XBE naked draft (batch 215). */
 #if defined(__clang__)

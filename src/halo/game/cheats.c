@@ -633,31 +633,12 @@ short FUN_000a57b0(float *vec __attribute__((unused)), float max_length __attrib
 #endif
 
 
-/* FUN_000a5810 (0xa5810) — XBE naked draft (batch 176). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000a5810(void)
+/* FUN_000a5810 (0xa5810) — readable C lift from XBE leaf. */
+void FUN_000a5810(int *out, float value, int field0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  out[1] = *(int *)&value;
+  out[0] = field0;
 }
-#else
-#error "FUN_000a5810: clang naked draft required"
-#endif
-
 
 /* FUN_000a5830 (0xa5830) — XBE naked draft (batch 135). */
 #if defined(__clang__)

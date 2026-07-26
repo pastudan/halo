@@ -1658,33 +1658,13 @@ void FUN_00049300(void)
 #endif
 
 
-/* FUN_000493B0 (0x493b0) — XBE naked draft (batch 213). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000493B0(float *out __attribute__((unused)), float value __attribute__((unused)), int field_4 __attribute__((unused)), int field_8 __attribute__((unused)))
+/* FUN_000493B0 (0x493b0) — readable C lift from XBE leaf. */
+void FUN_000493B0(float *out, float value, int field_4, int field_8)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "fstps (%%eax)\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  out[0] = value;
+  *(int *)(out + 1) = field_4;
+  *(int *)(out + 2) = field_8;
 }
-#else
-#error "FUN_000493B0: clang naked draft required"
-#endif
-
 
 /* ai_debug_lineoffire_addpill (0x49430) — XBE naked draft (batch 150). */
 #if defined(__clang__)

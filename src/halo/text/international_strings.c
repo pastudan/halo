@@ -158,7 +158,7 @@ static void (*const b19c5d0_exitfn)(int) = system_exit;
 static void (*const b19c5d0_c19bd30)(void) = FUN_0019bd30;
 static void (*const b19c5d0_c19be30)(void) = parse_string;
 static void * (*const b19c5d0_c19cff0)(void *font_tag, unsigned short character) = FUN_0019cff0;
-static void (*const b19c5d0_c108a10)(void) = FUN_00108a10;
+static void (*const b19c5d0_c108a10)(void) = (void *)FUN_00108a10;
 static void (*const b19c5d0_c19c1b0)(void) = FUN_0019c1b0;
 
 __attribute__((naked, noinline))
@@ -502,7 +502,7 @@ static void (*const b19c960_exitfn)(int) = system_exit;
 static void (*const b19c960_c19bd30)(void) = FUN_0019bd30;
 static int16_t (*const b19c960_c19c0a0)(void *state) = FUN_0019c0a0;
 static void * (*const b19c960_c19cff0)(void *font_tag, unsigned short character) = FUN_0019cff0;
-static void (*const b19c960_c108a10)(void) = FUN_00108a10;
+static void (*const b19c960_c108a10)(void) = (void *)FUN_00108a10;
 static void (*const b19c960_c19c3c0)(void) = FUN_0019c3c0;
 
 __attribute__((naked, noinline))
@@ -1020,7 +1020,7 @@ void FUN_0019ce70(void)
 
 /* FUN_0019cec0 (0x19cec0) — XBE naked draft (batch 272). */
 #if defined(__clang__)
-static void (*const b19cec0_c1089a0)(int *bounds, int y0, int x0, int h, int w) = FUN_001089a0;
+static void (*const b19cec0_c1089a0)(int *bounds, int y0, int x0, int h, int w) = (void *)FUN_001089a0;
 static void (*const b19cec0_c19c5d0)(void *callback, void *screen_pos, const void *color, void *clip_bounds, int flags, char *text) = FUN_0019c5d0;
 
 __attribute__((naked, noinline))
