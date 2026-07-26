@@ -284,60 +284,22 @@ void FUN_000a54b0(void)
 #endif
 
 
-/* FUN_000a5590 (0xa5590) — XBE naked draft (batch 161). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000a5590(void)
+/* FUN_000a5590 (0xa5590) — readable C lift. */
+float FUN_000a5590(float x, float y)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_000a5590_1\n\t"
-      "flds 0x2533c0\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a5590_1:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_000a5590_2\n\t"
-      "flds 0x2533c8\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a5590_2:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float half = y * *(float *)0x253398;
+  if (!(x < y) && x == x && y == y) {
+    return *(float *)0x2533c0;
+  }
+  if (x > half || x != x || half != half) {
+    return (y - x) / (y - half);
+  }
+  return *(float *)0x2533c8;
 }
-#else
-#error "FUN_000a5590: clang naked draft required"
-#endif
-
 
 /* FUN_000a55e0 (0xa55e0) — XBE naked draft (batch 165). */
 #if defined(__clang__)
-static void (*const ba55e0_ca5590)(void) = FUN_000a5590;
+static void (*const ba55e0_ca5590)(void) = (void (*)(void))(void *)&FUN_000a5590;
 
 __attribute__((naked, noinline))
 void FUN_000a55e0(void)
@@ -909,7 +871,7 @@ void FUN_000a5920(void)
 static void (*const ba5ac0_ca5920)(void) = FUN_000a5920;
 static float (*const ba5ac0_norm)(float *) = normalize3d;
 static void (*const ba5ac0_c1d94f0)(void) = FUN_001d94f0;
-static void (*const ba5ac0_ca5590)(void) = FUN_000a5590;
+static void (*const ba5ac0_ca5590)(void) = (void (*)(void))(void *)&FUN_000a5590;
 static void *(*const ba5ac0_get)(int, int) = object_get_and_verify_type;
 static void *(*const ba5ac0_tag)(int, int) = tag_get;
 static void * (*const ba5ac0_c18e450)(void) = game_globals_get;
