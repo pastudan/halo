@@ -1612,105 +1612,46 @@ void FUN_000495b0(void)
 }
 
 
-/* ai_debug_highlight_cluster (0x496c0) — XBE naked draft (batch 134). */
-#if defined(__clang__)
-static int (*const b496c0_gtime)(void) = game_time_get;
-static void (*const b496c0_c58fd0)(int encounter_handle, char update_actor_visibility, int cluster_count, int pvs, char *out_cluster_bv) = FUN_00058fd0;
-static void (*const b496c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b496c0_exitfn)(int) = system_exit;
-static void *(*const b496c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-char ai_debug_highlight_cluster(int16_t cluster_index __attribute__((unused)), void *out __attribute__((unused)))
+/* ai_debug_highlight_cluster (0x496c0) — readable C lift. */
+char ai_debug_highlight_cluster(int16_t index, void *out_color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x5aca6c, %%cl\n\t"
-      "xorb %%al, %%al\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lai_debug_highlight_cluster_6\n\t"
-      "cmpl $-1, 0x5ac9f4\n\t"
-      "je .Lai_debug_highlight_cluster_6\n\t"
-      "call *%[gtime]\n\t"
-      "cmpl %%eax, 0x2c8e90\n\t"
-      "movl 0x5ac9f4, %%edx\n\t"
-      "jne .Lai_debug_highlight_cluster_1\n\t"
-      "cmpl %%edx, 0x2c8e8c\n\t"
-      "je .Lai_debug_highlight_cluster_2\n\t"
-      ".Lai_debug_highlight_cluster_1:\n\t"
-      "pushl $0x331f18\n\t"
-      "pushl $0\n\t"
-      "pushl $0x200\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c58fd0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x5ac9f4, %%edx\n\t"
-      "movl %%eax, 0x2c8e90\n\t"
-      "movl %%edx, 0x2c8e8c\n\t"
-      ".Lai_debug_highlight_cluster_2:\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lai_debug_highlight_cluster_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1025\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl $0x25abec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x5ac9f4, %%edx\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_debug_highlight_cluster_3:\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edi\n\t"
-      "shll %%cl, %%edi\n\t"
-      "sarl $5, %%eax\n\t"
-      "testl %%edi, 0x331f18(,%%eax,4)\n\t"
-      "popl %%edi\n\t"
-      "je .Lai_debug_highlight_cluster_5\n\t"
-      "movl 0x5ab270, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xd(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lai_debug_highlight_cluster_4\n\t"
-      "movl 0x2ee6e0, %%ecx\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lai_debug_highlight_cluster_4:\n\t"
-      "movl 0x2ee6d8, %%edx\n\t"
-      "movl %%edx, (%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lai_debug_highlight_cluster_5:\n\t"
-      "movl 0x2ee6c8, %%eax\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      ".Lai_debug_highlight_cluster_6:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(b496c0_gtime), [c58fd0] "m"(b496c0_c58fd0), [assert] "m"(b496c0_assert), [exitfn] "m"(b496c0_exitfn), [dget] "m"(b496c0_dget)
-      : "memory");
+  int now;
+  int encounter;
+  char *enc;
+  int bit;
+  int word;
+
+  if (*(unsigned char *)0x5aca6c == 0)
+    return 0;
+  if (*(int *)0x5ac9f4 == -1)
+    return 0;
+  now = game_time_get();
+  encounter = *(int *)0x5ac9f4;
+  if (*(int *)0x2c8e90 != now || *(int *)0x2c8e8c != encounter) {
+    FUN_00058fd0(encounter, 0, 0x200, 0, (void *)0x331f18);
+    *(int *)0x2c8e90 = game_time_get();
+    *(int *)0x2c8e8c = *(int *)0x5ac9f4;
+    encounter = *(int *)0x5ac9f4;
+  }
+  if (out_color == 0) {
+    display_assert((const char *)0x25abec, (const char *)0x25ab74, 0x1025, 1);
+    system_exit(-1);
+    encounter = *(int *)0x5ac9f4;
+  }
+  word = (int)index;
+  bit = 1 << (word & 0x1f);
+  if ((*(int *)(0x331f18 + (word >> 5) * 4) & bit) != 0) {
+    enc = (char *)datum_get(*(data_t **)0x5ab270, encounter);
+    if (enc[0xd] != 0)
+      *(int *)out_color = *(int *)0x2ee6e0;
+    else
+      *(int *)out_color = *(int *)0x2ee6d8;
+    return 1;
+  }
+  *(int *)out_color = *(int *)0x2ee6c8;
+  return 1;
 }
-#else
-#error "ai_debug_highlight_cluster: clang naked draft required"
-#endif
+
 
 
 /* FUN_000497c0 (0x497c0) — readable C lift. */

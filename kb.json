@@ -34853,7 +34853,8 @@
         {
           "addr": "0x496c0",
           "decl": "char ai_debug_highlight_cluster(int16_t cluster_index, void *out);",
-          "ported": false
+          "ported": true,
+          "name": "ai_debug_highlight_cluster"
         },
         {
           "addr": "0x497c0",
