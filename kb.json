@@ -29646,7 +29646,7 @@
         {
           "addr": "0x1b5d90",
           "decl": "void vehicle_render_debug(int vehicle_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b5df0",

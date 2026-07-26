@@ -1965,57 +1965,28 @@ void vehicle_accelerate(int handle, float *velocity)
 
 
 
-/* vehicle_render_debug (0x1b5d90) — XBE naked draft (batch 237). */
-#if defined(__clang__)
-static void *(*const b1b5d90_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1b5d90_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-void vehicle_render_debug(int vehicle_handle __attribute__((unused)))
+/* 0x1b5d90 — vehicle_render_debug: empty wheel-count loop when debug flag set. */
+void vehicle_render_debug(int vehicle_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x76656869\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x8c(%%eax), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lvehicle_render_debug_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x70687973\n\t"
-      "call *%[tag]\n\t"
-      "movb 0x5054f4, %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lvehicle_render_debug_2\n\t"
-      "movl 0x74(%%eax), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lvehicle_render_debug_2\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lvehicle_render_debug_1:\n\t"
-      "incl %%ecx\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "jl .Lvehicle_render_debug_1\n\t"
-      ".Lvehicle_render_debug_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1b5d90_get), [tag] "m"(b1b5d90_tag)
-      : "memory");
-}
-#else
-#error "vehicle_render_debug: clang naked draft required"
-#endif
+  char *vehicle;
+  char *vehicle_tag;
+  int physics_tag_handle;
+  char *physics_tag;
+  int wheel_count;
+  short i;
 
+  vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehicle_tag = (char *)tag_get(0x76656869, *(int *)vehicle); /* vehi */
+  physics_tag_handle = *(int *)(vehicle_tag + 0x8c);
+  if (physics_tag_handle == -1)
+    return;
+  physics_tag = (char *)tag_get(0x70687973, physics_tag_handle); /* phys */
+  if (!*(char *)0x5054f4)
+    return;
+  wheel_count = *(int *)(physics_tag + 0x74);
+  for (i = 0; i < wheel_count; i++) {
+  }
+}
 
 /* FUN_001b5f20 (0x1b5f20) — Project a delta vector onto a reference axis and
  * clamp its length. Register args: a@<eax>, b@<ecx>, out@<esi>. */
