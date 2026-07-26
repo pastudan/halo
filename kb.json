@@ -28072,7 +28072,7 @@
         {
           "addr": "0x19e760",
           "decl": "int ufputs(const wchar_t *s, void *stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e800",
@@ -28102,22 +28102,22 @@
         {
           "addr": "0x19eb50",
           "decl": "int uvfprintf(void *stream, const wchar_t *format, char *args);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19ebd0",
           "decl": "int uvprintf(const wchar_t *format, char *args);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19ec40",
           "decl": "int uvsnprintf(wchar_t *buffer, size_t count, const wchar_t *format, char *args);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19ecf0",
           "decl": "int uvsprintf(wchar_t *buffer, const wchar_t *format, char *args);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19eda0",
@@ -28162,17 +28162,17 @@
         {
           "addr": "0x19f160",
           "decl": "long ustrtol(const wchar_t *s, wchar_t **endptr, int base);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f1d0",
           "decl": "unsigned long ustrtoul(const wchar_t *s, wchar_t **endptr, int base);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f240",
           "decl": "double ustrtod(const wchar_t *s, wchar_t **endptr);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f2b0",
@@ -38103,7 +38103,7 @@
         },
         {
           "addr": "0x1470b0",
-          "decl": "void FUN_001470b0(void);",
+          "decl": "int FUN_001470b0(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7);",
           "ported": true
         }
       ],
