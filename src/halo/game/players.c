@@ -2418,44 +2418,15 @@ void players_update_after_game(void)
     profile_exit_private((void *)0x2f0e88);
 }
 
-/* valid_real_vector2d (0xbb2b0) — XBE naked draft (batch 166). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char valid_real_vector2d(float *v __attribute__((unused)))
+/* valid_real_vector2d (0xbb2b0) — readable C lift. */
+char valid_real_vector2d(float *v)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x7f800000, %%edx\n\t"
-      "cmpl $0x7f800000, %%edx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "je .Lvalid_real_vector2d_1\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x7f800000, %%ecx\n\t"
-      "cmpl $0x7f800000, %%ecx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "je .Lvalid_real_vector2d_1\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lvalid_real_vector2d_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int x = *(unsigned int *)v;
+  unsigned int y = *(unsigned int *)(v + 1);
+  if ((x & 0x7f800000u) == 0x7f800000u) return 0;
+  if ((y & 0x7f800000u) == 0x7f800000u) return 0;
+  return 1;
 }
-#else
-#error "valid_real_vector2d: clang naked draft required"
-#endif
-
 
 /* FUN_000BB290 (0xbb290) — XBE naked draft (batch 194). */
 #if defined(__clang__)

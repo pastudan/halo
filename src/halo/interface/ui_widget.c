@@ -2026,15 +2026,10 @@ void widget_free(void *block)
 /* ui_widgets_active (0xe3d70) — readable C lift. */
 char ui_widgets_active(void)
 {
-  int *slot;
-
-  if (!*(char *)0x46cc82) {
-    return 0;
-  }
-  for (slot = (int *)0x46cc20; slot < (int *)0x46cc30; slot++) {
-    if (*slot != 0) {
-      return 1;
-    }
+  unsigned int *p;
+  if (!*(char *)0x46cc82) return 0;
+  for (p = (unsigned int *)0x46cc20; p < (unsigned int *)0x46cc30; p++) {
+    if (*p != 0) return 1;
   }
   return 0;
 }
@@ -2357,12 +2352,13 @@ void display_error_deferred(int16_t error_handle __attribute__((unused)), int16_
 
 
 /* display_error_abort_to_dashboard_deferred (0xe4590) — readable C lift. */
-void display_error_abort_to_dashboard_deferred(int16_t code, char flag)
+void display_error_abort_to_dashboard_deferred(short error_handle, char flag)
 {
-  if (*(int16_t *)0x46cc68 == (int16_t)-1) {
-    *(int16_t *)0x46cc68 = code;
-    *(char *)0x46cc6a = flag;
+  if (*(short *)0x46cc68 != (short)-1) {
+    return;
   }
+  *(short *)0x46cc68 = error_handle;
+  *(char *)0x46cc6a = flag;
 }
 
 /* ui_widget_link_child (0xe4800) — XBE naked draft (batch 147). */

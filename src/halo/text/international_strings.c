@@ -1233,10 +1233,9 @@ void * FUN_0019cff0(void *font_tag __attribute__((unused)), unsigned short chara
 /* set_language_code (0x19d060) — readable C lift. */
 void set_language_code(short code)
 {
-  if (code < 0 || code >= 6) {
-    code = 0;
-  }
-  *(short *)0x4d9be0 = code;
+  short v = code;
+  if (v < 0 || v >= 6) v = 0;
+  *(short *)0x4d9be0 = v;
 }
 
 /* FUN_0019d380 (0x19d380) — XBE naked draft (batch 271). */

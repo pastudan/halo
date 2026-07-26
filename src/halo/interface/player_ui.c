@@ -196,41 +196,15 @@ void player_ui_set_single_player_local_player_controller(void)
 #endif
 
 
-/* player_ui_get_single_player_local_player_from_controller (0xe0810) — XBE naked draft (batch 169). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int player_ui_get_single_player_local_player_from_controller(short local_player_index __attribute__((unused)))
+/* player_ui_get_single_player_local_player_from_controller (0xe0810) — readable C lift. */
+short player_ui_get_single_player_local_player_from_controller(short controller)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movw 0x8(%%ebp), %%cx\n\t"
-      "orl $0xffffffff, %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lplayer_ui_get_single_player_local_player_from_controller_1:\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "cmpw %%cx, 0x46bfc4(,%%esi,2)\n\t"
-      "je .Lplayer_ui_get_single_player_local_player_from_controller_2\n\t"
-      "incl %%eax\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lplayer_ui_get_single_player_local_player_from_controller_1\n\t"
-      "movw %%dx, %%ax\n\t"
-      ".Lplayer_ui_get_single_player_local_player_from_controller_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  short i;
+  for (i = 0; i < 4; i++) {
+    if (*(short *)(0x46bfc4 + (int)i * 2) == controller) return i;
+  }
+  return (short)-1;
 }
-#else
-#error "player_ui_get_single_player_local_player_from_controller: clang naked draft required"
-#endif
-
 
 /* player_ui_local_player_joined_multiplayer_game (0xe0840) — XBE naked draft (batch 173). */
 #if defined(__clang__)
@@ -450,12 +424,10 @@ void player_ui_get_active_player_profile(void)
 
 
 /* player_ui_get_active_player_profile_index (0xe09e0) — readable C lift. */
-int player_ui_get_active_player_profile_index(short index)
+int player_ui_get_active_player_profile_index(short local_player_index)
 {
-  if (index < 0 || index >= 4) {
-    return -1;
-  }
-  return *(int *)(0x46bf10 + (int)index * 0x38);
+  if (local_player_index < 0 || local_player_index >= 4) return 0;
+  return *(int *)(0x46bf10 + (int)local_player_index * 0x38);
 }
 
 /* player_ui_get_last_single_player_level_played (0xe0a10) — XBE naked draft (batch 175). */

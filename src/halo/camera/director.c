@@ -2820,36 +2820,18 @@ void editor_camera_set_position(void)
 #endif
 
 
-/* FUN_00087ac0 (0x87ac0) — XBE naked draft (batch 164). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00087ac0(void)
+/* FUN_00087ac0 (0x87ac0) — readable C lift. */
+char FUN_00087ac0(char enable)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movb 0x335699, %%al\n\t"
-      "movb %%cl, 0x335699\n\t"
-      "jne .LFUN_00087ac0_1\n\t"
-      "movl 0x3356b0, %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_00087ac0_1\n\t"
-      "movl $0, 0x14(%%ecx)\n\t"
-      ".LFUN_00087ac0_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  char prev = *(char *)0x335699;
+  void *p;
+  *(char *)0x335699 = enable;
+  if (!enable) {
+    p = *(void **)0x3356b0;
+    if (p) *(int *)((char *)p + 0x14) = 0;
+  }
+  return prev;
 }
-#else
-#error "FUN_00087ac0: clang naked draft required"
-#endif
-
 
 /* editor_camera_set_mode (0x87b00) — XBE naked draft (batch 132). */
 #if defined(__clang__)

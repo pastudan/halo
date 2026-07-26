@@ -2434,40 +2434,14 @@ void FUN_000fb990(int weapon_handle)
 }
 #endif
 
-/* FUN_000fba00 (0xfba00) — XBE naked draft (batch 175). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_000fba00(int16_t value __attribute__((unused)), int16_t threshold __attribute__((unused)))
+/* FUN_000fba00 (0xfba00) — readable C lift. */
+char FUN_000fba00(short value, short threshold)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl %%dx, %%ecx\n\t"
-      "xorb %%al, %%al\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_000fba00_1\n\t"
-      "jle .LFUN_000fba00_2\n\t"
-      "cmpl $2, %%ecx\n\t"
-      "jg .LFUN_000fba00_2\n\t"
-      "cmpw %%dx, 0x8(%%ebp)\n\t"
-      "setge %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000fba00_1:\n\t"
-      "movb $1, %%al\n\t"
-      ".LFUN_000fba00_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int t = (int)threshold;
+  if (t == 0) return 1;
+  if (t <= 0 || t > 2) return 0;
+  return value >= threshold;
 }
-#else
-#error "FUN_000fba00: clang naked draft required"
-#endif
-
 
 /* FUN_000fbcf0 (0xfbcf0) — XBE naked draft (batch 171). */
 #if defined(__clang__)

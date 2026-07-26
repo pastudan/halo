@@ -3024,12 +3024,10 @@ char sound_scripted_dialog_is_playing(void)
 /* sound_manager_set_sound_environment (0x1cb9b0) — readable C lift. */
 void sound_manager_set_sound_environment(void *environment)
 {
+  unsigned int *dst = (unsigned int *)0x4eb068;
+  unsigned int *src = (unsigned int *)environment;
   int i;
-  int *src = (int *)environment;
-  int *dst = (int *)0x4eb068;
-  for (i = 0; i < 0x12; i++) {
-    dst[i] = src[i];
-  }
+  for (i = 0; i < 0x12; i++) dst[i] = src[i];
 }
 
 /* FUN_001cb9d0 (0x1cb9d0) — XBE naked draft (batch 286). */

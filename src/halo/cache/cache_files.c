@@ -3982,52 +3982,10 @@ void tag_groups_checksum(void)
 #endif
 
 
-/* 0x1b9920 */
+/* FUN_001b9920 (0x1b9920) — readable C lift from XBE leaf. */
 int FUN_001b9920(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int edi = 0;
-
-  /* test (char)eax, (char)eax -> je 0x1b99d2 */
-  /* test eax, eax -> jne 0x1b996f */
-  display_assert((char *)0x002b7dec, (char *)0x002b7dc8, 295, 0);
-  system_exit(0);
-  /* test ecx, ecx -> jle 0x1b99d2 */
-  /* relift: cmp edi, dword ptr [eax] -> jne 0x1b99a5 */
-  crt_stricmp((char *)(uintptr_t)ebx, (char *)(uintptr_t)edx);
-  /* test eax, eax -> je 0x1b99be */
-  /* cmp eax, edx -> jl 0x1b9985 */
-  physical_memory_protect((void *)0x803a6000, 0x01600000, 0);
-  physical_memory_protect((void *)0x803a6000, 0x01600000, 0);
-  physical_memory_protect((void *)(uintptr_t)ecx, eax, 0);
-  physical_memory_protect((void *)(uintptr_t)eax, edx, 0);
-  /* test eax, eax -> je 0x1b9a80 */
-  physical_memory_protect((void *)(uintptr_t)edx, ecx, 0);
-  physical_memory_protect((void *)(uintptr_t)ecx, eax, 0);
-  error(0, (char *)0x002b7e04);
-  error(0, (char *)0x002b7e44);
-  error(0, (char *)0x002b7e80);
-  error(0, (char *)0x002b7ec8);
-  error(0, (char *)0x002b7f10);
-  error(0, (char *)0x002b7f48);
-  error(0, (char *)0x002b7f80);
-  error(0, (char *)0x002b7fc0);
-  /* cmp ecx, edi -> jge 0x1b9be9 */
-  /* cmp edx, -1 -> je 0x1b9be6 */
-  /* relift: cmp edx, dword ptr [ecx] -> je 0x1b9be6 */
-  /* relift: cmp edx, dword ptr [ecx + 4] -> je 0x1b9be6 */
-  /* relift: cmp edx, dword ptr [ecx + 8] -> je 0x1b9be6 */
-  /* relift: cmp ecx, dword ptr [edx + 0xc] -> jl 0x1b9ba0 */
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)edi;
+  return *(int *)0x4e4d68;
 }
 
 /* 0x1b9bf0 */

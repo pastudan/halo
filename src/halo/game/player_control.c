@@ -155,6 +155,49 @@ void player_control_action_test_reset(void) {
 }
 
 
+/* player_control_action_test_accept (0xb6ab0) — readable C lift from XBE leaf. */
+char player_control_action_test_accept(void)
+{
+  unsigned int *base = *(unsigned int **)0x457090;
+  base[1] |= 0x4;
+  base[2] |= 0x4;
+  return (char)((base[0] >> 2) & 1);
+}
+
+/* player_control_action_test_back (0xb6ad0) — readable C lift from XBE leaf. */
+char player_control_action_test_back(void)
+{
+  unsigned int *base = *(unsigned int **)0x457090;
+  base[1] |= 0x8;
+  base[2] |= 0x8;
+  return (char)((base[0] >> 3) & 1);
+}
+
+/* player_control_action_test_action (0xb6af0) — readable C lift from XBE leaf. */
+char player_control_action_test_action(void)
+{
+  unsigned int *base = *(unsigned int **)0x457090;
+  base[1] |= 0x1;
+  base[2] |= 0x1;
+  return (char)(base[0] & 1);
+}
+
+/* player_control_action_test_look_relative_up (0xb6bb0) — readable C lift from XBE leaf. */
+char player_control_action_test_look_relative_up(void)
+{
+  unsigned int *base = *(unsigned int **)0x457090;
+  return (char)((base[0] >> 7) & 1);
+}
+
+/* player_control_action_test_look_relative_down (0xb6bc0) — readable C lift from XBE leaf. */
+char player_control_action_test_look_relative_down(void)
+{
+  unsigned int *base = *(unsigned int **)0x457090;
+  return (char)((base[0] >> 8) & 1);
+}
+
+
+
 
 /* limit2d (0xb6e10) — XBE naked draft (batch 161). */
 #if defined(__clang__)

@@ -921,41 +921,12 @@ float FUN_0010c340(float *v1, float *v2)
   return sqrtf(cy * cy + cx * cx + cz * cz);
 }
 
-/* FUN_0010c390 (0x10c390) — XBE naked draft (batch 271). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float FUN_0010c390(float param_1 __attribute__((unused)), float param_2 __attribute__((unused)), uint8_t param_3 __attribute__((unused)))
+/* FUN_0010c390 (0x10c390) — readable C lift. */
+float FUN_0010c390(float a, float b, unsigned char t)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "cmpb $0xff, %%al\n\t"
-      "jne .LFUN_0010c390_1\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0010c390_1:\n\t"
-      "movzbl %%al, %%eax\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "fmuls 0x261518\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "fadds 0x8(%%ebp)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (t == 0xff) return b;
+  return a + (b - a) * ((float)t * (1.0f / 255.0f));
 }
-#else
-#error "FUN_0010c390: clang naked draft required"
-#endif
-
 
 /* Compute the angle (radians) between two 3D vectors v1 and v2.
  *

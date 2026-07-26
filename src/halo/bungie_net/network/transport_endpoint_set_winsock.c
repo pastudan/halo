@@ -1411,45 +1411,18 @@ void delete_endpoint_set(int set __attribute__((unused)))
 #endif
 
 
-/* FUN_000824a0 (0x824a0) — XBE naked draft (batch 264). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000824a0(void)
+/* FUN_000824a0 (0x824a0) — readable C lift. */
+int FUN_000824a0(int *a, int *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%ecx\n\t"
-      "jne .LFUN_000824a0_1\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_000824a0_2\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000824a0_1:\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jne .LFUN_000824a0_2\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000824a0_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int av = *a;
+  int bv = *b;
+  if (av == 0) {
+    if (bv == 0) return 0;
+    return 1;
+  }
+  if (bv == 0) return -1;
+  return 0;
 }
-#else
-#error "FUN_000824a0: clang naked draft required"
-#endif
-
 
 /* poll_endpoint_set (0x824d0) — XBE naked draft (batch 244). */
 #if defined(__clang__)

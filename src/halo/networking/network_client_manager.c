@@ -1006,39 +1006,15 @@ char network_game_client_set_machine(void *client __attribute__((unused)), void 
 #endif
 
 
-/* network_game_client_get_machine (0x124c10) — XBE naked draft (batch 100). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void * network_game_client_get_machine(void *client __attribute__((unused)))
+/* network_game_client_get_machine (0x124c10) — readable C lift. */
+void *network_game_client_get_machine(void *client)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lnetwork_game_client_get_machine_1\n\t"
-      "movw (%%ecx), %%ax\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jae .Lnetwork_game_client_get_machine_1\n\t"
-      "movzwl %%ax, %%eax\n\t"
-      "imull $0x44, %%eax, %%eax\n\t"
-      "leal 0x970(%%eax,%%ecx,1), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_get_machine_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned short idx;
+  if (!client) return 0;
+  idx = *(unsigned short *)client;
+  if (idx >= 4) return 0;
+  return (char *)client + 0x970 + (int)idx * 0x44;
 }
-#else
-#error "network_game_client_get_machine: clang naked draft required"
-#endif
-
 
 /* 0x124c80 */
 void *FUN_00124c80(void *client)

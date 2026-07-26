@@ -1406,14 +1406,10 @@ void FUN_000e1f20(void)
 
 
 /* FUN_000e2170 (0xe2170) — readable C lift. */
-void FUN_000e2170(char value)
+void FUN_000e2170(char v)
 {
-  *(char *)0x30f030 = value;
+  *(char *)0x30f030 = v;
 }
-
-
-
-
 
 /* D3DXMatrixIdentity (0xe21e0) — readable C lift from XBE leaf. */
 void D3DXMatrixIdentity(float *m)

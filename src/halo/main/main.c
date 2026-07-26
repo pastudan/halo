@@ -3729,38 +3729,18 @@ void main_print_version(void)
   console_printf(0, (const char *)0x28b5d4);
 }
 
-/* main_save_map_no_timeout (0x101ec0) — XBE naked draft (batch 206). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* main_save_map_no_timeout (0x101ec0) — readable C lift. */
 void main_save_map_no_timeout(void)
 {
-  __asm__ volatile(
-      "movb 0x46da28, %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpb %%al, %%cl\n\t"
-      "je .Lmain_save_map_no_timeout_1\n\t"
-      "cmpb %%al, 0x46da2a\n\t"
-      "je .Lmain_save_map_no_timeout_2\n\t"
-      ".Lmain_save_map_no_timeout_1:\n\t"
-      "movb $1, %%cl\n\t"
-      "movb %%cl, 0x46da28\n\t"
-      "movb %%cl, 0x46da29\n\t"
-      "movl %%eax, 0x46da2c\n\t"
-      "movl %%eax, 0x46da30\n\t"
-      "movw %%ax, 0x46da38\n\t"
-      ".Lmain_save_map_no_timeout_2:\n\t"
-      "movb %%al, 0x46da2a\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (*(char *)0x46da28 == 0 || *(char *)0x46da2a != 0) {
+    *(char *)0x46da28 = 1;
+    *(char *)0x46da29 = 1;
+    *(int *)0x46da2c = 0;
+    *(int *)0x46da30 = 0;
+    *(short *)0x46da38 = 0;
+  }
+  *(char *)0x46da2a = 0;
 }
-#else
-#error "main_save_map_no_timeout: clang naked draft required"
-#endif
-
 
 /* main_roll_credits (0x102070) — XBE naked draft (batch 188). */
 #if defined(__clang__)
