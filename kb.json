@@ -6255,7 +6255,7 @@
         },
         {
           "addr": "0x11ecf0",
-          "decl": "int memory_block_valid(void *block_hdr@<ecx>);",
+          "decl": "char FUN_0011ecf0(void *pool @<ecx>);",
           "ported": true
         },
         {
@@ -6310,8 +6310,8 @@
         },
         {
           "addr": "0x11ee50",
-          "decl": "void FUN_0011ee50(void);",
-          "ported": false
+          "decl": "void *FUN_0011ee50(void *pool @<esi>);",
+          "ported": true
         },
         {
           "addr": "0x11f140",

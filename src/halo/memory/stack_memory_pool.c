@@ -1086,39 +1086,17 @@ int FUN_0011eb10(void *pool /*@<esi>*/)
   return *(int *)((char *)pool + 4);
 }
 
-/* FUN_0011ee50 (0x11ee50) — XBE naked draft (batch 177). */
-#if defined(__clang__)
-static int (*const b11ee50_c11ecf0)(void *block_hdr) = memory_block_valid;
-static void (*const b11ee50_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11ee50_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_0011ee50(void)
+/* FUN_0011ee50 (0x11ee50) — readable C lift. */
+void *FUN_0011ee50(void *pool)
 {
-  __asm__ volatile(
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c11ecf0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0011ee50_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x23f\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x290254\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011ee50_1:\n\t"
-      "leal 0x1c(%%esi), %%eax\n\t"
-      "ret\n\t"
-      :
-      : [c11ecf0] "m"(b11ee50_c11ecf0), [assert] "m"(b11ee50_assert), [exitfn] "m"(b11ee50_exitfn)
-      : "memory");
+  extern char DAT_00290254[];
+  extern char DAT_0029018c[];
+  if (!FUN_0011ecf0(pool)) {
+    display_assert(DAT_00290254, DAT_0029018c, 0x23f, 1);
+    system_exit(-1);
+  }
+  return (char *)pool + 0x1c;
 }
-#else
-#error "FUN_0011ee50: clang naked draft required"
-#endif
-
 
 /* FUN_0011f140 (0x11f140) — XBE naked draft (batch 153). */
 #if defined(__clang__)
