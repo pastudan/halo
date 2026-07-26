@@ -310,14 +310,14 @@ def main() -> int:
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c8a),
         ("FUN_00136bc0", 0x136bc0, 0x136f40),
         # gameplay wave 17 (2026-07-26)
-        ("FUN_001b8570", 0x1b8570, 0x1b8f10),
-        ("item_update", 0xf7340, 0xf7cb0),
-        ("FUN_000fd570", 0xfd570, 0xfdc90),
+        ("FUN_001b8570", 0x1b8570, 0x1b8f08),
+        ("item_update", 0xf7340, 0xf7ca1),
+        ("FUN_000fd570", 0xfd570, 0xfdc8e),
         ("FUN_00138900", 0x138900, 0x138e15),
         ("FUN_001377d0", 0x1377d0, 0x137d12),
         # gameplay wave 18 (2026-07-26)
-        ("FUN_001b8570", 0x1b8570, 0x1b8f10),
-        ("item_update", 0xf7340, 0xf7cb0),
+        ("FUN_001b8570", 0x1b8570, 0x1b8f08),
+        ("item_update", 0xf7340, 0xf7ca1),
         ("FUN_000f5900", 0xf5900, 0xf5f10),
         ("FUN_000f5fb0", 0xf5fb0, 0xf63c4),
         ("FUN_000f4cf0", 0xf4cf0, 0xf4e92),
@@ -325,7 +325,7 @@ def main() -> int:
         ("FUN_000f7110", 0xf7110, 0xf7340),
         ("multiplayer_settings_select_list_update_item", 0xf4210, 0xf46e0),
         ("FUN_000f46e0", 0xf46e0, 0xf4b60),
-        ("FUN_00135510", 0x135510, 0x135f20),
+        ("FUN_00135510", 0x135510, 0x135f1b),
         ("FUN_001b6e20", 0x1b6e20, 0x1b7016),
         # gameplay wave 20 (2026-07-26)
         ("first_person_weapon_update", 0xdd580, 0xddae0),
@@ -359,7 +359,7 @@ def main() -> int:
         ("FUN_001a4a70", 0x1a4a70, 0x1a4c50),
         ("physics_compute_biped_collision", 0x151a50, 0x151ec0),
         ("biped_limp_noodle_valid_joint_rotation", 0x19f540, 0x19fa1c),
-        ("FUN_0019fa20", 0x19fa20, 0x1a01d0),
+        ("FUN_0019fa20", 0x19fa20, 0x1a01c3),
         ("FUN_001a4c50", 0x1a4c50, 0x1a5300),
         # gameplay wave 25 (2026-07-26)
         ("FUN_00154a50", 0x154a50, 0x154fc0),
@@ -377,7 +377,7 @@ def main() -> int:
         ("lightning_offset_marker_position", 0x135420, 0x135510),
         ("object_get_self_illumination", 0x1393b0, 0x139480),
         ("FUN_00154540", 0x154540, 0x154630),
-        ("FUN_00135510", 0x135510, 0x135f20),
+        ("FUN_00135510", 0x135510, 0x135f1b),
         ("first_person_weapon_adjust_light", 0xdd340, 0xdd410),
         # gameplay wave 28 (2026-07-26)
         ("item_get_position_even_if_in_inventory", 0xf6a60, 0xf6ae3),
@@ -521,48 +521,10 @@ def main() -> int:
         ("FUN_001a4440", 0x1a4440, 0x1a4990),
         ("biped_limp_noodle_valid_joint_rotation", 0x19f540, 0x19fa1c),
         ("FUN_001377d0", 0x1377d0, 0x137d12),
+        # gameplay wave 45 (2026-07-26)
+        ("FUN_001b8570", 0x1b8570, 0x1b8f08),
+        ("FUN_00135510", 0x135510, 0x135f1b),
+        ("item_update", 0xf7340, 0xf7ca1),
+        ("FUN_0019fa20", 0x19fa20, 0x1a01c3),
+        ("FUN_000fd570", 0xfd570, 0xfdc8e),
     ]
-
-    xbe = Xbe.from_file(args.xbe)
-    pe = pefile.PE(args.pe)
-    rows = []
-
-    print("=== Structural mnemonic match (XBE orig vs clang lift) ===")
-    print("(Interim — VC71 needs RXDK CL.Exe; equivalence needs delinked .obj)\n")
-
-    for name, va, end in targets:
-        orig = xbe_bytes(xbe, va, end)
-        cand, cand_va = pe_fn_bytes(pe, name)
-        o_m = mnemonics(orig, va)
-        c_m = mnemonics(cand, cand_va)
-        ratio = SequenceMatcher(None, o_m, c_m, autojunk=False).ratio() * 100.0
-        o_calls = sum(1 for m in o_m if m == "call")
-        c_calls = sum(1 for m in c_m if m == "call")
-        print(
-            f"{name}: {ratio:5.1f}%  "
-            f"orig_insns={len(o_m)} cand_insns={len(c_m)} "
-            f"calls {o_calls}->{c_calls}  "
-            f"orig_bytes={len(orig)} cand_bytes={len(cand)}"
-        )
-        rows.append(
-            {
-                "name": name,
-                "addr": hex(va),
-                "match_pct": round(ratio, 2),
-                "orig_insns": len(o_m),
-                "cand_insns": len(c_m),
-                "orig_calls": o_calls,
-                "cand_calls": c_calls,
-                "note": "clang-vs-xbe interim; not VC71",
-            }
-        )
-
-    out = Path(args.json_out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(rows, indent=2) + "\n")
-    print(f"\nwrote {out}")
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
