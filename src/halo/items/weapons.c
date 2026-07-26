@@ -3467,100 +3467,27 @@ void FUN_000fcd10(int16_t trigger_index, int weapon_handle)
 }
 
 
-/* 0xfcdd0 — clear trigger charge/state (weapon@eax, trigger@ecx). */
-#if defined(__clang__)
-static void *(*const FUN_000fcdd0_get)(int, int) = object_get_and_verify_type;
-static char *(*const FUN_000fcdd0_entry)(void *, int16_t) = FUN_000fb320;
-static void *(*const FUN_000fcdd0_tag)(int, int) = tag_get;
-static void *(*const FUN_000fcdd0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const FUN_000fcdd0_assert)(const char *, const char *, int,
-                                         bool) = display_assert;
-static void (*const FUN_000fcdd0_exit)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_000fcdd0(int16_t trigger_index __attribute__((unused)),
-                  int weapon_handle __attribute__((unused)))
-{
-  /* XBE: trigger@eax, weapon@ecx (si carries trigger after mov esi,eax). */
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ecx, %%ebx\n\t"
-      "pushl $4\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[entry]\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movswl %%si, %%edi\n\t"
-      "pushl $0x114\n\t"
-      "addl $0x4fc, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl $4\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "jl 1f\n\t"
-      "cmpw $2, %%si\n\t"
-      "jl 2f\n\t"
-      "1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa11\n\t"
-      "pushl $0x28ad48\n\t"
-      "pushl $0x28ae40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exit]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "2:\n\t"
-      "leal (%%edi,%%edi,8), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "leal (%%ebx,%%ecx,4), %%eax\n\t"
-      "popl %%esi\n\t"
-      "movb $0, 0x211(%%eax)\n\t"
-      "movw $0, 0x212(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_000fcdd0_get), [entry] "m"(FUN_000fcdd0_entry),
-        [tag] "m"(FUN_000fcdd0_tag), [elem] "m"(FUN_000fcdd0_elem),
-        [assert] "m"(FUN_000fcdd0_assert), [exit] "m"(FUN_000fcdd0_exit)
-      : "memory");
-}
-#else
+/* FUN_000fcdd0 (0xfcdd0) — readable C lift. */
 void FUN_000fcdd0(int16_t trigger_index, int weapon_handle)
 {
-  char *weapon_obj;
-  char *trigger_entry;
-  int trigger_idx;
-
-  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  FUN_000fb320(weapon_obj, trigger_index);
-  tag_block_get_element(
-      (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4fc,
-      (int)trigger_index, 0x114);
-
-  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  extern char DAT_0028ae40[];
+  extern char DAT_0028ad48[];
+  char *weapon;
+  char *weap_tag;
+  char *slot;
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  (void)FUN_000fb320(weapon, trigger_index);
+  weap_tag = (char *)tag_get(0x77656170, *(int *)weapon);
+  (void)tag_block_get_element((void *)(weap_tag + 0x4fc), (int)trigger_index, 0x114);
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
   if (trigger_index < 0 || trigger_index >= 2) {
-    display_assert((char *)0x0028ae40, (char *)0x0028ad48, 0xa11, 1);
+    display_assert(DAT_0028ae40, DAT_0028ad48, 0xa11, 1);
     system_exit(-1);
   }
-
-  trigger_idx = (int)trigger_index;
-  trigger_entry = (char *)weapon_obj + trigger_idx * 36 + 0x210;
-  trigger_entry[1] = 0;
-  *(int16_t *)(trigger_entry + 2) = 0;
+  slot = weapon + (int)trigger_index * 36;
+  slot[0x211] = 0;
+  *(int16_t *)(slot + 0x212) = 0;
 }
-#endif
 
 /* FUN_000fce60 (0xfce60) — readable C lift: init trigger overcharged state. */
 void FUN_000fce60(int weapon_handle /*@<eax>*/, int16_t trigger_index /*@<si>*/)

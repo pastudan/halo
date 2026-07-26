@@ -18401,7 +18401,8 @@
         {
           "addr": "0xe1000",
           "decl": "void FUN_000e1000(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000e1000"
         },
         {
           "addr": "0xe1050",
@@ -33801,8 +33802,8 @@
         },
         {
           "addr": "0xfcdd0",
-          "decl": "void FUN_000fcdd0(int16_t trigger_index, int weapon_handle);",
-          "ported": false
+          "decl": "void FUN_000fcdd0(int16_t trigger_index @<eax>, int weapon_handle @<ecx>);",
+          "ported": true
         },
         {
           "addr": "0xfce60",
@@ -38978,8 +38979,9 @@
         },
         {
           "addr": "0x24770",
-          "decl": "void FUN_00024770(void);",
-          "ported": false
+          "decl": "int FUN_00024770(void *unused, void *ctx, void *cand);",
+          "ported": false,
+          "name": "FUN_00024770"
         },
         {
           "addr": "0x24850",
