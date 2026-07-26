@@ -384,6 +384,45 @@ def try_emit_c(insns: list, decl: str, name: str) -> str | None:
             g = int(m.group(1), 16)
             return f"{sig} {{\n  return *(uint32_t *)0x{g:x};\n}}\n"
 
+    # store imm through pointer arg: push ebp; mov ebp,esp; mov eax,[ebp+8]; mov [eax(+off)], IMM; pop ebp; ret
+    if (
+        len(body_ops) >= 4
+        and body_ops[0] == ("push", "ebp")
+        and body_ops[1] == ("mov", "ebp, esp")
+        and body_ops[-1] == ("pop", "ebp")
+    ):
+        mid = body_ops[2:-1]
+        if (
+            len(mid) == 2
+            and mid[0] == ("mov", "eax, dword ptr [ebp + 8]")
+            and mid[1][0] == "mov"
+        ):
+            m = re.match(
+                r"(byte|word|dword) ptr \[eax(?: \+ (0x[0-9a-f]+|\d+))?\]"
+                r", (0x[0-9a-f]+|-?\d+)$",
+                mid[1][1],
+            )
+            if m:
+                width, off, val = m.group(1), m.group(2), m.group(3)
+                o = int(off, 0) if off else 0
+                ctype = {"byte": "uint8_t", "word": "uint16_t", "dword": "uint32_t"}[width]
+                pname = "arg0"
+                pm = re.search(r"\(([^)]*)\)", sig)
+                params = (pm.group(1) if pm else "").strip()
+                if params and params != "void":
+                    pname = params.split(",")[0].strip().split()[-1].strip("*")
+                if o == 0:
+                    return (
+                        f"{sig} {{\n"
+                        f"  *({ctype} *){pname} = ({ctype}){val};\n"
+                        f"}}\n"
+                    )
+                return (
+                    f"{sig} {{\n"
+                    f"  *({ctype} *)((uint8_t *){pname} + 0x{o:x}) = ({ctype}){val};\n"
+                    f"}}\n"
+                )
+
     return None
 
 
