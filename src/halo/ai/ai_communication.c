@@ -1713,99 +1713,39 @@ char FUN_00043a20(int conversation_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_00043ce0 (0x43ce0) — XBE naked draft (batch 139). */
-#if defined(__clang__)
-static void *(*const b43ce0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b43ce0_tag)(int, int) = tag_get;
-static char (*const b43ce0_c3b120)(int actor) = FUN_0003b120;
-static void *(*const b43ce0_get)(int, int) = object_get_and_verify_type;
-static int *(*const b43ce0_gseed)(void) = get_global_random_seed_address;
-static float (*const b43ce0_rrange)(int *, float, float) = random_real_range;
-static void (*const b43ce0_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-void FUN_00043ce0(int actor /* */ __attribute__((unused)))
+/* FUN_00043ce0 (0x43ce0) — readable C lift. */
+void FUN_00043ce0(int actor)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x58(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x61637472\n\t"
-      "call *%[tag]\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[c3b120]\n\t"
-      "movb %%al, %%bl\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00043ce0_1\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%di, 0x338(%%eax)\n\t"
-      "jle .LFUN_00043ce0_1\n\t"
-      "movw 0x3aa(%%eax), %%di\n\t"
-      ".LFUN_00043ce0_1:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "je .LFUN_00043ce0_2\n\t"
-      "movl 0x404(%%eax), %%edx\n\t"
-      "movl 0x400(%%eax), %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "jmp .LFUN_00043ce0_3\n\t"
-      ".LFUN_00043ce0_2:\n\t"
-      "movl 0x3fc(%%eax), %%ecx\n\t"
-      "movl 0x3f8(%%eax), %%edx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      ".LFUN_00043ce0_3:\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fmuls 0x253394\n\t"
-      "movswl %%di, %%edx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb %%bl, 0x6cc(%%esi)\n\t"
-      "fiaddl -0x8(%%ebp)\n\t"
-      "call *%[ftol]\n\t"
-      "popl %%edi\n\t"
-      "movw %%ax, 0x6ce(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b43ce0_dget), [tag] "m"(b43ce0_tag), [c3b120] "m"(b43ce0_c3b120), [get] "m"(b43ce0_get), [gseed] "m"(b43ce0_gseed), [rrange] "m"(b43ce0_rrange), [ftol] "m"(b43ce0_ftol)
-      : "memory");
+  char *actor_data;
+  void *tag;
+  char flag;
+  int16_t bonus;
+  float lo;
+  float hi;
+  float r;
+
+  actor_data = (char *)datum_get(*(data_t **)0x6325a4, actor);
+  tag = tag_get(0x61637472, *(int *)(actor_data + 0x58));
+  flag = FUN_0003b120(actor);
+  bonus = 0;
+  if (*(int *)(actor_data + 0x18) != -1) {
+    char *obj = (char *)object_get_and_verify_type(*(int *)(actor_data + 0x18), 3);
+    if (*(int16_t *)(obj + 0x338) > 0)
+      bonus = *(int16_t *)(obj + 0x3aa);
+  }
+  if (flag) {
+    hi = *(float *)((char *)tag + 0x404);
+    lo = *(float *)((char *)tag + 0x400);
+  } else {
+    hi = *(float *)((char *)tag + 0x3fc);
+    lo = *(float *)((char *)tag + 0x3f8);
+  }
+  r = random_real_range(get_global_random_seed_address(), lo, hi);
+  r = r * *(float *)0x253394 + (float)bonus;
+  actor_data[0x6cc] = flag;
+  *(int16_t *)(actor_data + 0x6ce) = (int16_t)r;
 }
-#else
-#error "FUN_00043ce0: clang naked draft required"
-#endif
+
 
 
 /* actor_communication_update (0x43db0) — readable C lift. */
