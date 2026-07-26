@@ -32838,7 +32838,8 @@
         },
         {
           "addr": "0x22dc0",
-          "decl": "void FUN_00022dc0(int actor_handle);"
+          "decl": "void FUN_00022dc0(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x20f80",
@@ -32867,7 +32868,8 @@
         },
         {
           "addr": "0x21ae0",
-          "decl": "char FUN_00021ae0(int actor_handle, float range, float param3, float *encounter_pos, short *out_count);"
+          "decl": "char FUN_00021ae0(int actor_handle, float range, float param3, float *encounter_pos, short *out_count);",
+          "ported": false
         },
         {
           "addr": "0x22010",
@@ -32902,7 +32904,8 @@
         },
         {
           "addr": "0x218d0",
-          "decl": "void actor_combat_build_grenade_trajectory(void);"
+          "decl": "void actor_combat_build_grenade_trajectory(void);",
+          "ported": false
         },
         {
           "addr": "0x219e0",
@@ -32911,11 +32914,13 @@
         },
         {
           "addr": "0x220c0",
-          "decl": "void actor_aim_projectile(float *origin, float *direction, int unit_handle);"
+          "decl": "void actor_aim_projectile(float *origin, float *direction, int unit_handle);",
+          "ported": false
         },
         {
           "addr": "0x22b40",
-          "decl": "void FUN_00022b40(int actor_handle @<ebx>, float *aim_vector @<esi>);"
+          "decl": "void FUN_00022b40(int actor_handle @<ebx>, float *aim_vector @<esi>);",
+          "ported": false
         },
         {
           "addr": "0x22ba0",

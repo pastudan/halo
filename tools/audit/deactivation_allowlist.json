@@ -17029,5 +17029,40 @@
     "object": "files.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x22dc0",
+    "name": "FUN_00022dc0",
+    "object": "actor_combat.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x21ae0",
+    "name": "FUN_00021ae0",
+    "object": "actor_combat.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x218d0",
+    "name": "actor_combat_build_grenade_trajectory",
+    "object": "actor_combat.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x220c0",
+    "name": "actor_aim_projectile",
+    "object": "actor_combat.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x22b40",
+    "name": "FUN_00022b40",
+    "object": "actor_combat.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
