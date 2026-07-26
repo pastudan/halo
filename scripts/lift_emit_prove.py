@@ -139,6 +139,15 @@ def run_uni(name: str, addr: int, seeds: int, timeout: float) -> dict:
 
 def update_decl(addr: int, decl: str) -> None:
     kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
+    decl = (decl or "").strip()
+    if (
+        not decl
+        or decl.lstrip().startswith("*")
+        or len(decl) > 240
+        or "(" not in decl
+        or ")" not in decl
+    ):
+        return
     if not decl.endswith(";"):
         decl += ";"
     for o in kb.get("objects", []):
@@ -203,11 +212,18 @@ def commit_chunk(n: int, touched: set[Path], label: str = "emit") -> str | None:
     sha = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
     ).stdout.strip()
-    try:
-        git_push()
-    except SystemExit as e:
-        print("push failed", e, flush=True)
-    print(f"COMMIT+PUSH {sha}", flush=True)
+    subprocess.run(
+        ["git", "pull", "--rebase", "pastudan", "track-a-collision-bsp"],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    r = subprocess.run(
+        ["git", "push", "pastudan", "HEAD:track-a-collision-bsp"],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        print("push failed", r.stdout, r.stderr, flush=True)
+    else:
+        print(f"COMMIT+PUSH {sha}", flush=True)
     return sha
 
 
@@ -225,7 +241,18 @@ def main() -> int:
         default=True,
         help="Skip lifts that call same-TU naked/unproven callees (default: on)",
     )
+    ap.add_argument(
+        "--addrs",
+        default="",
+        help="Comma/space separated hex addrs to include (optional filter)",
+    )
     args = ap.parse_args()
+    addr_filter: set[int] | None = None
+    if args.addrs.strip():
+        addr_filter = set()
+        for tok in re.split(r"[\s,]+", args.addrs.strip()):
+            if tok:
+                addr_filter.add(int(tok, 16))
 
     merge_remote()
     kb, name_by, decl_by, src_by, ported = law.load_kb_names()
@@ -238,6 +265,8 @@ def main() -> int:
     skipped_same = 0
     for i, ai in enumerate(starts):
         if ported.get(ai) is not False:
+            continue
+        if addr_filter is not None and ai not in addr_filter:
             continue
         src = src_by.get(ai) or ""
         if any(s in src.lower() for s in SKIP):
@@ -339,10 +368,13 @@ def main() -> int:
             f"/* {name} (0x{ai:x}) — readable C lift. */\n{body}"
         )
         sig_m = re.search(
-            rf"^([\w\s\*]+?\b{re.escape(name)}\s*\([^{{]*\))", c_src, re.M
+            rf"^(?:void|int|char|short|float|double|bool|unsigned|signed|uint\w+_t|int\w+_t)"
+            rf"[\w\s\*]*\b{re.escape(name)}\s*\([^;{{]*\)",
+            c_src,
+            re.M,
         )
         if sig_m:
-            update_decl(ai, sig_m.group(1).strip())
+            update_decl(ai, sig_m.group(0).strip())
             if not regen_decl_h():
                 print("  decl.h FAIL", flush=True)
                 continue

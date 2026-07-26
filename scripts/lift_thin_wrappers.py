@@ -198,7 +198,7 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
         if fn and g:
             return (
                 f"{sig}\n{{\n"
-                f"  void *h = *(void **)0x{g.group(1)};\n"
+                f"  int h = *(int *)0x{g.group(1)};\n"
                 f"  if (h)\n"
                 f"    {fn}(h);\n"
                 f"}}\n"
@@ -537,7 +537,7 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
 
     # tag_get(group, idx); store idx to global
     if (
-        len(mid) == 7
+        len(mid) in (7, 8)
         and mid[0] == ("push", "esi")
         and mid[1] == ("mov", "esi, dword ptr [ebp + 8]")
         and mid[2] == ("push", "esi")
@@ -548,6 +548,7 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
         and mid[6][0] == "mov"
         and "dword ptr [0x" in mid[6][1]
         and mid[6][1].endswith(", esi")
+        and (len(mid) == 7 or mid[7] == ("pop", "esi"))
     ):
         fn = callee(mid[4][1])
         g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[6][1])
@@ -633,7 +634,7 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
 
     # HS ebx-reg wrapper: mov eax,arg1; push ebx; mov ebx,arg0; push imm; push imm; push eax; call F
     if (
-        len(mid) == 8
+        len(mid) in (8, 9)
         and mid[0] == ("mov", "eax, dword ptr [ebp + 0xc]")
         and mid[1] == ("push", "ebx")
         and mid[2] == ("mov", "ebx, dword ptr [ebp + 8]")
@@ -642,6 +643,7 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
         and mid[5] == ("push", "eax")
         and mid[6][0] == "call"
         and mid[7][0] == "add"
+        and (len(mid) == 8 or mid[8] == ("pop", "ebx"))
     ):
         fn = callee(mid[6][1])
         if fn:
