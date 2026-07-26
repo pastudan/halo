@@ -28,17 +28,21 @@ def _uc_regs():
     from unicorn.x86_const import (
         UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC_X86_REG_EDX,
         UC_X86_REG_ESI, UC_X86_REG_EDI, UC_X86_REG_ESP, UC_X86_REG_EBP,
+        UC_X86_REG_AL, UC_X86_REG_AH, UC_X86_REG_BL, UC_X86_REG_BH,
+        UC_X86_REG_CL, UC_X86_REG_CH, UC_X86_REG_DL, UC_X86_REG_DH,
+        UC_X86_REG_AX, UC_X86_REG_BX, UC_X86_REG_CX, UC_X86_REG_DX,
     )
     return {
-        "eax": UC_X86_REG_EAX, "ax": UC_X86_REG_EAX,
-        "ebx": UC_X86_REG_EBX, "bx": UC_X86_REG_EBX,
-        "ecx": UC_X86_REG_ECX, "cx": UC_X86_REG_ECX,
-        "edx": UC_X86_REG_EDX, "dx": UC_X86_REG_EDX,
+        "eax": UC_X86_REG_EAX, "ax": UC_X86_REG_AX, "al": UC_X86_REG_AL, "ah": UC_X86_REG_AH,
+        "ebx": UC_X86_REG_EBX, "bx": UC_X86_REG_BX, "bl": UC_X86_REG_BL, "bh": UC_X86_REG_BH,
+        "ecx": UC_X86_REG_ECX, "cx": UC_X86_REG_CX, "cl": UC_X86_REG_CL, "ch": UC_X86_REG_CH,
+        "edx": UC_X86_REG_EDX, "dx": UC_X86_REG_DX, "dl": UC_X86_REG_DL, "dh": UC_X86_REG_DH,
         "esi": UC_X86_REG_ESI, "si": UC_X86_REG_ESI,
         "edi": UC_X86_REG_EDI, "di": UC_X86_REG_EDI,
         "esp": UC_X86_REG_ESP,
         "ebp": UC_X86_REG_EBP,
     }
+
 
 
 @dataclass
@@ -294,7 +298,13 @@ def setup_args(uc, abi: dict, arg_values: list, scratch_writes: dict,
 
     uc.reg_write(UC_X86_REG_ESP, esp)
 
-    # Set register args
+    # Set register args (mask sub-register writes; Unicorn byte/word regs)
+    byte_regs = {"al", "ah", "bl", "bh", "cl", "ch", "dl", "dh"}
+    word_regs = {"ax", "bx", "cx", "dx"}
     for reg_name, val in reg_args.items():
         if reg_name in regs:
+            if reg_name in byte_regs:
+                val &= 0xFF
+            elif reg_name in word_regs:
+                val &= 0xFFFF
             uc.reg_write(regs[reg_name], val)
