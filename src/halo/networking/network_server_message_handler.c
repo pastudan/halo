@@ -9,7 +9,7 @@
  *
  * Callers pass the server pointer in a register (ESI for most handlers, EAX
  * for FUN_00130180); the machine index, message buffer and message size are
- * stack arguments.  See kb.json @<reg> annotations.  All callee declarations
+ * stack arguments.  See kb.json annotations.  All callee declarations
  * come from the generated decl.h. */
 
 /* Handle client add-player request during pregame (0x12fd80).
@@ -209,7 +209,7 @@ char FUN_001300b0(int server, int machine, void *message_data, int message_size)
 /* Handle client remove-player request during a live game (0x130180).
  * Requires in-game state; removes the player, then broadcasts a
  * remove-player notification (type 0x16) to all machines.
- * server arrives in EAX (see kb.json @<eax>). */
+ * server arrives in EAX (see kb.json). */
 char FUN_00130180(int server, int machine, void *message_data, int message_size)
 {
   char decoded_buf[32];

@@ -481,7 +481,7 @@ bool director_compute_camera_input(short *out_buf, int local_player_index)
  * director_apply_replay_mode_for_player(reset_flag, local_player_index,
  * mode_flags) other     → no-op
  *
- * local_player_index@<ecx>, reset_flag@<eax>, mode_flags@<edx>.
+ * local_player_index, reset_flag, mode_flags.
  *
  * 0x874d0 / director.obj
  */

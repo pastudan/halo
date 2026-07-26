@@ -1409,8 +1409,8 @@ void effects_start_on_first_person_weapon(int local_player_index,
  * (0x9e180). Validates the forward vector, optionally transforms through the
  * node matrix, then builds a 4x3 orientation matrix at output+4 with position
  * embedded. */
-void FUN_0009e180(void *output, int16_t marker_index /* @<ax> */,
-                  void *creation_info /* @<ebx> */)
+void FUN_0009e180(void *output, int16_t marker_index ,
+                  void *creation_info )
 {
   int16_t count = *(int16_t *)((char *)creation_info + 0x8);
   int offset;

@@ -349,7 +349,7 @@ bool any_player_is_dead(void)
  *         combined_pvs.
  *   - Then OR in the cluster returned by 0x13DCC0 (the "currently focused
  *     parent object" cluster -- see objects.c FUN_0013dcc0) when valid. */
-void players_update_pvs(void *combined_pvs /* @<edi> */, bool local_player_only)
+void players_update_pvs(void *combined_pvs , bool local_player_only)
 {
   void *structure_bsp;
   data_iter_t iter;
@@ -497,7 +497,7 @@ bool player_examine_nearby_unit(int player_unit_handle, int nearby_unit_handle)
  * player_handle is passed in EAX (register argument).
  * Writes 0 to player+0x28 (action result type, word) and
  * NONE (-1) to player+0x24 (action result object, dword). */
-void player_reset_action_result(int player_handle /* @<eax> */)
+void player_reset_action_result(int player_handle )
 {
   char *player;
 
@@ -520,7 +520,7 @@ void player_reset_action_result(int player_handle /* @<eax> */)
  *
  * The action result object (player+0x24) is the vehicle or seat object
  * the player is interacting with. */
-bool player_try_to_enter_vehicle(int player_handle /* @<eax> */)
+bool player_try_to_enter_vehicle(int player_handle )
 {
   char *player;
   int *vehicle_obj;
@@ -989,7 +989,7 @@ common_tail:
  *   6,7 = default: return false
  *
  * Returns true on success, false otherwise. */
-bool player_try_to_spawn_in_vehicle(int player_handle /* @<eax> */)
+bool player_try_to_spawn_in_vehicle(int player_handle )
 {
   char *player;
   char *unit;
@@ -2467,7 +2467,7 @@ void FUN_000BB290(float *out_direction __attribute__((unused)))
  * The record's first 16-bit field (record[0], zero-extended) is passed as
  * FUN_0018ef00's first argument. Returns a normalized bool: 1 when index is
  * valid and FUN_0018ef00 returns nonzero, otherwise 0. */
-char FUN_000ba850(int16_t index /* @<ax> */, int object_handle)
+char FUN_000ba850(int16_t index , int object_handle)
 {
   void *scenario;
   unsigned short *element;
@@ -2496,7 +2496,7 @@ char FUN_000ba850(int16_t index /* @<ax> */, int object_handle)
  * camo-active flag, per player_set_respawn_timer) and clears the powerup-type
  * field at unit+0x3d2.  object_get_and_verify_type is called unconditionally,
  * before the branch, matching the original. */
-void FUN_000bb180(int player_handle /* @<eax> */,
+void FUN_000bb180(int player_handle ,
                                int16_t powerup_index)
 {
   char *player;
@@ -2519,7 +2519,7 @@ void FUN_000bb180(int player_handle /* @<eax> */,
  * biped/vehicle family).  When param2 is 0, ORs bit 0x20 into the unit flags
  * at +0x1b4.  object_get_and_verify_type is called unconditionally, before the
  * branch, matching the original. */
-void FUN_000bb1c0(int player_index /* @<eax> */, int16_t param2)
+void FUN_000bb1c0(int player_index , int16_t param2)
 {
   char *player;
   char *unit_obj;
@@ -2538,7 +2538,7 @@ void FUN_000bb1c0(int player_index /* @<eax> */, int16_t param2)
  * biped/vehicle family).  object_get_and_verify_type is called
  * unconditionally, before the branch, matching the original.  When param2 is
  * 0, clears bit 0x10 of the unit flags dword at +0x1b4. */
-void FUN_000bb1f0(int player_index /* @<eax> */, int16_t param2)
+void FUN_000bb1f0(int player_index , int16_t param2)
 {
   char *player;
   char *unit_obj;
@@ -4095,7 +4095,7 @@ void players_debug_render(void)
 
 /* Update one player's unit before game logic runs on the client (0xbc920).
  *
- * @<ebx> = player_index (register arg); object_handle and position are cdecl
+ *  = player_index (register arg); object_handle and position are cdecl
  * stack args (position is asserted non-NULL).  Looks up the player's unit and
  * decides whether it must be re-seated / repositioned this tick:
  *   - If the scenario cluster filter (players_globals+0x2a) is active and the
@@ -4107,7 +4107,7 @@ void players_debug_render(void)
  *   - Otherwise defer to FUN_000bb670 and record its bool result inverted
  *     into players_globals+0x2e.
  */
-void players_update_before_game_client(int player_index /* @<ebx> */,
+void players_update_before_game_client(int player_index ,
                                        int object_handle, void *position)
 {
   char *player;
@@ -5263,7 +5263,7 @@ void FUN_000bee00(int16_t function_index, int thread_datum, char init)
  * with hs_return's 2-dword cleanup; the context-pack ARG_COUNT warning on
  * 0xcbf80 ("cleanup=3 vs decl=2") is that merge, and the PUSH count proves
  * hs_return still takes exactly 2 args. Ghidra modeled this void(void), so the
- * three cdecl params showed up as in_stack_* — they are stack args, not @<reg>.
+ * three cdecl params showed up as in_stack_* — they are stack args, not.
  *
  * Callees (all cdecl, in kb.json):
  *   0xcc560  = hs_macro_function_evaluate(int16_t, int, char) -> record ptr
@@ -5314,7 +5314,7 @@ void FUN_000bee80(int16_t function_index, int thread_datum, char init)
  * on 0xcbf80 ("cleanup=3 vs decl=2") is that merge, and the PUSH count proves
  * hs_return still takes exactly 2 args (do NOT "fix" either decl). Ghidra
  * modeled this void(void), so the three cdecl params showed up as in_stack_*
- * — they are stack args, not @<reg>.
+ * — they are stack args, not.
  *
  * Callees (all cdecl, in kb.json):
  *   0xcc560  = hs_macro_function_evaluate(int16_t, int, char) -> record ptr
@@ -5364,7 +5364,7 @@ void FUN_000bef00(int16_t function_index, int thread_datum, char init)
  *   ("cleanup=3 vs decl=2") is that merge -- hs_return really takes 2 args,
  *   do NOT "fix" its decl. POP ESI; POP EBP; RET (no immediate -> cdecl).
  *   Ghidra modeled this void(void), so the three cdecl params appeared as
- *   in_stack_* pseudo-locals; they are stack args, not @<reg>.
+ *   in_stack_* pseudo-locals; they are stack args, not.
  *
  * Callees (all cdecl, in kb.json):
  *   0xcc560  = hs_macro_function_evaluate(int16_t, int, char) -> record ptr
@@ -6151,11 +6151,11 @@ void FUN_000bec70(int16_t function_index, int thread_handle)
  * matches its twins.
  *
  * Ghidra modelled this void(void), so the cdecl params surfaced as
- * in_stack_00000008 (off by 4 => [EBP+0xc]); they are STACK args, not @<reg>
+ * in_stack_00000008 (off by 4 => [EBP+0xc]); they are STACK args, not
  * (lift-learnings 31 / void-decl trap).  kb.json's decl was corrected from
  * `void(void)` to the 3-arg cdecl form as part of this lift.
  *
- * Callees (both cdecl, in kb.json, no @<reg> args):
+ * Callees (both cdecl, in kb.json, no args):
  *   0x1b2260 = scripting_magic_melee_attack(void)  -- no args, no ADD ESP
  *   0xcbf80  = hs_return(int thread_handle, int value) */
 void FUN_000bf5e0(int16_t function_index, int thread_datum, char init)
@@ -7480,7 +7480,7 @@ void FUN_000bedb0(int16_t function_index, int thread_datum, char init)
  * 2-dword cleanup; the context-pack ARG_COUNT warning on 0xcbf80 ("cleanup=4")
  * is that merge, and the PUSH count proves hs_return still takes exactly 2.
  * No FPU ops. Ghidra modeled this void(void): the three cdecl params were
- * unmodeled (in_stack_*), so all three come off the stack — no @<reg>.
+ * unmodeled (in_stack_*), so all three come off the stack — no.
  *
  * Callees (all cdecl, in kb.json):
  *   0xcc560  = hs_macro_function_evaluate(int16_t, int, char) -> record ptr

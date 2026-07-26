@@ -8,7 +8,7 @@
  * Source TU: bitmap_extract.c (assert strings confirm)
  * ABI: bitmap passed in EAX (@EAX), returns short (new bitmap index or -1).
  */
-short FUN_00075380(void *bitmap /* @<eax> */)
+short FUN_00075380(void *bitmap )
 {
   char *group;
   short bitmap_type;
@@ -1022,9 +1022,9 @@ void *FUN_00077590(void *bitmap)
  * averaging scale×scale source pixel blocks per output pixel.
  * Only includes non-transparent pixels in the average when alpha_weighted != 0.
  * brightness_adjust is added to the computed alpha channel value.
- * @<eax> = scale: box filter kernel size (must be >= 2).
+ *  = scale: box filter kernel size (must be >= 2).
  */
-void *FUN_00077720(short scale /* @<eax> */, void *source_bitmap,
+void *FUN_00077720(short scale , void *source_bitmap,
                    short brightness_adjust, char alpha_weighted)
 {
   unsigned short src_width;
@@ -1166,9 +1166,9 @@ void *FUN_00077720(short scale /* @<eax> */, void *source_bitmap,
  * source voxel blocks per output voxel. Only includes non-transparent voxels in
  * the average when alpha_weighted != 0. brightness_adjust is added to the
  * computed alpha channel value.
- * @<eax> = scale: box filter kernel size (must be >= 2).
+ *  = scale: box filter kernel size (must be >= 2).
  */
-void *FUN_000779b0(short scale /* @<eax> */, void *source_bitmap,
+void *FUN_000779b0(short scale , void *source_bitmap,
                    short brightness_adjust, char alpha_weighted)
 {
   unsigned short src_width;
@@ -1823,7 +1823,7 @@ void FUN_00078460(void *bitmap, short filter_radius, short *filter_coefficients)
  * filter_coefficients.
  */
 void FUN_00078b80(int filter_radius, short *filter_coefficients,
-                  void *bitmap /* @<esi> */)
+                  void *bitmap )
 {
   /* bitmap_verify(bitmap, TRUE) */
   if (!bitmap_verify(bitmap, 1)) {
@@ -1862,7 +1862,7 @@ void FUN_00078b80(int filter_radius, short *filter_coefficients,
  * negative_table.
  */
 void FUN_000790b0(int unused, int positive_table, int negative_table,
-                  void *bitmap /* @<esi> */)
+                  void *bitmap )
 {
   /* bitmap_verify(bitmap, TRUE) */
   if (!bitmap_verify(bitmap, 1)) {
@@ -1901,7 +1901,7 @@ void FUN_000790b0(int unused, int positive_table, int negative_table,
  * cube type, checks positive/negative table pointers, then prints warning and
  * returns. */
 void FUN_00079180(int unused, int positive_table, int negative_table,
-                  void *bitmap /* @<esi> */)
+                  void *bitmap )
 {
   if (!bitmap_verify(bitmap, 1)) {
     display_assert("bitmap_verify(bitmap, TRUE)",
@@ -1932,8 +1932,8 @@ void FUN_00079180(int unused, int positive_table, int negative_table,
  * (alpha==0), copies RGB from the first non-transparent neighbor found in the
  * 3x3 neighborhood. Runs `passes` iterations over the whole bitmap, writing
  * each pass into a temp buffer then memcpy'ing back.
- * @<eax> = passes (must be > 0). */
-void FUN_00079250(short passes /* @<eax> */, void *bitmap)
+ *  = passes (must be > 0). */
+void FUN_00079250(short passes , void *bitmap)
 {
   short width;
   short height;
@@ -2043,7 +2043,7 @@ void FUN_00079250(short passes /* @<eax> */, void *bitmap)
  *
  * ABI: bitmap passed in ESI (@ESI). One stack param: passes (short).
  */
-void FUN_00079590(short passes, void *bitmap /* @<esi> */)
+void FUN_00079590(short passes, void *bitmap )
 {
   /* bitmap_verify(bitmap, TRUE) */
   if (!bitmap_verify(bitmap, 1)) {
@@ -2080,7 +2080,7 @@ void FUN_00079590(short passes, void *bitmap /* @<esi> */)
  *
  * ABI: bitmap passed in ESI (@ESI). One stack param: bump_height (float).
  */
-void FUN_00079630(float bump_height, void *bitmap /* @<esi> */)
+void FUN_00079630(float bump_height, void *bitmap )
 {
   /* bitmap_verify(bitmap, TRUE) */
   if (!bitmap_verify(bitmap, 1)) {

@@ -15,7 +15,7 @@
  * The message buffer and its byte length are the only true stack args.
  * These register arguments are invisible in the Ghidra pseudocode (shown
  * as unaff_ESI / param_1) and were recovered from the disassembly
- * prologues.  The @<reg> annotations in kb.json encode this.
+ * prologues.  The annotations in kb.json encode this.
  *
  * Handlers for the message types owned by network_client_manager.obj
  * (FUN_00127260 game_advertise .. FUN_00127710 pregame_keep_alive) are

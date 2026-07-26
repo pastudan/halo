@@ -415,7 +415,7 @@ unsigned int sound_render_time(void)
  * then looks up the sound class definition for the tag's class index. If the
  * class definition's "suppress" byte (offset 0x28) is zero, the sound is
  * allowed to play. Returns true (1) if playable, false (0) otherwise. */
-bool sound_can_play(int sound_tag_index /* @<eax> */)
+bool sound_can_play(int sound_tag_index )
 {
   void *sound_tag;
   void *pitch_range_element;
@@ -442,7 +442,7 @@ bool sound_can_play(int sound_tag_index /* @<eax> */)
  * The channel count is stored at 0x4eb0b4
  * (sound_manager_globals.channel_count). Asserts that channel_index is in range
  * [0, channel_count). */
-void *sound_channel_get(short channel_index /* @<si> */)
+void *sound_channel_get(short channel_index )
 {
   assert_halt(channel_index >= 0 && channel_index < *(short *)0x4eb0b4);
 
@@ -452,7 +452,7 @@ void *sound_channel_get(short channel_index /* @<si> */)
 /* Return a pointer to the sound listener entry for a local player.
  * The listeners table lives at 0x4eaf58 with a stride of 0x44.
  * Asserts that listener_index is in [0, MAXIMUM_NUMBER_OF_LOCAL_PLAYERS). */
-void *sound_listener_get(short listener_index /* @<si> */)
+void *sound_listener_get(short listener_index )
 {
   short index = listener_index;
 
@@ -475,7 +475,7 @@ void *sound_listener_get(short listener_index /* @<si> */)
  *     resetting the accumulator to zero.
  *   - Returns 2 (reject) if no promotion sound, subtracting the interval.
  * Returns 0 if no promotion is needed. */
-int16_t sound_check_promotion(int sound_tag_index /* @<eax> */)
+int16_t sound_check_promotion(int sound_tag_index )
 {
   char *sound_tag;
   short promotion_count;
@@ -538,7 +538,7 @@ int16_t sound_check_promotion(int sound_tag_index /* @<eax> */)
  * sound_handle, checks sound_valid_for_channel and whether the tag_index
  * matches.  Matching channels are added to the definition list; if the
  * source field (+0x0c) also matches, they are added to the source list. */
-void sound_collect_like_sounds(int sound_handle, void *summary /* @<esi> */)
+void sound_collect_like_sounds(int sound_handle, void *summary )
 {
   char *sound_entry;
   char *sound_tag;
@@ -1054,7 +1054,7 @@ void sound_start_fade(short mode, float seconds, int fade_in_sound_index,
  * If the sound has a playing channel (playing_channel_index != NONE at +0x8c):
  *   1. Clear the channel's sound_handle to NONE (-1) in the channel table
  *      at 0x4fc3a0 (stride 0x18).
- *   2. Call sound_channel_stop (0x1cc140, @<di>) to release cache-sound
+ *   2. Call sound_channel_stop (0x1cc140, ) to release cache-sound
  *      references and stop the hardware channel.
  *   3. Clear the sound's playing_channel_index to NONE.
  *
@@ -1071,7 +1071,7 @@ void sound_start_fade(short mode, float seconds, int fade_in_sound_index,
  * Clear the sound tag's last-played field (+0x94) if it matches sound_handle.
  * Assert that the sound's playing_channel_index is NONE after processing.
  * Finally, delete the sound datum from the sounds table (0x4fdba4). */
-void sound_stop_channel(int sound_handle /* @<ebx> */)
+void sound_stop_channel(int sound_handle )
 {
   char *sound_entry;
   void *tag_ptr;
@@ -1372,14 +1372,14 @@ void sound_update_channel(int channel_index, float attenuation)
  *
  * Phase 2 — instance limiting (only if playing_channel_index != -1):
  *   Collects a summary of similar sounds via sound_collect_like_sounds
- *   (0x1cbd30, @<esi>).  If the like_source_count has reached
+ *   (0x1cbd30, ).  If the like_source_count has reached
  *   max_source_instance_count, searches the source channel list for the
  *   oldest to steal.  Otherwise, if the like_definition_count has reached
  *   max_instance_count, searches the definition channel list.  If a
  *   stealable channel is found, stops its sound; if not, stops our own.
  *
  * sound_handle passed in EAX (register argument). */
-void sound_start_next_looping_permutation(int sound_handle /* @<eax> */)
+void sound_start_next_looping_permutation(int sound_handle )
 {
   char *sound_entry;
   void *sound_tag;
@@ -1480,7 +1480,7 @@ void sound_stop_impulse(int sound_index)
  *     0x1c8310 to evaluate channel suitability. Returns the best channel
  *     index, or -1 if priority^2 < min distance or source[0x3c] == 1.0f.
  */
-int16_t sound_allocate_channel(void *source /* @<eax> */, float priority)
+int16_t sound_allocate_channel(void *source , float priority)
 {
   short spatialization_mode;
   int best_channel;
@@ -1548,7 +1548,7 @@ int16_t sound_allocate_channel(void *source /* @<eax> */, float priority)
  * cached.
  *
  * Parameters:
- *   sound_tag_handle  (@<eax>) — tag index of the sound definition (snd!)
+ *   sound_tag_handle  () — tag index of the sound definition (snd!)
  *   looping_handle    — datum handle of the parent looping sound source
  *   track_index       — which track within the looping sound (16-bit)
  *   type              — sound entry type/class (16-bit)
@@ -1568,7 +1568,7 @@ int16_t sound_allocate_channel(void *source /* @<eax> */, float priority)
  *   8. Select pitch range and permutation from the tag.
  *   9. Resolve the permutation's tag block element and request sound cache.
  *  10. Increment the looping sound source's reference count (+0x50). */
-int sound_create_looping_entry(int sound_tag_handle /* @<eax> */,
+int sound_create_looping_entry(int sound_tag_handle ,
                                int looping_handle, int track_index, int type)
 {
   char *looping_source;
@@ -2200,9 +2200,9 @@ done:
  *
  *   1. Resolves the sound datum and its tag, then updates the channel's
  *      attenuation curve via sound_update_channel_attenuation (0x1cc310,
- *      @<eax>). If the computed attenuation and the sound entry's target
+ *      ). If the computed attenuation and the sound entry's target
  *      attenuation (sound_entry+0xa0) both reach 0.0f, the sound has
- *      faded out — stop it via sound_stop_channel (0x1cca60, @<ebx>)
+ *      faded out — stop it via sound_stop_channel (0x1cca60, )
  *      and mark the channel free (-1).
  *   2. Otherwise, dispatches on the sound's spatialization mode
  *      (sound_entry+0x14). Two top-level branches select on the channel
@@ -2216,7 +2216,7 @@ done:
  *          world-space position.
  *        - BIT CLEAR: compute an audible-volume scalar. Copy the source
  *          position, then for mode 1 fetch the listener via
- *          sound_listener_get (0x1cbac0, @<si>) and transform the
+ *          sound_listener_get (0x1cbac0, ) and transform the
  *          position through real_matrix3x3_transform_point (0x1096e0).
  *          For modes 1 and 2, scale the current attenuation by
  *          1 - (sqrt(|pos|^2) - min_dist) / (max_dist - min_dist) using

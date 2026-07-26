@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 import sys, os
 _tools_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _tools_dir not in sys.path:

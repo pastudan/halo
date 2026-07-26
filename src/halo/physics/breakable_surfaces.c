@@ -1179,7 +1179,7 @@ void FUN_00145660(int object_handle __attribute__((unused)),
       : "memory");
 }
 #else
-void FUN_00145660(int object_handle /* @<eax> */, int animation_graph_tag,
+void FUN_00145660(int object_handle , int animation_graph_tag,
                   const char *anim_name, int16_t frame)
 {
   char *obj;

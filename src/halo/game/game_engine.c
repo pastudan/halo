@@ -239,7 +239,7 @@ void game_engine_remove_dropped_weapons(void)
 /* If the flag weapon is loose (no parent vehicle, no carried bit) and has
  * bit 0x20 at offset 0x1dc set, clear that bit and notify the game engine
  * via vtable slot 16. weapon_index passed in ESI (register arg). */
-void game_engine_update_flag_state(int weapon_index /* @<esi> */)
+void game_engine_update_flag_state(int weapon_index )
 {
   char *obj;
 
@@ -1311,7 +1311,7 @@ game_variant_t *game_engine_team_race_default(game_variant_t *variant)
 
 /* Check if any of the 4 gamepads has the specified button pressed.
  * button_index passed in EDI (register arg). Returns true on first hit. */
-bool game_engine_check_input_button(int button_index /* @<edi> */)
+bool game_engine_check_input_button(int button_index )
 {
   int i;
 
@@ -2798,7 +2798,7 @@ void game_engine_validate_map_netgame_flags(void)
   int found_index;
   void (*validate_duplicate_flags)(short, const char *) =
     (void (*)(short, const char *))0xaa010;
-  /* FUN_000aa0b0 has game_type@<bx> — must call by name, not raw cast */
+  /* FUN_000aa0b0 has game_type — must call by name, not raw cast */
   void (*validate_spawn_points)(short, int, short, const char *) =
     (void (*)(short, int, short, const char *))0xae400;
   int (*matches_game_type)(int, int, void *) =
@@ -3724,7 +3724,7 @@ wchar_t *FUN_000b1e40(int team_index, wchar_t *dst)
 /* Play the score sound for the given event index. Looks up the sound
  * tag from game_globals multiplayer_information sounds block.
  * event_index passed in ESI (register arg). */
-void game_engine_play_score_sound(int event_index /* @<esi> */)
+void game_engine_play_score_sound(int event_index )
 {
   void *globals;
   void *mp_info;
@@ -3774,7 +3774,7 @@ void game_engine_score_tick(void)
 
 /* Return the duration in ticks of the score sound at event_index.
  * event_index passed in ESI (register arg). */
-int game_engine_get_score_sound_duration(int event_index /* @<esi> */)
+int game_engine_get_score_sound_duration(int event_index )
 {
   void *globals;
   void *mp_info;
@@ -5642,8 +5642,8 @@ void game_show_score_you_ally_enemy(int param_1, int param_2, int param_3, int p
 
 
 /* Find a player whose biped is carrying weapon_handle.
- * weapon_handle passed via @<edi> — set by FUN_000b0c10 before the call. */
-int FUN_000b0100(int weapon_handle /* @<edi> */)
+ * weapon_handle passed via — set by FUN_000b0c10 before the call. */
+int FUN_000b0100(int weapon_handle )
 {
   data_iter_t iter;
   int player;
@@ -7550,7 +7550,7 @@ void FUN_000b1600(int param_1)
 }
 
 /* Oddball: increment score for a player holding the ball (b2740).
- * player_handle arrives in EAX (kb @<eax>): the unported ball-carrier
+ * player_handle arrives in EAX (kb): the unported ball-carrier
  * tick FUN_000b2810 tail-jumps here with MOV EAX,ESI.
  * The original RE-READS [0x456e08] and the team score before each of
  * the three checks (game_engine_post_event can mutate them) — do not
@@ -8245,9 +8245,9 @@ void FUN_000b39a0(int player_handle)
 }
 
 /* CTF: check if position is within radius of a team's flag.
- * EAX = team_index (@<eax>), ECX = position ptr (@<ecx> — TEST ECX,ECX at
+ * EAX = team_index (), ECX = position ptr ( — TEST ECX,ECX at
  * 0xb0a75, FSUB [ECX] at 0xb0a86), [EBP+8] = radius (FLD [EBP+8] at 0xb0a4).
- * kb.json decl updated to add @<ecx> on position. */
+ * kb.json decl updated to add on position. */
 char FUN_000b0a70(int team_index, float *position, float radius)
 {
   float *flag_pos;
