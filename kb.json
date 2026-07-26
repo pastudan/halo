@@ -39336,7 +39336,7 @@
         {
           "addr": "0x1393b0",
           "decl": "float object_get_self_illumination(int object_handle);",
-          "ported": false,
+          "ported": true,
           "name": "object_get_self_illumination"
         }
       ],
