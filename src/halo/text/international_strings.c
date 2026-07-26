@@ -839,41 +839,145 @@ void FUN_0019c960(void *callback __attribute__((unused)), void *screen_pos __att
 #endif
 
 
-/* 0x19ccf0 */
+/* FUN_0019ccf0 (0x19ccf0) — XBE naked draft (batch 267). */
+#if defined(__clang__)
+static void * (*const b19ccf0_c19bcc0)(int16_t style, int font_index) = FUN_0019bcc0;
+static void (*const b19ccf0_c19c5d0)(void *callback, void *screen_pos, const void *color, void *clip_bounds, int flags, char *text) = FUN_0019c5d0;
+
+__attribute__((naked, noinline))
 void FUN_0019ccf0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  FUN_0019bcc0(edi, 0);
-  /* mem[0x004d9b04] = eax */
-  FUN_0019c5d0((void *)0x0019b3c0, (void *)(uintptr_t)esi, (void *)(uintptr_t)ecx, (void *)0, 0, (char *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl $0x7fff, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x4d9b14, %%esi\n\t"
+      "movw %%ax, 0x4d9afc\n\t"
+      "movw %%ax, 0x4d9afe\n\t"
+      "movl $0xffff8000, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x4d9b0c, %%edi\n\t"
+      "movw %%ax, 0x4d9b00\n\t"
+      "movw %%ax, 0x4d9b02\n\t"
+      "call *%[c19bcc0]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl %%eax, 0x4d9b04\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "leal 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x19b3c0\n\t"
+      "call *%[c19c5d0]\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movw %%cx, 0x2(%%eax)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "incl %%ecx\n\t"
+      "movw %%cx, 0x6(%%eax)\n\t"
+      "movl 0x4d9b04, %%edi\n\t"
+      "movw 0xa(%%ebp), %%cx\n\t"
+      "movw %%cx, %%dx\n\t"
+      "subw 0x4(%%edi), %%dx\n\t"
+      "popl %%edi\n\t"
+      "movw %%dx, (%%eax)\n\t"
+      "movl 0x4d9b04, %%edx\n\t"
+      "movw 0x6(%%edx), %%dx\n\t"
+      "addw %%cx, %%dx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movw %%dx, 0x4(%%eax)\n\t"
+      "movw 0x4d9afe, %%dx\n\t"
+      "movw %%dx, 0x2(%%ecx)\n\t"
+      "movw (%%esi), %%dx\n\t"
+      "movw %%dx, (%%ecx)\n\t"
+      "movw 0x4d9b02, %%dx\n\t"
+      "movw %%dx, 0x6(%%ecx)\n\t"
+      "movw 0x4(%%eax), %%ax\n\t"
+      "movw %%ax, 0x4(%%ecx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c19bcc0] "m"(b19ccf0_c19bcc0), [c19c5d0] "m"(b19ccf0_c19c5d0)
+      : "memory");
 }
+#else
+#error "FUN_0019ccf0: clang naked draft required"
+#endif
 
-/* 0x19cdb0 */
-void FUN_0019cdb0(short *out_rect, void *text, short *out_bounds, short *in_rect)
+
+/* FUN_0019cdb0 (0x19cdb0) — XBE naked draft (batch 267). */
+#if defined(__clang__)
+static void * (*const b19cdb0_c19bcc0)(int16_t style, int font_index) = FUN_0019bcc0;
+static void (*const b19cdb0_c19c960)(void *callback, void *screen_pos, const void *color, void *clip_bounds, int flags, unsigned short *text) = FUN_0019c960;
+
+__attribute__((naked, noinline))
+void FUN_0019cdb0(short *out_rect __attribute__((unused)), void *text __attribute__((unused)), short *out_bounds __attribute__((unused)), short *in_rect __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  FUN_0019bcc0(edi, 0);
-  /* mem[0x004d9b04] = eax */
-  FUN_0019c960((void *)0x0019b3c0, (void *)(uintptr_t)esi, (void *)(uintptr_t)ecx, (void *)0, 0, (void *)(uintptr_t)eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl $0x7fff, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x4d9b14, %%esi\n\t"
+      "movw %%ax, 0x4d9afc\n\t"
+      "movw %%ax, 0x4d9afe\n\t"
+      "movl $0xffff8000, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x4d9b0c, %%edi\n\t"
+      "movw %%ax, 0x4d9b00\n\t"
+      "movw %%ax, 0x4d9b02\n\t"
+      "call *%[c19bcc0]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl %%eax, 0x4d9b04\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "leal 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x19b3c0\n\t"
+      "call *%[c19c960]\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movw %%cx, 0x2(%%eax)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "incl %%ecx\n\t"
+      "movw %%cx, 0x6(%%eax)\n\t"
+      "movl 0x4d9b04, %%edi\n\t"
+      "movw 0xa(%%ebp), %%cx\n\t"
+      "movw %%cx, %%dx\n\t"
+      "subw 0x4(%%edi), %%dx\n\t"
+      "popl %%edi\n\t"
+      "movw %%dx, (%%eax)\n\t"
+      "movl 0x4d9b04, %%edx\n\t"
+      "movw 0x6(%%edx), %%dx\n\t"
+      "addw %%cx, %%dx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movw %%dx, 0x4(%%eax)\n\t"
+      "movw 0x4d9afe, %%dx\n\t"
+      "movw %%dx, 0x2(%%ecx)\n\t"
+      "movw (%%esi), %%dx\n\t"
+      "movw %%dx, (%%ecx)\n\t"
+      "movw 0x4d9b02, %%dx\n\t"
+      "movw %%dx, 0x6(%%ecx)\n\t"
+      "movw 0x4(%%eax), %%ax\n\t"
+      "movw %%ax, 0x4(%%ecx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c19bcc0] "m"(b19cdb0_c19bcc0), [c19c960] "m"(b19cdb0_c19c960)
+      : "memory");
 }
+#else
+#error "FUN_0019cdb0: clang naked draft required"
+#endif
+
 
 /* 0x19ce70 */
 void FUN_0019ce70(void)
@@ -1063,73 +1167,206 @@ void umemchr(void)
   (void)edi;
 }
 
-/* 0x19d4f0 */
+/* umemcpy (0x19d4f0) — XBE naked draft (batch 261). */
+#if defined(__clang__)
+static void (*const b19d4f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19d4f0_exitfn)(int) = system_exit;
+static void * (*const b19d4f0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+
+__attribute__((naked, noinline))
 void umemcpy(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test ebx, ebx -> jne 0x19d521 */
-  display_assert((char *)0x002b4660, (char *)0x002b45b4, 96, 0);
-  system_exit(0);
-  /* cmp edi, 0x10000000 -> jb 0x19d549 */
-  display_assert((char *)0x002b4628, (char *)0x002b45b4, 97, 0);
-  system_exit(0);
-  /* cmp eax, esi -> jbe 0x19d574 */
-  /* cmp ecx, ebx -> jbe 0x19d574 */
-  display_assert((char *)0x002b45d8, (char *)0x002b45b4, 98, 0);
-  system_exit(0);
-  csmemcpy((void *)(uintptr_t)esi, (void *)(uintptr_t)ebx, edi);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .Lumemcpy_1\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lumemcpy_2\n\t"
+      ".Lumemcpy_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x60\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4660\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lumemcpy_2:\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "cmpl $0x10000000, %%edi\n\t"
+      "jb .Lumemcpy_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x61\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4628\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lumemcpy_3:\n\t"
+      "leal (%%ebx,%%edi,1), %%eax\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jbe .Lumemcpy_4\n\t"
+      "leal (%%esi,%%edi,1), %%ecx\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "jbe .Lumemcpy_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x62\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b45d8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lumemcpy_4:\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19d4f0_assert), [exitfn] "m"(b19d4f0_exitfn), [c8e0b0] "m"(b19d4f0_c8e0b0)
+      : "memory");
 }
+#else
+#error "umemcpy: clang naked draft required"
+#endif
 
-/* 0x19d590 */
+
+/* umemcmp (0x19d590) — XBE naked draft (batch 268). */
+#if defined(__clang__)
+static void (*const b19d590_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19d590_exitfn)(int) = system_exit;
+static int (*const b19d590_c8da40)(const void *a, const void *b, int size) = csmemcmp;
+
+__attribute__((naked, noinline))
 void umemcmp(void)
 {
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test ebx, ebx -> jne 0x19d5c1 */
-  display_assert((char *)0x002b469c, (char *)0x002b45b4, 109, 0);
-  system_exit(0);
-  /* cmp edi, 0x10000000 -> jbe 0x19d5e9 */
-  display_assert((char *)0x002b466c, (char *)0x002b45b4, 110, 0);
-  system_exit(0);
-  csmemcmp((void *)(uintptr_t)esi, (void *)(uintptr_t)ebx, 0);
-
-  (void)ebx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .Lumemcmp_1\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lumemcmp_2\n\t"
+      ".Lumemcmp_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6d\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b469c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lumemcmp_2:\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "cmpl $0x10000000, %%edi\n\t"
+      "jbe .Lumemcmp_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6e\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b466c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lumemcmp_3:\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8da40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19d590_assert), [exitfn] "m"(b19d590_exitfn), [c8da40] "m"(b19d590_c8da40)
+      : "memory");
 }
+#else
+#error "umemcmp: clang naked draft required"
+#endif
 
-/* 0x19d600 */
+
+/* umemmove (0x19d600) — XBE naked draft (batch 268). */
+#if defined(__clang__)
+static void (*const b19d600_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19d600_exitfn)(int) = system_exit;
+static void (*const b19d600_c8dae0)(void *dest, const void *src, unsigned int size) = csmemmove;
+
+__attribute__((naked, noinline))
 void umemmove(void)
 {
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test ebx, ebx -> jne 0x19d631 */
-  display_assert((char *)0x002b4660, (char *)0x002b45b4, 121, 0);
-  system_exit(0);
-  /* cmp edi, 0x10000000 -> jbe 0x19d659 */
-  display_assert((char *)0x002b46b0, (char *)0x002b45b4, 122, 0);
-  system_exit(0);
-  csmemmove((void *)(uintptr_t)esi, (void *)(uintptr_t)ebx, edi);
-
-  (void)ebx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "je .Lumemmove_1\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lumemmove_2\n\t"
+      ".Lumemmove_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x79\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4660\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lumemmove_2:\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "cmpl $0x10000000, %%edi\n\t"
+      "jbe .Lumemmove_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x7a\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b46b0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lumemmove_3:\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8dae0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19d600_assert), [exitfn] "m"(b19d600_exitfn), [c8dae0] "m"(b19d600_c8dae0)
+      : "memory");
 }
+#else
+#error "umemmove: clang naked draft required"
+#endif
+
 
 /* 0x19d670 */
 void umemset(void)
@@ -1174,88 +1411,78 @@ void align_to_character(void)
   (void)edi;
 }
 
-/* 0x19d760 */
+/* ustrcat (0x19d760) — XBE naked draft (batch 264). */
+#if defined(__clang__)
+static void (*const b19d760_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19d760_exitfn)(int) = system_exit;
+static size_t (*const b19d760_c1db11e)(const wchar_t *str) = _wcslen;
+static void (*const b19d760_c1db156)(void) = _wcscat;
+
+__attribute__((naked, noinline))
 void ustrcat(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test edi, edi -> jne 0x19d793 */
-  display_assert((char *)0x002b4660, (char *)0x002b45b4, 157, 0);
-  system_exit(0);
-  _wcslen((wchar_t *)(uintptr_t)esi);
-  /* cmp eax, 0x8000 -> jb 0x19d7c3 */
-  display_assert((char *)0x002b47b4, (char *)0x002b45b4, 158, 0);
-  system_exit(0);
-  _wcslen((wchar_t *)(uintptr_t)edi);
-  /* cmp eax, 0x8000 -> jb 0x19d7f3 */
-  display_assert((char *)0x002b4790, (char *)0x002b45b4, 159, 0);
-  system_exit(0);
-  _wcscat();
-  /* test edi, edi -> jne 0x19d843 */
-  display_assert((char *)0x002b4828, (char *)0x002b45b4, 181, 0);
-  system_exit(0);
-  _wcslen((wchar_t *)(uintptr_t)esi);
-  /* cmp eax, 0x8000 -> jb 0x19d873 */
-  display_assert((char *)0x002b4800, (char *)0x002b45b4, 182, 0);
-  system_exit(0);
-  _wcslen((wchar_t *)(uintptr_t)edi);
-  /* cmp eax, 0x8000 -> jb 0x19d8a3 */
-  display_assert((char *)0x002b47d8, (char *)0x002b45b4, 183, 0);
-  system_exit(0);
-  _wcscmp((wchar_t *)(uintptr_t)esi, (wchar_t *)(uintptr_t)edi);
-  /* test esi, esi -> jne 0x19d8eb */
-  display_assert((char *)0x0027b838, (char *)0x002b45b4, 194, 0);
-  system_exit(0);
-  _wcslen((wchar_t *)(uintptr_t)esi);
-  /* cmp esi, 0x8000 -> jb 0x19d91e */
-  display_assert((char *)0x002b483c, (char *)0x002b45b4, 196, 0);
-  system_exit(0);
-  /* test edi, edi -> jne 0x19d95e */
-  display_assert((char *)0x0027b838, (char *)0x002b45b4, 208, 0);
-  system_exit(0);
-  /* test eax, eax -> jbe 0x19d99d */
-  /* test (int16_t)ecx, (int16_t)ecx -> je 0x19d975 */
-  /* cmp esi, eax -> jb 0x19d965 */
-  /* cmp esi, 0x8000 -> jb 0x19d99d */
-  display_assert((char *)0x002b483c, (char *)0x002b45b4, 214, 0);
-  system_exit(0);
-  /* test esi, esi -> jne 0x19d9db */
-  display_assert((char *)0x0027b838, (char *)0x002b45b4, 224, 0);
-  system_exit(0);
-  _wcslen((wchar_t *)(uintptr_t)esi);
-  /* cmp eax, 0x8000 -> jb 0x19da0b */
-  display_assert((char *)0x002b4858, (char *)0x002b45b4, 225, 0);
-  system_exit(0);
-  _wcschr((wchar_t *)(uintptr_t)esi, eax);
-  /* test edi, edi -> jne 0x19da53 */
-  display_assert((char *)0x002b4828, (char *)0x002b45b4, 235, 0);
-  system_exit(0);
-  _wcslen((wchar_t *)(uintptr_t)esi);
-  /* cmp eax, 0x8000 -> jb 0x19da83 */
-  display_assert((char *)0x002b4800, (char *)0x002b45b4, 236, 0);
-  system_exit(0);
-  _wcslen((wchar_t *)(uintptr_t)edi);
-  /* cmp eax, 0x8000 -> jb 0x19dab3 */
-  display_assert((char *)0x002b47d8, (char *)0x002b45b4, 237, 0);
-  system_exit(0);
-  FUN_001dbfa7((wchar_t *)(uintptr_t)esi, (wchar_t *)(uintptr_t)edi);
-  /* test edi, edi -> jne 0x19db03 */
-  display_assert((char *)0x002b48ac, (char *)0x002b45b4, 247, 0);
-  system_exit(0);
-  _wcslen((wchar_t *)(uintptr_t)esi);
-  /* cmp eax, 0x8000 -> jb 0x19db33 */
-  display_assert((char *)0x002b4858, (char *)0x002b45b4, 248, 0);
-  system_exit(0);
-  _wcslen((wchar_t *)(uintptr_t)edi);
-  /* cmp eax, 0x8000 -> jb 0x19db63 */
-  display_assert((char *)0x002b4880, (char *)0x002b45b4, 249, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "je .Lustrcat_1\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lustrcat_2\n\t"
+      ".Lustrcat_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9d\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4660\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lustrcat_2:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1db11e]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x8000, %%eax\n\t"
+      "jb .Lustrcat_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9e\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b47b4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lustrcat_3:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1db11e]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x8000, %%eax\n\t"
+      "jb .Lustrcat_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9f\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4790\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lustrcat_4:\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1db156]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19d760_assert), [exitfn] "m"(b19d760_exitfn), [c1db11e] "m"(b19d760_c1db11e), [c1db156] "m"(b19d760_c1db156)
+      : "memory");
 }
+#else
+#error "ustrcat: clang naked draft required"
+#endif
+

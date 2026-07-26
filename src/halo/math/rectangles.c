@@ -1642,26 +1642,123 @@ void FUN_00108c60(void)
 #endif
 
 
-/* 0x108cd0 */
+/* FUN_00108cd0 (0x108cd0) — XBE naked draft (batch 266). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00108cd0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "movw (%%esi), %%dx\n\t"
+      "xorb %%al, %%al\n\t"
+      "cmpw 0x2(%%ecx), %%dx\n\t"
+      "jl .LFUN_00108cd0_1\n\t"
+      "cmpw 0x6(%%ecx), %%dx\n\t"
+      "jge .LFUN_00108cd0_1\n\t"
+      "movw 0x2(%%esi), %%dx\n\t"
+      "cmpw (%%ecx), %%dx\n\t"
+      "jl .LFUN_00108cd0_1\n\t"
+      "cmpw 0x4(%%ecx), %%dx\n\t"
+      "jge .LFUN_00108cd0_1\n\t"
+      "movb $1, %%al\n\t"
+      ".LFUN_00108cd0_1:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00108cd0: clang naked draft required"
+#endif
 
-/* 0x108d00 */
+
+/* FUN_00108d00 (0x108d00) — XBE naked draft (batch 263). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00108d00(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movw 0x2(%%eax), %%dx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "cmpw 0x2(%%ecx), %%dx\n\t"
+      "jl .LFUN_00108d00_1\n\t"
+      "movw 0x6(%%eax), %%dx\n\t"
+      "cmpw 0x6(%%ecx), %%dx\n\t"
+      "jg .LFUN_00108d00_1\n\t"
+      "movw (%%eax), %%dx\n\t"
+      "cmpw (%%ecx), %%dx\n\t"
+      "jl .LFUN_00108d00_1\n\t"
+      "movw 0x4(%%eax), %%ax\n\t"
+      "cmpw 0x4(%%ecx), %%ax\n\t"
+      "jg .LFUN_00108d00_1\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00108d00_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00108d00: clang naked draft required"
+#endif
 
-/* 0x108d40 */
+
+/* FUN_00108d40 (0x108d40) — XBE naked draft (batch 263). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00108d40(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movw 0x2(%%eax), %%dx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "cmpw 0x2(%%ecx), %%dx\n\t"
+      "jne .LFUN_00108d40_1\n\t"
+      "movw 0x6(%%eax), %%dx\n\t"
+      "cmpw 0x6(%%ecx), %%dx\n\t"
+      "jne .LFUN_00108d40_1\n\t"
+      "movw (%%eax), %%dx\n\t"
+      "cmpw (%%ecx), %%dx\n\t"
+      "jne .LFUN_00108d40_1\n\t"
+      "movw 0x4(%%eax), %%ax\n\t"
+      "cmpw 0x4(%%ecx), %%ax\n\t"
+      "jne .LFUN_00108d40_1\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00108d40_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00108d40: clang naked draft required"
+#endif
+
 
 /* 0x108d80 */
 void FUN_00108d80(void)

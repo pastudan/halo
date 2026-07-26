@@ -1222,34 +1222,154 @@ void bitmap_3d_compress_to_mipmap(void)
 #endif
 
 
-/* 0x7c490 */
+/* FUN_0007c490 (0x7c490) — XBE naked draft (batch 263). */
+#if defined(__clang__)
+static float * (*const b7c490_c7c270)(float *out_color, uint32_t flags, float *rgb_lower_bound, float *rgb_upper_bound, float blend) = FUN_0007c270;
+static bool (*const b7c490_c7b020)(float *rgb) = valid_real_rgb_color;
+static char * (*const b7c490_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b7c490_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b7c490_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_0007c490(void)
 {
-  int eax = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  FUN_0007c270((float *)(uintptr_t)esi, eax, (float *)(uintptr_t)edx, (float *)0, 0.0f);
-  /* test edi, edi -> je 0x7c593 */
-  valid_real_rgb_color((float *)(uintptr_t)edi);
-  /* test (char)eax, (char)eax -> jne 0x7c519 */
-  csprintf((char *)0x005ab100, (char *)0x0026488c);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-  /* test (char)eax, 0x41 -> je 0x7c551 */
-  /* test (char)eax, 0x41 -> je 0x7c551 */
-  valid_real_rgb_color((float *)(uintptr_t)esi);
-  /* test (char)eax, (char)eax -> jne 0x7c5e9 */
-  csprintf((char *)0x005ab100, (char *)0x0026488c);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x14(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "leal 0x4(%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "addl $4, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c7c270]\n\t"
+      "movl 0x18(%%ebp), %%edi\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LFUN_0007c490_4\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c7b020]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0007c490_1\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x96e\n\t"
+      "pushl $0x2641f0\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x2648c8\n\t"
+      "pushl $0x26488c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0007c490_1:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "flds (%%ecx)\n\t"
+      "fcomps 0x253f44\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_0007c490_2\n\t"
+      "flds (%%ebx)\n\t"
+      "fcomps 0x253f44\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_0007c490_2\n\t"
+      "flds (%%esi)\n\t"
+      "fmuls (%%edi)\n\t"
+      "fstps (%%esi)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "fstps 0x4(%%esi)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "jmp .LFUN_0007c490_3\n\t"
+      ".LFUN_0007c490_2:\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs 0x1c(%%ebp)\n\t"
+      "fmuls (%%ecx)\n\t"
+      "flds 0x1c(%%ebp)\n\t"
+      "fmuls (%%ebx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x2533c8\n\t"
+      "fsub %%st(1), %%st(0)\n\t"
+      "fld %%st(1)\n\t"
+      "fmuls (%%esi)\n\t"
+      "fld %%st(1)\n\t"
+      "fmuls (%%edi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps (%%esi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "fld %%st(2)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps 0x4(%%esi)\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      ".LFUN_0007c490_3:\n\t"
+      "fstps 0x8(%%esi)\n\t"
+      ".LFUN_0007c490_4:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c7b020]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0007c490_5\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x982\n\t"
+      "pushl $0x2641f0\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x264870\n\t"
+      "pushl $0x26488c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0007c490_5:\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c7c270] "m"(b7c490_c7c270), [c7b020] "m"(b7c490_c7b020), [c8d9d0] "m"(b7c490_c8d9d0), [assert] "m"(b7c490_assert), [exitfn] "m"(b7c490_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_0007c490: clang naked draft required"
+#endif
+
 
 /* bitmap_format_to_a8r8g8b8 (0x7d0d0) — XBE naked draft (batch 244). */
 #if defined(__clang__)
@@ -2120,23 +2240,64 @@ int bitmap_get_pixel_count(void *bitmap)
   (void)edi;
 }
 
-/* 0x7e040 */
-int bitmap_get_pixel_data_size(void *bitmap_data)
+/* bitmap_get_pixel_data_size (0x7e040) — XBE naked draft (batch 268). */
+#if defined(__clang__)
+static bool (*const b7e040_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
+static void (*const b7e040_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b7e040_exitfn)(int) = system_exit;
+static int (*const b7e040_c7dfe0)(void *bitmap) = bitmap_get_pixel_count;
+static short (*const b7e040_c7c840)(short format) = bitmap_format_bits_per_pixel;
+
+__attribute__((naked, noinline))
+int bitmap_get_pixel_data_size(void *bitmap_data __attribute__((unused)))
 {
-  int eax = 0;
-  int esi = 0;
-
-  bitmap_verify((void *)(uintptr_t)esi, 0);
-  /* test (char)eax, (char)eax -> jne 0x7e077 */
-  display_assert((char *)0x00264da0, (char *)0x00264a74, 906, 0);
-  system_exit(0);
-  bitmap_get_pixel_count((void *)(uintptr_t)esi);
-  bitmap_format_bits_per_pixel(0);
-  return 0;
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c7d470]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lbitmap_get_pixel_data_size_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x38a\n\t"
+      "pushl $0x264a74\n\t"
+      "pushl $0x264da0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbitmap_get_pixel_data_size_1:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c7dfe0]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0xc(%%esi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c7c840]\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "imull %%edi, %%eax\n\t"
+      "cdq\n\t"
+      "addl $8, %%esp\n\t"
+      "andl $7, %%edx\n\t"
+      "addl %%edx, %%eax\n\t"
+      "popl %%edi\n\t"
+      "sarl $3, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c7d470] "m"(b7e040_c7d470), [assert] "m"(b7e040_assert), [exitfn] "m"(b7e040_exitfn), [c7dfe0] "m"(b7e040_c7dfe0), [c7c840] "m"(b7e040_c7c840)
+      : "memory");
 }
+#else
+#error "bitmap_get_pixel_data_size: clang naked draft required"
+#endif
+
 
 /* 0x7e0b0 */
 void *bitmap_2d_new(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format)

@@ -3995,57 +3995,124 @@ int FUN_0012f3f0(int server, int machine, void *message)
   return result;
 }
 
-/* Broadcast a message to all connected client machines (0x12f430).
- * Iterates 4 machine slots, checks each is valid and alive, then copies
- * and sends the message. Returns false if any write fails. */
-__declspec(noinline) bool FUN_0012f430(void *server, void *message)
+/* FUN_0012f430 (0x12f430) — XBE naked draft (batch 262). */
+#if defined(__clang__)
+static void (*const b12f430_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b12f430_exitfn)(int) = system_exit;
+static int (*const b12f430_c12d450)(int server, int machine_index) = network_game_server_get_client_machine_at_index;
+static bool (*const b12f430_c12c500)(int server, int machine) = network_game_server_client_machine_is_joined_to_game;
+static int (*const b12f430_c12d3b0)(void *machine) = network_game_server_adjust_machine_settings;
+static bool (*const b12f430_c128660)(int connection) = network_connection_active;
+static void * (*const b12f430_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static bool (*const b12f430_c128e00)(void *connection, void *message, unsigned short size, int dest_address, bool reliable) = network_connection_write;
+static void (*const b12f430_c12b650)(const char *fmt, ...) = network_game_log;
+
+__attribute__((naked, noinline))
+bool FUN_0012f430(void *server __attribute__((unused)), void *message __attribute__((unused)))
 {
-  char local_buf[0x600];
-  bool result;
-  int i;
-  unsigned short msg_len;
-  int machine;
-  int connection;
-
-  result = true;
-  if (!server || !message) {
-    display_assert(
-      "server && message",
-      "c:\\halo\\SOURCE\\networking\\network_server_message_handler.c", 0x187,
-      1);
-    system_exit(-1);
-  }
-
-  msg_len = *(unsigned short *)message >> 4;
-
-  for (i = 0; i < 4; i++) {
-    machine = network_game_server_get_client_machine_at_index((int)server, i);
-    if (!network_game_server_client_machine_is_joined_to_game((int)server,
-                                                              machine))
-      continue;
-    connection = network_game_server_adjust_machine_settings((void *)machine);
-    if (!connection)
-      continue;
-    if (!network_connection_active(connection))
-      continue;
-    if (msg_len > 0x600) {
-      display_assert(
-        "message_length<=sizeof(message_buffer)",
-        "c:\\halo\\SOURCE\\networking\\network_server_message_handler.c", 0x19a,
-        1);
-      system_exit(-1);
-    }
-    csmemcpy(local_buf, message, msg_len);
-    if (!network_connection_write((void *)connection, local_buf, msg_len, 0,
-                                  1)) {
-      network_game_log("network_game_server_write() failed in "
-                       "network_game_server_send_message_to_all_machines()");
-      result = false;
-    }
-  }
-
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x604, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "je .LFUN_0012f430_1\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_0012f430_2\n\t"
+      ".LFUN_0012f430_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x187\n\t"
+      "pushl $0x298ea0\n\t"
+      "pushl $0x298e8c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0012f430_2:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movw (%%eax), %%di\n\t"
+      "shrw $4, %%di\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".LFUN_0012f430_3:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c12d450]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c12c500]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0012f430_5\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c12d3b0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_0012f430_5\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c128660]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0012f430_5\n\t"
+      "cmpw $0x600, %%di\n\t"
+      "jbe .LFUN_0012f430_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19a\n\t"
+      "pushl $0x298ea0\n\t"
+      "pushl $0x298e64\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0012f430_4:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movzwl %%di, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x604(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8e0b0]\n\t"
+      "pushl $1\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x604(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c128e00]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0012f430_5\n\t"
+      "pushl $0x298e08\n\t"
+      "call *%[c12b650]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      ".LFUN_0012f430_5:\n\t"
+      "incl %%ebx\n\t"
+      "cmpl $4, %%ebx\n\t"
+      "jl .LFUN_0012f430_3\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b12f430_assert), [exitfn] "m"(b12f430_exitfn), [c12d450] "m"(b12f430_c12d450), [c12c500] "m"(b12f430_c12c500), [c12d3b0] "m"(b12f430_c12d3b0), [c128660] "m"(b12f430_c128660), [c8e0b0] "m"(b12f430_c8e0b0), [c128e00] "m"(b12f430_c128e00), [c12b650] "m"(b12f430_c12b650)
+      : "memory");
 }
+#else
+#error "FUN_0012f430: clang naked draft required"
+#endif
 
 typedef struct {
   unsigned int w[8];

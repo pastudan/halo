@@ -115,7 +115,11 @@ def true_end(xbe: Xbe, md: Cs, va: int, scan: int = 0x4000) -> int | None:
             if insn.mnemonic != "ret":
                 continue
             rest = insns2[i + 1 :]
-            if rest and all(r.mnemonic in ("mov", "jmp", "nop") for r in rest):
+            # Shared epilogue residue after RET: nops/movs, or push-imm +
+            # jmp trampolines (common assert paths laid out after the ret).
+            if rest and all(
+                r.mnemonic in ("mov", "jmp", "nop", "push") for r in rest
+            ):
                 return insn.address + insn.size
     return last
 
@@ -422,21 +426,15 @@ def main() -> int:
             return 1
         print("ALL 100%")
     if args.commit:
-        files = subprocess.check_output(
-            ["rg", "-l", f"batch {batches[0]}", "src/halo"],
-            cwd=ROOT,
-            text=True,
-        ).split()
-        # broaden: any batch in range
-        all_files = set(files)
+        # NUL-delimited so paths with spaces (e.g. "saved games/") stay intact.
+        all_files: set[str] = set()
         for b in batches:
             try:
                 more = subprocess.check_output(
-                    ["rg", "-l", f"batch {b}", "src/halo"],
+                    ["rg", "-l0", f"batch {b}", "src/halo"],
                     cwd=ROOT,
-                    text=True,
-                ).split()
-                all_files.update(more)
+                )
+                all_files.update(p.decode() for p in more.split(b"\0") if p)
             except subprocess.CalledProcessError:
                 pass
         subprocess.check_call(
@@ -455,9 +453,13 @@ def main() -> int:
             ],
             cwd=ROOT,
         )
+        if len(batches) == 1:
+            batch_span = f"batch {batches[0]}"
+        else:
+            batch_span = f"batches {batches[0]}-{batches[-1]}"
         msg = (
             f"lift(track-a): port {len(picked)} ported:false Capstone weaks "
-            f"(batches {batches[0]}-{batches[-1]})."
+            f"({batch_span})."
         )
         subprocess.check_call(["git", "commit", "-m", msg], cwd=ROOT)
         subprocess.check_call(["git", "push", "pastudan", "HEAD"], cwd=ROOT)

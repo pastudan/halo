@@ -1257,52 +1257,166 @@ void file_read_only(void)
   (void)edx;
 }
 
-/* 0x19aad0 */
+/* file_set_eof (0x19aad0) — XBE naked draft (batch 266). */
+#if defined(__clang__)
+static file_ref_t * (*const b19aad0_c199620)(file_ref_t *info) = file_reference_verify;
+static bool (*const b19aad0_c19aa00)(file_ref_t *info, int offset) = file_set_position;
+static bool __stdcall (*const b19aad0_c1d158c)(int handle) = SetEndOfFile;
+static int (*const b19aad0_c1d2240)(void) = xapi_GetLastError;
+static void (*const b19aad0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void __stdcall (*const b19aad0_c1d2268)(unsigned int error) = SetLastError;
+
+__attribute__((naked, noinline))
 void file_set_eof(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  file_reference_verify((void *)(uintptr_t)esi);
-  file_set_position((void *)(uintptr_t)esi, 0);
-  /* test (char)eax, (char)eax -> je 0x19ab07 */
-  SetEndOfFile(0);
-  /* test eax, eax -> je 0x19ab07 */
-  file_reference_verify((void *)(uintptr_t)esi);
-  xapi_GetLastError();
-  error(0, (char *)0x002b3ea4);
-  SetLastError(0);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c199620]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c19aa00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lfile_set_eof_1\n\t"
+      "movl 0x108(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d158c]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lfile_set_eof_1\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lfile_set_eof_1:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c199620]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1d2240]\n\t"
+      "pushl %%eax\n\t"
+      "addl $8, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x2b4000\n\t"
+      "pushl $0x2b3ea4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl $0\n\t"
+      "call *%[c1d2268]\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c199620] "m"(b19aad0_c199620), [c19aa00] "m"(b19aad0_c19aa00), [c1d158c] "m"(b19aad0_c1d158c), [c1d2240] "m"(b19aad0_c1d2240), [c8f390] "m"(b19aad0_c8f390), [c1d2268] "m"(b19aad0_c1d2268)
+      : "memory");
 }
+#else
+#error "file_set_eof: clang naked draft required"
+#endif
 
-/* 0x19ac00 */
+
+/* file_write (0x19ac00) — XBE naked draft (batch 265). */
+#if defined(__clang__)
+static file_ref_t * (*const b19ac00_c199620)(file_ref_t *info) = file_reference_verify;
+static void (*const b19ac00_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19ac00_exitfn)(int) = system_exit;
+static int __stdcall (*const b19ac00_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = WriteFile;
+static int (*const b19ac00_c1d2240)(void) = xapi_GetLastError;
+static void (*const b19ac00_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void __stdcall (*const b19ac00_c1d2268)(unsigned int error) = SetLastError;
+
+__attribute__((naked, noinline))
 void file_write(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  file_reference_verify((void *)(uintptr_t)ebx);
-  display_assert((char *)0x00267900, (char *)0x002b3dec, 451, 0);
-  system_exit(0);
-  WriteFile(0, (void *)(uintptr_t)edi, ecx, (void *)(uintptr_t)eax, (void *)0);
-  /* test eax, eax -> je 0x19ac68 */
-  /* relift: cmp dword ptr [ebp - 4], eax -> jne 0x19ac68 */
-  file_reference_verify((void *)(uintptr_t)ebx);
-  xapi_GetLastError();
-  error(0, (char *)0x002b3ea4);
-  SetLastError(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c199620]\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jne .Lfile_write_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1c3\n\t"
+      "pushl $0x2b3dec\n\t"
+      "pushl $0x267900\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lfile_write_1:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x108(%%esi), %%edx\n\t"
+      "pushl $0\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d14b6]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lfile_write_2\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "cmpl %%eax, -0x4(%%ebp)\n\t"
+      "jne .Lfile_write_2\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lfile_write_2:\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c199620]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1d2240]\n\t"
+      "pushl %%eax\n\t"
+      "addl $8, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x2b401c\n\t"
+      "pushl $0x2b3ea4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl $0\n\t"
+      "call *%[c1d2268]\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c199620] "m"(b19ac00_c199620), [assert] "m"(b19ac00_assert), [exitfn] "m"(b19ac00_exitfn), [c1d14b6] "m"(b19ac00_c1d14b6), [c1d2240] "m"(b19ac00_c1d2240), [c8f390] "m"(b19ac00_c8f390), [c1d2268] "m"(b19ac00_c1d2268)
+      : "memory");
 }
+#else
+#error "file_write: clang naked draft required"
+#endif
+
 
 /* 0x19acf0 */
 void file_write_to_position(void)
@@ -1418,52 +1532,171 @@ void file_get_last_modification_date(void)
 #endif
 
 
-/* 0x19adf0 */
+/* file_get_size (0x19adf0) — XBE naked draft (batch 261). */
+#if defined(__clang__)
+static file_ref_t * (*const b19adf0_c199620)(file_ref_t *info) = file_reference_verify;
+static void (*const b19adf0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19adf0_exitfn)(int) = system_exit;
+static void (*const b19adf0_c19a370)(int16_t location, const char *path, char *out) = path_from_file_reference;
+static void (*const b19adf0_c1d0ee1)(void) = FUN_001d0ee1;
+static int (*const b19adf0_c1d2240)(void) = xapi_GetLastError;
+static void (*const b19adf0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void __stdcall (*const b19adf0_c1d2268)(unsigned int error) = SetLastError;
+
+__attribute__((naked, noinline))
 void file_get_size(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  file_reference_verify((void *)(uintptr_t)esi);
-  /* test edi, edi -> jne 0x19ae4a */
-  display_assert((char *)0x00267f68, (char *)0x002b3dec, 524, 0);
-  system_exit(0);
-  path_from_file_reference(edx, (char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
-  FUN_001d0ee1();
-  /* test eax, eax -> je 0x19ae88 */
-  file_reference_verify((void *)(uintptr_t)esi);
-  xapi_GetLastError();
-  error(0, (char *)0x002b3ea4);
-  SetLastError(0);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x124, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c199620]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movb $0, -0x124(%%ebp)\n\t"
+      "movl $0x3f, %%ecx\n\t"
+      "leal -0x123(%%ebp), %%edi\n\t"
+      "rep stosl\n\t"
+      "stosw\n\t"
+      ".byte 0xaa\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lfile_get_size_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x20c\n\t"
+      "pushl $0x2b3dec\n\t"
+      "pushl $0x267f68\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lfile_get_size_1:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x6(%%ebx), %%dx\n\t"
+      "leal -0x124(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x8(%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c19a370]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "leal -0x24(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "leal -0x124(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d0ee1]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lfile_get_size_2\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl %%edx, (%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lfile_get_size_2:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c199620]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1d2240]\n\t"
+      "pushl %%eax\n\t"
+      "addl $8, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x2b4048\n\t"
+      "pushl $0x2b3ea4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl $0\n\t"
+      "call *%[c1d2268]\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c199620] "m"(b19adf0_c199620), [assert] "m"(b19adf0_assert), [exitfn] "m"(b19adf0_exitfn), [c19a370] "m"(b19adf0_c19a370), [c1d0ee1] "m"(b19adf0_c1d0ee1), [c1d2240] "m"(b19adf0_c1d2240), [c8f390] "m"(b19adf0_c8f390), [c1d2268] "m"(b19adf0_c1d2268)
+      : "memory");
 }
+#else
+#error "file_get_size: clang naked draft required"
+#endif
+
 /* --- files.obj batch drafts (2026-07-26) --- */
 
-/* 0x199420 */
+/* file_reference_create (0x199420) — XBE naked draft (batch 268). */
+#if defined(__clang__)
+static void (*const b199420_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b199420_exitfn)(int) = system_exit;
+static void *(*const b199420_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void file_reference_create(void)
 {
-  int esi = 0;
-  int edi = 0;
-
-  display_assert((char *)0x002b3b10, (char *)0x002b3aac, 91, 0);
-  system_exit(0);
-  /* cmp (int16_t)edi, -1 -> jl 0x199459 */
-  /* cmp (int16_t)edi, 2 -> jl 0x199476 */
-  display_assert((char *)0x002b3ad0, (char *)0x002b3aac, 92, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)esi, 0, 268);
-
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .Lfile_reference_create_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5b\n\t"
+      "pushl $0x2b3aac\n\t"
+      "pushl $0x2b3b10\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lfile_reference_create_1:\n\t"
+      "movw 0xc(%%ebp), %%di\n\t"
+      "cmpw $-1, %%di\n\t"
+      "jl .Lfile_reference_create_2\n\t"
+      "cmpw $2, %%di\n\t"
+      "jl .Lfile_reference_create_3\n\t"
+      ".Lfile_reference_create_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5c\n\t"
+      "pushl $0x2b3aac\n\t"
+      "pushl $0x2b3ad0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lfile_reference_create_3:\n\t"
+      "pushl $0x10c\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw %%di, 0x6(%%esi)\n\t"
+      "popl %%edi\n\t"
+      "movl $0x66696c6f, (%%esi)\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b199420_assert), [exitfn] "m"(b199420_exitfn), [memset] "m"(b199420_memset)
+      : "memory");
 }
+#else
+#error "file_reference_create: clang naked draft required"
+#endif
+
 
 /* file_printf (0x1995c0) — XBE naked draft (batch 258). */
 #if defined(__clang__)

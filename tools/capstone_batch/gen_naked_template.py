@@ -812,24 +812,28 @@ def inject(name: str, va: int, body: str, path: Path) -> None:
         print(f"  replaced {name} ({len(matches)} prior) -> {path}")
         return
     # Real definitions only: name(...) { … } — never prototypes ending in ';',
-    # and never a '{' that appears inside a comment (e.g. "({size, offset})").
+    # never call sites like `if (!name(...)) {`, and never a '{' inside a
+    # comment (e.g. "({size, offset})").
     def_pat = re.compile(
-        rf"^(?:(?:__attribute__\s*\(\([^;]*?\)\)\s*)|(?:static\s+)|(?:inline\s+)|(?:[\w\*]+\s+))+{re.escape(name)}\s*\(",
+        rf"^(?:(?:__attribute__\s*\(\([^;]*?\)\)\s*)|(?:__declspec\s*\([^)]*\)\s*)|(?:static\s+)|(?:inline\s+)|(?:[\w\*]+\s+))+{re.escape(name)}\s*\(",
         re.M,
     )
-    candidates = list(def_pat.finditer(text))
-    if not candidates:
-        candidates = list(
-            re.finditer(
-                rf"^[^\n]*\b{re.escape(name)}\s*\(",
-                text,
-                re.M,
-            )
-        )
+    name_positions: list[int] = []
+    for cand in def_pat.finditer(text):
+        nm = re.search(rf"\b{re.escape(name)}\s*\(", text[cand.start() : cand.start() + 240])
+        if nm:
+            name_positions.append(cand.start() + nm.start())
+    if not name_positions:
+        for cand in re.finditer(rf"\b{re.escape(name)}\s*\(", text):
+            if _is_defn_site(text, name, cand.start()):
+                name_positions.append(cand.start())
     m = None
     brace = None
-    for cand in candidates:
-        line_start = text.rfind("\n", 0, cand.start()) + 1
+    name_pos = None
+    for name_pos in name_positions:
+        if not _is_defn_site(text, name, name_pos):
+            continue
+        line_start = text.rfind("\n", 0, name_pos) + 1
         before_txt = text[:line_start]
         last_open = before_txt.rfind("/*")
         last_close = before_txt.rfind("*/")
@@ -837,7 +841,7 @@ def inject(name: str, va: int, body: str, path: Path) -> None:
             continue  # inside block comment
         # Scan from '(' of the declarator to the function-body '{',
         # skipping comments/strings; reject if ';' comes first.
-        i = text.find("(", cand.start())
+        i = text.find("(", name_pos)
         if i < 0:
             continue
         depth_p = 0
@@ -895,15 +899,15 @@ def inject(name: str, va: int, body: str, path: Path) -> None:
             j += 1
         if body_brace is None:
             continue
-        attr_lookback = text[max(0, cand.start() - 80) : cand.start()]
+        attr_lookback = text[max(0, name_pos - 80) : name_pos]
         if "__attribute__" in attr_lookback and "naked" in attr_lookback:
             continue
-        m = cand
+        m = True
         brace = body_brace
         break
-    if m is None or brace is None:
+    if not m or brace is None or name_pos is None:
         raise SystemExit(f"no def {name} in {path}")
-    line_start = text.rfind("\n", 0, m.start()) + 1
+    line_start = text.rfind("\n", 0, name_pos) + 1
     before_txt = text[:line_start]
     start = line_start
     end_c = before_txt.rfind("*/")

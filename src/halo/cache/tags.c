@@ -509,46 +509,130 @@ void FUN_001ba8b0(void)
   (void)eax;
 }
 
-/* 0x1ba930 */
+/* FUN_001ba930 (0x1ba930) — XBE naked draft (batch 266). */
+#if defined(__clang__)
+static void (*const b1ba930_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1ba930_exitfn)(int) = system_exit;
+static void (*const b1ba930_c1d00b9)(void) = FUN_001d00b9;
+
+__attribute__((naked, noinline))
 void FUN_001ba930(void)
 {
-  int eax = 0;
-
-  /* test (char)eax, 4 -> jne 0x1ba95b */
-  display_assert((char *)0x002b8538, (char *)0x002b839c, 1494, 0);
-  system_exit(0);
-  FUN_001d00b9();
-  /* test (char)eax, 4 -> je 0x1ba99c */
-  display_assert((char *)0x002b84f0, (char *)0x002b839c, 1498, 0);
-  system_exit(0);
-  display_assert((char *)0x002b8488, (char *)0x002b839c, 1499, 0);
-  system_exit(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x994(%%esi), %%eax\n\t"
+      "testb $4, %%ah\n\t"
+      "jne .LFUN_001ba930_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5d6\n\t"
+      "pushl $0x2b839c\n\t"
+      "pushl $0x2b8538\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001ba930_1:\n\t"
+      "movl 0x950(%%esi), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1388\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d00b9]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x994(%%esi), %%eax\n\t"
+      "testb $4, %%ah\n\t"
+      "je .LFUN_001ba930_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5da\n\t"
+      "pushl $0x2b839c\n\t"
+      "pushl $0x2b84f0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001ba930_2:\n\t"
+      "cmpl $0xc0, %%edi\n\t"
+      "popl %%edi\n\t"
+      "je .LFUN_001ba930_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5db\n\t"
+      "pushl $0x2b839c\n\t"
+      "pushl $0x2b8488\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001ba930_3:\n\t"
+      "andl $0xfffffbff, 0x994(%%esi)\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1ba930_assert), [exitfn] "m"(b1ba930_exitfn), [c1d00b9] "m"(b1ba930_c1d00b9)
+      : "memory");
 }
+#else
+#error "FUN_001ba930: clang naked draft required"
+#endif
 
-/* 0x1ba9d0 */
+
+/* FUN_001ba9d0 (0x1ba9d0) — XBE naked draft (batch 265). */
+#if defined(__clang__)
+static void __stdcall (*const b1ba9d0_c1d371d)(void *addr, unsigned int size, unsigned int protect) = physical_memory_protect;
+
+__attribute__((naked, noinline))
 void FUN_001ba9d0(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* relift: cmp word ptr [esi + edx*2 + 0xa78], (int16_t)ebx -> jne 0x1baa05 */
-  /* relift: test dword ptr [esi + edx*4 + 0x998], eax -> jne 0x1baa13 */
-  /* cmp (int16_t)edi, 8 -> jl 0x1ba9e0 */
-  physical_memory_protect((void *)(uintptr_t)ecx, 0x00020000, 0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movw 0xc(%%ebp), %%bx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "nop\n\t"
+      ".LFUN_001ba9d0_1:\n\t"
+      "movswl %%di, %%edx\n\t"
+      "cmpw %%bx, 0xa78(%%esi,%%edx,2)\n\t"
+      "jne .LFUN_001ba9d0_2\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%eax\n\t"
+      "shll %%cl, %%eax\n\t"
+      "sarl $5, %%edx\n\t"
+      "testl %%eax, 0x998(%%esi,%%edx,4)\n\t"
+      "jne .LFUN_001ba9d0_3\n\t"
+      ".LFUN_001ba9d0_2:\n\t"
+      "incl %%edi\n\t"
+      "cmpw $8, %%di\n\t"
+      "jl .LFUN_001ba9d0_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001ba9d0_3:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "movl 0x964(%%esi,%%eax,4), %%ecx\n\t"
+      "pushl $2\n\t"
+      "pushl $0x20000\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0xa78(%%esi,%%eax,2), %%edi\n\t"
+      "call *%[c1d371d]\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d371d] "m"(b1ba9d0_c1d371d)
+      : "memory");
 }
+#else
+#error "FUN_001ba9d0: clang naked draft required"
+#endif
+
 
 /* 0x1baa50 */
 void FUN_001baa50(void)

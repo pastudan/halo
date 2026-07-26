@@ -1592,30 +1592,81 @@ char FUN_00120620(int animation)
   (void)esi;
 }
 
-/* 0x120670 */
+/* build_damage_animation_index (0x120670) — XBE naked draft (batch 264). */
+#if defined(__clang__)
+static void (*const b120670_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b120670_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void build_damage_animation_index(void)
 {
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (int16_t)edi, (int16_t)edi -> jl 0x120684 */
-  /* cmp (int16_t)edi, 4 -> jl 0x1206a1 */
-  display_assert((char *)0x00290d98, (char *)0x00290ce4, 55, 0);
-  system_exit(0);
-  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x1206af */
-  /* cmp (int16_t)ebx, 4 -> jl 0x1206cc */
-  display_assert((char *)0x00290d48, (char *)0x00290ce4, 56, 0);
-  system_exit(0);
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1206da */
-  /* cmp (int16_t)esi, 0xb -> jl 0x1206f7 */
-  display_assert((char *)0x00290d10, (char *)0x00290ce4, 57, 0);
-  system_exit(0);
-
-  (void)ebx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Lbuild_damage_animation_index_1\n\t"
+      "cmpw $4, %%di\n\t"
+      "jl .Lbuild_damage_animation_index_2\n\t"
+      ".Lbuild_damage_animation_index_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x37\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x290d98\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbuild_damage_animation_index_2:\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jl .Lbuild_damage_animation_index_3\n\t"
+      "cmpw $4, %%bx\n\t"
+      "jl .Lbuild_damage_animation_index_4\n\t"
+      ".Lbuild_damage_animation_index_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x38\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x290d48\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbuild_damage_animation_index_4:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lbuild_damage_animation_index_5\n\t"
+      "cmpw $0xb, %%si\n\t"
+      "jl .Lbuild_damage_animation_index_6\n\t"
+      ".Lbuild_damage_animation_index_5:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x39\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x290d10\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbuild_damage_animation_index_6:\n\t"
+      "leal (%%ebx,%%edi,4), %%eax\n\t"
+      "imull $0xb, %%eax, %%eax\n\t"
+      "popl %%edi\n\t"
+      "addl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b120670_assert), [exitfn] "m"(b120670_exitfn)
+      : "memory");
 }
+#else
+#error "build_damage_animation_index: clang naked draft required"
+#endif
+
 
 /* FUN_00120710 (0x120710) — XBE naked draft (batch 248). */
 #if defined(__clang__)
@@ -1698,25 +1749,75 @@ void FUN_00120710(int anim_entry __attribute__((unused)), int tick_out __attribu
 #endif
 
 
-/* 0x120790 */
+/* animation_set_frame_size (0x120790) — XBE naked draft (batch 264). */
+#if defined(__clang__)
+static void (*const b120790_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b120790_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void animation_set_frame_size(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  /* test esi, esi -> jne 0x1207bb */
-  display_assert((char *)0x00290cd8, (char *)0x00290ce4, 123, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [esi + 0x2c], 0 -> jle 0x120801 */
-  /* relift: test dword ptr [esi + ecx*4 + 0x6c], eax -> je 0x1207ea */
-  /* relift: test dword ptr [esi + ecx*4 + 0x5c], eax -> je 0x1207f3 */
-  /* relift: test dword ptr [esi + ecx*4 + 0x7c], eax -> je 0x1207fc */
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lanimation_set_frame_size_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x7b\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x290cd8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lanimation_set_frame_size_1:\n\t"
+      "cmpw $0, 0x2c(%%esi)\n\t"
+      "jle .Lanimation_set_frame_size_6\n\t"
+      "pushl %%ebx\n\t"
+      "movzwl 0x2c(%%esi), %%ebx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lanimation_set_frame_size_2:\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%eax\n\t"
+      "shll %%cl, %%eax\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "sarl $5, %%ecx\n\t"
+      "testl %%eax, 0x6c(%%esi,%%ecx,4)\n\t"
+      "je .Lanimation_set_frame_size_3\n\t"
+      "addl $8, %%edi\n\t"
+      ".Lanimation_set_frame_size_3:\n\t"
+      "testl %%eax, 0x5c(%%esi,%%ecx,4)\n\t"
+      "je .Lanimation_set_frame_size_4\n\t"
+      "addl $0xc, %%edi\n\t"
+      ".Lanimation_set_frame_size_4:\n\t"
+      "testl %%eax, 0x7c(%%esi,%%ecx,4)\n\t"
+      "je .Lanimation_set_frame_size_5\n\t"
+      "addl $4, %%edi\n\t"
+      ".Lanimation_set_frame_size_5:\n\t"
+      "incl %%edx\n\t"
+      "decl %%ebx\n\t"
+      "jne .Lanimation_set_frame_size_2\n\t"
+      "popl %%ebx\n\t"
+      ".Lanimation_set_frame_size_6:\n\t"
+      "movw %%di, 0x24(%%esi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b120790_assert), [exitfn] "m"(b120790_exitfn)
+      : "memory");
 }
+#else
+#error "animation_set_frame_size: clang naked draft required"
+#endif
+
 
 /* quaternion_decompress_6byte_renormalized (0x120930) — XBE naked draft (batch 258). */
 #if defined(__clang__)
@@ -1821,40 +1922,149 @@ void quaternion_compress_6byte(void)
 #endif
 
 
-/* 0x120a40 */
+/* animation_graph_node_matrices_from_orientations (0x120a40) — XBE naked draft (batch 261). */
+#if defined(__clang__)
+static void *(*const b120a40_tag)(int, int) = tag_get;
+static void (*const b120a40_m4x3)(void *, float *, float *, float *) = matrix4x3_from_forward_up_position;
+static void *(*const b120a40_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b120a40_c109500)(float *out, float *qsp) = FUN_00109500;
+static void (*const b120a40_c109850)(float *a, float *b, float *out) = matrix4x3_multiply;
+static void (*const b120a40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b120a40_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void animation_graph_node_matrices_from_orientations(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  tag_get(0x616e7472, 0);
-  matrix4x3_from_forward_up_position((void *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
-  FUN_00109500((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
-  matrix4x3_multiply((float *)(uintptr_t)edi, (float *)(uintptr_t)edx, (float *)(uintptr_t)esi);
-  /* relift: cmp word ptr [ebx + 0x20], (int16_t)edi -> je 0x120b42 */
-  /* cmp (int16_t)esi, 0x40 -> jl 0x120b2f */
-  display_assert((char *)0x00290ddc, (char *)0x00290ce4, 1250, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [ebx + 0x22], (int16_t)edi -> je 0x120b80 */
-  /* cmp (int16_t)esi, 0x40 -> jl 0x120b6d */
-  display_assert((char *)0x00290ddc, (char *)0x00290ce4, 1256, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [ebp - 8], (int16_t)esi -> jne 0x120a97 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xf4, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x616e7472\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x1c(%%ebp), %%ecx\n\t"
+      "movl 0x18(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x74(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[m4x3]\n\t"
+      "movl 0x68(%%esi), %%edx\n\t"
+      "leal 0x68(%%esi), %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "jle .Lanimation_graph_node_matrices_from_orientations_9\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl $1, -0x4(%%ebp)\n\t"
+      "movw %%ax, -0xf4(%%ebp)\n\t"
+      "jmp .Lanimation_graph_node_matrices_from_orientations_2\n\t"
+      ".Lanimation_graph_node_matrices_from_orientations_1:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lanimation_graph_node_matrices_from_orientations_2:\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movw -0xf4(%%ebp,%%edx,2), %%di\n\t"
+      "movswl %%di, %%esi\n\t"
+      "pushl $0x40\n\t"
+      "incl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testw %%di, %%di\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "jne .Lanimation_graph_node_matrices_from_orientations_3\n\t"
+      "leal -0x74(%%ebp), %%edi\n\t"
+      "jmp .Lanimation_graph_node_matrices_from_orientations_4\n\t"
+      ".Lanimation_graph_node_matrices_from_orientations_3:\n\t"
+      "movswl 0x24(%%ebx), %%edi\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "imull $0x34, %%edi, %%edi\n\t"
+      "addl %%eax, %%edi\n\t"
+      ".Lanimation_graph_node_matrices_from_orientations_4:\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "shll $5, %%eax\n\t"
+      "addl %%edx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x40(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c109500]\n\t"
+      "imull $0x34, %%esi, %%esi\n\t"
+      "addl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x40(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c109850]\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpw %%di, 0x20(%%ebx)\n\t"
+      "je .Lanimation_graph_node_matrices_from_orientations_6\n\t"
+      "cmpw $0x40, %%si\n\t"
+      "jl .Lanimation_graph_node_matrices_from_orientations_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4e2\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x290ddc\n\t"
+      "call *%[assert]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lanimation_graph_node_matrices_from_orientations_5:\n\t"
+      "movw 0x20(%%ebx), %%cx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "incl %%esi\n\t"
+      "movw %%cx, -0xf4(%%ebp,%%eax,2)\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      ".Lanimation_graph_node_matrices_from_orientations_6:\n\t"
+      "cmpw %%di, 0x22(%%ebx)\n\t"
+      "je .Lanimation_graph_node_matrices_from_orientations_8\n\t"
+      "cmpw $0x40, %%si\n\t"
+      "jl .Lanimation_graph_node_matrices_from_orientations_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4e8\n\t"
+      "pushl $0x290ce4\n\t"
+      "pushl $0x290ddc\n\t"
+      "call *%[assert]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lanimation_graph_node_matrices_from_orientations_7:\n\t"
+      "movw 0x22(%%ebx), %%ax\n\t"
+      "movswl %%si, %%edx\n\t"
+      "incl %%esi\n\t"
+      "movw %%ax, -0xf4(%%ebp,%%edx,2)\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      ".Lanimation_graph_node_matrices_from_orientations_8:\n\t"
+      "cmpw %%si, -0x8(%%ebp)\n\t"
+      "jne .Lanimation_graph_node_matrices_from_orientations_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".Lanimation_graph_node_matrices_from_orientations_9:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b120a40_tag), [m4x3] "m"(b120a40_m4x3), [elem] "m"(b120a40_elem), [c109500] "m"(b120a40_c109500), [c109850] "m"(b120a40_c109850), [assert] "m"(b120a40_assert), [exitfn] "m"(b120a40_exitfn)
+      : "memory");
 }
+#else
+#error "animation_graph_node_matrices_from_orientations: clang naked draft required"
+#endif
+
 
 /* interpolate_node_orientations (0x120ba0) — XBE naked draft (batch 252). */
 #if defined(__clang__)
@@ -3974,67 +4184,260 @@ void FUN_00123990(void)
 #endif
 
 
-/* 0x123b30 */
+/* FUN_00123b30 (0x123b30) — XBE naked draft (batch 268). */
+#if defined(__clang__)
+static void *(*const b123b30_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b123b30_c1094d0)(float *out_matrix, float *position, float *basis_data) = component_vectors_from_normal3d;
+static void (*const b123b30_m4x3)(void *, float *, float *, float *) = matrix4x3_from_forward_up_position;
+static void (*const b123b30_c109850)(float *a, float *b, float *out) = matrix4x3_multiply;
+static void (*const b123b30_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b123b30_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_00123b30(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 156);
-  component_vectors_from_normal3d((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx);
-  /* test (int16_t)edi, (int16_t)edi -> jne 0x123be0 */
-  /* test ecx, ecx -> jne 0x123bb8 */
-  /* test eax, eax -> jne 0x123bc4 */
-  matrix4x3_from_forward_up_position((void *)(uintptr_t)esi, (float *)(uintptr_t)eax, (float *)(uintptr_t)ecx, (float *)(uintptr_t)edx);
-  matrix4x3_multiply((float *)(uintptr_t)esi, (float *)(uintptr_t)ecx, (float *)(uintptr_t)esi);
-  /* relift: cmp word ptr [ebx + 0x24], -1 -> jne 0x123c07 */
-  display_assert((char *)0x00291584, (char *)0x00291564, 650, 0);
-  system_exit(0);
-  matrix4x3_multiply((float *)(uintptr_t)ecx, (float *)0, (float *)0);
-  /* cmp (int16_t)ebx, -1 -> je 0x123c5b */
-  /* relift: cmp word ptr [ebp - 8], (int16_t)ecx -> jne 0x123b5a */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc0, %%esp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "addl $0xb8, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movw %%ax, -0xc0(%%ebp)\n\t"
+      "movl $1, -0x4(%%ebp)\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "jmp .LFUN_00123b30_2\n\t"
+      ".LFUN_00123b30_1:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_00123b30_2:\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movw -0xc0(%%ebp,%%edx,2), %%di\n\t"
+      "incl %%eax\n\t"
+      "movswl %%di, %%esi\n\t"
+      "pushl $0x9c\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "leal 0x34(%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x28(%%ebx), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x40(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1094d0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testw %%di, %%di\n\t"
+      "jne .LFUN_00123b30_6\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, %%edx\n\t"
+      "jne .LFUN_00123b30_3\n\t"
+      "movl 0x31fc44, %%edx\n\t"
+      ".LFUN_00123b30_3:\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jne .LFUN_00123b30_4\n\t"
+      "movl 0x31fc3c, %%ecx\n\t"
+      ".LFUN_00123b30_4:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00123b30_5\n\t"
+      "movl 0x31fc1c, %%eax\n\t"
+      ".LFUN_00123b30_5:\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[m4x3]\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x40(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c109850]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "jmp .LFUN_00123b30_8\n\t"
+      ".LFUN_00123b30_6:\n\t"
+      "cmpw $-1, 0x24(%%ebx)\n\t"
+      "jne .LFUN_00123b30_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28a\n\t"
+      "pushl $0x291564\n\t"
+      "pushl $0x291584\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00123b30_7:\n\t"
+      "movswl 0x24(%%ebx), %%ecx\n\t"
+      "imull $0x34, %%esi, %%esi\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "imull $0x34, %%ecx, %%ecx\n\t"
+      "addl %%eax, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x40(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c109850]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00123b30_8:\n\t"
+      "movw 0x20(%%ebx), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "je .LFUN_00123b30_9\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "incl %%ecx\n\t"
+      "movw %%ax, -0xc0(%%ebp,%%edx,2)\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      ".LFUN_00123b30_9:\n\t"
+      "movw 0x22(%%ebx), %%bx\n\t"
+      "cmpw $-1, %%bx\n\t"
+      "je .LFUN_00123b30_10\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "incl %%ecx\n\t"
+      "movw %%bx, -0xc0(%%ebp,%%eax,2)\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      ".LFUN_00123b30_10:\n\t"
+      "cmpw %%cx, -0x8(%%ebp)\n\t"
+      "jne .LFUN_00123b30_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b123b30_elem), [c1094d0] "m"(b123b30_c1094d0), [m4x3] "m"(b123b30_m4x3), [c109850] "m"(b123b30_c109850), [assert] "m"(b123b30_assert), [exitfn] "m"(b123b30_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00123b30: clang naked draft required"
+#endif
 
-/* 0x123c70 */
-void FUN_00123c70(void *mode_tag, void *out_matrices, void *node_data, float *position, float *forward, float *up)
+
+/* FUN_00123c70 (0x123c70) — XBE naked draft (batch 266). */
+#if defined(__clang__)
+static void (*const b123c70_m4x3)(void *, float *, float *, float *) = matrix4x3_from_forward_up_position;
+static void *(*const b123c70_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b123c70_c109500)(float *out, float *qsp) = FUN_00109500;
+static void (*const b123c70_c109850)(float *a, float *b, float *out) = matrix4x3_multiply;
+
+__attribute__((naked, noinline))
+void FUN_00123c70(void *mode_tag __attribute__((unused)), void *out_matrices __attribute__((unused)), void *node_data __attribute__((unused)), float *position __attribute__((unused)), float *forward __attribute__((unused)), float *up __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  matrix4x3_from_forward_up_position((void *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
-  FUN_00109500((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
-  matrix4x3_multiply((float *)(uintptr_t)edi, (float *)(uintptr_t)edx, (float *)(uintptr_t)esi);
-  /* cmp (int16_t)eax, 0xffff -> je 0x123d4d */
-  /* cmp (int16_t)ebx, -1 -> je 0x123d66 */
-  /* relift: cmp word ptr [ebp - 4], (int16_t)ecx -> jne 0x123cc0 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xf0, %%esp\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x3c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[m4x3]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0xb8(%%ecx), %%edx\n\t"
+      "addl $0xb8, %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "jle .LFUN_00123c70_7\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl $1, 0x8(%%ebp)\n\t"
+      "movw %%ax, -0xf0(%%ebp)\n\t"
+      "jmp .LFUN_00123c70_2\n\t"
+      ".LFUN_00123c70_1:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "jmp .LFUN_00123c70_2\n\t"
+      "leal (%%esp), %%esp\n\t"
+      "nop\n\t"
+      ".LFUN_00123c70_2:\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movw -0xf0(%%ebp,%%edx,2), %%di\n\t"
+      "movswl %%di, %%esi\n\t"
+      "pushl $0x9c\n\t"
+      "incl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testw %%di, %%di\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "jne .LFUN_00123c70_3\n\t"
+      "leal -0x3c(%%ebp), %%edi\n\t"
+      "jmp .LFUN_00123c70_4\n\t"
+      ".LFUN_00123c70_3:\n\t"
+      "movswl 0x24(%%ebx), %%edi\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "imull $0x34, %%edi, %%edi\n\t"
+      "addl %%eax, %%edi\n\t"
+      ".LFUN_00123c70_4:\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "shll $5, %%eax\n\t"
+      "addl %%edx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x70(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c109500]\n\t"
+      "imull $0x34, %%esi, %%esi\n\t"
+      "addl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x70(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c109850]\n\t"
+      "movw 0x20(%%ebx), %%ax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_00123c70_5\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "incl %%ecx\n\t"
+      "movw %%ax, -0xf0(%%ebp,%%edx,2)\n\t"
+      "movl %%ecx, 0x8(%%ebp)\n\t"
+      ".LFUN_00123c70_5:\n\t"
+      "movw 0x22(%%ebx), %%bx\n\t"
+      "cmpw $-1, %%bx\n\t"
+      "je .LFUN_00123c70_6\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "incl %%ecx\n\t"
+      "movw %%bx, -0xf0(%%ebp,%%eax,2)\n\t"
+      "movl %%ecx, 0x8(%%ebp)\n\t"
+      ".LFUN_00123c70_6:\n\t"
+      "cmpw %%cx, -0x4(%%ebp)\n\t"
+      "jne .LFUN_00123c70_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_00123c70_7:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [m4x3] "m"(b123c70_m4x3), [elem] "m"(b123c70_elem), [c109500] "m"(b123c70_c109500), [c109850] "m"(b123c70_c109850)
+      : "memory");
 }
+#else
+#error "FUN_00123c70: clang naked draft required"
+#endif
+
 
 /* FUN_00123d80 (0x123d80) — XBE naked draft (batch 253). */
 #if defined(__clang__)

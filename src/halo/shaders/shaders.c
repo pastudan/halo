@@ -609,23 +609,82 @@ void shader_is_mirror(void)
   (void)edx;
 }
 
-/* 0x1908a0 */
-char shader_is_decal(void *shader)
+/* shader_is_decal (0x1908a0) — XBE naked draft (batch 261). */
+#if defined(__clang__)
+static void * (*const b1908a0_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
+
+__attribute__((naked, noinline))
+char shader_is_decal(void *shader __attribute__((unused)))
 {
-  int ecx = 0;
-  int edx = 0;
-
-  /* test ecx, ecx -> je 0x19090b */
-  /* cmp edx, 4 -> ja 0x19090b */
-  FUN_001906b0((void *)(uintptr_t)ecx, 0);
-  FUN_001906b0((void *)(uintptr_t)ecx, 0);
-  FUN_001906b0((void *)(uintptr_t)ecx, 0);
-  FUN_001906b0((void *)(uintptr_t)ecx, 0);
-  return 0;
-
-  (void)ecx;
-  (void)edx;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "xorb %%al, %%al\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lshader_is_decal_5\n\t"
+      "movswl 0x24(%%ecx), %%edx\n\t"
+      "addl $-5, %%edx\n\t"
+      "cmpl $4, %%edx\n\t"
+      "ja .Lshader_is_decal_5\n\t"
+      "jmp *.Lshader_is_decal_jt(,%%edx,4)\n\t"
+      ".Lshader_is_decal_1:\n\t"
+      "pushl $5\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1906b0]\n\t"
+      "movb 0x29(%%eax), %%al\n\t"
+      "shrb $1, %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "andb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lshader_is_decal_2:\n\t"
+      "pushl $6\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1906b0]\n\t"
+      "movb 0x29(%%eax), %%al\n\t"
+      "shrb $1, %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "andb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lshader_is_decal_3:\n\t"
+      "pushl $8\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1906b0]\n\t"
+      "movb 0x28(%%eax), %%al\n\t"
+      "shrb $1, %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "andb $1, %%al\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lshader_is_decal_4:\n\t"
+      "pushl $9\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1906b0]\n\t"
+      "movb 0x28(%%eax), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "andb $1, %%al\n\t"
+      ".Lshader_is_decal_5:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lshader_is_decal_jt:\n\t"
+      ".long .Lshader_is_decal_1\n\t"
+      ".long .Lshader_is_decal_2\n\t"
+      ".long .Lshader_is_decal_5\n\t"
+      ".long .Lshader_is_decal_3\n\t"
+      ".long .Lshader_is_decal_4\n\t"
+      ".text\n\t"
+      :
+      : [c1906b0] "m"(b1908a0_c1906b0)
+      : "memory");
 }
+#else
+#error "shader_is_decal: clang naked draft required"
+#endif
+
 
 /* 0x190930 */
 char shader_is_water_decal(void *shader)

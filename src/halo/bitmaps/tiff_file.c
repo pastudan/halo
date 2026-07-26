@@ -1032,25 +1032,65 @@ void FUN_0007ffe0(void)
 #endif
 
 
-/* 0x80070 */
+/* FUN_00080070 (0x80070) — XBE naked draft (batch 266). */
+#if defined(__clang__)
+static void (*const b80070_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b80070_exitfn)(int) = system_exit;
+static void (*const b80070_c7ffe0)(void) = FUN_0007ffe0;
+static void (*const b80070_c7ff40)(void) = FUN_0007ff40;
+
+__attribute__((naked, noinline))
 void FUN_00080070(void)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test edi, edi -> je 0x8008e */
-  /* test esi, esi -> je 0x8008e */
-  /* test eax, eax -> jne 0x800ab */
-  display_assert((char *)0x00265a40, (char *)0x00265a54, 79, 0);
-  system_exit(0);
-  FUN_0007ffe0();
-  FUN_0007ff40();
-
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LFUN_00080070_1\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_00080070_1\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00080070_2\n\t"
+      ".LFUN_00080070_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x4f\n\t"
+      "pushl $0x265a54\n\t"
+      "pushl $0x265a40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00080070_2:\n\t"
+      "leal -0x8(%%ebp), %%ebx\n\t"
+      "call *%[c7ffe0]\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c7ff40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b80070_assert), [exitfn] "m"(b80070_exitfn), [c7ffe0] "m"(b80070_c7ffe0), [c7ff40] "m"(b80070_c7ff40)
+      : "memory");
 }
+#else
+#error "FUN_00080070: clang naked draft required"
+#endif
+
 
 /* FUN_000800d0 (0x800d0) — XBE naked draft (batch 250). */
 #if defined(__clang__)

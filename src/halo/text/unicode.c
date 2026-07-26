@@ -93,12 +93,81 @@ static void unicode_assert_count(size_t count)
   assert_halt(count < 0x8000);
 }
 
-/* 0x19d810 */
-int ustrcmp(const wchar_t *s1, const wchar_t *s2)
+/* ustrcmp (0x19d810) — XBE naked draft (batch 261). */
+#if defined(__clang__)
+static void (*const b19d810_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19d810_exitfn)(int) = system_exit;
+static size_t (*const b19d810_c1db11e)(const wchar_t *str) = _wcslen;
+static int (*const b19d810_c1dbf75)(const wchar_t *s1, const wchar_t *s2) = _wcscmp;
+
+__attribute__((naked, noinline))
+int ustrcmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __attribute__((unused)))
 {
-  unicode_assert_two_strings(s1, s2);
-  return _wcscmp(s1, s2);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "je .Lustrcmp_1\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lustrcmp_2\n\t"
+      ".Lustrcmp_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb5\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4828\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lustrcmp_2:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1db11e]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x8000, %%eax\n\t"
+      "jb .Lustrcmp_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb6\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4800\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lustrcmp_3:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1db11e]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x8000, %%eax\n\t"
+      "jb .Lustrcmp_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb7\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b47d8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lustrcmp_4:\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1dbf75]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19d810_assert), [exitfn] "m"(b19d810_exitfn), [c1db11e] "m"(b19d810_c1db11e), [c1dbf75] "m"(b19d810_c1dbf75)
+      : "memory");
 }
+#else
+#error "ustrcmp: clang naked draft required"
+#endif
+
 
 /* 0x19d8c0 */
 int ustrlen(const unsigned short *s)
@@ -111,18 +180,68 @@ int ustrlen(const unsigned short *s)
   return len;
 }
 
-/* 0x19d930 */
-size_t ustrnlen(const wchar_t *s, size_t max_len)
-{
-  size_t n;
+/* ustrnlen (0x19d930) — XBE naked draft (batch 267). */
+#if defined(__clang__)
+static void (*const b19d930_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19d930_exitfn)(int) = system_exit;
 
-  assert_halt(s);
-  n = 0;
-  while (n < max_len && s[n] != 0)
-    n++;
-  assert_halt(n < 0x8000);
-  return n;
+__attribute__((naked, noinline))
+size_t ustrnlen(const wchar_t *s __attribute__((unused)), size_t max_len __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lustrnlen_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd0\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x27b838\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lustrnlen_1:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jbe .Lustrnlen_4\n\t"
+      ".Lustrnlen_2:\n\t"
+      "movw (%%edi), %%cx\n\t"
+      "addl $2, %%edi\n\t"
+      "testw %%cx, %%cx\n\t"
+      "je .Lustrnlen_3\n\t"
+      "incl %%esi\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jb .Lustrnlen_2\n\t"
+      ".Lustrnlen_3:\n\t"
+      "cmpl $0x8000, %%esi\n\t"
+      "jb .Lustrnlen_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd6\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b483c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lustrnlen_4:\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19d930_assert), [exitfn] "m"(b19d930_exitfn)
+      : "memory");
 }
+#else
+#error "ustrnlen: clang naked draft required"
+#endif
+
 
 /* 0x19d9b0 */
 wchar_t *ustrchr(const wchar_t *s, wchar_t c)
@@ -794,13 +913,75 @@ wchar_t *ufgets(wchar_t *buffer, int count, void *stream)
   return _fgetws(buffer, count, stream);
 }
 
-/* 0x19e760 */
-int ufputs(const wchar_t *s, void *stream)
+/* ufputs (0x19e760) — XBE naked draft (batch 264). */
+#if defined(__clang__)
+static void (*const b19e760_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19e760_exitfn)(int) = system_exit;
+static size_t (*const b19e760_c1db11e)(const wchar_t *str) = _wcslen;
+static int (*const b19e760_c1dc82c)(const wchar_t *s, void *stream) = _fputws;
+
+__attribute__((naked, noinline))
+int ufputs(const wchar_t *s __attribute__((unused)), void *stream __attribute__((unused)))
 {
-  assert_halt(s && stream);
-  unicode_assert_string(s);
-  return _fputws(s, stream);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lufputs_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x278\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x27b838\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lufputs_1:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1db11e]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x8000, %%eax\n\t"
+      "jb .Lufputs_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x279\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4858\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lufputs_2:\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lufputs_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x27a\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4948\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lufputs_3:\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1dc82c]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19e760_assert), [exitfn] "m"(b19e760_exitfn), [c1db11e] "m"(b19e760_c1db11e), [c1dc82c] "m"(b19e760_c1dc82c)
+      : "memory");
 }
+#else
+#error "ufputs: clang naked draft required"
+#endif
+
 
 /* 0x19e800 */
 wchar_t *ugets(wchar_t *buffer)
@@ -830,18 +1011,62 @@ int ufprintf(void *stream, const wchar_t *format, ...)
   return result;
 }
 
-/* 0x19e980 */
-int uprintf(const wchar_t *format, ...)
-{
-  va_list args;
-  int result;
+/* uprintf (0x19e980) — XBE naked draft (batch 264). */
+#if defined(__clang__)
+static void (*const b19e980_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19e980_exitfn)(int) = system_exit;
+static size_t (*const b19e980_c1db11e)(const wchar_t *str) = _wcslen;
+static int (*const b19e980_c1dca00)(const wchar_t *format, char *args) = _vprintf;
 
-  unicode_assert_string(format);
-  va_start(args, format);
-  result = _vprintf(format, (char *)args);
-  va_end(args);
-  return result;
+__attribute__((naked, noinline))
+int uprintf(const wchar_t *format __attribute__((unused)), ...)
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Luprintf_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2bb\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x263510\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Luprintf_1:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1db11e]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x8000, %%eax\n\t"
+      "jb .Luprintf_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2bc\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4950\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Luprintf_2:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "leal 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1dca00]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19e980_assert), [exitfn] "m"(b19e980_exitfn), [c1db11e] "m"(b19e980_c1db11e), [c1dca00] "m"(b19e980_c1dca00)
+      : "memory");
 }
+#else
+#error "uprintf: clang naked draft required"
+#endif
+
 
 /* 0x19eaa0 */
 int usprintf(wchar_t *buffer, const wchar_t *format, ...)
@@ -882,14 +1107,83 @@ int uvsnprintf(wchar_t *buffer, size_t count, const wchar_t *format, char *args)
   return _vsnwprintf(buffer, count, format, args);
 }
 
-/* 0x19ecf0 */
-int uvsprintf(wchar_t *buffer, const wchar_t *format, char *args)
+/* uvsprintf (0x19ecf0) — XBE naked draft (batch 264). */
+#if defined(__clang__)
+static void (*const b19ecf0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b19ecf0_exitfn)(int) = system_exit;
+static size_t (*const b19ecf0_c1db11e)(const wchar_t *str) = _wcslen;
+static int (*const b19ecf0_c1dcace)(wchar_t *buffer, const wchar_t *format, char *args) = FUN_001dcace;
+
+__attribute__((naked, noinline))
+int uvsprintf(wchar_t *buffer __attribute__((unused)), const wchar_t *format __attribute__((unused)), char *args __attribute__((unused)))
 {
-  assert_halt(buffer && format);
-  unicode_assert_string(buffer);
-  unicode_assert_string(format);
-  return FUN_001dcace(buffer, format, args);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "je .Luvsprintf_1\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Luvsprintf_2\n\t"
+      ".Luvsprintf_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x349\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b49a4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Luvsprintf_2:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1db11e]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x8000, %%eax\n\t"
+      "jb .Luvsprintf_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x34a\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4858\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Luvsprintf_3:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1db11e]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x8000, %%eax\n\t"
+      "jb .Luvsprintf_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x34b\n\t"
+      "pushl $0x2b45b4\n\t"
+      "pushl $0x2b4950\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Luvsprintf_4:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1dcace]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b19ecf0_assert), [exitfn] "m"(b19ecf0_exitfn), [c1db11e] "m"(b19ecf0_c1db11e), [c1dcace] "m"(b19ecf0_c1dcace)
+      : "memory");
 }
+#else
+#error "uvsprintf: clang naked draft required"
+#endif
+
 
 /* 0x19eda0 */
 void *ufdopen(int fd, const wchar_t *mode)

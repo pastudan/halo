@@ -52,46 +52,117 @@ void *xbox_texture_cache_steal_memory(unsigned int size)
   return base + HALO_TEXTURE_CACHE_STEAL_GUARD_SIZE;
 }
 
+/* xbox_texture_cache_return_memory (0x1beb10) — XBE naked draft (batch 266). */
+#if defined(__clang__)
+static void (*const b1beb10_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1beb10_exitfn)(int) = system_exit;
+static void (*const b1beb10_c11db00)(void *cache, int new_page_count) = lruv_resize;
+static void * (*const b1beb10_c1bdd60)(void) = FUN_001bdd60;
+static void __stdcall (*const b1beb10_c1d371d)(void *addr, unsigned int size, unsigned int protect) = physical_memory_protect;
+
+__attribute__((naked, noinline))
 void xbox_texture_cache_return_memory(void)
 {
-  if (*(int8_t *)0x4ea984 == 0) {
-    display_assert("xbox_texture_cache_globals.stolen_memory",
-                   "c:\\halo\\SOURCE\\cache\\xbox_texture_cache.c", 0x159,
-                   true);
-    system_exit(-1);
-  }
-
-  lruv_resize(*(void **)0x4ea980, HALO_TEXTURE_CACHE_PAGE_COUNT);
-  physical_memory_protect(FUN_001bdd60(), HALO_TEXTURE_CACHE_SIZE, 0x404);
-  *(int8_t *)0x4ea984 = 0;
+  __asm__ volatile(
+      "movb 0x4ea984, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lxbox_texture_cache_return_memory_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x159\n\t"
+      "pushl $0x2b96d8\n\t"
+      "pushl $0x2b9748\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lxbox_texture_cache_return_memory_1:\n\t"
+      "movl 0x4ea980, %%eax\n\t"
+      "pushl $0x580\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c11db00]\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl $0x404\n\t"
+      "pushl $0x1600000\n\t"
+      "call *%[c1bdd60]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d371d]\n\t"
+      "movb $0, 0x4ea984\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1beb10_assert), [exitfn] "m"(b1beb10_exitfn), [c11db00] "m"(b1beb10_c11db00), [c1bdd60] "m"(b1beb10_c1bdd60), [c1d371d] "m"(b1beb10_c1d371d)
+      : "memory");
 }
+#else
+#error "xbox_texture_cache_return_memory: clang naked draft required"
+#endif
 
-/* bitmap_format_to_d3d_linear_format (0x1beba0)
- *
- * Look up the linear D3D texture format code for a bitmap format index.
- * Table at 0x2b9618 maps format indices 0..17 to D3D format codes.
- * If flags bit 0x20 is set and format is 10 or 11 (DXT4/DXT5), returns 0x33. */
-int bitmap_format_to_d3d_linear_format(int16_t format, uint16_t flags)
+
+/* bitmap_format_to_d3d_linear_format (0x1beba0) — XBE naked draft (batch 262). */
+#if defined(__clang__)
+static void (*const b1beba0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1beba0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int bitmap_format_to_d3d_linear_format(int16_t format __attribute__((unused)), uint16_t flags __attribute__((unused)))
 {
-  int *table = (int *)0x2b9618;
-
-  if (format < 0 || format >= 0x12) {
-    display_assert("format>=0 && format<NUMBER_OF_BITMAP_FORMATS",
-                   "c:\\halo\\SOURCE\\cache\\xbox_texture_cache.c", 0x1e1, 1);
-    system_exit(-1);
-  }
-
-  if (table[format] == -1) {
-    display_assert("table[format]!=NONE",
-                   "c:\\halo\\SOURCE\\cache\\xbox_texture_cache.c", 0x1e2, 1);
-    system_exit(-1);
-  }
-
-  if ((flags & 0x20) && (format == 10 || format == 11))
-    return 0x33;
-
-  return table[format];
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "pushl %%edi\n\t"
+      "jl .Lbitmap_format_to_d3d_linear_format_1\n\t"
+      "cmpw $0x12, %%si\n\t"
+      "jl .Lbitmap_format_to_d3d_linear_format_2\n\t"
+      ".Lbitmap_format_to_d3d_linear_format_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1e1\n\t"
+      "pushl $0x2b96d8\n\t"
+      "pushl $0x264ad4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbitmap_format_to_d3d_linear_format_2:\n\t"
+      "movswl %%si, %%edi\n\t"
+      "cmpl $-1, 0x2b9618(,%%edi,4)\n\t"
+      "jne .Lbitmap_format_to_d3d_linear_format_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1e2\n\t"
+      "pushl $0x2b96d8\n\t"
+      "pushl $0x2b9774\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lbitmap_format_to_d3d_linear_format_3:\n\t"
+      "testb $0x20, 0xc(%%ebp)\n\t"
+      "je .Lbitmap_format_to_d3d_linear_format_5\n\t"
+      "cmpw $0xa, %%si\n\t"
+      "je .Lbitmap_format_to_d3d_linear_format_4\n\t"
+      "cmpw $0xb, %%si\n\t"
+      "jne .Lbitmap_format_to_d3d_linear_format_5\n\t"
+      ".Lbitmap_format_to_d3d_linear_format_4:\n\t"
+      "popl %%edi\n\t"
+      "movl $0x33, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lbitmap_format_to_d3d_linear_format_5:\n\t"
+      "movl 0x2b9618(,%%edi,4), %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1beba0_assert), [exitfn] "m"(b1beba0_exitfn)
+      : "memory");
 }
+#else
+#error "bitmap_format_to_d3d_linear_format: clang naked draft required"
+#endif
+
 
 /* FUN_001bec30 (0x1bec30)
  *
@@ -343,18 +414,70 @@ void texture_cache_idle(void)
   (void)eax;
 }
 
-/* 0x1be960 */
-void texture_cache_bitmap_new(int tag_index, void *bitmap)
+/* texture_cache_bitmap_new (0x1be960) — XBE naked draft (batch 265). */
+#if defined(__clang__)
+static void (*const b1be960_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1be960_exitfn)(int) = system_exit;
+static void *(*const b1be960_tag)(int, int) = tag_get;
+static int (*const b1be960_c7e040)(void *bitmap_data) = bitmap_get_pixel_data_size;
+
+__attribute__((naked, noinline))
+void texture_cache_bitmap_new(int tag_index __attribute__((unused)), void *bitmap __attribute__((unused)))
 {
-  int esi = 0;
-
-  display_assert((char *)0x002b96a8, (char *)0x002b96d8, 157, 0);
-  system_exit(0);
-  tag_get('mtib', 0);
-  bitmap_get_pixel_data_size((void *)(uintptr_t)esi);
-
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "movb 0xe(%%esi), %%al\n\t"
+      "movl $0x80, %%ebx\n\t"
+      "testb %%al, %%bl\n\t"
+      "pushl %%edi\n\t"
+      "je .Ltexture_cache_bitmap_new_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9d\n\t"
+      "pushl $0x2b96d8\n\t"
+      "pushl $0x2b96a8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltexture_cache_bitmap_new_1:\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "orw %%bx, 0xe(%%esi)\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x6269746d\n\t"
+      "movl $0xffffffff, 0x24(%%esi)\n\t"
+      "movl %%ebx, 0x2c(%%esi)\n\t"
+      "movl %%ebx, 0x28(%%esi)\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x38(%%eax), %%eax\n\t"
+      "movl 0x18(%%esi), %%ecx\n\t"
+      "addl %%eax, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ecx, 0x18(%%esi)\n\t"
+      "call *%[c7e040]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%edi, 0x20(%%esi)\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebx, 0x2c(%%esi)\n\t"
+      "movl %%ebx, 0x28(%%esi)\n\t"
+      "movl %%eax, 0x1c(%%esi)\n\t"
+      "movl $0xffffffff, 0x24(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1be960_assert), [exitfn] "m"(b1be960_exitfn), [tag] "m"(b1be960_tag), [c7e040] "m"(b1be960_c7e040)
+      : "memory");
 }
+#else
+#error "texture_cache_bitmap_new: clang naked draft required"
+#endif
+
 
 /* 0x1be9f0 */
 void texture_cache_bitmap_delete(void)
@@ -422,29 +545,77 @@ void FUN_001bed50(void)
   (void)ecx;
 }
 
-/* 0x1bed90 */
+/* FUN_001bed90 (0x1bed90) — XBE naked draft (batch 261). */
+#if defined(__clang__)
+static void *(*const b1bed90_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int __stdcall (*const b1bed90_c1ed980)(void *resource) = D3DResource_IsBusy;
+static void (*const b1bed90_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1bed90_exitfn)(int) = system_exit;
+static void (*const b1bed90_c1196d0)(data_t *data, int datum_handle) = datum_delete;
+
+__attribute__((naked, noinline))
 void FUN_001bed90(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  datum_get((void *)(uintptr_t)eax, 0);
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* test (char)ecx, (char)ecx -> je 0x1bedb0 */
-  D3DResource_IsBusy((void *)(uintptr_t)eax);
-  /* test eax, eax -> jne 0x1bedb0 */
-  /* relift: cmp dword ptr [edx + 0x24], esi -> je 0x1bedfc */
-  display_assert((char *)0x002b9788, (char *)0x002b96d8, 391, 0);
-  system_exit(0);
-  datum_delete((void *)(uintptr_t)edx, 0);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x4ea978, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_001bed90_1:\n\t"
+      "movl 0x4ea978, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0x4(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .LFUN_001bed90_1\n\t"
+      "addl $0xc, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ed980]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_001bed90_1\n\t"
+      "movl 0x8(%%edi), %%edx\n\t"
+      "cmpl %%esi, 0x24(%%edx)\n\t"
+      "je .LFUN_001bed90_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x187\n\t"
+      "pushl $0x2b96d8\n\t"
+      "pushl $0x2b9788\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001bed90_2:\n\t"
+      "movl 0x8(%%edi), %%eax\n\t"
+      "movl $0xffffffff, 0x24(%%eax)\n\t"
+      "movl 0x8(%%edi), %%ecx\n\t"
+      "movl $0, 0x2c(%%ecx)\n\t"
+      "movl 0x4ea978, %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1196d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1bed90_dget), [c1ed980] "m"(b1bed90_c1ed980), [assert] "m"(b1bed90_assert), [exitfn] "m"(b1bed90_exitfn), [c1196d0] "m"(b1bed90_c1196d0)
+      : "memory");
 }
+#else
+#error "FUN_001bed90: clang naked draft required"
+#endif
+
 
 /* FUN_001bef80 (0x1bef80) — XBE naked draft (batch 246). */
 #if defined(__clang__)
@@ -532,26 +703,77 @@ void FUN_001bef80(void)
 #endif
 
 
-/* 0x1bf080 */
+/* texture_cache_new (0x1bf080) — XBE naked draft (batch 267). */
+#if defined(__clang__)
+static data_t * (*const b1bf080_c1194d0)(char *name, int16_t maximum_count, int16_t size) = data_new;
+static void (*const b1bf080_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1bf080_exitfn)(int) = system_exit;
+static void * (*const b1bf080_c11dd60)(int name, int page_count, int page_size_bits, int maximum_block_count, void (*delete_cb)(int), int (*query_cb)(int)) = lruv_new;
+static void * (*const b1bf080_c1bdd60)(void) = FUN_001bdd60;
+
+__attribute__((naked, noinline))
 void texture_cache_new(void)
 {
-  int eax = 0;
-
-  data_new((char *)0x002b983c, 1408, 32);
-  /* mem[0x004ea978] = eax */
-  display_assert((char *)0x002b9818, (char *)0x002b96d8, 98, 0);
-  system_exit(0);
-  lruv_new(0x002b9804, 1408, 14, 1408, (void *)0x001bed90, (void *)0x001bed50);
-  /* mem[0x004ea980] = eax */
-  display_assert((char *)0x002b97e0, (char *)0x002b96d8, 102, 0);
-  system_exit(0);
-  FUN_001bdd60();
-  /* mem[0x004ea97c] = eax */
-  display_assert((char *)0x002b97b8, (char *)0x002b96d8, 105, 0);
-  system_exit(0);
-
-  (void)eax;
+  __asm__ volatile(
+      "pushl $0x20\n\t"
+      "pushl $0x580\n\t"
+      "pushl $0x2b983c\n\t"
+      "call *%[c1194d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x4ea978\n\t"
+      "jne .Ltexture_cache_new_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x62\n\t"
+      "pushl $0x2b96d8\n\t"
+      "pushl $0x2b9818\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltexture_cache_new_1:\n\t"
+      "pushl $0x1bed50\n\t"
+      "pushl $0x1bed90\n\t"
+      "pushl $0x580\n\t"
+      "pushl $0xe\n\t"
+      "pushl $0x580\n\t"
+      "pushl $0x2b9804\n\t"
+      "call *%[c11dd60]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x4ea980\n\t"
+      "jne .Ltexture_cache_new_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x66\n\t"
+      "pushl $0x2b96d8\n\t"
+      "pushl $0x2b97e0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltexture_cache_new_2:\n\t"
+      "call *%[c1bdd60]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x4ea97c\n\t"
+      "jne .Ltexture_cache_new_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x69\n\t"
+      "pushl $0x2b96d8\n\t"
+      "pushl $0x2b97b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ltexture_cache_new_3:\n\t"
+      "ret\n\t"
+      :
+      : [c1194d0] "m"(b1bf080_c1194d0), [assert] "m"(b1bf080_assert), [exitfn] "m"(b1bf080_exitfn), [c11dd60] "m"(b1bf080_c11dd60), [c1bdd60] "m"(b1bf080_c1bdd60)
+      : "memory");
 }
+#else
+#error "texture_cache_new: clang naked draft required"
+#endif
+
 
 /* 0x1bf130 */
 void texture_cache_close(void)
