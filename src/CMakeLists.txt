@@ -26,6 +26,7 @@
 	halo/bink/bink_playback.c
 	halo/bink/bink_sound.c
 	halo/camera/bored_camera.c
+	halo/cache/cache_files.c
 	halo/cache/xbox_sound_cache.c
 	halo/camera/director.c
 	halo/camera/observer.c

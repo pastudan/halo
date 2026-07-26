@@ -37346,36 +37346,44 @@
       "functions": [
         {
           "addr": "0x1b9920",
-          "decl": "int FUN_001b9920(void);"
+          "decl": "int FUN_001b9920(void);",
+          "ported": false
         },
         {
           "addr": "0x1b9bf0",
           "comment": "Validate and resolve a tag index to its tag_instance record pointer. Asserts if tags not loaded or index out of range. Source: cache/cache_files.c",
-          "decl": "int *tag_instance_resolve(int tag_index@<edi>);"
+          "decl": "int *tag_instance_resolve(int tag_index@<edi>);",
+          "ported": false
         },
         {
           "addr": "0x1b9de0",
-          "decl": "bool cache_files_give_time_to_precache(const char *name);"
+          "decl": "bool cache_files_give_time_to_precache(const char *name);",
+          "ported": false
         },
         {
           "addr": "0x1b9890",
-          "decl": "void scenario_tags_unload(void);"
+          "decl": "void scenario_tags_unload(void);",
+          "ported": false
         },
         {
           "addr": "0x1b98c0",
-          "decl": "void tag_files_close(void);"
+          "decl": "void tag_files_close(void);",
+          "ported": false
         },
         {
           "addr": "0x1b98d0",
-          "decl": "void tag_groups_checksum(void);"
+          "decl": "void tag_groups_checksum(void);",
+          "ported": false
         },
         {
           "addr": "0x1b9ce0",
-          "decl": "bool cache_file_header_verify(void *header, const char *path, int report_errors);"
+          "decl": "bool cache_file_header_verify(void *header, const char *path, int report_errors);",
+          "ported": false
         },
         {
           "addr": "0x1b9e70",
-          "decl": "void FUN_001b9e70(void);"
+          "decl": "void FUN_001b9e70(void);",
+          "ported": false
         }
       ],
       "name": "cache_files.obj",

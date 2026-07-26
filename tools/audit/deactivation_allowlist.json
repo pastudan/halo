@@ -16574,5 +16574,61 @@
     "object": "files_windows.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b9920",
+    "name": "FUN_001b9920",
+    "object": "cache_files.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b9bf0",
+    "name": "tag_instance_resolve",
+    "object": "cache_files.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b9de0",
+    "name": "cache_files_give_time_to_precache",
+    "object": "cache_files.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b9890",
+    "name": "scenario_tags_unload",
+    "object": "cache_files.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b98c0",
+    "name": "tag_files_close",
+    "object": "cache_files.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b98d0",
+    "name": "tag_groups_checksum",
+    "object": "cache_files.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b9ce0",
+    "name": "cache_file_header_verify",
+    "object": "cache_files.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1b9e70",
+    "name": "FUN_001b9e70",
+    "object": "cache_files.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
