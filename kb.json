@@ -34501,8 +34501,9 @@
         },
         {
           "addr": "0x43360",
-          "decl": "void FUN_00043360(int unit /* @<edi> */, short priority /* @<bx> */, int actor /* @<esi> */, int stack_a);",
-          "ported": false
+          "decl": "void FUN_00043360(int look_arg, int unit @<edi>, short priority @<bx>, int actor @<esi>);",
+          "ported": true,
+          "name": "FUN_00043360"
         },
         {
           "addr": "0x433b0",
@@ -35853,7 +35854,8 @@
         {
           "addr": "0x5ac60",
           "decl": "char FUN_0005ac60(int *samples, int score, float y, float x, float z);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_0005ac60"
         },
         {
           "addr": "0x5acf0",

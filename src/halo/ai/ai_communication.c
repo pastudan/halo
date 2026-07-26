@@ -1101,53 +1101,20 @@ void FUN_000432b0(int unit /* */ __attribute__((unused)), int actor /* */ __attr
 #endif
 
 
-/* FUN_00043360 (0x43360) — XBE naked draft (batch 186). */
-#if defined(__clang__)
-static void *(*const b43360_tryget)(int, int) = object_try_and_get_and_verify_type;
-static int (*const b43360_c27a60)(int actor_handle, short look_type, short priority, short *look_buf) = FUN_00027a60;
-
-__attribute__((naked, noinline))
-void FUN_00043360(int unit /* */ __attribute__((unused)), short priority /* */ __attribute__((unused)), int actor /* */ __attribute__((unused)), int stack_a __attribute__((unused)))
+/* FUN_00043360 (0x43360) — readable C lift.
+ * unit@edi priority@bx actor@esi; look_arg on stack. */
+void FUN_00043360(int look_arg, int unit, short priority, int actor)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_00043360_1\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jle .LFUN_00043360_1\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_00043360_1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00043360_1\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movw $6, -0x10(%%ebp)\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "call *%[c27a60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_00043360_1:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tryget] "m"(b43360_tryget), [c27a60] "m"(b43360_c27a60)
-      : "memory");
+  short buf[8];
+
+  if (unit == -1 || priority <= 0 || actor == -1)
+    return;
+  if (!object_try_and_get_and_verify_type(actor, -1))
+    return;
+  buf[0] = 6;
+  *(int *)((char *)buf + 4) = actor;
+  FUN_00027a60(unit, (short)look_arg, priority, buf);
 }
-#else
-#error "FUN_00043360: clang naked draft required"
-#endif
-
-
 /* ai_conversation_status (0x433b0) — XBE naked draft (batch 125). */
 #if defined(__clang__)
 static void (*const b433b0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
