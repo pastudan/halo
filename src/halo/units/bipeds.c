@@ -2915,128 +2915,212 @@ void FUN_001a2440(int unit_handle /* @edi */)
   *(char *)((int)object + 0x45b) = 0;
 }
 
-/* FUN_001a25e0 (0x1a25e0)
- *
- * Finds the BSP surface most directly under the biped's camera point and
- * records it on the unit. Gets the biped camera position, sphere-tests the
- * collision BSP for nearby surfaces (collision_bsp_test_sphere), then for each
- * returned surface index looks up its plane (orienting the normal by the
- * surface's plane-index sign bit) and selects the surface whose signed plane
- * distance to the camera point is smallest. The winning surface index is stored
- * at unit+0x430 and its oriented normal is written to unit+0x46c (4 floats) and
- * unit+0x30 (3 floats). Brackets the work in the collision-user-depth stack
- * (global 0x4761d8 / stack 0x5a8c80), asserting depth < 0x20 on entry and > 1
- * on exit.
- *
- * Confirmed: @ecx = unit_handle (MOV EDI,ECX at 0x1a25ef); 0x1054-byte stack
- *   frame (_chkstk); out_pos vec3 at EBP-0x44; radius = camera_height +
- * [0x2533e8] passed via push-then-fstp; surface index from results[1+i]; plane
- * lookups via tag_block_get_element (element sizes 0xc and 0x10); normal
- * negated when the plane index sign bit is set; dot FPU order z*nz, then +x*nx,
- * +y*ny, -d. Inferred: "find supporting surface" semantics from the stores into
- * unit+0x430/ 0x46c/0x30 and the min-distance selection.
- */
-void FUN_001a25e0(int unit_handle /* @ecx */)
+/* FUN_001a25e0 (0x1a25e0) — XBE naked draft (batch 54). */
+#if defined(__clang__)
+static void (*const b1a25e0_chkstk)(void) = FUN_001d90e0;
+static void *(*const b1a25e0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a25e0_gbsp)(void) = global_collision_bsp_get;
+static void (*const b1a25e0_c1a0890)(int unit_handle, vector3_t *out_pos, float *out_height_offset, float *out_camera_height) = biped_get_camera_height_and_offset;
+static void (*const b1a25e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1a25e0_exitfn)(int) = system_exit;
+static char * (*const b1a25e0_c1459e0)(void) = breakable_surfaces_get_bsp_surface_data;
+static int (*const b1a25e0_c1493b0)(int bsp, short flags, int breakable_surfaces, int origin, float radius, int *results) = collision_bsp_test_sphere;
+static void *(*const b1a25e0_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+void FUN_001a25e0(int unit_handle /* @ecx */ __attribute__((unused)))
 {
-  int results[1028]; /* 0x1010 bytes: results[0]=count, results[1+i]=surface idx
-                      */
-  vector3_t cam_pos;
-  vector3_t *cam_ptr;
-  float height_offset;
-  float camera_height;
-  char *unit_obj;
-  char *surface_data;
-  void *bsp;
-  int16_t depth;
-  int count;
-  int i;
-  int idx2;
-  int *surface_elem;
-  float *plane;
-  int plane_index;
-  int best_index;
-  float best_dist;
-  float n[4];
-  float best_n[4];
-  float dist;
-  float radius;
-
-  unit_obj = (char *)object_get_and_verify_type(unit_handle, 1);
-  bsp = global_collision_bsp_get();
-  biped_get_camera_height_and_offset(unit_handle, &cam_pos, &height_offset,
-                                     &camera_height);
-
-  if (*(int16_t *)0x4761d8 >= 0x20) {
-    display_assert("collision_user_depth<NUMBER_OF_COLLISION_USERS",
-                   "c:\\halo\\SOURCE\\units\\bipeds.c", 0xf71, true);
-    system_exit(-1);
-  }
-  depth = *(int16_t *)0x4761d8;
-  *(int16_t *)0x4761d8 = (int16_t)(depth + 1);
-  *(int16_t *)(0x5a8c80 + depth * 2) = 7;
-
-  cam_ptr = &cam_pos;
-  surface_data = (char *)breakable_surfaces_get_bsp_surface_data();
-  radius = camera_height + *(float *)0x2533e8;
-  if ((char)collision_bsp_test_sphere((int)bsp, 0x100, (int)surface_data,
-                                      (int)cam_ptr, *(int *)&radius,
-                                      results) != 0) {
-    count = results[0];
-    best_index = -1;
-    *(int *)&best_dist = 0x7f7fffff;
-    i = 0;
-    if (count > 0) {
-      do {
-        surface_elem = (int *)tag_block_get_element(
-          (void *)(surface_data + 0x3c), results[1 + i], 0xc);
-        plane_index = *surface_elem;
-        plane = (float *)tag_block_get_element((void *)(surface_data + 0xc),
-                                               plane_index & 0x7fffffff, 0x10);
-        if (plane_index < 0) {
-          n[0] = -plane[0];
-          n[1] = -plane[1];
-          idx2 = 2;
-          n[idx2] = -plane[idx2];
-          n[3] = -plane[3];
-        } else {
-          n[0] = plane[0];
-          n[1] = plane[1];
-          n[idx2] = plane[idx2];
-          n[3] = plane[3];
-        }
-        dist =
-          (cam_pos.z * n[idx2] + n[0] * cam_pos.x + cam_pos.y * n[1]) - n[3];
-        if (dist < best_dist) {
-          best_index = results[1 + i];
-          best_n[0] = n[0];
-          best_n[1] = n[1];
-          best_n[idx2] = n[idx2];
-          best_n[3] = n[3];
-          best_dist = dist;
-        }
-        i = (int)(int16_t)(i + 1);
-      } while (i < count);
-
-      if (best_index != -1) {
-        *(int *)(unit_obj + 0x430) = best_index;
-        *(float *)(unit_obj + 0x46c) = best_n[0];
-        *(float *)(unit_obj + 0x470) = best_n[1];
-        *(float *)(unit_obj + 0x474) = best_n[idx2];
-        *(float *)(unit_obj + 0x478) = best_n[3];
-        *(float *)(unit_obj + 0x30) = best_n[0];
-        *(float *)(unit_obj + 0x34) = best_n[1];
-        *(float *)(unit_obj + 0x38) = best_n[idx2];
-      }
-    }
-  }
-
-  if (*(int16_t *)0x4761d8 <= 1) {
-    display_assert("collision_user_depth>0",
-                   "c:\\halo\\SOURCE\\units\\bipeds.c", 0xf94, true);
-    system_exit(-1);
-  }
-  *(int16_t *)0x4761d8 = (int16_t)(*(int16_t *)0x4761d8 - 1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl $0x1054, %%eax\n\t"
+      "call *%[chkstk]\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ecx, %%edi\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, -0x24(%%ebp)\n\t"
+      "call *%[gbsp]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x44(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1a0890]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpw $0x20, 0x4761d8\n\t"
+      "jl .LFUN_001a25e0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf71\n\t"
+      "pushl $0x2b4d5c\n\t"
+      "pushl $0x253440\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a25e0_1:\n\t"
+      "movw 0x4761d8, %%ax\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fadds 0x2533e8\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "leal -0x1054(%%ebp), %%edx\n\t"
+      "incw %%ax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movw %%ax, 0x4761d8\n\t"
+      "leal -0x44(%%ebp), %%eax\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "movw $7, 0x5a8c80(,%%ecx,2)\n\t"
+      "call *%[c1459e0]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1493b0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001a25e0_8\n\t"
+      "movl -0x1054(%%ebp), %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "movl $0xffffffff, -0x4(%%ebp)\n\t"
+      "movl $0x7f7fffff, -0x20(%%ebp)\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "jle .LFUN_001a25e0_8\n\t"
+      "leal 0x3c(%%esi), %%ecx\n\t"
+      "addl $0xc, %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "movl -0x38(%%ebp), %%ebx\n\t"
+      "movl %%ecx, -0x28(%%ebp)\n\t"
+      "movl %%esi, -0x18(%%ebp)\n\t"
+      ".LFUN_001a25e0_2:\n\t"
+      "movl -0x1050(%%ebp,%%eax,4), %%edx\n\t"
+      "leal -0x1050(%%ebp,%%eax,4), %%edi\n\t"
+      "movl -0x28(%%ebp), %%eax\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%esi\n\t"
+      "movl -0x18(%%ebp), %%edx\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "pushl $0x10\n\t"
+      "andl $0x7fffffff, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jns .LFUN_001a25e0_3\n\t"
+      "flds (%%eax)\n\t"
+      "fchs\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fchs\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fchs\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0xc(%%eax)\n\t"
+      "fchs\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jmp .LFUN_001a25e0_4\n\t"
+      ".LFUN_001a25e0_3:\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%ecx, -0x14(%%ebp)\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      ".LFUN_001a25e0_4:\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      "fmuls -0xc(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls -0x44(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x40(%%ebp)\n\t"
+      "fmuls -0x10(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsubs -0x8(%%ebp)\n\t"
+      "fcoms -0x20(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a25e0_5\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movl -0x14(%%ebp), %%ebx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0x34(%%ebp)\n\t"
+      "movl %%edx, -0x30(%%ebp)\n\t"
+      "movl %%eax, -0x2c(%%ebp)\n\t"
+      "jmp .LFUN_001a25e0_6\n\t"
+      ".LFUN_001a25e0_5:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_001a25e0_6:\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "movl -0x1054(%%ebp), %%ecx\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .LFUN_001a25e0_2\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_001a25e0_7\n\t"
+      "movl -0x24(%%ebp), %%eax\n\t"
+      "movl -0x30(%%ebp), %%edx\n\t"
+      "movl -0x2c(%%ebp), %%edi\n\t"
+      "movl %%ecx, 0x430(%%eax)\n\t"
+      "leal 0x46c(%%eax), %%ecx\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "movl -0x34(%%ebp), %%ecx\n\t"
+      "movl %%ebx, (%%esi)\n\t"
+      "addl $0x30, %%eax\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      "movl %%ebx, (%%eax)\n\t"
+      "movl %%edx, 0x8(%%esi)\n\t"
+      "movl %%ecx, 0x4(%%eax)\n\t"
+      "movl %%edi, 0xc(%%esi)\n\t"
+      "movl %%edx, 0x8(%%eax)\n\t"
+      ".LFUN_001a25e0_7:\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_001a25e0_8:\n\t"
+      "cmpw $1, 0x4761d8\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "jg .LFUN_001a25e0_9\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf94\n\t"
+      "pushl $0x2b4d5c\n\t"
+      "pushl $0x253418\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a25e0_9:\n\t"
+      "decw 0x4761d8\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      :
+      : [chkstk] "m"(b1a25e0_chkstk), [get] "m"(b1a25e0_get), [gbsp] "m"(b1a25e0_gbsp), [c1a0890] "m"(b1a25e0_c1a0890), [assert] "m"(b1a25e0_assert), [exitfn] "m"(b1a25e0_exitfn), [c1459e0] "m"(b1a25e0_c1459e0), [c1493b0] "m"(b1a25e0_c1493b0), [elem] "m"(b1a25e0_elem)
+      : "memory");
 }
+#else
+#error "FUN_001a25e0: clang naked draft required"
+#endif
+
 
 /* FUN_001a2800 (0x1a2800)
  *

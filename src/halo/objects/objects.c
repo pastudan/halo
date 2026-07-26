@@ -6711,124 +6711,190 @@ void FUN_00141900(void)
   }
 }
 
-/*
- * FUN_00141970 (0x141970 / objects.obj) — evaluate the four object "function
- * input" values from the object tag and store them into the object's function
- * value cache (object+0xd4, four floats).
- *
- * For each of the four function-input source codes (object tag+0x108, stride 2),
- * a non-zero code selects a value via a jump table (table at 0x141b38, byte index
- * map at 0x141b58 keyed on code-1):
- *   code 1  -> object+0x90               (raw float)
- *   code 2  -> object+0x94, clamped <=1.0
- *   code 3  -> object+0x9c
- *   code 4  -> object+0x98
- *   code 5  -> if cached value == 1.0, a new random value (random_math_real)
- *   code 0x12 -> 0.0 when object+0xb6 bit 4 set, else 1.0
- *   code 0x13 -> heading-vs-scenario angle: atan2(marker[+4], marker[+8]) of the
- *                base node marker (object_get_node_matrix(handle,0)); wrapped
- *                against scenario+0x4c (FUN_000b6dd0), scaled (0x29c120) + offset
- *                (0x253398), clamped to [0,1]; falls back to the cached value when
- *                |marker[+0xc]| >= threshold (0x29c128)
- *   codes 0xa..0x11 (default) -> region state byte object+0x128+(code-0xa) * 0x261518
- *   any other code in default range -> assert (region_index out of range)
- *
- * Read-only with respect to object lifecycle: writes only the object's own
- * function value cache (object+0xd4..). No GC/garbage/cluster-list mutation.
- *
- * Confirmed: 1 cdecl arg (object_handle @ [EBP+0x8]); 4-iteration loop ([EBP-0x8]).
- * Confirmed: default value is 0.0 (FLOAT 0x2533c0); 1.0 = 0x2533c8.
- * Confirmed (push-then-fstp): FUN_000b6dd0 takes TWO args — param_1 = scenario+0x4c
- * (PUSH ECX at 0x141a9a), param_2 = the FPATAN result stored via FSTP [ESP] at
- * 0x141a8f over the PUSH ECX at 0x141a89; ADD ESP,8 cleans both. Decompiler
- * dropped param_2.
- * Confirmed: jump table at 0x141b38 / index map at 0x141b58 (code-1 keyed).
- */
-void FUN_00141970(int param_1)
-{
-  int *obj;
-  int obj_tag;
-  short *codes;
-  float *values;
-  int n;
-  short code;
-  float value;
-  int marker;
-  float angle;
+/* FUN_00141970 (0x141970) — XBE naked draft (batch 54). */
+#if defined(__clang__)
+static void *(*const b141970_get)(int, int) = object_get_and_verify_type;
+static void *(*const b141970_tag)(int, int) = tag_get;
+static int *(*const b141970_gseed)(void) = get_global_random_seed_address;
+static float (*const b141970_rmreal)(unsigned int *) = random_math_real;
+static void *(*const b141970_onode)(int, short) = object_get_node_matrix;
+static scenario_t * (*const b141970_c18e380)(void) = global_scenario_get;
+static float (*const b141970_cb6dd0)(float a, float b) = FUN_000b6dd0;
+static void (*const b141970_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b141970_exitfn)(int) = system_exit;
 
-  obj = (int *)object_get_and_verify_type(param_1, -1);
-  obj_tag = (int)tag_get(0x6f626a65, *obj);
-  codes = (short *)(obj_tag + 0x108);
-  values = (float *)(obj + 0x35);   /* object+0xd4 */
-  n = 4;
-  do {
-    code = *codes;
-    if (code != 0) {
-      value = *(float *)0x2533c0;   /* default 0.0 */
-      switch (code) {
-      case 1:
-        value = *(float *)((char *)obj + 0x90);
-        break;
-      case 2:
-        value = *(float *)((char *)obj + 0x94);
-        if (*(float *)0x2533c8 < value) {
-          value = *(float *)0x2533c8;
-        }
-        break;
-      case 3:
-        value = *(float *)((char *)obj + 0x9c);
-        break;
-      case 4:
-        value = *(float *)((char *)obj + 0x98);
-        break;
-      case 5:
-        if (*values == 1.0f) {
-          value = random_math_real((unsigned int *)get_global_random_seed_address());
-        }
-        break;
-      case 0x12:
-        if ((*(unsigned char *)((char *)obj + 0xb6) & 4) == 0) {
-          value = *(float *)0x2533c8;
-        } else {
-          value = *(float *)0x2533c0;
-        }
-        break;
-      case 0x13:
-        marker = (int)object_get_node_matrix(param_1, 0);
-        if ((float)xbox_fabsf(*(float *)(marker + 0xc)) >= *(float *)0x29c128) {
-          value = *values;
-        } else {
-          angle = (float)xbox_atan2((double)*(float *)(marker + 4),
-                                    (double)*(float *)(marker + 8));
-          angle = FUN_000b6dd0(*(float *)((char *)global_scenario_get() + 0x4c), angle);
-          value = angle * *(float *)0x29c120 + *(float *)0x253398;
-          if (*(float *)0x2533c0 <= value) {
-            if (*(float *)0x2533c8 < value) {
-              value = *(float *)0x2533c8;
-            }
-          } else {
-            value = *(float *)0x2533c0;
-          }
-        }
-        break;
-      default:
-        code = (short)(code - 0xa);
-        if ((code < 0) || (7 < code)) {
-          display_assert("region_index>=0 && region_index<MAXIMUM_REGIONS_PER_OBJECT",
-                         "c:\\halo\\SOURCE\\objects\\objects.c", 0xa46, 1);
-          system_exit(-1);
-        }
-        value = (float)*(unsigned char *)((char *)obj + 0x128 + (int)code)
-                * *(float *)0x261518;
-        break;
-      }
-      *values = value;
-    }
-    codes = codes + 1;
-    values = values + 1;
-    n = n - 1;
-  } while (n != 0);
+__attribute__((naked, noinline))
+void FUN_00141970(int param_1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "addl $0x108, %%eax\n\t"
+      "leal 0xd4(%%edi), %%ebx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl $4, -0x8(%%ebp)\n\t"
+      "jmp .LFUN_00141970_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_00141970_1:\n\t"
+      "movw (%%eax), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .LFUN_00141970_16\n\t"
+      "flds 0x2533c0\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "decl %%ecx\n\t"
+      "cmpl $0x12, %%ecx\n\t"
+      "ja .LFUN_00141970_12\n\t"
+      "movzbl 0x141b58(%%ecx), %%edx\n\t"
+      "jmp *.LFUN_00141970_jt(,%%edx,4)\n\t"
+      ".LFUN_00141970_2:\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x9c(%%edi)\n\t"
+      "jmp .LFUN_00141970_15\n\t"
+      ".LFUN_00141970_3:\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x98(%%edi)\n\t"
+      "jmp .LFUN_00141970_15\n\t"
+      ".LFUN_00141970_4:\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x90(%%edi)\n\t"
+      "jmp .LFUN_00141970_15\n\t"
+      ".LFUN_00141970_5:\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x94(%%edi)\n\t"
+      ".LFUN_00141970_6:\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00141970_15\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_00141970_7:\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .LFUN_00141970_15\n\t"
+      ".LFUN_00141970_8:\n\t"
+      "cmpl $0x3f800000, (%%ebx)\n\t"
+      "jne .LFUN_00141970_15\n\t"
+      "fstp %%st(0)\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "addl $4, %%esp\n\t"
+      "jmp .LFUN_00141970_15\n\t"
+      ".LFUN_00141970_9:\n\t"
+      "movb 0xb6(%%edi), %%al\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $4, %%al\n\t"
+      "je .LFUN_00141970_7\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .LFUN_00141970_15\n\t"
+      ".LFUN_00141970_10:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "fstp %%st(0)\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[onode]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "flds 0xc(%%ecx)\n\t"
+      "addl $8, %%esp\n\t"
+      "fabs\n\t"
+      "fcompl 0x29c128\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00141970_11\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "pushl %%ecx\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fpatan\n\t"
+      "fstps (%%esp)\n\t"
+      "call *%[c18e380]\n\t"
+      "movl 0x4c(%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[cb6dd0]\n\t"
+      "fmuls 0x29c120\n\t"
+      "addl $8, %%esp\n\t"
+      "fadds 0x253398\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00141970_6\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .LFUN_00141970_15\n\t"
+      ".LFUN_00141970_11:\n\t"
+      "flds (%%ebx)\n\t"
+      "jmp .LFUN_00141970_15\n\t"
+      ".LFUN_00141970_12:\n\t"
+      "leal -0xa(%%eax), %%esi\n\t"
+      "fstp %%st(0)\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .LFUN_00141970_13\n\t"
+      "cmpw $8, %%si\n\t"
+      "jl .LFUN_00141970_14\n\t"
+      ".LFUN_00141970_13:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa46\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29b03c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00141970_14:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "movzbl 0x128(%%edx,%%edi,1), %%eax\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "fildl -0xc(%%ebp)\n\t"
+      "fmuls 0x261518\n\t"
+      ".LFUN_00141970_15:\n\t"
+      "fstps (%%ebx)\n\t"
+      ".LFUN_00141970_16:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "addl $2, %%eax\n\t"
+      "addl $4, %%ebx\n\t"
+      "decl %%ecx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "jne .LFUN_00141970_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_00141970_jt:\n\t"
+      ".long .LFUN_00141970_4\n\t"
+      ".long .LFUN_00141970_5\n\t"
+      ".long .LFUN_00141970_2\n\t"
+      ".long .LFUN_00141970_3\n\t"
+      ".long .LFUN_00141970_8\n\t"
+      ".long .LFUN_00141970_9\n\t"
+      ".long .LFUN_00141970_10\n\t"
+      ".long .LFUN_00141970_12\n\t"
+      ".text\n\t"
+      :
+      : [get] "m"(b141970_get), [tag] "m"(b141970_tag), [gseed] "m"(b141970_gseed), [rmreal] "m"(b141970_rmreal), [onode] "m"(b141970_onode), [c18e380] "m"(b141970_c18e380), [cb6dd0] "m"(b141970_cb6dd0), [assert] "m"(b141970_assert), [exitfn] "m"(b141970_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00141970: clang naked draft required"
+#endif
+
 
 /*
  * FUN_00145490 (0x145490 / objects.obj) — flush deferred object work: run one

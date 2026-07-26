@@ -2003,188 +2003,245 @@ void unit_handle_weapon_state_change(int object_handle, int16_t state)
   }
 }
 
-/* unit_record_damage (0x1a8ee0)
- *
- * Records damage in the unit's 4-slot damage tracking array at +0x3E0.
- * Each slot is 16 bytes: [timestamp, damage_amount, killing_object, attacker_object].
- *
- * First scans existing slots for a matching attacker or killing object handle;
- * if found, accumulates damage and updates the timestamp. Otherwise, finds an
- * empty slot (timestamp == -1) or evicts the oldest slot with the smallest
- * accumulated damage.
- *
- * If notify_ai is true and attacker_team != NONE, checks team allegiance
- * and notifies the AI system about killing sprees. Resolves the actual
- * attacker unit by following the player->unit chain and seat hierarchy.
- *
- * Confirmed: SUB ESP,0x8; 4 callee-saved regs; 7 stack params.
- * Confirmed: LEA EAX,[EDI+0x3E4] — damage array starts at +0x3E4 (per-slot +0x4).
- * Confirmed: IMUL/FCOMP loop with 4 iterations.
- * Confirmed: assert "best_new_attacker_index!=NONE" at line 0x136C, file units.c.
- * Confirmed: game_time_get = game_time_get, game_allegiance_get_team_is_friendly = game_allegiance check.
- * Confirmed: ai_handle_killing_spree = ai_handle_killing_spree.
- */
-void unit_record_damage(int unit_handle, float damage_amount, int16_t damage_type,
-                        char notify_ai, int attacker_object, int16_t attacker_team,
-                        int killing_object)
+/* unit_record_damage (0x1a8ee0) — XBE naked draft (batch 54). */
+#if defined(__clang__)
+static void *(*const b1a8ee0_get)(int, int) = object_get_and_verify_type;
+static int (*const b1a8ee0_gtime)(void) = game_time_get;
+static void (*const b1a8ee0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1a8ee0_exitfn)(int) = system_exit;
+static bool (*const b1a8ee0_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
+static void *(*const b1a8ee0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b1a8ee0_tryget)(int, int) = object_try_and_get_and_verify_type;
+static char (*const b1a8ee0_c3ff40)(int unit_handle, short killing_spree_count) = ai_handle_killing_spree;
+
+__attribute__((naked, noinline))
+void unit_record_damage(int unit_handle __attribute__((unused)), float damage_amount __attribute__((unused)), int16_t damage_type __attribute__((unused)), char notify_ai __attribute__((unused)), int attacker_object __attribute__((unused)), int16_t attacker_team __attribute__((unused)), int killing_object __attribute__((unused)))
 {
-  char *unit;
-  char found_existing;
-  int timestamp;
-  float *slot_damage;
-  int i;
-  int16_t empty_slot;
-  int16_t best_damage_slot;
-  int16_t best_oldest_slot;
-  int16_t s;
-  char *attacker_unit;
-  int attacker_unit_handle;
-  int seated_handle;
-  int killing_spree_count;
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  found_existing = 0;
-  timestamp = game_time_get();
-
-  /* Scan existing 4 slots for matching attacker or killing object */
-  slot_damage = (float *)(unit + 0x3e4);
-  i = 4;
-  do {
-    if ((attacker_object != -1 && *(int *)(((char *)slot_damage) + 8) == attacker_object) ||
-        *(int *)(((char *)slot_damage) + 4) == killing_object) {
-      *(int *)(((char *)slot_damage) - 4) = timestamp;
-      found_existing = 1;
-      *slot_damage = damage_amount + *slot_damage;
-    }
-    slot_damage = (float *)((char *)slot_damage + 0x10);
-    i = i - 1;
-  } while (i != 0);
-
-  if (!found_existing) {
-    /* Find an empty slot (timestamp == -1) */
-    empty_slot = 0;
-    do {
-      if (*(int *)(unit + ((int)empty_slot + 0x3e) * 0x10) == -1) {
-        goto write_slot;
-      }
-      empty_slot = empty_slot + 1;
-    } while (empty_slot < 4);
-
-    /* No empty slot — find the slot with the smallest damage (to evict) */
-    best_damage_slot = 0;
-    s = 1;
-    do {
-      if (*(float *)(unit + 0x3e4 + (int)best_damage_slot * 0x10) <
-          *(float *)(unit + 0x3f4 + ((int)s - 1) * 0x10)) {
-        best_damage_slot = s;
-      }
-      s = s + 1;
-    } while (s < 4);
-
-    /* Among remaining slots (excluding best_damage_slot), find the oldest */
-    best_oldest_slot = -1;
-    s = 0;
-    do {
-      if (s != best_damage_slot) {
-        if (best_oldest_slot == -1 ||
-            *(uint32_t *)(unit + 0x3e0 + (int)s * 0x10) <
-                *(uint32_t *)(unit + ((int)best_oldest_slot + 0x3e) * 0x10)) {
-          best_oldest_slot = s;
-        }
-      }
-      s = s + 1;
-    } while (s < 4);
-
-    if (best_oldest_slot == -1) {
-      display_assert("best_new_attacker_index!=NONE",
-                     "c:\\halo\\SOURCE\\units\\units.c", 0x136c, 1);
-      system_exit(-1);
-    }
-
-    empty_slot = best_oldest_slot;
-
-  write_slot:
-    {
-      int slot_base;
-      slot_base = (int)empty_slot * 0x10;
-      *(int *)(unit + slot_base + 0x3ec) = attacker_object;
-      *(int *)(unit + slot_base + 0x3e8) = killing_object;
-      /* Store damage as raw float bits via int assignment matches original MOV */
-      *(float *)(unit + slot_base + 0x3e4) = damage_amount;
-      *(int *)(unit + ((int)empty_slot + 0x3e) * 0x10) = timestamp;
-    }
-  }
-
-  /* AI notification section */
-  if (notify_ai == '\0') {
-    return;
-  }
-  if ((int16_t)attacker_team == -1) {
-    return;
-  }
-  if (!game_allegiance_get_team_is_friendly(
-          *(int16_t *)(unit + 0x68), attacker_team)) {
-    return;
-  }
-
-  /* Resolve the actual attacking unit */
-  attacker_unit = NULL;
-  attacker_unit_handle = killing_object;
-  if (attacker_object != -1) {
-    {
-      char *player_entry;
-      player_entry = (char *)datum_get(*(void **)0x5aa6d4, attacker_object);
-      seated_handle = *(int *)(player_entry + 0x34);
-      if (seated_handle != -1) {
-        attacker_unit = (char *)object_get_and_verify_type(seated_handle, 3);
-        attacker_unit_handle = seated_handle;
-        if (attacker_unit != NULL) {
-          goto have_attacker;
-        }
-      }
-    }
-  }
-  attacker_unit = (char *)object_try_and_get_and_verify_type(killing_object, 3);
-  attacker_unit_handle = killing_object;
-  if (attacker_unit == NULL) {
-    return;
-  }
-
-have_attacker:
-  /* Follow seat hierarchy (driver/gunner) to the controlling unit */
-  if (damage_type == 9) {
-    seated_handle = *(int *)(attacker_unit + 0x2d4);
-  } else {
-    seated_handle = *(int *)(attacker_unit + 0x2d8);
-  }
-  if (seated_handle != -1) {
-    attacker_unit = (char *)object_get_and_verify_type(seated_handle, 3);
-    attacker_unit_handle = seated_handle;
-  }
-
-  /* Skip AI-controlled units */
-  if ((*(uint8_t *)(attacker_unit + 0xb6) & 4) != 0) {
-    return;
-  }
-
-  /* Update killing spree counter */
-  {
-    int last_damage_time;
-    last_damage_time = *(int *)(attacker_unit + 0x3dc);
-    if (last_damage_time == -1 || last_damage_time + 0x78 < timestamp) {
-      *(int16_t *)(attacker_unit + 0x3da) = 0;
-    }
-    *(int16_t *)(attacker_unit + 0x3da) =
-        *(int16_t *)(attacker_unit + 0x3da) + 1;
-    killing_spree_count = (int)(uint16_t) *(int16_t *)(attacker_unit + 0x3da);
-    *(int *)(attacker_unit + 0x3dc) = timestamp;
-
-    if (ai_handle_killing_spree(attacker_unit_handle,
-                                (short)killing_spree_count) != '\0') {
-      *(int16_t *)(attacker_unit + 0x3da) = 0;
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "leal 0x3e4(%%edi), %%eax\n\t"
+      "movl $4, %%esi\n\t"
+      ".Lunit_record_damage_1:\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .Lunit_record_damage_2\n\t"
+      "cmpl %%ecx, 0x8(%%eax)\n\t"
+      "je .Lunit_record_damage_3\n\t"
+      ".Lunit_record_damage_2:\n\t"
+      "movl 0x20(%%ebp), %%ecx\n\t"
+      "cmpl %%ecx, 0x4(%%eax)\n\t"
+      "jne .Lunit_record_damage_4\n\t"
+      ".Lunit_record_damage_3:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movl %%edx, -0x4(%%eax)\n\t"
+      "fadds (%%eax)\n\t"
+      "movb $1, %%bl\n\t"
+      "fstps (%%eax)\n\t"
+      ".Lunit_record_damage_4:\n\t"
+      "addl $0x10, %%eax\n\t"
+      "decl %%esi\n\t"
+      "jne .Lunit_record_damage_1\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .Lunit_record_damage_15\n\t"
+      "xorl %%esi, %%esi\n\t"
+      ".Lunit_record_damage_5:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "addl $0x3e, %%eax\n\t"
+      "shll $4, %%eax\n\t"
+      "cmpl $-1, (%%eax,%%edi,1)\n\t"
+      "je .Lunit_record_damage_6\n\t"
+      "incl %%esi\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lunit_record_damage_5\n\t"
+      "jmp .Lunit_record_damage_7\n\t"
+      ".Lunit_record_damage_6:\n\t"
+      "cmpw $-1, %%si\n\t"
+      "jne .Lunit_record_damage_14\n\t"
+      ".Lunit_record_damage_7:\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "movl $1, %%ecx\n\t"
+      "leal 0x3f4(%%edi), %%edx\n\t"
+      ".Lunit_record_damage_8:\n\t"
+      "flds (%%edx)\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "shll $4, %%eax\n\t"
+      "fcomps 0x3e4(%%eax,%%edi,1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lunit_record_damage_9\n\t"
+      "movl %%ecx, %%ebx\n\t"
+      ".Lunit_record_damage_9:\n\t"
+      "incl %%ecx\n\t"
+      "addl $0x10, %%edx\n\t"
+      "cmpw $4, %%cx\n\t"
+      "jl .Lunit_record_damage_8\n\t"
+      "orl $0xffffffff, %%esi\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal 0x3e0(%%edi), %%ecx\n\t"
+      ".Lunit_record_damage_10:\n\t"
+      "cmpw %%bx, %%ax\n\t"
+      "je .Lunit_record_damage_12\n\t"
+      "cmpw $-1, %%si\n\t"
+      "je .Lunit_record_damage_11\n\t"
+      "movl (%%ecx), %%ebx\n\t"
+      "movswl %%si, %%edx\n\t"
+      "addl $0x3e, %%edx\n\t"
+      "shll $4, %%edx\n\t"
+      "cmpl (%%edx,%%edi,1), %%ebx\n\t"
+      "movl -0x4(%%ebp), %%ebx\n\t"
+      "jae .Lunit_record_damage_12\n\t"
+      ".Lunit_record_damage_11:\n\t"
+      "movl %%eax, %%esi\n\t"
+      ".Lunit_record_damage_12:\n\t"
+      "incl %%eax\n\t"
+      "addl $0x10, %%ecx\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jl .Lunit_record_damage_10\n\t"
+      "cmpw $-1, %%si\n\t"
+      "jne .Lunit_record_damage_13\n\t"
+      "pushl $1\n\t"
+      "pushl $0x136c\n\t"
+      "pushl $0x2b68c0\n\t"
+      "pushl $0x2b6964\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lunit_record_damage_13:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      ".Lunit_record_damage_14:\n\t"
+      "movl 0x20(%%ebp), %%ebx\n\t"
+      "movswl %%si, %%ecx\n\t"
+      "movl 0x18(%%ebp), %%esi\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "shll $4, %%eax\n\t"
+      "addl %%edi, %%eax\n\t"
+      "addl $0x3e, %%ecx\n\t"
+      "movl %%esi, 0x3ec(%%eax)\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "shll $4, %%ecx\n\t"
+      "movl %%ebx, 0x3e8(%%eax)\n\t"
+      "movl %%esi, 0x3e4(%%eax)\n\t"
+      "movl %%edx, (%%ecx,%%edi,1)\n\t"
+      "jmp .Lunit_record_damage_16\n\t"
+      ".Lunit_record_damage_15:\n\t"
+      "movl 0x20(%%ebp), %%ebx\n\t"
+      ".Lunit_record_damage_16:\n\t"
+      "movb 0x14(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lunit_record_damage_24\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lunit_record_damage_24\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x68(%%edi), %%cx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ca7a30]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lunit_record_damage_24\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lunit_record_damage_17\n\t"
+      "movl 0x5aa6d4, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lunit_record_damage_17\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lunit_record_damage_18\n\t"
+      ".Lunit_record_damage_17:\n\t"
+      "pushl $3\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "call *%[tryget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lunit_record_damage_24\n\t"
+      ".Lunit_record_damage_18:\n\t"
+      "cmpw $9, 0x10(%%ebp)\n\t"
+      "jne .Lunit_record_damage_19\n\t"
+      "movl 0x2d4(%%esi), %%eax\n\t"
+      "jmp .Lunit_record_damage_20\n\t"
+      ".Lunit_record_damage_19:\n\t"
+      "movl 0x2d8(%%esi), %%eax\n\t"
+      ".Lunit_record_damage_20:\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lunit_record_damage_21\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      ".Lunit_record_damage_21:\n\t"
+      "testb $4, 0xb6(%%esi)\n\t"
+      "jne .Lunit_record_damage_24\n\t"
+      "call *%[gtime]\n\t"
+      "movl 0x3dc(%%esi), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .Lunit_record_damage_22\n\t"
+      "addl $0x78, %%ecx\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jge .Lunit_record_damage_23\n\t"
+      ".Lunit_record_damage_22:\n\t"
+      "movw $0, 0x3da(%%esi)\n\t"
+      ".Lunit_record_damage_23:\n\t"
+      "incw 0x3da(%%esi)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x3da(%%esi), %%cx\n\t"
+      "movl %%eax, 0x3dc(%%esi)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c3ff40]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lunit_record_damage_24\n\t"
+      "movw $0, 0x3da(%%esi)\n\t"
+      ".Lunit_record_damage_24:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      :
+      : [get] "m"(b1a8ee0_get), [gtime] "m"(b1a8ee0_gtime), [assert] "m"(b1a8ee0_assert), [exitfn] "m"(b1a8ee0_exitfn), [ca7a30] "m"(b1a8ee0_ca7a30), [dget] "m"(b1a8ee0_dget), [tryget] "m"(b1a8ee0_tryget), [c3ff40] "m"(b1a8ee0_c3ff40)
+      : "memory");
 }
+#else
+#error "unit_record_damage: clang naked draft required"
+#endif
+
 
 /* 0x1a9200 — get world-space position of the "head" marker on a unit.
  * Thin wrapper: calls object_get_markers_by_string_id for the string at
@@ -11917,146 +11974,230 @@ void unit_impact_melee_damage(int unit_handle __attribute__((unused)), int param
 #endif
 
 
-/* unit_cause_melee_damage (0x1ae840)
- * Applies melee damage from a unit to a target. Resolves the melee marker
- * position, optionally performs a collision test to adjust the damage origin,
- * then builds damage params and applies via object_cause_damage.
- * cdecl, 7 stack params.
- * If melee_hit is false and the collision result has a valid material type,
- * plays the melee clang sound via FUN_001abd10. */
-void unit_cause_melee_damage(int unit_handle, char melee_hit, int target_handle,
-                             int param_4, int param_5, int param_6,
-                             int param_7)
+/* unit_cause_melee_damage (0x1ae840) — XBE naked draft (batch 54). */
+#if defined(__clang__)
+static void *(*const b1ae840_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1ae840_tag)(int, int) = tag_get;
+static short (*const b1ae840_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
+static void (*const b1ae840_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1ae840_exitfn)(int) = system_exit;
+static bool (*const b1ae840_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
+static int (*const b1ae840_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
+static void (*const b1ae840_c136750)(void *damage_params, int tag_index) = damage_data_new;
+static void (*const b1ae840_c138e30)(void *damage_params, int target_index) = FUN_00138e30;
+static void (*const b1ae840_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = object_cause_damage;
+static void (*const b1ae840_c1abd10)(int16_t material_type, int unit_handle, int weapon_tag_index) = FUN_001abd10;
+
+__attribute__((naked, noinline))
+void unit_cause_melee_damage(int unit_handle __attribute__((unused)), char melee_hit __attribute__((unused)), int target_handle __attribute__((unused)), int param_4 __attribute__((unused)), int param_5 __attribute__((unused)), int param_6 __attribute__((unused)), int param_7 __attribute__((unused)))
 {
-  char *unit;
-  char *unit_tag;
-  int16_t marker_count;
-  /* FUN_0014df70 (collision raycast) writes an 80-byte result struct through
-   * this pointer (stores at +0..+0x4e, derived from disasm). The original
-   * allocates 0x50 bytes (lea [ebp-0x68], direction at [ebp-0x18]); a 4-byte
-   * buffer here overflowed the saved EBX/EDI/ESI/EBP slots, corrupting the
-   * caller's `unit` pointer to NONE (0xffffffff) -> [unit+0x25a] page fault
-   * (CR2=0x259) when an elite melees in PoA. Matches the correct siblings at
-   * units.c:2233 and units.c:11326. */
-  char collision_result[80];
-  float *position;
-  float melee_pos[3];
-  float direction[3];
-  char coll_hit;
-  int16_t coll_depth;
-  int weapon_handle;
-  char *weapon_obj;
-  char *weapon_tag;
-  int damage_effect_index;
-  char marker_buf[96];
-  char damage_params[0x54];
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  unit_tag = (char *)tag_get(0x756e6974, *(int *)unit);
-
-  if (*(int *)(unit_tag + 0x294) == -1) {
-    goto cleanup;
-  }
-
-  marker_count = object_get_markers_by_string_id(
-      unit_handle, (void *)0x25961c, marker_buf, 1);
-
-  if (marker_count == 1) {
-    /* marker found — use marker position as melee origin */
-    melee_pos[0] = *(float *)(marker_buf + 0x60);
-    melee_pos[1] = *(float *)(marker_buf + 0x64);
-    melee_pos[2] = *(float *)(marker_buf + 0x68);
-
-    /* collision user stack depth check */
-    if (*(int16_t *)0x4761d8 >= MAXIMUM_COLLISION_USER_STACK_DEPTH) {
-      display_assert(
-          "global_current_collision_user_depth < "
-          "MAXIMUM_COLLISION_USER_STACK_DEPTH",
-          "c:\\halo\\SOURCE\\units\\units.c", 0x21b9, true);
-      system_exit(-1);
-    }
-
-    coll_depth = *(int16_t *)0x4761d8;
-    *(int16_t *)0x4761d8 = coll_depth + 1;
-
-    position = (float *)(unit + 0x50);
-    *(int16_t *)(0x5a8c80 + coll_depth * 2) = 7;
-
-    /* direction = melee_pos - unit position */
-    direction[0] = melee_pos[0] - position[0];
-    direction[1] = melee_pos[1] - position[1];
-    direction[2] = melee_pos[2] - position[2];
-
-    coll_hit = (char)FUN_0014df70(0x1000e9, position, direction, -1,
-                                  (int16_t *)collision_result);
-    if (coll_hit != 0) {
-      /* collision hit — snap melee position to unit center */
-      melee_pos[0] = position[0];
-      melee_pos[1] = position[1];
-      melee_pos[2] = position[2];
-    }
-
-    if (*(int16_t *)0x4761d8 < 2) {
-      display_assert("global_current_collision_user_depth > 1",
-                     "c:\\halo\\SOURCE\\units\\units.c", 0x21c1, true);
-      system_exit(-1);
-    }
-    *(int16_t *)0x4761d8 = *(int16_t *)0x4761d8 - 1;
-  } else {
-    /* no marker — use unit position directly */
-    position = (float *)(unit + 0x50);
-    melee_pos[0] = position[0];
-    melee_pos[1] = position[1];
-    melee_pos[2] = position[2];
-  }
-
-  /* Determine the damage effect tag index */
-  damage_effect_index = *(int *)(unit_tag + 0x294);
-
-  /* Check if the current weapon has an override melee damage effect */
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  weapon_handle =
-      unit_get_weapon(unit_handle, *(int16_t *)(unit + 0x2a2));
-
-  if (weapon_handle != -1) {
-    weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-    weapon_tag = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-    /* Check weapon flags bit 15 (byte at +0x309, high bit) for melee override */
-    if ((char)(*(uint32_t *)(weapon_tag + 0x308) >> 8) < 0) {
-      damage_effect_index = *(int *)(weapon_tag + 0x3a0);
-    }
-  }
-
-  /* Build damage params */
-  damage_data_new(damage_params, damage_effect_index);
-
-  *(int *)(damage_params + 0x14) = *(int *)(unit + 0x48);
-  *(int *)(damage_params + 0x18) = *(int *)(unit + 0x4c);
-  *(int16_t *)(damage_params + 0x10) = *(int16_t *)(unit + 0x68);
-  *(int *)(damage_params + 0x08) = *(int *)(unit + 0x1c8);
-  *(float *)(damage_params + 0x20) = melee_pos[1];
-  *(int *)(damage_params + 0x2c) = *(int *)(unit + 0x54);
-  *(int *)(damage_params + 0x0c) = unit_handle;
-  *(float *)(damage_params + 0x1c) = melee_pos[0];
-  *(int *)(damage_params + 0x28) = *(int *)(unit + 0x50);
-  *(float *)(damage_params + 0x24) = melee_pos[2];
-  *(int *)(damage_params + 0x30) = *(int *)(unit + 0x58);
-
-  if (target_handle == -1) {
-    FUN_00138e30(damage_params, -1);
-  } else {
-    object_cause_damage(damage_params, target_handle, (short)param_4,
-                        (short)param_5, (short)param_6, (unsigned int)param_7);
-  }
-
-  if (melee_hit == 0 && *(int16_t *)(damage_params + 0x4c) != -1) {
-    FUN_001abd10(*(int16_t *)(damage_params + 0x4c), unit_handle,
-                 damage_effect_index);
-  }
-
-cleanup:
-  *(uint8_t *)(unit + 0x239) = 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xd8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x294(%%edi), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lunit_cause_melee_damage_9\n\t"
+      "pushl $1\n\t"
+      "leal -0xd8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x25961c\n\t"
+      "pushl %%esi\n\t"
+      "call *%[markers]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .Lunit_cause_melee_damage_4\n\t"
+      "cmpw $0x20, 0x4761d8\n\t"
+      "movl -0x78(%%ebp), %%edx\n\t"
+      "movl -0x74(%%ebp), %%eax\n\t"
+      "movl -0x70(%%ebp), %%ecx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "jl .Lunit_cause_melee_damage_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x21b9\n\t"
+      "pushl $0x2b68c0\n\t"
+      "pushl $0x253440\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lunit_cause_melee_damage_1:\n\t"
+      "movw 0x4761d8, %%ax\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "incw %%ax\n\t"
+      "movw %%ax, 0x4761d8\n\t"
+      "leal 0x50(%%ebx), %%esi\n\t"
+      "movw $7, 0x5a8c80(,%%edx,2)\n\t"
+      "leal -0x68(%%ebp), %%eax\n\t"
+      "fsubs (%%esi)\n\t"
+      "pushl %%eax\n\t"
+      "pushl $-1\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "pushl %%esi\n\t"
+      "fsubs 0x4(%%esi)\n\t"
+      "pushl $0x1000e9\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fsubs 0x8(%%esi)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "call *%[ray]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lunit_cause_melee_damage_2\n\t"
+      "movl %%esi, %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      ".Lunit_cause_melee_damage_2:\n\t"
+      "cmpw $1, 0x4761d8\n\t"
+      "jg .Lunit_cause_melee_damage_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x21c1\n\t"
+      "pushl $0x2b68c0\n\t"
+      "pushl $0x253418\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lunit_cause_melee_damage_3:\n\t"
+      "decw 0x4761d8\n\t"
+      "jmp .Lunit_cause_melee_damage_5\n\t"
+      ".Lunit_cause_melee_damage_4:\n\t"
+      "leal 0x50(%%ebx), %%esi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      ".Lunit_cause_melee_damage_5:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0x294(%%edi), %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[get]\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x2a2(%%eax), %%dx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1adeb0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lunit_cause_melee_damage_6\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x308(%%eax), %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%ch, %%ch\n\t"
+      "jns .Lunit_cause_melee_damage_6\n\t"
+      "movl 0x3a0(%%eax), %%edi\n\t"
+      ".Lunit_cause_melee_damage_6:\n\t"
+      "leal -0x6c(%%ebp), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c136750]\n\t"
+      "movl 0x48(%%ebx), %%eax\n\t"
+      "movl 0x4c(%%ebx), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x58(%%ebp)\n\t"
+      "movw 0x68(%%ebx), %%ax\n\t"
+      "movw %%ax, -0x5c(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0x54(%%ebp)\n\t"
+      "movl 0x1c8(%%ebx), %%ecx\n\t"
+      "movl %%eax, -0x4c(%%ebp)\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "movl %%edx, -0x60(%%ebp)\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movl %%ecx, -0x64(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl %%eax, -0x40(%%ebp)\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl %%edx, -0x50(%%ebp)\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "movl %%ecx, -0x48(%%ebp)\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%edx, -0x44(%%ebp)\n\t"
+      "movl %%ecx, -0x3c(%%ebp)\n\t"
+      "jne .Lunit_cause_melee_damage_7\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x6c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c138e30]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lunit_cause_melee_damage_8\n\t"
+      ".Lunit_cause_melee_damage_7:\n\t"
+      "movl 0x20(%%ebp), %%ecx\n\t"
+      "movl 0x1c(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x6c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c137d20]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".Lunit_cause_melee_damage_8:\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lunit_cause_melee_damage_9\n\t"
+      "cmpw $-1, -0x20(%%ebp)\n\t"
+      "je .Lunit_cause_melee_damage_9\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "call *%[c1abd10]\n\t"
+      ".Lunit_cause_melee_damage_9:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $0, 0x239(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      :
+      : [get] "m"(b1ae840_get), [tag] "m"(b1ae840_tag), [markers] "m"(b1ae840_markers), [assert] "m"(b1ae840_assert), [exitfn] "m"(b1ae840_exitfn), [ray] "m"(b1ae840_ray), [c1adeb0] "m"(b1ae840_c1adeb0), [c136750] "m"(b1ae840_c136750), [c138e30] "m"(b1ae840_c138e30), [c137d20] "m"(b1ae840_c137d20), [c1abd10] "m"(b1ae840_c1abd10)
+      : "memory");
 }
+#else
+#error "unit_cause_melee_damage: clang naked draft required"
+#endif
+
 
 /* unit_died (0x1b3060)
  * Handles unit death or feign-death. On real death (param_2=0): sets garbage,
@@ -12530,156 +12671,234 @@ skip_decrement:
   *(uint8_t *)(unit + 0x23d) = 3;
 }
 
-/* FUN_001abd90 (0x1abd90) — melee lunge collision damage
- * Tests for melee collision against the unit's parent (seat occupant target),
- * and applies damage using the unit's melee damage effect tag. When collision
- * hits, computes a surface normal and applies damage with collision context.
- * Otherwise applies damage with no-target params.
- * Register args: @edi = unit_handle. No stack params.
- * Called at the melee lunge phase (state 4) in unit_update. */
-void FUN_001abd90(int unit_handle)
+/* FUN_001abd90 (0x1abd90) — XBE naked draft (batch 54). */
+#if defined(__clang__)
+static void *(*const b1abd90_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1abd90_tag)(int, int) = tag_get;
+static void (*const b1abd90_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1abd90_exitfn)(int) = system_exit;
+static int (*const b1abd90_c14c8e0)(int *out, int object_handle) = FUN_0014c8e0;
+static vector3_t * (*const b1abd90_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+static float *(*const b1abd90_vsca)(float *, float *, float, float *) = vector3d_scale_add;
+static char (*const b1abd90_c14cb00)(int param_1, void *param_2, void *param_3, void *param_4, int16_t *param_5) = FUN_0014cb00;
+static void (*const b1abd90_c10a1c0)(float *matrix, float *in_plane, float *out_plane) = FUN_0010a1c0;
+static void (*const b1abd90_c994d0)(float *plane_in, float *plane_out) = plane_negate;
+static void (*const b1abd90_c136750)(void *damage_params, int tag_index) = damage_data_new;
+static void (*const b1abd90_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = object_cause_damage;
+
+__attribute__((naked, noinline))
+void FUN_001abd90(int unit_handle __attribute__((unused)))
 {
-  char *unit;
-  char *unit_tag_data;
-  int parent_handle;
-  char collision_buf[0x4c0 - 0x64]; /* large collision buffer */
-  char collision_result[0x60];
-  char damage_params[0x54];
-  float direction[3];
-  float point_out[3];
-  float surface_out[16];
-  float normal_out[16];
-  char hit_found;
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  unit_tag_data = (char *)tag_get(0x756e6974, *(int *)unit);
-
-  /* Only proceed if in melee lunge state 4, has parent, and has damage effect */
-  if (*(char *)(unit + 0x239) != 4) {
-    return;
-  }
-  parent_handle = *(int *)(unit + 0xcc);
-  if (parent_handle == -1) {
-    return;
-  }
-  if (*(int *)(unit_tag_data + 0x294) == -1) {
-    return;
-  }
-
-  hit_found = 0;
-
-  if (*(char *)(unit + 0x23a) == 0) {
-    /* First attempt — perform collision test */
-    if (*(int16_t *)0x4761d8 >= MAXIMUM_COLLISION_USER_STACK_DEPTH) {
-      display_assert(
-          "global_current_collision_user_depth < "
-          "MAXIMUM_COLLISION_USER_STACK_DEPTH",
-          "c:\\halo\\SOURCE\\units\\units.c", 0x22e6, true);
-      system_exit(-1);
-    }
-
-    {
-      int16_t coll_depth;
-      char coll_result;
-
-      coll_depth = *(int16_t *)0x4761d8;
-      *(int16_t *)0x4761d8 = coll_depth + 1;
-      *(int16_t *)(0x5a8c80 + coll_depth * 2) = 8;
-
-      /* Set up collision test against parent */
-      coll_result = FUN_0014c8e0((int *)collision_buf, parent_handle);
-
-      if (coll_result != 0) {
-        /* Get world position and compute melee direction */
-        object_get_world_position(unit_handle, (vector3_t *)point_out);
-
-        direction[0] = *(float *)(unit + 0x24) * *(float *)0x2549d4;
-        direction[1] = *(float *)(unit + 0x28) * *(float *)0x2549d4;
-        direction[2] = *(float *)(unit + 0x2c) * *(float *)0x2549d4;
-
-        vector3d_scale_add(point_out, direction, *(float *)0xbf000000,
-                           point_out);
-
-        coll_result = FUN_0014cb00((int)collision_buf, (void *)3, point_out,
-                                   direction, (int16_t *)collision_result);
-
-        if (coll_result != 0) {
-          /* Compute hit point */
-          vector3d_scale_add(point_out, direction,
-                             *(float *)(collision_result + 0x0c),
-                             surface_out);
-
-          /* Get surface normal */
-          {
-            int surface_base;
-            surface_base = *(int *)(collision_buf + 0x70 - 0x64);
-            FUN_0010a1c0(
-                (float *)(surface_base +
-                          *(int16_t *)collision_result * 0x34),
-                (float *)(collision_result + 0x14),
-                (float *)normal_out);
-          }
-
-          /* Negate normal if backfacing */
-          if (*(int *)(collision_result + 0x1c) < 0) {
-            plane_negate((float *)normal_out, (float *)normal_out);
-          }
-
-          hit_found = 1;
-        }
-      }
-
-      /* Pop collision user depth */
-      if (*(int16_t *)0x4761d8 < 2) {
-        display_assert("global_current_collision_user_depth > 1",
-                       "c:\\halo\\SOURCE\\units\\units.c", 0x22fe, true);
-        system_exit(-1);
-      }
-      *(int16_t *)0x4761d8 = *(int16_t *)0x4761d8 - 1;
-    }
-  }
-
-  /* Build damage params from melee damage effect */
-  {
-    int damage_effect;
-    damage_effect = *(int *)(unit_tag_data + 0x294);
-    damage_data_new(damage_params, damage_effect);
-  }
-
-  /* Set damage params common fields */
-  *(int *)(damage_params + 0x00) = unit_handle;
-  *(int16_t *)(damage_params + 0x04) = *(int16_t *)(unit + 0x68);
-  *(int *)(damage_params + 0x08) = *(int *)(unit + 0x1c8);
-  *(float *)(damage_params + 0x20) = 0.03333333f; /* 1/30 */
-
-  if (hit_found) {
-    /* Copy hit position and forward direction into damage params */
-    *(float *)(damage_params + 0x34) = surface_out[0];
-    *(float *)(damage_params + 0x38) = surface_out[1];
-    *(float *)(damage_params + 0x30) = surface_out[0]; /* duplicate */
-    *(float *)(damage_params + 0x3c) = surface_out[2];
-
-    /* Copy unit forward as damage direction */
-    *(float *)(damage_params + 0x2c) = *(float *)(unit + 0x24);
-    *(float *)(damage_params + 0x28) = *(float *)(unit + 0x28);
-    *(float *)(damage_params + 0x24) = *(float *)(unit + 0x2c);
-
-    *(uint32_t *)(damage_params + 0x04) |= 2;
-    *(char *)(unit + 0x23a) = 10;
-
-    object_cause_damage(damage_params, parent_handle,
-                        *(int16_t *)collision_result,
-                        *(int16_t *)(collision_result + 0x02),
-                        *(int16_t *)(collision_result + 0x1a),
-                        (unsigned int)normal_out);
-  } else {
-    object_cause_damage(damage_params, parent_handle,
-                        (short)-1, (short)-1, (short)-1, 0);
-  }
-
-  /* Decrement attack timer */
-  *(char *)(unit + 0x23a) = *(char *)(unit + 0x23a) - 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x4bc, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x239(%%esi), %%cl\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpb $4, %%cl\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "jne .LFUN_001abd90_8\n\t"
+      "movl 0xcc(%%esi), %%edx\n\t"
+      "movl $0xffffffff, %%ecx\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "je .LFUN_001abd90_8\n\t"
+      "cmpl %%ecx, 0x294(%%eax)\n\t"
+      "je .LFUN_001abd90_8\n\t"
+      "movb 0x23a(%%esi), %%cl\n\t"
+      "pushl %%ebx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_001abd90_5\n\t"
+      "cmpw $0x20, 0x4761d8\n\t"
+      "jl .LFUN_001abd90_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x22e6\n\t"
+      "pushl $0x2b68c0\n\t"
+      "pushl $0x253440\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001abd90_1:\n\t"
+      "movw 0x4761d8, %%ax\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "incw %%ax\n\t"
+      "movw %%ax, 0x4761d8\n\t"
+      "movw $8, 0x5a8c80(,%%ecx,2)\n\t"
+      "movl 0xcc(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x9c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c14c8e0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001abd90_3\n\t"
+      "leal -0x1c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1412f0]\n\t"
+      "flds 0x24(%%esi)\n\t"
+      "fmuls 0x2549d4\n\t"
+      "leal -0x1c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0xbf000000\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "flds 0x28(%%esi)\n\t"
+      "pushl %%eax\n\t"
+      "fmuls 0x2549d4\n\t"
+      "leal -0x1c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x2c(%%esi)\n\t"
+      "fmuls 0x2549d4\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "call *%[vsca]\n\t"
+      "leal -0x4bc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x1c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x9c(%%ebp), %%edx\n\t"
+      "pushl $3\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c14cb00]\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001abd90_3\n\t"
+      "movl -0x4b4(%%ebp), %%ecx\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[vsca]\n\t"
+      "movswl -0x4bc(%%ebp), %%eax\n\t"
+      "movl -0x4b0(%%ebp), %%edx\n\t"
+      "imull $0x34, %%eax, %%eax\n\t"
+      "movl -0x90(%%ebp), %%ebx\n\t"
+      "leal -0x38(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "addl %%ebx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10a1c0]\n\t"
+      "movl -0x4a8(%%ebp), %%eax\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jns .LFUN_001abd90_2\n\t"
+      "leal -0x38(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x38(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c994d0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_001abd90_2:\n\t"
+      "movb $1, %%bl\n\t"
+      ".LFUN_001abd90_3:\n\t"
+      "cmpw $1, 0x4761d8\n\t"
+      "jg .LFUN_001abd90_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x22fe\n\t"
+      "pushl $0x2b68c0\n\t"
+      "pushl $0x253418\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001abd90_4:\n\t"
+      "decw 0x4761d8\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      ".LFUN_001abd90_5:\n\t"
+      "movl 0x294(%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c136750]\n\t"
+      "movw 0x68(%%esi), %%dx\n\t"
+      "movl 0x1c8(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movl %%edi, -0x80(%%ebp)\n\t"
+      "movw %%dx, -0x7c(%%ebp)\n\t"
+      "movl %%eax, -0x84(%%ebp)\n\t"
+      "movl $0x3d088889, -0x4c(%%ebp)\n\t"
+      "je .LFUN_001abd90_6\n\t"
+      "movl -0x24(%%ebp), %%ecx\n\t"
+      "movl -0x20(%%ebp), %%edx\n\t"
+      "movl -0x28(%%ebp), %%eax\n\t"
+      "movl -0x88(%%ebp), %%ebx\n\t"
+      "movl %%ecx, -0x60(%%ebp)\n\t"
+      "movl %%ecx, -0x6c(%%ebp)\n\t"
+      "movl %%edx, -0x5c(%%ebp)\n\t"
+      "movl %%edx, -0x68(%%ebp)\n\t"
+      "leal 0x24(%%esi), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%eax, -0x64(%%ebp)\n\t"
+      "movl %%eax, -0x70(%%ebp)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%edx, -0x58(%%ebp)\n\t"
+      "leal -0x38(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x4bc(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x54(%%ebp)\n\t"
+      "movl -0x4a2(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xcc(%%esi), %%eax\n\t"
+      "movl %%ecx, -0x50(%%ebp)\n\t"
+      "movl -0x4ba(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "orl $2, %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8c(%%ebp), %%ecx\n\t"
+      "movl %%ebx, -0x88(%%ebp)\n\t"
+      "movb $0xa, 0x23a(%%esi)\n\t"
+      "pushl %%ecx\n\t"
+      "jmp .LFUN_001abd90_7\n\t"
+      ".LFUN_001abd90_6:\n\t"
+      "movl 0xcc(%%esi), %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x8c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      ".LFUN_001abd90_7:\n\t"
+      "call *%[c137d20]\n\t"
+      "movb 0x23a(%%esi), %%al\n\t"
+      "addl $0x18, %%esp\n\t"
+      "decb %%al\n\t"
+      "movb %%al, 0x23a(%%esi)\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_001abd90_8:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      :
+      : [get] "m"(b1abd90_get), [tag] "m"(b1abd90_tag), [assert] "m"(b1abd90_assert), [exitfn] "m"(b1abd90_exitfn), [c14c8e0] "m"(b1abd90_c14c8e0), [c1412f0] "m"(b1abd90_c1412f0), [vsca] "m"(b1abd90_vsca), [c14cb00] "m"(b1abd90_c14cb00), [c10a1c0] "m"(b1abd90_c10a1c0), [c994d0] "m"(b1abd90_c994d0), [c136750] "m"(b1abd90_c136750), [c137d20] "m"(b1abd90_c137d20)
+      : "memory");
 }
+#else
+#error "FUN_001abd90: clang naked draft required"
+#endif
+
 
 /* unit_adjust_plan_overlap (0x1acb70) — FPU quadratic solver for movement plans
  * When two movement plans overlap in time, adjusts the later plan by solving

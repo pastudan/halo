@@ -923,102 +923,139 @@ void object_destroy(int object_handle)
   object_delete(object_handle);
 }
 
-/* FUN_00137690 (0x137690) — Apply region destruction to an object.
- *
- * Called when a region on an object takes enough damage to be destroyed.
- * Looks up the object's collision model tag, validates the region_index,
- * then if the region hasn't already been destroyed:
- *   1. Gets the region element from the collision model's regions tag_block
- *      at coll+0x240 (element size 0x54)
- *   2. Creates the region's destroy effect (region+0x44) via FUN_0009ec30
- *   3. Calls object_permute_region to set the "~damaged" permutation on the
- * object's model for the destroyed region
- *   4. Propagates region flags (region+0x20) into the object's damage flags:
- *        bit 5 (0x20) -> obj+0xb6 |= 0x80
- *        bit 6 (0x40) -> obj+0xb6 |= 0x100
- *        bit 7 (0x80) -> obj+0xb7 |= 0x02
- *        bit 8 (0x100) -> obj+0xb7 |= 0x04
- *   5. If region has "forces body depletion" flag (bit 1 / 0x02), calls
- *      object_deplete_body to deplete the object's body
- *   6. Marks the region as destroyed in obj+0x124 (bitfield)
- *   7. Calls FUN_0013c6e0 to notify region-damage callbacks
- *
- * Confirmed: EDI = object_handle (register arg). Both callers in FUN_001377d0
- *   set EDI from [EBP+0x8] before calling:
- *     0x137a62: MOV EDI,[EBP+0x8]; PUSH EAX; CALL 0x137690
- *     0x137c26: PUSH EBX; CALL 0x137690; MOV EDI,[EBP+0x8] (restore after)
- * Confirmed: PUSH -1; PUSH EDI; CALL 0x13d680 => object_get_and_verify_type.
- * Confirmed: MOV EAX,[EBX] -> PUSH EAX; PUSH 0x6f626a65 => tag_get('obje').
- * Confirmed: MOV EAX,[EAX+0x7c]; CMP EAX,-1 checks collision model.
- * Confirmed: PUSH EAX; PUSH 0x636f6c6c => tag_get('coll', coll_index).
- * Confirmed: TEST AX,AX; JL assert; CMP AX,0x8; JL skip_assert.
- * Confirmed: PUSH 0x54; PUSH ECX; ADD ESI,0x240; PUSH ESI =>
- * tag_block_get_element. Confirmed: 8 pushes [0,0,0,0,-1,EDI,EDI,[ESI+0x44]]
- * before CALL 0x9ec30. Confirmed: PUSH 1; PUSH EDX; PUSH 0x29b030; PUSH EDI =>
- * object_permute_region(obj,"~damaged",rgn,1). Confirmed: flag tests at
- * 0x20,0x40,0x80,0x100 on region+0x20 byte. Confirmed: TEST byte [ESI+0x20],0x2
- * gates call to object_deplete_body. Confirmed: OR word [EBX+0x124],AX sets
- * region-damaged bit. Confirmed: PUSH [ESI+0x20]; PUSH EDX; PUSH EDI =>
- * FUN_0013c6e0(obj,rgn,flags).
- */
-void FUN_00137690(int object_handle, short region_index)
+/* FUN_00137690 (0x137690) — XBE naked draft (batch 54). */
+#if defined(__clang__)
+static void *(*const b137690_get)(int, int) = object_get_and_verify_type;
+static void *(*const b137690_tag)(int, int) = tag_get;
+static void (*const b137690_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b137690_exitfn)(int) = system_exit;
+static void *(*const b137690_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b137690_o9ec30)(int, int, int, short, float, float, int, int) = FUN_0009ec30;
+static void (*const b137690_c1402c0)(int object_handle, const char *marker_name, short region_index, char param_4) = object_permute_region;
+static void (*const b137690_c137540)(int object_handle) = object_deplete_body;
+static void (*const b137690_c13c6e0)(int object_handle, int region_index, unsigned int flags) = FUN_0013c6e0;
+
+__attribute__((naked, noinline))
+void FUN_00137690(int object_handle __attribute__((unused)), short region_index __attribute__((unused)))
 {
-  int *obj;
-  int obje_tag;
-  int coll_tag;
-  int coll_index;
-  char *region;
-  int region_idx;
-  unsigned short damaged_regions;
-  int bit;
-
-  obj = (int *)object_get_and_verify_type(object_handle, -1);
-  obje_tag = (int)tag_get(0x6f626a65, *obj);
-  coll_index = *(int *)(obje_tag + 0x7c);
-  if (coll_index == -1) {
-    return;
-  }
-
-  coll_tag = (int)tag_get(0x636f6c6c, coll_index);
-  if (region_index < 0 || region_index >= 8) {
-    display_assert("region_index>=0 && region_index<MAXIMUM_REGIONS_PER_OBJECT",
-                   "c:\\halo\\SOURCE\\objects\\damage.c", 0x71a, 1);
-    system_exit(-1);
-  }
-
-  region_idx = (int)region_index;
-  damaged_regions = *(unsigned short *)((char *)obj + 0x124);
-  bit = 1 << region_idx;
-  if ((damaged_regions & bit) != 0) {
-    return;
-  }
-
-  region =
-    (char *)tag_block_get_element((void *)(coll_tag + 0x240), region_idx, 0x54);
-  FUN_0009ec30(*(int *)(region + 0x44), object_handle,
-               object_handle, /* dup-args-ok: confirmed PUSH EDI,EDI */
-               -1, 0, 0, 0, 0);
-  object_permute_region(object_handle, "~damaged", region_index, 1);
-
-  if ((*(unsigned char *)(region + 0x20) & 0x20) != 0) {
-    *(unsigned short *)((char *)obj + 0xb6) |= 0x80;
-  }
-  if ((*(unsigned char *)(region + 0x20) & 0x40) != 0) {
-    *(unsigned short *)((char *)obj + 0xb6) |= 0x100;
-  }
-  if ((*(unsigned char *)(region + 0x20) & 0x80) != 0) {
-    *(unsigned char *)((char *)obj + 0xb7) |= 0x02;
-  }
-  if ((*(unsigned int *)(region + 0x20) & 0x100) != 0) {
-    *(unsigned char *)((char *)obj + 0xb7) |= 0x04;
-  }
-  if ((*(unsigned char *)(region + 0x20) & 0x02) != 0) {
-    object_deplete_body(object_handle);
-  }
-
-  *(unsigned short *)((char *)obj + 0x124) |= (unsigned short)(1 << region_idx);
-  FUN_0013c6e0(object_handle, region_index, *(unsigned int *)(region + 0x20));
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x7c(%%eax), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00137690_9\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x636f6c6c\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .LFUN_00137690_1\n\t"
+      "cmpw $8, %%ax\n\t"
+      "jl .LFUN_00137690_2\n\t"
+      ".LFUN_00137690_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x71a\n\t"
+      "pushl $0x29af50\n\t"
+      "pushl $0x29b03c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00137690_2:\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "movzwl 0x124(%%ebx), %%eax\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "testl %%edx, %%eax\n\t"
+      "jne .LFUN_00137690_8\n\t"
+      "pushl $0x54\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x240, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x44(%%esi), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[o9ec30]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x29b030\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1402c0]\n\t"
+      "movb 0x20(%%esi), %%al\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "testb $0x20, %%al\n\t"
+      "movl $0x80, %%ecx\n\t"
+      "je .LFUN_00137690_3\n\t"
+      "orw %%cx, 0xb6(%%ebx)\n\t"
+      ".LFUN_00137690_3:\n\t"
+      "testb $0x40, 0x20(%%esi)\n\t"
+      "movl $0x100, %%eax\n\t"
+      "je .LFUN_00137690_4\n\t"
+      "orw %%ax, 0xb6(%%ebx)\n\t"
+      ".LFUN_00137690_4:\n\t"
+      "testb %%cl, 0x20(%%esi)\n\t"
+      "je .LFUN_00137690_5\n\t"
+      "orb $2, 0xb7(%%ebx)\n\t"
+      ".LFUN_00137690_5:\n\t"
+      "testl %%eax, 0x20(%%esi)\n\t"
+      "je .LFUN_00137690_6\n\t"
+      "orb $4, 0xb7(%%ebx)\n\t"
+      ".LFUN_00137690_6:\n\t"
+      "testb $2, 0x20(%%esi)\n\t"
+      "je .LFUN_00137690_7\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c137540]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_00137690_7:\n\t"
+      "movswl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl $1, %%eax\n\t"
+      "shll %%cl, %%eax\n\t"
+      "orw %%ax, 0x124(%%ebx)\n\t"
+      "movl 0x20(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c13c6e0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00137690_8:\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_00137690_9:\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      :
+      : [get] "m"(b137690_get), [tag] "m"(b137690_tag), [assert] "m"(b137690_assert), [exitfn] "m"(b137690_exitfn), [elem] "m"(b137690_elem), [o9ec30] "m"(b137690_o9ec30), [c1402c0] "m"(b137690_c1402c0), [c137540] "m"(b137690_c137540), [c13c6e0] "m"(b137690_c13c6e0)
+      : "memory");
 }
+#else
+#error "FUN_00137690: clang naked draft required"
+#endif
+
 
 /* object_cause_damage (0x137d20) — XBE naked draft (batch 50). */
 #if defined(__clang__)
@@ -1807,101 +1844,213 @@ void object_cause_damage(void *damage_params __attribute__((unused)), int object
  * args (@<eax>, @<ecx>, @<esi>) that our cdecl C function cannot receive.
  * Original XBE code runs and correctly calls our ported callees. */
 #if 1
-void FUN_00137170(float *incident_direction, float *surface_normal,
-                  int object_handle, int effect_tag_index,
-                  short marker_index, float *position)
+/* FUN_00137170 (0x137170) — XBE naked draft (batch 54). */
+#if defined(__clang__)
+static float (*const b137170_norm)(float *) = normalize3d;
+static vector3_t * (*const b137170_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+static void *(*const b137170_get)(int, int) = object_get_and_verify_type;
+static void (*const b137170_c10c8e0)(float *v, float *n, float *out) = FUN_0010c8e0;
+static int (*const b137170_c9ee40)(int effect_tag_index, int object_index, int attached_object, uint16_t marker_index, short marker_count, void *effect_definition, float *marker_points, float *marker_forwards, float scale_a, float scale_b, float unknown1, float unknown2) = effect_new_attached_from_markers;
+static int (*const b137170_c9f0e0)(int effect_tag_index, int object_index, float *translational_velocity, short marker_count, void *effect_definition, float *marker_points, float *marker_forwards, float scale_a, float scale_b, float unknown1, float unknown2, float unknown3) = effect_new_unattached_from_markers;
+
+__attribute__((naked, noinline))
+void FUN_00137170(float *incident_direction __attribute__((unused)), float *surface_normal __attribute__((unused)), int object_handle __attribute__((unused)), int effect_tag_index __attribute__((unused)), short marker_index __attribute__((unused)), float *position __attribute__((unused)))
 {
-  float marker_points[15];
-  float forward_vectors[15];
-  char *effect_names[5];
-  float obj_pos[3];
-  float normal[3];
-  float direction[3];
-  float mag;
-  int i;
-  float *dst;
-  char *obj;
-
-  effect_names[0] = "normal";
-  effect_names[1] = "incident";
-  effect_names[2] = "negative incident";
-  effect_names[3] = "reflection";
-  effect_names[4] = "gravity";
-
-  /* Copy gravity vector directly into forward_vectors entry 4 */
-  forward_vectors[12] = *(float *)*(int *)0x31fc50;
-  forward_vectors[13] = *(float *)(*(int *)0x31fc50 + 4);
-  forward_vectors[14] = *(float *)(*(int *)0x31fc50 + 8);
-
-  /* Copy and normalize the incident direction */
-  normal[0] = incident_direction[0];
-  normal[1] = incident_direction[1];
-  normal[2] = incident_direction[2];
-  mag = normalize3d(normal);
-  if (mag == 0.0f) {
-    normal[0] = *(float *)*(int *)0x31fc3c;
-    normal[1] = *(float *)(*(int *)0x31fc3c + 4);
-    normal[2] = *(float *)(*(int *)0x31fc3c + 8);
-  }
-
-  /* Build forward vectors:
-   * [1] = incident (normal * -1.0)
-   * [2] = negative incident (normal copy)
-   */
-  forward_vectors[3] = normal[0] * -1.0f;
-  forward_vectors[6] = normal[0];
-  forward_vectors[7] = normal[1];
-  forward_vectors[4] = normal[1] * -1.0f;
-  forward_vectors[8] = normal[2];
-  forward_vectors[5] = normal[2] * -1.0f;
-
-  if (surface_normal == (float *)0) {
-    /* No surface normal provided: compute direction from position */
-    object_get_world_position(object_handle, (vector3_t *)obj_pos);
-    direction[0] = position[0] - obj_pos[0];
-    direction[1] = position[1] - obj_pos[1];
-    direction[2] = position[2] - obj_pos[2];
-    mag = normalize3d(direction);
-    if (mag == 0.0f) {
-      obj = (char *)object_get_and_verify_type(object_handle, -1);
-      direction[0] = *(float *)(obj + 0x24);
-      direction[1] = *(float *)(obj + 0x28);
-      direction[2] = *(float *)(obj + 0x2c);
-    }
-    /* forward[0] = computed direction ("normal") */
-    forward_vectors[0] = direction[0];
-    forward_vectors[1] = direction[1];
-    forward_vectors[2] = direction[2];
-    /* Reflect normal about direction */
-    FUN_0010c8e0(normal, direction, &forward_vectors[9]);
-  } else {
-    /* forward[0] = surface normal ("normal") */
-    forward_vectors[0] = surface_normal[0];
-    forward_vectors[1] = surface_normal[1];
-    forward_vectors[2] = surface_normal[2];
-    /* Reflect normal about surface normal */
-    FUN_0010c8e0(normal, surface_normal, &forward_vectors[9]);
-  }
-
-  /* Fill all 5 marker positions with the same impact position */
-  dst = marker_points;
-  for (i = 5; i != 0; i--) {
-    *dst = *position;
-    dst[1] = position[1];
-    dst[2] = position[2];
-    dst += 3;
-  }
-
-  if (object_handle != -1 && marker_index != -1) {
-    effect_new_attached_from_markers(effect_tag_index, object_handle, object_handle, /* dup-args-ok: confirmed PUSH ESI,ESI */
-                 (uint16_t)marker_index, 5, (void *)effect_names,
-                 marker_points, forward_vectors, 1.0f, 0.0f, 0.0f, 0.0f);
-    return;
-  }
-  effect_new_unattached_from_markers(effect_tag_index, object_handle,
-               *(float **)0x31fc38, 5, (void *)effect_names,
-               marker_points, forward_vectors, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xb0, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ecx, %%edi\n\t"
+      "movl 0x31fc50, %%ecx\n\t"
+      "movl $0x26b188, -0x2c(%%ebp)\n\t"
+      "movl $0x28ab18, -0x28(%%ebp)\n\t"
+      "movl $0x28ab04, -0x24(%%ebp)\n\t"
+      "movl $0x28aaf8, -0x20(%%ebp)\n\t"
+      "movl $0x26ad40, -0x1c(%%ebp)\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0x44(%%ebp)\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl %%edx, -0x40(%%ebp)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl %%ecx, -0x3c(%%ebp)\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl 0x8(%%eax), %%edx\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .LFUN_00137170_1\n\t"
+      "movl 0x31fc3c, %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      ".LFUN_00137170_1:\n\t"
+      "testl %%edi, %%edi\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x255e94\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "fstps -0x68(%%ebp)\n\t"
+      "movl %%edx, -0x5c(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "movl %%eax, -0x58(%%ebp)\n\t"
+      "fmuls 0x255e94\n\t"
+      "movl %%ecx, -0x54(%%ebp)\n\t"
+      "fstps -0x64(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x255e94\n\t"
+      "fstps -0x60(%%ebp)\n\t"
+      "jne .LFUN_00137170_3\n\t"
+      "leal -0x38(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1412f0]\n\t"
+      "flds (%%ebx)\n\t"
+      "fsubs -0x38(%%ebp)\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds 0x4(%%ebx)\n\t"
+      "fsubs -0x34(%%ebp)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "fsubs -0x30(%%ebp)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .LFUN_00137170_2\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "addl $0x24, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, -0x18(%%ebp)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, -0x14(%%ebp)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      ".LFUN_00137170_2:\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0x74(%%ebp)\n\t"
+      "leal -0x50(%%ebp), %%ecx\n\t"
+      "movl %%edx, -0x70(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x6c(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "jmp .LFUN_00137170_4\n\t"
+      ".LFUN_00137170_3:\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%edx, -0x74(%%ebp)\n\t"
+      "leal -0x50(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, -0x70(%%ebp)\n\t"
+      "movl %%ecx, -0x6c(%%ebp)\n\t"
+      "pushl %%edi\n\t"
+      ".LFUN_00137170_4:\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10c8e0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "leal -0xb0(%%ebp), %%eax\n\t"
+      "movl $5, %%ecx\n\t"
+      "jmp .LFUN_00137170_6\n\t"
+      ".LFUN_00137170_5:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      ".LFUN_00137170_6:\n\t"
+      "movl (%%ebx), %%edi\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movl %%edi, (%%edx)\n\t"
+      "movl 0x4(%%ebx), %%edi\n\t"
+      "movl %%edi, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ebx), %%edi\n\t"
+      "addl $0xc, %%eax\n\t"
+      "decl %%ecx\n\t"
+      "movl %%edi, 0x8(%%edx)\n\t"
+      "jne .LFUN_00137170_5\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "je .LFUN_00137170_7\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_00137170_7\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0x3f800000\n\t"
+      "leal -0x74(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0xb0(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "leal -0x2c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $5\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c9ee40]\n\t"
+      "addl $0x30, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00137170_7:\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0x3f800000\n\t"
+      "leal -0x74(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x31fc38, %%eax\n\t"
+      "leal -0xb0(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "leal -0x2c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $5\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c9f0e0]\n\t"
+      "addl $0x30, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      :
+      : [norm] "m"(b137170_norm), [c1412f0] "m"(b137170_c1412f0), [get] "m"(b137170_get), [c10c8e0] "m"(b137170_c10c8e0), [c9ee40] "m"(b137170_c9ee40), [c9f0e0] "m"(b137170_c9f0e0)
+      : "memory");
 }
+#else
+#error "FUN_00137170: clang naked draft required"
+#endif
+
 #endif
 
 /* object_damage_update (0x1384e0) — XBE naked draft (batch 51). */

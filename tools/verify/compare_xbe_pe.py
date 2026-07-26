@@ -587,6 +587,15 @@ def main() -> int:
         ("unit_board_vehicle", 0x1b2b80, 0x1b2dcf),
         ("unit_control_trace", 0x1af6b0, 0x1af98f),
         ("unit_impact_melee_damage", 0x1b2290, 0x1b24ca),
+        # gameplay wave 54 (2026-07-26)
+        ("FUN_00137690", 0x137690, 0x1377c3),
+        ("FUN_00137170", 0x137170, 0x13736e),
+        ("FUN_00141970", 0x141970, 0x141b38),
+        ("unit_record_damage", 0x1a8ee0, 0x1a912a),
+        ("unit_cause_melee_damage", 0x1ae840, 0x1aea8a),
+        ("FUN_001abd90", 0x1abd90, 0x1ac028),
+        ("FUN_001a25e0", 0x1a25e0, 0x1a27fe),
+        ("FUN_000f5750", 0xf5750, 0xf58f3),
     ]
 
     xbe = Xbe.from_file(args.xbe)
