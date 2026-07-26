@@ -13963,7 +13963,7 @@ void FUN_00053800(void)
 static void (*const b53890_cff4d0)(int channel, const char *format, ...) = console_printf;
 
 __attribute__((naked, noinline))
-void FUN_00053890(void)
+unsigned short FUN_00053890(void)
 {
   __asm__ volatile(
       "movswl 0x5abaa2, %%eax\n\t"

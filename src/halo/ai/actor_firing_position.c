@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* --- actor_firing_position.obj batch drafts (2026-07-26) --- */
 
 /* FUN_00024000 (0x24000) — XBE naked draft (batch 160). */
@@ -1332,53 +1333,19 @@ int actor_get_firing_position_group(int actor_handle __attribute__((unused)), sh
 #endif
 
 
-/* actor_clear_discarded_firing_positions (0x24b80) — XBE naked draft (batch 168). */
-#if defined(__clang__)
-static void *(*const b24b80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void actor_clear_discarded_firing_positions(int actor_handle __attribute__((unused)), int param2 __attribute__((unused)))
+/* actor_clear_discarded_firing_positions (0x24b80) — readable C lift (ai campaign). */
+void actor_clear_discarded_firing_positions(int actor_handle, int param2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "movw $0, 0x3c6(%%eax)\n\t"
-      "leal 0x3ca(%%eax), %%ecx\n\t"
-      "movl $4, %%edx\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lactor_clear_discarded_firing_positions_1:\n\t"
-      "movw $0xffff, (%%ecx)\n\t"
-      "addl $4, %%ecx\n\t"
-      "decl %%edx\n\t"
-      "jne .Lactor_clear_discarded_firing_positions_1\n\t"
-      "movb 0x3d8(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lactor_clear_discarded_firing_positions_3\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lactor_clear_discarded_firing_positions_2\n\t"
-      "movb 0x3d9(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lactor_clear_discarded_firing_positions_3\n\t"
-      ".Lactor_clear_discarded_firing_positions_2:\n\t"
-      "movb $0, 0x3d8(%%eax)\n\t"
-      ".Lactor_clear_discarded_firing_positions_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b24b80_dget)
-      : "memory");
+  unsigned char *a = (unsigned char *)datum_get(*(void **)0x6325a4, actor_handle);
+  *(uint16_t *)(a + 0x3c6) = 0;
+  uint16_t *slot = (uint16_t *)(a + 0x3ca);
+  for (int i = 0; i < 4; i++)
+    slot[i] = 0xffff;
+  if (a[0x3d8]) {
+    if (!param2 || a[0x3d9])
+      a[0x3d8] = 0;
+  }
 }
-#else
-#error "actor_clear_discarded_firing_positions: clang naked draft required"
-#endif
-
 
 /* FUN_00024be0 (0x24be0) — XBE naked draft (batch 144). */
 #if defined(__clang__)

@@ -557,54 +557,20 @@ char FUN_00042df0(int actor __attribute__((unused)), int unit __attribute__((unu
 #endif
 
 
-/* FUN_00042e60 (0x42e60) — XBE naked draft (batch 177). */
-#if defined(__clang__)
-static void *(*const b42e60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-char FUN_00042e60(int actor __attribute__((unused)), int unit __attribute__((unused)), int prop __attribute__((unused)))
+/* FUN_00042e60 (0x42e60) — readable C lift (ai campaign). */
+char FUN_00042e60(int actor, int unit, int prop)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00042e60_2\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0x6c(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "subl $5, %%ecx\n\t"
-      "je .LFUN_00042e60_1\n\t"
-      "subl $2, %%ecx\n\t"
-      "jne .LFUN_00042e60_2\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00042e60_1:\n\t"
-      "cmpw $1, 0xa4(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "sete %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00042e60_2:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b42e60_dget)
-      : "memory");
+  (void)actor; (void)unit;
+  if (prop == -1)
+    return 0;
+  void *p = datum_get(*(void **)0x6325a4, prop);
+  int st = (int)*(int16_t *)((char *)p + 0x6c);
+  if (st == 5)
+    return *(int16_t *)((char *)p + 0xa4) == 1;
+  if (st == 7)
+    return 1;
+  return 0;
 }
-#else
-#error "FUN_00042e60: clang naked draft required"
-#endif
-
 
 /* FUN_00042eb0 (0x42eb0) — XBE naked draft (batch 142). */
 #if defined(__clang__)
@@ -829,89 +795,31 @@ char FUN_00042fa0(int actor __attribute__((unused)), int unit __attribute__((unu
 #endif
 
 
-/* FUN_00043050 (0x43050) — XBE naked draft (batch 180). */
-#if defined(__clang__)
-static void *(*const b43050_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-char FUN_00043050(int actor __attribute__((unused)), int unit __attribute__((unused)), int prop __attribute__((unused)))
+/* FUN_00043050 (0x43050) — readable C lift (ai campaign). */
+char FUN_00043050(int actor, int unit, int prop)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00043050_1\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $3, 0x6a(%%eax)\n\t"
-      "jne .LFUN_00043050_1\n\t"
-      "cmpw $4, 0x6e(%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "jl .LFUN_00043050_2\n\t"
-      ".LFUN_00043050_1:\n\t"
-      "movb %%bl, %%al\n\t"
-      ".LFUN_00043050_2:\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b43050_dget)
-      : "memory");
+  (void)actor; (void)unit;
+  if (prop == -1)
+    return 0;
+  void *p = datum_get(*(void **)0x6325a4, prop);
+  if (*(int16_t *)((char *)p + 0x6a) != 3)
+    return 0;
+  if (*(int16_t *)((char *)p + 0x6e) < 4)
+    return 1;
+  return 0;
 }
-#else
-#error "FUN_00043050: clang naked draft required"
-#endif
 
-
-/* FUN_00043090 (0x43090) — XBE naked draft (batch 181). */
-#if defined(__clang__)
-static char (*const b43090_c3b150)(int actor_handle) = actor_is_fighting;
-static void *(*const b43090_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-char FUN_00043090(int actor __attribute__((unused)), int unit __attribute__((unused)), int prop __attribute__((unused)))
+/* FUN_00043090 (0x43090) — readable C lift (ai campaign). */
+char FUN_00043090(int actor, int unit, int prop)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c3b150]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00043090_1\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x4(%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "je .LFUN_00043090_2\n\t"
-      ".LFUN_00043090_1:\n\t"
-      "movb %%bl, %%al\n\t"
-      ".LFUN_00043090_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c3b150] "m"(b43090_c3b150), [dget] "m"(b43090_dget)
-      : "memory");
+  (void)actor; (void)unit;
+  if (!actor_is_fighting(prop))
+    return 0;
+  void *p = datum_get(*(void **)0x6325a4, prop);
+  if (*(int16_t *)((char *)p + 4) == 0)
+    return 1;
+  return 0;
 }
-#else
-#error "FUN_00043090: clang naked draft required"
-#endif
-
 
 /* actor_communication_team (0x43270) — readable C lift (ai campaign). */
 int actor_communication_team(int actor)

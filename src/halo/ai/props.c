@@ -2102,7 +2102,7 @@ void FUN_00064fa0(void)
 static void (*const b64fe0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 
 __attribute__((naked, noinline))
-void FUN_00064fe0(void)
+int FUN_00064fe0(void *prop)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2144,7 +2144,7 @@ void FUN_00064fe0(void)
 static void (*const b65020_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 
 __attribute__((naked, noinline))
-void FUN_00065020(void)
+int FUN_00065020(void *prop)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2186,7 +2186,7 @@ void FUN_00065020(void)
 static void (*const b65060_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 
 __attribute__((naked, noinline))
-void FUN_00065060(void)
+int FUN_00065060(void *prop)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2271,7 +2271,7 @@ void FUN_000650a0(void)
 static void (*const b650e0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 
 __attribute__((naked, noinline))
-void FUN_000650e0(void)
+int FUN_000650e0(void *prop)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2313,7 +2313,7 @@ void FUN_000650e0(void)
 static void (*const b65120_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 
 __attribute__((naked, noinline))
-void FUN_00065120(void)
+int FUN_00065120(void *prop)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2355,7 +2355,7 @@ void FUN_00065120(void)
 static void (*const b65160_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 
 __attribute__((naked, noinline))
-void FUN_00065160(void)
+int FUN_00065160(void *prop)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

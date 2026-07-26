@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* encounters.c — AI encounter management.
  *
  * Covers encounters.obj (XBE address ranges ~0x58fa0–0x597f0 and
@@ -5310,49 +5311,17 @@ int FUN_00057330(int16_t command_index __attribute__((unused)), char *state __at
 #endif
 
 
-/* encounter_set_respawn (0x5c630) — XBE naked draft (batch 236). */
-#if defined(__clang__)
-static void *(*const b5c630_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void encounter_set_respawn(int encounter_handle __attribute__((unused)), char flag __attribute__((unused)))
+/* encounter_set_respawn (0x5c630) — readable C lift (ai campaign). */
+void encounter_set_respawn(int encounter_handle, char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x632574, %%eax\n\t"
-      "movb 0x1(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lencounter_set_respawn_1\n\t"
-      "movl 0x5ab270, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xc(%%ebp), %%dl\n\t"
-      "movb %%dl, 0x3c(%%eax)\n\t"
-      "movl 0x5ab270, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movw $0x96, 0xe(%%eax)\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x6c, 0xde, 0xff, 0xff\n\t"
-      ".Lencounter_set_respawn_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b5c630_dget)
-      : "memory");
+  if (!*(unsigned char *)(*(unsigned char **)0x632574 + 1))
+    return;
+  void *e = datum_get(*(void **)0x5ab270, encounter_handle);
+  *((unsigned char *)e + 0x3c) = (unsigned char)flag;
+  e = datum_get(*(void **)0x5ab270, encounter_handle);
+  *(uint16_t *)((char *)e + 0xe) = 0x96;
+  FUN_0005a4e0(encounter_handle);
 }
-#else
-#error "encounter_set_respawn: clang naked draft required"
-#endif
-
 
 /* FUN_00053bf0 (0x53bf0) — XBE naked draft (batch 238). */
 #if defined(__clang__)
