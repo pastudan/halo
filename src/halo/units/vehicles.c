@@ -370,39 +370,48 @@ void FUN_001b4dc0(int handle, void *damage_data, unsigned int flags, float body_
   (void)local_8;
 }
 
-/* 0x1b5400 */
-int FUN_001b5400(int a0, int a1)
+/* 0x1b5400 — Exit seated units whose seat name matches a substring. */
+int FUN_001b5400(int unit_handle, int seat_name_substr)
 {
-  int eax = 0;
-  int ebx = 0;
-  int edi = 0;
-  int local_c = 0;
+  object_iter_t iter;
+  char *unit_tag;
+  char *unit_obj;
+  char seat_name[0x110];
+  int16_t exit_count = 0;
+  const char *needle = (const char *)(uintptr_t)seat_name_substr;
+  char match_any;
 
-  object_get_and_verify_type(a0, 3);
-  tag_get('tinu', *(int *)(eax));
-  /* test eax, eax -> je 0x1b544f */
-  csstrlen((char *)(uintptr_t)a1);
-  /* test eax, eax -> je 0x1b544f */
-  object_iterator_new((void *)0, 3, 0);
-  object_iterator_next((void *)0);
-  /* test eax, eax -> je 0x1b54f0 */
-  /* relift: cmp dword ptr [eax + 0xcc], edi -> jne 0x1b54e0 */
-  tag_block_get_element((void *)((char *)eax + 0x2e4), eax, 284);
-  csstrcpy((void *)0, (char *)(uintptr_t)eax);
-  csstr_tolower((void *)0);
-  /* test (char)ebx, (char)ebx -> jne 0x1b54cd */
-  crt_strstr((void *)0, (char *)(uintptr_t)a1);
-  /* test eax, eax -> je 0x1b54e0 */
-  unit_try_and_exit_seat(local_c);
-  /* test (char)eax, (char)eax -> je 0x1b54e0 */
-  object_iterator_next((void *)0);
-  /* test eax, eax -> jne 0x1b5472 */
-  return 0;
+  if (unit_handle == -1)
+    return 0;
 
-  (void)eax;
-  (void)ebx;
-  (void)edi;
-  (void)local_c;
+  unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
+  unit_tag = (char *)tag_get('tinu', *(int *)unit_obj);
+  match_any = (needle == 0 || csstrlen(needle) == 0);
+
+  object_iterator_new(&iter, 3, 0);
+  while ((unit_obj = (char *)object_iterator_next(&iter)) != 0) {
+    int16_t seat_index;
+    char *seat_entry;
+
+    if (*(int *)(unit_obj + 0xcc) != unit_handle)
+      continue;
+
+    seat_index = *(int16_t *)(unit_obj + 0x2a0);
+    seat_entry = (char *)tag_block_get_element(unit_tag + 0x2e4, (int)seat_index,
+                                               0x11c);
+    csstrcpy(seat_name, seat_entry + 4);
+    csstr_tolower(seat_name);
+
+    if (!match_any && crt_strstr(seat_name, needle) == 0)
+      continue;
+
+    if (!unit_try_and_exit_seat(iter.last_handle))
+      continue;
+
+    exit_count++;
+  }
+
+  return (int)exit_count;
 }
 
 /* 0x1b5500 — Exit vehicle seat when unit is seated with a valid seat index. */
@@ -467,25 +476,39 @@ char vehicle_is_flipped(int vehicle_handle)
   return 1;
 }
 
-/* 0x1b56b0 */
-void FUN_001b56b0(void)
+/* 0x1b56b0 — Update vehicle wheel-compression counters from physics state. */
+void FUN_001b56b0(int vehicle_handle, void *physics_state)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
+  char *vehicle;
+  char *vehicle_tag;
+  char *physics_tag;
+  int wheel_count;
+  int wheel_index;
+  unsigned char wheel_flags;
 
-  object_get_and_verify_type(eax, 2);
-  tag_get('ihev', *(int *)(eax));
-  tag_get('syhp', 0);
-  /* cmp (char)ecx, 0xff -> jae 0x1b56f0 */
-  /* cmp ecx, ebx -> jle 0x1b5723 */
-  /* test (char)ecx, 2 -> jne 0x1b572c */
-  /* test (char)ecx, 0x10 -> je 0x1b571a */
-  /* relift: cmp ecx, dword ptr [eax + 0x74] -> jl 0x1b5700 */
+  vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehicle_tag = (char *)tag_get('ihev', *(int *)vehicle);
+  physics_tag = (char *)tag_get('syhp', *(int *)(vehicle_tag + 0x8c));
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
+  if ((unsigned char)vehicle[0x428] != 0xff)
+    vehicle[0x428]++;
+
+  wheel_count = *(int *)(physics_tag + 0x74);
+  for (wheel_index = 0; wheel_index < wheel_count; wheel_index++) {
+    char *wheel_state = (char *)physics_state + wheel_index * 0x130;
+
+    wheel_flags = (unsigned char)*(int *)wheel_state;
+    if ((wheel_flags & 2) != 0) {
+      if ((unsigned char)vehicle[0x42b] != 0xff)
+        vehicle[0x42b]++;
+      vehicle[0x428] = 0;
+      return;
+    }
+    if ((wheel_flags & 0x10) != 0)
+      vehicle[0x428] = 0;
+  }
+
+  vehicle[0x42b] = 0;
 }
 
 /* 0x1b5750 — pack float w + three int components into quaternion storage */

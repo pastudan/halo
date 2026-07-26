@@ -14109,9 +14109,6 @@ char FUN_001a6350(int unit_handle)
 /* --- units.obj orphan shells (2026-07-26) --- */
 
 /* 0x1a8770 — True when anim_state byte +0xb is firing (3 or 4). */
-#if defined(__i386__) && defined(__GNUC__)
-__attribute__((regparm(1)))
-#endif
 char FUN_001a8770(void *anim_state)
 {
   char state = *(char *)((char *)anim_state + 0xb);
@@ -14126,11 +14123,10 @@ char FUN_001a8770(void *anim_state)
 /* 0x1a8890 — gate on anim_state[0xc]==0 and motion band at [0xb] */
 char FUN_001a8890(void *anim_state)
 {
-  char result;
-  char band;
+  char zero_flag = *(char *)((char *)anim_state + 0xc);
+  char band = *(char *)((char *)anim_state + 0xb);
+  char result = (zero_flag == 0);
 
-  result = (*(char *)((char *)anim_state + 0xc) == 0);
-  band = *(char *)((char *)anim_state + 0xb);
   if (band < 0x17)
     return result;
   if (band <= 0x23)
@@ -14140,7 +14136,7 @@ char FUN_001a8890(void *anim_state)
   return result;
 }
 
-/* 0x1a8910 — switch on anim_state for states 0x1e..0x29 */
+/* 0x1a8910 — jump table on anim_state for states 0x1e..0x29 */
 char FUN_001a8910(int16_t anim_state)
 {
   static const unsigned char k_slot[] = {
@@ -14149,7 +14145,7 @@ char FUN_001a8910(int16_t anim_state)
   int idx;
 
   idx = (int)anim_state - 0x1e;
-  if (idx < 0 || idx > 0xb)
+  if ((unsigned int)idx > 0xb)
     return 1;
   return k_slot[idx] ? 1 : 0;
 }
@@ -14157,9 +14153,8 @@ char FUN_001a8910(int16_t anim_state)
 /* 0x1a8950 — map (anim_state,target_state) pair to action id */
 int FUN_001a8950(int16_t anim_state, int16_t target_state)
 {
-  int result;
+  int result = 6;
 
-  result = 6;
   if (anim_state == 0 || anim_state == 2 || anim_state == 3) {
     if (target_state == 0 || target_state == 2 || target_state == 3)
       result = 1;

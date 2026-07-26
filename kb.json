@@ -29510,12 +29510,12 @@
         },
         {
           "addr": "0x1b5400",
-          "decl": "int FUN_001b5400(int a0, int a1);",
+          "decl": "int FUN_001b5400(int unit_handle, int seat_name_substr);",
           "ported": false
         },
         {
           "addr": "0x1b5500",
-          "decl": "void FUN_001b5500(int a0);",
+          "decl": "void FUN_001b5500(int unit_handle);",
           "ported": false
         },
         {
@@ -29540,7 +29540,7 @@
         },
         {
           "addr": "0x1b56b0",
-          "decl": "void FUN_001b56b0(void);",
+          "decl": "void FUN_001b56b0(int vehicle_handle@<eax>, void *physics_state@<edi>);",
           "ported": false
         },
         {
@@ -33590,7 +33590,7 @@
         },
         {
           "addr": "0xfb690",
-          "decl": "void FUN_000fb690(int weapon_handle, int16_t magazine_index);",
+          "decl": "void FUN_000fb690(int weapon_handle@<eax>, int16_t magazine_index@<cx>);",
           "ported": false
         },
         {

@@ -1269,7 +1269,7 @@ char FUN_000fb5a0(int weapon_handle, int16_t trigger_index)
   return result;
 }
 
-/* 0xfb690 */
+/* 0xfb690 — Zero one weapon magazine's loaded/reserve counts. */
 void FUN_000fb690(int weapon_handle, int16_t magazine_index)
 {
   char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);

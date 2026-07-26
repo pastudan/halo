@@ -243,6 +243,11 @@ def main() -> int:
         ("FUN_000fb910", 0xfb910, 0xfb990),
         ("FUN_000fb990", 0xfb990, 0xfb9da),
         ("FUN_001a8770", 0x1a8770, 0x1a8782),
+        # gameplay wave 7 (2026-07-26)
+        ("glow_trailing_particle_new", 0x134350, 0x1345b0),
+        ("FUN_001b5400", 0x1b5400, 0x1b5500),
+        ("FUN_001b56b0", 0x1b56b0, 0x1b5750),
+        ("FUN_000fb690", 0xfb690, 0xfb6d6),
     ]
 
     xbe = Xbe.from_file(args.xbe)

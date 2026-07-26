@@ -14229,7 +14229,7 @@ void FUN_001b8f80(void)
   FUN_001b74d0();
   /* test (char)eax, (char)eax -> jne 0x1b958a */
   FUN_001b72b0();
-  FUN_001b56b0();
+  FUN_001b56b0(0, 0);
   /* test (char)eax, 0x20 -> je 0x1b95b1 */
   /* test eax, 0x1000000 -> jne 0x1b966b */
   /* test dl, 0x28 -> je 0x1b966b */
