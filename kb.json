@@ -1979,7 +1979,7 @@
         },
         {
           "addr": "0x1e6596",
-          "decl": "void __strnicmp(void);"
+          "decl": "int __strnicmp(const char *a, const char *b, size_t n);"
         },
         {
           "addr": "0x1e65eb",
@@ -10216,7 +10216,8 @@
         },
         {
           "addr": "0xc1f80",
-          "decl": "void FUN_000c1f80(void);"
+          "decl": "void FUN_000c1f80(int16_t function_index, int thread_datum, char init);",
+          "ported": false
         },
         {
           "addr": "0xc1fa0",
@@ -10250,15 +10251,18 @@
         },
         {
           "addr": "0xc2100",
-          "decl": "void FUN_000c2100(void);"
+          "decl": "void FUN_000c2100(int16_t function_index, int thread_datum, char init);",
+          "ported": false
         },
         {
           "addr": "0xc2120",
-          "decl": "void FUN_000c2120(void);"
+          "decl": "void FUN_000c2120(int16_t function_index, int thread_datum, char init);",
+          "ported": false
         },
         {
           "addr": "0xc2140",
-          "decl": "void FUN_000c2140(void);"
+          "decl": "void FUN_000c2140(int16_t function_index, int thread_datum, char init);",
+          "ported": false
         },
         {
           "addr": "0xc2160",
@@ -10827,7 +10831,8 @@
         },
         {
           "addr": "0xc3a50",
-          "decl": "void hs_scenario_merge(void);"
+          "decl": "char hs_scenario_merge(void *dst_scenario, void *src_scenario);",
+          "ported": false
         },
         {
           "addr": "0xc3b60",
@@ -10861,7 +10866,8 @@
         },
         {
           "addr": "0xc3db0",
-          "decl": "void hs_find_tag_reference_by_index(void);"
+          "decl": "int16_t hs_find_tag_reference_by_index(int tag_index);",
+          "ported": false
         },
         {
           "addr": "0xc3e10",
@@ -10890,43 +10896,123 @@
         },
         {
           "addr": "0xc4010",
-          "decl": "void FUN_000c4010(void);"
+          "decl": "int FUN_000c4010(const char **a, const char **b);",
+          "ported": false
         },
         {
           "addr": "0xc4030",
-          "decl": "void FUN_000c4030(void);"
+          "decl": "void FUN_000c4030(const char *token@<esi>);",
+          "ported": false
         },
         {
           "addr": "0xc40b0",
-          "decl": "void FUN_000c40b0(void);"
+          "decl": "void FUN_000c40b0(const char **tokens, int16_t start@<ecx>, int16_t end@<eax>);",
+          "ported": false
         },
         {
           "addr": "0xc40f0",
-          "decl": "void FUN_000c40f0(void);"
+          "decl": "void FUN_000c40f0(int16_t name_offset, int element_size, void *block@<ebx>);",
+          "ported": false
         },
         {
           "addr": "0xc4130",
-          "decl": "void FUN_000c4130(void);"
+          "decl": "void FUN_000c4130(int16_t block_offset, int16_t name_offset, int element_size);",
+          "ported": false
         },
         {
           "addr": "0xc4160",
-          "decl": "void FUN_000c4160(void);"
+          "decl": "void FUN_000c4160(void);",
+          "ported": false
         },
         {
           "addr": "0xc4180",
-          "decl": "void FUN_000c4180(void);"
+          "decl": "void FUN_000c4180(void);",
+          "ported": false
         },
         {
           "addr": "0xc41b0",
-          "decl": "void FUN_000c41b0(void);"
+          "decl": "void FUN_000c41b0(void);",
+          "ported": false
         },
         {
           "addr": "0xc41e0",
-          "decl": "void FUN_000c41e0(void);"
+          "decl": "void FUN_000c41e0(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc4240",
+          "decl": "void FUN_000c4240(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc4270",
+          "decl": "void FUN_000c4270(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc4320",
+          "decl": "void FUN_000c4320(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc4350",
+          "decl": "void FUN_000c4350(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc4380",
+          "decl": "void FUN_000c4380(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc43b0",
+          "decl": "void FUN_000c43b0(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc43e0",
+          "decl": "void FUN_000c43e0(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc4410",
+          "decl": "void FUN_000c4410(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc4440",
+          "decl": "void FUN_000c4440(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc4470",
+          "decl": "void FUN_000c4470(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc44a0",
+          "decl": "void FUN_000c44a0(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc44d0",
+          "decl": "void FUN_000c44d0(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc4500",
+          "decl": "void FUN_000c4500(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc4540",
+          "decl": "void FUN_000c4540(void);",
+          "ported": false
         },
         {
           "addr": "0xc4580",
-          "decl": "int16_t hs_tokens_enumerate(const char *prefix, uint32_t type_mask, char **tokens, int16_t max_tokens);"
+          "decl": "int16_t hs_tokens_enumerate(const char *prefix, uint32_t type_mask, char **tokens, int16_t max_tokens);",
+          "ported": false
         },
         {
           "addr": "0xc4660",
@@ -10935,7 +11021,8 @@
         },
         {
           "addr": "0xc4770",
-          "decl": "void FUN_000c4770(void);"
+          "decl": "int FUN_000c4770(void *file_a, void *file_b);",
+          "ported": false
         },
         {
           "addr": "0xc47c0",
@@ -10954,15 +11041,18 @@
         },
         {
           "addr": "0xc4a40",
-          "decl": "void FUN_000c4a40(void);"
+          "decl": "void FUN_000c4a40(int16_t function_index@<eax>, char *buffer@<esi>);",
+          "ported": false
         },
         {
           "addr": "0xc4ae0",
-          "decl": "void FUN_000c4ae0(void);"
+          "decl": "void FUN_000c4ae0(int16_t function_index@<eax>, char *dest);",
+          "ported": false
         },
         {
           "addr": "0xc4b00",
-          "decl": "void hs_evaluate_by_name(void);"
+          "decl": "char hs_evaluate_by_name(const char *name);",
+          "ported": false
         },
         {
           "addr": "0xc4b40",
@@ -10976,7 +11066,8 @@
         },
         {
           "addr": "0xc4bb0",
-          "decl": "void FUN_000c4bb0(void);"
+          "decl": "void FUN_000c4bb0(int16_t function_index, int thread_datum, char init);",
+          "ported": false
         },
         {
           "addr": "0xc4c10",
@@ -10995,11 +11086,18 @@
         },
         {
           "addr": "0xc4e20",
-          "decl": "void hs_help(void);"
+          "decl": "void hs_help(const char *name);",
+          "ported": false
         },
         {
           "addr": "0xc4e90",
-          "decl": "void hs_doc(void);"
+          "decl": "void hs_doc(void);",
+          "ported": false
+        },
+        {
+          "addr": "0xc4f90",
+          "decl": "void FUN_000c4f90(void);",
+          "ported": false
         },
         {
           "addr": "0xc4ff0",
@@ -11023,11 +11121,13 @@
         },
         {
           "addr": "0xc5310",
-          "decl": "void FUN_000c5310(void);"
+          "decl": "int FUN_000c5310(int parent_handle, int sibling_handle);",
+          "ported": false
         },
         {
           "addr": "0xc55d0",
-          "decl": "void FUN_000c55d0(void);"
+          "decl": "char FUN_000c55d0(const char *name, int *out_handles, int16_t max_count@<ebx>, int root_handle@<edi>);",
+          "ported": false
         },
         {
           "addr": "0xc5680",

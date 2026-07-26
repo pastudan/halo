@@ -1789,11 +1789,11 @@ void FUN_000c4ff0(int16_t function_index, int thread_datum, char init)
  * void to the HS thread. */
 void FUN_000c5010(int16_t function_index, int thread_datum, char init)
 {
-  int result;
+  int *result;
 
-  result = hs_macro_function_evaluate(function_index, thread_datum, init);
+  result = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
   if (result != 0) {
-    hs_help();
+    hs_help((const char *)result[0]);
     hs_return(thread_datum, 0);
   }
 }
@@ -3456,4 +3456,595 @@ void FUN_000c3a10(int16_t function_index, int thread_datum, char init)
     xbox_set_machine_name(*(const char **)(args + 0));
     hs_return(thread_datum, 0);
   }
+}
+
+void FUN_000c1f80(int16_t function_index, int thread_datum, char init)
+{
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, 0);
+}
+
+void FUN_000c2100(int16_t function_index, int thread_datum, char init)
+{
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, 0);
+}
+
+void FUN_000c2120(int16_t function_index, int thread_datum, char init)
+{
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, 0);
+}
+
+void FUN_000c2140(int16_t function_index, int thread_datum, char init)
+{
+  (void)function_index;
+  (void)init;
+  hs_return(thread_datum, 0);
+}
+
+/* 0xc3a50 — merge source-file globals from src scenario into dst, clear scripts */
+
+char hs_scenario_merge(void *dst_scenario, void *src_scenario)
+{
+  char ok;
+  int i;
+  int j;
+  void *dst_globals;
+  void *src_globals;
+  void *src_elem;
+  void *dst_elem;
+  int16_t added;
+  void *new_elem;
+
+  ok = 1;
+  src_globals = (char *)src_scenario + 0x4c0;
+  dst_globals = (char *)dst_scenario + 0x4c0;
+  for (i = 0; i < *(int *)src_globals; i++) {
+    src_elem = tag_block_get_element(src_globals, i, 0x34);
+    for (j = 0; j < *(int *)dst_globals; j++) {
+      dst_elem = tag_block_get_element(dst_globals, j, 0x34);
+      if (crt_stricmp((const char *)src_elem, (const char *)dst_elem) == 0)
+        break;
+    }
+    if (j == *(int *)dst_globals) {
+      added = tag_block_add_element(dst_globals);
+      if (added == (int16_t)0xffff) {
+        ok = 0;
+      } else {
+        new_elem = tag_block_get_element(dst_globals, added, 0x34);
+        csstrcpy((char *)new_elem, (const char *)src_elem);
+        if (!tag_data_resize((char *)new_elem + 0x20, *(int *)((char *)src_elem + 0x20))) {
+          ok = 0;
+        } else {
+          csmemcpy(*(void **)((char *)new_elem + 0x2c),
+                   *(void **)((char *)src_elem + 0x2c),
+                   *(int *)((char *)src_elem + 0x20));
+        }
+      }
+    }
+  }
+  tag_block_resize((char *)dst_scenario + 0x49c, 0);
+  return ok;
+}
+
+/* 0xc3db0 — find scenario script-source tag-reference index by tag index */
+
+int16_t hs_find_tag_reference_by_index(int tag_index)
+{
+  void *block;
+  int16_t i;
+  void *elem;
+
+  if (*(int *)0x326a08 == -1)
+    return (int16_t)0xffff;
+  block = (char *)global_scenario_get() + 0x4b4;
+  for (i = 0; i < *(int *)block; i++) {
+    elem = tag_block_get_element(block, i, 0x28);
+    if (*(int *)((char *)elem + 0x24) == tag_index)
+      return i;
+  }
+  return (int16_t)0xffff;
+}
+
+/* 0xc4010 — qsort comparator for token pointers */
+
+int FUN_000c4010(const char **a, const char **b)
+{
+  return crt_stricmp(*a, *b);
+}
+
+/* 0xc4030 — append token to enumeration buffer if prefix matches */
+
+void FUN_000c4030(const char *token)
+{
+  if (*(void **)0x46b6d0 == 0) {
+    display_assert((const char *)0x27b964, (const char *)0x27b8c8, 0x29a, 1);
+    system_exit(-1);
+  }
+  if (*(int16_t *)0x46b6c8 >= *(int16_t *)0x46b6cc)
+    return;
+  if (__strnicmp(token, *(const char **)0x46b6d4, csstrlen(*(char **)0x46b6d4)) != 0)
+    return;
+  ((const char **)(*(void **)0x46b6d0))[*(int16_t *)0x46b6c8] = token;
+  *(int16_t *)0x46b6c8 = (int16_t)(*(int16_t *)0x46b6c8 + 1);
+}
+
+/* 0xc40b0 — enumerate a [start,end) slice of token pointers */
+
+void FUN_000c40b0(const char **tokens, int16_t start, int16_t end)
+{
+  int16_t i;
+  if (start >= end)
+    return;
+  for (i = start; i < end; i++)
+    FUN_000c4030(tokens[i]);
+}
+
+/* 0xc40f0 — enumerate names at name_offset inside each tag-block element */
+
+void FUN_000c40f0(int16_t name_offset, int element_size, void *block)
+{
+  int i;
+  void *elem;
+  for (i = 0; i < *(int *)block; i++) {
+    elem = tag_block_get_element(block, i, element_size);
+    FUN_000c4030((const char *)((char *)elem + name_offset));
+  }
+}
+
+/* 0xc4130 — enumerate names from a scenario tag-block by absolute offset */
+
+void FUN_000c4130(int16_t block_offset, int16_t name_offset, int element_size)
+{
+  void *block;
+  if (*(int *)0x326a08 == -1)
+    return;
+  block = (char *)global_scenario_get() + block_offset;
+  FUN_000c40f0(name_offset, element_size, block);
+}
+
+void FUN_000c4160(void)
+{
+  FUN_000c4030((const char *)0x25bb40);
+  FUN_000c4030((const char *)0x27b978);
+}
+
+void FUN_000c4180(void)
+{
+  int i;
+  const char **table = (const char **)0x2f156c;
+  for (i = 0; i < 5; i++)
+    FUN_000c4030(table[i]);
+}
+
+void FUN_000c41b0(void)
+{
+  int i;
+  const char **table = (const char **)0x2f14b8;
+  for (i = 0; i < 0x2d; i++)
+    FUN_000c4030(table[i]);
+}
+
+/* 0xc41e0 — enumerate all HS function-table entry names */
+
+void FUN_000c41e0(void)
+{
+  int16_t i;
+  void **table = (void **)0x2f1588;
+  for (i = 0; i < 0x1a2; i++) {
+    if (i < 0 || i >= 0x1a2) {
+      display_assert((const char *)0x27b8ec, (const char *)0x27b8c8, 0x20a, 1);
+      system_exit(-1);
+    }
+    FUN_000c4030(*(const char **)((char *)table[i] + 4));
+  }
+}
+
+void FUN_000c4240(void)
+{
+  if (*(int *)0x326a08 == -1)
+    return;
+  FUN_000c40f0(0, 0x5c, (char *)global_scenario_get() + 0x49c);
+}
+
+void FUN_000c4270(void)
+{
+  int16_t i;
+  int16_t count;
+  void **table;
+  count = *(int16_t *)0x27d504;
+  for (i = 0; i < count; i++) {
+    if (i < 0 || i >= count) {
+      display_assert((const char *)0x27b928, (const char *)0x27b8c8, 0x240, 1);
+      system_exit(-1);
+    }
+    table = *(void ***)(0x2f3708 + i * 4);
+    FUN_000c4030((const char *)table[0]);
+  }
+  if (*(int *)0x326a08 == -1)
+    return;
+  {
+    void *block = (char *)global_scenario_get() + 0x4a8;
+    int j;
+    for (j = 0; j < *(int *)block; j++)
+      FUN_000c4030((const char *)tag_block_get_element(block, j, 0x5c));
+  }
+}
+
+void FUN_000c4320(void)
+{
+  if (*(int *)0x326a08 == -1)
+    return;
+  FUN_000c40f0(0, 0xb0, (char *)global_scenario_get() + 0x42c);
+}
+
+void FUN_000c4350(void)
+{
+  if (*(int *)0x326a08 == -1)
+    return;
+  FUN_000c40f0(0, 0x60, (char *)global_scenario_get() + 0x438);
+}
+
+void FUN_000c4380(void)
+{
+  if (*(int *)0x326a08 == -1)
+    return;
+  FUN_000c40f0(0, 0x68, (char *)global_scenario_get() + 0x348);
+}
+
+void FUN_000c43b0(void)
+{
+  if (*(int *)0x326a08 == -1)
+    return;
+  FUN_000c40f0(0, 0x74, (char *)global_scenario_get() + 0x468);
+}
+
+void FUN_000c43e0(void)
+{
+  if (*(int *)0x326a08 == -1)
+    return;
+  FUN_000c40f0(0, 0x24, (char *)global_scenario_get() + 0x204);
+}
+
+void FUN_000c4410(void)
+{
+  if (*(int *)0x326a08 == -1)
+    return;
+  FUN_000c40f0(4, 0x60, (char *)global_scenario_get() + 0x360);
+}
+
+void FUN_000c4440(void)
+{
+  if (*(int *)0x326a08 == -1)
+    return;
+  FUN_000c40f0(4, 0x5c, (char *)global_scenario_get() + 0x4e4);
+}
+
+void FUN_000c4470(void)
+{
+  if (*(int *)0x326a08 == -1)
+    return;
+  FUN_000c40f0(4, 0x68, (char *)global_scenario_get() + 0x4f0);
+}
+
+void FUN_000c44a0(void)
+{
+  if (*(int *)0x326a08 == -1)
+    return;
+  FUN_000c40f0(4, 0x60, (char *)global_scenario_get() + 0x4fc);
+}
+
+void FUN_000c44d0(void)
+{
+  if (*(int *)0x326a08 == -1)
+    return;
+  FUN_000c40f0(0, 0x40, (char *)global_scenario_get() + 0x36c);
+}
+
+void FUN_000c4500(void)
+{
+  int tag_index;
+  void *tag;
+  tag_index = interface_get_tag_index(6);
+  if (tag_index == -1)
+    return;
+  tag = tag_get(0x68756467, interface_get_tag_index(6));
+  FUN_000c40f0(0, 0x68, (char *)tag + 0x160);
+}
+
+void FUN_000c4540(void)
+{
+  void *scenario;
+  int tag_index;
+  void *tag;
+  scenario = global_scenario_get();
+  if (*(int *)((char *)scenario + 0x5a0) == -1)
+    return;
+  tag_index = *(int *)((char *)global_scenario_get() + 0x5a0);
+  tag = tag_get(0x686d7420, tag_index);
+  FUN_000c40f0(0, 0x40, (char *)tag + 0x20);
+}
+
+/* 0xc4580 */
+
+int16_t hs_tokens_enumerate(const char *prefix, uint32_t type_mask, char **tokens,
+                            int16_t max_tokens)
+{
+  int i;
+  void (**table)(void);
+
+  if (*(void **)0x46b6d0 != 0) {
+    display_assert((const char *)0x27b9a4, (const char *)0x27b8c8, 0x398, 1);
+    system_exit(-1);
+  }
+  *(int16_t *)0x46b6cc = max_tokens;
+  *(int16_t *)0x46b6c8 = 0;
+  *(void **)0x46b6d0 = tokens;
+  *(const char **)0x46b6d4 = prefix ? prefix : (const char *)0x25386f;
+  table = (void (**)(void))0x2f2208;
+  for (i = 0; i < 0x12; i++) {
+    if (table[i] == 0) {
+      display_assert((const char *)0x27b980, (const char *)0x27b8c8, 0x3a1, 1);
+      system_exit(-1);
+    }
+    if (type_mask & (1u << i))
+      table[i]();
+  }
+  qsort(tokens, (size_t)*(int16_t *)0x46b6c8, 4, (int (*)(const void *, const void *))FUN_000c4010);
+  *(void **)0x46b6d0 = 0;
+  return *(int16_t *)0x46b6c8;
+}
+
+/* 0xc4770 — compare two file_reference names */
+
+int FUN_000c4770(void *file_a, void *file_b)
+{
+  char name_a[256];
+  char name_b[256];
+  file_reference_get_name(file_a, 4, name_a);
+  file_reference_get_name(file_b, 4, name_b);
+  return crt_stricmp(name_a, name_b);
+}
+
+/* 0xc4a40 — format function signature into buffer */
+
+void FUN_000c4a40(int16_t function_index, char *buffer)
+{
+  void *desc;
+  int16_t argc;
+  int16_t i;
+  int16_t type;
+
+  desc = hs_function_table_get(function_index);
+  crt_sprintf(buffer, (const char *)0x27ba9c, *(const char **)((char *)desc + 4));
+  if (*(const char **)((char *)desc + 0x14) != 0) {
+    crt_sprintf(buffer + csstrlen(buffer), (const char *)0x27ba98,
+                *(const char **)((char *)desc + 0x14));
+    FUN_0008dc30(buffer, (const char *)0x268580);
+    return;
+  }
+  argc = *(int16_t *)((char *)desc + 0x18);
+  if (argc > 0) {
+    for (i = 0; i < argc; i++) {
+      FUN_0008dc30(buffer, (const char *)0x27ba94);
+      type = *(int16_t *)((char *)desc + 0x1a + i * 2);
+      FUN_0008dc30(buffer, *(const char **)(0x2f14a8 + type * 4));
+      FUN_0008dc30(buffer, (const char *)0x27b1f4);
+    }
+  }
+  FUN_0008dc30(buffer, (const char *)0x268580);
+}
+
+/* 0xc4ae0 — copy function help string */
+
+void FUN_000c4ae0(int16_t function_index, char *dest)
+{
+  void *desc = hs_function_table_get(function_index);
+  csstrcpy(dest, *(const char **)((char *)desc + 0x10));
+}
+
+char hs_evaluate_by_name(const char *name)
+{
+  int16_t script_idx;
+  void *elem;
+  script_idx = hs_find_script_by_name(name);
+  if (script_idx == (int16_t)0xffff)
+    return 0;
+  elem = tag_block_get_element((char *)global_scenario_get() + 0x49c, script_idx, 0x5c);
+  hs_runtime_execute(*(int *)((char *)elem + 0x24));
+  return 1;
+}
+
+/* 0xc4bb0 — HS random_real_range wrapper (float bits via hs_return) */
+
+void FUN_000c4bb0(int16_t function_index, int thread_datum, char init)
+{
+  float *args;
+  float result;
+  args = (float *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args) {
+    result = random_real_range(get_global_random_seed_address(), args[0], args[1]);
+    hs_return(thread_datum, *(int *)&result);
+  }
+}
+
+void hs_help(const char *name)
+{
+  int16_t idx;
+  char buf[0x800];
+  void *desc;
+  idx = hs_find_function_by_name(name);
+  if (idx == (int16_t)-1)
+    return;
+  FUN_000c4a40(idx, buf);
+  console_printf(0, buf);
+  desc = hs_function_table_get(idx);
+  csstrcpy(buf, *(const char **)((char *)desc + 0x10));
+  console_printf(0, buf);
+}
+
+void hs_doc(void)
+{
+  void *fp;
+  int16_t i;
+  char buf[0x800];
+  void **table;
+
+  fp = crt_fopen((const char *)0x27bb24, (const char *)0x265938);
+  table = (void **)0x2f1588;
+  for (i = 0; i < 0x1a2; i++) {
+    if (i < 0 || i >= 0x1a2) {
+      display_assert((const char *)0x27b8ec, (const char *)0x27b8c8, 0x20a, 1);
+      system_exit(-1);
+    }
+    FUN_000c4a40(i, buf);
+    crt_fprintf(fp, (const char *)0x2686c4, buf);
+    if (i < 0 || i >= 0x1a2) {
+      display_assert((const char *)0x27b8ec, (const char *)0x27b8c8, 0x20a, 1);
+      system_exit(-1);
+    }
+    csstrcpy(buf, *(const char **)((char *)table[i] + 0x10));
+    crt_fprintf(fp, (const char *)0x27bb1c, buf);
+  }
+  crt_fclose(fp);
+}
+
+/* 0xc4f90 — recompile path (was unlabeled between hs_doc and FUN_000c4ff0) */
+
+void FUN_000c4f90(void)
+{
+  void *scenario;
+  if (!hs_needs_recompile())
+    return;
+  hs_mark_recompile();
+  hs_dispose_from_old_map();
+  scenario = (*(int *)0x326a08 == -1) ? 0 : global_scenario_get();
+  hs_scripts_initialize();
+  if (scenario && *(int *)((char *)scenario + 0x474) != 0)
+    hs_load_scenario_scripts(0);
+  hs_runtime_initialize();
+  hs_runtime_initialize_for_new_map();
+}
+
+/* 0xc5310 — allocate / splice HS syntax nodes */
+
+int FUN_000c5310(int parent_handle, int sibling_handle)
+{
+  int new_handle;
+  char *node;
+  char *parent;
+  char *sibling;
+  int child_a;
+  int child_b;
+  char *node_a;
+  char *node_b;
+  char *sib_node;
+  char *parent2;
+  int tmp;
+  int list_head;
+  char *list_node;
+  char *list_elem;
+
+  new_handle = data_new_at_index(*(data_t **)0x5aa6c8);
+  if (new_handle == -1) {
+    *(const char **)0x46b6fc = (const char *)0x27bca4;
+    *(int *)0x46b700 =
+      *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, parent_handle) + 0xc);
+    return new_handle;
+  }
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, new_handle);
+  parent = (char *)datum_get(*(data_t **)0x5aa6c8, parent_handle);
+  *(int *)(node + 0xc) = *(int *)(parent + 0xc);
+  *(int16_t *)(node + 6) = 0;
+  *(int *)(node + 8) = -1;
+  if (sibling_handle == -1) {
+    *(int16_t *)(node + 6) = 1;
+    parent = (char *)datum_get(*(data_t **)0x5aa6c8, parent_handle);
+    *(int16_t *)(node + 2) = *(int16_t *)(parent + 4);
+    *(int16_t *)(node + 4) = *(int16_t *)(parent + 4);
+    *(int *)(node + 0x10) = 0;
+    return new_handle;
+  }
+  sibling = (char *)datum_get(*(data_t **)0x5aa6c8, sibling_handle);
+  if ((*(uint8_t *)(sibling + 6) & 1) != 0) {
+    *(const char **)0x46b6fc = (const char *)0x27bc44;
+    *(int *)0x46b700 =
+      *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, sibling_handle) + 0xc);
+    return -1;
+  }
+  list_head = *(int *)(sibling + 0x10);
+  list_node = (char *)datum_get(*(data_t **)0x5aa6c8, list_head);
+  list_elem = list_node; /* kept for later writeback */
+  (void)list_elem;
+  /* Original sete/cmp -1 is unreachable; proceed with allocation. */
+  child_a = data_new_at_index(*(data_t **)0x5aa6c8);
+  child_b = data_new_at_index(*(data_t **)0x5aa6c8);
+  if (child_a == -1 || child_b == -1) {
+    *(const char **)0x46b6fc = (const char *)0x27bca4;
+    *(int *)0x46b700 =
+      *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, parent_handle) + 0xc);
+    return -1;
+  }
+  node_a = (char *)datum_get(*(data_t **)0x5aa6c8, child_a);
+  node_b = (char *)datum_get(*(data_t **)0x5aa6c8, child_b);
+  sib_node = (char *)datum_get(*(data_t **)0x5aa6c8, sibling_handle);
+  parent2 = (char *)datum_get(*(data_t **)0x5aa6c8, sibling_handle);
+  tmp = FUN_000c5310(parent_handle, *(int *)(parent2 + 8));
+  *(int *)(node_a + 8) = tmp;
+  if (tmp == -1)
+    return -1;
+  *(int *)(node + 0x10) = sibling_handle;
+  *(int16_t *)(node + 2) = 2;
+  *(int16_t *)(sib_node + 2) = 2;
+  *(int16_t *)(sib_node + 6) = 1;
+  *(int *)(sib_node + 8) = list_head;
+  *(int *)(sib_node + 0xc) = -1;
+  *(int16_t *)(sib_node + 4) = 2;
+  *(int *)(sib_node + 0x10) = 0;
+  *(int *)(node_a + 0x10) = child_b;
+  *(int16_t *)(node_a + 6) = 0;
+  *(int *)(node_a + 0xc) = *(int *)(node + 0xc);
+  *(int *)(node_b + 0x10) = 0;
+  *(int16_t *)(node_b + 2) = 0;
+  *(int16_t *)(node_b + 6) = 1;
+  *(int *)(node_b + 8) =
+    *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, list_head) + 8);
+  *(int *)(node_b + 0xc) = -1;
+  *(int16_t *)(node_b + 4) = 2;
+  *(int *)(list_node + 8) = child_a;
+  return new_handle;
+}
+
+/* 0xc55d0 — collect linked syntax-node handles into an array */
+
+char FUN_000c55d0(const char *name, int *out_handles, int16_t max_count,
+                  int root_handle)
+{
+  char *root;
+  char *child;
+  int handle;
+  int16_t count;
+
+  root = (char *)datum_get(*(data_t **)0x5aa6c8, root_handle);
+  child = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(root + 0x10));
+  handle = *(int *)(child + 8);
+  count = 0;
+  while (handle != -1) {
+    if (count >= max_count)
+      break;
+    out_handles[count] = handle;
+    handle = *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, handle) + 8);
+    count++;
+  }
+  if (count == max_count && handle == -1)
+    return 1;
+  crt_sprintf((char *)0x46b704, (const char *)0x27bcc8, name, (int)max_count);
+  *(char **)0x46b6fc = (char *)0x46b704;
+  *(int *)0x46b700 =
+    *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, root_handle) + 0xc);
+  return 0;
 }
