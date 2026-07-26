@@ -12163,7 +12163,7 @@ void ui_widget_pending_load_pop(int *head __attribute__((unused)), void *record 
 #endif
 
 
-/* ui_widget_pending_load_apply (0xe5090) — XBE naked draft (batch 129). */
+/* ui_widget_pending_load_apply (0xe5090) — XBE naked draft (batch 239). */
 #if defined(__clang__)
 static int * (*const be5090_ce4910)(int *widget, int tag_handle) = ui_widget_find_by_tag;
 static void *(*const be5090_tag)(int, int) = tag_get;
@@ -12259,9 +12259,7 @@ void ui_widget_pending_load_apply(int a6 __attribute__((unused)), int widget __a
       "movl %%esi, %%ecx\n\t"
       "popl %%esi\n\t"
       "popl %%ebp\n\t"
-      "jmp .Lui_widget_pending_load_apply_10000\n\t"
-      ".Lui_widget_pending_load_apply_10000:\n\t"
-      "jmp *%[ce4f20]\n\t"
+      ".byte 0xe9, 0xc8, 0xfd, 0xff, 0xff\n\t"
       :
       : [ce4910] "m"(be5090_ce4910), [tag] "m"(be5090_tag), [ce4f20] "m"(be5090_ce4f20), [ce4980] "m"(be5090_ce4980)
       : "memory");

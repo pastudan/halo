@@ -162,7 +162,7 @@ def main() -> int:
         ("FUN_001a8890", 0x1a8890, 0x1a88ad),
         ("FUN_001a8910", 0x1a8910, 0x1a892e),
         ("FUN_001a8950", 0x1a8950, 0x1a898e),
-        ("FUN_001a0db0", 0x1a0db0, 0x1a0e00),
+        ("FUN_001a0db0", 0x1a0db0, 0x1a0dfd),
         # collision_bsp extended
         ("FUN_00147ed0", 0x147ed0, 0x148240),
         ("FUN_00148240", 0x148240, 0x148365),
@@ -239,7 +239,7 @@ def main() -> int:
         ("actor_expected_acknowledgement", 0x32940, 0x32ac0),
         ("actor_perception_refresh_danger_zone", 0x32380, 0x32940),
         ("actor_visibility_at_point", 0x314f0, 0x31850),
-        ("actor_perception_unreachable", 0x32ac0, 0x32b50),
+        ("actor_perception_unreachable", 0x32ac0, 0x32b43),
         ("FUN_0002f5f0", 0x2f5f0, 0x2f6d9),
         # perception orphan + audibility wave (2026-07-26)
         ("actor_audibility_at_point", 0x31850, 0x31a87),
@@ -264,14 +264,14 @@ def main() -> int:
         ("object_update", 0x1444f0, 0x1446a0),
         ("FUN_00085000", 0x85000, 0x850ce),
         # encounters.obj implemented-but-unported (2026-07-26)
-        ("FUN_00053b80", 0x53b80, 0x53bf0),
-        ("FUN_00053bf0", 0x53bf0, 0x53c50),
+        ("FUN_00053b80", 0x53b80, 0x53be3),
+        ("FUN_00053bf0", 0x53bf0, 0x53c4b),
         ("FUN_00053c50", 0x53c50, 0x53d95),
         ("FUN_00053e80", 0x53e80, 0x53ed3),
         ("FUN_00053ee0", 0x53ee0, 0x53f33),
         ("FUN_00053f40", 0x53f40, 0x54020),
         ("FUN_000564b0", 0x564b0, 0x565bd),
-        ("FUN_000565c0", 0x565c0, 0x566a0),
+        ("FUN_000565c0", 0x565c0, 0x56696),
         ("encounters_initialize", 0x566a0, 0x5678c),
         ("FUN_00057330", 0x57330, 0x5737e),
         ("FUN_00057380", 0x57380, 0x575d0),
@@ -293,8 +293,8 @@ def main() -> int:
         ("encounter_mark_examined_pursuit_position", 0x5b5e0, 0x5b6e0),
         ("encounter_pursuit_position_already_examined", 0x5b6e0, 0x5b790),
         ("FUN_0005B790", 0x5b790, 0x5ba70),
-        ("encounter_force_activate", 0x5ba70, 0x5baa0),
-        ("encounter_force_deactivate", 0x5baa0, 0x5bad0),
+        ("encounter_force_activate", 0x5ba70, 0x5ba95),
+        ("encounter_force_deactivate", 0x5baa0, 0x5bac5),
         ("encounter_post_combat_select_random_behavior", 0x5bad0, 0x5bbe0),
         ("FUN_0005bbe0", 0x5bbe0, 0x5c3a0),
         ("encounter_get_actor_starting_location", 0x5c3a0, 0x5c510),
@@ -461,10 +461,10 @@ def main() -> int:
         ("FUN_00145580", 0x145580, 0x1455fc),
         ("weapon_owner_update", 0xfc4b0, 0xfc549),
         ("FUN_00085280", 0x85280, 0x85350),
-        ("FUN_00145610", 0x145610, 0x145660),
+        ("FUN_00145610", 0x145610, 0x14565e),
         ("lights_initialize_for_new_map", 0x1392b0, 0x1392d2),
-        ("lights_dispose_from_old_map", 0x1392e0, 0x139300),
-        ("first_person_weapon_get_marker_by_name_render", 0xddb90, 0xddbd0),
+        ("lights_dispose_from_old_map", 0x1392e0, 0x1392f9),
+        ("first_person_weapon_get_marker_by_name_render", 0xddb90, 0xddbc3),
         # gameplay wave 31 (2026-07-26)
         ("FUN_00145740", 0x145740, 0x1457a8),
         ("FUN_000de0e0", 0xde0e0, 0xde134),
@@ -484,7 +484,7 @@ def main() -> int:
         ("weapon_new", 0xfbd10, 0xfbe94),
         # gameplay wave 33 (2026-07-26)
         ("lights_enable", 0x139300, 0x139310),
-        ("light_delete", 0x139310, 0x139350),
+        ("light_delete", 0x139310, 0x139345),
         ("first_person_weapon_message_from_unit", 0xde360, 0xde3ab),
         ("FUN_000fcec0", 0xfcec0, 0xfcf13),
         ("FUN_000fcc90", 0xfcc90, 0xfcd0a),
@@ -617,7 +617,7 @@ def main() -> int:
         ("FUN_00139e50", 0x139e50, 0x13a242),
         ("unit_aiming_vector", 0x1ab410, 0x1ab76b),
         # gameplay wave 50 (2026-07-26)
-        ("FUN_001a2f40", 0x1a2f40, 0x1a440a),
+        ("FUN_001a2f40", 0x1a2f40, 0x1a4436),
         ("FUN_001b3690", 0x1b3690, 0x1b4da9),
         ("FUN_000f9c40", 0xf9c40, 0xfac17),
         ("FUN_000f90d0", 0xf90d0, 0xf9c28),
@@ -671,7 +671,7 @@ def main() -> int:
         # gameplay wave 56 (2026-07-26)
         # Ends stop at final RET (before align nop / JT); multi-JT uses skips.
         ("FUN_001ad260", 0x1ad260, 0x1ad713),
-        ("FUN_001b0d90", 0x1b0d90, 0x1b1229),
+        ("FUN_001b0d90", 0x1b0d90, 0x1b1278, [(0x1b122c, 0x1b1254), (0x1b1248, 0x1b1254), (0x1b1260, 0x1b1278)]),
         (
             "unit_impulse_to_animation_kind",
             0x1a9560,
@@ -721,7 +721,7 @@ def main() -> int:
         ("FUN_001a2290", 0x1a2290, 0x1a243d),
         ("FUN_001b04b0", 0x1b04b0, 0x1b0629),
         ("FUN_000ae110", 0xae110, 0xae247),
-        ("FUN_001a8b20", 0x1a8b20, 0x1a8ca0),
+        ("FUN_001a8b20", 0x1a8b20, 0x1a8cd4, [(0x1a8ca0, 0x1a8ca8), (0x1a8cbc, 0x1a8cd4)]),
         ("FUN_001a9f20", 0x1a9f20, 0x1aa071),
         ("FUN_00136150", 0x136150, 0x1362c4),
         ("FUN_001a1a10", 0x1a1a10, 0x1a1b8b),
@@ -1617,7 +1617,7 @@ def main() -> int:
         ("FUN_00127610", 0x127610, 0x127710),
         ("network_game_client_accepted_into_game", 0x124f40, 0x125050),
         ("FUN_000bbfe0", 0xbbfe0, 0xbc0ca),
-        ("FUN_000e1770", 0xe1770, 0xe19bd),
+        ("FUN_000e1770", 0xe1770, 0xe17af),
         ("FUN_000e1a10", 0xe1a10, 0xe1c81),
         ("player_control_get_unit_camera_info", 0xb6740, 0xb686a),
         ("FUN_000a48c0", 0xa48c0, 0xa49bb),
@@ -2727,6 +2727,9 @@ def main() -> int:
         ("structure_detail_objects_dispose", 0x1939d0, 0x1939d1),
         ("FUN_000538d0", 0x538d0, 0x538da),
         ("FUN_00184710", 0x184710, 0x184719),
+        # gameplay wave 238 (2026-07-26) — Capstone weaks
+        # gameplay wave 239 (2026-07-26) — Capstone weaks
+        ("unit_impulse_to_animation_kind", 0x1a9560, 0x1a96dc, [(0x1a969c, 0x1a96dc), (0x1a96d4, 0x1a96dc)]),
     ]
 
     xbe = Xbe.from_file(args.xbe)

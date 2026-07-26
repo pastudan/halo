@@ -1853,11 +1853,10 @@ void FUN_00080fc0(void)
 #endif
 
 
-/* FUN_00081090 (0x81090) — XBE naked draft (batch 158). */
+/* FUN_00081090 (0x81090) — XBE naked draft (batch 239). */
 #if defined(__clang__)
 static void (*const b81090_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b81090_exitfn)(int) = system_exit;
-static void (*const b81090_c80fc0)(void) = FUN_00080fc0;
 
 __attribute__((naked, noinline))
 void FUN_00081090(void)
@@ -1900,11 +1899,9 @@ void FUN_00081090(void)
       "movl %%esi, %%edx\n\t"
       "movl %%ebx, %%eax\n\t"
       "movl %%edi, %%ecx\n\t"
-      "jmp .LFUN_00081090_10000\n\t"
-      ".LFUN_00081090_10000:\n\t"
-      "jmp *%[c80fc0]\n\t"
+      ".byte 0xe9, 0xbe, 0xfe, 0xff, 0xff\n\t"
       :
-      : [assert] "m"(b81090_assert), [exitfn] "m"(b81090_exitfn), [c80fc0] "m"(b81090_c80fc0)
+      : [assert] "m"(b81090_assert), [exitfn] "m"(b81090_exitfn)
       : "memory");
 }
 #else

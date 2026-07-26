@@ -247,8 +247,9 @@ def find_jts(va: int, end: int) -> list[dict]:
             jt = int(m.group(1), 16)
         else:
             jt = int(m.group(1), 16)
-        # Allow jt == end for classic single JT-at-end (table sits at true_end).
-        if not (insn.address < jt <= end):
+        # Allow jt at/just past end: true_end often stops at last insn, while the
+        # jump table sits immediately after (classic JT-at-end, possibly misaligned).
+        if not (insn.address < jt <= end + 8):
             continue
         reg = None
         for r in ("eax", "ecx", "edx", "ebx", "esi", "edi"):
@@ -265,9 +266,9 @@ def find_jts(va: int, end: int) -> list[dict]:
     for i, j in enumerate(ordered):
         if i + 1 < len(ordered):
             limit = ordered[i + 1]["jt"]
-        elif j["jt"] == end:
+        elif j["jt"] >= end:
             # JT-at-end: table lives at/after end; allow reading past end.
-            limit = end + 256
+            limit = j["jt"] + 256
         else:
             limit = end
         raw = get_bytes(j["jt"], min(j["jt"] + 256, limit + 4))

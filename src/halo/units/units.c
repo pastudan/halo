@@ -23034,9 +23034,14 @@ char FUN_001a8890(void *anim_state)
  * XBE uses an in-function jump table; slot table is in .rodata so the PE
  * export ends at ret (same return polarity: 0 for slots marked 0). */
 #if defined(__clang__)
+__attribute__((unused))
 static const unsigned char FUN_001a8910_slots[12] = {
     0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0,
 };
+
+/* FUN_001a8910 (0x1a8910) — XBE naked draft (batch 238). */
+#if defined(__clang__)
+
 
 __attribute__((naked, noinline))
 char FUN_001a8910(int16_t anim_state __attribute__((unused)))
@@ -23046,17 +23051,27 @@ char FUN_001a8910(int16_t anim_state __attribute__((unused)))
       "addl $-0x1e, %%ecx\n\t"
       "cmpl $0xb, %%ecx\n\t"
       "movb $1, %%al\n\t"
-      "ja 2f\n\t"
-      "movzbl %[slots](%%ecx), %%ecx\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne 2f\n\t"
+      "ja .LFUN_001a8910_2\n\t"
+      "movzbl 0x1a8938(%%ecx), %%ecx\n\t"
+      "jmp *.LFUN_001a8910_jt(,%%ecx,4)\n\t"
+      ".LFUN_001a8910_1:\n\t"
       "xorb %%al, %%al\n\t"
-      "2:\n\t"
+      ".LFUN_001a8910_2:\n\t"
       "ret\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_001a8910_jt:\n\t"
+      ".long .LFUN_001a8910_1\n\t"
+      ".long .LFUN_001a8910_2\n\t"
+      ".text\n\t"
       :
-      : [slots] "m"(*(const unsigned char (*)[12])FUN_001a8910_slots)
+      :
       : "memory");
 }
+#else
+#error "FUN_001a8910: clang naked draft required"
+#endif
+
 #else
 char FUN_001a8910(int16_t anim_state)
 {

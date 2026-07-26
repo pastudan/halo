@@ -5354,18 +5354,48 @@ void encounter_set_respawn(int encounter_handle __attribute__((unused)), char fl
 #endif
 
 
-/* 0x53bf0 — Debug overlay: write per-team encounter respawn timers. */
+/* FUN_00053bf0 (0x53bf0) — XBE naked draft (batch 238). */
+#if defined(__clang__)
+static int (*const b53bf0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static void (*const b53bf0_c53800)(void) = FUN_00053800;
+
+__attribute__((naked, noinline))
 void FUN_00053bf0(void)
 {
-  int16_t timer_values[3];
-
-  crt_sprintf((char *)0x5ab280, (const char *)0x25c218, (int)*(int16_t *)0x5ac76e,
-              (int)*(int16_t *)0x5ac7f6, (int)*(int16_t *)0x5ac87e);
-  timer_values[0] = 0x96;
-  timer_values[1] = 0x12c;
-  timer_values[2] = 0x1c2;
-  ((void(__cdecl *)(char *, int, int16_t *))0x53800)((char *)0x5ab280, 3, timer_values);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movswl 0x5ac87e, %%eax\n\t"
+      "movswl 0x5ac7f6, %%ecx\n\t"
+      "movswl 0x5ac76e, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x25c218\n\t"
+      "pushl $0x5ab280\n\t"
+      "movw $0x96, -0x8(%%ebp)\n\t"
+      "movw $0x12c, -0x6(%%ebp)\n\t"
+      "movw $0x1c2, -0x4(%%ebp)\n\t"
+      "call *%[c1d90f0]\n\t"
+      "leal -0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x2ee6c4, %%eax\n\t"
+      "pushl $3\n\t"
+      "pushl $0x5ab280\n\t"
+      "call *%[c53800]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1d90f0] "m"(b53bf0_c1d90f0), [c53800] "m"(b53bf0_c53800)
+      : "memory");
 }
+#else
+#error "FUN_00053bf0: clang naked draft required"
+#endif
+
 
 /* FUN_00053b80 (0x53b80) — XBE naked draft (batch 238). */
 #if defined(__clang__)
