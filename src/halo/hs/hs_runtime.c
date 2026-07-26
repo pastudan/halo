@@ -2923,148 +2923,293 @@ void hs_evaluate_debug_string(int16_t function_index, int thread_datum,
   hs_return(thread_datum, -1);
 }
 
-/* 0xcd840 — Main HS thread execution tick. Runs the thread's expression
- * evaluation loop: resolves the current stack frame's expression, dispatches
- * to either a built-in function evaluate callback or a script-reference
- * evaluation. Respects sleep_until timing and the runtime-enabled flag.
- * On completion, marks continuous/dormant scripts as finished (sleep=-1)
- * and deletes console-command threads.
- */
-static void FUN_000cd840(int thread_handle)
+/* FUN_000cd840 (0xcd840) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const bcd840_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static scenario_t * (*const bcd840_c18e380)(void) = global_scenario_get;
+static void *(*const bcd840_elem)(void *, int, int) = tag_block_get_element;
+static char * (*const bcd840_ccaa80)(int thread_index) = hs_get_thread_script_name;
+static char * (*const bcd840_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const bcd840_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bcd840_exitfn)(int) = system_exit;
+static void * (*const bcd840_ccaba0)(int thread_handle, int size) = hs_thread_stack_alloc;
+static void (*const bcd840_ccc1d0)(int thread_handle, int expression_index, void *dest_ptr) = FUN_000cc1d0;
+static bool (*const bcd840_cb5be0)(void) = game_in_progress;
+static int (*const bcd840_gtime)(void) = game_time_get;
+static void * (*const bcd840_cc3d00)(int16_t function_index) = hs_function_table_get;
+static void (*const bcd840_ccbf80)(int thread_handle, int value) = hs_return;
+static void (*const bcd840_ccaa30)(int thread_handle) = FUN_000caa30;
+
+__attribute__((naked, noinline))
+void FUN_000cd840(int thread_handle __attribute__((unused)))
 {
-  char *thread;
-  char *script;
-  char *stack_base;
-  typedef void (*hs_evaluate_t)(int, int, int);
-
-  thread = (char *)datum_get(*(data_t **)0x5aa6c4, thread_handle);
-  *(int16_t *)0x46b812 = (int16_t)thread_handle;
-  script = NULL;
-
-  /* If script-type thread, look up and validate the script entry */
-  if (*(uint8_t *)(thread + 0x2) == 0) {
-    char *scenario = (char *)global_scenario_get();
-    script = (char *)tag_block_get_element(scenario + 0x49c,
-                                           *(int32_t *)(thread + 0x4), 0x5c);
-    if (*(int16_t *)(script + 0x20) == 3 || *(int16_t *)(script + 0x20) == 4) {
-      char *name = hs_get_thread_script_name(thread_handle);
-      char *msg =
-        csprintf((char *)0x5ab100,
-                 "a problem occurred while executing the script %s: %s (%s)",
-                 name, "found a static script at toplevel.",
-                 "script->script_type!=_hs_script_static && "
-                 "script->script_type!=_hs_script_stub");
-      display_assert(msg, "c:\\halo\\SOURCE\\hs\\hs_runtime.c", 0x2ba, true);
-      system_exit(-1);
-    }
-  }
-
-  /* valid_thread(thread) — verify stack pointer is within bounds */
-  {
-    data_t *td = *(data_t **)0x5aa6c4;
-    uint32_t pool_base = *(uint32_t *)((char *)td + 0x34);
-    int16_t datum_count = *(int16_t *)((char *)td + 0x2e);
-    int16_t datum_size = *(int16_t *)((char *)td + 0x22);
-    uint32_t pool_end = pool_base + (int)datum_count * (int)datum_size;
-    uint32_t thr = (uint32_t)thread;
-    uint32_t sp = *(uint32_t *)(thread + 0x10);
-    uint32_t sb = thr + 0x18;
-    uint32_t se = thr + 0x218;
-
-    if (thr < pool_base || thr >= pool_end || sp < sb || sp >= se ||
-        sp + (int)*(int16_t *)(sp + 0xc) + 0xe > se) {
-      char *name = hs_get_thread_script_name(thread_handle);
-      char *msg =
-        csprintf((char *)0x5ab100,
-                 "a problem occurred while executing the script %s: %s (%s)",
-                 name, "corrupted stack.", "valid_thread(thread)");
-      display_assert(msg, "c:\\halo\\SOURCE\\hs\\hs_runtime.c", 0x2bd, true);
-      system_exit(-1);
-    }
-  }
-
-  *(int32_t *)(thread + 0x8) = 0;
-  stack_base = thread + 0x18;
-
-  /* First tick: initialize the root expression evaluation */
-  if (*(char **)(thread + 0x10) == stack_base) {
-    if (script == NULL) {
-      display_assert("script", "c:\\halo\\SOURCE\\hs\\hs_runtime.c", 0x2c3,
-                     true);
-      system_exit(-1);
-    }
-    *(int16_t *)(*(char **)(thread + 0x10) + 0xc) = 0;
-    {
-      void *result = hs_thread_stack_alloc(thread_handle, 4);
-      FUN_000cc1d0(thread_handle, *(int *)(script + 0x24), result);
-    }
-    if (*(char **)(thread + 0x10) == stack_base)
-      goto done;
-  }
-
-  /* Main execution loop */
-  do {
-    char *expr;
-    uint8_t eval_flag;
-
-    if (*(int32_t *)(thread + 0x8) < 0)
-      break;
-    if (game_in_progress() && game_time_get() < *(int32_t *)(thread + 0x8))
-      break;
-    if (*(uint8_t *)0x46b810 == 0)
-      break;
-
-    expr = (char *)datum_get(*(data_t **)0x5aa6c8,
-                             *(int *)(*(char **)(thread + 0x10) + 0x4));
-    eval_flag = *(uint8_t *)(thread + 0x3) & 1;
-    *(int16_t *)(*(char **)(thread + 0x10) + 0xc) = 0;
-    *(uint8_t *)(thread + 0x3) &= 0xfe;
-
-    if (!(*(uint8_t *)(expr + 0x6) & 2)) {
-      /* Built-in function call */
-      int func_idx = (int)(uint16_t) * (int16_t *)(expr + 0x2);
-      char *func_entry = (char *)hs_function_table_get((int16_t)func_idx);
-      hs_evaluate_t evaluate = *(hs_evaluate_t *)(func_entry + 0xc);
-      if (evaluate == NULL) {
-        display_assert("function->evaluate",
-                       "c:\\halo\\SOURCE\\hs\\hs_runtime.c", 0x2d8, true);
-        system_exit(-1);
-      }
-      func_idx = (int)(uint16_t) * (int16_t *)(expr + 0x2);
-      evaluate(func_idx, thread_handle, (int)eval_flag);
-    } else {
-      /* Script reference */
-      int script_idx = (int)*(int16_t *)(expr + 0x2);
-      char *scenario = (char *)global_scenario_get();
-      char *ref_script =
-        (char *)tag_block_get_element(scenario + 0x49c, script_idx, 0x5c);
-      datum_get(*(data_t **)0x5aa6c4, thread_handle);
-      {
-        void *result = hs_thread_stack_alloc(thread_handle, 4);
-        if (eval_flag) {
-          FUN_000cc1d0(thread_handle, *(int *)(ref_script + 0x24), result);
-        } else {
-          hs_return(thread_handle, *(int *)result);
-        }
-      }
-    }
-  } while (*(char **)(thread + 0x10) != stack_base);
-
-done:
-  if (*(char **)(thread + 0x10) == stack_base) {
-    if (*(uint8_t *)(thread + 0x2) == 0) {
-      if (*(int16_t *)(script + 0x20) == 0 ||
-          *(int16_t *)(script + 0x20) == 1) {
-        *(int32_t *)(thread + 0x8) = -1;
-        *(int16_t *)0x46b812 = -1;
-        return;
-      }
-    } else if (*(uint8_t *)(thread + 0x2) == 2) {
-      FUN_000caa30(thread_handle);
-    }
-  }
-  *(int16_t *)0x46b812 = -1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x5aa6c4, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movw %%si, 0x46b812\n\t"
+      "movb 0x2(%%edi), %%al\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "jne .LFUN_000cd840_2\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "pushl $0x5c\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x49c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movw 0x20(%%eax), %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $3, %%ax\n\t"
+      "je .LFUN_000cd840_1\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jne .LFUN_000cd840_2\n\t"
+      ".LFUN_000cd840_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2ba\n\t"
+      "pushl $0x2805bc\n\t"
+      "pushl $0x280bc0\n\t"
+      "pushl $0x280b98\n\t"
+      "call *%[ccaa80]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2806c8\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000cd840_2:\n\t"
+      "movl 0x5aa6c4, %%eax\n\t"
+      "movl 0x34(%%eax), %%ecx\n\t"
+      "cmpl %%ecx, %%edi\n\t"
+      "jb .LFUN_000cd840_3\n\t"
+      "movswl 0x2e(%%eax), %%edx\n\t"
+      "movswl 0x22(%%eax), %%eax\n\t"
+      "imull %%eax, %%edx\n\t"
+      "addl %%ecx, %%edx\n\t"
+      "cmpl %%edx, %%edi\n\t"
+      "jae .LFUN_000cd840_3\n\t"
+      "movl 0x10(%%edi), %%eax\n\t"
+      "leal 0x18(%%edi), %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jb .LFUN_000cd840_3\n\t"
+      "leal 0x218(%%edi), %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jae .LFUN_000cd840_3\n\t"
+      "movswl 0xc(%%eax), %%edx\n\t"
+      "leal 0xe(%%edx,%%eax,1), %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jbe .LFUN_000cd840_4\n\t"
+      ".LFUN_000cd840_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2bd\n\t"
+      "pushl $0x2805bc\n\t"
+      "pushl $0x2807e4\n\t"
+      "pushl $0x2807d0\n\t"
+      "call *%[ccaa80]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2806c8\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000cd840_4:\n\t"
+      "movl 0x10(%%edi), %%eax\n\t"
+      "movl %%ebx, 0x8(%%edi)\n\t"
+      "leal 0x18(%%edi), %%ebx\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "jne .LFUN_000cd840_6\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000cd840_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2c3\n\t"
+      "pushl $0x2805bc\n\t"
+      "pushl $0x25bb40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000cd840_5:\n\t"
+      "movl 0x10(%%edi), %%ecx\n\t"
+      "pushl $4\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movw $0, 0xc(%%ecx)\n\t"
+      "call *%[ccaba0]\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x24(%%edx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[ccc1d0]\n\t"
+      "movl 0x10(%%edi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "je .LFUN_000cd840_13\n\t"
+      "jmp .LFUN_000cd840_6\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_000cd840_6:\n\t"
+      "movl 0x8(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LFUN_000cd840_13\n\t"
+      "call *%[cb5be0]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000cd840_7\n\t"
+      "call *%[gtime]\n\t"
+      "cmpl %%eax, 0x8(%%edi)\n\t"
+      "jg .LFUN_000cd840_13\n\t"
+      ".LFUN_000cd840_7:\n\t"
+      "movb 0x46b810, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000cd840_13\n\t"
+      "movl 0x10(%%edi), %%ecx\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movb 0x3(%%edi), %%bl\n\t"
+      "movl 0x10(%%edi), %%ecx\n\t"
+      "movw $0, 0xc(%%ecx)\n\t"
+      "andb $0xfe, 0x3(%%edi)\n\t"
+      "movb 0x6(%%eax), %%cl\n\t"
+      "andb $1, %%bl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $2, %%cl\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "movb %%bl, -0x8(%%ebp)\n\t"
+      "jne .LFUN_000cd840_9\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x2(%%eax), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[cc3d00]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0xc(%%ebx), %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000cd840_8\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2d8\n\t"
+      "pushl $0x2805bc\n\t"
+      "pushl $0x280b84\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000cd840_8:\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x2(%%ecx), %%dx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "call *0xc(%%ebx)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_000cd840_12\n\t"
+      ".LFUN_000cd840_9:\n\t"
+      "movw 0x2(%%eax), %%ax\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "pushl $0x5c\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x49c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x5aa6c4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "call *%[dget]\n\t"
+      "pushl $4\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[ccaba0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_000cd840_10\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x24(%%edx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[ccc1d0]\n\t"
+      "jmp .LFUN_000cd840_11\n\t"
+      ".LFUN_000cd840_10:\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccbf80]\n\t"
+      ".LFUN_000cd840_11:\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000cd840_12:\n\t"
+      "movl 0x10(%%edi), %%ecx\n\t"
+      "leal 0x18(%%edi), %%eax\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jne .LFUN_000cd840_6\n\t"
+      ".LFUN_000cd840_13:\n\t"
+      "movl 0x10(%%edi), %%ecx\n\t"
+      "leal 0x18(%%edi), %%eax\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jne .LFUN_000cd840_16\n\t"
+      "movb 0x2(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000cd840_15\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movw 0x20(%%edx), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .LFUN_000cd840_14\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .LFUN_000cd840_16\n\t"
+      ".LFUN_000cd840_14:\n\t"
+      "movl $0xffffffff, %%eax\n\t"
+      "movl %%eax, 0x8(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x46b812\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000cd840_15:\n\t"
+      "cmpb $2, %%al\n\t"
+      "jne .LFUN_000cd840_16\n\t"
+      "call *%[ccaa30]\n\t"
+      ".LFUN_000cd840_16:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw $0xffff, 0x46b812\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bcd840_dget), [c18e380] "m"(bcd840_c18e380), [elem] "m"(bcd840_elem), [ccaa80] "m"(bcd840_ccaa80), [c8d9d0] "m"(bcd840_c8d9d0), [assert] "m"(bcd840_assert), [exitfn] "m"(bcd840_exitfn), [ccaba0] "m"(bcd840_ccaba0), [ccc1d0] "m"(bcd840_ccc1d0), [cb5be0] "m"(bcd840_cb5be0), [gtime] "m"(bcd840_gtime), [cc3d00] "m"(bcd840_cc3d00), [ccbf80] "m"(bcd840_ccbf80), [ccaa30] "m"(bcd840_ccaa30)
+      : "memory");
 }
+#else
+#error "FUN_000cd840: clang naked draft required"
+#endif
+
 
 /* Initialize HaloScript runtime for a new map. Deletes all existing thread
  * data, creates an internal initialization thread, runs all global

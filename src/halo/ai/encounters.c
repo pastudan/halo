@@ -3007,288 +3007,379 @@ void FUN_0005a640(int encounter_handle /* @<eax> */)
   }
 }
 
-/* 0x5a6e0 — encounter_update_visibility.
- * Called every tick (from FUN_0005de80 / encounter_update) to refresh:
- *   1. Encounterless actor PVS visibility and activation timers.
- *   2. Per-encounter activation state based on cluster visibility.
- *
- * Phase 1 — encounterless actor loop:
- *   Iterates actors chained from ai_globals+8 (head) via actor+0x2c (next).
- *   For each actor:
- *     - Asserts actor+0x9 (encounterless flag).
- *     - If actor+0x6 == 0 (no vehicle): gets unit root parent, reads
- *       object+0x4c (cluster_index), checks PVS bit; writes actor+0x12.
- *     - Else: sets actor+0x12 = 1, then walks vehicle units or squad actor
- *       list to check if any are visible; clears actor+0x12 if one is found.
- *     - Activation decision at 0x5a870:
- *       if NOT (actor+0x12 && !g_ai_override && !actor+0xa &&
- * !game_in_editor()) → set actor+0x10 = 0x5a and activate. else if actor+0x10 >
- * 30: decrement by 30. else: zero actor+0x10 and deactivate.
- *     - Calls actor_verify_activation(local_c) each iteration.
- *     - Advances via actor+0x2c.
- *
- * Phase 2 — encounter loop:
- *   Iterates all encounters via data_iterator_new/next on encounter_data.
- *   For each encounter:
- *     - Reads combined visibility flags (encounter+0xc, game_in_editor,
- *       encounter+0x3e timer, g_ai_override).
- *     - Gets scenario encounter def; checks def+0x7e (bsp_index) vs current.
- *     - If bsp match (or -1): builds encounter cluster bit-vector via
- *       FUN_00058fd0, intersects with pvs via bit_vector_and.
- *       If any visibility → activate via FUN_0005a4e0(@<eax>).
- *       Else: goto deactivate path.
- *     - Deactivate path: if encounter+0xd (active): decrement encounter+0xe
- *       timer, or zero timer and deactivate via FUN_0005a640(@<eax>).
- *     - Activate path: check encounter+0x20 squads for pending actors;
- *       set encounter+0xe=0 and call FUN_0005a4e0 or FUN_0005a640.
- *
- * Confirmed:
- *   - CALL 0x18e3c0 (scenario_get) → [EBP-0x10].
- *   - CALL 0xba6c0 (players_get_combined_pvs) → [EBP-0xc].
- *   - [EBP-0x8] = local_c = encounterless actor list head (ai_globals+8).
- *   - datum_get(actor_data=0x6325a4, local_c) at 0x5a712.
- *   - assert "actor->meta.encounterless" at 0x5a72b/0x5a9a7 (lines
- * 0x8ba/0x720).
- *   - actor+0x6 branches at 0x5a750: JZ 0x5a82b (no vehicle = solo unit path).
- *   - actor+0x28 = -1 check at 0x5a756/0x5a760 selects vehicle vs squad path.
- *   - actor+0x12 written at 0x5a825 (0) / 0x5a84d,0x5a86d (1 or computed).
- *   - actor+0xa (sub-state byte) read at 0x5a870.
- *   - activation gate OR at 0x5a88c: JZ 0x5a8d4 (deactivate path).
- *   - actor+0x10 timer: 0x5a writes at 0x5a8cb; dec at 0x5a8e0; zero at
- * 0x5a8ec.
- *   - actor_set_active (0x3d5f0) called with (local_c, 1 or 0) at 0x5a934.
- *   - actor_verify_activation (0x3aca0) called at 0x5a940.
- *   - advance: local_c = actor+0x2c at 0x5a945.
- *   - encounter loop: data_iterator_new([EBP-0x20], 0x5ab270) at 0x5a957.
- *   - [EBP-0x18] = iter.datum_handle = encounter_handle.
- *   - cluster bv build: FUN_00058fd0(enc_hdl,1,0x200,pvs,local_64) at 0x5a9e4.
- *   - cluster bv intersect: bit_vector_and(*(uint16_t*)(scenario+0x134), pvs,
- * local_64, 0) at 0x5a9fd.
- *   - encounter+0xe = 0x96 on activate-trigger at 0x5aa09.
- *   - encounter+0x20 = squad count, encounter+0x22[i*2] = squad datum indices.
- *   - datum_get(encounter_data, squad_idx) → squad+0xe checked at 0x5aa58.
- */
+/* FUN_0005a6e0 (0x5a6e0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void * (*const b5a6e0_c18e3c0)(void) = scenario_get;
+static void * (*const b5a6e0_cba6c0)(void) = players_get_combined_pvs;
+static void *(*const b5a6e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b5a6e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b5a6e0_exitfn)(int) = system_exit;
+static void *(*const b5a6e0_get)(int, int) = object_get_and_verify_type;
+static int (*const b5a6e0_c13d7f0)(int object_handle) = object_get_root_parent;
+static bool (*const b5a6e0_c977f0)(void) = game_in_editor;
+static char (*const b5a6e0_c3d5f0)(int actor_handle, char active_flag) = actor_set_active;
+static void (*const b5a6e0_c3aca0)(int actor_handle) = actor_verify_activation;
+static void (*const b5a6e0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b5a6e0_c119810)(data_iter_t *iterator) = data_iterator_next;
+static scenario_t * (*const b5a6e0_c18e380)(void) = global_scenario_get;
+static void *(*const b5a6e0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b5a6e0_c58fd0)(int encounter_handle, char update_actor_visibility, int cluster_count, int pvs, char *out_cluster_bv) = FUN_00058fd0;
+static char (*const b5a6e0_c108e70)(int16_t bit_vector_size, int v0, int v1, int result_out) = bit_vector_and;
+static char (*const b5a6e0_c5a4e0)(int encounter_index /* */) = FUN_0005a4e0;
+static void (*const b5a6e0_c5a640)(int encounter_handle /* */) = FUN_0005a640;
+
+__attribute__((naked, noinline))
 void FUN_0005a6e0(void)
 {
-  char *scenario;
-  char *pvs;
-  char *ai_globals;
-  char *actor;
-  char *group_rec;
-  char *obj;
-  char *enc_def;
-  data_iter_t iter;
-  char cluster_bv[64];
-  int encounter_handle;
-  int actor_handle;
-  int unit_handle;
-  char *unit_obj;
-  int root;
-  char *actor_ptr;
-  char *squad_rec;
-  char *enc;
-  int i;
-  int16_t cluster_index;
-  int16_t squad_i;
-  int16_t squad_count;
-  int16_t enc_timer;
-  char enc_active;
-  char in_editor;
-  char override_flag;
-  char sub_state;
-  char any_squad_active;
-  char vis_result;
-
-  scenario = (char *)scenario_get();
-  pvs = (char *)players_get_combined_pvs();
-  ai_globals = *(char **)0x632574;
-  actor_handle = *(int *)(ai_globals + 8);
-
-  if (actor_handle == -1)
-    goto LAB_encounters;
-
-  /* Phase 1: encounterless actor visibility / activation update */
-LAB_actor_loop:
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  if (*(char *)(actor + 9) == '\0') {
-    display_assert("actor->meta.encounterless",
-                   "c:\\halo\\SOURCE\\ai\\encounters.c", 0x8ba, 1);
-    system_exit(-1);
-  }
-
-  /* Compute visibility into actor+0x12 */
-  if (*(char *)(actor + 6) != '\0') {
-    /* Actor is in a vehicle or group: start with not-visible */
-    *(char *)(actor + 0x12) = 1;
-    if (*(int *)(actor + 0x28) == -1) {
-      /* Walk vehicle unit list: actor+0x24 = head, unit+0x1ac = next */
-      unit_handle = *(int *)(actor + 0x24);
-      while (unit_handle != -1) {
-        unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
-        root = object_get_root_parent(unit_handle);
-        obj = (char *)object_get_and_verify_type(root, 0xffffffff);
-        cluster_index = *(int16_t *)(obj + 0x4c);
-        if (cluster_index != -1 &&
-            (*(unsigned int *)(pvs + ((int)cluster_index >> 5) * 4) &
-             (1 << ((unsigned char)cluster_index & 0x1f))) != 0)
-          goto LAB_0005a825;
-        unit_handle = *(int *)(unit_obj + 0x1ac);
-      }
-    } else {
-      /* Group path: get group record from swarm data, iterate unit handles */
-      group_rec =
-        (char *)datum_get(*(data_t **)0x6325a0, *(int *)(actor + 0x28));
-      squad_i = 0;
-      if (0 < *(int16_t *)(group_rec + 2)) {
-        do {
-          root = object_get_root_parent(
-            *(int *)(group_rec + 0x18 + (int)squad_i * 4));
-          obj = (char *)object_get_and_verify_type(root, 0xffffffff);
-          cluster_index = *(int16_t *)(obj + 0x4c);
-          if (cluster_index != -1 &&
-              (*(unsigned int *)(pvs + ((int)cluster_index >> 5) * 4) &
-               (1 << ((unsigned char)cluster_index & 0x1f))) != 0)
-            goto LAB_0005a825;
-          squad_i++;
-        } while (squad_i < *(int16_t *)(group_rec + 2));
-      }
-    }
-    goto LAB_0005a870;
-  }
-
-  /* Solo unit path (actor+6 == 0): get root parent and check cluster vs PVS */
-  root = object_get_root_parent(*(int *)(actor + 0x18));
-  obj = (char *)object_get_and_verify_type(root, 0xffffffff);
-  cluster_index = *(int16_t *)(obj + 0x4c);
-  if (cluster_index == -1) {
-    *(char *)(actor + 0x12) = 1;
-  } else {
-    /* NEG+SBB+INC pattern: 1 - (pvs_bit != 0) */
-    *(char *)(actor + 0x12) =
-      (char)(1 -
-             (((1 << ((unsigned char)cluster_index & 0x1f)) &
-               *(unsigned int *)(pvs + ((int)cluster_index >> 5) * 4)) != 0));
-  }
-  goto LAB_0005a870;
-
-LAB_0005a825:
-  *(char *)(actor + 0x12) = 0;
-
-LAB_0005a870:
-  /* Activation decision: short-circuit OR, last test inverted.
-   * ref: je visible, jne override, jne sub_state, je !editor → deactivate;
-   * fall=activate. SETZ; OR override; OR sub_state; then if !editor →
-   * deactivate. */
-  sub_state = *(char *)(actor + 0xa);
-  in_editor = game_in_editor();
-  if (*(char *)(actor + 0x12) == '\0')
-    goto LAB_activate; /* visible → activate */
-  if (*(char *)0x5ac9c9 != '\0')
-    goto LAB_activate; /* override → activate */
-  if (sub_state != '\0')
-    goto LAB_activate; /* sub_state → activate */
-  if (in_editor == '\0')
-    goto LAB_0005a8d4; /* !editor → deactivate */
-  /* else fall through to activate */
-
-LAB_activate:
-  /* Activate: re-fetch actor to assert encounterless, set timer, activate.
-   * Disasm 0x5a891: datum_get(actor_data, actor_handle) → ESI; check ESI+9;
-   * MOV [ESI+0x10], 0x5a; PUSH 1; PUSH actor_handle; JMP actor_set_active. */
-  actor_ptr = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  if (*(char *)(actor_ptr + 9) == '\0') {
-    display_assert("actor->meta.encounterless",
-                   "c:\\halo\\SOURCE\\ai\\encounters.c", 0x720, 1);
-    system_exit(-1);
-  }
-  *(int16_t *)(actor_ptr + 0x10) = 0x5a;
-  actor_set_active(actor_handle, 1);
-  goto LAB_advance;
-
-LAB_0005a8d4:
-  /* Deactivate or tick down timer */
-  if (*(int16_t *)(actor + 0x10) > 0x1e) {
-    *(int16_t *)(actor + 0x10) = (int16_t)(*(int16_t *)(actor + 0x10) - 0x1e);
-    goto LAB_advance;
-  }
-  *(int16_t *)(actor + 0x10) = 0;
-  /* Re-fetch actor to assert encounterless before deactivating */
-  actor_ptr = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  if (*(char *)(actor_ptr + 9) == '\0') {
-    display_assert("actor->meta.encounterless",
-                   "c:\\halo\\SOURCE\\ai\\encounters.c", 0x72e, 1);
-    system_exit(-1);
-  }
-  *(int16_t *)(actor_ptr + 0x10) = 0;
-  actor_set_active(actor_handle, 0);
-
-LAB_advance:
-  actor_verify_activation(actor_handle);
-  actor_handle = *(int *)(actor + 0x2c);
-  if (actor_handle != -1)
-    goto LAB_actor_loop;
-
-  /* Phase 2: encounter loop */
-LAB_encounters:
-  data_iterator_new(&iter, *(data_t **)0x5ab270);
-  enc = (char *)data_iterator_next(&iter);
-  for (;;) {
-    if (enc == NULL)
-      return;
-
-    encounter_handle = (int)iter.datum_handle;
-
-    /* Gather visibility flags */
-    enc_active = *(char *)(enc + 0xc);
-    in_editor = game_in_editor();
-    override_flag = *(char *)0x5ac9c9;
-    enc_timer = *(int16_t *)(enc + 0x3e);
-
-    enc_def =
-      (char *)tag_block_get_element((char *)global_scenario_get() + 0x42c,
-                                    (int)(encounter_handle & 0xffff), 0xb0);
-
-    if (*(int16_t *)(enc_def + 0x7e) == -1 ||
-        *(int16_t *)(enc_def + 0x7e) == *(int16_t *)0x326a0c) {
-      /* BSP matches: compute cluster visibility */
-      FUN_00058fd0(encounter_handle, 1, 0x200, (int)pvs, cluster_bv);
-      vis_result = bit_vector_and(*(int16_t *)(scenario + 0x134), (int)pvs,
-                                  (int)cluster_bv, 0);
-      if (!((enc_active == '\0' && in_editor == '\0') &&
-            (enc_timer < 1 && override_flag == '\0') && vis_result == '\0')) {
-        /* Trigger activation */
-        *(int16_t *)(enc + 0xe) = 0x96;
-        FUN_0005a4e0(encounter_handle /* @<eax> */);
-        goto LAB_enc_next;
-      }
-    }
-
-    /* Deactivate path */
-    if (*(char *)(enc + 0xd) == '\0' || *(int16_t *)(enc + 0xe) < 0x1f) {
-      /* Check squads for any active members */
-      squad_count = *(int16_t *)(enc + 0x20);
-      any_squad_active = '\0';
-      for (i = 0; i < (int)squad_count; i++) {
-        squad_rec = (char *)datum_get(*(data_t **)0x5ab270,
-                                      (int)*(int16_t *)(enc + 0x22 + i * 2));
-        if (*(int16_t *)(squad_rec + 0xe) > 0) {
-          any_squad_active = '\x01';
-        }
-      }
-      *(int16_t *)(enc + 0xe) = 0;
-      if (any_squad_active == '\0') {
-        FUN_0005a640(encounter_handle /* @<eax> */);
-      } else {
-        FUN_0005a4e0(encounter_handle /* @<eax> */);
-      }
-    } else {
-      *(int16_t *)(enc + 0xe) = *(int16_t *)(enc + 0xe) - 0x1e;
-    }
-
-  LAB_enc_next:
-    enc = (char *)data_iterator_next(&iter);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x60, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "call *%[cba6c0]\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "movl 0x632574, %%eax\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "je .LFUN_0005a6e0_19\n\t"
+      "jmp .LFUN_0005a6e0_2\n\t"
+      ".LFUN_0005a6e0_1:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      ".LFUN_0005a6e0_2:\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movb 0x9(%%edi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0005a6e0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x8ba\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x257830\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0005a6e0_3:\n\t"
+      "movb 0x6(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0005a6e0_10\n\t"
+      "movl 0x28(%%edi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movb $1, 0x12(%%edi)\n\t"
+      "jne .LFUN_0005a6e0_6\n\t"
+      "movl 0x24(%%edi), %%esi\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "je .LFUN_0005a6e0_12\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_0005a6e0_4:\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[c13d7f0]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movw 0x4c(%%eax), %%ax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_0005a6e0_5\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "sarl $5, %%eax\n\t"
+      "testl %%edx, (%%ecx,%%eax,4)\n\t"
+      "jne .LFUN_0005a6e0_9\n\t"
+      ".LFUN_0005a6e0_5:\n\t"
+      "movl 0x1ac(%%ebx), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne .LFUN_0005a6e0_4\n\t"
+      "jmp .LFUN_0005a6e0_12\n\t"
+      ".LFUN_0005a6e0_6:\n\t"
+      "movl 0x6325a0, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw %%si, 0x2(%%ebx)\n\t"
+      "jle .LFUN_0005a6e0_12\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_0005a6e0_7:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl 0x18(%%ebx,%%eax,4), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13d7f0]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movw 0x4c(%%eax), %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_0005a6e0_8\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "sarl $5, %%eax\n\t"
+      "testl %%edx, (%%ecx,%%eax,4)\n\t"
+      "jne .LFUN_0005a6e0_9\n\t"
+      ".LFUN_0005a6e0_8:\n\t"
+      "incl %%esi\n\t"
+      "cmpw 0x2(%%ebx), %%si\n\t"
+      "jl .LFUN_0005a6e0_7\n\t"
+      "jmp .LFUN_0005a6e0_12\n\t"
+      ".LFUN_0005a6e0_9:\n\t"
+      "movb $0, 0x12(%%edi)\n\t"
+      "jmp .LFUN_0005a6e0_12\n\t"
+      ".LFUN_0005a6e0_10:\n\t"
+      "movl 0x18(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c13d7f0]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movw 0x4c(%%eax), %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "jne .LFUN_0005a6e0_11\n\t"
+      "movb $1, 0x12(%%edi)\n\t"
+      "jmp .LFUN_0005a6e0_12\n\t"
+      ".LFUN_0005a6e0_11:\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "sarl $5, %%eax\n\t"
+      "andl (%%ecx,%%eax,4), %%edx\n\t"
+      "negl %%edx\n\t"
+      "sbbb %%dl, %%dl\n\t"
+      "incb %%dl\n\t"
+      "movb %%dl, 0x12(%%edi)\n\t"
+      ".LFUN_0005a6e0_12:\n\t"
+      "movb 0xa(%%edi), %%bl\n\t"
+      "call *%[c977f0]\n\t"
+      "movb 0x12(%%edi), %%dl\n\t"
+      "movb 0x5ac9c9, %%cl\n\t"
+      "orb %%al, %%bl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "sete %%dl\n\t"
+      "orb %%cl, %%dl\n\t"
+      "orb %%bl, %%dl\n\t"
+      "je .LFUN_0005a6e0_14\n\t"
+      "movl -0x8(%%ebp), %%ebx\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x9(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0005a6e0_13\n\t"
+      "pushl $1\n\t"
+      "pushl $0x720\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x257830\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0005a6e0_13:\n\t"
+      "pushl $1\n\t"
+      "movw $0x5a, 0x10(%%esi)\n\t"
+      "pushl %%ebx\n\t"
+      "jmp .LFUN_0005a6e0_17\n\t"
+      ".LFUN_0005a6e0_14:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x10(%%edi), %%ax\n\t"
+      "cmpw $0x1e, %%ax\n\t"
+      "jle .LFUN_0005a6e0_15\n\t"
+      "addl $-0x1e, %%eax\n\t"
+      "movw %%ax, 0x10(%%edi)\n\t"
+      "jmp .LFUN_0005a6e0_18\n\t"
+      ".LFUN_0005a6e0_15:\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      "movw $0, 0x10(%%edi)\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movb 0x9(%%ebx), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0005a6e0_16\n\t"
+      "pushl $1\n\t"
+      "pushl $0x72e\n\t"
+      "pushl $0x25d27c\n\t"
+      "pushl $0x257830\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0005a6e0_16:\n\t"
+      "pushl $0\n\t"
+      "movw $0, 0x10(%%ebx)\n\t"
+      "pushl %%esi\n\t"
+      ".LFUN_0005a6e0_17:\n\t"
+      "call *%[c3d5f0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_0005a6e0_18:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c3aca0]\n\t"
+      "movl 0x2c(%%edi), %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movl %%edi, -0x8(%%ebp)\n\t"
+      "jne .LFUN_0005a6e0_1\n\t"
+      ".LFUN_0005a6e0_19:\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x20(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x20(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_0005a6e0_29\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_0005a6e0_20:\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "andl $0xffff, %%eax\n\t"
+      "pushl $0xb0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x42c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movb 0xc(%%esi), %%bl\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[c977f0]\n\t"
+      "orb %%al, %%bl\n\t"
+      "cmpw $0, 0x3e(%%esi)\n\t"
+      "movb 0x5ac9c9, %%al\n\t"
+      "setg %%cl\n\t"
+      "orb %%al, %%cl\n\t"
+      "movw 0x7e(%%edi), %%ax\n\t"
+      "orb %%cl, %%bl\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_0005a6e0_21\n\t"
+      "cmpw 0x326a0c, %%ax\n\t"
+      "jne .LFUN_0005a6e0_22\n\t"
+      ".LFUN_0005a6e0_21:\n\t"
+      "movl -0xc(%%ebp), %%edi\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "leal -0x60(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x200\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c58fd0]\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x134(%%edx), %%ax\n\t"
+      "pushl $0\n\t"
+      "leal -0x60(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c108e70]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "orb %%al, %%bl\n\t"
+      "je .LFUN_0005a6e0_22\n\t"
+      "movw $0x96, 0xe(%%esi)\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "call *%[c5a4e0]\n\t"
+      "jmp .LFUN_0005a6e0_28\n\t"
+      ".LFUN_0005a6e0_22:\n\t"
+      "movb 0xd(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0005a6e0_23\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0xe(%%esi), %%ax\n\t"
+      "cmpw $0x1e, %%ax\n\t"
+      "jle .LFUN_0005a6e0_23\n\t"
+      "addl $-0x1e, %%eax\n\t"
+      "movw %%ax, 0xe(%%esi)\n\t"
+      "jmp .LFUN_0005a6e0_28\n\t"
+      ".LFUN_0005a6e0_23:\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpw %%bx, 0x20(%%esi)\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "jle .LFUN_0005a6e0_26\n\t"
+      ".LFUN_0005a6e0_24:\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "movswl %%bx, %%ecx\n\t"
+      "movswl 0x22(%%esi,%%ecx,2), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, 0xe(%%eax)\n\t"
+      "jle .LFUN_0005a6e0_25\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      ".LFUN_0005a6e0_25:\n\t"
+      "incl %%ebx\n\t"
+      "cmpw 0x20(%%esi), %%bx\n\t"
+      "jl .LFUN_0005a6e0_24\n\t"
+      ".LFUN_0005a6e0_26:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "movw $0, 0xe(%%esi)\n\t"
+      "testb %%al, %%al\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "je .LFUN_0005a6e0_27\n\t"
+      "call *%[c5a4e0]\n\t"
+      "jmp .LFUN_0005a6e0_28\n\t"
+      ".LFUN_0005a6e0_27:\n\t"
+      "call *%[c5a640]\n\t"
+      ".LFUN_0005a6e0_28:\n\t"
+      "leal -0x20(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119810]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_0005a6e0_20\n\t"
+      ".LFUN_0005a6e0_29:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e3c0] "m"(b5a6e0_c18e3c0), [cba6c0] "m"(b5a6e0_cba6c0), [dget] "m"(b5a6e0_dget), [assert] "m"(b5a6e0_assert), [exitfn] "m"(b5a6e0_exitfn), [get] "m"(b5a6e0_get), [c13d7f0] "m"(b5a6e0_c13d7f0), [c977f0] "m"(b5a6e0_c977f0), [c3d5f0] "m"(b5a6e0_c3d5f0), [c3aca0] "m"(b5a6e0_c3aca0), [c1197b0] "m"(b5a6e0_c1197b0), [c119810] "m"(b5a6e0_c119810), [c18e380] "m"(b5a6e0_c18e380), [elem] "m"(b5a6e0_elem), [c58fd0] "m"(b5a6e0_c58fd0), [c108e70] "m"(b5a6e0_c108e70), [c5a4e0] "m"(b5a6e0_c5a4e0), [c5a640] "m"(b5a6e0_c5a640)
+      : "memory");
 }
+#else
+#error "FUN_0005a6e0: clang naked draft required"
+#endif
+
 
 /* 0x0005aab0 — encounter_clear_active_props (encounter_stand_down).
  *

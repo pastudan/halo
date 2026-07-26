@@ -1424,206 +1424,340 @@ bool FUN_000c73a0(int datum_index)
   return false;
 }
 
-/* Type-check an HS expression (non-function) node (0xc74c0).
- *
- * Called from hs_type_check when a syntax node has flag bit 0 clear
- * (expression node, not a function-call). Receives datum_index in EBX
- * (register arg).
- *
- * Node layout (at hs_syntax_data[datum_index]):
- *   +0x2  int16_t  function_index / script_index
- *   +0x4  int16_t  type
- *   +0x6  uint8_t  flags (bit 0 = compiled, bit 1 = is_script, bit 2 =
- * variable_ref) +0x8  int      next sibling datum_index +0xc  int      string
- * offset (relative to compiled_source base) +0x10 int      first child
- * datum_index
- *
- * The function checks the expression's first child node (datum_index at
- * node+0x10) for the compiled flag (bit 0 of flags at child+0x6). If the
- * child is not compiled, emits an "i expected X, but i got an expression"
- * error and returns false.
- *
- * If compiled and type == 1 (hs_special_form):
- *   - Compares the child's string (child->string_offset + compiled_source)
- *     against "global" (strcmp). If matched, calls FUN_000c6b00 (global
- *     variable compile pass) with datum_index.
- *   - Otherwise compares against "script". If matched, calls FUN_000c6d90
- *     (script compile pass) with datum_index.
- *   - Otherwise sets error "i expected \"script\" or \"global\"." and returns
- *     false.
- *
- * For all other types, calls FUN_000c5960 (expression name resolution via
- * EAX = datum_index) to resolve the expression's function_index. Then:
- *   - If function_index == -1: error "this is not a valid function or
- *     script name." using child's string_offset.
- *   - If bit 1 of flags is set (is_script reference): looks up the script
- *     element via global_scenario_get()+0x49c, checking script type (must be
- *     3 or 4 = static/dormant). Validates return-type compatibility via
- *     hs_types_compatible if type != 0. Propagates return type if type == 0.
- *   - Otherwise (function reference): gets the function descriptor via
- *     hs_function_table_get. Validates return-type compatibility via
- * hs_types_compatible if type != 0. Checks hs_compile_globals.no_sleep
- * (0x46b806) and hs_compile_globals.no_set (0x46b807) context flags. Propagates
- * return type if type == 0 and fn_desc->return_type != 3 (void). Calls the
- *     function descriptor's parse function pointer at fn_desc+0x8 with
- *     (function_index, datum_index @EBX).
- *
- * Returns true on success, false on error.
- */
-bool FUN_000c74c0(int datum_index)
+/* FUN_000c74c0 (0xc74c0) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const bc74c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const bc74c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bc74c0_exitfn)(int) = system_exit;
+static int (*const bc74c0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
+static bool (*const bc74c0_cc6b00)(int datum_index) = FUN_000c6b00;
+static bool (*const bc74c0_cc6d90)(int datum_index) = FUN_000c6d90;
+static void (*const bc74c0_cc5960)(int datum_index) = FUN_000c5960;
+static scenario_t * (*const bc74c0_c18e380)(void) = global_scenario_get;
+static void *(*const bc74c0_elem)(void *, int, int) = tag_block_get_element;
+static bool (*const bc74c0_ccb070)(int16_t actual_type, int16_t desired_type) = hs_types_compatible;
+static int (*const bc74c0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static void * (*const bc74c0_cc3d00)(int16_t function_index) = hs_function_table_get;
+
+__attribute__((naked, noinline))
+bool FUN_000c74c0(int datum_index __attribute__((unused)))
 {
-  char *node;
-  char *node2;
-  int first_child;
-  char *child_node;
-  int16_t type;
-  char *child_node2;
-  int16_t fn_idx;
-  void *fn_desc;
-  int16_t fn_ret;
-  typedef bool (*hs_parse_fn_t)(int16_t function_index, int datum_index);
-  hs_parse_fn_t parse_fn;
-
-  /* Three datum_get calls at entry (matching binary) to load expression node
-   * and first-child node. */
-  node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
-  node2 = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
-  first_child = *(int *)(node2 + 0x10);
-  child_node = (char *)datum_get(*(data_t **)0x5aa6c8, first_child);
-
-  /* Validate expression type. */
-  type = *(int16_t *)(node + 0x4);
-  if (!((type >= 4 && type <= 0x30) || type == 1 || type == 0)) {
-    display_assert(
-      "hs_type_valid(expression->type) || expression->type==_hs_special_form"
-      " || expression->type==_hs_unparsed",
-      "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x534, 1);
-    system_exit(-1);
-  }
-
-  /* Reload child node (fourth datum_get, matches binary). */
-  child_node2 = (char *)datum_get(*(data_t **)0x5aa6c8, first_child);
-  if (!(*(uint8_t *)(child_node2 + 0x6) & 0x1)) {
-    {
-      /* Child is not compiled — emit error. */
-      const char *what = (*(int16_t *)(node + 0x4) == 1) ?
-                           "\"script\" or \"global\"" :
-                           "a function name";
-      crt_sprintf((char *)0x46b704, "i expected %s, but i got an expression.",
-                  what);
-      *(const char **)0x46b6fc = (const char *)0x46b704;
-      *(int *)0x46b700 = *(int *)(child_node + 0xc);
-      return false;
-    }
-  }
-
-  if (*(int16_t *)(node + 0x4) == 1) {
-    /* hs_special_form: child string must be "global" or "script". */
-    char *str = (char *)(*(int *)(child_node + 0xc) + *(int *)0x46b6e8);
-    if (csstrcmp(str, "global") == 0) {
-      return FUN_000c6b00(datum_index);
-    }
-    if (csstrcmp(str, "script") == 0) {
-      return FUN_000c6d90(datum_index);
-    }
-    *(const char **)0x46b6fc = "i expected \"script\" or \"global\".";
-    *(int *)0x46b700 = *(int *)(child_node + 0xc);
-    return false;
-  }
-
-  /* Resolve expression name: function_index written into node+0x2. */
-  FUN_000c5960(datum_index);
-
-  fn_idx = *(int16_t *)(node + 0x2);
-  if (fn_idx == -1) {
-    *(const char **)0x46b6fc = "this is not a valid function or script name.";
-    *(int *)0x46b700 = *(int *)(child_node + 0xc);
-    return false;
-  }
-
-  if (*(uint8_t *)(node + 0x6) & 0x2) {
-    /* Script reference: look up script element. */
-    char *script_elem = (char *)tag_block_get_element(
-      (char *)global_scenario_get() + 0x49c, (int)(int16_t)fn_idx, 0x5c);
-    int16_t script_type = *(int16_t *)(script_elem + 0x20);
-    if (script_type != 3 && script_type != 4) {
-      *(const char **)0x46b6fc = "this is not a static script.";
-      *(int *)0x46b700 = *(int *)(node + 0xc);
-      return false;
-    }
-
-    if (*(int16_t *)(node + 0x4) != 0) {
-      /* Validate return type compatibility. */
-      int16_t script_ret = *(int16_t *)(script_elem + 0x22);
-      int16_t expected = *(int16_t *)(node + 0x4);
-      if (!hs_types_compatible(script_ret, expected)) {
-        crt_sprintf(
-          (char *)0x46b704, "i expected a %s, but this script returns a %s.",
-          ((const char *
-              *)(void *)0x2f14a8)[(int)(int16_t)(*(int16_t *)(node + 0x4))],
-          ((const char **)(void *)0x2f14a8)[(int)(int16_t)script_ret]);
-        *(const char **)0x46b6fc = (const char *)0x46b704;
-        *(int *)0x46b700 = *(int *)(node + 0xc);
-        return false;
-      }
-    }
-
-    if (*(int16_t *)(node + 0x4) == 0) {
-      *(int16_t *)(node + 0x4) = *(int16_t *)(script_elem + 0x22);
-    }
-    return true;
-  }
-
-  /* Function reference: get descriptor. */
-  fn_desc = hs_function_table_get((int16_t)fn_idx);
-  fn_ret = *(int16_t *)fn_desc;
-
-  if (*(int16_t *)(node + 0x4) != 0) {
-    /* Validate return type compatibility. */
-    int16_t expected = *(int16_t *)(node + 0x4);
-    if (!hs_types_compatible(fn_ret, expected)) {
-      crt_sprintf((char *)0x46b704,
-                  "i expected a %s, but this function returns a %s.",
-                  ((const char **)(void *)0x2f14a8)[(int)(int16_t)expected],
-                  ((const char **)(void *)0x2f14a8)[(int)(int16_t)fn_ret]);
-      *(const char **)0x46b6fc = (const char *)0x46b704;
-      *(int *)0x46b700 = *(int *)(node + 0xc);
-      return false;
-    }
-  }
-
-  /* Context restrictions. */
-  if (*(uint8_t *)0x46b806 != 0) {
-    /* no_sleep context: sleep and sleep_forever are illegal. */
-    int16_t fi = *(int16_t *)(node + 0x2);
-    if (fi == 0x13 || fi == 0x14) {
-      *(const char **)0x46b6fc = "it is illegal to block in this context.";
-      *(int *)0x46b700 = *(int *)(node + 0xc);
-      return false;
-    }
-  }
-
-  if (*(uint8_t *)0x46b807 != 0 && *(int16_t *)(node + 0x2) == 0x4) {
-    *(const char **)0x46b6fc =
-      "it is illegal to set the value of variables in this context.";
-    *(int *)0x46b700 = *(int *)(node + 0xc);
-    return false;
-  }
-
-  /* Propagate return type if node is untyped and fn returns non-void. */
-  if (*(int16_t *)(node + 0x4) == 0 && fn_ret != 3) {
-    *(int16_t *)(node + 0x4) = fn_ret;
-  }
-
-  /* Invoke the function descriptor's parse callback. */
-  if (*(void **)(((char *)fn_desc) + 0x8) == NULL) {
-    display_assert("function->parse", "c:\\halo\\SOURCE\\hs\\hs_compile.c",
-                   0x58c, 1);
-    system_exit(-1);
-  }
-  parse_fn = *(hs_parse_fn_t *)(((char *)fn_desc) + 0x8);
-  return parse_fn(*(int16_t *)(node + 0x2), datum_index);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x5aa6c8, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%eax), %%edi\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movw 0x4(%%esi), %%ax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jl .LFUN_000c74c0_1\n\t"
+      "cmpw $0x31, %%ax\n\t"
+      "jl .LFUN_000c74c0_2\n\t"
+      ".LFUN_000c74c0_1:\n\t"
+      "cmpw $1, %%ax\n\t"
+      "je .LFUN_000c74c0_2\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .LFUN_000c74c0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x534\n\t"
+      "pushl $0x27bd0c\n\t"
+      "pushl $0x27c8c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000c74c0_2:\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movb 0x6(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $1, %%cl\n\t"
+      "je .LFUN_000c74c0_17\n\t"
+      "cmpw $1, 0x4(%%esi)\n\t"
+      "jne .LFUN_000c74c0_5\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      "movl 0xc(%%esi), %%ecx\n\t"
+      "addl 0x46b6e8, %%ecx\n\t"
+      "pushl $0x27b978\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8dcb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000c74c0_3\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cc6b00]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb %%al, -0x1(%%ebp)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c74c0_3:\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "addl 0x46b6e8, %%edx\n\t"
+      "pushl $0x25bb40\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8dcb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000c74c0_4\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cc6d90]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb %%al, -0x1(%%ebp)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c74c0_4:\n\t"
+      "movl $0x27caa4, 0x46b6fc\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x46b700\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c74c0_5:\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[cc5960]\n\t"
+      "movw 0x2(%%esi), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_000c74c0_16\n\t"
+      "testb $2, 0x6(%%esi)\n\t"
+      "je .LFUN_000c74c0_9\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "pushl $0x5c\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x49c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movw 0x20(%%edi), %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $3, %%ax\n\t"
+      "je .LFUN_000c74c0_6\n\t"
+      "cmpw $4, %%ax\n\t"
+      "je .LFUN_000c74c0_6\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "movl $0x27ca84, 0x46b6fc\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "popl %%edi\n\t"
+      "movl %%edx, 0x46b700\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c74c0_6:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x4(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .LFUN_000c74c0_7\n\t"
+      "pushl %%eax\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x22(%%edi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ccb070]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000c74c0_7\n\t"
+      "movswl 0x22(%%edi), %%ecx\n\t"
+      "movswl 0x4(%%esi), %%eax\n\t"
+      "movl 0x2f14a8(,%%ecx,4), %%edx\n\t"
+      "movl 0x2f14a8(,%%eax,4), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x27ca54\n\t"
+      "pushl $0x46b704\n\t"
+      "call *%[c1d90f0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl $0x46b704, 0x46b6fc\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "popl %%edi\n\t"
+      "movl %%edx, 0x46b700\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c74c0_7:\n\t"
+      "cmpw $0, 0x4(%%esi)\n\t"
+      "jne .LFUN_000c74c0_8\n\t"
+      "movw 0x22(%%edi), %%ax\n\t"
+      "movw %%ax, 0x4(%%esi)\n\t"
+      ".LFUN_000c74c0_8:\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c74c0_9:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cc3d00]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x4(%%esi), %%ax\n\t"
+      "addl $4, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .LFUN_000c74c0_10\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw (%%edi), %%cx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ccb070]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_000c74c0_10\n\t"
+      "movswl (%%edi), %%edx\n\t"
+      "movswl 0x4(%%esi), %%ecx\n\t"
+      "movl 0x2f14a8(,%%edx,4), %%eax\n\t"
+      "movl 0x2f14a8(,%%ecx,4), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x27ca20\n\t"
+      "pushl $0x46b704\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl $0x46b704, 0x46b6fc\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x46b700\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c74c0_10:\n\t"
+      "movb 0x46b806, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000c74c0_12\n\t"
+      "movw 0x2(%%esi), %%ax\n\t"
+      "cmpw $0x13, %%ax\n\t"
+      "je .LFUN_000c74c0_11\n\t"
+      "cmpw $0x14, %%ax\n\t"
+      "jne .LFUN_000c74c0_12\n\t"
+      ".LFUN_000c74c0_11:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "movl $0x27c9f8, 0x46b6fc\n\t"
+      "movl 0xc(%%esi), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "movl %%ecx, 0x46b700\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c74c0_12:\n\t"
+      "movb 0x46b807, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000c74c0_13\n\t"
+      "cmpw $4, 0x2(%%esi)\n\t"
+      "jne .LFUN_000c74c0_13\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "movl $0x27c9b8, 0x46b6fc\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "popl %%edi\n\t"
+      "movl %%edx, 0x46b700\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c74c0_13:\n\t"
+      "cmpw $0, 0x4(%%esi)\n\t"
+      "jne .LFUN_000c74c0_14\n\t"
+      "movw (%%edi), %%ax\n\t"
+      "cmpw $3, %%ax\n\t"
+      "je .LFUN_000c74c0_14\n\t"
+      "movw %%ax, 0x4(%%esi)\n\t"
+      ".LFUN_000c74c0_14:\n\t"
+      "movl 0x8(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_000c74c0_15\n\t"
+      "pushl $1\n\t"
+      "pushl $0x58c\n\t"
+      "pushl $0x27bd0c\n\t"
+      "pushl $0x27c9a8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000c74c0_15:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x2(%%esi), %%ax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *0x8(%%edi)\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movb %%al, -0x1(%%ebp)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c74c0_16:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "movl $0x27c978, 0x46b6fc\n\t"
+      "movl 0xc(%%ecx), %%edx\n\t"
+      "popl %%edi\n\t"
+      "movl %%edx, 0x46b700\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c74c0_17:\n\t"
+      "cmpw $1, 0x4(%%esi)\n\t"
+      "movl $0x27c960, %%eax\n\t"
+      "je .LFUN_000c74c0_18\n\t"
+      "movl $0x27c950, %%eax\n\t"
+      ".LFUN_000c74c0_18:\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x27c928\n\t"
+      "pushl $0x46b704\n\t"
+      "call *%[c1d90f0]\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl $0x46b704, 0x46b6fc\n\t"
+      "movl 0xc(%%eax), %%ecx\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "movl %%ecx, 0x46b700\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bc74c0_dget), [assert] "m"(bc74c0_assert), [exitfn] "m"(bc74c0_exitfn), [c8dcb0] "m"(bc74c0_c8dcb0), [cc6b00] "m"(bc74c0_cc6b00), [cc6d90] "m"(bc74c0_cc6d90), [cc5960] "m"(bc74c0_cc5960), [c18e380] "m"(bc74c0_c18e380), [elem] "m"(bc74c0_elem), [ccb070] "m"(bc74c0_ccb070), [c1d90f0] "m"(bc74c0_c1d90f0), [cc3d00] "m"(bc74c0_cc3d00)
+      : "memory");
 }
+#else
+#error "FUN_000c74c0: clang naked draft required"
+#endif
+
 
 /* Mark an HS syntax node (and its children) as needing recompilation
  * (0xc7b10). Sets dirty flag (bit 3) on the node.
