@@ -840,6 +840,19 @@ def main() -> int:
         ("FUN_0013cb30", 0x13cb30, 0x13cb7d),
         ("FUN_001a6820", 0x1a6820, 0x1a6867),
         ("FUN_00136100", 0x136100, 0x136150),
+        # gameplay wave 71 (2026-07-26) — AI/HS next-domain large weaks
+        ("FUN_00038e60", 0x38e60, 0x39c2f, [(0x39c30, 0x39c74)]),
+        ("FUN_0003dc20", 0x3dc20, 0x3e56c),
+        ("FUN_00022390", 0x22390, 0x22b3b),
+        ("FUN_00017120", 0x17120, 0x17838, [(0x17838, 0x178a8)]),
+        ("FUN_000cb230", 0xcb230, 0xcb70d, [(0xcb710, 0xcb7ac)]),
+        ("FUN_00024cf0", 0x24cf0, 0x25333),
+        ("FUN_00018b90", 0x18b90, 0x190bf, [(0x190c0, 0x190f0)]),
+        ("FUN_00055dd0", 0x55dd0, 0x56318),
+        ("FUN_00038370", 0x38370, 0x3887f),
+        ("FUN_000559a0", 0x559a0, 0x55dcb),
+        ("FUN_000c6d90", 0xc6d90, 0xc71bd),
+        ("FUN_00027410", 0x27410, 0x27869),
     ]
 
     xbe = Xbe.from_file(args.xbe)

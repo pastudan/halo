@@ -859,258 +859,392 @@ bool FUN_000c6b00(int datum_index)
   return false;
 }
 
-/* 0xc6d90 — Compile a (script <type> [<return-type>] <name> <body>) definition.
- *
- * Walks the argument list under datum_index to extract: script type, optional
- * return type (for static/stub scripts), script name, and the expression body.
- * If a script with the same name already exists the function validates that the
- * existing definition is a compatible stub (or static overriding a stub).
- * On success allocates two new syntax nodes for the "begin" wrapper and body,
- * writes the script element (name, type, return type, node handle), calls
- * hs_type_check on the body, and returns true.
- *
- * Script-type table at 0x2f156c (5 entries): startup(0), dormant(1),
- * continuous(2), static(3), stub(4).
- * HS type table at 0x2f14a8 (0x31 entries, indices 4..0x30 valid for return).
- *
- * Node layout used here (offsets confirmed from disassembly):
- *   +0x2  int16_t  (script index / function index)
- *   +0x4  int16_t  type
- *   +0x6  uint16_t flags
- *   +0x8  int      next sibling datum_index
- *   +0xc  int      string offset (relative to compiled source base at 0x46b6e8)
- *   +0x10 int      first child datum_index
- *
- * Script element layout (element_size=0x5c, confirmed from tag_block calls):
- *   +0x00 char[32] name (written via csstrcpy)
- *   +0x20 int16_t  script_type
- *   +0x22 int16_t  return_type
- *   +0x24 int      root_node datum_index
- *   +0x28 int      (init expression, used by globals; not touched here)
- */
-bool FUN_000c6d90(int datum_index)
+/* FUN_000c6d90 (0xc6d90) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const bc6d90_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const bc6d90_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
+static int (*const bc6d90_c8df60)(const char *s1) = csstrlen;
+static scenario_t * (*const bc6d90_c18e380)(void) = global_scenario_get;
+static int16_t (*const bc6d90_cc3d50)(const char *name) = hs_find_script_by_name;
+static int16_t (*const bc6d90_c1b9ad0)(void *tag_block) = tag_block_add_element;
+static void *(*const bc6d90_elem)(void *, int, int) = tag_block_get_element;
+static int (*const bc6d90_c119610)(data_t *data) = data_new_at_index;
+static bool (*const bc6d90_cc7d80)(int datum_index, int16_t check_type) = hs_type_check;
+static char * (*const bc6d90_c8dff0)(char *destination, const char *source) = csstrcpy;
+
+__attribute__((naked, noinline))
+bool FUN_000c6d90(int datum_index __attribute__((unused)))
 {
-  char *node;
-  int type_arg; /* first child of the "script" node */
-  int name_arg; /* sibling after type [and optional return-type] arg */
-  int name_next_arg; /* sibling after name (body expression) */
-  int16_t script_type_idx; /* index into the script-type name table (0-4) */
-  int16_t return_type_idx; /* index into the HS type table */
-  int return_type_arg; /* datum index of the return-type token node (static/stub
-                          only) */
-  char *type_str; /* pointer into source buffer for the type token */
-  char *name_str; /* pointer into source buffer for the name token */
-  int head_handle; /* datum index of newly-allocated head syntax node */
-  int body_handle; /* datum index of newly-allocated body syntax node */
-  char *head_node; /* pointer to head syntax node data */
-  char *body_node; /* pointer to body syntax node data */
-  char *script_elem; /* pointer to the script tag-block element */
-  int16_t existing; /* existing script index (-1 = not found) */
-
-  /* Navigate: datum_index -> (script) -> first child -> next sibling.
-   * That sibling is the script-type token node (type_arg). */
-  node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
-  node = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(node + 0x10));
-  type_arg = *(int *)(node + 0x8);
-
-  if (type_arg == -1) {
-    *(const char **)0x46b6fc =
-      "i expected (script <type> <name> <expression(s)>)";
-    node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
-    *(int *)0x46b700 = *(int *)(node + 0xc);
-    return false;
-  }
-
-  /* Resolve the script-type string and search the script-type table. */
-  node = (char *)datum_get(*(data_t **)0x5aa6c8, type_arg);
-  type_str = (char *)(*(int *)(node + 0xc) + *(int *)0x46b6e8);
-
-  script_type_idx = 0;
-  do {
-    if (csstrcmp(type_str, ((const char **)0x2f156c)[(int)script_type_idx]) ==
-        0)
-      goto found_script_type;
-    script_type_idx++;
-  } while (script_type_idx < 5);
-
-  /* No match — emit error, report position of the type token. */
-  *(const char **)0x46b6fc = "script type must be \"startup\", \"dormant\", "
-                             "\"continuous\", or \"static\".";
-  node = (char *)datum_get(*(data_t **)0x5aa6c8, type_arg);
-  *(int *)0x46b700 = *(int *)(node + 0xc);
-  return false;
-
-found_script_type:
-  if (script_type_idx == 3 || script_type_idx == 4) {
-    /* static or stub: next arg is return type, then name. */
-    node = (char *)datum_get(*(data_t **)0x5aa6c8, type_arg);
-    return_type_arg = *(int *)(node + 0x8);
-    if (return_type_arg == -1) {
-      *(const char **)0x46b6fc =
-        "i expected (script local <type> <name> <expression(s)>).";
-      node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
-      *(int *)0x46b700 = *(int *)(node + 0xc);
-      return false;
-    }
-
-    /* Search HS type table for return type name. */
-    node = (char *)datum_get(*(data_t **)0x5aa6c8, return_type_arg);
-    type_str = (char *)(*(int *)(node + 0xc) + *(int *)0x46b6e8);
-    return_type_idx = 0;
-    while (csstrcmp(type_str,
-                    ((const char **)0x2f14a8)[(int)return_type_idx]) != 0) {
-      return_type_idx++;
-      if (return_type_idx >= 0x31) {
-        return_type_idx = -1;
-        break;
-      }
-    }
-
-    /* Advance to the name node: next sibling of the return-type token.
-     * Error position (if invalid type) uses the return-type token node. */
-    node = (char *)datum_get(*(data_t **)0x5aa6c8, return_type_arg);
-    name_arg = *(int *)(node + 0x8);
-
-    if ((short)return_type_idx < 4 || 0x30 < (short)return_type_idx) {
-      *(const char **)0x46b6fc = "this is not a valid return type.";
-      node = (char *)datum_get(*(data_t **)0x5aa6c8, return_type_arg);
-      *(int *)0x46b700 = *(int *)(node + 0xc);
-      return false;
-    }
-  } else {
-    /* startup / dormant / continuous: no explicit return type; use index 4. */
-    return_type_idx = 4;
-    node = (char *)datum_get(*(data_t **)0x5aa6c8, type_arg);
-    name_arg = *(int *)(node + 0x8);
-  }
-
-  /* name_arg now points to the script-name token node. */
-  if (name_arg == -1) {
-    if (script_type_idx == 3) {
-      *(const char **)0x46b6fc =
-        "i expected (script static <type> <name> <expression(s)>)";
-    } else if (script_type_idx == 4) {
-      *(const char **)0x46b6fc =
-        "i expected (script stub <type> <name> <expression(s)>)";
-    } else {
-      *(const char **)0x46b6fc =
-        "i expected (script <type> <name> <expression(s)>)";
-    }
-    node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
-    *(int *)0x46b700 = *(int *)(node + 0xc);
-    return false;
-  }
-
-  node = (char *)datum_get(*(data_t **)0x5aa6c8, name_arg);
-  name_next_arg = *(int *)(node + 0x8);
-
-  if (name_next_arg == -1) {
-    if (script_type_idx == 3) {
-      *(const char **)0x46b6fc =
-        "i expected (script static <type> <name> <expression(s)>)";
-    } else if (script_type_idx == 4) {
-      *(const char **)0x46b6fc =
-        "i expected (script stub <type> <name> <expression(s)>)";
-    } else {
-      *(const char **)0x46b6fc =
-        "i expected (script <type> <name> <expression(s)>)";
-    }
-    node = (char *)datum_get(*(data_t **)0x5aa6c8, name_arg);
-    *(int *)0x46b700 = *(int *)(node + 0xc);
-    return false;
-  }
-
-  /* Validate name length (1..31 characters). */
-  node = (char *)datum_get(*(data_t **)0x5aa6c8, name_arg);
-  name_str = (char *)(*(int *)(node + 0xc) + *(int *)0x46b6e8);
-  if (csstrlen(name_str) == 0 || csstrlen(name_str) >= 0x20) {
-    *(const char **)0x46b6fc =
-      "i expected a script name less than 32 characters.";
-    node = (char *)datum_get(*(data_t **)0x5aa6c8, name_arg);
-    *(int *)0x46b700 = *(int *)(node + 0xc);
-    return false;
-  }
-
-  /* Look up scenario scripts block at scenario+0x49c. */
-  {
-    scenario_t *scenario = global_scenario_get();
-    void *scripts_block = (char *)scenario + 0x49c;
-
-    existing = hs_find_script_by_name(name_str);
-    if (existing == -1) {
-      /* No existing script — allocate a new script element. */
-      existing = (int16_t)tag_block_add_element(scripts_block);
-      if (existing == -1) {
-        *(const char **)0x46b6fc = "i couldn't allocate a script.";
-        node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
-        *(int *)0x46b700 = *(int *)(node + 0xc);
-        return false;
-      }
-    } else {
-      /* Script exists — validate override rules. */
-      char *elem =
-        (char *)tag_block_get_element(scripts_block, (int)existing, 0x5c);
-      int16_t elem_type = *(int16_t *)(elem + 0x20);
-      int16_t elem_rtype = *(int16_t *)(elem + 0x22);
-
-      /* A static overriding a stub of the same return type: allowed. */
-      if (elem_type == 4 && elem_rtype == return_type_idx &&
-          script_type_idx == 3) {
-        /* Return early: override accepted, existing stub will be replaced. */
-      } else if (elem_type == 3 && elem_rtype == return_type_idx &&
-                 script_type_idx == 4) {
-        /* A stub redeclaring a static of the same return type: already done. */
-        return true;
-      } else {
-        *(const char **)0x46b6fc =
-          "only static scripts of the same type can override stub scripts.";
-        node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
-        *(int *)0x46b700 = *(int *)(node + 0xc);
-        return false;
-      }
-    }
-
-    /* Allocate two syntax nodes for the script body. */
-    script_elem =
-      (char *)tag_block_get_element(scripts_block, (int)existing, 0x5c);
-    head_handle = data_new_at_index(*(data_t **)0x5aa6c8);
-    body_handle = data_new_at_index(*(data_t **)0x5aa6c8);
-    if (head_handle == -1 || body_handle == -1) {
-      *(const char **)0x46b6fc = "i couldn't allocate a syntax node.";
-      return false;
-    }
-
-    /* Initialise head node: type=0, flags=0, next=-1, string=param_1 string,
-     * first_child=body_handle. */
-    head_node = (char *)datum_get(*(data_t **)0x5aa6c8, head_handle);
-    body_node = (char *)datum_get(*(data_t **)0x5aa6c8, body_handle);
-    *(int *)(head_node + 0x10) = body_handle;
-    *(int *)(head_node + 0x8) = -1;
-    node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
-    *(int *)(head_node + 0xc) = *(int *)(node + 0xc);
-    *(int16_t *)(head_node + 0x6) = 0;
-
-    /* Initialise body node: flags=1 (leaf?), type_b=2, type_a=0,
-     * next=name_next_arg, function_index=0, string=-1 (none). */
-    *(int *)(body_node + 0x8) = name_next_arg;
-    *(int *)(body_node + 0xc) = -1;
-    *(int16_t *)(body_node + 0x2) = 0;
-    *(int16_t *)(body_node + 0x6) = 1;
-    *(int16_t *)(body_node + 0x4) = 2;
-
-    /* Type-check the body. */
-    if (!hs_type_check(head_handle, (int16_t)return_type_idx)) {
-      return false;
-    }
-
-    /* Write script element: name, return type, script type, root node. */
-    csstrcpy(script_elem, name_str);
-    *(int16_t *)(script_elem + 0x22) = return_type_idx;
-    *(int16_t *)(script_elem + 0x20) = script_type_idx;
-    *(int *)(script_elem + 0x24) = head_handle;
-    return true;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x1c, %%esp\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%eax), %%ecx\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%edi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_000c6d90_24\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%esi\n\t"
+      "movl 0x46b6e8, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "addl %%eax, %%esi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "movl %%ebx, -0xc(%%ebp)\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_000c6d90_1:\n\t"
+      "movswl %%bx, %%ecx\n\t"
+      "movl 0x2f156c(,%%ecx,4), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8dcb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c6d90_3\n\t"
+      "incl %%ebx\n\t"
+      "cmpw $5, %%bx\n\t"
+      "jl .LFUN_000c6d90_1\n\t"
+      "movl %%ebx, -0xc(%%ebp)\n\t"
+      ".LFUN_000c6d90_2:\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "movl $0x27c790, 0x46b6fc\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%ecx\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ecx, 0x46b700\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c6d90_3:\n\t"
+      "cmpw $-1, %%bx\n\t"
+      "movl %%ebx, -0xc(%%ebp)\n\t"
+      "je .LFUN_000c6d90_2\n\t"
+      "cmpw $3, %%bx\n\t"
+      "je .LFUN_000c6d90_4\n\t"
+      "cmpw $4, %%bx\n\t"
+      "je .LFUN_000c6d90_4\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "movl $4, -0x8(%%ebp)\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .LFUN_000c6d90_11\n\t"
+      ".LFUN_000c6d90_4:\n\t"
+      "movl 0x5aa6c8, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .LFUN_000c6d90_9\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%edi\n\t"
+      "movl 0x46b6e8, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "addl %%eax, %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      ".LFUN_000c6d90_5:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl 0x2f14a8(,%%eax,4), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c8dcb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000c6d90_8\n\t"
+      "incl %%esi\n\t"
+      "cmpw $0x31, %%si\n\t"
+      "jl .LFUN_000c6d90_5\n\t"
+      "movl $0xffffffff, -0x8(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%esi\n\t"
+      ".LFUN_000c6d90_6:\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .LFUN_000c6d90_7\n\t"
+      "cmpw $0x31, %%si\n\t"
+      "jl .LFUN_000c6d90_10\n\t"
+      ".LFUN_000c6d90_7:\n\t"
+      "movl $0x27c76c, 0x46b6fc\n\t"
+      "pushl %%ebx\n\t"
+      "jmp .LFUN_000c6d90_16\n\t"
+      ".LFUN_000c6d90_8:\n\t"
+      "movl %%esi, -0x8(%%ebp)\n\t"
+      "jmp .LFUN_000c6d90_6\n\t"
+      ".LFUN_000c6d90_9:\n\t"
+      "movl $0x27c730, 0x46b6fc\n\t"
+      "jmp .LFUN_000c6d90_15\n\t"
+      ".LFUN_000c6d90_10:\n\t"
+      "movl -0xc(%%ebp), %%ebx\n\t"
+      ".LFUN_000c6d90_11:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "je .LFUN_000c6d90_20\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "je .LFUN_000c6d90_20\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%esi\n\t"
+      "addl 0x46b6e8, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "movl %%esi, -0x18(%%ebp)\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jbe .LFUN_000c6d90_19\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8df60]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x1f, %%eax\n\t"
+      "ja .LFUN_000c6d90_19\n\t"
+      "call *%[c18e380]\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[cc3d50]\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "addl $0x49c, %%edi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne .LFUN_000c6d90_12\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1b9ad0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "jne .LFUN_000c6d90_17\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl $0x27c710, 0x46b6fc\n\t"
+      "pushl %%ecx\n\t"
+      "jmp .LFUN_000c6d90_25\n\t"
+      ".LFUN_000c6d90_12:\n\t"
+      "pushl $0x5c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movw 0x20(%%eax), %%cx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $4, %%cx\n\t"
+      "jne .LFUN_000c6d90_13\n\t"
+      "movw 0x22(%%eax), %%dx\n\t"
+      "cmpw -0x8(%%ebp), %%dx\n\t"
+      "jne .LFUN_000c6d90_13\n\t"
+      "cmpw $3, %%bx\n\t"
+      "je .LFUN_000c6d90_17\n\t"
+      ".LFUN_000c6d90_13:\n\t"
+      "cmpw $3, %%cx\n\t"
+      "jne .LFUN_000c6d90_14\n\t"
+      "movw -0x8(%%ebp), %%cx\n\t"
+      "cmpw %%cx, 0x22(%%eax)\n\t"
+      "jne .LFUN_000c6d90_14\n\t"
+      "cmpw $4, %%bx\n\t"
+      "jne .LFUN_000c6d90_14\n\t"
+      "popl %%edi\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c6d90_14:\n\t"
+      "movl $0x27c6d0, 0x46b6fc\n\t"
+      ".LFUN_000c6d90_15:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      ".LFUN_000c6d90_16:\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%ecx\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ecx, 0x46b700\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c6d90_17:\n\t"
+      "pushl $0x5c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "call *%[c119610]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x5aa6c8, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119610]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl %%esi, -0x10(%%ebp)\n\t"
+      "je .LFUN_000c6d90_18\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_000c6d90_18\n\t"
+      "movl 0x5aa6c8, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x10(%%edi)\n\t"
+      "movl $0xffffffff, 0x8(%%edi)\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl %%eax, 0xc(%%edi)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw %%ax, 0x6(%%edi)\n\t"
+      "movl -0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%ecx, 0x8(%%esi)\n\t"
+      "movl $0xffffffff, 0xc(%%esi)\n\t"
+      "movw %%ax, 0x2(%%esi)\n\t"
+      "movw $1, 0x6(%%esi)\n\t"
+      "movw $2, 0x4(%%esi)\n\t"
+      "call *%[cc7d80]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000c6d90_26\n\t"
+      "movl -0x18(%%ebp), %%edx\n\t"
+      "movl -0x1c(%%ebp), %%esi\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8dff0]\n\t"
+      "movw -0xc(%%ebp), %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "movw %%di, 0x22(%%esi)\n\t"
+      "popl %%edi\n\t"
+      "movw %%ax, 0x20(%%esi)\n\t"
+      "movl %%ebx, 0x24(%%esi)\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c6d90_18:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $0x27bca4, 0x46b6fc\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c6d90_19:\n\t"
+      "movl $0x27c69c, 0x46b6fc\n\t"
+      "pushl %%edi\n\t"
+      "jmp .LFUN_000c6d90_23\n\t"
+      ".LFUN_000c6d90_20:\n\t"
+      "cmpw $3, %%bx\n\t"
+      "jne .LFUN_000c6d90_21\n\t"
+      "movl $0x27c660, 0x46b6fc\n\t"
+      "jmp .LFUN_000c6d90_22\n\t"
+      ".LFUN_000c6d90_21:\n\t"
+      "cmpw $4, %%bx\n\t"
+      "movl $0x27c628, 0x46b6fc\n\t"
+      "je .LFUN_000c6d90_22\n\t"
+      "movl $0x27c5f4, 0x46b6fc\n\t"
+      ".LFUN_000c6d90_22:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      ".LFUN_000c6d90_23:\n\t"
+      "movl 0x5aa6c8, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%edx, 0x46b700\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000c6d90_24:\n\t"
+      "movl $0x27c5f4, 0x46b6fc\n\t"
+      "pushl %%esi\n\t"
+      ".LFUN_000c6d90_25:\n\t"
+      "movl 0x5aa6c8, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "movl %%eax, 0x46b700\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000c6d90_26:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bc6d90_dget), [c8dcb0] "m"(bc6d90_c8dcb0), [c8df60] "m"(bc6d90_c8df60), [c18e380] "m"(bc6d90_c18e380), [cc3d50] "m"(bc6d90_cc3d50), [c1b9ad0] "m"(bc6d90_c1b9ad0), [elem] "m"(bc6d90_elem), [c119610] "m"(bc6d90_c119610), [cc7d80] "m"(bc6d90_cc7d80), [c8dff0] "m"(bc6d90_c8dff0)
+      : "memory");
 }
+#else
+#error "FUN_000c6d90: clang naked draft required"
+#endif
+
 
 /* 0xc71c0 — Parse an atom (non-parenthesized token) from the HS source.
  * Quoted strings: scan to closing '"', null-terminate, report unterminated.

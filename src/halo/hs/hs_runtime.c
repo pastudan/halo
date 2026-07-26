@@ -847,305 +847,690 @@ static int hs_can_cast(int thread_handle, int16_t actual_type,
   return cast_fn(value);
 }
 
-/* 0xcb230 — Copy an external global's live C value into the HS globals datum
- * pool, type-dispatched. Only processes external globals (bit 15 set in
- * handle). Callees: datum_get, hs_external_global_get (0xc3e10),
- * hs_global_get_type (0xc3e60). ext_ptr+0x8 is the backing pointer to the live
- * C variable; NULL means use static default from the data segment.
- */
-static void FUN_000cb230(int loop_var)
+/* FUN_000cb230 (0xcb230) — XBE naked draft (batch 69). */
+#if defined(__clang__)
+static void *(*const bcb230_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void * (*const bcb230_cc3e10)(int16_t global_index) = hs_external_global_get;
+static int16_t (*const bcb230_cc3e60)(uint16_t script_ref) = hs_global_get_type;
+static void (*const bcb230_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bcb230_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void FUN_000cb230(int loop_var __attribute__((unused)))
 {
-  char *datum_ptr;
-  char *ext_ptr;
-  int16_t type;
-
-  if ((loop_var & 0x8000) == 0)
-    return;
-
-  datum_ptr = (char *)datum_get(*(data_t **)0x5aa6c0, loop_var & 0x7fff);
-  ext_ptr = (char *)hs_external_global_get((int16_t)(loop_var & 0x7fff));
-  type = hs_global_get_type((uint16_t)loop_var);
-
-  switch (type) {
-  case 5:
-    if (*(uint8_t **)(ext_ptr + 8) == NULL) {
-      *(uint8_t *)(datum_ptr + 4) = *(uint8_t *)0x26f3b2;
-    } else {
-      *(uint8_t *)(datum_ptr + 4) = **(uint8_t **)(ext_ptr + 8);
-    }
-    return;
-  case 6:
-    if (*(float **)(ext_ptr + 8) == NULL) {
-      *(float *)(datum_ptr + 4) = *(float *)0x26f3b4;
-    } else {
-      *(float *)(datum_ptr + 4) = **(float **)(ext_ptr + 8);
-    }
-    return;
-  case 7:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3b8;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 8:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f3bc;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 9:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x2f1580;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 10:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3c0;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0xb:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3c4;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0xc:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3c8;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0xd:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3cc;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0xe:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3d0;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0xf:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3d4;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x10:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3d8;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x11:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f3dc;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x12:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3e0;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x13:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3e4;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x14:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3e8;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x15:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3ec;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x16:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f3f0;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x17:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f3f4;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x18:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f3f8;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x19:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f400;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x1a:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f404;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x1b:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f3fc;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x1c:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f408;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x1d:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f40c;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x1e:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f410;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x1f:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f414;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x20:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f418;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x21:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f41c;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x22:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f420;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x23:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f424;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x24:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f428;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x25:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f430;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x26:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f434;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x27:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f438;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x28:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f43c;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x29:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f440;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x2a:
-    if (*(int32_t **)(ext_ptr + 8) == NULL) {
-      *(int32_t *)(datum_ptr + 4) = *(int32_t *)0x26f444;
-    } else {
-      *(int32_t *)(datum_ptr + 4) = **(int32_t **)(ext_ptr + 8);
-    }
-    return;
-  case 0x2b:
-    if (*(int16_t **)(ext_ptr + 8) == NULL) {
-      *(int16_t *)(datum_ptr + 4) = *(int16_t *)0x26f42c;
-    } else {
-      *(int16_t *)(datum_ptr + 4) = **(int16_t **)(ext_ptr + 8);
-    }
-    return;
-  default:
-    display_assert(NULL, "c:\\halo\\SOURCE\\hs\\hs_runtime.c", 0x638, true);
-    system_exit(-1);
-    return;
-  }
+  __asm__ volatile(
+      "testl $0x8000, %%edi\n\t"
+      "je .LFUN_000cb230_80\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%edi, %%eax\n\t"
+      "andl $0x7fff, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5aa6c0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "andl $0x7fff, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[cc3e10]\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[cc3e60]\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "addl $-5, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $0x26, %%eax\n\t"
+      "ja .LFUN_000cb230_79\n\t"
+      "jmp *.LFUN_000cb230_jt(,%%eax,4)\n\t"
+      ".LFUN_000cb230_1:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_2\n\t"
+      "movzbl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movb %%al, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_2:\n\t"
+      "movzbl 0x26f3b2, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movb %%al, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_3:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_4\n\t"
+      "flds (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "fstps 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_4:\n\t"
+      "flds 0x26f3b4\n\t"
+      "popl %%esi\n\t"
+      "fstps 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_5:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_6\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_6:\n\t"
+      "movswl 0x26f3b8, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_7:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_8\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_8:\n\t"
+      "movl 0x26f3bc, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_9:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_10\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_10:\n\t"
+      "movl 0x2f1580, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_11:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_12\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_12:\n\t"
+      "movswl 0x26f3c0, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_13:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_14\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_14:\n\t"
+      "movswl 0x26f3c4, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_15:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_16\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_16:\n\t"
+      "movswl 0x26f3c8, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_17:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_18\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_18:\n\t"
+      "movswl 0x26f3cc, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_19:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_20\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_20:\n\t"
+      "movswl 0x26f3d0, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_21:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_22\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_22:\n\t"
+      "movswl 0x26f3d4, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_23:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_24\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_24:\n\t"
+      "movswl 0x26f3d8, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_25:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_26\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_26:\n\t"
+      "movl 0x26f3dc, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_27:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_28\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_28:\n\t"
+      "movswl 0x26f3e0, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_29:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_30\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_30:\n\t"
+      "movswl 0x26f3e4, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_31:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_32\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_32:\n\t"
+      "movswl 0x26f3e8, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_33:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_34\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_34:\n\t"
+      "movswl 0x26f3ec, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_35:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_36\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_36:\n\t"
+      "movswl 0x26f3f0, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_37:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_38\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_38:\n\t"
+      "movl 0x26f3f4, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_39:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_40\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_40:\n\t"
+      "movl 0x26f3f8, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_41:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_42\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_42:\n\t"
+      "movl 0x26f400, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_43:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_44\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_44:\n\t"
+      "movl 0x26f404, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_45:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_46\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_46:\n\t"
+      "movl 0x26f3fc, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_47:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_48\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_48:\n\t"
+      "movl 0x26f408, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_49:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_50\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_50:\n\t"
+      "movl 0x26f40c, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_51:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_52\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_52:\n\t"
+      "movl 0x26f410, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_53:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_54\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_54:\n\t"
+      "movl 0x26f414, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_55:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_56\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_56:\n\t"
+      "movswl 0x26f418, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_57:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_58\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_58:\n\t"
+      "movswl 0x26f41c, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_59:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_60\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_60:\n\t"
+      "movswl 0x26f420, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_61:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_62\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_62:\n\t"
+      "movswl 0x26f424, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_63:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_64\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_64:\n\t"
+      "movswl 0x26f428, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_65:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_66\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_66:\n\t"
+      "movl 0x26f430, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_67:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_68\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_68:\n\t"
+      "movl 0x26f434, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_69:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_70\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_70:\n\t"
+      "movl 0x26f438, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_71:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_72\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_72:\n\t"
+      "movl 0x26f43c, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_73:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_74\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_74:\n\t"
+      "movl 0x26f440, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_75:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_76\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_76:\n\t"
+      "movl 0x26f444, %%esi\n\t"
+      "movl %%esi, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_77:\n\t"
+      "movl 0x8(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000cb230_78\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_78:\n\t"
+      "movswl 0x26f42c, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      ".LFUN_000cb230_79:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x638\n\t"
+      "pushl $0x2805bc\n\t"
+      "pushl $0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_000cb230_80:\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_000cb230_jt:\n\t"
+      ".long .LFUN_000cb230_1\n\t"
+      ".long .LFUN_000cb230_3\n\t"
+      ".long .LFUN_000cb230_5\n\t"
+      ".long .LFUN_000cb230_7\n\t"
+      ".long .LFUN_000cb230_9\n\t"
+      ".long .LFUN_000cb230_11\n\t"
+      ".long .LFUN_000cb230_13\n\t"
+      ".long .LFUN_000cb230_15\n\t"
+      ".long .LFUN_000cb230_17\n\t"
+      ".long .LFUN_000cb230_19\n\t"
+      ".long .LFUN_000cb230_21\n\t"
+      ".long .LFUN_000cb230_23\n\t"
+      ".long .LFUN_000cb230_25\n\t"
+      ".long .LFUN_000cb230_27\n\t"
+      ".long .LFUN_000cb230_29\n\t"
+      ".long .LFUN_000cb230_31\n\t"
+      ".long .LFUN_000cb230_33\n\t"
+      ".long .LFUN_000cb230_35\n\t"
+      ".long .LFUN_000cb230_37\n\t"
+      ".long .LFUN_000cb230_39\n\t"
+      ".long .LFUN_000cb230_41\n\t"
+      ".long .LFUN_000cb230_43\n\t"
+      ".long .LFUN_000cb230_45\n\t"
+      ".long .LFUN_000cb230_47\n\t"
+      ".long .LFUN_000cb230_49\n\t"
+      ".long .LFUN_000cb230_51\n\t"
+      ".long .LFUN_000cb230_53\n\t"
+      ".long .LFUN_000cb230_55\n\t"
+      ".long .LFUN_000cb230_57\n\t"
+      ".long .LFUN_000cb230_59\n\t"
+      ".long .LFUN_000cb230_61\n\t"
+      ".long .LFUN_000cb230_63\n\t"
+      ".long .LFUN_000cb230_65\n\t"
+      ".long .LFUN_000cb230_67\n\t"
+      ".long .LFUN_000cb230_69\n\t"
+      ".long .LFUN_000cb230_71\n\t"
+      ".long .LFUN_000cb230_73\n\t"
+      ".long .LFUN_000cb230_75\n\t"
+      ".long .LFUN_000cb230_77\n\t"
+      ".text\n\t"
+      :
+      : [dget] "m"(bcb230_dget), [cc3e10] "m"(bcb230_cc3e10), [cc3e60] "m"(bcb230_cc3e60), [assert] "m"(bcb230_assert), [exitfn] "m"(bcb230_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_000cb230: clang naked draft required"
+#endif
+
 
 /* 0xcb7b0 — Write HS datum values back to external C globals, type-dispatched.
  * Reverse of FUN_000cb230: datum_ptr+4 → *ext_ptr+8. Only writes if the
