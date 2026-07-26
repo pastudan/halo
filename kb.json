@@ -1785,7 +1785,7 @@
         {
           "addr": "0x1e075f",
           "decl": "void FUN_001e075f(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e07c0",
@@ -31381,7 +31381,7 @@
         {
           "addr": "0x1dab2a",
           "decl": "int isdigit(int c);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1dabaa",
@@ -31570,7 +31570,7 @@
         {
           "addr": "0x1da8e3",
           "decl": "wchar_t *FUN_001da8e3(wchar_t *s, size_t count);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "LIBCMT:strtok.obj",
@@ -41334,7 +41334,7 @@
         {
           "addr": "0x001e6e60",
           "decl": "void D3DDevice_GetLightEnable(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e6ed0",
@@ -41379,7 +41379,7 @@
         {
           "addr": "0x001e7180",
           "decl": "void D3DDevice_GetModelView(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x001e7200",

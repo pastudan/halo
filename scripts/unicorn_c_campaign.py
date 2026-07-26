@@ -136,7 +136,55 @@ def append_ledger(row: dict) -> None:
         f.write(json.dumps(row) + "\n")
 
 
-def run_unicorn(name: str, addr_int: int, seeds: int) -> dict:
+SKIP_SRC_PREFIXES = (
+    "xdk/",
+    "xapilib/",
+    "d3d8/",
+    "dsound/",
+    "xnet/",
+    "xgraphic/",
+    "bink/",
+    "libcmt/",
+    "libm/",
+    "xmv/",
+)
+
+GAMEPLAY_HINTS = (
+    "ai/",
+    "game/",
+    "objects/",
+    "units/",
+    "items/",
+    "physics/",
+    "effects/",
+    "camera/",
+    "input/",
+    "main/",
+    "scenario/",
+    "structures/",
+    "sound/",
+    "text/",
+    "saved",
+    "tag_files/",
+    "memory/",
+    "cseries/",
+    "bitmaps/",
+    "models/",
+    "devices/",
+    "cutscene/",
+    "cache/",
+    "network",
+    "shader",
+    "math/",
+    "collision",
+    "hs/",
+    "interface",
+    "render/",
+    "player",
+)
+
+
+def run_unicorn(name: str, addr_int: int, seeds: int, timeout: float = 25.0) -> dict:
     outj = ROOT / "artifacts" / "equivalence" / f"uni_{addr_int:08x}_s{seeds}.json"
     cmd = [
         sys.executable,
@@ -150,9 +198,23 @@ def run_unicorn(name: str, addr_int: int, seeds: int) -> dict:
         str(outj),
     ]
     t0 = time.time()
-    proc = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True)
+    try:
+        proc = subprocess.run(
+            cmd, cwd=str(ROOT), capture_output=True, text=True, timeout=timeout
+        )
+        timed_out = False
+    except subprocess.TimeoutExpired as exc:
+        timed_out = True
+        proc = subprocess.CompletedProcess(
+            cmd,
+            124,
+            (exc.stdout or "") if isinstance(exc.stdout, str) else "",
+            (exc.stderr or "") if isinstance(exc.stderr, str) else "timeout",
+        )
     dt = time.time() - t0
     text = (proc.stdout or "") + (proc.stderr or "")
+    if timed_out:
+        text += "\nTIMEOUT\n"
     passed = failed = errors = None
     m = RESULTS_RE.search(text)
     if m:
@@ -174,6 +236,7 @@ def run_unicorn(name: str, addr_int: int, seeds: int) -> dict:
         "dt": round(dt, 2),
         "tail": text[-400:],
         "missing_candidate": missing_cand,
+        "timeout": timed_out,
     }
 
 
@@ -251,10 +314,32 @@ def main() -> int:
         action="store_true",
         help="Re-run seeds=100 on ledger ok@50 that are still ported:false",
     )
+    ap.add_argument(
+        "--gameplay-only",
+        action="store_true",
+        help="Skip xdk/d3d/libcmt/etc.; keep gameplay-ish source paths only",
+    )
+    ap.add_argument(
+        "--timeout",
+        type=float,
+        default=25.0,
+        help="Per unicorn_diff wall-clock timeout seconds (default 25)",
+    )
     args = ap.parse_args()
 
     kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
     readable = inventory_readable(kb)
+    if args.gameplay_only:
+        filtered = []
+        for r in readable:
+            src = (r.get("source") or "").replace("\\", "/").lower()
+            if any(p in src for p in SKIP_SRC_PREFIXES):
+                continue
+            if not any(h in src for h in GAMEPLAY_HINTS):
+                continue
+            filtered.append(r)
+        print(f"gameplay filter: {len(readable)} -> {len(filtered)}")
+        readable = filtered
     inv_rows = [{k: v for k, v in r.items() if k != "fn"} for r in readable]
     INV.parent.mkdir(parents=True, exist_ok=True)
     INV.write_text(json.dumps(inv_rows, indent=2) + "\n")
@@ -284,7 +369,7 @@ def main() -> int:
             if r is None:
                 continue
             print(f"RECONFIRM {hex(ai)} {r['name']}")
-            res100 = run_unicorn(r["name"], ai, args.confirm_seeds)
+            res100 = run_unicorn(r["name"], ai, args.confirm_seeds, timeout=args.timeout)
             if clear_pass(res100, args.confirm_seeds):
                 r["fn"]["ported"] = True
                 append_ledger(
@@ -351,7 +436,7 @@ def main() -> int:
             done.add(ah)
             continue
 
-        res50 = run_unicorn(r["name"], r["addr_int"], args.screen_seeds)
+        res50 = run_unicorn(r["name"], r["addr_int"], args.screen_seeds, timeout=args.timeout)
         if res50.get("missing_candidate"):
             stats["missing_candidate"] += 1
             append_ledger(
@@ -409,7 +494,9 @@ def main() -> int:
             res100 = res50
             phase = "screen%d" % args.screen_seeds
         else:
-            res100 = run_unicorn(r["name"], r["addr_int"], args.confirm_seeds)
+            res100 = run_unicorn(
+                r["name"], r["addr_int"], args.confirm_seeds, timeout=args.timeout
+            )
             confirm_ok = clear_pass(res100, args.confirm_seeds)
             phase = "confirm%d" % args.confirm_seeds
 
