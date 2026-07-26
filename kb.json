@@ -35086,22 +35086,26 @@
         {
           "addr": "0x539c0",
           "decl": "void FUN_000539c0(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000539c0"
         },
         {
           "addr": "0x53a20",
           "decl": "void FUN_00053a20(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00053a20"
         },
         {
           "addr": "0x53a90",
           "decl": "void FUN_00053a90(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00053a90"
         },
         {
           "addr": "0x53af0",
           "decl": "void FUN_00053af0(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00053af0"
         }
       ],
       "name": "ai_debug.obj",
