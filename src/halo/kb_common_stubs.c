@@ -7153,14 +7153,108 @@ float FUN_001335e0(float a __attribute__((unused)), float b __attribute__((unuse
 #endif
 
 
-/* 0x1336a0 — evaluate a 4-point time curve for each XYZ channel via FUN_001335e0. */
-void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3, float t0,
-                  float t1, float t2, float t3, float time)
+/* FUN_001336a0 (0x1336a0) — XBE naked draft (batch 224). */
+#if defined(__clang__)
+static float (*const b1336a0_c1335e0)(float a, float b, float c, float d, float ta, float tb, float tc, float td, float t) = FUN_001335e0;
+
+__attribute__((naked, noinline))
+void FUN_001336a0(float *out __attribute__((unused)), float *p0 __attribute__((unused)), float *p1 __attribute__((unused)), float *p2 __attribute__((unused)), float *p3 __attribute__((unused)), float t0 __attribute__((unused)), float t1 __attribute__((unused)), float t2 __attribute__((unused)), float t3 __attribute__((unused)), float time __attribute__((unused)))
 {
-  out[0] = FUN_001335e0(p0[0], p1[0], p2[0], p3[0], t0, t1, t2, t3, time);
-  out[1] = FUN_001335e0(p0[1], p1[1], p2[1], p3[1], t0, t1, t2, t3, time);
-  out[2] = FUN_001335e0(p0[2], p1[2], p2[2], p3[2], t0, t1, t2, t3, time);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x20(%%ebp), %%eax\n\t"
+      "movl 0x1c(%%ebp), %%ecx\n\t"
+      "movl 0x18(%%ebp), %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x24(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x2c(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x28(%%ebp), %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1335e0]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0x20(%%ebp), %%edx\n\t"
+      "fstps (%%ecx)\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl 0x4(%%edx), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1335e0]\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x20(%%ebp), %%ecx\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "movl 0x1c(%%ebp), %%edx\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "addl $0x48, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl 0x8(%%edx), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1335e0]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "addl $0x24, %%esp\n\t"
+      "fstps 0x8(%%edx)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [c1335e0] "m"(b1336a0_c1335e0)
+      : "memory");
 }
+#else
+#error "FUN_001336a0: clang naked draft required"
+#endif
+
 
 /* 0x1337c0 */
 int glow_normal_particle_new(int glow_widget_ptr, short index, short count)
@@ -8766,149 +8860,435 @@ void FUN_00150ed0(void *phys_state, void *buffer_a, void *buffer_b, float *out_f
   (void)edi;
 }
 
-/* 0x151a50 — resolve biped/vehicle contact: impulse, translate, optional damage. */
-char physics_compute_biped_collision(void *physics_ctx, int biped_handle)
+/* physics_compute_biped_collision (0x151a50) — XBE naked draft (batch 224). */
+#if defined(__clang__)
+static void (*const b151a50_chkstk)(void) = FUN_001d90e0;
+static void (*const b151a50_c1a0890)(int unit_handle, vector3_t *out_pos, float *out_height_offset, float *out_camera_height) = biped_get_camera_height_and_offset;
+static bool (*const b151a50_c14c950)(int param_1, void *param_2) = FUN_0014c950;
+static void (*const b151a50_c14ad40)(void *features) = collision_features_init;
+static char (*const b151a50_c14cde0)(int param_1, int param_2, float param_3, int param_4, int param_5, int param_6) = FUN_0014cde0;
+static bool (*const b151a50_c14bc10)(void *features, void *los_data, void *out_hit) = collision_features_test_los;
+static void *(*const b151a50_get)(int, int) = object_get_and_verify_type;
+static float (*const b151a50_norm)(float *) = normalize3d;
+static void (*const b151a50_c1a4a70)(int handle, float *velocity) = FUN_001a4a70;
+static char (*const b151a50_c14f020)(uint32_t collision_flags, float *point, float vertical_extent, float p4, float p5, int unit_handle, float *point_out) = FUN_0014f020;
+static void (*const b151a50_otrans)(int, float *, void *) = object_translate;
+static int (*const b151a50_gtime)(void) = game_time_get;
+static float (*const b151a50_c121a0)(const float *a, const float *b) = distance_squared3d;
+static void * (*const b151a50_c18e450)(void) = game_globals_get;
+static void *(*const b151a50_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b151a50_c136750)(void *damage_params, int tag_index) = damage_data_new;
+static void (*const b151a50_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = object_cause_damage;
+static void *(*const b151a50_tag)(int, int) = tag_get;
+static void (*const b151a50_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b151a50_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+char physics_compute_biped_collision(void *physics_ctx __attribute__((unused)), int biped_handle __attribute__((unused)))
 {
-  char features[0xac98];
-  float cam_pos[3];
-  float height_offset;
-  float camera_height;
-  float xy_point[3];
-  float z_combined;
-  float probe_extent;
-  unsigned int tiny_extent = 0x3c800000u;
-  float los_hit[16];
-  char *vehicle;
-  char *biped;
-  float *veh_vel;
-  float *biped_vel;
-  float *biped_pos;
-  float *veh_pos;
-  float delta[3];
-  float speed;
-  float scale;
-  float impulse[3];
-  float hit_point[16];
-  char *globals_elem;
-  char damage[0x84];
-  int damager_handle;
-  char *damager_obj;
-  char *unit_tag;
-  int16_t material;
-  float tmp;
-
-  biped_get_camera_height_and_offset(biped_handle, (vector3_t *)cam_pos,
-                                    &height_offset, &camera_height);
-  if (!FUN_0014c950((int)(uintptr_t)physics_ctx, cam_pos)) {
-    collision_features_init(features);
-    /* mid-height point: (cam.x, cam.y, cam.z + height*0.5); z span from camera */
-    xy_point[0] = cam_pos[0];
-    xy_point[1] = cam_pos[1];
-    xy_point[2] = cam_pos[2];
-    z_combined = cam_pos[2] + height_offset * *(float *)0x253398 + camera_height;
-    tmp = camera_height - *(float *)0x282124;
-    if (tmp > *(float *)0x282124)
-      probe_extent = tmp;
-    else
-      probe_extent = *(float *)&tiny_extent;
-    FUN_0014cde0((int)(uintptr_t)physics_ctx, (int)(uintptr_t)xy_point,
-                 z_combined, *(int *)&height_offset, *(int *)&probe_extent,
-                 (int)(uintptr_t)features);
-    if (!collision_features_test_los(features, cam_pos, los_hit))
-      return 0;
-  }
-
-  vehicle = (char *)object_get_and_verify_type(*(int *)physics_ctx, 2);
-  biped = (char *)object_get_and_verify_type(biped_handle, 1);
-  veh_vel = (float *)(vehicle + 0x18);
-  veh_pos = (float *)(vehicle + 0x50);
-  biped_pos = (float *)(biped + 0x50);
-  biped_vel = (float *)(biped + 0x18);
-
-  speed = sqrtf(veh_vel[0] * veh_vel[0] + veh_vel[1] * veh_vel[1] +
-                veh_vel[2] * veh_vel[2]);
-  delta[0] = biped_pos[0] - veh_pos[0];
-  delta[1] = biped_pos[1] - veh_pos[1];
-  delta[2] = biped_pos[2] - veh_pos[2];
-  normalize3d(delta);
-  delta[2] += *(float *)0x2533f0;
-  normalize3d(delta);
-
-  scale = (speed > *(float *)0x25496c) ? speed : *(float *)0x25496c;
-  impulse[0] = (delta[0] * scale + veh_vel[0]) * *(float *)0x253398;
-  impulse[1] = (delta[1] * scale + veh_vel[1]) * *(float *)0x253398;
-  impulse[2] = (delta[2] * scale + veh_vel[2]) * *(float *)0x253398;
-  /* XBE folds scale*delta into the same slots then half-adds veh_vel via the
-   * pre-add before FUN_001a4a70 — structural equivalent impulse. */
-  FUN_001a4a70(biped_handle, impulse);
-
-  cam_pos[0] += impulse[0] + impulse[0];
-  cam_pos[1] += impulse[1] + impulse[1];
-  cam_pos[2] += impulse[2] + impulse[2];
-  if (FUN_0014f020(0x20c3a0, cam_pos, height_offset, height_offset,
-                   camera_height + camera_height, biped_handle, hit_point)) {
-    hit_point[2] -= height_offset;
-    object_translate(biped_handle, hit_point, (void *)0);
-    if (*(int *)physics_ctx == *(int *)(biped + 0x2dc) &&
-        game_time_get() <= *(int *)(biped + 0x2e0) + 0x5a)
-      return 1;
-    if (!(speed > *(float *)0x253d48))
-      goto damage_path;
-    if (!(distance_squared3d(veh_vel, biped_vel) > *(float *)0x25620c))
-      return 1;
-  }
-
-damage_path:
-  globals_elem = (char *)tag_block_get_element(
-      (char *)game_globals_get() + 0x188, 0, 0x98);
-  if (*(int *)(globals_elem + 0x68) != -1) {
-    damager_handle = *(int *)physics_ctx;
-    damager_obj = vehicle;
-    if (*(int *)(vehicle + 0x2d4) != -1) {
-      damager_handle = *(int *)(vehicle + 0x2d4);
-      damager_obj = (char *)object_get_and_verify_type(damager_handle, -1);
-    }
-    damage_data_new(damage, *(int *)(globals_elem + 0x68));
-    *(unsigned int *)(damage + 4) |= 1;
-    *(float *)(damage + 0x40) = 1.0f;
-    *(int *)(damage + 8) = *(int *)(damager_obj + 0x70);
-    *(int *)(damage + 0xc) = (*(int *)(damager_obj + 0x74) != -1)
-                                 ? *(int *)(damager_obj + 0x74)
-                                 : damager_handle;
-    *(int16_t *)(damage + 0x10) = *(int16_t *)(damager_obj + 0x68);
-    *(float *)(damage + 0x1c) = biped_pos[0];
-    *(float *)(damage + 0x20) = biped_pos[1];
-    *(float *)(damage + 0x24) = biped_pos[2];
-    *(float *)(damage + 0x28) = veh_pos[0];
-    *(float *)(damage + 0x2c) = veh_pos[1];
-    *(float *)(damage + 0x30) = veh_pos[2];
-    *(float *)(damage + 0x34) = delta[0];
-    *(float *)(damage + 0x38) = delta[1];
-    *(float *)(damage + 0x3c) = delta[2];
-    normalize3d((float *)(damage + 0x34));
-    object_cause_damage(damage, biped_handle, -1, -1, -1, 0);
-  }
-
-  if (*(int *)(globals_elem + 0x58) == -1)
-    return 1;
-
-  unit_tag = (char *)tag_get(0x756e6974, *(int *)biped); /* 'unit' */
-  damage_data_new(damage, *(int *)(globals_elem + 0x58));
-  material = *(int16_t *)(unit_tag + 0x298);
-  if (material < 0 || (unsigned short)material >= 3) {
-    display_assert((char *)0x29d7a8, (char *)0x29d780, 0x33e, 1);
-    system_exit(-1);
-  }
-  *(float *)(damage + 0x40) = *(float *)(0x32514c + (int)material * 4);
-  *(float *)(damage + 0x1c) = biped_pos[0];
-  *(float *)(damage + 0x20) = biped_pos[1];
-  *(float *)(damage + 0x24) = biped_pos[2];
-  *(float *)(damage + 0x34) = delta[0] * *(float *)0x255e94;
-  *(float *)(damage + 0x38) = delta[1] * *(float *)0x255e94;
-  *(float *)(damage + 0x3c) = delta[2] * *(float *)0x255e94;
-  object_cause_damage(damage, *(int *)physics_ctx, -1, -1, -1, 0);
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl $0xac98, %%eax\n\t"
+      "call *%[chkstk]\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "leal -0x14(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x2c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x28(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c1a0890]\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c14c950]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lphysics_compute_biped_collision_3\n\t"
+      "leal -0xac98(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c14ad40]\n\t"
+      "flds -0x2c(%%ebp)\n\t"
+      "fmuls 0x253398\n\t"
+      "movl -0x24(%%ebp), %%eax\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "movl -0x28(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "fadd %%st(1), %%st(0)\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "fadds -0x14(%%ebp)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fsubs 0x282124\n\t"
+      "fcoms 0x282124\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lphysics_compute_biped_collision_1\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "jmp .Lphysics_compute_biped_collision_2\n\t"
+      ".Lphysics_compute_biped_collision_1:\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0x3c800000, -0x10(%%ebp)\n\t"
+      ".Lphysics_compute_biped_collision_2:\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "movl -0x2c(%%ebp), %%eax\n\t"
+      "leal -0xac98(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c14cde0]\n\t"
+      "leal -0x5c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0xac98(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c14bc10]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lphysics_compute_biped_collision_14\n\t"
+      ".Lphysics_compute_biped_collision_3:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ebx, -0x30(%%ebp)\n\t"
+      "call *%[get]\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "leal 0x18(%%ebx), %%esi\n\t"
+      "flds (%%esi)\n\t"
+      "leal 0x50(%%eax), %%edi\n\t"
+      "fld %%st(0)\n\t"
+      "addl $0x50, %%ebx\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "fld %%st(2)\n\t"
+      "pushl %%ecx\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds (%%edi)\n\t"
+      "fsubs (%%ebx)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fsubs 0x4(%%ebx)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fsubs 0x8(%%ebx)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "fadds 0x2533f0\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fcomps 0x25496c\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lphysics_compute_biped_collision_4\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "jmp .Lphysics_compute_biped_collision_5\n\t"
+      ".Lphysics_compute_biped_collision_4:\n\t"
+      "flds 0x25496c\n\t"
+      ".Lphysics_compute_biped_collision_5:\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fadds (%%esi)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fadds 0x4(%%esi)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fadds 0x8(%%esi)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x253398\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x253398\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "fmuls 0x253398\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "call *%[c1a4a70]\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "leal -0x90(%%ebp), %%edx\n\t"
+      "fadds -0x28(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x2c(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "fadds -0x24(%%ebp)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "fadds -0x20(%%ebp)\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x20c3a0\n\t"
+      "call *%[c14f020]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lphysics_compute_biped_collision_7\n\t"
+      "flds -0x88(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "fsubs -0x14(%%ebp)\n\t"
+      "pushl $0\n\t"
+      "leal -0x90(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "fstps -0x88(%%ebp)\n\t"
+      "call *%[otrans]\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "movl 0x2dc(%%edx), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jne .Lphysics_compute_biped_collision_6\n\t"
+      "call *%[gtime]\n\t"
+      "movl -0x1c(%%ebp), %%ecx\n\t"
+      "movl 0x2e0(%%ecx), %%edx\n\t"
+      "addl $0x5a, %%edx\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "jle .Lphysics_compute_biped_collision_13\n\t"
+      ".Lphysics_compute_biped_collision_6:\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fcomps 0x253d48\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lphysics_compute_biped_collision_7\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "addl $0x18, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c121a0]\n\t"
+      "fcomps 0x25620c\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lphysics_compute_biped_collision_13\n\t"
+      ".Lphysics_compute_biped_collision_7:\n\t"
+      "pushl $0x98\n\t"
+      "pushl $0\n\t"
+      "call *%[c18e450]\n\t"
+      "addl $0x188, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x68(%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "je .Lphysics_compute_biped_collision_10\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl -0x30(%%ebp), %%esi\n\t"
+      "movl 0x2d4(%%esi), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "movl %%edx, -0x18(%%ebp)\n\t"
+      "je .Lphysics_compute_biped_collision_8\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%ecx, -0x18(%%ebp)\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lphysics_compute_biped_collision_8:\n\t"
+      "movl 0x68(%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x84(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c136750]\n\t"
+      "movl -0x80(%%ebp), %%edx\n\t"
+      "orl $1, %%edx\n\t"
+      "movl $0x3f800000, -0x44(%%ebp)\n\t"
+      "movl %%edx, -0x80(%%ebp)\n\t"
+      "movl 0x70(%%esi), %%edx\n\t"
+      "movl %%edx, -0x7c(%%ebp)\n\t"
+      "movl 0x74(%%esi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lphysics_compute_biped_collision_9\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      ".Lphysics_compute_biped_collision_9:\n\t"
+      "movl %%eax, -0x78(%%ebp)\n\t"
+      "movw 0x68(%%esi), %%cx\n\t"
+      "movw %%cx, -0x74(%%ebp)\n\t"
+      "movl %%edi, %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%eax, -0x68(%%ebp)\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl %%eax, -0x5c(%%ebp)\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0x64(%%ebp)\n\t"
+      "movl 0x4(%%ebx), %%ecx\n\t"
+      "movl %%edx, -0x60(%%ebp)\n\t"
+      "movl 0x8(%%ebx), %%edx\n\t"
+      "movl %%eax, -0x50(%%ebp)\n\t"
+      "movl %%ecx, -0x58(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl %%edx, -0x54(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "leal -0x50(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, -0x4c(%%ebp)\n\t"
+      "movl %%edx, -0x48(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x84(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c137d20]\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "addl $0x1c, %%esp\n\t"
+      ".Lphysics_compute_biped_collision_10:\n\t"
+      "cmpl $-1, 0x58(%%eax)\n\t"
+      "je .Lphysics_compute_biped_collision_13\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x58(%%edx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x84(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c136750]\n\t"
+      "movw 0x298(%%esi), %%ax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lphysics_compute_biped_collision_11\n\t"
+      "cmpw $3, %%ax\n\t"
+      "jb .Lphysics_compute_biped_collision_12\n\t"
+      ".Lphysics_compute_biped_collision_11:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x33e\n\t"
+      "pushl $0x29d780\n\t"
+      "pushl $0x29d7a8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lphysics_compute_biped_collision_12:\n\t"
+      "movswl 0x298(%%esi), %%edx\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "flds 0x32514c(,%%edx,4)\n\t"
+      "movl 0x8(%%edi), %%edx\n\t"
+      "fstps -0x44(%%ebp)\n\t"
+      "pushl $0\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "pushl $-1\n\t"
+      "fmuls 0x255e94\n\t"
+      "movl %%eax, -0x68(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $-1\n\t"
+      "fstps -0x50(%%ebp)\n\t"
+      "movl %%ecx, -0x64(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "fmuls 0x255e94\n\t"
+      "pushl $-1\n\t"
+      "movl %%edx, -0x60(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fstps -0x4c(%%ebp)\n\t"
+      "leal -0x84(%%ebp), %%edx\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "fmuls 0x255e94\n\t"
+      "fstps -0x48(%%ebp)\n\t"
+      "call *%[c137d20]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".Lphysics_compute_biped_collision_13:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lphysics_compute_biped_collision_14:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [chkstk] "m"(b151a50_chkstk), [c1a0890] "m"(b151a50_c1a0890), [c14c950] "m"(b151a50_c14c950), [c14ad40] "m"(b151a50_c14ad40), [c14cde0] "m"(b151a50_c14cde0), [c14bc10] "m"(b151a50_c14bc10), [get] "m"(b151a50_get), [norm] "m"(b151a50_norm), [c1a4a70] "m"(b151a50_c1a4a70), [c14f020] "m"(b151a50_c14f020), [otrans] "m"(b151a50_otrans), [gtime] "m"(b151a50_gtime), [c121a0] "m"(b151a50_c121a0), [c18e450] "m"(b151a50_c18e450), [elem] "m"(b151a50_elem), [c136750] "m"(b151a50_c136750), [c137d20] "m"(b151a50_c137d20), [tag] "m"(b151a50_tag), [assert] "m"(b151a50_assert), [exitfn] "m"(b151a50_exitfn)
+      : "memory");
 }
+#else
+#error "physics_compute_biped_collision: clang naked draft required"
+#endif
+
 
 /* 0x151ec0 */
 void FUN_00151ec0(void)

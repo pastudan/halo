@@ -3132,43 +3132,137 @@ void weapon_owner_update(int weapon_handle, int16_t owner_state, float t)
 #endif
 
 /* 0xfc550 — build HUD magazine/heat state (10-byte magazine records). */
+/* weapon_build_weapon_interface_state (0xfc550) — XBE naked draft (batch 227). */
 #if defined(__clang__)
-__attribute__((noinline))
-#endif
-void weapon_build_weapon_interface_state(int weapon_handle, int out_state)
+static void *(*const bfc550_get)(int, int) = object_get_and_verify_type;
+static void *(*const bfc550_tag)(int, int) = tag_get;
+static void (*const bfc550_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bfc550_exitfn)(int) = system_exit;
+static void *(*const bfc550_elem)(void *, int, int) = tag_block_get_element;
+
+__attribute__((naked, noinline))
+void weapon_build_weapon_interface_state(int weapon_handle __attribute__((unused)), int out_state __attribute__((unused)))
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-  char *state = (char *)out_state;
-  int16_t magazine_index;
-
-  *(int *)(state + 0) = *(int *)(weapon_obj + 0x1ec);
-  *(float *)(state + 4) = *(float *)(weapon_obj + 0x1f0);
-  state[8] = (char)(*(uint8_t *)(weapon_obj + 0x1dc) & 1);
-  *(int16_t *)(state + 0xa) = *(int16_t *)(tag_data + 0x4f0);
-
-  for (magazine_index = 0; (int)magazine_index < *(int *)(tag_data + 0x4f0);
-       magazine_index++) {
-    char *mag_entry =
-        (char *)weapon_obj + ((int)magazine_index * 3 + 0x96) * 4;
-    char *mag_def = (char *)tag_block_get_element(
-        (void *)(tag_data + 0x4f0), (int)magazine_index, 0x70);
-    char *out_mag = state + 0xc + (int)magazine_index * 10;
-    char reloading;
-
-    if (*(int16_t *)mag_entry == 1 || *(int16_t *)mag_entry == 3)
-      reloading = 1;
-    else
-      reloading = 0;
-
-    out_mag[0] = reloading;
-    out_mag[1] = (*(int16_t *)mag_entry == 0) ? 1 : 0;
-    *(int16_t *)(out_mag + 2) = *(int16_t *)(mag_entry + 8);
-    *(int16_t *)(out_mag + 4) = *(int16_t *)(mag_def + 0xa);
-    *(int16_t *)(out_mag + 6) = *(int16_t *)(mag_entry + 6);
-    *(int16_t *)(out_mag + 8) = *(int16_t *)(mag_def + 8);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x1ec(%%ebx), %%edx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x1f0(%%ebx), %%eax\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movb 0x1dc(%%ebx), %%dl\n\t"
+      "andb $1, %%dl\n\t"
+      "leal 0x4f0(%%esi), %%eax\n\t"
+      "movb %%dl, 0x8(%%ecx)\n\t"
+      "movw (%%eax), %%dx\n\t"
+      "movw %%dx, 0xa(%%ecx)\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "jle .Lweapon_build_weapon_interface_state_6\n\t"
+      "pushl %%edi\n\t"
+      ".Lweapon_build_weapon_interface_state_1:\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0, -0x4(%%ebp)\n\t"
+      "jl .Lweapon_build_weapon_interface_state_2\n\t"
+      "cmpl 0x4f0(%%eax), %%esi\n\t"
+      "jl .Lweapon_build_weapon_interface_state_3\n\t"
+      ".Lweapon_build_weapon_interface_state_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x672\n\t"
+      "pushl $0x28ad48\n\t"
+      "pushl $0x28adb8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lweapon_build_weapon_interface_state_3:\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "pushl $0x70\n\t"
+      "leal 0x96(%%esi,%%esi,2), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "leal (%%ebx,%%ecx,4), %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movw (%%edi), %%cx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $1, %%cx\n\t"
+      "je .Lweapon_build_weapon_interface_state_4\n\t"
+      "cmpw $3, %%cx\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      "jne .Lweapon_build_weapon_interface_state_5\n\t"
+      ".Lweapon_build_weapon_interface_state_4:\n\t"
+      "movl $1, -0x8(%%ebp)\n\t"
+      ".Lweapon_build_weapon_interface_state_5:\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "leal (%%esi,%%esi,4), %%ecx\n\t"
+      "leal (%%edx,%%ecx,2), %%ecx\n\t"
+      "movb -0x8(%%ebp), %%dl\n\t"
+      "movb %%dl, 0xc(%%ecx)\n\t"
+      "cmpw $0, (%%edi)\n\t"
+      "sete %%dl\n\t"
+      "movb %%dl, 0xd(%%ecx)\n\t"
+      "movw 0x8(%%edi), %%dx\n\t"
+      "movw %%dx, 0xe(%%ecx)\n\t"
+      "movw 0xa(%%eax), %%dx\n\t"
+      "movw %%dx, 0x10(%%ecx)\n\t"
+      "movw 0x6(%%edi), %%dx\n\t"
+      "movw %%dx, 0x12(%%ecx)\n\t"
+      "movw 0x8(%%eax), %%dx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "leal 0xa(%%esi,%%esi,4), %%ecx\n\t"
+      "movw %%dx, (%%eax,%%ecx,2)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "incl %%eax\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "cmpl (%%ecx), %%esi\n\t"
+      "jl .Lweapon_build_weapon_interface_state_1\n\t"
+      "popl %%edi\n\t"
+      ".Lweapon_build_weapon_interface_state_6:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [get] "m"(bfc550_get), [tag] "m"(bfc550_tag), [assert] "m"(bfc550_assert), [exitfn] "m"(bfc550_exitfn), [elem] "m"(bfc550_elem)
+      : "memory");
 }
+#else
+#error "weapon_build_weapon_interface_state: clang naked draft required"
+#endif
+
 
 /* 0xfc690 — true if magazine 0 is currently in the reloading state. */
 #if defined(__clang__)
@@ -3325,60 +3419,142 @@ int16_t weapon_rotate_zoom_level(int weapon_handle __attribute__((unused)), int1
 
 
 /* 0xfc780 — interpolate weapon zoom magnification for a zoom level. */
+/* weapon_get_zoom_magnification (0xfc780) — XBE naked draft (batch 227). */
 #if defined(__clang__)
-__attribute__((noinline))
-#endif
-float weapon_get_zoom_magnification(int weapon_handle, int16_t zoom_level)
+static void *(*const bfc780_get)(int, int) = object_get_and_verify_type;
+static void *(*const bfc780_tag)(int, int) = tag_get;
+static float (*const bfc780_c1d9e70)(float base, float exponent) = FUN_001d9e70;
+static char * (*const bfc780_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const bfc780_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bfc780_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+float weapon_get_zoom_magnification(int weapon_handle __attribute__((unused)), int16_t zoom_level __attribute__((unused)))
 {
-  char *weapon_obj;
-  char *tag_data;
-  float result;
-  float min_zoom;
-  float max_zoom;
-  float t;
-  int16_t zoom_count;
-
-  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  tag_data = (char *)tag_get(0x77656170, *(int *)weapon_obj);
-  result = *(float *)0x2533c8; /* 1.0f */
-  zoom_count = *(int16_t *)(tag_data + 0x3da);
-
-  if (zoom_level < 0 || zoom_level >= zoom_count)
-    return result;
-
-  if (zoom_count > 1)
-    t = (float)(int)zoom_level / (float)(int)(zoom_count - 1);
-  else
-    t = 0.0f;
-
-  /* XBE: fcomp 0.0; AH&0x41 => value <= 0 -> default 1.0 */
-  if (*(float *)(tag_data + 0x3dc) > *(float *)0x2533c0)
-    min_zoom = *(float *)(tag_data + 0x3dc);
-  else
-    min_zoom = *(float *)0x2533c8;
-
-  if (*(float *)(tag_data + 0x3e0) > *(float *)0x2533c0)
-    max_zoom = *(float *)(tag_data + 0x3e0);
-  else
-    max_zoom = *(float *)0x2533c8;
-
-  result = FUN_000fbcf0(max_zoom / min_zoom, t) * min_zoom;
-
-  if ((*(uint32_t *)&result & 0x7f800000u) == 0x7f800000u) {
-    display_assert(
-        csprintf((char *)0x5ab100, (char *)0x0025eb8c, (char *)0x0028aeec,
-                 *(unsigned int *)&result, (double)result),
-        (char *)0x0028ad48, 0x5a2, 1);
-    system_exit(-1);
-  }
-  /* XBE: fcomp 0.0; AH&0x41 == 0 => result > 0 ok; else assert */
-  if (!(result > *(float *)0x2533c0)) {
-    display_assert((char *)0x0028aed8, (char *)0x0028ad48, 0x5a3, 1);
-    system_exit(-1);
-  }
-
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "movl $0x3f800000, -0x4(%%ebp)\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movw 0xc(%%ebp), %%dx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testw %%dx, %%dx\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "jl .Lweapon_get_zoom_magnification_8\n\t"
+      "movw 0x3da(%%ecx), %%ax\n\t"
+      "cmpw %%ax, %%dx\n\t"
+      "jge .Lweapon_get_zoom_magnification_8\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jle .Lweapon_get_zoom_magnification_1\n\t"
+      "movswl %%dx, %%edx\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movl %%edx, 0xc(%%ebp)\n\t"
+      "decl %%eax\n\t"
+      "fildl 0xc(%%ebp)\n\t"
+      "movl %%eax, 0xc(%%ebp)\n\t"
+      "fidivl 0xc(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "jmp .Lweapon_get_zoom_magnification_2\n\t"
+      ".Lweapon_get_zoom_magnification_1:\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      ".Lweapon_get_zoom_magnification_2:\n\t"
+      "flds 0x3dc(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lweapon_get_zoom_magnification_3\n\t"
+      "movl 0x3dc(%%ecx), %%edx\n\t"
+      "movl %%edx, 0xc(%%ebp)\n\t"
+      "jmp .Lweapon_get_zoom_magnification_4\n\t"
+      ".Lweapon_get_zoom_magnification_3:\n\t"
+      "movl $0x3f800000, 0xc(%%ebp)\n\t"
+      ".Lweapon_get_zoom_magnification_4:\n\t"
+      "flds 0x3e0(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lweapon_get_zoom_magnification_5\n\t"
+      "movl 0x3e0(%%ecx), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .Lweapon_get_zoom_magnification_6\n\t"
+      ".Lweapon_get_zoom_magnification_5:\n\t"
+      "movl $0x3f800000, -0x4(%%ebp)\n\t"
+      ".Lweapon_get_zoom_magnification_6:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fdivs 0xc(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "call *%[c1d9e70]\n\t"
+      "fmuls 0xc(%%ebp)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, 0xc(%%ebp)\n\t"
+      "jne .Lweapon_get_zoom_magnification_7\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5a2\n\t"
+      "pushl $0x28ad48\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x28aeec\n\t"
+      "pushl $0x25eb8c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lweapon_get_zoom_magnification_7:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lweapon_get_zoom_magnification_8\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5a3\n\t"
+      "pushl $0x28ad48\n\t"
+      "pushl $0x28aed8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lweapon_get_zoom_magnification_8:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [get] "m"(bfc780_get), [tag] "m"(bfc780_tag), [c1d9e70] "m"(bfc780_c1d9e70), [c8d9d0] "m"(bfc780_c8d9d0), [assert] "m"(bfc780_assert), [exitfn] "m"(bfc780_exitfn)
+      : "memory");
 }
+#else
+#error "weapon_get_zoom_magnification: clang naked draft required"
+#endif
+
 
 /* weapon_get_field_of_view (0xfc8e0) — XBE naked draft (batch 166). */
 #if defined(__clang__)

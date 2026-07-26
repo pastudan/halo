@@ -23774,12 +23774,52 @@ void FUN_00085280(float *position, float *forward, float *up, float param_4,
   observer_update(k_observer_tick);
 }
 
-/* 0x85350 — Bind antenna globals without a scenario tag index. */
-void FUN_00085350(float *position, float *forward, float *up, float param_4,
-                  short param_5)
+/* FUN_00085350 (0x85350) — XBE naked draft (batch 225). */
+#if defined(__clang__)
+static void (*const b85350_c85280)(float *position, float *forward, float *up, float param_4, short param_5, int param_6) = FUN_00085280;
+
+__attribute__((naked, noinline))
+void FUN_00085350(float *param_1 __attribute__((unused)), float *param_2 __attribute__((unused)), float *param_3 __attribute__((unused)), float param_4 __attribute__((unused)), short param_5 __attribute__((unused)))
 {
-  FUN_00085280(position, forward, up, param_4, param_5, -1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c85280]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [c85280] "m"(b85350_c85280)
+      : "memory");
 }
+#else
+#error "FUN_00085350: clang naked draft required"
+#endif
+
 
 /* 0x134070 — Advance one glow particle along its widget path. */
 #if defined(__i386__) && defined(__GNUC__)
@@ -24441,70 +24481,153 @@ int glow_trailing_particle_new(int glow_widget_ptr /* @<ebx> */)
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((regparm(2)))
 #endif
-void FUN_00133300(int glow_widget, int particle_ptr, int object_handle)
+/* FUN_00133300 (0x133300) — XBE naked draft (batch 226). */
+#if defined(__clang__)
+static void *(*const b133300_tag)(int, int) = tag_get;
+static bool (*const b133300_c1403a0)(int object_handle, short function_index, void *out_value) = object_get_function_value;
+
+__attribute__((naked, noinline))
+void FUN_00133300(int glow_widget __attribute__((unused)), int particle_ptr __attribute__((unused)), int object_handle __attribute__((unused)))
 {
-  char *widget = (char *)glow_widget;
-  char *particle = (char *)particle_ptr;
-  char *glow_def;
-  float fn_value;
-  int16_t fn_index;
-  float path_ratio;
-  float fade;
-
-  glow_def = (char *)tag_get('!wlg', *(int *)(widget + 0x224));
-  fn_index = *(int16_t *)(glow_def + 0xb0);
-  fn_value = 0.0f;
-  if (fn_index != (int16_t)-1) {
-    if (!object_get_function_value(object_handle, fn_index, &fn_value))
-      fn_value = 0.0f;
-    *(float *)(particle + 0x10) =
-        (*(float *)(glow_def + 0xc8) - *(float *)(glow_def + 0xb8)) *
-            fn_value +
-        *(float *)(glow_def + 0xb8);
-    *(float *)(particle + 0x14) =
-        (*(float *)(glow_def + 0xcc) - *(float *)(glow_def + 0xbc)) *
-            fn_value +
-        *(float *)(glow_def + 0xbc);
-    *(float *)(particle + 0x18) =
-        (*(float *)(glow_def + 0xd0) - *(float *)(glow_def + 0xc0)) *
-            fn_value +
-        *(float *)(glow_def + 0xc0);
-    *(float *)(particle + 0xc) = 1.0f;
-  } else {
-    *(float *)(particle + 0xc) = 1.0f;
-  }
-
-  if ((glow_def[0x28] & 1) != 0) {
-    *(float *)(particle + 0x10) =
-        (*(float *)(glow_def + 0xc8) - *(float *)(glow_def + 0xb8)) *
-            *(float *)(glow_def + 0xf4) * *(float *)(particle + 0x28) +
-        *(float *)(glow_def + 0xb8);
-    *(float *)(particle + 0x14) =
-        (*(float *)(glow_def + 0xcc) - *(float *)(glow_def + 0xbc)) *
-            *(float *)(glow_def + 0xf4) * *(float *)(particle + 0x28) +
-        *(float *)(glow_def + 0xbc);
-    *(float *)(particle + 0x18) =
-        (*(float *)(glow_def + 0xd0) - *(float *)(glow_def + 0xc0)) *
-            *(float *)(glow_def + 0xf4) * *(float *)(particle + 0x28) +
-        *(float *)(glow_def + 0xc0);
-    *(float *)(particle + 0xc) = 1.0f;
-  }
-
-  path_ratio = *(float *)(particle + 0x28) / *(float *)(widget + 0x234);
-  fade = *(float *)(glow_def + 0xf8) * *(float *)0x253398;
-  if (path_ratio > fade) {
-    if (1.0f - fade > 0.0f)
-      *(float *)(particle + 0x58) = (path_ratio - fade) / (1.0f - fade);
-    else
-      *(float *)(particle + 0x58) = 1.0f;
-  } else {
-    *(float *)(particle + 0x58) = 0.0f;
-  }
-  if (*(float *)(particle + 0x58) < 0.0f)
-    *(float *)(particle + 0x58) = 0.0f;
-  else if (*(float *)(particle + 0x58) > 1.0f)
-    *(float *)(particle + 0x58) = 1.0f;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x224(%%ebx), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x676c7721\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0xb0(%%esi), %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_00133300_3\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1403a0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00133300_1\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .LFUN_00133300_2\n\t"
+      ".LFUN_00133300_1:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      ".LFUN_00133300_2:\n\t"
+      "flds 0xc8(%%esi)\n\t"
+      "movl $0x3f800000, %%ecx\n\t"
+      "fsubs 0xb8(%%esi)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds 0xb8(%%esi)\n\t"
+      "fstps 0x10(%%edi)\n\t"
+      "flds 0xcc(%%esi)\n\t"
+      "fsubs 0xbc(%%esi)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds 0xbc(%%esi)\n\t"
+      "fstps 0x14(%%edi)\n\t"
+      "flds 0xd0(%%esi)\n\t"
+      "fsubs 0xc0(%%esi)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds 0xc0(%%esi)\n\t"
+      "movl %%ecx, 0xc(%%edi)\n\t"
+      "fstps 0x18(%%edi)\n\t"
+      "fstp %%st(0)\n\t"
+      "jmp .LFUN_00133300_4\n\t"
+      ".LFUN_00133300_3:\n\t"
+      "movl $0x3f800000, %%ecx\n\t"
+      ".LFUN_00133300_4:\n\t"
+      "testb $1, 0x28(%%esi)\n\t"
+      "je .LFUN_00133300_5\n\t"
+      "flds 0xc8(%%esi)\n\t"
+      "fsubs 0xb8(%%esi)\n\t"
+      "fmuls 0xf4(%%esi)\n\t"
+      "fmuls 0x28(%%edi)\n\t"
+      "fadds 0xb8(%%esi)\n\t"
+      "fstps 0x10(%%edi)\n\t"
+      "flds 0xcc(%%esi)\n\t"
+      "fsubs 0xbc(%%esi)\n\t"
+      "fmuls 0xf4(%%esi)\n\t"
+      "fmuls 0x28(%%edi)\n\t"
+      "fadds 0xbc(%%esi)\n\t"
+      "fstps 0x14(%%edi)\n\t"
+      "flds 0xd0(%%esi)\n\t"
+      "fsubs 0xc0(%%esi)\n\t"
+      "fmuls 0xf4(%%esi)\n\t"
+      "fmuls 0x28(%%edi)\n\t"
+      "fadds 0xc0(%%esi)\n\t"
+      "movl %%ecx, 0xc(%%edi)\n\t"
+      "fstps 0x18(%%edi)\n\t"
+      ".LFUN_00133300_5:\n\t"
+      "flds 0x28(%%edi)\n\t"
+      "fdivs 0x234(%%ebx)\n\t"
+      "flds 0xf8(%%esi)\n\t"
+      "fmuls 0x253398\n\t"
+      "fld %%st(1)\n\t"
+      "popl %%esi\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00133300_6\n\t"
+      "fxch %%st(1)\n\t"
+      "fdiv %%st(1), %%st(0)\n\t"
+      "fstps 0x58(%%edi)\n\t"
+      "jmp .LFUN_00133300_9\n\t"
+      ".LFUN_00133300_6:\n\t"
+      "flds 0x2533c8\n\t"
+      "fsub %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00133300_7\n\t"
+      "flds 0x2533c8\n\t"
+      "fsub %%st(2), %%st(0)\n\t"
+      "fdiv %%st(1), %%st(0)\n\t"
+      "fstps 0x58(%%edi)\n\t"
+      "jmp .LFUN_00133300_8\n\t"
+      ".LFUN_00133300_7:\n\t"
+      "movl %%ecx, 0x58(%%edi)\n\t"
+      ".LFUN_00133300_8:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_00133300_9:\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x58(%%edi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00133300_10\n\t"
+      "movl $0, 0x58(%%edi)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00133300_10:\n\t"
+      "flds 0x58(%%edi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00133300_11\n\t"
+      "movl $0x3f800000, 0x58(%%edi)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00133300_11:\n\t"
+      "movl 0x58(%%edi), %%eax\n\t"
+      "movl %%eax, 0x58(%%edi)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b133300_tag), [c1403a0] "m"(b133300_c1403a0)
+      : "memory");
 }
+#else
+#error "FUN_00133300: clang naked draft required"
+#endif
+
 
 #if defined(__i386__) && defined(__GNUC__)
 #endif

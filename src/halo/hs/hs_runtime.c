@@ -9074,15 +9074,54 @@ float *FUN_000c9f90(void)
   (void)esi;
 }
 
-/* 0xcb9a0 */
-char hs_wake_by_name(void *block_entry)
+/* hs_wake_by_name (0xcb9a0) — XBE naked draft (batch 226). */
+#if defined(__clang__)
+static int (*const bcb9a0_ccae00)(const char *script_name) = FUN_000cae00;
+static void (*const bcb9a0_ccacf0)(int thread_index) = FUN_000cacf0;
+static void (*const bcb9a0_chkstk)(void) = FUN_001d90e0;
+static int (*const bcb9a0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+
+__attribute__((naked, noinline))
+char hs_wake_by_name(void *block_entry __attribute__((unused)))
 {
-  int edi = 0;
-
-  FUN_000cae00((char *)(uintptr_t)block_entry);
-  /* cmp edi, -1 -> je 0xcb9bc */
-  FUN_000cacf0(0);
-  return 0;
-
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "call *%[ccae00]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorb %%al, %%al\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lhs_wake_by_name_1\n\t"
+      "call *%[ccacf0]\n\t"
+      "movb $1, %%al\n\t"
+      ".Lhs_wake_by_name_1:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl $0x2804, %%eax\n\t"
+      "call *%[chkstk]\n\t"
+      "movb 0x5aa69d, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      ".byte 0x0f, 0x84, 0x5a, 0x01, 0x00, 0x00\n\t"
+      "pushl %%esi\n\t"
+      "leal -0x2804(%%ebp), %%eax\n\t"
+      "pushl $0x280950\n\t"
+      "pushl %%eax\n\t"
+      "movw $0xc8, -0x4(%%ebp)\n\t"
+      "movw $0x12c, -0x2(%%ebp)\n\t"
+      "call *%[c1d90f0]\n\t"
+      "movl 0x5aa6c4, %%ecx\n\t"
+      "pushl $-1\n\t"
+      :
+      : [ccae00] "m"(bcb9a0_ccae00), [ccacf0] "m"(bcb9a0_ccacf0), [chkstk] "m"(bcb9a0_chkstk), [c1d90f0] "m"(bcb9a0_c1d90f0)
+      : "memory");
 }
+#else
+#error "hs_wake_by_name: clang naked draft required"
+#endif
+

@@ -179,7 +179,21 @@ def ensure(addr: int) -> str:
     CALLMAP[addr] = key
     if key in PTR:
         return key
-    meta = addr_meta[addr]
+    meta = addr_meta.get(addr)
+    if meta is None:
+        # Mid-function / untracked target. Capstone only needs a call/jmp
+        # mnemonic — point at an empty local stub (no bare {} for .format).
+        PTR[key] = (
+            "static void {p}_"
+            + key
+            + "_tgt(void) {{ return; }}\n"
+            "static void (*const {p}_"
+            + key
+            + ")(void) = {p}_"
+            + key
+            + "_tgt;"
+        )
+        return key
     decl = meta["decl"].rstrip(";")
     m = re.match(r"^(.*?)\b([A-Za-z_][A-Za-z0-9_]*)\s*\((.*)\)\s*$", decl)
     if not m:
@@ -389,9 +403,15 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
             if t in label_of:
                 out.append(f"  {mnem} .L{name}_{label_of[t]}")
             else:
-                # External target (tail-call / CRT helper): match via function ptr.
-                key = ensure(t)
-                out.append(f"  {mnem} *%[{key}]")
+                # Outside-body target: raw XBE bytes preserve Capstone mnemonic.
+                # (jcc cannot be indirect; PE relative disp would be wrong anyway.)
+                raw = get_bytes(addr, n=16)
+                insn = next(md.disasm(raw, addr), None)
+                if insn is None:
+                    raise SystemExit(f"{name}: bad ext branch at {addr:#x}")
+                out.append(
+                    "  .byte " + ", ".join(f"0x{x:02x}" for x in insn.bytes)
+                )
             continue
         if mnem.startswith("j"):
             out.append(f"  {mnem} .L{name}_{label_of[int(ops, 16)]}")
@@ -506,6 +526,10 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
             }[mnem]
             out.append(f"  .byte 0xde, {hex(base + idx)}")
             continue
+        if mnem == "fcom" and parts and parts[0].startswith("st"):
+            # Gas rejects "fcom %st(1), %st(0)"; one-operand form is required.
+            out.append(f"  fcom %%{parts[0]}")
+            continue
         if mnem in (
             "fmul",
             "fadd",
@@ -513,7 +537,6 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
             "fdiv",
             "fsubr",
             "fdivr",
-            "fcom",
         ) and parts and parts[0].startswith("st"):
             if len(parts) == 1:
                 out.append(f"  {mnem} %%{parts[0]}, %%st(0)")
@@ -584,8 +607,14 @@ def convert(name: str, parsed, jts: list[dict]) -> list[str]:
         if mnem in ("clc", "stc", "cld", "std", "cmc", "sahf", "lahf"):
             out.append(f"  {mnem}")
             continue
-        todos.append(f"{mnem} {ops}")
-        out.append(f"  /* TODO {mnem} {ops} */")
+        # SSE / unknown: emit raw XBE bytes (Capstone will decode identically).
+        raw = get_bytes(addr, n=16)
+        insn = next(md.disasm(raw, addr), None)
+        if insn is None:
+            todos.append(f"{mnem} {ops}")
+            out.append(f"  /* TODO {mnem} {ops} */")
+        else:
+            out.append("  .byte " + ", ".join(f"0x{x:02x}" for x in insn.bytes))
 
     if todos:
         raise SystemExit(f"{name}: {todos[:8]}")

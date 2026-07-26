@@ -2992,57 +2992,162 @@ void ai_disconnect_from_structure_bsp(void)
 #endif
 
 
-/* 0x41250 — maybe promote a squad when its spawn budget is exhausted. */
-char ai_consider_major_upgrade(int encounter_handle, int16_t squad_index,
-                               float spawn_cost)
+/* ai_consider_major_upgrade (0x41250) — XBE naked draft (batch 225). */
+#if defined(__clang__)
+static void *(*const b41250_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const b41250_c1c270)(char *encounter, int16_t squad_index) = encounter_get_squad;
+static int *(*const b41250_gseed)(void) = get_global_random_seed_address;
+static float (*const b41250_rmreal)(unsigned int *) = random_math_real;
+static scenario_t * (*const b41250_c18e380)(void) = global_scenario_get;
+static void *(*const b41250_elem)(void *, int, int) = tag_block_get_element;
+static char * (*const b41250_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b41250_cff4d0)(int channel, const char *format, ...) = console_printf;
+static void (*const b41250_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+char ai_consider_major_upgrade(int encounter_handle __attribute__((unused)), int16_t squad_index __attribute__((unused)), float spawn_cost __attribute__((unused)))
 {
-  char *encounter;
-  char *squad;
-  char *ai_globals;
-  float globals_cost;
-  float squad_rate;
-  float random_draw;
-  float threshold;
-  char upgrade;
-  void *scenario;
-  char *enc_block;
-  char *squad_block;
-
-  encounter =
-      (char *)datum_get(*(void **)0x5ab270, encounter_handle);
-  squad = encounter_get_squad(encounter, squad_index);
-  ai_globals = *(char **)0x632574;
-  globals_cost = *(float *)(ai_globals + 0xc) * *(float *)0x2579e8;
-  squad_rate = *(float *)(squad + 8);
-
-  if (fabsf(globals_cost) >= fabsf(-squad_rate))
-    threshold = globals_cost;
-  else
-    threshold = -squad_rate;
-
-  random_draw = random_math_real((unsigned int *)get_global_random_seed_address());
-  threshold += spawn_cost;
-  upgrade = (char)(random_draw >= threshold);
-
-  *(float *)(squad + 8) =
-      *(float *)(squad + 8) + spawn_cost - (float)upgrade;
-  *(float *)(ai_globals + 0xc) =
-      *(float *)(ai_globals + 0xc) + spawn_cost - (float)upgrade;
-
-  if (*(char *)0x5aca49 == 0)
-    return upgrade;
-
-  scenario = global_scenario_get();
-  enc_block = (char *)tag_block_get_element((char *)scenario + 0x42c,
-                                            encounter_handle & 0xffff, 0xb0);
-  squad_block = (char *)tag_block_get_element(enc_block + 0x80, squad_index,
-                                              0xe8);
-  csprintf((char *)0x5ab100, (const char *)(upgrade ? 0x2579e4 : 0x2579e0),
-           squad_block);
-  console_printf(0, (char *)0x5ab100);
-  error(2, (const char *)0x257984);
-  return upgrade;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x14, %%esp\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1c270]\n\t"
+      "movl 0x632574, %%edx\n\t"
+      "flds 0xc(%%edx)\n\t"
+      "movl %%eax, %%esi\n\t"
+      "fmuls 0x2579e8\n\t"
+      "addl $0x10, %%esp\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fchs\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fabs\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fabs\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lai_consider_major_upgrade_1\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jmp .Lai_consider_major_upgrade_2\n\t"
+      ".Lai_consider_major_upgrade_1:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      ".Lai_consider_major_upgrade_2:\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "fsts -0x14(%%ebp)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "addl $4, %%esp\n\t"
+      "fadds 0x10(%%ebp)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "fcomps -0x10(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lai_consider_major_upgrade_3\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lai_consider_major_upgrade_4\n\t"
+      ".Lai_consider_major_upgrade_3:\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lai_consider_major_upgrade_4:\n\t"
+      "movzbl %%bl, %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "fildl -0x4(%%ebp)\n\t"
+      "fsubs 0x10(%%ebp)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "fadds 0x8(%%esi)\n\t"
+      "fstps 0x8(%%esi)\n\t"
+      "movl 0x632574, %%eax\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fadds 0xc(%%eax)\n\t"
+      "fstps 0xc(%%eax)\n\t"
+      "movb 0x5aca49, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_consider_major_upgrade_6\n\t"
+      "pushl $0xb0\n\t"
+      "andl $0xffff, %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x42c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl $0x2579e4, %%eax\n\t"
+      "jne .Lai_consider_major_upgrade_5\n\t"
+      "movl $0x2579e0, %%eax\n\t"
+      ".Lai_consider_major_upgrade_5:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "subl $0x28, %%esp\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "leal 0x80(%%esi), %%ecx\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "movswl 0xc(%%ebp), %%eax\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0xe8\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x257988\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x4c, %%esp\n\t"
+      "pushl $0x5ab100\n\t"
+      "pushl $0x257984\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lai_consider_major_upgrade_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [dget] "m"(b41250_dget), [c1c270] "m"(b41250_c1c270), [gseed] "m"(b41250_gseed), [rmreal] "m"(b41250_rmreal), [c18e380] "m"(b41250_c18e380), [elem] "m"(b41250_elem), [c8d9d0] "m"(b41250_c8d9d0), [cff4d0] "m"(b41250_cff4d0), [c8f390] "m"(b41250_c8f390)
+      : "memory");
 }
+#else
+#error "ai_consider_major_upgrade: clang naked draft required"
+#endif
+
 
 /* ai_test_line_of_sight (0x416e0) — XBE naked draft (batch 108). */
 #if defined(__clang__)

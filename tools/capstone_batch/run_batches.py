@@ -151,10 +151,11 @@ def pick(
     for w in pf:
         if w["name"] in seen:
             continue
-        if use_cand_end and "end" in w:
+        # Always prefer CFG true_end. Registered compare ends are sometimes
+        # short (missing shared epilogue) or long (bleed into the next symbol).
+        te = true_end(xbe, md, w["va"])
+        if not te and use_cand_end and "end" in w:
             te = int(w["end"])
-        else:
-            te = true_end(xbe, md, w["va"])
         if not te:
             skipped += 1
             continue

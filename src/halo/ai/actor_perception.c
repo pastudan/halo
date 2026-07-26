@@ -7222,456 +7222,941 @@ void prop_status_refresh(int actor_handle __attribute__((unused)), int prop_hand
 #endif
 
 
-/* 0x342a0 — evaluate a test object for perception refresh (weapons/attachments). */
-void actor_perception_refresh_test_object(int actor_handle, int unit_handle,
-                                          void *primary_list, void *secondary_list)
+/* actor_perception_refresh_test_object (0x342a0) — XBE naked draft (batch 223). */
+#if defined(__clang__)
+static void *(*const b342a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b342a0_get)(int, int) = object_get_and_verify_type;
+static int (*const b342a0_c13ec50)(int object_handle) = object_mark;
+static vector3_t * (*const b342a0_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+static void (*const b342a0_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = actor_perception_find_sense_position;
+static int (*const b342a0_c31c00)(int owner_handle, int unit_handle, char verify_flag, float *swarm_origin) = actor_perception_unit_from_swarm;
+static void *(*const b342a0_tag)(int, int) = tag_get;
+static bool (*const b342a0_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
+static int (*const b342a0_gtime)(void) = game_time_get;
+static char (*const b342a0_c2f5f0)(int actor_handle, float scale, float visibility, int unit_handle, char field_60, char dz_flag) = FUN_0002f5f0;
+static void (*const b342a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b342a0_exitfn)(int) = system_exit;
+static int16_t (*const b342a0_c1d6d0)(int actor_handle) = actor_action_try_to_panic;
+static int (*const b342a0_c645a0)(int actor_handle, int unit_handle, char friendly) = prop_new_unacknowledged;
+static void (*const b342a0_c31df0)(int actor_handle, int prop_handle, float *out_pos, char refresh_flag, char swarm_refresh) = prop_position_refresh;
+static char (*const b342a0_c32170)(float *sense_pos_out, int actor_handle, int unit_handle, char flag) = FUN_00032170;
+static void *(*const b342a0_memset)(void *, int, unsigned int) = csmemset;
+static void *(*const b342a0_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void (*const b342a0_c342a0)(int actor_handle, int unit_handle, void *primary_list, void *secondary_list) = actor_perception_refresh_test_object;
+
+__attribute__((naked, noinline))
+void actor_perception_refresh_test_object(int actor_handle __attribute__((unused)), int unit_handle __attribute__((unused)), void *primary_list __attribute__((unused)), void *secondary_list __attribute__((unused)))
 {
-  char *actor;
-  char *unit;
-  char *owner_actor;
-  char *encounter;
-  char *unit_def;
-  char *proj_def;
-  char sense_block[0x74];
-  char sense_block2[0xac];
-  float unit_pos[3];
-  float sense_origin[3];
-  float dist_sq;
-  float sqrt_dist;
-  float weapon_range;
-  float time_delta;
-  int owner_handle;
-  int swarm_unit;
-  int prop_handle;
-  int child_unit;
-  int weapon_object;
-  int16_t list_count;
-  char friendly;
-  char in_fov;
-  char has_weapon;
-  char should_add;
-  char hidden_enc;
-  char desire_ok;
-  char list_slot;
-
-  if (unit_handle == -1)
-    return;
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-
-  for (;;) {
-    unit = (char *)object_get_and_verify_type(unit_handle, -1);
-    if (!object_mark(unit_handle))
-      goto next_attachment;
-
-    if (*(int16_t *)(unit + 0x64) != 0) {
-      if (primary_list != 0)
-        *(int16_t *)primary_list = (int16_t)(*(int16_t *)primary_list + 1);
-      goto next_attachment;
-    }
-
-    object_get_world_position(unit_handle, (vector3_t *)unit_pos);
-    actor_perception_find_sense_position(actor_handle, unit_pos, -1, sense_block);
-
-    owner_handle = *(int *)(unit + 0x1a8);
-    if (owner_handle == -1)
-      owner_handle = *(int *)(unit + 0x1a4);
-    swarm_unit = unit_handle;
-    if (owner_handle != -1) {
-      swarm_unit = actor_perception_unit_from_swarm(
-          actor_handle, unit_handle, 1, (float *)(actor + 0x120));
-      if (swarm_unit == -1)
-        goto next_attachment;
-      unit = (char *)object_get_and_verify_type(swarm_unit, 3);
-      object_get_world_position(swarm_unit, (vector3_t *)unit_pos);
-    }
-
-    if (swarm_unit == -1 || owner_handle == actor_handle)
-      goto next_attachment;
-
-    unit_def = (char *)tag_get('unit', *(int *)unit);
-    has_weapon = (char)(*(int *)(unit + 0x1c8) != -1);
-    friendly = game_allegiance_get_team_is_friendly(*(int16_t *)(unit + 0x68),
-                                                    *(int16_t *)(actor + 0x3e));
-
-    in_fov = 0;
-    if ((*(uint8_t *)(unit + 0xb6) & 4) != 0 &&
-        *(int16_t *)(unit + 0x3d0) == 0) {
-      if (*(int *)(unit + 0x3cc) != -1) {
-        in_fov = 1;
-        time_delta = (float)(game_time_get() - *(int *)(unit + 0x3cc));
-      } else {
-        time_delta = 32767.0f;
-      }
-    } else {
-      time_delta = 0.0f;
-    }
-
-    weapon_range = *(float *)(unit_def + 0x284);
-    sense_origin[0] = *(float *)(sense_block + 0xc);
-    sense_origin[1] = *(float *)(sense_block + 0x10);
-    sense_origin[2] = *(float *)(sense_block + 0x14);
-    {
-      float dx = unit_pos[0] - sense_origin[0];
-      float dy = unit_pos[1] - sense_origin[1];
-      float dz = unit_pos[2] - sense_origin[2];
-      dist_sq = dx * dx + dy * dy + dz * dz;
-    }
-
-    if (weapon_range > *(float *)0x2533c0) {
-      if (in_fov != 0 || *(char *)((char *)unit + 0x253) == 0x1e) {
-        sqrt_dist = sqrtf(dist_sq);
-        FUN_0002f5f0(actor_handle, weapon_range, sqrt_dist, swarm_unit,
-                     friendly, 0);
-      }
-    }
-
-    owner_actor = 0;
-    if (owner_handle != -1)
-      owner_actor = (char *)datum_get(actor_data, owner_handle);
-
-    should_add = 0;
-    list_slot = 0;
-
-    if (!has_weapon) {
-      if (owner_actor == 0 || *(char *)(owner_actor + 8) == 0 ||
-          *(char *)(owner_actor + 0x13) != 0)
-        goto skip_desire;
-      if (dist_sq <= *(float *)0x255fe0)
-        goto skip_desire;
-    } else if (friendly != 0) {
-      goto skip_desire;
-    } else if (dist_sq <= *(float *)0x255fe0) {
-      goto skip_desire;
-    }
-
-    if (in_fov != 0) {
-      char max_teams;
-      char actor_teams;
-      char unit_teams;
-      desire_ok = 1;
-
-      if (*(int *)(actor + 0x34) != -1) {
-        encounter = (char *)datum_get(*(void **)0x5ab270, *(int *)(actor + 0x34));
-        max_teams = *(char *)(encounter + 0x58);
-        actor_teams = *(char *)(actor + 0x3a0);
-        unit_teams = *(char *)(unit + 0x3cc);
-        if (max_teams < actor_teams)
-          max_teams = actor_teams;
-        if (max_teams != -1 && unit_teams != -1 && unit_teams < max_teams)
-          desire_ok = 0;
-
-        hidden_enc = (char)(*(char *)(encounter + 0x45) == 0 &&
-                            *(char *)(encounter + 0x44) == 0 &&
-                            *(char *)(encounter + 0x42) == 0);
-        if (desire_ok != 0 && hidden_enc != 0) {
-          if (dist_sq > *(float *)0x255fdc * *(float *)0x255fdc)
-            goto skip_desire;
-        } else if (desire_ok != 0 && dist_sq > *(float *)0x2533c0 * *(float *)0x2533c0) {
-          goto skip_desire;
-        }
-      }
-
-      if (desire_ok != 0 && actor_action_try_to_panic(actor_handle) > 1)
-        goto skip_desire;
-
-      if (desire_ok != 0) {
-        float threshold = *(float *)0x254e74;
-        if (*(int16_t *)(actor + 0x6a) < 3)
-          threshold = *(float *)0x254df8;
-        if (dist_sq > threshold * threshold)
-          goto skip_desire;
-      }
-    } else if (dist_sq > *(float *)0x255fdc * *(float *)0x255fdc) {
-      goto skip_desire;
-    } else if (friendly != 0) {
-      if (dist_sq > *(float *)0x255fd8 * *(float *)0x255fd8)
-        should_add = 1;
-      else
-        should_add = 0;
-      if (*(int16_t *)(actor + 0x6e) >= 4)
-        should_add = 1;
-      else if (*(char *)(actor + 0x1cc) == 0) {
-        should_add = 1;
-        if (dist_sq > *(float *)0x254e74 * *(float *)0x254e74)
-          should_add = 0;
-      } else {
-        should_add = 0;
-      }
-      if (should_add == 0)
-        goto skip_desire;
-      list_slot = 1;
-    }
-
-    if (in_fov != 0) {
-      void *target_list = friendly ? secondary_list : primary_list;
-
-      if (target_list != 0) {
-        list_count = *(int16_t *)((char *)target_list + 2);
-        if (list_count < 0x80) {
-          int idx = list_count;
-          int base = idx + idx * 2;
-
-          *(int *)((char *)target_list + base * 4 + 8) = -1;
-          *(int *)((char *)target_list + base * 4 + 4) = swarm_unit;
-          *(float *)((char *)target_list + base * 4) = dist_sq;
-          *(int16_t *)((char *)target_list + 2) = list_count + 1;
-        }
-      }
-      goto next_attachment;
-    }
-
-    if (should_add != 0) {
-      void *target_list = list_slot ? secondary_list : primary_list;
-
-      if (target_list != 0) {
-        list_count = *(int16_t *)((char *)target_list + 2);
-        if (list_count < 0x80) {
-          int idx = list_count;
-          int base = idx + idx * 2;
-
-          *(int *)((char *)target_list + base * 4 + 8) = -1;
-          *(int *)((char *)target_list + base * 4 + 4) = swarm_unit;
-          *(float *)((char *)target_list + base * 4) = dist_sq;
-          *(int16_t *)((char *)target_list + 2) = list_count + 1;
-        }
-      }
-      goto next_attachment;
-    }
-
-    if (!has_weapon) {
-      prop_handle =
-          prop_new_unacknowledged(actor_handle, swarm_unit, friendly);
-      if (prop_handle == -1)
-        goto next_attachment;
-      prop_position_refresh(actor_handle, prop_handle, (float *)sense_block2, 0,
-                            0);
-      if (in_fov != 0)
-        goto next_attachment;
-      if (primary_list != 0)
-        *(int16_t *)primary_list = (int16_t)(*(int16_t *)primary_list + 1);
-    }
-
-    if (*(int *)(unit + 0x2d4) == -1)
-      FUN_00032170(0, actor_handle, swarm_unit, 0);
-
-    if (*(int16_t *)(actor + 0x280) == 5) {
-      proj_def = (char *)tag_get('jorp', *(int *)unit);
-      if (*(int *)(unit + 0xcc) == -1 ||
-          (*(uint8_t *)(unit + 0x1dc) & 0x20) != 0) {
-        object_get_world_position(unit_handle, (vector3_t *)unit_pos);
-        actor_perception_find_sense_position(actor_handle, unit_pos, -1,
-                                             sense_block2);
-        {
-          float dx = unit_pos[0] - *(float *)(sense_block2 + 0xc);
-          float dy = unit_pos[1] - *(float *)(sense_block2 + 0x10);
-          float dz = unit_pos[2] - *(float *)(sense_block2 + 0x14);
-          sqrt_dist = sqrtf(dx * dx + dy * dy + dz * dz);
-        }
-
-        if (*(float *)(proj_def + 0x1a8) + *(float *)0x253f34 > sqrt_dist) {
-          if (*(int16_t *)(actor + 0x280) < 2 ||
-              (*(int16_t *)(actor + 0x280) == 2 &&
-               *(int *)(actor + 0x28c) != unit_handle &&
-               sqrt_dist > *(float *)(actor + 0x2d4))) {
-            csmemset(actor + 0x280, 0, 0x6c);
-            *(int16_t *)(actor + 0x280) = 2;
-            *(int *)(actor + 0x28c) = unit_handle;
-            *(float *)(actor + 0x294) = *(float *)(proj_def + 0x1a8);
-            *(float *)(actor + 0x298) = unit_pos[0];
-            *(float *)(actor + 0x29c) = unit_pos[1];
-            *(float *)(actor + 0x2a0) = unit_pos[2];
-            *(int *)(actor + 0x2a4) = *(int *)(unit + 0x18);
-            *(int *)(actor + 0x2a8) = *(int *)(unit + 0x1c);
-            *(int *)(actor + 0x2ac) = *(int *)(unit + 0x20);
-            *(int16_t *)(actor + 0x284) = 0x1e;
-            *(char *)(actor + 0x286) = 0;
-            *(int16_t *)(actor + 0x282) = 0;
-
-            weapon_object = *(int *)(unit + 0x74);
-            if (weapon_object != -1) {
-              char *weapon_type = (char *)object_try_and_get_and_verify_type(
-                  weapon_object, -1);
-              if (weapon_type != 0) {
-                char type_mask =
-                    (char)(1 << *(uint8_t *)(weapon_type + 0x64));
-                if ((type_mask & 3) != 0) {
-                  if (*(int *)(actor + 0x18) != -1 &&
-                      weapon_object == *(int *)(actor + 0x18))
-                    *(int16_t *)(actor + 0x282) = 2;
-                  else if (!game_allegiance_get_team_is_friendly(
-                               *(int16_t *)(unit + 0x68),
-                               *(int16_t *)(actor + 0x3e)))
-                    *(int16_t *)(actor + 0x282) = 1;
-                }
-              }
-            }
-            *(int *)(actor + 0x290) = *(int *)(unit + 0x74);
-          }
-        }
-      }
-    }
-
-skip_desire:
-    (void)owner_actor;
-    (void)encounter;
-    (void)time_delta;
-    (void)hidden_enc;
-    (void)desire_ok;
-    (void)list_slot;
-
-next_attachment:
-    weapon_object = *(int *)(unit + 0xc8);
-    if (weapon_object != -1) {
-      actor_perception_refresh_test_object(actor_handle, weapon_object,
-                                           secondary_list, primary_list);
-    }
-    child_unit = *(int *)(unit + 0xc4);
-    if (child_unit == -1)
-      break;
-    unit_handle = child_unit;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xac, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "je .Lactor_perception_refresh_test_object_42\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lactor_perception_refresh_test_object_1:\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "call *%[c13ec50]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_perception_refresh_test_object_40\n\t"
+      "movl -0x14(%%ebp), %%esi\n\t"
+      "movw 0x64(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lactor_perception_refresh_test_object_33\n\t"
+      "leal -0x3c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%edi, -0xc(%%ebp)\n\t"
+      "call *%[c1412f0]\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "leal -0x74(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $-1\n\t"
+      "leal -0x3c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c31a90]\n\t"
+      "movl 0x1a8(%%esi), %%eax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_perception_refresh_test_object_2\n\t"
+      "pushl $1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "leal -0x74(%%ebp), %%edi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[c31c00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "je .Lactor_perception_refresh_test_object_40\n\t"
+      "movl %%eax, %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "leal -0x3c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c1412f0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "jmp .Lactor_perception_refresh_test_object_3\n\t"
+      ".Lactor_perception_refresh_test_object_2:\n\t"
+      "movl 0x1a4(%%esi), %%ebx\n\t"
+      "movl -0xc(%%ebp), %%edi\n\t"
+      ".Lactor_perception_refresh_test_object_3:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lactor_perception_refresh_test_object_40\n\t"
+      "cmpl 0x8(%%ebp), %%ebx\n\t"
+      "je .Lactor_perception_refresh_test_object_40\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x1c8(%%esi), %%ecx\n\t"
+      "movl -0x18(%%ebp), %%edx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "setne -0xd(%%ebp)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x68(%%esi), %%cx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x3e(%%edx), %%ax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca7a30]\n\t"
+      "movb %%al, -0x1c(%%ebp)\n\t"
+      "movb 0xb6(%%esi), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb $4, %%al\n\t"
+      "je .Lactor_perception_refresh_test_object_4\n\t"
+      "cmpw $0, 0x3d0(%%esi)\n\t"
+      "jne .Lactor_perception_refresh_test_object_4\n\t"
+      "cmpl $-1, 0x3cc(%%esi)\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "jne .Lactor_perception_refresh_test_object_5\n\t"
+      "movl $0x7fff, -0x24(%%ebp)\n\t"
+      "jmp .Lactor_perception_refresh_test_object_6\n\t"
+      ".Lactor_perception_refresh_test_object_4:\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "movl $0, -0x24(%%ebp)\n\t"
+      "jmp .Lactor_perception_refresh_test_object_6\n\t"
+      ".Lactor_perception_refresh_test_object_5:\n\t"
+      "call *%[gtime]\n\t"
+      "subw 0x3cc(%%esi), %%ax\n\t"
+      "movl %%eax, -0x24(%%ebp)\n\t"
+      ".Lactor_perception_refresh_test_object_6:\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      "movl 0x284(%%edi), %%ecx\n\t"
+      "fsubs -0x68(%%ebp)\n\t"
+      "movl %%ecx, -0x20(%%ebp)\n\t"
+      "flds -0x38(%%ebp)\n\t"
+      "fsubs -0x64(%%ebp)\n\t"
+      "flds -0x34(%%ebp)\n\t"
+      "fsubs -0x60(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_perception_refresh_test_object_8\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_refresh_test_object_7\n\t"
+      "cmpb $0x1e, 0x253(%%esi)\n\t"
+      "jne .Lactor_perception_refresh_test_object_8\n\t"
+      ".Lactor_perception_refresh_test_object_7:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "fsqrt\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "movl -0xc(%%ebp), %%edi\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "call *%[c2f5f0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lactor_perception_refresh_test_object_8:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0x6325a4, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "jne .Lactor_perception_refresh_test_object_9\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .Lactor_perception_refresh_test_object_10\n\t"
+      ".Lactor_perception_refresh_test_object_9:\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lactor_perception_refresh_test_object_10:\n\t"
+      "movb -0xd(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movb $0, 0xf(%%ebp)\n\t"
+      "jne .Lactor_perception_refresh_test_object_17\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lactor_perception_refresh_test_object_11\n\t"
+      "movb 0x8(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_perception_refresh_test_object_40\n\t"
+      "movb 0x13(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .Lactor_perception_refresh_test_object_40\n\t"
+      ".Lactor_perception_refresh_test_object_11:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomps 0x255fe0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lactor_perception_refresh_test_object_40\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_perception_refresh_test_object_24\n\t"
+      "movl 0x34(%%edi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movb $1, %%bl\n\t"
+      "je .Lactor_perception_refresh_test_object_21\n\t"
+      "movl 0x5ab270, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "pushl $3\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl 0x58(%%esi), %%ecx\n\t"
+      "movl 0x3a0(%%edi), %%edx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jg .Lactor_perception_refresh_test_object_12\n\t"
+      "movl %%edx, %%ecx\n\t"
+      ".Lactor_perception_refresh_test_object_12:\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .Lactor_perception_refresh_test_object_14\n\t"
+      "movl 0x3cc(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_perception_refresh_test_object_13\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jge .Lactor_perception_refresh_test_object_14\n\t"
+      ".Lactor_perception_refresh_test_object_13:\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lactor_perception_refresh_test_object_14:\n\t"
+      "movb 0x45(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_refresh_test_object_15\n\t"
+      "movb 0x44(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_refresh_test_object_15\n\t"
+      "movb 0x42(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_refresh_test_object_15\n\t"
+      "movb $1, %%al\n\t"
+      "jmp .Lactor_perception_refresh_test_object_16\n\t"
+      ".Lactor_perception_refresh_test_object_15:\n\t"
+      "xorb %%al, %%al\n\t"
+      ".Lactor_perception_refresh_test_object_16:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lactor_perception_refresh_test_object_40\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_perception_refresh_test_object_21\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomps 0x255fdc\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_perception_refresh_test_object_40\n\t"
+      ".Lactor_perception_refresh_test_object_17:\n\t"
+      "movb -0x1c(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "jne .Lactor_perception_refresh_test_object_19\n\t"
+      ".Lactor_perception_refresh_test_object_18:\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      ".Lactor_perception_refresh_test_object_19:\n\t"
+      "movb 0xf(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_perception_refresh_test_object_32\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_perception_refresh_test_object_20\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb96\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x256354\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_refresh_test_object_20:\n\t"
+      "movw 0x2(%%esi), %%ax\n\t"
+      "cmpw $0x80, %%ax\n\t"
+      "jge .Lactor_perception_refresh_test_object_40\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "movl $0xffffffff, 0x8(%%esi,%%ecx,4)\n\t"
+      "movswl 0x2(%%esi), %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%edx\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x4(%%esi,%%edx,4)\n\t"
+      "movswl 0x2(%%esi), %%eax\n\t"
+      "incl %%eax\n\t"
+      "leal (%%eax,%%eax,2), %%ecx\n\t"
+      "fstps (%%esi,%%ecx,4)\n\t"
+      "incw 0x2(%%esi)\n\t"
+      "jmp .Lactor_perception_refresh_test_object_40\n\t"
+      ".Lactor_perception_refresh_test_object_21:\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lactor_perception_refresh_test_object_17\n\t"
+      "movb -0x1c(%%ebp), %%bl\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lactor_perception_refresh_test_object_22\n\t"
+      "cmpw $0x96, -0x24(%%ebp)\n\t"
+      "jg .Lactor_perception_refresh_test_object_40\n\t"
+      ".Lactor_perception_refresh_test_object_22:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d6d0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jg .Lactor_perception_refresh_test_object_40\n\t"
+      "testb %%bl, %%bl\n\t"
+      "flds 0x254e74\n\t"
+      "jne .Lactor_perception_refresh_test_object_23\n\t"
+      "cmpw $3, 0x6a(%%edi)\n\t"
+      "jge .Lactor_perception_refresh_test_object_23\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x254df8\n\t"
+      ".Lactor_perception_refresh_test_object_23:\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lactor_perception_refresh_test_object_17\n\t"
+      "jmp .Lactor_perception_refresh_test_object_40\n\t"
+      ".Lactor_perception_refresh_test_object_24:\n\t"
+      "movb -0x1c(%%ebp), %%al\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_perception_refresh_test_object_26\n\t"
+      "fcomps 0x255fd8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_perception_refresh_test_object_25\n\t"
+      "movb $1, 0xf(%%ebp)\n\t"
+      "jmp .Lactor_perception_refresh_test_object_17\n\t"
+      ".Lactor_perception_refresh_test_object_25:\n\t"
+      "movb $0, 0xf(%%ebp)\n\t"
+      "jmp .Lactor_perception_refresh_test_object_17\n\t"
+      ".Lactor_perception_refresh_test_object_26:\n\t"
+      "fcomps 0x255fdc\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_perception_refresh_test_object_27\n\t"
+      "movb $1, %%cl\n\t"
+      "jmp .Lactor_perception_refresh_test_object_28\n\t"
+      ".Lactor_perception_refresh_test_object_27:\n\t"
+      "xorb %%cl, %%cl\n\t"
+      ".Lactor_perception_refresh_test_object_28:\n\t"
+      "cmpw $4, 0x6e(%%edi)\n\t"
+      "jl .Lactor_perception_refresh_test_object_29\n\t"
+      "movb $1, 0xf(%%ebp)\n\t"
+      "jmp .Lactor_perception_refresh_test_object_31\n\t"
+      ".Lactor_perception_refresh_test_object_29:\n\t"
+      "movb 0x1cc(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_refresh_test_object_30\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "movb $1, 0xf(%%ebp)\n\t"
+      "fcomps 0x254e74\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lactor_perception_refresh_test_object_31\n\t"
+      ".Lactor_perception_refresh_test_object_30:\n\t"
+      "movb $0, 0xf(%%ebp)\n\t"
+      ".Lactor_perception_refresh_test_object_31:\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lactor_perception_refresh_test_object_40\n\t"
+      "jmp .Lactor_perception_refresh_test_object_18\n\t"
+      ".Lactor_perception_refresh_test_object_32:\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c645a0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_perception_refresh_test_object_40\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "leal -0x74(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c31df0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_refresh_test_object_40\n\t"
+      "incw (%%esi)\n\t"
+      "jmp .Lactor_perception_refresh_test_object_40\n\t"
+      ".Lactor_perception_refresh_test_object_33:\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .Lactor_perception_refresh_test_object_34\n\t"
+      "cmpl $-1, 0x2d4(%%esi)\n\t"
+      "jne .Lactor_perception_refresh_test_object_40\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "call *%[c32170]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .Lactor_perception_refresh_test_object_40\n\t"
+      ".Lactor_perception_refresh_test_object_34:\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jne .Lactor_perception_refresh_test_object_40\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x70726f6a\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "flds 0x1a8(%%ebx)\n\t"
+      "addl $8, %%esp\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_perception_refresh_test_object_40\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "cmpl $-1, 0xcc(%%eax)\n\t"
+      "je .Lactor_perception_refresh_test_object_35\n\t"
+      "testb $0x20, 0x1dc(%%eax)\n\t"
+      "je .Lactor_perception_refresh_test_object_40\n\t"
+      ".Lactor_perception_refresh_test_object_35:\n\t"
+      "leal -0x30(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1412f0]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "leal -0xac(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $-1\n\t"
+      "leal -0x30(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c31a90]\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "fsubs -0xa0(%%ebp)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "flds -0x2c(%%ebp)\n\t"
+      "fsubs -0x9c(%%ebp)\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fsubs -0x98(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fstps 0xc(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x1a8(%%ebx)\n\t"
+      "fadds 0x253f34\n\t"
+      "fcomps 0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_perception_refresh_test_object_40\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "movw 0x280(%%ecx), %%ax\n\t"
+      "cmpw $2, %%ax\n\t"
+      "leal 0x280(%%ecx), %%esi\n\t"
+      "jl .Lactor_perception_refresh_test_object_36\n\t"
+      "jne .Lactor_perception_refresh_test_object_40\n\t"
+      "cmpl %%edi, 0x28c(%%ecx)\n\t"
+      "je .Lactor_perception_refresh_test_object_40\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x2d4(%%ecx)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_perception_refresh_test_object_40\n\t"
+      ".Lactor_perception_refresh_test_object_36:\n\t"
+      "pushl $0x6c\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "movw $2, (%%esi)\n\t"
+      "movl %%edi, 0x28c(%%eax)\n\t"
+      "movl 0x1a8(%%ebx), %%edx\n\t"
+      "movl %%edx, 0x294(%%eax)\n\t"
+      "movl -0x30(%%ebp), %%edx\n\t"
+      "leal 0x298(%%eax), %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl -0x2c(%%ebp), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl -0x28(%%ebp), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "leal 0x18(%%ecx), %%edx\n\t"
+      "movl (%%edx), %%edi\n\t"
+      "leal 0x2a4(%%eax), %%esi\n\t"
+      "movl %%edi, (%%esi)\n\t"
+      "movl 0x4(%%edx), %%edi\n\t"
+      "movl %%edi, 0x4(%%esi)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x8(%%esi)\n\t"
+      "movw $0x1e, 0x284(%%eax)\n\t"
+      "movb $0, 0x286(%%eax)\n\t"
+      "movw $0, 0x282(%%eax)\n\t"
+      "movl 0x74(%%ecx), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "orl $0xffffffff, %%esi\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_perception_refresh_test_object_38\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lactor_perception_refresh_test_object_38\n\t"
+      "movb 0x64(%%eax), %%cl\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "testb $3, %%dl\n\t"
+      "je .Lactor_perception_refresh_test_object_38\n\t"
+      "movl -0x18(%%ebp), %%edi\n\t"
+      "movl 0x18(%%edi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl 0x74(%%ecx), %%esi\n\t"
+      "je .Lactor_perception_refresh_test_object_37\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jne .Lactor_perception_refresh_test_object_37\n\t"
+      "movw $2, 0x282(%%edi)\n\t"
+      "jmp .Lactor_perception_refresh_test_object_39\n\t"
+      ".Lactor_perception_refresh_test_object_37:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x68(%%ecx), %%ax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x3e(%%edi), %%cx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ca7a30]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_refresh_test_object_39\n\t"
+      "movw $1, 0x282(%%edi)\n\t"
+      "jmp .Lactor_perception_refresh_test_object_39\n\t"
+      ".Lactor_perception_refresh_test_object_38:\n\t"
+      "movl -0x18(%%ebp), %%edi\n\t"
+      ".Lactor_perception_refresh_test_object_39:\n\t"
+      "movl %%esi, 0x290(%%edi)\n\t"
+      ".Lactor_perception_refresh_test_object_40:\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "movl 0xc8(%%edx), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_perception_refresh_test_object_41\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c342a0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lactor_perception_refresh_test_object_41:\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl 0xc4(%%ecx), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .Lactor_perception_refresh_test_object_1\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lactor_perception_refresh_test_object_42:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [dget] "m"(b342a0_dget), [get] "m"(b342a0_get), [c13ec50] "m"(b342a0_c13ec50), [c1412f0] "m"(b342a0_c1412f0), [c31a90] "m"(b342a0_c31a90), [c31c00] "m"(b342a0_c31c00), [tag] "m"(b342a0_tag), [ca7a30] "m"(b342a0_ca7a30), [gtime] "m"(b342a0_gtime), [c2f5f0] "m"(b342a0_c2f5f0), [assert] "m"(b342a0_assert), [exitfn] "m"(b342a0_exitfn), [c1d6d0] "m"(b342a0_c1d6d0), [c645a0] "m"(b342a0_c645a0), [c31df0] "m"(b342a0_c31df0), [c32170] "m"(b342a0_c32170), [memset] "m"(b342a0_memset), [tryget] "m"(b342a0_tryget), [c342a0] "m"(b342a0_c342a0)
+      : "memory");
 }
+#else
+#error "actor_perception_refresh_test_object: clang naked draft required"
+#endif
 
-/* 0x34970 — create an orphan prop acknowledgement from a friend's prop. */
-char actor_perception_create_orphan_from_friend(int actor_handle, int unit_handle,
-                                                int encounter_team,
-                                                int friend_prop)
+
+/* actor_perception_create_orphan_from_friend (0x34970) — XBE naked draft (batch 227). */
+#if defined(__clang__)
+static int (*const b34970_c64b40)(int actor_handle, int unit_handle, char create_if_needed, char refresh_flag) = FUN_00064b40;
+static void *(*const b34970_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b34970_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b34970_exitfn)(int) = system_exit;
+static void (*const b34970_c64a60)(int actor_handle, int parent_prop, int unused) = prop_orphan_update_information;
+static void (*const b34970_c31df0)(int actor_handle, int prop_handle, float *out_pos, char refresh_flag, char swarm_refresh) = prop_position_refresh;
+static void (*const b34970_c33440)(int actor_handle, int prop_handle, float *out_pos) = prop_status_refresh;
+static int (*const b34970_c64970)(int actor_handle, int parent_prop, int source_prop) = prop_orphan_from_friend;
+static int (*const b34970_c648a0)(int actor_handle, int parent_prop) = prop_orphan_transition;
+static bool (*const b34970_c2fc20)(int actor_handle, int clump_item_handle) = actor_get_perception_knowledge;
+static float (*const b34970_c2fd10)(int actor_handle, int clump_item_handle) = actor_compute_prop_target_weight;
+
+__attribute__((naked, noinline))
+char actor_perception_create_orphan_from_friend(int actor_handle __attribute__((unused)), int unit_handle __attribute__((unused)), int encounter_team __attribute__((unused)), int friend_prop __attribute__((unused)))
 {
-  char *prop;
-  char *parent;
-  char *orphan;
-  char local_44[0x44];
-  char refresh_parent;
-  char success;
-  int prop_handle;
-  int final_prop;
-  int parent_prop;
-  int orphan_prop;
-  int16_t status;
-
-  success = 1;
-  prop_handle = FUN_00064b40(actor_handle, unit_handle, 1, 0);
-  if (prop_handle == -1)
-    return success;
-
-  final_prop = prop_handle;
-
-  prop = (char *)datum_get(prop_data, prop_handle);
-  status = *(int16_t *)(prop + 0x24);
-  if (status >= 2 && status <= 3) {
-    success = 0;
-    goto finish;
-  }
-
-  parent_prop = *(int *)(prop + 0xc);
-  if (parent_prop == -1) {
-    status = *(int16_t *)(prop + 0x24);
-    if (status < 0) {
-      display_assert("prop->type >= 0",
-                     "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xedf, 1);
-      system_exit(-1);
-    }
-    if (status > 1) {
-      display_assert("prop->type <= 1",
-                     "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xedf, 1);
-      system_exit(-1);
-    }
-
-    if (friend_prop != -1) {
-      orphan_prop =
-          prop_orphan_from_friend(actor_handle, prop_handle, friend_prop);
-      if (orphan_prop == -1)
-        return 0;
-      orphan = (char *)datum_get(prop_data, orphan_prop);
-      *(int *)(orphan + 0x18) = *(int *)(prop + 0x18);
-      *(int *)(orphan + 0x1c) = *(int *)(prop + 0x1c);
-      *(char *)(orphan + 0x14) = *(char *)(prop + 0x14);
-    } else {
-      prop_position_refresh(actor_handle, prop_handle, (float *)local_44, 0, 0);
-      orphan_prop = prop_orphan_transition(actor_handle, prop_handle);
-      if (orphan_prop == -1)
-        return 0;
-    }
-    prop = (char *)datum_get(prop_data, orphan_prop);
-    final_prop = orphan_prop;
-    goto finish;
-  }
-
-  parent = (char *)datum_get(prop_data, parent_prop);
-  if (status < 0 || status > 1) {
-    display_assert("prop->type <= 1",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb4, 1);
-    system_exit(-1);
-  }
-
-  status = *(int16_t *)(parent + 0x24);
-  if (status >= 4 && status <= 5) {
-    display_assert("parent->type < 4 || parent->type > 5",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb5, 1);
-    system_exit(-1);
-  }
-  if (*(int *)(prop + 4) != actor_handle) {
-    display_assert("prop->actor_index == actor_index",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb6, 1);
-    system_exit(-1);
-  }
-  if (*(int *)(parent + 4) != actor_handle) {
-    display_assert("parent->actor_index == actor_index",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb7, 1);
-    system_exit(-1);
-  }
-  if (*(int *)(prop + 0xc) != parent_prop) {
-    display_assert("prop->parent_prop_index == parent_prop_index",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb8, 1);
-    system_exit(-1);
-  }
-  if (*(int *)(parent + 0xc) != prop_handle) {
-    display_assert("parent->parent_prop_index == prop_index",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb9, 1);
-    system_exit(-1);
-  }
-
-  refresh_parent = 0;
-  if (friend_prop != -1) {
-    prop_orphan_update_information(actor_handle, parent_prop, friend_prop);
-    *(int *)(prop + 0x18) = *(int *)(parent + 0x18);
-  } else {
-    *(int16_t *)(parent + 0x24) = 4;
-    *(int16_t *)(parent + 0x3c) = 0;
-    refresh_parent = 1;
-  }
-
-  prop_position_refresh(actor_handle, parent_prop, (float *)local_44, 1,
-                        refresh_parent);
-  prop_status_refresh(actor_handle, parent_prop, (float *)local_44);
-  prop = (char *)datum_get(prop_data, parent_prop);
-  final_prop = parent_prop;
-
-finish:
-  if (prop != 0) {
-    if (encounter_team != -1) {
-      if (friend_prop != -1) {
-        char *enc =
-            (char *)datum_get(*(void **)0x5ab270, friend_prop);
-        if (*(int16_t *)(enc + 0x32) >= 2) {
-          *(char *)(prop + 0xb8) = 1;
-          *(int16_t *)(prop + 0xb0) = 0;
-          *(int *)(prop + 0xb4) = encounter_team;
-        }
-      } else {
-        *(char *)(prop + 0xb8) = 1;
-        *(int16_t *)(prop + 0xb0) = 0;
-        *(int *)(prop + 0xb4) = encounter_team;
-      }
-    }
-    *(char *)(prop + 0xa4) =
-        (char)actor_get_perception_knowledge(actor_handle, final_prop);
-    *(float *)(prop + 0x50) =
-        actor_compute_prop_target_weight(actor_handle, final_prop);
-  }
-  return success;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x44, %%esp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "movb $1, %%bl\n\t"
+      "pushl %%ecx\n\t"
+      "movb %%bl, -0x1(%%ebp)\n\t"
+      "call *%[c64b40]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_24\n\t"
+      "movl 0x5ab23c, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movw 0x24(%%esi), %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, %%ax\n\t"
+      "jl .Lactor_perception_create_orphan_from_friend_1\n\t"
+      "cmpw $3, %%ax\n\t"
+      "jg .Lactor_perception_create_orphan_from_friend_1\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "jmp .Lactor_perception_create_orphan_from_friend_20\n\t"
+      ".Lactor_perception_create_orphan_from_friend_1:\n\t"
+      "movl 0xc(%%esi), %%ebx\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_12\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movw 0x24(%%esi), %%ax\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movb $0, -0xc(%%ebp)\n\t"
+      "jl .Lactor_perception_create_orphan_from_friend_2\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jle .Lactor_perception_create_orphan_from_friend_3\n\t"
+      ".Lactor_perception_create_orphan_from_friend_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xeb4\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x256450\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_create_orphan_from_friend_3:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movw 0x24(%%ecx), %%ax\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jl .Lactor_perception_create_orphan_from_friend_4\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jle .Lactor_perception_create_orphan_from_friend_5\n\t"
+      ".Lactor_perception_create_orphan_from_friend_4:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xeb5\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x256430\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_create_orphan_from_friend_5:\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "cmpl 0x8(%%ebp), %%edx\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0xeb6\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x256400\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_create_orphan_from_friend_6:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl %%eax, 0x4(%%ecx)\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0xeb7\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x2563cc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_create_orphan_from_friend_7:\n\t"
+      "cmpl %%ebx, 0xc(%%esi)\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_8\n\t"
+      "pushl $1\n\t"
+      "pushl $0xeb8\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x256394\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_create_orphan_from_friend_8:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "cmpl %%edi, 0xc(%%edx)\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_9\n\t"
+      "pushl $1\n\t"
+      "pushl $0xeb9\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x25635c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_create_orphan_from_friend_9:\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_10\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c64a60]\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl 0x18(%%ecx), %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%edx, 0x18(%%esi)\n\t"
+      "jmp .Lactor_perception_create_orphan_from_friend_11\n\t"
+      ".Lactor_perception_create_orphan_from_friend_10:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movw $4, 0x24(%%eax)\n\t"
+      "movw $0, 0x3c(%%eax)\n\t"
+      "movb $1, -0xc(%%ebp)\n\t"
+      ".Lactor_perception_create_orphan_from_friend_11:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x44(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c31df0]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "leal -0x44(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c33440]\n\t"
+      "movl 0x5ab23c, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "call *%[dget]\n\t"
+      "addl $0x28, %%esp\n\t"
+      "jmp .Lactor_perception_create_orphan_from_friend_19\n\t"
+      ".Lactor_perception_create_orphan_from_friend_12:\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lactor_perception_create_orphan_from_friend_13\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jle .Lactor_perception_create_orphan_from_friend_14\n\t"
+      ".Lactor_perception_create_orphan_from_friend_13:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xedf\n\t"
+      "pushl $0x255fb0\n\t"
+      "pushl $0x256450\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_perception_create_orphan_from_friend_14:\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_15\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c64970]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_17\n\t"
+      "movl 0x5ab23c, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x18(%%esi), %%edx\n\t"
+      "movl %%edx, 0x18(%%eax)\n\t"
+      "movl 0x1c(%%esi), %%ecx\n\t"
+      "movl %%ecx, 0x1c(%%eax)\n\t"
+      "movb 0x14(%%esi), %%dl\n\t"
+      "addl $8, %%esp\n\t"
+      "movb %%dl, 0x14(%%eax)\n\t"
+      "jmp .Lactor_perception_create_orphan_from_friend_16\n\t"
+      ".Lactor_perception_create_orphan_from_friend_15:\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "leal -0x44(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c31df0]\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c648a0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      ".Lactor_perception_create_orphan_from_friend_16:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .Lactor_perception_create_orphan_from_friend_18\n\t"
+      ".Lactor_perception_create_orphan_from_friend_17:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_perception_create_orphan_from_friend_18:\n\t"
+      "movl 0x5ab23c, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lactor_perception_create_orphan_from_friend_19:\n\t"
+      "movl %%eax, %%esi\n\t"
+      ".Lactor_perception_create_orphan_from_friend_20:\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_23\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_21\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_perception_create_orphan_from_friend_22\n\t"
+      "movl 0x5ab23c, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, 0x32(%%eax)\n\t"
+      "jl .Lactor_perception_create_orphan_from_friend_22\n\t"
+      ".Lactor_perception_create_orphan_from_friend_21:\n\t"
+      "movb $1, 0xb8(%%esi)\n\t"
+      "movw $0, 0xb0(%%esi)\n\t"
+      "movl %%ebx, 0xb4(%%esi)\n\t"
+      ".Lactor_perception_create_orphan_from_friend_22:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c2fc20]\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "movb %%al, 0xa4(%%esi)\n\t"
+      "call *%[c2fd10]\n\t"
+      "fstps 0x50(%%esi)\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lactor_perception_create_orphan_from_friend_23:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_perception_create_orphan_from_friend_24:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [c64b40] "m"(b34970_c64b40), [dget] "m"(b34970_dget), [assert] "m"(b34970_assert), [exitfn] "m"(b34970_exitfn), [c64a60] "m"(b34970_c64a60), [c31df0] "m"(b34970_c31df0), [c33440] "m"(b34970_c33440), [c64970] "m"(b34970_c64970), [c648a0] "m"(b34970_c648a0), [c2fc20] "m"(b34970_c2fc20), [c2fd10] "m"(b34970_c2fd10)
+      : "memory");
 }
+#else
+#error "actor_perception_create_orphan_from_friend: clang naked draft required"
+#endif
+
 
 /* actor_perception_refresh (0x34c80) — XBE naked draft (batch 104). */
 #if defined(__clang__)

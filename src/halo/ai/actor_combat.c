@@ -1582,119 +1582,278 @@ fail:
   return 0;
 }
 
-/* 0x220c0 — Record projectile aim state for a unit firing solution. */
-int actor_aim_projectile(int unit_handle, float *direction_in, float *direction_out,
-                         int *out_extra)
+/* actor_aim_projectile (0x220c0) — XBE naked draft (batch 223). */
+#if defined(__clang__)
+static void *(*const b220c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static int (*const b220c0_gtime)(void) = game_time_get;
+static void (*const b220c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b220c0_exitfn)(int) = system_exit;
+static float (*const b220c0_norm)(float *) = normalize3d;
+static bool (*const b220c0_c21fb0)(float *v) = valid_real_normal3d;
+static char * (*const b220c0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b220c0_c21130)(int actor_handle, float *weapon_vector) = actor_combat_get_weapon_vector;
+static void (*const b220c0_perp)(float *, float *) = perpendicular3d;
+static void (*const b220c0_rots)(float *, float *, float, float) = rotate_vector3d_by_sincos;
+
+__attribute__((naked, noinline))
+int actor_aim_projectile(int unit_handle __attribute__((unused)), float *direction_in __attribute__((unused)), float *direction_out __attribute__((unused)), int *out_extra __attribute__((unused)))
 {
-  char *actor;
-  char *firing;
-  char *prop;
-  int prop_object;
-  float weapon_vec[3];
-  float perp[3];
-  float axis[3];
-  char do_rotate;
-
-  prop_object = -1;
-  actor = (char *)datum_get(*(void **)0x6325a4, unit_handle);
-  firing = (char *)((unit_handle & 0xffff) * 0x657c + *(int *)0x331f58);
-
-  if (*(int16_t *)(actor + 0x5f2) == 2)
-    *(int *)(firing + 0x5c) = game_time_get();
-
-  if (*(int16_t *)(actor + 0x60c) == 1) {
-    int prop_handle = *(int *)(actor + 0x610);
-    if (prop_handle != -1) {
-      prop = (char *)datum_get(*(void **)0x5ab23c, prop_handle);
-      if (*(int16_t *)(prop + 0x24) >= 2 && *(int16_t *)(prop + 0x24) <= 3)
-        prop_object = *(int *)(prop + 0x18);
-    }
-  }
-
-  if (direction_out == 0) {
-    display_assert((char *)0x254a50, (char *)0x254910, 0x42f, 0);
-    system_exit(-1);
-  }
-
-  *(char *)(firing + 0x60) = *(char *)(actor + 0x688);
-  *(float *)(firing + 0x64) = direction_in[0];
-  *(float *)(firing + 0x68) = direction_in[1];
-  *(float *)(firing + 0x6c) = direction_in[2];
-  direction_out[0] = direction_in[0];
-  direction_out[1] = direction_in[1];
-  direction_out[2] = direction_in[2];
-
-  if (*(char *)(actor + 0x688) != 0) {
-    direction_out[0] = *(float *)(actor + 0x68c);
-    direction_out[1] = *(float *)(actor + 0x690);
-    direction_out[2] = *(float *)(actor + 0x694);
-  } else {
-    *(float *)(firing + 0x7c) = *(float *)(actor + 0x67c);
-    *(float *)(firing + 0x80) = *(float *)(actor + 0x680);
-    *(float *)(firing + 0x84) = *(float *)(actor + 0x684);
-    direction_out[0] = *(float *)(actor + 0x67c) - direction_in[0];
-    direction_out[1] = *(float *)(actor + 0x680) - direction_in[1];
-    direction_out[2] = *(float *)(actor + 0x684) - direction_in[2];
-    normalize3d(direction_out);
-  }
-
-  if (!valid_real_normal3d(direction_out)) {
-    csprintf((char *)0x5ab100, (char *)0x254a24, (double)direction_out[0],
-             (double)direction_out[1], (double)direction_out[2]);
-    display_assert((char *)0x5ab100, (char *)0x254910, 0x442, 0);
-    system_exit(-1);
-  }
-
-  *(float *)(firing + 0x70) = direction_out[0];
-  *(float *)(firing + 0x74) = direction_out[1];
-  *(float *)(firing + 0x78) = direction_out[2];
-
-  actor_combat_get_weapon_vector(unit_handle, weapon_vec);
-  if (weapon_vec[0] * direction_out[0] + weapon_vec[1] * direction_out[1] +
-          weapon_vec[2] * direction_out[2] <=
-      *(float *)0x2533dc) {
-    *(char *)(firing + 0x88) = 0;
-  } else {
-    do_rotate = 1;
-    axis[0] = weapon_vec[1] * direction_out[2] -
-              weapon_vec[2] * direction_out[1];
-    axis[1] = weapon_vec[2] * direction_out[0] -
-              weapon_vec[0] * direction_out[2];
-    axis[2] = weapon_vec[0] * direction_out[1] -
-              weapon_vec[1] * direction_out[0];
-    normalize3d(axis);
-    if (*(float *)0x2533c0 == axis[0] && *(float *)0x2533c0 == axis[1] &&
-        *(float *)0x2533c0 == axis[2])
-      do_rotate = 0;
-    else {
-      perpendicular3d(weapon_vec, perp);
-      normalize3d(perp);
-      if (*(float *)0x2533c0 == perp[0] && *(float *)0x2533c0 == perp[1] &&
-          *(float *)0x2533c0 == perp[2])
-        do_rotate = 0;
-    }
-
-    if (do_rotate != 0) {
-      direction_out[0] = weapon_vec[0];
-      direction_out[1] = weapon_vec[1];
-      direction_out[2] = weapon_vec[2];
-      rotate_vector3d_by_sincos(direction_out, axis, 0.5f, 0.866025388f);
-    }
-
-    *(float *)(firing + 0x98) = direction_out[0];
-    *(float *)(firing + 0x9c) = direction_out[1];
-    *(float *)(firing + 0xa0) = direction_out[2];
-    *(char *)(firing + 0x88) = 1;
-  }
-
-  *(float *)(firing + 0x8c) = direction_out[0];
-  *(float *)(firing + 0x90) = direction_out[1];
-  *(float *)(firing + 0x94) = direction_out[2];
-
-  if (out_extra != 0)
-    *out_extra = *(int *)(actor + 0x698);
-  return prop_object;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x20, %%esp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, 0x5f2(%%ebx)\n\t"
+      "movl %%ebx, -0x8(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jne .Lactor_aim_projectile_10\n\t"
+      "movl 0x331f58, %%ecx\n\t"
+      "andl $0xffff, %%edi\n\t"
+      "imull $0x657c, %%edi, %%edi\n\t"
+      "addl %%ecx, %%edi\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, 0x5c(%%edi)\n\t"
+      "cmpw $1, 0x60c(%%ebx)\n\t"
+      "jne .Lactor_aim_projectile_1\n\t"
+      "movl 0x610(%%ebx), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_aim_projectile_1\n\t"
+      "movl 0x5ab23c, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movw 0x24(%%eax), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, %%cx\n\t"
+      "jl .Lactor_aim_projectile_1\n\t"
+      "cmpw $3, %%cx\n\t"
+      "jg .Lactor_aim_projectile_1\n\t"
+      "movl 0x18(%%eax), %%edx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      ".Lactor_aim_projectile_1:\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lactor_aim_projectile_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x42f\n\t"
+      "pushl $0x254910\n\t"
+      "pushl $0x254a50\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_aim_projectile_2:\n\t"
+      "movb 0x688(%%ebx), %%al\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movb %%al, 0x60(%%edi)\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "leal 0x64(%%edi), %%ecx\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "movl 0x4(%%edx), %%eax\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movb 0x688(%%ebx), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_aim_projectile_3\n\t"
+      "addl $0x68c, %%ebx\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x4(%%ebx), %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl 0x8(%%ebx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "jmp .Lactor_aim_projectile_4\n\t"
+      ".Lactor_aim_projectile_3:\n\t"
+      "leal 0x67c(%%ebx), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl (%%ecx), %%ebx\n\t"
+      "leal 0x7c(%%edi), %%edx\n\t"
+      "movl %%ebx, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%ebx\n\t"
+      "movl %%ebx, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "flds (%%eax)\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "fsubs (%%ecx)\n\t"
+      "pushl %%esi\n\t"
+      "fstps (%%esi)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs 0x4(%%ecx)\n\t"
+      "fstps 0x4(%%esi)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fsubs 0x8(%%ecx)\n\t"
+      "fstps 0x8(%%esi)\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lactor_aim_projectile_4:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_aim_projectile_5\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x442\n\t"
+      "pushl $0x254910\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x254a50\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_aim_projectile_5:\n\t"
+      "movl %%esi, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "leal 0x70(%%edi), %%edx\n\t"
+      "movl %%ecx, (%%edx)\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "leal -0x14(%%ebp), %%ebx\n\t"
+      "call *%[c21130]\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps 0x2533dc\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_aim_projectile_8\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "leal -0x20(%%ebp), %%ecx\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "pushl %%ecx\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "movb $1, %%bl\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lactor_aim_projectile_6\n\t"
+      "leal -0x20(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x14(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[perp]\n\t"
+      "leal -0x20(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lactor_aim_projectile_6\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lactor_aim_projectile_6:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "movl %%esi, %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "je .Lactor_aim_projectile_7\n\t"
+      "pushl $0x3f5db3d7\n\t"
+      "pushl $0x3f000000\n\t"
+      "leal -0x20(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[rots]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lactor_aim_projectile_7:\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "leal 0x98(%%edi), %%edx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movb $1, 0x88(%%edi)\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "addl $0x8c, %%edi\n\t"
+      "movl %%ecx, (%%edi)\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "movl %%edx, 0x4(%%edi)\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "movl %%eax, 0x8(%%edi)\n\t"
+      "jmp .Lactor_aim_projectile_9\n\t"
+      ".Lactor_aim_projectile_8:\n\t"
+      "movb $0, 0x88(%%edi)\n\t"
+      ".Lactor_aim_projectile_9:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x698(%%ecx), %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "popl %%esi\n\t"
+      ".Lactor_aim_projectile_10:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [dget] "m"(b220c0_dget), [gtime] "m"(b220c0_gtime), [assert] "m"(b220c0_assert), [exitfn] "m"(b220c0_exitfn), [norm] "m"(b220c0_norm), [c21fb0] "m"(b220c0_c21fb0), [c8d9d0] "m"(b220c0_c8d9d0), [c21130] "m"(b220c0_c21130), [perp] "m"(b220c0_perp), [rots] "m"(b220c0_rots)
+      : "memory");
 }
+#else
+#error "actor_aim_projectile: clang naked draft required"
+#endif
+
 
 /* FUN_00022dc0 (0x22dc0) — XBE naked draft (batch 104). */
 #if defined(__clang__)

@@ -174,7 +174,7 @@ def main() -> int:
         ("FUN_00148eb0", 0x148eb0, 0x1491d0),
         ("FUN_001491d0", 0x1491d0, 0x1493a0),
         ("FUN_00149570", 0x149570, 0x149680),
-        ("FUN_00149680", 0x149680, 0x149c60),
+        ("FUN_00149680", 0x149680, 0x149c53),
         ("FUN_0014dc30", 0x14dc30, 0x14dce0),
         ("FUN_0014dce0", 0x14dce0, 0x14df70),
         ("FUN_0014ea10", 0x14ea10, 0x14ec30),
@@ -201,7 +201,7 @@ def main() -> int:
         ("path_add_steps", 0x61280, 0x615b0),
         ("FUN_000615b0", 0x615b0, 0x616e0),
         ("FUN_000616e0", 0x616e0, 0x61750),
-        ("FUN_00061750", 0x61750, 0x61bd8),
+        ("FUN_00061750", 0x61750, 0x61c91),
         ("find_turning_point", 0x63030, 0x633b0),
         ("FUN_000633b0", 0x633b0, 0x63710),
         ("FUN_00062e10", 0x62e10, 0x63030),
@@ -343,7 +343,7 @@ def main() -> int:
         ("FUN_00139480", 0x139480, 0x1396dc),
         ("FUN_001b72b0", 0x1b72b0, 0x1b74c6),
         ("FUN_001b74d0", 0x1b74d0, 0x1b77e1),
-        ("FUN_000de3f0", 0xde3f0, 0xde560),
+        ("FUN_000de3f0", 0xde3f0, 0xde52e),
         # gameplay wave 11 (2026-07-26)
         ("FUN_001b7020", 0x1b7020, 0x1b72a5),
         ("FUN_001b77f0", 0x1b77f0, 0x1b79c0),
@@ -359,7 +359,7 @@ def main() -> int:
         ("vehicle_export_function_values", 0x1b79c0, 0x1b7e48),
         ("FUN_001345b0", 0x1345b0, 0x134adb),
         ("FUN_001b5400", 0x1b5400, 0x1b54fb),
-        ("FUN_000de3f0", 0xde3f0, 0xde560),
+        ("FUN_000de3f0", 0xde3f0, 0xde52e),
         # gameplay wave 14 (2026-07-26)
         ("FUN_001345b0", 0x1345b0, 0x134adb),
         ("FUN_00133300", 0x133300, 0x133496),
@@ -368,7 +368,7 @@ def main() -> int:
         # gameplay wave 15 (2026-07-26)
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c8a),
         ("FUN_00136bc0", 0x136bc0, 0x136f3e),
-        ("FUN_00149680", 0x149680, 0x149d00),
+        ("FUN_00149680", 0x149680, 0x149c53),
         ("FUN_001377d0", 0x1377d0, 0x137d12),
         ("FUN_001491d0", 0x1491d0, 0x1493a0),
         # gameplay wave 16 (2026-07-26)
