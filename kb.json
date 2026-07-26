@@ -38965,7 +38965,7 @@
         {
           "addr": "0x245d0",
           "decl": "void post_evaluator_hide(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x246b0",
