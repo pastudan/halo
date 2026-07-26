@@ -6305,8 +6305,8 @@
         },
         {
           "addr": "0x11eb10",
-          "decl": "void FUN_0011eb10(void);",
-          "ported": false
+          "decl": "int FUN_0011eb10(void *pool @<esi>);",
+          "ported": true
         },
         {
           "addr": "0x11ee50",
