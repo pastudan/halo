@@ -641,11 +641,11 @@
         },
         {
           "addr": "0x1e6805",
-          "decl": "void FUN_001e6805(void);"
+          "decl": "wchar_t *FUN_001e6805(wchar_t *s);"
         },
         {
           "addr": "0x1e6831",
-          "decl": "void FUN_001e6831(void);"
+          "decl": "wchar_t *FUN_001e6831(wchar_t *s);"
         },
         {
           "addr": "0x1e6860",
@@ -733,63 +733,63 @@
         },
         {
           "addr": "0x1dbf75",
-          "decl": "void _wcscmp(void);"
+          "decl": "int _wcscmp(const wchar_t *s1, const wchar_t *s2);"
         },
         {
           "addr": "0x1dbfa7",
-          "decl": "void FUN_001dbfa7(void);"
+          "decl": "int FUN_001dbfa7(const wchar_t *s1, const wchar_t *s2);"
         },
         {
           "addr": "0x1dbfac",
-          "decl": "void _wcscspn(void);"
+          "decl": "size_t _wcscspn(const wchar_t *s, const wchar_t *reject);"
         },
         {
           "addr": "0x1dbfef",
-          "decl": "void _wcsncat(void);"
+          "decl": "wchar_t *_wcsncat(wchar_t *dest, const wchar_t *src, size_t count);"
         },
         {
           "addr": "0x1dc02c",
-          "decl": "void _wcsncmp(void);"
+          "decl": "int _wcsncmp(const wchar_t *s1, const wchar_t *s2, size_t count);"
         },
         {
           "addr": "0x1dc09e",
-          "decl": "void _wcspbrk(void);"
+          "decl": "wchar_t *_wcspbrk(const wchar_t *s, const wchar_t *accept);"
         },
         {
           "addr": "0x1dc0de",
-          "decl": "void _wcsrchr(void);"
+          "decl": "wchar_t *_wcsrchr(const wchar_t *s, wchar_t c);"
         },
         {
           "addr": "0x1dc10e",
-          "decl": "void _wcsspn(void);"
+          "decl": "size_t _wcsspn(const wchar_t *s, const wchar_t *accept);"
         },
         {
           "addr": "0x1dc154",
-          "decl": "void _wcsstr(void);"
+          "decl": "wchar_t *_wcsstr(const wchar_t *haystack, const wchar_t *needle);"
         },
         {
           "addr": "0x1dc1b2",
-          "decl": "void _wcstok(void);"
+          "decl": "wchar_t *_wcstok(wchar_t *s, const wchar_t *delim);"
         },
         {
           "addr": "0x1dc257",
-          "decl": "void FUN_001dc257(void);"
+          "decl": "size_t FUN_001dc257(wchar_t *dest, const wchar_t *src, size_t count);"
         },
         {
           "addr": "0x1dc27c",
-          "decl": "void FUN_001dc27c(void);"
+          "decl": "wchar_t *FUN_001dc27c(wchar_t *s, size_t count);"
         },
         {
           "addr": "0x1dc2c3",
-          "decl": "void __wcsicmp(void);"
+          "decl": "int __wcsicmp(const wchar_t *s1, const wchar_t *s2);"
         },
         {
           "addr": "0x1dc34b",
-          "decl": "void __wcsnicmp(void);"
+          "decl": "int __wcsnicmp(const wchar_t *s1, const wchar_t *s2, size_t count);"
         },
         {
           "addr": "0x1dc3e9",
-          "decl": "void FUN_001dc3e9(void);"
+          "decl": "int FUN_001dc3e9(int c, int mask);"
         },
         {
           "addr": "0x1dc41e",
@@ -797,7 +797,7 @@
         },
         {
           "addr": "0x1dc512",
-          "decl": "void _fgetwc(void);"
+          "decl": "int _fgetwc(void *stream);"
         },
         {
           "addr": "0x1dc54a",
@@ -818,7 +818,7 @@
         },
         {
           "addr": "0x1db134",
-          "decl": "void _wcschr(void);"
+          "decl": "wchar_t *_wcschr(const wchar_t *s, wchar_t c);"
         },
         {
           "addr": "0x1db156",
@@ -855,7 +855,7 @@
         },
         {
           "addr": "0x1dc61e",
-          "decl": "void _fputwc(void);"
+          "decl": "int _fputwc(int c, void *stream);"
         },
         {
           "addr": "0x1dc65c",
@@ -867,7 +867,7 @@
         },
         {
           "addr": "0x1dc766",
-          "decl": "void _ungetwc(void);"
+          "decl": "int _ungetwc(int c, void *stream);"
         },
         {
           "addr": "0x1dc7a2",
@@ -875,7 +875,7 @@
         },
         {
           "addr": "0x1dc7ac",
-          "decl": "void _fgetws(void);"
+          "decl": "wchar_t *_fgetws(wchar_t *buffer, int count, void *stream);"
         },
         {
           "addr": "0x1dc822",
@@ -883,7 +883,7 @@
         },
         {
           "addr": "0x1dc82c",
-          "decl": "void _fputws(void);"
+          "decl": "int _fputws(const wchar_t *s, void *stream);"
         },
         {
           "addr": "0x1dc890",
@@ -891,7 +891,7 @@
         },
         {
           "addr": "0x1dc89a",
-          "decl": "void __getws(void);"
+          "decl": "wchar_t *__getws(wchar_t *buffer);"
         },
         {
           "addr": "0x1dc909",
@@ -899,7 +899,7 @@
         },
         {
           "addr": "0x1dc914",
-          "decl": "void __putws(void);"
+          "decl": "int __putws(const wchar_t *s);"
         },
         {
           "addr": "0x1dc998",
@@ -907,7 +907,7 @@
         },
         {
           "addr": "0x1dc9a3",
-          "decl": "void _vfwprintf(void);"
+          "decl": "int _vfwprintf(void *stream, const wchar_t *format, char *args);"
         },
         {
           "addr": "0x1dc9f6",
@@ -915,7 +915,7 @@
         },
         {
           "addr": "0x1dca00",
-          "decl": "void _vprintf(void);"
+          "decl": "int _vprintf(const wchar_t *format, char *args);"
         },
         {
           "addr": "0x1dca55",
@@ -923,7 +923,7 @@
         },
         {
           "addr": "0x1dcace",
-          "decl": "void FUN_001dcace(void);"
+          "decl": "int FUN_001dcace(wchar_t *buffer, const wchar_t *format, char *args);"
         },
         {
           "addr": "0x1dcb3c",
@@ -931,7 +931,7 @@
         },
         {
           "addr": "0x1dcb6c",
-          "decl": "void FUN_001dcb6c(void);"
+          "decl": "void *FUN_001dcb6c(int fd, const wchar_t *mode);"
         },
         {
           "addr": "0x1dcc91",
@@ -947,11 +947,11 @@
         },
         {
           "addr": "0x1dccf5",
-          "decl": "void FUN_001dccf5(void);"
+          "decl": "void *FUN_001dccf5(const wchar_t *path, const wchar_t *mode);"
         },
         {
           "addr": "0x1dcd08",
-          "decl": "void __wfreopen(void);"
+          "decl": "void *__wfreopen(const wchar_t *path, const wchar_t *mode, void *stream);"
         },
         {
           "addr": "0x1dcd64",
@@ -959,7 +959,7 @@
         },
         {
           "addr": "0x1dcd6e",
-          "decl": "void FUN_001dcd6e(void);"
+          "decl": "void FUN_001dcd6e(const wchar_t *prefix);"
         },
         {
           "addr": "0x1dce64",
@@ -967,7 +967,7 @@
         },
         {
           "addr": "0x1dce6e",
-          "decl": "void FUN_001dce6e(void);"
+          "decl": "int FUN_001dce6e(const wchar_t *path);"
         },
         {
           "addr": "0x1dce9c",
@@ -979,7 +979,7 @@
         },
         {
           "addr": "0x1dcf51",
-          "decl": "void __wtmpnam(void);"
+          "decl": "wchar_t *FUN_001dcf51(wchar_t *buffer);"
         },
         {
           "addr": "0x1dd003",
@@ -26470,263 +26470,328 @@
         },
         {
           "addr": "0x19d810",
-          "decl": "int ustrcmp(const wchar_t *s1, const wchar_t *s2);"
+          "decl": "int ustrcmp(const wchar_t *s1, const wchar_t *s2);",
+          "ported": false
         },
         {
           "addr": "0x19d8c0",
-          "decl": "int ustrlen(const unsigned short *s);"
+          "decl": "int ustrlen(const unsigned short *s);",
+          "ported": false
         },
         {
           "addr": "0x19d930",
-          "decl": "void ustrnlen(void);"
+          "decl": "size_t ustrnlen(const wchar_t *s, size_t max_len);",
+          "ported": false
         },
         {
           "addr": "0x19d9b0",
-          "decl": "void ustrchr(void);"
+          "decl": "wchar_t *ustrchr(const wchar_t *s, wchar_t c);",
+          "ported": false
         },
         {
           "addr": "0x19da20",
-          "decl": "void ustrcoll(void);"
+          "decl": "int ustrcoll(const wchar_t *s1, const wchar_t *s2);",
+          "ported": false
         },
         {
           "addr": "0x19dad0",
-          "decl": "void ustrcspn(void);"
+          "decl": "size_t ustrcspn(const wchar_t *s, const wchar_t *reject);",
+          "ported": false
         },
         {
           "addr": "0x19db80",
-          "decl": "void ustrncat(void);"
+          "decl": "wchar_t *ustrncat(wchar_t *dest, const wchar_t *src, size_t count);",
+          "ported": false
         },
         {
           "addr": "0x19dc20",
-          "decl": "void ustrncmp(void);"
+          "decl": "int ustrncmp(const wchar_t *s1, const wchar_t *s2, size_t count);",
+          "ported": false
         },
         {
           "addr": "0x19dd00",
-          "decl": "void ustrpbrk(void);"
+          "decl": "wchar_t *ustrpbrk(const wchar_t *s, const wchar_t *accept);",
+          "ported": false
         },
         {
           "addr": "0x19ddb0",
-          "decl": "void ustrrchr(void);"
+          "decl": "wchar_t *ustrrchr(const wchar_t *s, wchar_t c);",
+          "ported": false
         },
         {
           "addr": "0x19de20",
-          "decl": "void ustrspn(void);"
+          "decl": "size_t ustrspn(const wchar_t *s, const wchar_t *accept);",
+          "ported": false
         },
         {
           "addr": "0x19ded0",
-          "decl": "void ustrstr(void);"
+          "decl": "wchar_t *ustrstr(const wchar_t *haystack, const wchar_t *needle);",
+          "ported": false
         },
         {
           "addr": "0x19df80",
-          "decl": "void ustrtok(void);"
+          "decl": "wchar_t *ustrtok(wchar_t *s, const wchar_t *delim);",
+          "ported": false
         },
         {
           "addr": "0x19dff0",
-          "decl": "void ustrxfrm(void);"
+          "decl": "size_t ustrxfrm(wchar_t *dest, const wchar_t *src, size_t count);",
+          "ported": false
         },
         {
           "addr": "0x19e0c0",
-          "decl": "void ustrlwr(void);"
+          "decl": "wchar_t *ustrlwr(wchar_t *s);",
+          "ported": false
         },
         {
           "addr": "0x19e130",
-          "decl": "void ustrupr(void);"
+          "decl": "wchar_t *ustrupr(wchar_t *s);",
+          "ported": false
         },
         {
           "addr": "0x19e1a0",
-          "decl": "void ustrnlwr(void);"
+          "decl": "wchar_t *ustrnlwr(wchar_t *s, size_t count);",
+          "ported": false
         },
         {
           "addr": "0x19e250",
-          "decl": "void ustrnupr(void);"
+          "decl": "wchar_t *ustrnupr(wchar_t *s, size_t count);",
+          "ported": false
         },
         {
           "addr": "0x19e300",
-          "decl": "void ustrcasecmp(void);"
+          "decl": "int ustrcasecmp(const wchar_t *s1, const wchar_t *s2);",
+          "ported": false
         },
         {
           "addr": "0x19e3b0",
-          "decl": "void ustrncasecmp(void);"
+          "decl": "int ustrncasecmp(const wchar_t *s1, const wchar_t *s2, size_t count);",
+          "ported": false
         },
         {
           "addr": "0x19e460",
-          "decl": "void uisalpha(void);"
+          "decl": "int uisalpha(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e480",
-          "decl": "void uisupper(void);"
+          "decl": "int uisupper(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e4a0",
-          "decl": "void uislower(void);"
+          "decl": "int uislower(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e4c0",
-          "decl": "void uisdigit(void);"
+          "decl": "int uisdigit(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e4e0",
-          "decl": "void uisxdigit(void);"
+          "decl": "int uisxdigit(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e500",
-          "decl": "void uisspace(void);"
+          "decl": "int uisspace(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e520",
-          "decl": "void uispunct(void);"
+          "decl": "int uispunct(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e540",
-          "decl": "void uisalnum(void);"
+          "decl": "int uisalnum(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e560",
-          "decl": "void uisprint(void);"
+          "decl": "int uisprint(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e580",
-          "decl": "int uisgraph(int c);"
+          "decl": "int uisgraph(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e5a0",
-          "decl": "void uiscntrl(void);"
+          "decl": "int uiscntrl(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e5c0",
-          "decl": "void utoupper(void);"
+          "decl": "int utoupper(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e5e0",
-          "decl": "void utolower(void);"
+          "decl": "int utolower(int c);",
+          "ported": false
         },
         {
           "addr": "0x19e600",
-          "decl": "void ufgetc(void);"
+          "decl": "int ufgetc(void *stream);",
+          "ported": false
         },
         {
           "addr": "0x19e640",
-          "decl": "void ufputc(void);"
+          "decl": "int ufputc(int c, void *stream);",
+          "ported": false
         },
         {
           "addr": "0x19e680",
-          "decl": "void uungetc(void);"
+          "decl": "int uungetc(int c, void *stream);",
+          "ported": false
         },
         {
           "addr": "0x19e6c0",
-          "decl": "void ufgets(void);"
+          "decl": "wchar_t *ufgets(wchar_t *buffer, int count, void *stream);",
+          "ported": false
         },
         {
           "addr": "0x19e760",
-          "decl": "void ufputs(void);"
+          "decl": "int ufputs(const wchar_t *s, void *stream);",
+          "ported": false
         },
         {
           "addr": "0x19e800",
-          "decl": "void ugets(void);"
+          "decl": "wchar_t *ugets(wchar_t *buffer);",
+          "ported": false
         },
         {
           "addr": "0x19e870",
-          "decl": "void uputs(void);"
+          "decl": "int uputs(const wchar_t *s);",
+          "ported": false
         },
         {
           "addr": "0x19e8e0",
-          "decl": "void ufprintf(void);"
+          "decl": "int ufprintf(void *stream, const wchar_t *format, ...);",
+          "ported": false
         },
         {
           "addr": "0x19e980",
-          "decl": "void uprintf(void);"
+          "decl": "int uprintf(const wchar_t *format, ...);",
+          "ported": false
         },
         {
           "addr": "0x19eaa0",
-          "decl": "wchar_t *usprintf(wchar_t *dst, const wchar_t *fmt, ...);"
+          "decl": "int usprintf(wchar_t *buffer, const wchar_t *format, ...);",
+          "ported": false
         },
         {
           "addr": "0x19eb50",
-          "decl": "void uvfprintf(void);"
+          "decl": "int uvfprintf(void *stream, const wchar_t *format, char *args);",
+          "ported": false
         },
         {
           "addr": "0x19ebd0",
-          "decl": "void uvprintf(void);"
+          "decl": "int uvprintf(const wchar_t *format, char *args);",
+          "ported": false
         },
         {
           "addr": "0x19ec40",
-          "decl": "void uvsnprintf(void);"
+          "decl": "int uvsnprintf(wchar_t *buffer, size_t count, const wchar_t *format, char *args);",
+          "ported": false
         },
         {
           "addr": "0x19ecf0",
-          "decl": "void uvsprintf(void);"
+          "decl": "int uvsprintf(wchar_t *buffer, const wchar_t *format, char *args);",
+          "ported": false
         },
         {
           "addr": "0x19eda0",
-          "decl": "void ufdopen(void);"
+          "decl": "void *ufdopen(int fd, const wchar_t *mode);",
+          "ported": false
         },
         {
           "addr": "0x19ee40",
-          "decl": "void ufopen(void);"
+          "decl": "void *ufopen(const wchar_t *path, const wchar_t *mode);",
+          "ported": false
         },
         {
           "addr": "0x19eee0",
-          "decl": "void ufclose(void);"
+          "decl": "int ufclose(void *stream);",
+          "ported": false
         },
         {
           "addr": "0x19ef20",
-          "decl": "void ufreopen(void);"
+          "decl": "void *ufreopen(const wchar_t *path, const wchar_t *mode, void *stream);",
+          "ported": false
         },
         {
           "addr": "0x19efd0",
-          "decl": "void uperror(void);"
+          "decl": "void uperror(const wchar_t *prefix);",
+          "ported": false
         },
         {
           "addr": "0x19f040",
-          "decl": "void upopen(void);"
+          "decl": "void *upopen(const wchar_t *command, const wchar_t *mode);",
+          "ported": false
         },
         {
           "addr": "0x19f0e0",
-          "decl": "void uremove(void);"
+          "decl": "int uremove(const wchar_t *path);",
+          "ported": false
         },
         {
           "addr": "0x19f150",
-          "decl": "void utmpnam(void);"
+          "decl": "wchar_t *utmpnam(wchar_t *buffer);",
+          "ported": false
         },
         {
           "addr": "0x19f160",
-          "decl": "void ustrtol(void);"
+          "decl": "long ustrtol(const wchar_t *s, wchar_t **endptr, int base);",
+          "ported": false
         },
         {
           "addr": "0x19f1d0",
-          "decl": "void ustrtoul(void);"
+          "decl": "unsigned long ustrtoul(const wchar_t *s, wchar_t **endptr, int base);",
+          "ported": false
         },
         {
           "addr": "0x19f240",
-          "decl": "void ustrtod(void);"
+          "decl": "double ustrtod(const wchar_t *s, wchar_t **endptr);",
+          "ported": false
         },
         {
           "addr": "0x19f2b0",
-          "decl": "void uatoi(void);"
+          "decl": "int uatoi(const wchar_t *s);",
+          "ported": false
         },
         {
           "addr": "0x19f320",
-          "decl": "void uctime(void);"
+          "decl": "wchar_t *uctime(const void *timeptr);",
+          "ported": false
         },
         {
           "addr": "0x19f360",
-          "decl": "void uasctime(void);"
+          "decl": "wchar_t *uasctime(const void *timeptr);",
+          "ported": false
         },
         {
           "addr": "0x19f4f0",
-          "decl": "void FUN_0019f4f0(void);"
+          "decl": "wchar_t *FUN_0019f4f0(int param);",
+          "ported": false
         },
         {
           "addr": "0x19f530",
-          "decl": "uint8_t FUN_0019f530(int unit_handle);"
+          "decl": "uint8_t FUN_0019f530(int unit_handle);",
+          "ported": false
         },
         {
           "addr": "0x19f540",
-          "decl": "void biped_limp_noodle_valid_joint_rotation(void);"
+          "decl": "char biped_limp_noodle_valid_joint_rotation(int unit_handle, int16_t node_index, void *node_block);",
+          "ported": false
         },
         {
           "addr": "0x19fa20",
-          "decl": "void FUN_0019fa20(int unit_handle, void *node_block);"
+          "decl": "void FUN_0019fa20(int unit_handle, void *node_block);",
+          "ported": false
         }
       ],
       "name": "unicode.obj",
@@ -29856,7 +29921,7 @@
         },
         {
           "addr": "0x1da8e3",
-          "decl": "void FUN_001da8e3(void);"
+          "decl": "wchar_t *FUN_001da8e3(wchar_t *s, size_t count);"
         }
       ],
       "name": "LIBCMT:strtok.obj"
@@ -29891,15 +29956,15 @@
       "functions": [
         {
           "addr": "0x1dd1d1",
-          "decl": "void FUN_001dd1d1(void);"
+          "decl": "long FUN_001dd1d1(const wchar_t *s, wchar_t **endptr, int base);"
         },
         {
           "addr": "0x1dd1e8",
-          "decl": "void FUN_001dd1e8(void);"
+          "decl": "unsigned long FUN_001dd1e8(const wchar_t *s, wchar_t **endptr, int base);"
         },
         {
           "addr": "0x1dd1ff",
-          "decl": "void FUN_001dd1ff(void);"
+          "decl": "double FUN_001dd1ff(const wchar_t *s, wchar_t **endptr);"
         },
         {
           "addr": "0x1dd375",
@@ -29907,7 +29972,7 @@
         },
         {
           "addr": "0x1dd3d4",
-          "decl": "void FUN_001dd3d4(void);"
+          "decl": "int FUN_001dd3d4(const wchar_t *s);"
         },
         {
           "addr": "0x1dd3d9",
@@ -29915,7 +29980,7 @@
         },
         {
           "addr": "0x1dd467",
-          "decl": "void __wctime(void);"
+          "decl": "wchar_t *__wctime(const void *timeptr);"
         },
         {
           "addr": "0x1dd480",
@@ -29923,11 +29988,11 @@
         },
         {
           "addr": "0x1dd49a",
-          "decl": "void __wasctime(void);"
+          "decl": "wchar_t *__wasctime(const void *timeptr);"
         },
         {
           "addr": "0x1dd576",
-          "decl": "void FUN_001dd576(void);"
+          "decl": "int FUN_001dd576(int param);"
         },
         {
           "addr": "0x1dd5c8",
