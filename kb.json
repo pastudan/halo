@@ -771,8 +771,9 @@
       "functions": [
         {
           "addr": "0x1d9260",
-          "decl": "void FUN_001d9260(void);",
-          "ported": false
+          "decl": "void qsort(void *base, unsigned nmemb, unsigned size, int (*compar)(const void *, const void *));",
+          "ported": false,
+          "name": "qsort"
         }
       ],
       "name": "LIBCMT:qsort.obj",
