@@ -33798,7 +33798,7 @@
         {
           "addr": "0xfcbd0",
           "decl": "void FUN_000fcbd0(int16_t magazine_index, int weapon_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfcc90",
@@ -40496,8 +40496,9 @@
         },
         {
           "addr": "0x60260",
-          "decl": "void FUN_00060260(void);",
-          "ported": false
+          "decl": "void FUN_00060260(unsigned short channel, void *path @<ebx>);",
+          "ported": false,
+          "name": "FUN_00060260"
         },
         {
           "addr": "0x60330",
