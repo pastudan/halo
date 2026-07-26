@@ -212,7 +212,7 @@ static void (*const be0840_assert)(const char *, const char *, int, bool) = disp
 static void (*const be0840_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void player_ui_local_player_joined_multiplayer_game(void)
+void player_ui_local_player_joined_multiplayer_game(int16_t local_player_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -256,7 +256,7 @@ static void (*const be0890_assert)(const char *, const char *, int, bool) = disp
 static void (*const be0890_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void player_ui_local_player_wants_to_play_multiplayer(void)
+uint8_t player_ui_local_player_wants_to_play_multiplayer(int16_t local_player_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -298,7 +298,7 @@ static void (*const be08e0_assert)(const char *, const char *, int, bool) = disp
 static void (*const be08e0_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void player_ui_clear_multiplayer_autojoin_for_local_player(void)
+void player_ui_clear_multiplayer_autojoin_for_local_player(int16_t local_player_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -418,7 +418,7 @@ static void (*const be0a10_assert)(const char *, const char *, int, bool) = disp
 static void (*const be0a10_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void player_ui_get_last_single_player_level_played(void)
+int16_t player_ui_get_last_single_player_level_played(int16_t local_player_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -461,7 +461,7 @@ static void (*const be0a60_exitfn)(int) = system_exit;
 static void * (*const be0a60_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 
 __attribute__((naked, noinline))
-void player_ui_set_game_variant(void)
+void player_ui_set_game_variant(void *variant)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -504,7 +504,7 @@ static void (*const be0ab0_exitfn)(int) = system_exit;
 static void * (*const be0ab0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 
 __attribute__((naked, noinline))
-void player_ui_game_variant_specified(void)
+char player_ui_game_variant_specified(void *out_variant)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -680,7 +680,7 @@ void player_ui_autolevel_enabled(void)
 static void (*const be0bf0_c1c1280)(void) = FUN_001c1280;
 
 __attribute__((naked, noinline))
-void player_ui_get_path_to_local_player_profile_directory(void)
+char player_ui_get_path_to_local_player_profile_directory(int16_t local_player_index, void *out_path)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -719,7 +719,7 @@ static void (*const be0c90_c1c2d20)(void) = saved_game_file_retrieve_player1_las
 static void (*const be0c90_c1c38d0)(void) = saved_game_file_find_profile_index_for_directory_path;
 
 __attribute__((naked, noinline))
-void player_ui_get_player1_last_used_profile_index(void)
+int player_ui_get_player1_last_used_profile_index(void)
 {
   __asm__ volatile(
       "movb 0x46c110, %%al\n\t"
@@ -833,7 +833,7 @@ static void (*const be0d80_c1c29a0)(void) = (void *)saved_game_file_get_type;
 static void (*const be0d80_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void player_ui_edit_profile_is_default_profile(void)
+char player_ui_edit_profile_is_default_profile(void)
 {
   __asm__ volatile(
       "movl 0x46c038, %%eax\n\t"

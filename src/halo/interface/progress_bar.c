@@ -1823,36 +1823,11 @@ void SetTextureStageStateSmart(int stage, int state, int value)
 #endif
 
 
-/* FUN_000e2650 (0xe2650) — XBE naked draft (batch 173). */
-#if defined(__clang__)
-static void __stdcall (*const be2650_c1ed280)(uint32_t reg, float a, float b) = D3DDevice_SetVertexData2f;
-
-__attribute__((naked, noinline))
-void FUN_000e2650(void)
+/* FUN_000e2650 (0xe2650) — readable C lift. */
+void FUN_000e2650(float x, float y, float z)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "subl $8, %%esp\n\t"
-      "fmuls 0x254cd0\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x282d3c\n\t"
-      "fadds 0x10(%%ebp)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $0xa\n\t"
-      "call *%[c1ed280]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ed280] "m"(be2650_c1ed280)
-      : "memory");
+  D3DDevice_SetVertexData2f(0xa, x * 32.0f + z, y * 20.0f);
 }
-#else
-#error "FUN_000e2650: clang naked draft required"
-#endif
-
 
 /* FUN_000e2680 (0xe2680) — XBE naked draft (batch 171). */
 #if defined(__clang__)

@@ -2233,54 +2233,22 @@ char main_menu_is_active(void)
   return *(char *)0x46cc88;
 }
 
-/* ui_set_next_level (0xe4420) — XBE naked draft (batch 174). */
-#if defined(__clang__)
-static const char * (*const be4420_c100870)(int16_t index) = main_get_solo_level_name;
-static void (*const be4420_cfffa0)(const char *name) = main_set_map_name;
-static void (*const be4420_cfff90)(void) = main_disallow_persistent_storage;
-static void (*const be4420_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const be4420_c100620)(void) = main_goto_main_menu;
-static void (*const be4420_c102070)(void) = main_roll_credits;
-
-__attribute__((naked, noinline))
+/* ui_set_next_level (0xe4420) — readable C lift. */
 void ui_set_next_level(int16_t level_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lui_set_next_level_2\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .Lui_set_next_level_1\n\t"
-      "cmpl $9, %%eax\n\t"
-      "jg .Lui_set_next_level_1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c100870]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cfffa0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "jmp *%[cfff90]\n\t"
-      ".Lui_set_next_level_1:\n\t"
-      "pushl $0x283318\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "jmp *%[c100620]\n\t"
-      ".Lui_set_next_level_2:\n\t"
-      "popl %%ebp\n\t"
-      "jmp *%[c102070]\n\t"
-      :
-      : [c100870] "m"(be4420_c100870), [cfffa0] "m"(be4420_cfffa0), [cfff90] "m"(be4420_cfff90), [c8f390] "m"(be4420_c8f390), [c100620] "m"(be4420_c100620), [c102070] "m"(be4420_c102070)
-      : "memory");
+  int idx = (int16_t)level_index;
+  if (idx == -1) {
+    main_roll_credits();
+    return;
+  }
+  if (idx < 0 || idx > 9) {
+    error(2, (const char *)0x283318);
+    main_goto_main_menu();
+    return;
+  }
+  main_set_map_name(main_get_solo_level_name(level_index));
+  main_disallow_persistent_storage();
 }
-#else
-#error "ui_set_next_level: clang naked draft required"
-#endif
-
 
 /* display_error_deferred (0xe4500) — XBE naked draft (batch 150). */
 #if defined(__clang__)
@@ -3397,7 +3365,7 @@ char ui_widget_event_handler_set_difficulty(void *widget, void *event_data, bool
 #if defined(__clang__)
 static void (*const be9cb0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const be9cb0_exitfn)(int) = system_exit;
-static void (*const be9cb0_ce0840)(void) = player_ui_local_player_joined_multiplayer_game;
+static void (*const be9cb0_ce0840)(int16_t) = player_ui_local_player_joined_multiplayer_game;
 
 __attribute__((naked, noinline))
 char display_error_abort_to_dashboard(void *widget, void *event_data, bool *widget_deleted)
@@ -3710,7 +3678,7 @@ char FUN_000eab70(void *widget)
 
 /* FUN_000ecd50 (0xecd50) — XBE naked draft (batch 143). */
 #if defined(__clang__)
-static void (*const becd50_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const becd50_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const becd50_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const becd50_exitfn)(int) = system_exit;
 static void * (*const becd50_ce3cd0)(void *widget, int index) = widget_instance_get_nth_child;
@@ -3800,7 +3768,7 @@ char FUN_000ecd50(void *widget)
 
 /* playlist_profile_change_koth_rules (0xece10) — XBE naked draft (batch 147). */
 #if defined(__clang__)
-static void (*const bece10_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const bece10_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const bece10_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const bece10_exitfn)(int) = system_exit;
 static void * (*const bece10_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
@@ -4046,7 +4014,7 @@ char FUN_000ea100(void *widget)
 
 /* FUN_000eceb0 (0xeceb0) — XBE naked draft (batch 108). */
 #if defined(__clang__)
-static void (*const beceb0_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const beceb0_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const beceb0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const beceb0_exitfn)(int) = system_exit;
 static void (*const beceb0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -7090,7 +7058,7 @@ static void (*const be98c0_c1c0f70)(void *profile, short *out_level, short *out_
 static void *(*const be98c0_tag)(int, int) = tag_get;
 static void (*const be98c0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const be98c0_exitfn)(int) = system_exit;
-static void (*const be98c0_ce0a10)(void) = player_ui_get_last_single_player_level_played;
+static int16_t (*const be98c0_ce0a10)(int16_t) = player_ui_get_last_single_player_level_played;
 
 __attribute__((naked, noinline))
 char FUN_000e98c0(void *widget)
@@ -7967,7 +7935,7 @@ static void *(*const bea570_memset)(void *, int, unsigned int) = csmemset;
 static game_variant_t * (*const bea570_cadd50)(game_variant_t *variant, const char *name) = game_engine_get_variant_by_name;
 static int (*const bea570_c8da40)(const void *a, const void *b, int size) = csmemcmp;
 static int (*const bea570_c1d9dac)(void *stream) = crt_fclose;
-static void (*const bea570_ce0a60)(void) = player_ui_set_game_variant;
+static void (*const bea570_ce0a60)(void *) = player_ui_set_game_variant;
 static void (*const bea570_c12d7f0)(void *server, void *variant) = network_game_server_change_game_variant;
 static void (*const bea570_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
@@ -8341,7 +8309,7 @@ static void (*const beaa10_assert)(const char *, const char *, int, bool) = disp
 static void (*const beaa10_exitfn)(int) = system_exit;
 static void * (*const beaa10_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
 static void (*const beaa10_c1c0d50)(void) = FUN_001c0d50;
-static void (*const beaa10_ce0c90)(void) = player_ui_get_player1_last_used_profile_index;
+static int (*const beaa10_ce0c90)(void) = player_ui_get_player1_last_used_profile_index;
 
 __attribute__((naked, noinline))
 char FUN_000eaa10(void *widget)
@@ -8957,7 +8925,7 @@ char FUN_000eaec0(void *widget)
 
 /* FUN_000eb020 (0xeb020) — XBE naked draft (batch 124). */
 #if defined(__clang__)
-static void (*const beb020_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const beb020_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const beb020_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const beb020_exitfn)(int) = system_exit;
 static void (*const beb020_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -9065,7 +9033,7 @@ char FUN_000eb020(void *widget)
 
 /* FUN_000eb150 (0xeb150) — XBE naked draft (batch 109). */
 #if defined(__clang__)
-static void (*const beb150_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const beb150_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const beb150_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const beb150_exitfn)(int) = system_exit;
 static void (*const beb150_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -9417,7 +9385,7 @@ char FUN_000eb150(void *widget)
 
 /* FUN_000eb4f0 (0xeb4f0) — XBE naked draft (batch 116). */
 #if defined(__clang__)
-static void (*const beb4f0_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const beb4f0_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const beb4f0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const beb4f0_exitfn)(int) = system_exit;
 static void (*const beb4f0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -9631,7 +9599,7 @@ char FUN_000eb4f0(void *widget)
 
 /* FUN_000eb710 (0xeb710) — XBE naked draft (batch 109). */
 #if defined(__clang__)
-static void (*const beb710_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const beb710_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const beb710_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const beb710_exitfn)(int) = system_exit;
 static void (*const beb710_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -9964,7 +9932,7 @@ char FUN_000eb710(void *widget)
 
 /* FUN_000eba70 (0xeba70) — XBE naked draft (batch 106). */
 #if defined(__clang__)
-static void (*const beba70_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const beba70_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const beba70_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const beba70_exitfn)(int) = system_exit;
 static void (*const beba70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -10478,7 +10446,7 @@ char FUN_000eba70(void *widget)
 
 /* FUN_000ebff0 (0xebff0) — XBE naked draft (batch 112). */
 #if defined(__clang__)
-static void (*const bebff0_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const bebff0_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const bebff0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const bebff0_exitfn)(int) = system_exit;
 static void (*const bebff0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -10753,7 +10721,7 @@ char FUN_000ebff0(void *widget)
 
 /* FUN_000ec2c0 (0xec2c0) — XBE naked draft (batch 106). */
 #if defined(__clang__)
-static void (*const bec2c0_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const bec2c0_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const bec2c0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const bec2c0_exitfn)(int) = system_exit;
 static void (*const bec2c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -11279,7 +11247,7 @@ char FUN_000ec2c0(void *widget)
 
 /* FUN_000ec840 (0xec840) — XBE naked draft (batch 110). */
 #if defined(__clang__)
-static void (*const bec840_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const bec840_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const bec840_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const bec840_exitfn)(int) = system_exit;
 static void (*const bec840_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -11582,7 +11550,7 @@ char FUN_000ec840(void *widget)
 
 /* FUN_000ecb60 (0xecb60) — XBE naked draft (batch 117). */
 #if defined(__clang__)
-static void (*const becb60_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
+static void *(*const becb60_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
 static void (*const becb60_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const becb60_exitfn)(int) = system_exit;
 static void (*const becb60_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
