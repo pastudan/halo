@@ -39184,7 +39184,8 @@
       "functions": [
         {
           "addr": "0x8d410",
-          "decl": "void FUN_0008d410(void);"
+          "decl": "void FUN_0008d410(void);",
+          "ported": false
         }
       ],
       "source": "camera/static_camera.c"

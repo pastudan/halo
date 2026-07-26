@@ -33,6 +33,7 @@
 	halo/camera/director.c
 	halo/camera/observer.c
 	halo/common.c
+	halo/camera/static_camera.c
 	halo/cseries/cseries.c
 	halo/cache/cache_files_windows.c
 	halo/cseries/errors.c

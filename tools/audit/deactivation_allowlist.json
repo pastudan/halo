@@ -17456,5 +17456,12 @@
     "object": "bink.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x8d410",
+    "name": "FUN_0008d410",
+    "object": "static_camera.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
