@@ -330,23 +330,51 @@ void project_point2d(float *point_2d, float *plane, int16_t projection,
                       plane[proj_i];
 }
 
-/* triple_product3d (0x993b0)
- *
- * Computes the scalar triple product: dot(cross(p, q), r).
- * Equivalent to the signed volume of the parallelepiped formed by vectors
- * p, q, r. Returns a float. */
-float triple_product3d(float *p, float *q, float *r)
+/* triple_product3d (0x993b0) — XBE naked draft (batch 95). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+float triple_product3d(float *param_1 __attribute__((unused)), float *param_2 __attribute__((unused)), float *param_3 __attribute__((unused)))
 {
-  float cross_x;
-  float cross_y;
-  float cross_z;
-
-  cross_x = p[1] * q[2] - p[2] * q[1];
-  cross_y = p[2] * q[0] - p[0] * q[2];
-  cross_z = p[0] * q[1] - q[0] * p[1];
-
-  return cross_x * r[0] + cross_y * r[1] + cross_z * r[2];
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fmuls (%%ecx)\n\t"
+      "flds (%%eax)\n\t"
+      "fmuls 0x8(%%ecx)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds (%%eax)\n\t"
+      "fmuls 0x4(%%ecx)\n\t"
+      "flds (%%ecx)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls (%%eax)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "triple_product3d: clang naked draft required"
+#endif
+
 
 /* plane2d_from_points (0x99400)
  *

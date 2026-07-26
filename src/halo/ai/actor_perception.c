@@ -270,23 +270,52 @@ uint16_t FUN_0002f380(int actor_handle __attribute__((unused)), int prop_handle 
 #endif
 
 
-/* FUN_0002f5b0 (0x2f5b0)
- * Compare two prop-like structs by their float[2] field (offset +8).
- * Returns -1, 0, or 1 (strcmp-style).
- */
-int FUN_0002f5b0(int param_1, int param_2)
-{
-  float f1;
-  float f2;
+/* FUN_0002f5b0 (0x2f5b0) — XBE naked draft (batch 95). */
+#if defined(__clang__)
 
-  f1 = *(float *)(param_1 + 8);
-  f2 = *(float *)(param_2 + 8);
-  if (f1 < f2)
-    return -1;
-  if (f2 < f1)
-    return 1;
-  return 0;
+
+__attribute__((naked, noinline))
+int FUN_0002f5b0(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fld %%st(1)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_0002f5b0_1\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $0xffffffff, %%eax\n\t"
+      "fstp %%st(0)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0002f5b0_1:\n\t"
+      "fxch %%st(1)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_0002f5b0_2\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0002f5b0_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0002f5b0: clang naked draft required"
+#endif
+
 
 /* actor_perception_find_prop_pathfinding_location (0x2f910)
  * Fills prop->pathfinding_surface_index (+0xec) if not already set.

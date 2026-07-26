@@ -303,22 +303,55 @@ char *file_reference_get_name(file_ref_t *info, int flags, char *name_out)
   return name_out;
 }
 
-/* 0x1999a0 — return true if two file references point to the same path.
- * Compares the location field (unk_6) and path string (unk_8) of both
- * validated references. */
-bool file_references_equal(file_ref_t *info1, file_ref_t *info2)
+/* file_references_equal (0x1999a0) — XBE naked draft (batch 95). */
+#if defined(__clang__)
+static file_ref_t * (*const b1999a0_c199620)(file_ref_t *info) = file_reference_verify;
+static int (*const b1999a0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
+
+__attribute__((naked, noinline))
+bool file_references_equal(file_ref_t *info1 __attribute__((unused)), file_ref_t *info2 __attribute__((unused)))
 {
-  file_ref_t *ref1;
-  file_ref_t *ref2;
-  ref1 = file_reference_verify(info1);
-  ref2 = file_reference_verify(info2);
-  if (ref1->unk_6 == ref2->unk_6) {
-    if (csstrcmp(ref1->unk_8, ref2->unk_8) == 0) {
-      return true;
-    }
-  }
-  return false;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c199620]\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c199620]\n\t"
+      "movw 0x6(%%esi), %%dx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "cmpw 0x6(%%eax), %%dx\n\t"
+      "jne .Lfile_references_equal_1\n\t"
+      "addl $8, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "addl $8, %%esi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c8dcb0]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movb $1, %%al\n\t"
+      "je .Lfile_references_equal_2\n\t"
+      ".Lfile_references_equal_1:\n\t"
+      "movb %%bl, %%al\n\t"
+      ".Lfile_references_equal_2:\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c199620] "m"(b1999a0_c199620), [c8dcb0] "m"(b1999a0_c8dcb0)
+      : "memory");
 }
+#else
+#error "file_references_equal: clang naked draft required"
+#endif
+
 
 /**
  * file_reference_create_from_path - initialize a file reference from a path.

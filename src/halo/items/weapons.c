@@ -121,36 +121,52 @@ bool weapon_is_flag(int object_index)
   return (tag[0x308 / 4] >> 3) & 1;
 }
 
-/* 0xfb0f0 — weapon_prevents_grenade_throwing
- *
- * Returns 1 if weapon_handle == -1 (no weapon), 1 if the weapon's animation
- * state at +0x1e8 is in range (4, 11), or the flag bit 6 of tag+0x308 is set.
- *
- * Confirmed: cdecl, 1 stack arg (param_1 = weapon_handle).
- * Confirmed: returns 1 immediately if param_1 == -1.
- * Confirmed: CALL object_get_and_verify_type(param_1, 4).
- * Confirmed: CALL tag_get(0x77656170, *obj).
- * Confirmed: SHR EAX,6; AND EAX,1 on *(uint *)(tag+0x308).
- * Confirmed: range check on *(char *)(obj+0x1e8): returns 1 if in (4,11).
- */
-int weapon_prevents_grenade_throwing(int weapon_handle)
-{
-  int *obj;
-  int tag;
-  char result;
+/* weapon_prevents_grenade_throwing (0xfb0f0) — XBE naked draft (batch 95). */
+#if defined(__clang__)
+static void *(*const bfb0f0_get)(int, int) = object_get_and_verify_type;
+static void *(*const bfb0f0_tag)(int, int) = tag_get;
 
-  result = 1;
-  if (weapon_handle != -1) {
-    obj = (int *)object_get_and_verify_type(weapon_handle, 4);
-    tag = (int)tag_get(0x77656170, *obj);
-    result = (char)((*(uint32_t *)(tag + 0x308) >> 6) & 1);
-    if (*(char *)((char *)obj + 0x1e8) >= 5 &&
-        *(char *)((char *)obj + 0x1e8) <= 10) {
-      result = 1;
-    }
-  }
-  return result;
+__attribute__((naked, noinline))
+int weapon_prevents_grenade_throwing(int weapon_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "movb $1, %%al\n\t"
+      "je .Lweapon_prevents_grenade_throwing_1\n\t"
+      "pushl %%esi\n\t"
+      "pushl $4\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x308(%%eax), %%eax\n\t"
+      "movb 0x1e8(%%esi), %%cl\n\t"
+      "shrl $6, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "andb $1, %%al\n\t"
+      "cmpb $5, %%cl\n\t"
+      "popl %%esi\n\t"
+      "jl .Lweapon_prevents_grenade_throwing_1\n\t"
+      "cmpb $0xa, %%cl\n\t"
+      "jg .Lweapon_prevents_grenade_throwing_1\n\t"
+      "movb $1, %%al\n\t"
+      ".Lweapon_prevents_grenade_throwing_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfb0f0_get), [tag] "m"(bfb0f0_tag)
+      : "memory");
 }
+#else
+#error "weapon_prevents_grenade_throwing: clang naked draft required"
+#endif
+
 
 /* 0xfb140 — weapon_get_animation_frame
  *

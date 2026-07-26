@@ -1159,6 +1159,19 @@ def main() -> int:
         ("actor_action_handle_combat_failure", 0x1f920, 0x1f976),
         ("hud_set_state_message_text", 0xd4e90, 0xd4ef9),
         ("ai_debug_select_actor", 0x4b1b0, 0x4b213),
+        # gameplay wave 95 (2026-07-26) — net/interface/AI Capstone weaks
+        ("FUN_0011ba00", 0x11ba00, 0x11ba42),
+        ("ui_widget_text_search_and_replace_function_invoke", 0xf5290, 0xf52e0),
+        ("hud_set_state_message_icon", 0xd4e30, 0xd4e8f),
+        ("file_references_equal", 0x1999a0, 0x1999e4),
+        ("network_game_message_encode", 0x12b6b0, 0x12b6ff),
+        ("cluster_partition_copy", 0x191700, 0x191746),
+        ("ai_debug_initialize_for_new_map", 0x4c0f0, 0x4c161),
+        ("triple_product3d", 0x993b0, 0x993f4),
+        ("actor_reset_action_state", 0x15eb0, 0x15f23),
+        ("FUN_0002f5b0", 0x2f5b0, 0x2f5ed),
+        ("FUN_00015150", 0x15150, 0x151ac),
+        ("weapon_prevents_grenade_throwing", 0xfb0f0, 0xfb138),
     ]
 
     xbe = Xbe.from_file(args.xbe)

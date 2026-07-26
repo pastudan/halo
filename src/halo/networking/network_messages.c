@@ -1925,28 +1925,55 @@ void hashtable_dispose(short *table __attribute__((unused)))
 #endif
 
 
-/* hashtable_hash — default hash function using small primes (0x11ba00).
- * Source: hashtable.c. */
-int FUN_0011ba00(unsigned char *key, unsigned int key_size)
-{
-  int hash;
-  short prime_index;
+/* FUN_0011ba00 (0x11ba00) — XBE naked draft (batch 95). */
+#if defined(__clang__)
 
-  hash = 0;
-  prime_index = 0;
-  if (key_size != 0) {
-    do {
-      if (prime_index == 0xf) {
-        prime_index = 0;
-        key_size = key_size - 0xf;
-      }
-      hash = hash + (int)hashtable_primes[prime_index] * (unsigned short)*key;
-      prime_index = prime_index + 1;
-      key = key + 1;
-    } while ((unsigned int)(int)prime_index < key_size);
-  }
-  return hash;
+
+__attribute__((naked, noinline))
+int FUN_0011ba00(unsigned char *key __attribute__((unused)), unsigned int key_size __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jbe .LFUN_0011ba00_3\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      ".LFUN_0011ba00_1:\n\t"
+      "cmpw $0xf, %%cx\n\t"
+      "jne .LFUN_0011ba00_2\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "subl $0xf, %%edx\n\t"
+      ".LFUN_0011ba00_2:\n\t"
+      "movzbw (%%esi), %%bx\n\t"
+      "movswl %%cx, %%edi\n\t"
+      "movswl 0x3220d4(,%%edi,2), %%edi\n\t"
+      "imulw %%bx, %%di\n\t"
+      "addl %%edi, %%eax\n\t"
+      "incl %%ecx\n\t"
+      "movswl %%cx, %%edi\n\t"
+      "incl %%esi\n\t"
+      "cmpl %%edx, %%edi\n\t"
+      "jb .LFUN_0011ba00_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_0011ba00_3:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_0011ba00: clang naked draft required"
+#endif
+
 
 /* FUN_0011ba50 (0x11ba50) — XBE naked draft (batch 84). */
 #if defined(__clang__)

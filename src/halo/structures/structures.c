@@ -2850,23 +2850,54 @@ int FUN_001916d0(int partition, int *state)
   return -1;
 }
 
-/* Copy a cluster partition (0x191700).
- * Both operands are 3-pointer structs (see cluster_partition_add_object):
- *   [0] -> cluster head array (one dword per cluster)
- *   [1] -> reference_list (per-cluster object references)
- *   [2] -> reference_list (per-object cluster references)
- * The head array holds scenario->0x134 (cluster tag_block count) dwords, so
- * csmemcpy moves count*4 bytes (the <<2 converts the dword count to bytes).
- * Copy order: element [2] BEFORE [1] -- preserve for codegen match.
- */
-void cluster_partition_copy(void **destination, void **source)
-{
-  void *scenario = scenario_get();
+/* cluster_partition_copy (0x191700) — XBE naked draft (batch 95). */
+#if defined(__clang__)
+static void * (*const b191700_c18e3c0)(void) = scenario_get;
+static void * (*const b191700_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void (*const b191700_c191440)(void *result, void *source) = reference_list_copy;
 
-  csmemcpy(destination[0], source[0], *(int *)((char *)scenario + 0x134) << 2);
-  reference_list_copy(destination[2], source[2]);
-  reference_list_copy(destination[1], source[1]);
+__attribute__((naked, noinline))
+void cluster_partition_copy(void **destination __attribute__((unused)), void **source __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c18e3c0]\n\t"
+      "movl 0x134(%%eax), %%eax\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "shll $2, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c8e0b0]\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "movl 0x8(%%edi), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c191440]\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "movl 0x4(%%edi), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c191440]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c18e3c0] "m"(b191700_c18e3c0), [c8e0b0] "m"(b191700_c8e0b0), [c191440] "m"(b191700_c191440)
+      : "memory");
 }
+#else
+#error "cluster_partition_copy: clang naked draft required"
+#endif
+
 
 /* 0x191750 - get a pointer to a cluster partition's per-cluster slot.
  * (TU: c:\halo\SOURCE\structures\cluster_partitions.c)

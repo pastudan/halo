@@ -876,19 +876,53 @@ int hud_messaging_get_objective(void)
 #endif
 
 
-/* hud_set_state_message_icon (0xd4e30)
- * Set a numeric value for a HUD message element. */
-void hud_set_state_message_icon(short param_1, short param_2, int param_3)
-{
-  int iVar1;
+/* hud_set_state_message_icon (0xd4e30) — XBE naked draft (batch 95). */
+#if defined(__clang__)
 
-  iVar1 = param_1 * 0x460 + *(int *)0x46bd18;
-  if (*(char *)(iVar1 + 0x458) != '\0' &&
-      *(char *)(*(int *)0x46bd10 + 1) == '\0' && *(int *)(iVar1 + 0x454) != 0) {
-    *(int *)(iVar1 + 0x434 + param_2 * 4) = param_3;
-    *(unsigned char *)(iVar1 + 0x459) &= (unsigned char)~(1 << (unsigned char)param_2);
-  }
+
+__attribute__((naked, noinline))
+void hud_set_state_message_icon(short param_1 __attribute__((unused)), short param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movswl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x46bd18, %%edx\n\t"
+      "imull $0x460, %%eax, %%eax\n\t"
+      "movb 0x458(%%eax,%%edx,1), %%cl\n\t"
+      "addl %%edx, %%eax\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Lhud_set_state_message_icon_1\n\t"
+      "movl 0x46bd10, %%ecx\n\t"
+      "movb 0x1(%%ecx), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "jne .Lhud_set_state_message_icon_1\n\t"
+      "movl 0x454(%%eax), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lhud_set_state_message_icon_1\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "movswl 0xc(%%ebp), %%esi\n\t"
+      "movl %%edx, 0x434(%%eax,%%esi,4)\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "movb $1, %%dl\n\t"
+      "shlb %%cl, %%dl\n\t"
+      "movb 0x459(%%eax), %%cl\n\t"
+      "popl %%esi\n\t"
+      "notb %%dl\n\t"
+      "andb %%dl, %%cl\n\t"
+      "movb %%cl, 0x459(%%eax)\n\t"
+      ".Lhud_set_state_message_icon_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "hud_set_state_message_icon: clang naked draft required"
+#endif
+
 
 /* hud_set_state_message_text (0xd4e90) — XBE naked draft (batch 94). */
 #if defined(__clang__)
