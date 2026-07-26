@@ -299,6 +299,20 @@ def main() -> int:
 
         if not applied:
             continue
+        # Sync decls from applied C bodies so decl.h matches lift signatures.
+        import re as _re
+        for job in applied:
+            body = job.get("body")
+            if not body:
+                continue
+            m = _re.search(
+                rf"^([\w\s\*]+?\b{_re.escape(job['name'])}\s*\([^{{]*\))",
+                body,
+                _re.M,
+            )
+            if m:
+                set_kb_decl(job["addr"], m.group(1).strip() + ";")
+                decl_changed = True
         if decl_changed and not regen_decl_h():
             path.write_text(backup, encoding="utf-8")
             continue
