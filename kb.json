@@ -12765,7 +12765,7 @@
         {
           "addr": "0xce240",
           "decl": "void object_list_delete(int list_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce2b0",
@@ -38977,7 +38977,7 @@
         },
         {
           "addr": "0x246b0",
-          "decl": "int FUN_000246b0(void *unused, void *ctx, void *cand);",
+          "decl": "int FUN_000246b0(int unused, void *actor, void *fp);",
           "ported": true,
           "name": "FUN_000246b0"
         },

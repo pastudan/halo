@@ -643,49 +643,44 @@ done:
 }
 
 /* FUN_000246b0 (0x246b0) — readable C lift. */
-int FUN_000246b0(void *unused, void *ctx, void *cand)
+int FUN_000246b0(int unused, void *actor, void *fp)
 {
+  float v;
   float score;
   int kind;
-  float dist;
-  float d2;
-  float c2;
+
   (void)unused;
-  if (*(unsigned char *)((char *)ctx + 0x5fc) == 0)
-    goto done;
-  if (cand == 0) {
-    *(float *)((char *)ctx + 0x660) =
-        *(float *)((char *)ctx + 0x660) + *(float *)0x254cd0;
+  if (*((unsigned char *)actor + 0x5fc) == 0) {
+    if (fp == 0)
+      return 1;
+    return (int)(unsigned char)*((unsigned char *)fp + 0x30);
+  }
+  if (fp == 0) {
+    *(float *)((char *)actor + 0x660) += *(float *)0x254cd0;
     return 1;
   }
-  kind = *(short *)((char *)cand + 6);
   score = 0.0f;
+  kind = (int)*(short *)((char *)fp + 6);
   if (kind == 0) {
     score = 20.0f;
   } else if (kind == 1) {
     score = 10.0f;
   } else {
-    dist = *(float *)((char *)ctx + 0x600) - *(float *)0x254ccc;
-    if (dist < *(float *)0x2533c0 || dist != dist) {
-      *((unsigned char *)cand + 0x31) = 1;
-      if (*(unsigned char *)((char *)ctx + 0x14) == 0)
-        *((unsigned char *)cand + 0x30) = 0;
+    v = *(float *)((char *)actor + 0x600) - *(float *)0x254ccc;
+    if (v >= 0.0f && (v * v) <= *(float *)((char *)fp + 0x2c)) {
+      /* early call with score 0 */
     } else {
-      d2 = dist * dist;
-      c2 = *(float *)((char *)cand + 0x2c);
-      if (!(c2 > d2)) {
-        *((unsigned char *)cand + 0x31) = 1;
-        if (*(unsigned char *)((char *)ctx + 0x14) == 0)
-          *((unsigned char *)cand + 0x30) = 0;
-      }
+      *((unsigned char *)fp + 0x31) = 1;
+      if (*((unsigned char *)actor + 0x14) == 0)
+        *((unsigned char *)fp + 0x30) = 0;
     }
   }
-  FUN_00024000(ctx, score, 0x14, 0, ctx);
-done:
-  if (cand == 0)
+  FUN_00024000(actor, score, 0x14, (void *)0, (void *)0);
+  if (fp == 0)
     return 1;
-  return *(unsigned char *)((char *)cand + 0x30);
+  return (int)(unsigned char)*((unsigned char *)fp + 0x30);
 }
+
 
 /* FUN_00024770 (0x24770) — readable C lift. */
 int FUN_00024770(void *unused, void *ctx, void *cand)
