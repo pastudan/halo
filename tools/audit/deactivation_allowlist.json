@@ -13697,5 +13697,138 @@
     "object": "bitmap_utilities.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c6ca0",
+    "name": "FUN_001c6ca0",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c6d20",
+    "name": "FUN_001c6d20",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c6d90",
+    "name": "FUN_001c6d90",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c6ed0",
+    "name": "FUN_001c6ed0",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c6fb0",
+    "name": "FUN_001c6fb0",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c70b0",
+    "name": "game_sound_clear",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c7160",
+    "name": "game_sound_restore",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c7230",
+    "name": "game_looping_sound_new",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c7500",
+    "name": "scripted_sound_time",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c7550",
+    "name": "scripted_sound_stop",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c75a0",
+    "name": "scripted_foley_predict",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c7650",
+    "name": "scripted_looping_sound_set_scale",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c76c0",
+    "name": "scripted_looping_sound_set_alternate",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c7710",
+    "name": "unattached_looping_sound_start",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c7770",
+    "name": "unattached_looping_sound_stop",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c77a0",
+    "name": "FUN_001c77a0",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c7ca0",
+    "name": "FUN_001c7ca0",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c7f80",
+    "name": "scripted_sound_new",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1c85a0",
+    "name": "FUN_001c85a0",
+    "object": "game_sound.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

@@ -9398,71 +9398,88 @@
         },
         {
           "addr": "0x1c6ca0",
-          "decl": "void FUN_001c6ca0(void);"
+          "decl": "void FUN_001c6ca0(void);",
+          "ported": false
         },
         {
           "addr": "0x1c6d20",
-          "decl": "void FUN_001c6d20(void);"
+          "decl": "void FUN_001c6d20(void);",
+          "ported": false
         },
         {
           "addr": "0x1c6d90",
-          "decl": "void FUN_001c6d90(void);"
+          "decl": "void FUN_001c6d90(void);",
+          "ported": false
         },
         {
           "addr": "0x1c6ed0",
-          "decl": "void FUN_001c6ed0(void);"
+          "decl": "void FUN_001c6ed0(void);",
+          "ported": false
         },
         {
           "addr": "0x1c6fb0",
-          "decl": "void FUN_001c6fb0(void);"
+          "decl": "void FUN_001c6fb0(void);",
+          "ported": false
         },
         {
           "addr": "0x1c70b0",
-          "decl": "void game_sound_clear(void);"
+          "decl": "void game_sound_clear(void);",
+          "ported": false
         },
         {
           "addr": "0x1c7160",
-          "decl": "void game_sound_restore(void);"
+          "decl": "void game_sound_restore(void);",
+          "ported": false
         },
         {
           "addr": "0x1c7230",
-          "decl": "int game_looping_sound_new(int object_index, int sound_tag_index, void *marker_name, short scale_index);"
+          "decl": "int game_looping_sound_new(int object_index, int sound_tag_index, void *marker_name, short scale_index);",
+          "ported": false
         },
         {
           "addr": "0x1c7500",
-          "decl": "int scripted_sound_time(int a0);"
+          "decl": "int scripted_sound_time(int a0);",
+          "ported": false
         },
         {
           "addr": "0x1c7550",
-          "decl": "void scripted_sound_stop(int a0);"
+          "decl": "void scripted_sound_stop(int a0);",
+          "ported": false
         },
         {
           "addr": "0x1c75a0",
-          "decl": "void scripted_foley_predict(int a0);"
+          "decl": "void scripted_foley_predict(int a0);",
+          "ported": false
         },
         {
           "addr": "0x1c7650",
-          "decl": "void scripted_looping_sound_set_scale(int a0, float a1);"
+          "decl": "void scripted_looping_sound_set_scale(int a0, float a1);",
+          "ported": false
         },
         {
           "addr": "0x1c76c0",
-          "decl": "void scripted_looping_sound_set_alternate(int a0, int a1);"
+          "decl": "void scripted_looping_sound_set_alternate(int a0, int a1);",
+          "ported": false
         },
         {
           "addr": "0x1c7710",
-          "decl": "int unattached_looping_sound_start(int sound_tag, int param_2, int param_3);"
+          "decl": "int unattached_looping_sound_start(int sound_tag, int param_2, int param_3);",
+          "ported": false
         },
         {
           "addr": "0x1c7770",
-          "decl": "void unattached_looping_sound_stop(int sound_index);"
+          "decl": "void unattached_looping_sound_stop(int sound_index);",
+          "ported": false
         },
         {
           "addr": "0x1c77a0",
-          "decl": "void FUN_001c77a0(void);"
+          "decl": "void FUN_001c77a0(void);",
+          "ported": false
         },
         {
           "addr": "0x1c7ca0",
-          "decl": "void FUN_001c7ca0(void);"
+          "decl": "void FUN_001c7ca0(void);",
+          "ported": false
         },
         {
           "addr": "0x1c7d10",
@@ -9476,11 +9493,13 @@
         },
         {
           "addr": "0x1c7f80",
-          "decl": "void scripted_sound_new(int a0, int a1, float a2);"
+          "decl": "void scripted_sound_new(int a0, int a1, float a2);",
+          "ported": false
         },
         {
           "addr": "0x1c85a0",
-          "decl": "void FUN_001c85a0(void);"
+          "decl": "void FUN_001c85a0(void);",
+          "ported": false
         }
       ],
       "name": "game_sound.obj",
