@@ -11685,12 +11685,12 @@
         {
           "addr": "0xc4180",
           "decl": "void FUN_000c4180(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc41b0",
           "decl": "void FUN_000c41b0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc41e0",
@@ -11760,12 +11760,12 @@
         {
           "addr": "0xc4500",
           "decl": "void FUN_000c4500(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4540",
           "decl": "void FUN_000c4540(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4580",
@@ -11810,7 +11810,7 @@
         {
           "addr": "0xc4b00",
           "decl": "char hs_evaluate_by_name(const char *name);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4b40",
@@ -12569,8 +12569,8 @@
         },
         {
           "addr": "0xcb9a0",
-          "decl": "char hs_wake_by_name(void *block_entry);",
-          "ported": false
+          "decl": "char hs_wake_by_name(const char *script_name);",
+          "ported": true
         },
         {
           "addr": "0xcb9c0",
@@ -13850,8 +13850,8 @@
         },
         {
           "addr": "0xdf350",
-          "decl": "void profile_graph_toggle(int a0);",
-          "ported": false
+          "decl": "void profile_graph_toggle(const char *name);",
+          "ported": true
         },
         {
           "addr": "0xdf3d0",
@@ -35045,7 +35045,7 @@
         },
         {
           "addr": "0x53800",
-          "decl": "void FUN_00053800(void *buf, int count, int16_t *vals);",
+          "decl": "void FUN_00053800(void);",
           "ported": false
         },
         {

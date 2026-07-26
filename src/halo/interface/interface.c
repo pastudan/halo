@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* UI/HUD interface subsystem init/dispose. */
 
 void interface_initialize(void)
@@ -724,66 +725,17 @@ void interface_draw_screen(void)
 #endif
 
 
-/* profile_graph_toggle (0xdf350) — XBE naked draft (batch 155). */
-#if defined(__clang__)
-static int (*const bdf350_c1dd801)(const char *a, const char *b) = crt_stricmp;
-
-__attribute__((naked, noinline))
-void profile_graph_toggle(int a0)
+/* profile_graph_toggle (0xdf350) — readable C lift. */
+void profile_graph_toggle(const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpw %%di, 0x306d20\n\t"
-      "jle .Lprofile_graph_toggle_4\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "jmp .Lprofile_graph_toggle_1\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lprofile_graph_toggle_1:\n\t"
-      "movswl %%di, %%esi\n\t"
-      "imull $0x20c, %%esi, %%esi\n\t"
-      "addl $0x306d28, %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lprofile_graph_toggle_2\n\t"
-      "leal 0x100(%%esi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lprofile_graph_toggle_3\n\t"
-      ".Lprofile_graph_toggle_2:\n\t"
-      "movb 0x209(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "sete %%cl\n\t"
-      "movb %%cl, 0x209(%%esi)\n\t"
-      ".Lprofile_graph_toggle_3:\n\t"
-      "incl %%edi\n\t"
-      "cmpw 0x306d20, %%di\n\t"
-      "jl .Lprofile_graph_toggle_1\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lprofile_graph_toggle_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dd801] "m"(bdf350_c1dd801)
-      : "memory");
+  int16_t count = *(int16_t *)0x306d20;
+  for (int16_t i = 0; i < count; i++) {
+    char *entry = (char *)0x306d28 + (int)i * 0x20c;
+    if (crt_stricmp(name, entry) == 0 || crt_stricmp(name, entry + 0x100) == 0) {
+      entry[0x209] = !entry[0x209];
+    }
+  }
 }
-#else
-#error "profile_graph_toggle: clang naked draft required"
-#endif
-
 
 /* FUN_000df3d0 (0xdf3d0) — XBE naked draft (batch 129). */
 #if defined(__clang__)
