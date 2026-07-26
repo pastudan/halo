@@ -6508,5 +6508,173 @@
     "object": "main.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x94020",
+    "name": "FUN_00094020",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x94060",
+    "name": "FUN_00094060",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x94290",
+    "name": "FUN_00094290",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x94a70",
+    "name": "FUN_00094a70",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x94ba0",
+    "name": "FUN_00094ba0",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x94c70",
+    "name": "recorded_animations_clear_debug_storage",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x94ff0",
+    "name": "recorded_animation_controlling_unit",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95050",
+    "name": "FUN_00095050",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x952d0",
+    "name": "recorded_animation_kill",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x955b0",
+    "name": "recorded_animation_get_time_left",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95660",
+    "name": "recorded_animation_play_and_delete",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95680",
+    "name": "FUN_00095680",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x956e0",
+    "name": "FUN_000956e0",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95750",
+    "name": "FUN_00095750",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95790",
+    "name": "FUN_00095790",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x958f0",
+    "name": "FUN_000958f0",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95930",
+    "name": "FUN_00095930",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x959b0",
+    "name": "FUN_000959b0",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95a20",
+    "name": "FUN_00095a20",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95a60",
+    "name": "FUN_00095a60",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95ad0",
+    "name": "FUN_00095ad0",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95b50",
+    "name": "FUN_00095b50",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95be0",
+    "name": "FUN_00095be0",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x95c10",
+    "name": "FUN_00095c10",
+    "object": "recorded_animations.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

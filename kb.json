@@ -4889,7 +4889,7 @@
         },
         {
           "addr": "0x93780",
-          "decl": "void FUN_00093780(void);"
+          "decl": "void FUN_00093780(int a, int *cursor, int c);"
         },
         {
           "addr": "0x93810",
@@ -21627,11 +21627,13 @@
       "functions": [
         {
           "addr": "0x94020",
-          "decl": "void FUN_00094020(void);"
+          "decl": "void FUN_00094020(int *out, int *cursor_ptr, int a, int c);",
+          "ported": false
         },
         {
           "addr": "0x94060",
-          "decl": "void FUN_00094060(void);"
+          "decl": "void FUN_00094060(int *out, int **stream, int *dest);",
+          "ported": false
         },
         {
           "addr": "0x940a0",
@@ -21639,7 +21641,8 @@
         },
         {
           "addr": "0x94290",
-          "decl": "void FUN_00094290(void);"
+          "decl": "void FUN_00094290(void);",
+          "ported": false
         },
         {
           "addr": "0x942a0",
@@ -21683,7 +21686,8 @@
         },
         {
           "addr": "0x94a70",
-          "decl": "void FUN_00094a70(void);"
+          "decl": "void FUN_00094a70(int a, int *cursor, int c);",
+          "ported": false
         },
         {
           "addr": "0x94a90",
@@ -21691,7 +21695,8 @@
         },
         {
           "addr": "0x94ba0",
-          "decl": "void FUN_00094ba0(void);"
+          "decl": "void FUN_00094ba0(void);",
+          "ported": false
         },
         {
           "addr": "0x94bb0",
@@ -21710,7 +21715,8 @@
         },
         {
           "addr": "0x94c70",
-          "decl": "void recorded_animations_clear_debug_storage(void);"
+          "decl": "void recorded_animations_clear_debug_storage(void);",
+          "ported": false
         },
         {
           "addr": "0x94cb0",
@@ -21723,11 +21729,13 @@
         },
         {
           "addr": "0x94ff0",
-          "decl": "char recorded_animation_controlling_unit(int unit_handle);"
+          "decl": "char recorded_animation_controlling_unit(int unit_handle);",
+          "ported": false
         },
         {
           "addr": "0x95050",
-          "decl": "void FUN_00095050(void);"
+          "decl": "void FUN_00095050(int unit@<edi>, int *out@<ebx>);",
+          "ported": false
         },
         {
           "addr": "0x950b0",
@@ -21740,15 +21748,17 @@
         },
         {
           "addr": "0x952d0",
-          "decl": "void recorded_animation_kill(int a0);"
+          "decl": "void recorded_animation_kill(int unit_handle);",
+          "ported": false
         },
         {
           "addr": "0x95330",
-          "decl": "void recorded_animation_play_internal(void);"
+          "decl": "void recorded_animation_play_internal(int unit, int anim, int flags);"
         },
         {
           "addr": "0x955b0",
-          "decl": "int recorded_animation_get_time_left(int a0);"
+          "decl": "int recorded_animation_get_time_left(int unit_handle);",
+          "ported": false
         },
         {
           "addr": "0x95640",
@@ -21757,23 +21767,28 @@
         },
         {
           "addr": "0x95660",
-          "decl": "int recorded_animation_play_and_delete(int a0, int a1);"
+          "decl": "int recorded_animation_play_and_delete(int unit, int anim);",
+          "ported": false
         },
         {
           "addr": "0x95680",
-          "decl": "int FUN_00095680(int a0, int a1);"
+          "decl": "int FUN_00095680(int unit, int anim);",
+          "ported": false
         },
         {
           "addr": "0x956e0",
-          "decl": "void FUN_000956e0(void);"
+          "decl": "void FUN_000956e0(int object, void *ctrl);",
+          "ported": false
         },
         {
           "addr": "0x95750",
-          "decl": "void FUN_00095750(void);"
+          "decl": "char FUN_00095750(int object);",
+          "ported": false
         },
         {
           "addr": "0x95790",
-          "decl": "void FUN_00095790(void);"
+          "decl": "char FUN_00095790(int object);",
+          "ported": false
         },
         {
           "addr": "0x957c0",
@@ -21781,39 +21796,48 @@
         },
         {
           "addr": "0x958f0",
-          "decl": "void FUN_000958f0(void);"
+          "decl": "void FUN_000958f0(int object);",
+          "ported": false
         },
         {
           "addr": "0x95930",
-          "decl": "void FUN_00095930(void);"
+          "decl": "void FUN_00095930(int object);",
+          "ported": false
         },
         {
           "addr": "0x959b0",
-          "decl": "void FUN_000959b0(void);"
+          "decl": "void FUN_000959b0(int object, void *ctrl);",
+          "ported": false
         },
         {
           "addr": "0x95a20",
-          "decl": "void FUN_00095a20(void);"
+          "decl": "char FUN_00095a20(int object);",
+          "ported": false
         },
         {
           "addr": "0x95a60",
-          "decl": "void FUN_00095a60(void);"
+          "decl": "char FUN_00095a60(int object);",
+          "ported": false
         },
         {
           "addr": "0x95ad0",
-          "decl": "void FUN_00095ad0(void);"
+          "decl": "void FUN_00095ad0(int object, void *ctrl);",
+          "ported": false
         },
         {
           "addr": "0x95b50",
-          "decl": "void FUN_00095b50(void);"
+          "decl": "char FUN_00095b50(int object);",
+          "ported": false
         },
         {
           "addr": "0x95be0",
-          "decl": "void FUN_00095be0(void);"
+          "decl": "void FUN_00095be0(int object);",
+          "ported": false
         },
         {
           "addr": "0x95c10",
-          "decl": "void FUN_00095c10(void);"
+          "decl": "void FUN_00095c10(int object);",
+          "ported": false
         },
         {
           "addr": "0x95c60",
@@ -31201,7 +31225,7 @@
         },
         {
           "addr": "0x97080",
-          "decl": "void FUN_00097080(void);"
+          "decl": "void FUN_00097080(int object, void *ctrl_block);"
         },
         {
           "addr": "0x97220",
