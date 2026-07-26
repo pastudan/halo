@@ -6760,5 +6760,117 @@
     "object": "recorded_animations.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x42cb0",
+    "name": "ai_communication_get_type_name",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x42ce0",
+    "name": "ai_communication_get_type_by_name",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x42d20",
+    "name": "ai_communication_packet_new",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x42d80",
+    "name": "FUN_00042d80",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x42df0",
+    "name": "FUN_00042df0",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x42e60",
+    "name": "FUN_00042e60",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x42eb0",
+    "name": "FUN_00042eb0",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x42f40",
+    "name": "FUN_00042f40",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x42f60",
+    "name": "FUN_00042f60",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x42fa0",
+    "name": "FUN_00042fa0",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x43050",
+    "name": "FUN_00043050",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x43090",
+    "name": "FUN_00043090",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x43270",
+    "name": "actor_communication_team",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x434c0",
+    "name": "ai_conversation_line",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x44500",
+    "name": "ai_conversation_stop",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x44590",
+    "name": "ai_conversation_actor_deleted",
+    "object": "ai_communication.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]

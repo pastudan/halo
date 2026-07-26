@@ -2801,12 +2801,12 @@
         },
         {
           "addr": "0x3b120",
-          "decl": "char FUN_0003b120(int actor_handle);",
+          "decl": "char FUN_0003b120(int actor);",
           "ported": true
         },
         {
           "addr": "0x3b150",
-          "decl": "char actor_is_fighting(int actor_handle);",
+          "decl": "char actor_is_fighting(int actor);",
           "ported": true
         },
         {
@@ -32209,51 +32209,63 @@
         },
         {
           "addr": "0x42cb0",
-          "decl": "void ai_communication_get_type_name(void);"
+          "decl": "const char *ai_communication_get_type_name(int16_t type);",
+          "ported": false
         },
         {
           "addr": "0x42ce0",
-          "decl": "void ai_communication_get_type_by_name(void);"
+          "decl": "int16_t ai_communication_get_type_by_name(const char *name);",
+          "ported": false
         },
         {
           "addr": "0x42d20",
-          "decl": "void ai_communication_packet_new(void *packet);"
+          "decl": "void ai_communication_packet_new(void *packet);",
+          "ported": false
         },
         {
           "addr": "0x42d80",
-          "decl": "void FUN_00042d80(void);"
+          "decl": "char FUN_00042d80(int actor, int unit, int prop);",
+          "ported": false
         },
         {
           "addr": "0x42df0",
-          "decl": "void FUN_00042df0(void);"
+          "decl": "char FUN_00042df0(int actor, int unit, int prop);",
+          "ported": false
         },
         {
           "addr": "0x42e60",
-          "decl": "void FUN_00042e60(void);"
+          "decl": "char FUN_00042e60(int actor, int unit, int prop);",
+          "ported": false
         },
         {
           "addr": "0x42eb0",
-          "decl": "void FUN_00042eb0(void);"
+          "decl": "char FUN_00042eb0(int actor, int unit, int prop);",
+          "ported": false
         },
         {
           "addr": "0x42f40",
-          "decl": "void FUN_00042f40(void);"
+          "decl": "char FUN_00042f40(int a, int b, int actor);",
+          "ported": false
         },
         {
           "addr": "0x42f60",
-          "decl": "void FUN_00042f60(void);"
+          "decl": "char FUN_00042f60(int actor, int unit, int prop);",
+          "ported": false
         },
         {
           "addr": "0x42fa0",
-          "decl": "void FUN_00042fa0(void);"
+          "decl": "char FUN_00042fa0(int actor, int unit, int prop);",
+          "ported": false
         },
         {
           "addr": "0x43050",
-          "decl": "void FUN_00043050(void);"
+          "decl": "char FUN_00043050(int actor, int unit, int prop);",
+          "ported": false
         },
         {
           "addr": "0x43090",
-          "decl": "void FUN_00043090(void);"
+          "decl": "char FUN_00043090(int actor, int unit, int prop);",
+          "ported": false
         },
         {
           "addr": "0x430d0",
@@ -32261,7 +32273,8 @@
         },
         {
           "addr": "0x43270",
-          "decl": "void actor_communication_team(void);"
+          "decl": "int actor_communication_team(int actor);",
+          "ported": false
         },
         {
           "addr": "0x432b0",
@@ -32277,7 +32290,8 @@
         },
         {
           "addr": "0x434c0",
-          "decl": "int ai_conversation_line(int param_1);"
+          "decl": "int16_t ai_conversation_line(int conversation_index);",
+          "ported": false
         },
         {
           "addr": "0x43520",
@@ -32287,7 +32301,7 @@
         },
         {
           "addr": "0x435b0",
-          "decl": "void ai_conversation_finish(int conversation_handle, char param_2, char param_3);"
+          "decl": "void ai_conversation_finish(int handle, int a, int b);"
         },
         {
           "addr": "0x43740",
@@ -32323,11 +32337,13 @@
         },
         {
           "addr": "0x44500",
-          "decl": "void ai_conversation_stop(int param_1);"
+          "decl": "void ai_conversation_stop(int conversation_index);",
+          "ported": false
         },
         {
           "addr": "0x44590",
-          "decl": "void ai_conversation_actor_deleted(int actor_handle);"
+          "decl": "void ai_conversation_actor_deleted(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x44660",
@@ -33785,7 +33801,7 @@
         },
         {
           "addr": "0x64b40",
-          "decl": "int FUN_00064b40(int param_1, int prop_handle, int param_3, int param_4);"
+          "decl": "int FUN_00064b40(int a, int b, int c, int d);"
         },
         {
           "addr": "0x64cd0",
