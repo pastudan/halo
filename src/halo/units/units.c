@@ -23022,42 +23022,6 @@ char FUN_001a8910(int16_t anim_state)
 #endif
 
 /* 0x1a8950 — map (anim_state@cx, target_state@dx) pair to action id. */
-#if defined(__clang__)
-__attribute__((naked, noinline))
-int FUN_001a8950(int16_t anim_state __attribute__((unused)),
-                 int16_t target_state __attribute__((unused)))
-{
-  __asm__ volatile(
-      "testw %%cx, %%cx\n\t"
-      "movl $6, %%eax\n\t"
-      "je 1f\n\t"
-      "cmpw $2, %%cx\n\t"
-      "je 1f\n\t"
-      "cmpw $3, %%cx\n\t"
-      "jne 2f\n\t"
-      "1:\n\t"
-      "testw %%dx, %%dx\n\t"
-      "je 3f\n\t"
-      "cmpw $2, %%dx\n\t"
-      "je 3f\n\t"
-      "cmpw $3, %%dx\n\t"
-      "jne 2f\n\t"
-      "3:\n\t"
-      "movl $1, %%eax\n\t"
-      "2:\n\t"
-      "cmpw $0x16, %%cx\n\t"
-      "je 4f\n\t"
-      "cmpw $0x15, %%cx\n\t"
-      "jne 5f\n\t"
-      "4:\n\t"
-      "movl $2, %%eax\n\t"
-      "5:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
 int FUN_001a8950(int16_t anim_state, int16_t target_state)
 {
   int result = 6;
@@ -23070,4 +23034,4 @@ int FUN_001a8950(int16_t anim_state, int16_t target_state)
     result = 2;
   return result;
 }
-#endif
+

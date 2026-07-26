@@ -13966,7 +13966,7 @@
         {
           "addr": "0xf5660",
           "decl": "char FUN_000f5660(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf56b0",

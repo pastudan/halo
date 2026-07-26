@@ -822,64 +822,6 @@ bool collision_features_test_los(void *features, void *los_data, void *out_hit)
 /* --- collision_features.obj batch drafts (2026-07-26) --- */
 
 /* 0x14ad60 — debug-draw a collision sphere feature. */
-#if defined(__clang__)
-static void (*const render_debug_collision_sphere_fn)(char, void *, float,
-                                                     void *) = FUN_00189540;
-
-__attribute__((naked, noinline))
-void render_debug_collision_sphere(void *sphere __attribute__((unused)),
-                                   void *color __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "movl 0x18(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "call *%[f]\n\t"
-      "addl $16, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [f] "m"(render_debug_collision_sphere_fn)
-      : "memory");
-}
-
-static void (*const render_debug_collision_cylinder_fn)(char, void *, void *,
-                                                       float, void *) =
-    FUN_001896d0;
-
-__attribute__((naked, noinline))
-void render_debug_collision_cylinder(void *cylinder __attribute__((unused)),
-                                     void *color __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "movl 0x24(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x18(%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "call *%[f]\n\t"
-      "addl $20, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [f] "m"(render_debug_collision_cylinder_fn)
-      : "memory");
-}
-#else
 void render_debug_collision_sphere(void *sphere, void *color)
 {
   char *sph = (char *)sphere;
@@ -892,7 +834,7 @@ void render_debug_collision_cylinder(void *cylinder, void *color)
   FUN_001896d0(1, (void *)(cyl + 0xc), (void *)(cyl + 0x18),
                *(float *)(cyl + 0x24), color);
 }
-#endif
+
 
 /* collision_sphere_test_vector (0x14bdb0) — XBE naked draft (batch 225). */
 #if defined(__clang__)

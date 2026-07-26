@@ -1158,41 +1158,6 @@ int16_t FUN_001b5400(int unit_handle, int seat_name_substr)
 
 
 /* 0x1b5500 — Exit vehicle seat when unit is seated with a valid seat index. */
-#if defined(__clang__)
-static char (*const FUN_001b5500_exit)(int) = unit_try_and_exit_seat;
-static void *(*const FUN_001b5500_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void FUN_001b5500(int unit_handle __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 8(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je 1f\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl 0xcc(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je 1f\n\t"
-      "cmpw $-1, 0x2a0(%%eax)\n\t"
-      "je 1f\n\t"
-      "pushl %%esi\n\t"
-      "call *%[exit]\n\t"
-      "addl $4, %%esp\n\t"
-      "1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_001b5500_get), [exit] "m"(FUN_001b5500_exit)
-      : "memory");
-}
-#else
 void FUN_001b5500(int unit_handle)
 {
   char *unit;
@@ -1208,7 +1173,7 @@ void FUN_001b5500(int unit_handle)
 
   unit_try_and_exit_seat(unit_handle);
 }
-#endif
+
 
 /* 0x1b5580 — Place vehicle and apply collision damage from placement. */
 void vehicle_causes_collision_damage(int vehicle_handle, void *placement)
@@ -1231,53 +1196,6 @@ char vehicle_hover(int vehicle_handle)
 
 
 /* 0x1b5610 — Toggle vehicle world-position refresh flag (+0x424 bit 1). */
-#if defined(__clang__)
-static void *(*const FUN_001b5610_get)(int, int) = object_get_and_verify_type;
-static vector3_t *(*const FUN_001b5610_pos)(int, vector3_t *) =
-    object_get_world_position;
-
-__attribute__((naked, noinline))
-void FUN_001b5610(int vehicle_handle __attribute__((unused)),
-                  char flag __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "movl 8(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je 2f\n\t"
-      "pushl %%esi\n\t"
-      "pushl $2\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je 1f\n\t"
-      "leal 0x454(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[pos]\n\t"
-      "addl $8, %%esp\n\t"
-      "orb $2, 0x424(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "1:\n\t"
-      "andb $0xfd, 0x424(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_001b5610_get), [pos] "m"(FUN_001b5610_pos)
-      : "memory");
-}
-#else
 void FUN_001b5610(int vehicle_handle, char flag)
 {
   char *vehicle;
@@ -1293,7 +1211,7 @@ void FUN_001b5610(int vehicle_handle, char flag)
     vehicle[0x424] &= 0xfd;
   }
 }
-#endif
+
 
 /* 0x1b5680 — True when the vehicle up-axis Z exceeds the flip threshold. */
 #if defined(__clang__)
