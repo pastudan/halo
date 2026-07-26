@@ -35358,7 +35358,7 @@
         {
           "addr": "0x58cc0",
           "decl": "void ai_scripting_follow_distance(int a0, int a1, int a2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x58d40",
@@ -36185,7 +36185,7 @@
         {
           "addr": "0x648a0",
           "decl": "int prop_orphan_transition(int actor_handle, int parent_prop);",
-          "ported": false,
+          "ported": true,
           "name": "prop_orphan_transition"
         },
         {
