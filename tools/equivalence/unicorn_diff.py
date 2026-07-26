@@ -297,18 +297,33 @@ def _load_kb() -> dict:
 
 
 def _find_kb_entry(kb: dict, func_name: str) -> Optional[dict]:
-    """Find a function entry in kb.json by name or hex address."""
+    """Find a function entry in kb.json by name or hex address.
+
+    Prefer exact ``name`` / address matches before scanning decl text — duplicate
+    or stale decls (same identifier, wrong addr) are common in this kb.
+    """
     addr_query = func_name if func_name.startswith("0x") else None
+    decl_fallback = None
     for obj in kb.get("objects", []):
         for fn in obj.get("functions", []):
+            enriched = dict(
+                fn, _obj_name=obj.get("name", ""), _obj_source=obj.get("source", "")
+            )
+            if addr_query and fn.get("addr", "") == addr_query:
+                return enriched
+            if fn.get("name") == func_name:
+                return enriched
             decl = fn.get("decl", "")
-            # Match function name in decl
-            m = re.search(r'\b(\w+)\s*\(', decl)
+            m = re.search(r"\b(\w+)\s*\(", decl)
             fn_name = m.group(1) if m else ""
-            if fn_name == func_name or fn.get("addr", "") == addr_query:
-                return dict(fn, _obj_name=obj.get("name", ""),
-                            _obj_source=obj.get("source", ""))
-    return None
+            if fn_name != func_name:
+                continue
+            kb_name = fn.get("name")
+            if kb_name and kb_name != func_name:
+                continue
+            if decl_fallback is None:
+                decl_fallback = enriched
+    return decl_fallback
 
 
 def _find_kb_entry_by_addr(kb: dict, addr: str) -> Optional[dict]:
