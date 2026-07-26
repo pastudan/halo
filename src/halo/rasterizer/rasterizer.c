@@ -5684,101 +5684,68 @@ void FUN_0016fec0(void)
   (void)edi;
 }
 
-/* 0x1700d0 */
+/* FUN_001700d0 (0x1700d0) — XBE naked draft (batch 357). */
+#if defined(__clang__)
+static void (*const b1700d0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1700d0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
 void FUN_001700d0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test esi, esi -> jne 0x1700f7 */
-  display_assert((char *)0x002a3e7c, (char *)0x002a3e80, 30, 0);
-  system_exit(0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  display_assert((char *)0x002a3e60, (char *)0x002a3e80, 31, 0);
-  system_exit(0);
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* cmp esi, 0x52 -> jge 0x17017f */
-  D3DDevice_SetRenderState_Simple(0, 0);
-  /* cmp esi, 0x74 -> jge 0x170192 */
-  D3DDevice_SetRenderState_Deferred(0, 0);
-  D3DDevice_SetRenderState_PSTextureModes();
-  /* cmp esi, 0x75 -> jne 0x1701af */
-  D3DDevice_SetRenderState_VertexBlend();
-  /* cmp esi, 0x76 -> jne 0x1701bf */
-  D3DDevice_SetRenderState_FogColor();
-  /* cmp esi, 0x77 -> jne 0x1701cf */
-  D3DDevice_SetRenderState_FillMode(edi);
-  /* cmp esi, 0x78 -> jne 0x1701df */
-  D3DDevice_SetRenderState_BackFillMode();
-  /* cmp esi, 0x79 -> jne 0x1701ef */
-  D3DDevice_SetRenderState_TwoSidedLighting();
-  /* cmp esi, 0x7a -> jne 0x1701ff */
-  D3DDevice_SetRenderState_NormalizeNormals();
-  /* cmp esi, 0x7b -> jne 0x17020f */
-  D3DDevice_SetRenderState_ZEnable(edi);
-  /* cmp esi, 0x7c -> jne 0x17021f */
-  D3DDevice_SetRenderState_StencilEnable(edi);
-  /* cmp esi, 0x7d -> jne 0x17022f */
-  D3DDevice_SetRenderState_StencilFail(edi);
-  /* cmp esi, 0x7f -> jne 0x17023f */
-  D3DDevice_SetRenderState_CullMode(edi);
-  /* cmp esi, 0x7e -> jne 0x17024f */
-  D3DDevice_SetRenderState_FrontFace();
-  /* cmp esi, 0x80 -> jne 0x170262 */
-  D3DDevice_SetRenderState_TextureFactor();
-  /* cmp esi, 0x81 -> jne 0x170275 */
-  D3DDevice_SetRenderState_ZBias(edi);
-  /* cmp esi, 0x82 -> jne 0x170288 */
-  D3DDevice_SetRenderState_LogicOp();
-  /* cmp esi, 0x83 -> jne 0x17029b */
-  D3DDevice_SetRenderState_EdgeAntiAlias();
-  /* cmp esi, 0x84 -> jne 0x1702ae */
-  D3DDevice_SetRenderState_MultiSampleAntiAlias();
-  /* cmp esi, 0x85 -> jne 0x1702c1 */
-  D3DDevice_SetRenderState_MultiSampleMask();
-  /* cmp esi, 0x86 -> jne 0x1702d4 */
-  D3DDevice_SetRenderState_MultiSampleType();
-  /* cmp esi, 0x87 -> jne 0x1702e7 */
-  D3DDevice_SetRenderState_ShadowFunc();
-  /* cmp esi, 0x88 -> jne 0x1702fa */
-  D3DDevice_SetRenderState_LineWidth();
-  /* cmp esi, 0x89 -> jne 0x17030d */
-  D3DDevice_SetRenderState_Dxt1NoiseEnable();
-  /* cmp esi, 0x8a -> jne 0x170320 */
-  D3DDevice_SetRenderState_YuvEnable();
-  /* cmp esi, 0x8b -> jne 0x170333 */
-  D3DDevice_SetRenderState_OcclusionCullEnable();
-  /* cmp esi, 0x8c -> jne 0x170346 */
-  D3DDevice_SetRenderState_StencilCullEnable();
-  /* cmp esi, 0x8d -> jne 0x170359 */
-  D3DDevice_SetRenderState_RopZCmpAlwaysRead();
-  /* cmp esi, 0x8e -> jne 0x17036c */
-  D3DDevice_SetRenderState_RopZRead();
-  /* cmp esi, 0x8f -> jne 0x17037a */
-  D3DDevice_SetRenderState_DoNotCullUncompressed();
-  /* cmp edx, 0x16 -> jge 0x170390 */
-  D3DDevice_SetTextureStageState(eax, 0, 0);
-  /* cmp edx, 0x1c -> jne 0x1703a1 */
-  D3DDevice_SetTextureState_TexCoordIndex();
-  /* cmp edx, 0x1d -> jne 0x1703b2 */
-  D3DDevice_SetTextureState_BorderColor(ecx, eax);
-  /* cmp edx, 0x1e -> jne 0x1703c3 */
-  D3DDevice_SetTextureState_ColorKeyColor();
-  /* cmp edx, 0x1b -> jg 0x1703d0 */
-  D3DDevice_SetTextureState_BumpEnv();
-  D3DDevice_SetVertexShaderConstant(0, (void *)(uintptr_t)ecx, eax);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_001700d0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1e\n\t"
+      "pushl $0x2a3e80\n\t"
+      "pushl $0x2a3e7c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001700d0_1:\n\t"
+      "flds (%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .LFUN_001700d0_2\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .LFUN_001700d0_3\n\t"
+      ".LFUN_001700d0_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1f\n\t"
+      "pushl $0x2a3e80\n\t"
+      "pushl $0x2a3e60\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001700d0_3:\n\t"
+      "flds 0x2533c8\n\t"
+      "fdivs (%%esi)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x2533c8\n\t"
+      "fdivs 0x4(%%esi)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1700d0_assert), [exitfn] "m"(b1700d0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_001700d0: clang naked draft required"
+#endif
+
 
 /* 0x1703f0 */
 void FUN_001703f0(void)
@@ -7965,28 +7932,65 @@ void FUN_00172650(void)
   (void)edx;
 }
 
-/* 0x1726a0 */
+/* FUN_001726a0 (0x1726a0) — XBE naked draft (batch 356). */
+#if defined(__clang__)
+static void (*const b1726a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1726a0_exitfn)(int) = system_exit;
+static void (*const b1726a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static void (*const b1726a0_c158140)(int target, int mipmap_index, uint32_t color, int do_clear, int zbuffer) = (void *)FUN_00158140;
+
+__attribute__((naked, noinline))
 void FUN_001726a0(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jne 0x1726c9 */
-  display_assert((char *)0x0029dc40, (char *)0x002a44b0, 563, 0);
-  system_exit(0);
-  /* relift: cmp word ptr [0x5a5bc0], 0 -> jne 0x17271d */
-  /* relift: relift: mov (char)eax, byte ptr [0x3256ca] */
-  /* test (char)eax, (char)eax -> je 0x17271d */
-  /* relift: relift: mov (char)eax, byte ptr [0x47e4b5] */
-  /* test (char)eax, (char)eax -> jne 0x1726f4 */
-  error(0, (char *)0x002a44ec);
-  /* relift: relift: mov (char)eax, byte ptr [0x3251fc] */
-  /* test (char)eax, (char)eax -> jne 0x17271d */
-  /* relift: relift: mov (int16_t)eax, word ptr [0x5a5bc0] */
-  FUN_00158140(0, 0, 0, 0, 0);
-  /* relift: relift: mov byte ptr [0x3251fc], 1 */
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x476ab0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_001726a0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x233\n\t"
+      "pushl $0x2a44b0\n\t"
+      "pushl $0x29dc40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001726a0_1:\n\t"
+      "cmpw $0, 0x5a5bc0\n\t"
+      "jne .LFUN_001726a0_3\n\t"
+      "movb 0x3256ca, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001726a0_3\n\t"
+      "movb 0x47e4b5, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001726a0_2\n\t"
+      "pushl $0x2a44ec\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_001726a0_2:\n\t"
+      "movb 0x3251fc, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001726a0_3\n\t"
+      "pushl $1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x5a5bc0, %%ax\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c158140]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "movb $1, 0x3251fc\n\t"
+      ".LFUN_001726a0_3:\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1726a0_assert), [exitfn] "m"(b1726a0_exitfn), [c8f390] "m"(b1726a0_c8f390), [c158140] "m"(b1726a0_c158140)
+      : "memory");
 }
+#else
+#error "FUN_001726a0: clang naked draft required"
+#endif
+
 
 /* 0x172720 */
 void rasterizer_window_get_fog(void)
@@ -9705,11 +9709,35 @@ void FUN_00174510(void *group __attribute__((unused)), int a2 __attribute__((unu
 #endif
 
 
-/* 0x174980 */
+/* FUN_00174980 (0x174980) — XBE naked draft (batch 358). */
+#if defined(__clang__)
+static void (*const b174980_c1ef100)(void) = (void *)D3DVertexBuffer_Lock;
+
+__attribute__((naked, noinline))
 void FUN_00174980(void)
 {
-  D3DVertexBuffer_Lock();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ef100]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1ef100] "m"(b174980_c1ef100)
+      : "memory");
 }
+#else
+#error "FUN_00174980: clang naked draft required"
+#endif
+
 
 /* 0x1749b0 */
 void FUN_001749b0(void)
@@ -9751,12 +9779,41 @@ void FUN_001749b0(void)
   (void)esi;
 }
 
-/* 0x174b60 */
+/* FUN_00174b60 (0x174b60) — XBE naked draft (batch 357). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void FUN_00174b60(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "flds (%%ecx)\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "fsubs (%%edx)\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "fstps (%%eax)\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "fsubs 0x4(%%edx)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fsubs 0x8(%%edx)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "flds 0xc(%%ecx)\n\t"
+      "fsubs 0xc(%%edx)\n\t"
+      "fstps 0xc(%%eax)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00174b60: clang naked draft required"
+#endif
+
 
 /* FUN_00174b90 (0x174b90) — XBE naked draft (batch 346). */
 #if defined(__clang__)

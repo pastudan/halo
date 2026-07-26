@@ -239,11 +239,36 @@ void FUN_001553a0(void)
 #endif
 
 
-/* 0x1553d0 */
+/* FUN_001553d0 (0x1553d0) — XBE naked draft (batch 355). */
+#if defined(__clang__)
+static void (*const b1553d0_c1e6b40)(void) = (void *)D3DDevice_CreateCubeTexture;
+
+__attribute__((naked, noinline))
 void FUN_001553d0(void)
 {
-  D3DDevice_CreateCubeTexture();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1e6b40]\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1e6b40] "m"(b1553d0_c1e6b40)
+      : "memory");
 }
+#else
+#error "FUN_001553d0: clang naked draft required"
+#endif
+
 
 /* 0x155560 */
 void FUN_00155560(void)
@@ -571,11 +596,35 @@ void rasterizer_set_texture_bitmap_data(int stage __attribute__((unused)), void 
 #endif
 
 
-/* 0x155cc0 */
+/* FUN_00155cc0 (0x155cc0) — XBE naked draft (batch 359). */
+#if defined(__clang__)
+static void (*const b155cc0_c1edd80)(void) = (void *)D3DVolumeTexture_LockBox;
+
+__attribute__((naked, noinline))
 void FUN_00155cc0(void)
 {
-  D3DVolumeTexture_LockBox();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1edd80]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1edd80] "m"(b155cc0_c1edd80)
+      : "memory");
 }
+#else
+#error "FUN_00155cc0: clang naked draft required"
+#endif
+
 
 /* rasterizer_set_texture_direct (0x155cf0) — XBE naked draft (batch 341). */
 #if defined(__clang__)

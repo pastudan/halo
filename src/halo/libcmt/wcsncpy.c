@@ -432,13 +432,51 @@ wchar_t *_wcsncat(wchar_t *dest, const wchar_t *src, size_t count)
   return NULL;
 }
 
-/* 0x1dc02c */
-int _wcsncmp(const wchar_t *s1, const wchar_t *s2, size_t count)
+/* _wcsncmp (0x1dc02c) — XBE naked draft (batch 353). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+int _wcsncmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __attribute__((unused)), size_t count __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "cmpl $0, 0x10(%%ebp)\n\t"
+      "jne .L_wcsncmp_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".L_wcsncmp_1:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      ".L_wcsncmp_2:\n\t"
+      "decl 0x10(%%ebp)\n\t"
+      "je .L_wcsncmp_3\n\t"
+      "movw (%%ecx), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .L_wcsncmp_3\n\t"
+      "cmpw (%%edx), %%ax\n\t"
+      "jne .L_wcsncmp_3\n\t"
+      "incl %%ecx\n\t"
+      "incl %%ecx\n\t"
+      "incl %%edx\n\t"
+      "incl %%edx\n\t"
+      "jmp .L_wcsncmp_2\n\t"
+      ".L_wcsncmp_3:\n\t"
+      "movzwl (%%ecx), %%eax\n\t"
+      "movzwl (%%edx), %%ecx\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "_wcsncmp: clang naked draft required"
+#endif
+
 
 /* 0x1dc061 */
 wchar_t *_wcsncpy(wchar_t *dest, const wchar_t *src, size_t count)
@@ -760,13 +798,37 @@ int __wcsnicmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __at
 #endif
 
 
-/* 0x1dc3e9 */
-int FUN_001dc3e9(int c, int mask)
+/* FUN_001dc3e9 (0x1dc3e9) — XBE naked draft (batch 355). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+int FUN_001dc3e9(int c __attribute__((unused)), int mask __attribute__((unused)))
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  __asm__ volatile(
+      "cmpw $0xffff, 0x4(%%esp)\n\t"
+      "je .LFUN_001dc3e9_1\n\t"
+      "cmpw $0x100, 0x4(%%esp)\n\t"
+      "jae .LFUN_001dc3e9_1\n\t"
+      "movzwl 0x4(%%esp), %%eax\n\t"
+      "movl 0x3317b8, %%ecx\n\t"
+      "movw (%%ecx,%%eax,2), %%ax\n\t"
+      "jmp .LFUN_001dc3e9_2\n\t"
+      ".LFUN_001dc3e9_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_001dc3e9_2:\n\t"
+      "movzwl 0x8(%%esp), %%ecx\n\t"
+      "movzwl %%ax, %%eax\n\t"
+      "andl %%ecx, %%eax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_001dc3e9: clang naked draft required"
+#endif
+
 
 /* __getwc_lk (0x1dc41e) — XBE naked draft (batch 310). */
 #if defined(__clang__)

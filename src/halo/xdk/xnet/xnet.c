@@ -2,36 +2,135 @@
 
 /* --- XNET:xnet.obj batch drafts (2026-07-26) --- */
 
-/* 0x1d8259 */
+/* XapiInitProcess (0x1d8259) — XBE naked draft (batch 353). */
+#if defined(__clang__)
+static void (*const b1d8259_c1d7749)(void) = (void *)FUN_001d7749;
+static void (*const b1d8259_c1d5842)(void) = (void *)FUN_001d5842;
+static int __stdcall (*const b1d8259_c1d7d21)(void *object_name_field) = (void *)FUN_001d7d21;
+static void (*const b1d8259_c1d819f)(void) = (void *)FUN_001d819f;
+static void (*const b1d8259_c1d3c95)(void) = (void *)XMountUtilityDrive;
+static void (*const b1d8259_c1d81f4)(void) = (void *)XapiBootToDash;
+static void (*const b1d8259_c1d454b)(void) = (void *)FUN_001d454b;
+
+__attribute__((naked, noinline))
 void XapiInitProcess(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  FUN_001d7749();
-  FUN_001d5842();
-  /* mem[0x00632a28] = eax */
-  /* relift: test byte ptr [0x10124], 8 -> jne 0x1d8323 */
-  FUN_001d7d21((void *)0x0032fd70);
-  /* test eax, eax -> jl 0x1d82ff */
-  /* cmp eax, esi -> jge 0x1d82d9 */
-  /* cmp eax, 0xc0000035 -> jne 0x1d829d */
-  FUN_001d819f();
-  /* cmp eax, esi -> jge 0x1d8303 */
-  /* cmp eax, 0xc000007f -> jne 0x1d82ff */
-  /* test (char)eax, 1 -> je 0x1d8342 */
-  XMountUtilityDrive();
-  /* test eax, eax -> jne 0x1d8342 */
-  XapiBootToDash();
-  /* cmp eax, esi -> jge 0x1d8342 */
-  /* cmp eax, 0xc0000035 -> jne 0x1d829d */
-  FUN_001d454b();
-  /* cmp esi, eax -> jae 0x1d8364 */
-  XapiBootToDash();
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x30, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "call *%[c1d7749]\n\t"
+      "pushl $0xc\n\t"
+      "popl %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "leal -0x30(%%ebp), %%edi\n\t"
+      "rep stosl\n\t"
+      "leal -0x30(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl $0x30, -0x30(%%ebp)\n\t"
+      "pushl 0x10138\n\t"
+      "pushl 0x10134\n\t"
+      "pushl %%esi\n\t"
+      "pushl $2\n\t"
+      "popl %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1d5842]\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "movl %%eax, 0x632a28\n\t"
+      "jne .LXapiInitProcess_2\n\t"
+      ".LXapiInitProcess_1:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "incl %%ecx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "jmp .LXapiInitProcess_9\n\t"
+      ".LXapiInitProcess_2:\n\t"
+      "testb $8, 0x10124\n\t"
+      "jne .LXapiInitProcess_6\n\t"
+      "pushl $0x32fd70\n\t"
+      "call *%[c1d7d21]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jl .LXapiInitProcess_4\n\t"
+      "pushl $0x32fd68\n\t"
+      "pushl $0x32fd60\n\t"
+      "call *0x253220\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jge .LXapiInitProcess_3\n\t"
+      "cmpl $0xc0000035, %%eax\n\t"
+      "jne .LXapiInitProcess_1\n\t"
+      ".LXapiInitProcess_3:\n\t"
+      "movl 0x10118, %%eax\n\t"
+      "leal 0xc(%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl 0x8(%%eax)\n\t"
+      "call *%[c1d819f]\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jge .LXapiInitProcess_5\n\t"
+      "cmpl $0xc000007f, %%eax\n\t"
+      "jne .LXapiInitProcess_4\n\t"
+      "pushl $0x54\n\t"
+      "popl %%ecx\n\t"
+      "pushl $0x10\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "jmp .LXapiInitProcess_9\n\t"
+      ".LXapiInitProcess_4:\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "jmp .LXapiInitProcess_8\n\t"
+      ".LXapiInitProcess_5:\n\t"
+      "movl 0x10124, %%eax\n\t"
+      "testb $1, %%al\n\t"
+      "je .LXapiInitProcess_7\n\t"
+      "andl %%edi, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d3c95]\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LXapiInitProcess_7\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "call *%[c1d81f4]\n\t"
+      "jmp .LXapiInitProcess_7\n\t"
+      ".LXapiInitProcess_6:\n\t"
+      "pushl $0x32fd68\n\t"
+      "pushl $0x32fd60\n\t"
+      "call *0x253220\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jge .LXapiInitProcess_7\n\t"
+      "cmpl $0xc0000035, %%eax\n\t"
+      "jne .LXapiInitProcess_1\n\t"
+      ".LXapiInitProcess_7:\n\t"
+      "movl 0x10118, %%eax\n\t"
+      "movl 0xa4(%%eax), %%esi\n\t"
+      "call *%[c1d454b]\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jae .LXapiInitProcess_10\n\t"
+      "pushl $4\n\t"
+      "popl %%ecx\n\t"
+      ".LXapiInitProcess_8:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      ".LXapiInitProcess_9:\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d81f4]\n\t"
+      ".LXapiInitProcess_10:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      ".byte 0xc9\n\t"
+      "ret\n\t"
+      :
+      : [c1d7749] "m"(b1d8259_c1d7749), [c1d5842] "m"(b1d8259_c1d5842), [c1d7d21] "m"(b1d8259_c1d7d21), [c1d819f] "m"(b1d8259_c1d819f), [c1d3c95] "m"(b1d8259_c1d3c95), [c1d81f4] "m"(b1d8259_c1d81f4), [c1d454b] "m"(b1d8259_c1d454b)
+      : "memory");
 }
+#else
+#error "XapiInitProcess: clang naked draft required"
+#endif
+
 
 /* 0x1d8368 */
 int XapiFormatFATVolume(void *device_path)
@@ -138,12 +237,44 @@ void _cinit(void)
 #endif
 
 
-/* 0x1d871b */
+/* _rtinit (0x1d871b) — XBE naked draft (batch 357). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void _rtinit(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl $0x2c84c0, %%eax\n\t"
+      "movl $0x2c84cc, %%edi\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jae .L_rtinit_3\n\t"
+      ".L_rtinit_1:\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .L_rtinit_2\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .L_rtinit_2\n\t"
+      "call *%%eax\n\t"
+      ".L_rtinit_2:\n\t"
+      "addl $4, %%esi\n\t"
+      "cmpl %%edi, %%esi\n\t"
+      "jb .L_rtinit_1\n\t"
+      ".L_rtinit_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "_rtinit: clang naked draft required"
+#endif
+
 
 /* 0x1d8750 */
 unsigned int FUN_001d8750(unsigned int val)

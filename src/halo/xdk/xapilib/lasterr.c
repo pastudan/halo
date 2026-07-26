@@ -219,25 +219,68 @@ void FUN_001d2367(void)
 #endif
 
 
-/* 0x1d23d9 */
+/* GetOverlappedResult (0x1d23d9) — XBE naked draft (batch 353). */
+#if defined(__clang__)
+static int __stdcall (*const b1d23d9_c1d0336)(int handle, int timeout_ms) = (void *)WaitForSingleObject;
+static void __stdcall (*const b1d23d9_c1d2268)(unsigned int error) = (void *)SetLastError;
+static void __stdcall (*const b1d23d9_c1d2296)(int status) = (void *)XapiSetLastNTError;
+
+__attribute__((naked, noinline))
 void GetOverlappedResult(void)
 {
-  int eax = 0;
-  int esi = 0;
-
-  /* relift: cmp dword ptr [esi], 0x103 -> jne 0x1d241e */
-  /* relift: cmp dword ptr [esp + 0x14], 0 -> je 0x1d2402 */
-  /* test eax, eax -> jne 0x1d23f8 */
-  WaitForSingleObject(0, 0);
-  /* cmp eax, 0x102 -> jne 0x1d241a */
-  SetLastError(996);
-  /* test eax, eax -> jne 0x1d2438 */
-  /* test esi, esi -> jl 0x1d2432 */
-  XapiSetLastNTError(0);
-
-  (void)eax;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%esi\n\t"
+      "movl 0xc(%%esp), %%esi\n\t"
+      "cmpl $0x103, (%%esi)\n\t"
+      "jne .LGetOverlappedResult_5\n\t"
+      "cmpl $0, 0x14(%%esp)\n\t"
+      "je .LGetOverlappedResult_2\n\t"
+      "movl 0x10(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LGetOverlappedResult_1\n\t"
+      "movl 0x8(%%esp), %%eax\n\t"
+      ".LGetOverlappedResult_1:\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d0336]\n\t"
+      "jmp .LGetOverlappedResult_3\n\t"
+      ".LGetOverlappedResult_2:\n\t"
+      "movl $0x102, %%eax\n\t"
+      ".LGetOverlappedResult_3:\n\t"
+      "cmpl $0x102, %%eax\n\t"
+      "jne .LGetOverlappedResult_4\n\t"
+      "pushl $0x3e4\n\t"
+      "call *%[c1d2268]\n\t"
+      "jmp .LGetOverlappedResult_7\n\t"
+      ".LGetOverlappedResult_4:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LGetOverlappedResult_7\n\t"
+      ".LGetOverlappedResult_5:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "movl 0x10(%%esp), %%ecx\n\t"
+      "movl %%eax, (%%ecx)\n\t"
+      "movl (%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jl .LGetOverlappedResult_6\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "incl %%eax\n\t"
+      "jmp .LGetOverlappedResult_8\n\t"
+      ".LGetOverlappedResult_6:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d2296]\n\t"
+      ".LGetOverlappedResult_7:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LGetOverlappedResult_8:\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c1d0336] "m"(b1d23d9_c1d0336), [c1d2268] "m"(b1d23d9_c1d2268), [c1d2296] "m"(b1d23d9_c1d2296)
+      : "memory");
 }
+#else
+#error "GetOverlappedResult: clang naked draft required"
+#endif
+
 
 /* FUN_001d243e (0x1d243e) — XBE naked draft (batch 342). */
 #if defined(__clang__)
