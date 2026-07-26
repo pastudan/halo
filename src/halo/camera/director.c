@@ -1407,91 +1407,28 @@ uint8_t director_inhibited_facing(int16_t a0)
   return *(uint8_t *)(0x335301 + (int)(int16_t)a0 * 0xf8);
 }
 
-/* director_inhibited_input (0x862c0) — XBE naked draft (batch 174). */
-#if defined(__clang__)
-static void (*const b862c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b862c0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void director_inhibited_input(void)
+/* director_inhibited_input (0x862c0) — readable C lift. */
+uint8_t director_inhibited_input(int16_t a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Ldirector_inhibited_input_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Ldirector_inhibited_input_2\n\t"
-      ".Ldirector_inhibited_input_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb3\n\t"
-      "pushl $0x26700c\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldirector_inhibited_input_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0xf8, %%eax, %%eax\n\t"
-      "movb 0x335302(%%eax), %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b862c0_assert), [exitfn] "m"(b862c0_exitfn)
-      : "memory");
+  if ((int16_t)a0 < 0 || (int16_t)a0 >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x26700c, 0xb3, 1);
+    system_exit(-1);
+  }
+  return *(uint8_t *)(0x335302 + (int)(int16_t)a0 * 0xf8);
 }
-#else
-#error "director_inhibited_input: clang naked draft required"
-#endif
 
-
-/* director_set_mode (0x86310) — XBE naked draft (batch 173). */
-#if defined(__clang__)
-static void (*const b86310_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b86310_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void director_set_mode(void)
+/* director_set_mode (0x86310) — readable C lift. */
+void director_set_mode(int16_t a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Ldirector_set_mode_1\n\t"
-      "cmpw $5, %%si\n\t"
-      "jl .Ldirector_set_mode_2\n\t"
-      ".Ldirector_set_mode_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x180\n\t"
-      "pushl $0x26700c\n\t"
-      "pushl $0x267044\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldirector_set_mode_2:\n\t"
-      "cmpw %%si, 0x3352ac\n\t"
-      "je .Ldirector_set_mode_3\n\t"
-      "movw %%si, 0x3352ac\n\t"
-      "movb $1, 0x3352ae\n\t"
-      ".Ldirector_set_mode_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b86310_assert), [exitfn] "m"(b86310_exitfn)
-      : "memory");
+  if ((int16_t)a0 < 0 || (int16_t)a0 >= 5) {
+    display_assert((const char *)0x267044, (const char *)0x26700c, 0x180, 1);
+    system_exit(-1);
+  }
+  if (*(int16_t *)0x3352ac != (int16_t)a0) {
+    *(int16_t *)0x3352ac = (int16_t)a0;
+    *(uint8_t *)0x3352ae = 1;
+  }
 }
-#else
-#error "director_set_mode: clang naked draft required"
-#endif
-
 
 /* director_save_camera (0x86360) — XBE naked draft (batch 146). */
 #if defined(__clang__)

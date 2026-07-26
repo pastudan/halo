@@ -7035,12 +7035,12 @@
         },
         {
           "addr": "0x862c0",
-          "decl": "void director_inhibited_input(void);",
-          "ported": false
+          "decl": "uint8_t director_inhibited_input(int16_t a0);",
+          "ported": true
         },
         {
           "addr": "0x86310",
-          "decl": "void director_set_mode(void);",
+          "decl": "void director_set_mode(int16_t a0);",
           "ported": false
         },
         {
@@ -7864,7 +7864,7 @@
         },
         {
           "addr": "0x1996d0",
-          "decl": "void file_reference_copy(void);",
+          "decl": "void *file_reference_copy(void *dst, void *src);",
           "ported": false
         },
         {
@@ -21781,7 +21781,7 @@
         },
         {
           "addr": "0x128c0",
-          "decl": "void action_avoid_setup(void);",
+          "decl": "int action_avoid_setup(void * a0, void * a1);",
           "ported": false
         },
         {
@@ -26575,8 +26575,8 @@
         },
         {
           "addr": "0x81910",
-          "decl": "void FUN_00081910(void);",
-          "ported": false
+          "decl": "void FUN_00081910(void * a0);",
+          "ported": true
         },
         {
           "addr": "0x81980",
@@ -37762,7 +37762,7 @@
         },
         {
           "addr": "0x120ee0",
-          "decl": "void animation_frame_get_xy_translation(void);",
+          "decl": "void animation_frame_get_xy_translation(void *animation, short frame_index, float *out_xy);",
           "ported": false
         },
         {
@@ -37847,7 +37847,7 @@
         },
         {
           "addr": "0x123e20",
-          "decl": "void animation_get_root_matrix(void);",
+          "decl": "void *animation_get_root_matrix(void *anim_graph, int index);",
           "ported": false
         },
         {
