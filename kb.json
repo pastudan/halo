@@ -32827,11 +32827,13 @@
       "functions": [
         {
           "addr": "0x53b80",
-          "decl": "void FUN_00053b80(void);"
+          "decl": "void FUN_00053b80(void);",
+          "ported": false
         },
         {
           "addr": "0x53bf0",
-          "decl": "void FUN_00053bf0(void);"
+          "decl": "void FUN_00053bf0(void);",
+          "ported": false
         },
         {
           "addr": "0x53c50",
@@ -32849,11 +32851,13 @@
         },
         {
           "addr": "0x53e80",
-          "decl": "int FUN_00053e80(void *ai_profile_element, const char *name);"
+          "decl": "int FUN_00053e80(void *ai_profile_element, const char *name);",
+          "ported": false
         },
         {
           "addr": "0x53ee0",
-          "decl": "int FUN_00053ee0(void *ai_profile_element, const char *name);"
+          "decl": "int FUN_00053ee0(void *encounter_def, const char *name);",
+          "ported": false
         },
         {
           "addr": "0x53f40",
@@ -32988,7 +32992,8 @@
         },
         {
           "addr": "0x57330",
-          "decl": "void FUN_00057330(void);"
+          "decl": "int FUN_00057330(int16_t command_index, char *state);",
+          "ported": false
         },
         {
           "addr": "0x57380",
@@ -33031,7 +33036,8 @@
         },
         {
           "addr": "0x57b40",
-          "decl": "int FUN_00057b40(int actor_handle@<eax>);"
+          "decl": "int FUN_00057b40(int actor_handle);",
+          "ported": false
         },
         {
           "addr": "0x57bc0",
@@ -33330,7 +33336,8 @@
         },
         {
           "addr": "0x5ac60",
-          "decl": "void FUN_0005ac60(void);"
+          "decl": "char FUN_0005ac60(int *samples, int score, float y, float x, float z);",
+          "ported": false
         },
         {
           "addr": "0x5acf0",
@@ -33421,7 +33428,8 @@
         },
         {
           "addr": "0x5c630",
-          "decl": "void encounter_set_respawn(int encounter_handle, char flag);"
+          "decl": "void encounter_set_respawn(int encounter_handle, char flag);",
+          "ported": false
         },
         {
           "addr": "0x5c680",

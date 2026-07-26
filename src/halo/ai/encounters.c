@@ -4831,6 +4831,167 @@ void FUN_0005dfb0(void)
 {
 }
 
+/* 0x57330 — Test whether a command-list entry exists and read its flag byte. */
+int FUN_00057330(int16_t command_index, char *state)
+{
+  char *block;
+  char *list;
+  int count;
+  char *elem;
+
+  block = (char *)tag_block_get_element((char *)global_scenario_get() + 0x438,
+                                        (int)command_index, 0x60);
+  list = block + 0x30;
+  count = *(int *)list;
+  if ((int)(uint8_t)*state >= count)
+    return 1;
+
+  elem = (char *)tag_block_get_element(list, (int)(uint8_t)*state, 0x20);
+  if (elem == NULL)
+    return 1;
+
+  return ((~*(uint8_t *)(elem + 4) & 0x10U) | 0x20U) >> 4;
+}
+
+/* 0x5c630 — Set encounter respawn state and force activation. */
+void encounter_set_respawn(int encounter_handle, char flag)
+{
+  char *encounter;
+
+  if (*(char *)(*(char **)0x632574 + 1) == 0)
+    return;
+
+  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
+  *(char *)(encounter + 0x3c) = flag;
+  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
+  *(int16_t *)(encounter + 0xe) = 0x96;
+  FUN_0005a4e0(encounter_handle);
+}
+
+/* 0x53bf0 — Debug overlay: write per-team encounter respawn timers. */
+void FUN_00053bf0(void)
+{
+  int16_t values[3];
+
+  crt_sprintf((char *)0x5ab280, (const char *)0x25c218,
+              (int)*(int16_t *)0x5ac76e, (int)*(int16_t *)0x5ac7f6,
+              (int)*(int16_t *)0x5ac87e);
+  values[0] = 0x96;
+  values[1] = 0x12c;
+  values[2] = 0x1c2;
+  ((void(__cdecl *)(char *, int, int16_t *))0x53800)((char *)0x5ab280, 3,
+                                                      values);
+}
+
+/* 0x53b80 — Debug overlay: write per-team encounter activation timers. */
+void FUN_00053b80(void)
+{
+  int16_t values[3];
+
+  crt_sprintf((char *)0x5ab280, (const char *)0x25c1d8,
+              (int)*(int16_t *)0x5ac5d6, (int)*(int16_t *)0x5ac65e,
+              (int)*(int16_t *)0x5ac6e6, (int)*(int16_t *)0x5ac906);
+  values[0] = 0x96;
+  values[1] = 0x12c;
+  values[2] = 0x1c2;
+  ((void(__cdecl *)(char *, int, int16_t *))0x53800)((char *)0x5ab280, 3,
+                                                      values);
+}
+
+/* 0x53e80 — Find firing-group index by name within an AI profile element. */
+int FUN_00053e80(void *ai_profile_element, const char *name)
+{
+  char *block;
+  int i;
+
+  block = (char *)ai_profile_element + 0x80;
+  for (i = 0; i < *(int *)block; i++) {
+    void *elem = tag_block_get_element(block, i, 0xe8);
+    if (((int(__cdecl *)(const char *, const char *, size_t))0x1e6596)(
+          (const char *)elem, name, 0x20) == 0) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+/* 0x53ee0 — Find platoon definition index by name within an encounter def. */
+int FUN_00053ee0(void *encounter_def, const char *name)
+{
+  char *block;
+  int i;
+
+  block = (char *)encounter_def + 0x8c;
+  for (i = 0; i < *(int *)block; i++) {
+    void *elem = tag_block_get_element(block, i, 0xac);
+    if (((int(__cdecl *)(const char *, const char *, size_t))0x1e6596)(
+          (const char *)elem, name, 0x20) == 0) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+/* 0x57b40 — Classify actor alertness / combat state (0..6). */
+int FUN_00057b40(int actor_handle)
+{
+  char *actor;
+
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  if (*(char *)(actor + 8) == 0)
+    return 0;
+  if (*(int16_t *)(actor + 0x6a) < 3)
+    return 1;
+  if (*(int16_t *)(actor + 0x6e) == 0)
+    return 2;
+  if (*(int16_t *)(actor + 0x268) < 6)
+    return 3;
+  if (*(int16_t *)(actor + 0x268) < 0xa)
+    return 4;
+  if (*(char *)(actor + 0x454) == 0 && *(char *)(actor + 0x45c) == 0)
+    return 5;
+  return 6;
+}
+
+/* 0x5ac60 — Insert a scored pursuit sample into a 2-slot sorted buffer. */
+char FUN_0005ac60(int *samples, int score, float y, float x, float z)
+{
+  char *cursor;
+  int16_t slot;
+  char inserted;
+
+  inserted = 0;
+  cursor = (char *)samples + 4;
+  for (slot = 0; slot < 2; slot++) {
+    if (y > *(float *)cursor) {
+      int shift = 1 - slot;
+      char *dest;
+      char *src;
+
+      if (shift > 0) {
+        dest = cursor + 0x10;
+        src = cursor;
+        do {
+          *(int *)(dest + 0) = *(int *)(src + 0);
+          *(int *)(dest + 4) = *(int *)(src + 4);
+          *(int *)(dest + 8) = *(int *)(src + 8);
+          *(int *)(dest + 0xc) = *(int *)(src + 0xc);
+          dest -= 0x10;
+          src -= 0x10;
+          shift--;
+        } while (shift != 0);
+      }
+      *(float *)cursor = y;
+      *(int *)(cursor - 4) = score;
+      *(float *)(cursor + 4) = x;
+      *(float *)(cursor + 8) = z;
+      inserted = 1;
+    }
+    cursor += 0x10;
+  }
+  return inserted;
+}
+
 /* Deferred functions (not yet ported — thunked from XBE):
  *   FUN_0005de80  — encounter_update (needs FUN_0005acf0 @<eax> audit)
  *   encounters_create_for_new_map  — encounter_tally_reset_pass (shared loop
