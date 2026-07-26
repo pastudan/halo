@@ -2506,7 +2506,8 @@
         {
           "addr": "0x1c0e0",
           "decl": "char FUN_0001c0e0(int actor_handle, char param_2, int state_data);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_0001c0e0"
         },
         {
           "addr": "0x1c190",
@@ -5198,12 +5199,12 @@
         },
         {
           "addr": "0xa5590",
-          "decl": "void FUN_000a5590(void);",
+          "decl": "float FUN_000a5590(float a, float b);",
           "ported": false
         },
         {
           "addr": "0xa55e0",
-          "decl": "void FUN_000a55e0(void);",
+          "decl": "float FUN_000a55e0(float a, float b, float c, float d);",
           "ported": false
         },
         {
@@ -11804,8 +11805,8 @@
         },
         {
           "addr": "0xc4ae0",
-          "decl": "void FUN_000c4ae0(int16_t function_index@<eax>, char *dest);",
-          "ported": false
+          "decl": "void FUN_000c4ae0(int16_t function_index, char *dest);",
+          "ported": true
         },
         {
           "addr": "0xc4b00",
@@ -12259,12 +12260,12 @@
         {
           "addr": "0xc99e0",
           "decl": "void FUN_000c99e0(int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9a20",
           "decl": "void FUN_000c9a20(int16_t name_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9a50",
@@ -12333,18 +12334,18 @@
         },
         {
           "addr": "0xc9f90",
-          "decl": "float *FUN_000c9f90(void);",
-          "ported": false
+          "decl": "float *FUN_000c9f90(int object_handle);",
+          "ported": true
         },
         {
           "addr": "0xca010",
           "decl": "float FUN_000ca010(int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca030",
           "decl": "void FUN_000ca030(int object_handle, float value);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca050",
@@ -12510,7 +12511,7 @@
         {
           "addr": "0xcaf40",
           "decl": "int16_t FUN_000caf40(float x);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcaf60",
@@ -34774,7 +34775,8 @@
         {
           "addr": "0x49430",
           "decl": "void ai_debug_lineoffire_addpill(float *vec_a, float *vec_b, float param_3, char param_4);",
-          "ported": false
+          "ported": false,
+          "name": "ai_debug_lineoffire_addpill"
         },
         {
           "addr": "0x494d0",
@@ -35352,7 +35354,7 @@
         {
           "addr": "0x58cc0",
           "decl": "void ai_scripting_follow_distance(int a0, int a1, int a2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x58d40",
@@ -35745,7 +35747,7 @@
         },
         {
           "addr": "0x58af0",
-          "decl": "void FUN_00058af0(int actor_handle, int vehicle_handle, void *seat_list, char require_pilot);",
+          "decl": "void FUN_00058af0(int seat_list, int mode, int encounter_handle @<eax>);",
           "ported": false
         },
         {
@@ -38901,7 +38903,7 @@
       "functions": [
         {
           "addr": "0x24000",
-          "decl": "void FUN_00024000(void *ctx, float score, int type, void *position);",
+          "decl": "void FUN_00024000(void *unused, float score, void *ctx @<esi>);",
           "ported": false,
           "name": "FUN_00024000"
         },
@@ -39697,7 +39699,7 @@
         },
         {
           "addr": "0x81a90",
-          "decl": "bool transport_address_equivalent(const void *a, const void *b);",
+          "decl": "void transport_address_equivalent(void);",
           "ported": false,
           "name": "transport_address_equivalent"
         },
@@ -40428,7 +40430,8 @@
         {
           "addr": "0x60200",
           "decl": "float FUN_00060200(void *path, int16_t heap_index);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00060200"
         },
         {
           "addr": "0x60260",
