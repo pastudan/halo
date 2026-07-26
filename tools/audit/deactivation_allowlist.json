@@ -15251,5 +15251,103 @@
     "object": "actor_firing_position.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1be920",
+    "name": "texture_cache_delete",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1be940",
+    "name": "texture_cache_open",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1be950",
+    "name": "texture_cache_idle",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1be960",
+    "name": "texture_cache_bitmap_new",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1be9f0",
+    "name": "texture_cache_bitmap_delete",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1beb70",
+    "name": "FUN_001beb70",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1becc0",
+    "name": "FUN_001becc0",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bed30",
+    "name": "texture_cache_flush",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bed50",
+    "name": "FUN_001bed50",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bed90",
+    "name": "FUN_001bed90",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bef80",
+    "name": "FUN_001bef80",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bf080",
+    "name": "texture_cache_new",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bf130",
+    "name": "texture_cache_close",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x1bf260",
+    "name": "texture_cache_debug_render",
+    "object": "xbox_texture_cache.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
