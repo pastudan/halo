@@ -11739,7 +11739,7 @@ void FUN_0013b380(void)
                   if (cVar3 != '\0') goto LAB_0013baac;
                 }
               } else {
-                first_person_weapon_center_flashlight(*(int *)(iVar5 + 0x2c), (float *)&light_params[1], (float *)&light_params[4], &light_params[7]);
+                first_person_weapon_center_flashlight(*(int *)(iVar5 + 0x2c), (float *)&light_params[1], (float *)&light_params[4], (float *)&light_params[7]);
 LAB_0013baac:
                 *(unsigned char *)(iVar5 + 2) = *(unsigned char *)(iVar5 + 2) | 8;
               }

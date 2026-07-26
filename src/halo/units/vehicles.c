@@ -590,19 +590,53 @@ void set_real_quaternion(float *quat, float w, int x, int y, int z)
   *(int *)((char *)quat + 0xc) = z;
 }
 
-/* 0x1b5770 */
-void vehicle_reset(void)
+/* 0x1b5770 — clear vehicle control/physics scratch state. */
+__declspec(noinline) void vehicle_reset(int vehicle_handle)
 {
-  object_get_and_verify_type(0, 0);
-  csmemset((void *)0, 0, 0);
+  char *vehicle;
+
+  vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  *(int16_t *)(vehicle + 0x424) = 0;
+  *(int16_t *)(vehicle + 0x426) = 0;
+  vehicle[0x428] = 0;
+  vehicle[0x429] = 0;
+  vehicle[0x42a] = 0;
+  vehicle[0x42b] = 0;
+  *(int *)(vehicle + 0x42c) = 0;
+  *(int *)(vehicle + 0x430) = 0;
+  *(int *)(vehicle + 0x434) = 0;
+  *(int *)(vehicle + 0x438) = 0;
+  *(int *)(vehicle + 0x43c) = 0;
+  *(int *)(vehicle + 0x440) = 0;
+  *(int *)(vehicle + 0x448) = 0;
+  *(int *)(vehicle + 0x444) = 0;
+  csmemset(vehicle + 0x44c, 0, 8);
+  *(int *)(vehicle + 0x460) = 0;
+  *(int *)(vehicle + 0x464) = 0;
+  *(int *)(vehicle + 0x468) = 0;
+  *(int *)(vehicle + 0x46c) = 0;
+  *(int *)(vehicle + 0x470) = 0;
+  *(int *)(vehicle + 0x474) = 0;
+  *(int *)(vehicle + 0x478) = 0;
 }
 
-/* 0x1b5820 */
-void vehicle_new(void)
+/* 0x1b5820 — initialize a newly created vehicle object. */
+char vehicle_new(int vehicle_handle)
 {
-  object_get_and_verify_type(0, 0);
-  tag_get('ihev', 0);
-  vehicle_reset();
+  char *vehicle;
+  char *vehicle_tag;
+
+  vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehicle_tag = (char *)tag_get(0x76656869, *(int *)vehicle); /* 'vehi' */
+  vehicle_reset(vehicle_handle);
+  if (*(int *)(vehicle_tag + 0x8c) == -1)
+    *(int *)(vehicle + 4) |= 0x20;
+  else
+    *(int *)(vehicle + 4) &= ~0x20;
+  if (*(int *)(vehicle_tag + 0x8c) != -1)
+    *(float *)(vehicle + 0x14) +=
+        *(float *)(vehicle_tag + 4) * *(float *)0x253398;
+  return 1;
 }
 
 /* 0x1b5890 — Preprocess vehicle node orientations from model_animations

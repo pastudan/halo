@@ -898,24 +898,25 @@ char *FUN_000dcaf0(int16_t local_player_index)
   return (char *)(*(int *)0x46bea8) + (int)local_player_index * 0x1ea0;
 }
 
-/* 0xdcdc0 */
-void FUN_000dcdc0(void)
+/* 0xdcdc0 — local-player index whose unit object matches object_handle. */
+int16_t FUN_000dcdc0(int object_handle /* @<edi> */)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  int16_t i;
+  int player_handle;
+  char *player;
 
-  local_player_get_player_index(esi);
-  /* cmp eax, -1 -> je 0xdcde7 */
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* cmp ecx, edi -> je 0xdcdf4 */
-  /* cmp (int16_t)esi, 4 -> jl 0xdcdc3 */
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+#if defined(__clang__)
+#pragma clang loop unroll(disable)
+#endif
+  for (i = 0; i < 4; i++) {
+    player_handle = local_player_get_player_index(i);
+    if (player_handle != -1) {
+      player = (char *)datum_get(*(data_t **)0x5aa6d4, player_handle);
+      if (*(int *)(player + 0x34) == object_handle)
+        return i;
+    }
+  }
+  return -1;
 }
 
 /* 0xdce80 — draw the local player's first-person weapon (and optional arms). */
@@ -1052,24 +1053,45 @@ int16_t first_person_weapon_get_marker_by_name(int object_handle,
                       out_markers, max_markers);
 }
 
-/* 0xdd260 */
-void first_person_weapon_center_flashlight(int object_handle, float *out_position, float *out_forward, void *out_up)
+/* 0xdd260 — flashlight marker center/forward/up for an FP weapon object. */
+void first_person_weapon_center_flashlight(int object_handle, float *out_position,
+                                           float *out_forward, float *out_up)
 {
-  int ecx = 0;
-  int esi = 0;
+  int16_t local_index;
+  char *fp;
+  char marker[0x6c];
+  float *forward;
+  float *position;
+  float *up;
 
-  FUN_000dcdc0();
-  /* cmp (int16_t)esi, -1 -> je 0xdd332 */
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xdd287 */
-  /* cmp (int16_t)esi, 4 -> jl 0xdd2a7 */
-  display_assert((char *)0x00266fc0, (char *)0x00282294, 1433, 0);
-  system_exit(0);
-  /* test (char)ecx, (char)ecx -> je 0xdd332 */
-  first_person_weapon_get_marker_by_name(0, (const char *)0, (void *)0, 0);
-  /* test (int16_t)eax, (int16_t)eax -> jle 0xdd332 */
+  local_index = FUN_000dcdc0(object_handle);
+  if (local_index == -1)
+    return;
+  if (local_index < 0 || local_index >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 0x599, 1);
+    system_exit(-1);
+  }
 
-  (void)ecx;
-  (void)esi;
+  fp = (char *)(*(int *)0x46bea8) + (int)local_index * 0x1ea0;
+  if (fp[0] == 0)
+    return;
+  if (first_person_weapon_get_marker_by_name(*(int *)(fp + 8),
+                                             (const char *)0x00282364, marker,
+                                             1) <= 0)
+    return;
+
+  forward = (float *)(marker + 0x3c);
+  position = (float *)(marker + 0x60);
+  up = (float *)(marker + 0x54);
+  out_position[0] = position[0] - forward[0] * *(float *)0x253398;
+  out_position[1] = position[1] - forward[1] * *(float *)0x253398;
+  out_position[2] = position[2] - forward[2] * *(float *)0x253398;
+  out_forward[0] = forward[0];
+  out_forward[1] = forward[1];
+  out_forward[2] = forward[2];
+  out_up[0] = up[0];
+  out_up[1] = up[1];
+  out_up[2] = up[2];
 }
 
 /* 0xdd340 — resolve FP weapon light marker into world basis vectors. */
@@ -1357,7 +1379,7 @@ void first_person_weapon_message_from_unit(int unit_handle, int message_type)
 {
   int esi = 0;
 
-  FUN_000dcdc0();
+  FUN_000dcdc0(unit_handle);
   FUN_000de140(0, 0);
   /* cmp (int16_t)esi, -1 -> jne 0xde3a6 */
   object_get_and_verify_type(0, 0);

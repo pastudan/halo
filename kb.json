@@ -4881,7 +4881,7 @@
         },
         {
           "addr": "0x145660",
-          "decl": "void FUN_00145660(void);",
+          "decl": "void FUN_00145660(int object_handle /* @<eax> */, int animation_graph_tag, const char *anim_name, int16_t frame);",
           "ported": false
         },
         {
@@ -8121,7 +8121,7 @@
         },
         {
           "addr": "0xdcdc0",
-          "decl": "void FUN_000dcdc0(void);",
+          "decl": "int16_t FUN_000dcdc0(int object_handle /* @<edi> */);",
           "ported": false
         },
         {
@@ -8143,7 +8143,7 @@
         },
         {
           "addr": "0xdd260",
-          "decl": "void first_person_weapon_center_flashlight(int object_handle, float *out_position, float *out_forward, void *out_up);",
+          "decl": "void first_person_weapon_center_flashlight(int object_handle, float *out_position, float *out_forward, float *out_up);",
           "ported": false
         },
         {
@@ -29550,12 +29550,12 @@
         },
         {
           "addr": "0x1b5770",
-          "decl": "void vehicle_reset(void);",
+          "decl": "void vehicle_reset(int vehicle_handle);",
           "ported": false
         },
         {
           "addr": "0x1b5820",
-          "decl": "void vehicle_new(void);",
+          "decl": "char vehicle_new(int vehicle_handle);",
           "ported": false
         },
         {

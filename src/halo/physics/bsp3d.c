@@ -342,29 +342,51 @@ int FUN_001470b0(int param_1, uint32_t param_2, uint32_t param_3,
 }
 /* --- bsp3d.obj batch drafts (2026-07-26) --- */
 
-/* 0x146be0 */
+/* 0x146be0 — apply projectile/damage radius to nearby breakable surfaces. */
 void FUN_00146be0(void *damage_params)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *scenario;
+  char *jpt;
+  char *block;
+  char *surf;
+  float *damage;
+  float radius;
+  float dx, dy, dz, limit;
+  int count;
+  int16_t i;
+  unsigned int *bits;
+  float *flags;
 
-  scenario_get();
-  tag_get('!tpj', 0);
-  /* test (char)eax, (char)eax -> je 0x146d37 */
-  /* test (char)eax, 0x41 -> jne 0x146c6b */
-  error(0, (char *)0x0029c9b8);
-  breakable_surface_extant(0);
-  /* test (char)eax, (char)eax -> je 0x146d27 */
-  tag_block_get_element((void *)(uintptr_t)esi, 0, 48);
-  breakable_surface_get(0);
-  breakable_surfaces_get_bsp_surface_data();
-  FUN_00145ad0(0, (void *)(uintptr_t)ecx, 0);
-  /* cmp edi, eax -> jl 0x146c88 */
+  scenario = (char *)scenario_get();
+  damage = (float *)damage_params;
+  jpt = (char *)tag_get(0x6a707421, *(int *)damage_params); /* '!tpj' */
+  if (*(char *)0x46f08c == 0)
+    return;
+  if (*(float *)(jpt + 0x1d4) == *(float *)0x2533c0 &&
+      *(float *)(jpt + 0x1d8) == *(float *)0x2533c0)
+    return;
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  radius = *(float *)(jpt + 4);
+  if (radius > *(float *)0x2533d8)
+    error(2, (char *)0x0029c9b8, (double)radius);
+
+  block = scenario + 0x16c;
+  count = *(int *)block;
+  for (i = 0; i < count; i++) {
+    if (!breakable_surface_extant(i))
+      continue;
+    surf = (char *)tag_block_get_element(block, (int)i, 0x30);
+    limit = *(float *)(surf + 0xc) + radius;
+    dx = damage[0x28 / 4] - *(float *)(surf + 0);
+    dy = damage[0x2c / 4] - *(float *)(surf + 4);
+    dz = damage[0x30 / 4] - *(float *)(surf + 8);
+    if (limit * limit < dx * dx + dy * dy + dz * dz)
+      continue;
+
+    flags = breakable_surface_get(i);
+    *flags = 0.0f;
+    bits = (unsigned int *)breakable_surfaces_get_bsp_surface_data();
+    bits[(unsigned int)i >> 5] &= ~(1u << ((unsigned int)i & 0x1f));
+    FUN_00145ad0((unsigned short)i, damage_params, *(int *)(surf + 0x10));
+  }
 }

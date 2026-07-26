@@ -988,29 +988,48 @@ void FUN_00145610(void)
   (void)ecx;
 }
 
-/* 0x145660 */
-void FUN_00145660(void)
+/* 0x145660 — bind an animation permutation onto a device/machine object. */
+void FUN_00145660(int object_handle /* @<eax> */, int animation_graph_tag,
+                  const char *anim_name, int16_t frame)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edi = 0;
+  char *obj;
+  char *antr;
+  char *anim;
+  int16_t anim_index;
+  int16_t max_frame;
+  int flags;
 
-  /* cmp eax, -1 -> je 0x145739 */
-  /* cmp edi, -1 -> je 0x145736 */
-  object_get_and_verify_type(0, 64);
-  tag_get('rtna', 0);
-  FUN_00120cb0(0, (char *)(uintptr_t)eax);
-  /* cmp (int16_t)edi, -1 -> je 0x14571b */
-  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
-  /* cmp ecx, eax -> jg 0x145709 */
-  tag_get_name(0);
-  console_warning((char *)0x0029c71c);
+  if (object_handle == -1)
+    return;
+  if (animation_graph_tag == -1)
+    return;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edi;
+  obj = (char *)object_get_and_verify_type(object_handle, 0x40);
+  antr = (char *)tag_get(0x616e7472, animation_graph_tag); /* 'antr' */
+  anim_index = FUN_00120cb0(animation_graph_tag, anim_name);
+  if (anim_index == -1) {
+    console_warning((char *)0x0029c71c, anim_name,
+                    tag_get_name(animation_graph_tag));
+    return;
+  }
+
+  anim = (char *)tag_block_get_element((void *)(antr + 0x74), (int)anim_index,
+                                       0xb4);
+  *(int *)(obj + 0x1a4) |= 1;
+  flags = *(int *)(obj + 4) & ~0x80;
+  *(int *)(obj + 4) = flags;
+  *(int16_t *)(obj + 0x80) = anim_index;
+  if (frame < 0) {
+    *(int16_t *)(obj + 0x82) = 0;
+    *(int *)(obj + 0x7c) = animation_graph_tag;
+    return;
+  }
+
+  max_frame = (int16_t)(*(int16_t *)(anim + 0x22) - 1);
+  if (frame > max_frame)
+    frame = max_frame;
+  *(int16_t *)(obj + 0x82) = frame;
+  *(int *)(obj + 0x7c) = animation_graph_tag;
 }
 
 /* 0x145740 */
@@ -1030,13 +1049,13 @@ int FUN_00145740(int a0)
 /* 0x1457b0 */
 void FUN_001457b0(int a0, int a1, int a2)
 {
-  FUN_00145660();
+  FUN_00145660(a0, a1, (const char *)(uintptr_t)a2, 0);
 }
 
 /* 0x1457d0 */
 void FUN_001457d0(int a0, int a1, int a2, int a3)
 {
-  FUN_00145660();
+  FUN_00145660(a0, a1, (const char *)(uintptr_t)a2, (int16_t)a3);
 }
 /* --- breakable_surfaces.obj orphan shells (2026-07-26) --- */
 

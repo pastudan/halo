@@ -378,6 +378,13 @@ def main() -> int:
         ("FUN_001546f0", 0x1546f0, 0x154750),
         ("FUN_00154750", 0x154750, 0x1547d0),
         ("FUN_001547d0", 0x1547d0, 0x15485e),
+        # gameplay wave 29 (2026-07-26)
+        ("vehicle_reset", 0x1b5770, 0x1b5820),
+        ("vehicle_new", 0x1b5820, 0x1b5890),
+        ("FUN_000dcdc0", 0xdcdc0, 0xdce00),
+        ("first_person_weapon_center_flashlight", 0xdd260, 0xdd340),
+        ("FUN_00145660", 0x145660, 0x145740),
+        ("FUN_00146be0", 0x146be0, 0x146d40),
     ]
 
     xbe = Xbe.from_file(args.xbe)
