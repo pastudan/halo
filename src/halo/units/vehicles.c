@@ -239,135 +239,199 @@ done:
 }
 /* --- vehicles.obj batch drafts (2026-07-26) --- */
 
-/* 0x1b4dc0 */
-void FUN_001b4dc0(int handle, void *damage_data, unsigned int flags, float body_vitality, float shield_vitality, int param_6, int param_7)
+/* FUN_001b4dc0 (0x1b4dc0) — Unit damage aftermath: stun counters, animation
+ * impulses, scoring hooks, AI notifications, and death handling. */
+void FUN_001b4dc0(int handle, void *damage_data, unsigned int flags,
+                  float body_vitality, float shield_vitality, int param_6,
+                  int param_7)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-  int local_10 = 0;
-  int local_14 = 0;
-  int local_18 = 0;
-  int local_1c = 0;
-  int local_20 = 0;
-  int local_4 = 0;
-  int local_8 = 0;
+  char *unit;
+  char *unit_tag;
+  char *dd;
+  char *jpt_ext;
+  char flags_bit0;
+  char feign_death;
+  char lethal_from_jpt;
+  float total_damage;
+  float impulse_mag;
+  float impulse_dir[3];
+  char has_impulse;
+  char ping_damage;
+  char ground_damage;
+  char air_damage;
+  const char *weapon_name_a;
+  const char *weapon_name_b;
+  char *path;
+  int16_t dialog_idx;
 
-  object_get_and_verify_type(handle, 3);
-  tag_get('tinu', *(int *)(eax));
-  tag_get('!tpj', *(int *)(damage_data));
-  /* relift: relift: mov (char)eax, byte ptr [0x5054f9] */
-  /* relift: cmp dword ptr [esi + 0x1c8], -1 -> je 0x1b4ebe */
-  object_get_and_verify_type(0, -1);
-  tag_get('ejbo', *(int *)(eax));
-  strrchr((const char *)(uintptr_t)*(int *)((char *)eax + 0x2c), 92);
-  /* test eax, eax -> je 0x1b4e6b */
-  /* cmp eax, -1 -> je 0x1b4e8a */
-  tag_get_name(*(int *)(damage_data));
-  strrchr((char *)(uintptr_t)eax, 92);
-  /* test eax, eax -> je 0x1b4e8a */
-  console_printf(0, (char *)0x002b7cac);
-  /* test (char)eax, 0x41 -> jne 0x1b4f19 */
-  /* cmp eax, -1 -> je 0x1b4f1b */
-  /* test (char)ecx, 0x10 -> je 0x1b4f4f */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test dl, dl -> je 0x1b4f6d */
-  /* relift: relift: fcomp dword ptr [0x253f40] */
-  /* test (char)eax, 1 -> je 0x1b4f71 */
-  /* test dl, dl -> jne 0x1b504e */
-  /* test (char)ecx, 0x20 -> je 0x1b504e */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b504e */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b504e */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b504e */
-  /* test (char)eax, 0x41 -> jne 0x1b504e */
-  FUN_000121e0(0.0f, 0.0f);
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x1b501d */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  FUN_001d9068();
-  display_assert((char *)0x002b7ac8, (char *)0x002b68c0, 4740, 1);
-  system_exit(-1);
-  /* relift: test byte ptr [edi + 4], 0x10 -> jne 0x1b5167 */
-  /* test (char)eax, (char)eax -> jne 0x1b5073 */
-  /* test (char)eax, (char)eax -> jne 0x1b5073 */
-  /* relift: test byte ptr [esi + 0xb6], 4 -> jne 0x1b5167 */
-  /* relift: test dword ptr [esi + 0x1b4], 0x800000 -> jne 0x1b5167 */
-  /* relift: test byte ptr [edx + 4], 0x10 -> jne 0x1b5167 */
-  magnitude3d((void *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b5100 */
-  magnitude3d((void *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b5100 */
-  FUN_0010c3c0();
-  /* relift: test byte ptr [eax + 4], 4 -> jne 0x1b511a */
-  /* test (char)eax, (char)eax -> jbe 0x1b5128 */
-  /* relift: test byte ptr [ebp + 0x10], 0x8a -> je 0x1b5132 */
-  FUN_001b1400(handle, local_4, local_8, local_1c, local_10, local_18, local_14, param_7, handle);
-  /* cmp ecx, -1 -> je 0x1b5191 */
-  game_engine_player_damaged_player(0, 0, flags);
-  /* cmp eax, -1 -> jne 0x1b519e */
-  /* relift: cmp dword ptr [edi + 0xc], eax -> je 0x1b51c5 */
-  unit_record_damage(handle, local_20, 0, local_4, 0, 0, 0);
-  /* relift: test byte ptr [edi + 4], 0x10 -> jne 0x1b521a */
-  /* test (char)ecx, 1 -> jne 0x1b51f3 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> je 0x1b51f3 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b521a */
-  FUN_001a71c0(handle, (void *)(uintptr_t)damage_data, 0, 0, 0.0f);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> je 0x1b523a */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b5243 */
-  unit_reset_weapon_state(handle);
-  /* relift: cmp word ptr [esi + 0x64], 0 -> jne 0x1b5294 */
-  /* test (char)eax, (char)eax -> je 0x1b526a */
-  ai_handle_death(handle, 0, 0);
-  /* relift: test byte ptr [esi + 0xb6], 4 -> jne 0x1b5294 */
-  ai_handle_damage(0, 0, 0, 0.0f, 0, 0);
-  /* relift: cmp dword ptr [esi + 0x1c8], -1 -> je 0x1b53d1 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b53d1 */
-  game_engine_running();
-  /* test (char)eax, (char)eax -> jne 0x1b52ce */
-  /* relift: relift: mov (char)eax, byte ptr [0x5054f8] */
-  /* test (char)eax, (char)eax -> je 0x1b53d1 */
-  game_globals_get();
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* test (char)eax, 1 -> jne 0x1b533f */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* test (char)eax, 0x41 -> jne 0x1b536c */
-  /* test (char)eax, 0x41 -> jne 0x1b536c */
-  FUN_001d9068();
-  FUN_001d9068();
-  FUN_001d9068();
-  /* relift: cmp word ptr [esi + 0x3d8], (int16_t)edi -> jge 0x1b53b3 */
-  /* test (char)eax, (char)eax -> jne 0x1b53df */
-  /* test (char)eax, (char)eax -> je 0x1b53ec */
-  unit_died(handle, local_8);
+  (void)param_6;
+  (void)param_7;
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
-  (void)local_10;
-  (void)local_14;
-  (void)local_18;
-  (void)local_1c;
-  (void)local_20;
-  (void)local_4;
-  (void)local_8;
+  unit = (char *)object_get_and_verify_type(handle, 3);
+  unit_tag = (char *)tag_get(0x756e6974, *(int *)unit);
+  dd = (char *)damage_data;
+  jpt_ext = (char *)tag_get(0x6a707421, *(int *)dd) + 0x1c4;
+  flags_bit0 = (char)(flags & 1);
+  feign_death = 0;
+  total_damage = body_vitality + shield_vitality;
+
+  if (*(char *)0x5054f9 != 0 && *(int *)(unit + 0x1c8) != -1) {
+    const char *default_name = (const char *)0x0025b724;
+    weapon_name_a = default_name;
+    weapon_name_b = default_name;
+    if (*(int *)(dd + 0xc) != -1) {
+      char *att_obj =
+          (char *)object_get_and_verify_type(*(int *)(dd + 0xc), -1);
+      char *att_obje = (char *)tag_get(0x6f626a65, *(int *)att_obj);
+      path = strrchr(att_obje + 0x2c, '\\');
+      if (path != 0)
+        weapon_name_a = path + 1;
+    }
+    if (*(int *)dd != -1) {
+      path = strrchr((char *)tag_get_name(*(int *)dd), '\\');
+      if (path != 0)
+        weapon_name_b = path + 1;
+    }
+    console_printf(0, (char *)0x002b7cac, *(unsigned short *)(unit + 0x1c8),
+                   weapon_name_a, weapon_name_b, body_vitality, shield_vitality);
+  }
+
+  if (*(float *)(unit + 0xa4) + *(float *)(unit + 0xa8) <= 0.0f) {
+    *(int16_t *)(unit + 0x3b4) = *(int16_t *)(jpt_ext + 2);
+    *(int16_t *)(unit + 0x3b6) = 0x2d;
+    if (*(float *)(unit + 0x3b8) > *(float *)(jpt_ext + 0x1c))
+      *(float *)(unit + 0x3b8) = *(float *)(jpt_ext + 0x1c);
+    if (*(int *)(dd + 0xc) != -1)
+      *(int *)(unit + 0x3bc) = *(int *)(dd + 0xc);
+  }
+
+  if ((*(unsigned int *)(unit + 0x1b4) & 0x10) != 0) {
+    *(float *)(unit + 0x32c) -= *(float *)(jpt_ext + 0x1c);
+    if (*(float *)(unit + 0x32c) < 0.0f)
+      *(float *)(unit + 0x32c) = 0.0f;
+  }
+
+  lethal_from_jpt = (char)(*(float *)(jpt_ext + 0x30) > 0.0001f);
+
+  if (flags_bit0 == 0 && (*(unsigned int *)(unit + 0x1b4) & 0x20) != 0 &&
+      *(float *)(unit_tag + 0x22c) <= 0.0f &&
+      *(float *)(unit_tag + 0x230) <= 0.0f &&
+      *(float *)(unit + 0x90) <= 0.0f &&
+      *(float *)(unit + 0xa8) <= *(float *)(unit_tag + 0x22c)) {
+    float roll = FUN_000121e0(0.0f, 1.0f) + *(float *)(unit_tag + 0x230);
+    roll *= *(float *)0x253394;
+    if (roll > 1.0f)
+      roll = 1.0f;
+    dialog_idx = (int16_t)(int)roll;
+    if (dialog_idx <= 0) {
+      display_assert((char *)0x002b68c0, (char *)0x002b7ac8, 4740, 1);
+      system_exit(-1);
+    }
+    *(int16_t *)(unit + 0x3d0) = dialog_idx;
+    feign_death = 1;
+  }
+
+  if ((dd[4] & 0x10) == 0 &&
+      (flags_bit0 != 0 || feign_death != 0 ||
+       (*(unsigned char *)(unit + 0xb6) & 4) != 0) &&
+      (*(unsigned int *)(unit + 0x1b4) & 0x800000) == 0 &&
+      (jpt_ext[4] & 0x10) == 0) {
+    impulse_dir[0] = *(float *)(dd + 0x34);
+    impulse_dir[1] = *(float *)(dd + 0x38);
+    impulse_dir[2] = *(float *)(dd + 0x3c);
+    impulse_mag = 0.0f;
+    has_impulse = 0;
+    if (magnitude3d(impulse_dir) > 0.0f) {
+      float vel[3];
+      float vel_mag;
+      vel[0] = *(float *)(unit + 0x24);
+      vel[1] = *(float *)(unit + 0x28);
+      vel[2] = *(float *)(unit + 0x2c);
+      vel_mag = magnitude3d(vel);
+      if (vel_mag > 0.0f) {
+        impulse_mag =
+            vel[0] * impulse_dir[0] + vel[1] * impulse_dir[1] +
+            vel[2] * impulse_dir[2];
+        has_impulse = 1;
+      }
+    }
+    ping_damage = 0;
+    if ((*(signed char *)(unit_tag + 0x17c) < 0) && (dd[4] & 4) == 0)
+      ping_damage = 1;
+    if (*(unsigned char *)(unit + 0x23b) > 0)
+      ping_damage = 1;
+    ground_damage = (char)((flags & 0x8a) != 0);
+    air_damage = lethal_from_jpt;
+    FUN_001b1400(handle, flags_bit0, 0, air_damage, ground_damage, ping_damage,
+                 impulse_mag, -1,
+                 has_impulse ? (int)(uintptr_t)impulse_dir : 0);
+  }
+
+  if (*(int *)(dd + 8) != -1 && *(int *)(unit + 0x1c8) != -1)
+    game_engine_player_damaged_player(*(int *)(dd + 8), *(int *)(unit + 0x1c8),
+                                      (flags >> 4) & 1);
+
+  if (*(int *)(dd + 8) != -1 || *(int *)(dd + 0xc) != -1) {
+    unit_record_damage(handle, total_damage, *(int16_t *)(jpt_ext + 2),
+                       flags_bit0, *(int *)(dd + 8),
+                       *(int16_t *)(dd + 0x10), *(int *)(dd + 0xc));
+  }
+
+  if ((dd[4] & 0x10) == 0 &&
+      (flags_bit0 != 0 || shield_vitality <= 0.0f || body_vitality <= 0.0f)) {
+    char combo = (char)(feign_death | flags_bit0);
+    FUN_001a71c0(handle, (int *)dd, (flags >> 6) & 1, combo, shield_vitality);
+  }
+
+  if (shield_vitality <= 0.0f && body_vitality <= 0.0f)
+    unit_reset_weapon_state(handle);
+
+  if (*(int16_t *)(unit + 0x64) == 0) {
+    if (flags_bit0 != 0) {
+      ai_handle_death(handle, *(int *)(dd + 0xc),
+                      *(int16_t *)(jpt_ext + 2));
+    } else if ((*(unsigned char *)(unit + 0xb6) & 4) == 0) {
+      ai_handle_damage(handle, *(int *)(dd + 0xc), *(int16_t *)(jpt_ext + 2),
+                       total_damage, (int)(uintptr_t)(dd + 0x34), 0);
+    }
+  }
+
+  if (*(int *)(unit + 0x1c8) != -1 && *(float *)(jpt_ext + 0x20) > 0.0f &&
+      (game_engine_running() || *(char *)0x5054f8 != 0)) {
+    char *globals = (char *)game_globals_get();
+    char *player_settings =
+        (char *)tag_block_get_element(globals + 0x170, 0, 0xf4);
+    float shake_x = *(float *)(jpt_ext + 0x20) * *(float *)(dd + 0x40);
+    float shake_y = *(float *)(jpt_ext + 0x24) * *(float *)(dd + 0x40);
+    if (shake_x < 0.0f)
+      shake_x = 0.0f;
+    if (shake_y < 0.0f)
+      shake_y = 0.0f;
+    else if (shake_y > 1.0f)
+      shake_y = 1.0f;
+    if (shake_x <= *(float *)(unit + 0x3d4))
+      *(float *)(unit + 0x3d4) += shake_x;
+    else
+      *(float *)(unit + 0x3d4) = shake_x;
+    {
+      int16_t low = (int16_t)(int)(*(float *)(jpt_ext + 0x28) *
+                                   *(float *)0x253394);
+      int16_t high =
+          (int16_t)(int)(*(float *)(player_settings + 0x8c) *
+                         *(float *)0x253394);
+      int16_t dur = (int16_t)(int)(*(float *)(player_settings + 0x90) *
+                                   *(float *)0x253394);
+      if (*(int16_t *)(unit + 0x3d8) < low)
+        *(int16_t *)(unit + 0x3d8) = low;
+      *(int16_t *)(unit + 0x3d8) = (int16_t)(*(int16_t *)(unit + 0x3d8) + dur);
+      if (*(int16_t *)(unit + 0x3d8) > high)
+        *(int16_t *)(unit + 0x3d8) = high;
+    }
+    (void)shake_y;
+  }
+
+  if (flags_bit0 != 0 || feign_death != 0)
+    unit_died(handle, (char)(feign_death | flags_bit0));
 }
 
 /* 0x1b5400 — Exit seated units whose seat name matches a substring. */
@@ -749,8 +813,8 @@ void FUN_001b5ff0(void)
   tag_get('syhp', 0);
   FUN_001daf7e();
   FUN_001daf7e();
-  FUN_00154270();
-  FUN_00154270();
+  FUN_00154270(0, 0, 0, 0, 0);
+  FUN_00154270(0, 0, 0, 0, 0);
 }
 
 /* 0x1b6140 */
@@ -760,70 +824,140 @@ void FUN_001b6140(void)
   tag_get('ihev', 0);
   tag_get('syhp', 0);
   FUN_001daf7e();
-  FUN_00154270();
-  FUN_00154270();
+  FUN_00154270(0, 0, 0, 0, 0);
+  FUN_00154270(0, 0, 0, 0, 0);
 }
 
-/* 0x1b6250 */
-void FUN_001b6250(void)
+/* FUN_001b6250 (0x1b6250) — flying-vehicle wheel/contact setup (physics type 3).
+ * wheel_state arrives in ESI from the caller. */
+void FUN_001b6250(int vehicle_handle, void *physics_buffer,
+                  void *wheel_state /* @<esi> */)
 {
-  int eax = 0;
+  char *veh;
+  char *vehi;
+  char *phys;
+  char *ws;
+  float angle;
+  float force[3];
+  float local_mat[12];
 
-  object_get_and_verify_type(0, 2);
-  tag_get('ihev', *(int *)(eax));
-  tag_get('syhp', 0);
-  /* test (char)eax, 0x41 -> jne 0x1b62e2 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  normalize3d((float *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  rotate_vector3d_by_sincos((void *)0, (float *)((char *)eax + 0x24), 0.0f, 0.0f);
-  FUN_0010c510((void *)0, (float *)((char *)eax + 0x30));
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b6464 */
-  /* relift: relift: fld dword ptr [0x2b7ce4] */
-  /* test (char)eax, 0x41 -> jne 0x1b64eb */
-  /* relift: relift: fld dword ptr [0x2b7ce0] */
-  FUN_00154270();
-  FUN_00154270();
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh);
+  phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c));
+  ws = (char *)wheel_state;
+  if (*(int *)(phys + 0x68) != 3)
+    return;
 
-  (void)eax;
+  angle = *(float *)(veh + 0x434) * *(float *)0x253398;
+  if (angle > 1.0f)
+    angle = 1.0f;
+  angle = 1.0f - angle;
+
+  *(float *)(ws + 4) = *(float *)(veh + 0x42c);
+  *(int *)(ws + 0xc) = 0x3b449ba6;
+  *(int *)(ws + 0x1c) = 0;
+  *(float *)(ws + 0x24) = sinf(angle);
+  *(float *)(ws + 0x28) = cosf(angle);
+  *(int *)(ws + 0x6c) = 0x3b449ba6;
+  *(int *)(ws + 0x7c) = 0;
+  *(int *)(ws + 0x80) = 0;
+  *(int *)(ws + 0x84) = 0;
+  *(int *)(ws + 0x88) = 0x3f800000;
+  *(int *)(ws + 0xcc) = 0x3ba3d70a;
+  *(int *)(ws + 0xdc) = 0;
+  *(int *)(ws + 0xe0) = 0;
+  *(int *)(ws + 0xe4) = 0;
+  *(int *)(ws + 0xe8) = 0x3f800000;
+
+  force[0] = 0.0f;
+  force[1] = 0.0f;
+  force[2] = 0.0f;
+  if (magnitude3d((float *)(veh + 0x18)) > 0.0f) {
+    float forward[3];
+    float ground;
+    float scale;
+    forward[0] = *(float *)(veh + 0x24);
+    forward[1] = *(float *)(veh + 0x28);
+    forward[2] = *(float *)(veh + 0x2c);
+    if (magnitude3d(forward) > 0.0f) {
+      ground = *(float *)(veh + 0x3c) * forward[0] +
+               *(float *)(veh + 0x40) * forward[1] +
+               *(float *)(veh + 0x44) * forward[2];
+      scale = *(float *)(phys + 0x50);
+      if (scale > *(float *)0x2b7ce4)
+        scale = *(float *)0x2b7ce4;
+      else if (scale < *(float *)0x2b7ce0)
+        scale = *(float *)0x2b7ce0;
+      force[0] = scale * forward[0];
+      force[1] = scale * forward[1];
+      force[2] = scale * forward[2];
+      (void)ground;
+    }
+  }
+
+  csmemset(local_mat, 0, sizeof(local_mat));
+  FUN_00154270(vehicle_handle, ws, physics_buffer, force, local_mat);
 }
 
-/* 0x1b6560 */
-void FUN_001b6560(void)
+/* FUN_001b6560 (0x1b6560) — wheel suspension force for physics type 2. */
+void FUN_001b6560(int vehicle_handle, void *wheel_buffer, void *scratch_buffer)
 {
-  int eax = 0;
+  char *veh;
+  char *vehi;
+  char *phys;
+  float local_force[3];
+  float side[3];
+  float speed;
+  float new_suspension;
 
-  object_get_and_verify_type(0, 2);
-  tag_get('ihev', *(int *)(eax));
-  tag_get('syhp', 0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b65e8 */
-  FUN_001b5f20();
-  FUN_0010a2c0((float *)0, (float *)0, (float *)0);
-  normalize3d((float *)0);
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  FUN_001aa4d0(0);
-  /* test (char)eax, (char)eax -> jne 0x1b670e */
-  FUN_0010c700((void *)0, (void *)0, 0.0f, 0.0f);
-  FUN_0010c690((void *)0, (void *)0, 0.0f, 0.0f);
-  FUN_001099f0((float *)0, (float *)0);
-  FUN_00109c70((void *)0, (void *)0, (void *)0);
-  FUN_0010a330((void *)0, (void *)0);
-  FUN_0010caf0((void *)0, (void *)0, (void *)0);
-  /* test (char)eax, 0x41 -> jne 0x1b68c6 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: relift: fld dword ptr [0x25bb10] */
-  /* test (char)eax, 0x41 -> jne 0x1b68af */
-  /* relift: relift: fld dword ptr [0x2533e8] */
-  /* test (char)eax, 0x41 -> je 0x1b6907 */
-  /* test (char)eax, 0x41 -> je 0x1b68eb */
-  /* relift: relift: fld dword ptr [0x29d9ac] */
-  /* test (char)eax, 0x41 -> jne 0x1b6907 */
-  FUN_00154270();
-  FUN_00154270();
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh);
+  phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c));
+  if (*(int *)(phys + 0x68) != 2)
+    return;
 
-  (void)eax;
+  if (*(float *)(veh + 0x42c) <= 0.0f)
+    FUN_001b5f20();
+  else
+    FUN_001b5f20();
+
+  local_force[0] = 0.0f;
+  local_force[1] = 0.0f;
+  local_force[2] = 0.0f;
+  side[0] = 0.0f;
+  side[1] = 0.0f;
+  side[2] = 0.0f;
+
+  speed = magnitude3d((float *)(veh + 0x3c));
+  new_suspension = *(float *)(veh + 0x448);
+  if (speed <= new_suspension) {
+    float delta = (1.0f - new_suspension);
+    delta = delta * delta * *(float *)0x2549d4;
+    if (delta < *(float *)0x25bb10)
+      delta = *(float *)0x25bb10;
+    else if (delta > *(float *)0x2533e8)
+      delta = *(float *)0x2533e8;
+    new_suspension = speed - *(float *)(veh + 0x448);
+    if (new_suspension > delta)
+      new_suspension = delta;
+  } else {
+    new_suspension = new_suspension * new_suspension * *(float *)0x2533e8;
+    if (new_suspension > *(float *)0x29d9ac)
+      new_suspension = *(float *)0x29d9ac;
+    new_suspension = -new_suspension;
+    speed = speed - *(float *)(veh + 0x448);
+    if (speed < new_suspension)
+      speed = new_suspension;
+    new_suspension = speed;
+  }
+  *(float *)(veh + 0x448) = new_suspension + *(float *)(veh + 0x448);
+
+  *(float *)((char *)wheel_buffer + 0x18) = *(float *)(veh + 0x2e8);
+  csmemcpy((char *)wheel_buffer + 0x1c, (char *)0x31fc5c, 0x10);
+  *(float *)((char *)wheel_buffer + 0x78) = *(float *)(veh + 0x2e8);
+  csmemcpy((char *)wheel_buffer + 0x7c, (char *)0x31fc5c, 0x10);
+
+  FUN_00154270(vehicle_handle, wheel_buffer, scratch_buffer, local_force, side);
 }
 
 /* 0x1b69a0 */
@@ -844,8 +978,8 @@ void FUN_001b69a0(void)
   matrix4x3_multiply((void *)0, (void *)0, (void *)0);
   FUN_00109fc0((void *)0, (void *)0);
   FUN_0010caf0((void *)0, (void *)0, (void *)0);
-  FUN_00154270();
-  FUN_00154270();
+  FUN_00154270(0, 0, 0, 0, 0);
+  FUN_00154270(0, 0, 0, 0, 0);
 
   (void)eax;
 }
@@ -1044,46 +1178,183 @@ void FUN_001b77f0(void)
   (void)ecx;
 }
 
-/* 0x1b79c0 */
-void vehicle_export_function_values(void)
+/* vehicle_export_function_values (0x1b79c0) — fill vehicle+0xd4 function-value
+ * slots from vehi tag indices (4 entries at vehi+0x31c). */
+void vehicle_export_function_values(int vehicle_handle)
 {
-  int eax = 0;
+  char *veh;
+  char *vehi;
+  float *out;
+  int16_t *fn_idx;
+  int slot;
+  float max_fwd;
+  float max_back;
+  float max_right_a;
+  float max_right_b;
+  float max_up_a;
+  float max_up_b;
+  float value;
 
-  object_get_and_verify_type(0, 2);
-  tag_get('ihev', *(int *)(eax));
-  /* test (char)eax, 0x41 -> jne 0x1b7a13 */
-  /* test (char)eax, 0x41 -> jne 0x1b7a44 */
-  /* test (char)eax, 0x41 -> jne 0x1b7a75 */
-  /* test (int16_t)eax, (int16_t)eax -> je 0x1b7e28 */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* cmp eax, 0x23 -> ja 0x1b7e23 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b7b1f */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> je 0x1b7df7 */
-  /* test (char)eax, 4 -> jne 0x1b7e1d */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* test (char)eax, 8 -> jne 0x1b7e1d */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  FUN_00012fe0((float *)((char *)eax + 0x18));
-  /* test (char)eax, 0x1c -> je 0x1b7e06 */
-  FUN_00012fe0((float *)((char *)eax + 0x18));
-  /* test (char)eax, 2 -> je 0x1b7e06 */
-  FUN_00012fe0((float *)((char *)eax + 0x18));
-  FUN_0010b8a0((float *)((char *)eax + 0x18), (float *)((char *)eax + 0x24), (void *)0, (void *)0);
-  FUN_00012fe0((void *)0);
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b7dbf */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  FUN_00012fe0((float *)((char *)eax + 0x18));
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x1b7e23 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh);
+  max_fwd = fabsf(*(float *)(vehi + 0x2f8));
+  max_back = fabsf(*(float *)(vehi + 0x2fc));
+  if (max_fwd < max_back)
+    max_fwd = max_back;
+  max_right_a = fabsf(*(float *)(vehi + 0x330));
+  max_right_b = fabsf(*(float *)(vehi + 0x334));
+  max_up_a = fabsf(*(float *)(vehi + 0x308));
+  max_up_b = fabsf(*(float *)(vehi + 0x30c));
 
-  (void)eax;
+  out = (float *)(veh + 0xd4);
+  fn_idx = (int16_t *)(vehi + 0x31c);
+  for (slot = 0; slot < 4; slot++) {
+    int index;
+    float a;
+    float b;
+    value = 0.0f;
+    if (fn_idx[slot] == 0)
+      break;
+    index = (int)fn_idx[slot] - 1;
+    if (index < 0 || index > 0x23) {
+      value = 0.0f;
+      goto store;
+    }
+    switch (index + 1) {
+    case 1:
+      value = fabsf(*(float *)(veh + 0x42c)) / max_fwd;
+      break;
+    case 2:
+      value = *(float *)(veh + 0x42c) / max_fwd;
+      if (*(float *)(veh + 0x42c) <= 0.0f)
+        value = 0.0f / max_fwd;
+      break;
+    case 3:
+      value = *(float *)(veh + 0x42c) / max_fwd;
+      if (*(float *)(veh + 0x42c) > 0.0f)
+        value = fabsf(*(float *)(vehi + 0x2fc));
+      value = *(float *)(veh + 0x42c) / max_fwd;
+      break;
+    case 4:
+      value = fabsf(*(float *)(veh + 0x42c)) / max_back;
+      break;
+    case 5:
+      value = fabsf(*(float *)(veh + 0x430)) / max_right_a;
+      break;
+    case 6:
+      value = fabsf(*(float *)(veh + 0x430)) / max_right_b;
+      break;
+    case 7:
+      value = fabsf(*(float *)(veh + 0x430)) /
+              (max_right_a > max_right_b ? max_right_a : max_right_b);
+      break;
+    case 8:
+      a = fabsf(*(float *)(veh + 0x42c)) / max_fwd;
+      b = fabsf(*(float *)(veh + 0x430)) / max_right_a;
+      value = a > b ? a : b;
+      break;
+    case 9:
+      value = fabsf(*(float *)(veh + 0x434)) / max_up_a;
+      break;
+    case 10:
+      value = fabsf(*(float *)(veh + 0x434)) / max_up_b;
+      break;
+    case 11:
+      value = fabsf(*(float *)(veh + 0x434)) /
+              (max_up_a > max_up_b ? max_up_a : max_up_b);
+      break;
+    case 12:
+      if ((*(unsigned char *)(veh + 0x424) & 4) != 0)
+        value = 0.0f;
+      else
+        value = 1.0f;
+      break;
+    case 13:
+      if ((*(unsigned char *)(veh + 0x424) & 8) != 0)
+        value = 0.0f;
+      else
+        value = 1.0f;
+      break;
+    case 14:
+      value = magnitude3d((float *)(veh + 0x18)) / max_fwd;
+      break;
+    case 15:
+      if ((*(unsigned char *)(veh + 4) & 0x1c) != 0)
+        value = magnitude3d((float *)(veh + 0x18)) / max_fwd;
+      else
+        value = 0.0f;
+      break;
+    case 16:
+      if ((*(unsigned char *)(veh + 4) & 2) != 0)
+        value = magnitude3d((float *)(veh + 0x18)) / max_fwd;
+      else
+        value = 0.0f;
+      break;
+    case 17:
+    case 18:
+      value =
+          fabsf(*(float *)(veh + 0x20) * *(float *)(veh + 0x2c) +
+                *(float *)(veh + 0x1c) * *(float *)(veh + 0x28) +
+                *(float *)(veh + 0x18) * *(float *)(veh + 0x24)) /
+          max_fwd;
+      break;
+    case 19:
+    case 20:
+      value = *(float *)(veh + 0x43c) / *(float *)(vehi + 0x310);
+      break;
+    case 21:
+    case 22:
+      value = *(float *)(veh + 0x440) / *(float *)(vehi + 0x310);
+      break;
+    case 23:
+      value = fabsf(*(float *)(veh + 0x42c) - *(float *)(veh + 0x434)) /
+              max_fwd;
+      break;
+    case 24:
+      value = fabsf(*(float *)(veh + 0x434) + *(float *)(veh + 0x42c)) /
+              max_fwd;
+      break;
+    case 25:
+    case 26:
+    case 27:
+      value = *(float *)(veh + 0x438) / *(float *)(vehi + 0x310);
+      break;
+    case 28:
+    case 29:
+    case 30:
+    case 31:
+      value = fabsf(*(float *)(veh + 0x42c)) / max_fwd;
+      break;
+    case 32: {
+      float cross[3];
+      float tmp[3];
+      FUN_0010b8a0((float *)(veh + 0x18), (float *)(veh + 0x24), tmp, cross);
+      value = magnitude3d(cross) * *(float *)0x254e6c;
+      value *= value;
+      break;
+    }
+    case 33:
+      value = *(float *)(veh + 0x448);
+      break;
+    case 34:
+      value = *(float *)(veh + 0x444);
+      break;
+    case 35:
+      value = magnitude3d((float *)(veh + 0x18)) / *(float *)(vehi + 0x2f8);
+      value = value * *(float *)(veh + 0x448) - *(float *)0x2533e8;
+      value *= *(float *)0x2b7d40;
+      break;
+    default:
+      value = 0.0f;
+      break;
+    }
+  store:
+    if (value <= 0.0f)
+      value = 0.0f;
+    else if (value >= 1.0f)
+      value = 1.0f;
+    out[slot] = value;
+  }
 }
 
 /* 0x1b8060 */

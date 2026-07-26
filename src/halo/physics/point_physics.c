@@ -38,7 +38,8 @@ float point_physics_definition_get_mass(int tag_data, float scale)
 /* --- point_physics.obj batch drafts (2026-07-26) --- */
 
 /* 0x154270 */
-void FUN_00154270(void)
+void FUN_00154270(int object_handle, void *buffer_a, void *buffer_b,
+                  float *force_vec, float *aux_vec)
 {
   int eax = 0;
   int ebx = 0;
@@ -46,19 +47,19 @@ void FUN_00154270(void)
   int esi = 0;
   int edi = 0;
 
-  object_get_and_verify_type(0, 0);
-  tag_get('ejbo', 0);
+  object_get_and_verify_type(object_handle, -1);
+  tag_get('ejbo', *(int *)(eax));
   tag_get('syhp', 0);
   /* test (char)eax, 0x41 -> jne 0x1542d4 */
   FUN_00152e40();
-  FUN_001509c0((void *)(uintptr_t)eax, 0);
+  FUN_001509c0((void *)(uintptr_t)eax, object_handle);
   /* cmp eax, edi -> je 0x154323 */
   /* relift: cmp dword ptr [ebx + 0x68], edi -> jle 0x154323 */
   FUN_001093b0((float *)(uintptr_t)esi, (float *)(uintptr_t)eax);
   FUN_00109120((float *)(uintptr_t)esi);
   /* cmp eax, ecx -> jl 0x1542f2 */
   FUN_00150ed0();
-  object_get_and_verify_type(0, 0);
+  object_get_and_verify_type(object_handle, 2);
   real_vector3d_valid((float *)(uintptr_t)esi);
   /* test (char)eax, (char)eax -> jne 0x154411 */
   csprintf((char *)0x005ab100, (char *)0x0026ae40);
@@ -73,6 +74,10 @@ void FUN_00154270(void)
   FUN_00152680();
   physics_compute_unit_collisions();
 
+  (void)buffer_a;
+  (void)buffer_b;
+  (void)force_vec;
+  (void)aux_vec;
   (void)eax;
   (void)ebx;
   (void)ecx;

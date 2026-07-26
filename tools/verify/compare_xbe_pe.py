@@ -254,6 +254,12 @@ def main() -> int:
         ("FUN_001345b0", 0x1345b0, 0x134adb),
         ("FUN_00133300", 0x133300, 0x133496),
         ("vehicle_preprocess_node_orientations", 0x1b5890, 0x1b5c90),
+        # gameplay wave 9 (2026-07-26)
+        ("FUN_001b4dc0", 0x1b4dc0, 0x1b5400),
+        ("FUN_00138900", 0x138900, 0x138e15),
+        ("vehicle_export_function_values", 0x1b79c0, 0x1b7ee0),
+        ("FUN_001b6560", 0x1b6560, 0x1b69a0),
+        ("FUN_001b6250", 0x1b6250, 0x1b6560),
     ]
 
     xbe = Xbe.from_file(args.xbe)

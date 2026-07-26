@@ -2363,85 +2363,224 @@ void FUN_001377d0(int object_handle, int region_index, int node_index,
     *param_11 = (void *)(uintptr_t) *(unsigned int *)(mat + 0x3c);
 }
 
-/* 0x138900 */
+/* FUN_00138900 (0x138900) — Apply area-damage to one object after a radius query.
+ *
+ * Tests line-of-sight / collision from the damage center to the object (with up
+ * to four axis-aligned probe directions for units), applies team and effect
+ * filters, scales damage by distance, calls object_cause_damage, optionally
+ * recurses to sibling/child objects. Recursion depth is tracked at 0x4761d8.
+ */
 void FUN_00138900(void *damage_params, int object_handle, char recursive)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *obj;
+  char *obje_tag;
+  char *jpt_tag;
+  char *dp;
+  char can_target;
+  char blocked;
+  char apply_damage;
+  char scale_randomized;
+  char caused_damage;
+  int16_t depth;
+  int axis;
+  int sibling;
+  float delta[3];
+  float perp[3];
+  float axis_a[3];
+  float axis_b[3];
+  float probe_dir[3];
+  float hit_pos[3];
+  float scale;
+  int16_t collision_buf[40];
 
-  object_get_and_verify_type(0, 0);
-  tag_get('ejbo', 0);
-  tag_get('!tpj', 0);
-  display_assert((char *)0x00253440, (char *)0x0029af50, 601, 0);
-  system_exit(0);
-  /* relift: relift: mov (int16_t)eax, word ptr [0x4761d8] */
-  /* relift: relift: mov word ptr [0x4761d8], (int16_t)eax */
-  /* test dl, 3 -> je 0x138b5b */
-  /* relift: relift: fcomp dword ptr [0x253f44] */
-  /* test (char)eax, 0x41 -> jne 0x138b5b */
-  perpendicular3d((float *)0, (float *)0);
-  normalize3d((float *)(uintptr_t)eax);
-  normalize3d((float *)0);
-  /* cmp eax, 3 -> ja 0x138abc */
-  object_get_root_parent(0);
-  FUN_0014df70(49697, (float *)(uintptr_t)edi, (float *)(uintptr_t)ecx, 0, (void *)0);
-  object_get_root_parent(0);
-  FUN_0014df70(0, (float *)0, (float *)0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> jne 0x138b42 */
-  object_get_root_parent(0);
-  FUN_0014df70(0, (float *)0, (float *)0, 0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0x138ba2 */
-  /* relift: cmp word ptr [0x4761d8], 1 -> jg 0x138bcc */
-  display_assert((char *)0x00253418, (char *)0x0029af50, 660, 0);
-  system_exit(0);
-  /* test (char)eax, 1 -> je 0x138bed */
-  /* relift: cmp edx, dword ptr [ecx + 0xc] -> jne 0x138bed */
-  /* test (char)eax, 8 -> je 0x138c15 */
-  game_allegiance_get_team_is_friendly(ecx, eax);
-  /* test (char)eax, (char)eax -> jne 0x138c15 */
-  /* test (char)ebx, (char)ebx -> je 0x138cd4 */
-  /* test (char)eax, 0x10 -> je 0x138cd4 */
-  /* test (char)eax, 3 -> je 0x138cd4 */
-  tag_get('tinu', 0);
-  /* test ecx, 0x80000 -> je 0x138cd4 */
-  /* relift: cmp edx, dword ptr [eax + 0xc] -> je 0x138cd4 */
-  FUN_000b5590(0);
-  /* test (char)eax, 0x41 -> je 0x138c96 */
-  /* test (char)eax, 4 -> je 0x138ca1 */
-  /* relift: test byte ptr [edx + 4], 0x40 -> je 0x138ca1 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x138cd0 */
-  get_global_random_seed_address();
-  random_math_real((void *)(uintptr_t)eax);
-  /* test (char)eax, 0x41 -> jne 0x138cd0 */
-  normalize3d((float *)0);
-  /* test (char)eax, 0x41 -> jne 0x138d49 */
-  /* relift: relift: fld dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x138d62 */
-  /* relift: relift: fld dword ptr [0x2533c8] */
-  /* relift: test byte ptr [ecx + 0xc], 1 -> jne 0x138d70 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* test (char)eax, 0x41 -> jne 0x138d99 */
-  object_cause_damage((void *)(uintptr_t)edx, 0, 0, 0, 0, 0);
-  /* cmp eax, -1 -> je 0x138dd3 */
-  tag_get('lloc', 0);
-  /* test (char)ecx, 8 -> je 0x138dd3 */
-  /* cmp eax, -1 -> je 0x138dd3 */
-  /* relift: tail-call FUN_00138900(); */
-  /* test (char)eax, (char)eax -> je 0x138dec */
-  /* test (char)ebx, (char)ebx -> je 0x138de5 */
-  /* test (char)eax, (char)eax -> je 0x138dec */
-  /* test (char)eax, (char)eax -> je 0x138e0a */
-  /* cmp esi, -1 -> je 0x138e0a */
+  for (;;) {
+    dp = (char *)damage_params;
+    obj = (char *)object_get_and_verify_type(object_handle, -1);
+    obje_tag = (char *)tag_get(0x6f626a65, *(int *)obj);
+    jpt_tag = (char *)tag_get(0x6a707421, *(int *)dp);
+    can_target = (char)(((unsigned char) ~obj[4]) & 1);
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+    if (*(int16_t *)0x4761d8 >= 0x20) {
+      display_assert((char *)0x00253440, (char *)0x0029af50, 601, 0);
+      system_exit(-1);
+    }
+    depth = *(int16_t *)0x4761d8;
+    *(int16_t *)0x4761d8 = (int16_t)(depth + 1);
+    *(int16_t *)(0x5a8c80 + (int)depth * 2) = 0xa;
+
+    blocked = 0;
+    if (can_target != 0 && ((1 << *(unsigned char *)(obj + 0x64)) & 3) != 0 &&
+        *(float *)(jpt_tag + 0x1cc) > 0.0001f) {
+      delta[0] = *(float *)(obj + 0x50) - *(float *)(dp + 0x28);
+      delta[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x30);
+      delta[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x38);
+      perpendicular3d(delta, perp);
+      normalize3d(perp);
+      normalize3d(perp);
+      axis_a[0] = perp[1] * delta[2] - perp[2] * delta[1];
+      axis_a[1] = perp[2] * delta[0] - perp[0] * delta[2];
+      axis_a[2] = perp[0] * delta[1] - perp[1] * delta[0];
+      normalize3d(axis_a);
+      axis_b[0] = delta[1] * perp[2] - delta[2] * perp[1];
+      axis_b[1] = delta[2] * perp[0] - delta[0] * perp[2];
+      axis_b[2] = delta[0] * perp[1] - delta[1] * perp[0];
+      normalize3d(axis_b);
+
+      blocked = 1;
+      axis = 0;
+      while (axis < 4) {
+        float extent = *(float *)(jpt_tag + 0x1cc);
+        switch (axis) {
+        case 0:
+          probe_dir[0] = perp[0] * extent;
+          probe_dir[1] = perp[1] * extent;
+          probe_dir[2] = perp[2] * extent;
+          break;
+        case 1:
+          probe_dir[0] = -perp[0] * extent;
+          probe_dir[1] = -perp[1] * extent;
+          probe_dir[2] = -perp[2] * extent;
+          break;
+        case 2:
+          probe_dir[0] = axis_a[0] * extent;
+          probe_dir[1] = axis_a[1] * extent;
+          probe_dir[2] = axis_a[2] * extent;
+          break;
+        default:
+          probe_dir[0] = -axis_a[0] * extent;
+          probe_dir[1] = -axis_a[1] * extent;
+          probe_dir[2] = -axis_a[2] * extent;
+          break;
+        }
+
+        object_get_root_parent(object_handle);
+        if (!FUN_0014df70(0xc221, (float *)(dp + 0x28), probe_dir, 0,
+                          collision_buf)) {
+          blocked = 0;
+          break;
+        }
+
+        hit_pos[0] = *(float *)((char *)collision_buf + 0x18);
+        hit_pos[1] = *(float *)((char *)collision_buf + 0x1c);
+        hit_pos[2] = *(float *)((char *)collision_buf + 0x20);
+        {
+          float seg[3];
+          seg[0] = *(float *)(obj + 0x50) - hit_pos[0];
+          seg[1] = *(float *)(obj + 0x54) - hit_pos[1];
+          seg[2] = *(float *)(obj + 0x58) - hit_pos[2];
+          object_get_root_parent(object_handle);
+          if (!FUN_0014df70(0xc221, hit_pos, seg, 0, collision_buf))
+            blocked = 0;
+        }
+        axis++;
+      }
+    } else {
+      float seg[3];
+      seg[0] = *(float *)(obj + 0x50) - *(float *)(dp + 0x28);
+      seg[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x30);
+      seg[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x38);
+      object_get_root_parent(object_handle);
+      blocked = (char)!FUN_0014df70(0xc221, (float *)(dp + 0x28), seg, 0,
+                                    collision_buf);
+    }
+
+    if (blocked != 0)
+      can_target = 0;
+
+    if (*(int16_t *)0x4761d8 > 1) {
+      display_assert((char *)0x00253418, (char *)0x0029af50, 660, 0);
+      system_exit(-1);
+    }
+    *(int16_t *)0x4761d8 = (int16_t)(*(int16_t *)0x4761d8 - 1);
+
+    apply_damage = can_target;
+    if ((*(unsigned char *)(jpt_tag + 0x1c8) & 1) != 0 &&
+        object_handle == *(int *)(dp + 0xc))
+      apply_damage = 0;
+    if ((*(unsigned char *)(jpt_tag + 0x1c8) & 8) != 0 &&
+        !game_allegiance_get_team_is_friendly(
+            *(int16_t *)(dp + 0x10), *(int16_t *)(obj + 0x68)))
+      apply_damage = 0;
+
+    scale_randomized = 0;
+    if (apply_damage != 0 && (*(unsigned int *)(jpt_tag + 0x1c8) & 0x10) != 0 &&
+        ((1 << *(unsigned char *)(obj + 0x64)) & 3) != 0) {
+      char *unit_tag;
+      float rand_scale;
+      unit_tag =
+          (char *)tag_get(0x756e6974, *(int *)object_get_and_verify_type(
+                                              object_handle, 3));
+      if ((*(unsigned int *)(unit_tag + 0x17c) & 0x80000) != 0 &&
+          object_handle != *(int *)(dp + 0xc)) {
+        rand_scale = FUN_000b5590(8);
+        if (rand_scale > 0.0f) {
+          apply_damage = 1;
+          if ((*(unsigned int *)(jpt_tag + 0x1c8) & 4) == 0 &&
+              (*(unsigned int *)(dp + 4) & 0x40) == 0)
+            apply_damage = 0;
+          if (apply_damage != 0) {
+            float threshold =
+                rand_scale * *(float *)0x25337c;
+            get_global_random_seed_address();
+            if (random_math_real((void *)0) >= threshold)
+              apply_damage = 0;
+          }
+        }
+        scale_randomized = 1;
+      } else {
+        apply_damage = 0;
+      }
+    }
+
+    *(unsigned int *)(dp + 4) |= 1;
+    caused_damage = 0;
+    if (apply_damage != 0) {
+      float dir[3];
+      dir[0] = *(float *)(obj + 0x50) - *(float *)(dp + 0x28);
+      dir[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x30);
+      dir[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x38);
+      normalize3d(dir);
+      *(float *)(dp + 0x34) = dir[0];
+      *(float *)(dp + 0x38) = dir[1];
+      *(float *)(dp + 0x3c) = dir[2];
+
+      scale = *(float *)(jpt_tag + 4) - *(float *)jpt_tag;
+      if (scale > 0.0f) {
+        float dist = *(float *)(dp + 0x40);
+        scale = 1.0f - dist / scale;
+        if (scale < 0.0f)
+          scale = 0.0f;
+        else if (scale > 1.0f)
+          scale = 1.0f;
+      } else {
+        scale = 0.0f;
+      }
+      if ((*(unsigned char *)(jpt_tag + 0xc) & 1) == 0)
+        *(float *)(dp + 0x40) = scale;
+      if (scale > 0.0f) {
+        object_cause_damage(damage_params, object_handle, -1, -1, -1, 0);
+        caused_damage = 1;
+      }
+
+      if (*(int *)(obje_tag + 0x7c) != -1) {
+        char *coll_tag =
+            (char *)tag_get(0x636f6c6c, *(int *)(obje_tag + 0x7c));
+        if ((coll_tag[0] & 8) != 0) {
+          sibling = *(int *)(obj + 0xc8);
+          if (sibling != -1)
+            FUN_00138900(damage_params, sibling, 1);
+        }
+      }
+    }
+
+    if (scale_randomized != 0 && (apply_damage == 0 || caused_damage == 0))
+      *(unsigned int *)(dp + 4) |= 0x40;
+
+    if (recursive == 0)
+      break;
+    sibling = *(int *)(obj + 0xc4);
+    if (sibling == -1)
+      break;
+    object_handle = sibling;
+  }
 }

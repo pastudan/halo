@@ -14166,7 +14166,7 @@ void FUN_001b8f10(void)
   /* test (char)eax, 0x41 -> jne 0x1b8f60 */
   FUN_001b69a0();
   FUN_001b7020();
-  FUN_001b6560();
+  FUN_001b6560(0, 0, 0);
   FUN_001b7020();
 
   (void)eax;
@@ -14230,7 +14230,7 @@ void FUN_001b8f80(void)
   /* relift: test byte ptr [ebx + 4], 0x20 -> jne 0x1b9819 */
   FUN_001b5ff0();
   FUN_001b6140();
-  FUN_001b6250();
+  FUN_001b6250(0, 0, 0);
   FUN_001b77f0();
   FUN_001b74d0();
   /* test (char)eax, (char)eax -> jne 0x1b958a */
@@ -14262,7 +14262,7 @@ void FUN_001b8f80(void)
   FUN_001b81d0(0, 0);
   FUN_001b8570(0);
   FUN_001b8f10();
-  FUN_00154270();
+  FUN_00154270(0, 0, 0, 0, 0);
   /* relift: cmp word ptr [ebx + 0x426], 0 -> jle 0x1b966e */
   FUN_001b6ca0();
   FUN_001b74d0();
