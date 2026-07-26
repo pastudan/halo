@@ -17759,7 +17759,7 @@
         {
           "addr": "0xb68c0",
           "decl": "int player_control_get_desired_weapon(int16_t local_player_index, int unit_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb6940",

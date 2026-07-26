@@ -907,72 +907,31 @@ void FUN_000b7f90(int16_t local_player_index,
 }
 
 
-/* player_control_get_desired_weapon (0xb68c0) — XBE naked draft (batch 153). */
-#if defined(__clang__)
-static void (*const bb68c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb68c0_exitfn)(int) = system_exit;
-static int (*const bb68c0_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
-static void *(*const bb68c0_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-int player_control_get_desired_weapon(int16_t local_player_index __attribute__((unused)), int unit_handle __attribute__((unused)))
+/* player_control_get_desired_weapon (0xb68c0) — readable C lift. */
+int player_control_get_desired_weapon(int16_t local_player_index, int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lplayer_control_get_desired_weapon_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lplayer_control_get_desired_weapon_2\n\t"
-      ".Lplayer_control_get_desired_weapon_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb1\n\t"
-      "pushl $0x26e1e8\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_control_get_desired_weapon_2:\n\t"
-      "movl 0x457090, %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "shll $6, %%eax\n\t"
-      "leal 0x10(%%eax,%%ecx,1), %%eax\n\t"
-      "cmpl %%esi, (%%eax)\n\t"
-      "jne .Lplayer_control_get_desired_weapon_3\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x20(%%eax), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1adeb0]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lplayer_control_get_desired_weapon_4\n\t"
-      ".Lplayer_control_get_desired_weapon_3:\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x2a2(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1adeb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lplayer_control_get_desired_weapon_4:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bb68c0_assert), [exitfn] "m"(bb68c0_exitfn), [c1adeb0] "m"(bb68c0_c1adeb0), [get] "m"(bb68c0_get)
-      : "memory");
+  unsigned char *base;
+  unsigned char *slot;
+  int weapon;
+  short current;
+
+  if (local_player_index < 0 || local_player_index >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x26e1e8, 0xb1, 1);
+    system_exit(-1);
+  }
+  base = *(unsigned char **)0x457090;
+  slot = base + ((int)local_player_index * 0x40) + 0x10;
+  if (*(int *)slot == unit_handle) {
+    current = *(short *)(slot + 0x20);
+    weapon = unit_get_weapon(unit_handle, current);
+    if (weapon != -1)
+      return weapon;
+  }
+  {
+    char *unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
+    return unit_get_weapon(unit_handle, *(short *)(unit_obj + 0x2a2));
+  }
 }
-#else
-#error "player_control_get_desired_weapon: clang naked draft required"
-#endif
-
-
 float *player_control_get_facing_angles(int16_t local_player_index)
 {
   char *slot;
