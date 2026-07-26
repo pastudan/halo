@@ -226,6 +226,40 @@ def update_decl(addr: int, decl: str, name: str | None = None) -> None:
                 return
 
 
+
+def sync_tu_decls(sp: Path, name_by: dict) -> int:
+    """Pull cdecls from readable C bodies in this TU into kb + decl.h."""
+    text = sp.read_text(encoding="utf-8", errors="replace")
+    # name -> signature line
+    sigs = {}
+    for m in re.finditer(
+        r"(?m)^((?:[\w\s\*]+?)\b([A-Za-z_][A-Za-z0-9_]*)\s*\([^;{]*\))\s*\{",
+        text,
+    ):
+        sig, name = m.group(1).strip(), m.group(2)
+        if name in ("if", "for", "while", "switch", "return"):
+            continue
+        if not sig.endswith(";"):
+            sig = sig + ";"
+        sigs[name] = sig
+    if not sigs:
+        return 0
+    kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
+    n = 0
+    for o in kb.get("objects", []):
+        for fn in o.get("functions") or []:
+            if not isinstance(fn, dict) or not fn.get("addr"):
+                continue
+            nm = func_name(fn) or ""
+            if nm in sigs and fn.get("decl") != sigs[nm]:
+                fn["decl"] = sigs[nm]
+                n += 1
+    if n:
+        KB_PATH.write_text(json.dumps(kb, indent=2) + "\n", encoding="utf-8")
+        regen_decl_h()
+    return n
+
+
 def merge_remote() -> None:
     subprocess.run(
         ["git", "fetch", "pastudan", "track-a-collision-bsp"],
@@ -507,6 +541,7 @@ def main() -> int:
         src_rel = src.replace("\\", "/")
         if "src/halo/" in src_rel:
             src_rel = src_rel.split("src/halo/", 1)[1]
+        sync_tu_decls(sp, name_by)
         if not docker_compile(src_rel):
             sp.write_text(text, encoding="utf-8")
             print("  compile FAIL", flush=True)
