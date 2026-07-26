@@ -7844,962 +7844,2184 @@ typedef void (*matrix_4x3_multiply_fn)(float *a, float *b, float *out);
 typedef void (*matrix_4x3_from_point_fn)(float *out, float *point);
 typedef void (*model_node_set_default_fn)(float *out, void *anim_data);
 
-/*
- * object_compute_node_matrices — compute the full node matrix hierarchy for an
- * object, transforming each node from local (animation) space into world space.
- *
- * If the object definition has no model (tag+0x34 == -1), builds a trivial
- * single-node matrix from the object's forward, up, and position vectors.
- *
- * Otherwise:
- *  1. Resolves the object type definition and model tag.
- *  2. Gets the parent node matrix if the object is attached to a parent.
- *  3. Decompresses the base animation pose into per-node local transforms.
- *  4. Applies overlay animations from the object definition's animation graph.
- *  5. Scales the root animation data if the object has a non-zero scale factor.
- *  6. Calls type-specific overlay adjustments via object_type_definition.
- *  7. Interpolates node matrices for objects with interpolation data.
- *  8. Validates the object's position and orientation vectors.
- *  9. Walks the node hierarchy (BFS via child/sibling indices), composing each
- *     node's local transform with its parent's world matrix.
- * 10. Applies an origin offset from the model tag and writes the bounding
- *     sphere radius.
- *
- * The bulk of the assembly is assertion/validation code that checks matrix
- * components for NaN/Inf and perpendicularity, expanded from the
- * assert_valid_real_matrix4x3 macro.
- *
- * Confirmed: 1 cdecl arg (object_handle). void return.
- * Confirmed: CALL 0x13d680 (object_get_and_verify_type) with (-1, handle).
- * Confirmed: CALL 0x1ba140 (tag_get) with 'obje' and object definition index.
- * Confirmed: CALL 0x13dfc0 (object_header_block_reference_get) for node matrix
- *            and animation data block references.
- * Confirmed: 0xfe0 type mask = bits 5..11 (_object_mask_cannot_interpolate).
- * Confirmed: CALL 0x109500 (model_node_matrices_set_default) for default pose.
- * Confirmed: CALL 0x109850 (matrix_4x3_multiply) for composing transforms.
- * Confirmed: CALL 0x109280 (matrix_4x3_from_point) for translation matrices.
- * Confirmed: CALL 0x109e10 (matrix_from_forward_and_up) for orientation.
- * Confirmed: CALL 0x109590 (matrix_transform_point) for origin offset.
- * Confirmed: SUB ESP,0xa44 — large stack frame for animation data and node
- *            queue.
- */
-void object_compute_node_matrices(int object_handle)
+/* object_compute_node_matrices (0x141b70) — XBE naked draft (batch 51). */
+#if defined(__clang__)
+static void *(*const b141b70_get)(int, int) = object_get_and_verify_type;
+static void *(*const b141b70_tag)(int, int) = tag_get;
+static void * (*const b141b70_c13dfc0)(int object_handle, void *reference) = object_header_block_reference_get;
+static void * (*const b141b70_c13c100)(int16_t object_type) = FUN_0013c100;
+static void *(*const b141b70_onode)(int, short) = object_get_node_matrix;
+static void *(*const b141b70_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b141b70_gtime)(void) = game_time_get;
+static void (*const b141b70_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b141b70_exitfn)(int) = system_exit;
+static void (*const b141b70_c121d60)(void *mode_tag, void *animation, int animation_index, void *out_node_data) = FUN_00121d60;
+static void (*const b141b70_c123aa0)(void *mode_tag, void *out_node_data) = FUN_00123aa0;
+static void (*const b141b70_c122690)(void *animation, float frame, void *node_data) = FUN_00122690;
+static void (*const b141b70_c122450)(void *animation, int frame, float scale, void *node_output) = overlay_animation_apply_scaled;
+static void (*const b141b70_c13c7a0)(int param_1, int param_2) = FUN_0013c7a0;
+static void (*const b141b70_c120ba0)(void) = interpolate_node_orientations;
+static bool (*const b141b70_ca16b0)(float *point) = valid_real_point3d;
+static const char * (*const b141b70_c1ba1f0)(int tag_index) = tag_get_name;
+static char * (*const b141b70_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static bool (*const b141b70_c84a70)(float *a, float *b) = valid_real_normal3d_perpendicular;
+static void (*const b141b70_c109500)(float *out, float *qsp) = FUN_00109500;
+static void (*const b141b70_c109280)(float *out, float *position) = matrix4x3_identity_with_position;
+static void (*const b141b70_c109e10)(float *out, float *forward, float *up) = matrix_from_forward_and_up;
+static void (*const b141b70_c109850)(float *a, float *b, float *out) = matrix4x3_multiply;
+static char (*const b141b70_cf6c40)(float *a, float *b, float *c) = valid_real_vector3d_axes3;
+static bool (*const b141b70_c21fb0)(float *v) = valid_real_normal3d;
+static char (*const b141b70_cf6d00)(float *mat) = valid_real_matrix4x3;
+static void (*const b141b70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b141b70_xfrmpt)(float *, float *, float *) = matrix_transform_point;
+
+__attribute__((naked, noinline))
+void object_compute_node_matrices(int object_handle __attribute__((unused)))
 {
-  /* MSVC original: SUB ESP,0xa44. Pad to match so unported callees that
-     read from overlapping MSVC stack offsets see valid memory. */
-  volatile char _msvc_frame_pad[92];
-  object_data_t *obj;
-  void *object_tag;
-  float *node_matrices;
-  uint8_t obj_type_byte;
-  int cannot_interpolate;
-  void *anim_data;
-  char anim_data_stack[2048];
-
-  (void)_msvc_frame_pad;
-
-  obj = (object_data_t *)object_get_and_verify_type(object_handle, -1);
-  object_tag = tag_get(0x6f626a65, *(int *)obj);
-  node_matrices = (float *)object_header_block_reference_get(
-    object_handle, (void *)((char *)obj + 0x1a0));
-
-  /* Objects with type bits 5..11 set cannot interpolate and use a stack
-   * buffer for animation data; others use the block reference at +0x19c. */
-  obj_type_byte = *(uint8_t *)((char *)obj + 0x64);
-  cannot_interpolate = ((1 << (obj_type_byte & 0x1f)) & 0xfe0u) != 0;
-
-  if (cannot_interpolate) {
-    anim_data = anim_data_stack;
-  } else {
-    anim_data = object_header_block_reference_get(
-      object_handle, (void *)((char *)obj + 0x19c));
-  }
-
-  if (*(int *)((char *)object_tag + 0x34) == -1) {
-    /* No model — build a trivial matrix from object vectors */
-    node_matrices[0] = 1.0f; /* scale */
-    node_matrices[1] = *(float *)((char *)obj + 0x24); /* forward.x */
-    node_matrices[2] = *(float *)((char *)obj + 0x28); /* forward.y */
-    node_matrices[3] = *(float *)((char *)obj + 0x2c); /* forward.z */
-    node_matrices[7] = *(float *)((char *)obj + 0x30); /* up.x */
-    node_matrices[8] = *(float *)((char *)obj + 0x34); /* up.y */
-    node_matrices[9] = *(float *)((char *)obj + 0x38); /* up.z */
-    /* left = up x forward */
-    node_matrices[4] =
-      node_matrices[8] * node_matrices[3] - node_matrices[9] * node_matrices[2];
-    node_matrices[5] =
-      node_matrices[9] * node_matrices[1] - node_matrices[3] * node_matrices[7];
-    node_matrices[6] =
-      node_matrices[7] * node_matrices[2] - node_matrices[8] * node_matrices[1];
-    /* position */
-    node_matrices[10] = *(float *)((char *)obj + 0x0c);
-    node_matrices[11] = *(float *)((char *)obj + 0x10);
-    node_matrices[12] = *(float *)((char *)obj + 0x14);
-  } else {
-    /* Has a model — full animation pipeline */
-    void *model_tag;
-    float *parent_node_mat;
-    uint8_t override_decompressor;
-    int anim_tag_index;
-
-    ((object_type_validate_fn)0x13c100)(*(int16_t *)((char *)obj + 0x64));
-    model_tag = tag_get(0x6d6f6465, *(int *)((char *)object_tag + 0x34));
-
-    /* Get parent node matrix if attached to a parent object */
-    parent_node_mat = NULL;
-    if (obj->parent_object_index.value != -1) {
-      parent_node_mat = (float *)object_get_node_matrix(
-        obj->parent_object_index.value,
-        (int16_t) * (int8_t *)((char *)obj + 0xd0));
-    }
-
-    override_decompressor = 0;
-
-    /* Decode animation pose into anim_data */
-    anim_tag_index = *(int *)((char *)obj + 0x7c);
-    if (anim_tag_index == -1 || *(int16_t *)((char *)obj + 0x80) == -1) {
-      /* No animation graph or no animation index — use default pose */
-      ((animation_set_default_fn)0x123aa0)(model_tag, anim_data);
-    } else {
-      void *anim_tag = tag_get(0x616e7472, anim_tag_index);
-      void *anim_entry = tag_block_get_element(
-        (char *)anim_tag + 0x74, (int)*(int16_t *)((char *)obj + 0x80), 0xb4);
-
-      if ((*(char *)((char *)obj + 0x4) < 0) &&
-          (0 < *(int16_t *)((char *)anim_entry + 0x22))) {
-        /* Object flag bit 7 set and animation has frames — compute
-         * frame from game_time + object_handle modulo frame count */
-        int time = game_time_get();
-        uint32_t frame_index =
-          (uint32_t)(time + object_handle) %
-          (uint32_t)(int)*(int16_t *)((char *)anim_entry + 0x22);
-        if ((int16_t)frame_index < 0) {
-          display_assert("frame_index>=0",
-                         "c:\\halo\\SOURCE\\objects\\objects.c", 0xa90, 1);
-          system_exit(-1);
-        }
-        ((animation_decode_fn)0x121d60)(model_tag, anim_entry,
-                                        (int)(int16_t)frame_index, anim_data);
-      } else {
-        /* Use the stored frame index at obj+0x82 */
-        int16_t frame_idx = *(int16_t *)((char *)obj + 0x82);
-        ((animation_decode_fn)0x121d60)(model_tag, anim_entry, (int)frame_idx,
-                                        anim_data);
-      }
-      override_decompressor =
-        (*(uint8_t *)((char *)anim_entry + 0x3a) >> 1) & 1;
-    }
-
-    /* Apply overlay animations from object definition's animation graph */
-    if (*(int *)((char *)object_tag + 0x44) != -1) {
-      void *overlay_anim_tag =
-        tag_get(0x616e7472, *(int *)((char *)object_tag + 0x44));
-      int overlay_count = *(int *)overlay_anim_tag;
-      int16_t overlay_idx = 0;
-      if (overlay_count > 0) {
-        int i = 0;
-        do {
-          int16_t *overlay_entry =
-            (int16_t *)tag_block_get_element(overlay_anim_tag, i, 0x14);
-          if (*overlay_entry != -1) {
-            int16_t region_idx = overlay_entry[1];
-            if ((int)region_idx < *(int *)((char *)object_tag + 0x158)) {
-              void *region_block = tag_block_get_element(
-                (char *)object_tag + 0x158, (int)region_idx, 0x168);
-              void *overlay_anim_entry = tag_block_get_element(
-                (char *)overlay_anim_tag + 0x74, (int)*overlay_entry, 0xb4);
-              int16_t mode = overlay_entry[2];
-              float func_value =
-                *(float *)((char *)obj + 0xe4 + region_idx * 4);
-
-              if (mode == 0) {
-                /* Keyframe overlay */
-                float total_frames;
-                float frame_value;
-                if ((*(uint8_t *)region_block & 2) == 0) {
-                  total_frames =
-                    (float)(int)(*(int16_t *)((char *)overlay_anim_entry +
-                                              0x22) -
-                                 1);
-                } else {
-                  total_frames =
-                    (float)(int)*(int16_t *)((char *)overlay_anim_entry + 0x22);
-                }
-                frame_value = total_frames * func_value;
-                ((animation_overlay_keyframe_fn)0x122690)(
-                  overlay_anim_entry, frame_value, anim_data);
-              } else if (mode == 1) {
-                /* Interpolated overlay */
-                int time = game_time_get();
-                uint32_t frame_mod =
-                  (uint32_t)(time + object_handle) %
-                  (uint32_t)(int)*(int16_t *)((char *)overlay_anim_entry +
-                                              0x22);
-                ((animation_overlay_interpolate_fn)0x122450)(
-                  overlay_anim_entry, (int)frame_mod, anim_data, anim_data);
-              }
-            }
-          }
-          overlay_idx = (int16_t)(overlay_idx + 1);
-          i = (int)overlay_idx;
-        } while (i < overlay_count);
-      }
-    }
-
-    /* Scale animation data if object has a non-zero scale factor */
-    if (*(float *)((char *)obj + 0x60) > *(float *)0x2533c0) {
-      float scale = *(float *)((char *)obj + 0x60);
-      *(float *)((char *)anim_data + 0x1c) =
-        scale * *(float *)((char *)anim_data + 0x1c);
-      *(float *)((char *)anim_data + 0x10) =
-        scale * *(float *)((char *)anim_data + 0x10);
-      *(float *)((char *)anim_data + 0x14) =
-        scale * *(float *)((char *)anim_data + 0x14);
-      *(float *)((char *)anim_data + 0x18) =
-        scale * *(float *)((char *)anim_data + 0x18);
-    }
-
-    /* Call type-specific overlay adjustments */
-    if (*(int *)((char *)object_tag + 0x44) != -1) {
-      ((overlay_adjust_fn)0x13c7a0)(object_handle, anim_data);
-    }
-
-    /* Interpolate node matrices if the object has interpolation data */
-    if (*(int16_t *)((char *)obj + 0x86) > 0) {
-      void *interp_data;
-      if (cannot_interpolate) {
-        display_assert("!TEST_FLAG(_object_mask_cannot_interpolate, "
-                       "object->object.type)",
-                       "c:\\halo\\SOURCE\\objects\\objects.c", 0xad9, 1);
-        system_exit(-1);
-      }
-      interp_data = object_header_block_reference_get(
-        object_handle, (void *)((char *)obj + 0x198));
-      ((anim_interpolate_fn)0x120ba0)(
-        *(int16_t *)((char *)model_tag + 0xb8), interp_data, anim_data,
-        *(int16_t *)((char *)obj + 0x84), *(int16_t *)((char *)obj + 0x86));
-    }
-
-    /* Validate object position and orientation if not using override */
-    if (!override_decompressor) {
-      if (!((valid_real_point3d_fn)0xa16b0)((float *)((char *)obj + 0x0c))) {
-        char *name = (char *)tag_get_name(*(int *)obj);
-        char *msg =
-          csprintf((char *)0x5ab100,
-                   "%s had a bad position before compute_node_matrices "
-                   "(%f,%f,%f)",
-                   name, (double)*(float *)((char *)obj + 0x0c),
-                   (double)*(float *)((char *)obj + 0x10),
-                   (double)*(float *)((char *)obj + 0x14));
-        display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0xae2, 1);
-        system_exit(-1);
-      }
-      if (!((valid_fwd_and_up_fn)0x84a70)((float *)((char *)obj + 0x24),
-                                          (float *)((char *)obj + 0x30))) {
-        char *name = (char *)tag_get_name(*(int *)obj);
-        char *msg = csprintf((char *)0x5ab100,
-                             "%s had a bad forward and up before "
-                             "compute_node_matrices (%f,%f,%f)x(%f,%f,%f)",
-                             name, (double)*(float *)((char *)obj + 0x24),
-                             (double)*(float *)((char *)obj + 0x28),
-                             (double)*(float *)((char *)obj + 0x2c),
-                             (double)*(float *)((char *)obj + 0x30),
-                             (double)*(float *)((char *)obj + 0x34),
-                             (double)*(float *)((char *)obj + 0x38));
-        display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0xae3, 1);
-        system_exit(-1);
-      }
-    }
-
-    /* Walk the node hierarchy via breadth-first traversal */
-    {
-      uint16_t node_queue[64];
-      int queue_read = 0;
-      int queue_write = 1;
-      void *model_nodes_block = (char *)model_tag + 0xb8;
-
-      float root_anim[13];
-      float orientation_matrix[13];
-      float translation_matrix[13];
-      float phys_offset_matrix[13];
-      float origin_matrix[13];
-      float parent_copy[13];
-
-      node_queue[0] = 0;
-
-      do {
-        int16_t cur_read = (int16_t)queue_read;
-        uint16_t node_idx_u16 = node_queue[cur_read];
-        int node_idx;
-        void *node_data;
-        queue_read++;
-        node_idx = (int)(int16_t)node_idx_u16;
-        node_data = tag_block_get_element(model_nodes_block, node_idx, 0x9c);
-
-        if ((int16_t)node_idx_u16 == 0) {
-          /* Root node processing */
-          ((model_node_set_default_fn)0x109500)(root_anim, anim_data);
-
-          if (!override_decompressor) {
-            /* Build orientation matrix from object's forward and up */
-            ((matrix_4x3_from_point_fn)0x109280)(translation_matrix,
-                                                 (float *)((char *)obj + 0x0c));
-            ((void (*)(float *, float *, float *))0x109e10)(
-              orientation_matrix, (float *)((char *)obj + 0x24),
-              (float *)((char *)obj + 0x30));
-
-            /* Negate left column if object flag 0x1000 is set */
-            if ((*(uint32_t *)((char *)obj + 0x4) & 0x1000) != 0) {
-              orientation_matrix[4] = -orientation_matrix[4];
-              orientation_matrix[5] = -orientation_matrix[5];
-              orientation_matrix[6] = -orientation_matrix[6];
-            }
-
-            /* Apply physics center-of-mass offset if present */
-            if (*(int *)((char *)object_tag + 0x8c) != -1) {
-              void *phys_tag =
-                tag_get(0x70687973, *(int *)((char *)object_tag + 0x8c));
-              float neg_com[3];
-              neg_com[0] = -*(float *)((char *)phys_tag + 0x0c);
-              neg_com[1] = -*(float *)((char *)phys_tag + 0x10);
-              neg_com[2] = -*(float *)((char *)phys_tag + 0x14);
-              ((matrix_4x3_from_point_fn)0x109280)(phys_offset_matrix, neg_com);
-              ((matrix_4x3_multiply_fn)0x109850)(
-                orientation_matrix, phys_offset_matrix, orientation_matrix);
-            }
-
-            /* Apply model origin offset */
-            ((matrix_4x3_from_point_fn)0x109280)(
-              origin_matrix, (float *)((char *)object_tag + 0x14));
-            ((matrix_4x3_multiply_fn)0x109850)(
-              orientation_matrix, origin_matrix, orientation_matrix);
-
-            if (parent_node_mat == NULL) {
-              /* No parent — compose directly */
-              ((matrix_4x3_multiply_fn)0x109850)(
-                translation_matrix, orientation_matrix, node_matrices);
-              ((matrix_4x3_multiply_fn)0x109850)(node_matrices, root_anim,
-                                                 node_matrices);
-            } else {
-              /* Has parent — may need to scale and adjust */
-              if (*(uint32_t *)parent_node_mat != 0x3f800000) {
-                /* Parent scale != 1.0: scale the orientation position */
-                float pscale = *parent_node_mat;
-                int k;
-                float *src;
-                float *dst;
-                orientation_matrix[10] *= pscale;
-                orientation_matrix[11] *= pscale;
-                orientation_matrix[12] *= pscale;
-                /* Copy parent matrix to local buffer and set scale=1 */
-                src = parent_node_mat;
-                dst = parent_copy;
-                for (k = 0xd; k != 0; k--) {
-                  *dst = *src;
-                  src++;
-                  dst++;
-                }
-                parent_node_mat = parent_copy;
-                parent_copy[0] = 1.0f;
-                obj = (object_data_t *)object_get_and_verify_type(
-                  object_handle, -1); /* decompiler artifact: reload ESI */
-              }
-
-              /* Check if parent object has flag 0x1000 (mirrored) */
-              {
-                void *parent_obj = object_get_and_verify_type(
-                  obj->parent_object_index.value, -1);
-                if ((*(uint32_t *)((char *)parent_obj + 0x4) & 0x1000) != 0) {
-                  /* Copy parent matrix if not already copied */
-                  if (parent_node_mat != parent_copy) {
-                    float *src2 = parent_node_mat;
-                    float *dst2 = parent_copy;
-                    int k2;
-                    for (k2 = 0xd; k2 != 0; k2--) {
-                      *dst2 = *src2;
-                      src2++;
-                      dst2++;
-                    }
-                    parent_node_mat = parent_copy;
-                    obj = (object_data_t *)object_get_and_verify_type(
-                      object_handle, -1);
-                  }
-                  /* Negate the left column of parent matrix */
-                  parent_node_mat[4] = -parent_node_mat[4];
-                  parent_node_mat[5] = -parent_node_mat[5];
-                  parent_node_mat[6] = -parent_node_mat[6];
-                }
-              }
-
-              /* Validate parent node matrix */
-              {
-                uint32_t scale_bits = *(uint32_t *)parent_node_mat & 0x7f800000;
-                if (scale_bits == 0x7f800000 ||
-                    !((valid_real_vectors_fn)0xf6c40)(parent_node_mat + 1,
-                                                      parent_node_mat + 4,
-                                                      parent_node_mat + 7) ||
-                    !((valid_real_point3d_fn)0xa16b0)(parent_node_mat + 10)) {
-                  /* Parent node matrix is invalid — detailed error
-                   * reporting */
-                  void *parent_obj_2 = object_get_and_verify_type(
-                    obj->parent_object_index.value, -1);
-                  char *obj_name = (char *)tag_get_name(*(int *)obj);
-                  char *parent_name =
-                    (char *)tag_get_name(*(int *)parent_obj_2);
-                  char *context =
-                    csprintf((char *)0x5ab100, "%s as parent node of %s",
-                             parent_name, obj_name);
-
-                  /* assert_valid_real_matrix4x3 expanded inline */
-                  if ((*(uint32_t *)parent_node_mat & 0x7f800000) ==
-                      0x7f800000) {
-                    char *msg =
-                      csprintf((char *)0x5ab100, "%s had a bad scale %f",
-                               context, (double)*parent_node_mat);
-                    display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                   0xb37, 1);
-                    system_exit(-1);
-                  }
-                  if (!valid_real_normal3d(parent_node_mat + 1)) {
-                    char *msg = csprintf(
-                      (char *)0x5ab100, "%s had a bad forward (%f,%f,%f)",
-                      context, (double)parent_node_mat[1],
-                      (double)parent_node_mat[2], (double)parent_node_mat[3]);
-                    display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                   0xb37, 1);
-                    system_exit(-1);
-                  }
-                  if (!valid_real_normal3d(parent_node_mat + 4)) {
-                    char *msg = csprintf(
-                      (char *)0x5ab100, "%s had a bad left (%f,%f,%f)", context,
-                      (double)parent_node_mat[4], (double)parent_node_mat[5],
-                      (double)parent_node_mat[6]);
-                    display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                   0xb37, 1);
-                    system_exit(-1);
-                  }
-                  if (!valid_real_normal3d(parent_node_mat + 7)) {
-                    char *msg = csprintf(
-                      (char *)0x5ab100, "%s had a bad up (%f,%f,%f)", context,
-                      (double)parent_node_mat[7], (double)parent_node_mat[8],
-                      (double)parent_node_mat[9]);
-                    display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                   0xb37, 1);
-                    system_exit(-1);
-                  }
-                  if (!((valid_real_point3d_fn)0xa16b0)(parent_node_mat + 10)) {
-                    char *msg = csprintf(
-                      (char *)0x5ab100, "%s had a bad position (%f,%f,%f)",
-                      context, (double)parent_node_mat[10],
-                      (double)parent_node_mat[11], (double)parent_node_mat[12]);
-                    display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                   0xb37, 1);
-                    system_exit(-1);
-                  }
-                  {
-                    float dot_fl = parent_node_mat[1] * parent_node_mat[4] +
-                                   parent_node_mat[2] * parent_node_mat[5] +
-                                   parent_node_mat[3] * parent_node_mat[6];
-                    if ((*(uint32_t *)&dot_fl & 0x7f800000) == 0x7f800000 ||
-                        (dot_fl < 0 ? -dot_fl : dot_fl) >= *(double *)0x2549d8) {
-                      char *msg = csprintf(
-                        (char *)0x5ab100,
-                        "%s had a forward (%f,%f,%f) not perpendicular "
-                        "to left (%f,%f,%f)",
-                        context, (double)parent_node_mat[1],
-                        (double)parent_node_mat[2], (double)parent_node_mat[3],
-                        (double)parent_node_mat[4], (double)parent_node_mat[5],
-                        (double)parent_node_mat[6]);
-                      display_assert(
-                        msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0xb37, 1);
-                      system_exit(-1);
-                    }
-                  }
-                  {
-                    float dot_ul = parent_node_mat[7] * parent_node_mat[4] +
-                                   parent_node_mat[8] * parent_node_mat[5] +
-                                   parent_node_mat[9] * parent_node_mat[6];
-                    if ((*(uint32_t *)&dot_ul & 0x7f800000) == 0x7f800000 ||
-                        (dot_ul < 0 ? -dot_ul : dot_ul) >= *(double *)0x2549d8) {
-                      char *msg = csprintf(
-                        (char *)0x5ab100,
-                        "%s had a up (%f,%f,%f) not perpendicular to "
-                        "left (%f,%f,%f)",
-                        context, (double)parent_node_mat[7],
-                        (double)parent_node_mat[8], (double)parent_node_mat[9],
-                        (double)parent_node_mat[4], (double)parent_node_mat[5],
-                        (double)parent_node_mat[6]);
-                      display_assert(
-                        msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0xb37, 1);
-                      system_exit(-1);
-                    }
-                  }
-                  {
-                    float dot_uf = parent_node_mat[7] * parent_node_mat[1] +
-                                   parent_node_mat[2] * parent_node_mat[8] +
-                                   parent_node_mat[3] * parent_node_mat[9];
-                    if ((*(uint32_t *)&dot_uf & 0x7f800000) == 0x7f800000 ||
-                        (dot_uf < 0 ? -dot_uf : dot_uf) >= *(double *)0x2549d8) {
-                      char *msg = csprintf(
-                        (char *)0x5ab100,
-                        "%s had a forward (%f,%f,%f) not perpendicular "
-                        "to up (%f,%f,%f)",
-                        context, (double)parent_node_mat[1],
-                        (double)parent_node_mat[2], (double)parent_node_mat[3],
-                        (double)parent_node_mat[7], (double)parent_node_mat[8],
-                        (double)parent_node_mat[9]);
-                      display_assert(
-                        msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0xb37, 1);
-                      system_exit(-1);
-                    }
-                  }
-                  if (!((valid_real_matrix4x3_fn)0xf6d00)(parent_node_mat)) {
-                    char *msg =
-                      csprintf((char *)0x5ab100,
-                               "%s: assert_valid_real_matrix4x3", context);
-                    display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                   0xb37, 1);
-                    system_exit(-1);
-                  }
-                }
-              }
-
-              /* Compose parent * translation, then node * orientation,
-               * then multiply with root anim */
-              ((matrix_4x3_multiply_fn)0x109850)(
-                parent_node_mat, translation_matrix, node_matrices);
-              ((matrix_4x3_multiply_fn)0x109850)(
-                node_matrices, orientation_matrix, node_matrices);
-              ((matrix_4x3_multiply_fn)0x109850)(node_matrices, root_anim,
-                                                 node_matrices);
-            }
-          } else {
-            /* override_decompressor — just copy root_anim to node_matrices */
-            float *src3 = root_anim;
-            float *dst3 = node_matrices;
-            int k3;
-            for (k3 = 0xd; k3 != 0; k3--) {
-              *dst3 = *src3;
-              src3++;
-              dst3++;
-            }
-          }
-
-          /* Validate root node matrix — first quick check */
-          {
-            float *fwd = node_matrices + 1;
-            float *left = node_matrices + 4;
-            uint32_t scale_bits = *(uint32_t *)node_matrices & 0x7f800000;
-            if (scale_bits == 0x7f800000 ||
-                !((valid_real_vectors_fn)0xf6c40)(fwd, left,
-                                                  node_matrices + 7) ||
-                (*(uint32_t *)&node_matrices[10] & 0x7f800000) == 0x7f800000 ||
-                (*(uint32_t *)&node_matrices[11] & 0x7f800000) == 0x7f800000 ||
-                (*(uint32_t *)&node_matrices[12] & 0x7f800000) == 0x7f800000) {
-              {
-                /* Root node matrix invalid — dump diagnostic info */
-                char *name;
-                obj = (object_data_t *)object_get_and_verify_type(object_handle,
-                                                                  -1);
-                name = (char *)tag_get_name(*(int *)obj);
-                error(2,
-                      "object_compute_node_matrices FAILURE on root node "
-                      "of %s",
-                      name);
-                error(2, "  object: pos %f %f %f, fwd %f %f %f, up %f %f %f",
-                      (double)*(float *)((char *)obj + 0x0c),
-                      (double)*(float *)((char *)obj + 0x10),
-                      (double)*(float *)((char *)obj + 0x14),
-                      (double)*(float *)((char *)obj + 0x24),
-                      (double)*(float *)((char *)obj + 0x28),
-                      (double)*(float *)((char *)obj + 0x2c),
-                      (double)*(float *)((char *)obj + 0x30),
-                      (double)*(float *)((char *)obj + 0x34),
-                      (double)*(float *)((char *)obj + 0x38));
-
-                if (*(int *)((char *)object_tag + 0x8c) != -1) {
-                  void *phys_tag2 =
-                    tag_get(0x70687973, *(int *)((char *)object_tag + 0x8c));
-                  error(2, "  center-of-mass translation %f %f %f",
-                        (double)-*(float *)((char *)phys_tag2 + 0x0c),
-                        (double)-*(float *)((char *)phys_tag2 + 0x10),
-                        (double)-*(float *)((char *)phys_tag2 + 0x14));
-                }
-                error(2, "  origin-offset %f %f %f",
-                      (double)*(float *)((char *)object_tag + 0x14),
-                      (double)*(float *)((char *)object_tag + 0x18),
-                      (double)*(float *)((char *)object_tag + 0x1c));
-
-                if (parent_node_mat == NULL) {
-                  error(2, "  no parent node");
-                } else {
-                  error(2, "  parent-node matrix fwd  %f %f %f",
-                        (double)parent_node_mat[1], (double)parent_node_mat[2],
-                        (double)parent_node_mat[3]);
-                  error(2, "                     left %f %f %f",
-                        (double)parent_node_mat[4], (double)parent_node_mat[5],
-                        (double)parent_node_mat[6]);
-                  error(2, "                     up   %f %f %f",
-                        (double)parent_node_mat[7], (double)parent_node_mat[8],
-                        (double)parent_node_mat[9]);
-                  error(2, "                     posn %f %f %f",
-                        (double)parent_node_mat[10],
-                        (double)parent_node_mat[11],
-                        (double)parent_node_mat[12]);
-                  error(2,
-                        "                     scale (jason's ugly secret) "
-                        "%f",
-                        (double)*parent_node_mat);
-                }
-
-                error(2, "");
-
-                error(2, "computed matrix fwd  %f %f %f",
-                      (double)node_matrices[1], (double)node_matrices[2],
-                      (double)node_matrices[3]);
-                error(2, "                left %f %f %f",
-                      (double)node_matrices[4], (double)node_matrices[5],
-                      (double)node_matrices[6]);
-                error(2, "                up   %f %f %f",
-                      (double)node_matrices[7], (double)node_matrices[8],
-                      (double)node_matrices[9]);
-                error(2, "                posn %f %f %f",
-                      (double)node_matrices[10], (double)node_matrices[11],
-                      (double)node_matrices[12]);
-                error(2, "                scale %f", (double)*node_matrices);
-
-                /* assert_valid_real_matrix4x3 on root node (line 0xb69)
-                 */
-                if ((*(uint32_t *)node_matrices & 0x7f800000) == 0x7f800000 ||
-                    !((valid_real_vectors_fn)0xf6c40)(fwd, left,
-                                                      node_matrices + 7) ||
-                    !((valid_real_point3d_fn)0xa16b0)(node_matrices + 10)) {
-                  if ((*(uint32_t *)node_matrices & 0x7f800000) == 0x7f800000) {
-                    char *msg =
-                      csprintf((char *)0x5ab100, "%s had a bad scale %f",
-                               "object_compute_node_matrices root node matrix",
-                               (double)*node_matrices);
-                    display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                   0xb69, 1);
-                    system_exit(-1);
-                  }
-                  {
-                    float mag_fwd = fwd[0] * fwd[0] + fwd[1] * fwd[1] +
-                                    fwd[2] * fwd[2] - *(float *)0x2533c8;
-                    if ((*(uint32_t *)&mag_fwd & 0x7f800000) == 0x7f800000 ||
-                        (mag_fwd < 0 ? -mag_fwd : mag_fwd) >=
-                          *(double *)0x2549d8) {
-                      char *msg = csprintf(
-                        (char *)0x5ab100, "%s had a bad forward (%f,%f,%f)",
-                        "object_compute_node_matrices root node matrix",
-                        (double)fwd[0], (double)fwd[1], (double)fwd[2]);
-                      display_assert(
-                        msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0xb69, 1);
-                      system_exit(-1);
-                    }
-                  }
-                  {
-                    float mag_left = left[0] * left[0] + left[1] * left[1] +
-                                     left[2] * left[2] - *(float *)0x2533c8;
-                    if ((*(uint32_t *)&mag_left & 0x7f800000) == 0x7f800000 ||
-                        (mag_left < 0 ? -mag_left : mag_left) >=
-                          *(double *)0x2549d8) {
-                      char *msg = csprintf(
-                        (char *)0x5ab100, "%s had a bad left (%f,%f,%f)",
-                        "object_compute_node_matrices root node matrix",
-                        (double)left[0], (double)left[1], (double)left[2]);
-                      display_assert(
-                        msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0xb69, 1);
-                      system_exit(-1);
-                    }
-                  }
-                  {
-                    float mag_up = node_matrices[9] * node_matrices[9] +
-                                   node_matrices[8] * node_matrices[8] +
-                                   node_matrices[7] * node_matrices[7] -
-                                   *(float *)0x2533c8;
-                    if ((*(uint32_t *)&mag_up & 0x7f800000) == 0x7f800000 ||
-                        (mag_up < 0 ? -mag_up : mag_up) >= *(double *)0x2549d8) {
-                      char *msg = csprintf(
-                        (char *)0x5ab100, "%s had a bad up (%f,%f,%f)",
-                        "object_compute_node_matrices root node matrix",
-                        (double)node_matrices[7], (double)node_matrices[8],
-                        (double)node_matrices[9]);
-                      display_assert(
-                        msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0xb69, 1);
-                      system_exit(-1);
-                    }
-                  }
-                  if ((*(uint32_t *)&node_matrices[10] & 0x7f800000) ==
-                        0x7f800000 ||
-                      (*(uint32_t *)&node_matrices[11] & 0x7f800000) ==
-                        0x7f800000 ||
-                      (*(uint32_t *)&node_matrices[12] & 0x7f800000) ==
-                        0x7f800000) {
-                    char *msg = csprintf(
-                      (char *)0x5ab100, "%s had a bad position (%f,%f,%f)",
-                      "object_compute_node_matrices root node matrix",
-                      (double)node_matrices[10], (double)node_matrices[11],
-                      (double)node_matrices[12]);
-                    display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                   0xb69, 1);
-                    system_exit(-1);
-                  }
-                  {
-                    float dot_fl =
-                      fwd[0] * left[0] + fwd[1] * left[1] + fwd[2] * left[2];
-                    if ((*(uint32_t *)&dot_fl & 0x7f800000) == 0x7f800000 ||
-                        (dot_fl < 0 ? -dot_fl : dot_fl) >= *(double *)0x2549d8) {
-                      char *msg = csprintf(
-                        (char *)0x5ab100,
-                        "%s had a forward (%f,%f,%f) not perpendicular "
-                        "to left (%f,%f,%f)",
-                        "object_compute_node_matrices root node matrix",
-                        (double)fwd[0], (double)fwd[1], (double)fwd[2],
-                        (double)left[0], (double)left[1], (double)left[2]);
-                      display_assert(
-                        msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0xb69, 1);
-                      system_exit(-1);
-                    }
-                  }
-                  {
-                    float dot_ul = left[0] * node_matrices[7] +
-                                   node_matrices[8] * left[1] +
-                                   node_matrices[9] * left[2];
-                    if ((*(uint32_t *)&dot_ul & 0x7f800000) == 0x7f800000 ||
-                        (dot_ul < 0 ? -dot_ul : dot_ul) >= *(double *)0x2549d8) {
-                      char *msg = csprintf(
-                        (char *)0x5ab100,
-                        "%s had a up (%f,%f,%f) not perpendicular to "
-                        "left (%f,%f,%f)",
-                        "object_compute_node_matrices root node matrix",
-                        (double)node_matrices[7], (double)node_matrices[8],
-                        (double)node_matrices[9], (double)left[0],
-                        (double)left[1], (double)left[2]);
-                      display_assert(
-                        msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0xb69, 1);
-                      system_exit(-1);
-                    }
-                  }
-                  {
-                    float dot_uf = node_matrices[7] * fwd[0] +
-                                   node_matrices[8] * fwd[1] +
-                                   node_matrices[9] * fwd[2];
-                    if ((*(uint32_t *)&dot_uf & 0x7f800000) == 0x7f800000 ||
-                        (dot_uf < 0 ? -dot_uf : dot_uf) >= *(double *)0x2549d8) {
-                      char *msg = csprintf(
-                        (char *)0x5ab100,
-                        "%s had a forward (%f,%f,%f) not perpendicular "
-                        "to up (%f,%f,%f)",
-                        "object_compute_node_matrices root node matrix",
-                        (double)fwd[0], (double)fwd[1], (double)fwd[2],
-                        (double)node_matrices[7], (double)node_matrices[8],
-                        (double)node_matrices[9]);
-                      display_assert(
-                        msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0xb69, 1);
-                      system_exit(-1);
-                    }
-                  }
-                  if ((*(uint32_t *)node_matrices & 0x7f800000) == 0x7f800000 ||
-                      !((valid_real_vectors_fn)0xf6c40)(fwd, left,
-                                                        node_matrices + 7) ||
-                      !((valid_real_point3d_fn)0xa16b0)(node_matrices + 10)) {
-                    char *msg = csprintf(
-                      (char *)0x5ab100, "%s: assert_valid_real_matrix4x3",
-                      "object_compute_node_matrices root node matrix");
-                    display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                   0xb69, 1);
-                    system_exit(-1);
-                  }
-                }
-              }
-            }
-          }
-
-          /* Final assert_valid_real_matrix4x3 on root (line 0xb77) */
-          {
-            float *fwd2 = node_matrices + 1;
-            float *left2 = node_matrices + 4;
-            if ((*(uint32_t *)node_matrices & 0x7f800000) == 0x7f800000 ||
-                !((valid_real_vectors_fn)0xf6c40)(fwd2, left2,
-                                                  node_matrices + 7) ||
-                (*(uint32_t *)&node_matrices[10] & 0x7f800000) == 0x7f800000 ||
-                (*(uint32_t *)&node_matrices[11] & 0x7f800000) == 0x7f800000 ||
-                (*(uint32_t *)&node_matrices[12] & 0x7f800000) == 0x7f800000) {
-              char *name2 = (char *)tag_get_name(*(int *)obj);
-
-              if ((*(uint32_t *)node_matrices & 0x7f800000) == 0x7f800000) {
-                char *msg = csprintf((char *)0x5ab100, "%s had a bad scale %f",
-                                     name2, (double)*node_matrices);
-                display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                               0xb77, 1);
-                system_exit(-1);
-              }
-              {
-                float mag_fwd = fwd2[0] * fwd2[0] + fwd2[1] * fwd2[1] +
-                                fwd2[2] * fwd2[2] - *(float *)0x2533c8;
-                if ((*(uint32_t *)&mag_fwd & 0x7f800000) == 0x7f800000 ||
-                    (mag_fwd < 0 ? -mag_fwd : mag_fwd) >= *(double *)0x2549d8) {
-                  char *msg = csprintf(
-                    (char *)0x5ab100, "%s had a bad forward (%f,%f,%f)", name2,
-                    (double)fwd2[0], (double)fwd2[1], (double)fwd2[2]);
-                  display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                 0xb77, 1);
-                  system_exit(-1);
-                }
-              }
-              {
-                float mag_left = left2[0] * left2[0] + left2[1] * left2[1] +
-                                 left2[2] * left2[2] - *(float *)0x2533c8;
-                if ((*(uint32_t *)&mag_left & 0x7f800000) == 0x7f800000 ||
-                    (mag_left < 0 ? -mag_left : mag_left) >=
-                      *(double *)0x2549d8) {
-                  char *msg = csprintf(
-                    (char *)0x5ab100, "%s had a bad left (%f,%f,%f)", name2,
-                    (double)left2[0], (double)left2[1], (double)left2[2]);
-                  display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                 0xb77, 1);
-                  system_exit(-1);
-                }
-              }
-              {
-                float mag_up = node_matrices[9] * node_matrices[9] +
-                               node_matrices[8] * node_matrices[8] +
-                               node_matrices[7] * node_matrices[7] -
-                               *(float *)0x2533c8;
-                if ((*(uint32_t *)&mag_up & 0x7f800000) == 0x7f800000 ||
-                    (mag_up < 0 ? -mag_up : mag_up) >= *(double *)0x2549d8) {
-                  char *msg = csprintf(
-                    (char *)0x5ab100, "%s had a bad up (%f,%f,%f)", name2,
-                    (double)node_matrices[7], (double)node_matrices[8],
-                    (double)node_matrices[9]);
-                  display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                 0xb77, 1);
-                  system_exit(-1);
-                }
-              }
-              if ((*(uint32_t *)&node_matrices[10] & 0x7f800000) ==
-                    0x7f800000 ||
-                  (*(uint32_t *)&node_matrices[11] & 0x7f800000) ==
-                    0x7f800000 ||
-                  (*(uint32_t *)&node_matrices[12] & 0x7f800000) ==
-                    0x7f800000) {
-                char *msg = csprintf(
-                  (char *)0x5ab100, "%s had a bad position (%f,%f,%f)", name2,
-                  (double)node_matrices[10], (double)node_matrices[11],
-                  (double)node_matrices[12]);
-                display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                               0xb77, 1);
-                system_exit(-1);
-              }
-              {
-                float dot_fl =
-                  fwd2[0] * left2[0] + fwd2[1] * left2[1] + fwd2[2] * left2[2];
-                if ((*(uint32_t *)&dot_fl & 0x7f800000) == 0x7f800000 ||
-                    (dot_fl < 0 ? -dot_fl : dot_fl) >= *(double *)0x2549d8) {
-                  char *msg = csprintf(
-                    (char *)0x5ab100,
-                    "%s had a forward (%f,%f,%f) not perpendicular "
-                    "to left (%f,%f,%f)",
-                    name2, (double)fwd2[0], (double)fwd2[1], (double)fwd2[2],
-                    (double)left2[0], (double)left2[1], (double)left2[2]);
-                  display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                 0xb77, 1);
-                  system_exit(-1);
-                }
-              }
-              {
-                float dot_ul = left2[0] * node_matrices[7] +
-                               node_matrices[8] * left2[1] +
-                               node_matrices[9] * left2[2];
-                if ((*(uint32_t *)&dot_ul & 0x7f800000) == 0x7f800000 ||
-                    (dot_ul < 0 ? -dot_ul : dot_ul) >= *(double *)0x2549d8) {
-                  char *msg = csprintf(
-                    (char *)0x5ab100,
-                    "%s had a up (%f,%f,%f) not perpendicular to "
-                    "left (%f,%f,%f)",
-                    name2, (double)node_matrices[7], (double)node_matrices[8],
-                    (double)node_matrices[9], (double)left2[0],
-                    (double)left2[1], (double)left2[2]);
-                  display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                 0xb77, 1);
-                  system_exit(-1);
-                }
-              }
-              {
-                float dot_uf = node_matrices[7] * fwd2[0] +
-                               fwd2[1] * node_matrices[8] +
-                               fwd2[2] * node_matrices[9];
-                if ((*(uint32_t *)&dot_uf & 0x7f800000) == 0x7f800000 ||
-                    (dot_uf < 0 ? -dot_uf : dot_uf) >= *(double *)0x2549d8) {
-                  char *msg = csprintf(
-                    (char *)0x5ab100,
-                    "%s had a forward (%f,%f,%f) not perpendicular "
-                    "to up (%f,%f,%f)",
-                    name2, (double)fwd2[0], (double)fwd2[1], (double)fwd2[2],
-                    (double)node_matrices[7], (double)node_matrices[8],
-                    (double)node_matrices[9]);
-                  display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                                 0xb77, 1);
-                  system_exit(-1);
-                }
-              }
-              if ((*(uint32_t *)node_matrices & 0x7f800000) == 0x7f800000 ||
-                  !((valid_real_vectors_fn)0xf6c40)(fwd2, left2,
-                                                    node_matrices + 7) ||
-                  !((valid_real_point3d_fn)0xa16b0)(node_matrices + 10)) {
-                char *msg = csprintf((char *)0x5ab100,
-                                     "%s: assert_valid_real_matrix4x3", name2);
-                display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c",
-                               0xb77, 1);
-                system_exit(-1);
-              }
-            }
-          }
-        } else {
-          /* Non-root node: set default pose then multiply by parent */
-          float *node_mat = node_matrices + node_idx * 13;
-          int16_t parent_idx;
-          float *parent_mat;
-          ((model_node_set_default_fn)0x109500)(node_mat, (char *)anim_data +
-                                                            node_idx * 0x20);
-
-          if (*(int16_t *)((char *)node_data + 0x24) == -1) {
-            display_assert("node->parent_node_index!=NONE",
-                           "c:\\halo\\SOURCE\\objects\\objects.c", 0xb71, 1);
-            system_exit(-1);
-          }
-          parent_idx = *(int16_t *)((char *)node_data + 0x24);
-          parent_mat = node_matrices + parent_idx * 13;
-          ((matrix_4x3_multiply_fn)0x109850)(parent_mat, node_mat, node_mat);
-        }
-
-        /* Enqueue child and sibling nodes */
-        if (*(uint16_t *)((char *)node_data + 0x20) != 0xffff) {
-          node_queue[(int16_t)queue_write] =
-            *(uint16_t *)((char *)node_data + 0x20);
-          queue_write++;
-        }
-        if (*(uint16_t *)((char *)node_data + 0x22) != 0xffff) {
-          node_queue[(int16_t)queue_write] =
-            *(uint16_t *)((char *)node_data + 0x22);
-          queue_write++;
-        }
-      } while ((int16_t)queue_read != (int16_t)queue_write);
-    }
-  }
-
-  /* Apply origin offset from model tag and set bounding sphere radius */
-  matrix_transform_point(node_matrices, (float *)((char *)object_tag + 0x08),
-                         (float *)((char *)obj + 0x50));
-  {
-    float radius = *(float *)((char *)object_tag + 0x04);
-    *(float *)((char *)obj + 0x5c) = radius;
-    if (*(float *)((char *)obj + 0x60) > *(float *)0x2533c0) {
-      *(float *)((char *)obj + 0x5c) = radius * *(float *)((char *)obj + 0x60);
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xa44, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6f626a65\n\t"
+      "movl %%esi, -0x28(%%ebp)\n\t"
+      "call *%[tag]\n\t"
+      "leal 0x1a0(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "call *%[c13dfc0]\n\t"
+      "movb 0x64(%%esi), %%cl\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "testl $0xfe0, %%edx\n\t"
+      "je .Lobject_compute_node_matrices_1\n\t"
+      "leal -0xa44(%%ebp), %%eax\n\t"
+      "jmp .Lobject_compute_node_matrices_2\n\t"
+      ".Lobject_compute_node_matrices_1:\n\t"
+      "leal 0x19c(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c13dfc0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_compute_node_matrices_2:\n\t"
+      "movl -0x1c(%%ebp), %%edi\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "cmpl $-1, 0x34(%%edi)\n\t"
+      "je .Lobject_compute_node_matrices_105\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x64(%%esi), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c13c100]\n\t"
+      "movl 0x34(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6d6f6465\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, -0x24(%%ebp)\n\t"
+      "movl 0xcc(%%esi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lobject_compute_node_matrices_3\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "jmp .Lobject_compute_node_matrices_4\n\t"
+      ".Lobject_compute_node_matrices_3:\n\t"
+      "movsbw 0xd0(%%esi), %%cx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[onode]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      ".Lobject_compute_node_matrices_4:\n\t"
+      "movl 0x7c(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%edi, -0x18(%%ebp)\n\t"
+      "movb $0, -0xd(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_8\n\t"
+      "cmpw $-1, 0x80(%%esi)\n\t"
+      "je .Lobject_compute_node_matrices_7\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x616e7472\n\t"
+      "call *%[tag]\n\t"
+      "movswl 0x80(%%esi), %%edx\n\t"
+      "pushl $0xb4\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x74, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movb 0x4(%%esi), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jns .Lobject_compute_node_matrices_5\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "cmpw $0, 0x22(%%eax)\n\t"
+      "jle .Lobject_compute_node_matrices_5\n\t"
+      "call *%[gtime]\n\t"
+      "addl 0x8(%%ebp), %%eax\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movswl 0x22(%%ecx), %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "divl %%ecx\n\t"
+      "testw %%dx, %%dx\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "jge .Lobject_compute_node_matrices_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa90\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29c430\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .Lobject_compute_node_matrices_6\n\t"
+      ".Lobject_compute_node_matrices_5:\n\t"
+      "movw 0x82(%%esi), %%dx\n\t"
+      "movw %%dx, -0x4(%%ebp)\n\t"
+      ".Lobject_compute_node_matrices_6:\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x24(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c121d60]\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movb 0x3a(%%ecx), %%al\n\t"
+      "shrb $1, %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "andb $1, %%al\n\t"
+      "movb %%al, -0xd(%%ebp)\n\t"
+      "jmp .Lobject_compute_node_matrices_10\n\t"
+      ".Lobject_compute_node_matrices_7:\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "movl -0x24(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "jmp .Lobject_compute_node_matrices_9\n\t"
+      ".Lobject_compute_node_matrices_8:\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl -0x24(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      ".Lobject_compute_node_matrices_9:\n\t"
+      "call *%[c123aa0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_compute_node_matrices_10:\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "movl 0x44(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_compute_node_matrices_16\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x616e7472\n\t"
+      "call *%[tag]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl $0, -0x2c(%%ebp)\n\t"
+      "jle .Lobject_compute_node_matrices_16\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lobject_compute_node_matrices_11:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "pushl $0x14\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $-1, (%%eax)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_15\n\t"
+      "movl -0x1c(%%ebp), %%ecx\n\t"
+      "movl %%eax, %%edx\n\t"
+      "movswl 0x2(%%edx), %%eax\n\t"
+      "movl 0x158(%%ecx), %%edx\n\t"
+      "addl $0x158, %%ecx\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "jge .Lobject_compute_node_matrices_15\n\t"
+      "pushl $0x168\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movswl (%%eax), %%ecx\n\t"
+      "pushl $0xb4\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x74, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movswl 0x2(%%eax), %%ecx\n\t"
+      "movw 0x4(%%eax), %%ax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "flds 0xe4(%%esi,%%ecx,4)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "jne .Lobject_compute_node_matrices_14\n\t"
+      "movl -0x20(%%ebp), %%edx\n\t"
+      "testb $2, (%%edx)\n\t"
+      "je .Lobject_compute_node_matrices_12\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movswl 0x22(%%eax), %%ecx\n\t"
+      "movl %%ecx, -0x20(%%ebp)\n\t"
+      "fildl -0x20(%%ebp)\n\t"
+      "jmp .Lobject_compute_node_matrices_13\n\t"
+      ".Lobject_compute_node_matrices_12:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movswl 0x22(%%edx), %%eax\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "fildl -0x20(%%ebp)\n\t"
+      ".Lobject_compute_node_matrices_13:\n\t"
+      "fmuls -0xc(%%ebp)\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c122690]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .Lobject_compute_node_matrices_15\n\t"
+      ".Lobject_compute_node_matrices_14:\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jne .Lobject_compute_node_matrices_15\n\t"
+      "call *%[gtime]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movswl 0x22(%%ecx), %%ecx\n\t"
+      "addl %%edx, %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "divl %%ecx\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c122450]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lobject_compute_node_matrices_15:\n\t"
+      "movl -0x2c(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0x2c(%%ebp)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "jl .Lobject_compute_node_matrices_11\n\t"
+      ".Lobject_compute_node_matrices_16:\n\t"
+      "flds 0x60(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_compute_node_matrices_17\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "flds 0x60(%%esi)\n\t"
+      "fmuls 0x1c(%%eax)\n\t"
+      "fstps 0x1c(%%eax)\n\t"
+      "flds 0x60(%%esi)\n\t"
+      "fmuls 0x10(%%eax)\n\t"
+      "fstps 0x10(%%eax)\n\t"
+      "flds 0x60(%%esi)\n\t"
+      "fmuls 0x14(%%eax)\n\t"
+      "fstps 0x14(%%eax)\n\t"
+      "flds 0x60(%%esi)\n\t"
+      "fmuls 0x18(%%eax)\n\t"
+      "fstps 0x18(%%eax)\n\t"
+      ".Lobject_compute_node_matrices_17:\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "cmpl $-1, 0x44(%%edx)\n\t"
+      "je .Lobject_compute_node_matrices_18\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13c7a0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_compute_node_matrices_18:\n\t"
+      "cmpw $0, 0x86(%%esi)\n\t"
+      "jle .Lobject_compute_node_matrices_20\n\t"
+      "movb 0x64(%%esi), %%cl\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "testl $0xfe0, %%edx\n\t"
+      "je .Lobject_compute_node_matrices_19\n\t"
+      "pushl $1\n\t"
+      "pushl $0xad9\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29bf80\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_19:\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x86(%%esi), %%ax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x84(%%esi), %%cx\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x198(%%esi), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c13dfc0]\n\t"
+      "movl -0x24(%%ebp), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0xb8(%%edx), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c120ba0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_20:\n\t"
+      "movb -0xd(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_22\n\t"
+      "leal 0xc(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca16b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_21\n\t"
+      "flds 0x14(%%esi)\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl $1\n\t"
+      "pushl $0xae2\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x10(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0xc(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x29c3f0\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_21:\n\t"
+      "leal 0x30(%%esi), %%eax\n\t"
+      "leal 0x24(%%esi), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c84a70]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_22\n\t"
+      "flds 0x38(%%esi)\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl $0xae3\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x30, %%esp\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x34(%%esi)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds 0x30(%%esi)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0x2c(%%esi)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x28(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x24(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x29c3a0\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_22:\n\t"
+      "movl -0x24(%%ebp), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "addl $0xb8, %%eax\n\t"
+      "movl $1, -0xc(%%ebp)\n\t"
+      "movw %%cx, -0x244(%%ebp)\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "jmp .Lobject_compute_node_matrices_24\n\t"
+      ".Lobject_compute_node_matrices_23:\n\t"
+      "movl -0x18(%%ebp), %%edi\n\t"
+      "jmp .Lobject_compute_node_matrices_24\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lobject_compute_node_matrices_24:\n\t"
+      "movswl %%cx, %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw -0x244(%%ebp,%%edx,2), %%ax\n\t"
+      "pushl $0x9c\n\t"
+      "incl %%ecx\n\t"
+      "movl %%ecx, -0x5c(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $0, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x2c(%%ebp)\n\t"
+      "jne .Lobject_compute_node_matrices_79\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x15c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c109500]\n\t"
+      "movb -0xd(%%ebp), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_47\n\t"
+      "leal 0xc(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xf4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c109280]\n\t"
+      "leal 0x30(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0x24(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xc0(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c109e10]\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb $0x10, %%ah\n\t"
+      "je .Lobject_compute_node_matrices_25\n\t"
+      "flds -0xb0(%%ebp)\n\t"
+      "fchs\n\t"
+      "fstps -0xb0(%%ebp)\n\t"
+      "flds -0xac(%%ebp)\n\t"
+      "fchs\n\t"
+      "fstps -0xac(%%ebp)\n\t"
+      "flds -0xa8(%%ebp)\n\t"
+      "fchs\n\t"
+      "fstps -0xa8(%%ebp)\n\t"
+      ".Lobject_compute_node_matrices_25:\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "movl 0x8c(%%edx), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_compute_node_matrices_26\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x70687973\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x14(%%eax)\n\t"
+      "fchs\n\t"
+      "leal -0x1c4(%%ebp), %%ecx\n\t"
+      "flds 0x10(%%eax)\n\t"
+      "fchs\n\t"
+      "flds 0xc(%%eax)\n\t"
+      "leal -0x8c(%%ebp), %%eax\n\t"
+      "fchs\n\t"
+      "pushl %%eax\n\t"
+      "fstps -0x8c(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fstps -0x88(%%ebp)\n\t"
+      "fstps -0x84(%%ebp)\n\t"
+      "call *%[c109280]\n\t"
+      "leal -0xc0(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x1c4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xc0(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c109850]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      ".Lobject_compute_node_matrices_26:\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "addl $0x14, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x190(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c109280]\n\t"
+      "leal -0xc0(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x190(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0xc0(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c109850]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Lobject_compute_node_matrices_46\n\t"
+      "cmpl $0x3f800000, (%%edi)\n\t"
+      "je .Lobject_compute_node_matrices_27\n\t"
+      "movl -0x18(%%ebp), %%esi\n\t"
+      "flds -0xcc(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "movl $0xd, %%ecx\n\t"
+      "leal -0x128(%%ebp), %%edi\n\t"
+      "fstps -0xcc(%%ebp)\n\t"
+      "flds -0xc8(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "fstps -0xc8(%%ebp)\n\t"
+      "flds -0xc4(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "rep movsl\n\t"
+      "fstps -0xc4(%%ebp)\n\t"
+      "movl -0x28(%%ebp), %%esi\n\t"
+      "leal -0x128(%%ebp), %%ecx\n\t"
+      "movl %%ecx, -0x18(%%ebp)\n\t"
+      "movl $0x3f800000, -0x128(%%ebp)\n\t"
+      "movl %%ecx, %%edi\n\t"
+      ".Lobject_compute_node_matrices_27:\n\t"
+      "movl 0xcc(%%esi), %%edx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $0x10, %%ch\n\t"
+      "je .Lobject_compute_node_matrices_29\n\t"
+      "leal -0x128(%%ebp), %%eax\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "je .Lobject_compute_node_matrices_28\n\t"
+      "movl -0x18(%%ebp), %%esi\n\t"
+      "movl $0xd, %%ecx\n\t"
+      "leal -0x128(%%ebp), %%edi\n\t"
+      "rep movsl\n\t"
+      "movl -0x28(%%ebp), %%esi\n\t"
+      "leal -0x128(%%ebp), %%ecx\n\t"
+      "movl %%ecx, -0x18(%%ebp)\n\t"
+      "movl %%ecx, %%edi\n\t"
+      ".Lobject_compute_node_matrices_28:\n\t"
+      "flds 0x10(%%edi)\n\t"
+      "fchs\n\t"
+      "fstps 0x10(%%edi)\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fchs\n\t"
+      "fstps 0x14(%%edi)\n\t"
+      "flds 0x18(%%edi)\n\t"
+      "fchs\n\t"
+      "fstps 0x18(%%edi)\n\t"
+      ".Lobject_compute_node_matrices_29:\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "movl %%edx, -0x24(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_30\n\t"
+      "leal 0x1c(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x10(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0x4(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cf6c40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_compute_node_matrices_30\n\t"
+      "leal 0x28(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ca16b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_45\n\t"
+      ".Lobject_compute_node_matrices_30:\n\t"
+      "movl 0xcc(%%esi), %%edx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x29c384\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "movl %%eax, -0x58(%%ebp)\n\t"
+      "jne .Lobject_compute_node_matrices_31\n\t"
+      "flds (%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb37\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28bd6c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_31:\n\t"
+      "leal 0x4(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_32\n\t"
+      "flds 0xc(%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb37\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28bd4c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_32:\n\t"
+      "leal 0x10(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_33\n\t"
+      "flds 0x18(%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb37\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x10(%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28bd2c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_33:\n\t"
+      "leal 0x1c(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_34\n\t"
+      "flds 0x24(%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb37\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x20(%%edi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28bd10\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_34:\n\t"
+      "leal 0x28(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca16b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_35\n\t"
+      "flds 0x30(%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb37\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x2c(%%edi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x28(%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28bcec\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_35:\n\t"
+      "flds 0xc(%%edi)\n\t"
+      "fmuls 0x18(%%edi)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fmuls 0x14(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fmuls 0x10(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "je .Lobject_compute_node_matrices_36\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_38\n\t"
+      "jmp .Lobject_compute_node_matrices_37\n\t"
+      ".Lobject_compute_node_matrices_36:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_37:\n\t"
+      "flds 0x18(%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb37\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x30, %%esp\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds 0x10(%%edi)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0xc(%%edi)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28bca8\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_38:\n\t"
+      "flds 0x24(%%edi)\n\t"
+      "fmuls 0x18(%%edi)\n\t"
+      "flds 0x20(%%edi)\n\t"
+      "fmuls 0x14(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "fmuls 0x10(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "je .Lobject_compute_node_matrices_39\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_41\n\t"
+      "jmp .Lobject_compute_node_matrices_40\n\t"
+      ".Lobject_compute_node_matrices_39:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_40:\n\t"
+      "flds 0x18(%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb37\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x30, %%esp\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds 0x10(%%edi)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0x24(%%edi)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x20(%%edi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28bc6c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_41:\n\t"
+      "flds 0xc(%%edi)\n\t"
+      "fmuls 0x24(%%edi)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fmuls 0x20(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "je .Lobject_compute_node_matrices_42\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_44\n\t"
+      "jmp .Lobject_compute_node_matrices_43\n\t"
+      ".Lobject_compute_node_matrices_42:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_43:\n\t"
+      "flds 0x24(%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb37\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x30, %%esp\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x20(%%edi)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0xc(%%edi)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28bc2c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_44:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cf6d00]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_45\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb37\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28bc0c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_45:\n\t"
+      "pushl %%ebx\n\t"
+      "leal -0xf4(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c109850]\n\t"
+      "pushl %%ebx\n\t"
+      "leal -0xc0(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c109850]\n\t"
+      "pushl %%ebx\n\t"
+      "leal -0x15c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c109850]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "jmp .Lobject_compute_node_matrices_48\n\t"
+      ".Lobject_compute_node_matrices_46:\n\t"
+      "pushl %%ebx\n\t"
+      "leal -0xc0(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0xf4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c109850]\n\t"
+      "pushl %%ebx\n\t"
+      "leal -0x15c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c109850]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "jmp .Lobject_compute_node_matrices_48\n\t"
+      ".Lobject_compute_node_matrices_47:\n\t"
+      "movl $0xd, %%ecx\n\t"
+      "leal -0x15c(%%ebp), %%esi\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "rep movsl\n\t"
+      ".Lobject_compute_node_matrices_48:\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "movl %%edx, -0x38(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_49\n\t"
+      "leal 0x1c(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x10(%%ebx), %%edi\n\t"
+      "leal 0x4(%%ebx), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cf6c40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_compute_node_matrices_49\n\t"
+      "movl 0x28(%%ebx), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, -0x7c(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_49\n\t"
+      "movl 0x2c(%%ebx), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "movl %%eax, -0x40(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_49\n\t"
+      "movl 0x30(%%ebx), %%edx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "movl %%edx, -0x64(%%ebp)\n\t"
+      "jne .Lobject_compute_node_matrices_76\n\t"
+      ".Lobject_compute_node_matrices_49:\n\t"
+      "movl -0x28(%%ebp), %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x29c34c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "flds 0x38(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "subl $0x38, %%esp\n\t"
+      "flds 0x34(%%esi)\n\t"
+      "fstpl 0x38(%%esp)\n\t"
+      "flds 0x30(%%esi)\n\t"
+      "fstpl 0x30(%%esp)\n\t"
+      "flds 0x2c(%%esi)\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x28(%%esi)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds 0x24(%%esi)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0x14(%%esi)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x10(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0xc(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c318\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "movl -0x1c(%%ebp), %%esi\n\t"
+      "movl 0x8c(%%esi), %%eax\n\t"
+      "addl $0x50, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_compute_node_matrices_50\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x70687973\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x14(%%eax)\n\t"
+      "fchs\n\t"
+      "subl $0x10, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x10(%%eax)\n\t"
+      "fchs\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0xc(%%eax)\n\t"
+      "fchs\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c2f0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x20, %%esp\n\t"
+      ".Lobject_compute_node_matrices_50:\n\t"
+      "flds 0x1c(%%esi)\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x18(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x14(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c2d4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "movl -0x18(%%ebp), %%esi\n\t"
+      "addl $0x20, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .Lobject_compute_node_matrices_51\n\t"
+      "flds 0xc(%%esi)\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c2b0\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "flds 0x18(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x14(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x10(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c28c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "flds 0x24(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x20(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x1c(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c268\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "flds 0x30(%%esi)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x2c(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x28(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c244\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "flds (%%esi)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c210\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "jmp .Lobject_compute_node_matrices_52\n\t"
+      ".Lobject_compute_node_matrices_51:\n\t"
+      "pushl $0x29c1fc\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_compute_node_matrices_52:\n\t"
+      "pushl $0x25386f\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "flds 0xc(%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "subl $0x10, %%esp\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "leal 0x4(%%ebx), %%esi\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c1dc\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "flds 0x18(%%ebx)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "leal 0x10(%%ebx), %%edi\n\t"
+      "flds 0x14(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c1bc\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c19c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "flds 0x30(%%ebx)\n\t"
+      "addl $8, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x2c(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x28(%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c17c\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "flds (%%ebx)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c160\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "movl %%edx, -0x48(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_53\n\t"
+      "leal 0x1c(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cf6c40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_compute_node_matrices_53\n\t"
+      "leal 0x28(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca16b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_76\n\t"
+      ".Lobject_compute_node_matrices_53:\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, -0x68(%%ebp)\n\t"
+      "jne .Lobject_compute_node_matrices_54\n\t"
+      "flds (%%ebx)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb69\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c130\n\t"
+      "pushl $0x28bd6c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_54:\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "flds (%%esi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "je .Lobject_compute_node_matrices_55\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_57\n\t"
+      "jmp .Lobject_compute_node_matrices_56\n\t"
+      ".Lobject_compute_node_matrices_55:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_56:\n\t"
+      "flds 0xc(%%ebx)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb69\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c130\n\t"
+      "pushl $0x28bd4c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_57:\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "flds (%%edi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "je .Lobject_compute_node_matrices_58\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_60\n\t"
+      "jmp .Lobject_compute_node_matrices_59\n\t"
+      ".Lobject_compute_node_matrices_58:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_59:\n\t"
+      "flds 0x18(%%ebx)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb69\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x14(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c130\n\t"
+      "pushl $0x28bd2c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_60:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "je .Lobject_compute_node_matrices_61\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_63\n\t"
+      "jmp .Lobject_compute_node_matrices_62\n\t"
+      ".Lobject_compute_node_matrices_61:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_62:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb69\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c130\n\t"
+      "pushl $0x28bd10\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_63:\n\t"
+      "movl 0x28(%%ebx), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "movl %%eax, -0x50(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_64\n\t"
+      "movl 0x2c(%%ebx), %%edx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "movl %%edx, -0x70(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_64\n\t"
+      "movl 0x30(%%ebx), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, -0x30(%%ebp)\n\t"
+      "jne .Lobject_compute_node_matrices_65\n\t"
+      ".Lobject_compute_node_matrices_64:\n\t"
+      "flds 0x30(%%ebx)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb69\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x2c(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x28(%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c130\n\t"
+      "pushl $0x28bcec\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_65:\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds (%%esi)\n\t"
+      "fmuls (%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "je .Lobject_compute_node_matrices_66\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_68\n\t"
+      "jmp .Lobject_compute_node_matrices_67\n\t"
+      ".Lobject_compute_node_matrices_66:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_67:\n\t"
+      "flds 0x18(%%ebx)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb69\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x30, %%esp\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x14(%%ebx)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0xc(%%ebx)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c130\n\t"
+      "pushl $0x28bca8\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_68:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds (%%edi)\n\t"
+      "fmuls 0x1c(%%ebx)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "je .Lobject_compute_node_matrices_69\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_71\n\t"
+      "jmp .Lobject_compute_node_matrices_70\n\t"
+      ".Lobject_compute_node_matrices_69:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_70:\n\t"
+      "flds 0x18(%%ebx)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb69\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x30, %%esp\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x14(%%ebx)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c130\n\t"
+      "pushl $0x28bc6c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_71:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fmuls (%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "je .Lobject_compute_node_matrices_72\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_74\n\t"
+      "jmp .Lobject_compute_node_matrices_73\n\t"
+      ".Lobject_compute_node_matrices_72:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_73:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb69\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x30, %%esp\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0xc(%%ebx)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x29c130\n\t"
+      "pushl $0x28bc2c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_74:\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "movl %%eax, -0x78(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_75\n\t"
+      "leal 0x1c(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cf6c40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_compute_node_matrices_75\n\t"
+      "leal 0x28(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca16b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_76\n\t"
+      ".Lobject_compute_node_matrices_75:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb69\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29c130\n\t"
+      "pushl $0x28bc0c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_76:\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, -0x60(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_77\n\t"
+      "leal 0x1c(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cf6c40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_compute_node_matrices_77\n\t"
+      "movl 0x28(%%ebx), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "movl %%eax, -0x80(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_77\n\t"
+      "movl 0x2c(%%ebx), %%edx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "movl %%edx, -0x74(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_77\n\t"
+      "movl 0x30(%%ebx), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, -0x6c(%%ebp)\n\t"
+      "jne .Lobject_compute_node_matrices_102\n\t"
+      ".Lobject_compute_node_matrices_77:\n\t"
+      "movl -0x28(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%edx, %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "movl %%edx, -0x34(%%ebp)\n\t"
+      "jne .Lobject_compute_node_matrices_78\n\t"
+      "flds (%%ebx)\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb77\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x28bd6c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_78:\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "flds (%%esi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "je .Lobject_compute_node_matrices_81\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_83\n\t"
+      "jmp .Lobject_compute_node_matrices_82\n\t"
+      ".Lobject_compute_node_matrices_79:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl %%eax, %%edx\n\t"
+      "imull $0x34, %%edx, %%edx\n\t"
+      "shll $5, %%eax\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "leal (%%edx,%%ebx,1), %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c109500]\n\t"
+      "movl -0x2c(%%ebp), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $-1, 0x24(%%edi)\n\t"
+      "jne .Lobject_compute_node_matrices_80\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb71\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x291584\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_80:\n\t"
+      "movswl 0x24(%%edi), %%eax\n\t"
+      "imull $0x34, %%eax, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "addl %%ebx, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c109850]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .Lobject_compute_node_matrices_102\n\t"
+      ".Lobject_compute_node_matrices_81:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_82:\n\t"
+      "flds 0xc(%%ebx)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb77\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x28bd4c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_83:\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "flds (%%edi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "je .Lobject_compute_node_matrices_84\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_86\n\t"
+      "jmp .Lobject_compute_node_matrices_85\n\t"
+      ".Lobject_compute_node_matrices_84:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_85:\n\t"
+      "flds 0x18(%%ebx)\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb77\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x14(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x28bd2c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_86:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "je .Lobject_compute_node_matrices_87\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_89\n\t"
+      "jmp .Lobject_compute_node_matrices_88\n\t"
+      ".Lobject_compute_node_matrices_87:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_88:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb77\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x28bd10\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_89:\n\t"
+      "movl 0x28(%%ebx), %%edx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "movl %%edx, -0x3c(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_90\n\t"
+      "movl 0x2c(%%ebx), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, -0x44(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_90\n\t"
+      "movl 0x30(%%ebx), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "movl %%eax, -0x4c(%%ebp)\n\t"
+      "jne .Lobject_compute_node_matrices_91\n\t"
+      ".Lobject_compute_node_matrices_90:\n\t"
+      "flds 0x30(%%ebx)\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb77\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x2c(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x28(%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x28bcec\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_91:\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds (%%esi)\n\t"
+      "fmuls (%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "je .Lobject_compute_node_matrices_92\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_94\n\t"
+      "jmp .Lobject_compute_node_matrices_93\n\t"
+      ".Lobject_compute_node_matrices_92:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_93:\n\t"
+      "flds 0x18(%%ebx)\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb77\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x30, %%esp\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x14(%%ebx)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0xc(%%ebx)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x28bca8\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_94:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds (%%edi)\n\t"
+      "fmuls 0x1c(%%ebx)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "je .Lobject_compute_node_matrices_95\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_97\n\t"
+      "jmp .Lobject_compute_node_matrices_96\n\t"
+      ".Lobject_compute_node_matrices_95:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_96:\n\t"
+      "flds 0x18(%%ebx)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb77\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x30, %%esp\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x14(%%ebx)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x28bc6c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_97:\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fmuls 0x24(%%ebx)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fmuls 0x20(%%ebx)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fmuls (%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "je .Lobject_compute_node_matrices_98\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_compute_node_matrices_100\n\t"
+      "jmp .Lobject_compute_node_matrices_99\n\t"
+      ".Lobject_compute_node_matrices_98:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lobject_compute_node_matrices_99:\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb77\n\t"
+      "pushl $0x29b91c\n\t"
+      "subl $0x30, %%esp\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0xc(%%ebx)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x28bc2c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x3c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_100:\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "movl %%eax, -0x54(%%ebp)\n\t"
+      "je .Lobject_compute_node_matrices_101\n\t"
+      "leal 0x1c(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%esi\n\t"
+      "call *%[cf6c40]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_compute_node_matrices_101\n\t"
+      "leal 0x28(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca16b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_compute_node_matrices_102\n\t"
+      ".Lobject_compute_node_matrices_101:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb77\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x28bc0c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_node_matrices_102:\n\t"
+      "movl -0x2c(%%ebp), %%edx\n\t"
+      "movw 0x20(%%edx), %%cx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "je .Lobject_compute_node_matrices_103\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "incl %%eax\n\t"
+      "movw %%cx, -0x244(%%ebp,%%esi,2)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      ".Lobject_compute_node_matrices_103:\n\t"
+      "movw 0x22(%%edx), %%cx\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .Lobject_compute_node_matrices_104\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "incl %%eax\n\t"
+      "movw %%cx, -0x244(%%ebp,%%edx,2)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      ".Lobject_compute_node_matrices_104:\n\t"
+      "movl -0x5c(%%ebp), %%ecx\n\t"
+      "cmpw %%ax, %%cx\n\t"
+      "movl -0x28(%%ebp), %%esi\n\t"
+      "jne .Lobject_compute_node_matrices_23\n\t"
+      "jmp .Lobject_compute_node_matrices_106\n\t"
+      ".Lobject_compute_node_matrices_105:\n\t"
+      "movl $0x3f800000, (%%ebx)\n\t"
+      "leal 0x4(%%ebx), %%eax\n\t"
+      "movl %%eax, %%edx\n\t"
+      "leal 0x24(%%esi), %%ecx\n\t"
+      "movl (%%ecx), %%edi\n\t"
+      "movl %%edi, (%%edx)\n\t"
+      "movl 0x4(%%ecx), %%edi\n\t"
+      "movl %%edi, 0x4(%%edx)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 0x8(%%edx)\n\t"
+      "leal 0x30(%%esi), %%edx\n\t"
+      "movl (%%edx), %%edi\n\t"
+      "leal 0x1c(%%ebx), %%ecx\n\t"
+      "movl %%edi, (%%ecx)\n\t"
+      "movl 0x4(%%edx), %%edi\n\t"
+      "movl %%edi, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "flds 0x1c(%%ebx)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      "leal 0x28(%%ebx), %%ecx\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fmuls (%%eax)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "fmuls (%%eax)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fmuls 0x1c(%%ebx)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds 0x20(%%ebx)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "flds 0x24(%%ebx)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      "leal 0xc(%%esi), %%eax\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps 0x10(%%ebx)\n\t"
+      "fstps 0x14(%%ebx)\n\t"
+      "fstps 0x18(%%ebx)\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, 0x8(%%ecx)\n\t"
+      ".Lobject_compute_node_matrices_106:\n\t"
+      "movl -0x1c(%%ebp), %%edi\n\t"
+      "leal 0x50(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x8(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[xfrmpt]\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fsts 0x5c(%%esi)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "flds 0x60(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_compute_node_matrices_107\n\t"
+      "fmuls 0x60(%%esi)\n\t"
+      "popl %%edi\n\t"
+      "fstps 0x5c(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lobject_compute_node_matrices_107:\n\t"
+      "popl %%edi\n\t"
+      "fstp %%st(0)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [get] "m"(b141b70_get), [tag] "m"(b141b70_tag), [c13dfc0] "m"(b141b70_c13dfc0), [c13c100] "m"(b141b70_c13c100), [onode] "m"(b141b70_onode), [elem] "m"(b141b70_elem), [gtime] "m"(b141b70_gtime), [assert] "m"(b141b70_assert), [exitfn] "m"(b141b70_exitfn), [c121d60] "m"(b141b70_c121d60), [c123aa0] "m"(b141b70_c123aa0), [c122690] "m"(b141b70_c122690), [c122450] "m"(b141b70_c122450), [c13c7a0] "m"(b141b70_c13c7a0), [c120ba0] "m"(b141b70_c120ba0), [ca16b0] "m"(b141b70_ca16b0), [c1ba1f0] "m"(b141b70_c1ba1f0), [c8d9d0] "m"(b141b70_c8d9d0), [c84a70] "m"(b141b70_c84a70), [c109500] "m"(b141b70_c109500), [c109280] "m"(b141b70_c109280), [c109e10] "m"(b141b70_c109e10), [c109850] "m"(b141b70_c109850), [cf6c40] "m"(b141b70_cf6c40), [c21fb0] "m"(b141b70_c21fb0), [cf6d00] "m"(b141b70_cf6d00), [c8f390] "m"(b141b70_c8f390), [xfrmpt] "m"(b141b70_xfrmpt)
+      : "memory");
 }
+#else
+#error "object_compute_node_matrices: clang naked draft required"
+#endif
+
 
 /* objects_scripting_detach — scripting wrapper: detach param_2 from param_1.
  * Checks that param_2's parent_object_index (+0xcc) matches param_1, then

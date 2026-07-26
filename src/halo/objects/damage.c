@@ -432,140 +432,244 @@ void object_deplete_shield(int object_handle)
   }
 }
 
-/* FUN_00136f40 (0x136f40) — Apply damage velocity and scoring effects to an
- * object based on its type and the damage parameters.
- *
- * Looks up the object's tag ('obje') and the damage effect tag ('jpt!') from
- * damage_data[0]. If the object's radius (obje+0x20) exceeds epsilon (0.0001f),
- * computes a velocity vector from the damage_data position (offset 0x34),
- * adds 0.45f to the Z component, normalizes, then scales by:
- *   jpt_tag+0x1f4 * obje+0x20 * (1/30.0f)
- *
- * Switches on the object type (obj+0x64):
- *   case 0 (biped):   calls FUN_001a4a70 (biped acceleration)
- *   case 1 (vehicle): optionally doubles velocity if jpt+0x1c8 flag set,
- *                     calls vehicle_accelerate (vehicle acceleration)
- *   case 2,3,4 (items): calls item_set_position with flag based on
- *                       damage_data+0x40 > 0.5f && jpt+0x1c8 flag
- *   case 5 (projectile): calls projectile_accelerate (projectile acceleration)
- *
- * After the switch, checks game state via game_engine_can_score:
- *   - If true and damage_data byte +4 >= 0: calls game_statistics_record_damage
- * for scoring, and conditionally FUN_000b56f0 if flags bit 0 is set.
- *   - Otherwise: calls game_engine_player_killed (player death tracking) via
- *     player_index_from_unit_index.
- *
- * Finally, if the object type is 0 or 1 (unit), forwards all parameters
- * to FUN_001b4dc0 for unit-specific damage handling.
- *
- * Register args: EBX = object_handle, ESI = damage_data pointer.
- * Stack args: flags, body_vitality, shield_vitality, param_4, param_5.
- *
- * Confirmed: PUSH -1; PUSH EBX; CALL 0x13d680 => object_get_and_verify_type.
- * Confirmed: tag_get('obje', obj[0]) and tag_get('jpt!', damage_data[0]).
- * Confirmed: FLD [EDI+0x20]; FCOMP [0x253f44] tests radius > 0.0001f.
- * Confirmed: LEA EDX,[ESI+0x34] copies position vector from damage_data.
- * Confirmed: FADD [0x25614c] adds 0.45f to z component.
- * Confirmed: CALL 0x13010 => normalize3d; FSTP ST0 discards return.
- * Confirmed: FLD [EDX+0x1f4]; FMUL [EDI+0x20]; FMUL [0x2546a4] for scale.
- * Confirmed: jump table at 0x137158 with 6 entries for switch(obj_type).
- * Confirmed: PUSH ECX; FSTP [ESP] pattern for float arg to
- * game_statistics_record_damage. Confirmed: (1 << obj_type) & 3 gates call to
- * FUN_001b4dc0. Confirmed: 7 pushes [EBX,ESI,flags,body,shield,p4,p5] for
- * FUN_001b4dc0.
- */
-void FUN_00136f40(int object_handle, void *damage_data, unsigned int flags,
-                  float body_vitality, float shield_vitality, int param_4,
-                  int param_5)
+/* FUN_00136f40 (0x136f40) — XBE naked draft (batch 51). */
+#if defined(__clang__)
+static void *(*const b136f40_get)(int, int) = object_get_and_verify_type;
+static void *(*const b136f40_tag)(int, int) = tag_get;
+static float (*const b136f40_norm)(float *) = normalize3d;
+static void (*const b136f40_cf8ee0)(int projectile_handle, float *acceleration) = projectile_accelerate;
+static void (*const b136f40_isetpos)(int, float *, int) = item_set_position;
+static void (*const b136f40_c1a4a70)(int handle, float *velocity) = FUN_001a4a70;
+static void (*const b136f40_c1b5c90)(int handle, float *velocity) = vehicle_accelerate;
+static bool (*const b136f40_ca8e40)(void) = game_engine_can_score;
+static void (*const b136f40_cb56e0)(int handle, float vitality, int param_3, int param_4, int param_5) = game_statistics_record_damage;
+static void (*const b136f40_cb56f0)(int handle, int param_2, int param_3, int param_4) = FUN_000b56f0;
+static int (*const b136f40_cba500)(int) = player_index_from_unit_index;
+static void (*const b136f40_caf660)(int killer_handle, int kill_object_handle, int dead_handle, int betrayal) = game_engine_player_killed;
+static void (*const b136f40_c1b4dc0)(int handle, void *damage_data, unsigned int flags, float body_vitality, float shield_vitality, int param_6, int param_7) = FUN_001b4dc0;
+
+__attribute__((naked, noinline))
+void FUN_00136f40(int object_handle __attribute__((unused)), void *damage_data __attribute__((unused)), unsigned int flags __attribute__((unused)), float body_vitality __attribute__((unused)), float shield_vitality __attribute__((unused)), int param_4 __attribute__((unused)), int param_5 __attribute__((unused)))
 {
-  int *obj;
-  char *obje_tag;
-  char *jpt_tag;
-  char *dd;
-  short obj_type;
-  float scale;
-  float direction[3];
-  float velocity[3];
-  char game_active;
-  int player_handle;
-
-  dd = (char *)damage_data;
-  obj = (int *)object_get_and_verify_type(object_handle, -1);
-  obje_tag = (char *)tag_get(0x6f626a65, *obj);
-  jpt_tag = (char *)tag_get(0x6a707421, *(int *)dd);
-
-  if (*(float *)(obje_tag + 0x20) > 0.0001f) {
-    direction[2] = *(float *)(dd + 0x3c) + 0.45f;
-    direction[0] = *(float *)(dd + 0x34);
-    direction[1] = *(float *)(dd + 0x38);
-    normalize3d(direction);
-
-    scale =
-      *(float *)(jpt_tag + 0x1f4) * *(float *)(obje_tag + 0x20) * 0.03333333f;
-    obj_type = *(short *)((char *)obj + 0x64);
-    velocity[0] = direction[0] * scale;
-    velocity[1] = direction[1] * scale;
-    velocity[2] = direction[2] * scale;
-
-    switch (obj_type) {
-    case 0:
-    case 1:
-      if (*(float *)(jpt_tag + 0x1f4) > 0.0001f &&
-          (*(unsigned int *)((char *)obj + 0x1b4) & 0x800000) == 0) {
-        if (obj_type == 0) {
-          FUN_001a4a70(object_handle, velocity);
-        } else if (obj_type == 1) {
-          if ((*(unsigned char *)(jpt_tag + 0x1c8) & 0x20) != 0) {
-            velocity[0] = velocity[0] + velocity[0];
-            velocity[1] = velocity[1] + velocity[1];
-            velocity[2] = velocity[2] + velocity[2];
-          }
-          vehicle_accelerate(object_handle, velocity);
-        }
-      }
-      break;
-    case 2:
-    case 3:
-    case 4:
-      if (*(float *)(dd + 0x40) > 0.5f &&
-          (*(unsigned char *)(jpt_tag + 0x1c8) & 0x20) != 0) {
-        item_set_position(object_handle, velocity, 1);
-      } else {
-        item_set_position(object_handle, velocity, 0);
-      }
-      break;
-    case 5:
-      projectile_accelerate(object_handle, velocity);
-      break;
-    default:
-      break;
-    }
-  }
-
-  game_active = game_engine_can_score();
-  if (game_active != 0 && *(signed char *)(dd + 0x4) >= 0) {
-    game_statistics_record_damage(
-      object_handle, body_vitality + shield_vitality, *(int *)(dd + 0x8),
-      *(int *)(dd + 0xc), (int)*(unsigned short *)(dd + 0x10));
-    if ((flags & 1) != 0) {
-      FUN_000b56f0(object_handle, *(int *)(dd + 0x8), *(int *)(dd + 0xc),
-                   (int)*(unsigned short *)(dd + 0x10));
-    }
-  } else {
-    game_active = game_engine_can_score();
-    if (game_active != 0) {
-      player_handle = player_index_from_unit_index(object_handle);
-      game_engine_player_killed(
-        player_handle, object_handle, player_handle,
-        1); /* dup-args-ok: confirmed PUSH EAX,EBX,EAX */
-    }
-  }
-
-  if ((1 << (*(unsigned char *)((char *)obj + 0x64) & 0x1f)) & 3) {
-    FUN_001b4dc0(object_handle, damage_data, flags, body_vitality,
-                 shield_vitality, param_4, param_5);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x20, %%esp\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6a707421\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x20(%%edi)\n\t"
+      "fcomps 0x253f44\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00136f40_7\n\t"
+      "leal 0x34(%%esi), %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%edx, -0x18(%%ebp)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fadds 0x25614c\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "leal -0x20(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "movl %%ecx, -0x1c(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "flds 0x1f4(%%edx)\n\t"
+      "addl $4, %%esp\n\t"
+      "fmuls 0x20(%%edi)\n\t"
+      "movl -0x4(%%ebp), %%edi\n\t"
+      "movw 0x64(%%edi), %%cx\n\t"
+      "movswl %%cx, %%eax\n\t"
+      "cmpl $5, %%eax\n\t"
+      "fmuls 0x2546a4\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "ja .LFUN_00136f40_8\n\t"
+      "jmp *.LFUN_00136f40_jt(,%%eax,4)\n\t"
+      ".LFUN_00136f40_1:\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cf8ee0]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .LFUN_00136f40_8\n\t"
+      ".LFUN_00136f40_2:\n\t"
+      "flds 0x40(%%esi)\n\t"
+      "fcomps 0x253398\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00136f40_3\n\t"
+      "testb $0x20, 0x1c8(%%edx)\n\t"
+      "je .LFUN_00136f40_3\n\t"
+      "movl $1, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[isetpos]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_00136f40_8\n\t"
+      ".LFUN_00136f40_3:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[isetpos]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_00136f40_8\n\t"
+      ".LFUN_00136f40_4:\n\t"
+      "flds 0x1f4(%%edx)\n\t"
+      "fcomps 0x253f44\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00136f40_8\n\t"
+      "testl $0x800000, 0x1b4(%%edi)\n\t"
+      "jne .LFUN_00136f40_8\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jne .LFUN_00136f40_5\n\t"
+      "leal -0x14(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1a4a70]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .LFUN_00136f40_8\n\t"
+      ".LFUN_00136f40_5:\n\t"
+      "cmpw $1, %%cx\n\t"
+      "jne .LFUN_00136f40_8\n\t"
+      "testb $0x20, 0x1c8(%%edx)\n\t"
+      "je .LFUN_00136f40_6\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      ".LFUN_00136f40_6:\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1b5c90]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .LFUN_00136f40_8\n\t"
+      ".LFUN_00136f40_7:\n\t"
+      "movl -0x4(%%ebp), %%edi\n\t"
+      ".LFUN_00136f40_8:\n\t"
+      "call *%[ca8e40]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00136f40_9\n\t"
+      "movb 0x4(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "js .LFUN_00136f40_9\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "fadds 0x10(%%ebp)\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x10(%%esi), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cb56e0]\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb $1, %%al\n\t"
+      "je .LFUN_00136f40_10\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x10(%%esi), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cb56f0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "jmp .LFUN_00136f40_10\n\t"
+      ".LFUN_00136f40_9:\n\t"
+      "call *%[ca8e40]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00136f40_10\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cba500]\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[caf660]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00136f40_10:\n\t"
+      "movb 0x64(%%edi), %%cl\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "popl %%edi\n\t"
+      "testb $3, %%dl\n\t"
+      "je .LFUN_00136f40_11\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c1b4dc0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      ".LFUN_00136f40_11:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_00136f40_jt:\n\t"
+      ".long .LFUN_00136f40_4\n\t"
+      ".long .LFUN_00136f40_4\n\t"
+      ".long .LFUN_00136f40_2\n\t"
+      ".long .LFUN_00136f40_2\n\t"
+      ".long .LFUN_00136f40_2\n\t"
+      ".long .LFUN_00136f40_1\n\t"
+      ".text\n\t"
+      :
+      : [get] "m"(b136f40_get), [tag] "m"(b136f40_tag), [norm] "m"(b136f40_norm), [cf8ee0] "m"(b136f40_cf8ee0), [isetpos] "m"(b136f40_isetpos), [c1a4a70] "m"(b136f40_c1a4a70), [c1b5c90] "m"(b136f40_c1b5c90), [ca8e40] "m"(b136f40_ca8e40), [cb56e0] "m"(b136f40_cb56e0), [cb56f0] "m"(b136f40_cb56f0), [cba500] "m"(b136f40_cba500), [caf660] "m"(b136f40_caf660), [c1b4dc0] "m"(b136f40_c1b4dc0)
+      : "memory");
 }
+#else
+#error "FUN_00136f40: clang naked draft required"
+#endif
+
 
 /* render_debug_object_damage (0x137370) — Damage debug overlay: display damage
  * vitality info for a targeted object, and handle picking a new target via
@@ -1800,231 +1904,344 @@ void FUN_00137170(float *incident_direction, float *surface_normal,
 }
 #endif
 
-/* object_damage_update (0x1384e0) — Per-tick damage state update for an object.
- *
- * Handles three main subsystems each tick:
- * 1. Pending damage application: if damage-pending flags (bits 5,6,13 of +0xb6)
- *    are set and the object is not invincible (bit 2), applies self-damage via
- *    the game difficulty's default damage effect.
- * 2. Shield vitality management:
- *    - Overshield charging (bit 4): increments shield toward 3.0f at 1/30 per
- * tick.
- *    - Overshield drain: if shield > 1.0f and game_engine_running(), drains at
- * a fixed rate (0.00074074074f/tick), notifying the player of lost shield
- * energy.
- *    - Shield recharge: if shield < 1.0f and delay counter is zero, recharges
- * at the collision model's recharge rate scaled by difficulty modifier (type
- * 3).
- * 3. Damage stun counters (+0xb0 body, +0xac shield): after incrementing,
- * decays current and recent damage values by 1/60 per tick once counter
- * thresholds are reached (0 for current, 60 for recent). Resets counter to -1
- * when both current and recent damage reach 0.0f.
- *
- * Confirmed: PUSH -1; PUSH EDI; CALL 0x13d680 => object_get_and_verify_type.
- * Confirmed: tag_get('obje', obj[0]) then tag_get('coll', obje[0x7c]).
- * Confirmed: FLD [ESI+0x8c]; FCOMP [0x2533c0] checks max_body_vitality > 0.0f.
- * Confirmed: TEST AH,0x41; JNZ skips when body <= 0.0f.
- * Confirmed: TEST CL,0x10 checks overshield charging flag (bit 4).
- * Confirmed: FADD [0x2546a4] adds 1/30 per tick for overshield charge.
- * Confirmed: FCOMP [0x254644] compares with 3.0f overshield cap.
- * Confirmed: TEST AH,0x1; JNZ for shield < 3.0f.
- * Confirmed: TEST AH,0x41; JNZ at 0x138649 for shield <= 1.0f.
- * Confirmed: CALL 0xa8e30 = game_engine_running().
- * Confirmed: CALL 0xba500 = player_index_from_unit_index(object_handle).
- * Confirmed: FLD [0x29b18c]; FCOMP [EBP-4] compares drain_rate with excess.
- * Confirmed: CALL 0xd7cd0 = FUN_000d7cd0(player_index, float_amount).
- * Confirmed: TEST AH,0x5; JP at 0x1386d0 for shield >= 1.0f skip.
- * Confirmed: MOV AX,[ESI+0xb4]; TEST AX,AX; JNZ for delay counter check.
- * Confirmed: DEC AX at 0x138774 for delay counter decrement.
- * Confirmed: CALL 0xb55b0 = FUN_000b55b0(3, team) for difficulty scale.
- * Confirmed: FMUL [EBP-4] scales recharge rate by difficulty.
- * Confirmed: CALL 0x1369e0 with @EAX = object_handle for shield recharge
- * effect. Confirmed: CALL 0x136a00 with @EAX = object_handle, param_1=1.
- * Confirmed: INC EAX; TEST EAX,EAX; JL for stun counter >= 0 check.
- * Confirmed: CMP EAX,0x3c; JL for stun counter >= 60 check.
- * Confirmed: FSUB [0x25634c] subtracts 1/60 per tick for damage decay.
- * Confirmed: TEST AH,0x44; JP for equality-with-zero check on damage values.
- * Confirmed: damage_data_new at 0x136750 and object_cause_damage at 0x137d20.
- * Confirmed: game_globals_get at 0x18e450, tag_block_get_element at 0x19b210.
- */
-void object_damage_update(int object_handle)
+/* object_damage_update (0x1384e0) — XBE naked draft (batch 51). */
+#if defined(__clang__)
+static void *(*const b1384e0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1384e0_tag)(int, int) = tag_get;
+static void * (*const b1384e0_c18e450)(void) = game_globals_get;
+static void *(*const b1384e0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b1384e0_c136750)(void *damage_params, int tag_index) = damage_data_new;
+static void (*const b1384e0_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = object_cause_damage;
+static bool (*const b1384e0_gerun)(void) = game_engine_running;
+static int (*const b1384e0_cba500)(int) = player_index_from_unit_index;
+static void (*const b1384e0_cd7cd0)(int player_handle, float param_2) = FUN_000d7cd0;
+static float (*const b1384e0_cb55b0)(short value_type, int team) = FUN_000b55b0;
+static void (*const b1384e0_c1369e0)(int object_handle, int effect_tag_index) = FUN_001369e0;
+static void (*const b1384e0_c136a00)(int object_handle, char param_1) = FUN_00136a00;
+
+__attribute__((naked, noinline))
+void object_damage_update(int object_handle __attribute__((unused)))
 {
-  char *obj;
-  char *obje_tag;
-  int coll_tag_index;
-  char *coll_tag;
-  unsigned short flags;
-  unsigned int damage_flags;
-  char damage_params[0x58];
-  float local_8;
-  char *difficulty;
-  int damage_tag_index;
-  int player_index;
-  float shield;
-  float new_shield;
-  int counter;
-  float fVar1;
-  float fVar3;
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  obje_tag = (char *)tag_get(0x6f626a65, *(int *)obj);
-  coll_tag_index = *(int *)(obje_tag + 0x7c);
-  if (coll_tag_index == -1)
-    return;
-  coll_tag = (char *)tag_get(0x636f6c6c, coll_tag_index);
-  if (coll_tag == (char *)0)
-    return;
-
-  /* --- Pending damage application --- */
-  flags = *(unsigned short *)(obj + 0xb6);
-  if ((flags & 0x2000) != 0 || (flags & 0x60) != 0) {
-    if ((flags & 4) == 0) {
-      difficulty = (char *)tag_block_get_element(
-        (char *)game_globals_get() + 0x188, 0, 0x98);
-      damage_tag_index = *(int *)(difficulty + 0x1c);
-      if (damage_tag_index != -1) {
-        damage_data_new(damage_params, damage_tag_index);
-        flags = *(unsigned short *)(obj + 0xb6);
-        damage_flags = *(unsigned int *)(damage_params + 0x4) | 4;
-        *(float *)(damage_params + 0x40) = 1.0f;
-        if ((flags & 0x40) != 0) {
-          damage_flags = damage_flags | 0x10;
-        }
-        *(unsigned int *)(damage_params + 0x4) = damage_flags;
-        if ((*(unsigned short *)(obj + 0xb6) & 0x2000) != 0) {
-          *(unsigned int *)(damage_params + 0x4) =
-            *(unsigned int *)(damage_params + 0x4) | 0x80;
-        }
-        object_cause_damage(damage_params, object_handle, -1, -1, -1, 0);
-      }
-    }
-    *(unsigned short *)(obj + 0xb6) &= 0xdf9f;
-  }
-
-  /* --- Shield vitality management --- */
-  *(unsigned char *)(obj + 0xb7) &= 0xef;
-  flags = *(unsigned short *)(obj + 0xb6);
-
-  if (!(*(float *)(obj + 0x8c) > 0.0f))
-    goto stun_body;
-  if ((flags & 4) != 0)
-    goto stun_body;
-
-  if ((flags & 0x10) != 0) {
-    /* Overshield charging: increment shield toward 3.0f */
-    shield = *(float *)(obj + 0x94) + 0.033333335f;
-    *(float *)(obj + 0x94) = shield;
-    if (!(shield < 3.0f)) {
-      *(float *)(obj + 0x94) = 3.0f;
-      *(unsigned short *)(obj + 0xb6) = flags & 0xffef;
-    } else {
-      *(unsigned short *)(obj + 0xb6) = flags | 0x1000;
-    }
-    goto stun_body;
-  }
-
-  /* Non-charging path: check overshield drain or recharge */
-  if (*(float *)(obj + 0x94) > 1.0f && game_engine_running()) {
-    /* Overshield drain */
-    player_index = player_index_from_unit_index(object_handle);
-    local_8 = *(float *)(obj + 0x94) - 1.0f;
-    if (!(0.00074074074f <= local_8)) {
-      *(float *)(obj + 0x94) = 1.0f;
-      FUN_000d7cd0(player_index, local_8);
-    } else {
-      *(float *)(obj + 0x94) = *(float *)(obj + 0x94) - 0.00074074074f;
-      FUN_000d7cd0(player_index, 0.00074074074f);
-    }
-    goto stun_body;
-  }
-
-  /* Shield recharge (shield < 1.0f) */
-  if (!(*(float *)(obj + 0x94) < 1.0f))
-    goto stun_body;
-
-  if (*(short *)(obj + 0xb4) == 0) {
-    local_8 = *(float *)(coll_tag + 0x1c0);
-    local_8 = FUN_000b55b0(3, (int)*(unsigned short *)(obj + 0x68)) * local_8;
-    if ((*(unsigned char *)(obj + 0xb6) & 8) != 0) {
-      FUN_001369e0(object_handle, *(int *)(coll_tag + 0x1b4));
-      *(unsigned char *)(obj + 0xb6) &= 0xf7;
-      FUN_00136a00(object_handle, 1);
-    }
-    *(unsigned char *)(obj + 0xb7) |= 0x10;
-    new_shield = local_8 + *(float *)(obj + 0x94);
-    flags = *(unsigned short *)(obj + 0xb6);
-    *(float *)(obj + 0x94) = new_shield;
-    if (new_shield > 1.0f) {
-      *(float *)(obj + 0x94) = 1.0f;
-      *(unsigned short *)(obj + 0xb6) = flags & 0xefff;
-    }
-  } else {
-    *(short *)(obj + 0xb4) = *(short *)(obj + 0xb4) - 1;
-  }
-
-stun_body:
-  /* --- Body stun counter decay --- */
-  counter = *(int *)(obj + 0xb0);
-  if (counter != -1) {
-    counter = counter + 1;
-    *(int *)(obj + 0xb0) = counter;
-    if (counter >= 0) {
-      *(float *)(obj + 0x9c) = *(float *)(obj + 0x9c) - 0.016666668f;
-    }
-    if (counter >= 60) {
-      *(float *)(obj + 0xa8) = *(float *)(obj + 0xa8) - 0.016666668f;
-    }
-    /* Clamp body current damage to >= 0 */
-    if (0.0f <= *(float *)(obj + 0x9c)) {
-      fVar1 = *(float *)(obj + 0x9c);
-    } else {
-      fVar1 = 0.0f;
-    }
-    *(float *)(obj + 0x9c) = fVar1;
-    /* Clamp body recent damage to >= 0 */
-    if (0.0f <= *(float *)(obj + 0xa8)) {
-      fVar3 = *(float *)(obj + 0xa8);
-    } else {
-      fVar3 = 0.0f;
-    }
-    local_8 = fVar3;
-    *(float *)(obj + 0xa8) = fVar3;
-    if (fVar1 == 0.0f && local_8 == 0.0f) {
-      *(int *)(obj + 0xb0) = -1;
-    }
-  }
-
-  /* --- Shield stun counter decay --- */
-  counter = *(int *)(obj + 0xac);
-  if (counter != -1) {
-    counter = counter + 1;
-    *(int *)(obj + 0xac) = counter;
-    if (counter >= 0) {
-      *(float *)(obj + 0x98) = *(float *)(obj + 0x98) - 0.016666668f;
-    }
-    if (counter >= 60) {
-      *(float *)(obj + 0xa4) = *(float *)(obj + 0xa4) - 0.016666668f;
-    }
-    /* Clamp shield current damage to >= 0 */
-    if (0.0f <= *(float *)(obj + 0x98)) {
-      fVar1 = *(float *)(obj + 0x98);
-    } else {
-      fVar1 = 0.0f;
-    }
-    *(float *)(obj + 0x98) = fVar1;
-    /* Clamp shield recent damage to >= 0 */
-    if (0.0f <= *(float *)(obj + 0xa4)) {
-      fVar3 = *(float *)(obj + 0xa4);
-    } else {
-      fVar3 = 0.0f;
-    }
-    local_8 = fVar3;
-    *(float *)(obj + 0xa4) = fVar3;
-    if (fVar1 == 0.0f && local_8 == 0.0f) {
-      *(int *)(obj + 0xac) = -1;
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x58, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x7c(%%eax), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_damage_update_27\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x636f6c6c\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "je .Lobject_damage_update_26\n\t"
+      "movw 0xb6(%%esi), %%ax\n\t"
+      "testb $0x20, %%ah\n\t"
+      "jne .Lobject_damage_update_1\n\t"
+      "testb $0x60, %%al\n\t"
+      "je .Lobject_damage_update_5\n\t"
+      ".Lobject_damage_update_1:\n\t"
+      "testb $4, %%al\n\t"
+      "jne .Lobject_damage_update_4\n\t"
+      "pushl $0x98\n\t"
+      "pushl $0\n\t"
+      "call *%[c18e450]\n\t"
+      "addl $0x188, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x1c(%%eax), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_damage_update_4\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x58(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c136750]\n\t"
+      "movl -0x54(%%ebp), %%edx\n\t"
+      "movw 0xb6(%%esi), %%ax\n\t"
+      "orl $4, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $0x40, %%al\n\t"
+      "movl $0x3f800000, -0x18(%%ebp)\n\t"
+      "movl %%edx, -0x54(%%ebp)\n\t"
+      "je .Lobject_damage_update_2\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "orl $0x10, %%ecx\n\t"
+      "movl %%ecx, -0x54(%%ebp)\n\t"
+      ".Lobject_damage_update_2:\n\t"
+      "testb $0x20, %%ah\n\t"
+      "je .Lobject_damage_update_3\n\t"
+      "orl $0x80, -0x54(%%ebp)\n\t"
+      ".Lobject_damage_update_3:\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "leal -0x58(%%ebp), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c137d20]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".Lobject_damage_update_4:\n\t"
+      "andw $0xdf9f, 0xb6(%%esi)\n\t"
+      ".Lobject_damage_update_5:\n\t"
+      "flds 0x8c(%%esi)\n\t"
+      "andb $0xef, 0xb7(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "movw 0xb6(%%esi), %%cx\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_damage_update_12\n\t"
+      "testb $4, %%cl\n\t"
+      "jne .Lobject_damage_update_12\n\t"
+      "testb $0x10, %%cl\n\t"
+      "flds 0x94(%%esi)\n\t"
+      "je .Lobject_damage_update_7\n\t"
+      "fadds 0x2546a4\n\t"
+      "fsts 0x94(%%esi)\n\t"
+      "fcomps 0x254644\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lobject_damage_update_6\n\t"
+      "andl $0xffef, %%ecx\n\t"
+      "movl $0x40400000, 0x94(%%esi)\n\t"
+      "movw %%cx, 0xb6(%%esi)\n\t"
+      "jmp .Lobject_damage_update_12\n\t"
+      ".Lobject_damage_update_6:\n\t"
+      "orl $0x1000, %%ecx\n\t"
+      "movw %%cx, 0xb6(%%esi)\n\t"
+      "jmp .Lobject_damage_update_12\n\t"
+      ".Lobject_damage_update_7:\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_damage_update_9\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_damage_update_9\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cba500]\n\t"
+      "flds 0x94(%%esi)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "addl $4, %%esp\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds 0x29b18c\n\t"
+      "fcomps -0x4(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_damage_update_8\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0x3f800000, 0x94(%%esi)\n\t"
+      "call *%[cd7cd0]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lobject_damage_update_12\n\t"
+      ".Lobject_damage_update_8:\n\t"
+      "flds 0x94(%%esi)\n\t"
+      "pushl $0x3a422e45\n\t"
+      "fsubs 0x29b18c\n\t"
+      "pushl %%ecx\n\t"
+      "fstps 0x94(%%esi)\n\t"
+      "call *%[cd7cd0]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lobject_damage_update_12\n\t"
+      ".Lobject_damage_update_9:\n\t"
+      "flds 0x94(%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lobject_damage_update_12\n\t"
+      "movw 0xb4(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jne .Lobject_damage_update_11\n\t"
+      "movl 0x1c0(%%ebx), %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x68(%%esi), %%dx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "pushl $3\n\t"
+      "call *%[cb55b0]\n\t"
+      "fmuls -0x4(%%ebp)\n\t"
+      "movb 0xb6(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $8, %%al\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "je .Lobject_damage_update_10\n\t"
+      "movl 0x1b4(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c1369e0]\n\t"
+      "andb $0xf7, 0xb6(%%esi)\n\t"
+      "pushl $1\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c136a00]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_damage_update_10:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "orb $0x10, 0xb7(%%esi)\n\t"
+      "fadds 0x94(%%esi)\n\t"
+      "movw 0xb6(%%esi), %%cx\n\t"
+      "fsts 0x94(%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_damage_update_12\n\t"
+      "andl $0xefff, %%ecx\n\t"
+      "movl $0x3f800000, 0x94(%%esi)\n\t"
+      "movw %%cx, 0xb6(%%esi)\n\t"
+      "jmp .Lobject_damage_update_12\n\t"
+      ".Lobject_damage_update_11:\n\t"
+      "decl %%eax\n\t"
+      "movw %%ax, 0xb4(%%esi)\n\t"
+      ".Lobject_damage_update_12:\n\t"
+      "movl 0xb0(%%esi), %%eax\n\t"
+      "orl $0xffffffff, %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .Lobject_damage_update_19\n\t"
+      "incl %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0xb0(%%esi)\n\t"
+      "jl .Lobject_damage_update_13\n\t"
+      "flds 0x9c(%%esi)\n\t"
+      "fsubs 0x25634c\n\t"
+      "fstps 0x9c(%%esi)\n\t"
+      ".Lobject_damage_update_13:\n\t"
+      "cmpl $0x3c, %%eax\n\t"
+      "jl .Lobject_damage_update_14\n\t"
+      "flds 0xa8(%%esi)\n\t"
+      "fsubs 0x25634c\n\t"
+      "fstps 0xa8(%%esi)\n\t"
+      ".Lobject_damage_update_14:\n\t"
+      "flds 0x2533c0\n\t"
+      "fcomps 0x9c(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_damage_update_15\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lobject_damage_update_16\n\t"
+      ".Lobject_damage_update_15:\n\t"
+      "flds 0x9c(%%esi)\n\t"
+      ".Lobject_damage_update_16:\n\t"
+      "fsts 0x9c(%%esi)\n\t"
+      "flds 0x2533c0\n\t"
+      "fcomps 0xa8(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_damage_update_17\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lobject_damage_update_18\n\t"
+      ".Lobject_damage_update_17:\n\t"
+      "flds 0xa8(%%esi)\n\t"
+      ".Lobject_damage_update_18:\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "fstps 0xa8(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lobject_damage_update_19\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lobject_damage_update_19\n\t"
+      "movl %%ecx, 0xb0(%%esi)\n\t"
+      ".Lobject_damage_update_19:\n\t"
+      "movl 0xac(%%esi), %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .Lobject_damage_update_26\n\t"
+      "incl %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0xac(%%esi)\n\t"
+      "jl .Lobject_damage_update_20\n\t"
+      "flds 0x98(%%esi)\n\t"
+      "fsubs 0x25634c\n\t"
+      "fstps 0x98(%%esi)\n\t"
+      ".Lobject_damage_update_20:\n\t"
+      "cmpl $0x3c, %%eax\n\t"
+      "jl .Lobject_damage_update_21\n\t"
+      "flds 0xa4(%%esi)\n\t"
+      "fsubs 0x25634c\n\t"
+      "fstps 0xa4(%%esi)\n\t"
+      ".Lobject_damage_update_21:\n\t"
+      "flds 0x2533c0\n\t"
+      "fcomps 0x98(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_damage_update_22\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lobject_damage_update_23\n\t"
+      ".Lobject_damage_update_22:\n\t"
+      "flds 0x98(%%esi)\n\t"
+      ".Lobject_damage_update_23:\n\t"
+      "fsts 0x98(%%esi)\n\t"
+      "flds 0x2533c0\n\t"
+      "fcomps 0xa4(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_damage_update_24\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lobject_damage_update_25\n\t"
+      ".Lobject_damage_update_24:\n\t"
+      "flds 0xa4(%%esi)\n\t"
+      ".Lobject_damage_update_25:\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "fstps 0xa4(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lobject_damage_update_26\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lobject_damage_update_26\n\t"
+      "movl %%ecx, 0xac(%%esi)\n\t"
+      ".Lobject_damage_update_26:\n\t"
+      "popl %%ebx\n\t"
+      ".Lobject_damage_update_27:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [get] "m"(b1384e0_get), [tag] "m"(b1384e0_tag), [c18e450] "m"(b1384e0_c18e450), [elem] "m"(b1384e0_elem), [c136750] "m"(b1384e0_c136750), [c137d20] "m"(b1384e0_c137d20), [gerun] "m"(b1384e0_gerun), [cba500] "m"(b1384e0_cba500), [cd7cd0] "m"(b1384e0_cd7cd0), [cb55b0] "m"(b1384e0_cb55b0), [c1369e0] "m"(b1384e0_c1369e0), [c136a00] "m"(b1384e0_c136a00)
+      : "memory");
 }
+#else
+#error "object_damage_update: clang naked draft required"
+#endif
+
 
 /* Apply area-of-effect damage to nearby objects (0x138e30).
  * Resolves the 'jpt!' damage effect tag, searches for objects within the

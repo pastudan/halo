@@ -560,6 +560,15 @@ def main() -> int:
         ("FUN_000f90d0", 0xf90d0, 0xf9c28),
         ("object_cause_damage", 0x137d20, 0x1384d3),
         ("FUN_001ac680", 0x1ac680, 0x1acd66),
+        # gameplay wave 51 (2026-07-26)
+        ("object_compute_node_matrices", 0x141b70, 0x14350a),
+        ("FUN_001a03c0", 0x1a03c0, 0x1a0859),
+        ("unit_cause_player_melee_damage", 0x1aea90, 0x1af0ca),
+        ("FUN_001234b0", 0x1234b0, 0x12398d),
+        ("unit_throw_grenade_begin", 0x1b2090, 0x1b223c),
+        ("FUN_00136f40", 0x136f40, 0x137158),
+        ("weapon_overcharged", 0xfb2f0, 0xfb508),
+        ("object_damage_update", 0x1384e0, 0x1388f3),
     ]
 
     xbe = Xbe.from_file(args.xbe)
