@@ -1114,6 +1114,19 @@ def try_emit(ops: list[tuple[str, str]], decl: str, name: str, name_by: dict) ->
     return None
 
 
+def update_kb_decl(kb: dict, addr: int, sig: str) -> None:
+    decl = (sig or "").strip()
+    if not decl:
+        return
+    if not decl.endswith(";"):
+        decl += ";"
+    for o in kb.get("objects", []):
+        for fn in o.get("functions") or []:
+            if isinstance(fn, dict) and fn.get("addr") and int(fn["addr"], 16) == addr:
+                fn["decl"] = decl
+                return
+
+
 def merge_kb_ported(ours_path: Path, theirs_text: str) -> str:
     """Union ported:true from ours into theirs (remote wins structure)."""
     ours = json.loads(ours_path.read_text(encoding="utf-8"))
