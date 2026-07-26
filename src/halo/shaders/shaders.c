@@ -473,6 +473,7 @@ void *FUN_001906b0(void *shader, int shader_type)
   extern char DAT_002a18b8[];
   extern char DAT_002b231c[];
   extern char DAT_002b22fc[];
+
   if (!shader) {
     display_assert(DAT_002a18b8, DAT_002b231c, 0x85c, 1);
     system_exit(-1);
@@ -618,50 +619,25 @@ int shader_get_vertex_shader_permutation(void *shader __attribute__((unused)))
 #endif
 
 
-/* shader_is_mirror (0x190830) — XBE naked draft (batch 274). */
-#if defined(__clang__)
-static void * (*const b190830_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
-
-__attribute__((naked, noinline))
-void shader_is_mirror(void)
+/* shader_is_mirror (0x190830) — readable C lift. */
+char shader_is_mirror(void *shader)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "xorb %%al, %%al\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lshader_is_mirror_2\n\t"
-      "movswl 0x24(%%ecx), %%edx\n\t"
-      "cmpl $3, %%edx\n\t"
-      "je .Lshader_is_mirror_1\n\t"
-      "cmpl $8, %%edx\n\t"
-      "jne .Lshader_is_mirror_2\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1906b0]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, 0x8a(%%eax)\n\t"
-      "sete %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lshader_is_mirror_1:\n\t"
-      "pushl $3\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1906b0]\n\t"
-      "movb 0x2d0(%%eax), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "andb $1, %%al\n\t"
-      ".Lshader_is_mirror_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1906b0] "m"(b190830_c1906b0)
-      : "memory");
+  int shader_type;
+  void *typed;
+
+  if (!shader)
+    return 0;
+  shader_type = *(int16_t *)((char *)shader + 0x24);
+  if (shader_type == 3) {
+    typed = FUN_001906b0(shader, 3);
+    return (char)(*(unsigned char *)((char *)typed + 0x2d0) & 1);
+  }
+  if (shader_type == 8) {
+    typed = FUN_001906b0(shader, 8);
+    return (char)(*(int16_t *)((char *)typed + 0x8a) == 2);
+  }
+  return 0;
 }
-#else
-#error "shader_is_mirror: clang naked draft required"
-#endif
 
 
 /* shader_is_decal (0x1908a0) — XBE naked draft (batch 261). */
@@ -741,100 +717,45 @@ char shader_is_decal(void *shader __attribute__((unused)))
 #endif
 
 
-/* shader_is_water_decal (0x190930) — XBE naked draft (batch 272). */
-#if defined(__clang__)
-static void * (*const b190930_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
-
-__attribute__((naked, noinline))
-char shader_is_water_decal(void *shader __attribute__((unused)))
+/* shader_is_water_decal (0x190930) — readable C lift. */
+char shader_is_water_decal(void *shader)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "xorb %%al, %%al\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lshader_is_water_decal_2\n\t"
-      "movswl 0x24(%%ecx), %%edx\n\t"
-      "subl $5, %%edx\n\t"
-      "je .Lshader_is_water_decal_1\n\t"
-      "decl %%edx\n\t"
-      "jne .Lshader_is_water_decal_2\n\t"
-      "pushl $6\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1906b0]\n\t"
-      "movb 0x29(%%eax), %%al\n\t"
-      "shrb $4, %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "andb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lshader_is_water_decal_1:\n\t"
-      "pushl $5\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1906b0]\n\t"
-      "movb 0x29(%%eax), %%al\n\t"
-      "shrb $4, %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "andb $1, %%al\n\t"
-      ".Lshader_is_water_decal_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1906b0] "m"(b190930_c1906b0)
-      : "memory");
+  int shader_type;
+  void *typed;
+
+  if (!shader)
+    return 0;
+  shader_type = *(int16_t *)((char *)shader + 0x24);
+  if (shader_type == 5) {
+    typed = FUN_001906b0(shader, 5);
+    return (char)((*(unsigned char *)((char *)typed + 0x29) >> 4) & 1);
+  }
+  if (shader_type == 6) {
+    typed = FUN_001906b0(shader, 6);
+    return (char)((*(unsigned char *)((char *)typed + 0x29) >> 4) & 1);
+  }
+  return 0;
 }
-#else
-#error "shader_is_water_decal: clang naked draft required"
-#endif
 
-
-/* shader_ignores_effect (0x190980) — XBE naked draft (batch 272). */
-#if defined(__clang__)
-static void * (*const b190980_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
-
-__attribute__((naked, noinline))
-char shader_ignores_effect(void *shader __attribute__((unused)))
+/* shader_ignores_effect (0x190980) — readable C lift. */
+char shader_ignores_effect(void *shader)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "xorb %%al, %%al\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lshader_ignores_effect_2\n\t"
-      "movswl 0x24(%%ecx), %%edx\n\t"
-      "subl $5, %%edx\n\t"
-      "je .Lshader_ignores_effect_1\n\t"
-      "decl %%edx\n\t"
-      "jne .Lshader_ignores_effect_2\n\t"
-      "pushl $6\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1906b0]\n\t"
-      "movb 0x29(%%eax), %%al\n\t"
-      "shrb $5, %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "andb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lshader_ignores_effect_1:\n\t"
-      "pushl $5\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1906b0]\n\t"
-      "movb 0x29(%%eax), %%al\n\t"
-      "shrb $5, %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "andb $1, %%al\n\t"
-      ".Lshader_ignores_effect_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1906b0] "m"(b190980_c1906b0)
-      : "memory");
+  int shader_type;
+  void *typed;
+
+  if (!shader)
+    return 0;
+  shader_type = *(int16_t *)((char *)shader + 0x24);
+  if (shader_type == 5) {
+    typed = FUN_001906b0(shader, 5);
+    return (char)((*(unsigned char *)((char *)typed + 0x29) >> 5) & 1);
+  }
+  if (shader_type == 6) {
+    typed = FUN_001906b0(shader, 6);
+    return (char)((*(unsigned char *)((char *)typed + 0x29) >> 5) & 1);
+  }
+  return 0;
 }
-#else
-#error "shader_ignores_effect: clang naked draft required"
-#endif
 
 
 /* shader_type_is_transparent (0x1909d0) — readable C lift. */

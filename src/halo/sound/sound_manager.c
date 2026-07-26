@@ -4233,32 +4233,14 @@ char FUN_001cc200(int looping_handle __attribute__((unused)), void *source __att
 #endif
 
 
-/* FUN_001cc2f0 (0x1cc2f0) — XBE naked draft (batch 288). */
-#if defined(__clang__)
-static void *(*const b1cc2f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_001cc2f0(int sound_handle __attribute__((unused)), int tag_index __attribute__((unused)))
+/* FUN_001cc2f0 (0x1cc2f0) — readable C lift. */
+void FUN_001cc2f0(int sound_handle /*@<eax>*/, int tag_index /*@<esi>*/)
 {
-  __asm__ volatile(
-      "movl 0x4fdba4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%esi, %%ecx\n\t"
-      "je .LFUN_001cc2f0_1\n\t"
-      "movl %%esi, 0x98(%%eax)\n\t"
-      ".LFUN_001cc2f0_1:\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1cc2f0_dget)
-      : "memory");
+  extern data_t *DAT_004fdba4;
+  char *node = (char *)datum_get(DAT_004fdba4, sound_handle);
+  if (*(int *)(node + 8) != tag_index)
+    *(int *)(node + 0x98) = tag_index;
 }
-#else
-#error "FUN_001cc2f0: clang naked draft required"
-#endif
 
 
 /* FUN_001cc440 (0x1cc440) — XBE naked draft (batch 278). */

@@ -6361,8 +6361,8 @@
         },
         {
           "addr": "0x11fd10",
-          "decl": "void FUN_0011fd10(void);",
-          "ported": false
+          "decl": "float FUN_0011fd10(void *block, char use_alt);",
+          "ported": true
         },
         {
           "addr": "0x11fd50",
@@ -17238,8 +17238,8 @@
         },
         {
           "addr": "0x89350",
-          "decl": "void FUN_00089350(void);",
-          "ported": false
+          "decl": "void FUN_00089350(float *dst, float *forward, float *angles_vector);",
+          "ported": true
         },
         {
           "addr": "0x893a0",
@@ -23967,8 +23967,8 @@
         },
         {
           "addr": "0x190830",
-          "decl": "void shader_is_mirror(void);",
-          "ported": false
+          "decl": "char shader_is_mirror(void *shader);",
+          "ported": true
         },
         {
           "addr": "0x1908a0",
@@ -23978,12 +23978,12 @@
         {
           "addr": "0x190930",
           "decl": "char shader_is_water_decal(void *shader);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x190980",
           "decl": "char shader_ignores_effect(void *shader);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1909d0",
@@ -25080,8 +25080,8 @@
         },
         {
           "addr": "0x1cc2f0",
-          "decl": "void FUN_001cc2f0(int sound_handle @<esi>, int tag_index @<eax>);",
-          "ported": false,
+          "decl": "void FUN_001cc2f0(int sound_handle@<eax>, int tag_index@<esi>);",
+          "ported": true,
           "name": "FUN_001cc2f0"
         },
         {
@@ -40092,7 +40092,7 @@
         {
           "addr": "0x96720",
           "decl": "bool device_can_change_position(int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x967a0",

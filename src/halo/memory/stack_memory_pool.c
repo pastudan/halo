@@ -1798,42 +1798,20 @@ void pool_new_pointer_clear(void)
 #endif
 
 
-/* FUN_0011fd10 (0x11fd10) — XBE naked draft (batch 165). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0011fd10(void)
+/* FUN_0011fd10 (0x11fd10) — readable C lift. */
+float FUN_0011fd10(void *block, char use_alt)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "je .LFUN_0011fd10_1\n\t"
-      "movl 0x14(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "jmp .LFUN_0011fd10_2\n\t"
-      ".LFUN_0011fd10_1:\n\t"
-      "movl 0x10(%%eax), %%edx\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      ".LFUN_0011fd10_2:\n\t"
-      "movswl 0xa(%%eax), %%ecx\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "movswl 0x8(%%eax), %%edx\n\t"
-      "imull %%edx, %%ecx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "fidivl 0xc(%%ebp)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int numerator;
+  int denominator;
+
+  if (use_alt)
+    numerator = *(int *)((char *)block + 0x14);
+  else
+    numerator = *(int *)((char *)block + 0x10);
+  denominator = (int)*(int16_t *)((char *)block + 0xa) *
+                (int)*(int16_t *)((char *)block + 8);
+  return (float)numerator / (float)denominator;
 }
-#else
-#error "FUN_0011fd10: clang naked draft required"
-#endif
 
 
 /* FUN_0011fd50 (0x11fd50) — XBE naked draft (batch 166). */

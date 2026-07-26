@@ -526,6 +526,36 @@ float device_group_get_value(int a0)
   return *(float *)(g + 4);
 }
 
+/* device_can_change_position (0x96720) — readable C lift. */
+bool device_can_change_position(int object_handle)
+{
+  extern data_t *DAT_005aa8c8;
+  char *obj;
+  char *group_a;
+  char *group_b;
+  int16_t group_index;
+  unsigned char flags;
+  char ok;
+
+  obj = (char *)object_get_and_verify_type(object_handle, 0x380);
+  group_index = *(int16_t *)(obj + 0x1b4);
+  ok = 0;
+  if (group_index == -1)
+    return (bool)ok;
+
+  group_a = (char *)datum_get(DAT_005aa8c8, (int)group_index);
+  group_b = (char *)datum_get(DAT_005aa8c8, (int)*(int16_t *)(obj + 0x1a8));
+  flags = (unsigned char)*(uint16_t *)(group_a + 2);
+  ok = 1;
+  if ((flags & 1) && (flags & 2))
+    ok = 0;
+  if ((*(unsigned char *)(obj + 0x1a4) & 2) != 0)
+    ok = 0;
+  if (*(int *)(group_b + 4) != 0x3f800000)
+    ok = 0;
+  return (bool)ok;
+}
+
 /* FUN_000967a0 (0x967a0) — XBE naked draft (batch 273). */
 #if defined(__clang__)
 static void *(*const b967a0_get)(int, int) = object_get_and_verify_type;

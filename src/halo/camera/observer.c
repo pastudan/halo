@@ -1537,6 +1537,23 @@ void FUN_00089330(float *out)
   out[6] = 1.2222222f; /* 0x3f9c61aa */
 }
 
+/* FUN_00089350 (0x89350) — readable C lift. */
+void FUN_00089350(float *dst, float *forward, float *angles_vector)
+{
+  unsigned int fov_bits = 0x3f9c61aau;
+
+  dst[1] = 0.0f;
+  dst[0] = 0.0f;
+  dst[4] = 0.0f;
+  dst[5] = 0.0f;
+  dst[3] = 0.0f;
+  *(unsigned int *)(dst + 6) = fov_bits;
+  dst[0] = forward[0];
+  dst[1] = forward[1];
+  dst[2] = forward[2];
+  vector_to_angles(dst + 3, angles_vector);
+}
+
 /* flying_camera_update (0x893a0) — XBE naked draft (batch 107). */
 #if defined(__clang__)
 static void (*const b893a0_assert)(const char *, const char *, int, bool) = display_assert;
