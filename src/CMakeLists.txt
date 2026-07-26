@@ -14,6 +14,7 @@
 	halo/ai/ai_debug.c
 	halo/ai/ai_profile.c
 	halo/ai/encounters.c
+	halo/ai/ai_script.c
 	halo/ai/path.c
 	halo/ai/path_obstacle_avoidance.c
 	halo/ai/path_smoothing.c

@@ -17218,5 +17218,26 @@
     "object": "game_state.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x58eb0",
+    "name": "FUN_00058eb0",
+    "object": "ai_script.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x58cc0",
+    "name": "ai_scripting_follow_distance",
+    "object": "ai_script.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x58d40",
+    "name": "FUN_00058d40",
+    "object": "ai_script.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
