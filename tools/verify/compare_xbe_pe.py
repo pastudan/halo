@@ -725,6 +725,19 @@ def main() -> int:
         ("FUN_001390d0", 0x1390d0, 0x1391d9),
         ("unit_place", 0x1b24d0, 0x1b2610),
         ("FUN_0013aa10", 0x13aa10, 0x13ab20),
+        # gameplay wave 62 (2026-07-26)
+        ("FUN_00139a30", 0x139a30, 0x139b3f),
+        ("FUN_001414e0", 0x1414e0, 0x1415e6),
+        ("FUN_0013a250", 0x13a250, 0x13a333),
+        ("FUN_0013a340", 0x13a340, 0x13a420),
+        ("FUN_001a2800", 0x1a2800, 0x1a2900),
+        ("unit_melee_attack_begin", 0x1b1b60, 0x1b1c49),
+        ("FUN_001a7b50", 0x1a7b50, 0x1a7c6f),
+        ("FUN_001a0f10", 0x1a0f10, 0x1a101a),
+        ("FUN_0013ce90", 0x13ce90, 0x13cf4e),
+        ("unit_create_initial_weapons", 0x1b2660, 0x1b273b),
+        ("FUN_0013b290", 0x13b290, 0x13b377),
+        ("FUN_001a7650", 0x1a7650, 0x1a7723),
     ]
 
     xbe = Xbe.from_file(args.xbe)

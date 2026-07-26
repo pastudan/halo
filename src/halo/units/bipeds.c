@@ -1600,80 +1600,116 @@ void FUN_001a0e00(float threshold, int unit_handle)
   *(unsigned char *)(unit_obj + 0x429) = (unsigned char)(int)(scaled * t);
 }
 
-/* FUN_001a0f10 (0x1a0f10)
- *
- * Spawns a biped contact/footstep effect from one entry of the biped tag's
- * contact-point block. Looks up the biped tag ('bipd') from the unit, brackets
- * the work in the collision-user-depth stack (global 0x4761d8 / stack 0x5a8c80,
- * marker 7), asserting depth < 0x20 on entry (line 0xf4f) and > 1 on exit
- * (line 0xf60). If the requested contact index (register BX) is in range of the
- * tag's contact-point block at tag+0x4e8 AND the effect tag reference at
- * tag+0x398 is valid (!= -1), and the object's animation/contact gate
- * FUN_0009f3b0(object+0x50) passes, it fetches contact-point element BX
- * (element size 0x40), resolves the named marker (name at element+0x20) on the
- * object via object_get_markers_by_string_id (one marker, into a 108-byte
- * result buffer), and on success spawns the effect (tag+0x398) at the marker's
- * world position (buffer+0x60) via FUN_0009f570.
- *
- * Confirmed (disasm): cdecl, 2 stack params [EBP+8]=unit_handle, [EBP+0xc];
- *   index is register-passed in BX (MOVSX EBX,BX at 0x1a0f73 reads BX before
- *   any write; callers 0x1a2440 load EBX immediately before each CALL). void
- *   return. The marker-result buffer is one contiguous region: Ghidra split it
- *   into local_74[96]+local_14[12], but object_get_markers_by_string_id writes
- *   to offset 0x6c (108 bytes) and FUN_0009f570 reads the position at +0x60
- *   (LEA [EBP-0x70] vs LEA [EBP-0x10] differ by exactly 0x60).
- * Inferred: 'bipd' contact-point footstep-effect spawn semantics from the
- *   tag-block index + effect-tag + marker-position spawn shape.
- * Uncertain: precise meaning of param_2 (forwarded unchanged to FUN_0009f570);
- *   callers pass 3 or 4 (region/permutation selector). Layout of the 108-byte
- *   marker-result buffer beyond "transform copy at +0x38..0x6c, position at
- *   +0x60" is opaque (no named struct in headers yet).
- */
-void FUN_001a0f10(int unit_handle, int param_2, short index /* @bx */)
+/* FUN_001a0f10 (0x1a0f10) — XBE naked draft (batch 62). */
+#if defined(__clang__)
+static void *(*const b1a0f10_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a0f10_tag)(int, int) = tag_get;
+static void (*const b1a0f10_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1a0f10_exitfn)(int) = system_exit;
+static bool (*const b1a0f10_o9f3b0)(void *) = FUN_0009f3b0;
+static void *(*const b1a0f10_elem)(void *, int, int) = tag_block_get_element;
+static short (*const b1a0f10_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
+static void (*const b1a0f10_c9f570)(int effect_tag_index, int param_2, void *position, int param_4) = FUN_0009f570;
+
+__attribute__((naked, noinline))
+void FUN_001a0f10(int unit_handle __attribute__((unused)), int param_2 __attribute__((unused)), short index __attribute__((unused)))
 {
-  unsigned int *object;
-  int biped_tag;
-  int depth;
-  void *contact_elem;
-  /* One contiguous marker-result buffer. object_get_markers_by_string_id
-   * writes up to offset 0x6c (108 bytes); FUN_0009f570 reads the marker
-   * world position at +0x60. Sized so the MSVC frame totals 0x70 with the
-   * 4-byte object pointer (do not split into separate locals). */
-  char marker_buf[0x6c];
-
-  object = (unsigned int *)object_get_and_verify_type(unit_handle, 1);
-  biped_tag = (int)tag_get(0x62697064, *object); /* 'bipd' */
-
-  if (*(int16_t *)0x4761d8 >= 0x20) {
-    display_assert("global_current_collision_user_depth < "
-                   "MAXIMUM_COLLISION_USER_STACK_DEPTH",
-                   "c:\\halo\\SOURCE\\units\\bipeds.c", 0xf4f, true);
-    system_exit(-1);
-  }
-  depth = *(int16_t *)0x4761d8;
-  *(int16_t *)0x4761d8 = (int16_t)(depth + 1);
-  *(int16_t *)(0x5a8c80 + depth * 2) = 7;
-
-  if (((int)index < *(int *)(biped_tag + 0x4e8)) &&
-      (*(int *)(biped_tag + 0x398) != -1)) {
-    if (FUN_0009f3b0((char *)object + 0x50) != false) {
-      contact_elem =
-        tag_block_get_element((void *)(biped_tag + 0x4e8), (int)index, 0x40);
-      if (object_get_markers_by_string_id(
-            unit_handle, (char *)contact_elem + 0x20, marker_buf, 1) != 0) {
-        FUN_0009f570(*(int *)(biped_tag + 0x398), param_2, marker_buf + 0x60,
-                     0);
-      }
-    }
-  }
-
-  if (*(int16_t *)0x4761d8 <= 1) {
-    display_assert("global_current_collision_user_depth > 1",
-                   "c:\\halo\\SOURCE\\units\\bipeds.c", 0xf60, true);
-    system_exit(-1);
-  }
-  *(int16_t *)0x4761d8 = (int16_t)(*(int16_t *)0x4761d8 - 1);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x70, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x62697064\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpw $0x20, 0x4761d8\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jl .LFUN_001a0f10_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf4f\n\t"
+      "pushl $0x2b4d5c\n\t"
+      "pushl $0x253440\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a0f10_1:\n\t"
+      "movw 0x4761d8, %%ax\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "incw %%ax\n\t"
+      "leal 0x4e8(%%esi), %%edi\n\t"
+      "movswl %%bx, %%ebx\n\t"
+      "movw $7, 0x5a8c80(,%%edx,2)\n\t"
+      "movw %%ax, 0x4761d8\n\t"
+      "cmpl (%%edi), %%ebx\n\t"
+      "jge .LFUN_001a0f10_2\n\t"
+      "cmpl $-1, 0x398(%%esi)\n\t"
+      "je .LFUN_001a0f10_2\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "addl $0x50, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[o9f3b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001a0f10_2\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl $1\n\t"
+      "leal -0x70(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x20, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[markers]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .LFUN_001a0f10_2\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x398(%%esi), %%edx\n\t"
+      "pushl $0\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c9f570]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_001a0f10_2:\n\t"
+      "cmpw $1, 0x4761d8\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "jg .LFUN_001a0f10_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf60\n\t"
+      "pushl $0x2b4d5c\n\t"
+      "pushl $0x253418\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a0f10_3:\n\t"
+      "decw 0x4761d8\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a0f10_get), [tag] "m"(b1a0f10_tag), [assert] "m"(b1a0f10_assert), [exitfn] "m"(b1a0f10_exitfn), [o9f3b0] "m"(b1a0f10_o9f3b0), [elem] "m"(b1a0f10_elem), [markers] "m"(b1a0f10_markers), [c9f570] "m"(b1a0f10_c9f570)
+      : "memory");
 }
+#else
+#error "FUN_001a0f10: clang naked draft required"
+#endif
+
 
 /* biped_adjust_placement (0x1a1020)
  *
@@ -3896,69 +3932,121 @@ void FUN_001a25e0(int unit_handle /* @ecx */ __attribute__((unused)))
 #endif
 
 
-/* FUN_001a2800 (0x1a2800)
- *
- * Biped vector-failure assert: validates that the biped's forward axis
- * (unit+0x24) and up axis (unit+0x30) are perpendicular unit vectors
- * (valid_real_normal3d_perpendicular). If not, formats a diagnostic naming the
- * biped tag, its physics mode (flying / player-physics / climb / normal from
- * tag flags at +0x2f4), its dead/limping state, the supplied failure-kind
- * string, and the two offending vectors, then asserts and exits.
- *
- * Confirmed: @eax = unit_handle (caller MOV EAX,[EBP+8] then PUSH str; ADD
- * ESP,4); perpendicular check on (unit+0x24, unit+0x30); six floats
- * unit+0x24..+0x38 promoted to double for csprintf; dead bit =
- * byte[unit+0xb6]&4, limp bit = byte[unit+0x424]&0x20; tag flags at tag+0x2f4
- * (&4 flying, &2 player-physics, &0x40 climb); display_assert at
- * bipeds.c:0x55d. Inferred: "vector failure" / mode-string semantics from the
- * format string.
- */
-void FUN_001a2800(int unit_handle /* @eax */, const char *failure_kind)
+/* FUN_001a2800 (0x1a2800) — XBE naked draft (batch 62). */
+#if defined(__clang__)
+static void *(*const b1a2800_get)(int, int) = object_get_and_verify_type;
+static bool (*const b1a2800_c84a70)(float *a, float *b) = valid_real_normal3d_perpendicular;
+static void *(*const b1a2800_tag)(int, int) = tag_get;
+static const char * (*const b1a2800_c1ba1f0)(int tag_index) = tag_get_name;
+static const char * (*const b1a2800_c19b0d0)(const char *tag_name) = tag_name_strip_path;
+static char * (*const b1a2800_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b1a2800_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1a2800_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void FUN_001a2800(int unit_handle __attribute__((unused)), const char *failure_kind __attribute__((unused)))
 {
-  char *unit_obj;
-  char *biped_tag;
-  const char *limp_str;
-  const char *dead_str;
-  const char *mode_str;
-  uint32_t flags;
-
-  unit_obj = (char *)object_get_and_verify_type(unit_handle, 1);
-  if (valid_real_normal3d_perpendicular((float *)(unit_obj + 0x24),
-                                        (float *)(unit_obj + 0x30)) == 0) {
-    biped_tag = (char *)tag_get(0x62697064, *(int *)unit_obj);
-
-    limp_str = "/limping";
-    if ((*(unsigned char *)(unit_obj + 0x424) & 0x20) == 0) {
-      limp_str = "";
-    }
-    dead_str = "/dead";
-    if ((*(unsigned char *)(unit_obj + 0xb6) & 4) == 0) {
-      dead_str = "";
-    }
-    flags = *(uint32_t *)(biped_tag + 0x2f4);
-    if ((flags & 4) != 0) {
-      mode_str = "flying";
-    } else if ((flags & 2) != 0) {
-      mode_str = "player-physics";
-    } else if ((flags & 0x40) != 0) {
-      mode_str = "climb";
-    } else {
-      mode_str = "normal";
-    }
-
-    csprintf(
-      (char *)0x5ab100,
-      "biped %s (%s%s%s): %s vector failure: (%f, %f, %f) / (%f, %f, %f)",
-      tag_name_strip_path(tag_get_name(*(int *)unit_obj)), mode_str, dead_str,
-      limp_str, failure_kind, (double)*(float *)(unit_obj + 0x24),
-      (double)*(float *)(unit_obj + 0x28), (double)*(float *)(unit_obj + 0x2c),
-      (double)*(float *)(unit_obj + 0x30), (double)*(float *)(unit_obj + 0x34),
-      (double)*(float *)(unit_obj + 0x38));
-    display_assert((const char *)0x5ab100, "c:\\halo\\SOURCE\\units\\bipeds.c",
-                   0x55d, true);
-    system_exit(-1);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "leal 0x30(%%esi), %%edi\n\t"
+      "leal 0x24(%%esi), %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c84a70]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a2800_6\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x424(%%esi), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $0x20, %%cl\n\t"
+      "movl $0x2b4f4c, %%edx\n\t"
+      "jne .LFUN_001a2800_1\n\t"
+      "movl $0x25386f, %%edx\n\t"
+      ".LFUN_001a2800_1:\n\t"
+      "testb $4, 0xb6(%%esi)\n\t"
+      "movl $0x2b4f44, %%ecx\n\t"
+      "jne .LFUN_001a2800_2\n\t"
+      "movl $0x25386f, %%ecx\n\t"
+      ".LFUN_001a2800_2:\n\t"
+      "movl 0x2f4(%%eax), %%eax\n\t"
+      "testb $4, %%al\n\t"
+      "je .LFUN_001a2800_3\n\t"
+      "movl $0x266fa0, %%eax\n\t"
+      "jmp .LFUN_001a2800_5\n\t"
+      ".LFUN_001a2800_3:\n\t"
+      "testb $2, %%al\n\t"
+      "je .LFUN_001a2800_4\n\t"
+      "movl $0x2b4f34, %%eax\n\t"
+      "jmp .LFUN_001a2800_5\n\t"
+      ".LFUN_001a2800_4:\n\t"
+      "testb $0x40, %%al\n\t"
+      "movl $0x2b4f2c, %%eax\n\t"
+      "jne .LFUN_001a2800_5\n\t"
+      "movl $0x26b188, %%eax\n\t"
+      ".LFUN_001a2800_5:\n\t"
+      "flds 0x38(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x55d\n\t"
+      "pushl $0x2b4d5c\n\t"
+      "subl $0x30, %%esp\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x34(%%esi)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0x2c(%%esi)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x28(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c19b0d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2b4ee8\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x4c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a2800_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a2800_get), [c84a70] "m"(b1a2800_c84a70), [tag] "m"(b1a2800_tag), [c1ba1f0] "m"(b1a2800_c1ba1f0), [c19b0d0] "m"(b1a2800_c19b0d0), [c8d9d0] "m"(b1a2800_c8d9d0), [assert] "m"(b1a2800_assert), [exitfn] "m"(b1a2800_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_001a2800: clang naked draft required"
+#endif
+
 
 /* FUN_001a2900 (0x1a2900) — XBE naked draft (batch 58). */
 #if defined(__clang__)

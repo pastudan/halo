@@ -1565,74 +1565,116 @@ char FUN_001a74d0(int unit_handle __attribute__((unused)), int scream_type __att
 #endif
 
 
-/* FUN_001a7650 (0x1a7650) — dialogue_definition_get_variant
- *
- * Searches the dialogue variants tag block at tag_data+0x2b4 for entries
- * matching the given dialogue_type. Collects up to 16 matching variant
- * indices into a local array. If exactly one match, returns that variant's
- * dialogue tag index. If multiple matches, picks one at random using
- * get_global_random_seed_address. Asserts if the chosen variant's dialogue
- * tag (0x75646c67 = "udlg") fails to load.
- *
- * Returns the dialogue tag index, or -1 if no matching variant found.
- *
- * Confirmed: thiscall — @ecx = tag_data pointer (MOV ESI,ECX at 0x1a7658).
- * Confirmed: 1 stack param = dialogue_type (int16_t).
- * Confirmed: tag_block at tag_data+0x2b4, element_size=0x18.
- * Confirmed: variant dialogue ref at element+0x14.
- * Confirmed: assert string "dialogue_definition_get(dialogue_index)" at 0x2b6874.
- * Confirmed: line 0x408 in unit_dialogue.c.
- */
-int FUN_001a7650(void *tag_data, int dialogue_type)
+/* FUN_001a7650 (0x1a7650) — XBE naked draft (batch 62). */
+#if defined(__clang__)
+static void *(*const b1a7650_elem)(void *, int, int) = tag_block_get_element;
+static int *(*const b1a7650_gseed)(void) = get_global_random_seed_address;
+static int16_t (*const b1a7650_c10b2d0)(unsigned int *seed, int16_t min, int16_t max) = random_range;
+static void *(*const b1a7650_tag)(int, int) = tag_get;
+static void (*const b1a7650_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1a7650_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int FUN_001a7650(void *tag_data __attribute__((unused)), int dialogue_type __attribute__((unused)))
 {
-  int *block;
-  int count;
-  int match_count;
-  int16_t match_indices[16];
-  int i;
-  short *element;
-  int16_t chosen;
-  int chosen_element;
-  int dialogue_tag_index;
-
-  block = (int *)((char *)tag_data + 0x2b4);
-  count = *block;
-  match_count = 0;
-
-  if (count > 0) {
-    for (i = 0; i < count; i++) {
-      element = (short *)tag_block_get_element(block, i, 0x18);
-      if ((int16_t)dialogue_type == -1 || *element == (int16_t)dialogue_type) {
-        match_indices[match_count] = (int16_t)i;
-        match_count++;
-      }
-    }
-
-    if ((int16_t)match_count > 0) {
-      if ((int16_t)match_count == 1) {
-        chosen = match_indices[0];
-      } else {
-        chosen = random_range(
-            (unsigned int *)get_global_random_seed_address(),
-            0, (int16_t)match_count);
-        chosen = match_indices[chosen];
-      }
-
-      chosen_element = (int)tag_block_get_element(block, (int)chosen, 0x18);
-      dialogue_tag_index = *(int *)(chosen_element + 0x14);
-
-      if (tag_get(0x75646c67, dialogue_tag_index) == NULL) {
-        display_assert("dialogue_definition_get(dialogue_index)",
-                       "c:\\halo\\SOURCE\\units\\unit_dialogue.c", 0x408, 1);
-        system_exit(-1);
-      }
-
-      return dialogue_tag_index;
-    }
-  }
-
-  return -1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x20, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ecx, %%esi\n\t"
+      "movl 0x2b4(%%esi), %%ecx\n\t"
+      "addl $0x2b4, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .LFUN_001a7650_8\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".LFUN_001a7650_1:\n\t"
+      "pushl $0x18\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "movw 0x8(%%ebp), %%cx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .LFUN_001a7650_2\n\t"
+      "cmpw %%cx, (%%eax)\n\t"
+      "jne .LFUN_001a7650_3\n\t"
+      ".LFUN_001a7650_2:\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "movw %%di, -0x20(%%ebp,%%eax,2)\n\t"
+      "incl %%ebx\n\t"
+      ".LFUN_001a7650_3:\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "incl %%edi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .LFUN_001a7650_1\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jle .LFUN_001a7650_7\n\t"
+      "cmpw $1, %%bx\n\t"
+      "jne .LFUN_001a7650_4\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "jmp .LFUN_001a7650_5\n\t"
+      ".LFUN_001a7650_4:\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10b2d0]\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "movw -0x20(%%ebp,%%ecx,2), %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_001a7650_5:\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "pushl $0x18\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x14(%%eax), %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x75646c67\n\t"
+      "call *%[tag]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_001a7650_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0x408\n\t"
+      "pushl $0x2b66ec\n\t"
+      "pushl $0x2b6874\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a7650_6:\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001a7650_7:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      ".LFUN_001a7650_8:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b1a7650_elem), [gseed] "m"(b1a7650_gseed), [c10b2d0] "m"(b1a7650_c10b2d0), [tag] "m"(b1a7650_tag), [assert] "m"(b1a7650_assert), [exitfn] "m"(b1a7650_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_001a7650: clang naked draft required"
+#endif
+
 
 /* FUN_001a7730 (0x1a7730) — unit_dialogue_select_variant
  *
@@ -9495,45 +9537,119 @@ void FUN_001a7ad0(int parent_handle, int param_2, int param_3)
   }
 }
 
-/* FUN_001a7b50 (0x1a7b50)
- * Computes and stores body/shield vitality ratios. Triggers events when
- * vitality transitions from nonzero to zero. */
-void FUN_001a7b50(int datum_handle, float body_damage, float shield_damage)
-{
-  float shield_ratio;
-  char *obj;
-  float body_ratio;
+/* FUN_001a7b50 (0x1a7b50) — XBE naked draft (batch 62). */
+#if defined(__clang__)
+static void *(*const b1a7b50_get)(int, int) = object_get_and_verify_type;
+static void (*const b1a7b50_c136b40)(int object_handle) = FUN_00136b40;
+static void (*const b1a7b50_c137540)(int object_handle) = object_deplete_body;
 
-  if (datum_handle == -1) {
-    return;
-  }
-  obj = (char *)object_get_and_verify_type(datum_handle, -1);
-  if ((*(uint8_t *)(obj + 0xb6) & 4) != 0) {
-    return;
-  }
-  if (*(float *)(obj + 0x8c) <= 0.0f) {
-    body_ratio = 0.0f;
-  } else if (shield_damage < *(float *)(obj + 0x8c)) {
-    body_ratio = shield_damage / *(float *)(obj + 0x8c);
-  } else {
-    body_ratio = 1.0f;
-  }
-  if (*(float *)(obj + 0x88) <= 0.0f) {
-    shield_ratio = 0.0f;
-  } else if (body_damage < *(float *)(obj + 0x88)) {
-    shield_ratio = body_damage / *(float *)(obj + 0x88);
-  } else {
-    shield_ratio = 1.0f;
-  }
-  if (0.0f < *(float *)(obj + 0x94) && body_ratio <= 0.0f) {
-    FUN_00136b40(datum_handle);
-  }
-  *(float *)(obj + 0x94) = body_ratio;
-  if (0.0f < *(float *)(obj + 0x90) && shield_ratio <= 0.0f) {
-    object_deplete_body(datum_handle);
-  }
-  *(float *)(obj + 0x90) = shield_ratio;
+__attribute__((naked, noinline))
+void FUN_001a7b50(int datum_handle __attribute__((unused)), float body_damage __attribute__((unused)), float shield_damage __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_001a7b50_10\n\t"
+      "pushl %%esi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0xb6(%%esi), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $4, %%al\n\t"
+      "jne .LFUN_001a7b50_9\n\t"
+      "flds 0x8c(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_001a7b50_1\n\t"
+      "movl $0, 0x8(%%ebp)\n\t"
+      "jmp .LFUN_001a7b50_3\n\t"
+      ".LFUN_001a7b50_1:\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fcomps 0x8c(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001a7b50_2\n\t"
+      "movl $0x3f800000, 0x8(%%ebp)\n\t"
+      "jmp .LFUN_001a7b50_3\n\t"
+      ".LFUN_001a7b50_2:\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fdivs 0x8c(%%esi)\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      ".LFUN_001a7b50_3:\n\t"
+      "flds 0x88(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_001a7b50_4\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_001a7b50_6\n\t"
+      ".LFUN_001a7b50_4:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x88(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001a7b50_5\n\t"
+      "movl $0x3f800000, -0x4(%%ebp)\n\t"
+      "jmp .LFUN_001a7b50_6\n\t"
+      ".LFUN_001a7b50_5:\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fdivs 0x88(%%esi)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".LFUN_001a7b50_6:\n\t"
+      "flds 0x94(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a7b50_7\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_001a7b50_7\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c136b40]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001a7b50_7:\n\t"
+      "flds 0x90(%%esi)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "fcomps 0x2533c0\n\t"
+      "movl %%eax, 0x94(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a7b50_8\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_001a7b50_8\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c137540]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001a7b50_8:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x90(%%esi)\n\t"
+      ".LFUN_001a7b50_9:\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_001a7b50_10:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1a7b50_get), [c136b40] "m"(b1a7b50_c136b40), [c137540] "m"(b1a7b50_c137540)
+      : "memory");
 }
+#else
+#error "FUN_001a7b50: clang naked draft required"
+#endif
+
 
 /* unit_test_spawning (0x1a9130)
  * Tests if unit should spawn attached objects on death. */
@@ -12797,82 +12913,126 @@ char unit_throw_grenade_begin(int unit_handle __attribute__((unused)), float *al
 #endif
 
 
-/* unit_melee_attack_begin (0x1b1b60) — begin a melee attack animation.
- *
- * Checks the unit's animation state via a switch table; if the state is one
- * of the dying/dead/special states (0x17-0x23,0x27,0x29), the attack is
- * blocked. Otherwise, determines the target animation state based on
- * param_2 (forced hit), melee readiness, and unit flags. Requests the
- * animation via FUN_001ad260. On success (or forced), sets melee flags
- * and optionally applies alignment vector.
- *
- * param_2: if non-zero, force melee hit (animation state 0x20, type=4).
- * param_3: if non-zero, pointer to float[3] alignment vector.
- *
- * Returns 1 on success, 0 if blocked.
- */
-char unit_melee_attack_begin(int unit_handle, char param_2, int param_3)
+/* unit_melee_attack_begin (0x1b1b60) — XBE naked draft (batch 62). */
+#if defined(__clang__)
+static void *(*const b1b1b60_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1b1b60_tag)(int, int) = tag_get;
+static char (*const b1b1b60_c1ad260)(int unit_handle, int16_t anim_state) = FUN_001ad260;
+static void (*const b1b1b60_c1af180)(int unit_handle, float *alignment_vector) = unit_apply_alignment_vector;
+
+__attribute__((naked, noinline))
+char unit_melee_attack_begin(int unit_handle __attribute__((unused)), char param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
 {
-  char *unit;
-  int unit_tag;
-  char anim_state;
-  char result;
-  uint8_t melee_ready;
-  char anim_ok;
-  int16_t new_state;
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  unit_tag = (int)tag_get(0x756e6974, *(int *)unit);
-  result = 0;
-
-  switch (*(uint8_t *)(unit + 0x253)) {
-  case 0x17: case 0x18: case 0x19: case 0x1a: case 0x1b:
-  case 0x1d: case 0x1e: case 0x1f: case 0x20: case 0x21:
-  case 0x22: case 0x23: case 0x27: case 0x29:
-    /* These animation states block melee attacks */
-    break;
-  default:
-    /* Check if melee is ready: either unit is in a vehicle (seat != 0)
-     * or the melee-ready bit (unit+0x424, bit 0) is set */
-    melee_ready = 0;
-    if (*(short *)(unit + 0x64) == 0) {
-      melee_ready = *(uint8_t *)(unit + 0x424) & 1;
-    }
-
-    if (param_2 != '\0') {
-      new_state = 0x20;  /* forced melee hit */
-    } else {
-      anim_state = *(char *)(unit + 0x253);
-      if (anim_state == 0x28) {
-        new_state = 0x29;  /* melee continuation */
-      } else {
-        new_state = (int16_t)((melee_ready != 0) + 0x1e);
-      }
-    }
-
-    anim_ok = FUN_001ad260(unit_handle, new_state);
-
-    if (anim_ok != '\0' || param_2 != '\0') {
-      /* Check unit tag flag bit 8 at offset 0x17c */
-      if ((*(uint32_t *)(unit_tag + 0x17c) & 0x100) != 0) {
-        *(uint8_t *)(unit + 0x253) = 0x19;
-      }
-      /* Apply alignment vector if provided */
-      if (param_3 != 0) {
-        unit_apply_alignment_vector(unit_handle, (float *)param_3);
-      }
-      if (param_2 != '\0') {
-        *(uint8_t *)(unit + 0x239) = 4;
-        *(uint8_t *)(unit + 0x23a) = 0;
-        return 1;
-      }
-      *(uint8_t *)(unit + 0x239) = 1;
-      result = 1;
-    }
-    break;
-  }
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x253(%%esi), %%cl\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movsbl %%cl, %%eax\n\t"
+      "addl $-0x17, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "cmpl $0x12, %%eax\n\t"
+      "ja .Lunit_melee_attack_begin_1\n\t"
+      "movzbl 0x1b1c54(%%eax), %%edx\n\t"
+      "jmp *.Lunit_melee_attack_begin_jt(,%%edx,4)\n\t"
+      ".Lunit_melee_attack_begin_1:\n\t"
+      "xorb %%al, %%al\n\t"
+      "cmpw $0, 0x64(%%esi)\n\t"
+      "jne .Lunit_melee_attack_begin_2\n\t"
+      "movb 0x424(%%esi), %%al\n\t"
+      "andb $1, %%al\n\t"
+      ".Lunit_melee_attack_begin_2:\n\t"
+      "movb 0xc(%%ebp), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "je .Lunit_melee_attack_begin_3\n\t"
+      "movl $0x20, %%eax\n\t"
+      "jmp .Lunit_melee_attack_begin_5\n\t"
+      ".Lunit_melee_attack_begin_3:\n\t"
+      "cmpb $0x28, %%cl\n\t"
+      "jne .Lunit_melee_attack_begin_4\n\t"
+      "movl $0x29, %%eax\n\t"
+      "jmp .Lunit_melee_attack_begin_5\n\t"
+      ".Lunit_melee_attack_begin_4:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testb %%al, %%al\n\t"
+      "setne %%cl\n\t"
+      "addl $0x1e, %%ecx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      ".Lunit_melee_attack_begin_5:\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1ad260]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lunit_melee_attack_begin_6\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lunit_melee_attack_begin_10\n\t"
+      ".Lunit_melee_attack_begin_6:\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl 0x17c(%%edx), %%eax\n\t"
+      "testb $1, %%ah\n\t"
+      "je .Lunit_melee_attack_begin_7\n\t"
+      "movb $0x19, 0x253(%%esi)\n\t"
+      ".Lunit_melee_attack_begin_7:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lunit_melee_attack_begin_8\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c1af180]\n\t"
+      ".Lunit_melee_attack_begin_8:\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lunit_melee_attack_begin_9\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%bl\n\t"
+      "movb $4, 0x239(%%esi)\n\t"
+      "movb $0, 0x23a(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lunit_melee_attack_begin_9:\n\t"
+      "movb $1, 0x239(%%esi)\n\t"
+      "movb $1, %%bl\n\t"
+      ".Lunit_melee_attack_begin_10:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lunit_melee_attack_begin_jt:\n\t"
+      ".long .Lunit_melee_attack_begin_10\n\t"
+      ".long .Lunit_melee_attack_begin_1\n\t"
+      ".text\n\t"
+      :
+      : [get] "m"(b1b1b60_get), [tag] "m"(b1b1b60_tag), [c1ad260] "m"(b1b1b60_c1ad260), [c1af180] "m"(b1b1b60_c1af180)
+      : "memory");
 }
+#else
+#error "unit_melee_attack_begin: clang naked draft required"
+#endif
+
 
 /* unit_place (0x1b24d0) — XBE naked draft (batch 61). */
 #if defined(__clang__)
@@ -12998,68 +13158,117 @@ void unit_place(int unit_handle __attribute__((unused)), void *placement __attri
 #endif
 
 
-/* unit_create_initial_weapons (0x1b2660) — create initial weapons for a unit.
- *
- * Iterates the unit tag's initial weapons tag block (at tag+0x2d8, element
- * size 0x24), and for each weapon tag index that is not NONE, creates an
- * object via object_placement_data_new + object_new. Then tries to pick
- * it up: if the game engine is running and the unit already has that weapon
- * definition, delete the duplicate; otherwise attempt unit_enter_seat and
- * delete on failure.
- *
- * Source: units.c
- */
-void unit_create_initial_weapons(int unit_handle)
+/* unit_create_initial_weapons (0x1b2660) — XBE naked draft (batch 62). */
+#if defined(__clang__)
+static void *(*const b1b2660_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1b2660_tag)(int, int) = tag_get;
+static void *(*const b1b2660_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b1b2660_opnew)(void *, int, int) = object_placement_data_new;
+static int (*const b1b2660_onew)(void *) = object_new;
+static bool (*const b1b2660_gerun)(void) = game_engine_running;
+static char (*const b1b2660_c1aad00)(int unit_handle, int definition_index) = unit_has_weapon_definition_index;
+static bool (*const b1b2660_c1b1db0)(int unit_handle, int seat_object_handle, int16_t flag) = unit_enter_seat;
+static void (*const b1b2660_odel)(int) = object_delete;
+
+__attribute__((naked, noinline))
+void unit_create_initial_weapons(int unit_handle __attribute__((unused)))
 {
-  char *unit;
-  int unit_tag;
-  int *initial_weapons_block;
-  int loop_counter;
-  int element;
-  int weapon_tag_index;
-  int weapon_handle;
-  char *weapon_data;
-  char engine_running;
-  char has_weapon;
-  char enter_ok;
-  uint8_t placement[136]; /* 0x88 bytes for object_placement_data */
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  unit_tag = (int)tag_get(0x756e6974, *(int *)unit);
-  initial_weapons_block = (int *)(unit_tag + 0x2d8);
-  loop_counter = 0;
-
-  if (*initial_weapons_block > 0) {
-    element = 0;
-    do {
-      element = (int)tag_block_get_element(initial_weapons_block, element, 0x24);
-      weapon_tag_index = *(int *)(element + 0xc);
-      if (weapon_tag_index != NONE) {
-        object_placement_data_new(placement, weapon_tag_index, unit_handle);
-        weapon_handle = object_new(placement);
-        if (weapon_handle != NONE) {
-          weapon_data = (char *)object_get_and_verify_type(weapon_handle, 4);
-          engine_running = game_engine_running();
-          if (engine_running != '\0') {
-            has_weapon = unit_has_weapon_definition_index(unit_handle, *(int *)weapon_data);
-            if (has_weapon != '\0') {
-              goto delete_weapon;
-            }
-          }
-          enter_ok = unit_enter_seat(unit_handle, weapon_handle, 0);
-          if (enter_ok != '\0') {
-            goto next_weapon;
-          }
-delete_weapon:
-          object_delete(weapon_handle);
-        }
-      }
-next_weapon:
-      loop_counter = loop_counter + 1;
-      element = (int)(short)loop_counter;
-    } while (element < *initial_weapons_block);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x8c, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "leal 0x2d8(%%eax), %%edi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "jle .Lunit_create_initial_weapons_5\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "pushl %%esi\n\t"
+      ".Lunit_create_initial_weapons_1:\n\t"
+      "pushl $0x24\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lunit_create_initial_weapons_4\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[opnew]\n\t"
+      "leal -0x8c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[onew]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lunit_create_initial_weapons_4\n\t"
+      "pushl $4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lunit_create_initial_weapons_2\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1aad00]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lunit_create_initial_weapons_3\n\t"
+      ".Lunit_create_initial_weapons_2:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1b1db0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lunit_create_initial_weapons_4\n\t"
+      ".Lunit_create_initial_weapons_3:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[odel]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lunit_create_initial_weapons_4:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lunit_create_initial_weapons_1\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lunit_create_initial_weapons_5:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b1b2660_get), [tag] "m"(b1b2660_tag), [elem] "m"(b1b2660_elem), [opnew] "m"(b1b2660_opnew), [onew] "m"(b1b2660_onew), [gerun] "m"(b1b2660_gerun), [c1aad00] "m"(b1b2660_c1aad00), [c1b1db0] "m"(b1b2660_c1b1db0), [odel] "m"(b1b2660_odel)
+      : "memory");
 }
+#else
+#error "unit_create_initial_weapons: clang naked draft required"
+#endif
+
 
 /* unit_scripting_enter_vehicle (0x1b32d0) — XBE naked draft (batch 59). */
 #if defined(__clang__)
