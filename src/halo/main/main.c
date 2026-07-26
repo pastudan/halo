@@ -3210,12 +3210,32 @@ void FUN_00100380(void)
   *(char *)0x46da3b = 1;
 }
 
-void main_respawn(char flag)
+/* main_respawn (0x100390) — XBE naked draft (batch 198). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+void main_respawn(char flag __attribute__((unused)))
 {
-  *(char *)0x46da3c = 1;
-  if (flag)
-    *(int16_t *)0x46da4e = 0x5b;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movb $1, 0x46da3c\n\t"
+      "je .Lmain_respawn_1\n\t"
+      "movw $0x5b, 0x46da4e\n\t"
+      ".Lmain_respawn_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "main_respawn: clang naked draft required"
+#endif
+
 
 /* main_save_core (0x1003b0) — XBE naked draft (batch 178). */
 #if defined(__clang__)

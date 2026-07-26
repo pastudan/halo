@@ -932,11 +932,29 @@ void ai_debug_lineofsight_reset(void)
   (void)0;
 }
 
+/* set_real_point3d (0x53620) — XBE naked draft (batch 198). */
+#if defined(__clang__)
+static void *(*const b53620_memset)(void *, int, unsigned int) = csmemset;
+
+__attribute__((naked, noinline))
 void set_real_point3d(void)
 {
-  csmemset((void *)0x5abaa0, 0, 0xeec);
-  *(char *)0x5abaa4 = 1;
+  __asm__ volatile(
+      "pushl $0xeec\n\t"
+      "pushl $0\n\t"
+      "pushl $0x5abaa0\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0x5abaa4\n\t"
+      "ret\n\t"
+      :
+      : [memset] "m"(b53620_memset)
+      : "memory");
 }
+#else
+#error "set_real_point3d: clang naked draft required"
+#endif
+
 
 void ai_debug_get_last_path(float *vec_a, float *vec_b)
 {

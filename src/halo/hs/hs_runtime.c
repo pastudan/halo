@@ -6355,15 +6355,65 @@ void FUN_000ca160(int16_t scenario_index __attribute__((unused)), char teleport_
 #endif
 
 
-void FUN_000ca3f0(int object_handle, int16_t scenario_index)
-{
-  FUN_000ca160(scenario_index, 1, 1, object_handle);
-}
+/* FUN_000ca3f0 (0xca3f0) — XBE naked draft (batch 202). */
+#if defined(__clang__)
+static void (*const bca3f0_cca160)(int16_t scenario_index, char teleport_flag, char facing_flag, int object_handle) = FUN_000ca160;
 
-void FUN_000ca410(int object_handle, int16_t scenario_index)
+__attribute__((naked, noinline))
+void FUN_000ca3f0(int object_handle __attribute__((unused)), int16_t scenario_index __attribute__((unused)))
 {
-  FUN_000ca160(scenario_index, 1, 0, object_handle);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl $1\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cca160]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cca160] "m"(bca3f0_cca160)
+      : "memory");
 }
+#else
+#error "FUN_000ca3f0: clang naked draft required"
+#endif
+
+
+/* FUN_000ca410 (0xca410) — XBE naked draft (batch 202). */
+#if defined(__clang__)
+static void (*const bca410_cca160)(int16_t scenario_index, char teleport_flag, char facing_flag, int object_handle) = FUN_000ca160;
+
+__attribute__((naked, noinline))
+void FUN_000ca410(int object_handle __attribute__((unused)), int16_t scenario_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl $1\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cca160]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cca160] "m"(bca410_cca160)
+      : "memory");
+}
+#else
+#error "FUN_000ca410: clang naked draft required"
+#endif
+
 
 /* FUN_000ca430 (0xca430) — XBE naked draft (batch 137). */
 #if defined(__clang__)
@@ -6826,19 +6876,51 @@ int FUN_000caf80(int16_t name_index __attribute__((unused)))
 #endif
 
 
-char FUN_000cb940(int16_t param, int thread_index, const char *detail)
-{
-  const char *msg;
-  char *thread;
+/* FUN_000cb940 (0xcb940) — XBE naked draft (batch 198). */
+#if defined(__clang__)
+static void *(*const bcb940_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const bcb940_ccaa80)(int thread_index) = hs_get_thread_script_name;
+static void (*const bcb940_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
-  (void)param;
-  thread = (char *)datum_get(*(data_t **)0x5aa6c4, thread_index);
-  (void)thread;
-  msg = detail ? detail : (const char *)0x28092c;
-  (void)msg;
-  error(2, (const char *)0x280900, hs_get_thread_script_name(thread_index));
-  return 0;
+__attribute__((naked, noinline))
+char FUN_000cb940(int16_t param __attribute__((unused)), int thread_index __attribute__((unused)), const char *detail __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x5aa6c4, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "movl %%edi, %%eax\n\t"
+      "jne .LFUN_000cb940_1\n\t"
+      "movl $0x28092c, %%eax\n\t"
+      ".LFUN_000cb940_1:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ccaa80]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x280900\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(bcb940_dget), [ccaa80] "m"(bcb940_ccaa80), [c8f390] "m"(bcb940_c8f390)
+      : "memory");
 }
+#else
+#error "FUN_000cb940: clang naked draft required"
+#endif
+
 
 /* hs_runtime_update (0xcde00) — XBE naked draft (batch 143). */
 #if defined(__clang__)

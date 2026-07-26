@@ -269,25 +269,49 @@ void FUN_00130ec0(void)
 #endif
 
 
-/* 0x130ef0 */
+/* FUN_00130ef0 (0x130ef0) — XBE naked draft (batch 202). */
+#if defined(__clang__)
+static void (*const b130ef0_c119b20)(data_t *data) = data_delete_all;
+
+__attribute__((naked, noinline))
 void FUN_00130ef0(void)
 {
-  int eax = 0;
-
-  data_delete_all((void *)(uintptr_t)eax);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x5a90d4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119b20]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c119b20] "m"(b130ef0_c119b20)
+      : "memory");
 }
+#else
+#error "FUN_00130ef0: clang naked draft required"
+#endif
 
-/* 0x130f00 */
+
+/* FUN_00130f00 (0x130f00) — XBE naked draft (batch 202). */
+#if defined(__clang__)
+static void (*const b130f00_c119550)(data_t *data) = data_make_invalid;
+
+__attribute__((naked, noinline))
 void FUN_00130f00(void)
 {
-  int eax = 0;
-
-  data_make_invalid((void *)(uintptr_t)eax);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x5a90d4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119550]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c119550] "m"(b130f00_c119550)
+      : "memory");
 }
+#else
+#error "FUN_00130f00: clang naked draft required"
+#endif
+
 
 /* FUN_00130f10 (0x130f10) — XBE naked draft (batch 168). */
 #if defined(__clang__)
@@ -1448,15 +1472,27 @@ void FUN_001319b0(void)
 #endif
 
 
-/* 0x1319e0 */
+/* FUN_001319e0 (0x1319e0) — XBE naked draft (batch 202). */
+#if defined(__clang__)
+static void (*const b1319e0_c119b20)(data_t *data) = data_delete_all;
+
+__attribute__((naked, noinline))
 void FUN_001319e0(void)
 {
-  int eax = 0;
-
-  data_delete_all((void *)(uintptr_t)eax);
-
-  (void)eax;
+  __asm__ volatile(
+      "movl 0x5a90d0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119b20]\n\t"
+      "popl %%ecx\n\t"
+      "ret\n\t"
+      :
+      : [c119b20] "m"(b1319e0_c119b20)
+      : "memory");
 }
+#else
+#error "FUN_001319e0: clang naked draft required"
+#endif
+
 
 /* 0x1319f0 */
 void FUN_001319f0(void)

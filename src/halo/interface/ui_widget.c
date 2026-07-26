@@ -1942,22 +1942,38 @@ void ui_widget_clear_last_error_index(void)
   *(int *)0x31e4c0 = -1;
 }
 
-/* --- ui_widget.obj batch1 drafts (2026-07-26) --- */
+/* event_controller_index_compatible_with_widget (0xe3b80) — XBE naked draft (batch 198). */
+#if defined(__clang__)
 
-bool event_controller_index_compatible_with_widget(void *widget,
-                                                   void *event_data)
+
+__attribute__((naked, noinline))
+bool event_controller_index_compatible_with_widget(void *widget __attribute__((unused)), void *event_data __attribute__((unused)))
 {
-  int16_t event_player;
-  int16_t widget_player;
-
-  event_player = *(int16_t *)((char *)event_data + 8);
-  if (event_player == -1)
-    return true;
-  widget_player = *(int16_t *)((char *)widget + 2);
-  if (event_player == widget_player)
-    return true;
-  return false;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movw 0x8(%%eax), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Levent_controller_index_compatible_with_widget_1\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "cmpw 0x2(%%ecx), %%ax\n\t"
+      "je .Levent_controller_index_compatible_with_widget_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Levent_controller_index_compatible_with_widget_1:\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "event_controller_index_compatible_with_widget: clang naked draft required"
+#endif
+
 
 /* set_ui_plasma_effect_color (0xe3bb0) — XBE naked draft (batch 165). */
 #if defined(__clang__)
