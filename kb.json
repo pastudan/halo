@@ -18290,7 +18290,7 @@
         {
           "addr": "0xe0a60",
           "decl": "void player_ui_set_game_variant(void *variant);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0ab0",
@@ -20311,7 +20311,7 @@
         {
           "addr": "0xe21e0",
           "decl": "void D3DXMatrixIdentity(float *m);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe2220",
@@ -27133,7 +27133,7 @@
         {
           "addr": "0xe55e0",
           "decl": "unsigned int modulate_pixel32_by_real_alpha(unsigned int pixel, float alpha);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe5620",
@@ -28148,7 +28148,7 @@
         {
           "addr": "0x19f0e0",
           "decl": "int uremove(const wchar_t *path);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f150",
@@ -28173,7 +28173,7 @@
         {
           "addr": "0x19f2b0",
           "decl": "int uatoi(const wchar_t *s);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19f320",
