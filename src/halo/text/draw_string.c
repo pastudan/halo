@@ -763,34 +763,12 @@ void draw_string_get_color(void)
 #endif
 
 
-/* FUN_0019B7E0 (0x19b7e0) — XBE naked draft (batch 289). */
-#if defined(__clang__)
-static void *(*const b19b7e0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-void FUN_0019B7E0(void)
+/* FUN_0019B7E0 (0x19b7e0) — readable C lift. */
+void FUN_0019B7E0(int tag_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x666f6e74\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%esi, 0x4d9b0c\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b19b7e0_tag)
-      : "memory");
+  tag_get(0x666f6e74, tag_index);
+  *(int *)0x4d9b0c = tag_index;
 }
-#else
-#error "FUN_0019B7E0: clang naked draft required"
-#endif
-
 
 /* draw_string_set_highlight (0x19b8f0) — readable C lift. */
 void draw_string_set_highlight(short a, short b)

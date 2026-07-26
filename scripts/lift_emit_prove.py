@@ -137,7 +137,25 @@ def run_uni(name: str, addr: int, seeds: int, timeout: float) -> dict:
     }
 
 
-def update_decl(addr: int, decl: str) -> None:
+def sync_decl_h(name: str, decl: str) -> bool:
+    """Patch HFUNC line in build/generated/decl.h (cmake regen is often stale)."""
+    path = ROOT / "build" / "generated" / "decl.h"
+    if not path.exists():
+        return False
+    d = (decl or "").strip().rstrip(";")
+    if not d or d.lstrip().startswith("*") or "(" not in d:
+        return False
+    text = path.read_text(encoding="utf-8", errors="replace")
+    pat = re.compile(rf"^HFUNC\s+.+\b{re.escape(name)}\s*\([^;]*\);", re.M)
+    new_line = f"HFUNC {d};"
+    new_text, n = pat.subn(new_line, text, count=1)
+    if n:
+        path.write_text(new_text, encoding="utf-8")
+        return True
+    return False
+
+
+def update_decl(addr: int, decl: str, name: str | None = None) -> None:
     kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
     decl = (decl or "").strip()
     if (
@@ -155,6 +173,8 @@ def update_decl(addr: int, decl: str) -> None:
             if isinstance(fn, dict) and fn.get("addr") and int(fn["addr"], 16) == addr:
                 fn["decl"] = decl
                 KB_PATH.write_text(json.dumps(kb, indent=2) + "\n", encoding="utf-8")
+                if name:
+                    sync_decl_h(name, decl)
                 return
 
 
@@ -374,10 +394,10 @@ def main() -> int:
             re.M,
         )
         if sig_m:
-            update_decl(ai, sig_m.group(0).strip())
-            if not regen_decl_h():
-                print("  decl.h FAIL", flush=True)
-                continue
+            update_decl(ai, sig_m.group(0).strip(), name=name)
+            # Best-effort cmake regen; direct HFUNC patch above is authoritative.
+            regen_decl_h()
+            sync_decl_h(name, sig_m.group(0).strip())
         new_text = text[: span[0]] + c_src + "\n" + text[span[1] :]
         if any(t in c_src for t in ("uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t")):
             if "#include <stdint.h>" not in new_text:
