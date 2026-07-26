@@ -298,7 +298,8 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
                 arg = nm
         if not fn or not ps:
             return None
-        return f"{sig}\n{{\n  (void){ps[0]};\n  {fn}({arg});\n}}\n"
+        # ebx holds ps[0] (register arg); stack push is first cdecl arg.
+        return f"{sig}\n{{\n  {fn}({arg}, {ps[0]});\n}}\n"
 
     # F(arg0, 0)
     if (
@@ -560,10 +561,12 @@ def try_emit(insns: list[str], decl: str, name: str, name_by: dict) -> str | Non
         g = re.search(r"\[0x([0-9a-fA-F]+)\]", mid[1][1])
         if not fn or not ps or not g:
             return None
-        ret = "" if is_void else "return "
-        return (
-            f"{sig}\n{{\n  {ret}{fn}(*(void **)0x{g.group(1)}, {ps[0]});\n}}\n"
-        )
+        call = f"{fn}(*(void **)0x{g.group(1)}, {ps[0]})"
+        if is_void:
+            return f"{sig}\n{{\n  {call};\n}}\n"
+        if fn in ("terminal_output", "display_assert", "system_exit"):
+            return f"{sig}\n{{\n  {call};\n  return 0;\n}}\n"
+        return f"{sig}\n{{\n  return {call};\n}}\n"
 
 
     # store imm pointer through arg0: mov eax,[ebp+8]; mov dword ptr [eax], imm
@@ -1200,9 +1203,23 @@ def _emit_general_forward(mid, ret_op, sig, ps, is_void, name_by, callee):
     else:
         call = f"{fn}({', '.join(args)})"
     if ret0:
+        if is_void:
+            return f"{sig}\n{{\n  {call};\n}}\n"
         return f"{sig}\n{{\n  {call};\n  return 0;\n}}\n"
     if is_void:
         return f"{sig}\n{{\n  {call};\n}}\n"
+    # Callee may be void while wrapper returns a register leftover — call then 0.
+    # Avoid `return void_fn(...)` which fails to compile.
+    cal_is_void = False
+    # Heuristic: known void terminal/output style when args don't match decl arity
+    # is handled by not using return-on-call when fn name suggests void sinks.
+    if fn in (
+        "terminal_output",
+        "display_assert",
+        "system_exit",
+        "D3DDevice_SetVertexData4f",
+    ):
+        return f"{sig}\n{{\n  {call};\n  return 0;\n}}\n"
     return f"{sig}\n{{\n  return {call};\n}}\n"
 
 

@@ -342,6 +342,8 @@ def try_emit_ai(
         _emit_tried_to,
         _emit_datum_store16,
         _emit_debug_imm_wrapper,
+        _emit_float_range_assert_add,
+        _emit_and_two_calls,
     ):
         body, new_decl = emitter(frame, decl, name, name_by)
         if body:
@@ -713,6 +715,102 @@ def _emit_debug_imm_wrapper(frame, decl, name, name_by):
 }}
 """
     return body, None
+
+
+def _emit_float_range_assert_add(frame, decl, name, name_by):
+    """fld arg; fcomp lo/hi; fatal assert; fadd [esi+off]; fstp [esi+off]."""
+    if len(frame) < 18:
+        return None, None
+    if not (
+        frame[0] == ("fld", "dword ptr [ebp + 0xc]")
+        and frame[1][0] == "fcomp"
+        and frame[2] == ("fnstsw", "ax")
+        and frame[3] == ("test", "ah, 1")
+        and frame[4][0] == "jne"
+        and frame[5] == ("fld", "dword ptr [ebp + 0xc]")
+        and frame[6][0] == "fcomp"
+        and frame[7] == ("fnstsw", "ax")
+    ):
+        return None, None
+    ab = None
+    for i, (m, o) in enumerate(frame):
+        if m == "push" and o == "1":
+            ab = law.parse_assert(frame, i)
+            if ab:
+                break
+    if not ab:
+        return None, None
+    # trailing fadd/fstp [esi + imm]
+    add_i = next(
+        (
+            i
+            for i, (m, o) in enumerate(frame)
+            if m == "fadd" and "dword ptr [esi +" in o
+        ),
+        None,
+    )
+    if add_i is None or add_i + 1 >= len(frame):
+        return None, None
+    if frame[add_i + 1][0] != "fstp":
+        return None, None
+    off_m = re.search(r"\[esi \+ (0x[0-9a-f]+|\d+)\]", frame[add_i][1])
+    if not off_m:
+        return None, None
+    lo_m = re.search(r"\[(0x[0-9a-f]+)\]", frame[1][1])
+    hi_m = re.search(r"\[(0x[0-9a-f]+)\]", frame[6][1])
+    if not lo_m or not hi_m:
+        return None, None
+    off = int(off_m.group(1), 0)
+    new_decl = f"void {name}(void *ctx, float score, int type, void *position);"
+    body = f"""void {name}(void *ctx, float score, int type, void *position)
+{{
+  (void)ctx;
+  (void)type;
+  if (!(score >= *(float *){lo_m.group(1)} && score <= *(float *){hi_m.group(1)})) {{
+{law.assert_c(ab)}  }}
+  *(float *)((char *)position + 0x{off:x}) = *(float *)((char *)position + 0x{off:x}) + score;
+}}
+"""
+    return body, new_decl
+
+
+def _emit_and_two_calls(frame, decl, name, name_by):
+    """push a2,a1,a0; call F; if al: push a2; call G; return al1&&al2."""
+    if len(frame) < 14:
+        return None, None
+    # strip push ebx/esi prologue if present
+    work = list(frame)
+    saved = []
+    while work and work[0][0] == "push" and work[0][1] in ("ebx", "esi", "edi"):
+        saved.append(work.pop(0)[1])
+    if len(work) < 12:
+        return None, None
+    if not (
+        work[0] == ("mov", "eax, dword ptr [ebp + 0xc]")
+        and work[1] == ("mov", "ecx, dword ptr [ebp + 8]")
+    ):
+        return None, None
+    # find mov esi,[ebp+0x10]; push esi; push eax; push ecx; xor bl,bl; call
+    if not any(m == "mov" and o == "esi, dword ptr [ebp + 0x10]" for m, o in work[:8]):
+        return None, None
+    calls = [i for i, (m, o) in enumerate(work) if m == "call"]
+    if len(calls) < 2:
+        return None, None
+    f1 = callee_name(work[calls[0]][1], name_by)
+    f2 = callee_name(work[calls[1]][1], name_by)
+    if not f1 or not f2:
+        return None, None
+    new_decl = f"char {name}(int actor, int unit, int prop);"
+    body = f"""char {name}(int actor, int unit, int prop)
+{{
+  if (!{f1}(actor, unit, prop))
+    return 0;
+  if (!{f2}(prop))
+    return 0;
+  return 1;
+}}
+"""
+    return body, new_decl
 
 
 def _emit_53890(ops, decl, name, name_by):

@@ -18244,7 +18244,7 @@
         },
         {
           "addr": "0xe0740",
-          "decl": "void player_ui_set_single_player_local_player_controller(short player_index, short controller_index);",
+          "decl": "void player_ui_set_single_player_local_player_controller(void);",
           "name": "player_ui_set_single_player_local_player_controller",
           "ported": false
         },
@@ -20301,7 +20301,7 @@
         },
         {
           "addr": "0xe1f20",
-          "decl": "int __stdcall FUN_000e1f20(int unused, unsigned int reg, float a, float b, float c, float d);",
+          "decl": "void FUN_000e1f20(int a0, int a1, int a2, int a3, int a4, int a5);",
           "ported": false
         },
         {
