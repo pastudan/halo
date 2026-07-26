@@ -34348,12 +34348,12 @@
         },
         {
           "addr": "0x342a0",
-          "decl": "void actor_perception_refresh_test_object(void);",
+          "decl": "void actor_perception_refresh_test_object(int actor_handle, int unit_handle, void *primary_list, void *secondary_list);",
           "ported": false
         },
         {
           "addr": "0x34970",
-          "decl": "void actor_perception_create_orphan_from_friend(int param_1, int encounter_team, int actor_handle, int encounter_handle);",
+          "decl": "char actor_perception_create_orphan_from_friend(int actor_handle, int unit_handle, int encounter_team, int friend_prop);",
           "ported": false
         },
         {
@@ -36018,8 +36018,8 @@
         },
         {
           "addr": "0x64400",
-          "decl": "void FUN_00064400(int actor_handle@<eax>, int prop_handle@<edi>);",
-          "ported": true
+          "decl": "void FUN_00064400(int actor_handle, int prop_handle);",
+          "ported": false
         },
         {
           "addr": "0x64540",
@@ -36079,22 +36079,22 @@
         },
         {
           "addr": "0x647c0",
-          "decl": "void FUN_000647c0(void);",
+          "decl": "void FUN_000647c0(int dest_prop, int src_prop);",
           "ported": false
         },
         {
           "addr": "0x648a0",
-          "decl": "void prop_orphan_transition(void);",
+          "decl": "int prop_orphan_transition(int actor_handle, int parent_prop);",
           "ported": false
         },
         {
           "addr": "0x64970",
-          "decl": "void prop_orphan_from_friend(void);",
+          "decl": "int prop_orphan_from_friend(int actor_handle, int parent_prop, int source_prop);",
           "ported": false
         },
         {
           "addr": "0x64a60",
-          "decl": "void prop_orphan_update_information(void);",
+          "decl": "void prop_orphan_update_information(int actor_handle, int parent_prop, int unused);",
           "ported": false
         },
         {

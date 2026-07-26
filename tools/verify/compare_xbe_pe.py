@@ -160,6 +160,15 @@ def main() -> int:
         ("actor_visibility_at_point", 0x314f0, 0x31850),
         ("actor_perception_unreachable", 0x32ac0, 0x32b50),
         ("FUN_0002f5f0", 0x2f5f0, 0x2f6e0),
+        # perception orphan + audibility wave (2026-07-26)
+        ("actor_audibility_at_point", 0x31850, 0x31a90),
+        ("actor_perception_refresh_test_object", 0x342a0, 0x34970),
+        ("actor_perception_create_orphan_from_friend", 0x34970, 0x34c80),
+        ("prop_orphan_from_friend", 0x64970, 0x64a60),
+        ("prop_orphan_transition", 0x648a0, 0x64970),
+        ("FUN_000647c0", 0x647c0, 0x648a0),
+        ("prop_orphan_update_information", 0x64a60, 0x64a80),
+        ("FUN_00064400", 0x64400, 0x645a0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

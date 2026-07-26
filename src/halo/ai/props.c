@@ -745,74 +745,124 @@ allocate_new:
   return prop_handle;
 }
 
-/* 0x647c0 */
-void FUN_000647c0(void)
+/* 0x647c0 — copy a prop record and reset orphan transition fields. */
+void FUN_000647c0(int dest_prop, int src_prop)
 {
-  datum_get((void *)0, 0);
-  datum_get((void *)0, 0);
-  csmemcpy((void *)0, (void *)0, 312);
+  char *dest;
+  char *src;
+  int16_t type;
+  int link4;
+  int link8;
+  int linkc;
+  float *default_fwd;
+
+  dest = (char *)datum_get(prop_data, dest_prop);
+  src = (char *)datum_get(prop_data, src_prop);
+  type = *(int16_t *)src;
+  link4 = *(int *)(src + 4);
+  link8 = *(int *)(src + 8);
+  linkc = *(int *)(src + 0xc);
+
+  csmemcpy(dest, src, 0x138);
+  *(int16_t *)dest = type;
+  *(int *)(dest + 4) = link4;
+  *(int *)(dest + 8) = link8;
+  *(int *)(dest + 0xc) = linkc;
+  *(int16_t *)(dest + 0x24) = 4;
+  *(int16_t *)(dest + 0x3a) = 0x384;
+  *(int16_t *)(dest + 0x3c) = 0;
+  *(char *)(dest + 0xb9) = 0;
+  *(char *)(dest + 0xba) = 0;
+  *(char *)(dest + 0xbb) = 0;
+  *(float *)(dest + 0x40) =
+      *(float *)(dest + 0xbc) - *(float *)(dest + 0x80);
+  *(float *)(dest + 0x44) =
+      *(float *)(dest + 0xc0) - *(float *)(dest + 0x84);
+  *(float *)(dest + 0x48) =
+      *(float *)(dest + 0xc4) - *(float *)(dest + 0x88);
+  default_fwd = (float *)*(int *)0x31fc38;
+  *(float *)(dest + 0xd4) = default_fwd[0];
+  *(float *)(dest + 0xd8) = default_fwd[1];
+  *(float *)(dest + 0xdc) = default_fwd[2];
+  *(char *)(dest + 0x123) = 0;
 }
 
-/* 0x648a0 */
-void prop_orphan_transition(void)
+/* 0x648a0 — orphan a prop by splitting it from its parent chain. */
+int prop_orphan_transition(int actor_handle, int parent_prop)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *parent;
+  char *child;
+  int new_prop;
 
-  data_new_at_index((void *)0);
-  prop_add(0, 0, -1);
-  /* cmp esi, -1 -> je 0x6495b */
-  datum_get((void *)0, 0);
-  datum_get((void *)0, 0);
-  /* cmp ecx, eax -> je 0x6491b */
-  display_assert((void *)0x0025f4b4, (void *)0x0025f134, 341, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [edi + 0xc], -1 -> je 0x64941 */
-  display_assert((void *)0x0025f48c, (void *)0x0025f134, 342, 0);
-  system_exit(0);
-  FUN_000647c0();
+  new_prop = data_new_at_index(prop_data);
+  prop_add(actor_handle, new_prop, -1);
+  if (new_prop == -1)
+    return -1;
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  parent = (char *)datum_get(prop_data, parent_prop);
+  child = (char *)datum_get(prop_data, new_prop);
+  if (*(int *)(parent + 4) != actor_handle) {
+    display_assert("parent->actor_index == actor_index",
+                   "c:\\halo\\SOURCE\\ai\\props.c", 0x155, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(parent + 0xc) != -1) {
+    display_assert("parent->parent_prop_index == NONE",
+                   "c:\\halo\\SOURCE\\ai\\props.c", 0x156, 1);
+    system_exit(-1);
+  }
+
+  FUN_000647c0(new_prop, parent_prop);
+  *(int *)(parent + 0xc) = new_prop;
+  *(int *)(child + 0xc) = parent_prop;
+  return new_prop;
 }
 
-/* 0x64970 */
-void prop_orphan_from_friend(void)
+/* 0x64970 — create an orphan prop copied from a friend's prop record. */
+int prop_orphan_from_friend(int actor_handle, int parent_prop, int source_prop)
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *parent;
+  char *source;
+  char *child;
+  int new_prop;
+  int16_t status;
 
-  data_new_at_index((void *)0);
-  prop_add(0, 0, -1);
-  /* cmp esi, -1 -> je 0x64a54 */
-  datum_get((void *)0, 0);
-  datum_get((void *)0, 0);
-  datum_get((void *)0, 0);
-  /* cmp eax, ebx -> je 0x649fd */
-  display_assert((void *)0x0025f4b4, (void *)0x0025f134, 365, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [edi + 0xc], -1 -> je 0x64a23 */
-  display_assert((void *)0x0025f48c, (void *)0x0025f134, 366, 0);
-  system_exit(0);
-  FUN_000647c0();
-  /* cmp (int16_t)eax, 5 -> jg 0x64a54 */
+  new_prop = data_new_at_index(prop_data);
+  prop_add(actor_handle, new_prop, -1);
+  if (new_prop == -1)
+    return -1;
 
-  (void)eax;
-  (void)ebx;
-  (void)esi;
-  (void)edi;
+  parent = (char *)datum_get(prop_data, parent_prop);
+  source = (char *)datum_get(prop_data, source_prop);
+  child = (char *)datum_get(prop_data, new_prop);
+
+  if (*(int *)(parent + 4) != actor_handle) {
+    display_assert("parent->actor_index == actor_index",
+                   "c:\\halo\\SOURCE\\ai\\props.c", 0x16d, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(parent + 0xc) != -1) {
+    display_assert("parent->parent_prop_index == NONE",
+                   "c:\\halo\\SOURCE\\ai\\props.c", 0x16e, 1);
+    system_exit(-1);
+  }
+
+  FUN_000647c0(new_prop, source_prop);
+  *(int *)(parent + 0xc) = new_prop;
+  *(int *)(child + 0xc) = parent_prop;
+  status = *(int16_t *)(source + 0x24);
+  if (status >= 4 && status <= 5)
+    *(int16_t *)(child + 0x24) = status;
+  return new_prop;
 }
 
-/* 0x64a60 */
-void prop_orphan_update_information(void)
+/* 0x64a60 — reset orphan transition fields on a parent prop copy. */
+void prop_orphan_update_information(int actor_handle, int parent_prop,
+                                    int unused)
 {
-  FUN_000647c0();
+  (void)actor_handle;
+  (void)unused;
+  FUN_000647c0(parent_prop, parent_prop);
 }
 
 /* 0x64b40 — create/refresh a prop acknowledgement for a perceived unit. */

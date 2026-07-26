@@ -1303,40 +1303,122 @@ int16_t actor_visibility_at_point(int actor_handle, float *out_pos, float *head_
   return 0;
 }
 
-/* 0x31850 */
-int actor_audibility_at_point(int actor_handle, void *input_block, float *position, void *location, short volume, int range_scale, short flags)
+extern void *scenario_get(void);
+extern uint8_t structure_bsp_cluster_sound_encoding(void *bsp,
+                                                    int16_t from_cluster,
+                                                    int16_t to_cluster);
+
+/* 0x31850 — audibility level from volume, distance, and cluster encoding. */
+int actor_audibility_at_point(int actor_handle, void *input_block,
+                              float *position, void *location, short volume,
+                              int range_scale, short flags)
 {
-  int eax = 0;
-  int ebx = 0;
-  int edx = 0;
-  int edi = 0;
+  char *actor;
+  char *encounter;
+  char *in;
+  char *loc;
+  float range;
+  float delta[3];
+  float rel_dot;
+  float dist_sq;
+  float attenuation;
+  float sqrt_dist;
+  int16_t result;
+  int profile;
+  void *scenario;
+  uint8_t encoding;
 
-  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), actor_handle);
-  tag_get('rtca', 0);
-  /* relift: cmp word ptr [edi + 0x28], -1 -> je 0x31a80 */
-  /* relift: cmp word ptr [edx + 4], -1 -> je 0x31a80 */
-  /* relift: relift: fcomp dword ptr [0x2533c0] */
-  /* cmp (int16_t)ebx, 2 -> jne 0x31921 */
-  /* cmp (int16_t)ebx, 1 -> jne 0x31933 */
-  /* cmp (int16_t)eax, 4 -> jne 0x31948 */
-  /* cmp (int16_t)eax, 1 -> jne 0x31959 */
-  /* cmp (int16_t)eax, 3 -> jne 0x3196b */
-  FUN_0018e5c0(0);
-  /* test (char)eax, (char)eax -> jne 0x3198b */
-  FUN_0018e5c0((int)(uintptr_t)location);
-  /* test (char)eax, (char)eax -> je 0x31997 */
-  /* test (int16_t)eax, (int16_t)eax -> je 0x319b2 */
-  /* cmp (int16_t)eax, 1 -> je 0x319b2 */
-  /* test (char)eax, 0x41 -> jne 0x31a31 */
-  scenario_get();
-  structure_bsp_cluster_sound_encoding((void *)0, 0, 0);
-  /* test (char)eax, 0x41 -> je 0x31a15 */
-  return 0;
+  (void)range_scale;
 
-  (void)eax;
-  (void)ebx;
-  (void)edx;
-  (void)edi;
+  attenuation = 0.0f;
+  result = 0;
+  if (volume == 0)
+    return 0;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  encounter = (char *)tag_get('rtca', *(int *)(actor + 0x58));
+  in = (char *)input_block;
+  loc = (char *)location;
+
+  if (*(int16_t *)(in + 0x28) == -1)
+    return 0;
+  if (*(int16_t *)(loc + 4) == -1)
+    return 0;
+
+  range = *(float *)(encounter + 0x4c);
+  delta[0] = position[0] - *(float *)in;
+  delta[1] = position[1] - *(float *)(in + 4);
+  delta[2] = position[2] - *(float *)(in + 8);
+  dist_sq = delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2];
+
+  rel_dot = delta[0] * *(float *)(in + 0x18) +
+            delta[1] * *(float *)(in + 0x1c) +
+            delta[2] * *(float *)(in + 0x20);
+  if (rel_dot <= *(float *)0x2533c0)
+    range *= *(float *)0x2533f0;
+
+  switch (*(int16_t *)(actor + 0x6a)) {
+  case 2:
+    range *= *(float *)0x2533c4;
+    break;
+  case 1:
+    range *= *(float *)0x253524;
+    break;
+  default:
+    break;
+  }
+
+  switch (volume) {
+  case 4:
+    range *= *(float *)0x2549d4;
+    break;
+  case 1:
+    range *= *(float *)0x25614c;
+    break;
+  case 3:
+    range *= *(float *)0x2533c4;
+    break;
+  default:
+    break;
+  }
+
+  if (FUN_0018e5c0((int)(uintptr_t)(in + 0x24)) ||
+      FUN_0018e5c0((int)(uintptr_t)loc))
+    range *= *(float *)0x25337c;
+
+  if (flags != 0 && flags != 1)
+    range *= *(float *)0x2533c4;
+
+  if (range * range <= dist_sq)
+    goto profile;
+
+  scenario = scenario_get();
+  encoding = structure_bsp_cluster_sound_encoding(
+      scenario, *(int16_t *)(in + 0x28), *(int16_t *)(loc + 4));
+  if ((char)encoding < 0)
+    goto profile;
+
+  attenuation = (float)(encoding & 0x7f) * *(float *)0x256148;
+  sqrt_dist = sqrtf(dist_sq);
+  if (attenuation + attenuation < sqrt_dist)
+    sqrt_dist = attenuation + attenuation;
+  if (sqrt_dist <= range) {
+    result = (int16_t)(volume >= 3 ? 3 : 2);
+    goto finish;
+  }
+
+profile:
+  sqrt_dist = sqrtf(dist_sq);
+
+finish:
+  profile = (actor_handle & 0xffff) * 0x657c + *(int *)0x331f58;
+  *(float *)(profile + 0xa8) = range;
+  *(float *)(profile + 0xb0) = attenuation;
+  *(char *)(profile + 0xa4) = 1;
+  *(int16_t *)(profile + 0xa6) = result;
+  *(float *)(profile + 0xac) = sqrt_dist;
+  *(float *)(profile + 0xb4) = dist_sq;
+  return result;
 }
 
 /* 0x31a90 — fill actor sense input block from closest swarm member. */
@@ -2749,180 +2831,455 @@ void prop_status_refresh(int actor_handle, int prop_handle, float *out_pos)
   (void)player_present;
 }
 
-/* 0x342a0 */
-void actor_perception_refresh_test_object(void)
+/* 0x342a0 — evaluate a test object for perception refresh (weapons/attachments). */
+void actor_perception_refresh_test_object(int actor_handle, int unit_handle,
+                                          void *primary_list, void *secondary_list)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *actor;
+  char *unit;
+  char *owner_actor;
+  char *encounter;
+  char *unit_def;
+  char *proj_def;
+  char sense_block[0x74];
+  char sense_block2[0xac];
+  float unit_pos[3];
+  float sense_origin[3];
+  float dist_sq;
+  float sqrt_dist;
+  float weapon_range;
+  float time_delta;
+  int owner_handle;
+  int swarm_unit;
+  int prop_handle;
+  int child_unit;
+  int weapon_object;
+  int16_t list_count;
+  char friendly;
+  char in_fov;
+  char has_weapon;
+  char should_add;
+  char hidden_enc;
+  char desire_ok;
+  char list_slot;
 
-  datum_get((void *)(uintptr_t)ecx, 0);
-  object_get_and_verify_type(0, 0);
-  object_mark(0);
-  /* test (char)eax, (char)eax -> je 0x34930 */
-  /* test (int16_t)eax, (int16_t)eax -> jne 0x3471f */
-  object_get_world_position(0, (void *)(uintptr_t)edx);
-  actor_perception_find_sense_position(0, (float *)(uintptr_t)ecx, 0, (void *)(uintptr_t)eax);
-  /* cmp eax, -1 -> je 0x34363 */
-  actor_perception_unit_from_swarm(0, 0, 0, 0);
-  object_get_and_verify_type(0, 0);
-  object_get_world_position(0, (void *)(uintptr_t)edx);
-  /* cmp edi, -1 -> je 0x34930 */
-  /* relift: cmp ebx, dword ptr [ebp + 8] -> je 0x34930 */
-  tag_get('tinu', 0);
-  game_allegiance_get_team_is_friendly(eax, ecx);
-  /* test (char)eax, 4 -> je 0x343e0 */
-  /* relift: cmp word ptr [esi + 0x3d0], 0 -> jne 0x343e0 */
-  game_time_get();
-  /* test (char)eax, 0x41 -> jne 0x34471 */
-  /* test (char)eax, (char)eax -> jne 0x34450 */
-  /* relift: cmp byte ptr [esi + 0x253], 0x1e -> jne 0x34471 */
-  FUN_0002f5f0(0, 0.0f, 0.0f, 0, 0, 0);
-  datum_get((void *)(uintptr_t)edx, 0);
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* test eax, eax -> je 0x344c7 */
-  /* test (char)ecx, (char)ecx -> je 0x34930 */
-  /* test (char)ecx, (char)ecx -> jne 0x34930 */
-  /* test (char)eax, 0x41 -> je 0x34930 */
-  /* test (char)eax, (char)eax -> je 0x34662 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  object_get_and_verify_type(0, 0);
-  /* cmp ecx, edx -> jg 0x34520 */
-  /* cmp ecx, -1 -> je 0x34536 */
-  /* cmp eax, -1 -> je 0x34534 */
-  /* cmp eax, ecx -> jge 0x34536 */
-  /* test (char)eax, (char)eax -> jne 0x3454f */
-  /* test (char)eax, (char)eax -> jne 0x3454f */
-  /* test (char)eax, (char)eax -> jne 0x3454f */
-  /* test (char)ebx, (char)ebx -> je 0x34930 */
-  /* test (char)eax, (char)eax -> je 0x345f5 */
-  /* test (char)eax, (char)eax -> je 0x346da */
-  /* test (char)eax, (char)eax -> je 0x345b4 */
-  display_assert((char *)0x00256354, (char *)0x00255fb0, 2966, 0);
-  system_exit(0);
-  /* cmp (int16_t)eax, 0x80 -> jge 0x34930 */
-  /* test (char)eax, 0x41 -> je 0x34575 */
-  /* test (char)ebx, (char)ebx -> je 0x3461c */
-  /* relift: cmp word ptr [ebp - 0x24], 0x96 -> jg 0x34930 */
-  actor_action_try_to_panic(0);
-  /* cmp (int16_t)eax, 1 -> jg 0x34930 */
-  /* relift: cmp word ptr [edi + 0x6a], 3 -> jge 0x3464b */
-  /* test (char)eax, (char)eax -> je 0x3468b */
-  /* test (char)eax, 0x41 -> jne 0x34682 */
-  /* relift: cmp word ptr [edi + 0x6e], 4 -> jl 0x346ab */
-  /* test (char)eax, (char)eax -> jne 0x346c9 */
-  /* test (char)eax, 0x41 -> je 0x346cd */
-  /* test (char)ecx, (char)ecx -> je 0x34930 */
-  prop_new_unacknowledged(0, 0, 0);
-  /* cmp eax, -1 -> je 0x34930 */
-  prop_position_refresh(0, 0, 0, 0, 0);
-  /* test (char)eax, (char)eax -> jne 0x34930 */
-  /* cmp (int16_t)eax, 1 -> jne 0x34748 */
-  /* relift: cmp dword ptr [esi + 0x2d4], -1 -> jne 0x34930 */
-  /* relift: FUN_00032170(NULL, actor, unit, 0) */
-  /* cmp (int16_t)eax, 5 -> jne 0x34930 */
-  tag_get('jorp', 0);
-  /* test (char)eax, 0x41 -> jne 0x34930 */
-  /* relift: cmp dword ptr [eax + 0xcc], -1 -> je 0x34797 */
-  /* relift: test byte ptr [eax + 0x1dc], 0x20 -> je 0x34930 */
-  object_get_world_position(0, (void *)(uintptr_t)ecx);
-  actor_perception_find_sense_position(0, (float *)(uintptr_t)eax, 0, (void *)(uintptr_t)edx);
-  /* test (char)eax, 0x41 -> jne 0x34930 */
-  /* relift: cmp dword ptr [ecx + 0x28c], edi -> je 0x34930 */
-  csmemset((void *)(uintptr_t)esi, 0, 108);
-  /* cmp eax, -1 -> je 0x34927 */
-  object_try_and_get_and_verify_type(0, 0);
-  /* test eax, eax -> je 0x34927 */
-  /* test dl, 3 -> je 0x34927 */
-  /* cmp esi, eax -> jne 0x34902 */
-  game_allegiance_get_team_is_friendly(ecx, eax);
-  /* test (char)eax, (char)eax -> jne 0x3492a */
-  /* cmp eax, -1 -> je 0x34953 */
-  /* relift: tail-call actor_perception_refresh_test_object(); */
-  /* cmp edi, -1 -> jne 0x342d0 */
+  if (unit_handle == -1)
+    return;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  actor = (char *)datum_get(actor_data, actor_handle);
+
+  for (;;) {
+    unit = (char *)object_get_and_verify_type(unit_handle, -1);
+    if (!object_mark(unit_handle))
+      goto next_attachment;
+
+    if (*(int16_t *)(unit + 0x64) != 0) {
+      if (primary_list != 0)
+        *(int16_t *)primary_list = (int16_t)(*(int16_t *)primary_list + 1);
+      goto next_attachment;
+    }
+
+    object_get_world_position(unit_handle, (vector3_t *)unit_pos);
+    actor_perception_find_sense_position(actor_handle, unit_pos, -1, sense_block);
+
+    owner_handle = *(int *)(unit + 0x1a8);
+    if (owner_handle == -1)
+      owner_handle = *(int *)(unit + 0x1a4);
+    swarm_unit = unit_handle;
+    if (owner_handle != -1) {
+      swarm_unit = actor_perception_unit_from_swarm(
+          actor_handle, unit_handle, 1, (float *)(actor + 0x120));
+      if (swarm_unit == -1)
+        goto next_attachment;
+      unit = (char *)object_get_and_verify_type(swarm_unit, 3);
+      object_get_world_position(swarm_unit, (vector3_t *)unit_pos);
+    }
+
+    if (swarm_unit == -1 || owner_handle == actor_handle)
+      goto next_attachment;
+
+    unit_def = (char *)tag_get('unit', *(int *)unit);
+    has_weapon = (char)(*(int *)(unit + 0x1c8) != -1);
+    friendly = game_allegiance_get_team_is_friendly(*(int16_t *)(unit + 0x68),
+                                                    *(int16_t *)(actor + 0x3e));
+
+    in_fov = 0;
+    if ((*(uint8_t *)(unit + 0xb6) & 4) != 0 &&
+        *(int16_t *)(unit + 0x3d0) == 0) {
+      if (*(int *)(unit + 0x3cc) != -1) {
+        in_fov = 1;
+        time_delta = (float)(game_time_get() - *(int *)(unit + 0x3cc));
+      } else {
+        time_delta = 32767.0f;
+      }
+    } else {
+      time_delta = 0.0f;
+    }
+
+    weapon_range = *(float *)(unit_def + 0x284);
+    sense_origin[0] = *(float *)(sense_block + 0xc);
+    sense_origin[1] = *(float *)(sense_block + 0x10);
+    sense_origin[2] = *(float *)(sense_block + 0x14);
+    {
+      float dx = unit_pos[0] - sense_origin[0];
+      float dy = unit_pos[1] - sense_origin[1];
+      float dz = unit_pos[2] - sense_origin[2];
+      dist_sq = dx * dx + dy * dy + dz * dz;
+    }
+
+    if (weapon_range > *(float *)0x2533c0) {
+      if (in_fov != 0 || *(char *)((char *)unit + 0x253) == 0x1e) {
+        sqrt_dist = sqrtf(dist_sq);
+        FUN_0002f5f0(actor_handle, weapon_range, sqrt_dist, swarm_unit,
+                     friendly, 0);
+      }
+    }
+
+    owner_actor = 0;
+    if (owner_handle != -1)
+      owner_actor = (char *)datum_get(actor_data, owner_handle);
+
+    should_add = 0;
+    list_slot = 0;
+
+    if (!has_weapon) {
+      if (owner_actor == 0 || *(char *)(owner_actor + 8) == 0 ||
+          *(char *)(owner_actor + 0x13) != 0)
+        goto skip_desire;
+      if (dist_sq <= *(float *)0x255fe0)
+        goto skip_desire;
+    } else if (friendly != 0) {
+      goto skip_desire;
+    } else if (dist_sq <= *(float *)0x255fe0) {
+      goto skip_desire;
+    }
+
+    if (in_fov != 0) {
+      char max_teams;
+      char actor_teams;
+      char unit_teams;
+      desire_ok = 1;
+
+      if (*(int *)(actor + 0x34) != -1) {
+        encounter = (char *)datum_get(*(void **)0x5ab270, *(int *)(actor + 0x34));
+        max_teams = *(char *)(encounter + 0x58);
+        actor_teams = *(char *)(actor + 0x3a0);
+        unit_teams = *(char *)(unit + 0x3cc);
+        if (max_teams < actor_teams)
+          max_teams = actor_teams;
+        if (max_teams != -1 && unit_teams != -1 && unit_teams < max_teams)
+          desire_ok = 0;
+
+        hidden_enc = (char)(*(char *)(encounter + 0x45) == 0 &&
+                            *(char *)(encounter + 0x44) == 0 &&
+                            *(char *)(encounter + 0x42) == 0);
+        if (desire_ok != 0 && hidden_enc != 0) {
+          if (dist_sq > *(float *)0x255fdc * *(float *)0x255fdc)
+            goto skip_desire;
+        } else if (desire_ok != 0 && dist_sq > *(float *)0x2533c0 * *(float *)0x2533c0) {
+          goto skip_desire;
+        }
+      }
+
+      if (desire_ok != 0 && actor_action_try_to_panic(actor_handle) > 1)
+        goto skip_desire;
+
+      if (desire_ok != 0) {
+        float threshold = *(float *)0x254e74;
+        if (*(int16_t *)(actor + 0x6a) < 3)
+          threshold = *(float *)0x254df8;
+        if (dist_sq > threshold * threshold)
+          goto skip_desire;
+      }
+    } else if (dist_sq > *(float *)0x255fdc * *(float *)0x255fdc) {
+      goto skip_desire;
+    } else if (friendly != 0) {
+      if (dist_sq > *(float *)0x255fd8 * *(float *)0x255fd8)
+        should_add = 1;
+      else
+        should_add = 0;
+      if (*(int16_t *)(actor + 0x6e) >= 4)
+        should_add = 1;
+      else if (*(char *)(actor + 0x1cc) == 0) {
+        should_add = 1;
+        if (dist_sq > *(float *)0x254e74 * *(float *)0x254e74)
+          should_add = 0;
+      } else {
+        should_add = 0;
+      }
+      if (should_add == 0)
+        goto skip_desire;
+      list_slot = 1;
+    }
+
+    if (in_fov != 0) {
+      void *target_list = friendly ? secondary_list : primary_list;
+
+      if (target_list != 0) {
+        list_count = *(int16_t *)((char *)target_list + 2);
+        if (list_count < 0x80) {
+          int idx = list_count;
+          int base = idx + idx * 2;
+
+          *(int *)((char *)target_list + base * 4 + 8) = -1;
+          *(int *)((char *)target_list + base * 4 + 4) = swarm_unit;
+          *(float *)((char *)target_list + base * 4) = dist_sq;
+          *(int16_t *)((char *)target_list + 2) = list_count + 1;
+        }
+      }
+      goto next_attachment;
+    }
+
+    if (should_add != 0) {
+      void *target_list = list_slot ? secondary_list : primary_list;
+
+      if (target_list != 0) {
+        list_count = *(int16_t *)((char *)target_list + 2);
+        if (list_count < 0x80) {
+          int idx = list_count;
+          int base = idx + idx * 2;
+
+          *(int *)((char *)target_list + base * 4 + 8) = -1;
+          *(int *)((char *)target_list + base * 4 + 4) = swarm_unit;
+          *(float *)((char *)target_list + base * 4) = dist_sq;
+          *(int16_t *)((char *)target_list + 2) = list_count + 1;
+        }
+      }
+      goto next_attachment;
+    }
+
+    if (!has_weapon) {
+      prop_handle =
+          prop_new_unacknowledged(actor_handle, swarm_unit, friendly);
+      if (prop_handle == -1)
+        goto next_attachment;
+      prop_position_refresh(actor_handle, prop_handle, (float *)sense_block2, 0,
+                            0);
+      if (in_fov != 0)
+        goto next_attachment;
+      if (primary_list != 0)
+        *(int16_t *)primary_list = (int16_t)(*(int16_t *)primary_list + 1);
+    }
+
+    if (*(int *)(unit + 0x2d4) == -1)
+      FUN_00032170(0, actor_handle, swarm_unit, 0);
+
+    if (*(int16_t *)(actor + 0x280) == 5) {
+      proj_def = (char *)tag_get('jorp', *(int *)unit);
+      if (*(int *)(unit + 0xcc) == -1 ||
+          (*(uint8_t *)(unit + 0x1dc) & 0x20) != 0) {
+        object_get_world_position(unit_handle, (vector3_t *)unit_pos);
+        actor_perception_find_sense_position(actor_handle, unit_pos, -1,
+                                             sense_block2);
+        {
+          float dx = unit_pos[0] - *(float *)(sense_block2 + 0xc);
+          float dy = unit_pos[1] - *(float *)(sense_block2 + 0x10);
+          float dz = unit_pos[2] - *(float *)(sense_block2 + 0x14);
+          sqrt_dist = sqrtf(dx * dx + dy * dy + dz * dz);
+        }
+
+        if (*(float *)(proj_def + 0x1a8) + *(float *)0x253f34 > sqrt_dist) {
+          if (*(int16_t *)(actor + 0x280) < 2 ||
+              (*(int16_t *)(actor + 0x280) == 2 &&
+               *(int *)(actor + 0x28c) != unit_handle &&
+               sqrt_dist > *(float *)(actor + 0x2d4))) {
+            csmemset(actor + 0x280, 0, 0x6c);
+            *(int16_t *)(actor + 0x280) = 2;
+            *(int *)(actor + 0x28c) = unit_handle;
+            *(float *)(actor + 0x294) = *(float *)(proj_def + 0x1a8);
+            *(float *)(actor + 0x298) = unit_pos[0];
+            *(float *)(actor + 0x29c) = unit_pos[1];
+            *(float *)(actor + 0x2a0) = unit_pos[2];
+            *(int *)(actor + 0x2a4) = *(int *)(unit + 0x18);
+            *(int *)(actor + 0x2a8) = *(int *)(unit + 0x1c);
+            *(int *)(actor + 0x2ac) = *(int *)(unit + 0x20);
+            *(int16_t *)(actor + 0x284) = 0x1e;
+            *(char *)(actor + 0x286) = 0;
+            *(int16_t *)(actor + 0x282) = 0;
+
+            weapon_object = *(int *)(unit + 0x74);
+            if (weapon_object != -1) {
+              char *weapon_type = (char *)object_try_and_get_and_verify_type(
+                  weapon_object, -1);
+              if (weapon_type != 0) {
+                char type_mask =
+                    (char)(1 << *(uint8_t *)(weapon_type + 0x64));
+                if ((type_mask & 3) != 0) {
+                  if (*(int *)(actor + 0x18) != -1 &&
+                      weapon_object == *(int *)(actor + 0x18))
+                    *(int16_t *)(actor + 0x282) = 2;
+                  else if (!game_allegiance_get_team_is_friendly(
+                               *(int16_t *)(unit + 0x68),
+                               *(int16_t *)(actor + 0x3e)))
+                    *(int16_t *)(actor + 0x282) = 1;
+                }
+              }
+            }
+            *(int *)(actor + 0x290) = *(int *)(unit + 0x74);
+          }
+        }
+      }
+    }
+
+skip_desire:
+    (void)owner_actor;
+    (void)encounter;
+    (void)time_delta;
+    (void)hidden_enc;
+    (void)desire_ok;
+    (void)list_slot;
+
+next_attachment:
+    weapon_object = *(int *)(unit + 0xc8);
+    if (weapon_object != -1) {
+      actor_perception_refresh_test_object(actor_handle, weapon_object,
+                                           secondary_list, primary_list);
+    }
+    child_unit = *(int *)(unit + 0xc4);
+    if (child_unit == -1)
+      break;
+    unit_handle = child_unit;
+  }
 }
 
-/* 0x34970 */
-void actor_perception_create_orphan_from_friend(int param_1, int encounter_team, int actor_handle, int encounter_handle)
+/* 0x34970 — create an orphan prop acknowledgement from a friend's prop. */
+char actor_perception_create_orphan_from_friend(int actor_handle, int unit_handle,
+                                                int encounter_team,
+                                                int friend_prop)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *prop;
+  char *parent;
+  char *orphan;
+  char local_44[0x44];
+  char refresh_parent;
+  char success;
+  int prop_handle;
+  int final_prop;
+  int parent_prop;
+  int orphan_prop;
+  int16_t status;
 
-  FUN_00064b40(param_1, encounter_team, 1, 0);
-  /* cmp edi, -1 -> je 0x34c6b */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), eax);
-  /* cmp (int16_t)eax, 2 -> jl 0x349c8 */
-  /* cmp (int16_t)eax, 3 -> jg 0x349c8 */
-  /* cmp ebx, -1 -> je 0x34b59 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
-  /* cmp (int16_t)eax, 1 -> jle 0x34a19 */
-  display_assert((char *)0x00256450, (char *)0x00255fb0, 3764, 1);
-  system_exit(-1);
-  /* cmp (int16_t)eax, 4 -> jl 0x34a2c */
-  /* cmp (int16_t)eax, 5 -> jle 0x34a4c */
-  display_assert((char *)0x00256430, (char *)0x00255fb0, 3765, 1);
-  system_exit(-1);
-  /* relift: cmp edx, dword ptr [ebp + 8] -> je 0x34a74 */
-  display_assert((char *)0x00256400, (char *)0x00255fb0, 3766, 1);
-  system_exit(-1);
-  /* relift: cmp dword ptr [ecx + 4], eax -> je 0x34a9f */
-  display_assert((char *)0x002563cc, (char *)0x00255fb0, 3767, 1);
-  system_exit(-1);
-  /* relift: cmp dword ptr [esi + 0xc], ebx -> je 0x34ac4 */
-  display_assert((char *)0x00256394, (char *)0x00255fb0, 3768, 1);
-  system_exit(-1);
-  /* relift: cmp dword ptr [edx + 0xc], edi -> je 0x34aec */
-  display_assert((char *)0x0025635c, (char *)0x00255fb0, 3769, 1);
-  system_exit(-1);
-  /* cmp eax, -1 -> je 0x34b0d */
-  prop_orphan_update_information();
-  prop_position_refresh(0, 0, 0, 0, 0);
-  prop_status_refresh(0, 0, 0);
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x34b64 */
-  /* cmp (int16_t)eax, 1 -> jle 0x34b84 */
-  display_assert((char *)0x00256450, (char *)0x00255fb0, 3807, 1);
-  system_exit(-1);
-  /* cmp eax, -1 -> je 0x34bc5 */
-  prop_orphan_from_friend();
-  /* cmp edi, -1 -> je 0x34be8 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), eax);
-  prop_position_refresh(0, 0, 0, 0, 0);
-  prop_orphan_transition();
-  /* cmp edi, -1 -> jne 0x34bf1 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), eax);
-  /* test esi, esi -> je 0x34c61 */
-  /* cmp ebx, -1 -> je 0x34c2e */
-  /* cmp eax, -1 -> je 0x34c44 */
-  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), encounter_handle);
-  /* relift: cmp word ptr [eax + 0x32], 2 -> jl 0x34c44 */
-  actor_get_perception_knowledge(param_1, eax);
-  actor_compute_prop_target_weight(param_1, eax);
+  success = 1;
+  prop_handle = FUN_00064b40(actor_handle, unit_handle, 1, 0);
+  if (prop_handle == -1)
+    return success;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  final_prop = prop_handle;
+
+  prop = (char *)datum_get(prop_data, prop_handle);
+  status = *(int16_t *)(prop + 0x24);
+  if (status >= 2 && status <= 3) {
+    success = 0;
+    goto finish;
+  }
+
+  parent_prop = *(int *)(prop + 0xc);
+  if (parent_prop == -1) {
+    status = *(int16_t *)(prop + 0x24);
+    if (status < 0) {
+      display_assert("prop->type >= 0",
+                     "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xedf, 1);
+      system_exit(-1);
+    }
+    if (status > 1) {
+      display_assert("prop->type <= 1",
+                     "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xedf, 1);
+      system_exit(-1);
+    }
+
+    if (friend_prop != -1) {
+      orphan_prop =
+          prop_orphan_from_friend(actor_handle, prop_handle, friend_prop);
+      if (orphan_prop == -1)
+        return 0;
+      orphan = (char *)datum_get(prop_data, orphan_prop);
+      *(int *)(orphan + 0x18) = *(int *)(prop + 0x18);
+      *(int *)(orphan + 0x1c) = *(int *)(prop + 0x1c);
+      *(char *)(orphan + 0x14) = *(char *)(prop + 0x14);
+    } else {
+      prop_position_refresh(actor_handle, prop_handle, (float *)local_44, 0, 0);
+      orphan_prop = prop_orphan_transition(actor_handle, prop_handle);
+      if (orphan_prop == -1)
+        return 0;
+    }
+    prop = (char *)datum_get(prop_data, orphan_prop);
+    final_prop = orphan_prop;
+    goto finish;
+  }
+
+  parent = (char *)datum_get(prop_data, parent_prop);
+  if (status < 0 || status > 1) {
+    display_assert("prop->type <= 1",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb4, 1);
+    system_exit(-1);
+  }
+
+  status = *(int16_t *)(parent + 0x24);
+  if (status >= 4 && status <= 5) {
+    display_assert("parent->type < 4 || parent->type > 5",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb5, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(prop + 4) != actor_handle) {
+    display_assert("prop->actor_index == actor_index",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb6, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(parent + 4) != actor_handle) {
+    display_assert("parent->actor_index == actor_index",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb7, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(prop + 0xc) != parent_prop) {
+    display_assert("prop->parent_prop_index == parent_prop_index",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb8, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(parent + 0xc) != prop_handle) {
+    display_assert("parent->parent_prop_index == prop_index",
+                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xeb9, 1);
+    system_exit(-1);
+  }
+
+  refresh_parent = 0;
+  if (friend_prop != -1) {
+    prop_orphan_update_information(actor_handle, parent_prop, friend_prop);
+    *(int *)(prop + 0x18) = *(int *)(parent + 0x18);
+  } else {
+    *(int16_t *)(parent + 0x24) = 4;
+    *(int16_t *)(parent + 0x3c) = 0;
+    refresh_parent = 1;
+  }
+
+  prop_position_refresh(actor_handle, parent_prop, (float *)local_44, 1,
+                        refresh_parent);
+  prop_status_refresh(actor_handle, parent_prop, (float *)local_44);
+  prop = (char *)datum_get(prop_data, parent_prop);
+  final_prop = parent_prop;
+
+finish:
+  if (prop != 0) {
+    if (encounter_team != -1) {
+      if (friend_prop != -1) {
+        char *enc =
+            (char *)datum_get(*(void **)0x5ab270, friend_prop);
+        if (*(int16_t *)(enc + 0x32) >= 2) {
+          *(char *)(prop + 0xb8) = 1;
+          *(int16_t *)(prop + 0xb0) = 0;
+          *(int *)(prop + 0xb4) = encounter_team;
+        }
+      } else {
+        *(char *)(prop + 0xb8) = 1;
+        *(int16_t *)(prop + 0xb0) = 0;
+        *(int *)(prop + 0xb4) = encounter_team;
+      }
+    }
+    *(char *)(prop + 0xa4) =
+        (char)actor_get_perception_knowledge(actor_handle, final_prop);
+    *(float *)(prop + 0x50) =
+        actor_compute_prop_target_weight(actor_handle, final_prop);
+  }
+  return success;
 }
 
 /* 0x34c80 */
@@ -3039,12 +3396,12 @@ void actor_perception_refresh(void)
   /* relift: test dword ptr [ebx + eax*4], edx -> je 0x35306 */
   cluster_partition_object_iter_first((void *)0, 0);
   /* cmp eax, -1 -> je 0x352c6 */
-  actor_perception_refresh_test_object();
+  /* relift: actor_perception_refresh_test_object(actor_handle, unit_handle, primary_list, secondary_list); */
   cluster_partition_object_iter_next((void *)0);
   /* cmp eax, -1 -> jne 0x352a0 */
   cluster_get_first_noncollideable_object((void *)0, 0);
   /* cmp eax, -1 -> je 0x35306 */
-  actor_perception_refresh_test_object();
+  /* relift: actor_perception_refresh_test_object(actor_handle, unit_handle, primary_list, secondary_list); */
   cluster_get_next_noncollideable_object((void *)0);
   /* cmp eax, -1 -> jne 0x352e0 */
   /* cmp eax, edx -> jl 0x35270 */
