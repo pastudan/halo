@@ -5161,20 +5161,22 @@ void encounter_set_respawn(int encounter_handle, char flag)
 }
 
 
-/* FUN_00053bf0 (0x53bf0) — readable C lift. */
+/* FUN_00053bf0 (0x53bf0) — readable C lift (debug overlay row). */
 void FUN_00053bf0(void)
 {
   int16_t vals[3];
-  void (*draw)(void *buf, int count, int16_t *v) =
-      (void (*)(void *, int, int16_t *))FUN_00053800;
+  char *buf;
+  void *color;
 
   vals[0] = 0x96;
   vals[1] = 0x12c;
   vals[2] = 0x1c2;
-  crt_sprintf((char *)0x5ab280, (const char *)0x25c218,
+  buf = (char *)0x5ab280;
+  crt_sprintf(buf, (const char *)0x25c218,
               (int)*(int16_t *)0x5ac76e, (int)*(int16_t *)0x5ac7f6,
               (int)*(int16_t *)0x5ac87e);
-  draw((void *)0x5ab280, 3, vals);
+  color = *(void **)0x2ee6c4;
+  FUN_00053800(buf, 3, vals, color);
 }
 
 /* 0x00053b80 — debug overlay row: collision / line-of-sight / line-of-fire /

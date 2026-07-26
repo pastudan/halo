@@ -34863,8 +34863,9 @@
         },
         {
           "addr": "0x4a460",
-          "decl": "void FUN_0004a460(int a0, int a1, void *buf, int buf_size, int max_entries);",
-          "ported": false
+          "decl": "void FUN_0004a460(int count, const char **names, unsigned int *bitvec, int vector_size, int16_t (*lookup)(const char *));",
+          "ported": false,
+          "name": "FUN_0004a460"
         },
         {
           "addr": "0x4a650",
@@ -35395,7 +35396,7 @@
         {
           "addr": "0x53bf0",
           "decl": "void FUN_00053bf0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x53c50",
