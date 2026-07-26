@@ -3262,93 +3262,25 @@ void main_load_core_at_startup(void)
   csstrcpy((char *)0x46dd55, (const char *)0x28b198);
 }
 
-/* main_load_core_name (0x100460) — XBE naked draft (batch 215). */
-#if defined(__clang__)
-static int (*const b100460_c8df60)(const char *s1) = csstrlen;
-static void (*const b100460_assert)(const char *, const char *, int, bool) = display_assert;
-static void * (*const b100460_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-
-__attribute__((naked, noinline))
-void main_load_core_name(const char *name __attribute__((unused)))
+/* main_load_core_name (0x100460) — readable C lift. */
+void main_load_core_name(const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8df60]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $0x40, %%eax\n\t"
-      "jb .Lmain_load_core_name_1\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3c9\n\t"
-      "pushl $0x28b0b4\n\t"
-      "pushl $0x28b1a4\n\t"
-      "call *%[assert]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lmain_load_core_name_1:\n\t"
-      "pushl $0x3f\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x46dd55\n\t"
-      "call *%[c8de70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, 0x46da3e\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8df60] "m"(b100460_c8df60), [assert] "m"(b100460_assert), [c8de70] "m"(b100460_c8de70)
-      : "memory");
+  if ((unsigned)csstrlen(name) >= 0x40) {
+    display_assert((const char *)0x28b1a4, (const char *)0x28b0b4, 0x3c9, 0);
+  }
+  csstrncpy(0x46dd55, name, 0x3f);
+  *(uint8_t *)0x46da3e = 1;
 }
-#else
-#error "main_load_core_name: clang naked draft required"
-#endif
 
-
-/* main_load_core_name_at_startup (0x1004b0) — XBE naked draft (batch 215). */
-#if defined(__clang__)
-static int (*const b1004b0_c8df60)(const char *s1) = csstrlen;
-static void (*const b1004b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void * (*const b1004b0_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-
-__attribute__((naked, noinline))
-void main_load_core_name_at_startup(const char *name __attribute__((unused)))
+/* main_load_core_name_at_startup (0x1004b0) — readable C lift. */
+void main_load_core_name_at_startup(const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8df60]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $0x40, %%eax\n\t"
-      "jb .Lmain_load_core_name_at_startup_1\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3d7\n\t"
-      "pushl $0x28b0b4\n\t"
-      "pushl $0x28b1a4\n\t"
-      "call *%[assert]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lmain_load_core_name_at_startup_1:\n\t"
-      "pushl $0x3f\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x46dd55\n\t"
-      "call *%[c8de70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, 0x46da3f\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8df60] "m"(b1004b0_c8df60), [assert] "m"(b1004b0_assert), [c8de70] "m"(b1004b0_c8de70)
-      : "memory");
+  if ((unsigned)csstrlen(name) >= 0x40) {
+    display_assert((const char *)0x28b1a4, (const char *)0x28b0b4, 0x3d7, 0);
+  }
+  csstrncpy(0x46dd55, name, 0x3f);
+  *(uint8_t *)0x46da3f = 1;
 }
-#else
-#error "main_load_core_name_at_startup: clang naked draft required"
-#endif
-
 
 /* main_switch_structure_bsp (0x100500) — XBE naked draft (batch 161). */
 #if defined(__clang__)
