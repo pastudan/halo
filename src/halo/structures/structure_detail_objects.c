@@ -345,9 +345,20 @@ void structure_detail_objects_dispose_from_old_map(void)
   (void)0;
 }
 
-/* 0x1939d0 */
+/* structure_detail_objects_dispose (0x1939d0) — XBE naked draft (batch 219). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void structure_detail_objects_dispose(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  __asm__ volatile(
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "structure_detail_objects_dispose: clang naked draft required"
+#endif
+

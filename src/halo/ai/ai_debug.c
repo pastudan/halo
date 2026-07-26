@@ -7457,11 +7457,25 @@ void FUN_00053890(void)
 #endif
 
 
-/* 0x538d0 — read debug widget field at +0x30 */
+/* FUN_000538d0 (0x538d0) — XBE naked draft (batch 219). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 int16_t FUN_000538d0(void)
 {
-  return *(int16_t *)(*(int *)0x5ab270 + 0x30);
+  __asm__ volatile(
+      "movl 0x5ab270, %%eax\n\t"
+      "movw 0x30(%%eax), %%ax\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_000538d0: clang naked draft required"
+#endif
+
 
 /* FUN_000538f0 (0x538f0) — XBE naked draft (batch 150). */
 #if defined(__clang__)

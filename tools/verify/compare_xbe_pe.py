@@ -2723,6 +2723,10 @@ def main() -> int:
         ("FUN_000ea540", 0xea540, 0xea569),
         ("FUN_000eab70", 0xeab70, 0xeab99),
         ("ai_debug_get_last_path", 0x493d0, 0x49422),
+        # gameplay wave 219 (2026-07-26) — Capstone weaks
+        ("structure_detail_objects_dispose", 0x1939d0, 0x1939d1),
+        ("FUN_000538d0", 0x538d0, 0x538da),
+        ("FUN_00184710", 0x184710, 0x184719),
     ]
 
     xbe = Xbe.from_file(args.xbe)
