@@ -917,24 +917,53 @@ char item_new(int object_handle)
   return survived;
 }
 
-/* Mark an item (type mask 0x10 = garbage item type) for garbage collection.
- * Sets the garbage flag, ORs object flags bits 18 and 19 (0xc0000), and
- * picks a random despawn timer in [300, 600] ticks stored at item_obj+0x1dc.
- * Returns true on success. */
-bool item_begin_garbage_collection(int item_handle)
-{
-  char *item_obj;
-  unsigned int *seed;
-  unsigned int flags;
+/* item_begin_garbage_collection (0xf6860) — XBE naked draft (batch 96). */
+#if defined(__clang__)
+static void *(*const bf6860_get)(int, int) = object_get_and_verify_type;
+static void (*const bf6860_garb)(int, int) = object_set_garbage_flag;
+static int *(*const bf6860_gseed)(void) = get_global_random_seed_address;
+static int16_t (*const bf6860_c10b2d0)(unsigned int *seed, int16_t min, int16_t max) = random_range;
 
-  item_obj = (char *)object_get_and_verify_type(item_handle, 0x10);
-  object_set_garbage_flag(item_handle, 1);
-  flags = *(unsigned int *)(item_obj + 0x4);
-  *(unsigned int *)(item_obj + 0x4) = flags | 0xc0000;
-  seed = (unsigned int *)get_global_random_seed_address();
-  *(int16_t *)(item_obj + 0x1dc) = random_range(seed, 300, 600);
-  return 1;
+__attribute__((naked, noinline))
+bool item_begin_garbage_collection(int item_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[garb]\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "orl $0xc0000, %%ecx\n\t"
+      "pushl $0x258\n\t"
+      "pushl $0x12c\n\t"
+      "movl %%ecx, 0x4(%%esi)\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c10b2d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw %%ax, 0x1dc(%%esi)\n\t"
+      "popl %%edi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bf6860_get), [garb] "m"(bf6860_garb), [gseed] "m"(bf6860_gseed), [c10b2d0] "m"(bf6860_c10b2d0)
+      : "memory");
 }
+#else
+#error "item_begin_garbage_collection: clang naked draft required"
+#endif
+
 
 /* FUN_000f68b0 (0xf68b0) — XBE naked draft (batch 64). */
 #if defined(__clang__)

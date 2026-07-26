@@ -17,33 +17,51 @@ void weapon_set_integrated_light_power(int weapon_handle, int light_power)
   *(int *)(weapon_obj + 0x1f8) = light_power;
 }
 
-/* 0xfae30 — weapon_preprocess_node_orientations
- *
- * Prefetches the weapon's animation graph block element for node orientation
- * processing. Resolves the weapon tag, finds the 'antr' tag, and calls
- * tag_block_get_element on the first animation element if the block is non-empty.
- * The result is discarded; the call likely primes an internal cache.
- *
- * Confirmed: cdecl, 1 stack arg (weapon_handle).
- * Confirmed: CALL object_get_and_verify_type(weapon_handle, 4).
- * Confirmed: CALL tag_get(0x77656170, *obj) → weap_tag.
- * Confirmed: CALL tag_get(0x616e7472, *(weap_tag+0x44)) → antr.
- * Confirmed: CMP *(int *)(antr+0x18), 0; JZ exit.
- * Confirmed: CALL tag_block_get_element(antr+0x18, 0, 0x1c) (result unused).
- */
-void weapon_preprocess_node_orientations(int weapon_handle)
-{
-  int *obj;
-  int tag;
-  int antr;
+/* weapon_preprocess_node_orientations (0xfae30) — XBE naked draft (batch 96). */
+#if defined(__clang__)
+static void *(*const bfae30_get)(int, int) = object_get_and_verify_type;
+static void *(*const bfae30_tag)(int, int) = tag_get;
+static void *(*const bfae30_elem)(void *, int, int) = tag_block_get_element;
 
-  obj = (int *)object_get_and_verify_type(weapon_handle, 4);
-  tag = (int)tag_get(0x77656170, *obj);
-  antr = (int)tag_get(0x616e7472, *(int *)(tag + 0x44));
-  if (*(int *)(antr + 0x18) != 0) {
-    tag_block_get_element((void *)(antr + 0x18), 0, 0x1c);
-  }
+__attribute__((naked, noinline))
+void weapon_preprocess_node_orientations(int weapon_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $4\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x44(%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x616e7472\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x18(%%eax), %%ecx\n\t"
+      "addl $0x18, %%eax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "je .Lweapon_preprocess_node_orientations_1\n\t"
+      "pushl $0x1c\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lweapon_preprocess_node_orientations_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfae30_get), [tag] "m"(bfae30_tag), [elem] "m"(bfae30_elem)
+      : "memory");
 }
+#else
+#error "weapon_preprocess_node_orientations: clang naked draft required"
+#endif
+
 
 /* 0xfaed0 — weapon_estimate_time_to_target
  *

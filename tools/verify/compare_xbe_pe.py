@@ -1172,6 +1172,19 @@ def main() -> int:
         ("FUN_0002f5b0", 0x2f5b0, 0x2f5ed),
         ("FUN_00015150", 0x15150, 0x151ac),
         ("weapon_prevents_grenade_throwing", 0xfb0f0, 0xfb138),
+        # gameplay wave 96 (2026-07-26) — items/objects/HS Capstone weaks
+        ("item_begin_garbage_collection", 0xf6860, 0xf68ae),
+        ("FUN_00191c70", 0x191c70, 0x191ca7),
+        ("object_markers_need_update", 0x13ec00, 0x13ec50),
+        ("FUN_00139930", 0x139930, 0x139981),
+        ("FUN_00061e80", 0x61e80, 0x61ebb),
+        ("render_debug_collision_bsp", 0x147660, 0x147693),
+        ("rasterizer_transparent_geometry_group_get", 0x184460, 0x1844ae),
+        ("weapon_preprocess_node_orientations", 0xfae30, 0xfae75),
+        ("FUN_000c1190", 0xc1190, 0xc11c8),
+        ("FUN_000c11d0", 0xc11d0, 0xc1208),
+        ("ai_debug_actor_deleted", 0x49080, 0x490be),
+        ("network_player_reset", 0x12a920, 0x12a960),
     ]
 
     xbe = Xbe.from_file(args.xbe)

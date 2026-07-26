@@ -3376,20 +3376,51 @@ void * rasterizer_transparent_geometry_next_group(void *group __attribute__((unu
 #endif
 
 
-/* rasterizer_transparent_geometry_group_get: return group by presorted index
- * (0x184460) */
-void *rasterizer_transparent_geometry_group_get(short group_presorted_index)
+/* rasterizer_transparent_geometry_group_get (0x184460) — XBE naked draft (batch 96). */
+#if defined(__clang__)
+static void (*const b184460_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b184460_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void * rasterizer_transparent_geometry_group_get(short group_presorted_index __attribute__((unused)))
 {
-  if (group_presorted_index < 0 || *(int *)0x4d0cf4 <= group_presorted_index) {
-    display_assert(
-      "group_presorted_index>=0 && "
-      "group_presorted_index<transparent_geometry_group_count",
-      "c:\\halo\\SOURCE\\rasterizer\\rasterizer_transparent_geometry.c", 0xbc,
-      1);
-    system_exit(-1);
-  }
-  return (void *)(group_presorted_index * 0xa0 + *(int *)0x4d0cec);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lrasterizer_transparent_geometry_group_get_1\n\t"
+      "movl 0x4d0cf4, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lrasterizer_transparent_geometry_group_get_2\n\t"
+      ".Lrasterizer_transparent_geometry_group_get_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xbc\n\t"
+      "pushl $0x2b0ca8\n\t"
+      "pushl $0x2b0d50\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_transparent_geometry_group_get_2:\n\t"
+      "movl 0x4d0cec, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,4), %%eax\n\t"
+      "shll $5, %%eax\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b184460_assert), [exitfn] "m"(b184460_exitfn)
+      : "memory");
 }
+#else
+#error "rasterizer_transparent_geometry_group_get: clang naked draft required"
+#endif
+
 
 /* rasterizer_transparent_geometry_group_to_presorted_index (0x1844b0) — XBE naked draft (batch 89). */
 #if defined(__clang__)

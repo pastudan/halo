@@ -821,23 +821,46 @@ bool FUN_0012a890(void)
   return *(void **)0x0046e8bc != NULL;
 }
 
-/* network_player_reset (0x12a920)
- *
- * Resets a network player entry: clears the player index (uint16 at offset 0)
- * to 0 and marks bytes at offsets 0x1c-0x1f as 0xFF (invalid/unused sentinel).
- * Source: network_game_manager.c line 88.
- */
-void network_player_reset(uint8_t *player)
+/* network_player_reset (0x12a920) — XBE naked draft (batch 96). */
+#if defined(__clang__)
+static void (*const b12a920_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b12a920_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void network_player_reset(uint8_t *player __attribute__((unused)))
 {
-  if (player == NULL) {
-    display_assert("player",
-                   "c:\\halo\\SOURCE\\networking\\network_game_manager.c", 0x58,
-                   1);
-    system_exit(-1);
-  }
-  player[0x1c] = 0xff;
-  player[0x1d] = 0xff;
-  player[0x1e] = 0xff;
-  player[0x1f] = 0xff;
-  *(uint16_t *)player = 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lnetwork_player_reset_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x58\n\t"
+      "pushl $0x295874\n\t"
+      "pushl $0x2569f0\n\t"
+      "call *%[assert]\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lnetwork_player_reset_1:\n\t"
+      "movb %%bl, 0x1c(%%esi)\n\t"
+      "movb %%bl, 0x1d(%%esi)\n\t"
+      "movb %%bl, 0x1e(%%esi)\n\t"
+      "movb %%bl, 0x1f(%%esi)\n\t"
+      "movw $0, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b12a920_assert), [exitfn] "m"(b12a920_exitfn)
+      : "memory");
 }
+#else
+#error "network_player_reset: clang naked draft required"
+#endif
+

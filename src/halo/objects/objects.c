@@ -2532,26 +2532,52 @@ void FUN_001398d0(int *param_1 __attribute__((unused)))
 #endif
 
 
-/* Light analog of object_markers_need_update: return whether this light's
- * cached marker generation (light+0xc) differs from the global marker counter
- * (lights_globals at 0x5a8d64). Unlike its sibling FUN_00139990, this is a
- * pure getter and does NOT write the cached value back. Asserts that the
- * lights marker system has been initialized (0x5a8d60). The result is a bool
- * (CONCAT31/SETNZ).
- * 0x139930 / objects.obj
- */
-int FUN_00139930(int light_handle)
-{
-  int light;
+/* FUN_00139930 (0x139930) — XBE naked draft (batch 96). */
+#if defined(__clang__)
+static void *(*const b139930_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b139930_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b139930_exitfn)(int) = system_exit;
 
-  light = (int)datum_get(*(data_t **)0x5a90bc, light_handle);
-  if (*(char *)0x5a8d60 == '\0') {
-    display_assert("lights_globals.marker_initialized",
-                   "c:\\halo\\SOURCE\\objects\\object_lights.c", 0x66f, 1);
-    system_exit(-1);
-  }
-  return *(int *)(light + 0xc) != *(int *)0x5a8d64;
+__attribute__((naked, noinline))
+int FUN_00139930(int param_1 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x5a90bc, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x5a8d60, %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00139930_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x66f\n\t"
+      "pushl $0x29b324\n\t"
+      "pushl $0x29b4ac\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00139930_1:\n\t"
+      "movl 0xc(%%esi), %%edx\n\t"
+      "cmpl 0x5a8d64, %%edx\n\t"
+      "setne %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b139930_dget), [assert] "m"(b139930_assert), [exitfn] "m"(b139930_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00139930: clang naked draft required"
+#endif
+
 
 /* FUN_00139990 (0x139990) — XBE naked draft (batch 65). */
 #if defined(__clang__)
@@ -7216,35 +7242,52 @@ void object_marker_end(void)
   object_globals->object_marker_initialized = 0;
 }
 
-/*
- * object_markers_need_update (0x13ec00) — query whether an object still needs
- * marking in the current sweep.
- *
- * Looks up the object (any type), asserts a marker sweep is in progress, then
- * returns whether the object's marker_generation (obj+0x08) differs from the
- * global marker generation counter at 0x5a8d28. Returns nonzero (true) when
- * the object has not yet been stamped this sweep. The read-only predicate
- * counterpart to object_mark (0x13ec50), which performs the same comparison
- * and then stamps the object.
- *
- * Confirmed: object_get_and_verify_type(handle, -1).
- * Confirmed: assert "object_globals->object_marker_initialized" at line 0xdc6.
- * Confirmed: compares obj->marker_generation (obj+0x08) against [0x5a8d28].
- * Confirmed: CONCAT31 => char/bool-width return of (generation != counter).
- */
-int object_markers_need_update(int object_handle)
+/* object_markers_need_update (0x13ec00) — XBE naked draft (batch 96). */
+#if defined(__clang__)
+static void *(*const b13ec00_get)(int, int) = object_get_and_verify_type;
+static void (*const b13ec00_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b13ec00_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+int object_markers_need_update(int object_handle __attribute__((unused)))
 {
-  object_data_t *obj =
-    (object_data_t *)object_get_and_verify_type(object_handle, -1);
-
-  if (!object_globals->object_marker_initialized) {
-    display_assert("object_globals->object_marker_initialized",
-                   "c:\\halo\\SOURCE\\objects\\objects.c", 0xdc6, 1);
-    system_exit(-1);
-  }
-
-  return obj->marker_generation != *(uint32_t *)0x5a8d28;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0x46f084, %%ecx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x1(%%ecx), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_markers_need_update_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xdc6\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29bc30\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_markers_need_update_1:\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "cmpl 0x5a8d28, %%edx\n\t"
+      "setne %%al\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b13ec00_get), [assert] "m"(b13ec00_assert), [exitfn] "m"(b13ec00_exitfn)
+      : "memory");
 }
+#else
+#error "object_markers_need_update: clang naked draft required"
+#endif
+
 
 /*
  * object_mark (0x13ec50) — mark an object with the current generation.

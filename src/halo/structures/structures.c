@@ -158,20 +158,50 @@ void FUN_00061df0(void *point, short projection, unsigned char sign,
   ((float *)out_projected)[1] = tmp;
 }
 
-/* 0x61e80 — 2D point-in-radius test.
- * Returns 1 when the squared 2D distance between points p0 and p1 (using the
- * x=[0] and y=[1] lanes only) is <= radius*radius, else 0.  Pure leaf, cdecl,
- * three stack args (two float*, one float).  The y-term is summed before the
- * x-term, matching the decompiler's fld ordering; every product is a
- * self-multiply so there is no operand-order/cross-product hazard. */
-int FUN_00061e80(float *p0, float *p1, float radius)
+/* FUN_00061e80 (0x61e80) — XBE naked draft (batch 96). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
+int FUN_00061e80(float *p0 __attribute__((unused)), float *p1 __attribute__((unused)), float radius __attribute__((unused)))
 {
-  if ((p1[1] - p0[1]) * (p1[1] - p0[1]) + (p1[0] - p0[0]) * (p1[0] - p0[0]) <=
-      radius * radius) {
-    return 1;
-  }
-  return 0;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "flds (%%eax)\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "fsubs (%%ecx)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs 0x4(%%ecx)\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fmuls 0x10(%%ebp)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $1, %%ah\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .LFUN_00061e80_1\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00061e80_1:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "FUN_00061e80: clang naked draft required"
+#endif
+
 
 /* 0x61ec0 — 3D point-in-radius test.
  * Returns 1 when the squared 3D distance between points p0 and p1 (x=[0],
@@ -3458,34 +3488,52 @@ char FUN_00191bd0(int search_value __attribute__((unused)), void **param_1 __att
 #endif
 
 
-/* 0x191c70 - linear-search a tag_block for the element referencing a value.
- * (TU: c:\halo\SOURCE\structures\leaf_map.c)
- *
- * Register ABI (frameless; direct use of ESI and EBX): block@<esi> (tag_block
- * pointer; *block is the element count) and search_value@<ebx> (int). Scans
- * elements 0..count-1 (stride 0x10); returns the index of the first element
- * whose first field equals search_value, or -1 if none match. */
-short FUN_00191c70(void *block /* @<esi> */, int search_value /* @<ebx> */)
-{
-  int count;
-  short i;
-  int *element;
+/* FUN_00191c70 (0x191c70) — XBE naked draft (batch 96). */
+#if defined(__clang__)
+static void *(*const b191c70_elem)(void *, int, int) = tag_block_get_element;
 
-  count = *(int *)block;
-  if (count <= 0) {
-    return -1;
-  }
-  i = 0;
-  do {
-    element = (int *)tag_block_get_element(block, i, 0x10);
-    if (*element == search_value) {
-      return i;
-    }
-    count = *(int *)block;
-    i = (short)(i + 1);
-  } while ((int)i < count);
-  return -1;
+__attribute__((naked, noinline))
+short FUN_00191c70(void *block __attribute__((unused)), int search_value __attribute__((unused)))
+{
+  __asm__ volatile(
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .LFUN_00191c70_2\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .LFUN_00191c70_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_00191c70_1:\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "je .LFUN_00191c70_3\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "incl %%edi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .LFUN_00191c70_1\n\t"
+      ".LFUN_00191c70_2:\n\t"
+      "orw $0xffff, %%ax\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      ".LFUN_00191c70_3:\n\t"
+      "movw %%di, %%ax\n\t"
+      "popl %%edi\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b191c70_elem)
+      : "memory");
 }
+#else
+#error "FUN_00191c70: clang naked draft required"
+#endif
+
 
 /* leaf_map_mark_portal_designators (0x191cb0) — XBE naked draft (batch 87). */
 #if defined(__clang__)

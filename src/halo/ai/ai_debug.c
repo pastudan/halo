@@ -97,28 +97,49 @@ void ai_debug_clear_storage(void)
 #endif
 
 
-/* ai_debug_actor_deleted: scan actor_path_debug_array (0x20 entries, stride
- * 0x1ca7c) and clear the active flag (offset +0xc) for any entry whose actor
- * handle (offset +0x0) matches actor_handle.
- *
- * No __FILE__ string.  Called from actor_delete (actors.obj, 0x3cc10). */
-void ai_debug_actor_deleted(int actor_handle)
-{
-  char *base;
-  int off;
-  int i;
+/* ai_debug_actor_deleted (0x49080) — XBE naked draft (batch 96). */
+#if defined(__clang__)
 
-  base = *(char **)0x331f5c;
-  off = 0;
-  for (i = 0x20; i != 0; i--) {
-    if (*(char *)(base + off + 0xc) != '\0' &&
-        *(int *)(base + off) == actor_handle) {
-      *(char *)(base + off + 0xc) = '\0';
-      base = *(char **)0x331f5c;
-    }
-    off += 0x1ca7c;
-  }
+
+__attribute__((naked, noinline))
+void ai_debug_actor_deleted(int actor_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x331f5c, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movl $0x20, %%esi\n\t"
+      ".Lai_debug_actor_deleted_1:\n\t"
+      "movb 0xc(%%ecx,%%edx,1), %%bl\n\t"
+      "testb %%bl, %%bl\n\t"
+      "leal 0xc(%%ecx,%%edx,1), %%eax\n\t"
+      "je .Lai_debug_actor_deleted_2\n\t"
+      "cmpl %%edi, (%%ecx,%%edx,1)\n\t"
+      "jne .Lai_debug_actor_deleted_2\n\t"
+      "movb $0, (%%eax)\n\t"
+      "movl 0x331f5c, %%edx\n\t"
+      ".Lai_debug_actor_deleted_2:\n\t"
+      "addl $0x1ca7c, %%ecx\n\t"
+      "decl %%esi\n\t"
+      "jne .Lai_debug_actor_deleted_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "ai_debug_actor_deleted: clang naked draft required"
+#endif
+
 
 /* ai_debug_get_path_storage (0x49120) — XBE naked draft (batch 86). */
 #if defined(__clang__)

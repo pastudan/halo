@@ -268,26 +268,51 @@ void render_debug_collision_surface(int bsp, int surface_index,
   } while (edge_index != first_edge);
 }
 
-/* 0x147660 - render_debug_collision_bsp
- *
- * Draws every edge of a collision BSP for debug visualization. The edge
- * tag_block header lives at bsp+0x48; its element count (bsp+0x48+0 first
- * dword) is the loop bound. Each edge is rendered by
- * render_debug_collision_edge, with param_2 forwarded unchanged
- * (transform-matrix pointer or flag) and the debug color pointer read from the
- * global at 0x2ee6d4.
- *
- * The original is a do-while guarded by an outer `count > 0` test, which is the
- * canonical MSVC codegen for this for-loop.
- */
-void render_debug_collision_bsp(int bsp, int matrix_or_flag)
-{
-  int i;
+/* render_debug_collision_bsp (0x147660) — XBE naked draft (batch 96). */
+#if defined(__clang__)
+static void (*const b147660_c147570)(int bsp, int edge_index, int matrix_or_flag, void *color) = render_debug_collision_edge;
 
-  for (i = 0; i < *(int *)(bsp + 0x48); i++) {
-    render_debug_collision_edge(bsp, i, matrix_or_flag, *(void **)0x2ee6d4);
-  }
+__attribute__((naked, noinline))
+void render_debug_collision_bsp(int bsp __attribute__((unused)), int matrix_or_flag __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl 0x48(%%edi), %%eax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lrender_debug_collision_bsp_2\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      ".Lrender_debug_collision_bsp_1:\n\t"
+      "movl 0x2ee6d4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c147570]\n\t"
+      "movl 0x48(%%edi), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "incl %%esi\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jl .Lrender_debug_collision_bsp_1\n\t"
+      "popl %%ebx\n\t"
+      ".Lrender_debug_collision_bsp_2:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c147570] "m"(b147660_c147570)
+      : "memory");
 }
+#else
+#error "render_debug_collision_bsp: clang naked draft required"
+#endif
+
 
 /* 0x1476a0 - collision_edge_length
  *
