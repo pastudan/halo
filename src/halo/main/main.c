@@ -3176,29 +3176,166 @@ void main_set_game_connection_to_film_playback(void)
   *(char *)0x46da45 = 1;
 }
 
-int main_get_solo_level_from_name(const char *map_name)
-{
-  char buf[0x80];
-  static const struct {
-    const char *needle;
-    int index;
-  } levels[] = {
-      {(char *)0x284a8c, 0}, {(char *)0x284a50, 1}, {(char *)0x284a14, 2},
-      {(char *)0x2849d8, 3}, {(char *)0x28499c, 4}, {(char *)0x284960, 5},
-      {(char *)0x284924, 6}, {(char *)0x2848e8, 7}, {(char *)0x2848ac, 8},
-      {(char *)0x284870, 9},
-  };
-  int i;
+/* main_get_solo_level_from_name (0x1006f0) — XBE naked draft (batch 121). */
+#if defined(__clang__)
+static void * (*const b1006f0_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+static char * (*const b1006f0_c8d9a0)(char *s) = csstr_tolower;
+static char * (*const b1006f0_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
 
-  csstrncpy(buf, map_name, 0x7f);
-  buf[0x7f] = 0;
-  csstr_tolower(buf);
-  for (i = 0; i < 10; i++) {
-    if (crt_strstr(buf, levels[i].needle) != 0)
-      return levels[i].index;
-  }
-  return -1;
+__attribute__((naked, noinline))
+int main_get_solo_level_from_name(const char *map_name __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x80, %%esp\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movb $0, -0x80(%%ebp)\n\t"
+      "movl $0x1f, %%ecx\n\t"
+      "leal -0x7f(%%ebp), %%edi\n\t"
+      "rep stosl\n\t"
+      "stosw\n\t"
+      "stosb\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl $0x7f\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x80(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8de70]\n\t"
+      "leal -0x80(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "call *%[c8d9a0]\n\t"
+      "leal -0x80(%%ebp), %%eax\n\t"
+      "pushl $0x284a8c\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "popl %%edi\n\t"
+      "je .Lmain_get_solo_level_from_name_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_get_solo_level_from_name_1:\n\t"
+      "leal -0x80(%%ebp), %%ecx\n\t"
+      "pushl $0x284a50\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lmain_get_solo_level_from_name_2\n\t"
+      "movl $1, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_get_solo_level_from_name_2:\n\t"
+      "leal -0x80(%%ebp), %%edx\n\t"
+      "pushl $0x284a14\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lmain_get_solo_level_from_name_3\n\t"
+      "movl $2, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_get_solo_level_from_name_3:\n\t"
+      "leal -0x80(%%ebp), %%eax\n\t"
+      "pushl $0x2849d8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lmain_get_solo_level_from_name_4\n\t"
+      "movl $3, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_get_solo_level_from_name_4:\n\t"
+      "leal -0x80(%%ebp), %%ecx\n\t"
+      "pushl $0x28499c\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lmain_get_solo_level_from_name_5\n\t"
+      "movl $4, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_get_solo_level_from_name_5:\n\t"
+      "leal -0x80(%%ebp), %%edx\n\t"
+      "pushl $0x284960\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lmain_get_solo_level_from_name_6\n\t"
+      "movl $5, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_get_solo_level_from_name_6:\n\t"
+      "leal -0x80(%%ebp), %%eax\n\t"
+      "pushl $0x284924\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lmain_get_solo_level_from_name_7\n\t"
+      "movl $6, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_get_solo_level_from_name_7:\n\t"
+      "leal -0x80(%%ebp), %%ecx\n\t"
+      "pushl $0x2848e8\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lmain_get_solo_level_from_name_8\n\t"
+      "movl $7, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_get_solo_level_from_name_8:\n\t"
+      "leal -0x80(%%ebp), %%edx\n\t"
+      "pushl $0x2848ac\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lmain_get_solo_level_from_name_9\n\t"
+      "movl $8, %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lmain_get_solo_level_from_name_9:\n\t"
+      "leal -0x80(%%ebp), %%eax\n\t"
+      "pushl $0x284870\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "negl %%eax\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "andl $0xa, %%eax\n\t"
+      "decl %%eax\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8de70] "m"(b1006f0_c8de70), [c8d9a0] "m"(b1006f0_c8d9a0), [c1d9690] "m"(b1006f0_c1d9690)
+      : "memory");
 }
+#else
+#error "main_get_solo_level_from_name: clang naked draft required"
+#endif
+
 
 int main_get_current_solo_level(void)
 {
@@ -3307,981 +3444,231 @@ void main_movie_start(float frame_rate)
 
 void FUN_00054df0(void);
 
-/* kb.json spans 0xe8e20..0xffe10 (94 KiB) across many distinct functions.
- * Bogus single-symbol boundary — placeholder draft only. */
-void FUN_000e8e20(int a0)
+/* FUN_000e8e20 (0xe8e20) — XBE naked draft (batch 115). */
+#if defined(__clang__)
+static void (*const be8e20_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be8e20_exitfn)(int) = system_exit;
+static const char * (*const be8e20_c1ba1f0)(int tag_index) = tag_get_name;
+static void * (*const be8e20_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+static char * (*const be8e20_c8d9a0)(char *s) = csstr_tolower;
+static char * (*const be8e20_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
+static __int16 (*const be8e20_ce07c0)(__int16 a1) = player_ui_get_single_player_local_player_controller;
+static void * (*const be8e20_ce84e0)(const char *name, int tag_index, int is_child, int widget_stack, int parent_tag_index, int a6, int a7) = ui_widget_load_by_name_or_tag;
+static void (*const be8e20_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+void FUN_000e8e20(int a0 __attribute__((unused)))
 {
-
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-  int local_1a = 0;
-  int local_1c = 0;
-  int local_20 = 0;
-  int local_24 = 0;
-  int local_4 = 0;
-  int lift_a1 = 0;
-
-  display_assert((char *)0x00284a90, (char *)0x00283280, 2407, 1);
-  system_exit(-1);
-  /* cmp eax, -1 -> je 0xe905f */
-  tag_get_name(*(int *)(0x326a08));
-  csstrncpy((void *)0, (void *)0, 0);
-  csstr_tolower((void *)0);
-  crt_strstr((void *)0, (char *)0x00284a8c);
-  /* test eax, eax -> je 0xe8eaf */
-  crt_strstr((void *)0, (char *)0x00284a50);
-  /* test eax, eax -> je 0xe8ed1 */
-  crt_strstr((void *)0, (char *)0x00284a14);
-  /* test eax, eax -> je 0xe8ef3 */
-  crt_strstr((void *)0, (char *)0x002849d8);
-  /* test eax, eax -> je 0xe8f15 */
-  crt_strstr((void *)0, (char *)0x0028499c);
-  /* test eax, eax -> je 0xe8f37 */
-  crt_strstr((void *)0, (char *)0x00284960);
-  /* test eax, eax -> je 0xe8f56 */
-  crt_strstr((void *)0, (char *)0x00284924);
-  /* test eax, eax -> je 0xe8f75 */
-  crt_strstr((void *)0, (char *)0x002848e8);
-  /* test eax, eax -> je 0xe8f94 */
-  crt_strstr((void *)0, (char *)0x002848ac);
-  /* test eax, eax -> je 0xe8fb3 */
-  crt_strstr((void *)0, (char *)0x00284870);
-  /* test eax, eax -> je 0xe9043 */
-  player_ui_get_single_player_local_player_controller(0);
-  ui_widget_load_by_name_or_tag((char *)0x00284838, -1, 0, eax, -1, -1, -1);
-  /* test eax, eax -> je 0xe902e */
-  /* test esi, esi -> je 0xe9004 */
-  /* relift: cmp word ptr [esi + 0xe], 1 -> je 0xe9024 */
-  /* test esi, esi -> jne 0xe8ff6 */
-  display_assert((char *)0x00284808, (char *)0x00283280, 2438, 1);
-  system_exit(-1);
-  error(2, (char *)0x002847e4);
-  error(2, (char *)0x002847a4);
-  error(2, (char *)0x00284768);
-  network_game_in_progress();
-  game_in_progress();
-  /* test (char)eax, (char)eax -> je 0xe928e */
-  cinematic_in_progress();
-  /* test (char)eax, (char)eax -> jne 0xe928e */
-  game_connection();
-  /* cmp (int16_t)eax, 3 -> je 0xe928e */
-  /* relift: relift: mov (char)eax, byte ptr [0x46cc88] */
-  /* test (char)eax, (char)eax -> jne 0xe928e */
-  /* test eax, eax -> jne 0xe928e */
-  input_has_gamepad(0);
-  /* test (char)eax, (char)eax -> je 0xe9103 */
-  local_player_exists(0);
-  /* test (char)eax, (char)eax -> je 0xe9103 */
-  input_get_gamepad_state(0);
-  /* cmp (char)ecx, 1 -> je 0xe910e */
-  /* cmp esi, 4 -> jl 0xe90d8 */
-  local_player_get_next(0);
-  /* cmp (int16_t)eax, 0xffff -> je 0xe9151 */
-  /* cmp (int16_t)eax, (int16_t)esi -> jne 0xe9141 */
-  local_player_get_next(0);
-  /* cmp (int16_t)eax, 0xffff -> jne 0xe9130 */
-  /* test (char)eax, (char)eax -> je 0xe9212 */
-  game_engine_allow_pause();
-  /* test (char)eax, (char)eax -> je 0xe928b */
-  /* cmp (int16_t)ebx, (int16_t)esi -> jne 0xe928b */
-  /* test eax, eax -> jne 0xe9207 */
-  network_game_client_get();
-  network_game_client_get_machine_index((void *)(uintptr_t)eax);
-  FUN_00124c40((void *)(uintptr_t)eax);
-  /* cmp eax, 3 -> ja 0xe91f3 */
-  ui_widget_load_by_name_or_tag((char *)0x00284c84, -1, 0, 0, -1, -1, -1);
-  /* test eax, eax -> jne 0xe928b */
-  error(2, (char *)0x00284c54);
-  /* relift: cmp byte ptr [ebp - 1], 1 -> jne 0xe91ec */
-  error(2, (char *)0x00284bbc);
-  ui_widget_close((void *)(uintptr_t)eax);
-  /* test eax, eax -> jl 0xe92ab */
-  /* cmp eax, 1 -> jle 0xe926f */
-  /* cmp eax, 2 -> jne 0xe92ab */
-  /* test eax, eax -> jne 0xe927d */
-  game_time_get_paused();
-  /* test (char)eax, (char)eax -> jne 0xe928b */
-  ui_widget_load_by_name_or_tag((char *)0x00284b84, -1, 0, 0, -1, -1, -1);
-  /* test eax, eax -> jne 0xe928b */
-  error(2, (char *)0x00284b54);
-  /* test eax, eax -> je 0xe92d7 */
-  game_time_get_paused();
-  /* cmp (char)eax, 1 -> jne 0xe928b */
-  ui_widgets_close_all();
-  /* mem[0x0046cc44] = ecx */
-  error(2, (char *)0x00284b00);
-  /* relift: relift: mov (char)eax, byte ptr [0x46cc82] */
-  /* test (char)eax, (char)eax -> je 0xe92d7 */
-  /* relift: cmp dword ptr [eax], 0 -> jne 0xe9286 */
-  /* cmp eax, 0x46cc30 -> jl 0xe92c8 */
-  ui_widget_load_by_name_or_tag((char *)0x00284ad0, -1, 0, 0, -1, -1, -1);
-  /* test eax, eax -> jne 0xe928b */
-  error(2, (char *)0x00284aa0);
-  tag_get('aLeD', lift_a1);
-  /* test (char)ecx, 0x10 -> je 0xe9371 */
-  /* cmp eax, 4 -> ja 0xe9368 */
-  /* cmp eax, 4 -> ja 0xe938a */
-  display_assert((char *)0x00284cb8, (char *)0x00283280, 5392, 1);
-  system_exit(-1);
-  /* test eax, eax -> jne 0xe93b8 */
-  /* test ecx, ecx -> je 0xe93f1 */
-  /* test eax, eax -> je 0xe93f1 */
-  /* relift: cmp eax, dword ptr [ebp + 8] -> je 0xe93ef */
-  /* test eax, eax -> jne 0xe93e0 */
-  ui_widget_load_by_name_or_tag((char *)0, lift_a1, 0, a0, 0, 0, 0);
-  error(2, (char *)0x00283728);
-  /* relift: relift: mov (char)eax, byte ptr [0x46cc82] */
-  display_assert((char *)0x002832d4, (char *)0x00283280, 644, 1);
-  system_exit(a0);
-  system_milliseconds();
-  /* mem[0x0046cc40] = eax */
-  /* cmp eax, esi -> je 0xe951d */
-  thread_is_done((void *)(uintptr_t)*(int *)(0x46cc7c));
-  /* test (char)eax, (char)eax -> je 0xe9807 */
-  thread_close((void *)(uintptr_t)*(int *)(0x46cc7c));
-  /* mem[0x0046cc7c] = esi */
-  ui_widget_set_events_suppressed(0);
-  bink_playback_has_video();
-  /* test (char)eax, (char)eax -> je 0xe94eb */
-  bink_playback_stop();
-  ui_widget_load_error_screen(34, 1);
-  bink_playback_has_video();
-  /* test (char)eax, (char)eax -> je 0xe950b */
-  bink_playback_stop();
-  ui_widget_load_error_screen(33, 1);
-  ui_automation_is_active();
-  /* test (char)eax, (char)eax -> jne 0xe9807 */
-  FUN_000f5640();
-  /* test (char)eax, (char)eax -> je 0xe9543 */
-  items_dispose_from_old_map();
-  event_manager_flush();
-  event_manager_tab_check();
-  /* test (char)eax, (char)eax -> je 0xe9557 */
-  event_manager_tab_process();
-  /* relift: relift: mov (int16_t)eax, word ptr [0x46cc68] */
-  /* cmp (int16_t)eax, (int16_t)edi -> je 0xe9583 */
-  /* relift: relift: mov (char)ecx, byte ptr [0x46cc6a] */
-  ui_widget_load_error_screen(0, 0);
-  /* relift: relift: mov word ptr [0x46cc68], (int16_t)edi */
-  /* relift: cmp word ptr [0x46cc50], (int16_t)edi -> jne 0xe979f */
-  /* relift: cmp word ptr [0x46cc56], (int16_t)edi -> jne 0xe979f */
-  /* relift: cmp word ptr [0x46cc5c], (int16_t)edi -> jne 0xe979f */
-  /* relift: cmp word ptr [0x46cc62], (int16_t)edi -> jne 0xe979f */
-  ui_widgets_process_pause();
-  /* cmp eax, esi -> je 0xe95d5 */
-  /* relift: cmp byte ptr [eax + 0x15], 1 -> jne 0xe95d5 */
-  /* cmp eax, esi -> je 0xe95f2 */
-  /* relift: cmp byte ptr [eax + 0x15], 1 -> jne 0xe95f2 */
-  /* cmp eax, esi -> je 0xe960f */
-  /* relift: cmp byte ptr [eax + 0x15], 1 -> jne 0xe960f */
-  /* cmp eax, esi -> je 0xe962c */
-  /* relift: cmp byte ptr [eax + 0x15], 1 -> jne 0xe962c */
-  /* test esi, esi -> je 0xe9776 */
-  /* relift: cmp byte ptr [esi + 0x15], 1 -> je 0xe9686 */
-  /* relift: relift: mov (char)eax, byte ptr [0x46cc88] */
-  /* test (char)eax, (char)eax -> je 0xe9679 */
-  /* test esi, esi -> je 0xe9776 */
-  /* test (char)ecx, (char)ecx -> je 0xe9686 */
-  /* cmp (char)eax, 1 -> jne 0xe9776 */
-  tag_get('aLeD', *(int *)(*(int *)(0x0046cc20)));
-  /* relift: relift: mov (char)eax, byte ptr [0x46cc85] */
-  event_manager_get_next_event((void *)0, 0);
-  /* test (char)eax, (char)eax -> je 0xe9704 */
-  /* test (char)eax, (char)eax -> jne 0xe96e7 */
-  ui_widget_process_event((void *)(uintptr_t)*(int *)(0x0046cc20), (void *)(uintptr_t)eax, (void *)0, (void *)0);
-  /* cmp (char)eax, 1 -> je 0xe9725 */
-  /* relift: cmp esi, dword ptr [ebx] -> jne 0xe9725 */
-  event_manager_get_next_event((void *)0, 0);
-  /* test (char)eax, (char)eax -> jne 0xe96c7 */
-  /* test (char)eax, (char)eax -> jne 0xe9725 */
-  ui_widget_process_event((void *)(uintptr_t)*(int *)(0x0046cc20), (void *)(uintptr_t)eax, (void *)0, (void *)0);
-  ui_widget_pending_load_pop((void *)0, (void *)0);
-  /* cmp eax, -1 -> je 0xe9773 */
-  ui_widget_load_by_name_or_tag((char *)0, local_24, 0, local_1a, -1, -1, -1);
-  /* test eax, eax -> je 0xe9773 */
-  ui_widget_pending_load_apply(local_20, local_1c, 0);
-  event_manager_flush();
-  /* relift: cmp word ptr [esi], (int16_t)edi -> je 0xe97fc */
-  /* relift: relift: mov (char)eax, byte ptr [0x46cc88] */
-  /* test (char)eax, (char)eax -> jne 0xe97d8 */
-  network_game_in_progress();
-  /* test (char)eax, (char)eax -> jne 0xe97d8 */
-  game_time_get();
-  /* cmp eax, 0x1e -> jge 0xe97d8 */
-  error(2, (char *)0x00284ce4);
-  ui_widget_display_error(0, 0, 0, 0);
-  /* cmp esi, 0x46cc68 -> jl 0xe97a4 */
-  /* test edi, edi -> je 0xe9823 */
-  /* test ebx, ebx -> jne 0xe9843 */
-  display_assert((char *)0x00285974, (char *)0x002859a4, 478, 1);
-  system_exit(-1);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0xe9889 */
-  /* cmp (int16_t)eax, 0x66 -> jae 0xe9889 */
-  /* test (char)ebx, (char)ebx -> jne 0xe9882 */
-  console_warning((char *)0x00285958);
-  error(2, (char *)0x00285938);
-  /* mem[0x0031e4c0] = 0xffffffff */
-  csmemset((void *)0x0046cce8, 0, 80);
-  player_ui_get_active_player_profile();
-  player_profile_save_last_level_played(0, 0, 0);
-  player_ui_get_active_player_profile();
-  player_profile_save_last_level_played(0, 0, 0);
-  /* test dl, dl -> jne 0xe9952 */
-  /* cmp eax, ecx -> je 0xe9952 */
-  /* test (char)ecx, (char)ecx -> jne 0xe9952 */
-  /* cmp eax, ecx -> je 0xe9952 */
-  /* test eax, eax -> jne 0xe998e */
-  /* cmp eax, 0xa -> jl 0xe9920 */
-  tag_get('aLeD', *(int *)(a0));
-  /* relift: cmp word ptr [edi], 2 -> je 0xe99cf */
-  display_assert((char *)0x00285a18, (char *)0x002859a4, 689, 1);
-  system_exit(-1);
-  /* relift: cmp dword ptr [edi + 0x3e0], 3 -> je 0xe99f8 */
-  display_assert((char *)0x002859e4, (char *)0x002859a4, 690, 1);
-  system_exit(-1);
-  player_ui_get_last_single_player_level_played();
-  /* test (int16_t)eax, (int16_t)eax -> jge 0xe9a22 */
-  player_ui_get_last_single_player_level_played();
-  /* cmp (int16_t)eax, 9 -> jle 0xe9a43 */
-  player_ui_get_last_single_player_level_played();
-  csmemset((void *)0x0046cce8, 0, 80);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0xe9aad */
-  /* cmp (int16_t)eax, 0xa -> jl 0xe9acd */
-  display_assert((char *)0x00285aa4, (char *)0x002859a4, 724, 1);
-  system_exit(-1);
-  error(2, (char *)0x00285a78);
-  error(2, (char *)0x00285a54);
-  ui_play_audio_feedback_sound(4);
-  player_ui_get_active_player_profile();
-  player_profile_save_last_level_played(0, 0, 0);
-  /* test dl, dl -> jne 0xe9b44 */
-  /* cmp ecx, edx -> je 0xe9b44 */
-  /* test (int16_t)eax, (int16_t)eax -> jne 0xe9b46 */
-  player_ui_remember_player1_profile(0);
-  player_ui_get_active_player_profile();
-  player_profile_save_last_level_played(0, 0, 0);
-  /* test dl, dl -> jne 0xe9bbf */
-  /* cmp ecx, edx -> je 0xe9bbf */
-  /* test (int16_t)eax, (int16_t)eax -> je 0xe9bbf */
-  /* cmp (int16_t)esi, 1 -> jle 0xe9b52 */
-  /* cmp (char)ebx, 1 -> jne 0xe9ae9 */
-  main_set_map_name((char *)0);
-  main_defer_map_map_change();
-  /* test (int16_t)eax, (int16_t)eax -> jl 0xe9be6 */
-  /* cmp (int16_t)eax, 4 -> jl 0xe9c06 */
-  display_assert((char *)0x00285ad8, (char *)0x002859a4, 787, 1);
-  system_exit(-1);
-  main_set_difficulty(0);
-  ui_play_audio_feedback_sound(2);
-  main_set_difficulty(1);
-  main_set_map_name((const char *)(uintptr_t)*(int *)(0x31e498));
-  set_game_connection(0);
-  main_menu_switch_to_single_player();
-  player_ui_remember_player1_profile(0);
-  main_revert_map();
-  main_reset_map();
-  game_state_save_to_persistent_storage();
-  main_goto_main_menu();
-  dispose_global_network_game_server();
-  dispose_global_network_game_client();
-  player_ui_clear_multiplayer_joins();
-  player_ui_clear_multiplayer_variant();
-  /* relift: cmp word ptr [esi + 8], -1 -> jne 0xe9cde */
-  display_assert((char *)0x00285b10, (char *)0x002859a4, 873, 1);
-  system_exit(-1);
-  player_ui_local_player_joined_multiplayer_game();
-  dispose_global_network_game_server();
-  dispose_global_network_game_client();
-  player_ui_clear_multiplayer_variant();
-  FUN_0012a250();
-  /* test (char)eax, (char)eax -> je 0xe9d29 */
-  set_game_connection(1);
-  error(2, (char *)0x00285b54);
-  dispose_global_network_game_server();
-  player_ui_clear_multiplayer_variant();
-  network_game_set_accept_remote_connections(1);
-  network_game_server_get();
-  /* test eax, eax -> jne 0xe9d91 */
-  game_engine_playlist_initialize();
-  FUN_0012a890();
-  /* cmp (char)ebx, 1 -> jne 0xe9d8d */
-  network_game_server_get();
-  network_game_server_pause_countdown((void *)(uintptr_t)eax, 0);
-  game_engine_playlist_begin();
-  set_game_connection(2);
-  /* test (char)ebx, (char)ebx -> je 0xe9da5 */
-  network_game_client_get();
-  /* test eax, eax -> jne 0xe9da1 */
-  FUN_0012a250();
-  /* test (char)ebx, (char)ebx -> jne 0xe9dca */
-  dispose_global_network_game_client();
-  dispose_global_network_game_server();
-  network_game_set_accept_remote_connections(0);
-  player_ui_clear_multiplayer_variant();
-  error(2, (char *)0x002828ac);
-  /* cmp (int16_t)eax, (int16_t)ebx -> jl 0xe9fbd */
-  /* cmp eax, ecx -> jge 0xe9fae */
-  /* cmp ecx, ebx -> je 0xe9fae */
-  /* cmp (int16_t)edx, (int16_t)ebx -> jbe 0xe9f95 */
-  /* relift: cmp byte ptr [edi + 0xe0], 1 -> jne 0xe9f75 */
-  /* relift: cmp word ptr [edi + 0xde], (int16_t)ebx -> jne 0xe9f5c */
-  FUN_00082bd0();
-  /* cmp eax, ebx -> je 0xe9f43 */
-  /* relift: cmp word ptr [ebp - 0xa], (int16_t)ebx -> je 0xe9f43 */
-  network_game_generate_join_game_token((void *)0);
-  network_game_client_get();
-  network_game_client_initiate_join_game((void *)(uintptr_t)eax, (void *)0, (void *)0, (void *)0);
-  /* test (char)eax, (char)eax -> je 0xe9f25 */
-  ui_widget_get_last_child((void *)(uintptr_t)a0);
-  /* test eax, eax -> je 0xe9ec3 */
-  widget_instance_get_child_index_from_parent((void *)(uintptr_t)a0);
-  ui_widget_load_by_name_or_tag((char *)0x002828e0, -1, 0, -1, *(int *)(eax), 0, eax);
-  /* test eax, eax -> jne 0xe9f07 */
-  error(2, (char *)0x00283728);
-  set_game_connection(1);
-  network_game_abort();
-  error(2, (char *)0x00285d20);
-  error(2, (char *)0x00285ce8);
-  error(2, (char *)0x00285c90);
-  error(2, (char *)0x00285c70);
-  ui_play_audio_feedback_sound(4);
-  error(2, (char *)0x00285c08);
-  error(2, (char *)0x00285b90);
-  dispose_global_network_game_client();
-  dispose_global_network_game_server();
-  player_ui_clear_multiplayer_variant();
-  network_game_set_accept_remote_connections(0);
-  network_game_server_get();
-  /* test eax, eax -> jne 0xea04a */
-  game_engine_playlist_initialize();
-  FUN_0012a890();
-  /* cmp (char)ebx, 1 -> jne 0xea046 */
-  game_engine_playlist_begin();
-  set_game_connection(2);
-  /* test (char)ebx, (char)ebx -> je 0xea05e */
-  network_game_client_get();
-  /* test eax, eax -> jne 0xea05a */
-  FUN_0012a250();
-  /* test (char)ebx, (char)ebx -> jne 0xea07c */
-  dispose_global_network_game_client();
-  dispose_global_network_game_server();
-  player_ui_clear_multiplayer_variant();
-  error(2, (char *)0x00285d48);
-  /* relift: relift: mov word ptr [0x31fa94], 2 */
-  player_ui_clear_multiplayer_joins();
-  player_ui_clear_multiplayer_variant();
-  dispose_global_network_game_server();
-  dispose_global_network_game_client();
-  network_game_set_accept_remote_connections(0);
-  /* relift: relift: mov word ptr [0x31fa94], 1 */
-  player_ui_end_editing_profile();
-  ui_widget_get_attract_mode_flag();
-  /* test (char)eax, (char)eax -> jne 0xea0ca */
-  ui_widget_start_title_music();
-  /* relift: relift: mov word ptr [0x31fa94], (int16_t)eax */
-  game_engine_playlist_initialize();
-  game_engine_playlist_next(0, 0, 4);
-  FUN_0012a190();
-  tag_get('aLeD', *(int *)(a0));
-  /* relift: cmp word ptr [edi], 2 -> je 0xea146 */
-  display_assert((char *)0x00285db8, (char *)0x002859a4, 1228, 1);
-  system_exit(-1);
-  /* relift: cmp dword ptr [edi + 0x3e0], 3 -> je 0xea16f */
-  display_assert((char *)0x00285d78, (char *)0x002859a4, 1229, 1);
-  system_exit(-1);
-  saved_game_file_retrieve_last_used_multiplayer_map();
-  /* test (char)eax, (char)eax -> je 0xea1dd */
-  crt_stricmp((void *)0, (char *)0);
-  /* test eax, eax -> je 0xea1c9 */
-  /* relift: cmp word ptr [esi + 0x3c], (int16_t)edi -> jl 0xea1a0 */
-  tag_get('aLeD', *(int *)(a0));
-  /* cmp ecx, 1 -> je 0xea256 */
-  display_assert((char *)0x00285ec0, (char *)0x002859a4, 1280, 1);
-  system_exit(-1);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [eax], 0 -> jne 0xea278 */
-  /* relift: cmp dword ptr [eax + 0x3e0], 3 -> je 0xea298 */
-  display_assert((char *)0x00285e70, (char *)0x002859a4, 1285, 1);
-  system_exit(-1);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [esi], 2 -> je 0xea2d3 */
-  display_assert((char *)0x00285db8, (char *)0x002859a4, 1288, 1);
-  system_exit(-1);
-  /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xea2fc */
-  display_assert((char *)0x00285d78, (char *)0x002859a4, 1289, 1);
-  system_exit(-1);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0xea311 */
-  /* cmp (int16_t)eax, 0xd -> jl 0xea331 */
-  display_assert((char *)0x00285e20, (char *)0x002859a4, 1298, 1);
-  system_exit(-1);
-  crt_fopen((char *)0x00285e04, (char *)0x002658a4);
-  /* test esi, esi -> je 0xea37e */
-  crt_fgets((void *)0, 64, (void *)(uintptr_t)eax);
-  csstrtok((void *)0, (char *)0x00285dfc);
-  crt_fclose((void *)(uintptr_t)eax);
-  main_set_multiplayer_map_name((void *)0);
-  FUN_000ab040((void *)0);
-  network_game_server_get();
-  /* test eax, eax -> je 0xea3a0 */
-  network_game_server_change_map_name(eax, (void *)0);
-  crt_stricmp((void *)0, (char *)0);
-  /* test eax, eax -> je 0xea3c5 */
-  /* cmp esi, 0xd -> jl 0xea3a2 */
-  saved_game_file_remember_last_used_multiplayer_map();
-  /* mem[0x0031e494] = 0xffffffff */
-  csmemset((void *)0x005aa260, -1, 324);
-  tag_get('aLeD', *(int *)(a0));
-  /* relift: cmp word ptr [esi], 2 -> je 0xea442 */
-  display_assert((char *)0x00285f48, (char *)0x002859a4, 1384, 1);
-  system_exit(-1);
-  /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xea46b */
-  display_assert((char *)0x00285f08, (char *)0x002859a4, 1385, 1);
-  system_exit(-1);
-  ui_widget_realloc(0, 400, (char *)0x002859a4, 1390);
-  FUN_001c26b0();
-  /* cmp (int16_t)eax, 3 -> jae 0xea4d5 */
-  saved_game_file_retrieve_last_used_multiplayer_variant_directory();
-  /* test (char)eax, (char)eax -> je 0xea52b */
-  saved_game_file_find_profile_index_for_directory_path();
-  /* cmp eax, -1 -> je 0xea52b */
-  /* test (int16_t)edx, (int16_t)edx -> jbe 0xea52b */
-  /* relift: cmp dword ptr [esi + ebx*4], eax -> je 0xea527 */
-  /* cmp (int16_t)ecx, (int16_t)edx -> jb 0xea510 */
-  /* test eax, eax -> je 0xea55e */
-  widget_free((void *)(*(int *)((char *)a0 + 0x40)));
-  tag_get('aLeD', *(int *)(a0));
-  /* cmp ecx, 1 -> je 0xea5ba */
-  display_assert((char *)0x00286108, (char *)0x002859a4, 1465, 1);
-  system_exit(-1);
-  tag_get('aLeD', 0);
-  /* relift: cmp dword ptr [eax + 0x3e0], ebx -> je 0xea600 */
-  display_assert((char *)0x002860b8, (char *)0x002859a4, 1470, 1);
-  system_exit(-1);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [esi], 2 -> je 0xea63b */
-  display_assert((char *)0x00286070, (char *)0x002859a4, 1473, 1);
-  system_exit(-1);
-  /* relift: cmp dword ptr [esi + 0x3e0], ebx -> je 0xea663 */
-  display_assert((char *)0x00286034, (char *)0x002859a4, 1474, 1);
-  system_exit(-1);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0xea67d */
-  /* cmp edx, ecx -> jl 0xea69d */
-  display_assert((char *)0x00285fe0, (char *)0x002859a4, 1483, 1);
-  system_exit(-1);
-  /* cmp esi, -1 -> jne 0xea6bf */
-  ui_play_audio_feedback_sound(4);
-  display_error_deferred(31, -1, 1, 0);
-  ui_play_audio_feedback_sound(4);
-  playlist_profile_delete();
-  /* test (char)eax, (char)eax -> je 0xea7f8 */
-  network_game_server_get();
-  FUN_001c4da0();
-  /* test (char)eax, (char)eax -> je 0xea725 */
-  saved_game_file_remember_last_used_multiplayer_variant_directory();
-  crt_fopen((char *)0x00285fc0, (char *)0x002658a4);
-  /* test ebx, ebx -> je 0xea7d2 */
-  crt_fgets((void *)0, 128, (void *)(uintptr_t)eax);
-  csstrtok((void *)0, (char *)0x00285dfc);
-  csmemset((void *)0, 0, 104);
-  game_engine_get_variant_by_name((void *)0, (void *)0);
-  csmemcmp((void *)0, (void *)0, 104);
-  /* test eax, eax -> je 0xea7c6 */
-  crt_fclose((void *)(uintptr_t)eax);
-  player_ui_set_game_variant();
-  /* test edi, edi -> je 0xea7ef */
-  network_game_server_change_game_variant((void *)(uintptr_t)a0, (void *)0);
-  error(2, (char *)0x00285f90);
-  /* test eax, eax -> jne 0xea83d */
-  display_assert((char *)0x00286184, (char *)0x002859a4, 1572, 1);
-  system_exit(-1);
-  FUN_0012a0a0();
-  /* test ebx, ebx -> je 0xea8f4 */
-  /* relift: cmp byte ptr [ebx + 0xc0], 1 -> jne 0xea8f4 */
-  network_game_client_get_local_machine_index();
-  network_player_is_valid((void *)((char *)(char *)eax + 0x242 - 0x1c));
-  /* test (char)eax, (char)eax -> je 0xea89e */
-  /* relift: cmp (int16_t)ecx, word ptr [ebp - 4] -> jne 0xea89e */
-  /* relift: cmp (int16_t)edx, word ptr [eax + 2] -> je 0xea8b0 */
-  /* cmp esi, 0x10 -> jl 0xea876 */
-  network_game_client_get();
-  network_game_client_update_local_player_data((void *)(uintptr_t)eax, (void *)0);
-  /* test (char)eax, (char)eax -> jne 0xea8f4 */
-  error(2, (char *)0x00286150);
-  /* test ebx, ebx -> jne 0xea92c */
-  display_assert((char *)0x00286184, (char *)0x002859a4, 1618, 1);
-  system_exit(-1);
-  network_game_client_get();
-  network_game_client_get_state((void *)(uintptr_t)eax, (void *)0);
-  /* cmp (int16_t)eax, 2 -> jne 0xeaa03 */
-  FUN_0012a0a0();
-  network_game_client_get_local_machine_index();
-  display_assert((char *)0x002861a8, (char *)0x002859a4, 1627, 1);
-  system_exit(-1);
-  /* cmp (int16_t)edi, -1 -> je 0xea9dd */
-  network_player_is_valid((void *)0);
-  /* test (char)eax, (char)eax -> je 0xea9d3 */
-  /* cmp (int16_t)edx, (int16_t)edi -> jne 0xea9d3 */
-  /* relift: cmp (int16_t)eax, word ptr [ebx + 2] -> je 0xeaa01 */
-  network_game_client_add_player((void *)(uintptr_t)local_4, 0);
-  /* test (char)eax, (char)eax -> jne 0xeaa01 */
-  network_game_log((char *)0x0028618c);
-  tag_get('aLeD', *(int *)(a0));
-  /* mem[0x0031e494] = 0xffffffff */
-  csmemset((void *)0x005aa3c0, -1, 156);
-  /* relift: cmp word ptr [edi], 2 -> je 0xeaa6d */
-  display_assert((char *)0x002861f8, (char *)0x002859a4, 1686, 1);
-  system_exit(-1);
-  /* cmp eax, ebx -> je 0xeaaa0 */
-  display_assert((char *)0x002861b0, (char *)0x002859a4, 1688, 1);
-  system_exit(-1);
-  ui_widget_realloc(0, 400, (char *)0x002859a4, 1693);
-  FUN_001c0d50();
-  /* cmp eax, ebx -> jne 0xeab29 */
-  /* cmp (int16_t)ecx, (int16_t)ebx -> jae 0xeab29 */
-  player_ui_get_player1_last_used_profile_index();
-  /* cmp eax, -1 -> je 0xeab61 */
-  /* relift: cmp word ptr [esi + 0x44], (int16_t)ecx -> jbe 0xeab61 */
-  /* relift: cmp dword ptr [edx + ecx*4], eax -> je 0xeab5d */
-  /* cmp ecx, edi -> jl 0xeab46 */
-  /* test eax, eax -> je 0xeab8e */
-  widget_free((void *)(*(int *)((char *)a0 + 0x40)));
-  /* test eax, eax -> je 0xeabb4 */
-  /* relift: cmp word ptr [eax + 2], -1 -> jne 0xeabd4 */
-  display_assert((char *)0x002863b4, (char *)0x002859a4, 1763, 1);
-  system_exit(-1);
-  tag_get('aLeD', *(int *)(a0));
-  /* relift: cmp word ptr [eax], 0 -> jne 0xeabf8 */
-  /* relift: cmp dword ptr [eax + 0x3e0], 3 -> jge 0xeac18 */
-  display_assert((char *)0x00286360, (char *)0x002859a4, 1772, 1);
-  system_exit(-1);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [esi], 2 -> je 0xeac53 */
-  display_assert((char *)0x00286320, (char *)0x002859a4, 1775, 1);
-  system_exit(-1);
-  /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xeac7c */
-  display_assert((char *)0x002862e8, (char *)0x002859a4, 1776, 1);
-  system_exit(-1);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0xeac93 */
-  /* cmp eax, edx -> jl 0xeacb3 */
-  display_assert((char *)0x00286298, (char *)0x002859a4, 1784, 1);
-  system_exit(-1);
-  /* cmp eax, -1 -> je 0xead3f */
-  display_error_deferred(31, -1, 1, 0);
-  ui_play_audio_feedback_sound(4);
-  player_profile_new();
-  /* test (char)eax, (char)eax -> je 0xead28 */
-  player_ui_get_single_player_local_player_from_controller(0);
-  player_ui_set_active_player_profile();
-  error(2, (char *)0x00286264);
-  error(2, (char *)0x0028623c);
-  ui_play_audio_feedback_sound(4);
-  /* relift: cmp word ptr [esi + 2], -1 -> jne 0xead97 */
-  display_assert((char *)0x002863b4, (char *)0x002859a4, 1834, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xeadb3 */
-  /* relift: cmp word ptr [esi + 0xe], 2 -> je 0xeadd3 */
-  /* test esi, esi -> jne 0xeada5 */
-  display_assert((char *)0x00286498, (char *)0x002859a4, 1838, 1);
-  system_exit(-1);
-  tag_get('aLeD', 0);
-  /* test ecx, ecx -> je 0xeae0d */
-  display_assert((char *)0x00286440, (char *)0x002859a4, 1845, 1);
-  system_exit(-1);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0xeae21 */
-  /* cmp eax, edx -> jl 0xeae41 */
-  display_assert((char *)0x002863f0, (char *)0x002859a4, 1851, 1);
-  system_exit(-1);
-  display_error_deferred(31, a0, 1, 0);
-  ui_play_audio_feedback_sound(4);
-  player_profile_new();
-  /* test (char)eax, (char)eax -> je 0xeae9d */
-  player_ui_set_active_player_profile();
-  error(2, (char *)0x00286264);
-  /* mem[0x0031e494] = 0xffffffff */
-  tag_get('aLeD', *(int *)(a0));
-  /* relift: cmp word ptr [eax], 0 -> jne 0xeaef3 */
-  /* relift: cmp dword ptr [eax + 0x3e0], 3 -> jge 0xeaf13 */
-  display_assert((char *)0x00286500, (char *)0x002859a4, 1896, 1);
-  system_exit(-1);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [edi], 2 -> je 0xeaf4f */
-  display_assert((char *)0x00286070, (char *)0x002859a4, 1899, 1);
-  system_exit(-1);
-  display_assert((char *)0x00286034, (char *)0x002859a4, 1900, 1);
-  system_exit(-1);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0xeaf90 */
-  /* cmp eax, edx -> jl 0xeafb0 */
-  display_assert((char *)0x00285fe0, (char *)0x002859a4, 1909, 1);
-  system_exit(-1);
-  /* cmp eax, -1 -> je 0xeafef */
-  player_ui_begin_editing_profile();
-  display_error_deferred(31, -1, 1, 0);
-  ui_play_audio_feedback_sound(4);
-  ui_play_audio_feedback_sound(4);
-  /* mem[0x0031e494] = 0xffffffff */
-  player_ui_end_editing_profile();
-  player_ui_get_edit_playlist_profile();
-  /* relift: cmp word ptr [esi + 0xe], 3 -> je 0xeb060 */
-  display_assert((char *)0x002865a0, (char *)0x002859a4, 1958, 1);
-  system_exit(-1);
-  /* test edi, edi -> je 0xeb0c8 */
-  /* cmp eax, 4 -> ja 0xeb097 */
-  error(2, (char *)0x0028657c);
-  /* relift: cmp esi, dword ptr [edi + 0x18] -> je 0xeb0be */
-  csmemset((void *)((char *)eax + 0x4c), 0, 24);
-  error(2, (char *)0x00286550);
-  player_ui_get_edit_playlist_profile();
-  virtual_keyboard_set_validation((wchar_t *)(uintptr_t)eax, 24, 9);
-  /* test (char)eax, (char)eax -> jne 0xeb12c */
-  error(2, (char *)0x002865d0);
-  error(2, (char *)0x00286550);
-  player_ui_get_edit_playlist_profile();
-  /* cmp edi, ebx -> jne 0xeb193 */
-  display_assert((char *)0x002868d0, (char *)0x002859a4, 2040, 1);
-  system_exit(-1);
-  /* cmp esi, ebx -> je 0xeb1ae */
-  /* relift: cmp word ptr [esi + 0xe], 2 -> je 0xeb1ce */
-  /* cmp esi, ebx -> jne 0xeb1a0 */
-  display_assert((char *)0x002868a8, (char *)0x002859a4, 2042, 1);
-  system_exit(-1);
-  error(2, (char *)0x0028686c);
-  /* cmp edi, ebx -> jne 0xeb220 */
-  display_assert((char *)0x00286848, (char *)0x002859a4, 2051, 1);
-  system_exit(-1);
-  /* cmp esi, ebx -> je 0xeb23d */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb25d */
-  /* cmp esi, ebx -> jne 0xeb230 */
-  display_assert((char *)0x0028681c, (char *)0x002859a4, 2053, 1);
-  system_exit(-1);
-  /* cmp eax, 5 -> ja 0xeb2b1 */
-  error(2, (char *)0x002867dc);
-  /* cmp edi, ebx -> jne 0xeb2e7 */
-  display_assert((char *)0x002867bc, (char *)0x002859a4, 2066, 1);
-  system_exit(-1);
-  /* cmp esi, ebx -> je 0xeb300 */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb320 */
-  /* cmp esi, ebx -> jne 0xeb2f3 */
-  display_assert((char *)0x0028678c, (char *)0x002859a4, 2068, 1);
-  system_exit(-1);
-  error(2, (char *)0x00286748);
-  /* cmp edi, ebx -> jne 0xeb372 */
-  display_assert((char *)0x00286720, (char *)0x002859a4, 2077, 1);
-  system_exit(-1);
-  /* cmp esi, ebx -> je 0xeb38d */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb3ad */
-  /* cmp esi, ebx -> jne 0xeb380 */
-  display_assert((char *)0x002866e8, (char *)0x002859a4, 2079, 1);
-  system_exit(-1);
-  error(2, (char *)0x002866a0);
-  /* cmp esi, ebx -> jne 0xeb405 */
-  display_assert((char *)0x0028667c, (char *)0x002859a4, 2088, 1);
-  system_exit(-1);
-  /* cmp esi, ebx -> je 0xeb41e */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb441 */
-  /* cmp esi, ebx -> jne 0xeb411 */
-  display_assert((char *)0x0028664c, (char *)0x002859a4, 2090, 1);
-  system_exit(-1);
-  error(2, (char *)0x00286608);
-  ui_widgets_pop_stack(0);
-  error(2, (char *)0x00286550);
-  player_ui_get_edit_playlist_profile();
-  /* test ebx, ebx -> je 0xeb6dd */
-  /* test edi, edi -> jne 0xeb52f */
-  display_assert((char *)0x00286a64, (char *)0x002859a4, 2126, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xeb544 */
-  /* relift: cmp word ptr [esi + 0xe], 2 -> je 0xeb564 */
-  /* test esi, esi -> jne 0xeb536 */
-  display_assert((char *)0x00286a38, (char *)0x002859a4, 2128, 1);
-  system_exit(-1);
-  error(2, (char *)0x002869f8);
-  /* test edi, edi -> jne 0xeb5b2 */
-  display_assert((char *)0x002869d4, (char *)0x002859a4, 2137, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xeb5cd */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb5ed */
-  /* test esi, esi -> jne 0xeb5c0 */
-  display_assert((char *)0x002869a8, (char *)0x002859a4, 2139, 1);
-  system_exit(-1);
-  /* cmp eax, 4 -> ja 0xeb62a */
-  error(2, (char *)0x00286968);
-  /* test esi, esi -> jne 0xeb660 */
-  display_assert((char *)0x00286950, (char *)0x002859a4, 2151, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xeb67d */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb69d */
-  /* test esi, esi -> jne 0xeb670 */
-  display_assert((char *)0x00286928, (char *)0x002859a4, 2153, 1);
-  system_exit(-1);
-  error(2, (char *)0x002868f0);
-  ui_widgets_pop_stack(0);
-  error(2, (char *)0x00286550);
-  player_ui_get_edit_playlist_profile();
-  /* cmp edi, ebx -> jne 0xeb753 */
-  display_assert((char *)0x00286c9c, (char *)0x002859a4, 2187, 1);
-  system_exit(-1);
-  /* cmp esi, ebx -> je 0xeb76e */
-  /* relift: cmp word ptr [esi + 0xe], 2 -> je 0xeb78e */
-  /* cmp esi, ebx -> jne 0xeb760 */
-  display_assert((char *)0x00286c70, (char *)0x002859a4, 2189, 1);
-  system_exit(-1);
-  error(2, (char *)0x00286c30);
-  /* cmp edi, ebx -> jne 0xeb7e0 */
-  display_assert((char *)0x00286c10, (char *)0x002859a4, 2198, 1);
-  system_exit(-1);
-  /* cmp esi, ebx -> je 0xeb7fd */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb81d */
-  /* cmp esi, ebx -> jne 0xeb7f0 */
-  display_assert((char *)0x00286be0, (char *)0x002859a4, 2200, 1);
-  system_exit(-1);
-  error(2, (char *)0x00286ba0);
-  /* cmp edi, ebx -> jne 0xeb86f */
-  display_assert((char *)0x00286b80, (char *)0x002859a4, 2209, 1);
-  system_exit(-1);
-  /* cmp esi, ebx -> je 0xeb88d */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb8ad */
-  /* cmp esi, ebx -> jne 0xeb880 */
-  display_assert((char *)0x00286b54, (char *)0x002859a4, 2211, 1);
-  system_exit(-1);
-  error(2, (char *)0x00286b14);
-  /* cmp edi, ebx -> jne 0xeb8ff */
-  display_assert((char *)0x00286af4, (char *)0x002859a4, 2220, 1);
-  system_exit(-1);
-  /* cmp esi, ebx -> je 0xeb91d */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb93d */
-  /* cmp esi, ebx -> jne 0xeb910 */
-  display_assert((char *)0x00286ac8, (char *)0x002859a4, 2222, 1);
-  system_exit(-1);
-  /* cmp eax, 4 -> ja 0xeb989 */
-  error(2, (char *)0x00286a88);
-  /* cmp esi, ebx -> jne 0xeb9bf */
-  display_assert((char *)0x00286950, (char *)0x002859a4, 2234, 1);
-  system_exit(-1);
-  /* cmp esi, ebx -> je 0xeb9dd */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xeb9fd */
-  /* cmp esi, ebx -> jne 0xeb9d0 */
-  display_assert((char *)0x00286928, (char *)0x002859a4, 2236, 1);
-  system_exit(-1);
-  error(2, (char *)0x002868f0);
-  ui_widgets_pop_stack(0);
-  error(2, (char *)0x00286550);
-  player_ui_get_edit_playlist_profile();
-  /* test edi, edi -> jne 0xebab0 */
-  display_assert((char *)0x00287034, (char *)0x002859a4, 2270, 1);
-  system_exit(-1);
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebaed */
-  /* test esi, esi -> jne 0xebac0 */
-  display_assert((char *)0x00287004, (char *)0x002859a4, 2272, 1);
-  system_exit(-1);
-  /* cmp eax, 3 -> ja 0xebb2d */
-  error(2, (char *)0x00286fc0);
-  /* test edi, edi -> jne 0xebb63 */
-  display_assert((char *)0x00286f98, (char *)0x002859a4, 2283, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xebb7d */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebb9d */
-  /* test esi, esi -> jne 0xebb70 */
-  display_assert((char *)0x00286f64, (char *)0x002859a4, 2285, 1);
-  system_exit(-1);
-  /* cmp eax, 3 -> ja 0xebbdd */
-  error(2, (char *)0x00286f20);
-  /* test edi, edi -> jne 0xebc13 */
-  display_assert((char *)0x00286efc, (char *)0x002859a4, 2296, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xebc2d */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebc4d */
-  /* test esi, esi -> jne 0xebc20 */
-  display_assert((char *)0x00286ecc, (char *)0x002859a4, 2298, 1);
-  system_exit(-1);
-  error(2, (char *)0x00286e88);
-  /* test edi, edi -> jne 0xebcb6 */
-  display_assert((char *)0x00286e6c, (char *)0x002859a4, 2308, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xebccf */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebcef */
-  /* test esi, esi -> jne 0xebcc2 */
-  display_assert((char *)0x00286e40, (char *)0x002859a4, 2310, 1);
-  system_exit(-1);
-  error(2, (char *)0x00286e04);
-  /* test edi, edi -> jne 0xebd58 */
-  display_assert((char *)0x00286de4, (char *)0x002859a4, 2320, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xebd71 */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebd91 */
-  /* test esi, esi -> jne 0xebd64 */
-  display_assert((char *)0x00286db8, (char *)0x002859a4, 2322, 1);
-  system_exit(-1);
-  error(2, (char *)0x00286d78);
-  /* test edi, edi -> jne 0xebde5 */
-  display_assert((char *)0x00286d54, (char *)0x002859a4, 2331, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xebdfe */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebe1e */
-  /* test esi, esi -> jne 0xebdf1 */
-  display_assert((char *)0x00286d24, (char *)0x002859a4, 2333, 1);
-  system_exit(-1);
-  /* test eax, eax -> jl 0xebe34 */
-  /* cmp eax, 0xf -> jg 0xebe34 */
-  error(2, (char *)0x00286ce0);
-  /* test edi, edi -> jne 0xebe6a */
-  display_assert((char *)0x00286cc0, (char *)0x002859a4, 2358, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xebe83 */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebea3 */
-  /* test esi, esi -> jne 0xebe76 */
-  display_assert((char *)0x002869a8, (char *)0x002859a4, 2360, 1);
-  system_exit(-1);
-  /* cmp eax, 4 -> ja 0xebeef */
-  error(2, (char *)0x00286968);
-  /* test esi, esi -> jne 0xebf25 */
-  display_assert((char *)0x00286950, (char *)0x002859a4, 2372, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xebf3e */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xebf5e */
-  /* test esi, esi -> jne 0xebf31 */
-  display_assert((char *)0x00286928, (char *)0x002859a4, 2374, 1);
-  system_exit(-1);
-  error(2, (char *)0x002868f0);
-  ui_widgets_pop_stack(0);
-  error(2, (char *)0x00286550);
-  player_ui_get_edit_playlist_profile();
-  /* test ebx, ebx -> je 0xec292 */
-  /* test edi, edi -> jne 0xec02f */
-  display_assert((char *)0x002871d8, (char *)0x002859a4, 2408, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xec044 */
-  /* relift: cmp word ptr [esi + 0xe], 2 -> je 0xec064 */
-  /* test esi, esi -> jne 0xec036 */
-  display_assert((char *)0x002871ac, (char *)0x002859a4, 2410, 1);
-  system_exit(-1);
-  error(2, (char *)0x0028716c);
-  /* test edi, edi -> jne 0xec0c4 */
-  display_assert((char *)0x0028714c, (char *)0x002859a4, 2420, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xec0dd */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec0fd */
-  /* test esi, esi -> jne 0xec0d0 */
-  display_assert((char *)0x00287120, (char *)0x002859a4, 2422, 1);
-  system_exit(-1);
-  error(2, (char *)0x002870e4);
-  /* test edi, edi -> jne 0xec15d */
-  display_assert((char *)0x002870c8, (char *)0x002859a4, 2432, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xec17d */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec19d */
-  /* test esi, esi -> jne 0xec170 */
-  display_assert((char *)0x0028709c, (char *)0x002859a4, 2434, 1);
-  system_exit(-1);
-  /* cmp eax, 5 -> ja 0xec1e3 */
-  error(2, (char *)0x0028705c);
-  /* test esi, esi -> jne 0xec219 */
-  display_assert((char *)0x00286950, (char *)0x002859a4, 2447, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xec232 */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec252 */
-  /* test esi, esi -> jne 0xec225 */
-  display_assert((char *)0x00286928, (char *)0x002859a4, 2449, 1);
-  system_exit(-1);
-  error(2, (char *)0x002868f0);
-  ui_widgets_pop_stack(0);
-  error(2, (char *)0x00286550);
-  player_ui_get_edit_playlist_profile();
-  /* test ebx, ebx -> je 0xec7cb */
-  /* test edi, edi -> jne 0xec2ff */
-  display_assert((char *)0x00287654, (char *)0x002859a4, 2483, 1);
-  system_exit(-1);
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec33d */
-  /* test esi, esi -> jne 0xec310 */
-  display_assert((char *)0x00287624, (char *)0x002859a4, 2485, 1);
-  system_exit(-1);
-  /* cmp eax, 3 -> ja 0xec371 */
-  error(2, (char *)0x002875e0);
-  /* test edi, edi -> jne 0xec3a7 */
-  display_assert((char *)0x002875b8, (char *)0x002859a4, 2496, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xec3c0 */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec3e0 */
-  /* test esi, esi -> jne 0xec3b3 */
-  display_assert((char *)0x00287588, (char *)0x002859a4, 2498, 1);
-  system_exit(-1);
-  /* cmp eax, 5 -> ja 0xec426 */
-  error(2, (char *)0x00287548);
-  /* test edi, edi -> jne 0xec45c */
-  display_assert((char *)0x00287530, (char *)0x002859a4, 2511, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xec475 */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec495 */
-  /* test esi, esi -> jne 0xec468 */
-  display_assert((char *)0x00287508, (char *)0x002859a4, 2513, 1);
-  system_exit(-1);
-  error(2, (char *)0x002874cc);
-  /* test edi, edi -> jne 0xec4ea */
-  display_assert((char *)0x002874ac, (char *)0x002859a4, 2522, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xec503 */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec523 */
-  /* test esi, esi -> jne 0xec4f6 */
-  display_assert((char *)0x00287480, (char *)0x002859a4, 2524, 1);
-  system_exit(-1);
-  /* cmp eax, 3 -> ja 0xec557 */
-  error(2, (char *)0x00287440);
-  /* test edi, edi -> jne 0xec58d */
-  display_assert((char *)0x0028741c, (char *)0x002859a4, 2535, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xec5ad */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec5cd */
-  /* test esi, esi -> jne 0xec5a0 */
-  display_assert((char *)0x002873e8, (char *)0x002859a4, 2537, 1);
-  system_exit(-1);
-  /* cmp eax, 3 -> ja 0xec601 */
-  error(2, (char *)0x002873a0);
-  /* test edi, edi -> jne 0xec637 */
-  display_assert((char *)0x00287380, (char *)0x002859a4, 2548, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xec650 */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec670 */
-  /* test esi, esi -> jne 0xec643 */
-  display_assert((char *)0x00287354, (char *)0x002859a4, 2550, 1);
-  system_exit(-1);
-  error(2, (char *)0x00287314);
-  /* test edi, edi -> jne 0xec6be */
-  display_assert((char *)0x002872f0, (char *)0x002859a4, 2559, 1);
-  system_exit(-1);
-  /* test esi, esi -> je 0xec6dd */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec6fd */
-  /* test esi, esi -> jne 0xec6d0 */
-  display_assert((char *)0x002872bc, (char *)0x002859a4, 2561, 1);
-  system_exit(-1);
-  error(2, (char *)0x00287278);
-  /* test eax, eax -> je 0xec784 */
-  /* test esi, esi -> je 0xec74d */
-  /* relift: cmp word ptr [esi + 0xe], (int16_t)eax -> je 0xec76d */
-  /* test esi, esi -> jne 0xec740 */
-  display_assert((char *)0x00287244, (char *)0x002859a4, 2574, 1);
-  system_exit(-1);
-  /* cmp eax, 3 -> ja 0xec7b5 */
-  error(2, (char *)0x00287200);
-  error(2, (char *)0x00286550);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
-  (void)local_1a;
-  (void)local_1c;
-  (void)local_20;
-  (void)local_24;
-  (void)local_4;
-  (void)lift_a1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x100, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movw 0x8(%%ebp), %%bx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "pushl %%esi\n\t"
+      "jge .LFUN_000e8e20_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x967\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x284a90\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000e8e20_1:\n\t"
+      "movl 0x326a08, %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_000e8e20_17\n\t"
+      "pushl $0xff\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x100(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8de70]\n\t"
+      "leal -0x100(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "call *%[c8d9a0]\n\t"
+      "leal -0x100(%%ebp), %%edx\n\t"
+      "pushl $0x284a8c\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000e8e20_2\n\t"
+      "movl $0x284a54, %%esi\n\t"
+      "jmp .LFUN_000e8e20_11\n\t"
+      ".LFUN_000e8e20_2:\n\t"
+      "leal -0x100(%%ebp), %%eax\n\t"
+      "pushl $0x284a50\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000e8e20_3\n\t"
+      "movl $0x284a18, %%esi\n\t"
+      "jmp .LFUN_000e8e20_11\n\t"
+      ".LFUN_000e8e20_3:\n\t"
+      "leal -0x100(%%ebp), %%ecx\n\t"
+      "pushl $0x284a14\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000e8e20_4\n\t"
+      "movl $0x2849dc, %%esi\n\t"
+      "jmp .LFUN_000e8e20_11\n\t"
+      ".LFUN_000e8e20_4:\n\t"
+      "leal -0x100(%%ebp), %%edx\n\t"
+      "pushl $0x2849d8\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000e8e20_5\n\t"
+      "movl $0x2849a0, %%esi\n\t"
+      "jmp .LFUN_000e8e20_11\n\t"
+      ".LFUN_000e8e20_5:\n\t"
+      "leal -0x100(%%ebp), %%eax\n\t"
+      "pushl $0x28499c\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000e8e20_6\n\t"
+      "movl $0x284964, %%esi\n\t"
+      "jmp .LFUN_000e8e20_11\n\t"
+      ".LFUN_000e8e20_6:\n\t"
+      "leal -0x100(%%ebp), %%ecx\n\t"
+      "pushl $0x284960\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000e8e20_7\n\t"
+      "movl $0x284928, %%esi\n\t"
+      "jmp .LFUN_000e8e20_11\n\t"
+      ".LFUN_000e8e20_7:\n\t"
+      "leal -0x100(%%ebp), %%edx\n\t"
+      "pushl $0x284924\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000e8e20_8\n\t"
+      "movl $0x2848ec, %%esi\n\t"
+      "jmp .LFUN_000e8e20_11\n\t"
+      ".LFUN_000e8e20_8:\n\t"
+      "leal -0x100(%%ebp), %%eax\n\t"
+      "pushl $0x2848e8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000e8e20_9\n\t"
+      "movl $0x2848b0, %%esi\n\t"
+      "jmp .LFUN_000e8e20_11\n\t"
+      ".LFUN_000e8e20_9:\n\t"
+      "leal -0x100(%%ebp), %%ecx\n\t"
+      "pushl $0x2848ac\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000e8e20_10\n\t"
+      "movl $0x284874, %%esi\n\t"
+      "jmp .LFUN_000e8e20_11\n\t"
+      ".LFUN_000e8e20_10:\n\t"
+      "leal -0x100(%%ebp), %%edx\n\t"
+      "pushl $0x284870\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d9690]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000e8e20_16\n\t"
+      "movl $0x284838, %%esi\n\t"
+      ".LFUN_000e8e20_11:\n\t"
+      "pushl $0\n\t"
+      "call *%[ce07c0]\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ce84e0]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000e8e20_15\n\t"
+      "movl 0x34(%%eax), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_000e8e20_13\n\t"
+      ".LFUN_000e8e20_12:\n\t"
+      "cmpw $1, 0xe(%%esi)\n\t"
+      "je .LFUN_000e8e20_14\n\t"
+      "movl 0x2c(%%esi), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_000e8e20_12\n\t"
+      ".LFUN_000e8e20_13:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x986\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x284808\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000e8e20_14:\n\t"
+      "movw %%bx, 0x40(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000e8e20_15:\n\t"
+      "pushl $0x2847e4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000e8e20_16:\n\t"
+      "leal -0x100(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2847a4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000e8e20_17:\n\t"
+      "pushl $0x284768\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(be8e20_assert), [exitfn] "m"(be8e20_exitfn), [c1ba1f0] "m"(be8e20_c1ba1f0), [c8de70] "m"(be8e20_c8de70), [c8d9a0] "m"(be8e20_c8d9a0), [c1d9690] "m"(be8e20_c1d9690), [ce07c0] "m"(be8e20_ce07c0), [ce84e0] "m"(be8e20_ce84e0), [c8f390] "m"(be8e20_c8f390)
+      : "memory");
 }
+#else
+#error "FUN_000e8e20: clang naked draft required"
+#endif
+
 
 void FUN_000ffeb0(char param_1)
 {
@@ -4630,103 +4017,354 @@ float *FUN_001037b0(float *out, float *p0, float *p1, float *p2)
   return out;
 }
 
-int FUN_00103860(int base, float *a, float *b, float *c, char flag)
+/* FUN_00103860 (0x103860) — XBE naked draft (batch 118). */
+#if defined(__clang__)
+static int (*const b103860_c117da0)(int *array) = FUN_00117da0;
+static int (*const b103860_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
+static int (*const b103860_c103600)(int *array, float *vec) = FUN_00103600;
+static int (*const b103860_c1036c0)(int *base, int a, int b, int flag) = FUN_001036c0;
+static void *(*const b103860_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b103860_c104040)(float *p0, float *p1, float *p2, float *color) = FUN_00104040;
+static void (*const b103860_c1db443)(void) = _wprintf;
+
+__attribute__((naked, noinline))
+int FUN_00103860(int base __attribute__((unused)), float *a __attribute__((unused)), float *b __attribute__((unused)), float *c __attribute__((unused)), char flag __attribute__((unused)))
 {
-  int slot;
-  int i;
-  int *elem;
-  int indices[3];
-  int result;
-
-  slot = FUN_00117da0((int *)(base + 0x18));
-  if (slot == -1)
-    return -1;
-  elem = (int *)FUN_00117ee0((int *)(base + 0x18), slot, 0x18);
-  result = FUN_00103600((int *)base, a);
-  indices[0] = result;
-  result = FUN_00103600((int *)base, b);
-  indices[1] = result;
-  result = FUN_00103600((int *)base, c);
-  indices[2] = result;
-  if (indices[0] == -1 || indices[1] == -1 || indices[2] == -1)
-    slot = -1;
-  elem = (int *)FUN_00117ee0((int *)(base + 0x18), slot, 0x18);
-  for (i = 1; i <= 3; i++) {
-    int edge = FUN_001036c0((int *)base, indices[i % 3], indices[i - 1], flag);
-    elem[i - 1] = edge;
-    if (edge == 0)
-      slot = 0;
-  }
-  csmemset(elem + 3, 0, 8);
-  elem[3] = -1;
-  if (flag == 0)
-    return slot;
-  {
-    int tri;
-    int *tri_elem;
-    int j;
-
-    for (tri = 0; tri < *(int *)(base + 0x1c); tri++) {
-      tri_elem = (int *)FUN_00117ee0((int *)(base + 0x18), tri, 0x18);
-      for (j = 0; j < 3; j++) {
-        int lhs = tri_elem[j] & 0x7fffffff;
-        int rhs = indices[j] & 0x7fffffff;
-        if (lhs != rhs)
-          break;
-      }
-      if (j == 3)
-        goto draw;
-    }
-    if (j == 3)
-      goto done;
-draw:
-    FUN_00104040(a, b, c, (float *)0x2ee6f0);
-    if (*(char *)0x46e393 == 0) {
-      ((void (__cdecl *)(wchar_t *))0x1db443)((wchar_t *)0x28b780);
-      *(char *)0x46e393 = 1;
-    }
-done:
-    return slot;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x18(%%esi), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c117da0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "je .LFUN_00103860_12\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x18\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c117ee0]\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "call *%[c103600]\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl %%edi, -0x18(%%ebp)\n\t"
+      "call *%[c103600]\n\t"
+      "movl 0x14(%%ebp), %%ebx\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "call *%[c103600]\n\t"
+      "orl $0xffffffff, %%ecx\n\t"
+      "cmpl %%ecx, %%edi\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "je .LFUN_00103860_1\n\t"
+      "cmpl %%ecx, -0x14(%%ebp)\n\t"
+      "je .LFUN_00103860_1\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jne .LFUN_00103860_2\n\t"
+      ".LFUN_00103860_1:\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      ".LFUN_00103860_2:\n\t"
+      "movl -0xc(%%ebp), %%ebx\n\t"
+      "leal -0x18(%%ebp), %%edi\n\t"
+      "movl $1, %%esi\n\t"
+      "subl %%ebx, %%edi\n\t"
+      "movl $3, -0x8(%%ebp)\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_00103860_3:\n\t"
+      "movl %%esi, %%eax\n\t"
+      "cdq\n\t"
+      "movl $3, %%ecx\n\t"
+      "idivl %%ecx\n\t"
+      "movl (%%edi,%%ebx,1), %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl -0x18(%%ebp,%%edx,4), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1036c0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "jne .LFUN_00103860_4\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      ".LFUN_00103860_4:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "incl %%esi\n\t"
+      "addl $4, %%ebx\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jne .LFUN_00103860_3\n\t"
+      "movl -0xc(%%ebp), %%edi\n\t"
+      "pushl $8\n\t"
+      "leal 0x10(%%edi), %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "movl $0xffffffff, 0xc(%%edi)\n\t"
+      "call *%[memset]\n\t"
+      "movb 0x18(%%ebp), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00103860_11\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x1c(%%eax), %%edx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "decl %%edx\n\t"
+      "testl %%edx, %%edx\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "jle .LFUN_00103860_11\n\t"
+      ".LFUN_00103860_5:\n\t"
+      "pushl $0x18\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0x18, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c117ee0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%esi, %%esi\n\t"
+      ".LFUN_00103860_6:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "movl (%%edi,%%edx,4), %%edx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "andl $0x7fffffff, %%edx\n\t"
+      ".LFUN_00103860_7:\n\t"
+      "movswl %%cx, %%ebx\n\t"
+      "movl (%%eax,%%ebx,4), %%ebx\n\t"
+      "andl $0x7fffffff, %%ebx\n\t"
+      "cmpl %%edx, %%ebx\n\t"
+      "je .LFUN_00103860_8\n\t"
+      "incl %%ecx\n\t"
+      "cmpw $3, %%cx\n\t"
+      "jl .LFUN_00103860_7\n\t"
+      ".LFUN_00103860_8:\n\t"
+      "cmpw $3, %%cx\n\t"
+      "je .LFUN_00103860_10\n\t"
+      "incl %%esi\n\t"
+      "cmpw $3, %%si\n\t"
+      "jl .LFUN_00103860_6\n\t"
+      "movl 0x2ee6f0, %%eax\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c104040]\n\t"
+      "movb 0x46e393, %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00103860_9\n\t"
+      "pushl $0x28b780\n\t"
+      "call *%[c1db443]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, 0x46e393\n\t"
+      ".LFUN_00103860_9:\n\t"
+      "popl %%ebx\n\t"
+      "popl %%edi\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00103860_10:\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x1c(%%eax), %%edx\n\t"
+      "incl %%ecx\n\t"
+      "decl %%edx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "jl .LFUN_00103860_5\n\t"
+      ".LFUN_00103860_11:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_00103860_12:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c117da0] "m"(b103860_c117da0), [c117ee0] "m"(b103860_c117ee0), [c103600] "m"(b103860_c103600), [c1036c0] "m"(b103860_c1036c0), [memset] "m"(b103860_memset), [c104040] "m"(b103860_c104040), [c1db443] "m"(b103860_c1db443)
+      : "memory");
 }
+#else
+#error "FUN_00103860: clang naked draft required"
+#endif
 
-char FUN_00103a00(uint32_t mark, int base, uint32_t *node, uint32_t plane_arg)
+
+/* FUN_00103a00 (0x103a00) — XBE naked draft (batch 119). */
+#if defined(__clang__)
+static int (*const b103a00_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
+static float * (*const b103a00_c1037b0)(float *out, float *p0, float *p1, float *p2) = FUN_001037b0;
+
+__attribute__((naked, noinline))
+char FUN_00103a00(uint32_t mark __attribute__((unused)), int base __attribute__((unused)), uint32_t *node __attribute__((unused)), uint32_t plane_arg __attribute__((unused)))
 {
-  float *plane;
-  float *p0;
-  float *p1;
-  float *p2;
-  float local[4];
-  float dot0;
-  float dot1;
-  float dot2;
-
-  (void)mark;
-  plane = (float *)plane_arg;
-  p0 = (float *)FUN_00117ee0((int *)(base + 0xc),
-                               node[0] & 0x7fffffff, 0x1c);
-  p0 = (float *)FUN_00117ee0((int *)p0, node[0] >> 31 ? 1 : 0, 0xc);
-  p1 = (float *)FUN_00117ee0((int *)(base + 0xc),
-                               node[1] & 0x7fffffff, 0x1c);
-  p1 = (float *)FUN_00117ee0((int *)p1, node[1] >> 31 ? 1 : 0, 0xc);
-  p2 = (float *)FUN_00117ee0((int *)(base + 0xc),
-                               node[2] & 0x7fffffff, 0x1c);
-  p2 = (float *)FUN_00117ee0((int *)p2, node[2] >> 31 ? 1 : 0, 0xc);
-  dot0 = p0[0] * plane[0] + p0[1] * plane[1] + p0[2] * plane[2] - plane[3];
-  if (fabs(dot0) > *(double *)0x28b800)
-    return 0;
-  dot1 = p1[0] * plane[0] + p1[1] * plane[1] + p1[2] * plane[2] - plane[3];
-  if (fabs(dot1) > *(double *)0x28b800)
-    return 0;
-  dot2 = p2[0] * plane[0] + p2[1] * plane[1] + p2[2] * plane[2] - plane[3];
-  if (fabs(dot2) > *(double *)0x28b800)
-    return 0;
-  if (FUN_001037b0(local, p0, p1, p2) == 0)
-    return 0;
-  if (local[0] * p0[0] + local[2] * p0[2] + local[1] * p0[1] >= *(float *)0x2533c0)
-    return 0;
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0xc\n\t"
+      "pushl $0x1c\n\t"
+      "andl $0x7fffffff, %%ecx\n\t"
+      "leal 0xc(%%ebx), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c117ee0]\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "andl $0x80000000, %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "negl %%edx\n\t"
+      "sbbl %%edx, %%edx\n\t"
+      "negl %%edx\n\t"
+      "movl 0xc(%%eax,%%edx,4), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c117ee0]\n\t"
+      "movl 0x4(%%esi), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0xc\n\t"
+      "pushl $0x1c\n\t"
+      "andl $0x7fffffff, %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0xc(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c117ee0]\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "andl $0x80000000, %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "negl %%edx\n\t"
+      "sbbl %%edx, %%edx\n\t"
+      "negl %%edx\n\t"
+      "movl 0xc(%%eax,%%edx,4), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c117ee0]\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0xc\n\t"
+      "pushl $0x1c\n\t"
+      "andl $0x7fffffff, %%ecx\n\t"
+      "movl %%eax, 0xc(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0xc(%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c117ee0]\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "andl $0x80000000, %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "negl %%edx\n\t"
+      "sbbl %%edx, %%edx\n\t"
+      "negl %%edx\n\t"
+      "movl 0xc(%%eax,%%edx,4), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c117ee0]\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%edi)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0xc(%%esi)\n\t"
+      "fabs\n\t"
+      "fcompl 0x28b800\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00103a00_1\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "flds 0x4(%%edx)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "flds 0x8(%%edx)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%edx)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0xc(%%esi)\n\t"
+      "fabs\n\t"
+      "fcompl 0x28b800\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00103a00_1\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%ecx)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsubs 0xc(%%esi)\n\t"
+      "fabs\n\t"
+      "fcompl 0x28b800\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00103a00_1\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1037b0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00103a00_1\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00103a00_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00103a00_1:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c117ee0] "m"(b103a00_c117ee0), [c1037b0] "m"(b103a00_c1037b0)
+      : "memory");
 }
+#else
+#error "FUN_00103a00: clang naked draft required"
+#endif
+
 
 int FUN_00103c00(int *obj)
 {
@@ -4806,81 +4444,353 @@ void FUN_00103e80(float *p0, float *p1, float *color)
   crt_fflush(*(void **)0x46e394);
 }
 
-void FUN_00104040(float *p0, float *p1, float *p2, float *color)
+/* FUN_00104040 (0x104040) — XBE naked draft (batch 120). */
+#if defined(__clang__)
+static void (*const b104040_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b104040_exitfn)(int) = system_exit;
+static bool (*const b104040_c103d30)(void) = FUN_00103d30;
+static void (*const b104040_xfrmpt)(float *, float *, float *) = matrix_transform_point;
+static int (*const b104040_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
+static int (*const b104040_c1d9bd2)(void *stream) = crt_fflush;
+
+__attribute__((naked, noinline))
+void FUN_00104040(float *p0 __attribute__((unused)), float *p1 __attribute__((unused)), float *p2 __attribute__((unused)), float *color __attribute__((unused)))
 {
-  float xform0[3];
-  float xform1[3];
-  float xform2[3];
-
-  if (p0 == 0)
-    error_geometry_assert_null((char *)0x28b948, 0xb1);
-  if (p1 == 0)
-    error_geometry_assert_null((char *)0x28b944, 0xb2);
-  if (p2 == 0)
-    error_geometry_assert_null((char *)0x28ba10, 0xb3);
-  if (color == 0)
-    error_geometry_assert_null((char *)0x269fd8, 0xb4);
-  if (!FUN_00103d30())
-    return;
-
-  matrix_transform_point(xform0, p0, (float *)0x31fb08);
-  matrix_transform_point(xform1, p1, (float *)0x31fb08);
-  matrix_transform_point(xform2, p2, (float *)0x31fb08);
-  crt_fprintf(*(void **)0x46e394, (char *)0x28b934, *(void **)0x46e394);
-  crt_fprintf(*(void **)0x46e394, (char *)0x28b9d8, xform0[0] * *(float *)0x253f00,
-              xform0[1] * *(float *)0x253f00, xform0[2] * *(float *)0x253f00,
-              xform1[0] * *(float *)0x253f00, xform1[1] * *(float *)0x253f00,
-              xform1[2] * *(float *)0x253f00, xform2[0] * *(float *)0x253f00,
-              xform2[1] * *(float *)0x253f00, xform2[2] * *(float *)0x253f00);
-  crt_fprintf(*(void **)0x46e394, (char *)0x28b9b0, *(void **)0x46e394);
-  crt_fprintf(*(void **)0x46e394, (char *)0x28b978, *(float *)0x2533c8 - color[0],
-              color[1], color[2], color[3]);
-  crt_fprintf(*(void **)0x46e394, (char *)0x28b94c, *(void **)0x46e394);
-  crt_fprintf(*(void **)0x46e394, (char *)0x28b868, *(void **)0x46e394);
-  crt_fflush(*(void **)0x46e394);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x24, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_00104040_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb1\n\t"
+      "pushl $0x28b838\n\t"
+      "pushl $0x28b948\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00104040_1:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00104040_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb2\n\t"
+      "pushl $0x28b838\n\t"
+      "pushl $0x28b944\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00104040_2:\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_00104040_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb3\n\t"
+      "pushl $0x28b838\n\t"
+      "pushl $0x28ba10\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00104040_3:\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00104040_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0xb4\n\t"
+      "pushl $0x28b838\n\t"
+      "pushl $0x269fd8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00104040_4:\n\t"
+      "call *%[c103d30]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00104040_5\n\t"
+      "leal -0x24(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x31fb08\n\t"
+      "call *%[xfrmpt]\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x31fb08\n\t"
+      "call *%[xfrmpt]\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x31fb08\n\t"
+      "call *%[xfrmpt]\n\t"
+      "movl 0x46e394, %%ecx\n\t"
+      "pushl $0x28b934\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "subl $0x1c, %%esp\n\t"
+      "movl 0x46e394, %%edx\n\t"
+      "fstpl 0x40(%%esp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "fstpl 0x38(%%esp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "fstpl 0x30(%%esp)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x28b9d8\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl 0x46e394, %%eax\n\t"
+      "pushl $0x28b9b0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d98ad]\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs (%%esi)\n\t"
+      "movl 0x46e394, %%ecx\n\t"
+      "addl $0x58, %%esp\n\t"
+      "subl $0x20, %%esp\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0xc(%%esi)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x28b978\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl 0x46e394, %%edx\n\t"
+      "pushl $0x28b94c\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl 0x46e394, %%eax\n\t"
+      "pushl $0x28b868\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl 0x46e394, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d9bd2]\n\t"
+      "addl $0x3c, %%esp\n\t"
+      ".LFUN_00104040_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b104040_assert), [exitfn] "m"(b104040_exitfn), [c103d30] "m"(b104040_c103d30), [xfrmpt] "m"(b104040_xfrmpt), [c1d98ad] "m"(b104040_c1d98ad), [c1d9bd2] "m"(b104040_c1d9bd2)
+      : "memory");
 }
+#else
+#error "FUN_00104040: clang naked draft required"
+#endif
 
-void FUN_00104240(int point_count, float *points, float *color)
+
+/* FUN_00104240 (0x104240) — XBE naked draft (batch 118). */
+#if defined(__clang__)
+static void (*const b104240_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b104240_exitfn)(int) = system_exit;
+static bool (*const b104240_c103d30)(void) = FUN_00103d30;
+static int (*const b104240_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
+static void (*const b104240_xfrmpt)(float *, float *, float *) = matrix_transform_point;
+static int (*const b104240_c1d9bd2)(void *stream) = crt_fflush;
+
+__attribute__((naked, noinline))
+void FUN_00104240(int point_count __attribute__((unused)), float *points __attribute__((unused)), float *color __attribute__((unused)))
 {
-  int i;
-  int16_t count;
-  float xform[3];
-
-  count = (int16_t)point_count;
-  if (count < 0)
-    error_geometry_assert_null((char *)0x28ba78, 0xd3);
-  if (points == 0)
-    error_geometry_assert_null((char *)0x28ba70, 0xd4);
-  if (color == 0)
-    error_geometry_assert_null((char *)0x269fd8, 0xd5);
-  if (count < 3)
-    return;
-  if (!FUN_00103d30())
-    return;
-
-  crt_fprintf(*(void **)0x46e394, (char *)0x28b934, *(void **)0x46e394);
-  crt_fprintf(*(void **)0x46e394, (char *)0x28ba58, *(void **)0x46e394);
-  if (count > 0) {
-    for (i = 0; i < count - 1; i++) {
-      matrix_transform_point(xform, points + i * 3, (float *)0x31fb08);
-      crt_fprintf(*(void **)0x46e394,
-                  (char *)(i + 1 == count - 1 ? 0x28ba4c : 0x28ba54),
-                  xform[0] * *(float *)0x253f00, xform[1] * *(float *)0x253f00,
-                  xform[2] * *(float *)0x253f00);
-    }
-  }
-  crt_fprintf(*(void **)0x46e394, (char *)0x28b9b0, *(void **)0x46e394);
-  crt_fprintf(*(void **)0x46e394, (char *)0x28b978, *(float *)0x2533c8 - color[0],
-              color[1], color[2], color[3]);
-  crt_fprintf(*(void **)0x46e394, (char *)0x28ba20, *(void **)0x46e394);
-  if (count > 0) {
-    for (i = 0; i < count; i++)
-      crt_fprintf(*(void **)0x46e394, (char *)0x28ba1c, i);
-  }
-  crt_fprintf(*(void **)0x46e394, (char *)0x28ba14, *(void **)0x46e394);
-  crt_fprintf(*(void **)0x46e394, (char *)0x28b868, *(void **)0x46e394);
-  crt_fflush(*(void **)0x46e394);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "movw 0x8(%%ebp), %%bx\n\t"
+      "testw %%bx, %%bx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jge .LFUN_00104240_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd3\n\t"
+      "pushl $0x28b838\n\t"
+      "pushl $0x28ba78\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00104240_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_00104240_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd4\n\t"
+      "pushl $0x28b838\n\t"
+      "pushl $0x28ba70\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00104240_2:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00104240_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd5\n\t"
+      "pushl $0x28b838\n\t"
+      "pushl $0x269fd8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00104240_3:\n\t"
+      "cmpw $3, %%bx\n\t"
+      "jl .LFUN_00104240_9\n\t"
+      "call *%[c103d30]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00104240_9\n\t"
+      "movl 0x46e394, %%eax\n\t"
+      "pushl $0x28b934\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl 0x46e394, %%ecx\n\t"
+      "pushl $0x28ba58\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jle .LFUN_00104240_6\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, 0xc(%%ebp)\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movzwl %%bx, %%ebx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00104240_4:\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x31fb08\n\t"
+      "call *%[xfrmpt]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "movl $0x28ba54, %%eax\n\t"
+      "jl .LFUN_00104240_5\n\t"
+      "movl $0x28ba4c, %%eax\n\t"
+      ".LFUN_00104240_5:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "fmuls 0x253f00\n\t"
+      "movl 0x46e394, %%eax\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x253f00\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x28ba40\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "incl %%esi\n\t"
+      "addl $0xc, %%edi\n\t"
+      "decl %%ebx\n\t"
+      "jne .LFUN_00104240_4\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "movw 0x8(%%ebp), %%bx\n\t"
+      ".LFUN_00104240_6:\n\t"
+      "movl 0x46e394, %%ecx\n\t"
+      "pushl $0x28b9b0\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs (%%esi)\n\t"
+      "movl 0x46e394, %%edx\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0xc(%%esi)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x28b978\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl 0x46e394, %%eax\n\t"
+      "pushl $0x28ba20\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $0x30, %%esp\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jle .LFUN_00104240_8\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "movzwl %%bx, %%edi\n\t"
+      ".LFUN_00104240_7:\n\t"
+      "movl 0x46e394, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x28ba1c\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "incl %%esi\n\t"
+      "decl %%edi\n\t"
+      "jne .LFUN_00104240_7\n\t"
+      ".LFUN_00104240_8:\n\t"
+      "movl 0x46e394, %%edx\n\t"
+      "pushl $0x28ba14\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl 0x46e394, %%eax\n\t"
+      "pushl $0x28b868\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d98ad]\n\t"
+      "movl 0x46e394, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1d9bd2]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00104240_9:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b104240_assert), [exitfn] "m"(b104240_exitfn), [c103d30] "m"(b104240_c103d30), [c1d98ad] "m"(b104240_c1d98ad), [xfrmpt] "m"(b104240_xfrmpt), [c1d9bd2] "m"(b104240_c1d9bd2)
+      : "memory");
 }
+#else
+#error "FUN_00104240: clang naked draft required"
+#endif
+
 
 /* FUN_00104430 (0x104430) — XBE naked draft (batch 112). */
 #if defined(__clang__)

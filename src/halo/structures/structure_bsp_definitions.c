@@ -165,76 +165,388 @@ void FUN_00192bb0(void)
   (void)ecx;
 }
 
-/* 0x192c30 */
+/* intersect_planes3d (0x192c30) — XBE naked draft (batch 121). */
+#if defined(__clang__)
+static void (*const b192c30_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b192c30_exitfn)(int) = system_exit;
+static void (*const b192c30_c192bb0)(void) = FUN_00192bb0;
+static uint8_t (*const b192c30_c99270)(float *plane, uint32_t basis) = FUN_00099270;
+static void (*const b192c30_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
+
+__attribute__((naked, noinline))
 void intersect_planes3d(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* test (char)eax, 1 -> jne 0x192c63 */
-  /* test (char)eax, 1 -> jne 0x192c65 */
-  /* test (char)eax, 1 -> jne 0x192c77 */
-  display_assert((char *)0x002b2a10, (char *)0x002b28b4, 299, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x192cd6 */
-  display_assert((char *)0x0025f120, (char *)0x002b28b4, 300, 0);
-  system_exit(0);
-  FUN_00192bb0();
-  FUN_00099270((float *)(uintptr_t)esi, ebx);
-  FUN_00061df0((void *)(uintptr_t)edx, 0, eax, (void *)0);
-  /* test (char)eax, 0x41 -> jne 0x192d90 */
-
-  (void)eax;
-  (void)ebx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "flds (%%esi)\n\t"
+      "pushl %%ebx\n\t"
+      "fabs\n\t"
+      "pushl %%edi\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fabs\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fabs\n\t"
+      ".byte 0xd8, 0xd1\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lintersect_planes3d_1\n\t"
+      "fcomp %%st(2)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lintersect_planes3d_2\n\t"
+      "fstp %%st(0)\n\t"
+      "movl $2, %%ebx\n\t"
+      "fstp %%st(0)\n\t"
+      "jmp .Lintersect_planes3d_4\n\t"
+      ".Lintersect_planes3d_1:\n\t"
+      "fstp %%st(0)\n\t"
+      ".Lintersect_planes3d_2:\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lintersect_planes3d_3\n\t"
+      "movl $1, %%ebx\n\t"
+      "jmp .Lintersect_planes3d_4\n\t"
+      ".Lintersect_planes3d_3:\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      ".Lintersect_planes3d_4:\n\t"
+      "movswl %%bx, %%edi\n\t"
+      "shll $2, %%edi\n\t"
+      "flds (%%edi,%%esi,1)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lintersect_planes3d_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x12b\n\t"
+      "pushl $0x2b28b4\n\t"
+      "pushl $0x2b2a10\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lintersect_planes3d_5:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lintersect_planes3d_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0x12c\n\t"
+      "pushl $0x2b28b4\n\t"
+      "pushl $0x25f120\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lintersect_planes3d_6:\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "flds (%%edi,%%ecx,1)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .Lintersect_planes3d_7\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "movl 0x8(%%ecx), %%eax\n\t"
+      "movl 0xc(%%ecx), %%ecx\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "jmp .Lintersect_planes3d_8\n\t"
+      ".Lintersect_planes3d_7:\n\t"
+      "flds (%%edi,%%ecx,1)\n\t"
+      "fdivs (%%edi,%%esi,1)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls (%%esi)\n\t"
+      "fsubrs (%%ecx)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "fsubrs 0x4(%%ecx)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "fsubrs 0x8(%%ecx)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "fmuls 0xc(%%esi)\n\t"
+      "fsubrs 0xc(%%ecx)\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      ".Lintersect_planes3d_8:\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "call *%[c192bb0]\n\t"
+      "fsts 0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Lintersect_planes3d_9\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c99270]\n\t"
+      "addl $8, %%esp\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c61df0]\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fdivs 0x8(%%ebp)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movw $1, %%ax\n\t"
+      "fstps 0x8(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lintersect_planes3d_9:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lintersect_planes3d_10\n\t"
+      "popl %%edi\n\t"
+      "xorw %%ax, %%ax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lintersect_planes3d_10:\n\t"
+      "popl %%edi\n\t"
+      "movw $2, %%ax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b192c30_assert), [exitfn] "m"(b192c30_exitfn), [c192bb0] "m"(b192c30_c192bb0), [c99270] "m"(b192c30_c99270), [c61df0] "m"(b192c30_c61df0)
+      : "memory");
 }
+#else
+#error "intersect_planes3d: clang naked draft required"
+#endif
 
-/* 0x192da0 */
+
+/* leaf_map_build_portals_from_leaf (0x192da0) — XBE naked draft (batch 115). */
+#if defined(__clang__)
+static void *(*const b192da0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b192da0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b192da0_exitfn)(int) = system_exit;
+static char (*const b192da0_c191bd0)(int search_value, void **param_1, char *out) = FUN_00191bd0;
+static void (*const b192da0_c192050)(void) = leaf_map_build_portal_from_leaves;
+static void (*const b192da0_c192da0)(void) = leaf_map_build_portals_from_leaf;
+
+__attribute__((naked, noinline))
 void leaf_map_build_portals_from_leaf(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 12);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x192ddb */
-  /* relift: cmp (int16_t)eax, word ptr [0x4d8e90] -> jl 0x192dfb */
-  display_assert((char *)0x002b2900, (char *)0x002b28b4, 59, 0);
-  system_exit(0);
-  FUN_00191bd0(0, (void *)(uintptr_t)edx, (char *)0);
-  /* cmp eax, ecx -> je 0x192e5f */
-  display_assert((char *)0x002b2a38, (char *)0x002b28b4, 415, 0);
-  system_exit(0);
-  /* cmp edi, -1 -> jne 0x192e7e */
-  /* test (int16_t)ebx, (int16_t)ebx -> je 0x192e7e */
-  /* test (int16_t)ebx, (int16_t)ebx -> jne 0x192e97 */
-  /* test (char)eax, (char)eax -> je 0x192f1c */
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
-  /* test eax, eax -> jle 0x192ee3 */
-  tag_block_get_element((void *)(uintptr_t)edi, 0, 16);
-  /* cmp edx, ecx -> je 0x192efe */
-  /* cmp eax, ecx -> jl 0x192ec4 */
-  /* cmp (int16_t)ebx, -1 -> je 0x192ee3 */
-  /* test (char)eax, (char)eax -> je 0x192f1c */
-  /* cmp (int16_t)edx, (int16_t)ebx -> je 0x192ee9 */
-  /* cmp eax, -1 -> je 0x192ee9 */
-  /* cmp edx, esi -> je 0x192ee9 */
-  leaf_map_build_portal_from_leaves();
-  /* relift: tail-call leaf_map_build_portals_from_leaf(); */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl %%esi, -0x10(%%ebp)\n\t"
+      "jne .Lleaf_map_build_portals_from_leaf_3\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lleaf_map_build_portals_from_leaf_1\n\t"
+      "cmpw 0x4d8e90, %%ax\n\t"
+      "jl .Lleaf_map_build_portals_from_leaf_2\n\t"
+      ".Lleaf_map_build_portals_from_leaf_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3b\n\t"
+      "pushl $0x2b28b4\n\t"
+      "pushl $0x2b2900\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lleaf_map_build_portals_from_leaf_2:\n\t"
+      "movswl 0x4d8e90, %%edx\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "subl %%eax, %%edx\n\t"
+      "movl 0x4d8a8c(,%%edx,4), %%ecx\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "jmp .Lleaf_map_build_portals_from_leaf_4\n\t"
+      ".Lleaf_map_build_portals_from_leaf_3:\n\t"
+      "movl $0xffffffff, -0x8(%%ebp)\n\t"
+      ".Lleaf_map_build_portals_from_leaf_4:\n\t"
+      "leal -0x3(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "movl (%%esi), %%ebx\n\t"
+      "call *%[c191bd0]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movb %%al, -0x2(%%ebp)\n\t"
+      "jne .Lleaf_map_build_portals_from_leaf_5\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "andl $0x7fffffff, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .Lleaf_map_build_portals_from_leaf_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19f\n\t"
+      "pushl $0x2b28b4\n\t"
+      "pushl $0x2b2a38\n\t"
+      "call *%[assert]\n\t"
+      "pushl %%edi\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lleaf_map_build_portals_from_leaf_5:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "movl %%ebx, -0xc(%%ebp)\n\t"
+      ".Lleaf_map_build_portals_from_leaf_6:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .Lleaf_map_build_portals_from_leaf_7\n\t"
+      "testw %%bx, %%bx\n\t"
+      "je .Lleaf_map_build_portals_from_leaf_7\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jns .Lleaf_map_build_portals_from_leaf_7\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "jmp .Lleaf_map_build_portals_from_leaf_8\n\t"
+      ".Lleaf_map_build_portals_from_leaf_7:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "jne .Lleaf_map_build_portals_from_leaf_15\n\t"
+      ".Lleaf_map_build_portals_from_leaf_8:\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jne .Lleaf_map_build_portals_from_leaf_9\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jns .Lleaf_map_build_portals_from_leaf_13\n\t"
+      ".Lleaf_map_build_portals_from_leaf_9:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lleaf_map_build_portals_from_leaf_16\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl %%esi, %%ecx\n\t"
+      "pushl $0x18\n\t"
+      "andl $0x7fffffff, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "addl $4, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lleaf_map_build_portals_from_leaf_11\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lleaf_map_build_portals_from_leaf_10:\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "je .Lleaf_map_build_portals_from_leaf_14\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "incl %%ebx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lleaf_map_build_portals_from_leaf_10\n\t"
+      ".Lleaf_map_build_portals_from_leaf_11:\n\t"
+      "movl -0xc(%%ebp), %%ebx\n\t"
+      ".Lleaf_map_build_portals_from_leaf_12:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      ".Lleaf_map_build_portals_from_leaf_13:\n\t"
+      "incl %%ebx\n\t"
+      "cmpw $2, %%bx\n\t"
+      "movl %%ebx, -0xc(%%ebp)\n\t"
+      "jl .Lleaf_map_build_portals_from_leaf_6\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lleaf_map_build_portals_from_leaf_14:\n\t"
+      "cmpw $-1, %%bx\n\t"
+      "je .Lleaf_map_build_portals_from_leaf_11\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "movl -0xc(%%ebp), %%ebx\n\t"
+      "jmp .Lleaf_map_build_portals_from_leaf_16\n\t"
+      ".Lleaf_map_build_portals_from_leaf_15:\n\t"
+      "movb -0x2(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lleaf_map_build_portals_from_leaf_16\n\t"
+      "movzbl -0x3(%%ebp), %%edx\n\t"
+      "cmpw %%bx, %%dx\n\t"
+      "je .Lleaf_map_build_portals_from_leaf_13\n\t"
+      ".Lleaf_map_build_portals_from_leaf_16:\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "movl 0x4(%%ecx,%%eax,4), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jns .Lleaf_map_build_portals_from_leaf_18\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lleaf_map_build_portals_from_leaf_13\n\t"
+      "movl %%eax, %%edx\n\t"
+      "andl $0x7fffffff, %%edx\n\t"
+      "cmpl %%esi, %%edx\n\t"
+      "je .Lleaf_map_build_portals_from_leaf_13\n\t"
+      "movb -0x1(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "jne .Lleaf_map_build_portals_from_leaf_17\n\t"
+      "movl %%edi, %%ecx\n\t"
+      ".Lleaf_map_build_portals_from_leaf_17:\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c192050]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .Lleaf_map_build_portals_from_leaf_12\n\t"
+      ".Lleaf_map_build_portals_from_leaf_18:\n\t"
+      "movb -0x1(%%ebp), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "jne .Lleaf_map_build_portals_from_leaf_19\n\t"
+      "movl %%edi, %%ecx\n\t"
+      ".Lleaf_map_build_portals_from_leaf_19:\n\t"
+      "movl 0x18(%%ebp), %%edx\n\t"
+      "decl %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c192da0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .Lleaf_map_build_portals_from_leaf_13\n\t"
+      :
+      : [elem] "m"(b192da0_elem), [assert] "m"(b192da0_assert), [exitfn] "m"(b192da0_exitfn), [c191bd0] "m"(b192da0_c191bd0), [c192050] "m"(b192da0_c192050), [c192da0] "m"(b192da0_c192da0)
+      : "memory");
 }
+#else
+#error "leaf_map_build_portals_from_leaf: clang naked draft required"
+#endif
+
 
 /* leaf_map_build_leaf_face_for_leaf_on_node (0x192f80) — XBE naked draft (batch 114). */
 #if defined(__clang__)
@@ -566,42 +878,195 @@ void leaf_map_initialize_from_bsp(void)
   (void)edi;
 }
 
-/* 0x1935f0 */
-void structure_bsp_find_material_for_surface(void *scenario, int surface_index, int16_t *out_collection_index, int16_t *out_geometry_index)
+/* structure_bsp_find_material_for_surface (0x1935f0) — XBE naked draft (batch 117). */
+#if defined(__clang__)
+static void *(*const b1935f0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b1935f0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1935f0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void structure_bsp_find_material_for_surface(void *scenario __attribute__((unused)), int surface_index __attribute__((unused)), int16_t *out_collection_index __attribute__((unused)), int16_t *out_geometry_index __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 32);
-  tag_block_get_element((void *)(uintptr_t)ebx, 0, 256);
-  /* cmp edx, ecx -> jge 0x19366e */
-  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
-  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
-  /* cmp eax, edx -> jl 0x1936b4 */
-  /* cmp (int16_t)esi, (int16_t)edi -> jg 0x193620 */
-  tag_block_get_element((void *)(uintptr_t)edx, 0, 32);
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 256);
-  /* cmp edx, ecx -> jge 0x19371c */
-  /* cmp edx, eax -> jl 0x193732 */
-  /* cmp (int16_t)esi, (int16_t)edi -> jl 0x1936e1 */
-  tag_block_get_element((void *)(uintptr_t)ecx, 0, 256);
-  /* cmp edi, eax -> jge 0x193770 */
-  display_assert((char *)0x002b2c74, (char *)0x002b2bf8, 102, 0);
-  system_exit(0);
-  display_assert((char *)0x002b2c30, (char *)0x002b2bf8, 103, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movw %%di, (%%eax)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movw 0x104(%%eax), %%si\n\t"
+      "addl $0x104, %%eax\n\t"
+      "decw %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "jle .Lstructure_bsp_find_material_for_surface_4\n\t"
+      "jmp .Lstructure_bsp_find_material_for_surface_1\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lstructure_bsp_find_material_for_surface_1:\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "movswl %%si, %%eax\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "cdq\n\t"
+      "subl %%edx, %%eax\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "sarl $1, %%eax\n\t"
+      "addl %%edi, %%eax\n\t"
+      "movw %%ax, (%%edx)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "pushl $0x100\n\t"
+      "leal 0x14(%%eax), %%ebx\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl 0x14(%%eax), %%ecx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "jge .Lstructure_bsp_find_material_for_surface_2\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movw (%%eax), %%si\n\t"
+      "decw %%si\n\t"
+      "movw %%si, (%%eax)\n\t"
+      "jmp .Lstructure_bsp_find_material_for_surface_3\n\t"
+      ".Lstructure_bsp_find_material_for_surface_2:\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl $0x100\n\t"
+      "decl %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "pushl $0x100\n\t"
+      "decl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x14(%%eax), %%ecx\n\t"
+      "movl 0x18(%%edi), %%edx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "addl %%ecx, %%edx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "jl .Lstructure_bsp_find_material_for_surface_4\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movw (%%eax), %%di\n\t"
+      "incw %%di\n\t"
+      "movw %%di, (%%eax)\n\t"
+      ".Lstructure_bsp_find_material_for_surface_3:\n\t"
+      "cmpw %%di, %%si\n\t"
+      "jg .Lstructure_bsp_find_material_for_surface_1\n\t"
+      ".Lstructure_bsp_find_material_for_surface_4:\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movswl (%%eax), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl $0x20\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x14(%%ebp), %%ebx\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "leal 0x14(%%eax), %%ecx\n\t"
+      "movw %%si, (%%ebx)\n\t"
+      "movw (%%ecx), %%di\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testw %%di, %%di\n\t"
+      "movl %%ecx, 0x10(%%ebp)\n\t"
+      "jle .Lstructure_bsp_find_material_for_surface_10\n\t"
+      "jmp .Lstructure_bsp_find_material_for_surface_6\n\t"
+      ".Lstructure_bsp_find_material_for_surface_5:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      ".Lstructure_bsp_find_material_for_surface_6:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "subl %%edx, %%eax\n\t"
+      "cdq\n\t"
+      "subl %%edx, %%eax\n\t"
+      "sarl $1, %%eax\n\t"
+      "addl %%esi, %%eax\n\t"
+      "movw %%ax, (%%ebx)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x14(%%eax), %%ecx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "jge .Lstructure_bsp_find_material_for_surface_7\n\t"
+      "movw (%%ebx), %%di\n\t"
+      "decw %%di\n\t"
+      "movw %%di, (%%ebx)\n\t"
+      "jmp .Lstructure_bsp_find_material_for_surface_8\n\t"
+      ".Lstructure_bsp_find_material_for_surface_7:\n\t"
+      "movl 0x18(%%eax), %%eax\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "jl .Lstructure_bsp_find_material_for_surface_9\n\t"
+      "movw (%%ebx), %%si\n\t"
+      "incw %%si\n\t"
+      "movw %%si, (%%ebx)\n\t"
+      ".Lstructure_bsp_find_material_for_surface_8:\n\t"
+      "cmpw %%di, %%si\n\t"
+      "jl .Lstructure_bsp_find_material_for_surface_5\n\t"
+      ".Lstructure_bsp_find_material_for_surface_9:\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      ".Lstructure_bsp_find_material_for_surface_10:\n\t"
+      "movswl (%%ebx), %%edx\n\t"
+      "pushl $0x100\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x14(%%esi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "jge .Lstructure_bsp_find_material_for_surface_11\n\t"
+      "pushl $1\n\t"
+      "pushl $0x66\n\t"
+      "pushl $0x2b2bf8\n\t"
+      "pushl $0x2b2c74\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_bsp_find_material_for_surface_11:\n\t"
+      "movl 0x18(%%esi), %%eax\n\t"
+      "addl 0x14(%%esi), %%eax\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "jl .Lstructure_bsp_find_material_for_surface_12\n\t"
+      "pushl $1\n\t"
+      "pushl $0x67\n\t"
+      "pushl $0x2b2bf8\n\t"
+      "pushl $0x2b2c30\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lstructure_bsp_find_material_for_surface_12:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b1935f0_elem), [assert] "m"(b1935f0_assert), [exitfn] "m"(b1935f0_exitfn)
+      : "memory");
 }
+#else
+#error "structure_bsp_find_material_for_surface: clang naked draft required"
+#endif
+
 
 /* 0x1937a0 */
 void vertex_type_from_shader_tag(void)

@@ -1057,37 +1057,174 @@ void render_frustum_get_projection_bounds(void *param_1, void *param_2)
   (void)edi;
 }
 
-/* 0x186050 */
-char render_camera_view_to_screen(int *param_1, int *param_2, void *param_3, void *param_4)
+/* render_camera_view_to_screen (0x186050) — XBE naked draft (batch 119). */
+#if defined(__clang__)
+static void (*const b186050_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b186050_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+char render_camera_view_to_screen(int *param_1 __attribute__((unused)), int *param_2 __attribute__((unused)), void *param_3 __attribute__((unused)), void *param_4 __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test edi, edi -> jne 0x18607d */
-  display_assert((char *)0x00266e9c, (char *)0x002b12b4, 978, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x1860a4 */
-  display_assert((char *)0x002b14b8, (char *)0x002b12b4, 979, 0);
-  system_exit(0);
-  /* test ebx, ebx -> jne 0x1860cb */
-  display_assert((char *)0x002b14d0, (char *)0x002b12b4, 980, 0);
-  system_exit(0);
-  /* test esi, esi -> jne 0x1860f2 */
-  display_assert((char *)0x002b14c0, (char *)0x002b12b4, 981, 0);
-  system_exit(0);
-  display_assert((char *)0x002b1454, (char *)0x002b12b4, 988, 0);
-  system_exit(0);
-  /* test (char)eax, 1 -> jne 0x18621d */
-  /* test (char)eax, 1 -> jne 0x18621d */
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lrender_camera_view_to_screen_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3d2\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x266e9c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_view_to_screen_1:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lrender_camera_view_to_screen_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3d3\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x2b14b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_view_to_screen_2:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lrender_camera_view_to_screen_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3d4\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x2b14d0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_view_to_screen_3:\n\t"
+      "movl 0x14(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lrender_camera_view_to_screen_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3d5\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x2b14c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_view_to_screen_4:\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lrender_camera_view_to_screen_6\n\t"
+      "flds 0x255e94\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "fdivs 0x8(%%ebx)\n\t"
+      "movb 0x140(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "fstps 0x8(%%ebp)\n\t"
+      "jne .Lrender_camera_view_to_screen_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3dc\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x2b1454\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_view_to_screen_5:\n\t"
+      "flds 0x144(%%eax)\n\t"
+      "fmuls (%%ebx)\n\t"
+      "flds 0x164(%%eax)\n\t"
+      "fmuls 0x8(%%ebx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fmuls 0x8(%%ebp)\n\t"
+      "fstps (%%esi)\n\t"
+      "flds 0x158(%%eax)\n\t"
+      "fmuls 0x4(%%ebx)\n\t"
+      "flds 0x168(%%eax)\n\t"
+      "fmuls 0x8(%%ebx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fmuls 0x8(%%ebp)\n\t"
+      "fchs\n\t"
+      "fstps 0xc(%%ebp)\n\t"
+      "flds (%%esi)\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "fcomps 0x255e94\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lrender_camera_view_to_screen_6\n\t"
+      "flds (%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .Lrender_camera_view_to_screen_6\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x255e94\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .Lrender_camera_view_to_screen_6\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .Lrender_camera_view_to_screen_6\n\t"
+      "movswl 0x2c(%%edi), %%edx\n\t"
+      "movswl 0x30(%%edi), %%ecx\n\t"
+      "movswl 0x2e(%%edi), %%eax\n\t"
+      "subl %%edx, %%ecx\n\t"
+      "movl %%ecx, 0xc(%%ebp)\n\t"
+      "movswl 0x32(%%edi), %%ecx\n\t"
+      "fildl 0xc(%%ebp)\n\t"
+      "subl %%eax, %%ecx\n\t"
+      "movl %%ecx, 0xc(%%ebp)\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "movb $1, %%al\n\t"
+      "fildl 0xc(%%ebp)\n\t"
+      "flds (%%esi)\n\t"
+      "fadds 0x2533c8\n\t"
+      "fmuls 0x253398\n\t"
+      ".byte 0xde, 0xc9\n\t"
+      "fiaddl 0x8(%%ebp)\n\t"
+      "fstps (%%esi)\n\t"
+      "movswl 0x2c(%%edi), %%edx\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "movl %%edx, 0xc(%%ebp)\n\t"
+      "fadds 0x2533c8\n\t"
+      "popl %%edi\n\t"
+      "fmuls 0x253398\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fiaddl 0xc(%%ebp)\n\t"
+      "fstps 0x4(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "fstp %%st(0)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrender_camera_view_to_screen_6:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b186050_assert), [exitfn] "m"(b186050_exitfn)
+      : "memory");
 }
+#else
+#error "render_camera_view_to_screen: clang naked draft required"
+#endif
+
 
 /* 0x186230 */
 void render_camera_screen_to_view(void *camera, void *frustum, float *screen_point, float *view_vector)
@@ -1489,38 +1626,169 @@ short render_frustum_cube_visible(void *param_1 __attribute__((unused)), int par
 #endif
 
 
-/* 0x186ac0 */
-int render_frustum_sphere_visible(void *frustum, float *center, float radius)
+/* render_frustum_sphere_visible (0x186ac0) — XBE naked draft (batch 119). */
+#if defined(__clang__)
+static float (*const b186ac0_c99500)(float *plane, float *point) = plane3d_distance_to_point;
+
+__attribute__((naked, noinline))
+int render_frustum_sphere_visible(void *frustum __attribute__((unused)), float *center __attribute__((unused)), float radius __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (char)eax, 0x41 -> je 0x186c02 */
-  /* test (char)eax, 0x41 -> je 0x186c02 */
-  /* test (char)eax, 0x41 -> je 0x186c02 */
-  plane3d_distance_to_point((float *)(uintptr_t)eax, (float *)(uintptr_t)esi);
-  /* test (char)eax, 0x41 -> je 0x186c02 */
-  plane3d_distance_to_point((float *)(uintptr_t)ecx, (float *)(uintptr_t)esi);
-  /* test (char)eax, 0x41 -> je 0x186c02 */
-  plane3d_distance_to_point((float *)(uintptr_t)edx, (float *)(uintptr_t)esi);
-  /* test (char)eax, 0x41 -> je 0x186c02 */
-  plane3d_distance_to_point((float *)(uintptr_t)eax, (float *)(uintptr_t)esi);
-  /* test (char)eax, 0x41 -> je 0x186c02 */
-  plane3d_distance_to_point((float *)(uintptr_t)ecx, (float *)(uintptr_t)esi);
-  /* test (char)eax, 0x41 -> je 0x186c02 */
-  plane3d_distance_to_point((float *)(uintptr_t)edi, (float *)0);
-  /* test (char)eax, 0x41 -> jne 0x186c0b */
-  return 0;
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "flds (%%esi)\n\t"
+      "pushl %%edi\n\t"
+      "fsubs 0x10(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "fcomps 0x12c(%%edi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lrender_frustum_sphere_visible_1\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fsubs 0x10(%%ebp)\n\t"
+      "fcomps 0x134(%%edi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lrender_frustum_sphere_visible_1\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fsubs 0x10(%%ebp)\n\t"
+      "fcomps 0x13c(%%edi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lrender_frustum_sphere_visible_1\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fadds (%%esi)\n\t"
+      "fcomps 0x128(%%edi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lrender_frustum_sphere_visible_1\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fadds 0x4(%%esi)\n\t"
+      "fcomps 0x130(%%edi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lrender_frustum_sphere_visible_1\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fadds 0x8(%%esi)\n\t"
+      "fcomps 0x138(%%edi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lrender_frustum_sphere_visible_1\n\t"
+      "leal 0x78(%%edi), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c99500]\n\t"
+      "fsts 0xc(%%ebp)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lrender_frustum_sphere_visible_1\n\t"
+      "leal 0x88(%%edi), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c99500]\n\t"
+      "fsts 0x8(%%ebp)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lrender_frustum_sphere_visible_1\n\t"
+      "leal 0x98(%%edi), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c99500]\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lrender_frustum_sphere_visible_1\n\t"
+      "leal 0xa8(%%edi), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c99500]\n\t"
+      "fsts -0x8(%%ebp)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lrender_frustum_sphere_visible_1\n\t"
+      "leal 0xb8(%%edi), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c99500]\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lrender_frustum_sphere_visible_1\n\t"
+      "pushl %%esi\n\t"
+      "addl $0xc8, %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c99500]\n\t"
+      "fsts -0xc(%%ebp)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lrender_frustum_sphere_visible_2\n\t"
+      ".Lrender_frustum_sphere_visible_1:\n\t"
+      "popl %%edi\n\t"
+      "xorw %%ax, %%ax\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrender_frustum_sphere_visible_2:\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fchs\n\t"
+      "fstps 0x10(%%ebp)\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lrender_frustum_sphere_visible_3\n\t"
+      "flds 0x8(%%ebp)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lrender_frustum_sphere_visible_3\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lrender_frustum_sphere_visible_3\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lrender_frustum_sphere_visible_3\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fcomps 0x10(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "movw $2, %%ax\n\t"
+      "jnp .Lrender_frustum_sphere_visible_4\n\t"
+      ".Lrender_frustum_sphere_visible_3:\n\t"
+      "movw $1, %%ax\n\t"
+      ".Lrender_frustum_sphere_visible_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c99500] "m"(b186ac0_c99500)
+      : "memory");
 }
+#else
+#error "render_frustum_sphere_visible: clang naked draft required"
+#endif
+
 
 /* 0x186c70 */
 char render_camera_world_to_screen(void *cam1, void *cam2, void *world_pos, float *screen_out)
@@ -1556,34 +1824,166 @@ char render_camera_world_to_screen(void *cam1, void *cam2, void *world_pos, floa
   (void)edi;
 }
 
-/* 0x186d40 */
+/* render_camera_debug_frustum (0x186d40) — XBE naked draft (batch 121). */
+#if defined(__clang__)
+static void (*const b186d40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b186d40_exitfn)(int) = system_exit;
+static void (*const b186d40_xfrmpt)(float *, float *, float *) = matrix_transform_point;
+static void (*const b186d40_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
+
+__attribute__((naked, noinline))
 void render_camera_debug_frustum(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test (char)eax, (char)eax -> je 0x186ee0 */
-  /* test edi, edi -> jne 0x186d80 */
-  display_assert((char *)0x00266e9c, (char *)0x002b12b4, 1083, 0);
-  system_exit(0);
-  /* test esi, esi -> jne 0x186da7 */
-  display_assert((char *)0x002b14b8, (char *)0x002b12b4, 1084, 0);
-  system_exit(0);
-  matrix_transform_point((float *)0, (float *)0, (float *)0);
-  FUN_00189270(0, (float *)(uintptr_t)esi, (float *)(uintptr_t)ebx, (void *)(uintptr_t)ecx);
-  FUN_00189270(0, (float *)(uintptr_t)edi, (float *)(uintptr_t)eax, (void *)(uintptr_t)edx);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x88, %%esp\n\t"
+      "movb 0x4d0e1a, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lrender_camera_debug_frustum_7\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lrender_camera_debug_frustum_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x43b\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x266e9c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_debug_frustum_1:\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Lrender_camera_debug_frustum_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x43c\n\t"
+      "pushl $0x2b12b4\n\t"
+      "pushl $0x2b14b8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrender_camera_debug_frustum_2:\n\t"
+      "addl $0x44, %%esi\n\t"
+      "leal -0x88(%%ebp), %%eax\n\t"
+      "movl %%esi, -0x1c(%%ebp)\n\t"
+      "movl $0xffffffff, -0x8(%%ebp)\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl $3, -0xc(%%ebp)\n\t"
+      "jmp .Lrender_camera_debug_frustum_3\n\t"
+      "leal (%%esp), %%esp\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lrender_camera_debug_frustum_3:\n\t"
+      "fildl -0x8(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%esi\n\t"
+      "movl $0xffffffff, -0x10(%%ebp)\n\t"
+      "movl $3, %%ebx\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "jmp .Lrender_camera_debug_frustum_4\n\t"
+      "leal (%%esp), %%esp\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lrender_camera_debug_frustum_4:\n\t"
+      "flds 0x28(%%edi)\n\t"
+      "movswl 0x36(%%edi), %%edx\n\t"
+      "fmuls 0x253398\n\t"
+      "movswl 0x3a(%%edi), %%ecx\n\t"
+      "movswl 0x38(%%edi), %%eax\n\t"
+      "fptan\n\t"
+      "subl %%edx, %%ecx\n\t"
+      "movl %%ecx, -0x14(%%ebp)\n\t"
+      "movswl 0x34(%%edi), %%ecx\n\t"
+      "subl %%ecx, %%eax\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "movl $0xbf800000, 0x8(%%esi)\n\t"
+      "fstp %%st(0)\n\t"
+      "fildl -0x14(%%ebp)\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "fimull -0x10(%%ebp)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fidivl -0x14(%%ebp)\n\t"
+      "fstps (%%esi)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fstps 0x4(%%esi)\n\t"
+      "fstp %%st(0)\n\t"
+      "call *%[xfrmpt]\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "incl %%edx\n\t"
+      "addl $0x24, %%esi\n\t"
+      "decl %%ebx\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "jne .Lrender_camera_debug_frustum_4\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "incl %%edx\n\t"
+      "addl $0xc, %%ecx\n\t"
+      "decl %%eax\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "jne .Lrender_camera_debug_frustum_3\n\t"
+      "leal -0x40(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "leal -0x70(%%ebp), %%ebx\n\t"
+      "movl $3, -0x8(%%ebp)\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lrender_camera_debug_frustum_5:\n\t"
+      "leal -0x88(%%ebp), %%edi\n\t"
+      "leal -0x88(%%ebp), %%esi\n\t"
+      "movl $3, -0xc(%%ebp)\n\t"
+      ".Lrender_camera_debug_frustum_6:\n\t"
+      "movl 0x2ee6d0, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $1\n\t"
+      "call *%[c189270]\n\t"
+      "movl 0x2ee6d0, %%edx\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "call *%[c189270]\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "addl $0x20, %%esp\n\t"
+      "addl $0x24, %%esi\n\t"
+      "addl $0xc, %%edi\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "jne .Lrender_camera_debug_frustum_6\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "addl $0xc, %%ecx\n\t"
+      "addl $0x24, %%ebx\n\t"
+      "decl %%eax\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jne .Lrender_camera_debug_frustum_5\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lrender_camera_debug_frustum_7:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b186d40_assert), [exitfn] "m"(b186d40_exitfn), [xfrmpt] "m"(b186d40_xfrmpt), [c189270] "m"(b186d40_c189270)
+      : "memory");
 }
+#else
+#error "render_camera_debug_frustum: clang naked draft required"
+#endif
+
 
 /* render_camera_mirror (0x186ef0) — XBE naked draft (batch 108). */
 #if defined(__clang__)

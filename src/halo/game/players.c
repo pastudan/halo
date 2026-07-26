@@ -3323,74 +3323,183 @@ apply_ticks:
   return 1;
 }
 
-/* Debug overlay for local player unit aim/camera probes (0xbc520). */
+/* players_debug_render (0xbc520) — XBE naked draft (batch 120). */
+#if defined(__clang__)
+static __int16 (*const bbc520_cba4c0)(__int16 a1) = local_player_get_next;
+static void (*const bbc520_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bbc520_exitfn)(int) = system_exit;
+static int (*const bbc520_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
+static void *(*const bbc520_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const bbc520_get)(int, int) = object_get_and_verify_type;
+static void (*const bbc520_c1a0890)(int unit_handle, vector3_t *out_pos, float *out_height_offset, float *out_camera_height) = biped_get_camera_height_and_offset;
+static char (*const bbc520_c1a1430)(int unit_handle, int seat_handle, float *initial_position, float *final_position, float scale, char keep_basis, char dont_teleport, char scale_by_height) = biped_fix_position;
+static void *(*const bbc520_tag)(int, int) = tag_get;
+static char (*const bbc520_c14e7d0)(uint32_t collision_flags, float *point, float *offset_vec, float p4, int unit_handle, void *result) = FUN_0014e7d0;
+static void (*const bbc520_c189860)(char flag, void *center, void *height_vec, float radius, void *color) = FUN_00189860;
+
+__attribute__((naked, noinline))
 void players_debug_render(void)
 {
-  int16_t local_player_index;
-  int iter_count;
-  int player_handle;
-  char *player;
-  int unit_handle;
-  char *unit_obj;
-  char *biped_tag;
-  vector3_t world_pos;
-  float height_offset;
-  float camera_height;
-  float position[3];
-  float height_vec[3];
-  float radius;
-  char collision_ok;
-  char collision_buf[0x84];
-
-  if (*(char *)0x46b6c4 == 0)
-    return;
-
-  iter_count = 0;
-  local_player_index = local_player_get_next(NONE);
-  while (local_player_index != NONE) {
-    if (local_player_index < NONE || local_player_index >= 4) {
-      display_assert("((local_player_index>=0) && (local_player_index<"
-                     "MAXIMUM_NUMBER_OF_LOCAL_PLAYERS)) || "
-                     "(local_player_index==NONE)",
-                     "c:\\halo\\SOURCE\\game\\players.c", 0x3ab, 1);
-      system_exit(NONE);
-    }
-
-    player_handle = local_player_get_player_index(local_player_index);
-    if (player_handle != NONE) {
-      player = (char *)datum_get(player_data, player_handle);
-      unit_handle = *(int *)(player + 0x34);
-      if (unit_handle != NONE) {
-        unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
-        biped_get_camera_height_and_offset(unit_handle, &world_pos,
-                                           &height_offset, &camera_height);
-        position[0] = world_pos.x;
-        position[1] = world_pos.y;
-        position[2] = world_pos.z;
-        collision_ok = biped_fix_position(unit_handle, NONE, position,
-                                          position, 2.0f, 1, 1, 0);
-        if (collision_ok) {
-          biped_tag = (char *)tag_get(0x62697064, *(int *)unit_obj);
-          position[2] = position[2] + *(float *)(biped_tag + 0x42c);
-          height_vec[0] = height_offset * *(float *)(*(int *)0x31fc44 + 0);
-          height_vec[1] = height_offset * *(float *)(*(int *)0x31fc44 + 4);
-          height_vec[2] = height_offset * *(float *)(*(int *)0x31fc44 + 8);
-          radius = camera_height;
-          if (FUN_0014e7d0(0x4029, position, height_vec, radius, unit_handle,
-                           collision_buf))
-            FUN_00189860(0, position, height_vec, radius, position);
-          else
-            FUN_00189860(0, position, height_vec, radius, position);
-        }
-      }
-    }
-
-    iter_count++;
-    if (iter_count >= 2)
-      break;
-    local_player_index = local_player_get_next(local_player_index);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x84, %%esp\n\t"
+      "movb 0x46b6c4, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayers_debug_render_8\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "movl $0, -0xc(%%ebp)\n\t"
+      "call *%[cba4c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lplayers_debug_render_1:\n\t"
+      "cmpw $-1, %%bx\n\t"
+      "je .Lplayers_debug_render_7\n\t"
+      "jl .Lplayers_debug_render_2\n\t"
+      "cmpw $4, %%bx\n\t"
+      "jl .Lplayers_debug_render_3\n\t"
+      ".Lplayers_debug_render_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3ab\n\t"
+      "pushl $0x26eb68\n\t"
+      "pushl $0x26eb88\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayers_debug_render_3:\n\t"
+      "movl 0x5aa6cc, %%ecx\n\t"
+      "movswl %%bx, %%eax\n\t"
+      "cmpl $-1, 0x4(%%ecx,%%eax,4)\n\t"
+      "je .Lplayers_debug_render_6\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cba3c0]\n\t"
+      "movl 0x5aa6d4, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%eax), %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lplayers_debug_render_6\n\t"
+      "pushl $3\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x1c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1a0890]\n\t"
+      "pushl $1\n\t"
+      "pushl $1\n\t"
+      "pushl $0\n\t"
+      "pushl $0x40000000\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $-1\n\t"
+      "call *%[c1a1430]\n\t"
+      "addl $0x38, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayers_debug_render_6\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x34(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1a0890]\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fadds 0x42c(%%edi)\n\t"
+      "movl 0x31fc44, %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "leal -0x28(%%ebp), %%edx\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls (%%eax)\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "leal -0x84(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x4029\n\t"
+      "call *%[c14e7d0]\n\t"
+      "addl $0x30, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lplayers_debug_render_4\n\t"
+      "movl 0x2ee6d0, %%ecx\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x28(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "jmp .Lplayers_debug_render_5\n\t"
+      ".Lplayers_debug_render_4:\n\t"
+      "movl 0x2ee6d4, %%edx\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x28(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      ".Lplayers_debug_render_5:\n\t"
+      "pushl $0\n\t"
+      "call *%[c189860]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lplayers_debug_render_6:\n\t"
+      "movl -0xc(%%ebp), %%esi\n\t"
+      "incl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%esi, -0xc(%%ebp)\n\t"
+      "call *%[cba4c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $2, %%si\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "jl .Lplayers_debug_render_1\n\t"
+      ".Lplayers_debug_render_7:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lplayers_debug_render_8:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [cba4c0] "m"(bbc520_cba4c0), [assert] "m"(bbc520_assert), [exitfn] "m"(bbc520_exitfn), [cba3c0] "m"(bbc520_cba3c0), [dget] "m"(bbc520_dget), [get] "m"(bbc520_get), [c1a0890] "m"(bbc520_c1a0890), [c1a1430] "m"(bbc520_c1a1430), [tag] "m"(bbc520_tag), [c14e7d0] "m"(bbc520_c14e7d0), [c189860] "m"(bbc520_c189860)
+      : "memory");
 }
+#else
+#error "players_debug_render: clang naked draft required"
+#endif
+
 
 /* Teleport a local player onto a structure-BSP anchor during reconnect (0xbc920). */
 void players_update_before_game_client(int player_handle, int anchor_unit,

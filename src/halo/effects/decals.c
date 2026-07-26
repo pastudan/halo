@@ -2281,95 +2281,385 @@ void decal_update(void)
   (void)ecx;
 }
 
-/* 0x99b70 */
+/* decals_reconnect_to_structure_bsp (0x99b70) — XBE naked draft (batch 119). */
+#if defined(__clang__)
+static void (*const b99b70_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b99b70_exitfn)(int) = system_exit;
+static void *(*const b99b70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b99b70_c98970)(int handle, bool layer_check) = FUN_00098970;
+static void (*const b99b70_c18f180)(void *location_out, void *point) = scenario_location_from_point;
+static void (*const b99b70_c99840)(int16_t cluster_index, int16_t layer, int decal_handle) = FUN_00099840;
+static void (*const b99b70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
 void decals_reconnect_to_structure_bsp(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* test eax, eax -> jne 0x99b9f */
-  display_assert((char *)0x00269ee0, (char *)0x00269e0c, 633, 0);
-  system_exit(0);
-  /* test (char)ecx, (char)ecx -> je 0x99d55 */
-  display_assert((char *)0x00269ec0, (char *)0x00269e0c, 641, 0);
-  system_exit(0);
-  /* cmp edi, -1 -> je 0x99d52 */
-  datum_get((void *)(uintptr_t)edx, 0);
-  /* relift: cmp word ptr [esi + 4], -1 -> je 0x99c48 */
-  display_assert((char *)0x0026a18c, (char *)0x00269e0c, 660, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x99c57 */
-  /* cmp (int16_t)eax, 5 -> jl 0x99c77 */
-  display_assert((char *)0x0026a154, (char *)0x00269e0c, 661, 0);
-  system_exit(0);
-  FUN_00098970(0, 0);
-  scenario_location_from_point((void *)(uintptr_t)eax, (void *)(uintptr_t)edx);
-  /* relift: cmp word ptr [ebp - 8], -1 -> je 0x99d25 */
-  /* cmp eax, -1 -> je 0x99cb9 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp eax, -1 -> je 0x99cd8 */
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* relift: cmp dword ptr [edx + 0x2800], edi -> je 0x99d06 */
-  display_assert((char *)0x0026a118, (char *)0x00269e0c, 682, 0);
-  system_exit(0);
-  FUN_00099840(edi, 0, 0);
-  FUN_00098970(0, 0);
-  error(0, (char *)0x0026a0e4);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x5aa8b8, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Ldecals_reconnect_to_structure_bsp_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x279\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x269ee0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_1:\n\t"
+      "movl 0x5aa8b8, %%eax\n\t"
+      "movb 0x24(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Ldecals_reconnect_to_structure_bsp_14\n\t"
+      "movl 0x44dfd0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "jne .Ldecals_reconnect_to_structure_bsp_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x281\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x269ec0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_2:\n\t"
+      "movl 0x44dfd0, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x2800(%%ecx), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Ldecals_reconnect_to_structure_bsp_13\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_3:\n\t"
+      "movl 0x5aa8b8, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x34(%%esi), %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "incl %%eax\n\t"
+      "cmpl $0x800, %%ecx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "jg .Ldecals_reconnect_to_structure_bsp_12\n\t"
+      "cmpw $-1, 0x4(%%esi)\n\t"
+      "je .Ldecals_reconnect_to_structure_bsp_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x294\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x26a18c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_4:\n\t"
+      "movw 0x6(%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Ldecals_reconnect_to_structure_bsp_5\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jl .Ldecals_reconnect_to_structure_bsp_6\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_5:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x295\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x26a154\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_6:\n\t"
+      "pushl $0\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c98970]\n\t"
+      "leal 0x8(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c18f180]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpw $-1, -0x8(%%ebp)\n\t"
+      "je .Ldecals_reconnect_to_structure_bsp_11\n\t"
+      "movl 0x34(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Ldecals_reconnect_to_structure_bsp_7\n\t"
+      "movl 0x5aa8b8, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x30(%%esi), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edx, 0x30(%%eax)\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_7:\n\t"
+      "movl 0x30(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Ldecals_reconnect_to_structure_bsp_8\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5aa8b8, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%esi), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ecx, 0x34(%%eax)\n\t"
+      "jmp .Ldecals_reconnect_to_structure_bsp_10\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_8:\n\t"
+      "movl 0x44dfd0, %%edx\n\t"
+      "cmpl %%edi, 0x2800(%%edx)\n\t"
+      "je .Ldecals_reconnect_to_structure_bsp_9\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2aa\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x26a118\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_9:\n\t"
+      "movl 0x34(%%esi), %%eax\n\t"
+      "movl 0x44dfd0, %%ecx\n\t"
+      "movl %%eax, 0x2800(%%ecx)\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_10:\n\t"
+      "movw 0x6(%%esi), %%ax\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c99840]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_11:\n\t"
+      "pushl $0\n\t"
+      "movl %%edi, %%eax\n\t"
+      "call *%[c98970]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "jne .Ldecals_reconnect_to_structure_bsp_3\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_12:\n\t"
+      "pushl $0x26a0e4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_13:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Ldecals_reconnect_to_structure_bsp_14:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b99b70_assert), [exitfn] "m"(b99b70_exitfn), [dget] "m"(b99b70_dget), [c98970] "m"(b99b70_c98970), [c18f180] "m"(b99b70_c18f180), [c99840] "m"(b99b70_c99840), [c8f390] "m"(b99b70_c8f390)
+      : "memory");
 }
+#else
+#error "decals_reconnect_to_structure_bsp: clang naked draft required"
+#endif
 
-/* 0x99d60 */
+
+/* decals_disconnect_from_structure_bsp (0x99d60) — XBE naked draft (batch 117). */
+#if defined(__clang__)
+static void (*const b99d60_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b99d60_exitfn)(int) = system_exit;
+static int (*const b99d60_c98fe0)(int16_t cluster_index, int16_t layer) = FUN_00098fe0;
+static void *(*const b99d60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b99d60_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
 void decals_disconnect_from_structure_bsp(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* cmp eax, esi -> jne 0x99d92 */
-  display_assert((char *)0x00269ee0, (char *)0x00269e0c, 713, 0);
-  system_exit(0);
-  /* test (char)ecx, (char)ecx -> je 0x99f72 */
-  /* relift: cmp dword ptr [0x44dfd0], esi -> jne 0x99dca */
-  display_assert((char *)0x00269ec0, (char *)0x00269e0c, 719, 0);
-  system_exit(0);
-  FUN_00098fe0(ecx, eax);
-  datum_get((void *)(uintptr_t)edx, 0);
-  /* relift: cmp (int16_t)edx, word ptr [ebp - 4] -> je 0x99e67 */
-  display_assert((char *)0x0026a1a8, (char *)0x00269e0c, 746, 0);
-  system_exit(0);
-  /* cmp eax, -1 -> je 0x99ea3 */
-  datum_get((void *)(uintptr_t)edx, 0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x99ebc */
-  /* cmp (int16_t)eax, 0x200 -> jl 0x99edc */
-  display_assert((char *)0x00269e58, (char *)0x00269e0c, 216, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x99eea */
-  /* cmp (int16_t)eax, 5 -> jl 0x99f0a */
-  display_assert((char *)0x00269e2c, (char *)0x00269e0c, 217, 0);
-  system_exit(0);
-  /* cmp edi, -1 -> jne 0x99e10 */
-  error(0, (char *)0x0026a0e4);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "movl 0x5aa8b8, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jne .Ldecals_disconnect_from_structure_bsp_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2c9\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x269ee0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_1:\n\t"
+      "movl 0x5aa8b8, %%eax\n\t"
+      "movb 0x24(%%eax), %%cl\n\t"
+      "testb %%cl, %%cl\n\t"
+      "je .Ldecals_disconnect_from_structure_bsp_16\n\t"
+      "cmpl %%esi, 0x44dfd0\n\t"
+      "jne .Ldecals_disconnect_from_structure_bsp_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2cf\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x269ec0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_2:\n\t"
+      "pushl %%ebx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl %%esi, -0x4(%%ebp)\n\t"
+      "movl %%esi, -0x10(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%esi, -0xc(%%ebp)\n\t"
+      "jmp .Ldecals_disconnect_from_structure_bsp_5\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_3:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%esi, -0xc(%%ebp)\n\t"
+      "jmp .Ldecals_disconnect_from_structure_bsp_5\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_4:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "leal (%%ebx), %%ebx\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_5:\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c98fe0]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "movl %%ebx, %%edi\n\t"
+      "movl %%esi, -0x14(%%ebp)\n\t"
+      "je .Ldecals_disconnect_from_structure_bsp_15\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_6:\n\t"
+      "movl 0x5aa8b8, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x34(%%esi), %%eax\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "incl %%eax\n\t"
+      "cmpl $0x800, %%ecx\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "jg .Ldecals_disconnect_from_structure_bsp_14\n\t"
+      "movw 0x4(%%esi), %%dx\n\t"
+      "cmpw -0x4(%%ebp), %%dx\n\t"
+      "je .Ldecals_disconnect_from_structure_bsp_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2ea\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x26a1a8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_7:\n\t"
+      "cmpl $-1, 0x34(%%esi)\n\t"
+      "movw $0xffff, 0x4(%%esi)\n\t"
+      "jne .Ldecals_disconnect_from_structure_bsp_13\n\t"
+      "movl 0x44dfd0, %%eax\n\t"
+      "movl 0x2800(%%eax), %%ecx\n\t"
+      "movl %%ecx, 0x34(%%esi)\n\t"
+      "movl 0x2800(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Ldecals_disconnect_from_structure_bsp_8\n\t"
+      "movl 0x5aa8b8, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edi, 0x30(%%eax)\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_8:\n\t"
+      "movl 0x44dfd0, %%eax\n\t"
+      "movl %%ebx, 0x2800(%%eax)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Ldecals_disconnect_from_structure_bsp_9\n\t"
+      "cmpw $0x200, %%ax\n\t"
+      "jl .Ldecals_disconnect_from_structure_bsp_10\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_9:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd8\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x269e58\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_10:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Ldecals_disconnect_from_structure_bsp_11\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jl .Ldecals_disconnect_from_structure_bsp_12\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_11:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xd9\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x269e2c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_12:\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movl 0x44dfd0, %%eax\n\t"
+      "addl %%edx, %%ecx\n\t"
+      "movl $0xffffffff, (%%eax,%%ecx,4)\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_13:\n\t"
+      "movl -0x18(%%ebp), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .Ldecals_disconnect_from_structure_bsp_6\n\t"
+      "jmp .Ldecals_disconnect_from_structure_bsp_15\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_14:\n\t"
+      "pushl $0x26a0e4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_15:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "incl %%eax\n\t"
+      "addl $0x200, %%edx\n\t"
+      "cmpw $5, %%ax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "jl .Ldecals_disconnect_from_structure_bsp_4\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "incl %%eax\n\t"
+      "incl %%edx\n\t"
+      "cmpw $0x200, %%ax\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl %%edx, -0x10(%%ebp)\n\t"
+      "jl .Ldecals_disconnect_from_structure_bsp_3\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".Ldecals_disconnect_from_structure_bsp_16:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b99d60_assert), [exitfn] "m"(b99d60_exitfn), [c98fe0] "m"(b99d60_c98fe0), [dget] "m"(b99d60_dget), [c8f390] "m"(b99d60_c8f390)
+      : "memory");
 }
+#else
+#error "decals_disconnect_from_structure_bsp: clang naked draft required"
+#endif
+
 
 /* 0x99f80 */
 void decals_update(void)
@@ -2391,50 +2681,167 @@ void decals_update(void)
   (void)edx;
 }
 
-/* 0x9a160 */
-void decal_delete(int decal_index)
+/* decal_delete (0x9a160) — XBE naked draft (batch 121). */
+#if defined(__clang__)
+static void *(*const b9a160_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b9a160_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b9a160_exitfn)(int) = system_exit;
+static void (*const b9a160_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b9a160_c1196d0)(data_t *data, int datum_handle) = datum_delete;
+static int (*const b9a160_c98fe0)(int16_t cluster_index, int16_t layer) = FUN_00098fe0;
+static void (*const b9a160_c98aa0)(int16_t cluster_index, int16_t layer, int param_1) = FUN_00098aa0;
+
+__attribute__((naked, noinline))
+void decal_delete(int decal_index __attribute__((unused)))
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  datum_get((void *)(uintptr_t)eax, 0);
-  /* test esi, esi -> jne 0x9a19d */
-  display_assert((char *)0x0026a2f4, (char *)0x00269e0c, 947, 0);
-  system_exit(0);
-  /* relift: test byte ptr [esi + 2], 1 -> je 0x9a1c3 */
-  /* test (char)eax, (char)eax -> jne 0x9a1c3 */
-  error(0, (char *)0x0026a2b4);
-  /* relift: test byte ptr [esi + 2], 2 -> je 0x9a1e9 */
-  /* test (char)eax, (char)eax -> jne 0x9a1e9 */
-  error(0, (char *)0x0026a270);
-  /* cmp eax, -1 -> je 0x9a207 */
-  datum_get((void *)(uintptr_t)ecx, 0);
-  /* cmp eax, -1 -> je 0x9a238 */
-  datum_get((void *)(uintptr_t)eax, 0);
-  datum_delete((void *)(uintptr_t)ecx, 0);
-  /* cmp (int16_t)eax, 0xffff -> jne 0x9a293 */
-  /* relift: cmp dword ptr [edx + 0x2800], ebx -> je 0x9a270 */
-  display_assert((char *)0x0026a118, (char *)0x00269e0c, 987, 0);
-  system_exit(0);
-  datum_delete((void *)(uintptr_t)ecx, 0);
-  FUN_00098fe0(eax, edx);
-  /* cmp eax, ebx -> je 0x9a2c7 */
-  display_assert((char *)0x0026a220, (char *)0x00269e0c, 992, 0);
-  system_exit(0);
-  FUN_00098aa0(eax, edi, 0);
-  datum_delete((void *)(uintptr_t)ecx, 0);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x5aa8b8, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .Ldecal_delete_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3b3\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x26a2f4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecal_delete_1:\n\t"
+      "testb $1, 0x2(%%esi)\n\t"
+      "je .Ldecal_delete_2\n\t"
+      "movb 0x4557e0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Ldecal_delete_2\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x26a2b4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0x4557e0\n\t"
+      ".Ldecal_delete_2:\n\t"
+      "testb $2, 0x2(%%esi)\n\t"
+      "je .Ldecal_delete_3\n\t"
+      "movb 0x4557e1, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Ldecal_delete_3\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0x26a270\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movb $1, 0x4557e1\n\t"
+      ".Ldecal_delete_3:\n\t"
+      "movl 0x34(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Ldecal_delete_4\n\t"
+      "movl 0x5aa8b8, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x30(%%esi), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edx, 0x30(%%eax)\n\t"
+      ".Ldecal_delete_4:\n\t"
+      "movl 0x30(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Ldecal_delete_5\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5aa8b8, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x34(%%esi), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%ecx, 0x34(%%eax)\n\t"
+      "movl 0x5aa8b8, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1196d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ldecal_delete_5:\n\t"
+      "movw 0x4(%%esi), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "jne .Ldecal_delete_7\n\t"
+      "movl 0x44dfd0, %%edx\n\t"
+      "cmpl %%ebx, 0x2800(%%edx)\n\t"
+      "je .Ldecal_delete_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3db\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x26a118\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecal_delete_6:\n\t"
+      "movl 0x44dfd0, %%ecx\n\t"
+      "movl 0x34(%%esi), %%eax\n\t"
+      "movl %%eax, 0x2800(%%ecx)\n\t"
+      "movl 0x5aa8b8, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1196d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Ldecal_delete_7:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x6(%%esi), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c98fe0]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "je .Ldecal_delete_8\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3e0\n\t"
+      "pushl $0x269e0c\n\t"
+      "pushl $0x26a220\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Ldecal_delete_8:\n\t"
+      "movl 0x34(%%esi), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movw 0x6(%%esi), %%di\n\t"
+      "movw 0x4(%%esi), %%si\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c98aa0]\n\t"
+      "movl 0x5aa8b8, %%ecx\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1196d0]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b9a160_dget), [assert] "m"(b9a160_assert), [exitfn] "m"(b9a160_exitfn), [c8f390] "m"(b9a160_c8f390), [c1196d0] "m"(b9a160_c1196d0), [c98fe0] "m"(b9a160_c98fe0), [c98aa0] "m"(b9a160_c98aa0)
+      : "memory");
 }
+#else
+#error "decal_delete: clang naked draft required"
+#endif
+
 
 /* 0x17cba0 */
 void FUN_0017cba0(void)

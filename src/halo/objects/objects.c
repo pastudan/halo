@@ -6656,112 +6656,199 @@ void object_name_list_set_handle(int16_t param_1 __attribute__((unused)), int pa
 #endif
 
 
-void object_set_garbage_flag(int object_handle, int is_garbage)
+/* object_set_garbage_flag (0x13d920) — XBE naked draft (batch 117). */
+#if defined(__clang__)
+static void *(*const b13d920_get)(int, int) = object_get_and_verify_type;
+static void *(*const b13d920_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char * (*const b13d920_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b13d920_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b13d920_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void object_set_garbage_flag(int object_handle __attribute__((unused)), int is_garbage __attribute__((unused)))
 {
-  object_data_t *obj =
-    (object_data_t *)object_get_and_verify_type(object_handle, -1);
-  object_globals_t *og = object_globals;
-
-  /* Pre-validation: walk the garbage list and assert integrity */
-  {
-    int handle = og->unk_8.value;
-    while (handle != -1) {
-      object_header_data_t *hdr =
-        (object_header_data_t *)datum_get(*(data_t **)0x5a8d50, handle);
-      object_data_t *gobj = hdr->object;
-      int16_t type = gobj->type;
-      if ((1 << (type & 0x1f)) == 0) {
-        char *msg = csprintf(
-          (char *)0x5ab100,
-          "got an object type we didn't expect (expected one of 0x%08x but "
-          "got #%d).",
-          -1, (int)type);
-        display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0x69a, 1);
-        system_exit(-1);
-      }
-      if ((gobj->flags & 0x10000) == 0) {
-        display_assert(
-          "TEST_FLAG(garbage_object->object.flags, _object_garbage_bit)",
-          "c:\\halo\\SOURCE\\objects\\objects.c", 0x7a0, 1);
-        system_exit(-1);
-      }
-      handle = gobj->unk_192;
-    }
-    og = object_globals;
-  }
-
-  if ((char)is_garbage != 0) {
-    /* Add to garbage list */
-    if ((obj->flags & 0x30000) != 0)
-      goto done;
-
-    obj->unk_192 = og->unk_8.value;
-    og->unk_8.value = object_handle;
-    obj->flags |= 0x10000;
-  } else {
-    /* Remove from garbage list */
-    uint32_t *prev_ptr;
-    int cur;
-
-    if ((obj->flags & 0x10000) == 0)
-      goto done;
-
-    /* Walk the list to find the previous pointer */
-    prev_ptr = (uint32_t *)&og->unk_8.value;
-    cur = og->unk_8.value;
-
-    while (cur != object_handle) {
-      object_header_data_t *hdr =
-        (object_header_data_t *)datum_get(*(data_t **)0x5a8d50, *prev_ptr);
-      object_data_t *gobj = hdr->object;
-      int16_t type = gobj->type;
-      if ((1 << (type & 0x1f)) == 0) {
-        char *msg = csprintf(
-          (char *)0x5ab100,
-          "got an object type we didn't expect (expected one of 0x%08x but "
-          "got #%d).",
-          -1, (int)type);
-        display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0x69a, 1);
-        system_exit(-1);
-      }
-      prev_ptr = &gobj->unk_192;
-      cur = gobj->unk_192;
-    }
-
-    /* Unlink: *prev_ptr = obj->next; obj->next = NONE */
-    *prev_ptr = obj->unk_192;
-    obj->unk_192 = 0xffffffff;
-    obj->flags &= ~(uint32_t)0x10000;
-  }
-
-done:
-  /* Post-validation: walk the garbage list again */
-  {
-    int handle = og->unk_8.value;
-    while (handle != -1) {
-      object_header_data_t *hdr =
-        (object_header_data_t *)datum_get(*(data_t **)0x5a8d50, handle);
-      object_data_t *gobj = hdr->object;
-      int16_t type = gobj->type;
-      if ((1 << (type & 0x1f)) == 0) {
-        char *msg = csprintf(
-          (char *)0x5ab100,
-          "got an object type we didn't expect (expected one of 0x%08x but "
-          "got #%d).",
-          -1, (int)type);
-        display_assert(msg, "c:\\halo\\SOURCE\\objects\\objects.c", 0x69a, 1);
-        system_exit(-1);
-      }
-      if ((gobj->flags & 0x10000) == 0) {
-        display_assert(
-          "TEST_FLAG(garbage_object->object.flags, _object_garbage_bit)",
-          "c:\\halo\\SOURCE\\objects\\objects.c", 0x7d6, 1);
-        system_exit(-1);
-      }
-      handle = gobj->unk_192;
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl 0x46f084, %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x8(%%ecx), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_set_garbage_flag_4\n\t"
+      ".Lobject_set_garbage_flag_1:\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%esi\n\t"
+      "movswl 0x64(%%esi), %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jne .Lobject_set_garbage_flag_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x69a\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $-1\n\t"
+      "pushl $0x29b940\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_set_garbage_flag_2:\n\t"
+      "testl $0x10000, 0x4(%%esi)\n\t"
+      "jne .Lobject_set_garbage_flag_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x7a0\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29b9c4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_set_garbage_flag_3:\n\t"
+      "movl 0xc0(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lobject_set_garbage_flag_1\n\t"
+      "movl 0x46f084, %%ecx\n\t"
+      ".Lobject_set_garbage_flag_4:\n\t"
+      "movb 0xc(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movl 0x4(%%edi), %%eax\n\t"
+      "je .Lobject_set_garbage_flag_5\n\t"
+      "testl $0x30000, %%eax\n\t"
+      "jne .Lobject_set_garbage_flag_10\n\t"
+      "movl 0x8(%%ecx), %%eax\n\t"
+      "movl %%eax, 0xc0(%%edi)\n\t"
+      "movl %%ebx, 0x8(%%ecx)\n\t"
+      "movl 0x4(%%edi), %%eax\n\t"
+      "orl $0x10000, %%eax\n\t"
+      "jmp .Lobject_set_garbage_flag_9\n\t"
+      ".Lobject_set_garbage_flag_5:\n\t"
+      "testl $0x10000, %%eax\n\t"
+      "je .Lobject_set_garbage_flag_10\n\t"
+      "movl 0x8(%%ecx), %%edx\n\t"
+      "cmpl %%ebx, %%edx\n\t"
+      "leal 0x8(%%ecx), %%eax\n\t"
+      "je .Lobject_set_garbage_flag_8\n\t"
+      "jmp .Lobject_set_garbage_flag_6\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lobject_set_garbage_flag_6:\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "movl 0x5a8d50, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%esi\n\t"
+      "movswl 0x64(%%esi), %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jne .Lobject_set_garbage_flag_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x69a\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $-1\n\t"
+      "pushl $0x29b940\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_set_garbage_flag_7:\n\t"
+      "movl 0xc0(%%esi), %%ecx\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "leal 0xc0(%%esi), %%eax\n\t"
+      "jne .Lobject_set_garbage_flag_6\n\t"
+      "movl 0x46f084, %%ecx\n\t"
+      ".Lobject_set_garbage_flag_8:\n\t"
+      "movl 0xc0(%%edi), %%edx\n\t"
+      "movl %%edx, (%%eax)\n\t"
+      "movl 0x4(%%edi), %%eax\n\t"
+      "movl $0xffffffff, 0xc0(%%edi)\n\t"
+      "andl $0xfffeffff, %%eax\n\t"
+      ".Lobject_set_garbage_flag_9:\n\t"
+      "movl %%eax, 0x4(%%edi)\n\t"
+      ".Lobject_set_garbage_flag_10:\n\t"
+      "movl 0x8(%%ecx), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_set_garbage_flag_14\n\t"
+      "movl $0x10000, %%edi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lobject_set_garbage_flag_11:\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x8(%%eax), %%esi\n\t"
+      "movswl 0x64(%%esi), %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edx, %%edx\n\t"
+      "jne .Lobject_set_garbage_flag_12\n\t"
+      "pushl $1\n\t"
+      "pushl $0x69a\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $-1\n\t"
+      "pushl $0x29b940\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_set_garbage_flag_12:\n\t"
+      "testl %%edi, 0x4(%%esi)\n\t"
+      "jne .Lobject_set_garbage_flag_13\n\t"
+      "pushl $1\n\t"
+      "pushl $0x7d6\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29b9c4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_set_garbage_flag_13:\n\t"
+      "movl 0xc0(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lobject_set_garbage_flag_11\n\t"
+      ".Lobject_set_garbage_flag_14:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b13d920_get), [dget] "m"(b13d920_dget), [c8d9d0] "m"(b13d920_c8d9d0), [assert] "m"(b13d920_assert), [exitfn] "m"(b13d920_exitfn)
+      : "memory");
 }
+#else
+#error "object_set_garbage_flag: clang naked draft required"
+#endif
+
 
 /* FUN_0013db60 (0x13db60) — XBE naked draft (batch 67). */
 #if defined(__clang__)
@@ -7440,111 +7527,196 @@ int object_mark(int object_handle)
   return 0;
 }
 
-/* attachments_new (0x13ecb0 / objects.obj) — create every attachment defined in
- * an object's tag and record each in the object datum's attachment table.
- *
- * Resolves the object datum and its 'obje' tag, then for each attachment element
- * (block at tag+0x140, stride 0x48) whose definition tag (element+0xc) is valid,
- * classifies the attachment by its group tag (element+0x0) into one of five
- * types and dispatches to the matching creator:
- *   type 0 'ligh' -> FUN_0013b1b0  (light)        ; sets object flag 0x100
- *   type 1 'lsnd' -> game_looping_sound_new       ; sets object flag 0x400
- *   type 2 'effe' -> FUN_0009eb40  (effect)
- *   type 3 'cont' -> contrail_new
- *   type 4 'pctl' -> FUN_000a12e0  (particle)
- * The attachment type byte is stored at object+0xf4+i and the created handle at
- * object+0xfc+i*4. Marker indices passed to creators are element fields minus 1
- * (element+0x30/+0x32/+0x34 -> marker / secondary / tertiary).
- *
- * DORMANT — kept ported=false. Gate B: caller edge from object_new (0x143c80,
- * lifecycle cluster member) at 0x144147, AND object-lifecycle mutation (fills the
- * object attachment table at +0xf4/+0xfc and sets creation flags at object+0x4).
- * Part of the object creation path; activate only with the lifecycle cluster.
- *
- * Confirmed: 1 cdecl arg (object_handle @ [EBP+0x8]).
- * Confirmed: jump table at 0x13ee4c maps type 0..4 to the five creators.
- * Confirmed: attachment element def index = element[3] (+0xc); store offsets
- * object+0xf4+i (type byte) and object+0xfc+i*4 (handle).
- * Confirmed: loop index is int16_t (MOVSX EDI,AX); count re-read from tag+0x140.
- */
-void attachments_new(int object_handle)
-{
-  int *obj;
-  int obj_tag;
-  unsigned int *element;
-  unsigned int def;
-  unsigned int group;
-  short type;
-  int handle;
-  int count;
-  short i;       /* attachment slot index (int16_t in original) */
-  int idx;
+/* attachments_new (0x13ecb0) — XBE naked draft (batch 117). */
+#if defined(__clang__)
+static void *(*const b13ecb0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b13ecb0_tag)(int, int) = tag_get;
+static void *(*const b13ecb0_elem)(void *, int, int) = tag_block_get_element;
+static int (*const b13ecb0_c13b1b0)(int tag_index, int object_handle, short attachment_index, short marker_index, short secondary_marker_index) = FUN_0013b1b0;
+static int (*const b13ecb0_c1c7230)(int object_index, int sound_tag_index, void *marker_name, short scale_index) = game_looping_sound_new;
+static int (*const b13ecb0_c9eb40)(int param_1, int param_2, short param_3, short param_4, short param_5) = FUN_0009eb40;
+static int (*const b13ecb0_c98580)(int definition_index, int object_index, short attachment_index) = contrail_new;
+static int (*const b13ecb0_ca12e0)(int particle_tag_index, int object_handle, int16_t attach_index) = FUN_000a12e0;
 
-  obj = (int *)object_get_and_verify_type(object_handle, -1);
-  obj_tag = (int)tag_get(0x6f626a65, *(int *)obj);
-  i = 0;
-  idx = 0;
-  count = *(int *)(obj_tag + 0x140);
-  if (0 < count) {
-    do {
-      element = (unsigned int *)tag_block_get_element((void *)(obj_tag + 0x140), idx, 0x48);
-      def = element[3];
-      type = -1;
-      handle = -1;
-      if (def != 0xffffffff) {
-        group = element[0];
-        if (group < 0x6c696769) {
-          if (group == 0x6c696768) {        /* 'ligh' */
-            type = 0;
-          } else if (group == 0x636f6e74) { /* 'cont' */
-            type = 3;
-          } else if (group == 0x65666665) { /* 'effe' */
-            type = 2;
-          }
-        } else if (group == 0x6c736e64) {   /* 'lsnd' */
-          type = 1;
-        } else if (group == 0x7063746c) {   /* 'pctl' */
-          type = 4;
-        }
-      }
-      switch (type) {
-      case 0:
-        handle = FUN_0013b1b0((int)def, object_handle, i,
-                              (short)(*(short *)((char *)element + 0x30) - 1),
-                              (short)(*(short *)((char *)element + 0x34) - 1));
-        if (handle != -1) {
-          obj[1] = obj[1] | 0x100;
-        }
-        break;
-      case 1:
-        handle = game_looping_sound_new(object_handle, (int)def, element + 4,
-                                        (short)(*(short *)((char *)element + 0x30) - 1));
-        if (handle != -1) {
-          obj[1] = obj[1] | 0x400;
-        }
-        break;
-      case 2:
-        handle = FUN_0009eb40((int)def, object_handle,
-                              (short)(*(short *)((char *)element + 0x30) - 1),
-                              (short)(*(short *)((char *)element + 0x32) - 1),
-                              (short)(*(short *)((char *)element + 0x34) - 1));
-        break;
-      case 3:
-        handle = contrail_new((int)def, object_handle, i);
-        break;
-      case 4:
-        handle = FUN_000a12e0((int)def, object_handle, i);
-        break;
-      default:
-        break;
-      }
-      *((char *)obj + 0xf4 + idx) = (char)type;
-      obj[idx + 0x3f] = handle;
-      i++;
-      idx = (int)i;
-    } while (idx < count);
-  }
+__attribute__((naked, noinline))
+void attachments_new(int object_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x140(%%eax), %%ecx\n\t"
+      "addl $0x140, %%eax\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%edi, %%ecx\n\t"
+      "movl %%edi, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "jle .Lattachments_new_15\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "jmp .Lattachments_new_2\n\t"
+      ".Lattachments_new_1:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      ".Lattachments_new_2:\n\t"
+      "pushl $0x48\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl 0xc(%%ecx), %%esi\n\t"
+      "addl $0xc, %%esp\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .Lattachments_new_7\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "cmpl $0x6c696768, %%edx\n\t"
+      "ja .Lattachments_new_5\n\t"
+      "je .Lattachments_new_4\n\t"
+      "cmpl $0x636f6e74, %%edx\n\t"
+      "je .Lattachments_new_3\n\t"
+      "cmpl $0x65666665, %%edx\n\t"
+      "jne .Lattachments_new_7\n\t"
+      "movl $2, %%ebx\n\t"
+      "jmp .Lattachments_new_7\n\t"
+      ".Lattachments_new_3:\n\t"
+      "movl $3, %%ebx\n\t"
+      "jmp .Lattachments_new_7\n\t"
+      ".Lattachments_new_4:\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "jmp .Lattachments_new_7\n\t"
+      ".Lattachments_new_5:\n\t"
+      "cmpl $0x6c736e64, %%edx\n\t"
+      "je .Lattachments_new_6\n\t"
+      "cmpl $0x7063746c, %%edx\n\t"
+      "jne .Lattachments_new_7\n\t"
+      "movl $4, %%ebx\n\t"
+      "jmp .Lattachments_new_7\n\t"
+      ".Lattachments_new_6:\n\t"
+      "movl $1, %%ebx\n\t"
+      ".Lattachments_new_7:\n\t"
+      "movswl %%bx, %%edx\n\t"
+      "cmpl $4, %%edx\n\t"
+      "ja .Lattachments_new_14\n\t"
+      "jmp *.Lattachments_new_jt(,%%edx,4)\n\t"
+      ".Lattachments_new_8:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x34(%%ecx), %%dx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x30(%%ecx), %%ax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "decw %%dx\n\t"
+      "decw %%ax\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c13b1b0]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lattachments_new_14\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "orl $0x100, 0x4(%%ecx)\n\t"
+      "jmp .Lattachments_new_14\n\t"
+      ".Lattachments_new_9:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x30(%%ecx), %%ax\n\t"
+      "decw %%ax\n\t"
+      "addl $0x10, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1c7230]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lattachments_new_14\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "orl $0x400, 0x4(%%ecx)\n\t"
+      "jmp .Lattachments_new_14\n\t"
+      ".Lattachments_new_10:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x34(%%ecx), %%dx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x32(%%ecx), %%ax\n\t"
+      "movswl 0x30(%%ecx), %%ecx\n\t"
+      "decw %%dx\n\t"
+      "decw %%ax\n\t"
+      "decw %%cx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c9eb40]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .Lattachments_new_14\n\t"
+      ".Lattachments_new_11:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c98580]\n\t"
+      "jmp .Lattachments_new_13\n\t"
+      ".Lattachments_new_12:\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ca12e0]\n\t"
+      ".Lattachments_new_13:\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lattachments_new_14:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movb %%bl, 0xf4(%%edi,%%ecx,1)\n\t"
+      "movl %%eax, 0xfc(%%ecx,%%edi,4)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "incl %%eax\n\t"
+      "movswl %%ax, %%edi\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "cmpl (%%ecx), %%edi\n\t"
+      "jl .Lattachments_new_1\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      ".Lattachments_new_15:\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".Lattachments_new_jt:\n\t"
+      ".long .Lattachments_new_8\n\t"
+      ".long .Lattachments_new_9\n\t"
+      ".long .Lattachments_new_10\n\t"
+      ".long .Lattachments_new_11\n\t"
+      ".long .Lattachments_new_12\n\t"
+      ".text\n\t"
+      :
+      : [get] "m"(b13ecb0_get), [tag] "m"(b13ecb0_tag), [elem] "m"(b13ecb0_elem), [c13b1b0] "m"(b13ecb0_c13b1b0), [c1c7230] "m"(b13ecb0_c1c7230), [c9eb40] "m"(b13ecb0_c9eb40), [c98580] "m"(b13ecb0_c98580), [ca12e0] "m"(b13ecb0_ca12e0)
+      : "memory");
 }
+#else
+#error "attachments_new: clang naked draft required"
+#endif
+
 
 /* Propagate wake/limbo flags to children (object_handle@eax). */
 #if defined(__clang__)
@@ -8221,187 +8393,392 @@ char object_select_random_region_permutations_by_variant(
   return all_ok;
 }
 
-/* 0x13e1f0 / objects.obj — Seed the object's four change-color slots during
- * spawn. For each of the 4 slots, copies the base RGB triple from the
- * placement color_data, then (if the model tag declares a change-color
- * animation for this slot index, block at obj_tag+0x164, element size 0x2c)
- * derives a deterministic pseudo-random blend value from the object's basis
- * vectors (obj+0xc/0x10/0x14) and the slot index, walks the slot's permutation
- * sub-block (element+0x20, element size 0x1c) as a cumulative distribution,
- * and on the first permutation whose threshold (perm[0]) is >= the blend
- * value, blends an RGB pair (perm+0x4 .. perm+0x10) into the slot color via
- * FUN_0007c270. Finally clamps each RGB component of the slot to [0,1] and
- * writes the clamped triple to the +0x30 mirror (obj+0x138 slot layout:
- * base RGB at +0, clamped RGB at +0x30).
- * Role: object spawn-appearance setup; establishes per-object tinting.
- * object_handle in EAX (register arg); color_data is first stack argument.
- * Confirmed: PUSH -1; PUSH EAX; CALL object_get_and_verify_type.
- * Confirmed: pseudo-random frac via x87_fmod(|dot|, 1.0) (CALL 0x1daf7e).
- * Confirmed: clamp lo/hi = *(float*)0x2533c0 (0.0) / 0x2533c8 (1.0).
- * Confirmed: 4 iterations; dest stride 0xc bytes, color_data stride 0xc. */
-void object_choose_random_change_colors(int object_handle /* @<eax> */,
-                                        void *color_data)
+/* object_choose_random_change_colors (0x13e1f0) — XBE naked draft (batch 116). */
+#if defined(__clang__)
+static void *(*const b13e1f0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b13e1f0_tag)(int, int) = tag_get;
+static void *(*const b13e1f0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b13e1f0_c1daf7e)(void) = FUN_001daf7e;
+static float * (*const b13e1f0_c7c270)(float *out_color, uint32_t flags, float *rgb_lower_bound, float *rgb_upper_bound, float blend) = FUN_0007c270;
+
+__attribute__((naked, noinline))
+void object_choose_random_change_colors(int object_handle __attribute__((unused)), void *color_data __attribute__((unused)))
 {
-  char *obj;
-  int obj_tag;
-  float *src;
-  float *dst;
-  int i;
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  obj_tag = (int)tag_get(0x6f626a65, *(int *)obj);
-  src = (float *)color_data;
-  dst = (float *)(obj + 0x138);
-
-  for (i = 0; i < 4; i = i + 1) {
-    float frac;
-    float c;
-
-    /* base RGB triple from placement data */
-    dst[0] = src[0];
-    dst[1] = src[1];
-    dst[2] = src[2];
-
-    if (i < *(int *)(obj_tag + 0x164)) {
-      char *cc_elem = (char *)tag_block_get_element(
-          (void *)(obj_tag + 0x164), i, 0x2c);
-
-      /* deterministic pseudo-random selector from object basis + slot index;
-       * the FABS is applied to the dot sum before the modulo */
-      frac = *(float *)(obj + 0x14) * *(float *)0x29bbe0 +
-             *(float *)(obj + 0xc) * *(float *)0x29bbdc +
-             *(float *)(obj + 0x10) * *(float *)0x29bbd8 +
-             (float)i * *(float *)0x29bbd4;
-      if (frac < 0.0f) {
-        frac = -frac;
-      }
-      frac = x87_fmod(frac, 1.0);
-
-      if (*(int *)(cc_elem + 0x20) > 0) {
-        int16_t j = 0;
-        do {
-          float *perm = (float *)tag_block_get_element(
-              (void *)(cc_elem + 0x20), (int)j, 0x1c);
-          if (frac <= perm[0]) {
-            float blend;
-            /* FABS applies only to obj+0x10 here, before adding index term */
-            blend = *(float *)(obj + 0x10);
-            if (blend < 0.0f) {
-              blend = -blend;
-            }
-            blend = blend + (float)i * *(float *)0x29bbd0;
-            blend = x87_fmod(blend, 1.0);
-            FUN_0007c270(dst, 1, perm + 1, perm + 4, blend);
-            break;
-          }
-          j = j + 1;
-        } while ((int)j < *(int *)(cc_elem + 0x20));
-      }
-    }
-
-    /* clamp each component to [0,1] and store in the +0x30 mirror */
-    c = *(float *)0x2533c0;
-    if (*(float *)0x2533c0 <= dst[0] && (c = *(float *)0x2533c8, dst[0] <= *(float *)0x2533c8)) {
-      c = dst[0];
-    }
-    dst[0xc] = c;
-    c = *(float *)0x2533c0;
-    if (*(float *)0x2533c0 <= dst[1] && (c = *(float *)0x2533c8, dst[1] <= *(float *)0x2533c8)) {
-      c = dst[1];
-    }
-    dst[0xd] = c;
-    c = *(float *)0x2533c0;
-    if (*(float *)0x2533c0 <= dst[2] && (c = *(float *)0x2533c8, dst[2] <= *(float *)0x2533c8)) {
-      c = dst[2];
-    }
-    dst[0xe] = c;
-
-    src = src + 3;
-    dst = dst + 3;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x20, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "addl $0x164, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "leal 0x138(%%edi), %%ebx\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "movl $4, -0x18(%%ebp)\n\t"
+      ".Lobject_choose_random_change_colors_1:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%esi\n\t"
+      "movl %%ebx, %%edx\n\t"
+      "movl %%esi, (%%edx)\n\t"
+      "movl 0x4(%%eax), %%esi\n\t"
+      "movl %%esi, 0x4(%%edx)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "cmpl (%%eax), %%ecx\n\t"
+      "jge .Lobject_choose_random_change_colors_5\n\t"
+      "pushl $0x2c\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "fildl -0x8(%%ebp)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, %%esi\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fmuls 0x29bbe0\n\t"
+      "flds 0xc(%%edi)\n\t"
+      "fmuls 0x29bbdc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds 0x10(%%edi)\n\t"
+      "fmuls 0x29bbd8\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls 0x29bbd4\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fabs\n\t"
+      "fldl 0x2573d8\n\t"
+      "call *%[c1daf7e]\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "movl 0x20(%%esi), %%eax\n\t"
+      "addl $0x20, %%esi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl $0, -0x10(%%ebp)\n\t"
+      "jle .Lobject_choose_random_change_colors_5\n\t"
+      "xorl %%eax, %%eax\n\t"
+      ".Lobject_choose_random_change_colors_2:\n\t"
+      "pushl $0x1c\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "call *%[elem]\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "fcomps (%%ebx)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jnp .Lobject_choose_random_change_colors_3\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "incl %%eax\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .Lobject_choose_random_change_colors_2\n\t"
+      "jmp .Lobject_choose_random_change_colors_4\n\t"
+      ".Lobject_choose_random_change_colors_3:\n\t"
+      "flds 0x10(%%edi)\n\t"
+      "fabs\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls 0x29bbd0\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fldl 0x2573d8\n\t"
+      "call *%[c1daf7e]\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "fstps (%%esp)\n\t"
+      "leal 0x10(%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "addl $4, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c7c270]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_choose_random_change_colors_4:\n\t"
+      "movl -0x4(%%ebp), %%ebx\n\t"
+      ".Lobject_choose_random_change_colors_5:\n\t"
+      "flds (%%ebx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lobject_choose_random_change_colors_6\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lobject_choose_random_change_colors_8\n\t"
+      ".Lobject_choose_random_change_colors_6:\n\t"
+      "flds (%%ebx)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_choose_random_change_colors_7\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Lobject_choose_random_change_colors_8\n\t"
+      ".Lobject_choose_random_change_colors_7:\n\t"
+      "flds (%%ebx)\n\t"
+      ".Lobject_choose_random_change_colors_8:\n\t"
+      "fstps 0x30(%%ebx)\n\t"
+      "flds 0x4(%%ebx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lobject_choose_random_change_colors_9\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lobject_choose_random_change_colors_11\n\t"
+      ".Lobject_choose_random_change_colors_9:\n\t"
+      "flds 0x4(%%ebx)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_choose_random_change_colors_10\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Lobject_choose_random_change_colors_11\n\t"
+      ".Lobject_choose_random_change_colors_10:\n\t"
+      "flds 0x4(%%ebx)\n\t"
+      ".Lobject_choose_random_change_colors_11:\n\t"
+      "fstps 0x34(%%ebx)\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lobject_choose_random_change_colors_12\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lobject_choose_random_change_colors_14\n\t"
+      ".Lobject_choose_random_change_colors_12:\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_choose_random_change_colors_13\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Lobject_choose_random_change_colors_14\n\t"
+      ".Lobject_choose_random_change_colors_13:\n\t"
+      "flds 0x8(%%ebx)\n\t"
+      ".Lobject_choose_random_change_colors_14:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "fstps 0x38(%%ebx)\n\t"
+      "movl -0xc(%%ebp), %%esi\n\t"
+      "movl -0x18(%%ebp), %%eax\n\t"
+      "incl %%ecx\n\t"
+      "addl $0xc, %%esi\n\t"
+      "addl $0xc, %%ebx\n\t"
+      "decl %%eax\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl %%esi, -0xc(%%ebp)\n\t"
+      "movl %%ebx, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "jne .Lobject_choose_random_change_colors_1\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b13e1f0_get), [tag] "m"(b13e1f0_tag), [elem] "m"(b13e1f0_elem), [c1daf7e] "m"(b13e1f0_c1daf7e), [c7c270] "m"(b13e1f0_c7c270)
+      : "memory");
 }
+#else
+#error "object_choose_random_change_colors: clang naked draft required"
+#endif
 
-/* 0x13e5d0 / objects.obj — Recompute the object's live change colors from its
- * current animation-function values. Gated on the object tag flag bit 0 at
- * obj_tag+0x24. For each change-color animation entry (block obj_tag+0x164,
- * element size 0x2c): if its blend-function index (entry+0x2) is nonzero,
- * blends an RGB pair (entry+0x8 .. entry+0x14) into the computed color slot
- * (obj+0x168 + i*0xc) using the precomputed function value as the blend
- * weight; if its scale-function index (entry+0x0) is nonzero, multiplies all
- * three components of the slot by that function value; finally clamps each
- * component to [0,1] in place. Function values are read directly from the
- * precomputed array at obj+0xd0 (filled by object_compute_function_values).
- * Role: object spawn-appearance / per-frame appearance update.
- * object_handle in EAX (register arg).
- * Confirmed: PUSH -1; PUSH EAX; CALL object_get_and_verify_type.
- * Confirmed: gate on (*(uint8_t*)(obj_tag+0x24) & 1).
- * Confirmed: function value = *(float*)(obj + 0xd0 + fn_idx*4).
- * Confirmed: computed color slot base obj+0x168 (the +0x30 change-color mirror).
- * Confirmed: clamp lo/hi = *(float*)0x2533c0 / 0x2533c8. */
-void object_compute_change_colors(int object_handle /* @<eax> */)
+
+/* object_compute_change_colors (0x13e5d0) — XBE naked draft (batch 119). */
+#if defined(__clang__)
+static void *(*const b13e5d0_get)(int, int) = object_get_and_verify_type;
+static void *(*const b13e5d0_tag)(int, int) = tag_get;
+static void *(*const b13e5d0_elem)(void *, int, int) = tag_block_get_element;
+static float * (*const b13e5d0_c7c270)(float *out_color, uint32_t flags, float *rgb_lower_bound, float *rgb_upper_bound, float blend) = FUN_0007c270;
+
+__attribute__((naked, noinline))
+void object_compute_change_colors(int object_handle __attribute__((unused)))
 {
-  char *obj;
-  int obj_tag;
-  int16_t i;
-  int16_t counter;
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  obj_tag = (int)tag_get(0x6f626a65, *(int *)obj);
-  if ((*(unsigned char *)(obj_tag + 0x24) & 1) == 0) {
-    return;
-  }
-
-  i = 0;
-  counter = 0;
-  if (*(int *)(obj_tag + 0x164) <= 0) {
-    return;
-  }
-  do {
-    char *entry = (char *)tag_block_get_element(
-        (void *)(obj_tag + 0x164), (int)i, 0x2c);
-    float *slot = (float *)(obj + 0x168 + (int)i * 0xc);
-    int16_t blend_fn;
-    int16_t scale_fn;
-    float c;
-
-    /* blend-function: blend the entry RGB pair into the slot */
-    blend_fn = *(int16_t *)(entry + 0x2);
-    if (blend_fn != 0) {
-      float fn_val = *(float *)(obj + 0xd0 + (int)blend_fn * 4);
-      FUN_0007c270(slot, *(int *)(entry + 0x4),
-                   (float *)(entry + 0x8), (float *)(entry + 0x14), fn_val);
-    }
-
-    /* scale-function: multiply all three components by the function value */
-    scale_fn = *(int16_t *)entry;
-    if (scale_fn != 0) {
-      float fn_val = *(float *)(obj + 0xd0 + (int)scale_fn * 4);
-      slot[0] = fn_val * slot[0];
-      slot[1] = fn_val * slot[1];
-      slot[2] = fn_val * slot[2];
-    }
-
-    /* clamp each component to [0,1] in place */
-    c = *(float *)0x2533c0;
-    if (*(float *)0x2533c0 <= slot[0] && (c = *(float *)0x2533c8, slot[0] <= *(float *)0x2533c8)) {
-      c = slot[0];
-    }
-    slot[0] = c;
-    c = *(float *)0x2533c0;
-    if (*(float *)0x2533c0 <= slot[1] && (c = *(float *)0x2533c8, slot[1] <= *(float *)0x2533c8)) {
-      c = slot[1];
-    }
-    slot[1] = c;
-    c = *(float *)0x2533c0;
-    if (*(float *)0x2533c0 <= slot[2] && (c = *(float *)0x2533c8, slot[2] <= *(float *)0x2533c8)) {
-      c = slot[2];
-    }
-    slot[2] = c;
-
-    counter = counter + 1;
-    i = counter;
-  } while ((int)i < *(int *)(obj_tag + 0x164));
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x24(%%eax), %%cl\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb $1, %%cl\n\t"
+      "je .Lobject_compute_change_colors_19\n\t"
+      "movl 0x164(%%eax), %%ecx\n\t"
+      "addl $0x164, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpl %%esi, %%ecx\n\t"
+      "movl %%esi, -0x8(%%ebp)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "jle .Lobject_compute_change_colors_18\n\t"
+      "pushl %%edi\n\t"
+      "jmp .Lobject_compute_change_colors_2\n\t"
+      ".Lobject_compute_change_colors_1:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "nop\n\t"
+      ".Lobject_compute_change_colors_2:\n\t"
+      "pushl $0x2c\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movw 0x2(%%edi), %%ax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .Lobject_compute_change_colors_5\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jl .Lobject_compute_change_colors_3\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "flds 0xd0(%%ebx,%%edx,4)\n\t"
+      "jmp .Lobject_compute_change_colors_4\n\t"
+      ".Lobject_compute_change_colors_3:\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "flds 0xd0(%%ebx,%%eax,4)\n\t"
+      ".Lobject_compute_change_colors_4:\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "leal 0x14(%%edi), %%edx\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0x8(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x5a(%%esi,%%esi,2), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "leal (%%ebx,%%edx,4), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c7c270]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_compute_change_colors_5:\n\t"
+      "movw (%%edi), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "je .Lobject_compute_change_colors_8\n\t"
+      "cmpw $5, %%di\n\t"
+      "jl .Lobject_compute_change_colors_6\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "flds 0xd0(%%ebx,%%ecx,4)\n\t"
+      "jmp .Lobject_compute_change_colors_7\n\t"
+      ".Lobject_compute_change_colors_6:\n\t"
+      "movswl %%di, %%edx\n\t"
+      "flds 0xd0(%%ebx,%%edx,4)\n\t"
+      ".Lobject_compute_change_colors_7:\n\t"
+      "fld %%st(0)\n\t"
+      "leal 0x5a(%%esi,%%esi,2), %%eax\n\t"
+      "fmuls (%%ebx,%%eax,4)\n\t"
+      "leal (%%ebx,%%eax,4), %%eax\n\t"
+      "leal (%%esi,%%esi,2), %%ecx\n\t"
+      "fstps (%%eax)\n\t"
+      "leal (%%ebx,%%ecx,4), %%eax\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x16c(%%eax)\n\t"
+      "fstps 0x16c(%%eax)\n\t"
+      "fmuls 0x170(%%eax)\n\t"
+      "fstps 0x170(%%eax)\n\t"
+      ".Lobject_compute_change_colors_8:\n\t"
+      "leal 0x5a(%%esi,%%esi,2), %%edx\n\t"
+      "flds (%%ebx,%%edx,4)\n\t"
+      "leal (%%ebx,%%edx,4), %%ecx\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lobject_compute_change_colors_9\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lobject_compute_change_colors_11\n\t"
+      ".Lobject_compute_change_colors_9:\n\t"
+      "flds (%%ecx)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_compute_change_colors_10\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Lobject_compute_change_colors_11\n\t"
+      ".Lobject_compute_change_colors_10:\n\t"
+      "flds (%%ecx)\n\t"
+      ".Lobject_compute_change_colors_11:\n\t"
+      "fstps (%%ecx)\n\t"
+      "leal (%%esi,%%esi,2), %%eax\n\t"
+      "flds 0x16c(%%ebx,%%eax,4)\n\t"
+      "leal (%%ebx,%%eax,4), %%ecx\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lobject_compute_change_colors_12\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lobject_compute_change_colors_14\n\t"
+      ".Lobject_compute_change_colors_12:\n\t"
+      "flds 0x16c(%%ecx)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_compute_change_colors_13\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Lobject_compute_change_colors_14\n\t"
+      ".Lobject_compute_change_colors_13:\n\t"
+      "flds 0x16c(%%ecx)\n\t"
+      ".Lobject_compute_change_colors_14:\n\t"
+      "fstps 0x16c(%%ecx)\n\t"
+      "flds 0x170(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lobject_compute_change_colors_15\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lobject_compute_change_colors_17\n\t"
+      ".Lobject_compute_change_colors_15:\n\t"
+      "flds 0x170(%%ecx)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_compute_change_colors_16\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Lobject_compute_change_colors_17\n\t"
+      ".Lobject_compute_change_colors_16:\n\t"
+      "flds 0x170(%%ecx)\n\t"
+      ".Lobject_compute_change_colors_17:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "fstps 0x170(%%ecx)\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "incl %%eax\n\t"
+      "movswl %%ax, %%esi\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "cmpl (%%ecx), %%esi\n\t"
+      "jl .Lobject_compute_change_colors_1\n\t"
+      "popl %%edi\n\t"
+      ".Lobject_compute_change_colors_18:\n\t"
+      "popl %%esi\n\t"
+      ".Lobject_compute_change_colors_19:\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b13e5d0_get), [tag] "m"(b13e5d0_tag), [elem] "m"(b13e5d0_elem), [c7c270] "m"(b13e5d0_c7c270)
+      : "memory");
 }
+#else
+#error "object_compute_change_colors: clang naked draft required"
+#endif
+
 
 /* 0x140ad0 / objects.obj — Choose random region permutations for an object's
  * model during spawn, honoring the object's requested variant (obj+0x6e).
@@ -10467,157 +10844,207 @@ int16_t object_get_first_cluster(void *iter_state, int object_handle)
                                *(int *)(root_obj + 0xbc));
 }
 
-/*
- * object_visible_to_any_player — check if an object is visible to any player.
- *
- * Returns true (1) if the object occupies a PVS-visible cluster AND is within
- * at least one player's field of view (or within the object's bounding sphere
- * distance from the player's head).
- *
- * The algorithm:
- *   1. Validate the object header flag (bit 0 of unk_2) and object flags
- *      (must have 0x800 set, must NOT have 0x200000 set).
- *   2. Iterate the object's clusters; for each, test visibility against the
- *      combined player PVS bitfield.
- *   3. If a visible cluster is found, iterate all players:
- *      a. Compute distance_squared from player head to object center.
- *      b. If dist_sq < radius_sq (player inside bounding sphere), visible.
- *      c. Otherwise, compute the half-angle subtended by the bounding sphere
- *         plus a PI/4 margin, and check if the object direction lies within
- *         the player's facing cone (dot product vs cos of half-angle).
- *
- * Confirmed: cdecl, 1 arg (object_handle at [EBP+8]).
- * Confirmed: Returns byte in AL (0 or 1).
- * Confirmed: CALL 0x119320 (datum_get) with object data table (0x5a8d50).
- * Confirmed: CALL 0x13d680 (object_get_and_verify_type) with mask -1 and 3.
- * Confirmed: CALL 0xba6c0 (players_get_combined_pvs) with no args.
- * Confirmed: CALL 0x13fe10 (object_get_first_cluster) with 2 cdecl args.
- * Confirmed: CALL 0x13d5f0 (FUN_0013d5f0) with 2 cdecl args.
- * Confirmed: CALL 0x1198f0 (data_next_index) with player_data, prev_index.
- * Confirmed: CALL 0x1a9200 (unit_get_head_position) with unit_handle, &out.
- * Confirmed: CALL 0x13010 (normalize3d) with delta vector pointer.
- * Confirmed: PVS bit test pattern: (1 << (cluster & 0x1f)) & pvs[cluster >> 5].
- * Confirmed: Float at 0x254a58 = PI/4 (0.7854f).
- * Confirmed: Player unit handle at player_datum + 0x34.
- * Confirmed: Unit forward vector at unit_obj + 0x1E0 (vector3_t unk_480).
- * Confirmed: Object position at obj + 0x50 (unk_80/unk_84/unk_88).
- * Confirmed: Object bounding radius at obj + 0x5C (unk_92).
- */
-int object_visible_to_any_player(int object_handle)
+/* object_visible_to_any_player (0x1407e0) — XBE naked draft (batch 115). */
+#if defined(__clang__)
+static void *(*const b1407e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b1407e0_get)(int, int) = object_get_and_verify_type;
+static void * (*const b1407e0_cba6c0)(void) = players_get_combined_pvs;
+static int16_t (*const b1407e0_c13fe10)(void *iter_state, int object_handle) = object_get_first_cluster;
+static int16_t (*const b1407e0_c13d5f0)(void *param_1, int param_2) = FUN_0013d5f0;
+static int (*const b1407e0_c1198f0)(data_t *data, int prev_index) = data_next_index;
+static void (*const b1407e0_c1a9200)(int object_handle, float *out_position) = unit_get_head_position;
+static float (*const b1407e0_norm)(float *) = normalize3d;
+
+__attribute__((naked, noinline))
+int object_visible_to_any_player(int object_handle __attribute__((unused)))
 {
-  object_header_data_t *header;
-  object_data_t *obj;
-  int *pvs;
-  int16_t cluster_index;
-  char iter_state[16];
-  int player_index;
-  char *player;
-  float radius_sq;
-  float head_pos[3];
-  float dx, dy, dz;
-  float dist_sq;
-  float delta[3];
-  float magnitude;
-  float half_angle;
-  float dot;
-  char *unit_obj;
-  int unit_handle;
-  char result;
-
-  result = 0;
-
-  /* Validate object header and flags */
-  header =
-    (object_header_data_t *)datum_get(*(data_t **)0x5a8d50, object_handle);
-  obj = (object_data_t *)object_get_and_verify_type(object_handle, -1);
-
-  if (!(header->unk_2 & 1))
-    return result;
-  if (!(obj->flags & 0x800))
-    return result;
-  if (obj->flags & 0x200000)
-    return result;
-
-  /* Get combined PVS and iterate object clusters */
-  pvs = (int *)players_get_combined_pvs();
-  cluster_index = object_get_first_cluster(iter_state, object_handle);
-  if (cluster_index == (int16_t)0xFFFF)
-    return result;
-
-  /* Check each cluster against PVS */
-  for (;;) {
-    int edx = (int)cluster_index;
-    int bit_index = edx & 0x1f;
-    int dword_index = edx >> 5;
-    int bit_mask = 1 << bit_index;
-
-    if (pvs[dword_index] & bit_mask)
-      break;
-
-    cluster_index = FUN_0013d5f0(iter_state, object_handle);
-    if (cluster_index == (int16_t)0xFFFF)
-      return result;
-  }
-
-  /* Object is in a visible cluster — check per-player visibility */
-  if (cluster_index == (int16_t)0xFFFF)
-    return result;
-
-  radius_sq = obj->unk_92 * obj->unk_92;
-
-  player_index = data_next_index(*(data_t **)0x5aa6d4, -1);
-  if (player_index == -1)
-    return result;
-
-  while (player_index != -1) {
-    player = (char *)datum_get(*(data_t **)0x5aa6d4, player_index);
-    unit_handle = *(int *)(player + 0x34);
-
-    if (unit_handle == -1)
-      goto next_player;
-
-    /* Get player head position */
-    unit_get_head_position(unit_handle, head_pos);
-
-    /* Distance check: is player head within bounding sphere? */
-    dx = obj->unk_80 - head_pos[0];
-    dy = obj->unk_84 - head_pos[1];
-    dz = obj->unk_88 - head_pos[2];
-    dist_sq = dz * dz + dy * dy + dx * dx;
-
-    if (dist_sq < radius_sq) {
-      result = 1;
-      return result;
-    }
-
-    /* FOV check: is object within player's viewing cone? */
-    unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
-
-    delta[0] = obj->unk_80 - head_pos[0];
-    delta[1] = obj->unk_84 - head_pos[1];
-    delta[2] = obj->unk_88 - head_pos[2];
-    magnitude = normalize3d(delta);
-
-    /* half_angle = atan2(radius, magnitude) + PI/4 */
-    half_angle = (float)(xbox_atan2((double)obj->unk_92, (double)magnitude) +
-                         (double)0.7853981852531433f);
-
-    /* dot product of normalized delta with unit forward vector */
-    dot = delta[2] * *(float *)(unit_obj + 0x1E8) +
-          delta[1] * *(float *)(unit_obj + 0x1E4) +
-          delta[0] * *(float *)(unit_obj + 0x1E0);
-
-    if (xbox_cosf(half_angle) < dot) {
-      result = 1;
-      return result;
-    }
-
-  next_player:
-    player_index = data_next_index(*(data_t **)0x5aa6d4, player_index);
-  }
-
-  return result;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x30, %%esp\n\t"
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x2(%%ebx), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb $1, %%al\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "je .Lobject_visible_to_any_player_6\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "testb $8, %%ah\n\t"
+      "je .Lobject_visible_to_any_player_6\n\t"
+      "testl $0x200000, %%eax\n\t"
+      "jne .Lobject_visible_to_any_player_6\n\t"
+      "call *%[cba6c0]\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "call *%[c13fe10]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lobject_visible_to_any_player_6\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lobject_visible_to_any_player_1:\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%ebx\n\t"
+      "shll %%cl, %%ebx\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "sarl $5, %%edx\n\t"
+      "testl %%ebx, (%%ecx,%%edx,4)\n\t"
+      "jne .Lobject_visible_to_any_player_2\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c13d5f0]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "jne .Lobject_visible_to_any_player_1\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lobject_visible_to_any_player_2:\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lobject_visible_to_any_player_6\n\t"
+      "flds 0x5c(%%esi)\n\t"
+      "movl 0x5aa6d4, %%eax\n\t"
+      "fld %%st(0)\n\t"
+      "pushl $-1\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "pushl %%eax\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "call *%[c1198f0]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .Lobject_visible_to_any_player_6\n\t"
+      ".Lobject_visible_to_any_player_3:\n\t"
+      "movl 0x5aa6d4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x34(%%edi), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_visible_to_any_player_4\n\t"
+      "leal -0x24(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1a9200]\n\t"
+      "flds 0x50(%%esi)\n\t"
+      "fsubs -0x24(%%ebp)\n\t"
+      "addl $8, %%esp\n\t"
+      "flds 0x54(%%esi)\n\t"
+      "fsubs -0x20(%%ebp)\n\t"
+      "flds 0x58(%%esi)\n\t"
+      "fsubs -0x1c(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(3)\n\t"
+      ".byte 0xd8, 0xcc\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps -0x8(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $5, %%ah\n\t"
+      "fstp %%st(0)\n\t"
+      "jnp .Lobject_visible_to_any_player_5\n\t"
+      "movl 0x34(%%edi), %%eax\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "flds 0x50(%%esi)\n\t"
+      "fsubs -0x24(%%ebp)\n\t"
+      "leal -0x30(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "fstps -0x30(%%ebp)\n\t"
+      "flds 0x54(%%esi)\n\t"
+      "fsubs -0x20(%%ebp)\n\t"
+      "fstps -0x2c(%%ebp)\n\t"
+      "flds 0x58(%%esi)\n\t"
+      "fsubs -0x1c(%%ebp)\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "flds 0x5c(%%esi)\n\t"
+      "fstpl -0x18(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fldl -0x18(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fpatan\n\t"
+      "fadds 0x254a58\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fmuls 0x1e8(%%edi)\n\t"
+      "flds -0x2c(%%ebp)\n\t"
+      "fmuls 0x1e4(%%edi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "fmuls 0x1e0(%%edi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fxch %%st(1)\n\t"
+      "fcos\n\t"
+      "fxch %%st(1)\n\t"
+      "fxch %%st(1)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .Lobject_visible_to_any_player_5\n\t"
+      ".Lobject_visible_to_any_player_4:\n\t"
+      "movl 0x5aa6d4, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1198f0]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "jne .Lobject_visible_to_any_player_3\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lobject_visible_to_any_player_5:\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      ".Lobject_visible_to_any_player_6:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b1407e0_dget), [get] "m"(b1407e0_get), [cba6c0] "m"(b1407e0_cba6c0), [c13fe10] "m"(b1407e0_c13fe10), [c13d5f0] "m"(b1407e0_c13d5f0), [c1198f0] "m"(b1407e0_c1198f0), [c1a9200] "m"(b1407e0_c1a9200), [norm] "m"(b1407e0_norm)
+      : "memory");
 }
+#else
+#error "object_visible_to_any_player: clang naked draft required"
+#endif
+
 
 void object_pvs_activate(int param_1)
 {
@@ -10750,106 +11177,189 @@ void object_delete(int object_handle)
   object_delete_internal(object_handle, 0);
 }
 
-/*
- * object_connect_to_map — link an object into the BSP/collision world.
- *
- * If the object has a parent (parent_object_index != -1), it chains into the
- * parent's child list via next_object_index/unk_200 and marks the header as
- * attached. Otherwise, it resolves a BSP location (from the caller or by
- * probing the object's bounding position), inserts into the collision/BSP
- * structure, and optionally garbage-collects or activates the object based on
- * PVS visibility.
- *
- * Confirmed: CALL 0x119320 (datum_get) with objects global at 0x5a8d50.
- * Confirmed: assert "DATUM_INDEX_TO_IDENTIFIER(object_index)" at line 0x36f.
- * Confirmed: assert "!TEST_FLAG(object->object.flags,
- * _object_connected_to_map_bit)" at line 0x370. Confirmed: CALL 0x13d680
- * (object_get_and_verify_type) with PUSH -1. Confirmed: CALL 0x140bc0
- * (object_delete_internal) with delete_sibling=0. Confirmed: CALL 0xba6c0
- * (players_get_combined_pvs). Confirmed: offset 0xCC = parent_object_index,
- * 0xC8 = unk_200, 0xC4 = next_object_index. Confirmed: 0x5a8d40 and 0x5a8d30
- * are alternate object list pointers selected by flag 0x2000000.
- */
-void object_connect_to_map(int object_handle, void *location)
+/* object_connect_to_map (0x140ce0) — XBE naked draft (batch 118). */
+#if defined(__clang__)
+static void *(*const b140ce0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b140ce0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b140ce0_exitfn)(int) = system_exit;
+static void *(*const b140ce0_get)(int, int) = object_get_and_verify_type;
+static void (*const b140ce0_c18f180)(void *location_out, void *point) = scenario_location_from_point;
+static void (*const b140ce0_c1917a0)(void *partition, int object_handle, void *first_cluster_ref, void *position, uint32_t radius_fp, void *location) = cluster_partition_add_object;
+static void * (*const b140ce0_cba6c0)(void) = players_get_combined_pvs;
+static void (*const b140ce0_c13fb30)(int object_handle) = object_activate;
+static void (*const b140ce0_c140bc0)(int object_handle, int delete_sibling) = object_delete_internal;
+
+__attribute__((naked, noinline))
+void object_connect_to_map(int object_handle __attribute__((unused)), void *location __attribute__((unused)))
 {
-  object_header_data_t *hdr =
-    (object_header_data_t *)datum_get(*(data_t **)0x5a8d50, object_handle);
-  object_data_t *obj = hdr->object;
-
-  if ((object_handle & 0xffff0000) == 0) {
-    display_assert("DATUM_INDEX_TO_IDENTIFIER(object_index)",
-                   "c:\\halo\\SOURCE\\objects\\objects.c", 0x36f, 1);
-    system_exit(-1);
-  }
-  if ((obj->flags & 0x800) != 0) {
-    display_assert(
-      "!TEST_FLAG(object->object.flags, _object_connected_to_map_bit)",
-      "c:\\halo\\SOURCE\\objects\\objects.c", 0x370, 1);
-    system_exit(-1);
-  }
-
-  if (obj->parent_object_index.value != -1) {
-    /* Child object: chain into parent's child linked list. */
-    object_data_t *parent_obj = (object_data_t *)object_get_and_verify_type(
-      obj->parent_object_index.value, -1);
-    object_data_t *self_obj =
-      (object_data_t *)object_get_and_verify_type(object_handle, -1);
-    self_obj->next_object_index.value = parent_obj->unk_200.value;
-    parent_obj->unk_200.value = (uint32_t)object_handle;
-    hdr->unk_2 |= 0x80;
-    *(int16_t *)((char *)obj + 0x4c) = -1;
-  } else {
-    /* Root object: resolve BSP location and insert into collision world. */
-    uint32_t local_loc[2];
-    uint32_t *loc;
-    object_data_t *self_obj;
-    void *obj_list;
-
-    if (location == NULL) {
-      scenario_location_from_point(local_loc, (char *)obj + 0x50);
-      location = local_loc;
-      if ((int16_t)local_loc[1] == -1) {
-        scenario_location_from_point(local_loc, (char *)obj + 0x0c);
-      }
-    }
-
-    loc = (uint32_t *)location;
-    if ((int16_t)loc[1] == -1) {
-      obj->flags |= 0x200000;
-    } else {
-      obj->unk_72 = loc[0];
-      obj->unk_76.value = loc[1];
-      hdr->unk_4 = (uint16_t)loc[1];
-      obj->flags &= ~0x200000u;
-    }
-
-    hdr->unk_2 &= 0x7f;
-
-    self_obj = (object_data_t *)object_get_and_verify_type(object_handle, -1);
-    obj_list =
-      (self_obj->flags & 0x2000000) ? (void *)0x5a8d40 : (void *)0x5a8d30;
-    cluster_partition_add_object(obj_list, object_handle, (char *)obj + 0xbc,
-                                 (char *)obj + 0x50, *(uint32_t *)&obj->unk_92,
-                                 (char *)obj + 0x48);
-
-    if ((hdr->unk_2 & 0x40) != 0) {
-      if (hdr->unk_4 != 0xffff) {
-        int16_t cluster = (int16_t)hdr->unk_4;
-        int *pvs = (int *)players_get_combined_pvs();
-        if ((pvs[cluster >> 5] & (1u << (cluster & 0x1f))) != 0) {
-          object_activate(object_handle);
-          goto done;
-        }
-      }
-      if ((obj->flags & 0x80000) != 0) {
-        object_delete_internal(object_handle, 0);
-      }
-    }
-  }
-done:
-  obj->flags |= 0x800;
-  hdr->unk_2 |= 0x20;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x5a8d50, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl $0xffff0000, %%ebx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x8(%%edi), %%esi\n\t"
+      "jne .Lobject_connect_to_map_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x36f\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29bf58\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_connect_to_map_1:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "testb $8, %%ah\n\t"
+      "je .Lobject_connect_to_map_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x370\n\t"
+      "pushl $0x29b91c\n\t"
+      "pushl $0x29c030\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_connect_to_map_2:\n\t"
+      "movl 0xcc(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_connect_to_map_3\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "addl $0xc8, %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "movl %%edx, 0xc4(%%eax)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "movb 0x2(%%edi), %%al\n\t"
+      "addl $0x10, %%esp\n\t"
+      "orb $0x80, %%al\n\t"
+      "movb %%al, 0x2(%%edi)\n\t"
+      "movw $0xffff, 0x4c(%%esi)\n\t"
+      "jmp .Lobject_connect_to_map_10\n\t"
+      ".Lobject_connect_to_map_3:\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lobject_connect_to_map_4\n\t"
+      "leal 0x50(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c18f180]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $-1, -0x4(%%ebp)\n\t"
+      "leal -0x8(%%ebp), %%ebx\n\t"
+      "jne .Lobject_connect_to_map_4\n\t"
+      "leal 0xc(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c18f180]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_connect_to_map_4:\n\t"
+      "cmpw $-1, 0x4(%%ebx)\n\t"
+      "je .Lobject_connect_to_map_5\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "movl %%edx, 0x48(%%esi)\n\t"
+      "movl 0x4(%%ebx), %%eax\n\t"
+      "movw %%ax, %%cx\n\t"
+      "movl %%eax, 0x4c(%%esi)\n\t"
+      "movw %%cx, 0x4(%%edi)\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "andl $0xffdfffff, %%eax\n\t"
+      "jmp .Lobject_connect_to_map_6\n\t"
+      ".Lobject_connect_to_map_5:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "orl $0x200000, %%eax\n\t"
+      ".Lobject_connect_to_map_6:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      "movb 0x2(%%edi), %%dl\n\t"
+      "andb $0x7f, %%dl\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "movb %%dl, 0x2(%%edi)\n\t"
+      "call *%[get]\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl $0x2000000, %%ecx\n\t"
+      "movl $0x5a8d40, %%eax\n\t"
+      "jne .Lobject_connect_to_map_7\n\t"
+      "movl $0x5a8d30, %%eax\n\t"
+      ".Lobject_connect_to_map_7:\n\t"
+      "movl 0x5c(%%esi), %%ecx\n\t"
+      "leal 0x48(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x50(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0xbc(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1917a0]\n\t"
+      "movb 0x2(%%edi), %%al\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb $0x40, %%al\n\t"
+      "je .Lobject_connect_to_map_10\n\t"
+      "cmpw $-1, 0x4(%%edi)\n\t"
+      "je .Lobject_connect_to_map_9\n\t"
+      "movswl 0x4(%%edi), %%ebx\n\t"
+      "call *%[cba6c0]\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "movl %%ebx, %%edx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%ebx\n\t"
+      "shll %%cl, %%ebx\n\t"
+      "sarl $5, %%edx\n\t"
+      "testl %%ebx, (%%eax,%%edx,4)\n\t"
+      "je .Lobject_connect_to_map_8\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c13fb30]\n\t"
+      "addl $4, %%esp\n\t"
+      "jmp .Lobject_connect_to_map_10\n\t"
+      ".Lobject_connect_to_map_8:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      ".Lobject_connect_to_map_9:\n\t"
+      "testl $0x80000, 0x4(%%esi)\n\t"
+      "je .Lobject_connect_to_map_10\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c140bc0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_connect_to_map_10:\n\t"
+      "orl $0x800, 0x4(%%esi)\n\t"
+      "orb $0x20, 0x2(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b140ce0_dget), [assert] "m"(b140ce0_assert), [exitfn] "m"(b140ce0_exitfn), [get] "m"(b140ce0_get), [c18f180] "m"(b140ce0_c18f180), [c1917a0] "m"(b140ce0_c1917a0), [cba6c0] "m"(b140ce0_cba6c0), [c13fb30] "m"(b140ce0_c13fb30), [c140bc0] "m"(b140ce0_c140bc0)
+      : "memory");
 }
+#else
+#error "object_connect_to_map: clang naked draft required"
+#endif
+
 
 /*
  * object_get_node_matrix — return a pointer to a specific node's 4x3 matrix
